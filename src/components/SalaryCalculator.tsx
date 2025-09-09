@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import html2canvas from "html2canvas";
 import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
+import DeductionPieChart from "./DeductionPieChart"; // [수정] 누락된 임포트 추가
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -12,7 +13,6 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 export default function SalaryCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
-
   const [payBasis, setPayBasis] = useState<"annual" | "monthly">("annual");
   const [severanceType, setSeveranceType] = useState<"separate" | "included">(
     "separate"
@@ -21,6 +21,7 @@ export default function SalaryCalculator() {
   const [nonTaxableAmount, setNonTaxableAmount] = useState("200,000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
+  const [overtimePay, setOvertimePay] = useState("");
   const [result, setResult] = useState({
     monthlyNet: 0,
     totalDeduction: 0,
@@ -56,11 +57,13 @@ export default function SalaryCalculator() {
     if (severanceType === "included" && annualSalary > 0) {
       annualSalary = (annualSalary / 13) * 12;
     }
+    const annualOvertime = parseNumber(overtimePay);
     const newResult = calculateNetSalary(
       annualSalary,
       nonTaxable,
       dependents,
-      children
+      children,
+      annualOvertime
     );
     setResult(newResult);
   }, [
@@ -70,6 +73,7 @@ export default function SalaryCalculator() {
     nonTaxableAmount,
     dependents,
     children,
+    overtimePay,
   ]);
 
   const handleReset = () => {
@@ -79,6 +83,7 @@ export default function SalaryCalculator() {
     setNonTaxableAmount("200,000");
     setDependents(1);
     setChildren(0);
+    setOvertimePay("");
   };
 
   const handleCapture = async () => {
@@ -143,7 +148,7 @@ export default function SalaryCalculator() {
               <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setPayBasis("annual")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                  className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                     payBasis === "annual"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
@@ -153,7 +158,7 @@ export default function SalaryCalculator() {
                 </button>
                 <button
                   onClick={() => setPayBasis("monthly")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                  className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                     payBasis === "monthly"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
@@ -170,7 +175,7 @@ export default function SalaryCalculator() {
               <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setSeveranceType("separate")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                  className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                     severanceType === "separate"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
@@ -180,7 +185,7 @@ export default function SalaryCalculator() {
                 </button>
                 <button
                   onClick={() => setSeveranceType("included")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                  className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                     severanceType === "included"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
@@ -267,12 +272,31 @@ export default function SalaryCalculator() {
               </span>
             </div>
           </div>
+          <div className="mt-4">
+            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+              야근수당 (연간 총액)
+            </label>
+            <div className="relative mt-1">
+              <input
+                type="text"
+                value={overtimePay}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/[^0-9]/g, "");
+                  setOvertimePay(v ? formatNumber(Number(v)) : "");
+                }}
+                className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+              />
+              <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                원
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div
         ref={resultCardRef}
-        className="bg-signature-blue dark:bg-dark-card text-white dark:text-dark-text p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
+        className="bg-gradient-to-br from-signature-blue to-blue-800 dark:bg-dark-card text-white dark:text-dark-text p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
       >
         <div className="flex-grow">
           <p className="font-semibold text-blue-200 dark:text-dark-text-secondary text-sm">
@@ -281,6 +305,9 @@ export default function SalaryCalculator() {
           <p className="text-4xl sm:text-5xl font-bold my-2 text-white dark:text-dark-text">
             {formatNumber(result.monthlyNet)} 원
           </p>
+          <div className="mt-4 max-h-48">
+            <DeductionPieChart data={result} />
+          </div>
           <div className="mt-6 pt-6 border-t border-white/20 dark:border-gray-700 space-y-3 text-sm">
             {Object.entries({
               국민연금: result.pension,

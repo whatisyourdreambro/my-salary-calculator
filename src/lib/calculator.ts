@@ -1,3 +1,7 @@
+// ===================================================================
+// 2025년 대한민국 4대 보험 및 소득세 정보 (최종판: 부양가족, 야근수당 반영)
+// ===================================================================
+
 const PENSION_RATE = 0.045;
 const PENSION_MONTHLY_CAP = 5900000 * PENSION_RATE;
 const HEALTH_RATE = 0.03545;
@@ -42,9 +46,12 @@ export function calculateNetSalary(
   annualSalary: number,
   nonTaxableAmount: number = 0,
   dependents: number = 1,
-  children: number = 0
+  children: number = 0,
+  overtimePay: number = 0
 ) {
-  if (annualSalary <= 0) {
+  const totalAnnualSalary = annualSalary + overtimePay;
+
+  if (totalAnnualSalary <= 0) {
     return {
       monthlyNet: 0,
       totalDeduction: 0,
@@ -57,9 +64,9 @@ export function calculateNetSalary(
     };
   }
 
-  const actualNonTaxableAmount = Math.min(annualSalary, nonTaxableAmount);
-  const taxableAnnualSalary = annualSalary - actualNonTaxableAmount;
-  const monthlySalary = annualSalary / 12;
+  const actualNonTaxableAmount = Math.min(totalAnnualSalary, nonTaxableAmount);
+  const taxableAnnualSalary = totalAnnualSalary - actualNonTaxableAmount;
+  const monthlySalary = totalAnnualSalary / 12;
   const taxableMonthlyIncome = Math.max(
     0,
     monthlySalary - actualNonTaxableAmount / 12
@@ -99,10 +106,10 @@ export function calculateNetSalary(
 
   const totalDeduction =
     pension + health + longTermCare + employment + incomeTax + localTax;
-  const monthlyNet = monthlySalary - totalDeduction;
+  const finalMonthlyNet = monthlySalary - totalDeduction;
 
   return {
-    monthlyNet: Math.round(monthlyNet),
+    monthlyNet: Math.round(finalMonthlyNet),
     totalDeduction: Math.round(totalDeduction),
     pension: Math.round(pension),
     health: Math.round(health),

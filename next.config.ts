@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+import nextMDX from "@next/mdx";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // MDX 페이지를 사용하도록 설정
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
-export default nextConfig;
+const withMDX = nextMDX();
+
+export default withMDX(nextConfig);
