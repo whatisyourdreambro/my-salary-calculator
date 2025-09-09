@@ -1,16 +1,7 @@
-import { calculateNetSalary } from "./calculator";
+// src/lib/generateData.ts
 
-export type SalaryData = {
-  preTax: number;
-  monthlyNet: number;
-  health: number;
-  employment: number;
-  longTermCare: number;
-  pension: number;
-  incomeTax: number;
-  localTax: number;
-  totalDeduction: number;
-};
+import { calculateNetSalary } from "./calculator";
+import type { SalaryData } from "./types"; // [수정] 타입을 새 파일에서 가져옵니다.
 
 // 1. 연봉 표 데이터 생성기 (기존과 동일)
 export function generateAnnualSalaryTableData(): SalaryData[] {

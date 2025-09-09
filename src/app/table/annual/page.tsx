@@ -4,7 +4,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
-import type { SalaryData } from "@/lib/generateData"; // 타입만 가져옵니다.
+import type { SalaryData } from "@/lib/types";
 
 const tableHeaders = [
   { key: "preTax", label: "세전 금액(원)" },

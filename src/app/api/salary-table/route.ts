@@ -1,5 +1,3 @@
-// src/app/api/salary-table/route.ts
-
 import { NextResponse } from "next/server";
 import {
   generateAnnualSalaryTableData,
