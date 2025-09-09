@@ -3,40 +3,31 @@ import path from "path";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 
-const contentDirectory = path.join(process.cwd(), "content");
+const rootDirectory = path.join(process.cwd(), "content");
 
-export async function getPostBySlug(slug: string) {
+export const getPostBySlug = async (slug: string) => {
   const realSlug = slug.replace(/\.mdx$/, "");
-  const filePath = path.join(contentDirectory, `${realSlug}.mdx`);
+  const filePath = path.join(rootDirectory, `${realSlug}.mdx`);
 
-  try {
-    const fileContent = fs.readFileSync(filePath, "utf8");
-    const { data, content } = matter(fileContent);
+  const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
 
-    const compiledContent = await compileMDX({
-      source: content,
-      options: { parseFrontmatter: false },
-    });
+  const { data, content } = matter(fileContent);
 
-    return { meta: data, content: compiledContent.content, slug: realSlug };
-  } catch (error) {
-    console.error(`Error reading or parsing MDX file for slug: ${slug}`, error);
-    return null;
+  const { content: compiledContent } = await compileMDX({
+    source: content,
+    options: { parseFrontmatter: false },
+  });
+
+  return { meta: { ...data, slug: realSlug }, content: compiledContent };
+};
+
+export const getAllPostsMeta = async () => {
+  const files = fs.readdirSync(rootDirectory);
+
+  const posts = [];
+  for (const file of files) {
+    const { meta } = await getPostBySlug(file);
+    posts.push(meta);
   }
-}
-
-export async function getAllPosts() {
-  try {
-    const files = fs.readdirSync(contentDirectory);
-    const posts = await Promise.all(
-      files.map((filename) => {
-        const slug = filename.replace(/\.mdx$/, "");
-        return getPostBySlug(slug);
-      })
-    );
-    return posts.filter((post) => post !== null);
-  } catch (error) {
-    console.error("Error reading content directory:", error);
-    return [];
-  }
-}
+  return posts;
+};

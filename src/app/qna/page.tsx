@@ -3,8 +3,16 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-async function getQnAPosts() {
-  const postsDirectory = path.join(process.cwd(), "content");
+// Define a type for the post metadata
+interface PostMeta {
+  slug: string;
+  title: string;
+  description: string;
+}
+
+// Function to get all Q&A posts metadata
+async function getQnAPosts(): Promise<PostMeta[]> {
+  const postsDirectory = path.join(process.cwd(), "content/qna");
   const filenames = fs.readdirSync(postsDirectory);
 
   const posts = filenames.map((filename) => {
@@ -14,8 +22,8 @@ async function getQnAPosts() {
 
     return {
       slug: filename.replace(".mdx", ""),
-      title: frontMatter.title as string,
-      description: frontMatter.description as string,
+      title: frontMatter.title,
+      description: frontMatter.description,
     };
   });
   return posts;
