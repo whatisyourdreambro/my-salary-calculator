@@ -3,22 +3,23 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-// 모든 Q&A 글을 읽어와서 목록으로 만듭니다.
+// Function to get all Q&A posts
 async function getQnAPosts() {
-  const files = fs.readdirSync(path.join(process.cwd(), "content"));
+  const postsDirectory = path.join(process.cwd(), "content");
+  const filenames = fs.readdirSync(postsDirectory);
 
-  return files.map((filename) => {
-    const markdownWithMeta = fs.readFileSync(
-      path.join("content", filename),
-      "utf-8"
-    );
-    const { data: frontMatter } = matter(markdownWithMeta);
+  const posts = filenames.map((filename) => {
+    const filePath = path.join(postsDirectory, filename);
+    const fileContents = fs.readFileSync(filePath, "utf-8");
+    const { data: frontMatter } = matter(fileContents);
+
     return {
       slug: filename.replace(".mdx", ""),
       title: frontMatter.title,
       description: frontMatter.description,
     };
   });
+  return posts;
 }
 
 export default async function QnAListPage() {

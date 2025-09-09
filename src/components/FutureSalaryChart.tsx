@@ -14,7 +14,7 @@ import {
   Legend,
   ChartOptions,
 } from "chart.js";
-import { FutureSalaryResult } from "@/lib/futureCalculator"; // 타입을 임포트합니다.
+import { FutureSalaryResult } from "@/lib/futureCalculator";
 
 ChartJS.register(
   CategoryScale,
@@ -27,7 +27,6 @@ ChartJS.register(
   Legend
 );
 
-// 컴포넌트의 props 타입을 명확히 정의합니다.
 interface FutureSalaryChartProps {
   data: FutureSalaryResult[];
 }
