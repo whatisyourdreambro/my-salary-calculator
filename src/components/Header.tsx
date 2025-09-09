@@ -10,6 +10,7 @@ const navLinks = [
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
   { name: "시급 표", longName: "시급 표", href: "/table/hourly" },
+  { name: "로또", longName: "로또 생성기", href: "/lotto" }, // [신규] 로또 생성기 메뉴 추가
 ];
 
 export default function Header() {
@@ -19,7 +20,7 @@ export default function Header() {
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-2">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
