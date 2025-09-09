@@ -18,7 +18,7 @@ const config: Config = {
         "dark-card": "#1e1e1e",
         "dark-text": "#e9ecef",
         "dark-text-secondary": "#adb5bd",
-        "signature-blue": "#007FFF", // Azure Blue 적용
+        "signature-blue": "#007FFF",
         "brand-red": "#DA012D",
       },
     },
