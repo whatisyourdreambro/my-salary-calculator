@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import html2canvas from "html2canvas";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
@@ -14,6 +15,7 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
   const today = new Date();
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -27,6 +29,31 @@ export default function SeveranceCalculator() {
     averageDailyWage: 0,
     estimatedSeverancePay: 0,
   });
+
+  // 달력 팝업의 표시 상태를 관리하는 state
+  const [isStartCalendarOpen, setStartCalendarOpen] = useState(false);
+  const [isEndCalendarOpen, setEndCalendarOpen] = useState(false);
+
+  useEffect(() => {
+    const data = searchParams.get("data");
+    const tab = searchParams.get("tab");
+    if (data && tab === "severance") {
+      try {
+        const decodedState = JSON.parse(atob(data));
+        setStartDate(
+          decodedState.startDate ? new Date(decodedState.startDate) : oneYearAgo
+        );
+        setEndDate(
+          decodedState.endDate ? new Date(decodedState.endDate) : today
+        );
+        setMonthlySalary(decodedState.monthlySalary || "");
+        setAnnualBonus(decodedState.annualBonus || "");
+        setAnnualLeavePay(decodedState.annualLeavePay || "");
+      } catch (error) {
+        console.error("Failed to parse shared data:", error);
+      }
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const newResult = calculateSeverancePay(
@@ -93,6 +120,14 @@ export default function SeveranceCalculator() {
     );
   };
 
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const numericValue = value.replace(/[^0-9]/g, "");
+      setter(numericValue ? formatNumber(Number(numericValue)) : "");
+    };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       <div className="space-y-8">
@@ -101,28 +136,55 @@ export default function SeveranceCalculator() {
             필수 입력
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            {/* ... 달력 UI 부분은 react-day-picker를 활용한 고급 UI로 교체 ... */}
-            <div>
+            <div className="relative">
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                 입사일
               </label>
-              <DayPicker
-                mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
-                locale={ko}
-              />
+              <button
+                onClick={() => setStartCalendarOpen(!isStartCalendarOpen)}
+                className="w-full text-left mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+              >
+                {startDate
+                  ? format(startDate, "PPP", { locale: ko })
+                  : "날짜 선택"}
+              </button>
+              {isStartCalendarOpen && (
+                <div className="absolute z-10 mt-2 bg-light-card dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
+                  <DayPicker
+                    mode="single"
+                    selected={startDate}
+                    onSelect={(date) => {
+                      setStartDate(date);
+                      setStartCalendarOpen(false);
+                    }}
+                    locale={ko}
+                  />
+                </div>
+              )}
             </div>
-            <div>
+            <div className="relative">
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                 퇴사일 (마지막 근무일)
               </label>
-              <DayPicker
-                mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
-                locale={ko}
-              />
+              <button
+                onClick={() => setEndCalendarOpen(!isEndCalendarOpen)}
+                className="w-full text-left mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+              >
+                {endDate ? format(endDate, "PPP", { locale: ko }) : "날짜 선택"}
+              </button>
+              {isEndCalendarOpen && (
+                <div className="absolute z-10 mt-2 bg-light-card dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
+                  <DayPicker
+                    mode="single"
+                    selected={endDate}
+                    onSelect={(date) => {
+                      setEndDate(date);
+                      setEndCalendarOpen(false);
+                    }}
+                    locale={ko}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <CurrencyInput
@@ -136,7 +198,40 @@ export default function SeveranceCalculator() {
           <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
             선택 입력 (1년치 총액)
           </h2>
-          {/* ... 선택 입력 UI 부분은 이전과 동일 ... */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                연간 상여금
+              </label>
+              <div className="relative mt-1">
+                <input
+                  type="text"
+                  value={annualBonus}
+                  onChange={handleInputChange(setAnnualBonus)}
+                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+                />
+                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                  원
+                </span>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                연차수당
+              </label>
+              <div className="relative mt-1">
+                <input
+                  type="text"
+                  value={annualLeavePay}
+                  onChange={handleInputChange(setAnnualLeavePay)}
+                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+                />
+                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                  원
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -161,13 +256,22 @@ export default function SeveranceCalculator() {
           </div>
         </div>
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <button onClick={handleCapture} className="...">
+          <button
+            onClick={handleCapture}
+            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
+          >
             캡쳐하기
           </button>
-          <button onClick={handleShareLink} className="...">
+          <button
+            onClick={handleShareLink}
+            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
+          >
             링크 공유
           </button>
-          <button onClick={handleReset} className="...">
+          <button
+            onClick={handleReset}
+            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
+          >
             초기화
           </button>
         </div>
