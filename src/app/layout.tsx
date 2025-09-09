@@ -3,7 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
-import Script from "next/script";
+import Script from "next/script"; // Script 컴포넌트를 임포트합니다.
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -25,14 +25,18 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
+        {/* 1. 스크린샷에 보이는 당신의 애드센스 코드를 복사합니다.
+          2. 아래 Script 태그 안에 붙여넣습니다. 
+             (client=... 부분의 ID가 당신의 고유 ID인지 다시 한번 확인하세요)
+        */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
       </head>
-      <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
+      <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-200">
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"
