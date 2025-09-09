@@ -1,42 +1,21 @@
 import Link from "next/link";
-import fs from "fs";
-import path from "path";
 
-// 포스트 메타데이터 타입을 정의합니다.
-interface PostMeta {
-  slug: string;
-  title: string;
-  description: string;
-}
-
-// qna 폴더 안의 게시글 폴더들을 읽어 메타데이터를 가져오는 함수
-async function getQnAPosts(): Promise<PostMeta[]> {
-  const qnaDirectory = path.join(process.cwd(), "src/app/qna");
-
-  const postSlugs = fs
-    .readdirSync(qnaDirectory, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
-
-  const posts = await Promise.all(
-    postSlugs.map(async (slug) => {
-      // 각 page.mdx 파일에서 metadata를 동적으로 import 합니다.
-      const { metadata } = await import(`./${slug}/page.mdx`);
-      return {
-        slug: slug,
-        // metadata.title에서 사이트 이름 부분을 제거하여 순수 제목만 사용합니다.
-        title: (metadata.title || "").replace(" | Moneysalary", ""),
-        description: metadata.description || "",
-      };
-    })
-  );
-
-  return posts;
-}
+const posts = [
+  {
+    slug: "interim-severance-pay",
+    title: "퇴직금 중간정산, 아무나 받을 수 있나요?",
+    description:
+      "2012년 이후 원칙적으로 금지된 퇴직금 중간정산, 하지만 법에서 정한 예외적인 사유에 해당하면 가능합니다. 그 조건을 확인해보세요.",
+  },
+  {
+    slug: "year-end-tax-preview",
+    title: "연말정산 미리보기, 핵심만 콕콕!",
+    description:
+      "2025년 연말정산, 미리 준비해서 13월의 월급을 놓치지 마세요. 핵심 공제 항목과 절세 팁을 알려드립니다.",
+  },
+];
 
 export default async function QnAListPage() {
-  const posts = await getQnAPosts();
-
   return (
     <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-10">

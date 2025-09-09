@@ -1,11 +1,6 @@
-import nextMDX from "@next/mdx";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure MDX to be treated as a page
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // 향후 필요하다면 여기에 다른 Next.js 설정을 추가할 수 있습니다.
 };
 
-const withMDX = nextMDX();
-
-export default withMDX(nextConfig);
+export default nextConfig;
