@@ -70,15 +70,15 @@ export default function SeveranceCalculator() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       <div className="space-y-8">
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
             필수 입력
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label
                 htmlFor="startDate"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary"
               >
                 입사일
               </label>
@@ -87,13 +87,13 @@ export default function SeveranceCalculator() {
                 id="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+                className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
               />
             </div>
             <div>
               <label
                 htmlFor="endDate"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary"
               >
                 퇴사일 (마지막 근무일)
               </label>
@@ -102,7 +102,7 @@ export default function SeveranceCalculator() {
                 id="endDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+                className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
               />
             </div>
           </div>
@@ -113,13 +113,13 @@ export default function SeveranceCalculator() {
             quickAmounts={[1000000, 100000, 10000]}
           />
         </div>
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
             선택 입력 (1년치 총액)
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                 연간 상여금
               </label>
               <div className="relative mt-1">
@@ -127,7 +127,7 @@ export default function SeveranceCalculator() {
                   type="text"
                   value={annualBonus}
                   onChange={handleInputChange(setAnnualBonus)}
-                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
                   원
@@ -135,7 +135,7 @@ export default function SeveranceCalculator() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                 연차수당
               </label>
               <div className="relative mt-1">
@@ -143,7 +143,7 @@ export default function SeveranceCalculator() {
                   type="text"
                   value={annualLeavePay}
                   onChange={handleInputChange(setAnnualLeavePay)}
-                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
                   원
@@ -156,16 +156,20 @@ export default function SeveranceCalculator() {
 
       <div
         ref={resultCardRef}
-        className="bg-signature-blue text-white p-6 rounded-xl flex flex-col h-full shadow-lg"
+        className="bg-gradient-to-br from-signature-blue to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-6 rounded-xl flex flex-col h-full shadow-lg"
       >
         <div className="flex-grow">
-          <p className="text-blue-200 text-sm">예상 퇴직금</p>
+          <p className="font-semibold text-blue-200 dark:text-gray-400 text-sm">
+            예상 퇴직금
+          </p>
           <p className="text-4xl sm:text-5xl font-bold my-2 text-white">
             {formatNumber(result.estimatedSeverancePay)} 원
           </p>
-          <div className="mt-6 pt-6 border-t border-white/20 flex justify-between text-sm">
-            <span className="text-blue-200">1일 평균 임금</span>
-            <span className="text-white font-bold">
+          <div className="mt-6 pt-6 border-t border-white/20 dark:border-gray-700 flex justify-between text-sm">
+            <span className="text-blue-200 dark:text-gray-400">
+              1일 평균 임금
+            </span>
+            <span className="text-white dark:text-dark-text font-medium">
               {formatNumber(result.averageDailyWage)} 원
             </span>
           </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
+import Footer from "@/components/Footer";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -25,29 +26,23 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
-        {/* AdSense 소유권 확인을 위한 메타 태그 */}
-        <meta
-          name="google-adsense-account"
-          content="ca-pub-2873403048341290"
-        ></meta>
-
-        {/* 기존 AdSense 스크립트 */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
       </head>
-      <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-200">
+      <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
         >
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
-            {children}
+            <main className="flex-grow w-full">{children}</main>
+            <Footer />
           </div>
         </NextThemesProvider>
       </body>
