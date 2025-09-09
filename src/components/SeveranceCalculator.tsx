@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"; // Add useMemo here
 import { useSearchParams } from "next/navigation";
 import html2canvas from "html2canvas";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
@@ -16,9 +16,13 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
-  const today = new Date();
-  const oneYearAgo = new Date();
-  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  const today = useMemo(() => new Date(), []);
+  const oneYearAgo = useMemo(() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 1);
+    return date;
+  }, []);
 
   const [startDate, setStartDate] = useState<Date | undefined>(oneYearAgo);
   const [endDate, setEndDate] = useState<Date | undefined>(today);
@@ -29,10 +33,16 @@ export default function SeveranceCalculator() {
     averageDailyWage: 0,
     estimatedSeverancePay: 0,
   });
-
-  // 달력 팝업의 표시 상태를 관리하는 state
   const [isStartCalendarOpen, setStartCalendarOpen] = useState(false);
   const [isEndCalendarOpen, setEndCalendarOpen] = useState(false);
+
+  const handleReset = useCallback(() => {
+    setStartDate(oneYearAgo);
+    setEndDate(today);
+    setMonthlySalary("");
+    setAnnualBonus("");
+    setAnnualLeavePay("");
+  }, [oneYearAgo, today]);
 
   useEffect(() => {
     const data = searchParams.get("data");
@@ -53,7 +63,7 @@ export default function SeveranceCalculator() {
         console.error("Failed to parse shared data:", error);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, oneYearAgo, today]);
 
   useEffect(() => {
     const newResult = calculateSeverancePay(
@@ -65,14 +75,6 @@ export default function SeveranceCalculator() {
     );
     setResult(newResult);
   }, [startDate, endDate, monthlySalary, annualBonus, annualLeavePay]);
-
-  const handleReset = () => {
-    setStartDate(oneYearAgo);
-    setEndDate(today);
-    setMonthlySalary("");
-    setAnnualBonus("");
-    setAnnualLeavePay("");
-  };
 
   const handleCapture = async () => {
     const element = resultCardRef.current;
