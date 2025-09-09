@@ -5,10 +5,6 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-interface Props {
-  params: { slug: string };
-}
-
 // Function to get the post data
 async function getPost(slug: string) {
   const markdownWithMeta = fs.readFileSync(
@@ -23,7 +19,12 @@ async function getPost(slug: string) {
 }
 
 // Function to generate metadata dynamically
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// [수정] Props 인터페이스 대신 타입을 직접 명시
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
   const { frontMatter } = await getPost(params.slug);
   return {
     title: `${frontMatter.title} | Moneysalary`,
@@ -40,7 +41,12 @@ export async function generateStaticParams() {
 }
 
 // The main page component
-export default async function QnAPostPage({ params }: Props) {
+// [수정] Props 인터페이스 대신 타입을 직접 명시
+export default async function QnAPostPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const post = await getPost(params.slug);
 
   if (!post) {
@@ -54,7 +60,7 @@ export default async function QnAPostPage({ params }: Props) {
         <p className="lead text-lg text-gray-600 dark:text-gray-400 mt-2 mb-8">
           {post.frontMatter.description}
         </p>
-        {}
+        {/* @ts-expect-error RSC Server Component compatibility issue */}
         <MDXRemote source={post.content} />
       </article>
     </main>
