@@ -1,5 +1,5 @@
 // src/lib/generateData.ts
-
+import "server-only"; // [추가] 이 파일은 서버 전용임을 명시합니다.
 import { calculateNetSalary } from "./calculator";
 import type { SalaryData } from "./types"; // [수정] 타입을 새 파일에서 가져옵니다.
 
