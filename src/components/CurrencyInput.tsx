@@ -67,27 +67,27 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      {/* [수정된 부분] 버튼 레이아웃을 두 개의 줄로 명확히 나누고, 새로운 색상과 정렬 방식을 적용합니다. */}
+      {/* [수정] 버튼 레이아웃을 flex에서 grid로 변경하여 완벽한 정렬을 구현합니다. */}
       <div className="mt-2 space-y-2">
         {/* 첫 번째 줄: + 버튼 */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
             <button
               key={`add-${amount}`}
               onClick={() => handleAmountChange(amount)}
-              className="flex-1 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-full hover:bg-signature-blue/20 transition"
+              className="px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition"
             >
               + {formatNumber(amount)}
             </button>
           ))}
         </div>
         {/* 두 번째 줄: - 버튼 */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
             <button
               key={`sub-${amount}`}
               onClick={() => handleAmountChange(-amount)}
-              className="flex-1 px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-full hover:bg-brand-red/20 transition"
+              className="px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition"
             >
               - {formatNumber(amount)}
             </button>

@@ -133,7 +133,6 @@ export default function SalaryCalculator() {
           <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
             선택 입력
           </h2>
-          {/* [수정] 누락되었던 입력 필드들을 다시 추가했습니다. */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
