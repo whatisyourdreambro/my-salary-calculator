@@ -14,13 +14,11 @@ const config: Config = {
         "light-card": "#ffffff",
         "light-text": "#212529",
         "light-text-secondary": "#495057",
-
         "dark-bg": "#121212",
         "dark-card": "#1e1e1e",
         "dark-text": "#e9ecef",
         "dark-text-secondary": "#adb5bd",
-
-        "signature-blue": "#007FFF",
+        "signature-blue": "#007FFF", // Azure Blue 적용
         "brand-red": "#DA012D",
       },
     },
