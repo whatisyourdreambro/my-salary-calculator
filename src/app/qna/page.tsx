@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-// Function to get all Q&A posts
 async function getQnAPosts() {
   const postsDirectory = path.join(process.cwd(), "content");
   const filenames = fs.readdirSync(postsDirectory);
@@ -15,8 +14,8 @@ async function getQnAPosts() {
 
     return {
       slug: filename.replace(".mdx", ""),
-      title: frontMatter.title,
-      description: frontMatter.description,
+      title: frontMatter.title as string,
+      description: frontMatter.description as string,
     };
   });
   return posts;
