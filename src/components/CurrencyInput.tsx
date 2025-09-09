@@ -50,7 +50,7 @@ export default function CurrencyInput({
 
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
         {label}
       </label>
       <div className="relative mt-1">
@@ -59,7 +59,7 @@ export default function CurrencyInput({
           type="text"
           value={value}
           onChange={handleChange}
-          className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
+          className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
           inputMode="numeric"
         />
         <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
@@ -67,7 +67,8 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      <div className="mt-2 grid grid-cols-3 sm:flex sm:flex-wrap gap-2">
+      {/* [수정] 버튼 레이아웃을 flex-wrap으로 변경하여 자연스럽게 줄바꿈되도록 합니다. */}
+      <div className="mt-2 flex flex-wrap gap-2">
         {quickAmounts.map((amount) => (
           <button
             key={`add-${amount}`}

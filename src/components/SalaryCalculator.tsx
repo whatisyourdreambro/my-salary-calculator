@@ -95,7 +95,6 @@ export default function SalaryCalculator() {
               </div>
             </div>
             <div>
-              {/* [수정] '퇴직금' 라벨 추가 */}
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1 block">
                 퇴직금
               </label>
@@ -134,11 +133,75 @@ export default function SalaryCalculator() {
           <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
             선택 입력
           </h2>
-          {/* ... (선택 입력 내부 요소들은 이전과 동일하게 유지) ... */}
+          {/* [수정] 누락되었던 입력 필드들을 다시 추가했습니다. */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                부양 가족 수 (본인포함)
+              </label>
+              <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                <button
+                  onClick={() => setDependents((p) => Math.max(1, p - 1))}
+                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                >
+                  -
+                </button>
+                <span className="font-bold text-lg text-light-text dark:text-dark-text">
+                  {dependents} 명
+                </span>
+                <button
+                  onClick={() => setDependents((p) => p + 1)}
+                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                20세 이하 자녀 수
+              </label>
+              <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                <button
+                  onClick={() => setChildren((p) => Math.max(0, p - 1))}
+                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                >
+                  -
+                </button>
+                <span className="font-bold text-lg text-light-text dark:text-dark-text">
+                  {children} 명
+                </span>
+                <button
+                  onClick={() => setChildren((p) => p + 1)}
+                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4">
+            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+              비과세액 (월 기준)
+            </label>
+            <div className="relative mt-1">
+              <input
+                type="text"
+                value={nonTaxableAmount}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/[^0-9]/g, "");
+                  setNonTaxableAmount(v ? formatNumber(Number(v)) : "");
+                }}
+                className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+              />
+              <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                원
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* [수정] 결과 카드에 그라데이션 및 새로운 스타일 적용 */}
       <div className="bg-gradient-to-br from-signature-blue to-blue-800 dark:from-gray-800 dark:to-gray-900 text-white p-6 rounded-xl flex flex-col h-full shadow-lg">
         <div className="flex-grow">
           <p className="font-semibold text-blue-200 dark:text-gray-400 text-sm">
