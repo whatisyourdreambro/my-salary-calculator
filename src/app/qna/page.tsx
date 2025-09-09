@@ -3,9 +3,9 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
+// Function to get all Q&A posts
 async function getQnAPosts() {
-  // [수정] content 폴더 경로를 src 안으로 변경합니다.
-  const postsDirectory = path.join(process.cwd(), "src/content");
+  const postsDirectory = path.join(process.cwd(), "content");
   const filenames = fs.readdirSync(postsDirectory);
 
   const posts = filenames.map((filename) => {

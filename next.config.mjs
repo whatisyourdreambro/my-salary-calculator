@@ -2,7 +2,7 @@ import nextMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // MDX 페이지를 사용하도록 설정
+  // Configure MDX to be treated as a page
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
