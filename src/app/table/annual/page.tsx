@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { Metadata } from "next";
 import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
 
-/* 페이지별 metadata는 검색엔진 최적화(SEO)에 매우 중요합니다.
-  하지만 'use client'를 사용하는 클라이언트 컴포넌트에서는 이 방식이 직접 지원되지 않습니다.
-  SEO를 더 강화하려면, 이 페이지들을 서버 컴포넌트로 분리하는 리팩토링이 필요하지만,
-  현재 기능에는 영향이 없으므로 일단 주석으로 남겨둡니다.
-*/
-// export const metadata: Metadata = {
-//   title: '2025년 연봉 실수령액표 (10만원 ~ 5억원)',
-//   description: '2025년 최신 기준 연봉 10만원부터 5억원까지의 구간별 세후 월급, 4대보험, 공제액을 상세히 확인하세요.',
-// };
+// [수정] 이 부분은 'use client' 컴포넌트에서는 직접 작동하지 않지만,
+// 향후 서버 컴포넌트로 전환할 때를 대비하여 남겨두거나,
+// useEffect를 사용한 동적 제목 설정의 기반이 됩니다.
+export const metadata: Metadata = {
+  // [수정] "1천만원" -> "10만원"으로 변경
+  title: "2025년 연봉 실수령액표 (10만원 ~ 5억원) | Moneysalary",
+  // [수정] description에도 변경사항 반영
+  description:
+    "2025년 최신 기준 연봉 10만원부터 5억원까지의 구간별 세후 월급, 4대보험, 공제액을 상세히 확인하세요. 연봉별 공제액 상세 정보 제공.",
+};
 
 const tableHeaders = [
   { key: "preTax", label: "세전 금액(원)" },
@@ -28,6 +29,10 @@ const tableHeaders = [
 ];
 
 export default function AnnualTablePage() {
+  useEffect(() => {
+    document.title = "2025년 연봉 실수령액표 (10만원 ~ 5억원) | Moneysalary";
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const allData = useMemo(() => generateAnnualSalaryTableData(), []);
 
