@@ -8,7 +8,8 @@ interface SalaryTableProps {
 
 export default function SalaryTable({ headers, data }: SalaryTableProps) {
   return (
-    <div className="max-h-[70vh] overflow-y-auto">
+    // [수정] 이 div에 overflow-x-auto 클래스를 추가하여 가로 스크롤을 활성화합니다.
+    <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
         <thead className="sticky top-0 bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
           <tr>
@@ -16,7 +17,7 @@ export default function SalaryTable({ headers, data }: SalaryTableProps) {
               <th
                 key={header.key as string}
                 scope="col"
-                className="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400"
+                className="px-6 py-4 text-left text-sm font-semibold text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 {header.label}
               </th>
@@ -25,7 +26,10 @@ export default function SalaryTable({ headers, data }: SalaryTableProps) {
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
           {data.map((row, index) => (
-            <tr key={index} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <tr
+              key={index}
+              className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+            >
               {headers.map((header) => (
                 <td
                   key={header.key as string}
