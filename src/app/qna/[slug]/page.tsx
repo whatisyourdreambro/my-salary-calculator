@@ -6,31 +6,32 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 interface Props {
-  params: {
-    slug: string;
-  };
+  params: { slug: string };
 }
 
+// Function to get the post data
 async function getPost(slug: string) {
   const markdownWithMeta = fs.readFileSync(
     path.join(process.cwd(), "content", `${slug}.mdx`),
     "utf-8"
   );
   const { data: frontMatter, content } = matter(markdownWithMeta);
-  return { frontMatter, content };
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPost(params.slug);
-  if (!post) {
-    return { title: "Not Found" };
-  }
   return {
-    title: `${post.frontMatter.title} | Moneysalary`,
-    description: post.frontMatter.description,
+    frontMatter: frontMatter as { title: string; description: string },
+    content,
   };
 }
 
+// Function to generate metadata dynamically
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { frontMatter } = await getPost(params.slug);
+  return {
+    title: `${frontMatter.title} | Moneysalary`,
+    description: frontMatter.description,
+  };
+}
+
+// Function to generate the static paths for all posts
 export async function generateStaticParams() {
   const files = fs.readdirSync(path.join(process.cwd(), "content"));
   return files.map((filename) => ({
@@ -38,6 +39,7 @@ export async function generateStaticParams() {
   }));
 }
 
+// The main page component
 export default async function QnAPostPage({ params }: Props) {
   const post = await getPost(params.slug);
 
@@ -52,7 +54,7 @@ export default async function QnAPostPage({ params }: Props) {
         <p className="lead text-lg text-gray-600 dark:text-gray-400 mt-2 mb-8">
           {post.frontMatter.description}
         </p>
-        {/* [수정] 불필요해진 @ts-expect-error 주석을 삭제했습니다. */}
+        {/* @ts-expect-error RSC Server Component compatibility issue */}
         <MDXRemote source={post.content} />
       </article>
     </main>

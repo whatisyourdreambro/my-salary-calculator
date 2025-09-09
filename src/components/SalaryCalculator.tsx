@@ -297,7 +297,7 @@ export default function SalaryCalculator() {
 
       <div
         ref={resultCardRef}
-        className="bg-gradient-to-br from-signature-blue to-blue-800 dark:bg-dark-card text-white dark:text-dark-text p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
+        className="bg-signature-blue dark:bg-dark-card text-white dark:text-dark-text p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
       >
         <div className="flex-grow">
           <p className="font-semibold text-blue-200 dark:text-dark-text-secondary text-sm">
@@ -322,7 +322,7 @@ export default function SalaryCalculator() {
                 <span className="text-blue-200 dark:text-dark-text-secondary">
                   {label}
                 </span>
-                <span className="text-white dark:text-dark-text font-medium">
+                <span className="text-white dark:text-dark-text font-bold">
                   {formatNumber(value)} 원
                 </span>
               </div>
