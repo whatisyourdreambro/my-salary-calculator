@@ -12,7 +12,7 @@ interface Props {
 // Function to get the post data
 async function getPost(slug: string) {
   const markdownWithMeta = fs.readFileSync(
-    path.join(process.cwd(), "content", `${slug}.mdx`),
+    path.join(process.cwd(), "content", "qna", `${slug}.mdx`),
     "utf-8"
   );
   const { data: frontMatter, content } = matter(markdownWithMeta);
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Function to generate the static paths for all posts
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), "content"));
+  const files = fs.readdirSync(path.join(process.cwd(), "content", "qna"));
   return files.map((filename) => ({
     slug: filename.replace(".mdx", ""),
   }));
