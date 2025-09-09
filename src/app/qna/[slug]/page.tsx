@@ -5,14 +5,14 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 
 // Define the type for the page's props
-interface Props {
+type Props = {
   params: { slug: string };
-}
+};
 
 // Function to get the post data
-async function getPost(params: { slug: string }) {
+async function getPost({ slug }: { slug: string }) {
   const markdownWithMeta = fs.readFileSync(
-    path.join(process.cwd(), "content", `${params.slug}.mdx`),
+    path.join(process.cwd(), "content/qna", `${slug}.mdx`),
     "utf-8"
   );
   const { data: frontMatter, content } = matter(markdownWithMeta);
@@ -30,13 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Function to generate the static paths for all posts
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), "content"));
+  const files = fs.readdirSync(path.join(process.cwd(), "content/qna"));
   return files.map((filename) => ({
     slug: filename.replace(".mdx", ""),
   }));
 }
 
-// The main page component with the correct props type
+// The main page component
 export default async function QnAPostPage({ params }: Props) {
   const { frontMatter, content } = await getPost(params);
 
@@ -48,7 +48,8 @@ export default async function QnAPostPage({ params }: Props) {
           {frontMatter.description}
         </p>
         {/*
-          The temporary error comment has been removed as the code is now fully compliant.
+          [수정] @ts-expect-error 주석을 삭제하고,
+          MDXRemote 컴포넌트를 올바르게 렌더링합니다.
         */}
         <MDXRemote source={content} />
       </article>
