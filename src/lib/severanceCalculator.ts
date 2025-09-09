@@ -15,7 +15,7 @@ function getDaysInLast3Months(endDate: string): number {
   const end = new Date(endDate);
   const threeMonthsBefore = new Date(end);
   threeMonthsBefore.setMonth(threeMonthsBefore.getMonth() - 3);
-  
+
   return (end.getTime() - threeMonthsBefore.getTime()) / (1000 * 60 * 60 * 24);
 }
 
@@ -42,24 +42,23 @@ export function calculateSeverancePay(
   const totalDaysOfEmployment = getTotalDays(startDate, endDate);
   // 1년 미만 근무 시 퇴직금 0원
   if (totalDaysOfEmployment < 365) {
-     return { averageDailyWage: 0, estimatedSeverancePay: 0 };
+    return { averageDailyWage: 0, estimatedSeverancePay: 0 };
   }
 
   const daysInLast3Months = getDaysInLast3Months(endDate);
-  
+
   // 3개월간 총 임금 = (월급*3) + (연간상여금*3/12) + (연차수당*3/12)
-  const totalWagesInLast3Months = 
-    (last3MonthsSalary * 3) + 
-    (annualBonus * 3 / 12) + 
-    (annualLeavePay * 3 / 12);
-    
+  const totalWagesInLast3Months =
+    last3MonthsSalary * 3 + (annualBonus * 3) / 12 + (annualLeavePay * 3) / 12;
+
   const averageDailyWage = totalWagesInLast3Months / daysInLast3Months;
 
   // 퇴직금 = 1일 평균임금 * 30일 * (재직일수 / 365)
-  const estimatedSeverancePay = averageDailyWage * 30 * (totalDaysOfEmployment / 365);
+  const estimatedSeverancePay =
+    averageDailyWage * 30 * (totalDaysOfEmployment / 365);
 
   return {
     averageDailyWage: Math.round(averageDailyWage),
-    estimatedSeverancePay: Math.round(estimatedSeverancePay)
+    estimatedSeverancePay: Math.round(estimatedSeverancePay),
   };
 }

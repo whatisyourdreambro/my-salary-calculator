@@ -67,9 +67,7 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      {/* [수정] 버튼 레이아웃을 flex에서 grid로 변경하여 완벽한 정렬을 구현합니다. */}
       <div className="mt-2 space-y-2">
-        {/* 첫 번째 줄: + 버튼 */}
         <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
             <button
@@ -81,7 +79,6 @@ export default function CurrencyInput({
             </button>
           ))}
         </div>
-        {/* 두 번째 줄: - 버튼 */}
         <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
             <button

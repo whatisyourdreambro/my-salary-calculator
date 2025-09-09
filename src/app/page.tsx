@@ -10,7 +10,8 @@ export default function HomePage() {
   return (
     <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        {/* [수정] 제목에 text-signature-blue 클래스를 추가했습니다. */}
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
           연봉 / 퇴직금 계산기
         </h1>
         <p className="mt-4 text-base lg:text-lg text-gray-600 dark:text-gray-400">

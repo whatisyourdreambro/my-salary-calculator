@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
 import { generateHourlyWageTableData } from "@/lib/generateData";
 
@@ -17,6 +17,10 @@ const tableHeaders = [
 ];
 
 export default function HourlyTablePage() {
+  useEffect(() => {
+    document.title = "시급 실수령액표 | Moneysalary";
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const allData = useMemo(() => generateHourlyWageTableData(), []);
 

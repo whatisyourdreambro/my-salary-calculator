@@ -1,20 +1,8 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import type { Metadata } from "next";
 import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
-
-// [수정] 이 부분은 'use client' 컴포넌트에서는 직접 작동하지 않지만,
-// 향후 서버 컴포넌트로 전환할 때를 대비하여 남겨두거나,
-// useEffect를 사용한 동적 제목 설정의 기반이 됩니다.
-export const metadata: Metadata = {
-  // [수정] "1천만원" -> "10만원"으로 변경
-  title: "2025년 연봉 실수령액표 (10만원 ~ 5억원) | Moneysalary",
-  // [수정] description에도 변경사항 반영
-  description:
-    "2025년 최신 기준 연봉 10만원부터 5억원까지의 구간별 세후 월급, 4대보험, 공제액을 상세히 확인하세요. 연봉별 공제액 상세 정보 제공.",
-};
 
 const tableHeaders = [
   { key: "preTax", label: "세전 금액(원)" },
@@ -30,7 +18,7 @@ const tableHeaders = [
 
 export default function AnnualTablePage() {
   useEffect(() => {
-    document.title = "2025년 연봉 실수령액표 (10만원 ~ 5억원) | Moneysalary";
+    document.title = "연봉 실수령액표 | Moneysalary";
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");

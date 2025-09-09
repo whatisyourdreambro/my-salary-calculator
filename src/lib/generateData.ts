@@ -1,8 +1,14 @@
-import { calculateNetSalary } from './calculator';
+import { calculateNetSalary } from "./calculator";
 
 export type SalaryData = {
-  preTax: number; monthlyNet: number; health: number; employment: number;
-  longTermCare: number; pension: number; incomeTax: number; localTax: number;
+  preTax: number;
+  monthlyNet: number;
+  health: number;
+  employment: number;
+  longTermCare: number;
+  pension: number;
+  incomeTax: number;
+  localTax: number;
   totalDeduction: number;
 };
 

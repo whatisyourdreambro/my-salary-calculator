@@ -20,8 +20,7 @@ const config: Config = {
         "dark-text": "#e9ecef",
         "dark-text-secondary": "#adb5bd",
 
-        // [수정] 요청하신 새로운 색상으로 교체합니다.
-        "signature-blue": "#1A66CC",
+        "signature-blue": "#007FFF",
         "brand-red": "#DA012D",
       },
     },
