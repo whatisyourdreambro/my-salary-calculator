@@ -1,70 +1,51 @@
-"use client";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
+// [수정] Props 타입을 명확하게 정의합니다.
+type Props = {
+  params: { slug: string };
+};
 
-export default function QnAPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+// Function to get the post data
+async function getPost(slug: string) {
+  const markdownWithMeta = fs.readFileSync(
+    path.join(process.cwd(), "content", "qna", `${slug}.mdx`),
+    "utf-8"
+  );
+  const { data: frontMatter, content } = matter(markdownWithMeta);
+  return {
+    frontMatter: frontMatter as { title: string; description: string },
+    content,
+  };
+}
 
-  const [post, setPost] = useState<{
-    frontMatter: { title: string; description: string };
-    content: MDXRemoteProps;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Function to generate metadata dynamically
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { frontMatter } = await getPost(params.slug);
+  return {
+    title: `${frontMatter.title} | Moneysalary`,
+    description: frontMatter.description,
+  };
+}
 
-  useEffect(() => {
-    if (!slug) return;
+// Function to generate the static paths for all posts
+export async function generateStaticParams() {
+  const files = fs.readdirSync(path.join(process.cwd(), "content", "qna"));
+  return files.map((filename) => ({
+    slug: filename.replace(".mdx", ""),
+  }));
+}
 
-    const fetchPost = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`/api/qna/${slug}`);
-        if (!res.ok) {
-          throw new Error("게시물을 불러오는데 실패했습니다.");
-        }
-        const data = await res.json();
-        setPost(data);
-      } catch (err: unknown) {
-        // [수정] any 대신 unknown 타입 사용
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("알 수 없는 오류가 발생했습니다.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPost();
-  }, [slug]);
-
-  if (isLoading) {
-    return (
-      <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div>Loading...</div>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div>오류: {error}</div>
-      </main>
-    );
-  }
+// The main page component
+export default async function QnAPostPage({ params }: Props) {
+  const post = await getPost(params.slug);
 
   if (!post) {
-    return (
-      <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div>게시물을 찾을 수 없습니다.</div>
-      </main>
-    );
+    notFound();
   }
 
   return (
@@ -75,8 +56,7 @@ export default function QnAPostPage() {
           {post.frontMatter.description}
         </p>
         {/* @ts-expect-error RSC Server Component compatibility issue */}
-        {/* [수정] @ts-ignore를 @ts-expect-error로 변경 */}
-        <MDXRemote {...post.content} />
+        <MDXRemote source={post.content} />
       </article>
     </main>
   );
