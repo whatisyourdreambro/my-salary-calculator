@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react"; // Add useMemo here
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import html2canvas from "html2canvas";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
@@ -17,6 +17,7 @@ export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
 
+  // [수정] useMemo를 사용해 렌더링 시마다 값이 새로 생성되는 것을 방지합니다.
   const today = useMemo(() => new Date(), []);
   const oneYearAgo = useMemo(() => {
     const date = new Date();

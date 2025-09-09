@@ -12,7 +12,7 @@ type Props = {
 // Function to get the post data
 async function getPost({ slug }: { slug: string }) {
   const markdownWithMeta = fs.readFileSync(
-    path.join("content/qna", `${slug}.mdx`),
+    path.join(process.cwd(), "content/qna", `${slug}.mdx`),
     "utf-8"
   );
   const { data: frontMatter, content } = matter(markdownWithMeta);
