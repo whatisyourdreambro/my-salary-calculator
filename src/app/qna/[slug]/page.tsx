@@ -1,9 +1,15 @@
+// src/app/qna/[slug]/page.tsx
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+// Props 타입을 함수 시그니처에 직접 정의
+type Props = {
+  params: { slug: string };
+};
 
 // Function to get the post data
 async function getPost(slug: string) {
