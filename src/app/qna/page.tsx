@@ -1,31 +1,36 @@
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 
-// Define a type for the post metadata
+// 포스트 메타데이터 타입을 정의합니다.
 interface PostMeta {
   slug: string;
   title: string;
   description: string;
 }
 
-// Function to get all Q&A posts metadata
+// qna 폴더 안의 게시글 폴더들을 읽어 메타데이터를 가져오는 함수
 async function getQnAPosts(): Promise<PostMeta[]> {
-  const postsDirectory = path.join(process.cwd(), "content/qna");
-  const filenames = fs.readdirSync(postsDirectory);
+  const qnaDirectory = path.join(process.cwd(), "src/app/qna");
 
-  const posts = filenames.map((filename) => {
-    const filePath = path.join(postsDirectory, filename);
-    const fileContents = fs.readFileSync(filePath, "utf-8");
-    const { data: frontMatter } = matter(fileContents);
+  const postSlugs = fs
+    .readdirSync(qnaDirectory, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
 
-    return {
-      slug: filename.replace(".mdx", ""),
-      title: frontMatter.title,
-      description: frontMatter.description,
-    };
-  });
+  const posts = await Promise.all(
+    postSlugs.map(async (slug) => {
+      // 각 page.mdx 파일에서 metadata를 동적으로 import 합니다.
+      const { metadata } = await import(`./${slug}/page.mdx`);
+      return {
+        slug: slug,
+        // metadata.title에서 사이트 이름 부분을 제거하여 순수 제목만 사용합니다.
+        title: (metadata.title || "").replace(" | Moneysalary", ""),
+        description: metadata.description || "",
+      };
+    })
+  );
+
   return posts;
 }
 
