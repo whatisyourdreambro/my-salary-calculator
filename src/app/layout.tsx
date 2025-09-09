@@ -27,12 +27,12 @@ export default function RootLayout({
       <head>
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" // 애드센스 ID로 교체 필요
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
       </head>
-      <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-200">
+      <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"

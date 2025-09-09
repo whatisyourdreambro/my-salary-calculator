@@ -6,3 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* 모든 요소에 부드러운 전환 효과를 기본으로 추가합니다. */
+* {
+  transition: color, background-color 0.2s ease-in-out;
+}
