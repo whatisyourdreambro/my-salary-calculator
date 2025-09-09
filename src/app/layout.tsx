@@ -25,11 +25,12 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
-        {/* [수정] 일반 <script>가 아닌 Next.js의 <Script> 컴포넌트를 사용하고, crossOrigin으로 수정합니다. */}
+        {/* [수정] 당신의 애드센스 코드를 Next.js의 Script 컴포넌트를 사용하여 삽입했습니다. */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
         ></Script>
       </head>
       <body className="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-200">
