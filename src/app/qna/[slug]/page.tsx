@@ -54,7 +54,7 @@ export default async function QnAPostPage({ params }: Props) {
         <p className="lead text-lg text-gray-600 dark:text-gray-400 mt-2 mb-8">
           {post.frontMatter.description}
         </p>
-        {/* @ts-expect-error RSC Server Component compatibility issue */}
+        {}
         <MDXRemote source={post.content} />
       </article>
     </main>
