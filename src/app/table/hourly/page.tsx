@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
-import { generateHourlyWageTableData } from "@/lib/generateData";
+import type { SalaryData } from "@/lib/generateData";
 
 const tableHeaders = [
   { key: "preTax", label: "세전 금액(원)" },
@@ -17,12 +17,27 @@ const tableHeaders = [
 ];
 
 export default function HourlyTablePage() {
+  const [allData, setAllData] = useState<SalaryData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     document.title = "시급 실수령액표 | Moneysalary";
-  }, []);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const allData = useMemo(() => generateHourlyWageTableData(), []);
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/salary-table?type=hourly");
+        const data = await res.json();
+        setAllData(data);
+      } catch (error) {
+        console.error("Failed to fetch salary data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -68,7 +83,11 @@ export default function HourlyTablePage() {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        {isLoading ? (
+          <div className="text-center p-10">데이터를 불러오는 중입니다...</div>
+        ) : (
+          <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        )}
       </div>
     </main>
   );

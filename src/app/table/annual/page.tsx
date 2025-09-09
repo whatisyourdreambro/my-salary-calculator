@@ -1,8 +1,10 @@
+// src/app/table/annual/page.tsx
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
-import { generateAnnualSalaryTableData } from "@/lib/generateData";
+import type { SalaryData } from "@/lib/generateData"; // 타입만 가져옵니다.
 
 const tableHeaders = [
   { key: "preTax", label: "세전 금액(원)" },
@@ -17,12 +19,28 @@ const tableHeaders = [
 ];
 
 export default function AnnualTablePage() {
+  const [allData, setAllData] = useState<SalaryData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     document.title = "연봉 실수령액표 | Moneysalary";
-  }, []);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const allData = useMemo(() => generateAnnualSalaryTableData(), []);
+    // API를 통해 데이터를 가져옵니다.
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/salary-table?type=annual");
+        const data = await res.json();
+        setAllData(data);
+      } catch (error) {
+        console.error("Failed to fetch salary data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -68,7 +86,11 @@ export default function AnnualTablePage() {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        {isLoading ? (
+          <div className="text-center p-10">데이터를 불러오는 중입니다...</div>
+        ) : (
+          <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        )}
       </div>
     </main>
   );
