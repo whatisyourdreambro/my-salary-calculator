@@ -2,9 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import SalaryCalculator from "@/components/SalaryCalculator";
-import SeveranceCalculator from "@/components/SeveranceCalculator";
-import FutureSalaryCalculator from "@/components/FutureSalaryCalculator";
+import dynamic from "next/dynamic";
+
+// 각 계산기를 Dynamic Import로 불러오고, ssr: false 옵션으로 서버 렌더링을 비활성화합니다.
+// 로딩 UI를 추가하여 사용자 경험을 개선합니다.
+const SalaryCalculator = dynamic(
+  () => import("@/components/SalaryCalculator"),
+  { ssr: false, loading: () => <p>연봉 계산기 로딩 중...</p> }
+);
+const SeveranceCalculator = dynamic(
+  () => import("@/components/SeveranceCalculator"),
+  { ssr: false, loading: () => <p>퇴직금 계산기 로딩 중...</p> }
+);
+const FutureSalaryCalculator = dynamic(
+  () => import("@/components/FutureSalaryCalculator"),
+  { ssr: false, loading: () => <p>미래 연봉 계산기 로딩 중...</p> }
+);
 
 export default function CalculatorTabs() {
   const searchParams = useSearchParams();
