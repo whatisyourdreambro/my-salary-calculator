@@ -4,14 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
+// [수정] 모든 href 값 끝에 있던 슬래시('/')를 제거합니다.
 const navLinks = [
   { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
-  { name: "연봉 표", longName: "연봉 표", href: "/table/annual/" },
-  { name: "월급 표", longName: "월급 표", href: "/table/monthly/" },
-  { name: "주급 표", longName: "주급 표", href: "/table/weekly/" },
-  { name: "시급 표", longName: "시급 표", href: "/table/hourly/" },
-  { name: "로또", longName: "로또 생성기", href: "/lotto/" },
-  { name: "Q&A", longName: "Q&A", href: "/qna/" }, // [신규] Q&A 메뉴 추가
+  { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
+  { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
+  { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
+  { name: "시급 표", longName: "시급 표", href: "/table/hourly" },
+  { name: "로또", longName: "로또 생성기", href: "/lotto" },
+  { name: "Q&A", longName: "Q&A", href: "/qna" },
 ];
 
 export default function Header() {
@@ -23,6 +24,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-1 sm:space-x-2">
             {navLinks.map((link) => {
+              // [수정] isActive 비교 시에도 슬래시를 고려하지 않도록 합니다.
+              // (trailingSlash가 없으면 pathname도 슬래시 없이 들어옵니다)
               const isActive = pathname === link.href;
               return (
                 <Link
