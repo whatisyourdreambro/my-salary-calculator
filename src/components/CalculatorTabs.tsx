@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import SalaryCalculator from "@/components/SalaryCalculator";
-import SeveranceCalculator from "@/components/SeveranceCalculator";
-import FutureSalaryCalculator from "@/components/FutureSalaryCalculator";
+import dynamic from "next/dynamic"; // next/dynamic을 import 합니다.
 
-// [수정] 이 줄에 export default를 추가했습니다.
+// 각 계산기 컴포넌트를 dynamic import로 불러옵니다.
+const SalaryCalculator = dynamic(() => import("@/components/SalaryCalculator"));
+const SeveranceCalculator = dynamic(
+  () => import("@/components/SeveranceCalculator")
+);
+const FutureSalaryCalculator = dynamic(
+  () => import("@/components/FutureSalaryCalculator")
+);
+
 export default function CalculatorTabs() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"salary" | "severance" | "future">(
@@ -27,6 +33,7 @@ export default function CalculatorTabs() {
   return (
     <div>
       <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800">
+        {/* 버튼 부분은 그대로 유지 */}
         <button
           onClick={() => setActiveTab("salary")}
           className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
@@ -60,6 +67,7 @@ export default function CalculatorTabs() {
       </div>
 
       <div>
+        {/* 탭에 따라 해당 컴포넌트를 렌더링하는 부분은 그대로 유지 */}
         {activeTab === "salary" && <SalaryCalculator />}
         {activeTab === "severance" && <SeveranceCalculator />}
         {activeTab === "future" && <FutureSalaryCalculator />}
