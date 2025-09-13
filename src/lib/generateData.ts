@@ -12,11 +12,11 @@ export type SalaryData = {
   totalDeduction: number;
 };
 
-// 데이터 생성 범위를 줄여 파일 크기를 최적화합니다.
+// 데이터 생성 범위를 대폭 줄여 파일 크기를 확실하게 최적화합니다.
 export function generateAnnualSalaryTableData(): SalaryData[] {
   const data: SalaryData[] = [];
-  // 2,400만원부터 1억원까지 100만원 단위로 생성
-  for (let salary = 24000000; salary <= 100000000; salary += 1000000) {
+  // 3,000만원부터 8,000만원까지 200만원 단위로 생성
+  for (let salary = 30000000; salary <= 80000000; salary += 2000000) {
     const results = calculateNetSalary(salary);
     data.push({ preTax: salary, ...results });
   }
@@ -25,8 +25,8 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
 
 export function generateMonthlySalaryTableData(): SalaryData[] {
   const data: SalaryData[] = [];
-  // 200만원부터 800만원까지 20만원 단위로 생성
-  for (let monthly = 2000000; monthly <= 8000000; monthly += 200000) {
+  // 250만원부터 600만원까지 50만원 단위로 생성
+  for (let monthly = 2500000; monthly <= 6000000; monthly += 500000) {
     const results = calculateNetSalary(monthly * 12);
     data.push({ preTax: monthly, ...results });
   }
@@ -35,8 +35,8 @@ export function generateMonthlySalaryTableData(): SalaryData[] {
 
 export function generateWeeklyPayTableData(): SalaryData[] {
   const data: SalaryData[] = [];
-  // 50만원부터 200만원까지 10만원 단위로 생성
-  for (let weekly = 500000; weekly <= 2000000; weekly += 100000) {
+  // 60만원부터 150만원까지 20만원 단위로 생성
+  for (let weekly = 600000; weekly <= 1500000; weekly += 200000) {
     const results = calculateNetSalary(weekly * 52);
     data.push({ preTax: weekly, ...results });
   }
@@ -45,8 +45,8 @@ export function generateWeeklyPayTableData(): SalaryData[] {
 
 export function generateHourlyWageTableData(): SalaryData[] {
   const data: SalaryData[] = [];
-  // 최저시급 근처부터 3만원까지 2,000원 단위로 생성
-  for (let hourly = 10000; hourly <= 30000; hourly += 2000) {
+  // 1만원부터 2만원까지 5,000원 단위로 생성
+  for (let hourly = 10000; hourly <= 20000; hourly += 5000) {
     const results = calculateNetSalary(hourly * 40 * 52);
     data.push({ preTax: hourly, ...results });
   }
