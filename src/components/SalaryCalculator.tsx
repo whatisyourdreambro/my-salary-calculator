@@ -31,6 +31,13 @@ export default function SalaryCalculator() {
     localTax: 0,
   });
 
+  // [수정] 급여 기준이 '월급'으로 변경되면, 퇴직금 옵션을 '별도'로 자동 변경합니다.
+  useEffect(() => {
+    if (payBasis === "monthly") {
+      setSeveranceType("separate");
+    }
+  }, [payBasis]);
+
   useEffect(() => {
     const data = searchParams.get("data");
     if (data) {
@@ -148,21 +155,23 @@ export default function SalaryCalculator() {
               <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setSeveranceType("separate")}
+                  disabled={payBasis === "monthly"} // [수정] 월급 기준일 때 비활성화
                   className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
                     severanceType === "separate"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
-                  }`}
+                  } ${payBasis === "monthly" ? "cursor-not-allowed" : ""}`}
                 >
                   별도
                 </button>
                 <button
                   onClick={() => setSeveranceType("included")}
+                  disabled={payBasis === "monthly"} // [수정] 월급 기준일 때 비활성화
                   className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
                     severanceType === "included"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
-                  }`}
+                  } ${payBasis === "monthly" ? "cursor-not-allowed" : ""}`}
                 >
                   포함
                 </button>
