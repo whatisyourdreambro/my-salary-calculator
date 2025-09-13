@@ -21,6 +21,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/guides/unemployment-benefits",
     "/guides/holiday-allowance",
     "/guides/severance-tax",
+    "/guides/four-major-insurances",
+    "/guides/year-end-tax-settlement",
+    "/guides/minimum-wage",
   ];
 
   return routes.map((route) => ({
