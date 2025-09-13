@@ -17,6 +17,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/qna/interim-severance-pay",
     "/qna/year-end-tax-preview",
     "/glossary",
+    "/guides",
+    "/guides/unemployment-benefits",
+    "/guides/holiday-allowance",
+    "/guides/severance-tax",
   ];
 
   return routes.map((route) => ({
