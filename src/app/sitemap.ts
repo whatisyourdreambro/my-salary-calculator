@@ -12,8 +12,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/table/hourly",
     "/lotto",
     "/qna",
+    "/qna/salary-allowance",
+    "/qna/health-insurance",
     "/qna/interim-severance-pay",
     "/qna/year-end-tax-preview",
+    "/glossary",
   ];
 
   return routes.map((route) => ({

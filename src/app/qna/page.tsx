@@ -2,10 +2,22 @@ import Link from "next/link";
 
 const posts = [
   {
+    slug: "salary-allowance",
+    title: "연봉에 포함되는 수당, 안되는 수당은?",
+    description:
+      "통상임금, 평균임금의 차이부터 비과세 수당까지, 내 연봉을 구성하는 각종 수당에 대해 자세히 알아보세요.",
+  },
+  {
+    slug: "health-insurance",
+    title: "건강보험료는 어떻게 결정되나요?",
+    description:
+      "매년 달라지는 건강보험료, 어떤 기준으로 부과되는지 직장가입자와 지역가입자의 차이점을 통해 명확하게 알려드립니다.",
+  },
+  {
     slug: "interim-severance-pay",
     title: "퇴직금 중간정산, 아무나 받을 수 있나요?",
     description:
-      "2012년 이후 원칙적으로 금지된 퇴직금 중간정산, 하지만 법에서 정한 예외적인 사유에 해당하면 가능합니다. 그 조건을 확인해보세요.",
+      "2012년 이후 원칙적으로 금지된 퇴직금 중간정산, 하지만 법에서 정한 예외적인 사유에 해당하면 가능합니다.",
   },
   {
     slug: "year-end-tax-preview",
@@ -13,7 +25,6 @@ const posts = [
     description:
       "2025년 연말정산, 미리 준비해서 13월의 월급을 놓치지 마세요. 핵심 공제 항목과 절세 팁을 알려드립니다.",
   },
-  // 새로운 Q&A 게시물이 생기면 이 배열에 추가하면 됩니다.
 ];
 
 export default async function QnAListPage() {

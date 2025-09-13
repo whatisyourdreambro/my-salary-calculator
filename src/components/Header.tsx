@@ -10,8 +10,9 @@ const navLinks = [
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
   { name: "시급 표", longName: "시급 표", href: "/table/hourly" },
-  { name: "로또", longName: "로또 생성기", href: "/lotto" },
+  { name: "용어 사전", longName: "용어 사전", href: "/glossary" },
   { name: "Q&A", longName: "Q&A", href: "/qna" },
+  { name: "로또", longName: "로또 생성기", href: "/lotto" },
 ];
 
 export default function Header() {
