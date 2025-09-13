@@ -31,10 +31,17 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
+        {/* 기존 Google AdSense 스크립트 */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        {/* [신규] 카카오 애드핏 필수 스크립트 */}
+        <Script
+          async
+          src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="afterInteractive"
         />
       </head>
