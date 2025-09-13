@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 현재 특별한 설정이 필요 없으므로 이 객체는 비어있는 것이 정상입니다.
+  // Cloudflare Pages와의 호환성을 높이기 위해 standalone 모드로 빌드합니다.
+  output: "standalone",
 };
 
 export default nextConfig;

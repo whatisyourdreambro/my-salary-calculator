@@ -9,14 +9,20 @@ function getTotalDays(startDate: string, endDate: string): number {
 }
 
 /**
- * 퇴사일 이전 3개월간의 총 일수를 계산합니다.
+ * [수정] 퇴사일 이전 3개월간의 달력상 총일수를 정확하게 계산합니다.
+ * 예: 5월 15일 퇴사 시 -> 2, 3, 4월의 총 일수 (28/29 + 31 + 30)
  */
 function getDaysInLast3Months(endDate: string): number {
   const end = new Date(endDate);
-  const threeMonthsBefore = new Date(end);
-  threeMonthsBefore.setMonth(threeMonthsBefore.getMonth() - 3);
+  let totalDays = 0;
 
-  return (end.getTime() - threeMonthsBefore.getTime()) / (1000 * 60 * 60 * 24);
+  // 퇴사일 기준 이전 3개월의 각 달의 마지막 날짜를 구해 총일수를 더합니다.
+  for (let i = 1; i <= 3; i++) {
+    const targetDate = new Date(end.getFullYear(), end.getMonth() - i + 1, 0);
+    totalDays += targetDate.getDate();
+  }
+
+  return totalDays;
 }
 
 /**
