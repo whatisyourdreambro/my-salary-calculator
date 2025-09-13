@@ -1,5 +1,3 @@
-// src/components/SalaryCalculator.tsx
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";

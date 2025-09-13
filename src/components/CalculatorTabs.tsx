@@ -1,91 +1,66 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
+import SalaryCalculator from "@/components/SalaryCalculator";
+import SeveranceCalculator from "@/components/SeveranceCalculator";
+import FutureSalaryCalculator from "@/components/FutureSalaryCalculator";
 
-// Define a simple loading component to show while the calculators are loading.
-const LoadingSpinner = () => (
-  <div className="flex justify-center items-center p-8">
-    <p className="text-gray-500 dark:text-gray-400">계산기를 불러오는 중...</p>
-  </div>
-);
+// 탭 종류를 상수로 정의하여 코드의 가독성과 유지보수성을 높입니다.
+const TABS = {
+  SALARY: "salary",
+  SEVERANCE: "severance",
+  FUTURE: "future",
+};
 
-// 1. Dynamically import each calculator component.
-// 2. Add `{ ssr: false }` to prevent them from being included in the server bundle.
-const SalaryCalculator = dynamic(
-  () => import("@/components/SalaryCalculator"),
-  { ssr: false }
-);
-const SeveranceCalculator = dynamic(
-  () => import("@/components/SeveranceCalculator"),
-  { ssr: false }
-);
-const FutureSalaryCalculator = dynamic(
-  () => import("@/components/FutureSalaryCalculator"),
-  { ssr: false }
-);
+type TabValue = (typeof TABS)[keyof typeof TABS];
 
 export default function CalculatorTabs() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<"salary" | "severance" | "future">(
-    "salary"
-  );
+  const [activeTab, setActiveTab] = useState<TabValue>(TABS.SALARY);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (tab === "severance") {
-      setActiveTab("severance");
-    } else if (tab === "future") {
-      setActiveTab("future");
+    if (tab === TABS.SEVERANCE || tab === TABS.FUTURE) {
+      setActiveTab(tab);
     } else {
-      setActiveTab("salary");
+      setActiveTab(TABS.SALARY);
     }
   }, [searchParams]);
+
+  const renderActiveCalculator = () => {
+    switch (activeTab) {
+      case TABS.SEVERANCE:
+        return <SeveranceCalculator />;
+      case TABS.FUTURE:
+        return <FutureSalaryCalculator />;
+      case TABS.SALARY:
+      default:
+        return <SalaryCalculator />;
+    }
+  };
 
   return (
     <div>
       <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800">
-        <button
-          onClick={() => setActiveTab("salary")}
-          className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
-            activeTab === "salary"
-              ? "border-b-2 border-signature-blue text-signature-blue"
-              : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-          }`}
-        >
-          연봉 계산기
-        </button>
-        <button
-          onClick={() => setActiveTab("severance")}
-          className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
-            activeTab === "severance"
-              ? "border-b-2 border-signature-blue text-signature-blue"
-              : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-          }`}
-        >
-          퇴직금 계산기
-        </button>
-        <button
-          onClick={() => setActiveTab("future")}
-          className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
-            activeTab === "future"
-              ? "border-b-2 border-signature-blue text-signature-blue"
-              : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-          }`}
-        >
-          미래 연봉
-        </button>
+        {(Object.values(TABS) as TabValue[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
+              activeTab === tab
+                ? "border-b-2 border-signature-blue text-signature-blue"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+            }`}
+          >
+            {tab === TABS.SALARY && "연봉 계산기"}
+            {tab === TABS.SEVERANCE && "퇴직금 계산기"}
+            {tab === TABS.FUTURE && "미래 연봉"}
+          </button>
+        ))}
       </div>
 
-      <div>
-        {/* Use Suspense to show a loading indicator while the component is being loaded */}
-        <Suspense fallback={<LoadingSpinner />}>
-          {activeTab === "salary" && <SalaryCalculator />}
-          {activeTab === "severance" && <SeveranceCalculator />}
-          {activeTab === "future" && <FutureSalaryCalculator />}
-        </Suspense>
-      </div>
+      <div>{renderActiveCalculator()}</div>
     </div>
   );
 }
