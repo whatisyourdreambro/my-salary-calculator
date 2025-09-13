@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
-import KakaoAdFit from "@/components/KakaoAdFit"; // 광고 컴포넌트 불러오기
 
 export default function HomePage() {
   return (
@@ -17,10 +16,9 @@ export default function HomePage() {
         <CalculatorTabs />
       </Suspense>
 
-      {/* [신규] 카카오 애드핏 광고 컴포넌트 삽입 */}
-      <div className="mt-8 flex justify-center">
-        <KakaoAdFit unit="DAN-4eRqZLQIGjrNcXj6" width="300" height="250" />
-      </div>
+      {/* 이전 단계에서 추가했던 개별 광고 코드는 삭제합니다.
+        광고는 이제 layout.tsx에서 모든 페이지에 공통으로 적용됩니다.
+      */}
     </main>
   );
 }
