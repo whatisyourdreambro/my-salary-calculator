@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
-// [수정] 모든 href 값 끝에 있던 슬래시('/')를 제거합니다.
+// [수정] 1. Q&A 메뉴 추가, 2. 모든 href 값 끝에 있던 슬래시('/') 제거
 const navLinks = [
   { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
@@ -24,8 +24,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-1 sm:space-x-2">
             {navLinks.map((link) => {
-              // [수정] isActive 비교 시에도 슬래시를 고려하지 않도록 합니다.
-              // (trailingSlash가 없으면 pathname도 슬래시 없이 들어옵니다)
+              // next.config.mjs에서 trailingSlash를 제거했으므로,
+              // pathname에는 더 이상 '/'가 붙지 않아 정확한 비교가 가능합니다.
               const isActive = pathname === link.href;
               return (
                 <Link

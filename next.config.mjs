@@ -1,19 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: "export" 설정을 제거하여 Next.js의 서버 기능을 활성화합니다.
-  // 이를 통해 동적 페이지 라우팅이 정상적으로 작동합니다.
-  // 향후 필요하다면 여기에 다른 Next.js 설정을 추가할 수 있습니다.
-  // 예: 이미지 최적화를 위한 remotePatterns 설정
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'example.com',
-  //       port: '',
-  //       pathname: '/images/**',
-  //     },
-  //   ],
-  // },
+  // 하위 페이지 404 오류를 해결하기 위해 trailingSlash 옵션을 사용하지 않습니다.
+  // 이 외에 다른 설정은 현재 필요하지 않습니다.
 };
 
 export default nextConfig;
