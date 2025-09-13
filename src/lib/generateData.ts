@@ -43,7 +43,7 @@ export function generateMonthlySalaryTableData(): SalaryData[] {
 export function generateWeeklyPayTableData(): SalaryData[] {
   const data: SalaryData[] = [];
   // 0원부터 2000만원까지 5만원 단위로 생성
-  for (let weekly = 0; weekly <= 20000000; weekly += 50000) {
+  for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
     const results = calculateNetSalary(weekly * 52);
     data.push({ preTax: weekly, ...results });
   }
@@ -54,7 +54,7 @@ export function generateWeeklyPayTableData(): SalaryData[] {
 export function generateHourlyWageTableData(): SalaryData[] {
   const data: SalaryData[] = [];
   // 0원부터 2000만원까지 5천원 단위로 생성
-  for (let hourly = 0; hourly <= 20000000; hourly += 5000) {
+  for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
     const results = calculateNetSalary(hourly * 40 * 52);
     data.push({ preTax: hourly, ...results });
   }
