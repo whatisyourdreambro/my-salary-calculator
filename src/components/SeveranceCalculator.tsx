@@ -4,13 +4,17 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
-import { ko } from "date-fns/locale";
-import { format } from "date-fns";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
+
+// Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 헬퍼 함수
+const toInputDateString = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
@@ -23,8 +27,12 @@ export default function SeveranceCalculator() {
     return date;
   }, []);
 
-  const [startDate, setStartDate] = useState<Date | undefined>(oneYearAgo);
-  const [endDate, setEndDate] = useState<Date | undefined>(today);
+  // 상태를 'YYYY-MM-DD' 문자열 형식으로 관리합니다.
+  const [startDate, setStartDate] = useState<string>(
+    toInputDateString(oneYearAgo)
+  );
+  const [endDate, setEndDate] = useState<string>(toInputDateString(today));
+
   const [monthlySalary, setMonthlySalary] = useState("");
   const [annualBonus, setAnnualBonus] = useState("");
   const [annualLeavePay, setAnnualLeavePay] = useState("");
@@ -32,12 +40,10 @@ export default function SeveranceCalculator() {
     averageDailyWage: 0,
     estimatedSeverancePay: 0,
   });
-  const [isStartCalendarOpen, setStartCalendarOpen] = useState(false);
-  const [isEndCalendarOpen, setEndCalendarOpen] = useState(false);
 
   const handleReset = useCallback(() => {
-    setStartDate(oneYearAgo);
-    setEndDate(today);
+    setStartDate(toInputDateString(oneYearAgo));
+    setEndDate(toInputDateString(today));
     setMonthlySalary("");
     setAnnualBonus("");
     setAnnualLeavePay("");
@@ -50,10 +56,14 @@ export default function SeveranceCalculator() {
       try {
         const decodedState = JSON.parse(atob(data));
         setStartDate(
-          decodedState.startDate ? new Date(decodedState.startDate) : oneYearAgo
+          decodedState.startDate
+            ? toInputDateString(new Date(decodedState.startDate))
+            : toInputDateString(oneYearAgo)
         );
         setEndDate(
-          decodedState.endDate ? new Date(decodedState.endDate) : today
+          decodedState.endDate
+            ? toInputDateString(new Date(decodedState.endDate))
+            : toInputDateString(today)
         );
         setMonthlySalary(decodedState.monthlySalary || "");
         setAnnualBonus(decodedState.annualBonus || "");
@@ -66,8 +76,8 @@ export default function SeveranceCalculator() {
 
   useEffect(() => {
     const newResult = calculateSeverancePay(
-      startDate ? format(startDate, "yyyy-MM-dd") : "",
-      endDate ? format(endDate, "yyyy-MM-dd") : "",
+      startDate,
+      endDate,
       parseNumber(monthlySalary),
       parseNumber(annualBonus),
       parseNumber(annualLeavePay)
@@ -77,8 +87,8 @@ export default function SeveranceCalculator() {
 
   const handleShareLink = () => {
     const stateToShare = {
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
+      startDate,
+      endDate,
       monthlySalary,
       annualBonus,
       annualLeavePay,
@@ -111,55 +121,35 @@ export default function SeveranceCalculator() {
             필수 입력
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div className="relative">
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+            <div>
+              <label
+                htmlFor="startDate"
+                className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary"
+              >
                 입사일
               </label>
-              <button
-                onClick={() => setStartCalendarOpen(!isStartCalendarOpen)}
-                className="w-full text-left mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
-              >
-                {startDate
-                  ? format(startDate, "PPP", { locale: ko })
-                  : "날짜 선택"}
-              </button>
-              {isStartCalendarOpen && (
-                <div className="absolute z-10 mt-2 bg-light-card dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
-                  <DayPicker
-                    mode="single"
-                    selected={startDate}
-                    onSelect={(date) => {
-                      setStartDate(date);
-                      setStartCalendarOpen(false);
-                    }}
-                    locale={ko}
-                  />
-                </div>
-              )}
+              <input
+                type="date"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+              />
             </div>
-            <div className="relative">
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+            <div>
+              <label
+                htmlFor="endDate"
+                className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary"
+              >
                 퇴사일 (마지막 근무일)
               </label>
-              <button
-                onClick={() => setEndCalendarOpen(!isEndCalendarOpen)}
-                className="w-full text-left mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
-              >
-                {endDate ? format(endDate, "PPP", { locale: ko }) : "날짜 선택"}
-              </button>
-              {isEndCalendarOpen && (
-                <div className="absolute z-10 mt-2 bg-light-card dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
-                  <DayPicker
-                    mode="single"
-                    selected={endDate}
-                    onSelect={(date) => {
-                      setEndDate(date);
-                      setEndCalendarOpen(false);
-                    }}
-                    locale={ko}
-                  />
-                </div>
-              )}
+              <input
+                type="date"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+              />
             </div>
           </div>
           <CurrencyInput
