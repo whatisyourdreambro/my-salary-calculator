@@ -1,22 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 
-// 각 계산기를 Dynamic Import로 불러오고, ssr: false 옵션으로 서버 렌더링을 비활성화합니다.
-// 로딩 UI를 추가하여 사용자 경험을 개선합니다.
+// Define a simple loading component to show while the calculators are loading.
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center p-8">
+    <p className="text-gray-500 dark:text-gray-400">계산기를 불러오는 중...</p>
+  </div>
+);
+
+// 1. Dynamically import each calculator component.
+// 2. Add `{ ssr: false }` to prevent them from being included in the server bundle.
 const SalaryCalculator = dynamic(
   () => import("@/components/SalaryCalculator"),
-  { ssr: false, loading: () => <p>연봉 계산기 로딩 중...</p> }
+  { ssr: false }
 );
 const SeveranceCalculator = dynamic(
   () => import("@/components/SeveranceCalculator"),
-  { ssr: false, loading: () => <p>퇴직금 계산기 로딩 중...</p> }
+  { ssr: false }
 );
 const FutureSalaryCalculator = dynamic(
   () => import("@/components/FutureSalaryCalculator"),
-  { ssr: false, loading: () => <p>미래 연봉 계산기 로딩 중...</p> }
+  { ssr: false }
 );
 
 export default function CalculatorTabs() {
@@ -72,9 +79,12 @@ export default function CalculatorTabs() {
       </div>
 
       <div>
-        {activeTab === "salary" && <SalaryCalculator />}
-        {activeTab === "severance" && <SeveranceCalculator />}
-        {activeTab === "future" && <FutureSalaryCalculator />}
+        {/* Use Suspense to show a loading indicator while the component is being loaded */}
+        <Suspense fallback={<LoadingSpinner />}>
+          {activeTab === "salary" && <SalaryCalculator />}
+          {activeTab === "severance" && <SeveranceCalculator />}
+          {activeTab === "future" && <FutureSalaryCalculator />}
+        </Suspense>
       </div>
     </div>
   );
