@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic"; // next/dynamic을 import 합니다.
+import dynamic from "next/dynamic";
 
-// 각 계산기 컴포넌트를 dynamic import로 불러옵니다.
-const SalaryCalculator = dynamic(() => import("@/components/SalaryCalculator"));
+// 각 계산기 컴포넌트를 dynamic import로 불러오면서, ssr: false 옵션을 추가합니다.
+const SalaryCalculator = dynamic(
+  () => import("@/components/SalaryCalculator"),
+  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
+);
 const SeveranceCalculator = dynamic(
-  () => import("@/components/SeveranceCalculator")
+  () => import("@/components/SeveranceCalculator"),
+  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
 );
 const FutureSalaryCalculator = dynamic(
-  () => import("@/components/FutureSalaryCalculator")
+  () => import("@/components/FutureSalaryCalculator"),
+  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
 );
 
 export default function CalculatorTabs() {
@@ -33,7 +38,7 @@ export default function CalculatorTabs() {
   return (
     <div>
       <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800">
-        {/* 버튼 부분은 그대로 유지 */}
+        {/* 버튼 부분은 수정할 필요 없습니다. */}
         <button
           onClick={() => setActiveTab("salary")}
           className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
@@ -67,7 +72,6 @@ export default function CalculatorTabs() {
       </div>
 
       <div>
-        {/* 탭에 따라 해당 컴포넌트를 렌더링하는 부분은 그대로 유지 */}
         {activeTab === "salary" && <SalaryCalculator />}
         {activeTab === "severance" && <SeveranceCalculator />}
         {activeTab === "future" && <FutureSalaryCalculator />}
