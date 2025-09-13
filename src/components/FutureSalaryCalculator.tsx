@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-// [수정] 사용하지 않는 FutureSalaryResult 타입을 import 목록에서 제거합니다.
 import { calculateFutureSalary } from "@/lib/futureCalculator";
 import CurrencyInput from "./CurrencyInput";
 

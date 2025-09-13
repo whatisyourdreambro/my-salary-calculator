@@ -2,21 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
-
-// 각 계산기 컴포넌트를 dynamic import로 불러오면서, ssr: false 옵션을 추가합니다.
-const SalaryCalculator = dynamic(
-  () => import("@/components/SalaryCalculator"),
-  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
-);
-const SeveranceCalculator = dynamic(
-  () => import("@/components/SeveranceCalculator"),
-  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
-);
-const FutureSalaryCalculator = dynamic(
-  () => import("@/components/FutureSalaryCalculator"),
-  { ssr: false, loading: () => <p>계산기를 불러오는 중...</p> } // 로딩 UI 추가
-);
+import SalaryCalculator from "@/components/SalaryCalculator";
+import SeveranceCalculator from "@/components/SeveranceCalculator";
+import FutureSalaryCalculator from "@/components/FutureSalaryCalculator";
 
 export default function CalculatorTabs() {
   const searchParams = useSearchParams();
@@ -38,7 +26,6 @@ export default function CalculatorTabs() {
   return (
     <div>
       <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800">
-        {/* 버튼 부분은 수정할 필요 없습니다. */}
         <button
           onClick={() => setActiveTab("salary")}
           className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
