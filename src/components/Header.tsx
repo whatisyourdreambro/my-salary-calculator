@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
-// [최종 수정] "Q&A" 링크가 포함된 최종 메뉴 목록입니다.
 const navLinks = [
   { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },

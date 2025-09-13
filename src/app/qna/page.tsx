@@ -13,6 +13,7 @@ const posts = [
     description:
       "2025년 연말정산, 미리 준비해서 13월의 월급을 놓치지 마세요. 핵심 공제 항목과 절세 팁을 알려드립니다.",
   },
+  // 새로운 Q&A 게시물이 생기면 이 배열에 추가하면 됩니다.
 ];
 
 export default async function QnAListPage() {
