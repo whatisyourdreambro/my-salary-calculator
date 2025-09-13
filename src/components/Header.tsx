@@ -6,11 +6,12 @@ import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
-  { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
-  { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
-  { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
-  { name: "시급 표", longName: "시급 표", href: "/table/hourly" },
-  { name: "로또", longName: "로또 생성기", href: "/lotto" }, // [신규] 로또 생성기 메뉴 추가
+  { name: "연봉 표", longName: "연봉 표", href: "/table/annual/" },
+  { name: "월급 표", longName: "월급 표", href: "/table/monthly/" },
+  { name: "주급 표", longName: "주급 표", href: "/table/weekly/" },
+  { name: "시급 표", longName: "시급 표", href: "/table/hourly/" },
+  { name: "로또", longName: "로또 생성기", href: "/lotto/" },
+  { name: "Q&A", longName: "Q&A", href: "/qna/" }, // [신규] Q&A 메뉴 추가
 ];
 
 export default function Header() {

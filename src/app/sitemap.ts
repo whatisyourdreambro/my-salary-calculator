@@ -4,11 +4,21 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.moneysalary.com";
 
-  return [
-    { url: `${baseUrl}/`, lastModified: new Date() },
-    { url: `${baseUrl}/table/annual`, lastModified: new Date() },
-    { url: `${baseUrl}/table/monthly`, lastModified: new Date() },
-    { url: `${baseUrl}/table/weekly`, lastModified: new Date() },
-    { url: `${baseUrl}/table/hourly`, lastModified: new Date() },
+  // 페이지 경로를 배열로 관리하여 유지보수 용이성을 높입니다.
+  const routes = [
+    "/",
+    "/table/annual",
+    "/table/monthly",
+    "/table/weekly",
+    "/table/hourly",
+    "/lotto",
+    "/qna",
+    "/qna/interim-severance-pay",
+    "/qna/year-end-tax-preview",
   ];
+
+  return routes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+  }));
 }
