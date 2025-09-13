@@ -4,10 +4,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import html2canvas from "html2canvas";
 import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
-import DeductionPieChart from "./DeductionPieChart";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -86,32 +84,6 @@ export default function SalaryCalculator() {
     setDependents(1);
     setChildren(0);
     setOvertimePay("");
-  };
-
-  const handleCapture = async () => {
-    const element = resultCardRef.current;
-    if (!element) return;
-
-    const watermark = document.createElement("div");
-    watermark.innerText = "https://www.moneysalary.com";
-    watermark.style.position = "absolute";
-    watermark.style.bottom = "10px";
-    watermark.style.right = "10px";
-    watermark.style.color = "rgba(255, 255, 255, 0.5)";
-    watermark.style.fontSize = "12px";
-    watermark.style.fontFamily = "sans-serif";
-    element.appendChild(watermark);
-
-    const canvas = await html2canvas(element, {
-      backgroundColor: null,
-      useCORS: true,
-    });
-    element.removeChild(watermark);
-
-    const link = document.createElement("a");
-    link.download = "salary_result.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
   };
 
   const handleShareLink = () => {
@@ -308,9 +280,6 @@ export default function SalaryCalculator() {
           <p className="text-4xl sm:text-5xl font-bold my-2 text-white dark:text-dark-text">
             {formatNumber(result.monthlyNet)} 원
           </p>
-          <div className="mt-4 max-h-48">
-            <DeductionPieChart data={result} />
-          </div>
           <div className="mt-6 pt-6 border-t border-white/20 dark:border-gray-700 space-y-3 text-sm">
             {Object.entries({
               국민연금: result.pension,
@@ -335,13 +304,7 @@ export default function SalaryCalculator() {
             <span>{formatNumber(result.totalDeduction)} 원</span>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <button
-            onClick={handleCapture}
-            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
-          >
-            캡쳐하기
-          </button>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={handleShareLink}
             className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"

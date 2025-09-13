@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import html2canvas from "html2canvas";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
 import { DayPicker } from "react-day-picker";
@@ -17,7 +16,6 @@ export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
 
-  // [수정] useMemo를 사용해 렌더링 시마다 값이 새로 생성되는 것을 방지합니다.
   const today = useMemo(() => new Date(), []);
   const oneYearAgo = useMemo(() => {
     const date = new Date();
@@ -76,32 +74,6 @@ export default function SeveranceCalculator() {
     );
     setResult(newResult);
   }, [startDate, endDate, monthlySalary, annualBonus, annualLeavePay]);
-
-  const handleCapture = async () => {
-    const element = resultCardRef.current;
-    if (!element) return;
-
-    const watermark = document.createElement("div");
-    watermark.innerText = "https://www.moneysalary.com";
-    watermark.style.position = "absolute";
-    watermark.style.bottom = "10px";
-    watermark.style.right = "10px";
-    watermark.style.color = "rgba(255, 255, 255, 0.5)";
-    watermark.style.fontSize = "12px";
-    watermark.style.fontFamily = "sans-serif";
-    element.appendChild(watermark);
-
-    const canvas = await html2canvas(element, {
-      backgroundColor: null,
-      useCORS: true,
-    });
-    element.removeChild(watermark);
-
-    const link = document.createElement("a");
-    link.download = "severance_pay_result.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  };
 
   const handleShareLink = () => {
     const stateToShare = {
@@ -258,13 +230,7 @@ export default function SeveranceCalculator() {
             </span>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <button
-            onClick={handleCapture}
-            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
-          >
-            캡쳐하기
-          </button>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={handleShareLink}
             className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
