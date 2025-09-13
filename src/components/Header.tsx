@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
+// [수정] 누락되었던 "Q&A" 링크를 navLinks 배열에 추가합니다.
 const navLinks = [
-  { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
+  { name: "계산기", longName: "연봉/퇴직금/미래연봉 계산기", href: "/" },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
