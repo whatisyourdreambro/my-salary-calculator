@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "연말정산 A to Z: 13월의 월급, 제대로 챙기는 법 | Moneysalary",
+  description:
+    "소득공제와 세액공제의 차이점부터 놓치기 쉬운 핵심 공제 항목까지, 연말정산의 모든 것을 알려드립니다.",
+};
 
 export default function YearEndTaxSettlementPage() {
   return (
@@ -14,15 +21,15 @@ export default function YearEndTaxSettlementPage() {
         </div>
 
         <p className="lead">
-          13월의 월급이라고 불리는 연말정산, 하지만 제대로 준비하지 않으면
-          13월의 세금폭탄이 될 수도 있습니다. 연말정산은 지난 1년 동안 월급에서
-          원천징수된 세금이 내가 실제로 내야 할 세금보다 많은지, 적은지를
-          따져보고 정산하는 과정입니다. 복잡해 보이지만, 핵심적인 공제 항목만 잘
-          챙겨도 훌륭한 절세가 가능합니다.
+          -13월의 월급-이라고 불리는 연말정산, 하지만 제대로 준비하지 않으면
+          -13월의 세금폭탄-이 될 수도 있습니다. 연말정산은 지난 1년 동안
+          월급에서 원천징수된 세금이 내가 실제로 내야 할 세금보다 많은지,
+          적은지를 따져보고 정산하는 과정입니다. 복잡해 보이지만, 핵심적인 공제
+          항목만 잘 챙겨도 훌륭한 절세가 가능합니다.
         </p>
 
         <h2>1. 연말정산의 기본 구조: 소득공제 vs 세액공제</h2>
-        <p>연말정산은 크게 소득공제와 세액공제 두 단계로 이루어집니다.</p>
+        <p>연말정산은 크게 -소득공제-와 -세액공제- 두 단계로 이루어집니다.</p>
         <ul>
           <li>
             <strong>소득공제:</strong> 세금을 매기는 기준이 되는 금액 자체를
@@ -30,9 +37,9 @@ export default function YearEndTaxSettlementPage() {
             높을수록 절세 효과가 큽니다.
           </li>
           <li>
-            <strong>세액공제:</strong> 소득공제를 거쳐 계산된 산출세액에서 세금
-            자체를 직접 깎아주는 것입니다. (예: 자녀 세액공제, 월세 세액공제).
-            소득 수준과 관계없이 공제액이 일정합니다.
+            <strong>세액공제:</strong> 소득공제를 거쳐 계산된 -산출세액-에서
+            세금 자체를 직접 깎아주는 것입니다. (예: 자녀 세액공제, 월세
+            세액공제). 소득 수준과 관계없이 공제액이 일정합니다.
           </li>
         </ul>
 
@@ -71,3 +78,6 @@ export default function YearEndTaxSettlementPage() {
     </main>
   );
 }
+
+// 이 파일이 모듈임을 명시적으로 선언하여 오류를 해결합니다.
+export {};
