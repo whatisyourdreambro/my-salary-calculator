@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 하위 페이지 404 오류를 해결하기 위해 trailingSlash 옵션을 사용하지 않습니다.
-  // 이 외에 다른 설정은 현재 필요하지 않습니다.
+  // 현재 특별한 설정이 필요 없으므로 이 객체는 비어있는 것이 정상입니다.
 };
 
 export default nextConfig;
