@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
+import SalaryRank from "@/components/SalaryRank"; // 👈 이 줄을 추가하세요.
 
 export default function HomePage() {
   return (
@@ -16,9 +17,8 @@ export default function HomePage() {
         <CalculatorTabs />
       </Suspense>
 
-      {/* 이전 단계에서 추가했던 개별 광고 코드는 삭제합니다.
-        광고는 이제 layout.tsx에서 모든 페이지에 공통으로 적용됩니다.
-      */}
+      {/* 👇 기존 코드 아래에 이 부분을 추가하세요. */}
+      <SalaryRank />
     </main>
   );
 }
