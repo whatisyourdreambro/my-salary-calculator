@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef } from "react";
 import CurrencyInput from "./CurrencyInput";
 import html2canvas from "html2canvas";
+import Link from "next/link"; // Link 컴포넌트를 사용하기 위해 import 합니다.
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -218,7 +219,9 @@ export default function SalaryRank() {
     median: number;
     average: number;
     condition: string;
+    recommendedGuides: { title: string; href: string }[];
   } | null>(null);
+
   const resultCardRef = useRef<HTMLDivElement>(null);
 
   const annualSalary = useMemo(
@@ -268,7 +271,49 @@ export default function SalaryRank() {
             regionMap[region],
           ].join("/");
 
-    setResult({ rank, median, average, condition: conditionText });
+    const recommendedGuides = [];
+    if (annualSalary > 0 && annualSalary < 40000000) {
+      recommendedGuides.push(
+        {
+          title: "실업급여 조건, A부터 Z까지 완벽 정리",
+          href: "/guides/unemployment-benefits",
+        },
+        {
+          title: "2025년 최저임금 완벽정리 (시급, 월급, 연봉)",
+          href: "/guides/minimum-wage",
+        }
+      );
+    } else if (annualSalary >= 70000000) {
+      recommendedGuides.push(
+        {
+          title: "4대 보험 완벽 정리: 국민연금, 건강보험 등",
+          href: "/guides/four-major-insurances",
+        },
+        {
+          title: "퇴직금 세금 계산, 복잡한 과정 한 번에 이해하기",
+          href: "/guides/severance-tax",
+        }
+      );
+    } else {
+      recommendedGuides.push(
+        {
+          title: "연말정산 A to Z: 13월의 월급, 제대로 챙기는 법",
+          href: "/guides/year-end-tax-settlement",
+        },
+        {
+          title: "주휴수당 계산법 및 지급 조건 완벽 가이드",
+          href: "/guides/holiday-allowance",
+        }
+      );
+    }
+
+    setResult({
+      rank,
+      median,
+      average,
+      condition: conditionText,
+      recommendedGuides,
+    });
   };
 
   const handleCapture = () => {
@@ -407,64 +452,91 @@ export default function SalaryRank() {
       </div>
 
       {result && (
-        <div
-          ref={resultCardRef}
-          className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative transition-all duration-500"
-        >
-          {/* --- 수정: 템플릿 리터럴(``)을 사용하여 문자열과 변수를 조합 --- */}
-          <p className="text-center font-semibold text-blue-200">
-            {`"${result.condition}" 그룹 내 연봉 리포트`}
-          </p>
-          <div className="grid grid-cols-3 gap-4 text-center my-6">
-            <div>
-              <p className="text-sm text-blue-200 opacity-80">내 순위</p>
-              <p className="text-2xl lg:text-3xl font-bold">
-                상위 {result.rank ?? "N/A"}%
-              </p>
+        <>
+          <div
+            ref={resultCardRef}
+            className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative transition-all duration-500"
+          >
+            <p className="text-center font-semibold text-blue-200">
+              {`"${result.condition}" 그룹 내 연봉 리포트`}
+            </p>
+            <div className="grid grid-cols-3 gap-4 text-center my-6">
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">내 순위</p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  상위 {result.rank ?? "N/A"}%
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">
+                  그룹 중위연봉
+                </p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  {formatNumber(result.median / 10000)}
+                  <span className="text-lg">만원</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">
+                  그룹 평균연봉
+                </p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  {formatNumber(result.average / 10000)}
+                  <span className="text-lg">만원</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-blue-200 opacity-80">그룹 중위연봉</p>
-              <p className="text-2xl lg:text-3xl font-bold">
-                {formatNumber(result.median / 10000)}
-                <span className="text-lg">만원</span>
-              </p>
+            <div className="w-full bg-blue-400/50 rounded-full h-3 mt-6 relative">
+              <div
+                className="bg-white h-3 rounded-full transition-all duration-1000"
+                style={{ width: `${100 - (result.rank ?? 100)}%` }}
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-4 border-signature-blue"
+                style={{ left: `${100 - (result.rank ?? 100)}%` }}
+              />
             </div>
-            <div>
-              <p className="text-sm text-blue-200 opacity-80">그룹 평균연봉</p>
-              <p className="text-2xl lg:text-3xl font-bold">
-                {formatNumber(result.average / 10000)}
-                <span className="text-lg">만원</span>
-              </p>
+            <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
+              * 정부 공인 데이터를 기반으로 한 추정치입니다.
+            </p>
+            <div className="flex gap-2 mt-8">
+              <button
+                onClick={handleShare}
+                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
+              >
+                공유하기
+              </button>
+              <button
+                onClick={handleCapture}
+                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
+              >
+                이미지 저장
+              </button>
             </div>
           </div>
-          <div className="w-full bg-blue-400/50 rounded-full h-3 mt-6 relative">
-            <div
-              className="bg-white h-3 rounded-full transition-all duration-1000"
-              style={{ width: `${100 - (result.rank ?? 100)}%` }}
-            />
-            <div
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-4 border-signature-blue"
-              style={{ left: `${100 - (result.rank ?? 100)}%` }}
-            />
+
+          <div className="mt-8">
+            <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-4">
+              {`'${result.condition}' 그룹을 위한 맞춤 가이드`}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {result.recommendedGuides.map((guide) => (
+                <Link
+                  key={guide.href}
+                  href={guide.href}
+                  className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-gray-50 dark:bg-gray-800/50 dark:border-gray-700"
+                >
+                  <p className="font-semibold text-signature-blue">
+                    {guide.title}
+                  </p>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                    자세히 보기 →
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
-          <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
-            * 정부 공인 데이터를 기반으로 한 추정치입니다.
-          </p>
-          <div className="flex gap-2 mt-8">
-            <button
-              onClick={handleShare}
-              className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
-            >
-              공유하기
-            </button>
-            <button
-              onClick={handleCapture}
-              className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
-            >
-              이미지 저장
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
