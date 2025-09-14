@@ -1,20 +1,20 @@
+export interface SalaryEvent {
+  yearIndex: number; // 0은 1년차, 1은 2년차...
+  type: "promotion" | "job_change";
+  value: number; // promotion: 추가 상승률(%), job_change: 새로운 연봉
+}
+
 export interface FutureSalaryResult {
   year: number;
   salary: number;
   increaseAmount: number;
 }
 
-/**
- * 미래 연봉을 계산합니다.
- * @param currentSalary 현재 연봉
- * @param years 예상 기간 (년)
- * @param rates 상승률 배열 (평균 상승률일 경우 [0.05], 개별일 경우 [0.05, 0.06, ...])
- * @returns 연도별 예상 연봉 결과 배열
- */
 export function calculateFutureSalary(
   currentSalary: number,
   years: number,
-  rates: number[]
+  baseRate: number,
+  events: SalaryEvent[]
 ): FutureSalaryResult[] {
   if (currentSalary <= 0 || years <= 0) {
     return [];
@@ -25,9 +25,21 @@ export function calculateFutureSalary(
   const currentYear = new Date().getFullYear();
 
   for (let i = 0; i < years; i++) {
-    // 개별 상승률이 부족할 경우, 마지막 상승률을 계속 사용
-    const rate = (rates[i] ?? rates[rates.length - 1]) / 100;
-    const newSalary = previousSalary * (1 + rate);
+    // 기본 상승률을 먼저 적용합니다.
+    let newSalary = previousSalary * (1 + baseRate / 100);
+
+    // 현재 연차에 이벤트가 있는지 확인합니다.
+    const event = events.find((e) => e.yearIndex === i);
+
+    if (event) {
+      if (event.type === "promotion") {
+        // 승진: 기본 상승된 연봉에 추가 상승률을 적용합니다.
+        newSalary = newSalary * (1 + event.value / 100);
+      } else if (event.type === "job_change") {
+        // 이직: 연봉을 이벤트 값으로 완전히 대체합니다.
+        newSalary = event.value;
+      }
+    }
 
     results.push({
       year: currentYear + i + 1,

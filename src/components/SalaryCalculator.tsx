@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { calculateNetSalary } from "@/lib/calculator";
+import { calculateNetSalary, AdvancedSettings } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
+import CountUp from "react-countup";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
+
+// --- 수정된 부분: result의 타입을 명확히 정의 ---
+type CalculationResult = ReturnType<typeof calculateNetSalary>;
 
 export default function SalaryCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
@@ -20,7 +24,18 @@ export default function SalaryCalculator() {
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
   const [overtimePay, setOvertimePay] = useState("");
-  const [result, setResult] = useState({
+
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
+    isSmeYouth: false,
+    disabledDependents: 0,
+    seniorDependents: 0,
+  });
+  const [taxSavingTip, setTaxSavingTip] = useState("");
+  // --- 수정된 부분: useRef의 타입을 명확히 지정하여 'any' 오류 해결 ---
+  const prevResultRef = useRef<CalculationResult | null>(null);
+
+  const [result, setResult] = useState<CalculationResult>({
     monthlyNet: 0,
     totalDeduction: 0,
     pension: 0,
@@ -31,31 +46,7 @@ export default function SalaryCalculator() {
     localTax: 0,
   });
 
-  // [수정] 급여 기준이 '월급'으로 변경되면, 퇴직금 옵션을 '별도'로 자동 변경합니다.
-  useEffect(() => {
-    if (payBasis === "monthly") {
-      setSeveranceType("separate");
-    }
-  }, [payBasis]);
-
-  useEffect(() => {
-    const data = searchParams.get("data");
-    if (data) {
-      try {
-        const decodedState = JSON.parse(atob(data));
-        setPayBasis(decodedState.payBasis || "annual");
-        setSeveranceType(decodedState.severanceType || "separate");
-        setSalaryInput(decodedState.salaryInput || "");
-        setNonTaxableAmount(decodedState.nonTaxableAmount || "200,000");
-        setDependents(decodedState.dependents || 1);
-        setChildren(decodedState.children || 0);
-      } catch (error) {
-        console.error("Failed to parse shared data:", error);
-      }
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
+  const runCalculation = useCallback(() => {
     const salary = parseNumber(salaryInput);
     const nonTaxable = parseNumber(nonTaxableAmount) * 12;
     let annualSalary = payBasis === "annual" ? salary : salary * 12;
@@ -68,8 +59,11 @@ export default function SalaryCalculator() {
       nonTaxable,
       dependents,
       children,
-      annualOvertime
+      annualOvertime,
+      advancedSettings
     );
+
+    prevResultRef.current = result;
     setResult(newResult);
   }, [
     payBasis,
@@ -79,7 +73,83 @@ export default function SalaryCalculator() {
     dependents,
     children,
     overtimePay,
+    advancedSettings,
+    result,
   ]);
+
+  useEffect(() => {
+    const data = searchParams.get("data");
+    if (data) {
+      try {
+        const decodedState = JSON.parse(atob(data));
+        setPayBasis(decodedState.payBasis || "annual");
+        setSeveranceType(decodedState.severanceType || "separate");
+        setSalaryInput(decodedState.salaryInput || "");
+        setNonTaxableAmount(decodedState.nonTaxableAmount || "200,000");
+        setDependents(decodedState.dependents || 1);
+        setChildren(decodedState.children || 0);
+        setOvertimePay(decodedState.overtimePay || "");
+      } catch (error) {
+        console.error("Failed to parse shared data:", error);
+      }
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    runCalculation();
+  }, [runCalculation]);
+
+  useEffect(() => {
+    if (payBasis === "monthly") {
+      setSeveranceType("separate");
+    }
+  }, [payBasis]);
+
+  const handleDependentChange = (
+    field: "dependents" | "children",
+    delta: number
+  ) => {
+    const currentVal = field === "dependents" ? dependents : children;
+    const newVal = Math.max(field === "dependents" ? 1 : 0, currentVal + delta);
+
+    const salary = parseNumber(salaryInput);
+    let annualSalary = payBasis === "annual" ? salary : salary * 12;
+    if (severanceType === "included") annualSalary = (annualSalary / 13) * 12;
+    const annualOvertime = parseNumber(overtimePay);
+    const nonTaxable = parseNumber(nonTaxableAmount) * 12;
+
+    const currentResult = calculateNetSalary(
+      annualSalary,
+      nonTaxable,
+      dependents,
+      children,
+      annualOvertime,
+      advancedSettings
+    );
+    const newResult = calculateNetSalary(
+      annualSalary,
+      nonTaxable,
+      field === "dependents" ? newVal : dependents,
+      field === "children" ? newVal : children,
+      annualOvertime,
+      advancedSettings
+    );
+
+    const taxDiff = Math.round(
+      (currentResult.incomeTax - newResult.incomeTax) * 12
+    );
+
+    if (delta > 0 && taxDiff > 0) {
+      const tip = `${
+        field === "children" ? "자녀" : "부양가족"
+      } 추가로 연간 약 ${formatNumber(taxDiff)}원 절세 효과가 있어요!`;
+      setTaxSavingTip(tip);
+      setTimeout(() => setTaxSavingTip(""), 4000);
+    }
+
+    if (field === "dependents") setDependents(newVal);
+    else setChildren(newVal);
+  };
 
   const handleReset = () => {
     setPayBasis("annual");
@@ -89,6 +159,12 @@ export default function SalaryCalculator() {
     setDependents(1);
     setChildren(0);
     setOvertimePay("");
+    setAdvancedSettings({
+      isSmeYouth: false,
+      disabledDependents: 0,
+      seniorDependents: 0,
+    });
+    setShowAdvanced(false);
   };
 
   const handleShareLink = () => {
@@ -100,16 +176,13 @@ export default function SalaryCalculator() {
       dependents,
       children,
       overtimePay,
+      advancedSettings,
     };
     const encodedState = btoa(JSON.stringify(stateToShare));
     const shareUrl = `${window.location.origin}/?tab=salary&data=${encodedState}`;
     navigator.clipboard.writeText(shareUrl).then(
-      () => {
-        alert("결과가 포함된 링크가 클립보드에 복사되었습니다.");
-      },
-      () => {
-        alert("링크 복사에 실패했습니다.");
-      }
+      () => alert("결과가 포함된 링크가 클립보드에 복사되었습니다."),
+      () => alert("링크 복사에 실패했습니다.")
     );
   };
 
@@ -155,23 +228,31 @@ export default function SalaryCalculator() {
               <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setSeveranceType("separate")}
-                  disabled={payBasis === "monthly"} // [수정] 월급 기준일 때 비활성화
+                  disabled={payBasis === "monthly"}
                   className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
                     severanceType === "separate"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
-                  } ${payBasis === "monthly" ? "cursor-not-allowed" : ""}`}
+                  } ${
+                    payBasis === "monthly"
+                      ? "cursor-not-allowed opacity-50"
+                      : ""
+                  }`}
                 >
                   별도
                 </button>
                 <button
                   onClick={() => setSeveranceType("included")}
-                  disabled={payBasis === "monthly"} // [수정] 월급 기준일 때 비활성화
+                  disabled={payBasis === "monthly"}
                   className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
                     severanceType === "included"
                       ? "bg-white dark:bg-gray-700 shadow-sm"
                       : "text-gray-500 dark:text-gray-400"
-                  } ${payBasis === "monthly" ? "cursor-not-allowed" : ""}`}
+                  } ${
+                    payBasis === "monthly"
+                      ? "cursor-not-allowed opacity-50"
+                      : ""
+                  }`}
                 >
                   포함
                 </button>
@@ -196,7 +277,7 @@ export default function SalaryCalculator() {
               </label>
               <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
                 <button
-                  onClick={() => setDependents((p) => Math.max(1, p - 1))}
+                  onClick={() => handleDependentChange("dependents", -1)}
                   className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                 >
                   -
@@ -205,7 +286,7 @@ export default function SalaryCalculator() {
                   {dependents} 명
                 </span>
                 <button
-                  onClick={() => setDependents((p) => p + 1)}
+                  onClick={() => handleDependentChange("dependents", 1)}
                   className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                 >
                   +
@@ -218,7 +299,7 @@ export default function SalaryCalculator() {
               </label>
               <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
                 <button
-                  onClick={() => setChildren((p) => Math.max(0, p - 1))}
+                  onClick={() => handleDependentChange("children", -1)}
                   className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                 >
                   -
@@ -227,7 +308,7 @@ export default function SalaryCalculator() {
                   {children} 명
                 </span>
                 <button
-                  onClick={() => setChildren((p) => p + 1)}
+                  onClick={() => handleDependentChange("children", 1)}
                   className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                 >
                   +
@@ -254,25 +335,84 @@ export default function SalaryCalculator() {
               </span>
             </div>
           </div>
-          <div className="mt-4">
-            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-              야근수당 (연간 총액)
-            </label>
-            <div className="relative mt-1">
-              <input
-                type="text"
-                value={overtimePay}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/[^0-9]/g, "");
-                  setOvertimePay(v ? formatNumber(Number(v)) : "");
-                }}
-                className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
-              />
-              <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
-                원
-              </span>
-            </div>
+        </div>
+
+        {taxSavingTip && (
+          <div className="p-3 bg-blue-100 dark:bg-blue-900/50 text-signature-blue text-sm rounded-lg text-center transition-opacity duration-300 animate-pulse">
+            {taxSavingTip}
           </div>
+        )}
+
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="w-full flex justify-between items-center text-left font-bold text-lg text-light-text dark:text-dark-text"
+          >
+            <span>상세 설정</span>
+            <span
+              className={`transform transition-transform duration-200 ${
+                showAdvanced ? "rotate-180" : "rotate-0"
+              }`}
+            >
+              ▼
+            </span>
+          </button>
+          {showAdvanced && (
+            <div className="space-y-4 pt-4 mt-4 border-t dark:border-gray-700">
+              <label className="flex items-center gap-3 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  checked={advancedSettings.isSmeYouth}
+                  onChange={(e) =>
+                    setAdvancedSettings({
+                      ...advancedSettings,
+                      isSmeYouth: e.target.checked,
+                    })
+                  }
+                  className="h-5 w-5 rounded border-gray-300 text-signature-blue focus:ring-signature-blue"
+                />
+                <span>
+                  중소기업 취업자 소득세 감면 적용 (연 200만원 한도, 90% 감면)
+                </span>
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                    장애인 (1인당 200만 추가공제)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={advancedSettings.disabledDependents}
+                    onChange={(e) =>
+                      setAdvancedSettings({
+                        ...advancedSettings,
+                        disabledDependents: Math.max(0, Number(e.target.value)),
+                      })
+                    }
+                    className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                    70세 이상 (1인당 100만 추가공제)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={advancedSettings.seniorDependents}
+                    onChange={(e) =>
+                      setAdvancedSettings({
+                        ...advancedSettings,
+                        seniorDependents: Math.max(0, Number(e.target.value)),
+                      })
+                    }
+                    className="w-full mt-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -285,30 +425,74 @@ export default function SalaryCalculator() {
             월 예상 실수령액
           </p>
           <p className="text-4xl sm:text-5xl font-bold my-2 text-white dark:text-dark-text">
-            {formatNumber(result.monthlyNet)} 원
+            <CountUp
+              start={prevResultRef.current?.monthlyNet || 0}
+              end={result.monthlyNet}
+              duration={0.5}
+              separator=","
+            />{" "}
+            원
           </p>
           <div className="mt-6 pt-6 border-t border-white/20 dark:border-gray-700 space-y-3 text-sm">
-            {Object.entries({
-              국민연금: result.pension,
-              건강보험: result.health,
-              장기요양: result.longTermCare,
-              고용보험: result.employment,
-              소득세: result.incomeTax,
-              지방소득세: result.localTax,
-            }).map(([label, value]) => (
+            {[
+              {
+                label: "국민연금",
+                value: result.pension,
+                prevValue: prevResultRef.current?.pension,
+              },
+              {
+                label: "건강보험",
+                value: result.health,
+                prevValue: prevResultRef.current?.health,
+              },
+              {
+                label: "장기요양",
+                value: result.longTermCare,
+                prevValue: prevResultRef.current?.longTermCare,
+              },
+              {
+                label: "고용보험",
+                value: result.employment,
+                prevValue: prevResultRef.current?.employment,
+              },
+              {
+                label: "소득세",
+                value: result.incomeTax,
+                prevValue: prevResultRef.current?.incomeTax,
+              },
+              {
+                label: "지방소득세",
+                value: result.localTax,
+                prevValue: prevResultRef.current?.localTax,
+              },
+            ].map(({ label, value, prevValue }) => (
               <div key={label} className="flex justify-between">
                 <span className="text-blue-200 dark:text-dark-text-secondary">
                   {label}
                 </span>
                 <span className="text-white dark:text-dark-text font-bold">
-                  {formatNumber(value)} 원
+                  <CountUp
+                    start={prevValue || 0}
+                    end={value}
+                    duration={0.5}
+                    separator=","
+                  />{" "}
+                  원
                 </span>
               </div>
             ))}
           </div>
           <div className="mt-4 pt-4 border-t border-white/20 dark:border-gray-700 flex justify-between font-bold text-white dark:text-dark-text">
             <span>총 공제액 합계</span>
-            <span>{formatNumber(result.totalDeduction)} 원</span>
+            <span>
+              <CountUp
+                start={prevResultRef.current?.totalDeduction || 0}
+                end={result.totalDeduction}
+                duration={0.5}
+                separator=","
+              />{" "}
+              원
+            </span>
           </div>
         </div>
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
