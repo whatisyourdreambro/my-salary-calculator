@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import KakaoAdFit from "@/components/KakaoAdFit"; // 새로 만든 광고 컴포넌트
+import KakaoAdFit from "@/components/KakaoAdFit";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -45,6 +45,27 @@ export default function RootLayout({
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="afterInteractive"
         />
+
+        {/* 👇 [추가된 부분] Google Analytics 스크립트 */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+        {/* 👆 [추가된 부분] 여기까지 */}
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
         <NextThemesProvider
@@ -55,9 +76,9 @@ export default function RootLayout({
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
 
-            {/* --- 광고를 포함한 새로운 메인 레이아웃 --- */}
+            {/* --- 광고를 포함한 메인 레이아웃 --- */}
             <div className="w-full flex-grow">
-              {/* 1. 상단 가로 배너 광고 (데스크탑/태블릿) */}
+              {/* ... (기존 광고 코드) ... */}
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-7DJN8QMp6O5Kayn7"
@@ -66,7 +87,6 @@ export default function RootLayout({
                 />
               </div>
 
-              {/* 2. 모바일 상단 추가 광고 */}
               <div className="md:hidden flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-lpJFw6yqHhzOXIfV"
@@ -76,7 +96,6 @@ export default function RootLayout({
               </div>
 
               <div className="flex justify-center w-full">
-                {/* 3. 왼쪽 세로 광고 (넓은 데스크탑 화면) */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
                     unit="DAN-HVBNRsdPlneE3Uxn"
@@ -85,10 +104,8 @@ export default function RootLayout({
                   />
                 </aside>
 
-                {/* 페이지 본문 컨텐츠 */}
                 <main className="w-full">{children}</main>
 
-                {/* 4. 오른쪽 세로 광고 (넓은 데스크탑 화면) */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
                     unit="DAN-O4kzbtdd9NleD4P6"
@@ -98,7 +115,6 @@ export default function RootLayout({
                 </aside>
               </div>
 
-              {/* 5. 콘텐츠 하단 추가 광고 (320x100) */}
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-WgV2d248sf3mJoB2"
@@ -107,7 +123,6 @@ export default function RootLayout({
                 />
               </div>
 
-              {/* 6. 기존 중앙 하단 광고 */}
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-4eRqZLQIGjrNcXj6"
@@ -116,7 +131,6 @@ export default function RootLayout({
                 />
               </div>
 
-              {/* 7. 최하단 추가 광고 (320x50) */}
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-no5HCWDFKDsohy4c"
