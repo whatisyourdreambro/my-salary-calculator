@@ -1,3 +1,5 @@
+// src/lib/calculator.ts
+
 // ===================================================================
 // 2025년 대한민국 4대 보험 및 소득세 정보 (V2: 상세 설정 기능 추가)
 // ===================================================================
@@ -15,6 +17,9 @@ export interface AdvancedSettings {
   disabledDependents: number; // 장애인 부양가족 수
   seniorDependents: number; // 70세 이상 경로우대 부양가족 수
 }
+
+// [수정] 계산 결과 타입을 export 합니다.
+export type CalculationResult = ReturnType<typeof calculateNetSalary>;
 
 function getEarnedIncomeDeduction(annualSalary: number): number {
   if (annualSalary <= 5000000) return annualSalary * 0.7;
@@ -55,7 +60,7 @@ export function calculateNetSalary(
   dependents: number = 1,
   children: number = 0,
   overtimePay: number = 0,
-  advancedSettings: AdvancedSettings // 상세 설정 파라미터 추가
+  advancedSettings: AdvancedSettings
 ) {
   const totalAnnualSalary = annualSalary + overtimePay;
 
@@ -90,7 +95,6 @@ export function calculateNetSalary(
 
   const earnedIncomeDeduction = getEarnedIncomeDeduction(taxableAnnualSalary);
 
-  // --- 상세 설정 로직 반영: 추가 인적공제 ---
   const personalDeduction =
     dependents * 1500000 +
     advancedSettings.disabledDependents * 2000000 +
@@ -112,10 +116,9 @@ export function calculateNetSalary(
 
   let finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
 
-  // --- 상세 설정 로직 반영: 중소기업 청년 소득세 감면 ---
   if (advancedSettings.isSmeYouth) {
-    const taxReductionLimit = 2000000; // 연간 감면 한도 200만원
-    const taxReductionAmount = finalAnnualTax * 0.9; // 90% 감면
+    const taxReductionLimit = 2000000;
+    const taxReductionAmount = finalAnnualTax * 0.9;
     finalAnnualTax -= Math.min(taxReductionAmount, taxReductionLimit);
   }
 

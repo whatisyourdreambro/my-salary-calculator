@@ -1,20 +1,23 @@
+// src/components/SalaryRank.tsx
+
 "use client";
 
 import { useState, useMemo, useRef } from "react";
 import CurrencyInput from "./CurrencyInput";
 import html2canvas from "html2canvas";
-import Link from "next/link"; // Link 컴포넌트를 사용하기 위해 import 합니다.
+import Link from "next/link";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
 type PercentileData = { percentile: number; income: number };
-type SalaryStat = {
+
+export type SalaryStat = {
   percentiles: PercentileData[];
   median: number;
   average: number;
 };
 
-const salaryData: Record<string, SalaryStat> = {
+export const salaryData: Record<string, SalaryStat> = {
   "all-all-all-all": {
     percentiles: [
       { percentile: 25, income: 3010 },
