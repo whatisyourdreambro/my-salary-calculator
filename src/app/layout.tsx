@@ -66,8 +66,17 @@ export default function RootLayout({
                 />
               </div>
 
+              {/* 2. 모바일 상단 추가 광고 */}
+              <div className="md:hidden flex justify-center my-4">
+                <KakaoAdFit
+                  unit="DAN-lpJFw6yqHhzOXIfV"
+                  width="320"
+                  height="50"
+                />
+              </div>
+
               <div className="flex justify-center w-full">
-                {/* 2. 왼쪽 세로 광고 (넓은 데스크탑 화면) */}
+                {/* 3. 왼쪽 세로 광고 (넓은 데스크탑 화면) */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
                     unit="DAN-HVBNRsdPlneE3Uxn"
@@ -79,7 +88,7 @@ export default function RootLayout({
                 {/* 페이지 본문 컨텐츠 */}
                 <main className="w-full">{children}</main>
 
-                {/* 3. 오른쪽 세로 광고 (넓은 데스크탑 화면) */}
+                {/* 4. 오른쪽 세로 광고 (넓은 데스크탑 화면) */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
                     unit="DAN-O4kzbtdd9NleD4P6"
@@ -89,12 +98,30 @@ export default function RootLayout({
                 </aside>
               </div>
 
-              {/* 기존에 추가했던 중앙 하단 광고 */}
+              {/* 5. 콘텐츠 하단 추가 광고 (320x100) */}
+              <div className="flex justify-center my-4">
+                <KakaoAdFit
+                  unit="DAN-WgV2d248sf3mJoB2"
+                  width="320"
+                  height="100"
+                />
+              </div>
+
+              {/* 6. 기존 중앙 하단 광고 */}
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-4eRqZLQIGjrNcXj6"
                   width="300"
                   height="250"
+                />
+              </div>
+
+              {/* 7. 최하단 추가 광고 (320x50) */}
+              <div className="flex justify-center my-4">
+                <KakaoAdFit
+                  unit="DAN-no5HCWDFKDsohy4c"
+                  width="320"
+                  height="50"
                 />
               </div>
             </div>
