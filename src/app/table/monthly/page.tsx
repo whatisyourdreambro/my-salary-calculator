@@ -16,22 +16,24 @@ const tableHeaders = [
   { key: "totalDeduction", label: "공제액 합계(원)" },
 ];
 
+const allData = generateMonthlySalaryTableData();
+const ITEMS_PER_PAGE = 100;
+
 export default function MonthlyTablePage() {
   useEffect(() => {
     document.title = "월급 실수령액표 | Moneysalary";
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const allData = useMemo(() => generateMonthlySalaryTableData(), []);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const numericValue = value.replace(/[^0-9]/g, "");
-    if (numericValue) {
-      setSearchTerm(parseInt(numericValue, 10).toLocaleString());
-    } else {
-      setSearchTerm("");
-    }
+    setSearchTerm(
+      numericValue ? parseInt(numericValue, 10).toLocaleString() : ""
+    );
+    setCurrentPage(1);
   };
 
   const filteredData = useMemo(() => {
@@ -40,7 +42,15 @@ export default function MonthlyTablePage() {
     return allData.filter((row) =>
       row.preTax.toString().includes(cleanSearchTerm)
     );
-  }, [searchTerm, allData]);
+  }, [searchTerm]);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredData.slice(startIndex, endIndex);
+  }, [currentPage, filteredData]);
+
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
   const dynamicHeaders = tableHeaders.map((h) =>
     h.key === "preTax" ? { ...h, label: "월급(원)" } : h
@@ -68,7 +78,27 @@ export default function MonthlyTablePage() {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        <SalaryTable headers={dynamicHeaders} data={paginatedData} />
+      </div>
+
+      <div className="flex justify-center items-center mt-6 space-x-2">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+        >
+          이전
+        </button>
+        <span className="text-sm">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+        >
+          다음
+        </button>
       </div>
     </main>
   );

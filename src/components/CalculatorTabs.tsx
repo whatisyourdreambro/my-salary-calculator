@@ -2,11 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic"; // dynamic import를 위해 추가
 import SalaryCalculator from "@/components/SalaryCalculator";
 import SeveranceCalculator from "@/components/SeveranceCalculator";
-import FutureSalaryCalculator from "@/components/FutureSalaryCalculator";
 
-// 탭 종류를 상수로 정의하여 코드의 가독성과 유지보수성을 높입니다.
+// [수정] FutureSalaryCalculator를 dynamic import로 변경합니다.
+const FutureSalaryCalculator = dynamic(
+  () => import("@/components/FutureSalaryCalculator"),
+  {
+    loading: () => (
+      <div className="p-8 text-center">미래 연봉 계산기 로딩 중...</div>
+    ),
+    ssr: false, // 서버에서는 렌더링하지 않음
+  }
+);
+
 const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",

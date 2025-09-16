@@ -1,6 +1,4 @@
-// src/app/table/annual/page.tsx
-
-"use client"; // "use client"는 유지하되, 데이터 생성은 서버에서 이미 완료됨
+"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
@@ -18,10 +16,8 @@ const tableHeaders = [
   { key: "totalDeduction", label: "공제액 합계(원)" },
 ];
 
-// [수정] 데이터를 서버에서 미리 생성하고 클라이언트에서는 상태 관리만 하도록 변경
-// Next.js 14+ App Router에서는 "use client" 컴포넌트라도 부모가 서버 컴포넌트이면
-// 데이터 생성은 서버에서 한 번만 실행됩니다.
 const allData = generateAnnualSalaryTableData();
+const ITEMS_PER_PAGE = 100; // 한 페이지에 100개씩 표시
 
 export default function AnnualTablePage() {
   useEffect(() => {
@@ -29,17 +25,18 @@ export default function AnnualTablePage() {
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 추가
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const numericValue = value.replace(/[^0-9]/g, "");
-    if (numericValue) {
-      setSearchTerm(parseInt(numericValue, 10).toLocaleString());
-    } else {
-      setSearchTerm("");
-    }
+    setSearchTerm(
+      numericValue ? parseInt(numericValue, 10).toLocaleString() : ""
+    );
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
+  // 검색 결과 필터링
   const filteredData = useMemo(() => {
     if (!searchTerm) return allData;
     const cleanSearchTerm = searchTerm.replace(/,/g, "");
@@ -47,6 +44,15 @@ export default function AnnualTablePage() {
       row.preTax.toString().includes(cleanSearchTerm)
     );
   }, [searchTerm]);
+
+  // 현재 페이지에 해당하는 데이터만 잘라내기
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredData.slice(startIndex, endIndex);
+  }, [currentPage, filteredData]);
+
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
   const dynamicHeaders = tableHeaders.map((h) =>
     h.key === "preTax" ? { ...h, label: "연봉(원)" } : h
@@ -74,7 +80,28 @@ export default function AnnualTablePage() {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <SalaryTable headers={dynamicHeaders} data={filteredData} />
+        <SalaryTable headers={dynamicHeaders} data={paginatedData} />
+      </div>
+
+      {/* 페이지네이션 UI 추가 */}
+      <div className="flex justify-center items-center mt-6 space-x-2">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+        >
+          이전
+        </button>
+        <span className="text-sm">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+        >
+          다음
+        </button>
       </div>
     </main>
   );
