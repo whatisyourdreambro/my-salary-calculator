@@ -6,7 +6,7 @@ import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
-import PageTransitionAd from "@/components/PageTransitionAd";
+// import PageTransitionAd from "@/components/PageTransitionAd";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -102,7 +102,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <PageTransitionAd />
+          {/* <PageTransitionAd /> */}
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">
