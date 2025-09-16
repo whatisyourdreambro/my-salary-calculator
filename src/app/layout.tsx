@@ -7,7 +7,7 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 import ClientOnly from "@/components/ClientOnly";
-import PageTransitionAd from "@/components/PageTransitionAd";
+// import PageTransitionAd from "@/components/PageTransitionAd"; // [1차 수정] 문제의 원인인 전면 광고 컴포넌트를 비활성화합니다.
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -27,14 +27,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// [핵심 수정] 프로젝트의 표준 AdFit 타입을 이곳에 정의합니다.
+// [2차 수정] 모든 AdFit 타입을 이곳에서 표준화하여 관리합니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
     AdFit?: {
       createIns: (ins: HTMLModElement) => void;
       destroyIns: (ins: HTMLModElement) => void;
-      showAd?: (unitId: string) => void; // 모든 AdFit 함수 타입을 포함
+      showAd?: (unitId: string) => void;
     };
   }
 }
@@ -106,7 +106,8 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <PageTransitionAd />
+          {/* <PageTransitionAd /> */}{" "}
+          {/* [1차 수정] 렌더링되지 않도록 주석 처리합니다. */}
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">

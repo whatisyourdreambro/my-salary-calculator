@@ -8,5 +8,6 @@ body {
 }
 
 * {
-  transition: color, background-color 0.2s ease-in-out;
+  /* [수정] 잘못된 CSS 구문을 표준에 맞게 수정합니다. */
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }

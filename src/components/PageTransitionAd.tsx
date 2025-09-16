@@ -3,16 +3,9 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-// [수정] layout.tsx와 타입을 일치시키고 showAd를 추가합니다.
-declare global {
-  interface Window {
-    AdFit?: {
-      createIns: (ins: HTMLModElement) => void;
-      destroyIns: (ins: HTMLModElement) => void;
-      showAd?: (unitId: string) => void;
-    };
-  }
-}
+//
+// [정리] layout.tsx에 표준 타입이 정의되었으므로, 이곳의 declare global 블록은 삭제합니다.
+//
 
 const VIEW_THRESHOLD = 3;
 
@@ -30,7 +23,7 @@ export default function PageTransitionAd() {
     navigationCount.current += 1;
 
     if (navigationCount.current % VIEW_THRESHOLD === 0) {
-      // [핵심 수정] adfit -> AdFit으로 오타 수정 및 안정성 강화를 위한 방어 코드 추가
+      // AdFit 객체와 showAd 함수가 존재하는지 확인하여 안정성을 높입니다.
       if (window.AdFit && typeof window.AdFit.showAd === "function") {
         window.AdFit.showAd("DAN-gtL0uD65wrODCXRh");
       }

@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-// [핵심 수정] 이곳에 있던 'declare global' 블록을 완전히 삭제합니다.
-// 타입 정의는 root layout에서 관리합니다.
+//
+// [정리] layout.tsx에 표준 타입이 정의되었으므로, 이곳의 declare global 블록은 삭제합니다.
+//
 
 type AdFitProps = {
   unit: string;
@@ -28,7 +29,7 @@ export default function KakaoAdFit({
     }
 
     const tryLoadAd = () => {
-      // [수정] 안정성을 위해 방어 코드를 추가합니다.
+      // AdFit 객체와 createIns 함수가 존재하는지 확인하여 안정성을 높입니다.
       if (window.AdFit && typeof window.AdFit.createIns === "function") {
         try {
           window.AdFit.createIns(currentIns);
