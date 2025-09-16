@@ -2,15 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-// AdFit 전역 타입 선언
-declare global {
-  interface Window {
-    AdFit?: {
-      createIns: (ins: HTMLModElement) => void;
-      destroyIns: (ins: HTMLModElement) => void;
-    };
-  }
-}
+// [핵심 수정] 이곳에 있던 'declare global' 블록을 완전히 삭제합니다.
+// 타입 정의는 root layout에서 관리합니다.
 
 type AdFitProps = {
   unit: string;
@@ -34,19 +27,18 @@ export default function KakaoAdFit({
       return;
     }
 
-    // window.AdFit이 로드될 때까지 짧은 지연을 두고 재시도할 수 있습니다.
     const tryLoadAd = () => {
-      if (window.AdFit) {
+      // [수정] 안정성을 위해 방어 코드를 추가합니다.
+      if (window.AdFit && typeof window.AdFit.createIns === "function") {
         try {
           window.AdFit.createIns(currentIns);
-          initializedRef.current = true; // 광고가 한 번 생성되었음을 표시
+          initializedRef.current = true;
         } catch (e) {
           console.error("Kakao AdFit create error:", e);
         }
       }
     };
 
-    // 스크립트가 로드된 후이므로 바로 실행
     tryLoadAd();
   }, []);
 

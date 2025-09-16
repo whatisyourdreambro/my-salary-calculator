@@ -3,16 +3,17 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-// Kakao AdFit 전역 타입 선언 (수정)
+// [수정] layout.tsx와 타입을 일치시키고 showAd를 추가합니다.
 declare global {
   interface Window {
-    adfit?: {
-      showAd: (unitId: string) => void;
+    AdFit?: {
+      createIns: (ins: HTMLModElement) => void;
+      destroyIns: (ins: HTMLModElement) => void;
+      showAd?: (unitId: string) => void;
     };
   }
 }
 
-// 몇 번 페이지를 이동했을 때 광고를 띄울지 설정합니다.
 const VIEW_THRESHOLD = 3;
 
 export default function PageTransitionAd() {
@@ -29,8 +30,9 @@ export default function PageTransitionAd() {
     navigationCount.current += 1;
 
     if (navigationCount.current % VIEW_THRESHOLD === 0) {
-      if (window.adfit && typeof window.adfit.showAd === "function") {
-        window.adfit.showAd("DAN-gtL0uD65wrODCXRh");
+      // [핵심 수정] adfit -> AdFit으로 오타 수정 및 안정성 강화를 위한 방어 코드 추가
+      if (window.AdFit && typeof window.AdFit.showAd === "function") {
+        window.AdFit.showAd("DAN-gtL0uD65wrODCXRh");
       }
       navigationCount.current = 0;
     }

@@ -27,11 +27,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+// [핵심 수정] 프로젝트의 표준 AdFit 타입을 이곳에 정의합니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    adfit?: {
-      showAd: (unitId: string) => void;
+    AdFit?: {
+      createIns: (ins: HTMLModElement) => void;
+      destroyIns: (ins: HTMLModElement) => void;
+      showAd?: (unitId: string) => void; // 모든 AdFit 함수 타입을 포함
     };
   }
 }
