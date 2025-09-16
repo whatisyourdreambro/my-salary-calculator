@@ -7,7 +7,8 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 import ClientOnly from "@/components/ClientOnly";
-// import PageTransitionAd from "@/components/PageTransitionAd"; // [1차 수정] 문제의 원인인 전면 광고 컴포넌트를 비활성화합니다.
+// 페이지 전환 광고는 잠시 비활성화합니다.
+// import PageTransitionAd from "@/components/PageTransitionAd";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -27,7 +28,6 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// [2차 수정] 모든 AdFit 타입을 이곳에서 표준화하여 관리합니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
@@ -106,22 +106,29 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          {/* <PageTransitionAd /> */}{" "}
-          {/* [1차 수정] 렌더링되지 않도록 주석 처리합니다. */}
+          {/* <PageTransitionAd /> */}
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">
               <ClientOnly>
+                {/* PC 상단 배너 */}
                 <div className="hidden md:flex justify-center my-4">
                   <KakaoAdFit
-                    unit="DAN-7DJN8QMp6O5Kayn7"
+                    unit="DAN-7DJN8QMp6O5Kayn7" // 002번
                     width="728"
                     height="90"
                   />
                 </div>
-                <div className="md:hidden flex justify-center my-4">
+                {/* 모바일 상단 배너 */}
+                <div className="md:hidden flex flex-col items-center my-4 space-y-4">
                   <KakaoAdFit
-                    unit="DAN-lpJFw6yqHhzOXIfV"
+                    unit="DAN-lpJFw6yqHhzOXIfV" // 005번
+                    width="320"
+                    height="50"
+                  />
+                  {/* [추가] 모바일 320x50 추가 슬롯 */}
+                  <KakaoAdFit
+                    unit="DAN-no5HCWDFKDsohy4c" // 007번
                     width="320"
                     height="50"
                   />
@@ -129,20 +136,23 @@ export default function RootLayout({
               </ClientOnly>
 
               <div className="flex justify-center w-full">
+                {/* 좌측 사이드바 */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <ClientOnly>
                     <KakaoAdFit
-                      unit="DAN-HVBNRsdPlneE3Uxn"
+                      unit="DAN-HVBNRsdPlneE3Uxn" // 003번
                       width="160"
                       height="600"
                     />
                   </ClientOnly>
                 </aside>
+                {/* 메인 콘텐츠 */}
                 <main className="w-full">{children}</main>
+                {/* 우측 사이드바 */}
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <ClientOnly>
                     <KakaoAdFit
-                      unit="DAN-O4kzbtdd9NleD4P6"
+                      unit="DAN-O4kzbtdd9NleD4P6" // 004번
                       width="160"
                       height="600"
                     />
@@ -151,11 +161,18 @@ export default function RootLayout({
               </div>
 
               <ClientOnly>
-                <div className="flex justify-center my-4">
+                {/* 하단 배너 */}
+                <div className="flex flex-col items-center my-4 space-y-4">
                   <KakaoAdFit
-                    unit="DAN-WgV2d248sf3mJoB2"
+                    unit="DAN-WgV2d248sf3mJoB2" // 006번
                     width="320"
                     height="100"
+                  />
+                  {/* [추가] 하단 300x250 추가 슬롯 */}
+                  <KakaoAdFit
+                    unit="DAN-4eRqZLQjGjrNcXj6" // 001번
+                    width="300"
+                    height="250"
                   />
                 </div>
               </ClientOnly>
