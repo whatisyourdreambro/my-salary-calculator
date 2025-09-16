@@ -2,10 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-//
-// [정리] layout.tsx에 표준 타입이 정의되었으므로, 이곳의 declare global 블록은 삭제합니다.
-//
-
 type AdFitProps = {
   unit: string;
   width: string;
@@ -28,19 +24,36 @@ export default function KakaoAdFit({
       return;
     }
 
+    // [수정] AdFit 스크립트가 로드될 때까지 대기하는 로직 추가
     const tryLoadAd = () => {
-      // AdFit 객체와 createIns 함수가 존재하는지 확인하여 안정성을 높입니다.
       if (window.AdFit && typeof window.AdFit.createIns === "function") {
         try {
           window.AdFit.createIns(currentIns);
           initializedRef.current = true;
+          return true; // 성공
         } catch (e) {
           console.error("Kakao AdFit create error:", e);
+          return true; // 오류가 발생했더라도 재시도 중단
         }
       }
+      return false; // AdFit 스크립트가 아직 로드되지 않음
     };
 
-    tryLoadAd();
+    // 즉시 시도
+    if (tryLoadAd()) {
+      return;
+    }
+
+    // 스크립트가 로드될 때까지 100ms 간격으로 최대 10초간 재시도
+    let attempt = 0;
+    const intervalId = setInterval(() => {
+      attempt++;
+      if (tryLoadAd() || attempt >= 100) {
+        clearInterval(intervalId);
+      }
+    }, 100);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
