@@ -6,7 +6,7 @@ import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
-import PageTransitionAd from "@/components/PageTransitionAd"; // 페이지 이동 광고 컴포넌트
+import PageTransitionAd from "@/components/PageTransitionAd";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -15,9 +15,9 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "연봉/퇴직금/미래연봉 계산기 | Moneysalary",
+  title: "2025년 연봉 실수령액 계산기 | Moneysalary",
   description:
-    "연봉, 월급, 주급, 시급, 퇴직금, 미래연봉의 세후 실수령액을 가장 정확하게 계산하세요. 2025년 최신 4대보험, 소득세 기준이 적용되었습니다.",
+    "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
 };
 
 export const viewport: Viewport = {
@@ -43,7 +43,6 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
-        {/* Google Tag Manager */}
         <Script id="google-tag-manager-head" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -53,30 +52,23 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-W9KTVSQH');
           `}
         </Script>
-
-        {/* CookieYes Consent Banner */}
         <Script
           id="cookieyes"
           type="text/javascript"
           src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
           strategy="beforeInteractive"
         ></Script>
-
-        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js?adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-        {/* Kakao AdFit */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="lazyOnload"
         />
-
-        {/* Google Analytics */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -96,7 +88,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -112,10 +103,10 @@ export default function RootLayout({
           enableSystem
         >
           <PageTransitionAd />
-
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">
+              {/* [수정] 상단 배너 광고 */}
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-7DJN8QMp6O5Kayn7"
@@ -130,6 +121,7 @@ export default function RootLayout({
                   height="50"
                 />
               </div>
+
               <div className="flex justify-center w-full">
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
@@ -147,6 +139,8 @@ export default function RootLayout({
                   />
                 </aside>
               </div>
+
+              {/* [수정] 콘텐츠 하단 광고 영역 */}
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-WgV2d248sf3mJoB2"
@@ -154,30 +148,8 @@ export default function RootLayout({
                   height="100"
                 />
               </div>
-              <div className="flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-4eRqZLQIGjrNcXj6"
-                  width="300"
-                  height="250"
-                />
-              </div>
 
-              {/* [추가] 요청하신 새로운 광고 단위 */}
-              <div className="flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-gtL0uD65wrODCXRh"
-                  width="300"
-                  height="250"
-                />
-              </div>
-
-              <div className="flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-no5HCWDFKDsohy4c"
-                  width="320"
-                  height="50"
-                />
-              </div>
+              {/* [제거] 중복되고 효율 낮은 광고 제거 */}
             </div>
             <Footer />
           </div>

@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "급여 관련 자주 묻는 질문(Q&A) | Moneysalary",
+  description:
+    "연봉 수당, 건강보험료, 퇴직금 중간정산, 연말정산 등 급여에 대한 모든 궁금증을 해결해 드립니다.",
+};
 
 const posts = [
   {
@@ -27,33 +34,53 @@ const posts = [
   },
 ];
 
+// [추가] FAQ 구조화된 데이터 생성
+const faqStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: posts.map((post) => ({
+    "@type": "Question",
+    name: post.title,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: post.description,
+    },
+  })),
+};
+
 export default async function QnAListPage() {
   return (
-    <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-signature-blue dark:text-gray-100 sm:text-5xl">
-          궁금한 점을 해결해 보세요 (Q&A)
-        </h1>
-        <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-400">
-          급여, 세금, 퇴직금에 대한 모든 것을 알려드립니다.
-        </p>
-      </div>
-      <div className="space-y-6">
-        {posts.map((post) => (
-          <Link
-            key={post.slug}
-            href={`/qna/${post.slug}`}
-            className="block p-6 border border-gray-200 dark:border-gray-800 rounded-lg hover:shadow-lg transition-shadow bg-light-card dark:bg-dark-card"
-          >
-            <h2 className="text-2xl font-bold text-light-text dark:text-dark-text">
-              {post.title}
-            </h2>
-            <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
-              {post.description}
-            </p>
-          </Link>
-        ))}
-      </div>
-    </main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
+      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold tracking-tight text-signature-blue dark:text-gray-100 sm:text-5xl">
+            궁금한 점을 해결해 보세요 (Q&A)
+          </h1>
+          <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-400">
+            급여, 세금, 퇴직금에 대한 모든 것을 알려드립니다.
+          </p>
+        </div>
+        <div className="space-y-6">
+          {posts.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/qna/${post.slug}`}
+              className="block p-6 border border-gray-200 dark:border-gray-800 rounded-lg hover:shadow-lg transition-shadow bg-light-card dark:bg-dark-card"
+            >
+              <h2 className="text-2xl font-bold text-light-text dark:text-dark-text">
+                {post.title}
+              </h2>
+              <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
+                {post.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </main>
+    </>
   );
 }

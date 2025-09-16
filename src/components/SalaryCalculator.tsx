@@ -5,11 +5,11 @@ import { useSearchParams } from "next/navigation";
 import { calculateNetSalary, AdvancedSettings } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
+import Link from "next/link"; // Link 컴포넌트 import
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
-// --- 수정된 부분: result의 타입을 명확히 정의 ---
 type CalculationResult = ReturnType<typeof calculateNetSalary>;
 
 export default function SalaryCalculator() {
@@ -32,7 +32,6 @@ export default function SalaryCalculator() {
     seniorDependents: 0,
   });
   const [taxSavingTip, setTaxSavingTip] = useState("");
-  // --- 수정된 부분: useRef의 타입을 명확히 지정하여 'any' 오류 해결 ---
   const prevResultRef = useRef<CalculationResult | null>(null);
 
   const [result, setResult] = useState<CalculationResult>({
@@ -180,6 +179,15 @@ export default function SalaryCalculator() {
     };
     const encodedState = btoa(JSON.stringify(stateToShare));
     const shareUrl = `${window.location.origin}/?tab=salary&data=${encodedState}`;
+
+    if (window.gtag) {
+      window.gtag("event", "share", {
+        method: "clipboard",
+        content_type: "salary_calculator_result",
+        content_id: salaryInput,
+      });
+    }
+
     navigator.clipboard.writeText(shareUrl).then(
       () => alert("결과가 포함된 링크가 클립보드에 복사되었습니다."),
       () => alert("링크 복사에 실패했습니다.")
@@ -495,7 +503,20 @@ export default function SalaryCalculator() {
             </span>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+
+        {/* [추가] 결과에 따른 맞춤형 콘텐츠 링크 */}
+        {result.monthlyNet > 0 && (
+          <div className="mt-6">
+            <Link
+              href="/guides/2025-salary-guide"
+              className="block w-full py-3 text-center bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold text-white transition"
+            >
+              내 연봉, 더 자세히 분석하기 🧐
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={handleShareLink}
             className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
