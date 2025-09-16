@@ -2,22 +2,10 @@
 
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import dynamic from "next/dynamic";
+import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
-import { salaryData } from "@/components/SalaryRank";
-
-// [수정] SalaryDetailDashboard를 dynamic import로 변경
-const SalaryDetailDashboard = dynamic(
-  () => import("@/components/SalaryDetailDashboard"),
-  {
-    loading: () => (
-      <div className="w-full h-screen flex justify-center items-center">
-        연봉 분석 리포트를 불러오는 중입니다...
-      </div>
-    ),
-    ssr: false,
-  }
-);
+// [수정] 데이터를 클라이언트 컴포넌트가 아닌 lib/salaryData에서 직접 import 합니다.
+import { salaryData } from "@/lib/salaryData";
 
 type Props = {
   params: { amount: string };
