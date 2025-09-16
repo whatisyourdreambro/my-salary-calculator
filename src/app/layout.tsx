@@ -39,7 +39,6 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
-        {/* [추가] Google Tag Manager 스크립트 (head) */}
         <Script id="google-tag-manager-head" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -49,30 +48,23 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-W9KTVSQH');
           `}
         </Script>
-
-        {/* CookieYes 동의 배너 스크립트 */}
         <Script
           id="cookieyes"
           type="text/javascript"
           src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
           strategy="beforeInteractive"
         ></Script>
-
-        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js?adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-        {/* Kakao AdFit */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="lazyOnload"
         />
-
-        {/* Google Analytics */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -92,7 +84,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
-        {/* [추가] Google Tag Manager (noscript) (body) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -109,8 +100,8 @@ export default function RootLayout({
         >
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
-            <div className="w-full flex-grow">
-              {/* 광고 코드들... */}
+            {/* [수정] 아래 div에 relative와 z-index 추가 */}
+            <div className="relative z-0 w-full flex-grow">
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-7DJN8QMp6O5Kayn7"
