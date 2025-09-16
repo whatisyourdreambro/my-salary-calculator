@@ -1,12 +1,14 @@
+// src/components/KakaoAdFit.tsx
+
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
-// Kakao AdFit SDK 타입을 window 객체에 추가하여 타입스크립트 오류를 방지합니다.
 declare global {
   interface Window {
     AdFit?: {
       createIns: (ins: HTMLModElement) => void;
+      destroyIns: (ins: HTMLModElement) => void;
     };
   }
 }
@@ -15,7 +17,7 @@ type AdFitProps = {
   unit: string;
   width: string;
   height: string;
-  className?: string; // 추가적인 스타일링을 위한 className prop
+  className?: string;
 };
 
 export default function KakaoAdFit({
@@ -24,23 +26,47 @@ export default function KakaoAdFit({
   height,
   className = "",
 }: AdFitProps) {
+  const insRef = useRef<HTMLModElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    // AdFit 스크립트가 로드된 후 광고를 렌더링하도록 처리합니다.
-    try {
-      const ins = document.querySelector<HTMLModElement>(
-        `ins[data-ad-unit="${unit}"]`
-      );
-      if (window.AdFit && ins) {
-        window.AdFit.createIns(ins);
+    const currentIns = insRef.current;
+    if (!currentIns) return;
+
+    // Intersection Observer를 사용하여 광고가 뷰포트에 들어왔을 때만 로드
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoaded) {
+          try {
+            if (window.AdFit) {
+              window.AdFit.createIns(currentIns);
+              setIsLoaded(true); // 한번 로드되면 다시 로드하지 않도록 상태 변경
+            }
+          } catch (e) {
+            console.error("Kakao AdFit error:", e);
+          }
+          observer.unobserve(currentIns); // 관찰 중지
+        }
+      },
+      { threshold: 0.1 } // 10% 보이면 실행
+    );
+
+    observer.observe(currentIns);
+
+    return () => {
+      if (currentIns) {
+        observer.unobserve(currentIns);
       }
-    } catch (e) {
-      console.error("Kakao AdFit error:", e);
-    }
-  }, [unit]);
+    };
+  }, [isLoaded, unit]);
 
   return (
-    <div className={`kakao-ad-container ${className}`}>
+    <div
+      className={`kakao-ad-container ${className}`}
+      style={{ minWidth: `${width}px`, minHeight: `${height}px` }}
+    >
       <ins
+        ref={insRef}
         className="kakao_ad_area"
         style={{ display: "none" }}
         data-ad-unit={unit}

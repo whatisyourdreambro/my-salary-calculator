@@ -1,6 +1,18 @@
+// src/app/page.tsx
+
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import CalculatorTabs from "@/components/CalculatorTabs";
-import SalaryRank from "@/components/SalaryRank"; // 👈 이 줄을 추가하세요.
+
+// [수정] SalaryRank를 dynamic import로 변경
+const SalaryRank = dynamic(() => import("@/components/SalaryRank"), {
+  loading: () => (
+    <div className="w-full h-96 flex justify-center items-center">
+      순위 비교 차트 로딩 중...
+    </div>
+  ),
+  ssr: false, // 서버에서는 렌더링하지 않음
+});
 
 export default function HomePage() {
   return (
@@ -17,7 +29,6 @@ export default function HomePage() {
         <CalculatorTabs />
       </Suspense>
 
-      {/* 👇 기존 코드 아래에 이 부분을 추가하세요. */}
       <SalaryRank />
     </main>
   );

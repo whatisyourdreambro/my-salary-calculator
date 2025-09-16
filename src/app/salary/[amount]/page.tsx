@@ -2,9 +2,22 @@
 
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
+import dynamic from "next/dynamic";
 import { calculateNetSalary } from "@/lib/calculator";
 import { salaryData } from "@/components/SalaryRank";
+
+// [수정] SalaryDetailDashboard를 dynamic import로 변경
+const SalaryDetailDashboard = dynamic(
+  () => import("@/components/SalaryDetailDashboard"),
+  {
+    loading: () => (
+      <div className="w-full h-screen flex justify-center items-center">
+        연봉 분석 리포트를 불러오는 중입니다...
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 type Props = {
   params: { amount: string };
@@ -35,7 +48,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  // Example: Pre-build pages for salaries from 20M to 200M KRW in 1M increments
   const paths = Array.from({ length: 181 }, (_, i) => ({
     amount: (2000 + i * 100).toString(),
   }));
@@ -49,14 +61,12 @@ export default function SalaryDetailPage({ params }: Props) {
   }
   const annualSalary = amountParam * 10000;
 
-  // Calculate net salary with default settings
   const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, 0, {
     isSmeYouth: false,
     disabledDependents: 0,
     seniorDependents: 0,
   });
 
-  // Calculate rank against national data
   const rankData = salaryData["all-all-all-all"];
   const findRank = () => {
     const rank = [...rankData.percentiles]

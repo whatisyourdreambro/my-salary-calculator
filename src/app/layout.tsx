@@ -10,6 +10,7 @@ import KakaoAdFit from "@/components/KakaoAdFit";
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+  display: "swap", // [수정] 폰트 로딩 최적화
 });
 
 export const metadata: Metadata = {
@@ -37,16 +38,16 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload" // [수정] 로딩 시점 지연
         />
         {/* Kakao AdFit */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload" // [수정] 로딩 시점 지연
         />
 
-        {/* 👇 [추가된 부분] Google Analytics 스크립트 */}
+        {/* Google Analytics 스크립트 */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
@@ -65,7 +66,6 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* 👆 [추가된 부분] 여기까지 */}
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
         <NextThemesProvider
@@ -75,10 +75,7 @@ export default function RootLayout({
         >
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
-
-            {/* --- 광고를 포함한 메인 레이아웃 --- */}
             <div className="w-full flex-grow">
-              {/* ... (기존 광고 코드) ... */}
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-7DJN8QMp6O5Kayn7"
@@ -86,7 +83,6 @@ export default function RootLayout({
                   height="90"
                 />
               </div>
-
               <div className="md:hidden flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-lpJFw6yqHhzOXIfV"
@@ -94,7 +90,6 @@ export default function RootLayout({
                   height="50"
                 />
               </div>
-
               <div className="flex justify-center w-full">
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
@@ -103,9 +98,7 @@ export default function RootLayout({
                     height="600"
                   />
                 </aside>
-
                 <main className="w-full">{children}</main>
-
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
                   <KakaoAdFit
                     unit="DAN-O4kzbtdd9NleD4P6"
@@ -114,7 +107,6 @@ export default function RootLayout({
                   />
                 </aside>
               </div>
-
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-WgV2d248sf3mJoB2"
@@ -122,7 +114,6 @@ export default function RootLayout({
                   height="100"
                 />
               </div>
-
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-4eRqZLQIGjrNcXj6"
@@ -130,7 +121,6 @@ export default function RootLayout({
                   height="250"
                 />
               </div>
-
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-no5HCWDFKDsohy4c"
@@ -139,7 +129,6 @@ export default function RootLayout({
                 />
               </div>
             </div>
-
             <Footer />
           </div>
         </NextThemesProvider>
