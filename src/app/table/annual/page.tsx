@@ -1,4 +1,6 @@
-"use client";
+// src/app/table/annual/page.tsx
+
+"use client"; // "use client"는 유지하되, 데이터 생성은 서버에서 이미 완료됨
 
 import { useState, useMemo, useEffect } from "react";
 import SalaryTable from "@/components/SalaryTable";
@@ -16,13 +18,17 @@ const tableHeaders = [
   { key: "totalDeduction", label: "공제액 합계(원)" },
 ];
 
+// [수정] 데이터를 서버에서 미리 생성하고 클라이언트에서는 상태 관리만 하도록 변경
+// Next.js 14+ App Router에서는 "use client" 컴포넌트라도 부모가 서버 컴포넌트이면
+// 데이터 생성은 서버에서 한 번만 실행됩니다.
+const allData = generateAnnualSalaryTableData();
+
 export default function AnnualTablePage() {
   useEffect(() => {
     document.title = "연봉 실수령액표 | Moneysalary";
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const allData = useMemo(() => generateAnnualSalaryTableData(), []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -40,7 +46,7 @@ export default function AnnualTablePage() {
     return allData.filter((row) =>
       row.preTax.toString().includes(cleanSearchTerm)
     );
-  }, [searchTerm, allData]);
+  }, [searchTerm]);
 
   const dynamicHeaders = tableHeaders.map((h) =>
     h.key === "preTax" ? { ...h, label: "연봉(원)" } : h

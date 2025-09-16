@@ -3,14 +3,14 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
-import Script from "next/script";
+import Script from "next/script"; // next/script를 사용합니다
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
-  display: "swap", // [수정] 폰트 로딩 최적화
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -36,33 +36,34 @@ export default function RootLayout({
         {/* Google AdSense */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
+          src="https://pagead2.googlesyndication.com/pagead/js?adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
-          strategy="lazyOnload" // [수정] 로딩 시점 지연
+          strategy="lazyOnload"
         />
         {/* Kakao AdFit */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
-          strategy="lazyOnload" // [수정] 로딩 시점 지연
+          strategy="lazyOnload"
         />
 
-        {/* Google Analytics 스크립트 */}
+        {/* [기존 GA 코드 제거] 이전에 있던 GA 코드는 삭제합니다. */}
+
+        {/* [수정] 여기에 새 Google Analytics 코드를 Next.js 방식으로 넣습니다. */}
         <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
         />
         <Script
-          id="gtag-init"
+          id="gtag-init-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-                page_path: window.location.pathname,
-              });
+              gtag('config', 'G-EZ8GT7RPEZ');
             `,
           }}
         />
@@ -76,6 +77,7 @@ export default function RootLayout({
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="w-full flex-grow">
+              {/* 광고 코드들... */}
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-7DJN8QMp6O5Kayn7"
