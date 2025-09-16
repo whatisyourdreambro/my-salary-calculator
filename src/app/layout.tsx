@@ -6,8 +6,7 @@ import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
-import ClientOnly from "@/components/ClientOnly"; // ClientOnly 컴포넌트를 새로 import 합니다.
-// import PageTransitionAd from "@/components/PageTransitionAd"; // 페이지 전환 광고는 사용자 경험을 위해 제거합니다.
+import ClientOnly from "@/components/ClientOnly";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -65,11 +64,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-        <Script
+        {/* 아래 Kakao AdFit 스크립트를 반드시 제거해야 합니다! */}
+        {/* <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="lazyOnload"
-        />
+        /> */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -103,7 +103,6 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          {/* <PageTransitionAd /> */}
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">

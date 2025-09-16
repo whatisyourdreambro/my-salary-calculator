@@ -1,9 +1,11 @@
-// src/components/KakaoAdFit.tsx
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 
+// Kakao AdFit SDK 스크립트가 로드되었는지 전역으로 추적하는 변수
+let isSdkLoaded = false;
+
+// AdFit 전역 타입 선언
 declare global {
   interface Window {
     AdFit?: {
@@ -27,28 +29,45 @@ export default function KakaoAdFit({
   className = "",
 }: AdFitProps) {
   const insRef = useRef<HTMLModElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isAdCreated, setIsAdCreated] = useState(false);
+
+  const loadAdFitSdk = () => {
+    if (isSdkLoaded) {
+      return Promise.resolve();
+    }
+    return new Promise<void>((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://t1.daumcdn.net/kas/static/ba.min.js";
+      script.async = true;
+      script.onload = () => {
+        isSdkLoaded = true;
+        resolve();
+      };
+      document.head.appendChild(script);
+    });
+  };
 
   useEffect(() => {
     const currentIns = insRef.current;
-    if (!currentIns) return;
+    if (!currentIns || isAdCreated) return;
 
-    // Intersection Observer를 사용하여 광고가 뷰포트에 들어왔을 때만 로드
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoaded) {
-          try {
-            if (window.AdFit) {
-              window.AdFit.createIns(currentIns);
-              setIsLoaded(true); // 한번 로드되면 다시 로드하지 않도록 상태 변경
+        if (entries[0].isIntersecting) {
+          loadAdFitSdk().then(() => {
+            if (window.AdFit && !isAdCreated) {
+              try {
+                window.AdFit.createIns(currentIns);
+                setIsAdCreated(true);
+              } catch (e) {
+                console.error("Kakao AdFit create error:", e);
+              }
             }
-          } catch (e) {
-            console.error("Kakao AdFit error:", e);
-          }
-          observer.unobserve(currentIns); // 관찰 중지
+          });
+          observer.unobserve(currentIns);
         }
       },
-      { threshold: 0.1 } // 10% 보이면 실행
+      { threshold: 0.1 }
     );
 
     observer.observe(currentIns);
@@ -58,7 +77,7 @@ export default function KakaoAdFit({
         observer.unobserve(currentIns);
       }
     };
-  }, [isLoaded, unit]);
+  }, [isAdCreated]);
 
   return (
     <div
