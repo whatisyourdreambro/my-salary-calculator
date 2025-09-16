@@ -25,6 +25,13 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+// gtag 타입을 전역으로 선언합니다.
+declare global {
+  interface Window {
+    gtag: (param1: string, param2: string, param3: object) => void;
+  }
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -33,6 +40,14 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
+        {/* [추가 완료] CookieYes 동의 배너 스크립트 */}
+        <Script
+          id="cookieyes"
+          type="text/javascript"
+          src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
+          strategy="beforeInteractive"
+        ></Script>
+
         {/* Google AdSense */}
         <Script
           async
@@ -47,9 +62,7 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
 
-        {/* [기존 GA 코드 제거] 이전에 있던 GA 코드는 삭제합니다. */}
-
-        {/* [수정] 여기에 새 Google Analytics 코드를 Next.js 방식으로 넣습니다. */}
+        {/* Google Analytics */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
