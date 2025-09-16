@@ -9,8 +9,9 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // [핵심 수정] 광고 서비스가 정상 작동하도록 보안 정책에 필요한 도메인을 추가합니다.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://*.googlesyndication.com https://t1.daumcdn.net https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://www.google.com;
-  frame-src 'self' https://*.google.com https://*.daum.net https://*.kakao.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://*.googlesyndication.com https://t1.daumcdn.net https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://www.google.com https://static.doubleclick.net https://ssl.google-analytics.com;
+  frame-src 'self' https://*.google.com https://*.daum.net https://*.kakao.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com;
+  frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
   media-src 'none';
