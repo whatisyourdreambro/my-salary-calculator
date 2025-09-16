@@ -2,18 +2,28 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic"; // dynamic import를 위해 추가
+import dynamic from "next/dynamic";
 import SalaryCalculator from "@/components/SalaryCalculator";
 import SeveranceCalculator from "@/components/SeveranceCalculator";
 
-// [수정] FutureSalaryCalculator를 dynamic import로 변경합니다.
+// 미래 연봉 계산기와 연봉 비교 계산기는 dynamic import로 로딩 속도 최적화
 const FutureSalaryCalculator = dynamic(
   () => import("@/components/FutureSalaryCalculator"),
   {
     loading: () => (
       <div className="p-8 text-center">미래 연봉 계산기 로딩 중...</div>
     ),
-    ssr: false, // 서버에서는 렌더링하지 않음
+    ssr: false,
+  }
+);
+
+const SalaryComparator = dynamic(
+  () => import("@/components/SalaryComparator"),
+  {
+    loading: () => (
+      <div className="p-8 text-center">연봉 비교 계산기 로딩 중...</div>
+    ),
+    ssr: false,
   }
 );
 
@@ -21,6 +31,7 @@ const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
   FUTURE: "future",
+  COMPARATOR: "comparator", // [추가] 비교기 탭
 };
 
 type TabValue = (typeof TABS)[keyof typeof TABS];
@@ -31,7 +42,11 @@ export default function CalculatorTabs() {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (tab === TABS.SEVERANCE || tab === TABS.FUTURE) {
+    if (
+      tab === TABS.SEVERANCE ||
+      tab === TABS.FUTURE ||
+      tab === TABS.COMPARATOR
+    ) {
       setActiveTab(tab);
     } else {
       setActiveTab(TABS.SALARY);
@@ -44,6 +59,8 @@ export default function CalculatorTabs() {
         return <SeveranceCalculator />;
       case TABS.FUTURE:
         return <FutureSalaryCalculator />;
+      case TABS.COMPARATOR: // [추가]
+        return <SalaryComparator />;
       case TABS.SALARY:
       default:
         return <SalaryCalculator />;
@@ -66,6 +83,7 @@ export default function CalculatorTabs() {
             {tab === TABS.SALARY && "연봉 계산기"}
             {tab === TABS.SEVERANCE && "퇴직금 계산기"}
             {tab === TABS.FUTURE && "미래 연봉"}
+            {tab === TABS.COMPARATOR && "연봉 비교기"} {/* [추가] */}
           </button>
         ))}
       </div>
