@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { calculateNetSalary, AdvancedSettings } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import Link from "next/link"; // Link 컴포넌트 import
+import Link from "next/link";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -53,18 +53,21 @@ export default function SalaryCalculator() {
       annualSalary = (annualSalary / 13) * 12;
     }
     const annualOvertime = parseNumber(overtimePay);
-    const newResult = calculateNetSalary(
-      annualSalary,
-      nonTaxable,
-      dependents,
-      children,
-      annualOvertime,
-      advancedSettings
-    );
 
-    prevResultRef.current = result;
-    setResult(newResult);
+    // prevResultRef.current를 업데이트하기 위해 현재 result 상태를 가져옵니다.
+    setResult((prevResult) => {
+      prevResultRef.current = prevResult;
+      return calculateNetSalary(
+        annualSalary,
+        nonTaxable,
+        dependents,
+        children,
+        annualOvertime,
+        advancedSettings
+      );
+    });
   }, [
+    // [핵심 수정] 무한 루프를 유발하던 'result'를 의존성 배열에서 제거했습니다.
     payBasis,
     severanceType,
     salaryInput,
@@ -73,9 +76,9 @@ export default function SalaryCalculator() {
     children,
     overtimePay,
     advancedSettings,
-    result,
   ]);
 
+  // 최초 마운트 및 URL 데이터 파싱 로직
   useEffect(() => {
     const data = searchParams.get("data");
     if (data) {
@@ -94,6 +97,7 @@ export default function SalaryCalculator() {
     }
   }, [searchParams]);
 
+  // 입력값이 변경될 때마다 계산을 실행합니다.
   useEffect(() => {
     runCalculation();
   }, [runCalculation]);
@@ -504,7 +508,6 @@ export default function SalaryCalculator() {
           </div>
         </div>
 
-        {/* [추가] 결과에 따른 맞춤형 콘텐츠 링크 */}
         {result.monthlyNet > 0 && (
           <div className="mt-6">
             <Link
