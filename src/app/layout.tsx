@@ -6,6 +6,7 @@ import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
+import PageTransitionAd from "@/components/PageTransitionAd"; // 페이지 이동 광고 컴포넌트
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -28,6 +29,9 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
+    adfit?: {
+      showAd: (unitId: string) => void;
+    };
   }
 }
 
@@ -39,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
+        {/* Google Tag Manager */}
         <Script id="google-tag-manager-head" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -48,23 +53,30 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-W9KTVSQH');
           `}
         </Script>
+
+        {/* CookieYes Consent Banner */}
         <Script
           id="cookieyes"
           type="text/javascript"
           src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
           strategy="beforeInteractive"
         ></Script>
+
+        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js?adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
+        {/* Kakao AdFit */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="lazyOnload"
         />
+
+        {/* Google Analytics */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -84,6 +96,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -98,9 +111,10 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
+          <PageTransitionAd />
+
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
-            {/* [수정] 아래 div에 relative와 z-index 추가 */}
             <div className="relative z-0 w-full flex-grow">
               <div className="hidden md:flex justify-center my-4">
                 <KakaoAdFit
@@ -147,6 +161,16 @@ export default function RootLayout({
                   height="250"
                 />
               </div>
+
+              {/* [추가] 요청하신 새로운 광고 단위 */}
+              <div className="flex justify-center my-4">
+                <KakaoAdFit
+                  unit="DAN-gtL0uD65wrODCXRh"
+                  width="300"
+                  height="250"
+                />
+              </div>
+
               <div className="flex justify-center my-4">
                 <KakaoAdFit
                   unit="DAN-no5HCWDFKDsohy4c"
