@@ -1,5 +1,3 @@
-// src/app/guides/road-to-100m-part2-sidejob.tsx
-
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -9,12 +7,22 @@ export const metadata: Metadata = {
     "직장인 부업 추천! 개발, 디자인 등 전문성을 활용한 N잡부터 스마트스토어, 배달 아르바이트까지. 월 100만원 추가 수익을 위한 현실적인 방법과 세금 신고 노하우를 알려드립니다.",
 };
 
+// [수정] publisher, dateModified 추가
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "N잡으로 월 100만원 더 벌기 (2025년 부업 가이드)",
   author: { "@type": "Organization", name: "Moneysalary" },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
   datePublished: "2025-09-16",
+  dateModified: "2025-09-16",
   description:
     "직장인 부업 추천! 개발, 디자인 등 전문성을 활용한 N잡부터 스마트스토어, 배달 아르바이트까지. 월 100만원 추가 수익을 위한 현실적인 방법과 세금 신고 노하우를 알려드립니다.",
 };

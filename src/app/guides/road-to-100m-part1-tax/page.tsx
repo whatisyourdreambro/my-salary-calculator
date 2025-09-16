@@ -1,5 +1,3 @@
-// src/app/guides/road-to-100m-part1-tax.tsx
-
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -9,12 +7,22 @@ export const metadata: Metadata = {
     "연봉 1억 실수령액을 높이는 가장 확실한 방법, 절세. 연금저축펀드, IRP, 비과세 수당 활용법부터 놓치기 쉬운 소득공제, 세액공제 항목까지 총정리했습니다.",
 };
 
+// [수정] publisher, dateModified 추가
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "연봉 1억을 위한 현실적인 절세 전략 (2025년 최종판)",
   author: { "@type": "Organization", name: "Moneysalary" },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
   datePublished: "2025-09-16",
+  dateModified: "2025-09-16",
   description:
     "연봉 1억 실수령액을 높이는 가장 확실한 방법, 절세. 연금저축펀드, IRP, 비과세 수당 활용법부터 놓치기 쉬운 소득공제, 세액공제 항목까지 총정리했습니다.",
 };

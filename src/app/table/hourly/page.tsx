@@ -16,6 +16,29 @@ const tableHeaders = [
   { key: "totalDeduction", label: "공제액 합계(원)" },
 ];
 
+// [추가] DataSet 스키마 데이터
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "DataSet",
+  name: "2025년 시급 실수령액 표",
+  description:
+    "2025년 최신 세법 기준 시급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
+  url: "https://www.moneysalary.com/table/hourly",
+  creator: {
+    "@type": "Organization",
+    name: "Moneysalary",
+  },
+  license: "https://www.moneysalary.com",
+  keywords: [
+    "시급",
+    "실수령액",
+    "세후 월급",
+    "시급 테이블",
+    "2025년",
+    "최저시급",
+  ],
+};
+
 export default function HourlyTablePage() {
   useEffect(() => {
     document.title = "시급 실수령액표 | Moneysalary";
@@ -57,53 +80,59 @@ export default function HourlyTablePage() {
   };
 
   return (
-    <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
-          시급 실수령액 표
-        </h1>
-        <p className="mt-4 text-base lg:text-lg leading-8 text-gray-600 dark:text-gray-400">
-          시급 구간별 월 예상 실수령액과 상세 공제 내역을 확인하세요.
-        </p>
-      </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
+            시급 실수령액 표
+          </h1>
+          <p className="mt-4 text-base lg:text-lg leading-8 text-gray-600 dark:text-gray-400">
+            시급 구간별 월 예상 실수령액과 상세 공제 내역을 확인하세요.
+          </p>
+        </div>
 
-      <div className="mb-6 max-w-sm mx-auto">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="시급으로 검색 (예: 15,000)"
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-signature-blue focus:border-signature-blue bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
-        />
-      </div>
+        <div className="mb-6 max-w-sm mx-auto">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="시급으로 검색 (예: 15,000)"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-signature-blue focus:border-signature-blue bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+          />
+        </div>
 
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        {isLoading ? (
-          <div className="p-8 text-center">데이터를 불러오는 중입니다...</div>
-        ) : (
-          <SalaryTable headers={tableHeaders} data={data} />
-        )}
-      </div>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+          {isLoading ? (
+            <div className="p-8 text-center">데이터를 불러오는 중입니다...</div>
+          ) : (
+            <SalaryTable headers={tableHeaders} data={data} />
+          )}
+        </div>
 
-      <div className="flex justify-center items-center mt-6 space-x-2">
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-          disabled={currentPage === 1 || isLoading}
-          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
-        >
-          이전
-        </button>
-        <span className="text-sm">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-          disabled={currentPage === totalPages || isLoading}
-          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
-        >
-          다음
-        </button>
-      </div>
-    </main>
+        <div className="flex justify-center items-center mt-6 space-x-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1 || isLoading}
+            className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+          >
+            이전
+          </button>
+          <span className="text-sm">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages || isLoading}
+            className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
+          >
+            다음
+          </button>
+        </div>
+      </main>
+    </>
   );
 }

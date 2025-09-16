@@ -1,5 +1,3 @@
-// src/app/guides/road-to-100m-part3-invest.tsx
-
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -9,12 +7,22 @@ export const metadata: Metadata = {
     "연봉으로 시작하는 가장 현실적인 투자 방법. 시드머니 모으기부터 미국 S&P 500 ETF, 연금저축펀드를 활용한 장기 투자 전략과 절세 혜택까지, 직장인을 위한 투자 로드맵을 제시합니다.",
 };
 
+// [수정] publisher, dateModified 추가
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: "월급으로 시작하는 투자 파이프라인 (2025년 투자 로드맵)",
   author: { "@type": "Organization", name: "Moneysalary" },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
   datePublished: "2025-09-16",
+  dateModified: "2025-09-16",
   description:
     "연봉으로 시작하는 가장 현실적인 투자 방법. 시드머니 모으기부터 미국 S&P 500 ETF, 연금저축펀드를 활용한 장기 투자 전략과 절세 혜택까지, 직장인을 위한 투자 로드맵을 제시합니다.",
 };

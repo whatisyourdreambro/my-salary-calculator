@@ -44,6 +44,24 @@ const guides = [
     description:
       "2025년 최저시급은 얼마일까요? 최저임금 기준 월급과 연봉, 그리고 주휴수당 포함 계산법까지 모두 알려드립니다.",
   },
+  {
+    slug: "road-to-100m-part1-tax",
+    title: "연봉 1억을 위한 현실적인 절세 전략 (2025년 최종판)",
+    description:
+      "연봉 1억 실수령액을 높이는 가장 확실한 방법, 절세. 연금저축펀드, IRP, 비과세 수당 활용법부터 총정리했습니다.",
+  },
+  {
+    slug: "road-to-100m-part2-sidejob",
+    title: "N잡으로 월 100만원 더 벌기 (2025년 부업 가이드)",
+    description:
+      "직장인 부업 추천! 전문성을 활용한 N잡부터 스마트스토어, 배달 아르바이트까지 현실적인 방법을 알려드립니다.",
+  },
+  {
+    slug: "road-to-100m-part3-invest",
+    title: "월급으로 시작하는 투자 파이프라인 (2025년 투자 로드맵)",
+    description:
+      "시드머니 모으기부터 미국 S&P 500 ETF, 연금저축펀드를 활용한 장기 투자 전략과 절세 혜택까지 제시합니다.",
+  },
 ];
 
 export default function GuidesListPage() {

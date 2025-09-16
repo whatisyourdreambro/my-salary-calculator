@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "2025년 최신 세법 기준, 연봉별 실수령액 표와 4대보험, 소득세 공제액을 상세히 분석합니다. 연봉 3000, 4000, 5000, 6000, 1억까지 구간별 세후 월급을 확인하세요.",
 };
 
+// [수정] Article 스키마에 발행인(publisher), 수정일(dateModified) 정보 추가
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -15,8 +16,16 @@ const articleStructuredData = {
     "@type": "Organization",
     name: "Moneysalary",
   },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
   datePublished: "2025-09-16",
-  image: "https://www.moneysalary.com/og-image.png",
+  dateModified: "2025-09-16",
   description:
     "2025년 최신 세법 기준, 연봉별 실수령액 표와 4대보험, 소득세 공제액을 상세히 분석합니다.",
 };
@@ -32,6 +41,7 @@ export default function SalaryGuide2025Page() {
       />
       <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <article className="prose dark:prose-invert lg:prose-xl w-full">
+          {/* ... 기존 article 내용 ... */}
           <div className="mb-8">
             <h1 className="!mb-2">2025년 연봉 실수령액 완벽 가이드</h1>
             <p className="text-lg text-gray-500 dark:text-gray-400">
