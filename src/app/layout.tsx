@@ -6,7 +6,8 @@ import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
-// import PageTransitionAd from "@/components/PageTransitionAd";
+import ClientOnly from "@/components/ClientOnly"; // ClientOnly 컴포넌트를 새로 import 합니다.
+// import PageTransitionAd from "@/components/PageTransitionAd"; // 페이지 전환 광고는 사용자 경험을 위해 제거합니다.
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -106,50 +107,54 @@ export default function RootLayout({
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">
-              {/* [수정] 상단 배너 광고 */}
-              <div className="hidden md:flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-7DJN8QMp6O5Kayn7"
-                  width="728"
-                  height="90"
-                />
-              </div>
-              <div className="md:hidden flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-lpJFw6yqHhzOXIfV"
-                  width="320"
-                  height="50"
-                />
-              </div>
+              <ClientOnly>
+                <div className="hidden md:flex justify-center my-4">
+                  <KakaoAdFit
+                    unit="DAN-7DJN8QMp6O5Kayn7"
+                    width="728"
+                    height="90"
+                  />
+                </div>
+                <div className="md:hidden flex justify-center my-4">
+                  <KakaoAdFit
+                    unit="DAN-lpJFw6yqHhzOXIfV"
+                    width="320"
+                    height="50"
+                  />
+                </div>
+              </ClientOnly>
 
               <div className="flex justify-center w-full">
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
-                  <KakaoAdFit
-                    unit="DAN-HVBNRsdPlneE3Uxn"
-                    width="160"
-                    height="600"
-                  />
+                  <ClientOnly>
+                    <KakaoAdFit
+                      unit="DAN-HVBNRsdPlneE3Uxn"
+                      width="160"
+                      height="600"
+                    />
+                  </ClientOnly>
                 </aside>
                 <main className="w-full">{children}</main>
                 <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
-                  <KakaoAdFit
-                    unit="DAN-O4kzbtdd9NleD4P6"
-                    width="160"
-                    height="600"
-                  />
+                  <ClientOnly>
+                    <KakaoAdFit
+                      unit="DAN-O4kzbtdd9NleD4P6"
+                      width="160"
+                      height="600"
+                    />
+                  </ClientOnly>
                 </aside>
               </div>
 
-              {/* [수정] 콘텐츠 하단 광고 영역 */}
-              <div className="flex justify-center my-4">
-                <KakaoAdFit
-                  unit="DAN-WgV2d248sf3mJoB2"
-                  width="320"
-                  height="100"
-                />
-              </div>
-
-              {/* [제거] 중복되고 효율 낮은 광고 제거 */}
+              <ClientOnly>
+                <div className="flex justify-center my-4">
+                  <KakaoAdFit
+                    unit="DAN-WgV2d248sf3mJoB2"
+                    width="320"
+                    height="100"
+                  />
+                </div>
+              </ClientOnly>
             </div>
             <Footer />
           </div>
