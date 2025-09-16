@@ -11,6 +11,8 @@ import { salaryData } from "@/lib/salaryData";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
+// [수정] SalaryStat 타입은 salaryData.ts에서 가져오므로 여기선 제거합니다.
+
 const findSalaryRank = (annualSalary: number, key: string) => {
   const data = salaryData[key] || salaryData["all-all-all-all"];
   if (annualSalary <= 0)
