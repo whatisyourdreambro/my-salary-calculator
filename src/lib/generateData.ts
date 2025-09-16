@@ -12,18 +12,22 @@ export type SalaryData = {
   totalDeduction: number;
 };
 
-// --- 수정된 부분 ---
-// 연봉 표는 일반적인 상황을 가정하므로, 상세 설정은 기본값으로 채워줍니다.
+// --- 수정된 부분: 계산된 데이터를 저장할 캐시 객체 생성 ---
+const tableDataCache = new Map<string, SalaryData[]>();
+
 const defaultAdvancedSettings = {
   isSmeYouth: false,
   disabledDependents: 0,
   seniorDependents: 0,
 };
 
-// 연봉 실수령액 데이터 생성
+// 연봉 실수령액 데이터 생성 (캐싱 적용)
 export function generateAnnualSalaryTableData(): SalaryData[] {
+  if (tableDataCache.has("annual")) {
+    return tableDataCache.get("annual")!;
+  }
+
   const data: SalaryData[] = [];
-  // 0원부터 1억원까지 5만원 단위로 생성
   for (let salary = 0; salary <= 100000000; salary += 50000) {
     const results = calculateNetSalary(
       salary,
@@ -35,7 +39,6 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
     );
     data.push({ preTax: salary, ...results });
   }
-  // 1억 100만원부터 5억원까지 100만원 단위로 생성
   for (let salary = 101000000; salary <= 500000000; salary += 1000000) {
     const results = calculateNetSalary(
       salary,
@@ -47,13 +50,18 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
     );
     data.push({ preTax: salary, ...results });
   }
+
+  tableDataCache.set("annual", data); // 계산된 결과를 캐시에 저장
   return data;
 }
 
-// 월급 실수령액 데이터 생성
+// 월급 실수령액 데이터 생성 (캐싱 적용)
 export function generateMonthlySalaryTableData(): SalaryData[] {
+  if (tableDataCache.has("monthly")) {
+    return tableDataCache.get("monthly")!;
+  }
+
   const data: SalaryData[] = [];
-  // 0원부터 1억원까지 5만원 단위로 생성
   for (let monthly = 0; monthly <= 100000000; monthly += 50000) {
     const results = calculateNetSalary(
       monthly * 12,
@@ -65,13 +73,18 @@ export function generateMonthlySalaryTableData(): SalaryData[] {
     );
     data.push({ preTax: monthly, ...results });
   }
+
+  tableDataCache.set("monthly", data);
   return data;
 }
 
-// 주급 실수령액 데이터 생성
+// 주급 실수령액 데이터 생성 (캐싱 적용)
 export function generateWeeklyPayTableData(): SalaryData[] {
+  if (tableDataCache.has("weekly")) {
+    return tableDataCache.get("weekly")!;
+  }
+
   const data: SalaryData[] = [];
-  // 0원부터 1000만원까지 5만원 단위로 생성
   for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
     const results = calculateNetSalary(
       weekly * 52,
@@ -83,13 +96,18 @@ export function generateWeeklyPayTableData(): SalaryData[] {
     );
     data.push({ preTax: weekly, ...results });
   }
+
+  tableDataCache.set("weekly", data);
   return data;
 }
 
-// 시급 실수령액 데이터 생성 (주 40시간, 52주 근무 기준)
+// 시급 실수령액 데이터 생성 (캐싱 적용)
 export function generateHourlyWageTableData(): SalaryData[] {
+  if (tableDataCache.has("hourly")) {
+    return tableDataCache.get("hourly")!;
+  }
+
   const data: SalaryData[] = [];
-  // 0원부터 1000만원까지 5천원 단위로 생성
   for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
     const results = calculateNetSalary(
       hourly * 40 * 52,
@@ -101,5 +119,7 @@ export function generateHourlyWageTableData(): SalaryData[] {
     );
     data.push({ preTax: hourly, ...results });
   }
+
+  tableDataCache.set("hourly", data);
   return data;
 }

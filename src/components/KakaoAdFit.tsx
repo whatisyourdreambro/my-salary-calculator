@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-// Kakao AdFit SDK 스크립트가 로드되었는지 전역으로 추적하는 변수
-let isSdkLoaded = false;
+import { useEffect, useRef } from "react";
 
 // AdFit 전역 타입 선언
 declare global {
@@ -29,55 +26,29 @@ export default function KakaoAdFit({
   className = "",
 }: AdFitProps) {
   const insRef = useRef<HTMLModElement>(null);
-  const [isAdCreated, setIsAdCreated] = useState(false);
-
-  const loadAdFitSdk = () => {
-    if (isSdkLoaded) {
-      return Promise.resolve();
-    }
-    return new Promise<void>((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://t1.daumcdn.net/kas/static/ba.min.js";
-      script.async = true;
-      script.onload = () => {
-        isSdkLoaded = true;
-        resolve();
-      };
-      document.head.appendChild(script);
-    });
-  };
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     const currentIns = insRef.current;
-    if (!currentIns || isAdCreated) return;
+    if (!currentIns || initializedRef.current) {
+      return;
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadAdFitSdk().then(() => {
-            if (window.AdFit && !isAdCreated) {
-              try {
-                window.AdFit.createIns(currentIns);
-                setIsAdCreated(true);
-              } catch (e) {
-                console.error("Kakao AdFit create error:", e);
-              }
-            }
-          });
-          observer.unobserve(currentIns);
+    // window.AdFit이 로드될 때까지 짧은 지연을 두고 재시도할 수 있습니다.
+    const tryLoadAd = () => {
+      if (window.AdFit) {
+        try {
+          window.AdFit.createIns(currentIns);
+          initializedRef.current = true; // 광고가 한 번 생성되었음을 표시
+        } catch (e) {
+          console.error("Kakao AdFit create error:", e);
         }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(currentIns);
-
-    return () => {
-      if (currentIns) {
-        observer.unobserve(currentIns);
       }
     };
-  }, [isAdCreated]);
+
+    // 스크립트가 로드된 후이므로 바로 실행
+    tryLoadAd();
+  }, []);
 
   return (
     <div
