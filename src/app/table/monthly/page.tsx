@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SalaryTable from "@/components/SalaryTable";
-import { generateMonthlySalaryTableData } from "@/lib/generateData";
+import type { SalaryData } from "@/lib/generateData";
 
 const tableHeaders = [
-  { key: "preTax", label: "세전 금액(원)" },
+  { key: "preTax", label: "월급(원)" },
   { key: "monthlyNet", label: "월 실수령액(원)" },
   { key: "health", label: "건강보험(원)" },
   { key: "employment", label: "고용보험(원)" },
@@ -16,16 +16,36 @@ const tableHeaders = [
   { key: "totalDeduction", label: "공제액 합계(원)" },
 ];
 
-const allData = generateMonthlySalaryTableData();
-const ITEMS_PER_PAGE = 100;
-
 export default function MonthlyTablePage() {
   useEffect(() => {
     document.title = "월급 실수령액표 | Moneysalary";
   }, []);
 
+  const [data, setData] = useState<SalaryData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/salary-table?type=monthly&page=${currentPage}&searchTerm=${searchTerm}`
+      );
+      const result = await response.json();
+      setData(result.data);
+      setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to fetch salary data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, searchTerm]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -35,26 +55,6 @@ export default function MonthlyTablePage() {
     );
     setCurrentPage(1);
   };
-
-  const filteredData = useMemo(() => {
-    if (!searchTerm) return allData;
-    const cleanSearchTerm = searchTerm.replace(/,/g, "");
-    return allData.filter((row) =>
-      row.preTax.toString().includes(cleanSearchTerm)
-    );
-  }, [searchTerm]);
-
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return filteredData.slice(startIndex, endIndex);
-  }, [currentPage, filteredData]);
-
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-
-  const dynamicHeaders = tableHeaders.map((h) =>
-    h.key === "preTax" ? { ...h, label: "월급(원)" } : h
-  );
 
   return (
     <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -78,13 +78,17 @@ export default function MonthlyTablePage() {
       </div>
 
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <SalaryTable headers={dynamicHeaders} data={paginatedData} />
+        {isLoading ? (
+          <div className="p-8 text-center">데이터를 불러오는 중입니다...</div>
+        ) : (
+          <SalaryTable headers={tableHeaders} data={data} />
+        )}
       </div>
 
       <div className="flex justify-center items-center mt-6 space-x-2">
         <button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-          disabled={currentPage === 1}
+          disabled={currentPage === 1 || isLoading}
           className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
         >
           이전
@@ -94,7 +98,7 @@ export default function MonthlyTablePage() {
         </span>
         <button
           onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || isLoading}
           className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
         >
           다음
