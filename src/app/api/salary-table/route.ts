@@ -8,8 +8,8 @@ import {
   generateHourlyWageTableData,
 } from "@/lib/generateData";
 
-// generateData 함수들을 API 라우트 내에서 호출하도록 수정합니다.
-// (기존 generateData.ts의 내용은 그대로 두셔도 됩니다)
+// 이 코드를 추가하여 Cloudflare Pages 엣지 런타임에서 실행되도록 설정합니다.
+export const runtime = "edge";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

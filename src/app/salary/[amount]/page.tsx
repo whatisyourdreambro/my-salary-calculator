@@ -6,7 +6,7 @@ import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
 // [수정] 데이터를 클라이언트 컴포넌트가 아닌 lib/salaryData에서 직접 import 합니다.
 import { salaryData } from "@/lib/salaryData";
-
+export const runtime = "edge";
 type Props = {
   params: { amount: string };
 };
