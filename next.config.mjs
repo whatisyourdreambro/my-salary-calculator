@@ -6,11 +6,11 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-// [핵심 수정] 광고 및 외부 스크립트가 작동하도록 콘텐츠 보안 정책을 수정합니다.
+// [핵심 수정] 광고 서비스가 정상 작동하도록 보안 정책에 필요한 도메인을 추가합니다.
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://*.googlesyndication.com https://t1.daumcdn.net https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://www.google.com;
-  frame-src 'self' https://*.google.com https://*.daum.net https://googleads.g.doubleclick.net;
+  frame-src 'self' https://*.google.com https://*.daum.net https://*.kakao.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com;
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
   media-src 'none';
