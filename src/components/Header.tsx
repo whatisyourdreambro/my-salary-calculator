@@ -5,7 +5,12 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
-  { name: "계산기", longName: "연봉/퇴직금 계산기", href: "/" },
+  // [수정] longName을 요청하신 내용으로 변경했습니다.
+  {
+    name: "계산기",
+    longName: "연봉/퇴직금/미래연봉/연봉비교 계산기",
+    href: "/",
+  },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
@@ -25,7 +30,6 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
             {navLinks.map((link) => {
-              // 현재 경로가 해당 링크로 시작하는지 확인하여 하위 페이지에서도 탭이 활성화되도록 수정
               const isActive =
                 (link.href !== "/" && pathname.startsWith(link.href)) ||
                 pathname === link.href;

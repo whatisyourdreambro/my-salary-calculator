@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-// [수정] 사용하지 않는 'AdvancedSettings' 타입을 import에서 제거했습니다.
 import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
 import html2canvas from "html2canvas";
@@ -36,7 +35,9 @@ export default function SalaryComparator() {
     children: 0,
   });
   const [results, setResults] = useState<OfferResult[]>([]);
-  const resultCardRef = useRef<HTMLDivElement>(null);
+
+  // [수정] 캡쳐할 전체 영역을 위한 ref 추가
+  const comparatorRef = useRef<HTMLDivElement>(null);
 
   const handleOfferChange = (
     id: number,
@@ -89,7 +90,7 @@ export default function SalaryComparator() {
         parseNumber(commonSettings.nonTaxableAmount) * 12,
         commonSettings.dependents,
         commonSettings.children,
-        0, // overtime is already added to total
+        0,
         { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }
       );
 
@@ -110,19 +111,43 @@ export default function SalaryComparator() {
         )
       : null;
 
+  // [수정] 캡쳐 로직 강화 (전체 영역, 워터마크 추가)
   const handleCapture = () => {
-    const card = resultCardRef.current;
-    if (!card) return;
-    html2canvas(card, { backgroundColor: "#ffffff" }).then((canvas) => {
+    const captureArea = comparatorRef.current;
+    if (!captureArea) return;
+
+    // 워터마크 생성 및 추가
+    const watermark = document.createElement("div");
+    watermark.innerText = "moneysalary.com";
+    Object.assign(watermark.style, {
+      position: "absolute",
+      bottom: "20px",
+      right: "20px",
+      fontSize: "14px",
+      fontWeight: "bold",
+      color: "rgba(0, 0, 0, 0.2)",
+      pointerEvents: "none",
+    });
+    captureArea.appendChild(watermark);
+
+    html2canvas(captureArea, {
+      backgroundColor: null, // 투명 배경으로 캡쳐
+      useCORS: true,
+    }).then((canvas) => {
       const link = document.createElement("a");
-      link.download = `연봉비교_결과.png`;
+      link.download = `연봉비교_결과_moneysalary.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
+      // 캡쳐 후 워터마크 제거
+      captureArea.removeChild(watermark);
     });
   };
 
+  // [수정] 공통으로 사용할 quickAmounts
+  const quickAmounts = [10000000, 1000000, 100000];
+
   return (
-    <div className="space-y-8 mt-8">
+    <div ref={comparatorRef} className="space-y-8 mt-8">
       {/* 공통 설정 */}
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
         <h2 className="text-lg font-bold mb-4">공통 설정</h2>
@@ -145,6 +170,7 @@ export default function SalaryComparator() {
             <label className="text-sm font-medium">부양가족 (본인포함)</label>
             <input
               type="number"
+              min="1"
               value={commonSettings.dependents}
               onChange={(e) =>
                 setCommonSettings({
@@ -159,6 +185,7 @@ export default function SalaryComparator() {
             <label className="text-sm font-medium">20세 이하 자녀</label>
             <input
               type="number"
+              min="0"
               value={commonSettings.children}
               onChange={(e) =>
                 setCommonSettings({
@@ -197,14 +224,14 @@ export default function SalaryComparator() {
               label="계약 연봉"
               value={offer.salary}
               onValueChange={(v) => handleOfferChange(offer.id, "salary", v)}
-              quickAmounts={[10000000, 5000000]}
+              quickAmounts={quickAmounts}
             />
             <div className="mt-4">
               <CurrencyInput
                 label="성과금 (연)"
                 value={offer.bonus}
                 onValueChange={(v) => handleOfferChange(offer.id, "bonus", v)}
-                quickAmounts={[1000000, 500000]}
+                quickAmounts={quickAmounts}
               />
             </div>
             <div className="mt-4">
@@ -214,7 +241,7 @@ export default function SalaryComparator() {
                 onValueChange={(v) =>
                   handleOfferChange(offer.id, "overtime", v)
                 }
-                quickAmounts={[100000, 50000]}
+                quickAmounts={quickAmounts}
               />
             </div>
           </div>
@@ -239,10 +266,7 @@ export default function SalaryComparator() {
 
       {/* 결과 영역 */}
       {results.length > 0 && bestOffer && (
-        <div
-          ref={resultCardRef}
-          className="bg-light-card dark:bg-dark-card p-6 rounded-xl border"
-        >
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
           <h2 className="text-2xl font-bold text-center mb-6">
             최종 오퍼 비교 결과
           </h2>
