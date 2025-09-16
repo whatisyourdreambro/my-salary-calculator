@@ -3,7 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
-import Script from "next/script"; // next/script를 사용합니다
+import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 
@@ -25,7 +25,6 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// gtag 타입을 전역으로 선언합니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
@@ -40,7 +39,18 @@ export default function RootLayout({
   return (
     <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
       <head>
-        {/* [추가 완료] CookieYes 동의 배너 스크립트 */}
+        {/* [추가] Google Tag Manager 스크립트 (head) */}
+        <Script id="google-tag-manager-head" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-W9KTVSQH');
+          `}
+        </Script>
+
+        {/* CookieYes 동의 배너 스크립트 */}
         <Script
           id="cookieyes"
           type="text/javascript"
@@ -82,6 +92,16 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
+        {/* [추가] Google Tag Manager (noscript) (body) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"
