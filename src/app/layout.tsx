@@ -7,7 +7,7 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 import ClientOnly from "@/components/ClientOnly";
-import PageTransitionAd from "@/components/PageTransitionAd"; // 참고: 전면 광고는 사이트 안정성을 위해 비활성화 상태입니다.
+import PageTransitionAd from "@/components/PageTransitionAd";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -67,10 +67,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
+        {/* [수정] 스크립트 로딩 전략을 afterInteractive로 변경했습니다. */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script
           async
