@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/qna/year-end-tax-preview",
     "/glossary",
     "/guides",
+    "/guides/industry-trends-2025",
     "/guides/unemployment-benefits",
     "/guides/holiday-allowance",
     "/guides/severance-tax",

@@ -9,6 +9,13 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    slug: "industry-trends-2025",
+    title:
+      "대기업 연봉의 미래: 삼성·하이닉스 AI성과급 vs 현대차, 정부 정책 총정리",
+    description:
+      "AI 반도체 붐, 자동차 산업 전환, 그리고 정부의 '기업 밸류업 프로그램'이 대기업 직장인들의 연봉과 성과급에 미칠 영향을 심층 분석합니다.",
+  },
+  {
     slug: "unemployment-benefits",
     title: "실업급여 조건, A부터 Z까지 완벽 정리 (2025년 최신판)",
     description:
