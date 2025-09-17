@@ -12,6 +12,7 @@ const navLinks = [
   },
   { name: "연말정산", longName: "연말정산 계산기", href: "/year-end-tax" },
   { name: "주택대출", longName: "주택담보대출 계산기", href: "/home-loan" },
+  { name: "파이어족", longName: "FIRE 계산기", href: "/fire-calculator" },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
