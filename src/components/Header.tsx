@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
-  // [수정] longName을 요청하신 내용으로 변경했습니다.
   {
     name: "계산기",
     longName: "연봉/퇴직금/미래연봉/연봉비교 계산기",
     href: "/",
   },
+  { name: "주택대출", longName: "주택담보대출 계산기", href: "/home-loan" },
   { name: "연봉 표", longName: "연봉 표", href: "/table/annual" },
   { name: "월급 표", longName: "월급 표", href: "/table/monthly" },
   { name: "주급 표", longName: "주급 표", href: "/table/weekly" },
