@@ -5,7 +5,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     "/",
-    "/home-loan", // 이 줄을 추가하세요
+    "/home-loan",
+    "/year-end-tax", // 이 줄을 추가하세요
     "/table/annual",
     "/table/monthly",
     "/table/weekly",
