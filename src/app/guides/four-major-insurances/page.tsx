@@ -8,7 +8,6 @@ export const metadata: Metadata = {
     "직장인이라면 반드시 알아야 할 4대 사회보험의 모든 것. 각 보험의 역할, 요율, 계산 방법까지 한 페이지에서 완벽하게 마스터하세요.",
 };
 
-// [추가] Article 스키마 데이터
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -35,67 +34,95 @@ export default function FourMajorInsurancesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <article className="prose dark:prose-invert lg:prose-xl w-full">
-          <div className="mb-8">
-            <h1 className="!mb-2">
-              4대 보험 완벽 정리: 국민연금, 건강보험, 고용보험, 산재보험
-            </h1>
-            <p className="text-lg text-gray-500 dark:text-gray-400">
-              최종 업데이트: 2025년 9월
-            </p>
-          </div>
-
-          <p className="lead">
-            월급 명세서를 볼 때마다 -대체 이 돈은 다 어디로 가는 걸까?- 궁금했던
-            4대 보험. 국민연금, 건강보험, 고용보험, 산재보험으로 구성된 4대
-            사회보험은 대한민국 국민의 기본적인 생활을 보장하는 핵심적인
-            사회안전망입니다. 각 보험이 어떤 역할을 하고 내 월급에서 어떻게
-            계산되어 나가는지 명확하게 알려드립니다.
+      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+            4대 보험, 월급에서 왜 떼는 걸까?
+          </h1>
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+            국민연금, 건강보험, 고용보험, 산재보험. 직장인의 든든한 사회안전망
+            4대 보험의 모든 것을 알려드립니다.
           </p>
-
-          <h2>1. 국민연금: 나의 노후를 위한 최소한의 준비</h2>
-          <p>
-            소득이 있을 때 꾸준히 보험료를 납부하여 모아두었다가, 나이가 들어
-            생업에 종사하지 못하거나 예기치 못한 사고나 질병으로 장애를 입거나
-            사망했을 때 본인 또는 유족에게 연금을 지급하여 기본적인 생활을
-            유지할 수 있도록 돕는 제도입니다.{" "}
-            <strong>2025년 기준 요율은 소득월액의 9%</strong>이며, 직장가입자의
-            경우 회사와 근로자가 각각 4.5%씩 부담합니다.
+          <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
+            최종 업데이트: 2025년 9월 1일
           </p>
+        </div>
 
-          <h2>2. 건강보험: 아플 때 든든한 버팀목</h2>
-          <p>
-            질병이나 부상으로 인해 발생하는 고액의 진료비 부담을 방지하기 위한
-            제도로, 국민들이 평소에 보험료를 내고 보험자인 국민건강보험공단이
-            이를 관리·운영하다가 필요시 보험급여를 제공합니다.{" "}
-            <strong>2025년 기준 요율은 보수월액의 7.09%</strong>이며, 이 중
-            50%를 근로자가 부담합니다. 여기에 추가로 장기요양보험료가
-            건강보험료의 12.95%만큼 부과됩니다.
-          </p>
-
-          <h2>3. 고용보험: 실직과 재취업의 다리</h2>
-          <p>
-            실직한 근로자에게 실업급여를 지급하여 재취업을 준비하는 기간 동안의
-            생계를 지원하고, 재취업을 위한 각종 교육 훈련 프로그램 등을 제공하는
-            사회보험입니다. <strong>2025년 기준 요율은 1.8%</strong>로, 이 중
-            근로자는 0.9%를 부담합니다.
-          </p>
-
-          <h2>4. 산재보험: 일터에서의 안전망</h2>
-          <p>
-            업무상의 사유로 부상, 질병, 사망 등 재해를 입었을 경우 근로자와 그
-            가족의 생활을 보장하기 위한 보험입니다. 치료비, 휴업급여, 장해급여,
-            유족급여 등을 지급합니다. 산재보험료는 **전액 사업주가 부담**하므로
-            근로자의 월급에서는 공제되지 않습니다.
-          </p>
-
-          <blockquote>
+        <article className="prose dark:prose-invert lg:prose-xl max-w-none space-y-8">
+          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+            <h2 className="!mt-0 text-2xl font-bold">
+              1. 국민연금: 나의 노후를 위한 최소한의 준비
+            </h2>
             <p>
-              4대 보험료가 공제된 후 나의 정확한 월 실수령액이 궁금하다면?{" "}
-              <Link href="/">급여 계산기</Link>로 바로 확인해보세요.
+              소득이 있을 때 꾸준히 보험료를 납부하여 모아두었다가, 나이가 들어
+              생업에 종사하지 못하거나 예기치 못한 사고나 질병으로 장애를 입거나
+              사망했을 때 본인 또는 유족에게 연금을 지급하여 기본적인 생활을
+              유지할 수 있도록 돕는 제도입니다.
             </p>
-          </blockquote>
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+              <p className="!my-0">
+                <strong>2025년 기준 요율:</strong> 총 9% (근로자 4.5%, 회사 4.5%
+                부담)
+              </p>
+            </div>
+          </section>
+
+          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+            <h2 className="!mt-0 text-2xl font-bold">
+              2. 건강보험: 아플 때 든든한 버팀목
+            </h2>
+            <p>
+              질병이나 부상으로 인해 발생하는 고액의 진료비 부담을 방지하기 위한
+              제도로, 평소에 보험료를 내고 필요시 보험급여를 제공받습니다.
+              여기에 추가로 장기요양보험료가 건강보험료의 12.95%만큼 부과됩니다.
+            </p>
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+              <p className="!my-0">
+                <strong>2025년 기준 요율:</strong> 총 7.09% (근로자 3.545%, 회사
+                3.545% 부담)
+              </p>
+            </div>
+          </section>
+
+          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+            <h2 className="!mt-0 text-2xl font-bold">
+              3. 고용보험: 실직과 재취업의 다리
+            </h2>
+            <p>
+              실직한 근로자에게 실업급여를 지급하여 재취업을 준비하는 기간
+              동안의 생계를 지원하고, 재취업을 위한 각종 교육 훈련 프로그램 등을
+              제공하는 사회보험입니다.
+            </p>
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+              <p className="!my-0">
+                <strong>2025년 기준 요율:</strong> 근로자 부담 0.9%
+              </p>
+            </div>
+          </section>
+
+          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+            <h2 className="!mt-0 text-2xl font-bold">
+              4. 산재보험: 일터에서의 안전망
+            </h2>
+            <p>
+              업무상의 사유로 부상, 질병, 사망 등 재해를 입었을 경우 근로자와 그
+              가족의 생활을 보장하기 위한 보험입니다. 치료비, 휴업급여,
+              장해급여, 유족급여 등을 지급합니다.
+            </p>
+            <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg border border-teal-200 dark:border-teal-700">
+              <p className="!my-0">
+                <strong>산재보험료는 전액 사업주가 부담</strong>하므로 근로자의
+                월급에서는 공제되지 않습니다.
+              </p>
+            </div>
+          </section>
+
+          <Link
+            href="/"
+            className="block mt-12 p-4 bg-signature-blue text-white rounded-lg text-center font-bold text-xl hover:bg-blue-700 transition-colors"
+          >
+            그래서 내 월급은 얼마? 지금 바로 계산하기
+          </Link>
         </article>
       </main>
     </>
