@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import KakaoAdFit from "@/components/KakaoAdFit";
+import ClientOnly from "@/components/ClientOnly";
 
 export const metadata: Metadata = {
   title: "실업급여 조건, A부터 Z까지 완벽 정리 (2025년 최신판) | Moneysalary",
@@ -61,6 +63,16 @@ export default function UnemploymentBenefitsPage() {
             <strong>취업촉진수당</strong>으로 나뉩니다. 우리가 흔히 실업급여라고
             부르는 것은 대부분 구직급여를 의미합니다.
           </p>
+
+          <ClientOnly>
+            <div className="my-8 flex justify-center">
+              <KakaoAdFit
+                unit="DAN-WgV2d248sf3mJoB2"
+                width="320"
+                height="100"
+              />
+            </div>
+          </ClientOnly>
 
           <h2>2. 가장 중요한 수급 조건 4가지</h2>
           <p>아래 4가지 조건을 모두 충족해야 실업급여를 받을 수 있습니다.</p>

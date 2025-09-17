@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import KakaoAdFit from "@/components/KakaoAdFit";
+import ClientOnly from "@/components/ClientOnly";
 
 export const metadata: Metadata = {
   title: "건강보험료는 어떻게 결정되나요? | Moneysalary",
@@ -51,6 +53,17 @@ export default function HealthInsurancePage() {
             월급 외 소득(사업, 이자, 배당 등)이 연간 2,000만원을 초과하면 추가로
             소득월액 보험료가 부과될 수 있습니다.
           </p>
+
+          <ClientOnly>
+            <div className="my-8 flex justify-center">
+              <KakaoAdFit
+                unit="DAN-4eRqZLQIGjrNcXj6"
+                width="300"
+                height="250"
+              />
+            </div>
+          </ClientOnly>
+
           <h2>2. 지역가입자 건강보험료</h2>
           <p>
             프리랜서, 자영업자 등 지역가입자의 건강보험료는 소득뿐만 아니라

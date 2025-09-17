@@ -7,7 +7,7 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import KakaoAdFit from "@/components/KakaoAdFit";
 import ClientOnly from "@/components/ClientOnly";
-// import PageTransitionAd from "@/components/PageTransitionAd"; // 참고: 전면 광고는 사이트 안정성을 위해 비활성화 상태입니다.
+import PageTransitionAd from "@/components/PageTransitionAd"; // 참고: 전면 광고는 사이트 안정성을 위해 비활성화 상태입니다.
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -105,7 +105,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          {/* <PageTransitionAd /> */}
+          <PageTransitionAd />
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
             <div className="relative z-0 w-full flex-grow">
