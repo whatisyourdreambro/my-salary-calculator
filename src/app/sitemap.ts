@@ -1,4 +1,3 @@
-// src/app/sitemap.ts
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -24,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/guides/four-major-insurances",
     "/guides/year-end-tax-settlement",
     "/guides/minimum-wage",
+    "/guides/nurse-salary",
     "/guides/road-to-100m-part1-tax",
     "/guides/road-to-100m-part2-sidejob",
     "/guides/road-to-100m-part3-invest",
