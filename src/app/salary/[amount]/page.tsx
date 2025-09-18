@@ -35,7 +35,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// [수정] 100만원 단위로 2000만원부터 2억까지 페이지를 생성하도록 변경합니다.
 export async function generateStaticParams() {
+  // 2000만원부터 2억원까지 100만원 단위로 amount 파라미터를 생성합니다.
   const paths = Array.from({ length: 181 }, (_, i) => ({
     amount: (2000 + i * 100).toString(),
   }));
