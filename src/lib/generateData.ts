@@ -1,3 +1,5 @@
+// src/lib/generateData.ts
+
 import { calculateNetSalary } from "./calculator";
 
 export type SalaryData = {

@@ -1,3 +1,5 @@
+// src/components/SalaryCalculator.tsx
+
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -54,7 +56,6 @@ export default function SalaryCalculator() {
     }
     const annualOvertime = parseNumber(overtimePay);
 
-    // prevResultRef.current를 업데이트하기 위해 현재 result 상태를 가져옵니다.
     setResult((prevResult) => {
       prevResultRef.current = prevResult;
       return calculateNetSalary(
@@ -67,7 +68,6 @@ export default function SalaryCalculator() {
       );
     });
   }, [
-    // [핵심 수정] 무한 루프를 유발하던 'result'를 의존성 배열에서 제거했습니다.
     payBasis,
     severanceType,
     salaryInput,
@@ -78,7 +78,6 @@ export default function SalaryCalculator() {
     advancedSettings,
   ]);
 
-  // 최초 마운트 및 URL 데이터 파싱 로직
   useEffect(() => {
     const data = searchParams.get("data");
     if (data) {
@@ -97,7 +96,6 @@ export default function SalaryCalculator() {
     }
   }, [searchParams]);
 
-  // 입력값이 변경될 때마다 계산을 실행합니다.
   useEffect(() => {
     runCalculation();
   }, [runCalculation]);
