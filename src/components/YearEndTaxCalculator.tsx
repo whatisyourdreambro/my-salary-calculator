@@ -1,3 +1,5 @@
+// src/components/YearEndTaxCalculator.tsx
+
 "use client";
 
 // [수정] 사용하지 않는 useMemo를 제거했습니다.

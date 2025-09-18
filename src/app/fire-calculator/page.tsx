@@ -1,3 +1,5 @@
+// src/app/fire-calculator/page.tsx
+
 import type { Metadata } from "next";
 // [수정] 올바른 컴포넌트 경로로 수정했습니다.
 import FireCalculator from "../../components/FireCalculator";
