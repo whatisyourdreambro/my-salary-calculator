@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "2025년 연봉 실수령액 계산기 | Moneysalary",
   description:
     "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
+  // [수정] 새로운 SVG 파비콘을 지정합니다.
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export const viewport: Viewport = {
@@ -27,7 +31,6 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    // [추가] Kakao AdFit 스크립트가 window 객체에 추가하는 타입 정의를 다시 추가합니다.
     AdFit?: {
       createIns: (ins: HTMLModElement) => void;
       destroyIns: (ins: HTMLModElement) => void;
@@ -69,7 +72,6 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* Kakao AdFit 스크립트는 AdSense와 함께 공존할 수 있습니다. */}
         <Script
           async
           src="https://t1.daumcdn.net/kas/static/ba.min.js"
