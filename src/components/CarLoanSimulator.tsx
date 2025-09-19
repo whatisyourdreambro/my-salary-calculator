@@ -18,7 +18,6 @@ type CarWithLoan = {
 };
 
 export default function CarLoanSimulator() {
-  // [수정] 초기 연봉 값에 1,000단위 구분 기호를 적용합니다.
   const [annualSalary, setAnnualSalary] = useState("50,000,000");
   const [loanTerm, setLoanTerm] = useState(5);
   const [interestRate, setInterestRate] = useState(5.5);
@@ -49,31 +48,27 @@ export default function CarLoanSimulator() {
             onValueChange={setAnnualSalary}
             quickAmounts={[10000000, 5000000, 1000000]}
           />
+          {/* [수정] 할부 기간 입력을 range에서 number로 변경 */}
           <div>
-            <label className="text-sm font-medium">
-              할부 기간: <strong>{loanTerm}년</strong>
-            </label>
+            <label className="text-sm font-medium">할부 기간 (년)</label>
             <input
-              type="range"
-              min="1"
-              max="7"
+              type="number"
               value={loanTerm}
               onChange={(e) => setLoanTerm(Number(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 mt-2"
+              className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              placeholder="예: 5"
             />
           </div>
+          {/* [수정] 예상 금리 입력을 range에서 number로 변경 */}
           <div>
-            <label className="text-sm font-medium">
-              예상 금리: <strong>{interestRate}%</strong>
-            </label>
+            <label className="text-sm font-medium">예상 금리 (%)</label>
             <input
-              type="range"
-              min="3"
-              max="10"
+              type="number"
               step="0.1"
               value={interestRate}
               onChange={(e) => setInterestRate(Number(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 mt-2"
+              className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              placeholder="예: 5.5"
             />
           </div>
         </div>
