@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
-import Image from "next/image";
 
 type LinkItem = {
   name: string;
@@ -57,33 +56,28 @@ const navConfig: NavItem[] = [
 
 export default function Header() {
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsMenuOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
 
   return (
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        {/* h-16 -> h-24 로 헤더 높이 증가, flex-col md:flex-row 로 모바일에서 세로 정렬 */}
+        <div className="flex flex-col md:flex-row justify-between items-center h-24">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <Image
-                src="/logo-full.png"
-                alt="Moneysalary Logo"
-                width={180}
-                height={36}
-                priority
-                // [수정 1] PC에서 로고가 더 잘 보이도록 높이를 키웁니다. (h-9 -> h-10)
-                className="h-10 w-auto"
-              />
+              {/* 로고 Image 컴포넌트를 h1 텍스트로 교체 */}
+              <h1 className="text-xl font-bold text-signature-blue py-2">
+                MoneySalary 대한민국 최고의 연봉 계산기
+              </h1>
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6">
+          {/* hidden md:flex 클래스를 제거하여 항상 메뉴가 보이도록 수정 */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {navConfig.map((item) =>
               item.type === "dropdown" ? (
                 <div
@@ -92,7 +86,7 @@ export default function Header() {
                   onMouseEnter={() => setOpenDropdown(item.name)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  <button className="flex items-center gap-1 py-2 px-3 text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200">
+                  <button className="flex items-center gap-1 py-2 px-1 sm:px-3 text-sm sm:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-200">
                     {item.name}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +130,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`py-2 text-base font-medium transition-colors duration-200 border-b-2 ${
+                  className={`py-2 text-sm sm:text-base font-medium transition-colors duration-200 border-b-2 ${
                     pathname === item.href ||
                     (item.href.startsWith("/?") &&
                       pathname === "/" &&
@@ -151,132 +145,13 @@ export default function Header() {
                 </Link>
               )
             )}
+            {/* ThemeToggle을 메뉴 항목들과 함께 배치 */}
+            <ThemeToggle />
           </div>
 
-          {/* [수정 2] 모바일에서 메뉴가 사라지지 않도록 flex-shrink-0 클래스를 추가합니다. */}
-          <div className="flex items-center flex-shrink-0">
-            <ThemeToggle />
-            <div className="md:hidden ml-4">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-                aria-label="메뉴 열기"
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+          {/* 모바일 햄버거 메뉴 버튼과 메뉴 패널 전체를 삭제 */}
         </div>
       </nav>
-
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-white dark:bg-dark-bg z-50 md:hidden">
-          <div className="flex justify-between items-center h-16 px-4 border-b dark:border-gray-800">
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/logo-full.png"
-                alt="Moneysalary Logo"
-                width={180}
-                height={36}
-                className="h-10 w-auto"
-              />
-            </Link>
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="p-2 rounded-md text-gray-500 dark:text-gray-400"
-              aria-label="메뉴 닫기"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="flex flex-col items-start px-4 py-6 space-y-4 overflow-y-auto h-[calc(100%-4rem)]">
-            {navConfig.map((item) =>
-              item.type === "dropdown" ? (
-                <div key={item.name} className="w-full">
-                  <button
-                    onClick={() =>
-                      setOpenDropdown(
-                        openDropdown === item.name ? null : item.name
-                      )
-                    }
-                    className="flex justify-between items-center w-full py-2 text-lg font-bold text-gray-700 dark:text-gray-300 hover:text-signature-blue"
-                  >
-                    {item.name}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className={`w-5 h-5 transition-transform duration-200 ${
-                        openDropdown === item.name ? "rotate-180" : ""
-                      }`}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                  {openDropdown === item.name && (
-                    <div className="pl-4 border-l border-gray-200 dark:border-gray-700 mt-2 space-y-2">
-                      {item.items.map((subItem) => (
-                        <Link
-                          key={subItem.href}
-                          href={subItem.href}
-                          className={`block py-1 text-base transition-colors ${
-                            pathname === subItem.href
-                              ? "font-bold text-signature-blue"
-                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                          }`}
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setOpenDropdown(null);
-                          }}
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="w-full py-2 text-lg font-bold text-gray-700 dark:text-gray-300 hover:text-signature-blue"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              )
-            )}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
