@@ -67,29 +67,26 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      <div className="mt-2 space-y-2">
-        <div className="grid grid-cols-3 gap-2">
-          {quickAmounts.map((amount) => (
-            <button
-              key={`add-${amount}`}
-              onClick={() => handleAmountChange(amount)}
-              className="px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition"
-            >
-              + {formatNumber(amount)}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {quickAmounts.map((amount) => (
-            <button
-              key={`sub-${amount}`}
-              onClick={() => handleAmountChange(-amount)}
-              className="px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition"
-            >
-              - {formatNumber(amount)}
-            </button>
-          ))}
-        </div>
+      {/* [수정] 두 줄로 나뉘어 있던 div 구조를 하나의 6열 그리드로 통합했습니다. */}
+      <div className="mt-2 grid grid-cols-6 gap-2">
+        {quickAmounts.map((amount) => (
+          <button
+            key={`add-${amount}`}
+            onClick={() => handleAmountChange(amount)}
+            className="px-2 py-1.5 text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+          >
+            + {formatNumber(amount)}
+          </button>
+        ))}
+        {quickAmounts.map((amount) => (
+          <button
+            key={`sub-${amount}`}
+            onClick={() => handleAmountChange(-amount)}
+            className="px-2 py-1.5 text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
+          >
+            - {formatNumber(amount)}
+          </button>
+        ))}
       </div>
     </div>
   );
