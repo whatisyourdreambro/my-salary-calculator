@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-// [수정] CarLoanResult, Car, calculateCarLoan, recommendCarsBySalary 인터페이스 및 함수 임포트
 import {
   Car,
   CarLoanResult,
@@ -13,18 +12,17 @@ import {
 
 const formatNumber = (num: number) => num.toLocaleString();
 
-// [추가] 추천 차량과 계산 결과를 함께 담을 타입 정의
 type CarWithLoan = {
   car: Car;
   loan: CarLoanResult;
 };
 
 export default function CarLoanSimulator() {
-  const [annualSalary, setAnnualSalary] = useState("50000000");
+  // [수정] 초기 연봉 값에 1,000단위 구분 기호를 적용합니다.
+  const [annualSalary, setAnnualSalary] = useState("50,000,000");
   const [loanTerm, setLoanTerm] = useState(5);
   const [interestRate, setInterestRate] = useState(5.5);
 
-  // [수정] 추천 차량과 각 차량별 할부금 계산 결과를 한번에 처리
   const comparisonResults: CarWithLoan[] = useMemo(() => {
     const salary = Number(annualSalary.replace(/,/g, ""));
     const recommendedCars = recommendCarsBySalary(salary);
@@ -81,7 +79,7 @@ export default function CarLoanSimulator() {
         </div>
       </div>
 
-      {/* [수정] 2. 추천 차량 및 할부금 비교 */}
+      {/* 2. 추천 차량 및 할부금 비교 */}
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800">
         <h2 className="text-xl font-bold mb-4">
           2. 내 연봉에 맞는 추천 차량 & 할부금 비교
@@ -117,8 +115,6 @@ export default function CarLoanSimulator() {
           </p>
         )}
       </div>
-
-      {/* [제거] 기존의 sticky 결과창은 더 이상 필요 없으므로 삭제합니다. */}
     </div>
   );
 }

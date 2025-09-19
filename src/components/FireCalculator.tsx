@@ -17,16 +17,19 @@ import {
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
+type CalculationMode = "bySpending" | "byTarget";
+
 interface FireInputs {
   currentAge: string;
   monthlySpending: string;
   currentSavings: string;
   monthlySavings: string;
   annualReturn: string;
-  inflationRate: string; // 인플레이션율 추가
+  inflationRate: string;
+  targetAmount: string; // 목표 금액 추가
 }
 
-const calculateFireDate = (inputs: FireInputs) => {
+const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
   const {
     currentAge,
     currentSavings,
@@ -34,25 +37,29 @@ const calculateFireDate = (inputs: FireInputs) => {
     annualReturn,
     inflationRate,
     monthlySpending,
+    targetAmount: targetAmountInput,
   } = inputs;
 
-  const targetAmount = parseNumber(monthlySpending) * 12 * 25;
+  const targetAmount =
+    mode === "bySpending"
+      ? parseNumber(monthlySpending) * 12 * 25
+      : parseNumber(targetAmountInput);
 
-  if (parseNumber(currentSavings) >= targetAmount) {
+  if (parseNumber(currentSavings) >= targetAmount && mode === "byTarget") {
     return {
       yearsToFire: 0,
       finalAge: parseInt(currentAge, 10),
       chartData: [],
-      targetAmount,
+      finalTargetAmount: targetAmount,
     };
   }
 
   let futureValue = parseNumber(currentSavings);
-  let adjustedMonthlySpending = parseNumber(monthlySpending);
   let years = 0;
   const monthlyRate = parseFloat(annualReturn) / 100 / 12;
   const inflation = parseFloat(inflationRate) / 100;
   const monthlySave = parseNumber(monthlySavings);
+
   const chartData = [
     {
       year: 0,
@@ -64,13 +71,15 @@ const calculateFireDate = (inputs: FireInputs) => {
 
   let currentTargetAmount = targetAmount;
 
-  while (futureValue < currentTargetAmount && years < 60) {
+  while (futureValue < currentTargetAmount && years < 100) {
     for (let i = 0; i < 12; i++) {
       futureValue = futureValue * (1 + monthlyRate) + monthlySave;
     }
     years++;
-    adjustedMonthlySpending *= 1 + inflation;
-    currentTargetAmount = adjustedMonthlySpending * 12 * 25;
+
+    if (mode === "bySpending") {
+      currentTargetAmount *= 1 + inflation;
+    }
 
     chartData.push({
       year: years,
@@ -81,30 +90,33 @@ const calculateFireDate = (inputs: FireInputs) => {
   }
 
   return {
-    yearsToFire: years >= 60 ? Infinity : years,
-    finalAge: years >= 60 ? Infinity : parseInt(currentAge, 10) + years,
+    yearsToFire: years >= 100 ? Infinity : years,
+    finalAge: years >= 100 ? Infinity : parseInt(currentAge, 10) + years,
     chartData,
-    targetAmount: Math.round(currentTargetAmount),
+    finalTargetAmount: Math.round(currentTargetAmount),
   };
 };
 
 export default function FireCalculator() {
+  const [mode, setMode] = useState<CalculationMode>("bySpending");
+  // [수정] 초기값에 1,000단위 구분 기호를 적용합니다.
   const [inputs, setInputs] = useState<FireInputs>({
     currentAge: "30",
-    monthlySpending: "3000000",
-    currentSavings: "50000000",
-    monthlySavings: "1500000",
+    monthlySpending: "3,000,000",
+    currentSavings: "50,000,000",
+    monthlySavings: "1,500,000",
     annualReturn: "7",
-    inflationRate: "2", // 인플레이션율 초기값
+    inflationRate: "2",
+    targetAmount: "1,000,000,000", // 목표금액 초기값 추가
   });
 
   const handleInputChange = (field: keyof FireInputs, value: string) => {
     setInputs((prev) => ({ ...prev, [field]: value }));
   };
 
-  const { targetAmount, yearsToFire, finalAge, chartData } = useMemo(
-    () => calculateFireDate(inputs),
-    [inputs]
+  const { finalTargetAmount, yearsToFire, finalAge, chartData } = useMemo(
+    () => calculateFireDate(inputs, mode),
+    [inputs, mode]
   );
 
   return (
@@ -113,7 +125,26 @@ export default function FireCalculator() {
         <h2 className="text-xl font-bold text-center">
           나의 FIRE 계획 입력하기
         </h2>
-        {/* ... 다른 입력 필드들 ... */}
+
+        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mt-1">
+          <button
+            onClick={() => setMode("bySpending")}
+            className={`flex-1 p-2 rounded-md text-sm font-semibold ${
+              mode === "bySpending" ? "bg-white dark:bg-gray-700 shadow-sm" : ""
+            }`}
+          >
+            생활비 기반
+          </button>
+          <button
+            onClick={() => setMode("byTarget")}
+            className={`flex-1 p-2 rounded-md text-sm font-semibold ${
+              mode === "byTarget" ? "bg-white dark:bg-gray-700 shadow-sm" : ""
+            }`}
+          >
+            목표액 기반
+          </button>
+        </div>
+
         <div>
           <label className="text-sm font-medium">
             현재 나이: <strong>{inputs.currentAge}세</strong>
@@ -127,12 +158,23 @@ export default function FireCalculator() {
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
           />
         </div>
-        <CurrencyInput
-          label="은퇴 후 월 목표 생활비 (현재 가치)"
-          value={inputs.monthlySpending}
-          onValueChange={(v) => handleInputChange("monthlySpending", v)}
-          quickAmounts={[100000, 500000]}
-        />
+
+        {mode === "bySpending" ? (
+          <CurrencyInput
+            label="은퇴 후 월 목표 생활비 (현재 가치)"
+            value={inputs.monthlySpending}
+            onValueChange={(v) => handleInputChange("monthlySpending", v)}
+            quickAmounts={[100000, 500000]}
+          />
+        ) : (
+          <CurrencyInput
+            label="FIRE 목표 금액"
+            value={inputs.targetAmount}
+            onValueChange={(v) => handleInputChange("targetAmount", v)}
+            quickAmounts={[100000000, 50000000]}
+          />
+        )}
+
         <CurrencyInput
           label="현재 모은 돈 (순자산)"
           value={inputs.currentSavings}
@@ -145,32 +187,26 @@ export default function FireCalculator() {
           onValueChange={(v) => handleInputChange("monthlySavings", v)}
           quickAmounts={[100000, 500000]}
         />
+
+        {/* [수정] 수익률, 물가상승률 입력 제한 해제 */}
         <div>
-          <label className="text-sm font-medium">
-            연평균 투자 수익률: <strong>{inputs.annualReturn}%</strong>
-          </label>
+          <label className="text-sm font-medium">연평균 투자 수익률 (%)</label>
           <input
-            type="range"
-            min="1"
-            max="15"
-            step="0.5"
+            type="number"
             value={inputs.annualReturn}
             onChange={(e) => handleInputChange("annualReturn", e.target.value)}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
           />
         </div>
         <div>
           <label className="text-sm font-medium">
-            예상 연평균 물가상승률: <strong>{inputs.inflationRate}%</strong>
+            예상 연평균 물가상승률 (%)
           </label>
           <input
-            type="range"
-            min="0"
-            max="5"
-            step="0.1"
+            type="number"
             value={inputs.inflationRate}
             onChange={(e) => handleInputChange("inflationRate", e.target.value)}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
           />
         </div>
       </div>
@@ -180,13 +216,12 @@ export default function FireCalculator() {
         </h2>
         <div className="bg-white/20 p-6 rounded-lg text-center">
           <p className="font-semibold text-blue-200 text-lg">
-            파이어(FIRE) 목표 금액 (물가상승률 반영)
+            파이어(FIRE) 목표 금액
           </p>
           <p className="text-4xl font-bold my-1">
-            <CountUp end={targetAmount} separator="," /> 원
+            <CountUp end={finalTargetAmount} separator="," /> 원
           </p>
         </div>
-        {/* ... (나머지 결과 UI) ... */}
         <div className="bg-white/20 p-6 rounded-lg text-center">
           {yearsToFire === Infinity ? (
             <>
