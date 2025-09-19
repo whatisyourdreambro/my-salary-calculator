@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -48,25 +48,6 @@ export default function CurrencyInput({
     onValueChange(formatNumber(newAmount));
   };
 
-  // [수정] 버튼 렌더링을 위한 단일 배열 생성 로직을 유지하여 코드 가독성을 높입니다.
-  const quickButtons = useMemo(() => {
-    return [
-      ...quickAmounts.map((amount) => ({
-        key: `add-${amount}`,
-        amount: amount,
-        label: `+ ${formatNumber(amount)}`,
-        className:
-          "bg-signature-blue/10 text-signature-blue hover:bg-signature-blue/20",
-      })),
-      ...quickAmounts.map((amount) => ({
-        key: `sub-${amount}`,
-        amount: -amount,
-        label: `- ${formatNumber(amount)}`,
-        className: "bg-brand-red/10 text-brand-red hover:bg-brand-red/20",
-      })),
-    ];
-  }, [quickAmounts]);
-
   return (
     <div>
       <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
@@ -86,18 +67,30 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      {/* [수정] 어떤 상황에서도 깨지지 않는 Flexbox
-       레이아웃으로 최종 변경했습니다. */}
-      <div className="mt-2 flex flex-wrap gap-2">
-        {quickButtons.map((btn) => (
-          <button
-            key={btn.key}
-            onClick={() => handleAmountChange(btn.amount)}
-            className={`flex-1 px-2 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition whitespace-nowrap ${btn.className}`}
-          >
-            {btn.label}
-          </button>
-        ))}
+      {/* [수정] 파트너님의 요청대로 덧셈과 뺄셈 버튼을 명확한 2단 구조로 분리하여 모든 UI의 통일성을 확보했습니다. */}
+      <div className="mt-2 space-y-2">
+        <div className="grid grid-cols-3 gap-2">
+          {quickAmounts.map((amount) => (
+            <button
+              key={`add-${amount}`}
+              onClick={() => handleAmountChange(amount)}
+              className="px-2 py-1.5 text-xs sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+            >
+              + {formatNumber(amount)}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {quickAmounts.map((amount) => (
+            <button
+              key={`sub-${amount}`}
+              onClick={() => handleAmountChange(-amount)}
+              className="px-2 py-1.5 text-xs sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
+            >
+              - {formatNumber(amount)}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
