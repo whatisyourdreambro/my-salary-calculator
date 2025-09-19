@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+// [수정] useMemo를 import합니다.
+import { useState, useRef, useEffect, useMemo } from "react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -20,6 +21,38 @@ export default function CurrencyInput({
 }: CurrencyInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState<number | null>(null);
+
+  // [추가] 덧셈/뺄셈 버튼을 위한 하나의 통합된 배열을 생성합니다.
+  // 이 방식은 렌더링 오류를 원천적으로 방지하는 가장 안정적인 구조입니다.
+  const quickButtons = useMemo(() => {
+    const buttons: {
+      key: string;
+      amount: number;
+      label: string;
+      className: string;
+    }[] = [];
+
+    quickAmounts.forEach((amount) => {
+      buttons.push({
+        key: `add-${amount}`,
+        amount: amount,
+        label: `+ ${formatNumber(amount)}`,
+        className:
+          "bg-signature-blue/10 text-signature-blue hover:bg-signature-blue/20",
+      });
+    });
+
+    quickAmounts.forEach((amount) => {
+      buttons.push({
+        key: `sub-${amount}`,
+        amount: -amount,
+        label: `- ${formatNumber(amount)}`,
+        className: "bg-brand-red/10 text-brand-red hover:bg-brand-red/20",
+      });
+    });
+
+    return buttons;
+  }, [quickAmounts]);
 
   useEffect(() => {
     const input = inputRef.current;
@@ -67,24 +100,15 @@ export default function CurrencyInput({
         </span>
       </div>
 
-      {/* [수정] 두 줄로 나뉘어 있던 div 구조를 하나의 6열 그리드로 통합했습니다. */}
-      <div className="mt-2 grid grid-cols-6 gap-2">
-        {quickAmounts.map((amount) => (
+      {/* [수정] 통합된 버튼 배열을 단 한번의 map으로 렌더링하여 안정성을 확보합니다. */}
+      <div className="mt-2 grid grid-cols-3 sm:grid-cols-6 gap-2">
+        {quickButtons.map((btn) => (
           <button
-            key={`add-${amount}`}
-            onClick={() => handleAmountChange(amount)}
-            className="px-2 py-1.5 text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+            key={btn.key}
+            onClick={() => handleAmountChange(btn.amount)}
+            className={`px-2 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition whitespace-nowrap ${btn.className}`}
           >
-            + {formatNumber(amount)}
-          </button>
-        ))}
-        {quickAmounts.map((amount) => (
-          <button
-            key={`sub-${amount}`}
-            onClick={() => handleAmountChange(-amount)}
-            className="px-2 py-1.5 text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
-          >
-            - {formatNumber(amount)}
+            {btn.label}
           </button>
         ))}
       </div>
