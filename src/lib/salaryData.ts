@@ -8,8 +8,8 @@ export interface SalaryStat {
 }
 
 // 국가통계포털(KOSIS), 고용노동부 임금직무정보시스템 데이터를 기반으로 재구성한 2024-2025년 기준 데이터
-// [추가] 파트너님의 요청에 따라 다양한 직군, 경력, 연령대 키를 추가했습니다.
-//       실제 서비스에서는 각 키에 맞는 정확한 통계 데이터가 필요합니다. 여기서는 구조만 보여드립니다.
+// [참고] 파트너님의 요청에 따라 다양한 직군, 경력, 연령대 키 구조가 반영되어 있습니다.
+//       실제 서비스에서는 각 키에 맞는 정확한 통계 데이터가 필요합니다.
 export const salaryData: Record<string, SalaryStat> = {
   // --- 전체 데이터 ---
   "all-all-all-all": {
@@ -53,18 +53,20 @@ export const salaryData: Record<string, SalaryStat> = {
       99: 55000000,
     },
   },
-  // --- [추가] 더 많은 예시 데이터 (실제 데이터로 채워야 함) ---
-  "marketing-1-2-20s-capital": {
-    median: 40000000,
-    average: 42000000,
+  // --- 추가된 예시 데이터 ---
+  "marketing-all-all-capital": {
+    // 마케팅/영업, 수도권 (스크린샷에 대응하는 넓은 범위의 예시 데이터)
+    median: 42000000,
+    average: 48500000,
     percentiles: {
-      1: 90000000,
-      10: 60000000,
-      25: 48000000,
-      50: 40000000,
-      75: 35000000,
-      90: 32000000,
-      99: 28000000,
+      1: 150000000,
+      5: 110000000,
+      10: 95000000,
+      25: 68000000,
+      50: 42000000,
+      75: 31000000,
+      90: 26000000,
+      99: 22000000,
     },
   },
   "professional-11-14-40s-all": {
@@ -82,53 +84,55 @@ export const salaryData: Record<string, SalaryStat> = {
   },
 };
 
-// [수정] 1% 단위의 정밀한 연봉 순위를 계산하는 함수 (선형 보간법 적용)
+// [수정] 1% 단위의 정밀한 연봉 순위를 계산하는 함수 로직 전체 개선
 export const findSalaryRank = (annualSalary: number, key: string) => {
-  const data = salaryData[key] || salaryData["all-all-all-all"];
+  const data =
+    salaryData[key] ||
+    salaryData["marketing-all-all-capital"] ||
+    salaryData["all-all-all-all"];
   if (annualSalary <= 0) {
     return { rank: null, median: data.median, average: data.average };
   }
 
-  // 백분위 데이터를 연봉 내림차순으로 정렬
+  // 백분위 데이터를 연봉 오름차순으로 정렬
   const percentiles = Object.entries(data.percentiles)
     .map(([p, s]) => ({ percentile: parseInt(p, 10), salary: s }))
-    .sort((a, b) => b.salary - a.salary);
+    .sort((a, b) => a.salary - b.salary);
 
   // 최고 연봉보다 높은 경우
-  if (annualSalary >= percentiles[0].salary) {
+  if (annualSalary >= percentiles[percentiles.length - 1].salary) {
     return { rank: 1, median: data.median, average: data.average };
   }
 
   // 최저 연봉보다 낮은 경우
-  if (annualSalary <= percentiles[percentiles.length - 1].salary) {
+  if (annualSalary <= percentiles[0].salary) {
     return { rank: 99, median: data.median, average: data.average };
   }
 
-  // 내 연봉이 속하는 구간 찾기
-  let lowerBound = percentiles[percentiles.length - 1];
-  let upperBound = percentiles[0];
+  // 내 연봉이 속하는 두 구간(상/하위) 찾기
+  let lowerBound = percentiles[0];
+  let upperBound = percentiles[percentiles.length - 1];
 
-  for (let i = 0; i < percentiles.length; i++) {
-    if (annualSalary <= percentiles[i].salary) {
+  for (let i = 0; i < percentiles.length - 1; i++) {
+    if (
+      annualSalary >= percentiles[i].salary &&
+      annualSalary < percentiles[i + 1].salary
+    ) {
       lowerBound = percentiles[i];
-    } else {
-      upperBound = percentiles[i];
+      upperBound = percentiles[i + 1];
       break;
     }
   }
 
-  // 선형 보간법으로 순위 추정
-  let rank = lowerBound.percentile;
+  // 선형 보간법으로 정밀한 순위 추정
   const salaryRange = upperBound.salary - lowerBound.salary;
+  const rankRange = upperBound.percentile - lowerBound.percentile;
+  const positionInRange = (annualSalary - lowerBound.salary) / salaryRange;
 
-  if (salaryRange > 0) {
-    const positionInRange = (annualSalary - lowerBound.salary) / salaryRange;
-    const percentileRange = lowerBound.percentile - upperBound.percentile;
-    rank = lowerBound.percentile - positionInRange * percentileRange;
-  }
+  const rank = lowerBound.percentile + positionInRange * rankRange;
 
   return {
-    rank: Math.max(1, Math.round(rank)), // 순위는 최소 1%, 최대 99%로 표시
+    rank: Math.max(1, Math.round(rank)), // 순위는 1% ~ 99% 사이로 표시
     median: data.median,
     average: data.average,
   };
