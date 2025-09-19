@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
-import { salaryData } from "@/lib/salaryData";
+// findSalaryRank 함수를 import하여 사용합니다.
+import { salaryData, findSalaryRank } from "@/lib/salaryData";
 export const runtime = "edge";
 
 type Props = {
@@ -64,23 +65,16 @@ export default function SalaryDetailPage({ params }: Props) {
     seniorDependents: 0,
   });
 
+  // salaryData에서 직접 findSalaryRank 함수를 호출하여 순위를 계산합니다.
+  const { rank } = findSalaryRank(annualSalary, "all-all-all-all");
   const rankData = salaryData["all-all-all-all"];
-  const findRank = () => {
-    const rank = [...rankData.percentiles]
-      .sort((a, b) => a.income - b.income)
-      .reverse()
-      .find((d) => annualSalary >= d.income);
-    return rank ? 100 - rank.percentile : 0;
-  };
-
-  const rank = findRank();
 
   return (
     <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       <SalaryDetailDashboard
         annualSalary={annualSalary}
         calculationResult={calculationResult}
-        rank={rank}
+        rank={rank ?? 0}
         rankData={rankData}
       />
     </main>

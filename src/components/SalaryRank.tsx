@@ -1,31 +1,12 @@
-// src/components/SalaryRank.tsx
-
 "use client";
 
 import { useState, useMemo, useRef } from "react";
 import CurrencyInput from "./CurrencyInput";
 import html2canvas from "html2canvas";
 import Link from "next/link";
-// [수정] 데이터를 외부 파일에서 import 합니다.
-import { salaryData } from "@/lib/salaryData";
+import { findSalaryRank, salaryData } from "@/lib/salaryData"; // salaryData 직접 import
 
 const formatNumber = (num: number) => num.toLocaleString();
-
-// [수정] SalaryStat 타입은 salaryData.ts에서 가져오므로 여기선 제거합니다.
-
-const findSalaryRank = (annualSalary: number, key: string) => {
-  const data = salaryData[key] || salaryData["all-all-all-all"];
-  if (annualSalary <= 0)
-    return { rank: null, median: data.median, average: data.average };
-
-  const rank = [...data.percentiles]
-    .sort((a, b) => a.income - b.income)
-    .reverse()
-    .find((d) => annualSalary >= d.income);
-
-  const percentile = rank ? rank.percentile : 0;
-  return { rank: 100 - percentile, median: data.median, average: data.average };
-};
 
 export default function SalaryRank() {
   const [salaryInput, setSalaryInput] = useState("");
@@ -33,6 +14,7 @@ export default function SalaryRank() {
   const [experienceLevel, setExperienceLevel] = useState("all");
   const [ageGroup, setAgeGroup] = useState("all");
   const [region, setRegion] = useState("all");
+  const resultCardRef = useRef<HTMLDivElement>(null);
 
   const [result, setResult] = useState<{
     rank: number | null;
@@ -42,124 +24,88 @@ export default function SalaryRank() {
     recommendedGuides: { title: string; href: string }[];
   } | null>(null);
 
-  const resultCardRef = useRef<HTMLDivElement>(null);
-
   const annualSalary = useMemo(
     () => Number(salaryInput.replace(/,/g, "")),
     [salaryInput]
   );
 
   const handleCalculateRank = () => {
-    const filters = [jobCategory, experienceLevel, ageGroup, region];
-    const key = filters.some((f) => f === "all")
-      ? "all-all-all-all"
-      : filters.join("-");
+    let key = `${jobCategory}-${experienceLevel}-${ageGroup}-${region}`;
+
+    if (!salaryData[key]) {
+      key = `all-${experienceLevel}-${ageGroup}-all`;
+      if (!salaryData[key]) {
+        key = "all-all-all-all";
+      }
+    }
 
     const { rank, median, average } = findSalaryRank(annualSalary, key);
 
     const jobMap: Record<string, string> = {
-      all: "전체",
+      all: "전체 직군",
       management: "경영/사무",
       it_dev: "IT/개발",
       design: "디자인",
+      professional: "전문직",
+      manufacturing: "생산/기술",
     };
     const expMap: Record<string, string> = {
-      all: "경력",
+      all: "전체 경력",
       "1-3": "1~3년차",
       "4-7": "4~7년차",
       "8+": "8년 이상",
     };
     const ageMap: Record<string, string> = {
-      all: "연령",
+      all: "전체 연령",
       "20s": "20대",
       "30s": "30대",
-      "40s": "40대 이상",
+      "40s": "40대+",
     };
     const regionMap: Record<string, string> = {
-      all: "지역",
+      all: "전국",
       capital: "수도권",
       "non-capital": "수도권 외",
     };
 
-    const conditionText =
-      key === "all-all-all-all"
-        ? "전체 근로자"
-        : [
-            jobMap[jobCategory],
-            expMap[experienceLevel],
-            ageMap[ageGroup],
-            regionMap[region],
-          ].join("/");
+    const conditionText = [
+      jobMap[jobCategory],
+      expMap[experienceLevel],
+      ageMap[ageGroup],
+      regionMap[region],
+    ]
+      .filter((v) => !v.startsWith("전체"))
+      .join("/");
 
-    const recommendedGuides = [];
-    if (annualSalary > 0 && annualSalary < 40000000) {
-      recommendedGuides.push(
-        {
-          title: "실업급여 조건, A부터 Z까지 완벽 정리",
-          href: "/guides/unemployment-benefits",
-        },
-        {
-          title: "2025년 최저임금 완벽정리 (시급, 월급, 연봉)",
-          href: "/guides/minimum-wage",
-        }
-      );
-    } else if (annualSalary >= 70000000) {
-      recommendedGuides.push(
-        {
-          title: "4대 보험 완벽 정리: 국민연금, 건강보험 등",
-          href: "/guides/four-major-insurances",
-        },
-        {
-          title: "퇴직금 세금 계산, 복잡한 과정 한 번에 이해하기",
-          href: "/guides/severance-tax",
-        }
-      );
-    } else {
-      recommendedGuides.push(
-        {
-          title: "연말정산 A to Z: 13월의 월급, 제대로 챙기는 법",
-          href: "/guides/year-end-tax-settlement",
-        },
-        {
-          title: "주휴수당 계산법 및 지급 조건 완벽 가이드",
-          href: "/guides/holiday-allowance",
-        }
-      );
-    }
+    const recommendedGuides = [
+      {
+        title: "연봉 1억을 위한 현실적인 절세 전략",
+        href: "/guides/road-to-100m-part1-tax",
+      },
+      {
+        title: "이직 시 연봉협상, 최소 OO%는 불러야 하는 이유",
+        href: "/guides/salary-negotiation",
+      },
+    ];
 
     setResult({
       rank,
       median,
       average,
-      condition: conditionText,
+      condition: conditionText || "전체 근로자",
       recommendedGuides,
     });
   };
 
   const handleCapture = () => {
     const card = resultCardRef.current;
-    if (!card) return;
-
-    const watermark = document.createElement("div");
-    watermark.innerText = "moneysalary.com";
-    Object.assign(watermark.style, {
-      position: "absolute",
-      bottom: "10px",
-      right: "15px",
-      fontSize: "12px",
-      color: "rgba(255, 255, 255, 0.5)",
-      pointerEvents: "none",
-    });
-
-    card.appendChild(watermark);
-
-    html2canvas(card, { backgroundColor: "#007FFF" }).then((canvas) => {
-      const link = document.createElement("a");
-      link.download = `my_salary_report_${annualSalary}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-      card.removeChild(watermark);
-    });
+    if (card) {
+      html2canvas(card, { backgroundColor: "#007FFF" }).then((canvas) => {
+        const link = document.createElement("a");
+        link.download = "my-salary-report.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
   };
 
   const handleShare = () => {
@@ -184,74 +130,56 @@ export default function SalaryRank() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-16 bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
-      <h2 className="text-2xl sm:text-3xl font-bold text-center text-light-text dark:text-dark-text mb-2">
+    <div className="w-full max-w-3xl mx-auto mt-16 bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2">
         💰 내 연봉, 동료들과 비교하면 몇 등일까?
       </h2>
       <p className="text-center text-light-text-secondary dark:text-dark-text-secondary mb-8">
-        직군, 경력, 나이, 지역을 선택하고 더 정확한 내 소득 위치를 확인해보세요.
+        국가통계 기반 데이터로 더 정확해진 내 소득 위치를 확인해보세요.
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            직군
-          </label>
-          <select
-            value={jobCategory}
-            onChange={(e) => setJobCategory(e.target.value)}
-            className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 focus:ring-2 focus:ring-signature-blue"
-          >
-            <option value="all">전체</option>
-            <option value="management">경영/사무</option>
-            <option value="it_dev">IT/개발</option>
-            <option value="design">디자인</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            경력
-          </label>
-          <select
-            value={experienceLevel}
-            onChange={(e) => setExperienceLevel(e.target.value)}
-            className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 focus:ring-2 focus:ring-signature-blue"
-          >
-            <option value="all">전체</option>
-            <option value="1-3">1~3년</option>
-            <option value="4-7">4~7년</option>
-            <option value="8+">8년 이상</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            나이
-          </label>
-          <select
-            value={ageGroup}
-            onChange={(e) => setAgeGroup(e.target.value)}
-            className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 focus:ring-2 focus:ring-signature-blue"
-          >
-            <option value="all">전체</option>
-            <option value="20s">20대</option>
-            <option value="30s">30대</option>
-            <option value="40s">40대 이상</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            지역
-          </label>
-          <select
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 focus:ring-2 focus:ring-signature-blue"
-          >
-            <option value="all">전국</option>
-            <option value="capital">수도권</option>
-            <option value="non-capital">수도권 외</option>
-          </select>
-        </div>
+        <select
+          value={jobCategory}
+          onChange={(e) => setJobCategory(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
+        >
+          <option value="all">전체 직군</option>
+          <option value="management">경영/사무</option>
+          <option value="it_dev">IT/개발</option>
+          <option value="design">디자인</option>
+          <option value="professional">전문직(의료/법률/금융)</option>
+          <option value="manufacturing">생산/기술</option>
+        </select>
+        <select
+          value={experienceLevel}
+          onChange={(e) => setExperienceLevel(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
+        >
+          <option value="all">전체 경력</option>
+          <option value="1-3">1~3년</option>
+          <option value="4-7">4~7년</option>
+          <option value="8+">8년 이상</option>
+        </select>
+        <select
+          value={ageGroup}
+          onChange={(e) => setAgeGroup(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
+        >
+          <option value="all">전체 연령</option>
+          <option value="20s">20대</option>
+          <option value="30s">30대</option>
+          <option value="40s">40대 이상</option>
+        </select>
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
+        >
+          <option value="all">전국</option>
+          <option value="capital">수도권</option>
+          <option value="non-capital">수도권 외</option>
+        </select>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-end mt-6">
@@ -275,7 +203,7 @@ export default function SalaryRank() {
         <>
           <div
             ref={resultCardRef}
-            className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative transition-all duration-500"
+            className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative"
           >
             <p className="text-center font-semibold text-blue-200">
               {`"${result.condition}" 그룹 내 연봉 리포트`}
@@ -308,7 +236,7 @@ export default function SalaryRank() {
             </div>
             <div className="w-full bg-blue-400/50 rounded-full h-3 mt-6 relative">
               <div
-                className="bg-white h-3 rounded-full transition-all duration-1000"
+                className="bg-white h-3 rounded-full"
                 style={{ width: `${100 - (result.rank ?? 100)}%` }}
               />
               <div
@@ -317,7 +245,7 @@ export default function SalaryRank() {
               />
             </div>
             <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
-              * 정부 공인 데이터를 기반으로 한 추정치입니다.
+              * 국가통계 기반 데이터로 추정한 값입니다.
             </p>
             <div className="flex gap-2 mt-8">
               <button
@@ -334,22 +262,21 @@ export default function SalaryRank() {
               </button>
             </div>
           </div>
-
           <div className="mt-8">
             <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-4">
-              {`'${result.condition}' 그룹을 위한 맞춤 가이드`}
+              맞춤 가이드
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {result.recommendedGuides.map((guide) => (
                 <Link
                   key={guide.href}
                   href={guide.href}
-                  className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-gray-50 dark:bg-gray-800/50 dark:border-gray-700"
+                  className="block p-4 border rounded-lg hover:shadow-lg bg-gray-50 dark:bg-gray-800/50"
                 >
                   <p className="font-semibold text-signature-blue">
                     {guide.title}
                   </p>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                  <span className="text-xs text-gray-500 mt-2 block">
                     자세히 보기 →
                   </span>
                 </Link>

@@ -73,7 +73,7 @@ export default function Header() {
                 className="text-md sm:text-xl font-bold whitespace-nowrap"
                 style={{ color: "#007FFF" }}
               >
-                MoneySalary 대한민국 최고의 연봉 안내 사이트
+                MoneySalary 대한민국 최고의 연봉 정보 사이트
               </h1>
             </Link>
           </div>
