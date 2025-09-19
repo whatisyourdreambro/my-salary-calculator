@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
 
 type LinkItem = { name: string; href: string; type: "link" };
@@ -44,15 +44,13 @@ const navConfig: NavItem[] = [
       { name: "용어 사전", href: "/glossary" },
     ],
   },
-  // 이전 코드에서 누락되었던 일반 링크 항목들을 다시 추가합니다.
   { name: "연봉 비교", href: "/?tab=comparator", type: "link" },
-  { name: "로또 생성기", href: "/lotto", type: "link" },
+  { name: "연봉 순위", href: "/?tab=rank", type: "link" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setOpenDropdown(null);
@@ -64,13 +62,13 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
+          {/* 로고/사이트 제목 영역 */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              {/* 요청하신 텍스트로 수정하고, 모바일 화면을 위해 폰트 크기를 반응형으로 조절합니다. */}
               <h1
-                className="text-md sm:text-xl font-bold whitespace-nowrap"
+                className="text-sm sm:text-lg md:text-xl font-bold whitespace-nowrap"
                 style={{ color: "#007FFF" }}
               >
                 MoneySalary 대한민국 최고의 연봉 정보 사이트
@@ -78,11 +76,10 @@ export default function Header() {
             </Link>
           </div>
 
-          <div className="flex-1 flex justify-end md:justify-center items-center overflow-hidden">
-            <div
-              ref={navRef}
-              className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto whitespace-nowrap scrollbar-hide"
-            >
+          {/* 메뉴 및 테마 토글 영역 */}
+          <div className="flex flex-1 justify-end items-center min-w-0">
+            {/* 메뉴 항목들을 담는 컨테이너 */}
+            <div className="hidden md:flex items-center space-x-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
                   <div
@@ -90,18 +87,17 @@ export default function Header() {
                     className="relative"
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
-                    {/* onMouseEnter (마우스 올렸을 때) 와 onClick (클릭했을 때) 이벤트를 모두 처리하도록 수정 */}
                     <button
                       onMouseEnter={() => setOpenDropdown(item.name)}
                       onClick={() => handleDropdownToggle(item.name)}
-                      className="flex items-center gap-1 py-2 px-2 sm:px-3 text-sm sm:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      className="flex items-center gap-1 py-2 px-3 text-sm lg:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                     >
                       {item.name}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className={`w-5 h-5 transition-transform duration-200 ${
+                        className={`w-5 h-5 transition-transform ${
                           openDropdown === item.name ? "rotate-180" : ""
                         }`}
                       >
@@ -113,7 +109,7 @@ export default function Header() {
                       </svg>
                     </button>
                     <div
-                      className={`absolute top-full left-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700 overflow-hidden transition-all duration-200 ${
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700 ${
                         openDropdown === item.name
                           ? "opacity-100 visible"
                           : "opacity-0 invisible"
@@ -136,23 +132,13 @@ export default function Header() {
                     </div>
                   </div>
                 ) : (
-                  // 누락되었던 일반 링크(LinkItem) 렌더링 로직 추가
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`py-2 px-2 sm:px-3 text-sm sm:text-base font-medium transition-colors duration-200 border-b-2 ${
-                      pathname === item.href ||
-                      (item.href.startsWith("/?") &&
-                        pathname === "/" &&
-                        typeof window !== "undefined" &&
-                        new URLSearchParams(
-                          window.location.search
-                        ).toString() ===
-                          new URLSearchParams(
-                            item.href.split("?")[1]
-                          ).toString())
+                    className={`py-2 px-3 text-sm lg:text-base font-medium border-b-2 ${
+                      pathname === item.href
                         ? "border-signature-blue text-signature-blue"
-                        : "border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        : "border-transparent text-gray-500 hover:text-gray-900"
                     }`}
                   >
                     {item.name}
@@ -160,21 +146,56 @@ export default function Header() {
                 )
               )}
             </div>
-          </div>
-          <div className="flex-shrink-0 ml-2">
-            <ThemeToggle />
+            {/* 모바일 햄버거 메뉴 */}
+            <div className="md:hidden">
+              <button
+                onClick={() => handleDropdownToggle("mobile-menu")}
+                className="p-2 rounded-md"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+              </button>
+              {openDropdown === "mobile-menu" && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
+                  {/* 'flat_map'을 올바른 'flatMap'으로 수정했습니다. */}
+                  {navConfig
+                    .flatMap((item) =>
+                      item.type === "link" ? [item] : item.items
+                    )
+                    .map((subItem) => (
+                      <Link
+                        key={subItem.href}
+                        href={subItem.href}
+                        className={`block px-4 py-2 text-sm ${
+                          pathname === subItem.href
+                            ? "font-bold text-signature-blue"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        }`}
+                        onClick={() => setOpenDropdown(null)}
+                      >
+                        {subItem.name}
+                      </Link>
+                    ))}
+                </div>
+              )}
+            </div>
+            <div className="ml-2">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </nav>
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </header>
   );
 }
