@@ -63,9 +63,10 @@ export default function Header() {
 
   // [수정] useEffect 의존성 배열에 누락된 값을 추가하여 React Hook 규칙을 준수합니다.
   useEffect(() => {
-    if (isMenuOpen) setIsMenuOpen(false);
-    if (openDropdown) setOpenDropdown(null);
-  }, [pathname, isMenuOpen, openDropdown]);
+    // 페이지 경로가 변경되면 모든 메뉴를 닫습니다.
+    setIsMenuOpen(false);
+    setOpenDropdown(null);
+  }, [pathname]);
 
   return (
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
