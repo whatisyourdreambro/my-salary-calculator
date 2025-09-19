@@ -1,5 +1,3 @@
-// src/components/CalculatorTabs.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,35 +6,30 @@ import dynamic from "next/dynamic";
 import SalaryCalculator from "@/components/SalaryCalculator";
 import SeveranceCalculator from "@/components/SeveranceCalculator";
 
-// 미래 연봉 계산기와 연봉 비교 계산기는 dynamic import로 로딩 속도 최적화
+// Dynamic imports for performance
 const FutureSalaryCalculator = dynamic(
-  () => import("@/components/FutureSalaryCalculator"),
-  {
-    loading: () => (
-      <div className="p-8 text-center">미래 연봉 계산기 로딩 중...</div>
-    ),
-    ssr: false,
-  }
+  () => import("@/components/FutureSalaryCalculator")
 );
-
-const SalaryComparator = dynamic(
-  () => import("@/components/SalaryComparator"),
-  {
-    loading: () => (
-      <div className="p-8 text-center">연봉 비교 계산기 로딩 중...</div>
-    ),
-    ssr: false,
-  }
-);
+const SalaryComparator = dynamic(() => import("@/components/SalaryComparator"));
+const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
 
 const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
   FUTURE: "future",
-  COMPARATOR: "comparator", // [추가] 비교기 탭
+  COMPARATOR: "comparator",
+  RANK: "rank", // 연봉 순위 탭 추가
 };
 
 type TabValue = (typeof TABS)[keyof typeof TABS];
+
+const TAB_NAMES: Record<TabValue, string> = {
+  [TABS.SALARY]: "연봉 계산기",
+  [TABS.SEVERANCE]: "퇴직금 계산기",
+  [TABS.FUTURE]: "미래 연봉",
+  [TABS.COMPARATOR]: "연봉 비교기",
+  [TABS.RANK]: "연봉 순위", // 연봉 순위 탭 이름
+};
 
 export default function CalculatorTabs() {
   const searchParams = useSearchParams();
@@ -44,12 +37,8 @@ export default function CalculatorTabs() {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (
-      tab === TABS.SEVERANCE ||
-      tab === TABS.FUTURE ||
-      tab === TABS.COMPARATOR
-    ) {
-      setActiveTab(tab);
+    if (tab && Object.values(TABS).includes(tab as TabValue)) {
+      setActiveTab(tab as TabValue);
     } else {
       setActiveTab(TABS.SALARY);
     }
@@ -61,8 +50,10 @@ export default function CalculatorTabs() {
         return <SeveranceCalculator />;
       case TABS.FUTURE:
         return <FutureSalaryCalculator />;
-      case TABS.COMPARATOR: // [추가]
+      case TABS.COMPARATOR:
         return <SalaryComparator />;
+      case TABS.RANK:
+        return <SalaryRank />;
       case TABS.SALARY:
       default:
         return <SalaryCalculator />;
@@ -71,25 +62,30 @@ export default function CalculatorTabs() {
 
   return (
     <div>
-      <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
         {(Object.values(TABS) as TabValue[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 sm:px-6 py-3 font-semibold text-base sm:text-lg transition-colors duration-200 ${
+            className={`px-3 sm:px-6 py-3 font-semibold text-sm sm:text-lg transition-colors duration-200 shrink-0 ${
               activeTab === tab
                 ? "border-b-2 border-signature-blue text-signature-blue"
                 : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
             }`}
           >
-            {tab === TABS.SALARY && "연봉 계산기"}
-            {tab === TABS.SEVERANCE && "퇴직금 계산기"}
-            {tab === TABS.FUTURE && "미래 연봉"}
-            {tab === TABS.COMPARATOR && "연봉 비교기"} {/* [추가] */}
+            {TAB_NAMES[tab]}
           </button>
         ))}
       </div>
-
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
       <div>{renderActiveCalculator()}</div>
     </div>
   );

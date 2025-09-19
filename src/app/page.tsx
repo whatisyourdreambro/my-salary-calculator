@@ -1,17 +1,7 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
 import CalculatorTabs from "@/components/CalculatorTabs";
 
-const SalaryRank = dynamic(() => import("@/components/SalaryRank"), {
-  loading: () => (
-    <div className="w-full h-96 flex justify-center items-center">
-      순위 비교 차트 로딩 중...
-    </div>
-  ),
-  ssr: false,
-});
-
-// [추가] 웹사이트 구조화된 데이터
+// 웹사이트 구조화된 데이터
 const websiteStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -44,7 +34,6 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* [추가] SEO를 위한 콘텐츠 섹션 */}
         <section className="my-12 p-6 bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-gray-800">
           <h2 className="text-2xl font-bold text-center mb-4">
             Moneysalary 계산기는 무엇이 다른가요?
@@ -62,7 +51,7 @@ export default function HomePage() {
           <CalculatorTabs />
         </Suspense>
 
-        <SalaryRank />
+        {/* SalaryRank 컴포넌트는 CalculatorTabs 내부로 이동했으므로 여기서 삭제합니다. */}
       </main>
     </>
   );
