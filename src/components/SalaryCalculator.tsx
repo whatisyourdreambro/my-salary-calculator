@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+// [수정] 사용하지 않는 'useRef'를 import 구문에서 제거했습니다.
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
@@ -20,7 +21,6 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 type CalculationResult = ReturnType<typeof calculateNetSalary>;
 
-// 폭포 차트 데이터 가공 함수
 const generateWaterfallData = (
   grossSalary: number,
   result: CalculationResult
@@ -31,24 +31,26 @@ const generateWaterfallData = (
 
   const data = [
     { name: "세전월급", value: monthlyGross, color: "#007FFF" },
-    { name: "국민연금", value: -pension, color: "#FF8042" },
-    { name: "건강보험", value: -health, color: "#FF8042" },
-    { name: "고용보험", value: -employment, color: "#FF8042" },
-    { name: "소득세", value: -incomeTax - localTax, color: "#FFBB28" },
-    { name: "실수령액", value: monthlyNet, color: "#00C49F" },
+    { name: "국민연금", value: -pension, color: "#FF6384" },
+    { name: "건강보험", value: -health, color: "#FF9F40" },
+    { name: "고용보험", value: -employment, color: "#FFCD56" },
+    { name: "소득세 등", value: -(incomeTax + localTax), color: "#4BC0C0" },
+    { name: "실수령액", value: monthlyNet, color: "#36A2EB" },
   ];
 
   let cumulative = 0;
   return data.map((d) => {
     const base = cumulative;
-    if (d.name !== "세전월급" && d.name !== "실수령액") {
-      cumulative += d.value;
-    } else if (d.name === "실수령액") {
-      cumulative = 0; // 실수령액은 바닥부터 시작
+    let range: [number, number];
+
+    if (d.name === "실수령액") {
+      range = [0, d.value];
     } else {
-      cumulative = d.value;
+      cumulative += d.value;
+      range = [Math.min(base, cumulative), Math.max(base, cumulative)];
     }
-    return { ...d, range: [base, cumulative] };
+
+    return { ...d, range };
   });
 };
 
@@ -63,7 +65,6 @@ export default function SalaryCalculator() {
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
   const [overtimePay, setOvertimePay] = useState("");
-  const prevResultRef = useRef<CalculationResult | null>(null);
 
   const [result, setResult] = useState<CalculationResult>({
     monthlyNet: 0,
@@ -94,17 +95,16 @@ export default function SalaryCalculator() {
     const nonTaxable = parseNumber(nonTaxableAmount) * 12;
     const annualOvertime = parseNumber(overtimePay);
 
-    setResult((prevResult) => {
-      prevResultRef.current = prevResult;
-      return calculateNetSalary(
+    setResult(
+      calculateNetSalary(
         annualSalary,
         nonTaxable,
         dependents,
         children,
         annualOvertime,
         { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }
-      );
-    });
+      )
+    );
   }, [annualSalary, nonTaxableAmount, dependents, children, overtimePay]);
 
   useEffect(() => {
@@ -296,7 +296,7 @@ export default function SalaryCalculator() {
                 value={nonTaxableAmount}
                 onChange={(e) => {
                   const v = e.target.value.replace(/[^0-9]/g, "");
-                  setNonTaxableAmount(v ? formatNumber(Number(v)) : "");
+                  setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
                 }}
                 className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
               />
@@ -335,21 +335,33 @@ export default function SalaryCalculator() {
             </div>
             <div>
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={waterfallData} barGap={-10}>
+                <BarChart
+                  data={waterfallData}
+                  margin={{ top: 20, right: 0, left: 0, bottom: 20 }}
+                >
                   <XAxis
                     type="category"
                     dataKey="name"
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 11 }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={50}
                   />
-                  <YAxis hide={true} domain={[0, "dataMax + 1000000"]} />
+                  <YAxis hide={true} domain={[0, "dataMax + 100000"]} />
                   <Tooltip
-                    formatter={(value: number) =>
-                      `${formatNumber(Math.abs(value))} 원`
-                    }
+                    formatter={(value: number, name, props) => {
+                      if (Array.isArray(props.payload.range)) {
+                        const actualValue = Math.abs(
+                          props.payload.range[1] - props.payload.range[0]
+                        );
+                        return `${formatNumber(Math.round(actualValue))} 원`;
+                      }
+                      return `${formatNumber(Math.abs(value))} 원`;
+                    }}
                   />
-                  <Bar dataKey="range">
+                  <Bar dataKey="range" isAnimationActive={false}>
                     {waterfallData.map((d, i) => (
-                      <Cell key={i} fill={d.color} />
+                      <Cell key={`cell-${i}`} fill={d.color} />
                     ))}
                   </Bar>
                 </BarChart>

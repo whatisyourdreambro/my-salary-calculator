@@ -51,46 +51,50 @@ const navConfig: NavItem[] = [
 export default function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    // 페이지 이동 시 모든 메뉴를 닫습니다.
     setOpenDropdown(null);
+    setIsMobileMenuOpen(false);
   }, [pathname]);
-
-  const handleDropdownToggle = (itemName: string) => {
-    setOpenDropdown(openDropdown === itemName ? null : itemName);
-  };
 
   return (
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
-      <nav className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* 로고/사이트 제목 영역 */}
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* [수정] 로고 영역: flex-shrink-0으로 로고가 줄어들지 않도록 보호하고, 제목을 간결하게 변경 */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <h1
-                className="text-sm sm:text-lg md:text-xl font-bold whitespace-nowrap"
+                className="text-lg sm:text-xl font-bold whitespace-nowrap"
                 style={{ color: "#007FFF" }}
               >
-                MoneySalary 대한민국 최고의 연봉 정보 사이트
+                Moneysalary
               </h1>
             </Link>
           </div>
 
-          {/* 메뉴 및 테마 토글 영역 */}
-          <div className="flex flex-1 justify-end items-center min-w-0">
-            {/* 메뉴 항목들을 담는 컨테이너 */}
+          {/* [수정] 메뉴 및 테마 토글 전체 영역 */}
+          <div className="flex items-center">
+            {/* 데스크톱 메뉴 */}
             <div className="hidden md:flex items-center space-x-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
+                  // [수정] onMouseEnter/Leave 이벤트를 부모 div로 이동하여 메뉴 영역 전체를 인식하도록 함
                   <div
                     key={item.name}
                     className="relative"
+                    onMouseEnter={() => setOpenDropdown(item.name)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
                     <button
-                      onMouseEnter={() => setOpenDropdown(item.name)}
-                      onClick={() => handleDropdownToggle(item.name)}
-                      className="flex items-center gap-1 py-2 px-3 text-sm lg:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === item.name ? null : item.name
+                        )
+                      }
+                      className="flex items-center gap-1 py-2 px-3 text-sm lg:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                     >
                       {item.name}
                       <svg
@@ -108,11 +112,12 @@ export default function Header() {
                         />
                       </svg>
                     </button>
+                    {/* [수정] 드롭다운 메뉴 표시/숨김 로직 개선 */}
                     <div
-                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700 ${
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700 transition-all duration-200 ${
                         openDropdown === item.name
-                          ? "opacity-100 visible"
-                          : "opacity-0 invisible"
+                          ? "opacity-100 visible translate-y-0"
+                          : "opacity-0 invisible -translate-y-2"
                       }`}
                     >
                       {item.items.map((subItem) => (
@@ -124,7 +129,6 @@ export default function Header() {
                               ? "font-bold text-signature-blue"
                               : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                           }`}
-                          onClick={() => setOpenDropdown(null)}
                         >
                           {subItem.name}
                         </Link>
@@ -135,66 +139,66 @@ export default function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`py-2 px-3 text-sm lg:text-base font-medium border-b-2 ${
-                      pathname === item.href
-                        ? "border-signature-blue text-signature-blue"
-                        : "border-transparent text-gray-500 hover:text-gray-900"
-                    }`}
+                    className="py-2 px-3 text-sm lg:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                   >
                     {item.name}
                   </Link>
                 )
               )}
             </div>
-            {/* 모바일 햄버거 메뉴 */}
-            <div className="md:hidden">
-              <button
-                onClick={() => handleDropdownToggle("mobile-menu")}
-                className="p-2 rounded-md"
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+
+            <div className="flex items-center">
+              {/* 테마 토글은 항상 보이도록 수정 */}
+              <div className="ml-4">
+                <ThemeToggle />
+              </div>
+              {/* 모바일 햄버거 메뉴 버튼 */}
+              <div className="md:hidden ml-2">
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 rounded-md text-gray-500 dark:text-gray-400"
+                  aria-label="메뉴 열기"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
-              </button>
-              {openDropdown === "mobile-menu" && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700">
-                  {/* 'flat_map'을 올바른 'flatMap'으로 수정했습니다. */}
-                  {navConfig
-                    .flatMap((item) =>
-                      item.type === "link" ? [item] : item.items
-                    )
-                    .map((subItem) => (
-                      <Link
-                        key={subItem.href}
-                        href={subItem.href}
-                        className={`block px-4 py-2 text-sm ${
-                          pathname === subItem.href
-                            ? "font-bold text-signature-blue"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                        }`}
-                        onClick={() => setOpenDropdown(null)}
-                      >
-                        {subItem.name}
-                      </Link>
-                    ))}
-                </div>
-              )}
-            </div>
-            <div className="ml-2">
-              <ThemeToggle />
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16m-7 6h7"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* [추가] 모바일 메뉴 드롭다운 영역 */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden pb-4">
+            {/* [수정] flat_map -> flatMap 으로 수정 */}
+            {navConfig
+              .flatMap((item) => (item.type === "link" ? [item] : item.items))
+              .map((subItem) => (
+                <Link
+                  key={subItem.href}
+                  href={subItem.href}
+                  className={`block px-4 py-3 text-base rounded-md ${
+                    pathname === subItem.href
+                      ? "font-bold bg-blue-50 text-signature-blue dark:bg-blue-900/30"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  }`}
+                >
+                  {subItem.name}
+                </Link>
+              ))}
+          </div>
+        )}
       </nav>
     </header>
   );

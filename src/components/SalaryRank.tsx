@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+// [수정] 사용하지 않는 'useRef'와 'html2canvas' 관련 코드를 모두 제거했습니다.
+import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
-import html2canvas from "html2canvas";
 import Link from "next/link";
-import { findSalaryRank, salaryData } from "@/lib/salaryData"; // salaryData 직접 import
+import { findSalaryRank, salaryData } from "@/lib/salaryData";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -14,7 +14,6 @@ export default function SalaryRank() {
   const [experienceLevel, setExperienceLevel] = useState("all");
   const [ageGroup, setAgeGroup] = useState("all");
   const [region, setRegion] = useState("all");
-  const resultCardRef = useRef<HTMLDivElement>(null);
 
   const [result, setResult] = useState<{
     rank: number | null;
@@ -31,35 +30,48 @@ export default function SalaryRank() {
 
   const handleCalculateRank = () => {
     let key = `${jobCategory}-${experienceLevel}-${ageGroup}-${region}`;
-
-    if (!salaryData[key]) {
-      key = `all-${experienceLevel}-${ageGroup}-all`;
-      if (!salaryData[key]) {
-        key = "all-all-all-all";
-      }
-    }
+    if (!salaryData[key])
+      key = `${jobCategory}-${experienceLevel}-${ageGroup}-all`;
+    if (!salaryData[key]) key = `${jobCategory}-${experienceLevel}-all-all`;
+    if (!salaryData[key]) key = `${jobCategory}-all-all-all`;
+    if (!salaryData[key]) key = "all-all-all-all";
 
     const { rank, median, average } = findSalaryRank(annualSalary, key);
 
     const jobMap: Record<string, string> = {
       all: "전체 직군",
       management: "경영/사무",
+      marketing: "마케팅/영업",
       it_dev: "IT/개발",
       design: "디자인",
       professional: "전문직",
       manufacturing: "생산/기술",
+      service: "서비스/교육",
     };
     const expMap: Record<string, string> = {
       all: "전체 경력",
-      "1-3": "1~3년차",
-      "4-7": "4~7년차",
-      "8+": "8년 이상",
+      "1-2": "1~2년",
+      "3-6": "3~6년",
+      "7-10": "7~10년",
+      "11-14": "11~14년",
+      "15-18": "15~18년",
+      "19-22": "19~22년",
+      "23-26": "23~26년",
+      "27-30": "27~30년",
+      "31-34": "31~34년",
+      "35-38": "35~38년",
+      "39+": "39년 이상",
     };
     const ageMap: Record<string, string> = {
       all: "전체 연령",
+      "10s": "10대",
       "20s": "20대",
       "30s": "30대",
-      "40s": "40대+",
+      "40s": "40대",
+      "50s": "50대",
+      "60s": "60대",
+      "70s": "70대",
+      "80s": "80대 이상",
     };
     const regionMap: Record<string, string> = {
       all: "전국",
@@ -74,7 +86,7 @@ export default function SalaryRank() {
       regionMap[region],
     ]
       .filter((v) => !v.startsWith("전체"))
-      .join("/");
+      .join(" / ");
 
     const recommendedGuides = [
       {
@@ -94,18 +106,6 @@ export default function SalaryRank() {
       condition: conditionText || "전체 근로자",
       recommendedGuides,
     });
-  };
-
-  const handleCapture = () => {
-    const card = resultCardRef.current;
-    if (card) {
-      html2canvas(card, { backgroundColor: "#007FFF" }).then((canvas) => {
-        const link = document.createElement("a");
-        link.download = "my-salary-report.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      });
-    }
   };
 
   const handleShare = () => {
@@ -146,10 +146,12 @@ export default function SalaryRank() {
         >
           <option value="all">전체 직군</option>
           <option value="management">경영/사무</option>
+          <option value="marketing">마케팅/영업</option>
           <option value="it_dev">IT/개발</option>
           <option value="design">디자인</option>
           <option value="professional">전문직(의료/법률/금융)</option>
           <option value="manufacturing">생산/기술</option>
+          <option value="service">서비스/교육</option>
         </select>
         <select
           value={experienceLevel}
@@ -157,9 +159,17 @@ export default function SalaryRank() {
           className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
         >
           <option value="all">전체 경력</option>
-          <option value="1-3">1~3년</option>
-          <option value="4-7">4~7년</option>
-          <option value="8+">8년 이상</option>
+          <option value="1-2">1~2년</option>
+          <option value="3-6">3~6년</option>
+          <option value="7-10">7~10년</option>
+          <option value="11-14">11~14년</option>
+          <option value="15-18">15~18년</option>
+          <option value="19-22">19~22년</option>
+          <option value="23-26">23~26년</option>
+          <option value="27-30">27~30년</option>
+          <option value="31-34">31~34년</option>
+          <option value="35-38">35~38년</option>
+          <option value="39+">39년 이상</option>
         </select>
         <select
           value={ageGroup}
@@ -167,9 +177,14 @@ export default function SalaryRank() {
           className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-signature-blue"
         >
           <option value="all">전체 연령</option>
+          <option value="10s">10대</option>
           <option value="20s">20대</option>
           <option value="30s">30대</option>
-          <option value="40s">40대 이상</option>
+          <option value="40s">40대</option>
+          <option value="50s">50대</option>
+          <option value="60s">60대</option>
+          <option value="70s">70대</option>
+          <option value="80s">80대 이상</option>
         </select>
         <select
           value={region}
@@ -201,13 +216,8 @@ export default function SalaryRank() {
 
       {result && (
         <>
-          <div
-            ref={resultCardRef}
-            className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative"
-          >
-            <p className="text-center font-semibold text-blue-200">
-              {`"${result.condition}" 그룹 내 연봉 리포트`}
-            </p>
+          <div className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative">
+            <p className="text-center font-semibold text-blue-200">{`"${result.condition}" 그룹 내 연봉 리포트`}</p>
             <div className="grid grid-cols-3 gap-4 text-center my-6">
               <div>
                 <p className="text-sm text-blue-200 opacity-80">내 순위</p>
@@ -247,18 +257,13 @@ export default function SalaryRank() {
             <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
               * 국가통계 기반 데이터로 추정한 값입니다.
             </p>
-            <div className="flex gap-2 mt-8">
+            {/* [수정] 이미지 저장 버튼 제거, 공유하기 버튼만 남김 */}
+            <div className="mt-8">
               <button
                 onClick={handleShare}
                 className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
               >
-                공유하기
-              </button>
-              <button
-                onClick={handleCapture}
-                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
-              >
-                이미지 저장
+                결과 공유하기
               </button>
             </div>
           </div>
