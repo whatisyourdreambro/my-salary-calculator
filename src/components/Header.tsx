@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
-import Image from "next/image";
+// [수정] Image 컴포넌트는 더 이상 사용하지 않습니다.
+// import Image from "next/image";
 
-// [수정] 메뉴 아이템에 대한 명확한 타입을 정의하여 'undefined' 오류를 해결합니다.
 type LinkItem = {
   name: string;
   href: string;
@@ -61,9 +61,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  // [수정] useEffect 의존성 배열에 누락된 값을 추가하여 React Hook 규칙을 준수합니다.
   useEffect(() => {
-    // 페이지 경로가 변경되면 모든 메뉴를 닫습니다.
     setIsMenuOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
@@ -74,13 +72,10 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <Image
+              {/* [수정] Next.js의 Image 컴포넌트를 일반 img 태그로 변경하여 렌더링 안정성을 높입니다. */}
+              <img
                 src="/logo-full.png"
                 alt="Moneysalary Logo"
-                width={180}
-                height={36}
-                priority
-                // [수정] 이미지 크기를 조절하기 위해 className을 추가합니다.
                 className="h-9 w-auto"
               />
             </Link>
@@ -187,11 +182,11 @@ export default function Header() {
         <div className="fixed inset-0 bg-white dark:bg-dark-bg z-50 md:hidden">
           <div className="flex justify-between items-center h-16 px-4 border-b dark:border-gray-800">
             <Link href="/" className="flex items-center">
-              <Image
+              {/* [수정] 모바일 메뉴에서도 일반 img 태그를 사용합니다. */}
+              <img
                 src="/logo-full.png"
                 alt="Moneysalary Logo"
-                width={180}
-                height={36}
+                className="h-9 w-auto"
               />
             </Link>
             <button
