@@ -21,7 +21,7 @@ const navConfig: NavItem[] = [
       { name: "종합 계산기", href: "/" },
       { name: "연말정산 계산기", href: "/year-end-tax" },
       { name: "주택담보대출 계산기", href: "/home-loan" },
-      { name: "자동차 구매 계산기", href: "/car-loan" }, // 자동차 계산기 추가
+      { name: "자동차 구매 계산기", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
     ],
   },
@@ -44,6 +44,9 @@ const navConfig: NavItem[] = [
       { name: "용어 사전", href: "/glossary" },
     ],
   },
+  // 이전 코드에서 누락되었던 일반 링크 항목들을 다시 추가합니다.
+  { name: "연봉 비교", href: "/?tab=comparator", type: "link" },
+  { name: "로또 생성기", href: "/lotto", type: "link" },
 ];
 
 export default function Header() {
@@ -55,19 +58,26 @@ export default function Header() {
     setOpenDropdown(null);
   }, [pathname]);
 
+  const handleDropdownToggle = (itemName: string) => {
+    setOpenDropdown(openDropdown === itemName ? null : itemName);
+  };
+
   return (
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <h1 className="text-xl font-bold" style={{ color: "#007FFF" }}>
-                MoneySalary
+              {/* 요청하신 텍스트로 수정하고, 모바일 화면을 위해 폰트 크기를 반응형으로 조절합니다. */}
+              <h1
+                className="text-md sm:text-xl font-bold whitespace-nowrap"
+                style={{ color: "#007FFF" }}
+              >
+                MoneySalary 대한민국 최고의 연봉 안내 사이트
               </h1>
             </Link>
           </div>
 
-          {/* Nav Container */}
           <div className="flex-1 flex justify-end md:justify-center items-center overflow-hidden">
             <div
               ref={navRef}
@@ -78,10 +88,14 @@ export default function Header() {
                   <div
                     key={item.name}
                     className="relative"
-                    onMouseEnter={() => setOpenDropdown(item.name)}
                     onMouseLeave={() => setOpenDropdown(null)}
                   >
-                    <button className="flex items-center gap-1 py-2 px-2 sm:px-3 text-sm sm:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                    {/* onMouseEnter (마우스 올렸을 때) 와 onClick (클릭했을 때) 이벤트를 모두 처리하도록 수정 */}
+                    <button
+                      onMouseEnter={() => setOpenDropdown(item.name)}
+                      onClick={() => handleDropdownToggle(item.name)}
+                      className="flex items-center gap-1 py-2 px-2 sm:px-3 text-sm sm:text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    >
                       {item.name}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +135,29 @@ export default function Header() {
                       ))}
                     </div>
                   </div>
-                ) : null
+                ) : (
+                  // 누락되었던 일반 링크(LinkItem) 렌더링 로직 추가
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`py-2 px-2 sm:px-3 text-sm sm:text-base font-medium transition-colors duration-200 border-b-2 ${
+                      pathname === item.href ||
+                      (item.href.startsWith("/?") &&
+                        pathname === "/" &&
+                        typeof window !== "undefined" &&
+                        new URLSearchParams(
+                          window.location.search
+                        ).toString() ===
+                          new URLSearchParams(
+                            item.href.split("?")[1]
+                          ).toString())
+                        ? "border-signature-blue text-signature-blue"
+                        : "border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )
               )}
             </div>
           </div>
