@@ -80,6 +80,8 @@ export default function Header() {
                 width={180}
                 height={36}
                 priority
+                // [수정] 이미지 크기를 조절하기 위해 className을 추가합니다.
+                className="h-9 w-auto"
               />
             </Link>
           </div>
