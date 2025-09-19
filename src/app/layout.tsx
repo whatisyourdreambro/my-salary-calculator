@@ -27,7 +27,12 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    // [수정] 외부 라이브러리인 adsbygoogle의 any 타입 사용을 위해 ESLint 규칙을 한 줄 비활성화합니다.
+    // [추가] Kakao AdFit 스크립트가 window 객체에 추가하는 타입 정의를 다시 추가합니다.
+    AdFit?: {
+      createIns: (ins: HTMLModElement) => void;
+      destroyIns: (ins: HTMLModElement) => void;
+      showAd?: (unitId: string) => void;
+    };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     adsbygoogle?: any[];
   }
@@ -61,6 +66,13 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
+        {/* Kakao AdFit 스크립트는 AdSense와 함께 공존할 수 있습니다. */}
+        <Script
+          async
+          src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="afterInteractive"
         />
 
