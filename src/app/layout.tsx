@@ -1,5 +1,3 @@
-// src/app/layout.tsx
-
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
@@ -7,9 +5,6 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import KakaoAdFit from "@/components/KakaoAdFit";
-import ClientOnly from "@/components/ClientOnly";
-import PageTransitionAd from "@/components/PageTransitionAd";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -32,11 +27,9 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    AdFit?: {
-      createIns: (ins: HTMLModElement) => void;
-      destroyIns: (ins: HTMLModElement) => void;
-      showAd?: (unitId: string) => void;
-    };
+    // [수정] 외부 라이브러리인 adsbygoogle의 any 타입 사용을 위해 ESLint 규칙을 한 줄 비활성화합니다.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    adsbygoogle?: any[];
   }
 }
 
@@ -63,18 +56,14 @@ export default function RootLayout({
           src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
           strategy="beforeInteractive"
         ></Script>
+
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js?adsbygoogle.js?client=ca-pub-2873403048341290"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
           crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-        {/* [수정] 스크립트 로딩 전략을 afterInteractive로 변경했습니다. */}
-        <Script
-          async
-          src="https://t1.daumcdn.net/kas/static/ba.min.js"
           strategy="afterInteractive"
         />
+
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -108,76 +97,9 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <PageTransitionAd />
           <div className="flex flex-col items-center w-full min-h-screen">
             <Header />
-            <div className="relative z-0 w-full flex-grow">
-              <ClientOnly>
-                {/* PC 상단 배너 (728x90) */}
-                <div className="hidden md:flex justify-center my-4">
-                  <KakaoAdFit
-                    unit="DAN-7DJN8QMp6O5Kayn7"
-                    width="728"
-                    height="90"
-                  />
-                </div>
-                {/* 모바일 상단 배너 (320x50, 2개) */}
-                <div className="md:hidden flex flex-col items-center my-4 space-y-4">
-                  <KakaoAdFit
-                    unit="DAN-lpJFw6yqHhzOXIfV"
-                    width="320"
-                    height="50"
-                  />
-                  <KakaoAdFit
-                    unit="DAN-no5HCWDFKDsohy4c"
-                    width="320"
-                    height="50"
-                  />
-                </div>
-              </ClientOnly>
-
-              <div className="flex justify-center w-full">
-                {/* 좌측 사이드바 (160x600) */}
-                <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
-                  <ClientOnly>
-                    <KakaoAdFit
-                      unit="DAN-HVBNRsdPlneE3Uxn"
-                      width="160"
-                      height="600"
-                    />
-                  </ClientOnly>
-                </aside>
-
-                <main className="w-full">{children}</main>
-
-                {/* 우측 사이드바 (160x600) */}
-                <aside className="hidden xl:flex sticky top-20 h-screen justify-center w-[160px] flex-shrink-0 mx-4">
-                  <ClientOnly>
-                    <KakaoAdFit
-                      unit="DAN-O4kzbtdd9NleD4P6"
-                      width="160"
-                      height="600"
-                    />
-                  </ClientOnly>
-                </aside>
-              </div>
-
-              <ClientOnly>
-                {/* 하단 배너 (320x100, 300x250) */}
-                <div className="flex flex-col items-center my-4 space-y-4">
-                  <KakaoAdFit
-                    unit="DAN-WgV2d248sf3mJoB2"
-                    width="320"
-                    height="100"
-                  />
-                  <KakaoAdFit
-                    unit="DAN-4eRqZLQIGjrNcXj6"
-                    width="300"
-                    height="250"
-                  />
-                </div>
-              </ClientOnly>
-            </div>
+            <main className="w-full flex-grow">{children}</main>
             <Footer />
           </div>
         </NextThemesProvider>
