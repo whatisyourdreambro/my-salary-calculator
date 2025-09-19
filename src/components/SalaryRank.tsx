@@ -1,6 +1,5 @@
 "use client";
 
-// [수정] 사용하지 않는 'useRef'와 'html2canvas' 관련 코드를 모두 제거했습니다.
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import Link from "next/link";
@@ -108,24 +107,32 @@ export default function SalaryRank() {
     });
   };
 
-  const handleShare = () => {
-    if (!result) return;
+  const handleShare = async () => {
+    if (!result || result.rank === null) return;
+
     const shareText = `💰 내 연봉 ${annualSalary.toLocaleString()}원은 "${
       result.condition
     }" 그룹에서 상위 ${result.rank}%래요! 여러분도 확인해보세요!`;
-    const shareUrl = window.location.href;
+    const shareUrl =
+      window.location.origin + `/?tab=rank&salary=${annualSalary}`;
 
-    if (navigator.share) {
-      navigator.share({
-        title: "내 연봉 리포트",
-        text: shareText,
-        url: shareUrl,
-      });
-    } else {
-      navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-      alert(
-        "결과가 클립보드에 복사되었습니다. 원하는 곳에 붙여넣어 공유하세요!"
-      );
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "내 연봉 순위 리포트 | Moneysalary",
+          text: shareText,
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        alert(
+          "결과가 클립보드에 복사되었습니다. 원하는 곳에 붙여넣어 공유하세요!"
+        );
+      }
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      alert("공유 기능에 실패하여, 내용이 클립보드에 복사되었습니다.");
     }
   };
 
@@ -257,7 +264,6 @@ export default function SalaryRank() {
             <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
               * 국가통계 기반 데이터로 추정한 값입니다.
             </p>
-            {/* [수정] 이미지 저장 버튼 제거, 공유하기 버튼만 남김 */}
             <div className="mt-8">
               <button
                 onClick={handleShare}
