@@ -4,8 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
-// [수정] Image 컴포넌트는 더 이상 사용하지 않습니다.
-// import Image from "next/image";
+import Image from "next/image";
 
 type LinkItem = {
   name: string;
@@ -72,11 +71,14 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              {/* [수정] Next.js의 Image 컴포넌트를 일반 img 태그로 변경하여 렌더링 안정성을 높입니다. */}
-              <img
+              <Image
                 src="/logo-full.png"
                 alt="Moneysalary Logo"
-                className="h-9 w-auto"
+                width={180}
+                height={36}
+                priority
+                // [수정 1] PC에서 로고가 더 잘 보이도록 높이를 키웁니다. (h-9 -> h-10)
+                className="h-10 w-auto"
               />
             </Link>
           </div>
@@ -151,7 +153,8 @@ export default function Header() {
             )}
           </div>
 
-          <div className="flex items-center">
+          {/* [수정 2] 모바일에서 메뉴가 사라지지 않도록 flex-shrink-0 클래스를 추가합니다. */}
+          <div className="flex items-center flex-shrink-0">
             <ThemeToggle />
             <div className="md:hidden ml-4">
               <button
@@ -182,11 +185,12 @@ export default function Header() {
         <div className="fixed inset-0 bg-white dark:bg-dark-bg z-50 md:hidden">
           <div className="flex justify-between items-center h-16 px-4 border-b dark:border-gray-800">
             <Link href="/" className="flex items-center">
-              {/* [수정] 모바일 메뉴에서도 일반 img 태그를 사용합니다. */}
-              <img
+              <Image
                 src="/logo-full.png"
                 alt="Moneysalary Logo"
-                className="h-9 w-auto"
+                width={180}
+                height={36}
+                className="h-10 w-auto"
               />
             </Link>
             <button
