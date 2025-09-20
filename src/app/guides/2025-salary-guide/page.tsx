@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+// [추가] 현재 날짜를 YYYY-MM-DD 형식으로 생성하는 로직
+const today = new Date();
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, "0");
+const day = today.getDate().toString().padStart(2, "0");
+const currentDate = `${year}-${month}-${day}`;
+const currentDateKorean = `${year}년 ${month}월 ${day}일`;
+
 export const metadata: Metadata = {
   title: "2025년 연봉 실수령액 완벽 가이드: 세후 월급과 세금 총정리",
   description:
@@ -24,7 +32,8 @@ const articleStructuredData = {
     },
   },
   datePublished: "2025-09-16",
-  dateModified: "2025-09-16",
+  // [수정] dateModified 값을 동적으로 할당
+  dateModified: currentDate,
   description:
     "2025년 최신 세법 기준, 연봉별 실수령액 표와 4대보험, 소득세 공제액을 상세히 분석합니다.",
 };
@@ -48,7 +57,8 @@ export default function SalaryGuide2025Page() {
             완벽하게 정리해 드립니다.
           </p>
           <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-            최종 업데이트: 2025년 9월 16일
+            {/* [수정] 최종 업데이트 날짜를 동적으로 표시 */}
+            최종 업데이트: {currentDateKorean}
           </p>
         </div>
 
