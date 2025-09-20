@@ -107,13 +107,15 @@ export default function HomeLoanSimulator() {
           label="주택 가격"
           value={homePrice}
           onValueChange={setHomePrice}
-          quickAmounts={[100000000, 50000000]}
+          // [수정] 3개 버튼으로 변경
+          quickAmounts={[100000000, 50000000, 10000000]}
         />
         <CurrencyInput
           label="자기 자본"
           value={downPayment}
           onValueChange={setDownPayment}
-          quickAmounts={[10000000, 5000000]}
+          // [수정] 3개 버튼으로 변경
+          quickAmounts={[50000000, 10000000, 5000000]}
         />
         <div>
           <label className="text-sm font-medium">
@@ -146,7 +148,8 @@ export default function HomeLoanSimulator() {
           label="나의 세전 연소득"
           value={annualIncome}
           onValueChange={setAnnualIncome}
-          quickAmounts={[10000000, 5000000]}
+          // [수정] 3개 버튼으로 변경
+          quickAmounts={[10000000, 5000000, 1000000]}
         />
         <div>
           <label className="text-sm font-medium">상환 방식</label>

@@ -3,19 +3,80 @@
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
+// [수정] 사용하지 않는 recharts import 항목들 제거
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  Legend,
-} from "recharts";
-import { calculateYearEndTax, TaxInputs } from "@/lib/yearEndTaxCalculator";
+  calculateYearEndTax,
+  TaxInputs,
+  TaxResult,
+} from "@/lib/yearEndTaxCalculator";
 
 const formatNumber = (num: number) => num.toLocaleString();
+
+// 상세 리포트 컴포넌트 (변경 없음)
+const AnalysisReport = ({
+  inputs,
+  result,
+}: {
+  inputs: TaxInputs;
+  result: TaxResult;
+}) => {
+  const earnedIncomeDeduction =
+    inputs.grossSalary - result.taxBase - result.determinedTax > 0
+      ? inputs.grossSalary - result.taxBase - result.determinedTax
+      : 0;
+  const earnedIncomeAmount = inputs.grossSalary - earnedIncomeDeduction;
+  const incomeDeductionTotal = earnedIncomeAmount - result.taxBase;
+  const calculatedTax =
+    result.determinedTax +
+    (inputs.prepaidTax - result.finalRefund - result.determinedTax);
+  const taxCreditTotal = calculatedTax - result.determinedTax;
+
+  const calculationSteps = [
+    { label: "총급여액 (A)", value: inputs.grossSalary, isBold: true },
+    { label: "(-) 근로소득공제", value: earnedIncomeDeduction },
+    { label: "(=) 근로소득금액 (B)", value: earnedIncomeAmount },
+    { label: "(-) 소득공제 합계", value: incomeDeductionTotal },
+    { label: "(=) 과세표준 (C)", value: result.taxBase, isBold: true },
+    { label: "산출세액 (D)", value: calculatedTax },
+    { label: "(-) 세액공제 합계", value: taxCreditTotal },
+    { label: "(=) 결정세액 (E)", value: result.determinedTax, isBold: true },
+    { label: "기납부세액 (F)", value: inputs.prepaidTax, isBold: true },
+    {
+      label: "(=) 최종 환급/납부액 (F-E)",
+      value: result.finalRefund,
+      isFinal: true,
+    },
+  ];
+
+  return (
+    <div className="mt-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50">
+      <h4 className="text-lg font-bold text-center mb-4">상세 분석 리포트</h4>
+      <div className="space-y-2 text-sm">
+        {calculationSteps.map((step, index) => (
+          <div
+            key={index}
+            className={`flex justify-between items-center py-1 ${
+              step.isBold ? "border-t mt-1 pt-1" : ""
+            }`}
+          >
+            <span className={`${step.isFinal ? "font-bold text-lg" : ""}`}>
+              {step.label}
+            </span>
+            <span
+              className={`font-mono ${
+                step.isFinal && step.value >= 0 ? "text-blue-600" : ""
+              } ${step.isFinal && step.value < 0 ? "text-red-600" : ""} ${
+                step.isBold ? "font-bold" : ""
+              }`}
+            >
+              {formatNumber(Math.round(step.value))} 원
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Accordion = ({
   title,
@@ -84,7 +145,6 @@ const NumberInput = ({
   </div>
 );
 
-// [추가] 시뮬레이션을 위한 슬라이더 컴포넌트
 const OptimizationSlider = ({
   label,
   tip,
@@ -145,8 +205,21 @@ export default function YearEndTaxCalculator() {
     monthlyRent: 0,
   });
 
+  const [showReport, setShowReport] = useState(false);
+
   const result = useMemo(() => calculateYearEndTax(inputs), [inputs]);
-  const initialRefund = result.finalRefund;
+
+  // [수정] useMemo 의존성 배열에 inputs 전체를 포함
+  const initialRefund = useMemo(
+    () =>
+      calculateYearEndTax({
+        ...inputs,
+        pensionSavings: 0,
+        creditCard: 0,
+        donation: 0,
+      }).finalRefund,
+    [inputs]
+  );
 
   const handleInputChange = (field: keyof TaxInputs, value: string) => {
     setInputs((prev) => ({
@@ -159,27 +232,21 @@ export default function YearEndTaxCalculator() {
     setInputs((prev) => ({ ...prev, [field]: value }));
   };
 
-  const chartData = [
-    { name: "기납부세액", value: inputs.prepaidTax },
-    { name: "결정세액", value: result.determinedTax },
-  ];
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-      {/* 입력 섹션 */}
       <div className="lg:col-span-2 space-y-6">
         <Accordion title="1. 기본 정보" defaultOpen={true}>
           <CurrencyInput
             label="총급여액 (연봉)"
             value={inputs.grossSalary.toLocaleString()}
             onValueChange={(v) => handleInputChange("grossSalary", v)}
-            quickAmounts={[10000000, 5000000]}
+            quickAmounts={[10000000, 5000000, 1000000]}
           />
           <CurrencyInput
             label="기납부세액 (원천징수된 세금 총액)"
             value={inputs.prepaidTax.toLocaleString()}
             onValueChange={(v) => handleInputChange("prepaidTax", v)}
-            quickAmounts={[100000, 50000]}
+            quickAmounts={[500000, 100000, 50000]}
           />
         </Accordion>
 
@@ -202,71 +269,40 @@ export default function YearEndTaxCalculator() {
               onChange={(v) => handleNumberChange("disabledDependents", v)}
             />
           </div>
-          <CurrencyInput
-            label="국민연금 납부액"
-            value={inputs.nationalPension.toLocaleString()}
-            onValueChange={(v) => handleInputChange("nationalPension", v)}
-            quickAmounts={[]}
-          />
           <div className="grid md:grid-cols-2 gap-4">
             <CurrencyInput
               label="신용카드"
               value={inputs.creditCard.toLocaleString()}
               onValueChange={(v) => handleInputChange("creditCard", v)}
-              quickAmounts={[]}
+              quickAmounts={[5000000, 1000000, 500000]}
             />
             <CurrencyInput
               label="체크카드·현금영수증"
               value={inputs.debitCardAndCash.toLocaleString()}
               onValueChange={(v) => handleInputChange("debitCardAndCash", v)}
-              quickAmounts={[]}
+              quickAmounts={[5000000, 1000000, 500000]}
             />
           </div>
         </Accordion>
 
         <Accordion title="3. 세액 공제 항목">
           <div className="grid md:grid-cols-2 gap-4">
-            <NumberInput
-              label="자녀 (만 8세 이상)"
-              value={inputs.children}
-              onChange={(v) => handleNumberChange("children", v)}
-            />
-            <NumberInput
-              label="올해 출생/입양 자녀"
-              value={inputs.birthsOrAdoptions}
-              onChange={(v) => handleNumberChange("birthsOrAdoptions", v)}
-            />
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
             <CurrencyInput
               label="연금저축/IRP 납입액"
               value={inputs.pensionSavings.toLocaleString()}
               onValueChange={(v) => handleInputChange("pensionSavings", v)}
-              quickAmounts={[]}
-            />
-            <CurrencyInput
-              label="월세액"
-              value={inputs.monthlyRent.toLocaleString()}
-              onValueChange={(v) => handleInputChange("monthlyRent", v)}
-              quickAmounts={[]}
-            />
-            <CurrencyInput
-              label="의료비"
-              value={inputs.medicalExpenses.toLocaleString()}
-              onValueChange={(v) => handleInputChange("medicalExpenses", v)}
-              quickAmounts={[]}
+              quickAmounts={[3000000, 1000000, 500000]}
             />
             <CurrencyInput
               label="기부금"
               value={inputs.donation.toLocaleString()}
               onValueChange={(v) => handleInputChange("donation", v)}
-              quickAmounts={[]}
+              quickAmounts={[100000, 50000, 10000]}
             />
           </div>
         </Accordion>
       </div>
 
-      {/* 결과 및 시뮬레이션 섹션 */}
       <div className="lg:col-span-1 space-y-6">
         <div className="sticky top-24 bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
           <h2 className="text-2xl font-bold text-center mb-4">
@@ -298,25 +334,14 @@ export default function YearEndTaxCalculator() {
             </p>
           </div>
 
-          <div className="mt-6">
-            <ResponsiveContainer width="100%" height={100}>
-              <BarChart data={chartData} layout="vertical" barGap={5}>
-                <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" hide />
-                <Tooltip
-                  formatter={(value: number) => `${formatNumber(value)}원`}
-                />
-                <Legend iconType="circle" />
-                <Bar dataKey="value" stackId="a" barSize={20}>
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={index === 0 ? "#3B82F6" : "#EF4444"}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="mt-4">
+            <button
+              onClick={() => setShowReport(!showReport)}
+              className="w-full text-sm text-center text-gray-500 hover:text-signature-blue"
+            >
+              {showReport ? "리포트 숨기기 ▲" : "상세 분석 리포트 보기 ▼"}
+            </button>
+            {showReport && <AnalysisReport inputs={inputs} result={result} />}
           </div>
 
           <div className="mt-6 pt-6 border-t dark:border-gray-700">
@@ -337,13 +362,6 @@ export default function YearEndTaxCalculator() {
                 value={inputs.creditCard}
                 max={inputs.grossSalary}
                 onChange={(v) => handleNumberChange("creditCard", v)}
-              />
-              <OptimizationSlider
-                label="기부금"
-                tip="기부금액에 따라 15~30% 세액공제를 받을 수 있습니다."
-                value={inputs.donation}
-                max={inputs.grossSalary * 0.3} // 예시 한도
-                onChange={(v) => handleNumberChange("donation", v)}
               />
             </div>
             {result.finalRefund > initialRefund && (
