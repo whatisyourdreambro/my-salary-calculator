@@ -1,31 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Cpu, Car, Landmark } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "삼성 vs 하이닉스, 역대급 '성과급 격차' 심층 분석 (feat. 정부 밸류업) | Moneysalary",
+  title: "2025 산업대전망: 반도체, 자동차 그리고 내 월급의 미래 | Moneysalary",
   description:
-    "왜 SK하이닉스 성과급은 연봉의 50%인데, 삼성전자는 아닐까? HBM 기술 격차, 사업부별 실적 차이, 그리고 정부의 '기업 밸류업 프로그램'이 두 거인의 연봉과 미래에 미칠 영향을 심층 분석합니다.",
+    "AI발 반도체 성과급 격차, 현대차의 SDV 전환, 정부의 '기업 밸류업 프로그램'이 2025년 당신의 연봉과 자산에 미칠 영향을 심층 분석하고 미래 전략을 제시합니다.",
+  openGraph: {
+    title: "2025 산업대전망: 반도체, 자동차 그리고 내 월급의 미래",
+    description:
+      "거대한 산업의 흐름 속, 당신의 연봉은 어디로 향할까요? 2025년 핵심 트렌드를 분석합니다.",
+    images: [
+      "/api/og?title=2025 산업대전망과 내 월급의 미래&description=반도체·자동차·정부정책 핵심 분석",
+    ],
+  },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline:
-    "삼성 vs 하이닉스, 역대급 '성과급 격차' 심층 분석 (feat. 정부 밸류업)",
+  headline: "2025 산업대전망: 반도체, 자동차 그리고 내 월급의 미래",
   author: { "@type": "Organization", name: "Moneysalary" },
-  publisher: {
-    "@type": "Organization",
-    name: "Moneysalary",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://www.moneysalary.com/favicon.ico",
-    },
-  },
   datePublished: "2025-09-18",
-  dateModified: "2025-09-18",
+  dateModified: "2025-09-22",
   description:
-    "HBM 기술 격차, 사업부별 실적 차이, 그리고 정부의 '기업 밸류업 프로그램'이 삼성전자와 SK하이닉스 직장인들의 연봉과 성과급에 미칠 영향을 심층 분석합니다.",
+    "AI발 반도체 성과급 격차, 현대차의 SDV 전환, 정부의 '기업 밸류업 프로그램'이 2025년 당신의 연봉과 자산에 미칠 영향을 심층 분석하고 미래 전략을 제시합니다.",
 };
 
 export default function IndustryTrends2025Page() {
@@ -37,163 +36,127 @@ export default function IndustryTrends2025Page() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        {/* 헤드라인 섹션 */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-signature-blue to-violet-500 bg-clip-text text-transparent pb-2">
-            성과급 전쟁: 삼성의 &apos;박탈감&apos; vs 하이닉스의
-            &apos;축포&apos;
+      <main className="w-full bg-light-bg dark:bg-dark-bg">
+        {/* Hero Section */}
+        <div className="w-full bg-gradient-to-br from-slate-800 to-gray-900 text-white text-center py-20 sm:py-28 px-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            2025 대전망:
+            <br />{" "}
+            <span className="text-cyan-400">
+              당신의 월급을 결정할 3가지 흐름
+            </span>
           </h1>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-            2025년 대한민국 산업 지형을 뒤흔드는 거대한 변화와 당신의 월급에
-            미칠 영향을 심층 분석합니다.
-          </p>
-          <p className="mt-2 text-sm text-gray-400 dark:text-gray-500">
-            최종 업데이트: 2025년 9월 18일
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
+            AI 반도체 전쟁, 자동차 산업의 대전환, 그리고 정부의 정책 변화.
+            거대한 파도 속에서 당신의 커리어와 연봉은 어디로 향하게 될까요?
+            2025년 대한민국 산업 지형을 읽고 미래를 준비하세요.
           </p>
         </div>
 
-        {/* [수정] article 태그를 추가하여 JSX 구조를 바로잡았습니다. */}
-        <article className="space-y-8">
-          {/* 1부: 반도체 */}
-          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 !mt-0">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-signature-blue"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414M19.778 19.778l-1.414-1.414M18.364 5.636l-1.414 1.414M4.222 19.778l1.414-1.414M12 12a3 3 0 100-6 3 3 0 000 6z"
-                />
-              </svg>
-              1부: AI 골드러시 - 삼성 vs 하이닉스
-            </h2>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">
-              &quot;같은 HBM 만드는데 왜...&quot; 직장인 커뮤니티를 달군
-              삼성전자 직원들의 토로입니다. AI 반도체 특수로 SK하이닉스가 역대급
-              &apos;축포&apos;를 터뜨린 반면, 삼성전자는 기대에 미치지 못하는
-              성과급이 예상되며 직원들의 상대적 박탈감이 커지고 있습니다.
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
+          <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+            <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+              우리는 개인의 노력을 넘어, 거대한 산업의 흐름이 개인의 부를
+              결정하는 시대에 살고 있습니다. 내가 속한 산업이 성장하는가,
+              정체하는가에 따라 나의 연봉 상승률과 자산 증식 속도는 극명하게
+              달라집니다. 2025년, 당신이 반드시 주목해야 할 세 가지 거대한
+              흐름을 분석합니다.
             </p>
-            {/* [수정] 중복된 CSS 클래스를 정리했습니다. */}
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 space-y-3">
-              <h3 className="font-bold text-lg">
-                무엇이 성과급 격차를 만들었나?
-              </h3>
-              <p className="text-sm">
-                <strong>SK하이닉스 (선택과 집중):</strong> HBM 시장을 선점한
-                전략이 AI 시대와 맞물려 OPI 50%라는 최고의 성과로 이어졌습니다.
-              </p>
-              <p className="text-sm">
-                <strong>삼성전자 (거인의 딜레마):</strong> HBM의 성과가
-                파운드리, 낸드 등 다른 사업부의 부진과 합산되며 성과급 재원이
-                희석되는 구조적 한계를 보입니다.
-              </p>
-              <p className="text-sm">
-                <strong>정부의 K-칩스법:</strong> 반도체 투자 세액공제 혜택이
-                현금흐름이 좋은 하이닉스의 인재 영입 경쟁에 더 유리하게 작용할
-                수 있습니다.
-              </p>
-            </div>
-            <Link
-              href="/"
-              className="block mt-6 p-4 bg-signature-blue/10 dark:bg-signature-blue/20 rounded-lg text-center font-semibold text-signature-blue hover:bg-signature-blue/20 dark:hover:bg-signature-blue/30 transition-colors"
-            >
-              성과급 포함 실수령액 확인하기 →
-            </Link>
-          </section>
 
-          {/* 2부: 자동차 */}
-          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 !mt-0">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-teal-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-              2부: 현대차의 전환, &apos;협상&apos;의 성과급
-            </h2>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">
-              반도체 업계가 기술과 실적에 따라 성과급이 롤러코스터를 타는 반면,{" "}
-              <strong>현대자동차</strong>는 매년 노사간의 치열한
-              &apos;협상&apos;을 통해 성과급이 결정됩니다. 성공적인 전기차(EV)
-              판매 실적을 바탕으로 역대급 성과급을 지급했지만, 이는 반도체
-              업계와는 다른 성격의 보상 체계입니다.
-            </p>
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 space-y-3">
-              <h3 className="font-bold text-lg">안정성과 딜레마</h3>
-              <p className="text-sm">
-                <strong>안정적 보상:</strong> 노사 합의 기반의 성과급은 변동성이
-                적어 고용 안정성을 중시하는 직원들에게 장점이 될 수 있습니다.
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3">
+                <Cpu className="w-7 h-7 text-signature-blue" />
+                흐름 1: AI 반도체, 성과급의 &apos;부익부 빈익빈&apos;
+              </h2>
+              <p>
+                &quot;같은 HBM 만드는데 왜...&quot; 이 한탄은 AI가 촉발한 반도체
+                시장의 지각변동을 상징합니다. HBM 시장을 선점한 SK하이닉스가
+                역대급 성과급(PS)을 터뜨린 반면, 거함 삼성전자는 상대적으로
+                부진한 성과급(OPI)이 예상되며 직원들의 희비가 엇갈렸습니다. 이는
+                기술 리더십과 시장 선점의 중요성을 여실히 보여줍니다.
               </p>
-              <p className="text-sm">
-                <strong>미래와의 갈등:</strong> 회사는 SDV(소프트웨어 중심
-                자동차) 전환을 위한 R&D 투자를, 노조는 현재 이익의 분배를
-                요구하며 미래 경쟁력과 현재 보상 사이의 딜레마가 반복됩니다.
-              </p>
-            </div>
-          </section>
+              <blockquote>
+                <p>
+                  <strong>핵심 인사이트:</strong> 앞으로 반도체 업계의 연봉은
+                  &apos;회사&apos;가 아닌 &apos;사업부&apos;와
+                  &apos;기술&apos;에 따라 극명하게 갈릴 것입니다. HBM, CXL 등 AI
+                  관련 핵심 기술 분야의 인재 가치는 계속해서 치솟을 것이며,
+                  전통적인 메모리나 파운드리 분야와의 격차는 더 벌어질 수
+                  있습니다.
+                </p>
+              </blockquote>
+            </section>
 
-          {/* 3부: 정부 정책 */}
-          <section className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 !mt-0">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-amber-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3">
+                <Car className="w-7 h-7 text-teal-500" />
+                흐름 2: 자동차, &apos;하드웨어&apos;에서
+                &apos;소프트웨어&apos;로
+              </h2>
+              <p>
+                현대자동차의 &apos;킹산직&apos; 신드롬은 강력한 노사 협상을 통한
+                안정적인 고연봉 시대를 상징했습니다. 하지만 자동차 산업의
+                패러다임이 전기차와 SDV(소프트웨어 중심 자동차)로 급격히
+                전환되면서 새로운 연봉 지형이 펼쳐지고 있습니다.
+              </p>
+              <div className="mt-6 p-6 bg-teal-50 dark:bg-teal-900/20 rounded-lg border-l-4 border-teal-500">
+                <h3 className="font-bold !mt-0 !text-xl">
+                  새로운 &apos;킹&apos;의 등장: 자동차 S/W 개발자
+                </h3>
+                <p className="!my-2 !text-base">
+                  자율주행, 인포테인먼트 시스템을 개발하는 소프트웨어
+                  엔지니어들의 몸값이 천정부지로 치솟고 있습니다. 기존 생산직의
+                  연봉 테이블과는 완전히 다른, IT 업계 최상위권에 준하는 보상
+                  패키지를 제시하며 인재를 끌어모으고 있습니다. 이는 전통
+                  제조업이 IT 기업으로 변모하는 과정에서 나타나는 자연스러운
+                  현상입니다.
+                </p>
+              </div>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3">
+                <Landmark className="w-7 h-7 text-amber-500" />
+                흐름 3: 정부 정책, &apos;성과급&apos;에서
+                &apos;주주환원&apos;으로
+              </h2>
+              <p>
+                정부가 추진하는{" "}
+                <strong>&apos;기업 밸류업 프로그램&apos;</strong>은 장기적으로
+                대기업의 보상 체계에 큰 변화를 가져올 수 있습니다. 기업의 이익을
+                직원 성과급으로 지급하기보다, 배당이나 자사주 소각 등 주주가치를
+                높이는 데 사용하라는 압박이 커지기 때문입니다.
+              </p>
+              <blockquote>
+                <p>
+                  <strong>기회와 위기:</strong> 단기적으로는 성과급 재원이
+                  줄어들 수 있다는 우려가 있습니다. 하지만 장기적으로는 기업
+                  가치 상승으로 인한 주가 상승이 우리사주나 스톡옵션을 보유한
+                  직원들의 자산 가치를 크게 증대시키는 기회가 될 수 있습니다.
+                  &apos;현금 보너스&apos;의 시대에서 &apos;자본 이득&apos;의
+                  시대로 전환될 가능성을 시사합니다.
+                </p>
+              </blockquote>
+            </section>
+
+            <section className="mt-16 text-center">
+              <h2 className="!text-2xl font-bold">
+                거인의 어깨 위에서 미래를 보세요
+              </h2>
+              <p>
+                산업의 거대한 흐름을 이해하는 것은 내 연봉과 커리어를 위한
+                최고의 나침반입니다. 당신이 속한 산업은 어디로 향하고 있나요?
+                지금 바로 당신의 연봉 위치를 확인하고 미래 전략을 세워보세요.
+              </p>
+              <Link
+                href="/?tab=rank"
+                className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-              3부: 정부의 변수, &apos;기업 밸류업&apos;의 나비효과
-            </h2>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">
-              정부가 추진하는 <strong>&apos;기업 밸류업 프로그램&apos;</strong>
-              은 기업이 이익을 성과급보다 배당, 자사주 소각 등 주주환원에 더
-              많이 쓰도록 유도하는 정책입니다. 이는 장기적으로 대기업의 보상
-              체계에 큰 변화를 가져올 수 있습니다.
-            </p>
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 space-y-3">
-              <h3 className="font-bold text-lg">기회와 위기</h3>
-              <p className="text-sm">
-                <strong>성과급 재원 감소?:</strong> 주주환원 압박이 커지면,
-                기업이 예측 불가능한 거액의 OPI보다는 안정적인 보상 체계를
-                선호하게 될 수 있습니다.
-              </p>
-              <p className="text-sm">
-                <strong>자산 증식의 기회:</strong> 반면, 기업 가치가 재평가되어
-                주가가 오르면 우리사주나 스톡옵션을 보유한 직원들의 자산 가치는
-                크게 상승할 수 있습니다.
-              </p>
-            </div>
-            <Link
-              href="/?tab=comparator"
-              className="block mt-6 p-4 bg-signature-blue/10 dark:bg-signature-blue/20 rounded-lg text-center font-semibold text-signature-blue hover:bg-signature-blue/20 dark:hover:bg-signature-blue/30 transition-colors"
-            >
-              여러 회사 오퍼, 실수령액으로 비교하기 →
-            </Link>
-          </section>
-        </article>
+                내 연봉 순위 확인하고 미래 예측하기
+              </Link>
+            </section>
+          </article>
+        </div>
       </main>
     </>
   );

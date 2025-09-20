@@ -1,186 +1,243 @@
-// src/app/guides/page.tsx
-
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BookOpenText, Target, Briefcase, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "급여/세금/퇴직금 가이드 | Moneysalary",
+  title: "Moneysalary 금융 가이드 | 연봉, 세금, 재테크의 모든 것",
   description:
-    "실업급여, 주휴수당, 퇴직금 세금 등 직장인이라면 꼭 알아야 할 필수 정보들을 알기 쉽게 정리했습니다.",
+    "직장인을 위한 가장 현실적인 금융 인사이트. 연봉 실수령액부터 퇴직금, 연말정산, 투자 전략까지. 당신의 경제적 자유를 위한 모든 지식을 담았습니다.",
 };
 
+// [수정] 고도화된 콘텐츠에 맞춰 제목과 설명을 모두 업데이트하고, 카테고리(category)와 아이콘(icon) 속성을 추가했습니다.
 const guides = [
+  // 카테고리 1: 연봉의 모든 것
   {
-    slug: "samsung-vs-hynix",
-    title: "삼성전자 vs SK하이닉스, 성과급 포함 연봉 비교 (2025년 최종판)",
+    slug: "2025-salary-guide",
+    title: "2025년 연봉 실수령액: 내 월급, 세후 얼마일까?",
     description:
-      "반도체 양대산맥, 삼성전자와 SK하이닉스! HBM 대전 속에서 과연 어디가 더 높은 성과급과 연봉을 받을까요? 현직자 정보를 기반으로 상세히 비교 분석합니다.",
-  },
-  {
-    slug: "nekarakubae-salary",
-    title: "네카라쿠배 신입 개발자 초봉 실수령액 완벽 분석 (2025년)",
-    description:
-      "꿈의 직장 '네카라쿠배' 신입 개발자 실제 초봉은? 계약 연봉, 사이닝 보너스, 스톡옵션을 모두 포함한 2025년 최신 기준 세후 월급을 알려드립니다.",
-  },
-  {
-    slug: "nurse-5yr-salary",
-    title: "5년차 간호사 연봉 테이블 및 세후 월급 (2025년 빅5 병원 포함)",
-    description:
-      "대학병원, 종합병원 기준 5년차 간호사의 현실적인 연봉과 실수령액은? 서울대, 아산, 삼성서울병원 등 빅5 병원 정보와 함께 상세히 알려드립니다.",
-  },
-  {
-    slug: "civil-servant-salary",
-    title: "공무원 9급, 7급 첫 월급 상세 분석 (2025년 기준 실수령액)",
-    description:
-      "2025년 공무원 봉급표 기준, 9급 및 7급 1호봉의 실제 첫 월급은? 기본급과 각종 수당을 포함한 세후 실수령액을 상세히 알려드립니다.",
-  },
-  {
-    slug: "hyundai-salary",
-    title: "현대자동차 생산직 초봉과 성과급 분석 (2025년)",
-    description:
-      "킹산직, 갓산직이라 불리는 현대차 생산직! 2025년 최신 정보 기준 신입 초봉, 성과급, 각종 복지를 포함한 예상 실수령액을 알아봅니다.",
-  },
-  {
-    slug: "salary-negotiation",
-    title: "이직 시 연봉협상, 최소 OO%는 불러야 하는 이유",
-    description:
-      "성공적인 이직을 위한 연봉협상 전략! 현재 연봉, 시장 가치, 희망 연봉을 기반으로 최소 15~20%를 높여 불러야 하는 이유와 협상 노하우를 알려드립니다.",
-  },
-  {
-    slug: "first-job-investment",
-    title: "첫 월급 재테크, 100만원으로 시작하는 투자 로드맵",
-    description:
-      "사회초년생을 위한 첫 월급 재테크 완벽 가이드. 100만원 시드머니로 시작하는 연금저축펀드, S&P 500 ETF 등 가장 현실적인 투자 방법을 소개합니다.",
-  },
-  {
-    slug: "yef-2026-preview",
-    title: "2026년 연말정산, 바뀌는 공제 항목 총정리",
-    description:
-      "미리 준비하는 2026년 연말정산. 새롭게 바뀌는 소득공제, 세액공제 항목은 무엇일까요? 최신 세법 개정안을 바탕으로 핵심 변경 사항을 예측하고 정리합니다.",
-  },
-  {
-    slug: "didimdol-vs-bogeumjari",
-    title: "내 집 마련 디딤돌 대출 vs 보금자리론 완벽 비교 (2025년)",
-    description:
-      "신혼부부, 생애최초 주택 구매자를 위한 대표 정책 대출 상품! 디딤돌 대출과 보금자리론의 자격 조건, 대출 한도, 금리를 2025년 기준으로 완벽하게 비교 분석합니다.",
-  },
-  {
-    slug: "industry-trends-2025",
-    title:
-      "삼성 vs 하이닉스, 역대급 '성과급 격차' 심층 분석 (feat. 정부 밸류업)",
-    description:
-      "왜 SK하이닉스 성과급은 연봉의 50%인데, 삼성전자는 아닐까? HBM 기술 격차, 사업부별 실적 차이가 두 거인의 연봉과 미래에 미칠 영향을 심층 분석합니다.",
+      "연봉 3000부터 1억까지, 2025년 최신 세법을 완벽 적용한 실수령액 테이블과 상세 공제 내역을 확인하세요.",
+    category: "연봉 기본",
   },
   {
     slug: "salary-4500",
-    title: "연봉 4500만원 실수령액, 세후 월급은 얼마일까? (2025년 기준)",
+    title: "연봉 4500만원 실수령액: 세후 월급 318만원, 적절한 걸까?",
     description:
-      "연봉 4500만원 직장인의 실제 월급은? 2025년 최신 4대보험, 소득세 기준 세후 실수령액과 공제 항목을 상세히 분석해 드립니다.",
+      "세후 월급 318만원을 상세히 분해하고, 이 시기 직장인을 위한 가장 현실적인 재테크 전략과 미래 로드맵을 제시합니다.",
+    category: "연봉 분석",
   },
   {
-    slug: "bonus-tax",
-    title: "성과급(상여금) 세금 계산법, A to Z 완벽 정리 (2025년)",
+    slug: "nekarakubae-salary",
+    title: "네카라쿠배 개발자 초봉 1억, 그 진실은? (2025년 최종판)",
     description:
-      "열심히 일한 보상, 성과급! 하지만 세금이 얼마나 나올지 걱정되시나요? 성과급(상여금) 세금 계산 원리와 절세 팁까지 모두 알려드립니다.",
+      "계약 연봉, 사이닝 보너스, 스톡옵션을 포함한 '영끌 초봉'의 실체와 세후 실수령액을 완벽하게 분석합니다.",
+    category: "연봉 분석",
   },
   {
-    slug: "4-day-week",
-    title: "주 4일제 연봉 계산법: 내 월급은 어떻게 바뀔까?",
+    slug: "hyundai-salary",
+    title: "현대차 생산직 연봉: '킹산직'의 모든 것 (2025년 최종 분석)",
     description:
-      "주 4일제(주 32시간)로 전환되면 내 연봉과 월급은 어떻게 바뀔까요? 근로시간 단축 시 임금 계산 원칙과 실제 계산법을 알려드립니다.",
-  },
-  {
-    slug: "unemployment-benefits",
-    title: "실업급여 조건, A부터 Z까지 완벽 정리 (2025년 최신판)",
-    description:
-      "실업급여 수급 자격, 신청 방법, 지급액, 구직활동까지. 2025년 최신 기준으로 실업급여의 모든 것을 자세히 알려드립니다.",
-  },
-  {
-    slug: "holiday-allowance",
-    title: "주휴수당 계산법 및 지급 조건 완벽 가이드",
-    description:
-      "주휴수당, 받을 수 있는지 궁금하신가요? 2025년 최신 지급 조건과 내 월급에 맞는 주휴수당 계산법을 예시와 함께 알려드립니다.",
-  },
-  {
-    slug: "severance-tax",
-    title: "퇴직금 세금 계산, 복잡한 과정 한 번에 이해하기",
-    description:
-      "내 퇴직금에서 세금이 얼마나 빠져나갈까요? 복잡한 퇴직소득세 계산 구조와 공제 항목을 예시와 함께 쉽게 설명해 드립니다.",
-  },
-  {
-    slug: "four-major-insurances",
-    title: "4대 보험 완벽 정리: 국민연금, 건강보험, 고용보험, 산재보험",
-    description:
-      "직장인이라면 반드시 알아야 할 4대 사회보험의 모든 것. 각 보험의 역할, 요율, 계산 방법까지 한 페이지에서 완벽하게 마스터하세요.",
-  },
-  {
-    slug: "year-end-tax-settlement",
-    title: "연말정산 A to Z: 13월의 월급, 제대로 챙기는 법",
-    description:
-      "소득공제와 세액공제의 차이점부터 놓치기 쉬운 핵심 공제 항목까지, 연말정산의 모든 것을 알려드립니다.",
-  },
-  {
-    slug: "minimum-wage",
-    title: "2025년 최저임금 완벽정리 (시급, 월급, 연봉)",
-    description:
-      "2025년 최저시급은 얼마일까요? 최저임금 기준 월급과 연봉, 그리고 주휴수당 포함 계산법까지 모두 알려드립니다.",
+      "수천 대 일의 경쟁률, 신의 직장이라 불리는 '킹산직'의 실제 연봉을 파헤쳐봅니다.",
+    category: "연봉 분석",
   },
   {
     slug: "nurse-salary",
-    title: "2025년 간호사 연봉 테이블 완벽 분석 (신규, 5년차, 수간호사)",
+    title: "간호사 연봉 테이블: 신규부터 수간호사까지 총정리 (2025년)",
     description:
-      "대학병원, 종합병원, 개인병원별 신규 간호사부터 5년차, 10년차 이상 수간호사까지 직급별 연봉 및 실수령액 정보를 제공합니다.",
+      "병원 규모별, 경력별 현실적인 연봉과 세후 실수령액, 그리고 간호사의 커리어 로드맵까지 완벽 분석합니다.",
+    category: "연봉 분석",
   },
   {
-    slug: "road-to-100m-part1-tax",
-    title: "연봉 1억을 위한 현실적인 절세 전략 (2025년 최종판)",
+    slug: "civil-servant-salary",
+    title: "공무원 월급, 정말 박봉일까? | 9급·7급 첫 월급 실수령액 분석",
     description:
-      "연봉 1억 실수령액을 높이는 가장 확실한 방법, 절세. 연금저축펀드, IRP, 비과세 수당 활용법부터 총정리했습니다.",
+      "기본급 뒤에 숨겨진 각종 수당을 포함한 공무원의 진짜 월급을 공개합니다.",
+    category: "연봉 분석",
+  },
+
+  // 카테고리 2: 커리어와 성장
+  {
+    slug: "salary-negotiation",
+    title: "연봉협상: 최소 20% 올려받는 4단계 전략 (2025년 최종판)",
+    description:
+      "당신의 가치를 돈으로 바꾸는 실전 협상 기술. 준비부터 마무리까지 A to Z.",
+    category: "커리어 성장",
+  },
+  {
+    slug: "samsung-vs-hynix",
+    title: "삼성전자 vs SK하이닉스: 연봉과 성과급, 누가 진정한 승자인가?",
+    description:
+      "HBM 전쟁 속 두 거인의 성과급과 미래, 현직자와 취준생을 위한 완벽 분석.",
+    category: "커리어 성장",
+  },
+  {
+    slug: "industry-trends-2025",
+    title: "2025 산업대전망: 반도체, 자동차 그리고 내 월급의 미래",
+    description:
+      "거대한 산업의 흐름 속, 당신의 연봉은 어디로 향할까요? 2025년 핵심 트렌드를 분석합니다.",
+    category: "커리어 성장",
+  },
+  {
+    slug: "nurse-5yr-salary",
+    title: "5년차 간호사 연봉과 커리어: 번아웃과 성장 사이 (2025년)",
+    description:
+      "임상에 남을 것인가, 떠날 것인가. 5년차 간호사의 현실 연봉과 미래 커리어 로드맵을 제시합니다.",
+    category: "커리어 성장",
+  },
+
+  // 카테고리 3: 필수 금융 지식
+  {
+    slug: "four-major-insurances",
+    title: "4대 보험 완벽 가이드: 내 월급에서 왜, 얼마나 떼는 걸까?",
+    description:
+      "국민연금, 건강보험, 고용보험, 산재보험. 내 삶을 지키는 최소한의 안전장치, 제대로 알아보세요.",
+    category: "필수 지식",
+  },
+  {
+    slug: "bonus-tax",
+    title: "성과급 세금 폭탄, 피하는 법 완벽 가이드 (2025년 최종판)",
+    description:
+      "상여금 세금 계산의 원리부터 연말정산으로 세금을 돌려받는 방법, IRP를 활용한 절세 전략까지 총정리.",
+    category: "필수 지식",
+  },
+  {
+    slug: "severance-tax",
+    title: "퇴직금 세금 계산: 최소 40% 아끼는 공제의 비밀 (2025년)",
+    description:
+      "복잡한 퇴직소득세 4단계 계산법과 세금을 획기적으로 줄여주는 '공제'의 모든 것을 설명합니다.",
+    category: "필수 지식",
+  },
+  {
+    slug: "year-end-tax-settlement",
+    title: "연말정산 A to Z: 13월의 월급, 제대로 찾는 법 (2025년)",
+    description:
+      "세금 폭탄이 아닌 '13월의 보너스'를 위한 완벽 가이드. 놓치기 쉬운 공제 꿀팁까지 A to Z를 알려드립니다.",
+    category: "필수 지식",
+  },
+  {
+    slug: "unemployment-benefits",
+    title: "실업급여 A to Z: 조건, 신청 방법, 금액까지 완벽 정리 (2025년)",
+    description:
+      "갑작스러운 실직, 막막하신가요? 당신의 새로운 시작을 돕기 위한 모든 정보를 담았습니다.",
+    category: "필수 지식",
+  },
+  {
+    slug: "holiday-allowance",
+    title: "주휴수당, 당신의 숨겨진 1일치 월급 | 조건, 계산법, Q&A 완벽정리",
+    description:
+      "주 15시간 이상 일했다면 당신도 받을 수 있다! 당신의 소중한 권리를 찾아드립니다.",
+    category: "필수 지식",
+  },
+  {
+    slug: "minimum-wage",
+    title: "2025년 최저임금 완벽정리: 시급 10,030원, 내 월급은? (예상)",
+    description:
+      "최저시급 기준, 주휴수당을 포함한 실수령액은 얼마일까요? 대한민국 최저임금의 모든 것을 알려드립니다.",
+    category: "필수 지식",
+  },
+  {
+    slug: "4-day-week",
+    title: "주 4일제, 꿈일까 현실일까? | 연봉 삭감의 진실과 계산법",
+    description:
+      "'임금 유지'와 '비례 삭감' 시나리오별 연봉 변화를 실제 예시와 함께 완벽하게 계산해 드립니다.",
+    category: "필수 지식",
+  },
+
+  // 카테고리 4: 재테크 로드맵
+  {
+    slug: "road-to-100m-part1-tax",
+    title: "연봉 1억을 위한 절세 전략: 세금, 아는 만큼 월급이 늘어난다",
+    description:
+      "부를 쌓기 위한 첫 번째 관문이자 가장 확실한 방법, 절세의 모든 것을 알려드립니다.",
+    category: "재테크 로드맵",
   },
   {
     slug: "road-to-100m-part2-sidejob",
-    title: "N잡으로 월 100만원 더 벌기 (2025년 부업 가이드)",
+    title: "N잡으로 월 100만원 더 벌기: 당신의 시간을 돈으로 바꾸는 기술",
     description:
-      "직장인 부업 추천! 전문성을 활용한 N잡부터 스마트스토어, 배달 아르바이트까지 현실적인 방법을 알려드립니다.",
+      "퇴근 후, 주말의 자투리 시간을 활용해 월 100만원의 추가 현금 흐름을 만드는 가장 현실적인 방법을 공개합니다.",
+    category: "재테크 로드맵",
   },
   {
     slug: "road-to-100m-part3-invest",
-    title: "월급으로 시작하는 투자 파이프라인 (2025년 투자 로드맵)",
+    title: "월급으로 만드는 투자 파이프라인: 돈이 스스로 일하게 하라",
     description:
-      "시드머니 모으기부터 미국 S&P 500 ETF, 연금저축펀드를 활용한 장기 투자 전략과 절세 혜택까지 제시합니다.",
+      "당신이 잠자는 동안에도 자산이 불어나는 자동화 시스템, 그 설계도를 공개합니다.",
+    category: "재테크 로드맵",
   },
+  {
+    slug: "first-job-investment",
+    title: "첫 월급 100만원 재테크: 부자되는 첫걸음, 이렇게 시작하세요",
+    description:
+      "사회초년생 필독! 당신의 미래를 바꿀 첫 월급 재테크 로드맵을 공개합니다.",
+    category: "재테크 로드맵",
+  },
+  {
+    slug: "didimdol-vs-bogeumjari",
+    title: "디딤돌 vs 보금자리론, 내게 맞는 대출은? (2025년 최종 비교)",
+    description:
+      "내 집 마련, 어떤 대출부터 알아봐야 할까요? 두 대표 정책 대출을 완벽하게 비교해드립니다.",
+    category: "재테크 로드맵",
+  },
+  {
+    slug: "yef-2026-preview",
+    title: "2026 연말정산 미리보기: 13월의 월급, 더 두둑해질까?",
+    description:
+      "내년 연말정산, 미리 준비하고 더 많이 환급받으세요. 핵심 변경 예측 총정리.",
+    category: "재테크 로드맵",
+  },
+];
+
+const categories = [
+  { id: "연봉 분석", name: "연봉 심층 분석", icon: Target },
+  { id: "커리어 성장", name: "커리어 성장", icon: Briefcase },
+  { id: "필수 지식", name: "필수 금융 지식", icon: BookOpenText },
+  { id: "재테크 로드맵", name: "재테크 로드맵", icon: TrendingUp },
 ];
 
 export default function GuidesListPage() {
   return (
-    <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <div className="text-center mb-10">
+    <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight text-signature-blue dark:text-gray-100 sm:text-5xl">
-          콘텐츠 가이드
+          Moneysalary 금융 라이브러리
         </h1>
-        <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-400">
-          직장인이라면 꼭 알아야 할 필수 금융 정보를 쉽고 깊이있게 알려드립니다.
+        <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
+          당신의 경제적 자유를 위한 모든 지식을 담았습니다. <br /> 가장 궁금한
+          주제부터 탐색해보세요.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {guides.map((guide) => (
-          <Link
-            key={guide.slug}
-            href={`/guides/${guide.slug}`}
-            className="flex flex-col p-6 border border-gray-200 dark:border-gray-800 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all bg-light-card dark:bg-dark-card"
-          >
-            <h2 className="text-xl font-bold text-light-text dark:text-dark-text mb-2">
-              {guide.title}
+
+      {categories.map((category) => (
+        <section key={category.id} className="mb-16">
+          <div className="flex items-center mb-6">
+            <category.icon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+            <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200">
+              {category.name}
             </h2>
-            <p className="flex-grow text-light-text-secondary dark:text-dark-text-secondary">
-              {guide.description}
-            </p>
-            <span className="mt-4 text-sm font-semibold text-signature-blue self-start">
-              자세히 보기 →
-            </span>
-          </Link>
-        ))}
-      </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {guides
+              .filter((g) => g.category === category.id)
+              .map((guide) => (
+                <Link
+                  key={guide.slug}
+                  href={`/guides/${guide.slug}`}
+                  className="flex flex-col p-6 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl hover:-translate-y-1.5 transition-all bg-light-card dark:bg-dark-card group"
+                >
+                  <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-2 group-hover:text-signature-blue transition-colors">
+                    {guide.title}
+                  </h3>
+                  <p className="flex-grow text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                    {guide.description}
+                  </p>
+                  <span className="mt-4 text-sm font-semibold text-signature-blue self-start">
+                    자세히 보기 →
+                  </span>
+                </Link>
+              ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 }
