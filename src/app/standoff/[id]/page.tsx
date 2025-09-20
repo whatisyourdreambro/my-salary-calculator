@@ -4,6 +4,9 @@ import BalanceGame from "@/components/BalanceGame";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+// ✅ 이 코드를 추가하여 엣지 런타임에서 실행되도록 설정합니다.
+export const runtime = "edge";
+
 interface PageProps {
   params: { id: string };
 }
