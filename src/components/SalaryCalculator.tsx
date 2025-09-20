@@ -1,6 +1,5 @@
 "use client";
 
-// [수정] 사용하지 않는 'useRef'를 import 구문에서 제거했습니다.
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { calculateNetSalary } from "@/lib/calculator";
@@ -15,6 +14,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import type { StoredSalaryData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -144,6 +144,24 @@ export default function SalaryCalculator() {
 
     if (field === "dependents") setDependents(newVal);
     else setChildren(newVal);
+  };
+
+  // [추가] 계산 결과를 localStorage에 저장하는 함수
+  const handleSaveData = () => {
+    const dataToStore: StoredSalaryData = {
+      annualSalary,
+      monthlyNet: result.monthlyNet,
+      payBasis,
+      severanceType,
+      nonTaxableAmount: parseNumber(nonTaxableAmount),
+      dependents,
+      children,
+    };
+    localStorage.setItem("moneysalary-dashboard", JSON.stringify(dataToStore));
+    alert(
+      "연봉 정보가 저장되었습니다! 다음 방문 시 대시보드에서 바로 확인할 수 있습니다."
+    );
+    window.location.reload(); // 페이지를 새로고침하여 대시보드를 표시
   };
 
   const handleReset = () => {
@@ -368,14 +386,21 @@ export default function SalaryCalculator() {
               </ResponsiveContainer>
             </div>
           </div>
-        </div>
-        <div className="text-center">
-          <button
-            onClick={handleReset}
-            className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 rounded-lg"
-          >
-            초기화
-          </button>
+          {/* [추가] 저장하기 및 초기화 버튼 영역 */}
+          <div className="mt-6 pt-6 border-t dark:border-gray-700 grid grid-cols-2 gap-4">
+            <button
+              onClick={handleReset}
+              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+            >
+              초기화
+            </button>
+            <button
+              onClick={handleSaveData}
+              className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
+            >
+              내 연봉으로 저장
+            </button>
+          </div>
         </div>
       </div>
     </div>

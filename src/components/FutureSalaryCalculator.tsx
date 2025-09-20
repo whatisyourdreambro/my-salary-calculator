@@ -1,5 +1,3 @@
-// src/components/FutureSalaryCalculator.tsx
-
 "use client";
 
 import { useState, useMemo } from "react";
@@ -8,6 +6,7 @@ import {
   calculatePathToGoal,
   SalaryEvent,
 } from "@/lib/futureCalculator";
+import { salaryData } from "@/lib/salaryData"; // [추가] salaryData import
 import CurrencyInput from "./CurrencyInput";
 import {
   LineChart,
@@ -35,13 +34,29 @@ export default function FutureSalaryCalculator() {
 
   const [targetSalary, setTargetSalary] = useState("100000000");
 
+  // [추가] 시장 데이터 비교를 위한 상태
+  const [jobCategory, setJobCategory] = useState("it_dev");
+  const [experienceLevel, setExperienceLevel] = useState("3-6");
+
   const futureSalaries = useMemo(() => {
     if (mode === "predict") {
       const salary = Number(currentSalary.replace(/,/g, ""));
-      return calculateFutureSalary(salary, years, baseRate, events);
+      // [수정] marketData를 찾아서 계산 함수에 전달
+      const marketDataKey = `${jobCategory}-${experienceLevel}-all-all`;
+      const marketData =
+        salaryData[marketDataKey] ?? salaryData["all-all-all-all"];
+      return calculateFutureSalary(salary, years, baseRate, events, marketData);
     }
     return [];
-  }, [mode, currentSalary, years, baseRate, events]);
+  }, [
+    mode,
+    currentSalary,
+    years,
+    baseRate,
+    events,
+    jobCategory,
+    experienceLevel,
+  ]);
 
   const careerPaths = useMemo(() => {
     if (mode === "goal") {
@@ -179,6 +194,34 @@ export default function FutureSalaryCalculator() {
           {mode === "predict" && (
             <div className="p-4 border dark:border-gray-700 rounded-lg">
               <h3 className="text-lg font-bold mb-4">예측 조건</h3>
+              {/* [추가] 직군 및 경력 선택 UI */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="text-sm font-medium">직군</label>
+                  <select
+                    value={jobCategory}
+                    onChange={(e) => setJobCategory(e.target.value)}
+                    className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card"
+                  >
+                    <option value="it_dev">IT/개발</option>
+                    <option value="marketing">마케팅/영업</option>
+                    <option value="professional">전문직</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">경력</label>
+                  <select
+                    value={experienceLevel}
+                    onChange={(e) => setExperienceLevel(e.target.value)}
+                    className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card"
+                  >
+                    <option value="1-2">1~2년</option>
+                    <option value="3-6">3~6년</option>
+                    <option value="7-10">7~10년</option>
+                    <option value="11-14">11~14년</option>
+                  </select>
+                </div>
+              </div>
               <div>
                 <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                   기본 연봉 상승률 (%)
@@ -278,7 +321,7 @@ export default function FutureSalaryCalculator() {
         <div className="lg:col-span-3">
           <h2 className="text-2xl font-bold text-light-text dark:text-dark-text mb-4">
             {mode === "predict"
-              ? "미래 연봉 예측 결과"
+              ? "커리어 로드맵 시뮬레이션"
               : `연봉 ${formatNumber(
                   Number(targetSalary.replace(/,/g, ""))
                 )}원 달성 경로`}
@@ -299,20 +342,39 @@ export default function FutureSalaryCalculator() {
                     }
                   />
                   <Tooltip
-                    formatter={(value: number) => [
+                    formatter={(value: number, name: string) => [
                       `${formatNumber(value)} 원`,
-                      "예상 연봉",
+                      name,
                     ]}
                   />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="salary"
-                    name="예상 연봉"
+                    name="나의 예상 연봉"
                     stroke="#007FFF"
                     strokeWidth={3}
                     dot={{ r: 4 }}
                     activeDot={{ r: 8 }}
+                  />
+                  {/* [추가] 시장 데이터 라인 */}
+                  <Line
+                    type="monotone"
+                    dataKey="marketAverage"
+                    name="시장 평균"
+                    stroke="#FFBB28"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    dot={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="marketTop10"
+                    name="시장 상위 10%"
+                    stroke="#00C49F"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    dot={false}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -322,7 +384,7 @@ export default function FutureSalaryCalculator() {
                     <tr className="border-b dark:border-gray-700">
                       <th className="p-2 text-left font-semibold">연도</th>
                       <th className="p-2 text-right font-semibold">
-                        예상 연봉
+                        나의 예상 연봉
                       </th>
                       <th className="p-2 text-right font-semibold">상승액</th>
                     </tr>

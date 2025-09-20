@@ -1,4 +1,12 @@
 // src/app/types.ts
 
-// 이 파일의 모든 내용을 삭제합니다.
-// 파일 자체는 유지하되, 내용은 비어있어야 합니다.
+// localStorage에 저장될 데이터 타입을 정의합니다.
+export interface StoredSalaryData {
+  annualSalary: number;
+  monthlyNet: number;
+  payBasis: "annual" | "monthly";
+  severanceType: "separate" | "included";
+  nonTaxableAmount: number;
+  dependents: number;
+  children: number;
+}

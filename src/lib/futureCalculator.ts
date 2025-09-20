@@ -1,15 +1,18 @@
 // src/lib/futureCalculator.ts
 
-// [수정] interface와 type을 모두 export 합니다.
+import type { SalaryStat } from "./salaryData";
+
 export interface SalaryEvent {
-  yearIndex: number; // 0은 1년차, 1은 2년차...
+  yearIndex: number;
   type: "promotion" | "job_change";
-  value: number; // promotion: 추가 상승률(%), job_change: 새로운 연봉
+  value: number;
 }
 
 export interface FutureSalaryResult {
   year: number;
-  salary: number;
+  salary: number; // 나의 예상 연봉
+  marketAverage: number; // 시장 평균 연봉
+  marketTop10: number; // 시장 상위 10% 연봉
   increaseAmount: number;
 }
 
@@ -20,11 +23,13 @@ export interface CareerPath {
   avgIncreaseRate: number;
 }
 
+// [수정] marketData 파라미터를 추가하여 시장 데이터와 함께 계산
 export function calculateFutureSalary(
   currentSalary: number,
   years: number,
   baseRate: number,
-  events: SalaryEvent[]
+  events: SalaryEvent[],
+  marketData: SalaryStat | null
 ): FutureSalaryResult[] {
   if (currentSalary <= 0 || years <= 0) {
     return [];
@@ -34,36 +39,43 @@ export function calculateFutureSalary(
   let previousSalary = currentSalary;
   const currentYear = new Date().getFullYear();
 
+  // 시장 데이터가 있을 경우, 초기 시장 연봉 설정 (없으면 0)
+  let previousMarketAverage = marketData?.average ?? 0;
+  let previousMarketTop10 = marketData?.percentiles[10] ?? 0;
+
   for (let i = 0; i < years; i++) {
-    // 기본 상승률을 먼저 적용합니다.
+    // 1. 나의 예상 연봉 계산
     let newSalary = previousSalary * (1 + baseRate / 100);
-
-    // 현재 연차에 이벤트가 있는지 확인합니다.
     const event = events.find((e) => e.yearIndex === i);
-
     if (event) {
       if (event.type === "promotion") {
-        // 승진: 기본 상승된 연봉에 추가 상승률을 적용합니다.
         newSalary = newSalary * (1 + event.value / 100);
       } else if (event.type === "job_change") {
-        // 이직: 연봉을 이벤트 값으로 완전히 대체합니다.
         newSalary = event.value;
       }
     }
 
+    // 2. 시장 연봉 예측 (매년 기본 상승률만큼 동일하게 상승한다고 가정)
+    const newMarketAverage = previousMarketAverage * (1 + baseRate / 100);
+    const newMarketTop10 = previousMarketTop10 * (1 + baseRate / 100);
+
     results.push({
       year: currentYear + i + 1,
       salary: Math.round(newSalary),
+      marketAverage: Math.round(newMarketAverage),
+      marketTop10: Math.round(newMarketTop10),
       increaseAmount: Math.round(newSalary - previousSalary),
     });
 
     previousSalary = newSalary;
+    previousMarketAverage = newMarketAverage;
+    previousMarketTop10 = newMarketTop10;
   }
 
   return results;
 }
 
-// 목표 연봉을 달성하기 위한 경로를 역산하는 함수
+// 목표 연봉 달성 경로 계산 함수 (변경 없음)
 export function calculatePathToGoal(
   currentSalary: number,
   targetSalary: number,

@@ -23,6 +23,8 @@ const navConfig: NavItem[] = [
       { name: "주택담보대출 계산기", href: "/home-loan" },
       { name: "자동차 구매 계산기", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
+      // [추가] 급여명세서 탭으로 바로 이동하는 링크
+      { name: "급여명세서", href: "/?tab=paystub" },
     ],
   },
   {
@@ -104,7 +106,7 @@ export default function Header() {
                       >
                         <path
                           fillRule="evenodd"
-                          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                          d="M5.22 8.22a.75.75 S0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
                           clipRule="evenodd"
                         />
                       </svg>
