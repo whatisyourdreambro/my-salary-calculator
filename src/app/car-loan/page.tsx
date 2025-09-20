@@ -2,23 +2,29 @@ import type { Metadata } from "next";
 import CarLoanSimulator from "@/components/CarLoanSimulator";
 
 export const metadata: Metadata = {
-  title: "자동차 구매 계산기 | 내 연봉으로 살 수 있는 차는? | Moneysalary",
+  title: "자동차 구매 계산기 | 내 연봉으로 살 수 있는 드림카는? | Moneysalary",
   description:
-    "내 연봉에 맞는 현실적인 드림카를 찾아보세요! 연봉, 할부 기간, 금리를 입력하고 구매 가능한 자동차 가격대와 월 납입금을 시뮬레이션 할 수 있습니다.",
+    "내 연봉에 맞는 현실적인 드림카를 찾아보세요! 200종 이상의 국산차, 수입차 데이터베이스를 기반으로 구매 가능한 자동차와 월 납입금을 시뮬레이션 할 수 있습니다.",
 };
 
 export default function CarLoanPage() {
   return (
-    <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
-          🚗 내 월급으로 살 수 있는 자동차는?
+    <main className="w-full bg-light-bg dark:bg-dark-bg">
+      {/* Hero Section */}
+      <div className="w-full bg-gradient-to-br from-gray-800 to-slate-900 text-white text-center py-20 sm:py-28 px-4">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+          내 연봉으로 살 수 있는
+          <br /> <span className="text-cyan-400">나만의 드림카 찾기</span>
         </h1>
-        <p className="mt-4 text-base lg:text-lg text-gray-600 dark:text-gray-400">
-          연봉에 맞는 현실적인 드림카를 찾고, 월 납입금을 미리 계산해보세요.
+        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
+          단순한 이동수단을 넘어, 당신의 가치를 증명하는 자동차. 현실적인 예산
+          안에서 최고의 만족감을 선사할 당신의 다음 차를 찾아보세요.
         </p>
       </div>
-      <CarLoanSimulator />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
+        <CarLoanSimulator />
+      </div>
     </main>
   );
 }
