@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef, Suspense } from "react"; // Suspense 추가
-import { useSearchParams } from "next/navigation"; // useSearchParams 추가
+import { useEffect, useState, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import type { StoredSalaryData } from "@/app/types";
 import { findSalaryRank } from "@/lib/salaryData";
 import {
@@ -19,7 +19,46 @@ const formatNumber = (num: number) => num.toLocaleString();
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-// [추가] Report 컴포넌트 분리
+const RADIAN = Math.PI / 180;
+
+// [최종 수정] 라이브러리의 타입 정의와 실제 데이터 간의 불일치 문제를 해결하기 위해
+// 타입 단언(as)을 사용하고, 해당 라인에 대해서만 ESLint 규칙을 비활성화합니다.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const renderCustomizedLabel = (props: any) => {
+  const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+
+  // props 객체에 필요한 값이 없는 경우를 대비한 방어 코드
+  if (
+    [cx, cy, midAngle, innerRadius, outerRadius, percent].some(
+      (val) => val === undefined
+    )
+  ) {
+    return null;
+  }
+
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  if (percent < 0.05) {
+    return null;
+  }
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor="middle"
+      dominantBaseline="central"
+      fontSize="16px"
+      fontWeight="bold"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 const Report = () => {
   const searchParams = useSearchParams();
   const [data, setData] = useState<StoredSalaryData | null>(null);
@@ -161,7 +200,9 @@ const Report = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label
+                  fill="#8884d8"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
                 >
                   {chartData.map((entry, index) => (
                     <Cell
@@ -197,7 +238,6 @@ const Report = () => {
   );
 };
 
-// [추가] Suspense로 Report 컴포넌트를 감싸서 useSearchParams 사용을 지원
 export default function ReportPage() {
   return (
     <Suspense fallback={<div>Loading Report...</div>}>

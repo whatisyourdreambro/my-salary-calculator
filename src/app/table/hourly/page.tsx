@@ -1,22 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import SalaryTable from "@/components/SalaryTable";
 import type { SalaryData } from "@/lib/generateData";
+import { Search, Shield } from "lucide-react"; // [수정] 사용하지 않는 아이콘 제거
+import Link from "next/link";
 
 const tableHeaders = [
-  { key: "preTax", label: "시급(원)" },
-  { key: "monthlyNet", label: "월 실수령액(원)" },
-  { key: "health", label: "건강보험(원)" },
-  { key: "employment", label: "고용보험(원)" },
-  { key: "longTermCare", label: "장기요양(원)" },
-  { key: "pension", label: "국민연금(원)" },
-  { key: "incomeTax", label: "소득세(원)" },
-  { key: "localTax", label: "지방소득세(원)" },
-  { key: "totalDeduction", label: "공제액 합계(원)" },
+  { key: "preTax", label: "시급" },
+  { key: "monthlyNet", label: "월 환산 실수령액" },
+  { key: "totalDeduction", label: "월 환산 공제액" },
+  { key: "pension", label: "국민연금" },
+  { key: "health", label: "건강보험" },
+  { key: "employment", label: "고용보험" },
+  { key: "incomeTax", label: "소득세" },
 ];
 
-// [추가] DataSet 스키마 데이터
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "DataSet",
@@ -29,21 +28,10 @@ const structuredData = {
     name: "Moneysalary",
   },
   license: "https://www.moneysalary.com",
-  keywords: [
-    "시급",
-    "실수령액",
-    "세후 월급",
-    "시급 테이블",
-    "2025년",
-    "최저시급",
-  ],
+  keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "최저시급"],
 };
 
 export default function HourlyTablePage() {
-  useEffect(() => {
-    document.title = "시급 실수령액표 | Moneysalary";
-  }, []);
-
   const [data, setData] = useState<SalaryData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,58 +67,104 @@ export default function HourlyTablePage() {
     setCurrentPage(1);
   };
 
+  const highlightRows = useMemo(() => [10030, 15000, 20000], []);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
-            시급 실수령액 표
+      <main className="w-full bg-light-bg dark:bg-dark-bg">
+        {/* Hero Section */}
+        <div className="w-full bg-gradient-to-br from-purple-500 to-indigo-600 dark:from-gray-900 dark:to-purple-800 text-white text-center py-20 sm:py-28 px-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            당신의 시간은 얼마인가요?
           </h1>
-          <p className="mt-4 text-base lg:text-lg leading-8 text-gray-600 dark:text-gray-400">
-            시급 구간별 월 예상 실수령액과 상세 공제 내역을 확인하세요.
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-100 dark:text-gray-300">
+            나의 한 시간의 가치를 월급으로 환산하여 확인해보세요. 최저시급부터
+            고액 시급까지, 당신의 노력을 숫자로 증명해 드립니다.
           </p>
         </div>
 
-        <div className="mb-6 max-w-sm mx-auto">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="시급으로 검색 (예: 15,000)"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-signature-blue focus:border-signature-blue bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
-          />
-        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
+          <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+            <div className="mb-8">
+              <label htmlFor="search" className="sr-only">
+                시급 검색
+              </label>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="search"
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="찾고 싶은 시급을 입력하세요 (예: 15,000)"
+                  className="w-full pl-11 pr-4 py-4 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-signature-blue bg-white dark:bg-gray-800 text-lg"
+                />
+              </div>
+            </div>
 
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-          {isLoading ? (
-            <div className="p-8 text-center">데이터를 불러오는 중입니다...</div>
-          ) : (
-            <SalaryTable headers={tableHeaders} data={data} />
-          )}
-        </div>
+            <div className="overflow-hidden">
+              {isLoading ? (
+                <div className="py-20 text-center text-gray-500">
+                  데이터를 불러오는 중입니다...
+                </div>
+              ) : (
+                <SalaryTable
+                  headers={tableHeaders}
+                  data={data}
+                  highlightRows={highlightRows}
+                  unit="원"
+                />
+              )}
+            </div>
 
-        <div className="flex justify-center items-center mt-6 space-x-2">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1 || isLoading}
-            className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
-          >
-            이전
-          </button>
-          <span className="text-sm">
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages || isLoading}
-            className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-800"
-          >
-            다음
-          </button>
+            <div className="flex justify-center items-center mt-8 space-x-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1 || isLoading}
+                className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              >
+                이전
+              </button>
+              <span className="text-sm font-semibold">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages || isLoading}
+                className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              >
+                다음
+              </button>
+            </div>
+          </div>
+
+          <section className="mt-16 bg-light-card dark:bg-dark-card p-8 rounded-2xl shadow-xl border">
+            <h2 className="text-3xl font-bold text-center mb-10 text-gray-800 dark:text-gray-200 flex items-center justify-center gap-3">
+              <Shield className="w-8 h-8 text-purple-500" />내 권리의 시작,
+              최저임금
+            </h2>
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="text-lg text-light-text-secondary dark:text-dark-text-secondary">
+                최저임금은 국가가 법으로 정한 최소한의 임금 수준입니다. 2025년
+                기준 최저시급은 <strong>10,030원(예상)</strong>으로, 모든
+                사업주는 이 이상의 시급을 지급해야 할 의무가 있습니다.
+              </p>
+              <Link
+                href="/guides/minimum-wage"
+                className="inline-block mt-6 py-3 px-6 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition-transform transform hover:scale-105"
+              >
+                2025년 최저임금 완벽 가이드
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </>

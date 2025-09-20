@@ -233,7 +233,8 @@ export default function GlossaryPage() {
         </p>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
+      {/* [수정] -mt-20 클래스를 제거하고 pt-16, pb-24를 추가하여 충분한 상하 여백을 확보했습니다. */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
         <div className="space-y-16">
           {categories.map((category) => (
             <section key={category}>
@@ -270,7 +271,7 @@ export default function GlossaryPage() {
                         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-signature-blue">
                           <p className="!m-0 text-sm">
                             <span className="font-bold text-signature-blue">
-                              💡 Moneysalary's Tip:
+                              💡 Moneysalary&apos;s Tip:
                             </span>{" "}
                             {item.tip}
                           </p>
