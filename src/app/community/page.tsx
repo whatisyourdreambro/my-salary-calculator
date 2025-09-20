@@ -1,6 +1,7 @@
 // src/app/community/page.tsx
 import { getPosts } from "@/app/actions";
 import NewPostForm from "@/components/NewPostForm";
+import PollDisplay from "@/components/PollDisplay"; // 투표 컴포넌트 import
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -54,7 +55,10 @@ export default async function CommunityPage() {
             <p className="mt-4 text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
               {post.content}
             </p>
-            {/* 투표 기능은 다음 단계에서 UI를 추가하겠습니다. */}
+            {/* [수정] 게시글 타입이 'poll'인 경우 PollDisplay 컴포넌트를 렌더링합니다. */}
+            {post.postType === "poll" && post.pollOptions && (
+              <PollDisplay post={post} />
+            )}
           </div>
         ))}
         {posts.length === 0 && (
