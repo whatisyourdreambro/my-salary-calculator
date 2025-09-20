@@ -1,19 +1,16 @@
 // src/app/community/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getPosts } from "@/app/actions";
 import NewPostForm from "@/components/NewPostForm";
 import PollDisplay from "@/components/PollDisplay";
-// ✅ 사용하지 않는 Metadata import 제거
-// import type { Metadata } from "next";
 import type { Post } from "@/app/types";
 
-// ... timeAgo 함수는 변경 없음 ...
-function timeAgo(date: Date): string {
-  const seconds = Math.floor(
-    (new Date().getTime() - new Date(date).getTime()) / 1000
-  );
+// 시간 표기 포맷 함수
+function timeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;
   if (interval > 1) return Math.floor(interval) + "년 전";
   interval = seconds / 2592000;
@@ -29,20 +26,17 @@ function timeAgo(date: Date): string {
 
 export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchPosts() {
-      const fetchedPosts = await getPosts();
-      setPosts(fetchedPosts);
-    }
-    fetchPosts();
-  }, []);
-
-  // 이제 이 함수는 NewPostForm에서 호출될 것입니다.
-  const handlePostSuccess = async () => {
+  const fetchPosts = useCallback(async () => {
     const fetchedPosts = await getPosts();
     setPosts(fetchedPosts);
-  };
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   return (
     <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -55,28 +49,32 @@ export default function CommunityPage() {
         </p>
       </div>
 
-      {/* ✅ onPostSuccess prop으로 함수를 전달합니다. */}
-      <NewPostForm onPostSuccess={handlePostSuccess} />
+      <NewPostForm onPostSuccess={fetchPosts} />
 
       <div className="mt-12 space-y-6">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800"
-          >
-            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>{post.author}</span>
-              <span>{timeAgo(post.createdAt)}</span>
+        {isLoading ? (
+          <p className="text-center text-gray-500 py-10">
+            게시글을 불러오는 중입니다...
+          </p>
+        ) : posts.length > 0 ? (
+          posts.map((post) => (
+            <div
+              key={post.id}
+              className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800"
+            >
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                <span>{post.author}</span>
+                <span>{timeAgo(post.createdAt)}</span>
+              </div>
+              <p className="mt-4 text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+                {post.content}
+              </p>
+              {post.postType === "poll" && post.pollOptions && (
+                <PollDisplay post={post} />
+              )}
             </div>
-            <p className="mt-4 text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-              {post.content}
-            </p>
-            {post.postType === "poll" && post.pollOptions && (
-              <PollDisplay post={post} />
-            )}
-          </div>
-        ))}
-        {posts.length === 0 && (
+          ))
+        ) : (
           <p className="text-center text-gray-500 py-10">
             아직 등록된 글이 없습니다. 첫 번째 글을 작성해보세요!
           </p>

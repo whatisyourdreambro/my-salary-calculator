@@ -10,7 +10,7 @@ export interface Post {
   id: number;
   author: string;
   content: string;
-  createdAt: Date;
+  createdAt: string; // ✅ Date에서 string으로 변경
   postType: "text" | "poll";
   pollOptions?: [PollOption, PollOption];
 }
