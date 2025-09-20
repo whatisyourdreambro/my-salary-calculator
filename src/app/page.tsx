@@ -1,5 +1,13 @@
 import { Suspense } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
+import type { Metadata } from "next"; // Metadata 타입을 import 합니다.
+
+// [추가] 메인 페이지를 위한 명시적인 metadata 객체
+export const metadata: Metadata = {
+  title: "2025년 연봉 실수령액 계산기 | Moneysalary",
+  description:
+    "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
+};
 
 // 웹사이트 구조화된 데이터
 const websiteStructuredData = {
@@ -50,8 +58,6 @@ export default function HomePage() {
         <Suspense fallback={<div>Loading...</div>}>
           <CalculatorTabs />
         </Suspense>
-
-        {/* SalaryRank 컴포넌트는 CalculatorTabs 내부로 이동했으므로 여기서 삭제합니다. */}
       </main>
     </>
   );

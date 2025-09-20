@@ -13,15 +13,32 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "2025년 연봉 실수령액 계산기 | Moneysalary",
+  // [수정] metadataBase 추가로 기준 URL 설정
+  metadataBase: new URL("https://www.moneysalary.com"),
+  title: {
+    default: "2025년 연봉 실수령액 계산기 | Moneysalary",
+    template: "%s | Moneysalary", // 페이지별 title에 자동으로 사이트 이름 추가
+  },
   description:
     "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
-  // [수정] 아래 icons 부분을 삭제하거나 주석 처리합니다.
-  /*
-  icons: {
-    icon: "/favicon.svg",
+  // [수정] Open Graph 기본값 설정
+  openGraph: {
+    title: "Moneysalary 연봉 계산기",
+    description: "2025년 최신 기준, 가장 정확한 연봉 실수령액을 계산해보세요.",
+    siteName: "Moneysalary",
+    images: [
+      {
+        url: "/logo-full.png", // public 폴더의 기본 OG 이미지
+        width: 800,
+        height: 600,
+      },
+    ],
+    type: "website",
   },
-  */
+  // [수정] Favicon 설정 활성화
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export const viewport: Viewport = {
