@@ -44,7 +44,6 @@ const navConfig: NavItem[] = [
       { name: "용어 사전", href: "/glossary" },
     ],
   },
-  { name: "커뮤니티", href: "/community", type: "link" },
   { name: "연봉 비교", href: "/?tab=comparator", type: "link" },
   { name: "연봉 순위", href: "/?tab=rank", type: "link" },
 ];

@@ -1,32 +1,4 @@
 // src/app/types.ts
 
-// 커뮤니티 게시글 데이터 구조
-export interface PollOption {
-  text: string;
-  votes: number;
-}
-
-export interface Post {
-  id: number;
-  author: string;
-  content: string;
-  createdAt: string; // ✅ Date에서 string으로 변경
-  postType: "text" | "poll";
-  pollOptions?: [PollOption, PollOption];
-}
-
-// 밸런스 게임 데이터 구조
-export interface Poll {
-  id: number;
-  topic: string;
-  optionA_text: string;
-  optionA_votes: number;
-  optionB_text: string;
-  optionB_votes: number;
-}
-
-// 서버와 클라이언트가 공유할 폼 상태 타입
-export type FormState = {
-  error?: string | null;
-  success?: boolean;
-};
+// 이 파일의 모든 내용을 삭제합니다.
+// 파일 자체는 유지하되, 내용은 비어있어야 합니다.
