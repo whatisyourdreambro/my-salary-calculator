@@ -2,6 +2,26 @@
 
 import { NextResponse } from "next/server";
 
+// [추가] XML에서 사용되는 특수문자를 처리하는 함수
+const escapeXml = (unsafe: string) => {
+  return unsafe.replace(/[<>&'""]/g, (c) => {
+    switch (c) {
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case "&":
+        return "&amp;";
+      case "'":
+        return "&apos;";
+      case '"':
+        return "&quot;";
+      default:
+        return c;
+    }
+  });
+};
+
 // src/app/guides/page.tsx 에 있는 전체 가이드 목록을 기반으로 합니다.
 const guides = [
   {
@@ -148,21 +168,27 @@ const guides = [
 function generateRssFeed() {
   const baseUrl = "https://www.moneysalary.com";
   const siteTitle = "Moneysalary Blog";
+  const feedDescription = "연봉, 세금, 재테크에 대한 모든 것";
+  const currentDate = new Date().toUTCString();
 
   let rss = `<?xml version="1.0" encoding="UTF-8" ?>`;
-  rss += `<rss version="2.0">`;
+  rss += `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`; // atom 네임스페이스 추가
   rss += `<channel>`;
-  rss += `<title>${siteTitle}</title>`;
+  rss += `<title>${escapeXml(siteTitle)}</title>`;
   rss += `<link>${baseUrl}</link>`;
-  rss += `<description>연봉, 세금, 재테크에 대한 모든 것</description>`;
+  rss += `<description>${escapeXml(feedDescription)}</description>`;
   rss += `<language>ko</language>`;
+  rss += `<lastBuildDate>${currentDate}</lastBuildDate>`; // [추가] 피드 최종 빌드 시간
+  rss += `<atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />`; // [추가] RSS 피드 주소 명시
 
   guides.forEach((guide) => {
+    const itemUrl = `${baseUrl}/guides/${guide.slug}`;
     rss += `<item>`;
-    rss += `<title>${guide.title}</title>`;
-    rss += `<link>${baseUrl}/guides/${guide.slug}</link>`;
-    rss += `<description>${guide.description}</description>`;
-    rss += `<pubDate>${new Date().toUTCString()}</pubDate>`; // 실제로는 각 글의 발행일이 들어가야 합니다.
+    rss += `<title>${escapeXml(guide.title)}</title>`;
+    rss += `<link>${itemUrl}</link>`;
+    rss += `<description>${escapeXml(guide.description)}</description>`;
+    rss += `<pubDate>${currentDate}</pubDate>`; // 실제로는 각 글의 발행일이 들어가야 합니다.
+    rss += `<guid isPermaLink="true">${itemUrl}</guid>`; // [추가] 각 아이템의 고유 주소
     rss += `</item>`;
   });
 
@@ -176,7 +202,7 @@ export async function GET() {
   const feed = generateRssFeed();
   return new NextResponse(feed, {
     headers: {
-      "Content-Type": "application/xml",
+      "Content-Type": "application/xml; charset=utf-8",
     },
   });
 }
