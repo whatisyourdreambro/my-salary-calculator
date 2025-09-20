@@ -1,18 +1,19 @@
 // src/app/community/page.tsx
+"use client";
+
+import { useState, useEffect } from "react";
 import { getPosts } from "@/app/actions";
 import NewPostForm from "@/components/NewPostForm";
-import PollDisplay from "@/components/PollDisplay"; // 투표 컴포넌트 import
-import type { Metadata } from "next";
+import PollDisplay from "@/components/PollDisplay";
+// ✅ 사용하지 않는 Metadata import 제거
+// import type { Metadata } from "next";
+import type { Post } from "@/app/types";
 
-export const metadata: Metadata = {
-  title: "커뮤니티 | Moneysalary",
-  description:
-    "연봉, 이직, 커리어에 대한 직장인들의 솔직한 이야기를 익명으로 나눠보세요.",
-};
-
-// 시간 표기 포맷 함수
+// ... timeAgo 함수는 변경 없음 ...
 function timeAgo(date: Date): string {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  const seconds = Math.floor(
+    (new Date().getTime() - new Date(date).getTime()) / 1000
+  );
   let interval = seconds / 31536000;
   if (interval > 1) return Math.floor(interval) + "년 전";
   interval = seconds / 2592000;
@@ -26,8 +27,22 @@ function timeAgo(date: Date): string {
   return Math.floor(seconds) + "초 전";
 }
 
-export default async function CommunityPage() {
-  const posts = await getPosts();
+export default function CommunityPage() {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      const fetchedPosts = await getPosts();
+      setPosts(fetchedPosts);
+    }
+    fetchPosts();
+  }, []);
+
+  // 이제 이 함수는 NewPostForm에서 호출될 것입니다.
+  const handlePostSuccess = async () => {
+    const fetchedPosts = await getPosts();
+    setPosts(fetchedPosts);
+  };
 
   return (
     <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -40,7 +55,8 @@ export default async function CommunityPage() {
         </p>
       </div>
 
-      <NewPostForm />
+      {/* ✅ onPostSuccess prop으로 함수를 전달합니다. */}
+      <NewPostForm onPostSuccess={handlePostSuccess} />
 
       <div className="mt-12 space-y-6">
         {posts.map((post) => (
@@ -55,7 +71,6 @@ export default async function CommunityPage() {
             <p className="mt-4 text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
               {post.content}
             </p>
-            {/* [수정] 게시글 타입이 'poll'인 경우 PollDisplay 컴포넌트를 렌더링합니다. */}
             {post.postType === "poll" && post.pollOptions && (
               <PollDisplay post={post} />
             )}

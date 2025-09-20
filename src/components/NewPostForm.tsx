@@ -4,10 +4,9 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { createPost } from "@/app/actions";
 import { useEffect, useRef, useState } from "react";
-// [수정] 공유 타입을 import 합니다.
 import type { FormState } from "@/app/types";
 
-// 폼 제출 버튼 컴포넌트
+// SubmitButton 컴포넌트는 변경 없음...
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
@@ -21,25 +20,32 @@ function SubmitButton() {
   );
 }
 
-// [수정] 초기 상태에 명확한 타입을 지정합니다.
 const initialState: FormState = {
   error: null,
   success: false,
 };
 
-export default function NewPostForm() {
+// ✅ Props 타입에 onPostSuccess 추가
+interface NewPostFormProps {
+  onPostSuccess?: () => void;
+}
+
+export default function NewPostForm({ onPostSuccess }: NewPostFormProps) {
   const [state, formAction] = useFormState(createPost, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const [postType, setPostType] = useState<"text" | "poll">("text");
   const [pollOptions, setPollOptions] = useState(["", ""]);
 
-  // 서버 액션이 성공적으로 완료되면 폼을 리셋
   useEffect(() => {
     if (state.success) {
       formRef.current?.reset();
       setPollOptions(["", ""]);
+      // ✅ 글쓰기 성공 시 부모 컴포넌트에서 받은 함수를 호출합니다.
+      if (onPostSuccess) {
+        onPostSuccess();
+      }
     }
-  }, [state.success]);
+  }, [state.success, onPostSuccess]);
 
   const handlePollOptionChange = (index: number, value: string) => {
     const newOptions = [...pollOptions];
@@ -53,6 +59,7 @@ export default function NewPostForm() {
       action={formAction}
       className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 space-y-4"
     >
+      {/* ... 나머지 form 내용은 변경 없음 ... */}
       <input type="hidden" name="postType" value={postType} />
 
       <div className="flex border border-gray-200 dark:border-gray-700 rounded-lg p-1">
