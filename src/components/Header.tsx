@@ -44,6 +44,7 @@ const navConfig: NavItem[] = [
       { name: "용어 사전", href: "/glossary" },
     ],
   },
+  { name: "커뮤니티", href: "/community", type: "link" },
   { name: "연봉 비교", href: "/?tab=comparator", type: "link" },
   { name: "연봉 순위", href: "/?tab=rank", type: "link" },
 ];
@@ -63,7 +64,6 @@ export default function Header() {
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* [수정] 로고 영역: flex-shrink-0으로 로고가 줄어들지 않도록 보호하고, 제목을 간결하게 변경 */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <h1
@@ -75,13 +75,11 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* [수정] 메뉴 및 테마 토글 전체 영역 */}
           <div className="flex items-center">
             {/* 데스크톱 메뉴 */}
             <div className="hidden md:flex items-center space-x-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
-                  // [수정] onMouseEnter/Leave 이벤트를 부모 div로 이동하여 메뉴 영역 전체를 인식하도록 함
                   <div
                     key={item.name}
                     className="relative"
@@ -112,7 +110,6 @@ export default function Header() {
                         />
                       </svg>
                     </button>
-                    {/* [수정] 드롭다운 메뉴 표시/숨김 로직 개선 */}
                     <div
                       className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg shadow-lg border dark:border-gray-700 transition-all duration-200 ${
                         openDropdown === item.name
@@ -148,11 +145,9 @@ export default function Header() {
             </div>
 
             <div className="flex items-center">
-              {/* 테마 토글은 항상 보이도록 수정 */}
               <div className="ml-4">
                 <ThemeToggle />
               </div>
-              {/* 모바일 햄버거 메뉴 버튼 */}
               <div className="md:hidden ml-2">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -178,10 +173,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* [추가] 모바일 메뉴 드롭다운 영역 */}
         {isMobileMenuOpen && (
           <div className="md:hidden pb-4">
-            {/* [수정] flat_map -> flatMap 으로 수정 */}
             {navConfig
               .flatMap((item) => (item.type === "link" ? [item] : item.items))
               .map((subItem) => (

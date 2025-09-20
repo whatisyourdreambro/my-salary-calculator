@@ -2,62 +2,114 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+// [수정] 공유 타입을 import 합니다.
+import type { Post, FormState, Poll } from "@/app/types";
 
-// --- 기존 Post 관련 코드 (수정됨) ---
-interface Post {
-  id: number;
-  content: string;
-  createdAt: Date;
-  author: string;
+// --- 부적절한 단어 필터링 목록 ---
+const FORBIDDEN_WORDS = [
+  "바보",
+  "멍청이",
+  "개자식",
+  "시발",
+  "존나", // 비속어
+  "섹스",
+  "야동",
+  "음란", // 성적인 단어
+  "살인",
+  "자살",
+  "폭력", // 폭력적인 단어
+];
+
+// 텍스트에 금지된 단어가 포함되어 있는지 확인하는 함수
+function containsForbiddenWords(text: string): boolean {
+  return FORBIDDEN_WORDS.some((word) => text.includes(word));
 }
-// 예시를 위한 가상 DB입니다. 실제 운영 시 Vercel Postgres 등으로 교체해야 합니다.
+
+// --- Post 관련 코드 (투표 기능 추가) ---
 const postDb: { posts: Post[] } = { posts: [] };
-let postIdCounter = 1; // 오류 수정을 위해 변수명 변경 및 사용
+let postIdCounter = 1;
 
-// 새로운 글을 생성하는 서버 액션 (오류 수정 완료)
-export async function createPost(formData: FormData) {
+// [수정] prevState의 'any' 타입을 'FormState'로 변경하고, 반환 타입도 명시합니다.
+export async function createPost(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   const content = formData.get("content") as string;
+  const postType = formData.get("postType") as "text" | "poll";
 
+  // 유효성 검사
   if (!content || content.trim().length === 0) {
     return { error: "내용을 입력해주세요." };
   }
+  if (content.length > 500) {
+    return { error: "내용은 500자 이하로 작성해주세요." };
+  }
 
-  // 익명 저자 생성 (예: '익명ab12')
+  // 콘텐츠 필터링
+  if (containsForbiddenWords(content)) {
+    return { error: "부적절한 단어가 포함되어 있습니다." };
+  }
+
   const authorId = Math.random().toString(36).substring(2, 8);
-
-  // [수정] 누락되었던 newPost 객체 생성 로직 추가
   const newPost: Post = {
-    id: postIdCounter++, // postIdCounter를 사용하여 ID를 부여하고 1 증가시킵니다.
+    id: postIdCounter++,
     content,
     createdAt: new Date(),
     author: `익명${authorId}`,
+    postType: postType,
   };
 
-  // 실제 DB에 저장하는 로직
-  postDb.posts.unshift(newPost);
+  if (postType === "poll") {
+    const option1 = formData.get("pollOption1") as string;
+    const option2 = formData.get("pollOption2") as string;
 
-  // 커뮤니티 페이지의 캐시를 갱신하여 새 글이 즉시 보이게 함
+    if (
+      !option1 ||
+      !option2 ||
+      option1.trim().length === 0 ||
+      option2.trim().length === 0
+    ) {
+      return { error: "투표 항목을 모두 입력해주세요." };
+    }
+    if (containsForbiddenWords(option1) || containsForbiddenWords(option2)) {
+      return { error: "투표 항목에 부적절한 단어가 포함되어 있습니다." };
+    }
+
+    newPost.pollOptions = [
+      { text: option1, votes: 0 },
+      { text: option2, votes: 0 },
+    ];
+  }
+
+  postDb.posts.unshift(newPost);
   revalidatePath("/community");
 
-  return { success: true };
+  return { success: true, error: null };
+}
+
+// 투표 액션
+export async function voteOnPoll(postId: number, optionIndex: number) {
+  const post = postDb.posts.find((p) => p.id === postId);
+
+  if (
+    post &&
+    post.postType === "poll" &&
+    post.pollOptions &&
+    (optionIndex === 0 || optionIndex === 1)
+  ) {
+    post.pollOptions[optionIndex].votes++;
+    revalidatePath("/community");
+    return { success: true, updatedPost: post };
+  }
+  return { error: "투표에 실패했습니다." };
 }
 
 // 모든 글을 가져오는 함수
 export async function getPosts() {
-  // 실제 DB에서 글을 가져오는 로직
   return postDb.posts;
 }
 
-// --- [신규] 밸런스 게임 관련 코드 (변경 없음) ---
-interface Poll {
-  id: number;
-  topic: string;
-  optionA_text: string;
-  optionA_votes: number;
-  optionB_text: string;
-  optionB_votes: number;
-}
-
+// --- 밸런스 게임 관련 코드 ---
 const pollDb: { polls: Poll[] } = {
   polls: [
     {
