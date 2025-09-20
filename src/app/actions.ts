@@ -4,7 +4,7 @@
 import { revalidatePath } from "next/cache";
 import type { Post, FormState, Poll } from "@/app/types";
 
-// --- 부적절한 단어 필터링 목록 (대폭 강화) ---
+// --- 부적절한 단어 필터링 목록 ---
 const FORBIDDEN_WORDS = [
   // 욕설 및 비속어
   "개새끼",
@@ -160,15 +160,12 @@ export async function createPost(
   const content = formData.get("content") as string;
   const postType = formData.get("postType") as "text" | "poll";
 
-  // 유효성 검사
   if (!content || content.trim().length === 0) {
     return { error: "내용을 입력해주세요." };
   }
   if (content.length > 500) {
     return { error: "내용은 500자 이하로 작성해주세요." };
   }
-
-  // 콘텐츠 필터링
   if (containsForbiddenWords(content)) {
     return { error: "부적절한 단어가 포함되어 있습니다." };
   }
@@ -210,7 +207,6 @@ export async function createPost(
   return { success: true, error: null };
 }
 
-// 투표 액션
 export async function voteOnPoll(postId: number, optionIndex: number) {
   const post = postDb.posts.find((p) => p.id === postId);
 
@@ -227,7 +223,6 @@ export async function voteOnPoll(postId: number, optionIndex: number) {
   return { error: "투표에 실패했습니다." };
 }
 
-// 모든 글을 가져오는 함수
 export async function getPosts() {
   return postDb.posts;
 }
