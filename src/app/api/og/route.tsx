@@ -12,6 +12,9 @@ export async function GET(request: Request) {
     const title = searchParams.get("title") ?? "나의 연봉은 얼마일까?";
     const rank = searchParams.get("rank");
     const salary = searchParams.get("salary");
+    // [수정] description 변수를 아래 JSX에서 사용합니다.
+    const description =
+      searchParams.get("description") ?? "Moneysalary.com 에서 확인해보세요";
 
     return new ImageResponse(
       (
@@ -26,30 +29,63 @@ export async function GET(request: Request) {
             backgroundColor: "#007FFF",
             color: "white",
             fontFamily: '"Noto Sans KR", sans-serif',
+            padding: "80px",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://www.moneysalary.com/logo-full.png"
-            alt="Moneysalary Logo"
-            width={300}
-            style={{ position: "absolute", top: 50, left: 50 }}
-          />
-          <div style={{ fontSize: 72, fontWeight: 700, textAlign: "center" }}>
+          <div
+            style={{
+              position: "absolute",
+              top: 60,
+              left: 60,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ fontSize: 32, fontWeight: "bold" }}>Moneysalary</div>
+          </div>
+          <div
+            style={{
+              fontSize: 64,
+              fontWeight: 700,
+              textAlign: "center",
+              lineHeight: 1.3,
+            }}
+          >
             {title}
           </div>
           {salary && (
-            <div style={{ fontSize: 48, marginTop: 30, textAlign: "center" }}>
+            <div
+              style={{
+                fontSize: 42,
+                marginTop: 20,
+                textAlign: "center",
+                color: "#e0e0e0",
+              }}
+            >
               연봉: {parseInt(salary, 10).toLocaleString()}원
             </div>
           )}
+          {/* [수정] description을 표시하는 div 추가 */}
+          <div
+            style={{
+              fontSize: 32,
+              marginTop: 25,
+              textAlign: "center",
+              color: "#e0e0e0",
+              padding: "0 80px",
+              lineHeight: 1.4,
+            }}
+          >
+            {description}
+          </div>
           {rank && (
             <div
               style={{
-                fontSize: 60,
-                marginTop: 40,
-                padding: "10px 30px",
-                border: "4px solid white",
+                fontSize: 52,
+                marginTop: 30,
+                padding: "12px 35px",
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                border: "3px solid white",
                 borderRadius: "20px",
                 textAlign: "center",
               }}
@@ -61,8 +97,9 @@ export async function GET(request: Request) {
             style={{
               fontSize: 28,
               position: "absolute",
-              bottom: 40,
+              bottom: 50,
               right: 60,
+              opacity: 0.8,
             }}
           >
             Moneysalary.com

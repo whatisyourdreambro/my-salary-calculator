@@ -34,19 +34,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// generateStaticParams를 수정하여 더 많은 롱테일 페이지를 생성합니다.
 export async function generateStaticParams() {
   const paths = [];
-  // 2000만원 ~ 1억원까지는 100만원 단위로 생성
-  for (let i = 2000; i <= 10000; i += 100) {
+  // 2000만원 ~ 1억원까지는 50만원 단위로 더욱 촘촘하게 생성
+  for (let i = 2000; i <= 10000; i += 50) {
     paths.push({ amount: i.toString() });
   }
-  // 3000만원 ~ 8000만원 사이는 50만원 단위를 추가로 생성 (가장 검색량이 많은 구간)
-  for (let i = 3050; i <= 7950; i += 100) {
+  // 1억원 ~ 2억원까지는 100만원 단위로 생성
+  for (let i = 10100; i <= 20000; i += 100) {
     paths.push({ amount: i.toString() });
   }
-  // 1억원 ~ 2억원까지는 500만원 단위로 생성
-  for (let i = 10500; i <= 20000; i += 500) {
+  // 2억원 ~ 5억원까지 고연봉자 타겟 페이지 생성
+  for (let i = 20500; i <= 50000; i += 500) {
     paths.push({ amount: i.toString() });
   }
   return paths;
