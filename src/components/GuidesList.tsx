@@ -1,9 +1,20 @@
+// src/components/GuidesList.tsx
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
-import { BookOpenText } from "lucide-react";
+// [수정] 필요한 아이콘들을 직접 import합니다.
+import { BookOpenText, Target, Briefcase, TrendingUp } from "lucide-react";
 import type { ElementType } from "react";
+
+// [수정] 아이콘 이름을 실제 컴포넌트로 매핑하는 객체를 생성합니다.
+const iconMap: { [key: string]: ElementType } = {
+  BookOpenText,
+  Target,
+  Briefcase,
+  TrendingUp,
+};
 
 interface Guide {
   slug: string;
@@ -15,7 +26,7 @@ interface Guide {
 interface Category {
   id: string;
   name: string;
-  icon: ElementType;
+  icon: string; // [수정] icon 타입을 ElementType에서 string으로 변경합니다.
 }
 
 interface GuidesListProps {
@@ -44,27 +55,32 @@ export default function GuidesList({ guides, categories }: GuidesListProps) {
     <>
       {/* Category Filter UI */}
       <div className="flex justify-center flex-wrap gap-2 mb-12">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setActiveCategory(category.id)}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
-              activeCategory === category.id
-                ? "bg-signature-blue text-white shadow-md"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            <category.icon className="w-4 h-4" />
-            {category.name}
-          </button>
-        ))}
+        {categories.map((category) => {
+          // [수정] iconMap을 통해 아이콘 이름을 실제 컴포넌트로 변환합니다.
+          const Icon = iconMap[category.icon] || BookOpenText;
+          return (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
+                activeCategory === category.id
+                  ? "bg-signature-blue text-white shadow-md"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {category.name}
+            </button>
+          );
+        })}
       </div>
 
       {Object.entries(groupedGuides).map(([categoryName, guidesInCategory]) => {
         const categoryInfo = categories.find(
           (c) => c.id === categoryName || c.name === categoryName
         );
-        const Icon = categoryInfo ? categoryInfo.icon : BookOpenText;
+        // [수정] iconMap을 통해 아이콘 이름을 실제 컴포넌트로 변환합니다.
+        const Icon = categoryInfo ? iconMap[categoryInfo.icon] : BookOpenText;
 
         if (guidesInCategory.length === 0) return null;
 

@@ -1,5 +1,6 @@
+// src/app/guides/page.tsx
+
 import type { Metadata } from "next";
-import { BookOpenText, Target, Briefcase, TrendingUp } from "lucide-react";
 import GuidesList from "@/components/GuidesList"; // 정확한 경로로 수정
 
 export const metadata: Metadata = {
@@ -179,12 +180,13 @@ const guides = [
   },
 ];
 
+// [수정] categories 배열의 icon 속성을 컴포넌트에서 문자열 이름으로 변경합니다.
 const categories = [
-  { id: "all", name: "전체보기", icon: BookOpenText },
-  { id: "연봉 분석", name: "연봉 심층 분석", icon: Target },
-  { id: "커리어 성장", name: "커리어 성장", icon: Briefcase },
-  { id: "필수 지식", name: "필수 금융 지식", icon: BookOpenText },
-  { id: "재테크 로드맵", name: "재테크 로드맵", icon: TrendingUp },
+  { id: "all", name: "전체보기", icon: "BookOpenText" },
+  { id: "연봉 분석", name: "연봉 심층 분석", icon: "Target" },
+  { id: "커리어 성장", name: "커리어 성장", icon: "Briefcase" },
+  { id: "필수 지식", name: "필수 금융 지식", icon: "BookOpenText" },
+  { id: "재테크 로드맵", name: "재테크 로드맵", icon: "TrendingUp" },
 ];
 
 export default function GuidesPage() {
