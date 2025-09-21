@@ -1,6 +1,7 @@
 // src/lib/generateData.ts
 
 import { calculateNetSalary } from "./calculator";
+import type { AdvancedSettings } from "@/app/types";
 
 export type SalaryData = {
   preTax: number;
@@ -14,10 +15,9 @@ export type SalaryData = {
   totalDeduction: number;
 };
 
-// --- 수정된 부분: 계산된 데이터를 저장할 캐시 객체 생성 ---
 const tableDataCache = new Map<string, SalaryData[]>();
 
-const defaultAdvancedSettings = {
+const defaultAdvancedSettings: AdvancedSettings = {
   isSmeYouth: false,
   disabledDependents: 0,
   seniorDependents: 0,
@@ -31,29 +31,29 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
 
   const data: SalaryData[] = [];
   for (let salary = 0; salary <= 100000000; salary += 50000) {
+    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       salary,
       0,
       1,
-      0,
       0,
       defaultAdvancedSettings
     );
     data.push({ preTax: salary, ...results });
   }
   for (let salary = 101000000; salary <= 500000000; salary += 1000000) {
+    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       salary,
       0,
       1,
-      0,
       0,
       defaultAdvancedSettings
     );
     data.push({ preTax: salary, ...results });
   }
 
-  tableDataCache.set("annual", data); // 계산된 결과를 캐시에 저장
+  tableDataCache.set("annual", data);
   return data;
 }
 
@@ -65,11 +65,11 @@ export function generateMonthlySalaryTableData(): SalaryData[] {
 
   const data: SalaryData[] = [];
   for (let monthly = 0; monthly <= 100000000; monthly += 50000) {
+    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       monthly * 12,
       0,
       1,
-      0,
       0,
       defaultAdvancedSettings
     );
@@ -88,11 +88,11 @@ export function generateWeeklyPayTableData(): SalaryData[] {
 
   const data: SalaryData[] = [];
   for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
+    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       weekly * 52,
       0,
       1,
-      0,
       0,
       defaultAdvancedSettings
     );
@@ -111,11 +111,11 @@ export function generateHourlyWageTableData(): SalaryData[] {
 
   const data: SalaryData[] = [];
   for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
+    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       hourly * 40 * 52,
       0,
       1,
-      0,
       0,
       defaultAdvancedSettings
     );
