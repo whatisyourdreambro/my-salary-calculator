@@ -3,6 +3,9 @@
 import ShareableResult from "@/components/ShareableResult";
 import { Suspense } from "react";
 
+// [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
+export const runtime = "edge";
+
 type Props = {
   params: { data: string };
 };
