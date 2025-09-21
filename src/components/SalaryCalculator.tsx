@@ -22,6 +22,7 @@ import type {
   AdvancedSettings,
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
+import FinancialHealthAnalysis from "./FinancialHealthAnalysis"; // 금융 진단 컴포넌트 import
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -71,8 +72,8 @@ export default function SalaryCalculator() {
   const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
+  const [monthlyExpenses, setMonthlyExpenses] = useState(""); // 월평균 고정지출 state 추가
 
-  // [수정] 불필요한 재생성을 막기 위해 useMemo로 감쌌습니다.
   const advancedSettings = useMemo<AdvancedSettings>(
     () => ({
       isSmeYouth: false,
@@ -143,7 +144,6 @@ export default function SalaryCalculator() {
       const existingData: StoredFinancialData = existingDataJSON
         ? JSON.parse(existingDataJSON)
         : { lastUpdated: new Date().toISOString() };
-
       const salaryDataToStore: StoredSalaryData = {
         annualSalary,
         monthlyNet: result.monthlyNet,
@@ -153,13 +153,11 @@ export default function SalaryCalculator() {
         dependents,
         children,
       };
-
       const updatedData: StoredFinancialData = {
         ...existingData,
         salary: salaryDataToStore,
         lastUpdated: new Date().toISOString(),
       };
-
       localStorage.setItem(
         "moneysalary-financial-data",
         JSON.stringify(updatedData)
@@ -179,6 +177,7 @@ export default function SalaryCalculator() {
     setNonTaxableAmount("200000");
     setDependents(1);
     setChildren(0);
+    setMonthlyExpenses("");
   };
 
   return (
@@ -323,6 +322,15 @@ export default function SalaryCalculator() {
                 </span>
               </div>
             </div>
+            {/* [추가] 월평균 고정 지출 입력 */}
+            <div className="mt-4">
+              <CurrencyInput
+                label="월평균 고정 지출 (주거비, 통신비 등)"
+                value={monthlyExpenses}
+                onValueChange={setMonthlyExpenses}
+                quickAmounts={[500000, 100000, 50000]}
+              />
+            </div>
           </div>
         </div>
 
@@ -405,6 +413,12 @@ export default function SalaryCalculator() {
         <SalaryAnalysis
           annualSalary={annualSalary}
           monthlyNet={result.monthlyNet}
+        />
+      )}
+      {parseNumber(monthlyExpenses) > 0 && (
+        <FinancialHealthAnalysis
+          monthlyNet={result.monthlyNet}
+          monthlyExpenses={parseNumber(monthlyExpenses)}
         />
       )}
     </div>
