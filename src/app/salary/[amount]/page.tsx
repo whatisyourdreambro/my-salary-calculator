@@ -1,8 +1,9 @@
+// src/app/salary/[amount]/page.tsx
+
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
-// findSalaryRank 함수를 import하여 사용합니다.
 import { salaryData, findSalaryRank } from "@/lib/salaryData";
 export const runtime = "edge";
 
@@ -36,15 +37,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const paths = [];
-  // 2000만원 ~ 1억원까지는 50만원 단위로 더욱 촘촘하게 생성
   for (let i = 2000; i <= 10000; i += 50) {
     paths.push({ amount: i.toString() });
   }
-  // 1억원 ~ 2억원까지는 100만원 단위로 생성
   for (let i = 10100; i <= 20000; i += 100) {
     paths.push({ amount: i.toString() });
   }
-  // 2억원 ~ 5억원까지 고연봉자 타겟 페이지 생성
   for (let i = 20500; i <= 50000; i += 500) {
     paths.push({ amount: i.toString() });
   }
@@ -58,13 +56,13 @@ export default function SalaryDetailPage({ params }: Props) {
   }
   const annualSalary = amountParam * 10000;
 
-  const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, 0, {
+  // [수정] 불필요한 인수(0)를 제거했습니다.
+  const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, {
     isSmeYouth: false,
     disabledDependents: 0,
     seniorDependents: 0,
   });
 
-  // salaryData에서 직접 findSalaryRank 함수를 호출하여 순위를 계산합니다.
   const { rank } = findSalaryRank(annualSalary, "all-all-all-all");
   const rankData = salaryData["all-all-all-all"];
 

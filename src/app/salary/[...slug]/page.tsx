@@ -12,14 +12,10 @@ type Props = {
   params: { slug: string[] };
 };
 
-// slug 파라미터를 분석하여 연봉, 직업 등의 정보를 추출하는 함수
 function parseSlug(slug: string[]) {
-  // 예시: /salary/developer/5/samsung -> { job: 'developer', experience: 5, company: 'samsung' }
-  // 실제 서비스에서는 이 slug를 기반으로 DB나 별도 데이터 소스에서 연봉 정보를 조회해야 합니다.
-  // 여기서는 예시로 고정된 값을 반환합니다.
   const annualSalary = parseInt(slug[0], 10) * 10000 || 50000000;
   const jobTitle = slug.join(" ");
-  const conditionKey = "all-all-all-all"; // slug에 따라 동적으로 키를 생성해야 합니다.
+  const conditionKey = "all-all-all-all";
 
   return { annualSalary, jobTitle, conditionKey };
 }
@@ -65,7 +61,8 @@ export default function SalarySlugPage({ params }: Props) {
     notFound();
   }
 
-  const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, 0, {
+  // [수정] 불필요한 인수(0)를 제거했습니다.
+  const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, {
     isSmeYouth: false,
     disabledDependents: 0,
     seniorDependents: 0,
