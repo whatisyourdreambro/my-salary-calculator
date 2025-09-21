@@ -1,8 +1,11 @@
+// src/app/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
 import MyDashboard from "@/components/MyDashboard";
+// [수정] StoredFinancialData 타입을 import합니다.
 import type { StoredFinancialData } from "@/app/types";
 
 const websiteStructuredData = {
@@ -25,12 +28,14 @@ export default function HomePage() {
   useEffect(() => {
     // 페이지가 로드될 때 localStorage에서 데이터를 가져옵니다.
     try {
+      // [수정] 'moneysalary-financial-data' 키를 사용합니다.
       const savedData = localStorage.getItem("moneysalary-financial-data");
       if (savedData) {
         setDashboardData(JSON.parse(savedData));
       }
     } catch (error) {
       console.error("Failed to parse dashboard data from localStorage", error);
+      // [수정] 'moneysalary-financial-data' 키를 삭제합니다.
       localStorage.removeItem("moneysalary-financial-data");
     } finally {
       setIsLoading(false);
@@ -39,6 +44,7 @@ export default function HomePage() {
 
   const handleResetDashboard = () => {
     // 대시보드 데이터를 삭제하고 계산기 화면으로 전환합니다.
+    // [수정] 'moneysalary-financial-data' 키를 삭제합니다.
     localStorage.removeItem("moneysalary-financial-data");
     setDashboardData(null);
     window.location.reload(); // 상태를 확실히 초기화하기 위해 페이지 새로고침

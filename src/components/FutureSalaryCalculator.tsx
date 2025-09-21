@@ -1,3 +1,5 @@
+// src/components/FutureSalaryCalculator.tsx
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -6,7 +8,7 @@ import {
   calculatePathToGoal,
   SalaryEvent,
 } from "@/lib/futureCalculator";
-import { salaryData } from "@/lib/salaryData"; // [추가] salaryData import
+import { salaryData } from "@/lib/salaryData";
 import CurrencyInput from "./CurrencyInput";
 import {
   LineChart,
@@ -18,6 +20,8 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
+// [추가] 타입 import
+import type { StoredFinancialData, StoredFutureSalaryData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -34,14 +38,12 @@ export default function FutureSalaryCalculator() {
 
   const [targetSalary, setTargetSalary] = useState("100000000");
 
-  // [추가] 시장 데이터 비교를 위한 상태
   const [jobCategory, setJobCategory] = useState("it_dev");
   const [experienceLevel, setExperienceLevel] = useState("3-6");
 
   const futureSalaries = useMemo(() => {
     if (mode === "predict") {
       const salary = Number(currentSalary.replace(/,/g, ""));
-      // [수정] marketData를 찾아서 계산 함수에 전달
       const marketDataKey = `${jobCategory}-${experienceLevel}-all-all`;
       const marketData =
         salaryData[marketDataKey] ?? salaryData["all-all-all-all"];
@@ -71,6 +73,50 @@ export default function FutureSalaryCalculator() {
     const newYears = Math.max(1, Math.min(30, newYearValue));
     setYears(newYears);
     setEvents(events.filter((e) => e.yearIndex < newYears));
+  };
+
+  // [추가] 대시보드 저장 핸들러
+  const handleSaveData = () => {
+    if (mode !== "predict" || futureSalaries.length === 0) {
+      alert("먼저 미래 연봉을 예측해주세요.");
+      return;
+    }
+
+    const lastYearData = futureSalaries[futureSalaries.length - 1];
+    const initialSalary = Number(currentSalary.replace(/,/g, ""));
+
+    try {
+      const existingDataJSON = localStorage.getItem(
+        "moneysalary-financial-data"
+      );
+      const existingData: StoredFinancialData = existingDataJSON
+        ? JSON.parse(existingDataJSON)
+        : { lastUpdated: new Date().toISOString() };
+
+      const futureDataToStore: StoredFutureSalaryData = {
+        years: years,
+        finalSalary: lastYearData.salary,
+        totalIncrease: lastYearData.salary - initialSalary,
+      };
+
+      const updatedData: StoredFinancialData = {
+        ...existingData,
+        futureSalary: futureDataToStore,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "moneysalary-financial-data",
+        JSON.stringify(updatedData)
+      );
+      alert(
+        "미래 연봉 예측 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to save data to localStorage:", error);
+      alert("데이터 저장에 실패했습니다.");
+    }
   };
 
   const addEvent = () => {
@@ -194,7 +240,6 @@ export default function FutureSalaryCalculator() {
           {mode === "predict" && (
             <div className="p-4 border dark:border-gray-700 rounded-lg">
               <h3 className="text-lg font-bold mb-4">예측 조건</h3>
-              {/* [추가] 직군 및 경력 선택 UI */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="text-sm font-medium">직군</label>
@@ -357,7 +402,6 @@ export default function FutureSalaryCalculator() {
                     dot={{ r: 4 }}
                     activeDot={{ r: 8 }}
                   />
-                  {/* [추가] 시장 데이터 라인 */}
                   <Line
                     type="monotone"
                     dataKey="marketAverage"
@@ -406,6 +450,14 @@ export default function FutureSalaryCalculator() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="mt-6">
+                <button
+                  onClick={handleSaveData}
+                  className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
+                >
+                  대시보드에 저장
+                </button>
               </div>
             </>
           )}

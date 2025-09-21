@@ -1,14 +1,17 @@
+// src/components/SeveranceCalculator.tsx
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
+// [추가] 타입 import
+import type { StoredFinancialData, StoredSeveranceData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
-// Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 헬퍼 함수
 const toInputDateString = (date: Date): string => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -16,7 +19,6 @@ const toInputDateString = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-// [수정] export default를 명시하여 이 컴포넌트가 모듈의 기본임을 선언합니다.
 export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -28,7 +30,6 @@ export default function SeveranceCalculator() {
     return date;
   }, []);
 
-  // 상태를 'YYYY-MM-DD' 문자열 형식으로 관리합니다.
   const [startDate, setStartDate] = useState<string>(
     toInputDateString(oneYearAgo)
   );
@@ -86,24 +87,42 @@ export default function SeveranceCalculator() {
     setResult(newResult);
   }, [startDate, endDate, monthlySalary, annualBonus, annualLeavePay]);
 
-  const handleShareLink = () => {
-    const stateToShare = {
-      startDate,
-      endDate,
-      monthlySalary,
-      annualBonus,
-      annualLeavePay,
-    };
-    const encodedState = btoa(JSON.stringify(stateToShare));
-    const shareUrl = `${window.location.origin}/?tab=severance&data=${encodedState}`;
-    navigator.clipboard.writeText(shareUrl).then(
-      () => {
-        alert("결과가 포함된 링크가 클립보드에 복사되었습니다.");
-      },
-      () => {
-        alert("링크 복사에 실패했습니다.");
-      }
-    );
+  // [추가] 대시보드 저장 핸들러
+  const handleSaveData = () => {
+    if (result.estimatedSeverancePay <= 0) {
+      alert("퇴직금이 계산되지 않았습니다. 정보를 먼저 입력해주세요.");
+      return;
+    }
+    try {
+      const existingDataJSON = localStorage.getItem(
+        "moneysalary-financial-data"
+      );
+      const existingData: StoredFinancialData = existingDataJSON
+        ? JSON.parse(existingDataJSON)
+        : { lastUpdated: new Date().toISOString() };
+
+      const severanceDataToStore: StoredSeveranceData = {
+        estimatedSeverancePay: result.estimatedSeverancePay,
+      };
+
+      const updatedData: StoredFinancialData = {
+        ...existingData,
+        severance: severanceDataToStore,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "moneysalary-financial-data",
+        JSON.stringify(updatedData)
+      );
+      alert(
+        "예상 퇴직금 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to save data to localStorage:", error);
+      alert("데이터 저장에 실패했습니다.");
+    }
   };
 
   const handleInputChange =
@@ -221,18 +240,19 @@ export default function SeveranceCalculator() {
             </span>
           </div>
         </div>
+        {/* [수정] 버튼 UI/UX 통일 */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <button
-            onClick={handleShareLink}
-            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
-          >
-            링크 공유
-          </button>
           <button
             onClick={handleReset}
             className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
           >
             초기화
+          </button>
+          <button
+            onClick={handleSaveData}
+            className="py-3 bg-white hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-bold text-signature-blue dark:text-white transition"
+          >
+            대시보드에 저장
           </button>
         </div>
       </div>

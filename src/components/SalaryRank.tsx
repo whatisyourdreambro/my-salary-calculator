@@ -1,9 +1,13 @@
+// src/components/SalaryRank.tsx
+
 "use client";
 
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import Link from "next/link";
 import { findSalaryRank, salaryData } from "@/lib/salaryData";
+// [추가] 타입 import
+import type { StoredFinancialData, StoredRankData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -105,6 +109,47 @@ export default function SalaryRank() {
       condition: conditionText || "전체 근로자",
       recommendedGuides,
     });
+  };
+
+  // [추가] 대시보드 저장 핸들러
+  const handleSaveData = () => {
+    if (!result || result.rank === null) {
+      alert("먼저 연봉 순위를 계산해주세요.");
+      return;
+    }
+    try {
+      const existingDataJSON = localStorage.getItem(
+        "moneysalary-financial-data"
+      );
+      const existingData: StoredFinancialData = existingDataJSON
+        ? JSON.parse(existingDataJSON)
+        : { lastUpdated: new Date().toISOString() };
+
+      const rankDataToStore: StoredRankData = {
+        rank: result.rank,
+        condition: result.condition,
+        median: result.median,
+        average: result.average,
+      };
+
+      const updatedData: StoredFinancialData = {
+        ...existingData,
+        rank: rankDataToStore,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "moneysalary-financial-data",
+        JSON.stringify(updatedData)
+      );
+      alert(
+        "연봉 순위 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to save data to localStorage:", error);
+      alert("데이터 저장에 실패했습니다.");
+    }
   };
 
   const handleShare = async () => {
@@ -264,7 +309,13 @@ export default function SalaryRank() {
             <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
               * 국가통계 기반 데이터로 추정한 값입니다.
             </p>
-            <div className="mt-8">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={handleSaveData}
+                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
+              >
+                대시보드에 저장
+              </button>
               <button
                 onClick={handleShare}
                 className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"

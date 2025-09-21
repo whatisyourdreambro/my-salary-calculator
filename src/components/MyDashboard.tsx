@@ -1,9 +1,12 @@
+// src/components/MyDashboard.tsx
+
 "use client";
 
 import type { StoredFinancialData } from "@/app/types";
 import CountUp from "react-countup";
 import Link from "next/link";
-import { Home, LogOut, Wallet } from "lucide-react";
+// [수정] 필요한 아이콘들을 모두 import합니다.
+import { Home, LogOut, Wallet, BarChart2, TrendingUp } from "lucide-react";
 
 interface MyDashboardProps {
   data: StoredFinancialData;
@@ -46,7 +49,7 @@ const InfoCard = ({
 );
 
 export default function MyDashboard({ data, onReset }: MyDashboardProps) {
-  const { salary, severance, homeLoan, lastUpdated } = data;
+  const { salary, severance, homeLoan, rank, futureSalary, lastUpdated } = data;
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-8 text-center">
@@ -71,8 +74,28 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
               title="기준 연봉"
               value={salary.annualSalary}
               unit="원"
-              link="/"
+              link="/?tab=salary"
               linkText="급여 다시 계산하기"
+            />
+          )}
+          {rank && (
+            <InfoCard
+              icon={BarChart2}
+              title={`연봉 순위 (${rank.condition})`}
+              value={rank.rank}
+              unit="%"
+              link="/?tab=rank"
+              linkText="순위 다시 계산하기"
+            />
+          )}
+          {futureSalary && (
+            <InfoCard
+              icon={TrendingUp}
+              title={`${futureSalary.years}년 후 예상 연봉`}
+              value={futureSalary.finalSalary}
+              unit="원"
+              link="/?tab=future"
+              linkText="미래 다시 예측하기"
             />
           )}
           {severance && (
@@ -102,18 +125,18 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
             마지막 저장: {new Date(lastUpdated).toLocaleString()}
           </p>
           <div className="flex gap-4">
-            <Link
-              href="/report"
-              className="py-2 px-5 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
-            >
-              종합 리포트 보기
-            </Link>
             <button
               onClick={onReset}
               className="py-2 px-5 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
             >
               데이터 초기화
             </button>
+            <Link
+              href="/report"
+              className="py-2 px-5 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
+            >
+              종합 리포트 보기
+            </Link>
           </div>
         </div>
       </div>

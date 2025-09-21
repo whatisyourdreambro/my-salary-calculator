@@ -1,3 +1,5 @@
+// src/components/SalaryCalculator.tsx
+
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -14,7 +16,8 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import type { StoredSalaryData } from "@/app/types";
+// [수정] StoredFinancialData 타입을 import 합니다.
+import type { StoredSalaryData, StoredFinancialData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -146,22 +149,44 @@ export default function SalaryCalculator() {
     else setChildren(newVal);
   };
 
-  // [추가] 계산 결과를 localStorage에 저장하는 함수
+  // [수정] 계산 결과를 새로운 통합 데이터 구조에 맞게 저장하는 함수로 변경합니다.
   const handleSaveData = () => {
-    const dataToStore: StoredSalaryData = {
-      annualSalary,
-      monthlyNet: result.monthlyNet,
-      payBasis,
-      severanceType,
-      nonTaxableAmount: parseNumber(nonTaxableAmount),
-      dependents,
-      children,
-    };
-    localStorage.setItem("moneysalary-dashboard", JSON.stringify(dataToStore));
-    alert(
-      "연봉 정보가 저장되었습니다! 다음 방문 시 대시보드에서 바로 확인할 수 있습니다."
-    );
-    window.location.reload(); // 페이지를 새로고침하여 대시보드를 표시
+    try {
+      const existingDataJSON = localStorage.getItem(
+        "moneysalary-financial-data"
+      );
+      const existingData: StoredFinancialData = existingDataJSON
+        ? JSON.parse(existingDataJSON)
+        : { lastUpdated: new Date().toISOString() };
+
+      const salaryDataToStore: StoredSalaryData = {
+        annualSalary,
+        monthlyNet: result.monthlyNet,
+        payBasis,
+        severanceType,
+        nonTaxableAmount: parseNumber(nonTaxableAmount),
+        dependents,
+        children,
+      };
+
+      const updatedData: StoredFinancialData = {
+        ...existingData,
+        salary: salaryDataToStore,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "moneysalary-financial-data",
+        JSON.stringify(updatedData)
+      );
+      alert(
+        "연봉 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to save data to localStorage:", error);
+      alert("데이터 저장에 실패했습니다.");
+    }
   };
 
   const handleReset = () => {
@@ -386,7 +411,7 @@ export default function SalaryCalculator() {
               </ResponsiveContainer>
             </div>
           </div>
-          {/* [추가] 저장하기 및 초기화 버튼 영역 */}
+          {/* [수정] '내 연봉으로 저장' 버튼의 이름을 '대시보드에 저장'으로 변경하여 일관성을 확보합니다. */}
           <div className="mt-6 pt-6 border-t dark:border-gray-700 grid grid-cols-2 gap-4">
             <button
               onClick={handleReset}
@@ -398,7 +423,7 @@ export default function SalaryCalculator() {
               onClick={handleSaveData}
               className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
             >
-              내 연봉으로 저장
+              대시보드에 저장
             </button>
           </div>
         </div>

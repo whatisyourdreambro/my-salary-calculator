@@ -1,8 +1,12 @@
+// src/components/HomeLoanSimulator.tsx
+
 "use client";
 
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
+// [추가] 타입 import
+import type { StoredFinancialData, StoredHomeLoanData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -68,8 +72,6 @@ export default function HomeLoanSimulator() {
           (Math.pow(1 + monthlyRate, numberOfMonths) - 1);
         total = monthly * numberOfMonths;
       } else {
-        // equalPrincipal
-        // 원금균등은 첫 달 납입액이 가장 크므로 첫 달 기준으로 표시
         const principalPayment = principal / numberOfMonths;
         const firstMonthInterest = principal * monthlyRate;
         monthly = principalPayment + firstMonthInterest;
@@ -99,6 +101,45 @@ export default function HomeLoanSimulator() {
       repaymentType,
     ]);
 
+  // [추가] 대시보드 저장 핸들러
+  const handleSaveData = () => {
+    if (monthlyPayment <= 0) {
+      alert("대출 정보가 올바르지 않습니다. 입력값을 확인해주세요.");
+      return;
+    }
+    try {
+      const existingDataJSON = localStorage.getItem(
+        "moneysalary-financial-data"
+      );
+      const existingData: StoredFinancialData = existingDataJSON
+        ? JSON.parse(existingDataJSON)
+        : { lastUpdated: new Date().toISOString() };
+
+      const homeLoanDataToStore: StoredHomeLoanData = {
+        monthlyPayment,
+        loanSuggestion,
+      };
+
+      const updatedData: StoredFinancialData = {
+        ...existingData,
+        homeLoan: homeLoanDataToStore,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "moneysalary-financial-data",
+        JSON.stringify(updatedData)
+      );
+      alert(
+        "주택담보대출 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to save data to localStorage:", error);
+      alert("데이터 저장에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       <div className="space-y-6 bg-light-card dark:bg-dark-card p-6 rounded-xl border">
@@ -107,14 +148,12 @@ export default function HomeLoanSimulator() {
           label="주택 가격"
           value={homePrice}
           onValueChange={setHomePrice}
-          // [수정] 3개 버튼으로 변경
           quickAmounts={[100000000, 50000000, 10000000]}
         />
         <CurrencyInput
           label="자기 자본"
           value={downPayment}
           onValueChange={setDownPayment}
-          // [수정] 3개 버튼으로 변경
           quickAmounts={[50000000, 10000000, 5000000]}
         />
         <div>
@@ -148,7 +187,6 @@ export default function HomeLoanSimulator() {
           label="나의 세전 연소득"
           value={annualIncome}
           onValueChange={setAnnualIncome}
-          // [수정] 3개 버튼으로 변경
           quickAmounts={[10000000, 5000000, 1000000]}
         />
         <div>
@@ -208,12 +246,12 @@ export default function HomeLoanSimulator() {
           </div>
         </div>
       </div>
-      <div className="space-y-6 bg-signature-blue text-white p-6 rounded-xl shadow-lg">
+      <div className="space-y-6 bg-signature-blue text-white p-6 rounded-xl shadow-lg flex flex-col">
         <h2 className="text-2xl font-bold text-center">📊 시뮬레이션 결과</h2>
         <div className="bg-white/10 p-3 rounded-lg text-center font-semibold text-sm">
           {loanSuggestion}
         </div>
-        <div className="bg-white/20 p-6 rounded-lg text-center">
+        <div className="bg-white/20 p-6 rounded-lg text-center flex-grow flex flex-col justify-center">
           <p className="font-semibold text-blue-200 text-lg">
             {repaymentType === "equalPrincipal" ? "첫 달 " : ""}월 상환액
           </p>
@@ -231,6 +269,15 @@ export default function HomeLoanSimulator() {
             <span>총 상환 금액</span>
             <span>{formatNumber(totalPayment)} 원</span>
           </div>
+        </div>
+        {/* [추가] 저장 버튼 */}
+        <div className="mt-auto pt-4">
+          <button
+            onClick={handleSaveData}
+            className="w-full py-3 bg-white text-signature-blue font-bold rounded-lg hover:bg-gray-200 transition"
+          >
+            대시보드에 저장
+          </button>
         </div>
       </div>
     </div>

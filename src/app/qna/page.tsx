@@ -1,3 +1,5 @@
+// src/app/qna/page.tsx
+
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -84,6 +86,7 @@ const faqStructuredData = {
   mainEntity: qnaData.map((item) => ({
     "@type": "Question",
     name: item.question,
+    answerCount: 1, // <--- [수정] 이 필드를 추가하여 SEO 문제를 해결합니다.
     acceptedAnswer: {
       "@type": "Answer",
       text: `${item.answer.conclusion} ${item.answer.details.join(
