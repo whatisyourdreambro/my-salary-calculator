@@ -14,12 +14,12 @@ export async function GET(request: Request) {
     const description =
       searchParams.get("description") ?? "Moneysalary.com 에서 확인해보세요";
 
-    // [수정] 폰트 경로를 new URL()을 사용하여 절대 경로로 참조합니다.
+    // [수정] 폰트 경로를 전체 URL로 변경하여 빌드 오류를 해결합니다.
     const notoBold = fetch(
-      new URL("../../public/fonts/NotoSansKR-Bold.ttf", import.meta.url)
+      "https://www.moneysalary.com/fonts/NotoSansKR-Bold.ttf"
     ).then((res) => res.arrayBuffer());
     const notoRegular = fetch(
-      new URL("../../public/fonts/NotoSansKR-Regular.ttf", import.meta.url)
+      "https://www.moneysalary.com/fonts/NotoSansKR-Regular.ttf"
     ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
               opacity: 0.8,
             }}
           >
-            Moneysalary.com
+            moneysalary.com
           </div>
         </div>
       ),
