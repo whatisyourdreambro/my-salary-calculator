@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
-// [추가] LayoutDashboard 아이콘을 import합니다.
 import { LayoutDashboard } from "lucide-react";
 
 type LinkItem = { name: string; href: string; type: "link" };
@@ -17,19 +16,24 @@ type DropdownItem = {
 };
 type NavItem = LinkItem | DropdownItem;
 
+// --- [수정된 부분] 계산기 드롭다운 메뉴 항목 재구성 ---
 const navConfig: NavItem[] = [
   {
     name: "계산기",
     type: "dropdown",
     items: [
-      { name: "종합 계산기", href: "/" },
+      { name: "종합 계산기 (정규직)", href: "/?tab=salary" },
+      { name: "알바/프리랜서", href: "/?tab=freelancer" },
+      { name: "퇴직금 계산기", href: "/?tab=severance" },
+      { name: "미래 연봉 예측", href: "/?tab=future" },
       { name: "연말정산 계산기", href: "/year-end-tax" },
       { name: "주택담보대출 계산기", href: "/home-loan" },
       { name: "자동차 구매 계산기", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
-      { name: "급여명세서", href: "/?tab=paystub" },
+      { name: "급여명세서 생성기", href: "/?tab=paystub" },
     ],
   },
+  // --- [수정 끝] ---
   {
     name: "연봉 테이블",
     type: "dropdown",
@@ -140,7 +144,6 @@ export default function Header() {
                   </Link>
                 )
               )}
-              {/* [추가] 마이 대시보드 버튼 */}
               <Link
                 href="/dashboard"
                 className="flex items-center gap-2 py-2 px-4 ml-2 text-sm lg:text-base font-bold text-white bg-primary rounded-lg hover:bg-primary-hover transition-all animate-subtle-shine"
