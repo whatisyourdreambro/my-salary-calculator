@@ -1,25 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import SalaryCalculator from "@/components/SalaryCalculator";
-import SeveranceCalculator from "@/components/SeveranceCalculator";
-// [추가] PayStubGenerator를 동적으로 임포트
-const PayStubGenerator = dynamic(() => import("@/components/PayStubGenerator"));
+import {
+  TrendingUp,
+  PiggyBank,
+  FileText,
+  GitCompare,
+  BarChart3,
+  Calculator,
+} from "lucide-react";
 
 // Dynamic imports for performance
+const SalaryCalculator = dynamic(() => import("@/components/SalaryCalculator"));
+const SeveranceCalculator = dynamic(
+  () => import("@/components/SeveranceCalculator")
+);
+const PayStubGenerator = dynamic(() => import("@/components/PayStubGenerator"));
 const FutureSalaryCalculator = dynamic(
   () => import("@/components/FutureSalaryCalculator")
 );
 const SalaryComparator = dynamic(() => import("@/components/SalaryComparator"));
 const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
 
-// [추가] PAYSTUB 탭 정의
 const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
-  PAYSTUB: "paystub", // 신규 탭
+  PAYSTUB: "paystub",
   FUTURE: "future",
   COMPARATOR: "comparator",
   RANK: "rank",
@@ -27,24 +35,50 @@ const TABS = {
 
 type TabValue = (typeof TABS)[keyof typeof TABS];
 
-// [추가] PAYSTUB 탭 이름 정의
-const TAB_NAMES: Record<TabValue, string> = {
-  [TABS.SALARY]: "연봉 계산기",
-  [TABS.SEVERANCE]: "퇴직금 계산기",
-  [TABS.PAYSTUB]: "급여명세서", // 신규 탭
-  [TABS.FUTURE]: "미래 연봉",
-  [TABS.COMPARATOR]: "연봉 비교기",
-  [TABS.RANK]: "연봉 순위",
+const TAB_CONFIG: Record<
+  TabValue,
+  { name: string; description: string; icon: React.ElementType }
+> = {
+  [TABS.SALARY]: {
+    name: "연봉 계산기",
+    description: "내 월급의 모든 것",
+    icon: Calculator,
+  },
+  [TABS.SEVERANCE]: {
+    name: "퇴직금 계산기",
+    description: "미래를 위한 자금 계획",
+    icon: PiggyBank,
+  },
+  [TABS.PAYSTUB]: {
+    name: "급여명세서",
+    description: "월급 내역 한눈에 보기",
+    icon: FileText,
+  },
+  [TABS.FUTURE]: {
+    name: "미래 연봉",
+    description: "커리어 로드맵 예측",
+    icon: TrendingUp,
+  },
+  [TABS.COMPARATOR]: {
+    name: "연봉 비교",
+    description: "최고의 오퍼 선택하기",
+    icon: GitCompare,
+  },
+  [TABS.RANK]: {
+    name: "연봉 순위",
+    description: "내 소득 위치 확인",
+    icon: BarChart3,
+  },
 };
 
-export default function CalculatorTabs() {
+function CalculatorTabsComponent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabValue>(TABS.SALARY);
 
   useEffect(() => {
-    const tab = searchParams.get("tab");
-    if (tab && Object.values(TABS).includes(tab as TabValue)) {
-      setActiveTab(tab as TabValue);
+    const tab = searchParams.get("tab") as TabValue;
+    if (tab && Object.values(TABS).includes(tab)) {
+      setActiveTab(tab);
     } else {
       setActiveTab(TABS.SALARY);
     }
@@ -54,7 +88,6 @@ export default function CalculatorTabs() {
     switch (activeTab) {
       case TABS.SEVERANCE:
         return <SeveranceCalculator />;
-      // [추가] PAYSTUB 탭 렌더링 로직
       case TABS.PAYSTUB:
         return <PayStubGenerator />;
       case TABS.FUTURE:
@@ -71,20 +104,24 @@ export default function CalculatorTabs() {
 
   return (
     <div>
-      <div className="flex justify-center mb-8 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
-        {(Object.values(TABS) as TabValue[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-3 sm:px-6 py-3 font-semibold text-sm sm:text-lg transition-colors duration-200 shrink-0 ${
-              activeTab === tab
-                ? "border-b-2 border-signature-blue text-signature-blue"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-            }`}
-          >
-            {TAB_NAMES[tab]}
-          </button>
-        ))}
+      <div className="flex justify-center mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        {(Object.values(TABS) as TabValue[]).map((tab) => {
+          const { name, icon: Icon } = TAB_CONFIG[tab];
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 sm:px-6 py-4 font-semibold text-sm sm:text-base transition-colors duration-200 shrink-0 flex items-center gap-2 ${
+                activeTab === tab
+                  ? "border-b-2 border-signature-blue text-signature-blue"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border-b-2 border-transparent"
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              {name}
+            </button>
+          );
+        })}
       </div>
       <style jsx global>{`
         .scrollbar-hide::-webkit-scrollbar {
@@ -97,5 +134,14 @@ export default function CalculatorTabs() {
       `}</style>
       <div>{renderActiveCalculator()}</div>
     </div>
+  );
+}
+
+// Suspense for client-side components
+export default function CalculatorTabs() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CalculatorTabsComponent />
+    </Suspense>
   );
 }

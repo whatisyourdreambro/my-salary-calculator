@@ -1,11 +1,7 @@
-"use client"; // 상태 관리를 위해 클라이언트 컴포넌트로 전환합니다.
-
-import { useState } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { BookOpenText, Target, Briefcase, TrendingUp } from "lucide-react";
+import GuidesList from "@/components/GuidesList"; // 정확한 경로로 수정
 
-// 메타데이터는 서버 컴포넌트 기능이므로 export const로 유지합니다.
 export const metadata: Metadata = {
   title: "Moneysalary 금융 가이드 | 연봉, 세금, 재테크의 모든 것",
   description:
@@ -191,24 +187,7 @@ const categories = [
   { id: "재테크 로드맵", name: "재테크 로드맵", icon: TrendingUp },
 ];
 
-export default function GuidesListPage() {
-  const [activeCategory, setActiveCategory] = useState("all");
-
-  const filteredGuides =
-    activeCategory === "all"
-      ? guides
-      : guides.filter((g) => g.category.includes(activeCategory));
-
-  // 카테고리별로 그룹화
-  const groupedGuides = filteredGuides.reduce((acc, guide) => {
-    const category = guide.category || "기타";
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(guide);
-    return acc;
-  }, {} as Record<string, typeof guides>);
-
+export default function GuidesPage() {
   return (
     <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-12">
@@ -221,60 +200,7 @@ export default function GuidesListPage() {
         </p>
       </div>
 
-      {/* 카테고리 필터링 UI */}
-      <div className="flex justify-center flex-wrap gap-2 mb-12">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setActiveCategory(category.id)}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
-              activeCategory === category.id
-                ? "bg-signature-blue text-white shadow-md"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            <category.icon className="w-4 h-4" />
-            {category.name}
-          </button>
-        ))}
-      </div>
-
-      {Object.entries(groupedGuides).map(([category, guidesInCategory]) => {
-        const categoryInfo = categories.find(
-          (c) => c.id === category || c.name === category
-        );
-        const Icon = categoryInfo ? categoryInfo.icon : BookOpenText;
-
-        return (
-          <section key={category} className="mb-16">
-            <div className="flex items-center mb-6">
-              <Icon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-              <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200">
-                {categoryInfo ? categoryInfo.name : category}
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {guidesInCategory.map((guide) => (
-                <Link
-                  key={guide.slug}
-                  href={`/guides/${guide.slug}`}
-                  className="flex flex-col p-6 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl hover:-translate-y-1.5 transition-all bg-light-card dark:bg-dark-card group"
-                >
-                  <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-2 group-hover:text-signature-blue transition-colors">
-                    {guide.title}
-                  </h3>
-                  <p className="flex-grow text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                    {guide.description}
-                  </p>
-                  <span className="mt-4 text-sm font-semibold text-signature-blue self-start">
-                    자세히 보기 →
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      <GuidesList guides={guides} categories={categories} />
     </main>
   );
 }

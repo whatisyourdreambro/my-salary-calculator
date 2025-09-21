@@ -1,11 +1,10 @@
-"use client"; // localStorage 접근을 위해 클라이언트 컴포넌트로 전환
+"use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
 import MyDashboard from "@/components/MyDashboard";
-import type { StoredSalaryData } from "@/app/types";
+import type { StoredFinancialData } from "@/app/types";
 
-// 웹사이트 구조화된 데이터 (변경 없음)
 const websiteStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -19,31 +18,40 @@ const websiteStructuredData = {
 };
 
 export default function HomePage() {
-  const [dashboardData, setDashboardData] = useState<StoredSalaryData | null>(
-    null
-  );
+  const [dashboardData, setDashboardData] =
+    useState<StoredFinancialData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 페이지가 로드될 때 localStorage에서 데이터를 가져옵니다.
-    const savedData = localStorage.getItem("moneysalary-dashboard");
-    if (savedData) {
-      try {
+    try {
+      const savedData = localStorage.getItem("moneysalary-financial-data");
+      if (savedData) {
         setDashboardData(JSON.parse(savedData));
-      } catch (error) {
-        console.error(
-          "Failed to parse dashboard data from localStorage",
-          error
-        );
-        localStorage.removeItem("moneysalary-dashboard");
       }
+    } catch (error) {
+      console.error("Failed to parse dashboard data from localStorage", error);
+      localStorage.removeItem("moneysalary-financial-data");
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const handleResetDashboard = () => {
     // 대시보드 데이터를 삭제하고 계산기 화면으로 전환합니다.
-    localStorage.removeItem("moneysalary-dashboard");
+    localStorage.removeItem("moneysalary-financial-data");
     setDashboardData(null);
+    window.location.reload(); // 상태를 확실히 초기화하기 위해 페이지 새로고침
   };
+
+  // 로딩 중에는 스켈레톤 UI나 로딩 스피너를 보여줄 수 있습니다.
+  if (isLoading) {
+    return (
+      <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="text-center py-20">Loading...</div>
+      </main>
+    );
+  }
 
   return (
     <>
@@ -54,8 +62,9 @@ export default function HomePage() {
         }}
       />
       <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* 저장된 데이터가 없을 때만 상단 제목을 보여줍니다. */}
-        {!dashboardData && (
+        {dashboardData ? (
+          <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
+        ) : (
           <>
             <div className="text-center mb-8">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
@@ -79,16 +88,9 @@ export default function HomePage() {
                 관리하세요.
               </p>
             </section>
+            <CalculatorTabs />
           </>
         )}
-
-        <Suspense fallback={<div>Loading...</div>}>
-          {dashboardData ? (
-            <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
-          ) : (
-            <CalculatorTabs />
-          )}
-        </Suspense>
       </main>
     </>
   );
