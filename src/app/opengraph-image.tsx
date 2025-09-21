@@ -4,103 +4,140 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Moneysalary Open Graph Image";
-export const size = {
-  width: 1200,
-  height: 630,
-};
-export const contentType = "image/png";
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
 
-export default async function Image() {
-  // 폰트 데이터를 가져오는 로직은 실제 프로젝트에 맞게 경로를 확인해야 합니다.
-  // public 폴더에 폰트 파일이 있다고 가정합니다.
-  const interSemiBold = fetch(
-    new URL("../../public/Inter-SemiBold.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
+    const title = searchParams.get("title") ?? "나의 연봉은 얼마일까?";
+    const rank = searchParams.get("rank");
+    const salary = searchParams.get("salary");
+    const description =
+      searchParams.get("description") ?? "Moneysalary.com 에서 확인해보세요";
 
-  const interBold = fetch(
-    new URL("../../public/Inter-Bold.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
+    // [수정] 폰트 경로를 new URL()을 사용하여 절대 경로로 참조합니다.
+    const notoBold = fetch(
+      new URL("../../public/fonts/NotoSansKR-Bold.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
+    const notoRegular = fetch(
+      new URL("../../public/fonts/NotoSansKR-Regular.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#111827",
-          color: "#F9FAFB",
-          fontFamily: '"Inter", sans-serif',
-          padding: "40px",
-          position: "relative",
-        }}
-      >
-        {/* [수정] ESLint 경고를 비활성화하는 주석을 추가했습니다. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt="Moneysalary Logo"
-          src="https://www.moneysalary.com/logo-full.png"
-          width="120"
-          height="120"
-          style={{ position: "absolute", top: 40, left: 40 }}
-        />
+    return new ImageResponse(
+      (
         <div
           style={{
-            fontSize: 72,
-            fontWeight: 700,
-            marginBottom: 20,
-            textAlign: "center",
-            lineHeight: "1.2",
-            color: "#FFFFFF",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#0052ff",
+            color: "white",
+            fontFamily: '"Noto Sans KR", sans-serif',
+            padding: "80px",
           }}
         >
-          Moneysalary 연봉 계산기
+          <div
+            style={{
+              position: "absolute",
+              top: 60,
+              left: 60,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ fontSize: 32, fontWeight: "bold" }}>Moneysalary</div>
+          </div>
+          <div
+            style={{
+              fontSize: 64,
+              fontWeight: 700,
+              textAlign: "center",
+              lineHeight: 1.3,
+            }}
+          >
+            {title}
+          </div>
+          {salary && (
+            <div
+              style={{
+                fontSize: 42,
+                marginTop: 20,
+                textAlign: "center",
+                color: "#e0e0e0",
+              }}
+            >
+              연봉: {parseInt(salary, 10).toLocaleString()}원
+            </div>
+          )}
+          <div
+            style={{
+              fontSize: 32,
+              marginTop: 25,
+              textAlign: "center",
+              color: "#e0e0e0",
+              padding: "0 80px",
+              lineHeight: 1.4,
+            }}
+          >
+            {description}
+          </div>
+          {rank && (
+            <div
+              style={{
+                fontSize: 52,
+                marginTop: 30,
+                padding: "12px 35px",
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+                border: "3px solid white",
+                borderRadius: "20px",
+                textAlign: "center",
+              }}
+            >
+              상위 {rank}%
+            </div>
+          )}
+          <div
+            style={{
+              fontSize: 28,
+              position: "absolute",
+              bottom: 50,
+              right: 60,
+              opacity: 0.8,
+            }}
+          >
+            Moneysalary.com
+          </div>
         </div>
-        <div
-          style={{
-            fontSize: 32,
-            textAlign: "center",
-            maxWidth: "80%",
-            color: "#D1D5DB",
-            lineHeight: "1.4",
-          }}
-        >
-          2025년 최신 기준, 가장 정확한 연봉 실수령액을 계산해보세요.
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 40,
-            fontSize: 24,
-            color: "#6B7280",
-          }}
-        >
-          moneysalary.com
-        </div>
-      </div>
-    ),
-    {
-      width: size.width,
-      height: size.height,
-      fonts: [
-        {
-          name: "Inter",
-          data: await interSemiBold,
-          style: "normal",
-          weight: 600,
-        },
-        {
-          name: "Inter",
-          data: await interBold,
-          style: "normal",
-          weight: 700,
-        },
-      ],
+      ),
+      {
+        width: 1200,
+        height: 630,
+        fonts: [
+          {
+            name: "Noto Sans KR",
+            data: await notoRegular,
+            style: "normal",
+            weight: 400,
+          },
+          {
+            name: "Noto Sans KR",
+            data: await notoBold,
+            style: "normal",
+            weight: 700,
+          },
+        ],
+      }
+    );
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.error(`${e.message}`);
+    } else {
+      console.error(e);
     }
-  );
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    });
+  }
 }

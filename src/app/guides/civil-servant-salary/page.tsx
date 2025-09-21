@@ -1,6 +1,8 @@
+// src/app/guides/civil-servant-salary/page.tsx
+
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Wallet, Shield } from "lucide-react"; // Landmark, TrendingUp 제거
+import { Wallet, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "공무원 월급, 정말 박봉일까? | 9급·7급 첫 월급 실수령액 분석 (2025년)",
@@ -38,7 +40,6 @@ export default function CivilServantSalaryPage() {
         }}
       />
       <main className="w-full bg-light-bg dark:bg-dark-bg">
-        {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-slate-600 to-gray-700 dark:from-gray-900 dark:to-slate-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
             공무원 월급,
@@ -102,13 +103,13 @@ export default function CivilServantSalaryPage() {
                       <td className="font-bold">약 2,595,000원</td>
                     </tr>
                     <tr className="bg-blue-50 dark:bg-blue-900/20">
-                      <td className="py-3 px-4 font-bold text-signature-blue">
+                      <td className="py-3 px-4 font-bold text-primary">
                         세후 실수령액 (예상)
                       </td>
-                      <td className="font-bold text-signature-blue text-lg">
+                      <td className="font-bold text-primary text-lg">
                         약 200만원
                       </td>
-                      <td className="font-bold text-signature-blue text-lg">
+                      <td className="font-bold text-primary text-lg">
                         약 230만원
                       </td>
                     </tr>
@@ -154,7 +155,7 @@ export default function CivilServantSalaryPage() {
               </p>
               <Link
                 href="/?tab=comparator"
-                className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+                className="inline-block mt-6 py-4 px-8 bg-primary text-white rounded-lg text-center font-bold text-lg hover:bg-primary-hover transition-transform transform hover:scale-105 shadow-lg"
               >
                 사기업 vs 공무원 연봉 비교해보기
               </Link>
