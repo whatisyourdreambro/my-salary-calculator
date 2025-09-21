@@ -4,7 +4,6 @@
 
 import CalculatorTabs from "@/components/CalculatorTabs";
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
-import MediaLogos from "@/components/MediaLogos"; // [추가] 미디어 로고 컴포넌트 import
 
 const websiteStructuredData = {
   "@context": "https://schema.org",
@@ -69,11 +68,6 @@ export default function HomePage() {
           style={{ animationDelay: "0.4s" }}
         >
           <CalculatorTabs />
-        </div>
-
-        {/* [추가] Media Logos Section */}
-        <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-          <MediaLogos />
         </div>
 
         {/* Feature Section */}

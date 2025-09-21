@@ -1,3 +1,5 @@
+// src/components/CalculatorTabs.tsx
+
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
@@ -10,6 +12,7 @@ import {
   GitCompare,
   BarChart3,
   Calculator,
+  Briefcase, // 추가
 } from "lucide-react";
 
 // Dynamic imports for performance
@@ -23,10 +26,14 @@ const FutureSalaryCalculator = dynamic(
 );
 const SalaryComparator = dynamic(() => import("@/components/SalaryComparator"));
 const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
+const FreelancerCalculator = dynamic(
+  () => import("@/components/FreelancerCalculator")
+); // 추가
 
 const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
+  FREELANCER: "freelancer", // 추가
   PAYSTUB: "paystub",
   FUTURE: "future",
   COMPARATOR: "comparator",
@@ -40,7 +47,7 @@ const TAB_CONFIG: Record<
   { name: string; description: string; icon: React.ElementType }
 > = {
   [TABS.SALARY]: {
-    name: "연봉 계산기",
+    name: "정규직 계산기",
     description: "내 월급의 모든 것",
     icon: Calculator,
   },
@@ -48,6 +55,12 @@ const TAB_CONFIG: Record<
     name: "퇴직금 계산기",
     description: "미래를 위한 자금 계획",
     icon: PiggyBank,
+  },
+  [TABS.FREELANCER]: {
+    // 추가
+    name: "알바/프리랜서",
+    description: "3.3% 및 4대보험 계산",
+    icon: Briefcase,
   },
   [TABS.PAYSTUB]: {
     name: "급여명세서",
@@ -88,6 +101,8 @@ function CalculatorTabsComponent() {
     switch (activeTab) {
       case TABS.SEVERANCE:
         return <SeveranceCalculator />;
+      case TABS.FREELANCER: // 추가
+        return <FreelancerCalculator />;
       case TABS.PAYSTUB:
         return <PayStubGenerator />;
       case TABS.FUTURE:
