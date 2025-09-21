@@ -5,8 +5,8 @@
 import { useState, useEffect } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
 import MyDashboard from "@/components/MyDashboard";
-// [수정] StoredFinancialData 타입을 import합니다.
 import type { StoredFinancialData } from "@/app/types";
+import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
 
 const websiteStructuredData = {
   "@context": "https://schema.org",
@@ -20,22 +20,37 @@ const websiteStructuredData = {
   },
 };
 
+const FeatureCard = ({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: React.ElementType;
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800/50 shadow-sm hover:shadow-lg transition-shadow">
+    <Icon className="w-8 h-8 text-primary mb-3" />
+    <h3 className="text-lg font-bold mb-2">{title}</h3>
+    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+      {children}
+    </p>
+  </div>
+);
+
 export default function HomePage() {
   const [dashboardData, setDashboardData] =
     useState<StoredFinancialData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 페이지가 로드될 때 localStorage에서 데이터를 가져옵니다.
     try {
-      // [수정] 'moneysalary-financial-data' 키를 사용합니다.
       const savedData = localStorage.getItem("moneysalary-financial-data");
       if (savedData) {
         setDashboardData(JSON.parse(savedData));
       }
     } catch (error) {
       console.error("Failed to parse dashboard data from localStorage", error);
-      // [수정] 'moneysalary-financial-data' 키를 삭제합니다.
       localStorage.removeItem("moneysalary-financial-data");
     } finally {
       setIsLoading(false);
@@ -43,18 +58,17 @@ export default function HomePage() {
   }, []);
 
   const handleResetDashboard = () => {
-    // 대시보드 데이터를 삭제하고 계산기 화면으로 전환합니다.
-    // [수정] 'moneysalary-financial-data' 키를 삭제합니다.
     localStorage.removeItem("moneysalary-financial-data");
     setDashboardData(null);
-    window.location.reload(); // 상태를 확실히 초기화하기 위해 페이지 새로고침
+    window.location.reload();
   };
 
-  // 로딩 중에는 스켈레톤 UI나 로딩 스피너를 보여줄 수 있습니다.
   if (isLoading) {
     return (
-      <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="text-center py-20">Loading...</div>
+      <main className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <p className="text-lg font-semibold">로딩 중...</p>
+        </div>
       </main>
     );
   }
@@ -67,34 +81,58 @@ export default function HomePage() {
           __html: JSON.stringify(websiteStructuredData),
         }}
       />
-      <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {dashboardData ? (
           <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
         ) : (
           <>
-            <div className="text-center mb-8">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
-                2025년 연봉 실수령액 계산기
+            {/* New Hero Section */}
+            <section className="text-center py-20 sm:py-28">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
+                당신의 진짜 가치를,
+                <br />
+                <span className="text-primary">숫자로 증명하세요.</span>
               </h1>
-              <p className="mt-4 text-base lg:text-lg text-gray-600 dark:text-gray-400">
-                2025년 최신 4대보험 및 소득세 기준을 적용하여 가장 정확한 세후
-                실수령액을 확인하세요.
-              </p>
-            </div>
-            <section className="my-12 p-6 bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-gray-800">
-              <h2 className="text-2xl font-bold text-center mb-4">
-                Moneysalary 계산기는 무엇이 다른가요?
-              </h2>
-              <p className="text-center text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-                Moneysalary는 단순한 계산을 넘어, 2025년 최신 고용보험,
-                건강보험, 국민연금 요율과 소득세법상 근로소득 간이세액표를
-                완벽하게 반영하여 가장 정확한 실수령액 정보를 제공합니다.
-                비과세액, 부양가족 수 등 복잡한 공제 항목까지 상세히 설정하여
-                내게 맞는 결과를 확인하고, 퇴직금과 미래 예상 연봉까지 한 곳에서
-                관리하세요.
+              <p
+                className="mt-6 max-w-2xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary animate-fade-in-up"
+                style={{ animationDelay: "0.2s" }}
+              >
+                2025년 최신 세법 기준, 가장 정확한 연봉 계산기.
+                <br />
+                단순 계산을 넘어 당신의 경제적 여정을 함께합니다.
               </p>
             </section>
-            <CalculatorTabs />
+
+            {/* New Feature Section */}
+            <section
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 animate-fade-in-up"
+              style={{ animationDelay: "0.4s" }}
+            >
+              <FeatureCard icon={Calculator} title="정확한 실수령액">
+                4대 보험, 소득세, 비과세액까지 완벽 반영하여 1원 단위까지
+                정확하게 계산합니다.
+              </FeatureCard>
+              <FeatureCard icon={BarChart} title="객관적인 연봉 순위">
+                국가 통계 데이터 기반으로 직군/경력별 내 연봉 위치를 객관적으로
+                파악하세요.
+              </FeatureCard>
+              <FeatureCard icon={TrendingUp} title="미래 연봉 예측">
+                나의 커리어패스를 직접 설계하고, 승진과 이직을 통한 미래 연봉
+                변화를 시뮬레이션합니다.
+              </FeatureCard>
+              <FeatureCard icon={CheckCircle} title="종합 금융 대시보드">
+                급여, 퇴직금, 대출 정보를 한 곳에 저장하고 관리하는 나만의 금융
+                비서를 경험하세요.
+              </FeatureCard>
+            </section>
+
+            {/* Calculator Tabs Section */}
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: "0.6s" }}
+            >
+              <CalculatorTabs />
+            </div>
           </>
         )}
       </main>

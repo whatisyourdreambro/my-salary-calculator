@@ -1,3 +1,5 @@
+// src/app/layout.tsx
+
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
@@ -20,7 +22,6 @@ export const metadata: Metadata = {
   },
   description:
     "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
-  // [수정] Naver와 같은 기타 검색엔진은 'other' 객체를 통해 추가합니다.
   verification: {
     other: {
       "naver-site-verification": "34115e50f205aed3725f94e2400aaddef8c1b691",
@@ -118,7 +119,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
+      <body>
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -133,7 +134,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <div className="flex flex-col items-center w-full min-h-screen">
+          <div className="flex flex-col min-h-screen">
             <Header />
             <main className="w-full flex-grow">{children}</main>
             <Footer />
