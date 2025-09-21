@@ -9,6 +9,7 @@ export interface StoredSalaryData {
   nonTaxableAmount: number;
   dependents: number;
   children: number;
+  monthlyExpenses?: number; // [추가] 월평균 지출액 (선택적)
 }
 
 // 주택담보대출 계산 결과 저장 데이터

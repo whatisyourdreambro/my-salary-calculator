@@ -182,6 +182,7 @@ export default function SalaryCalculator() {
     else setChildren(newVal);
   };
 
+  // --- [수정된 부분] handleSaveData 함수 ---
   const handleSaveData = () => {
     if (incomeType !== "regular") {
       alert("정규직 소득만 대시보드에 저장할 수 있습니다.");
@@ -202,6 +203,7 @@ export default function SalaryCalculator() {
         nonTaxableAmount: parseNumber(nonTaxableAmount),
         dependents,
         children,
+        monthlyExpenses: parseNumber(monthlyExpenses), // 월 지출액 추가
       };
       const updatedData: StoredFinancialData = {
         ...existingData,
@@ -219,6 +221,7 @@ export default function SalaryCalculator() {
       alert("데이터 저장에 실패했습니다.");
     }
   };
+  // --- [수정 끝] ---
 
   const handleShare = async () => {
     if (incomeType !== "regular") {
