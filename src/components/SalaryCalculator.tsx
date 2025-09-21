@@ -16,13 +16,15 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import { Share2 } from "lucide-react"; // Share2 아이콘 import 경로 수정
 import type {
   StoredSalaryData,
   StoredFinancialData,
   AdvancedSettings,
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
-import FinancialHealthAnalysis from "./FinancialHealthAnalysis"; // 금융 진단 컴포넌트 import
+import FinancialHealthAnalysis from "./FinancialHealthAnalysis";
+import KakaoAdFit from "./KakaoAdFit";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -50,14 +52,12 @@ const generateWaterfallData = (
   return data.map((d) => {
     const base = cumulative;
     let range: [number, number];
-
     if (d.name === "실수령액") {
       range = [0, d.value];
     } else {
       cumulative += d.value;
       range = [Math.min(base, cumulative), Math.max(base, cumulative)];
     }
-
     return { ...d, range };
   });
 };
@@ -72,7 +72,7 @@ export default function SalaryCalculator() {
   const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
-  const [monthlyExpenses, setMonthlyExpenses] = useState(""); // 월평균 고정지출 state 추가
+  const [monthlyExpenses, setMonthlyExpenses] = useState("");
 
   const advancedSettings = useMemo<AdvancedSettings>(
     () => ({
@@ -131,7 +131,6 @@ export default function SalaryCalculator() {
   ) => {
     const currentVal = field === "dependents" ? dependents : children;
     const newVal = Math.max(field === "dependents" ? 1 : 0, currentVal + delta);
-
     if (field === "dependents") setDependents(newVal);
     else setChildren(newVal);
   };
@@ -167,6 +166,25 @@ export default function SalaryCalculator() {
     } catch (error) {
       console.error("Failed to save data to localStorage:", error);
       alert("데이터 저장에 실패했습니다.");
+    }
+  };
+
+  const handleShare = async () => {
+    const dataToShare = {
+      annualSalary,
+      nonTaxableAmount: parseNumber(nonTaxableAmount),
+      dependents,
+      children,
+    };
+    const encodedData = btoa(JSON.stringify(dataToShare));
+    const shareUrl = `${window.location.origin}/share/${encodedData}`;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("결과 공유 링크가 클립보드에 복사되었습니다!");
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      alert("공유 링크 복사에 실패했습니다.");
     }
   };
 
@@ -322,7 +340,6 @@ export default function SalaryCalculator() {
                 </span>
               </div>
             </div>
-            {/* [추가] 월평균 고정 지출 입력 */}
             <div className="mt-4">
               <CurrencyInput
                 label="월평균 고정 지출 (주거비, 통신비 등)"
@@ -393,7 +410,10 @@ export default function SalaryCalculator() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="mt-6 pt-6 border-t dark:border-gray-700 grid grid-cols-2 gap-4">
+          <div className="my-6 flex justify-center">
+            <KakaoAdFit unit="DAN-SoLf2ssVbA4s3aOp" width="320" height="100" />
+          </div>
+          <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2">
             <button
               onClick={handleReset}
               className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
@@ -404,7 +424,13 @@ export default function SalaryCalculator() {
               onClick={handleSaveData}
               className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
             >
-              대시보드에 저장
+              대시보드 저장
+            </button>
+            <button
+              onClick={handleShare}
+              className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2"
+            >
+              <Share2 size={16} /> 결과 공유
             </button>
           </div>
         </div>
