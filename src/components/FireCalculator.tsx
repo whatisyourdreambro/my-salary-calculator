@@ -13,11 +13,19 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { PlusCircle, Trash2 } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 type CalculationMode = "bySpending" | "byTarget";
+
+interface LifeEvent {
+  year: number;
+  type: "oneTimeExpense" | "oneTimeIncome";
+  amount: string;
+  description: string;
+}
 
 interface FireInputs {
   currentAge: string;
@@ -26,10 +34,14 @@ interface FireInputs {
   monthlySavings: string;
   annualReturn: string;
   inflationRate: string;
-  targetAmount: string; // 목표 금액 추가
+  targetAmount: string;
 }
 
-const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
+const calculateFireDate = (
+  inputs: FireInputs,
+  mode: CalculationMode,
+  lifeEvents: LifeEvent[]
+) => {
   const {
     currentAge,
     currentSavings,
@@ -39,7 +51,6 @@ const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
     monthlySpending,
     targetAmount: targetAmountInput,
   } = inputs;
-
   const targetAmount =
     mode === "bySpending"
       ? parseNumber(monthlySpending) * 12 * 25
@@ -55,27 +66,41 @@ const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
   }
 
   let futureValue = parseNumber(currentSavings);
+  let totalContribution = parseNumber(currentSavings);
   let years = 0;
   const monthlyRate = parseFloat(annualReturn) / 100 / 12;
   const inflation = parseFloat(inflationRate) / 100;
   const monthlySave = parseNumber(monthlySavings);
+  const age = parseInt(currentAge, 10);
 
   const chartData = [
     {
       year: 0,
-      age: parseInt(currentAge, 10),
+      age: age,
       assets: futureValue,
       target: targetAmount,
+      contribution: totalContribution,
     },
   ];
-
   let currentTargetAmount = targetAmount;
 
   while (futureValue < currentTargetAmount && years < 100) {
+    years++;
+    totalContribution += monthlySave * 12;
     for (let i = 0; i < 12; i++) {
       futureValue = futureValue * (1 + monthlyRate) + monthlySave;
     }
-    years++;
+
+    const eventForYear = lifeEvents.find((e) => e.year === years);
+    if (eventForYear) {
+      const eventAmount = parseNumber(eventForYear.amount);
+      if (eventForYear.type === "oneTimeExpense") {
+        futureValue -= eventAmount;
+      } else {
+        futureValue += eventAmount;
+        totalContribution += eventAmount;
+      }
+    }
 
     if (mode === "bySpending") {
       currentTargetAmount *= 1 + inflation;
@@ -83,15 +108,16 @@ const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
 
     chartData.push({
       year: years,
-      age: parseInt(currentAge, 10) + years,
+      age: age + years,
       assets: Math.round(futureValue),
       target: Math.round(currentTargetAmount),
+      contribution: Math.round(totalContribution),
     });
   }
 
   return {
     yearsToFire: years >= 100 ? Infinity : years,
-    finalAge: years >= 100 ? Infinity : parseInt(currentAge, 10) + years,
+    finalAge: years >= 100 ? Infinity : age + years,
     chartData,
     finalTargetAmount: Math.round(currentTargetAmount),
   };
@@ -99,7 +125,6 @@ const calculateFireDate = (inputs: FireInputs, mode: CalculationMode) => {
 
 export default function FireCalculator() {
   const [mode, setMode] = useState<CalculationMode>("bySpending");
-  // [수정] 초기값에 1,000단위 구분 기호를 적용합니다.
   const [inputs, setInputs] = useState<FireInputs>({
     currentAge: "30",
     monthlySpending: "3,000,000",
@@ -107,16 +132,58 @@ export default function FireCalculator() {
     monthlySavings: "1,500,000",
     annualReturn: "7",
     inflationRate: "2",
-    targetAmount: "1,000,000,000", // 목표금액 초기값 추가
+    targetAmount: "1,000,000,000",
   });
+  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
 
   const handleInputChange = (field: keyof FireInputs, value: string) => {
     setInputs((prev) => ({ ...prev, [field]: value }));
   };
 
+  const addLifeEvent = () => {
+    setLifeEvents([
+      ...lifeEvents,
+      {
+        year: 1,
+        type: "oneTimeExpense",
+        amount: "10,000,000",
+        description: "이벤트",
+      },
+    ]);
+  };
+
+  const updateLifeEvent = (
+    index: number,
+    field: keyof LifeEvent,
+    value: string | number
+  ) => {
+    const newEvents = [...lifeEvents];
+    const eventToUpdate = { ...newEvents[index] };
+
+    if (field === "year" && typeof value === "number") {
+      eventToUpdate[field] = value;
+    } else if (field === "amount" && typeof value === "string") {
+      eventToUpdate[field] = value;
+    } else if (field === "description" && typeof value === "string") {
+      eventToUpdate[field] = value;
+    } else if (
+      field === "type" &&
+      (value === "oneTimeExpense" || value === "oneTimeIncome")
+    ) {
+      eventToUpdate[field] = value;
+    }
+
+    newEvents[index] = eventToUpdate;
+    setLifeEvents(newEvents);
+  };
+
+  const removeLifeEvent = (index: number) => {
+    setLifeEvents(lifeEvents.filter((_, i) => i !== index));
+  };
+
   const { finalTargetAmount, yearsToFire, finalAge, chartData } = useMemo(
-    () => calculateFireDate(inputs, mode),
-    [inputs, mode]
+    () => calculateFireDate(inputs, mode, lifeEvents),
+    [inputs, mode, lifeEvents]
   );
 
   return (
@@ -188,7 +255,6 @@ export default function FireCalculator() {
           quickAmounts={[100000, 500000]}
         />
 
-        {/* [수정] 수익률, 물가상승률 입력 제한 해제 */}
         <div>
           <label className="text-sm font-medium">연평균 투자 수익률 (%)</label>
           <input
@@ -208,6 +274,67 @@ export default function FireCalculator() {
             onChange={(e) => handleInputChange("inflationRate", e.target.value)}
             className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
           />
+        </div>
+
+        {/* Life Events Section */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold">생애 주기 이벤트</h3>
+          {lifeEvents.map((event, index) => (
+            <div
+              key={index}
+              className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg space-y-2 relative"
+            >
+              <button
+                onClick={() => removeLifeEvent(index)}
+                className="absolute top-2 right-2 text-red-400 hover:text-red-600"
+              >
+                <Trash2 size={16} />
+              </button>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="number"
+                  value={event.year}
+                  onChange={(e) =>
+                    updateLifeEvent(index, "year", Number(e.target.value))
+                  }
+                  className="w-20 p-1 border rounded"
+                  min="1"
+                />
+                <span>년 후</span>
+                <select
+                  value={event.type}
+                  onChange={(e) =>
+                    updateLifeEvent(index, "type", e.target.value)
+                  }
+                  className="p-1 border rounded dark:bg-dark-card"
+                >
+                  <option value="oneTimeExpense">지출</option>
+                  <option value="oneTimeIncome">수입</option>
+                </select>
+              </div>
+              <input
+                type="text"
+                placeholder="설명 (예: 주택 구매)"
+                value={event.description}
+                onChange={(e) =>
+                  updateLifeEvent(index, "description", e.target.value)
+                }
+                className="w-full p-1 border rounded dark:bg-dark-card"
+              />
+              <CurrencyInput
+                label=""
+                value={event.amount}
+                onValueChange={(v) => updateLifeEvent(index, "amount", v)}
+                quickAmounts={[10000000, 5000000]}
+              />
+            </div>
+          ))}
+          <button
+            onClick={addLifeEvent}
+            className="w-full flex items-center justify-center gap-2 p-2 bg-blue-100/50 text-signature-blue font-semibold rounded-lg hover:bg-blue-100/80 transition"
+          >
+            <PlusCircle size={18} /> 이벤트 추가
+          </button>
         </div>
       </div>
       <div className="lg:col-span-3 space-y-6 bg-gradient-to-br from-signature-blue to-violet-500 text-white p-6 rounded-xl shadow-lg">
@@ -264,7 +391,10 @@ export default function FireCalculator() {
                 }
               />
               <Tooltip
-                formatter={(value: number) => [`${formatNumber(value)}원`]}
+                formatter={(value: number, name: string) => [
+                  `${formatNumber(value)}원`,
+                  name,
+                ]}
               />
               <Legend />
               <Line
@@ -274,6 +404,15 @@ export default function FireCalculator() {
                 stroke="#FFD700"
                 strokeWidth={3}
                 dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="contribution"
+                name="총 납입 원금"
+                stroke="#A8E6CF"
+                strokeWidth={2}
+                dot={false}
+                strokeDasharray="3 3"
               />
               <Line
                 type="monotone"

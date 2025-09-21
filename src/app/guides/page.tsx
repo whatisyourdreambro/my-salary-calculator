@@ -1,22 +1,24 @@
+"use client"; // 상태 관리를 위해 클라이언트 컴포넌트로 전환합니다.
+
+import { useState } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpenText, Target, Briefcase, TrendingUp } from "lucide-react";
 
+// 메타데이터는 서버 컴포넌트 기능이므로 export const로 유지합니다.
 export const metadata: Metadata = {
   title: "Moneysalary 금융 가이드 | 연봉, 세금, 재테크의 모든 것",
   description:
     "직장인을 위한 가장 현실적인 금융 인사이트. 연봉 실수령액부터 퇴직금, 연말정산, 투자 전략까지. 당신의 경제적 자유를 위한 모든 지식을 담았습니다.",
 };
 
-// [수정] 고도화된 콘텐츠에 맞춰 제목과 설명을 모두 업데이트하고, 카테고리(category)와 아이콘(icon) 속성을 추가했습니다.
 const guides = [
-  // 카테고리 1: 연봉의 모든 것
   {
     slug: "2025-salary-guide",
     title: "2025년 연봉 실수령액: 내 월급, 세후 얼마일까?",
     description:
       "연봉 3000부터 1억까지, 2025년 최신 세법을 완벽 적용한 실수령액 테이블과 상세 공제 내역을 확인하세요.",
-    category: "연봉 기본",
+    category: "연봉 분석",
   },
   {
     slug: "salary-4500",
@@ -53,8 +55,6 @@ const guides = [
       "기본급 뒤에 숨겨진 각종 수당을 포함한 공무원의 진짜 월급을 공개합니다.",
     category: "연봉 분석",
   },
-
-  // 카테고리 2: 커리어와 성장
   {
     slug: "salary-negotiation",
     title: "연봉협상: 최소 20% 올려받는 4단계 전략 (2025년 최종판)",
@@ -83,8 +83,6 @@ const guides = [
       "임상에 남을 것인가, 떠날 것인가. 5년차 간호사의 현실 연봉과 미래 커리어 로드맵을 제시합니다.",
     category: "커리어 성장",
   },
-
-  // 카테고리 3: 필수 금융 지식
   {
     slug: "four-major-insurances",
     title: "4대 보험 완벽 가이드: 내 월급에서 왜, 얼마나 떼는 걸까?",
@@ -141,8 +139,6 @@ const guides = [
       "'임금 유지'와 '비례 삭감' 시나리오별 연봉 변화를 실제 예시와 함께 완벽하게 계산해 드립니다.",
     category: "필수 지식",
   },
-
-  // 카테고리 4: 재테크 로드맵
   {
     slug: "road-to-100m-part1-tax",
     title: "연봉 1억을 위한 절세 전략: 세금, 아는 만큼 월급이 늘어난다",
@@ -188,6 +184,7 @@ const guides = [
 ];
 
 const categories = [
+  { id: "all", name: "전체보기", icon: BookOpenText },
   { id: "연봉 분석", name: "연봉 심층 분석", icon: Target },
   { id: "커리어 성장", name: "커리어 성장", icon: Briefcase },
   { id: "필수 지식", name: "필수 금융 지식", icon: BookOpenText },
@@ -195,6 +192,23 @@ const categories = [
 ];
 
 export default function GuidesListPage() {
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  const filteredGuides =
+    activeCategory === "all"
+      ? guides
+      : guides.filter((g) => g.category.includes(activeCategory));
+
+  // 카테고리별로 그룹화
+  const groupedGuides = filteredGuides.reduce((acc, guide) => {
+    const category = guide.category || "기타";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(guide);
+    return acc;
+  }, {} as Record<string, typeof guides>);
+
   return (
     <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
       <div className="text-center mb-12">
@@ -207,18 +221,40 @@ export default function GuidesListPage() {
         </p>
       </div>
 
-      {categories.map((category) => (
-        <section key={category.id} className="mb-16">
-          <div className="flex items-center mb-6">
-            <category.icon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-            <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200">
-              {category.name}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {guides
-              .filter((g) => g.category === category.id)
-              .map((guide) => (
+      {/* 카테고리 필터링 UI */}
+      <div className="flex justify-center flex-wrap gap-2 mb-12">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setActiveCategory(category.id)}
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
+              activeCategory === category.id
+                ? "bg-signature-blue text-white shadow-md"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+            }`}
+          >
+            <category.icon className="w-4 h-4" />
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+      {Object.entries(groupedGuides).map(([category, guidesInCategory]) => {
+        const categoryInfo = categories.find(
+          (c) => c.id === category || c.name === category
+        );
+        const Icon = categoryInfo ? categoryInfo.icon : BookOpenText;
+
+        return (
+          <section key={category} className="mb-16">
+            <div className="flex items-center mb-6">
+              <Icon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
+              <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                {categoryInfo ? categoryInfo.name : category}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {guidesInCategory.map((guide) => (
                 <Link
                   key={guide.slug}
                   href={`/guides/${guide.slug}`}
@@ -235,9 +271,10 @@ export default function GuidesListPage() {
                   </span>
                 </Link>
               ))}
-          </div>
-        </section>
-      ))}
+            </div>
+          </section>
+        );
+      })}
     </main>
   );
 }
