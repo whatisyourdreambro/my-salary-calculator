@@ -37,8 +37,6 @@ export default function SalaryComparator() {
     children: 0,
   });
   const [results, setResults] = useState<OfferResult[]>([]);
-
-  // [수정] 캡쳐할 전체 영역을 위한 ref 추가
   const comparatorRef = useRef<HTMLDivElement>(null);
 
   const handleOfferChange = (
@@ -87,12 +85,12 @@ export default function SalaryComparator() {
       const annualOvertime = parseNumber(offer.overtime);
       const totalAnnualIncome = annualSalary + annualBonus + annualOvertime;
 
+      // [수정] 불필요한 인수(0)를 제거했습니다.
       const net = calculateNetSalary(
         totalAnnualIncome,
         parseNumber(commonSettings.nonTaxableAmount) * 12,
         commonSettings.dependents,
         commonSettings.children,
-        0,
         { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }
       );
 
@@ -113,12 +111,10 @@ export default function SalaryComparator() {
         )
       : null;
 
-  // [수정] 캡쳐 로직 강화 (전체 영역, 워터마크 추가)
   const handleCapture = () => {
     const captureArea = comparatorRef.current;
     if (!captureArea) return;
 
-    // 워터마크 생성 및 추가
     const watermark = document.createElement("div");
     watermark.innerText = "moneysalary.com";
     Object.assign(watermark.style, {
@@ -133,24 +129,21 @@ export default function SalaryComparator() {
     captureArea.appendChild(watermark);
 
     html2canvas(captureArea, {
-      backgroundColor: null, // 투명 배경으로 캡쳐
+      backgroundColor: null,
       useCORS: true,
     }).then((canvas) => {
       const link = document.createElement("a");
       link.download = `연봉비교_결과_moneysalary.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      // 캡쳐 후 워터마크 제거
       captureArea.removeChild(watermark);
     });
   };
 
-  // [수정] 공통으로 사용할 quickAmounts
   const quickAmounts = [10000000, 1000000, 100000];
 
   return (
     <div ref={comparatorRef} className="space-y-8 mt-8">
-      {/* 공통 설정 */}
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
         <h2 className="text-lg font-bold mb-4">공통 설정</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -201,7 +194,6 @@ export default function SalaryComparator() {
         </div>
       </div>
 
-      {/* 오퍼 입력 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offers.map((offer) => (
           <div
@@ -250,7 +242,6 @@ export default function SalaryComparator() {
         ))}
       </div>
 
-      {/* 버튼 영역 */}
       <div className="flex gap-4">
         <button
           onClick={addOffer}
@@ -260,13 +251,12 @@ export default function SalaryComparator() {
         </button>
         <button
           onClick={handleCalculate}
-          className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-600 transition"
+          className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
         >
           결과 분석하기
         </button>
       </div>
 
-      {/* 결과 영역 */}
       {results.length > 0 && bestOffer && (
         <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
           <h2 className="text-2xl font-bold text-center mb-6">
@@ -280,7 +270,7 @@ export default function SalaryComparator() {
                   key={res.id}
                   className={`p-4 rounded-lg border-2 ${
                     res.id === bestOffer.id
-                      ? "border-signature-blue bg-blue-50 dark:bg-blue-900/20"
+                      ? "border-primary bg-blue-50 dark:bg-blue-900/20"
                       : "border-gray-200 dark:border-gray-700"
                   }`}
                 >
@@ -288,7 +278,7 @@ export default function SalaryComparator() {
                     <div className="flex items-center gap-3">
                       <span
                         className={`text-xl font-bold ${
-                          res.id === bestOffer.id ? "text-signature-blue" : ""
+                          res.id === bestOffer.id ? "text-primary" : ""
                         }`}
                       >
                         {index + 1}위
@@ -297,13 +287,13 @@ export default function SalaryComparator() {
                         {res.companyName}
                       </span>
                       {res.id === bestOffer.id && (
-                        <span className="text-xs font-bold text-white bg-signature-blue px-2 py-0.5 rounded-full">
+                        <span className="text-xs font-bold text-white bg-primary px-2 py-0.5 rounded-full">
                           BEST
                         </span>
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-bold text-signature-blue">
+                      <p className="text-xl font-bold text-primary">
                         월 <CountUp end={res.monthlyNet} separator="," /> 원
                       </p>
                       <p className="text-xs text-gray-500">
