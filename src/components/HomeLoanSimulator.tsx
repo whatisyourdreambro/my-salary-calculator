@@ -5,8 +5,8 @@
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-// [추가] 타입 import
 import type { StoredFinancialData, StoredHomeLoanData } from "@/app/types";
+import { useRouter } from "next/navigation";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -25,6 +25,8 @@ export default function HomeLoanSimulator() {
   const [repaymentType, setRepaymentType] = useState<RepaymentType>(
     "equalPrincipalAndInterest"
   );
+
+  const router = useRouter();
 
   const { monthlyPayment, totalInterest, totalPayment, loanSuggestion } =
     useMemo(() => {
@@ -101,7 +103,6 @@ export default function HomeLoanSimulator() {
       repaymentType,
     ]);
 
-  // [추가] 대시보드 저장 핸들러
   const handleSaveData = () => {
     if (monthlyPayment <= 0) {
       alert("대출 정보가 올바르지 않습니다. 입력값을 확인해주세요.");
@@ -114,26 +115,21 @@ export default function HomeLoanSimulator() {
       const existingData: StoredFinancialData = existingDataJSON
         ? JSON.parse(existingDataJSON)
         : { lastUpdated: new Date().toISOString() };
-
       const homeLoanDataToStore: StoredHomeLoanData = {
         monthlyPayment,
         loanSuggestion,
       };
-
       const updatedData: StoredFinancialData = {
         ...existingData,
         homeLoan: homeLoanDataToStore,
         lastUpdated: new Date().toISOString(),
       };
-
       localStorage.setItem(
         "moneysalary-financial-data",
         JSON.stringify(updatedData)
       );
-      alert(
-        "주택담보대출 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
-      );
-      window.location.reload();
+      alert("주택담보대출 정보가 대시보드에 저장되었습니다!");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Failed to save data to localStorage:", error);
       alert("데이터 저장에 실패했습니다.");
@@ -223,7 +219,7 @@ export default function HomeLoanSimulator() {
               }
               className={`flex-1 p-2 rounded-md text-sm font-semibold border-2 ${
                 userType === "newlywed"
-                  ? "border-signature-blue bg-blue-50 dark:bg-blue-900/30"
+                  ? "border-primary bg-blue-50 dark:bg-blue-900/30"
                   : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
@@ -237,7 +233,7 @@ export default function HomeLoanSimulator() {
               }
               className={`flex-1 p-2 rounded-md text-sm font-semibold border-2 ${
                 userType === "firstTimeBuyer"
-                  ? "border-signature-blue bg-blue-50 dark:bg-blue-900/30"
+                  ? "border-primary bg-blue-50 dark:bg-blue-900/30"
                   : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
@@ -246,7 +242,7 @@ export default function HomeLoanSimulator() {
           </div>
         </div>
       </div>
-      <div className="space-y-6 bg-signature-blue text-white p-6 rounded-xl shadow-lg flex flex-col">
+      <div className="space-y-6 bg-primary text-white p-6 rounded-xl shadow-lg flex flex-col">
         <h2 className="text-2xl font-bold text-center">📊 시뮬레이션 결과</h2>
         <div className="bg-white/10 p-3 rounded-lg text-center font-semibold text-sm">
           {loanSuggestion}
@@ -270,11 +266,10 @@ export default function HomeLoanSimulator() {
             <span>{formatNumber(totalPayment)} 원</span>
           </div>
         </div>
-        {/* [추가] 저장 버튼 */}
         <div className="mt-auto pt-4">
           <button
             onClick={handleSaveData}
-            className="w-full py-3 bg-white text-signature-blue font-bold rounded-lg hover:bg-gray-200 transition"
+            className="w-full py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-200 transition"
           >
             대시보드에 저장
           </button>

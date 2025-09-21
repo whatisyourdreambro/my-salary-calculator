@@ -3,10 +3,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
-// [추가] 타입 import
 import type { StoredFinancialData, StoredSeveranceData } from "@/app/types";
 
 const formatNumber = (num: number) => num.toLocaleString();
@@ -22,6 +21,7 @@ const toInputDateString = (date: Date): string => {
 export default function SeveranceCalculator() {
   const resultCardRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const today = useMemo(() => new Date(), []);
   const oneYearAgo = useMemo(() => {
@@ -87,7 +87,6 @@ export default function SeveranceCalculator() {
     setResult(newResult);
   }, [startDate, endDate, monthlySalary, annualBonus, annualLeavePay]);
 
-  // [추가] 대시보드 저장 핸들러
   const handleSaveData = () => {
     if (result.estimatedSeverancePay <= 0) {
       alert("퇴직금이 계산되지 않았습니다. 정보를 먼저 입력해주세요.");
@@ -115,10 +114,8 @@ export default function SeveranceCalculator() {
         "moneysalary-financial-data",
         JSON.stringify(updatedData)
       );
-      alert(
-        "예상 퇴직금 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
-      );
-      window.location.reload();
+      alert("예상 퇴직금 정보가 대시보드에 저장되었습니다!");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Failed to save data to localStorage:", error);
       alert("데이터 저장에 실패했습니다.");
@@ -136,10 +133,8 @@ export default function SeveranceCalculator() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       <div className="space-y-8">
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
-            필수 입력
-          </h2>
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+          <h2 className="text-lg font-bold mb-4">필수 입력</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label
@@ -153,7 +148,7 @@ export default function SeveranceCalculator() {
                 id="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+                className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
               />
             </div>
             <div>
@@ -168,7 +163,7 @@ export default function SeveranceCalculator() {
                 id="endDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card"
+                className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
               />
             </div>
           </div>
@@ -179,10 +174,8 @@ export default function SeveranceCalculator() {
             quickAmounts={[1000000, 100000, 10000]}
           />
         </div>
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
-            선택 입력 (1년치 총액)
-          </h2>
+        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+          <h2 className="text-lg font-bold mb-4">선택 입력 (1년치 총액)</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
@@ -193,9 +186,9 @@ export default function SeveranceCalculator() {
                   type="text"
                   value={annualBonus}
                   onChange={handleInputChange(setAnnualBonus)}
-                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+                  className="w-full p-3 pr-12 border rounded-lg dark:bg-dark-card dark:border-gray-700"
                 />
-                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
                   원
                 </span>
               </div>
@@ -209,9 +202,9 @@ export default function SeveranceCalculator() {
                   type="text"
                   value={annualLeavePay}
                   onChange={handleInputChange(setAnnualLeavePay)}
-                  className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
+                  className="w-full p-3 pr-12 border rounded-lg dark:bg-dark-card dark:border-gray-700"
                 />
-                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
                   원
                 </span>
               </div>
@@ -222,35 +215,30 @@ export default function SeveranceCalculator() {
 
       <div
         ref={resultCardRef}
-        className="bg-signature-blue dark:bg-dark-card text-white dark:text-dark-text p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
+        className="bg-primary text-white p-6 rounded-xl flex flex-col h-full shadow-lg relative overflow-hidden"
       >
         <div className="flex-grow">
-          <p className="font-semibold text-blue-200 dark:text-dark-text-secondary text-sm">
-            예상 퇴직금
-          </p>
-          <p className="text-4xl sm:text-5xl font-bold my-2 text-white dark:text-dark-text">
+          <p className="font-semibold text-blue-200 text-sm">예상 퇴직금</p>
+          <p className="text-4xl sm:text-5xl font-bold my-2">
             {formatNumber(result.estimatedSeverancePay)} 원
           </p>
-          <div className="mt-6 pt-6 border-t border-white/20 dark:border-gray-700 flex justify-between text-sm">
-            <span className="text-blue-200 dark:text-dark-text-secondary">
-              1일 평균 임금
-            </span>
-            <span className="text-white dark:text-dark-text font-medium">
+          <div className="mt-6 pt-6 border-t border-white/20 flex justify-between text-sm">
+            <span className="text-blue-200">1일 평균 임금</span>
+            <span className="font-medium">
               {formatNumber(result.averageDailyWage)} 원
             </span>
           </div>
         </div>
-        {/* [수정] 버튼 UI/UX 통일 */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={handleReset}
-            className="py-3 bg-white/20 hover:bg-white/30 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg text-sm font-semibold text-white dark:text-gray-300 transition"
+            className="py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition"
           >
             초기화
           </button>
           <button
             onClick={handleSaveData}
-            className="py-3 bg-white hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700 rounded-lg text-sm font-bold text-signature-blue dark:text-white transition"
+            className="py-3 bg-white hover:bg-gray-100 rounded-lg text-sm font-bold text-primary transition"
           >
             대시보드에 저장
           </button>

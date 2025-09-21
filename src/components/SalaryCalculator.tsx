@@ -1,156 +1,122 @@
-// src/components/SalaryCalculator.tsx
+// src/components/SalaryRank.tsx
 
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
-import { calculateNetSalary } from "@/lib/calculator";
+import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
-import CountUp from "react-countup";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-// [수정] StoredFinancialData 타입을 import 합니다.
-import type { StoredSalaryData, StoredFinancialData } from "@/app/types";
+import Link from "next/link";
+import { findSalaryRank, salaryData } from "@/lib/salaryData";
+import type { StoredFinancialData, StoredRankData } from "@/app/types";
+import { useRouter } from "next/navigation";
 
 const formatNumber = (num: number) => num.toLocaleString();
-const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
-type CalculationResult = ReturnType<typeof calculateNetSalary>;
+export default function SalaryRank() {
+  const [salaryInput, setSalaryInput] = useState("");
+  const [jobCategory, setJobCategory] = useState("all");
+  const [experienceLevel, setExperienceLevel] = useState("all");
+  const [ageGroup, setAgeGroup] = useState("all");
+  const [region, setRegion] = useState("all");
+  const router = useRouter();
 
-const generateWaterfallData = (
-  grossSalary: number,
-  result: CalculationResult
-) => {
-  const { pension, health, employment, incomeTax, localTax, monthlyNet } =
-    result;
-  const monthlyGross = grossSalary / 12;
+  const [result, setResult] = useState<{
+    rank: number | null;
+    median: number;
+    average: number;
+    condition: string;
+    recommendedGuides: { title: string; href: string }[];
+  } | null>(null);
 
-  const data = [
-    { name: "세전월급", value: monthlyGross, color: "#007FFF" },
-    { name: "국민연금", value: -pension, color: "#FF6384" },
-    { name: "건강보험", value: -health, color: "#FF9F40" },
-    { name: "고용보험", value: -employment, color: "#FFCD56" },
-    { name: "소득세 등", value: -(incomeTax + localTax), color: "#4BC0C0" },
-    { name: "실수령액", value: monthlyNet, color: "#36A2EB" },
-  ];
-
-  let cumulative = 0;
-  return data.map((d) => {
-    const base = cumulative;
-    let range: [number, number];
-
-    if (d.name === "실수령액") {
-      range = [0, d.value];
-    } else {
-      cumulative += d.value;
-      range = [Math.min(base, cumulative), Math.max(base, cumulative)];
-    }
-
-    return { ...d, range };
-  });
-};
-
-export default function SalaryCalculator() {
-  const searchParams = useSearchParams();
-  const [payBasis, setPayBasis] = useState<"annual" | "monthly">("annual");
-  const [severanceType, setSeveranceType] = useState<"separate" | "included">(
-    "separate"
-  );
-  const [salaryInput, setSalaryInput] = useState("50000000");
-  const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
-  const [dependents, setDependents] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [overtimePay, setOvertimePay] = useState("");
-
-  const [result, setResult] = useState<CalculationResult>({
-    monthlyNet: 0,
-    totalDeduction: 0,
-    pension: 0,
-    health: 0,
-    longTermCare: 0,
-    employment: 0,
-    incomeTax: 0,
-    localTax: 0,
-  });
-
-  const annualSalary = useMemo(() => {
-    const salary = parseNumber(salaryInput);
-    let annual = payBasis === "annual" ? salary : salary * 12;
-    if (severanceType === "included" && annual > 0) {
-      annual = (annual / 13) * 12;
-    }
-    return annual;
-  }, [salaryInput, payBasis, severanceType]);
-
-  const waterfallData = useMemo(
-    () => generateWaterfallData(annualSalary, result),
-    [annualSalary, result]
+  const annualSalary = useMemo(
+    () => Number(salaryInput.replace(/,/g, "")),
+    [salaryInput]
   );
 
-  const runCalculation = useCallback(() => {
-    const nonTaxable = parseNumber(nonTaxableAmount) * 12;
-    const annualOvertime = parseNumber(overtimePay);
+  const handleCalculateRank = () => {
+    let key = `${jobCategory}-${experienceLevel}-${ageGroup}-${region}`;
+    if (!salaryData[key])
+      key = `${jobCategory}-${experienceLevel}-${ageGroup}-all`;
+    if (!salaryData[key]) key = `${jobCategory}-${experienceLevel}-all-all`;
+    if (!salaryData[key]) key = `${jobCategory}-all-all-all`;
+    if (!salaryData[key]) key = "all-all-all-all";
 
-    setResult(
-      calculateNetSalary(
-        annualSalary,
-        nonTaxable,
-        dependents,
-        children,
-        annualOvertime,
-        { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }
-      )
-    );
-  }, [annualSalary, nonTaxableAmount, dependents, children, overtimePay]);
+    const { rank, median, average } = findSalaryRank(annualSalary, key);
 
-  useEffect(() => {
-    runCalculation();
-  }, [runCalculation]);
+    const jobMap: Record<string, string> = {
+      all: "전체 직군",
+      management: "경영/사무",
+      marketing: "마케팅/영업",
+      it_dev: "IT/개발",
+      design: "디자인",
+      professional: "전문직",
+      manufacturing: "생산/기술",
+      service: "서비스/교육",
+    };
+    const expMap: Record<string, string> = {
+      all: "전체 경력",
+      "1-2": "1~2년",
+      "3-6": "3~6년",
+      "7-10": "7~10년",
+      "11-14": "11~14년",
+      "15-18": "15~18년",
+      "19-22": "19~22년",
+      "23-26": "23~26년",
+      "27-30": "27~30년",
+      "31-34": "31~34년",
+      "35-38": "35~38년",
+      "39+": "39년 이상",
+    };
+    const ageMap: Record<string, string> = {
+      all: "전체 연령",
+      "10s": "10대",
+      "20s": "20대",
+      "30s": "30대",
+      "40s": "40대",
+      "50s": "50대",
+      "60s": "60대",
+      "70s": "70대",
+      "80s": "80대 이상",
+    };
+    const regionMap: Record<string, string> = {
+      all: "전국",
+      capital: "수도권",
+      "non-capital": "수도권 외",
+    };
 
-  useEffect(() => {
-    const data = searchParams.get("data");
-    if (data) {
-      try {
-        const decodedState = JSON.parse(atob(data));
-        setPayBasis(decodedState.payBasis || "annual");
-        setSeveranceType(decodedState.severanceType || "separate");
-        setSalaryInput(decodedState.salaryInput || "50000000");
-        setNonTaxableAmount(decodedState.nonTaxableAmount || "200000");
-        setDependents(decodedState.dependents || 1);
-        setChildren(decodedState.children || 0);
-        setOvertimePay(decodedState.overtimePay || "");
-      } catch (error) {
-        console.error("Failed to parse shared data:", error);
-      }
-    }
-  }, [searchParams]);
+    const conditionText = [
+      jobMap[jobCategory],
+      expMap[experienceLevel],
+      ageMap[ageGroup],
+      regionMap[region],
+    ]
+      .filter((v) => !v.startsWith("전체"))
+      .join(" / ");
 
-  useEffect(() => {
-    if (payBasis === "monthly") {
-      setSeveranceType("separate");
-    }
-  }, [payBasis]);
+    const recommendedGuides = [
+      {
+        title: "연봉 1억을 위한 현실적인 절세 전략",
+        href: "/guides/road-to-100m-part1-tax",
+      },
+      {
+        title: "이직 시 연봉협상, 최소 OO%는 불러야 하는 이유",
+        href: "/guides/salary-negotiation",
+      },
+    ];
 
-  const handleDependentChange = (
-    field: "dependents" | "children",
-    delta: number
-  ) => {
-    const currentVal = field === "dependents" ? dependents : children;
-    const newVal = Math.max(field === "dependents" ? 1 : 0, currentVal + delta);
-
-    if (field === "dependents") setDependents(newVal);
-    else setChildren(newVal);
+    setResult({
+      rank,
+      median,
+      average,
+      condition: conditionText || "전체 근로자",
+      recommendedGuides,
+    });
   };
 
-  // [수정] 계산 결과를 새로운 통합 데이터 구조에 맞게 저장하는 함수로 변경합니다.
   const handleSaveData = () => {
+    if (!result || result.rank === null) {
+      alert("먼저 연봉 순위를 계산해주세요.");
+      return;
+    }
     try {
       const existingDataJSON = localStorage.getItem(
         "moneysalary-financial-data"
@@ -158,276 +124,181 @@ export default function SalaryCalculator() {
       const existingData: StoredFinancialData = existingDataJSON
         ? JSON.parse(existingDataJSON)
         : { lastUpdated: new Date().toISOString() };
-
-      const salaryDataToStore: StoredSalaryData = {
-        annualSalary,
-        monthlyNet: result.monthlyNet,
-        payBasis,
-        severanceType,
-        nonTaxableAmount: parseNumber(nonTaxableAmount),
-        dependents,
-        children,
+      const rankDataToStore: StoredRankData = {
+        rank: result.rank,
+        condition: result.condition,
+        median: result.median,
+        average: result.average,
       };
-
       const updatedData: StoredFinancialData = {
         ...existingData,
-        salary: salaryDataToStore,
+        rank: rankDataToStore,
         lastUpdated: new Date().toISOString(),
       };
-
       localStorage.setItem(
         "moneysalary-financial-data",
         JSON.stringify(updatedData)
       );
-      alert(
-        "연봉 정보가 대시보드에 저장되었습니다! 페이지를 새로고침하여 확인해보세요."
-      );
-      window.location.reload();
+      alert("연봉 순위 정보가 대시보드에 저장되었습니다!");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Failed to save data to localStorage:", error);
       alert("데이터 저장에 실패했습니다.");
     }
   };
 
-  const handleReset = () => {
-    setPayBasis("annual");
-    setSeveranceType("separate");
-    setSalaryInput("50000000");
-    setNonTaxableAmount("200000");
-    setDependents(1);
-    setChildren(0);
-    setOvertimePay("");
-  };
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-      <div className="space-y-6">
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
-            필수 입력
-          </h2>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1 block">
-                급여 기준
-              </label>
-              <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                <button
-                  onClick={() => setPayBasis("annual")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                    payBasis === "annual"
-                      ? "bg-white dark:bg-gray-700 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                >
-                  연봉
-                </button>
-                <button
-                  onClick={() => setPayBasis("monthly")}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                    payBasis === "monthly"
-                      ? "bg-white dark:bg-gray-700 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                >
-                  월급
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1 block">
-                퇴직금
-              </label>
-              <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                <button
-                  onClick={() => setSeveranceType("separate")}
-                  disabled={payBasis === "monthly"}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                    severanceType === "separate"
-                      ? "bg-white dark:bg-gray-700 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400"
-                  } ${
-                    payBasis === "monthly"
-                      ? "cursor-not-allowed opacity-50"
-                      : ""
-                  }`}
-                >
-                  별도
-                </button>
-                <button
-                  onClick={() => setSeveranceType("included")}
-                  disabled={payBasis === "monthly"}
-                  className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                    severanceType === "included"
-                      ? "bg-white dark:bg-gray-700 shadow-sm"
-                      : "text-gray-500 dark:text-gray-400"
-                  } ${
-                    payBasis === "monthly"
-                      ? "cursor-not-allowed opacity-50"
-                      : ""
-                  }`}
-                >
-                  포함
-                </button>
-              </div>
-            </div>
-          </div>
+    <div className="w-full max-w-3xl mx-auto mt-16 bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2">
+        💰 내 연봉, 동료들과 비교하면 몇 등일까?
+      </h2>
+      <p className="text-center text-light-text-secondary dark:text-dark-text-secondary mb-8">
+        국가통계 기반 데이터로 더 정확해진 내 소득 위치를 확인해보세요.
+      </p>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <select
+          value={jobCategory}
+          onChange={(e) => setJobCategory(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">전체 직군</option>{" "}
+          <option value="management">경영/사무</option>{" "}
+          <option value="marketing">마케팅/영업</option>{" "}
+          <option value="it_dev">IT/개발</option>{" "}
+          <option value="design">디자인</option>{" "}
+          <option value="professional">전문직(의료/법률/금융)</option>{" "}
+          <option value="manufacturing">생산/기술</option>{" "}
+          <option value="service">서비스/교육</option>
+        </select>
+        <select
+          value={experienceLevel}
+          onChange={(e) => setExperienceLevel(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">전체 경력</option>{" "}
+          <option value="1-2">1~2년</option> <option value="3-6">3~6년</option>{" "}
+          <option value="7-10">7~10년</option>{" "}
+          <option value="11-14">11~14년</option>{" "}
+          <option value="15-18">15~18년</option>{" "}
+          <option value="19-22">19~22년</option>{" "}
+          <option value="23-26">23~26년</option>{" "}
+          <option value="27-30">27~30년</option>{" "}
+          <option value="31-34">31~34년</option>{" "}
+          <option value="35-38">35~38년</option>{" "}
+          <option value="39+">39년 이상</option>
+        </select>
+        <select
+          value={ageGroup}
+          onChange={(e) => setAgeGroup(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">전체 연령</option>{" "}
+          <option value="10s">10대</option> <option value="20s">20대</option>{" "}
+          <option value="30s">30대</option> <option value="40s">40대</option>{" "}
+          <option value="50s">50대</option> <option value="60s">60대</option>{" "}
+          <option value="70s">70대</option>{" "}
+          <option value="80s">80대 이상</option>
+        </select>
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">전국</option>{" "}
+          <option value="capital">수도권</option>{" "}
+          <option value="non-capital">수도권 외</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 items-end mt-6">
+        <div className="flex-grow w-full">
           <CurrencyInput
-            label={payBasis === "annual" ? "연봉" : "월급"}
+            label="세전 연봉 입력"
             value={salaryInput}
             onValueChange={setSalaryInput}
             quickAmounts={[10000000, 1000000, 100000]}
           />
         </div>
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <h2 className="text-lg font-bold text-light-text dark:text-dark-text mb-4">
-            선택 입력
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                부양 가족 수 (본인포함)
-              </label>
-              <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                <button
-                  onClick={() => handleDependentChange("dependents", -1)}
-                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
-                >
-                  -
-                </button>
-                <span className="font-bold text-lg text-light-text dark:text-dark-text">
-                  {dependents} 명
-                </span>
-                <button
-                  onClick={() => handleDependentChange("dependents", 1)}
-                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                20세 이하 자녀 수
-              </label>
-              <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                <button
-                  onClick={() => handleDependentChange("children", -1)}
-                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
-                >
-                  -
-                </button>
-                <span className="font-bold text-lg text-light-text dark:text-dark-text">
-                  {children} 명
-                </span>
-                <button
-                  onClick={() => handleDependentChange("children", 1)}
-                  className="w-8 h-8 text-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-              비과세액 (월 기준)
-            </label>
-            <div className="relative mt-1">
-              <input
-                type="text"
-                value={nonTaxableAmount}
-                onChange={(e) => {
-                  const v = e.target.value.replace(/[^0-9]/g, "");
-                  setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
-                }}
-                className="w-full p-3 pr-12 border border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
-              />
-              <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
-                원
-              </span>
-            </div>
-          </div>
-        </div>
+        <button
+          onClick={handleCalculateRank}
+          className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-colors flex-shrink-0"
+        >
+          결과 확인
+        </button>
       </div>
 
-      <div className="space-y-4">
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
-          <h2 className="text-xl font-bold mb-4">월급 상세 분석</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <p className="font-semibold text-sm text-gray-500">
-                월 예상 실수령액
-              </p>
-              <p className="text-4xl font-bold my-1 text-signature-blue">
-                <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
-                원
-              </p>
-              <p className="font-semibold text-sm text-gray-500 mt-4">
-                총 공제액 합계
-              </p>
-              <p className="text-2xl font-bold text-red-500">
-                -{" "}
-                <CountUp
-                  end={result.totalDeduction}
-                  duration={0.5}
-                  separator=","
-                />{" "}
-                원
-              </p>
+      {result && (
+        <>
+          <div className="mt-8 p-6 bg-primary text-white rounded-2xl shadow-xl relative">
+            <p className="text-center font-semibold text-blue-200">{`"${result.condition}" 그룹 내 연봉 리포트`}</p>
+            <div className="grid grid-cols-3 gap-4 text-center my-6">
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">내 순위</p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  상위 {result.rank ?? "N/A"}%
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">
+                  그룹 중위연봉
+                </p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  {formatNumber(result.median / 10000)}
+                  <span className="text-lg">만원</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-blue-200 opacity-80">
+                  그룹 평균연봉
+                </p>
+                <p className="text-2xl lg:text-3xl font-bold">
+                  {formatNumber(result.average / 10000)}
+                  <span className="text-lg">만원</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart
-                  data={waterfallData}
-                  margin={{ top: 20, right: 0, left: 0, bottom: 20 }}
+            <div className="w-full bg-blue-400/50 rounded-full h-3 mt-6 relative">
+              <div
+                className="bg-white h-3 rounded-full"
+                style={{ width: `${100 - (result.rank ?? 100)}%` }}
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-4 border-primary"
+                style={{ left: `${100 - (result.rank ?? 100)}%` }}
+              />
+            </div>
+            <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
+              * 국가통계 기반 데이터로 추정한 값입니다.
+            </p>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={handleSaveData}
+                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
+              >
+                대시보드에 저장
+              </button>
+            </div>
+          </div>
+          <div className="mt-8">
+            <h3 className="text-xl font-bold">맞춤 가이드</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {result.recommendedGuides.map((guide) => (
+                <Link
+                  key={guide.href}
+                  href={guide.href}
+                  className="block p-4 border rounded-lg hover:shadow-lg bg-gray-50 dark:bg-gray-800/50"
                 >
-                  <XAxis
-                    type="category"
-                    dataKey="name"
-                    tick={{ fontSize: 11 }}
-                    angle={-45}
-                    textAnchor="end"
-                    height={50}
-                  />
-                  <YAxis hide={true} domain={[0, "dataMax + 100000"]} />
-                  <Tooltip
-                    formatter={(value: number, name, props) => {
-                      if (Array.isArray(props.payload.range)) {
-                        const actualValue = Math.abs(
-                          props.payload.range[1] - props.payload.range[0]
-                        );
-                        return `${formatNumber(Math.round(actualValue))} 원`;
-                      }
-                      return `${formatNumber(Math.abs(value))} 원`;
-                    }}
-                  />
-                  <Bar dataKey="range" isAnimationActive={false}>
-                    {waterfallData.map((d, i) => (
-                      <Cell key={`cell-${i}`} fill={d.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+                  <p className="font-semibold text-primary">{guide.title}</p>
+                  <span className="text-xs text-gray-500 mt-2 block">
+                    자세히 보기 →
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
-          {/* [수정] '내 연봉으로 저장' 버튼의 이름을 '대시보드에 저장'으로 변경하여 일관성을 확보합니다. */}
-          <div className="mt-6 pt-6 border-t dark:border-gray-700 grid grid-cols-2 gap-4">
-            <button
-              onClick={handleReset}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              초기화
-            </button>
-            <button
-              onClick={handleSaveData}
-              className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
-            >
-              대시보드에 저장
-            </button>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

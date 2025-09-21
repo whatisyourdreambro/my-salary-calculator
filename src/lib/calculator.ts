@@ -1,8 +1,7 @@
 // src/lib/calculator.ts
 
-// ===================================================================
-// 2025년 대한민국 4대 보험 및 소득세 정보 (V2: 상세 설정 기능 추가)
-// ===================================================================
+// [추가] types.ts에서 AdvancedSettings 타입을 import 합니다.
+import type { AdvancedSettings } from "@/app/types";
 
 const PENSION_RATE = 0.045;
 const PENSION_MONTHLY_CAP = 5900000 * PENSION_RATE;
@@ -11,14 +10,6 @@ const LONG_TERM_CARE_RATE = 0.1295;
 const EMPLOYMENT_INSURANCE_RATE = 0.009;
 const LOCAL_INCOME_TAX_RATE = 0.1;
 
-// --- 상세 설정을 위한 인터페이스 정의 ---
-export interface AdvancedSettings {
-  isSmeYouth: boolean; // 중소기업 취업 청년 감면 여부
-  disabledDependents: number; // 장애인 부양가족 수
-  seniorDependents: number; // 70세 이상 경로우대 부양가족 수
-}
-
-// [수정] 계산 결과 타입을 export 합니다.
 export type CalculationResult = ReturnType<typeof calculateNetSalary>;
 
 function getEarnedIncomeDeduction(annualSalary: number): number {
@@ -54,17 +45,15 @@ function getTaxCredit(calculatedTax: number, annualSalary: number): number {
   return credit;
 }
 
+// [수정] overtimePay 파라미터를 제거하고 advancedSettings를 받도록 변경
 export function calculateNetSalary(
   annualSalary: number,
   nonTaxableAmount: number = 0,
   dependents: number = 1,
   children: number = 0,
-  overtimePay: number = 0,
   advancedSettings: AdvancedSettings
 ) {
-  const totalAnnualSalary = annualSalary + overtimePay;
-
-  if (totalAnnualSalary <= 0) {
+  if (annualSalary <= 0) {
     return {
       monthlyNet: 0,
       totalDeduction: 0,
@@ -77,9 +66,9 @@ export function calculateNetSalary(
     };
   }
 
-  const actualNonTaxableAmount = Math.min(totalAnnualSalary, nonTaxableAmount);
-  const taxableAnnualSalary = totalAnnualSalary - actualNonTaxableAmount;
-  const monthlySalary = totalAnnualSalary / 12;
+  const actualNonTaxableAmount = Math.min(annualSalary, nonTaxableAmount);
+  const taxableAnnualSalary = annualSalary - actualNonTaxableAmount;
+  const monthlySalary = annualSalary / 12;
   const taxableMonthlyIncome = Math.max(
     0,
     monthlySalary - actualNonTaxableAmount / 12
@@ -112,7 +101,14 @@ export function calculateNetSalary(
 
   const calculatedTax = getCalculatedTax(taxBase);
   const taxCredit = getTaxCredit(calculatedTax, taxableAnnualSalary);
-  const childTaxCredit = children * 150000;
+
+  // 자녀 세액공제: 1명 15만원, 2명 35만원(15+20), 3명부터 1명당 30만원 추가
+  let childTaxCredit = 0;
+  if (children === 1) {
+    childTaxCredit = 150000;
+  } else if (children >= 2) {
+    childTaxCredit = 350000 + (children - 2) * 300000;
+  }
 
   let finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
 

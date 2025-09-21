@@ -37,6 +37,13 @@ export interface StoredFutureSalaryData {
   totalIncrease: number;
 }
 
+// [추가] 상세 설정을 위한 인터페이스
+export interface AdvancedSettings {
+  isSmeYouth: boolean; // 중소기업 취업 청년 감면 여부
+  disabledDependents: number; // 장애인 부양가족 수
+  seniorDependents: number; // 70세 이상 경로우대 부양가족 수
+}
+
 // 모든 금융 데이터를 통합 관리하는 최상위 타입
 export interface StoredFinancialData {
   salary?: StoredSalaryData;

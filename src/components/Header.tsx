@@ -1,9 +1,13 @@
+// src/components/Header.tsx
+
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
+// [추가] LayoutDashboard 아이콘을 import합니다.
+import { LayoutDashboard } from "lucide-react";
 
 type LinkItem = { name: string; href: string; type: "link" };
 type DropdownItem = {
@@ -23,7 +27,6 @@ const navConfig: NavItem[] = [
       { name: "주택담보대출 계산기", href: "/home-loan" },
       { name: "자동차 구매 계산기", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
-      // [추가] 급여명세서 탭으로 바로 이동하는 링크
       { name: "급여명세서", href: "/?tab=paystub" },
     ],
   },
@@ -46,8 +49,6 @@ const navConfig: NavItem[] = [
       { name: "용어 사전", href: "/glossary" },
     ],
   },
-  { name: "연봉 비교", href: "/?tab=comparator", type: "link" },
-  { name: "연봉 순위", href: "/?tab=rank", type: "link" },
 ];
 
 export default function Header() {
@@ -56,7 +57,6 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    // 페이지 이동 시 모든 메뉴를 닫습니다.
     setOpenDropdown(null);
     setIsMobileMenuOpen(false);
   }, [pathname]);
@@ -67,10 +67,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <h1
-                className="text-lg sm:text-xl font-bold whitespace-nowrap"
-                style={{ color: "#007FFF" }}
-              >
+              <h1 className="text-lg sm:text-xl font-bold whitespace-nowrap text-primary">
                 Moneysalary
               </h1>
             </Link>
@@ -124,7 +121,7 @@ export default function Header() {
                           href={subItem.href}
                           className={`block px-4 py-2 text-sm ${
                             pathname === subItem.href
-                              ? "font-bold text-signature-blue"
+                              ? "font-bold text-primary"
                               : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                           }`}
                         >
@@ -143,6 +140,14 @@ export default function Header() {
                   </Link>
                 )
               )}
+              {/* [추가] 마이 대시보드 버튼 */}
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 py-2 px-4 ml-2 text-sm lg:text-base font-bold text-white bg-primary rounded-lg hover:bg-primary-hover transition-all animate-subtle-shine"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                마이 대시보드
+              </Link>
             </div>
 
             <div className="flex items-center">
@@ -175,7 +180,14 @@ export default function Header() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="md:hidden pb-4">
+          <div className="md:hidden pb-4 space-y-1">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-3 px-4 py-3 text-base font-bold rounded-md bg-blue-50 text-primary dark:bg-blue-900/30"
+            >
+              <LayoutDashboard className="w-5 h-5" />
+              마이 대시보드
+            </Link>
             {navConfig
               .flatMap((item) => (item.type === "link" ? [item] : item.items))
               .map((subItem) => (
@@ -184,7 +196,7 @@ export default function Header() {
                   href={subItem.href}
                   className={`block px-4 py-3 text-base rounded-md ${
                     pathname === subItem.href
-                      ? "font-bold bg-blue-50 text-signature-blue dark:bg-blue-900/30"
+                      ? "font-bold bg-gray-100 dark:bg-gray-800"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
                 >

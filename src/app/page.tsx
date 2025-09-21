@@ -2,10 +2,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
 import CalculatorTabs from "@/components/CalculatorTabs";
-import MyDashboard from "@/components/MyDashboard";
-import type { StoredFinancialData } from "@/app/types";
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
 
 const websiteStructuredData = {
@@ -39,40 +36,6 @@ const FeatureCard = ({
 );
 
 export default function HomePage() {
-  const [dashboardData, setDashboardData] =
-    useState<StoredFinancialData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    try {
-      const savedData = localStorage.getItem("moneysalary-financial-data");
-      if (savedData) {
-        setDashboardData(JSON.parse(savedData));
-      }
-    } catch (error) {
-      console.error("Failed to parse dashboard data from localStorage", error);
-      localStorage.removeItem("moneysalary-financial-data");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const handleResetDashboard = () => {
-    localStorage.removeItem("moneysalary-financial-data");
-    setDashboardData(null);
-    window.location.reload();
-  };
-
-  if (isLoading) {
-    return (
-      <main className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <p className="text-lg font-semibold">로딩 중...</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <>
       <script
@@ -82,59 +45,50 @@ export default function HomePage() {
         }}
       />
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {dashboardData ? (
-          <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
-        ) : (
-          <>
-            {/* New Hero Section */}
-            <section className="text-center py-20 sm:py-28">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
-                당신의 진짜 가치를,
-                <br />
-                <span className="text-primary">숫자로 증명하세요.</span>
-              </h1>
-              <p
-                className="mt-6 max-w-2xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary animate-fade-in-up"
-                style={{ animationDelay: "0.2s" }}
-              >
-                2025년 최신 세법 기준, 가장 정확한 연봉 계산기.
-                <br />
-                단순 계산을 넘어 당신의 경제적 여정을 함께합니다.
-              </p>
-            </section>
+        {/* Hero Section */}
+        <section className="text-center py-20 sm:py-28">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
+            당신의 진짜 가치를,
+            <br />
+            <span className="text-primary">숫자로 증명하세요.</span>
+          </h1>
+          <p
+            className="mt-6 max-w-2xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
+            2025년 최신 세법 기준, 가장 정확한 연봉 계산기.
+            <br />
+            단순 계산을 넘어 당신의 경제적 여정을 함께합니다.
+          </p>
+        </section>
 
-            {/* New Feature Section */}
-            <section
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 animate-fade-in-up"
-              style={{ animationDelay: "0.4s" }}
-            >
-              <FeatureCard icon={Calculator} title="정확한 실수령액">
-                4대 보험, 소득세, 비과세액까지 완벽 반영하여 1원 단위까지
-                정확하게 계산합니다.
-              </FeatureCard>
-              <FeatureCard icon={BarChart} title="객관적인 연봉 순위">
-                국가 통계 데이터 기반으로 직군/경력별 내 연봉 위치를 객관적으로
-                파악하세요.
-              </FeatureCard>
-              <FeatureCard icon={TrendingUp} title="미래 연봉 예측">
-                나의 커리어패스를 직접 설계하고, 승진과 이직을 통한 미래 연봉
-                변화를 시뮬레이션합니다.
-              </FeatureCard>
-              <FeatureCard icon={CheckCircle} title="종합 금융 대시보드">
-                급여, 퇴직금, 대출 정보를 한 곳에 저장하고 관리하는 나만의 금융
-                비서를 경험하세요.
-              </FeatureCard>
-            </section>
+        {/* Feature Section */}
+        <section
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 animate-fade-in-up"
+          style={{ animationDelay: "0.4s" }}
+        >
+          <FeatureCard icon={Calculator} title="정확한 실수령액">
+            4대 보험, 소득세, 비과세액까지 완벽 반영하여 1원 단위까지 정확하게
+            계산합니다.
+          </FeatureCard>
+          <FeatureCard icon={BarChart} title="객관적인 연봉 순위">
+            국가 통계 데이터 기반으로 직군/경력별 내 연봉 위치를 객관적으로
+            파악하세요.
+          </FeatureCard>
+          <FeatureCard icon={TrendingUp} title="미래 연봉 예측">
+            나의 커리어패스를 직접 설계하고, 승진과 이직을 통한 미래 연봉 변화를
+            시뮬레이션합니다.
+          </FeatureCard>
+          <FeatureCard icon={CheckCircle} title="종합 금융 대시보드">
+            급여, 퇴직금, 대출 정보를 한 곳에 저장하고 관리하는 나만의 금융
+            비서를 경험하세요.
+          </FeatureCard>
+        </section>
 
-            {/* Calculator Tabs Section */}
-            <div
-              className="animate-fade-in-up"
-              style={{ animationDelay: "0.6s" }}
-            >
-              <CalculatorTabs />
-            </div>
-          </>
-        )}
+        {/* Calculator Tabs Section */}
+        <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+          <CalculatorTabs />
+        </div>
       </main>
     </>
   );

@@ -3,7 +3,6 @@
 "use client";
 
 import { useEffect, useState, useRef, Suspense } from "react";
-// [수정] 사용하지 않는 useSearchParams import를 제거합니다.
 import type { StoredFinancialData } from "@/app/types";
 import { findSalaryRank } from "@/lib/salaryData";
 import {
@@ -20,7 +19,30 @@ import CountUp from "react-countup";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
-const COLORS = ["#0088FE", "#FF8042", "#00C49F"];
+const COLORS = ["#0052ff", "#ffc82c", "#00C49F"];
+
+// 파이 차트 라벨 렌더링 함수 (타입 최종 수정)
+const RADIAN = Math.PI / 180;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const renderCustomizedLabel = (props: any) => {
+  const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+      className="font-bold text-sm"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 
 const Report = () => {
   const [data, setData] = useState<StoredFinancialData | null>(null);
@@ -33,7 +55,6 @@ const Report = () => {
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         setData(parsedData);
-        // [수정] rank 상태는 여기서만 설정하도록 통일합니다.
         if (parsedData.salary) {
           const { rank: calculatedRank } = findSalaryRank(
             parsedData.salary.annualSalary,
@@ -67,7 +88,7 @@ const Report = () => {
         <h1 className="text-3xl font-bold">리포트 데이터를 불러오는 중...</h1>
         <p className="mt-4">
           저장된 금융 정보가 없습니다.{" "}
-          <Link href="/" className="text-signature-blue font-bold">
+          <Link href="/" className="text-primary font-bold">
             홈으로 돌아가
           </Link>{" "}
           계산 결과를 먼저 저장해주세요.
@@ -93,7 +114,7 @@ const Report = () => {
         className="bg-light-card dark:bg-dark-card p-8 rounded-2xl shadow-lg border"
       >
         <div className="text-center border-b pb-4 mb-6">
-          <h1 className="text-3xl font-bold text-signature-blue">
+          <h1 className="text-3xl font-bold text-primary">
             나의 종합 금융 리포트
           </h1>
           <p className="text-sm text-gray-500">
@@ -107,12 +128,11 @@ const Report = () => {
               <p className="font-semibold text-gray-600 dark:text-gray-400">
                 월 실수령액
               </p>
-              <p className="text-3xl font-bold text-signature-blue">
+              <p className="text-3xl font-bold text-primary">
                 <CountUp end={salary.monthlyNet} separator="," />원
               </p>
             </div>
           )}
-          {/* [수정] rank가 있을 경우에만 연봉 순위 카드를 표시합니다. */}
           {rank !== null && (
             <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
               <p className="font-semibold text-gray-600 dark:text-gray-400">
@@ -139,7 +159,7 @@ const Report = () => {
               <p className="font-semibold text-gray-600 dark:text-gray-400">
                 월 대출 상환액
               </p>
-              <p className="text-3xl font-bold text-red-500">
+              <p className="text-3xl font-bold text-danger">
                 <CountUp end={homeLoan.monthlyPayment} separator="," />원
               </p>
             </div>
@@ -160,6 +180,8 @@ const Report = () => {
                 cy="50%"
                 outerRadius={100}
                 fill="#8884d8"
+                labelLine={false}
+                label={renderCustomizedLabel}
               >
                 {chartData.map((entry, index) => (
                   <Cell
@@ -176,13 +198,19 @@ const Report = () => {
           </ResponsiveContainer>
         </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col sm:flex-row gap-4">
         <button
           onClick={handleDownload}
-          className="w-full py-3 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-700 transition"
+          className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
         >
           리포트 이미지로 저장하기
         </button>
+        <Link
+          href="/dashboard"
+          className="w-full text-center py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+        >
+          대시보드로 돌아가기
+        </Link>
       </div>
     </main>
   );
