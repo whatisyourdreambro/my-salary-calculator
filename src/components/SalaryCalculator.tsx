@@ -25,7 +25,7 @@ import type {
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
 import FinancialHealthAnalysis from "./FinancialHealthAnalysis";
-import KakaoAdFit from "./KakaoAdFit";
+// import KakaoAdFit from "./KakaoAdFit"; // KakaoAdFit import 제거
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -182,7 +182,6 @@ export default function SalaryCalculator() {
     else setChildren(newVal);
   };
 
-  // --- [수정된 부분] handleSaveData 함수 ---
   const handleSaveData = () => {
     if (incomeType !== "regular") {
       alert("정규직 소득만 대시보드에 저장할 수 있습니다.");
@@ -203,7 +202,7 @@ export default function SalaryCalculator() {
         nonTaxableAmount: parseNumber(nonTaxableAmount),
         dependents,
         children,
-        monthlyExpenses: parseNumber(monthlyExpenses), // 월 지출액 추가
+        monthlyExpenses: parseNumber(monthlyExpenses),
       };
       const updatedData: StoredFinancialData = {
         ...existingData,
@@ -221,7 +220,6 @@ export default function SalaryCalculator() {
       alert("데이터 저장에 실패했습니다.");
     }
   };
-  // --- [수정 끝] ---
 
   const handleShare = async () => {
     if (incomeType !== "regular") {
@@ -513,10 +511,8 @@ export default function SalaryCalculator() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="my-6 flex justify-center">
-            <KakaoAdFit unit="DAN-SoLf2ssVbA4s3aOp" width="320" height="100" />
-          </div>
-          <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2">
+          {/* KakaoAdFit 컴포넌트 호출 제거 */}
+          <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2 mt-6">
             <button
               onClick={handleReset}
               className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"

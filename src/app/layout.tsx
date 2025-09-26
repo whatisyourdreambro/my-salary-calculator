@@ -54,11 +54,7 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    AdFit?: {
-      createIns: (ins: HTMLModElement) => void;
-      destroyIns: (ins: HTMLModElement) => void;
-      showAd?: (unitId: string) => void;
-    };
+    // AdFit 관련 타입 정의 제거
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     adsbygoogle?: any[];
   }
@@ -95,11 +91,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        <Script
-          async
-          src="https://t1.daumcdn.net/kas/static/ba.min.js"
-          strategy="afterInteractive"
-        />
+        {/* Kakao AdFit 스크립트 제거 */}
 
         <Script
           async

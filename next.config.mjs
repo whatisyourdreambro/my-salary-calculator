@@ -6,10 +6,11 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+// *.daum.net, *.kakao.com 관련 부분을 CSP에서 제거
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https: *.googletagmanager.com *.google-analytics.com *.googlesyndication.com *.google.com *.doubleclick.net *.daum.net *.kakao.com https://cdn-cookieyes.com *.googleadservices.com;
-  frame-src 'self' https: *.google.com *.daum.net *.kakao.com *.googlesyndication.com *.googleadservices.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https: *.googletagmanager.com *.google-analytics.com *.googlesyndication.com *.google.com *.doubleclick.net https://cdn-cookieyes.com *.googleadservices.com;
+  frame-src 'self' https: *.google.com *.googlesyndication.com *.googleadservices.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
