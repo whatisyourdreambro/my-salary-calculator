@@ -25,7 +25,6 @@ import type {
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
 import FinancialHealthAnalysis from "./FinancialHealthAnalysis";
-// import KakaoAdFit from "./KakaoAdFit"; // KakaoAdFit import 제거
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -90,14 +89,12 @@ export default function SalaryCalculator() {
   const [children, setChildren] = useState(0);
   const [monthlyExpenses, setMonthlyExpenses] = useState("");
 
-  const advancedSettings = useMemo<AdvancedSettings>(
-    () => ({
-      isSmeYouth: false,
-      disabledDependents: 0,
-      seniorDependents: 0,
-    }),
-    []
-  );
+  // [고도화] 상세 설정 State 추가
+  const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
+    isSmeYouth: false,
+    disabledDependents: 0,
+    seniorDependents: 0,
+  });
 
   const [result, setResult] = useState<CalculationResult>({
     monthlyNet: 0,
@@ -173,13 +170,39 @@ export default function SalaryCalculator() {
   }, [runCalculation]);
 
   const handleDependentChange = (
-    field: "dependents" | "children",
+    field:
+      | "dependents"
+      | "children"
+      | "disabledDependents"
+      | "seniorDependents",
     delta: number
   ) => {
-    const currentVal = field === "dependents" ? dependents : children;
-    const newVal = Math.max(field === "dependents" ? 1 : 0, currentVal + delta);
-    if (field === "dependents") setDependents(newVal);
-    else setChildren(newVal);
+    if (field === "dependents" || field === "children") {
+      const currentVal = field === "dependents" ? dependents : children;
+      const newVal = Math.max(
+        field === "dependents" ? 1 : 0,
+        currentVal + delta
+      );
+      if (field === "dependents") setDependents(newVal);
+      else setChildren(newVal);
+    } else {
+      setAdvancedSettings((prev) => {
+        const currentVal = prev[field];
+        const newVal = Math.max(0, currentVal + delta);
+        // 장애인/경로우대 부양가족 수는 전체 부양가족 수를 넘을 수 없음
+        if (
+          field === "disabledDependents" &&
+          newVal + prev.seniorDependents > dependents
+        )
+          return prev;
+        if (
+          field === "seniorDependents" &&
+          newVal + prev.disabledDependents > dependents
+        )
+          return prev;
+        return { ...prev, [field]: newVal };
+      });
+    }
   };
 
   const handleSaveData = () => {
@@ -253,6 +276,11 @@ export default function SalaryCalculator() {
     setDependents(1);
     setChildren(0);
     setMonthlyExpenses("");
+    setAdvancedSettings({
+      isSmeYouth: false,
+      disabledDependents: 0,
+      seniorDependents: 0,
+    });
   };
 
   return (
@@ -378,7 +406,7 @@ export default function SalaryCalculator() {
 
           {incomeType === "regular" && (
             <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border">
-              <h2 className="text-lg font-bold">선택 입력</h2>
+              <h2 className="text-lg font-bold">상세 설정</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
@@ -420,6 +448,58 @@ export default function SalaryCalculator() {
                     </button>
                   </div>
                 </div>
+                <div>
+                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                    70세 이상 (경로우대)
+                  </label>
+                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                    <button
+                      onClick={() =>
+                        handleDependentChange("seniorDependents", -1)
+                      }
+                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      -
+                    </button>
+                    <span className="font-bold text-lg">
+                      {advancedSettings.seniorDependents} 명
+                    </span>
+                    <button
+                      onClick={() =>
+                        handleDependentChange("seniorDependents", 1)
+                      }
+                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                    장애인
+                  </label>
+                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                    <button
+                      onClick={() =>
+                        handleDependentChange("disabledDependents", -1)
+                      }
+                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      -
+                    </button>
+                    <span className="font-bold text-lg">
+                      {advancedSettings.disabledDependents} 명
+                    </span>
+                    <button
+                      onClick={() =>
+                        handleDependentChange("disabledDependents", 1)
+                      }
+                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className="mt-4">
                 <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
@@ -438,6 +518,28 @@ export default function SalaryCalculator() {
                   <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
                     원
                   </span>
+                </div>
+              </div>
+              <div className="mt-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="isSmeYouth"
+                    checked={advancedSettings.isSmeYouth}
+                    onChange={(e) =>
+                      setAdvancedSettings((prev) => ({
+                        ...prev,
+                        isSmeYouth: e.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <label
+                    htmlFor="isSmeYouth"
+                    className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
+                  >
+                    중소기업 취업 청년 소득세 감면 대상
+                  </label>
                 </div>
               </div>
               <div className="mt-4">
@@ -511,7 +613,6 @@ export default function SalaryCalculator() {
               </ResponsiveContainer>
             </div>
           </div>
-          {/* KakaoAdFit 컴포넌트 호출 제거 */}
           <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2 mt-6">
             <button
               onClick={handleReset}

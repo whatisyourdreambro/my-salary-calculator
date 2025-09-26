@@ -15,7 +15,7 @@ export type SalaryData = {
   totalDeduction: number;
 };
 
-const tableDataCache = new Map<string, SalaryData[]>();
+// [고도화] 서버리스 환경에 적합하지 않은 인메모리 캐시(tableDataCache) 제거
 
 const defaultAdvancedSettings: AdvancedSettings = {
   isSmeYouth: false,
@@ -23,15 +23,10 @@ const defaultAdvancedSettings: AdvancedSettings = {
   seniorDependents: 0,
 };
 
-// 연봉 실수령액 데이터 생성 (캐싱 적용)
+// 연봉 실수령액 데이터 생성
 export function generateAnnualSalaryTableData(): SalaryData[] {
-  if (tableDataCache.has("annual")) {
-    return tableDataCache.get("annual")!;
-  }
-
   const data: SalaryData[] = [];
   for (let salary = 0; salary <= 100000000; salary += 50000) {
-    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       salary,
       0,
@@ -42,7 +37,6 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
     data.push({ preTax: salary, ...results });
   }
   for (let salary = 101000000; salary <= 500000000; salary += 1000000) {
-    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       salary,
       0,
@@ -52,20 +46,13 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
     );
     data.push({ preTax: salary, ...results });
   }
-
-  tableDataCache.set("annual", data);
   return data;
 }
 
-// 월급 실수령액 데이터 생성 (캐싱 적용)
+// 월급 실수령액 데이터 생성
 export function generateMonthlySalaryTableData(): SalaryData[] {
-  if (tableDataCache.has("monthly")) {
-    return tableDataCache.get("monthly")!;
-  }
-
   const data: SalaryData[] = [];
   for (let monthly = 0; monthly <= 100000000; monthly += 50000) {
-    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       monthly * 12,
       0,
@@ -75,20 +62,13 @@ export function generateMonthlySalaryTableData(): SalaryData[] {
     );
     data.push({ preTax: monthly, ...results });
   }
-
-  tableDataCache.set("monthly", data);
   return data;
 }
 
-// 주급 실수령액 데이터 생성 (캐싱 적용)
+// 주급 실수령액 데이터 생성
 export function generateWeeklyPayTableData(): SalaryData[] {
-  if (tableDataCache.has("weekly")) {
-    return tableDataCache.get("weekly")!;
-  }
-
   const data: SalaryData[] = [];
   for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
-    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       weekly * 52,
       0,
@@ -98,20 +78,13 @@ export function generateWeeklyPayTableData(): SalaryData[] {
     );
     data.push({ preTax: weekly, ...results });
   }
-
-  tableDataCache.set("weekly", data);
   return data;
 }
 
-// 시급 실수령액 데이터 생성 (캐싱 적용)
+// 시급 실수령액 데이터 생성
 export function generateHourlyWageTableData(): SalaryData[] {
-  if (tableDataCache.has("hourly")) {
-    return tableDataCache.get("hourly")!;
-  }
-
   const data: SalaryData[] = [];
   for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
-    // [수정] 불필요한 인수(0)를 제거했습니다.
     const results = calculateNetSalary(
       hourly * 40 * 52,
       0,
@@ -121,7 +94,5 @@ export function generateHourlyWageTableData(): SalaryData[] {
     );
     data.push({ preTax: hourly, ...results });
   }
-
-  tableDataCache.set("hourly", data);
   return data;
 }
