@@ -2,7 +2,6 @@
 
 import { NextResponse } from "next/server";
 
-// [추가] XML에서 사용되는 특수문자를 처리하는 함수
 const escapeXml = (unsafe: string) => {
   return unsafe.replace(/[<>&'""]/g, (c) => {
     switch (c) {
@@ -22,8 +21,13 @@ const escapeXml = (unsafe: string) => {
   });
 };
 
-// src/app/guides/page.tsx 에 있는 전체 가이드 목록을 기반으로 합니다.
 const guides = [
+  {
+    slug: "exchange-rate-impact",
+    title: "환율, 내 월급과 자산의 가치를 결정하는 보이지 않는 손 (2025년)",
+    description:
+      "환율이란 무엇일까요? 환율 상승과 하락이 해외여행, 직구, 주식 투자, 그리고 대한민국 경제에 미치는 영향을 가장 쉽게 설명하고, 환테크 전략까지 제시합니다.",
+  },
   {
     slug: "naver-vs-kakao",
     title: "네이버 vs 카카오 연봉, 복지, 미래: 어디가 더 좋을까? (2025년)",
@@ -178,14 +182,14 @@ function generateRssFeed() {
   const currentDate = new Date().toUTCString();
 
   let rss = `<?xml version="1.0" encoding="UTF-8" ?>`;
-  rss += `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`; // atom 네임스페이스 추가
+  rss += `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`;
   rss += `<channel>`;
   rss += `<title>${escapeXml(siteTitle)}</title>`;
   rss += `<link>${baseUrl}</link>`;
   rss += `<description>${escapeXml(feedDescription)}</description>`;
   rss += `<language>ko</language>`;
-  rss += `<lastBuildDate>${currentDate}</lastBuildDate>`; // [추가] 피드 최종 빌드 시간
-  rss += `<atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />`; // [추가] RSS 피드 주소 명시
+  rss += `<lastBuildDate>${currentDate}</lastBuildDate>`;
+  rss += `<atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />`;
 
   guides.forEach((guide) => {
     const itemUrl = `${baseUrl}/guides/${guide.slug}`;
@@ -193,8 +197,8 @@ function generateRssFeed() {
     rss += `<title>${escapeXml(guide.title)}</title>`;
     rss += `<link>${itemUrl}</link>`;
     rss += `<description>${escapeXml(guide.description)}</description>`;
-    rss += `<pubDate>${currentDate}</pubDate>`; // 실제로는 각 글의 발행일이 들어가야 합니다.
-    rss += `<guid isPermaLink="true">${itemUrl}</guid>`; // [추가] 각 아이템의 고유 주소
+    rss += `<pubDate>${currentDate}</pubDate>`;
+    rss += `<guid isPermaLink="true">${itemUrl}</guid>`;
     rss += `</item>`;
   });
 

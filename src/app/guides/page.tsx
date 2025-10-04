@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    slug: "exchange-rate-impact",
+    title: "환율, 내 월급과 자산의 가치를 결정하는 보이지 않는 손",
+    description:
+      "환율 상승과 하락이 해외여행, 직구, 주식 투자, 그리고 대한민국 경제에 미치는 영향을 가장 쉽게 설명하고, 환테크 전략까지 제시합니다.",
+    category: "재테크 로드맵",
+  },
+  {
     slug: "naver-vs-kakao",
     title: "네이버 vs 카카오: 연봉, 복지, 미래 중 당신의 선택은?",
     description:

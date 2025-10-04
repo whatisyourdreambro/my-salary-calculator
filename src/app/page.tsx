@@ -1,10 +1,8 @@
-// src/app/page.tsx
-
 "use client";
 
 import CalculatorTabs from "@/components/CalculatorTabs";
+import ExchangeRateDisplay from "@/components/ExchangeRateDisplay";
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
-import Link from "next/link"; // Link import 추가
 
 const websiteStructuredData = {
   "@context": "https://schema.org",
@@ -63,6 +61,9 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* Real-time Exchange Rate Display */}
+        <ExchangeRateDisplay />
+
         {/* Calculator Tabs Section */}
         <div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up"
@@ -71,7 +72,6 @@ export default function HomePage() {
           <CalculatorTabs />
         </div>
 
-        {/* --- [수정된 부분] FeatureCard를 Link로 감싸기 --- */}
         <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -83,33 +83,32 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link href="/?tab=salary">
+            <div>
               <FeatureCard icon={Calculator} title="정확한 실수령액">
                 4대 보험, 소득세, 비과세액까지 완벽 반영하여 1원 단위까지
                 정확하게 계산합니다.
               </FeatureCard>
-            </Link>
-            <Link href="/?tab=rank">
+            </div>
+            <div>
               <FeatureCard icon={BarChart} title="객관적인 연봉 순위">
                 국가 통계 데이터 기반으로 직군/경력별 내 연봉 위치를 객관적으로
                 파악하세요.
               </FeatureCard>
-            </Link>
-            <Link href="/?tab=future">
+            </div>
+            <div>
               <FeatureCard icon={TrendingUp} title="미래 연봉 예측">
                 나의 커리어패스를 직접 설계하고, 승진과 이직을 통한 미래 연봉
                 변화를 시뮬레이션합니다.
               </FeatureCard>
-            </Link>
-            <Link href="/dashboard">
+            </div>
+            <div>
               <FeatureCard icon={CheckCircle} title="종합 금융 대시보드">
                 급여, 퇴직금, 대출 정보를 한 곳에 저장하고 관리하는 나만의 금융
                 비서를 경험하세요.
               </FeatureCard>
-            </Link>
+            </div>
           </div>
         </section>
-        {/* --- [수정 끝] --- */}
       </main>
     </>
   );

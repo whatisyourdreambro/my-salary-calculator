@@ -40,6 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const guideRoutes = [
+    "exchange-rate-impact",
     "naver-vs-kakao",
     "samsung-vs-hynix",
     "nekarakubae-salary",
