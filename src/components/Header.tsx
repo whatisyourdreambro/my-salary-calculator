@@ -16,7 +16,6 @@ type DropdownItem = {
 };
 type NavItem = LinkItem | DropdownItem;
 
-// --- [수정된 부분] 계산기 드롭다운 메뉴 항목 재구성 ---
 const navConfig: NavItem[] = [
   {
     name: "계산기",
@@ -33,7 +32,6 @@ const navConfig: NavItem[] = [
       { name: "급여명세서 생성기", href: "/?tab=paystub" },
     ],
   },
-  // --- [수정 끝] ---
   {
     name: "연봉 테이블",
     type: "dropdown",
@@ -51,6 +49,7 @@ const navConfig: NavItem[] = [
       { name: "전체 가이드", href: "/guides" },
       { name: "자주 묻는 질문(Q&A)", href: "/qna" },
       { name: "용어 사전", href: "/glossary" },
+      { name: "🍀 행운의 로또 번호", href: "/lotto" }, // [추가] 로또 페이지 링크 추가!
     ],
   },
 ];
