@@ -3,21 +3,61 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
-interface ExchangeRate {
-  code: string;
+interface InfoItem {
+  id: string;
+  flag: string;
   name: string;
-  rate: number;
+  unit: string;
+  value: number;
   change: number;
 }
 
-const initialRates: ExchangeRate[] = [
-  { code: "USD", name: "미국 달러", rate: 1380.5, change: 1.2 },
-  { code: "JPY", name: "일본 엔 (100)", rate: 880.1, change: -0.5 },
-  { code: "EUR", name: "유로", rate: 1490.8, change: 0.8 },
+// 초기 데이터 (API 호출 실패 시 표시될 기본값)
+const initialData: InfoItem[] = [
+  {
+    id: "USD",
+    flag: "🇺🇸",
+    name: "미국 달러",
+    unit: "원",
+    value: 1380.5,
+    change: 0.15,
+  },
+  {
+    id: "JPY",
+    flag: "🇯🇵",
+    name: "일본 엔",
+    unit: "원 (100엔)",
+    value: 880.1,
+    change: -0.25,
+  },
+  {
+    id: "EUR",
+    flag: "🇪🇺",
+    name: "유로",
+    unit: "원",
+    value: 1490.8,
+    change: 0.05,
+  },
+  {
+    id: "CNY",
+    flag: "🇨🇳",
+    name: "중국 위안",
+    unit: "원",
+    value: 189.7,
+    change: -0.1,
+  },
+  {
+    id: "GBP",
+    flag: "🇬🇧",
+    name: "영국 파운드",
+    unit: "원",
+    value: 1755.2,
+    change: 0.3,
+  },
 ];
 
 export default function ExchangeRateDisplay() {
-  const [rates, setRates] = useState<ExchangeRate[]>(initialRates);
+  const [marketData, setMarketData] = useState<InfoItem[]>(initialData);
   const [lastUpdated, setLastUpdated] = useState<string>(
     new Date().toLocaleTimeString()
   );
@@ -25,49 +65,25 @@ export default function ExchangeRateDisplay() {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        // 무료 환율 API 예시 (실제 서비스 시 API 키 발급 필요)
         const response = await fetch("https://open.er-api.com/v6/latest/KRW");
-        if (!response.ok) {
-          throw new Error("환율 정보를 불러오는 데 실패했습니다.");
-        }
+        if (!response.ok) throw new Error("API response was not ok.");
         const data = await response.json();
 
-        // USD, JPY, EUR 환율 정보 업데이트 (API 응답 구조에 맞게 수정)
-        const newRates = [
-          {
-            code: "USD",
-            name: "미국 달러",
-            rate: 1 / data.rates.USD,
-            change:
-              ((1 / data.rates.USD - initialRates[0].rate) /
-                initialRates[0].rate) *
-              100,
-          },
-          {
-            code: "JPY",
-            name: "일본 엔 (100)",
-            rate: (1 / data.rates.JPY) * 100,
-            change:
-              (((1 / data.rates.JPY) * 100 - initialRates[1].rate) /
-                initialRates[1].rate) *
-              100,
-          },
-          {
-            code: "EUR",
-            name: "유로",
-            rate: 1 / data.rates.EUR,
-            change:
-              ((1 / data.rates.EUR - initialRates[2].rate) /
-                initialRates[2].rate) *
-              100,
-          },
-        ];
+        const updatedData = initialData.map((item) => {
+          const rate = 1 / data.rates[item.id];
+          let displayRate = rate;
+          if (item.id === "JPY") {
+            displayRate = rate * 100;
+          }
+          const change = ((displayRate - item.value) / item.value) * 100;
 
-        setRates(newRates);
+          return { ...item, value: displayRate, change };
+        });
+
+        setMarketData(updatedData);
         setLastUpdated(new Date().toLocaleTimeString());
       } catch (error) {
-        console.error(error);
-        // API 호출 실패 시 초기값 유지
+        console.error("Failed to fetch exchange rates:", error);
       }
     };
 
@@ -77,10 +93,22 @@ export default function ExchangeRateDisplay() {
     return () => clearInterval(interval);
   }, []);
 
-  const getChangeIcon = (change: number) => {
-    if (change > 0) return <TrendingUp size={16} className="text-red-500" />;
-    if (change < 0) return <TrendingDown size={16} className="text-blue-500" />;
-    return <Minus size={16} className="text-gray-500" />;
+  const ChangeIndicator = ({ change }: { change: number }) => {
+    const isUp = change > 0;
+    const isDown = change < 0;
+    const colorClass = isUp
+      ? "text-red-500"
+      : isDown
+      ? "text-blue-500"
+      : "text-gray-500";
+    const Icon = isUp ? TrendingUp : isDown ? TrendingDown : Minus;
+
+    return (
+      <span className={`flex items-center text-sm font-semibold ${colorClass}`}>
+        <Icon size={16} className="mr-1" />
+        {change.toFixed(2)}%
+      </span>
+    );
   };
 
   return (
@@ -88,36 +116,30 @@ export default function ExchangeRateDisplay() {
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12 animate-fade-in-up"
       style={{ animationDelay: "0.6s" }}
     >
-      <div className="bg-light-card dark:bg-dark-card p-4 rounded-xl border border-gray-200 dark:border-gray-800/50 shadow-sm">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div className="font-bold text-sm sm:text-base flex items-center justify-center">
-            주요 환율
-            <span className="text-xs text-gray-500 ml-2 hidden sm:inline">
-              ({lastUpdated} 기준)
-            </span>
-          </div>
-          {rates.map((rate) => (
-            <div key={rate.code} className="p-2">
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                {rate.name}
+      <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-gray-200 dark:border-gray-800/50 shadow-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">주요 통화 환율</h2>
+          <span className="text-xs text-gray-500">업데이트: {lastUpdated}</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {marketData.map((item) => (
+            <div
+              key={item.id}
+              className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">{item.flag}</span>
+                <p className="font-bold text-light-text dark:text-dark-text">
+                  {item.name}
+                </p>
+              </div>
+              <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                {item.value.toFixed(2)}
               </p>
-              <p className="text-lg font-bold flex items-center justify-center gap-2">
-                {rate.rate.toFixed(2)}
-                <span className="flex items-center text-xs">
-                  {getChangeIcon(rate.change)}
-                  <span
-                    className={`${
-                      rate.change > 0
-                        ? "text-red-500"
-                        : rate.change < 0
-                        ? "text-blue-500"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {Math.abs(rate.change).toFixed(2)}%
-                  </span>
-                </span>
-              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-gray-500">{item.unit}</p>
+                <ChangeIndicator change={item.change} />
+              </div>
             </div>
           ))}
         </div>
