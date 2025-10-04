@@ -9,7 +9,7 @@ import {
 } from "@/lib/dashboardAnalysis";
 import CountUp from "react-countup";
 import Link from "next/link";
-// [수정] 사용하지 않는 아이콘 import 제거
+// [수정] 사용하는 아이콘만 남기고 정리
 import { Sparkles, RefreshCw } from "lucide-react";
 import {
   RadialBarChart,
