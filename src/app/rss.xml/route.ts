@@ -25,6 +25,12 @@ const escapeXml = (unsafe: string) => {
 // src/app/guides/page.tsx 에 있는 전체 가이드 목록을 기반으로 합니다.
 const guides = [
   {
+    slug: "naver-vs-kakao",
+    title: "네이버 vs 카카오 연봉, 복지, 미래: 어디가 더 좋을까? (2025년)",
+    description:
+      "대한민국 IT를 대표하는 두 거인, 네이버와 카카오! 신입 초봉부터 성과급, 기업문화, 복지, 그리고 미래 성장성까지. 현직자와 취준생을 위한 가장 솔직하고 현실적인 비교 분석.",
+  },
+  {
     slug: "samsung-vs-hynix",
     title: "삼성전자 vs SK하이닉스, 성과급 포함 연봉 비교 (2025년 최종판)",
     description:

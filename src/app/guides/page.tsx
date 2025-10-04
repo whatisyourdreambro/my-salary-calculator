@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    slug: "naver-vs-kakao",
+    title: "네이버 vs 카카오: 연봉, 복지, 미래 중 당신의 선택은?",
+    description:
+      "대한민국 IT를 대표하는 두 거인, 네이버와 카카오! 신입 초봉부터 성과급, 기업문화, 미래 성장성까지 완벽하게 비교 분석합니다.",
+    category: "커리어 성장",
+  },
+  {
     slug: "2025-salary-guide",
     title: "2025년 연봉 실수령액: 내 월급, 세후 얼마일까?",
     description:
@@ -180,7 +187,6 @@ const guides = [
   },
 ];
 
-// [수정] categories 배열의 icon 속성을 컴포넌트에서 문자열 이름으로 변경합니다.
 const categories = [
   { id: "all", name: "전체보기", icon: "BookOpenText" },
   { id: "연봉 분석", name: "연봉 심층 분석", icon: "Target" },
