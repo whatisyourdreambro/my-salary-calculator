@@ -32,6 +32,7 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 type CalculationResult = ReturnType<typeof calculateNetSalary>;
 type IncomeType = "regular" | "freelancer" | "part_time";
 
+// [고도화] 월급 흐름 차트 데이터 생성 로직 개선
 const generateWaterfallData = (
   grossSalary: number,
   result: CalculationResult,
@@ -189,7 +190,7 @@ export default function SalaryCalculator() {
       setAdvancedSettings((prev) => {
         const currentVal = prev[field];
         const newVal = Math.max(0, currentVal + delta);
-        // 장애인/경로우대 부양가족 수는 전체 부양가족 수를 넘을 수 없음
+        // [수정] 장애인/경로우대 부양가족 수는 전체 부양가족 수를 넘지 않도록 로직 강화
         if (
           field === "disabledDependents" &&
           newVal + prev.seniorDependents > dependents
@@ -286,6 +287,7 @@ export default function SalaryCalculator() {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 왼쪽: 입력 섹션 */}
         <div className="space-y-6">
           <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border">
             <h2 className="text-lg font-bold">소득 정보</h2>
@@ -448,6 +450,7 @@ export default function SalaryCalculator() {
                     </button>
                   </div>
                 </div>
+                {/* [추가] 상세 설정 UI */}
                 <div>
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                     70세 이상 (경로우대)
@@ -554,6 +557,7 @@ export default function SalaryCalculator() {
           )}
         </div>
 
+        {/* 오른쪽: 결과 섹션 */}
         <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
           <h2 className="text-xl font-bold mb-4">월급 상세 분석</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -637,6 +641,7 @@ export default function SalaryCalculator() {
           </div>
         </div>
       </div>
+      {/* 분석 리포트 */}
       {annualSalary > 0 && incomeType === "regular" && (
         <SalaryAnalysis
           annualSalary={annualSalary}

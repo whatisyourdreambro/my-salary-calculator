@@ -2,11 +2,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  generateLottoSets,
-  type LottoGenerationMode,
-} from "@/lib/lottoGenerator";
-import CurrencyInput from "@/components/CurrencyInput";
+import { generateLottoSets } from "@/lib/lottoGenerator";
 
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
 const getNumberColorClass = (number: number): string => {
@@ -18,36 +14,11 @@ const getNumberColorClass = (number: number): string => {
   return "bg-gray-200 text-gray-800";
 };
 
-const ModeButton = ({
-  mode,
-  currentMode,
-  setMode,
-  children,
-}: {
-  mode: LottoGenerationMode;
-  currentMode: LottoGenerationMode;
-  setMode: (mode: LottoGenerationMode) => void;
-  children: React.ReactNode;
-}) => (
-  <button
-    onClick={() => setMode(mode)}
-    className={`flex-1 p-3 rounded-lg font-semibold transition ${
-      currentMode === mode
-        ? "bg-primary text-white shadow-md"
-        : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-    }`}
-  >
-    {children}
-  </button>
-);
-
 export default function LottoPage() {
   const [numberOfSets, setNumberOfSets] = useState(5);
   const [includeInput, setIncludeInput] = useState("");
   const [excludeInput, setExcludeInput] = useState("");
-  const [salaryInput, setSalaryInput] = useState("3,000,000");
   const [generatedSets, setGeneratedSets] = useState<number[][]>([]);
-  const [mode, setMode] = useState<LottoGenerationMode>("random");
 
   const parseNumbers = (input: string) =>
     input
@@ -66,13 +37,11 @@ export default function LottoPage() {
 
   const handleGenerate = () => {
     try {
-      const sets = generateLottoSets({
-        count: numberOfSets,
-        mode,
+      const sets = generateLottoSets(
+        numberOfSets,
         includeNumbers,
-        excludeNumbers,
-        salary: Number(salaryInput.replace(/,/g, "")),
-      });
+        excludeNumbers
+      );
       setGeneratedSets(sets);
     } catch (error) {
       if (error instanceof Error) {
@@ -88,51 +57,29 @@ export default function LottoPage() {
           🍀 행운의 로또 번호 생성기
         </h1>
         <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-400">
-          Moneysalary만의 특별한 조합으로 행운을 빌어보세요.
+          당신의 행운을 시험해 보세요.
         </p>
       </div>
 
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg space-y-6">
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            생성 방식 선택
-          </label>
-          <div className="flex gap-2">
-            <ModeButton mode="random" currentMode={mode} setMode={setMode}>
-              완전 랜덤
-            </ModeButton>
-            <ModeButton mode="statistical" currentMode={mode} setMode={setMode}>
-              통계 기반
-            </ModeButton>
-            <ModeButton mode="salary" currentMode={mode} setMode={setMode}>
-              ✨월급 기반
-            </ModeButton>
-          </div>
-        </div>
-
-        {mode === "salary" && (
-          <CurrencyInput
-            label="나의 월급 또는 원하는 숫자를 입력하세요"
-            value={salaryInput}
-            onValueChange={setSalaryInput}
-            quickAmounts={[1000000, 500000, 100000]}
-          />
-        )}
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-1">
             <label htmlFor="sets" className="block text-sm font-medium">
-              생성 개수
+              생성 개수 (최대 20개)
             </label>
             <input
               type="number"
               id="sets"
               value={numberOfSets}
+              // [수정] 최대 20개 제한 로직 적용
               onChange={(e) =>
-                setNumberOfSets(Math.max(1, Number(e.target.value)))
+                setNumberOfSets(
+                  Math.min(20, Math.max(1, Number(e.target.value)))
+                )
               }
               className="mt-1 w-full p-2 border rounded-md dark:bg-dark-card dark:border-gray-600"
               min="1"
+              max="20"
             />
           </div>
           <div className="sm:col-span-1">
