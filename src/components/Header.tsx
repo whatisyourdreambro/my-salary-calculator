@@ -49,7 +49,8 @@ const navConfig: NavItem[] = [
       { name: "전체 가이드", href: "/guides" },
       { name: "자주 묻는 질문(Q&A)", href: "/qna" },
       { name: "용어 사전", href: "/glossary" },
-      { name: "🍀 행운의 로또 번호", href: "/lotto" }, // [추가] 로또 페이지 링크 추가!
+      { name: "🍀 행운의 로또 번호", href: "/lotto" },
+      { name: "💸 인생 연봉 그래프", href: "/mbti-salary" },
     ],
   },
 ];

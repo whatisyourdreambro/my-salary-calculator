@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/year-end-tax", changeFrequency: "monthly", priority: 0.8 },
     { url: "/fire-calculator", changeFrequency: "monthly", priority: 0.8 },
     { url: "/car-loan", changeFrequency: "monthly", priority: 0.8 },
+    { url: "/mbti-salary", changeFrequency: "weekly", priority: 0.9 },
     { url: "/table/annual", changeFrequency: "weekly", priority: 0.9 },
     { url: "/table/monthly", changeFrequency: "weekly", priority: 0.9 },
     { url: "/table/weekly", changeFrequency: "weekly", priority: 0.9 },
