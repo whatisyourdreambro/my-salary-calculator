@@ -1,7 +1,7 @@
 // src/app/mbti-salary/page.tsx
 import type { Metadata } from "next";
 // 경로에서 '/components'를 제거하여 수정했습니다.
-import SalaryMBTICalculator from "@/SalaryMBTICalculator";
+import SalaryMBTICalculator from "@/components/SalaryMBTICalculator";
 
 export const metadata: Metadata = {
   title: "재미로 보는 나의 인생 연봉 그래프 테스트 | Moneysalary",

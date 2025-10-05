@@ -248,13 +248,13 @@ export default function SeveranceCalculator() {
           <div className="mt-6 grid grid-cols-2 gap-2">
             <button
               onClick={handleReset}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
             >
               <RotateCcw size={16} /> 초기화
             </button>
             <button
               onClick={handleSaveData}
-              className="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary-hover transition"
             >
               <Save size={16} /> 대시보드 저장
             </button>

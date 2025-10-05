@@ -31,13 +31,13 @@ export default function FutureSalaryCalculator() {
   const [mode, setMode] = useState<CalculatorMode>("predict");
   const router = useRouter();
 
-  const [currentSalary, setCurrentSalary] = useState("50000000");
+  const [currentSalary, setCurrentSalary] = useState("50,000,000");
   const [years, setYears] = useState(10);
 
   const [baseRate, setBaseRate] = useState(5);
   const [events, setEvents] = useState<SalaryEvent[]>([]);
 
-  const [targetSalary, setTargetSalary] = useState("100000000");
+  const [targetSalary, setTargetSalary] = useState("100,000,000");
 
   const [jobCategory, setJobCategory] = useState("it_dev");
   const [experienceLevel, setExperienceLevel] = useState("3-6");

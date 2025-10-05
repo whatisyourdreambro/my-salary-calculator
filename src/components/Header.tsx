@@ -50,7 +50,7 @@ const navConfig: NavItem[] = [
       { name: "자주 묻는 질문(Q&A)", href: "/qna" },
       { name: "용어 사전", href: "/glossary" },
       { name: "🍀 행운의 로또 번호", href: "/lotto" },
-      { name: "💸 인생 연봉 그래프", href: "/mbti-salary" },
+      { name: "💸 인생 연봉 그래프", href: "/mbti-salary" }, // <<-- 이 부분이 추가되었습니다!
     ],
   },
 ];

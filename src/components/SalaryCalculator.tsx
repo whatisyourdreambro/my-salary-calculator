@@ -30,7 +30,7 @@ export default function SalaryCalculator() {
   const [severanceType, setSeveranceType] = useState<"separate" | "included">(
     "separate"
   );
-  const [salaryInput, setSalaryInput] = useState("50000000");
+  const [salaryInput, setSalaryInput] = useState("50,000,000");
   const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
@@ -205,7 +205,7 @@ export default function SalaryCalculator() {
     setIncomeType("regular");
     setPayBasis("annual");
     setSeveranceType("separate");
-    setSalaryInput("50000000");
+    setSalaryInput("50,000,000");
     setNonTaxableAmount("200000");
     setDependents(1);
     setChildren(0);

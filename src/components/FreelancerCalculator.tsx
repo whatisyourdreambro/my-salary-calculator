@@ -14,12 +14,63 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
+// recharts가 전달하는 props 타입(string | number)과 호환되도록 수정
+interface CustomBarLabelProps {
+  x?: number | string;
+  y?: number | string;
+  width?: number | string;
+  value?: number | string;
+}
+
+// 차트 바에 표시될 커스텀 라벨 컴포넌트
+const CustomBarLabel = (props: CustomBarLabelProps) => {
+  const { x, y, width, value } = props;
+
+  // props 값이 없을 경우 렌더링하지 않음
+  if (
+    x === undefined ||
+    y === undefined ||
+    width === undefined ||
+    value === undefined
+  ) {
+    return null;
+  }
+
+  // props로 받은 값을 산술 연산 전에 안전하게 숫자형으로 변환
+  const numX = Number(x);
+  const numY = Number(y);
+  const numWidth = Number(width);
+  const numValue = Number(value);
+
+  // 라벨 텍스트의 위치 계산
+  const textX = numX + numWidth + 10;
+  const textY = numY + 15;
+
+  // 차트 바의 너비가 너무 좁으면 라벨을 숨김
+  if (numWidth < 30) {
+    return null;
+  }
+
+  return (
+    <text
+      x={textX}
+      y={textY}
+      fill="#6b7280"
+      textAnchor="start"
+      className="font-semibold"
+    >
+      {`${formatNumber(numValue)}원`}
+    </text>
+  );
+};
+
 export default function FreelancerCalculator() {
-  const [income, setIncome] = useState("3000000");
+  const [income, setIncome] = useState("3,000,000");
   const [taxType, setTaxType] = useState<"freelancer" | "part_time">(
     "freelancer"
   );
@@ -46,11 +97,13 @@ export default function FreelancerCalculator() {
         }
       );
     }
-    return data.filter((d) => d.value > 0);
+    // 값이 0보다 큰 항목만 필터링하고, 값 기준으로 오름차순 정렬
+    return data.filter((d) => d.value > 0).sort((a, b) => a.value - b.value);
   }, [result, taxType]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+      {/* 소득 정보 입력 섹션 */}
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
         <h2 className="text-lg font-bold mb-4">소득 정보 입력</h2>
         <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mb-4">
@@ -83,6 +136,7 @@ export default function FreelancerCalculator() {
         />
       </div>
 
+      {/* 예상 실수령액 섹션 */}
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
         <h2 className="text-xl font-bold mb-4">예상 실수령액</h2>
         <div className="text-center">
@@ -106,8 +160,17 @@ export default function FreelancerCalculator() {
               <YAxis type="category" dataKey="name" hide />
               <Tooltip
                 formatter={(value: number) => `${formatNumber(value)} 원`}
+                cursor={{ fill: "transparent" }}
               />
-              <Bar dataKey="value" barSize={20}>
+              <Bar dataKey="value" barSize={25} radius={[4, 4, 4, 4]}>
+                <LabelList dataKey="value" content={CustomBarLabel} />
+                <LabelList
+                  dataKey="name"
+                  position="insideLeft"
+                  offset={10}
+                  className="font-semibold"
+                  fill="#ffffff"
+                />
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
