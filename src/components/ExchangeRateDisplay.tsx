@@ -157,11 +157,11 @@ export default function ExchangeRateDisplay() {
                 </p>
               </div>
               <p className="text-2xl font-bold text-light-text dark:text-dark-text">
-                {item.value.toFixed(2)}
+                {isLoading ? "..." : item.value.toFixed(2)}
               </p>
               <div className="flex justify-between items-center">
                 <p className="text-xs text-gray-500">{item.unit}</p>
-                <ChangeIndicator change={item.change} />
+                {!isLoading && <ChangeIndicator change={item.change} />}
               </div>
             </div>
           ))}
