@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-// [수정] 사용하지 않는 recharts import 항목들 제거
 import {
   calculateYearEndTax,
   TaxInputs,
@@ -12,7 +11,6 @@ import {
 
 const formatNumber = (num: number) => num.toLocaleString();
 
-// 상세 리포트 컴포넌트 (변경 없음)
 const AnalysisReport = ({
   inputs,
   result,
@@ -209,7 +207,6 @@ export default function YearEndTaxCalculator() {
 
   const result = useMemo(() => calculateYearEndTax(inputs), [inputs]);
 
-  // [수정] useMemo 의존성 배열에 inputs 전체를 포함
   const initialRefund = useMemo(
     () =>
       calculateYearEndTax({

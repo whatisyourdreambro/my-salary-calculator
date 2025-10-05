@@ -1,7 +1,6 @@
 // src/app/year-end-tax/page.tsx
 
 import type { Metadata } from "next";
-// [수정] 절대 경로 별칭을 사용하여 모듈을 찾지 못하는 오류를 해결합니다.
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 
 export const metadata: Metadata = {
