@@ -12,7 +12,6 @@ interface InfoItem {
   change: number;
 }
 
-// API 호출 실패 또는 로딩 시 표시될 기본 데이터
 const initialData: InfoItem[] = [
   { id: "USD", flag: "🇺🇸", name: "미국 달러", unit: "원", value: 0, change: 0 },
   {
@@ -44,27 +43,43 @@ export default function ExchangeRateDisplay() {
     const fetchRates = async () => {
       setIsLoading(true);
       try {
-        const todayResponse = await fetch(
-          "https://open.er-api.com/v6/latest/KRW"
-        );
-        if (!todayResponse.ok)
-          throw new Error("오늘 환율 정보를 가져오지 못했습니다.");
+        // 어제 날짜를 YYYY-MM-DD 형식으로 계산
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+        // Promise.all을 사용해 오늘과 어제 환율을 동시에 요청
+        const [todayResponse, yesterdayResponse] = await Promise.all([
+          fetch("https://open.er-api.com/v6/latest/KRW"),
+          fetch(
+            `https://open.er-api.com/v6/historical/${yesterdayStr}?base=KRW`
+          ),
+        ]);
+
+        if (!todayResponse.ok || !yesterdayResponse.ok) {
+          throw new Error("환율 정보를 가져오는 데 실패했습니다.");
+        }
+
         const todayData = await todayResponse.json();
+        const yesterdayData = await yesterdayResponse.json();
 
         const updatedData = initialData.map((item) => {
-          const currentRate = 1 / todayData.rates[item.id];
-          let displayRate = currentRate;
+          const todayRate = 1 / todayData.rates[item.id];
+          const yesterdayRate = 1 / yesterdayData.rates[item.id];
+
+          let displayRate = todayRate;
+          let displayYesterdayRate = yesterdayRate;
+
           if (item.id === "JPY") {
-            displayRate = currentRate * 100;
+            displayRate *= 100;
+            displayYesterdayRate *= 100;
           }
 
-          // 임시 기준값(initialData의 value) 대비 변동률 계산
-          // 실제 서비스에서는 전일 종가 데이터를 별도로 관리해야 정확한 일일 변동률 표시 가능
-          const baseValue = 1380; // 예시 기준값
           const change =
-            item.value !== 0
-              ? ((displayRate - item.value) / item.value) * 100
-              : ((displayRate - baseValue) / baseValue) * 100;
+            displayYesterdayRate > 0
+              ? ((displayRate - displayYesterdayRate) / displayYesterdayRate) *
+                100
+              : 0;
 
           return { ...item, value: displayRate, change };
         });
@@ -73,13 +88,14 @@ export default function ExchangeRateDisplay() {
         setLastUpdated(new Date().toLocaleTimeString());
       } catch (error) {
         console.error("환율 정보 업데이트 실패:", error);
-        setMarketData(initialData);
+        setMarketData(initialData); // 실패 시 초기 데이터로 리셋
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchRates();
+    // 무료 API는 하루에 한 번 업데이트되므로, 너무 잦은 호출은 불필요합니다.
     const interval = setInterval(fetchRates, 3600000); // 1시간에 한 번 업데이트
 
     return () => clearInterval(interval);
