@@ -1,13 +1,15 @@
-// src/components/SalaryRank.tsx
-
 "use client";
 
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
-import Link from "next/link";
 import { findSalaryRank, salaryData } from "@/lib/salaryData";
-// [추가] 타입 import
 import type { StoredFinancialData, StoredRankData } from "@/app/types";
+import { analyzeSalary, generateGrowthPlan } from "@/lib/reportCardAnalysis";
+import type { ReportCardData, GrowthPlan } from "@/lib/reportCardAnalysis";
+
+// 새로 만든 컴포넌트들을 import 합니다.
+import SalaryReportCard from "./SalaryReportCard";
+import AIGrowthPlan from "./AIGrowthPlan";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -18,12 +20,14 @@ export default function SalaryRank() {
   const [ageGroup, setAgeGroup] = useState("all");
   const [region, setRegion] = useState("all");
 
+  // 분석 결과를 담을 state 추가
+  const [reportData, setReportData] = useState<ReportCardData | null>(null);
+  const [growthPlan, setGrowthPlan] = useState<GrowthPlan[] | null>(null);
   const [result, setResult] = useState<{
     rank: number | null;
+    condition: string;
     median: number;
     average: number;
-    condition: string;
-    recommendedGuides: { title: string; href: string }[];
   } | null>(null);
 
   const annualSalary = useMemo(
@@ -40,6 +44,28 @@ export default function SalaryRank() {
     if (!salaryData[key]) key = "all-all-all-all";
 
     const { rank, median, average } = findSalaryRank(annualSalary, key);
+
+    if (rank === null) {
+      alert("연봉을 입력해주세요.");
+      return;
+    }
+
+    const marketData = salaryData[key];
+    const newReportData = analyzeSalary(
+      annualSalary,
+      rank,
+      jobCategory,
+      experienceLevel,
+      marketData
+    );
+    const newGrowthPlan = generateGrowthPlan(
+      newReportData.grade,
+      rank,
+      annualSalary
+    );
+
+    setReportData(newReportData);
+    setGrowthPlan(newGrowthPlan);
 
     const jobMap: Record<string, string> = {
       all: "전체 직군",
@@ -81,7 +107,6 @@ export default function SalaryRank() {
       capital: "수도권",
       "non-capital": "수도권 외",
     };
-
     const conditionText = [
       jobMap[jobCategory],
       expMap[experienceLevel],
@@ -91,27 +116,14 @@ export default function SalaryRank() {
       .filter((v) => !v.startsWith("전체"))
       .join(" / ");
 
-    const recommendedGuides = [
-      {
-        title: "연봉 1억을 위한 현실적인 절세 전략",
-        href: "/guides/road-to-100m-part1-tax",
-      },
-      {
-        title: "이직 시 연봉협상, 최소 OO%는 불러야 하는 이유",
-        href: "/guides/salary-negotiation",
-      },
-    ];
-
     setResult({
       rank,
       median,
       average,
       condition: conditionText || "전체 근로자",
-      recommendedGuides,
     });
   };
 
-  // [추가] 대시보드 저장 핸들러
   const handleSaveData = () => {
     if (!result || result.rank === null) {
       alert("먼저 연봉 순위를 계산해주세요.");
@@ -153,18 +165,16 @@ export default function SalaryRank() {
   };
 
   const handleShare = async () => {
-    if (!result || result.rank === null) return;
+    if (!result || result.rank === null || !reportData) return;
 
-    const shareText = `💰 내 연봉 ${annualSalary.toLocaleString()}원은 "${
-      result.condition
-    }" 그룹에서 상위 ${result.rank}%래요! 여러분도 확인해보세요!`;
+    const shareText = `💰 내 연봉 등급은 '${reportData.grade}'! "${result.condition}" 그룹에서 상위 ${result.rank}%래요! 여러분도 확인해보세요!`;
     const shareUrl =
       window.location.origin + `/?tab=rank&salary=${annualSalary}`;
 
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "내 연봉 순위 리포트 | Moneysalary",
+          title: "내 연봉 성적표 | Moneysalary",
           text: shareText,
           url: shareUrl,
         });
@@ -187,7 +197,8 @@ export default function SalaryRank() {
         💰 내 연봉, 동료들과 비교하면 몇 등일까?
       </h2>
       <p className="text-center text-light-text-secondary dark:text-dark-text-secondary mb-8">
-        국가통계 기반 데이터로 더 정확해진 내 소득 위치를 확인해보세요.
+        국가통계 기반 데이터로 더 정확해진 내 소득 위치를 확인하고, 성장을 위한
+        AI 플랜까지 받아보세요.
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -201,7 +212,7 @@ export default function SalaryRank() {
           <option value="marketing">마케팅/영업</option>
           <option value="it_dev">IT/개발</option>
           <option value="design">디자인</option>
-          <option value="professional">전문직(의료/법률/금융)</option>
+          <option value="professional">전문직</option>
           <option value="manufacturing">생산/기술</option>
           <option value="service">서비스/교육</option>
         </select>
@@ -262,91 +273,30 @@ export default function SalaryRank() {
           onClick={handleCalculateRank}
           className="w-full sm:w-auto px-8 py-4 bg-signature-blue text-white font-bold rounded-lg hover:bg-blue-600 transition-colors flex-shrink-0"
         >
-          결과 확인
+          AI 분석 시작하기
         </button>
       </div>
 
-      {result && (
+      {reportData && (
         <>
-          <div className="mt-8 p-6 bg-signature-blue text-white rounded-2xl shadow-xl relative">
-            <p className="text-center font-semibold text-blue-200">{`"${result.condition}" 그룹 내 연봉 리포트`}</p>
-            <div className="grid grid-cols-3 gap-4 text-center my-6">
-              <div>
-                <p className="text-sm text-blue-200 opacity-80">내 순위</p>
-                <p className="text-2xl lg:text-3xl font-bold">
-                  상위 {result.rank ?? "N/A"}%
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-blue-200 opacity-80">
-                  그룹 중위연봉
-                </p>
-                <p className="text-2xl lg:text-3xl font-bold">
-                  {formatNumber(result.median / 10000)}
-                  <span className="text-lg">만원</span>
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-blue-200 opacity-80">
-                  그룹 평균연봉
-                </p>
-                <p className="text-2xl lg:text-3xl font-bold">
-                  {formatNumber(result.average / 10000)}
-                  <span className="text-lg">만원</span>
-                </p>
-              </div>
-            </div>
-            <div className="w-full bg-blue-400/50 rounded-full h-3 mt-6 relative">
-              <div
-                className="bg-white h-3 rounded-full"
-                style={{ width: `${100 - (result.rank ?? 100)}%` }}
-              />
-              <div
-                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white border-4 border-signature-blue"
-                style={{ left: `${100 - (result.rank ?? 100)}%` }}
-              />
-            </div>
-            <p className="text-xs text-blue-200 mt-2 text-center opacity-70">
-              * 국가통계 기반 데이터로 추정한 값입니다.
-            </p>
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
-                onClick={handleSaveData}
-                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
-              >
-                대시보드에 저장
-              </button>
-              <button
-                onClick={handleShare}
-                className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
-              >
-                결과 공유하기
-              </button>
-            </div>
-          </div>
-          <div className="mt-8">
-            <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-4">
-              맞춤 가이드
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {result.recommendedGuides.map((guide) => (
-                <Link
-                  key={guide.href}
-                  href={guide.href}
-                  className="block p-4 border rounded-lg hover:shadow-lg bg-gray-50 dark:bg-gray-800/50"
-                >
-                  <p className="font-semibold text-signature-blue">
-                    {guide.title}
-                  </p>
-                  <span className="text-xs text-gray-500 mt-2 block">
-                    자세히 보기 →
-                  </span>
-                </Link>
-              ))}
-            </div>
+          <SalaryReportCard reportData={reportData} />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={handleSaveData}
+              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            >
+              대시보드에 저장
+            </button>
+            <button
+              onClick={handleShare}
+              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            >
+              성적표 공유하기
+            </button>
           </div>
         </>
       )}
+      {growthPlan && <AIGrowthPlan plans={growthPlan} />}
     </div>
   );
 }
