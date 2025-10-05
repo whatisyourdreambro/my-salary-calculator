@@ -2,25 +2,26 @@
 
 import { useState, useEffect } from "react";
 
+// 표시할 통화의 기본 구조 정의
 interface InfoItem {
   id: string;
   flag: string;
   name: string;
   unit: string;
-  value: number;
+  value: number | null; // API 호출 전/실패 시 null일 수 있음
 }
 
-// 초기 데이터 구조만 정의 (값은 API를 통해 채워짐)
-const initialData: InfoItem[] = [
-  { id: "USD", flag: "🇺🇸", name: "미국 달러", unit: "원", value: 0 },
-  { id: "JPY", flag: "🇯🇵", name: "일본 엔", unit: "원 (100엔)", value: 0 },
-  { id: "EUR", flag: "🇪🇺", name: "유로", unit: "원", value: 0 },
-  { id: "CNY", flag: "🇨🇳", name: "중국 위안", unit: "원", value: 0 },
-  { id: "GBP", flag: "🇬🇧", name: "영국 파운드", unit: "원", value: 0 },
+// 화면에 표시될 통화 목록
+const currencyList: InfoItem[] = [
+  { id: "USD", flag: "🇺🇸", name: "미국 달러", unit: "원", value: null },
+  { id: "JPY", flag: "🇯🇵", name: "일본 엔", unit: "원 (100엔)", value: null },
+  { id: "EUR", flag: "🇪🇺", name: "유로", unit: "원", value: null },
+  { id: "CNY", flag: "🇨🇳", name: "중국 위안", unit: "원", value: null },
+  { id: "GBP", flag: "🇬🇧", name: "영국 파운드", unit: "원", value: null },
 ];
 
 export default function ExchangeRateDisplay() {
-  const [marketData, setMarketData] = useState<InfoItem[]>(initialData);
+  const [marketData, setMarketData] = useState<InfoItem[]>(currencyList);
   const [lastUpdated, setLastUpdated] = useState<string>("-");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,13 +29,18 @@ export default function ExchangeRateDisplay() {
     const fetchRates = async () => {
       setIsLoading(true);
       try {
+        // ExchangeRate-API의 무료 'latest' 엔드포인트 호출
         const response = await fetch("https://open.er-api.com/v6/latest/KRW");
-        if (!response.ok) throw new Error("API response was not ok.");
+        if (!response.ok) {
+          throw new Error("API 응답에 문제가 있습니다.");
+        }
         const data = await response.json();
 
-        const updatedData = initialData.map((item) => {
+        // API 응답을 바탕으로 각 통화의 환율 계산
+        const updatedData = currencyList.map((item) => {
           const rate = 1 / data.rates[item.id];
           let displayRate = rate;
+          // 일본 엔은 100엔 단위로 표시
           if (item.id === "JPY") {
             displayRate = rate * 100;
           }
@@ -42,17 +48,21 @@ export default function ExchangeRateDisplay() {
         });
 
         setMarketData(updatedData);
-        setLastUpdated(new Date().toLocaleTimeString());
+        setLastUpdated(
+          new Date(data.time_last_update_unix * 1000).toLocaleString()
+        );
       } catch (error) {
-        console.error("환율 정보 업데이트 실패:", error);
-        setMarketData(initialData); // 실패 시 값을 0으로 유지
+        console.error("환율 정보 업데이트에 실패했습니다:", error);
+        // API 호출 실패 시, 값 없는 초기 상태 유지
+        setMarketData(currencyList);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchRates();
-    const interval = setInterval(fetchRates, 3600000); // 1시간에 한 번 업데이트
+    // 무료 API는 하루 한 번 업데이트되므로, 1시간에 한 번만 호출하여 불필요한 트래픽 방지
+    const interval = setInterval(fetchRates, 3600000);
 
     return () => clearInterval(interval);
   }, []);
@@ -64,8 +74,8 @@ export default function ExchangeRateDisplay() {
     >
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-gray-200 dark:border-gray-800/50 shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">주요 통화 환율</h2>
-          <span className="text-xs text-gray-500">업데이트: {lastUpdated}</span>
+          <h2 className="text-xl font-bold">오늘의 주요 환율</h2>
+          <span className="text-xs text-gray-500">기준: {lastUpdated}</span>
         </div>
         {isLoading ? (
           <div className="text-center py-10 text-gray-500">
@@ -86,7 +96,7 @@ export default function ExchangeRateDisplay() {
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-light-text dark:text-dark-text">
-                    {item.value > 0 ? item.value.toFixed(2) : "-"}
+                    {item.value ? item.value.toFixed(2) : "-"}
                   </p>
                   <p className="text-xs text-gray-500">{item.unit}</p>
                 </div>
