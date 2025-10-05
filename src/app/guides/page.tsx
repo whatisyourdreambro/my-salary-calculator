@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    slug: "compound-interest",
+    title: "복리의 마법, 스노우볼 효과: 부자들의 비밀 무기",
+    description:
+      "시간을 내 편으로 만들어 자산을 불리는 가장 확실한 방법, 복리의 모든 것을 알려드립니다.",
+    category: "재테크 로드맵",
+  },
+  {
     slug: "exchange-rate-impact",
     title: "환율, 내 월급과 자산의 가치를 결정하는 보이지 않는 손",
     description:

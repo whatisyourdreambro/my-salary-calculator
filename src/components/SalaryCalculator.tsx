@@ -8,15 +8,6 @@ import { calculateNetSalary } from "@/lib/calculator";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
 import { Share2 } from "lucide-react";
 import type {
   StoredSalaryData,
@@ -32,51 +23,6 @@ const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 type CalculationResult = ReturnType<typeof calculateNetSalary>;
 type IncomeType = "regular" | "freelancer" | "part_time";
 
-// [고도화] 월급 흐름 차트 데이터 생성 로직 개선
-const generateWaterfallData = (
-  grossSalary: number,
-  result: CalculationResult,
-  incomeType: IncomeType,
-  payBasis: "annual" | "monthly"
-) => {
-  const { pension, health, employment, incomeTax, localTax, monthlyNet } =
-    result;
-
-  let monthlyGross: number;
-  if (incomeType === "regular") {
-    monthlyGross =
-      payBasis === "annual" ? Math.round(grossSalary / 12) : grossSalary;
-  } else {
-    monthlyGross = grossSalary;
-  }
-
-  if (grossSalary <= 0) {
-    return [];
-  }
-
-  const data = [
-    { name: "세전소득", value: monthlyGross, color: "#0052ff" },
-    { name: "국민연금", value: -pension, color: "#ff8c00" },
-    { name: "건강보험", value: -health, color: "#ff6384" },
-    { name: "고용보험", value: -employment, color: "#ffcd56" },
-    { name: "소득세 등", value: -(incomeTax + localTax), color: "#4bc0c0" },
-    { name: "실수령액", value: monthlyNet, color: "#36a2eb" },
-  ].filter((item) => item.value !== 0);
-
-  let cumulative = 0;
-  return data.map((d) => {
-    const base = cumulative;
-    let range: [number, number];
-    if (d.name === "실수령액") {
-      range = [0, d.value];
-    } else {
-      cumulative += d.value;
-      range = [Math.min(base, cumulative), Math.max(base, cumulative)];
-    }
-    return { ...d, range };
-  });
-};
-
 export default function SalaryCalculator() {
   const router = useRouter();
   const [incomeType, setIncomeType] = useState<IncomeType>("regular");
@@ -90,7 +36,6 @@ export default function SalaryCalculator() {
   const [children, setChildren] = useState(0);
   const [monthlyExpenses, setMonthlyExpenses] = useState("");
 
-  // [고도화] 상세 설정 State 추가
   const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
     isSmeYouth: false,
     disabledDependents: 0,
@@ -118,17 +63,6 @@ export default function SalaryCalculator() {
     }
     return annual;
   }, [salaryInput, payBasis, severanceType, incomeType]);
-
-  const waterfallData = useMemo(
-    () =>
-      generateWaterfallData(
-        parseNumber(salaryInput),
-        result,
-        incomeType,
-        payBasis
-      ),
-    [salaryInput, result, incomeType, payBasis]
-  );
 
   const runCalculation = useCallback(() => {
     const salary = parseNumber(salaryInput);
@@ -190,7 +124,6 @@ export default function SalaryCalculator() {
       setAdvancedSettings((prev) => {
         const currentVal = prev[field];
         const newVal = Math.max(0, currentVal + delta);
-        // [수정] 장애인/경로우대 부양가족 수는 전체 부양가족 수를 넘지 않도록 로직 강화
         if (
           field === "disabledDependents" &&
           newVal + prev.seniorDependents > dependents
@@ -284,10 +217,25 @@ export default function SalaryCalculator() {
     });
   };
 
+  const deductionData = [
+    { name: "국민연금", value: result.pension, color: "#ff8c00" },
+    { name: "건강보험", value: result.health, color: "#ff6384" },
+    { name: "고용보험", value: result.employment, color: "#ffcd56" },
+    {
+      name: "소득세 등",
+      value: result.incomeTax + result.localTax,
+      color: "#4bc0c0",
+    },
+  ].filter((item) => item.value > 0);
+
+  const totalDeductions = deductionData.reduce(
+    (acc, cur) => acc + cur.value,
+    0
+  );
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* 왼쪽: 입력 섹션 */}
         <div className="space-y-6">
           <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border">
             <h2 className="text-lg font-bold">소득 정보</h2>
@@ -450,7 +398,6 @@ export default function SalaryCalculator() {
                     </button>
                   </div>
                 </div>
-                {/* [추가] 상세 설정 UI */}
                 <div>
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
                     70세 이상 (경로우대)
@@ -560,7 +507,7 @@ export default function SalaryCalculator() {
         {/* 오른쪽: 결과 섹션 */}
         <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
           <h2 className="text-xl font-bold mb-4">월급 상세 분석</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4">
             <div>
               <p className="font-semibold text-sm text-gray-500">
                 월 예상 실수령액
@@ -569,7 +516,9 @@ export default function SalaryCalculator() {
                 <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
                 원
               </p>
-              <p className="font-semibold text-sm text-gray-500 mt-4">
+            </div>
+            <div>
+              <p className="font-semibold text-sm text-gray-500">
                 총 공제액 합계
               </p>
               <p className="text-2xl font-bold text-danger">
@@ -582,39 +531,32 @@ export default function SalaryCalculator() {
                 원
               </p>
             </div>
-            <div>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart
-                  data={waterfallData}
-                  margin={{ top: 20, right: 0, left: 0, bottom: 20 }}
-                >
-                  <XAxis
-                    type="category"
-                    dataKey="name"
-                    tick={{ fontSize: 11 }}
-                    angle={-45}
-                    textAnchor="end"
-                    height={50}
-                  />
-                  <YAxis hide={true} domain={[0, "dataMax + 100000"]} />
-                  <Tooltip
-                    formatter={(value: number, name, props) => {
-                      if (Array.isArray(props.payload.range)) {
-                        const actualValue = Math.abs(
-                          props.payload.range[1] - props.payload.range[0]
-                        );
-                        return `${formatNumber(Math.round(actualValue))} 원`;
-                      }
-                      return `${formatNumber(Math.abs(value))} 원`;
-                    }}
-                  />
-                  <Bar dataKey="range" isAnimationActive={false}>
-                    {waterfallData.map((d, i) => (
-                      <Cell key={`cell-${i}`} fill={d.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+            <div className="space-y-2 pt-4">
+              {deductionData.map((item) => (
+                <div key={item.name}>
+                  <div className="flex justify-between items-center text-sm">
+                    <span
+                      style={{ color: item.color }}
+                      className="font-semibold"
+                    >
+                      {item.name}
+                    </span>
+                    <span>
+                      {formatNumber(item.value)}원 (
+                      {((item.value / totalDeductions) * 100).toFixed(1)}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-1">
+                    <div
+                      className="h-2.5 rounded-full"
+                      style={{
+                        width: `${(item.value / totalDeductions) * 100}%`,
+                        backgroundColor: item.color,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2 mt-6">
@@ -641,7 +583,6 @@ export default function SalaryCalculator() {
           </div>
         </div>
       </div>
-      {/* 분석 리포트 */}
       {annualSalary > 0 && incomeType === "regular" && (
         <SalaryAnalysis
           annualSalary={annualSalary}

@@ -12,107 +12,104 @@ interface InfoItem {
   change: number;
 }
 
-// 초기 데이터 (API 호출 실패 시 표시될 기본값)
 const initialData: InfoItem[] = [
   {
     id: "USD",
     flag: "🇺🇸",
     name: "미국 달러",
     unit: "원",
-    value: 1380.5,
-    change: 0.15,
+    value: 0,
+    change: 0,
   },
   {
     id: "JPY",
     flag: "🇯🇵",
     name: "일본 엔",
     unit: "원 (100엔)",
-    value: 880.1,
-    change: -0.25,
+    value: 0,
+    change: 0,
   },
   {
     id: "EUR",
     flag: "🇪🇺",
     name: "유로",
     unit: "원",
-    value: 1490.8,
-    change: 0.05,
+    value: 0,
+    change: 0,
   },
   {
     id: "CNY",
     flag: "🇨🇳",
     name: "중국 위안",
     unit: "원",
-    value: 189.7,
-    change: -0.1,
+    value: 0,
+    change: 0,
   },
   {
     id: "GBP",
     flag: "🇬🇧",
     name: "영국 파운드",
     unit: "원",
-    value: 1755.2,
-    change: 0.3,
+    value: 0,
+    change: 0,
   },
 ];
 
 export default function ExchangeRateDisplay() {
   const [marketData, setMarketData] = useState<InfoItem[]>(initialData);
-  const [lastUpdated, setLastUpdated] = useState<string>(
-    new Date().toLocaleTimeString()
-  );
+  const [lastUpdated, setLastUpdated] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRates = async () => {
+      setIsLoading(true);
       try {
-        // 어제 날짜를 YYYY-MM-DD 형식으로 계산
+        const response = await fetch(`https://open.er-api.com/v6/latest/KRW`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch latest exchange rates.");
+        }
+        const data = await response.json();
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split("T")[0];
-
-        // Promise.all을 사용해 오늘과 어제 환율을 동시에 요청
-        const [todayResponse, yesterdayResponse] = await Promise.all([
-          fetch("https://open.er-api.com/v6/latest/KRW"),
-          fetch(`https://open.er-api.com/v6/${yesterdayStr}?base=KRW`),
-        ]);
-
-        if (!todayResponse.ok || !yesterdayResponse.ok) {
-          throw new Error("환율 정보를 가져오는 데 실패했습니다.");
+        const prevResponse = await fetch(
+          `https://open.er-api.com/v6/${yesterdayStr}?base=KRW`
+        );
+        if (!prevResponse.ok) {
+          throw new Error("Failed to fetch previous day's exchange rates.");
         }
-
-        const todayData = await todayResponse.json();
-        const yesterdayData = await yesterdayResponse.json();
+        const prevData = await prevResponse.json();
 
         const updatedData = initialData.map((item) => {
-          const todayRate = 1 / todayData.rates[item.id];
-          const yesterdayRate = 1 / yesterdayData.rates[item.id];
-
+          const todayRate = 1 / data.rates[item.id];
+          const yesterdayRate = 1 / prevData.rates[item.id];
           let displayRate = todayRate;
-          let displayYesterdayRate = yesterdayRate;
-
+          let change = 0;
           if (item.id === "JPY") {
             displayRate *= 100;
-            displayYesterdayRate *= 100;
+            change = ((todayRate - yesterdayRate) / yesterdayRate) * 100;
+          } else {
+            change = ((todayRate - yesterdayRate) / yesterdayRate) * 100;
           }
 
-          const change =
-            displayYesterdayRate > 0
-              ? ((displayRate - displayYesterdayRate) / displayYesterdayRate) *
-                100
-              : 0;
-
-          return { ...item, value: displayRate, change };
+          return {
+            ...item,
+            value: displayRate,
+            change: change,
+          };
         });
 
         setMarketData(updatedData);
-        setLastUpdated(new Date().toLocaleTimeString());
+        setLastUpdated(new Date().toLocaleString());
       } catch (error) {
-        console.error("환율 정보 업데이트 실패:", error);
+        console.error("Error fetching exchange rates:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchRates();
-    const interval = setInterval(fetchRates, 3600000); // 1시간에 한 번 업데이트
+    const interval = setInterval(fetchRates, 3600000); // 1 hour
 
     return () => clearInterval(interval);
   }, []);
@@ -143,7 +140,9 @@ export default function ExchangeRateDisplay() {
       <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-gray-200 dark:border-gray-800/50 shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">주요 통화 환율</h2>
-          <span className="text-xs text-gray-500">업데이트: {lastUpdated}</span>
+          <span className="text-xs text-gray-500">
+            {isLoading ? "로딩중..." : `업데이트: ${lastUpdated}`}
+          </span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {marketData.map((item) => (
