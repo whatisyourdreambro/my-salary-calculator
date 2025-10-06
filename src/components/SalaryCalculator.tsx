@@ -100,6 +100,17 @@ export default function SalaryCalculator() {
     salaryInput,
   ]);
 
+  // [추가된 부분] Google Ads 전환 추적 스크립트
+  useEffect(() => {
+    // 계산 결과(result.monthlyNet)가 유효할 때 전환 이벤트를 발생시킵니다.
+    if (result && result.monthlyNet > 0 && typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-17586554693/E3-oCJSY3p4bEMWO9sFB",
+      });
+      console.log("Google Ads Conversion (Main Calculator) Fired!"); // 정상 작동 확인용 로그
+    }
+  }, [result]); // result 상태가 변경될 때마다 이 효과를 실행합니다.
+
   useEffect(() => {
     runCalculation();
   }, [runCalculation]);

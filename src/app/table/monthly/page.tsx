@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import SalaryTable from "@/components/SalaryTable";
 import type { SalaryData } from "@/lib/generateData";
-import { PiggyBank, Search } from "lucide-react"; // [수정] 사용하지 않는 아이콘 제거
+import { PiggyBank, Search } from "lucide-react";
 import Link from "next/link";
 
 const tableHeaders = [
@@ -37,6 +37,17 @@ export default function MonthlyTablePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // [추가된 부분] Google Ads 전환 추적 스크립트
+  useEffect(() => {
+    // 페이지가 처음 로드될 때 한 번만 전환 이벤트를 발생시킵니다.
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-17586554693/E3-oCJSY3p4bEMWO9sFB",
+      });
+      console.log("Google Ads Conversion (Monthly Table) Fired!"); // 정상 작동 확인용 로그
+    }
+  }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시 1회만 실행되도록 합니다.
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
