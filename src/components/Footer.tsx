@@ -66,6 +66,19 @@ export default function Footer() {
             본 사이트에서 제공하는 정보는 법적 효력이 없으며, 참고용으로만
             사용하시기 바랍니다.
           </p>
+          {/* 환율 데이터 출처 명시 (추가된 부분) */}
+          <p className="mt-2">
+            실시간 환율 정보는{" "}
+            <a
+              href="https://www.frankfurter.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-primary"
+            >
+              Frankfurter API
+            </a>
+            를 통해 제공됩니다.
+          </p>
         </div>
       </div>
     </footer>
