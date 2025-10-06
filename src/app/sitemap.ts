@@ -14,7 +14,8 @@ type ChangeFrequency =
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.moneysalary.com";
 
-  const routes: {
+  // 기존 정적 라우트
+  const staticRoutes: {
     url: string;
     changeFrequency: ChangeFrequency;
     priority: number;
@@ -33,14 +34,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/guides", changeFrequency: "weekly", priority: 0.9 },
     { url: "/qna", changeFrequency: "weekly", priority: 0.9 },
     { url: "/glossary", changeFrequency: "monthly", priority: 0.7 },
-    {
-      url: "/guides/civil-servant-salary-table",
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
   ];
 
-  const guideRoutes = [
+  const staticUrls = staticRoutes.map((route) => ({
+    url: `${baseUrl}${route.url}`,
+    lastModified: new Date(),
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
+  }));
+
+  // 가이드 페이지 라우트
+  const guideSlugs = [
     "compound-interest",
     "exchange-rate-impact",
     "naver-vs-kakao",
@@ -67,19 +71,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "road-to-100m-part1-tax",
     "road-to-100m-part2-sidejob",
     "road-to-100m-part3-invest",
-  ].map((slug) => ({
+  ];
+  const guideUrls = guideSlugs.map((slug) => ({
     url: `${baseUrl}/guides/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as ChangeFrequency,
     priority: 0.7,
   }));
 
-  const staticRoutes = routes.map((route) => ({
-    url: `${baseUrl}${route.url}`,
-    lastModified: new Date(),
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
-  }));
+  // 연봉 상세 페이지 동적 생성 (모든 범위 포함)
+  const salaryUrls: MetadataRoute.Sitemap = [];
+  for (let i = 2000; i <= 10000; i += 50) {
+    salaryUrls.push({
+      url: `${baseUrl}/salary/${i}`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    });
+  }
+  for (let i = 10100; i <= 20000; i += 100) {
+    salaryUrls.push({
+      url: `${baseUrl}/salary/${i}`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    });
+  }
+  for (let i = 20500; i <= 50000; i += 500) {
+    salaryUrls.push({
+      url: `${baseUrl}/salary/${i}`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    });
+  }
 
-  return [...staticRoutes, ...guideRoutes];
+  return [...staticUrls, ...guideUrls, ...salaryUrls];
 }

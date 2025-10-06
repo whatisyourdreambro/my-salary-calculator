@@ -1,4 +1,9 @@
 # public/robots.txt
 User-agent: *
 Allow: /
+
+# 검색 엔진이 수집할 필요 없는 경로를 제외합니다.
+Disallow: /api/
+Disallow: /_next/
+
 Sitemap: https://www.moneysalary.com/sitemap.xml

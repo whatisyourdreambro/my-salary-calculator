@@ -46,7 +46,8 @@ export default function SalaryMBTICalculator() {
 
   const handleShare = async () => {
     if (!result) return;
-    const shareText = `나의 인생 연봉 그래프는 '${result.title}'! 💸 여러분도 지금 바로 확인해보세요!`;
+    // 공유 문구를 더 흥미롭게 수정!
+    const shareText = `💸 내 인생 연봉 그래프는 '${result.title}'! 과연 당신의 재물운은? 지금 바로 확인해보세요! 👇`;
     const shareUrl = window.location.href;
 
     if (navigator.share) {

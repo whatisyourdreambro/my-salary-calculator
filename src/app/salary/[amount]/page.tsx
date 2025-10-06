@@ -19,18 +19,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "정보를 찾을 수 없습니다." };
   }
 
+  // 연봉 순위 계산 로직 추가
+  const { rank } = findSalaryRank(amount, "all-all-all-all");
+
+  const formattedSalary = formatNumber(amount);
+  const title = `연봉 ${formattedSalary}원 실수령액, 순위, 완벽 분석`;
+  const description = `월 실수령액부터 전국 순위, 추천 절세 팁까지 한눈에 확인하세요.`;
+
   return {
-    title: `연봉 ${formatNumber(
-      amount
-    )}원 실수령액, 순위, 완벽 분석 | Moneysalary`,
-    description: `연봉 ${formatNumber(
-      amount
-    )}원의 월 실수령액, 4대 보험 공제 내역, 전국 근로자 대비 순위 및 맞춤형 재테크 가이드를 확인하세요.`,
+    title: `${title} | Moneysalary`,
+    description,
     openGraph: {
-      title: `연봉 ${formatNumber(amount)}원 실수령액 완벽 분석`,
-      description: `월 실수령액부터 전국 순위, 추천 절세 팁까지 한눈에 확인하세요.`,
+      title,
+      description,
       url: `https://www.moneysalary.com/salary/${params.amount}`,
       type: "website",
+      // 동적으로 OG 이미지 URL 생성
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(
+            `연봉 ${formattedSalary}원`
+          )}&description=${encodeURIComponent(
+            `월 실수령액은 얼마일까요?`
+          )}&rank=${rank}`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
   };
 }
