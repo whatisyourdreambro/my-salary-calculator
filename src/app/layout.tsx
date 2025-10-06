@@ -54,7 +54,6 @@ export const viewport: Viewport = {
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    // [제거] AdFit 관련 타입 정의 제거
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     adsbygoogle?: any[];
   }
@@ -91,8 +90,6 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* [제거] Kakao AdFit 스크립트 제거 */}
-
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
@@ -107,6 +104,7 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-EZ8GT7RPEZ');
+              gtag('config', 'AW-17586554693'); // <-- 이 줄이 추가되었습니다!
             `,
           }}
         />
