@@ -35,14 +35,16 @@ const useTypingEffect = (text: string, speed = 50) => {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
-    setDisplayedText("");
+    setDisplayedText(""); // 텍스트가 바뀔 때마다 초기화
     if (text) {
       let i = 0;
       const intervalId = setInterval(() => {
-        setDisplayedText((prev) => prev + text.charAt(i));
-        i++;
+        // [수정] i가 텍스트 길이에 도달하면 인터벌을 정리합니다.
         if (i >= text.length) {
           clearInterval(intervalId);
+        } else {
+          i++;
+          setDisplayedText(text.slice(0, i));
         }
       }, speed);
       return () => clearInterval(intervalId);
