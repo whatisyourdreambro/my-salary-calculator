@@ -191,7 +191,7 @@ export default function MbtiSalaryPage() {
                 }}
               ></div>
             </div>
-            {/* [수정] min-h-[100px] 클래스를 제거하여 내용에 따라 높이가 유연하게 변경되도록 수정했습니다. */}
+            {/* [수정] min-h-[100px] 클래스를 제거하고 패딩(py-4)과 새로운 최소 높이를 추가했습니다. */}
             <div className="text-center py-4">
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
                 Q{currentQuestionIndex + 1}.
