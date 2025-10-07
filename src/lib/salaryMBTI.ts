@@ -12,7 +12,6 @@ export interface SalaryMBTIType {
   icon: string; // 3D Icon identifier
   data: { age: number; salary: number }[];
   guide: {
-    // [추가] 'guide' 속성을 추가했습니다.
     link: string;
     title: string;
   };
