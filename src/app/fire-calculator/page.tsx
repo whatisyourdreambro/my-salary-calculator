@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function FireCalculatorPage() {
   return (
-    <main className="w-full min-h-[calc(100vh-4rem)] bg-gray-900 text-white overflow-hidden relative flex items-center justify-center">
+    <main className="w-full min-h-[calc(100vh-4rem)] bg-light-bg dark:bg-gray-900 text-light-text dark:text-white overflow-hidden relative flex items-center justify-center py-12">
       {/* Animated Background */}
-      <div className="absolute inset-0 z-0 opacity-40">
+      <div className="absolute inset-0 z-0 opacity-10 dark:opacity-40">
         {[...Array(50)].map((_, i) => (
           <div
             key={i}
-            className="absolute bg-white rounded-full animate-pulse"
+            className="absolute bg-gray-500 rounded-full animate-pulse"
             style={{
               width: `${Math.random() * 2 + 1}px`,
               height: `${Math.random() * 2 + 1}px`,
@@ -28,7 +28,7 @@ export default function FireCalculatorPage() {
             }}
           />
         ))}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-light-bg dark:from-gray-900 via-transparent to-transparent" />
         <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-violet-500/10 via-transparent to-transparent animate-spin-slow" />
       </div>
 
