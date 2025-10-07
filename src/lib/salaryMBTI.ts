@@ -11,6 +11,11 @@ export interface SalaryMBTIType {
   };
   icon: string; // 3D Icon identifier
   data: { age: number; salary: number }[];
+  guide: {
+    // [추가] 'guide' 속성을 추가했습니다.
+    link: string;
+    title: string;
+  };
   growthPlan: {
     step: number;
     title: string;
@@ -85,6 +90,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 15 },
       { age: 60, salary: 30 },
     ],
+    guide: {
+      link: "/guides/road-to-100m-part1-tax",
+      title: "절세 전략 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -129,6 +138,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 40, salary: 8 },
       { age: 60, salary: 5 },
     ],
+    guide: {
+      link: "/guides/road-to-100m-part2-sidejob",
+      title: "N잡으로 월 100만원 벌기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -173,6 +186,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 10 },
       { age: 60, salary: 20 },
     ],
+    guide: {
+      link: "/guides/salary-negotiation",
+      title: "연봉 협상 전략 가이드",
+    },
     growthPlan: [
       {
         step: 1,
@@ -218,6 +235,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 2.5 },
       { age: 60, salary: 4 },
     ],
+    guide: {
+      link: "/guides/road-to-100m-part2-sidejob",
+      title: "N잡 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -262,6 +283,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 1.2 },
       { age: 60, salary: 1.5 },
     ],
+    guide: {
+      link: "/guides/civil-servant-salary",
+      title: "공무원 월급 가이드",
+    },
     growthPlan: [
       {
         step: 1,
@@ -307,6 +332,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 2.0 },
       { age: 60, salary: 3.0 },
     ],
+    guide: {
+      link: "/guides/first-job-investment",
+      title: "첫 월급 재테크 가이드",
+    },
     growthPlan: [
       {
         step: 1,
@@ -351,6 +380,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 8 },
       { age: 60, salary: 15 },
     ],
+    guide: {
+      link: "/guides/road-to-100m-part3-invest",
+      title: "투자 파이프라인 구축 가이드",
+    },
     growthPlan: [
       {
         step: 1,
@@ -396,6 +429,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 3 },
       { age: 60, salary: 3.5 },
     ],
+    guide: {
+      link: "/guides/nekarakubae-salary",
+      title: "네카라쿠배 연봉 가이드",
+    },
     growthPlan: [
       {
         step: 1,
@@ -439,6 +476,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 4.0 },
       { age: 60, salary: 5.0 },
     ],
+    guide: {
+      link: "/guides/bonus-tax",
+      title: "성과급 세금 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -484,6 +525,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 1.5 },
       { age: 60, salary: 2.0 },
     ],
+    guide: {
+      link: "/guides/didimdol-vs-bogeumjari",
+      title: "디딤돌 vs 보금자리론",
+    },
     growthPlan: [
       {
         step: 1,
@@ -529,6 +574,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 40, salary: 15 },
       { age: 60, salary: 50 },
     ],
+    guide: {
+      link: "/guides/exchange-rate-impact",
+      title: "환율 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -548,7 +597,7 @@ const resultTypes: SalaryMBTIType[] = [
       },
       {
         step: 3,
-        title: "행운 번호 테스트",
+        title: "행운의 번호 테스트",
         description:
           "재미로 당신의 행운을 시험해보세요. 하지만 투자는 재미로 하는 것이 아닙니다!",
         link: "/lotto",
@@ -573,6 +622,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 1.0 },
       { age: 60, salary: 0.8 },
     ],
+    guide: {
+      link: "/car-loan",
+      title: "자동차 구매 계산기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -619,6 +672,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 4.0 },
       { age: 60, salary: 8.0 },
     ],
+    guide: {
+      link: "/guides/compound-interest",
+      title: "복리 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -664,6 +721,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 2.0 },
       { age: 60, salary: 3.0 },
     ],
+    guide: {
+      link: "/guides/road-to-100m-part2-sidejob",
+      title: "N잡 가이드 보기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -708,6 +769,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 45, salary: 0.5 },
       { age: 60, salary: 0.5 },
     ],
+    guide: {
+      link: "/fire-calculator",
+      title: "FIRE 계산기",
+    },
     growthPlan: [
       {
         step: 1,
@@ -752,6 +817,10 @@ const resultTypes: SalaryMBTIType[] = [
       { age: 50, salary: 1.2 },
       { age: 60, salary: 1.0 },
     ],
+    guide: {
+      link: "/?tab=freelancer",
+      title: "프리랜서 계산기",
+    },
     growthPlan: [
       {
         step: 1,

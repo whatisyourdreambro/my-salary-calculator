@@ -113,14 +113,15 @@ export default function SalaryMBTICalculator() {
           <p className="text-center text-lg">{result.description}</p>
         </div>
         <div className="mt-6 space-y-4">
+          {/* [수정] result.guide 대신 result.growthPlan[0]을 사용합니다. */}
           <Link
-            href={result.guide.link}
+            href={result.growthPlan[0].link}
             className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50 dark:bg-blue-900/30 dark:border-gray-700 text-center"
           >
             <p className="font-bold text-signature-blue">
               📈 {result.title}을 위한 맞춤 금융 가이드
             </p>
-            <p className="text-sm mt-1">{result.guide.title}</p>
+            <p className="text-sm mt-1">{result.growthPlan[0].title}</p>
           </Link>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
