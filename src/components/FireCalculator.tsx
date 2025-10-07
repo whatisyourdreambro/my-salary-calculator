@@ -208,18 +208,18 @@ export default function FireCalculator() {
   if (step === "intro") {
     return (
       <div className="text-center animate-fade-in-up">
-        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400">
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-300 dark:to-indigo-300">
           나의 경제적 자유,
           <br />그 여정을 시작합니다
         </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-200 dark:text-indigo-100">
+        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-light-text-secondary dark:text-indigo-100">
           당신의 재정 정보를 바탕으로, 경제적 독립과 조기 은퇴(FIRE)를 향한
           <br />
           가장 현실적인 로드맵을 시뮬레이션합니다.
         </p>
         <button
           onClick={() => setStep("essentials")}
-          className="mt-10 px-12 py-4 bg-white text-black font-bold rounded-full text-lg hover:bg-gray-200 transition-transform transform hover:scale-105 shadow-lg shadow-violet-500/30 flex items-center gap-2 mx-auto"
+          className="mt-10 px-12 py-4 bg-gray-800 text-white dark:bg-white dark:text-black font-bold rounded-full text-lg hover:bg-gray-700 dark:hover:bg-gray-200 transition-transform transform hover:scale-105 shadow-lg shadow-violet-500/30 flex items-center gap-2 mx-auto"
         >
           여정 시작하기 <ArrowRight />
         </button>
@@ -245,7 +245,7 @@ export default function FireCalculator() {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 transition-all ${
                     isActive
-                      ? "bg-violet-500 border-violet-500 text-white"
+                      ? "bg-primary dark:bg-violet-500 border-primary dark:border-violet-500 text-white"
                       : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400"
                   }`}
                 >
@@ -264,7 +264,7 @@ export default function FireCalculator() {
                   <div
                     className={`hidden sm:block w-8 h-1 rounded-full transition-colors ${
                       isActive
-                        ? "bg-violet-500"
+                        ? "bg-primary dark:bg-violet-500"
                         : "bg-gray-200 dark:bg-gray-700"
                     }`}
                   />
