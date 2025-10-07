@@ -118,13 +118,12 @@ export default function LottoPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-gray-900 text-white overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-30">
-        {/* 별똥별 효과를 위한 여러개의 div */}
+    <main className="w-full min-h-screen bg-light-bg dark:bg-gray-900 text-light-text dark:text-white overflow-hidden">
+      <div className="absolute inset-0 z-0 opacity-10 dark:opacity-30">
         {[...Array(50)].map((_, i) => (
           <div
             key={i}
-            className="absolute bg-white rounded-full animate-pulse"
+            className="absolute bg-gray-500 rounded-full animate-pulse"
             style={{
               width: `${Math.random() * 2 + 1}px`,
               height: `${Math.random() * 2 + 1}px`,
@@ -138,16 +137,16 @@ export default function LottoPage() {
       </div>
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center mb-10">
-          <Clover className="mx-auto h-12 w-12 text-green-400 animate-pulse" />
-          <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-yellow-300">
+          <Clover className="mx-auto h-12 w-12 text-green-500 dark:text-green-400 animate-pulse" />
+          <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-yellow-500 dark:from-green-300 dark:to-yellow-300">
             행운의 로또 번호 생성기
           </h1>
-          <p className="mt-4 text-lg leading-8 text-gray-300">
+          <p className="mt-4 text-lg leading-8 text-light-text-secondary dark:text-gray-300">
             당신의 일상에 특별한 행운을 더해보세요.
           </p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20 shadow-lg space-y-6">
+        <div className="bg-light-card/80 dark:bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-white/20 shadow-lg space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="sets" className="block text-sm font-medium">
@@ -157,7 +156,7 @@ export default function LottoPage() {
                 id="sets"
                 value={numberOfSets}
                 onChange={(e) => setNumberOfSets(Number(e.target.value))}
-                className="mt-1 w-full p-3 border rounded-md bg-gray-800 border-gray-600 text-white"
+                className="mt-1 w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-light-text dark:text-white"
               >
                 {[1, 2, 3, 4, 5, 10, 15, 20].map((n) => (
                   <option key={n} value={n}>
@@ -176,7 +175,7 @@ export default function LottoPage() {
                 onChange={(e) =>
                   setStrategy(e.target.value as GenerationStrategy)
                 }
-                className="mt-1 w-full p-3 border rounded-md bg-gray-800 border-gray-600 text-white"
+                className="mt-1 w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-light-text dark:text-white"
               >
                 <option value="random">랜덤 균형</option>
                 <option value="balancedOddEven">홀/짝수 조합</option>
@@ -187,7 +186,7 @@ export default function LottoPage() {
 
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="w-full flex items-center justify-center gap-2 text-sm text-gray-300 hover:text-white"
+            className="w-full flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-light-text dark:hover:text-white"
           >
             <Settings size={16} />
             {showAdvanced ? "고급 설정 닫기" : "고급 설정 열기"}
@@ -205,7 +204,7 @@ export default function LottoPage() {
                   value={includeInput}
                   onChange={(e) => setIncludeInput(e.target.value)}
                   placeholder="예: 7, 15"
-                  className="mt-1 w-full p-2 border rounded-md bg-gray-800 border-gray-600"
+                  className="mt-1 w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                 />
               </div>
               <div>
@@ -218,7 +217,7 @@ export default function LottoPage() {
                   value={excludeInput}
                   onChange={(e) => setExcludeInput(e.target.value)}
                   placeholder="예: 3, 21"
-                  className="mt-1 w-full p-2 border rounded-md bg-gray-800 border-gray-600"
+                  className="mt-1 w-full p-2 border rounded-md bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                 />
               </div>
             </div>
@@ -234,7 +233,7 @@ export default function LottoPage() {
             </button>
             <button
               onClick={handleReset}
-              className="p-4 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+              className="p-4 bg-gray-200 dark:bg-gray-700 text-light-text dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
               aria-label="초기화"
             >
               <RefreshCw size={20} />
@@ -244,7 +243,7 @@ export default function LottoPage() {
 
         {isLoading && (
           <div className="mt-8 text-center">
-            <Loader className="mx-auto h-12 w-12 animate-spin text-green-400" />
+            <Loader className="mx-auto h-12 w-12 animate-spin text-green-500 dark:text-green-400" />
             <p className="mt-4">당신을 위한 행운의 숫자를 찾고 있습니다...</p>
           </div>
         )}
@@ -256,11 +255,11 @@ export default function LottoPage() {
               {revealedSets.map((set, index) => (
                 <div
                   key={index}
-                  className="bg-white/5 p-4 rounded-xl border border-white/10 animate-fade-in-up"
+                  className="bg-light-card/50 dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 animate-fade-in-up"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-gray-400 w-8">
+                    <span className="font-bold text-gray-500 dark:text-gray-400 w-8">
                       {String.fromCharCode(65 + index)}
                     </span>
                     <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
@@ -276,20 +275,20 @@ export default function LottoPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2 text-xs">
-                    <span className="bg-white/10 px-2 py-1 rounded-full">
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/10 flex flex-wrap gap-2 text-xs">
+                    <span className="bg-gray-200 dark:bg-white/10 px-2 py-1 rounded-full">
                       총합: {set.analysis.sum}
                     </span>
-                    <span className="bg-white/10 px-2 py-1 rounded-full">
+                    <span className="bg-gray-200 dark:bg-white/10 px-2 py-1 rounded-full">
                       홀: {set.analysis.oddCount}
                     </span>
-                    <span className="bg-white/10 px-2 py-1 rounded-full">
+                    <span className="bg-gray-200 dark:bg-white/10 px-2 py-1 rounded-full">
                       짝: {set.analysis.evenCount}
                     </span>
-                    <span className="bg-white/10 px-2 py-1 rounded-full">
+                    <span className="bg-gray-200 dark:bg-white/10 px-2 py-1 rounded-full">
                       저: {set.analysis.lowCount}
                     </span>
-                    <span className="bg-white/10 px-2 py-1 rounded-full">
+                    <span className="bg-gray-200 dark:bg-white/10 px-2 py-1 rounded-full">
                       고: {set.analysis.highCount}
                     </span>
                   </div>
