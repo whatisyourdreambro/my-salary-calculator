@@ -1,27 +1,40 @@
 // src/app/fire-calculator/page.tsx
 
 import type { Metadata } from "next";
-// [수정] 올바른 컴포넌트 경로로 수정했습니다.
-import FireCalculator from "../../components/FireCalculator";
+import FireCalculator from "@/components/FireCalculator";
 
 export const metadata: Metadata = {
-  title: "파이어족(FIRE) 계산기 | 경제적 자유 계산기 | Moneysalary",
+  title: "FIRE 시뮬레이터: 당신의 경제적 자유 여정 | Moneysalary",
   description:
-    "나는 몇 살에 퇴사할 수 있을까? 현재 자산, 월 저축액, 목표 은퇴 나이를 입력하고 경제적 자유(Financial Independence, Retire Early) 달성 시점을 시뮬레이션 해보세요.",
+    "단순 계산을 넘어, 당신의 은퇴 여정을 한 편의 영화처럼 시뮬레이션하세요. 투자 성향, 소득 상승, 생애 이벤트까지 모두 반영하여 가장 현실적인 FIRE 달성 시점을 예측합니다.",
 };
 
 export default function FireCalculatorPage() {
   return (
-    <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-signature-blue dark:text-gray-100">
-          🔥 내 퇴사 D-DAY는 언제일까?
-        </h1>
-        <p className="mt-4 text-base lg:text-lg text-gray-600 dark:text-gray-400">
-          파이어족(FIRE)을 꿈꾸는 당신을 위한 경제적 자유 달성 시뮬레이터
-        </p>
+    <main className="w-full min-h-[calc(100vh-4rem)] bg-gray-900 text-white overflow-hidden relative flex items-center justify-center">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0 opacity-40">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-white rounded-full animate-pulse"
+            style={{
+              width: `${Math.random() * 2 + 1}px`,
+              height: `${Math.random() * 2 + 1}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+            }}
+          />
+        ))}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
+        <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-violet-500/10 via-transparent to-transparent animate-spin-slow" />
       </div>
-      <FireCalculator />
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <FireCalculator />
+      </div>
     </main>
   );
 }
