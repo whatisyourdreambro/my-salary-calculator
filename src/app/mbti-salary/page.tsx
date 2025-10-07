@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import type { ElementType } from "react"; // <--- 오류 해결을 위해 이 부분을 추가했습니다.
+import type { ElementType } from "react";
 import {
   questions,
   getResultType,
