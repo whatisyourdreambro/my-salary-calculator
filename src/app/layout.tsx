@@ -92,7 +92,7 @@ export default function RootLayout({
 
         <Script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
           strategy="afterInteractive"
         />
         <Script
@@ -103,8 +103,8 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-EZ8GT7RPEZ');
-              gtag('config', 'AW-17586554693'); // <-- 이 줄이 추가되었습니다!
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              gtag('config', '${process.env.NEXT_PUBLIC_ADS_ID}');
             `,
           }}
         />
