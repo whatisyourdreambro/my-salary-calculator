@@ -151,8 +151,7 @@ export default function ExchangeRateImpactCalculator() {
     }
   }, [fetchRates, searchParams]);
 
-  // [수정] 결과 단위를 비교 통화에 맞게 변경하는 로직
-  const { analysis, resultSymbol } = useMemo(() => {
+  const { analysis, resultSymbol, chartSymbol } = useMemo(() => {
     const pRateRaw = parseFloat(manualPastRateStr) || 0;
     const cRateRaw = parseFloat(manualCurrentRateStr) || 0;
     const amount = parseNumber(assetAmount);
@@ -164,6 +163,7 @@ export default function ExchangeRateImpactCalculator() {
 
     let res;
     let symbol;
+    let chartSym;
 
     if (!amount || !pRate || !cRate) {
       res = {
@@ -174,24 +174,28 @@ export default function ExchangeRateImpactCalculator() {
       };
       symbol =
         currencies.find((c) => c.id === comparisonCurrency)?.symbol || "₩";
+      chartSym = symbol;
     } else if (isAssetKRW) {
-      // 자산이 원화일 경우, 결과는 '비교 통화'로 표시
-      symbol =
+      symbol = currencies.find((c) => c.id === "KRW")?.symbol || "₩";
+      chartSym =
         currencies.find((c) => c.id === comparisonCurrency)?.symbol || "$";
       const pastValueInForeign = amount / pRate;
       const currentValueInForeign = amount / cRate;
-      const changeAmount = currentValueInForeign - pastValueInForeign;
+      const changeInForeign = currentValueInForeign - pastValueInForeign;
+      const changeAmountInKRW = changeInForeign * cRate;
       const changePercentage =
-        pastValueInForeign > 0 ? (changeAmount / pastValueInForeign) * 100 : 0;
+        pastValueInForeign > 0
+          ? (changeInForeign / pastValueInForeign) * 100
+          : 0;
       res = {
-        changeAmount: changeAmount,
+        changeAmount: changeAmountInKRW,
         changePercentage: parseFloat(changePercentage.toFixed(2)),
         pastValue: pastValueInForeign,
         currentValue: currentValueInForeign,
       };
     } else {
-      // 자산이 외화일 경우, 결과는 '원화'로 표시
       symbol = currencies.find((c) => c.id === "KRW")?.symbol || "₩";
+      chartSym = symbol;
       const pastValueInKRW = amount * pRate;
       const currentValueInKRW = amount * cRate;
       const changeAmount = currentValueInKRW - pastValueInKRW;
@@ -205,7 +209,6 @@ export default function ExchangeRateImpactCalculator() {
       };
     }
 
-    // 정수형이 아닌 경우 소수점 2자리까지 표시
     const roundValue = (val: number) =>
       Number.isInteger(val) ? val : parseFloat(val.toFixed(2));
 
@@ -217,6 +220,7 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: roundValue(res.currentValue),
       },
       resultSymbol: symbol,
+      chartSymbol: chartSym,
     };
   }, [
     assetAmount,
@@ -236,7 +240,6 @@ export default function ExchangeRateImpactCalculator() {
 
   const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
 
-  // [수정] 공유 링크를 고정 URL로 변경
   const handleShareLink = async () => {
     const shareUrl = "https://www.moneysalary.com/?tab=exchange";
     try {
@@ -499,6 +502,11 @@ export default function ExchangeRateImpactCalculator() {
                     >
                       ({analysis.changePercentage}%)
                     </p>
+                    {assetCurrency === "KRW" && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        원화 자산의 해외 구매력 가치 변화 (현재 환율 기준)
+                      </p>
+                    )}
                   </div>
                   <div className="h-48 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
                     <ResponsiveContainer width="100%" height="100%">
@@ -518,7 +526,7 @@ export default function ExchangeRateImpactCalculator() {
                         />
                         <Tooltip
                           formatter={(value: number) =>
-                            `${resultSymbol}${formatNumber(value)}`
+                            `${chartSymbol}${formatNumber(value)}`
                           }
                           cursor={{ fill: "rgba(0,0,0,0.05)" }}
                         />
