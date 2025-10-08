@@ -228,10 +228,10 @@ export default function SalaryCalculator() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border">
+    <div className="space-y-8 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-3 space-y-6">
+          <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border h-full">
             <h2 className="text-lg font-bold">소득 정보</h2>
             <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 my-4">
               <button
@@ -344,200 +344,209 @@ export default function SalaryCalculator() {
               }
               value={salaryInput}
               onValueChange={setSalaryInput}
-              quickAmounts={[10000000, 1000000, 100000]}
+              quickAmounts={[10000000, 100000, 100000]}
             />
+            {incomeType === "regular" && (
+              <>
+                <div className="mt-6 pt-6 border-t dark:border-gray-700">
+                  <h2 className="text-lg font-bold">상세 설정</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                        부양 가족 수 (본인포함)
+                      </label>
+                      <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                        <button
+                          onClick={() =>
+                            handleDependentChange("dependents", -1)
+                          }
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span className="font-bold text-lg">
+                          {dependents} 명
+                        </span>
+                        <button
+                          onClick={() => handleDependentChange("dependents", 1)}
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                        20세 이하 자녀 수
+                      </label>
+                      <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                        <button
+                          onClick={() => handleDependentChange("children", -1)}
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span className="font-bold text-lg">{children} 명</span>
+                        <button
+                          onClick={() => handleDependentChange("children", 1)}
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                        70세 이상 (경로우대)
+                      </label>
+                      <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                        <button
+                          onClick={() =>
+                            handleDependentChange("seniorDependents", -1)
+                          }
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span className="font-bold text-lg">
+                          {advancedSettings.seniorDependents} 명
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleDependentChange("seniorDependents", 1)
+                          }
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                        장애인
+                      </label>
+                      <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+                        <button
+                          onClick={() =>
+                            handleDependentChange("disabledDependents", -1)
+                          }
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          -
+                        </button>
+                        <span className="font-bold text-lg">
+                          {advancedSettings.disabledDependents} 명
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleDependentChange("disabledDependents", 1)
+                          }
+                          className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                      비과세액 (월 기준)
+                    </label>
+                    <div className="relative mt-1">
+                      <input
+                        type="text"
+                        value={nonTaxableAmount}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/[^0-9]/g, "");
+                          setNonTaxableAmount(
+                            v ? formatNumber(Number(v)) : "0"
+                          );
+                        }}
+                        className="w-full p-3 pr-12 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      />
+                      <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
+                        원
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="isSmeYouth"
+                        checked={advancedSettings.isSmeYouth}
+                        onChange={(e) =>
+                          setAdvancedSettings((prev) => ({
+                            ...prev,
+                            isSmeYouth: e.target.checked,
+                          }))
+                        }
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <label
+                        htmlFor="isSmeYouth"
+                        className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
+                      >
+                        중소기업 취업 청년 소득세 감면 대상
+                      </label>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <CurrencyInput
+                      label="월평균 고정 지출 (주거비, 통신비 등)"
+                      value={monthlyExpenses}
+                      onValueChange={setMonthlyExpenses}
+                      quickAmounts={[500000, 100000, 50000]}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-
-          {incomeType === "regular" && (
-            <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border">
-              <h2 className="text-lg font-bold">상세 설정</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    부양 가족 수 (본인포함)
-                  </label>
-                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                    <button
-                      onClick={() => handleDependentChange("dependents", -1)}
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      -
-                    </button>
-                    <span className="font-bold text-lg">{dependents} 명</span>
-                    <button
-                      onClick={() => handleDependentChange("dependents", 1)}
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    20세 이하 자녀 수
-                  </label>
-                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                    <button
-                      onClick={() => handleDependentChange("children", -1)}
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      -
-                    </button>
-                    <span className="font-bold text-lg">{children} 명</span>
-                    <button
-                      onClick={() => handleDependentChange("children", 1)}
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    70세 이상 (경로우대)
-                  </label>
-                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                    <button
-                      onClick={() =>
-                        handleDependentChange("seniorDependents", -1)
-                      }
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      -
-                    </button>
-                    <span className="font-bold text-lg">
-                      {advancedSettings.seniorDependents} 명
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleDependentChange("seniorDependents", 1)
-                      }
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    장애인
-                  </label>
-                  <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-                    <button
-                      onClick={() =>
-                        handleDependentChange("disabledDependents", -1)
-                      }
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      -
-                    </button>
-                    <span className="font-bold text-lg">
-                      {advancedSettings.disabledDependents} 명
-                    </span>
-                    <button
-                      onClick={() =>
-                        handleDependentChange("disabledDependents", 1)
-                      }
-                      className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                  비과세액 (월 기준)
-                </label>
-                <div className="relative mt-1">
-                  <input
-                    type="text"
-                    value={nonTaxableAmount}
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/[^0-9]/g, "");
-                      setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
-                    }}
-                    className="w-full p-3 pr-12 border rounded-lg dark:bg-dark-card dark:border-gray-700"
-                  />
-                  <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
-                    원
-                  </span>
-                </div>
-              </div>
-              <div className="mt-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="isSmeYouth"
-                    checked={advancedSettings.isSmeYouth}
-                    onChange={(e) =>
-                      setAdvancedSettings((prev) => ({
-                        ...prev,
-                        isSmeYouth: e.target.checked,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                  <label
-                    htmlFor="isSmeYouth"
-                    className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
-                  >
-                    중소기업 취업 청년 소득세 감면 대상
-                  </label>
-                </div>
-              </div>
-              <div className="mt-4">
-                <CurrencyInput
-                  label="월평균 고정 지출 (주거비, 통신비 등)"
-                  value={monthlyExpenses}
-                  onValueChange={setMonthlyExpenses}
-                  quickAmounts={[500000, 100000, 50000]}
-                />
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 오른쪽: 결과 요약 및 버튼 */}
-        <div className="space-y-4">
-          <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
-            <h2 className="text-xl font-bold mb-4">월 예상 실수령액</h2>
-            <p className="text-4xl font-bold my-1 text-primary">
-              <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
-              원
-            </p>
-            <p className="font-semibold text-sm text-danger mt-2">
-              (공제액 합계: -{" "}
-              <CountUp
-                end={result.totalDeduction}
-                duration={0.5}
-                separator=","
-              />{" "}
-              원)
-            </p>
-          </div>
-          <div className="pt-2">
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={handleReset}
-                className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-              >
-                초기화
-              </button>
-              <button
-                onClick={handleSaveData}
-                className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
-                disabled={incomeType !== "regular"}
-              >
-                대시보드 저장
-              </button>
-              <button
-                onClick={handleShare}
-                className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2 disabled:opacity-50"
-                disabled={incomeType !== "regular"}
-              >
-                <Share2 size={16} /> 결과 공유
-              </button>
+        <div className="lg:col-span-2">
+          <div className="sticky top-24 space-y-4">
+            <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
+              <h2 className="text-xl font-bold mb-4">월 예상 실수령액</h2>
+              <p className="text-4xl font-bold my-1 text-primary">
+                <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
+                원
+              </p>
+              <p className="font-semibold text-sm text-danger mt-2">
+                (공제액 합계: -{" "}
+                <CountUp
+                  end={result.totalDeduction}
+                  duration={0.5}
+                  separator=","
+                />{" "}
+                원)
+              </p>
+            </div>
+            <div className="pt-2">
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={handleReset}
+                  className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                >
+                  초기화
+                </button>
+                <button
+                  onClick={handleSaveData}
+                  className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
+                  disabled={incomeType !== "regular"}
+                >
+                  대시보드 저장
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2 disabled:opacity-50"
+                  disabled={incomeType !== "regular"}
+                >
+                  <Share2 size={16} /> 결과 공유
+                </button>
+              </div>
             </div>
           </div>
         </div>

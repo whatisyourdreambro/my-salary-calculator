@@ -1,66 +1,21 @@
-// src/components/ExchangeRateDisplay.tsx
+// src/components/ExchangeRateImpactCalculator.tsx
 "use client";
 
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo, useRef } from "react";
 import CountUp from "react-countup";
 import html2canvas from "html2canvas";
 import {
   TrendingUp,
   TrendingDown,
-  Loader,
-  RefreshCw,
-  AlertCircle,
   Link as LinkIcon,
   Image as ImageIcon,
-  PlusCircle,
-  X,
-  Award,
   Globe,
-  Wallet,
 } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  LabelList,
-} from "recharts";
-import CustomBarLabel from "./CustomBarLabel";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
-
-const toInputDateString = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-const currencies = [
-  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
-  { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
-  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
-  { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
-  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥" },
-  { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£" },
-];
-
-interface Scenario {
-  id: number;
-  title: string;
-  pastRate: string;
-  currentRate: string;
-  useDxy: boolean;
-  pastDxy: string;
-  currentDxy: string;
-}
 
 // 연봉 구매력 계산기 컴포넌트
 const SalaryPurchasingPowerCalculator = () => {
@@ -119,6 +74,8 @@ const SalaryPurchasingPowerCalculator = () => {
     });
   };
 
+  const TrendIcon = isIncrease ? TrendingUp : TrendingDown;
+
   return (
     <div
       ref={purchasingPowerRef}
@@ -130,8 +87,8 @@ const SalaryPurchasingPowerCalculator = () => {
           연봉 구매력 계산기
         </h2>
         <p className="mt-2 text-slate-400 max-w-xl mx-auto">
-          환율 변동이 내 연봉의 실제 '글로벌 가치'에 미치는 영향을 대통령급
-          보고서 수준으로 분석해 드립니다.
+          환율 변동이 내 연봉의 실제 &apos;글로벌 가치&apos;에 미치는 영향을
+          대통령급 보고서 수준으로 분석해 드립니다.
         </p>
       </div>
 
@@ -191,11 +148,7 @@ const SalaryPurchasingPowerCalculator = () => {
             isIncrease ? "text-sky-400" : "text-red-400"
           }`}
         >
-          {isIncrease ? (
-            <TrendingUp className="w-10 h-10" />
-          ) : (
-            <TrendingDown className="w-10 h-10" />
-          )}
+          <TrendIcon className="w-10 h-10" />
           <CountUp
             end={Math.abs(changeInKRW)}
             prefix="₩ "
@@ -241,283 +194,11 @@ const SalaryPurchasingPowerCalculator = () => {
   );
 };
 
-// 기존 ExchangeRateImpactCalculator 컴포넌트 (시나리오 비교)
+// 메인 컴포넌트는 두 개의 하위 컴포넌트를 렌더링하는 역할만 합니다.
 export default function ExchangeRateImpactCalculator() {
-  const searchParams = useSearchParams();
-  const reportRef = useRef<HTMLDivElement>(null);
-
-  const [assetAmount, setAssetAmount] = useState(
-    () => searchParams.get("assetAmount") || "100000000"
-  );
-  const [assetCurrency, setAssetCurrency] = useState(
-    () => searchParams.get("assetCurrency") || "KRW"
-  );
-  const [comparisonCurrency, setComparisonCurrency] = useState(
-    () => searchParams.get("comparisonCurrency") || "USD"
-  );
-  const [pastDate, setPastDate] = useState(
-    () =>
-      searchParams.get("pastDate") ||
-      (() => {
-        const date = new Date();
-        date.setFullYear(date.getFullYear() - 1);
-        return toInputDateString(date);
-      })()
-  );
-  const [isManual, setIsManual] = useState(
-    () => searchParams.get("isManual") === "true"
-  );
-  const [manualPastRateStr, setManualPastRateStr] = useState(
-    () => searchParams.get("manualPastRateStr") || ""
-  );
-  const [manualCurrentRateStr, setManualCurrentRateStr] = useState(
-    () => searchParams.get("manualCurrentRateStr") || ""
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [useDxy, setUseDxy] = useState(false);
-  const [pastDxy, setPastDxy] = useState("105.00");
-  const [currentDxy, setCurrentDxy] = useState("108.00");
-
-  const [scenarios, setScenarios] = useState<Scenario[]>([
-    {
-      id: 1,
-      title: "시나리오 1",
-      pastRate: "1416",
-      currentRate: "1387",
-      useDxy: false,
-      pastDxy: "105",
-      currentDxy: "103",
-    },
-  ]);
-  const [nextId, setNextId] = useState(2);
-
-  const foreignCurrency =
-    assetCurrency === "KRW" ? comparisonCurrency : assetCurrency;
-
-  const addScenario = () => {
-    if (scenarios.length >= 3) {
-      alert("최대 3개까지 시나리오를 추가할 수 있습니다.");
-      return;
-    }
-    setScenarios([
-      ...scenarios,
-      {
-        id: nextId,
-        title: `시나리오 ${nextId}`,
-        pastRate: "",
-        currentRate: "",
-        useDxy: false,
-        pastDxy: "",
-        currentDxy: "",
-      },
-    ]);
-    setNextId(nextId + 1);
-  };
-
-  const removeScenario = (id: number) => {
-    if (scenarios.length <= 1) {
-      alert("최소 1개의 시나리오가 필요합니다.");
-      return;
-    }
-    setScenarios(scenarios.filter((s) => s.id !== id));
-  };
-
-  const updateScenario = (
-    id: number,
-    field: keyof Omit<Scenario, "id" | "title">,
-    value: string | boolean
-  ) => {
-    setScenarios(
-      scenarios.map((s) => (s.id === id ? { ...s, [field]: value } : s))
-    );
-  };
-
-  const fetchRates = useCallback(async () => {
-    if (isManual || useDxy) {
-      setIsLoading(false);
-      return;
-    }
-    const to = "KRW";
-    const from = foreignCurrency;
-
-    if (from === to) {
-      setManualPastRateStr("1.0000");
-      setManualCurrentRateStr("1.0000");
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-    try {
-      const [pastRes, currentRes] = await Promise.all([
-        fetch(`https://api.frankfurter.app/${pastDate}?from=${from}&to=${to}`),
-        fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`),
-      ]);
-
-      if (!pastRes.ok || !currentRes.ok)
-        throw new Error("환율 정보를 불러오는 데 실패했습니다.");
-
-      const pastData = await pastRes.json();
-      const currentData = await currentRes.json();
-
-      const pastRate =
-        from === "JPY" ? pastData.rates[to] * 100 : pastData.rates[to];
-      const currentRate =
-        from === "JPY" ? currentData.rates[to] * 100 : currentData.rates[to];
-
-      const newScenarios = scenarios.map((s) =>
-        s.id === 1
-          ? {
-              ...s,
-              pastRate: pastRate?.toFixed(4) || "0",
-              currentRate: currentRate?.toFixed(4) || "0",
-            }
-          : s
-      );
-      setScenarios(newScenarios);
-    } catch (e) {
-      if (e instanceof Error) setError(e.message);
-      else setError("알 수 없는 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [pastDate, foreignCurrency, isManual, useDxy, scenarios]);
-
-  useEffect(() => {
-    scenarios.forEach((s) => {
-      if (s.useDxy) {
-        const pDxy = parseFloat(s.pastDxy) || 0;
-        const cDxy = parseFloat(s.currentDxy) || 0;
-        const pRate = parseFloat(s.pastRate) || 1300;
-        if (pDxy > 0 && cDxy > 0) {
-          const estimatedRate = pRate * (cDxy / pDxy);
-          if (s.currentRate !== estimatedRate.toFixed(4)) {
-            setScenarios((currentScenarios) =>
-              currentScenarios.map((sc) =>
-                sc.id === s.id
-                  ? { ...sc, currentRate: estimatedRate.toFixed(4) }
-                  : sc
-              )
-            );
-          }
-        }
-      }
-    });
-  }, [scenarios]);
-
-  useEffect(() => {
-    if (!searchParams.get("assetAmount")) {
-      fetchRates();
-    } else {
-      setIsLoading(false);
-    }
-  }, [fetchRates, searchParams]);
-
-  const analysisResults = useMemo(() => {
-    return scenarios.map((scenario) => {
-      const { pastRate, currentRate } = scenario;
-      const isAssetKRW = assetCurrency === "KRW";
-      const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
-      const pRateRaw = parseFloat(pastRate) || 0;
-      const cRateRaw = parseFloat(currentRate) || 0;
-      const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
-      const cRate = foreign === "JPY" ? cRateRaw / 100 : cRateRaw;
-      const amount = parseNumber(assetAmount);
-
-      let res;
-      if (!amount || !pRate || !cRate) {
-        res = {
-          changeAmount: 0,
-          changePercentage: 0,
-          pastValue: 0,
-          currentValue: 0,
-        };
-      } else if (isAssetKRW) {
-        const pastValueInForeign = amount / pRate;
-        const currentValueInForeign = amount / cRate;
-        const changeAmount = currentValueInForeign - pastValueInForeign;
-        res = {
-          changeAmount,
-          changePercentage:
-            pastValueInForeign > 0
-              ? (changeAmount / pastValueInForeign) * 100
-              : 0,
-          pastValue: pastValueInForeign,
-          currentValue: currentValueInForeign,
-        };
-      } else {
-        const pastValueInKRW = amount * pRate;
-        const currentValueInKRW = amount * cRate;
-        const changeAmount = currentValueInKRW - pastValueInKRW;
-        res = {
-          changeAmount,
-          changePercentage:
-            pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
-          pastValue: pastValueInKRW,
-          currentValue: currentValueInKRW,
-        };
-      }
-
-      const roundValue = (val: number) =>
-        Number.isInteger(val) ? val : parseFloat(val.toFixed(2));
-
-      return {
-        id: scenario.id,
-        changeAmount: roundValue(res.changeAmount),
-        pastValue: roundValue(res.pastValue),
-        currentValue: roundValue(res.currentValue),
-        changePercentage: parseFloat(res.changePercentage.toFixed(2)),
-      };
-    });
-  }, [assetAmount, assetCurrency, comparisonCurrency, scenarios]);
-
-  const bestScenario = useMemo(() => {
-    if (analysisResults.length === 0) return null;
-    return analysisResults.reduce((best, current) =>
-      current.changeAmount > best.changeAmount ? current : best
-    );
-  }, [analysisResults]);
-
-  const handleShareLink = async () => {
-    const shareUrl = "https://www.moneysalary.com/?tab=exchange";
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      alert("공유 링크가 클립보드에 복사되었습니다!");
-    } catch (err) {
-      console.error("링크 공유 실패:", err);
-      alert("링크 복사에 실패했습니다.");
-    }
-  };
-
-  const handleShareImage = () => {
-    const element = reportRef.current;
-    if (!element) return;
-    html2canvas(element, { scale: 2, backgroundColor: null }).then((canvas) => {
-      const link = document.createElement("a");
-      link.download = `Moneysalary_환율분석결과.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    });
-  };
-
-  const assetSymbol =
-    currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
-  const resultSymbol =
-    assetCurrency === "KRW"
-      ? currencies.find((c) => c.id === comparisonCurrency)?.symbol || "$"
-      : "₩";
-
   return (
     <>
-      <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
-        {/* ... 여기에 기존 시나리오 계산기 UI가 들어갑니다 ... */}
-      </div>
-
       <SalaryPurchasingPowerCalculator />
-
       <FinancialKnowledgeArchive />
     </>
   );
