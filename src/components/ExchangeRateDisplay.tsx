@@ -243,7 +243,7 @@ export default function ExchangeRateImpactCalculator() {
         ? "#1e1e1e"
         : "#ffffff",
       useCORS: true,
-      windowHeight: element.scrollHeight, // [수정] 전체 높이를 캡처하도록 설정
+      windowHeight: element.scrollHeight,
     }).then((canvas) => {
       const link = document.createElement("a");
       link.download = `Moneysalary_환율분석결과.png`;
@@ -441,12 +441,12 @@ export default function ExchangeRateImpactCalculator() {
                     <p className="font-semibold text-sm text-light-text-secondary dark:text-dark-text-secondary">
                       {`과거 환율 ${manualPastRateStr} → 현재 ${manualCurrentRateStr} 기준`}
                     </p>
-                    <div className="flex items-center justify-center gap-3 sm:gap-4 my-2">
-                      <div className="text-xl sm:text-2xl font-bold text-gray-500">
+                    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 my-2">
+                      <div className="text-lg sm:text-2xl font-bold text-gray-500">
                         {`${resultSymbol}${formatNumber(analysis.pastValue)}`}
                       </div>
                       <ArrowRight
-                        className={`w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0 ${
+                        className={`w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 ${
                           analysis.changeAmount >= 0
                             ? "text-primary"
                             : "text-danger"
@@ -492,7 +492,7 @@ export default function ExchangeRateImpactCalculator() {
                       <BarChart
                         data={chartData}
                         layout="vertical"
-                        margin={{ left: 10, right: 120 }}
+                        margin={{ left: 10, right: 90 }}
                       >
                         <XAxis type="number" hide />
                         <YAxis
