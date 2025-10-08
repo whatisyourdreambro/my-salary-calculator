@@ -196,18 +196,18 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: finalValueInKRW,
       };
     } else {
-      // 자산이 외화일 때: 외화 -> KRW -> 외화 (가치 하락/상승분을 해당 외화로 표시)
-      const pastValueInKRW = amount * pRate;
-      const currentValueInKRW = amount * cRate;
-      const changeInKRW = currentValueInKRW - pastValueInKRW;
-      const changeInForeign = changeInKRW / cRate; // 가치 변화량을 현재 환율로 다시 해당 외화로 환산
-      const finalValueInForeign = amount + changeInForeign;
+      // [수정된 로직] 자산이 외화일 때의 계산
+      const pastValue = amount;
+      // 환율 비율을 통해 현재 가치를 계산합니다.
+      // 예: EUR/USD 환율이 5 -> 3으로 변하면, EUR 가치는 5/3배 상승.
+      const currentValue = amount * (pRate / cRate);
+      const changeAmount = currentValue - pastValue;
 
       res = {
-        changeAmount: changeInForeign,
-        changePercentage: amount > 0 ? (changeInForeign / amount) * 100 : 0,
-        pastValue: amount,
-        currentValue: finalValueInForeign,
+        changeAmount: changeAmount,
+        changePercentage: pastValue > 0 ? (changeAmount / pastValue) * 100 : 0,
+        pastValue: pastValue,
+        currentValue: currentValue,
       };
     }
 
