@@ -15,7 +15,6 @@ import type {
   AdvancedSettings,
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
-import FinancialHealthAnalysis from "./FinancialHealthAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
 
 const formatNumber = (num: number) => num.toLocaleString();
@@ -553,18 +552,16 @@ export default function SalaryCalculator() {
       </div>
       {annualSalary > 0 && incomeType === "regular" && (
         <>
-          <DetailedAnalysis annualSalary={annualSalary} result={result} />
+          <DetailedAnalysis
+            annualSalary={annualSalary}
+            result={result}
+            monthlyExpenses={parseNumber(monthlyExpenses)}
+          />
           <SalaryAnalysis
             annualSalary={annualSalary}
             monthlyNet={result.monthlyNet}
           />
         </>
-      )}
-      {parseNumber(monthlyExpenses) > 0 && incomeType === "regular" && (
-        <FinancialHealthAnalysis
-          monthlyNet={result.monthlyNet}
-          monthlyExpenses={parseNumber(monthlyExpenses)}
-        />
       )}
     </div>
   );

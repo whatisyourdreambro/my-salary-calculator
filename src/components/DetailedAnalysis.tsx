@@ -2,6 +2,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import {
   PieChart,
   Pie,
@@ -11,16 +12,7 @@ import {
   Legend,
 } from "recharts";
 import type { CalculationResult } from "@/lib/calculator";
-import {
-  Calendar,
-  TrendingDown,
-  Gift,
-  Car,
-  Home,
-  Briefcase,
-  PiggyBank,
-} from "lucide-react";
-import CountUp from "react-countup";
+import { TrendingDown, AlertTriangle, ShieldCheck, Award } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -34,24 +26,16 @@ const DEDUCTION_COLORS = [
   "#ff9f40",
 ];
 
-// 마일스톤 데이터 및 아이콘 정의
-const milestones = [
-  { amount: 1500000, label: "국내 5성급 호텔 호캉스", Icon: Home },
-  { amount: 3000000, label: "최신형 스마트폰 플렉스", Icon: Gift },
-  { amount: 5000000, label: "유럽 왕복 항공권", Icon: Briefcase },
-  { amount: 10000000, label: "천만원 종잣돈 마련!", Icon: PiggyBank },
-  { amount: 25000000, label: "경차(캐스퍼) 현금 구매", Icon: Car },
-  { amount: 50000000, label: "5천만원 종잣돈 달성!", Icon: PiggyBank },
-];
-
 interface DetailedAnalysisProps {
   annualSalary: number;
   result: CalculationResult;
+  monthlyExpenses: number;
 }
 
 export default function DetailedAnalysis({
   annualSalary,
   result,
+  monthlyExpenses,
 }: DetailedAnalysisProps) {
   const monthlyGross = useMemo(
     () => Math.round(annualSalary / 12),
@@ -72,25 +56,94 @@ export default function DetailedAnalysis({
     { name: "지방소득세", value: result.localTax, rate: "소득세의 10%" },
   ].filter((item) => item.value > 0);
 
-  // 연봉 타임라인 데이터 생성 로직
-  const timelineData = useMemo(() => {
-    const data = [];
-    let cumulativeNet = 0;
-    let milestoneIndex = 0;
-    for (let i = 1; i <= 12; i++) {
-      cumulativeNet += result.monthlyNet;
-      let achievedMilestone = null;
-      if (
-        milestoneIndex < milestones.length &&
-        cumulativeNet >= milestones[milestoneIndex].amount
-      ) {
-        achievedMilestone = milestones[milestoneIndex];
-        milestoneIndex++;
-      }
-      data.push({ month: i, cumulativeNet, milestone: achievedMilestone });
+  const FinancialHealthSection = () => {
+    if (result.monthlyNet <= 0 || monthlyExpenses <= 0) {
+      return null;
     }
-    return data;
-  }, [result.monthlyNet]);
+
+    const monthlySaving = result.monthlyNet - monthlyExpenses;
+    const savingRate = Math.round((monthlySaving / result.monthlyNet) * 100);
+
+    const getHealthStatus = () => {
+      if (savingRate < 20) {
+        return {
+          Icon: AlertTriangle,
+          color: "text-danger",
+          bgColor: "bg-red-50 dark:bg-red-900/20",
+          title: "위험: 재정 상태 점검이 시급합니다.",
+          message: `현재 저축률은 ${savingRate}%로, 미래를 위한 재정적 준비가 부족한 상태입니다. 소비 습관을 점검하고 고정 지출을 줄이는 노력이 반드시 필요합니다.`,
+          actionLink: "/guides/first-job-investment",
+          actionText: "사회초년생 재테크 가이드 보기",
+        };
+      }
+      if (savingRate < 50) {
+        return {
+          Icon: ShieldCheck,
+          color: "text-primary",
+          bgColor: "bg-blue-50 dark:bg-blue-900/20",
+          title: "안정: 잘하고 있지만, 더 발전할 수 있습니다.",
+          message: `현재 저축률은 ${savingRate}%로, 안정적인 재무 흐름을 만들고 있습니다. 여기서 만족하지 말고, 투자 파이프라인을 구축하여 자산 증식 속도를 높여보세요.`,
+          actionLink: "/guides/road-to-100m-part3-invest",
+          actionText: "투자 파이프라인 구축 가이드 보기",
+        };
+      }
+      return {
+        Icon: Award,
+        color: "text-green-500",
+        bgColor: "bg-green-50 dark:bg-green-900/20",
+        title: "우수: 훌륭한 재무 습관을 가지고 있습니다.",
+        message: `현재 저축률은 ${savingRate}%로, 매우 훌륭한 저축 습관을 가지고 있습니다. 이제 N잡, 부수입 등을 통해 소득의 파이 자체를 키워 경제적 자유를 앞당기세요.`,
+        actionLink: "/guides/road-to-100m-part2-sidejob",
+        actionText: "N잡으로 월 100만원 더 벌기",
+      };
+    };
+
+    const status = getHealthStatus();
+
+    return (
+      <div className="mt-12 pt-8 border-t dark:border-gray-700">
+        <div className={`p-6 rounded-2xl border ${status.bgColor}`}>
+          <div className="flex items-center gap-4">
+            <status.Icon className={`w-10 h-10 ${status.color}`} />
+            <div>
+              <h3 className={`text-2xl font-bold ${status.color}`}>
+                금융 건전성: {status.title}
+              </h3>
+            </div>
+          </div>
+          <div className="mt-4 pl-14">
+            <div className="grid grid-cols-2 gap-4 text-center mb-4">
+              <div className="bg-light-card dark:bg-dark-card p-3 rounded-lg">
+                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                  월 저축 가능액
+                </p>
+                <p className="font-bold text-lg">
+                  {formatNumber(monthlySaving)}원
+                </p>
+              </div>
+              <div className="bg-light-card dark:bg-dark-card p-3 rounded-lg">
+                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                  예상 저축률
+                </p>
+                <p className={`font-bold text-lg ${status.color}`}>
+                  {savingRate}%
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              {status.message}
+            </p>
+            <Link
+              href={status.actionLink}
+              className={`mt-3 inline-block text-sm font-bold ${status.color} hover:underline`}
+            >
+              {status.actionText} →
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
@@ -165,53 +218,7 @@ export default function DetailedAnalysis({
         </div>
       </div>
 
-      {/* Salary Timeline */}
-      <div className="mt-12 pt-8 border-t dark:border-gray-700">
-        <div className="flex items-center gap-2 mb-6">
-          <Calendar className="w-7 h-7 text-green-500" />
-          <h3 className="text-xl font-bold">연봉 타임라인: 12개월의 여정</h3>
-        </div>
-        <div className="relative pl-8">
-          {/* Timeline Vertical Line */}
-          <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
-
-          {timelineData.map((item) => (
-            <div key={item.month} className="mb-8 relative">
-              <div className="absolute -left-5 top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-light-card dark:border-dark-card"></div>
-              <p className="font-bold text-lg">{item.month}개월 후</p>
-              <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                누적 실수령액:{" "}
-                <span className="font-bold text-primary">
-                  {formatNumber(item.cumulativeNet)}원
-                </span>
-              </p>
-              {item.milestone && (
-                <div className="mt-2 flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-400 animate-fade-in-up">
-                  <item.milestone.Icon className="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                  <p className="font-semibold text-sm sm:text-base">
-                    <span className="font-bold text-yellow-700 dark:text-yellow-300">
-                      마일스톤 달성!
-                    </span>{" "}
-                    {item.milestone.label}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 p-4 bg-green-50 dark:bg-green-800/20 rounded-lg text-center border border-green-200 dark:border-green-700">
-          <p className="font-bold text-lg text-green-700 dark:text-green-300">
-            1년 후, 당신은{" "}
-            <CountUp
-              end={result.monthlyNet * 12}
-              separator=","
-              duration={1}
-              className="text-2xl"
-            />
-            원의 가치를 만들어냈습니다!
-          </p>
-        </div>
-      </div>
+      <FinancialHealthSection />
     </div>
   );
 }
