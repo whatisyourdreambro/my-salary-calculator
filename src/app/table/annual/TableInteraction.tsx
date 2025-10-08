@@ -15,7 +15,7 @@ export default function TableInteraction({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // URL 쿼리에서 현재 페이지와 검색어를 직접 읽어와 상태를 관리합니다.
+  // [수정 완료] Props 대신 URL에서 직접 상태를 읽어옵니다.
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const currentSearch = searchParams.get("searchTerm") || "";
 

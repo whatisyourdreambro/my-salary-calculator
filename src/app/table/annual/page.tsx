@@ -5,7 +5,7 @@ import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
 import { HelpCircle } from "lucide-react";
 import Link from "next/link";
-import TableInteraction from "./TableInteraction"; // 수정된 TableInteraction을 import 합니다.
+import TableInteraction from "./TableInteraction"; // 역할 분리된 클라이언트 컴포넌트
 
 const tableHeaders = [
   { key: "preTax", label: "연봉" },
@@ -32,6 +32,7 @@ const structuredData = {
   keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2025년"],
 };
 
+// 서버 컴포넌트는 데이터 로직에만 집중합니다.
 async function AnnualTable({
   searchParams,
 }: {
@@ -76,7 +77,7 @@ async function AnnualTable({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
-            {/* [수정] 불필요한 Props를 모두 제거하여 컴포넌트를 더욱 간결하게 만듭니다. */}
+            {/* [수정 완료] TableInteraction 컴포넌트에 더 이상 불필요한 props를 전달하지 않습니다. */}
             <TableInteraction totalPages={totalPages} />
 
             <div className="overflow-hidden mt-8">
