@@ -11,8 +11,16 @@ import {
   Legend,
 } from "recharts";
 import type { CalculationResult } from "@/lib/calculator";
-import { Calendar, TrendingDown } from "lucide-react";
-import CountUp from "react-countup"; // CountUp import 추가
+import {
+  Calendar,
+  TrendingDown,
+  Gift,
+  Car,
+  Home,
+  Briefcase,
+  PiggyBank,
+} from "lucide-react";
+import CountUp from "react-countup";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
@@ -24,6 +32,16 @@ const DEDUCTION_COLORS = [
   "#4bc0c0",
   "#9966ff",
   "#ff9f40",
+];
+
+// 마일스톤 데이터 및 아이콘 정의
+const milestones = [
+  { amount: 1500000, label: "국내 5성급 호텔 호캉스", Icon: Home },
+  { amount: 3000000, label: "최신형 스마트폰 플렉스", Icon: Gift },
+  { amount: 5000000, label: "유럽 왕복 항공권", Icon: Briefcase },
+  { amount: 10000000, label: "천만원 종잣돈 마련!", Icon: PiggyBank },
+  { amount: 25000000, label: "경차(캐스퍼) 현금 구매", Icon: Car },
+  { amount: 50000000, label: "5천만원 종잣돈 달성!", Icon: PiggyBank },
 ];
 
 interface DetailedAnalysisProps {
@@ -54,13 +72,33 @@ export default function DetailedAnalysis({
     { name: "지방소득세", value: result.localTax, rate: "소득세의 10%" },
   ].filter((item) => item.value > 0);
 
-  return (
-    <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
-      <h2 className="text-xl font-bold mb-6 text-center">월급 상세 분석</h2>
+  // 연봉 타임라인 데이터 생성 로직
+  const timelineData = useMemo(() => {
+    const data = [];
+    let cumulativeNet = 0;
+    let milestoneIndex = 0;
+    for (let i = 1; i <= 12; i++) {
+      cumulativeNet += result.monthlyNet;
+      let achievedMilestone = null;
+      if (
+        milestoneIndex < milestones.length &&
+        cumulativeNet >= milestones[milestoneIndex].amount
+      ) {
+        achievedMilestone = milestones[milestoneIndex];
+        milestoneIndex++;
+      }
+      data.push({ month: i, cumulativeNet, milestone: achievedMilestone });
+    }
+    return data;
+  }, [result.monthlyNet]);
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+  return (
+    <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+      <h2 className="text-2xl font-bold mb-8 text-center">월급 상세 분석</h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
         {/* Left: Donut Chart & Composition */}
-        <div className="flex flex-col items-center">
+        <div className="lg:col-span-2 flex flex-col items-center">
           <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary">
             월 세전 급여: {formatNumber(monthlyGross)}원
           </p>
@@ -87,38 +125,38 @@ export default function DetailedAnalysis({
                 <Tooltip
                   formatter={(value: number) => `${formatNumber(value)} 원`}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: "14px" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Right: Deduction Details Table */}
-        <div>
+        <div className="lg:col-span-3">
           <div className="flex items-center gap-2 mb-3">
             <TrendingDown className="w-6 h-6 text-danger" />
-            <h3 className="text-lg font-bold">상세 공제 내역</h3>
+            <h3 className="text-xl font-bold">상세 공제 내역</h3>
           </div>
           <div className="space-y-2 text-sm">
             {deductionDetails.map((item, index) => (
               <div
                 key={item.name}
-                className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800/50 rounded-md"
+                className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
               >
                 <div className="flex items-center">
                   <span
-                    className="w-2.5 h-2.5 rounded-full mr-2"
+                    className="w-2.5 h-2.5 rounded-full mr-3"
                     style={{
                       backgroundColor:
                         DEDUCTION_COLORS[index % DEDUCTION_COLORS.length],
                     }}
                   ></span>
-                  <span className="font-semibold">{item.name}</span>
+                  <span className="font-semibold text-base">{item.name}</span>
                   <span className="text-xs text-gray-500 ml-2">
                     ({item.rate})
                   </span>
                 </div>
-                <span className="font-mono font-semibold">
+                <span className="font-mono font-bold text-base">
                   {formatNumber(item.value)}원
                 </span>
               </div>
@@ -127,34 +165,50 @@ export default function DetailedAnalysis({
         </div>
       </div>
 
-      {/* Salary Calendar */}
-      <div className="mt-10 pt-6 border-t dark:border-gray-700">
-        <div className="flex items-center gap-2 mb-4">
-          <Calendar className="w-6 h-6 text-green-500" />
-          <h3 className="text-lg font-bold">연봉 달력</h3>
+      {/* Salary Timeline */}
+      <div className="mt-12 pt-8 border-t dark:border-gray-700">
+        <div className="flex items-center gap-2 mb-6">
+          <Calendar className="w-7 h-7 text-green-500" />
+          <h3 className="text-xl font-bold">연봉 타임라인: 12개월의 여정</h3>
         </div>
-        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 text-center">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
-            >
-              <p className="text-xs font-bold text-gray-500">{i + 1}월</p>
-              <p className="text-sm font-semibold text-primary">
-                +
-                {(result.monthlyNet / 10000).toLocaleString(undefined, {
-                  maximumFractionDigits: 0,
-                })}
-                만
+        <div className="relative pl-8">
+          {/* Timeline Vertical Line */}
+          <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+
+          {timelineData.map((item) => (
+            <div key={item.month} className="mb-8 relative">
+              <div className="absolute -left-5 top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-light-card dark:border-dark-card"></div>
+              <p className="font-bold text-lg">{item.month}개월 후</p>
+              <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                누적 실수령액:{" "}
+                <span className="font-bold text-primary">
+                  {formatNumber(item.cumulativeNet)}원
+                </span>
               </p>
+              {item.milestone && (
+                <div className="mt-2 flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-400 animate-fade-in-up">
+                  <item.milestone.Icon className="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                  <p className="font-semibold text-sm sm:text-base">
+                    <span className="font-bold text-yellow-700 dark:text-yellow-300">
+                      마일스톤 달성!
+                    </span>{" "}
+                    {item.milestone.label}
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
-        <div className="mt-4 p-4 bg-primary/10 rounded-lg text-center">
-          <p className="font-bold text-lg text-primary">
-            12개월 후, 당신의 통장에는 총{" "}
-            <CountUp end={result.monthlyNet * 12} separator="," duration={1} />
-            원이 쌓입니다!
+        <div className="mt-4 p-4 bg-green-50 dark:bg-green-800/20 rounded-lg text-center border border-green-200 dark:border-green-700">
+          <p className="font-bold text-lg text-green-700 dark:text-green-300">
+            1년 후, 당신은{" "}
+            <CountUp
+              end={result.monthlyNet * 12}
+              separator=","
+              duration={1}
+              className="text-2xl"
+            />
+            원의 가치를 만들어냈습니다!
           </p>
         </div>
       </div>

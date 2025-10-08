@@ -1,3 +1,4 @@
+// src/components/CurrencyInput.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -5,11 +6,21 @@ import { useState, useRef, useEffect } from "react";
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
+interface Currency {
+  id: string;
+  name: string;
+  flag: string;
+  symbol: string;
+}
+
 interface CurrencyInputProps {
   label: string;
   value: string;
   onValueChange: (value: string) => void;
   quickAmounts: number[];
+  selectedCurrency?: string;
+  onCurrencyChange?: (value: string) => void;
+  currencies?: Currency[];
 }
 
 export default function CurrencyInput({
@@ -17,9 +28,15 @@ export default function CurrencyInput({
   value,
   onValueChange,
   quickAmounts,
+  selectedCurrency,
+  onCurrencyChange,
+  currencies,
 }: CurrencyInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState<number | null>(null);
+
+  const symbol =
+    currencies?.find((c) => c.id === selectedCurrency)?.symbol || "원";
 
   useEffect(() => {
     const input = inputRef.current;
@@ -53,21 +70,35 @@ export default function CurrencyInput({
       <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
         {label}
       </label>
-      <div className="relative mt-1">
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          onChange={handleChange}
-          className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
-          inputMode="numeric"
-        />
-        <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-          원
-        </span>
+      <div className="flex gap-2 mt-1">
+        {currencies && onCurrencyChange && selectedCurrency && (
+          <select
+            value={selectedCurrency}
+            onChange={(e) => onCurrencyChange(e.target.value)}
+            className="p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700 basis-1/3 sm:basis-auto"
+          >
+            {currencies.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.flag} {c.id}
+              </option>
+            ))}
+          </select>
+        )}
+        <div className="relative flex-grow">
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={handleChange}
+            className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
+            inputMode="numeric"
+          />
+          <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+            {symbol}
+          </span>
+        </div>
       </div>
 
-      {/* [수정] 파트너님의 요청대로 덧셈과 뺄셈 버튼을 명확한 2단 구조로 분리하여 모든 UI의 통일성을 확보했습니다. */}
       <div className="mt-2 space-y-2">
         <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
