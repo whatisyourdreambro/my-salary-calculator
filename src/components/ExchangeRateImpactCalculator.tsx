@@ -4,7 +4,14 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import { TrendingUp, TrendingDown, HelpCircle, Loader } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  HelpCircle,
+  Loader,
+  RefreshCw,
+  AlertCircle,
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -13,6 +20,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 const formatNumber = (num: number) => num.toLocaleString();
@@ -25,6 +33,42 @@ const toInputDateString = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+const currencies = [
+  { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
+  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
+  { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
+  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥" },
+];
+
+// 'any' 타입 대신 정확한 타입을 지정해줍니다.
+interface CustomLabelProps {
+  x?: number;
+  y?: number;
+  width?: number;
+  value?: number;
+}
+
+// Bar 차트의 라벨을 직접 그리는 커스텀 컴포넌트
+const CustomBarLabel = (props: CustomLabelProps) => {
+  const { x = 0, y = 0, width = 0, value = 0 } = props;
+  if (width < 30) return null; // 바가 너무 작으면 라벨을 숨깁니다.
+
+  const labelX = x + width + 10; // 바의 오른쪽에 위치
+  const labelY = y + 20; // 바의 세로 중앙에 위치
+
+  return (
+    <text
+      x={labelX}
+      y={labelY}
+      dominantBaseline="middle"
+      textAnchor="start"
+      className="fill-light-text dark:fill-dark-text font-bold"
+    >
+      {formatNumber(value)}
+    </text>
+  );
+};
+
 export default function ExchangeRateImpactCalculator() {
   const [initialKRW, setInitialKRW] = useState("10,000,000");
   const [pastDate, setPastDate] = useState(() => {
@@ -32,6 +76,7 @@ export default function ExchangeRateImpactCalculator() {
     date.setFullYear(date.getFullYear() - 1);
     return toInputDateString(date);
   });
+  const [currency, setCurrency] = useState("USD");
 
   const [pastRate, setPastRate] = useState(0);
   const [currentRate, setCurrentRate] = useState(0);
@@ -43,8 +88,10 @@ export default function ExchangeRateImpactCalculator() {
     setError(null);
     try {
       const [pastRes, currentRes] = await Promise.all([
-        fetch(`https://api.frankfurter.app/${pastDate}?from=USD&to=KRW`),
-        fetch(`https://api.frankfurter.app/latest?from=USD&to=KRW`),
+        fetch(
+          `https://api.frankfurter.app/${pastDate}?from=${currency}&to=KRW`
+        ),
+        fetch(`https://api.frankfurter.app/latest?from=${currency}&to=KRW`),
       ]);
 
       if (!pastRes.ok || !currentRes.ok) {
@@ -62,7 +109,7 @@ export default function ExchangeRateImpactCalculator() {
     } finally {
       setIsLoading(false);
     }
-  }, [pastDate]);
+  }, [pastDate, currency]);
 
   useEffect(() => {
     fetchRates();
@@ -72,38 +119,42 @@ export default function ExchangeRateImpactCalculator() {
     const krw = parseNumber(initialKRW);
     if (!krw || !pastRate || !currentRate)
       return {
-        initialUSD: 0,
+        initialForeign: 0,
         currentEquivalentKRW: 0,
         changeAmount: 0,
         changePercentage: 0,
       };
 
-    const initialUSD = krw / pastRate;
-    const currentEquivalentKRW = initialUSD * currentRate;
+    const rateMultiplier = currency === "JPY" ? 100 : 1;
+    const initialForeign = krw / (pastRate / rateMultiplier);
+    const currentEquivalentKRW =
+      initialForeign * (currentRate / rateMultiplier);
     const changeAmount = currentEquivalentKRW - krw;
-    const changePercentage = (changeAmount / krw) * 100;
+    const changePercentage = krw > 0 ? (changeAmount / krw) * 100 : 0;
 
     return {
-      initialUSD,
+      initialForeign,
       currentEquivalentKRW: Math.round(currentEquivalentKRW),
       changeAmount: Math.round(changeAmount),
       changePercentage: parseFloat(changePercentage.toFixed(2)),
     };
-  }, [initialKRW, pastRate, currentRate]);
+  }, [initialKRW, pastRate, currentRate, currency]);
 
+  const selectedCurrencyInfo =
+    currencies.find((c) => c.id === currency) || currencies[0];
   const chartData = [
     { name: "과거 가치", value: parseNumber(initialKRW) },
     { name: "현재 가치", value: analysis.currentEquivalentKRW },
   ];
 
   return (
-    <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border mt-8">
+    <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
       <h2 className="text-2xl font-bold text-center mb-6">
         환율 변동에 따른 내 자산가치 변화
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* Input Section */}
-        <div className="space-y-4">
+        <div className="lg:col-span-2 space-y-4">
           <CurrencyInput
             label="분석할 원화 자산"
             value={initialKRW}
@@ -119,80 +170,147 @@ export default function ExchangeRateImpactCalculator() {
               className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
             />
           </div>
-          <div className="flex gap-4">
-            <div className="w-1/2">
-              <label className="text-sm font-medium">과거 환율</label>
-              <p className="font-bold text-lg">{pastRate.toFixed(2)} 원/달러</p>
-            </div>
-            <div className="w-1/2">
-              <label className="text-sm font-medium">현재 환율</label>
-              <p className="font-bold text-lg">
-                {currentRate.toFixed(2)} 원/달러
-              </p>
+          <div>
+            <label className="text-sm font-medium">비교 통화</label>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+            >
+              {currencies.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.flag} {c.name} ({c.id})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">환율 직접 비교</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                value={pastRate.toFixed(2)}
+                onChange={(e) => setPastRate(Number(e.target.value))}
+                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                aria-label="과거 환율"
+              />
+              <span>→</span>
+              <input
+                type="number"
+                value={currentRate.toFixed(2)}
+                onChange={(e) => setCurrentRate(Number(e.target.value))}
+                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                aria-label="현재 환율"
+              />
+              <button
+                onClick={fetchRates}
+                className="p-2 border rounded-lg dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="최신 환율 불러오기"
+              >
+                <RefreshCw size={18} />
+              </button>
             </div>
           </div>
         </div>
 
         {/* Result Section */}
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <Loader className="animate-spin" />
-          </div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : (
-          <div className="space-y-4">
-            <div
-              className={`p-6 rounded-lg text-center transition-colors duration-300 ${
-                analysis.changeAmount >= 0
-                  ? "bg-blue-50 dark:bg-blue-900/30"
-                  : "bg-red-50 dark:bg-red-900/30"
-              }`}
-            >
-              <p
-                className={`text-lg font-bold ${
-                  analysis.changeAmount >= 0
-                    ? "text-blue-600 dark:text-blue-300"
-                    : "text-red-600 dark:text-red-400"
-                }`}
-              >
-                {analysis.changeAmount >= 0
-                  ? "달러 기준 구매력 상승!"
-                  : "달러 기준 구매력 하락..."}
-              </p>
-              <div className="flex items-center justify-center gap-2 text-3xl font-bold my-1">
-                {analysis.changeAmount >= 0 ? (
-                  <TrendingUp className="w-8 h-8 text-blue-500" />
-                ) : (
-                  <TrendingDown className="w-8 h-8 text-red-500" />
-                )}
-                <span>
-                  <CountUp end={analysis.changeAmount} separator="," /> 원 (
-                  {analysis.changePercentage}%)
-                </span>
+        <div className="lg:col-span-3">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <Loader
+                  className="animate-spin mx-auto text-primary"
+                  size={48}
+                />
+                <p className="mt-4 font-semibold">
+                  최신 환율 정보를 불러오는 중...
+                </p>
               </div>
             </div>
-            <div className="h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical">
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" hide />
-                  <Tooltip
-                    formatter={(value: number) => `${formatNumber(value)}원`}
-                  />
-                  <Bar dataKey="value" barSize={40}>
-                    {chartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={index === 0 ? "#a0aec0" : "#0052ff"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+          ) : error ? (
+            <div className="flex items-center justify-center h-full p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <AlertCircle className="w-8 h-8 text-red-500 mr-4" />
+              <div>
+                <h3 className="font-bold">로딩 실패</h3>
+                <p className="text-sm">{error}</p>
+              </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="space-y-4 animate-fade-in-up">
+              <div
+                className={`p-6 rounded-xl text-center transition-colors duration-300 ${
+                  analysis.changeAmount >= 0
+                    ? "bg-blue-50 dark:bg-blue-900/30"
+                    : "bg-red-50 dark:bg-red-900/30"
+                }`}
+              >
+                <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                  {pastDate} 대비,{" "}
+                  <strong>{formatNumber(parseNumber(initialKRW))}원</strong>의
+                  가치는
+                </p>
+                <div
+                  className={`flex items-center justify-center gap-2 text-3xl font-bold my-1 ${
+                    analysis.changeAmount >= 0 ? "text-primary" : "text-danger"
+                  }`}
+                >
+                  {analysis.changeAmount >= 0 ? (
+                    <TrendingUp className="w-8 h-8" />
+                  ) : (
+                    <TrendingDown className="w-8 h-8" />
+                  )}
+                  <CountUp
+                    end={analysis.changeAmount}
+                    prefix={analysis.changeAmount >= 0 ? "+ " : ""}
+                    separator=","
+                  />
+                  원 ({analysis.changePercentage}%)
+                </div>
+                <p className="text-sm">
+                  (과거{" "}
+                  <strong>
+                    {selectedCurrencyInfo.symbol}
+                    {formatNumber(Math.round(analysis.initialForeign))}
+                  </strong>
+                  의 현재 원화 가치 기준)
+                </p>
+              </div>
+              <div className="h-48 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={chartData}
+                    layout="vertical"
+                    margin={{ left: 10, right: 100 }}
+                  >
+                    <XAxis type="number" hide />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      width={70}
+                    />
+                    <Tooltip
+                      formatter={(value: string | number) =>
+                        `${formatNumber(Number(value))}원`
+                      }
+                      cursor={{ fill: "rgba(0,0,0,0.05)" }}
+                    />
+                    <Bar dataKey="value" barSize={40}>
+                      {chartData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={index === 0 ? "#a0aec0" : "#0052ff"}
+                        />
+                      ))}
+                      <LabelList dataKey="value" content={<CustomBarLabel />} />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
         <h4 className="font-bold flex items-center gap-2">

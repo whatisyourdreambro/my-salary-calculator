@@ -159,7 +159,9 @@ export default function FreelancerCalculator() {
               <XAxis type="number" hide />
               <YAxis type="category" dataKey="name" hide />
               <Tooltip
-                formatter={(value: number) => `${formatNumber(value)} 원`}
+                formatter={(value: string | number) =>
+                  `${formatNumber(Number(value))} 원`
+                }
                 cursor={{ fill: "transparent" }}
               />
               <Bar dataKey="value" barSize={25} radius={[4, 4, 4, 4]}>
