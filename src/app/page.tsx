@@ -1,7 +1,9 @@
+// src/app/page.tsx
+
 "use client";
 
 import CalculatorTabs from "@/components/CalculatorTabs";
-import ExchangeRateDisplay from "@/components/ExchangeRateDisplay";
+// [삭제] ExchangeRateDisplay 컴포넌트 import 제거
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
 
 const websiteStructuredData = {
@@ -61,8 +63,7 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* Real-time Exchange Rate Display */}
-        <ExchangeRateDisplay />
+        {/* [삭제] Real-time Exchange Rate Display 섹션 제거 */}
 
         {/* Calculator Tabs Section */}
         <div
