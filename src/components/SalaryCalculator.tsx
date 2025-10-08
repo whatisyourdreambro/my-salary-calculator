@@ -5,7 +5,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { calculateNetSalary } from "@/lib/calculator";
-import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
+import { calculatePartTimeSalary } from "@/lib/freelancerCalculator"; // 함수 import 추가
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import { Share2 } from "lucide-react";
@@ -16,6 +16,7 @@ import type {
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
 import FinancialHealthAnalysis from "./FinancialHealthAnalysis";
+import DetailedAnalysis from "./DetailedAnalysis";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -84,7 +85,7 @@ export default function SalaryCalculator() {
         totalDeduction: partTimeResult.totalDeduction,
         pension: partTimeResult.nationalPension,
         health: partTimeResult.healthInsurance,
-        longTermCare: 0,
+        longTermCare: 0, // 프리랜서/알바는 장기요양보험료 별도 계산 필요 (여기선 0으로 처리)
         employment: partTimeResult.employmentInsurance,
         incomeTax: partTimeResult.incomeTax,
         localTax: partTimeResult.localTax,
@@ -101,12 +102,11 @@ export default function SalaryCalculator() {
   ]);
 
   useEffect(() => {
-    // 계산 결과(result.monthlyNet)가 유효할 때 전환 이벤트를 발생시킵니다.
     if (result && result.monthlyNet > 0 && typeof window.gtag === "function") {
       window.gtag("event", "conversion", {
         send_to: `${process.env.NEXT_PUBLIC_ADS_ID}/${process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION}`,
       });
-      console.log("Google Ads Conversion (Main Calculator) Fired!"); // 정상 작동 확인용 로그
+      console.log("Google Ads Conversion (Main Calculator) Fired!");
     }
   }, [result]);
 
@@ -226,22 +226,6 @@ export default function SalaryCalculator() {
       seniorDependents: 0,
     });
   };
-
-  const deductionData = [
-    { name: "국민연금", value: result.pension, color: "#ff8c00" },
-    { name: "건강보험", value: result.health, color: "#ff6384" },
-    { name: "고용보험", value: result.employment, color: "#ffcd56" },
-    {
-      name: "소득세 등",
-      value: result.incomeTax + result.localTax,
-      color: "#4bc0c0",
-    },
-  ].filter((item) => item.value > 0);
-
-  const totalDeductions = deductionData.reduce(
-    (acc, cur) => acc + cur.value,
-    0
-  );
 
   return (
     <div className="space-y-8">
@@ -514,90 +498,58 @@ export default function SalaryCalculator() {
           )}
         </div>
 
-        {/* 오른쪽: 결과 섹션 */}
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
-          <h2 className="text-xl font-bold mb-4">월급 상세 분석</h2>
-          <div className="space-y-4">
-            <div>
-              <p className="font-semibold text-sm text-gray-500">
-                월 예상 실수령액
-              </p>
-              <p className="text-4xl font-bold my-1 text-primary">
-                <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
-                원
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-sm text-gray-500">
-                총 공제액 합계
-              </p>
-              <p className="text-2xl font-bold text-danger">
-                -{" "}
-                <CountUp
-                  end={result.totalDeduction}
-                  duration={0.5}
-                  separator=","
-                />{" "}
-                원
-              </p>
-            </div>
-            <div className="space-y-2 pt-4">
-              {deductionData.map((item) => (
-                <div key={item.name}>
-                  <div className="flex justify-between items-center text-sm">
-                    <span
-                      style={{ color: item.color }}
-                      className="font-semibold"
-                    >
-                      {item.name}
-                    </span>
-                    <span>
-                      {formatNumber(item.value)}원 (
-                      {((item.value / totalDeductions) * 100).toFixed(1)}%)
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-1">
-                    <div
-                      className="h-2.5 rounded-full"
-                      style={{
-                        width: `${(item.value / totalDeductions) * 100}%`,
-                        backgroundColor: item.color,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* 오른쪽: 결과 요약 및 버튼 */}
+        <div className="space-y-4">
+          <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
+            <h2 className="text-xl font-bold mb-4">월 예상 실수령액</h2>
+            <p className="text-4xl font-bold my-1 text-primary">
+              <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
+              원
+            </p>
+            <p className="font-semibold text-sm text-danger mt-2">
+              (공제액 합계: -{" "}
+              <CountUp
+                end={result.totalDeduction}
+                duration={0.5}
+                separator=","
+              />{" "}
+              원)
+            </p>
           </div>
-          <div className="pt-6 border-t dark:border-gray-700 grid grid-cols-3 gap-2 mt-6">
-            <button
-              onClick={handleReset}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-            >
-              초기화
-            </button>
-            <button
-              onClick={handleSaveData}
-              className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
-              disabled={incomeType !== "regular"}
-            >
-              대시보드 저장
-            </button>
-            <button
-              onClick={handleShare}
-              className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2 disabled:opacity-50"
-              disabled={incomeType !== "regular"}
-            >
-              <Share2 size={16} /> 결과 공유
-            </button>
+          <div className="pt-2">
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={handleReset}
+                className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              >
+                초기화
+              </button>
+              <button
+                onClick={handleSaveData}
+                className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
+                disabled={incomeType !== "regular"}
+              >
+                대시보드 저장
+              </button>
+              <button
+                onClick={handleShare}
+                className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2 disabled:opacity-50"
+                disabled={incomeType !== "regular"}
+              >
+                <Share2 size={16} /> 결과 공유
+              </button>
+            </div>
           </div>
         </div>
       </div>
       {annualSalary > 0 && incomeType === "regular" && (
-        <SalaryAnalysis
-          annualSalary={annualSalary}
-          monthlyNet={result.monthlyNet}
-        />
+        <>
+          <DetailedAnalysis annualSalary={annualSalary} result={result} />
+          <SalaryAnalysis
+            annualSalary={annualSalary}
+            monthlyNet={result.monthlyNet}
+          />
+        </>
       )}
       {parseNumber(monthlyExpenses) > 0 && incomeType === "regular" && (
         <FinancialHealthAnalysis
