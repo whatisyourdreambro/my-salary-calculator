@@ -21,7 +21,7 @@ import {
   Cell,
   LabelList,
 } from "recharts";
-import CustomBarLabel from "./CustomBarLabel"; // 1단계에서 만든 컴포넌트를 import 합니다.
+import CustomBarLabel from "./CustomBarLabel";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -43,7 +43,7 @@ const currencies = [
 ];
 
 export default function ExchangeRateImpactCalculator() {
-  const [assetAmount, setAssetAmount] = useState("10,000,000");
+  const [assetAmount, setAssetAmount] = useState("10000000");
   const [assetCurrency, setAssetCurrency] = useState("KRW");
   const [comparisonCurrency, setComparisonCurrency] = useState("USD");
   const [pastDate, setPastDate] = useState(() => {
@@ -52,8 +52,8 @@ export default function ExchangeRateImpactCalculator() {
     return toInputDateString(date);
   });
 
-  const [pastRate, setPastRate] = useState(0);
-  const [currentRate, setCurrentRate] = useState(0);
+  const [manualPastRateStr, setManualPastRateStr] = useState("");
+  const [manualCurrentRateStr, setManualCurrentRateStr] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isManual, setIsManual] = useState(false);
@@ -61,8 +61,8 @@ export default function ExchangeRateImpactCalculator() {
   const fetchRates = useCallback(async () => {
     if (isManual) return;
     if (assetCurrency === comparisonCurrency) {
-      setPastRate(1);
-      setCurrentRate(1);
+      setManualPastRateStr("1.0000");
+      setManualCurrentRateStr("1.0000");
       setIsLoading(false);
       return;
     }
@@ -78,15 +78,18 @@ export default function ExchangeRateImpactCalculator() {
         ),
       ]);
 
-      if (!pastRes.ok || !currentRes.ok) {
+      if (!pastRes.ok || !currentRes.ok)
         throw new Error("환율 정보를 불러오는 데 실패했습니다.");
-      }
 
       const pastData = await pastRes.json();
       const currentData = await currentRes.json();
 
-      setPastRate(pastData.rates[comparisonCurrency]);
-      setCurrentRate(currentData.rates[comparisonCurrency]);
+      setManualPastRateStr(
+        pastData.rates[comparisonCurrency]?.toFixed(4) || "0"
+      );
+      setManualCurrentRateStr(
+        currentData.rates[comparisonCurrency]?.toFixed(4) || "0"
+      );
     } catch (e) {
       if (e instanceof Error) setError(e.message);
       else setError("알 수 없는 오류가 발생했습니다.");
@@ -101,7 +104,10 @@ export default function ExchangeRateImpactCalculator() {
 
   const analysis = useMemo(() => {
     const amount = parseNumber(assetAmount);
-    if (!amount || !pastRate || !currentRate)
+    const pRate = parseFloat(manualPastRateStr) || 0;
+    const cRate = parseFloat(manualCurrentRateStr) || 0;
+
+    if (!amount || !pRate || !cRate)
       return {
         changeAmount: 0,
         changePercentage: 0,
@@ -109,8 +115,8 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: 0,
       };
 
-    const pastValueInComparison = amount * pastRate;
-    const currentValueInComparison = amount * currentRate;
+    const pastValueInComparison = amount * pRate;
+    const currentValueInComparison = amount * cRate;
 
     const changeAmount = currentValueInComparison - pastValueInComparison;
     const changePercentage =
@@ -124,7 +130,7 @@ export default function ExchangeRateImpactCalculator() {
       pastValue: Math.round(pastValueInComparison),
       currentValue: Math.round(currentValueInComparison),
     };
-  }, [assetAmount, pastRate, currentRate]);
+  }, [assetAmount, manualPastRateStr, manualCurrentRateStr]);
 
   const assetSymbol =
     currencies.find((c) => c.id === assetCurrency)?.symbol || "원";
@@ -140,13 +146,16 @@ export default function ExchangeRateImpactCalculator() {
 
   return (
     <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
-      <h2 className="text-2xl font-bold text-center mb-6">
+      <h2 className="text-2xl font-bold text-center mb-8">
         환율 변동에 따른 내 자산가치 변화
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* === 입력부 === */}
+        <div className="space-y-6">
           <div>
-            <label className="text-sm font-medium">분석할 자산</label>
+            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+              분석할 자산
+            </label>
             <div className="flex gap-2 mt-1">
               <select
                 value={assetCurrency}
@@ -166,7 +175,7 @@ export default function ExchangeRateImpactCalculator() {
                   onChange={(e) =>
                     setAssetAmount(e.target.value.replace(/[^0-9]/g, ""))
                   }
-                  className="w-full p-3 pr-8 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                  className="w-full text-lg p-3 pr-8 border rounded-lg dark:bg-dark-card dark:border-gray-700 font-semibold"
                 />
                 <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">
                   {assetSymbol}
@@ -176,7 +185,9 @@ export default function ExchangeRateImpactCalculator() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">비교 통화</label>
+            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+              비교 통화
+            </label>
             <select
               value={comparisonCurrency}
               onChange={(e) => setComparisonCurrency(e.target.value)}
@@ -194,14 +205,19 @@ export default function ExchangeRateImpactCalculator() {
 
           <div>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">기준 과거 시점</label>
-              <div className="flex items-center gap-2">
-                <span className="text-xs">수동입력</span>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                기준 과거 시점
+              </label>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsManual(!isManual)}
+              >
+                <span className="text-xs font-semibold">수동입력</span>
                 <input
                   type="checkbox"
                   checked={isManual}
                   onChange={(e) => setIsManual(e.target.checked)}
-                  className="h-4 w-4 rounded"
+                  className="h-4 w-4 rounded cursor-pointer"
                 />
               </div>
             </div>
@@ -215,27 +231,28 @@ export default function ExchangeRateImpactCalculator() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              환율 {isManual ? "직접 입력" : "자동 비교"} (1 {assetCurrency} 당{" "}
-              {comparisonCurrency})
+            <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+              환율 (1 {assetCurrency} 당 {comparisonCurrency})
             </label>
+            <div className="grid grid-cols-2 gap-2 text-center text-xs font-semibold text-gray-500">
+              <div>과거 환율</div>
+              <div>현재(미래) 환율</div>
+            </div>
             <div className="flex items-center gap-2">
               <input
-                type="number"
-                value={pastRate.toFixed(4)}
-                onChange={(e) => setPastRate(Number(e.target.value))}
+                type="text"
+                value={manualPastRateStr}
+                onChange={(e) => setManualPastRateStr(e.target.value)}
                 disabled={!isManual}
-                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50"
-                aria-label="과거 환율"
+                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50 text-center font-mono"
               />
-              <span>→</span>
+              <span className="font-bold text-primary">→</span>
               <input
-                type="number"
-                value={currentRate.toFixed(4)}
-                onChange={(e) => setCurrentRate(Number(e.target.value))}
+                type="text"
+                value={manualCurrentRateStr}
+                onChange={(e) => setManualCurrentRateStr(e.target.value)}
                 disabled={!isManual}
-                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50"
-                aria-label="현재 환율"
+                className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50 text-center font-mono"
               />
               <button
                 onClick={fetchRates}
@@ -249,7 +266,8 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="lg:col-span-3">
+        {/* === 결과부 === */}
+        <div className="flex flex-col justify-between">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
@@ -271,9 +289,9 @@ export default function ExchangeRateImpactCalculator() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4 animate-fade-in-up">
+            <div className="space-y-6 animate-fade-in-up h-full flex flex-col">
               <div
-                className={`p-6 rounded-xl text-center transition-colors duration-300 ${
+                className={`p-6 rounded-xl text-center transition-colors duration-300 grow flex flex-col justify-center ${
                   analysis.changeAmount >= 0
                     ? "bg-blue-50 dark:bg-blue-900/30"
                     : "bg-red-50 dark:bg-red-900/30"
@@ -288,14 +306,14 @@ export default function ExchangeRateImpactCalculator() {
                   의 가치는
                 </p>
                 <div
-                  className={`flex items-center justify-center gap-2 text-3xl font-bold my-1 ${
+                  className={`flex items-center justify-center gap-2 text-4xl lg:text-5xl font-bold my-2 ${
                     analysis.changeAmount >= 0 ? "text-primary" : "text-danger"
                   }`}
                 >
                   {analysis.changeAmount >= 0 ? (
-                    <TrendingUp className="w-8 h-8" />
+                    <TrendingUp className="w-10 h-10" />
                   ) : (
-                    <TrendingDown className="w-8 h-8" />
+                    <TrendingDown className="w-10 h-10" />
                   )}
                   <CountUp
                     end={Math.abs(analysis.changeAmount)}
@@ -306,10 +324,16 @@ export default function ExchangeRateImpactCalculator() {
                     }
                     separator=","
                   />
-                  <span>({analysis.changePercentage}%)</span>
                 </div>
+                <p
+                  className={`font-semibold text-lg ${
+                    analysis.changeAmount >= 0 ? "text-primary" : "text-danger"
+                  }`}
+                >
+                  ({analysis.changePercentage}%)
+                </p>
               </div>
-              <div className="h-64 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
+              <div className="h-48 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartData}
