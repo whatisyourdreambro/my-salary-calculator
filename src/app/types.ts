@@ -1,5 +1,3 @@
-// src/app/types.ts
-
 // localStorage에 저장될 연봉 계산기 데이터
 export interface StoredSalaryData {
   annualSalary: number;
@@ -9,7 +7,8 @@ export interface StoredSalaryData {
   nonTaxableAmount: number;
   dependents: number;
   children: number;
-  monthlyExpenses?: number; // [추가] 월평균 지출액 (선택적)
+  monthlyExpenses?: number; // 월평균 지출액 (선택적)
+  advancedSettings?: AdvancedSettings; // [개선] 연봉 계산과 관련된 상세 설정을 포함
 }
 
 // 주택담보대출 계산 결과 저장 데이터
@@ -38,7 +37,7 @@ export interface StoredFutureSalaryData {
   totalIncrease: number;
 }
 
-// [추가] 상세 설정을 위한 인터페이스
+// 연봉 계산 상세 설정을 위한 인터페이스
 export interface AdvancedSettings {
   isSmeYouth: boolean; // 중소기업 취업 청년 감면 여부
   disabledDependents: number; // 장애인 부양가족 수
