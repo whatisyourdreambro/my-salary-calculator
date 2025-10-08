@@ -57,7 +57,7 @@ export default function ExchangeRateImpactCalculator() {
   const [mode, setMode] = useState<AnalysisMode>("forward");
 
   const [assetAmount, setAssetAmount] = useState(
-    () => searchParams.get("assetAmount") || "10000000"
+    () => searchParams.get("assetAmount") || "100000000"
   );
   const [targetAmount, setTargetAmount] = useState("10000");
   const [assetCurrency, setAssetCurrency] = useState(
@@ -102,8 +102,8 @@ export default function ExchangeRateImpactCalculator() {
     setIsLoading(true);
     setError(null);
     try {
-      const from = mode === "forward" ? assetCurrency : comparisonCurrency;
-      const to = mode === "forward" ? comparisonCurrency : assetCurrency;
+      const from = comparisonCurrency;
+      const to = assetCurrency;
 
       const [pastRes, currentRes] = await Promise.all([
         fetch(`https://api.frankfurter.app/${pastDate}?from=${from}&to=${to}`),
@@ -116,15 +116,20 @@ export default function ExchangeRateImpactCalculator() {
       const pastData = await pastRes.json();
       const currentData = await currentRes.json();
 
-      setManualPastRateStr(pastData.rates[to]?.toFixed(4) || "0");
-      setManualCurrentRateStr(currentData.rates[to]?.toFixed(4) || "0");
+      const pastRate =
+        to === "JPY" ? pastData.rates[to] / 100 : pastData.rates[to];
+      const currentRate =
+        to === "JPY" ? currentData.rates[to] / 100 : currentData.rates[to];
+
+      setManualPastRateStr(pastRate?.toFixed(4) || "0");
+      setManualCurrentRateStr(currentRate?.toFixed(4) || "0");
     } catch (e) {
       if (e instanceof Error) setError(e.message);
       else setError("알 수 없는 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
-  }, [pastDate, assetCurrency, comparisonCurrency, isManual, mode]);
+  }, [pastDate, assetCurrency, comparisonCurrency, isManual]);
 
   useEffect(() => {
     if (!searchParams.get("assetAmount")) {
@@ -139,8 +144,8 @@ export default function ExchangeRateImpactCalculator() {
     const cRate = parseFloat(manualCurrentRateStr) || 0;
 
     if (mode === "forward") {
-      const amount = parseNumber(assetAmount);
-      if (!amount || !pRate || !cRate)
+      const amountInAssetCurrency = parseNumber(assetAmount);
+      if (!amountInAssetCurrency || !pRate || !cRate)
         return {
           changeAmount: 0,
           changePercentage: 0,
@@ -148,18 +153,19 @@ export default function ExchangeRateImpactCalculator() {
           currentValue: 0,
         };
 
-      const pastValueInComparison = amount * pRate;
-      const currentValueInComparison = amount * cRate;
-      const changeInComparison =
-        currentValueInComparison - pastValueInComparison;
-      const changeAmount = cRate > 0 ? changeInComparison / cRate : 0;
-      const changePercentage = amount > 0 ? (changeAmount / amount) * 100 : 0;
+      const amountInComparisonCurrency = amountInAssetCurrency / pRate;
+      const currentValue = amountInComparisonCurrency * cRate;
+      const changeAmount = currentValue - amountInAssetCurrency;
+      const changePercentage =
+        amountInAssetCurrency > 0
+          ? (changeAmount / amountInAssetCurrency) * 100
+          : 0;
 
       return {
         changeAmount: Math.round(changeAmount),
         changePercentage: parseFloat(changePercentage.toFixed(2)),
-        pastValue: Math.round(amount),
-        currentValue: Math.round(amount + changeAmount),
+        pastValue: Math.round(amountInAssetCurrency),
+        currentValue: Math.round(currentValue),
       };
     } else {
       const amount = parseNumber(targetAmount);
@@ -227,7 +233,6 @@ export default function ExchangeRateImpactCalculator() {
       await navigator.clipboard.writeText(shareUrl);
       alert("결과 공유 링크가 클립보드에 복사되었습니다!");
     } catch (err) {
-      // [오류 수정] err 변수를 console.error에서 사용하여 'unused' 경고를 해결합니다.
       console.error("링크 공유 실패:", err);
       alert("링크 복사에 실패했습니다.");
     }
@@ -300,7 +305,7 @@ export default function ExchangeRateImpactCalculator() {
             {mode === "forward" ? (
               <div>
                 <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                  분석할 자산
+                  과거 기준 자산 가치 ({assetCurrency})
                 </label>
                 <div className="flex gap-2 mt-1">
                   <select
@@ -363,17 +368,11 @@ export default function ExchangeRateImpactCalculator() {
                 }
                 className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
               >
-                {currencies
-                  .filter(
-                    (c) =>
-                      c.id !==
-                      (mode === "forward" ? assetCurrency : comparisonCurrency)
-                  )
-                  .map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.flag} {c.name} ({c.id})
-                    </option>
-                  ))}
+                {currencies.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.flag} {c.name} ({c.id})
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -406,9 +405,9 @@ export default function ExchangeRateImpactCalculator() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                환율 (1{" "}
-                {mode === "forward" ? assetCurrency : comparisonCurrency} 당{" "}
-                {mode === "forward" ? comparisonCurrency : assetCurrency})
+                환율 (1 {comparisonCurrency} 당{" "}
+                {assetCurrency === "JPY" ? "100" : ""}
+                {assetCurrency})
               </label>
               <div className="grid grid-cols-2 gap-2 text-center text-xs font-semibold text-gray-500">
                 <div>과거 환율</div>
