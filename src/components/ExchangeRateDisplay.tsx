@@ -21,6 +21,7 @@ const toInputDateString = (date: Date): string => {
 };
 
 const currencies = [
+  // [수정] 요청하신 대로 원화 기호를 '₩'로 수정했습니다.
   { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
   { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
   { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
@@ -433,13 +434,14 @@ export default function ExchangeRateImpactCalculator() {
                             changeAmount >= 0 ? "text-primary" : "text-danger"
                           }`}
                         >
+                          {/* [수정] CountUp 컴포넌트 사용법을 개선하여 부호와 화폐 기호를 깔끔하게 표시합니다. */}
                           <CountUp
-                            end={changeAmount}
+                            end={Math.abs(changeAmount)}
                             separator=","
                             prefix={changeAmount >= 0 ? "+ " : "- "}
+                            suffix=" ₩"
                             duration={0.5}
                           />
-                          ₩
                         </p>
                         <p className="text-xs text-gray-500">
                           ({res.changePercentage.toFixed(2)}%)
