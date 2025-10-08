@@ -13,6 +13,7 @@ import {
   Image as ImageIcon,
   ArrowRight,
   Info,
+  RotateCcw,
 } from "lucide-react";
 import {
   BarChart,
@@ -28,8 +29,11 @@ import CustomBarLabel from "./CustomBarLabel";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
 
-const formatNumber = (num: number) => num.toLocaleString();
-const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
+const formatNumber = (num: number) => {
+  if (isNaN(num)) return "0";
+  return num.toLocaleString();
+};
+const parseNumber = (str: string) => Number(String(str).replace(/,/g, ""));
 
 const toInputDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -41,18 +45,24 @@ const toInputDateString = (date: Date): string => {
 const currencies = [
   { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
   { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
-  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
+  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "JPY" },
   { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
-  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥" },
+  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "CNY" },
   { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£" },
 ];
+
+const initialPastDate = (() => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 1);
+  return toInputDateString(date);
+})();
 
 export default function ExchangeRateImpactCalculator() {
   const searchParams = useSearchParams();
   const reportRef = useRef<HTMLDivElement>(null);
 
-  const [assetAmount, setAssetAmount] = useState(
-    () => searchParams.get("assetAmount") || "40000000"
+  const [assetAmount, setAssetAmount] = useState(() =>
+    formatNumber(parseNumber(searchParams.get("assetAmount") || "40000000"))
   );
   const [assetCurrency, setAssetCurrency] = useState(
     () => searchParams.get("assetCurrency") || "KRW"
@@ -61,19 +71,13 @@ export default function ExchangeRateImpactCalculator() {
     () => searchParams.get("comparisonCurrency") || "USD"
   );
   const [pastDate, setPastDate] = useState(
-    () =>
-      searchParams.get("pastDate") ||
-      (() => {
-        const date = new Date();
-        date.setFullYear(date.getFullYear() - 1);
-        return toInputDateString(date);
-      })()
+    () => searchParams.get("pastDate") || initialPastDate
   );
   const [isManual, setIsManual] = useState(
     () => searchParams.get("isManual") === "true"
   );
   const [manualPastRateStr, setManualPastRateStr] = useState(
-    () => searchParams.get("manualPastRateStr") || "1500"
+    () => searchParams.get("manualPastRateStr") || ""
   );
   const [manualCurrentRateStr, setManualCurrentRateStr] = useState(
     () => searchParams.get("manualCurrentRateStr") || ""
@@ -81,9 +85,9 @@ export default function ExchangeRateImpactCalculator() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [useDxy, setUseDxy] = useState(true);
-  const [pastDxy, setPastDxy] = useState("98");
-  const [currentDxy, setCurrentDxy] = useState("111");
+  const [useDxy, setUseDxy] = useState(false);
+  const [pastDxy, setPastDxy] = useState("105.00");
+  const [currentDxy, setCurrentDxy] = useState("108.00");
 
   const foreignCurrency =
     assetCurrency === "KRW" ? comparisonCurrency : assetCurrency;
@@ -147,12 +151,13 @@ export default function ExchangeRateImpactCalculator() {
   }, [useDxy, pastDxy, currentDxy, manualPastRateStr, fetchRates]);
 
   useEffect(() => {
+    // Only fetch on mount if not loading from URL params
     if (!searchParams.get("assetAmount")) {
       fetchRates();
     } else {
       setIsLoading(false);
     }
-  }, [fetchRates, searchParams]);
+  }, []); // Run only on mount
 
   const { analysis, resultSymbol } = useMemo(() => {
     const pRateRaw = parseFloat(manualPastRateStr) || 0;
@@ -160,7 +165,10 @@ export default function ExchangeRateImpactCalculator() {
     const amount = parseNumber(assetAmount);
     const isAssetKRW = assetCurrency === "KRW";
     const symbol =
-      currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
+      currencies.find(
+        (c) => c.id === (isAssetKRW ? comparisonCurrency : assetCurrency)
+      )?.symbol || "₩";
+    const finalResultSymbol = isAssetKRW ? symbol : "₩";
 
     const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
     const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
@@ -177,24 +185,28 @@ export default function ExchangeRateImpactCalculator() {
       };
     } else if (isAssetKRW) {
       const pastValueInForeign = amount / pRate;
-      const effectiveValueInKRW = pastValueInForeign * cRate;
-      const changeAmount = effectiveValueInKRW - amount;
+      const currentValueInForeign = amount / cRate;
+      const changeAmount = currentValueInForeign - pastValueInForeign;
       res = {
         changeAmount,
-        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
-        pastValue: amount,
-        currentValue: effectiveValueInKRW,
+        changePercentage:
+          pastValueInForeign > 0
+            ? (changeAmount / pastValueInForeign) * 100
+            : 0,
+        pastValue: pastValueInForeign,
+        currentValue: currentValueInForeign,
       };
     } else {
+      // 자산이 외화일 경우
       const pastValueInKRW = amount * pRate;
       const currentValueInKRW = amount * cRate;
-      const changeInKRW = currentValueInKRW - pastValueInKRW;
-      const changeAmount = cRate > 0 ? changeInKRW / cRate : 0;
+      const changeAmount = currentValueInKRW - pastValueInKRW;
       res = {
         changeAmount,
-        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
-        pastValue: amount,
-        currentValue: amount + changeAmount,
+        changePercentage:
+          pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
+        pastValue: pastValueInKRW,
+        currentValue: currentValueInKRW,
       };
     }
 
@@ -208,7 +220,7 @@ export default function ExchangeRateImpactCalculator() {
         pastValue: roundValue(res.pastValue),
         currentValue: roundValue(res.currentValue),
       },
-      resultSymbol: symbol,
+      resultSymbol: finalResultSymbol,
     };
   }, [
     assetAmount,
@@ -255,6 +267,19 @@ export default function ExchangeRateImpactCalculator() {
       link.click();
       element.style.cssText = originalStyle;
     });
+  };
+
+  const handleReset = () => {
+    setAssetAmount(formatNumber(40000000));
+    setAssetCurrency("KRW");
+    setComparisonCurrency("USD");
+    setPastDate(initialPastDate);
+    setIsManual(false);
+    setUseDxy(false);
+    setManualPastRateStr("");
+    setManualCurrentRateStr("");
+    setError(null);
+    // Resetting will trigger fetchRates due to dependency change
   };
 
   return (
@@ -462,7 +487,7 @@ export default function ExchangeRateImpactCalculator() {
                       >
                         <CountUp
                           end={analysis.currentValue}
-                          suffix={` ${resultSymbol}`}
+                          prefix={`${resultSymbol}`}
                           separator=","
                           decimals={
                             Number.isInteger(analysis.currentValue) ? 0 : 2
@@ -531,7 +556,13 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t dark:border-gray-700 flex flex-col sm:flex-row gap-4">
+        <div className="mt-8 pt-6 border-t dark:border-gray-700 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <button
+            onClick={handleReset}
+            className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
+          >
+            <RotateCcw size={18} /> 초기화
+          </button>
           <button
             onClick={handleShareLink}
             className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
