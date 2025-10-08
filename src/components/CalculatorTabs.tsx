@@ -31,7 +31,7 @@ const FreelancerCalculator = dynamic(
   () => import("@/components/FreelancerCalculator")
 );
 const ExchangeRateImpactCalculator = dynamic(
-  () => import("@/components/ExchangeRateImpactCalculator")
+  () => import("@/components/ExchangeRateDisplay")
 );
 const YearEndTaxCalculator = dynamic(
   () => import("@/components/YearEndTaxCalculator")
@@ -40,7 +40,6 @@ const YearEndTaxCalculator = dynamic(
 const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
-  // [수정] FREELANCANCER -> FREELANCER 오타 수정
   FREELANCER: "freelancer",
   EXCHANGE: "exchange",
   YEAR_END_TAX: "year-end-tax",
@@ -165,8 +164,8 @@ function CalculatorTabsComponent() {
         })}
       </div>
 
-      {/* 기존 탭 메뉴는 PC(md 이상)에서만 보이도록 수정 */}
-      <div className="hidden md:flex mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
+      {/* [수정] PC/태블릿 용 탭 메뉴를 2줄로 나뉘도록 수정 */}
+      <div className="hidden md:flex flex-wrap justify-center mb-10 border-b border-gray-200 dark:border-gray-800">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
           return (
@@ -185,15 +184,7 @@ function CalculatorTabsComponent() {
           );
         })}
       </div>
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+
       <div>{renderActiveCalculator()}</div>
     </div>
   );
