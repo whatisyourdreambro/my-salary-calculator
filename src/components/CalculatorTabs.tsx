@@ -141,7 +141,6 @@ function CalculatorTabsComponent() {
 
   return (
     <div>
-      {/* 모바일용 그리드 메뉴 UI/UX 초고도화 */}
       <div className="md:hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
@@ -164,7 +163,7 @@ function CalculatorTabsComponent() {
         })}
       </div>
 
-      {/* [수정] PC/태블릿 용 탭 메뉴를 2줄로 나뉘도록 수정 */}
+      {/* [수정] flex-wrap, justify-center 추가, overflow-x-auto, whitespace-nowrap 제거 */}
       <div className="hidden md:flex flex-wrap justify-center mb-10 border-b border-gray-200 dark:border-gray-800">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
