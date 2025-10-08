@@ -157,7 +157,7 @@ export default function ExchangeRateImpactCalculator() {
     } else {
       setIsLoading(false);
     }
-  }, []); // Run only on mount
+  }, [fetchRates, searchParams]); // Run only on mount
 
   const { analysis, resultSymbol } = useMemo(() => {
     const pRateRaw = parseFloat(manualPastRateStr) || 0;
