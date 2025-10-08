@@ -13,10 +13,6 @@ import {
 } from "lucide-react";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 
-// ✨ [수정] 불필요해진 변환 함수들 완전 삭제
-// const formatNumber = (num: number) => num.toLocaleString();
-// const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
-
 const toInputDateString = (date: Date): string => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -54,7 +50,6 @@ interface AnalysisResult {
 export default function ExchangeRateImpactCalculator() {
   const reportRef = useRef<HTMLDivElement>(null);
 
-  // ✨ [수정] 상태의 타입을 string이 아닌 number로 변경
   const [assetAmount, setAssetAmount] = useState(100000000);
   const [assetCurrency, setAssetCurrency] = useState("KRW");
   const [comparisonCurrency, setComparisonCurrency] = useState("USD");
@@ -149,7 +144,6 @@ export default function ExchangeRateImpactCalculator() {
       const pRate = foreignCurrency === "JPY" ? pRateRaw / 100 : pRateRaw;
       const cRate = foreignCurrency === "JPY" ? cRateRaw / 100 : cRateRaw;
 
-      // ✨ [수정] parseNumber 없이 상태를 직접 사용
       const amount = assetAmount;
 
       if (!amount || !pRate || !cRate)
@@ -169,9 +163,7 @@ export default function ExchangeRateImpactCalculator() {
         const changeAmount = changeInForeign * cRate;
         result = {
           changeAmount: Math.round(changeAmount),
-          changePercentage: parseFloat(
-            amount > 0 ? (changeAmount / amount) * 100 : 0
-          ),
+          changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
           pastValue: Math.round(amount),
           currentValue: Math.round(amount + changeAmount),
         };
@@ -181,9 +173,8 @@ export default function ExchangeRateImpactCalculator() {
         const changeAmount = currentValueInKRW - pastValueInKRW;
         result = {
           changeAmount: Math.round(changeAmount),
-          changePercentage: parseFloat(
-            pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0
-          ),
+          changePercentage:
+            pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
           pastValue: Math.round(pastValueInKRW),
           currentValue: Math.round(currentValueInKRW),
         };
@@ -201,7 +192,7 @@ export default function ExchangeRateImpactCalculator() {
 
   const handleShareLink = async () => {
     const dataToShare = {
-      assetAmount: assetAmount.toString(), // string으로 변환
+      assetAmount: assetAmount.toString(),
       assetCurrency,
       comparisonCurrency,
       pastDate,
@@ -253,7 +244,6 @@ export default function ExchangeRateImpactCalculator() {
           </div>
           <div>
             <label className="text-sm font-medium">자산 금액</label>
-            {/* ✨ [수정] input 타입을 number로 바꾸고 value와 onChange를 단순화 */}
             <input
               type="number"
               value={assetAmount}
@@ -291,7 +281,6 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        {/* 이하 JSX는 모두 동일합니다 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {scenarios.map((scenario) => (
             <div
@@ -450,7 +439,7 @@ export default function ExchangeRateImpactCalculator() {
                             prefix={changeAmount >= 0 ? "+ " : "- "}
                             duration={0.5}
                           />
-                          원
+                          ₩
                         </p>
                         <p className="text-xs text-gray-500">
                           ({res.changePercentage.toFixed(2)}%)
