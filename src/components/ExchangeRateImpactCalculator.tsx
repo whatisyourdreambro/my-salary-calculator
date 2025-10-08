@@ -38,7 +38,7 @@ const toInputDateString = (date: Date): string => {
 };
 
 const currencies = [
-  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "원" },
+  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
   { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
   { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
   { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
@@ -80,7 +80,6 @@ export default function ExchangeRateImpactCalculator() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 달러 인덱스 관련 state 추가
   const [useDxy, setUseDxy] = useState(false);
   const [pastDxy, setPastDxy] = useState("105.00");
   const [currentDxy, setCurrentDxy] = useState("108.00");
@@ -136,7 +135,7 @@ export default function ExchangeRateImpactCalculator() {
     if (useDxy) {
       const pDxy = parseFloat(pastDxy) || 0;
       const cDxy = parseFloat(currentDxy) || 0;
-      const pRate = parseFloat(manualPastRateStr) || 1300; // 과거 환율이 없으면 1300을 기준으로 추정
+      const pRate = parseFloat(manualPastRateStr) || 1300;
       if (pDxy > 0 && cDxy > 0) {
         const estimatedRate = pRate * (cDxy / pDxy);
         setManualCurrentRateStr(estimatedRate.toFixed(4));
@@ -204,7 +203,8 @@ export default function ExchangeRateImpactCalculator() {
   ]);
 
   const assetSymbol =
-    currencies.find((c) => c.id === assetCurrency)?.symbol || "원";
+    currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
+  const krwSymbol = currencies.find((c) => c.id === "KRW")?.symbol || "₩";
 
   const chartData = [
     { name: "과거", value: analysis.pastValue },
@@ -214,17 +214,17 @@ export default function ExchangeRateImpactCalculator() {
   const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
 
   const handleShareLink = async () => {
-    const dataToShare = {
-      assetAmount,
+    const params = new URLSearchParams({
+      tab: "exchange",
+      assetAmount: assetAmount.toString(),
       assetCurrency,
       comparisonCurrency,
       pastDate,
       isManual: isManual.toString(),
       manualPastRateStr,
       manualCurrentRateStr,
-    };
-    const encodedData = btoa(JSON.stringify(dataToShare));
-    const shareUrl = `${window.location.origin}/share-exchange/${encodedData}`;
+    });
+    const shareUrl = `${window.location.origin}/?${params.toString()}`;
 
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -469,11 +469,8 @@ export default function ExchangeRateImpactCalculator() {
                       )}
                       <CountUp
                         end={Math.abs(analysis.changeAmount)}
-                        prefix={
-                          analysis.changeAmount >= 0
-                            ? `+ ${assetSymbol}`
-                            : `- ${assetSymbol}`
-                        }
+                        prefix={analysis.changeAmount >= 0 ? "+ " : "- "}
+                        suffix={` ${krwSymbol}`}
                         separator=","
                       />
                     </div>
@@ -505,7 +502,7 @@ export default function ExchangeRateImpactCalculator() {
                         />
                         <Tooltip
                           formatter={(value: number) =>
-                            `${assetSymbol}${formatNumber(value)}`
+                            `${krwSymbol}${formatNumber(value)}`
                           }
                           cursor={{ fill: "rgba(0,0,0,0.05)" }}
                         />
