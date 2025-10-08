@@ -338,8 +338,8 @@ export default function ExchangeRateImpactCalculator() {
               <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    환율 (1 {foreignCurrency === "JPY" ? "100" : ""}
-                    {foreignCurrency} 당 KRW)
+                    환율 (1 {comparisonCurrency === "JPY" ? "100" : ""}
+                    {comparisonCurrency} 당 {assetCurrency})
                   </label>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
