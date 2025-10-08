@@ -13,7 +13,7 @@ import {
   BarChart3,
   Calculator,
   Briefcase,
-  Shield,
+  Globe, // Shield 아이콘 대신 Globe 사용
 } from "lucide-react";
 
 // Dynamic imports for performance
@@ -30,6 +30,10 @@ const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
 const FreelancerCalculator = dynamic(
   () => import("@/components/FreelancerCalculator")
 );
+const ExchangeRateImpactCalculator = dynamic(
+  // 새로 만든 계산기 import
+  () => import("@/components/ExchangeRateImpactCalculator")
+);
 const YearEndTaxCalculator = dynamic(
   () => import("@/components/YearEndTaxCalculator")
 );
@@ -38,6 +42,7 @@ const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
   FREELANCER: "freelancer",
+  EXCHANGE: "exchange", // 탭 추가
   YEAR_END_TAX: "year-end-tax",
   PAYSTUB: "paystub",
   FUTURE: "future",
@@ -66,10 +71,16 @@ const TAB_CONFIG: Record<
     description: "3.3% 및 4대보험 계산",
     icon: Briefcase,
   },
+  [TABS.EXCHANGE]: {
+    // 설정 추가
+    name: "환율 영향",
+    description: "내 자산가치 변화 분석",
+    icon: Globe,
+  },
   [TABS.YEAR_END_TAX]: {
     name: "연말정산 최적화",
     description: "최상의 환급 시나리오",
-    icon: Shield,
+    icon: FileText, // Shield -> FileText 로 변경 또는 다른 아이콘
   },
   [TABS.PAYSTUB]: {
     name: "급여명세서",
@@ -112,6 +123,8 @@ function CalculatorTabsComponent() {
         return <SeveranceCalculator />;
       case TABS.FREELANCER:
         return <FreelancerCalculator />;
+      case TABS.EXCHANGE: // 렌더링 케이스 추가
+        return <ExchangeRateImpactCalculator />;
       case TABS.YEAR_END_TAX:
         return <YearEndTaxCalculator />;
       case TABS.PAYSTUB:

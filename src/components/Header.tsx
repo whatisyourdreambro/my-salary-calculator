@@ -22,6 +22,7 @@ const navConfig: NavItem[] = [
     type: "dropdown",
     items: [
       { name: "종합 계산기 (정규직)", href: "/?tab=salary" },
+      { name: "환율 영향 계산기", href: "/?tab=exchange" },
       { name: "알바/프리랜서", href: "/?tab=freelancer" },
       { name: "퇴직금 계산기", href: "/?tab=severance" },
       { name: "미래 연봉 예측", href: "/?tab=future" },
@@ -50,7 +51,7 @@ const navConfig: NavItem[] = [
       { name: "자주 묻는 질문(Q&A)", href: "/qna" },
       { name: "용어 사전", href: "/glossary" },
       { name: "🍀 행운의 로또 번호", href: "/lotto" },
-      { name: "💸 인생 연봉 그래프", href: "/mbti-salary" }, // <<-- 이 부분이 추가되었습니다!
+      { name: "💸 인생 연봉 그래프", href: "/mbti-salary" },
     ],
   },
 ];

@@ -45,6 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 가이드 페이지 라우트
   const guideSlugs = [
+    "exchange-rate-deep-dive",
     "compound-interest",
     "exchange-rate-impact",
     "naver-vs-kakao",

@@ -39,16 +39,16 @@ export default function ExchangeRateDisplay() {
   const [marketData, setMarketData] = useState<InfoItem[]>(initialData);
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // 에러 상태 추가
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRates = async () => {
       setIsLoading(true);
-      setError(null); // API 요청 시작 시 에러 초기화
+      setError(null);
       try {
-        // API 엔드포인트 변경 (frankfurter.app 사용)
+        const currencies = "USD,JPY,EUR,CNY,GBP";
         const response = await fetch(
-          `https://api.frankfurter.app/latest?from=KRW`
+          `https://api.frankfurter.app/latest?to=KRW&from=${currencies}`
         );
         if (!response.ok)
           throw new Error("최신 환율 정보를 가져오지 못했습니다.");
@@ -58,9 +58,8 @@ export default function ExchangeRateDisplay() {
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-        // 과거 날짜 API 엔드포인트 변경
         const prevResponse = await fetch(
-          `https://api.frankfurter.app/${yesterdayStr}?from=KRW`
+          `https://api.frankfurter.app/${yesterdayStr}?to=KRW&from=${currencies}`
         );
         if (!prevResponse.ok)
           throw new Error("어제 환율 정보를 가져오지 못했습니다.");
@@ -68,11 +67,11 @@ export default function ExchangeRateDisplay() {
 
         const updatedData = initialData.map((item) => {
           if (!data.rates[item.id] || !prevData.rates[item.id]) {
-            return item; // 해당 통화 정보가 없으면 기존 데이터 유지
+            return item;
           }
 
-          const todayRate = 1 / data.rates[item.id];
-          const yesterdayRate = 1 / prevData.rates[item.id];
+          const todayRate = data.rates[item.id]["KRW"];
+          const yesterdayRate = prevData.rates[item.id]["KRW"];
 
           let displayRate = todayRate;
           let change = 0;

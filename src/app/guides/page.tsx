@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    slug: "exchange-rate-deep-dive",
+    title: "환율의 대서사시: 당신의 부를 결정하는 보이지 않는 전쟁",
+    description:
+      "금리의 속삭임, 무역의 파도, 지정학적 폭풍 속에서 환율은 어떻게 춤추는가? 환율의 모든 것을 파헤칩니다.",
+    category: "재테크 로드맵",
+  },
+  {
     slug: "compound-interest",
     title: "복리의 마법, 스노우볼 효과: 부자들의 비밀 무기",
     description:
