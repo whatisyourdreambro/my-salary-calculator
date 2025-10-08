@@ -6,13 +6,12 @@ import { useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
 import html2canvas from "html2canvas";
 import {
-  TrendingUp,
-  TrendingDown,
   Loader,
   RefreshCw,
   AlertCircle,
   Link as LinkIcon,
   Image as ImageIcon,
+  ArrowRight,
 } from "lucide-react";
 import {
   BarChart,
@@ -171,6 +170,7 @@ export default function ExchangeRateImpactCalculator() {
         changePercentage: 0,
         pastValue: 0,
         currentValue: 0,
+        effectiveValue: 0,
       };
       symbol =
         currencies.find((c) => c.id === comparisonCurrency)?.symbol || "₩";
@@ -192,6 +192,7 @@ export default function ExchangeRateImpactCalculator() {
         changePercentage: parseFloat(changePercentage.toFixed(2)),
         pastValue: pastValueInForeign,
         currentValue: currentValueInForeign,
+        effectiveValue: amount + changeAmountInKRW,
       };
     } else {
       symbol = currencies.find((c) => c.id === "KRW")?.symbol || "₩";
@@ -206,6 +207,7 @@ export default function ExchangeRateImpactCalculator() {
         changePercentage: parseFloat(changePercentage.toFixed(2)),
         pastValue: pastValueInKRW,
         currentValue: currentValueInKRW,
+        effectiveValue: currentValueInKRW,
       };
     }
 
@@ -218,6 +220,7 @@ export default function ExchangeRateImpactCalculator() {
         changePercentage: res.changePercentage,
         pastValue: roundValue(res.pastValue),
         currentValue: roundValue(res.currentValue),
+        effectiveValue: roundValue(res.effectiveValue),
       },
       resultSymbol: symbol,
       chartSymbol: chartSym,
@@ -254,11 +257,22 @@ export default function ExchangeRateImpactCalculator() {
   const handleShareImage = () => {
     const element = reportRef.current;
     if (!element) return;
-    html2canvas(element, { scale: 2, backgroundColor: null }).then((canvas) => {
+
+    const originalStyle = element.style.cssText;
+    element.style.width = `${element.offsetWidth}px`;
+
+    html2canvas(element, {
+      scale: 2,
+      backgroundColor: document.documentElement.classList.contains("dark")
+        ? "#1e1e1e"
+        : "#ffffff",
+      useCORS: true,
+    }).then((canvas) => {
       const link = document.createElement("a");
       link.download = `Moneysalary_환율분석결과.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
+      element.style.cssText = originalStyle;
     });
   };
 
@@ -269,9 +283,8 @@ export default function ExchangeRateImpactCalculator() {
           환율 변동에 따른 내 자산 가치 변화
         </h2>
 
-        <div ref={reportRef} className="bg-light-card dark:bg-dark-card p-4">
+        <div className="p-4" ref={reportRef}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* === 입력부 === */}
             <div className="space-y-6">
               <div>
                 <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
@@ -433,7 +446,6 @@ export default function ExchangeRateImpactCalculator() {
               </div>
             </div>
 
-            {/* === 결과부 === */}
             <div className="flex flex-col justify-center">
               {isLoading ? (
                 <div className="text-center">
@@ -463,45 +475,57 @@ export default function ExchangeRateImpactCalculator() {
                     }`}
                   >
                     <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary text-sm">
-                      {`과거 환율 ${manualPastRateStr} 대비, 현재(미래) 환율 ${manualCurrentRateStr} 기준,`}
-                      <br />
-                      <strong>
-                        {assetSymbol}
-                        {formatNumber(parseNumber(assetAmount))}
-                      </strong>
-                      의 상대적 가치는
+                      {`과거 환율 ${manualPastRateStr} → 현재 ${manualCurrentRateStr} 기준`}
                     </p>
-                    <div
-                      className={`flex items-center justify-center gap-2 text-4xl lg:text-5xl font-bold my-2 ${
-                        analysis.changeAmount >= 0
-                          ? "text-primary"
-                          : "text-danger"
-                      }`}
-                    >
-                      {analysis.changeAmount >= 0 ? (
-                        <TrendingUp className="w-10 h-10" />
-                      ) : (
-                        <TrendingDown className="w-10 h-10" />
-                      )}
-                      <CountUp
-                        end={Math.abs(analysis.changeAmount)}
-                        prefix={analysis.changeAmount >= 0 ? "+ " : "- "}
-                        suffix={` ${resultSymbol}`}
-                        separator=","
-                        decimals={
-                          Number.isInteger(analysis.changeAmount) ? 0 : 2
-                        }
+                    <div className="flex items-center justify-center gap-4 my-2">
+                      <div className="text-2xl font-bold">
+                        {assetCurrency === "KRW"
+                          ? `${resultSymbol}${formatNumber(
+                              parseNumber(assetAmount)
+                            )}`
+                          : `${chartSymbol}${formatNumber(analysis.pastValue)}`}
+                      </div>
+                      <ArrowRight
+                        className={`w-8 h-8 ${
+                          analysis.changeAmount >= 0
+                            ? "text-primary"
+                            : "text-danger"
+                        }`}
                       />
+                      <div
+                        className={`text-4xl font-bold ${
+                          analysis.changeAmount >= 0
+                            ? "text-primary"
+                            : "text-danger"
+                        }`}
+                      >
+                        <CountUp
+                          end={analysis.effectiveValue}
+                          suffix={` ${resultSymbol}`}
+                          separator=","
+                          decimals={
+                            Number.isInteger(analysis.effectiveValue) ? 0 : 2
+                          }
+                        />
+                      </div>
                     </div>
-                    <p
+                    <div
                       className={`font-semibold text-lg ${
                         analysis.changeAmount >= 0
                           ? "text-primary"
                           : "text-danger"
                       }`}
                     >
-                      ({analysis.changePercentage}%)
-                    </p>
+                      <CountUp
+                        end={analysis.changeAmount}
+                        prefix={analysis.changeAmount >= 0 ? "+ " : ""}
+                        suffix={` ${resultSymbol} (${analysis.changePercentage}%)`}
+                        separator=","
+                        decimals={
+                          Number.isInteger(analysis.changeAmount) ? 0 : 2
+                        }
+                      />
+                    </div>
                     {assetCurrency === "KRW" && (
                       <p className="text-xs text-gray-500 mt-2">
                         원화 자산의 해외 구매력 가치 변화 (현재 환율 기준)
