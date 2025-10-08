@@ -143,7 +143,8 @@ function CalculatorTabsComponent() {
 
   return (
     <div>
-      <div className="flex justify-center mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
+      {/* [수정] justify-center 클래스를 삭제했습니다. */}
+      <div className="flex mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
           return (
