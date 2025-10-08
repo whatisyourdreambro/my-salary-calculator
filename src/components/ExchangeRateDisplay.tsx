@@ -45,9 +45,9 @@ const toInputDateString = (date: Date): string => {
 const currencies = [
   { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
   { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
-  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "JPY" },
+  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
   { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
-  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "CNY" },
+  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥" },
   { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£" },
 ];
 
@@ -165,10 +165,10 @@ export default function ExchangeRateImpactCalculator() {
     const amount = parseNumber(assetAmount);
     const isAssetKRW = assetCurrency === "KRW";
 
-    const finalResultSymbol =
-      currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
-
     const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
+    const symbol = currencies.find((c) => c.id === foreign)?.symbol || "₩";
+    const finalResultSymbol = isAssetKRW ? symbol : "₩";
+
     const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
     const cRate = foreign === "JPY" ? cRateRaw / 100 : cRateRaw;
 
@@ -182,26 +182,30 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: 0,
       };
     } else if (isAssetKRW) {
-      // 자산이 KRW일 때: KRW -> 외화(과거환율) -> KRW(현재환율)
+      // 자산이 KRW일 때: 결과를 비교 통화로 표시 (원래 로직)
       const pastValueInForeign = amount / pRate;
-      const currentValueInKRW = pastValueInForeign * cRate;
-      const changeAmount = currentValueInKRW - amount;
+      const currentValueInForeign = amount / cRate;
+      const changeAmount = currentValueInForeign - pastValueInForeign;
       res = {
         changeAmount,
-        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
-        pastValue: amount,
-        currentValue: currentValueInKRW,
+        changePercentage:
+          pastValueInForeign > 0
+            ? (changeAmount / pastValueInForeign) * 100
+            : 0,
+        pastValue: pastValueInForeign,
+        currentValue: currentValueInForeign,
       };
     } else {
-      // 자산이 외화일 때: 외화 -> KRW(과거환율) -> 외화(현재환율)
+      // 자산이 외화일 때: 결과를 KRW로 표시 (원래 로직)
       const pastValueInKRW = amount * pRate;
-      const currentValueInForeign = pastValueInKRW / cRate;
-      const changeAmount = currentValueInForeign - amount;
+      const currentValueInKRW = amount * cRate;
+      const changeAmount = currentValueInKRW - pastValueInKRW;
       res = {
         changeAmount,
-        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
-        pastValue: amount,
-        currentValue: currentValueInForeign,
+        changePercentage:
+          pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
+        pastValue: pastValueInKRW,
+        currentValue: currentValueInKRW,
       };
     }
 
