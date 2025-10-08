@@ -1,7 +1,7 @@
 // src/components/ExchangeRateDisplay.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, TrendingDown, Minus, AlertCircle } from "lucide-react";
 
 interface InfoItem {
@@ -41,73 +41,111 @@ export default function ExchangeRateDisplay() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchRates = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const currencies = "USD,JPY,EUR,CNY,GBP";
-        const response = await fetch(
-          `https://api.frankfurter.app/latest?to=KRW&from=${currencies}`
-        );
-        if (!response.ok)
-          throw new Error("최신 환율 정보를 가져오지 못했습니다.");
-        const data = await response.json();
+  const fetchRates = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
 
-        const yesterday = new Date();
+      // 어제 날짜가 주말(토:6, 일:0)인 경우 금요일로 변경
+      if (yesterday.getDay() === 0) {
+        yesterday.setDate(yesterday.getDate() - 2);
+      } else if (yesterday.getDay() === 6) {
         yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split("T")[0];
+      }
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-        const prevResponse = await fetch(
-          `https://api.frankfurter.app/${yesterdayStr}?to=KRW&from=${currencies}`
+      const currenciesToFetch = "KRW,JPY,EUR,CNY,GBP";
+
+      const [currentRes, prevRes] = await Promise.all([
+        fetch(
+          `https://api.frankfurter.app/latest?from=USD&to=${currenciesToFetch}`
+        ),
+        fetch(
+          `https://api.frankfurter.app/${yesterdayStr}?from=USD&to=${currenciesToFetch}`
+        ),
+      ]);
+
+      if (!currentRes.ok || !prevRes.ok) {
+        throw new Error(
+          "환율 정보를 가져오는 데 실패했습니다. API 서버에 문제가 있을 수 있습니다."
         );
-        if (!prevResponse.ok)
-          throw new Error("어제 환율 정보를 가져오지 못했습니다.");
-        const prevData = await prevResponse.json();
+      }
 
-        const updatedData = initialData.map((item) => {
-          if (!data.rates[item.id] || !prevData.rates[item.id]) {
-            return item;
-          }
+      const currentData = await currentRes.json();
+      const prevData = await prevRes.json();
 
-          const todayRate = data.rates[item.id]["KRW"];
-          const yesterdayRate = prevData.rates[item.id]["KRW"];
+      const updatedData = initialData.map((item) => {
+        // 데이터가 없는 경우를 대비한 방어 코드
+        if (!currentData.rates || !prevData.rates) return item;
 
-          let displayRate = todayRate;
-          let change = 0;
+        const todayRateKRW = currentData.rates.KRW;
+        const yesterdayRateKRW = prevData.rates.KRW;
 
-          if (item.id === "JPY") {
-            displayRate *= 100;
-            const yesterdayDisplayRate = yesterdayRate * 100;
+        if (!todayRateKRW || !yesterdayRateKRW) return item;
+
+        let displayRate = 0;
+        let change = 0;
+
+        if (item.id === "USD") {
+          displayRate = todayRateKRW;
+          const yesterdayDisplayRate = yesterdayRateKRW;
+          if (yesterdayDisplayRate > 0) {
             change =
               ((displayRate - yesterdayDisplayRate) / yesterdayDisplayRate) *
               100;
-          } else {
-            change = ((todayRate - yesterdayRate) / yesterdayRate) * 100;
           }
+        } else {
+          const todayRateForeign = currentData.rates[item.id];
+          const yesterdayRateForeign = prevData.rates[item.id];
 
-          return { ...item, value: displayRate, change };
-        });
+          if (!todayRateForeign || !yesterdayRateForeign) return item;
 
-        setMarketData(updatedData);
-        setLastUpdated(new Date().toLocaleString());
-      } catch (err) {
-        if (err instanceof Error) {
-          console.error("환율 정보 로딩 실패:", err.message);
-          setError(
-            "환율 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요."
-          );
+          displayRate = todayRateKRW / todayRateForeign;
+          const yesterdayDisplayRate = yesterdayRateKRW / yesterdayRateForeign;
+
+          if (yesterdayDisplayRate > 0) {
+            if (item.id === "JPY") {
+              const displayRate100 = displayRate * 100;
+              const yesterdayDisplayRate100 = yesterdayDisplayRate * 100;
+              change =
+                ((displayRate100 - yesterdayDisplayRate100) /
+                  yesterdayDisplayRate100) *
+                100;
+              displayRate = displayRate100;
+            } else {
+              change =
+                ((displayRate - yesterdayDisplayRate) / yesterdayDisplayRate) *
+                100;
+            }
+          }
         }
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
+        return { ...item, value: displayRate, change: change };
+      });
+
+      setMarketData(updatedData);
+      setLastUpdated(new Date().toLocaleString());
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("환율 정보 로딩 실패:", err.message);
+        setError(err.message);
+      } else {
+        setError("알 수 없는 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
     fetchRates();
     const interval = setInterval(fetchRates, 3600000); // 1시간마다 업데이트
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchRates]);
 
   const ChangeIndicator = ({ change }: { change: number }) => {
     if (isNaN(change)) return null;
