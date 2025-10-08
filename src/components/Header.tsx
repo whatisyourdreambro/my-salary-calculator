@@ -74,7 +74,6 @@ export default function Header() {
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* ... (PC 메뉴 부분, 변경 없음) ... */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <h1 className="text-lg sm:text-xl font-bold whitespace-nowrap text-primary">
@@ -188,7 +187,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* [수정] 모바일 메뉴 전체 로직 변경 */}
+        {/* [수정] 모바일 메뉴를 아코디언 형태로 변경 */}
         {isMobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-1 animate-fade-in-up">
             <Link
