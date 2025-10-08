@@ -236,8 +236,6 @@ export default function ExchangeRateImpactCalculator() {
   const handleShareImage = () => {
     const element = reportRef.current;
     if (!element) return;
-    const originalStyle = element.style.cssText;
-    element.style.width = `${element.offsetWidth}px`;
 
     html2canvas(element, {
       scale: 2,
@@ -245,12 +243,12 @@ export default function ExchangeRateImpactCalculator() {
         ? "#1e1e1e"
         : "#ffffff",
       useCORS: true,
+      windowHeight: element.scrollHeight, // [수정] 전체 높이를 캡처하도록 설정
     }).then((canvas) => {
       const link = document.createElement("a");
       link.download = `Moneysalary_환율분석결과.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      element.style.cssText = originalStyle;
     });
   };
 
