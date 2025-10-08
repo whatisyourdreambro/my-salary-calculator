@@ -7,7 +7,6 @@ import CountUp from "react-countup";
 import html2canvas from "html2canvas";
 import {
   Loader,
-  RefreshCw,
   AlertCircle,
   Link as LinkIcon,
   Image as ImageIcon,
@@ -89,7 +88,6 @@ export default function ExchangeRateImpactCalculator() {
   const [pastDxy, setPastDxy] = useState("105.00");
   const [currentDxy, setCurrentDxy] = useState("108.00");
 
-  // [수정] 동일 통화 선택 방지 로직
   useEffect(() => {
     if (assetCurrency === comparisonCurrency) {
       const newComparison = currencies.find((c) => c.id !== assetCurrency);
@@ -99,7 +97,6 @@ export default function ExchangeRateImpactCalculator() {
     }
   }, [assetCurrency, comparisonCurrency]);
 
-  // [수정] 환율 조회 로직 전면 수정
   const fetchRates = useCallback(async () => {
     if (isManual || useDxy) {
       setIsLoading(false);
@@ -129,15 +126,8 @@ export default function ExchangeRateImpactCalculator() {
       const pastData = await pastRes.json();
       const currentData = await currentRes.json();
 
-      const isJpyKrwPair =
-        (from === "JPY" && to === "KRW") || (from === "KRW" && to === "JPY");
-
-      const pastRateValue = isJpyKrwPair
-        ? pastData.rates[to] * 100
-        : pastData.rates[to];
-      const currentRateValue = isJpyKrwPair
-        ? currentData.rates[to] * 100
-        : currentData.rates[to];
+      const pastRateValue = pastData.rates[to];
+      const currentRateValue = currentData.rates[to];
 
       setManualPastRateStr(pastRateValue?.toFixed(4) || "0");
       setManualCurrentRateStr(currentRateValue?.toFixed(4) || "0");
@@ -151,7 +141,6 @@ export default function ExchangeRateImpactCalculator() {
 
   useEffect(() => {
     if (useDxy) {
-      // DXY 로직은 KRW/USD 환율 예측에 주로 사용되므로, 이 경우에만 작동하도록 제한하는 것이 좋습니다.
       if (assetCurrency === "KRW" && comparisonCurrency === "USD") {
         const pDxy = parseFloat(pastDxy) || 0;
         const cDxy = parseFloat(currentDxy) || 0;
@@ -160,8 +149,6 @@ export default function ExchangeRateImpactCalculator() {
           const estimatedRate = pRate * (cDxy / pDxy);
           setManualCurrentRateStr(estimatedRate.toFixed(4));
         }
-      } else {
-        // DXY 추정은 현재 KRW/USD 쌍에 대해서만 지원한다고 알림
       }
     } else {
       fetchRates();
@@ -184,7 +171,6 @@ export default function ExchangeRateImpactCalculator() {
     }
   }, [fetchRates, searchParams]);
 
-  // [수정] 계산 로직 통합 및 수정
   const { analysis, resultSymbol } = useMemo(() => {
     const pRate = parseFloat(manualPastRateStr) || 0;
     const cRate = parseFloat(manualCurrentRateStr) || 0;
@@ -204,7 +190,6 @@ export default function ExchangeRateImpactCalculator() {
       };
     } else {
       const pastValue = amount;
-      // 환율 비율을 통해 현재 가치를 올바르게 계산 (과거환율/현재환율)
       const currentValue = amount * (pRate / cRate);
       const changeAmount = currentValue - pastValue;
 
@@ -236,10 +221,6 @@ export default function ExchangeRateImpactCalculator() {
   ];
 
   const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
-
-  const isJpyKrwPair =
-    (assetCurrency === "KRW" && comparisonCurrency === "JPY") ||
-    (assetCurrency === "JPY" && comparisonCurrency === "KRW");
 
   const handleShareLink = async () => {
     const shareUrl = "https://www.moneysalary.com/?tab=exchange";
@@ -341,8 +322,7 @@ export default function ExchangeRateImpactCalculator() {
               <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    환율 ({isJpyKrwPair ? "100" : "1"} {comparisonCurrency} 당{" "}
-                    {assetCurrency})
+                    환율 (1 {comparisonCurrency} 당 {assetCurrency})
                   </label>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
@@ -375,14 +355,6 @@ export default function ExchangeRateImpactCalculator() {
                     disabled={!isManual || useDxy}
                     className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50 text-center font-mono"
                   />
-                  <button
-                    onClick={fetchRates}
-                    disabled={isManual || useDxy}
-                    className="p-2 border rounded-lg dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
-                    aria-label="최신 환율 불러오기"
-                  >
-                    <RefreshCw size={18} />
-                  </button>
                 </div>
               </div>
 
