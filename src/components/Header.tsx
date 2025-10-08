@@ -20,17 +20,19 @@ const navConfig: NavItem[] = [
   {
     name: "계산기",
     type: "dropdown",
+    // [수정] CalculatorTabs.tsx의 순서와 동일하게 메뉴 순서를 조정했습니다.
     items: [
       { name: "종합 계산기 (정규직)", href: "/?tab=salary" },
-      { name: "환율 영향 계산기", href: "/?tab=exchange" },
-      { name: "알바/프리랜서", href: "/?tab=freelancer" },
       { name: "퇴직금 계산기", href: "/?tab=severance" },
-      { name: "미래 연봉 예측", href: "/?tab=future" },
+      { name: "알바/프리랜서", href: "/?tab=freelancer" },
+      { name: "환율 영향 계산기", href: "/?tab=exchange" },
       { name: "연말정산 계산기", href: "/year-end-tax" },
-      { name: "주택담보대출 계산기", href: "/home-loan" },
+      { name: "급여명세서 생성기", href: "/?tab=paystub" },
+      { name: "미래 연봉 예측", href: "/?tab=future" },
+      { name: "연봉 비교", href: "/?tab=comparator" },
+      { name: "연봉 순위", href: "/?tab=rank" },
       { name: "자동차 구매 계산기", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
-      { name: "급여명세서 생성기", href: "/?tab=paystub" },
     ],
   },
   {
@@ -60,7 +62,6 @@ export default function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // [추가] 모바일 아코디언 메뉴 상태
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
     null
   );
@@ -187,7 +188,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* [수정] 모바일 메뉴를 아코디언 형태로 변경 */}
         {isMobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-1 animate-fade-in-up">
             <Link
