@@ -1,13 +1,8 @@
 // src/app/mbti-salary/page.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import type { ElementType } from "react";
-import {
-  questions,
-  getResultType,
-  type SalaryMBTIType,
-} from "@/lib/salaryMBTI";
+import { useState, useRef, useEffect, ElementType } from "react";
+import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
 import {
   LineChart,
   Line,
@@ -30,7 +25,7 @@ import {
   Target,
 } from "lucide-react";
 
-// 타이핑 효과를 위한 커스텀 훅
+// 타이핑 효과를 위한 커스텀 훅 (사용자 경험 극대화)
 const useTypingEffect = (text: string, speed = 50) => {
   const [displayedText, setDisplayedText] = useState("");
 
@@ -39,7 +34,6 @@ const useTypingEffect = (text: string, speed = 50) => {
     if (text) {
       let i = 0;
       const intervalId = setInterval(() => {
-        // [수정] i가 텍스트 길이에 도달하면 인터벌을 정리합니다.
         if (i >= text.length) {
           clearInterval(intervalId);
         } else {
@@ -83,7 +77,7 @@ export default function MbtiSalaryPage() {
         const resultType = getResultType(newAnswers);
         setResult(resultType);
         setStep("result");
-      }, 2000); // 2초간 로딩 애니메이션
+      }, 2000); // 로딩 애니메이션으로 기대감 증폭
     }
   };
 
@@ -120,8 +114,8 @@ export default function MbtiSalaryPage() {
   const handleDownload = () => {
     if (resultRef.current) {
       html2canvas(resultRef.current, {
-        backgroundColor: null,
-        scale: 2,
+        backgroundColor: null, // 투명 배경 유지
+        scale: 2, // 고해상도 이미지 생성
       }).then((canvas) => {
         const link = document.createElement("a");
         link.download = `내 인생 연봉 그래프_${result?.title}_Moneysalary.png`;
@@ -131,6 +125,7 @@ export default function MbtiSalaryPage() {
     }
   };
 
+  // 아이콘과 스텝을 매핑하여 동적으로 렌더링
   const iconMap: { [key: number]: ElementType } = {
     1: Target,
     2: BrainCircuit,
@@ -139,7 +134,7 @@ export default function MbtiSalaryPage() {
 
   return (
     <main className="w-full min-h-screen bg-light-bg dark:bg-gray-900 text-light-text dark:text-white overflow-hidden relative">
-      {/* Animated Background */}
+      {/* [UX 강화] 몰입감을 높이는 동적 배경 애니메이션 */}
       <div className="absolute inset-0 z-0 opacity-10 dark:opacity-40">
         {[...Array(50)].map((_, i) => (
           <div
@@ -193,7 +188,6 @@ export default function MbtiSalaryPage() {
                 }}
               ></div>
             </div>
-            {/* [수정] min-h-[100px] 클래스를 제거하고 패딩(py-4)과 새로운 최소 높이를 추가했습니다. */}
             <div className="text-center py-4">
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
                 Q{currentQuestionIndex + 1}.
@@ -230,6 +224,7 @@ export default function MbtiSalaryPage() {
 
         {step === "result" && result && (
           <div className="w-full max-w-4xl animate-fade-in-up">
+            {/* [바이럴 핵심] 공유/저장될 결과 리포트 영역 */}
             <div
               ref={resultRef}
               className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-slate-800 p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-white/20"
@@ -290,6 +285,7 @@ export default function MbtiSalaryPage() {
                 </ResponsiveContainer>
               </div>
 
+              {/* [가치 증대] 개인 맞춤형 분석 추가 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="bg-gray-200/50 dark:bg-white/5 p-4 rounded-lg">
                   <h4 className="font-bold text-lg text-green-600 dark:text-green-400">
@@ -306,6 +302,7 @@ export default function MbtiSalaryPage() {
               </div>
             </div>
 
+            {/* [유입 유도] 개인 맞춤형 성장 플랜 및 내부 링크 강화 */}
             <div className="mt-8">
               <h3 className="text-2xl font-bold text-center mb-6">
                 🚀 당신을 위한 성장 플랜
