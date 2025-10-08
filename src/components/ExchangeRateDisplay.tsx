@@ -89,16 +89,24 @@ export default function ExchangeRateImpactCalculator() {
   const [pastDxy, setPastDxy] = useState("105.00");
   const [currentDxy, setCurrentDxy] = useState("108.00");
 
-  const foreignCurrency =
-    assetCurrency === "KRW" ? comparisonCurrency : assetCurrency;
+  // [수정] 동일 통화 선택 방지 로직
+  useEffect(() => {
+    if (assetCurrency === comparisonCurrency) {
+      const newComparison = currencies.find((c) => c.id !== assetCurrency);
+      if (newComparison) {
+        setComparisonCurrency(newComparison.id);
+      }
+    }
+  }, [assetCurrency, comparisonCurrency]);
 
+  // [수정] 환율 조회 로직 전면 수정
   const fetchRates = useCallback(async () => {
     if (isManual || useDxy) {
       setIsLoading(false);
       return;
     }
-    const to = "KRW";
-    const from = foreignCurrency;
+    const from = comparisonCurrency;
+    const to = assetCurrency;
 
     if (from === to) {
       setManualPastRateStr("1.0000");
@@ -121,10 +129,15 @@ export default function ExchangeRateImpactCalculator() {
       const pastData = await pastRes.json();
       const currentData = await currentRes.json();
 
-      const pastRateValue =
-        from === "JPY" ? pastData.rates[to] * 100 : pastData.rates[to];
-      const currentRateValue =
-        from === "JPY" ? currentData.rates[to] * 100 : currentData.rates[to];
+      const isJpyKrwPair =
+        (from === "JPY" && to === "KRW") || (from === "KRW" && to === "JPY");
+
+      const pastRateValue = isJpyKrwPair
+        ? pastData.rates[to] * 100
+        : pastData.rates[to];
+      const currentRateValue = isJpyKrwPair
+        ? currentData.rates[to] * 100
+        : currentData.rates[to];
 
       setManualPastRateStr(pastRateValue?.toFixed(4) || "0");
       setManualCurrentRateStr(currentRateValue?.toFixed(4) || "0");
@@ -134,43 +147,51 @@ export default function ExchangeRateImpactCalculator() {
     } finally {
       setIsLoading(false);
     }
-  }, [pastDate, foreignCurrency, isManual, useDxy]);
+  }, [pastDate, assetCurrency, comparisonCurrency, isManual, useDxy]);
 
   useEffect(() => {
     if (useDxy) {
-      const pDxy = parseFloat(pastDxy) || 0;
-      const cDxy = parseFloat(currentDxy) || 0;
-      const pRate = parseFloat(manualPastRateStr) || 1300;
-      if (pDxy > 0 && cDxy > 0 && pRate > 0) {
-        const estimatedRate = pRate * (cDxy / pDxy);
-        setManualCurrentRateStr(estimatedRate.toFixed(4));
+      // DXY 로직은 KRW/USD 환율 예측에 주로 사용되므로, 이 경우에만 작동하도록 제한하는 것이 좋습니다.
+      if (assetCurrency === "KRW" && comparisonCurrency === "USD") {
+        const pDxy = parseFloat(pastDxy) || 0;
+        const cDxy = parseFloat(currentDxy) || 0;
+        const pRate = parseFloat(manualPastRateStr) || 1300;
+        if (pDxy > 0 && cDxy > 0 && pRate > 0) {
+          const estimatedRate = pRate * (cDxy / pDxy);
+          setManualCurrentRateStr(estimatedRate.toFixed(4));
+        }
+      } else {
+        // DXY 추정은 현재 KRW/USD 쌍에 대해서만 지원한다고 알림
       }
     } else {
       fetchRates();
     }
-  }, [useDxy, pastDxy, currentDxy, manualPastRateStr, fetchRates]);
+  }, [
+    useDxy,
+    pastDxy,
+    currentDxy,
+    manualPastRateStr,
+    fetchRates,
+    assetCurrency,
+    comparisonCurrency,
+  ]);
 
   useEffect(() => {
-    // Only fetch on mount if not loading from URL params
     if (!searchParams.get("assetAmount")) {
       fetchRates();
     } else {
       setIsLoading(false);
     }
-  }, [fetchRates, searchParams]); // Run only on mount
+  }, [fetchRates, searchParams]);
 
+  // [수정] 계산 로직 통합 및 수정
   const { analysis, resultSymbol } = useMemo(() => {
-    const pRateRaw = parseFloat(manualPastRateStr) || 0;
-    const cRateRaw = parseFloat(manualCurrentRateStr) || 0;
+    const pRate = parseFloat(manualPastRateStr) || 0;
+    const cRate = parseFloat(manualCurrentRateStr) || 0;
     const amount = parseNumber(assetAmount);
-    const isAssetKRW = assetCurrency === "KRW";
 
     const finalResultSymbol =
       currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
-
-    const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
-    const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
-    const cRate = foreign === "JPY" ? cRateRaw / 100 : cRateRaw;
 
     let res;
 
@@ -178,28 +199,12 @@ export default function ExchangeRateImpactCalculator() {
       res = {
         changeAmount: 0,
         changePercentage: 0,
-        pastValue: 0,
-        currentValue: 0,
-      };
-    } else if (isAssetKRW) {
-      // 자산이 KRW일 때: KRW -> 외화 -> KRW (가치 하락/상승분을 원화로 표시)
-      const pastValueInForeign = amount / pRate;
-      const currentValueInForeign = amount / cRate;
-      const changeInForeign = currentValueInForeign - pastValueInForeign;
-      const changeInKRW = changeInForeign * cRate; // 가치 변화량을 현재 환율로 다시 원화로 환산
-      const finalValueInKRW = amount + changeInKRW;
-
-      res = {
-        changeAmount: changeInKRW,
-        changePercentage: amount > 0 ? (changeInKRW / amount) * 100 : 0,
         pastValue: amount,
-        currentValue: finalValueInKRW,
+        currentValue: amount,
       };
     } else {
-      // [수정된 로직] 자산이 외화일 때의 계산
       const pastValue = amount;
-      // 환율 비율을 통해 현재 가치를 계산합니다.
-      // 예: EUR/USD 환율이 5 -> 3으로 변하면, EUR 가치는 5/3배 상승.
+      // 환율 비율을 통해 현재 가치를 올바르게 계산 (과거환율/현재환율)
       const currentValue = amount * (pRate / cRate);
       const changeAmount = currentValue - pastValue;
 
@@ -223,13 +228,7 @@ export default function ExchangeRateImpactCalculator() {
       },
       resultSymbol: finalResultSymbol,
     };
-  }, [
-    assetAmount,
-    assetCurrency,
-    comparisonCurrency,
-    manualPastRateStr,
-    manualCurrentRateStr,
-  ]);
+  }, [assetAmount, assetCurrency, manualPastRateStr, manualCurrentRateStr]);
 
   const chartData = [
     { name: "과거", value: analysis.pastValue },
@@ -237,6 +236,10 @@ export default function ExchangeRateImpactCalculator() {
   ];
 
   const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
+
+  const isJpyKrwPair =
+    (assetCurrency === "KRW" && comparisonCurrency === "JPY") ||
+    (assetCurrency === "JPY" && comparisonCurrency === "KRW");
 
   const handleShareLink = async () => {
     const shareUrl = "https://www.moneysalary.com/?tab=exchange";
@@ -280,7 +283,7 @@ export default function ExchangeRateImpactCalculator() {
     setManualPastRateStr("");
     setManualCurrentRateStr("");
     setError(null);
-    // Resetting will trigger fetchRates due to dependency change
+    fetchRates();
   };
 
   return (
@@ -338,8 +341,8 @@ export default function ExchangeRateImpactCalculator() {
               <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    환율 (1 {comparisonCurrency === "JPY" ? "100" : ""}
-                    {comparisonCurrency} 당 {assetCurrency})
+                    환율 ({isJpyKrwPair ? "100" : "1"} {comparisonCurrency} 당{" "}
+                    {assetCurrency})
                   </label>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
