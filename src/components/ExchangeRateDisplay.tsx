@@ -164,11 +164,9 @@ export default function ExchangeRateImpactCalculator() {
     const cRateRaw = parseFloat(manualCurrentRateStr) || 0;
     const amount = parseNumber(assetAmount);
     const isAssetKRW = assetCurrency === "KRW";
-    const symbol =
-      currencies.find(
-        (c) => c.id === (isAssetKRW ? comparisonCurrency : assetCurrency)
-      )?.symbol || "₩";
-    const finalResultSymbol = isAssetKRW ? symbol : "₩";
+
+    const finalResultSymbol =
+      currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
 
     const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
     const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
@@ -184,29 +182,26 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: 0,
       };
     } else if (isAssetKRW) {
+      // 자산이 KRW일 때: KRW -> 외화(과거환율) -> KRW(현재환율)
       const pastValueInForeign = amount / pRate;
-      const currentValueInForeign = amount / cRate;
-      const changeAmount = currentValueInForeign - pastValueInForeign;
+      const currentValueInKRW = pastValueInForeign * cRate;
+      const changeAmount = currentValueInKRW - amount;
       res = {
         changeAmount,
-        changePercentage:
-          pastValueInForeign > 0
-            ? (changeAmount / pastValueInForeign) * 100
-            : 0,
-        pastValue: pastValueInForeign,
-        currentValue: currentValueInForeign,
+        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
+        pastValue: amount,
+        currentValue: currentValueInKRW,
       };
     } else {
-      // 자산이 외화일 경우
+      // 자산이 외화일 때: 외화 -> KRW(과거환율) -> 외화(현재환율)
       const pastValueInKRW = amount * pRate;
-      const currentValueInKRW = amount * cRate;
-      const changeAmount = currentValueInKRW - pastValueInKRW;
+      const currentValueInForeign = pastValueInKRW / cRate;
+      const changeAmount = currentValueInForeign - amount;
       res = {
         changeAmount,
-        changePercentage:
-          pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
-        pastValue: pastValueInKRW,
-        currentValue: currentValueInKRW,
+        changePercentage: amount > 0 ? (changeAmount / amount) * 100 : 0,
+        pastValue: amount,
+        currentValue: currentValueInForeign,
       };
     }
 
