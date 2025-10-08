@@ -14,8 +14,6 @@ import {
   AlertCircle,
   Link as LinkIcon,
   Image as ImageIcon,
-  ArrowRightLeft,
-  Target,
 } from "lucide-react";
 import {
   BarChart,
@@ -48,18 +46,13 @@ const currencies = [
   { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£" },
 ];
 
-type AnalysisMode = "forward" | "reverse";
-
 export default function ExchangeRateImpactCalculator() {
   const searchParams = useSearchParams();
   const reportRef = useRef<HTMLDivElement>(null);
 
-  const [mode, setMode] = useState<AnalysisMode>("forward");
-
   const [assetAmount, setAssetAmount] = useState(
     () => searchParams.get("assetAmount") || "100000000"
   );
-  const [targetAmount, setTargetAmount] = useState("10000");
   const [assetCurrency, setAssetCurrency] = useState(
     () => searchParams.get("assetCurrency") || "KRW"
   );
@@ -88,23 +81,27 @@ export default function ExchangeRateImpactCalculator() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const foreignCurrency =
+    assetCurrency === "KRW" ? comparisonCurrency : assetCurrency;
+
   const fetchRates = useCallback(async () => {
     if (isManual) {
       setIsLoading(false);
       return;
     }
-    if (assetCurrency === comparisonCurrency) {
+    const to = "KRW";
+    const from = foreignCurrency;
+
+    if (from === to) {
       setManualPastRateStr("1.0000");
       setManualCurrentRateStr("1.0000");
       setIsLoading(false);
       return;
     }
+
     setIsLoading(true);
     setError(null);
     try {
-      const from = comparisonCurrency;
-      const to = assetCurrency;
-
       const [pastRes, currentRes] = await Promise.all([
         fetch(`https://api.frankfurter.app/${pastDate}?from=${from}&to=${to}`),
         fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`),
@@ -117,9 +114,9 @@ export default function ExchangeRateImpactCalculator() {
       const currentData = await currentRes.json();
 
       const pastRate =
-        to === "JPY" ? pastData.rates[to] / 100 : pastData.rates[to];
+        from === "JPY" ? pastData.rates[to] * 100 : pastData.rates[to];
       const currentRate =
-        to === "JPY" ? currentData.rates[to] / 100 : currentData.rates[to];
+        from === "JPY" ? currentData.rates[to] * 100 : currentData.rates[to];
 
       setManualPastRateStr(pastRate?.toFixed(4) || "0");
       setManualCurrentRateStr(currentRate?.toFixed(4) || "0");
@@ -129,7 +126,7 @@ export default function ExchangeRateImpactCalculator() {
     } finally {
       setIsLoading(false);
     }
-  }, [pastDate, assetCurrency, comparisonCurrency, isManual]);
+  }, [pastDate, foreignCurrency, isManual]);
 
   useEffect(() => {
     if (!searchParams.get("assetAmount")) {
@@ -140,68 +137,58 @@ export default function ExchangeRateImpactCalculator() {
   }, [fetchRates, searchParams]);
 
   const analysis = useMemo(() => {
-    const pRate = parseFloat(manualPastRateStr) || 0;
-    const cRate = parseFloat(manualCurrentRateStr) || 0;
+    const pRateRaw = parseFloat(manualPastRateStr) || 0;
+    const cRateRaw = parseFloat(manualCurrentRateStr) || 0;
 
-    if (mode === "forward") {
-      const amountInAssetCurrency = parseNumber(assetAmount);
-      if (!amountInAssetCurrency || !pRate || !cRate)
-        return {
-          changeAmount: 0,
-          changePercentage: 0,
-          pastValue: 0,
-          currentValue: 0,
-        };
+    const pRate = foreignCurrency === "JPY" ? pRateRaw / 100 : pRateRaw;
+    const cRate = foreignCurrency === "JPY" ? cRateRaw / 100 : cRateRaw;
 
-      const amountInComparisonCurrency = amountInAssetCurrency / pRate;
-      const currentValue = amountInComparisonCurrency * cRate;
-      const changeAmount = currentValue - amountInAssetCurrency;
-      const changePercentage =
-        amountInAssetCurrency > 0
-          ? (changeAmount / amountInAssetCurrency) * 100
-          : 0;
+    const amount = parseNumber(assetAmount);
+    const isAssetKRW = assetCurrency === "KRW";
 
+    if (!amount || !pRate || !cRate)
+      return {
+        changeAmount: 0,
+        changePercentage: 0,
+        pastValue: 0,
+        currentValue: 0,
+      };
+
+    if (isAssetKRW) {
+      const pastValueInForeign = amount / pRate;
+      const currentValueInForeign = amount / cRate;
+      const changeInForeign = currentValueInForeign - pastValueInForeign;
+      const changeAmount = changeInForeign * cRate;
+      const changePercentage = amount > 0 ? (changeAmount / amount) * 100 : 0;
       return {
         changeAmount: Math.round(changeAmount),
         changePercentage: parseFloat(changePercentage.toFixed(2)),
-        pastValue: Math.round(amountInAssetCurrency),
-        currentValue: Math.round(currentValue),
+        pastValue: Math.round(amount),
+        currentValue: Math.round(amount + changeAmount),
       };
     } else {
-      const amount = parseNumber(targetAmount);
-      if (!amount || !pRate || !cRate)
-        return {
-          changeAmount: 0,
-          changePercentage: 0,
-          pastValue: 0,
-          currentValue: 0,
-        };
-
-      const pastRequiredAsset = amount * pRate;
-      const currentRequiredAsset = amount * cRate;
-      const changeAmount = currentRequiredAsset - pastRequiredAsset;
+      const pastValueInKRW = amount * pRate;
+      const currentValueInKRW = amount * cRate;
+      const changeAmount = currentValueInKRW - pastValueInKRW;
       const changePercentage =
-        pastRequiredAsset > 0 ? (changeAmount / pastRequiredAsset) * 100 : 0;
-
+        pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0;
       return {
         changeAmount: Math.round(changeAmount),
         changePercentage: parseFloat(changePercentage.toFixed(2)),
-        pastValue: Math.round(pastRequiredAsset),
-        currentValue: Math.round(currentRequiredAsset),
+        pastValue: Math.round(pastValueInKRW),
+        currentValue: Math.round(currentValueInKRW),
       };
     }
   }, [
-    mode,
     assetAmount,
-    targetAmount,
+    assetCurrency,
+    foreignCurrency,
     manualPastRateStr,
     manualCurrentRateStr,
   ]);
 
   const assetSymbol =
     currencies.find((c) => c.id === assetCurrency)?.symbol || "원";
-  const comparisonSymbol =
-    currencies.find((c) => c.id === comparisonCurrency)?.symbol || "$";
 
   const chartData = [
     { name: "과거", value: analysis.pastValue },
@@ -223,8 +210,6 @@ export default function ExchangeRateImpactCalculator() {
       isManual: isManual.toString(),
       manualPastRateStr,
       manualCurrentRateStr,
-      mode,
-      targetAmount,
     };
     const encodedData = btoa(JSON.stringify(dataToShare));
     const shareUrl = `${window.location.origin}/share-exchange/${encodedData}`;
@@ -269,110 +254,62 @@ export default function ExchangeRateImpactCalculator() {
 
   return (
     <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
-      <h2 className="text-2xl font-bold text-center mb-4">
-        환율 변동에 따른 내 자산가치 변화
+      <h2 className="text-2xl font-bold text-center mb-8">
+        환율 변동에 따른 내 자산 가치 변화
       </h2>
-
-      <div className="flex justify-center mb-8">
-        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-          <button
-            onClick={() => setMode("forward")}
-            className={`flex items-center gap-2 flex-1 px-4 py-2 rounded-md text-sm font-semibold transition ${
-              mode === "forward"
-                ? "bg-white dark:bg-gray-700 shadow-sm"
-                : "text-gray-500"
-            }`}
-          >
-            <ArrowRightLeft size={16} /> 내 자산 가치 변화
-          </button>
-          <button
-            onClick={() => setMode("reverse")}
-            className={`flex items-center gap-2 flex-1 px-4 py-2 rounded-md text-sm font-semibold transition ${
-              mode === "reverse"
-                ? "bg-white dark:bg-gray-700 shadow-sm"
-                : "text-gray-500"
-            }`}
-          >
-            <Target size={16} /> 목표 금액 달성
-          </button>
-        </div>
-      </div>
 
       <div ref={reportRef} className="bg-light-card dark:bg-dark-card">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* === 입력부 === */}
           <div className="space-y-6">
-            {mode === "forward" ? (
-              <div>
-                <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                  과거 기준 자산 가치 ({assetCurrency})
-                </label>
-                <div className="flex gap-2 mt-1">
-                  <select
-                    value={assetCurrency}
-                    onChange={(e) => setAssetCurrency(e.target.value)}
-                    className="p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
-                  >
-                    {currencies.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.flag} {c.id}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="relative flex-grow">
-                    <input
-                      type="text"
-                      value={formatNumber(parseNumber(assetAmount))}
-                      onChange={(e) =>
-                        setAssetAmount(e.target.value.replace(/[^0-9]/g, ""))
-                      }
-                      className="w-full text-lg p-3 pr-8 border rounded-lg dark:bg-dark-card dark:border-gray-700 font-semibold"
-                    />
-                    <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                      {assetSymbol}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                  목표 금액 ({comparisonCurrency})
-                </label>
-                <div className="relative mt-1">
+            <div>
+              <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                분석 자산
+              </label>
+              <div className="flex gap-2 mt-1">
+                <select
+                  value={assetCurrency}
+                  onChange={(e) => setAssetCurrency(e.target.value)}
+                  className="p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                >
+                  {currencies.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.flag} {c.id}
+                    </option>
+                  ))}
+                </select>
+                <div className="relative flex-grow">
                   <input
                     type="text"
-                    value={formatNumber(parseNumber(targetAmount))}
+                    value={formatNumber(parseNumber(assetAmount))}
                     onChange={(e) =>
-                      setTargetAmount(e.target.value.replace(/[^0-9]/g, ""))
+                      setAssetAmount(e.target.value.replace(/[^0-9]/g, ""))
                     }
                     className="w-full text-lg p-3 pr-8 border rounded-lg dark:bg-dark-card dark:border-gray-700 font-semibold"
                   />
                   <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-                    {comparisonSymbol}
+                    {assetSymbol}
                   </span>
                 </div>
               </div>
-            )}
+            </div>
 
             <div>
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                {mode === "forward" ? "비교 통화" : "내 통화"}
+                비교 통화
               </label>
               <select
-                value={mode === "forward" ? comparisonCurrency : assetCurrency}
-                onChange={(e) =>
-                  mode === "forward"
-                    ? setComparisonCurrency(e.target.value)
-                    : setAssetCurrency(e.target.value)
-                }
+                value={comparisonCurrency}
+                onChange={(e) => setComparisonCurrency(e.target.value)}
                 className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
               >
-                {currencies.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.flag} {c.name} ({c.id})
-                  </option>
-                ))}
+                {currencies
+                  .filter((c) => c.id !== assetCurrency)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.flag} {c.name} ({c.id})
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -405,9 +342,8 @@ export default function ExchangeRateImpactCalculator() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                환율 (1 {comparisonCurrency} 당{" "}
-                {assetCurrency === "JPY" ? "100" : ""}
-                {assetCurrency})
+                환율 (1 {foreignCurrency === "JPY" ? "100" : ""}
+                {foreignCurrency} 당 KRW)
               </label>
               <div className="grid grid-cols-2 gap-2 text-center text-xs font-semibold text-gray-500">
                 <div>과거 환율</div>
@@ -473,25 +409,12 @@ export default function ExchangeRateImpactCalculator() {
                   }`}
                 >
                   <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary">
-                    {mode === "forward" ? (
-                      <>
-                        {resultSubtitle}
-                        <strong>
-                          {assetSymbol}
-                          {formatNumber(parseNumber(assetAmount))}
-                        </strong>
-                        의 가치는
-                      </>
-                    ) : (
-                      <>
-                        {resultSubtitle}
-                        <strong>
-                          {comparisonSymbol}
-                          {formatNumber(parseNumber(targetAmount))}
-                        </strong>
-                        을 위해 필요한 자산은
-                      </>
-                    )}
+                    {resultSubtitle}
+                    <strong>
+                      {assetSymbol}
+                      {formatNumber(parseNumber(assetAmount))}
+                    </strong>
+                    의 상대적 가치는
                   </p>
                   <div
                     className={`flex items-center justify-center gap-2 text-4xl lg:text-5xl font-bold my-2 ${
