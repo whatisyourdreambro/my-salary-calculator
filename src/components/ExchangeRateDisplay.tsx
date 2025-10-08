@@ -21,7 +21,7 @@ const toInputDateString = (date: Date): string => {
 };
 
 const currencies = [
-  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "원" },
+  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
   { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
   { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
   { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
