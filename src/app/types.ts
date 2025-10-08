@@ -1,3 +1,5 @@
+import type { ElementType } from "react";
+
 // localStorage에 저장될 연봉 계산기 데이터
 export interface StoredSalaryData {
   annualSalary: number;
@@ -53,3 +55,19 @@ export interface StoredFinancialData {
   futureSalary?: StoredFutureSalaryData;
   lastUpdated: string; // 데이터 업데이트 시각
 }
+
+// [추가] 가이드 및 카테고리 관련 타입
+export type Category = {
+  id: string;
+  name: string;
+  // lucide-react 아이콘과 같은 React 컴포넌트를 직접 받기 위해 타입을 ElementType으로 지정
+  icon: ElementType;
+};
+
+export type Guide = {
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  publishedAt: string;
+};
