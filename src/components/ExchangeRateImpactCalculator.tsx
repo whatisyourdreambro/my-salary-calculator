@@ -118,24 +118,24 @@ export default function ExchangeRateImpactCalculator() {
     const pastValueInComparison = amount * pRate;
     const currentValueInComparison = amount * cRate;
 
-    const changeAmount = currentValueInComparison - pastValueInComparison;
-    const changePercentage =
-      pastValueInComparison > 0
-        ? (changeAmount / pastValueInComparison) * 100
-        : 0;
+    const changeInComparison = currentValueInComparison - pastValueInComparison;
+    const changeAmount = changeInComparison / cRate;
+
+    const changePercentage = amount > 0 ? (changeAmount / amount) * 100 : 0;
+
+    const pastValueForChart = amount;
+    const currentValueForChart = amount + changeAmount;
 
     return {
       changeAmount: Math.round(changeAmount),
       changePercentage: parseFloat(changePercentage.toFixed(2)),
-      pastValue: Math.round(pastValueInComparison),
-      currentValue: Math.round(currentValueInComparison),
+      pastValue: Math.round(pastValueForChart),
+      currentValue: Math.round(currentValueForChart),
     };
   }, [assetAmount, manualPastRateStr, manualCurrentRateStr]);
 
   const assetSymbol =
     currencies.find((c) => c.id === assetCurrency)?.symbol || "원";
-  const comparisonSymbol =
-    currencies.find((c) => c.id === comparisonCurrency)?.symbol || "$";
 
   const chartData = [
     { name: "과거 가치", value: analysis.pastValue },
@@ -143,6 +143,10 @@ export default function ExchangeRateImpactCalculator() {
   ];
 
   const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
+
+  const resultSubtitle = isManual
+    ? `${manualPastRateStr} → ${manualCurrentRateStr} 대비, `
+    : `${pastDate} 대비, `;
 
   return (
     <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
@@ -216,7 +220,7 @@ export default function ExchangeRateImpactCalculator() {
                 <input
                   type="checkbox"
                   checked={isManual}
-                  onChange={(e) => setIsManual(e.target.checked)}
+                  readOnly
                   className="h-4 w-4 rounded cursor-pointer"
                 />
               </div>
@@ -298,7 +302,7 @@ export default function ExchangeRateImpactCalculator() {
                 }`}
               >
                 <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary">
-                  {pastDate} 대비,{" "}
+                  {resultSubtitle}
                   <strong>
                     {assetSymbol}
                     {formatNumber(parseNumber(assetAmount))}
@@ -319,8 +323,8 @@ export default function ExchangeRateImpactCalculator() {
                     end={Math.abs(analysis.changeAmount)}
                     prefix={
                       analysis.changeAmount >= 0
-                        ? `+ ${comparisonSymbol}`
-                        : `- ${comparisonSymbol}`
+                        ? `+ ${assetSymbol}`
+                        : `- ${assetSymbol}`
                     }
                     separator=","
                   />
@@ -351,7 +355,7 @@ export default function ExchangeRateImpactCalculator() {
                     />
                     <Tooltip
                       formatter={(value: number) =>
-                        `${comparisonSymbol}${formatNumber(value)}`
+                        `${assetSymbol}${formatNumber(value)}`
                       }
                       cursor={{ fill: "rgba(0,0,0,0.05)" }}
                     />
