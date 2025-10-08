@@ -7,6 +7,9 @@ import { HelpCircle } from "lucide-react";
 import Link from "next/link";
 import TableInteraction from "./TableInteraction"; // 역할 분리된 클라이언트 컴포넌트
 
+// Cloudflare Pages 배포를 위한 Edge 런타임 설정
+export const runtime = "edge";
+
 const tableHeaders = [
   { key: "preTax", label: "연봉" },
   { key: "monthlyNet", label: "월 실수령액" },
