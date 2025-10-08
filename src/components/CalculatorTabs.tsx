@@ -13,7 +13,7 @@ import {
   BarChart3,
   Calculator,
   Briefcase,
-  Globe, // Shield 아이콘 대신 Globe 사용
+  Globe,
 } from "lucide-react";
 
 // Dynamic imports for performance
@@ -31,7 +31,6 @@ const FreelancerCalculator = dynamic(
   () => import("@/components/FreelancerCalculator")
 );
 const ExchangeRateImpactCalculator = dynamic(
-  // 새로 만든 계산기 import
   () => import("@/components/ExchangeRateImpactCalculator")
 );
 const YearEndTaxCalculator = dynamic(
@@ -42,7 +41,7 @@ const TABS = {
   SALARY: "salary",
   SEVERANCE: "severance",
   FREELANCER: "freelancer",
-  EXCHANGE: "exchange", // 탭 추가
+  EXCHANGE: "exchange",
   YEAR_END_TAX: "year-end-tax",
   PAYSTUB: "paystub",
   FUTURE: "future",
@@ -52,55 +51,64 @@ const TABS = {
 
 type TabValue = (typeof TABS)[keyof typeof TABS];
 
+// [수정] 모바일 드롭다운에 표시할 emoji 추가
 const TAB_CONFIG: Record<
   TabValue,
-  { name: string; description: string; icon: React.ElementType }
+  { name: string; description: string; icon: React.ElementType; emoji: string }
 > = {
   [TABS.SALARY]: {
     name: "정규직 계산기",
     description: "내 월급의 모든 것",
     icon: Calculator,
+    emoji: "🧮",
   },
   [TABS.SEVERANCE]: {
     name: "퇴직금 계산기",
     description: "미래를 위한 자금 계획",
     icon: PiggyBank,
+    emoji: "🐖",
   },
   [TABS.FREELANCER]: {
     name: "알바/프리랜서",
     description: "3.3% 및 4대보험 계산",
     icon: Briefcase,
+    emoji: "💼",
   },
   [TABS.EXCHANGE]: {
-    // 설정 추가
     name: "환율 영향",
     description: "내 자산가치 변화 분석",
     icon: Globe,
+    emoji: "🌐",
   },
   [TABS.YEAR_END_TAX]: {
     name: "연말정산 최적화",
     description: "최상의 환급 시나리오",
-    icon: FileText, // Shield -> FileText 로 변경 또는 다른 아이콘
+    icon: FileText,
+    emoji: "📄",
   },
   [TABS.PAYSTUB]: {
     name: "급여명세서",
     description: "월급 내역 한눈에 보기",
     icon: FileText,
+    emoji: "🧾",
   },
   [TABS.FUTURE]: {
     name: "미래 연봉",
     description: "커리어 로드맵 예측",
     icon: TrendingUp,
+    emoji: "📈",
   },
   [TABS.COMPARATOR]: {
     name: "연봉 비교",
     description: "최고의 오퍼 선택하기",
     icon: GitCompare,
+    emoji: "⚖️",
   },
   [TABS.RANK]: {
     name: "연봉 순위",
     description: "내 소득 위치 확인",
     icon: BarChart3,
+    emoji: "📊",
   },
 };
 
@@ -118,12 +126,13 @@ function CalculatorTabsComponent() {
   }, [searchParams]);
 
   const renderActiveCalculator = () => {
+    // ... (내용 변경 없음)
     switch (activeTab) {
       case TABS.SEVERANCE:
         return <SeveranceCalculator />;
       case TABS.FREELANCER:
         return <FreelancerCalculator />;
-      case TABS.EXCHANGE: // 렌더링 케이스 추가
+      case TABS.EXCHANGE:
         return <ExchangeRateImpactCalculator />;
       case TABS.YEAR_END_TAX:
         return <YearEndTaxCalculator />;
@@ -143,8 +152,27 @@ function CalculatorTabsComponent() {
 
   return (
     <div>
-      {/* [수정] justify-center 클래스를 삭제했습니다. */}
-      <div className="flex mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
+      {/* [수정] 모바일용 드롭다운 메뉴 추가 */}
+      <div className="md:hidden mb-6">
+        <label htmlFor="calculator-select" className="sr-only">
+          계산기 선택
+        </label>
+        <select
+          id="calculator-select"
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value as TabValue)}
+          className="w-full p-4 text-lg font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card focus:ring-2 focus:ring-signature-blue appearance-none"
+        >
+          {(Object.values(TABS) as TabValue[]).map((tab) => (
+            <option key={tab} value={tab}>
+              {TAB_CONFIG[tab].emoji} {TAB_CONFIG[tab].name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* [수정] 기존 탭 메뉴는 PC(md 이상)에서만 보이도록 수정 */}
+      <div className="hidden md:flex mb-10 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap scrollbar-hide">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
           return (

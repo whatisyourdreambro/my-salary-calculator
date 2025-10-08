@@ -60,6 +60,10 @@ export default function Header() {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // [추가] 모바일 아코디언 메뉴 상태
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     setOpenDropdown(null);
@@ -70,6 +74,7 @@ export default function Header() {
     <header className="w-full bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 backdrop-blur-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* ... (PC 메뉴 부분, 변경 없음) ... */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <h1 className="text-lg sm:text-xl font-bold whitespace-nowrap text-primary">
@@ -183,8 +188,9 @@ export default function Header() {
           </div>
         </div>
 
+        {/* [수정] 모바일 메뉴 전체 로직 변경 */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pb-4 space-y-1">
+          <div className="md:hidden pb-4 space-y-1 animate-fade-in-up">
             <Link
               href="/dashboard"
               className="flex items-center gap-3 px-4 py-3 text-base font-bold rounded-md bg-blue-50 text-primary dark:bg-blue-900/30"
@@ -192,21 +198,61 @@ export default function Header() {
               <LayoutDashboard className="w-5 h-5" />
               마이 대시보드
             </Link>
-            {navConfig
-              .flatMap((item) => (item.type === "link" ? [item] : item.items))
-              .map((subItem) => (
+            {navConfig.map((item) =>
+              item.type === "link" ? (
                 <Link
-                  key={subItem.href}
-                  href={subItem.href}
-                  className={`block px-4 py-3 text-base rounded-md ${
-                    pathname === subItem.href
-                      ? "font-bold bg-gray-100 dark:bg-gray-800"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  }`}
+                  key={item.href}
+                  href={item.href}
+                  className="block px-4 py-3 text-base font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
-                  {subItem.name}
+                  {item.name}
                 </Link>
-              ))}
+              ) : (
+                <div key={item.name}>
+                  <button
+                    onClick={() =>
+                      setOpenMobileDropdown(
+                        openMobileDropdown === item.name ? null : item.name
+                      )
+                    }
+                    className="w-full flex justify-between items-center px-4 py-3 text-base font-bold rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    <span>{item.name}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className={`w-5 h-5 transition-transform ${
+                        openMobileDropdown === item.name ? "rotate-180" : ""
+                      }`}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  {openMobileDropdown === item.name && (
+                    <div className="pl-5 mt-1 space-y-1">
+                      {item.items.map((subItem) => (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          className={`block pl-5 pr-4 py-2 text-base rounded-md ${
+                            pathname === subItem.href
+                              ? "font-semibold text-primary bg-blue-50 dark:bg-blue-900/30"
+                              : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            )}
           </div>
         )}
       </nav>
