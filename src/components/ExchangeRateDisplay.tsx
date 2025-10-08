@@ -165,10 +165,10 @@ export default function ExchangeRateImpactCalculator() {
     const amount = parseNumber(assetAmount);
     const isAssetKRW = assetCurrency === "KRW";
 
-    const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
-    const symbol = currencies.find((c) => c.id === foreign)?.symbol || "₩";
-    const finalResultSymbol = isAssetKRW ? symbol : "₩";
+    const finalResultSymbol =
+      currencies.find((c) => c.id === assetCurrency)?.symbol || "₩";
 
+    const foreign = isAssetKRW ? comparisonCurrency : assetCurrency;
     const pRate = foreign === "JPY" ? pRateRaw / 100 : pRateRaw;
     const cRate = foreign === "JPY" ? cRateRaw / 100 : cRateRaw;
 
@@ -182,30 +182,32 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: 0,
       };
     } else if (isAssetKRW) {
-      // 자산이 KRW일 때: 결과를 비교 통화로 표시 (원래 로직)
+      // 자산이 KRW일 때: KRW -> 외화 -> KRW (가치 하락/상승분을 원화로 표시)
       const pastValueInForeign = amount / pRate;
       const currentValueInForeign = amount / cRate;
-      const changeAmount = currentValueInForeign - pastValueInForeign;
+      const changeInForeign = currentValueInForeign - pastValueInForeign;
+      const changeInKRW = changeInForeign * cRate; // 가치 변화량을 현재 환율로 다시 원화로 환산
+      const finalValueInKRW = amount + changeInKRW;
+
       res = {
-        changeAmount,
-        changePercentage:
-          pastValueInForeign > 0
-            ? (changeAmount / pastValueInForeign) * 100
-            : 0,
-        pastValue: pastValueInForeign,
-        currentValue: currentValueInForeign,
+        changeAmount: changeInKRW,
+        changePercentage: amount > 0 ? (changeInKRW / amount) * 100 : 0,
+        pastValue: amount,
+        currentValue: finalValueInKRW,
       };
     } else {
-      // 자산이 외화일 때: 결과를 KRW로 표시 (원래 로직)
+      // 자산이 외화일 때: 외화 -> KRW -> 외화 (가치 하락/상승분을 해당 외화로 표시)
       const pastValueInKRW = amount * pRate;
       const currentValueInKRW = amount * cRate;
-      const changeAmount = currentValueInKRW - pastValueInKRW;
+      const changeInKRW = currentValueInKRW - pastValueInKRW;
+      const changeInForeign = changeInKRW / cRate; // 가치 변화량을 현재 환율로 다시 해당 외화로 환산
+      const finalValueInForeign = amount + changeInForeign;
+
       res = {
-        changeAmount,
-        changePercentage:
-          pastValueInKRW > 0 ? (changeAmount / pastValueInKRW) * 100 : 0,
-        pastValue: pastValueInKRW,
-        currentValue: currentValueInKRW,
+        changeAmount: changeInForeign,
+        changePercentage: amount > 0 ? (changeInForeign / amount) * 100 : 0,
+        pastValue: amount,
+        currentValue: finalValueInForeign,
       };
     }
 
@@ -336,8 +338,8 @@ export default function ExchangeRateImpactCalculator() {
               <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-                    환율 ({foreignCurrency === "JPY" ? "100" : "1"}{" "}
-                    {foreignCurrency} 당 KRW 가치)
+                    환율 (1 {foreignCurrency === "JPY" ? "100" : ""}
+                    {foreignCurrency} 당 KRW)
                   </label>
                   <div
                     className="flex items-center gap-2 cursor-pointer"
