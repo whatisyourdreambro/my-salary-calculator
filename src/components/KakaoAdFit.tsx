@@ -29,7 +29,10 @@ export default function KakaoAdFit({
   const adContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (disabled || typeof window.adfit === "undefined") {
+    if (disabled) return;
+
+    // adfit 스크립트가 로드되었는지 확인
+    if (typeof window.adfit === "undefined") {
       return;
     }
 
@@ -38,7 +41,7 @@ export default function KakaoAdFit({
       return;
     }
 
-    // 이전에 생성된 광고가 있다면 제거
+    // 이전에 생성된 광고가 있다면 제거 (중복 렌더링 방지)
     while (adContainer.firstChild) {
       adContainer.removeChild(adContainer.firstChild);
     }
@@ -52,16 +55,19 @@ export default function KakaoAdFit({
     ins.setAttribute("data-ad-height", height);
     adContainer.appendChild(ins);
 
-    // 해당 광고 단위만 렌더링하도록 수정
+    // 해당 광고 슬롯만 콕 집어 렌더링
+    // 중요: adfit.render()는 <ins> 태그 자체를 인자로 받거나,
+    // <ins> 태그를 포함하는 부모 컨테이너를 인자로 받을 수 있습니다.
+    // 여기서는 컨테이너를 전달하여 그 안의 광고를 그리도록 합니다.
     window.adfit.render(adContainer);
 
-    // 컴포넌트가 사라질 때 광고를 명확하게 제거 (메모리 누수 방지)
+    // 컴포넌트가 언마운트될 때 광고를 제거하는 cleanup 함수
     return () => {
       if (adContainer && window.adfit?.destroy) {
         window.adfit.destroy(adContainer);
       }
     };
-  }, [unit, width, height, disabled]);
+  }, [unit, width, height, disabled]); // 의존성 배열은 그대로 유지
 
   if (disabled) {
     return null;
