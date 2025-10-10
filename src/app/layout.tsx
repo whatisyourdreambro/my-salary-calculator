@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import AdManager from "@/components/AdManager"; // AdManager 컴포넌트 가져오기
+import AdManager from "@/components/AdManager";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -52,14 +52,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// [수정] KakaoAdFit.tsx 와 동일한 타입으로 수정하여 충돌을 해결했습니다.
+// [수정] KakaoAdFit.tsx 와 타입을 일치시켰습니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
     adsbygoogle?: unknown[];
     adfit?: {
-      render: () => void;
-      destroy: (container: HTMLElement) => void;
+      render: (el: HTMLElement) => void;
+      destroy: (el: HTMLElement) => void;
     };
   }
 }
