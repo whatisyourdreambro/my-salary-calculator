@@ -6,7 +6,7 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-// [수정] *.adfit.kakao.com 을 script-src와 frame-src에 추가했습니다.
+// [수정] 카카오 애드핏 관련 도메인을 script-src와 frame-src에 추가했습니다.
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com;
