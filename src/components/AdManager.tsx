@@ -4,13 +4,15 @@
 import { useState, useEffect } from "react";
 import KakaoAdFit from "./KakaoAdFit";
 
-// 광고 위치 타입을 정의합니다. (예: 'header', 'footer', 'sidebar')
+// 광고 위치 타입을 정의합니다.
 type AdPosition =
   | "header-banner"
   | "footer-banner"
   | "in-content"
   | "sidebar-left"
-  | "sidebar-right";
+  | "sidebar-right"
+  | "interstitial" // '008화면 전환' 광고를 위한 새 위치
+  | "footer-banner-mobile-alt"; // '007' 광고를 위한 새 위치
 
 type AdManagerProps = {
   position: AdPosition;
@@ -21,24 +23,22 @@ const AdManager = ({ position }: AdManagerProps) => {
 
   useEffect(() => {
     const handleResize = () => {
-      // 화면 너비가 768px 이상이면 데스크톱 환경으로 판단합니다.
       setIsDesktop(window.innerWidth >= 768);
     };
 
-    handleResize(); // 컴포넌트가 처음 로드될 때 실행
-    window.addEventListener("resize", handleResize); // 화면 크기가 바뀔 때마다 실행
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 1달 뒤 AdSense로 돌아갈 때 이 값을 true로 바꾸면 모든 카카오 광고가 표시되지 않습니다.
   const adDisabled = false;
 
   // position 값에 따라 다른 광고 유닛을 렌더링합니다.
   switch (position) {
     case "header-banner":
       return isDesktop ? (
-        // 데스크톱 상단 배너 (728x90)
+        // 데스크톱 상단 배너 (728x90) - 002번
         <KakaoAdFit
           unit="DAN-7DJN8QMp6O5Kayn7"
           width="728"
@@ -46,7 +46,7 @@ const AdManager = ({ position }: AdManagerProps) => {
           disabled={adDisabled}
         />
       ) : (
-        // 모바일 상단 배너 (320x100)
+        // 모바일 상단 배너 (320x100) - 006번
         <KakaoAdFit
           unit="DAN-WgV2d248sf3mJoB2"
           width="320"
@@ -57,7 +57,7 @@ const AdManager = ({ position }: AdManagerProps) => {
 
     case "footer-banner":
       return isDesktop ? (
-        // 데스크톱 하단 배너 (728x90) - 상단과 동일한 유닛 사용 또는 다른 유닛 사용 가능
+        // 데스크톱 하단 배너 (728x90) - 002번 (재사용)
         <KakaoAdFit
           unit="DAN-7DJN8QMp6O5Kayn7"
           width="728"
@@ -65,7 +65,7 @@ const AdManager = ({ position }: AdManagerProps) => {
           disabled={adDisabled}
         />
       ) : (
-        // 모바일 하단 배너 (320x50)
+        // 모바일 하단 배너 (320x50) - 005번
         <KakaoAdFit
           unit="DAN-lpJFw6yqHhzOXIfV"
           width="320"
@@ -74,8 +74,19 @@ const AdManager = ({ position }: AdManagerProps) => {
         />
       );
 
+    // [추가] 007번 광고단위 (320x50)
+    case "footer-banner-mobile-alt":
+      return (
+        <KakaoAdFit
+          unit="DAN-no5HCWDFKDsohy4c"
+          width="320"
+          height="50"
+          disabled={adDisabled}
+        />
+      );
+
     case "in-content":
-      // 콘텐츠 중간 삽입용 광고 (300x250)
+      // 콘텐츠 중간 삽입용 광고 (300x250) - 001번
       return (
         <KakaoAdFit
           unit="DAN-4eRqZLQIGjrNcXj6"
@@ -85,8 +96,19 @@ const AdManager = ({ position }: AdManagerProps) => {
         />
       );
 
+    // [추가] 008번 화면 전환 광고 (300x250)
+    case "interstitial":
+      return (
+        <KakaoAdFit
+          unit="DAN-gtL0uD65wrODCXRh"
+          width="300"
+          height="250"
+          disabled={adDisabled}
+        />
+      );
+
     case "sidebar-left":
-      // 사이드바용 광고 (160x600)
+      // 왼쪽 사이드바용 광고 (160x600) - 004번
       return (
         <KakaoAdFit
           unit="DAN-O4kzbtdd9NleD4P6"
@@ -97,7 +119,7 @@ const AdManager = ({ position }: AdManagerProps) => {
       );
 
     case "sidebar-right":
-      // 오른쪽 사이드바용 다른 광고 (160x600)
+      // 오른쪽 사이드바용 광고 (160x600) - 003번
       return (
         <KakaoAdFit
           unit="DAN-HVBNRsdPlneE3Uxn"

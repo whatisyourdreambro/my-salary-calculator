@@ -7,15 +7,14 @@ type AdFitProps = {
   unit: string;
   width: string;
   height: string;
-  disabled?: boolean; // 광고를 쉽게 켜고 끌 수 있는 옵션
+  disabled?: boolean;
 };
 
-// Kakao AdFit 스크립트 타입을 위한 전역 선언
 declare global {
   interface Window {
     adfit?: {
-      render: () => void;
-      destroy: (container: HTMLElement) => void;
+      render: (el: HTMLElement) => void;
+      destroy: (el: HTMLElement) => void;
     };
   }
 }
@@ -29,36 +28,33 @@ export default function KakaoAdFit({
   const adContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // disabled 상태이거나 adfit 스크립트가 없으면 아무것도 하지 않음
-    if (disabled || !window.adfit) {
-      return;
-    }
+    if (disabled || !window.adfit) return;
 
-    // adContainerRef.current를 변수에 할당하여 클린업 함수에서 사용
     const adContainer = adContainerRef.current;
+    if (!adContainer) return;
 
-    // adContainer가 없으면 아무것도 하지 않음
-    if (!adContainer) {
-      return;
-    }
+    // adContainer 내부에 ins 태그를 동적으로 생성합니다.
+    const ins = document.createElement("ins");
+    ins.className = "kakao_ad_area";
+    ins.style.display = "none";
+    ins.setAttribute("data-ad-unit", unit);
+    ins.setAttribute("data-ad-width", width);
+    ins.setAttribute("data-ad-height", height);
+    adContainer.appendChild(ins);
 
-    // window.adfit.render()를 호출하여 페이지 내의 모든 광고를 렌더링합니다.
-    window.adfit.render();
+    // 해당 광고 단위만 콕 집어서 렌더링합니다.
+    window.adfit.render(adContainer);
 
-    // 컴포넌트가 언마운트될 때 광고를 정리하여 메모리 누수 및 중복을 방지합니다.
+    // 컴포넌트가 언마운트될 때 광고를 확실하게 제거합니다.
     return () => {
-      if (adContainer && window.adfit && window.adfit.destroy) {
-        // adfit.destroy를 사용하여 특정 컨테이너의 광고만 깔끔하게 제거합니다.
+      if (adContainer && window.adfit?.destroy) {
         window.adfit.destroy(adContainer);
       }
     };
-  }, [unit, width, height, disabled]); // 광고 정보가 변경될 때마다 effect를 다시 실행
+  }, [unit, width, height, disabled]);
 
-  if (disabled) {
-    return null;
-  }
+  if (disabled) return null;
 
-  // JSX에서 직접 ins 태그를 렌더링하여 안정성을 높입니다.
   return (
     <div
       style={{
@@ -70,15 +66,7 @@ export default function KakaoAdFit({
         padding: "20px 0",
       }}
     >
-      <div ref={adContainerRef}>
-        <ins
-          className="kakao_ad_area"
-          style={{ display: "none" }}
-          data-ad-unit={unit}
-          data-ad-width={width}
-          data-ad-height={height}
-        ></ins>
-      </div>
+      <div ref={adContainerRef} />
     </div>
   );
 }
