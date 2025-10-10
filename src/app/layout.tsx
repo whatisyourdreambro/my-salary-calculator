@@ -52,14 +52,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-// TypeScript가 window 객체에 있는 외부 스크립트 변수들을 인식하도록 타입을 선언합니다.
+// [수정] KakaoAdFit.tsx 와 동일한 타입으로 수정하여 충돌을 해결했습니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    // 'any' 타입 대신 'unknown'을 사용하여 타입 안정성을 높입니다.
     adsbygoogle?: unknown[];
     adfit?: {
-      render: (element: HTMLElement | null) => void;
+      render: () => void;
+      destroy: (container: HTMLElement) => void;
     };
   }
 }
