@@ -1,5 +1,24 @@
 import type { ElementType } from "react";
 
+// ========================================================================
+// [수정] 전역 Window 객체에 gtag와 adfit 타입을 추가하여 빌드 오류를 해결합니다.
+declare global {
+  interface Window {
+    // Google Analytics (gtag)를 위한 타입
+    gtag?: (param1: string, param2: string, param3: object) => void;
+
+    // Kakao AdFit을 위한 타입
+    adfit?: {
+      render: (el: HTMLElement) => void;
+      destroy: (el: HTMLElement) => void;
+    };
+
+    // 로컬 테스트용 광고 실패 콜백 함수 타입
+    onAdFitFail?: (el: HTMLElement) => void;
+  }
+}
+// ========================================================================
+
 // localStorage에 저장될 연봉 계산기 데이터
 export interface StoredSalaryData {
   annualSalary: number;
