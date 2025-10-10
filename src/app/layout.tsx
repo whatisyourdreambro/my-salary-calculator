@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
+import AdManager from "@/components/AdManager"; // 1. AdManager 컴포넌트 가져오기
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -108,6 +109,12 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Kakao AdFit 전역 스크립트 추가 */}
+        <Script
+          async
+          src="https://t1.daumcdn.net/kas/static/ba.min.js"
+          strategy="afterInteractive"
+        />
       </head>
       <body>
         <noscript>
@@ -127,6 +134,10 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="w-full flex-grow">{children}</main>
+
+            {/* 2. Footer 바로 위에 AdManager를 추가합니다. */}
+            <AdManager />
+
             <Footer />
           </div>
         </NextThemesProvider>
