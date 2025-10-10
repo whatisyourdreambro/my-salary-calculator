@@ -1,23 +1,4 @@
-import type { ElementType } from "react";
-
-// ========================================================================
-// [수정] 전역 Window 객체에 gtag와 adfit 타입을 추가하여 빌드 오류를 해결합니다.
-declare global {
-  interface Window {
-    // Google Analytics (gtag)를 위한 타입
-    gtag?: (param1: string, param2: string, param3: object) => void;
-
-    // Kakao AdFit을 위한 타입
-    adfit?: {
-      render: (el: HTMLElement) => void;
-      destroy: (el: HTMLElement) => void;
-    };
-
-    // 로컬 테스트용 광고 실패 콜백 함수 타입
-    onAdFitFail?: (el: HTMLElement) => void;
-  }
-}
-// ========================================================================
+// src/app/types.ts
 
 // localStorage에 저장될 연봉 계산기 데이터
 export interface StoredSalaryData {
@@ -28,8 +9,7 @@ export interface StoredSalaryData {
   nonTaxableAmount: number;
   dependents: number;
   children: number;
-  monthlyExpenses?: number; // 월평균 지출액 (선택적)
-  advancedSettings?: AdvancedSettings; // [개선] 연봉 계산과 관련된 상세 설정을 포함
+  monthlyExpenses?: number; // [추가] 월평균 지출액 (선택적)
 }
 
 // 주택담보대출 계산 결과 저장 데이터
@@ -58,7 +38,7 @@ export interface StoredFutureSalaryData {
   totalIncrease: number;
 }
 
-// 연봉 계산 상세 설정을 위한 인터페이스
+// [추가] 상세 설정을 위한 인터페이스
 export interface AdvancedSettings {
   isSmeYouth: boolean; // 중소기업 취업 청년 감면 여부
   disabledDependents: number; // 장애인 부양가족 수
@@ -74,19 +54,3 @@ export interface StoredFinancialData {
   futureSalary?: StoredFutureSalaryData;
   lastUpdated: string; // 데이터 업데이트 시각
 }
-
-// [추가] 가이드 및 카테고리 관련 타입
-export type Category = {
-  id: string;
-  name: string;
-  // lucide-react 아이콘과 같은 React 컴포넌트를 직접 받기 위해 타입을 ElementType으로 지정
-  icon: ElementType;
-};
-
-export type Guide = {
-  slug: string;
-  title: string;
-  summary: string;
-  category: string;
-  publishedAt: string;
-};
