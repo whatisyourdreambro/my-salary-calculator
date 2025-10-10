@@ -32,7 +32,7 @@ const AdManager = ({ position }: AdManagerProps) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const adDisabled = false;
+  const adDisabled = false; // 필요 시 true로 변경하여 광고 비활성화
 
   // position 값에 따라 다른 광고 유닛을 렌더링합니다.
   switch (position) {
@@ -74,8 +74,8 @@ const AdManager = ({ position }: AdManagerProps) => {
         />
       );
 
-    // [추가] 007번 광고단위 (320x50)
     case "footer-banner-mobile-alt":
+      // [추가] 007번 광고단위 (320x50)
       return (
         <KakaoAdFit
           unit="DAN-no5HCWDFKDsohy4c"
@@ -96,8 +96,8 @@ const AdManager = ({ position }: AdManagerProps) => {
         />
       );
 
-    // [추가] 008번 화면 전환 광고 (300x250)
     case "interstitial":
+      // [추가] 008번 화면 전환 광고 (300x250)
       return (
         <KakaoAdFit
           unit="DAN-gtL0uD65wrODCXRh"

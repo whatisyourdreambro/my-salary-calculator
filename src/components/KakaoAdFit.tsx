@@ -3,6 +3,16 @@
 
 import { useEffect, useRef } from "react";
 
+// window.adfit 타입을 전역으로 확장합니다.
+declare global {
+  interface Window {
+    adfit?: {
+      render: (el: HTMLElement) => void;
+      destroy: (el: HTMLElement) => void;
+    };
+  }
+}
+
 type AdFitProps = {
   unit: string;
   width: string;
@@ -18,20 +28,15 @@ export default function KakaoAdFit({
 }: AdFitProps) {
   const adContainerRef = useRef<HTMLDivElement>(null);
 
-  // unit, width, height가 변경될 때마다 광고를 다시 렌더링합니다.
   useEffect(() => {
-    if (disabled) {
-      return;
-    }
+    if (disabled) return;
 
     const adContainer = adContainerRef.current;
-    if (!adContainer) {
-      return;
-    }
+    if (!adContainer) return;
 
-    // ❗️ Kakao AdFit 스크립트가 로드되었는지 확인하는 것이 매우 중요합니다.
-    // 스크립트 로드 전에 이 코드가 실행되면 오류가 발생합니다.
-    if (!window.adfit) {
+    // [수정] window.adfit 객체가 로드되었는지 확인하는 방어 코드 추가
+    if (typeof window.adfit?.render !== "function") {
+      console.warn("AdFit 스크립트가 아직 로드되지 않았습니다.");
       return;
     }
 
@@ -40,26 +45,31 @@ export default function KakaoAdFit({
       adContainer.removeChild(adContainer.firstChild);
     }
 
-    // 공식 가이드에 따라 <ins> 태그를 동적으로 생성합니다.
     const ins = document.createElement("ins");
     ins.className = "kakao_ad_area";
     ins.style.display = "none";
 
-    // data-* 속성들을 설정합니다.
     ins.setAttribute("data-ad-unit", unit);
     ins.setAttribute("data-ad-width", width);
     ins.setAttribute("data-ad-height", height);
 
     adContainer.appendChild(ins);
 
-    // 생성된 <ins> 태그를 기반으로 광고를 렌더링합니다.
-    window.adfit.render(adContainer);
+    // [수정] window.adfit.render를 호출하기 전에 한 번 더 확인합니다.
+    try {
+      window.adfit.render(adContainer);
+    } catch (e) {
+      console.error("Kakao AdFit 렌더링에 실패했습니다.", e);
+    }
 
-    // 컴포넌트가 사라질 때(unmount) 광고 리소스를 정리합니다.
-    // 이는 메모리 누수를 방지하고, 페이지 이동 시 발생할 수 있는 오류를 막습니다.
     return () => {
-      if (adContainer && window.adfit?.destroy) {
-        window.adfit.destroy(adContainer);
+      // [수정] destroy 함수 존재 여부도 확인하여 안정성 강화
+      if (adContainer && typeof window.adfit?.destroy === "function") {
+        try {
+          window.adfit.destroy(adContainer);
+        } catch (e) {
+          console.error("Kakao AdFit 리소스 정리에 실패했습니다.", e);
+        }
       }
     };
   }, [unit, width, height, disabled]);
@@ -68,7 +78,6 @@ export default function KakaoAdFit({
     return null;
   }
 
-  // 광고를 담을 컨테이너 div
   return (
     <div
       style={{

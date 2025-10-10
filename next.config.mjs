@@ -6,11 +6,11 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-// [수정] 카카오 애드핏 관련 도메인을 script-src와 frame-src에 추가했습니다.
+// [수정 완료] 카카오 애드핏 및 구글 애드센스 광고 로딩에 필요한 모든 도메인을 script-src와 frame-src에 추가했습니다.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com;
-  frame-src 'self' https://googleads.g.doubleclick.net https://www.googletagmanager.com *.kakao.com *.adfit.kakao.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com;
+  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com *.kakao.com *.adfit.kakao.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
