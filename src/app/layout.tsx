@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import AdManager from "@/components/AdManager"; // 1. AdManager 컴포넌트 가져오기
+import AdManager from "@/components/AdManager"; // AdManager 컴포넌트 가져오기
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -52,11 +52,15 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+// TypeScript가 window 객체에 있는 외부 스크립트 변수들을 인식하도록 타입을 선언합니다.
 declare global {
   interface Window {
     gtag: (param1: string, param2: string, param3: object) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    adsbygoogle?: any[];
+    // 'any' 타입 대신 'unknown'을 사용하여 타입 안정성을 높입니다.
+    adsbygoogle?: unknown[];
+    adfit?: {
+      render: (element: HTMLElement | null) => void;
+    };
   }
 }
 
@@ -133,11 +137,9 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
+            <AdManager position="header-banner" />
             <main className="w-full flex-grow">{children}</main>
-
-            {/* 2. Footer 바로 위에 AdManager를 추가합니다. */}
-            <AdManager />
-
+            <AdManager position="footer-banner" />
             <Footer />
           </div>
         </NextThemesProvider>
