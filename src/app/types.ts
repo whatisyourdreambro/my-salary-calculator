@@ -36,11 +36,32 @@ export type StoredRankData = {
   };
 };
 
+// SeveranceCalculator에서 사용하는 타입
+export type StoredSeveranceData = {
+  estimatedSeverancePay: number;
+};
+
+// HomeLoanSimulator에서 사용하는 타입
+export type StoredHomeLoanData = {
+  monthlyPayment: number;
+  loanSuggestion: string;
+};
+
+// FutureSalaryCalculator에서 사용하는 타입
+export type StoredFutureSalaryData = {
+  years: number;
+  finalSalary: number;
+  totalIncrease: number;
+};
+
+// StoredFinancialData 타입을 확장하여 모든 데이터 구조를 포함합니다.
 export type StoredFinancialData = {
   salary?: StoredSalaryData;
-  rank?: StoredRankData; // rank 속성 추가
+  rank?: StoredRankData;
+  severance?: StoredSeveranceData;
+  homeLoan?: StoredHomeLoanData;
+  futureSalary?: StoredFutureSalaryData;
   lastUpdated: string;
-  // 다른 금융 데이터 타입들을 여기에 추가할 수 있습니다.
 };
 
 export type AdvancedSettings = {
