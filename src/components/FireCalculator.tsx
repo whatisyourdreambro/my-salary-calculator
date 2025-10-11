@@ -13,6 +13,7 @@ import {
   Legend,
   ResponsiveContainer,
   CartesianGrid,
+  ReferenceLine,
 } from "recharts";
 import {
   PlusCircle,
@@ -120,6 +121,26 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
     totalContributions: Math.round(totalContributions),
     totalReturns: Math.round(futureValue - totalContributions),
   };
+};
+
+// Custom Tooltip Component
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const totalAssets = payload.reduce((sum: number, entry: any) => sum + entry.value, 0);
+    const contribution = payload.find((p: any) => p.dataKey === 'contribution')?.value || 0;
+    const returns = totalAssets - contribution;
+
+    return (
+      <div className="p-4 bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-lg shadow-lg text-white">
+        <p className="font-bold text-lg">{`${label}세`}</p>
+        <p style={{ color: '#8884d8' }}>{`총 납입 원금: ${formatNumber(contribution)}원`}</p>
+        <p style={{ color: '#82ca9d' }}>{`총 투자 수익: ${formatNumber(returns)}원`}</p>
+        <hr className="my-2 border-gray-600" />
+        <p className="font-bold">{`총 자산: ${formatNumber(totalAssets)}원`}</p>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default function FireCalculator() {
@@ -498,6 +519,16 @@ export default function FireCalculator() {
                   data={chartData}
                   margin={{ top: 10, right: 30, left: 20, bottom: 0 }}
                 >
+                  <defs>
+                    <linearGradient id="colorContribution" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorReturns" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="currentColor"
@@ -508,23 +539,16 @@ export default function FireCalculator() {
                     tickFormatter={(v) => `${(v / 100000000).toFixed(1)}억`}
                     stroke="currentColor"
                   />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "rgba(30,30,30,0.8)",
-                      borderColor: "#555",
-                    }}
-                    formatter={(value: number, name: string) => [
-                      `${formatNumber(value)}원`,
-                      name === "contribution" ? "총 납입 원금" : "총 자산",
-                    ]}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend />
+                  <ReferenceLine y={finalTargetAmount} label="FIRE 목표" stroke="red" strokeDasharray="3 3" />
                   <Area
                     type="monotone"
                     dataKey="contribution"
                     stackId="1"
                     stroke="#8884d8"
-                    fill="#8884d8"
+                    fillOpacity={1}
+                    fill="url(#colorContribution)"
                     name="총 납입 원금"
                   />
                   <Area
@@ -532,7 +556,8 @@ export default function FireCalculator() {
                     dataKey={(data) => data.assets - data.contribution}
                     stackId="1"
                     stroke="#82ca9d"
-                    fill="#82ca9d"
+                    fillOpacity={1}
+                    fill="url(#colorReturns)"
                     name="총 투자 수익"
                   />
                 </AreaChart>
