@@ -1,16 +1,27 @@
+// src/components/DetailedAnalysis.tsx
+
 "use client";
 
-import { useMemo } from "react";
-import Link from "next/link";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
-import type { CalculationResult } from "@/lib/calculator";
-import { TrendingDown, AlertTriangle, ShieldCheck, Award } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-
-const formatNumber = (num: number) => num.toLocaleString();
-
-const DEDUCTION_COLORS = ["#ff8c00", "#ff6384", "#ffcd56", "#4bc0c0", "#9966ff", "#ff9f40"];
+import React from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
+import { CalculationResult } from "@/app/types"; // 수정된 경로
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator"; // 수정된 경로
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // 수정된 경로
+import { Info, Wallet } from "lucide-react";
 
 interface DetailedAnalysisProps {
   annualSalary: number;
@@ -18,131 +29,204 @@ interface DetailedAnalysisProps {
   monthlyExpenses: number;
 }
 
-export default function DetailedAnalysis({ annualSalary, result, monthlyExpenses }: DetailedAnalysisProps) {
-  const monthlyGross = useMemo(() => Math.round(annualSalary / 12), [annualSalary]);
+const formatNumber = (num: number) => num.toLocaleString();
 
-  const compositionData = [
-    { name: "월 실수령액", value: result.monthlyNet },
-    { name: "월 총 공제액", value: result.totalDeduction },
-  ];
+const COLORS = {
+  netPay: "hsl(var(--primary))",
+  pension: "hsl(var(--chart-1))",
+  health: "hsl(var(--chart-2))",
+  employment: "hsl(var(--chart-3))",
+  tax: "hsl(var(--chart-4))",
+};
 
-  const deductionDetails = [
-    { name: "국민연금", value: result.pension, rate: "4.5%" },
-    { name: "건강보험", value: result.health, rate: "3.545%" },
-    { name: "장기요양", value: result.longTermCare, rate: "건강보험의 12.95%" },
-    { name: "고용보험", value: result.employment, rate: "0.9%" },
-    { name: "소득세", value: result.incomeTax, rate: "소득 구간별" },
-    { name: "지방소득세", value: result.localTax, rate: "소득세의 10%" },
-  ].filter((item) => item.value > 0);
+const DEDUCTION_ITEMS = [
+  { name: "국민연금", key: "pension", color: COLORS.pension },
+  { name: "건강보험", key: "health", color: COLORS.health },
+  { name: "고용보험", key: "employment", color: COLORS.employment },
+  { name: "소득세(지방소득세 포함)", key: "tax", color: COLORS.tax },
+];
 
-  const FinancialHealthSection = () => {
-    if (result.monthlyNet <= 0 || monthlyExpenses <= 0) return null;
+const FinancialHealthAnalysis: React.FC<{ netToTotalRatio: number }> = ({
+  netToTotalRatio,
+}) => {
+  let healthStatus = "";
+  let description = "";
+  let variant: "default" | "destructive" = "default";
 
-    const monthlySaving = result.monthlyNet - monthlyExpenses;
-    const savingRate = Math.round((monthlySaving / result.monthlyNet) * 100);
-
-    const getHealthStatus = () => {
-      if (savingRate < 20) {
-        return {
-          Icon: AlertTriangle,
-          className: "text-destructive bg-destructive/10 border-destructive/20",
-          title: "위험: 재정 상태 점검이 시급합니다.",
-          message: `현재 저축률은 ${savingRate}%로, 미래를 위한 재정적 준비가 부족한 상태입니다. 소비 습관을 점검하고 고정 지출을 줄이는 노력이 반드시 필요합니다.`,
-          actionLink: "/guides/first-job-investment",
-          actionText: "사회초년생 재테크 가이드 보기",
-        };
-      }
-      if (savingRate < 50) {
-        return {
-          Icon: ShieldCheck,
-          className: "text-primary bg-primary/10 border-primary/20",
-          title: "안정: 잘하고 있지만, 더 발전할 수 있습니다.",
-          message: `현재 저축률은 ${savingRate}%로, 안정적인 재무 흐름을 만들고 있습니다. 여기서 만족하지 말고, 투자 파이프라인을 구축하여 자산 증식 속도를 높여보세요.`,
-          actionLink: "/guides/road-to-100m-part3-invest",
-          actionText: "투자 파이프라인 구축 가이드 보기",
-        };
-      }
-      return {
-        Icon: Award,
-        className: "text-green-500 bg-green-500/10 border-green-500/20",
-        title: "우수: 훌륭한 재무 습관을 가지고 있습니다.",
-        message: `현재 저축률은 ${savingRate}%로, 매우 훌륭한 저축 습관을 가지고 있습니다. 이제 N잡, 부수입 등을 통해 소득의 파이 자체를 키워 경제적 자유를 앞당기세요.`,
-        actionLink: "/guides/road-to-100m-part2-sidejob",
-        actionText: "N잡으로 월 100만원 더 벌기",
-      };
-    };
-
-    const status = getHealthStatus();
-
-    return (
-      <div className="mt-12 pt-8 border-t">
-        <div className={cn("p-6 rounded-2xl border", status.className)}>
-          <div className="flex items-center gap-4">
-            <status.Icon className="w-10 h-10" />
-            <div><h3 className="text-2xl font-bold">금융 건전성: {status.title}</h3></div>
-          </div>
-          <div className="mt-4 pl-14">
-            <div className="grid grid-cols-2 gap-4 text-center mb-4">
-              <div className="bg-card p-3 rounded-lg">
-                <p className="text-sm text-muted-foreground">월 저축 가능액</p>
-                <p className="font-bold text-lg">{formatNumber(monthlySaving)}원</p>
-              </div>
-              <div className="bg-card p-3 rounded-lg">
-                <p className="text-sm text-muted-foreground">예상 저축률</p>
-                <p className={cn("font-bold text-lg", status.className.split(' ')[0])}>{savingRate}%</p>
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground">{status.message}</p>
-            <Link href={status.actionLink} className={cn("mt-3 inline-block text-sm font-bold hover:underline", status.className.split(' ')[0])}>{status.actionText} →</Link>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  if (netToTotalRatio > 0.88) {
+    healthStatus = "매우 건강";
+    description =
+      "실수령액 비중이 매우 높습니다. 절세 전략을 잘 활용하고 계십니다.";
+    variant = "default";
+  } else if (netToTotalRatio > 0.82) {
+    healthStatus = "양호";
+    description =
+      "평균적인 수준의 실수령액 비중입니다. 비과세 항목을 점검해보세요.";
+    variant = "default";
+  } else {
+    healthStatus = "주의 필요";
+    description =
+      "공제액 비중이 다소 높습니다. 연말정산을 통해 환급액을 높일 수 있습니다.";
+    variant = "destructive";
+  }
 
   return (
-    <Card className="mt-8">
+    <Alert variant={variant}>
+      <Info className="h-4 w-4" />
+      <AlertTitle>금융 건전성: {healthStatus}</AlertTitle>
+      <AlertDescription>{description}</AlertDescription>
+    </Alert>
+  );
+};
+
+export default function DetailedAnalysis({
+  annualSalary,
+  result,
+  monthlyExpenses,
+}: DetailedAnalysisProps) {
+  const monthlySalary = annualSalary / 12;
+  const {
+    monthlyNet,
+    totalDeduction,
+    pension,
+    health,
+    employment,
+    incomeTax,
+    localTax,
+  } = result;
+
+  const totalTax = incomeTax + localTax;
+
+  const pieData = [
+    { name: "실수령액", value: monthlyNet },
+    { name: "국민연금", value: pension },
+    { name: "건강보험", value: health },
+    { name: "고용보험", value: employment },
+    { name: "소득세", value: totalTax },
+  ];
+
+  const netToTotalRatio = monthlyNet / monthlySalary;
+  const disposableIncome = monthlyNet - monthlyExpenses;
+
+  return (
+    <Card>
       <CardHeader>
-        <CardTitle className="text-2xl text-center">월급 상세 분석</CardTitle>
+        <CardTitle>월급 상세 분석</CardTitle>
+        <CardDescription>
+          매월 내 급여가 어떻게 구성되는지 자세히 살펴보세요.
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
-          <div className="lg:col-span-2 flex flex-col items-center">
-            <p className="font-semibold text-muted-foreground">월 세전 급여: {formatNumber(monthlyGross)}원</p>
-            <div className="w-full h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={compositionData} dataKey="value" innerRadius={60} outerRadius={80} paddingAngle={5}>
-                    {compositionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index === 0 ? "hsl(var(--primary))" : "hsl(var(--destructive))"} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value: number) => `${formatNumber(value)} 원`} />
-                  <Legend wrapperStyle={{ fontSize: "14px" }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div className="h-64 w-full">
+            <ResponsiveContainer>
+              <PieChart>
+                <Tooltip
+                  cursor={{ fill: "hsl(var(--muted))" }}
+                  contentStyle={{
+                    backgroundColor: "hsl(var(--background))",
+                    borderColor: "hsl(var(--border))",
+                    borderRadius: "var(--radius)",
+                  }}
+                />
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  stroke="hsl(var(--background))"
+                  strokeWidth={3}
+                >
+                  <Cell key={`cell-netPay`} fill={COLORS.netPay} />
+                  <Cell key={`cell-pension`} fill={COLORS.pension} />
+                  <Cell key={`cell-health`} fill={COLORS.health} />
+                  <Cell key={`cell-employment`} fill={COLORS.employment} />
+                  <Cell key={`cell-tax`} fill={COLORS.tax} />
+                </Pie>
+                <Legend
+                  formatter={(value) => (
+                    <span className="text-foreground">{value}</span>
+                  )}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-          <div className="lg:col-span-3">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingDown className="w-6 h-6 text-destructive" />
-              <h3 className="text-xl font-bold">상세 공제 내역</h3>
-            </div>
-            <div className="space-y-2 text-sm">
-              {deductionDetails.map((item, index) => (
-                <div key={item.name} className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                  <div className="flex items-center">
-                    <span className="w-2.5 h-2.5 rounded-full mr-3" style={{ backgroundColor: DEDUCTION_COLORS[index % DEDUCTION_COLORS.length] }}></span>
-                    <span className="font-semibold text-base">{item.name}</span>
-                    <span className="text-xs text-muted-foreground ml-2">({item.rate})</span>
-                  </div>
-                  <span className="font-mono font-bold text-base">{formatNumber(item.value)}원</span>
+          <div>
+            <p className="text-lg font-semibold text-muted-foreground">
+              월 세전 급여
+            </p>
+            <p className="text-3xl font-bold text-foreground mb-4">
+              {formatNumber(monthlySalary)}원
+            </p>
+            <Separator />
+            <p className="text-lg font-semibold text-muted-foreground mt-4">
+              월 실수령액
+            </p>
+            <p className="text-3xl font-bold text-primary">
+              {formatNumber(monthlyNet)}원
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-3">상세 공제 내역</h3>
+          <div className="space-y-2 rounded-lg border p-4">
+            {DEDUCTION_ITEMS.map((item) => (
+              <div
+                key={item.key}
+                className="flex justify-between items-center py-1"
+              >
+                <div className="flex items-center">
+                  <span
+                    className="w-3 h-3 rounded-full mr-3"
+                    style={{ backgroundColor: item.color }}
+                  ></span>
+                  <span className="text-sm font-medium text-foreground">
+                    {item.name}
+                  </span>
                 </div>
-              ))}
+                <span className="text-sm font-semibold text-foreground">
+                  {formatNumber(
+                    item.key === "tax"
+                      ? totalTax
+                      : (result[item.key as keyof CalculationResult] as number)
+                  )}
+                  원
+                </span>
+              </div>
+            ))}
+            <Separator className="my-2" />
+            <div className="flex justify-between items-center pt-1 font-bold">
+              <span className="text-foreground">총 공제액</span>
+              <span className="text-destructive">
+                {formatNumber(totalDeduction)}원
+              </span>
             </div>
           </div>
         </div>
-        <FinancialHealthSection />
+
+        {monthlyExpenses > 0 && (
+          <Card className="bg-muted/50">
+            <CardHeader className="flex-row items-center gap-4 space-y-0 pb-2">
+              <Wallet className="h-6 w-6 text-muted-foreground" />
+              <CardTitle>월 가처분 소득</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">
+                {formatNumber(disposableIncome)} 원
+              </p>
+              <p className="text-xs text-muted-foreground">
+                월 실수령액({formatNumber(monthlyNet)}원) - 월 고정지출(
+                {formatNumber(monthlyExpenses)}원)
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        <FinancialHealthAnalysis netToTotalRatio={netToTotalRatio} />
       </CardContent>
     </Card>
   );

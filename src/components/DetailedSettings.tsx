@@ -1,28 +1,65 @@
+// src/components/DetailedSettings.tsx
+
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import CurrencyInput from "./CurrencyInput";
+import { Minus, Plus } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import type { AdvancedSettings } from "@/app/types";
 
-interface Props {
+const formatNumber = (num: number) => num.toLocaleString();
+const parseNumber = (str: string) => Number(String(str).replace(/,/g, ""));
+
+interface DetailedSettingsProps {
   dependents: number;
   children: number;
   advancedSettings: AdvancedSettings;
   nonTaxableAmount: string;
   monthlyExpenses: string;
   handleDependentChange: (
-    field: "dependents" | "children" | "disabledDependents" | "seniorDependents",
+    field:
+      | "dependents"
+      | "children"
+      | "disabledDependents"
+      | "seniorDependents",
     delta: number
   ) => void;
   setNonTaxableAmount: (value: string) => void;
-  setAdvancedSettings: (value: React.SetStateAction<AdvancedSettings>) => void;
+  setAdvancedSettings: React.Dispatch<React.SetStateAction<AdvancedSettings>>;
   setMonthlyExpenses: (value: string) => void;
 }
 
-const formatNumber = (num: number) => num.toLocaleString();
+const NumberControl: React.FC<{
+  label: string;
+  value: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+}> = ({ label, value, onIncrement, onDecrement }) => {
+  return (
+    <div className="flex items-center justify-between p-2 rounded-md bg-muted">
+      <Label className="text-sm text-muted-foreground">{label}</Label>
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon" onClick={onDecrement}>
+          <Minus className="h-4 w-4" />
+        </Button>
+        <span className="font-bold w-8 text-center text-foreground">
+          {value}
+        </span>
+        <Button variant="outline" size="icon" onClick={onIncrement}>
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 export default function DetailedSettings({
   dependents,
@@ -34,83 +71,76 @@ export default function DetailedSettings({
   setNonTaxableAmount,
   setAdvancedSettings,
   setMonthlyExpenses,
-}: Props) {
+}: DetailedSettingsProps) {
   return (
-    <div className="mt-6 pt-6 border-t">
-      <h2 className="text-lg font-bold mb-4">상세 설정</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label>부양 가족 수 (본인포함)</Label>
-          <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("dependents", -1)}>-</Button>
-            <span className="font-bold text-lg">{dependents} 명</span>
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("dependents", 1)}>+</Button>
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>상세 설정 (비과세액, 부양가족 등)</AccordionTrigger>
+        <AccordionContent className="space-y-4 pt-4">
+          <div className="space-y-2">
+            <Label htmlFor="non-taxable">월 비과세액 (식대 등)</Label>
+            <Input
+              id="non-taxable"
+              type="text"
+              value={formatNumber(parseNumber(nonTaxableAmount))}
+              onChange={(e) =>
+                setNonTaxableAmount(e.target.value.replace(/,/g, ""))
+              }
+              className="text-right"
+            />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label>20세 이하 자녀 수</Label>
-          <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("children", -1)}>-</Button>
-            <span className="font-bold text-lg">{children} 명</span>
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("children", 1)}>+</Button>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label>70세 이상 (경로우대)</Label>
-          <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("seniorDependents", -1)}>-</Button>
-            <span className="font-bold text-lg">{advancedSettings.seniorDependents} 명</span>
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("seniorDependents", 1)}>+</Button>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label>장애인</Label>
-          <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("disabledDependents", -1)}>-</Button>
-            <span className="font-bold text-lg">{advancedSettings.disabledDependents} 명</span>
-            <Button variant="outline" size="icon" onClick={() => handleDependentChange("disabledDependents", 1)}>+</Button>
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 space-y-2">
-        <Label htmlFor="non-taxable-amount">비과세액 (월 기준)</Label>
-        <div className="relative">
-          <Input
-            id="non-taxable-amount"
-            type="text"
-            value={nonTaxableAmount}
-            onChange={(e) => {
-              const v = e.target.value.replace(/[^0-9]/g, "");
-              setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
-            }}
-            className="pr-12"
+          <NumberControl
+            label="본인 포함 부양 가족 수"
+            value={dependents}
+            onIncrement={() => handleDependentChange("dependents", 1)}
+            onDecrement={() => handleDependentChange("dependents", -1)}
           />
-          <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">원</span>
-        </div>
-      </div>
-      <div className="mt-4 flex items-center space-x-2">
-        <Checkbox
-          id="isSmeYouth"
-          checked={advancedSettings.isSmeYouth}
-          onCheckedChange={(checked) =>
-            setAdvancedSettings((prev) => ({
-              ...prev,
-              isSmeYouth: !!checked,
-            }))
-          }
-        />
-        <Label htmlFor="isSmeYouth" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          중소기업 취업 청년 소득세 감면 대상
-        </Label>
-      </div>
-      <div className="mt-4">
-        <CurrencyInput
-          label="월평균 고정 지출 (주거비, 통신비 등)"
-          value={monthlyExpenses}
-          onValueChange={setMonthlyExpenses}
-          quickAmounts={[500000, 100000, 50000]}
-        />
-      </div>
-    </div>
+          <NumberControl
+            label="8세 이상 20세 이하 자녀 수"
+            value={children}
+            onIncrement={() => handleDependentChange("children", 1)}
+            onDecrement={() => handleDependentChange("children", -1)}
+          />
+          <NumberControl
+            label="장애인 부양가족"
+            value={advancedSettings.disabledDependents}
+            onIncrement={() => handleDependentChange("disabledDependents", 1)}
+            onDecrement={() => handleDependentChange("disabledDependents", -1)}
+          />
+          <NumberControl
+            label="70세 이상 경로우대"
+            value={advancedSettings.seniorDependents}
+            onIncrement={() => handleDependentChange("seniorDependents", 1)}
+            onDecrement={() => handleDependentChange("seniorDependents", -1)}
+          />
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="sme-youth"
+              checked={advancedSettings.isSmeYouth}
+              onCheckedChange={(checked) =>
+                setAdvancedSettings((prev) => ({
+                  ...prev,
+                  isSmeYouth: !!checked,
+                }))
+              }
+            />
+            <Label htmlFor="sme-youth">중소기업 취업 청년 감면 대상</Label>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="monthly-expenses">월 고정 지출 (선택)</Label>
+            <Input
+              id="monthly-expenses"
+              type="text"
+              value={formatNumber(parseNumber(monthlyExpenses))}
+              onChange={(e) =>
+                setMonthlyExpenses(e.target.value.replace(/,/g, ""))
+              }
+              placeholder="예: 월세, 통신비 등"
+              className="text-right"
+            />
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

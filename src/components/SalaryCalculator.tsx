@@ -1,14 +1,12 @@
-// src/components/SalaryCalculator.tsx
-
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { calculateNetSalary } from "@/lib/calculator";
-import { calculatePartTimeSalary } from "@/lib/freelancerCalculator"; // 함수 import 추가
+import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import { Share2 } from "lucide-react";
+import { Share2, RotateCcw, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type {
   StoredSalaryData,
@@ -18,16 +16,18 @@ import type {
 import dynamic from "next/dynamic";
 import IncomeTypeSelector from "./IncomeTypeSelector";
 import DetailedSettings from "./DetailedSettings";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Toaster, toast } from "sonner";
 
 const SalaryAnalysis = dynamic(() => import("./SalaryAnalysis"), {
-  loading: () => <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />,
+  loading: () => <div className="h-48 rounded-xl animate-pulse bg-muted" />,
 });
 const DetailedAnalysis = dynamic(() => import("./DetailedAnalysis"), {
-  loading: () => <div className="h-96 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />,
+  loading: () => <div className="h-96 rounded-xl animate-pulse bg-muted" />,
 });
 
-const formatNumber = (num: number) => num.toLocaleString();
-const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
+const parseNumber = (str: string) => Number(String(str).replace(/,/g, ""));
 
 type CalculationResult = ReturnType<typeof calculateNetSalary>;
 export type IncomeType = "regular" | "freelancer" | "part_time";
@@ -93,7 +93,7 @@ export default function SalaryCalculator() {
         totalDeduction: partTimeResult.totalDeduction,
         pension: partTimeResult.nationalPension,
         health: partTimeResult.healthInsurance,
-        longTermCare: 0, // 프리랜서/알바는 장기요양보험료 별도 계산 필요 (여기선 0으로 처리)
+        longTermCare: 0,
         employment: partTimeResult.employmentInsurance,
         incomeTax: partTimeResult.incomeTax,
         localTax: partTimeResult.localTax,
@@ -159,7 +159,7 @@ export default function SalaryCalculator() {
 
   const handleSaveData = () => {
     if (incomeType !== "regular") {
-      alert("정규직 소득만 대시보드에 저장할 수 있습니다.");
+      toast.error("정규직 소득만 대시보드에 저장할 수 있습니다.");
       return;
     }
     try {
@@ -188,17 +188,21 @@ export default function SalaryCalculator() {
         "moneysalary-financial-data",
         JSON.stringify(updatedData)
       );
-      alert("연봉 정보가 대시보드에 저장되었습니다!");
-      router.push("/dashboard");
+      toast.success("연봉 정보가 대시보드에 저장되었습니다!", {
+        action: {
+          label: "이동",
+          onClick: () => router.push("/dashboard"),
+        },
+      });
     } catch (error) {
       console.error("Failed to save data to localStorage:", error);
-      alert("데이터 저장에 실패했습니다.");
+      toast.error("데이터 저장에 실패했습니다.");
     }
   };
 
   const handleShare = async () => {
     if (incomeType !== "regular") {
-      alert("정규직 소득만 공유할 수 있습니다.");
+      toast.error("정규직 소득만 공유할 수 있습니다.");
       return;
     }
     const dataToShare = {
@@ -212,10 +216,10 @@ export default function SalaryCalculator() {
 
     try {
       await navigator.clipboard.writeText(shareUrl);
-      alert("결과 공유 링크가 클립보드에 복사되었습니다!");
+      toast.success("결과 공유 링크가 클립보드에 복사되었습니다!");
     } catch (error) {
       console.error("Sharing failed:", error);
-      alert("공유 링크 복사에 실패했습니다.");
+      toast.error("공유 링크 복사에 실패했습니다.");
     }
   };
 
@@ -233,162 +237,162 @@ export default function SalaryCalculator() {
       disabledDependents: 0,
       seniorDependents: 0,
     });
+    toast.info("입력값이 초기화되었습니다.");
   };
 
   return (
-    <div className="space-y-8 mt-8">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-3 space-y-6">
-          <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-sm border h-full">
-            <h2 className="text-lg font-bold">소득 정보</h2>
-            <IncomeTypeSelector incomeType={incomeType} onIncomeTypeChange={setIncomeType} />
-
-            {incomeType === "regular" && (
-              <div className="grid grid-cols-2 gap-4 my-4">
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1 block">
-                    급여 기준
-                  </label>
-                  <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                    <button
-                      onClick={() => setPayBasis("annual")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                        payBasis === "annual"
-                          ? "bg-white dark:bg-gray-700 shadow-sm"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      연봉
-                    </button>
-                    <button
-                      onClick={() => setPayBasis("monthly")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                        payBasis === "monthly"
-                          ? "bg-white dark:bg-gray-700 shadow-sm"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      월급
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1 block">
-                    퇴직금
-                  </label>
-                  <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                    <button
-                      onClick={() => setSeveranceType("separate")}
-                      disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                        severanceType === "separate"
-                          ? "bg-white dark:bg-gray-700 shadow-sm"
-                          : "text-gray-500"
-                      } ${
-                        payBasis === "monthly"
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
-                      }`}
-                    >
-                      별도
-                    </button>
-                    <button
-                      onClick={() => setSeveranceType("included")}
-                      disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
-                        severanceType === "included"
-                          ? "bg-white dark:bg-gray-700 shadow-sm"
-                          : "text-gray-500"
-                      } ${
-                        payBasis === "monthly"
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
-                      }`}
-                    >
-                      포함
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            <CurrencyInput
-              label={
-                incomeType === "regular"
-                  ? payBasis === "annual"
-                    ? "연봉"
-                    : "월급"
-                  : "월 소득"
-              }
-              value={salaryInput}
-              onValueChange={setSalaryInput}
-              quickAmounts={[10000000, 100000, 100000]}
-            />
-            {incomeType === "regular" && (
-              <>
-                <DetailedSettings
-                  dependents={dependents}
-                  children={children}
-                  advancedSettings={advancedSettings}
-                  nonTaxableAmount={nonTaxableAmount}
-                  monthlyExpenses={monthlyExpenses}
-                  handleDependentChange={handleDependentChange}
-                  setNonTaxableAmount={setNonTaxableAmount}
-                  setAdvancedSettings={setAdvancedSettings}
-                  setMonthlyExpenses={setMonthlyExpenses}
+    <>
+      <Toaster richColors position="top-center" />
+      <div className="space-y-8 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>소득 정보</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <IncomeTypeSelector
+                  incomeType={incomeType}
+                  onIncomeTypeChange={(type) =>
+                    setIncomeType(type as IncomeType)
+                  }
                 />
-              </>
-            )}
-          </div>
-        </div>
 
-        {/* 오른쪽: 결과 요약 및 버튼 */}
-        <div className="lg:col-span-2">
-          <div className="sticky top-24 space-y-4">
-            <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border">
-              <h2 className="text-xl font-bold mb-4">월 예상 실수령액</h2>
-              <p className="text-4xl font-bold my-1 text-primary">
-                <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
-                원
-              </p>
-              <p className="font-semibold text-sm text-danger mt-2">
-                (공제액 합계: -{" "}
-                <CountUp
-                  end={result.totalDeduction}
-                  duration={0.5}
-                  separator=","
-                />{" "}
-                원)
-              </p>
-            </div>
-            <div className="pt-2">
+                {incomeType === "regular" && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <Tabs
+                      value={payBasis}
+                      onValueChange={(value) =>
+                        setPayBasis(value as "annual" | "monthly")
+                      }
+                    >
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="annual">연봉</TabsTrigger>
+                        <TabsTrigger value="monthly">월급</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                    <Tabs
+                      value={severanceType}
+                      onValueChange={(value) =>
+                        setSeveranceType(value as "separate" | "included")
+                      }
+                    >
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger
+                          value="separate"
+                          disabled={payBasis === "monthly"}
+                        >
+                          퇴직금 별도
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="included"
+                          disabled={payBasis === "monthly"}
+                        >
+                          퇴직금 포함
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                )}
+
+                <CurrencyInput
+                  label={
+                    incomeType === "regular"
+                      ? payBasis === "annual"
+                        ? "연봉"
+                        : "월급"
+                      : "월 소득"
+                  }
+                  value={salaryInput}
+                  onValueChange={setSalaryInput}
+                  quickAmounts={[10000000, 1000000, 100000]}
+                />
+
+                {incomeType === "regular" && (
+                  <DetailedSettings
+                    dependents={dependents}
+                    children={children}
+                    advancedSettings={advancedSettings}
+                    nonTaxableAmount={nonTaxableAmount}
+                    monthlyExpenses={monthlyExpenses}
+                    handleDependentChange={handleDependentChange}
+                    setNonTaxableAmount={setNonTaxableAmount}
+                    setAdvancedSettings={setAdvancedSettings}
+                    setMonthlyExpenses={setMonthlyExpenses}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-2">
+            <div className="sticky top-24 space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>월 예상 실수령액</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-4xl font-bold my-1 text-primary text-center">
+                    <CountUp
+                      end={result.monthlyNet}
+                      duration={0.5}
+                      separator=","
+                    />{" "}
+                    원
+                  </p>
+                  <p className="font-semibold text-sm text-destructive text-center mt-2">
+                    (공제액 합계: -{" "}
+                    <CountUp
+                      end={result.totalDeduction}
+                      duration={0.5}
+                      separator=","
+                    />{" "}
+                    원)
+                  </p>
+                </CardContent>
+              </Card>
               <div className="grid grid-cols-3 gap-2">
-                <Button onClick={handleReset} variant="outline" className="w-full">
-                  초기화
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <RotateCcw size={16} className="mr-2" /> 초기화
                 </Button>
-                <Button onClick={handleSaveData} disabled={incomeType !== "regular"} className="w-full">
-                  대시보드 저장
+                <Button
+                  onClick={handleSaveData}
+                  disabled={incomeType !== "regular"}
+                  className="w-full"
+                >
+                  <Save size={16} className="mr-2" /> 저장
                 </Button>
-                <Button onClick={handleShare} disabled={incomeType !== "regular"} variant="secondary" className="w-full">
-                  <Share2 size={16} className="mr-2" /> 결과 공유
+                <Button
+                  onClick={handleShare}
+                  disabled={incomeType !== "regular"}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Share2 size={16} className="mr-2" /> 공유
                 </Button>
               </div>
             </div>
           </div>
         </div>
+
+        {annualSalary > 0 && incomeType === "regular" && (
+          <div className="space-y-8">
+            <DetailedAnalysis
+              annualSalary={annualSalary}
+              result={result}
+              monthlyExpenses={parseNumber(monthlyExpenses)}
+            />
+            <SalaryAnalysis
+              annualSalary={annualSalary}
+              monthlyNet={result.monthlyNet}
+            />
+          </div>
+        )}
       </div>
-      {annualSalary > 0 && incomeType === "regular" && (
-        <>
-          <DetailedAnalysis
-            annualSalary={annualSalary}
-            result={result}
-            monthlyExpenses={parseNumber(monthlyExpenses)}
-          />
-          <SalaryAnalysis
-            annualSalary={annualSalary}
-            monthlyNet={result.monthlyNet}
-          />
-        </>
-      )}
-    </div>
+    </>
   );
 }
