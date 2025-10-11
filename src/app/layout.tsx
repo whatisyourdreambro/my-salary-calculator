@@ -110,6 +110,40 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Script
+          id="schema-markup"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "name": "Moneysalary",
+                  "url": "https://www.moneysalary.com",
+                  "logo": "https://www.moneysalary.com/logo-full.png",
+                  "sameAs": [
+                    "https://www.youtube.com/@moneysalary",
+                    "https://blog.naver.com/moneysalary"
+                  ]
+                },
+                {
+                  "@type": "WebSite",
+                  "name": "Moneysalary",
+                  "url": "https://www.moneysalary.com",
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                      "@type": "EntryPoint",
+                      "urlTemplate": "https://www.moneysalary.com/search?q={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                  }
+                }
+              ]
+            }),
+          }}
+        />
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"

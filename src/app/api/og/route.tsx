@@ -8,13 +8,18 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // 파라미터 파싱
     const title = searchParams.get("title") ?? "나의 연봉은 얼마일까?";
     const rank = searchParams.get("rank");
-    const salary = searchParams.get("salary");
-    // [수정] description 변수를 아래 JSX에서 사용합니다.
     const description =
       searchParams.get("description") ?? "Moneysalary.com 에서 확인해보세요";
+
+    // Fetch fonts from CDN
+    const notoSansKrBold = fetch(
+      'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-kr@5.0.13/files/noto-sans-kr-korean-700-normal.woff2'
+    ).then((res) => res.arrayBuffer());
+    const notoSansKrRegular = fetch(
+      'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-kr@5.0.13/files/noto-sans-kr-korean-400-normal.woff2'
+    ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
       (
@@ -26,54 +31,39 @@ export async function GET(request: Request) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#007FFF",
+            backgroundColor: "#1a1a1a",
+            backgroundImage: "linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%)",
             color: "white",
-            fontFamily: '"Noto Sans KR", sans-serif',
-            padding: "80px",
+            fontFamily: '"Noto Sans KR"',
+            padding: "60px",
           }}
         >
+            <img 
+                src="https://www.moneysalary.com/logo-full.png" 
+                width="180" 
+                style={{ position: 'absolute', top: 60, left: 60, opacity: 0.8 }}
+            />
           <div
             style={{
-              position: "absolute",
-              top: 60,
-              left: 60,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <div style={{ fontSize: 32, fontWeight: "bold" }}>Moneysalary</div>
-          </div>
-          <div
-            style={{
-              fontSize: 64,
+              fontSize: 72,
               fontWeight: 700,
               textAlign: "center",
-              lineHeight: 1.3,
+              lineHeight: 1.2,
+              padding: "0 80px",
+              textShadow: "0px 2px 10px rgba(0,0,0,0.5)"
             }}
           >
             {title}
           </div>
-          {salary && (
-            <div
-              style={{
-                fontSize: 42,
-                marginTop: 20,
-                textAlign: "center",
-                color: "#e0e0e0",
-              }}
-            >
-              연봉: {parseInt(salary, 10).toLocaleString()}원
-            </div>
-          )}
-          {/* [수정] description을 표시하는 div 추가 */}
           <div
             style={{
-              fontSize: 32,
-              marginTop: 25,
+              fontSize: 36,
+              marginTop: 30,
               textAlign: "center",
-              color: "#e0e0e0",
-              padding: "0 80px",
-              lineHeight: 1.4,
+              color: "#b0b0b0",
+              padding: "0 100px",
+              lineHeight: 1.5,
+              textShadow: "0px 2px 5px rgba(0,0,0,0.3)"
             }}
           >
             {description}
@@ -82,12 +72,14 @@ export async function GET(request: Request) {
             <div
               style={{
                 fontSize: 52,
-                marginTop: 30,
-                padding: "12px 35px",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                border: "3px solid white",
-                borderRadius: "20px",
+                marginTop: 40,
+                padding: "15px 40px",
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                border: "2px solid rgba(255, 255, 255, 0.8)",
+                borderRadius: "100px",
                 textAlign: "center",
+                fontWeight: 700,
+                textShadow: "0px 1px 3px rgba(0,0,0,0.3)"
               }}
             >
               상위 {rank}%
@@ -99,7 +91,8 @@ export async function GET(request: Request) {
               position: "absolute",
               bottom: 50,
               right: 60,
-              opacity: 0.8,
+              opacity: 0.7,
+              color: "#b0b0b0"
             }}
           >
             Moneysalary.com
@@ -109,6 +102,20 @@ export async function GET(request: Request) {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          {
+            name: "Noto Sans KR",
+            data: await notoSansKrRegular,
+            style: "normal",
+            weight: 400,
+          },
+          {
+            name: "Noto Sans KR",
+            data: await notoSansKrBold,
+            style: "normal",
+            weight: 700,
+          },
+        ],
       }
     );
   } catch (e: unknown) {

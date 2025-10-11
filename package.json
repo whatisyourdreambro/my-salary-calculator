@@ -7,30 +7,38 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest",
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
-    "lucide-react": "^0.544.0",
-    "next": "^14.2.4",
+    "lucide-react": "^0.545.0",
+    "next": "^14.2.33",
     "next-themes": "^0.4.6",
     "react": "^18",
     "react-countup": "^6.5.3",
     "react-dom": "^18",
-    "recharts": "^3.2.0"
+    "recharts": "^3.2.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@next/bundle-analyzer": "^15.5.3",
+    "@next/bundle-analyzer": "^14.2.33",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/recharts": "^1.8.29",
     "autoprefixer": "^10.4.21",
     "eslint": "^8",
-    "eslint-config-next": "^14.2.4",
+    "eslint-config-next": "^14.2.33",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "tailwindcss": "^3.4.18",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
   }
 }

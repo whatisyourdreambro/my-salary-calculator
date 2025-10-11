@@ -1,7 +1,7 @@
 // src/components/FireCalculator.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import {
@@ -23,35 +23,10 @@ import {
   ArrowRight,
   MousePointerClick,
 } from "lucide-react";
+import { useFireCalculatorStore, FireInputs, LifeEvent, CalculationStep, InvestmentStrategy } from "../stores/fireCalculatorStore";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
-
-type CalculationStep =
-  | "intro"
-  | "essentials"
-  | "investment"
-  | "events"
-  | "result";
-type InvestmentStrategy = "conservative" | "balanced" | "aggressive";
-
-interface LifeEvent {
-  year: number;
-  type: "oneTimeExpense" | "oneTimeIncome";
-  amount: string;
-  description: string;
-}
-
-interface FireInputs {
-  currentAge: string;
-  monthlySpending: string;
-  currentSavings: string;
-  monthlySavings: string;
-  salaryGrowthRate: string;
-  investmentStrategy: InvestmentStrategy;
-  customReturn: string;
-  retirementIncome: string;
-}
 
 const strategyReturns = {
   conservative: 4,
@@ -148,25 +123,24 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
 };
 
 export default function FireCalculator() {
-  const [step, setStep] = useState<CalculationStep>("intro");
-  const [inputs, setInputs] = useState<FireInputs>({
-    currentAge: "30",
-    monthlySpending: "3,000,000",
-    currentSavings: "50,000,000",
-    monthlySavings: "1,500,000",
-    salaryGrowthRate: "5",
-    investmentStrategy: "balanced",
-    customReturn: "",
-    retirementIncome: "0",
-  });
-  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
+  const {
+    step,
+    inputs,
+    lifeEvents,
+    setStep,
+    handleInputChange,
+    addLifeEvent,
+    updateLifeEvent,
+    removeLifeEvent,
+    reset,
+  } = useFireCalculatorStore();
 
-  const handleInputChange = (
-    field: keyof FireInputs,
-    value: string | InvestmentStrategy
-  ) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  useEffect(() => {
+    // Reset state when component unmounts
+    return () => {
+      reset();
+    };
+  }, [reset]);
 
   const {
     yearsToFire,
@@ -179,31 +153,6 @@ export default function FireCalculator() {
     () => calculateFireDate(inputs, lifeEvents),
     [inputs, lifeEvents]
   );
-
-  const addLifeEvent = () =>
-    setLifeEvents([
-      ...lifeEvents,
-      {
-        year: 1,
-        type: "oneTimeExpense",
-        amount: "10,000,000",
-        description: "이벤트",
-      },
-    ]);
-
-  const updateLifeEvent = (
-    index: number,
-    field: keyof LifeEvent,
-    value: string | number
-  ) => {
-    const newEvents = [...lifeEvents];
-    const event = { ...newEvents[index], [field]: value };
-    newEvents[index] = event;
-    setLifeEvents(newEvents);
-  };
-
-  const removeLifeEvent = (index: number) =>
-    setLifeEvents(lifeEvents.filter((_, i) => i !== index));
 
   if (step === "intro") {
     return (
@@ -440,7 +389,7 @@ export default function FireCalculator() {
                   <select
                     value={event.type}
                     onChange={(e) =>
-                      updateLifeEvent(index, "type", e.target.value)
+                      updateLifeEvent(index, "type", e.target.value as LifeEvent['type'])
                     }
                     className="p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
                   >

@@ -7,8 +7,6 @@ import { calculateNetSalary } from "@/lib/calculator";
 import { salaryData, findSalaryRank } from "@/lib/salaryData";
 import SalaryAnalysis from "@/components/SalaryAnalysis"; // 연봉별 맞춤 분석 컴포넌트 추가
 
-export const runtime = "edge";
-
 type Props = {
   params: { amount: string };
 };
