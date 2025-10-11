@@ -4,6 +4,7 @@
 
 import { TrendingUp, PiggyBank, Shield, BarChart2 } from "lucide-react";
 import Link from "next/link";
+import AIContentRecommender from "./AIContentRecommender";
 
 interface SalaryAnalysisProps {
   annualSalary: number;
@@ -199,6 +200,7 @@ export default function SalaryAnalysis({
           </AnalysisCard>
         ))}
       </div>
+      <AIContentRecommender />
     </div>
   );
 }

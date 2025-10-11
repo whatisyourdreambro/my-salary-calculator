@@ -1,9 +1,10 @@
 // src/app/page.tsx
-
 "use client";
 
+import { useState, useEffect } from "react";
+import type { StoredFinancialData } from "@/app/types";
+import PersonalizedWelcome from "@/components/PersonalizedWelcome";
 import CalculatorTabs from "@/components/CalculatorTabs";
-// [삭제] ExchangeRateDisplay 컴포넌트 import 제거
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
 
 const websiteStructuredData = {
@@ -37,6 +38,19 @@ const FeatureCard = ({
 );
 
 export default function HomePage() {
+  const [userProfile, setUserProfile] = useState<StoredFinancialData | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem("moneysalary-financial-data");
+      if (savedData) {
+        setUserProfile(JSON.parse(savedData));
+      }
+    } catch (error) {
+      console.error("Failed to parse user profile from localStorage:", error);
+    }
+  }, []);
+
   return (
     <>
       <script
@@ -48,6 +62,7 @@ export default function HomePage() {
       <main className="w-full">
         {/* Hero Section */}
         <section className="text-center py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PersonalizedWelcome profile={userProfile} />
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
             당신의 진짜 가치를,
             <br />
@@ -62,8 +77,6 @@ export default function HomePage() {
             단순 계산을 넘어 당신의 경제적 여정을 함께합니다.
           </p>
         </section>
-
-        {/* [삭제] Real-time Exchange Rate Display 섹션 제거 */}
 
         {/* Calculator Tabs Section */}
         <div
