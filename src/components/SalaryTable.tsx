@@ -1,13 +1,21 @@
-// src/components/SalaryTable.tsx
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
-type TableRow = { [key: string]: string | number };
-type Header = { key: keyof TableRow; label: string };
+type TableRowData = { [key: string]: string | number };
+type Header = { key: keyof TableRowData; label: string };
 
 interface SalaryTableProps {
   headers: Header[];
-  data: TableRow[];
-  highlightRows?: number[]; // 특정 값을 기준으로 행을 하이라이트
-  unit?: string; // 금액 뒤에 붙일 단위 (예: 원)
+  data: TableRowData[];
+  highlightRows?: number[];
+  unit?: string;
 }
 
 export default function SalaryTable({
@@ -17,53 +25,39 @@ export default function SalaryTable({
   unit = "원",
 }: SalaryTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm text-left">
-        <thead className="sticky top-0 bg-gray-100 dark:bg-gray-950 z-10">
-          <tr>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
             {headers.map((header) => (
-              <th
-                key={header.key as string}
-                scope="col"
-                className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap"
-              >
-                {header.label}
-              </th>
+              <TableHead key={header.key as string}>{header.label}</TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.map((row, index) => {
             const isHighlighted = highlightRows.includes(
               row[headers[0].key] as number
             );
             return (
-              <tr
+              <TableRow
                 key={index}
-                className={`transition-colors ${
-                  isHighlighted
-                    ? "bg-blue-50 dark:bg-blue-900/20 font-bold"
-                    : "bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                }`}
+                className={cn(isHighlighted && "bg-muted font-bold")}
               >
                 {headers.map((header) => (
-                  <td
+                  <TableCell
                     key={header.key as string}
-                    className={`px-6 py-5 whitespace-nowrap ${
-                      isHighlighted
-                        ? "text-signature-blue dark:text-blue-300"
-                        : "text-gray-800 dark:text-gray-300"
-                    }`}
+                    className={cn(isHighlighted && "text-primary")}
                   >
                     {Number(row[header.key]).toLocaleString()}
                     {unit && ` ${unit}`}
-                  </td>
+                  </TableCell>
                 ))}
-              </tr>
+              </TableRow>
             );
           })}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

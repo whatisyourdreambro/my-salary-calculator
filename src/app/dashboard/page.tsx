@@ -7,6 +7,7 @@ import MyDashboard from "@/components/MyDashboard";
 import type { StoredFinancialData } from "@/app/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] =
@@ -47,25 +48,22 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main className="container py-12">
       {dashboardData ? (
         <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
       ) : (
-        <div className="text-center bg-light-card dark:bg-dark-card p-12 rounded-2xl shadow-lg border">
-          <h1 className="text-3xl font-bold text-light-text dark:text-dark-text">
+        <div className="text-center bg-card p-12 rounded-2xl shadow-lg border">
+          <h1 className="text-3xl font-bold text-card-foreground">
             저장된 데이터가 없습니다.
           </h1>
-          <p className="mt-4 text-light-text-secondary dark:text-dark-text-secondary">
+          <p className="mt-4 text-muted-foreground">
             먼저 연봉, 퇴직금 등 금융 정보를 계산하고 저장하여
             <br />
             나만의 맞춤형 금융 대시보드를 만들어보세요.
           </p>
-          <Link
-            href="/"
-            className="inline-block mt-8 py-3 px-8 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover transition-transform transform hover:scale-105 shadow-lg"
-          >
-            계산하러 가기
-          </Link>
+          <Button asChild className="mt-8">
+            <Link href="/">계산하러 가기</Link>
+          </Button>
         </div>
       )}
     </main>

@@ -72,15 +72,15 @@ export default function HomePage() {
       />
       <main className="w-full">
         {/* Hero Section */}
-        <section className="text-center py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="container text-center py-20 sm:py-28">
           <PersonalizedWelcome profile={userProfile} />
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground animate-fade-in-up">
             당신의 진짜 가치를,
             <br />
             <span className="text-primary">숫자로 증명하세요.</span>
           </h1>
           <p
-            className="mt-6 max-w-2xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary animate-fade-in-up"
+            className="mt-6 max-w-2xl mx-auto text-muted-foreground animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
             2025년 최신 세법 기준, 가장 정확한 연봉 계산기.
@@ -91,18 +91,18 @@ export default function HomePage() {
 
         {/* Calculator Tabs Section */}
         <div
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up"
+          className="container animate-fade-in-up"
           style={{ animationDelay: "0.4s" }}
         >
           <CalculatorTabs />
         </div>
 
-        <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="container py-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
               모든 것은 숫자에서 시작됩니다
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-light-text-secondary dark:text-dark-text-secondary">
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
               Moneysalary는 단순한 계산기를 넘어, 당신의 금융 여정을 위한 강력한
               나침반입니다.
             </p>
