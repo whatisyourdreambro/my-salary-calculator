@@ -1,6 +1,9 @@
-// src/components/DetailedSettings.tsx
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import CurrencyInput from "./CurrencyInput";
 import type { AdvancedSettings } from "@/app/types";
 
@@ -33,134 +36,72 @@ export default function DetailedSettings({
   setMonthlyExpenses,
 }: Props) {
   return (
-    <div className="mt-6 pt-6 border-t dark:border-gray-700">
-      <h2 className="text-lg font-bold">상세 설정</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            부양 가족 수 (본인포함)
-          </label>
-          <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-            <button
-              onClick={() => handleDependentChange("dependents", -1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              -
-            </button>
+    <div className="mt-6 pt-6 border-t">
+      <h2 className="text-lg font-bold mb-4">상세 설정</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label>부양 가족 수 (본인포함)</Label>
+          <div className="flex items-center justify-between p-1 border rounded-lg">
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("dependents", -1)}>-</Button>
             <span className="font-bold text-lg">{dependents} 명</span>
-            <button
-              onClick={() => handleDependentChange("dependents", 1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              +
-            </button>
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("dependents", 1)}>+</Button>
           </div>
         </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            20세 이하 자녀 수
-          </label>
-          <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-            <button
-              onClick={() => handleDependentChange("children", -1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              -
-            </button>
+        <div className="space-y-2">
+          <Label>20세 이하 자녀 수</Label>
+          <div className="flex items-center justify-between p-1 border rounded-lg">
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("children", -1)}>-</Button>
             <span className="font-bold text-lg">{children} 명</span>
-            <button
-              onClick={() => handleDependentChange("children", 1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              +
-            </button>
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("children", 1)}>+</Button>
           </div>
         </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            70세 이상 (경로우대)
-          </label>
-          <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-            <button
-              onClick={() => handleDependentChange("seniorDependents", -1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              -
-            </button>
-            <span className="font-bold text-lg">
-              {advancedSettings.seniorDependents} 명
-            </span>
-            <button
-              onClick={() => handleDependentChange("seniorDependents", 1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              +
-            </button>
+        <div className="space-y-2">
+          <Label>70세 이상 (경로우대)</Label>
+          <div className="flex items-center justify-between p-1 border rounded-lg">
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("seniorDependents", -1)}>-</Button>
+            <span className="font-bold text-lg">{advancedSettings.seniorDependents} 명</span>
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("seniorDependents", 1)}>+</Button>
           </div>
         </div>
-        <div>
-          <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-            장애인
-          </label>
-          <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
-            <button
-              onClick={() => handleDependentChange("disabledDependents", -1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              -
-            </button>
-            <span className="font-bold text-lg">
-              {advancedSettings.disabledDependents} 명
-            </span>
-            <button
-              onClick={() => handleDependentChange("disabledDependents", 1)}
-              className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              +
-            </button>
+        <div className="space-y-2">
+          <Label>장애인</Label>
+          <div className="flex items-center justify-between p-1 border rounded-lg">
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("disabledDependents", -1)}>-</Button>
+            <span className="font-bold text-lg">{advancedSettings.disabledDependents} 명</span>
+            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("disabledDependents", 1)}>+</Button>
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-          비과세액 (월 기준)
-        </label>
-        <div className="relative mt-1">
-          <input
+      <div className="mt-4 space-y-2">
+        <Label htmlFor="non-taxable-amount">비과세액 (월 기준)</Label>
+        <div className="relative">
+          <Input
+            id="non-taxable-amount"
             type="text"
             value={nonTaxableAmount}
             onChange={(e) => {
               const v = e.target.value.replace(/[^0-9]/g, "");
               setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
             }}
-            className="w-full p-3 pr-12 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+            className="pr-12"
           />
-          <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400">
-            원
-          </span>
+          <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">원</span>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="isSmeYouth"
-            checked={advancedSettings.isSmeYouth}
-            onChange={(e) =>
-              setAdvancedSettings((prev) => ({
-                ...prev,
-                isSmeYouth: e.target.checked,
-              }))
-            }
-            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <label
-            htmlFor="isSmeYouth"
-            className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
-          >
-            중소기업 취업 청년 소득세 감면 대상
-          </label>
-        </div>
+      <div className="mt-4 flex items-center space-x-2">
+        <Checkbox
+          id="isSmeYouth"
+          checked={advancedSettings.isSmeYouth}
+          onCheckedChange={(checked) =>
+            setAdvancedSettings((prev) => ({
+              ...prev,
+              isSmeYouth: !!checked,
+            }))
+          }
+        />
+        <Label htmlFor="isSmeYouth" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          중소기업 취업 청년 소득세 감면 대상
+        </Label>
       </div>
       <div className="mt-4">
         <CurrencyInput

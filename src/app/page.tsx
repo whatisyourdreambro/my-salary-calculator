@@ -6,6 +6,13 @@ import type { StoredFinancialData } from "@/app/types";
 import PersonalizedWelcome from "@/components/PersonalizedWelcome";
 import CalculatorTabs from "@/components/CalculatorTabs";
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const websiteStructuredData = {
   "@context": "https://schema.org",
@@ -28,13 +35,17 @@ const FeatureCard = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800/50 shadow-sm hover:shadow-lg transition-shadow h-full">
-    <Icon className="w-8 h-8 text-primary mb-3" />
-    <h3 className="text-lg font-bold mb-2">{title}</h3>
-    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-      {children}
-    </p>
-  </div>
+  <Card className="h-full transition-shadow hover:shadow-lg">
+    <CardHeader>
+      <Icon className="w-8 h-8 text-primary mb-2" />
+      <CardTitle>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-muted-foreground">
+        {children}
+      </p>
+    </CardContent>
+  </Card>
 );
 
 export default function HomePage() {

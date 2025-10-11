@@ -9,6 +9,7 @@ import { calculatePartTimeSalary } from "@/lib/freelancerCalculator"; // 함수 
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import { Share2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type {
   StoredSalaryData,
   StoredFinancialData,
@@ -361,26 +362,15 @@ export default function SalaryCalculator() {
             </div>
             <div className="pt-2">
               <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={handleReset}
-                  className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-                >
+                <Button onClick={handleReset} variant="outline" className="w-full">
                   초기화
-                </button>
-                <button
-                  onClick={handleSaveData}
-                  className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
+                </Button>
+                <Button onClick={handleSaveData} disabled={incomeType !== "regular"} className="w-full">
                   대시보드 저장
-                </button>
-                <button
-                  onClick={handleShare}
-                  className="w-full py-3 bg-accent text-light-text font-bold rounded-lg hover:bg-accent-hover transition flex items-center justify-center gap-2 disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
-                  <Share2 size={16} /> 결과 공유
-                </button>
+                </Button>
+                <Button onClick={handleShare} disabled={incomeType !== "regular"} variant="secondary" className="w-full">
+                  <Share2 size={16} className="mr-2" /> 결과 공유
+                </Button>
               </div>
             </div>
           </div>
