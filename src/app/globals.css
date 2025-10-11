@@ -5,36 +5,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --border: 240 5% 90%;
-    --muted-foreground: 240 5% 40%;
-    --background: 240 5% 96%;
-    --foreground: 240 5% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 5% 10%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 240 5% 10%;
-    --danger: 0 84% 60%;
-  }
-
-  .dark {
-    --border: 222 47% 18%;
-    --muted-foreground: 210 40% 65%;
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 222 47% 11%;
-    --danger: 0 72% 51%;
-  }
-
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    @apply bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text transition-colors duration-300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
