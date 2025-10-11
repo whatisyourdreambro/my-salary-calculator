@@ -42,33 +42,33 @@ export default function DetailedSettings({
         <div className="space-y-2">
           <Label>부양 가족 수 (본인포함)</Label>
           <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("dependents", -1)}>-</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("dependents", -1)}>-</Button>
             <span className="font-bold text-lg">{dependents} 명</span>
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("dependents", 1)}>+</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("dependents", 1)}>+</Button>
           </div>
         </div>
         <div className="space-y-2">
           <Label>20세 이하 자녀 수</Label>
           <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("children", -1)}>-</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("children", -1)}>-</Button>
             <span className="font-bold text-lg">{children} 명</span>
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("children", 1)}>+</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("children", 1)}>+</Button>
           </div>
         </div>
         <div className="space-y-2">
           <Label>70세 이상 (경로우대)</Label>
           <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("seniorDependents", -1)}>-</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("seniorDependents", -1)}>-</Button>
             <span className="font-bold text-lg">{advancedSettings.seniorDependents} 명</span>
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("seniorDependents", 1)}>+</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("seniorDependents", 1)}>+</Button>
           </div>
         </div>
         <div className="space-y-2">
           <Label>장애인</Label>
           <div className="flex items-center justify-between p-1 border rounded-lg">
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("disabledDependents", -1)}>-</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("disabledDependents", -1)}>-</Button>
             <span className="font-bold text-lg">{advancedSettings.disabledDependents} 명</span>
-            <Button variant="ghost" size="icon" onClick={() => handleDependentChange("disabledDependents", 1)}>+</Button>
+            <Button variant="outline" size="icon" onClick={() => handleDependentChange("disabledDependents", 1)}>+</Button>
           </div>
         </div>
       </div>

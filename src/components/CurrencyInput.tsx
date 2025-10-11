@@ -1,7 +1,17 @@
-// src/components/CurrencyInput.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -66,34 +76,34 @@ export default function CurrencyInput({
   };
 
   return (
-    <div>
-      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
-        {label}
-      </label>
-      <div className="flex gap-2 mt-1">
+    <div className="space-y-2">
+      <Label htmlFor={label}>{label}</Label>
+      <div className="flex gap-2">
         {currencies && onCurrencyChange && selectedCurrency && (
-          <select
-            value={selectedCurrency}
-            onChange={(e) => onCurrencyChange(e.target.value)}
-            className="p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700 basis-1/3 sm:basis-auto"
-          >
-            {currencies.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.flag} {c.id}
-              </option>
-            ))}
-          </select>
+          <Select value={selectedCurrency} onValueChange={onCurrencyChange}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {currencies.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.flag} {c.id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )}
         <div className="relative flex-grow">
-          <input
+          <Input
             ref={inputRef}
+            id={label}
             type="text"
             value={value}
             onChange={handleChange}
-            className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
+            className="pr-10 text-xl sm:text-2xl font-bold h-auto py-3"
             inputMode="numeric"
           />
-          <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+          <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground text-sm sm:text-base">
             {symbol}
           </span>
         </div>
@@ -102,24 +112,26 @@ export default function CurrencyInput({
       <div className="mt-2 space-y-2">
         <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
-            <button
+            <Button
               key={`add-${amount}`}
               onClick={() => handleAmountChange(amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+              variant="outline"
+              size="sm"
             >
               + {formatNumber(amount)}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
-            <button
+            <Button
               key={`sub-${amount}`}
               onClick={() => handleAmountChange(-amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
+              variant="destructive"
+              size="sm"
             >
               - {formatNumber(amount)}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
