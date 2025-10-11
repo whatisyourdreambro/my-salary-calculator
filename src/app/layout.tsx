@@ -4,7 +4,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import { NextThemesProvider } from "./providers";
+import { ThemeProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 
@@ -153,7 +153,7 @@ export default function RootLayout({
           ></iframe>
         </noscript>
 
-        <NextThemesProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
@@ -163,7 +163,7 @@ export default function RootLayout({
             <main className="w-full flex-grow">{children}</main>
             <Footer />
           </div>
-        </NextThemesProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

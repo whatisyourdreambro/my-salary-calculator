@@ -1,5 +1,3 @@
-// tailwind.config.ts
-
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -10,38 +8,78 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-        // 기본 배경 및 텍스트 색상
-        "light-bg": "#f9fafb", // 밝은 모드 배경
-        "light-card": "#ffffff", // 밝은 모드 카드
-        "light-text": "#111827", // 밝은 모드 기본 텍스트
-        "light-text-secondary": "#6b7280", // 밝은 모드 보조 텍스트
-        "dark-bg": "#121212", // 어두운 모드 배경
-        "dark-card": "#1e1e1e", // 어두운 모드 카드
-        "dark-text": "#f3f4f6", // 어두운 모드 기본 텍스트
-        "dark-text-secondary": "#9ca3af", // 어두운 모드 보조 텍스트
-
-        // 브랜드 및 강조 색상 (신규)
+        // Shadcn UI Colors
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        // Original Project Colors (some retained for compatibility)
+        "light-bg": "#f9fafb",
+        "light-card": "#ffffff",
+        "light-text": "#111827",
+        "light-text-secondary": "#6b7280",
+        "dark-bg": "#121212",
+        "dark-card": "#1e1e1e",
+        "dark-text": "#f3f4f6",
+        "dark-text-secondary": "#9ca3af",
         primary: {
-          DEFAULT: "#0052ff", // 신뢰감을 주는 메인 파란색
-          hover: "#0048e0", // 호버 효과
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+          hover: "#0048e0",
         },
         accent: {
-          DEFAULT: "#ffc82c", // 행동을 유도하는 노란색
-          hover: "#f0b91a", // 호버 효과
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+          hover: "#f0b91a",
         },
-        danger: "#e11d48", // 위험/경고
-
-        // 레거시 색상 (하위 호환성)
+        danger: "#e11d48",
         "signature-blue": "#0052ff",
         "brand-red": "#e11d48",
       },
-      animation: {
-        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
-        "subtle-shine": "subtleShine 2s infinite linear",
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
         fadeInUp: {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -51,8 +89,15 @@ const config: Config = {
           "50%": { "box-shadow": "0 0 20px rgba(0, 82, 255, 0.3)" },
         },
       },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+        "subtle-shine": "subtleShine 2s infinite linear",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
+
 export default config;

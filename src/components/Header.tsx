@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import ThemeToggle from "./ThemeToggle";
+import { ThemeToggle } from "./ThemeToggle";
 import { LayoutDashboard } from "lucide-react";
 
 type LinkItem = { name: string; href: string; type: "link" };
