@@ -137,16 +137,9 @@ export default function RootLayout({
 
               {/* 메인 컨텐츠 영역 */}
               <main className="w-full flex flex-col items-center">
-                {/* 상단 리더보드 광고 (반응형) */}
+                {/* 상단 리더보드 광고 */}
                 <div className="w-full flex justify-center py-4">
-                  {/* 데스크톱용 광고 (728x90) */}
-                  <div className="hidden md:block">
-                    <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
-                  </div>
-                  {/* 모바일용 광고 (320x50) */}
-                  <div className="block md:hidden">
-                    <KakaoAdFit unit="DAN-no5HCWDFKDsohy4c" width="320" height="50" />
-                  </div>
+                  <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
                 </div>
 
                 {/* 페이지 실제 컨텐츠 */}

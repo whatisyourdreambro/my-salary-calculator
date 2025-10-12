@@ -77,6 +77,15 @@ export default function SeveranceCalculator() {
   const [annualSalaryForDC, setAnnualSalaryForDC] = useState("");
   const [dcReturnRate, setDcReturnRate] = useState("5");
 
+  // Helper function to get total days, needed for DC calculation as well
+  const getTotalDays = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) return 0;
+    return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+  };
+
   const result = useMemo(() => {
     const numericSalaries = salaries.map((s) => parseNumber(s));
     return calculateSeverancePay(
@@ -96,15 +105,6 @@ export default function SeveranceCalculator() {
       parseNumber(dcReturnRate)
     );
   }, [startDate, endDate, annualSalaryForDC, dcReturnRate]);
-
-  // Helper function to get total days, needed for DC calculation as well
-  const getTotalDays = (start: string, end: string) => {
-    if (!start || !end) return 0;
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) return 0;
-    return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
-  };
 
   const handleSalaryChange = (index: number, value: string) => {
     const newSalaries = [...salaries];
