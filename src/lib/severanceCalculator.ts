@@ -172,6 +172,15 @@ export function calculateSeverancePay(
     totalDaysOfEmployment < 365 ||
     last3MonthsSalaries.reduce((a, b) => a + b, 0) <= 0
   ) {
+    const defaultTaxDetails = {
+      serviceYearDeduction: 0,
+      retirementIncome: 0,
+      convertedSalary: 0,
+      convertedSalaryDeduction: 0,
+      taxBase: 0,
+      calculatedTax: 0,
+    };
+
     return {
       totalDaysOfEmployment,
       yearsOfService: { years, months },
@@ -180,6 +189,7 @@ export function calculateSeverancePay(
       incomeTax: 0,
       localTax: 0,
       netSeverancePay: 0,
+      details: defaultTaxDetails,
     };
   }
 
