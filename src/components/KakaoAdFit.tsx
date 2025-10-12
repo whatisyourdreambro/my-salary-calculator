@@ -51,7 +51,7 @@ const KakaoAdFit: React.FC<KakaoAdFitProps> = ({ unit, width, height, disabled }
     return null;
   }
 
-  return <div ref={adContainerRef} style={{ width: `${width}px`, height: `${height}px`, margin: '0 auto' }} />;
+  return <div ref={adContainerRef} style={{ width: `${width}px`, minHeight: `${height}px`, margin: '0 auto' }} />;
 };
 
 export default KakaoAdFit;

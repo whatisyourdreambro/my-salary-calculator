@@ -2,9 +2,13 @@
 
 "use client";
 
-import CalculatorTabs from "@/components/CalculatorTabs";
-// [삭제] ExchangeRateDisplay 컴포넌트 import 제거
+import dynamic from 'next/dynamic';
 import { CheckCircle, BarChart, TrendingUp, Calculator } from "lucide-react";
+
+const CalculatorTabs = dynamic(() => import('@/components/CalculatorTabs'), {
+  ssr: false,
+  loading: () => <div className="w-full h-[500px] flex justify-center items-center"><p>계산기 로딩 중...</p></div>
+});
 
 const websiteStructuredData = {
   "@context": "https://schema.org",
