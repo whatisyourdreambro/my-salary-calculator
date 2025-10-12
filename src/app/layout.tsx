@@ -127,41 +127,39 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-
-            {/* 상단 리더보드 광고 */}
-            <div className="w-full flex justify-center py-4">
-              <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
-            </div>
-
-            <div className="flex-grow w-full max-w-screen-xl mx-auto flex">
+            <div className="w-full flex-grow grid grid-cols-1 xl:grid-cols-[1fr_minmax(0,1280px)_1fr] gap-4 px-4">
               {/* 좌측 사이드바 광고 */}
-              <aside className="hidden md:block w-48 flex-shrink-0 py-8 pr-8">
+              <aside className="hidden xl:flex justify-center items-start pt-16">
                 <div className="sticky top-20">
                   <KakaoAdFit unit="DAN-O4kzbtdd9NleD4P6" width="160" height="600" />
                 </div>
               </aside>
 
-              {/* 메인 컨텐츠 */}
-              <main className="flex-grow w-full px-4">
-                {/* 본문 상단 광고 */}
+              {/* 메인 컨텐츠 영역 */}
+              <main className="w-full flex flex-col items-center">
+                {/* 상단 리더보드 광고 */}
                 <div className="w-full flex justify-center py-4">
-                  <KakaoAdFit unit="DAN-gtL0uD65wrODCXRh" width="300" height="250" />
+                  <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
                 </div>
-                
-                {children}
 
+                {/* 페이지 실제 컨텐츠 */}
+                <div className="w-full flex-grow">
+                  {children}
+                </div>
+
+                {/* 하단 배너 광고 */}
+                <div className="w-full flex justify-center py-8">
+                  <KakaoAdFit unit="DAN-WgV2d248sf3mJoB2" width="320" height="100" />
+                </div>
               </main>
 
-              {/* 우측 사이드바 광고 (삭제) */}
-              <aside className="hidden md:block w-48 flex-shrink-0 py-8 pl-8">
+              {/* 우측 사이드바 광고 */}
+              <aside className="hidden xl:flex justify-center items-start pt-16">
+                <div className="sticky top-20">
+                  <KakaoAdFit unit="DAN-HVBNRsdPlneE3Uxn" width="160" height="600" />
+                </div>
               </aside>
             </div>
-
-            {/* 하단 배너 광고 */}
-            <div className="w-full flex flex-col items-center space-y-4 py-4">
-              <KakaoAdFit unit="DAN-WgV2d248sf3mJoB2" width="320" height="100" />
-            </div>
-
             <Footer />
           </div>
         </NextThemesProvider>
