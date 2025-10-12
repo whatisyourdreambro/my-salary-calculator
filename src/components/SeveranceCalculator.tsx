@@ -211,7 +211,7 @@ export default function SeveranceCalculator() {
                 <h2 className="text-xl font-bold mb-4">
                   급여 정보 (퇴사일 이전 3개월)
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-4">
                   {[2, 1, 0].map((i) => (
                     <CurrencyInput
                       key={i}
@@ -225,7 +225,7 @@ export default function SeveranceCalculator() {
               </div>
 
               <Accordion title="상여금, 연차수당 등 추가 입력 (선택)">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <CurrencyInput
                     label="연간 상여금 총액"
                     value={annualBonus}
