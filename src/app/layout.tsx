@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
+import KakaoAdFit from "@/components/KakaoAdFit";
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -127,6 +128,32 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             <main className="w-full flex-grow">{children}</main>
+            <div className="w-full flex-col items-center justify-center space-y-4 py-8">
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-gtL0uD65wrODCXRh" width="300" height="250" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-no5HCWDFKDsohy4c" width="320" height="50" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-WgV2d248sf3mJoB2" width="320" height="100" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-lpJFw6yqHhzOXIfV" width="320" height="50" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-O4kzbtdd9NleD4P6" width="160" height="600" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-HVBNRsdPlneE3Uxn" width="160" height="600" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
+              </div>
+              <div className="flex justify-center">
+                <KakaoAdFit unit="DAN-4eRqZLQIGjrNcXj6" width="300" height="250" />
+              </div>
+            </div>
             <Footer />
           </div>
         </NextThemesProvider>
