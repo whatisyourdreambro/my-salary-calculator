@@ -272,9 +272,7 @@ export default function SeveranceCalculator() {
                   </div>
                 </div>
               </div>
-              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
-                <h2 className="text-xl font-bold mb-4">DC형 정보</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <CurrencyInput
                     label="연간 총 급여"
                     value={annualSalaryForDC}
