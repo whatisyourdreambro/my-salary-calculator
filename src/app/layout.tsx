@@ -150,27 +150,16 @@ export default function RootLayout({
                 
                 {children}
 
-                {/* 본문 하단 광고 */}
-                <div className="w-full flex justify-center py-4">
-                  <KakaoAdFit unit="DAN-4eRqZLQIGjrNcXj6" width="300" height="250" />
-                </div>
               </main>
 
-              {/* 우측 사이드바 광고 */}
+              {/* 우측 사이드바 광고 (삭제) */}
               <aside className="hidden md:block w-48 flex-shrink-0 py-8 pl-8">
-                <div className="sticky top-20">
-                  <KakaoAdFit unit="DAN-HVBNRsdPlneE3Uxn" width="160" height="600" />
-                </div>
               </aside>
             </div>
 
             {/* 하단 배너 광고 */}
             <div className="w-full flex flex-col items-center space-y-4 py-4">
               <KakaoAdFit unit="DAN-WgV2d248sf3mJoB2" width="320" height="100" />
-              <div className="flex space-x-4">
-                <KakaoAdFit unit="DAN-no5HCWDFKDsohy4c" width="320" height="50" />
-                <KakaoAdFit unit="DAN-lpJFw6yqHhzOXIfV" width="320" height="50" />
-              </div>
             </div>
 
             <Footer />

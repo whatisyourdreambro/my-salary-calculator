@@ -10,7 +10,7 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com;
-  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com *.kakao.com *.adfit.kakao.com;
+  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
