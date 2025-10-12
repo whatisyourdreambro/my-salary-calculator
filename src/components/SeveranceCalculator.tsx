@@ -4,7 +4,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { calculateSeverancePay } from "@/lib/severanceCalculator";
+import { calculateSeverancePay, calculateDCseverance } from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
 import type { StoredFinancialData, StoredSeveranceData } from "@/app/types";
 import { Save, RotateCcw } from "lucide-react";
@@ -52,6 +52,9 @@ const Accordion = ({
 };
 
 export default function SeveranceCalculator() {
+  const [pensionType, setPensionType] = useState<"severance" | "db" | "dc">(
+    "severance"
+  );
   const router = useRouter();
 
   const today = useMemo(() => new Date(), []);
@@ -70,6 +73,10 @@ export default function SeveranceCalculator() {
   const [annualBonus, setAnnualBonus] = useState("");
   const [annualLeavePay, setAnnualLeavePay] = useState("");
 
+  // DC형 계산을 위한 상태
+  const [annualSalaryForDC, setAnnualSalaryForDC] = useState("");
+  const [dcReturnRate, setDcReturnRate] = useState("5");
+
   const result = useMemo(() => {
     const numericSalaries = salaries.map((s) => parseNumber(s));
     return calculateSeverancePay(
@@ -80,6 +87,24 @@ export default function SeveranceCalculator() {
       parseNumber(annualLeavePay)
     );
   }, [startDate, endDate, salaries, annualBonus, annualLeavePay]);
+
+  const dcResult = useMemo(() => {
+    const totalDays = getTotalDays(startDate, endDate);
+    return calculateDCseverance(
+      parseNumber(annualSalaryForDC),
+      totalDays,
+      parseNumber(dcReturnRate)
+    );
+  }, [startDate, endDate, annualSalaryForDC, dcReturnRate]);
+
+  // Helper function to get total days, needed for DC calculation as well
+  const getTotalDays = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) return 0;
+    return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+  };
 
   const handleSalaryChange = (index: number, value: string) => {
     const newSalaries = [...salaries];
@@ -128,122 +153,274 @@ export default function SeveranceCalculator() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-8">
-      <div className="lg:col-span-3 space-y-6">
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
-          <h2 className="text-xl font-bold mb-4">근무 정보</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="startDate" className="text-sm font-medium">
-                입사일
-              </label>
-              <input
-                type="date"
-                id="startDate"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
-              />
-            </div>
-            <div>
-              <label htmlFor="endDate" className="text-sm font-medium">
-                퇴사일 (마지막 근무일)
-              </label>
-              <input
-                type="date"
-                id="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
-              />
-            </div>
-          </div>
-        </div>
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="mb-6 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-xl flex justify-center">
+        {[
+          { id: "severance", label: "퇴직금" },
+          { id: "db", label: "DB형" },
+          { id: "dc", label: "DC형" },
+        ].map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setPensionType(item.id as any)}
+            className={`w-1/3 py-2.5 text-sm font-bold rounded-lg transition-colors ${
+              pensionType === item.id
+                ? "bg-white dark:bg-gray-700 text-primary shadow"
+                : "text-gray-500 hover:bg-gray-200/50 dark:hover:bg-gray-700/50"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-3 space-y-6">
+          {pensionType === "severance" || pensionType === "db" ? (
+            <>
+              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+                <h2 className="text-xl font-bold mb-4">근무 정보</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="startDate" className="text-sm font-medium">
+                      입사일
+                    </label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="endDate" className="text-sm font-medium">
+                      퇴사일 (마지막 근무일)
+                    </label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                    />
+                  </div>
+                </div>
+              </div>
 
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
-          <h2 className="text-xl font-bold mb-4">
-            급여 정보 (퇴사일 이전 3개월)
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[2, 1, 0].map((i) => (
-              <CurrencyInput
-                key={i}
-                label={`퇴사 ${i + 1}개월 전 급여`}
-                value={salaries[2 - i]}
-                onValueChange={(v) => handleSalaryChange(2 - i, v)}
-                quickAmounts={[1000000, 100000]}
-              />
-            ))}
-          </div>
-        </div>
+              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+                <h2 className="text-xl font-bold mb-4">
+                  급여 정보 (퇴사일 이전 3개월)
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[2, 1, 0].map((i) => (
+                    <CurrencyInput
+                      key={i}
+                      label={`퇴사 ${i + 1}개월 전 급여`}
+                      value={salaries[2 - i]}
+                      onValueChange={(v) => handleSalaryChange(2 - i, v)}
+                      quickAmounts={[1000000, 100000]}
+                    />
+                  ))}
+                </div>
+              </div>
 
-        <Accordion title="상여금, 연차수당 등 추가 입력 (선택)">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <CurrencyInput
-              label="연간 상여금 총액"
-              value={annualBonus}
-              onValueChange={setAnnualBonus}
-              quickAmounts={[1000000, 500000]}
-            />
-            <CurrencyInput
-              label="미사용 연차수당"
-              value={annualLeavePay}
-              onValueChange={setAnnualLeavePay}
-              quickAmounts={[500000, 100000]}
-            />
-          </div>
-        </Accordion>
+              <Accordion title="상여금, 연차수당 등 추가 입력 (선택)">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <CurrencyInput
+                    label="연간 상여금 총액"
+                    value={annualBonus}
+                    onValueChange={setAnnualBonus}
+                    quickAmounts={[1000000, 500000]}
+                  />
+                  <CurrencyInput
+                    label="미사용 연차수당"
+                    value={annualLeavePay}
+                    onValueChange={setAnnualLeavePay}
+                    quickAmounts={[500000, 100000]}
+                  />
+                </div>
+              </Accordion>
+            </>
+          ) : (
+            <>
+              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+                <h2 className="text-xl font-bold mb-4">근무 정보</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="startDate" className="text-sm font-medium">
+                      입사일
+                    </label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="endDate" className="text-sm font-medium">
+                      퇴사일 (마지막 근무일)
+                    </label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+                <h2 className="text-xl font-bold mb-4">DC형 정보</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <CurrencyInput
+                    label="연간 총 급여"
+                    value={annualSalaryForDC}
+                    onValueChange={setAnnualSalaryForDC}
+                    quickAmounts={[10000000, 1000000]}
+                  />
+                  <div>
+                    <label htmlFor="dcReturnRate" className="text-sm font-medium">
+                      연평균 예상 투자수익률 (%)
+                    </label>
+                    <input
+                      type="number"
+                      id="dcReturnRate"
+                      value={dcReturnRate}
+                      onChange={(e) => setDcReturnRate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      placeholder="예: 5"
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
       </div>
 
       <div className="lg:col-span-2 space-y-6">
         <div className="sticky top-24 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
-          <h2 className="text-2xl font-bold text-center mb-4">
-            💰 예상 퇴직금 결과
-          </h2>
+          {pensionType === "dc" ? (
+            <>
+              <h2 className="text-2xl font-bold text-center mb-4">
+                💰 예상 DC형 적립금
+              </h2>
+              <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center mb-4">
+                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                  총 재직일수
+                </p>
+                <p className="text-xl font-bold">
+                  <CountUp end={getTotalDays(startDate, endDate)} separator="," />일
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t-2 border-dashed">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold">예상 적립금</span>
+                  <p className="text-4xl font-bold text-primary">
+                    <CountUp end={dcResult.estimatedDCseverance} separator="," /> 원
+                  </p>
+                </div>
+              </div>
+              <div className="mt-2 text-xs text-center text-gray-500">
+                * DC형은 개인의 투자 수익에 따라 결과가 달라지며, 세금은 연금 수령 시점에 별도 부과됩니다.
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-center mb-4">
+                💰 예상 퇴직금 결과
+              </h2>
 
-          <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center mb-4">
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
-              총 재직일수
-            </p>
-            <p className="text-xl font-bold">
-              <CountUp end={result.totalDaysOfEmployment} separator="," />일 (
-              {result.yearsOfService.years}년 {result.yearsOfService.months}
-              개월)
-            </p>
-          </div>
+              <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center mb-4">
+                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                  총 재직일수
+                </p>
+                <p className="text-xl font-bold">
+                  <CountUp end={result.totalDaysOfEmployment} separator="," />일 (
+                  {result.yearsOfService.years}년 {result.yearsOfService.months}
+                  개월)
+                </p>
+              </div>
 
-          <div className="space-y-3">
-            <div className="flex justify-between items-baseline">
-              <span className="text-md font-semibold text-light-text-secondary dark:text-dark-text-secondary">
-                세전 퇴직금
-              </span>
-              <p className="text-2xl font-bold text-light-text dark:text-dark-text">
-                <CountUp end={result.estimatedSeverancePay} separator="," /> 원
-              </p>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-md font-semibold text-danger">
-                퇴직 소득세
-              </span>
-              <p className="text-2xl font-bold text-danger">
-                -{" "}
-                <CountUp
-                  end={result.incomeTax + result.localTax}
-                  separator=","
-                />{" "}
-                원
-              </p>
-            </div>
-          </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-md font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                    세전 퇴직금
+                  </span>
+                  <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                    <CountUp end={result.estimatedSeverancePay} separator="," /> 원
+                  </p>
+                </div>
+                <div className="flex justify-between items-baseline">
+                  <span className="text-md font-semibold text-danger">
+                    퇴직 소득세
+                  </span>
+                  <p className="text-2xl font-bold text-danger">
+                    -{" "}
+                    <CountUp
+                      end={result.incomeTax + result.localTax}
+                      separator=","
+                    />{" "}
+                    원
+                  </p>
+                </div>
+              </div>
 
-          <div className="mt-4 pt-4 border-t-2 border-dashed">
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-bold">세후 실수령액</span>
-              <p className="text-4xl font-bold text-primary">
-                <CountUp end={result.netSeverancePay} separator="," /> 원
-              </p>
-            </div>
-          </div>
+              <div className="mt-4 pt-4 border-t-2 border-dashed">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold">세후 실수령액</span>
+                  <p className="text-4xl font-bold text-primary">
+                    <CountUp end={result.netSeverancePay} separator="," /> 원
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <Accordion title="세금 계산 과정 & IRP 혜택 보기">
+                  <div className="text-xs space-y-2 text-gray-600 dark:text-gray-400">
+                    <div className="flex justify-between">
+                      <span>과세대상 퇴직금:</span>
+                      <span className="font-mono">{result.details?.retirementIncome.toLocaleString()}원</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>└ 근속연수공제:</span>
+                      <span className="font-mono">-{result.details?.serviceYearDeduction.toLocaleString()}원</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>환산급여:</span>
+                      <span className="font-mono">{result.details?.convertedSalary.toLocaleString()}원</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>└ 환산급여공제:</span>
+                      <span className="font-mono">-{result.details?.convertedSalaryDeduction.toLocaleString()}원</span>
+                    </div>
+                    <div className="flex justify-between font-bold">
+                      <span>과세표준:</span>
+                      <span className="font-mono">{result.details?.taxBase.toLocaleString()}원</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>산출세액:</span>
+                      <span className="font-mono">{result.details?.calculatedTax.toLocaleString()}원</span>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-dashed">
+                    <h4 className="font-bold text-sm mb-2 text-center">💡 IRP 계좌로 이전 시 혜택</h4>
+                    <p className="text-xs text-center text-gray-500 mb-2">
+                      퇴직금을 IRP 계좌로 이전하여 연금으로 수령 시, 퇴직소득세의 30%를 감면받을 수 있습니다.
+                    </p>
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
+                      <p className="text-sm font-semibold">감면 후 예상 세금</p>
+                      <p className="text-lg font-bold text-signature-blue">
+                        <CountUp end={(result.incomeTax + result.localTax) * 0.7} separator="," /> 원
+                      </p>
+                    </div>
+                  </div>
+                </Accordion>
+              </div>
+            </>
+          )}
 
           <div className="mt-6 grid grid-cols-2 gap-2">
             <button
@@ -255,12 +432,14 @@ export default function SeveranceCalculator() {
             <button
               onClick={handleSaveData}
               className="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary-hover transition"
+              disabled={pensionType === 'dc'} // DC형일 때 저장 비활성화
             >
               <Save size={16} /> 대시보드 저장
             </button>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

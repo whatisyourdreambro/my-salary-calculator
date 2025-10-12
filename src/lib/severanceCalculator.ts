@@ -51,8 +51,22 @@ export function calculateSeveranceTax(
   severancePay: number,
   totalDaysOfEmployment: number
 ) {
+  const defaultReturn = {
+    incomeTax: 0,
+    localTax: 0,
+    netSeverancePay: severancePay,
+    details: {
+      serviceYearDeduction: 0,
+      retirementIncome: 0,
+      convertedSalary: 0,
+      convertedSalaryDeduction: 0,
+      taxBase: 0,
+      calculatedTax: 0,
+    },
+  };
+
   if (severancePay <= 0 || totalDaysOfEmployment < 365) {
-    return { incomeTax: 0, localTax: 0, netSeverancePay: severancePay };
+    return defaultReturn;
   }
 
   const yearsOfService = Math.max(1, Math.ceil(totalDaysOfEmployment / 365));
@@ -71,7 +85,7 @@ export function calculateSeveranceTax(
 
   const retirementIncome = severancePay - serviceYearDeduction;
   if (retirementIncome <= 0) {
-    return { incomeTax: 0, localTax: 0, netSeverancePay: severancePay };
+    return defaultReturn;
   }
 
   // 2. 환산급여 계산
@@ -94,7 +108,7 @@ export function calculateSeveranceTax(
   // 4. 과세표준
   const taxBase = convertedSalary - convertedSalaryDeduction;
   if (taxBase <= 0) {
-    return { incomeTax: 0, localTax: 0, netSeverancePay: severancePay };
+    return defaultReturn;
   }
 
   // 5. 환산산출세액
@@ -124,6 +138,14 @@ export function calculateSeveranceTax(
     incomeTax: Math.round(incomeTax),
     localTax: Math.round(localTax),
     netSeverancePay: Math.round(netSeverancePay),
+    details: {
+      serviceYearDeduction: Math.round(serviceYearDeduction),
+      retirementIncome: Math.round(retirementIncome),
+      convertedSalary: Math.round(convertedSalary),
+      convertedSalaryDeduction: Math.round(convertedSalaryDeduction),
+      taxBase: Math.round(taxBase),
+      calculatedTax: Math.round(incomeTax),
+    },
   };
 }
 
@@ -182,5 +204,37 @@ export function calculateSeverancePay(
     averageDailyWage: Math.round(averageDailyWage),
     estimatedSeverancePay: Math.round(estimatedSeverancePay),
     ...taxResult,
+  };
+}
+
+/**
+ * DC형 퇴직연금 예상 적립금을 시뮬레이션합니다.
+ * @param annualSalary 연간 총 급여
+ * @param totalDaysOfEmployment 총 재직일수
+ * @param returnRate 연평균 투자수익률 (%)
+ * @returns 예상 적립금
+ */
+export function calculateDCseverance(
+  annualSalary: number,
+  totalDaysOfEmployment: number,
+  returnRate: number
+) {
+  if (annualSalary <= 0 || totalDaysOfEmployment < 365) {
+    return { estimatedDCseverance: 0 };
+  }
+
+  const yearsOfService = totalDaysOfEmployment / 365;
+  const annualContribution = annualSalary / 12;
+  const rate = 1 + returnRate / 100;
+
+  let totalAccumulation = 0;
+
+  // 매년 말에 적립금이 납입되고, 연 복리로 수익이 발생한다고 가정하는 시뮬레이션
+  for (let i = 0; i < yearsOfService; i++) {
+    totalAccumulation = (totalAccumulation + annualContribution) * rate;
+  }
+
+  return {
+    estimatedDCseverance: Math.round(totalAccumulation),
   };
 }

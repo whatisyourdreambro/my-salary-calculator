@@ -105,7 +105,7 @@ export default function CurrencyInput({
             <button
               key={`add-${amount}`}
               onClick={() => handleAmountChange(amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+              className="px-2 py-1.5 text-xs sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition"
             >
               + {formatNumber(amount)}
             </button>
@@ -116,7 +116,7 @@ export default function CurrencyInput({
             <button
               key={`sub-${amount}`}
               onClick={() => handleAmountChange(-amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
+              className="px-2 py-1.5 text-xs sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition"
             >
               - {formatNumber(amount)}
             </button>
