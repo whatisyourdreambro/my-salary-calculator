@@ -96,6 +96,7 @@ export default function PayStubGenerator() {
             </div>
           </div>
           <table className="w-full text-sm border-collapse">
+            <thead>
               <tr className="border-b-2 border-foreground">
                 <th className="p-2 text-left">지급내역</th>
                 <th className="p-2 text-right">금액</th>
