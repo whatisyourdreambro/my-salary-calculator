@@ -51,6 +51,7 @@ const resultTypes = {
     description: "'인생은 한 번뿐!' 현재의 행복을 가장 중시하는 당신. 화끈한 소비로 스트레스를 풀지만, 가끔은 텅장이 될 수 있어요. 멋진 인생을 살지만, 작은 계획이라도 세워보면 어떨까요?",
     color: "text-orange-500",
     bg: "bg-orange-500/10",
+    bgColor: "bg-orange-500",
   },
   plan: {
     title: "계획적인 거북이",
@@ -58,6 +59,7 @@ const resultTypes = {
     description: "한 걸음 한 걸음, 목표를 향해 나아가는 당신. 모든 소비는 계획 안에서 이루어져야 직성이 풀립니다. 안정적인 미래가 보장되지만, 가끔은 즉흥적인 소비로 작은 행복을 느껴보는 것도 좋아요!",
     color: "text-blue-500",
     bg: "bg-blue-500/10",
+    bgColor: "bg-blue-500",
   },
   save: {
     title: "알뜰살뜰 다람쥐",
@@ -65,6 +67,7 @@ const resultTypes = {
     description: "도토리를 모으듯 차곡차곡 쌓이는 통장 잔고를 보며 행복을 느끼는 당신. 절약과 저축의 신이지만, 가끔은 모은 돈으로 자신에게 큰 선물을 해주는 건 어떨까요?",
     color: "text-green-500",
     bg: "bg-green-500/10",
+    bgColor: "bg-green-500",
   },
   social: {
     title: "인싸 토끼",
@@ -72,6 +75,7 @@ const resultTypes = {
     description: "혼자보다는 함께일 때 더 큰 행복을 느끼는 당신. 주변 사람들을 챙기느라 지출이 많지만, 그만큼 행복한 추억도 많아요. 하지만 나의 재무 상태도 잊지 말고 챙겨주세요!",
     color: "text-pink-500",
     bg: "bg-pink-500/10",
+    bgColor: "bg-pink-500",
   },
 };
 
@@ -160,7 +164,7 @@ export default function SpendingTestPage() {
                 </button>
                 <button
                   onClick={handleShare}
-                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.color.replace('text-', 'bg-')} hover:brightness-110`}
+                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.bgColor} hover:brightness-110`}
                 >
                   <Share2 className="inline-block w-4 h-4 mr-2"/>
                   결과 공유하기

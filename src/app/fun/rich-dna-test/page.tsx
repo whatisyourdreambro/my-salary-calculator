@@ -50,6 +50,7 @@ const resultTypes = {
     description: "가치 투자의 살아있는 전설. 당신은 기업의 내재 가치를 보고, 시장의 소음에도 흔들리지 않는 강철 멘탈의 소유자입니다. '복리'라는 눈덩이를 굴려 거대한 부를 쌓을 '시간의 마법사' 타입입니다.",
     color: "text-blue-600",
     bg: "bg-blue-600/10",
+    bgColor: "bg-blue-600",
   },
   musk: {
     title: "일론 머스크",
@@ -57,6 +58,7 @@ const resultTypes = {
     description: "세상을 바꾸는 혁신가. 당신은 리스크를 두려워하지 않으며, 미래에 대한 확신과 대담한 상상력으로 세상을 놀라게 합니다. '하이 리스크, 하이 리턴'을 추구하며, 불가능에 도전하는 '미래의 설계자' 타입입니다.",
     color: "text-red-600",
     bg: "bg-red-600/10",
+    bgColor: "bg-red-600",
   },
   rockefeller: {
     title: "존 D. 록펠러",
@@ -64,6 +66,7 @@ const resultTypes = {
     description: "석유의 왕, 부의 시스템을 만든 거인. 당신은 압도적인 시장 지배력과 독점적 지위를 통해 부를 축적하는 능력이 탁월합니다. 경쟁자를 압도하고, 거대한 부의 제국을 건설할 '시스템의 지배자' 타입입니다.",
     color: "text-gray-700",
     bg: "bg-gray-700/10",
+    bgColor: "bg-gray-700",
   },
   templeton: {
     title: "존 템플턴",
@@ -71,6 +74,7 @@ const resultTypes = {
     description: "월가의 영적 투자자. 당신은 비관론이 극에 달했을 때가 최고의 기회임을 알고 있습니다. 남들이 공포에 떨 때 과감히 투자하고, 위기 속에서 숨겨진 보석을 찾아내는 '역발상의 대가' 타입입니다.",
     color: "text-purple-600",
     bg: "bg-purple-600/10",
+    bgColor: "bg-purple-600",
   },
 };
 
@@ -159,7 +163,7 @@ export default function RichDnaTestPage() {
                 </button>
                 <button
                   onClick={handleShare}
-                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.color.replace('text-', 'bg-')} hover:brightness-110`}
+                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.bgColor} hover:brightness-110`}
                 >
                   <Share2 className="inline-block w-4 h-4 mr-2"/>
                   결과 공유하기

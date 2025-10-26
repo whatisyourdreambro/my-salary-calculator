@@ -30,15 +30,15 @@ const formatNumber = (num: number) => num.toLocaleString();
 
 const HealthScoreGauge = ({ score, rating }: { score: number; rating: string; }) => {
   const scoreColorClass =
-    score >= 80 ? "text-primary"
-    : score >= 60 ? "text-sky-500" // Use a sky blue for 'Good'
-    : score >= 40 ? "text-amber-500" // Use amber for 'Warning'
+    score >= 80 ? "text-success"
+    : score >= 60 ? "text-primary"
+    : score >= 40 ? "text-warning"
     : "text-destructive";
 
   const scoreFillColor =
-    score >= 80 ? "hsl(var(--primary))"
-    : score >= 60 ? "hsl(201 89% 53%)" // sky-500
-    : score >= 40 ? "hsl(43 96% 56%)" // amber-500
+    score >= 80 ? "hsl(var(--success))"
+    : score >= 60 ? "hsl(var(--primary))"
+    : score >= 40 ? "hsl(var(--warning))"
     : "hsl(var(--destructive))";
 
   return (
