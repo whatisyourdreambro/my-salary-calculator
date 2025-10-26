@@ -4,7 +4,10 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { calculateSeverancePay, calculateDCseverance } from "@/lib/severanceCalculator";
+import {
+  calculateSeverancePay,
+  calculateDCseverance,
+} from "@/lib/severanceCalculator";
 import CurrencyInput from "./CurrencyInput";
 import type { StoredFinancialData, StoredSeveranceData } from "@/app/types";
 import { Save, RotateCcw } from "lucide-react";
@@ -42,11 +45,7 @@ const Accordion = ({
           ▼
         </span>
       </button>
-      {isOpen && (
-        <div className="p-4 space-y-4 bg-card">
-          {children}
-        </div>
-      )}
+      {isOpen && <div className="p-4 space-y-4 bg-card">{children}</div>}
     </div>
   );
 };
@@ -82,8 +81,16 @@ export default function SeveranceCalculator() {
     if (!start || !end) return 0;
     const startDate = new Date(start);
     const endDate = new Date(end);
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) return 0;
-    return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+    if (
+      isNaN(startDate.getTime()) ||
+      isNaN(endDate.getTime()) ||
+      endDate < startDate
+    )
+      return 0;
+    // 마지막 근무일 포함을 위해 +1
+    return (
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1
+    );
   };
 
   const result = useMemo(() => {
@@ -118,11 +125,18 @@ export default function SeveranceCalculator() {
     setSalaries(["", "", ""]);
     setAnnualBonus("");
     setAnnualLeavePay("");
+    // DC형 관련 상태도 초기화
+    setAnnualSalaryForDC("");
+    setDcReturnRate("5");
   }, [oneYearAgo, today]);
 
   const handleSaveData = () => {
-    if (result.estimatedSeverancePay <= 0) {
+    if (result.estimatedSeverancePay <= 0 && pensionType !== "dc") {
       alert("퇴직금이 계산되지 않았습니다. 정보를 먼저 입력해주세요.");
+      return;
+    }
+    if (pensionType === "dc") {
+      alert("DC형 퇴직연금 정보는 대시보드에 저장되지 않습니다.");
       return;
     }
     try {
@@ -162,7 +176,7 @@ export default function SeveranceCalculator() {
         ].map((item) => (
           <button
             key={item.id}
-            onClick={() => setPensionType(item.id as any)}
+            onClick={() => setPensionType(item.id as "severance" | "db" | "dc")} // <--- 여기가 수정된 부분입니다.
             className={`w-1/3 py-2.5 text-sm font-bold rounded-lg transition-colors ${
               pensionType === item.id
                 ? "bg-card text-primary shadow"
@@ -177,6 +191,7 @@ export default function SeveranceCalculator() {
         <div className="lg:col-span-3 space-y-6">
           {pensionType === "severance" || pensionType === "db" ? (
             <>
+              {/* 퇴직금 또는 DB형 입력 폼 */}
               <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -189,6 +204,10 @@ export default function SeveranceCalculator() {
                       id="startDate"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full mt-1 p-3 border rounded-lg bg-card border-border"
+                    />
+                  </div>
+                  <div>
                     <label htmlFor="endDate" className="text-sm font-medium">
                       퇴사일 (마지막 근무일)
                     </label>
@@ -239,6 +258,7 @@ export default function SeveranceCalculator() {
             </>
           ) : (
             <>
+              {/* DC형 입력 폼 */}
               <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -278,7 +298,10 @@ export default function SeveranceCalculator() {
                     quickAmounts={[10000000, 1000000]}
                   />
                   <div>
-                    <label htmlFor="dcReturnRate" className="text-sm font-medium">
+                    <label
+                      htmlFor="dcReturnRate"
+                      className="text-sm font-medium"
+                    >
                       연평균 예상 투자수익률 (%)
                     </label>
                     <input
@@ -300,6 +323,7 @@ export default function SeveranceCalculator() {
           <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-lg border">
             {pensionType === "dc" ? (
               <>
+                {/* DC형 결과 표시 */}
                 <h2 className="text-2xl font-bold text-center mb-4">
                   💰 예상 DC형 적립금
                 </h2>
@@ -308,23 +332,33 @@ export default function SeveranceCalculator() {
                     총 재직일수
                   </p>
                   <p className="text-xl font-bold">
-                    <CountUp end={getTotalDays(startDate, endDate)} separator="," />일
+                    <CountUp
+                      end={getTotalDays(startDate, endDate)}
+                      separator=","
+                    />
+                    일
                   </p>
                 </div>
                 <div className="mt-4 pt-4 border-t-2 border-dashed">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">예상 적립금</span>
                     <p className="text-4xl font-bold text-primary">
-                      <CountUp end={dcResult.estimatedDCseverance} separator="," /> 원
+                      <CountUp
+                        end={dcResult.estimatedDCseverance}
+                        separator=","
+                      />{" "}
+                      원
                     </p>
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-center text-muted-foreground">
-                  * DC형은 개인의 투자 수익에 따라 결과가 달라지며, 세금은 연금 수령 시점에 별도 부과됩니다.
+                  * DC형은 개인의 투자 수익에 따라 결과가 달라지며, 세금은 연금
+                  수령 시점에 별도 부과됩니다.
                 </div>
               </>
             ) : (
               <>
+                {/* 퇴직금 또는 DB형 결과 표시 */}
                 <h2 className="text-2xl font-bold text-center mb-4">
                   💰 예상 퇴직금 결과
                 </h2>
@@ -334,8 +368,9 @@ export default function SeveranceCalculator() {
                     총 재직일수
                   </p>
                   <p className="text-xl font-bold">
-                    <CountUp end={result.totalDaysOfEmployment} separator="," />일 (
-                    {result.yearsOfService.years}년 {result.yearsOfService.months}
+                    <CountUp end={result.totalDaysOfEmployment} separator="," />
+                    일 ({result.yearsOfService.years}년{" "}
+                    {result.yearsOfService.months}
                     개월)
                   </p>
                 </div>
@@ -346,7 +381,11 @@ export default function SeveranceCalculator() {
                       세전 퇴직금
                     </span>
                     <p className="text-2xl font-bold text-foreground">
-                      <CountUp end={result.estimatedSeverancePay} separator="," /> 원
+                      <CountUp
+                        end={result.estimatedSeverancePay}
+                        separator=","
+                      />{" "}
+                      원
                     </p>
                   </div>
                   <div className="flex justify-between items-baseline">
@@ -378,38 +417,63 @@ export default function SeveranceCalculator() {
                     <div className="text-xs space-y-2 text-muted-foreground">
                       <div className="flex justify-between">
                         <span>과세대상 퇴직금:</span>
-                        <span className="font-mono">{result.details?.retirementIncome.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          {result.details?.retirementIncome.toLocaleString()}원
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>└ 근속연수공제:</span>
-                        <span className="font-mono">-{result.details?.serviceYearDeduction.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          -
+                          {result.details?.serviceYearDeduction.toLocaleString()}
+                          원
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>환산급여:</span>
-                        <span className="font-mono">{result.details?.convertedSalary.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          {result.details?.convertedSalary.toLocaleString()}원
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>└ 환산급여공제:</span>
-                        <span className="font-mono">-{result.details?.convertedSalaryDeduction.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          -
+                          {result.details?.convertedSalaryDeduction.toLocaleString()}
+                          원
+                        </span>
                       </div>
                       <div className="flex justify-between font-bold">
                         <span>과세표준:</span>
-                        <span className="font-mono">{result.details?.taxBase.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          {result.details?.taxBase.toLocaleString()}원
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span>산출세액:</span>
-                        <span className="font-mono">{result.details?.calculatedTax.toLocaleString()}원</span>
+                        <span className="font-mono">
+                          {result.details?.calculatedTax.toLocaleString()}원
+                        </span>
                       </div>
                     </div>
                     <div className="mt-4 pt-4 border-t border-dashed">
-                      <h4 className="font-bold text-sm mb-2 text-center">💡 IRP 계좌로 이전 시 혜택</h4>
+                      <h4 className="font-bold text-sm mb-2 text-center">
+                        💡 IRP 계좌로 이전 시 혜택
+                      </h4>
                       <p className="text-xs text-center text-muted-foreground mb-2">
-                        퇴직금을 IRP 계좌로 이전하여 연금으로 수령 시, 퇴직소득세의 30%를 감면받을 수 있습니다.
+                        퇴직금을 IRP 계좌로 이전하여 연금으로 수령 시,
+                        퇴직소득세의 30%를 감면받을 수 있습니다.
                       </p>
                       <div className="p-3 bg-primary/10 rounded-lg text-center">
-                        <p className="text-sm font-semibold">감면 후 예상 세금</p>
+                        <p className="text-sm font-semibold">
+                          감면 후 예상 세금
+                        </p>
                         <p className="text-lg font-bold text-primary">
-                          <CountUp end={(result.incomeTax + result.localTax) * 0.7} separator="," /> 원
+                          <CountUp
+                            end={(result.incomeTax + result.localTax) * 0.7}
+                            separator=","
+                          />{" "}
+                          원
                         </p>
                       </div>
                     </div>
@@ -427,8 +491,8 @@ export default function SeveranceCalculator() {
               </button>
               <button
                 onClick={handleSaveData}
-                className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition"
-                disabled={pensionType === 'dc'} // DC형일 때 저장 비활성화
+                className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition disabled:opacity-50"
+                disabled={pensionType === "dc"} // DC형일 때 저장 비활성화
               >
                 <Save size={16} /> 대시보드 저장
               </button>
