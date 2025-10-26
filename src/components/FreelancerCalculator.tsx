@@ -102,27 +102,27 @@ export default function FreelancerCalculator() {
   }, [result, taxType]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* 소득 정보 입력 섹션 */}
-      <div className="bg-card p-6 rounded-xl border">
+      <div className="bg-card p-6 rounded-xl border border-border">
         <h2 className="text-lg font-bold mb-4">소득 정보 입력</h2>
         <div className="flex bg-secondary rounded-lg p-1 mb-4">
           <button
             onClick={() => setTaxType("freelancer")}
-            className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+            className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
               taxType === "freelancer"
-                ? "bg-card shadow-sm"
-                : "text-muted-foreground"
+                ? "bg-background shadow-sm text-primary"
+                : "text-muted-foreground hover:bg-secondary/60"
             }`}
           >
             프리랜서 (3.3%)
           </button>
           <button
             onClick={() => setTaxType("part_time")}
-            className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+            className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
               taxType === "part_time"
-                ? "bg-card shadow-sm"
-                : "text-muted-foreground"
+                ? "bg-background shadow-sm text-primary"
+                : "text-muted-foreground hover:bg-secondary/60"
             }`}
           >
             아르바이트 (4대보험)
@@ -137,13 +137,13 @@ export default function FreelancerCalculator() {
       </div>
 
       {/* 예상 실수령액 섹션 */}
-      <div className="bg-card p-6 rounded-xl shadow-lg border">
+      <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
         <h2 className="text-xl font-bold mb-4">예상 실수령액</h2>
         <div className="text-center">
           <p className="text-4xl font-bold my-1 text-primary">
             <CountUp end={result.netPay} duration={0.5} separator="," /> 원
           </p>
-          <p className="font-semibold text-sm text-gray-500 mt-2">
+          <p className="font-semibold text-sm text-muted-foreground mt-2">
             총 공제액: -{" "}
             <CountUp end={result.totalDeduction} duration={0.5} separator="," />{" "}
             원

@@ -31,16 +31,23 @@ const FeatureCard = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-800/50 shadow-sm hover:shadow-lg transition-shadow h-full">
-    <Icon className="w-8 h-8 text-primary mb-3" />
-    <h3 className="text-lg font-bold mb-2">{title}</h3>
-    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-      {children}
-    </p>
+  <div className="bg-card p-6 rounded-xl border border-border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all h-full">
+    <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg mb-4">
+      <Icon className="w-6 h-6 text-primary" />
+    </div>
+    <h3 className="text-lg font-bold mb-2 text-foreground">{title}</h3>
+    <p className="text-sm text-muted-foreground">{children}</p>
   </div>
 );
 
 export default function HomePage() {
+  const scrollToCalculator = () => {
+    const calculatorSection = document.getElementById("calculator-section");
+    if (calculatorSection) {
+      calculatorSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <script
@@ -51,67 +58,70 @@ export default function HomePage() {
       />
       <main className="w-full">
         {/* Hero Section */}
-        <section className="text-center py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-light-text dark:text-dark-text animate-fade-in-up">
-            당신의 진짜 가치를,
+        <section className="text-center py-20 sm:py-28 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground animate-fade-in-up">
+            당신의 연봉,
             <br />
-            <span className="text-primary">숫자로 증명하세요.</span>
+            <span className="text-primary">정확한 가치를 알다</span>
           </h1>
           <p
-            className="mt-6 max-w-2xl mx-auto text-lg text-light-text-secondary dark:text-dark-text-secondary animate-fade-in-up"
+            className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
-            2025년 최신 세법 기준, 가장 정확한 연봉 계산기.
+            2025년 최신 기준 연봉 실수령액 계산부터 퇴직금, 연말정산까지.
             <br />
-            단순 계산을 넘어 당신의 경제적 여정을 함께합니다.
+            머니샐러리가 당신의 성공적인 금융 여정을 돕습니다.
           </p>
+          <div
+            className="mt-10 flex justify-center gap-4 animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
+            <button
+              onClick={scrollToCalculator}
+              className="bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg text-lg hover:brightness-95 transition-all"
+            >
+              계산 시작하기
+            </button>
+          </div>
         </section>
-
-        {/* [삭제] Real-time Exchange Rate Display 섹션 제거 */}
 
         {/* Calculator Tabs Section */}
         <div
+          id="calculator-section"
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up"
           style={{ animationDelay: "0.4s" }}
         >
           <CalculatorTabs />
         </div>
 
-        <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Features Section */}
+        <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              모든 것은 숫자에서 시작됩니다
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+              당신의 금융 파트너, 머니샐러리
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-light-text-secondary dark:text-dark-text-secondary">
-              Moneysalary는 단순한 계산기를 넘어, 당신의 금융 여정을 위한 강력한
-              나침반입니다.
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+              정확한 계산을 넘어, 건강한 재무 관리를 위한 다양한 기능을
+              제공합니다.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div>
-              <FeatureCard icon={Calculator} title="정확한 실수령액">
-                4대 보험, 소득세, 비과세액까지 완벽 반영하여 1원 단위까지
-                정확하게 계산합니다.
-              </FeatureCard>
-            </div>
-            <div>
-              <FeatureCard icon={BarChart} title="객관적인 연봉 순위">
-                국가 통계 데이터 기반으로 직군/경력별 내 연봉 위치를 객관적으로
-                파악하세요.
-              </FeatureCard>
-            </div>
-            <div>
-              <FeatureCard icon={TrendingUp} title="미래 연봉 예측">
-                나의 커리어패스를 직접 설계하고, 승진과 이직을 통한 미래 연봉
-                변화를 시뮬레이션합니다.
-              </FeatureCard>
-            </div>
-            <div>
-              <FeatureCard icon={CheckCircle} title="종합 금융 대시보드">
-                급여, 퇴직금, 대출 정보를 한 곳에 저장하고 관리하는 나만의 금융
-                비서를 경험하세요.
-              </FeatureCard>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard icon={Calculator} title="종합 소득 계산">
+              정규직, 프리랜서 등 다양한 고용 형태에 맞는 정확한 세후 소득을
+              계산합니다.
+            </FeatureCard>
+            <FeatureCard icon={BarChart} title="연봉 정보 분석">
+              연봉 테이블, 순위 비교, 미래 연봉 예측을 통해 자신의 가치를
+              객관적으로 파악하세요.
+            </FeatureCard>
+            <FeatureCard icon={TrendingUp} title="금융 성장 가이드">
+              초년생부터 투자 전문가까지, 커리어와 자산 성장을 위한 맞춤형
+              콘텐츠를 제공합니다.
+            </FeatureCard>
+            <FeatureCard icon={CheckCircle} title="나만의 금융 비서">
+              대시보드에서 급여, 대출, 예상 세금 등을 한눈에 확인하고 관리할 수
+              있습니다.
+            </FeatureCard>
           </div>
         </section>
       </main>

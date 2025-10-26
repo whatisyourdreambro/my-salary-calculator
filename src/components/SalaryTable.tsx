@@ -17,15 +17,17 @@ export default function SalaryTable({
   unit = "원",
 }: SalaryTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm text-left">
-        <thead className="sticky top-0 bg-secondary z-10">
+    <div className="overflow-x-auto border border-border rounded-lg">
+      <table className="min-w-full text-sm">
+        <thead className="bg-secondary/80 backdrop-blur-sm">
           <tr>
-            {headers.map((header) => (
+            {headers.map((header, headerIndex) => (
               <th
                 key={header.key as string}
                 scope="col"
-                className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap"
+                className={`px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap ${
+                  headerIndex === 0 ? "text-left" : "text-right"
+                }`}
               >
                 {header.label}
               </th>
@@ -42,17 +44,19 @@ export default function SalaryTable({
                 key={index}
                 className={`transition-colors ${
                   isHighlighted
-                    ? "bg-primary/10 font-bold"
-                    : "bg-card hover:bg-secondary"
+                    ? "bg-primary/10"
+                    : "bg-card hover:bg-secondary/50"
                 }`}
               >
-                {headers.map((header) => (
+                {headers.map((header, cellIndex) => (
                   <td
                     key={header.key as string}
-                    className={`px-6 py-5 whitespace-nowrap ${
-                      isHighlighted
-                        ? "text-primary"
-                        : "text-foreground"
+                    className={`px-6 py-4 whitespace-nowrap font-mono ${
+                      cellIndex === 0
+                        ? "text-left font-sans font-bold text-primary"
+                        : "text-right text-foreground/80"
+                    } ${
+                      isHighlighted && "font-bold text-primary"
                     }`}
                   >
                     {Number(row[header.key]).toLocaleString()}

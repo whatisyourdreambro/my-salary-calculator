@@ -140,41 +140,19 @@ function CalculatorTabsComponent() {
   };
 
   return (
-    <div>
-      <div className="md:hidden grid grid-cols-3 sm:grid-cols-4 gap-2 mb-8">
+    <div className="bg-card border border-border rounded-xl shadow-lg">
+      {/* Desktop Tabs */}
+      <div className="hidden md:flex flex-wrap justify-center p-2 bg-secondary/50 rounded-t-xl">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
           return (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all text-center ${
+              className={`px-4 py-2.5 font-semibold text-sm rounded-md transition-all duration-200 shrink-0 flex items-center gap-2 m-1 ${
                 activeTab === tab
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "text-muted-foreground hover:bg-secondary"
-              }`}
-            >
-              <Icon className="w-6 h-6 mb-1" />
-              <span className="text-xs font-semibold">
-                {name.split(" ")[0]}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* [수정] flex-wrap, justify-center 추가, overflow-x-auto, whitespace-nowrap 제거 */}
-      <div className="hidden md:flex flex-wrap justify-center mb-10 border-b">
-        {(Object.values(TABS) as TabValue[]).map((tab) => {
-          const { name, icon: Icon } = TAB_CONFIG[tab];
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 sm:px-6 py-4 font-semibold text-sm sm:text-base transition-colors duration-200 shrink-0 flex items-center gap-2 ${
-                activeTab === tab
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-foreground border-b-2 border-transparent"
+                  ? "bg-background text-primary shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -184,7 +162,30 @@ function CalculatorTabsComponent() {
         })}
       </div>
 
-      <div>{renderActiveCalculator()}</div>
+      {/* Mobile Tabs */}
+      <div className="md:hidden grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 border-b border-border">
+        {(Object.values(TABS) as TabValue[]).map((tab) => {
+          const { name, icon: Icon } = TAB_CONFIG[tab];
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex flex-col items-center justify-center p-3 rounded-lg transition-all text-center ${
+                activeTab === tab
+                  ? "bg-primary/10 text-primary font-bold"
+                  : "text-muted-foreground hover:bg-secondary"
+              }`}
+            >
+              <Icon className="w-5 h-5 mb-1" />
+              <span className="text-xs font-semibold">
+                {name.split(" ")[0]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="p-4 sm:p-6 md:p-8">{renderActiveCalculator()}</div>
     </div>
   );
 }

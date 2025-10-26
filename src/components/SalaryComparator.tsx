@@ -7,6 +7,8 @@ import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
 import html2canvas from "html2canvas";
 import CountUp from "react-countup";
+import NumberStepper from "./NumberStepper";
+import { X } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -32,23 +34,15 @@ export default function SalaryComparator() {
     { id: 2, companyName: "B 회사", salary: "", bonus: "", overtime: "" },
   ]);
   const [commonSettings, setCommonSettings] = useState({
-    nonTaxableAmount: "200,000",
+    nonTaxableAmount: "200000",
     dependents: 1,
     children: 0,
   });
   const [results, setResults] = useState<OfferResult[]>([]);
   const comparatorRef = useRef<HTMLDivElement>(null);
 
-  const handleOfferChange = (
-    id: number,
-    field: keyof Omit<Offer, "id">,
-    value: string
-  ) => {
-    setOffers(
-      offers.map((offer) =>
-        offer.id === id ? { ...offer, [field]: value } : offer
-      )
-    );
+  const handleOfferChange = (id: number, field: keyof Omit<Offer, "id">, value: string) => {
+    setOffers(offers.map((offer) => (offer.id === id ? { ...offer, [field]: value } : offer)));
   };
 
   const addOffer = () => {
@@ -58,16 +52,7 @@ export default function SalaryComparator() {
     }
     const newId = (offers[offers.length - 1]?.id || 0) + 1;
     const newCompanyName = `${String.fromCharCode(65 + offers.length)} 회사`;
-    setOffers([
-      ...offers,
-      {
-        id: newId,
-        companyName: newCompanyName,
-        salary: "",
-        bonus: "",
-        overtime: "",
-      },
-    ]);
+    setOffers([...offers, { id: newId, companyName: newCompanyName, salary: "", bonus: "", overtime: "" }]);
   };
 
   const removeOffer = (id: number) => {
@@ -85,7 +70,6 @@ export default function SalaryComparator() {
       const annualOvertime = parseNumber(offer.overtime);
       const totalAnnualIncome = annualSalary + annualBonus + annualOvertime;
 
-      // [수정] 불필요한 인수(0)를 제거했습니다.
       const net = calculateNetSalary(
         totalAnnualIncome,
         parseNumber(commonSettings.nonTaxableAmount) * 12,
@@ -101,214 +85,133 @@ export default function SalaryComparator() {
         totalAnnual: totalAnnualIncome,
       };
     });
-    setResults(calculatedResults);
+    setResults(calculatedResults.sort((a, b) => b.monthlyNet - a.monthlyNet));
   };
 
-  const bestOffer =
-    results.length > 0
-      ? results.reduce((max, current) =>
-          current.monthlyNet > max.monthlyNet ? current : max
-        )
-      : null;
+  const bestOffer = results.length > 0 ? results[0] : null;
 
   const handleCapture = () => {
     const captureArea = comparatorRef.current;
     if (!captureArea) return;
 
-    const watermark = document.createElement("div");
-    watermark.innerText = "moneysalary.com";
-    Object.assign(watermark.style, {
-      position: "absolute",
-      bottom: "20px",
-      right: "20px",
-      fontSize: "14px",
-      fontWeight: "bold",
-      color: "rgba(0, 0, 0, 0.2)",
-      pointerEvents: "none",
-    });
-    captureArea.appendChild(watermark);
-
-    html2canvas(captureArea, {
-      backgroundColor: null,
-      useCORS: true,
-    }).then((canvas) => {
+    html2canvas(captureArea, { scale: 2, backgroundColor: document.documentElement.classList.contains("dark") ? "#1a202c" : "#ffffff", useCORS: true }).then((canvas) => {
       const link = document.createElement("a");
       link.download = `연봉비교_결과_moneysalary.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      captureArea.removeChild(watermark);
     });
   };
 
-  const quickAmounts = [10000000, 1000000, 100000];
+  const inputStyle = "w-full p-3 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition";
 
   return (
-    <div ref={comparatorRef} className="space-y-8 mt-8">
-      <div className="bg-card p-6 rounded-xl border">
+    <div ref={comparatorRef} className="space-y-8">
+      <div className="bg-card p-6 rounded-xl border border-border">
         <h2 className="text-lg font-bold mb-4">공통 설정</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-sm font-medium">비과세액 (월)</label>
-            <input
-              type="text"
-              value={formatNumber(parseNumber(commonSettings.nonTaxableAmount))}
-              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
+            <CurrencyInput
+              label="비과세액 (월)"
+              value={commonSettings.nonTaxableAmount}
+              onValueChange={(v) => setCommonSettings({ ...commonSettings, nonTaxableAmount: v })}
+              quickAmounts={[100000, 50000]}
             />
-          </div>
-          <div>
-            <label className="text-sm font-medium">부양가족 (본인포함)</label>
-            <input
-              type="number"
-              min="1"
+            <NumberStepper
+              label="부양가족 (본인포함)"
               value={commonSettings.dependents}
-              onChange={(e) =>
-                setCommonSettings({
-                  ...commonSettings,
-                  dependents: Number(e.target.value),
-                })
-              }
-              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
+              onValueChange={(v) => setCommonSettings({ ...commonSettings, dependents: v })}
+              min={1}
+              unit="명"
             />
-          </div>
-          <div>
-            <label className="text-sm font-medium">20세 이하 자녀</label>
-            <input
-              type="number"
-              min="0"
+            <NumberStepper
+              label="20세 이하 자녀"
               value={commonSettings.children}
-              onChange={(e) =>
-                setCommonSettings({
-                  ...commonSettings,
-                  children: Number(e.target.value),
-                })
-              }
-              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
+              onValueChange={(v) => setCommonSettings({ ...commonSettings, children: v })}
+              min={0}
+              unit="명"
             />
-          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offers.map((offer) => (
-          <div
-            key={offer.id}
-            className="bg-card p-6 rounded-xl border relative"
-          >
-            <button
-              onClick={() => removeOffer(offer.id)}
-              className="absolute top-2 right-2 text-destructive font-bold text-xl leading-none p-1"
-            >
-              &times;
+          <div key={offer.id} className="bg-card p-6 rounded-xl border border-border relative space-y-4">
+            <button onClick={() => removeOffer(offer.id)} className="absolute top-3 right-3 text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-destructive/10">
+              <X size={18} />
             </button>
             <input
               type="text"
               value={offer.companyName}
-              onChange={(e) =>
-                handleOfferChange(offer.id, "companyName", e.target.value)
-              }
-              className="text-xl font-bold mb-4 w-full bg-transparent border-b border-border pb-2"
+              onChange={(e) => handleOfferChange(offer.id, "companyName", e.target.value)}
+              placeholder="회사명 입력"
+              className={`${inputStyle} text-lg font-bold`}
             />
             <CurrencyInput
               label="계약 연봉"
               value={offer.salary}
               onValueChange={(v) => handleOfferChange(offer.id, "salary", v)}
-              quickAmounts={quickAmounts}
+              quickAmounts={[10000000, 1000000, 100000]}
             />
-            <div className="mt-4">
-              <CurrencyInput
-                label="성과금 (연)"
-                value={offer.bonus}
-                onValueChange={(v) => handleOfferChange(offer.id, "bonus", v)}
-                quickAmounts={quickAmounts}
-              />
-            </div>
-            <div className="mt-4">
-              <CurrencyInput
-                label="기타 수당 (연)"
-                value={offer.overtime}
-                onValueChange={(v) =>
-                  handleOfferChange(offer.id, "overtime", v)
-                }
-                quickAmounts={quickAmounts}
-              />
-            </div>
+            <CurrencyInput
+              label="성과금 (연)"
+              value={offer.bonus}
+              onValueChange={(v) => handleOfferChange(offer.id, "bonus", v)}
+              quickAmounts={[10000000, 1000000, 100000]}
+            />
+            <CurrencyInput
+              label="기타 수당 (연)"
+              value={offer.overtime}
+              onValueChange={(v) => handleOfferChange(offer.id, "overtime", v)}
+              quickAmounts={[10000000, 1000000, 100000]}
+            />
           </div>
         ))}
       </div>
 
       <div className="flex gap-4">
-        <button
-          onClick={addOffer}
-          className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition"
-        >
+        <button onClick={addOffer} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors">
           + 오퍼 추가
         </button>
-        <button
-          onClick={handleCalculate}
-          className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
-        >
+        <button onClick={handleCalculate} className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all">
           결과 분석하기
         </button>
       </div>
 
       {results.length > 0 && bestOffer && (
-        <div className="bg-card p-6 rounded-xl border">
-          <h2 className="text-2xl font-bold text-center mb-6">
-            최종 오퍼 비교 결과
-          </h2>
+        <div className="bg-card p-6 rounded-xl border border-border">
+          <h2 className="text-2xl font-bold text-center mb-6">최종 오퍼 비교 결과</h2>
           <div className="space-y-4">
-            {results
-              .sort((a, b) => b.monthlyNet - a.monthlyNet)
-              .map((res, index) => (
-                <div
-                  key={res.id}
-                  className={`p-4 rounded-lg border-2 ${
-                    res.id === bestOffer.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border"
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`text-xl font-bold ${
-                          res.id === bestOffer.id ? "text-primary" : ""
-                        }`}
-                      >
-                        {index + 1}위
-                      </span>
-                      <span className="text-lg font-semibold">
-                        {res.companyName}
-                      </span>
-                      {res.id === bestOffer.id && (
-                        <span className="text-xs font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">
-                          BEST
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-primary">
-                        월 <CountUp end={res.monthlyNet} separator="," /> 원
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        연봉 환산 {formatNumber(res.totalAnnual)}원
-                      </p>
-                    </div>
+            {results.map((res, index) => (
+              <div
+                key={res.id}
+                className={`p-4 rounded-lg border-2 ${
+                  res.id === bestOffer.id ? "border-primary bg-primary/10" : "border-border"
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xl font-bold ${res.id === bestOffer.id ? "text-primary" : "text-muted-foreground"}`}>
+                      {index + 1}위
+                    </span>
+                    <span className="text-lg font-semibold">{res.companyName}</span>
+                    {res.id === bestOffer.id && (
+                      <span className="text-xs font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">BEST</span>
+                    )}
                   </div>
-                  {res.id !== bestOffer.id && (
-                    <div className="text-right mt-2 text-sm text-destructive">
-                      - 월 {formatNumber(bestOffer.monthlyNet - res.monthlyNet)}
-                      원 차이
-                    </div>
-                  )}
+                  <div className="text-right">
+                    <p className="text-xl font-bold text-primary">월 <CountUp end={res.monthlyNet} separator="," /> 원</p>
+                    <p className="text-xs text-muted-foreground">연봉 환산 {formatNumber(res.totalAnnual)}원</p>
+                  </div>
                 </div>
-              ))}
+                {res.id !== bestOffer.id && (
+                  <div className="text-right mt-2 text-sm text-destructive">
+                    - 월 {formatNumber(bestOffer.monthlyNet - res.monthlyNet)} 원 차이
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           <div className="flex gap-4 mt-6">
-            <button
-              onClick={handleCapture}
-              className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition"
-            >
+            <button onClick={handleCapture} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors">
               결과 이미지 저장
             </button>
           </div>

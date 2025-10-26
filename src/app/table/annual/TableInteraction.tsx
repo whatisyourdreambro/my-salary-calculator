@@ -50,47 +50,43 @@ export default function TableInteraction({
   };
 
   return (
-    <>
-      <div className="mb-8">
-        <form onSubmit={handleSearchSubmit} className="relative">
-          <label htmlFor="search" className="sr-only">
-            연봉 검색
-          </label>
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <Search className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            id="search"
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="찾고 싶은 연봉을 입력하세요 (예: 50,000,000)"
-            className="w-full pl-11 pr-4 py-4 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-signature-blue bg-white dark:bg-gray-800 text-lg"
-          />
-        </form>
-      </div>
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+      <form onSubmit={handleSearchSubmit} className="relative w-full sm:max-w-xs">
+        <label htmlFor="search" className="sr-only">
+          연봉 검색
+        </label>
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <Search className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <input
+          id="search"
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="연봉으로 검색..."
+          className="w-full pl-10 pr-4 py-3 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition text-base"
+        />
+      </form>
 
-      <div className="flex justify-center items-center mt-8 mb-4 space-x-2">
+      <div className="flex justify-center items-center gap-2">
         <button
           onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
         >
           이전
         </button>
-        <span className="text-sm font-semibold">
+        <span className="text-sm font-semibold text-muted-foreground">
           {currentPage} / {totalPages}
         </span>
         <button
-          onClick={() =>
-            handlePageChange(Math.min(totalPages, currentPage + 1))
-          }
+          onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
         >
           다음
         </button>
       </div>
-    </>
+    </div>
   );
 }

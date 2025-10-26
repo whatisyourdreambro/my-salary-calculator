@@ -16,6 +16,7 @@ import type {
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
+import NumberStepper from "./NumberStepper";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -113,38 +114,17 @@ export default function SalaryCalculator() {
     runCalculation();
   }, [runCalculation]);
 
-  const handleDependentChange = (
-    field:
-      | "dependents"
-      | "children"
-      | "disabledDependents"
-      | "seniorDependents",
-    delta: number
-  ) => {
-    if (field === "dependents" || field === "children") {
-      const currentVal = field === "dependents" ? dependents : children;
-      const newVal = Math.max(
-        field === "dependents" ? 1 : 0,
-        currentVal + delta
-      );
-      if (field === "dependents") setDependents(newVal);
-      else setChildren(newVal);
-    } else {
-      setAdvancedSettings((prev) => {
-        const currentVal = prev[field];
-        const newVal = Math.max(0, currentVal + delta);
-        if (
-          field === "disabledDependents" &&
-          newVal + prev.seniorDependents > dependents
-        )
-          return prev;
-        if (
-          field === "seniorDependents" &&
-          newVal + prev.disabledDependents > dependents
-        )
-          return prev;
-        return { ...prev, [field]: newVal };
-      });
+  const handleSeniorDependentsChange = (newValue: number) => {
+    if (newValue < 0) return;
+    if (newValue + advancedSettings.disabledDependents <= dependents) {
+      setAdvancedSettings(prev => ({ ...prev, seniorDependents: newValue }));
+    }
+  };
+
+  const handleDisabledDependentsChange = (newValue: number) => {
+    if (newValue < 0) return;
+    if (newValue + advancedSettings.seniorDependents <= dependents) {
+      setAdvancedSettings(prev => ({ ...prev, disabledDependents: newValue }));
     }
   };
 
@@ -227,38 +207,41 @@ export default function SalaryCalculator() {
   };
 
   return (
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8 mt-4">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {/* Left Side: Inputs */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-card p-6 rounded-xl shadow-sm border h-full">
-            <h2 className="text-lg font-bold">소득 정보</h2>
-            <div className="flex bg-secondary rounded-lg p-1 my-4">
+          <div className="bg-card p-6 rounded-xl border border-border">
+            <h2 className="text-xl font-bold border-b border-border pb-4 mb-4">소득 정보</h2>
+            
+            {/* Income Type Switcher */}
+            <div className="flex bg-secondary rounded-lg p-1 mb-4">
               <button
                 onClick={() => setIncomeType("regular")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
                   incomeType === "regular"
-                    ? "bg-card shadow-sm"
-                    : "text-muted-foreground"
+                    ? "bg-background shadow-sm text-primary"
+                    : "text-muted-foreground hover:bg-secondary/60"
                 }`}
               >
                 정규직
               </button>
               <button
                 onClick={() => setIncomeType("freelancer")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
                   incomeType === "freelancer"
-                    ? "bg-card shadow-sm"
-                    : "text-muted-foreground"
+                    ? "bg-background shadow-sm text-primary"
+                    : "text-muted-foreground hover:bg-secondary/60"
                 }`}
               >
                 프리랜서(3.3%)
               </button>
               <button
                 onClick={() => setIncomeType("part_time")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
                   incomeType === "part_time"
-                    ? "bg-card shadow-sm"
-                    : "text-muted-foreground"
+                    ? "bg-background shadow-sm text-primary"
+                    : "text-muted-foreground hover:bg-secondary/60"
                 }`}
               >
                 아르바이트
@@ -268,26 +251,26 @@ export default function SalaryCalculator() {
             {incomeType === "regular" && (
               <div className="grid grid-cols-2 gap-4 my-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-1 block">
+                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
                     급여 기준
                   </label>
                   <div className="flex bg-secondary rounded-lg p-1">
                     <button
                       onClick={() => setPayBasis("annual")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
                         payBasis === "annual"
-                          ? "bg-card shadow-sm"
-                          : "text-muted-foreground"
+                          ? "bg-background shadow-sm text-primary"
+                          : "text-muted-foreground hover:bg-secondary/60"
                       }`}
                     >
                       연봉
                     </button>
                     <button
                       onClick={() => setPayBasis("monthly")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
                         payBasis === "monthly"
-                          ? "bg-card shadow-sm"
-                          : "text-muted-foreground"
+                          ? "bg-background shadow-sm text-primary"
+                          : "text-muted-foreground hover:bg-secondary/60"
                       }`}
                     >
                       월급
@@ -295,21 +278,17 @@ export default function SalaryCalculator() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-1 block">
+                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
                     퇴직금
                   </label>
                   <div className="flex bg-secondary rounded-lg p-1">
                     <button
                       onClick={() => setSeveranceType("separate")}
                       disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                         severanceType === "separate"
-                          ? "bg-card shadow-sm"
-                          : "text-muted-foreground"
-                      } ${
-                        payBasis === "monthly"
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
+                          ? "bg-background shadow-sm text-primary"
+                          : "text-muted-foreground hover:bg-secondary/60"
                       }`}
                     >
                       별도
@@ -317,14 +296,10 @@ export default function SalaryCalculator() {
                     <button
                       onClick={() => setSeveranceType("included")}
                       disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition ${
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                         severanceType === "included"
-                          ? "bg-card shadow-sm"
-                          : "text-muted-foreground"
-                      } ${
-                        payBasis === "monthly"
-                          ? "cursor-not-allowed opacity-50"
-                          : ""
+                          ? "bg-background shadow-sm text-primary"
+                          : "text-muted-foreground hover:bg-secondary/60"
                       }`}
                     >
                       포함
@@ -347,125 +322,27 @@ export default function SalaryCalculator() {
             />
             {incomeType === "regular" && (
               <>
-                <div className="mt-6 pt-6 border-t">
-                  <h2 className="text-lg font-bold">상세 설정</h2>
+                <div className="mt-6 pt-6 border-t border-border">
+                  <h2 className="text-xl font-bold">상세 설정</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        부양 가족 수 (본인포함)
-                      </label>
-                      <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
-                        <button
-                          onClick={() =>
-                            handleDependentChange("dependents", -1)
-                          }
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          -
-                        </button>
-                        <span className="font-bold text-lg">
-                          {dependents} 명
-                        </span>
-                        <button
-                          onClick={() => handleDependentChange("dependents", 1)}
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        20세 이하 자녀 수
-                      </label>
-                      <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
-                        <button
-                          onClick={() => handleDependentChange("children", -1)}
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          -
-                        </button>
-                        <span className="font-bold text-lg">{children} 명</span>
-                        <button
-                          onClick={() => handleDependentChange("children", 1)}
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        70세 이상 (경로우대)
-                      </label>
-                      <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
-                        <button
-                          onClick={() =>
-                            handleDependentChange("seniorDependents", -1)
-                          }
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          -
-                        </button>
-                        <span className="font-bold text-lg">
-                          {advancedSettings.seniorDependents} 명
-                        </span>
-                        <button
-                          onClick={() =>
-                            handleDependentChange("seniorDependents", 1)
-                          }
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        장애인
-                      </label>
-                      <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
-                        <button
-                          onClick={() =>
-                            handleDependentChange("disabledDependents", -1)
-                          }
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          -
-                        </button>
-                        <span className="font-bold text-lg">
-                          {advancedSettings.disabledDependents} 명
-                        </span>
-                        <button
-                          onClick={() =>
-                            handleDependentChange("disabledDependents", 1)
-                          }
-                          className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <NumberStepper label="부양 가족 수 (본인포함)" value={dependents} onValueChange={(v) => setDependents(v)} min={1} unit="명" />
+                    <NumberStepper label="20세 이하 자녀 수" value={children} onValueChange={(v) => setChildren(v)} min={0} unit="명" />
+                    <NumberStepper label="70세 이상 (경로우대)" value={advancedSettings.seniorDependents} onValueChange={handleSeniorDependentsChange} min={0} unit="명" />
+                    <NumberStepper label="장애인" value={advancedSettings.disabledDependents} onValueChange={handleDisabledDependentsChange} min={0} unit="명" />
                   </div>
                   <div className="mt-4">
-                    <label className="text-sm font-medium text-muted-foreground">
-                      비과세액 (월 기준)
-                    </label>
-                    <div className="relative mt-1">
+                    <label className="text-sm font-medium text-muted-foreground">비과세액 (월 기준)</label>
+                    <div className="relative mt-2">
                       <input
                         type="text"
                         value={nonTaxableAmount}
                         onChange={(e) => {
                           const v = e.target.value.replace(/[^0-9]/g, "");
-                          setNonTaxableAmount(
-                            v ? formatNumber(Number(v)) : "0"
-                          );
+                          setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
                         }}
-                        className="w-full p-3 pr-12 border rounded-lg bg-card border-border"
+                        className="w-full p-3 pr-12 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
                       />
-                      <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">
-                        원
-                      </span>
+                      <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">원</span>
                     </div>
                   </div>
                   <div className="mt-4">
@@ -474,18 +351,10 @@ export default function SalaryCalculator() {
                         type="checkbox"
                         id="isSmeYouth"
                         checked={advancedSettings.isSmeYouth}
-                        onChange={(e) =>
-                          setAdvancedSettings((prev) => ({
-                            ...prev,
-                            isSmeYouth: e.target.checked,
-                          }))
-                        }
+                        onChange={(e) => setAdvancedSettings((prev) => ({ ...prev, isSmeYouth: e.target.checked }))}
                         className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                       />
-                      <label
-                        htmlFor="isSmeYouth"
-                        className="ml-2 block text-sm text-foreground"
-                      >
+                      <label htmlFor="isSmeYouth" className="ml-2 block text-sm text-foreground">
                         중소기업 취업 청년 소득세 감면 대상
                       </label>
                     </div>
@@ -504,48 +373,39 @@ export default function SalaryCalculator() {
           </div>
         </div>
 
-        {/* 오른쪽: 결과 요약 및 버튼 */}
+        {/* Right Side: Results */}
         <div className="lg:col-span-2">
           <div className="sticky top-24 space-y-4">
-            <div className="bg-card p-6 rounded-xl shadow-lg border">
-              <h2 className="text-xl font-bold mb-4">월 예상 실수령액</h2>
+            <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
+              <h2 className="text-lg font-bold mb-2 text-muted-foreground">월 예상 실수령액</h2>
               <p className="text-4xl font-bold my-1 text-primary">
-                <CountUp end={result.monthlyNet} duration={0.5} separator="," />{" "}
-                원
+                <CountUp end={result.monthlyNet} duration={0.5} separator="," /> 원
               </p>
               <p className="font-semibold text-sm text-destructive mt-2">
-                (공제액 합계: -{" "}
-                <CountUp
-                  end={result.totalDeduction}
-                  duration={0.5}
-                  separator=","
-                />{" "}
-                원)
+                (공제액 합계: - <CountUp end={result.totalDeduction} duration={0.5} separator="," /> 원)
               </p>
             </div>
-            <div className="pt-2">
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={handleReset}
-                  className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition"
-                >
-                  초기화
-                </button>
-                <button
-                  onClick={handleSaveData}
-                  className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
-                  대시보드 저장
-                </button>
-                <button
-                  onClick={handleShare}
-                  className="w-full py-3 bg-accent text-accent-foreground font-bold rounded-lg hover:bg-accent/90 transition flex items-center justify-center gap-2 disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
-                  <Share2 size={16} /> 결과 공유
-                </button>
-              </div>
+            <div className="pt-2 grid grid-cols-3 gap-2">
+              <button
+                onClick={handleReset}
+                className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors"
+              >
+                초기화
+              </button>
+              <button
+                onClick={handleShare}
+                className="w-full py-3 bg-secondary text-secondary-foreground font-bold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                disabled={incomeType !== "regular"}
+              >
+                <Share2 size={16} /> 공유
+              </button>
+              <button
+                onClick={handleSaveData}
+                className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all disabled:opacity-50"
+                disabled={incomeType !== "regular"}
+              >
+                저장
+              </button>
             </div>
           </div>
         </div>

@@ -60,10 +60,10 @@ export default function PayStubGenerator() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-8">
+    <div className="w-full max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Input Section */}
-        <div className="bg-card p-6 rounded-xl border">
+        <div className="bg-card p-6 rounded-xl border border-border">
           <h2 className="text-2xl font-bold mb-4">급여명세서 생성</h2>
           <CurrencyInput
             label="세전 연봉 입력"
@@ -73,7 +73,7 @@ export default function PayStubGenerator() {
           />
           <button
             onClick={handleDownload}
-            className="w-full mt-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
+            className="w-full mt-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all"
           >
             PNG 이미지로 다운로드
           </button>
@@ -82,7 +82,7 @@ export default function PayStubGenerator() {
         {/* Pay Stub Section */}
         <div
           ref={payStubRef}
-          className="bg-card p-6 rounded-xl shadow-lg border relative text-foreground"
+          className="bg-card p-6 rounded-xl shadow-lg border border-border relative text-foreground"
         >
           <h3 className="text-2xl font-bold text-center mb-4">
             급 여 명 세 서

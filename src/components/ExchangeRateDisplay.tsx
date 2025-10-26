@@ -265,9 +265,12 @@ export default function ExchangeRateImpactCalculator() {
     fetchRates();
   };
 
+  const inputStyle = "w-full p-3 mt-1 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition disabled:opacity-50";
+  const textInputStyle = `${inputStyle} text-center font-mono`;
+
   return (
     <>
-      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
+      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg border border-border mt-8 animate-fade-in-up">
         <h2 className="text-2xl font-bold text-center mb-8">
           환율 변동에 따른 내 자산 가치 변화
         </h2>
@@ -286,123 +289,65 @@ export default function ExchangeRateImpactCalculator() {
               />
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  비교 통화
-                </label>
+                <label className="text-sm font-medium text-muted-foreground">비교 통화</label>
                 <select
                   value={comparisonCurrency}
                   onChange={(e) => setComparisonCurrency(e.target.value)}
-                  className="w-full p-3 mt-1 border rounded-lg bg-card border-border"
+                  className={inputStyle}
                 >
                   {currencies
                     .filter((c) => c.id !== assetCurrency)
                     .map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.flag} {c.name} ({c.id})
-                      </option>
+                      <option key={c.id} value={c.id}>{c.flag} {c.name} ({c.id})</option>
                     ))}
                 </select>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  기준 과거 시점
-                </label>
+                <label className="text-sm font-medium text-muted-foreground">기준 과거 시점</label>
                 <input
                   type="date"
                   value={pastDate}
                   onChange={(e) => setPastDate(e.target.value)}
                   disabled={isManual || useDxy}
-                  className="w-full p-3 mt-1 border rounded-lg bg-card border-border disabled:opacity-50"
+                  className={inputStyle}
                 />
               </div>
 
-              <div className="space-y-2 p-4 border rounded-lg">
+              <div className="space-y-2 p-4 border border-border rounded-lg">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    환율 (1 {comparisonCurrency} 당 {assetCurrency})
-                  </label>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setIsManual(!isManual)}
-                  >
+                  <label className="text-sm font-medium text-muted-foreground">환율 (1 {comparisonCurrency} 당 {assetCurrency})</label>
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsManual(!isManual)}>
                     <span className="text-xs font-semibold">수동입력</span>
-                    <input
-                      type="checkbox"
-                      checked={isManual}
-                      readOnly
-                      className="h-4 w-4 rounded cursor-pointer"
-                    />
+                    <input type="checkbox" checked={isManual} readOnly className="h-4 w-4 rounded cursor-pointer" />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="과거 환율"
-                    value={manualPastRateStr}
-                    onChange={(e) => setManualPastRateStr(e.target.value)}
-                    disabled={!isManual}
-                    className="w-full p-2 border rounded-lg bg-card border-border disabled:opacity-50 text-center font-mono"
-                  />
+                  <input type="text" placeholder="과거 환율" value={manualPastRateStr} onChange={(e) => setManualPastRateStr(e.target.value)} disabled={!isManual} className={textInputStyle} />
                   <span className="font-bold text-primary">→</span>
-                  <input
-                    type="text"
-                    placeholder="현재/미래 환율"
-                    value={manualCurrentRateStr}
-                    onChange={(e) => setManualCurrentRateStr(e.target.value)}
-                    disabled={!isManual || useDxy}
-                    className="w-full p-2 border rounded-lg bg-card border-border disabled:opacity-50 text-center font-mono"
-                  />
+                  <input type="text" placeholder="현재/미래 환율" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
                 </div>
               </div>
 
-              <div className="space-y-2 p-4 border rounded-lg bg-secondary">
+              <div className="space-y-2 p-4 border border-border rounded-lg bg-secondary/50">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    달러 인덱스 (DXY)
-                  </label>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setUseDxy(!useDxy)}
-                  >
-                    <span className="text-xs font-bold text-primary">
-                      DXY로 환율 추정
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={useDxy}
-                      readOnly
-                      className="h-4 w-4 rounded cursor-pointer"
-                    />
+                  <label className="text-sm font-medium text-muted-foreground">달러 인덱스 (DXY)</label>
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => setUseDxy(!useDxy)}>
+                    <span className="text-xs font-bold text-primary">DXY로 환율 추정</span>
+                    <input type="checkbox" checked={useDxy} readOnly className="h-4 w-4 rounded cursor-pointer" />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="과거 DXY"
-                    value={pastDxy}
-                    onChange={(e) => setPastDxy(e.target.value)}
-                    className="w-full p-2 border rounded-lg bg-card border-border text-center font-mono"
-                  />
+                  <input type="text" placeholder="과거 DXY" value={pastDxy} onChange={(e) => setPastDxy(e.target.value)} className={textInputStyle} />
                   <span className="font-bold text-primary">→</span>
-                  <input
-                    type="text"
-                    placeholder="현재/미래 DXY"
-                    value={currentDxy}
-                    onChange={(e) => setCurrentDxy(e.target.value)}
-                    className="w-full p-2 border rounded-lg bg-card border-border text-center font-mono"
-                  />
+                  <input type="text" placeholder="현재/미래 DXY" value={currentDxy} onChange={(e) => setCurrentDxy(e.target.value)} className={textInputStyle} />
                 </div>
                 {useDxy && (
                   <div className="mt-2 p-3 bg-primary/10 rounded-md text-xs text-primary flex items-start gap-2">
                     <Info size={16} className="flex-shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold">
-                        &apos;DXY로 환율 추정하기&apos;:
-                      </span>{" "}
-                      달러 가치 변화율을 &apos;과거 환율&apos;에 적용하여
-                      &apos;현재/미래 환율&apos;을 추정합니다. 시장의 큰 흐름을
-                      예측하는 참고 지표로 활용할 수 있습니다.
+                      <span className="font-bold">&apos;DXY로 환율 추정하기&apos;:</span>{" "}
+                      달러 가치 변화율을 &apos;과거 환율&apos;에 적용하여 &apos;현재/미래 환율&apos;을 추정합니다. 시장의 큰 흐름을 예측하는 참고 지표로 활용할 수 있습니다.
                     </div>
                   </div>
                 )}
@@ -413,13 +358,8 @@ export default function ExchangeRateImpactCalculator() {
             <div className="flex flex-col justify-center">
               {isLoading ? (
                 <div className="text-center">
-                  <Loader
-                    className="animate-spin mx-auto text-primary"
-                    size={48}
-                  />
-                  <p className="mt-4 font-semibold">
-                    환율 정보를 불러오는 중...
-                  </p>
+                  <Loader className="animate-spin mx-auto text-primary" size={48} />
+                  <p className="mt-4 font-semibold">환율 정보를 불러오는 중...</p>
                 </div>
               ) : error ? (
                 <div className="flex items-center justify-center h-full p-4 bg-destructive/10 rounded-lg">
@@ -442,7 +382,7 @@ export default function ExchangeRateImpactCalculator() {
                       {`과거 환율 ${manualPastRateStr} → 현재 ${manualCurrentRateStr} 기준`}
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 my-2">
-                      <div className="text-lg sm:text-2xl font-bold text-gray-500">
+                      <div className="text-lg sm:text-2xl font-bold text-muted-foreground">
                         {`${resultSymbol}${formatNumber(analysis.pastValue)}`}
                       </div>
                       <ArrowRight
@@ -487,39 +427,17 @@ export default function ExchangeRateImpactCalculator() {
                       />
                     </div>
                   </div>
-                  <div className="h-48 bg-secondary p-4 rounded-xl">
+                  <div className="h-48 bg-secondary/50 p-4 rounded-xl">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={chartData}
-                        layout="vertical"
-                        margin={{ left: 10, right: 90 }}
-                      >
+                      <BarChart data={chartData} layout="vertical" margin={{ left: 10, right: 90 }}>
                         <XAxis type="number" hide />
-                        <YAxis
-                          type="category"
-                          dataKey="name"
-                          axisLine={false}
-                          tickLine={false}
-                          width={70}
-                          stroke="currentColor"
-                        />
-                        <Tooltip
-                          formatter={(value: number) =>
-                            `${resultSymbol}${formatNumber(value)}`
-                          }
-                          cursor={{ fill: "rgba(0,0,0,0.05)" }}
-                        />
+                        <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={70} stroke="currentColor" />
+                        <Tooltip formatter={(value: number) => `${resultSymbol}${formatNumber(value)}`} cursor={{ fill: "rgba(0,0,0,0.05)" }} />
                         <Bar dataKey="value" barSize={30} radius={[0, 8, 8, 0]}>
                           {chartData.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={index === 0 ? "hsl(var(--muted-foreground))" : currentValueColor}
-                            />
+                            <Cell key={`cell-${index}`} fill={index === 0 ? "hsl(var(--muted-foreground))" : currentValueColor} />
                           ))}
-                          <LabelList
-                            dataKey="value"
-                            content={<CustomBarLabel />}
-                          />
+                          <LabelList dataKey="value" content={<CustomBarLabel />} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
@@ -530,23 +448,14 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button
-            onClick={handleReset}
-            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
-          >
+        <div className="mt-8 pt-6 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <button onClick={handleReset} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
             <RotateCcw size={18} /> 초기화
           </button>
-          <button
-            onClick={handleShareLink}
-            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
-          >
+          <button onClick={handleShareLink} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
             <LinkIcon size={18} /> 링크로 공유
           </button>
-          <button
-            onClick={handleShareImage}
-            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
-          >
+          <button onClick={handleShareImage} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
             <ImageIcon size={18} /> 이미지로 저장
           </button>
         </div>

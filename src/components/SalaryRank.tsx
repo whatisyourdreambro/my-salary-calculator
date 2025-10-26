@@ -141,7 +141,7 @@ export default function SalaryRank() {
             </button>
             <button
               onClick={handleSaveData}
-              className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+              className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:brightness-95 transition-all"
             >
               <Save size={16} /> 대시보드 저장
             </button>
