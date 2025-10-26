@@ -28,13 +28,13 @@ const navConfig: NavItem[] = [
     ],
   },
   {
-    name: "연봉 정보",
+    name: "연봉 테이블",
     type: "dropdown",
     items: [
-      { name: "연봉 테이블", href: "/table/annual" },
-      { name: "연봉 비교", href: "/?tab=comparator" },
-      { name: "연봉 순위", href: "/?tab=rank" },
-      { name: "미래 연봉 예측", href: "/?tab=future" },
+      { name: "연봉 표", href: "/table/annual" },
+      { name: "월급 표", href: "/table/monthly" },
+      { name: "주급 표", href: "/table/weekly" },
+      { name: "시급 표", href: "/table/hourly" },
     ],
   },
   {

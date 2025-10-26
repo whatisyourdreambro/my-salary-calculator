@@ -51,9 +51,9 @@ export default function SalaryTable({
                 {headers.map((header, cellIndex) => (
                   <td
                     key={header.key as string}
-                    className={`px-6 py-4 whitespace-nowrap font-mono ${
+                    className={`px-6 py-4 whitespace-nowrap ${
                       cellIndex === 0
-                        ? "text-left font-sans font-bold text-primary"
+                        ? "text-left font-bold text-primary"
                         : "text-right text-foreground/80"
                     } ${
                       isHighlighted && "font-bold text-primary"
