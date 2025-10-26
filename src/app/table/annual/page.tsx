@@ -5,7 +5,7 @@ import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
 import { HelpCircle } from "lucide-react";
 import Link from "next/link";
-import TableInteraction from "./TableInteraction"; // 역할 분리된 클라이언트 컴포넌트
+import TableInteraction from "@/components/TableInteraction"; // 역할 분리된 클라이언트 컴포넌트
 
 // Cloudflare Pages 배포를 위한 Edge 런타임 설정
 export const runtime = "edge";
@@ -81,7 +81,7 @@ async function AnnualTable({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border border-border">
             {/* [수정 완료] TableInteraction 컴포넌트에 더 이상 불필요한 props를 전달하지 않습니다. */}
-            <TableInteraction totalPages={totalPages} />
+            <TableInteraction totalPages={totalPages} basePath="/table/annual" searchPlaceholder="연봉으로 검색..." />
 
             <div className="overflow-hidden mt-8">
               <SalaryTable
