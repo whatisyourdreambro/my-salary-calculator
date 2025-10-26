@@ -4,7 +4,8 @@
 
 import { useEffect, useState, useRef, Suspense } from "react";
 import type { StoredFinancialData } from "@/app/types";
-import { findSalaryRank } from "@/lib/salaryData";
+// [수정] findSalaryRank -> calculateRank 로 변경
+import { calculateRank } from "@/lib/salaryData";
 import {
   PieChart,
   Pie,
@@ -76,7 +77,8 @@ const Report = () => {
         const parsedData = JSON.parse(savedData);
         setData(parsedData);
         if (parsedData.salary) {
-          const { rank: calculatedRank } = findSalaryRank(
+          // [수정] findSalaryRank -> calculateRank 로 변경
+          const { rank: calculatedRank } = calculateRank(
             parsedData.salary.annualSalary,
             "all-all-all-all"
           );

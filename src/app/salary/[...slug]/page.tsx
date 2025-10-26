@@ -4,7 +4,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
-import { salaryData, findSalaryRank } from "@/lib/salaryData";
+// [수정] findSalaryRank -> calculateRank 로 변경
+import { salaryData, calculateRank } from "@/lib/salaryData";
 
 export const runtime = "edge";
 
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `연봉 ${formattedSalary}원 (${jobTitle}) 실수령액, 순위 분석 | Moneysalary`;
   const description = `연봉 ${formattedSalary}원 (${jobTitle})의 월 실수령액, 4대 보험 공제 내역, 전국 근로자 대비 순위 및 맞춤형 재테크 가이드를 확인하세요.`;
 
-  const { rank } = findSalaryRank(annualSalary, "all-all-all-all");
+  // [수정] findSalaryRank -> calculateRank 로 변경
+  const { rank } = calculateRank(annualSalary, "all-all-all-all");
 
   return {
     title,
@@ -68,7 +70,8 @@ export default function SalarySlugPage({ params }: Props) {
     seniorDependents: 0,
   });
 
-  const { rank } = findSalaryRank(annualSalary, conditionKey);
+  // [수정] findSalaryRank -> calculateRank 로 변경
+  const { rank } = calculateRank(annualSalary, conditionKey);
   const rankData = salaryData[conditionKey] || salaryData["all-all-all-all"];
 
   return (

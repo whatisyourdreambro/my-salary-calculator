@@ -4,7 +4,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
 import { calculateNetSalary } from "@/lib/calculator";
-import { salaryData, findSalaryRank } from "@/lib/salaryData";
+// [수정] findSalaryRank -> calculateRank 로 변경
+import { salaryData, calculateRank } from "@/lib/salaryData";
 import SalaryAnalysis from "@/components/SalaryAnalysis"; // 연봉별 맞춤 분석 컴포넌트 추가
 
 export const runtime = "edge";
@@ -25,7 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "정보를 찾을 수 없습니다." };
   }
 
-  const { rank } = findSalaryRank(amount, "all-all-all-all");
+  // [수정] findSalaryRank -> calculateRank 로 변경
+  const { rank } = calculateRank(amount, "all-all-all-all");
   const formattedSalary = formatNumber(amount);
   const { monthlyNet } = calculateNetSalary(amount, 2400000, 1, 0, {
     isSmeYouth: false,
@@ -93,8 +95,9 @@ const getFaqStructuredData = (
         name: `연봉 ${formattedSalary}원은 대한민국 상위 몇 %인가요?`,
         acceptedAnswer: {
           "@type": "Answer",
+          // [수정] findSalaryRank -> calculateRank 로 변경
           text: `국가통계포털(KOSIS) 데이터 기반으로 분석한 결과, 연봉 ${formattedSalary}원은 전체 임금 근로자 중 상위 ${
-            findSalaryRank(annualSalary, "all-all-all-all").rank
+            calculateRank(annualSalary, "all-all-all-all").rank
           }%에 해당하는 소득 수준입니다.`,
         },
       },
@@ -138,7 +141,8 @@ export default function SalaryDetailPage({ params }: Props) {
     seniorDependents: 0,
   });
 
-  const { rank } = findSalaryRank(annualSalary, "all-all-all-all");
+  // [수정] findSalaryRank -> calculateRank 로 변경
+  const { rank } = calculateRank(annualSalary, "all-all-all-all");
   const rankData = salaryData["all-all-all-all"];
 
   const faqStructuredData = getFaqStructuredData(
