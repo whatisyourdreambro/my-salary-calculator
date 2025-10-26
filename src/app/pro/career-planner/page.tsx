@@ -16,18 +16,12 @@ import {
 import CurrencyInput from "@/components/CurrencyInput";
 import NumberStepper from "@/components/NumberStepper";
 import { Plus, X, BrainCircuit, TrendingUp, Briefcase, GraduationCap } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const DynamicCareerVisuals = dynamic(() => import("@/components/CareerVisuals"), {
+  loading: () => <div className="text-center p-10 min-h-[600px] flex items-center justify-center"><p>차트 로딩 중...</p></div>,
+  ssr: false
+});
 
 const eventIcons: { [key in CareerEventType]: React.ElementType } = {
   promotion: TrendingUp,
@@ -226,48 +220,7 @@ export default function CareerPlannerPage() {
                 </button>
               </div>
               
-              {results.length === 0 ? (
-                <div className="text-center p-10 border-2 border-dashed border-border rounded-xl min-h-[600px] flex items-center justify-center">
-                  <p className="text-muted-foreground">입력값을 설정하고 '결과 보기'를 눌러주세요. 📊</p>
-                </div>
-              ) : (
-                <div className="space-y-8 animate-fade-in-up">
-                  <div>
-                    <h3 className="text-lg font-bold mb-2">순자산 성장 추이</h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={results}>
-                        <defs>
-                          <linearGradient id="colorNetWorth" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-                        <XAxis dataKey="age" label={{ value: "나이", position: "insideBottom", offset: -5 }} fontSize={12} />
-                        <YAxis tickFormatter={formatYAxis} fontSize={12} />
-                        <Tooltip formatter={(value: number) => [value.toLocaleString() + '원', '순자산']} />
-                        <Area type="monotone" dataKey="netWorth" strokeWidth={2} stroke="hsl(var(--primary))" fill="url(#colorNetWorth)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-bold mb-2">연봉 및 총 수입 변화</h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={results}>
-                        <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
-                        <XAxis dataKey="age" label={{ value: "나이", position: "insideBottom", offset: -5 }} fontSize={12} />
-                        <YAxis tickFormatter={formatYAxis} fontSize={12} />
-                        <Tooltip formatter={(value: number) => value.toLocaleString() + '원'} />
-                        <Legend />
-                        <Line type="monotone" dataKey="salary" name="연봉" strokeWidth={2} stroke="hsl(var(--primary))" />
-                        <Line type="monotone" dataKey="sideIncome" name="부수입" strokeWidth={2} stroke="hsl(var(--accent))" strokeDasharray="5 5" />
-                        <Line type="monotone" dataKey="totalIncome" name="총 수입" strokeWidth={2} stroke="hsl(var(--secondary-foreground))" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              )}
+              <DynamicCareerVisuals results={results} />
             </div>
           </div>
         </div>

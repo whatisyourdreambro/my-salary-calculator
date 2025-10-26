@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import CurrencyInput from "@/components/CurrencyInput";
 import { motion } from "framer-motion";
 import {
-  Coffee, Smartphone, Car, Plane, Home, Pizza, Film, Gamepad2, Dumbbell, Beer
+  Coffee, Smartphone, Car, Plane, Home, Pizza, Film, Gamepad2, Dumbbell, Beer, UtensilsCrossed, Headphones, Cpu, ShoppingBag, Theater
 } from "lucide-react";
 
 const items = [
@@ -15,8 +15,13 @@ const items = [
   { name: "헬스장 1개월 회원권", price: 50000, icon: Dumbbell, unit: "개월" },
   { name: "생맥주 500cc", price: 4000, icon: Beer, unit: "잔" },
   { name: "최신 게임 타이틀", price: 80000, icon: Gamepad2, unit: "개" },
+  { name: "호텔 뷔페 2인", price: 350000, icon: UtensilsCrossed, unit: "회" },
+  { name: "에어팟 맥스", price: 769000, icon: Headphones, unit: "개" },
   { name: "아이폰 16 Pro", price: 1800000, icon: Smartphone, unit: "대" },
+  { name: "최신 그래픽카드 (5090)", price: 2500000, icon: Cpu, unit: "개" },
+  { name: "뮤지컬 VIP석 티켓", price: 180000, icon: Theater, unit: "장" },
   { name: "제주도 왕복 항공권", price: 100000, icon: Plane, unit: "장" },
+  { name: "샤넬 클래식 플랩백", price: 15000000, icon: ShoppingBag, unit: "개" },
   { name: "현대 아반떼 (깡통)", price: 19000000, icon: Car, unit: "대" },
   { name: "서울 아파트 1평", price: 40000000, icon: Home, unit: "평" },
 ];

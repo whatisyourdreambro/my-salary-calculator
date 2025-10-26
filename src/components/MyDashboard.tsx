@@ -31,14 +31,14 @@ const formatNumber = (num: number) => num.toLocaleString();
 const HealthScoreGauge = ({ score, rating }: { score: number; rating: string; }) => {
   const scoreColorClass =
     score >= 80 ? "text-primary"
-    : score >= 60 ? "text-blue-500" // A different shade for "Good"
-    : score >= 40 ? "text-yellow-500" // Warning color
+    : score >= 60 ? "text-sky-500" // Use a sky blue for 'Good'
+    : score >= 40 ? "text-amber-500" // Use amber for 'Warning'
     : "text-destructive";
 
   const scoreFillColor =
     score >= 80 ? "hsl(var(--primary))"
-    : score >= 60 ? "hsl(217 91% 60%)"
-    : score >= 40 ? "hsl(48 96% 51%)"
+    : score >= 60 ? "hsl(201 89% 53%)" // sky-500
+    : score >= 40 ? "hsl(43 96% 56%)" // amber-500
     : "hsl(var(--destructive))";
 
   return (
@@ -50,7 +50,8 @@ const HealthScoreGauge = ({ score, rating }: { score: number; rating: string; })
       </ResponsiveContainer>
       <div className={`absolute inset-0 flex flex-col items-center justify-center ${scoreColorClass}`}>
         <p className="text-4xl font-bold">
-          {score}<span className="text-2xl">점</span>
+          {score}
+          <span className="text-2xl">점</span>
         </p>
         <p className="font-semibold text-sm">{rating}</p>
       </div>
