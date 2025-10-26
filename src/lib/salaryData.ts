@@ -85,7 +85,7 @@ export const salaryData: Record<string, SalaryStat> = {
 };
 
 // [수정] 1% 단위의 정밀한 연봉 순위를 계산하는 함수 로직 전체 개선
-export const findSalaryRank = (annualSalary: number, key: string) => {
+export const calculateRank = (annualSalary: number, key: string) => {
   const data =
     salaryData[key] ||
     salaryData["marketing-all-all-capital"] ||
@@ -137,3 +137,7 @@ export const findSalaryRank = (annualSalary: number, key: string) => {
     average: data.average,
   };
 };
+
+export const salaryDistribution = Object.entries(
+  salaryData["all-all-all-all"].percentiles
+).map(([p, s]) => ({ salaryRange: s, percentage: 100 - parseInt(p, 10) }));

@@ -40,7 +40,7 @@ export default function SalaryRank() {
   const rankResult = useMemo(() => {
     const salaryNum = Number(annualSalary.replace(/,/g, ""));
     if (isNaN(salaryNum) || salaryNum <= 0) return null;
-    return calculateRank(salaryNum);
+    return calculateRank(salaryNum, "all-all-all-all");
   }, [annualSalary]);
 
   const handleReset = useCallback(() => {
