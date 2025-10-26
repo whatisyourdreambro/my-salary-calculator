@@ -1,3 +1,5 @@
+// src/components/CarLoanSimulator.tsx
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -94,7 +96,7 @@ export default function CarLoanSimulator() {
   return (
     <div className="space-y-8">
       {/* 1. 기본 정보 입력 */}
-      <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+      <div className="bg-card p-6 rounded-2xl shadow-xl border">
         <h2 className="text-xl font-bold mb-4">1. 나의 구매력 확인하기</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <CurrencyInput
@@ -111,7 +113,7 @@ export default function CarLoanSimulator() {
               max="10"
               value={loanTerm}
               onChange={(e) => setLoanTerm(Number(e.target.value))}
-              className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              className="w-full p-3 mt-1 border rounded-lg bg-card border-border"
             />
           </div>
           <div>
@@ -123,17 +125,17 @@ export default function CarLoanSimulator() {
               max="20"
               value={interestRate}
               onChange={(e) => setInterestRate(Number(e.target.value))}
-              className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              className="w-full p-3 mt-1 border rounded-lg bg-card border-border"
             />
           </div>
         </div>
       </div>
 
       {/* 2. 추천 차량 및 할부금 비교 */}
-      <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border">
         <h2 className="text-2xl font-bold mb-6 text-center">
           2. 연봉{" "}
-          <span className="text-signature-blue">
+          <span className="text-primary">
             {formatNumber(Number(annualSalary.replace(/,/g, "")))}원
           </span>
           을 위한 추천 차량
@@ -145,8 +147,8 @@ export default function CarLoanSimulator() {
               return (
                 <section key={category}>
                   <div className="flex items-center mb-4">
-                    <Icon className="w-7 h-7 text-gray-500 dark:text-gray-400" />
-                    <h3 className="ml-3 text-2xl font-bold text-gray-800 dark:text-gray-200">
+                    <Icon className="w-7 h-7 text-muted-foreground" />
+                    <h3 className="ml-3 text-2xl font-bold text-foreground">
                       {category}
                     </h3>
                   </div>
@@ -154,17 +156,17 @@ export default function CarLoanSimulator() {
                     {cars.map(({ car, loan }) => (
                       <div
                         key={car.name}
-                        className="p-4 border-2 rounded-lg text-left transition bg-gray-50 dark:bg-gray-800/50 hover:border-signature-blue hover:shadow-md"
+                        className="p-4 border-2 rounded-lg text-left transition bg-background hover:border-primary hover:shadow-md"
                       >
                         <p className="font-bold text-lg">{car.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-muted-foreground">
                           {formatNumber(car.price)}원
                         </p>
-                        <div className="mt-4 pt-4 border-t dark:border-gray-700">
-                          <p className="text-xs text-gray-500">
+                        <div className="mt-4 pt-4 border-t">
+                          <p className="text-xs text-muted-foreground">
                             월 예상 납입금
                           </p>
-                          <p className="text-xl font-bold text-signature-blue">
+                          <p className="text-xl font-bold text-primary">
                             <CountUp end={loan.monthlyPayment} separator="," />{" "}
                             원
                           </p>
@@ -177,7 +179,7 @@ export default function CarLoanSimulator() {
             })}
           </div>
         ) : (
-          <p className="text-center text-gray-500 py-12">
+          <p className="text-center text-muted-foreground py-12">
             추천 드릴 차량이 없습니다. 연봉을 조절해보세요.
           </p>
         )}

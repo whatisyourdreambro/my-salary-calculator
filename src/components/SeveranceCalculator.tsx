@@ -28,10 +28,10 @@ const Accordion = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border rounded-lg overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="w-full flex justify-between items-center p-4 bg-secondary hover:bg-secondary/80"
       >
         <h3 className="text-md font-semibold">{title}</h3>
         <span
@@ -43,7 +43,7 @@ const Accordion = ({
         </span>
       </button>
       {isOpen && (
-        <div className="p-4 space-y-4 bg-white dark:bg-dark-card">
+        <div className="p-4 space-y-4 bg-card">
           {children}
         </div>
       )}
@@ -154,7 +154,7 @@ export default function SeveranceCalculator() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="mb-6 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-xl flex justify-center">
+      <div className="mb-6 bg-secondary p-1.5 rounded-xl flex justify-center">
         {[
           { id: "severance", label: "퇴직금" },
           { id: "db", label: "DB형" },
@@ -165,8 +165,8 @@ export default function SeveranceCalculator() {
             onClick={() => setPensionType(item.id as any)}
             className={`w-1/3 py-2.5 text-sm font-bold rounded-lg transition-colors ${
               pensionType === item.id
-                ? "bg-white dark:bg-gray-700 text-primary shadow"
-                : "text-gray-500 hover:bg-gray-200/50 dark:hover:bg-gray-700/50"
+                ? "bg-card text-primary shadow"
+                : "text-muted-foreground hover:bg-secondary/50"
             }`}
           >
             {item.label}
@@ -177,7 +177,7 @@ export default function SeveranceCalculator() {
         <div className="lg:col-span-3 space-y-6">
           {pensionType === "severance" || pensionType === "db" ? (
             <>
-              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+              <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -189,10 +189,6 @@ export default function SeveranceCalculator() {
                       id="startDate"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
-                    />
-                  </div>
-                  <div>
                     <label htmlFor="endDate" className="text-sm font-medium">
                       퇴사일 (마지막 근무일)
                     </label>
@@ -201,13 +197,13 @@ export default function SeveranceCalculator() {
                       id="endDate"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      className="w-full mt-1 p-3 border rounded-lg bg-card border-border"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+              <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">
                   급여 정보 (퇴사일 이전 3개월)
                 </h2>
@@ -243,7 +239,7 @@ export default function SeveranceCalculator() {
             </>
           ) : (
             <>
-              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+              <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -255,7 +251,7 @@ export default function SeveranceCalculator() {
                       id="startDate"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      className="w-full mt-1 p-3 border rounded-lg bg-card border-border"
                     />
                   </div>
                   <div>
@@ -267,12 +263,12 @@ export default function SeveranceCalculator() {
                       id="endDate"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      className="w-full mt-1 p-3 border rounded-lg bg-card border-border"
                     />
                   </div>
                 </div>
               </div>
-              <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+              <div className="bg-card p-6 rounded-xl border">
                 <h2 className="text-xl font-bold mb-4">급여 정보</h2>
                 <div className="space-y-4">
                   <CurrencyInput
@@ -290,7 +286,7 @@ export default function SeveranceCalculator() {
                       id="dcReturnRate"
                       value={dcReturnRate}
                       onChange={(e) => setDcReturnRate(e.target.value)}
-                      className="w-full mt-1 p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                      className="w-full mt-1 p-3 border rounded-lg bg-card border-border"
                       placeholder="예: 5"
                     />
                   </div>
@@ -301,14 +297,14 @@ export default function SeveranceCalculator() {
         </div>
 
         <div className="lg:col-span-2 space-y-6">
-          <div className="sticky top-24 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
+          <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-lg border">
             {pensionType === "dc" ? (
               <>
                 <h2 className="text-2xl font-bold text-center mb-4">
                   💰 예상 DC형 적립금
                 </h2>
-                <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center mb-4">
-                  <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                <div className="bg-secondary p-4 rounded-lg text-center mb-4">
+                  <p className="text-sm font-semibold text-muted-foreground">
                     총 재직일수
                   </p>
                   <p className="text-xl font-bold">
@@ -323,7 +319,7 @@ export default function SeveranceCalculator() {
                     </p>
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-center text-gray-500">
+                <div className="mt-2 text-xs text-center text-muted-foreground">
                   * DC형은 개인의 투자 수익에 따라 결과가 달라지며, 세금은 연금 수령 시점에 별도 부과됩니다.
                 </div>
               </>
@@ -333,8 +329,8 @@ export default function SeveranceCalculator() {
                   💰 예상 퇴직금 결과
                 </h2>
 
-                <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg text-center mb-4">
-                  <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                <div className="bg-secondary p-4 rounded-lg text-center mb-4">
+                  <p className="text-sm font-semibold text-muted-foreground">
                     총 재직일수
                   </p>
                   <p className="text-xl font-bold">
@@ -346,18 +342,18 @@ export default function SeveranceCalculator() {
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-md font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                    <span className="text-md font-semibold text-muted-foreground">
                       세전 퇴직금
                     </span>
-                    <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                    <p className="text-2xl font-bold text-foreground">
                       <CountUp end={result.estimatedSeverancePay} separator="," /> 원
                     </p>
                   </div>
                   <div className="flex justify-between items-baseline">
-                    <span className="text-md font-semibold text-danger">
+                    <span className="text-md font-semibold text-destructive">
                       퇴직 소득세
                     </span>
-                    <p className="text-2xl font-bold text-danger">
+                    <p className="text-2xl font-bold text-destructive">
                       -{" "}
                       <CountUp
                         end={result.incomeTax + result.localTax}
@@ -379,7 +375,7 @@ export default function SeveranceCalculator() {
 
                 <div className="mt-6">
                   <Accordion title="세금 계산 과정 & IRP 혜택 보기">
-                    <div className="text-xs space-y-2 text-gray-600 dark:text-gray-400">
+                    <div className="text-xs space-y-2 text-muted-foreground">
                       <div className="flex justify-between">
                         <span>과세대상 퇴직금:</span>
                         <span className="font-mono">{result.details?.retirementIncome.toLocaleString()}원</span>
@@ -407,12 +403,12 @@ export default function SeveranceCalculator() {
                     </div>
                     <div className="mt-4 pt-4 border-t border-dashed">
                       <h4 className="font-bold text-sm mb-2 text-center">💡 IRP 계좌로 이전 시 혜택</h4>
-                      <p className="text-xs text-center text-gray-500 mb-2">
+                      <p className="text-xs text-center text-muted-foreground mb-2">
                         퇴직금을 IRP 계좌로 이전하여 연금으로 수령 시, 퇴직소득세의 30%를 감면받을 수 있습니다.
                       </p>
-                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
+                      <div className="p-3 bg-primary/10 rounded-lg text-center">
                         <p className="text-sm font-semibold">감면 후 예상 세금</p>
-                        <p className="text-lg font-bold text-signature-blue">
+                        <p className="text-lg font-bold text-primary">
                           <CountUp end={(result.incomeTax + result.localTax) * 0.7} separator="," /> 원
                         </p>
                       </div>
@@ -425,13 +421,13 @@ export default function SeveranceCalculator() {
             <div className="mt-6 grid grid-cols-2 gap-2">
               <button
                 onClick={handleReset}
-                className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                className="w-full py-3 bg-secondary font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-secondary/80 transition"
               >
                 <RotateCcw size={16} /> 초기화
               </button>
               <button
                 onClick={handleSaveData}
-                className="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary-hover transition"
+                className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition"
                 disabled={pensionType === 'dc'} // DC형일 때 저장 비활성화
               >
                 <Save size={16} /> 대시보드 저장

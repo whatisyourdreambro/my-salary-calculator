@@ -118,7 +118,7 @@ export default function LottoPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-light-bg dark:bg-gray-900 text-light-text dark:text-white overflow-hidden">
+    <main className="w-full min-h-screen bg-background text-foreground overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-10 dark:opacity-30">
         {[...Array(50)].map((_, i) => (
           <div

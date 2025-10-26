@@ -63,7 +63,7 @@ export default function PayStubGenerator() {
     <div className="w-full max-w-4xl mx-auto mt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Input Section */}
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+        <div className="bg-card p-6 rounded-xl border">
           <h2 className="text-2xl font-bold mb-4">급여명세서 생성</h2>
           <CurrencyInput
             label="세전 연봉 입력"
@@ -73,7 +73,7 @@ export default function PayStubGenerator() {
           />
           <button
             onClick={handleDownload}
-            className="w-full mt-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
+            className="w-full mt-6 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
           >
             PNG 이미지로 다운로드
           </button>
@@ -82,7 +82,7 @@ export default function PayStubGenerator() {
         {/* Pay Stub Section */}
         <div
           ref={payStubRef}
-          className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border relative text-gray-800 dark:text-white"
+          className="bg-card p-6 rounded-xl shadow-lg border relative text-foreground"
         >
           <h3 className="text-2xl font-bold text-center mb-4">
             급 여 명 세 서
@@ -96,8 +96,7 @@ export default function PayStubGenerator() {
             </div>
           </div>
           <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b-2 border-black dark:border-white">
+              <tr className="border-b-2 border-foreground">
                 <th className="p-2 text-left">지급내역</th>
                 <th className="p-2 text-right">금액</th>
                 <th className="p-2 text-left pl-4">공제내역</th>
@@ -105,7 +104,7 @@ export default function PayStubGenerator() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b dark:border-gray-600">
+              <tr className="border-b border-border">
                 <td className="p-2">기본급</td>
                 <td className="p-2 text-right">{formatNumber(monthlyGross)}</td>
                 <td className="p-2 pl-4">국민연금</td>
@@ -113,7 +112,7 @@ export default function PayStubGenerator() {
                   {formatNumber(result.pension)}
                 </td>
               </tr>
-              <tr className="border-b dark:border-gray-600">
+              <tr className="border-b border-border">
                 <td className="p-2"></td>
                 <td className="p-2 text-right"></td>
                 <td className="p-2 pl-4">건강보험</td>
@@ -121,7 +120,7 @@ export default function PayStubGenerator() {
                   {formatNumber(result.health)}
                 </td>
               </tr>
-              <tr className="border-b dark:border-gray-600">
+              <tr className="border-b border-border">
                 <td className="p-2"></td>
                 <td className="p-2 text-right"></td>
                 <td className="p-2 pl-4">장기요양</td>
@@ -129,7 +128,7 @@ export default function PayStubGenerator() {
                   {formatNumber(result.longTermCare)}
                 </td>
               </tr>
-              <tr className="border-b dark:border-gray-600">
+              <tr className="border-b border-border">
                 <td className="p-2"></td>
                 <td className="p-2 text-right"></td>
                 <td className="p-2 pl-4">고용보험</td>
@@ -137,7 +136,7 @@ export default function PayStubGenerator() {
                   {formatNumber(result.employment)}
                 </td>
               </tr>
-              <tr className="border-b-2 border-black dark:border-white">
+              <tr className="border-b-2 border-foreground">
                 <td className="p-2"></td>
                 <td className="p-2 text-right"></td>
                 <td className="p-2 pl-4">소득세</td>
@@ -145,7 +144,7 @@ export default function PayStubGenerator() {
                   {formatNumber(result.incomeTax)}
                 </td>
               </tr>
-              <tr className="border-b-2 border-black dark:border-white">
+              <tr className="border-b-2 border-foreground">
                 <td className="p-2 font-bold">지급총액</td>
                 <td className="p-2 text-right font-bold">
                   {formatNumber(monthlyGross)}
@@ -165,12 +164,12 @@ export default function PayStubGenerator() {
               </tr>
             </tbody>
           </table>
-          <div className="mt-4 p-4 border-t-4 border-double border-black dark:border-white text-right">
+          <div className="mt-4 p-4 border-t-4 border-double border-foreground text-right">
             <span className="font-bold text-lg">
               실 지급액: {formatNumber(result.monthlyNet)} 원
             </span>
           </div>
-          <div className="absolute bottom-2 right-4 text-xs text-gray-400 dark:text-gray-500 font-bold">
+          <div className="absolute bottom-2 right-4 text-xs text-muted-foreground font-bold">
             Moneysalary.com
           </div>
         </div>

@@ -80,9 +80,9 @@ export default function SalaryMBTICalculator() {
 
   if (result) {
     return (
-      <div className="bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border animate-fade-in-up">
-        <div ref={resultRef} className="bg-light-card dark:bg-dark-card p-8">
-          <p className="text-center font-semibold text-signature-blue">
+      <div className="bg-card p-6 sm:p-10 rounded-2xl shadow-xl border animate-fade-in-up">
+        <div ref={resultRef} className="bg-card p-8">
+          <p className="text-center font-semibold text-primary">
             당신의 인생 연봉 그래프는...
           </p>
           <h2 className="text-4xl font-bold text-center my-2">
@@ -102,7 +102,7 @@ export default function SalaryMBTICalculator() {
                 <Line
                   type="monotone"
                   dataKey="salary"
-                  stroke="#0052ff"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={3}
                   dot={{ r: 4 }}
                   activeDot={{ r: 8 }}
@@ -116,9 +116,9 @@ export default function SalaryMBTICalculator() {
           {/* [수정] result.guide 대신 result.growthPlan[0]을 사용합니다. */}
           <Link
             href={result.growthPlan[0].link}
-            className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-blue-50 dark:bg-blue-900/30 dark:border-gray-700 text-center"
+            className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-primary/10 dark:border-border text-center"
           >
-            <p className="font-bold text-signature-blue">
+            <p className="font-bold text-primary">
               📈 {result.title}을 위한 맞춤 금융 가이드
             </p>
             <p className="text-sm mt-1">{result.growthPlan[0].title}</p>
@@ -126,7 +126,7 @@ export default function SalaryMBTICalculator() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
               onClick={handleDownload}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-secondary font-semibold rounded-lg flex items-center justify-center gap-2"
             >
               {" "}
               <Download size={18} />
@@ -134,14 +134,14 @@ export default function SalaryMBTICalculator() {
             </button>
             <button
               onClick={handleShare}
-              className="w-full py-3 bg-yellow-400 dark:bg-yellow-500 font-bold rounded-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-accent font-bold rounded-lg flex items-center justify-center gap-2"
             >
               <Share2 size={18} />
               결과 공유
             </button>
             <button
               onClick={handleReset}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-secondary font-semibold rounded-lg flex items-center justify-center gap-2"
             >
               <RefreshCw size={18} />
               다시하기
@@ -156,10 +156,10 @@ export default function SalaryMBTICalculator() {
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border">
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-8">
+    <div className="bg-card p-6 sm:p-10 rounded-2xl shadow-xl border">
+      <div className="w-full bg-secondary rounded-full h-2.5 mb-8">
         <div
-          className="bg-signature-blue h-2.5 rounded-full transition-all duration-500"
+          className="bg-primary h-2.5 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
@@ -177,7 +177,7 @@ export default function SalaryMBTICalculator() {
             <button
               key={index}
               onClick={() => handleAnswer(option.type)}
-              className="w-full text-left p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg hover:border-signature-blue hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all transform hover:scale-105"
+              className="w-full text-left p-4 border-2 border-border rounded-lg hover:border-primary hover:bg-primary/10 transition-all transform hover:scale-105"
             >
               <p className="text-lg font-semibold">{option.text}</p>
             </button>

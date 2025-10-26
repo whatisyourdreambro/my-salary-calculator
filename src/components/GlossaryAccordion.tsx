@@ -23,13 +23,13 @@ export default function GlossaryAccordion({ items }: GlossaryAccordionProps) {
       {items.map((item, index) => (
         <div
           key={index}
-          className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md"
+          className="border rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md"
         >
           <button
             onClick={() => handleClick(index)}
-            className="w-full flex justify-between items-center p-5 text-left bg-light-card dark:bg-dark-card hover:bg-gray-50 dark:hover:bg-gray-800/50"
+            className="w-full flex justify-between items-center p-5 text-left bg-card hover:bg-secondary"
           >
-            <span className="text-lg font-semibold text-light-text dark:text-dark-text">
+            <span className="text-lg font-semibold text-foreground">
               {item.title}
             </span>
             <svg
@@ -38,7 +38,7 @@ export default function GlossaryAccordion({ items }: GlossaryAccordionProps) {
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className={`w-6 h-6 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${
+              className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${
                 activeIndex === index ? "rotate-180" : ""
               }`}
             >
@@ -57,8 +57,8 @@ export default function GlossaryAccordion({ items }: GlossaryAccordionProps) {
             }`}
           >
             <div className="overflow-hidden">
-              <div className="p-5 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                <p className="text-base leading-relaxed text-light-text-secondary dark:text-dark-text-secondary">
+              <div className="p-5 border-t bg-card">
+                <p className="text-base leading-relaxed text-muted-foreground">
                   {item.content}
                 </p>
               </div>

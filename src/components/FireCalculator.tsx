@@ -212,14 +212,14 @@ export default function FireCalculator() {
           나의 경제적 자유,
           <br />그 여정을 시작합니다
         </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-light-text-secondary dark:text-indigo-100">
+        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground">
           당신의 재정 정보를 바탕으로, 경제적 독립과 조기 은퇴(FIRE)를 향한
           <br />
           가장 현실적인 로드맵을 시뮬레이션합니다.
         </p>
         <button
           onClick={() => setStep("essentials")}
-          className="mt-10 px-12 py-4 bg-gray-800 text-white dark:bg-white dark:text-black font-bold rounded-full text-lg hover:bg-gray-700 dark:hover:bg-gray-200 transition-transform transform hover:scale-105 shadow-lg shadow-violet-500/30 flex items-center gap-2 mx-auto"
+          className="mt-10 px-12 py-4 bg-foreground text-background font-bold rounded-full text-lg hover:bg-foreground/90 transition-transform transform hover:scale-105 shadow-lg shadow-primary/30 flex items-center gap-2 mx-auto"
         >
           여정 시작하기 <ArrowRight />
         </button>
@@ -245,8 +245,8 @@ export default function FireCalculator() {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 transition-all ${
                     isActive
-                      ? "bg-primary dark:bg-violet-500 border-primary dark:border-violet-500 text-white"
-                      : "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400"
+                      ? "bg-primary border-primary text-primary-foreground"
+                      : "bg-secondary border-border text-secondary-foreground"
                   }`}
                 >
                   {index + 1}
@@ -254,8 +254,8 @@ export default function FireCalculator() {
                 <span
                   className={`hidden sm:inline-block font-semibold transition-colors ${
                     isActive
-                      ? "text-light-text dark:text-white"
-                      : "text-gray-500"
+                      ? "text-foreground"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {name}
@@ -264,8 +264,8 @@ export default function FireCalculator() {
                   <div
                     className={`hidden sm:block w-8 h-1 rounded-full transition-colors ${
                       isActive
-                        ? "bg-primary dark:bg-violet-500"
-                        : "bg-gray-200 dark:bg-gray-700"
+                        ? "bg-primary"
+                        : "bg-secondary"
                     }`}
                   />
                 )}
@@ -276,7 +276,7 @@ export default function FireCalculator() {
       </div>
 
       <div
-        className="bg-light-card/80 dark:bg-black/30 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-gray-200 dark:border-white/20"
+        className="bg-card/80 dark:bg-background/30 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border"
         key={step}
       >
         {step === "essentials" && (
@@ -293,7 +293,7 @@ export default function FireCalculator() {
                   onChange={(e) =>
                     handleInputChange("currentAge", e.target.value)
                   }
-                  className="w-full p-3 mt-1 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+                  className="w-full p-3 mt-1 border rounded-lg bg-background border-border"
                 />
               </div>
               <CurrencyInput
@@ -318,7 +318,7 @@ export default function FireCalculator() {
             <div className="text-center mt-8">
               <button
                 onClick={() => setStep("investment")}
-                className="px-8 py-3 bg-primary dark:bg-violet-500 text-white font-bold rounded-full hover:bg-primary-hover dark:hover:bg-violet-600 transition"
+                className="px-8 py-3 bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/90 transition"
               >
                 다음 단계로 <ArrowRight className="inline-block" />
               </button>
@@ -342,7 +342,7 @@ export default function FireCalculator() {
                   onChange={(e) =>
                     handleInputChange("salaryGrowthRate", e.target.value)
                   }
-                  className="w-full p-3 mt-1 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+                  className="w-full p-3 mt-1 border rounded-lg bg-background border-border"
                 />
               </div>
               <CurrencyInput
@@ -384,8 +384,8 @@ export default function FireCalculator() {
                       }
                       className={`p-3 rounded-lg border-2 transition-all text-center ${
                         inputs.investmentStrategy === id
-                          ? "border-primary dark:border-violet-400 bg-blue-50 dark:bg-violet-900/50"
-                          : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:border-gray-400 dark:hover:border-gray-500"
+                          ? "border-primary bg-primary/10"
+                          : "border-border bg-secondary hover:border-border/70"
                       }`}
                     >
                       <Icon className="w-6 h-6 mx-auto mb-1" />
@@ -399,7 +399,7 @@ export default function FireCalculator() {
             <div className="text-center mt-8">
               <button
                 onClick={() => setStep("events")}
-                className="px-8 py-3 bg-primary dark:bg-violet-500 text-white font-bold rounded-full hover:bg-primary-hover dark:hover:bg-violet-600 transition"
+                className="px-8 py-3 bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/90 transition"
               >
                 다음 단계로 <ArrowRight className="inline-block" />
               </button>
@@ -416,7 +416,7 @@ export default function FireCalculator() {
               {lifeEvents.map((event, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg flex items-center gap-2 flex-wrap"
+                  className="p-4 bg-secondary/50 rounded-lg flex items-center gap-2 flex-wrap"
                 >
                   <input
                     type="number"
@@ -424,7 +424,7 @@ export default function FireCalculator() {
                     onChange={(e) =>
                       updateLifeEvent(index, "year", Number(e.target.value))
                     }
-                    className="w-16 p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                    className="w-16 p-2 border rounded bg-card border-border"
                     min="1"
                   />
                   <span>년 후,</span>
@@ -435,14 +435,14 @@ export default function FireCalculator() {
                     onChange={(e) =>
                       updateLifeEvent(index, "description", e.target.value)
                     }
-                    className="flex-grow p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                    className="flex-grow p-2 border rounded bg-card border-border"
                   />
                   <select
                     value={event.type}
                     onChange={(e) =>
                       updateLifeEvent(index, "type", e.target.value)
                     }
-                    className="p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                    className="p-2 border rounded bg-card border-border"
                   >
                     <option value="oneTimeExpense">지출</option>
                     <option value="oneTimeIncome">수입</option>
@@ -457,12 +457,12 @@ export default function FireCalculator() {
                         e.target.value.replace(/[^0-9]/g, "")
                       )
                     }
-                    className="w-32 p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                    className="w-32 p-2 border rounded bg-card border-border"
                   />
                   <span>원</span>
                   <button
                     onClick={() => removeLifeEvent(index)}
-                    className="text-red-500 hover:text-red-600"
+                    className="text-destructive hover:text-destructive/80"
                   >
                     <Trash2 size={20} />
                   </button>
@@ -470,7 +470,7 @@ export default function FireCalculator() {
               ))}
               <button
                 onClick={addLifeEvent}
-                className="w-full flex items-center justify-center gap-2 p-3 bg-gray-100 dark:bg-white/10 font-semibold rounded-lg hover:bg-gray-200 dark:hover:bg-white/20 transition"
+                className="w-full flex items-center justify-center gap-2 p-3 bg-muted font-semibold rounded-lg hover:bg-muted/80 transition"
               >
                 <PlusCircle size={18} /> 이벤트 추가
               </button>
@@ -478,7 +478,7 @@ export default function FireCalculator() {
             <div className="text-center mt-8">
               <button
                 onClick={() => setStep("result")}
-                className="px-8 py-3 bg-primary dark:bg-violet-500 text-white font-bold rounded-full hover:bg-primary-hover dark:hover:bg-violet-600 transition"
+                className="px-8 py-3 bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/90 transition"
               >
                 결과 확인하기 <MousePointerClick className="inline-block" />
               </button>
@@ -491,25 +491,25 @@ export default function FireCalculator() {
             <div className="text-center">
               {yearsToFire === Infinity ? (
                 <>
-                  <h2 className="text-3xl font-bold text-yellow-500 dark:text-yellow-400">
+                  <h2 className="text-3xl font-bold text-destructive">
                     목표를 달성하기 어렵습니다 😥
                   </h2>
-                  <p className="mt-2 text-light-text-secondary dark:text-gray-300">
+                  <p className="mt-2 text-muted-foreground">
                     저축액을 늘리거나 투자 전략을 변경하여 다시 시도해보세요.
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="font-semibold text-lg text-primary dark:text-indigo-300">
+                  <p className="font-semibold text-lg text-primary">
                     당신은{" "}
-                    <strong className="text-yellow-600 dark:text-yellow-300 text-xl">
+                    <strong className="text-accent text-xl">
                       {yearsToFire}년 후,
                     </strong>
                   </p>
                   <h2 className="text-6xl font-bold my-2">
                     <CountUp end={finalAge} /> 세
                   </h2>
-                  <p className="font-semibold text-lg text-primary dark:text-indigo-300">
+                  <p className="font-semibold text-lg text-primary">
                     경제적 자유를 달성할 수 있습니다!
                   </p>
                 </>
@@ -517,27 +517,27 @@ export default function FireCalculator() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center my-6">
-              <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-lg">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   최종 목표 금액
                 </p>
                 <p className="text-xl font-bold">
                   <CountUp end={finalTargetAmount} separator="," /> 원
                 </p>
               </div>
-              <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-lg">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   총 납입 원금
                 </p>
                 <p className="text-xl font-bold">
                   <CountUp end={totalContributions} separator="," /> 원
                 </p>
               </div>
-              <div className="bg-gray-100 dark:bg-white/5 p-4 rounded-lg">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   총 투자 수익
                 </p>
-                <p className="text-xl font-bold text-green-600 dark:text-green-400">
+                <p className="text-xl font-bold text-green-500">
                   + <CountUp end={totalReturns} separator="," /> 원
                 </p>
               </div>
@@ -561,8 +561,8 @@ export default function FireCalculator() {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(30,30,30,0.8)",
-                      borderColor: "#555",
+                      backgroundColor: "hsl(var(--card))",
+                      borderColor: "hsl(var(--border))",
                     }}
                     formatter={(value: number, name: string) => [
                       `${formatNumber(value)}원`,
@@ -574,16 +574,16 @@ export default function FireCalculator() {
                     type="monotone"
                     dataKey="contribution"
                     stackId="1"
-                    stroke="#8884d8"
-                    fill="#8884d8"
+                    stroke="hsl(var(--primary))"
+                    fill="hsl(var(--primary))"
                     name="총 납입 원금"
                   />
                   <Area
                     type="monotone"
                     dataKey={(data) => data.assets - data.contribution}
                     stackId="1"
-                    stroke="#82ca9d"
-                    fill="#82ca9d"
+                    stroke="hsl(var(--green-500))"
+                    fill="hsl(var(--green-500))"
                     name="총 투자 수익"
                   />
                 </AreaChart>
@@ -592,7 +592,7 @@ export default function FireCalculator() {
             <div className="text-center mt-8">
               <button
                 onClick={() => setStep("essentials")}
-                className="px-8 py-3 bg-gray-200 dark:bg-gray-700 text-light-text dark:text-white font-bold rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                className="px-8 py-3 bg-background text-foreground font-bold rounded-full hover:bg-secondary transition"
               >
                 조건 변경하여 다시 계산하기
               </button>

@@ -67,7 +67,7 @@ export default function CurrencyInput({
 
   return (
     <div>
-      <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+      <label className="text-sm font-medium text-muted-foreground">
         {label}
       </label>
       <div className="flex gap-2 mt-1">
@@ -75,7 +75,7 @@ export default function CurrencyInput({
           <select
             value={selectedCurrency}
             onChange={(e) => onCurrencyChange(e.target.value)}
-            className="p-3 border rounded-lg dark:bg-dark-card dark:border-gray-700 basis-1/3 sm:basis-auto"
+            className="p-3 border rounded-lg bg-card border-border basis-1/3 sm:basis-auto"
           >
             {currencies.map((c) => (
               <option key={c.id} value={c.id}>
@@ -90,10 +90,10 @@ export default function CurrencyInput({
             type="text"
             value={value}
             onChange={handleChange}
-            className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 border-gray-200 dark:border-gray-700 rounded-lg bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text focus:ring-2 focus:ring-signature-blue focus:border-signature-blue"
+            className="w-full p-3 sm:p-4 pr-10 sm:pr-12 text-xl sm:text-2xl font-bold border-2 rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
             inputMode="numeric"
           />
-          <span className="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+          <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground text-sm sm:text-base">
             {symbol}
           </span>
         </div>
@@ -105,7 +105,7 @@ export default function CurrencyInput({
             <button
               key={`add-${amount}`}
               onClick={() => handleAmountChange(amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-signature-blue/10 text-signature-blue font-semibold rounded-lg hover:bg-signature-blue/20 transition whitespace-nowrap"
+              className="px-2 py-1.5 text-xs sm:text-sm bg-primary/10 text-primary font-semibold rounded-lg hover:bg-primary/20 transition whitespace-nowrap"
             >
               + {formatNumber(amount)}
             </button>
@@ -116,7 +116,7 @@ export default function CurrencyInput({
             <button
               key={`sub-${amount}`}
               onClick={() => handleAmountChange(-amount)}
-              className="px-2 py-1.5 text-xs sm:text-sm bg-brand-red/10 text-brand-red font-semibold rounded-lg hover:bg-brand-red/20 transition whitespace-nowrap"
+              className="px-2 py-1.5 text-xs sm:text-sm bg-destructive/10 text-destructive font-semibold rounded-lg hover:bg-destructive/20 transition whitespace-nowrap"
             >
               - {formatNumber(amount)}
             </button>

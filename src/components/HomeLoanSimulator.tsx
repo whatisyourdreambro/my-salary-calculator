@@ -138,7 +138,7 @@ export default function HomeLoanSimulator() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-      <div className="space-y-6 bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+      <div className="space-y-6 bg-card p-6 rounded-xl border">
         <h2 className="text-xl font-bold">대출 정보 입력</h2>
         <CurrencyInput
           label="주택 가격"
@@ -162,7 +162,7 @@ export default function HomeLoanSimulator() {
             max="40"
             value={loanTerm}
             onChange={(e) => setLoanTerm(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 mt-2"
+            className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer mt-2"
           />
         </div>
         <div>
@@ -176,7 +176,7 @@ export default function HomeLoanSimulator() {
             step="0.1"
             value={interestRate}
             onChange={(e) => setInterestRate(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 mt-2"
+            className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer mt-2"
           />
         </div>
         <CurrencyInput
@@ -187,12 +187,12 @@ export default function HomeLoanSimulator() {
         />
         <div>
           <label className="text-sm font-medium">상환 방식</label>
-          <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mt-1">
+          <div className="flex bg-secondary rounded-lg p-1 mt-1">
             <button
               onClick={() => setRepaymentType("equalPrincipalAndInterest")}
               className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                 repaymentType === "equalPrincipalAndInterest"
-                  ? "bg-white dark:bg-gray-700 shadow-sm"
+                  ? "bg-card shadow-sm"
                   : ""
               }`}
             >
@@ -202,7 +202,7 @@ export default function HomeLoanSimulator() {
               onClick={() => setRepaymentType("equalPrincipal")}
               className={`flex-1 p-2 rounded-md text-sm font-semibold ${
                 repaymentType === "equalPrincipal"
-                  ? "bg-white dark:bg-gray-700 shadow-sm"
+                  ? "bg-card shadow-sm"
                   : ""
               }`}
             >
@@ -219,8 +219,8 @@ export default function HomeLoanSimulator() {
               }
               className={`flex-1 p-2 rounded-md text-sm font-semibold border-2 ${
                 userType === "newlywed"
-                  ? "border-primary bg-blue-50 dark:bg-blue-900/30"
-                  : "bg-gray-100 dark:bg-gray-800"
+                  ? "border-primary bg-primary/10"
+                  : "bg-secondary"
               }`}
             >
               신혼부부
@@ -233,8 +233,8 @@ export default function HomeLoanSimulator() {
               }
               className={`flex-1 p-2 rounded-md text-sm font-semibold border-2 ${
                 userType === "firstTimeBuyer"
-                  ? "border-primary bg-blue-50 dark:bg-blue-900/30"
-                  : "bg-gray-100 dark:bg-gray-800"
+                  ? "border-primary bg-primary/10"
+                  : "bg-secondary"
               }`}
             >
               생애최초
@@ -242,13 +242,13 @@ export default function HomeLoanSimulator() {
           </div>
         </div>
       </div>
-      <div className="space-y-6 bg-primary text-white p-6 rounded-xl shadow-lg flex flex-col">
+      <div className="space-y-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg flex flex-col">
         <h2 className="text-2xl font-bold text-center">📊 시뮬레이션 결과</h2>
-        <div className="bg-white/10 p-3 rounded-lg text-center font-semibold text-sm">
+        <div className="bg-primary-foreground/10 p-3 rounded-lg text-center font-semibold text-sm">
           {loanSuggestion}
         </div>
-        <div className="bg-white/20 p-6 rounded-lg text-center flex-grow flex flex-col justify-center">
-          <p className="font-semibold text-blue-200 text-lg">
+        <div className="bg-primary-foreground/20 p-6 rounded-lg text-center flex-grow flex flex-col justify-center">
+          <p className="font-semibold text-lg">
             {repaymentType === "equalPrincipal" ? "첫 달 " : ""}월 상환액
           </p>
           <p className="text-4xl sm:text-5xl font-bold my-2">
@@ -260,7 +260,7 @@ export default function HomeLoanSimulator() {
             <span className="opacity-80">총 예상 이자</span>
             <strong>{formatNumber(totalInterest)} 원</strong>
           </div>
-          <hr className="border-white/30 my-2" />
+          <hr className="border-primary-foreground/30 my-2" />
           <div className="flex justify-between font-bold text-lg">
             <span>총 상환 금액</span>
             <span>{formatNumber(totalPayment)} 원</span>
@@ -269,7 +269,7 @@ export default function HomeLoanSimulator() {
         <div className="mt-auto pt-4">
           <button
             onClick={handleSaveData}
-            className="w-full py-3 bg-white text-primary font-bold rounded-lg hover:bg-gray-200 transition"
+            className="w-full py-3 bg-card text-primary font-bold rounded-lg hover:bg-card/90 transition"
           >
             대시보드에 저장
           </button>

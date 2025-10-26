@@ -151,7 +151,7 @@ function CalculatorTabsComponent() {
               className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all text-center ${
                 activeTab === tab
                   ? "bg-primary/10 text-primary font-bold"
-                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  : "text-muted-foreground hover:bg-secondary"
               }`}
             >
               <Icon className="w-6 h-6 mb-1" />
@@ -164,7 +164,7 @@ function CalculatorTabsComponent() {
       </div>
 
       {/* [수정] flex-wrap, justify-center 추가, overflow-x-auto, whitespace-nowrap 제거 */}
-      <div className="hidden md:flex flex-wrap justify-center mb-10 border-b border-gray-200 dark:border-gray-800">
+      <div className="hidden md:flex flex-wrap justify-center mb-10 border-b">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
           return (
@@ -173,8 +173,8 @@ function CalculatorTabsComponent() {
               onClick={() => setActiveTab(tab)}
               className={`px-4 sm:px-6 py-4 font-semibold text-sm sm:text-base transition-colors duration-200 shrink-0 flex items-center gap-2 ${
                 activeTab === tab
-                  ? "border-b-2 border-signature-blue text-signature-blue"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border-b-2 border-transparent"
+                  ? "border-b-2 border-primary text-primary"
+                  : "text-muted-foreground hover:text-foreground border-b-2 border-transparent"
               }`}
             >
               <Icon className="w-5 h-5" />

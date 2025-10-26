@@ -112,7 +112,7 @@ export default function FinancialKnowledgeArchive() {
         {knowledgeData.map((item, index) => (
           <div
             key={index}
-            className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-lg bg-light-card dark:bg-dark-card"
+            className="border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-lg bg-card"
           >
             <button
               onClick={() => handleClick(index)}
@@ -121,10 +121,10 @@ export default function FinancialKnowledgeArchive() {
               <div className="flex items-center gap-4">
                 <item.icon className="w-8 h-8 text-primary flex-shrink-0" />
                 <div>
-                  <h3 className="text-lg font-bold text-light-text dark:text-dark-text">
+                  <h3 className="text-lg font-bold text-foreground">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary hidden md:block">
+                  <p className="text-sm text-muted-foreground hidden md:block">
                     {item.summary}
                   </p>
                 </div>
@@ -135,7 +135,7 @@ export default function FinancialKnowledgeArchive() {
                 viewBox="0 0 24 24"
                 strokeWidth={2.5}
                 stroke="currentColor"
-                className={`w-6 h-6 text-gray-400 transition-transform duration-500 flex-shrink-0 ${
+                className={`w-6 h-6 text-muted-foreground transition-transform duration-500 flex-shrink-0 ${
                   activeIndex === index ? "rotate-180" : ""
                 }`}
               >
@@ -154,19 +154,19 @@ export default function FinancialKnowledgeArchive() {
               }`}
             >
               <div className="overflow-hidden">
-                <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                  <p className="text-base text-light-text-secondary dark:text-dark-text-secondary">
+                <div className="p-6 border-t space-y-4">
+                  <p className="text-base text-muted-foreground">
                     {item.content}
                   </p>
-                  <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                  <div className="p-4 bg-secondary rounded-lg">
                     <p className="!m-0 text-sm">
                       <span className="font-bold">💬 쉽게 풀어보기:</span>{" "}
                       {item.analogy}
                     </p>
                   </div>
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-signature-blue">
+                  <div className="p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
                     <p className="!m-0 text-sm">
-                      <span className="font-bold text-signature-blue">
+                      <span className="font-bold text-primary">
                         💡 투자자에게 미치는 영향:
                       </span>{" "}
                       {item.implication}

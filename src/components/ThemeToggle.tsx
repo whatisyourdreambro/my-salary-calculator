@@ -21,7 +21,7 @@ export default function ThemeToggle() {
     <div className="flex items-center gap-2">
       <button
         onClick={() => setTheme(isDark ? "light" : "dark")}
-        className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="p-2 rounded-full text-muted-foreground hover:bg-secondary transition-colors"
         aria-label="Toggle theme"
       >
         {isDark ? (
@@ -48,7 +48,7 @@ export default function ThemeToggle() {
           </svg>
         )}
       </button>
-      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 hidden sm:inline">
+      <span className="text-xs font-semibold text-muted-foreground hidden sm:inline">
         {isDark ? "다크 모드" : "라이트 모드"}
       </span>
     </div>

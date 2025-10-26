@@ -41,7 +41,7 @@ export default function UnemploymentBenefitsPage() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         <div className="w-full bg-gradient-to-br from-sky-500 to-blue-600 dark:from-gray-900 dark:to-sky-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
             갑작스러운 실직,

@@ -86,7 +86,7 @@ export default function MonthlyTablePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-green-500 to-emerald-600 dark:from-gray-900 dark:to-green-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">

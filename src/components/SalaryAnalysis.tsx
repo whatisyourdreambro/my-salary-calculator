@@ -21,10 +21,10 @@ const AnalysisCard = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <div className="bg-gray-50 dark:bg-dark-bg p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+  <div className="bg-secondary p-6 rounded-xl border">
     <Icon className="w-8 h-8 text-primary mb-3" />
     <h4 className="font-bold text-lg mb-2">{title}</h4>
-    <div className="text-sm text-light-text-secondary dark:text-dark-text-secondary space-y-2">
+    <div className="text-sm text-muted-foreground space-y-2">
       {children}
     </div>
   </div>
@@ -185,11 +185,11 @@ export default function SalaryAnalysis({
   const analysis = getAnalysisContent();
 
   return (
-    <div className="mt-8 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-xl border animate-fade-in-up">
+    <div className="mt-8 bg-card p-6 rounded-2xl shadow-xl border animate-fade-in-up">
       <h3 className="text-2xl font-bold text-center mb-2">
         AI 금융 분석 리포트
       </h3>
-      <p className="text-center text-light-text-secondary dark:text-dark-text-secondary mb-6">
+      <p className="text-center text-muted-foreground mb-6">
         {analysis.title}
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

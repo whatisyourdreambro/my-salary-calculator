@@ -36,7 +36,7 @@ export default function MinimumWagePage() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-slate-700 to-gray-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">

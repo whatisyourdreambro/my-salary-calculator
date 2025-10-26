@@ -12,30 +12,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // 기본 배경 및 텍스트 색상
-        "light-bg": "#f9fafb", // 밝은 모드 배경
-        "light-card": "#ffffff", // 밝은 모드 카드
-        "light-text": "#111827", // 밝은 모드 기본 텍스트
-        "light-text-secondary": "#6b7280", // 밝은 모드 보조 텍스트
-        "dark-bg": "#121212", // 어두운 모드 배경
-        "dark-card": "#1e1e1e", // 어두운 모드 카드
-        "dark-text": "#f3f4f6", // 어두운 모드 기본 텍스트
-        "dark-text-secondary": "#9ca3af", // 어두운 모드 보조 텍스트
-
-        // 브랜드 및 강조 색상 (신규)
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#0052ff", // 신뢰감을 주는 메인 파란색
-          hover: "#0048e0", // 호버 효과
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#ffc82c", // 행동을 유도하는 노란색
-          hover: "#f0b91a", // 호버 효과
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        danger: "#e11d48", // 위험/경고
-
-        // 레거시 색상 (하위 호환성)
-        "signature-blue": "#0052ff",
-        "brand-red": "#e11d48",
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
       animation: {
         "fade-in-up": "fadeInUp 0.8s ease-out forwards",

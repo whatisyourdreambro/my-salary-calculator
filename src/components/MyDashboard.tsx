@@ -40,12 +40,12 @@ const HealthScoreGauge = ({
 }) => {
   const scoreColor =
     score >= 80
-      ? "#22c55e"
+      ? "var(--color-samsung-green)"
       : score >= 60
-      ? "#3b82f6"
+      ? "hsl(var(--primary))"
       : score >= 40
-      ? "#f97316"
-      : "#ef4444";
+      ? "hsl(var(--accent))"
+      : "hsl(var(--destructive))";
 
   return (
     <div className="relative h-48 w-48 mx-auto">
@@ -91,12 +91,12 @@ const AdviceCard = ({
   link: string;
   linkText: string;
 }) => (
-  <div className="bg-gray-50 dark:bg-dark-bg p-6 rounded-xl border border-gray-200 dark:border-gray-800 flex flex-col">
+  <div className="bg-background p-6 rounded-xl border flex flex-col">
     <div className="flex items-center gap-2 mb-2">
-      <Sparkles className="w-5 h-5 text-yellow-500" />
+      <Sparkles className="w-5 h-5 text-accent" />
       <h4 className="font-bold text-lg">{title}</h4>
     </div>
-    <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary flex-grow">
+    <p className="text-sm text-secondary-foreground flex-grow">
       {message}
     </p>
     <Link
@@ -126,7 +126,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
           나의 종합 금융 대시보드
         </h1>
-        <p className="mt-3 text-light-text-secondary dark:text-dark-text-secondary">
+        <p className="text-muted-foreground">
           마지막 업데이트: {new Date(data.lastUpdated).toLocaleString()}
         </p>
       </div>
@@ -134,12 +134,12 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* 좌측: 핵심 지표 */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
+          <div className="bg-card p-6 rounded-2xl shadow-lg border">
             <h3 className="text-xl font-bold mb-4 text-center">핵심 지표</h3>
             <div className="space-y-4">
               {salary && (
-                <div className="flex justify-between items-baseline p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <span className="text-sm font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                <div className="flex justify-between items-baseline p-3 bg-secondary rounded-lg">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     월 실수령액
                   </span>
                   <p className="text-2xl font-bold text-primary">
@@ -148,31 +148,31 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
                 </div>
               )}
               {rank && (
-                <div className="flex justify-between items-baseline p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <span className="text-sm font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                <div className="flex justify-between items-baseline p-3 bg-secondary rounded-lg">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     연봉 순위
                   </span>
-                  <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                  <p className="text-2xl font-bold text-foreground">
                     상위 {rank.rank}%
                   </p>
                 </div>
               )}
               {futureSalary && (
-                <div className="flex justify-between items-baseline p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <span className="text-sm font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                <div className="flex justify-between items-baseline p-3 bg-secondary rounded-lg">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     {futureSalary.years}년 후 연봉
                   </span>
-                  <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                  <p className="text-2xl font-bold text-foreground">
                     <CountUp end={futureSalary.finalSalary} separator="," />원
                   </p>
                 </div>
               )}
               {severance && (
-                <div className="flex justify-between items-baseline p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <span className="text-sm font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+                <div className="flex justify-between items-baseline p-3 bg-secondary rounded-lg">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     예상 퇴직금
                   </span>
-                  <p className="text-2xl font-bold text-light-text dark:text-dark-text">
+                  <p className="text-2xl font-bold text-foreground">
                     <CountUp
                       end={severance.estimatedSeverancePay}
                       separator=","
@@ -184,7 +184,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
             </div>
             <Link
               href="/report"
-              className="w-full mt-6 inline-block text-center py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
+              className="w-full mt-6 inline-block text-center py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
             >
               상세 리포트 보기
             </Link>
@@ -192,13 +192,13 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
         </div>
 
         {/* 중앙: 금융 건강 점수 */}
-        <div className="lg:col-span-1 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border flex flex-col items-center justify-center">
+        <div className="lg:col-span-1 bg-card p-6 rounded-2xl shadow-lg border flex flex-col items-center justify-center">
           <h3 className="text-xl font-bold mb-4">나의 금융 건강 점수</h3>
           <HealthScoreGauge score={score} rating={rating} />
         </div>
 
         {/* 우측: 연봉 분석 */}
-        <div className="lg:col-span-1 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
+        <div className="lg:col-span-1 bg-card p-6 rounded-2xl shadow-lg border">
           <h3 className="text-xl font-bold mb-4">연봉 분석</h3>
           {salary ? (
             <div className="text-center">
@@ -240,7 +240,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
       </div>
 
       {/* 하단: 맞춤형 조언 */}
-      <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border">
+      <div className="bg-card p-6 rounded-2xl shadow-lg border">
         <h3 className="text-2xl font-bold mb-6 text-center">
           AI 기반 맞춤 조언
         </h3>
@@ -258,7 +258,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
       <div className="mt-12 pt-8 border-t dark:border-gray-800 flex justify-center items-center">
         <button
           onClick={onReset}
-          className="py-3 px-6 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2"
+          className="py-3 px-6 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center gap-2"
         >
           <RefreshCw size={16} />
           대시보드 초기화

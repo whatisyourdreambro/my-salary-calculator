@@ -16,7 +16,7 @@ import { TrendingDown, AlertTriangle, ShieldCheck, Award } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString();
 
-const COLORS = ["#0052ff", "#e11d48"];
+const COLORS = ["hsl(var(--primary))", "hsl(var(--destructive))"];
 const DEDUCTION_COLORS = [
   "#ff8c00",
   "#ff6384",
@@ -68,8 +68,8 @@ export default function DetailedAnalysis({
       if (savingRate < 20) {
         return {
           Icon: AlertTriangle,
-          color: "text-danger",
-          bgColor: "bg-red-50 dark:bg-red-900/20",
+          color: "text-destructive",
+          bgColor: "bg-destructive/10",
           title: "위험: 재정 상태 점검이 시급합니다.",
           message: `현재 저축률은 ${savingRate}%로, 미래를 위한 재정적 준비가 부족한 상태입니다. 소비 습관을 점검하고 고정 지출을 줄이는 노력이 반드시 필요합니다.`,
           actionLink: "/guides/first-job-investment",
@@ -80,7 +80,7 @@ export default function DetailedAnalysis({
         return {
           Icon: ShieldCheck,
           color: "text-primary",
-          bgColor: "bg-blue-50 dark:bg-blue-900/20",
+          bgColor: "bg-primary/10",
           title: "안정: 잘하고 있지만, 더 발전할 수 있습니다.",
           message: `현재 저축률은 ${savingRate}%로, 안정적인 재무 흐름을 만들고 있습니다. 여기서 만족하지 말고, 투자 파이프라인을 구축하여 자산 증식 속도를 높여보세요.`,
           actionLink: "/guides/road-to-100m-part3-invest",
@@ -90,7 +90,7 @@ export default function DetailedAnalysis({
       return {
         Icon: Award,
         color: "text-green-500",
-        bgColor: "bg-green-50 dark:bg-green-900/20",
+        bgColor: "bg-green-500/10",
         title: "우수: 훌륭한 재무 습관을 가지고 있습니다.",
         message: `현재 저축률은 ${savingRate}%로, 매우 훌륭한 저축 습관을 가지고 있습니다. 이제 N잡, 부수입 등을 통해 소득의 파이 자체를 키워 경제적 자유를 앞당기세요.`,
         actionLink: "/guides/road-to-100m-part2-sidejob",
@@ -101,7 +101,7 @@ export default function DetailedAnalysis({
     const status = getHealthStatus();
 
     return (
-      <div className="mt-12 pt-8 border-t dark:border-gray-700">
+      <div className="mt-12 pt-8 border-t">
         <div className={`p-6 rounded-2xl border ${status.bgColor}`}>
           <div className="flex items-center gap-4">
             <status.Icon className={`w-10 h-10 ${status.color}`} />
@@ -113,16 +113,16 @@ export default function DetailedAnalysis({
           </div>
           <div className="mt-4 pl-14">
             <div className="grid grid-cols-2 gap-4 text-center mb-4">
-              <div className="bg-light-card dark:bg-dark-card p-3 rounded-lg">
-                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              <div className="bg-card p-3 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   월 저축 가능액
                 </p>
                 <p className="font-bold text-lg">
                   {formatNumber(monthlySaving)}원
                 </p>
               </div>
-              <div className="bg-light-card dark:bg-dark-card p-3 rounded-lg">
-                <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              <div className="bg-card p-3 rounded-lg">
+                <p className="text-sm text-muted-foreground">
                   예상 저축률
                 </p>
                 <p className={`font-bold text-lg ${status.color}`}>
@@ -130,7 +130,7 @@ export default function DetailedAnalysis({
                 </p>
               </div>
             </div>
-            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            <p className="text-sm text-muted-foreground">
               {status.message}
             </p>
             <Link
@@ -146,13 +146,13 @@ export default function DetailedAnalysis({
   };
 
   return (
-    <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+    <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg border">
       <h2 className="text-2xl font-bold mb-8 text-center">월급 상세 분석</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
         {/* Left: Donut Chart & Composition */}
         <div className="lg:col-span-2 flex flex-col items-center">
-          <p className="font-semibold text-light-text-secondary dark:text-dark-text-secondary">
+          <p className="font-semibold text-muted-foreground">
             월 세전 급여: {formatNumber(monthlyGross)}원
           </p>
           <div className="w-full h-56">
@@ -187,14 +187,14 @@ export default function DetailedAnalysis({
         {/* Right: Deduction Details Table */}
         <div className="lg:col-span-3">
           <div className="flex items-center gap-2 mb-3">
-            <TrendingDown className="w-6 h-6 text-danger" />
+            <TrendingDown className="w-6 h-6 text-destructive" />
             <h3 className="text-xl font-bold">상세 공제 내역</h3>
           </div>
           <div className="space-y-2 text-sm">
             {deductionDetails.map((item, index) => (
               <div
                 key={item.name}
-                className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+                className="flex justify-between items-center p-3 bg-secondary rounded-lg"
               >
                 <div className="flex items-center">
                   <span
@@ -205,7 +205,7 @@ export default function DetailedAnalysis({
                     }}
                   ></span>
                   <span className="font-semibold text-base">{item.name}</span>
-                  <span className="text-xs text-gray-500 ml-2">
+                  <span className="text-xs text-muted-foreground ml-2">
                     ({item.rate})
                   </span>
                 </div>

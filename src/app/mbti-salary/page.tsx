@@ -133,7 +133,7 @@ export default function MbtiSalaryPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-light-bg dark:bg-gray-900 text-light-text dark:text-white overflow-hidden relative">
+    <main className="w-full min-h-screen bg-background text-foreground overflow-hidden relative">
       {/* [UX 강화] 몰입감을 높이는 동적 배경 애니메이션 */}
       <div className="absolute inset-0 z-0 opacity-10 dark:opacity-40">
         {[...Array(50)].map((_, i) => (
@@ -150,7 +150,7 @@ export default function MbtiSalaryPage() {
             }}
           />
         ))}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-light-bg dark:from-gray-900 via-transparent to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-background via-transparent to-transparent" />
         <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-violet-500/10 via-transparent to-transparent animate-spin-slow" />
       </div>
 

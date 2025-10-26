@@ -64,8 +64,8 @@ export default function GuidesList({ guides, categories }: GuidesListProps) {
               onClick={() => setActiveCategory(category.id)}
               className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
                 activeCategory === category.id
-                  ? "bg-signature-blue text-white shadow-md"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -87,8 +87,8 @@ export default function GuidesList({ guides, categories }: GuidesListProps) {
         return (
           <section key={categoryName} className="mb-16">
             <div className="flex items-center mb-6">
-              <Icon className="w-8 h-8 text-gray-500 dark:text-gray-400" />
-              <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-200">
+              <Icon className="w-8 h-8 text-muted-foreground" />
+              <h2 className="ml-3 text-2xl sm:text-3xl font-bold text-foreground">
                 {categoryInfo ? categoryInfo.name : categoryName}
               </h2>
             </div>
@@ -97,15 +97,15 @@ export default function GuidesList({ guides, categories }: GuidesListProps) {
                 <Link
                   key={guide.slug}
                   href={`/guides/${guide.slug}`}
-                  className="flex flex-col p-6 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl hover:-translate-y-1.5 transition-all bg-light-card dark:bg-dark-card group"
+                  className="flex flex-col p-6 border rounded-2xl hover:shadow-xl hover:-translate-y-1.5 transition-all bg-card group"
                 >
-                  <h3 className="text-xl font-bold text-light-text dark:text-dark-text mb-2 group-hover:text-signature-blue transition-colors">
+                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                     {guide.title}
                   </h3>
-                  <p className="flex-grow text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                  <p className="flex-grow text-sm text-muted-foreground">
                     {guide.description}
                   </p>
-                  <span className="mt-4 text-sm font-semibold text-signature-blue self-start">
+                  <span className="mt-4 text-sm font-semibold text-primary self-start">
                     자세히 보기 →
                   </span>
                 </Link>

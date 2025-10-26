@@ -297,7 +297,7 @@ export default function QnAPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         <div className="w-full bg-gradient-to-br from-gray-900 via-slate-800 to-black text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
             당신의 돈에 대한 모든 질문

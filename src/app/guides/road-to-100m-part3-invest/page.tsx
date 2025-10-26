@@ -36,7 +36,7 @@ export default function RoadTo100mInvestPage() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-violet-600 to-indigo-700 dark:from-gray-900 dark:to-violet-800 text-white text-center py-20 sm:py-28 px-4">
           <p className="text-lg font-semibold text-indigo-200">

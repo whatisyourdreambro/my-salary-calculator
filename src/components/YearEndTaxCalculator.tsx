@@ -47,7 +47,7 @@ const AnalysisReport = ({
   ];
 
   return (
-    <div className="mt-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50">
+    <div className="mt-6 p-4 border rounded-lg bg-muted/50">
       <h4 className="text-lg font-bold text-center mb-4">상세 분석 리포트</h4>
       <div className="space-y-2 text-sm">
         {calculationSteps.map((step, index) => (
@@ -62,8 +62,8 @@ const AnalysisReport = ({
             </span>
             <span
               className={`font-mono ${
-                step.isFinal && step.value >= 0 ? "text-blue-600" : ""
-              } ${step.isFinal && step.value < 0 ? "text-red-600" : ""} ${
+                step.isFinal && step.value >= 0 ? "text-primary" : ""
+              } ${step.isFinal && step.value < 0 ? "text-destructive" : ""} ${
                 step.isBold ? "font-bold" : ""
               }`}
             >
@@ -87,10 +87,10 @@ const Accordion = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border rounded-lg overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="w-full flex justify-between items-center p-4 bg-secondary hover:bg-secondary/80"
       >
         <h3 className="text-lg font-semibold">{title}</h3>
         <span
@@ -102,7 +102,7 @@ const Accordion = ({
         </span>
       </button>
       {isOpen && (
-        <div className="p-4 space-y-4 bg-white dark:bg-dark-card">
+        <div className="p-4 space-y-4 bg-card">
           {children}
         </div>
       )}
@@ -122,20 +122,20 @@ const NumberInput = ({
   min?: number;
 }) => (
   <div>
-    <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+    <label className="text-sm font-medium text-muted-foreground">
       {label}
     </label>
-    <div className="flex items-center justify-between p-2 mt-1 border dark:border-gray-700 rounded-lg">
+    <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
       <button
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
       >
         -
       </button>
       <span className="font-bold text-lg">{value} 명</span>
       <button
         onClick={() => onChange(value + 1)}
-        className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
       >
         +
       </button>
@@ -159,7 +159,7 @@ const OptimizationSlider = ({
   <div>
     <div className="flex justify-between items-center mb-1">
       <label className="text-sm font-medium">{label}</label>
-      <span className="text-sm font-bold text-signature-blue">
+      <span className="text-sm font-bold text-primary">
         {formatNumber(value)}원
       </span>
     </div>
@@ -170,9 +170,9 @@ const OptimizationSlider = ({
       step={100000}
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+      className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer"
     />
-    <p className="text-xs text-gray-500 mt-1">{tip}</p>
+    <p className="text-xs text-muted-foreground mt-1">{tip}</p>
   </div>
 );
 
@@ -301,15 +301,15 @@ export default function YearEndTaxCalculator() {
       </div>
 
       <div className="lg:col-span-1 space-y-6">
-        <div className="sticky top-24 bg-light-card dark:bg-dark-card p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
+        <div className="sticky top-24 bg-card p-6 rounded-xl shadow-lg border">
           <h2 className="text-2xl font-bold text-center mb-4">
             💸 연말정산 예상 결과
           </h2>
           <div
             className={`p-4 rounded-lg text-center transition-colors duration-300 ${
               result.finalRefund >= 0
-                ? "bg-blue-100 dark:bg-blue-900/50"
-                : "bg-red-100 dark:bg-red-900/50"
+                ? "bg-primary/10"
+                : "bg-destructive/10"
             }`}
           >
             <p className="font-semibold">
@@ -318,8 +318,8 @@ export default function YearEndTaxCalculator() {
             <p
               className={`text-4xl font-bold my-1 transition-colors duration-300 ${
                 result.finalRefund >= 0
-                  ? "text-signature-blue"
-                  : "text-brand-red"
+                  ? "text-primary"
+                  : "text-destructive"
               }`}
             >
               <CountUp
@@ -334,14 +334,14 @@ export default function YearEndTaxCalculator() {
           <div className="mt-4">
             <button
               onClick={() => setShowReport(!showReport)}
-              className="w-full text-sm text-center text-gray-500 hover:text-signature-blue"
+              className="w-full text-sm text-center text-muted-foreground hover:text-primary"
             >
               {showReport ? "리포트 숨기기 ▲" : "상세 분석 리포트 보기 ▼"}
             </button>
             {showReport && <AnalysisReport inputs={inputs} result={result} />}
           </div>
 
-          <div className="mt-6 pt-6 border-t dark:border-gray-700">
+          <div className="mt-6 pt-6 border-t">
             <h3 className="text-lg font-bold text-center mb-4">
               절세 최적화 시뮬레이터
             </h3>
@@ -362,8 +362,8 @@ export default function YearEndTaxCalculator() {
               />
             </div>
             {result.finalRefund > initialRefund && (
-              <div className="mt-4 text-center p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                <p className="text-sm font-bold text-green-600">
+              <div className="mt-4 text-center p-2 bg-green-500/10 rounded-lg">
+                <p className="text-sm font-bold text-green-500">
                   환급액 {formatNumber(result.finalRefund - initialRefund)}원
                   증가!
                 </p>

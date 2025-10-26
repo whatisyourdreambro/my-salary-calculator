@@ -36,7 +36,7 @@ export default function YEF2026PreviewPage() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-gray-800 to-slate-900 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">

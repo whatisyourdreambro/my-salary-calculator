@@ -35,7 +35,7 @@ export default function FourMajorInsurancesPage() {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <main className="w-full bg-light-bg dark:bg-dark-bg">
+      <main className="w-full bg-background">
         {/* Hero Section */}
         <div className="w-full bg-gradient-to-br from-teal-500 to-cyan-500 dark:from-gray-900 dark:to-teal-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">

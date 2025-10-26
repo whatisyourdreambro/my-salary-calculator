@@ -19,20 +19,20 @@ export default function SalaryTable({
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm text-left">
-        <thead className="sticky top-0 bg-gray-100 dark:bg-gray-950 z-10">
+        <thead className="sticky top-0 bg-secondary z-10">
           <tr>
             {headers.map((header) => (
               <th
                 key={header.key as string}
                 scope="col"
-                className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap"
               >
                 {header.label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+        <tbody className="divide-y divide-border">
           {data.map((row, index) => {
             const isHighlighted = highlightRows.includes(
               row[headers[0].key] as number
@@ -42,8 +42,8 @@ export default function SalaryTable({
                 key={index}
                 className={`transition-colors ${
                   isHighlighted
-                    ? "bg-blue-50 dark:bg-blue-900/20 font-bold"
-                    : "bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    ? "bg-primary/10 font-bold"
+                    : "bg-card hover:bg-secondary"
                 }`}
               >
                 {headers.map((header) => (
@@ -51,8 +51,8 @@ export default function SalaryTable({
                     key={header.key as string}
                     className={`px-6 py-5 whitespace-nowrap ${
                       isHighlighted
-                        ? "text-signature-blue dark:text-blue-300"
-                        : "text-gray-800 dark:text-gray-300"
+                        ? "text-primary"
+                        : "text-foreground"
                     }`}
                   >
                     {Number(row[header.key]).toLocaleString()}

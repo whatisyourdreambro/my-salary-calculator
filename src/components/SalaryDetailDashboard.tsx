@@ -81,29 +81,29 @@ export default function SalaryDetailDashboard({
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="text-center p-8 bg-light-card dark:bg-dark-card rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
-        <p className="text-lg font-medium text-light-text-secondary dark:text-dark-text-secondary">
+      <div className="text-center p-8 bg-card rounded-2xl shadow-lg border">
+        <p className="text-lg font-medium text-muted-foreground">
           연봉{" "}
-          <span className="font-bold text-signature-blue">
+          <span className="font-bold text-primary">
             {formatNumber(annualSalary)}
           </span>
           원의 분석 결과
         </p>
-        <h1 className="text-4xl sm:text-6xl font-bold text-light-text dark:text-dark-text my-4">
+        <h1 className="text-4xl sm:text-6xl font-bold text-foreground my-4">
           월{" "}
-          <span className="text-signature-blue">
+          <span className="text-primary">
             {formatNumber(monthlyNet)}
           </span>
           원
         </h1>
-        <p className="text-xl font-semibold text-gray-600 dark:text-gray-400">
+        <p className="text-xl font-semibold text-muted-foreground">
           대한민국 전체 근로자 중{" "}
-          <span className="text-signature-blue">상위 {rank}%</span>에
+          <span className="text-primary">상위 {rank}%</span>에
           해당합니다.
         </p>
-        <div className="mt-6 pt-6 border-t dark:border-gray-700 grid grid-cols-2 gap-4 text-center">
+        <div className="mt-6 pt-6 border-t grid grid-cols-2 gap-4 text-center">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               그룹 중위연봉
             </p>
             <p className="text-xl font-bold">
@@ -111,7 +111,7 @@ export default function SalaryDetailDashboard({
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               그룹 평균연봉
             </p>
             <p className="text-xl font-bold">
@@ -123,7 +123,7 @@ export default function SalaryDetailDashboard({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* 공제 내역 분석 */}
-        <div className="lg:col-span-2 bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+        <div className="lg:col-span-2 bg-card p-6 rounded-2xl shadow-lg border">
           <h2 className="text-2xl font-bold mb-4">
             월 공제 내역 분석 (총 {formatNumber(totalDeduction)}원)
           </h2>
@@ -164,11 +164,11 @@ export default function SalaryDetailDashboard({
                       className="w-3 h-3 rounded-full mr-3"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     ></span>
-                    <span className="text-light-text-secondary dark:text-dark-text-secondary">
+                    <span className="text-muted-foreground">
                       {item.name}
                     </span>
                   </div>
-                  <span className="font-bold text-light-text dark:text-dark-text">
+                  <span className="font-bold text-foreground">
                     {formatNumber(item.value)}원
                   </span>
                 </div>
@@ -178,7 +178,7 @@ export default function SalaryDetailDashboard({
         </div>
 
         {/* 맞춤형 가이드 */}
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800">
+        <div className="bg-card p-6 rounded-2xl shadow-lg border">
           <h2 className="text-2xl font-bold mb-4">당신을 위한 맞춤 가이드</h2>
           <div className="space-y-4">
             {recommendedGuides.map(
@@ -187,12 +187,12 @@ export default function SalaryDetailDashboard({
                   <Link
                     key={guide.href}
                     href={guide.href}
-                    className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-gray-50 dark:bg-gray-800/50 dark:border-gray-700"
+                    className="block p-4 border rounded-lg hover:shadow-lg transition-shadow bg-secondary/50"
                   >
-                    <p className="font-semibold text-signature-blue">
+                    <p className="font-semibold text-primary">
                       {guide.title}
                     </p>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                    <span className="text-xs text-muted-foreground mt-2 block">
                       자세히 보기 →
                     </span>
                   </Link>
@@ -200,9 +200,9 @@ export default function SalaryDetailDashboard({
             )}
             <Link
               href="/guides"
-              className="block p-4 border border-dashed rounded-lg text-center hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+              className="block p-4 border border-dashed rounded-lg text-center hover:bg-secondary transition"
             >
-              <p className="font-semibold text-gray-600 dark:text-gray-400">
+              <p className="font-semibold text-muted-foreground">
                 더 많은 가이드 전체 보기
               </p>
             </Link>

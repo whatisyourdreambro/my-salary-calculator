@@ -220,7 +220,7 @@ export default function ExchangeRateImpactCalculator() {
     { name: "현재", value: analysis.currentValue },
   ];
 
-  const currentValueColor = analysis.changeAmount >= 0 ? "#0052ff" : "#e11d48";
+  const currentValueColor = analysis.changeAmount >= 0 ? "hsl(var(--primary))" : "hsl(var(--destructive))";
 
   const handleShareLink = async () => {
     const shareUrl = "https://www.moneysalary.com/?tab=exchange";
@@ -267,7 +267,7 @@ export default function ExchangeRateImpactCalculator() {
 
   return (
     <>
-      <div className="bg-light-card dark:bg-dark-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
+      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg border mt-8 animate-fade-in-up">
         <h2 className="text-2xl font-bold text-center mb-8">
           환율 변동에 따른 내 자산 가치 변화
         </h2>
@@ -286,13 +286,13 @@ export default function ExchangeRateImpactCalculator() {
               />
 
               <div>
-                <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                <label className="text-sm font-medium text-muted-foreground">
                   비교 통화
                 </label>
                 <select
                   value={comparisonCurrency}
                   onChange={(e) => setComparisonCurrency(e.target.value)}
-                  className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                  className="w-full p-3 mt-1 border rounded-lg bg-card border-border"
                 >
                   {currencies
                     .filter((c) => c.id !== assetCurrency)
@@ -305,7 +305,7 @@ export default function ExchangeRateImpactCalculator() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                <label className="text-sm font-medium text-muted-foreground">
                   기준 과거 시점
                 </label>
                 <input
@@ -313,13 +313,13 @@ export default function ExchangeRateImpactCalculator() {
                   value={pastDate}
                   onChange={(e) => setPastDate(e.target.value)}
                   disabled={isManual || useDxy}
-                  className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50"
+                  className="w-full p-3 mt-1 border rounded-lg bg-card border-border disabled:opacity-50"
                 />
               </div>
 
-              <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700">
+              <div className="space-y-2 p-4 border rounded-lg">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                  <label className="text-sm font-medium text-muted-foreground">
                     환율 (1 {comparisonCurrency} 당 {assetCurrency})
                   </label>
                   <div
@@ -342,7 +342,7 @@ export default function ExchangeRateImpactCalculator() {
                     value={manualPastRateStr}
                     onChange={(e) => setManualPastRateStr(e.target.value)}
                     disabled={!isManual}
-                    className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50 text-center font-mono"
+                    className="w-full p-2 border rounded-lg bg-card border-border disabled:opacity-50 text-center font-mono"
                   />
                   <span className="font-bold text-primary">→</span>
                   <input
@@ -351,14 +351,14 @@ export default function ExchangeRateImpactCalculator() {
                     value={manualCurrentRateStr}
                     onChange={(e) => setManualCurrentRateStr(e.target.value)}
                     disabled={!isManual || useDxy}
-                    className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 disabled:opacity-50 text-center font-mono"
+                    className="w-full p-2 border rounded-lg bg-card border-border disabled:opacity-50 text-center font-mono"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2 p-4 border rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <div className="space-y-2 p-4 border rounded-lg bg-secondary">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+                  <label className="text-sm font-medium text-muted-foreground">
                     달러 인덱스 (DXY)
                   </label>
                   <div
@@ -382,7 +382,7 @@ export default function ExchangeRateImpactCalculator() {
                     placeholder="과거 DXY"
                     value={pastDxy}
                     onChange={(e) => setPastDxy(e.target.value)}
-                    className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 text-center font-mono"
+                    className="w-full p-2 border rounded-lg bg-card border-border text-center font-mono"
                   />
                   <span className="font-bold text-primary">→</span>
                   <input
@@ -390,11 +390,11 @@ export default function ExchangeRateImpactCalculator() {
                     placeholder="현재/미래 DXY"
                     value={currentDxy}
                     onChange={(e) => setCurrentDxy(e.target.value)}
-                    className="w-full p-2 border rounded-lg dark:bg-dark-card dark:border-gray-700 text-center font-mono"
+                    className="w-full p-2 border rounded-lg bg-card border-border text-center font-mono"
                   />
                 </div>
                 {useDxy && (
-                  <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md text-xs text-blue-800 dark:text-blue-200 flex items-start gap-2">
+                  <div className="mt-2 p-3 bg-primary/10 rounded-md text-xs text-primary flex items-start gap-2">
                     <Info size={16} className="flex-shrink-0 mt-0.5" />
                     <div>
                       <span className="font-bold">
@@ -422,8 +422,8 @@ export default function ExchangeRateImpactCalculator() {
                   </p>
                 </div>
               ) : error ? (
-                <div className="flex items-center justify-center h-full p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                  <AlertCircle className="w-8 h-8 text-red-500 mr-4" />
+                <div className="flex items-center justify-center h-full p-4 bg-destructive/10 rounded-lg">
+                  <AlertCircle className="w-8 h-8 text-destructive mr-4" />
                   <div>
                     <h3 className="font-bold">로딩 실패</h3>
                     <p className="text-sm">{error}</p>
@@ -434,11 +434,11 @@ export default function ExchangeRateImpactCalculator() {
                   <div
                     className={`p-6 rounded-xl text-center transition-colors duration-300 grow flex flex-col justify-center ${
                       analysis.changeAmount >= 0
-                        ? "bg-blue-50 dark:bg-blue-900/30"
-                        : "bg-red-50 dark:bg-red-900/30"
+                        ? "bg-primary/10"
+                        : "bg-destructive/10"
                     }`}
                   >
-                    <p className="font-semibold text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                    <p className="font-semibold text-sm text-muted-foreground">
                       {`과거 환율 ${manualPastRateStr} → 현재 ${manualCurrentRateStr} 기준`}
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 my-2">
@@ -449,14 +449,14 @@ export default function ExchangeRateImpactCalculator() {
                         className={`w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 ${
                           analysis.changeAmount >= 0
                             ? "text-primary"
-                            : "text-danger"
+                            : "text-destructive"
                         }`}
                       />
                       <div
                         className={`text-3xl sm:text-4xl font-bold ${
                           analysis.changeAmount >= 0
                             ? "text-primary"
-                            : "text-danger"
+                            : "text-destructive"
                         }`}
                       >
                         <CountUp
@@ -473,7 +473,7 @@ export default function ExchangeRateImpactCalculator() {
                       className={`font-semibold text-base sm:text-lg ${
                         analysis.changeAmount >= 0
                           ? "text-primary"
-                          : "text-danger"
+                          : "text-destructive"
                       }`}
                     >
                       <CountUp
@@ -487,7 +487,7 @@ export default function ExchangeRateImpactCalculator() {
                       />
                     </div>
                   </div>
-                  <div className="h-48 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
+                  <div className="h-48 bg-secondary p-4 rounded-xl">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={chartData}
@@ -513,7 +513,7 @@ export default function ExchangeRateImpactCalculator() {
                           {chartData.map((entry, index) => (
                             <Cell
                               key={`cell-${index}`}
-                              fill={index === 0 ? "#a0aec0" : currentValueColor}
+                              fill={index === 0 ? "hsl(var(--muted-foreground))" : currentValueColor}
                             />
                           ))}
                           <LabelList
@@ -530,22 +530,22 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t dark:border-gray-700 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="mt-8 pt-6 border-t grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
             onClick={handleReset}
-            className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
+            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
           >
             <RotateCcw size={18} /> 초기화
           </button>
           <button
             onClick={handleShareLink}
-            className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
+            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
           >
             <LinkIcon size={18} /> 링크로 공유
           </button>
           <button
             onClick={handleShareImage}
-            className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
+            className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition flex items-center justify-center gap-2"
           >
             <ImageIcon size={18} /> 이미지로 저장
           </button>

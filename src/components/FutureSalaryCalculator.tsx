@@ -172,15 +172,15 @@ export default function FutureSalaryCalculator() {
   };
 
   return (
-    <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl shadow-lg border mt-8">
+    <div className="bg-card p-6 rounded-2xl shadow-lg border mt-8">
       <div className="flex justify-center mb-8">
-        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+        <div className="flex bg-secondary rounded-lg p-1">
           <button
             onClick={() => setMode("predict")}
             className={`flex-1 px-4 py-2 rounded-md text-sm font-semibold transition ${
               mode === "predict"
-                ? "bg-white dark:bg-gray-700 shadow-sm"
-                : "text-gray-500"
+                ? "bg-card shadow-sm"
+                : "text-muted-foreground"
             }`}
           >
             미래 연봉 예측
@@ -189,8 +189,8 @@ export default function FutureSalaryCalculator() {
             onClick={() => setMode("goal")}
             className={`flex-1 px-4 py-2 rounded-md text-sm font-semibold transition ${
               mode === "goal"
-                ? "bg-white dark:bg-gray-700 shadow-sm"
-                : "text-gray-500"
+                ? "bg-card shadow-sm"
+                : "text-muted-foreground"
             }`}
           >
             목표 달성 경로
@@ -200,7 +200,7 @@ export default function FutureSalaryCalculator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="p-4 border dark:border-gray-700 rounded-lg">
+          <div className="p-4 border rounded-lg">
             <h2 className="text-lg font-bold mb-4">공통 정보</h2>
             <div className="space-y-4">
               <CurrencyInput
@@ -211,17 +211,17 @@ export default function FutureSalaryCalculator() {
               />
               <div>
                 <label className="text-sm font-medium">기간 (년)</label>
-                <div className="flex items-center justify-between p-2 mt-1 border rounded-lg dark:border-gray-700">
+                <div className="flex items-center justify-between p-2 mt-1 border rounded-lg">
                   <button
                     onClick={() => handleYearsChange(years - 1)}
-                    className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
                   >
                     -
                   </button>
                   <span className="font-bold text-lg">{years} 년</span>
                   <button
                     onClick={() => handleYearsChange(years + 1)}
-                    className="w-8 h-8 text-xl rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="w-8 h-8 text-xl rounded-full hover:bg-secondary"
                   >
                     +
                   </button>
@@ -231,7 +231,7 @@ export default function FutureSalaryCalculator() {
           </div>
 
           {mode === "predict" && (
-            <div className="p-4 border dark:border-gray-700 rounded-lg">
+            <div className="p-4 border rounded-lg">
               <h3 className="text-lg font-bold mb-4">예측 조건</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
@@ -239,7 +239,7 @@ export default function FutureSalaryCalculator() {
                   <select
                     value={jobCategory}
                     onChange={(e) => setJobCategory(e.target.value)}
-                    className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card"
+                    className="w-full mt-1 p-2 border rounded-lg bg-card"
                   >
                     <option value="it_dev">IT/개발</option>{" "}
                     <option value="marketing">마케팅/영업</option>{" "}
@@ -251,7 +251,7 @@ export default function FutureSalaryCalculator() {
                   <select
                     value={experienceLevel}
                     onChange={(e) => setExperienceLevel(e.target.value)}
-                    className="w-full mt-1 p-2 border rounded-lg dark:bg-dark-card"
+                    className="w-full mt-1 p-2 border rounded-lg bg-card"
                   >
                     <option value="1-2">1~2년</option>{" "}
                     <option value="3-6">3~6년</option>{" "}
@@ -268,7 +268,7 @@ export default function FutureSalaryCalculator() {
                   type="number"
                   value={baseRate}
                   onChange={(e) => setBaseRate(Number(e.target.value))}
-                  className="w-full p-3 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+                  className="w-full p-3 mt-1 border rounded-lg bg-card border-border"
                 />
               </div>
               <h3 className="text-lg font-bold mt-4 mb-2">커리어 이벤트</h3>
@@ -276,7 +276,7 @@ export default function FutureSalaryCalculator() {
                 {events.map((event, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg space-y-2"
+                    className="p-3 bg-secondary/50 rounded-lg space-y-2"
                   >
                     <div className="flex justify-between items-center">
                       <select
@@ -288,7 +288,7 @@ export default function FutureSalaryCalculator() {
                             Number(e.target.value)
                           )
                         }
-                        className="p-2 border rounded-md dark:bg-dark-card font-semibold"
+                        className="p-2 border rounded-md bg-card font-semibold"
                       >
                         {Array.from({ length: years }, (_, i) => (
                           <option key={i} value={i}>
@@ -299,7 +299,7 @@ export default function FutureSalaryCalculator() {
                       </select>
                       <button
                         onClick={() => removeEvent(index)}
-                        className="text-red-500 hover:text-red-700 font-bold p-1"
+                        className="text-destructive hover:text-destructive/80 font-bold p-1"
                       >
                         ×
                       </button>
@@ -310,7 +310,7 @@ export default function FutureSalaryCalculator() {
                         onChange={(e) =>
                           updateEvent(index, "type", e.target.value)
                         }
-                        className="w-1/2 p-2 border rounded-md dark:bg-dark-card"
+                        className="w-1/2 p-2 border rounded-md bg-card"
                       >
                         <option value="promotion">승진</option>{" "}
                         <option value="job_change">이직</option>
@@ -322,7 +322,7 @@ export default function FutureSalaryCalculator() {
                           onChange={(e) =>
                             updateEvent(index, "value", e.target.value)
                           }
-                          className="w-full h-full p-2 pr-6 border rounded-md dark:bg-dark-card"
+                          className="w-full h-full p-2 pr-6 border rounded-md bg-card"
                         />
                         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
                           {event.type === "promotion" ? "%" : "원"}
@@ -342,7 +342,7 @@ export default function FutureSalaryCalculator() {
           )}
 
           {mode === "goal" && (
-            <div className="p-4 border dark:border-gray-700 rounded-lg">
+            <div className="p-4 border rounded-lg">
               <h2 className="text-lg font-bold mb-4">목표 정보</h2>
               <CurrencyInput
                 label="목표 연봉"
@@ -388,7 +388,7 @@ export default function FutureSalaryCalculator() {
                     type="monotone"
                     dataKey="salary"
                     name="나의 예상 연봉"
-                    stroke="#0052ff"
+                    stroke="hsl(var(--primary))"
                     strokeWidth={3}
                     dot={{ r: 4 }}
                     activeDot={{ r: 8 }}
@@ -397,7 +397,7 @@ export default function FutureSalaryCalculator() {
                     type="monotone"
                     dataKey="marketAverage"
                     name="시장 평균"
-                    stroke="#ffc82c"
+                    stroke="hsl(var(--accent))"
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     dot={false}
@@ -406,7 +406,7 @@ export default function FutureSalaryCalculator() {
                     type="monotone"
                     dataKey="marketTop10"
                     name="시장 상위 10%"
-                    stroke="#00C49F"
+                    stroke="hsl(var(--green-500))"
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     dot={false}
@@ -415,8 +415,8 @@ export default function FutureSalaryCalculator() {
               </ResponsiveContainer>
               <div className="max-h-[25vh] overflow-y-auto mt-6">
                 <table className="min-w-full text-sm">
-                  <thead className="sticky top-0 bg-light-card dark:bg-dark-card">
-                    <tr className="border-b dark:border-gray-700">
+                  <thead className="sticky top-0 bg-card">
+                    <tr className="border-b">
                       <th className="p-2 text-left font-semibold">연도</th>
                       <th className="p-2 text-right font-semibold">
                         나의 예상 연봉
@@ -428,13 +428,13 @@ export default function FutureSalaryCalculator() {
                     {futureSalaries.map((item) => (
                       <tr
                         key={item.year}
-                        className="border-t dark:border-gray-700"
+                        className="border-t"
                       >
                         <td className="p-2 font-semibold">{item.year}년</td>
                         <td className="p-2 text-right text-primary font-bold">
                           {formatNumber(item.salary)} 원
                         </td>
-                        <td className="p-2 text-right text-green-600">
+                        <td className="p-2 text-right text-green-500">
                           + {formatNumber(item.increaseAmount)} 원
                         </td>
                       </tr>
@@ -445,7 +445,7 @@ export default function FutureSalaryCalculator() {
               <div className="mt-6">
                 <button
                   onClick={handleSaveData}
-                  className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
+                  className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
                 >
                   대시보드에 저장
                 </button>
@@ -459,19 +459,19 @@ export default function FutureSalaryCalculator() {
                 careerPaths.map((path) => (
                   <div
                     key={path.scenario}
-                    className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700"
+                    className="p-6 bg-secondary/50 rounded-lg border"
                   >
                     <h3 className="text-xl font-bold text-primary">
                       {path.scenario}
                     </h3>
-                    <p className="mt-2 text-light-text-secondary dark:text-dark-text-secondary">
+                    <p className="mt-2 text-muted-foreground">
                       {path.description}
                     </p>
                     <div className="mt-4 space-y-2">
                       {path.events.map((event) => (
                         <div
                           key={event.yearIndex}
-                          className="p-3 bg-white dark:bg-dark-card rounded"
+                          className="p-3 bg-card rounded"
                         >
                           <p className="font-semibold">
                             {event.yearIndex + 1}년차:{" "}
@@ -484,18 +484,18 @@ export default function FutureSalaryCalculator() {
                           </p>
                         </div>
                       ))}
-                      <div className="p-3 bg-white dark:bg-dark-card rounded">
+                      <div className="p-3 bg-card rounded">
                         <p className="font-semibold">이후 기간</p>
                         <p>
                           연 평균{" "}
-                          <span className="font-bold text-green-600">
+                          <span className="font-bold text-green-500">
                             {path.avgIncreaseRate}%
                           </span>
                           의 연봉 상승 필요
                         </p>
                       </div>
                     </div>
-                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                    <div className="mt-4 p-4 bg-primary/10 rounded-lg">
                       <h4 className="font-bold">⭐ 역량 제안</h4>
                       <p className="text-sm mt-1">
                         {path.scenario === "안정 성장형"
@@ -506,7 +506,7 @@ export default function FutureSalaryCalculator() {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-gray-500 py-10">
+                <p className="text-center text-muted-foreground py-10">
                   현실적인 경로를 찾을 수 없습니다. 목표를 재설정해주세요.
                 </p>
               )}

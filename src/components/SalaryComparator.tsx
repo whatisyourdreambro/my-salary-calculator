@@ -144,7 +144,7 @@ export default function SalaryComparator() {
 
   return (
     <div ref={comparatorRef} className="space-y-8 mt-8">
-      <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+      <div className="bg-card p-6 rounded-xl border">
         <h2 className="text-lg font-bold mb-4">공통 설정</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -152,13 +152,7 @@ export default function SalaryComparator() {
             <input
               type="text"
               value={formatNumber(parseNumber(commonSettings.nonTaxableAmount))}
-              onChange={(e) =>
-                setCommonSettings({
-                  ...commonSettings,
-                  nonTaxableAmount: e.target.value.replace(/[^0-9]/g, ""),
-                })
-              }
-              className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
             />
           </div>
           <div>
@@ -173,7 +167,7 @@ export default function SalaryComparator() {
                   dependents: Number(e.target.value),
                 })
               }
-              className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
             />
           </div>
           <div>
@@ -188,7 +182,7 @@ export default function SalaryComparator() {
                   children: Number(e.target.value),
                 })
               }
-              className="w-full p-2 mt-1 border rounded-lg dark:bg-dark-card dark:border-gray-700"
+              className="w-full p-2 mt-1 border rounded-lg bg-card border-border"
             />
           </div>
         </div>
@@ -198,11 +192,11 @@ export default function SalaryComparator() {
         {offers.map((offer) => (
           <div
             key={offer.id}
-            className="bg-light-card dark:bg-dark-card p-6 rounded-xl border relative"
+            className="bg-card p-6 rounded-xl border relative"
           >
             <button
               onClick={() => removeOffer(offer.id)}
-              className="absolute top-2 right-2 text-red-500 font-bold text-xl leading-none p-1"
+              className="absolute top-2 right-2 text-destructive font-bold text-xl leading-none p-1"
             >
               &times;
             </button>
@@ -212,7 +206,7 @@ export default function SalaryComparator() {
               onChange={(e) =>
                 handleOfferChange(offer.id, "companyName", e.target.value)
               }
-              className="text-xl font-bold mb-4 w-full bg-transparent border-b dark:border-gray-700 pb-2"
+              className="text-xl font-bold mb-4 w-full bg-transparent border-b border-border pb-2"
             />
             <CurrencyInput
               label="계약 연봉"
@@ -245,20 +239,20 @@ export default function SalaryComparator() {
       <div className="flex gap-4">
         <button
           onClick={addOffer}
-          className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition"
         >
           + 오퍼 추가
         </button>
         <button
           onClick={handleCalculate}
-          className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
+          className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 transition"
         >
           결과 분석하기
         </button>
       </div>
 
       {results.length > 0 && bestOffer && (
-        <div className="bg-light-card dark:bg-dark-card p-6 rounded-xl border">
+        <div className="bg-card p-6 rounded-xl border">
           <h2 className="text-2xl font-bold text-center mb-6">
             최종 오퍼 비교 결과
           </h2>
@@ -270,8 +264,8 @@ export default function SalaryComparator() {
                   key={res.id}
                   className={`p-4 rounded-lg border-2 ${
                     res.id === bestOffer.id
-                      ? "border-primary bg-blue-50 dark:bg-blue-900/20"
-                      : "border-gray-200 dark:border-gray-700"
+                      ? "border-primary bg-primary/10"
+                      : "border-border"
                   }`}
                 >
                   <div className="flex justify-between items-center">
@@ -287,7 +281,7 @@ export default function SalaryComparator() {
                         {res.companyName}
                       </span>
                       {res.id === bestOffer.id && (
-                        <span className="text-xs font-bold text-white bg-primary px-2 py-0.5 rounded-full">
+                        <span className="text-xs font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded-full">
                           BEST
                         </span>
                       )}
@@ -296,13 +290,13 @@ export default function SalaryComparator() {
                       <p className="text-xl font-bold text-primary">
                         월 <CountUp end={res.monthlyNet} separator="," /> 원
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted-foreground">
                         연봉 환산 {formatNumber(res.totalAnnual)}원
                       </p>
                     </div>
                   </div>
                   {res.id !== bestOffer.id && (
-                    <div className="text-right mt-2 text-sm text-red-500">
+                    <div className="text-right mt-2 text-sm text-destructive">
                       - 월 {formatNumber(bestOffer.monthlyNet - res.monthlyNet)}
                       원 차이
                     </div>
@@ -313,7 +307,7 @@ export default function SalaryComparator() {
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleCapture}
-              className="w-full py-3 bg-gray-200 dark:bg-gray-700 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              className="w-full py-3 bg-secondary font-semibold rounded-lg hover:bg-secondary/80 transition"
             >
               결과 이미지 저장
             </button>
