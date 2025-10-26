@@ -18,6 +18,11 @@ type NavItem = LinkItem | DropdownItem;
 
 const navConfig: NavItem[] = [
   {
+    name: "커리어 플래너",
+    href: "/pro/career-planner",
+    type: "link"
+  },
+  {
     name: "연봉 계산기",
     type: "dropdown",
     items: [
