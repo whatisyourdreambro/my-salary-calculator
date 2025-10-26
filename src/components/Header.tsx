@@ -62,11 +62,18 @@ const navConfig: NavItem[] = [
     ],
   },
   {
-    name: "커뮤니티",
+    name: "재미로 보는 금융",
     type: "dropdown",
     items: [
-      { name: "연봉 MBTI", href: "/mbti-salary" },
-      { name: "로또 번호 생성기", href: "/lotto" },
+      { name: "내 월급으로 살 수 있는 것?", href: "/fun/what-to-buy" },
+      { name: "소비 성향 테스트", href: "/fun/spending-test" },
+      { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
+      { name: "내 연봉으로 환생한다면?", href: "/fun/reincarnation" },
+      { name: "밈코인 투자 시뮬레이터", href: "/fun/meme-coin" },
+      { name: "나의 금융 MBTI", href: "/fun/financial-mbti" },
+      { name: "회사 탈출 계산기", href: "/fun/escape-plan" },
+      { name: "오늘 점심 뭐 먹지?", href: "/fun/lunch-roulette" },
+      { name: "행운의 로또 번호", href: "/lotto" },
     ],
   },
 ];
