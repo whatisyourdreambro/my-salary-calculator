@@ -51,18 +51,18 @@ export default function DashboardPage() {
       {dashboardData ? (
         <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
       ) : (
-        <div className="text-center bg-light-card dark:bg-dark-card p-12 rounded-2xl shadow-lg border">
-          <h1 className="text-3xl font-bold text-light-text dark:text-dark-text">
+        <div className="text-center bg-card p-12 rounded-2xl shadow-lg border border-border">
+          <h1 className="text-3xl font-bold text-foreground">
             저장된 데이터가 없습니다.
           </h1>
-          <p className="mt-4 text-light-text-secondary dark:text-dark-text-secondary">
+          <p className="mt-4 text-muted-foreground">
             먼저 연봉, 퇴직금 등 금융 정보를 계산하고 저장하여
             <br />
             나만의 맞춤형 금융 대시보드를 만들어보세요.
           </p>
           <Link
             href="/"
-            className="inline-block mt-8 py-3 px-8 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover transition-transform transform hover:scale-105 shadow-lg"
+            className="inline-block mt-8 py-3 px-8 bg-primary text-primary-foreground rounded-lg font-bold hover:brightness-95 transition-all shadow-lg"
           >
             계산하러 가기
           </Link>
