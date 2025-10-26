@@ -25,6 +25,7 @@ export interface StoredSeveranceData {
 
 // 연봉 순위 결과 저장 데이터
 export interface StoredRankData {
+  annualSalary: number; // [수정] annualSalary 속성 추가
   rank: number;
   condition: string;
   median: number;
