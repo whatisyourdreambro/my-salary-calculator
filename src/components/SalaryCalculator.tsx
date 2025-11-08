@@ -211,11 +211,11 @@ export default function SalaryCalculator() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* Left Side: Inputs */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-card p-6 rounded-xl border border-border">
+          <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
             <h2 className="text-xl font-bold border-b border-border pb-4 mb-4">소득 정보</h2>
             
             {/* Income Type Switcher */}
-            <div className="flex bg-secondary rounded-lg p-1 mb-4">
+            <div className="flex flex-col sm:flex-row bg-secondary rounded-lg p-1 mb-4">
               <button
                 onClick={() => setIncomeType("regular")}
                 className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
@@ -249,7 +249,7 @@ export default function SalaryCalculator() {
             </div>
 
             {incomeType === "regular" && (
-              <div className="grid grid-cols-2 gap-4 my-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground mb-2 block">
                     급여 기준
@@ -376,9 +376,9 @@ export default function SalaryCalculator() {
         {/* Right Side: Results */}
         <div className="lg:col-span-2">
           <div className="sticky top-24 space-y-4">
-            <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
-              <h2 className="text-lg font-bold mb-2 text-muted-foreground">월 예상 실수령액</h2>
-              <p className="text-4xl font-bold my-1 text-primary">
+            <div className="bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
+              <h2 className="text-base sm:text-lg font-bold mb-2 text-muted-foreground">월 예상 실수령액</h2>
+              <p className="text-3xl sm:text-4xl font-bold my-1 text-primary">
                 <CountUp end={result.monthlyNet} duration={0.5} separator="," /> 원
               </p>
               <p className="font-semibold text-sm text-destructive mt-2">

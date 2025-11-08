@@ -1268,8 +1268,7 @@ export const guides: Guide[] = [
           <div>
             <h3 className="font-bold !mt-0 !mb-1">급여명세서 확인 & 통장 쪼개기</h3>
             <p className="!text-sm !my-0">
-              내 월급에서 세금과 4대보험이 왜, 얼마나 빠져나가는지 이해하는 것부터 시작입니다. 그 후, 월급 통장, 소비 통장, 저축/투자 통장으로 돈의 흐름을 통제하세요.
-              <a href="/guides/4-major-insurances" className="text-sm font-bold text-purple-600 hover:underline block mt-1">→ 4대보험 완벽 가이드 보기</a>
+              내 월급에서 세금과 <a href="/guides/4-major-insurances" className="text-purple-600 hover:underline">4대보험</a>이 왜, 얼마나 빠져나가는지 이해하는 것부터 시작입니다. 그 후, 월급 통장, 소비 통장, 그리고 비상금을 보관할 <a href="/guides/parking-account-comparison" className="text-purple-600 hover:underline">파킹통장</a>으로 돈의 흐름을 통제하세요.
             </p>
           </div>
         </div>
@@ -1321,8 +1320,8 @@ export const guides: Guide[] = [
         사회초년생이 피해야 할 재테크 실수 3가지
       </h2>
       <ul className="!my-4 space-y-2 text-base">
-        <li><strong>1. 신용카드의 유혹:</strong> 할부의 편리함에 빠져 미래의 소득을 당겨쓰기 시작하면, 돈을 모으기 어렵습니다. 체크카드를 주력으로 사용하세요.</li>
-        <li><strong>2. 묻지마 투자:</strong> 친구 따라, 유튜버 따라 잘 알지도 못하는 주식이나 코인에 투자하는 것은 도박과 같습니다. 내가 이해하는 상품에만 투자하세요.</li>
+        <li><strong>1. 신용카드의 유혹:</strong> 할부의 편리함에 빠져 미래의 소득을 당겨쓰기 시작하면, 돈을 모으기 어렵습니다. 당신의 <a href="/guides/credit-score-101" className="text-red-600 hover:underline">신용점수</a> 관리에도 좋지 않습니다.</li>
+        <li><strong>2. 묻지마 투자:</strong> 친구 따라, 유튜버 따라 잘 알지도 못하는 주식이나 코인에 투자하는 것은 도박과 같습니다. <a href="/guides/compound-interest-magic" className="text-red-600 hover:underline">복리의 마법</a>은 내가 이해하는 상품에 장기 투자할 때 일어납니다.</li>
         <li><strong>3. 불필요한 보험 가입:</strong> 보험은 필수지만, 사회초년생에게 월 20~30만원짜리 종신보험은 과합니다. 실손보험과 같은 보장성 보험부터 우선적으로 알아보세요.</li>
       </ul>
     </section>

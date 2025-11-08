@@ -143,7 +143,7 @@ export default function SeveranceCalculator() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="mb-6 bg-secondary p-1.5 rounded-xl flex justify-center">
+      <div className="mb-6 bg-secondary p-1.5 rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-1">
         {[
           { id: "severance", label: "퇴직금" },
           { id: "db", label: "DB형" },
@@ -152,7 +152,7 @@ export default function SeveranceCalculator() {
           <button
             key={item.id}
             onClick={() => setPensionType(item.id as "severance" | "db" | "dc")}
-            className={`w-1/3 py-2.5 text-sm font-bold rounded-lg transition-colors ${
+            className={`w-full py-2.5 text-sm font-bold rounded-lg transition-colors ${
               pensionType === item.id
                 ? "bg-card text-primary shadow"
                 : "text-muted-foreground hover:bg-secondary/50"
@@ -166,8 +166,8 @@ export default function SeveranceCalculator() {
         <div className="lg:col-span-3 space-y-6">
           {pensionType === "severance" || pensionType === "db" ? (
             <>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h2 className="text-xl font-bold mb-4">근무 정보</h2>
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="startDate" className="text-sm font-medium text-muted-foreground">입사일</label>
@@ -180,8 +180,8 @@ export default function SeveranceCalculator() {
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h2 className="text-xl font-bold mb-4">급여 정보 (퇴사일 이전 3개월)</h2>
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">급여 정보 (퇴사일 이전 3개월)</h2>
                 <div className="space-y-4">
                   {[2, 1, 0].map((i) => (
                     <CurrencyInput
@@ -214,8 +214,8 @@ export default function SeveranceCalculator() {
             </>
           ) : (
             <>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h2 className="text-xl font-bold mb-4">근무 정보</h2>
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">근무 정보</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="startDate" className="text-sm font-medium text-muted-foreground">입사일</label>
@@ -227,8 +227,8 @@ export default function SeveranceCalculator() {
                   </div>
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h2 className="text-xl font-bold mb-4">급여 정보</h2>
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">급여 정보</h2>
                 <div className="space-y-4">
                   <CurrencyInput
                     label="연간 총 급여"
@@ -247,43 +247,43 @@ export default function SeveranceCalculator() {
         </div>
 
         <div className="lg:col-span-2 space-y-6">
-          <div className="sticky top-24 bg-card p-6 rounded-2xl shadow-lg border border-border">
+          <div className="sticky top-24 bg-card p-4 sm:p-6 rounded-2xl shadow-lg border border-border">
             {pensionType === "dc" ? (
               <>
-                <h2 className="text-2xl font-bold text-center mb-4">💰 예상 DC형 적립금</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">💰 예상 DC형 적립금</h2>
                 <div className="bg-secondary p-4 rounded-lg text-center mb-4">
                   <p className="text-sm font-semibold text-muted-foreground">총 재직일수</p>
-                  <p className="text-xl font-bold"><CountUp end={getTotalDays(startDate, endDate)} separator="," /> 일</p>
+                  <p className="text-lg sm:text-xl font-bold"><CountUp end={getTotalDays(startDate, endDate)} separator="," /> 일</p>
                 </div>
                 <div className="mt-4 pt-4 border-t-2 border-dashed border-border">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold">예상 적립금</span>
-                    <p className="text-4xl font-bold text-primary"><CountUp end={dcResult.estimatedDCseverance} separator="," /> 원</p>
+                    <span className="text-base sm:text-lg font-bold">예상 적립금</span>
+                    <p className="text-3xl sm:text-4xl font-bold text-primary"><CountUp end={dcResult.estimatedDCseverance} separator="," /> 원</p>
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-center text-muted-foreground">* DC형은 개인의 투자 수익에 따라 결과가 달라지며, 세금은 연금 수령 시점에 별도 부과됩니다.</div>
               </>
             ) : (
               <>
-                <h2 className="text-2xl font-bold text-center mb-4">💰 예상 퇴직금 결과</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">💰 예상 퇴직금 결과</h2>
                 <div className="bg-secondary p-4 rounded-lg text-center mb-4">
                   <p className="text-sm font-semibold text-muted-foreground">총 재직일수</p>
-                  <p className="text-xl font-bold"><CountUp end={result.totalDaysOfEmployment} separator="," /> 일 ({result.yearsOfService.years}년 {result.yearsOfService.months}개월)</p>
+                  <p className="text-lg sm:text-xl font-bold"><CountUp end={result.totalDaysOfEmployment} separator="," /> 일 ({result.yearsOfService.years}년 {result.yearsOfService.months}개월)</p>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-baseline">
                     <span className="text-md font-semibold text-muted-foreground">세전 퇴직금</span>
-                    <p className="text-2xl font-bold text-foreground"><CountUp end={result.estimatedSeverancePay} separator="," /> 원</p>
+                    <p className="text-xl sm:text-2xl font-bold text-foreground"><CountUp end={result.estimatedSeverancePay} separator="," /> 원</p>
                   </div>
                   <div className="flex justify-between items-baseline">
                     <span className="text-md font-semibold text-destructive">퇴직 소득세</span>
-                    <p className="text-2xl font-bold text-destructive">- <CountUp end={result.incomeTax + result.localTax} separator="," /> 원</p>
+                    <p className="text-xl sm:text-2xl font-bold text-destructive">- <CountUp end={result.incomeTax + result.localTax} separator="," /> 원</p>
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t-2 border-dashed border-border">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">세후 실수령액</span>
-                    <p className="text-4xl font-bold text-primary"><CountUp end={result.netSeverancePay} separator="," /> 원</p>
+                    <p className="text-3xl sm:text-4xl font-bold text-primary"><CountUp end={result.netSeverancePay} separator="," /> 원</p>
                   </div>
                 </div>
                 <div className="mt-6">

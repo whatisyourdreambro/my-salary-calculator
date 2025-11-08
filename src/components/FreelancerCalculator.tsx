@@ -62,7 +62,7 @@ const CustomBarLabel = (props: CustomBarLabelProps) => {
       y={textY}
       fill="hsl(var(--muted-foreground))"
       textAnchor="start"
-      className="font-semibold"
+      className="font-semibold text-sm"
     >
       {`${formatNumber(numValue)}원`}
     </text>
@@ -104,7 +104,7 @@ export default function FreelancerCalculator() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* 소득 정보 입력 섹션 */}
-      <div className="bg-card p-6 rounded-xl border border-border">
+      <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
         <h2 className="text-lg font-bold mb-4">소득 정보 입력</h2>
         <div className="flex bg-secondary rounded-lg p-1 mb-4">
           <button
@@ -137,10 +137,10 @@ export default function FreelancerCalculator() {
       </div>
 
       {/* 예상 실수령액 섹션 */}
-      <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
-        <h2 className="text-xl font-bold mb-4">예상 실수령액</h2>
+      <div className="bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
+        <h2 className="text-lg sm:text-xl font-bold mb-4">예상 실수령액</h2>
         <div className="text-center">
-          <p className="text-4xl font-bold my-1 text-primary">
+          <p className="text-3xl sm:text-4xl font-bold my-1 text-primary">
             <CountUp end={result.netPay} duration={0.5} separator="," /> 원
           </p>
           <p className="font-semibold text-sm text-muted-foreground mt-2">

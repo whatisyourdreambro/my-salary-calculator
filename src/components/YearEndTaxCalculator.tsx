@@ -38,7 +38,7 @@ const AnalysisReport = ({ inputs, result }: { inputs: TaxInputs; result: TaxResu
   return (
     <div className="mt-6 p-4 border border-border rounded-lg bg-secondary/30">
       <h4 className="text-lg font-bold text-center mb-4">상세 분석 리포트</h4>
-      <div className="space-y-2 text-sm">
+      <div className="space-y-2 text-xs sm:text-sm">
         {calculationSteps.map((step, index) => (
           <div
             key={index}
@@ -46,11 +46,11 @@ const AnalysisReport = ({ inputs, result }: { inputs: TaxInputs; result: TaxResu
               step.isBold ? "border-t border-border mt-1 pt-1.5" : ""
             }`}
           >
-            <span className={`${step.isFinal ? "font-bold text-lg" : "text-muted-foreground"}`}>
+            <span className={`${step.isFinal ? "font-bold text-base sm:text-lg" : "text-muted-foreground"}`}>
               {step.label}
             </span>
             <span
-              className={`font-mono text-base ${
+              className={`font-mono text-sm sm:text-base ${
                 step.isFinal && step.value >= 0 ? "text-primary" : ""
               } ${step.isFinal && step.value < 0 ? "text-destructive" : ""} ${
                 step.isBold ? "font-bold text-foreground" : "text-muted-foreground"
@@ -189,12 +189,12 @@ export default function YearEndTaxCalculator() {
         </Accordion>
 
         <Accordion title="2. 소득 공제 항목">
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <NumberStepper label="부양가족(본인포함)" value={inputs.dependents} onValueChange={(v) => handleNumberChange("dependents", v)} min={1} unit="명" />
             <NumberStepper label="만 70세 이상" value={inputs.seniorDependents} onValueChange={(v) => handleNumberChange("seniorDependents", v)} unit="명" />
             <NumberStepper label="장애인" value={inputs.disabledDependents} onValueChange={(v) => handleNumberChange("disabledDependents", v)} unit="명" />
           </div>
-          <div className="grid md:grid-cols-2 gap-4 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
             <CurrencyInput
               label="신용카드"
               value={inputs.creditCard.toLocaleString()}
@@ -211,7 +211,7 @@ export default function YearEndTaxCalculator() {
         </Accordion>
 
         <Accordion title="3. 세액 공제 항목">
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="연금저축/IRP 납입액"
               value={inputs.pensionSavings.toLocaleString()}
@@ -229,8 +229,8 @@ export default function YearEndTaxCalculator() {
       </div>
 
       <div className="lg:col-span-1 space-y-6">
-        <div className="sticky top-24 bg-card p-6 rounded-xl shadow-lg border border-border">
-          <h2 className="text-2xl font-bold text-center mb-4">💸 연말정산 예상 결과</h2>
+        <div className="sticky top-24 bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">💸 연말정산 예상 결과</h2>
           <div
             className={`p-4 rounded-lg text-center transition-colors duration-300 ${
               result.finalRefund >= 0 ? "bg-primary/10" : "bg-destructive/10"
@@ -240,7 +240,7 @@ export default function YearEndTaxCalculator() {
               {result.finalRefund >= 0 ? "예상 환급액" : "예상 추가 납부액"}
             </p>
             <p
-              className={`text-4xl font-bold my-1 transition-colors duration-300 ${
+              className={`text-3xl sm:text-4xl font-bold my-1 transition-colors duration-300 ${
                 result.finalRefund >= 0 ? "text-primary" : "text-destructive"
               }`}
             >

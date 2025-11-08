@@ -5,9 +5,8 @@
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-// [수정] 아이콘과 계산 로직의 import 경로를 명확하게 분리했습니다.
 import {
-  Car as CarIcon, // 'Car' 타입과의 이름 충돌을 피하기 위해 아이콘에 별칭(alias)을 부여합니다.
+  Car as CarIcon,
   Truck,
   Gem,
   Rocket,
@@ -15,7 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 import {
-  type Car, // [수정] 'Car'는 타입으로만 가져옵니다.
+  type Car,
   type CarLoanResult,
   calculateCarLoan,
   recommendCarsBySalary,
@@ -28,9 +27,8 @@ type CarWithLoan = {
   loan: CarLoanResult;
 };
 
-// [고도화] 카테고리별 아이콘 매핑
 const categoryIcons: { [key: string]: React.ElementType } = {
-  경차: CarIcon, // [수정] 별칭을 사용한 아이콘 컴포넌트를 참조합니다.
+  경차: CarIcon,
   소형: CarIcon,
   준중형: CarIcon,
   중형: CarIcon,
@@ -72,7 +70,6 @@ export default function CarLoanSimulator() {
     const recommendedCars = recommendCarsBySalary(salary);
 
     return recommendedCars.map((car: Car) => {
-      // [수정] car 매개변수에 명시적으로 타입을 지정합니다.
       const loan = calculateCarLoan(car.price, {
         annualSalary: salary,
         loanTerm,
@@ -96,9 +93,9 @@ export default function CarLoanSimulator() {
   return (
     <div className="space-y-8">
       {/* 1. 기본 정보 입력 */}
-      <div className="bg-card p-6 rounded-2xl shadow-xl border">
-        <h2 className="text-xl font-bold mb-4">1. 나의 구매력 확인하기</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-card p-4 sm:p-6 rounded-2xl shadow-xl border">
+        <h2 className="text-lg sm:text-xl font-bold mb-4">1. 나의 구매력 확인하기</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           <CurrencyInput
             label="세전 연봉"
             value={annualSalary}
@@ -132,8 +129,8 @@ export default function CarLoanSimulator() {
       </div>
 
       {/* 2. 추천 차량 및 할부금 비교 */}
-      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border">
-        <h2 className="text-2xl font-bold mb-6 text-center">
+      <div className="bg-card p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
           2. 연봉{" "}
           <span className="text-primary">
             {formatNumber(Number(annualSalary.replace(/,/g, "")))}원
@@ -147,18 +144,18 @@ export default function CarLoanSimulator() {
               return (
                 <section key={category}>
                   <div className="flex items-center mb-4">
-                    <Icon className="w-7 h-7 text-muted-foreground" />
-                    <h3 className="ml-3 text-2xl font-bold text-foreground">
+                    <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-muted-foreground" />
+                    <h3 className="ml-3 text-xl sm:text-2xl font-bold text-foreground">
                       {category}
                     </h3>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {cars.map(({ car, loan }) => (
                       <div
                         key={car.name}
                         className="p-4 border-2 rounded-lg text-left transition bg-background hover:border-primary hover:shadow-md"
                       >
-                        <p className="font-bold text-lg">{car.name}</p>
+                        <p className="font-bold text-base sm:text-lg">{car.name}</p>
                         <p className="text-sm text-muted-foreground">
                           {formatNumber(car.price)}원
                         </p>
@@ -166,7 +163,7 @@ export default function CarLoanSimulator() {
                           <p className="text-xs text-muted-foreground">
                             월 예상 납입금
                           </p>
-                          <p className="text-xl font-bold text-primary">
+                          <p className="text-lg sm:text-xl font-bold text-primary">
                             <CountUp end={loan.monthlyPayment} separator="," />{" "}
                             원
                           </p>

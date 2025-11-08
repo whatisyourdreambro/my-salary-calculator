@@ -276,12 +276,12 @@ export default function FireCalculator() {
       </div>
 
       <div
-        className="bg-card/80 dark:bg-background/30 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border"
+        className="bg-card/80 dark:bg-background/30 backdrop-blur-md p-4 sm:p-6 md:p-10 rounded-2xl shadow-2xl border"
         key={step}
       >
         {step === "essentials" && (
           <div className="animate-fade-in-up">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
               1. 당신의 현재를 알려주세요
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -328,7 +328,7 @@ export default function FireCalculator() {
 
         {step === "investment" && (
           <div className="animate-fade-in-up">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
               2. 당신의 미래 계획을 알려주세요
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -353,7 +353,7 @@ export default function FireCalculator() {
               />
               <div className="md:col-span-2">
                 <label className="text-sm font-medium">투자 성향</label>
-                <div className="grid grid-cols-3 gap-2 mt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
                   {[
                     {
                       id: "conservative",
@@ -409,7 +409,7 @@ export default function FireCalculator() {
 
         {step === "events" && (
           <div className="animate-fade-in-up">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
               3. 예상되는 생애 이벤트가 있나요? (선택)
             </h2>
             <div className="max-w-3xl mx-auto space-y-4">
@@ -491,7 +491,7 @@ export default function FireCalculator() {
             <div className="text-center">
               {yearsToFire === Infinity ? (
                 <>
-                  <h2 className="text-3xl font-bold text-destructive">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-destructive">
                     목표를 달성하기 어렵습니다 😥
                   </h2>
                   <p className="mt-2 text-muted-foreground">
@@ -500,16 +500,16 @@ export default function FireCalculator() {
                 </>
               ) : (
                 <>
-                  <p className="font-semibold text-lg text-primary">
+                  <p className="font-semibold text-base sm:text-lg text-primary">
                     당신은{" "}
-                    <strong className="text-accent text-xl">
+                    <strong className="text-accent text-lg sm:text-xl">
                       {yearsToFire}년 후,
                     </strong>
                   </p>
-                  <h2 className="text-6xl font-bold my-2">
+                  <h2 className="text-5xl sm:text-6xl font-bold my-2">
                     <CountUp end={finalAge} /> 세
                   </h2>
-                  <p className="font-semibold text-lg text-primary">
+                  <p className="font-semibold text-base sm:text-lg text-primary">
                     경제적 자유를 달성할 수 있습니다!
                   </p>
                 </>
@@ -521,7 +521,7 @@ export default function FireCalculator() {
                 <p className="text-sm text-muted-foreground">
                   최종 목표 금액
                 </p>
-                <p className="text-xl font-bold">
+                <p className="text-lg sm:text-xl font-bold">
                   <CountUp end={finalTargetAmount} separator="," /> 원
                 </p>
               </div>
@@ -529,7 +529,7 @@ export default function FireCalculator() {
                 <p className="text-sm text-muted-foreground">
                   총 납입 원금
                 </p>
-                <p className="text-xl font-bold">
+                <p className="text-lg sm:text-xl font-bold">
                   <CountUp end={totalContributions} separator="," /> 원
                 </p>
               </div>
@@ -537,7 +537,7 @@ export default function FireCalculator() {
                 <p className="text-sm text-muted-foreground">
                   총 투자 수익
                 </p>
-                <p className="text-xl font-bold text-green-500">
+                <p className="text-lg sm:text-xl font-bold text-green-500">
                   + <CountUp end={totalReturns} separator="," /> 원
                 </p>
               </div>
