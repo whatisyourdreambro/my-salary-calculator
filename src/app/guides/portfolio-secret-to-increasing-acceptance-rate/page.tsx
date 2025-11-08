@@ -1,7 +1,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Briefcase, Lightbulb, Code, Palette } from "lucide-react";
+import { Briefcase, Lightbulb, Code, Palette, Rocket } from "lucide-react";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -11,37 +11,26 @@ const currentDate = `${year}-${month}-${day}`;
 const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "포트폴리오, 합격률 높이는 비법: 당신의 역량을 증명하라!",
+  title: "합격률 200% 높이는 포트폴리오의 비밀: '과정'을 팔아라",
   description:
-    "이력서만으로는 부족하다! 디자인, 개발, 마케팅 등 당신의 역량을 한눈에 보여줄 포트폴리오. 합격률을 높이는 포트폴리오를 만드는 구체적인 방법, 프로젝트 선정 기준, 그리고 효과적인 스토리텔링 노하우를 알려드립니다.",
+    "결과물만 나열된 포트폴리오는 매력 없습니다. 당신의 '문제 해결 과정'을 보여주는 것이 합격의 비밀입니다. 개발자, 디자이너를 위한 포트폴리오 전략과 프로젝트 스토리텔링 템플릿을 공개합니다.",
   openGraph: {
-    title: "포트폴리오, 합격률 높이는 비법: 당신의 역량을 증명하라!",
+    title: "합격률 200% 높이는 포트폴리오의 비밀: '과정'을 팔아라",
     description:
       "포트폴리오는 당신의 얼굴입니다. 매력적인 포트폴리오로 당신의 꿈을 현실로 만드세요.",
-    images: ["/api/og?title=포트폴리오, 합격률 높이는 비법"],
+    images: ["/api/og?title=포트폴리오, 합격률 높이는 비밀"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "포트폴리오, 합격률 높이는 비법: 당신의 역량을 증명하라!",
-  author: {
-    "@type": "Organization",
-    name: "Moneysalary",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "Moneysalary",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://www.moneysalary.com/favicon.ico",
-    },
-  },
-  datePublished: "2025-10-28",
+  headline: "합격률 200% 높이는 포트폴리오의 비밀: '과정'을 팔아라",
+  author: { "@type": "Organization", name: "Moneysalary" },
+  datePublished: "2025-06-30",
   dateModified: currentDate,
   description:
-    "합격률을 높이는 포트폴리오를 만드는 구체적인 방법, 프로젝트 선정 기준, 그리고 효과적인 스토리텔링 노하우를 알려드립니다.",
+    "당신의 '문제 해결 과정'을 보여주는 것이 합격의 비밀입니다. 개발자, 디자이너를 위한 포트폴리오 전략과 프로젝트 스토리텔링 템플릿을 공개합니다.",
 };
 
 export default function PortfolioGuidePage() {
@@ -56,11 +45,11 @@ export default function PortfolioGuidePage() {
       <main className="w-full bg-background">
         <div className="w-full bg-gradient-to-br from-purple-500 to-indigo-600 dark:from-gray-900 dark:to-purple-900 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            포트폴리오,
-            <br /> 합격률 높이는 비법
+            합격률 200% 높이는
+            <br /> 포트폴리오의 비밀
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-100 dark:text-gray-300">
-            이력서만으로는 당신의 역량을 다 보여줄 수 없습니다. 디자인, 개발, 마케팅 등 당신의 실력을 한눈에 보여줄 포트폴리오! 합격률을 높이는 포트폴리오를 만드는 모든 노하우를 알려드립니다.
+            경력기술서가 당신의 '논리'를 증명한다면, 포트폴리오는 당신의 '실력'을 증명합니다. 합격하는 포트폴리오는 무엇이 다른지, 그 비밀을 알려드립니다.
           </p>
           <p className="mt-4 text-xs text-indigo-200 dark:text-gray-500">
             최종 업데이트: {currentDateKorean}
@@ -70,94 +59,62 @@ export default function PortfolioGuidePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              포트폴리오는 당신의 역량과 경험을 시각적으로 보여주는 가장 강력한 도구입니다. 특히 디자인, 개발, 마케팅, 기획 등 실무 역량이 중요한 직무에서는 이력서보다 포트폴리오가 합격 여부를 결정하는 데 더 큰 영향을 미치기도 합니다. 단순히 작업물을 모아놓는 것을 넘어, 당신의 강점과 문제 해결 능력을 효과적으로 어필할 수 있는 포트폴리오를 만드는 것이 중요합니다. 이 가이드를 통해 합격률을 높이는 포트폴리오를 만드는 모든 노하우를 알아보세요.
+              인사담당자는 당신의 화려한 결과물보다, 그 결과물을 만들기까지의 '과정'을 궁금해합니다. 어떤 문제를 만났고, 어떻게 해결했으며, 그 과정에서 무엇을 배웠는지를 통해 당신의 진짜 실력과 성장 가능성을 보기 때문입니다. 합격하는 포트폴리오는 '결과물 모음집'이 아닌, '문제 해결 과정 보고서'입니다.
             </p>
-
-            <section className="mt-12 bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border border-purple-200 dark:border-purple-800">
-              <h2 className="!mt-0 !text-2xl font-bold text-purple-600 flex items-center gap-2">
-                <Briefcase className="w-6 h-6" />
-                포트폴리오, 왜 중요할까?
-              </h2>
-              <ul className="!my-4 space-y-2 text-base">
-                <li>
-                  <strong>실무 역량 증명:</strong> 당신이 어떤 기술을 가지고 있고, 어떤 프로젝트를 수행했으며, 어떤 성과를 냈는지 구체적으로 보여줄 수 있습니다.
-                </li>
-                <li>
-                  <strong>차별화된 경쟁력:</strong> 수많은 지원자들 사이에서 당신만의 강점과 개성을 어필하여 차별화된 경쟁력을 확보할 수 있습니다.
-                </li>
-                <li>
-                  <strong>면접의 도구:</strong> 포트폴리오를 바탕으로 면접관과 심도 있는 대화를 나누며 당신의 역량을 더욱 효과적으로 전달할 수 있습니다.
-                </li>
-              </ul>
-            </section>
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Palette className="w-7 h-7 text-green-500" />
-                합격률 높이는 포트폴리오, 3단계 전략
+                <Briefcase className="w-7 h-7 text-green-500" />
+                직군별 포트폴리오 핵심 전략
               </h2>
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
-                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
-                    1. '나만의 강점'을 보여줄 프로젝트 선정
-                  </h3>
-                  <p className="!text-sm !my-0">
-                    가장 자신 있는 프로젝트, 당신의 핵심 역량을 가장 잘 보여줄 수 있는 프로젝트를 3~5개 정도 선정하세요. 단순히 결과물만 보여주는 것이 아니라, 프로젝트의 배경, 당신의 역할, 문제 해결 과정, 그리고 성과를 명확하게 설명해야 합니다.
-                  </p>
+                  <h3 className="font-bold !mt-0 !mb-2 flex items-center gap-2"><Code className="w-6 h-6"/> 개발자 포트폴리오</h3>
+                  <ul className="!text-sm !my-0 list-disc list-inside space-y-1">
+                    <li><strong>GitHub:</strong> 단순히 코드를 올리는 것을 넘어, 프로젝트 README에 개발 동기, 사용 기술, 구현 기능, 그리고 '어려웠던 점과 해결 과정'을 상세히 기록하세요.</li>
+                    <li><strong>라이브 데모:</strong> 실제 작동하는 서비스 링크를 제공하여 결과물을 직접 체험하게 만드세요.</li>
+                    <li><strong>기술 블로그:</strong> 특정 기술을 도입한 이유, 에러 해결 과정 등을 기록한 블로그는 당신의 학습 능력과 성장 가능성을 보여주는 최고의 증거입니다.</li>
+                  </ul>
                 </div>
                 <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
-                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
-                    2. '스토리텔링'으로 몰입도를 높여라
-                  </h3>
-                  <p className="!text-sm !my-0">
-                    각 프로젝트마다 '어떤 문제를 해결하기 위해 어떤 고민을 했고, 어떤 과정을 거쳐, 어떤 결과물을 만들었으며, 그 결과 어떤 성과를 얻었는지'를 스토리텔링 방식으로 풀어내세요. 면접관이 당신의 작업 과정을 이해하고 공감할 수 있도록 돕습니다.
-                  </p>
-                </div>
-                <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
-                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
-                    3. '깔끔하고 가독성 높은' 디자인과 구성
-                  </h3>
-                  <p className="!text-sm !my-0">
-                    포트폴리오는 당신의 첫인상입니다. 깔끔하고 전문적인 디자인, 그리고 가독성 높은 구성은 당신의 역량을 더욱 돋보이게 합니다. PDF 파일, 웹사이트, 노션 등 다양한 형태로 제작할 수 있습니다.
-                  </p>
+                  <h3 className="font-bold !mt-0 !mb-2 flex items-center gap-2"><Palette className="w-6 h-6"/> 디자이너/기획자 포트폴리오</h3>
+                  <ul className="!text-sm !my-0 list-disc list-inside space-y-1">
+                    <li><strong>Case Study 중심:</strong> '어떤 문제를 발견했고(Problem), 어떻게 리서치했으며(Research), 어떤 해결책을 제시했고(Solution), 그 결과 어떤 임팩트가 있었는지(Impact)'를 하나의 이야기로 엮어내세요.</li>
+                    <li><strong>과정을 시각화:</strong> 와이어프레임, 사용자 플로우, 프로토타입 등 디자인 과정의 중간 산출물을 포함하여 당신의 논리적인 사고 과정을 보여주세요.</li>
+                  </ul>
                 </div>
               </div>
             </section>
 
-            <section className="mt-12 bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-2xl border border-yellow-200 dark:border-yellow-800">
-              <h2 className="!mt-0 !text-2xl font-bold text-yellow-700 flex items-center gap-2">
-                <Lightbulb className="w-6 h-6" /> 포트폴리오, 이것만은 피하세요!
+            <section className="mt-12 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-signature-blue flex items-center gap-2">
+                <Lightbulb className="w-6 h-6" />
+                '킬러 프로젝트' 스토리텔링 5단계 템플릿
               </h2>
-              <ul className="!my-2 space-y-1 text-base">
-                <li>
-                  <strong>너무 많은 프로젝트:</strong> 양보다는 질! 가장 자신 있는 프로젝트 위주로 선정하세요.
-                </li>
-                <li>
-                  <strong>결과물만 나열:</strong> 과정과 성과를 함께 보여주는 것이 중요합니다.
-                </li>
-                <li>
-                  <strong>오탈자 및 비문:</strong> 기본적인 맞춤법과 문법은 반드시 확인하세요.
-                </li>
-                <li>
-                  <strong>회사 기밀 유출:</strong> 이전 회사 프로젝트를 포트폴리오에 포함할 경우, 회사 기밀 유출에 주의하고 반드시 비공개 처리하거나 회사와 협의하세요.
-                </li>
-              </ul>
+              <p className="!my-2 text-base">
+                당신의 프로젝트를 가장 매력적으로 보여주는 이야기 구조입니다. 이 순서대로 프로젝트를 설명해보세요.
+              </p>
+              <ol className="!my-4 space-y-2 text-base !p-0 !list-none">
+                <li className="p-2"><strong>1. 프로젝트 개요:</strong> 한 줄 요약, 사용 기술, 나의 역할, 프로젝트 기간</li>
+                <li className="p-2"><strong>2. 문제 정의 (The Problem):</strong> 이 프로젝트는 어떤 문제를 해결하기 위해 시작되었나요?</li>
+                <li className="p-2"><strong>3. 나의 역할 및 기여 (My Contribution):</strong> 이 프로젝트에서 나는 구체적으로 무엇을, 왜 했나요?</li>
+                <li className="p-2"><strong>4. 과정과 배움 (The Process & Learnings):</strong> 어떤 기술적/기획적 어려움이 있었고, 어떻게 해결했으며, 그 과정에서 무엇을 배웠나요? <strong>(가장 중요한 부분!)</strong></li>
+                <li className="p-2"><strong>5. 결과 및 성과 (The Outcome):</strong> 그래서 결과는 어땠나요? 정량적 성과(예: 로딩 속도 30% 개선)나 정성적 성과(예: 사용자 만족도 피드백)를 보여주세요.</li>
+              </ol>
             </section>
 
-            <section className="mt-12 text-center">
-              <h2 className="!text-2xl font-bold flex items-center gap-3 justify-center">
-                <Code className="w-7 h-7 text-indigo-500" />
-                당신의 역량을 세상에 보여주세요!
+            <section className="mt-16 text-center bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl">
+              <h2 className="!text-2xl font-bold">
+                서류 합격, 다음은 최종 관문!
               </h2>
-              <p>
-                포트폴리오는 당신의 열정과 노력을 담은 소중한 결과물입니다. <br />
-                Moneysalary의 커리어 가이드와 함께 당신의 꿈을 현실로 만드세요.
+              <p className="mt-4 max-w-xl mx-auto">
+                매력적인 포트폴리오로 서류를 통과했다면, 이제 당신의 가치를 증명하고 원하는 연봉을 얻어낼 차례입니다. 면접과 연봉 협상을 준비하세요.
               </p>
               <Link
-                href="/guides/side-projects-shortcut-to-career-growth"
+                href="/guides/salary-negotiation"
                 className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                사이드 프로젝트로 커리어 성장하기 🚀
+                연봉 협상 실전 전략 가이드 🚀
               </Link>
             </section>
           </article>

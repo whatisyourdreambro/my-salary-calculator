@@ -49,12 +49,10 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
                 </div>
             </div>
         </div>
-        <div className="prose dark:prose-invert lg:prose-xl mx-auto">
-            <p className="lead">{guide.description}</p>
-            <div className="mt-12 text-center p-8 border-2 border-dashed border-border rounded-xl">
-                <p className="text-muted-foreground">이곳에 실제 가이드 본문이 표시됩니다.</p>
-            </div>
-        </div>
+        <div
+            className="prose dark:prose-invert lg:prose-xl max-w-none"
+            dangerouslySetInnerHTML={{ __html: guide.content }}
+        />
       </article>
     </main>
   );

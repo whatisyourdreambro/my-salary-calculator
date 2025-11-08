@@ -1,6 +1,7 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Globe, TrendingUp, TrendingDown, HelpCircle } from "lucide-react";
+import { Globe, TrendingUp, TrendingDown, HelpCircle, Brain } from "lucide-react";
 
 const today = new Date();
 const year = today.getFullYear();
@@ -10,37 +11,26 @@ const currentDate = `${year}-${month}-${day}`;
 const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "환율의 모든 것: 오르면 왜 수출에 유리하고 수입에 불리할까?",
+  title: "환율 완벽 이해: 해외 투자자를 위한 환율 변동 대처법",
   description:
-    "뉴스에 매일 나오는 환율, 정확히 알고 계신가요? 달러-원 환율이 오르고 내리는 원리부터, 환율 변동이 수출/수입 기업과 우리 삶에 미치는 영향까지 완벽하게 설명해 드립니다.",
+    "미국 주식 투자자 필독! 달러-원 환율이 오르고 내리는 핵심 원인 3가지(금리, 무역수지, 경제위기)를 이해하고, 환율 변동이 내 투자 수익률에 미치는 영향을 분석하여 현명한 투자 전략을 세워보세요.",
   openGraph: {
-    title: "환율의 모든 것: 오르면 왜 수출에 유리하고 수입에 불리할까?",
+    title: "환율 완벽 이해: 해외 투자자를 위한 환율 변동 대처법",
     description:
-      "환율, 더 이상 어려운 경제 용어가 아닙니다. 환율의 기본 원리를 이해하고 경제 뉴스를 꿰뚫어 보세요.",
-    images: ["/api/og?title=환율, 오르면 왜 수출에 유리할까?"],
+      "환율, 더 이상 어려운 경제 용어가 아닙니다. 환율의 기본 원리를 이해하고 당신의 해외 투자 수익률을 지키세요.",
+    images: ["/api/og?title=환율 완벽 이해: 해외 투자자 필독"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "환율의 모든 것: 오르면 왜 수출에 유리하고 수입에 불리할까?",
-  author: {
-    "@type": "Organization",
-    name: "Moneysalary",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "Moneysalary",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://www.moneysalary.com/favicon.ico",
-    },
-  },
-  datePublished: "2025-10-28",
+  headline: "환율 완벽 이해: 해외 투자자를 위한 환율 변동 대처법",
+  author: { "@type": "Organization", name: "Moneysalary" },
+  datePublished: "2025-06-01",
   dateModified: currentDate,
   description:
-    "달러-원 환율이 오르고 내리는 원리부터, 환율 변동이 수출/수입 기업과 우리 삶에 미치는 영향까지 완벽하게 설명해 드립니다.",
+    "환율 변동의 핵심 원인 3가지를 이해하고, 환율 변동이 투자 수익률에 미치는 영향을 분석하여 현명한 투자 전략을 세우는 법을 알려드립니다.",
 };
 
 export default function ExchangeRateDeepDiveGuidePage() {
@@ -55,11 +45,11 @@ export default function ExchangeRateDeepDiveGuidePage() {
       <main className="w-full bg-background">
         <div className="w-full bg-gradient-to-br from-teal-500 to-cyan-600 dark:from-gray-900 dark:to-teal-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            환율, 오르면 정말
-            <br /> 좋은 걸까?
+            환율 완벽 이해:
+            <br /> 해외 투자자 필독 가이드
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-cyan-100 dark:text-gray-300">
-            "환율 상승, 수출 기업에 호재!" 뉴스에서 자주 듣는 말이지만, 그 의미를 정확히 알고 계신가요? 환율의 기본 원리부터 우리 경제에 미치는 영향까지, 더 이상 헷갈리지 않게 알려드립니다.
+            미국 주식에 투자했는데, 왜 환율 때문에 수익률이 달라질까요? 환율의 기본 원리부터 내 투자 자산을 지키는 전략까지, 해외 투자자라면 반드시 알아야 할 모든 것을 알려드립니다.
           </p>
           <p className="mt-4 text-xs text-cyan-200 dark:text-gray-500">
             최종 업데이트: {currentDateKorean}
@@ -69,24 +59,22 @@ export default function ExchangeRateDeepDiveGuidePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              환율은 단순히 '외국 돈의 가격'이 아닙니다. 국가 경제의 기초 체력을 보여주는 거울이자, 수출입 기업의 운명을 좌우하고, 심지어 우리 장바구니 물가에도 영향을 미치는 중요한 경제 지표입니다. 환율의 작동 원리를 이해하면, 복잡한 경제 뉴스를 꿰뚫어 보는 눈을 가질 수 있습니다.
+              환율은 단순히 '외국 돈의 가격'이 아닙니다. 해외 투자를 할 때, 나의 최종 수익률을 결정하는 매우 중요한 변수입니다. 환율의 작동 원리를 이해하면, 복잡한 경제 뉴스를 꿰뚫어 보고, 더 현명한 투자 결정을 내릴 수 있습니다.
             </p>
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
                 <HelpCircle className="w-7 h-7 text-amber-500" />
-                환율, 대체 뭔가요?
+                환율 상승 vs 하락, 개념부터 잡기
               </h2>
-              <p>
-                환율(Exchange Rate)은 한 나라의 돈을 다른 나라 돈으로 바꿀 때의 교환 비율을 의미합니다. 예를 들어, 미국 달러와 대한민국 원의 환율이 '1달러 = 1,300원'이라면, 1달러를 사기 위해 1,300원이 필요하다는 뜻입니다.
-              </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
                   <h3 className="font-bold !mt-0 !mb-1 text-brand-red flex items-center gap-2">
                     <TrendingUp className="w-5 h-5" /> 환율 상승 (원화 가치 하락)
                   </h3>
                   <p className="!text-sm !my-0">
-                    1달러를 사기 위해 더 많은 원화(예: 1,400원)가 필요해진 상황. 원화의 힘이 약해졌다는 의미입니다.
+                    <strong>1달러 = 1,300원 → 1,400원</strong><br/>
+                    1달러를 사기 위해 더 많은 원화가 필요한 상황. 원화의 힘이 약해졌다는 의미입니다.
                   </p>
                 </div>
                 <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
@@ -94,7 +82,8 @@ export default function ExchangeRateDeepDiveGuidePage() {
                     <TrendingDown className="w-5 h-5" /> 환율 하락 (원화 가치 상승)
                   </h3>
                   <p className="!text-sm !my-0">
-                    1달러를 사기 위해 더 적은 원화(예: 1,200원)가 필요한 상황. 원화의 힘이 강해졌다는 의미입니다.
+                    <strong>1달러 = 1,300원 → 1,200원</strong><br/>
+                    1달러를 사기 위해 더 적은 원화가 필요한 상황. 원화의 힘이 강해졌다는 의미입니다.
                   </p>
                 </div>
               </div>
@@ -102,43 +91,45 @@ export default function ExchangeRateDeepDiveGuidePage() {
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Globe className="w-7 h-7 text-green-500" />
-                환율 상승, 왜 수출에 유리할까?
+                <Brain className="w-7 h-7 text-purple-500" />
+                환율은 왜 매일 변동할까? (핵심 요인 3가지)
               </h2>
-              <p>
-                환율이 오르면(원화 가치가 하락하면) 왜 수출 기업이 웃게 될까요? 간단한 예시로 알아봅시다.
-              </p>
-              <blockquote className="!border-l-green-500">
-                <p>
-                  미국에 1만 달러짜리 자동차를 수출하는 한국 기업이 있다고 가정해봅시다.
-                </p>
-                <ul className="!my-4 space-y-2 text-base">
-                  <li><strong>환율이 1,200원일 때:</strong> 1만 달러를 벌면 한국 돈으로 <strong>1,200만원</strong>이 됩니다.</li>
-                  <li><strong>환율이 1,400원으로 오르면:</strong> 똑같이 1만 달러를 벌어도 한국 돈으로 <strong>1,400만원</strong>이 됩니다.</li>
+              <ol className="!my-4 space-y-3 text-base !p-0">
+                <li className="p-4 border-l-4 border-purple-300"><strong>1. 금리 차이:</strong> 미국 금리가 한국보다 높으면, 더 높은 이자를 주는 달러의 매력이 커져 달러가 강세(환율 상승)가 됩니다. 전 세계 돈이 미국으로 몰리는 현상입니다.</li>
+                <li className="p-4 border-l-4 border-purple-300"><strong>2. 무역수지:</strong> 한국이 수출을 잘해서 달러를 많이 벌어들이면(무역수지 흑자), 시중에 달러 공급이 늘어나 달러가 약세(환율 하락)가 됩니다.</li>
+                <li className="p-4 border-l-4 border-purple-300"><strong>3. 글로벌 경제 상황:</strong> 세계 경제가 불안해지면(전쟁, 금융위기 등), 가장 안전한 자산으로 여겨지는 달러에 돈이 몰리면서 달러가 강세(환율 상승)가 됩니다.</li>
+              </ol>
+            </section>
+
+            <section className="mt-12 bg-teal-50 dark:bg-teal-900/20 p-6 rounded-2xl border border-teal-200 dark:border-teal-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-teal-700 flex items-center gap-2">
+                <Globe className="w-6 h-6" />
+                그래서, 내 미국 주식 계좌에는 어떤 영향이?
+              </h2>
+              <blockquote className="!border-l-teal-500 !mt-4 !text-base bg-white dark:bg-gray-800 p-4 rounded">
+                <p className="font-bold !mt-0">1,000달러짜리 미국 주식을 샀다고 가정해봅시다.</p>
+                <ul className="!my-2 list-disc list-inside text-sm">
+                    <li><strong>환율 상승기 (1,300원 → 1,400원):</strong> 주가가 그대로여도, 내 주식의 원화 가치는 130만원에서 140만원으로 오릅니다. <strong>환차익 발생!</strong></li>
+                    <li><strong>환율 하락기 (1,300원 → 1,200원):</strong> 주가가 그대로여도, 내 주식의 원화 가치는 130만원에서 120만원으로 내립니다. <strong>환차손 발생!</strong></li>
                 </ul>
-                <p>
-                  수출 기업 입장에서는 가만히 앉아서 200만원을 더 버는 셈입니다. 또한, 미국 시장에서 자동차 가격을 1만 달러보다 낮춰 팔 수 있는 여력이 생겨 가격 경쟁력이 높아집니다.
-                </p>
               </blockquote>
-              <p className="mt-4">
-                반대로, 수입 기업은 울상이 됩니다. 1만 달러짜리 기계를 수입해야 한다면, 이전보다 200만원을 더 주고 사와야 하기 때문입니다. 이는 수입 물가 상승으로 이어져 결국 우리 소비자들의 부담을 가중시키는 요인이 됩니다.
+              <p className="!my-2 text-base">
+                이처럼 해외 투자는 '주가 변동'과 '환율 변동'이라는 두 가지 변수에 동시에 영향을 받습니다.
               </p>
             </section>
 
-            <section className="mt-12 text-center">
-              <h2 className="!text-2xl font-bold flex items-center gap-3 justify-center">
-                <TrendingUp className="w-7 h-7 text-indigo-500" />
-                환율 변동, 내 자산에는 어떤 영향이?
+            <section className="mt-16 text-center">
+              <h2 className="!text-2xl font-bold">
+                환율 변동, 어떻게 대처해야 할까?
               </h2>
-              <p>
-                환율은 해외 주식 투자, 해외 여행 등 우리 삶 곳곳에 영향을 미칩니다. <br />
-                환율 변동이 내 자산에 미치는 영향에 대해 더 자세히 알아보세요.
+              <p className="mt-4 max-w-xl mx-auto">
+                환율 변동에 대처하는 가장 좋은 방법은 환율 자체를 이해하고, 내 투자 전략에 맞게 활용하는 것입니다. '환노출'과 '환헤지'의 개념을 배우고, 나에게 맞는 ETF를 선택하는 방법을 알아보세요.
               </p>
               <Link
-                href="/guides/exchange-rate-impact"
+                href="/guides/etf-investment-from-stock-selection-to-trading-strategy"
                 className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                환율이 내 월급에 미치는 영향 알아보기 💸
+                ETF 환노출/환헤지 전략 가이드 보기 📈
               </Link>
             </section>
           </article>
