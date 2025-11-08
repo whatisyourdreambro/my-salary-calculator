@@ -1,33 +1,49 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TrendingDown, Shield, Sliders, CheckSquare } from "lucide-react";
+import { Calculator, PiggyBank, ShieldCheck, FileText } from "lucide-react";
+
+const today = new Date();
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, "0");
+const day = today.getDate().toString().padStart(2, "0");
+const currentDate = `${year}-${month}-${day}`;
+const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "퇴직금 세금 계산: 최소 40% 아끼는 공제의 비밀 (2025년)",
+  title: "퇴직소득세 계산법과 절세 전략: 퇴직금 세금 폭탄 피하는 법 (2025년)",
   description:
-    "내 퇴직금에서 세금이 얼마나 나갈까? 복잡한 퇴직소득세 4단계 계산법과 세금을 획기적으로 줄여주는 '근속연수공제', '환산급여공제'의 모든 것을 실제 예시와 함께 완벽하게 설명합니다.",
+    "퇴직금, 세금으로 얼마나 떼일까? 퇴직소득세 계산의 모든 것과 IRP, 연금저축을 활용한 절세 전략을 알려드립니다. 퇴직금 중간정산 시 세금은? 명예퇴직금 세금은? 궁금증을 모두 해결하세요.",
   openGraph: {
-    title: "퇴직금 세금, 최소 40% 아끼는 공제의 비밀",
+    title: "퇴직소득세 계산법과 절세 전략: 퇴직금 세금 폭탄 피하는 법 (2025년)",
     description:
-      "수천만 원이 될 수 있는 내 퇴직금 세금, 계산법을 아는 만큼 돌려받습니다.",
-    images: [
-      "/api/og?title=퇴직금 세금, 아는 만큼 아낀다&description=2025년 기준 완벽 계산 가이드",
-    ],
+      "퇴직금, 제대로 알고 받아야 세금 폭탄을 피할 수 있습니다. 당신의 소중한 퇴직금을 지키는 절세 가이드.",
+    images: ["/api/og?title=퇴직소득세, 얼마나 떼일까?"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "퇴직금 세금 계산: 최소 40% 아끼는 공제의 비밀 (2025년)",
-  author: { "@type": "Organization", name: "Moneysalary" },
-  datePublished: "2025-09-01",
-  dateModified: "2025-09-20",
+  headline: "퇴직소득세 계산법과 절세 전략: 퇴직금 세금 폭탄 피하는 법 (2025년)",
+  author: {
+    "@type": "Organization",
+    name: "Moneysalary",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
+  datePublished: "2025-10-28",
+  dateModified: currentDate,
   description:
-    "복잡한 퇴직소득세 4단계 계산법과 세금을 획기적으로 줄여주는 '근속연수공제', '환산급여공제'의 모든 것을 실제 예시와 함께 완벽하게 설명합니다.",
+    "퇴직소득세 계산의 모든 것과 IRP, 연금저축을 활용한 절세 전략을 알려드립니다. 퇴직금 중간정산 시 세금은? 명예퇴직금 세금은? 궁금증을 모두 해결하세요.",
 };
 
-export default function SeveranceTaxPage() {
+export default function SeveranceTaxGuidePage() {
   return (
     <>
       <script
@@ -37,152 +53,117 @@ export default function SeveranceTaxPage() {
         }}
       />
       <main className="w-full bg-background">
-        {/* Hero Section */}
-        <div className="w-full bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-900 dark:to-black text-white text-center py-20 sm:py-28 px-4">
+        <div className="w-full bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-gray-900 dark:to-indigo-900 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            내 퇴직금 세금,
-            <br />
-            얼마나 떼일까?
+            퇴직금 세금 폭탄,
+            <br /> 피할 수 있을까?
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-300">
-            수십 년의 땀과 노력이 담긴 퇴직금. 하지만 세금 계산법을 모른다면
-            생각보다 훨씬 많은 돈을 잃을 수 있습니다. 세금을 결정하는 핵심
-            원리를 파헤쳐 드립니다.
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-purple-100 dark:text-gray-300">
+            수십 년간의 노고에 대한 보상, 퇴직금. 하지만 목돈을 받는 기쁨도 잠시, 세금으로 얼마나 떼일지 걱정되시죠? 퇴직소득세의 모든 것을 파헤치고, 당신의 퇴직금을 지키는 절세 전략을 알려드립니다.
+          </p>
+          <p className="mt-4 text-xs text-purple-200 dark:text-gray-500">
+            최종 업데이트: {currentDateKorean}
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              오랜 직장 생활의 마침표, 퇴직금. 하지만 막상 수령할 때가 되면
-              복잡한 세금 문제에 부딪히게 됩니다. 퇴직소득세는 다른 소득에 비해
-              세금 부담이 적도록 설계되었지만, 그 구조가 매우 복잡해 이해하기
-              어렵습니다. 이 글에서는 4단계로 이루어진 퇴직소득세 계산의 전
-              과정을 하나씩, 그리고 쉽게 풀어드립니다.
+              퇴직금은 근로자가 퇴직할 때 받는 일시금으로, 근로소득과는 별도로 '퇴직소득'으로 분류되어 세금이 부과됩니다. 일반 소득세와는 다른 복잡한 계산 방식을 가지고 있으며, 장기근속에 대한 세금 혜택이 있지만, 잘못 관리하면 예상치 못한 세금 폭탄을 맞을 수도 있습니다. 당신의 소중한 퇴직금을 온전히 지키기 위한 현명한 방법을 지금부터 알아봅시다.
             </p>
 
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <TrendingDown className="w-7 h-7 text-signature-blue" />
-                퇴직금 세금, 왜 월급보다 적게 낼까?
+            <section className="mt-12 bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border border-purple-200 dark:border-purple-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-purple-600 flex items-center gap-2">
+                <FileText className="w-6 h-6" />
+                퇴직소득세, 왜 따로 계산할까?
               </h2>
-              <p>
-                국가는 장기간의 근로에 대한 보상인 퇴직금에 대해서는 큰 세제
-                혜택을 줍니다. 월급처럼 매년 세금을 매기는 것이 아니라, 퇴직 시
-                한 번에 정산하면서 <strong>&apos;공제&apos;</strong>라는
-                이름으로 세금 부담을 대폭 줄여주기 때문입니다. 이 공제의 규모가
-                매우 커서, 실제 적용되는 세율이 명목 세율보다 훨씬 낮아지는
-                효과가 있습니다.
+              <p className="!my-2 text-base">
+                퇴직소득은 수십 년간의 근로에 대한 보상이 한꺼번에 지급되는 '불규칙적인 소득'입니다. 만약 이 소득을 일반 근로소득과 합산하여 과세한다면, 높은 누진세율이 적용되어 세금 부담이 엄청나게 커질 것입니다. 이를 방지하기 위해 퇴직소득은 <strong>'분류과세'</strong>되어 다른 소득과 합산하지 않고 별도로 세금을 계산합니다. 또한, 장기근속에 대한 세금 부담을 덜어주기 위한 <strong>'연분연승법'</strong>이라는 독특한 계산 방식을 적용합니다.
               </p>
             </section>
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Sliders className="w-7 h-7 text-purple-500" />
-                복잡한 4단계 계산법, 핵심만 파헤치기
+                <Calculator className="w-7 h-7 text-signature-blue" />
+                퇴직소득세 계산, 이렇게 합니다!
               </h2>
               <p>
-                내 퇴직소득세는 아래와 같은 4단계의 과정을 거쳐 최종 결정됩니다.
-                각 단계의 핵심은 &apos;얼마나 많이 깎아주는가(공제)&apos;에
-                있습니다.
+                퇴직소득세는 다음과 같은 복잡한 단계를 거쳐 계산됩니다. (2025년 기준)
               </p>
-              <div className="mt-6 space-y-4">
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <h3 className="!mt-0 !mb-1 font-semibold text-lg">
-                    1단계: 환산급여 계산 (연봉으로 바꾸기)
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    <strong>(퇴직금 - 근속연수공제) ÷ 근속연수 × 12</strong>.
-                    퇴직금을 연봉처럼 바꿔서 세율을 적용하기 쉽게 만드는
-                    과정입니다. 여기서 첫 번째 세금 할인,{" "}
-                    <strong>근속연수공제</strong>가 적용됩니다.
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <h3 className="!mt-0 !mb-1 font-semibold text-lg">
-                    2단계: 과세표준 계산 (진짜 세금 기준 금액)
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    <strong>환산급여 - 환산급여공제</strong>. 1단계에서 계산된
-                    금액에서 두 번째 세금 할인, <strong>환산급여공제</strong>를
-                    적용해 세금을 매길 최종 기준 금액을 확정합니다. 이 공제
-                    규모가 매우 큽니다.
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <h3 className="!mt-0 !mb-1 font-semibold text-lg">
-                    3단계: 산출세액 계산 (세율 적용)
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    <strong>과세표준 × 기본세율(6~45%)</strong>. 드디어 세율을
-                    곱해 세금을 계산합니다. 하지만 이게 끝이 아닙니다.
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                  <h3 className="!mt-0 !mb-1 font-semibold text-lg">
-                    4단계: 최종 납부세액 (마지막 조정)
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    <strong>(산출세액 ÷ 12 × 근속연수)</strong>. 3단계 세금을
-                    다시 연 단위로 쪼개 최종적으로 내가 낼 세금을 결정합니다.
-                    장기 근속의 효과를 마지막으로 반영해주는 과정입니다.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Shield className="w-7 h-7 text-green-500" />
-                세금을 줄이는 두 개의 핵심 방패: 공제
-              </h2>
-              <p>
-                결국 퇴직금 세금의 핵심은 &apos;근속연수공제&apos;와
-                &apos;환산급여공제&apos;라는 두 가지 거대한 공제 항목입니다.
-              </p>
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <h3 className="font-bold !mt-0 !text-lg">근속연수공제</h3>
-                  <p className="!text-base !my-0 mt-2">
-                    오래 일할수록 더 많이 깎아주는 공제입니다. 근속연수에 따라
-                    정해진 금액을 퇴직금에서 바로 빼주기 때문에,
-                    장기근속자일수록 세금 부담이 크게 줄어듭니다.
-                  </p>
-                </div>
-                <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                  <h3 className="font-bold !mt-0 !text-lg">환산급여공제</h3>
-                  <p className="!text-base !my-0 mt-2">
-                    가장 강력한 세금 할인 혜택입니다. 1단계에서 계산된
-                    환산급여를 기준으로, 소득 구간에 따라 최소 40%에서 최대
-                    100%까지 매우 높은 비율로 금액을 추가 공제해줍니다.
-                  </p>
-                </div>
-              </div>
-              <blockquote>
+              <ol className="!my-4 space-y-4 text-base">
+                <li>
+                  <strong>1단계: 퇴직소득금액 계산</strong><br />
+                  퇴직금 총액 - 비과세 퇴직소득 = 퇴직소득금액
+                </li>
+                <li>
+                  <strong>2단계: 퇴직소득공제 적용</strong><br />
+                  퇴직소득금액 - 근속연수공제 - 환산급여공제 = 퇴직소득과세표준
+                  <ul className="!my-2 list-disc list-inside text-sm">
+                    <li><strong>근속연수공제:</strong> 근속연수에 따라 40%~100% 공제 (장기근속 유리)</li>
+                    <li><strong>환산급여공제:</strong> 퇴직소득금액에 따라 차등 공제</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>3단계: 연분연승법 적용 (핵심!)</strong><br />
+                  퇴직소득과세표준을 근속연수로 나눈 후, 소득세율을 적용하여 세액을 계산하고, 다시 근속연수를 곱합니다. 이 과정이 세금 부담을 크게 줄여줍니다.
+                </li>
+              </ol>
+              <blockquote className="!border-l-blue-500 mt-6">
                 <p>
-                  <strong>결론:</strong> 이 두 가지 강력한 공제 덕분에,
-                  근속연수가 길고 퇴직금이 소액인 경우 세금이 전혀 없을 수도
-                  있습니다. 복잡한 계산 과정은 결국 세금을 최대한 줄여주기 위한
-                  장치인 셈입니다.
+                  <strong>예시:</strong> 근속연수 10년, 퇴직금 1억원인 경우, 연분연승법을 통해 마치 10년간 1천만원씩 받은 것처럼 세금을 계산하여 낮은 세율을 적용받게 됩니다.
                 </p>
               </blockquote>
             </section>
 
-            <section className="mt-16 text-center">
-              <h2 className="!text-2xl font-bold flex items-center gap-3 justify-center">
-                <CheckSquare className="w-7 h-7 text-signature-blue" />
-                복잡한 계산은 이제 그만
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3">
+                <PiggyBank className="w-7 h-7 text-green-500" />
+                퇴직소득세 절세 전략 TOP 3
               </h2>
               <p>
-                원리는 이해했지만 여전히 복잡하신가요? 걱정하지 마세요.
-                Moneysalary 퇴직금 계산기에 당신의 정보만 입력하면, 이 모든
-                복잡한 과정을 거친 최종 예상 퇴직금을 바로 확인할 수 있습니다.
+                퇴직소득세는 한 번 내면 끝이지만, 미리 준비하면 세금 부담을 크게 줄일 수 있습니다.
+              </p>
+              <div className="mt-6 space-y-6">
+                <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
+                    <ShieldCheck className="w-6 h-6 text-green-600" /> 1. IRP (개인형 퇴직연금) 활용
+                  </h3>
+                  <p className="!text-sm !my-0">
+                    퇴직금을 IRP 계좌로 받으면 퇴직소득세 납부를 <strong>최대 5년까지 유예</strong>할 수 있습니다. 이 기간 동안 퇴직금은 비과세로 운용되며, 연금으로 수령 시 퇴직소득세의 30%를 감면받을 수 있습니다. 가장 강력한 절세 수단입니다.
+                  </p>
+                </div>
+                <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
+                    2. 근속연수 늘리기
+                  </h3>
+                  <p className="!text-sm !my-0">
+                    근속연수가 길수록 근속연수공제 혜택이 커져 세금 부담이 줄어듭니다. 퇴직 시점을 조절할 수 있다면, 근속연수를 1년이라도 더 채우는 것이 유리할 수 있습니다.
+                  </p>
+                </div>
+                <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+                  <h3 className="font-bold !mt-0 !mb-2 text-light-text dark:text-dark-text flex items-center gap-2">
+                    3. 명예퇴직금, 위로금 등 비과세 항목 확인
+                  </h3>
+                  <p className="!text-sm !my-0">
+                    회사에서 지급하는 명예퇴직금이나 위로금 중에는 비과세 한도가 적용되는 경우가 있습니다. 회사 담당자나 세무 전문가와 상담하여 비과세 혜택을 최대한 활용하세요.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-12 text-center">
+              <h2 className="!text-2xl font-bold">
+                내 퇴직금, 정확히 계산하고 싶다면?
+              </h2>
+              <p>
+                복잡한 퇴직소득세 계산, 혼자서 고민하지 마세요. <br />
+                Moneysalary의 퇴직금 계산기로 당신의 퇴직금을 정확히 예측하고, 현명한 절세 계획을 세워보세요.
               </p>
               <Link
-                href="/?tab=severance"
+                href="/severance"
                 className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                내 퇴직금 바로 확인하기
+                퇴직금 계산기 바로가기 💰
               </Link>
             </section>
           </article>

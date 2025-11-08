@@ -1,33 +1,57 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Crown, Car, Shield, Coins } from "lucide-react";
+import { Car, BarChart2, TrendingUp, Building } from "lucide-react";
+
+const today = new Date();
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, "0");
+const day = today.getDate().toString().padStart(2, "0");
+const currentDate = `${year}-${month}-${day}`;
+const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "현대차 생산직 연봉: '킹산직'의 모든 것 (2025년 최종 분석)",
+  title: "현대자동차 연봉, 신입 초봉 1억? 직급별 연봉 총정리 (2025년)",
   description:
-    "수천 대 일의 경쟁률, 신의 직장이라 불리는 '킹산직'. 현대자동차 생산직의 신입 초봉, 성과급, 복지를 포함한 실제 연봉과 그들이 받는 대우에 대한 모든 것을 심층 분석합니다.",
+    "꿈의 직장, 현대자동차의 진짜 연봉이 궁금하신가요? 신입사원(초봉)부터 대리, 과장, 차장, 부장까지 직급별 평균 연봉과 성과급, 복지를 총정리했습니다.",
   openGraph: {
-    title: "현대차 생산직 연봉: '킹산직'의 모든 것 (2025년 최종 분석)",
+    title: "현대자동차 연봉, 신입 초봉 1억? 직급별 연봉 총정리 (2025년)",
     description:
-      "수천 대 일의 경쟁률, 신의 직장이라 불리는 '킹산직'의 실제 연봉을 파헤쳐봅니다.",
-    images: [
-      "/api/og?title=현대차 생산직, 킹산직의 모든 것&description=2025년 연봉 및 성과급 심층 분석",
-    ],
+      "킹차갓무직, 현대자동차의 직급별 연봉과 성과급의 모든 것을 파헤쳐봅니다.",
+    images: ["/api/og?title=현대자동차 직급별 연봉 총정리"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "현대차 생산직 연봉: '킹산직'의 모든 것 (2025년 최종 분석)",
-  author: { "@type": "Organization", name: "Moneysalary" },
-  datePublished: "2025-09-21",
-  dateModified: "2025-09-21",
+  headline: "현대자동차 연봉, 신입 초봉 1억? 직급별 연봉 총정리 (2025년)",
+  author: {
+    "@type": "Organization",
+    name: "Moneysalary",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
+  datePublished: "2025-10-28",
+  dateModified: currentDate,
   description:
-    "현대자동차 생산직의 신입 초봉, 성과급, 복지를 포함한 실제 연봉과 그들이 받는 대우에 대한 모든 것을 심층 분석합니다.",
+    "신입사원(초봉)부터 대리, 과장, 차장, 부장까지 직급별 평균 연봉과 성과급, 복지를 총정리했습니다.",
 };
 
-export default function HyundaiSalaryPage() {
+const hyundaiSalaryData = [
+  { rank: "신입 (사원)", avgSalary: "7,000만원 ~ 8,000만원", note: "성과급 포함 시 1억 근접" },
+  { rank: "대리", avgSalary: "8,000만원 ~ 1억원", note: "" },
+  { rank: "과장", avgSalary: "1억원 ~ 1.3억원", note: "" },
+  { rank: "차장", avgSalary: "1.2억원 ~ 1.5억원", note: "" },
+  { rank: "부장", avgSalary: "1.5억원 이상", note: "" },
+];
+
+export default function HyundaiSalaryGuidePage() {
   return (
     <>
       <script
@@ -37,119 +61,96 @@ export default function HyundaiSalaryPage() {
         }}
       />
       <main className="w-full bg-background">
-        {/* Hero Section */}
-        <div className="w-full bg-gradient-to-br from-gray-800 to-slate-900 text-white text-center py-20 sm:py-28 px-4">
+        <div className="w-full bg-gradient-to-br from-blue-700 to-gray-800 dark:from-gray-900 dark:to-blue-900 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            <span className="text-yellow-400">킹산직</span>, 그들은 얼마를 벌까?
-            <br /> 현대자동차 생산직 심층 분석
+            현대자동차 연봉,
+            <br /> 신입 초봉 1억 시대 열리나?
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
-            사무직보다 높은 연봉, 정년 보장, 강력한 복지. 대한민국 취업 시장의
-            패러다임을 바꾼 &apos;킹산직&apos; 신드롬의 중심, 현대차 생산직의
-            모든 것을 파헤칩니다.
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-200 dark:text-gray-300">
+            '킹차갓무직'이라 불리며 취준생들의 워너비 직장으로 떠오른 현대자동차. 과연 그 명성만큼의 연봉을 받을까요? 신입사원부터 부장까지, 직급별 연봉을 파헤쳐봅니다.
+          </p>
+          <p className="mt-4 text-xs text-gray-300 dark:text-gray-500">
+            최종 업데이트: {currentDateKorean}
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              수천 대 일의 경쟁률, 주요 대학 커뮤니티의 폭발적인 관심. 과거
-              제조업 생산직의 이미지를 완전히 뒤엎고 &apos;킹(King)산직&apos;,
-              &apos;갓(God)산직&apos;이라는 신조어를 탄생시킨 현대자동차. 과연
-              그들의 연봉 테이블에는 어떤 비밀이 숨겨져 있을까요?
+              최근 몇 년간 파격적인 성과급과 임금 인상으로 현대자동차의 위상이 달라졌습니다. 높은 연봉, 강력한 노조, 정년 보장, 그리고 자동차 할인까지. 현대자동차가 '꿈의 직장'으로 불리는 이유를 연봉부터 복지까지 샅샅이 분석해 드립니다.
             </p>
 
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Coins className="w-7 h-7 text-yellow-500" />
-                연봉 1억의 비밀: 기본급이 아닌 &apos;성과급&apos;
+            <section className="mt-12 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-signature-blue flex items-center gap-2">
+                <Car className="w-6 h-6" />
+                현대차 연봉의 핵심: 기본급 + α
               </h2>
-              <p>
-                현대차 생산직 연봉의 핵심은 기본급이 아닙니다. 매년 노사 협상을
-                통해 결정되는 막대한 규모의 <strong>성과급과 격려금</strong>이
-                바로 고연봉의 비결입니다. 2025년 기준, 모든 수당과 성과급을
-                포함한 신입의 초봉은 <strong>7,000만원에서 최대 1억원</strong>에
-                육박할 것으로 예상됩니다.
+              <p className="!my-2 text-base">
+                현대자동차의 연봉은 단순히 기본급만으로 평가할 수 없습니다. 매년 터지는 역대급 <strong>성과급</strong>과 각종 <strong>복지 포인트, 차량 할인</strong> 혜택까지 더해야 진짜 연봉이 완성됩니다. 특히 성과급은 연봉의 30%를 넘나들며, '초봉 1억'의 현실화를 이끌고 있습니다.
               </p>
-              <div className="mt-6 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                <h3 className="!mt-0 !mb-2 font-bold text-lg">
-                  2024년 실제 지급 사례 (언론 보도 기준)
-                </h3>
-                <ul className="!my-0 !text-base list-disc pl-5 space-y-1">
-                  <li>
-                    <strong>성과급:</strong> 400% + 1,050만원
-                  </li>
-                  <li>
-                    <strong>격려금:</strong> 250만원
-                  </li>
-                  <li>
-                    <strong>포인트 및 상품권:</strong> 70만원 상당
-                  </li>
-                </ul>
-              </div>
             </section>
 
             <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Shield className="w-7 h-7 text-blue-500" />
-                돈이 전부가 아니다: 킹산직을 만드는 3대 요소
+              <h2 className="!text-2xl font-bold flex items-center gap-3 text-center justify-center">
+                <BarChart2 className="w-7 h-7 text-green-500" />
+                직급별 평균 연봉 (2025년 예상, 성과급 포함)
               </h2>
-              <p>
-                높은 연봉 외에도 현대차 생산직이 선망의 대상이 된 이유는
-                분명합니다.
+              <p className="text-center">
+                블라인드, 잡플래닛 등 현직자들의 데이터를 종합하여 추정한 직급별 평균 연봉입니다. (계약 연봉 기준, 성과급 및 각종 수당 포함 시)
               </p>
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-4 text-center">
-                  <Shield className="w-10 h-10 text-blue-500 mx-auto" />
-                  <h3 className="font-bold !mt-2 !mb-1">압도적 고용 안정성</h3>
-                  <p className="!text-sm !my-0">
-                    강력한 노동조합을 바탕으로 사실상 정년이 보장됩니다. 만
-                    60세까지 안정적으로 근무할 수 있다는 것은 최고의 복지입니다.
-                  </p>
-                </div>
-                <div className="p-4 text-center">
-                  <Car className="w-10 h-10 text-blue-500 mx-auto" />
-                  <h3 className="font-bold !mt-2 !mb-1">파격적인 복지 혜택</h3>
-                  <p className="!text-sm !my-0">
-                    최대 30% 저렴하게 신차를 구매할 수 있는 직원 할인 혜택은
-                    현대차 직원만의 특권입니다. 자녀 학자금, 의료비 지원 등도
-                    최고 수준입니다.
-                  </p>
-                </div>
-                <div className="p-4 text-center">
-                  <Crown className="w-10 h-10 text-yellow-500 mx-auto" />
-                  <h3 className="font-bold !mt-2 !mb-1">사회적 인식 변화</h3>
-                  <p className="!text-sm !my-0">
-                    &apos;블루칼라&apos;에 대한 편견이 사라지고, 안정성과 높은
-                    소득을 갖춘 &apos;기술 전문가&apos;로 인정받는 사회적
-                    분위기가 형성되었습니다.
-                  </p>
-                </div>
+              <div className="overflow-x-auto mt-6 shadow-md rounded-lg">
+                <table className="min-w-full text-center">
+                  <thead className="bg-gray-100 dark:bg-gray-800">
+                    <tr>
+                      <th className="py-3 px-4 font-bold">직급</th>
+                      <th className="py-3 px-4 font-bold text-signature-blue">평균 연봉 (추정)</th>
+                      <th className="py-3 px-4 font-semibold">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {hyundaiSalaryData.map((item, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      >
+                        <td className="py-4 px-4 font-bold">{item.rank}</td>
+                        <td className="py-4 px-4 font-bold text-lg text-signature-blue">
+                          {item.avgSalary}
+                        </td>
+                        <td className="py-4 px-4 text-gray-600 dark:text-gray-400 text-sm">
+                          {item.note}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
+               <p class="text-xs text-center mt-2 text-gray-500">* 위 금액은 실제와 차이가 있을 수 있으며, 사업부 및 개인 성과에 따라 크게 달라질 수 있습니다.</p>
             </section>
 
-            <blockquote>
-              <p>
-                물론 3교대 근무와 육체적 노동 강도는 분명히 고려해야 할
-                부분입니다. 하지만 이를 상쇄하고도 남을 만큼의 압도적인 보상과
-                안정성이 오늘날의 &apos;킹산직&apos; 신드롬을 만들었습니다.
-              </p>
-            </blockquote>
-
-            <section className="mt-16 text-center">
-              <h2 className="!text-2xl font-bold">
-                만약 당신이 &apos;킹산직&apos;이 된다면?
+            <section className="mt-12 text-center">
+              <h2 className="!text-2xl font-bold flex items-center gap-3 justify-center">
+                <Building className="w-7 h-7 text-indigo-500" />
+                다른 기업 연봉과 비교해보고 싶다면?
               </h2>
               <p>
-                성과급을 포함한 나의 첫해 예상 실수령액이 궁금하다면, 지금 바로
-                계산해보세요.
+                삼성전자, SK하이닉스, 네이버, 카카오... 대한민국을 대표하는 다른 기업들의 연봉은 어떨까요? <br />
+                Moneysalary의 기업별 연봉 가이드에서 확인해보세요.
               </p>
-              <Link
-                href="/?salaryInput=75,000,000&payBasis=annual"
-                className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
-              >
-                연봉 7,500만원 실수령액 계산하기
-              </Link>
+              <div className="mt-6 flex justify-center gap-4">
+                <Link
+                  href="/guides/samsung-vs-hynix"
+                  className="inline-block py-3 px-6 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-center font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                >
+                  삼성 vs 하이닉스
+                </Link>
+                <Link
+                  href="/guides/naver-vs-kakao"
+                  className="inline-block py-3 px-6 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-center font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                >
+                  네이버 vs 카카오
+                </Link>
+              </div>
             </section>
           </article>
         </div>

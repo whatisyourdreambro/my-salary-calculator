@@ -1,36 +1,57 @@
-// src/app/guides/civil-servant-salary/page.tsx
-
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Wallet, Shield } from "lucide-react";
+import { BarChart2, TrendingUp, HelpCircle, Award } from "lucide-react";
+
+const today = new Date();
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, "0");
+const day = today.getDate().toString().padStart(2, "0");
+const currentDate = `${year}-${month}-${day}`;
+const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "공무원 월급, 정말 박봉일까? | 9급·7급 첫 월급 실수령액 분석 (2025년)",
+  title: "2025년 공무원 봉급표, 9급부터 1급까지 실수령액 총정리",
   description:
-    "2025년 공무원 봉급표 기준, 9급 및 7급 1호봉의 진짜 첫 월급은? 기본급에 각종 수당을 더하고 세금을 제외한 실제 통장에 찍히는 실수령액을 상세히 알려드립니다.",
+    "안정적인 직업의 대명사, 공무원! 2025년 최신 봉급표를 기준으로 9급, 7급, 5급 등 주요 직급별 연봉과 실제 통장에 찍히는 월급을 자세히 알려드립니다.",
   openGraph: {
-    title: "공무원 월급, 정말 박봉일까? | 9급·7급 첫 월급 실수령액 분석",
+    title: "2025년 공무원 봉급표, 9급부터 1급까지 실수령액 총정리",
     description:
-      "기본급 뒤에 숨겨진 각종 수당을 포함한 공무원의 진짜 월급을 공개합니다.",
-    images: [
-      "/api/og?title=공무원 월급, 정말 박봉일까?&description=2025년 기준 9급·7급 실수령액 심층 분석",
-    ],
+      "나라를 위해 일하는 당신의 연봉, 얼마나 될까요? 2025년 공무원 직급별 연봉과 실수령액을 확인해보세요.",
+    images: ["/api/og?title=2025년 공무원 봉급표 완벽 분석"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline:
-    "공무원 월급, 정말 박봉일까? | 9급·7급 첫 월급 실수령액 분석 (2025년)",
-  author: { "@type": "Organization", name: "Moneysalary" },
-  datePublished: "2025-09-22",
-  dateModified: "2025-09-22",
+  headline: "2025년 공무원 봉급표, 9급부터 1급까지 실수령액 총정리",
+  author: {
+    "@type": "Organization",
+    name: "Moneysalary",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
+  datePublished: "2025-10-28",
+  dateModified: currentDate,
   description:
-    "2025년 공무원 봉급표 기준, 9급 및 7급 1호봉의 실제 첫 월급은? 기본급과 각종 수당을 포함한 세후 실수령액을 상세히 알려드립니다.",
+    "2025년 최신 공무원 봉급표를 기준으로 9급, 7급, 5급 등 주요 직급별 연봉과 실제 통장에 찍히는 월급을 자세히 알려드립니다.",
 };
 
-export default function CivilServantSalaryPage() {
+const civilServantSalaryData = [
+  { rank: "9급 1호봉", baseSalary: "187만원", expectedPostTax: "약 170만원" },
+  { rank: "7급 1호봉", baseSalary: "220만원", expectedPostTax: "약 200만원" },
+  { rank: "5급 1호봉", baseSalary: "280만원", expectedPostTax: "약 250만원" },
+  { rank: "교사 1호봉", baseSalary: "210만원", expectedPostTax: "약 190만원" },
+  { rank: "경찰/소방(순경/소방사) 1호봉", baseSalary: "187만원", expectedPostTax: "약 170만원" },
+];
+
+export default function CivilServantSalaryGuidePage() {
   return (
     <>
       <script
@@ -40,124 +61,124 @@ export default function CivilServantSalaryPage() {
         }}
       />
       <main className="w-full bg-background">
-        <div className="w-full bg-gradient-to-br from-slate-600 to-gray-700 dark:from-gray-900 dark:to-slate-800 text-white text-center py-20 sm:py-28 px-4">
+        <div className="w-full bg-gradient-to-br from-blue-500 to-indigo-500 dark:from-gray-900 dark:to-blue-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            공무원 월급,
-            <br /> 정말 &apos;박봉&apos;일까?
+            2025년 공무원 봉급,
+            <br /> 내 월급은 얼마일까?
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
-            &apos;평생 직장&apos;이라는 안정성과 &apos;적은 월급&apos;이라는
-            편견 사이. 2025년 기준 9급, 7급 신규 공무원의 진짜 첫 월급 명세서를
-            낱낱이 파헤쳐 봅니다.
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-100 dark:text-gray-300">
+            국민을 위해 봉사하는 공무원, 그 안정성만큼이나 궁금한 것이 바로 연봉입니다. 2025년 최신 봉급표를 기준으로 당신의 진짜 월급을 알려드립니다.
+          </p>
+          <p className="mt-4 text-xs text-indigo-200 dark:text-gray-500">
+            최종 업데이트: {currentDateKorean}
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              매년 수십만 명이 공무원 시험에 도전하는 이유는 무엇일까요? 최고의
-              안정성을 자랑하지만, 월급이 적다는 이야기 때문에 많은 수험생과
-              예비 공무원들이 현실적인 고민에 빠집니다. 결론부터 말하자면,
-              공무원 월급은 단순히 봉급표의 &apos;기본급&apos;만 봐서는 절대 안
-              됩니다.
+              &quot;공무원은 박봉이다?&quot; 옛말입니다. 물론 대기업처럼 폭발적인 연봉 상승을 기대하기는 어렵지만, 각종 수당과 공무원연금 등 숨겨진 혜택까지 고려하면 결코 적지 않은 보수입니다. 이 글에서는 공무원 봉급 체계의 모든 것을 파헤쳐봅니다.
             </p>
+
+            <section className="mt-12 bg-blue-50 dark:bg-blue-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-signature-blue flex items-center gap-2">
+                <Award className="w-6 h-6" />
+                공무원 월급, 핵심 포인트!
+              </h2>
+              <ul className="!my-4 space-y-2 text-base">
+                <li>
+                  <strong>기본급 + 수당 = 진짜 월급:</strong> 봉급표의 기본급에 각종 수당(정근수당, 명절휴가비, 초과근무수당 등)이 더해져 최종 월급이 결정됩니다.
+                </li>
+                <li>
+                  <strong>호봉제의 마법:</strong> 매년 꾸준히 호봉이 오르면서 기본급이 상승하는 안정적인 구조입니다.
+                </li>
+                <li>
+                  <strong>다양한 직렬:</strong> 일반행정직, 교육직, 경찰/소방직 등 직렬에 따라 봉급과 수당 체계가 다릅니다.
+                </li>
+              </ul>
+            </section>
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Wallet className="w-7 h-7 text-green-500" />첫 월급 명세서
-                재구성: 기본급 + α
+                <HelpCircle className="w-7 h-7 text-amber-500" />
+                봉급표, 어떻게 봐야 할까요?
               </h2>
               <p>
-                공무원 월급은 기본급에 매달 고정적으로 지급되는 여러 수당이
-                더해져 완성됩니다. 2025년 9급 1호봉의 기본급은 약 190만원이지만,
-                실제로는 각종 수당이 더해져 세전 250만원 이상을 받게 됩니다.
+                공무원 봉급은 '기본급'과 '수당'으로 구성됩니다. 인사혁신처에서 매년 발표하는 '공무원 봉급표'는 이 중 기본급에 해당합니다. 여기에 개인별로 해당하는 각종 수당이 추가되어 실수령액이 결정되는 구조입니다.
               </p>
-              <div className="mt-6 overflow-x-auto shadow-md rounded-lg">
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+                  <h3 className="font-bold !mt-0 !mb-1 text-light-text dark:text-dark-text">
+                    기본급 (봉급)
+                  </h3>
+                  <p className="!text-sm !my-0">
+                    직급과 호봉에 따라 정해진 고정 급여. 모든 보수의 기준이 됩니다.
+                  </p>
+                </div>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+                  <h3 className="font-bold !mt-0 !mb-1 text-light-text dark:text-dark-text">
+                    수당
+                  </h3>
+                  <p className="!text-sm !my-0">
+                    정근수당, 가족수당, 초과근무수당 등 근무 조건과 개인 상황에 따라 추가로 지급되는 보수입니다.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3 text-center justify-center">
+                <BarChart2 className="w-7 h-7 text-green-500" />
+                주요 직급별 초임 봉급 (2025년 예상)
+              </h2>
+              <p className="text-center">
+                주요 공무원 직렬의 초임(1호봉) 기준 월 예상 실수령액입니다. (1인 가구, 비과세액 20만원 기준)
+              </p>
+              <div className="overflow-x-auto mt-6 shadow-md rounded-lg">
                 <table className="min-w-full text-center">
                   <thead className="bg-gray-100 dark:bg-gray-800">
                     <tr>
-                      <th className="py-3 px-4 font-bold">항목</th>
-                      <th className="py-3 px-4 font-semibold">9급 1호봉</th>
-                      <th className="py-3 px-4 font-semibold">7급 1호봉</th>
+                      <th className="py-3 px-4 font-bold">직급(호봉)</th>
+                      <th className="py-3 px-4 font-semibold">월 기본급</th>
+                      <th className="py-3 px-4 font-bold text-signature-blue">
+                        월 세후 (예상)
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    <tr>
-                      <td className="py-3 px-4 font-semibold">기본급(봉급)</td>
-                      <td>약 1,900,000원</td>
-                      <td>약 2,250,000원</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-semibold">정액급식비</td>
-                      <td>140,000원</td>
-                      <td>140,000원</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-semibold">직급보조비</td>
-                      <td>185,000원</td>
-                      <td>205,000원</td>
-                    </tr>
-                    <tr className="bg-gray-50 dark:bg-gray-800/50">
-                      <td className="py-3 px-4 font-bold">세전 월급 (예상)</td>
-                      <td className="font-bold">약 2,225,000원</td>
-                      <td className="font-bold">약 2,595,000원</td>
-                    </tr>
-                    <tr className="bg-blue-50 dark:bg-blue-900/20">
-                      <td className="py-3 px-4 font-bold text-primary">
-                        세후 실수령액 (예상)
-                      </td>
-                      <td className="font-bold text-primary text-lg">
-                        약 200만원
-                      </td>
-                      <td className="font-bold text-primary text-lg">
-                        약 230만원
-                      </td>
-                    </tr>
+                    {civilServantSalaryData.map((item, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      >
+                        <td className="py-4 px-4 font-bold">{item.rank}</td>
+                        <td className="py-4 px-4 text-gray-600 dark:text-gray-400">
+                          {item.baseSalary}
+                        </td>
+                        <td className="py-4 px-4 font-bold text-lg text-signature-blue">
+                          {item.expectedPostTax}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-sm text-center mt-2 text-gray-500">
-                ※ 위 금액은 공통 수당만 포함한 최소치이며, 초과근무수당,
-                가족수당, 명절휴가비 등은 제외된 금액입니다.
-              </p>
+               <p class="text-xs text-center mt-2 text-gray-500">* 위 금액은 각종 수당(초과근무, 직급보조비 등)이 제외된 기본급 기준의 예상 실수령액입니다.</p>
             </section>
 
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Shield className="w-7 h-7 text-blue-500" />
-                연봉 그 이상의 가치: 안정성과 연금
+            <section className="mt-12 text-center">
+              <h2 className="!text-2xl font-bold flex items-center gap-3 justify-center">
+                <TrendingUp className="w-7 h-7 text-indigo-500" />내 실수령액, 정확히 계산하고 싶다면?
               </h2>
               <p>
-                공무원의 진짜 가치는 당장의 월급보다 장기적인 안정성에 있습니다.
-              </p>
-              <blockquote>
-                <p>
-                  <strong>자동 연봉 상승 시스템:</strong> 매년 자동으로 오르는
-                  &apos;호봉&apos; 제도는 장기 근속 시 안정적인 소득 상승을
-                  보장합니다. 특별한 성과 없이도 꾸준히 일하면 연봉이 오르는
-                  구조는 사기업에서는 찾아보기 힘든 큰 장점입니다.
-                  <br />
-                  <br />
-                  <strong>든든한 노후 보장:</strong> 국민연금보다 수령액이 높은
-                  공무원연금은 은퇴 후의 삶을 보장하는 가장 확실한 안전판입니다.
-                </p>
-              </blockquote>
-            </section>
-
-            <section className="mt-16 text-center">
-              <h2 className="!text-2xl font-bold">
-                당신의 선택, 후회 없으신가요?
-              </h2>
-              <p>
-                높은 연봉의 사기업과 안정적인 공무원 사이에서 고민하고 있다면,
-                단순히 첫 월급만 비교해서는 안 됩니다. 장기적인 관점에서 당신의
-                삶에 더 큰 가치를 주는 것이 무엇인지 신중하게 생각해보세요.
+                각종 수당과 공제 내역을 모두 반영한 정확한 실수령액이 궁금하신가요? <br />
+                Moneysalary 계산기에 직접 입력하여 1원 단위까지 정확한 내 월급을 확인해보세요.
               </p>
               <Link
-                href="/?tab=comparator"
-                className="inline-block mt-6 py-4 px-8 bg-primary text-white rounded-lg text-center font-bold text-lg hover:bg-primary-hover transition-transform transform hover:scale-105 shadow-lg"
+                href="/"
+                className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                사기업 vs 공무원 연봉 비교해보기
+                내 월급 실수령액 계산하기 🧐
               </Link>
             </section>
           </article>

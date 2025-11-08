@@ -1,33 +1,49 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Award, CalendarCheck, FileWarning } from "lucide-react"; // AlertCircle 제거
+import { CalendarCheck, Calculator, HelpCircle, AlertTriangle } from "lucide-react";
+
+const today = new Date();
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, "0");
+const day = today.getDate().toString().padStart(2, "0");
+const currentDate = `${year}-${month}-${day}`;
+const currentDateKorean = `${year}년 ${month}월 ${day}일`;
 
 export const metadata: Metadata = {
-  title: "주휴수당, 당신의 숨겨진 1일치 월급 | 조건, 계산법, Q&A 완벽정리",
+  title: "주휴수당 조건, 계산법, 못 받았을 때 대처법 총정리 (2025년)",
   description:
-    "주 15시간 이상 일했다면 당신도 받을 수 있다! 2025년 최신 주휴수당 지급 조건과 내 시급에 맞는 정확한 계산법, 못 받았을 때 대처법까지. 당신의 소중한 권리를 찾아드립니다.",
+    "주 15시간 이상 일했다면 당신도 받을 수 있는 공짜 하루치 급여, 주휴수당! 지급 조건부터 내 알바비에 맞는 계산법, 그리고 사장님이 안 줄 때 대처법까지. 당신의 권리를 찾아가세요.",
   openGraph: {
-    title: "주휴수당, 당신의 숨겨진 1일치 월급 | 조건, 계산법 완벽정리",
+    title: "주휴수당 조건, 계산법, 못 받았을 때 대처법 총정리 (2025년)",
     description:
-      "주 15시간 이상 일했다면 당신도 받을 수 있습니다. 지금 바로 확인해보세요.",
-    images: [
-      "/api/og?title=주휴수당, 당신의 숨겨진 하루치 월급&description=지급 조건부터 계산법, Q&A까지",
-    ],
+      "일주일에 하루는 유급 휴가! 주휴수당, 제대로 알고 계신가요? 당신의 숨은 돈을 찾아드립니다.",
+    images: ["/api/og?title=주휴수당, 당신도 받을 수 있어요!"],
   },
 };
 
 const articleStructuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "주휴수당, 당신의 숨겨진 1일치 월급 | 조건, 계산법, Q&A 완벽정리",
-  author: { "@type": "Organization", name: "Moneysalary" },
-  datePublished: "2025-09-01",
-  dateModified: "2025-09-20",
+  headline: "주휴수당 조건, 계산법, 못 받았을 때 대처법 총정리 (2025년)",
+  author: {
+    "@type": "Organization",
+    name: "Moneysalary",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Moneysalary",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.moneysalary.com/favicon.ico",
+    },
+  },
+  datePublished: "2025-10-28",
+  dateModified: currentDate,
   description:
-    "2025년 최신 주휴수당 지급 조건과 내 시급에 맞는 정확한 계산법, 못 받았을 때 대처법까지. 당신의 소중한 권리를 찾아드립니다.",
+    "주휴수당 지급 조건부터 계산법, 그리고 사장님이 안 줄 때 대처법까지. 당신의 권리를 찾아가세요.",
 };
 
-export default function HolidayAllowancePage() {
+export default function HolidayAllowanceGuidePage() {
   return (
     <>
       <script
@@ -37,145 +53,96 @@ export default function HolidayAllowancePage() {
         }}
       />
       <main className="w-full bg-background">
-        {/* Hero Section */}
-        <div className="w-full bg-gradient-to-br from-lime-500 to-green-600 dark:from-gray-900 dark:to-lime-800 text-white text-center py-20 sm:py-28 px-4">
+        <div className="w-full bg-gradient-to-br from-yellow-400 to-amber-500 dark:from-gray-900 dark:to-amber-800 text-white text-center py-20 sm:py-28 px-4">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
             주휴수당,
-            <br /> 당신의 숨겨진 월급입니다
+            <br /> 당신의 숨은 돈을 찾아라!
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-green-100 dark:text-gray-300">
-            아르바이트, 단기 계약직, 정규직 모두에게 해당되는 소중한 권리.
-            일주일을 성실하게 채운 당신에게 주어지는 당연한 보상, 주휴수당의
-            모든 것을 알려드립니다.
+          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-amber-100 dark:text-gray-300">
+            일주일에 15시간 이상 일했다면, 하루치 일당을 더 받을 수 있다는 사실! 아르바이트생과 단기 근로자의 소중한 권리, 주휴수당의 모든 것을 알려드립니다.
+          </p>
+          <p className="mt-4 text-xs text-amber-200 dark:text-gray-500">
+            최종 업데이트: {currentDateKorean}
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
           <article className="prose dark:prose-invert lg:prose-xl max-w-none bg-light-card dark:bg-dark-card p-6 sm:p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
             <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
-              일주일에 5일 일했는데, 6일치 급여를 받는다고? 바로
-              &apos;주휴수당&apos; 덕분입니다. 근로기준법에 명시된 엄연한
-              근로자의 권리이지만, 많은 분들이 지급 조건과 계산법을 잘 몰라
-              놓치고 있습니다. 이 글을 끝까지 읽는다면, 당신의 통장에 잠들어
-              있던 숨은 돈을 찾게 될지도 모릅니다.
+              시급 1만원에 하루 8시간, 주 5일 일하면 주급은 40만원일까요? 정답은 '아니오'입니다. 주휴수당을 포함한 <strong>48만원</strong>을 받아야 맞습니다. 근로기준법에 명시된 엄연한 권리지만, 많은 분들이 모르고 지나치는 주휴수당, 지금부터 확실하게 챙겨가세요.
             </p>
 
             <section className="mt-12">
               <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <CalendarCheck className="w-7 h-7 text-lime-600" />
-                나는 주휴수당 대상일까? (핵심 체크리스트 3가지)
+                <HelpCircle className="w-7 h-7 text-green-500" />
+                주휴수당, 누가 받을 수 있나요? (지급 조건)
               </h2>
               <p>
-                복잡한 법 조항은 잊으세요. 아래 3가지 질문에 모두
-                &apos;네&apos;라고 답할 수 있다면, 당신은 주휴수당을 받을 자격이
-                충분합니다.
+                아래 3가지 조건을 <strong>모두</strong> 충족하면 정규직, 계약직, 아르바이트 등 고용 형태와 관계없이 누구나 주휴수당을 받을 수 있습니다.
               </p>
-              <ul className="!my-6 !pl-0 space-y-4">
-                <li className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-l-4 border-lime-500">
-                  <h3 className="!mt-0 !mb-1 font-semibold">
-                    1. 일주일에 15시간 이상 일하기로 약속했나요?
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    근로계약서에 명시된 &apos;소정근로시간&apos;이 주 15시간
-                    이상이어야 합니다. 실제 초과 근무 시간은 포함되지 않습니다.
-                  </p>
-                </li>
-                <li className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-l-4 border-lime-500">
-                  <h3 className="!mt-0 !mb-1 font-semibold">
-                    이번 주, 약속한 날에 모두 출근했나요?
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    일하기로 약속한 날에 모두 출근, 즉 &apos;개근&apos;해야
-                    합니다. 지각이나 조퇴는 결근이 아니지만, 단 하루라도
-                    무단결근했다면 그 주의 주휴수당은 받을 수 없습니다.
-                  </p>
-                </li>
-                <li className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-l-4 border-lime-500">
-                  <h3 className="!mt-0 !mb-1 font-semibold">
-                    다음 주에도 계속 일할 예정인가요?
-                  </h3>
-                  <p className="!my-0 !text-base">
-                    주휴수당은 다음 주의 근로를 전제로 발생합니다. 따라서 마지막
-                    근무를 마친 주에는 일반적으로 주휴수당이 발생하지 않습니다.
-                  </p>
-                </li>
-              </ul>
-            </section>
-
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <Award className="w-7 h-7 text-amber-500" />내 주휴수당, 정확히
-                얼마일까?
-              </h2>
-              <p>
-                주휴수당은 보통 <strong>&apos;하루치 일급&apos;</strong>에
-                해당합니다. 계산은 간단한 공식으로 할 수 있습니다.
-              </p>
-              <div className="mt-6 p-8 bg-gray-100 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700 text-center">
-                <p className="text-lg font-medium">주휴수당 계산 공식</p>
-                <p className="text-xl sm:text-2xl font-bold my-2 text-wrap break-all">
-                  (1주일 총 근로시간 / 40시간) × 8시간 × 시급
-                </p>
-              </div>
-              <p className="mt-4">
-                <strong>[실전 예시]</strong> 카페에서 시급 1만원을 받고, 월, 수,
-                금, 토 주 4일, 하루 5시간씩 일하는 아르바이트생의 경우:
-              </p>
-              <ul className="!my-2">
+              <ol className="!my-4 list-decimal list-inside space-y-4 text-base bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
                 <li>
-                  <strong>1주일 총 근로시간:</strong> 5시간 × 4일 = 20시간
+                  <strong>주 15시간 이상 근무:</strong> 1주일 동안의 소정근로시간이 15시간 이상이어야 합니다.
                 </li>
                 <li>
-                  <strong>주휴수당 계산:</strong> (20시간 / 40시간) × 8시간 ×
-                  10,000원 = <strong>40,000원</strong>
-                </li>
-              </ul>
-              <p>
-                따라서 이 아르바이트생은 주급 200,000원 (20시간 × 10,000원)에
-                주휴수당 40,000원을 더한 <strong>총 240,000원</strong>을 받아야
-                마땅합니다.
-              </p>
-            </section>
-
-            <section className="mt-12">
-              <h2 className="!text-2xl font-bold flex items-center gap-3">
-                <FileWarning className="w-7 h-7 text-red-500" />
-                사장님이 주휴수당을 안 주신다면?
-              </h2>
-              <p>
-                주휴수당 지급은 법적 의무입니다. 만약 위 조건을 모두
-                충족하는데도 받지 못했다면, 이는 <strong>임금체불</strong>에
-                해당합니다.
-              </p>
-              <ol className="!my-4">
-                <li>
-                  <strong>증거 자료 확보:</strong> 근로계약서, 급여명세서,
-                  출퇴근 기록 등 근무 사실을 입증할 수 있는 자료를 최대한
-                  모아두세요.
+                  <strong>개근:</strong> 약속한 근무일에 모두 출근해야 합니다. 지각이나 조퇴는 결근이 아니지만, 사전에 합의되지 않은 결근이 있다면 해당 주의 주휴수당은 발생하지 않습니다.
                 </li>
                 <li>
-                  <strong>사장님과 대화:</strong> 먼저 사장님께 주휴수당 지급
-                  의무에 대해 정중히 설명하고 지급을 요청하는 것이 좋습니다.
-                </li>
-                <li>
-                  <strong>고용노동부 신고:</strong> 대화로 해결되지 않는다면,
-                  관할 고용노동청에 임금체불 진정을 제기하여 법적인 도움을 받을
-                  수 있습니다.
+                  <strong>계속 근로:</strong> 다음 주에도 계속 일할 것이 예정되어 있어야 합니다. (마지막 근무주는 제외될 수 있습니다.)
                 </li>
               </ol>
             </section>
 
-            <section className="mt-16 text-center">
-              <h2 className="!text-2xl font-bold">아는 것이 힘입니다</h2>
+            <section className="mt-12">
+              <h2 className="!text-2xl font-bold flex items-center gap-3">
+                <Calculator className="w-7 h-7 text-signature-blue" />
+                내 주휴수당, 얼마일까? (계산법)
+              </h2>
               <p>
-                주휴수당은 당신의 땀과 노력에 대한 정당한 대가입니다. 더 이상
-                헷갈리지 말고, 당신의 소중한 권리를 당당하게 챙기세요.
+                주휴수당은 생각보다 간단하게 계산할 수 있습니다. 하루치 임금을 추가로 받는다고 생각하면 쉽습니다.
+              </p>
+              <div className="mt-6 p-8 bg-gray-100 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700 text-center">
+                <p className="text-lg font-medium">
+                  (1주일 총 근로시간 / 40시간) × 8시간 × 시급
+                </p>
+                <p className="text-sm mt-2">* 주 40시간 미만 근로자의 경우, 위 공식 대신 <br/> <span className="font-bold">(1주일 총 근로시간 / 5) × 시급</span> 으로 더 간단히 계산할 수 있습니다.</p>
+              </div>
+              <blockquote className="!border-l-blue-500 mt-6">
+                <p className="font-bold">예시: 시급 12,000원으로 주 3일, 하루 6시간씩 일하는 경우</p>
+                 <ul className="!my-2 text-base">
+                  <li><strong>1주일 총 근로시간:</strong> 6시간 × 3일 = 18시간</li>
+                  <li><strong>주휴수당:</strong> (18시간 / 5) × 12,000원 = <strong>43,200원</strong></li>
+                  <li><strong>총 주급:</strong> (18시간 × 12,000원) + 43,200원 = 216,000원 + 43,200원 = <strong>259,200원</strong></li>
+                </ul>
+              </blockquote>
+            </section>
+
+            <section className="mt-12 bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-200 dark:border-red-800">
+              <h2 className="!mt-0 !text-2xl font-bold text-brand-red flex items-center gap-2">
+                <AlertTriangle className="w-6 h-6" />
+                사장님이 주휴수당을 안 준다면?
+              </h2>
+              <p className="!my-2 text-base">
+                주휴수당은 근로기준법상 명시된 <strong>임금</strong>입니다. 이를 지급하지 않는 것은 명백한 임금체불에 해당합니다. 지급을 거부당했다면 증거(근로계약서, 출퇴근 기록, 급여 이체 내역 등)를 모아 고용노동부에 진정(신고)을 제기할 수 있습니다.
+              </p>
+              <a href="https://minwon.moel.go.kr/" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-red hover:underline">
+                고용노동부 민원마당 바로가기 →
+              </a>
+            </section>
+
+            <section className="mt-12 text-center">
+              <h2 className="!text-2xl font-bold">
+                최저시급, 제대로 계산해보고 싶다면?
+              </h2>
+              <p>
+                내 시급에 주휴수당이 포함되어 있는지, 최저시급은 잘 지켜지고 있는지 궁금하다면? <br />
+                Moneysalary의 최저임금 계산기로 확인해보세요.
               </p>
               <Link
-                href="/table/hourly"
+                href="/guides/minimum-wage"
                 className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
               >
-                시급별 실수령액 테이블 확인하기
+                최저임금 계산기 바로가기 ⏱️
               </Link>
             </section>
           </article>
