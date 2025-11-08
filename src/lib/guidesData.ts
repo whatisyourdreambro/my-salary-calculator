@@ -23,8 +23,158 @@ export const categories = [
 ];
 
 export const guides: Guide[] = [
-  { slug: "salary-guide-2025", title: "2025년 연봉 실수령액 완벽 분석", description: "최신 세법을 적용한 연봉 구간별 상세 실수령액 표를 제공합니다.", category: "연봉", tags: ["연봉", "실수령액", "2025년"], level: "초급", publishedDate: "2025-10-26", views: 150234, content: `` },
-  { slug: "salary-negotiation-strategy", title: "연봉협상, 최소 20% 올리는 4단계 전략", description: "당신의 가치를 증명하고, 원하는 연봉을 얻어내는 실전 협상 기술을 공개합니다.", category: "연봉", tags: ["연봉협상", "커리어", "몸값"], level: "중급", publishedDate: "2025-10-20", views: 98765, content: `` },
+  { slug: "salary-guide-2025", title: "2025년 연봉 실수령액 완벽 분석", description: "최신 세법을 적용한 연봉 구간별 상세 실수령액 표를 제공합니다.", category: "연봉", tags: ["연봉", "실수령액", "2025년"], level: "초급", publishedDate: "2025-10-26", views: 150234, content: `
+    <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+      '연봉 5,000만원'이면 내 통장에는 한 달에 얼마가 찍힐까요? 연봉 계약서의 숫자와 실제 월급이 다른 이유는 바로 '세금'과 '4대보험' 때문입니다. 2025년 최신 기준을 적용한 연봉 구간별 실수령액을 한눈에 볼 수 있도록 정리했습니다.
+    </p>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-blue-500"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 12v-4"></path><path d="M12 16h.01"></path></svg>
+        내 월급에서 무엇을 떼어갈까? (공제 항목)
+      </h2>
+      <p>
+        월급에서 공제되는 항목은 크게 '4대보험'과 '소득세'로 나뉩니다.
+      </p>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+          <h3 className="font-bold !mt-0 !mb-1">4대 보험</h3>
+          <p className="!text-sm !my-0">국민연금, 건강보험(장기요양보험 포함), 고용보험. 내 소득의 약 9%가 공제됩니다.</p>
+        </div>
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+          <h3 className="font-bold !mt-0 !mb-1">소득세 & 지방소득세</h3>
+          <p className="!text-sm !my-0">총 급여에서 비과세 소득과 각종 공제를 제외한 '과세표준'에 따라 부과되며, 소득이 높을수록 세율도 높아집니다.</p>
+        </div>
+      </div>
+    </section>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">2025년 연봉 실수령액 표</h2>
+      <p>
+        아래 표는 1인 가구, 비과세액 20만원(식대 등)을 기준으로 계산한 예상 금액입니다. 부양가족 수 등 개인별 조건에 따라 실제 수령액은 달라질 수 있습니다.
+      </p>
+      <div className="overflow-x-auto mt-4 shadow-md rounded-lg">
+        <table className="w-full text-center text-sm">
+          <thead className="bg-gray-100 dark:bg-gray-800">
+            <tr>
+              <th className="p-3 font-semibold">연봉</th>
+              <th className="p-3 font-semibold">월 환산액</th>
+              <th className="p-3 font-semibold text-red-500">공제액 합계</th>
+              <th className="p-3 font-semibold text-blue-600">월 예상 실수령액</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">3,000만원</td><td className="p-3">250만원</td><td className="p-3 text-red-500">약 28만원</td><td className="p-3 font-bold text-blue-600">약 222만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">4,000만원</td><td className="p-3">333만원</td><td className="p-3 text-red-500">약 43만원</td><td className="p-3 font-bold text-blue-600">약 290만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">5,000만원</td><td className="p-3">417만원</td><td className="p-3 text-red-500">약 63만원</td><td className="p-3 font-bold text-blue-600">약 354만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">6,000만원</td><td className="p-3">500만원</td><td className="p-3 text-red-500">약 86만원</td><td className="p-3 font-bold text-blue-600">약 414만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">7,000만원</td><td className="p-3">583만원</td><td className="p-3 text-red-500">약 111만원</td><td className="p-3 font-bold text-blue-600">약 472만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">8,000만원</td><td className="p-3">667만원</td><td className="p-3 text-red-500">약 138만원</td><td className="p-3 font-bold text-blue-600">약 529만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">9,000만원</td><td className="p-3">750만원</td><td className="p-3 text-red-500">약 168만원</td><td className="p-3 font-bold text-blue-600">약 582만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">1억원</td><td className="p-3">833만원</td><td className="p-3 text-red-500">약 199만원</td><td className="p-3 font-bold text-blue-600">약 634만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">1.5억원</td><td className="p-3">1,250만원</td><td className="p-3 text-red-500">약 384만원</td><td className="p-3 font-bold text-blue-600">약 866만원</td></tr>
+            <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50"><td className="p-3 font-bold">2억원</td><td className="p-3">1,667만원</td><td className="p-3 text-red-500">약 598만원</td><td className="p-3 font-bold text-blue-600">약 1,069만원</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section className="mt-16 text-center bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl">
+      <h2 className="!text-2xl font-bold">
+        내 연봉의 정확한 실수령액 계산하기
+      </h2>
+      <p className="mt-4 max-w-xl mx-auto">
+        부양가족 수, 비과세액 등 나의 상황에 맞는 정확한 실수령액이 궁금하다면, '연봉 계산기'에 직접 입력하여 1원 단위까지 확인해보세요.
+      </p>
+      <a
+        href="/salary"
+        className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block w-5 h-5 mr-2"><path d="M12 20V10H6V8l6-6 6 6v2h-6v8Z"></path><path d="M12 20v-2"></path><path d="M12 12v-2"></path></svg>
+        연봉 계산기 바로가기
+      </a>
+    </section>
+  ` },
+  { slug: "salary-negotiation-strategy", title: "연봉협상, 최소 20% 올리는 4단계 전략", description: "당신의 가치를 증명하고, 원하는 연봉을 얻어내는 실전 협상 기술을 공개합니다.", category: "연봉", tags: ["연봉협상", "커리어", "몸값"], level: "중급", publishedDate: "2025-10-20", views: 98765, content: `
+    <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+      연봉 협상은 단순히 돈을 더 달라고 조르는 과정이 아닙니다. 지난 1년간 내가 회사에 기여한 바를 객관적인 데이터로 증명하고, 나의 시장 가치에 맞는 합당한 대우를 요구하는 '논리적인 설득' 과정입니다. 철저한 준비만이 당신을 협상의 승자로 이끌 것입니다.
+    </p>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7 text-purple-500"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+        성공적인 연봉 협상을 위한 4단계
+      </h2>
+      <div className="mt-6 space-y-8">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600 font-bold text-xl">1</div>
+          <div>
+            <h3 className="font-bold !mt-0 !mb-1">정보 수집: 나의 시장 가치를 파악하라</h3>
+            <p className="!text-sm !my-0">
+              채용 사이트(원티드, 리멤버)의 연봉 정보, 업계 현직자 커뮤니티(블라인드)를 통해 비슷한 연차와 직무의 평균 연봉을 파악하세요. 이것이 당신의 협상 기준점이 됩니다.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600 font-bold text-xl">2</div>
+          <div>
+            <h3 className="font-bold !mt-0 !mb-1">성과 정리: 숫자로 증명하라</h3>
+            <p className="!text-sm !my-0">
+              '열심히 일했다'는 말은 힘이 없습니다. '어떤 프로젝트로 매출을 몇 % 상승시켰다', '업무 프로세스 개선으로 비용을 얼마 절감했다' 와 같이 성과를 구체적인 숫자로 정리하세요.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600 font-bold text-xl">3</div>
+          <div>
+            <h3 className="font-bold !mt-0 !mb-1">목표 설정: 희망 연봉과 마지노선을 정하라</h3>
+            <p className="!text-sm !my-0">
+              조사한 시장 가치와 성과를 바탕으로 희망 연봉(이상적인 금액)과 마지노선(최소한 받아야 하는 금액)을 명확히 정하세요. 감정적인 대응을 피하고 유연하게 대처할 수 있습니다.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600 font-bold text-xl">4</div>
+          <div>
+            <h3 className="font-bold !mt-0 !mb-1">논리적인 소통: 근거를 제시하라</h3>
+            <p className="!text-sm !my-0">
+              '동기는 더 받는다던데' 같은 감정적인 비교는 최악입니다. 준비한 자료를 바탕으로 '저는 회사에 이렇게 기여했고, 저의 시장 가치는 이 정도이니, 이 정도의 보상을 기대합니다' 라고 자신감 있게 이야기하세요.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <blockquote className="!border-l-purple-500 mt-12">
+        <p className="font-bold flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg> 협상 테이블에서의 전문가 Tip</p>
+        <ul className="!my-2 space-y-2 text-base">
+            <li><strong>먼저 액수를 말하지 마라:</strong> 회사 측의 제안을 먼저 들어보고 협상을 시작하는 것이 유리합니다.</li>
+            <li><strong>침묵을 활용하라:</strong> 원하는 금액과 근거를 제시한 후에는, 불안해하며 말을 덧붙이지 말고 차분히 상대의 답변을 기다리세요. 침묵이 당신의 자신감을 보여줍니다.</li>
+            <li><strong>긍정적인 태도를 유지하라:</strong> 협상은 싸움이 아닙니다. '회사와 함께 성장하고 싶다'는 긍정적인 태도를 유지하며, 당신의 가치를 인정해달라고 정중히 요구하세요.</li>
+        </ul>
+    </blockquote>
+    <section className="mt-12 bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl border border-red-200 dark:border-red-800">
+      <h2 className="!mt-0 !text-2xl font-bold text-red-700 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+        회사의 '거절'에 대처하는 법
+      </h2>
+      <ul className="!my-4 space-y-2 text-base">
+        <li><strong>"회사 예산이 부족합니다":</strong> "이해합니다. 그렇다면 혹시 연봉 외에 스톡옵션, 성과급, 복지포인트, 추가 유급휴가 등 다른 보상 방안도 논의가 가능할까요?" 라며 대안을 제시하세요.</li>
+        <li><strong>"내부 규정상 어렵습니다":</strong> "그렇군요. 그렇다면 다음 평가 시점에 제가 원하는 수준의 보상을 받기 위해 어떤 목표를 달성해야 할지 구체적으로 알려주실 수 있을까요?" 라며 다음을 기약하세요.</li>
+        <li><strong>"일단 동결 후, 나중에 인상":</strong> "알겠습니다. 논의된 내용을 잊지 않도록, 간단하게 메일로 정리해서 보내드려도 괜찮을까요?" 라며 내용을 기록으로 남기세요.</li>
+      </ul>
+    </section>
+    <section className="mt-16 text-center bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl">
+      <h2 className="!text-2xl font-bold">
+        연봉 인상 후, 내 통장엔 얼마가 더 찍힐까?
+      </h2>
+      <p className="mt-4 max-w-xl mx-auto">
+        연봉 1,000만원 인상과 500만원 인상의 실수령액 차이는 생각보다 큽니다. '연봉 계산기'로 협상 전후의 월급을 비교하고, 당신의 노력이 가져온 실질적인 변화를 체감해보세요.
+      </p>
+      <a
+        href="/salary"
+        className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block w-5 h-5 mr-2"><path d="M12 20V10H6V8l6-6 6 6v2h-6v8Z"></path><path d="M12 20v-2"></path><path d="M12 12v-2"></path></svg>
+        인상 전후 실수령액 비교하기
+      </a>
+    </section>
+  ` },
   { slug: "nekarakubae-salary", title: "네카라쿠배 개발자 초봉 1억, 그 진실은?", description: "계약 연봉, 사이닝 보너스, 스톡옵션을 포함한 '영끌 초봉'의 실체를 파헤칩니다.", category: "연봉", tags: ["개발자", "IT", "네카라쿠배"], level: "중급", publishedDate: "2025-10-15", views: 120345, content: `
     <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
       '네카라쿠배'는 더 이상 단순한 기업 이름의 나열이 아닙니다. 높은 연봉, 최고의 복지, 뛰어난 동료, 그리고 무한한 성장 기회를 상징하는 대한민국 IT 인재들의 '워너비' 그 자체가 되었습니다. 과연 이들 기업은 무엇이 다를까요?
