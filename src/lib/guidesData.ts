@@ -2004,7 +2004,7 @@ export const guides: Guide[] = [
       </a>
     </section>
   ` },
-  { slug: "real-estate-investment-basics", title: "부동산 소액 투자, 1000만원으로 시작하는 법", description: "리츠(REITs)를 활용하여 누구나 쉽게 부동산에 간접 투자하는 방법을 알려드립니다.", category: "부동산", tags: ["리츠", "소액투자", "재테크"], level: "초급", publishedDate: "2025-10-03", views: 87654, content: `
+  { slug: "real-estate-investment-basics", title: "부동산 소액 투자, 1000만원으로 시작하는 법", description: "리츠(REITs)를 활용하여 누구나 쉽게 부동산에 간접 투자하는 방법을 알려드립니다.", category: "재테크/투자", tags: ["리츠", "소액투자", "재테크"], level: "초급", publishedDate: "2025-10-03", views: 87654, content: `
     <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
       '부동산 투자'라고 하면 수억 원의 목돈이 있어야만 가능하다고 생각하시나요? 단돈 1만원으로도 강남의 대형 빌딩 주인이 되어 월세처럼 따박따박 배당금을 받을 수 있는 방법이 있습니다. 바로 '리츠(REITs)'를 통해서입니다. 부동산 투자의 패러다임을 바꾼 리츠의 모든 것을 알려드립니다.
     </p>
