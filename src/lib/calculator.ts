@@ -136,3 +136,101 @@ export function calculateNetSalary(
     localTax: Math.round(localTax),
   };
 }
+
+// [2026년용 추가] 2026년 세법 변경을 가정하여 계산 로직을 복제합니다.
+// TODO: 2026년 실제 세율 및 공제 한도가 확정되면 아래 상수를 업데이트해야 합니다.
+const PENSION_RATE_2026 = 0.045;
+const PENSION_MONTHLY_CAP_2026 = 6200000 * PENSION_RATE_2026; // 예시: 상한액 620만원으로 상향 가정
+const HEALTH_RATE_2026 = 0.036; // 예시: 건강보험 요율 3.6%로 인상 가정
+const LONG_TERM_CARE_RATE_2026 = 0.13; // 예시: 장기요양보험 요율 13%로 인상 가정
+const EMPLOYMENT_INSURANCE_RATE_2026 = 0.009;
+
+export function calculateNetSalary2026(
+  annualSalary: number,
+  nonTaxableAmount: number = 0,
+  dependents: number = 1,
+  children: number = 0,
+  advancedSettings: AdvancedSettings
+) {
+  if (annualSalary <= 0) {
+    return {
+      monthlyNet: 0,
+      totalDeduction: 0,
+      pension: 0,
+      health: 0,
+      longTermCare: 0,
+      employment: 0,
+      incomeTax: 0,
+      localTax: 0,
+    };
+  }
+
+  const actualNonTaxableAmount = Math.min(annualSalary, nonTaxableAmount);
+  const taxableAnnualSalary = annualSalary - actualNonTaxableAmount;
+  const monthlySalary = annualSalary / 12;
+  const taxableMonthlyIncome = Math.max(
+    0,
+    monthlySalary - actualNonTaxableAmount / 12
+  );
+
+  const pension = Math.min(
+    taxableMonthlyIncome * PENSION_RATE_2026,
+    PENSION_MONTHLY_CAP_2026
+  );
+  const health = taxableMonthlyIncome * HEALTH_RATE_2026;
+  const longTermCare = health * LONG_TERM_CARE_RATE_2026;
+  const employment = taxableMonthlyIncome * EMPLOYMENT_INSURANCE_RATE_2026;
+
+  const earnedIncomeDeduction = getEarnedIncomeDeduction(taxableAnnualSalary);
+
+  const personalDeduction =
+    dependents * 1500000 +
+    advancedSettings.disabledDependents * 2000000 +
+    advancedSettings.seniorDependents * 1000000;
+
+  const pensionDeduction = pension * 12;
+
+  const taxBase = Math.max(
+    0,
+    taxableAnnualSalary -
+      earnedIncomeDeduction -
+      personalDeduction -
+      pensionDeduction
+  );
+
+  const calculatedTax = getCalculatedTax(taxBase);
+  const taxCredit = getTaxCredit(calculatedTax, taxableAnnualSalary);
+
+  let childTaxCredit = 0;
+  if (children === 1) {
+    childTaxCredit = 150000;
+  } else if (children >= 2) {
+    childTaxCredit = 350000 + (children - 2) * 300000;
+  }
+
+  let finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
+
+  if (advancedSettings.isSmeYouth) {
+    const taxReductionLimit = 2000000;
+    const taxReductionAmount = finalAnnualTax * 0.9;
+    finalAnnualTax -= Math.min(taxReductionAmount, taxReductionLimit);
+  }
+
+  const incomeTax = finalAnnualTax / 12;
+  const localTax = incomeTax * LOCAL_INCOME_TAX_RATE;
+
+  const totalDeduction =
+    pension + health + longTermCare + employment + incomeTax + localTax;
+  const finalMonthlyNet = monthlySalary - totalDeduction;
+
+  return {
+    monthlyNet: Math.round(finalMonthlyNet),
+    totalDeduction: Math.round(totalDeduction),
+    pension: Math.round(pension),
+    health: Math.round(health),
+    longTermCare: Math.round(longTermCare),
+    employment: Math.round(employment),
+    incomeTax: Math.round(incomeTax),
+    localTax: Math.round(localTax),
+  };
+}

@@ -32,13 +32,23 @@ const navConfig: NavItem[] = [
     ],
   },
   {
-    name: "연봉 테이블",
+    name: "2025 연봉 테이블",
     type: "dropdown",
     items: [
       { name: "연봉 표", href: "/table/annual" },
       { name: "월급 표", href: "/table/monthly" },
       { name: "주급 표", href: "/table/weekly" },
       { name: "시급 표", href: "/table/hourly" },
+    ],
+  },
+  {
+    name: "2026 연봉 테이블",
+    type: "dropdown",
+    items: [
+      { name: "2026 연봉 표", href: "/table/2026/annual" },
+      { name: "2026 월급 표", href: "/table/2026/monthly" },
+      { name: "2026 주급 표", href: "/table/2026/weekly" },
+      { name: "2026 시급 표", href: "/table/2026/hourly" },
     ],
   },
   {
@@ -85,7 +95,7 @@ const Dropdown = ({ item, pathname }: { item: DropdownItem; pathname: string | n
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button className="flex items-center gap-1 py-2 px-3 text-base font-medium text-foreground/70 hover:text-foreground transition-colors">
+      <button className="flex items-center gap-1 py-2 px-2 lg:px-3 text-sm lg:text-base font-medium text-foreground/70 hover:text-foreground transition-colors whitespace-nowrap">
         {item.name}
         <ChevronDown size={16} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
@@ -182,7 +192,7 @@ export default function Header() {
 
           <div className="flex items-center">
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
                   <Dropdown key={item.name} item={item} pathname={pathname} />
@@ -190,7 +200,7 @@ export default function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="py-2 px-4 text-base font-medium text-foreground/70 hover:text-foreground transition-colors"
+                    className="py-2 px-3 text-sm lg:text-base font-medium text-foreground/70 hover:text-foreground transition-colors whitespace-nowrap"
                   >
                     {item.name}
                   </Link>
@@ -198,9 +208,9 @@ export default function Header() {
               )}
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 py-2 px-4 ml-4 text-base font-bold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                className="flex items-center gap-2 py-2 px-3 ml-2 text-sm lg:text-base font-bold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap"
               >
-                <LayoutDashboard size={18} />
+                <LayoutDashboard size={16} className="lg:w-4 lg:h-4" />
                 마이 대시보드
               </Link>
             </div>
