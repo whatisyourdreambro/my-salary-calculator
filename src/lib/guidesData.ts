@@ -19,6 +19,7 @@ export const categories = [
   { id: "세금", name: "절세/세금" },
   { id: "투자", name: "재테크/투자" },
   { id: "부동산", name: "부동산" },
+  { id: "노동/법률", name: "노동/법률" },
   { id: "기초", name: "금융 기초" },
 ];
 
@@ -2515,4 +2516,187 @@ export const guides: Guide[] = [
       </a>
     </section>
   ` },
+  {
+    slug: "labor-union-pros-and-cons",
+    title: "노동조합, 가입할까 말까? 장단점 완벽 비교",
+    description: "노동조합 가입을 고민하는 당신을 위해, 노조의 진짜 역할과 장단점을 객관적으로 분석해 드립니다.",
+    category: "노동/법률",
+    tags: ["노동조합", "노조", "직장생활"],
+    level: "중급",
+    publishedDate: "2025-11-08",
+    views: 12345,
+    content: `
+    <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+      '노동조합'하면 무엇이 떠오르시나요? 빨간 조끼, 머리띠, 투쟁? 혹은 회사의 부당함에 맞서 나의 권리를 지켜주는 든든한 울타리? 노동조합은 근로자가 주체가 되어 근로조건의 유지·개선 기타 근로자의 경제적·사회적 지위의 향상을 도모함을 목적으로 조직하는 단체입니다. 가입을 망설이는 당신을 위해, 노동조합의 장점과 단점을 객관적으로 비교 분석해 드립니다.
+    </p>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">노동조합의 장점: 뭉치면 강해진다</h2>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+          <h3 className="font-bold !mt-0 !mb-2 text-green-700 dark:text-green-300">1. 임금 및 복지 향상</h3>
+          <p className="!text-sm !my-0">개인이 회사와 동등한 위치에서 연봉, 성과급, 복지 혜택을 협상하기는 어렵습니다. 노조는 조합원들의 힘을 모아 회사와 대등한 위치에서 '단체교섭'을 진행하며, 이를 통해 개인 혼자서는 얻기 힘든 임금 인상과 복지 향상을 이끌어낼 수 있습니다.</p>
+        </div>
+        <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+          <h3 className="font-bold !mt-0 !mb-2 text-green-700 dark:text-green-300">2. 부당해고 및 징계로부터 보호</h3>
+          <p className="!text-sm !my-0">회사가 정당한 이유 없이 해고, 징계, 부서 이동 등 불이익을 줄 경우, 노조는 법률 자문, 변호사 선임 등을 통해 조합원이 부당한 처우를 받지 않도록 보호하는 방패 역할을 합니다.</p>
+        </div>
+        <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+          <h3 className="font-bold !mt-0 !mb-2 text-green-700 dark:text-green-300">3. 투명한 정보 공개 요구</h3>
+          <p className="!text-sm !my-0">회사의 경영 성과, 성과급 지급 기준 등 민감한 정보들을 투명하게 공개하도록 요구할 수 있습니다. 이를 통해 깜깜이 성과급 지급과 같은 불합리한 관행을 개선하고, 공정한 보상 체계를 만드는 데 기여할 수 있습니다.</p>
+        </div>
+        <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+          <h3 className="font-bold !mt-0 !mb-2 text-green-700 dark:text-green-300">4. 근무 환경 개선</h3>
+          <p className="!text-sm !my-0">과도한 야근, 열악한 휴게 공간, 불합리한 평가 제도 등 개인이 말하기 어려운 문제들을 노조가 공식적으로 문제 제기하고 개선을 요구하여 더 나은 근무 환경을 만들 수 있습니다.</p>
+        </div>
+      </div>
+    </section>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">노동조합의 단점: 빛과 그림자</h2>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+          <h3 className="font-bold !mt-0 !mb-2 text-red-700 dark:text-red-300">1. 조합비 납부 의무</h3>
+          <p className="!text-sm !my-0">노조 운영을 위해 매달 통상임금의 1% 내외를 조합비로 납부해야 합니다. 노조의 활동으로 얻는 이익이 조합비보다 크다고 판단될 때 가입하는 것이 합리적입니다.</p>
+        </div>
+        <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+          <h3 className="font-bold !mt-0 !mb-2 text-red-700 dark:text-red-300">2. 회사와의 갈등 가능성</h3>
+          <p className="!text-sm !my-0">노조 활동이 활발한 사업장의 경우, 파업이나 쟁의 행위 등으로 인해 회사와의 관계가 악화될 수 있으며, 이 과정에서 조합원들이 심리적, 물리적 어려움을 겪을 수 있습니다.</p>
+        </div>
+        <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+          <h3 className="font-bold !mt-0 !mb-2 text-red-700 dark:text-red-300">3. 집단주의적 의사결정</h3>
+          <p className="!text-sm !my-0">노조의 결정(예: 임금 인상률)이 나의 개인적인 생각과 다르더라도 따라야 하는 경우가 있습니다. 개인의 성과에 따른 차등 보상보다, 전체 조합원의 이익을 우선시하는 경향이 있습니다.</p>
+        </div>
+        <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+          <h3 className="font-bold !mt-0 !mb-2 text-red-700 dark:text-red-300">4. 정치적 편향성 우려</h3>
+          <p className="!text-sm !my-0">일부 노조의 경우, 근로조건 개선이라는 본연의 목적을 넘어 특정 정당이나 정치적 입장을 대변하는 활동을 하여 내부 조합원들 간의 갈등을 유발하기도 합니다.</p>
+        </div>
+      </div>
+    </section>
+    <section className="mt-16 text-center bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl">
+      <h2 className="!text-2xl font-bold">
+        노동조합, 더 자세히 알고 싶다면?
+      </h2>
+      <p className="mt-4 max-w-xl mx-auto">
+        노동조합의 종류, 설립 방법, 그리고 교섭대표노조의 역할 등 더 깊이 있는 정보가 궁금하다면 아래 가이드를 확인해보세요.
+      </p>
+      <a
+        href="/guides/labor-union-deep-dive"
+        className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+      >
+        노동조합 심층 탐구 가이드 보기
+      </a>
+    </section>
+  `
+  },
+  {
+    slug: "labor-union-deep-dive",
+    title: "노동조합 심층 탐구: 종류, 설립, 교섭대표노조 A to Z",
+    description: "단위노조, 산별노조, 교섭대표노조 등 복잡한 노동조합의 세계를 명확하게 정리해 드립니다.",
+    category: "노동/법률",
+    tags: ["노동조합", "산별노조", "교섭대표노조"],
+    level: "고급",
+    publishedDate: "2025-11-07",
+    views: 8765,
+    content: `
+    <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+      최근 IT 업계를 중심으로 노동조합 설립 열풍이 불고 있습니다. 네이버, 카카오, 넥슨, 스마일게이트 등 주요 기업에 노조가 생기면서 '노동조합'은 더 이상 특정 산업군만의 이야기가 아니게 되었습니다. 하지만 단위노조, 지회, 산별노조, 교섭대표노조 등 복잡한 용어들은 여전히 어렵게 느껴집니다. 노동조합의 종류와 설립 방법, 그리고 가장 중요한 '교섭대표노조'의 역할까지, 노동조합의 모든 것을 심층적으로 알아봅니다.
+    </p>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">노동조합의 종류: 어디까지 묶을 것인가?</h2>
+      <div className="mt-6 space-y-4">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+          <h3 className="font-bold !mt-0 !text-lg">1. 기업별 노동조합 (단위노조)</h3>
+          <p className="!text-sm !my-0">가장 일반적인 형태로, 특정 기업에 소속된 근로자들로 구성된 노조입니다. (예: 삼성전자 노동조합, 현대자동차 노동조합)</p>
+        </div>
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+          <h3 className="font-bold !mt-0 !text-lg">2. 산업별 노동조합 (산별노조)</h3>
+          <p className="!text-sm !my-0">동일한 산업에 종사하는 근로자들이 기업의 경계를 넘어 함께 구성하는 노조입니다. (예: 전국금속노동조합, 전국화학섬유식품산업노동조합). 보통 산별노조 산하에 각 기업별 '지회'가 있는 구조입니다. (예: 전국금속노동조합 현대자동차지부)</p>
+        </div>
+        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border dark:border-gray-700">
+          <h3 className="font-bold !mt-0 !text-lg">3. 일반 노동조합</h3>
+          <p className="!text-sm !my-0">직업이나 산업과 관계없이, 여러 분야의 근로자들이 함께 가입할 수 있는 노조입니다. (예: 청년유니온)</p>
+        </div>
+      </div>
+    </section>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">노동조합은 어떻게 만드나요? (설립 절차)</h2>
+      <p>2명 이상의 근로자만 모이면 누구나 자유롭게 노동조합을 설립할 수 있습니다.</p>
+      <ol className="!my-4 list-decimal list-inside space-y-2 text-base bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
+        <li><strong>설립 준비:</strong> 함께할 동료 2명 이상을 모으고, 노조의 목표와 활동 방향을 정합니다.</li>
+        <li><strong>규약 제정:</strong> 노조의 명칭, 목적, 조합원의 자격 등 노조 운영에 필요한 규칙(규약)을 만듭니다.</li>
+        <li><strong>창립 총회 개최:</strong> 조합원 과반수가 참석하여 규약을 확정하고, 임원을 선출합니다.</li>
+        <li><strong>설립 신고:</strong> 관할 행정관청(고용노동부, 시/군/구청)에 설립신고서를 제출하면 '노동조합 설립 필증'이 교부되며 법적인 지위를 갖게 됩니다.</li>
+      </ol>
+    </section>
+    <section className="mt-12 bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+      <h2 className="!mt-0 !text-2xl font-bold text-yellow-700">가장 중요한 '교섭대표노조'란?</h2>
+      <p className="!my-2 text-base">
+        하나의 회사에 여러 개의 노동조합이 있는 경우, 회사는 모든 노조와 개별적으로 교섭하지 않습니다. 법적으로 '교섭 창구 단일화' 절차를 거쳐, 조합원 수가 가장 많은 <strong>과반수 노조</strong>가 '교섭대표노조'의 지위를 얻어 모든 조합원을 대표하여 회사와 교섭하게 됩니다.
+      </p>
+      <blockquote className="!border-l-yellow-500 !mt-4 !text-base">
+        <p>
+          <strong>핵심:</strong> 내가 가입한 노조가 교섭대표노조가 아니라면, 임금 및 단체협약의 주요 내용 결정 과정에서 목소리를 내기 어렵습니다. 따라서 어떤 노조가 우리 회사의 교섭대표노조인지, 그리고 그 노조가 나의 입장을 잘 대변해주는지가 매우 중요합니다.
+        </p>
+        <a href="/guides/majority-union-benefits" className="text-sm font-bold text-yellow-800 dark:text-yellow-300 hover:underline block mt-2">→ 과반수 노조의 막강한 힘 알아보기</a>
+      </blockquote>
+    </section>
+  `
+  },
+  {
+    slug: "majority-union-benefits",
+    title: "과반수 노조의 막강한 힘: 근로자에게 유리한 3가지",
+    description: "교섭대표노조가 되었을 때 얻게 되는 강력한 권한과, 그것이 나의 직장생활에 미치는 영향을 알아봅니다.",
+    category: "노동/법률",
+    tags: ["노동조합", "과반수노조", "교섭대표노조"],
+    level: "고급",
+    publishedDate: "2025-11-06",
+    views: 7654,
+    content: `
+    <p className="lead text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-300">
+      하나의 사업장에 여러 노동조합이 존재할 경우, 법에 따라 조합원 수가 가장 많은 '과반수 노조'가 교섭대표노조의 지위를 갖게 됩니다. 이 교섭대표노조는 단순히 조합원 수가 많은 것을 넘어, 법적으로 막강한 권한을 부여받습니다. 과반수 노조가 되었을 때 근로자에게 유리한 3가지 핵심적인 권한을 알아봅니다.
+    </p>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">과반수 노조의 3가지 막강한 권한</h2>
+      <div className="mt-6 space-y-4">
+        <div className="p-6 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+          <h3 className="font-bold !mt-0 !text-xl text-blue-700 dark:text-blue-300">1. 근로시간면제 (타임오프) 제도</h3>
+          <p className="!text-sm !my-2">
+            노조의 간부나 직원이 회사의 업무는 하지 않고 노조 활동만 전담하면서도, 회사로부터 급여를 받을 수 있는 제도입니다. 조합원 수에 따라 사용할 수 있는 총 시간이 정해지며, 과반수 노조는 이 시간을 어떻게 배분할지 결정하는 주도권을 갖게 됩니다. 이를 통해 노조 활동가들이 안정적으로 노조 업무에 집중할 수 있는 환경이 만들어집니다.
+          </p>
+        </div>
+        <div className="p-6 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+          <h3 className="font-bold !mt-0 !text-xl text-blue-700 dark:text-blue-300">2. 노사협의회 근로자위원 위촉 권한</h3>
+          <p className="!text-sm !my-2">
+            노사협의회는 임금 외에 회사의 복지, 교육, 안전 등 전반적인 사항을 논의하는 중요한 기구입니다. 과반수 노조는 이 노사협의회에 참여하는 '근로자위원'을 위촉할 수 있는 막강한 권한을 가집니다. 이를 통해 회사의 중요한 의사결정 과정에 직접 참여하여 근로자의 목소리를 반영할 수 있습니다.
+          </p>
+        </div>
+        <div className="p-6 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+          <h3 className="font-bold !mt-0 !text-xl text-blue-700 dark:text-blue-300">3. 취업규칙 불이익 변경 시 동의권</h3>
+          <p className="!text-sm !my-2">
+            회사가 근로자에게 불리하게 취업규칙(예: 임금피크제 도입, 휴가 축소 등)을 변경하려고 할 때, 반드시 근로자 과반수의 동의를 얻어야 합니다. 이때 과반수 노조가 있다면, 전체 근로자의 의견을 묻는 대신 '과반수 노조의 동의'만으로 법적인 효력이 발생합니다. 즉, 과반수 노조가 반대하면 회사는 근로자에게 불리한 제도를 마음대로 도입할 수 없습니다.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section className="mt-12">
+      <h2 className="!text-2xl font-bold">결론: 과반수의 힘이 근로자의 힘</h2>
+      <p>
+        이처럼 과반수 노조는 단순히 교섭대표권을 갖는 것을 넘어, 회사의 주요 의사결정에 실질적인 영향력을 행사할 수 있는 법적 권한을 가집니다. 따라서 어떤 노조가 과반수가 되는지는 전체 근로자의 근로조건과 직장생활에 매우 큰 영향을 미치게 됩니다.
+      </p>
+    </section>
+    <section className="mt-16 text-center bg-gray-100 dark:bg-gray-800/50 p-8 rounded-2xl">
+      <h2 className="!text-2xl font-bold">
+        노동조합, 가입해야 할까?
+      </h2>
+      <p className="mt-4 max-w-xl mx-auto">
+        과반수 노조의 강력한 힘을 알아보았습니다. 이제 노동조합 가입의 장점과 단점을 다시 한번 꼼꼼히 따져보고, 현명한 결정을 내려보세요.
+      </p>
+      <a
+        href="/guides/labor-union-pros-and-cons"
+        className="inline-block mt-6 py-4 px-8 bg-signature-blue text-white rounded-lg text-center font-bold text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+      >
+        노동조합 장단점 비교 가이드 보기
+      </a>
+    </section>
+  `
+  },
 ];
