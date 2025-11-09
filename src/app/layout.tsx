@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import KakaoAdFit from "@/components/KakaoAdFit";
+
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
@@ -128,37 +128,21 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Header />
             <div className="w-full flex-grow grid grid-cols-1 xl:grid-cols-[1fr_minmax(0,1280px)_1fr] gap-4 px-4">
-              {/* 좌측 사이드바 광고 */}
-              <aside className="hidden xl:flex justify-center items-start pt-16">
-                <div className="sticky top-20">
-                  <KakaoAdFit unit="DAN-O4kzbtdd9NleD4P6" width="160" height="600" />
-                </div>
-              </aside>
+
 
               {/* 메인 컨텐츠 영역 */}
               <main className="w-full flex flex-col items-center">
-                {/* 상단 리더보드 광고 */}
-                <div className="w-full flex justify-center py-4">
-                  <KakaoAdFit unit="DAN-7DJN8QMp6O5Kayn7" width="728" height="90" />
-                </div>
+
 
                 {/* 페이지 실제 컨텐츠 */}
                 <div className="w-full flex-grow">
                   {children}
                 </div>
 
-                {/* 하단 배너 광고 */}
-                <div className="w-full flex justify-center py-8">
-                  <KakaoAdFit unit="DAN-WgV2d248sf3mJoB2" width="320" height="100" />
-                </div>
+
               </main>
 
-              {/* 우측 사이드바 광고 */}
-              <aside className="hidden xl:flex justify-center items-start pt-16">
-                <div className="sticky top-20">
-                  <KakaoAdFit unit="DAN-HVBNRsdPlneE3Uxn" width="160" height="600" />
-                </div>
-              </aside>
+
             </div>
             <Footer />
           </div>
