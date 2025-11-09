@@ -1,11 +1,10 @@
 // src/app/table/annual/page.tsx
 
 import { Suspense } from "react";
-import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
 import { HelpCircle } from "lucide-react";
 import Link from "next/link";
-import TableInteraction from "@/components/TableInteraction"; // 역할 분리된 클라이언트 컴포넌트
+import AnnualTableInteractive from "./AnnualTableInteractive";
 
 // Cloudflare Pages 배포를 위한 Edge 런타임 설정
 export const runtime = "edge";
@@ -78,21 +77,16 @@ async function AnnualTable({
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
-          <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border border-border">
-            {/* [수정 완료] TableInteraction 컴포넌트에 더 이상 불필요한 props를 전달하지 않습니다. */}
-            <TableInteraction totalPages={totalPages} basePath="/table/annual" searchPlaceholder="연봉으로 검색..." />
+        <AnnualTableInteractive
+          allData={allData}
+          tableHeaders={tableHeaders}
+          highlightRows={highlightRows}
+          totalPages={totalPages}
+          paginatedData={paginatedData}
+        />
 
-            <div className="overflow-hidden mt-8">
-              <SalaryTable
-                headers={tableHeaders}
-                data={paginatedData}
-                highlightRows={highlightRows}
-                unit="원"
-              />
-            </div>
-          </div>
-          <section className="mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <HelpCircle className="w-8 h-8 text-primary" />
               연봉에 대한 모든 궁금증 (Q&A)

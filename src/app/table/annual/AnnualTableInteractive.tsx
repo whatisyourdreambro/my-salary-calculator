@@ -1,7 +1,7 @@
 "use client";
 
 import InteractiveTable from "@/components/InteractiveTable";
-import { calculateNetSalary2026 } from "@/lib/calculator";
+import { calculateNetSalary } from "@/lib/calculator";
 import type { SalaryData } from "@/lib/generateData";
 
 interface AnnualTableInteractiveProps {
@@ -20,8 +20,8 @@ export default function AnnualTableInteractive({
   paginatedData,
 }: AnnualTableInteractiveProps) {
   const pageConfig = {
-    title: "연봉별 실수령액 시뮬레이터 (2026년 예상)",
-    basePath: "/table/2026/annual",
+    title: "연봉별 실수령액 시뮬레이터 (2025년)",
+    basePath: "/table/annual",
     searchPlaceholder: "연봉으로 검색...",
     salaryLabel: "연봉",
     salaryMin: 10000000,
@@ -37,7 +37,7 @@ export default function AnnualTableInteractive({
       highlightRows={highlightRows}
       totalPages={totalPages}
       paginatedData={paginatedData}
-      calculationFn={calculateNetSalary2026}
+      calculationFn={calculateNetSalary}
       pageConfig={pageConfig}
     />
   );

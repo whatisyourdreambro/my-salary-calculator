@@ -1,10 +1,10 @@
 "use client";
 
 import InteractiveTable from "@/components/InteractiveTable";
-import { calculateNetSalary2026 } from "@/lib/calculator";
+import { calculateNetSalary } from "@/lib/calculator";
 import type { SalaryData } from "@/lib/generateData";
 
-interface WeeklyTableInteractiveProps {
+interface HourlyTableInteractiveProps {
   allData: SalaryData[];
   tableHeaders: { key: string; label: string }[];
   highlightRows: number[];
@@ -12,22 +12,22 @@ interface WeeklyTableInteractiveProps {
   paginatedData: SalaryData[];
 }
 
-export default function WeeklyTableInteractive({
+export default function HourlyTableInteractive({
   allData,
   tableHeaders,
   highlightRows,
   totalPages,
   paginatedData,
-}: WeeklyTableInteractiveProps) {
+}: HourlyTableInteractiveProps) {
   const pageConfig = {
-    title: "주급별 실수령액 시뮬레이터 (2026년 예상)",
-    basePath: "/table/2026/weekly",
-    searchPlaceholder: "주급으로 검색...",
-    salaryLabel: "주급",
-    salaryMin: 100000,
-    salaryMax: 5000000,
-    salaryStep: 50000,
-    defaultSalary: 1000000,
+    title: "시급별 실수령액 시뮬레이터 (2025년)",
+    basePath: "/table/hourly",
+    searchPlaceholder: "시급으로 검색...",
+    salaryLabel: "시급",
+    salaryMin: 10000,
+    salaryMax: 50000,
+    salaryStep: 1000,
+    defaultSalary: 15000,
   };
 
   return (
@@ -38,7 +38,7 @@ export default function WeeklyTableInteractive({
       totalPages={totalPages}
       paginatedData={paginatedData}
       calculationFn={(salary, nonTaxable, dependents, children, settings) => 
-        calculateNetSalary2026(salary * 52, nonTaxable, dependents, children, settings)
+        calculateNetSalary(salary * 8 * 209 / 12 * 12, nonTaxable, dependents, children, settings)
       }
       pageConfig={pageConfig}
     />

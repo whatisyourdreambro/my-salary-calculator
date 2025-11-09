@@ -1,7 +1,7 @@
 "use client";
 
 import InteractiveTable from "@/components/InteractiveTable";
-import { calculateNetSalary2026 } from "@/lib/calculator";
+import { calculateNetSalary } from "@/lib/calculator";
 import type { SalaryData } from "@/lib/generateData";
 
 interface WeeklyTableInteractiveProps {
@@ -20,8 +20,8 @@ export default function WeeklyTableInteractive({
   paginatedData,
 }: WeeklyTableInteractiveProps) {
   const pageConfig = {
-    title: "주급별 실수령액 시뮬레이터 (2026년 예상)",
-    basePath: "/table/2026/weekly",
+    title: "주급별 실수령액 시뮬레이터 (2025년)",
+    basePath: "/table/weekly",
     searchPlaceholder: "주급으로 검색...",
     salaryLabel: "주급",
     salaryMin: 100000,
@@ -38,7 +38,7 @@ export default function WeeklyTableInteractive({
       totalPages={totalPages}
       paginatedData={paginatedData}
       calculationFn={(salary, nonTaxable, dependents, children, settings) => 
-        calculateNetSalary2026(salary * 52, nonTaxable, dependents, children, settings)
+        calculateNetSalary(salary * 52, nonTaxable, dependents, children, settings)
       }
       pageConfig={pageConfig}
     />
