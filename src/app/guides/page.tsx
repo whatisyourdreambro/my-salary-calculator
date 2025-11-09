@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { guides, categories } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function GuidesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -17,7 +17,7 @@ export default function GuidesPage() {
     return sortedGuides.filter(guide => guide.category === selectedCategory);
   }, [selectedCategory]);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -27,7 +27,7 @@ export default function GuidesPage() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
