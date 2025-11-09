@@ -127,30 +127,12 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-            <div className="w-full flex-grow grid grid-cols-1 xl:grid-cols-[1fr_minmax(0,1280px)_1fr] gap-4 px-4">
-
-
-              <aside className="hidden xl:flex justify-center items-start pt-16">
-                <div className="sticky top-20 w-40 h-[600px]">
-                  {/* Ad space */}
-                </div>
-              </aside>
-
-              {/* 메인 컨텐츠 영역 */}
-              <main className="w-full flex flex-col items-center col-span-1 xl:col-start-2">
-                {/* 페이지 실제 컨텐츠 */}
+            <div className="w-full flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <main className="w-full flex flex-col items-center">
                 <div className="w-full flex-grow">
                   {children}
                 </div>
               </main>
-
-              <aside className="hidden xl:flex justify-center items-start pt-16">
-                <div className="sticky top-20 w-40 h-[600px]">
-                  {/* Ad space */}
-                </div>
-              </aside>
-
-
             </div>
             <Footer />
           </div>
