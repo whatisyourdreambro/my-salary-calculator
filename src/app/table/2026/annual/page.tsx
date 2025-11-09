@@ -1,11 +1,10 @@
 // src/app/table/2026/annual/page.tsx
 
 import { Suspense } from "react";
-import SalaryTable from "@/components/SalaryTable";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import TableInteraction from "@/components/TableInteraction";
+import AnnualTableInteractive from "./AnnualTableInteractive";
 
 // Cloudflare Pages 배포를 위한 Edge 런타임 설정
 export const runtime = "edge";
@@ -35,7 +34,6 @@ const structuredData = {
   keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
 };
 
-// 서버 컴포넌트는 데이터 로직에만 집중합니다.
 async function AnnualTable2026({
   searchParams,
 }: {
@@ -77,21 +75,16 @@ async function AnnualTable2026({
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
-          <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border border-border">
-            <TableInteraction totalPages={totalPages} basePath="/table/2026/annual" searchPlaceholder="연봉으로 검색..." />
+        <AnnualTableInteractive
+          allData={allData}
+          tableHeaders={tableHeaders}
+          highlightRows={highlightRows}
+          totalPages={totalPages}
+          paginatedData={paginatedData}
+        />
 
-            <div className="overflow-hidden mt-8">
-              <SalaryTable
-                headers={tableHeaders}
-                data={paginatedData}
-                highlightRows={highlightRows}
-                unit="원"
-              />
-            </div>
-          </div>
-
-          <section className="mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
               2025년 vs 2026년 주요 정책 비교

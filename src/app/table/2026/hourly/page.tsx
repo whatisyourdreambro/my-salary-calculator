@@ -1,11 +1,10 @@
 // src/app/table/2026/hourly/page.tsx
 
 import { Suspense } from "react";
-import SalaryTable from "@/components/SalaryTable";
 import { generateHourlyWageTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import TableInteraction from "@/components/TableInteraction";
+import HourlyTableInteractive from "./HourlyTableInteractive";
 
 export const runtime = "edge";
 
@@ -74,20 +73,16 @@ async function HourlyTable2026({
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
-          <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-xl border border-border">
-            <TableInteraction totalPages={totalPages} basePath="/table/2026/hourly" searchPlaceholder="시급으로 검색..." />
+        <HourlyTableInteractive
+          allData={allData}
+          tableHeaders={tableHeaders}
+          highlightRows={highlightRows}
+          totalPages={totalPages}
+          paginatedData={paginatedData}
+        />
 
-            <div className="overflow-hidden mt-8">
-              <SalaryTable
-                headers={tableHeaders}
-                data={paginatedData}
-                highlightRows={highlightRows}
-                unit="원"
-              />
-            </div>
-          </div>
-          <section className="mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
               2025년 vs 2026년 주요 정책 비교
