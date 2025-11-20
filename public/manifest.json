@@ -1,0 +1,26 @@
+{
+    "name": "Moneysalary - 연봉 계산기",
+    "short_name": "Moneysalary",
+    "description": "2025년 최신 연봉 실수령액 계산기",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#10b981",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "/logo-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/logo-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

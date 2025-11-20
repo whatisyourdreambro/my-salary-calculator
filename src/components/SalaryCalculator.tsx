@@ -5,10 +5,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { calculateNetSalary } from "@/lib/calculator";
-import { calculatePartTimeSalary } from "@/lib/freelancerCalculator"; // 함수 import 추가
+import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import { Share2 } from "lucide-react";
+import { Share2, Copy, CheckCircle } from "lucide-react";
 import type {
   StoredSalaryData,
   StoredFinancialData,
@@ -17,6 +17,7 @@ import type {
 import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
 import NumberStepper from "./NumberStepper";
+import SalaryPieChart from "./SalaryPieChart";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -28,14 +29,13 @@ export default function SalaryCalculator() {
   const router = useRouter();
   const [incomeType, setIncomeType] = useState<IncomeType>("regular");
   const [payBasis, setPayBasis] = useState<"annual" | "monthly">("annual");
-  const [severanceType, setSeveranceType] = useState<"separate" | "included">(
-    "separate"
-  );
+  const [severanceType, setSeveranceType] = useState<"separate" | "included">("separate");
   const [salaryInput, setSalaryInput] = useState("50,000,000");
   const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
   const [monthlyExpenses, setMonthlyExpenses] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
     isSmeYouth: false,
@@ -53,6 +53,37 @@ export default function SalaryCalculator() {
     incomeTax: 0,
     localTax: 0,
   });
+
+  // Load from Local Storage on Mount
+  useEffect(() => {
+    const saved = localStorage.getItem("moneysalary-user-input");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.salaryInput) setSalaryInput(parsed.salaryInput);
+        if (parsed.incomeType) setIncomeType(parsed.incomeType);
+        if (parsed.payBasis) setPayBasis(parsed.payBasis);
+        if (parsed.dependents) setDependents(parsed.dependents);
+        if (parsed.children) setChildren(parsed.children);
+        if (parsed.nonTaxableAmount) setNonTaxableAmount(parsed.nonTaxableAmount);
+      } catch (e) {
+        console.error("Failed to load saved inputs", e);
+      }
+    }
+  }, []);
+
+  // Save to Local Storage on Change (Debounced slightly by effect nature)
+  useEffect(() => {
+    const dataToSave = {
+      salaryInput,
+      incomeType,
+      payBasis,
+      dependents,
+      children,
+      nonTaxableAmount,
+    };
+    localStorage.setItem("moneysalary-user-input", JSON.stringify(dataToSave));
+  }, [salaryInput, incomeType, payBasis, dependents, children, nonTaxableAmount]);
 
   const annualSalary = useMemo(() => {
     const salary = parseNumber(salaryInput);
@@ -85,7 +116,7 @@ export default function SalaryCalculator() {
         totalDeduction: partTimeResult.totalDeduction,
         pension: partTimeResult.nationalPension,
         health: partTimeResult.healthInsurance,
-        longTermCare: 0, // 프리랜서/알바는 장기요양보험료 별도 계산 필요 (여기선 0으로 처리)
+        longTermCare: 0,
         employment: partTimeResult.employmentInsurance,
         incomeTax: partTimeResult.incomeTax,
         localTax: partTimeResult.localTax,
@@ -106,7 +137,6 @@ export default function SalaryCalculator() {
       window.gtag("event", "conversion", {
         send_to: `${process.env.NEXT_PUBLIC_ADS_ID}/${process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION}`,
       });
-      console.log("Google Ads Conversion (Main Calculator) Fired!");
     }
   }, [result]);
 
@@ -134,9 +164,7 @@ export default function SalaryCalculator() {
       return;
     }
     try {
-      const existingDataJSON = localStorage.getItem(
-        "moneysalary-financial-data"
-      );
+      const existingDataJSON = localStorage.getItem("moneysalary-financial-data");
       const existingData: StoredFinancialData = existingDataJSON
         ? JSON.parse(existingDataJSON)
         : { lastUpdated: new Date().toISOString() };
@@ -155,10 +183,7 @@ export default function SalaryCalculator() {
         salary: salaryDataToStore,
         lastUpdated: new Date().toISOString(),
       };
-      localStorage.setItem(
-        "moneysalary-financial-data",
-        JSON.stringify(updatedData)
-      );
+      localStorage.setItem("moneysalary-financial-data", JSON.stringify(updatedData));
       alert("연봉 정보가 대시보드에 저장되었습니다!");
       router.push("/dashboard");
     } catch (error) {
@@ -190,6 +215,16 @@ export default function SalaryCalculator() {
     }
   };
 
+  const handleCopyResult = async () => {
+    try {
+      await navigator.clipboard.writeText(result.monthlyNet.toString());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy result", err);
+    }
+  };
+
   const handleReset = () => {
     setIncomeType("regular");
     setPayBasis("annual");
@@ -204,6 +239,7 @@ export default function SalaryCalculator() {
       disabledDependents: 0,
       seniorDependents: 0,
     });
+    localStorage.removeItem("moneysalary-user-input");
   };
 
   return (
@@ -211,38 +247,35 @@ export default function SalaryCalculator() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* Left Side: Inputs */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+          <div className="bg-card p-4 sm:p-6 rounded-xl border border-border shadow-sm">
             <h2 className="text-xl font-bold border-b border-border pb-4 mb-4">소득 정보</h2>
-            
+
             {/* Income Type Switcher */}
             <div className="flex flex-col sm:flex-row bg-secondary rounded-lg p-1 mb-4">
               <button
                 onClick={() => setIncomeType("regular")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
-                  incomeType === "regular"
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${incomeType === "regular"
                     ? "bg-background shadow-sm text-primary"
                     : "text-muted-foreground hover:bg-secondary/60"
-                }`}
+                  }`}
               >
                 정규직
               </button>
               <button
                 onClick={() => setIncomeType("freelancer")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
-                  incomeType === "freelancer"
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${incomeType === "freelancer"
                     ? "bg-background shadow-sm text-primary"
                     : "text-muted-foreground hover:bg-secondary/60"
-                }`}
+                  }`}
               >
                 프리랜서(3.3%)
               </button>
               <button
                 onClick={() => setIncomeType("part_time")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
-                  incomeType === "part_time"
+                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${incomeType === "part_time"
                     ? "bg-background shadow-sm text-primary"
                     : "text-muted-foreground hover:bg-secondary/60"
-                }`}
+                  }`}
               >
                 아르바이트
               </button>
@@ -257,21 +290,19 @@ export default function SalaryCalculator() {
                   <div className="flex bg-secondary rounded-lg p-1">
                     <button
                       onClick={() => setPayBasis("annual")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
-                        payBasis === "annual"
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${payBasis === "annual"
                           ? "bg-background shadow-sm text-primary"
                           : "text-muted-foreground hover:bg-secondary/60"
-                      }`}
+                        }`}
                     >
                       연봉
                     </button>
                     <button
                       onClick={() => setPayBasis("monthly")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
-                        payBasis === "monthly"
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${payBasis === "monthly"
                           ? "bg-background shadow-sm text-primary"
                           : "text-muted-foreground hover:bg-secondary/60"
-                      }`}
+                        }`}
                     >
                       월급
                     </button>
@@ -285,22 +316,20 @@ export default function SalaryCalculator() {
                     <button
                       onClick={() => setSeveranceType("separate")}
                       disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                        severanceType === "separate"
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${severanceType === "separate"
                           ? "bg-background shadow-sm text-primary"
                           : "text-muted-foreground hover:bg-secondary/60"
-                      }`}
+                        }`}
                     >
                       별도
                     </button>
                     <button
                       onClick={() => setSeveranceType("included")}
                       disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                        severanceType === "included"
+                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${severanceType === "included"
                           ? "bg-background shadow-sm text-primary"
                           : "text-muted-foreground hover:bg-secondary/60"
-                      }`}
+                        }`}
                     >
                       포함
                     </button>
@@ -375,16 +404,29 @@ export default function SalaryCalculator() {
 
         {/* Right Side: Results */}
         <div className="lg:col-span-2">
-          <div className="sticky top-24 space-y-4">
+          <div className="sticky top-24 space-y-6">
             <div className="bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
               <h2 className="text-base sm:text-lg font-bold mb-2 text-muted-foreground">월 예상 실수령액</h2>
-              <p className="text-3xl sm:text-4xl font-bold my-1 text-primary">
-                <CountUp end={result.monthlyNet} duration={0.5} separator="," /> 원
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-3xl sm:text-4xl font-bold my-1 text-primary">
+                  <CountUp end={result.monthlyNet} duration={0.5} separator="," /> 원
+                </p>
+                <button
+                  onClick={handleCopyResult}
+                  className="p-2 hover:bg-secondary rounded-full transition-colors"
+                  title="실수령액 복사"
+                >
+                  {copied ? <CheckCircle className="w-5 h-5 text-primary" /> : <Copy className="w-5 h-5 text-muted-foreground" />}
+                </button>
+              </div>
               <p className="font-semibold text-sm text-destructive mt-2">
                 (공제액 합계: - <CountUp end={result.totalDeduction} duration={0.5} separator="," /> 원)
               </p>
             </div>
+
+            {/* Visual Chart */}
+            <SalaryPieChart netPay={result.monthlyNet} totalDeduction={result.totalDeduction} />
+
             <div className="pt-2 grid grid-cols-3 gap-2">
               <button
                 onClick={handleReset}
