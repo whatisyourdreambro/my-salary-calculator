@@ -8,7 +8,8 @@ interface AdUnitProps {
     responsive?: boolean;
     className?: string;
     sticky?: boolean;
-    label?: string; // For debugging or internal labeling
+    label?: string;
+    layoutKey?: string;
 }
 
 export default function AdUnit({
@@ -18,6 +19,7 @@ export default function AdUnit({
     className = "",
     sticky = false,
     label,
+    layoutKey,
 }: AdUnitProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -57,10 +59,11 @@ export default function AdUnit({
                 <ins
                     className="adsbygoogle block"
                     style={{ display: "block" }}
-                    data-ad-client="ca-pub-2873403048341290"
+                    data-ad-client={process.env.NEXT_PUBLIC_ADS_ID}
                     data-ad-slot={slotId}
                     data-ad-format={format}
                     data-full-width-responsive={responsive ? "true" : "false"}
+                    data-ad-layout-key={layoutKey}
                 />
             </div>
 

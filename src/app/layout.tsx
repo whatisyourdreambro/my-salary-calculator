@@ -112,7 +112,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body className={`${notoSansKr.className} min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary`}>
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -121,11 +121,12 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-
+        <div className="aurora-bg" />
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
+          disableTransitionOnChange
         >
           <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
             <Header />
