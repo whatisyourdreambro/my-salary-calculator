@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState } from "react";
 import {
   ShieldCheck,
   HeartPulse,
@@ -14,18 +16,15 @@ import {
   TrendingUp,
   Home,
   Flame,
+  Search,
+  Sparkles,
 } from "lucide-react";
-import { ElementType } from "react";
-
-export const metadata: Metadata = {
-  title: "금융 용어 사전 | 당신의 돈에 대한 모든 것 | Moneysalary",
-  description:
-    "4대 보험, 세금, 연말정산부터 투자와 재테크까지. 직장인과 사회초년생이 꼭 알아야 할 모든 금융 용어를 가장 쉽게 설명해 드립니다.",
-};
+import { motion, AnimatePresence } from "framer-motion";
+import AdUnit from "@/components/AdUnit";
 
 interface GlossaryItem {
   title: string;
-  icon: ElementType;
+  icon: any;
   category: string;
   summary: string;
   content: string;
@@ -212,6 +211,7 @@ const glossaryData: GlossaryItem[] = [
 ];
 
 const categories = [
+  "전체",
   "4대 보험 & 세금 기초",
   "급여 & 임금",
   "퇴직 & 이직",
@@ -219,70 +219,157 @@ const categories = [
 ];
 
 export default function GlossaryPage() {
-  return (
-    <main className="w-full bg-background">
-      {/* Hero Section */}
-      <div className="w-full bg-gradient-to-br from-gray-800 to-slate-900 text-white text-center py-20 sm:py-28 px-4">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-          금융 용어,
-          <br /> 당신의 돈이 말을 거는 순간
-        </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
-          더 이상 어렵고 복잡한 용어에 주눅 들지 마세요. 당신의 월급봉투와 통장,
-          그리고 미래를 이해하는 가장 확실한 열쇠를 드립니다.
-        </p>
-      </div>
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
 
-      {/* [수정] -mt-20 클래스를 제거하고 pt-16, pb-24를 추가하여 충분한 상하 여백을 확보했습니다. */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
-        <div className="space-y-16">
-          {categories.map((category) => (
-            <section key={category}>
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 border-b-2 border-signature-blue pb-3 mb-8">
-                {category}
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {glossaryData
-                  .filter((item) => item.category === category)
-                  .map((item) => (
-                    <div
-                      key={item.title}
-                      className="flex flex-col p-8 bg-light-card dark:bg-dark-card rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
-                    >
-                      <div className="flex items-center gap-4 mb-3">
-                        <item.icon className="w-8 h-8 text-signature-blue flex-shrink-0" />
-                        <h3 className="!m-0 text-2xl font-bold">
-                          {item.title}
-                        </h3>
-                      </div>
-                      <p className="text-base font-semibold text-gray-500 dark:text-gray-400 italic mb-4">
-                        {item.summary}
-                      </p>
-                      <p className="text-base text-light-text-secondary dark:text-dark-text-secondary flex-grow">
-                        {item.content}
-                      </p>
-                      <div className="mt-6 pt-6 border-t dark:border-gray-700 space-y-4">
-                        <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                          <p className="!m-0 text-sm">
-                            <span className="font-bold">💬 쉽게 풀어보기:</span>{" "}
-                            {item.analogy}
-                          </p>
-                        </div>
-                        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-signature-blue">
-                          <p className="!m-0 text-sm">
-                            <span className="font-bold text-signature-blue">
-                              💡 Moneysalary&apos;s Tip:
-                            </span>{" "}
-                            {item.tip}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </section>
+  const filteredData = glossaryData.filter((item) => {
+    const matchesSearch =
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.summary.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "전체" || item.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  return (
+    <main className="w-full bg-background min-h-screen">
+      {/* Hero Section */}
+      <section className="relative py-20 sm:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-slate-800 to-black z-0" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20 z-0" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/30 rounded-full blur-[100px] -z-10 animate-pulse-glow" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground font-medium text-sm mb-6">
+              <Sparkles className="w-4 h-4" />
+              <span>금융 문맹 탈출 프로젝트</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+              금융 용어, <br className="sm:hidden" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+                당신의 돈이 말을 거는 순간
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto">
+              더 이상 어렵고 복잡한 용어에 주눅 들지 마세요. <br className="hidden sm:block" />
+              당신의 월급봉투와 통장, 그리고 미래를 이해하는 가장 확실한 열쇠를 드립니다.
+            </p>
+          </motion.div>
+
+          {/* Search Bar */}
+          <motion.div
+            className="mt-10 max-w-xl mx-auto relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <input
+                type="text"
+                placeholder="궁금한 용어를 검색해보세요 (예: 국민연금, IRP)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-lg text-lg"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-10 relative z-20">
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {categories.map((category, index) => (
+            <motion.button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${selectedCategory === category
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 scale-105"
+                  : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground border border-border"
+                }`}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              {category}
+            </motion.button>
           ))}
         </div>
+
+        {/* Ad Unit */}
+        <AdUnit slotId="9876543210" format="auto" label="Glossary Top Ad" className="mb-12" />
+
+        {/* Glossary Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filteredData.map((item, index) => (
+              <motion.div
+                key={item.title}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="group relative bg-card/50 backdrop-blur-sm dark:bg-card/30 border border-border/50 rounded-2xl p-6 hover:shadow-xl hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-primary/10 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs font-medium px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
+                      {item.category}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-sm font-medium text-muted-foreground mb-4 italic">
+                    &quot;{item.summary}&quot;
+                  </p>
+
+                  <p className="text-sm text-foreground/80 leading-relaxed mb-6 line-clamp-3 group-hover:line-clamp-none transition-all">
+                    {item.content}
+                  </p>
+
+                  <div className="space-y-3 pt-4 border-t border-border/50">
+                    <div className="bg-secondary/50 p-3 rounded-lg">
+                      <p className="text-xs text-foreground/90">
+                        <span className="font-bold block mb-1">💬 쉽게 말하면:</span>
+                        {item.analogy}
+                      </p>
+                    </div>
+                    <div className="bg-blue-500/10 p-3 rounded-lg border-l-2 border-blue-500">
+                      <p className="text-xs text-foreground/90">
+                        <span className="font-bold text-blue-500 block mb-1">💡 Honey Tip:</span>
+                        {item.tip}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {filteredData.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-xl text-muted-foreground">
+              검색 결과가 없습니다. 다른 용어로 검색해보세요.
+            </p>
+          </div>
+        )}
       </div>
     </main>
   );
