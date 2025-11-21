@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { guides, categories } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Search } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -54,7 +54,7 @@ export default function GuidesPage() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
