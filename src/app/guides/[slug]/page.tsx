@@ -1,6 +1,8 @@
 // src/app/guides/[slug]/page.tsx
 "use client";
 
+export const runtime = "edge";
+
 import { guides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
 import { Calendar, Eye, Clock, Share2, ChevronLeft, Calculator, ArrowRight } from "lucide-react";
