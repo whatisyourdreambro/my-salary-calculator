@@ -131,11 +131,36 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
             <Header />
 
-            {/* Main Layout - Centered Single Column */}
-            <div className="w-full flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
-              <main className="w-full flex flex-col animate-fade-in-up">
-                {children}
-              </main>
+            {/* Main Layout Container with Sidebars */}
+            <div className="flex justify-center w-full max-w-[1920px] mx-auto relative">
+              {/* Left Sidebar Ad */}
+              <aside className="hidden 3xl:flex flex-col w-[160px] sticky top-24 h-fit mr-4 z-10">
+                <div className="w-[160px] h-[600px]">
+                  <AdUnit
+                    slotId="LEFT_SIDEBAR_SLOT_ID"
+                    format="vertical"
+                    label="Left Sidebar"
+                  />
+                </div>
+              </aside>
+
+              {/* Main Content - Centered Single Column */}
+              <div className="w-full flex-grow max-w-5xl px-4 sm:px-6 lg:px-8 py-12 pt-24">
+                <main className="w-full flex flex-col animate-fade-in-up">
+                  {children}
+                </main>
+              </div>
+
+              {/* Right Sidebar Ad */}
+              <aside className="hidden 3xl:flex flex-col w-[160px] sticky top-24 h-fit ml-4 z-10">
+                <div className="w-[160px] h-[600px]">
+                  <AdUnit
+                    slotId="RIGHT_SIDEBAR_SLOT_ID"
+                    format="vertical"
+                    label="Right Sidebar"
+                  />
+                </div>
+              </aside>
             </div>
 
             <Footer />
