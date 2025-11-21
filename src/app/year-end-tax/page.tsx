@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
+import AdUnit from "@/components/AdUnit";
 
 export const metadata: Metadata = {
   title: "연말정산 환급금 계산기 (2025년 귀속) | Moneysalary",
@@ -21,7 +22,18 @@ export default function YearEndTaxPage() {
           세워보세요.
         </p>
       </div>
+
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="8899001122" format="auto" label="Tax Calculator Top Ad" />
+      </div>
+
       <YearEndTaxCalculator />
+
+      {/* Ad Unit: Bottom */}
+      <div className="mt-12">
+        <AdUnit slotId="2211009988" format="auto" label="Tax Calculator Bottom Ad" />
+      </div>
     </main>
   );
 }

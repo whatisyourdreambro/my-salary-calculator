@@ -10,7 +10,7 @@ export default function EnglishLandingPage() {
         <div className="min-h-screen py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-12">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -44,6 +44,11 @@ export default function EnglishLandingPage() {
                             </Link>
                         </div>
                     </motion.div>
+                </div>
+
+                {/* Ad Unit: Below Hero */}
+                <div className="mb-16">
+                    <AdUnit slotId="3344556677" format="auto" label="English Landing Top Ad" />
                 </div>
 
                 {/* Features Grid */}

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import {
   Coffee, Smartphone, Car, Plane, Home, Pizza, Film, Gamepad2, Dumbbell, Beer, UtensilsCrossed, Headphones, Cpu, ShoppingBag, Theater
 } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const items = [
   { name: "스타벅스 아메리카노", price: 4500, icon: Coffee, unit: "잔" },
@@ -27,8 +28,8 @@ const items = [
 ];
 
 const formatNumber = (num: number) => {
-    if (num < 1) return num.toFixed(2);
-    return Math.floor(num).toLocaleString();
+  if (num < 1) return num.toFixed(2);
+  return Math.floor(num).toLocaleString();
 }
 
 const ResultCard = ({ item, salary }: { item: typeof items[0], salary: number }) => {
@@ -69,6 +70,11 @@ export default function WhatToBuyPage() {
         </p>
       </div>
 
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="4433221100" format="auto" label="What To Buy Top Ad" />
+      </div>
+
       <div className="max-w-md mx-auto mb-12">
         <CurrencyInput
           label="월급 입력 (세후)"
@@ -82,6 +88,11 @@ export default function WhatToBuyPage() {
         {items.map((item) => (
           <ResultCard key={item.name} item={item} salary={monthlySalary} />
         ))}
+      </div>
+
+      {/* Ad Unit: Bottom */}
+      <div className="mt-12">
+        <AdUnit slotId="0011223344" format="auto" label="What To Buy Bottom Ad" />
       </div>
     </main>
   );

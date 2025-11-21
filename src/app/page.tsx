@@ -1,11 +1,10 @@
-// src/app/page.tsx
-
 "use client";
 
 import dynamic from 'next/dynamic';
 import { CheckCircle, BarChart, TrendingUp, Calculator, ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from 'react';
+import AdUnit from "@/components/AdUnit";
 
 const CalculatorTabs = dynamic(() => import('@/components/CalculatorTabs'), {
   ssr: false,
@@ -166,6 +165,11 @@ export default function HomePage() {
           </motion.div>
         </section>
 
+        {/* Ad Unit 1: Between Hero and Calculator */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <AdUnit slotId="1122334455" format="auto" label="Home Top Ad" />
+        </div>
+
         {/* Calculator Tabs Section */}
         <section
           id="calculator-section"
@@ -184,6 +188,11 @@ export default function HomePage() {
             </div>
           </motion.div>
         </section>
+
+        {/* Ad Unit 2: Between Calculator and Features */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <AdUnit slotId="5544332211" format="auto" label="Home Middle Ad" />
+        </div>
 
         {/* Features Section */}
         <section className="py-32 relative overflow-hidden">

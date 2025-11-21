@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Feather, Wheat, Hammer, Shield, Scroll, Gem, Crown, Flame
 } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const tiers = [
   { limit: 28000000, title: "길거리의 깃털", icon: Feather, description: "당신은 바람에 흩날리는 깃털처럼 자유로운 영혼입니다. 주머니는 가볍지만, 세상 모든 것을 구경할 수 있는 자유가 있죠. 가끔은 배고플 수 있습니다." },
@@ -43,6 +44,11 @@ export default function ReincarnationPage() {
         </p>
       </div>
 
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="3322110099" format="auto" label="Reincarnation Top Ad" />
+      </div>
+
       <div className="max-w-md mx-auto mb-12">
         <CurrencyInput
           label="나의 현재 연봉"
@@ -60,7 +66,7 @@ export default function ReincarnationPage() {
           transition={{ duration: 0.7, type: "spring" }}
           className="bg-card p-8 rounded-2xl shadow-2xl border border-border flex flex-col items-center text-center"
         >
-          <motion.div 
+          <motion.div
             className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 shadow-inner"
             animate={{ rotate: [0, 10, -10, 10, 0], scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
@@ -74,6 +80,11 @@ export default function ReincarnationPage() {
           </p>
         </motion.div>
       </AnimatePresence>
+
+      {/* Ad Unit: Bottom */}
+      <div className="mt-12">
+        <AdUnit slotId="0099887766" format="auto" label="Reincarnation Bottom Ad" />
+      </div>
     </main>
   );
 }

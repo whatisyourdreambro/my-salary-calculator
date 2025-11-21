@@ -5,6 +5,7 @@ import { guides, categories } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Search } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import AdUnit from "@/components/AdUnit";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -97,6 +98,11 @@ export default function GuidesPage() {
         </div>
       </motion.div>
 
+      {/* Ad Unit: Guides Top */}
+      <div className="mb-12">
+        <AdUnit slotId="1234567890" format="auto" label="Guides Top Ad" />
+      </div>
+
       {/* Categories */}
       <div className="flex flex-wrap justify-center gap-3 mb-12">
         {categories.map(category => (
@@ -180,6 +186,11 @@ export default function GuidesPage() {
           </button>
         </div>
       )}
+
+      {/* Ad Unit: Guides Bottom */}
+      <div className="mt-16">
+        <AdUnit slotId="0987654321" format="auto" label="Guides Bottom Ad" />
+      </div>
 
       {/* Empty State */}
       {filteredGuides.length === 0 && (

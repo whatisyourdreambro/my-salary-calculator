@@ -1,176 +1,242 @@
-// src/app/salary/[amount]/page.tsx
-
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
+import Link from "next/link";
 import { calculateNetSalary } from "@/lib/calculator";
-// [수정] findSalaryRank -> calculateRank 로 변경
-import { salaryData, calculateRank } from "@/lib/salaryData";
-import SalaryAnalysis from "@/components/SalaryAnalysis"; // 연봉별 맞춤 분석 컴포넌트 추가
+import AdUnit from "@/components/AdUnit";
+import {
+  ArrowRight,
+  Calculator,
+  CheckCircle2,
+  Coins,
+  CreditCard,
+  PiggyBank,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 
-export const runtime = "edge";
+// Generate static params for popular salary ranges
+export async function generateStaticParams() {
+  const params = [];
+
+  // 20m to 100m in 1m increments
+  for (let i = 20; i <= 100; i++) {
+    params.push({ amount: (i * 1000000).toString() });
+  }
+
+  // 105m to 200m in 5m increments
+  for (let i = 105; i <= 200; i += 5) {
+    params.push({ amount: (i * 1000000).toString() });
+  }
+
+  // Special popular amounts
+  const specials = [
+    24000000, 26000000, 28000000, 32000000, 35000000, 38000000, 42000000,
+    45000000, 55000000, 65000000, 75000000, 85000000, 95000000,
+  ];
+  specials.forEach((s) => params.push({ amount: s.toString() }));
+
+  return params;
+}
 
 type Props = {
   params: { amount: string };
 };
 
-const formatNumber = (num: number) => num.toLocaleString();
-
-/**
- * [SEO 초고도화 1] 동적 메타데이터 생성 최적화
- * 각 연봉 페이지에 고유하고 구체적인 제목과 설명을 부여하여 검색 엔진의 이해도를 높입니다.
- */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const amount = parseInt(params.amount, 10) * 10000;
-  if (isNaN(amount) || amount < 0) {
-    return { title: "정보를 찾을 수 없습니다." };
-  }
-
-  // [수정] findSalaryRank -> calculateRank 로 변경
-  const { rank } = calculateRank(amount, "all-all-all-all");
-  const formattedSalary = formatNumber(amount);
-  const { monthlyNet } = calculateNetSalary(amount, 2400000, 1, 0, {
+  const amount = Number(params.amount);
+  const formattedAmount = (amount / 10000).toLocaleString();
+  const result = calculateNetSalary(amount, 200000 * 12, 1, 0, {
     isSmeYouth: false,
     disabledDependents: 0,
     seniorDependents: 0,
   });
 
-  const title = `연봉 ${formattedSalary}원 실수령액: 월 ${formatNumber(
-    monthlyNet
-  )}원 (상위 ${rank}%)`;
-  const description = `연봉 ${formattedSalary}원의 2025년 최신 기준 세후 실수령액, 월급 상세 공제 내역, 전국 근로자 대비 소득 순위 및 맞춤형 재테크 전략을 확인하세요.`;
-
   return {
-    title: `${title} | Moneysalary`,
-    description,
-    openGraph: {
-      title,
-      description,
-      url: `https://www.moneysalary.com/salary/${params.amount}`,
-      type: "article",
-      images: [
-        {
-          url: `/api/og?title=${encodeURIComponent(
-            `연봉 ${formattedSalary}원`
-          )}&description=${encodeURIComponent(
-            `월 실수령액은 약 ${formatNumber(monthlyNet)}원 입니다.`
-          )}&rank=${rank}`,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
+    title: `2025년 연봉 ${formattedAmount}만원 실수령액은? (세금 포함) | Moneysalary`,
+    description: `연봉 ${formattedAmount}만원의 월 예상 실수령액은 ${result.monthlyNet.toLocaleString()}원입니다. 4대보험, 소득세, 지방소득세 공제 내역을 확인하세요.`,
+    alternates: {
+      canonical: `https://moneysalary.com/salary/${params.amount}`,
     },
   };
 }
 
-/**
- * [SEO 초고도화 2] FAQ 스키마 데이터 동적 생성
- * '연봉 X원의 실수령액은?', '연봉 X원의 세금은?' 등 예상 질문과 답변을 구조화된 데이터로 제공하여
- * 구글 검색 결과에 '자주 묻는 질문(FAQ)' 형태로 노출될 확률을 극대화합니다.
- */
-const getFaqStructuredData = (
-  annualSalary: number,
-  monthlyNet: number,
-  totalDeduction: number
-) => {
-  const formattedSalary = formatNumber(annualSalary);
-  const formattedMonthlyNet = formatNumber(monthlyNet);
-  const formattedTotalDeduction = formatNumber(totalDeduction);
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `연봉 ${formattedSalary}원의 실수령액은 얼마인가요?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `2025년 최신 세법 기준, 연봉 ${formattedSalary}원의 월 평균 실수령액은 약 ${formattedMonthlyNet}원입니다. 이는 4대 보험과 소득세 등 월 평균 약 ${formattedTotalDeduction}원의 공제액이 제외된 금액입니다.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `연봉 ${formattedSalary}원은 대한민국 상위 몇 %인가요?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          // [수정] findSalaryRank -> calculateRank 로 변경
-          text: `국가통계포털(KOSIS) 데이터 기반으로 분석한 결과, 연봉 ${formattedSalary}원은 전체 임금 근로자 중 상위 ${
-            calculateRank(annualSalary, "all-all-all-all").rank
-          }%에 해당하는 소득 수준입니다.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `연봉 ${formattedSalary}원에 맞는 재테크 방법은 무엇인가요?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `연봉 ${formattedSalary} 구간은 본격적으로 자산을 불려나가야 하는 중요한 시기입니다. '선저축 후지출' 습관을 만들고, 연금저축펀드/IRP를 활용한 절세와 S&P 500 ETF 등 우량 자산에 대한 장기 투자를 시작하는 것을 추천합니다. 자세한 내용은 본문 하단의 AI 금융 분석 리포트를 참고하세요.`,
-        },
-      },
-    ],
-  };
-};
-
-// Next.js가 빌드 시점에 미리 페이지를 생성하도록 경로를 제공합니다.
-export async function generateStaticParams() {
-  const paths = [];
-  for (let i = 2000; i <= 10000; i += 50) {
-    paths.push({ amount: i.toString() });
-  }
-  for (let i = 10100; i <= 20000; i += 100) {
-    paths.push({ amount: i.toString() });
-  }
-  for (let i = 20500; i <= 50000; i += 500) {
-    paths.push({ amount: i.toString() });
-  }
-  return paths;
-}
-
-export default function SalaryDetailPage({ params }: Props) {
-  const amountParam = parseInt(params.amount, 10);
-  if (isNaN(amountParam) || amountParam <= 0) {
-    notFound();
-  }
-  const annualSalary = amountParam * 10000;
-
-  const calculationResult = calculateNetSalary(annualSalary, 2400000, 1, 0, {
+export default function SalaryAmountPage({ params }: Props) {
+  const amount = Number(params.amount);
+  const result = calculateNetSalary(amount, 200000 * 12, 1, 0, {
     isSmeYouth: false,
     disabledDependents: 0,
     seniorDependents: 0,
   });
 
-  // [수정] findSalaryRank -> calculateRank 로 변경
-  const { rank } = calculateRank(annualSalary, "all-all-all-all");
-  const rankData = salaryData["all-all-all-all"];
-
-  const faqStructuredData = getFaqStructuredData(
-    annualSalary,
-    calculationResult.monthlyNet,
-    calculationResult.totalDeduction
-  );
+  const monthlyAmount = Math.floor(amount / 12);
+  const taxRate = ((result.totalDeduction / monthlyAmount) * 100).toFixed(1);
 
   return (
-    <>
-      {/* [SEO 초고도화 3] 생성된 스키마 데이터를 페이지에 삽입 */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
-      />
-      <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        <SalaryDetailDashboard
-          annualSalary={annualSalary}
-          calculationResult={calculationResult}
-          rank={rank ?? 0}
-          rankData={rankData}
-        />
-        {/* [콘텐츠 초고도화] 연봉별 맞춤 분석 및 재테크 가이드 컴포넌트 추가 */}
-        <SalaryAnalysis
-          annualSalary={annualSalary}
-          monthlyNet={calculationResult.monthlyNet}
-        />
-      </main>
-    </>
+    <main className="w-full bg-background min-h-screen pb-20">
+      {/* Hero Section */}
+      <section className="relative py-16 sm:py-24 overflow-hidden bg-slate-900 text-white">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground font-medium text-sm mb-6">
+            <Calculator className="w-4 h-4" />
+            <span>2025년 최신 세율 적용</span>
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6 leading-tight">
+            연봉 <span className="text-primary">{(amount / 10000).toLocaleString()}만원</span>의<br />
+            월 실수령액은 얼마일까요?
+          </h1>
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto border border-white/20 shadow-2xl">
+            <p className="text-sm text-slate-300 mb-2">예상 월 실수령액</p>
+            <p className="text-4xl sm:text-6xl font-black text-white tracking-tight">
+              {result.monthlyNet.toLocaleString()}
+              <span className="text-2xl sm:text-3xl font-medium ml-2 text-slate-300">원</span>
+            </p>
+            <div className="mt-4 flex justify-center gap-4 text-sm text-slate-300">
+              <span>공제액 합계: -{result.totalDeduction.toLocaleString()}원</span>
+              <span className="text-white/20">|</span>
+              <span>실효세율: {taxRate}%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 space-y-8">
+        {/* Ad Unit 1 */}
+        <AdUnit slotId="1234567890" format="auto" label="Salary Top Ad" />
+
+        {/* Detailed Breakdown */}
+        <div className="bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
+          <div className="p-6 border-b border-border bg-secondary/30">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Wallet className="w-5 h-5 text-primary" />
+              급여 상세 내역
+            </h2>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-muted-foreground">세전 월급</span>
+              <span className="font-bold text-lg">{monthlyAmount.toLocaleString()}원</span>
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">공제 내역 (4대보험 + 세금)</p>
+              {[
+                { label: "국민연금 (4.5%)", value: result.pension },
+                { label: "건강보험 (3.545%)", value: result.health },
+                { label: "장기요양 (12.95%)", value: result.longTermCare },
+                { label: "고용보험 (0.9%)", value: result.employment },
+                { label: "소득세 (간이세액)", value: result.incomeTax },
+                { label: "지방소득세 (10%)", value: result.localTax },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                    {item.label}
+                  </span>
+                  <span className="font-medium text-red-500">-{item.value.toLocaleString()}원</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-4 mt-4 border-t-2 border-dashed border-border">
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-lg">최종 실수령액</span>
+                <span className="font-black text-2xl text-primary">{result.monthlyNet.toLocaleString()}원</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fun Analysis: What can you buy? */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-900">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <PiggyBank className="w-5 h-5 text-indigo-500" />
+              저축 시뮬레이션
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">월 50% 저축 시</span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {(result.monthlyNet * 0.5).toLocaleString()}원
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">1년 모으면</span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {(result.monthlyNet * 0.5 * 12).toLocaleString()}원
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">1억 모으는데</span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  {(100000000 / (result.monthlyNet * 0.5)).toFixed(1)}개월
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 rounded-2xl p-6 border border-emerald-100 dark:border-emerald-900">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-emerald-500" />
+              구매력 지수
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">치킨 (2만원)</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                  약 {Math.floor(result.monthlyNet / 20000)}마리
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">아이폰15 (125만원)</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                  약 {(result.monthlyNet / 1250000).toFixed(1)}대
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">스타벅스 (4500원)</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                  약 {Math.floor(result.monthlyNet / 4500)}잔
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Ad Unit 2 */}
+        <AdUnit slotId="0987654321" format="rectangle" label="Salary Middle Ad" />
+
+        {/* CTA */}
+        <div className="bg-primary/5 rounded-2xl p-8 text-center border border-primary/20">
+          <h3 className="text-2xl font-bold mb-4">내 상황에 딱 맞는 계산이 필요하신가요?</h3>
+          <p className="text-muted-foreground mb-6">
+            부양가족, 비과세액, 2026년 예상 실수령액 등 더 자세한 계산은<br />
+            전문 계산기에서 확인해보세요.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25"
+          >
+            <Calculator className="w-5 h-5" />
+            정밀 계산기 바로가기
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+
+        {/* Related Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link href="/table/2025/annual" className="p-4 bg-card border border-border rounded-xl hover:border-primary transition-colors flex items-center justify-between group">
+            <span className="font-medium">2025년 연봉 실수령액 표</span>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </Link>
+          <Link href="/fun/salary-slip" className="p-4 bg-card border border-border rounded-xl hover:border-primary transition-colors flex items-center justify-between group">
+            <span className="font-medium">월급 영수증 발급받기</span>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }

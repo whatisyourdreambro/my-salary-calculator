@@ -5,6 +5,7 @@ import Link from "next/link";
 import { companies } from "@/lib/companyData";
 import { Search, Building2, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import AdUnit from "@/components/AdUnit";
 
 export default function CompanyPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +30,7 @@ export default function CompanyPage() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="max-w-2xl mx-auto mb-12 relative">
+                <div className="max-w-2xl mx-auto mb-8 relative">
                     <div className="relative">
                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                         <input
@@ -40,6 +41,11 @@ export default function CompanyPage() {
                             className="w-full pl-12 pr-4 py-4 bg-card/50 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-lg"
                         />
                     </div>
+                </div>
+
+                {/* Ad Unit: Below Search */}
+                <div className="mb-12">
+                    <AdUnit slotId="5566778899" format="auto" label="Company List Top Ad" />
                 </div>
 
                 {/* Company Grid */}
@@ -104,6 +110,11 @@ export default function CompanyPage() {
                             </motion.div>
                         </Link>
                     ))}
+                </div>
+
+                {/* Ad Unit: Bottom */}
+                <div className="mt-12">
+                    <AdUnit slotId="9988776655" format="auto" label="Company List Bottom Ad" />
                 </div>
 
                 {filteredCompanies.length === 0 && (

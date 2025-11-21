@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Castle, Rocket, Factory, Gem } from "lucide-react";
+import { Share2, Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, Download } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const questions = [
   {
@@ -46,45 +47,60 @@ const questions = [
 const resultTypes = {
   buffett: {
     title: "워렌 버핏",
+    subtitle: "가치 투자의 현인",
     icon: Castle,
-    description: "가치 투자의 살아있는 전설. 당신은 기업의 내재 가치를 보고, 시장의 소음에도 흔들리지 않는 강철 멘탈의 소유자입니다. '복리'라는 눈덩이를 굴려 거대한 부를 쌓을 '시간의 마법사' 타입입니다.",
+    description: "당신은 기업의 내재 가치를 보고, 시장의 소음에도 흔들리지 않는 강철 멘탈의 소유자입니다. '복리'라는 눈덩이를 굴려 거대한 부를 쌓을 '시간의 마법사' 타입입니다.",
     color: "text-blue-600",
-    bg: "bg-blue-600/10",
-    bgColor: "bg-blue-600",
+    gradient: "from-blue-500 to-cyan-500",
+    bg: "bg-blue-50",
+    borderColor: "border-blue-200",
   },
   musk: {
     title: "일론 머스크",
+    subtitle: "미래의 설계자",
     icon: Rocket,
-    description: "세상을 바꾸는 혁신가. 당신은 리스크를 두려워하지 않으며, 미래에 대한 확신과 대담한 상상력으로 세상을 놀라게 합니다. '하이 리스크, 하이 리턴'을 추구하며, 불가능에 도전하는 '미래의 설계자' 타입입니다.",
+    description: "당신은 리스크를 두려워하지 않으며, 미래에 대한 확신과 대담한 상상력으로 세상을 놀라게 합니다. 불가능에 도전하여 인류의 역사를 바꿀 '혁신가' 타입입니다.",
     color: "text-red-600",
-    bg: "bg-red-600/10",
-    bgColor: "bg-red-600",
+    gradient: "from-red-500 to-orange-500",
+    bg: "bg-red-50",
+    borderColor: "border-red-200",
   },
   rockefeller: {
     title: "존 D. 록펠러",
+    subtitle: "시스템의 지배자",
     icon: Factory,
-    description: "석유의 왕, 부의 시스템을 만든 거인. 당신은 압도적인 시장 지배력과 독점적 지위를 통해 부를 축적하는 능력이 탁월합니다. 경쟁자를 압도하고, 거대한 부의 제국을 건설할 '시스템의 지배자' 타입입니다.",
-    color: "text-gray-700",
-    bg: "bg-gray-700/10",
-    bgColor: "bg-gray-700",
+    description: "당신은 압도적인 시장 지배력과 독점적 지위를 통해 부를 축적하는 능력이 탁월합니다. 경쟁자를 압도하고, 거대한 부의 제국을 건설할 '제국 건설자' 타입입니다.",
+    color: "text-slate-700",
+    gradient: "from-slate-700 to-gray-600",
+    bg: "bg-slate-50",
+    borderColor: "border-slate-200",
   },
   templeton: {
     title: "존 템플턴",
+    subtitle: "역발상의 대가",
     icon: Gem,
-    description: "월가의 영적 투자자. 당신은 비관론이 극에 달했을 때가 최고의 기회임을 알고 있습니다. 남들이 공포에 떨 때 과감히 투자하고, 위기 속에서 숨겨진 보석을 찾아내는 '역발상의 대가' 타입입니다.",
+    description: "당신은 비관론이 극에 달했을 때가 최고의 기회임을 알고 있습니다. 남들이 공포에 떨 때 과감히 투자하고, 위기 속에서 숨겨진 보석을 찾아내는 '영적 투자자' 타입입니다.",
     color: "text-purple-600",
-    bg: "bg-purple-600/10",
-    bgColor: "bg-purple-600",
+    gradient: "from-purple-500 to-pink-500",
+    bg: "bg-purple-50",
+    borderColor: "border-purple-200",
   },
 };
 
 export default function RichDnaTestPage() {
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState({ buffett: 0, musk: 0, rockefeller: 0, templeton: 0 });
+  const [showResult, setShowResult] = useState(false);
 
   const handleAnswer = (type: keyof typeof scores) => {
-    setScores(prev => ({ ...prev, [type]: prev[type] + 1 }));
-    setStep(prev => prev + 1);
+    const newScores = { ...scores, [type]: scores[type] + 1 };
+    setScores(newScores);
+
+    if (step < questions.length - 1) {
+      setStep(prev => prev + 1);
+    } else {
+      setShowResult(true);
+    }
   };
 
   const getResultType = () => {
@@ -95,84 +111,153 @@ export default function RichDnaTestPage() {
   const resetTest = () => {
     setStep(0);
     setScores({ buffett: 0, musk: 0, rockefeller: 0, templeton: 0 });
+    setShowResult(false);
   };
 
-  const result = step === questions.length ? resultTypes[getResultType()] : null;
-  const ResultIcon = result?.icon;
+  const resultKey = getResultType();
+  const result = resultTypes[resultKey];
+  const ResultIcon = result.icon;
 
   const handleShare = () => {
     const shareUrl = window.location.href;
-    navigator.clipboard.writeText(`나의 부자 DNA는 '${result?.title}' 타입! 당신의 DNA도 확인해보세요!\n${shareUrl}`)
-      .then(() => alert("결과가 클립보드에 복사되었습니다! 친구들에게 공유해보세요."))
-      .catch(err => console.error("Share failed", err));
+    if (navigator.share) {
+      navigator.share({
+        title: "부자 DNA 테스트",
+        text: `나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!`,
+        url: shareUrl,
+      });
+    } else {
+      navigator.clipboard.writeText(`나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!\n${shareUrl}`)
+        .then(() => alert("결과가 클립보드에 복사되었습니다!"))
+        .catch(err => console.error("Share failed", err));
+    }
   };
 
   return (
-    <main className="w-full max-w-2xl mx-auto px-4 py-12 sm:py-16">
-      <AnimatePresence mode="wait">
-        {step < questions.length ? (
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="text-center mb-10">
-              <p className="text-lg font-semibold text-primary">Question {step + 1}</p>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mt-2">
+    <main className="w-full min-h-screen bg-background pb-20">
+      {/* Header */}
+      <div className="bg-slate-900 text-white py-12 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <div className="relative z-10">
+          <h1 className="text-3xl font-bold mb-2">부자 DNA 테스트</h1>
+          <p className="text-slate-300">당신 안에 잠든 억만장자의 본능을 깨우세요</p>
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto px-4 -mt-6 relative z-20">
+        <AnimatePresence mode="wait">
+          {!showResult ? (
+            <motion.div
+              key="question"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bg-card rounded-3xl shadow-xl border border-border p-6 sm:p-10"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                  Q{step + 1}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {step + 1} / {questions.length}
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-bold mb-8 leading-tight">
                 {questions[step].question}
-              </h1>
-            </div>
-            <div className="space-y-4">
-              {questions[step].answers.map((answer) => (
-                <button
-                  key={answer.text}
-                  onClick={() => handleAnswer(answer.type as keyof typeof scores)}
-                  className="w-full text-left p-5 rounded-xl border border-border bg-card hover:bg-secondary hover:border-primary transition-all duration-200 shadow-sm"
-                >
-                  <p className="text-lg font-medium text-foreground">{answer.text}</p>
-                </button>
-              ))}
-            </div>
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-              {step + 1} / {questions.length}
-            </div>
-          </motion.div>
-        ) : (
-          result && ResultIcon && (
+              </h2>
+
+              <div className="space-y-4">
+                {questions[step].answers.map((answer, idx) => (
+                  <motion.button
+                    key={idx}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    onClick={() => handleAnswer(answer.type as keyof typeof scores)}
+                    className="w-full text-left p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium group-hover:text-primary transition-colors">
+                        {answer.text}
+                      </span>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
             <motion.div
               key="result"
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className={`text-center p-8 rounded-2xl shadow-2xl border ${result.bg} border-current`}
+              className="space-y-6"
             >
-              <p className="font-semibold">당신의 부자 DNA는...</p>
-              <div className="w-24 h-24 mx-auto my-4 bg-background rounded-full flex items-center justify-center shadow-inner">
-                  <ResultIcon className={`w-12 h-12 ${result.color}`} />
+              {/* Certificate Card */}
+              <div className={`bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border-4 ${result.borderColor} overflow-hidden relative`}>
+                {/* Decorative Background */}
+                <div className={`absolute top-0 left-0 w-full h-32 bg-gradient-to-r ${result.gradient} opacity-10`} />
+                <div className="absolute top-4 right-4 opacity-20">
+                  <ResultIcon className="w-32 h-32" />
+                </div>
+
+                <div className="p-8 sm:p-12 text-center relative z-10">
+                  <div className="inline-block p-4 rounded-full bg-white dark:bg-slate-800 shadow-lg mb-6">
+                    <ResultIcon className={`w-12 h-12 ${result.color}`} />
+                  </div>
+
+                  <p className="text-sm font-bold tracking-widest uppercase text-muted-foreground mb-2">
+                    CERTIFICATE OF WEALTH DNA
+                  </p>
+                  <h2 className={`text-4xl sm:text-5xl font-black mb-2 ${result.color}`}>
+                    {result.title}
+                  </h2>
+                  <p className="text-xl font-medium text-foreground/80 mb-8">
+                    {result.subtitle}
+                  </p>
+
+                  <div className="w-16 h-1 bg-border mx-auto mb-8" />
+
+                  <p className="text-lg leading-relaxed text-muted-foreground mb-8">
+                    {result.description}
+                  </p>
+
+                  <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground font-mono">
+                    <span>ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
+                    <span>•</span>
+                    <span>{new Date().toLocaleDateString()}</span>
+                  </div>
+                </div>
+
+                {/* Bottom Pattern */}
+                <div className="h-4 bg-gradient-to-r from-transparent via-current to-transparent opacity-20" style={{ color: result.color }} />
               </div>
-              <h2 className={`text-4xl font-bold ${result.color}`}>{result.title} 타입</h2>
-              <p className="mt-4 max-w-md mx-auto text-foreground/80 leading-relaxed">{result.description}</p>
-              <div className="mt-8 flex gap-4 justify-center">
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={resetTest}
-                  className="py-2 px-6 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors"
+                  className="py-4 bg-card border border-border rounded-xl font-bold hover:bg-secondary transition-colors flex items-center justify-center gap-2"
                 >
-                  다시하기
+                  <RefreshCw className="w-5 h-5" />
+                  다시 하기
                 </button>
                 <button
                   onClick={handleShare}
-                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.bgColor} hover:brightness-110`}
+                  className={`py-4 text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 bg-gradient-to-r ${result.gradient}`}
                 >
-                  <Share2 className="inline-block w-4 h-4 mr-2"/>
+                  <Share2 className="w-5 h-5" />
                   결과 공유하기
                 </button>
               </div>
+
+              {/* Ad Unit */}
+              <AdUnit slotId="9988776655" format="rectangle" label="DNA Result Ad" />
             </motion.div>
-          )
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
     </main>
   );
 }

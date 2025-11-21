@@ -7,6 +7,7 @@ import NumberStepper from "@/components/NumberStepper";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Coffee, Beer, Plane, Rocket, BedDouble } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -35,16 +36,16 @@ const calculateYearsToTarget = (currentAssets: number, monthlySaving: number, re
 };
 
 const ProgressBar = ({ percentage }: { percentage: number }) => (
-    <div className="w-full bg-secondary rounded-full h-8 border border-border shadow-inner">
-        <motion.div
-            className="bg-primary h-8 rounded-full flex items-center justify-center text-primary-foreground font-bold text-sm"
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min(percentage, 100)}%` }}
-            transition={{ duration: 1, type: "spring" }}
-        >
-            {percentage.toFixed(1)}%
-        </motion.div>
-    </div>
+  <div className="w-full bg-secondary rounded-full h-8 border border-border shadow-inner">
+    <motion.div
+      className="bg-primary h-8 rounded-full flex items-center justify-center text-primary-foreground font-bold text-sm"
+      initial={{ width: 0 }}
+      animate={{ width: `${Math.min(percentage, 100)}%` }}
+      transition={{ duration: 1, type: "spring" }}
+    >
+      {percentage.toFixed(1)}%
+    </motion.div>
+  </div>
 );
 
 export default function EscapePlanPage() {
@@ -78,6 +79,11 @@ export default function EscapePlanPage() {
         <p className="mt-6 text-lg leading-8 text-muted-foreground">당신의 퇴사 시계를 맞춰보세요. 자유가 얼마 남지 않았습니다!</p>
       </div>
 
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="1122334455" format="auto" label="Escape Plan Top Ad" />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6 bg-card p-6 rounded-2xl border border-border">
           <h2 className="text-xl font-bold">나의 현재 상태</h2>
@@ -88,34 +94,40 @@ export default function EscapePlanPage() {
         </div>
 
         <div className="space-y-6">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1}} className="bg-card p-6 rounded-2xl shadow-2xl border border-border text-center">
-                <h2 className="text-xl font-bold mb-2">탈출 목표 금액 (파이어족 기준)</h2>
-                <p className="text-4xl font-bold text-primary">{formatNumber(targetAmount)}원</p>
-                <p className="text-xs text-muted-foreground mt-1">* 연 생활비의 25배, 4% 인출 법칙 기준</p>
-                <div className="mt-6">
-                    <p className="text-sm font-semibold mb-2">현재 진행률</p>
-                    <ProgressBar percentage={progressPercentage} />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="bg-card p-6 rounded-2xl shadow-2xl border border-border text-center">
+            <h2 className="text-xl font-bold mb-2">탈출 목표 금액 (파이어족 기준)</h2>
+            <p className="text-4xl font-bold text-primary">{formatNumber(targetAmount)}원</p>
+            <p className="text-xs text-muted-foreground mt-1">* 연 생활비의 25배, 4% 인출 법칙 기준</p>
+            <div className="mt-6">
+              <p className="text-sm font-semibold mb-2">현재 진행률</p>
+              <ProgressBar percentage={progressPercentage} />
+            </div>
+          </motion.div>
+
+          {/* Ad Unit: Middle */}
+          <div className="my-4">
+            <AdUnit slotId="5544332211" format="auto" label="Escape Plan Middle Ad" />
+          </div>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }} className="bg-card p-6 rounded-2xl shadow-2xl border border-border text-center">
+            <h2 className="text-xl font-bold mb-2">예상 탈출 시점</h2>
+            {yearsToTarget === 0 ? (
+              <p className="text-4xl font-bold text-primary">🎉 지금 바로 탈출 가능! 🎉</p>
+            ) : isFinite(yearsToTarget) ? (
+              <p className="text-4xl font-bold text-primary">약 {yearsToTarget.toFixed(1)}년 후</p>
+            ) : (
+              <p className="text-3xl font-bold text-destructive">탈출 계획을 다시 세워보세요...</p>
+            )}
+            <div className="mt-6 grid grid-cols-2 gap-4">
+              {isFinite(yearsToTarget) && yearsToTarget > 0 && funMetrics.map(metric => (
+                <div key={metric.name} className="bg-secondary p-3 rounded-lg">
+                  <metric.icon className="w-6 h-6 mx-auto text-muted-foreground mb-1" />
+                  <p className="text-sm font-semibold">{metric.name}</p>
+                  <p className="text-lg font-bold">{formatNumber(metric.value)} {metric.unit}</p>
                 </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2}} className="bg-card p-6 rounded-2xl shadow-2xl border border-border text-center">
-                <h2 className="text-xl font-bold mb-2">예상 탈출 시점</h2>
-                {yearsToTarget === 0 ? (
-                    <p className="text-4xl font-bold text-primary">🎉 지금 바로 탈출 가능! 🎉</p>
-                ) : isFinite(yearsToTarget) ? (
-                    <p className="text-4xl font-bold text-primary">약 {yearsToTarget.toFixed(1)}년 후</p>
-                ) : (
-                    <p className="text-3xl font-bold text-destructive">탈출 계획을 다시 세워보세요...</p>
-                )}
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                    {isFinite(yearsToTarget) && yearsToTarget > 0 && funMetrics.map(metric => (
-                        <div key={metric.name} className="bg-secondary p-3 rounded-lg">
-                            <metric.icon className="w-6 h-6 mx-auto text-muted-foreground mb-1" />
-                            <p className="text-sm font-semibold">{metric.name}</p>
-                            <p className="text-lg font-bold">{formatNumber(metric.value)} {metric.unit}</p>
-                        </div>
-                    ))}
-                </div>
-            </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </main>

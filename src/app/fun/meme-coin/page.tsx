@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Dog, Cat, Ghost, Rocket, TrendingDown, Skull } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const initialCapital = 1000000;
 
@@ -52,8 +53,8 @@ export default function MemeCoinPage() {
     const profit = finalValue - totalInvested;
 
     const chartData = [
-        { time: '시작', value: totalInvested },
-        { time: '1달 후', value: finalValue },
+      { time: '시작', value: totalInvested },
+      { time: '1달 후', value: finalValue },
     ];
 
     setResult({ randomEvent, finalPortfolio, finalValue, profit, chartData });
@@ -71,6 +72,11 @@ export default function MemeCoinPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">밈코인 투자 시뮬레이터</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">100만원으로 인생역전, 혹은 나락. 당신의 선택은?</p>
+      </div>
+
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="8877665544" format="auto" label="Meme Coin Top Ad" />
       </div>
 
       <AnimatePresence mode="wait">
@@ -112,19 +118,25 @@ export default function MemeCoinPage() {
                 <h2 className="text-3xl font-bold my-2">최종 자산</h2>
                 <p className={`text-5xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-destructive'}`}>{formatNumber(result.finalValue)}원</p>
                 <p className={`font-semibold ${result.profit >= 0 ? 'text-green-500' : 'text-destructive'}`}>
-                    ({result.profit >= 0 ? '+' : ''}{formatNumber(result.profit)}원 / {((result.profit / totalInvested) * 100).toFixed(2)}%)
+                  ({result.profit >= 0 ? '+' : ''}{formatNumber(result.profit)}원 / {((result.profit / totalInvested) * 100).toFixed(2)}%)
                 </p>
                 <div className="h-64 mt-6">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={result.chartData}>
-                            <XAxis dataKey="time" />
-                            <YAxis hide={true} domain={['dataMin - 100000', 'dataMax + 100000']} />
-                            <Tooltip formatter={(value: number) => `${formatNumber(value)} 원`} />
-                            <Line type="monotone" dataKey="value" strokeWidth={3} stroke={result.profit >= 0 ? "hsl(var(--primary))" : "hsl(var(--destructive))"} />
-                        </LineChart>
-                    </ResponsiveContainer>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={result.chartData}>
+                      <XAxis dataKey="time" />
+                      <YAxis hide={true} domain={['dataMin - 100000', 'dataMax + 100000']} />
+                      <Tooltip formatter={(value: number) => `${formatNumber(value)} 원`} />
+                      <Line type="monotone" dataKey="value" strokeWidth={3} stroke={result.profit >= 0 ? "hsl(var(--primary))" : "hsl(var(--destructive))"} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
+
+              {/* Ad Unit: Result Bottom */}
+              <div className="my-8">
+                <AdUnit slotId="4455667788" format="auto" label="Meme Coin Result Ad" />
+              </div>
+
               <div className="mt-8 text-center">
                 <button onClick={resetGame} className="px-12 py-4 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors">
                   다시하기

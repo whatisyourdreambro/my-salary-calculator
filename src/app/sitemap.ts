@@ -49,22 +49,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 3. 동적 연봉 상세 페이지 URL
   const salaryUrls: MetadataRoute.Sitemap = [];
-  for (let i = 2000; i <= 10000; i += 100) {
+
+  // 20m to 100m in 1m increments
+  for (let i = 20; i <= 100; i++) {
     salaryUrls.push({
-      url: `${baseUrl}/salary/${i}0000`,
+      url: `${baseUrl}/salary/${i * 1000000}`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.6,
     });
   }
-   for (let i = 11000; i <= 20000; i += 500) {
+
+  // 105m to 200m in 5m increments
+  for (let i = 105; i <= 200; i += 5) {
     salaryUrls.push({
-      url: `${baseUrl}/salary/${i}0000`,
+      url: `${baseUrl}/salary/${i * 1000000}`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,
     });
   }
+
+  // Special popular amounts
+  const specials = [
+    24000000, 26000000, 28000000, 32000000, 35000000, 38000000, 42000000,
+    45000000, 55000000, 65000000, 75000000, 85000000, 95000000,
+  ];
+  specials.forEach((s) => {
+    salaryUrls.push({
+      url: `${baseUrl}/salary/${s}`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.7,
+    });
+  });
 
   return [...staticUrls, ...guideUrls, ...salaryUrls];
 }

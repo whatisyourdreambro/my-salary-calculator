@@ -1,5 +1,3 @@
-// src/app/dashboard/page.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,6 +5,7 @@ import MyDashboard from "@/components/MyDashboard";
 import type { StoredFinancialData } from "@/app/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdUnit from "@/components/AdUnit";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] =
@@ -68,6 +67,11 @@ export default function DashboardPage() {
           </Link>
         </div>
       )}
+
+      {/* Ad Unit: Dashboard Bottom */}
+      <div className="mt-12">
+        <AdUnit slotId="9988776655" format="auto" label="Dashboard Bottom Ad" />
+      </div>
     </main>
   );
 }

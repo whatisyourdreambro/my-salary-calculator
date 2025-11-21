@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Turtle, Squirrel, Zap, Rabbit, Share2 } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const questions = [
   {
@@ -110,6 +111,20 @@ export default function SpendingTestPage() {
 
   return (
     <main className="w-full max-w-2xl mx-auto px-4 py-12 sm:py-16">
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">
+          소비 성향 테스트
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          나는 어떤 소비 습관을 가지고 있을까?
+        </p>
+      </div>
+
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="7788990011" format="auto" label="Spending Test Top Ad" />
+      </div>
+
       <AnimatePresence mode="wait">
         {step < questions.length ? (
           <motion.div
@@ -151,10 +166,16 @@ export default function SpendingTestPage() {
             >
               <p className="font-semibold">나의 소비 성향은...</p>
               <div className="w-24 h-24 mx-auto my-4 bg-background rounded-full flex items-center justify-center shadow-inner">
-                  <ResultIcon className={`w-12 h-12 ${result.color}`} />
+                <ResultIcon className={`w-12 h-12 ${result.color}`} />
               </div>
               <h2 className={`text-4xl font-bold ${result.color}`}>{result.title}</h2>
               <p className="mt-4 max-w-md mx-auto text-foreground/80 leading-relaxed">{result.description}</p>
+
+              {/* Ad Unit: Result Middle */}
+              <div className="my-8">
+                <AdUnit slotId="1100998877" format="auto" label="Spending Test Result Ad" />
+              </div>
+
               <div className="mt-8 flex gap-4 justify-center">
                 <button
                   onClick={resetTest}
@@ -166,7 +187,7 @@ export default function SpendingTestPage() {
                   onClick={handleShare}
                   className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.bgColor} hover:brightness-110`}
                 >
-                  <Share2 className="inline-block w-4 h-4 mr-2"/>
+                  <Share2 className="inline-block w-4 h-4 mr-2" />
                   결과 공유하기
                 </button>
               </div>

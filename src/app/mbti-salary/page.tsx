@@ -24,6 +24,7 @@ import {
   BrainCircuit,
   Target,
 } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 // 타이핑 효과를 위한 커스텀 훅 (사용자 경험 극대화)
 const useTypingEffect = (text: string, speed = 50) => {
@@ -182,9 +183,8 @@ export default function MbtiSalaryPage() {
               <div
                 className="bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-400 dark:to-indigo-400 h-2.5 rounded-full transition-all duration-500"
                 style={{
-                  width: `${
-                    ((currentQuestionIndex + 1) / questions.length) * 100
-                  }%`,
+                  width: `${((currentQuestionIndex + 1) / questions.length) * 100
+                    }%`,
                 }}
               ></div>
             </div>
@@ -300,6 +300,11 @@ export default function MbtiSalaryPage() {
                   <p className="text-sm mt-2">{result.dna.weakness}</p>
                 </div>
               </div>
+            </div>
+
+            {/* Ad Unit: Result Middle */}
+            <div className="my-8">
+              <AdUnit slotId="7766554433" format="auto" label="MBTI Result Ad" />
             </div>
 
             {/* [유입 유도] 개인 맞춤형 성장 플랜 및 내부 링크 강화 */}

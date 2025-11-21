@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pizza, Sandwich, Fish, Beef, UtensilsCrossed, ChefHat } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 const normalMenu = [
   { name: "국밥", icon: UtensilsCrossed },
@@ -61,54 +62,64 @@ export default function LunchRoulettePage() {
         </p>
       </div>
 
+      {/* Ad Unit: Top */}
+      <div className="mb-8 w-full">
+        <AdUnit slotId="2233445566" format="auto" label="Lunch Roulette Top Ad" />
+      </div>
+
       <div className="flex items-center gap-4 mb-8">
         <span className="font-semibold">내 카드</span>
-        <div 
-            onClick={() => setIsCorporate(!isCorporate)}
-            className={`relative w-16 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors ${isCorporate ? 'bg-primary' : 'bg-secondary'}`}>
-            <motion.div 
-                className="w-6 h-6 bg-white rounded-full shadow-md" 
-                layout 
-                transition={{ type: "spring", stiffness: 700, damping: 30 }} 
-            />
+        <div
+          onClick={() => setIsCorporate(!isCorporate)}
+          className={`relative w-16 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors ${isCorporate ? 'bg-primary' : 'bg-secondary'}`}>
+          <motion.div
+            className="w-6 h-6 bg-white rounded-full shadow-md"
+            layout
+            transition={{ type: "spring", stiffness: 700, damping: 30 }}
+          />
         </div>
         <span className="font-bold text-primary">법인 카드 💳</span>
       </div>
 
       <div className="relative w-80 h-80 rounded-full border-8 border-border shadow-2xl flex items-center justify-center overflow-hidden">
         <AnimatePresence>
-        {isSpinning ? (
+          {isSpinning ? (
             <motion.div
-                className="text-4xl font-bold text-muted-foreground"
-                animate={{ rotate: 3600, scale: [1, 1.2, 1] }}
-                transition={{ duration: 3, ease: "linear" }}
+              className="text-4xl font-bold text-muted-foreground"
+              animate={{ rotate: 3600, scale: [1, 1.2, 1] }}
+              transition={{ duration: 3, ease: "linear" }}
             >
-                🤔
+              🤔
             </motion.div>
-        ) : result && ResultIcon ? (
+          ) : result && ResultIcon ? (
             <motion.div
-                key={result.name}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-center"
+              key={result.name}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-center"
             >
-                <ResultIcon className="w-24 h-24 mx-auto text-primary" />
-                <p className="text-4xl font-bold mt-4">{result.name}</p>
+              <ResultIcon className="w-24 h-24 mx-auto text-primary" />
+              <p className="text-4xl font-bold mt-4">{result.name}</p>
             </motion.div>
-        ) : (
+          ) : (
             <p className="text-2xl font-semibold text-muted-foreground">룰렛을 돌려주세요!</p>
-        )}
+          )}
         </AnimatePresence>
       </div>
 
-      <div className="mt-8">
-        <button 
-            onClick={spinRoulette} 
-            disabled={isSpinning}
-            className="px-12 py-4 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all shadow-lg disabled:opacity-50 disabled:cursor-wait"
+      <div className="mt-8 w-full flex flex-col items-center">
+        <button
+          onClick={spinRoulette}
+          disabled={isSpinning}
+          className="px-12 py-4 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all shadow-lg disabled:opacity-50 disabled:cursor-wait"
         >
-            {isSpinning ? '돌아가는 중...' : '점심 룰렛 돌리기!'}
+          {isSpinning ? '돌아가는 중...' : '점심 룰렛 돌리기!'}
         </button>
+
+        {/* Ad Unit: Bottom */}
+        <div className="mt-12 w-full">
+          <AdUnit slotId="6655443322" format="auto" label="Lunch Roulette Bottom Ad" />
+        </div>
       </div>
     </main>
   );

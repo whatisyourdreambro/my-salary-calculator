@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
+import AdUnit from "@/components/AdUnit";
 
 export const metadata: Metadata = {
   title: "주택담보대출 계산기 (DSR 포함) | Moneysalary",
@@ -19,7 +20,18 @@ export default function HomeLoanPage() {
           똑똑하게 계획하세요.
         </p>
       </div>
+
+      {/* Ad Unit: Top */}
+      <div className="mb-8">
+        <AdUnit slotId="3344556677" format="auto" label="Home Loan Top Ad" />
+      </div>
+
       <HomeLoanSimulator />
+
+      {/* Ad Unit: Bottom */}
+      <div className="mt-12">
+        <AdUnit slotId="7766554433" format="auto" label="Home Loan Bottom Ad" />
+      </div>
     </main>
   );
 }

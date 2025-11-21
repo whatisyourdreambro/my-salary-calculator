@@ -9,6 +9,7 @@ import { Calendar, Eye, Clock, Share2, ChevronLeft, Calculator, ArrowRight } fro
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import AdUnit from "@/components/AdUnit";
 
 export default function GuidePage({ params }: { params: { slug: string } }) {
   const guide = guides.find((g) => g.slug === params.slug);
@@ -104,6 +105,11 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
                 dangerouslySetInnerHTML={{ __html: guide.content }}
               />
 
+              {/* Ad Unit: Content Bottom */}
+              <div className="my-12">
+                <AdUnit slotId="5544332211" format="auto" label="Guide Content Bottom Ad" />
+              </div>
+
               {/* Tags */}
               <div className="mt-12 pt-8 border-t border-border">
                 <div className="flex flex-wrap gap-2">
@@ -142,7 +148,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="sticky top-24"
             >
-              <div className="glass-card p-6 rounded-2xl border border-primary/20 shadow-xl relative overflow-hidden group">
+              <div className="glass-card p-6 rounded-2xl border border-primary/20 shadow-xl relative overflow-hidden group mb-8">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <div className="relative z-10">
@@ -165,8 +171,13 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
                 </div>
               </div>
 
+              {/* Ad Unit: Sidebar Sticky */}
+              <div className="mb-8">
+                <AdUnit slotId="1122334455" format="auto" label="Guide Sidebar Ad" />
+              </div>
+
               {/* Newsletter / CTA */}
-              <div className="mt-8 glass-card p-6 rounded-2xl border border-border shadow-lg">
+              <div className="glass-card p-6 rounded-2xl border border-border shadow-lg">
                 <h3 className="text-lg font-bold text-foreground mb-2">
                   매주 새로운 금융 꿀팁
                 </h3>
