@@ -131,29 +131,11 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
             <Header />
 
-            {/* Main Layout with Sidebar for Desktop */}
-            <div className="w-full flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <div className="flex flex-col lg:flex-row gap-8">
-                {/* Main Content Area */}
-                <main className="w-full lg:w-[75%] flex flex-col">
-                  {children}
-                </main>
-
-                {/* Sidebar Area (Desktop Only) */}
-                <aside className="hidden lg:block w-[25%] min-w-[300px]">
-                  <div className="sticky top-24 space-y-8">
-                    {/* Sidebar Ad 1 (Sticky) */}
-                    <AdUnit
-                      slotId="1234567890" // Replace with real slot ID
-                      format="vertical"
-                      label="Sidebar Sticky"
-                      sticky={true}
-                    />
-
-                    {/* Additional Sidebar Content (e.g., Popular Posts) could go here */}
-                  </div>
-                </aside>
-              </div>
+            {/* Main Layout - Centered Single Column */}
+            <div className="w-full flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+              <main className="w-full flex flex-col animate-fade-in-up">
+                {children}
+              </main>
             </div>
 
             <Footer />

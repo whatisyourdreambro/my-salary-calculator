@@ -21,22 +21,31 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full mt-32 border-t border-border bg-background">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <footer className="w-full mt-32 border-t border-white/10 bg-background relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12">
           <div className="md:w-1/3">
-            <Link href="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary">Moneysalary</h1>
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
+                <span className="text-xl font-bold text-primary">M</span>
+              </div>
+              <h1 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">Moneysalary</h1>
             </Link>
-            <p className="mt-4 text-base text-foreground/60">
+            <p className="mt-4 text-base text-muted-foreground leading-relaxed">
               당신의 경제적 여정을 돕는 든든한 파트너.
+              <br />
+              정확한 계산과 스마트한 인사이트를 제공합니다.
             </p>
             <div className="flex space-x-4 mt-6">
               {socialLinks.map((link, index) => (
                 <a
                   key={index}
                   href={link.href}
-                  className="text-foreground/60 hover:text-primary transition-colors"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                 >
                   {link.icon}
                 </a>
@@ -45,15 +54,15 @@ export default function Footer() {
           </div>
           <div className="grid grid-cols-2 gap-8 md:w-2/3">
             <div>
-              <h3 className="text-base font-semibold tracking-wider uppercase text-foreground/80">
+              <h3 className="text-sm font-bold tracking-wider uppercase text-primary mb-6">
                 핵심 기능
               </h3>
-              <ul className="mt-4 space-y-3">
+              <ul className="space-y-4">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-foreground/60 hover:text-primary transition-colors"
+                      className="text-base text-muted-foreground hover:text-primary hover:translate-x-1 transition-all inline-block"
                     >
                       {link.name}
                     </Link>
@@ -62,15 +71,15 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-base font-semibold tracking-wider uppercase text-foreground/80">
+              <h3 className="text-sm font-bold tracking-wider uppercase text-primary mb-6">
                 기타
               </h3>
-              <ul className="mt-4 space-y-3">
+              <ul className="space-y-4">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-foreground/60 hover:text-primary transition-colors"
+                      className="text-base text-muted-foreground hover:text-primary hover:translate-x-1 transition-all inline-block"
                     >
                       {link.name}
                     </Link>
@@ -80,7 +89,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-border text-center text-sm text-foreground/50">
+        <div className="mt-16 pt-8 border-t border-border text-center text-sm text-muted-foreground">
           <p>© {currentYear} Moneysalary. All Rights Reserved.</p>
           <p className="mt-2">
             본 사이트에서 제공하는 정보는 법적 효력이 없으며, 참고용으로만
@@ -92,7 +101,7 @@ export default function Footer() {
               href="https://www.frankfurter.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-primary"
+              className="underline hover:text-primary decoration-primary/30 underline-offset-4"
             >
               Frankfurter API
             </a>
