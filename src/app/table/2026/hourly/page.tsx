@@ -5,6 +5,7 @@ import { generateHourlyWageTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import HourlyTableInteractive from "./HourlyTableInteractive";
+import TableHero from "@/components/TableHero";
 
 export const runtime = "edge";
 
@@ -45,8 +46,8 @@ async function HourlyTable2026({
 
   const filteredData = searchTerm
     ? allData.filter((row) =>
-        row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-      )
+      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
+    )
     : allData;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -64,14 +65,23 @@ async function HourlyTable2026({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <main className="w-full bg-background">
-        <div className="w-full bg-gradient-to-br from-primary/90 to-primary dark:from-gray-900 dark:to-primary/80 text-white text-center py-20 sm:py-28 px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            2026 시급 실수령액 미리보기
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-blue-100 dark:text-gray-300">
-            2026년 최저시급은 얼마가 될까요? 예상 최저시급과 내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
-          </p>
-        </div>
+        <TableHero
+          badgeText="2026년 최신 데이터 반영"
+          title={
+            <>
+              2026 시급 실수령액 <br className="sm:hidden" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+                미리보기
+              </span>
+            </>
+          }
+          description={
+            <>
+              2026년 최저시급은 얼마가 될까요? <br className="hidden sm:block" />
+              예상 최저시급과 내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
+            </>
+          }
+        />
 
         <HourlyTableInteractive
           allData={allData}
@@ -124,7 +134,7 @@ async function HourlyTable2026({
                 <p className="text-muted-foreground">
                   2026년 최저시급은 아직 결정되지 않았지만, 최근 인상률을 고려할 때 <strong>10,300원 ~ 10,500원</strong> 사이에서 결정될 가능성이 있습니다. 확정되는 대로 신속하게 업데이트하겠습니다.
                 </p>
-                 <Link
+                <Link
                   href="/guides/minimum-wage"
                   className="text-primary font-semibold mt-4 inline-block"
                 >

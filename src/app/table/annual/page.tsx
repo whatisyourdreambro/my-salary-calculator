@@ -2,9 +2,10 @@
 
 import { Suspense } from "react";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import AnnualTableInteractive from "./AnnualTableInteractive";
+import TableHero from "@/components/TableHero";
 
 // Cloudflare Pages 배포를 위한 Edge 런타임 설정
 export const runtime = "edge";
@@ -48,8 +49,8 @@ async function AnnualTable({
 
   const filteredData = searchTerm
     ? allData.filter((row) =>
-        row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-      )
+      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
+    )
     : allData;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -67,15 +68,23 @@ async function AnnualTable({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <main className="w-full bg-background">
-        <div className="w-full bg-gradient-to-br from-primary/90 to-primary dark:from-gray-900 dark:to-primary/80 text-white text-center py-20 sm:py-28 px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            2025 연봉 실수령액 대백과
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-blue-100 dark:text-gray-300">
-            당신의 진짜 가치를 숫자로 확인하세요. 2025년 최신 세법 기준, 연봉
-            구간별 상세 공제 내역과 실수령액을 한눈에 비교해 드립니다.
-          </p>
-        </div>
+        <TableHero
+          badgeText="2025년 최신 세법 기준"
+          title={
+            <>
+              2025 연봉 실수령액 <br className="sm:hidden" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+                대백과
+              </span>
+            </>
+          }
+          description={
+            <>
+              당신의 진짜 가치를 숫자로 확인하세요. <br className="hidden sm:block" />
+              2025년 최신 세법 기준, 연봉 구간별 상세 공제 내역과 실수령액을 한눈에 비교해 드립니다.
+            </>
+          }
+        />
 
         <AnnualTableInteractive
           allData={allData}

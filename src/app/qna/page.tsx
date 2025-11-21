@@ -10,7 +10,12 @@ import {
   Landmark,
   Briefcase,
   TrendingUp,
+  ChevronDown,
+  ArrowRight,
+  MessageCircle,
+  Sparkles
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { ElementType } from "react";
 
 // Q&A 데이터 항목에 대한 타입 정의
@@ -239,12 +244,12 @@ const categories: {
   name: string;
   icon: ElementType;
 }[] = [
-  { id: "전체", name: "전체보기", icon: HelpCircle },
-  { id: "연봉 및 수당", name: "연봉/수당", icon: Wallet },
-  { id: "4대보험 및 세금", name: "4대보험/세금", icon: Landmark },
-  { id: "퇴직 및 이직", name: "퇴직/이직", icon: Briefcase },
-  { id: "재테크", name: "재테크", icon: TrendingUp },
-];
+    { id: "전체", name: "전체보기", icon: HelpCircle },
+    { id: "연봉 및 수당", name: "연봉/수당", icon: Wallet },
+    { id: "4대보험 및 세금", name: "4대보험/세금", icon: Landmark },
+    { id: "퇴직 및 이직", name: "퇴직/이직", icon: Briefcase },
+    { id: "재테크", name: "재테크", icon: TrendingUp },
+  ];
 
 const faqStructuredData: FaqPage = {
   "@context": "https://schema.org",
@@ -297,161 +302,221 @@ export default function QnAPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
-      <main className="w-full bg-background">
-        <div className="w-full bg-gradient-to-br from-gray-900 via-slate-800 to-black text-white text-center py-20 sm:py-28 px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            당신의 돈에 대한 모든 질문
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-300">
-            급여, 세금, 퇴직금부터 재테크까지. 알아두면 피가 되고 살이 되는 금융
-            지식을 명쾌하게 알려드립니다.
-          </p>
-        </div>
+      <div className="w-full space-y-12">
+        {/* Hero Section */}
+        <section className="relative py-16 sm:py-24 overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-slate-800 to-black text-white text-center shadow-2xl">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/30 rounded-full blur-[100px] -z-10 animate-pulse-glow" />
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 -mt-20">
-          <div className="sticky top-20 z-10 mb-12">
-            <div className="bg-light-card/80 dark:bg-dark-card/80 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800">
-              <div className="relative mb-4">
+          <div className="relative z-10 max-w-3xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground font-medium text-sm mb-6">
+                <MessageCircle className="w-4 h-4" />
+                <span>무엇이든 물어보세요</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
+                금융에 대한 <br className="sm:hidden" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">모든 질문과 해답</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-slate-300 leading-relaxed">
+                급여, 세금, 퇴직금부터 재테크까지.<br className="hidden sm:block" />
+                알아두면 피가 되고 살이 되는 금융 지식을 명쾌하게 알려드립니다.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Search & Filter Section */}
+        <section className="sticky top-24 z-30 -mt-8">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="glass-card p-6 rounded-2xl shadow-xl border border-white/20 backdrop-blur-xl bg-white/80 dark:bg-black/80"
+            >
+              <div className="relative mb-6">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="궁금한 점을 검색해보세요 (예: 퇴직금)"
-                  className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-signature-blue bg-white dark:bg-gray-800"
+                  placeholder="궁금한 점을 검색해보세요 (예: 퇴직금, 연말정산)"
+                  className="w-full pl-11 pr-4 py-4 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-lg"
                 />
               </div>
-              <div className="flex justify-center flex-wrap gap-2">
+
+              <div className="flex flex-wrap justify-center gap-2">
                 {categories.map(({ id, name, icon: Icon }) => (
                   <button
                     key={id}
                     onClick={() => setActiveCategory(id)}
-                    className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 ${
-                      activeCategory === id
-                        ? "bg-signature-blue text-white shadow-md"
-                        : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                    }`}
+                    className={`px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 flex items-center gap-2 border ${activeCategory === id
+                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25 scale-105"
+                        : "bg-background hover:bg-secondary text-muted-foreground border-border hover:border-primary/50"
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     {name}
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
+        </section>
 
-          <div className="space-y-12">
-            {Object.entries(groupedByCategory).map(([category, items]) => (
-              <section key={category}>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 border-b-2 border-signature-blue pb-3 mb-8">
+        {/* Q&A List Section */}
+        <section className="max-w-4xl mx-auto px-4 pb-20">
+          <div className="space-y-16">
+            {Object.entries(groupedByCategory).map(([category, items], sectionIndex) => (
+              <motion.div
+                key={category}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: sectionIndex * 0.1 }}
+              >
+                <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground mb-8 pl-2 border-l-4 border-primary">
                   {category}
+                  <span className="text-sm font-normal text-muted-foreground bg-secondary px-2 py-1 rounded-md">
+                    {items.length}개
+                  </span>
                 </h2>
-                <div className="space-y-6">
+
+                <div className="space-y-4">
                   {items.map((item, index) => {
                     const globalIndex = qnaData.findIndex(
                       (q) => q.question === item.question
                     );
+                    const isActive = activeIndex === globalIndex;
+
                     return (
-                      <div
+                      <motion.div
                         key={index}
-                        className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                        layout
+                        className={`group rounded-2xl border transition-all duration-300 overflow-hidden ${isActive
+                            ? "bg-card border-primary shadow-lg ring-1 ring-primary/20"
+                            : "bg-card/50 border-border hover:border-primary/50 hover:bg-card hover:shadow-md"
+                          }`}
                       >
                         <button
                           onClick={() => toggleAccordion(item.question)}
-                          className="w-full flex justify-between items-center p-6 text-left bg-light-card dark:bg-dark-card"
+                          className="w-full flex justify-between items-center p-6 text-left"
                         >
-                          <h3 className="text-xl font-bold text-light-text dark:text-dark-text pr-4">
-                            <span className="text-signature-blue mr-2">Q.</span>
-                            {item.question}
-                          </h3>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2.5}
-                            stroke="currentColor"
-                            className={`w-6 h-6 text-gray-500 dark:text-gray-400 transition-transform duration-500 flex-shrink-0 ${
-                              activeIndex === globalIndex ? "rotate-180" : ""
-                            }`}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                            />
-                          </svg>
-                        </button>
-                        <div
-                          className={`grid transition-all duration-500 ease-in-out ${
-                            activeIndex === globalIndex
-                              ? "grid-rows-[1fr] opacity-100"
-                              : "grid-rows-[0fr] opacity-0"
-                          }`}
-                        >
-                          <div className="overflow-hidden">
-                            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-card/50 space-y-6">
-                              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-signature-blue">
-                                <p className="!m-0 font-semibold text-light-text dark:text-dark-text">
-                                  <span className="font-bold">A. 결론:</span>{" "}
-                                  {item.answer.conclusion}
-                                </p>
-                              </div>
-                              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                                <h4 className="font-semibold mb-3 text-light-text dark:text-dark-text">
-                                  더 자세히 알아볼까요?
-                                </h4>
-                                <ul className="space-y-3 text-sm list-disc pl-5">
-                                  {item.answer.details.map((detail, i) => (
-                                    <li
-                                      key={i}
-                                      dangerouslySetInnerHTML={{
-                                        __html: detail,
-                                      }}
-                                      className="text-light-text-secondary dark:text-dark-text-secondary"
-                                    />
-                                  ))}
-                                </ul>
-                              </div>
-                              {item.answer.tip && (
-                                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-500">
-                                  <p className="!m-0 text-sm">
-                                    <span className="font-bold text-yellow-600">
-                                      💡 Moneysalary&apos;s Tip:
-                                    </span>{" "}
-                                    <span className="text-light-text-secondary dark:text-dark-text-secondary">
-                                      {item.answer.tip}
-                                    </span>
-                                  </p>
-                                </div>
-                              )}
-                              <Link
-                                href={item.answer.action.href}
-                                className="block w-full text-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg font-semibold text-signature-blue hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                              >
-                                {item.answer.action.text} →
-                              </Link>
-                            </div>
+                          <div className="flex items-start gap-4 pr-4">
+                            <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg transition-colors ${isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground group-hover:text-primary"
+                              }`}>
+                              Q
+                            </span>
+                            <h3 className={`text-lg sm:text-xl font-bold transition-colors ${isActive ? "text-primary" : "text-foreground group-hover:text-primary"
+                              }`}>
+                              {item.question}
+                            </h3>
                           </div>
-                        </div>
-                      </div>
+                          <ChevronDown
+                            className={`w-6 h-6 text-muted-foreground transition-transform duration-300 flex-shrink-0 ${isActive ? "rotate-180 text-primary" : "group-hover:text-primary"
+                              }`}
+                          />
+                        </button>
+
+                        <AnimatePresence>
+                          {isActive && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                            >
+                              <div className="px-6 pb-6 sm:px-8 sm:pb-8 pt-2 border-t border-border/50">
+                                <div className="space-y-6">
+                                  {/* Conclusion Box */}
+                                  <div className="p-5 bg-primary/5 rounded-xl border border-primary/10">
+                                    <div className="flex gap-3">
+                                      <span className="text-2xl">💡</span>
+                                      <div>
+                                        <p className="font-bold text-primary mb-1">핵심 요약</p>
+                                        <p className="text-foreground font-medium leading-relaxed">
+                                          {item.answer.conclusion}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Details */}
+                                  <div className="pl-2 sm:pl-4 border-l-2 border-border space-y-4">
+                                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                                      <Sparkles className="w-4 h-4 text-yellow-500" />
+                                      상세 설명
+                                    </h4>
+                                    <ul className="space-y-3 text-muted-foreground">
+                                      {item.answer.details.map((detail, i) => (
+                                        <li
+                                          key={i}
+                                          dangerouslySetInnerHTML={{
+                                            __html: detail,
+                                          }}
+                                          className="text-sm sm:text-base leading-relaxed [&>strong]:text-foreground [&>strong]:font-semibold"
+                                        />
+                                      ))}
+                                    </ul>
+                                  </div>
+
+                                  {/* Tip */}
+                                  {item.answer.tip && (
+                                    <div className="p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                                      <p className="text-sm sm:text-base">
+                                        <span className="font-bold text-yellow-600 dark:text-yellow-400 mr-2">
+                                          Honey Tip 🍯
+                                        </span>
+                                        <span className="text-foreground/80">
+                                          {item.answer.tip}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  )}
+
+                                  {/* Action Button */}
+                                  <Link
+                                    href={item.answer.action.href}
+                                    className="group/btn flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground font-bold rounded-xl transition-all duration-300 gap-2 mx-auto sm:mx-0"
+                                  >
+                                    {item.answer.action.text}
+                                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                  </Link>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
                     );
                   })}
                 </div>
-              </section>
+              </motion.div>
             ))}
+
             {filteredData.length === 0 && (
-              <div className="text-center py-20 text-gray-500">
-                <p className="text-xl font-semibold">
-                  아쉽게도 검색 결과가 없네요.
+              <div className="text-center py-20">
+                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Search className="w-10 h-10 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">
+                  검색 결과가 없습니다
+                </h3>
+                <p className="text-muted-foreground">
+                  다른 키워드로 검색해보시거나 카테고리를 변경해보세요.
                 </p>
-                <p className="mt-2">다른 키워드로 다시 검색해보시겠어요?</p>
               </div>
             )}
           </div>
-        </div>
-      </main>
+        </section>
+      </div>
     </>
   );
 }

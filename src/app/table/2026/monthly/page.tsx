@@ -5,6 +5,7 @@ import { generateMonthlySalaryTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import MonthlyTableInteractive from "./MonthlyTableInteractive";
+import TableHero from "@/components/TableHero";
 
 export const runtime = "edge";
 
@@ -45,8 +46,8 @@ async function MonthlyTable2026({
 
   const filteredData = searchTerm
     ? allData.filter((row) =>
-        row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-      )
+      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
+    )
     : allData;
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -64,14 +65,23 @@ async function MonthlyTable2026({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <main className="w-full bg-background">
-        <div className="w-full bg-gradient-to-br from-primary/90 to-primary dark:from-gray-900 dark:to-primary/80 text-white text-center py-20 sm:py-28 px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-            2026 월급 실수령액 미리보기
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-blue-100 dark:text-gray-300">
-            2026년, 내 월급 통장에는 얼마가 찍힐까요? 최신 정책 전망을 반영한 예상 월급 실수령액을 확인해보세요.
-          </p>
-        </div>
+        <TableHero
+          badgeText="2026년 최신 데이터 반영"
+          title={
+            <>
+              2026 월급 실수령액 <br className="sm:hidden" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
+                미리보기
+              </span>
+            </>
+          }
+          description={
+            <>
+              2026년, 내 월급 통장에는 얼마가 찍힐까요? <br className="hidden sm:block" />
+              최신 정책 전망을 반영한 예상 월급 실수령액을 확인해보세요.
+            </>
+          }
+        />
 
         <MonthlyTableInteractive
           allData={allData}
