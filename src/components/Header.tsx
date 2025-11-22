@@ -65,6 +65,7 @@ const navConfig: NavItem[] = [
     type: "dropdown",
     items: [
       { name: "2025 신년 운세", href: "/fun/fortune" },
+      { name: "멘사급 IQ 테스트", href: "/fun/iq-test" },
       { name: "플래피 샐러리맨", href: "/fun/flappy" },
       { name: "야근 테트리스", href: "/fun/tetris" },
       { name: "소비 성향 테스트", href: "/fun/spending-test" },

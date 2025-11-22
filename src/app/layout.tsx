@@ -140,12 +140,28 @@ export default function RootLayout({
 
             {/* Main Layout Container with Sidebars */}
             <div className="flex justify-center w-full max-w-[1920px] mx-auto relative">
+              {/* Left Sidebar (Desktop Only) */}
+              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
+                <div className="space-y-6">
+                  <AdUnit slotId="1234567890" format="vertical" label="Global Left Sidebar 1" />
+                  <AdUnit slotId="0987654321" format="vertical" label="Global Left Sidebar 2" />
+                </div>
+              </aside>
+
               {/* Main Content - Centered Single Column */}
               <div className="w-full flex-grow max-w-7xl px-4 sm:px-6 lg:px-8 py-12 pt-24">
                 <main className="w-full flex flex-col animate-fade-in-up">
                   {children}
                 </main>
               </div>
+
+              {/* Right Sidebar (Desktop Only) */}
+              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
+                <div className="space-y-6">
+                  <AdUnit slotId="1122334455" format="vertical" label="Global Right Sidebar 1" />
+                  <AdUnit slotId="5544332211" format="vertical" label="Global Right Sidebar 2" />
+                </div>
+              </aside>
             </div>
 
             <Footer />

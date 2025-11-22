@@ -179,6 +179,10 @@ export default function TetrisPage() {
     // --- Controls ---
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+                e.preventDefault();
+            }
+
             if (!isPlaying || gameOver) return;
 
             switch (e.key) {

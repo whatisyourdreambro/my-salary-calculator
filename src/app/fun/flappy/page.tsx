@@ -19,9 +19,16 @@ export default function FlappyGamePage() {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const requestRef = useRef<number>();
+    const gameStateRef = useRef<"start" | "playing" | "gameover">("start"); // Ref for loop access
     const birdRef = useRef({ x: 50, y: 300, velocity: 0, size: 30 });
     const obstaclesRef = useRef<{ x: number; topHeight: number; passed: boolean }[]>([]);
     const lastSpawnTime = useRef(0);
+    const scoreRef = useRef(0); // Ref for score to avoid closure issues in loop if needed
+
+    // Sync ref with state
+    useEffect(() => {
+        gameStateRef.current = gameState;
+    }, [gameState]);
 
     // Load high score
     useEffect(() => {
@@ -31,6 +38,8 @@ export default function FlappyGamePage() {
 
     // Game Loop
     const update = (time: number) => {
+        if (gameStateRef.current !== "playing") return; // Stop if not playing
+
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
@@ -58,7 +67,7 @@ export default function FlappyGamePage() {
         }
 
         // Update & Draw Obstacles
-        obstaclesRef.current.forEach((obs, index) => {
+        obstaclesRef.current.forEach((obs) => {
             obs.x -= OBSTACLE_SPEED;
 
             // Draw Top Obstacle (Tax Bill)
@@ -83,7 +92,8 @@ export default function FlappyGamePage() {
             // Score Update
             if (!obs.passed && obs.x + 50 < 50) { // Bird x is fixed at 50
                 obs.passed = true;
-                setScore(s => s + 1);
+                scoreRef.current += 1;
+                setScore(scoreRef.current);
             }
         });
 
@@ -101,14 +111,16 @@ export default function FlappyGamePage() {
             gameOver();
         }
 
-        if (gameState === "playing") {
+        if (gameStateRef.current === "playing") {
             requestRef.current = requestAnimationFrame(update);
         }
     };
 
     const startGame = () => {
         setGameState("playing");
+        gameStateRef.current = "playing"; // Immediate update for loop
         setScore(0);
+        scoreRef.current = 0;
         birdRef.current = { x: 50, y: 300, velocity: 0, size: 30 };
         obstaclesRef.current = [];
         lastSpawnTime.current = performance.now();
@@ -117,16 +129,17 @@ export default function FlappyGamePage() {
 
     const gameOver = () => {
         setGameState("gameover");
+        gameStateRef.current = "gameover";
         if (requestRef.current) cancelAnimationFrame(requestRef.current);
 
-        if (score > highScore) {
-            setHighScore(score);
-            localStorage.setItem("flappyHighScore", score.toString());
+        if (scoreRef.current > highScore) {
+            setHighScore(scoreRef.current);
+            localStorage.setItem("flappyHighScore", scoreRef.current.toString());
         }
     };
 
     const jump = () => {
-        if (gameState === "playing") {
+        if (gameStateRef.current === "playing") {
             birdRef.current.velocity = JUMP_STRENGTH;
         }
     };
@@ -135,7 +148,7 @@ export default function FlappyGamePage() {
         const handleKeyPress = (e: KeyboardEvent) => {
             if (e.code === "Space") {
                 e.preventDefault();
-                if (gameState === "playing") {
+                if (gameStateRef.current === "playing") {
                     jump();
                 } else {
                     startGame();
@@ -144,7 +157,7 @@ export default function FlappyGamePage() {
         };
         window.addEventListener("keydown", handleKeyPress);
         return () => window.removeEventListener("keydown", handleKeyPress);
-    }, [gameState]);
+    }, []);
 
     return (
         <main className="w-full min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 overflow-hidden">
@@ -162,7 +175,7 @@ export default function FlappyGamePage() {
                         width={400}
                         height={600}
                         onClick={jump}
-                        className="w-full h-auto cursor-pointer bg-slate-900"
+                        className="w-full h-auto cursor-pointer bg-slate-900 touch-none"
                     />
 
                     {/* Score Overlay */}
@@ -213,7 +226,17 @@ export default function FlappyGamePage() {
                                 </button>
                                 <button
                                     className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
-                                    onClick={() => alert("준비중입니다!")}
+                                    onClick={() => {
+                                        if (navigator.share) {
+                                            navigator.share({
+                                                title: 'Flappy Salaryman',
+                                                text: `내 점수는 ${score}점! 세금을 피해 월급을 지켰습니다.`,
+                                                url: window.location.href
+                                            });
+                                        } else {
+                                            alert("공유하기를 지원하지 않는 브라우저입니다.");
+                                        }
+                                    }}
                                 >
                                     <Share2 className="w-5 h-5" />
                                     공유하기
