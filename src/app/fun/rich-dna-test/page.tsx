@@ -134,17 +134,27 @@ export default function RichDnaTestPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-background pb-20">
+    <main className="w-full max-w-4xl mx-auto px-4 py-12 sm:py-16">
       {/* Header */}
-      <div className="bg-slate-900 text-white py-12 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="relative z-10">
-          <h1 className="text-3xl font-bold mb-2">부자 DNA 테스트</h1>
-          <p className="text-slate-300">당신 안에 잠든 억만장자의 본능을 깨우세요</p>
+      <div className="text-center mb-12">
+        <div className="inline-block p-3 rounded-full bg-yellow-500/10 mb-6 border border-yellow-500/20">
+          <Gem className="w-8 h-8 text-yellow-500" />
         </div>
+        <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500">
+          부자 DNA 테스트
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          당신 안에 잠든 억만장자의 본능을 깨우세요.<br />
+          세계적인 부호들과 당신의 싱크로율은?
+        </p>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 -mt-6 relative z-20">
+      {/* Ad Unit: Top */}
+      <div className="mb-12 max-w-2xl mx-auto">
+        <AdUnit slotId="3344556677" format="auto" label="Rich DNA Top Ad" />
+      </div>
+
+      <div className="max-w-3xl mx-auto relative min-h-[500px]">
         <AnimatePresence mode="wait">
           {!showResult ? (
             <motion.div
@@ -152,39 +162,53 @@ export default function RichDnaTestPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-card rounded-3xl shadow-xl border border-border p-6 sm:p-10"
+              className="bg-card/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-8">
-                <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                  Q{step + 1}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {step + 1} / {questions.length}
-                </span>
-              </div>
+              {/* Decorative Elements */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
 
-              <h2 className="text-2xl sm:text-3xl font-bold mb-8 leading-tight">
-                {questions[step].question}
-              </h2>
-
-              <div className="space-y-4">
-                {questions[step].answers.map((answer, idx) => (
-                  <motion.button
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    onClick={() => handleAnswer(answer.type as keyof typeof scores)}
-                    className="w-full text-left p-5 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-medium group-hover:text-primary transition-colors">
-                        {answer.text}
-                      </span>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+              <div className="relative z-10">
+                <div className="flex justify-between items-center mb-10">
+                  <span className="text-sm font-bold text-yellow-600 bg-yellow-500/10 px-4 py-1.5 rounded-full border border-yellow-500/20">
+                    QUESTION {step + 1}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 h-2 bg-secondary rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-yellow-500"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${((step + 1) / questions.length) * 100}%` }}
+                      />
                     </div>
-                  </motion.button>
-                ))}
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {step + 1} / {questions.length}
+                    </span>
+                  </div>
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl font-bold mb-10 leading-tight text-foreground">
+                  {questions[step].question}
+                </h2>
+
+                <div className="grid gap-4">
+                  {questions[step].answers.map((answer, idx) => (
+                    <motion.button
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      onClick={() => handleAnswer(answer.type as keyof typeof scores)}
+                      className="w-full text-left p-6 rounded-2xl border-2 border-border bg-background/50 hover:bg-yellow-500/5 hover:border-yellow-500 transition-all duration-300 group relative overflow-hidden"
+                    >
+                      <div className="flex items-center justify-between relative z-10">
+                        <span className="text-lg font-medium group-hover:text-yellow-600 transition-colors">
+                          {answer.text}
+                        </span>
+                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-yellow-600 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ) : (
@@ -192,68 +216,85 @@ export default function RichDnaTestPage() {
               key="result"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="space-y-6"
+              className="space-y-8"
             >
               {/* Certificate Card */}
-              <div className={`bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border-4 ${result.borderColor} overflow-hidden relative`}>
+              <div className={`bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border-8 double ${result.borderColor} overflow-hidden relative print:shadow-none`}>
+                {/* Premium Texture Overlay */}
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none" />
+
                 {/* Decorative Background */}
-                <div className={`absolute top-0 left-0 w-full h-32 bg-gradient-to-r ${result.gradient} opacity-10`} />
-                <div className="absolute top-4 right-4 opacity-20">
-                  <ResultIcon className="w-32 h-32" />
+                <div className={`absolute top-0 left-0 w-full h-48 bg-gradient-to-b ${result.gradient} opacity-10`} />
+                <div className="absolute -top-24 -right-24 opacity-10 rotate-12">
+                  <ResultIcon className="w-96 h-96" />
                 </div>
 
-                <div className="p-8 sm:p-12 text-center relative z-10">
-                  <div className="inline-block p-4 rounded-full bg-white dark:bg-slate-800 shadow-lg mb-6">
+                <div className="p-8 sm:p-16 text-center relative z-10">
+                  <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-xl mb-8 border-4 border-white/20 ring-1 ring-black/5">
                     <ResultIcon className={`w-12 h-12 ${result.color}`} />
                   </div>
 
-                  <p className="text-sm font-bold tracking-widest uppercase text-muted-foreground mb-2">
-                    CERTIFICATE OF WEALTH DNA
-                  </p>
-                  <h2 className={`text-4xl sm:text-5xl font-black mb-2 ${result.color}`}>
-                    {result.title}
-                  </h2>
-                  <p className="text-xl font-medium text-foreground/80 mb-8">
-                    {result.subtitle}
-                  </p>
+                  <div className="mb-8">
+                    <p className="text-xs font-bold tracking-[0.3em] uppercase text-muted-foreground mb-3">
+                      CERTIFICATE OF WEALTH DNA
+                    </p>
+                    <h2 className={`text-5xl sm:text-6xl font-black mb-4 tracking-tight ${result.color}`}>
+                      {result.title}
+                    </h2>
+                    <div className="flex items-center justify-center gap-4">
+                      <div className="h-px w-12 bg-border" />
+                      <p className="text-xl font-serif italic text-foreground/80">
+                        {result.subtitle}
+                      </p>
+                      <div className="h-px w-12 bg-border" />
+                    </div>
+                  </div>
 
-                  <div className="w-16 h-1 bg-border mx-auto mb-8" />
+                  <div className="bg-secondary/30 rounded-2xl p-8 mb-10 backdrop-blur-sm">
+                    <p className="text-lg leading-relaxed text-foreground/90 font-medium keep-all">
+                      {result.description}
+                    </p>
+                  </div>
 
-                  <p className="text-lg leading-relaxed text-muted-foreground mb-8">
-                    {result.description}
-                  </p>
+                  {/* Ad Unit: Inside Certificate */}
+                  <div className="mb-8">
+                    <AdUnit slotId="9988776655" format="rectangle" label="DNA Result Ad" />
+                  </div>
 
-                  <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground font-mono">
-                    <span>ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
-                    <span>•</span>
-                    <span>{new Date().toLocaleDateString()}</span>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground font-mono border-t border-border pt-6">
+                    <div className="flex gap-4">
+                      <span>ISSUED: {new Date().toLocaleDateString()}</span>
+                      <span>NO: {Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
+                    </div>
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-1 h-4 bg-border/50" />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                {/* Bottom Pattern */}
-                <div className="h-4 bg-gradient-to-r from-transparent via-current to-transparent opacity-20" style={{ color: result.color }} />
+                {/* Gold Foil Effect Bottom */}
+                <div className="h-2 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200" />
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
                 <button
                   onClick={resetTest}
-                  className="py-4 bg-card border border-border rounded-xl font-bold hover:bg-secondary transition-colors flex items-center justify-center gap-2"
+                  className="py-4 px-8 bg-card hover:bg-secondary border border-border rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 group"
                 >
-                  <RefreshCw className="w-5 h-5" />
-                  다시 하기
+                  <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
+                  다시 테스트하기
                 </button>
                 <button
                   onClick={handleShare}
-                  className={`py-4 text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 bg-gradient-to-r ${result.gradient}`}
+                  className={`py-4 px-8 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-2 bg-gradient-to-r ${result.gradient}`}
                 >
                   <Share2 className="w-5 h-5" />
-                  결과 공유하기
+                  인증서 공유하기
                 </button>
               </div>
-
-              {/* Ad Unit */}
-              <AdUnit slotId="9988776655" format="rectangle" label="DNA Result Ad" />
             </motion.div>
           )}
         </AnimatePresence>

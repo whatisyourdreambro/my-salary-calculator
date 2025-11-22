@@ -78,51 +78,140 @@ export default function FinancialMbtiPage() {
   };
 
   return (
-    <main className="w-full max-w-2xl mx-auto px-4 py-12 sm:py-16">
-      <AnimatePresence mode="wait">
-        {step < questions.length ? (
-          <motion.div key={step} initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.3 }}>
-            <div className="text-center mb-10">
-              <p className="text-lg font-semibold text-primary">MBTI Test</p>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mt-2">{questions[step].question}</h1>
-            </div>
-            <div className="space-y-4">
-              {questions[step].answers.map((answer) => (
-                <button key={answer.text} onClick={() => handleAnswer(questions[step].axis, answer.value)} className="w-full text-center p-6 rounded-xl border border-border bg-card hover:bg-primary/10 hover:border-primary transition-all duration-200 shadow-sm">
-                  <p className="text-xl font-medium text-foreground">{answer.text}</p>
-                </button>
-              ))}
-            </div>
-            <div className="mt-8 text-center text-sm text-muted-foreground">{step + 1} / {questions.length}</div>
-          </motion.div>
-        ) : (
-          result && (
-            <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="text-center">
-              <div className="p-8 rounded-2xl shadow-2xl border border-border bg-card">
-                <p className="font-semibold text-primary">나의 금융 MBTI 결과</p>
-                <h2 className="text-5xl font-bold text-primary my-2">{resultKey}</h2>
-                <h3 className="text-2xl font-semibold text-foreground">{result.title}</h3>
-                <div className="my-6 space-x-2">
-                  {result.keywords.map(kw => <span key={kw} className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm font-semibold">#{kw}</span>)}
-                </div>
-                <p className="mt-4 max-w-md mx-auto text-muted-foreground leading-relaxed text-left bg-secondary/50 p-4 rounded-lg">{result.description}</p>
+    <main className="w-full max-w-4xl mx-auto px-4 py-12 sm:py-16">
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+          금융 MBTI 테스트
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          나의 투자 성향은 어떤 유형일까요?<br />
+          16가지 유형으로 알아보는 나의 금융 DNA
+        </p>
+      </div>
 
-                {/* Ad Unit: Result Middle */}
-                <div className="my-8">
-                  <AdUnit slotId="9988776655" format="auto" label="Financial MBTI Result Ad" />
-                </div>
+      {/* Ad Unit: Top */}
+      <div className="mb-12 max-w-2xl mx-auto">
+        <AdUnit slotId="1234567890" format="auto" label="MBTI Top Ad" />
+      </div>
 
-                <div className="mt-8 flex gap-4 justify-center">
-                  <button onClick={resetTest} className="py-2 px-6 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors">다시하기</button>
-                  <button onClick={handleShare} className="py-2 px-6 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all shadow-lg">
-                    <Share2 className="inline-block w-4 h-4 mr-2" />결과 공유하기
-                  </button>
+      <div className="max-w-3xl mx-auto relative min-h-[500px]">
+        <AnimatePresence mode="wait">
+          {step < questions.length ? (
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+              className="bg-card/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-10">
+                <span className="text-sm font-bold text-blue-600 bg-blue-500/10 px-4 py-1.5 rounded-full border border-blue-500/20">
+                  QUESTION {step + 1}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 h-2 bg-secondary rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-blue-500"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${((step + 1) / questions.length) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {step + 1} / {questions.length}
+                  </span>
                 </div>
               </div>
+
+              <h2 className="text-3xl sm:text-4xl font-bold mb-10 leading-tight text-foreground">
+                {questions[step].question}
+              </h2>
+
+              <div className="grid gap-4">
+                {questions[step].answers.map((answer, idx) => (
+                  <motion.button
+                    key={answer.text}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    onClick={() => handleAnswer(questions[step].axis, answer.value)}
+                    className="w-full text-left p-6 rounded-2xl border-2 border-border bg-background/50 hover:bg-blue-500/5 hover:border-blue-500 transition-all duration-200 group shadow-sm hover:shadow-md"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium group-hover:text-blue-600 transition-colors">
+                        {answer.text}
+                      </span>
+                      <div className="w-6 h-6 rounded-full border-2 border-border group-hover:border-blue-500 group-hover:bg-blue-500 transition-colors" />
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
             </motion.div>
-          )
-        )}
-      </AnimatePresence>
+          ) : (
+            result && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-8"
+              >
+                <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl border border-border overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+
+                  <div className="p-8 sm:p-16 text-center relative z-10">
+                    <p className="text-sm font-bold tracking-widest uppercase text-blue-500 mb-4">
+                      YOUR FINANCIAL TYPE
+                    </p>
+
+                    <h2 className="text-6xl sm:text-8xl font-black mb-2 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                      {resultKey}
+                    </h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">
+                      {result.title}
+                    </h3>
+
+                    <div className="flex flex-wrap justify-center gap-2 mb-8">
+                      {result.keywords.map(kw => (
+                        <span key={kw} className="px-4 py-2 bg-secondary text-secondary-foreground rounded-full text-sm font-bold border border-border">
+                          #{kw}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="bg-secondary/50 rounded-2xl p-8 mb-10 text-left">
+                      <p className="text-lg leading-relaxed text-foreground/90 font-medium keep-all">
+                        {result.description}
+                      </p>
+                    </div>
+
+                    {/* Ad Unit: Result Middle */}
+                    <div className="mb-10">
+                      <AdUnit slotId="9988776655" format="rectangle" label="Financial MBTI Result Ad" />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button
+                        onClick={resetTest}
+                        className="py-4 px-8 bg-card hover:bg-secondary border border-border rounded-xl font-bold transition-all shadow-lg"
+                      >
+                        다시 테스트하기
+                      </button>
+                      <button
+                        onClick={handleShare}
+                        className="py-4 px-8 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+                      >
+                        <Share2 className="w-5 h-5" />
+                        결과 공유하기
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
+      </div>
     </main>
   );
 }

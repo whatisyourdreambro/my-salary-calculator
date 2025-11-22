@@ -110,91 +110,123 @@ export default function SpendingTestPage() {
   };
 
   return (
-    <main className="w-full max-w-2xl mx-auto px-4 py-12 sm:py-16">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">
+    <main className="w-full max-w-4xl mx-auto px-4 py-12 sm:py-16">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
           소비 성향 테스트
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          나는 어떤 소비 습관을 가지고 있을까?
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          나의 소비 습관은 어떤 동물과 닮았을까요?<br />
+          숨겨진 부자 DNA를 찾아보세요.
         </p>
       </div>
 
       {/* Ad Unit: Top */}
-      <div className="mb-8">
+      <div className="mb-12 max-w-2xl mx-auto">
         <AdUnit slotId="7788990011" format="auto" label="Spending Test Top Ad" />
       </div>
 
-      <AnimatePresence mode="wait">
-        {step < questions.length ? (
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="text-center mb-10">
-              <p className="text-lg font-semibold text-primary">Q{step + 1}.</p>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mt-2">
-                {questions[step].question}
-              </h1>
-            </div>
-            <div className="space-y-4">
-              {questions[step].answers.map((answer) => (
-                <button
-                  key={answer.text}
-                  onClick={() => handleAnswer(answer.type as keyof typeof scores)}
-                  className="w-full text-left p-5 rounded-xl border border-border bg-card hover:bg-secondary hover:border-primary transition-all duration-200 shadow-sm"
-                >
-                  <p className="text-lg font-medium text-foreground">{answer.text}</p>
-                </button>
-              ))}
-            </div>
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-              {step + 1} / {questions.length}
-            </div>
-          </motion.div>
-        ) : (
-          result && ResultIcon && (
+      <div className="max-w-2xl mx-auto relative min-h-[400px]">
+        <AnimatePresence mode="wait">
+          {step < questions.length ? (
             <motion.div
-              key="result"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className={`text-center p-8 rounded-2xl shadow-2xl border ${result.bg} border-current`}
+              key={step}
+              initial={{ opacity: 0, x: 50, rotate: 2 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+              exit={{ opacity: 0, x: -50, rotate: -2 }}
+              transition={{ duration: 0.4, ease: "backOut" }}
+              className="bg-card/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl"
             >
-              <p className="font-semibold">나의 소비 성향은...</p>
-              <div className="w-24 h-24 mx-auto my-4 bg-background rounded-full flex items-center justify-center shadow-inner">
-                <ResultIcon className={`w-12 h-12 ${result.color}`} />
-              </div>
-              <h2 className={`text-4xl font-bold ${result.color}`}>{result.title}</h2>
-              <p className="mt-4 max-w-md mx-auto text-foreground/80 leading-relaxed">{result.description}</p>
-
-              {/* Ad Unit: Result Middle */}
-              <div className="my-8">
-                <AdUnit slotId="1100998877" format="auto" label="Spending Test Result Ad" />
+              <div className="flex justify-between items-center mb-8">
+                <span className="text-sm font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">
+                  QUESTION {step + 1}
+                </span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {step + 1} / {questions.length}
+                </span>
               </div>
 
-              <div className="mt-8 flex gap-4 justify-center">
-                <button
-                  onClick={resetTest}
-                  className="py-2 px-6 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors"
-                >
-                  다시하기
-                </button>
-                <button
-                  onClick={handleShare}
-                  className={`py-2 px-6 text-white font-bold rounded-lg transition-all shadow-lg ${result.bgColor} hover:brightness-110`}
-                >
-                  <Share2 className="inline-block w-4 h-4 mr-2" />
-                  결과 공유하기
-                </button>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-8 leading-tight text-foreground">
+                {questions[step].question}
+              </h2>
+
+              <div className="space-y-4">
+                {questions[step].answers.map((answer, idx) => (
+                  <motion.button
+                    key={answer.text}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    onClick={() => handleAnswer(answer.type as keyof typeof scores)}
+                    className="w-full text-left p-6 rounded-2xl border-2 border-border bg-background/50 hover:bg-primary/5 hover:border-primary transition-all duration-200 group shadow-sm hover:shadow-md"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium group-hover:text-primary transition-colors">
+                        {answer.text}
+                      </span>
+                      <div className="w-6 h-6 rounded-full border-2 border-border group-hover:border-primary group-hover:bg-primary transition-colors" />
+                    </div>
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
-          )
-        )}
-      </AnimatePresence>
+          ) : (
+            result && ResultIcon && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className={`text-center p-10 rounded-3xl shadow-2xl border-4 ${result.bg} ${result.color.replace('text', 'border').replace('600', '200')} relative overflow-hidden`}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${result.bg} opacity-50`} />
+
+                <div className="relative z-10">
+                  <p className="font-bold text-lg mb-6 tracking-widest opacity-80">MY SPENDING TYPE</p>
+
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", bounce: 0.5 }}
+                    className="w-32 h-32 mx-auto mb-6 bg-white rounded-full flex items-center justify-center shadow-xl"
+                  >
+                    <ResultIcon className={`w-16 h-16 ${result.color}`} />
+                  </motion.div>
+
+                  <h2 className={`text-4xl sm:text-5xl font-black mb-6 ${result.color}`}>{result.title}</h2>
+
+                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-inner">
+                    <p className="text-lg leading-relaxed text-slate-800 font-medium keep-all">
+                      {result.description}
+                    </p>
+                  </div>
+
+                  {/* Ad Unit: Result Middle */}
+                  <div className="my-8 bg-white/50 p-4 rounded-xl">
+                    <AdUnit slotId="1100998877" format="rectangle" label="Spending Test Result Ad" />
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={resetTest}
+                      className="py-4 px-8 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-50 transition-colors shadow-lg"
+                    >
+                      다시하기
+                    </button>
+                    <button
+                      onClick={handleShare}
+                      className={`py-4 px-8 text-white font-bold rounded-xl transition-all shadow-lg ${result.bgColor} hover:brightness-110 flex items-center justify-center gap-2`}
+                    >
+                      <Share2 className="w-5 h-5" />
+                      결과 공유하기
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
+      </div>
     </main>
   );
 }
