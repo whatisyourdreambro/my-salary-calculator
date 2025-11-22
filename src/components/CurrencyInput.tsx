@@ -13,6 +13,8 @@ interface Currency {
   symbol: string;
 }
 
+import { cn } from "@/lib/utils";
+
 interface CurrencyInputProps {
   label: string;
   value: string;
@@ -21,6 +23,7 @@ interface CurrencyInputProps {
   selectedCurrency?: string;
   onCurrencyChange?: (value: string) => void;
   currencies?: Currency[];
+  className?: string;
 }
 
 export default function CurrencyInput({
@@ -31,6 +34,7 @@ export default function CurrencyInput({
   selectedCurrency,
   onCurrencyChange,
   currencies,
+  className,
 }: CurrencyInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState<number | null>(null);
@@ -90,7 +94,10 @@ export default function CurrencyInput({
             type="text"
             value={value}
             onChange={handleChange}
-            className="w-full p-3 pr-12 bg-secondary/50 border border-border rounded-lg text-xl font-bold focus:ring-2 focus:ring-primary focus:border-primary transition"
+            className={cn(
+              "w-full p-3 pr-12 bg-secondary/50 border border-border rounded-lg text-xl font-bold focus:ring-2 focus:ring-primary focus:border-primary transition",
+              className
+            )}
             inputMode="numeric"
           />
           <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground text-base">
