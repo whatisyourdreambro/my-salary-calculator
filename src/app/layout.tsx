@@ -45,6 +45,13 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
   manifest: "/manifest.json",
+  alternates: {
+    canonical: "https://www.moneysalary.com",
+    languages: {
+      "ko-KR": "https://www.moneysalary.com",
+      "en-US": "https://www.moneysalary.com/en",
+    },
+  },
 };
 
 export const viewport: Viewport = {

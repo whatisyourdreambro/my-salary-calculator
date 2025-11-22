@@ -18,6 +18,9 @@ const CalculatorTabs = dynamic(() => import('@/components/CalculatorTabs'), {
   )
 });
 
+const LoanCalculator = dynamic(() => import('@/components/LoanCalculator'), { ssr: false });
+const DepositCalculator = dynamic(() => import('@/components/DepositCalculator'), { ssr: false });
+
 const websiteStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -236,6 +239,26 @@ export default function HomePage() {
                 급여, 대출, 세금을 한눈에.
                 <span className="text-foreground font-bold"> 스마트한 대시보드</span>로 관리하세요.
               </FeatureCard>
+            </div>
+          </div>
+        </section>
+
+        {/* Financial Tools Section (High CPC) */}
+        <section className="py-20 bg-slate-50 dark:bg-slate-900/50 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">금융 계산기</h2>
+              <p className="text-muted-foreground">대출 이자와 적금 수익을 미리 계산해보세요.</p>
+            </div>
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-center mb-4">대출 이자 계산기</h3>
+                <LoanCalculator />
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-center mb-4">적금 이자 계산기</h3>
+                <DepositCalculator />
+              </div>
             </div>
           </div>
         </section>

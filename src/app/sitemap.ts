@@ -30,6 +30,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/guides',
     '/qna',
     '/glossary',
+    // Fun Pages
+    '/fun/escape-plan',
+    '/fun/financial-mbti',
+    '/fun/lunch-roulette',
+    '/fun/meme-coin',
+    '/fun/rank',
+    '/fun/reincarnation',
+    '/fun/rich-dna-test',
+    '/fun/salary-slip',
+    '/fun/spending-test',
+    '/fun/what-to-buy',
+    // Company Pages
+    '/company',
+    '/company/compare',
+    '/company/simulator',
+    // Global Pages
+    '/en',
+    '/en/flat-tax',
   ];
 
   const staticUrls = staticRoutes.map((route) => ({

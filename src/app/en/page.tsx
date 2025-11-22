@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowRight, Calculator, Globe, DollarSign, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
-import AdUnit from "@/components/AdUnit";
 
 export default function EnglishLandingPage() {
     return (
@@ -44,11 +43,6 @@ export default function EnglishLandingPage() {
                             </Link>
                         </div>
                     </motion.div>
-                </div>
-
-                {/* Ad Unit: Below Hero */}
-                <div className="mb-16">
-                    <AdUnit slotId="3344556677" format="auto" label="English Landing Top Ad" />
                 </div>
 
                 {/* Features Grid */}
@@ -107,14 +101,6 @@ export default function EnglishLandingPage() {
                         </Link>
                     </motion.div>
                 </div>
-
-                {/* Ad Unit */}
-                <AdUnit
-                    slotId="1122334455"
-                    format="auto"
-                    responsive={true}
-                    label="English Landing Bottom"
-                />
             </div>
         </div>
     );
