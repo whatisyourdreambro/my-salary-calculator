@@ -101,7 +101,7 @@ export default function SalaryAmountPage({ params }: Props) {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 space-y-8">
         {/* Ad Unit 1 */}
         <AdUnit slotId="1234567890" format="auto" label="Salary Top Ad" />
 

@@ -45,7 +45,7 @@ export default function SimulatorPage() {
 
     return (
         <div className="min-h-screen py-12">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Link href="/company" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     기업 데이터베이스로

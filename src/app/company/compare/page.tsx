@@ -24,7 +24,7 @@ export default function CompareSelectionPage() {
 
     return (
         <div className="min-h-screen py-12">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
                         VERSUS ENGINE

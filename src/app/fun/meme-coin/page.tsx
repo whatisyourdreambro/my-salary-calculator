@@ -68,7 +68,7 @@ export default function MemeCoinPage() {
   };
 
   return (
-    <main className="w-full max-w-4xl mx-auto px-4 py-12 sm:py-16">
+    <main className="w-full max-w-5xl mx-auto px-4 py-12 sm:py-16">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">밈코인 투자 시뮬레이터</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">100만원으로 인생역전, 혹은 나락. 당신의 선택은?</p>

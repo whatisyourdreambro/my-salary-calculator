@@ -87,7 +87,7 @@ export default function SalaryRankPage() {
                 <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
                 <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/2" />
 
-                <div className="relative z-10 max-w-4xl mx-auto px-4">
+                <div className="relative z-10 max-w-5xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -110,7 +110,7 @@ export default function SalaryRankPage() {
                 </div>
             </section>
 
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
                 <div className="bg-card rounded-3xl shadow-2xl border border-border overflow-hidden">
                     <div className="p-8 sm:p-12">
                         {!showResult ? (

@@ -20,70 +20,74 @@ export default function SalaryTable({
   adInterval = 20,
 }: SalaryTableProps) {
   return (
-    <div className="overflow-x-auto border border-border rounded-lg">
-      <table className="min-w-full text-sm">
-        <thead className="bg-secondary/80 backdrop-blur-sm">
-          <tr>
-            {headers.map((header, headerIndex) => (
-              <th
-                key={header.key as string}
-                scope="col"
-                className={`px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap ${headerIndex === 0 ? "text-left" : "text-right"
-                  }`}
-              >
-                {header.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {data.map((row, index) => {
-            const isHighlighted = highlightRows.includes(
-              row[headers[0].key] as number
-            );
-            const showAd = (index + 1) % adInterval === 0 && index !== data.length - 1;
-
-            return (
-              <React.Fragment key={index}>
-                <tr
-                  className={`transition-colors ${isHighlighted
-                      ? "bg-primary/10"
-                      : "bg-card hover:bg-secondary/50"
+    <div className="overflow-hidden border border-white/20 rounded-2xl shadow-2xl bg-white/5 backdrop-blur-xl">
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-black/5 dark:bg-white/5 backdrop-blur-md">
+            <tr>
+              {headers.map((header, headerIndex) => (
+                <th
+                  key={header.key as string}
+                  scope="col"
+                  className={`px-8 py-5 text-xs font-extrabold text-muted-foreground uppercase tracking-widest whitespace-nowrap ${headerIndex === 0
+                      ? "text-left pl-8 sticky left-0 z-20 bg-background/95 backdrop-blur-sm shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r border-border/50"
+                      : "text-right"
                     }`}
                 >
-                  {headers.map((header, cellIndex) => (
-                    <td
-                      key={header.key as string}
-                      className={`px-6 py-4 whitespace-nowrap ${cellIndex === 0
-                          ? "text-left font-bold text-primary"
-                          : "text-right text-foreground/80"
-                        } ${isHighlighted && "font-bold text-primary"
-                        }`}
-                    >
-                      {Number(row[header.key]).toLocaleString()}
-                      {unit && ` ${unit}`}
-                    </td>
-                  ))}
-                </tr>
-                {showAd && (
-                  <tr className="bg-secondary/20">
-                    <td colSpan={headers.length} className="p-4">
-                      <div className="flex justify-center w-full">
-                        <AdUnit
-                          slotId={`TABLE_IN_FEED_${index}`}
-                          format="fluid"
-                          layoutKey="-fb+5w+4e-db+86"
-                          label={`Table Ad ${index}`}
-                        />
-                      </div>
-                    </td>
+                  {header.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/10">
+            {data.map((row, index) => {
+              const isHighlighted = highlightRows.includes(
+                row[headers[0].key] as number
+              );
+              const showAd = (index + 1) % adInterval === 0 && index !== data.length - 1;
+
+              return (
+                <React.Fragment key={index}>
+                  <tr
+                    className={`transition-all duration-200 ${isHighlighted
+                      ? "bg-primary/20 hover:bg-primary/30"
+                      : "hover:bg-white/5 dark:hover:bg-white/5"
+                      }`}
+                  >
+                    {headers.map((header, cellIndex) => (
+                      <td
+                        key={header.key as string}
+                        className={`px-8 py-5 whitespace-nowrap text-base ${cellIndex === 0
+                            ? "text-left font-bold text-primary pl-8 sticky left-0 z-10 bg-background/95 backdrop-blur-sm shadow-[4px_0_24px_rgba(0,0,0,0.1)] border-r border-border/50"
+                            : "text-right text-foreground/90"
+                          } ${isHighlighted && "font-bold text-primary"
+                          }`}
+                      >
+                        {Number(row[header.key]).toLocaleString()}
+                        {unit && ` ${unit}`}
+                      </td>
+                    ))}
                   </tr>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
-      </table>
+                  {showAd && (
+                    <tr className="bg-secondary/20">
+                      <td colSpan={headers.length} className="p-0">
+                        <div className="flex justify-center w-full py-4">
+                          <AdUnit
+                            slotId={`TABLE_IN_FEED_${index}`}
+                            format="fluid"
+                            layoutKey="-fb+5w+4e-db+86"
+                            label={`Table Ad ${index}`}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
