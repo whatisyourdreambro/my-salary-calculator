@@ -194,6 +194,8 @@ export default function LottoPage() {
                     <option value="random">🎲 랜덤 균형 (추천)</option>
                     <option value="balancedOddEven">⚖️ 홀짝 균형</option>
                     <option value="balancedHighLow">📈 고저 균형</option>
+                    <option value="dream">🌙 꿈 해몽 (랜덤)</option>
+                    <option value="zodiac">🐉 띠별 운세 (랜덤)</option>
                   </select>
                 </div>
 

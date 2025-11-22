@@ -64,6 +64,9 @@ const navConfig: NavItem[] = [
     name: "재미/실험실",
     type: "dropdown",
     items: [
+      { name: "2025 신년 운세", href: "/fun/fortune" },
+      { name: "플래피 샐러리맨", href: "/fun/flappy" },
+      { name: "야근 테트리스", href: "/fun/tetris" },
       { name: "소비 성향 테스트", href: "/fun/spending-test" },
       { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
       { name: "금융 MBTI", href: "/fun/financial-mbti" },
@@ -207,8 +210,8 @@ export default function Header() {
                     key={item.name}
                     href={item.href}
                     className={`py-2 px-4 text-sm font-medium rounded-full transition-all duration-300 ${pathname === item.href
-                        ? "bg-primary/10 text-primary"
-                        : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground/70 hover:text-primary hover:bg-primary/5"
                       }`}
                   >
                     {item.name}
