@@ -214,7 +214,7 @@ export default function Header() {
             </div>
 
             {/* Desktop Navigation - Centered */}
-            <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1">
+            <div className="hidden xl:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
                   <Dropdown key={item.name} item={item} pathname={pathname} isScrolled={isScrolled} />
@@ -245,7 +245,7 @@ export default function Header() {
 
               <ThemeToggle />
 
-              <div className="lg:hidden">
+              <div className="xl:hidden">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="p-2 rounded-full hover:bg-accent/50 transition-colors"
@@ -267,7 +267,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-3xl lg:hidden pt-20"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-3xl xl:hidden pt-20"
           >
             <div className="h-full overflow-y-auto pb-20">
               <div className="px-4 py-2 space-y-2">
