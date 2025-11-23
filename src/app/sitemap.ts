@@ -1,4 +1,3 @@
-// src/app/sitemap.ts
 import { MetadataRoute } from 'next';
 import { guides } from '@/lib/guidesData';
 
@@ -14,7 +13,7 @@ type ChangeFrequency =
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.moneysalary.com";
 
-  // 1. 정적 페이지 URL
+  // 1. Static Pages
   const staticRoutes = [
     '/',
     '/dashboard',
@@ -57,7 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '/' ? 1.0 : 0.8,
   }));
 
-  // 2. 동적 가이드 페이지 URL (guidesData.ts에서 직접 생성)
+  // 2. Dynamic Guide Pages
   const guideUrls = guides.map((guide) => ({
     url: `${baseUrl}/guides/${guide.slug}`,
     lastModified: new Date(guide.publishedDate),
@@ -65,7 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // 3. 동적 연봉 상세 페이지 URL
+  // 3. Dynamic Salary Pages
   const salaryUrls: MetadataRoute.Sitemap = [];
 
   // 20m to 100m in 1m increments
@@ -125,11 +124,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Individual company pages
-  // Import data directly to avoid build-time repository issues if any
   const { seedCompanies } = require('@/data/seedCompanies');
   const { globalCompanies } = require('@/data/globalCompanies');
+  const { krCompanies_Batch2 } = require('@/data/krCompanies_Batch2');
+  const { krCompanies_Batch3 } = require('@/data/krCompanies_Batch3');
+  const { krCompanies_Batch4 } = require('@/data/krCompanies_Batch4');
+  const { krCompanies_Batch5 } = require('@/data/krCompanies_Batch5');
 
-  const allCompanies = [...seedCompanies, ...globalCompanies];
+  const allCompanies = [...seedCompanies, ...globalCompanies, ...krCompanies_Batch2, ...krCompanies_Batch3, ...krCompanies_Batch4, ...krCompanies_Batch5];
 
   allCompanies.forEach((company: any) => {
     companyUrls.push({
