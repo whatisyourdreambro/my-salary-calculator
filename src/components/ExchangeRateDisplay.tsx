@@ -1,4 +1,3 @@
-// src/components/ExchangeRateDisplay.tsx
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
@@ -11,13 +10,13 @@ import {
   Link as LinkIcon,
   Image as ImageIcon,
   ArrowRight,
-  Info,
   RotateCcw,
   Globe,
   TrendingUp,
   Coffee,
   Sandwich,
-  Plane
+  Crown,
+  Gem
 } from "lucide-react";
 import {
   BarChart,
@@ -32,7 +31,7 @@ import {
 import CustomBarLabel from "./CustomBarLabel";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
@@ -65,26 +64,29 @@ const initialPastDate = (() => {
 // Mock Data for Purchasing Power (Big Mac Index / Coffee Index)
 const purchasingPowerData = {
   KRW: { bigMac: 6900, coffee: 4500 },
-  USD: { bigMac: 5.69, coffee: 5.50 }, // $5.69 * 1400 = ~8000 KRW
-  JPY: { bigMac: 450, coffee: 400 },   // 450 * 9.2 = ~4140 KRW
+  USD: { bigMac: 5.69, coffee: 5.50 },
+  JPY: { bigMac: 450, coffee: 400 },
   EUR: { bigMac: 5.30, coffee: 4.50 },
   CNY: { bigMac: 24.0, coffee: 30.0 },
   GBP: { bigMac: 4.19, coffee: 3.50 },
 };
 
 const CurrencyTicker = () => (
-  <div className="w-full overflow-hidden bg-primary/5 border-y border-primary/10 py-2 mb-8">
+  <div className="w-full overflow-hidden bg-black border-y border-yellow-500/20 py-3 mb-8 relative">
+    <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10 pointer-events-none" />
     <motion.div
-      className="flex whitespace-nowrap gap-8"
+      className="flex whitespace-nowrap gap-12"
       animate={{ x: [0, -1000] }}
-      transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+      transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
     >
       {[...currencies, ...currencies, ...currencies].map((c, i) => (
-        <div key={i} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <span className="text-lg">{c.flag}</span>
-          <span>{c.id}</span>
-          <span className="text-primary font-bold">{c.rate.toLocaleString()}</span>
-          <span className="text-xs text-emerald-500">▲ 0.5%</span>
+        <div key={i} className="flex items-center gap-3 text-sm font-medium text-zinc-400">
+          <span className="text-xl grayscale opacity-70">{c.flag}</span>
+          <span className="font-serif text-yellow-500/80">{c.id}</span>
+          <span className="text-white font-bold tracking-wider">{c.rate.toLocaleString()}</span>
+          <span className="text-xs text-emerald-500 flex items-center gap-1">
+            <TrendingUp size={10} /> LIVE
+          </span>
         </div>
       ))}
     </motion.div>
@@ -96,7 +98,7 @@ export default function ExchangeRateImpactCalculator() {
   const reportRef = useRef<HTMLDivElement>(null);
 
   const [assetAmount, setAssetAmount] = useState(() =>
-    formatNumber(parseNumber(searchParams.get("assetAmount") || "60000000"))
+    formatNumber(parseNumber(searchParams.get("assetAmount") || "100000000"))
   );
   const [assetCurrency, setAssetCurrency] = useState(
     () => searchParams.get("assetCurrency") || "KRW"
@@ -150,9 +152,11 @@ export default function ExchangeRateImpactCalculator() {
     setIsLoading(true);
     setError(null);
     try {
+      // Use open.er-api.com for "Real-time" (Latest)
+      // Use frankfurter for Past (Historical)
       const [pastRes, currentRes] = await Promise.all([
         fetch(`https://api.frankfurter.app/${pastDate}?from=${from}&to=${to}`),
-        fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`),
+        fetch(`https://open.er-api.com/v6/latest/${from}`),
       ]);
 
       if (!pastRes.ok || !currentRes.ok)
@@ -240,8 +244,7 @@ export default function ExchangeRateImpactCalculator() {
       Number.isInteger(val) ? val : parseFloat(val.toFixed(2));
 
     // Purchasing Power Calculation
-    // Convert current asset amount to comparison currency
-    const convertedAmount = amount / cRate; // Amount in Comparison Currency
+    const convertedAmount = amount / cRate;
     const compCurrencyData = purchasingPowerData[comparisonCurrency as keyof typeof purchasingPowerData];
 
     const bigMacs = compCurrencyData ? convertedAmount / compCurrencyData.bigMac : 0;
@@ -267,7 +270,7 @@ export default function ExchangeRateImpactCalculator() {
     { name: "현재", value: analysis.currentValue },
   ];
 
-  const currentValueColor = analysis.changeAmount >= 0 ? "hsl(var(--primary))" : "hsl(var(--destructive))";
+  const currentValueColor = analysis.changeAmount >= 0 ? "#10b981" : "#f43f5e";
 
   const handleShareLink = async () => {
     const shareUrl = "https://www.moneysalary.com/?tab=exchange";
@@ -286,21 +289,19 @@ export default function ExchangeRateImpactCalculator() {
 
     html2canvas(element, {
       scale: 2,
-      backgroundColor: document.documentElement.classList.contains("dark")
-        ? "#1e1e1e"
-        : "#ffffff",
+      backgroundColor: "#000000",
       useCORS: true,
       windowHeight: element.scrollHeight,
     }).then((canvas) => {
       const link = document.createElement("a");
-      link.download = `Moneysalary_환율분석결과.png`;
+      link.download = `Moneysalary_Premium_Report.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     });
   };
 
   const handleReset = () => {
-    setAssetAmount(formatNumber(60000000));
+    setAssetAmount(formatNumber(100000000));
     setAssetCurrency("KRW");
     setComparisonCurrency("USD");
     setPastDate(initialPastDate);
@@ -312,43 +313,50 @@ export default function ExchangeRateImpactCalculator() {
     fetchRates();
   };
 
-  const inputStyle = "w-full p-3 mt-1 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition disabled:opacity-50 text-foreground";
-  const textInputStyle = `${inputStyle} text-center font-mono`;
+  const inputStyle = "w-full p-4 mt-1 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-1 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition disabled:opacity-50 text-white font-medium";
+  const textInputStyle = `${inputStyle} text-center font-mono text-lg`;
 
   return (
-    <div className="animate-fade-in-up">
+    <div className="animate-fade-in-up bg-black min-h-screen text-white">
       <CurrencyTicker />
 
-      <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-6 sm:p-8 rounded-3xl shadow-2xl">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-cyan-500/10 mb-4">
-            <Globe className="w-6 h-6 text-cyan-500" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 border border-yellow-500/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+            <Crown className="w-8 h-8 text-yellow-500" />
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Global Salary Intelligence
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-4 tracking-tight">
+            Global Wealth Intelligence
           </h2>
-          <p className="text-zinc-400">환율 변동에 따른 내 연봉의 진짜 가치를 확인하세요.</p>
+          <p className="text-zinc-400 text-lg max-w-2xl mx-auto font-light">
+            초고액 자산가를 위한 실시간 환율 영향 분석 및 자산 가치 시뮬레이션
+          </p>
         </div>
 
-        <div className="p-4" ref={reportRef}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="bg-zinc-950 border border-zinc-800 p-8 sm:p-10 rounded-[2rem] shadow-2xl relative overflow-hidden" ref={reportRef}>
+          {/* Decorative Elements */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 relative z-10">
             {/* Input Section */}
-            <div className="space-y-6">
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+            <div className="space-y-8">
+              <div className="bg-zinc-900/50 p-8 rounded-3xl border border-zinc-800/50 backdrop-blur-sm">
                 <CurrencyInput
-                  label="연봉 / 자산 입력"
+                  label="분석할 자산 규모"
                   value={assetAmount}
                   onValueChange={setAssetAmount}
-                  quickAmounts={[10000000, 5000000]}
+                  quickAmounts={[100000000, 500000000, 1000000000]}
                   selectedCurrency={assetCurrency}
                   onCurrencyChange={setAssetCurrency}
                   currencies={currencies}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm font-medium text-zinc-400 mb-1 block">비교 통화</label>
+                  <label className="text-xs font-bold text-yellow-500/80 uppercase tracking-wider mb-2 block">Comparison Currency</label>
                   <select
                     value={comparisonCurrency}
                     onChange={(e) => setComparisonCurrency(e.target.value)}
@@ -362,7 +370,7 @@ export default function ExchangeRateImpactCalculator() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-zinc-400 mb-1 block">기준 과거 시점</label>
+                  <label className="text-xs font-bold text-yellow-500/80 uppercase tracking-wider mb-2 block">Historical Date</label>
                   <input
                     type="date"
                     value={pastDate}
@@ -373,18 +381,24 @@ export default function ExchangeRateImpactCalculator() {
                 </div>
               </div>
 
-              <div className="space-y-2 p-4 border border-white/10 rounded-2xl bg-white/5">
+              <div className="space-y-4 p-6 border border-zinc-800 rounded-3xl bg-zinc-900/30">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-zinc-400">환율 (1 {comparisonCurrency} 당 {assetCurrency})</label>
-                  <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => setIsManual(!isManual)}>
-                    <span className="text-xs font-semibold">수동입력</span>
-                    <div className={`w-4 h-4 rounded border ${isManual ? 'bg-primary border-primary' : 'border-zinc-500'}`} />
+                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Exchange Rate ({comparisonCurrency} → {assetCurrency})</label>
+                  <div className="flex items-center gap-2 cursor-pointer hover:text-yellow-500 transition-colors" onClick={() => setIsManual(!isManual)}>
+                    <span className="text-xs font-bold">MANUAL OVERRIDE</span>
+                    <div className={`w-3 h-3 rounded-full border ${isManual ? 'bg-yellow-500 border-yellow-500' : 'border-zinc-600'}`} />
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input type="text" placeholder="과거 환율" value={manualPastRateStr} onChange={(e) => setManualPastRateStr(e.target.value)} disabled={!isManual} className={textInputStyle} />
-                  <ArrowRight className="text-zinc-500" />
-                  <input type="text" placeholder="현재 환율" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <span className="text-xs text-zinc-500 block mb-1 text-center">PAST</span>
+                    <input type="text" value={manualPastRateStr} onChange={(e) => setManualPastRateStr(e.target.value)} disabled={!isManual} className={textInputStyle} />
+                  </div>
+                  <ArrowRight className="text-zinc-700" />
+                  <div className="flex-1">
+                    <span className="text-xs text-zinc-500 block mb-1 text-center">CURRENT (LIVE)</span>
+                    <input type="text" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -393,49 +407,52 @@ export default function ExchangeRateImpactCalculator() {
             <div className="flex flex-col justify-center">
               {isLoading ? (
                 <div className="text-center py-20">
-                  <Loader className="animate-spin mx-auto text-primary mb-4" size={48} />
-                  <p className="font-semibold text-zinc-400">글로벌 데이터를 분석 중입니다...</p>
+                  <Loader className="animate-spin mx-auto text-yellow-500 mb-6" size={48} />
+                  <p className="font-serif text-xl text-zinc-300">Analyzing Global Markets...</p>
                 </div>
               ) : error ? (
-                <div className="flex items-center justify-center h-full p-8 bg-red-500/10 rounded-2xl border border-red-500/20">
+                <div className="flex items-center justify-center h-full p-8 bg-red-900/10 rounded-3xl border border-red-900/30">
                   <div className="text-center">
                     <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                    <h3 className="font-bold text-red-400 mb-2">데이터 로드 실패</h3>
-                    <p className="text-sm text-red-300">{error}</p>
+                    <h3 className="font-bold text-red-400 mb-2">Analysis Failed</h3>
+                    <p className="text-sm text-red-300/70">{error}</p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6 h-full flex flex-col">
+                <div className="space-y-8 h-full flex flex-col">
                   {/* Main Result Card */}
-                  <div className={`p-8 rounded-3xl text-center transition-all duration-500 border ${analysis.changeAmount >= 0
-                    ? "bg-emerald-500/10 border-emerald-500/20"
-                    : "bg-rose-500/10 border-rose-500/20"
+                  <div className={`p-10 rounded-[2.5rem] text-center transition-all duration-500 border relative overflow-hidden group ${analysis.changeAmount >= 0
+                    ? "bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border-emerald-500/20"
+                    : "bg-gradient-to-br from-rose-950/30 to-rose-900/10 border-rose-500/20"
                     }`}>
-                    <p className="font-medium text-sm text-zinc-400 mb-4">
-                      환율 변동으로 인한 가치 변화
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay" />
+
+                    <p className="font-serif text-zinc-400 mb-6 tracking-wide uppercase text-xs">
+                      Net Asset Value Impact
                     </p>
 
-                    <div className="flex items-center justify-center gap-4 mb-2">
-                      <span className="text-2xl font-bold text-zinc-500 line-through decoration-zinc-500/50">
+                    <div className="flex flex-col items-center justify-center gap-2 mb-6">
+                      <span className="text-xl font-medium text-zinc-600 line-through decoration-zinc-600/50">
                         {resultSymbol}{formatNumber(analysis.pastValue)}
                       </span>
-                      <ArrowRight className="text-zinc-600" />
-                      <span className={`text-4xl sm:text-5xl font-black ${analysis.changeAmount >= 0 ? "text-emerald-400" : "text-rose-400"
+                      <ArrowRight className="text-zinc-700 rotate-90 my-2" size={20} />
+                      <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${analysis.changeAmount >= 0 ? "text-emerald-400" : "text-rose-400"
                         }`}>
                         <CountUp
                           end={analysis.currentValue}
                           prefix={resultSymbol}
                           separator=","
                           decimals={0}
+                          duration={2}
                         />
                       </span>
                     </div>
 
-                    <div className={`inline-flex items-center gap-2 px-4 py-1 rounded-full text-sm font-bold ${analysis.changeAmount >= 0
-                      ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-rose-500/20 text-rose-400"
+                    <div className={`inline-flex items-center gap-3 px-6 py-2 rounded-full text-sm font-bold border ${analysis.changeAmount >= 0
+                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                      : "bg-rose-500/10 border-rose-500/20 text-rose-400"
                       }`}>
-                      {analysis.changeAmount >= 0 ? <TrendingUp size={14} /> : <TrendingUp size={14} className="rotate-180" />}
+                      {analysis.changeAmount >= 0 ? <TrendingUp size={16} /> : <TrendingUp size={16} className="rotate-180" />}
                       <CountUp
                         end={Math.abs(analysis.changeAmount)}
                         prefix={analysis.changeAmount >= 0 ? "+" : "-"}
@@ -446,42 +463,42 @@ export default function ExchangeRateImpactCalculator() {
                   </div>
 
                   {/* Purchasing Power Cards */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
-                      <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mb-2">
-                        <Sandwich className="w-5 h-5 text-orange-500" />
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors group">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <Gem className="w-6 h-6 text-blue-400" />
                       </div>
-                      <p className="text-xs text-zinc-400 mb-1">Big Mac Index</p>
-                      <p className="text-xl font-bold text-white">
-                        {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-500">개</span>
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Luxury Index</p>
+                      <p className="text-2xl font-bold text-white">
+                        {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Units</span>
                       </p>
                     </div>
-                    <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
-                      <div className="w-10 h-10 rounded-full bg-amber-700/20 flex items-center justify-center mb-2">
-                        <Coffee className="w-5 h-5 text-amber-700" />
+                    <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors group">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <Coffee className="w-6 h-6 text-amber-600" />
                       </div>
-                      <p className="text-xs text-zinc-400 mb-1">Starbucks Index</p>
-                      <p className="text-xl font-bold text-white">
-                        {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-500">잔</span>
+                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Lifestyle Index</p>
+                      <p className="text-2xl font-bold text-white">
+                        {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Cups</span>
                       </p>
                     </div>
                   </div>
 
                   {/* Chart */}
-                  <div className="h-40 bg-white/5 p-4 rounded-2xl border border-white/10">
+                  <div className="h-48 bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 50, top: 0, bottom: 0 }}>
                         <XAxis type="number" hide />
-                        <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={40} stroke="#71717a" fontSize={12} />
+                        <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={40} stroke="#52525b" fontSize={12} fontWeight={700} />
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px' }}
-                          itemStyle={{ color: '#e4e4e7' }}
+                          contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '12px', padding: '12px' }}
+                          itemStyle={{ color: '#e4e4e7', fontFamily: 'serif' }}
                           formatter={(value: number) => `${resultSymbol}${formatNumber(value)}`}
-                          cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                          cursor={{ fill: "rgba(255,255,255,0.02)" }}
                         />
-                        <Bar dataKey="value" barSize={24} radius={[0, 4, 4, 0]}>
+                        <Bar dataKey="value" barSize={32} radius={[0, 8, 8, 0]}>
                           {chartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index === 0 ? "#52525b" : currentValueColor} />
+                            <Cell key={`cell-${index}`} fill={index === 0 ? "#3f3f46" : currentValueColor} />
                           ))}
                           <LabelList dataKey="value" content={<CustomBarLabel />} />
                         </Bar>
@@ -494,15 +511,15 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button onClick={handleReset} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
-            <RotateCcw size={18} /> 초기화
+        <div className="mt-8 pt-8 border-t border-zinc-900 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <button onClick={handleReset} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+            <RotateCcw size={18} /> RESET
           </button>
-          <button onClick={handleShareLink} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
-            <LinkIcon size={18} /> 링크로 공유
+          <button onClick={handleShareLink} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+            <LinkIcon size={18} /> SHARE LINK
           </button>
-          <button onClick={handleShareImage} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
-            <ImageIcon size={18} /> 이미지로 저장
+          <button onClick={handleShareImage} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+            <ImageIcon size={18} /> SAVE REPORT
           </button>
         </div>
       </div>

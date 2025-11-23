@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Play, RotateCcw, Users, Settings, Sparkles } from "lucide-react";
+import { Trophy, Play, RotateCcw, Users, Settings, Sparkles, Gift, Plus, Trash2 } from "lucide-react";
 
+// --- Types ---
 interface Ball {
     id: number;
     name: string;
@@ -15,12 +16,18 @@ interface Ball {
     radius: number;
     finished: boolean;
     rank: number;
+    // Avatar Props
+    hasGlasses: boolean;
+    hasTie: boolean;
+    tieColor: string;
+    isSweating: boolean;
 }
 
 interface Peg {
     x: number;
     y: number;
     radius: number;
+    type: "normal" | "bumper";
 }
 
 interface Particle {
@@ -30,6 +37,14 @@ interface Particle {
     vy: number;
     life: number;
     color: string;
+    type: "spark" | "text";
+    text?: string;
+    size: number;
+}
+
+interface SpecialPrize {
+    rank: number;
+    name: string;
 }
 
 const COLORS = [
@@ -37,14 +52,17 @@ const COLORS = [
     "#06b6d4", "#3b82f6", "#6366f1", "#8b5cf6", "#d946ef", "#f43f5e"
 ];
 
+const IMPACT_WORDS = ["POW!", "BAM!", "CRASH!", "BOOM!", "OUCH!"];
+
 export default function RandomDrawGame() {
-    // Setup State
+    // --- Setup State ---
     const [title, setTitle] = useState("");
     const [candidatesText, setCandidatesText] = useState("");
     const [winnerCount, setWinnerCount] = useState(1);
+    const [specialPrizes, setSpecialPrizes] = useState<SpecialPrize[]>([]);
     const [gameState, setGameState] = useState<"setup" | "racing" | "finished">("setup");
 
-    // Game State
+    // --- Game State ---
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [winners, setWinners] = useState<Ball[]>([]);
     const requestRef = useRef<number>();
@@ -52,65 +70,97 @@ export default function RandomDrawGame() {
     const pegsRef = useRef<Peg[]>([]);
     const particlesRef = useRef<Particle[]>([]);
     const cameraYRef = useRef(0);
+    const shakeRef = useRef(0); // Screen shake intensity
 
-    // Initialize Game
+    // --- Helpers ---
+    const addSpecialPrize = () => {
+        setSpecialPrizes([...specialPrizes, { rank: 1, name: "" }]);
+    };
+
+    const removeSpecialPrize = (index: number) => {
+        setSpecialPrizes(specialPrizes.filter((_, i) => i !== index));
+    };
+
+    const updateSpecialPrize = (index: number, field: keyof SpecialPrize, value: string | number) => {
+        const newPrizes = [...specialPrizes];
+        newPrizes[index] = { ...newPrizes[index], [field]: value };
+        setSpecialPrizes(newPrizes);
+    };
+
+    // --- Game Logic ---
     const startGame = () => {
         const names = candidatesText.split("\n").filter(n => n.trim() !== "");
         if (names.length === 0) return alert("참가자를 입력해주세요!");
         if (winnerCount > names.length) return alert("당첨자 수가 참가자 수보다 많습니다!");
 
-        // Create Balls
+        // Create Balls with Avatars
         ballsRef.current = names.map((name, i) => ({
             id: i,
             name: name.trim(),
-            x: 50 + Math.random() * (window.innerWidth < 600 ? 300 : 700), // Random start X
-            y: -50 - Math.random() * 200, // Staggered start Y
-            vx: (Math.random() - 0.5) * 4, // More chaotic start
+            x: 50 + Math.random() * (window.innerWidth < 600 ? 300 : 700),
+            y: -50 - Math.random() * 300, // More staggered start
+            vx: (Math.random() - 0.5) * 8, // High chaotic energy
             vy: 0,
             color: COLORS[i % COLORS.length],
-            radius: 10,
+            radius: 14, // Slightly larger for details
             finished: false,
-            rank: 0
+            rank: 0,
+            hasGlasses: Math.random() > 0.5,
+            hasTie: true,
+            tieColor: COLORS[(i + 2) % COLORS.length],
+            isSweating: false
         }));
 
-        // Create Pegs (Obstacles)
+        // Create Pegs & Bumpers
         const pegs: Peg[] = [];
-        const rows = 20; // Longer race
-        const cols = 12;
+        const rows = 25;
+        const cols = 10;
         const width = window.innerWidth < 600 ? 350 : 800;
         const startX = 50;
         const startY = 100;
         const gapX = width / cols;
-        const gapY = 50;
+        const gapY = 60;
 
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols + (r % 2); c++) {
+                const isBumper = Math.random() < 0.1; // 10% chance for bumper
                 pegs.push({
                     x: startX + c * gapX + (r % 2 === 0 ? 0 : gapX / 2),
                     y: startY + r * gapY,
-                    radius: 3
+                    radius: isBumper ? 12 : 4,
+                    type: isBumper ? "bumper" : "normal"
                 });
             }
         }
         pegsRef.current = pegs;
         particlesRef.current = [];
         cameraYRef.current = 0;
+        shakeRef.current = 0;
 
         setWinners([]);
         setGameState("racing");
         requestRef.current = requestAnimationFrame(gameLoop);
     };
 
-    const createParticles = (x: number, y: number, color: string) => {
-        for (let i = 0; i < 5; i++) {
+    const createParticles = (x: number, y: number, color: string, type: "spark" | "text" = "spark") => {
+        if (type === "text") {
             particlesRef.current.push({
-                x,
-                y,
-                vx: (Math.random() - 0.5) * 5,
-                vy: (Math.random() - 0.5) * 5,
-                life: 1.0,
-                color
+                x, y, vx: 0, vy: -1, life: 1.0, color: "#fff", type: "text",
+                text: IMPACT_WORDS[Math.floor(Math.random() * IMPACT_WORDS.length)],
+                size: 20
             });
+        } else {
+            for (let i = 0; i < 8; i++) {
+                particlesRef.current.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1.0,
+                    color,
+                    type: "spark",
+                    size: Math.random() * 3 + 1
+                });
+            }
         }
     };
 
@@ -120,52 +170,84 @@ export default function RandomDrawGame() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // Resize Canvas
+        // High-DPI Rendering
+        const dpr = window.devicePixelRatio || 1;
         const width = window.innerWidth < 600 ? 400 : 900;
         const height = 800;
-        canvas.width = width;
-        canvas.height = height;
 
-        // Camera Logic (Follow the leader)
+        if (canvas.width !== width * dpr) {
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.scale(dpr, dpr);
+        }
+
+        // Camera Logic
         let leaderY = 0;
         ballsRef.current.forEach(b => {
             if (!b.finished && b.y > leaderY) leaderY = b.y;
         });
-        // Smooth camera follow
         const targetCameraY = Math.max(0, leaderY - height / 2);
         cameraYRef.current += (targetCameraY - cameraYRef.current) * 0.1;
 
-        // Apply Camera Transform
+        // Screen Shake Decay
+        if (shakeRef.current > 0) shakeRef.current *= 0.9;
+
+        // Clear Canvas
         ctx.save();
-        ctx.translate(0, -cameraYRef.current);
+        // Apply Camera + Shake
+        const shakeX = (Math.random() - 0.5) * shakeRef.current;
+        const shakeY = (Math.random() - 0.5) * shakeRef.current;
+        ctx.translate(shakeX, -cameraYRef.current + shakeY);
 
-        // Clear with Trail Effect
-        ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Trail effect
-        ctx.fillRect(0, cameraYRef.current, width, height);
+        ctx.fillStyle = "#0a0a0a";
+        ctx.fillRect(-shakeX, cameraYRef.current - shakeY, width, height);
 
-        // Draw Pegs (Neon)
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = "#0ea5e9";
-        ctx.fillStyle = "#0ea5e9";
+        // Draw Pegs
         pegsRef.current.forEach(peg => {
             ctx.beginPath();
             ctx.arc(peg.x, peg.y, peg.radius, 0, Math.PI * 2);
-            ctx.fill();
+            if (peg.type === "bumper") {
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = "#f472b6"; // Pink glow
+                ctx.fillStyle = "#ec4899";
+                ctx.fill();
+                // Inner ring
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, peg.radius * 0.6, 0, Math.PI * 2);
+                ctx.fillStyle = "#fbcfe8";
+                ctx.fill();
+            } else {
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "#0ea5e9"; // Blue glow
+                ctx.fillStyle = "#0ea5e9";
+                ctx.fill();
+            }
+            ctx.shadowBlur = 0;
         });
-        ctx.shadowBlur = 0;
 
         // Update & Draw Particles
         particlesRef.current.forEach((p, i) => {
             p.x += p.vx;
             p.y += p.vy;
-            p.life -= 0.05;
+            p.life -= 0.02;
             if (p.life <= 0) particlesRef.current.splice(i, 1);
 
             ctx.globalAlpha = p.life;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-            ctx.fill();
+            if (p.type === "text") {
+                ctx.font = `900 ${p.size}px sans-serif`;
+                ctx.fillStyle = "white";
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 3;
+                ctx.strokeText(p.text!, p.x, p.y);
+                ctx.fillText(p.text!, p.x, p.y);
+            } else {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
         });
         ctx.globalAlpha = 1;
 
@@ -175,7 +257,7 @@ export default function RandomDrawGame() {
             if (!ball.finished) {
                 activeBalls++;
                 // Physics
-                ball.vy += 0.2; // Gravity
+                ball.vy += 0.25; // Gravity
                 ball.vx *= 0.99; // Air resistance
                 ball.x += ball.vx;
                 ball.y += ball.vy;
@@ -183,13 +265,11 @@ export default function RandomDrawGame() {
                 // Wall Collisions
                 if (ball.x < ball.radius) {
                     ball.x = ball.radius;
-                    ball.vx *= -0.7;
-                    createParticles(ball.x, ball.y, ball.color);
+                    ball.vx *= -0.6;
                 }
                 if (ball.x > width - ball.radius) {
                     ball.x = width - ball.radius;
-                    ball.vx *= -0.7;
-                    createParticles(ball.x, ball.y, ball.color);
+                    ball.vx *= -0.6;
                 }
 
                 // Peg Collisions
@@ -200,71 +280,134 @@ export default function RandomDrawGame() {
                     const minDist = ball.radius + peg.radius;
 
                     if (dist < minDist) {
-                        // Bounce
+                        // Collision!
                         const angle = Math.atan2(dy, dx);
+
+                        // Bumper Boost
+                        const boost = peg.type === "bumper" ? 1.5 : 0.6;
                         const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-                        ball.vx = Math.cos(angle) * speed * 0.8 + (Math.random() - 0.5);
-                        ball.vy = Math.sin(angle) * speed * 0.8;
+
+                        ball.vx = Math.cos(angle) * speed * boost + (Math.random() - 0.5);
+                        ball.vy = Math.sin(angle) * speed * boost;
 
                         // Push out
                         const overlap = minDist - dist;
                         ball.x += Math.cos(angle) * overlap;
                         ball.y += Math.sin(angle) * overlap;
 
-                        // Spark Effect
-                        if (speed > 2) createParticles(peg.x, peg.y, ball.color);
+                        // Effects
+                        if (peg.type === "bumper") {
+                            shakeRef.current = 5; // Screen shake
+                            createParticles(peg.x, peg.y, "#ec4899", "spark");
+                            createParticles(peg.x, peg.y, "", "text"); // POW!
+                            ball.isSweating = true; // Scared salaryman
+                        } else if (speed > 5) {
+                            createParticles(peg.x, peg.y, ball.color, "spark");
+                        }
                     }
                 });
 
-                // Finish Line (Adjusted for long course)
-                const finishLineY = 1200; // Longer track
+                // Finish Line
+                const finishLineY = 1600; // Longer track
                 if (ball.y > finishLineY) {
                     ball.finished = true;
                     ball.y = finishLineY;
                     const currentRank = ballsRef.current.filter(b => b.finished).length;
                     ball.rank = currentRank;
 
-                    if (currentRank <= winnerCount) {
-                        setWinners(prev => [...prev, ball]);
-                        createParticles(ball.x, ball.y, "#ffd700"); // Gold particles for finishers
+                    if (currentRank <= winnerCount || specialPrizes.some(p => p.rank === currentRank)) {
+                        setWinners(prev => [...prev, ball].sort((a, b) => a.rank - b.rank));
+                        createParticles(ball.x, ball.y, "#ffd700", "spark");
                     }
                 }
             }
 
-            // Draw Ball (Neon Glow)
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = ball.color;
+            // --- Draw Salaryman Avatar ---
+            ctx.save();
+            ctx.translate(ball.x, ball.y);
+
+            // Body (Ball)
             ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
             ctx.fillStyle = ball.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = ball.color;
             ctx.fill();
             ctx.shadowBlur = 0;
 
-            // Draw Name Tag
+            // Eyes (Glasses or Dots)
+            ctx.fillStyle = "white";
+            if (ball.hasGlasses) {
+                // Glasses Frame
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(-4, -2, 4, 0, Math.PI * 2); // Left lens
+                ctx.arc(4, -2, 4, 0, Math.PI * 2); // Right lens
+                ctx.stroke();
+                ctx.fillStyle = "rgba(255,255,255,0.5)";
+                ctx.fill();
+                // Bridge
+                ctx.beginPath();
+                ctx.moveTo(-1, -2);
+                ctx.lineTo(1, -2);
+                ctx.stroke();
+            } else {
+                // Simple Eyes
+                ctx.beginPath();
+                ctx.arc(-4, -2, 2, 0, Math.PI * 2);
+                ctx.arc(4, -2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Tie
+            if (ball.hasTie) {
+                ctx.fillStyle = ball.tieColor;
+                ctx.beginPath();
+                ctx.moveTo(0, 2);
+                ctx.lineTo(-3, 10);
+                ctx.lineTo(0, 12);
+                ctx.lineTo(3, 10);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Sweat (if hit bumper)
+            if (ball.isSweating) {
+                ctx.fillStyle = "#bae6fd";
+                ctx.beginPath();
+                ctx.arc(8, -8, 2, 0, Math.PI * 2);
+                ctx.fill();
+                // Reset sweat occasionally
+                if (Math.random() < 0.05) ball.isSweating = false;
+            }
+
+            ctx.restore();
+
+            // Name Tag
             ctx.fillStyle = "white";
             ctx.font = "bold 12px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(ball.name, ball.x, ball.y - 15);
+            ctx.fillText(ball.name, ball.x, ball.y - 20);
         });
 
         // Draw Finish Line
-        const finishLineY = 1200;
+        const finishLineY = 1600;
         ctx.beginPath();
         ctx.moveTo(0, finishLineY);
         ctx.lineTo(width, finishLineY);
         ctx.strokeStyle = "#ef4444";
         ctx.lineWidth = 5;
-        ctx.setLineDash([10, 10]);
+        ctx.setLineDash([20, 20]);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Draw "FINISH" Text
         ctx.fillStyle = "#ef4444";
-        ctx.font = "bold 40px sans-serif";
+        ctx.font = "bold 60px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("FINISH LINE", width / 2, finishLineY + 50);
+        ctx.fillText("FINISH LINE", width / 2, finishLineY + 80);
 
-        ctx.restore(); // Restore camera transform
+        ctx.restore();
 
         // Check Game Over
         if (activeBalls === 0) {
@@ -295,83 +438,115 @@ export default function RandomDrawGame() {
                     <div className="text-center mb-10 relative z-10">
                         <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-4 tracking-tight">
                             NEON MARBLE RACE
+                            <span className="block text-lg font-bold text-white mt-2 tracking-widest opacity-80">GOD MODE EDITION</span>
                         </h2>
                         <p className="text-zinc-400 text-lg">
                             운명을 건 한판 승부! 참가자를 입력하고 레이스를 시작하세요.
                         </p>
                     </div>
 
-                    <div className="space-y-8 relative z-10">
-                        <div>
-                            <label className="block text-sm font-bold text-zinc-400 mb-2">추첨 제목</label>
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="예: 오늘 점심 쏘기"
-                                className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
-                            />
-                        </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 relative z-10">
+                        {/* Left Column: Inputs */}
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-zinc-400 mb-2">추첨 제목</label>
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="예: 오늘 점심 쏘기"
+                                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+                                />
+                            </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label className="block text-sm font-bold text-zinc-400 mb-2">참가자 명단</label>
                                 <textarea
                                     value={candidatesText}
                                     onChange={(e) => setCandidatesText(e.target.value)}
                                     placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
-                                    className="w-full h-80 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none resize-none font-mono leading-relaxed"
+                                    className="w-full h-60 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none resize-none font-mono leading-relaxed"
                                 />
                                 <div className="flex justify-between text-xs text-zinc-500 mt-2 px-1">
                                     <span>엔터로 구분해주세요</span>
                                     <span>총 {candidatesText.split("\n").filter(n => n.trim()).length}명</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="space-y-8">
-                                <div>
-                                    <label className="block text-sm font-bold text-zinc-400 mb-2">당첨자 수</label>
-                                    <div className="flex items-center gap-4 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4">
-                                        <Users className="text-zinc-500" />
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
-                                            value={winnerCount}
-                                            onChange={(e) => setWinnerCount(Number(e.target.value))}
-                                            className="bg-transparent text-white text-2xl font-bold outline-none w-full"
-                                        />
-                                        <span className="text-zinc-500 font-bold">명</span>
-                                    </div>
+                        {/* Right Column: Settings */}
+                        <div className="space-y-8">
+                            {/* Winner Count */}
+                            <div>
+                                <label className="block text-sm font-bold text-zinc-400 mb-2">당첨자 수</label>
+                                <div className="flex items-center gap-4 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4">
+                                    <Users className="text-zinc-500" />
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
+                                        value={winnerCount}
+                                        onChange={(e) => setWinnerCount(Number(e.target.value))}
+                                        className="bg-transparent text-white text-2xl font-bold outline-none w-full"
+                                    />
+                                    <span className="text-zinc-500 font-bold">명</span>
                                 </div>
-
-                                <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border border-white/10 rounded-xl p-6">
-                                    <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                                        <Sparkles className="w-4 h-4 text-yellow-400" /> 게임 특징
-                                    </h3>
-                                    <ul className="text-sm text-zinc-400 space-y-3">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                                            물리 엔진 기반의 리얼타임 시뮬레이션
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                            충돌 파티클 및 네온 글로우 효과
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-pink-500" />
-                                            선두를 따라가는 다이내믹 카메라
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <button
-                                    onClick={startGame}
-                                    className="w-full py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-2xl rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(168,85,247,0.4)] flex items-center justify-center gap-3 group"
-                                >
-                                    <Play className="fill-current group-hover:animate-pulse" /> RACE START
-                                </button>
                             </div>
+
+                            {/* Special Prizes */}
+                            <div className="bg-zinc-900/30 border border-zinc-700 rounded-xl p-5">
+                                <div className="flex items-center justify-between mb-4">
+                                    <label className="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                                        <Gift className="w-4 h-4" /> 특별상 설정
+                                    </label>
+                                    <button
+                                        onClick={addSpecialPrize}
+                                        className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-1 rounded-lg flex items-center gap-1 transition-colors"
+                                    >
+                                        <Plus className="w-3 h-3" /> 추가
+                                    </button>
+                                </div>
+                                <div className="space-y-3 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                    {specialPrizes.map((prize, idx) => (
+                                        <div key={idx} className="flex items-center gap-2">
+                                            <div className="flex items-center gap-1 bg-zinc-950 rounded-lg px-3 py-2 border border-zinc-800 w-24">
+                                                <span className="text-zinc-500 text-xs">No.</span>
+                                                <input
+                                                    type="number"
+                                                    value={prize.rank}
+                                                    onChange={(e) => updateSpecialPrize(idx, "rank", Number(e.target.value))}
+                                                    className="bg-transparent text-white font-bold w-full outline-none text-center"
+                                                />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={prize.name}
+                                                onChange={(e) => updateSpecialPrize(idx, "name", e.target.value)}
+                                                placeholder="상품명 (예: 치킨)"
+                                                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-yellow-500/50 transition-colors"
+                                            />
+                                            <button
+                                                onClick={() => removeSpecialPrize(idx)}
+                                                className="p-2 text-zinc-500 hover:text-red-400 transition-colors"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {specialPrizes.length === 0 && (
+                                        <p className="text-xs text-zinc-600 text-center py-2">
+                                            특정 등수에게 줄 특별한 선물이 있나요?
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={startGame}
+                                className="w-full py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-2xl rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(168,85,247,0.4)] flex items-center justify-center gap-3 group"
+                            >
+                                <Play className="fill-current group-hover:animate-pulse" /> RACE START
+                            </button>
                         </div>
                     </div>
                 </motion.div>
@@ -402,29 +577,45 @@ export default function RandomDrawGame() {
                 />
 
                 {/* Live Leaderboard */}
-                <div className="absolute top-24 right-6 w-72 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 pointer-events-none shadow-2xl">
+                <div className="absolute top-24 right-6 w-80 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 pointer-events-none shadow-2xl">
                     <h3 className="text-white font-black mb-4 flex items-center gap-2 text-lg">
                         <Trophy className="w-5 h-5 text-yellow-500" /> LIVE RANKING
                     </h3>
-                    <div className="space-y-2 max-h-[400px] overflow-hidden">
+                    <div className="space-y-2 max-h-[500px] overflow-hidden">
                         <AnimatePresence>
-                            {winners.map((ball, i) => (
-                                <motion.div
-                                    key={ball.id}
-                                    initial={{ x: 50, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5"
-                                >
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${i === 0 ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-black" :
-                                            i === 1 ? "bg-gradient-to-br from-gray-300 to-gray-500 text-black" :
-                                                i === 2 ? "bg-gradient-to-br from-amber-600 to-amber-800 text-white" : "bg-zinc-800 text-zinc-400"
-                                        }`}>
-                                        {i + 1}
-                                    </div>
-                                    <span className="text-white font-bold text-lg truncate">{ball.name}</span>
-                                    {i === 0 && <Sparkles className="w-4 h-4 text-yellow-400 ml-auto animate-pulse" />}
-                                </motion.div>
-                            ))}
+                            {winners.map((ball, i) => {
+                                const specialPrize = specialPrizes.find(p => p.rank === ball.rank);
+                                return (
+                                    <motion.div
+                                        key={ball.id}
+                                        initial={{ x: 50, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        className={`flex items-center gap-3 rounded-xl p-3 border ${specialPrize
+                                                ? "bg-yellow-500/20 border-yellow-500/50"
+                                                : "bg-white/5 border-white/5"
+                                            }`}
+                                    >
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${ball.rank === 1 ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-black" :
+                                                ball.rank === 2 ? "bg-gradient-to-br from-gray-300 to-gray-500 text-black" :
+                                                    ball.rank === 3 ? "bg-gradient-to-br from-amber-600 to-amber-800 text-white" :
+                                                        "bg-zinc-800 text-zinc-400"
+                                            }`}>
+                                            {ball.rank}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-white font-bold text-lg truncate">{ball.name}</span>
+                                                {specialPrize && (
+                                                    <span className="text-[10px] font-bold bg-yellow-500 text-black px-1.5 py-0.5 rounded-full animate-pulse">
+                                                        {specialPrize.name}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        {ball.rank === 1 && <Sparkles className="w-4 h-4 text-yellow-400 ml-auto animate-pulse" />}
+                                    </motion.div>
+                                );
+                            })}
                         </AnimatePresence>
                         {winners.length === 0 && (
                             <div className="text-zinc-500 text-sm text-center py-8 italic">
