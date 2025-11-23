@@ -15,6 +15,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyComparator, ComparisonResult } from "@/lib/versusEngine";
 import { CompanyProfile, JobLevel } from "@/types/company";
 import AdUnit from "@/components/AdUnit";
+import BoxingGame from "@/components/BoxingGame";
 
 // --- Components ---
 
@@ -126,6 +127,8 @@ export default function BattlePage() {
     const [companyAId, setCompanyAId] = useState<string>(companies[0].id);
     const [companyBId, setCompanyBId] = useState<string>(companies[1].id);
     const [jobLevel, setJobLevel] = useState<JobLevel>("entry");
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [showResult, setShowResult] = useState(false);
 
     const companyA = companyRepository.getById(companyAId);
     const companyB = companyRepository.getById(companyBId);
@@ -135,8 +138,30 @@ export default function BattlePage() {
         return CompanyComparator.compare(companyA, companyB, jobLevel);
     }, [companyA, companyB, jobLevel]);
 
+    const handleFight = () => {
+        setIsPlaying(true);
+        setShowResult(false);
+    };
+
+    const handleFinishGame = () => {
+        setIsPlaying(false);
+        setShowResult(true);
+    };
+
     return (
         <main className="w-full min-h-screen bg-zinc-950 text-white pb-20 overflow-x-hidden">
+            {/* Game Overlay */}
+            <AnimatePresence>
+                {isPlaying && result && (
+                    <BoxingGame
+                        companyA={companyA!}
+                        companyB={companyB!}
+                        result={result}
+                        onFinish={handleFinishGame}
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Hero Section */}
             <section className="relative py-16 text-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
@@ -173,14 +198,14 @@ export default function BattlePage() {
                             companies={companies}
                         />
 
-                        <div className="flex flex-col items-center gap-2 min-w-[120px]">
+                        <div className="flex flex-col items-center gap-4 min-w-[120px]">
                             <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center border-2 border-zinc-700">
                                 <Swords className="w-6 h-6 text-zinc-400" />
                             </div>
                             <select
                                 value={jobLevel}
                                 onChange={(e) => setJobLevel(e.target.value as JobLevel)}
-                                className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-sm font-medium text-center"
+                                className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
                             >
                                 <option value="entry">신입 (Entry)</option>
                                 <option value="junior">주니어 (Junior)</option>
@@ -188,6 +213,13 @@ export default function BattlePage() {
                                 <option value="lead">리드 (Lead)</option>
                                 <option value="executive">임원 (Exec)</option>
                             </select>
+
+                            <button
+                                onClick={handleFight}
+                                className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl font-black italic text-xl shadow-lg hover:scale-105 transition-transform animate-pulse"
+                            >
+                                FIGHT!
+                            </button>
                         </div>
 
                         <CompanySelector
@@ -200,8 +232,8 @@ export default function BattlePage() {
                 </div>
 
                 {/* Battle Arena */}
-                {result && (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {result && (showResult ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in-up">
                         {/* Left Stats (Player 1) */}
                         <div className="lg:col-span-3 order-2 lg:order-1 text-center lg:text-left space-y-6">
                             <motion.div
@@ -331,7 +363,13 @@ export default function BattlePage() {
                             </motion.div>
                         </div>
                     </div>
-                )}
+                ) : (
+                    <div className="text-center py-20 animate-pulse">
+                        <p className="text-2xl text-zinc-500 font-bold">
+                            선수를 선택하고 <span className="text-red-500">FIGHT!</span> 버튼을 누르세요.
+                        </p>
+                    </div>
+                ))}
 
                 {/* Ad Unit */}
                 <div className="mt-16">
