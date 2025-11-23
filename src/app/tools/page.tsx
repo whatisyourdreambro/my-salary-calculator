@@ -14,7 +14,11 @@ import {
     GraduationCap,
     Scale,
     ArrowRightLeft,
-    Home
+    Home,
+    Briefcase,
+    Fuel,
+    Users,
+    Dices
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -54,6 +58,47 @@ const CATEGORIES = [
         ],
     },
     {
+        id: "date",
+        name: "날짜 & 시간",
+        description: "중요한 일정과 시간을 관리",
+        icon: Clock,
+        color: "text-rose-400",
+        bg: "bg-rose-500/10",
+        border: "border-rose-500/20",
+        tools: [
+            { name: "D-Day 계산기", href: "/tools/date/d-day", icon: Calendar },
+            { name: "만 나이 계산기", href: "/tools/date/age", icon: Smile },
+            { name: "영업일 계산기", href: "/tools/date/work-days", icon: Briefcase },
+        ],
+    },
+    {
+        id: "life",
+        name: "생활 & 편의",
+        description: "일상을 편리하게 만드는 도구",
+        icon: Coffee,
+        color: "text-yellow-400",
+        bg: "bg-yellow-500/10",
+        border: "border-yellow-500/20",
+        tools: [
+            { name: "N빵(더치페이) 계산기", href: "/tools/life/dutch-pay", icon: Users },
+            { name: "유류비 계산기", href: "/tools/life/fuel-cost", icon: Fuel },
+            { name: "단위 변환기", href: "/tools/life/unit-converter", icon: ArrowRightLeft },
+        ],
+    },
+    {
+        id: "math",
+        name: "수학 & 랜덤",
+        description: "복잡한 계산을 단순하게",
+        icon: Calculator,
+        color: "text-blue-400",
+        bg: "bg-blue-500/10",
+        border: "border-blue-500/20",
+        tools: [
+            { name: "퍼센트 계산기", href: "/tools/math/percent", icon: Percent },
+            { name: "랜덤 숫자(로또)", href: "/tools/math/number-gen", icon: Dices },
+        ],
+    },
+    {
         id: "health",
         name: "건강 & 피트니스",
         description: "내 몸을 위한 스마트한 관리",
@@ -66,36 +111,6 @@ const CATEGORIES = [
             { name: "BMR 기초대사량", href: "/tools/health/bmr", icon: Activity },
             { name: "일일 필요 칼로리", href: "/tools/health/calories", icon: Coffee },
             { name: "물 섭취량 계산기", href: "/tools/health/water", icon: Activity },
-        ],
-    },
-    {
-        id: "life",
-        name: "생활 & 편의",
-        description: "일상을 편리하게 만드는 도구",
-        icon: Smile,
-        color: "text-yellow-400",
-        bg: "bg-yellow-500/10",
-        border: "border-yellow-500/20",
-        tools: [
-            { name: "더치페이 계산기", href: "/tools/life/dutch-pay", icon: Calculator },
-            { name: "유류비 계산기", href: "/tools/life/fuel", icon: Activity },
-            { name: "학점 변환기", href: "/tools/life/gpa", icon: GraduationCap },
-            { name: "만 나이 계산기", href: "/tools/life/age", icon: Calendar },
-        ],
-    },
-    {
-        id: "math",
-        name: "수학 & 변환",
-        description: "복잡한 계산을 단순하게",
-        icon: Calculator,
-        color: "text-blue-400",
-        bg: "bg-blue-500/10",
-        border: "border-blue-500/20",
-        tools: [
-            { name: "퍼센트 계산기", href: "/tools/math", icon: Percent },
-            { name: "단위 변환기", href: "/tools/math", icon: ArrowRightLeft },
-            { name: "D-Day 계산기", href: "/tools/date/d-day", icon: Clock },
-            { name: "날짜 계산기", href: "/tools/date/calculator", icon: Calendar },
         ],
     },
 ];
@@ -119,7 +134,7 @@ export default function ToolsHubPage() {
                 </div>
 
                 {/* Categories Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {CATEGORIES.map((category) => (
                         <div
                             key={category.id}
@@ -135,7 +150,7 @@ export default function ToolsHubPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 gap-3">
                                 {category.tools.map((tool) => (
                                     <Link
                                         key={tool.name}

@@ -54,6 +54,18 @@ const navConfig: NavItem[] = [
     ],
   },
   {
+    name: "Fun/Lab 🧪",
+    type: "dropdown",
+    items: [
+      { name: "랜덤 뽑기 (God Mode) 🎰", href: "/fun/random" },
+      { name: "주말 당직 게임 (Survival) 🗓️", href: "/fun/weekend-duty" },
+      { name: "MBTI 연봉 순위 (Viral) 🧠", href: "/fun/mbti-salary" },
+      { name: "연봉 배틀 (PvP) 🥊", href: "/fun/salary-battle" },
+      { name: "이상형 월드컵 (Company) 🏆", href: "/fun/worldcup" },
+      { name: "테트리스 (Salaryman) 🧱", href: "/fun/tetris" },
+    ],
+  },
+  {
     name: "계산기 도구",
     type: "dropdown",
     items: [
