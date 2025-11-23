@@ -1,150 +1,373 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import CurrencyInput from "@/components/CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Feather, Wheat, Hammer, Shield, Scroll, Gem, Crown, Flame, Sparkles, Sword, Wand
+  Sparkles, Globe2, Crown, Briefcase, Zap, Skull, RefreshCw, Share2, Dna
 } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
-const tiers = [
-  { limit: 28000000, title: "자유로운 영혼의 음유시인", rank: "F", icon: Feather, color: "text-green-400", bg: "from-green-900 to-slate-900", description: "바람 따라 구름 따라 떠도는 영혼. 주머니는 가볍지만 낭만은 가득합니다." },
-  { limit: 35000000, title: "성실한 마을 청년", rank: "E", icon: Wheat, color: "text-amber-400", bg: "from-amber-900 to-slate-900", description: "마을의 든든한 일꾼. 축제 때 춤추는 것을 좋아하며 소박한 행복을 누립니다." },
-  { limit: 45000000, title: "왕국의 숙련된 대장장이", rank: "D", icon: Hammer, color: "text-orange-500", bg: "from-orange-900 to-slate-900", description: "당신의 망치질 소리는 왕국의 자랑입니다. 명검을 만들기 위해 밤을 지새웁니다." },
-  { limit: 60000000, title: "왕실 근위대 기사", rank: "C", icon: Shield, color: "text-blue-400", bg: "from-blue-900 to-slate-900", description: "왕을 지키는 명예로운 검. 빛나는 갑옷만큼이나 당신의 충성심은 빛납니다." },
-  { limit: 80000000, title: "고위 마법사", rank: "B", icon: Wand, color: "text-purple-400", bg: "from-purple-900 to-slate-900", description: "진리를 탐구하는 현자. 손짓 한 번으로 전장을 뒤집는 강력한 힘을 가졌습니다." },
-  { limit: 120000000, title: "대륙의 거상", rank: "A", icon: Gem, color: "text-emerald-400", bg: "from-emerald-900 to-slate-900", description: "돈으로 살 수 없는 건 없습니다. 당신의 상단은 대륙의 경제를 지배합니다." },
-  { limit: 200000000, title: "제국의 대공", rank: "S", icon: Crown, color: "text-yellow-400", bg: "from-yellow-900 to-slate-900", description: "황제 다음가는 권력자. 당신의 영지에서는 해가 지지 않습니다." },
-  { limit: Infinity, title: "에인션트 드래곤", rank: "SSS", icon: Flame, color: "text-red-500", bg: "from-red-900 to-slate-900", description: "필멸자들의 삶을 관조하는 초월적 존재. 금은보화는 그저 침대일 뿐입니다." },
+// --- Data & Types ---
+
+type Rarity = "S" | "A" | "B" | "C" | "F";
+
+interface LifeAttribute {
+  name: string;
+  rarity: Rarity;
+  description?: string;
+}
+
+const COUNTRIES: LifeAttribute[] = [
+  { name: "아랍에미리트 (석유왕국)", rarity: "S", description: "태어나니 마당에서 석유가 솟구칩니다." },
+  { name: "스위스", rarity: "S", description: "알프스 산맥을 보며 평화롭게 자랍니다." },
+  { name: "미국 (뉴욕)", rarity: "A", description: "세계의 중심에서 기회를 잡으세요." },
+  { name: "대한민국", rarity: "B", description: "치열하지만 역동적인 삶. 치킨은 맛있습니다." },
+  { name: "일본", rarity: "B", description: "장인 정신과 편의점의 나라." },
+  { name: "브라질", rarity: "C", description: "열정적인 삼바와 축구의 나라." },
+  { name: "인도", rarity: "C", description: "IT 강국, 하지만 경쟁은 상상을 초월합니다." },
+  { name: "북한", rarity: "F", description: "아... 탈출 계획부터 세우셔야겠습니다." },
+  { name: "소말리아", rarity: "F", description: "해적왕이 될 자질이 있으신가요?" },
 ];
 
-const getTier = (salary: number) => {
-  return tiers.find(tier => salary < tier.limit) || tiers[tiers.length - 1];
+const SPOONS: LifeAttribute[] = [
+  { name: "비브라늄 수저", rarity: "S", description: "재산 측정 불가. 세계를 움직이는 가문." },
+  { name: "다이아 수저", rarity: "A", description: "평생 놀고 먹어도 3대가 풍족합니다." },
+  { name: "금수저", rarity: "B", description: "부모님의 지원으로 편안한 출발." },
+  { name: "은수저", rarity: "C", description: "부족함 없이 자랐습니다." },
+  { name: "흙수저", rarity: "F", description: "맨주먹으로 세상을 헤쳐나가야 합니다." },
+];
+
+const TALENTS: LifeAttribute[] = [
+  { name: "초능력 (염력)", rarity: "S", description: "세상에 이런 일이! 당신은 초능력자입니다." },
+  { name: "천재적인 두뇌", rarity: "A", description: "3살 때 미적분을 풀었습니다." },
+  { name: "압도적 비주얼", rarity: "A", description: "얼굴이 복지입니다. 걸어다니는 기업." },
+  { name: "절대미각", rarity: "B", description: "요리계의 혁명가." },
+  { name: "강철 체력", rarity: "C", description: "3일 밤을 새워도 멀쩡합니다." },
+  { name: "무능력", rarity: "F", description: "평범함이 가장 큰 무기일지도..." },
+];
+
+const OCCUPATIONS: LifeAttribute[] = [
+  { name: "우주 정복자", rarity: "S", description: "지구를 넘어 우주를 지배합니다." },
+  { name: "글로벌 기업 CEO", rarity: "A", description: "당신의 결정 하나에 세계 경제가 흔들립니다." },
+  { name: "월드스타", rarity: "A", description: "전 세계가 당신의 이름을 외칩니다." },
+  { name: "건물주", rarity: "B", description: "조물주 위에 건물주." },
+  { name: "공무원", rarity: "C", description: "안정적인 삶의 대명사." },
+  { name: "편의점 알바", rarity: "F", description: "폐기 도시락으로 끼니를 때웁니다." },
+];
+
+// --- Helper Functions ---
+
+const getRarityColor = (rarity: Rarity) => {
+  switch (rarity) {
+    case "S": return "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]";
+    case "A": return "text-purple-400";
+    case "B": return "text-blue-400";
+    case "C": return "text-green-400";
+    case "F": return "text-slate-500";
+    default: return "text-white";
+  }
 };
+
+const getRarityBg = (rarity: Rarity) => {
+  switch (rarity) {
+    case "S": return "bg-yellow-500/20 border-yellow-500/50";
+    case "A": return "bg-purple-500/20 border-purple-500/50";
+    case "B": return "bg-blue-500/20 border-blue-500/50";
+    case "C": return "bg-green-500/20 border-green-500/50";
+    case "F": return "bg-slate-500/20 border-slate-500/50";
+    default: return "bg-slate-800 border-slate-700";
+  }
+};
+
+const pickRandom = (items: LifeAttribute[], karmaMultiplier: number): LifeAttribute => {
+  // Higher karma = higher chance of better rarity
+  // Karma 1.0 = normal weights
+  // Karma 2.0 = S/A tier weights doubled
+
+  const weightedItems = items.map(item => {
+    let weight = 1;
+    if (item.rarity === "S") weight = 1 * karmaMultiplier;
+    if (item.rarity === "A") weight = 3 * karmaMultiplier;
+    if (item.rarity === "B") weight = 10;
+    if (item.rarity === "C") weight = 20;
+    if (item.rarity === "F") weight = 20 / karmaMultiplier;
+    return { item, weight };
+  });
+
+  const totalWeight = weightedItems.reduce((a, b) => a + b.weight, 0);
+  let random = Math.random() * totalWeight;
+
+  for (const { item, weight } of weightedItems) {
+    random -= weight;
+    if (random <= 0) return item;
+  }
+  return items[items.length - 1];
+};
+
+// --- Component ---
 
 export default function ReincarnationPage() {
   const [salary, setSalary] = useState("50000000");
-  const annualSalary = useMemo(() => Number(salary.replace(/,/g, "")), [salary]);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [result, setResult] = useState<{
+    country: LifeAttribute;
+    spoon: LifeAttribute;
+    talent: LifeAttribute;
+    occupation: LifeAttribute;
+    lifeSpan: number;
+  } | null>(null);
 
-  const result = getTier(annualSalary);
-  const ResultIcon = result.icon;
+  const handleSpin = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    setResult(null);
+
+    const annualSalary = Number(salary.replace(/,/g, ""));
+    // Karma calculation: 50m = 1.0, 100m = 1.5, 200m = 2.0...
+    const karma = Math.max(0.5, Math.min(3.0, 0.5 + (annualSalary / 100000000)));
+
+    setTimeout(() => {
+      setResult({
+        country: pickRandom(COUNTRIES, karma),
+        spoon: pickRandom(SPOONS, karma),
+        talent: pickRandom(TALENTS, karma),
+        occupation: pickRandom(OCCUPATIONS, karma),
+        lifeSpan: Math.floor(60 + Math.random() * 40 + (karma * 5)), // 60 ~ 100+
+      });
+      setIsSpinning(false);
+    }, 3000);
+  };
+
+  const handleShare = async () => {
+    if (!result) return;
+    const text = `[인생 2회차 결과]\n국적: ${result.country.name}\n계급: ${result.spoon.name}\n직업: ${result.occupation.name}\n\n당신의 다음 생이 궁금하다면?`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "인생 2회차 시뮬레이터",
+          text: text,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error("Share failed", err);
+      }
+    } else {
+      navigator.clipboard.writeText(text).then(() => alert("결과가 복사되었습니다!"));
+    }
+  };
 
   return (
-    <main className="w-full min-h-screen bg-slate-950 text-slate-100 font-serif overflow-hidden relative flex flex-col items-center py-12 px-4">
-      {/* Mystical Background */}
+    <main className="w-full min-h-screen bg-black text-white font-sans overflow-hidden relative flex flex-col items-center py-12 px-4">
+      {/* Cosmic Background */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black" />
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay" />
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900 via-black to-black opacity-80" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+        {/* Stars */}
+        {[...Array(50)].map((_, i) => (
+          <div
             key={i}
-            className="absolute bg-white rounded-full blur-sm"
+            className="absolute bg-white rounded-full animate-pulse"
             style={{
-              width: Math.random() * 4 + 1,
-              height: Math.random() * 4 + 1,
+              width: Math.random() * 2 + 1,
+              height: Math.random() * 2 + 1,
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: Math.random() * 5 + 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: Math.random() * 5,
+              animationDelay: `${Math.random() * 5}s`,
+              opacity: Math.random() * 0.7 + 0.3,
             }}
           />
         ))}
       </div>
 
       <div className="relative z-10 w-full max-w-2xl flex flex-col items-center">
+        {/* Header */}
         <div className="text-center mb-12">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="inline-block mb-4"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-block mb-4 p-4 rounded-full bg-indigo-500/10 border border-indigo-500/30"
           >
-            <Sparkles className="w-8 h-8 text-yellow-400 mx-auto animate-pulse" />
+            <Dna className="w-10 h-10 text-indigo-400 animate-spin-slow" />
           </motion.div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-600 drop-shadow-[0_2px_10px_rgba(234,179,8,0.5)]">
-            이세계 환생 시뮬레이터
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+            LIFE GACHA
           </h1>
-          <p className="mt-4 text-lg text-slate-400 font-light italic">
-            "당신의 연봉이 이세계에서의 운명을 결정합니다..."
+          <p className="mt-4 text-indigo-200/60 text-lg font-light tracking-wide">
+            당신의 현생 연봉이 다음 생의 <span className="text-indigo-400 font-bold">운명(Karma)</span>을 결정합니다.
           </p>
         </div>
 
-        {/* Ad Unit: Top */}
+        {/* Ad Unit */}
         <div className="mb-12 w-full max-w-md">
           <AdUnit slotId="3322110099" format="auto" label="Reincarnation Top Ad" />
         </div>
 
         {/* Input Section */}
-        <div className="w-full max-w-md bg-slate-900/50 backdrop-blur-md border border-slate-700 p-6 rounded-2xl shadow-xl mb-12">
-          <CurrencyInput
-            label="현생의 연봉을 입력하시오"
-            value={salary}
-            onValueChange={setSalary}
-            quickAmounts={[30000000, 50000000, 100000000]}
-            className="text-center text-2xl font-bold bg-slate-800 border-slate-600 text-yellow-100 focus:border-yellow-500"
-          />
-        </div>
-
-        {/* Result Card */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={result.title}
-            initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            exit={{ opacity: 0, scale: 0.8, rotateY: -90 }}
-            transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
-            className="perspective-1000"
-          >
-            <div className={`relative w-[320px] md:w-[380px] bg-gradient-to-br ${result.bg} p-[2px] rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden group`}>
-              {/* Card Border Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50" />
-
-              <div className="relative bg-slate-950 h-full rounded-[calc(2rem-2px)] p-8 flex flex-col items-center text-center overflow-hidden">
-                {/* Rank Badge */}
-                <div className="absolute top-6 right-6 w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm">
-                  <span className={`font-black text-xl ${result.color} drop-shadow-glow`}>{result.rank}</span>
-                </div>
-
-                {/* Icon Container */}
-                <motion.div
-                  className={`w-32 h-32 rounded-full bg-gradient-to-br ${result.bg} flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] border-4 border-slate-800 relative group-hover:scale-110 transition-transform duration-500`}
+          {!isSpinning && !result && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="w-full max-w-md space-y-8"
+            >
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+                <CurrencyInput
+                  label="현생의 연봉 (Karma Point)"
+                  value={salary}
+                  onValueChange={setSalary}
+                  quickAmounts={[30000000, 50000000, 100000000]}
+                  className="text-center text-3xl font-black bg-black/30 border-white/20 text-indigo-300 focus:border-indigo-500 h-16"
+                />
+                <button
+                  onClick={handleSpin}
+                  className="w-full mt-8 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xl font-black rounded-2xl shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                 >
-                  <ResultIcon className={`w-16 h-16 ${result.color} drop-shadow-lg`} />
-                  <div className="absolute inset-0 rounded-full border border-white/10" />
-                </motion.div>
-
-                <h3 className="text-sm text-slate-400 uppercase tracking-[0.2em] mb-2">Class</h3>
-                <h2 className={`text-3xl font-bold ${result.color} mb-6 drop-shadow-md leading-tight`}>
-                  {result.title}
-                </h2>
-
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-6" />
-
-                <p className="text-slate-300 leading-relaxed font-light">
-                  {result.description}
-                </p>
-
-                {/* Decorative Elements */}
-                <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+                  <Sparkles className="w-6 h-6" />
+                  환생 가챠 돌리기
+                </button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </AnimatePresence>
 
-        {/* Ad Unit: Bottom */}
-        <div className="mt-16 w-full max-w-md">
-          <AdUnit slotId="0099887766" format="auto" label="Reincarnation Bottom Ad" />
-        </div>
+        {/* Spinning Animation */}
+        <AnimatePresence>
+          {isSpinning && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              className="flex flex-col items-center justify-center py-20"
+            >
+              <div className="relative w-48 h-48 mb-8">
+                <motion.div
+                  className="absolute inset-0 border-4 border-indigo-500/30 rounded-full"
+                />
+                <motion.div
+                  className="absolute inset-0 border-4 border-t-indigo-400 border-r-purple-400 border-b-pink-400 border-l-transparent rounded-full"
+                  animate={{ rotate: 1080 }}
+                  transition={{ duration: 3, ease: "circOut" }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-6xl animate-pulse">🧬</span>
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">영혼 데이터 재구성 중...</h2>
+              <p className="text-indigo-300">당신의 카르마를 분석하고 있습니다.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Result Display */}
+        <AnimatePresence>
+          {result && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full max-w-lg"
+            >
+              <div className="bg-black/40 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                {/* Background Glow */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none" />
+
+                <div className="text-center mb-8 relative z-10">
+                  <div className="inline-block px-4 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/50 text-indigo-300 text-sm font-bold mb-4">
+                    REINCARNATION COMPLETE
+                  </div>
+                  <h2 className="text-3xl font-bold text-white">당신의 다음 생은?</h2>
+                </div>
+
+                <div className="space-y-4 relative z-10">
+                  {/* Country */}
+                  <div className={`p-4 rounded-2xl border ${getRarityBg(result.country.rarity)} flex items-center gap-4`}>
+                    <div className="p-3 rounded-xl bg-black/30">
+                      <Globe2 className={`w-6 h-6 ${getRarityColor(result.country.rarity)}`} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Nationality</p>
+                      <h3 className={`text-lg font-bold ${getRarityColor(result.country.rarity)}`}>{result.country.name}</h3>
+                      <p className="text-xs text-slate-400 mt-1">{result.country.description}</p>
+                    </div>
+                    <div className="ml-auto text-xl font-black italic opacity-50">{result.country.rarity}</div>
+                  </div>
+
+                  {/* Spoon */}
+                  <div className={`p-4 rounded-2xl border ${getRarityBg(result.spoon.rarity)} flex items-center gap-4`}>
+                    <div className="p-3 rounded-xl bg-black/30">
+                      <Crown className={`w-6 h-6 ${getRarityColor(result.spoon.rarity)}`} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Class</p>
+                      <h3 className={`text-lg font-bold ${getRarityColor(result.spoon.rarity)}`}>{result.spoon.name}</h3>
+                      <p className="text-xs text-slate-400 mt-1">{result.spoon.description}</p>
+                    </div>
+                    <div className="ml-auto text-xl font-black italic opacity-50">{result.spoon.rarity}</div>
+                  </div>
+
+                  {/* Talent */}
+                  <div className={`p-4 rounded-2xl border ${getRarityBg(result.talent.rarity)} flex items-center gap-4`}>
+                    <div className="p-3 rounded-xl bg-black/30">
+                      <Zap className={`w-6 h-6 ${getRarityColor(result.talent.rarity)}`} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Talent</p>
+                      <h3 className={`text-lg font-bold ${getRarityColor(result.talent.rarity)}`}>{result.talent.name}</h3>
+                      <p className="text-xs text-slate-400 mt-1">{result.talent.description}</p>
+                    </div>
+                    <div className="ml-auto text-xl font-black italic opacity-50">{result.talent.rarity}</div>
+                  </div>
+
+                  {/* Occupation */}
+                  <div className={`p-4 rounded-2xl border ${getRarityBg(result.occupation.rarity)} flex items-center gap-4`}>
+                    <div className="p-3 rounded-xl bg-black/30">
+                      <Briefcase className={`w-6 h-6 ${getRarityColor(result.occupation.rarity)}`} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Occupation</p>
+                      <h3 className={`text-lg font-bold ${getRarityColor(result.occupation.rarity)}`}>{result.occupation.name}</h3>
+                      <p className="text-xs text-slate-400 mt-1">{result.occupation.description}</p>
+                    </div>
+                    <div className="ml-auto text-xl font-black italic opacity-50">{result.occupation.rarity}</div>
+                  </div>
+
+                  {/* Life Span */}
+                  <div className="p-4 rounded-2xl border border-slate-700 bg-slate-800/50 flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-black/30">
+                      <Skull className="w-6 h-6 text-slate-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider">Life Span</p>
+                      <h3 className="text-lg font-bold text-white">{result.lifeSpan}세</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-8 relative z-10">
+                  <button
+                    onClick={() => {
+                      setResult(null);
+                    }}
+                    className="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                  >
+                    <RefreshCw size={20} /> 다시 하기
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-900/30"
+                  >
+                    <Share2 size={20} /> 결과 공유
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <AdUnit slotId="0099887766" format="auto" label="Reincarnation Result Ad" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   );
