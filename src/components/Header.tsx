@@ -66,6 +66,15 @@ const navConfig: NavItem[] = [
     ],
   },
   {
+    name: "계산기 도구",
+    type: "dropdown",
+    items: [
+      { name: "대출 이자 계산기 🏦", href: "/tools/loan" },
+      { name: "예적금 계산기 💰", href: "/tools/deposit" },
+      { name: "퍼센트 계산기 ➗", href: "/tools/math" },
+    ],
+  },
+  {
     name: "생활 금융",
     type: "dropdown",
     items: [
