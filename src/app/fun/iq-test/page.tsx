@@ -229,57 +229,102 @@ export default function IQTestPage() {
                     ) : (
                         <motion.div
                             key="result"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 text-center"
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "backOut" }}
+                            className="relative"
                         >
-                            <div className="mb-8">
-                                <div className="inline-block p-4 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 mb-4">
-                                    <Lightbulb size={48} />
+                            {/* Certificate Card */}
+                            <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 relative z-10">
+                                {/* Header Background */}
+                                <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600">
+                                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                                    <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-slate-900 to-transparent"></div>
                                 </div>
-                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">테스트 완료!</h2>
-                                <p className="text-slate-500">당신의 추정 IQ는...</p>
-                            </div>
 
-                            <div className="mb-12">
-                                <span className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
-                                    {score}
-                                </span>
-                                <div className="mt-4 inline-block px-4 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-sm font-medium text-slate-600 dark:text-slate-400">
-                                    상위 {score > 130 ? "1%" : score > 110 ? "15%" : "50%"} 수준
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                <button
-                                    onClick={resetTest}
-                                    className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <RefreshCw size={20} /> 다시하기
-                                </button>
-                                <button
-                                    onClick={handleShare}
-                                    className="p-4 rounded-xl bg-indigo-600 font-bold text-white hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30"
-                                >
-                                    <Share2 size={20} /> 결과 공유
-                                </button>
-                            </div>
-
-                            <div className="text-left bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl">
-                                <h3 className="font-bold mb-4 flex items-center gap-2">
-                                    <CheckCircle2 className="text-green-500" size={20} /> 정답 및 해설
-                                </h3>
-                                <div className="space-y-6 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                                    {questions.map((q, idx) => (
-                                        <div key={q.id} className="border-b border-slate-200 dark:border-slate-800 last:border-0 pb-4 last:pb-0">
-                                            <p className="font-medium text-sm mb-1">Q{idx + 1}. {q.question}</p>
-                                            <p className="text-xs text-slate-500 mb-2">정답: {q.options[q.answer]}</p>
-                                            <p className="text-xs text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 p-2 rounded">💡 {q.explanation}</p>
+                                <div className="relative pt-20 px-6 pb-10 text-center">
+                                    {/* Score Badge */}
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: 0.2, type: "spring" }}
+                                        className="w-48 h-48 mx-auto bg-white dark:bg-slate-800 rounded-full shadow-2xl flex flex-col items-center justify-center mb-8 border-8 border-white/50 dark:border-slate-700/50 backdrop-blur-xl relative z-20"
+                                    >
+                                        <span className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">IQ Score</span>
+                                        <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 tracking-tighter">
+                                            {score}
+                                        </span>
+                                        <div className="absolute -bottom-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                                            {score > 130 ? "MENSA LEVEL" : score > 110 ? "HIGH INTELLIGENCE" : "NORMAL"}
                                         </div>
-                                    ))}
+                                    </motion.div>
+
+                                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+                                        Test Certified
+                                    </h2>
+                                    <p className="text-slate-500 dark:text-slate-400 mb-10 font-medium">
+                                        Official Result • {new Date().toLocaleDateString()}
+                                    </p>
+
+                                    {/* Stats Grid */}
+                                    <div className="grid grid-cols-3 gap-4 mb-10 max-w-lg mx-auto">
+                                        {[
+                                            { label: "Logic", val: "98%", color: "bg-blue-500" },
+                                            { label: "Pattern", val: "95%", color: "bg-purple-500" },
+                                            { label: "Memory", val: "92%", color: "bg-pink-500" }
+                                        ].map((stat, i) => (
+                                            <div key={i} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                                <div className={`w-2 h-2 rounded-full ${stat.color} mb-2 mx-auto`}></div>
+                                                <div className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-1">{stat.val}</div>
+                                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.label}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                                        <button
+                                            onClick={resetTest}
+                                            className="px-8 py-4 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        >
+                                            <RefreshCw size={20} /> 다시하기
+                                        </button>
+                                        <button
+                                            onClick={handleShare}
+                                            className="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        >
+                                            <Share2 size={20} /> 결과 공유하기
+                                        </button>
+                                    </div>
+
+                                    {/* Answers Section */}
+                                    <div className="text-left bg-slate-50 dark:bg-slate-950/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                        <button
+                                            onClick={() => document.getElementById('answers-list')?.classList.toggle('hidden')}
+                                            className="w-full flex items-center justify-between font-bold text-slate-700 dark:text-slate-300 mb-2"
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                <CheckCircle2 className="text-green-500" size={20} /> 정답 및 해설 보기
+                                            </span>
+                                            <span className="text-xs text-slate-400">Click to toggle</span>
+                                        </button>
+
+                                        <div id="answers-list" className="hidden space-y-6 mt-6 border-t border-slate-200 dark:border-slate-800 pt-6">
+                                            {questions.map((q, idx) => (
+                                                <div key={q.id} className="border-b border-slate-200 dark:border-slate-800 last:border-0 pb-4 last:pb-0">
+                                                    <p className="font-bold text-sm mb-2 text-slate-800 dark:text-slate-200">Q{idx + 1}. {q.question}</p>
+                                                    <div className="flex justify-between items-start gap-4">
+                                                        <p className="text-xs text-slate-500">정답: <span className="font-bold text-indigo-500">{q.options[q.answer]}</span></p>
+                                                    </div>
+                                                    <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+                                                        💡 {q.explanation}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
                         </motion.div>
                     )}
                 </AnimatePresence>

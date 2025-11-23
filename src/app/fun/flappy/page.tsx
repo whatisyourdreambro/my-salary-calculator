@@ -6,11 +6,11 @@ import { Play, RotateCcw, Share2, Trophy } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
 // Game Constants
-const GRAVITY = 0.6;
-const JUMP_STRENGTH = -10;
+const GRAVITY = 0.4; // Reduced from 0.6
+const JUMP_STRENGTH = -8; // Reduced from -10 to match gravity
 const OBSTACLE_SPEED = 3;
-const OBSTACLE_SPAWN_RATE = 2000; // ms
-const GAP_SIZE = 150;
+const OBSTACLE_SPAWN_RATE = 2500; // Slower spawn (was 2000)
+const GAP_SIZE = 180; // Wider gap (was 150)
 
 export default function FlappyGamePage() {
     const [gameState, setGameState] = useState<"start" | "playing" | "gameover">("start");
@@ -78,19 +78,27 @@ export default function FlappyGamePage() {
             ctx.fillStyle = "#f97316"; // Orange-500
             ctx.fillRect(obs.x, obs.topHeight + GAP_SIZE, 50, canvas.height - (obs.topHeight + GAP_SIZE));
 
-            // Collision Detection
+            // Collision Detection (Forgiving Hitbox)
             const bird = birdRef.current;
+            const hitboxPadding = 5; // Make hitbox smaller than visual size
+            const birdLeft = bird.x + hitboxPadding;
+            const birdRight = bird.x + bird.size - hitboxPadding;
+            const birdTop = bird.y + hitboxPadding;
+            const birdBottom = bird.y + bird.size - hitboxPadding;
+
             if (
-                bird.y < obs.topHeight ||
-                bird.y + bird.size > obs.topHeight + GAP_SIZE
+                birdTop < obs.topHeight ||
+                birdBottom > obs.topHeight + GAP_SIZE
             ) {
-                if (bird.x + bird.size > obs.x && bird.x < obs.x + 50) {
+                if (birdRight > obs.x && birdLeft < obs.x + 50) {
                     gameOver();
                 }
             }
 
             // Score Update
-            if (!obs.passed && obs.x + 50 < 50) { // Bird x is fixed at 50
+            // Score when bird passes the obstacle safely
+            // Bird is at 50. Obstacle passes when obs.x + 50 < 50.
+            if (!obs.passed && obs.x + 50 < 50) {
                 obs.passed = true;
                 scoreRef.current += 1;
                 setScore(scoreRef.current);
@@ -104,6 +112,11 @@ export default function FlappyGamePage() {
         ctx.fillStyle = "#3b82f6"; // Blue-500
         ctx.beginPath();
         ctx.arc(50 + birdRef.current.size / 2, birdRef.current.y + birdRef.current.size / 2, birdRef.current.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        // Add eye for cuteness
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(50 + birdRef.current.size / 2 + 5, birdRef.current.y + birdRef.current.size / 2 - 5, 4, 0, Math.PI * 2);
         ctx.fill();
 
         // Floor/Ceiling Collision
