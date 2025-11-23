@@ -41,7 +41,7 @@ export default function SalarySlipPage() {
             setTimeout(() => {
                 setShowOfficial(true);
                 setIsPrinting(false);
-            }, 1500);
+            }, 2000);
         }
     };
 
@@ -204,179 +204,205 @@ export default function SalarySlipPage() {
                 </motion.div>
 
                 {/* Right Column: Preview/Result */}
-                <div className="flex flex-col items-center justify-start min-h-[600px] relative">
-                    {!showOfficial && (
-                        <div className="absolute top-0 left-0 w-full h-full z-20 flex items-center justify-center pointer-events-none">
-                            <div className="bg-black/50 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 text-white font-bold flex items-center gap-2">
-                                <Eye className="w-4 h-4" />
-                                실시간 미리보기
-                            </div>
-                        </div>
-                    )}
+                <div className="flex flex-col items-center justify-start min-h-[700px] relative perspective-1000">
+                    {/* Printer Slot Effect */}
+                    <div className="absolute top-0 w-[380px] h-4 bg-zinc-800 rounded-full shadow-inner z-30 border border-zinc-700" />
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className={`relative perspective-1000 transition-all duration-500 ${!showOfficial ? 'opacity-70 scale-95 blur-[1px]' : 'opacity-100 scale-100'}`}
-                    >
-                        {/* Receipt Paper */}
-                        <div
-                            ref={receiptRef}
-                            className="w-[360px] sm:w-[400px] bg-[#fffdf5] text-zinc-900 shadow-2xl relative overflow-hidden font-mono text-sm leading-relaxed transform-gpu origin-top"
-                            style={{
-                                backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4d4d4' fill-opacity='0.1'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' /%3E%3C/g%3E%3C/svg%3E\")",
-                                boxShadow: "0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.1), 0 4px 4px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.1), 0 16px 16px rgba(0,0,0,0.1)"
+                    <AnimatePresence>
+                        <motion.div
+                            initial={{ y: -300, opacity: 0 }}
+                            animate={{
+                                y: showOfficial ? 0 : isPrinting ? [-300, 0] : -20,
+                                opacity: 1,
+                                transition: {
+                                    y: { duration: isPrinting ? 2 : 0.5, ease: "linear" }
+                                }
                             }}
+                            className={`relative transition-all duration-500 ${!showOfficial && !isPrinting ? 'opacity-70 scale-95 blur-[1px]' : 'opacity-100 scale-100'}`}
                         >
-                            {/* Jagged Top */}
-                            <div className="absolute top-0 left-0 w-full h-3 bg-zinc-950 z-10"
+                            {/* Receipt Paper */}
+                            <div
+                                ref={receiptRef}
+                                className="w-[360px] sm:w-[380px] bg-[#fffdf5] text-zinc-900 shadow-2xl relative overflow-hidden font-mono text-sm leading-relaxed transform-gpu origin-top"
                                 style={{
-                                    clipPath: "polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%)"
+                                    // Thermal Paper Texture
+                                    backgroundImage: `
+                                        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
+                                        linear-gradient(to bottom, #fffdf5, #f0f0e0)
+                                    `,
+                                    boxShadow: "0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.1), 0 4px 4px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.1), 0 16px 16px rgba(0,0,0,0.1)"
                                 }}
-                            />
+                            >
+                                {/* Jagged Top */}
+                                <div className="absolute top-0 left-0 w-full h-3 bg-zinc-950 z-10"
+                                    style={{
+                                        clipPath: "polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%)"
+                                    }}
+                                />
 
-                            <div className="p-8 pt-12 relative">
-                                {/* Stamp Effect */}
-                                <AnimatePresence>
-                                    {showOfficial && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 2, rotate: -30 }}
-                                            animate={{ opacity: 0.8, scale: 1, rotate: -15 }}
-                                            transition={{ type: "spring", bounce: 0.5 }}
-                                            className="absolute top-16 right-8 w-24 h-24 border-4 border-red-600 rounded-full flex items-center justify-center text-red-600 font-black text-xl rotate-[-15deg] opacity-80 z-0 pointer-events-none mix-blend-multiply"
-                                        >
-                                            <div className="text-center leading-none">
-                                                PAID<br />
-                                                <span className="text-xs">APPROVED</span>
+                                <div className="p-8 pt-12 relative">
+                                    {/* Stamp Effect */}
+                                    <AnimatePresence>
+                                        {showOfficial && (
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 2, rotate: -30 }}
+                                                animate={{ opacity: 0.8, scale: 1, rotate: -15 }}
+                                                transition={{ type: "spring", bounce: 0.5, delay: 0.5 }}
+                                                className="absolute top-20 right-8 w-24 h-24 border-4 border-red-600 rounded-full flex items-center justify-center text-red-600 font-black text-xl rotate-[-15deg] opacity-80 z-0 pointer-events-none mix-blend-multiply"
+                                                style={{ maskImage: "url(https://grainy-gradients.vercel.app/noise.svg)" }} // Rough stamp look
+                                            >
+                                                <div className="text-center leading-none">
+                                                    PAID<br />
+                                                    <span className="text-xs">APPROVED</span>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* Header */}
+                                    <div className="text-center border-b-2 border-dashed border-zinc-400 pb-6 mb-6 relative z-10">
+                                        <h2 className="text-2xl font-black tracking-tighter mb-1 uppercase">
+                                            {companyName ? companyName : "MONEY SALARY"}
+                                        </h2>
+                                        <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em]">Official Salary Receipt</p>
+                                        <div className="flex justify-between text-[10px] text-zinc-400 mt-4 font-mono">
+                                            <span>DATE: {date}</span>
+                                            <span>TIME: {new Date().toLocaleTimeString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
+                                            <span>TERM: #0025</span>
+                                            <span>AUTH: {Math.floor(Math.random() * 999999)}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* User Info */}
+                                    <div className="grid grid-cols-2 gap-2 text-xs text-zinc-600 mb-6 border-b border-dashed border-zinc-400 pb-4 font-mono">
+                                        <div>NAME : <span className="text-zinc-900 font-bold">{userName || "-"}</span></div>
+                                        <div>ID NO: <span className="text-zinc-900 font-bold">{employeeId || "-"}</span></div>
+                                        <div className="col-span-2">DEPT : <span className="text-zinc-900 font-bold">{department || "-"}</span></div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="space-y-3 relative z-10 font-mono text-sm">
+                                        <div className="flex justify-between items-end">
+                                            <span className="font-bold">GROSS PAY</span>
+                                            <span className="font-bold text-lg">{Math.floor(fullReceiptData.preTax / 12).toLocaleString()}</span>
+                                        </div>
+
+                                        <div className="border-t border-dashed border-zinc-300 my-2" />
+
+                                        <div className="space-y-1 text-zinc-600 text-xs">
+                                            <div className="flex justify-between">
+                                                <span>NATIONAL PENSION</span>
+                                                <span>-{fullReceiptData.pension.toLocaleString()}</span>
                                             </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-
-                                {/* Header */}
-                                <div className="text-center border-b-2 border-dashed border-zinc-300 pb-6 mb-6 relative z-10">
-                                    <h2 className="text-2xl font-black tracking-tighter mb-1">
-                                        {companyName ? companyName : "MONEY SALARY"}
-                                    </h2>
-                                    <p className="text-xs text-zinc-500 uppercase tracking-widest">Official Salary Receipt</p>
-                                    <p className="text-xs text-zinc-400 mt-2">{date}</p>
-                                </div>
-
-                                {/* User Info */}
-                                <div className="grid grid-cols-2 gap-2 text-xs text-zinc-500 mb-6 border-b border-dashed border-zinc-300 pb-4">
-                                    <div>성명: <span className="text-zinc-900 font-bold">{userName || "-"}</span></div>
-                                    <div>사원번호: <span className="text-zinc-900 font-bold">{employeeId || "-"}</span></div>
-                                    <div className="col-span-2">부서: <span className="text-zinc-900 font-bold">{department || "-"}</span></div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="space-y-4 relative z-10">
-                                    <div className="flex justify-between items-end">
-                                        <span className="font-bold text-lg">세전 월급</span>
-                                        <span className="font-bold text-lg">{Math.floor(fullReceiptData.preTax / 12).toLocaleString()}</span>
-                                    </div>
-
-                                    <div className="border-t border-dashed border-zinc-300 my-4" />
-
-                                    <div className="space-y-2 text-zinc-600">
-                                        <div className="flex justify-between">
-                                            <span>국민연금 (4.5%)</span>
-                                            <span>-{fullReceiptData.pension.toLocaleString()}</span>
+                                            <div className="flex justify-between">
+                                                <span>HEALTH INS</span>
+                                                <span>-{fullReceiptData.health.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>LONG-TERM CARE</span>
+                                                <span>-{fullReceiptData.longTermCare.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>EMPLOYMENT INS</span>
+                                                <span>-{fullReceiptData.employment.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>INCOME TAX</span>
+                                                <span>-{fullReceiptData.incomeTax.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>LOCAL TAX</span>
+                                                <span>-{fullReceiptData.localTax.toLocaleString()}</span>
+                                            </div>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span>건강보험 (3.545%)</span>
-                                            <span>-{fullReceiptData.health.toLocaleString()}</span>
+
+                                        <div className="border-t-4 border-double border-zinc-900 my-4" />
+
+                                        <div className="flex justify-between items-end text-xl font-black">
+                                            <span>NET PAY</span>
+                                            <span className="bg-black text-white px-2 py-1 transform -rotate-1">
+                                                ₩{fullReceiptData.monthlyNet.toLocaleString()}
+                                            </span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span>장기요양 (12.95%)</span>
-                                            <span>-{fullReceiptData.longTermCare.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>고용보험 (0.9%)</span>
-                                            <span>-{fullReceiptData.employment.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>근로소득세 (간이)</span>
-                                            <span>-{fullReceiptData.incomeTax.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>지방소득세 (10%)</span>
-                                            <span>-{fullReceiptData.localTax.toLocaleString()}</span>
+
+                                        <div className="mt-2 text-right text-[10px] text-zinc-400">
+                                            * INCLUDES NON-TAXABLE MEAL ALLOWANCE
                                         </div>
                                     </div>
 
-                                    <div className="border-t-2 border-zinc-900 my-4" />
+                                    {/* Footer with Seal */}
+                                    <div className="mt-8 text-center relative z-10">
+                                        <div className="relative inline-block py-4 px-8">
+                                            <p className="text-sm font-black text-zinc-900 relative z-10 uppercase">
+                                                (SIGNED) {companyName || "MONEYSALARY"} CEO
+                                            </p>
 
-                                    <div className="flex justify-between items-end text-xl font-black">
-                                        <span>실수령액</span>
-                                        <span className="bg-yellow-200 px-1">{fullReceiptData.monthlyNet.toLocaleString()} 원</span>
-                                    </div>
+                                            {/* Official Seal (Red Stamp) */}
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 border-2 border-red-600 rounded-sm flex items-center justify-center opacity-70 mix-blend-multiply rotate-3 z-0">
+                                                <div className="w-12 h-12 border border-red-600 rounded-sm flex items-center justify-center">
+                                                    <span className="text-red-600 font-serif font-bold text-[10px] writing-vertical-rl">
+                                                        OFFICIAL<br />SEAL
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div className="mt-2 text-right text-xs text-zinc-400">
-                                        * 비과세 식대 20만원 포함 가정
-                                    </div>
-                                </div>
+                                        {/* Barcode */}
+                                        <div className="mt-6 flex flex-col items-center">
+                                            <div className="h-12 w-full max-w-[200px] bg-zinc-900"
+                                                style={{
+                                                    maskImage: "repeating-linear-gradient(90deg, black, black 2px, transparent 2px, transparent 4px)"
+                                                }}
+                                            />
+                                            <p className="text-[10px] font-mono mt-1 tracking-widest">
+                                                {Math.random().toString().slice(2, 14)}
+                                            </p>
+                                        </div>
 
-                                {/* Footer with Seal */}
-                                <div className="mt-12 text-center relative z-10">
-                                    <p className="text-sm font-bold text-zinc-800 mb-8">
-                                        위와 같이 급여를 정히 영수함.
-                                    </p>
-
-                                    <div className="relative inline-block py-4 px-8">
-                                        <p className="text-lg font-black text-zinc-900 relative z-10">
-                                            (주) {companyName || "머니샐러리"} 대표이사
+                                        <p className="text-[10px] text-zinc-400 mt-4">
+                                            www.moneysalary.com
                                         </p>
-
-                                        {/* Official Seal (Red Stamp) */}
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-4 border-red-600 rounded-lg flex items-center justify-center opacity-80 mix-blend-multiply rotate-3 z-0">
-                                            <div className="w-14 h-14 border border-red-600 rounded flex items-center justify-center">
-                                                <span className="text-red-600 font-serif font-bold text-xs writing-vertical-rl">
-                                                    {companyName ? companyName.slice(0, 4) : "머니샐러리"}
-                                                    <br />
-                                                    직인
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <p className="text-[8px] text-zinc-300 mt-1 opacity-50">
+                                            * FOR ENTERTAINMENT PURPOSES ONLY
+                                        </p>
                                     </div>
-
-                                    <p className="text-[10px] text-zinc-400 mt-8">
-                                        www.moneysalary.com
-                                    </p>
-                                    <p className="text-[8px] text-zinc-300 mt-2 opacity-50">
-                                        * 본 영수증은 법적 효력이 없으며, 재미를 위한 가상 영수증입니다.
-                                    </p>
                                 </div>
-                            </div>
 
-                            {/* Jagged Bottom */}
-                            <div className="absolute bottom-0 left-0 w-full h-3 bg-zinc-950 z-10"
-                                style={{
-                                    clipPath: "polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%)"
-                                }}
-                            />
-                        </div>
-
-                        {/* Action Buttons */}
-                        {showOfficial && (
-                            <div className="flex justify-center gap-4 mt-8">
-                                <button
-                                    onClick={handleReset}
-                                    className="p-4 bg-zinc-800 rounded-full shadow-lg hover:scale-110 transition-transform text-zinc-300"
-                                    title="다시 하기"
-                                >
-                                    <RefreshCw className="w-6 h-6" />
-                                </button>
-                                <button
-                                    onClick={handleShare}
-                                    className="p-4 bg-blue-600 text-white rounded-full shadow-lg hover:scale-110 transition-transform shadow-blue-600/30"
-                                    title="공유하기"
-                                >
-                                    <Share2 className="w-6 h-6" />
-                                </button>
+                                {/* Jagged Bottom */}
+                                <div className="absolute bottom-0 left-0 w-full h-3 bg-zinc-950 z-10"
+                                    style={{
+                                        clipPath: "polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%)"
+                                    }}
+                                />
                             </div>
-                        )}
-                    </motion.div>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    {/* Action Buttons */}
+                    {showOfficial && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex justify-center gap-4 mt-8"
+                        >
+                            <button
+                                onClick={handleReset}
+                                className="p-4 bg-zinc-800 rounded-full shadow-lg hover:scale-110 transition-transform text-zinc-300"
+                                title="다시 하기"
+                            >
+                                <RefreshCw className="w-6 h-6" />
+                            </button>
+                            <button
+                                onClick={handleShare}
+                                className="p-4 bg-blue-600 text-white rounded-full shadow-lg hover:scale-110 transition-transform shadow-blue-600/30"
+                                title="공유하기"
+                            >
+                                <Share2 className="w-6 h-6" />
+                            </button>
+                        </motion.div>
+                    )}
                 </div>
             </div>
 
