@@ -138,6 +138,11 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
             <Header />
 
+            {/* Global Top Ad (Desktop/Mobile) */}
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center">
+              <AdUnit slotId="9988776655" format="auto" label="Global Top Banner" />
+            </div>
+
             {/* Main Layout Container with Sidebars */}
             <div className="flex justify-center w-full max-w-[1920px] mx-auto relative">
               {/* Left Sidebar (Desktop Only) */}
@@ -149,7 +154,7 @@ export default function RootLayout({
               </aside>
 
               {/* Main Content - Centered Single Column */}
-              <div className="w-full flex-grow max-w-7xl px-4 sm:px-6 lg:px-8 py-12 pt-24">
+              <div className="w-full flex-grow max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
                 <main className="w-full flex flex-col animate-fade-in-up">
                   {children}
                 </main>
@@ -162,6 +167,11 @@ export default function RootLayout({
                   <AdUnit slotId="5544332211" format="vertical" label="Global Right Sidebar 2" />
                 </div>
               </aside>
+            </div>
+
+            {/* Global Bottom Ad */}
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center">
+              <AdUnit slotId="4455667788" format="auto" label="Global Bottom Banner" />
             </div>
 
             <Footer />

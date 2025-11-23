@@ -54,6 +54,18 @@ const navConfig: NavItem[] = [
     ],
   },
   {
+    name: "Fun/Lab",
+    type: "dropdown",
+    items: [
+      { name: "연봉 배틀 🥊", href: "/battle" },
+      { name: "2026 신년운세 🐍", href: "/fun/fortune" },
+      { name: "IQ 테스트 🧠", href: "/fun/iq-test" },
+      { name: "월급 영수증 🧾", href: "/fun/salary-slip" },
+      { name: "환생 시뮬레이터 🎲", href: "/fun/reincarnation" },
+      { name: "자산 배분 게임 💰", href: "/fun/asset-allocator" },
+    ],
+  },
+  {
     name: "생활 금융",
     type: "dropdown",
     items: [
