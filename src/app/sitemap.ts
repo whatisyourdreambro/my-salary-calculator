@@ -124,22 +124,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Individual company pages (we'll import and use the repository)
-  // For now, hardcode the known company IDs
-  const companyIds = [
-    'samsung-electronics',
-    'sk-hynix',
-    'naver',
-    'kakao',
-    'coupang',
-    'toss',
-    'hyundai',
-    'lgensol',
-  ];
+  // Individual company pages
+  // Import data directly to avoid build-time repository issues if any
+  const { seedCompanies } = require('@/data/seedCompanies');
+  const { globalCompanies } = require('@/data/globalCompanies');
 
-  companyIds.forEach((id) => {
+  const allCompanies = [...seedCompanies, ...globalCompanies];
+
+  allCompanies.forEach((company: any) => {
     companyUrls.push({
-      url: `${baseUrl}/salary-db/${id}`,
+      url: `${baseUrl}/salary-db/${company.id}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.85,

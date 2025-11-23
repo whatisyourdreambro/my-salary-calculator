@@ -1,34 +1,26 @@
 import { CompanyProfile } from "@/types/company";
 import { seedCompanies } from "@/data/seedCompanies";
+import { globalCompanies } from "@/data/globalCompanies";
 
-export class CompanyRepository {
-    private companies: CompanyProfile[];
+// Merge all data sources
+const allCompanies = [...seedCompanies, ...globalCompanies];
 
-    constructor() {
-        // In a real app, this might fetch from a DB.
-        // For now, we load the seed data.
-        this.companies = seedCompanies;
-    }
+export const companyRepository = {
+    getAll: (): CompanyProfile[] => {
+        return allCompanies;
+    },
 
-    getAll(): CompanyProfile[] {
-        return this.companies;
-    }
+    getById: (id: string): CompanyProfile | undefined => {
+        return allCompanies.find((c) => c.id === id);
+    },
 
-    getById(id: string): CompanyProfile | undefined {
-        return this.companies.find((c) => c.id === id);
-    }
-
-    search(query: string): CompanyProfile[] {
+    search: (query: string): CompanyProfile[] => {
         const lowerQuery = query.toLowerCase();
-        return this.companies.filter(
+        return allCompanies.filter(
             (c) =>
                 c.name.ko.toLowerCase().includes(lowerQuery) ||
                 c.name.en.toLowerCase().includes(lowerQuery) ||
                 c.industry.toLowerCase().includes(lowerQuery)
         );
-    }
-
-    // Future: Add filtering by salary range, industry, etc.
-}
-
-export const companyRepository = new CompanyRepository();
+    },
+};
