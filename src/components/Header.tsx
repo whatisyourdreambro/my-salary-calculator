@@ -69,9 +69,11 @@ const navConfig: NavItem[] = [
     name: "계산기 도구",
     type: "dropdown",
     items: [
+      { name: "전체 보기 (Hub) 🏰", href: "/tools" },
       { name: "대출 이자 계산기 🏦", href: "/tools/loan" },
       { name: "예적금 계산기 💰", href: "/tools/deposit" },
-      { name: "퍼센트 계산기 ➗", href: "/tools/math" },
+      { name: "부가세(VAT) 계산기 🧾", href: "/tools/finance/vat" },
+      { name: "BMI 비만도 계산기 ⚖️", href: "/tools/health/bmi" },
     ],
   },
   {
