@@ -23,11 +23,11 @@ export function calculateSalaryRank(ageGroup: string, salary: number) {
     const percentiles = SALARY_PERCENTILES[ageGroup] || SALARY_PERCENTILES["30s"];
     const salaryMan = salary / 10000; // Convert to Man-won
 
-    if (salaryMan >= percentiles[0]) return { percentile: 1, ...TIER_CONFIG[0] };
-    if (salaryMan >= percentiles[1]) return { percentile: 5, ...TIER_CONFIG[1] };
-    if (salaryMan >= percentiles[2]) return { percentile: 10, ...TIER_CONFIG[2] };
-    if (salaryMan >= percentiles[3]) return { percentile: 25, ...TIER_CONFIG[3] };
-    if (salaryMan >= percentiles[4]) return { percentile: 50, ...TIER_CONFIG[4] };
-    if (salaryMan >= percentiles[5]) return { percentile: 75, ...TIER_CONFIG[5] };
-    return { percentile: 90, ...TIER_CONFIG[6] };
+    if (salaryMan >= percentiles[0]) return { ...TIER_CONFIG[0] };
+    if (salaryMan >= percentiles[1]) return { ...TIER_CONFIG[1] };
+    if (salaryMan >= percentiles[2]) return { ...TIER_CONFIG[2] };
+    if (salaryMan >= percentiles[3]) return { ...TIER_CONFIG[3] };
+    if (salaryMan >= percentiles[4]) return { ...TIER_CONFIG[4] };
+    if (salaryMan >= percentiles[5]) return { ...TIER_CONFIG[5] };
+    return { ...TIER_CONFIG[6] };
 }

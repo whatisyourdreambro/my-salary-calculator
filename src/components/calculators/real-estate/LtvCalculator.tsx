@@ -81,7 +81,7 @@ export default function LtvCalculator() {
             </div>
 
             <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800">
-                <AdUnit slotId="1231231234" format="horizontal" label="LTV Calculator Ad" />
+                <AdUnit slotId="1231231234" format="rectangle" label="LTV Calculator Ad" />
             </div>
         </div>
     );
