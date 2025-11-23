@@ -13,6 +13,11 @@ import {
   ArrowRight,
   Info,
   RotateCcw,
+  Globe,
+  TrendingUp,
+  Coffee,
+  Sandwich,
+  Plane
 } from "lucide-react";
 import {
   BarChart,
@@ -27,6 +32,7 @@ import {
 import CustomBarLabel from "./CustomBarLabel";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
+import { motion, AnimatePresence } from "framer-motion";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
@@ -42,12 +48,12 @@ const toInputDateString = (date: Date): string => {
 };
 
 const currencies = [
-  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩" },
-  { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$" },
-  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥" },
-  { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€" },
-  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥" },
-  { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£" },
+  { id: "KRW", name: "대한민국 원", flag: "🇰🇷", symbol: "₩", rate: 1 },
+  { id: "USD", name: "미국 달러", flag: "🇺🇸", symbol: "$", rate: 1400 },
+  { id: "JPY", name: "일본 엔", flag: "🇯🇵", symbol: "¥", rate: 9.2 },
+  { id: "EUR", name: "유로", flag: "🇪🇺", symbol: "€", rate: 1500 },
+  { id: "CNY", name: "중국 위안", flag: "🇨🇳", symbol: "¥", rate: 195 },
+  { id: "GBP", name: "영국 파운드", flag: "🇬🇧", symbol: "£", rate: 1750 },
 ];
 
 const initialPastDate = (() => {
@@ -56,12 +62,41 @@ const initialPastDate = (() => {
   return toInputDateString(date);
 })();
 
+// Mock Data for Purchasing Power (Big Mac Index / Coffee Index)
+const purchasingPowerData = {
+  KRW: { bigMac: 6900, coffee: 4500 },
+  USD: { bigMac: 5.69, coffee: 5.50 }, // $5.69 * 1400 = ~8000 KRW
+  JPY: { bigMac: 450, coffee: 400 },   // 450 * 9.2 = ~4140 KRW
+  EUR: { bigMac: 5.30, coffee: 4.50 },
+  CNY: { bigMac: 24.0, coffee: 30.0 },
+  GBP: { bigMac: 4.19, coffee: 3.50 },
+};
+
+const CurrencyTicker = () => (
+  <div className="w-full overflow-hidden bg-primary/5 border-y border-primary/10 py-2 mb-8">
+    <motion.div
+      className="flex whitespace-nowrap gap-8"
+      animate={{ x: [0, -1000] }}
+      transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+    >
+      {[...currencies, ...currencies, ...currencies].map((c, i) => (
+        <div key={i} className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+          <span className="text-lg">{c.flag}</span>
+          <span>{c.id}</span>
+          <span className="text-primary font-bold">{c.rate.toLocaleString()}</span>
+          <span className="text-xs text-emerald-500">▲ 0.5%</span>
+        </div>
+      ))}
+    </motion.div>
+  </div>
+);
+
 export default function ExchangeRateImpactCalculator() {
   const searchParams = useSearchParams();
   const reportRef = useRef<HTMLDivElement>(null);
 
   const [assetAmount, setAssetAmount] = useState(() =>
-    formatNumber(parseNumber(searchParams.get("assetAmount") || "40000000"))
+    formatNumber(parseNumber(searchParams.get("assetAmount") || "60000000"))
   );
   const [assetCurrency, setAssetCurrency] = useState(
     () => searchParams.get("assetCurrency") || "KRW"
@@ -92,7 +127,7 @@ export default function ExchangeRateImpactCalculator() {
     if (assetCurrency === comparisonCurrency) {
       const newComparison = currencies.find((c) => c.id !== assetCurrency);
       if (newComparison) {
-        setComparisonCurrency(newComparison.id);
+        setComparisonCurrency(newComparison?.id || "USD");
       }
     }
   }, [assetCurrency, comparisonCurrency]);
@@ -171,7 +206,7 @@ export default function ExchangeRateImpactCalculator() {
     }
   }, [fetchRates, searchParams]);
 
-  const { analysis, resultSymbol } = useMemo(() => {
+  const { analysis, resultSymbol, purchasingPower } = useMemo(() => {
     const pRate = parseFloat(manualPastRateStr) || 0;
     const cRate = parseFloat(manualCurrentRateStr) || 0;
     const amount = parseNumber(assetAmount);
@@ -204,6 +239,14 @@ export default function ExchangeRateImpactCalculator() {
     const roundValue = (val: number) =>
       Number.isInteger(val) ? val : parseFloat(val.toFixed(2));
 
+    // Purchasing Power Calculation
+    // Convert current asset amount to comparison currency
+    const convertedAmount = amount / cRate; // Amount in Comparison Currency
+    const compCurrencyData = purchasingPowerData[comparisonCurrency as keyof typeof purchasingPowerData];
+
+    const bigMacs = compCurrencyData ? convertedAmount / compCurrencyData.bigMac : 0;
+    const coffees = compCurrencyData ? convertedAmount / compCurrencyData.coffee : 0;
+
     return {
       analysis: {
         changeAmount: roundValue(res.changeAmount),
@@ -212,8 +255,12 @@ export default function ExchangeRateImpactCalculator() {
         currentValue: roundValue(res.currentValue),
       },
       resultSymbol: finalResultSymbol,
+      purchasingPower: {
+        bigMacs: Math.floor(bigMacs),
+        coffees: Math.floor(coffees),
+      }
     };
-  }, [assetAmount, assetCurrency, manualPastRateStr, manualCurrentRateStr]);
+  }, [assetAmount, assetCurrency, manualPastRateStr, manualCurrentRateStr, comparisonCurrency]);
 
   const chartData = [
     { name: "과거", value: analysis.pastValue },
@@ -253,7 +300,7 @@ export default function ExchangeRateImpactCalculator() {
   };
 
   const handleReset = () => {
-    setAssetAmount(formatNumber(40000000));
+    setAssetAmount(formatNumber(60000000));
     setAssetCurrency("KRW");
     setComparisonCurrency("USD");
     setPastDate(initialPastDate);
@@ -265,177 +312,176 @@ export default function ExchangeRateImpactCalculator() {
     fetchRates();
   };
 
-  const inputStyle = "w-full p-3 mt-1 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition disabled:opacity-50";
+  const inputStyle = "w-full p-3 mt-1 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition disabled:opacity-50 text-foreground";
   const textInputStyle = `${inputStyle} text-center font-mono`;
 
   return (
-    <>
-      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg border border-border mt-8 animate-fade-in-up">
-        <h2 className="text-2xl font-bold text-center mb-8">
-          환율 변동에 따른 내 자산 가치 변화
-        </h2>
+    <div className="animate-fade-in-up">
+      <CurrencyTicker />
+
+      <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-6 sm:p-8 rounded-3xl shadow-2xl">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-cyan-500/10 mb-4">
+            <Globe className="w-6 h-6 text-cyan-500" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">
+            Global Salary Intelligence
+          </h2>
+          <p className="text-zinc-400">환율 변동에 따른 내 연봉의 진짜 가치를 확인하세요.</p>
+        </div>
 
         <div className="p-4" ref={reportRef}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Input Section */}
             <div className="space-y-6">
-              <CurrencyInput
-                label="분석 자산"
-                value={assetAmount}
-                onValueChange={setAssetAmount}
-                quickAmounts={[10000000, 1000000]}
-                selectedCurrency={assetCurrency}
-                onCurrencyChange={setAssetCurrency}
-                currencies={currencies}
-              />
-
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">비교 통화</label>
-                <select
-                  value={comparisonCurrency}
-                  onChange={(e) => setComparisonCurrency(e.target.value)}
-                  className={inputStyle}
-                >
-                  {currencies
-                    .filter((c) => c.id !== assetCurrency)
-                    .map((c) => (
-                      <option key={c.id} value={c.id}>{c.flag} {c.name} ({c.id})</option>
-                    ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">기준 과거 시점</label>
-                <input
-                  type="date"
-                  value={pastDate}
-                  onChange={(e) => setPastDate(e.target.value)}
-                  disabled={isManual || useDxy}
-                  className={inputStyle}
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <CurrencyInput
+                  label="연봉 / 자산 입력"
+                  value={assetAmount}
+                  onValueChange={setAssetAmount}
+                  quickAmounts={[10000000, 5000000]}
+                  selectedCurrency={assetCurrency}
+                  onCurrencyChange={setAssetCurrency}
+                  currencies={currencies}
                 />
               </div>
 
-              <div className="space-y-2 p-4 border border-border rounded-lg">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-zinc-400 mb-1 block">비교 통화</label>
+                  <select
+                    value={comparisonCurrency}
+                    onChange={(e) => setComparisonCurrency(e.target.value)}
+                    className={inputStyle}
+                  >
+                    {currencies
+                      .filter((c) => c.id !== assetCurrency)
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>{c.flag} {c.name} ({c.id})</option>
+                      ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-zinc-400 mb-1 block">기준 과거 시점</label>
+                  <input
+                    type="date"
+                    value={pastDate}
+                    onChange={(e) => setPastDate(e.target.value)}
+                    disabled={isManual || useDxy}
+                    className={inputStyle}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2 p-4 border border-white/10 rounded-2xl bg-white/5">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-muted-foreground">환율 (1 {comparisonCurrency} 당 {assetCurrency})</label>
-                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsManual(!isManual)}>
+                  <label className="text-sm font-medium text-zinc-400">환율 (1 {comparisonCurrency} 당 {assetCurrency})</label>
+                  <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => setIsManual(!isManual)}>
                     <span className="text-xs font-semibold">수동입력</span>
-                    <input type="checkbox" checked={isManual} readOnly className="h-4 w-4 rounded cursor-pointer" />
+                    <div className={`w-4 h-4 rounded border ${isManual ? 'bg-primary border-primary' : 'border-zinc-500'}`} />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="text" placeholder="과거 환율" value={manualPastRateStr} onChange={(e) => setManualPastRateStr(e.target.value)} disabled={!isManual} className={textInputStyle} />
-                  <span className="font-bold text-primary">→</span>
-                  <input type="text" placeholder="현재/미래 환율" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
+                  <ArrowRight className="text-zinc-500" />
+                  <input type="text" placeholder="현재 환율" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
                 </div>
-              </div>
-
-              <div className="space-y-2 p-4 border border-border rounded-lg bg-secondary/50">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-muted-foreground">달러 인덱스 (DXY)</label>
-                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => setUseDxy(!useDxy)}>
-                    <span className="text-xs font-bold text-primary">DXY로 환율 추정</span>
-                    <input type="checkbox" checked={useDxy} readOnly className="h-4 w-4 rounded cursor-pointer" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="text" placeholder="과거 DXY" value={pastDxy} onChange={(e) => setPastDxy(e.target.value)} className={textInputStyle} />
-                  <span className="font-bold text-primary">→</span>
-                  <input type="text" placeholder="현재/미래 DXY" value={currentDxy} onChange={(e) => setCurrentDxy(e.target.value)} className={textInputStyle} />
-                </div>
-                {useDxy && (
-                  <div className="mt-2 p-3 bg-primary/10 rounded-md text-xs text-primary flex items-start gap-2">
-                    <Info size={16} className="flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="font-bold">&apos;DXY로 환율 추정하기&apos;:</span>{" "}
-                      달러 가치 변화율을 &apos;과거 환율&apos;에 적용하여 &apos;현재/미래 환율&apos;을 추정합니다. 시장의 큰 흐름을 예측하는 참고 지표로 활용할 수 있습니다.
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* === 결과부 === */}
+            {/* Result Section */}
             <div className="flex flex-col justify-center">
               {isLoading ? (
-                <div className="text-center">
-                  <Loader className="animate-spin mx-auto text-primary" size={48} />
-                  <p className="mt-4 font-semibold">환율 정보를 불러오는 중...</p>
+                <div className="text-center py-20">
+                  <Loader className="animate-spin mx-auto text-primary mb-4" size={48} />
+                  <p className="font-semibold text-zinc-400">글로벌 데이터를 분석 중입니다...</p>
                 </div>
               ) : error ? (
-                <div className="flex items-center justify-center h-full p-4 bg-destructive/10 rounded-lg">
-                  <AlertCircle className="w-8 h-8 text-destructive mr-4" />
-                  <div>
-                    <h3 className="font-bold">로딩 실패</h3>
-                    <p className="text-sm">{error}</p>
+                <div className="flex items-center justify-center h-full p-8 bg-red-500/10 rounded-2xl border border-red-500/20">
+                  <div className="text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                    <h3 className="font-bold text-red-400 mb-2">데이터 로드 실패</h3>
+                    <p className="text-sm text-red-300">{error}</p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6 animate-fade-in-up h-full flex flex-col">
-                  <div
-                    className={`p-6 rounded-xl text-center transition-colors duration-300 grow flex flex-col justify-center ${
-                      analysis.changeAmount >= 0
-                        ? "bg-primary/10"
-                        : "bg-destructive/10"
-                    }`}
-                  >
-                    <p className="font-semibold text-sm text-muted-foreground">
-                      {`과거 환율 ${manualPastRateStr} → 현재 ${manualCurrentRateStr} 기준`}
+                <div className="space-y-6 h-full flex flex-col">
+                  {/* Main Result Card */}
+                  <div className={`p-8 rounded-3xl text-center transition-all duration-500 border ${analysis.changeAmount >= 0
+                    ? "bg-emerald-500/10 border-emerald-500/20"
+                    : "bg-rose-500/10 border-rose-500/20"
+                    }`}>
+                    <p className="font-medium text-sm text-zinc-400 mb-4">
+                      환율 변동으로 인한 가치 변화
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 my-2">
-                      <div className="text-lg sm:text-2xl font-bold text-muted-foreground">
-                        {`${resultSymbol}${formatNumber(analysis.pastValue)}`}
-                      </div>
-                      <ArrowRight
-                        className={`w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 ${
-                          analysis.changeAmount >= 0
-                            ? "text-primary"
-                            : "text-destructive"
-                        }`}
-                      />
-                      <div
-                        className={`text-3xl sm:text-4xl font-bold ${
-                          analysis.changeAmount >= 0
-                            ? "text-primary"
-                            : "text-destructive"
-                        }`}
-                      >
+
+                    <div className="flex items-center justify-center gap-4 mb-2">
+                      <span className="text-2xl font-bold text-zinc-500 line-through decoration-zinc-500/50">
+                        {resultSymbol}{formatNumber(analysis.pastValue)}
+                      </span>
+                      <ArrowRight className="text-zinc-600" />
+                      <span className={`text-4xl sm:text-5xl font-black ${analysis.changeAmount >= 0 ? "text-emerald-400" : "text-rose-400"
+                        }`}>
                         <CountUp
                           end={analysis.currentValue}
-                          prefix={`${resultSymbol}`}
+                          prefix={resultSymbol}
                           separator=","
-                          decimals={
-                            Number.isInteger(analysis.currentValue) ? 0 : 2
-                          }
+                          decimals={0}
                         />
-                      </div>
+                      </span>
                     </div>
-                    <div
-                      className={`font-semibold text-base sm:text-lg ${
-                        analysis.changeAmount >= 0
-                          ? "text-primary"
-                          : "text-destructive"
-                      }`}
-                    >
+
+                    <div className={`inline-flex items-center gap-2 px-4 py-1 rounded-full text-sm font-bold ${analysis.changeAmount >= 0
+                      ? "bg-emerald-500/20 text-emerald-400"
+                      : "bg-rose-500/20 text-rose-400"
+                      }`}>
+                      {analysis.changeAmount >= 0 ? <TrendingUp size={14} /> : <TrendingUp size={14} className="rotate-180" />}
                       <CountUp
-                        end={analysis.changeAmount}
-                        prefix={analysis.changeAmount >= 0 ? "▲ " : "▼ "}
-                        suffix={` ${resultSymbol} (${analysis.changePercentage}%)`}
+                        end={Math.abs(analysis.changeAmount)}
+                        prefix={analysis.changeAmount >= 0 ? "+" : "-"}
                         separator=","
-                        decimals={
-                          Number.isInteger(analysis.changeAmount) ? 0 : 2
-                        }
                       />
+                      <span>({analysis.changePercentage}%)</span>
                     </div>
                   </div>
-                  <div className="h-48 bg-secondary/50 p-4 rounded-xl">
+
+                  {/* Purchasing Power Cards */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mb-2">
+                        <Sandwich className="w-5 h-5 text-orange-500" />
+                      </div>
+                      <p className="text-xs text-zinc-400 mb-1">Big Mac Index</p>
+                      <p className="text-xl font-bold text-white">
+                        {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-500">개</span>
+                      </p>
+                    </div>
+                    <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-amber-700/20 flex items-center justify-center mb-2">
+                        <Coffee className="w-5 h-5 text-amber-700" />
+                      </div>
+                      <p className="text-xs text-zinc-400 mb-1">Starbucks Index</p>
+                      <p className="text-xl font-bold text-white">
+                        {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-500">잔</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Chart */}
+                  <div className="h-40 bg-white/5 p-4 rounded-2xl border border-white/10">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartData} layout="vertical" margin={{ left: 10, right: 90 }}>
+                      <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 50, top: 0, bottom: 0 }}>
                         <XAxis type="number" hide />
-                        <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={70} stroke="currentColor" />
-                        <Tooltip formatter={(value: number) => `${resultSymbol}${formatNumber(value)}`} cursor={{ fill: "rgba(0,0,0,0.05)" }} />
-                        <Bar dataKey="value" barSize={30} radius={[0, 8, 8, 0]}>
+                        <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={40} stroke="#71717a" fontSize={12} />
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px' }}
+                          itemStyle={{ color: '#e4e4e7' }}
+                          formatter={(value: number) => `${resultSymbol}${formatNumber(value)}`}
+                          cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                        />
+                        <Bar dataKey="value" barSize={24} radius={[0, 4, 4, 0]}>
                           {chartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index === 0 ? "hsl(var(--muted-foreground))" : currentValueColor} />
+                            <Cell key={`cell-${index}`} fill={index === 0 ? "#52525b" : currentValueColor} />
                           ))}
                           <LabelList dataKey="value" content={<CustomBarLabel />} />
                         </Bar>
@@ -448,20 +494,20 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button onClick={handleReset} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
+        <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <button onClick={handleReset} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
             <RotateCcw size={18} /> 초기화
           </button>
-          <button onClick={handleShareLink} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
+          <button onClick={handleShareLink} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
             <LinkIcon size={18} /> 링크로 공유
           </button>
-          <button onClick={handleShareImage} className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2">
+          <button onClick={handleShareImage} className="w-full py-3 bg-white/5 text-zinc-300 font-semibold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2 border border-white/10">
             <ImageIcon size={18} /> 이미지로 저장
           </button>
         </div>
       </div>
 
       <FinancialKnowledgeArchive />
-    </>
+    </div>
   );
 }
