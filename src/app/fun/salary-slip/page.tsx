@@ -343,6 +343,9 @@ export default function SalarySlipPage() {
                                     <p className="text-[10px] text-zinc-400 mt-8">
                                         www.moneysalary.com
                                     </p>
+                                    <p className="text-[8px] text-zinc-300 mt-2 opacity-50">
+                                        * 본 영수증은 법적 효력이 없으며, 재미를 위한 가상 영수증입니다.
+                                    </p>
                                 </div>
                             </div>
 
