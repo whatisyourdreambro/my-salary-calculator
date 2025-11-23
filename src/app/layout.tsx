@@ -140,7 +140,7 @@ export default function RootLayout({
 
             {/* Global Top Ad (Desktop/Mobile) */}
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center">
-              <AdUnit slotId="9988776655" format="auto" label="Global Top Banner" />
+              <AdUnit slotId="3348584614" format="auto" label="Global Top Banner (Center 01)" />
             </div>
 
             {/* Main Layout Container with Sidebars */}
@@ -148,8 +148,10 @@ export default function RootLayout({
               {/* Left Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
                 <div className="space-y-6">
-                  <AdUnit slotId="1234567890" format="vertical" label="Global Left Sidebar 1" />
-                  <AdUnit slotId="0987654321" format="vertical" label="Global Left Sidebar 2" />
+                  {/* Left 01 */}
+                  <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 01" />
+                  {/* Left 02 */}
+                  <AdUnit slotId="1464657303" format="vertical" label="Left Sidebar 02" />
                 </div>
               </aside>
 
@@ -163,15 +165,17 @@ export default function RootLayout({
               {/* Right Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
                 <div className="space-y-6">
-                  <AdUnit slotId="1122334455" format="vertical" label="Global Right Sidebar 1" />
-                  <AdUnit slotId="5544332211" format="vertical" label="Global Right Sidebar 2" />
+                  {/* Right 01 */}
+                  <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 01" />
+                  {/* Right 02 */}
+                  <AdUnit slotId="1404221203" format="vertical" label="Right Sidebar 02" />
                 </div>
               </aside>
             </div>
 
             {/* Global Bottom Ad */}
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center">
-              <AdUnit slotId="4455667788" format="auto" label="Global Bottom Banner" />
+              <AdUnit slotId="3348584614" format="auto" label="Global Bottom Banner (Center 01 Duplicate)" />
             </div>
 
             <Footer />
