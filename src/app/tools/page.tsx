@@ -12,7 +12,9 @@ import {
     Clock,
     Coffee,
     GraduationCap,
-    Scale
+    Scale,
+    ArrowRightLeft,
+    Home
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -36,6 +38,19 @@ const CATEGORIES = [
             { name: "CAGR(연평균성장률)", href: "/tools/finance/cagr", icon: TrendingUp },
             { name: "ROI(투자수익률)", href: "/tools/finance/roi", icon: Activity },
             { name: "적정 주가 계산기", href: "/tools/finance/fair-value", icon: Scale },
+        ],
+    },
+    {
+        id: "real-estate",
+        name: "부동산 (Real Estate)",
+        description: "내 집 마련을 위한 필수 도구",
+        icon: Home,
+        color: "text-green-400",
+        bg: "bg-green-500/10",
+        border: "border-green-500/20",
+        tools: [
+            { name: "DSR 계산기", href: "/tools/real-estate/dsr", icon: Activity },
+            { name: "LTV 계산기", href: "/tools/real-estate/ltv", icon: Home },
         ],
     },
     {
@@ -84,8 +99,6 @@ const CATEGORIES = [
         ],
     },
 ];
-
-import { ArrowRightLeft } from "lucide-react";
 
 export default function ToolsHubPage() {
     return (

@@ -54,19 +54,6 @@ const navConfig: NavItem[] = [
     ],
   },
   {
-    name: "Fun/Lab",
-    type: "dropdown",
-    items: [
-      { name: "연봉 배틀 🥊", href: "/battle" },
-      { name: "랜덤 추첨 (Marble Race) 🎰", href: "/fun/random-draw" },
-      { name: "2026 신년운세 🐍", href: "/fun/fortune" },
-      { name: "IQ 테스트 🧠", href: "/fun/iq-test" },
-      { name: "월급 영수증 🧾", href: "/fun/salary-slip" },
-      { name: "환생 시뮬레이터 🎲", href: "/fun/reincarnation" },
-      { name: "자산 배분 게임 💰", href: "/fun/asset-allocator" },
-    ],
-  },
-  {
     name: "계산기 도구",
     type: "dropdown",
     items: [
@@ -75,6 +62,7 @@ const navConfig: NavItem[] = [
       { name: "예적금 계산기 💰", href: "/tools/deposit" },
       { name: "부가세(VAT) 계산기 🧾", href: "/tools/finance/vat" },
       { name: "BMI 비만도 계산기 ⚖️", href: "/tools/health/bmi" },
+      { name: "부동산 계산기 (DSR/LTV) 🏠", href: "/tools/real-estate/dsr" },
     ],
   },
   {
