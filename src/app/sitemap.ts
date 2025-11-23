@@ -102,5 +102,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  return [...staticUrls, ...guideUrls, ...salaryUrls];
+  // 4. Company Database Pages
+  const companyUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/salary-db`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/salary-db/submit`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/battle`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+  ];
+
+  // Individual company pages (we'll import and use the repository)
+  // For now, hardcode the known company IDs
+  const companyIds = [
+    'samsung-electronics',
+    'sk-hynix',
+    'naver',
+    'kakao',
+    'coupang',
+    'toss',
+    'hyundai',
+    'lgensol',
+  ];
+
+  companyIds.forEach((id) => {
+    companyUrls.push({
+      url: `${baseUrl}/salary-db/${id}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    });
+  });
+
+  return [...staticUrls, ...guideUrls, ...salaryUrls, ...companyUrls];
 }

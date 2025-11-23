@@ -37,6 +37,8 @@ const navConfig: NavItem[] = [
     name: "연봉 테이블",
     type: "dropdown",
     items: [
+      { name: "기업별 연봉 DB", href: "/salary-db" },
+      { name: "내 연봉 제보하기 📣", href: "/salary-db/submit" },
       { name: "2025 연봉 표", href: "/table/annual" },
       { name: "2025 월급 표", href: "/table/monthly" },
       { name: "2026 연봉 표", href: "/table/2026/annual" },
@@ -57,20 +59,6 @@ const navConfig: NavItem[] = [
     items: [
       { name: "자동차 구매", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
-      { name: "급여명세서", href: "/?tab=paystub" },
-    ],
-  },
-  {
-    name: "재미/실험실",
-    type: "dropdown",
-    items: [
-      { name: "2026 신년 운세", href: "/fun/fortune" },
-      { name: "멘사급 IQ 테스트", href: "/fun/iq-test" },
-      { name: "플래피 샐러리맨", href: "/fun/flappy" },
-      { name: "야근 테트리스", href: "/fun/tetris" },
-      { name: "소비 성향 테스트", href: "/fun/spending-test" },
-      { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
-      { name: "금융 MBTI", href: "/fun/financial-mbti" },
       { name: "로또 번호 생성", href: "/lotto" },
     ],
   },

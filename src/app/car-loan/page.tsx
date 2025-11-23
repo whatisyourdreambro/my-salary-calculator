@@ -12,6 +12,10 @@ import {
   Gauge,
   Wallet,
   AlertCircle,
+  Wrench,
+  TrendingUp,
+  Fuel,
+  ShieldCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
@@ -23,7 +27,7 @@ import {
   recommendCarsBySalary,
 } from "@/lib/carLoanCalculator";
 
-// Currency Input Component (Inline for simplicity in this page overhaul)
+// Currency Input Component
 const CurrencyInput = ({
   label,
   value,
@@ -113,16 +117,20 @@ export default function CarLoanPage() {
   const [annualSalary, setAnnualSalary] = useState("60,000,000");
   const [loanTerm, setLoanTerm] = useState(60); // Months
   const [interestRate, setInterestRate] = useState(5.5);
+  const [fuelCost, setFuelCost] = useState("200,000"); // Monthly fuel
+  const [insuranceCost, setInsuranceCost] = useState("1,000,000"); // Annual insurance
 
   const salaryNum = Number(annualSalary.replace(/,/g, ""));
   const monthlySalary = Math.floor(salaryNum / 12);
+  const monthlyFuel = Number(fuelCost.replace(/,/g, ""));
+  const monthlyInsurance = Math.floor(Number(insuranceCost.replace(/,/g, "")) / 12);
 
   const comparisonResults = useMemo(() => {
     const recommendedCars = recommendCarsBySalary(salaryNum);
     return recommendedCars.map((car) => {
       const loan = calculateCarLoan(car.price, {
         annualSalary: salaryNum,
-        loanTerm: loanTerm / 12, // Convert months to years for calculation
+        loanTerm: loanTerm / 12,
         interestRate,
       });
       return { car, loan };
@@ -137,6 +145,16 @@ export default function CarLoanPage() {
       return acc;
     }, {} as Record<string, typeof comparisonResults>);
   }, [comparisonResults]);
+
+  // Opportunity Cost Calculation (Simple S&P 500 assumption: 8% annual return)
+  const calculateOpportunityCost = (monthlyPayment: number) => {
+    const rate = 0.08 / 12;
+    const months = loanTerm;
+    // Future Value of Annuity formula: PMT * ((1 + r)^n - 1) / r
+    const futureValue = monthlyPayment * (Math.pow(1 + rate, months) - 1) / rate;
+    const totalPrincipal = monthlyPayment * months;
+    return futureValue - totalPrincipal;
+  };
 
   return (
     <main className="w-full bg-background min-h-screen pb-20">
@@ -162,7 +180,8 @@ export default function CarLoanPage() {
               </span>
             </h1>
             <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              단순한 계산을 넘어, 당신의 재정 상황에 딱 맞는 현실적인 드림카를 찾아드립니다.
+              할부금뿐만 아니라 유지비, 기회비용까지 고려한 <br className="hidden sm:block" />
+              가장 현실적이고 현명한 차량 구매 가이드를 제공합니다.
             </p>
           </motion.div>
         </div>
@@ -223,6 +242,25 @@ export default function CarLoanPage() {
                     value={interestRate}
                     onChange={(e) => setInterestRate(Number(e.target.value))}
                     className="w-full accent-primary h-2 bg-secondary rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+
+                <div className="pt-6 border-t border-border space-y-4">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Wrench className="w-4 h-4 text-muted-foreground" />
+                    유지비 설정 (월 평균)
+                  </h3>
+                  <CurrencyInput
+                    label="예상 월 주유/충전비"
+                    value={fuelCost}
+                    onValueChange={setFuelCost}
+                    quickAmounts={[50000, 100000]}
+                  />
+                  <CurrencyInput
+                    label="연간 자동차 보험료"
+                    value={insuranceCost}
+                    onValueChange={setInsuranceCost}
+                    quickAmounts={[100000, 500000]}
                   />
                 </div>
 
@@ -296,14 +334,22 @@ export default function CarLoanPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {cars.map(({ car, loan }) => {
-                        const monthlyPaymentRatio = (loan.monthlyPayment / (monthlySalary * 0.85)) * 100;
+                        const monthlyTotalCost = loan.monthlyPayment + monthlyFuel + monthlyInsurance;
+                        const monthlyPaymentRatio = (monthlyTotalCost / (monthlySalary * 0.85)) * 100;
                         const isHighBurden = monthlyPaymentRatio > 20;
+                        const opportunityCost = calculateOpportunityCost(loan.monthlyPayment);
 
                         return (
                           <div
                             key={car.name}
-                            className="group bg-card hover:bg-accent/50 border border-border rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                            className="group bg-card hover:bg-accent/50 border border-border rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative overflow-hidden"
                           >
+                            {isHighBurden && (
+                              <div className="absolute top-0 right-0 bg-amber-500 text-white text-xs px-2 py-1 rounded-bl-lg z-10 font-bold">
+                                주의
+                              </div>
+                            )}
+
                             <div className="flex justify-between items-start mb-4">
                               <div>
                                 <h4 className="font-bold text-lg group-hover:text-primary transition-colors">
@@ -313,24 +359,30 @@ export default function CarLoanPage() {
                                   {Number(car.price).toLocaleString()}원
                                 </p>
                               </div>
-                              {isHighBurden && (
-                                <div className="text-amber-500" title="월 소득의 20% 초과">
-                                  <AlertCircle className="w-5 h-5" />
-                                </div>
-                              )}
                             </div>
 
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                               <div className="flex justify-between items-center py-2 border-t border-border/50">
-                                <span className="text-sm text-muted-foreground">월 납입금</span>
+                                <span className="text-sm text-muted-foreground">월 할부금</span>
                                 <span className="font-bold text-lg">
                                   <CountUp end={loan.monthlyPayment} separator="," />원
                                 </span>
                               </div>
 
+                              <div className="bg-secondary/30 p-3 rounded-lg space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground flex items-center gap-1"><Fuel className="w-3 h-3" />유지비 합계</span>
+                                  <span className="font-medium">+{Number(monthlyFuel + monthlyInsurance).toLocaleString()}원</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-border/50">
+                                  <span className="font-bold text-foreground">월 총 지출</span>
+                                  <span className="font-bold text-primary">{Number(monthlyTotalCost).toLocaleString()}원</span>
+                                </div>
+                              </div>
+
                               <div className="space-y-1">
                                 <div className="flex justify-between text-xs">
-                                  <span className="text-muted-foreground">월 실수령액 대비</span>
+                                  <span className="text-muted-foreground">월 실수령액 대비 지출</span>
                                   <span className={`font-bold ${isHighBurden ? "text-amber-500" : "text-green-500"}`}>
                                     {monthlyPaymentRatio.toFixed(1)}%
                                   </span>
@@ -341,6 +393,16 @@ export default function CarLoanPage() {
                                     style={{ width: `${Math.min(monthlyPaymentRatio, 100)}%` }}
                                   />
                                 </div>
+                              </div>
+
+                              <div className="pt-2 border-t border-border/50">
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                                  <TrendingUp className="w-3 h-3" />
+                                  <span>기회비용 (S&P500 투자 시 수익)</span>
+                                </div>
+                                <p className="text-sm font-medium text-blue-500">
+                                  +{Math.round(opportunityCost / 10000).toLocaleString()}만원 손해
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -370,3 +432,4 @@ export default function CarLoanPage() {
     </main>
   );
 }
+

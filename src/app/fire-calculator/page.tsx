@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
   CartesianGrid,
+  ReferenceLine,
 } from "recharts";
 import {
   PlusCircle,
@@ -22,6 +23,9 @@ import {
   Flame,
   Target,
   Coins,
+  Coffee,
+  Palmtree,
+  Info
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
@@ -56,6 +60,7 @@ interface FireInputs {
   investmentStrategy: InvestmentStrategy;
   customReturn: string;
   retirementIncome: string;
+  withdrawalRate: string; // New: 4% rule adjustment
 }
 
 const strategyReturns = {
@@ -76,16 +81,26 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
     customReturn,
     monthlySpending,
     retirementIncome,
+    withdrawalRate,
   } = inputs;
 
   const inflationRate = 0.02; // 2%
   const annualReturnRate =
     (parseFloat(customReturn) || strategyReturns[investmentStrategy]) / 100;
   const annualSalaryGrowth = parseFloat(salaryGrowthRate) / 100;
+  const safeWithdrawalRate = parseFloat(withdrawalRate) / 100;
 
-  const targetAmount =
-    (parseNumber(monthlySpending) * 12 - parseNumber(retirementIncome) * 12) *
-    25;
+  // Target Amount = (Annual Spending - Annual Pension) / Withdrawal Rate
+  const annualSpending = parseNumber(monthlySpending) * 12;
+  const annualPension = parseNumber(retirementIncome) * 12;
+  const targetAmount = (annualSpending - annualPension) / safeWithdrawalRate;
+
+  // Coast FIRE Target: Amount needed NOW to grow to Target Amount by age 65 without further contributions
+  const yearsTo65 = 65 - parseInt(currentAge, 10);
+  const coastFireTarget = targetAmount / Math.pow(1 + annualReturnRate, yearsTo65);
+
+  // Barista FIRE Target: Target Amount if you cover 50% of expenses with part-time work
+  const baristaTargetAmount = (annualSpending * 0.5 - annualPension) / safeWithdrawalRate;
 
   if (parseNumber(currentSavings) >= targetAmount) {
     return {
@@ -95,6 +110,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
       finalTargetAmount: targetAmount,
       totalContributions: parseNumber(currentSavings),
       totalReturns: 0,
+      coastFireTarget,
+      baristaTargetAmount,
     };
   }
 
@@ -110,6 +127,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
       age: age,
       assets: futureValue,
       contribution: totalContributions,
+      target: targetAmount,
+      coast: coastFireTarget * Math.pow(1 + annualReturnRate, 0), // Coast line grows? No, Coast target is static present value usually, but for chart we can show "Coast Path"
     },
   ];
   let currentTargetAmount = targetAmount;
@@ -133,13 +152,15 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
       }
     }
 
-    currentTargetAmount *= 1 + inflationRate;
+    currentTargetAmount *= 1 + inflationRate; // Target grows with inflation
 
     chartData.push({
       year: years,
       age: age + years,
       assets: Math.round(futureValue),
       contribution: Math.round(totalContributions),
+      target: Math.round(currentTargetAmount),
+      coast: 0, // Placeholder
     });
   }
 
@@ -151,6 +172,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
     finalTargetAmount: Math.round(currentTargetAmount),
     totalContributions: Math.round(totalContributions),
     totalReturns: Math.round(futureValue - totalContributions),
+    coastFireTarget: Math.round(coastFireTarget),
+    baristaTargetAmount: Math.round(baristaTargetAmount),
   };
 };
 
@@ -219,6 +242,7 @@ export default function FireCalculatorPage() {
     investmentStrategy: "balanced",
     customReturn: "",
     retirementIncome: "0",
+    withdrawalRate: "4",
   });
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
 
@@ -236,6 +260,8 @@ export default function FireCalculatorPage() {
     finalTargetAmount,
     totalContributions,
     totalReturns,
+    coastFireTarget,
+    baristaTargetAmount,
   } = useMemo(
     () => calculateFireDate(inputs, lifeEvents),
     [inputs, lifeEvents]
@@ -355,8 +381,8 @@ export default function FireCalculatorPage() {
                         <div key={name} className="flex items-center gap-2">
                           <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${isActive
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-secondary text-muted-foreground"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-secondary text-muted-foreground"
                               }`}
                           >
                             {index + 1}
@@ -450,6 +476,26 @@ export default function FireCalculatorPage() {
                         onValueChange={(v) => handleInputChange("retirementIncome", v)}
                         quickAmounts={[100000, 500000]}
                       />
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
+                          인출률 (Withdrawal Rate)
+                          <div className="group relative">
+                            <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                              은퇴 자금에서 매년 꺼내 쓸 비율입니다. 통상적으로 4%가 안전하다고 알려져 있습니다.
+                            </div>
+                          </div>
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={inputs.withdrawalRate}
+                            onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
+                            className="w-full p-4 text-lg font-bold bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary/50"
+                          />
+                          <span className="font-bold">%</span>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="space-y-4">
@@ -464,8 +510,8 @@ export default function FireCalculatorPage() {
                             key={id}
                             onClick={() => handleInputChange("investmentStrategy", id as InvestmentStrategy)}
                             className={`p-4 rounded-xl border-2 transition-all text-center space-y-2 ${inputs.investmentStrategy === id
-                                ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                                : "border-border hover:border-primary/50 hover:bg-accent"
+                              ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                              : "border-border hover:border-primary/50 hover:bg-accent"
                               }`}
                           >
                             <Icon className={`w-8 h-8 mx-auto ${inputs.investmentStrategy === id ? "text-primary" : "text-muted-foreground"}`} />
@@ -602,6 +648,36 @@ export default function FireCalculatorPage() {
                       ))}
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200 dark:border-orange-800">
+                        <div className="flex items-center gap-2 mb-2 text-orange-600 dark:text-orange-400">
+                          <Palmtree className="w-5 h-5" />
+                          <h3 className="font-bold">Coast FIRE</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          지금 당장 은퇴하진 않지만, 더 이상 노후 대비 저축을 하지 않아도 되는 상태입니다.
+                        </p>
+                        <p className="text-2xl font-bold text-foreground">
+                          <CountUp end={coastFireTarget} separator="," />원
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          (현재 이 금액이 있다면 저축 중단 가능)
+                        </p>
+                      </div>
+                      <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                        <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400">
+                          <Coffee className="w-5 h-5" />
+                          <h3 className="font-bold">Barista FIRE</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          생활비의 50%를 아르바이트 등으로 충당하며 반은퇴 상태를 즐기는 목표액입니다.
+                        </p>
+                        <p className="text-2xl font-bold text-foreground">
+                          <CountUp end={baristaTargetAmount} separator="," />원
+                        </p>
+                      </div>
+                    </div>
+
                     <div className="h-[400px] w-full bg-card border border-border rounded-xl p-4">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -635,6 +711,14 @@ export default function FireCalculatorPage() {
                             fill="transparent"
                             strokeDasharray="5 5"
                           />
+                          <Area
+                            type="monotone"
+                            dataKey="target"
+                            name="목표 금액 (인플레이션 반영)"
+                            stroke="#ff7300"
+                            fill="transparent"
+                            strokeDasharray="3 3"
+                          />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -662,3 +746,4 @@ export default function FireCalculatorPage() {
     </main>
   );
 }
+
