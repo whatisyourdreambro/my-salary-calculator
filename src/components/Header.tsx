@@ -58,6 +58,7 @@ const navConfig: NavItem[] = [
     type: "dropdown",
     items: [
       { name: "연봉 배틀 🥊", href: "/battle" },
+      { name: "랜덤 추첨 (Marble Race) 🎰", href: "/fun/random-draw" },
       { name: "2026 신년운세 🐍", href: "/fun/fortune" },
       { name: "IQ 테스트 🧠", href: "/fun/iq-test" },
       { name: "월급 영수증 🧾", href: "/fun/salary-slip" },
