@@ -40,6 +40,11 @@ export default function AdUnit({
         );
     }
 
+    // Manual Ad Units are currently disabled to allow Auto Ads to take full control.
+    // User Request: "Delete the places written as advertisement... so that even auto ads can go in"
+    return null;
+
+    /*
     return (
         <div className={`ad-container ${className} ${sticky ? "sticky top-4" : ""}`}>
             {label && <div className="text-[10px] text-zinc-600 text-center mb-1">Advertisement</div>}
@@ -54,4 +59,5 @@ export default function AdUnit({
             />
         </div>
     );
+    */
 }
