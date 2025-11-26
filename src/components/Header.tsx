@@ -214,7 +214,7 @@ export default function Header() {
             </div>
 
             {/* Desktop Navigation - Centered */}
-            <div className="hidden xl:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1">
+            <div className="hidden xl:flex items-center gap-1">
               {navConfig.map((item) =>
                 item.type === "dropdown" ? (
                   <Dropdown key={item.name} item={item} pathname={pathname} isScrolled={isScrolled} />
