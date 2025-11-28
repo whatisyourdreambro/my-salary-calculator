@@ -42,7 +42,7 @@ export default function AdUnit({
 
     return (
         <div className={`ad-container ${className} ${sticky ? "sticky top-4" : ""}`}>
-            {label && <div className="text-[10px] text-zinc-600 text-center mb-1">Advertisement</div>}
+
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}
