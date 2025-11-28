@@ -10,6 +10,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AdUnit from "@/components/AdUnit";
+import ShareButtons from "@/components/ShareButtons";
 
 export default function GuidePage({ params }: { params: { slug: string } }) {
   const guide = guides.find((g) => g.slug === params.slug);
@@ -130,12 +131,14 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
                 </div>
                 <span className="font-medium">목록으로 돌아가기</span>
               </Link>
-              <button className="group flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                <span className="font-medium">공유하기</span>
-                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                  <Share2 className="w-5 h-5" />
-                </div>
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-muted-foreground mr-2">공유하기</span>
+                <ShareButtons
+                  title={guide.title}
+                  description={`${guide.category} 가이드 | Moneysalary`}
+                  className="justify-end"
+                />
+              </div>
             </div>
           </motion.article>
 

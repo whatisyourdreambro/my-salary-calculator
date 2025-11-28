@@ -4,6 +4,7 @@
 
 import { TrendingUp, PiggyBank, Shield, BarChart2 } from "lucide-react";
 import Link from "next/link";
+import ShareButtons from "@/components/ShareButtons";
 
 interface SalaryAnalysisProps {
   annualSalary: number;
@@ -198,6 +199,16 @@ export default function SalaryAnalysis({
             {card.content}
           </AnalysisCard>
         ))}
+      </div>
+
+      <div className="mt-8 pt-6 border-t border-border">
+        <p className="text-center text-sm text-muted-foreground mb-4">
+          이 분석 결과를 친구들에게 공유해보세요!
+        </p>
+        <ShareButtons
+          title={`내 연봉 ${formatNumber(annualSalary)}원의 실수령액 분석 결과`}
+          description={`${analysis.title} 머니샐러리에서 자세한 분석을 확인하세요.`}
+        />
       </div>
     </div>
   );

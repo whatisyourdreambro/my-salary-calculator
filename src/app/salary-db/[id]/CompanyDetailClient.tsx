@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 import CountUp from "react-countup";
+import ShareButtons from "@/components/ShareButtons";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString()}만원`;
 
@@ -58,6 +59,13 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                             </span>
                         </div>
                         <p className="text-slate-300 text-lg max-w-2xl">{company.description}</p>
+                        <div className="mt-6">
+                            <ShareButtons
+                                title={`${company.name.ko} 연봉 및 기업 정보 | Moneysalary`}
+                                description={`${company.name.ko}의 신입 초봉, 평균 연봉, 복지 정보를 확인하세요.`}
+                                className="justify-center md:justify-start"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -172,8 +180,8 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                                     <p className="text-sm text-muted-foreground mb-1">근무 형태</p>
                                     <div className="flex items-center gap-2">
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${company.workLife.remoteWork.policy === 'remote' ? 'bg-green-100 text-green-700' :
-                                                company.workLife.remoteWork.policy === 'hybrid' ? 'bg-blue-100 text-blue-700' :
-                                                    'bg-slate-100 text-slate-700'
+                                            company.workLife.remoteWork.policy === 'hybrid' ? 'bg-blue-100 text-blue-700' :
+                                                'bg-slate-100 text-slate-700'
                                             }`}>
                                             {company.workLife.remoteWork.policy.toUpperCase()}
                                         </span>

@@ -23,10 +23,18 @@ export const metadata: Metadata = {
   },
   description:
     "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
+  keywords: ["연봉계산기", "2025연봉계산기", "실수령액계산기", "월급계산기", "퇴직금계산기", "연봉실수령액", "4대보험계산기", "연말정산", "Moneysalary", "머니샐러리"],
+  twitter: {
+    card: "summary_large_image",
+    title: "Moneysalary - 2025년 연봉 실수령액 계산기",
+    description: "2025년 최신 세법 완벽 반영! 내 연봉의 실제 수령액을 1초 만에 확인하세요.",
+    images: ["/logo-full.png"],
+  },
   verification: {
     other: {
       "naver-site-verification": "34115e50f205aed3725f94e2400aaddef8c1b691",
     },
+    google: "google-site-verification-placeholder", // User to replace if needed
   },
   openGraph: {
     title: "Moneysalary 연봉 계산기",
@@ -66,6 +74,8 @@ declare global {
     gtag: (param1: string, param2: string, param3: object) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     adsbygoogle?: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Kakao?: any;
   }
 }
 
@@ -101,6 +111,13 @@ export default function RootLayout({
         />
 
         <Script
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+          integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
+        <Script
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
           strategy="afterInteractive"
@@ -115,6 +132,18 @@ export default function RootLayout({
               gtag('js', new Date());
               gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
               gtag('config', '${process.env.NEXT_PUBLIC_ADS_ID}');
+            `,
+          }}
+        />
+        <Script
+          id="kakao-init"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.Kakao && !window.Kakao.isInitialized()) {
+                // Replace with your actual JavaScript Key from Kakao Developers
+                window.Kakao.init('${process.env.NEXT_PUBLIC_KAKAO_JS_KEY || "YOUR_KAKAO_JS_KEY"}');
+              }
             `,
           }}
         />

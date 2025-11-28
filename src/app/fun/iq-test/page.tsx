@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Share2, CheckCircle2, XCircle, RefreshCw, Lightbulb } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
+import ShareButtons from "@/components/ShareButtons";
 
 // 15 Logic Questions
 const questions = [
@@ -289,12 +290,13 @@ export default function IQTestPage() {
                                         >
                                             <RefreshCw size={20} /> 다시하기
                                         </button>
-                                        <button
-                                            onClick={handleShare}
-                                            className="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold hover:shadow-lg hover:shadow-indigo-500/30 transition-all active:scale-95 flex items-center justify-center gap-2"
-                                        >
-                                            <Share2 size={20} /> 결과 공유하기
-                                        </button>
+                                    </div>
+
+                                    <div className="flex justify-center mb-12">
+                                        <ShareButtons
+                                            title={`나의 IQ 테스트 결과: ${score}점`}
+                                            description={`당신의 IQ는 얼마인가요? 멘사급 문제에 도전해보세요!`}
+                                        />
                                     </div>
 
                                     {/* Answers Section */}
