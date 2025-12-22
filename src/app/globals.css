@@ -18,8 +18,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 150 100% 35%;
-    /* Deep Emerald */
+    --primary: 158 95% 34%;
+    /* Vibrant Premium Emerald */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
@@ -34,35 +34,39 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 150 100% 35%;
+    --border: 214.3 31.8% 90%;
+    --input: 214.3 31.8% 90%;
+    --ring: 150 100% 30%;
 
     --radius: 1rem;
-    /* More rounded for premium feel */
 
-    --chart-1: 142 76% 36%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Chart Colors - Professional Palette */
+    --chart-1: 150 100% 30%;
+    /* Emerald */
+    --chart-2: 210 100% 40%;
+    /* Royal Blue */
+    --chart-3: 260 60% 50%;
+    /* Deep Purple */
+    --chart-4: 45 90% 50%;
+    /* Gold */
+    --chart-5: 10 80% 55%;
+    /* Terra Cotta */
   }
 
   .dark {
     /* Dark Mode - Premium Deep Space */
-    --background: 224 71% 4%;
-    /* Very deep rich navy/black */
+    --background: 224 71% 2%;
+    /* Absolute deep space black/navy */
     --foreground: 210 40% 98%;
 
     --card: 224 71% 6%;
-    /* Slightly lighter than bg */
     --card-foreground: 210 40% 98%;
 
     --popover: 224 71% 6%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 150 60% 50%;
-    /* Vibrant Emerald */
+    --primary: 158 82% 50%;
+    /* Neon Emerald for dark mode pop */
     --primary-foreground: 144 100% 5%;
 
     --secondary: 217 33% 12%;
@@ -81,11 +85,11 @@
     --input: 217 33% 15%;
     --ring: 150 60% 50%;
 
-    --chart-1: 142 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-1: 150 60% 50%;
+    --chart-2: 210 70% 60%;
+    --chart-3: 260 70% 65%;
+    --chart-4: 45 80% 60%;
+    --chart-5: 10 70% 65%;
   }
 }
 
@@ -115,13 +119,17 @@
     @apply bg-white/50 dark:bg-slate-950/50 backdrop-blur-md border border-slate-200 dark:border-slate-800 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200;
   }
 
-  /* Text Gradients */
+  /* Premium Gradients */
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 dark:from-white dark:via-slate-200 dark:to-slate-400;
   }
 
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500;
   }
 
   /* Aurora Background - Enhanced */
@@ -153,6 +161,10 @@
 
   .glow-md {
     box-shadow: 0 0 20px -5px theme('colors.primary.DEFAULT / 0.3');
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px -5px rgba(251, 191, 36, 0.3);
   }
 }
 

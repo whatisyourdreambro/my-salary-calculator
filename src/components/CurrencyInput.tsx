@@ -95,7 +95,7 @@ export default function CurrencyInput({
             value={value}
             onChange={handleChange}
             className={cn(
-              "w-full p-3 pr-12 bg-secondary/50 border border-border rounded-lg text-xl font-bold focus:ring-2 focus:ring-primary focus:border-primary transition",
+              "glass-input w-full p-3 pr-12 rounded-lg text-xl font-bold bg-white/50 dark:bg-slate-900/50",
               className
             )}
             inputMode="numeric"
@@ -107,25 +107,23 @@ export default function CurrencyInput({
       </div>
 
       <div className="mt-3 space-y-2">
-        <div className="grid grid-cols-3 gap-2">
+        <div className="flex flex-wrap gap-2">
           {quickAmounts.map((amount) => (
             <button
               key={`add-${amount}`}
               onClick={() => handleAmountChange(amount)}
-              className="py-1.5 text-sm bg-primary/10 text-primary font-semibold rounded-lg hover:bg-primary/20 transition whitespace-nowrap"
+              className="px-3 py-1.5 text-xs font-semibold rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/10"
             >
-              + {formatNumber(amount)}
+              +{formatNumber(amount / 10000)}만
             </button>
           ))}
-        </div>
-        <div className="grid grid-cols-3 gap-2">
           {quickAmounts.map((amount) => (
             <button
               key={`sub-${amount}`}
               onClick={() => handleAmountChange(-amount)}
-              className="py-1.5 text-sm bg-destructive/10 text-destructive font-semibold rounded-lg hover:bg-destructive/20 transition whitespace-nowrap"
+              className="px-3 py-1.5 text-xs font-semibold rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors border border-destructive/10"
             >
-              - {formatNumber(amount)}
+              -{formatNumber(amount / 10000)}만
             </button>
           ))}
         </div>

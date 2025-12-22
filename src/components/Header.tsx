@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 import { LayoutDashboard, ChevronDown, Menu, X } from "lucide-react";
 
 type LinkItem = { name: string; href: string; type: "link" };
@@ -111,14 +112,14 @@ const Dropdown = ({ item, pathname, isScrolled }: { item: DropdownItem; pathname
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: 10, scale: 0.95, filter: "blur(5px)" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 glass-card rounded-2xl p-2 z-50 shadow-2xl ring-1 ring-white/20 dark:ring-white/10"
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 glass-card rounded-2xl p-2 z-50 shadow-2xl ring-1 ring-white/20 dark:ring-white/10"
           >
             <div className="flex flex-col gap-1">
               {item.items.map((subItem) => (
                 <Link
                   key={subItem.href}
                   href={subItem.href}
-                  className={`block px-3 py-2.5 text-sm rounded-xl transition-all ${pathname === subItem.href
+                  className={`block px-4 py-3 text-sm rounded-xl transition-all ${pathname === subItem.href
                     ? "font-semibold text-primary bg-primary/10"
                     : "text-foreground/80 hover:bg-primary/5 hover:text-primary hover:translate-x-1"
                     }`}
@@ -192,7 +193,7 @@ export default function Header() {
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled || isMobileMenuOpen
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-sm supports-[backdrop-filter]:bg-background/60"
+          ? "bg-background/70 backdrop-blur-xl border-b border-white/10 shadow-lg supports-[backdrop-filter]:bg-background/60"
           : "bg-transparent border-b border-transparent"
           }`}
         initial={{ y: -100 }}
@@ -205,13 +206,9 @@ export default function Header() {
             {/* Logo Area */}
             <div className="flex-shrink-0 z-50">
               <Link href="/" className="flex items-center gap-2 group">
-                <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-gradient-to-br from-primary to-emerald-600 rounded-xl shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform duration-300">
-                  <span className="text-white font-bold text-lg sm:text-xl">M</span>
-                  <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative group-hover:scale-105 transition-transform duration-300">
+                  <Logo className="h-10 w-auto" showText={true} />
                 </div>
-                <span className="text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
-                  Moneysalary
-                </span>
               </Link>
             </div>
 
@@ -239,7 +236,7 @@ export default function Header() {
             <div className="flex items-center gap-2 sm:gap-3 z-50">
               <Link
                 href="/dashboard"
-                className="hidden sm:flex items-center gap-2 py-2.5 px-5 text-sm font-bold text-primary-foreground bg-primary rounded-full shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                className="hidden sm:flex items-center gap-2 py-2.5 px-5 text-sm font-bold text-primary-foreground bg-primary rounded-full shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:bg-primary/90 hover:shadow-[0_0_25px_-5px_rgba(16,185,129,0.6)] hover:-translate-y-0.5 transition-all"
               >
                 <LayoutDashboard size={18} />
                 <span className="hidden lg:inline">대시보드</span>

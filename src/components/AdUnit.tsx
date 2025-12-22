@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface AdUnitProps {
     slotId: string;
@@ -21,27 +21,31 @@ export default function AdUnit({
     label,
     layoutKey,
 }: AdUnitProps) {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     useEffect(() => {
         try {
             // @ts-ignore
             (window.adsbygoogle = window.adsbygoogle || []).push({});
+            // Simulate load delay for smoother transition (optional, or rely on ad load event if possible)
+            const timer = setTimeout(() => setIsLoaded(true), 1000);
+            return () => clearTimeout(timer);
         } catch (err) {
             console.error("AdSense error:", err);
         }
     }, []);
 
-    // Development placeholder (visible only in dev mode or if explicitly requested)
-    if (process.env.NODE_ENV === "development") {
-        return (
-            <div className={`bg-zinc-800/50 border border-zinc-700 border-dashed flex items-center justify-center text-zinc-500 text-xs font-mono p-4 ${className}`} style={{ minHeight: "100px", width: "100%" }}>
-                [AdSense: {label || slotId}]<br />
-                Format: {format}
-            </div>
-        );
-    }
-
     return (
-        <div className={`ad-container ${className} ${sticky ? "sticky top-4" : ""}`}>
+        <div className={`ad-container relative overflow-hidden rounded-xl ${className} ${sticky ? "sticky top-24" : ""}`} style={{ minHeight: "100px" }}>
+            {/* Premium Placeholder / Loading State */}
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-zinc-900/50 backdrop-blur-sm border border-white/5 flex flex-col items-center justify-center z-10">
+                    <div className="w-full h-full absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer-gold" />
+                    <span className="text-[10px] font-medium tracking-widest text-zinc-600 uppercase z-20">
+                        Advertisement
+                    </span>
+                </div>
+            )}
 
             <ins
                 className="adsbygoogle"

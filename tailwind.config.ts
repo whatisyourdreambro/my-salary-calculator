@@ -85,9 +85,17 @@ const config = {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "reveal-up": {
+          "0%": { opacity: "0", transform: "translateY(40px) scale(0.95)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
         "shimmer": {
           "0%": { backgroundPosition: "200% 0" },
           "100%": { backgroundPosition: "-200% 0" },
+        },
+        "shimmer-gold": {
+          "0%": { backgroundPosition: "200% 0", opacity: "0.5" },
+          "100%": { backgroundPosition: "-200% 0", opacity: "1" },
         },
         "float": {
           "0%, 100%": { transform: "translateY(0)" },
@@ -118,7 +126,9 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-up": "fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "reveal-up": "reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "shimmer": "shimmer 8s linear infinite",
+        "shimmer-gold": "shimmer-gold 4s linear infinite",
         "float": "float 6s ease-in-out infinite",
         "pulse-glow": "pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "blob": "blob 7s infinite",
@@ -129,6 +139,7 @@ const config = {
         "hero-gradient": "linear-gradient(to bottom right, hsl(var(--primary)/0.1), hsl(var(--background)))",
         "glass": "linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)",
         "shine": "linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)",
+        "shine-gold": "linear-gradient(45deg, transparent 25%, rgba(251, 191, 36, 0.3) 50%, transparent 75%)",
       },
     },
   },

@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { Noto_Sans_KR, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
@@ -13,6 +13,13 @@ const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   display: "swap",
+  variable: "--font-noto",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -50,7 +57,9 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
   manifest: "/manifest.json",
   alternates: {
@@ -85,7 +94,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={notoSansKr.className} suppressHydrationWarning>
+    <html lang="ko" className={`${notoSansKr.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         <Script id="google-tag-manager-head" strategy="afterInteractive">
           {`
@@ -148,7 +157,39 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${notoSansKr.className} min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary`}>
+      <body className={`font-sans min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden`}>
+        <Script
+          id="ld-json"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Moneysalary",
+              "url": "https://www.moneysalary.com",
+              "description": "2025년 최신 세법 기준 연봉 실수령액 계산기",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.moneysalary.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+        <Script
+          id="ld-json-org"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Moneysalary",
+              "url": "https://www.moneysalary.com",
+              "logo": "https://www.moneysalary.com/logo.svg",
+              "sameAs": []
+            })
+          }}
+        />
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W9KTVSQH"
@@ -157,26 +198,29 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
+
+        {/* Global Aurora Background */}
         <div className="aurora-bg" />
+
         <NextThemesProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
+          <div className="flex flex-col min-h-screen relative">
             <Header />
 
             {/* Global Top Ad (Desktop/Mobile) */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center z-10 min-h-[100px] transition-all duration-300">
               <AdUnit slotId="3348584614" format="auto" label="Global Top Banner (Center 01)" />
             </div>
 
             {/* Main Layout Container with Sidebars */}
-            <div className="flex justify-center w-full max-w-[1920px] mx-auto relative">
+            <div className="flex justify-center w-full max-w-[1920px] mx-auto relative z-10">
               {/* Left Sidebar (Desktop Only) */}
-              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
-                <div className="space-y-6">
+              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
+                <div className="space-y-6 min-h-[600px]">
                   {/* Left 01 */}
                   <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 01" />
                   {/* Left 02 */}
@@ -186,14 +230,14 @@ export default function RootLayout({
 
               {/* Main Content - Centered Single Column */}
               <div className="w-full flex-grow max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
-                <main className="w-full flex flex-col animate-fade-in-up">
+                <main className="w-full flex flex-col animate-fade-in-up min-h-[60vh]">
                   {children}
                 </main>
               </div>
 
               {/* Right Sidebar (Desktop Only) */}
-              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4">
-                <div className="space-y-6">
+              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
+                <div className="space-y-6 min-h-[600px]">
                   {/* Right 01 */}
                   <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 01" />
                   {/* Right 02 */}
@@ -203,7 +247,7 @@ export default function RootLayout({
             </div>
 
             {/* Global Bottom Ad */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center z-10 min-h-[100px]">
               <AdUnit slotId="3348584614" format="auto" label="Global Bottom Banner (Center 01 Duplicate)" />
             </div>
 

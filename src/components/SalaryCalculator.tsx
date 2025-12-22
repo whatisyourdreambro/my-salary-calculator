@@ -8,6 +8,7 @@ import { calculateNetSalary } from "@/lib/calculator";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
+import confetti from "canvas-confetti";
 import { Share2, Copy, CheckCircle } from "lucide-react";
 import type {
   StoredSalaryData,
@@ -179,6 +180,14 @@ export default function SalaryCalculator() {
       const resultElement = document.getElementById("calculation-result");
       if (resultElement) {
         resultElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Trigger Confetti
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.7 },
+          colors: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899'],
+          zIndex: 9999,
+        });
       }
     }, 100);
   };
@@ -561,7 +570,7 @@ export default function SalaryCalculator() {
             <div className="mt-6">
               <button
                 onClick={handleCalculateClick}
-                className="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95"
+                className="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95 animate-pulse-glow"
               >
                 실수령액 계산하기
               </button>
