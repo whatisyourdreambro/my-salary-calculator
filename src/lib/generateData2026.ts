@@ -2,6 +2,7 @@
 // src/lib/generateData2026.ts
 
 export interface SalaryData {
+    [key: string]: number;
     preTax: number;
     monthlyNet: number;
     totalDeduction: number;
