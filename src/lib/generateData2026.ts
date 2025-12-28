@@ -13,20 +13,20 @@ export interface SalaryData {
     changeValue: number; // 2026 vs 2025 difference
 }
 
-// 2025 Rates (Base)
+// 2025 Rates (Base) - Confirmed
 const RATES_2025 = {
-    pension: 0.045,
-    health: 0.03545,
-    ltc: 0.1295, // of health
-    employment: 0.009,
+    pension: 0.045, // 9% / 2
+    health: 0.03545, // 7.09% / 2
+    ltc: 0.1295, // 12.95% of health
+    employment: 0.009, // 0.9%
 };
 
-// 2026 Simulated Rates (Slight increase simulation)
+// 2026 Simulated Rates (Based on latest news/announcements as of Dec 2025)
 const RATES_2026 = {
-    pension: 0.046, // assumed +0.1%
-    health: 0.0365, // assumed increase
-    ltc: 0.13,      // assumed increase
-    employment: 0.009, // unchanged usually
+    pension: 0.0475, // 9.5% / 2 (Phased increase confirmed)
+    health: 0.03595, // 7.19% / 2 (Confirmed increase from 7.09%)
+    ltc: 0.1314,     // 13.14% of Health (Confirmed ratio)
+    employment: 0.009, // Unchanged (Assumption as no announcement)
 };
 
 function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
