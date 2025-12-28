@@ -325,10 +325,7 @@ export default function HomePage() {
           </motion.div>
         </section>
 
-        {/* Ad Unit 2 */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[250px]">
-          <AdUnit slotId="5544332211" format="auto" label="Home Middle Ad" />
-        </div>
+
 
         {/* Financial Tools Section */}
         <section className="py-24 bg-zinc-900/30 relative border-t border-white/5">
