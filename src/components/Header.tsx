@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import ThemeToggle from "./ThemeToggle";
 import Logo from "./Logo";
 import { LayoutDashboard, ChevronDown, Menu, X } from "lucide-react";
 
@@ -20,71 +19,71 @@ type NavItem = LinkItem | DropdownItem;
 
 const navConfig: NavItem[] = [
   {
-    name: "커리어 플래너 🚀",
+    name: "커리어 플래너",
     href: "/pro/career-planner",
     type: "link"
   },
   {
-    name: "연봉 계산기 💸",
+    name: "연봉 계산기",
     type: "dropdown",
     items: [
-      { name: "종합 계산기 🧮", href: "/?tab=salary" },
-      { name: "퇴직금 계산기 💼", href: "/?tab=severance" },
-      { name: "프리랜서/알바 ☕", href: "/?tab=freelancer" },
-      { name: "연말정산 계산기 🧾", href: "/year-end-tax" },
+      { name: "종합 계산기", href: "/?tab=salary" },
+      { name: "퇴직금 계산기", href: "/?tab=severance" },
+      { name: "프리랜서/알바", href: "/?tab=freelancer" },
+      { name: "연말정산 계산기", href: "/year-end-tax" },
     ],
   },
   {
-    name: "연봉 테이블 📊",
+    name: "연봉 테이블",
     type: "dropdown",
     items: [
-      { name: "기업별 연봉 DB 🏢", href: "/salary-db" },
-      { name: "내 연봉 제보하기 📣", href: "/salary-db/submit" },
-      { name: "2025 연봉 표 📅", href: "/table/annual" },
-      { name: "2025 월급 표 💰", href: "/table/monthly" },
-      { name: "2026 연봉 표 🔮", href: "/table/2026/annual" },
+      { name: "기업별 연봉 DB", href: "/salary-db" },
+      { name: "내 연봉 제보하기", href: "/salary-db/submit" },
+      { name: "2025 연봉 표", href: "/table/annual" },
+      { name: "2025 월급 표", href: "/table/monthly" },
+      { name: "2026 연봉 표", href: "/table/2026/annual" },
     ],
   },
   {
-    name: "금융 가이드 📚",
+    name: "금융 가이드",
     type: "dropdown",
     items: [
-      { name: "전체 가이드 📖", href: "/guides" },
-      { name: "Q&A ❓", href: "/qna" },
-      { name: "용어 사전 📕", href: "/glossary" },
+      { name: "전체 가이드", href: "/guides" },
+      { name: "Q&A", href: "/qna" },
+      { name: "용어 사전", href: "/glossary" },
     ],
   },
   {
-    name: "Fun/Lab 🧪",
+    name: "Fun/Lab",
     type: "dropdown",
     items: [
-      { name: "랜덤 뽑기 (God Mode) 🎰", href: "/fun/random-draw" },
-      { name: "주말 당직 게임 (Survival) 🗓️", href: "/fun/weekend-duty" },
-      { name: "MBTI 연봉 순위 (Viral) 🧠", href: "/fun/mbti-salary" },
-      { name: "연봉 배틀 (PvP) 🥊", href: "/fun/salary-battle" },
-      { name: "이상형 월드컵 (Company) 🏆", href: "/fun/worldcup" },
-      { name: "테트리스 (Salaryman) 🧱", href: "/fun/tetris" },
+      { name: "랜덤 뽑기", href: "/fun/random-draw" },
+      { name: "주말 당직 게임", href: "/fun/weekend-duty" },
+      { name: "MBTI 연봉 순위", href: "/fun/mbti-salary" },
+      { name: "연봉 배틀", href: "/fun/salary-battle" },
+      { name: "이상형 월드컵", href: "/fun/worldcup" },
+      { name: "테트리스", href: "/fun/tetris" },
     ],
   },
   {
-    name: "계산기 도구 🧰",
+    name: "계산기 도구",
     type: "dropdown",
     items: [
-      { name: "전체 보기 (Hub) 🏰", href: "/tools" },
-      { name: "대출 이자 계산기 🏦", href: "/tools/loan" },
-      { name: "예적금 계산기 💰", href: "/tools/deposit" },
-      { name: "부가세(VAT) 계산기 🧾", href: "/tools/finance/vat" },
-      { name: "BMI 비만도 계산기 ⚖️", href: "/tools/health/bmi" },
-      { name: "부동산 계산기 (DSR/LTV) 🏠", href: "/tools/real-estate/dsr" },
+      { name: "전체 보기", href: "/tools" },
+      { name: "대출 이자 계산기", href: "/tools/loan" },
+      { name: "예적금 계산기", href: "/tools/deposit" },
+      { name: "부가세(VAT) 계산기", href: "/tools/finance/vat" },
+      { name: "BMI 비만도 계산기", href: "/tools/health/bmi" },
+      { name: "부동산 계산기", href: "/tools/real-estate/dsr" },
     ],
   },
   {
-    name: "생활 금융 🚗",
+    name: "생활 금융",
     type: "dropdown",
     items: [
-      { name: "자동차 구매 🚘", href: "/car-loan" },
-      { name: "FIRE 계산기 🔥", href: "/fire-calculator" },
-      { name: "로또 번호 생성 🎰", href: "/lotto" },
+      { name: "자동차 구매", href: "/car-loan" },
+      { name: "FIRE 계산기", href: "/fire-calculator" },
+      { name: "로또 번호 생성", href: "/lotto" },
     ],
   },
 ];
@@ -242,7 +241,7 @@ export default function Header() {
                 <span className="hidden lg:inline">대시보드</span>
               </Link>
 
-              <ThemeToggle />
+
 
               <div className="xl:hidden">
                 <button

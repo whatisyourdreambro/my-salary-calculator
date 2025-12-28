@@ -204,8 +204,9 @@ export default function RootLayout({
 
         <NextThemesProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <div className="flex flex-col min-h-screen relative">
