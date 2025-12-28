@@ -53,7 +53,7 @@ async function AnnualTable({
         title={
           <>
             2026 연봉 실수령액 <br className="sm:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 whitespace-nowrap">
               미리보기
             </span>
           </>

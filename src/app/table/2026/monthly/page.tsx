@@ -47,7 +47,7 @@ async function MonthlyTable({
         title={
           <>
             2026 월급 실수령액 <br className="sm:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 whitespace-nowrap">
               미리보기
             </span>
           </>
