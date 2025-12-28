@@ -209,10 +209,7 @@ export default function HomePage() {
           </motion.div>
         </section>
 
-        {/* Ad Unit 1 */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[250px]">
-          <AdUnit slotId="1122334455" format="auto" label="Home Top Ad" />
-        </div>
+
 
         {/* Calculator Grid Navigation (Bento Grid) */}
         <section className="py-24 px-4 relative">
