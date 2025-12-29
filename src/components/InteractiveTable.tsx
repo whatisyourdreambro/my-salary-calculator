@@ -93,7 +93,7 @@ export default function InteractiveTable({
     <div className="w-full mx-auto px-0 sm:px-4 lg:px-0 py-12 sm:py-16 -mt-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <motion.div
-          className="lg:col-span-2 bg-white/30 dark:bg-black/30 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-white/20"
+          className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-2xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -158,7 +158,7 @@ export default function InteractiveTable({
         </motion.div>
         <div className="space-y-8">
           <motion.div
-            className="bg-white/30 dark:bg-black/30 backdrop-blur-lg p-6 rounded-2xl shadow-xl border border-white/20"
+            className="bg-zinc-900/40 backdrop-blur-2xl p-6 rounded-2xl shadow-xl border border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -171,7 +171,7 @@ export default function InteractiveTable({
             </div>
           </motion.div>
           <motion.div
-            className="bg-white/30 dark:bg-black/30 backdrop-blur-lg p-6 rounded-2xl shadow-xl border border-white/20"
+            className="bg-zinc-900/40 backdrop-blur-2xl p-6 rounded-2xl shadow-xl border border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -189,7 +189,7 @@ export default function InteractiveTable({
         </div>
       </div>
       <motion.div
-        className="bg-white/30 dark:bg-black/30 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-white/20 mt-8"
+        className="bg-zinc-900/40 backdrop-blur-2xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/10 mt-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}

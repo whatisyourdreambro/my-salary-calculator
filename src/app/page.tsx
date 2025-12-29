@@ -59,28 +59,34 @@ const CalculatorCard = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer ${colSpan === 2 ? 'md:col-span-2' : ''}`}
+    whileHover={{ y: -5, scale: 1.02 }}
+    className={`group relative overflow-hidden rounded-[2rem] border border-white/5 bg-zinc-900/40 backdrop-blur-2xl transition-all duration-500 hover:shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] ${colSpan === 2 ? 'md:col-span-2' : ''}`}
   >
-    <Link href={href} className="block p-6 h-full relative z-10">
-      {/* Inner Glow Effect */}
-      <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-${color}-500/10 via-transparent to-transparent`} />
+    <Link href={href} className="block p-8 h-full relative z-10">
+      {/* Premium Gradient Background on Hover */}
+      <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-${color}-500/10 via-transparent to-transparent`} />
 
-      {/* Border Shine */}
-      <div className="absolute inset-0 rounded-3xl ring-1 ring-white/0 group-hover:ring-white/20 transition-all duration-500" />
+      {/* Animated Border Shine */}
+      <div className="absolute inset-0 rounded-[2rem] ring-1 ring-white/10 group-hover:ring-white/20 transition-all duration-500" />
 
-      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-500/10 rounded-full blur-3xl group-hover:bg-${color}-500/20 transition-colors duration-500`} />
+      {/* Ambient Glow */}
+      <div className={`absolute -top-20 -right-20 w-64 h-64 bg-${color}-500/5 rounded-full blur-[80px] group-hover:bg-${color}-500/10 transition-colors duration-700`} />
 
       <div className="relative z-10 flex flex-col h-full">
-        <div className={`w-12 h-12 rounded-2xl bg-${color}-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 border border-${color}-500/20`}>
-          <Icon className={`w-6 h-6 text-${color}-500`} />
+        <div className="flex items-start justify-between mb-6">
+          <div className={`w-14 h-14 rounded-2xl bg-zinc-900/80 border border-white/5 flex items-center justify-center group-hover:scale-110 group-hover:border-${color}-500/30 group-hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.1)] transition-all duration-500`}>
+            <Icon className={`w-7 h-7 text-zinc-400 group-hover:text-${color}-400 transition-colors duration-500`} />
+          </div>
+          <div className={`opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0`}>
+            <ArrowRight className={`w-5 h-5 text-${color}-400`} />
+          </div>
         </div>
 
-        <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">{title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-zinc-300 transition-colors duration-300">{description}</p>
+        <h3 className="text-2xl font-bold text-zinc-100 mb-3 group-hover:text-white transition-colors duration-300 tracking-tight">{title}</h3>
+        <p className="text-zinc-400 leading-relaxed text-[15px] group-hover:text-zinc-300 transition-colors duration-300">{description}</p>
 
-        <div className="mt-auto pt-6 flex items-center text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors duration-300">
-          바로가기 <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
-        </div>
+        {/* Decorative Bottom Line */}
+        <div className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-${color}-500/0 via-${color}-500/50 to-${color}-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
       </div>
     </Link>
   </motion.div>
@@ -297,7 +303,7 @@ export default function HomePage() {
                 icon={GitCompare}
                 title="연봉 비교"
                 description="두 회사의 실제 가치(시급, 복지) 정밀 비교"
-                href="/battle"
+                href="/company/compare"
                 color="red"
                 colSpan={2}
                 delay={0.7}

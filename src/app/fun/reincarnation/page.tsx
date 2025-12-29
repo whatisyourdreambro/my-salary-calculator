@@ -159,25 +159,12 @@ export default function ReincarnationPage() {
 
   return (
     <main className="w-full min-h-screen bg-black text-white font-sans overflow-hidden relative flex flex-col items-center py-12 px-4">
-      {/* Cosmic Background */}
+      {/* Premium Aurora Background (Consistent with Home) */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900 via-black to-black opacity-80" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
-        {/* Stars */}
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute bg-white rounded-full animate-pulse"
-            style={{
-              width: Math.random() * 2 + 1,
-              height: Math.random() * 2 + 1,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              opacity: Math.random() * 0.7 + 0.3,
-            }}
-          />
-        ))}
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[120px] animate-blob" />
+        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] bg-emerald-500/10 rounded-full blur-[120px] animate-blob animation-delay-4000" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
       </div>
 
       <div className="relative z-10 w-full max-w-2xl flex flex-col items-center">
@@ -212,7 +199,8 @@ export default function ReincarnationPage() {
               exit={{ opacity: 0, y: -20 }}
               className="w-full max-w-md space-y-8"
             >
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+              <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/10 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <CurrencyInput
                   label="현생의 연봉 (Karma Point)"
                   value={salary}
@@ -268,7 +256,7 @@ export default function ReincarnationPage() {
               animate={{ opacity: 1, y: 0 }}
               className="w-full max-w-lg"
             >
-              <div className="bg-black/40 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+              <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
                 {/* Background Glow */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none" />
 

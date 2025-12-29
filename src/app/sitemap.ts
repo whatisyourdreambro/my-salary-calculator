@@ -40,6 +40,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/fun/salary-slip',
     '/fun/spending-test',
     '/fun/what-to-buy',
+    '/fun/iq-test',
+    '/fun/flappy',
+    '/fun/lotto',
+    '/fun/tetris',
+    '/fun',
     // Company Pages
     '/company',
     '/company/compare',
