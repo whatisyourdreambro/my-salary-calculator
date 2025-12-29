@@ -58,12 +58,12 @@ const navConfig: NavItem[] = [
     name: "Fun/Lab",
     type: "dropdown",
     items: [
-      { name: "랜덤 뽑기", href: "/fun/random-draw" },
-      { name: "주말 당직 게임", href: "/fun/weekend-duty" },
-      { name: "MBTI 연봉 순위", href: "/fun/mbti-salary" },
-      { name: "연봉 배틀", href: "/fun/salary-battle" },
-      { name: "이상형 월드컵", href: "/fun/worldcup" },
-      { name: "테트리스", href: "/fun/tetris" },
+      { name: "전체 보기", href: "/fun" },
+      { name: "멘사급 IQ 테스트", href: "/fun/iq-test" },
+      { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
+      { name: "연봉 상위 1% 계산기", href: "/fun/rank" },
+      { name: "인생 2회차 게임", href: "/fun/reincarnation" },
+      { name: "월급쟁이 테트리스", href: "/fun/tetris" },
     ],
   },
   {
