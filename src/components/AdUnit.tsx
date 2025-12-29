@@ -32,11 +32,6 @@ export default function AdUnit({
 
     return (
         <div className={`ad-container relative ${className} ${sticky ? "sticky top-24" : ""}`}>
-            {label && (
-                <div className="text-[10px] text-muted-foreground/50 text-center uppercase tracking-widest mb-1">
-                    Advertisement
-                </div>
-            )}
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}
