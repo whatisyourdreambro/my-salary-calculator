@@ -21,7 +21,7 @@ export default function AdUnit({
     sticky = false,
     label,
     layoutKey,
-    minHeight = "250px", // Default increased to matching standard ad sizes to prevent shift
+    minHeight = "100px", // Reverted default to 100px to prevent large empty spaces (white boxes) on sidebars
 }: AdUnitProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
