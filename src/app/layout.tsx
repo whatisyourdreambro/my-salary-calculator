@@ -222,7 +222,7 @@ export default function RootLayout({
             <div className="flex justify-center w-full max-w-[1920px] mx-auto relative z-10">
               {/* Left Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] p-4">
-                <div className="space-y-6">
+                <div className="space-y-6 h-full">
                   {/* Left 01 - Static */}
                   <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 01" />
                   {/* Left 02 - Static */}
@@ -241,7 +241,7 @@ export default function RootLayout({
 
               {/* Right Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] p-4">
-                <div className="space-y-6">
+                <div className="space-y-6 h-full">
                   {/* Right 01 - Static */}
                   <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 01" />
                   {/* Right 02 - Static */}
