@@ -25,12 +25,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const formatMoney = (val: number) => `${Math.round(val / 10000)}만원`;
 
     return {
-        title: `${company.name.ko} 연봉 정보 (${new Date().getFullYear()}) - 신입 ${formatMoney(entryTotal)} | MoneySalary`,
-        description: `${company.name.ko}(${company.name.en})의 실제 연봉 정보. 신입 ${formatMoney(entryTotal)}, 평균 근무시간 ${company.workLife.weeklyHours.real}시간, 기업문화 ${company.culture.score}/10점. 초봉부터 임원까지 연봉 로드맵, 복지 혜택, 장단점까지 한눈에 확인하세요.`,
+        title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)} | MoneySalary`,
+        description: `${company.name.ko}(${company.name.en})의 2025년 예상 실수령액 및 영끌 연봉 정보. 신입 ${formatMoney(entryTotal)}, 평균 근무시간 ${company.workLife.weeklyHours.real}시간. 초봉부터 임원까지 연봉 로드맵과 숨겨진 복지 혜택까지 확인하세요.`,
         keywords: [
             `${company.name.ko} 연봉`,
             `${company.name.ko} 초봉`,
             `${company.name.ko} 신입연봉`,
+            `${company.name.ko} 영끌`,
+            "2025 연봉표",
             `${company.name.en} salary`,
             `${company.industry} 연봉`,
             "연봉정보",
@@ -39,8 +41,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
             "대기업연봉",
         ],
         openGraph: {
-            title: `${company.name.ko} 연봉 정보 - 신입 ${formatMoney(entryTotal)}`,
-            description: `${company.name.ko}의 실제 연봉, 워라밸, 기업문화 정보. 신입부터 임원까지 연봉 로드맵 한눈에 보기.`,
+            title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)}`,
+            description: `${company.name.ko}의 2025년 예상 연봉, 워라밸, 기업문화 정보. 신입부터 임원까지 연봉 로드맵 한눈에 보기.`,
             type: "article",
             images: [
                 {
@@ -53,8 +55,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         },
         twitter: {
             card: "summary_large_image",
-            title: `${company.name.ko} 연봉 - 신입 ${formatMoney(entryTotal)}`,
-            description: `실제 연봉, 워라밸, 기업문화 정보 확인하기`,
+            title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)}`,
+            description: `2025년 예상 실수령액 및 현직자 워라밸 정보 확인하기`,
         },
     };
 }

@@ -163,7 +163,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                         </section>
 
                         {/* Ad Unit */}
-                        <AdUnit slotId="5566778899" format="auto" label="Company Detail Middle" />
+                        <AdUnit slotId="5566778899" format="auto" label="Company Detail Middle" minHeight="250px" />
                     </div>
 
                     {/* Right Column: Details */}
