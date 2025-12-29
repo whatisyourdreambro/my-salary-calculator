@@ -181,14 +181,7 @@ export default function FunLabPage() {
                         icon={Sparkles}
                         title="로또 시뮬레이터"
                         description="10억 당첨될 때까지 얼마나 걸릴까? 인생역전 도전."
-                        href="/fun/lotto" // Note: Directory listed as 'lotto' in src/app, assuming route is /lotto or /fun/lotto? Checking file structure... 
-                        // File list showed 'lotto' in 'src/app/lotto', but plan said integrate fun tools. 
-                        // Actually 'lotto' is in src/app/lotto, not src/app/fun. 
-                        // Wait, previous file list showed src/app/fun contained many, but lotto was outside in src/app/lotto?
-                        // Let me check Step 4 output. 'lotto' is in src/app root. 
-                        // So link should be /lotto.
-                        // Wait, I should double check if I can move it or just link it. Linking is safer.
-                        // But consistency? I'll link to /lotto for now.
+                        href="/lotto"
                         color="yellow"
                         badge="HOT"
                     />

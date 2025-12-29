@@ -171,9 +171,7 @@ export default function IQTestClient() {
                 </div>
 
                 {/* Ad Unit: Top */}
-                <div className="mb-8">
-                    <AdUnit slotId="1122334455" format="auto" label="IQ Test Top Ad" />
-                </div>
+                {/* Ad Unit: Top - REMOVED */}
 
                 <AnimatePresence mode="wait">
                     {!showResult ? (

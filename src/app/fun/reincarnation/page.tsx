@@ -186,9 +186,7 @@ export default function ReincarnationPage() {
         </div>
 
         {/* Ad Unit */}
-        <div className="mb-12 w-full max-w-md">
-          <AdUnit slotId="3322110099" format="auto" label="Reincarnation Top Ad" />
-        </div>
+        {/* Ad Unit: Top - REMOVED */}
 
         {/* Input Section */}
         <AnimatePresence mode="wait">

@@ -113,9 +113,7 @@ export default function RankClient() {
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
 
                 {/* Ad Unit: Top */}
-                <div className="mb-8">
-                    <AdUnit slotId="5678901234" format="auto" label="Rank Page Top Ad" />
-                </div>
+                {/* Ad Unit: Top - REMOVED */}
 
                 <div className="bg-zinc-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/10 overflow-hidden relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-50" />

@@ -161,9 +161,7 @@ export default function RichDNAClient() {
                 </div>
 
                 {/* Ad Unit: Top */}
-                <div className="mb-12 max-w-2xl mx-auto">
-                    <AdUnit slotId="3344556677" format="auto" label="Rich DNA Top Ad" />
-                </div>
+                {/* Ad Unit: Top - REMOVED */}
 
                 <div className="max-w-3xl mx-auto relative min-h-[500px]">
                     <AnimatePresence mode="wait">
