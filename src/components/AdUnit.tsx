@@ -31,7 +31,7 @@ export default function AdUnit({
     }, []);
 
     return (
-        <div className={`ad-container relative ${className} ${sticky ? "sticky top-24" : ""}`}>
+        <div className={`ad-container relative overflow-hidden ${className} ${sticky ? "sticky top-24" : ""}`} style={{ minHeight: "100px" }}>
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}

@@ -106,18 +106,19 @@ export default function RootLayout({
           `}
         </Script>
         <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
           id="cookieyes"
           type="text/javascript"
           src="https://cdn-cookieyes.com/client_data/9dcaa51591b1d01c1349ede6/script.js"
           strategy="beforeInteractive"
         ></Script>
 
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+
 
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
