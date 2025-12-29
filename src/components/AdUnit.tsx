@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface AdUnitProps {
     slotId: string;
@@ -21,32 +21,22 @@ export default function AdUnit({
     label,
     layoutKey,
 }: AdUnitProps) {
-    const [isLoaded, setIsLoaded] = useState(false);
-
     useEffect(() => {
         try {
             // @ts-ignore
             (window.adsbygoogle = window.adsbygoogle || []).push({});
-            // Simulate load delay for smoother transition (optional, or rely on ad load event if possible)
-            const timer = setTimeout(() => setIsLoaded(true), 1000);
-            return () => clearTimeout(timer);
         } catch (err) {
             console.error("AdSense error:", err);
         }
     }, []);
 
     return (
-        <div className={`ad-container relative overflow-hidden rounded-xl ${className} ${sticky ? "sticky top-24" : ""}`} style={{ minHeight: "100px" }}>
-            {/* Premium Placeholder / Loading State */}
-            {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-900/50 backdrop-blur-sm border border-white/5 flex flex-col items-center justify-center z-10">
-                    <div className="w-full h-full absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer-gold" />
-                    <span className="text-[10px] font-medium tracking-widest text-zinc-600 uppercase z-20">
-                        Advertisement
-                    </span>
+        <div className={`ad-container relative ${className} ${sticky ? "sticky top-24" : ""}`}>
+            {label && (
+                <div className="text-[10px] text-muted-foreground/50 text-center uppercase tracking-widest mb-1">
+                    Advertisement
                 </div>
             )}
-
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}
