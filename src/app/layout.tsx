@@ -221,12 +221,14 @@ export default function RootLayout({
             {/* Main Layout Container with Sidebars */}
             <div className="flex justify-center w-full max-w-[1920px] mx-auto relative z-10">
               {/* Left Sidebar (Desktop Only) */}
-              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
+              <aside className="hidden xl:block w-[300px] min-w-[300px] p-4">
                 <div className="space-y-6">
-                  {/* Left 01 */}
+                  {/* Left 01 - Static */}
                   <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 01" />
-                  {/* Left 02 */}
+                  {/* Left 02 - Static */}
                   <AdUnit slotId="1464657303" format="vertical" label="Left Sidebar 02" />
+                  {/* Left 03 - Sticky Follower */}
+                  <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 03" sticky={true} />
                 </div>
               </aside>
 
@@ -238,12 +240,14 @@ export default function RootLayout({
               </div>
 
               {/* Right Sidebar (Desktop Only) */}
-              <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
+              <aside className="hidden xl:block w-[300px] min-w-[300px] p-4">
                 <div className="space-y-6">
-                  {/* Right 01 */}
+                  {/* Right 01 - Static */}
                   <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 01" />
-                  {/* Right 02 */}
+                  {/* Right 02 - Static */}
                   <AdUnit slotId="1404221203" format="vertical" label="Right Sidebar 02" />
+                  {/* Right 03 - Sticky Follower */}
+                  <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 03" sticky={true} />
                 </div>
               </aside>
             </div>
