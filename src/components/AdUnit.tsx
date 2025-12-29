@@ -10,7 +10,6 @@ interface AdUnitProps {
     sticky?: boolean;
     label?: string;
     layoutKey?: string;
-    minHeight?: string | number;
 }
 
 export default function AdUnit({
@@ -21,7 +20,6 @@ export default function AdUnit({
     sticky = false,
     label,
     layoutKey,
-    minHeight = "100px", // Reverted default to 100px to prevent large empty spaces (white boxes) on sidebars
 }: AdUnitProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -38,7 +36,7 @@ export default function AdUnit({
     }, []);
 
     return (
-        <div className={`ad-container relative overflow-hidden rounded-xl ${className} ${sticky ? "sticky top-24" : ""}`} style={{ minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }}>
+        <div className={`ad-container relative overflow-hidden rounded-xl ${className} ${sticky ? "sticky top-24" : ""}`} style={{ minHeight: "100px" }}>
             {/* Premium Placeholder / Loading State */}
             {!isLoaded && (
                 <div className="absolute inset-0 bg-zinc-900/50 backdrop-blur-sm border border-white/5 flex flex-col items-center justify-center z-10">
