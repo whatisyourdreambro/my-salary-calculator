@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Github } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -30,10 +31,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12">
           <div className="md:w-1/3">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform border border-emerald-500/20">
-                <span className="text-xl font-bold text-emerald-500">M</span>
-              </div>
-              <h1 className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">Moneysalary</h1>
+              <Link href="/" className="flex items-center gap-2 group">
+                <Logo className="h-8 w-auto text-white" showText={true} />
+              </Link>
             </Link>
             <p className="mt-4 text-base text-zinc-400 leading-relaxed">
               당신의 경제적 여정을 돕는 든든한 파트너.

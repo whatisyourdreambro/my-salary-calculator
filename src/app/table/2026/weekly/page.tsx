@@ -56,6 +56,8 @@ async function WeeklyTable2026({
     page * itemsPerPage
   );
 
+  // Weekly Minimum Wage (10,320 * 40 + 8h holiday pay ~ 48h) roughly 495,360 KRW per week if including holiday pay? 
+  // Usually weekly stats are simple. Let's keep the highlights rounded.
   const highlightRows = [1000000, 1500000, 2000000];
 
   return (
@@ -77,8 +79,8 @@ async function WeeklyTable2026({
           }
           description={
             <>
-              2026년, 주급으로 받는 내 급여는 월급으로 환산하면 얼마일까요? <br className="hidden sm:block" />
-              최신 정책 전망을 반영한 예상 실수령액을 확인하세요.
+              2026년 최저시급 10,320원 확정! <br className="hidden sm:block" />
+              주급으로 환산 시 예상 실수령액을 확인해보세요.
             </>
           }
         />
@@ -99,23 +101,21 @@ async function WeeklyTable2026({
             </h2>
             <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
               <p className="text-center text-muted-foreground">
-                현재 2026년 세법 개정안이 확정되지 않았습니다. 아래 정보는 현재까지의 전망을 바탕으로 한 예상치이며, 실제와 다를 수 있습니다.
+                2026년 최저시급 10,320원(2.9% 인상)이 확정되었습니다.
               </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 국민연금 요율: 9% (근로자 4.5%)</li>
-                    <li>- 건강보험 요율: 7.09% (근로자 3.545%)</li>
-                    <li>- 근로소득세 최저세율: 6%</li>
+                    <li>- 최저시급: 10,030원</li>
+                    <li>- 월 환산액: 2,096,270원</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">2026년 (전망)</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">2026년 (확정)</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 국민연금 요율: <span className="font-semibold text-primary">변동 가능성 있음</span></li>
-                    <li>- 건강보험 요율: <span className="font-semibold text-primary">소폭 인상 전망</span></li>
-                    <li>- 근로소득세: <span className="font-semibold text-primary">세율 조정 논의 중</span></li>
+                    <li>- 최저시급: <span className="font-semibold text-primary">10,320원</span></li>
+                    <li>- 월 환산액: <span className="font-semibold text-primary">2,156,880원</span></li>
                   </ul>
                 </div>
               </div>
@@ -129,10 +129,10 @@ async function WeeklyTable2026({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
                 <h3 className="font-bold text-xl mb-3">
-                  Q. 주급제인데 4대보험에 가입해야 하나요?
+                  Q. 2026년 주급은 얼마인가요? (최저임금 기준)
                 </h3>
                 <p className="text-muted-foreground">
-                  네, 주 15시간 이상, 월 60시간 이상 근무하는 근로자는 주급제, 시급제 등 급여 형태와 관계없이 4대보험 의무 가입 대상입니다. 이 표는 4대보험 가입을 기준으로 계산되었습니다.
+                  2026년 최저시급 10,320원 기준으로 주 40시간(주휴수당 포함 48시간분) 근무 시 주급은 <strong>495,360원</strong>입니다.
                 </p>
               </div>
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
@@ -140,7 +140,7 @@ async function WeeklyTable2026({
                   Q. 주휴수당은 어떻게 계산되나요?
                 </h3>
                 <p className="text-muted-foreground">
-                  1주 동안 규정된 근무일수를 다 채운 근로자에게는 1일치의 유급 주휴일이 주어집니다. 이 표의 계산은 주 5일, 40시간 근무를 기준으로 주휴수당이 포함된 월 환산액으로 계산됩니다.
+                  1주 15시간 이상 근무 시 1일치(8시간) 임금이 추가됩니다. 시급 10,320원 기준 주휴수당은 82,560원입니다.
                 </p>
                 <Link
                   href="/guides/holiday-allowance"

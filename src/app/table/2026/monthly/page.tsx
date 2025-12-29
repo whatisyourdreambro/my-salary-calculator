@@ -43,7 +43,7 @@ async function MonthlyTable({
   return (
     <main className="w-full bg-background min-h-screen pb-20">
       <TableHero
-        badgeText="2026년 예상 시뮬레이션"
+        badgeText="2026년 최신 데이터 반영"
         title={
           <>
             2026 월급 실수령액 <br className="sm:hidden" />
@@ -54,8 +54,8 @@ async function MonthlyTable({
         }
         description={
           <>
-            2026년 예상 월급표입니다. <br />
-            세후 수령액 변화를 미리 확인해보세요.
+            2026년 최저월급은 약 216만원입니다. (<span className="text-primary font-bold">10,320원</span> 기준)<br />
+            내 월급의 세후 수령액 변화를 미리 확인해보세요.
           </>
         }
       />

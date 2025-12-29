@@ -56,7 +56,7 @@ async function HourlyTable2026({
     page * itemsPerPage
   );
 
-  const highlightRows = [10030, 12000, 15000, 20000];
+  const highlightRows = [10320, 12000, 15000, 20000];
 
   return (
     <>
@@ -77,8 +77,8 @@ async function HourlyTable2026({
           }
           description={
             <>
-              2026년 최저시급은 얼마가 될까요? <br className="hidden sm:block" />
-              예상 최저시급과 내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
+              2026년 최저시급은 <strong>10,320원</strong>으로 확정되었습니다. <br className="hidden sm:block" />
+              내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
             </>
           }
         />
@@ -99,23 +99,21 @@ async function HourlyTable2026({
             </h2>
             <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
               <p className="text-center text-muted-foreground">
-                현재 2026년 세법 개정안이 확정되지 않았습니다. 아래 정보는 현재까지의 전망을 바탕으로 한 예상치이며, 실제와 다를 수 있습니다.
+                2026년 최저임금이 10,320원으로 확정되었습니다.
               </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 국민연금 요율: 9% (근로자 4.5%)</li>
-                    <li>- 건강보험 요율: 7.09% (근로자 3.545%)</li>
-                    <li>- 근로소득세 최저세율: 6%</li>
+                    <li>- 최저시급: 10,030원</li>
+                    <li>- 월 환산액: 2,096,270원</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">2026년 (전망)</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">2026년 (확정)</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 국민연금 요율: <span className="font-semibold text-primary">변동 가능성 있음</span></li>
-                    <li>- 건강보험 요율: <span className="font-semibold text-primary">소폭 인상 전망</span></li>
-                    <li>- 근로소득세: <span className="font-semibold text-primary">세율 조정 논의 중</span></li>
+                    <li>- 최저시급: <span className="font-semibold text-primary">10,320원 (2.9% 인상)</span></li>
+                    <li>- 월 환산액: <span className="font-semibold text-primary">2,156,880원</span></li>
                   </ul>
                 </div>
               </div>
@@ -129,10 +127,10 @@ async function HourlyTable2026({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
                 <h3 className="font-bold text-xl mb-3">
-                  Q. 2026년 최저시급은 얼마로 예상되나요?
+                  Q. 2026년 최저시급은 얼마인가요?
                 </h3>
                 <p className="text-muted-foreground">
-                  2026년 최저시급은 아직 결정되지 않았지만, 최근 인상률을 고려할 때 <strong>10,300원 ~ 10,500원</strong> 사이에서 결정될 가능성이 있습니다. 확정되는 대로 신속하게 업데이트하겠습니다.
+                  2026년 최저시급은 <strong>10,320원</strong>으로 결정되었습니다. 2025년 10,030원 대비 290원(2.9%) 인상된 금액입니다.
                 </p>
                 <Link
                   href="/guides/minimum-wage"

@@ -44,12 +44,12 @@ async function AnnualTable({
     page * itemsPerPage
   );
 
-  const highlightRows = [30000000, 50000000, 80000000, 100000000];
+  const highlightRows = [26000000, 30000000, 50000000, 80000000, 100000000];
 
   return (
     <main className="w-full bg-background min-h-screen pb-20">
       <TableHero
-        badgeText="2026년 예상 시뮬레이션"
+        badgeText="2026년 최신 데이터 반영"
         title={
           <>
             2026 연봉 실수령액 <br className="sm:hidden" />
@@ -61,7 +61,7 @@ async function AnnualTable({
         description={
           <>
             2026년, 내 월급은 어떻게 변할까요? <br className="hidden sm:block" />
-            물가 상승과 보험료 인상을 반영한 상세 예측 데이터를 확인하세요.
+            최저임금 인상(10,320원)과 보험료율 전망을 반영한 데이터입니다.
           </>
         }
       />
