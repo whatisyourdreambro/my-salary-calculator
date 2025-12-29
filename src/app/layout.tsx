@@ -213,7 +213,7 @@ export default function RootLayout({
             <Header />
 
             {/* Global Top Ad (Desktop/Mobile) */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center z-10 min-h-[100px] transition-all duration-300">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-6 flex justify-center z-10 transition-all duration-300">
               <AdUnit slotId="3348584614" format="auto" label="Global Top Banner (Center 01)" />
             </div>
 
@@ -221,7 +221,7 @@ export default function RootLayout({
             <div className="flex justify-center w-full max-w-[1920px] mx-auto relative z-10">
               {/* Left Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
-                <div className="space-y-6 min-h-[600px]">
+                <div className="space-y-6">
                   {/* Left 01 */}
                   <AdUnit slotId="2717302873" format="vertical" label="Left Sidebar 01" />
                   {/* Left 02 */}
@@ -238,7 +238,7 @@ export default function RootLayout({
 
               {/* Right Sidebar (Desktop Only) */}
               <aside className="hidden xl:block w-[300px] min-w-[300px] sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto p-4 scrollbar-hide transition-all duration-500 ease-in-out">
-                <div className="space-y-6 min-h-[600px]">
+                <div className="space-y-6">
                   {/* Right 01 */}
                   <AdUnit slotId="2773143192" format="vertical" label="Right Sidebar 01" />
                   {/* Right 02 */}
@@ -248,7 +248,7 @@ export default function RootLayout({
             </div>
 
             {/* Global Bottom Ad */}
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center z-10 min-h-[100px]">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex justify-center z-10">
               <AdUnit slotId="3348584614" format="auto" label="Global Bottom Banner (Center 01 Duplicate)" />
             </div>
 
