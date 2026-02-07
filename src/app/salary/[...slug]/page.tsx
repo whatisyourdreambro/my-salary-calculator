@@ -7,7 +7,7 @@ import { calculateNetSalary } from "@/lib/calculator";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { salaryData, calculateRank } from "@/lib/salaryData";
 
-export const runtime = "edge";
+
 
 type Props = {
   params: { slug: string[] };

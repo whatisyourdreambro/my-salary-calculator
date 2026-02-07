@@ -7,7 +7,7 @@ import Link from "next/link";
 import WeeklyTableInteractive from "./WeeklyTableInteractive";
 import TableHero from "@/components/TableHero";
 
-export const runtime = "edge";
+
 
 const tableHeaders = [
   { key: "preTax", label: "주급" },
@@ -33,31 +33,9 @@ const structuredData = {
   keywords: ["주급", "실수령액", "세후 월급", "주급 테이블", "2026년"],
 };
 
-async function WeeklyTable2026({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+// 서버 컴포넌트는 데이터 로직에만 집중합니다.
+function WeeklyTable2026() {
   const allData = generateWeeklyPayTableData2026();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
-  // Weekly Minimum Wage (10,320 * 40 + 8h holiday pay ~ 48h) roughly 495,360 KRW per week if including holiday pay? 
-  // Usually weekly stats are simple. Let's keep the highlights rounded.
   const highlightRows = [1000000, 1500000, 2000000];
 
   return (
@@ -85,13 +63,13 @@ async function WeeklyTable2026({
           }
         />
 
-        <WeeklyTableInteractive
-          allData={allData}
-          tableHeaders={tableHeaders}
-          highlightRows={highlightRows}
-          totalPages={totalPages}
-          paginatedData={paginatedData}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <WeeklyTableInteractive
+            allData={allData}
+            tableHeaders={tableHeaders}
+            highlightRows={highlightRows}
+          />
+        </Suspense>
 
         <div className="w-full py-16">
           <section>
@@ -157,14 +135,6 @@ async function WeeklyTable2026({
   );
 }
 
-export default function WeeklyTable2026Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <WeeklyTable2026 searchParams={searchParams} />
-    </Suspense>
-  );
+export default function WeeklyTable2026Page() {
+  return <WeeklyTable2026 />;
 }

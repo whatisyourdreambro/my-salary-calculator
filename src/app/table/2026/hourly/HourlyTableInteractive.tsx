@@ -8,16 +8,12 @@ interface HourlyTableInteractiveProps {
   allData: SalaryData[];
   tableHeaders: { key: string; label: string }[];
   highlightRows: number[];
-  totalPages: number;
-  paginatedData: SalaryData[];
 }
 
 export default function HourlyTableInteractive({
   allData,
   tableHeaders,
   highlightRows,
-  totalPages,
-  paginatedData,
 }: HourlyTableInteractiveProps) {
   const pageConfig = {
     title: "시급별 실수령액 시뮬레이터 (2026년 예상)",
@@ -35,9 +31,7 @@ export default function HourlyTableInteractive({
       allData={allData}
       tableHeaders={tableHeaders}
       highlightRows={highlightRows}
-      totalPages={totalPages}
-      paginatedData={paginatedData}
-      calculationFn={(salary, nonTaxable, dependents, children, settings) => 
+      calculationFn={(salary, nonTaxable, dependents, children, settings) =>
         calculateNetSalary2026(salary * 8 * 209 / 12 * 12, nonTaxable, dependents, children, settings)
       }
       pageConfig={pageConfig}

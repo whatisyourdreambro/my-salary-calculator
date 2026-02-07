@@ -7,7 +7,7 @@ import Link from "next/link";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
 
-export const runtime = "edge";
+
 
 const tableHeaders = [
   { key: "preTax", label: "시급" },
@@ -33,29 +33,8 @@ const structuredData = {
   keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "2025년"],
 };
 
-async function HourlyTable({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+function HourlyTable() {
   const allData = generateHourlyWageTableData();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
   const highlightRows = [10030, 12000, 15000, 20000];
 
   return (
@@ -83,13 +62,13 @@ async function HourlyTable({
           }
         />
 
-        <HourlyTableInteractive
-          allData={allData}
-          tableHeaders={tableHeaders}
-          highlightRows={highlightRows}
-          totalPages={totalPages}
-          paginatedData={paginatedData}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <HourlyTableInteractive
+            allData={allData}
+            tableHeaders={tableHeaders}
+            highlightRows={highlightRows}
+          />
+        </Suspense>
 
         <div className="w-full py-16">
           <section>
@@ -163,14 +142,6 @@ async function HourlyTable({
   );
 }
 
-export default function HourlyTablePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HourlyTable searchParams={searchParams} />
-    </Suspense>
-  );
+export default function HourlyTablePage() {
+  return <HourlyTable />;
 }

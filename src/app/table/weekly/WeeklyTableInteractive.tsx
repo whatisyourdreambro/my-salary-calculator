@@ -8,16 +8,12 @@ interface WeeklyTableInteractiveProps {
   allData: SalaryData[];
   tableHeaders: { key: string; label: string }[];
   highlightRows: number[];
-  totalPages: number;
-  paginatedData: SalaryData[];
 }
 
 export default function WeeklyTableInteractive({
   allData,
   tableHeaders,
   highlightRows,
-  totalPages,
-  paginatedData,
 }: WeeklyTableInteractiveProps) {
   const pageConfig = {
     title: "주급별 실수령액 시뮬레이터 (2025년)",
@@ -35,9 +31,7 @@ export default function WeeklyTableInteractive({
       allData={allData}
       tableHeaders={tableHeaders}
       highlightRows={highlightRows}
-      totalPages={totalPages}
-      paginatedData={paginatedData}
-      calculationFn={(salary, nonTaxable, dependents, children, settings) => 
+      calculationFn={(salary, nonTaxable, dependents, children, settings) =>
         calculateNetSalary(salary * 52, nonTaxable, dependents, children, settings)
       }
       pageConfig={pageConfig}

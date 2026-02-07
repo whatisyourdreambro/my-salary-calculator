@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart,
   Bar,
@@ -57,11 +58,25 @@ export default function InteractiveTable({
   allData,
   tableHeaders,
   highlightRows,
-  totalPages,
-  paginatedData,
   calculationFn,
   pageConfig,
-}: InteractiveTableProps) {
+}: Omit<InteractiveTableProps, "totalPages" | "paginatedData">) {
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const searchTerm = searchParams.get("searchTerm") || "";
+  const itemsPerPage = 100;
+
+  const filteredData = searchTerm
+    ? allData.filter((row) =>
+      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
+    )
+    : allData;
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
   const [salary, setSalary] = useState(pageConfig.defaultSalary);
   const [dependents, setDependents] = useState(1);
   const [nonTaxableAmount, setNonTaxableAmount] = useState(200000);

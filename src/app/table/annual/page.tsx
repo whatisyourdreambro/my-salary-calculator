@@ -7,8 +7,6 @@ import Link from "next/link";
 import AnnualTableInteractive from "./AnnualTableInteractive";
 import TableHero from "@/components/TableHero";
 
-// Cloudflare Pages 배포를 위한 Edge 런타임 설정
-export const runtime = "edge";
 
 const tableHeaders = [
   { key: "preTax", label: "연봉" },
@@ -36,29 +34,8 @@ const structuredData = {
 };
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
-async function AnnualTable({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+function AnnualTable() {
   const allData = generateAnnualSalaryTableData();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
   const highlightRows = [30000000, 50000000, 80000000, 100000000];
 
   return (
@@ -86,13 +63,13 @@ async function AnnualTable({
           }
         />
 
-        <AnnualTableInteractive
-          allData={allData}
-          tableHeaders={tableHeaders}
-          highlightRows={highlightRows}
-          totalPages={totalPages}
-          paginatedData={paginatedData}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AnnualTableInteractive
+            allData={allData}
+            tableHeaders={tableHeaders}
+            highlightRows={highlightRows}
+          />
+        </Suspense>
 
         <div className="w-full py-16">
           <section>
@@ -171,14 +148,6 @@ async function AnnualTable({
   );
 }
 
-export default function AnnualTablePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <AnnualTable searchParams={searchParams} />
-    </Suspense>
-  );
+export default function AnnualTablePage() {
+  return <AnnualTable />;
 }

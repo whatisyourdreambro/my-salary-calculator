@@ -7,7 +7,7 @@ import Link from "next/link";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
 
-export const runtime = "edge";
+
 
 const tableHeaders = [
   { key: "preTax", label: "시급" },
@@ -33,29 +33,9 @@ const structuredData = {
   keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "2026년"],
 };
 
-async function HourlyTable2026({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+// 서버 컴포넌트는 데이터 로직에만 집중합니다.
+function HourlyTable2026() {
   const allData = generateHourlyWageTableData2026();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
   const highlightRows = [10320, 12000, 15000, 20000];
 
   return (
@@ -83,13 +63,13 @@ async function HourlyTable2026({
           }
         />
 
-        <HourlyTableInteractive
-          allData={allData}
-          tableHeaders={tableHeaders}
-          highlightRows={highlightRows}
-          totalPages={totalPages}
-          paginatedData={paginatedData}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <HourlyTableInteractive
+            allData={allData}
+            tableHeaders={tableHeaders}
+            highlightRows={highlightRows}
+          />
+        </Suspense>
 
         <div className="w-full py-16">
           <section>
@@ -161,14 +141,6 @@ async function HourlyTable2026({
   );
 }
 
-export default function HourlyTable2026Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HourlyTable2026 searchParams={searchParams} />
-    </Suspense>
-  );
+export default function HourlyTable2026Page() {
+  return <HourlyTable2026 />;
 }

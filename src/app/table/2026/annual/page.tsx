@@ -8,7 +8,7 @@ import Link from "next/link";
 import SalaryTable from "@/components/SalaryTable"; // Reusing the generic component
 import TableHero from "@/components/TableHero";
 
-export const runtime = "edge";
+
 
 const tableHeaders = [
   { key: "preTax", label: "연봉" },
@@ -21,29 +21,9 @@ const tableHeaders = [
   { key: "incomeTax", label: "소득세" },
 ];
 
-async function AnnualTable({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+// 서버 컴포넌트는 데이터 로직에만 집중합니다.
+function AnnualTable() {
   const allData = generateAnnualSalaryTableData2026();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
   const highlightRows = [26000000, 30000000, 50000000, 80000000, 100000000];
 
   return (
@@ -69,7 +49,7 @@ async function AnnualTable({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
         <SalaryTable
           headers={tableHeaders}
-          data={paginatedData}
+          data={allData} // Using allData, but wait, SalaryTable might need checking if it handles large data or pagination
           highlightRows={highlightRows}
         />
 
@@ -81,14 +61,6 @@ async function AnnualTable({
   );
 }
 
-export default function AnnualTablePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading 2026 Data...</div>}>
-      <AnnualTable searchParams={searchParams} />
-    </Suspense>
-  );
+export default function AnnualTablePage() {
+  return <AnnualTable />;
 }

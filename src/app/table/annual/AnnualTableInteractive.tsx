@@ -8,16 +8,12 @@ interface AnnualTableInteractiveProps {
   allData: SalaryData[];
   tableHeaders: { key: string; label: string }[];
   highlightRows: number[];
-  totalPages: number;
-  paginatedData: SalaryData[];
 }
 
 export default function AnnualTableInteractive({
   allData,
   tableHeaders,
   highlightRows,
-  totalPages,
-  paginatedData,
 }: AnnualTableInteractiveProps) {
   const pageConfig = {
     title: "연봉별 실수령액 시뮬레이터 (2025년)",
@@ -35,8 +31,6 @@ export default function AnnualTableInteractive({
       allData={allData}
       tableHeaders={tableHeaders}
       highlightRows={highlightRows}
-      totalPages={totalPages}
-      paginatedData={paginatedData}
       calculationFn={calculateNetSalary}
       pageConfig={pageConfig}
     />

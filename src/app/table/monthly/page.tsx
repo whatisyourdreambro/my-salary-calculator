@@ -7,7 +7,7 @@ import Link from "next/link";
 import MonthlyTableInteractive from "./MonthlyTableInteractive";
 import TableHero from "@/components/TableHero";
 
-export const runtime = "edge";
+
 
 const tableHeaders = [
   { key: "preTax", label: "월급" },
@@ -33,29 +33,8 @@ const structuredData = {
   keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2025년"],
 };
 
-async function MonthlyTable({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+function MonthlyTable() {
   const allData = generateMonthlySalaryTableData();
-
-  const page = parseInt(searchParams.page as string, 10) || 1;
-  const searchTerm = searchParams.searchTerm as string | undefined;
-  const itemsPerPage = 100;
-
-  const filteredData = searchTerm
-    ? allData.filter((row) =>
-      row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
-    )
-    : allData;
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
   const highlightRows = [3000000, 4000000, 5000000, 6000000];
 
   return (
@@ -83,13 +62,13 @@ async function MonthlyTable({
           }
         />
 
-        <MonthlyTableInteractive
-          allData={allData}
-          tableHeaders={tableHeaders}
-          highlightRows={highlightRows}
-          totalPages={totalPages}
-          paginatedData={paginatedData}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <MonthlyTableInteractive
+            allData={allData}
+            tableHeaders={tableHeaders}
+            highlightRows={highlightRows}
+          />
+        </Suspense>
 
         <div className="w-full py-16">
           <section>
@@ -157,14 +136,6 @@ async function MonthlyTable({
   );
 }
 
-export default function MonthlyTablePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MonthlyTable searchParams={searchParams} />
-    </Suspense>
-  );
+export default function MonthlyTablePage() {
+  return <MonthlyTable />;
 }
