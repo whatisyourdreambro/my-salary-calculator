@@ -1,3 +1,5 @@
+"use client";
+
 import AdUnit from "@/components/AdUnit";
 import React from "react";
 import { motion } from "framer-motion";
