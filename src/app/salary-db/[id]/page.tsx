@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 
 // Generate static params for all companies
+export const dynamic = 'force-static';
 export async function generateStaticParams() {
     const companies = companyRepository.getAll();
     return companies.map((company) => ({

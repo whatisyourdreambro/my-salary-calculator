@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import { Metadata } from "next";
 
+
+export const dynamic = 'force-static';
+
 export async function generateStaticParams() {
   return guides.map((guide) => ({
     slug: guide.slug,

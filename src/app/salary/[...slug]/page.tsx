@@ -9,6 +9,9 @@ import { salaryData, calculateRank } from "@/lib/salaryData";
 
 
 
+
+export const runtime = 'edge';
+
 type Props = {
   params: { slug: string[] };
 };

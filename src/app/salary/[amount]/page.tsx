@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 // Generate static params for popular salary ranges
+export const dynamic = 'force-static';
 export async function generateStaticParams() {
   const params = [];
 
