@@ -15,54 +15,54 @@ export default function Footer() {
     { name: "이용약관", href: "/terms" },
   ];
   const socialLinks = [
-    { icon: <Facebook size={20} />, href: "#" },
-    { icon: <Twitter size={20} />, href: "#" },
-    { icon: <Instagram size={20} />, href: "#" },
-    { icon: <Github size={20} />, href: "#" },
+    { icon: <Facebook size={18} />, href: "#" },
+    { icon: <Twitter size={18} />, href: "#" },
+    { icon: <Instagram size={18} />, href: "#" },
+    { icon: <Github size={18} />, href: "#" },
   ];
 
   return (
-    <footer className="w-full mt-32 border-t border-white/10 bg-zinc-950 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
-      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-emerald-500/10 blur-[100px] rounded-full pointer-events-none" />
+    <footer className="w-full mt-32 bg-[#1C1917] text-stone-400 relative overflow-hidden border-t border-stone-800">
+      {/* Decorative Top Border */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
-          <div className="md:w-1/3">
-            <Link href="/" className="flex items-center gap-2 group">
-              <Link href="/" className="flex items-center gap-2 group">
-                <Logo className="h-8 w-auto text-white" showText={true} />
-              </Link>
+      <div className="max-w-7xl mx-auto py-20 px-6 sm:px-8 relative z-10">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+
+          {/* Brand Section */}
+          <div className="md:w-1/3 space-y-6">
+            <Link href="/" className="inline-block group">
+              <Logo className="h-8 w-auto text-stone-200" showText={true} />
             </Link>
-            <p className="mt-4 text-base text-zinc-400 leading-relaxed">
-              당신의 경제적 여정을 돕는 든든한 파트너.
-              <br />
-              정확한 계산과 스마트한 인사이트를 제공합니다.
+            <p className="text-base text-stone-500 leading-relaxed font-sans max-w-sm">
+              우아한 금융 생활의 시작, 머니샐러리.<br />
+              <span className="text-stone-400">당신의 가치를 높이는 가장 정확한 기준을 제시합니다.</span>
             </p>
-            <div className="flex space-x-4 mt-6">
+            <div className="flex space-x-3 pt-2">
               {socialLinks.map((link, index) => (
                 <a
                   key={index}
                   href={link.href}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all duration-300 hover:scale-110"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-stone-800/50 border border-stone-700 hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
                 >
                   {link.icon}
                 </a>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-8 md:w-2/3">
+
+          {/* Links Section */}
+          <div className="grid grid-cols-2 gap-12 md:w-2/3 md:pl-12">
             <div>
-              <h3 className="text-sm font-bold tracking-wider uppercase text-emerald-500 mb-6">
-                핵심 기능
+              <h3 className="text-sm font-serif font-bold tracking-widest uppercase text-accent mb-8">
+                Services
               </h3>
               <ul className="space-y-4">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-zinc-400 hover:text-white hover:translate-x-1 transition-all inline-block"
+                      className="text-base text-stone-400 hover:text-stone-100 hover:translate-x-1 transition-all duration-300 inline-block font-sans"
                     >
                       {link.name}
                     </Link>
@@ -71,15 +71,15 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-bold tracking-wider uppercase text-emerald-500 mb-6">
-                기타
+              <h3 className="text-sm font-serif font-bold tracking-widest uppercase text-accent mb-8">
+                Legal & Support
               </h3>
               <ul className="space-y-4">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-zinc-400 hover:text-white hover:translate-x-1 transition-all inline-block"
+                      className="text-base text-stone-400 hover:text-stone-100 hover:translate-x-1 transition-all duration-300 inline-block font-sans"
                     >
                       {link.name}
                     </Link>
@@ -89,24 +89,15 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-white/10 text-center text-sm text-zinc-500">
+
+        {/* Bottom Bar */}
+        <div className="mt-20 pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-600 font-sans">
           <p>© {currentYear} Moneysalary. All Rights Reserved.</p>
-          <p className="mt-2">
-            본 사이트에서 제공하는 정보는 법적 효력이 없으며, 참고용으로만
-            사용하시기 바랍니다.
-          </p>
-          <p className="mt-2">
-            실시간 환율 정보는{" "}
-            <a
-              href="https://www.frankfurter.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-emerald-400 decoration-emerald-500/30 underline-offset-4"
-            >
-              Frankfurter API
-            </a>
-            를 통해 제공됩니다.
-          </p>
+          <div className="flex items-center gap-6">
+            <p className="hidden md:block">
+              Exchange rates via FKF API
+            </p>
+          </div>
         </div>
       </div>
     </footer>

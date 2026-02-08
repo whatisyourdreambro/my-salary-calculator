@@ -6,90 +6,95 @@
 
 @layer base {
   :root {
-    /* Light Mode - Premium Clean */
-    --background: 210 40% 98%;
-    /* Soft bluish white */
-    --foreground: 222 47% 11%;
-    /* Deep navy */
+    /* Light Mode - Warm Hotel Lobby */
+    --background: 40 20% 99%;
+    /* #FAFAF9 (Warm Cream) */
+    --foreground: 20 10% 15%;
+    /* #292524 (Warm Charcoal) */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 20 10% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 20 10% 15%;
 
-    --primary: 158 95% 34%;
-    /* Vibrant Premium Emerald */
-    --primary-foreground: 0 0% 100%;
+    --primary: 165 40% 25%;
+    /* #26594C (Regency Deep Green) */
+    --primary-foreground: 40 20% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 40 20% 94%;
+    /* #F0EFEA (Soft Stone) */
+    --secondary-foreground: 20 10% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 20% 96%;
+    --muted-foreground: 25 5% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 45 60% 50%;
+    /* #CC9254 (Antique Gold) */
+    --accent-foreground: 40 20% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 90%;
-    --input: 214.3 31.8% 90%;
-    --ring: 150 100% 30%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 165 40% 25%;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
+    /* Reduced for smarter look, less "app-like" */
 
-    /* Chart Colors - Professional Palette */
-    --chart-1: 150 100% 30%;
-    /* Emerald */
-    --chart-2: 210 100% 40%;
-    /* Royal Blue */
-    --chart-3: 260 60% 50%;
-    /* Deep Purple */
-    --chart-4: 45 90% 50%;
+    /* Chart Colors - Elegant Palette */
+    --chart-1: 165 40% 30%;
+    /* Deep Green */
+    --chart-2: 45 50% 55%;
     /* Gold */
-    --chart-5: 10 80% 55%;
-    /* Terra Cotta */
+    --chart-3: 20 20% 40%;
+    /* Taupe */
+    --chart-4: 200 30% 35%;
+    /* Slate Blue */
+    --chart-5: 15 40% 50%;
+    /* Terracotta */
   }
 
   .dark {
-    /* Dark Mode - Premium Deep Space */
-    --background: 224 71% 2%;
-    /* Absolute deep space black/navy */
-    --foreground: 210 40% 98%;
+    /* Dark Mode - Luxury Lounge */
+    --background: 24 10% 10%;
+    /* #1C1917 (Warm Dark) */
+    --foreground: 40 20% 90%;
+    /* #E7E5E4 (Soft Cream) */
 
-    --card: 224 71% 6%;
-    --card-foreground: 210 40% 98%;
+    --card: 24 10% 12%;
+    --card-foreground: 40 20% 90%;
 
-    --popover: 224 71% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 24 10% 12%;
+    --popover-foreground: 40 20% 90%;
 
-    --primary: 158 82% 50%;
-    /* Neon Emerald for dark mode pop */
-    --primary-foreground: 144 100% 5%;
+    --primary: 165 30% 50%;
+    /* #599C8B (Soft Jade) */
+    --primary-foreground: 24 10% 10%;
 
-    --secondary: 217 33% 12%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 24 5% 18%;
+    --secondary-foreground: 40 20% 90%;
 
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 24 5% 18%;
+    --muted-foreground: 40 5% 60%;
 
-    --accent: 217 33% 12%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 50% 55%;
+    /* #CBA577 (Muted Gold) */
+    --accent-foreground: 24 10% 10%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 15%;
-    --input: 217 33% 15%;
-    --ring: 150 60% 50%;
+    --border: 24 5% 20%;
+    --input: 24 5% 20%;
+    --ring: 165 30% 50%;
 
-    --chart-1: 150 60% 50%;
-    --chart-2: 210 70% 60%;
-    --chart-3: 260 70% 65%;
-    --chart-4: 45 80% 60%;
-    --chart-5: 10 70% 65%;
+    --chart-1: 165 30% 50%;
+    --chart-2: 45 40% 60%;
+    --chart-3: 20 10% 50%;
+    --chart-4: 200 20% 50%;
+    --chart-5: 15 30% 60%;
   }
 }
 
@@ -99,97 +104,66 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif tracking-tight;
   }
 }
 
 @layer utilities {
 
-  /* Premium Glass Effects */
+  /* Hotel Luxury - Frosted Marble Glass */
   .glass {
-    @apply bg-white/70 dark:bg-slate-950/50 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
+    @apply bg-white/80 dark:bg-[#1C1917]/80 backdrop-blur-md border border-stone-200/50 dark:border-stone-800/50 shadow-sm;
   }
 
   .glass-card {
-    @apply bg-white/60 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/40 dark:border-white/5 shadow-xl transition-all duration-300 hover:shadow-2xl hover:bg-white/70 dark:hover:bg-slate-900/50;
+    @apply bg-white/60 dark:bg-[#1C1917]/60 backdrop-blur-xl border border-white/40 dark:border-white/5 shadow-lg transition-all duration-500 hover:shadow-xl hover:bg-white/90 dark:hover:bg-[#1C1917]/80 rounded-xl;
   }
 
   .glass-input {
-    @apply bg-white/50 dark:bg-slate-950/50 backdrop-blur-md border border-slate-200 dark:border-slate-800 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+    @apply bg-stone-50/50 dark:bg-stone-900/50 backdrop-blur border border-stone-200 dark:border-stone-800 focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-all duration-300 rounded-md;
   }
 
-  /* Premium Gradients */
+  /* Elegant Gradients */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 dark:from-white dark:via-slate-200 dark:to-slate-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-stone-800 via-stone-600 to-stone-800 dark:from-stone-200 dark:via-stone-400 dark:to-stone-200;
   }
 
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--primary))] to-teal-700 dark:from-[hsl(var(--primary))] dark:to-teal-300;
   }
 
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 dark:from-amber-300 dark:via-yellow-200 dark:to-amber-400;
   }
 
-  /* Aurora Background - Enhanced */
-  .aurora-bg {
-    background:
-      radial-gradient(circle at 0% 0%, hsla(150, 50%, 15%, 0.15) 0, transparent 50%),
-      radial-gradient(circle at 100% 0%, hsla(220, 50%, 20%, 0.15) 0, transparent 50%),
-      radial-gradient(circle at 50% 100%, hsla(260, 40%, 20%, 0.1) 0, transparent 50%);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .dark .aurora-bg {
-    background:
-      radial-gradient(circle at 0% 0%, hsla(150, 40%, 10%, 0.3) 0, transparent 60%),
-      radial-gradient(circle at 100% 0%, hsla(220, 40%, 15%, 0.3) 0, transparent 60%),
-      radial-gradient(circle at 50% 100%, hsla(260, 30%, 15%, 0.2) 0, transparent 60%);
-  }
-
-  /* Glow Effects */
-  .glow-sm {
-    box-shadow: 0 0 10px -2px theme('colors.primary.DEFAULT / 0.2');
-  }
-
-  .glow-md {
-    box-shadow: 0 0 20px -5px theme('colors.primary.DEFAULT / 0.3');
+  /* Soft Ambient Glow */
+  .glow-soft {
+    box-shadow: 0 0 30px -10px theme('colors.primary.DEFAULT / 0.15');
   }
 
   .glow-gold {
-    box-shadow: 0 0 20px -5px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 0 30px -10px rgba(204, 146, 84, 0.2);
+  }
+
+  /* Luxury Marble Background Pattern (Subtle) */
+  .bg-marble {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
 }
 
-@keyframes aurora {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.animate-aurora {
-  animation: aurora 20s ease infinite;
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbar - Minimal */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -197,5 +171,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-700 rounded-full hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors;
+  @apply bg-stone-300 dark:bg-stone-700 rounded-full hover:bg-stone-400 dark:hover:bg-stone-600 transition-colors;
 }

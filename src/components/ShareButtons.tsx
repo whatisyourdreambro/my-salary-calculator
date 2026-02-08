@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Share2, Link as LinkIcon, Facebook, Twitter, MessageCircle } from "lucide-react";
+import { Share2, Link as LinkIcon, MessageCircle, Twitter, Facebook } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ShareButtonsProps {
@@ -84,69 +84,61 @@ export default function ShareButtons({
         );
     };
 
-    const handleLineShare = () => {
-        window.open(
-            `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`,
-            "_blank"
-        );
-    };
-
     return (
-        <div className={`flex flex-wrap gap-2 items-center justify-center ${className}`}>
+        <div className={`flex flex-wrap gap-3 items-center ${className}`}>
             {/* Kakao Share */}
-            <button
+            <motion.button
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleKakaoShare}
-                className="w-10 h-10 rounded-full bg-[#FEE500] flex items-center justify-center hover:scale-110 transition-transform shadow-sm"
+                className="w-10 h-10 rounded-full bg-[#FEE500] flex items-center justify-center shadow-lg shadow-[#FEE500]/30 transition-all border border-[#FEE500]"
                 aria-label="카카오톡 공유"
             >
-                <MessageCircle className="w-5 h-5 text-[#000000]" fill="currentColor" />
-            </button>
+                <MessageCircle className="w-5 h-5 text-[#371D1E]" fill="currentColor" />
+            </motion.button>
 
             {/* Facebook Share */}
-            <button
+            <motion.button
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleFacebookShare}
-                className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center hover:scale-110 transition-transform shadow-sm"
+                className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center shadow-lg shadow-[#1877F2]/30 transition-all border border-[#1877F2]"
                 aria-label="페이스북 공유"
             >
                 <Facebook className="w-5 h-5 text-white" fill="currentColor" />
-            </button>
+            </motion.button>
 
             {/* Twitter/X Share */}
-            <button
+            <motion.button
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleTwitterShare}
-                className="w-10 h-10 rounded-full bg-black flex items-center justify-center hover:scale-110 transition-transform shadow-sm"
+                className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-lg shadow-black/30 transition-all border border-zinc-800"
                 aria-label="트위터 공유"
             >
-                <Twitter className="w-5 h-5 text-white" fill="currentColor" />
-            </button>
-
-            {/* Line Share */}
-            <button
-                onClick={handleLineShare}
-                className="w-10 h-10 rounded-full bg-[#06C755] flex items-center justify-center hover:scale-110 transition-transform shadow-sm"
-                aria-label="라인 공유"
-            >
-                <span className="text-white font-bold text-xs">LINE</span>
-            </button>
+                <Twitter className="w-4 h-4 text-white" fill="currentColor" />
+            </motion.button>
 
             {/* Copy Link */}
             <div className="relative">
-                <button
+                <motion.button
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleCopyLink}
-                    className="w-10 h-10 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center hover:scale-110 transition-transform shadow-sm border border-gray-200 dark:border-zinc-700"
+                    className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shadow-lg shadow-secondary/30 transition-all border border-border hover:bg-foreground hover:text-secondary hover:border-foreground"
                     aria-label="링크 복사"
                 >
-                    <LinkIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </button>
+                    <LinkIcon className="w-4 h-4" />
+                </motion.button>
                 <AnimatePresence>
                     {showCopied && (
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: -40 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap"
+                            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                            animate={{ opacity: 1, y: -45, scale: 1 }}
+                            exit={{ opacity: 0, y: 0, scale: 0.8 }}
+                            className="absolute left-1/2 -translate-x-1/2 bg-foreground text-background font-bold text-xs py-1.5 px-3 rounded-full whitespace-nowrap shadow-xl"
                         >
-                            복사됨!
+                            복사 완료!
                         </motion.div>
                     )}
                 </AnimatePresence>

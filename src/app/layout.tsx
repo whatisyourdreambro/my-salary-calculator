@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR, Inter } from "next/font/google";
+import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { NextThemesProvider } from "./providers";
@@ -9,32 +9,33 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import AdUnit from "@/components/AdUnit";
 
-const notoSansKr = Noto_Sans_KR({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
-  variable: "--font-noto",
+  variable: "--font-playfair",
 });
 
-const inter = Inter({
+const lato = Lato({
   subsets: ["latin"],
+  weight: ["100", "300", "400", "700", "900"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-lato",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.moneysalary.com"),
   title: {
-    default: "2025년 연봉 실수령액 계산기 | Moneysalary",
-    template: "%s | Moneysalary",
+    default: "MoneySalary | Premium Salary & Tax Calculator",
+    template: "%s | MoneySalary",
   },
+  // ... (rest of metadata remains mostly same, just updating title flavor if needed, but keeping it minimal for now)
   description:
-    "2025년 최신 세법(4대보험, 소득세) 기준 연봉 실수령액을 가장 빠르고 정확하게 계산하세요. 연봉, 월급, 퇴직금 세후 금액을 바로 확인할 수 있습니다.",
+    "Experience the most elegant and precise salary calculator. Check your 2025 net income with our premium financial tools.",
   keywords: ["연봉계산기", "2025연봉계산기", "실수령액계산기", "월급계산기", "퇴직금계산기", "연봉실수령액", "4대보험계산기", "연말정산", "Moneysalary", "머니샐러리"],
   twitter: {
     card: "summary_large_image",
-    title: "Moneysalary - 2025년 연봉 실수령액 계산기",
-    description: "2025년 최신 세법 완벽 반영! 내 연봉의 실제 수령액을 1초 만에 확인하세요.",
+    title: "MoneySalary - Premium Financial Tools",
+    description: "Elegant, Precise, Professional. Calculate your 2025 net income instantly.",
     images: ["/logo-full.png"],
   },
   verification: {
@@ -44,8 +45,8 @@ export const metadata: Metadata = {
     google: "google-site-verification-placeholder", // User to replace if needed
   },
   openGraph: {
-    title: "Moneysalary 연봉 계산기",
-    description: "2025년 최신 기준, 가장 정확한 연봉 실수령액을 계산해보세요.",
+    title: "MoneySalary Premium Calculator",
+    description: "2025 Standard Top-Tier Financial Tools.",
     siteName: "Moneysalary",
     images: [
       {
@@ -75,7 +76,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#10b981", // Emerald-500
+  themeColor: "#1c1917", // Warm Dark Grey (Stone-900)
 };
 
 declare global {
@@ -94,7 +95,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html lang="ko" className={`${playfair.variable} ${lato.variable}`} suppressHydrationWarning>
       <head>
         <Script id="google-tag-manager-head" strategy="afterInteractive">
           {`
@@ -158,7 +159,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden`}>
+      <body className={`font-sans min-h-screen bg-background text-foreground antialiased selection:bg-accent/30 selection:text-accent-foreground overflow-x-hidden`}>
         <Script
           id="ld-json"
           type="application/ld+json"
