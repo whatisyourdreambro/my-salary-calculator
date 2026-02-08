@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -25,11 +25,15 @@ import {
   Coins,
   Coffee,
   Palmtree,
-  Info
+  Info,
+  CheckCircle2,
+  Sparkles,
+  PiggyBank
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import AdUnit from "@/components/AdUnit";
+import confetti from "canvas-confetti";
 
 // --- Types & Utilities ---
 
@@ -60,7 +64,7 @@ interface FireInputs {
   investmentStrategy: InvestmentStrategy;
   customReturn: string;
   retirementIncome: string;
-  withdrawalRate: string; // New: 4% rule adjustment
+  withdrawalRate: string;
 }
 
 const strategyReturns = {
@@ -128,7 +132,7 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
       assets: futureValue,
       contribution: totalContributions,
       target: targetAmount,
-      coast: coastFireTarget * Math.pow(1 + annualReturnRate, 0), // Coast line grows? No, Coast target is static present value usually, but for chart we can show "Coast Path"
+      coast: coastFireTarget * Math.pow(1 + annualReturnRate, 0),
     },
   ];
   let currentTargetAmount = targetAmount;
@@ -160,7 +164,7 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
       assets: Math.round(futureValue),
       contribution: Math.round(totalContributions),
       target: Math.round(currentTargetAmount),
-      coast: 0, // Placeholder
+      coast: 0,
     });
   }
 
@@ -184,11 +188,13 @@ const CurrencyInput = ({
   value,
   onValueChange,
   quickAmounts,
+  icon: Icon
 }: {
   label: string;
   value: string;
   onValueChange: (val: string) => void;
   quickAmounts?: number[];
+  icon?: any;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/,/g, "");
@@ -198,16 +204,19 @@ const CurrencyInput = ({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium text-muted-foreground">{label}</label>
+    <div className="space-y-2 group">
+      <label className="text-sm font-medium text-slate-400 group-focus-within:text-primary transition-colors flex items-center gap-2">
+        {Icon && <Icon className="w-4 h-4" />}
+        {label}
+      </label>
       <div className="relative">
         <input
           type="text"
           value={value}
           onChange={handleChange}
-          className="w-full p-4 text-lg font-bold bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+          className="w-full p-4 pl-4 text-lg font-bold bg-zinc-900/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-white placeholder:text-zinc-700"
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-medium group-focus-within:text-white transition-colors">
           원
         </span>
       </div>
@@ -220,7 +229,7 @@ const CurrencyInput = ({
                 const current = Number(value.replace(/,/g, "")) || 0;
                 onValueChange((current + amount).toLocaleString());
               }}
-              className="px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full hover:bg-secondary/80 transition-colors"
+              className="px-3 py-1.5 text-xs font-semibold bg-white/5 text-slate-300 rounded-full hover:bg-white/10 hover:text-white border border-white/5 transition-all"
             >
               +{amount / 10000}만
             </button>
@@ -250,7 +259,7 @@ export default function FireCalculatorPage() {
     field: keyof FireInputs,
     value: string | InvestmentStrategy
   ) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
+    setInputs((prev) => ({ ...prev, [field]: value as any }));
   };
 
   const {
@@ -266,6 +275,17 @@ export default function FireCalculatorPage() {
     () => calculateFireDate(inputs, lifeEvents),
     [inputs, lifeEvents]
   );
+
+  useEffect(() => {
+    if (step === 'result' && yearsToFire !== Infinity) {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#3b82f6', '#8b5cf6']
+      });
+    }
+  }, [step, yearsToFire]);
 
   const addLifeEvent = () =>
     setLifeEvents([
@@ -293,457 +313,593 @@ export default function FireCalculatorPage() {
     setLifeEvents(lifeEvents.filter((_, i) => i !== index));
 
   return (
-    <main className="w-full min-h-screen bg-background pb-20">
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+    <main className="w-full min-h-screen bg-black pb-20 selection:bg-indigo-500/30">
+      {/* Deep Space Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-black pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-[0.03] pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow delay-1000" />
+      </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      {/* Content Wrapper */}
+      <div className="relative z-10 w-full">
+        {/* Hero Section */}
+        <section className="relative py-24 sm:py-32 overflow-hidden text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="max-w-4xl mx-auto px-4"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-300 font-medium text-sm mb-6">
-              <Flame className="w-4 h-4" />
-              <span>FIRE Movement Simulator</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-300 font-medium text-sm mb-8 shadow-[0_0_20px_-5px_rgba(99,102,241,0.3)]">
+              <Flame className="w-4 h-4 text-indigo-400" />
+              <span className="tracking-wide">FIRE Movement Simulator</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              경제적 자유를 향한 <br className="sm:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-                가장 현실적인 로드맵
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-8 leading-[1.1]">
+              Design Your <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-gradient-x">
+                Financial Freedom
               </span>
             </h1>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              단순한 계산을 넘어, 당신의 인생 계획을 시뮬레이션합니다. <br className="hidden sm:block" />
-              언제쯤 일에서 해방될 수 있을지 확인해보세요.
+
+            <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              단순히 돈을 모으는 것이 아닙니다. <br className="hidden sm:block" />
+              당신의 시간을 되찾는 가장 정교한 시뮬레이션을 경험하세요.
             </p>
           </motion.div>
-        </div>
-      </section>
+        </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
-        <AnimatePresence mode="wait">
-          {step === "intro" ? (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-card rounded-3xl shadow-2xl border border-border p-8 sm:p-12 text-center"
-            >
-              <div className="max-w-lg mx-auto space-y-8">
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { icon: Target, label: "목표 설정" },
-                    { icon: TrendingUp, label: "투자 전략" },
-                    { icon: Rocket, label: "자유 달성" },
-                  ].map(({ icon: Icon, label }, i) => (
-                    <div key={label} className="flex flex-col items-center gap-2 p-4 bg-secondary/50 rounded-2xl">
-                      <Icon className="w-8 h-8 text-primary" />
-                      <span className="font-medium text-sm">{label}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-muted-foreground">
-                  현재 자산, 저축액, 그리고 예상되는 미래의 이벤트들을 입력하면
-                  AI 알고리즘이 당신의 은퇴 시기를 예측해드립니다.
-                </p>
-                <button
-                  onClick={() => setStep("essentials")}
-                  className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl text-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/25"
-                >
-                  시뮬레이션 시작하기
-                </button>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="calculator"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-card rounded-3xl shadow-2xl border border-border overflow-hidden"
-            >
-              {/* Progress Bar */}
-              <div className="bg-secondary/30 border-b border-border p-4">
-                <div className="flex justify-center items-center gap-2 sm:gap-4">
-                  {(["기본 정보", "투자 전략", "생애 이벤트", "결과 확인"] as const).map(
-                    (name, index) => {
-                      const stepOrder: CalculationStep[] = [
-                        "essentials",
-                        "investment",
-                        "events",
-                        "result",
-                      ];
-                      const isActive = stepOrder.indexOf(step) >= index;
-                      return (
-                        <div key={name} className="flex items-center gap-2">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${isActive
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-secondary text-muted-foreground"
-                              }`}
-                          >
-                            {index + 1}
-                          </div>
-                          <span className={`hidden sm:inline text-sm font-medium ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
-                            {name}
-                          </span>
-                          {index < 3 && <div className="w-8 h-[2px] bg-border mx-2 hidden sm:block" />}
-                        </div>
-                      );
-                    }
-                  )}
-                </div>
-              </div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative">
+          <AnimatePresence mode="wait">
+            {step === "intro" ? (
+              <motion.div
+                key="intro"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                transition={{ duration: 0.5 }}
+                className="glass-card bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 sm:p-14 text-center shadow-2xl relative overflow-hidden group"
+              >
+                {/* Decorative Elements */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="p-6 sm:p-10">
-                {step === "essentials" && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-8 max-w-2xl mx-auto"
-                  >
-                    <div className="text-center mb-8">
-                      <h2 className="text-2xl font-bold mb-2">현재 상황을 알려주세요</h2>
-                      <p className="text-muted-foreground">정확한 진단을 위해 솔직하게 입력해주세요.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">현재 나이</label>
-                        <input
-                          type="number"
-                          value={inputs.currentAge}
-                          onChange={(e) => handleInputChange("currentAge", e.target.value)}
-                          className="w-full p-4 text-lg font-bold bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary/50"
-                        />
-                      </div>
-                      <CurrencyInput
-                        label="현재 모은 돈 (순자산)"
-                        value={inputs.currentSavings}
-                        onValueChange={(v) => handleInputChange("currentSavings", v)}
-                        quickAmounts={[10000000, 50000000]}
-                      />
-                      <CurrencyInput
-                        label="월 저축/투자 금액"
-                        value={inputs.monthlySavings}
-                        onValueChange={(v) => handleInputChange("monthlySavings", v)}
-                        quickAmounts={[100000, 500000]}
-                      />
-                      <CurrencyInput
-                        label="은퇴 후 월 목표 생활비"
-                        value={inputs.monthlySpending}
-                        onValueChange={(v) => handleInputChange("monthlySpending", v)}
-                        quickAmounts={[100000, 500000]}
-                      />
-                    </div>
-
-                    <button
-                      onClick={() => setStep("investment")}
-                      className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all mt-8"
-                    >
-                      다음 단계로
-                    </button>
-                  </motion.div>
-                )}
-
-                {step === "investment" && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-8 max-w-2xl mx-auto"
-                  >
-                    <div className="text-center mb-8">
-                      <h2 className="text-2xl font-bold mb-2">미래 계획을 세워볼까요?</h2>
-                      <p className="text-muted-foreground">투자 성향과 예상 소득 변화를 입력하세요.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">연평균 소득 상승률 (%)</label>
-                        <input
-                          type="number"
-                          value={inputs.salaryGrowthRate}
-                          onChange={(e) => handleInputChange("salaryGrowthRate", e.target.value)}
-                          className="w-full p-4 text-lg font-bold bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary/50"
-                        />
-                      </div>
-                      <CurrencyInput
-                        label="은퇴 후 월 추가소득 (국민연금 등)"
-                        value={inputs.retirementIncome}
-                        onValueChange={(v) => handleInputChange("retirementIncome", v)}
-                        quickAmounts={[100000, 500000]}
-                      />
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                          인출률 (Withdrawal Rate)
-                          <div className="group relative">
-                            <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-                              은퇴 자금에서 매년 꺼내 쓸 비율입니다. 통상적으로 4%가 안전하다고 알려져 있습니다.
-                            </div>
-                          </div>
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="number"
-                            value={inputs.withdrawalRate}
-                            onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
-                            className="w-full p-4 text-lg font-bold bg-background border border-border rounded-xl focus:ring-2 focus:ring-primary/50"
-                          />
-                          <span className="font-bold">%</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <label className="text-sm font-medium text-muted-foreground">투자 성향 선택</label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {[
-                          { id: "conservative", Icon: Shield, label: "안정형", return: 4, desc: "예금 위주" },
-                          { id: "balanced", Icon: TrendingUp, label: "균형형", return: 7, desc: "주식+채권" },
-                          { id: "aggressive", Icon: Rocket, label: "공격형", return: 10, desc: "주식 위주" },
-                        ].map(({ id, Icon, label, return: returnValue, desc }) => (
-                          <button
-                            key={id}
-                            onClick={() => handleInputChange("investmentStrategy", id as InvestmentStrategy)}
-                            className={`p-4 rounded-xl border-2 transition-all text-center space-y-2 ${inputs.investmentStrategy === id
-                              ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                              : "border-border hover:border-primary/50 hover:bg-accent"
-                              }`}
-                          >
-                            <Icon className={`w-8 h-8 mx-auto ${inputs.investmentStrategy === id ? "text-primary" : "text-muted-foreground"}`} />
-                            <div>
-                              <p className="font-bold">{label}</p>
-                              <p className="text-xs text-muted-foreground">{desc}</p>
-                            </div>
-                            <div className="text-sm font-bold text-primary">연 {returnValue}%</div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => setStep("events")}
-                      className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all mt-8"
-                    >
-                      다음 단계로
-                    </button>
-                  </motion.div>
-                )}
-
-                {step === "events" && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-8 max-w-2xl mx-auto"
-                  >
-                    <div className="text-center mb-8">
-                      <h2 className="text-2xl font-bold mb-2">특별한 이벤트가 있나요?</h2>
-                      <p className="text-muted-foreground">결혼, 주택 구입 등 큰 지출이나 수입을 예상해보세요.</p>
-                    </div>
-
-                    <div className="space-y-4 min-h-[200px]">
-                      {lifeEvents.map((event, index) => (
-                        <div key={index} className="p-4 bg-secondary/30 border border-border rounded-xl flex items-center gap-3 flex-wrap animate-fade-in-up">
-                          <div className="flex items-center gap-2 bg-background p-2 rounded-lg border border-border">
-                            <input
-                              type="number"
-                              value={event.year}
-                              onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
-                              className="w-12 text-center bg-transparent font-bold outline-none"
-                            />
-                            <span className="text-sm text-muted-foreground">년 후</span>
-                          </div>
-
-                          <input
-                            type="text"
-                            placeholder="이벤트명 (예: 결혼)"
-                            value={event.description}
-                            onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
-                            className="flex-grow p-2 bg-transparent border-b border-border focus:border-primary outline-none"
-                          />
-
-                          <select
-                            value={event.type}
-                            onChange={(e) => updateLifeEvent(index, "type", e.target.value)}
-                            className="p-2 bg-background border border-border rounded-lg text-sm"
-                          >
-                            <option value="oneTimeExpense">지출 (-)</option>
-                            <option value="oneTimeIncome">수입 (+)</option>
-                          </select>
-
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={formatNumber(parseNumber(event.amount))}
-                              onChange={(e) => updateLifeEvent(index, "amount", e.target.value.replace(/[^0-9]/g, ""))}
-                              className="w-24 text-right bg-transparent border-b border-border focus:border-primary outline-none font-bold"
-                            />
-                            <span className="text-sm">원</span>
-                          </div>
-
-                          <button onClick={() => removeLifeEvent(index)} className="text-muted-foreground hover:text-destructive transition-colors">
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      ))}
-
-                      <button
-                        onClick={addLifeEvent}
-                        className="w-full py-3 border-2 border-dashed border-border rounded-xl text-muted-foreground hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
+                <div className="max-w-xl mx-auto space-y-12 relative z-10">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    {[
+                      { icon: Target, label: "목표 설정", desc: "나만의 기준" },
+                      { icon: TrendingUp, label: "투자 전략", desc: "복리의 마법" },
+                      { icon: Sparkles, label: "자유 달성", desc: "새로운 삶" },
+                    ].map(({ icon: Icon, label, desc }, i) => (
+                      <motion.div
+                        key={label}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 + (i * 0.1) }}
+                        className="flex flex-col items-center gap-3 p-6 bg-white/5 rounded-3xl border border-white/5 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 transition-all duration-300"
                       >
-                        <PlusCircle size={20} /> 이벤트 추가하기
-                      </button>
-                    </div>
+                        <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-300 ring-1 ring-white/10">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <span className="block font-bold text-white text-lg mb-1">{label}</span>
+                          <span className="text-xs text-slate-400 font-medium tracking-wide uppercase">{desc}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
 
-                    <button
-                      onClick={() => setStep("result")}
-                      className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all mt-8"
-                    >
-                      결과 확인하기
-                    </button>
-                  </motion.div>
-                )}
+                  <div className="space-y-2">
+                    <p className="text-slate-300 text-lg leading-relaxed">
+                      현재 자산부터 은퇴 후 꿈꾸는 라이프스타일까지,<br />
+                      AI 알고리즘이 당신의 <span className="text-indigo-400 font-bold">경제적 자유 시점</span>을 예측해드립니다.
+                    </p>
+                  </div>
 
-                {step === "result" && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="space-y-8"
+                  <motion.button
+                    layoutId="next-button"
+                    onClick={() => setStep("essentials")}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl text-lg hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.5)] transition-all overflow-hidden"
                   >
-                    <div className="text-center space-y-4">
-                      {yearsToFire === Infinity ? (
-                        <div className="p-8 bg-destructive/10 rounded-2xl border border-destructive/20">
-                          <h2 className="text-2xl font-bold text-destructive mb-2">목표 달성이 어렵습니다 😥</h2>
-                          <p className="text-muted-foreground">저축액을 늘리거나, 목표 생활비를 조정해보세요.</p>
-                        </div>
-                      ) : (
-                        <div className="p-8 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl border border-indigo-500/20">
-                          <p className="text-lg text-muted-foreground mb-2">경제적 자유까지</p>
-                          <h2 className="text-5xl sm:text-7xl font-bold text-foreground mb-4">
-                            <CountUp end={yearsToFire} />년
-                          </h2>
-                          <p className="text-xl">
-                            <span className="font-bold text-primary">{finalAge}세</span>에 은퇴 가능합니다! 🎉
-                          </p>
-                        </div>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      시뮬레이션 시작하기 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="calculator"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-zinc-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/10 overflow-hidden"
+              >
+                {/* Modern Step Indicator */}
+                <div className="bg-zinc-950/50 border-b border-white/5 px-4 pt-8 pb-0">
+                  <div className="max-w-2xl mx-auto">
+                    <div className="flex justify-between items-center relative pb-8">
+                      {/* Progress Line */}
+                      <div className="absolute top-4 left-0 w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${(['essentials', 'investment', 'events', 'result'].indexOf(step) / 3) * 100}%` }}
+                          transition={{ duration: 0.5, ease: "easeInOut" }}
+                        />
+                      </div>
+
+                      {(["기본 정보", "투자 전략", "생애 이벤트", "결과 확인"] as const).map(
+                        (name, index) => {
+                          const stepOrder: CalculationStep[] = [
+                            "essentials",
+                            "investment",
+                            "events",
+                            "result",
+                          ];
+                          const currentIdx = stepOrder.indexOf(step);
+                          const isActive = currentIdx >= index;
+                          const isCurrent = currentIdx === index;
+
+                          return (
+                            <div key={name} className="relative z-10 flex flex-col items-center gap-3 w-20">
+                              <motion.div
+                                animate={{
+                                  scale: isCurrent ? 1.2 : 1,
+                                  backgroundColor: isActive ? "#6366f1" : "rgba(255,255,255,0.05)",
+                                  borderColor: isActive ? "#818cf8" : "rgba(255,255,255,0.1)"
+                                }}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ring-4 ring-black border transition-colors ${isActive ? "text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]" : "text-slate-500 border-white/10"}`}
+                              >
+                                {isActive ? <CheckCircle2 className="w-4 h-4" /> : index + 1}
+                              </motion.div>
+                              <span className={`text-[11px] font-bold tracking-tight uppercase ${isActive ? "text-white" : "text-slate-600"}`}>
+                                {name}
+                              </span>
+                            </div>
+                          );
+                        }
                       )}
                     </div>
+                  </div>
+                </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {[
-                        { label: "최종 목표 금액", value: finalTargetAmount, color: "text-foreground" },
-                        { label: "총 납입 원금", value: totalContributions, color: "text-muted-foreground" },
-                        { label: "총 투자 수익", value: totalReturns, color: "text-green-500" },
-                      ].map((item) => (
-                        <div key={item.label} className="bg-secondary/30 p-6 rounded-xl text-center border border-border">
-                          <p className="text-sm text-muted-foreground mb-2">{item.label}</p>
-                          <p className={`text-xl font-bold ${item.color}`}>
-                            <CountUp end={item.value} separator="," />원
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200 dark:border-orange-800">
-                        <div className="flex items-center gap-2 mb-2 text-orange-600 dark:text-orange-400">
-                          <Palmtree className="w-5 h-5" />
-                          <h3 className="font-bold">Coast FIRE</h3>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          지금 당장 은퇴하진 않지만, 더 이상 노후 대비 저축을 하지 않아도 되는 상태입니다.
-                        </p>
-                        <p className="text-2xl font-bold text-foreground">
-                          <CountUp end={coastFireTarget} separator="," />원
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          (현재 이 금액이 있다면 저축 중단 가능)
-                        </p>
+                <div className="p-6 sm:p-12 relative">
+                  {step === "essentials" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-10 max-w-2xl mx-auto"
+                    >
+                      <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-3">현재 상황을 입력해주세요</h2>
+                        <p className="text-slate-400 text-lg">가장 기본적인 데이터를 바탕으로 시작합니다.</p>
                       </div>
-                      <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                        <div className="flex items-center gap-2 mb-2 text-emerald-600 dark:text-emerald-400">
-                          <Coffee className="w-5 h-5" />
-                          <h3 className="font-bold">Barista FIRE</h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-2 group">
+                          <label className="text-sm font-medium text-slate-400 group-focus-within:text-primary transition-colors">현재 나이</label>
+                          <input
+                            type="number"
+                            value={inputs.currentAge}
+                            onChange={(e) => handleInputChange("currentAge", e.target.value)}
+                            className="w-full p-4 text-lg font-bold bg-zinc-900/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-white"
+                          />
                         </div>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          생활비의 50%를 아르바이트 등으로 충당하며 반은퇴 상태를 즐기는 목표액입니다.
-                        </p>
-                        <p className="text-2xl font-bold text-foreground">
-                          <CountUp end={baristaTargetAmount} separator="," />원
-                        </p>
+                        <CurrencyInput
+                          label="현재 모은 돈 (순자산)"
+                          value={inputs.currentSavings}
+                          onValueChange={(v) => handleInputChange("currentSavings", v)}
+                          quickAmounts={[10000000, 50000000]}
+                          icon={Coins}
+                        />
+                        <CurrencyInput
+                          label="월 저축/투자 금액"
+                          value={inputs.monthlySavings}
+                          onValueChange={(v) => handleInputChange("monthlySavings", v)}
+                          quickAmounts={[100000, 500000]}
+                          icon={PiggyBank}
+                        />
+                        <CurrencyInput
+                          label="은퇴 후 월 목표 생활비"
+                          value={inputs.monthlySpending}
+                          onValueChange={(v) => handleInputChange("monthlySpending", v)}
+                          quickAmounts={[100000, 500000]}
+                          icon={Coffee}
+                        />
                       </div>
-                    </div>
 
-                    <div className="h-[400px] w-full bg-card border border-border rounded-xl p-4">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                          <defs>
-                            <linearGradient id="colorAssets" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
-                          <XAxis dataKey="age" unit="세" />
-                          <YAxis tickFormatter={(v) => `${(v / 100000000).toFixed(0)}억`} />
-                          <Tooltip
-                            contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                            formatter={(value: number) => `${formatNumber(value)}원`}
-                          />
-                          <Legend />
-                          <Area
-                            type="monotone"
-                            dataKey="assets"
-                            name="총 자산"
-                            stroke="#8884d8"
-                            fillOpacity={1}
-                            fill="url(#colorAssets)"
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="contribution"
-                            name="납입 원금"
-                            stroke="#82ca9d"
-                            fill="transparent"
-                            strokeDasharray="5 5"
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="target"
-                            name="목표 금액 (인플레이션 반영)"
-                            stroke="#ff7300"
-                            fill="transparent"
-                            strokeDasharray="3 3"
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    <div className="flex justify-center pt-8">
-                      <button
-                        onClick={() => setStep("essentials")}
-                        className="px-8 py-3 border border-border rounded-full hover:bg-secondary transition-colors text-sm font-medium"
+                      <motion.button
+                        layoutId="next-button"
+                        onClick={() => setStep("investment")}
+                        className="w-full py-5 bg-white text-black font-bold rounded-2xl text-lg hover:bg-slate-200 transition-all mt-8"
                       >
-                        조건 변경하여 다시 계산하기
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                        다음 단계로
+                      </motion.button>
+                    </motion.div>
+                  )}
 
-        {/* Bottom Ad */}
-        <div className="mt-12">
-          <AdUnit slotId="9988776655" format="auto" label="FIRE Bottom Ad" />
+                  {step === "investment" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-10 max-w-3xl mx-auto"
+                    >
+                      <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-3">미래 계획 설계</h2>
+                        <p className="text-slate-400 text-lg">투자 성향에 따른 기대 수익률을 설정합니다.</p>
+                      </div>
+
+                      <div className="space-y-6">
+                        <label className="text-sm font-bold text-slate-400 uppercase tracking-widest text-center block mb-6">투자 성향 선택</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                          {[
+                            { id: "conservative", Icon: Shield, label: "안정형", return: 4, desc: "예금 위주 / 잃지 않는 투자" },
+                            { id: "balanced", Icon: TrendingUp, label: "균형형", return: 7, desc: "주식+채권 / 시장 평균 추구" },
+                            { id: "aggressive", Icon: Rocket, label: "공격형", return: 10, desc: "주식 위주 / 고수익 추구" },
+                          ].map(({ id, Icon, label, return: returnValue, desc }) => (
+                            <button
+                              key={id}
+                              onClick={() => handleInputChange("investmentStrategy", id as InvestmentStrategy)}
+                              className={`group relative p-6 rounded-2xl border-2 transition-all text-center space-y-4 overflow-hidden ${inputs.investmentStrategy === id
+                                ? "border-indigo-500 bg-indigo-500/10"
+                                : "border-white/5 bg-zinc-900/50 hover:border-white/20 hover:bg-zinc-800"
+                                }`}
+                            >
+                              <div className={`relative z-10 w-12 h-12 mx-auto rounded-xl flex items-center justify-center transition-all ${inputs.investmentStrategy === id ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/30" : "bg-white/5 text-slate-400 group-hover:bg-white/10"
+                                }`}>
+                                <Icon className="w-6 h-6" />
+                              </div>
+
+                              <div className="relative z-10">
+                                <p className={`font-bold text-lg mb-1 ${inputs.investmentStrategy === id ? "text-white" : "text-slate-300"}`}>{label}</p>
+                                <p className="text-xs text-slate-500 line-clamp-2">{desc}</p>
+                              </div>
+                              <div className={`relative z-10 text-2xl font-black ${inputs.investmentStrategy === id ? "text-indigo-400" : "text-slate-600"}`}>
+                                {returnValue}%
+                              </div>
+
+                              {inputs.investmentStrategy === id && (
+                                <div className="absolute inset-0 bg-indigo-500/5 pointer-events-none" />
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-white/5">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-400 block">소득 상승률 (%)</label>
+                          <input
+                            type="number"
+                            value={inputs.salaryGrowthRate}
+                            onChange={(e) => handleInputChange("salaryGrowthRate", e.target.value)}
+                            className="w-full p-3 font-bold bg-zinc-900/50 border border-white/10 rounded-lg text-white focus:border-indigo-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-400 block">은퇴 후 추가 소득 (월)</label>
+                          <CurrencyInput
+                            label=""
+                            value={inputs.retirementIncome}
+                            onValueChange={(v) => handleInputChange("retirementIncome", v)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-slate-400 flex items-center gap-2">
+                            4% 룰 (인출률)
+                            <div className="group relative">
+                              <Info className="w-3 h-3 text-slate-500 cursor-help" />
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-zinc-800 text-zinc-300 text-xs rounded border border-white/10 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                                은퇴 자금의 몇 %를 매년 꺼내 쓸지 결정합니다. 낮을수록 안전합니다.
+                              </div>
+                            </div>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={inputs.withdrawalRate}
+                              onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
+                              className="w-full p-3 font-bold bg-zinc-900/50 border border-white/10 rounded-lg text-white focus:border-indigo-500"
+                            />
+                            <span className="font-bold text-slate-500">%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <motion.button
+                        layoutId="next-button"
+                        onClick={() => setStep("events")}
+                        className="w-full py-5 bg-white text-black font-bold rounded-2xl text-lg hover:bg-slate-200 transition-all mt-8"
+                      >
+                        다음 단계로
+                      </motion.button>
+                    </motion.div>
+                  )}
+
+                  {step === "events" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-10 max-w-3xl mx-auto"
+                    >
+                      <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-3">라이프 이벤트</h2>
+                        <p className="text-slate-400 text-lg">결혼, 주택 구입 등 큰 자금의 흐름을 미리 계획하세요.</p>
+                      </div>
+
+                      <div className="space-y-4 min-h-[300px]">
+                        <AnimatePresence>
+                          {lifeEvents.map((event, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="p-4 bg-zinc-800/40 border border-white/5 rounded-2xl flex items-center gap-3 flex-wrap"
+                            >
+                              <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-lg border border-white/5">
+                                <input
+                                  type="number"
+                                  value={event.year}
+                                  onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
+                                  className="w-12 text-center bg-transparent font-bold outline-none text-white border-b border-transparent focus:border-indigo-500 transition-colors"
+                                />
+                                <span className="text-sm text-slate-500">년 후</span>
+                              </div>
+
+                              <input
+                                type="text"
+                                placeholder="이벤트명 (예: 결혼)"
+                                value={event.description}
+                                onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
+                                className="flex-grow p-2 bg-transparent border-b border-white/10 focus:border-indigo-500 outline-none text-white placeholder:text-slate-600 transition-colors"
+                              />
+
+                              <select
+                                value={event.type}
+                                onChange={(e) => updateLifeEvent(index, "type", e.target.value)}
+                                className="p-2 bg-zinc-900 border border-white/10 rounded-lg text-sm text-slate-300 focus:text-white outline-none"
+                              >
+                                <option value="oneTimeExpense">지출 (-)</option>
+                                <option value="oneTimeIncome">수입 (+)</option>
+                              </select>
+
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={formatNumber(parseNumber(event.amount))}
+                                  onChange={(e) => updateLifeEvent(index, "amount", e.target.value.replace(/[^0-9]/g, ""))}
+                                  className="w-28 text-right bg-transparent border-b border-white/10 focus:border-indigo-500 outline-none font-bold text-white"
+                                />
+                                <span className="text-sm text-slate-500">원</span>
+                              </div>
+
+                              <button onClick={() => removeLifeEvent(index)} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-full transition-all">
+                                <Trash2 size={18} />
+                              </button>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+
+                        <button
+                          onClick={addLifeEvent}
+                          className="w-full py-4 border-2 border-dashed border-white/10 rounded-2xl text-slate-400 hover:border-indigo-500/50 hover:text-indigo-400 hover:bg-indigo-500/5 transition-all flex items-center justify-center gap-2 font-medium"
+                        >
+                          <PlusCircle size={20} /> 이벤트 추가하기
+                        </button>
+                      </div>
+
+                      <motion.button
+                        layoutId="next-button"
+                        onClick={() => setStep("result")}
+                        className="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl text-lg hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.5)] transition-all"
+                      >
+                        결과 확인하기
+                      </motion.button>
+                    </motion.div>
+                  )}
+
+                  {step === "result" && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="space-y-12"
+                    >
+                      <div className="text-center space-y-6">
+                        {yearsToFire === Infinity ? (
+                          <div className="p-10 bg-red-500/5 rounded-[2rem] border border-red-500/20 backdrop-blur-md">
+                            <h2 className="text-3xl font-bold text-red-400 mb-2">목표 달성이 어렵습니다 😥</h2>
+                            <p className="text-slate-400">저축액을 늘리거나, 목표 생활비를 조금 조정해보세요.</p>
+                          </div>
+                        ) : (
+                          <div className="relative p-10 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-[2rem] border border-indigo-500/20 backdrop-blur-md overflow-hidden">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none" />
+                            <div className="relative z-10">
+                              <p className="text-lg text-indigo-300 font-medium mb-4 uppercase tracking-wider">Financial Freedom</p>
+                              <h2 className="text-6xl sm:text-8xl font-black text-white mb-6 tracking-tight drop-shadow-2xl">
+                                <CountUp end={yearsToFire} duration={2} />
+                                <span className="text-4xl sm:text-6xl text-white/50 ml-2">Years</span>
+                              </h2>
+                              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-xl text-slate-300">
+                                <span className="font-bold text-white">{finalAge}세</span>에 은퇴 가능합니다
+                                <Sparkles className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                          { label: "최종 목표 금액", value: finalTargetAmount, color: "text-white" },
+                          { label: "총 납입 원금", value: totalContributions, color: "text-slate-400" },
+                          { label: "총 투자 수익", value: totalReturns, color: "text-emerald-400" },
+                        ].map((item, i) => (
+                          <motion.div
+                            key={item.label}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + (i * 0.1) }}
+                            className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:bg-white/10 transition-colors"
+                          >
+                            <p className="text-sm text-slate-500 font-medium mb-2 uppercase tracking-wide">{item.label}</p>
+                            <p className={`text-2xl sm:text-3xl font-bold ${item.color}`}>
+                              <CountUp end={item.value} separator="," />원
+                            </p>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-gradient-to-br from-orange-500/10 to-amber-500/10 p-8 rounded-3xl border border-orange-500/20 relative overflow-hidden group">
+                          <div className="absolute -right-10 -top-10 text-orange-500/10 group-hover:text-orange-500/20 transition-colors">
+                            <Palmtree size={150} />
+                          </div>
+                          <div className="relative z-10">
+                            <div className="flex items-center gap-3 mb-4 text-orange-400">
+                              <div className="p-2 rounded-lg bg-orange-500/20">
+                                <Palmtree className="w-6 h-6" />
+                              </div>
+                              <h3 className="font-bold text-xl">Coast FIRE</h3>
+                            </div>
+                            <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+                              지금 당장 은퇴하진 않지만, <br />더 이상 노후 대비 저축을 하지 않아도 되는 상태
+                            </p>
+                            <p className="text-3xl font-bold text-white">
+                              <CountUp end={coastFireTarget} separator="," />원
+                            </p>
+                            <p className="text-xs text-slate-500 mt-2 font-medium">
+                              * 현재 이 금액이 있다면 저축 중단 가능
+                            </p>
+                          </div>
+                        </div>
+                        <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-8 rounded-3xl border border-emerald-500/20 relative overflow-hidden group">
+                          <div className="absolute -right-10 -top-10 text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors">
+                            <Coffee size={150} />
+                          </div>
+                          <div className="relative z-10">
+                            <div className="flex items-center gap-3 mb-4 text-emerald-400">
+                              <div className="p-2 rounded-lg bg-emerald-500/20">
+                                <Coffee className="w-6 h-6" />
+                              </div>
+                              <h3 className="font-bold text-xl">Barista FIRE</h3>
+                            </div>
+                            <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+                              생활비의 50%를 소일거리로 충당하며 <br />반은퇴 상태를 즐기는 목표액
+                            </p>
+                            <p className="text-3xl font-bold text-white">
+                              <CountUp end={baristaTargetAmount} separator="," />원
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="h-[500px] w-full bg-zinc-900/50 border border-white/5 rounded-[2rem] p-6 sm:p-8 backdrop-blur-sm relative">
+                        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                          <TrendingUp className="w-5 h-5 text-indigo-400" />
+                          자산 성장 시뮬레이션
+                        </h3>
+                        <ResponsiveContainer width="100%" height="90%">
+                          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                            <defs>
+                              <linearGradient id="colorAssets" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.5} />
+                                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} stroke="#ffffff" vertical={false} />
+                            <XAxis
+                              dataKey="age"
+                              unit="세"
+                              stroke="#94a3b8"
+                              tickLine={false}
+                              axisLine={false}
+                              tick={{ fontSize: 12 }}
+                              dy={10}
+                            />
+                            <YAxis
+                              tickFormatter={(v) => `${(v / 100000000).toFixed(0)}억`}
+                              stroke="#94a3b8"
+                              tickLine={false}
+                              axisLine={false}
+                              tick={{ fontSize: 12 }}
+                            />
+                            <Tooltip
+                              contentStyle={{
+                                backgroundColor: 'rgba(24, 24, 27, 0.9)',
+                                borderColor: 'rgba(255, 255, 255, 0.1)',
+                                borderRadius: '16px',
+                                backdropFilter: 'blur(10px)',
+                                color: '#fff',
+                                padding: '16px'
+                              }}
+                              itemStyle={{ color: '#fff' }}
+                              formatter={(value: number) => `${formatNumber(value)}원`}
+                              labelStyle={{ color: '#94a3b8', marginBottom: '8px' }}
+                            />
+                            <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                            <Area
+                              type="monotone"
+                              dataKey="assets"
+                              name="총 자산"
+                              stroke="#6366f1"
+                              strokeWidth={3}
+                              fillOpacity={1}
+                              fill="url(#colorAssets)"
+                              activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="contribution"
+                              name="납입 원금"
+                              stroke="#94a3b8"
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              fill="transparent"
+                              opacity={0.5}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="target"
+                              name="목표 금액 (인플레이션)"
+                              stroke="#fb923c"
+                              strokeWidth={2}
+                              strokeDasharray="5 5"
+                              fill="transparent"
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+
+                      <div className="flex justify-center pt-8">
+                        <button
+                          onClick={() => setStep("essentials")}
+                          className="px-8 py-4 border border-white/10 bg-white/5 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-all text-sm font-bold tracking-wide uppercase"
+                        >
+                          조건 변경하여 다시 계산하기
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Bottom Ad */}
+          <div className="mt-20">
+            <AdUnit slotId="9988776655" format="auto" label="FIRE Bottom Ad" />
+          </div>
         </div>
       </div>
     </main>
   );
 }
-
