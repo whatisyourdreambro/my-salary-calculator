@@ -312,23 +312,50 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Main Calculator Section */}
+        {/* Main Calculator Section - Hybrid Layout */}
         <section
           id="calculator-section"
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 pt-10"
+          className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-32 pt-10"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-20"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-[2.5rem] blur-2xl -z-10 opacity-60" />
-            <div className="glass-card rounded-[2.5rem] p-2 sm:p-4 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl bg-zinc-900/50 border border-white/10">
-              <CalculatorTabs />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left Ad - Desktop Only */}
+            <div className="hidden lg:block lg:col-span-2">
+               <AdUnit 
+                  slotId="5492837410" 
+                  format="vertical" 
+                  className="min-h-[600px] sticky top-24" 
+                  label="Sidebar Left" 
+               />
             </div>
-          </motion.div>
+
+            {/* Main App Area (Center) */}
+            <div className="lg:col-span-8 flex justify-center">
+              <motion.div
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative z-20 w-full max-w-lg" // Strict Native App Width
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-[2.5rem] blur-2xl -z-10 opacity-60" />
+                <div className="glass-card rounded-[2.5rem] p-2 sm:p-4 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl bg-white border border-white/10">
+                  <CalculatorTabs />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Ad - Desktop Only */}
+            <div className="hidden lg:block lg:col-span-2">
+               <AdUnit 
+                  slotId="5492837410" 
+                  format="vertical" 
+                  className="min-h-[600px] sticky top-24" 
+                  label="Sidebar Right" 
+               />
+            </div>
+
+          </div>
         </section>
 
 
