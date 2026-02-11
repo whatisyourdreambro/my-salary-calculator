@@ -101,10 +101,12 @@
 @layer base {
   * {
     @apply border-border;
+    letter-spacing: -0.02em;
   }
 
   body {
     @apply bg-background text-foreground antialiased font-sans;
+    font-feature-settings: "cv11", "ss01", "tnum"; /* Tabular Numbers enabled globally */
   }
 
   h1,
@@ -113,7 +115,7 @@
   h4,
   h5,
   h6 {
-    @apply font-serif tracking-tight;
+    @apply font-sans tracking-tight font-black; /* Change from serif to black sans */
   }
 }
 

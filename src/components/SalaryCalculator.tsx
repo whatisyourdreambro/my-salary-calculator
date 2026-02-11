@@ -4,12 +4,14 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { calculateSalary2026 } from "@/lib/TaxLogic"; // New 2026 Logic
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
+import MoneyInput from "./ui/MoneyInput"; // New UI Component
+import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import confetti from "canvas-confetti";
-import { Share2, Copy, CheckCircle, Info } from "lucide-react";
+import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles } from "lucide-react";
 import type {
   StoredSalaryData,
   StoredFinancialData,
@@ -342,210 +344,116 @@ export default function SalaryCalculator() {
   const [activeSheet, setActiveSheet] = useState<"dependents" | "children" | "nonTaxable" | null>(null);
 
   return (
-    <div className="space-y-8 mt-4 relative">
+    <div className="space-y-12 pb-20">
       <LoadingInterstitial isOpen={isCalculating} onClose={handleInterstitialClose} />
 
-      {/* Mobile Bottom Sheets */}
-      <BottomSheet isOpen={activeSheet === "dependents"} onClose={() => setActiveSheet(null)} title="부양 가족 수">
-        <div className="p-4">
-          <NumberStepper label="" value={dependents} onValueChange={setDependents} min={1} unit="명" />
-          <button onClick={() => setActiveSheet(null)} className="w-full mt-6 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
-        </div>
-      </BottomSheet>
-      <BottomSheet isOpen={activeSheet === "children"} onClose={() => setActiveSheet(null)} title="20세 이하 자녀 수">
-        <div className="p-4">
-          <NumberStepper label="" value={children} onValueChange={setChildren} min={0} unit="명" />
-          <button onClick={() => setActiveSheet(null)} className="w-full mt-6 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
-        </div>
-      </BottomSheet>
-      <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 (월 기준)">
-         <div className="p-4 space-y-4">
-            <CurrencyInput 
-              label="" 
-              value={nonTaxableAmount} 
-              onValueChange={setNonTaxableAmount} 
-              quickAmounts={[100000, 200000]}
-            />
-            <button onClick={() => setActiveSheet(null)} className="w-full mt-4 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
+      {/* Hero / Input Section */}
+      <div className="pt-12 px-6 flex flex-col items-center">
+         <div className="flex items-center gap-2 mb-2">
+            <span className="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">2026 Edition</span>
+            <Sparkles size={14} className="text-[#FFD700]" />
          </div>
-      </BottomSheet>
+         <h1 className="text-2xl font-black text-slate-800 mb-8">얼마나 받으시나요?</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Left: Input Card */}
-        <div className="lg:col-span-3 space-y-6">
-          <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 shadow-xl relative overflow-hidden">
-             {/* Decorative Background Element */}
-             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -z-10 opacity-50"></div>
+         <MoneyInput 
+            label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
+            value={salaryInput} 
+            onValueChange={setSalaryInput} 
+         />
 
-            <div className="flex items-center justify-between border-b border-blue-100 pb-4 mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <span className="text-3xl">💰</span> 급여 계산기
-                </h2>
-                {/* Mung Reaction Spot - Small Preview */}
-                <div className="hidden sm:block">
-                   <MungMascot mood={mungMood} />
-                </div>
-            </div>
-
-            {/* Income Type Tabs */}
-            <div className="flex p-1 bg-gray-100 rounded-xl mb-6">
-              {(["regular", "freelancer", "part_time"] as const).map((type) => (
-                <button
+         {/* Quick Toggles */}
+         <div className="w-full max-w-xs mt-8 p-1 bg-slate-100 rounded-2xl flex">
+            {(["regular", "freelancer", "part_time"] as const).map((type) => (
+               <button
                   key={type}
                   onClick={() => setIncomeType(type)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                    incomeType === type
-                      ? "bg-white text-primary shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
+                  className={cn(
+                     "flex-1 py-3 rounded-xl text-xs font-black transition-all",
+                     incomeType === type ? "bg-white text-[#0F4C81] shadow-lg scale-105" : "text-slate-400 hover:text-slate-600"
+                  )}
+               >
                   {type === "regular" ? "직장인" : type === "freelancer" ? "프리랜서" : "알바"}
-                </button>
-              ))}
-            </div>
-
-            {incomeType === "regular" && (
-                <div className="flex gap-2 mb-4">
-                    <button onClick={() => setPayBasis("annual")} className={`px-4 py-2 rounded-lg border ${payBasis === "annual" ? "bg-blue-50 border-blue-200 text-blue-700 font-bold" : "border-gray-200 text-gray-500"}`}>연봉</button>
-                    <button onClick={() => setPayBasis("monthly")} className={`px-4 py-2 rounded-lg border ${payBasis === "monthly" ? "bg-blue-50 border-blue-200 text-blue-700 font-bold" : "border-gray-200 text-gray-500"}`}>월급</button>
-                </div>
-            )}
-
-            <CurrencyInput
-              label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
-              value={salaryInput}
-              onValueChange={setSalaryInput}
-              quickAmounts={[10000000, 1000000, 100000]}
-            />
-
-            {incomeType === "regular" && (
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Info size={18} className="text-blue-500"/> 상세 조건
-                </h3>
-                
-                {/* Desktop Grid */}
-                <div className="hidden sm:grid grid-cols-2 gap-4">
-                    <NumberStepper label="부양가족 (본인포함)" value={dependents} onValueChange={setDependents} min={1} unit="명" />
-                    <NumberStepper label="20세 이하 자녀" value={children} onValueChange={setChildren} min={0} unit="명" />
-                </div>
-
-                {/* Mobile Triggers */}
-                <div className="sm:hidden grid grid-cols-2 gap-3">
-                    <button onClick={() => setActiveSheet("dependents")} className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-left">
-                        <div className="text-xs text-gray-500">부양가족</div>
-                        <div className="font-bold text-lg">{dependents}명</div>
-                    </button>
-                    <button onClick={() => setActiveSheet("children")} className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-left">
-                        <div className="text-xs text-gray-500">자녀</div>
-                        <div className="font-bold text-lg">{children}명</div>
-                    </button>
-                </div>
-
-                <div className="mt-4">
-                    <label className="text-sm font-medium text-gray-500 mb-1 block">비과세액 (식대 등)</label>
-                    <div className="relative">
-                        <input 
-                            type="text" 
-                            value={nonTaxableAmount} 
-                            onChange={(e) => setNonTaxableAmount(e.target.value)} // Simplified for brevity
-                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-right font-bold text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        />
-                        <span className="absolute right-12 top-3 text-gray-400">원</span>
-                    </div>
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={handleCalculateClick}
-              className="w-full mt-8 py-4 bg-gradient-to-r from-[#0F4C81] to-[#0c406e] text-white text-xl font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all active:scale-95 flex items-center justify-center gap-2"
-            >
-              🚀 2026년 실수령액 확인하기
-            </button>
-          </div>
-        </div>
-
-        {/* Right: Result Card */}
-        <div className="lg:col-span-2">
-            {showResult ? (
-                <div id="calculation-result" className="space-y-6 animate-fade-in-up">
-                    <div className="bg-white p-6 rounded-2xl border-2 border-[#FFD700] shadow-2xl relative">
-                        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-                            <MungMascot mood={mungMood} />
-                        </div>
-                        
-                        <div className="mt-8 text-center">
-                            <h3 className="text-gray-500 font-medium">예상 월 실수령액</h3>
-                            <div className="flex items-center justify-center gap-2 mt-1">
-                                <span className="text-4xl sm:text-5xl font-extrabold text-[#0F4C81] tracking-tight">
-                                    <CountUp end={result.monthlyNet} duration={1.5} separator="," />
-                                </span>
-                                <span className="text-xl text-gray-600 font-bold">원</span>
-                            </div>
-                        </div>
-
-                        <div className="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-100">
-                             <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
-                                <span>총 공제액 (세금+보험)</span>
-                                <span className="font-bold text-red-500">-<CountUp end={result.totalDeduction} separator=","/>원</span>
-                             </div>
-                             <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                 <div 
-                                    className="bg-red-400 h-2 rounded-full" 
-                                    style={{ width: `${Math.min((result.totalDeduction / (annualSalary/12)) * 100, 100)}%` }}
-                                 ></div>
-                             </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2 mt-6">
-                             <button onClick={handleCopyResult} className="py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-                                {copied ? <CheckCircle size={18}/> : <Copy size={18}/>} 복사
-                             </button>
-                             <button onClick={handleShare} className="py-3 bg-[#FFD700] text-[#381f15] font-bold rounded-xl hover:bg-[#e6c200] transition-colors flex items-center justify-center gap-2">
-                                <Share2 size={18}/> 공유
-                             </button>
-                        </div>
-                    </div>
-
-                    {/* Ad Unit */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
-                        <span className="text-xs text-gray-400 block mb-2">SPONSORED</span>
-                        <AdUnit slotId="5492837410" format="rectangle" />
-                    </div>
-
-                    <SalaryPieChart netPay={result.monthlyNet} totalDeduction={result.totalDeduction} />
-                </div>
-            ) : (
-                <div className="hidden lg:flex h-full items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
-                    <div>
-                        <div className="text-6xl mb-4 grayscale opacity-50">🥔</div>
-                        <p>좌측 정보를 입력하고<br/>버튼을 눌러주세요!</p>
-                    </div>
-                </div>
-            )}
-        </div>
-      </div>
-       
-      {showResult && incomeType === "regular" && (
-         <div className="mt-12 space-y-12 animate-fade-in-up delay-200">
-            {/* Phase 2: Wealth Charting */}
-            <div className="pt-8 border-t border-gray-100">
-                <WealthChart monthlyNetSalary={result.monthlyNet} />
-            </div>
-
-            {/* Phase 3: Viral Tier Card */}
-            <div className="pt-8 border-t border-gray-100">
-                <SalaryTierCard annualSalary={annualSalary} />
-            </div>
-
-            <DetailedAnalysis 
-                annualSalary={annualSalary} 
-                result={result} 
-                monthlyExpenses={parseNumber(monthlyExpenses)} 
-            />
+               </button>
+            ))}
          </div>
+
+         {incomeType === "regular" && (
+            <div className="mt-6 flex gap-4">
+               <button 
+                  onClick={() => setPayBasis(payBasis === "annual" ? "monthly" : "annual")}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 rounded-xl text-xs font-bold text-slate-600 shadow-sm"
+               >
+                  <Calculator size={14} /> {payBasis === "annual" ? "연봉 기준" : "월급 기준"}
+               </button>
+               <button 
+                  onClick={() => setActiveSheet("nonTaxable")}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-100 rounded-xl text-xs font-bold text-slate-600 shadow-sm"
+               >
+                  <Zap size={14} className="text-[#FFD700]" /> 비과세 {nonTaxableAmount}원
+               </button>
+            </div>
+         )}
+
+         <button
+            onClick={handleCalculateClick}
+            className="w-full max-w-xs mt-12 py-5 bg-gradient-to-r from-[#0F4C81] to-[#0c406e] text-white text-lg font-black rounded-[2rem] shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 flex items-center justify-center gap-3"
+         >
+            실수령액 계산하기 <ChevronRight size={20} />
+         </button>
+      </div>
+
+      {/* Result Section */}
+      {showResult && (
+        <div id="calculation-result" className="px-6 space-y-12 animate-fade-in-up">
+          <div className="flex flex-col items-center relative">
+             <div className="absolute -top-16 z-20">
+                <MungMascot mood={mungMood} />
+             </div>
+             <SalaryResultCard 
+                monthlyNet={result.monthlyNet}
+                totalDeduction={result.totalDeduction}
+                breakdown={{
+                  pension: result.pension,
+                  health: result.health,
+                  longTermCare: result.longTermCare,
+                  employment: result.employment,
+                  incomeTax: result.incomeTax,
+                  localTax: result.localTax
+                }}
+             />
+          </div>
+
+          <WealthChart monthlyNetSalary={result.monthlyNet} />
+          
+          <SalaryTierCard annualSalary={annualSalary} />
+
+          {/* Social / Actions */}
+          <div className="grid grid-cols-2 gap-4">
+             <button onClick={handleShare} className="py-4 bg-slate-900 text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2">
+                <Share2 size={18} /> 결과 공유
+             </button>
+             <button onClick={handleSaveData} className="py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-sm flex items-center justify-center gap-2">
+                <CheckCircle size={18} /> 저장하기
+             </button>
+          </div>
+
+          <AdUnit slotId="5492837410" format="auto" />
+          
+          <DetailedAnalysis 
+            annualSalary={annualSalary} 
+            result={result} 
+            monthlyExpenses={parseNumber(monthlyExpenses)} 
+          />
+        </div>
       )}
+
+      {/* Bottom Sheets (Same as before but with consistent styling) */}
+      <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
+         <div className="p-8 space-y-6">
+            <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
+            <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-[#0F4C81] text-white font-black rounded-2xl">저장 후 닫기</button>
+         </div>
+      </BottomSheet>
     </div>
   );
 }
