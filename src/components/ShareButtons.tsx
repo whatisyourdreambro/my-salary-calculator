@@ -38,13 +38,19 @@ export default function ShareButtons({
         }
     };
 
-    const handleKakaoShare = () => {
-        if (typeof window !== "undefined" && window.Kakao) {
-            if (!window.Kakao.isInitialized()) {
-                window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
-            }
+        const handleKakaoShare = () => {
 
-            window.Kakao.Share.sendDefault({
+            if (typeof window !== "undefined" && (window as any).Kakao) {
+
+                if (!(window as any).Kakao.isInitialized()) {
+
+                    (window as any).Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+
+                }
+
+                (window as any).Kakao.Share.sendDefault({
+
+    
                 objectType: "feed",
                 content: {
                     title: title,

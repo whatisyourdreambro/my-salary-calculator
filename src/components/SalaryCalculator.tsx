@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import MoneyInput from "./ui/MoneyInput"; // New UI Component
@@ -11,7 +12,7 @@ import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import confetti from "canvas-confetti";
-import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles } from "lucide-react";
+import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles, ChevronRight } from "lucide-react";
 import type {
   StoredSalaryData,
   StoredFinancialData,
@@ -135,17 +136,20 @@ export default function SalaryCalculator() {
     }
   }, []);
 
-  // Save to Local Storage on Change
+  // Save to Local Storage - DEBOUNCED to prevent constant write/re-render cycles
   useEffect(() => {
-    const dataToSave = {
-      salaryInput,
-      incomeType,
-      payBasis,
-      dependents,
-      children,
-      nonTaxableAmount,
-    };
-    localStorage.setItem("moneysalary-user-input", JSON.stringify(dataToSave));
+    const timer = setTimeout(() => {
+      const dataToSave = {
+        salaryInput,
+        incomeType,
+        payBasis,
+        dependents,
+        children,
+        nonTaxableAmount,
+      };
+      localStorage.setItem("moneysalary-user-input", JSON.stringify(dataToSave));
+    }, 1000); // 1 second debounce
+    return () => clearTimeout(timer);
   }, [salaryInput, incomeType, payBasis, dependents, children, nonTaxableAmount]);
 
   const annualSalary = useMemo(() => {
@@ -159,32 +163,18 @@ export default function SalaryCalculator() {
     return annual;
   }, [salaryInput, payBasis, severanceType, incomeType]);
 
+  // Pure Calculation Function (No side effects)
   const runCalculation = useCallback(() => {
     const salary = parseNumber(salaryInput);
-    
-    // Reset mood initially
     let newMood: "normal" | "happy" | "shocked" | "cool" = "normal";
 
     if (incomeType === "regular") {
-      const nonTaxableMonthly = parseNumber(nonTaxableAmount);
-      
-      // Use New 2026 Logic
-      const taxResult = calculateSalary2026(
-        annualSalary,
-        nonTaxableMonthly,
-        dependents,
-        children
-      );
-
-      // Determine Mood based on logic
+      const taxResult = calculateSalary2026(annualSalary, parseNumber(nonTaxableAmount), dependents, children);
       const deductionRate = taxResult.totalDeductions / (annualSalary / 12);
-      if (annualSalary >= 100_000_000) {
-        newMood = "cool"; // High Earner
-      } else if (deductionRate > 0.2) {
-        newMood = "shocked"; // High Tax
-      } else if (taxResult.netPay > 3_000_000) {
-        newMood = "happy"; // Decent Net Pay
-      }
+      
+      if (annualSalary >= 100_000_000) newMood = "cool";
+      else if (deductionRate > 0.2) newMood = "shocked";
+      else if (taxResult.netPay > 3_000_000) newMood = "happy";
 
       setResult({
         monthlyNet: taxResult.netPay,
@@ -208,27 +198,19 @@ export default function SalaryCalculator() {
         incomeTax: partTimeResult.incomeTax,
         localTax: partTimeResult.localTax,
       });
-       if (partTimeResult.netPay > 2000000) newMood = "happy";
+      if (partTimeResult.netPay > 2000000) newMood = "happy";
     }
     setMungMood(newMood);
+  }, [annualSalary, nonTaxableAmount, dependents, children, incomeType, salaryInput]);
 
-  }, [
-    annualSalary,
-    nonTaxableAmount,
-    dependents,
-    children,
-    advancedSettings,
-    incomeType,
-    salaryInput,
-  ]);
-
+  // Analytics - Only fire once per actual result display
   useEffect(() => {
-    if (result && result.monthlyNet > 0 && typeof window.gtag === "function") {
-      window.gtag("event", "conversion", {
+    if (showResult && result.monthlyNet > 0 && typeof (window as any).gtag === "function") {
+      (window as any).gtag("event", "conversion", {
         send_to: `${process.env.NEXT_PUBLIC_ADS_ID}/${process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION}`,
       });
     }
-  }, [result]);
+  }, [showResult]); // Trigger only when the result card is actually shown to the user
 
   const handleCalculateClick = () => {
     setIsCalculating(true);

@@ -1,8 +1,9 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
+import Script from "next/script"; // Import next/script
 import "./globals.css";
-import { ThemeProvider } from "@/app/providers";
+import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -17,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Structured Data for SEO (FinanceApplication)
+  // ... (Structured Data remains same)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FinancialApplication",
@@ -35,7 +36,13 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
-        {/* Load Pretendard from CDN to ensure zero build errors */}
+        {/* Load AdSense with afterInteractive to prevent UI blocking while ensuring ads show */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5492837410"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <link
           rel="stylesheet"
           as="style"
@@ -48,7 +55,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased text-slate-900 bg-slate-100 selection:bg-primary/10">
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <NextThemesProvider attribute="class" defaultTheme="light">
           <div className="flex flex-col min-h-screen">
             <Header />
             {/* 
@@ -62,7 +69,7 @@ export default function RootLayout({
             </div>
             <Footer />
           </div>
-        </ThemeProvider>
+        </NextThemesProvider>
       </body>
     </html>
   );

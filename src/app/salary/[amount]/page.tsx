@@ -125,7 +125,7 @@ export default function SalaryAmountPage({ params }: Props) {
             longTermCare: tax.longTermCare,
             employment: tax.employmentInsurance,
             incomeTax: tax.incomeTax,
-            localTax: tax.localTax
+            localTax: tax.localIncomeTax
           }}
         />
 
