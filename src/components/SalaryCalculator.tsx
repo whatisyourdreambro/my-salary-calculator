@@ -360,7 +360,12 @@ export default function SalaryCalculator() {
       </BottomSheet>
       <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 (월 기준)">
          <div className="p-4 space-y-4">
-            <CurrencyInput label="" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
+            <CurrencyInput 
+              label="" 
+              value={nonTaxableAmount} 
+              onValueChange={setNonTaxableAmount} 
+              quickAmounts={[100000, 200000]}
+            />
             <button onClick={() => setActiveSheet(null)} className="w-full mt-4 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
          </div>
       </BottomSheet>
