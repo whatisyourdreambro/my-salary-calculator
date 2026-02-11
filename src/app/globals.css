@@ -99,23 +99,27 @@
 }
 
 @layer base {
+  :root {
+    --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+
   * {
     @apply border-border;
-    letter-spacing: -0.02em;
+    font-family: var(--font-pretendard);
+    letter-spacing: -0.02em; /* Premium Tight Look */
   }
 
   body {
-    @apply bg-background text-foreground antialiased font-sans;
-    font-feature-settings: "cv11", "ss01", "tnum"; /* Tabular Numbers enabled globally */
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01", "tnum"; /* Features for better UI */
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-sans tracking-tight font-black; /* Change from serif to black sans */
+  .font-mono-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black tracking-tighter;
   }
 }
 

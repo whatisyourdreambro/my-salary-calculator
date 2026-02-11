@@ -1,18 +1,10 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-// Load Pretendard Variable Font
-const pretendard = localFont({
-  src: "../fonts/PretendardVariable.woff2", // Assuming font is in public/fonts
-  display: "swap",
-  variable: "--font-pretendard",
-});
 
 export const metadata: Metadata = {
   title: "머니샐러리 | 2026 연봉계산기 & 자산 플래닝",
@@ -25,7 +17,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Structured Data for SEO
+  // Structured Data for SEO (FinanceApplication)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FinancialApplication",
@@ -41,21 +33,33 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="ko" suppressHydrationWarning className={`${pretendard.variable}`}>
+    <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* Load Pretendard from CDN to ensure zero build errors */}
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin=""
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-sans antialiased text-slate-900 bg-slate-50 selection:bg-primary/10">
+      <body className="antialiased text-slate-900 bg-slate-100 selection:bg-primary/10">
         <ThemeProvider attribute="class" defaultTheme="light">
           <div className="flex flex-col min-h-screen">
             <Header />
-            {/* Native App View Container: Centered max-width for desktop */}
-            <main className="flex-grow w-full max-w-lg mx-auto bg-white sm:shadow-2xl sm:min-h-[90vh] sm:my-8 sm:rounded-[3rem] overflow-hidden relative">
-              {children}
-            </main>
+            {/* 
+               Extreme UX: Universal App Shell 
+               Centered max-width on desktop to look like a high-fidelity mobile app 
+            */}
+            <div className="flex-grow w-full flex flex-col items-center py-0 sm:py-12">
+              <main className="w-full max-w-lg bg-white sm:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] sm:rounded-[3rem] overflow-hidden relative min-h-screen sm:min-h-[85vh] flex flex-col">
+                {children}
+              </main>
+            </div>
             <Footer />
           </div>
         </ThemeProvider>

@@ -47,15 +47,25 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const amount = parseSalaryParam(params.amount);
+  const tax = calculateSalary2026(amount, 200000, 1, 0);
+  
   const formattedAmount = amount >= 100000000 
     ? `${(amount / 100000000).toFixed(1)}억` 
     : `${(amount / 10000).toLocaleString()}만원`;
 
+  const amountDisplay = amount >= 100000000 ? `${(amount / 100000000).toFixed(1)}억` : `${(amount/10000)}`;
+  const netDisplay = tax.netPay.toLocaleString();
+
+  const ogUrl = `/api/og?amount=${amountDisplay}&net=${netDisplay}`;
+
   return {
     title: `2026년 연봉 ${formattedAmount} 실수령액은? | 머니샐러리`,
-    description: `연봉 ${formattedAmount}의 2026년 예상 월 실수령액과 세금 공제 내역을 확인하세요.`,
+    description: `연봉 ${formattedAmount}의 2026년 예상 월 실수령액은 ${netDisplay}원입니다. 세금 공제 내역을 확인하세요.`,
     alternates: {
       canonical: `https://moneysalary.com/salary/${params.amount}`,
+    },
+    openGraph: {
+      images: [ogUrl],
     },
   };
 }
@@ -68,8 +78,27 @@ export default function SalaryAmountPage({ params }: Props) {
     ? `${(amount / 100000000).toFixed(1)}억` 
     : `${(amount / 10000).toLocaleString()}만원`;
 
+  // JSON-LD for this specific salary
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FinancialApplication",
+    "name": `Salary Analysis for ${formattedAmount}`,
+    "description": `2026 Salary breakdown for ${formattedAmount}`,
+    "applicationCategory": "FinanceApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW"
+    }
+  };
+
   return (
     <main className="min-h-screen bg-white pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
       {/* Header Area */}
       <div className="pt-12 px-6 flex flex-col items-center">
         <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors mb-8 group">
