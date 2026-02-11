@@ -29,12 +29,34 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#0F4C81", // Trust Blue
+          foreground: "#ffffff",
+          50: "#f0f7ff",
+          100: "#e0effe",
+          200: "#bae0fd",
+          300: "#7cc5fa",
+          400: "#36a9f5",
+          500: "#0c8de3",
+          600: "#006fc1",
+          700: "#0F4C81", // Trust Blue Base
+          800: "#0c406e",
+          900: "#0e365b",
+          950: "#09223b",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#FFD700", // Warm Gold
+          foreground: "#381f15",
+          50: "#fdfbf7",
+          100: "#fdf8dc", // Light Gold
+          200: "#fbf0b1",
+          300: "#f8e376",
+          400: "#FFD700", // Warm Gold Base
+          500: "#ecc000",
+          600: "#ca9a00",
+          700: "#a17203",
+          800: "#855a0b",
+          900: "#714a0f",
+          950: "#422803",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -56,14 +78,14 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Premium Custom Colors
+        // Legacy Brand Colors (Kept for compatibility)
         brand: {
-          50: "#fdfbf7", // Warm cream light
+          50: "#fdfbf7", 
           100: "#f8f4eb",
-          200: "#f1e7d4", // Antique white
-          300: "#e6cfad", // Gold tint
-          400: "#d9b07e", // Gold
-          500: "#cc9254", // Deep Gold
+          200: "#f1e7d4", 
+          300: "#e6cfad", 
+          400: "#d9b07e", 
+          500: "#cc9254", 
           600: "#b57642",
           700: "#965b36",
           800: "#7d4a31",
@@ -152,4 +174,3 @@ const config = {
 } satisfies Config;
 
 export default config;
-

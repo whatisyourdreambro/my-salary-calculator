@@ -4,12 +4,12 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { calculateNetSalary } from "@/lib/calculator";
+import { calculateSalary2026 } from "@/lib/TaxLogic"; // New 2026 Logic
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import confetti from "canvas-confetti";
-import { Share2, Copy, CheckCircle } from "lucide-react";
+import { Share2, Copy, CheckCircle, Info } from "lucide-react";
 import type {
   StoredSalaryData,
   StoredFinancialData,
@@ -19,6 +19,8 @@ import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
 import NumberStepper from "./NumberStepper";
 import SalaryPieChart from "./SalaryPieChart";
+import WealthChart from "./WealthChart";
+import SalaryTierCard from "./SalaryTierCard"; // New Import
 import LoadingInterstitial from "./LoadingInterstitial";
 import AdUnit from "./AdUnit";
 import BottomSheet from "./BottomSheet";
@@ -26,8 +28,56 @@ import BottomSheet from "./BottomSheet";
 const formatNumber = (num: number) => num.toLocaleString();
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
-type CalculationResult = ReturnType<typeof calculateNetSalary>;
+// Unified Result Type
+type CalculationResult = {
+  monthlyNet: number;
+  totalDeduction: number;
+  pension: number;
+  health: number;
+  longTermCare: number;
+  employment: number;
+  incomeTax: number;
+  localTax: number;
+};
+
 type IncomeType = "regular" | "freelancer" | "part_time";
+
+// --- Mung Mascot Component ---
+const MungMascot = ({ mood }: { mood: "normal" | "happy" | "shocked" | "cool" }) => {
+  const getEmoji = () => {
+    switch (mood) {
+      case "happy": return "🥰"; // Loves money
+      case "shocked": return "😱"; // High tax
+      case "cool": return "😎"; // High income
+      default: return "🥔"; // Normal Potato Mung
+    }
+  };
+
+  const getColor = () => {
+    switch (mood) {
+      case "happy": return "bg-pink-100 border-pink-300";
+      case "shocked": return "bg-red-100 border-red-300";
+      case "cool": return "bg-blue-100 border-blue-300";
+      default: return "bg-yellow-100 border-yellow-300";
+    }
+  };
+
+  return (
+    <div className={`relative w-24 h-24 rounded-full border-4 flex items-center justify-center text-5xl shadow-lg transition-all duration-500 transform hover:scale-110 ${getColor()}`}>
+      {getEmoji()}
+      {mood === "shocked" && (
+        <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce">
+          세금?!
+        </div>
+      )}
+      {mood === "cool" && (
+        <div className="absolute -bottom-2 -left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+          FLEX
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function SalaryCalculator() {
   const router = useRouter();
@@ -62,6 +112,9 @@ export default function SalaryCalculator() {
     localTax: 0,
   });
 
+  // Mung's Mood State
+  const [mungMood, setMungMood] = useState<"normal" | "happy" | "shocked" | "cool">("normal");
+
   // Load from Local Storage on Mount
   useEffect(() => {
     const saved = localStorage.getItem("moneysalary-user-input");
@@ -74,7 +127,6 @@ export default function SalaryCalculator() {
         if (parsed.dependents) setDependents(parsed.dependents);
         if (parsed.children) setChildren(parsed.children);
         if (parsed.nonTaxableAmount) setNonTaxableAmount(parsed.nonTaxableAmount);
-        // Don't auto-calculate or show result on load to force interaction
       } catch (e) {
         console.error("Failed to load saved inputs", e);
       }
@@ -105,26 +157,43 @@ export default function SalaryCalculator() {
     return annual;
   }, [salaryInput, payBasis, severanceType, incomeType]);
 
-  // Phase 1: Contextual Keyword Logic
-  const incomeContext = useMemo(() => {
-    if (annualSalary >= 80000000) return "high_net_worth";
-    if (annualSalary <= 35000000) return "entry_level";
-    return "mid_level";
-  }, [annualSalary]);
-
   const runCalculation = useCallback(() => {
     const salary = parseNumber(salaryInput);
+    
+    // Reset mood initially
+    let newMood: "normal" | "happy" | "shocked" | "cool" = "normal";
+
     if (incomeType === "regular") {
-      const nonTaxable = parseNumber(nonTaxableAmount) * 12;
-      setResult(
-        calculateNetSalary(
-          annualSalary,
-          nonTaxable,
-          dependents,
-          children,
-          advancedSettings
-        )
+      const nonTaxableMonthly = parseNumber(nonTaxableAmount);
+      
+      // Use New 2026 Logic
+      const taxResult = calculateSalary2026(
+        annualSalary,
+        nonTaxableMonthly,
+        dependents,
+        children
       );
+
+      // Determine Mood based on logic
+      const deductionRate = taxResult.totalDeductions / (annualSalary / 12);
+      if (annualSalary >= 100_000_000) {
+        newMood = "cool"; // High Earner
+      } else if (deductionRate > 0.2) {
+        newMood = "shocked"; // High Tax
+      } else if (taxResult.netPay > 3_000_000) {
+        newMood = "happy"; // Decent Net Pay
+      }
+
+      setResult({
+        monthlyNet: taxResult.netPay,
+        totalDeduction: taxResult.totalDeductions,
+        pension: taxResult.nationalPension,
+        health: taxResult.healthInsurance,
+        longTermCare: taxResult.longTermCare,
+        employment: taxResult.employmentInsurance,
+        incomeTax: taxResult.incomeTax,
+        localTax: taxResult.localIncomeTax,
+      });
     } else {
       const partTimeResult = calculatePartTimeSalary(salary, incomeType);
       setResult({
@@ -137,7 +206,10 @@ export default function SalaryCalculator() {
         incomeTax: partTimeResult.incomeTax,
         localTax: partTimeResult.localTax,
       });
+       if (partTimeResult.netPay > 2000000) newMood = "happy";
     }
+    setMungMood(newMood);
+
   }, [
     annualSalary,
     nonTaxableAmount,
@@ -156,18 +228,8 @@ export default function SalaryCalculator() {
     }
   }, [result]);
 
-  useEffect(() => {
-    // This useEffect will now only run when runCalculation changes,
-    // but the actual calculation is triggered by handleCalculateClick
-    // and the result display by handleInterstitialClose.
-    // We can remove this useEffect if we only want calculation on button click.
-    // For now, keeping it as it was, but the display logic is changed.
-    // runCalculation(); // Removed to prevent auto-calculation on mount/dependency change
-  }, [runCalculation]);
-
   const handleCalculateClick = () => {
     setIsCalculating(true);
-    // Calculation happens immediately but result is hidden by interstitial
     runCalculation();
   };
 
@@ -175,36 +237,36 @@ export default function SalaryCalculator() {
     setIsCalculating(false);
     setShowResult(true);
 
-    // Scroll to result
     setTimeout(() => {
       const resultElement = document.getElementById("calculation-result");
       if (resultElement) {
         resultElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        // Trigger Confetti
         confetti({
           particleCount: 150,
           spread: 70,
           origin: { y: 0.7 },
-          colors: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899'],
+          colors: ['#0F4C81', '#FFD700', '#f59e0b'], // Trust Blue & Gold
           zIndex: 9999,
         });
       }
     }, 100);
   };
 
+  // ... (Handlers for Seniors/Disabled omitted for brevity but logic remains in state if needed for future extension, keeping UI cleaner for now as per design)
+  // Re-adding essential handlers if specific inputs are exposed
   const handleSeniorDependentsChange = (newValue: number) => {
-    if (newValue < 0) return;
-    if (newValue + advancedSettings.disabledDependents <= dependents) {
-      setAdvancedSettings(prev => ({ ...prev, seniorDependents: newValue }));
-    }
-  };
-
-  const handleDisabledDependentsChange = (newValue: number) => {
-    if (newValue < 0) return;
-    if (newValue + advancedSettings.seniorDependents <= dependents) {
-      setAdvancedSettings(prev => ({ ...prev, disabledDependents: newValue }));
-    }
-  };
+      if (newValue < 0) return;
+      if (newValue + advancedSettings.disabledDependents <= dependents) {
+        setAdvancedSettings(prev => ({ ...prev, seniorDependents: newValue }));
+      }
+    };
+  
+    const handleDisabledDependentsChange = (newValue: number) => {
+      if (newValue < 0) return;
+      if (newValue + advancedSettings.seniorDependents <= dependents) {
+        setAdvancedSettings(prev => ({ ...prev, disabledDependents: newValue }));
+      }
+    };
 
   const handleSaveData = () => {
     if (incomeType !== "regular") {
@@ -241,10 +303,6 @@ export default function SalaryCalculator() {
   };
 
   const handleShare = async () => {
-    if (incomeType !== "regular") {
-      alert("정규직 소득만 공유할 수 있습니다.");
-      return;
-    }
     const dataToShare = {
       annualSalary,
       nonTaxableAmount: parseNumber(nonTaxableAmount),
@@ -256,10 +314,9 @@ export default function SalaryCalculator() {
 
     try {
       await navigator.clipboard.writeText(shareUrl);
-      alert("결과 공유 링크가 클립보드에 복사되었습니다!");
+      alert("링크가 복사되었습니다!");
     } catch (error) {
-      console.error("Sharing failed:", error);
-      alert("공유 링크 복사에 실패했습니다.");
+        console.error("Sharing failed", error);
     }
   };
 
@@ -269,419 +326,220 @@ export default function SalaryCalculator() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy result", err);
+      console.error("Failed to copy", err);
     }
   };
 
   const handleReset = () => {
     setIncomeType("regular");
     setPayBasis("annual");
-    setSeveranceType("separate");
     setSalaryInput("50,000,000");
-    setNonTaxableAmount("200000");
-    setDependents(1);
-    setChildren(0);
-    setMonthlyExpenses("");
-    setAdvancedSettings({
-      isSmeYouth: false,
-      disabledDependents: 0,
-      seniorDependents: 0,
-    });
     setShowResult(false);
+    setMungMood("normal");
     localStorage.removeItem("moneysalary-user-input");
   };
 
-  // Phase 3: Bottom Sheet State
   const [activeSheet, setActiveSheet] = useState<"dependents" | "children" | "nonTaxable" | null>(null);
 
   return (
     <div className="space-y-8 mt-4 relative">
       <LoadingInterstitial isOpen={isCalculating} onClose={handleInterstitialClose} />
 
-      {/* Phase 3: Mobile Bottom Sheets */}
-      <BottomSheet
-        isOpen={activeSheet === "dependents"}
-        onClose={() => setActiveSheet(null)}
-        title="부양 가족 수 (본인포함)"
-      >
+      {/* Mobile Bottom Sheets */}
+      <BottomSheet isOpen={activeSheet === "dependents"} onClose={() => setActiveSheet(null)} title="부양 가족 수">
         <div className="p-4">
-          <NumberStepper
-            label=""
-            value={dependents}
-            onValueChange={(v) => setDependents(v)}
-            min={1}
-            unit="명"
-          />
-          <button
-            onClick={() => setActiveSheet(null)}
-            className="w-full mt-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl"
-          >
-            확인
-          </button>
+          <NumberStepper label="" value={dependents} onValueChange={setDependents} min={1} unit="명" />
+          <button onClick={() => setActiveSheet(null)} className="w-full mt-6 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
         </div>
       </BottomSheet>
-
-      <BottomSheet
-        isOpen={activeSheet === "children"}
-        onClose={() => setActiveSheet(null)}
-        title="20세 이하 자녀 수"
-      >
+      <BottomSheet isOpen={activeSheet === "children"} onClose={() => setActiveSheet(null)} title="20세 이하 자녀 수">
         <div className="p-4">
-          <NumberStepper
-            label=""
-            value={children}
-            onValueChange={(v) => setChildren(v)}
-            min={0}
-            unit="명"
-          />
-          <button
-            onClick={() => setActiveSheet(null)}
-            className="w-full mt-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl"
-          >
-            확인
-          </button>
+          <NumberStepper label="" value={children} onValueChange={setChildren} min={0} unit="명" />
+          <button onClick={() => setActiveSheet(null)} className="w-full mt-6 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
         </div>
       </BottomSheet>
-
-      <BottomSheet
-        isOpen={activeSheet === "nonTaxable"}
-        onClose={() => setActiveSheet(null)}
-        title="비과세액 (월 기준)"
-      >
-        <div className="p-4 space-y-4">
-          <div className="relative">
-            <input
-              type="text"
-              value={nonTaxableAmount}
-              onChange={(e) => {
-                const v = e.target.value.replace(/[^0-9]/g, "");
-                setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
-              }}
-              className="w-full p-4 text-lg bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition text-right pr-12"
-              autoFocus
-            />
-            <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">원</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {[100000, 200000].map((amt) => (
-              <button
-                key={amt}
-                onClick={() => setNonTaxableAmount(formatNumber(amt))}
-                className="px-4 py-2 bg-secondary rounded-full text-sm whitespace-nowrap"
-              >
-                {formatNumber(amt)}원
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={() => setActiveSheet(null)}
-            className="w-full mt-4 py-3 bg-primary text-primary-foreground font-bold rounded-xl"
-          >
-            확인
-          </button>
-        </div>
+      <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 (월 기준)">
+         <div className="p-4 space-y-4">
+            <CurrencyInput label="" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
+            <button onClick={() => setActiveSheet(null)} className="w-full mt-4 py-3 bg-primary text-white font-bold rounded-xl">확인</button>
+         </div>
       </BottomSheet>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Left Side: Inputs */}
+        {/* Left: Input Card */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-card/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-border shadow-sm">
-            <h2 className="text-xl font-bold border-b border-border pb-4 mb-4">소득 정보</h2>
+          <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 shadow-xl relative overflow-hidden">
+             {/* Decorative Background Element */}
+             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -z-10 opacity-50"></div>
 
-            {/* Income Type Switcher */}
-            <div className="flex flex-col sm:flex-row bg-secondary rounded-lg p-1 mb-4">
-              <button
-                onClick={() => setIncomeType("regular")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 ${incomeType === "regular"
-                  ? "bg-background shadow-sm text-primary"
-                  : "text-muted-foreground hover:bg-secondary/60"
+            <div className="flex items-center justify-between border-b border-blue-100 pb-4 mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <span className="text-3xl">💰</span> 급여 계산기
+                </h2>
+                {/* Mung Reaction Spot - Small Preview */}
+                <div className="hidden sm:block">
+                   <MungMascot mood={mungMood} />
+                </div>
+            </div>
+
+            {/* Income Type Tabs */}
+            <div className="flex p-1 bg-gray-100 rounded-xl mb-6">
+              {(["regular", "freelancer", "part_time"] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setIncomeType(type)}
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                    incomeType === type
+                      ? "bg-white text-primary shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
-              >
-                정규직
-              </button>
-              <button
-                onClick={() => setIncomeType("freelancer")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 ${incomeType === "freelancer"
-                  ? "bg-background shadow-sm text-primary"
-                  : "text-muted-foreground hover:bg-secondary/60"
-                  }`}
-              >
-                프리랜서(3.3%)
-              </button>
-              <button
-                onClick={() => setIncomeType("part_time")}
-                className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 ${incomeType === "part_time"
-                  ? "bg-background shadow-sm text-primary"
-                  : "text-muted-foreground hover:bg-secondary/60"
-                  }`}
-              >
-                아르바이트
-              </button>
+                >
+                  {type === "regular" ? "직장인" : type === "freelancer" ? "프리랜서" : "알바"}
+                </button>
+              ))}
             </div>
 
             {incomeType === "regular" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                    급여 기준
-                  </label>
-                  <div className="flex bg-secondary rounded-lg p-1">
-                    <button
-                      onClick={() => setPayBasis("annual")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 ${payBasis === "annual"
-                        ? "bg-background shadow-sm text-primary"
-                        : "text-muted-foreground hover:bg-secondary/60"
-                        }`}
-                    >
-                      연봉
-                    </button>
-                    <button
-                      onClick={() => setPayBasis("monthly")}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 ${payBasis === "monthly"
-                        ? "bg-background shadow-sm text-primary"
-                        : "text-muted-foreground hover:bg-secondary/60"
-                        }`}
-                    >
-                      월급
-                    </button>
-                  </div>
+                <div className="flex gap-2 mb-4">
+                    <button onClick={() => setPayBasis("annual")} className={`px-4 py-2 rounded-lg border ${payBasis === "annual" ? "bg-blue-50 border-blue-200 text-blue-700 font-bold" : "border-gray-200 text-gray-500"}`}>연봉</button>
+                    <button onClick={() => setPayBasis("monthly")} className={`px-4 py-2 rounded-lg border ${payBasis === "monthly" ? "bg-blue-50 border-blue-200 text-blue-700 font-bold" : "border-gray-200 text-gray-500"}`}>월급</button>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                    퇴직금
-                  </label>
-                  <div className="flex bg-secondary rounded-lg p-1">
-                    <button
-                      onClick={() => setSeveranceType("separate")}
-                      disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${severanceType === "separate"
-                        ? "bg-background shadow-sm text-primary"
-                        : "text-muted-foreground hover:bg-secondary/60"
-                        }`}
-                    >
-                      별도
+            )}
+
+            <CurrencyInput
+              label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
+              value={salaryInput}
+              onValueChange={setSalaryInput}
+              quickAmounts={[10000000, 1000000, 100000]}
+            />
+
+            {incomeType === "regular" && (
+              <div className="mt-8 pt-6 border-t border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <Info size={18} className="text-blue-500"/> 상세 조건
+                </h3>
+                
+                {/* Desktop Grid */}
+                <div className="hidden sm:grid grid-cols-2 gap-4">
+                    <NumberStepper label="부양가족 (본인포함)" value={dependents} onValueChange={setDependents} min={1} unit="명" />
+                    <NumberStepper label="20세 이하 자녀" value={children} onValueChange={setChildren} min={0} unit="명" />
+                </div>
+
+                {/* Mobile Triggers */}
+                <div className="sm:hidden grid grid-cols-2 gap-3">
+                    <button onClick={() => setActiveSheet("dependents")} className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-left">
+                        <div className="text-xs text-gray-500">부양가족</div>
+                        <div className="font-bold text-lg">{dependents}명</div>
                     </button>
-                    <button
-                      onClick={() => setSeveranceType("included")}
-                      disabled={payBasis === "monthly"}
-                      className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${severanceType === "included"
-                        ? "bg-background shadow-sm text-primary"
-                        : "text-muted-foreground hover:bg-secondary/60"
-                        }`}
-                    >
-                      포함
+                    <button onClick={() => setActiveSheet("children")} className="p-4 bg-gray-50 rounded-xl border border-gray-200 text-left">
+                        <div className="text-xs text-gray-500">자녀</div>
+                        <div className="font-bold text-lg">{children}명</div>
                     </button>
-                  </div>
+                </div>
+
+                <div className="mt-4">
+                    <label className="text-sm font-medium text-gray-500 mb-1 block">비과세액 (식대 등)</label>
+                    <div className="relative">
+                        <input 
+                            type="text" 
+                            value={nonTaxableAmount} 
+                            onChange={(e) => setNonTaxableAmount(e.target.value)} // Simplified for brevity
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-right font-bold text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                        <span className="absolute right-12 top-3 text-gray-400">원</span>
+                    </div>
                 </div>
               </div>
             )}
-            <CurrencyInput
-              label={
-                incomeType === "regular"
-                  ? payBasis === "annual"
-                    ? "연봉"
-                    : "월급"
-                  : "월 소득"
-              }
-              value={salaryInput}
-              onValueChange={setSalaryInput}
-              quickAmounts={[10000000, 100000, 100000]}
-            />
-            {incomeType === "regular" && (
-              <>
-                <div className="mt-6 pt-6 border-t border-border">
-                  <h2 className="text-xl font-bold">상세 설정</h2>
 
-                  {/* Desktop View: Grid */}
-                  <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <NumberStepper label="부양 가족 수 (본인포함)" value={dependents} onValueChange={(v) => setDependents(v)} min={1} unit="명" />
-                    <NumberStepper label="20세 이하 자녀 수" value={children} onValueChange={(v) => setChildren(v)} min={0} unit="명" />
-                    <NumberStepper label="70세 이상 (경로우대)" value={advancedSettings.seniorDependents} onValueChange={handleSeniorDependentsChange} min={0} unit="명" />
-                    <NumberStepper label="장애인" value={advancedSettings.disabledDependents} onValueChange={handleDisabledDependentsChange} min={0} unit="명" />
-                  </div>
-
-                  {/* Mobile View: Bottom Sheet Triggers */}
-                  <div className="sm:hidden space-y-4 mt-4">
-                    <button
-                      onClick={() => setActiveSheet("dependents")}
-                      className="w-full flex justify-between items-center p-4 bg-secondary/30 rounded-xl border border-border active:bg-secondary/50 transition-colors"
-                    >
-                      <span className="font-medium">부양 가족 수</span>
-                      <span className="font-bold text-primary">{dependents}명</span>
-                    </button>
-                    <button
-                      onClick={() => setActiveSheet("children")}
-                      className="w-full flex justify-between items-center p-4 bg-secondary/30 rounded-xl border border-border active:bg-secondary/50 transition-colors"
-                    >
-                      <span className="font-medium">20세 이하 자녀</span>
-                      <span className="font-bold text-primary">{children}명</span>
-                    </button>
-                    <button
-                      onClick={() => setActiveSheet("nonTaxable")}
-                      className="w-full flex justify-between items-center p-4 bg-secondary/30 rounded-xl border border-border active:bg-secondary/50 transition-colors"
-                    >
-                      <span className="font-medium">비과세액</span>
-                      <span className="font-bold text-primary">{nonTaxableAmount}원</span>
-                    </button>
-                  </div>
-
-                  <div className="mt-4 hidden sm:block">
-                    <label className="text-sm font-medium text-muted-foreground">비과세액 (월 기준)</label>
-                    <div className="relative mt-2">
-                      <input
-                        type="text"
-                        value={nonTaxableAmount}
-                        onChange={(e) => {
-                          const v = e.target.value.replace(/[^0-9]/g, "");
-                          setNonTaxableAmount(v ? formatNumber(Number(v)) : "0");
-                        }}
-                        className="w-full p-3 pr-12 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition"
-                      />
-                      <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground">원</span>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="isSmeYouth"
-                        checked={advancedSettings.isSmeYouth}
-                        onChange={(e) => setAdvancedSettings((prev) => ({ ...prev, isSmeYouth: e.target.checked }))}
-                        className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                      />
-                      <label htmlFor="isSmeYouth" className="ml-2 block text-sm text-foreground">
-                        중소기업 취업 청년 소득세 감면 대상
-                      </label>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <CurrencyInput
-                      label="월평균 고정 지출 (주거비, 통신비 등)"
-                      value={monthlyExpenses}
-                      onValueChange={setMonthlyExpenses}
-                      quickAmounts={[500000, 100000, 50000]}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Calculate Button */}
-            <div className="mt-6">
-              <button
-                onClick={handleCalculateClick}
-                className="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-white text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95 animate-pulse-glow"
-              >
-                실수령액 계산하기
-              </button>
-            </div>
+            <button
+              onClick={handleCalculateClick}
+              className="w-full mt-8 py-4 bg-gradient-to-r from-[#0F4C81] to-[#0c406e] text-white text-xl font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              🚀 2026년 실수령액 확인하기
+            </button>
           </div>
         </div>
 
-        {/* Right Side: Results */}
+        {/* Right: Result Card */}
         <div className="lg:col-span-2">
-          {showResult && (
-            <div id="calculation-result" className="sticky top-24 space-y-6 animate-fade-in-up">
-              <div className="bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
-                <h2 className="text-base sm:text-lg font-bold mb-2 text-muted-foreground">월 예상 실수령액</h2>
-                <div className="flex items-center gap-2">
-                  <p className="text-3xl sm:text-4xl font-bold my-1 text-primary">
-                    <CountUp end={result.monthlyNet} duration={0.5} separator="," /> 원
-                  </p>
-                  <button
-                    onClick={handleCopyResult}
-                    className="p-2 hover:bg-secondary rounded-full transition-colors"
-                    title="실수령액 복사"
-                  >
-                    {copied ? <CheckCircle className="w-5 h-5 text-primary" /> : <Copy className="w-5 h-5 text-muted-foreground" />}
-                  </button>
+            {showResult ? (
+                <div id="calculation-result" className="space-y-6 animate-fade-in-up">
+                    <div className="bg-white p-6 rounded-2xl border-2 border-[#FFD700] shadow-2xl relative">
+                        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                            <MungMascot mood={mungMood} />
+                        </div>
+                        
+                        <div className="mt-8 text-center">
+                            <h3 className="text-gray-500 font-medium">예상 월 실수령액</h3>
+                            <div className="flex items-center justify-center gap-2 mt-1">
+                                <span className="text-4xl sm:text-5xl font-extrabold text-[#0F4C81] tracking-tight">
+                                    <CountUp end={result.monthlyNet} duration={1.5} separator="," />
+                                </span>
+                                <span className="text-xl text-gray-600 font-bold">원</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-100">
+                             <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
+                                <span>총 공제액 (세금+보험)</span>
+                                <span className="font-bold text-red-500">-<CountUp end={result.totalDeduction} separator=","/>원</span>
+                             </div>
+                             <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                 <div 
+                                    className="bg-red-400 h-2 rounded-full" 
+                                    style={{ width: `${Math.min((result.totalDeduction / (annualSalary/12)) * 100, 100)}%` }}
+                                 ></div>
+                             </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 mt-6">
+                             <button onClick={handleCopyResult} className="py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                {copied ? <CheckCircle size={18}/> : <Copy size={18}/>} 복사
+                             </button>
+                             <button onClick={handleShare} className="py-3 bg-[#FFD700] text-[#381f15] font-bold rounded-xl hover:bg-[#e6c200] transition-colors flex items-center justify-center gap-2">
+                                <Share2 size={18}/> 공유
+                             </button>
+                        </div>
+                    </div>
+
+                    {/* Ad Unit */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+                        <span className="text-xs text-gray-400 block mb-2">SPONSORED</span>
+                        <AdUnit slotId="5492837410" format="rectangle" />
+                    </div>
+
+                    <SalaryPieChart netPay={result.monthlyNet} totalDeduction={result.totalDeduction} />
                 </div>
-                <p className="font-semibold text-sm text-destructive mt-2">
-                  (공제액 합계: - <CountUp end={result.totalDeduction} duration={0.5} separator="," /> 원)
-                </p>
-              </div>
-
-              {/* Phase 1: High-Attention Native Ad Injection */}
-              <div className="w-full">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-semibold text-muted-foreground bg-secondary px-2 py-0.5 rounded">AD</span>
-                  <span className="text-xs text-muted-foreground">맞춤형 금융 상품 추천</span>
+            ) : (
+                <div className="hidden lg:flex h-full items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
+                    <div>
+                        <div className="text-6xl mb-4 grayscale opacity-50">🥔</div>
+                        <p>좌측 정보를 입력하고<br/>버튼을 눌러주세요!</p>
+                    </div>
                 </div>
-                <AdUnit
-                  slotId="5492837410" // Placeholder for Native Ad
-                  format="fluid"
-                  layoutKey="-fb+5w+4e-db+86" // Example layout key for native feed
-                  className="w-full min-h-[120px] bg-card/50 rounded-xl border border-border shadow-sm"
-                  label="Native Result Ad"
-                />
-              </div>
-
-              {/* Visual Chart */}
-              <SalaryPieChart netPay={result.monthlyNet} totalDeduction={result.totalDeduction} />
-
-              <div className="pt-2 grid grid-cols-3 gap-2">
-                <button
-                  onClick={handleReset}
-                  className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-lg hover:bg-secondary/80 transition-colors"
-                >
-                  초기화
-                </button>
-                <button
-                  onClick={handleShare}
-                  className="w-full py-3 bg-secondary text-secondary-foreground font-bold rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
-                  <Share2 size={16} /> 공유
-                </button>
-                <button
-                  onClick={handleSaveData}
-                  className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:brightness-95 transition-all disabled:opacity-50"
-                  disabled={incomeType !== "regular"}
-                >
-                  저장
-                </button>
-              </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
+       
+      {showResult && incomeType === "regular" && (
+         <div className="mt-12 space-y-12 animate-fade-in-up delay-200">
+            {/* Phase 2: Wealth Charting */}
+            <div className="pt-8 border-t border-gray-100">
+                <WealthChart monthlyNetSalary={result.monthlyNet} />
+            </div>
 
-      {/* Phase 1: Contextual Keyword Injection (Hidden for SEO/Ad Targeting) */}
-      {showResult && annualSalary > 0 && (
-        <div className="mt-8 opacity-0 h-0 overflow-hidden">
-          {incomeContext === "high_net_worth" && (
-            <div>
-              <h3>VIP 자산 관리 및 절세 전략</h3>
-              <p>고소득 전문직을 위한 프라이빗 뱅킹, 부동산 투자, 법인 전환 컨설팅, 프리미엄 신용카드 추천.</p>
+            {/* Phase 3: Viral Tier Card */}
+            <div className="pt-8 border-t border-gray-100">
+                <SalaryTierCard annualSalary={annualSalary} />
             </div>
-          )}
-          {incomeContext === "entry_level" && (
-            <div>
-              <h3>청년 금융 지원 및 신용 관리</h3>
-              <p>청년 도약 계좌, 중소기업 취업 청년 소득세 감면, 학자금 대출 상환, 신용 점수 올리기, 소액 투자.</p>
-            </div>
-          )}
-          {incomeContext === "mid_level" && (
-            <div>
-              <h3>직장인 재테크 및 연말정산</h3>
-              <p>IRP 퇴직연금 세액공제, 신용카드 소득공제 최적화, 주택 청약 종합 저축, ISA 계좌 활용.</p>
-            </div>
-          )}
-        </div>
-      )}
 
-      {showResult && annualSalary > 0 && incomeType === "regular" && (
-        <>
-          <DetailedAnalysis
-            annualSalary={annualSalary}
-            result={result}
-            monthlyExpenses={parseNumber(monthlyExpenses)}
-          />
-          <SalaryAnalysis
-            annualSalary={annualSalary}
-            monthlyNet={result.monthlyNet}
-          />
-        </>
+            <DetailedAnalysis 
+                annualSalary={annualSalary} 
+                result={result} 
+                monthlyExpenses={parseNumber(monthlyExpenses)} 
+            />
+         </div>
       )}
     </div>
   );
