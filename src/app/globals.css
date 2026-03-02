@@ -1,5 +1,117 @@
-@layer utilities {
+/* src/app/globals.css */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Toss Style Light Mode */
+    --background: 210 20% 98%; /* #F2F4F6 (Toss Light Gray Background) */
+    --foreground: 222 47% 11%; /* #191F28 (Toss Black Text) */
+
+    --card: 0 0% 100%; /* Pure White */
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 218 89% 51%; /* #3182F6 (Toss Blue) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 96%; /* #F2F4F6 */
+    --secondary-foreground: 215 16% 47%; /* #4E5968 (Toss Sub Text) */
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 218 89% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%; /* #E5E8EB (Toss Border) */
+    --input: 214 32% 91%;
+    --ring: 218 89% 51%;
+
+    --radius: 1rem; /* 부드러운 곡선 기본값 */
+
+    /* Chart Colors - Toss/Fintech Friendly */
+    --chart-1: 218 89% 51%; /* Blue */
+    --chart-2: 160 84% 39%; /* Mint/Emerald */
+    --chart-3: 250 89% 65%; /* Purple */
+    --chart-4: 340 82% 52%; /* Pink */
+    --chart-5: 40 90% 50%; /* Yellow/Orange */
+  }
+
+  .dark {
+    /* Toss Style Dark Mode (Very Clean Dark) */
+    --background: 222 47% 11%; /* #191F28 */
+    --foreground: 210 20% 98%; /* #F9FAFB */
+
+    --card: 217 33% 17%; /* #1E232E */
+    --card-foreground: 210 20% 98%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 218 89% 65%; /* Brighter Blue for Dark Mode */
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 215 20% 80%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 70%;
+
+    --accent: 218 89% 65%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 218 89% 65%;
+  }
+}
+
+@layer base {
+  :root {
+    --font-pretendard:
+      "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", sans-serif;
+  }
+
+  * {
+    @apply border-border;
+    font-family: var(--font-pretendard);
+    letter-spacing: -0.015em; /* 텍스트 밀도 높임 */
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01", "tnum";
+  }
+
+  .font-mono-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
   /* Toss Style Clean Utilities */
   .glass {
     @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_#00000005];
@@ -20,4 +132,18 @@
   .text-gradient-primary {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400;
   }
+}
+
+/* Custom Scrollbar - Minimal Toss Style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors;
 }
