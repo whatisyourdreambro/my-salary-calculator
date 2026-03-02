@@ -1,0 +1,79 @@
+﻿?∽툘 @cloudflare/next-on-pages CLI v.1.13.16
+node.exe : 
+위치 줄:1 문자:1
++ & "C:\Program Files\n
+odejs/node.exe" "C:\Pro
+gram Files\nodejs/node_
+mo ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (:String) [],    
+ RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+?∽툘 Warning: It seems l
+ike you're on a Windows
+ system, the Vercel CLI
+ (run by @cloudflare/ne
+xt-on-pages
+?∽툘 to build your appli
+cation) seems not to wo
+rk reliably on Windows 
+so if you experience is
+sues during
+?∽툘 the build process p
+lease try switching to 
+a different operating s
+ystem or running
+?∽툘 @cloudflare/next-on
+-pages under the Window
+s Subsystem for Linux
+
+node:events:497
+      throw er; // Unha
+ndled 'error' event
+      ^
+
+Error: spawn bash ENOEN
+T
+    at ChildProcess._ha
+ndle.onexit (node:inter
+nal/child_process:285:1
+9)
+    at onErrorNT (node:
+internal/child_process:
+483:16)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:90:21)
+Emitted 'error' event o
+n ChildProcess instance
+ at:
+    at ChildProcess._ha
+ndle.onexit (node:inter
+nal/child_process:291:1
+2)
+    at onErrorNT (node:
+internal/child_process:
+483:16)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:90:21) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'spawn bash'
+,
+  path: 'bash',
+  spawnargs: [ '--nopro
+file', '--norc' ]
+}
+
+Node.js v22.19.0

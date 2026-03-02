@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
@@ -11,10 +11,16 @@ import AdUnit from "@/components/AdUnit";
 // 대표님의 실제 애드센스 퍼블리셔 ID
 const ADSENSE_ID = "ca-pub-2873403048341290";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: "머니샐러리 | 2026 연봉계산기 & 자산 플래닝",
   description: "대한민국 No.1 연봉 및 자산 관리 플랫폼. 가장 정확한 2026 실수령액 계산과 자산 성장 시뮬레이션을 경험하세요.",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
 };
 
 export default function RootLayout({

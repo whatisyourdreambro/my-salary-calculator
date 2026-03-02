@@ -9,6 +9,9 @@ import AdUnit from "@/components/AdUnit";
 
 export const revalidate = 86400;
 
+// [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
+export const runtime = "edge";
+
 type Props = {
   params: { amount: string[] }; // 폴더명이 [...amount] 이므로 slug대신 amount로 매핑
 };
