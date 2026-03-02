@@ -7,72 +7,89 @@
 @layer base {
   :root {
     /* Toss Style Light Mode */
-    --background: 210 20% 98%; /* #F2F4F6 (Toss Light Gray Background) */
-    --foreground: 222 47% 11%; /* #191F28 (Toss Black Text) */
+    --background: 210 20% 98%;
+    /* #F2F4F6 (Toss Light Gray Background) */
+    --foreground: 222 47% 11%;
+    /* #191F28 (Toss Black Text) */
 
-    --card: 0 0% 100%; /* Pure White */
+    --card: 0 0% 100%;
+    /* Pure White */
     --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 218 89% 51%; /* #3182F6 (Toss Blue) */
+    --primary: 218 89% 51%;
+    /* #3182F6 (Toss Blue) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 96%; /* #F2F4F6 */
-    --secondary-foreground: 215 16% 47%; /* #4E5968 (Toss Sub Text) */
+    --secondary: 210 40% 96.1%;
+    /* #F1F5F9 */
+    --secondary-foreground: 215.4 16.3% 46.9%;
+    /* #4E5968 (Toss Sub Text) */
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 218 89% 51%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 32% 91%; /* #E5E8EB (Toss Border) */
-    --input: 214 32% 91%;
+    --border: 214.3 31.8% 91.4%;
+    /* #E5E8EB (Toss Border) */
+    --input: 214.3 31.8% 91.4%;
     --ring: 218 89% 51%;
 
-    --radius: 1rem; /* 부드러운 곡선 기본값 */
+    --radius: 1.5rem;
+    /* Toss Style Huge Radius for Cards */
 
-    /* Chart Colors - Toss/Fintech Friendly */
-    --chart-1: 218 89% 51%; /* Blue */
-    --chart-2: 160 84% 39%; /* Mint/Emerald */
-    --chart-3: 250 89% 65%; /* Purple */
-    --chart-4: 340 82% 52%; /* Pink */
-    --chart-5: 40 90% 50%; /* Yellow/Orange */
+    /* Chart Colors - Fintech Friendly */
+    --chart-1: 218 89% 51%;
+    /* Blue */
+    --chart-2: 160 84% 39%;
+    /* Mint/Emerald */
+    --chart-3: 250 89% 65%;
+    /* Purple */
+    --chart-4: 340 82% 52%;
+    /* Pink */
+    --chart-5: 40 90% 50%;
+    /* Yellow/Orange */
   }
 
   .dark {
-    /* Toss Style Dark Mode (Very Clean Dark) */
-    --background: 222 47% 11%; /* #191F28 */
-    --foreground: 210 20% 98%; /* #F9FAFB */
+    /* Toss Style Dark Mode (Clean Dark) */
+    --background: 222 47% 11%;
+    /* #191F28 */
+    --foreground: 210 40% 98%;
+    /* #F9FAFB */
 
-    --card: 217 33% 17%; /* #1E232E */
-    --card-foreground: 210 20% 98%;
+    --card: 217.2 32.6% 17.5%;
+    /* #1E232E */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 218 89% 65%; /* Brighter Blue for Dark Mode */
-    --primary-foreground: 222 47% 11%;
+    --primary: 218 89% 65%;
+    /* Brighter Blue for Dark Mode */
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217 33% 20%;
-    --secondary-foreground: 215 20% 80%;
+    --secondary: 217.2 32.6% 20%;
+    --secondary-foreground: 215 20.2% 80%;
 
-    --muted: 217 33% 20%;
-    --muted-foreground: 215 20% 70%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 218 89% 65%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
+    --border: 217.2 32.6% 23%;
+    --input: 217.2 32.6% 23%;
     --ring: 218 89% 65%;
   }
 }
@@ -89,7 +106,8 @@
   * {
     @apply border-border;
     font-family: var(--font-pretendard);
-    letter-spacing: -0.015em; /* 텍스트 밀도 높임 */
+    letter-spacing: -0.01em;
+    /* 텍스트 렌더링 최적화 */
   }
 
   body {
@@ -97,40 +115,62 @@
     font-feature-settings: "cv11", "ss01", "tnum";
   }
 
+  /* 숫자 등 고정폭을 위한 설정 */
   .font-mono-tabular {
     font-variant-numeric: tabular-nums;
   }
 
+  /* 헤딩 타이포그래피 */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight text-slate-800 dark:text-slate-100;
   }
 }
 
 @layer utilities {
-  /* Toss Style Clean Utilities */
+
+  /* Toss Style Utilities */
+  .toss-card {
+    @apply bg-white dark:bg-[#1E232E] border border-slate-100 dark:border-slate-800 shadow-[0_8px_30px_#0000000A] dark:shadow-[0_8px_30px_#00000033] rounded-[24px] transition-all;
+  }
+
+  .toss-input {
+    @apply bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 rounded-[16px] text-lg font-semibold px-5 py-4 w-full;
+  }
+
+  .toss-button-primary {
+    @apply bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4 shadow-lg shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition-all w-full flex items-center justify-center gap-2 text-lg;
+  }
+
+  .toss-button-secondary {
+    @apply bg-[#F2F4F6] dark:bg-slate-800 text-[#4E5968] dark:text-slate-300 font-bold rounded-[16px] px-6 py-4 hover:bg-[#E5E8EB] dark:hover:bg-slate-700 active:scale-[0.98] transition-all w-full flex items-center justify-center gap-2;
+  }
+
+  /* Legacy aliases for safe refactoring */
   .glass {
-    @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_#00000005];
+    @apply toss-card;
   }
 
   .glass-card {
-    @apply bg-white dark:bg-[#1E232E] border border-slate-100/50 dark:border-slate-800 shadow-[0_8px_30px_#0000000A] rounded-[24px] transition-all duration-300;
+    @apply toss-card;
   }
 
   .glass-input {
-    @apply bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-[14px];
+    @apply toss-input;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300;
+    @apply text-slate-900 dark:text-white;
+    /* Removed gradient to enforce clean toss aesthetic */
   }
 
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400;
+    @apply text-blue-600 dark:text-blue-400;
+    /* Flat primary instead of gradient */
   }
 }
 

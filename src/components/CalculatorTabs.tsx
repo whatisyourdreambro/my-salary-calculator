@@ -140,18 +140,42 @@ function CalculatorTabsComponent() {
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl shadow-lg">
-      {/* Desktop Tabs */}
-      <div className="hidden md:flex flex-wrap justify-center p-2 bg-secondary/50 rounded-t-xl">
+    <div className="w-full">
+      {/* Toss Style Segmented Control (Desktop) */}
+      <div className="hidden md:flex justify-center mb-8">
+        <div className="inline-flex bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-[20px]">
+          {(Object.values(TABS) as TabValue[]).map((tab) => {
+            const { name, icon: Icon } = TAB_CONFIG[tab];
+            const isActive = activeTab === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`relative px-5 py-3 text-[15px] font-bold rounded-[16px] transition-all duration-300 flex items-center gap-2 ${isActive
+                  ? "text-blue-600 bg-white dark:bg-slate-700 shadow-[0_2px_12px_#0000000F]"
+                  : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
+                  }`}
+              >
+                <Icon className="w-[18px] h-[18px]" />
+                <span className="relative z-10">{name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Toss Style Mobile Nav (Scrollable Pills) */}
+      <div className="md:hidden flex overflow-x-auto hide-scrollbar mb-6 -mx-4 px-4 pb-4 pt-2 gap-2 snap-x">
         {(Object.values(TABS) as TabValue[]).map((tab) => {
           const { name, icon: Icon } = TAB_CONFIG[tab];
+          const isActive = activeTab === tab;
           return (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 font-semibold text-sm rounded-md transition-all duration-200 shrink-0 flex items-center gap-2 m-1 ${activeTab === tab
-                  ? "bg-background text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+              className={`flex-none snap-start flex items-center gap-2 px-5 py-3.5 rounded-[18px] transition-all whitespace-nowrap font-bold text-[15px] ${isActive
+                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md"
+                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
                 }`}
             >
               <Icon className="w-5 h-5" />
@@ -161,29 +185,7 @@ function CalculatorTabsComponent() {
         })}
       </div>
 
-      {/* Mobile Tabs */}
-      <div className="md:hidden grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 border-b border-border">
-        {(Object.values(TABS) as TabValue[]).map((tab) => {
-          const { name, icon: Icon } = TAB_CONFIG[tab];
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all text-center min-h-[80px] active:scale-95 ${activeTab === tab
-                  ? "bg-primary/10 text-primary font-bold shadow-sm border border-primary/20"
-                  : "text-muted-foreground hover:bg-secondary border border-transparent"
-                }`}
-            >
-              <Icon className="w-6 h-6 mb-2" />
-              <span className="text-xs font-semibold">
-                {name.split(" ")[0]}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="p-4 sm:p-6 md:p-8">{renderActiveCalculator()}</div>
+      <div className="w-full">{renderActiveCalculator()}</div>
     </div>
   );
 }

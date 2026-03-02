@@ -1,0 +1,122 @@
+﻿
+> my-salary-calculator@0.1.0 build
+> next build
+
+  ??Next.js 14.2.32
+
+   Creating an optimized production build ...
+ ??Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/191) ...
+   Generating static pages (47/191) 
+   Generating static pages (95/191) 
+   Generating static pages (143/191) 
+ ??Generating static pages (191/191)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+????/                                    5.8 kB          142 kB
+????/_not-found                          195 B          88.2 kB
+??? /api/og                              0 B                0 B
+??? /api/salary-table                    0 B                0 B
+????/calc/2026-year                      13.3 kB         330 kB
+????/car-loan                            7.6 kB          140 kB
+????/company                             4.11 kB         141 kB
+??? /company/[id]                        4.97 kB         244 kB
+????/company/compare                     3.11 kB         131 kB
+??? /company/compare/[slug]              7.63 kB         242 kB
+????/company/simulator                   4.01 kB         247 kB
+????/dashboard                           10.7 kB         216 kB
+????/en                                  191 B            97 kB
+????/en/flat-tax                         2.73 kB         139 kB
+????/en/salary-converter                 4.65 kB         239 kB
+????/fire-calculator                     9.74 kB         146 kB
+????/fun                                 191 B            97 kB
+????/fun/asset-allocator                 3.95 kB        96.2 kB
+????/fun/escape-plan                     5.63 kB         141 kB
+????/fun/financial-mbti                  8.21 kB         136 kB
+????/fun/flappy                          4.04 kB        92.1 kB
+????/fun/fortune                         8.78 kB         137 kB
+????/fun/iq-test                         9.11 kB         146 kB
+????/fun/lunch-roulette                  7.02 kB         135 kB
+????/fun/mbti-salary                     5.37 kB         179 kB
+????/fun/meme-coin                       7.98 kB         238 kB
+????/fun/random-draw                     7.34 kB         135 kB
+????/fun/rank                            10.5 kB         245 kB
+????/fun/reincarnation                   8.79 kB         145 kB
+????/fun/rich-dna-test                   7.86 kB         145 kB
+????/fun/salary-battle                   7.54 kB         239 kB
+????/fun/salary-rank                     7.04 kB         181 kB
+????/fun/salary-slip                     7.49 kB         135 kB
+????/fun/spending-test                   6.74 kB         135 kB
+????/fun/tetris                          6.75 kB         135 kB
+????/fun/weekend-duty                    4.71 kB         178 kB
+????/fun/what-to-buy                     5.36 kB         141 kB
+????/fun/worldcup                        4.78 kB         153 kB
+????/global                              3.75 kB         207 kB
+????/glossary                            13.6 kB         142 kB
+????/guides                              15 kB           152 kB
+????/guides/[slug]                       8.53 kB         150 kB
+??  ??/guides/salary-guide-2025
+??  ??/guides/salary-negotiation-secret
+??  ??/guides/nekarakubae-salary-truth
+??  ??[+47 more paths]
+????/home-loan                           3.82 kB         104 kB
+????/lotto                               5.74 kB        93.8 kB
+????/manifest.json                       0 B                0 B
+????/mbti-salary                         16.4 kB         261 kB
+??? /opengraph-image                     0 B                0 B
+????/pro/career-planner                  6.1 kB          102 kB
+????/qna                                 9.91 kB         147 kB
+????/report                              4.55 kB         264 kB
+????/robots.txt                          0 B                0 B
+????/rss.xml                             0 B                0 B
+????/salary-db                           2.74 kB         156 kB
+????/salary-db/[id]                      8.06 kB         243 kB
+??  ??/salary-db/samsung-electronics
+??  ??/salary-db/sk-hynix
+??  ??/salary-db/naver
+??  ??[+60 more paths]
+????/salary-db/submit                    3.44 kB         131 kB
+??? /salary/[...amount]                  2.95 kB         198 kB
+??? /salary/[amount]                     3.81 kB         267 kB
+??? /share/[data]                        1.85 kB         103 kB
+????/sitemap.xml                         0 B                0 B
+????/table/2026/annual                   144 B           131 kB
+????/table/2026/hourly                   569 B           262 kB
+????/table/2026/monthly                  143 B           131 kB
+????/table/2026/weekly                   564 B           262 kB
+????/table/annual                        534 B           262 kB
+????/table/hourly                        560 B           262 kB
+????/table/monthly                       552 B           262 kB
+????/table/weekly                        551 B           262 kB
+????/tools                               191 B            97 kB
+????/tools/date/age                      177 B          91.2 kB
+????/tools/date/d-day                    177 B          91.2 kB
+????/tools/date/work-days                177 B          91.2 kB
+????/tools/deposit                       2.31 kB         130 kB
+????/tools/finance/cagr                  1.58 kB        89.6 kB
+????/tools/finance/vat                   1.86 kB        89.9 kB
+????/tools/health/bmi                    1.71 kB        89.8 kB
+????/tools/life/dutch-pay                177 B          91.5 kB
+????/tools/life/fuel-cost                178 B          91.5 kB
+????/tools/life/unit-converter           178 B          91.5 kB
+????/tools/loan                          2.93 kB         234 kB
+????/tools/math                          1.51 kB         129 kB
+????/tools/math/number-gen               177 B          91.4 kB
+????/tools/math/percent                  177 B          91.4 kB
+????/tools/real-estate/dsr               2.54 kB         131 kB
+????/tools/real-estate/ltv               2.46 kB         130 kB
+????/year-end-tax                        4.9 kB          105 kB
++ First Load JS shared by all            88 kB
+  ??chunks/5030-79bac71cd6910542.js      31.8 kB
+  ??chunks/fd9d1056-7c3004612b1f4e0a.js  53.6 kB
+  ??other shared chunks (total)          2.63 kB
+
+
+?? (Static)   prerendered as static content
+?? (SSG)      prerendered as static HTML (uses getStaticProps)
+?  (Dynamic)  server-rendered on demand
+
