@@ -9,9 +9,8 @@ import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import { ArrowLeft, Sparkles, ChevronRight } from "lucide-react";
 
-// [필수] 클라우드플레어 빌드용 Edge 설정
+// [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
 export const runtime = "edge";
-export const revalidate = 86400;
 
 function parseSalaryParam(param: string): number {
   const manwonMatch = param.match(/^(\d+)-manwon$/);
@@ -23,19 +22,6 @@ function parseSalaryParam(param: string): number {
   const numeric = parseInt(param, 10);
   if (!isNaN(numeric) && numeric > 1000) return numeric;
   return 50000000;
-}
-
-export async function generateStaticParams() {
-  const params: { amount: string }[] = [];
-  const salaries = [3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000];
-  salaries.forEach((s) => params.push({ amount: `${s}-manwon` }));
-  [1, 1.5, 2].forEach((e) =>
-    params.push({ amount: `${e}-eok`.replace(".5", "-5") }),
-  );
-  for (let i = 30; i <= 100; i += 5) {
-    params.push({ amount: (i * 1000000).toString() });
-  }
-  return params;
 }
 
 type Props = {
@@ -81,7 +67,7 @@ export default function SalaryAmountPage({ params }: Props) {
       : `${(amount / 10000).toLocaleString()}만원`;
 
   const jsonLd = {
-    "@context": "https://schema.org",
+    "@context": "[https://schema.org](https://schema.org)",
     "@type": "FinancialApplication",
     name: `Salary Analysis for ${formattedAmount}`,
     description: `2026 Salary breakdown for ${formattedAmount}`,
