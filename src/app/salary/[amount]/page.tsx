@@ -7,11 +7,11 @@ import AdUnit from "@/components/AdUnit";
 import WealthChart from "@/components/WealthChart";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
-import {
-  ArrowLeft,
-  Sparkles,
-  ChevronRight
-} from "lucide-react";
+import { ArrowLeft, Sparkles, ChevronRight } from "lucide-react";
+
+// [필수] 클라우드플레어 빌드용 Edge 설정
+export const runtime = "edge";
+export const revalidate = 86400;
 
 function parseSalaryParam(param: string): number {
   const manwonMatch = param.match(/^(\d+)-manwon$/);
@@ -25,13 +25,13 @@ function parseSalaryParam(param: string): number {
   return 50000000;
 }
 
-export const revalidate = 86400;
-
 export async function generateStaticParams() {
   const params: { amount: string }[] = [];
   const salaries = [3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000];
-  salaries.forEach(s => params.push({ amount: `${s}-manwon` }));
-  [1, 1.5, 2].forEach(e => params.push({ amount: `${e}-eok`.replace(".5", "-5") }));
+  salaries.forEach((s) => params.push({ amount: `${s}-manwon` }));
+  [1, 1.5, 2].forEach((e) =>
+    params.push({ amount: `${e}-eok`.replace(".5", "-5") }),
+  );
   for (let i = 30; i <= 100; i += 5) {
     params.push({ amount: (i * 1000000).toString() });
   }
@@ -46,11 +46,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const amount = parseSalaryParam(params.amount);
   const tax = calculateSalary2026(amount, 200000, 1, 0);
 
-  const formattedAmount = amount >= 100000000
-    ? `${(amount / 100000000).toFixed(1)}억`
-    : `${(amount / 10000).toLocaleString()}만원`;
+  const formattedAmount =
+    amount >= 100000000
+      ? `${(amount / 100000000).toFixed(1)}억`
+      : `${(amount / 10000).toLocaleString()}만원`;
 
-  const amountDisplay = amount >= 100000000 ? `${(amount / 100000000).toFixed(1)}억` : `${(amount / 10000)}`;
+  const amountDisplay =
+    amount >= 100000000
+      ? `${(amount / 100000000).toFixed(1)}억`
+      : `${amount / 10000}`;
   const netDisplay = tax.netPay.toLocaleString();
 
   const ogUrl = `/api/og?amount=${amountDisplay}&net=${netDisplay}`;
@@ -71,21 +75,22 @@ export default function SalaryAmountPage({ params }: Props) {
   const amount = parseSalaryParam(params.amount);
   const tax = calculateSalary2026(amount, 200000, 1, 0);
 
-  const formattedAmount = amount >= 100000000
-    ? `${(amount / 100000000).toFixed(1)}억`
-    : `${(amount / 10000).toLocaleString()}만원`;
+  const formattedAmount =
+    amount >= 100000000
+      ? `${(amount / 100000000).toFixed(1)}억`
+      : `${(amount / 10000).toLocaleString()}만원`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FinancialApplication",
-    "name": `Salary Analysis for ${formattedAmount}`,
-    "description": `2026 Salary breakdown for ${formattedAmount}`,
-    "applicationCategory": "FinanceApplication",
-    "offers": {
+    name: `Salary Analysis for ${formattedAmount}`,
+    description: `2026 Salary breakdown for ${formattedAmount}`,
+    applicationCategory: "FinanceApplication",
+    offers: {
       "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "KRW"
-    }
+      price: "0",
+      priceCurrency: "KRW",
+    },
   };
 
   return (
@@ -95,26 +100,33 @@ export default function SalaryAmountPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Header Area */}
       <div className="pt-8 px-6 flex flex-col items-center">
-        <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors mb-6 group">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors mb-6 group"
+        >
+          <ArrowLeft
+            size={16}
+            className="group-hover:-translate-x-1 transition-transform"
+          />
           <span className="text-xs font-bold">전체 계산기로 돌아가기</span>
         </Link>
 
-        {/* 최상단 배너 광고 */}
+        {/* 상단 배너 광고 */}
         <div className="w-full max-w-4xl mb-8">
           <AdUnit slotId="9958502911" format="auto" label="상단 배너" />
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <span className="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">2026 REPORT</span>
+          <span className="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+            2026 REPORT
+          </span>
           <Sparkles size={14} className="text-[#FFD700]" />
         </div>
 
         <h1 className="text-3xl font-black text-slate-800 text-center mb-10">
-          연봉 <span className="text-primary">{formattedAmount}</span>의<br />
-          월 실수령액 분석
+          연봉 <span className="text-primary">{formattedAmount}</span>의<br />월
+          실수령액 분석
         </h1>
 
         <SalaryResultCard
@@ -126,11 +138,11 @@ export default function SalaryAmountPage({ params }: Props) {
             longTermCare: tax.longTermCare,
             employment: tax.employmentInsurance,
             incomeTax: tax.incomeTax,
-            localTax: tax.localIncomeTax
+            localTax: tax.localIncomeTax,
           }}
         />
 
-        {/* 결과창 바로 아래 프리미엄 본문 광고 (수익률 1위 구간) */}
+        {/* 결과창 프리미엄 본문 광고 */}
         <div className="w-full max-w-4xl mt-10">
           <AdUnit slotId="5584143639" format="auto" label="결과창 프리미엄" />
         </div>
@@ -139,17 +151,19 @@ export default function SalaryAmountPage({ params }: Props) {
           <WealthChart monthlyNetSalary={tax.netPay} />
           <SalaryTierCard annualSalary={amount} />
 
-          {/* SEO Footer Links */}
           <div className="pt-12 border-t border-slate-200 px-6 max-w-4xl mx-auto w-full">
-            <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 text-center">다른 연봉 리포트</h2>
+            <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 text-center">
+              다른 연봉 리포트
+            </h2>
             <div className="grid grid-cols-2 gap-3">
-              {[4000, 5000, 6000, 8000].map(s => (
+              {[4000, 5000, 6000, 8000].map((s) => (
                 <Link
                   key={s}
                   href={`/salary/${s}-manwon`}
                   className="p-4 bg-white border border-slate-100 rounded-2xl text-xs font-bold text-slate-600 flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
                 >
-                  연봉 {s}만원 <ChevronRight size={14} className="text-slate-300" />
+                  연봉 {s}만원{" "}
+                  <ChevronRight size={14} className="text-slate-300" />
                 </Link>
               ))}
             </div>
