@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdUnit from "@/components/AdUnit";
 
+// 대표님의 실제 애드센스 퍼블리셔 ID
 const ADSENSE_ID = "ca-pub-2873403048341290";
 
 export const metadata: Metadata = {
@@ -55,35 +56,38 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      {/* 모바일 앵커 광고가 하단 푸터를 가리지 않도록 하단 여백(pb-20) 부여 */}
-      <body className="antialiased text-slate-900 bg-slate-50 selection:bg-primary/10 pb-20 md:pb-0">
+      {/* Toss Style Root Body:
+        기본 배경색을 아주 밝은 회색(#F2F4F6)으로 설정하고, 텍스트를 진한 네이비/블랙으로 잡습니다.
+        모바일 앵커 광고를 위해 pb-20 여백을 부여합니다.
+      */}
+      <body className="antialiased text-slate-900 bg-background selection:bg-blue-600/10 pb-20 md:pb-0">
         <NextThemesProvider attribute="class" defaultTheme="light">
           <div className="flex flex-col min-h-screen">
             <Header />
 
-            {/* Hybrid Responsive Layout: Ad - App - Ad */}
-            <div className="flex-grow w-full flex justify-center max-w-[1440px] mx-auto">
+            {/* 수익 최적화 하이브리드 레이아웃: Ad - App - Ad */}
+            <div className="flex-grow w-full flex justify-center max-w-[1600px] mx-auto">
 
-              {/* 데스크탑 왼쪽 날개 광고 (화면 너비가 넓을 때만 노출) */}
-              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-24 h-[calc(100vh-6rem)] pt-8 justify-center">
-                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px]" label="PC 날개 광고" />
+              {/* 데스크탑 왼쪽 날개 광고 */}
+              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-28 h-[calc(100vh-7rem)] pt-6 justify-center">
+                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px] rounded-2xl overflow-hidden shadow-sm" label="PC 날개 광고" />
               </aside>
 
-              {/* 실제 콘텐츠 영역 */}
+              {/* 메인 콘텐츠 영역 */}
               <main className="flex-grow w-full min-w-0">
                 {children}
               </main>
 
-              {/* 데스크탑 오른쪽 날개 광고 (화면 너비가 넓을 때만 노출) */}
-              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-24 h-[calc(100vh-6rem)] pt-8 justify-center">
-                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px]" label="PC 날개 광고" />
+              {/* 데스크탑 오른쪽 날개 광고 */}
+              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-28 h-[calc(100vh-7rem)] pt-6 justify-center">
+                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px] rounded-2xl overflow-hidden shadow-sm" label="PC 날개 광고" />
               </aside>
 
             </div>
 
             <Footer />
 
-            {/* 전역 모바일 하단 고정 앵커 광고 (모바일에서만 보임) */}
+            {/* 전역 모바일 하단 고정 앵커 광고 */}
             <div className="block md:hidden">
               <AdUnit slotId="6458241606" sticky={true} format="auto" label="모바일 앵커" />
             </div>

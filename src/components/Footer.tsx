@@ -1,3 +1,5 @@
+// src/components/Footer.tsx
+
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Github } from "lucide-react";
 import Logo from "./Logo";
@@ -22,28 +24,25 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full mt-32 bg-[#1C1917] text-stone-400 relative overflow-hidden border-t border-stone-800">
-      {/* Decorative Top Border */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-
-      <div className="max-w-7xl mx-auto py-20 px-6 sm:px-8 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+    <footer className="w-full mt-24 bg-slate-50 text-slate-500 relative border-t border-slate-200/60">
+      <div className="max-w-7xl mx-auto py-16 px-6 sm:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
 
           {/* Brand Section */}
-          <div className="md:w-1/3 space-y-6">
-            <Link href="/" className="inline-block group">
-              <Logo className="h-8 w-auto text-stone-200" showText={true} />
+          <div className="md:w-1/3 space-y-5">
+            <Link href="/" className="inline-block">
+              <Logo className="h-8 w-auto text-slate-800" showText={true} />
             </Link>
-            <p className="text-base text-stone-500 leading-relaxed font-sans max-w-sm">
+            <p className="text-[15px] text-slate-500 leading-relaxed font-medium">
               우아한 금융 생활의 시작, 머니샐러리.<br />
-              <span className="text-stone-400">당신의 가치를 높이는 가장 정확한 기준을 제시합니다.</span>
+              당신의 가치를 높이는 가장 정확한 기준을 제시합니다.
             </p>
             <div className="flex space-x-3 pt-2">
               {socialLinks.map((link, index) => (
                 <a
                   key={index}
                   href={link.href}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-stone-800/50 border border-stone-700 hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:shadow-sm transition-all duration-200"
                 >
                   {link.icon}
                 </a>
@@ -52,17 +51,17 @@ export default function Footer() {
           </div>
 
           {/* Links Section */}
-          <div className="grid grid-cols-2 gap-12 md:w-2/3 md:pl-12">
+          <div className="grid grid-cols-2 gap-10 md:w-2/3 md:pl-12">
             <div>
-              <h3 className="text-sm font-serif font-bold tracking-widest uppercase text-accent mb-8">
-                Services
+              <h3 className="text-[14px] font-bold text-slate-800 mb-6">
+                서비스
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3.5">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-stone-400 hover:text-stone-100 hover:translate-x-1 transition-all duration-300 inline-block font-sans"
+                      className="text-[15px] font-medium text-slate-500 hover:text-blue-600 transition-colors inline-block"
                     >
                       {link.name}
                     </Link>
@@ -71,15 +70,15 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-serif font-bold tracking-widest uppercase text-accent mb-8">
-                Legal & Support
+              <h3 className="text-[14px] font-bold text-slate-800 mb-6">
+                고객 지원
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3.5">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-base text-stone-400 hover:text-stone-100 hover:translate-x-1 transition-all duration-300 inline-block font-sans"
+                      className="text-[15px] font-medium text-slate-500 hover:text-blue-600 transition-colors inline-block"
                     >
                       {link.name}
                     </Link>
@@ -91,11 +90,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-20 pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-600 font-sans">
+        <div className="mt-16 pt-6 border-t border-slate-200/80 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-medium text-slate-400">
           <p>© {currentYear} Moneysalary. All Rights Reserved.</p>
           <div className="flex items-center gap-6">
             <p className="hidden md:block">
-              Exchange rates via FKF API
+              환율 데이터 제공: FKF API
             </p>
           </div>
         </div>

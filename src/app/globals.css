@@ -6,95 +6,91 @@
 
 @layer base {
   :root {
-    /* Light Mode - Warm Hotel Lobby */
-    --background: 40 20% 99%;
-    /* #FAFAF9 (Warm Cream) */
-    --foreground: 20 10% 15%;
-    /* #292524 (Warm Charcoal) */
+    /* Toss Style Light Mode */
+    --background: 210 20% 98%;
+    /* #F2F4F6 (Toss Light Gray Background) */
+    --foreground: 222 47% 11%;
+    /* #191F28 (Toss Black Text) */
 
     --card: 0 0% 100%;
-    --card-foreground: 20 10% 15%;
+    /* Pure White */
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 10% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 165 40% 25%;
-    /* #26594C (Regency Deep Green) */
-    --primary-foreground: 40 20% 98%;
+    --primary: 218 89% 51%;
+    /* #3182F6 (Toss Blue) */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 20% 94%;
-    /* #F0EFEA (Soft Stone) */
-    --secondary-foreground: 20 10% 15%;
+    --secondary: 210 20% 96%;
+    /* #F2F4F6 */
+    --secondary-foreground: 215 16% 47%;
+    /* #4E5968 (Toss Sub Text) */
 
-    --muted: 40 20% 96%;
-    --muted-foreground: 25 5% 45%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 45 60% 50%;
-    /* #CC9254 (Antique Gold) */
-    --accent-foreground: 40 20% 98%;
+    --accent: 218 89% 51%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 40 10% 90%;
-    --input: 40 10% 90%;
-    --ring: 165 40% 25%;
+    --border: 214 32% 91%;
+    /* #E5E8EB (Toss Border) */
+    --input: 214 32% 91%;
+    --ring: 218 89% 51%;
 
-    --radius: 0.5rem;
-    /* Reduced for smarter look, less "app-like" */
+    --radius: 1rem;
+    /* 부드러운 곡선 기본값 */
 
-    /* Chart Colors - Elegant Palette */
-    --chart-1: 165 40% 30%;
-    /* Deep Green */
-    --chart-2: 45 50% 55%;
-    /* Gold */
-    --chart-3: 20 20% 40%;
-    /* Taupe */
-    --chart-4: 200 30% 35%;
-    /* Slate Blue */
-    --chart-5: 15 40% 50%;
-    /* Terracotta */
+    /* Chart Colors - Toss/Fintech Friendly */
+    --chart-1: 218 89% 51%;
+    /* Blue */
+    --chart-2: 160 84% 39%;
+    /* Mint/Emerald */
+    --chart-3: 250 89% 65%;
+    /* Purple */
+    --chart-4: 340 82% 52%;
+    /* Pink */
+    --chart-5: 40 90% 50%;
+    /* Yellow/Orange */
   }
 
   .dark {
-    /* Dark Mode - Luxury Lounge */
-    --background: 24 10% 10%;
-    /* #1C1917 (Warm Dark) */
-    --foreground: 40 20% 90%;
-    /* #E7E5E4 (Soft Cream) */
+    /* Toss Style Dark Mode (Very Clean Dark) */
+    --background: 222 47% 11%;
+    /* #191F28 */
+    --foreground: 210 20% 98%;
+    /* #F9FAFB */
 
-    --card: 24 10% 12%;
-    --card-foreground: 40 20% 90%;
+    --card: 217 33% 17%;
+    /* #1E232E */
+    --card-foreground: 210 20% 98%;
 
-    --popover: 24 10% 12%;
-    --popover-foreground: 40 20% 90%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 165 30% 50%;
-    /* #599C8B (Soft Jade) */
-    --primary-foreground: 24 10% 10%;
+    --primary: 218 89% 65%;
+    /* Brighter Blue for Dark Mode */
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 24 5% 18%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 215 20% 80%;
 
-    --muted: 24 5% 18%;
-    --muted-foreground: 40 5% 60%;
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 70%;
 
-    --accent: 45 50% 55%;
-    /* #CBA577 (Muted Gold) */
-    --accent-foreground: 24 10% 10%;
+    --accent: 218 89% 65%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 24 5% 20%;
-    --input: 24 5% 20%;
-    --ring: 165 30% 50%;
-
-    --chart-1: 165 30% 50%;
-    --chart-2: 45 40% 60%;
-    --chart-3: 20 10% 50%;
-    --chart-4: 200 20% 50%;
-    --chart-5: 15 30% 60%;
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 218 89% 65%;
   }
 }
 
@@ -106,70 +102,57 @@
   * {
     @apply border-border;
     font-family: var(--font-pretendard);
-    letter-spacing: -0.02em; /* Premium Tight Look */
+    letter-spacing: -0.015em;
+    /* 텍스트 밀도 높임 */
   }
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "cv11", "ss01", "tnum"; /* Features for better UI */
+    font-feature-settings: "cv11", "ss01", "tnum";
   }
 
   .font-mono-tabular {
     font-variant-numeric: tabular-nums;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-black tracking-tighter;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
   }
 }
 
 @layer utilities {
 
-  /* Hotel Luxury - Frosted Marble Glass */
+  /* Toss Style Clean Utilities */
   .glass {
-    @apply bg-white/80 dark:bg-[#1C1917]/80 backdrop-blur-md border border-stone-200/50 dark:border-stone-800/50 shadow-sm;
+    @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_rgba(0, 0, 0, 0.02)];
   }
 
   .glass-card {
-    @apply bg-white/60 dark:bg-[#1C1917]/60 backdrop-blur-xl border border-white/40 dark:border-white/5 shadow-lg transition-all duration-500 hover:shadow-xl hover:bg-white/90 dark:hover:bg-[#1C1917]/80 rounded-xl;
+    @apply bg-white dark:bg-[#1E232E] border border-slate-100/50 dark:border-slate-800 shadow-[0_8px_30px_rgb(0, 0, 0, 0.04)] rounded-[24px] transition-all duration-300;
   }
 
   .glass-input {
-    @apply bg-stone-50/50 dark:bg-stone-900/50 backdrop-blur border border-stone-200 dark:border-stone-800 focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-all duration-300 rounded-md;
+    @apply bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 rounded-[14px];
   }
 
-  /* Elegant Gradients */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-stone-800 via-stone-600 to-stone-800 dark:from-stone-200 dark:via-stone-400 dark:to-stone-200;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300;
   }
 
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--primary))] to-teal-700 dark:from-[hsl(var(--primary))] dark:to-teal-300;
-  }
-
-  .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 dark:from-amber-300 dark:via-yellow-200 dark:to-amber-400;
-  }
-
-  /* Soft Ambient Glow */
-  .glow-soft {
-    box-shadow: 0 0 30px -10px theme('colors.primary.DEFAULT / 0.15');
-  }
-
-  .glow-gold {
-    box-shadow: 0 0 30px -10px rgba(204, 146, 84, 0.2);
-  }
-
-  /* Luxury Marble Background Pattern (Subtle) */
-  .bg-marble {
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400;
   }
 }
 
-/* Custom Scrollbar - Minimal */
+/* Custom Scrollbar - Minimal Toss Style */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -177,5 +160,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-stone-300 dark:bg-stone-700 rounded-full hover:bg-stone-400 dark:hover:bg-stone-600 transition-colors;
+  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors;
 }
