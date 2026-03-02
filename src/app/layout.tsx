@@ -6,8 +6,9 @@ import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdUnit from "@/components/AdUnit";
 
-const ADSENSE_ID = "ca-pub-5492837410"; // User can swap this easily
+const ADSENSE_ID = "ca-pub-2873403048341290";
 
 export const metadata: Metadata = {
   title: "머니샐러리 | 2026 연봉계산기 & 자산 플래닝",
@@ -54,19 +55,39 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased text-slate-900 bg-slate-50 selection:bg-primary/10">
+      {/* 모바일 앵커 광고가 하단 푸터를 가리지 않도록 하단 여백(pb-20) 부여 */}
+      <body className="antialiased text-slate-900 bg-slate-50 selection:bg-primary/10 pb-20 md:pb-0">
         <NextThemesProvider attribute="class" defaultTheme="light">
           <div className="flex flex-col min-h-screen">
             <Header />
-            {/* 
-               Hybrid Responsive Layout: 
-               On Mobile: Full width
-               On Desktop: Ad - App - Ad
-            */}
-            <div className="flex-grow w-full">
-              {children}
+
+            {/* Hybrid Responsive Layout: Ad - App - Ad */}
+            <div className="flex-grow w-full flex justify-center max-w-[1440px] mx-auto">
+
+              {/* 데스크탑 왼쪽 날개 광고 (화면 너비가 넓을 때만 노출) */}
+              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-24 h-[calc(100vh-6rem)] pt-8 justify-center">
+                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px]" label="PC 날개 광고" />
+              </aside>
+
+              {/* 실제 콘텐츠 영역 */}
+              <main className="flex-grow w-full min-w-0">
+                {children}
+              </main>
+
+              {/* 데스크탑 오른쪽 날개 광고 (화면 너비가 넓을 때만 노출) */}
+              <aside className="hidden xl:flex w-[160px] flex-shrink-0 sticky top-24 h-[calc(100vh-6rem)] pt-8 justify-center">
+                <AdUnit slotId="1397486615" format="vertical" className="w-[160px] h-[600px]" label="PC 날개 광고" />
+              </aside>
+
             </div>
+
             <Footer />
+
+            {/* 전역 모바일 하단 고정 앵커 광고 (모바일에서만 보임) */}
+            <div className="block md:hidden">
+              <AdUnit slotId="6458241606" sticky={true} format="auto" label="모바일 앵커" />
+            </div>
+
           </div>
         </NextThemesProvider>
       </body>

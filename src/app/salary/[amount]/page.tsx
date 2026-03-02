@@ -3,20 +3,16 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
-import { calculateSalaryRank } from "@/data/salaryRankData";
 import AdUnit from "@/components/AdUnit";
 import WealthChart from "@/components/WealthChart";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import {
   ArrowLeft,
-  Calculator,
   Sparkles,
-  TrendingUp,
   ChevronRight
 } from "lucide-react";
 
-// Helper to parse dynamic segment
 function parseSalaryParam(param: string): number {
   const manwonMatch = param.match(/^(\d+)-manwon$/);
   if (manwonMatch) return parseInt(manwonMatch[1]) * 10000;
@@ -29,7 +25,8 @@ function parseSalaryParam(param: string): number {
   return 50000000;
 }
 
-export const dynamic = 'force-static';
+export const revalidate = 86400;
+
 export async function generateStaticParams() {
   const params: { amount: string }[] = [];
   const salaries = [3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000];
@@ -48,12 +45,12 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const amount = parseSalaryParam(params.amount);
   const tax = calculateSalary2026(amount, 200000, 1, 0);
-  
-  const formattedAmount = amount >= 100000000 
-    ? `${(amount / 100000000).toFixed(1)}억` 
+
+  const formattedAmount = amount >= 100000000
+    ? `${(amount / 100000000).toFixed(1)}억`
     : `${(amount / 10000).toLocaleString()}만원`;
 
-  const amountDisplay = amount >= 100000000 ? `${(amount / 100000000).toFixed(1)}억` : `${(amount/10000)}`;
+  const amountDisplay = amount >= 100000000 ? `${(amount / 100000000).toFixed(1)}억` : `${(amount / 10000)}`;
   const netDisplay = tax.netPay.toLocaleString();
 
   const ogUrl = `/api/og?amount=${amountDisplay}&net=${netDisplay}`;
@@ -73,12 +70,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default function SalaryAmountPage({ params }: Props) {
   const amount = parseSalaryParam(params.amount);
   const tax = calculateSalary2026(amount, 200000, 1, 0);
-  
-  const formattedAmount = amount >= 100000000 
-    ? `${(amount / 100000000).toFixed(1)}억` 
+
+  const formattedAmount = amount >= 100000000
+    ? `${(amount / 100000000).toFixed(1)}억`
     : `${(amount / 10000).toLocaleString()}만원`;
 
-  // JSON-LD for this specific salary
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FinancialApplication",
@@ -93,30 +89,35 @@ export default function SalaryAmountPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-white pb-20">
+    <main className="min-h-screen bg-transparent pb-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
+
       {/* Header Area */}
-      <div className="pt-12 px-6 flex flex-col items-center">
-        <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors mb-8 group">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> 
+      <div className="pt-8 px-6 flex flex-col items-center">
+        <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors mb-6 group">
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span className="text-xs font-bold">전체 계산기로 돌아가기</span>
         </Link>
-        
+
+        {/* 최상단 배너 광고 */}
+        <div className="w-full max-w-4xl mb-8">
+          <AdUnit slotId="9958502911" format="auto" label="상단 배너" />
+        </div>
+
         <div className="flex items-center gap-2 mb-2">
           <span className="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">2026 REPORT</span>
           <Sparkles size={14} className="text-[#FFD700]" />
         </div>
-        
-        <h1 className="text-3xl font-black text-slate-800 text-center mb-12">
+
+        <h1 className="text-3xl font-black text-slate-800 text-center mb-10">
           연봉 <span className="text-primary">{formattedAmount}</span>의<br />
           월 실수령액 분석
         </h1>
 
-        <SalaryResultCard 
+        <SalaryResultCard
           monthlyNet={tax.netPay}
           totalDeduction={tax.totalDeductions}
           breakdown={{
@@ -129,23 +130,24 @@ export default function SalaryAmountPage({ params }: Props) {
           }}
         />
 
-        <div className="w-full mt-12 space-y-12">
+        {/* 결과창 바로 아래 프리미엄 본문 광고 (수익률 1위 구간) */}
+        <div className="w-full max-w-4xl mt-10">
+          <AdUnit slotId="5584143639" format="auto" label="결과창 프리미엄" />
+        </div>
+
+        <div className="w-full mt-10 space-y-12">
           <WealthChart monthlyNetSalary={tax.netPay} />
           <SalaryTierCard annualSalary={amount} />
-          
-          <div className="px-6">
-            <AdUnit slotId="5492837410" format="auto" />
-          </div>
 
           {/* SEO Footer Links */}
-          <div className="pt-12 border-t border-slate-100 px-6">
+          <div className="pt-12 border-t border-slate-200 px-6 max-w-4xl mx-auto w-full">
             <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 text-center">다른 연봉 리포트</h2>
             <div className="grid grid-cols-2 gap-3">
               {[4000, 5000, 6000, 8000].map(s => (
-                <Link 
-                  key={s} 
+                <Link
+                  key={s}
                   href={`/salary/${s}-manwon`}
-                  className="p-4 bg-slate-50 rounded-2xl text-xs font-bold text-slate-600 flex justify-between items-center hover:bg-slate-100 transition-colors"
+                  className="p-4 bg-white border border-slate-100 rounded-2xl text-xs font-bold text-slate-600 flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
                 >
                   연봉 {s}만원 <ChevronRight size={14} className="text-slate-300" />
                 </Link>
