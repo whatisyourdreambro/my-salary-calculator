@@ -4,30 +4,30 @@
 
 import React from "react";
 import CountUp from "react-countup";
-import { Info, ChevronRight, PieChart, Sparkles } from "lucide-react";
+import { Info, ChevronRight, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DeductionItemProps {
   label: string;
   value: number;
-  color: string;
-  icon?: React.ReactNode;
+  iconBg: string;
+  iconColor: string;
 }
 
-const DeductionItem = ({ label, value, color, icon }: DeductionItemProps) => (
-  <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
-    <div className="flex items-center gap-3">
-      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg", color)}>
-        {icon || label[0]}
+const DeductionItem = ({ label, value, iconBg, iconColor }: DeductionItemProps) => (
+  <div className="flex items-center justify-between py-4 group cursor-pointer active:scale-[0.98] transition-transform">
+    <div className="flex items-center gap-4">
+      <div className={cn("w-10 h-10 rounded-[14px] flex items-center justify-center transition-colors", iconBg)}>
+        <ReceiptText size={20} className={iconColor} />
       </div>
-      <span className="font-bold text-slate-600">{label}</span>
+      <span className="font-semibold text-slate-700 text-[15px]">{label}</span>
     </div>
-    <div className="text-right">
-      <div className="font-black text-slate-800 font-mono-tabular">
+    <div className="flex items-center gap-1">
+      <div className="font-bold text-slate-900 font-mono-tabular text-[15px]">
         <CountUp end={value} separator="," duration={1} />
-        <span className="text-xs ml-0.5 text-slate-400">원</span>
+        <span className="text-sm font-medium ml-0.5 text-slate-500">원</span>
       </div>
-      <ChevronRight size={14} className="ml-auto text-slate-200 group-hover:text-slate-400 transition-colors" />
+      <ChevronRight size={16} className="text-slate-300 group-hover:text-slate-500 transition-colors ml-1" />
     </div>
   </div>
 );
@@ -51,56 +51,51 @@ export default function SalaryResultCard({
   breakdown,
 }: SalaryResultCardProps) {
   return (
-    <div className="space-y-6 w-full max-w-lg mx-auto p-4 sm:p-0">
-      {/* Massive Result Card - Glassmorphism */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0F4C81] to-[#0c406e] rounded-[2.5rem] p-8 text-white shadow-2xl border border-white/10">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#FFD700]/20 rounded-full -ml-12 -mb-12 blur-xl"></div>
-        
-        <div className="relative z-10">
-          <div className="flex justify-between items-center mb-6">
-            <span className="text-xs font-black uppercase tracking-[0.2em] opacity-60">Estimated Monthly Net</span>
-            <Sparkles size={16} className="text-[#FFD700] animate-pulse" />
-          </div>
-          
-          <div className="flex items-baseline gap-2">
-            <h2 className="text-5xl sm:text-6xl font-black font-mono-tabular tracking-tighter">
-              <CountUp end={monthlyNet} separator="," duration={1.5} />
-            </h2>
-            <span className="text-2xl font-bold opacity-60">원</span>
-          </div>
-          
-          <div className="mt-8 flex items-center justify-between p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-400"></div>
-              <span className="text-xs font-bold text-blue-100">공제액 합계</span>
-            </div>
-            <span className="font-black text-sm">
-              -<CountUp end={totalDeduction} separator="," duration={1} />원
-            </span>
-          </div>
+    <div className="w-full max-w-lg mx-auto space-y-4">
+      {/* 메인 결과 카드 - Toss Style White Card */}
+      <div className="bg-white rounded-[32px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/50">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-bold text-slate-500">예상 월 실수령액</span>
+        </div>
+
+        <div className="flex items-baseline gap-1 mb-8">
+          <h2 className="text-[2.75rem] leading-none font-extrabold text-slate-900 font-mono-tabular tracking-tight">
+            <CountUp end={monthlyNet} separator="," duration={1.5} />
+          </h2>
+          <span className="text-2xl font-bold text-slate-900">원</span>
+        </div>
+
+        {/* 공제액 요약 박스 */}
+        <div className="flex items-center justify-between p-5 bg-slate-50 rounded-[20px]">
+          <span className="text-[15px] font-semibold text-slate-600">총 공제액</span>
+          <span className="font-bold text-[15px] text-blue-600 font-mono-tabular">
+            -<CountUp end={totalDeduction} separator="," duration={1} />원
+          </span>
         </div>
       </div>
 
-      {/* Deduction List - Card Style */}
-      <div className="space-y-3">
+      {/* 상세 공제 내역 리스트 */}
+      <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/50">
         <div className="flex items-center justify-between px-2 mb-2">
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Deduction Details</h3>
-          <Info size={14} className="text-slate-300" />
+          <h3 className="text-sm font-bold text-slate-800">공제 상세 내역</h3>
+          <Info size={18} className="text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" />
         </div>
-        
-        <DeductionItem label="국민연금" value={breakdown.pension} color="bg-blue-500" icon={<PieChart size={18}/>} />
-        <DeductionItem label="건강보험" value={breakdown.health} color="bg-emerald-500" icon={<PieChart size={18}/>} />
-        <DeductionItem label="고용보험" value={breakdown.employment} color="bg-indigo-500" icon={<PieChart size={18}/>} />
-        <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} color="bg-orange-500" icon={<PieChart size={18}/>} />
+
+        <div className="divide-y divide-slate-100">
+          <DeductionItem label="국민연금" value={breakdown.pension} iconBg="bg-blue-50" iconColor="text-blue-500" />
+          <DeductionItem label="건강보험" value={breakdown.health} iconBg="bg-emerald-50" iconColor="text-emerald-500" />
+          <DeductionItem label="고용보험" value={breakdown.employment} iconBg="bg-indigo-50" iconColor="text-indigo-500" />
+          <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} iconBg="bg-rose-50" iconColor="text-rose-500" />
+        </div>
       </div>
 
-      <div className="bg-slate-50 rounded-2xl p-4 flex gap-3 border border-slate-100 italic">
-          <div className="text-xl">💡</div>
-          <p className="text-xs text-slate-500 leading-relaxed">
-            비과세 식대 20만원 및 본인 1인 공제가 적용된 결과입니다. 
-            부양가족이나 중소기업 감면 혜택에 따라 금액이 달라질 수 있습니다.
-          </p>
+      {/* 안내 문구 */}
+      <div className="px-6 py-4 flex gap-3">
+        <span className="text-lg leading-none">💡</span>
+        <p className="text-[13px] text-slate-500 leading-relaxed font-medium">
+          비과세 식대 20만원 및 본인 1인 공제가 적용된 결과입니다.
+          부양가족이나 중소기업 감면 혜택에 따라 실제 금액은 다를 수 있습니다.
+        </p>
       </div>
     </div>
   );
