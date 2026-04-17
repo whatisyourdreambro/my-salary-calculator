@@ -113,7 +113,7 @@ export default function SpendingTestPage() {
     <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pb-20">
       {/* Hero */}
       <section className="relative pt-28 pb-10 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/10 dark:bg-primary/10 rounded-full blur-[100px] -z-10" />
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary font-bold text-sm mb-6">
           🐾 소비 성향 분석

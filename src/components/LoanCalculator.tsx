@@ -123,8 +123,8 @@ export default function LoanCalculator() {
                 </div>
             </div>
 
-            <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-100 dark:border-yellow-900/30">
-                <p className="text-sm text-yellow-800 dark:text-yellow-200 flex items-center gap-2">
+            <div className="mt-6 p-4 bg-primary/5 dark:bg-primary/20 rounded-xl border border-primary dark:border-primary/30">
+                <p className="text-sm text-primary dark:text-primary flex items-center gap-2">
                     💡 <strong>Tip:</strong> 대출 금리가 1%만 낮아져도 총 이자가 수천만 원 절약됩니다.
                 </p>
             </div>

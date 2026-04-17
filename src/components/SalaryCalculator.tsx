@@ -59,10 +59,10 @@ const MungMascot = ({ mood }: { mood: "normal" | "happy" | "shocked" | "cool" })
 
   const getColor = () => {
     switch (mood) {
-      case "happy": return "bg-pink-100 border-pink-300";
+      case "happy": return "bg-slate-50 border-primary";
       case "shocked": return "bg-red-100 border-red-300";
       case "cool": return "bg-blue-100 border-blue-300";
-      default: return "bg-yellow-100 border-yellow-300";
+      default: return "bg-primary/5 border-primary";
     }
   };
 
@@ -334,7 +334,7 @@ export default function SalaryCalculator() {
       <div className="pt-2 px-2 sm:px-4 flex flex-col">
         <div className="flex items-center gap-2 mb-4">
           <span className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full">2026 심플 계산기</span>
-          <Sparkles size={16} className="text-yellow-500" />
+          <Sparkles size={16} className="text-primary" />
         </div>
         <h1 className="text-[28px] sm:text-[32px] font-black text-slate-900 dark:text-white mb-8 tracking-tight">얼마나 받으시나요?</h1>
 
@@ -372,7 +372,7 @@ export default function SalaryCalculator() {
               onClick={() => setActiveSheet("nonTaxable")}
               className="flex-1 flex items-center justify-center gap-2 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-[16px] text-[15px] font-bold text-slate-700 dark:text-slate-300 active:scale-[0.98] transition-all"
             >
-              <Zap size={18} className="text-yellow-500" /> 비과세 {formatNumber(parseNumber(nonTaxableAmount))}
+              <Zap size={18} className="text-primary" /> 비과세 {formatNumber(parseNumber(nonTaxableAmount))}
             </button>
           </div>
         )}

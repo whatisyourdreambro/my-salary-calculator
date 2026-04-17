@@ -77,7 +77,7 @@ export default function BoxingGame({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl">
             <motion.div
-                className="w-full max-w-5xl p-4 relative overflow-hidden rounded-3xl border-4 border-yellow-600/50 bg-zinc-900 shadow-2xl"
+                className="w-full max-w-5xl p-4 relative overflow-hidden rounded-3xl border-4 border-primary/50 bg-white shadow-2xl"
                 animate={{ x: [0, -cameraShake, cameraShake, -cameraShake, cameraShake, 0] }}
                 transition={{ duration: 0.3 }}
             >
@@ -98,9 +98,9 @@ export default function BoxingGame({
                             <span>{companyA.name.ko}</span>
                             <span>{hpA}%</span>
                         </div>
-                        <div className="h-8 bg-zinc-950 rounded-lg overflow-hidden border-2 border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                        <div className="h-8 bg-slate-50 rounded-lg overflow-hidden border-2 border-blue-900/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
                             <motion.div
-                                className="h-full bg-gradient-to-r from-blue-600 to-cyan-400"
+                                className="h-full bg-gradient-to-r from-blue-600 to-primary/80"
                                 initial={{ width: "100%" }}
                                 animate={{ width: `${hpA}%` }}
                                 transition={{ type: "spring", stiffness: 100 }}
@@ -109,8 +109,8 @@ export default function BoxingGame({
                     </div>
 
                     <div className="mx-8 text-center">
-                        <div className="text-6xl font-black text-yellow-500 italic drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">VS</div>
-                        <div className="text-xs text-zinc-500 font-bold tracking-widest mt-1">SALARY DEATHMATCH</div>
+                        <div className="text-6xl font-black text-primary italic drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">VS</div>
+                        <div className="text-xs text-slate-500 font-bold tracking-widest mt-1">SALARY DEATHMATCH</div>
                     </div>
 
                     <div className="flex-1">
@@ -118,9 +118,9 @@ export default function BoxingGame({
                             <span>{hpB}%</span>
                             <span>{companyB.name.ko}</span>
                         </div>
-                        <div className="h-8 bg-zinc-950 rounded-lg overflow-hidden border-2 border-red-900/50 shadow-[0_0_15px_rgba(239,68,68,0.5)]">
+                        <div className="h-8 bg-slate-50 rounded-lg overflow-hidden border-2 border-red-900/50 shadow-[0_0_15px_rgba(239,68,68,0.5)]">
                             <motion.div
-                                className="h-full bg-gradient-to-l from-red-600 to-orange-500"
+                                className="h-full bg-gradient-to-l from-red-600 to-primary/80"
                                 initial={{ width: "100%" }}
                                 animate={{ width: `${hpB}%` }}
                                 transition={{ type: "spring", stiffness: 100 }}
@@ -157,7 +157,7 @@ export default function BoxingGame({
                                     animate={{ opacity: 0, scale: 2.5, rotate: 20 }}
                                     className="absolute inset-0 flex items-center justify-center z-20"
                                 >
-                                    <Star className="w-32 h-32 text-yellow-400 fill-yellow-400 stroke-black stroke-2" />
+                                    <Star className="w-32 h-32 text-primary fill-yellow-400 stroke-black stroke-2" />
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -189,7 +189,7 @@ export default function BoxingGame({
                                     animate={{ opacity: 0, scale: 2.5, rotate: -20 }}
                                     className="absolute inset-0 flex items-center justify-center z-20"
                                 >
-                                    <Zap className="w-32 h-32 text-yellow-400 fill-yellow-400 stroke-black stroke-2" />
+                                    <Zap className="w-32 h-32 text-primary fill-yellow-400 stroke-black stroke-2" />
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -223,9 +223,9 @@ export default function BoxingGame({
                                 animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
                             >
-                                <Trophy className="w-32 h-32 text-yellow-400 mb-6 drop-shadow-[0_0_30px_rgba(234,179,8,0.8)]" />
+                                <Trophy className="w-32 h-32 text-primary mb-6 drop-shadow-[0_0_30px_rgba(234,179,8,0.8)]" />
                             </motion.div>
-                            <h2 className="text-8xl font-black text-white mb-4 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600">
+                            <h2 className="text-8xl font-black text-white mb-4 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary/80">
                                 KO!
                             </h2>
                             <p className="text-3xl text-white font-bold mb-12">

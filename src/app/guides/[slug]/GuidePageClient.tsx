@@ -46,7 +46,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
         <main className="min-h-screen bg-slate-50 dark:bg-[#191F28] relative selection:bg-primary/20">
             {/* Reading Progress Bar */}
             <motion.div
-                className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 z-50 origin-left"
+                className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-primary/80 z-50 origin-left"
                 style={{ scaleX }}
             />
 
@@ -62,7 +62,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                     className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-bold text-sm mb-6">
-                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        <span className="w-2 h-2 rounded-full bg-primary/50" />
                         {guide.category} 가이드
                     </div>
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6 leading-tight">

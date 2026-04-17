@@ -21,7 +21,7 @@ export function DutchPayCalculator() {
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Users className="text-purple-500" /> N빵 (더치페이) 계산기
+                <Users className="text-primary" /> N빵 (더치페이) 계산기
             </h2>
             <div className="space-y-6">
                 <div>
@@ -30,7 +30,7 @@ export function DutchPayCalculator() {
                         type="text"
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-purple-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                         placeholder="0"
                     />
                 </div>
@@ -40,20 +40,20 @@ export function DutchPayCalculator() {
                         type="number"
                         value={people}
                         onChange={(e) => setPeople(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-purple-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                         placeholder="0"
                     />
                 </div>
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/100 transition-colors"
                 >
                     계산하기
                 </button>
                 {result !== null && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">1인당 부담금 (10원 단위 올림)</p>
-                        <p className="text-5xl font-black text-purple-500">{result.toLocaleString()}원</p>
+                        <p className="text-5xl font-black text-primary">{result.toLocaleString()}원</p>
                     </div>
                 )}
             </div>
@@ -83,7 +83,7 @@ export function FuelCostCalculator() {
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Fuel className="text-orange-500" /> 유류비 계산기
+                <Fuel className="text-primary" /> 유류비 계산기
             </h2>
             <div className="space-y-6">
                 <div>
@@ -92,7 +92,7 @@ export function FuelCostCalculator() {
                         type="number"
                         value={distance}
                         onChange={(e) => setDistance(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-orange-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                     />
                 </div>
                 <div>
@@ -101,7 +101,7 @@ export function FuelCostCalculator() {
                         type="number"
                         value={efficiency}
                         onChange={(e) => setEfficiency(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-orange-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                     />
                 </div>
                 <div>
@@ -110,19 +110,19 @@ export function FuelCostCalculator() {
                         type="number"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-orange-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                     />
                 </div>
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/50 transition-colors"
                 >
                     계산하기
                 </button>
                 {result !== null && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">예상 유류비</p>
-                        <p className="text-5xl font-black text-orange-500">{result.toLocaleString()}원</p>
+                        <p className="text-5xl font-black text-primary">{result.toLocaleString()}원</p>
                     </div>
                 )}
             </div>
@@ -158,19 +158,19 @@ export function UnitConverter() {
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Ruler className="text-cyan-500" /> 단위 변환기
+                <Ruler className="text-primary" /> 단위 변환기
             </h2>
             <div className="space-y-6">
                 <div className="flex gap-4 p-1 bg-black rounded-xl border border-slate-200">
                     <button
                         onClick={() => { setType("length"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "length" ? "bg-cyan-600 text-white" : "text-slate-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "length" ? "bg-primary text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         길이 (cm)
                     </button>
                     <button
                         onClick={() => { setType("weight"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "weight" ? "bg-cyan-600 text-white" : "text-slate-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "weight" ? "bg-primary text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         무게 (kg)
                     </button>
@@ -183,19 +183,19 @@ export function UnitConverter() {
                         type="number"
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-cyan-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                     />
                 </div>
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl hover:bg-cyan-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/50 transition-colors"
                 >
                     변환하기
                 </button>
                 {result && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">변환 결과</p>
-                        <p className="text-3xl font-black text-cyan-500">{result}</p>
+                        <p className="text-3xl font-black text-primary">{result}</p>
                     </div>
                 )}
             </div>

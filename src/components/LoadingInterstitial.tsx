@@ -61,7 +61,7 @@ export default function LoadingInterstitial({ isOpen, onClose }: LoadingIntersti
                             >
                                 <div className="w-16 h-16 bg-primary rounded-full shadow-[0_0_30px_rgba(34,197,94,0.6)]" />
                             </motion.div>
-                            <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
+                            <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
                                 AI가 최신 세법을 분석중입니다...
                             </h2>
                             <p className="text-muted-foreground">2026년 소득세율 및 4대보험료 적용 중</p>

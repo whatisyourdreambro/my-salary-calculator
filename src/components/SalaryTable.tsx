@@ -25,7 +25,7 @@ export default function SalaryTable({
   return (
     <div className="w-full">
       {/* Mobile Card View */}
-      <div className="md:hidden space-y-6">
+      <div className="md:hidden space-y-3">
         {data.map((row, index) => {
           const isHighlighted = highlightRows.includes(row[headers[0].key] as number);
           const showAd = (index + 1) % adInterval === 0 && index !== data.length - 1;
@@ -36,32 +36,27 @@ export default function SalaryTable({
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className={`relative overflow-hidden rounded-[1.5rem] p-5 sm:p-6 transition-all duration-300 ${isHighlighted
-                  ? "bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-lg"
-                  : "bg-white dark:bg-[#080808] border border-slate-200 dark:border-slate-800 shadow-sm"
+                transition={{ duration: 0.4 }}
+                className={`relative overflow-hidden rounded-2xl p-5 transition-all duration-300 ${isHighlighted
+                  ? "bg-primary/5 border border-primary/20 shadow-sm"
+                  : "bg-white border border-slate-100 shadow-sm"
                   }`}
               >
-                {/* Visual Accent for Highlighted Rows */}
-                {isHighlighted && (
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
-                )}
-
                 <div className="relative z-10 w-full">
-                  <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-200 dark:border-slate-800">
-                    <span className="text-slate-500 dark:text-slate-400 font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
-                    <span className={`text-xl sm:text-2xl font-bold tracking-tight break-all text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-slate-900 dark:text-white'}`}>
+                  <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                    <span className="text-slate-500 font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
+                    <span className={`text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-slate-900'}`}>
                       {Number(row[headers[0].key]).toLocaleString()}{unit}
                     </span>
                   </div>
 
-                  <div className="space-y-3 w-full">
+                  <div className="space-y-2.5 w-full">
                     {headers.slice(1).map((header) => (
-                      <div key={header.key as string} className="flex justify-between items-center text-sm gap-4">
-                        <span className="text-slate-600 dark:text-slate-400 font-medium shrink-0">{header.label}</span>
-                        <span className={`tabular-nums font-bold text-right break-words ${header.key === 'monthlyNet' || header.key === 'preTax'
-                          ? 'text-slate-900 dark:text-white text-base'
-                          : 'text-slate-500 dark:text-slate-500'
+                      <div key={header.key as string} className="flex justify-between items-center text-sm">
+                        <span className="text-slate-500 font-medium shrink-0">{header.label}</span>
+                        <span className={`tabular-nums font-bold text-right ${header.key === 'monthlyNet' || header.key === 'preTax'
+                          ? 'text-slate-900 text-base'
+                          : 'text-slate-500'
                           }`}>
                           {Number(row[header.key]).toLocaleString()}{unit}
                         </span>
@@ -72,7 +67,7 @@ export default function SalaryTable({
               </motion.div>
 
               {showAd && (
-                <div className="py-6">
+                <div className="py-4">
                   <AdUnit
                     slotId={`TABLE_MOBILE_FEED_${index}`}
                     format="rectangle"
@@ -86,20 +81,17 @@ export default function SalaryTable({
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden md:block relative overflow-hidden rounded-[2rem] border border-stone-200 dark:border-stone-800 shadow-xl bg-white dark:bg-[#1C1917]">
-        {/* Paper Texture */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }} />
-
-        <div className="overflow-x-auto relative z-10 custom-scrollbar">
+      <div className="hidden md:block relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm bg-white">
+        <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead className="bg-stone-50 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 sticky top-0 z-30">
+            <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-30">
               <tr>
                 {headers.map((header, headerIndex) => (
                   <th
                     key={header.key as string}
                     scope="col"
-                    className={`px-8 py-6 text-xs font-bold text-stone-500 uppercase tracking-[0.15em] whitespace-nowrap ${headerIndex === 0
-                      ? "text-left pl-10 sticky left-0 z-20 bg-stone-50 dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 shadow-[5px_0_20px_rgba(0,0,0,0.02)]"
+                    className={`px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap ${headerIndex === 0
+                      ? "text-left pl-8 sticky left-0 z-20 bg-slate-50 border-r border-slate-200"
                       : "text-right"
                       }`}
                   >
@@ -108,7 +100,7 @@ export default function SalaryTable({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            <tbody className="divide-y divide-slate-100">
               {data.map((row, index) => {
                 const isHighlighted = highlightRows.includes(
                   row[headers[0].key] as number
@@ -121,32 +113,32 @@ export default function SalaryTable({
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.2, delay: index % 10 * 0.05 }}
-                      className={`group transition-all duration-300 ${isHighlighted
-                        ? "bg-primary/5 hover:bg-primary/10"
-                        : "hover:bg-stone-50 dark:hover:bg-stone-900/50"
+                      transition={{ duration: 0.2, delay: index % 10 * 0.03 }}
+                      className={`group transition-all duration-200 ${isHighlighted
+                        ? "bg-primary/5 hover:bg-primary/8"
+                        : "hover:bg-slate-50"
                         }`}
                     >
                       {headers.map((header, cellIndex) => (
                         <td
                           key={header.key as string}
-                          className={`px-8 py-5 whitespace-nowrap text-base tabular-nums ${cellIndex === 0
-                            ? `text-left font-serif font-bold pl-10 sticky left-0 z-10 border-r border-stone-100 dark:border-stone-800 shadow-[5px_0_20px_rgba(0,0,0,0.02)] transition-colors ${isHighlighted
-                              ? 'text-primary bg-stone-100 dark:bg-stone-900'
-                              : 'text-foreground bg-white dark:bg-[#1C1917] group-hover:bg-stone-50 dark:group-hover:bg-stone-900/50'
+                          className={`px-6 py-4 whitespace-nowrap text-sm tabular-nums ${cellIndex === 0
+                            ? `text-left font-bold pl-8 sticky left-0 z-10 border-r border-slate-200 transition-colors ${isHighlighted
+                              ? 'text-primary bg-primary/5'
+                              : 'text-slate-900 bg-white group-hover:bg-slate-50'
                             }`
-                            : "text-right text-stone-500 font-medium group-hover:text-stone-700 dark:group-hover:text-stone-300 transition-colors"
-                            } ${isHighlighted && cellIndex !== 0 ? "font-bold text-stone-700 dark:text-stone-300" : ""}`}
+                            : `text-right font-medium transition-colors ${isHighlighted && cellIndex !== 0 ? "font-bold text-slate-700" : "text-slate-500 group-hover:text-slate-700"}`
+                            }`}
                         >
                           {Number(row[header.key]).toLocaleString()}
-                          {unit && <span className="text-xs text-stone-400 ml-1 font-normal font-sans">{unit}</span>}
+                          {unit && <span className="text-xs text-slate-400 ml-0.5 font-normal">{unit}</span>}
                         </td>
                       ))}
                     </motion.tr>
                     {showAd && (
                       <tr className="bg-transparent">
-                        <td colSpan={headers.length} className="p-0 border-y border-stone-100 dark:border-stone-800">
-                          <div className="flex justify-center w-full py-8 bg-stone-50/50 dark:bg-stone-900/50 backdrop-blur-sm">
+                        <td colSpan={headers.length} className="p-0 border-y border-slate-100">
+                          <div className="flex justify-center w-full py-6 bg-slate-50">
                             <AdUnit
                               slotId={`TABLE_IN_FEED_${index}`}
                               format="fluid"

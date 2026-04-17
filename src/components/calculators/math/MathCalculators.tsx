@@ -36,13 +36,13 @@ export function PercentCalculator() {
                 <div className="flex gap-4 p-1 bg-black rounded-xl border border-slate-200">
                     <button
                         onClick={() => { setMode("of"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "of" ? "bg-indigo-600 text-white" : "text-slate-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "of" ? "bg-primary text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         비율 계산 (X% of Y)
                     </button>
                     <button
                         onClick={() => { setMode("is"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "is" ? "bg-indigo-600 text-white" : "text-slate-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "is" ? "bg-primary text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         비중 계산 (X is ?% of Y)
                     </button>
@@ -53,22 +53,22 @@ export function PercentCalculator() {
                         <>
                             <div>
                                 <label className="block text-sm font-bold text-slate-600 mb-2">전체값 (Y)</label>
-                                <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                                <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-slate-600 mb-2">비율 (X%)</label>
-                                <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                                <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                             </div>
                         </>
                     ) : (
                         <>
                             <div>
                                 <label className="block text-sm font-bold text-slate-600 mb-2">일부값 (X)</label>
-                                <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                                <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-slate-600 mb-2">전체값 (Y)</label>
-                                <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                                <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                             </div>
                         </>
                     )}
@@ -76,7 +76,7 @@ export function PercentCalculator() {
 
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/100 transition-colors"
                 >
                     계산하기
                 </button>
@@ -126,15 +126,15 @@ export function NumberGenerator() {
                 <div className="grid grid-cols-3 gap-4">
                     <div>
                         <label className="block text-sm font-bold text-slate-600 mb-2">최소값</label>
-                        <input type="number" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                        <input type="number" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-slate-600 mb-2">최대값</label>
-                        <input type="number" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                        <input type="number" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-slate-600 mb-2">개수</label>
-                        <input type="number" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
+                        <input type="number" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white outline-none" />
                     </div>
                 </div>
 
@@ -148,7 +148,7 @@ export function NumberGenerator() {
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <div className="flex flex-wrap justify-center gap-3">
                             {result.map((n) => (
-                                <div key={n} className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center font-black text-white shadow-lg">
+                                <div key={n} className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center font-black text-white shadow-lg">
                                     {n}
                                 </div>
                             ))}

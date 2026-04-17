@@ -155,10 +155,10 @@ export default function IQTestClient() {
 
             {/* Hero Section */}
             <section className="relative pt-28 pb-14 text-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10" />
                 <div className="max-w-4xl mx-auto px-4">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-emerald-200 dark:border-primary/50 text-primary mb-6 shadow-md">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-primary dark:border-primary/50 text-primary mb-6 shadow-md">
                         <Brain size={32} />
                     </div>
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
@@ -185,11 +185,11 @@ export default function IQTestClient() {
                         >
                             {/* Progress Bar */}
                             <div className="mb-8">
-                                <div className="flex justify-between text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">
+                                <div className="flex justify-between text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
                                     <span>Question {currentQuestion + 1}</span>
                                     <span>{questions.length} Total</span>
                                 </div>
-                                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                                     <motion.div
                                         className="h-full bg-primary"
                                         initial={{ width: 0 }}
@@ -209,9 +209,9 @@ export default function IQTestClient() {
                                     <button
                                         key={index}
                                         onClick={() => handleAnswer(index)}
-                                        className="w-full p-5 text-left rounded-xl border border-white/5 bg-white/5 hover:bg-primary/20 hover:border-primary/50 transition-all font-medium text-zinc-300 active:scale-[0.98] group"
+                                        className="w-full p-5 text-left rounded-xl border border-white/5 bg-white/5 hover:bg-primary/20 hover:border-primary/50 transition-all font-medium text-slate-600 active:scale-[0.98] group"
                                     >
-                                        <span className="inline-block w-6 h-6 rounded-full bg-black/40 text-xs text-center leading-6 mr-3 text-zinc-500 group-hover:text-primary">
+                                        <span className="inline-block w-6 h-6 rounded-full bg-black/40 text-xs text-center leading-6 mr-3 text-slate-500 group-hover:text-primary">
                                             {String.fromCharCode(65 + index)}
                                         </span>
                                         <span className="group-hover:text-white transition-colors">
@@ -230,9 +230,9 @@ export default function IQTestClient() {
                             className="relative"
                         >
                             {/* Result Card */}
-                            <div className="bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 relative z-10">
+                            <div className="bg-white/50 backdrop-blur-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 relative z-10">
                                 {/* Header Background */}
-                                <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-emerald-900/50 via-zinc-900 to-zinc-900 opacity-50" />
+                                <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-primary/50 via-primary/50 to-primary/80 opacity-50" />
 
                                 <div className="relative pt-20 px-6 pb-10 text-center">
                                     {/* Score Badge */}
@@ -242,8 +242,8 @@ export default function IQTestClient() {
                                         transition={{ delay: 0.2, type: "spring" }}
                                         className="w-48 h-48 mx-auto bg-black/50 rounded-full shadow-2xl flex flex-col items-center justify-center mb-8 border-4 border-primary/30 backdrop-blur-xl relative z-20 ring-4 ring-black/20"
                                     >
-                                        <span className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-1">IQ Score</span>
-                                        <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-cyan-400 tracking-tighter">
+                                        <span className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">IQ Score</span>
+                                        <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary to-primary/80 tracking-tighter">
                                             {score}
                                         </span>
                                         <div className="absolute -bottom-4 bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg border border-white/10">
@@ -254,7 +254,7 @@ export default function IQTestClient() {
                                     <h2 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">
                                         Test Certified
                                     </h2>
-                                    <p className="text-zinc-500 mb-10 font-medium">
+                                    <p className="text-slate-500 mb-10 font-medium">
                                         Official Result • {new Date().toLocaleDateString()}
                                     </p>
 
@@ -262,14 +262,14 @@ export default function IQTestClient() {
                                     <div className="flex flex-col gap-4 max-w-sm mx-auto mb-12">
                                         <button
                                             onClick={resetTest}
-                                            className="w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-zinc-300 transition-all flex items-center justify-center gap-2"
+                                            className="w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-slate-600 transition-all flex items-center justify-center gap-2"
                                         >
                                             <RefreshCw size={18} /> 다시 도전하기
                                         </button>
                                         {/* Fun Hub Link */}
                                         <Link
                                             href="/fun"
-                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold transition-all shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2"
+                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
                                         >
                                             <TrendingUp size={18} /> 다른 테스트 하러가기
                                         </Link>
@@ -286,7 +286,7 @@ export default function IQTestClient() {
                                     <div className="text-left bg-black/30 p-6 rounded-3xl border border-white/5">
                                         <button
                                             onClick={() => document.getElementById('answers-list')?.classList.toggle('hidden')}
-                                            className="w-full flex items-center justify-between font-bold text-zinc-300 mb-2 group"
+                                            className="w-full flex items-center justify-between font-bold text-slate-600 mb-2 group"
                                         >
                                             <span className="flex items-center gap-2 group-hover:text-white transition-colors">
                                                 <CheckCircle2 className="text-primary" size={20} /> 정답 및 해설 보기
@@ -298,8 +298,8 @@ export default function IQTestClient() {
                                             {questions.map((q, idx) => (
                                                 <div key={q.id} className="border-b border-white/5 last:border-0 pb-4 last:pb-0">
                                                     <p className="font-bold text-sm mb-2 text-zinc-200">Q{idx + 1}. {q.question}</p>
-                                                    <p className="text-xs text-zinc-500 mb-2">정답: <span className="font-bold text-primary">{q.options[q.answer]}</span></p>
-                                                    <p className="text-xs text-zinc-400 bg-white/5 p-3 rounded-xl">
+                                                    <p className="text-xs text-slate-500 mb-2">정답: <span className="font-bold text-primary">{q.options[q.answer]}</span></p>
+                                                    <p className="text-xs text-slate-500 bg-white/5 p-3 rounded-xl">
                                                         💡 {q.explanation}
                                                     </p>
                                                 </div>

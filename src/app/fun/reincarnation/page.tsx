@@ -69,10 +69,10 @@ const getRarityColor = (rarity: Rarity) => {
 
 const getRarityBg = (rarity: Rarity) => {
   switch (rarity) {
-    case "S": return "bg-primary/10 dark:bg-primary/20 border-yellow-200 dark:border-primary/50";
-    case "A": return "bg-primary/10 dark:bg-primary/20 border-purple-200 dark:border-primary/50";
+    case "S": return "bg-primary/10 dark:bg-primary/20 border-primary dark:border-primary/50";
+    case "A": return "bg-primary/10 dark:bg-primary/20 border-primary dark:border-primary/50";
     case "B": return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700/50";
-    case "C": return "bg-primary/10 dark:bg-primary/20 border-green-200 dark:border-primary/50";
+    case "C": return "bg-primary/10 dark:bg-primary/20 border-primary dark:border-primary/50";
     case "F": return "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700";
     default: return "bg-slate-100 border-slate-200";
   }
@@ -148,7 +148,7 @@ export default function ReincarnationPage() {
     <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] font-sans pb-20">
       {/* Hero Section */}
       <section className="relative pt-28 pb-14 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10" />
         <div className="max-w-4xl mx-auto px-4">
           <div className="inline-block mb-5 p-4 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-indigo-200 dark:border-primary/50">

@@ -95,7 +95,7 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
         <div className="space-y-3">
           <div className="flex justify-between">
             <label className="text-sm font-bold text-gray-700">기대 수익률 (연)</label>
-            <span className="text-sm font-bold text-green-600">{annualReturn}%</span>
+            <span className="text-sm font-bold text-primary">{annualReturn}%</span>
           </div>
           <input
             type="range"
@@ -165,7 +165,7 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
                           <span>단순 저축:</span> 
                           <span className="font-bold">{formatKRW(payload[0].value as number)}원</span>
                         </p>
-                        <p className="text-sm text-amber-600 flex justify-between gap-4">
+                        <p className="text-sm text-primary flex justify-between gap-4">
                           <span>복리 성장:</span> 
                           <span className="font-bold">{formatKRW(payload[1].value as number)}원</span>
                         </p>
@@ -223,11 +223,11 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-amber-50 rounded-xl p-4 flex gap-3 items-start border border-amber-100">
+      <div className="bg-primary/5 rounded-xl p-4 flex gap-3 items-start border border-primary">
         <div className="text-2xl">💡</div>
         <div>
-          <h4 className="font-bold text-amber-900 text-sm">Mung's Wealth Tip</h4>
-          <p className="text-amber-800 text-xs mt-1 leading-relaxed">
+          <h4 className="font-bold text-primary text-sm">Mung's Wealth Tip</h4>
+          <p className="text-primary text-xs mt-1 leading-relaxed">
             {fireYear 
               ? `현재 저축과 수익률을 유지하면 ${fireYear.age}세에 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 거대해집니다!`
               : `목표액에 도달하기 위해 저축률을 높이거나 투자 수익률을 개선해보세요. 일찍 시작할수록 유리합니다.`}

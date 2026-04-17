@@ -47,10 +47,10 @@ export default function SalaryRankCalculator() {
         <div className="w-full max-w-5xl mx-auto">
             {/* Header */}
             <div className="text-center mb-12">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 border border-yellow-500/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
-                    <Crown className="w-8 h-8 text-yellow-500" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/80/20 border border-primary/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+                    <Crown className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-4 tracking-tight">
+                <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-4 tracking-tight">
                     Private Salary Ranking
                 </h2>
                 <p className="text-slate-600 text-lg max-w-2xl mx-auto font-light">
@@ -64,7 +64,7 @@ export default function SalaryRankCalculator() {
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay" />
 
                     <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-3 relative z-10">
-                        <CreditCard className="w-6 h-6 text-yellow-500" />
+                        <CreditCard className="w-6 h-6 text-primary" />
                         <span className="font-serif tracking-wide">ENTER DETAILS</span>
                     </h3>
 
@@ -97,7 +97,7 @@ export default function SalaryRankCalculator() {
                                         const val = e.target.value.replace(/[^0-9]/g, "");
                                         setSalary(Number(val).toLocaleString());
                                     }}
-                                    className="w-full p-6 text-3xl font-black bg-white border border-slate-200 rounded-2xl focus:border-yellow-500/50 outline-none text-slate-900 placeholder-zinc-800 transition-all text-right tracking-tight"
+                                    className="w-full p-6 text-3xl font-black bg-white border border-slate-200 rounded-2xl focus:border-primary/50 outline-none text-slate-900 placeholder-zinc-800 transition-all text-right tracking-tight"
                                     placeholder="0"
                                 />
                                 <span className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 font-serif text-xl">₩</span>
@@ -107,7 +107,7 @@ export default function SalaryRankCalculator() {
                         <button
                             onClick={handleCalculate}
                             disabled={isCalculating || !salary}
-                            className="w-full py-6 bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-black text-xl rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-3 group"
+                            className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 text-black font-black text-xl rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-3 group"
                         >
                             {isCalculating ? (
                                 <>
@@ -123,7 +123,7 @@ export default function SalaryRankCalculator() {
                     </div>
 
                     {/* Ad Unit */}
-                    <div className="mt-10 pt-8 border-t border-zinc-900">
+                    <div className="mt-10 pt-8 border-t border-slate-200">
                         <AdUnit slotId="5556667777" format="rectangle" label="Salary Rank Input Ad" />
                     </div>
                 </div>
@@ -136,7 +136,7 @@ export default function SalaryRankCalculator() {
                                 initial={{ opacity: 0, rotateX: 20 }}
                                 animate={{ opacity: 1, rotateX: 0 }}
                                 exit={{ opacity: 0, rotateX: -20 }}
-                                className="absolute inset-0 flex flex-col items-center justify-center text-zinc-600 bg-slate-50 rounded-[2.5rem] border border-zinc-900 border-dashed"
+                                className="absolute inset-0 flex flex-col items-center justify-center text-zinc-600 bg-slate-50 rounded-[2.5rem] border border-slate-200 border-dashed"
                             >
                                 <Crown className="w-24 h-24 mb-6 opacity-10" />
                                 <p className="font-serif text-xl opacity-50">Awaiting Data Input...</p>
@@ -152,9 +152,9 @@ export default function SalaryRankCalculator() {
                             >
                                 <div className="relative">
                                     <div className="w-24 h-24 border-4 border-slate-200 rounded-full" />
-                                    <div className="absolute inset-0 w-24 h-24 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin shadow-[0_0_30px_rgba(234,179,8,0.4)]" />
+                                    <div className="absolute inset-0 w-24 h-24 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_30px_rgba(234,179,8,0.4)]" />
                                 </div>
-                                <p className="text-yellow-500 font-bold mt-8 animate-pulse tracking-widest text-sm">ACCESSING GLOBAL DB...</p>
+                                <p className="text-primary font-bold mt-8 animate-pulse tracking-widest text-sm">ACCESSING GLOBAL DB...</p>
                             </motion.div>
                         )}
 
@@ -183,7 +183,7 @@ export default function SalaryRankCalculator() {
                                             </h3>
                                         </div>
                                         <div className="w-16 h-10 bg-slate-100/50 rounded-lg border border-white/10 flex items-center justify-center">
-                                            <div className="w-10 h-6 bg-gradient-to-br from-yellow-200 to-yellow-600 rounded opacity-80" />
+                                            <div className="w-10 h-6 bg-gradient-to-br from-primary to-primary/80 rounded opacity-80" />
                                         </div>
                                     </div>
 
@@ -210,7 +210,7 @@ export default function SalaryRankCalculator() {
                                         <div>
                                             <p className="text-zinc-600 text-xs font-bold uppercase mb-2">Peer Comparison</p>
                                             <p className="text-slate-900 font-medium leading-relaxed">
-                                                You earn more than <span className="text-yellow-500 font-bold">{100 - result.percentile}%</span> of people in their {ageGroup.replace("s", "0s")}.
+                                                You earn more than <span className="text-primary font-bold">{100 - result.percentile}%</span> of people in their {ageGroup.replace("s", "0s")}.
                                             </p>
                                         </div>
                                         <div>
@@ -245,7 +245,13 @@ export default function SalaryRankCalculator() {
                                     </button>
                                     <button
                                         onClick={handleShare}
-                                        className="flex-1 py-4 bg-white text-black font-bold rounded-2xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/10"
+                                        className="flex-1 py-4 bg-white text-black font-bold rounded-2xl hover:
+        param($m)
+        $n = [int]($m.Value -replace 'bg-zinc-','')
+        if ($n -ge 900) { 'bg-white' }
+        elseif ($n -ge 700) { 'bg-slate-100' }
+        else { 'bg-slate-50' }
+     transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/10"
                                     >
                                         <Share2 className="w-4 h-4" /> SAVE CARD
                                     </button>

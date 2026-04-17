@@ -50,6 +50,7 @@ const navConfig: NavItem[] = [
     type: "dropdown",
     items: [
       { name: "전체 가이드", href: "/guides" },
+      { name: "직장인 꿀팁 모음", href: "/tips" },
       { name: "Q&A", href: "/qna" },
       { name: "용어 사전", href: "/glossary" },
     ],
@@ -73,6 +74,8 @@ const navConfig: NavItem[] = [
       { name: "전체 보기", href: "/tools" },
       { name: "대출 이자 계산기", href: "/tools/loan" },
       { name: "예적금 계산기", href: "/tools/deposit" },
+      { name: "IRP·연금저축 세액공제", href: "/tools/finance/irp" },
+      { name: "구독 지출 계산기", href: "/tools/life/subscription" },
       { name: "부가세(VAT) 계산기", href: "/tools/finance/vat" },
       { name: "BMI 비만도 계산기", href: "/tools/health/bmi" },
       { name: "부동산 계산기", href: "/tools/real-estate/dsr" },
@@ -84,6 +87,7 @@ const navConfig: NavItem[] = [
     items: [
       { name: "자동차 구매", href: "/car-loan" },
       { name: "FIRE 계산기", href: "/fire-calculator" },
+      { name: "2026 재물운 사주", href: "/fortune-2026" },
       { name: "로또 번호 생성", href: "/lotto" },
     ],
   },

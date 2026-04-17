@@ -46,7 +46,7 @@ export default function Calc2026Page() {
             </div>
             
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
-                <div className="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center text-yellow-600">
+                <div className="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
                     <Sparkles size={24} />
                 </div>
                 <h3 className="font-bold text-gray-800">연봉 티어 시스템</h3>
@@ -56,7 +56,7 @@ export default function Calc2026Page() {
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
-                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-green-600">
+                <div className="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
                     <Info size={24} />
                 </div>
                 <h3 className="font-bold text-gray-800">자산 성장 경로</h3>

@@ -12,7 +12,7 @@ import AdUnit from "@/components/AdUnit";
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
 const getNumberColorClass = (number: number): string => {
   if (number >= 1 && number <= 10)
-    return "bg-yellow-400 text-black shadow-inner shadow-black/20";
+    return "bg-primary text-black shadow-inner shadow-black/20";
   if (number >= 11 && number <= 20)
     return "bg-blue-500 text-white shadow-inner shadow-black/20";
   if (number >= 21 && number <= 30)
@@ -20,7 +20,7 @@ const getNumberColorClass = (number: number): string => {
   if (number >= 31 && number <= 40)
     return "bg-gray-600 text-white shadow-inner shadow-black/20";
   if (number >= 41 && number <= 45)
-    return "bg-green-500 text-white shadow-inner shadow-black/20";
+    return "bg-primary/50 text-white shadow-inner shadow-black/20";
   return "bg-gray-200 text-gray-800 shadow-inner shadow-black/20";
 };
 
@@ -125,7 +125,7 @@ export default function LottoPage() {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute bg-green-500 rounded-full blur-3xl animate-pulse"
+            className="absolute bg-primary/50 rounded-full blur-3xl animate-pulse"
             style={{
               width: `${Math.random() * 200 + 50}px`,
               height: `${Math.random() * 200 + 50}px`,
@@ -141,10 +141,10 @@ export default function LottoPage() {
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block p-4 rounded-full bg-green-500/10 mb-6 border border-green-500/20 animate-bounce-slow">
-            <Clover className="w-10 h-10 text-green-500" />
+          <div className="inline-block p-4 rounded-full bg-primary/50/10 mb-6 border border-primary/20 animate-bounce-slow">
+            <Clover className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl font-black tracking-tight sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500">
+          <h1 className="text-4xl font-black tracking-tight sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-primary/50 to-primary/80">
             행운의 로또 생성기
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -171,7 +171,7 @@ export default function LottoPage() {
                     id="sets"
                     value={numberOfSets}
                     onChange={(e) => setNumberOfSets(Number(e.target.value))}
-                    className="w-full p-4 rounded-xl bg-background border-2 border-border focus:border-green-500 transition-colors font-medium"
+                    className="w-full p-4 rounded-xl bg-background border-2 border-border focus:border-primary transition-colors font-medium"
                   >
                     {[1, 2, 3, 4, 5, 10].map((n) => (
                       <option key={n} value={n}>
@@ -189,7 +189,7 @@ export default function LottoPage() {
                     id="strategy"
                     value={strategy}
                     onChange={(e) => setStrategy(e.target.value as GenerationStrategy)}
-                    className="w-full p-4 rounded-xl bg-background border-2 border-border focus:border-green-500 transition-colors font-medium"
+                    className="w-full p-4 rounded-xl bg-background border-2 border-border focus:border-primary transition-colors font-medium"
                   >
                     <option value="random">🎲 랜덤 균형 (추천)</option>
                     <option value="balancedOddEven">⚖️ 홀짝 균형</option>
@@ -201,7 +201,7 @@ export default function LottoPage() {
 
                 <button
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="w-full py-3 px-4 rounded-xl border-2 border-dashed border-border hover:border-green-500 hover:text-green-500 transition-all flex items-center justify-center gap-2 text-sm font-bold text-muted-foreground"
+                  className="w-full py-3 px-4 rounded-xl border-2 border-dashed border-border hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2 text-sm font-bold text-muted-foreground"
                 >
                   <Settings size={16} />
                   {showAdvanced ? "고급 설정 닫기" : "제외/포함 숫자 설정"}
@@ -236,7 +236,7 @@ export default function LottoPage() {
                   <button
                     onClick={handleGenerate}
                     disabled={isLoading}
-                    className="flex-1 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
+                    className="flex-1 py-4 bg-gradient-to-r from-green-500 to-primary/80 text-white font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95"
                   >
                     {isLoading ? <Loader className="animate-spin" /> : <Sparkles className="w-5 h-5" />}
                     번호 생성
@@ -278,18 +278,18 @@ export default function LottoPage() {
               {isLoading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm z-20">
                   <div className="relative w-32 h-32 mb-8">
-                    <div className="absolute inset-0 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin" />
-                    <div className="absolute inset-0 flex items-center justify-center font-black text-2xl text-green-500 animate-pulse">
+                    <div className="absolute inset-0 border-4 border-primary/30 border-t-green-500 rounded-full animate-spin" />
+                    <div className="absolute inset-0 flex items-center justify-center font-black text-2xl text-primary animate-pulse">
                       LUCKY
                     </div>
                   </div>
-                  <p className="text-xl font-bold animate-pulse text-green-500">행운을 모으는 중...</p>
+                  <p className="text-xl font-bold animate-pulse text-primary">행운을 모으는 중...</p>
                 </div>
               ) : revealedSets.length > 0 ? (
                 <div className="space-y-6">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold flex items-center gap-2">
-                      <Sparkles className="text-yellow-500" />
+                      <Sparkles className="text-primary" />
                       생성 결과
                     </h2>
                     <span className="text-sm font-medium text-muted-foreground bg-secondary px-3 py-1 rounded-full">

@@ -146,15 +146,15 @@ export default function FortunePage() {
                                 <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700 tracking-tight">
                                     2026 병오년<br />정통 신년운세
                                 </h1>
-                                <p className="text-zinc-400 text-lg">
+                                <p className="text-slate-500 text-lg">
                                     붉은 말의 해, 당신의 운명을 미리 확인하세요.
                                 </p>
                             </div>
 
-                            <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-8 shadow-2xl space-y-6">
+                            <div className="bg-white/80 backdrop-blur-md border border-slate-200 rounded-3xl p-8 shadow-2xl space-y-6">
                                 {/* Name Input */}
                                 <div className="space-y-2">
-                                    <label className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+                                    <label className="flex items-center gap-2 text-sm font-medium text-slate-500">
                                         <User size={16} /> 이름
                                     </label>
                                     <input
@@ -162,20 +162,20 @@ export default function FortunePage() {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="이름을 입력하세요"
-                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 text-lg focus:border-primary focus:ring-1 focus:ring-red-500 outline-none transition-all"
+                                        className="w-full bg-black/30 border border-slate-200 rounded-xl px-4 py-3 text-lg focus:border-primary focus:ring-1 focus:ring-red-500 outline-none transition-all"
                                     />
                                 </div>
 
                                 {/* Gender & Calendar Type */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-400">성별</label>
-                                        <div className="flex bg-black/30 rounded-xl p-1 border border-zinc-700">
+                                        <label className="text-sm font-medium text-slate-500">성별</label>
+                                        <div className="flex bg-black/30 rounded-xl p-1 border border-slate-200">
                                             {(["male", "female"] as const).map((g) => (
                                                 <button
                                                     key={g}
                                                     onClick={() => setGender(g)}
-                                                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${gender === g ? "bg-zinc-700 text-white shadow-md" : "text-zinc-500 hover:text-zinc-300"
+                                                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${gender === g ? "bg-slate-200 text-white shadow-md" : "text-slate-500 hover:text-slate-600"
                                                         }`}
                                                 >
                                                     {g === "male" ? "남성" : "여성"}
@@ -184,13 +184,13 @@ export default function FortunePage() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-400">양력/음력</label>
-                                        <div className="flex bg-black/30 rounded-xl p-1 border border-zinc-700">
+                                        <label className="text-sm font-medium text-slate-500">양력/음력</label>
+                                        <div className="flex bg-black/30 rounded-xl p-1 border border-slate-200">
                                             {(["solar", "lunar"] as const).map((c) => (
                                                 <button
                                                     key={c}
                                                     onClick={() => setCalendar(c)}
-                                                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${calendar === c ? "bg-zinc-700 text-white shadow-md" : "text-zinc-500 hover:text-zinc-300"
+                                                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${calendar === c ? "bg-slate-200 text-white shadow-md" : "text-slate-500 hover:text-slate-600"
                                                         }`}
                                                 >
                                                     {c === "solar" ? "양력" : "음력"}
@@ -202,28 +202,28 @@ export default function FortunePage() {
 
                                 {/* Date of Birth */}
                                 <div className="space-y-2">
-                                    <label className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+                                    <label className="flex items-center gap-2 text-sm font-medium text-slate-500">
                                         <Calendar size={16} /> 생년월일
                                     </label>
                                     <div className="grid grid-cols-3 gap-2">
                                         <select
                                             value={year}
                                             onChange={(e) => setYear(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
+                                            className="bg-black/30 border border-slate-200 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {YEARS.map(y => <option key={y} value={y}>{y}년</option>)}
                                         </select>
                                         <select
                                             value={month}
                                             onChange={(e) => setMonth(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
+                                            className="bg-black/30 border border-slate-200 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {MONTHS.map(m => <option key={m} value={m}>{m}월</option>)}
                                         </select>
                                         <select
                                             value={day}
                                             onChange={(e) => setDay(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
+                                            className="bg-black/30 border border-slate-200 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {DAYS.map(d => <option key={d} value={d}>{d}일</option>)}
                                         </select>
@@ -232,13 +232,13 @@ export default function FortunePage() {
 
                                 {/* Time of Birth */}
                                 <div className="space-y-2">
-                                    <label className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+                                    <label className="flex items-center gap-2 text-sm font-medium text-slate-500">
                                         <Clock size={16} /> 태어난 시간
                                     </label>
                                     <select
                                         value={time}
                                         onChange={(e) => setTime(e.target.value)}
-                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-primary"
+                                        className="w-full bg-black/30 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-primary"
                                     >
                                         {TIMES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                                     </select>
@@ -281,11 +281,11 @@ export default function FortunePage() {
                                 </div>
                             </div>
                             <h2 className="text-2xl font-bold mb-4 text-white">사주명식을 분석하고 있습니다...</h2>
-                            <p className="text-zinc-500 animate-pulse">
+                            <p className="text-slate-500 animate-pulse">
                                 {year}년 {month}월 {day}일의 기운을 읽는 중
                             </p>
 
-                            <div className="mt-12 w-full max-w-sm bg-zinc-900/50 p-4 rounded-xl">
+                            <div className="mt-12 w-full max-w-sm bg-white/50 p-4 rounded-xl">
                                 <AdUnit slotId="0987654321" format="rectangle" label="Fortune Loading Ad" />
                             </div>
                         </motion.div>
@@ -299,7 +299,7 @@ export default function FortunePage() {
                             className="space-y-8"
                         >
                             {/* Result Paper */}
-                            <div className="bg-[#f5f5f0] text-zinc-900 rounded-sm p-8 shadow-2xl relative overflow-hidden min-h-[600px] border-l-8 border-red-800">
+                            <div className="bg-[#f5f5f0] text-primary rounded-sm p-8 shadow-2xl relative overflow-hidden min-h-[600px] border-l-8 border-red-800">
                                 {/* Paper Texture Overlay */}
                                 <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] pointer-events-none" />
 
@@ -309,12 +309,18 @@ export default function FortunePage() {
                                 </div>
 
                                 <div className="relative z-10">
-                                    <div className="text-center border-b-2 border-zinc-300 pb-8 mb-8">
-                                        <p className="text-zinc-500 font-serif mb-2">2026 병오년(丙午年)</p>
-                                        <h2 className="text-3xl md:text-4xl font-black mb-4 font-serif text-zinc-800">
+                                    <div className="text-center border-b-2 border-slate-200 pb-8 mb-8">
+                                        <p className="text-slate-500 font-serif mb-2">2026 병오년(丙午年)</p>
+                                        <h2 className="text-3xl md:text-4xl font-black mb-4 font-serif text-primary">
                                             {resultData.title}
                                         </h2>
-                                        <div className="inline-flex items-center gap-2 px-4 py-1 bg-zinc-200 rounded-full text-sm text-zinc-600">
+                                        <div className="inline-flex items-center gap-2 px-4 py-1 
+        param($m)
+        $n = [int]($m.Value -replace 'bg-zinc-','')
+        if ($n -ge 900) { 'bg-white' }
+        elseif ($n -ge 700) { 'bg-slate-100' }
+        else { 'bg-slate-50' }
+     rounded-full text-sm text-zinc-600">
                                             <span>{name}님 ({gender === 'male' ? '남' : '여'})</span>
                                             <span>|</span>
                                             <span>{year}.{month}.{day} ({calendar === 'solar' ? '양' : '음'})</span>
@@ -326,14 +332,14 @@ export default function FortunePage() {
                                             <h3 className="flex items-center gap-2 text-xl font-bold text-primary mb-3 font-serif">
                                                 <Sparkles size={20} /> 총운 (Total Luck)
                                             </h3>
-                                            <p className="text-lg leading-relaxed text-zinc-700 text-justify">
+                                            <p className="text-lg leading-relaxed text-primary text-justify">
                                                 {resultData.totalLuck}
                                             </p>
                                         </section>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <section>
-                                                <h3 className="flex items-center gap-2 text-lg font-bold text-zinc-800 mb-3 font-serif">
+                                                <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-serif">
                                                     💰 재물운
                                                 </h3>
                                                 <p className="text-zinc-600 text-justify text-sm leading-relaxed">
@@ -341,7 +347,7 @@ export default function FortunePage() {
                                                 </p>
                                             </section>
                                             <section>
-                                                <h3 className="flex items-center gap-2 text-lg font-bold text-zinc-800 mb-3 font-serif">
+                                                <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-serif">
                                                     💼 직장/사업운
                                                 </h3>
                                                 <p className="text-zinc-600 text-justify text-sm leading-relaxed">
@@ -350,19 +356,25 @@ export default function FortunePage() {
                                             </section>
                                         </div>
 
-                                        <div className="bg-zinc-100 p-6 rounded-xl border border-zinc-200">
-                                            <h4 className="font-bold text-center text-zinc-800 mb-4">행운의 아이템</h4>
+                                        <div className="
+        param($m)
+        $n = [int]($m.Value -replace 'bg-zinc-','')
+        if ($n -ge 900) { 'bg-white' }
+        elseif ($n -ge 700) { 'bg-slate-100' }
+        else { 'bg-slate-50' }
+     p-6 rounded-xl border border-slate-200">
+                                            <h4 className="font-bold text-center text-primary mb-4">행운의 아이템</h4>
                                             <div className="flex justify-around text-center">
                                                 <div>
-                                                    <p className="text-xs text-zinc-500 mb-1">행운의 색</p>
+                                                    <p className="text-xs text-slate-500 mb-1">행운의 색</p>
                                                     <p className="font-bold text-primary">{resultData.luckyColor}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs text-zinc-500 mb-1">행운의 숫자</p>
+                                                    <p className="text-xs text-slate-500 mb-1">행운의 숫자</p>
                                                     <p className="font-bold text-blue-600">{resultData.luckyNumber}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs text-zinc-500 mb-1">총점</p>
+                                                    <p className="text-xs text-slate-500 mb-1">총점</p>
                                                     <p className="font-bold text-primary text-xl">{resultData.score}점</p>
                                                 </div>
                                             </div>
@@ -377,7 +389,7 @@ export default function FortunePage() {
                                         setStep("input");
                                         setName("");
                                     }}
-                                    className="flex-1 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                                 >
                                     <RefreshCw size={20} /> 다시 하기
                                 </button>

@@ -52,7 +52,7 @@ export default function SimulatorPage() {
                 </Link>
 
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-blue-600">
+                    <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
                         David vs. Goliath
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -86,7 +86,7 @@ export default function SimulatorPage() {
                                             className="w-full accent-emerald-500"
                                         />
                                     </div>
-                                    <div className="text-right font-bold text-emerald-500 text-lg mt-1">
+                                    <div className="text-right font-bold text-primary text-lg mt-1">
                                         {formatCurrency(smeSalary)}만원
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@ export default function SimulatorPage() {
                                             type="checkbox"
                                             checked={isYouth}
                                             onChange={(e) => setIsYouth(e.target.checked)}
-                                            className="w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
                                         />
                                     </div>
                                 </div>
@@ -166,12 +166,12 @@ export default function SimulatorPage() {
                             </div>
 
                             <div className="mt-8 grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-center">
-                                    <div className="text-sm text-emerald-500 font-bold mb-1">David (중소기업)</div>
+                                <div className="p-4 bg-primary/50/10 border border-primary/20 rounded-2xl text-center">
+                                    <div className="text-sm text-primary font-bold mb-1">David (중소기업)</div>
                                     <div className="text-2xl font-black text-foreground">
                                         {smeNet.toLocaleString()}원
                                     </div>
-                                    {isYouth && <div className="text-xs text-emerald-400 mt-1">✨ 세금 감면 적용됨</div>}
+                                    {isYouth && <div className="text-xs text-primary mt-1">✨ 세금 감면 적용됨</div>}
                                 </div>
                                 <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-center">
                                     <div className="text-sm text-blue-500 font-bold mb-1">Goliath (대기업)</div>

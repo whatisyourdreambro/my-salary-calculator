@@ -61,7 +61,7 @@ export default function CurrencyInput({
 
   return (
     <div>
-      <label className="block text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
         {label}
       </label>
       <div className="relative group">
@@ -72,7 +72,7 @@ export default function CurrencyInput({
               onChange={(e) => onCurrencyChange(e.target.value)}
               className="bg-transparent font-serif font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
             />
-            <span className="pointer-events-none absolute right-2 text-stone-400">▼</span>
+            <span className="pointer-events-none absolute right-2 text-slate-500">▼</span>
           </div>
         )}
 
@@ -82,14 +82,14 @@ export default function CurrencyInput({
           value={value}
           onChange={handleChange}
           className={cn(
-            "w-full py-4 bg-transparent border-b-2 border-stone-200 dark:border-stone-800 text-3xl font-serif font-bold text-foreground placeholder-stone-300 focus:border-primary focus:outline-none transition-all duration-300",
+            "w-full py-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-200 text-3xl font-serif font-bold text-foreground placeholder-stone-300 focus:border-primary focus:outline-none transition-all duration-300",
             className,
             currencies ? "pl-24" : ""
           )}
           placeholder="0"
           inputMode="numeric"
         />
-        <span className="absolute inset-y-0 right-0 flex items-center text-stone-400 font-serif text-xl pointer-events-none group-hover:text-primary transition-colors">
+        <span className="absolute inset-y-0 right-0 flex items-center text-slate-500 font-serif text-xl pointer-events-none group-hover:text-primary transition-colors">
           {symbol}
         </span>
       </div>
@@ -99,7 +99,17 @@ export default function CurrencyInput({
           <button
             key={`add-${amount}`}
             onClick={() => handleAmountChange(amount)}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-stone-100 dark:bg-stone-900 text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-800 hover:text-primary transition-colors duration-300"
+            className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full 
+        param($m)
+        $n = [int]($m.Value -replace 'bg-stone-','')
+        if ($n -ge 900) { 'bg-white' }
+        else { 'bg-slate-50' }
+     dark:bg-white text-slate-500 hover:
+        param($m)
+        $n = [int]($m.Value -replace 'bg-stone-','')
+        if ($n -ge 900) { 'bg-white' }
+        else { 'bg-slate-50' }
+     dark:hover:bg-slate-100 hover:text-primary transition-colors duration-300"
           >
             +{formatNumber(amount / 10000)}만
           </button>

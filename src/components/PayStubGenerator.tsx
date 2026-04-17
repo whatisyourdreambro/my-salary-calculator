@@ -233,7 +233,7 @@ export default function PayStubGenerator() {
                 <p className="text-xs text-gray-500">귀하의 노고에 감사드립니다.</p>
               </div>
               <div className="relative z-10 text-right">
-                <span className="text-3xl font-black tracking-tight text-yellow-400">
+                <span className="text-3xl font-black tracking-tight text-primary">
                   {formatNumber(result.monthlyNet)}
                 </span>
                 <span className="text-lg font-medium ml-1 text-gray-300">원</span>

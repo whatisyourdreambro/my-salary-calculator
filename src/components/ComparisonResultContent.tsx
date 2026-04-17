@@ -109,7 +109,7 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                             </div>
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">신입 초봉</div>
-                                <div className="text-2xl font-bold text-emerald-500">{companyA.entryLevelSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold text-primary">{companyA.entryLevelSalary.toLocaleString()}만원</div>
                             </div>
                         </div>
                     </div>
@@ -153,11 +153,11 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: 0.5, type: "spring" }}
-                            className="bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border border-yellow-500/50 rounded-3xl p-6 text-center relative overflow-hidden"
+                            className="bg-gradient-to-br from-primary/20 to-primary/80/20 border border-primary/50 rounded-3xl p-6 text-center relative overflow-hidden"
                         >
-                            <div className="absolute inset-0 bg-yellow-500/10 blur-xl" />
-                            <Trophy className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-                            <h3 className="text-lg font-bold text-yellow-500 mb-1">연봉 킹</h3>
+                            <div className="absolute inset-0 bg-primary/50/10 blur-xl" />
+                            <Trophy className="w-12 h-12 text-primary mx-auto mb-2" />
+                            <h3 className="text-lg font-bold text-primary mb-1">연봉 킹</h3>
                             <div className="text-2xl font-black">{winner.name}</div>
                             <p className="text-sm text-muted-foreground mt-2">
                                 평균 연봉이 더 높습니다.
@@ -178,7 +178,7 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                             </div>
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">신입 초봉</div>
-                                <div className="text-2xl font-bold text-emerald-500">{companyB.entryLevelSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold text-primary">{companyB.entryLevelSalary.toLocaleString()}만원</div>
                             </div>
                         </div>
                     </div>

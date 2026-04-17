@@ -89,8 +89,8 @@ export default function DetailedAnalysis({
       }
       return {
         Icon: Award,
-        color: "text-green-500",
-        bgColor: "bg-green-500/10",
+        color: "text-primary",
+        bgColor: "bg-primary/50/10",
         title: "우수: 훌륭한 재무 습관을 가지고 있습니다.",
         message: `현재 저축률은 ${savingRate}%로, 매우 훌륭한 저축 습관을 가지고 있습니다. 이제 N잡, 부수입 등을 통해 소득의 파이 자체를 키워 경제적 자유를 앞당기세요.`,
         actionLink: "/guides/road-to-100m-part2-sidejob",

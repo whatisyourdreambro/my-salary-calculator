@@ -21,7 +21,7 @@ export default function CompanyPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+                    <h1 className="text-4xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
                         기업 연봉 데이터베이스
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -59,7 +59,7 @@ export default function CompanyPage() {
                                 className="group relative bg-card/40 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-card/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden"
                             >
                                 {/* Hover Gradient Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/80/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                                 <div className="relative z-10">
                                     <div className="flex items-start justify-between mb-4">
@@ -93,7 +93,7 @@ export default function CompanyPage() {
                                                 <TrendingUp className="w-3 h-3" />
                                                 신입 초봉
                                             </div>
-                                            <div className="font-bold text-lg text-emerald-500">
+                                            <div className="font-bold text-lg text-primary">
                                                 {company.entryLevelSalary.toLocaleString()}만원
                                             </div>
                                         </div>

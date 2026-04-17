@@ -81,7 +81,7 @@ export default function RankClient() {
 
             {/* Hero Section */}
             <section className="relative pt-28 pb-16 overflow-hidden text-center">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
                 <div className="max-w-5xl mx-auto px-4">
@@ -119,11 +119,11 @@ export default function RankClient() {
                                 className="space-y-12"
                             >
                                 <div className="text-center">
-                                    <label className="block text-lg font-medium text-zinc-400 mb-6">
+                                    <label className="block text-lg font-medium text-slate-500 mb-6">
                                         세전 연봉을 입력하세요
                                     </label>
                                     <div className="relative max-w-md mx-auto group">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity" />
                                         <input
                                             type="text"
                                             value={salaryInput}
@@ -135,7 +135,7 @@ export default function RankClient() {
                                             placeholder="0"
                                             autoFocus
                                         />
-                                        <span className="absolute right-8 top-1/2 -translate-y-1/2 text-xl font-bold text-zinc-500">
+                                        <span className="absolute right-8 top-1/2 -translate-y-1/2 text-xl font-bold text-slate-500">
                                             원
                                         </span>
                                     </div>
@@ -144,7 +144,7 @@ export default function RankClient() {
                                 <button
                                     onClick={handleCalculate}
                                     disabled={!salaryInput}
-                                    className="w-full py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-2xl font-black rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:shadow-[0_0_60px_rgba(168,85,247,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                    className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white text-2xl font-black rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:shadow-[0_0_60px_rgba(168,85,247,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                                 >
                                     내 순위 확인하기
                                 </button>
@@ -156,12 +156,12 @@ export default function RankClient() {
                                 className="space-y-12"
                             >
                                 <div className="text-center">
-                                    <p className="text-lg text-zinc-400 mb-4 font-medium">당신은 대한민국 상위</p>
-                                    <h2 className="text-7xl sm:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 mb-6 drop-shadow-2xl">
+                                    <p className="text-lg text-slate-500 mb-4 font-medium">당신은 대한민국 상위</p>
+                                    <h2 className="text-7xl sm:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-6 drop-shadow-2xl">
                                         <CountUp end={percentile} decimals={1} duration={2} />%
                                     </h2>
                                     <div className="inline-block px-6 py-2 rounded-full bg-white/5 border border-white/10">
-                                        <p className="text-xl text-zinc-300">
+                                        <p className="text-xl text-slate-600">
                                             연봉 <span className="font-bold text-white">{salaryInput}원</span>
                                         </p>
                                     </div>
@@ -203,12 +203,12 @@ export default function RankClient() {
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
                                         <Users className="w-8 h-8 mx-auto mb-3 text-blue-400" />
-                                        <p className="text-sm text-zinc-500 mb-1">비슷한 연봉</p>
+                                        <p className="text-sm text-slate-500 mb-1">비슷한 연봉</p>
                                         <p className="font-bold text-2xl text-white">약 45만명</p>
                                     </div>
                                     <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
                                         <Trophy className="w-8 h-8 mx-auto mb-3 text-primary" />
-                                        <p className="text-sm text-zinc-500 mb-1">예상 등급</p>
+                                        <p className="text-sm text-slate-500 mb-1">예상 등급</p>
                                         <p className="font-bold text-2xl text-white">
                                             {percentile <= 10 ? "다이아몬드" : percentile <= 30 ? "플래티넘" : "골드"}
                                         </p>
@@ -218,7 +218,7 @@ export default function RankClient() {
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <button
                                         onClick={() => setShowResult(false)}
-                                        className="flex-1 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-zinc-300 transition-all flex items-center justify-center gap-2"
+                                        className="flex-1 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-slate-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <RefreshCw size={18} /> 다시 하기
                                     </button>
@@ -232,7 +232,7 @@ export default function RankClient() {
                                 </div>
                                 <Link
                                     href="/fun"
-                                    className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-primary/30 text-zinc-400 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-4 rounded-xl bg-white border border-white/10 hover:border-primary/30 text-slate-500 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
                                 >
                                     <TrendingUp size={18} /> 다른 테스트 보러가기
                                 </Link>

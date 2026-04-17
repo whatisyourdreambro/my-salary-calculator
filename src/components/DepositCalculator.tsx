@@ -45,8 +45,8 @@ export default function DepositCalculator() {
     return (
         <div className="w-full max-w-2xl mx-auto p-6 bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
-                    <PiggyBank className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-3 bg-primary/5 dark:bg-primary/30 rounded-xl">
+                    <PiggyBank className="w-6 h-6 text-primary dark:text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">적금 이자 계산기</h2>
             </div>
@@ -61,7 +61,7 @@ export default function DepositCalculator() {
                                 type="number"
                                 value={monthlyAmount}
                                 onChange={(e) => setMonthlyAmount(Number(e.target.value))}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary transition-all font-semibold"
                             />
                         </div>
                     </div>
@@ -75,7 +75,7 @@ export default function DepositCalculator() {
                                 step="0.1"
                                 value={rate}
                                 onChange={(e) => setRate(Number(e.target.value))}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary transition-all font-semibold"
                             />
                         </div>
                     </div>
@@ -88,7 +88,7 @@ export default function DepositCalculator() {
                                 type="number"
                                 value={period}
                                 onChange={(e) => setPeriod(Number(e.target.value))}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary transition-all font-semibold"
                             />
                         </div>
                     </div>
@@ -96,13 +96,13 @@ export default function DepositCalculator() {
                     <div className="flex items-center gap-4 pt-2">
                         <button
                             onClick={() => setIsCompound(true)}
-                            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${isCompound ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-800"}`}
+                            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${isCompound ? "bg-primary/5 text-primary dark:bg-primary/50 dark:text-primary" : "bg-slate-100 text-slate-500 dark:bg-slate-800"}`}
                         >
                             월복리
                         </button>
                         <button
                             onClick={() => setIsCompound(false)}
-                            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${!isCompound ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300" : "bg-slate-100 text-slate-500 dark:bg-slate-800"}`}
+                            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${!isCompound ? "bg-primary/5 text-primary dark:bg-primary/50 dark:text-primary" : "bg-slate-100 text-slate-500 dark:bg-slate-800"}`}
                         >
                             단리
                         </button>
@@ -112,7 +112,7 @@ export default function DepositCalculator() {
                 <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 flex flex-col justify-center space-y-6">
                     <div className="space-y-1">
                         <p className="text-sm text-slate-500 dark:text-slate-400">세후 만기 수령액</p>
-                        <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <p className="text-3xl font-bold text-primary dark:text-primary">
                             {result ? formatMoney(result.total) : "-"}
                         </p>
                     </div>

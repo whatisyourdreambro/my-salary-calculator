@@ -60,8 +60,8 @@ export default function GlossaryPage() {
     <main className="w-full bg-slate-50 dark:bg-[#191F28] min-h-screen pb-20">
       {/* Hero Section */}
       <section className="relative pt-28 pb-16 overflow-hidden text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-indigo-400/10 dark:bg-indigo-500/15 rounded-full blur-[120px] -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/100/15 rounded-full blur-[120px] -z-10" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4">
           <motion.div
@@ -69,7 +69,7 @@ export default function GlossaryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/100/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-sm mb-6">
               <BookOpen className="w-4 h-4" />
               <span>금융 문맹 탈출 프로젝트</span>
             </div>

@@ -79,7 +79,7 @@ export default function SalaryConverterPage() {
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6">
                         Global Salary Converter <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-primary/80">
                             Real Purchasing Power (PPP)
                         </span>
                     </h1>
@@ -123,7 +123,7 @@ export default function SalaryConverterPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                     <div className="lg:col-span-2 bg-slate-800/50 border border-slate-700 rounded-3xl p-6">
                         <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                            <TrendingUp className="w-5 h-5 text-primary" />
                             Real Purchasing Power (Net USD)
                         </h3>
                         <div className="h-[300px] w-full">
@@ -170,7 +170,7 @@ export default function SalaryConverterPage() {
                                     <div className="text-4xl mb-2">{res.flag}</div>
                                     <h3 className="text-lg font-bold">{res.countryName}</h3>
                                 </div>
-                                <div className={`px-3 py-1 rounded-full text-xs font-bold ${res.effectiveRate > 30 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
+                                <div className={`px-3 py-1 rounded-full text-xs font-bold ${res.effectiveRate > 30 ? 'bg-red-500/20 text-red-400' : 'bg-primary/50/20 text-primary'}`}>
                                     Tax {res.effectiveRate.toFixed(1)}%
                                 </div>
                             </div>
@@ -185,8 +185,8 @@ export default function SalaryConverterPage() {
                                     <span className="font-mono font-bold text-white">{Math.round(res.net).toLocaleString()} {res.currency}</span>
                                 </div>
                                 <div className="pt-3 border-t border-slate-600/50 flex justify-between items-center">
-                                    <span className="text-sm text-emerald-400 font-bold">Real Value (PPP)</span>
-                                    <span className="text-xl font-black text-emerald-400">
+                                    <span className="text-sm text-primary font-bold">Real Value (PPP)</span>
+                                    <span className="text-xl font-black text-primary">
                                         ${Math.round(res.pppAdjustedNetUSD).toLocaleString()}
                                     </span>
                                 </div>

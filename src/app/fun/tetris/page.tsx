@@ -239,7 +239,7 @@ export default function TetrisPage() {
             {/* Cyberpunk Background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-                <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-purple-500/10 via-blue-500/5 to-transparent blur-3xl" />
+                <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-primary/10 via-blue-500/5 to-transparent blur-3xl" />
             </div>
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 items-center lg:items-start justify-center h-full">
@@ -247,7 +247,7 @@ export default function TetrisPage() {
                 {/* Left Panel: Stats & Info */}
                 <div className="w-full lg:w-64 flex flex-col gap-4 order-2 lg:order-1">
                     <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700 p-6 rounded-2xl shadow-xl">
-                        <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-6 tracking-tighter">
+                        <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 mb-6 tracking-tighter">
                             SALARYMAN<br />BLOCKS
                         </h1>
 
@@ -319,7 +319,7 @@ export default function TetrisPage() {
                                             <div className="flex gap-4">
                                                 <button
                                                     onClick={startGame}
-                                                    className="p-4 bg-primary hover:bg-primary text-slate-900 rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
+                                                    className="p-4 bg-primary hover:bg-primary text-white rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
                                                 >
                                                     <RefreshCw size={24} />
                                                 </button>
@@ -336,7 +336,7 @@ export default function TetrisPage() {
                                             <h2 className="text-3xl font-black text-white mb-8">READY?</h2>
                                             <button
                                                 onClick={startGame}
-                                                className="group relative px-8 py-4 bg-primary hover:bg-primary text-slate-900 rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"
+                                                className="group relative px-8 py-4 bg-primary hover:bg-primary text-white rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"
                                             >
                                                 <span className="relative z-10 flex items-center gap-2">
                                                     <Play fill="currentColor" /> START GAME

@@ -26,7 +26,7 @@ export default function SubmitSalaryPage() {
                     animate={{ scale: 1, opacity: 1 }}
                     className="max-w-md w-full bg-card border border-border rounded-3xl p-8 text-center shadow-2xl"
                 >
-                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-primary/5 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-10 h-10" />
                     </div>
                     <h1 className="text-2xl font-bold mb-2">제출해주셔서 감사합니다!</h1>
@@ -105,7 +105,7 @@ export default function SubmitSalaryPage() {
                     {/* Compensation Details */}
                     <div className="space-y-4">
                         <h2 className="text-lg font-bold flex items-center gap-2">
-                            <DollarSign className="w-5 h-5 text-emerald-500" />
+                            <DollarSign className="w-5 h-5 text-primary" />
                             보상 상세 (작년 기준)
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -131,7 +131,7 @@ export default function SubmitSalaryPage() {
                     {/* Review */}
                     <div className="space-y-4">
                         <h2 className="text-lg font-bold flex items-center gap-2">
-                            <AlertCircle className="w-5 h-5 text-purple-500" />
+                            <AlertCircle className="w-5 h-5 text-primary" />
                             한줄 평
                         </h2>
                         <div>

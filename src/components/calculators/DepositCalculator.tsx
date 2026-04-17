@@ -157,7 +157,7 @@ export default function DepositCalculator() {
                                         onClick={() => setTaxType(t.id as TaxType)}
                                         className={`py-2 text-xs sm:text-sm rounded-lg transition-all ${taxType === t.id
                                                 ? "bg-primary text-white font-bold shadow-lg shadow-primary/20"
-                                                : "bg-slate-100 text-slate-600 hover:bg-zinc-700"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                             }`}
                                     >
                                         {t.label}

@@ -40,8 +40,8 @@ export default function LiveTicker() {
                     className="bg-slate-900/90 backdrop-blur-md text-white px-4 py-3 rounded-full shadow-2xl border border-white/10 flex items-center gap-3 pointer-events-auto max-w-sm w-full sm:w-auto"
                 >
                     <div className="relative">
-                        <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75" />
-                        <div className="relative bg-green-500 rounded-full p-1">
+                        <div className="absolute inset-0 bg-primary/50 rounded-full animate-ping opacity-75" />
+                        <div className="relative bg-primary/50 rounded-full p-1">
                             <Bell className="w-3 h-3 text-white" />
                         </div>
                     </div>

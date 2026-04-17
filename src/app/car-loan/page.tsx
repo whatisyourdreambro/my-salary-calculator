@@ -175,7 +175,7 @@ export default function CarLoanPage() {
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               내 연봉으로 살 수 있는 <br className="sm:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
                 드림카는 무엇일까요?
               </span>
             </h1>
@@ -292,7 +292,7 @@ export default function CarLoanPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden"
+              className="bg-gradient-to-br from-indigo-500 to-primary/80 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
@@ -345,7 +345,7 @@ export default function CarLoanPage() {
                             className="group bg-card hover:bg-accent/50 border border-border rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative overflow-hidden"
                           >
                             {isHighBurden && (
-                              <div className="absolute top-0 right-0 bg-amber-500 text-white text-xs px-2 py-1 rounded-bl-lg z-10 font-bold">
+                              <div className="absolute top-0 right-0 bg-primary/50 text-white text-xs px-2 py-1 rounded-bl-lg z-10 font-bold">
                                 주의
                               </div>
                             )}
@@ -383,13 +383,13 @@ export default function CarLoanPage() {
                               <div className="space-y-1">
                                 <div className="flex justify-between text-xs">
                                   <span className="text-muted-foreground">월 실수령액 대비 지출</span>
-                                  <span className={`font-bold ${isHighBurden ? "text-amber-500" : "text-green-500"}`}>
+                                  <span className={`font-bold ${isHighBurden ? "text-primary" : "text-primary"}`}>
                                     {monthlyPaymentRatio.toFixed(1)}%
                                   </span>
                                 </div>
                                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
                                   <div
-                                    className={`h-full rounded-full ${isHighBurden ? "bg-amber-500" : "bg-green-500"}`}
+                                    className={`h-full rounded-full ${isHighBurden ? "bg-primary/50" : "bg-primary/50"}`}
                                     style={{ width: `${Math.min(monthlyPaymentRatio, 100)}%` }}
                                   />
                                 </div>

@@ -134,7 +134,7 @@ export default function LoanCalculator() {
                                     type="number"
                                     value={amount}
                                     onChange={(e) => setAmount(Number(e.target.value))}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                             <div className="flex gap-2 mt-2">
@@ -142,7 +142,7 @@ export default function LoanCalculator() {
                                     <button
                                         key={val}
                                         onClick={() => setAmount(val)}
-                                        className="px-3 py-1 text-xs bg-slate-100 text-slate-600 rounded-full hover:bg-zinc-700 transition-colors"
+                                        className="px-3 py-1 text-xs bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                                     >
                                         {val / 10000}만
                                     </button>
@@ -161,7 +161,7 @@ export default function LoanCalculator() {
                                     step="0.1"
                                     value={rate}
                                     onChange={(e) => setRate(Number(e.target.value))}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -176,7 +176,7 @@ export default function LoanCalculator() {
                                     type="number"
                                     value={term}
                                     onChange={(e) => setTerm(Number(e.target.value))}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -195,8 +195,8 @@ export default function LoanCalculator() {
                                         key={m.id}
                                         onClick={() => setMethod(m.id as RepaymentMethod)}
                                         className={`py-2 text-sm rounded-lg transition-all ${method === m.id
-                                                ? "bg-primary text-white font-bold shadow-lg shadow-emerald-500/20"
-                                                : "bg-slate-100 text-slate-600 hover:bg-zinc-700"
+                                                ? "bg-primary text-white font-bold shadow-lg shadow-primary/20"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                             }`}
                                     >
                                         {m.label}

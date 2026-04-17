@@ -119,7 +119,7 @@ export default function ShareButtons({
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleTwitterShare}
-                className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-lg shadow-black/30 transition-all border border-zinc-800"
+                className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-lg shadow-black/30 transition-all border border-slate-200"
                 aria-label="트위터 공유"
             >
                 <Twitter className="w-4 h-4 text-white" fill="currentColor" />

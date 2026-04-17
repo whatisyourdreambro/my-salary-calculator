@@ -68,7 +68,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <Zap size={18} className="text-yellow-500 fill-yellow-500"/> 소셜 공유용 티어 카드
+            <Zap size={18} className="text-primary fill-yellow-500"/> 소셜 공유용 티어 카드
         </h3>
         <p className="text-xs text-gray-500">이미지로 저장해서 공유해보세요!</p>
       </div>

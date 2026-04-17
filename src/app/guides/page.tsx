@@ -13,7 +13,7 @@ function HeroGuide({ guide }: { guide: Guide }) {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black z-0" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/30 transition-all duration-1000" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 group-hover:bg-indigo-500/30 transition-all duration-1000" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/100/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 group-hover:bg-primary/100/30 transition-all duration-1000" />
 
       <div className="absolute bottom-0 left-0 w-full p-8 sm:p-12 z-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
@@ -67,7 +67,7 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
                 {guide.category}
               </span>
               {guide.views > 10000 && (
-                <span className="flex items-center gap-1 text-xs font-medium text-amber-500 bg-amber-400/10 px-2 py-1 rounded-full border border-amber-400/20">
+                <span className="flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">
                   <TrendingUp className="w-3 h-3" /> 인기
                 </span>
               )}

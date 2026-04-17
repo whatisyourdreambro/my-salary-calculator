@@ -24,8 +24,8 @@ export default function DsrCalculator() {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-zinc-200 dark:border-slate-200 overflow-hidden">
-            <div className="p-6 border-b border-zinc-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
+        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-slate-200 dark:border-slate-200 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                     <Building2 className="w-5 h-5 text-blue-600" />
                     DSR (총부채원리금상환비율) 계산기
@@ -42,7 +42,7 @@ export default function DsrCalculator() {
                         type="text"
                         value={income}
                         onChange={(e) => setIncome(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                        className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-lg font-bold"
+                        className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="50,000,000"
                     />
                 </div>
@@ -54,7 +54,7 @@ export default function DsrCalculator() {
                             type="text"
                             value={principal}
                             onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                            className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent"
+                            className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent"
                             placeholder="10,000,000"
                         />
                     </div>
@@ -64,7 +64,7 @@ export default function DsrCalculator() {
                             type="text"
                             value={interest}
                             onChange={(e) => setInterest(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                            className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent"
+                            className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent"
                             placeholder="2,000,000"
                         />
                     </div>
@@ -95,7 +95,7 @@ export default function DsrCalculator() {
                 )}
             </div>
 
-            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-zinc-200 dark:border-slate-200">
+            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-slate-200 dark:border-slate-200">
                 <AdUnit slotId="1231231234" format="rectangle" label="DSR Calculator Ad" />
             </div>
         </div>

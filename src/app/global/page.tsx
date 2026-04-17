@@ -65,7 +65,7 @@ export default function GlobalTaxPage() {
                 </Link>
 
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                    <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-primary/80">
                         Global Salary Comparison
                     </h1>
                     <p className="text-xl text-muted-foreground">

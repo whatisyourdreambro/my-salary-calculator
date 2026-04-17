@@ -246,13 +246,13 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               <CalculatorCard icon={Calculator} title="정규직 계산기" description="2026년 최신 세율 적용, 가장 정확한 실수령액 계산" href="/?tab=salary" colorClass="bg-blue-50 text-blue-600 dark:bg-blue-900/30" colSpan={2} delay={0} />
-              <CalculatorCard icon={PiggyBank} title="퇴직금 계산기" description="예상 퇴직금과 IRP 절세 효과 분석" href="/?tab=severance" colorClass="bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30" delay={0.1} />
-              <CalculatorCard icon={Briefcase} title="알바/프리랜서" description="3.3% 공제 및 주휴수당 완벽 계산" href="/?tab=freelancer" colorClass="bg-purple-50 text-purple-600 dark:bg-purple-900/30" delay={0.2} />
-              <CalculatorCard icon={Globe} title="환율 영향 (New)" description="내 연봉의 글로벌 구매력 비교" href="/?tab=exchange" colorClass="bg-cyan-50 text-cyan-600 dark:bg-cyan-900/30" delay={0.3} />
-              <CalculatorCard icon={FileText} title="연말정산 설계" description="13월의 월급을 위한 필승 시뮬레이션" href="/year-end-tax" colorClass="bg-pink-50 text-pink-600 dark:bg-pink-900/30" delay={0.4} />
-              <CalculatorCard icon={Receipt} title="급여명세서" description="직인까지 찍히는 나만의 급여 명세서" href="/fun/salary-slip" colorClass="bg-yellow-50 text-yellow-600 dark:bg-yellow-900/30" delay={0.5} />
-              <CalculatorCard icon={TrendingUp} title="미래 연봉 예측" description="커리어 성장 곡선과 은퇴 목표 달성 시기 분석" href="/?tab=future" colorClass="bg-orange-50 text-orange-600 dark:bg-orange-900/30" delay={0.6} />
-              <CalculatorCard icon={GitCompare} title="기업 오퍼 비교" description="두 회사의 실제 가치(시급, 복지) 정밀 비교" href="/company/compare" colorClass="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30" colSpan={2} delay={0.7} />
+              <CalculatorCard icon={PiggyBank} title="퇴직금 계산기" description="예상 퇴직금과 IRP 절세 효과 분석" href="/?tab=severance" colorClass="bg-primary/5 text-primary dark:bg-primary/30" delay={0.1} />
+              <CalculatorCard icon={Briefcase} title="알바/프리랜서" description="3.3% 공제 및 주휴수당 완벽 계산" href="/?tab=freelancer" colorClass="bg-primary/10 text-primary dark:bg-primary/30" delay={0.2} />
+              <CalculatorCard icon={Globe} title="환율 영향 (New)" description="내 연봉의 글로벌 구매력 비교" href="/?tab=exchange" colorClass="bg-primary/5 text-primary dark:bg-primary/30" delay={0.3} />
+              <CalculatorCard icon={FileText} title="연말정산 설계" description="13월의 월급을 위한 필승 시뮬레이션" href="/year-end-tax" colorClass="bg-slate-50 text-primary dark:bg-primary/30" delay={0.4} />
+              <CalculatorCard icon={Receipt} title="급여명세서" description="직인까지 찍히는 나만의 급여 명세서" href="/fun/salary-slip" colorClass="bg-primary/5 text-primary dark:bg-primary/30" delay={0.5} />
+              <CalculatorCard icon={TrendingUp} title="미래 연봉 예측" description="커리어 성장 곡선과 은퇴 목표 달성 시기 분석" href="/?tab=future" colorClass="bg-primary/5 text-primary dark:bg-primary/30" delay={0.6} />
+              <CalculatorCard icon={GitCompare} title="기업 오퍼 비교" description="두 회사의 실제 가치(시급, 복지) 정밀 비교" href="/company/compare" colorClass="bg-primary/10 text-indigo-600 dark:bg-primary/30" colSpan={2} delay={0.7} />
             </div>
           </div>
         </section>

@@ -208,7 +208,7 @@ export default function FireCalculator() {
   if (step === "intro") {
     return (
       <div className="text-center animate-fade-in-up">
-        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-300 dark:to-indigo-300">
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-indigo-300">
           나의 경제적 자유,
           <br />그 여정을 시작합니다
         </h1>
@@ -537,7 +537,7 @@ export default function FireCalculator() {
                 <p className="text-sm text-muted-foreground">
                   총 투자 수익
                 </p>
-                <p className="text-lg sm:text-xl font-bold text-green-500">
+                <p className="text-lg sm:text-xl font-bold text-primary">
                   + <CountUp end={totalReturns} separator="," /> 원
                 </p>
               </div>

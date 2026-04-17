@@ -111,7 +111,7 @@ export default function IdealTypeWorldCup() {
         <div className="w-full max-w-6xl mx-auto px-4 py-8">
             {/* Header */}
             <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-pink-500/10 text-pink-500 text-sm font-bold mb-4 border border-pink-500/20">
+                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-500/10 text-primary text-sm font-bold mb-4 border border-primary/20">
                     <Heart size={14} className="fill-current" />
                     Ideal Type World Cup
                 </div>
@@ -135,14 +135,14 @@ export default function IdealTypeWorldCup() {
                             className="flex flex-col items-center justify-center space-y-8 py-12"
                         >
                             <div className="relative">
-                                <Crown className="w-24 h-24 text-yellow-400 absolute -top-16 left-1/2 -translate-x-1/2 animate-bounce" />
+                                <Crown className="w-24 h-24 text-primary absolute -top-16 left-1/2 -translate-x-1/2 animate-bounce" />
                                 <div className="text-[120px] leading-none filter drop-shadow-2xl">
                                     {winner.logo}
                                 </div>
                             </div>
 
                             <div className="text-center space-y-2">
-                                <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400">
+                                <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/50 to-primary/80">
                                     {winner.name.ko}
                                 </h2>
                                 <p className="text-xl text-muted-foreground">{winner.industry}</p>
@@ -173,7 +173,7 @@ export default function IdealTypeWorldCup() {
                             {/* Round Indicator */}
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 bg-black/80 backdrop-blur-md px-6 py-2 rounded-full border border-white/10 text-white font-bold text-xl shadow-xl">
                                 {roundName}
-                                <span className="text-sm text-zinc-400 ml-2 font-normal">
+                                <span className="text-sm text-slate-500 ml-2 font-normal">
                                     ({(currentPairIndex / 2) + 1} / {currentRound.length / 2})
                                 </span>
                             </div>
@@ -252,7 +252,7 @@ function ContenderCard({ company, onClick, position }: { company: CompanyProfile
                     <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
                         <div className="text-xs text-muted-foreground uppercase mb-1">워라밸</div>
                         <div className="font-bold text-lg flex items-center justify-center gap-1">
-                            <span className="text-yellow-500">★</span>
+                            <span className="text-primary">★</span>
                             {company.culture.score}
                         </div>
                     </div>

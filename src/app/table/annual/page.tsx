@@ -80,29 +80,29 @@ function AnnualTable() {
             <div className="space-y-16">
               {/* Premium Q&A Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-zinc-900/40 backdrop-blur-2xl p-8 rounded-3xl shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <div className="bg-white/40 backdrop-blur-2xl p-8 rounded-3xl shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                   <h3 className="font-bold text-xl mb-4 text-zinc-100 flex items-center gap-2">
-                    <span className="text-emerald-400">Q.</span> '세전', '세후'는 무슨 뜻인가요?
+                    <span className="text-primary">Q.</span> '세전', '세후'는 무슨 뜻인가요?
                   </h3>
-                  <p className="text-zinc-400 leading-relaxed">
+                  <p className="text-slate-500 leading-relaxed">
                     <strong>세전 연봉</strong>은 회사와 계약한 금액 총액을
                     의미하며, <strong>세후 실수령액</strong>은 이 세전 연봉에서
                     4대보험(국민연금, 건강보험, 고용보험, 산재보험)과 소득세(국세, 지방세) 등 각종 공제 항목을 제외하고
                     실제 통장에 입금되는 금액을 말합니다.
                   </p>
                 </div>
-                <div className="bg-zinc-900/40 backdrop-blur-2xl p-8 rounded-3xl shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                <div className="bg-white/40 backdrop-blur-2xl p-8 rounded-3xl shadow-xl border border-white/10 hover:border-white/20 transition-all duration-300">
                   <h3 className="font-bold text-xl mb-4 text-zinc-100 flex items-center gap-2">
-                    <span className="text-emerald-400">Q.</span> 연봉이 같아도 실수령액이 다른 이유는?
+                    <span className="text-primary">Q.</span> 연봉이 같아도 실수령액이 다른 이유는?
                   </h3>
-                  <p className="text-zinc-400 leading-relaxed">
+                  <p className="text-slate-500 leading-relaxed">
                     <strong>비과세 수당(식대 20만원 등)</strong>, 부양가족 수,
                     그리고 <strong>연말정산 결과</strong>에 따라 매월 공제되는 세금(원천징수액)이 달라지기 때문입니다.
                     머니샐러리 계산기에서 상세 조건을 입력하면 나만의 정확한 실수령액을 확인할 수 있습니다.
                   </p>
                   <Link
                     href="/"
-                    className="text-emerald-400 font-semibold mt-6 inline-flex items-center gap-1 hover:gap-2 transition-all"
+                    className="text-primary font-semibold mt-6 inline-flex items-center gap-1 hover:gap-2 transition-all"
                   >
                     내 조건으로 정확히 계산하기 <TrendingUp className="w-4 h-4" />
                   </Link>
@@ -110,11 +110,11 @@ function AnnualTable() {
               </div>
 
               {/* SEO Content Section */}
-              <div className="bg-zinc-900/40 backdrop-blur-2xl p-8 md:p-12 rounded-3xl border border-white/10">
+              <div className="bg-white/40 backdrop-blur-2xl p-8 md:p-12 rounded-3xl border border-white/10">
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
                   2026년 연봉 실수령액, 무엇이 달라졌나요?
                 </h2>
-                <div className="space-y-8 text-zinc-300 leading-relaxed">
+                <div className="space-y-8 text-slate-600 leading-relaxed">
                   <div>
                     <h3 className="text-xl font-semibold text-zinc-100 mb-3">1. 식대 비과세 한도 확대 유지</h3>
                     <p>

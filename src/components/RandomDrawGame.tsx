@@ -432,15 +432,15 @@ export default function RandomDrawGame() {
                     className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
                 >
                     {/* Background Glow */}
-                    <div className="absolute -top-20 -left-20 w-64 h-64 bg-purple-600/30 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/30 rounded-full blur-3xl pointer-events-none" />
                     <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-600/30 rounded-full blur-3xl pointer-events-none" />
 
                     <div className="text-center mb-10 relative z-10">
-                        <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-4 tracking-tight">
+                        <h2 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 mb-4 tracking-tight">
                             NEON MARBLE RACE
                             <span className="block text-lg font-bold text-white mt-2 tracking-widest opacity-80">GOD MODE EDITION</span>
                         </h2>
-                        <p className="text-zinc-400 text-lg">
+                        <p className="text-slate-500 text-lg">
                             운명을 건 한판 승부! 참가자를 입력하고 레이스를 시작하세요.
                         </p>
                     </div>
@@ -449,25 +449,25 @@ export default function RandomDrawGame() {
                         {/* Left Column: Inputs */}
                         <div className="space-y-6">
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">추첨 제목</label>
+                                <label className="block text-sm font-bold text-slate-500 mb-2">추첨 제목</label>
                                 <input
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="예: 오늘 점심 쏘기"
-                                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+                                    className="w-full bg-white/50 border border-slate-200 rounded-xl p-4 text-white focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">참가자 명단</label>
+                                <label className="block text-sm font-bold text-slate-500 mb-2">참가자 명단</label>
                                 <textarea
                                     value={candidatesText}
                                     onChange={(e) => setCandidatesText(e.target.value)}
                                     placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
-                                    className="w-full h-60 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-purple-500 outline-none resize-none font-mono leading-relaxed"
+                                    className="w-full h-60 bg-white/50 border border-slate-200 rounded-xl p-4 text-white focus:ring-2 focus:ring-primary outline-none resize-none font-mono leading-relaxed"
                                 />
-                                <div className="flex justify-between text-xs text-zinc-500 mt-2 px-1">
+                                <div className="flex justify-between text-xs text-slate-500 mt-2 px-1">
                                     <span>엔터로 구분해주세요</span>
                                     <span>총 {candidatesText.split("\n").filter(n => n.trim()).length}명</span>
                                 </div>
@@ -478,9 +478,9 @@ export default function RandomDrawGame() {
                         <div className="space-y-8">
                             {/* Winner Count */}
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">당첨자 수</label>
-                                <div className="flex items-center gap-4 bg-zinc-900/50 border border-zinc-700 rounded-xl p-4">
-                                    <Users className="text-zinc-500" />
+                                <label className="block text-sm font-bold text-slate-500 mb-2">당첨자 수</label>
+                                <div className="flex items-center gap-4 bg-white/50 border border-slate-200 rounded-xl p-4">
+                                    <Users className="text-slate-500" />
                                     <input
                                         type="number"
                                         min="1"
@@ -489,19 +489,19 @@ export default function RandomDrawGame() {
                                         onChange={(e) => setWinnerCount(Number(e.target.value))}
                                         className="bg-transparent text-white text-2xl font-bold outline-none w-full"
                                     />
-                                    <span className="text-zinc-500 font-bold">명</span>
+                                    <span className="text-slate-500 font-bold">명</span>
                                 </div>
                             </div>
 
                             {/* Special Prizes */}
-                            <div className="bg-zinc-900/30 border border-zinc-700 rounded-xl p-5">
+                            <div className="bg-white/30 border border-slate-200 rounded-xl p-5">
                                 <div className="flex items-center justify-between mb-4">
-                                    <label className="text-sm font-bold text-yellow-400 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-primary flex items-center gap-2">
                                         <Gift className="w-4 h-4" /> 특별상 설정
                                     </label>
                                     <button
                                         onClick={addSpecialPrize}
-                                        className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-3 py-1 rounded-lg flex items-center gap-1 transition-colors"
+                                        className="text-xs bg-slate-100 hover:bg-slate-200 text-white px-3 py-1 rounded-lg flex items-center gap-1 transition-colors"
                                     >
                                         <Plus className="w-3 h-3" /> 추가
                                     </button>
@@ -509,8 +509,8 @@ export default function RandomDrawGame() {
                                 <div className="space-y-3 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                                     {specialPrizes.map((prize, idx) => (
                                         <div key={idx} className="flex items-center gap-2">
-                                            <div className="flex items-center gap-1 bg-zinc-950 rounded-lg px-3 py-2 border border-zinc-800 w-24">
-                                                <span className="text-zinc-500 text-xs">No.</span>
+                                            <div className="flex items-center gap-1 bg-slate-50 rounded-lg px-3 py-2 border border-slate-200 w-24">
+                                                <span className="text-slate-500 text-xs">No.</span>
                                                 <input
                                                     type="number"
                                                     value={prize.rank}
@@ -523,11 +523,11 @@ export default function RandomDrawGame() {
                                                 value={prize.name}
                                                 onChange={(e) => updateSpecialPrize(idx, "name", e.target.value)}
                                                 placeholder="상품명 (예: 치킨)"
-                                                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-yellow-500/50 transition-colors"
+                                                className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary/50 transition-colors"
                                             />
                                             <button
                                                 onClick={() => removeSpecialPrize(idx)}
-                                                className="p-2 text-zinc-500 hover:text-red-400 transition-colors"
+                                                className="p-2 text-slate-500 hover:text-red-400 transition-colors"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
@@ -543,7 +543,7 @@ export default function RandomDrawGame() {
 
                             <button
                                 onClick={startGame}
-                                className="w-full py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-2xl rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(168,85,247,0.4)] flex items-center justify-center gap-3 group"
+                                className="w-full py-5 bg-gradient-to-r from-primary to-primary/80 text-white font-black text-2xl rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(168,85,247,0.4)] flex items-center justify-center gap-3 group"
                             >
                                 <Play className="fill-current group-hover:animate-pulse" /> RACE START
                             </button>
@@ -563,7 +563,7 @@ export default function RandomDrawGame() {
                         <motion.div
                             initial={{ scale: 0, rotate: -10 }}
                             animate={{ scale: 1, rotate: 0 }}
-                            className="mt-4 inline-block px-8 py-3 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black text-xl rounded-full shadow-[0_0_30px_rgba(220,38,38,0.6)]"
+                            className="mt-4 inline-block px-8 py-3 bg-gradient-to-r from-red-600 to-primary/80 text-white font-black text-xl rounded-full shadow-[0_0_30px_rgba(220,38,38,0.6)]"
                         >
                             RACE FINISHED!
                         </motion.div>
@@ -573,13 +573,13 @@ export default function RandomDrawGame() {
                 {/* Canvas */}
                 <canvas
                     ref={canvasRef}
-                    className="w-full h-[600px] md:h-[800px] bg-[#0a0a0a] rounded-3xl border-4 border-zinc-800 shadow-2xl cursor-crosshair"
+                    className="w-full h-[600px] md:h-[800px] bg-[#0a0a0a] rounded-3xl border-4 border-slate-200 shadow-2xl cursor-crosshair"
                 />
 
                 {/* Live Leaderboard */}
                 <div className="absolute top-24 right-6 w-80 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 pointer-events-none shadow-2xl">
                     <h3 className="text-white font-black mb-4 flex items-center gap-2 text-lg">
-                        <Trophy className="w-5 h-5 text-yellow-500" /> LIVE RANKING
+                        <Trophy className="w-5 h-5 text-primary" /> LIVE RANKING
                     </h3>
                     <div className="space-y-2 max-h-[500px] overflow-hidden">
                         <AnimatePresence>
@@ -591,14 +591,14 @@ export default function RandomDrawGame() {
                                         initial={{ x: 50, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         className={`flex items-center gap-3 rounded-xl p-3 border ${specialPrize
-                                                ? "bg-yellow-500/20 border-yellow-500/50"
+                                                ? "bg-primary/50/20 border-primary/50"
                                                 : "bg-white/5 border-white/5"
                                             }`}
                                     >
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${ball.rank === 1 ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-black" :
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${ball.rank === 1 ? "bg-gradient-to-br from-primary to-primary/80 text-black" :
                                                 ball.rank === 2 ? "bg-gradient-to-br from-gray-300 to-gray-500 text-black" :
-                                                    ball.rank === 3 ? "bg-gradient-to-br from-amber-600 to-amber-800 text-white" :
-                                                        "bg-zinc-800 text-zinc-400"
+                                                    ball.rank === 3 ? "bg-gradient-to-br from-primary to-primary/80 text-white" :
+                                                        "bg-slate-100 text-slate-500"
                                             }`}>
                                             {ball.rank}
                                         </div>
@@ -606,19 +606,19 @@ export default function RandomDrawGame() {
                                             <div className="flex items-center gap-2">
                                                 <span className="text-white font-bold text-lg truncate">{ball.name}</span>
                                                 {specialPrize && (
-                                                    <span className="text-[10px] font-bold bg-yellow-500 text-black px-1.5 py-0.5 rounded-full animate-pulse">
+                                                    <span className="text-[10px] font-bold bg-primary/50 text-black px-1.5 py-0.5 rounded-full animate-pulse">
                                                         {specialPrize.name}
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
-                                        {ball.rank === 1 && <Sparkles className="w-4 h-4 text-yellow-400 ml-auto animate-pulse" />}
+                                        {ball.rank === 1 && <Sparkles className="w-4 h-4 text-primary ml-auto animate-pulse" />}
                                     </motion.div>
                                 );
                             })}
                         </AnimatePresence>
                         {winners.length === 0 && (
-                            <div className="text-zinc-500 text-sm text-center py-8 italic">
+                            <div className="text-slate-500 text-sm text-center py-8 italic">
                                 Racing in progress...
                             </div>
                         )}

@@ -81,7 +81,7 @@ export default function MemeCoinPage() {
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none bg-[linear-gradient(0deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent)] bg-[size:50px_50px]" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-12">
-        <div className="text-center mb-12 border-b border-green-900/50 pb-8">
+        <div className="text-center mb-12 border-b border-primary/50 pb-8">
           <div className="inline-block px-4 py-1 border border-primary rounded-full text-xs mb-4 animate-pulse">
             LIVE MARKET STATUS: EXTREME GREED
           </div>
@@ -92,7 +92,7 @@ export default function MemeCoinPage() {
         </div>
 
         {/* Ad Unit */}
-        <div className="mb-8 max-w-3xl mx-auto border border-green-900/30 bg-primary/5 rounded-lg overflow-hidden">
+        <div className="mb-8 max-w-3xl mx-auto border border-primary/30 bg-primary/5 rounded-lg overflow-hidden">
           <AdUnit slotId="8877665544" format="auto" label="Meme Coin Top Ad" />
         </div>
 
@@ -123,33 +123,33 @@ export default function MemeCoinPage() {
               {/* Coins Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {coins.map(coin => (
-                  <div key={coin.id} className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl hover:border-primary/50 transition-colors group">
+                  <div key={coin.id} className="bg-white/50 border border-slate-200 p-6 rounded-2xl hover:border-primary/50 transition-colors group">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="p-3 rounded-full" style={{ backgroundColor: `${coin.color}20` }}>
                         <coin.icon className="w-8 h-8" style={{ color: coin.color }} />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-white">{coin.name}</h3>
-                        <p className="text-xs text-zinc-500">{coin.fullName}</p>
+                        <p className="text-xs text-slate-500">{coin.fullName}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-zinc-400 min-h-[40px] mb-6">{coin.description}</p>
+                    <p className="text-sm text-slate-500 min-h-[40px] mb-6">{coin.description}</p>
 
-                    <div className="bg-black/50 p-4 rounded-xl mb-4 border border-zinc-800">
-                      <p className="text-xs text-zinc-500 mb-1">내 보유량</p>
+                    <div className="bg-black/50 p-4 rounded-xl mb-4 border border-slate-200">
+                      <p className="text-xs text-slate-500 mb-1">내 보유량</p>
                       <p className="text-xl font-bold text-white">{formatNumber(investments[coin.id as keyof typeof investments])} 원</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => handleInvestmentChange(coin.id as keyof typeof investments, -100000)}
-                        className="py-2 bg-zinc-800 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
+                        className="py-2 bg-slate-100 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
                       >
                         -10만
                       </button>
                       <button
                         onClick={() => handleInvestmentChange(coin.id as keyof typeof investments, 100000)}
-                        className="py-2 bg-zinc-800 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
+                        className="py-2 bg-slate-100 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
                       >
                         +10만
                       </button>
@@ -204,20 +204,20 @@ export default function MemeCoinPage() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-                  <p className="text-zinc-500 text-sm">최종 평가액</p>
+                <div className="bg-white/50 p-6 rounded-2xl border border-slate-200">
+                  <p className="text-slate-500 text-sm">최종 평가액</p>
                   <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {formatNumber(result.finalValue)} 원
                   </p>
                 </div>
-                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-                  <p className="text-zinc-500 text-sm">수익금</p>
+                <div className="bg-white/50 p-6 rounded-2xl border border-slate-200">
+                  <p className="text-slate-500 text-sm">수익금</p>
                   <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {result.profit > 0 ? '+' : ''}{formatNumber(result.profit)} 원
                   </p>
                 </div>
-                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
-                  <p className="text-zinc-500 text-sm">수익률</p>
+                <div className="bg-white/50 p-6 rounded-2xl border border-slate-200">
+                  <p className="text-slate-500 text-sm">수익률</p>
                   <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {result.profitRate.toFixed(2)}%
                   </p>
@@ -225,7 +225,7 @@ export default function MemeCoinPage() {
               </div>
 
               {/* Chart */}
-              <div className="h-64 bg-zinc-900/30 rounded-2xl border border-zinc-800 p-4">
+              <div className="h-64 bg-white/30 rounded-2xl border border-slate-200 p-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={result.chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#333" />

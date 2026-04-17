@@ -152,13 +152,13 @@ export default function MbtiSalaryPage() {
           />
         ))}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-background via-transparent to-transparent" />
-        <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-violet-500/10 via-transparent to-transparent animate-spin-slow" />
+        <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-primary/10 via-transparent to-transparent animate-spin-slow" />
       </div>
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         {step === "intro" && (
           <div className="text-center animate-fade-in-up">
-            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-300 dark:to-indigo-300">
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-indigo-300">
               당신의 부(富)는
               <br />
               어떤 모습일까요?
@@ -181,7 +181,7 @@ export default function MbtiSalaryPage() {
           <div className="w-full max-w-2xl bg-light-card/80 dark:bg-black/30 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-gray-200 dark:border-white/20 animate-fade-in-up">
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-8">
               <div
-                className="bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-400 dark:to-indigo-400 h-2.5 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-indigo-400 h-2.5 rounded-full transition-all duration-500"
                 style={{
                   width: `${((currentQuestionIndex + 1) / questions.length) * 100
                     }%`,
@@ -201,7 +201,7 @@ export default function MbtiSalaryPage() {
                 <button
                   key={index}
                   onClick={() => handleAnswer(option.type)}
-                  className="w-full text-left p-5 border-2 border-gray-300 dark:border-gray-700 rounded-lg bg-gray-100/50 dark:bg-gray-800/50 hover:border-violet-500 dark:hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all transform hover:scale-105"
+                  className="w-full text-left p-5 border-2 border-gray-300 dark:border-gray-700 rounded-lg bg-gray-100/50 dark:bg-gray-800/50 hover:border-primary dark:hover:border-primary hover:bg-primary/10 dark:hover:bg-primary/30 transition-all transform hover:scale-105"
                 >
                   <p className="text-lg font-semibold">{option.text}</p>
                 </button>
@@ -212,7 +212,7 @@ export default function MbtiSalaryPage() {
 
         {step === "loading" && (
           <div className="text-center animate-fade-in-up">
-            <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-violet-500 dark:border-violet-400 mx-auto"></div>
+            <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary dark:border-primary mx-auto"></div>
             <h2 className="mt-8 text-2xl font-bold">
               당신의 미래를 분석하는 중...
             </h2>
@@ -232,7 +232,7 @@ export default function MbtiSalaryPage() {
               <p className="text-center font-semibold text-primary dark:text-indigo-300">
                 당신의 인생 연봉 그래프는...
               </p>
-              <h2 className="text-4xl font-bold text-center my-2 bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-indigo-500 dark:from-violet-300 dark:to-indigo-300">
+              <h2 className="text-4xl font-bold text-center my-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-indigo-300">
                 {result.title} <span className="text-3xl">{result.icon}</span>
               </h2>
               <p className="text-center text-light-text-secondary dark:text-gray-300 max-w-md mx-auto">
@@ -288,7 +288,7 @@ export default function MbtiSalaryPage() {
               {/* [가치 증대] 개인 맞춤형 분석 추가 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="bg-gray-200/50 dark:bg-white/5 p-4 rounded-lg">
-                  <h4 className="font-bold text-lg text-green-600 dark:text-green-400">
+                  <h4 className="font-bold text-lg text-primary dark:text-primary">
                     Financial DNA: 강점
                   </h4>
                   <p className="text-sm mt-2">{result.dna.strength}</p>
@@ -322,7 +322,7 @@ export default function MbtiSalaryPage() {
                       className="p-4 border border-gray-200 dark:border-white/20 rounded-xl bg-light-card dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="bg-violet-200 dark:bg-violet-500/20 text-violet-600 dark:text-violet-300 p-3 rounded-full">
+                        <div className="bg-primary/10 dark:bg-primary/100/20 text-primary dark:text-primary p-3 rounded-full">
                           <Icon className="w-6 h-6" />
                         </div>
                         <div>
@@ -337,7 +337,7 @@ export default function MbtiSalaryPage() {
                           </p>
                           <Link
                             href={plan.link}
-                            className="inline-flex items-center gap-2 mt-3 text-sm font-bold text-primary dark:text-violet-300 hover:underline"
+                            className="inline-flex items-center gap-2 mt-3 text-sm font-bold text-primary dark:text-primary hover:underline"
                           >
                             {plan.linkText} <ArrowRight size={16} />
                           </Link>
@@ -359,7 +359,7 @@ export default function MbtiSalaryPage() {
               </button>
               <button
                 onClick={handleShare}
-                className="w-full py-3 bg-yellow-400 text-black dark:bg-yellow-500 font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-yellow-500 dark:hover:bg-yellow-600 transition"
+                className="w-full py-3 bg-primary text-black dark:bg-primary/50 font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/50 dark:hover:bg-primary transition"
               >
                 <Share2 size={18} />
                 결과 공유

@@ -149,7 +149,7 @@ export default function BattlePage() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-zinc-950 text-white pb-20 overflow-x-hidden">
+        <main className="w-full min-h-screen bg-slate-50 text-white pb-20 overflow-x-hidden">
             {/* Game Overlay */}
             <AnimatePresence>
                 {isPlaying && result && (
@@ -179,9 +179,9 @@ export default function BattlePage() {
                         </span>
                     </motion.div>
                     <h1 className="text-5xl sm:text-7xl font-black italic tracking-tighter mb-2">
-                        SALARY <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">FIGHT</span>
+                        SALARY <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-primary/50 to-red-500">FIGHT</span>
                     </h1>
-                    <p className="text-zinc-400 text-lg">
+                    <p className="text-slate-500 text-lg">
                         실전 배틀! 연봉/복지/워라벨 비교
                     </p>
                 </div>
@@ -189,7 +189,7 @@ export default function BattlePage() {
 
             <div className="max-w-6xl mx-auto px-4 relative z-20">
                 {/* Controls */}
-                <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 mb-12 shadow-2xl">
+                <div className="bg-white/50 backdrop-blur-md border border-slate-200 rounded-2xl p-6 mb-12 shadow-2xl">
                     <div className="flex flex-col md:flex-row gap-6 items-center">
                         <CompanySelector
                             label="Player 1 (Blue Corner)"
@@ -199,13 +199,13 @@ export default function BattlePage() {
                         />
 
                         <div className="flex flex-col items-center gap-4 min-w-[120px]">
-                            <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center border-2 border-zinc-700">
-                                <Swords className="w-6 h-6 text-zinc-400" />
+                            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border-2 border-slate-200">
+                                <Swords className="w-6 h-6 text-slate-500" />
                             </div>
                             <select
                                 value={jobLevel}
                                 onChange={(e) => setJobLevel(e.target.value as JobLevel)}
-                                className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
+                                className="bg-slate-100 border border-slate-200 rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
                             >
                                 <option value="entry">?�입 (Entry)</option>
                                 <option value="junior">주니어(Junior)</option>
@@ -216,7 +216,7 @@ export default function BattlePage() {
 
                             <button
                                 onClick={handleFight}
-                                className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-600 rounded-xl font-black italic text-xl shadow-lg hover:scale-105 transition-transform animate-pulse"
+                                className="w-full py-3 bg-gradient-to-r from-red-600 to-primary/80 rounded-xl font-black italic text-xl shadow-lg hover:scale-105 transition-transform animate-pulse"
                             >
                                 FIGHT!
                             </button>
@@ -239,21 +239,21 @@ export default function BattlePage() {
                             <motion.div
                                 initial={{ x: -50, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
-                                className="bg-zinc-900/50 border border-blue-500/30 p-6 rounded-2xl"
+                                className="bg-white/50 border border-blue-500/30 p-6 rounded-2xl"
                             >
                                 <div className="text-6xl mb-4">{result.companyA.logo}</div>
                                 <h2 className="text-2xl font-bold text-blue-400 mb-1">{result.companyA.name.ko}</h2>
-                                <p className="text-sm text-zinc-400 mb-4">{result.companyA.industry}</p>
+                                <p className="text-sm text-slate-500 mb-4">{result.companyA.industry}</p>
 
                                 <div className="space-y-4">
-                                    <div className="bg-zinc-950/50 p-3 rounded-xl">
-                                        <p className="text-xs text-zinc-500 uppercase">Total Comp</p>
+                                    <div className="bg-slate-50/50 p-3 rounded-xl">
+                                        <p className="text-xs text-slate-500 uppercase">Total Comp</p>
                                         <p className="text-xl font-bold text-white">
                                             {(result.metrics.totalComp.a / 10000).toLocaleString()}만원
                                         </p>
                                     </div>
-                                    <div className="bg-zinc-950/50 p-3 rounded-xl">
-                                        <p className="text-xs text-zinc-500 uppercase">Real Hourly</p>
+                                    <div className="bg-slate-50/50 p-3 rounded-xl">
+                                        <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-white">
                                             {Math.round(result.metrics.realHourlyWage.a).toLocaleString()}원
                                         </p>
@@ -267,7 +267,7 @@ export default function BattlePage() {
                             <motion.div
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden"
+                                className="bg-white/80 border border-slate-200 rounded-3xl p-6 shadow-2xl relative overflow-hidden"
                             >
                                 {/* Radar Chart */}
                                 <div className="h-[300px] w-full mb-8">
@@ -297,9 +297,9 @@ export default function BattlePage() {
                                 </div>
 
                                 {/* Verdict Box */}
-                                <div className="bg-gradient-to-r from-zinc-800 to-zinc-900 border border-zinc-700 p-6 rounded-xl text-center relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500" />
-                                    <h3 className="text-lg font-bold text-zinc-300 mb-2 flex items-center justify-center gap-2">
+                                <div className="bg-gradient-to-r from-primary to-primary/80 border border-slate-200 p-6 rounded-xl text-center relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-primary/50 to-red-500" />
+                                    <h3 className="text-lg font-bold text-slate-600 mb-2 flex items-center justify-center gap-2">
                                         <Trophy className="w-5 h-5 text-primary" />
                                         AI ?�판 ?�정
                                     </h3>
@@ -340,21 +340,21 @@ export default function BattlePage() {
                             <motion.div
                                 initial={{ x: 50, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
-                                className="bg-zinc-900/50 border border-primary/30 p-6 rounded-2xl"
+                                className="bg-white/50 border border-primary/30 p-6 rounded-2xl"
                             >
                                 <div className="text-6xl mb-4">{result.companyB.logo}</div>
                                 <h2 className="text-2xl font-bold text-primary mb-1">{result.companyB.name.ko}</h2>
-                                <p className="text-sm text-zinc-400 mb-4">{result.companyB.industry}</p>
+                                <p className="text-sm text-slate-500 mb-4">{result.companyB.industry}</p>
 
                                 <div className="space-y-4">
-                                    <div className="bg-zinc-950/50 p-3 rounded-xl">
-                                        <p className="text-xs text-zinc-500 uppercase">Total Comp</p>
+                                    <div className="bg-slate-50/50 p-3 rounded-xl">
+                                        <p className="text-xs text-slate-500 uppercase">Total Comp</p>
                                         <p className="text-xl font-bold text-white">
                                             {(result.metrics.totalComp.b / 10000).toLocaleString()}만원
                                         </p>
                                     </div>
-                                    <div className="bg-zinc-950/50 p-3 rounded-xl">
-                                        <p className="text-xs text-zinc-500 uppercase">Real Hourly</p>
+                                    <div className="bg-slate-50/50 p-3 rounded-xl">
+                                        <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-white">
                                             {Math.round(result.metrics.realHourlyWage.b).toLocaleString()}원
                                         </p>
@@ -365,7 +365,7 @@ export default function BattlePage() {
                     </div>
                 ) : (
                     <div className="text-center py-20 animate-pulse">
-                        <p className="text-2xl text-zinc-500 font-bold">
+                        <p className="text-2xl text-slate-500 font-bold">
                             연봉 배틀의 <span className="text-primary">FIGHT!</span> 버튼을 눌러주세요.
                         </p>
                     </div>

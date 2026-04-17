@@ -51,7 +51,7 @@ export default function VatCalculator() {
                     <button
                         onClick={() => setType("total")}
                         className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "total"
-                                ? "bg-emerald-600 text-white shadow-sm"
+                                ? "bg-primary text-white shadow-sm"
                                 : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
@@ -60,7 +60,7 @@ export default function VatCalculator() {
                     <button
                         onClick={() => setType("supply")}
                         className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "supply"
-                                ? "bg-emerald-600 text-white shadow-sm"
+                                ? "bg-primary text-white shadow-sm"
                                 : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
@@ -78,7 +78,7 @@ export default function VatCalculator() {
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
                         placeholder={type === "total" ? "부가세 포함 금액" : "부가세 별도 금액"}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-xl text-white font-bold focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-xl text-white font-bold focus:ring-2 focus:ring-primary outline-none transition-all"
                     />
                 </div>
 

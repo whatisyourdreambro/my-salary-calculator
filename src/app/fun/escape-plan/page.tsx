@@ -36,7 +36,7 @@ const calculateYearsToTarget = (currentAssets: number, monthlySaving: number, re
 const ProgressBar = ({ percentage }: { percentage: number }) => (
   <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-6 overflow-hidden relative">
     <motion.div
-      className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 relative"
+      className="h-full bg-gradient-to-r from-blue-500 to-primary/80 relative"
       initial={{ width: 0 }}
       animate={{ width: `${Math.min(percentage, 100)}%` }}
       transition={{ duration: 1.5, ease: "easeOut" }}
@@ -77,10 +77,10 @@ export default function EscapePlanPage() {
     <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] text-slate-900 dark:text-slate-100 font-sans pb-20">
       {/* Hero */}
       <section className="relative pt-28 pb-14 overflow-hidden text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-400/10 dark:bg-blue-500/15 rounded-full blur-[120px] -z-10" />
         <div className="max-w-4xl mx-auto px-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-gradient-to-br from-blue-500 to-cyan-500 text-white mb-6 shadow-lg shadow-blue-500/30">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-gradient-to-br from-blue-500 to-primary/80 text-white mb-6 shadow-lg shadow-blue-500/30">
             <DoorOpen size={32} />
           </div>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900 dark:text-white">

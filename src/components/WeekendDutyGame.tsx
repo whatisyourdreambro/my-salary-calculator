@@ -27,9 +27,9 @@ interface GameState {
 }
 
 const PREF_CONFIG: Record<Preference, { icon: any, color: string, label: string, weight: number }> = {
-    HOPE: { icon: Heart, color: "text-rose-500", label: "희망", weight: 100 },
-    NEUTRAL: { icon: Meh, color: "text-zinc-400", label: "가능", weight: 10 },
-    NON_HOPE: { icon: Frown, color: "text-orange-500", label: "비희망", weight: 1 },
+    HOPE: { icon: Heart, color: "text-primary", label: "희망", weight: 100 },
+    NEUTRAL: { icon: Meh, color: "text-slate-500", label: "가능", weight: 10 },
+    NON_HOPE: { icon: Frown, color: "text-primary", label: "비희망", weight: 1 },
     UNAVAILABLE: { icon: X, color: "text-red-600", label: "불가", weight: 0 },
 };
 
@@ -189,67 +189,67 @@ export default function WeekendDutyGame() {
     };
 
     return (
-        <div className="w-full max-w-6xl mx-auto min-h-screen bg-zinc-950 text-white p-4 md:p-8 font-sans">
+        <div className="w-full max-w-6xl mx-auto min-h-screen bg-slate-50 text-white p-4 md:p-8 font-sans">
             {/* Header */}
             <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500 mb-4 tracking-tighter">
+                <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 mb-4 tracking-tighter">
                     OFFICE SURVIVAL
                 </h1>
-                <p className="text-zinc-400 text-lg">주말 당직, 운명의 룰렛을 돌려라!</p>
+                <p className="text-slate-500 text-lg">주말 당직, 운명의 룰렛을 돌려라!</p>
             </div>
 
             {/* Step 1: Setup */}
             {gameState.step === "setup" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in-up">
-                    <div className="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
+                    <div className="bg-white p-8 rounded-3xl border border-slate-200">
                         <label className="block text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <Calendar className="text-rose-500" /> 대상 날짜 입력
+                            <Calendar className="text-primary" /> 대상 날짜 입력
                         </label>
                         <textarea
                             value={datesInput}
                             onChange={(e) => setDatesInput(e.target.value)}
                             placeholder="11/23, 11/24, 11/30..."
-                            className="w-full h-40 bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-rose-500 outline-none resize-none"
+                            className="w-full h-40 bg-slate-50 border border-slate-200 rounded-xl p-4 text-white focus:border-primary outline-none resize-none"
                         />
-                        <p className="text-xs text-zinc-500 mt-2">쉼표(,)나 엔터로 구분</p>
+                        <p className="text-xs text-slate-500 mt-2">쉼표(,)나 엔터로 구분</p>
                     </div>
 
-                    <div className="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
+                    <div className="bg-white p-8 rounded-3xl border border-slate-200">
                         <label className="block text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <Users className="text-orange-500" /> 대상 인원 입력
+                            <Users className="text-primary" /> 대상 인원 입력
                         </label>
                         <textarea
                             value={peopleInput}
                             onChange={(e) => setPeopleInput(e.target.value)}
                             placeholder="김철수, 이영희, 박지성..."
-                            className="w-full h-40 bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-orange-500 outline-none resize-none"
+                            className="w-full h-40 bg-slate-50 border border-slate-200 rounded-xl p-4 text-white focus:border-primary outline-none resize-none"
                         />
                     </div>
 
-                    <div className="md:col-span-2 bg-zinc-900 p-8 rounded-3xl border border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between">
+                    <div className="md:col-span-2 bg-white p-8 rounded-3xl border border-slate-200 flex flex-col md:flex-row gap-8 items-center justify-between">
                         <div className="flex gap-8">
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">일일 근무 인원</label>
+                                <label className="block text-sm font-bold text-slate-500 mb-2">일일 근무 인원</label>
                                 <input
                                     type="number"
                                     value={shiftsPerDay}
                                     onChange={(e) => setShiftsPerDay(Number(e.target.value))}
-                                    className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 w-24 text-center font-bold text-xl"
+                                    className="bg-slate-50 border border-slate-200 rounded-xl p-3 w-24 text-center font-bold text-xl"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">기본 근무 제한</label>
+                                <label className="block text-sm font-bold text-slate-500 mb-2">기본 근무 제한</label>
                                 <input
                                     type="number"
                                     value={defaultMaxShifts}
                                     onChange={(e) => setDefaultMaxShifts(Number(e.target.value))}
-                                    className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 w-24 text-center font-bold text-xl"
+                                    className="bg-slate-50 border border-slate-200 rounded-xl p-3 w-24 text-center font-bold text-xl"
                                 />
                             </div>
                         </div>
                         <button
                             onClick={initializeMatrix}
-                            className="px-12 py-4 bg-gradient-to-r from-rose-600 to-orange-600 rounded-xl font-black text-xl hover:scale-105 transition-transform shadow-lg shadow-rose-500/20"
+                            className="px-12 py-4 bg-gradient-to-r from-primary to-primary/80 rounded-xl font-black text-xl hover:scale-105 transition-transform shadow-lg shadow-primary/20"
                         >
                             NEXT STEP
                         </button>
@@ -260,10 +260,10 @@ export default function WeekendDutyGame() {
             {/* Step 2: Preference Matrix */}
             {gameState.step === "matrix" && (
                 <div className="animate-fade-in-up">
-                    <div className="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
-                        <div className="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/50">
+                    <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                        <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Settings className="text-zinc-400" /> 근무 선호도 설정
+                                <Settings className="text-slate-500" /> 근무 선호도 설정
                             </h2>
                             <div className="flex gap-4 text-xs font-bold">
                                 {Object.values(PREF_CONFIG).map(c => (
@@ -276,9 +276,9 @@ export default function WeekendDutyGame() {
 
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-zinc-400 uppercase bg-zinc-950">
+                                <thead className="text-xs text-slate-500 uppercase bg-slate-50">
                                     <tr>
-                                        <th className="px-6 py-4 font-bold sticky left-0 bg-zinc-950 z-10">이름 / 제한</th>
+                                        <th className="px-6 py-4 font-bold sticky left-0 bg-slate-50 z-10">이름 / 제한</th>
                                         {gameState.dates.map(date => (
                                             <th key={date} className="px-6 py-4 font-bold text-center min-w-[100px]">{date}</th>
                                         ))}
@@ -286,14 +286,14 @@ export default function WeekendDutyGame() {
                                 </thead>
                                 <tbody>
                                     {gameState.people.map(person => (
-                                        <tr key={person.id} className="border-b border-zinc-800 hover:bg-zinc-800/30 transition-colors">
-                                            <td className="px-6 py-4 font-medium sticky left-0 bg-zinc-900 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.2)]">
+                                        <tr key={person.id} className="border-b border-slate-200 hover:bg-slate-100/30 transition-colors">
+                                            <td className="px-6 py-4 font-medium sticky left-0 bg-white z-10 shadow-[2px_0_5px_rgba(0,0,0,0.2)]">
                                                 <div className="flex items-center justify-between gap-4">
                                                     <span className="text-lg">{person.name}</span>
-                                                    <div className="flex items-center gap-2 bg-zinc-950 rounded-lg px-2 py-1">
-                                                        <button onClick={() => updateMaxShifts(person.id, -1)} className="text-zinc-500 hover:text-white">-</button>
-                                                        <span className="font-mono text-rose-500 font-bold">{person.maxShifts}</span>
-                                                        <button onClick={() => updateMaxShifts(person.id, 1)} className="text-zinc-500 hover:text-white">+</button>
+                                                    <div className="flex items-center gap-2 bg-slate-50 rounded-lg px-2 py-1">
+                                                        <button onClick={() => updateMaxShifts(person.id, -1)} className="text-slate-500 hover:text-white">-</button>
+                                                        <span className="font-mono text-primary font-bold">{person.maxShifts}</span>
+                                                        <button onClick={() => updateMaxShifts(person.id, 1)} className="text-slate-500 hover:text-white">+</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -323,7 +323,7 @@ export default function WeekendDutyGame() {
                     <div className="mt-8 flex justify-end">
                         <button
                             onClick={startGame}
-                            className="px-12 py-4 bg-gradient-to-r from-rose-600 to-orange-600 rounded-xl font-black text-xl hover:scale-105 transition-transform shadow-lg shadow-rose-500/20 flex items-center gap-2"
+                            className="px-12 py-4 bg-gradient-to-r from-primary to-primary/80 rounded-xl font-black text-xl hover:scale-105 transition-transform shadow-lg shadow-primary/20 flex items-center gap-2"
                         >
                             <Play className="fill-current" /> GAME START
                         </button>
@@ -334,10 +334,10 @@ export default function WeekendDutyGame() {
             {/* Step 3: Gaming */}
             {gameState.step === "gaming" && (
                 <div className="max-w-2xl mx-auto text-center animate-fade-in-up">
-                    <div className="bg-zinc-900 rounded-[3rem] p-12 border-4 border-zinc-800 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-500 via-orange-500 to-rose-500 animate-pulse" />
+                    <div className="bg-white rounded-[3rem] p-12 border-4 border-slate-200 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-primary/50 to-primary/80 animate-pulse" />
 
-                        <h3 className="text-2xl font-bold text-zinc-400 mb-8">
+                        <h3 className="text-2xl font-bold text-slate-500 mb-8">
                             TARGET DATE
                         </h3>
                         <div className="text-6xl font-black text-white mb-12 tracking-tighter">
@@ -363,7 +363,7 @@ export default function WeekendDutyGame() {
                                     </motion.div>
                                 </div>
                             ) : (
-                                <div className="text-zinc-500 text-xl font-mono">
+                                <div className="text-slate-500 text-xl font-mono">
                                     READY TO SPIN...
                                 </div>
                             )}
@@ -378,9 +378,9 @@ export default function WeekendDutyGame() {
                         </button>
                     </div>
 
-                    <div className="mt-8 text-left bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 h-40 overflow-y-auto font-mono text-sm text-zinc-400">
+                    <div className="mt-8 text-left bg-white/50 p-6 rounded-2xl border border-slate-200 h-40 overflow-y-auto font-mono text-sm text-slate-500">
                         {gameState.logs.map((log, i) => (
-                            <div key={i} className="mb-1 text-green-400">
+                            <div key={i} className="mb-1 text-primary">
                                 &gt; {log}
                             </div>
                         ))}
@@ -391,26 +391,26 @@ export default function WeekendDutyGame() {
             {/* Step 4: Result */}
             {gameState.step === "result" && (
                 <div className="animate-fade-in-up">
-                    <div ref={resultRef} className="bg-zinc-900 rounded-3xl border border-zinc-800 p-8 md:p-12 max-w-4xl mx-auto">
+                    <div ref={resultRef} className="bg-white rounded-3xl border border-slate-200 p-8 md:p-12 max-w-4xl mx-auto">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl font-black text-white mb-2">FINAL SCHEDULE</h2>
-                            <p className="text-zinc-500">확정된 근무표입니다. 스크린샷을 저장하세요.</p>
+                            <p className="text-slate-500">확정된 근무표입니다. 스크린샷을 저장하세요.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {gameState.dates.map(date => {
                                 const workers = gameState.people.filter(p => p.assignedShifts.includes(date));
                                 return (
-                                    <div key={date} className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 flex flex-col items-center text-center">
-                                        <div className="text-rose-500 font-black text-xl mb-4 border-b border-zinc-800 w-full pb-2">
+                                    <div key={date} className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col items-center text-center">
+                                        <div className="text-primary font-black text-xl mb-4 border-b border-slate-200 w-full pb-2">
                                             {date}
                                         </div>
                                         <div className="space-y-2 w-full">
                                             {workers.map(w => (
-                                                <div key={w.id} className="bg-zinc-900 rounded-lg py-2 px-4 font-bold text-white flex justify-between items-center">
+                                                <div key={w.id} className="bg-white rounded-lg py-2 px-4 font-bold text-white flex justify-between items-center">
                                                     <span>{w.name}</span>
-                                                    {w.preferences[date] === "HOPE" && <Heart size={12} className="text-rose-500" />}
-                                                    {w.preferences[date] === "NON_HOPE" && <Frown size={12} className="text-orange-500" />}
+                                                    {w.preferences[date] === "HOPE" && <Heart size={12} className="text-primary" />}
+                                                    {w.preferences[date] === "NON_HOPE" && <Frown size={12} className="text-primary" />}
                                                 </div>
                                             ))}
                                             {workers.length === 0 && <span className="text-zinc-600 italic">No workers</span>}
@@ -420,12 +420,12 @@ export default function WeekendDutyGame() {
                             })}
                         </div>
 
-                        <div className="mt-12 pt-8 border-t border-zinc-800">
-                            <h3 className="text-lg font-bold text-zinc-400 mb-4">근무 통계</h3>
+                        <div className="mt-12 pt-8 border-t border-slate-200">
+                            <h3 className="text-lg font-bold text-slate-500 mb-4">근무 통계</h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {gameState.people.map(p => (
-                                    <div key={p.id} className="bg-zinc-950 rounded-xl p-4 border border-zinc-800 flex justify-between items-center">
-                                        <span className="font-bold text-zinc-300">{p.name}</span>
+                                    <div key={p.id} className="bg-slate-50 rounded-xl p-4 border border-slate-200 flex justify-between items-center">
+                                        <span className="font-bold text-slate-600">{p.name}</span>
                                         <span className={`font-black text-xl ${p.assignedShifts.length > p.maxShifts ? "text-red-500" : "text-white"}`}>
                                             {p.assignedShifts.length} <span className="text-xs text-zinc-600 font-normal">/ {p.maxShifts}</span>
                                         </span>
@@ -438,13 +438,19 @@ export default function WeekendDutyGame() {
                     <div className="mt-8 flex justify-center gap-4">
                         <button
                             onClick={() => setGameState(prev => ({ ...prev, step: "setup" }))}
-                            className="px-8 py-4 bg-zinc-800 text-white rounded-xl font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2"
+                            className="px-8 py-4 bg-slate-100 text-white rounded-xl font-bold hover:bg-slate-200 transition-colors flex items-center gap-2"
                         >
                             <RotateCcw size={20} /> RESTART
                         </button>
                         <button
                             onClick={handleDownload}
-                            className="px-8 py-4 bg-white text-black rounded-xl font-bold hover:bg-zinc-200 transition-colors flex items-center gap-2"
+                            className="px-8 py-4 bg-white text-black rounded-xl font-bold hover:
+        param($m)
+        $n = [int]($m.Value -replace 'bg-zinc-','')
+        if ($n -ge 900) { 'bg-white' }
+        elseif ($n -ge 700) { 'bg-slate-100' }
+        else { 'bg-slate-50' }
+     transition-colors flex items-center gap-2"
                         >
                             <Download size={20} /> SAVE IMAGE
                         </button>

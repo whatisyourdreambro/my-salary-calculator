@@ -72,7 +72,7 @@ const purchasingPowerData = {
 };
 
 const CurrencyTicker = () => (
-  <div className="w-full overflow-hidden bg-black border-y border-yellow-500/20 py-3 mb-8 relative">
+  <div className="w-full overflow-hidden bg-black border-y border-primary/20 py-3 mb-8 relative">
     <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10 pointer-events-none" />
     <motion.div
       className="flex whitespace-nowrap gap-12"
@@ -80,11 +80,11 @@ const CurrencyTicker = () => (
       transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
     >
       {[...currencies, ...currencies, ...currencies].map((c, i) => (
-        <div key={i} className="flex items-center gap-3 text-sm font-medium text-zinc-400">
+        <div key={i} className="flex items-center gap-3 text-sm font-medium text-slate-500">
           <span className="text-xl grayscale opacity-70">{c.flag}</span>
-          <span className="font-serif text-yellow-500/80">{c.id}</span>
+          <span className="font-serif text-primary/80">{c.id}</span>
           <span className="text-white font-bold tracking-wider">{c.rate.toLocaleString()}</span>
-          <span className="text-xs text-emerald-500 flex items-center gap-1">
+          <span className="text-xs text-primary flex items-center gap-1">
             <TrendingUp size={10} /> LIVE
           </span>
         </div>
@@ -313,7 +313,7 @@ export default function ExchangeRateImpactCalculator() {
     fetchRates();
   };
 
-  const inputStyle = "w-full p-4 mt-1 bg-zinc-900 border border-zinc-800 rounded-xl focus:ring-1 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition disabled:opacity-50 text-white font-medium";
+  const inputStyle = "w-full p-4 mt-1 bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition disabled:opacity-50 text-white font-medium";
   const textInputStyle = `${inputStyle} text-center font-mono text-lg`;
 
   return (
@@ -323,26 +323,26 @@ export default function ExchangeRateImpactCalculator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 border border-yellow-500/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
-            <Crown className="w-8 h-8 text-yellow-500" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/80/20 border border-primary/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+            <Crown className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-4 tracking-tight">
             Global Wealth Intelligence
           </h2>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto font-light">
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto font-light">
             초고액 자산가를 위한 실시간 환율 영향 분석 및 자산 가치 시뮬레이션
           </p>
         </div>
 
-        <div className="bg-zinc-950 border border-zinc-800 p-8 sm:p-10 rounded-[2rem] shadow-2xl relative overflow-hidden" ref={reportRef}>
+        <div className="bg-slate-50 border border-slate-200 p-8 sm:p-10 rounded-[2rem] shadow-2xl relative overflow-hidden" ref={reportRef}>
           {/* Decorative Elements */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50/50 to-transparent" />
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-primary/50/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 relative z-10">
             {/* Input Section */}
             <div className="space-y-8">
-              <div className="bg-zinc-900/50 p-8 rounded-3xl border border-zinc-800/50 backdrop-blur-sm">
+              <div className="bg-white/50 p-8 rounded-3xl border border-slate-200/50 backdrop-blur-sm">
                 <CurrencyInput
                   label="분석할 자산 규모"
                   value={assetAmount}
@@ -356,7 +356,7 @@ export default function ExchangeRateImpactCalculator() {
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-xs font-bold text-yellow-500/80 uppercase tracking-wider mb-2 block">Comparison Currency</label>
+                  <label className="text-xs font-bold text-primary/80 uppercase tracking-wider mb-2 block">Comparison Currency</label>
                   <select
                     value={comparisonCurrency}
                     onChange={(e) => setComparisonCurrency(e.target.value)}
@@ -370,7 +370,7 @@ export default function ExchangeRateImpactCalculator() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-yellow-500/80 uppercase tracking-wider mb-2 block">Historical Date</label>
+                  <label className="text-xs font-bold text-primary/80 uppercase tracking-wider mb-2 block">Historical Date</label>
                   <input
                     type="date"
                     value={pastDate}
@@ -381,22 +381,22 @@ export default function ExchangeRateImpactCalculator() {
                 </div>
               </div>
 
-              <div className="space-y-4 p-6 border border-zinc-800 rounded-3xl bg-zinc-900/30">
+              <div className="space-y-4 p-6 border border-slate-200 rounded-3xl bg-white/30">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Exchange Rate ({comparisonCurrency} → {assetCurrency})</label>
-                  <div className="flex items-center gap-2 cursor-pointer hover:text-yellow-500 transition-colors" onClick={() => setIsManual(!isManual)}>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Exchange Rate ({comparisonCurrency} → {assetCurrency})</label>
+                  <div className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors" onClick={() => setIsManual(!isManual)}>
                     <span className="text-xs font-bold">MANUAL OVERRIDE</span>
-                    <div className={`w-3 h-3 rounded-full border ${isManual ? 'bg-yellow-500 border-yellow-500' : 'border-zinc-600'}`} />
+                    <div className={`w-3 h-3 rounded-full border ${isManual ? 'bg-primary/50 border-primary' : 'border-slate-200'}`} />
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
-                    <span className="text-xs text-zinc-500 block mb-1 text-center">PAST</span>
+                    <span className="text-xs text-slate-500 block mb-1 text-center">PAST</span>
                     <input type="text" value={manualPastRateStr} onChange={(e) => setManualPastRateStr(e.target.value)} disabled={!isManual} className={textInputStyle} />
                   </div>
-                  <ArrowRight className="text-zinc-700" />
+                  <ArrowRight className="text-primary" />
                   <div className="flex-1">
-                    <span className="text-xs text-zinc-500 block mb-1 text-center">CURRENT (LIVE)</span>
+                    <span className="text-xs text-slate-500 block mb-1 text-center">CURRENT (LIVE)</span>
                     <input type="text" value={manualCurrentRateStr} onChange={(e) => setManualCurrentRateStr(e.target.value)} disabled={!isManual || useDxy} className={textInputStyle} />
                   </div>
                 </div>
@@ -407,8 +407,8 @@ export default function ExchangeRateImpactCalculator() {
             <div className="flex flex-col justify-center">
               {isLoading ? (
                 <div className="text-center py-20">
-                  <Loader className="animate-spin mx-auto text-yellow-500 mb-6" size={48} />
-                  <p className="font-serif text-xl text-zinc-300">Analyzing Global Markets...</p>
+                  <Loader className="animate-spin mx-auto text-primary mb-6" size={48} />
+                  <p className="font-serif text-xl text-slate-600">Analyzing Global Markets...</p>
                 </div>
               ) : error ? (
                 <div className="flex items-center justify-center h-full p-8 bg-red-900/10 rounded-3xl border border-red-900/30">
@@ -422,12 +422,12 @@ export default function ExchangeRateImpactCalculator() {
                 <div className="space-y-8 h-full flex flex-col">
                   {/* Main Result Card */}
                   <div className={`p-10 rounded-[2.5rem] text-center transition-all duration-500 border relative overflow-hidden group ${analysis.changeAmount >= 0
-                    ? "bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border-emerald-500/20"
-                    : "bg-gradient-to-br from-rose-950/30 to-rose-900/10 border-rose-500/20"
+                    ? "bg-gradient-to-br from-primary/30 to-primary/80/10 border-primary/20"
+                    : "bg-gradient-to-br from-primary/30 to-primary/80/10 border-primary/20"
                     }`}>
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay" />
 
-                    <p className="font-serif text-zinc-400 mb-6 tracking-wide uppercase text-xs">
+                    <p className="font-serif text-slate-500 mb-6 tracking-wide uppercase text-xs">
                       Net Asset Value Impact
                     </p>
 
@@ -435,8 +435,8 @@ export default function ExchangeRateImpactCalculator() {
                       <span className="text-xl font-medium text-zinc-600 line-through decoration-zinc-600/50">
                         {resultSymbol}{formatNumber(analysis.pastValue)}
                       </span>
-                      <ArrowRight className="text-zinc-700 rotate-90 my-2" size={20} />
-                      <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${analysis.changeAmount >= 0 ? "text-emerald-400" : "text-rose-400"
+                      <ArrowRight className="text-primary rotate-90 my-2" size={20} />
+                      <span className={`text-5xl sm:text-6xl font-black tracking-tighter ${analysis.changeAmount >= 0 ? "text-primary" : "text-primary"
                         }`}>
                         <CountUp
                           end={analysis.currentValue}
@@ -449,8 +449,8 @@ export default function ExchangeRateImpactCalculator() {
                     </div>
 
                     <div className={`inline-flex items-center gap-3 px-6 py-2 rounded-full text-sm font-bold border ${analysis.changeAmount >= 0
-                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                      : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                      ? "bg-primary/50/10 border-primary/20 text-primary"
+                      : "bg-slate-500/10 border-primary/20 text-primary"
                       }`}>
                       {analysis.changeAmount >= 0 ? <TrendingUp size={16} /> : <TrendingUp size={16} className="rotate-180" />}
                       <CountUp
@@ -464,20 +464,20 @@ export default function ExchangeRateImpactCalculator() {
 
                   {/* Purchasing Power Cards */}
                   <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors group">
-                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <div className="bg-white p-6 rounded-3xl border border-slate-200 flex flex-col items-center justify-center text-center hover:border-primary/30 transition-colors group">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                         <Gem className="w-6 h-6 text-blue-400" />
                       </div>
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Luxury Index</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Luxury Index</p>
                       <p className="text-2xl font-bold text-white">
                         {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Units</span>
                       </p>
                     </div>
-                    <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors group">
-                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <Coffee className="w-6 h-6 text-amber-600" />
+                    <div className="bg-white p-6 rounded-3xl border border-slate-200 flex flex-col items-center justify-center text-center hover:border-primary/30 transition-colors group">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <Coffee className="w-6 h-6 text-primary" />
                       </div>
-                      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Lifestyle Index</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Lifestyle Index</p>
                       <p className="text-2xl font-bold text-white">
                         {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Cups</span>
                       </p>
@@ -485,7 +485,7 @@ export default function ExchangeRateImpactCalculator() {
                   </div>
 
                   {/* Chart */}
-                  <div className="h-48 bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
+                  <div className="h-48 bg-white p-6 rounded-3xl border border-slate-200">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 50, top: 0, bottom: 0 }}>
                         <XAxis type="number" hide />
@@ -511,14 +511,14 @@ export default function ExchangeRateImpactCalculator() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-zinc-900 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button onClick={handleReset} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+        <div className="mt-8 pt-8 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <button onClick={handleReset} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
             <RotateCcw size={18} /> RESET
           </button>
-          <button onClick={handleShareLink} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+          <button onClick={handleShareLink} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
             <LinkIcon size={18} /> SHARE LINK
           </button>
-          <button onClick={handleShareImage} className="w-full py-4 bg-zinc-900 text-zinc-400 font-bold rounded-2xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-2 border border-zinc-800">
+          <button onClick={handleShareImage} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
             <ImageIcon size={18} /> SAVE REPORT
           </button>
         </div>

@@ -27,7 +27,7 @@ export function DDayCalculator() {
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Calendar className="text-rose-500" /> D-Day 계산기
+                <Calendar className="text-primary" /> D-Day 계산기
             </h2>
             <div className="space-y-6">
                 <div>
@@ -36,19 +36,19 @@ export function DDayCalculator() {
                         type="date"
                         value={targetDate}
                         onChange={(e) => setTargetDate(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-rose-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                     />
                 </div>
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-slate-500 transition-colors"
                 >
                     계산하기
                 </button>
                 {result && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">결과</p>
-                        <p className="text-5xl font-black text-rose-500">{result}</p>
+                        <p className="text-5xl font-black text-primary">{result}</p>
                     </div>
                 )}
             </div>
@@ -94,7 +94,7 @@ export function AgeCalculator() {
                         type="date"
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
-                        className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-blue-500 outline-none"
+                        className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-blue-500 outline-none"
                     />
                 </div>
                 <button
@@ -155,7 +155,7 @@ export function WorkDayCalculator() {
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Briefcase className="text-green-500" /> 영업일(평일) 계산기
+                <Briefcase className="text-primary" /> 영업일(평일) 계산기
             </h2>
             <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -165,7 +165,7 @@ export function WorkDayCalculator() {
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-green-500 outline-none"
+                            className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                         />
                     </div>
                     <div>
@@ -174,20 +174,20 @@ export function WorkDayCalculator() {
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white focus:border-green-500 outline-none"
+                            className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                         />
                     </div>
                 </div>
                 <button
                     onClick={calculate}
-                    className="w-full py-4 bg-green-600 text-white font-bold rounded-xl hover:bg-green-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/50 transition-colors"
                 >
                     계산하기
                 </button>
                 {result !== null && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">주말 제외 영업일수</p>
-                        <p className="text-5xl font-black text-green-500">{result}일</p>
+                        <p className="text-5xl font-black text-primary">{result}일</p>
                     </div>
                 )}
             </div>

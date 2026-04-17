@@ -87,7 +87,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                     <TrendingUp className="w-4 h-4" />
                                     신입 초봉
                                 </div>
-                                <div className="text-2xl font-bold text-emerald-500">
+                                <div className="text-2xl font-bold text-primary">
                                     {company.entryLevelSalary.toLocaleString()}만원
                                 </div>
                             </div>
@@ -105,7 +105,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                     <Wallet className="w-4 h-4" />
                                     임원 평균
                                 </div>
-                                <div className="text-2xl font-bold text-purple-500">
+                                <div className="text-2xl font-bold text-primary">
                                     {company.executiveSalary.toLocaleString()}만원
                                 </div>
                             </div>

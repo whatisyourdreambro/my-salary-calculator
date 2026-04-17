@@ -253,12 +253,12 @@ export default function AssetAllocatorGame() {
                         <div className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(203,165,119,0.5)]">
                             {timeLeft}
                         </div>
-                        <span className="text-[10px] text-stone-500 uppercase font-bold">Seconds Left</span>
+                        <span className="text-[10px] text-slate-500 uppercase font-bold">Seconds Left</span>
                     </div>
 
                     <div className="flex flex-col items-end">
                         <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">High Score</span>
-                        <span className="text-lg font-serif font-bold text-stone-400 tabular-nums">
+                        <span className="text-lg font-serif font-bold text-slate-500 tabular-nums">
                             ${highScore.toLocaleString()}
                         </span>
                     </div>
@@ -285,16 +285,16 @@ export default function AssetAllocatorGame() {
                             </p>
 
                             <div className="grid grid-cols-2 gap-4 mb-10 max-w-xs w-full">
-                                <div className="flex items-center gap-2 text-sm text-stone-400">
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
                                     <span className="text-2xl">💎</span> <span className="font-bold text-white">+50</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-stone-400">
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
                                     <span className="text-2xl">🧈</span> <span className="font-bold text-white">+30</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-stone-400">
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
                                     <span className="text-2xl">🪙</span> <span className="font-bold text-white">+10</span>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-stone-400">
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
                                     <span className="text-2xl">💣</span> <span className="font-bold text-primary">-20</span>
                                 </div>
                             </div>
@@ -313,7 +313,7 @@ export default function AssetAllocatorGame() {
                         <div className="absolute inset-0 z-20 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
                             <Trophy className="w-20 h-20 text-[#CBA577] mb-6 drop-shadow-[0_0_20px_rgba(203,165,119,0.5)]" />
                             <h2 className="text-4xl font-serif font-bold text-white mb-2">SESSION CLOSED</h2>
-                            <p className="text-stone-400 mb-8 uppercase tracking-widest text-xs font-bold">Final Net Worth</p>
+                            <p className="text-slate-500 mb-8 uppercase tracking-widest text-xs font-bold">Final Net Worth</p>
 
                             <div className="text-7xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400 mb-12">
                                 ${score.toLocaleString()}
@@ -328,7 +328,7 @@ export default function AssetAllocatorGame() {
                                 </button>
                                 <button
                                     onClick={() => window.location.href = '/'}
-                                    className="border border-stone-700 text-stone-300 hover:bg-stone-800 rounded-full px-8 py-3 transition-all"
+                                    className="border border-slate-200 text-stone-300 hover:bg-slate-100 rounded-full px-8 py-3 transition-all"
                                 >
                                     EXIT
                                 </button>
@@ -339,11 +339,16 @@ export default function AssetAllocatorGame() {
 
                 {/* Controls Hint */}
                 {gameState === "playing" && (
-                    <div className="flex items-center gap-6 text-stone-500 text-xs font-bold uppercase tracking-widest opacity-50">
+                    <div className="flex items-center gap-6 text-slate-500 text-xs font-bold uppercase tracking-widest opacity-50">
                         <div className="flex items-center gap-2">
                             <Monitor className="w-4 h-4" /> Move Mouse
                         </div>
-                        <div className="w-px h-4 bg-stone-700" />
+                        <div className="w-px h-4 
+        param($m)
+        $n = [int]($m.Value -replace 'bg-stone-','')
+        if ($n -ge 900) { 'bg-white' }
+        else { 'bg-slate-50' }
+    " />
                         <div className="flex items-center gap-2">
                             <Smartphone className="w-4 h-4" /> Drag Finger
                         </div>

@@ -78,7 +78,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                         label="신입 영끌 연봉"
                         value={formatMoney(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0))}
                         sub="기본급 + 평균 인센티브"
-                        color="text-emerald-500"
+                        color="text-primary"
                     />
                     <StatCard
                         icon={Clock}
@@ -92,14 +92,14 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                         label="기업 문화 점수"
                         value={`${company.culture.score}/10`}
                         sub={company.culture.keywords[0]}
-                        color="text-yellow-500"
+                        color="text-primary"
                     />
                     <StatCard
                         icon={Zap}
                         label="인센티브 포텐"
                         value={`최대 ${company.salary.entry.incentive.max}%`}
                         sub="연봉 대비 비율"
-                        color="text-purple-500"
+                        color="text-primary"
                     />
                 </div>
 
@@ -139,7 +139,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                         </section>
 
                         {/* Life Simulator */}
-                        <section className="bg-gradient-to-br from-indigo-900 to-purple-900 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
+                        <section className="bg-gradient-to-br from-indigo-900 to-primary/80 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                             <h2 className="text-xl font-bold mb-4 flex items-center gap-2 relative z-10">
                                 <Car className="w-5 h-5" />
@@ -151,7 +151,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                                     <span className="text-white font-bold">테슬라 Model 3</span>를 사는데 얼마나 걸릴까요?
                                 </p>
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-5xl font-black text-yellow-400">
+                                    <span className="text-5xl font-black text-primary">
                                         <CountUp end={monthsToTesla} duration={2} />
                                     </span>
                                     <span className="text-xl font-bold">개월</span>
@@ -179,7 +179,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                                 <div>
                                     <p className="text-sm text-muted-foreground mb-1">근무 형태</p>
                                     <div className="flex items-center gap-2">
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${company.workLife.remoteWork.policy === 'remote' ? 'bg-green-100 text-green-700' :
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${company.workLife.remoteWork.policy === 'remote' ? 'bg-primary/5 text-primary' :
                                             company.workLife.remoteWork.policy === 'hybrid' ? 'bg-blue-100 text-blue-700' :
                                                 'bg-slate-100 text-slate-700'
                                             }`}>
@@ -222,7 +222,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                         {/* Benefits */}
                         <section className="bg-card border border-border rounded-2xl p-6 shadow-lg">
                             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <Briefcase className="w-5 h-5 text-purple-500" />
+                                <Briefcase className="w-5 h-5 text-primary" />
                                 주요 복지 (Benefits)
                             </h2>
                             <div className="space-y-3">
@@ -233,7 +233,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
                                             <p className="text-sm font-bold">{benefit.title}</p>
                                             <p className="text-xs text-muted-foreground">{benefit.description}</p>
                                             {benefit.value && benefit.value > 0 && (
-                                                <p className="text-xs text-emerald-500 font-medium mt-0.5">
+                                                <p className="text-xs text-primary font-medium mt-0.5">
                                                     + 연 {formatMoney(benefit.value)} 가치
                                                 </p>
                                             )}

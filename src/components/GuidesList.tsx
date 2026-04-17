@@ -18,7 +18,7 @@ const GuideCard = ({ guide }: { guide: Guide }) => {
   const levelColor =
     guide.level === "고급" ? "border-red-500 text-red-500"
     : guide.level === "중급" ? "border-blue-500 text-blue-500"
-    : "border-green-500 text-green-500";
+    : "border-primary text-primary";
 
   return (
     <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
@@ -95,7 +95,7 @@ export default function GuidesList({ guides, categories }: GuidesListProps) {
     <div className="space-y-16">
         {/* Featured Section */}
         <section>
-            <h2 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-3"><Star className="w-8 h-8 text-amber-400"/> 인기 금융 가이드 TOP 3</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-3"><Star className="w-8 h-8 text-primary"/> 인기 금융 가이드 TOP 3</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {featuredGuides.map(guide => <GuideCard key={guide.slug} guide={guide} />)}
             </div>

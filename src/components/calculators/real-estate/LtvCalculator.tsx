@@ -21,10 +21,10 @@ export default function LtvCalculator() {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-zinc-200 dark:border-slate-200 overflow-hidden">
-            <div className="p-6 border-b border-zinc-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
+        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-slate-200 dark:border-slate-200 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                    <Home className="w-5 h-5 text-green-600" />
+                    <Home className="w-5 h-5 text-primary" />
                     LTV (주택담보대출비율) 계산기
                 </h2>
                 <p className="text-sm text-slate-500 mt-1">
@@ -39,7 +39,7 @@ export default function LtvCalculator() {
                         type="text"
                         value={price}
                         onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                        className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-lg font-bold"
+                        className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="500,000,000"
                     />
                 </div>
@@ -50,14 +50,14 @@ export default function LtvCalculator() {
                         type="text"
                         value={loan}
                         onChange={(e) => setLoan(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
-                        className="w-full p-3 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-transparent text-lg font-bold"
+                        className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="300,000,000"
                     />
                 </div>
 
                 <button
                     onClick={calculateLTV}
-                    className="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-primary hover:bg-primary text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                     <Calculator className="w-5 h-5" /> 계산하기
                 </button>
@@ -66,10 +66,10 @@ export default function LtvCalculator() {
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 text-center border border-green-100 dark:border-green-800"
+                        className="bg-primary/5 dark:bg-primary/20 rounded-xl p-6 text-center border border-primary dark:border-primary"
                     >
                         <p className="text-sm text-slate-500 dark:text-slate-600 mb-1">당신의 LTV는</p>
-                        <p className="text-4xl font-black text-green-600 dark:text-green-400">
+                        <p className="text-4xl font-black text-primary dark:text-primary">
                             {ltv.toFixed(2)}%
                         </p>
                         <div className="mt-4 text-xs text-slate-500 text-left bg-white dark:bg-black/20 p-3 rounded-lg">
@@ -80,7 +80,7 @@ export default function LtvCalculator() {
                 )}
             </div>
 
-            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-zinc-200 dark:border-slate-200">
+            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-slate-200 dark:border-slate-200">
                 <AdUnit slotId="1231231234" format="rectangle" label="LTV Calculator Ad" />
             </div>
         </div>

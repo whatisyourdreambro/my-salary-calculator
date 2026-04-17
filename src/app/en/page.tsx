@@ -12,7 +12,7 @@ export default function GlobalLandingPage() {
                     <Globe className="w-4 h-4" />
                     Global Expansion
                 </div>
-                <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
+                <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-primary/50 to-primary/80">
                     MoneySalary<br />Global
                 </h1>
                 <p className="text-xl text-slate-400 mb-10">

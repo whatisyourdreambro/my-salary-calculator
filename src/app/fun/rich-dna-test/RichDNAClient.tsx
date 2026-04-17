@@ -52,7 +52,7 @@ const resultTypes = {
         icon: Castle,
         description: "당신은 기업의 내재 가치를 보고, 시장의 소음에도 흔들리지 않는 강철 멘탈의 소유자입니다. '복리'라는 눈덩이를 굴려 거대한 부를 쌓을 '시간의 마법사' 타입입니다.",
         color: "text-blue-400",
-        gradient: "from-blue-500 to-cyan-500",
+        gradient: "from-blue-500 to-primary/80",
         bg: "bg-blue-900/20",
         borderColor: "border-blue-500/30",
     },
@@ -62,7 +62,7 @@ const resultTypes = {
         icon: Rocket,
         description: "당신은 리스크를 두려워하지 않으며, 미래에 대한 확신과 대담한 상상력으로 세상을 놀라게 합니다. 불가능에 도전하여 인류의 역사를 바꿀 '혁신가' 타입입니다.",
         color: "text-primary",
-        gradient: "from-red-500 to-orange-500",
+        gradient: "from-red-500 to-primary/80",
         bg: "bg-primary/20",
         borderColor: "border-primary/30",
     },
@@ -72,7 +72,7 @@ const resultTypes = {
         icon: Factory,
         description: "당신은 압도적인 시장 지배력과 독점적 지위를 통해 부를 축적하는 능력이 탁월합니다. 경쟁자를 압도하고, 거대한 부의 제국을 건설할 '제국 건설자' 타입입니다.",
         color: "text-primary",
-        gradient: "from-emerald-600 to-teal-600",
+        gradient: "from-primary to-primary/80",
         bg: "bg-primary/20",
         borderColor: "border-primary/30",
     },
@@ -82,7 +82,7 @@ const resultTypes = {
         icon: Gem,
         description: "당신은 비관론이 극에 달했을 때가 최고의 기회임을 알고 있습니다. 남들이 공포에 떨 때 과감히 투자하고, 위기 속에서 숨겨진 보석을 찾아내는 '영적 투자자' 타입입니다.",
         color: "text-primary",
-        gradient: "from-purple-500 to-pink-500",
+        gradient: "from-primary to-primary/80",
         bg: "bg-primary/20",
         borderColor: "border-primary/30",
     },
@@ -141,11 +141,11 @@ export default function RichDNAClient() {
 
             {/* Hero Section */}
             <section className="relative pt-28 pb-14 text-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10" />
 
                 <div className="max-w-4xl mx-auto px-4">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/10 dark:bg-primary/30 border border-yellow-200 dark:border-primary/50 mb-6 shadow-md">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/10 dark:bg-primary/30 border border-primary dark:border-primary/50 mb-6 shadow-md">
                         <Gem className="w-10 h-10 text-primary" />
                     </div>
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-4">
@@ -177,14 +177,14 @@ export default function RichDNAClient() {
                                             QUESTION {step + 1}
                                         </span>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-24 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
                                                 <motion.div
                                                     className="h-full bg-primary"
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${((step + 1) / questions.length) * 100}%` }}
                                                 />
                                             </div>
-                                            <span className="text-sm font-medium text-zinc-500">
+                                            <span className="text-sm font-medium text-slate-500">
                                                 {step + 1} / {questions.length}
                                             </span>
                                         </div>
@@ -205,7 +205,7 @@ export default function RichDNAClient() {
                                                 className="w-full text-left p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 group relative overflow-hidden active:scale-[0.99]"
                                             >
                                                 <div className="flex items-center justify-between relative z-10">
-                                                    <span className="text-lg font-medium text-zinc-300 group-hover:text-primary transition-colors">
+                                                    <span className="text-lg font-medium text-slate-600 group-hover:text-primary transition-colors">
                                                         {answer.text}
                                                     </span>
                                                     <ArrowRight className="w-5 h-5 text-zinc-600 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
@@ -232,12 +232,12 @@ export default function RichDNAClient() {
                                     </div>
 
                                     <div className="p-8 sm:p-16 text-center relative z-10">
-                                        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-zinc-900 shadow-xl mb-8 border-4 border-white/5 ring-4 ring-black/20">
+                                        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white shadow-xl mb-8 border-4 border-white/5 ring-4 ring-black/20">
                                             <ResultIcon className={`w-12 h-12 ${result.color}`} />
                                         </div>
 
                                         <div className="mb-8">
-                                            <p className="text-xs font-bold tracking-[0.3em] uppercase text-zinc-500 mb-3">
+                                            <p className="text-xs font-bold tracking-[0.3em] uppercase text-slate-500 mb-3">
                                                 CERTIFICATE OF WEALTH DNA
                                             </p>
                                             <h2 className={`text-5xl sm:text-6xl font-black mb-4 tracking-tight ${result.color} drop-shadow-lg`}>
@@ -245,7 +245,7 @@ export default function RichDNAClient() {
                                             </h2>
                                             <div className="flex items-center justify-center gap-4">
                                                 <div className="h-px w-12 bg-white/10" />
-                                                <p className="text-xl font-serif italic text-zinc-300">
+                                                <p className="text-xl font-serif italic text-slate-600">
                                                     {result.subtitle}
                                                 </p>
                                                 <div className="h-px w-12 bg-white/10" />
@@ -258,7 +258,7 @@ export default function RichDNAClient() {
                                             </p>
                                         </div>
 
-                                        <div className="flex items-center justify-between text-xs text-zinc-500 font-mono border-t border-white/10 pt-6">
+                                        <div className="flex items-center justify-between text-xs text-slate-500 font-mono border-t border-white/10 pt-6">
                                             <div className="flex gap-4">
                                                 <span>ISSUED: {new Date().toLocaleDateString()}</span>
                                                 <span>NO: {Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
@@ -267,14 +267,14 @@ export default function RichDNAClient() {
                                     </div>
 
                                     {/* Gold Foil Effect Bottom */}
-                                    <div className="h-2 bg-gradient-to-r from-yellow-500 via-yellow-200 to-yellow-500" />
+                                    <div className="h-2 bg-gradient-to-r from-primary via-primary/50 to-primary/80" />
                                 </div>
 
                                 {/* Action Buttons */}
                                 <div className="flex flex-col gap-4 max-w-sm mx-auto">
                                     <button
                                         onClick={resetTest}
-                                        className="w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-zinc-300 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 font-bold text-slate-600 transition-all flex items-center justify-center gap-2"
                                     >
                                         <RefreshCw size={18} /> 다시 테스트하기
                                     </button>
@@ -287,7 +287,7 @@ export default function RichDNAClient() {
                                     {/* Fun Hub Link */}
                                     <Link
                                         href="/fun"
-                                        className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-primary/30 text-zinc-400 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-4 rounded-xl bg-white border border-white/10 hover:border-primary/30 text-slate-500 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
                                     >
                                         <TrendingUp size={18} /> 다른 테스트 보러가기
                                     </Link>

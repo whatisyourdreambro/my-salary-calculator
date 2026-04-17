@@ -79,7 +79,7 @@ export default function SalaryDBPage() {
                                             {company.logo}
                                         </div>
                                         <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${company.tier === 'conglomerate' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                                                company.tier === 'unicorn' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' :
+                                                company.tier === 'unicorn' ? 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-primary' :
                                                     'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                                             }`}>
                                             {company.tier}

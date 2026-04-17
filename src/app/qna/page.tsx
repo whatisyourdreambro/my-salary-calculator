@@ -83,7 +83,7 @@ export default function QnAPage() {
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6 leading-tight">
               금융에 대한 <br className="sm:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-emerald-400">모든 질문과 해답</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-primary/80">모든 질문과 해답</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-300 leading-relaxed font-light">
               급여, 세금, 퇴직금부터 재테크까지.<br className="hidden sm:block" />
@@ -217,7 +217,7 @@ export default function QnAPage() {
                                 {/* Details */}
                                 <div className="pl-2 sm:pl-4 border-l-2 border-border space-y-6">
                                   <h4 className="font-bold text-foreground flex items-center gap-2 text-lg">
-                                    <Sparkles className="w-5 h-5 text-yellow-500" />
+                                    <Sparkles className="w-5 h-5 text-primary" />
                                     상세 설명
                                   </h4>
                                   <ul className="space-y-4 text-muted-foreground">
@@ -235,9 +235,9 @@ export default function QnAPage() {
 
                                 {/* Tip */}
                                 {item.answer.tip && (
-                                  <div className="p-5 bg-yellow-500/10 rounded-2xl border border-yellow-500/20">
+                                  <div className="p-5 bg-primary/50/10 rounded-2xl border border-primary/20">
                                     <p className="text-base">
-                                      <span className="font-bold text-yellow-600 dark:text-yellow-400 mr-2 flex items-center gap-2 mb-2">
+                                      <span className="font-bold text-primary dark:text-primary mr-2 flex items-center gap-2 mb-2">
                                         <Sparkles className="w-4 h-4" />
                                         Honey Tip 🍯
                                       </span>
