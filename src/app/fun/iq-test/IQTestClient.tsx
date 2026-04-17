@@ -151,28 +151,29 @@ export default function IQTestClient() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-zinc-950 py-12 px-4 font-sans relative">
-            {/* Simple Grid Background */}
-            <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5 pointer-events-none" />
+        <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] font-sans relative">
 
-            <div className="max-w-2xl mx-auto relative z-10">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 text-emerald-500 mb-6 shadow-2xl shadow-emerald-500/10">
+            {/* Hero Section */}
+            <section className="relative pt-28 pb-14 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-400/10 dark:bg-emerald-500/15 rounded-full blur-[120px] -z-10" />
+                <div className="max-w-4xl mx-auto px-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/50 text-emerald-500 mb-6 shadow-md">
                         <Brain size={32} />
                     </div>
-                    <h1 className="text-4xl font-black tracking-tight text-white mb-4">
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
                         멘사급 <span className="text-emerald-500">IQ 테스트</span>
                     </h1>
-                    <p className="text-lg text-zinc-400">
+                    <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
                         상위 1%에 도전하세요.<br />
                         15개의 논리 문제가 당신을 기다립니다.
                     </p>
                 </div>
+            </section>
 
-                {/* Ad Unit: Top */}
                 {/* Ad Unit: Top - REMOVED */}
 
+            <div className="max-w-2xl mx-auto px-4 pb-20 relative z-10">
                 <AnimatePresence mode="wait">
                     {!showResult ? (
                         <motion.div
@@ -180,7 +181,7 @@ export default function IQTestClient() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-zinc-900/50 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/10 p-8"
+                            className="toss-card p-8"
                         >
                             {/* Progress Bar */}
                             <div className="mb-8">

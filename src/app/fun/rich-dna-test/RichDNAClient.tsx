@@ -137,32 +137,30 @@ export default function RichDNAClient() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-zinc-950 px-4 py-12 sm:py-16 relative overflow-hidden font-sans">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-600/10 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px]" />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5" />
-            </div>
+        <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] font-sans relative overflow-hidden">
 
-            <div className="max-w-4xl mx-auto relative z-10">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-zinc-900 border border-yellow-500/20 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)] animate-float">
+            {/* Hero Section */}
+            <section className="relative pt-28 pb-14 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-yellow-400/10 dark:bg-yellow-500/15 rounded-full blur-[120px] -z-10" />
+
+                <div className="max-w-4xl mx-auto px-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 mb-6 shadow-md">
                         <Gem className="w-10 h-10 text-yellow-500" />
                     </div>
-                    <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl mb-4">
-                        부자 DNA <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400">테스트</span>
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-4">
+                        부자 DNA <span className="text-yellow-500">테스트</span>
                     </h1>
-                    <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-                        당신 안에 잠든 억만장자의 본능을 깨우세요.<br />
+                    <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+                        당신 안에 잠든 억만장자의 본능을 꺼우세요.<br />
                         세계적인 부호들과 당신의 싱크로율은?
                     </p>
                 </div>
+            </section>
 
-                {/* Ad Unit: Top */}
                 {/* Ad Unit: Top - REMOVED */}
 
+            <div className="max-w-4xl mx-auto px-4 pb-20 relative z-10">
                 <div className="max-w-3xl mx-auto relative min-h-[500px]">
                     <AnimatePresence mode="wait">
                         {!showResult ? (
@@ -171,7 +169,7 @@ export default function RichDNAClient() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
-                                className="bg-zinc-900/60 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 sm:p-12 shadow-2xl relative overflow-hidden"
+                                className="toss-card p-8 sm:p-12 relative overflow-hidden"
                             >
                                 <div className="relative z-10">
                                     <div className="flex justify-between items-center mb-10">
@@ -225,7 +223,7 @@ export default function RichDNAClient() {
                                 className="space-y-8"
                             >
                                 {/* Certificate Card */}
-                                <div className={`bg-zinc-900/80 backdrop-blur-xl rounded-[2rem] shadow-2xl border-2 ${result.borderColor} overflow-hidden relative`}>
+                                <div className={`toss-card overflow-hidden relative border-2 ${result.borderColor}`}>
 
                                     {/* Decorative Background */}
                                     <div className={`absolute top-0 left-0 w-full h-48 bg-gradient-to-b ${result.gradient} opacity-20`} />

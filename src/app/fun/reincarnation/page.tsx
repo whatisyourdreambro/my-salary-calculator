@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CurrencyInput from "@/components/CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -56,35 +56,29 @@ const OCCUPATIONS: LifeAttribute[] = [
   { name: "편의점 알바", rarity: "F", description: "폐기 도시락으로 끼니를 때웁니다." },
 ];
 
-// --- Helper Functions ---
-
 const getRarityColor = (rarity: Rarity) => {
   switch (rarity) {
-    case "S": return "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]";
-    case "A": return "text-purple-400";
-    case "B": return "text-blue-400";
-    case "C": return "text-green-400";
-    case "F": return "text-slate-500";
-    default: return "text-white";
+    case "S": return "text-yellow-500 font-black";
+    case "A": return "text-purple-500 font-black";
+    case "B": return "text-blue-500 font-bold";
+    case "C": return "text-green-500 font-bold";
+    case "F": return "text-slate-400 font-medium";
+    default: return "text-slate-700 dark:text-slate-300";
   }
 };
 
 const getRarityBg = (rarity: Rarity) => {
   switch (rarity) {
-    case "S": return "bg-yellow-500/20 border-yellow-500/50";
-    case "A": return "bg-purple-500/20 border-purple-500/50";
-    case "B": return "bg-blue-500/20 border-blue-500/50";
-    case "C": return "bg-green-500/20 border-green-500/50";
-    case "F": return "bg-slate-500/20 border-slate-500/50";
-    default: return "bg-slate-800 border-slate-700";
+    case "S": return "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700/50";
+    case "A": return "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700/50";
+    case "B": return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700/50";
+    case "C": return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700/50";
+    case "F": return "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700";
+    default: return "bg-slate-100 border-slate-200";
   }
 };
 
 const pickRandom = (items: LifeAttribute[], karmaMultiplier: number): LifeAttribute => {
-  // Higher karma = higher chance of better rarity
-  // Karma 1.0 = normal weights
-  // Karma 2.0 = S/A tier weights doubled
-
   const weightedItems = items.map(item => {
     let weight = 1;
     if (item.rarity === "S") weight = 1 * karmaMultiplier;
@@ -124,7 +118,6 @@ export default function ReincarnationPage() {
     setResult(null);
 
     const annualSalary = Number(salary.replace(/,/g, ""));
-    // Karma calculation: 50m = 1.0, 100m = 1.5, 200m = 2.0...
     const karma = Math.max(0.5, Math.min(3.0, 0.5 + (annualSalary / 100000000)));
 
     setTimeout(() => {
@@ -133,7 +126,7 @@ export default function ReincarnationPage() {
         spoon: pickRandom(SPOONS, karma),
         talent: pickRandom(TALENTS, karma),
         occupation: pickRandom(OCCUPATIONS, karma),
-        lifeSpan: Math.floor(60 + Math.random() * 40 + (karma * 5)), // 60 ~ 100+
+        lifeSpan: Math.floor(60 + Math.random() * 40 + (karma * 5)),
       });
       setIsSpinning(false);
     }, 3000);
@@ -144,50 +137,33 @@ export default function ReincarnationPage() {
     const text = `[인생 2회차 결과]\n국적: ${result.country.name}\n계급: ${result.spoon.name}\n직업: ${result.occupation.name}\n\n당신의 다음 생이 궁금하다면?`;
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: "인생 2회차 시뮬레이터",
-          text: text,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.error("Share failed", err);
-      }
+        await navigator.share({ title: "인생 2회차 시뮬레이터", text, url: window.location.href });
+      } catch { /* cancelled */ }
     } else {
       navigator.clipboard.writeText(text).then(() => alert("결과가 복사되었습니다!"));
     }
   };
 
   return (
-    <main className="w-full min-h-screen bg-black text-white font-sans overflow-hidden relative flex flex-col items-center py-12 px-4">
-      {/* Premium Aurora Background (Consistent with Home) */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[120px] animate-blob" />
-        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] bg-emerald-500/10 rounded-full blur-[120px] animate-blob animation-delay-4000" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-2xl flex flex-col items-center">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="inline-block mb-4 p-4 rounded-full bg-indigo-500/10 border border-indigo-500/30"
-          >
-            <Dna className="w-10 h-10 text-indigo-400 animate-spin-slow" />
-          </motion.div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-            LIFE GACHA
+    <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] font-sans pb-20">
+      {/* Hero Section */}
+      <section className="relative pt-28 pb-14 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-indigo-400/10 dark:bg-indigo-500/15 rounded-full blur-[120px] -z-10" />
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="inline-block mb-5 p-4 rounded-[20px] bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-700/50">
+            <Dna className="w-10 h-10 text-indigo-500" />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-white mb-4">
+            LIFE <span className="text-indigo-600">GACHA</span>
           </h1>
-          <p className="mt-4 text-indigo-200/60 text-lg font-light tracking-wide">
-            당신의 현생 연봉이 다음 생의 <span className="text-indigo-400 font-bold">운명(Karma)</span>을 결정합니다.
+          <p className="mt-2 text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
+            당신의 현생 연봉이 다음 생의 <span className="text-indigo-600 font-bold">운명(Karma)</span>을 결정합니다.
           </p>
         </div>
+      </section>
 
-        {/* Ad Unit */}
-        {/* Ad Unit: Top - REMOVED */}
-
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 flex flex-col items-center">
         {/* Input Section */}
         <AnimatePresence mode="wait">
           {!isSpinning && !result && (
@@ -197,18 +173,16 @@ export default function ReincarnationPage() {
               exit={{ opacity: 0, y: -20 }}
               className="w-full max-w-md space-y-8"
             >
-              <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/10 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="toss-card p-8">
                 <CurrencyInput
                   label="현생의 연봉 (Karma Point)"
                   value={salary}
                   onValueChange={setSalary}
                   quickAmounts={[30000000, 50000000, 100000000]}
-                  className="text-center text-3xl font-black bg-black/30 border-white/20 text-indigo-300 focus:border-indigo-500 h-16"
                 />
                 <button
                   onClick={handleSpin}
-                  className="w-full mt-8 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xl font-black rounded-2xl shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
+                  className="toss-button-primary mt-8"
                 >
                   <Sparkles className="w-6 h-6" />
                   환생 가챠 돌리기
@@ -229,10 +203,10 @@ export default function ReincarnationPage() {
             >
               <div className="relative w-48 h-48 mb-8">
                 <motion.div
-                  className="absolute inset-0 border-4 border-indigo-500/30 rounded-full"
+                  className="absolute inset-0 border-4 border-indigo-200 dark:border-indigo-900 rounded-full"
                 />
                 <motion.div
-                  className="absolute inset-0 border-4 border-t-indigo-400 border-r-purple-400 border-b-pink-400 border-l-transparent rounded-full"
+                  className="absolute inset-0 border-4 border-t-indigo-500 border-r-purple-500 border-b-pink-500 border-l-transparent rounded-full"
                   animate={{ rotate: 1080 }}
                   transition={{ duration: 3, ease: "circOut" }}
                 />
@@ -240,8 +214,8 @@ export default function ReincarnationPage() {
                   <span className="text-6xl animate-pulse">🧬</span>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">영혼 데이터 재구성 중...</h2>
-              <p className="text-indigo-300">당신의 카르마를 분석하고 있습니다.</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">영혼 데이터 재구성 중...</h2>
+              <p className="text-indigo-500 dark:text-indigo-400 font-medium">당신의 카르마를 분석하고 있습니다.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -254,96 +228,91 @@ export default function ReincarnationPage() {
               animate={{ opacity: 1, y: 0 }}
               className="w-full max-w-lg"
             >
-              <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-                {/* Background Glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none" />
-
-                <div className="text-center mb-8 relative z-10">
-                  <div className="inline-block px-4 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/50 text-indigo-300 text-sm font-bold mb-4">
+              <div className="toss-card p-8 relative overflow-hidden">
+                <div className="text-center mb-8">
+                  <div className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-sm font-bold mb-4">
                     REINCARNATION COMPLETE
                   </div>
-                  <h2 className="text-3xl font-bold text-white">당신의 다음 생은?</h2>
+                  <h2 className="text-3xl font-black text-slate-900 dark:text-white">당신의 다음 생은?</h2>
                 </div>
 
-                <div className="space-y-4 relative z-10">
+                <div className="space-y-3">
                   {/* Country */}
                   <div className={`p-4 rounded-2xl border ${getRarityBg(result.country.rarity)} flex items-center gap-4`}>
-                    <div className="p-3 rounded-xl bg-black/30">
-                      <Globe2 className={`w-6 h-6 ${getRarityColor(result.country.rarity)}`} />
+                    <div className="p-3 rounded-xl bg-white/60 dark:bg-black/20">
+                      <Globe2 className={`w-5 h-5 ${getRarityColor(result.country.rarity)}`} />
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-400 uppercase tracking-wider">Nationality</p>
-                      <h3 className={`text-lg font-bold ${getRarityColor(result.country.rarity)}`}>{result.country.name}</h3>
-                      <p className="text-xs text-slate-400 mt-1">{result.country.description}</p>
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Nationality</p>
+                      <h3 className={`text-base font-bold ${getRarityColor(result.country.rarity)}`}>{result.country.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{result.country.description}</p>
                     </div>
-                    <div className="ml-auto text-xl font-black italic opacity-50">{result.country.rarity}</div>
+                    <div className={`text-lg font-black italic ${getRarityColor(result.country.rarity)}`}>{result.country.rarity}</div>
                   </div>
 
                   {/* Spoon */}
                   <div className={`p-4 rounded-2xl border ${getRarityBg(result.spoon.rarity)} flex items-center gap-4`}>
-                    <div className="p-3 rounded-xl bg-black/30">
-                      <Crown className={`w-6 h-6 ${getRarityColor(result.spoon.rarity)}`} />
+                    <div className="p-3 rounded-xl bg-white/60 dark:bg-black/20">
+                      <Crown className={`w-5 h-5 ${getRarityColor(result.spoon.rarity)}`} />
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-400 uppercase tracking-wider">Class</p>
-                      <h3 className={`text-lg font-bold ${getRarityColor(result.spoon.rarity)}`}>{result.spoon.name}</h3>
-                      <p className="text-xs text-slate-400 mt-1">{result.spoon.description}</p>
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Class</p>
+                      <h3 className={`text-base font-bold ${getRarityColor(result.spoon.rarity)}`}>{result.spoon.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{result.spoon.description}</p>
                     </div>
-                    <div className="ml-auto text-xl font-black italic opacity-50">{result.spoon.rarity}</div>
+                    <div className={`text-lg font-black italic ${getRarityColor(result.spoon.rarity)}`}>{result.spoon.rarity}</div>
                   </div>
 
                   {/* Talent */}
                   <div className={`p-4 rounded-2xl border ${getRarityBg(result.talent.rarity)} flex items-center gap-4`}>
-                    <div className="p-3 rounded-xl bg-black/30">
-                      <Zap className={`w-6 h-6 ${getRarityColor(result.talent.rarity)}`} />
+                    <div className="p-3 rounded-xl bg-white/60 dark:bg-black/20">
+                      <Zap className={`w-5 h-5 ${getRarityColor(result.talent.rarity)}`} />
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-400 uppercase tracking-wider">Talent</p>
-                      <h3 className={`text-lg font-bold ${getRarityColor(result.talent.rarity)}`}>{result.talent.name}</h3>
-                      <p className="text-xs text-slate-400 mt-1">{result.talent.description}</p>
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Talent</p>
+                      <h3 className={`text-base font-bold ${getRarityColor(result.talent.rarity)}`}>{result.talent.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{result.talent.description}</p>
                     </div>
-                    <div className="ml-auto text-xl font-black italic opacity-50">{result.talent.rarity}</div>
+                    <div className={`text-lg font-black italic ${getRarityColor(result.talent.rarity)}`}>{result.talent.rarity}</div>
                   </div>
 
                   {/* Occupation */}
                   <div className={`p-4 rounded-2xl border ${getRarityBg(result.occupation.rarity)} flex items-center gap-4`}>
-                    <div className="p-3 rounded-xl bg-black/30">
-                      <Briefcase className={`w-6 h-6 ${getRarityColor(result.occupation.rarity)}`} />
+                    <div className="p-3 rounded-xl bg-white/60 dark:bg-black/20">
+                      <Briefcase className={`w-5 h-5 ${getRarityColor(result.occupation.rarity)}`} />
                     </div>
-                    <div>
-                      <p className="text-xs text-slate-400 uppercase tracking-wider">Occupation</p>
-                      <h3 className={`text-lg font-bold ${getRarityColor(result.occupation.rarity)}`}>{result.occupation.name}</h3>
-                      <p className="text-xs text-slate-400 mt-1">{result.occupation.description}</p>
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Occupation</p>
+                      <h3 className={`text-base font-bold ${getRarityColor(result.occupation.rarity)}`}>{result.occupation.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{result.occupation.description}</p>
                     </div>
-                    <div className="ml-auto text-xl font-black italic opacity-50">{result.occupation.rarity}</div>
+                    <div className={`text-lg font-black italic ${getRarityColor(result.occupation.rarity)}`}>{result.occupation.rarity}</div>
                   </div>
 
                   {/* Life Span */}
-                  <div className="p-4 rounded-2xl border border-slate-700 bg-slate-800/50 flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-black/30">
-                      <Skull className="w-6 h-6 text-slate-400" />
+                  <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-white/60 dark:bg-black/20">
+                      <Skull className="w-5 h-5 text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-400 uppercase tracking-wider">Life Span</p>
-                      <h3 className="text-lg font-bold text-white">{result.lifeSpan}세</h3>
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Life Span</p>
+                      <h3 className="text-base font-bold text-slate-700 dark:text-slate-300">{result.lifeSpan}세</h3>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-3 mt-8 relative z-10">
+                <div className="flex gap-3 mt-8">
                   <button
-                    onClick={() => {
-                      setResult(null);
-                    }}
-                    className="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                    onClick={() => setResult(null)}
+                    className="toss-button-secondary flex-1"
                   >
-                    <RefreshCw size={20} /> 다시 하기
+                    <RefreshCw size={18} /> 다시 하기
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-900/30"
+                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[16px] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg"
                   >
-                    <Share2 size={20} /> 결과 공유
+                    <Share2 size={18} /> 결과 공유
                   </button>
                 </div>
               </div>

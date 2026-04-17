@@ -35,9 +35,10 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <main className="flex items-center justify-center min-h-[60vh]">
+      <main className="flex items-center justify-center min-h-[60vh] bg-slate-50 dark:bg-[#191F28]">
         <div className="text-center">
-          <p className="text-lg font-semibold">
+          <div className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-lg font-semibold text-slate-500">
             대시보드 데이터를 불러오는 중...
           </p>
         </div>
@@ -46,31 +47,35 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {dashboardData ? (
-        <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
-      ) : (
-        <div className="text-center bg-card p-12 rounded-2xl shadow-lg border border-border">
-          <h1 className="text-3xl font-bold text-foreground">
-            저장된 데이터가 없습니다.
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            먼저 연봉, 퇴직금 등 금융 정보를 계산하고 저장하여
-            <br />
-            나만의 맞춤형 금융 대시보드를 만들어보세요.
-          </p>
-          <Link
-            href="/"
-            className="inline-block mt-8 py-3 px-8 bg-primary text-primary-foreground rounded-lg font-bold hover:brightness-95 transition-all shadow-lg"
-          >
-            계산하러 가기
-          </Link>
-        </div>
-      )}
+    <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pt-28 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {dashboardData ? (
+          <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
+        ) : (
+          <div className="text-center toss-card p-16">
+            <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-8">
+              <span className="text-5xl">📊</span>
+            </div>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+              저장된 데이터가 없습니다.
+            </h1>
+            <p className="mt-2 text-lg text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto">
+              먼저 연봉, 퇴직금 등 금융 정보를 계산하고 저장하여<br />
+              나만의 맞춤형 금융 대시보드를 만들어보세요.
+            </p>
+            <Link
+              href="/"
+              className="toss-button-primary inline-flex w-auto px-10 py-4 text-lg"
+            >
+              계산하러 가기
+            </Link>
+          </div>
+        )}
 
-      {/* Ad Unit: Dashboard Bottom */}
-      <div className="mt-12">
-        <AdUnit slotId="9988776655" format="auto" label="Dashboard Bottom Ad" />
+        {/* Ad Unit: Dashboard Bottom */}
+        <div className="mt-12">
+          <AdUnit slotId="9988776655" format="auto" label="Dashboard Bottom Ad" />
+        </div>
       </div>
     </main>
   );
