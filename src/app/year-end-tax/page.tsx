@@ -5,9 +5,9 @@ import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import AdUnit from "@/components/AdUnit";
 
 export const metadata: Metadata = {
-  title: "연말정산 환급금 계산기 (2025년 귀속) | Moneysalary",
+  title: "연말정산 환급금 계산기 (2026년 귀속) | Moneysalary",
   description:
-    "13월의 월급, 미리 계산해보세요! 총급여, 신용카드, 의료비 등 항목을 입력하고 2025년 귀속 연말정산 예상 환급금 또는 추가 납부 세액을 확인하세요.",
+    "13월의 월급, 미리 계산해보세요! 총급여, 신용카드, 의료비 등 항목을 입력하고 2026년 귀속 연말정산 예상 환급금 또는 추가 납부 세액을 확인하세요.",
 };
 
 export default function YearEndTaxPage() {
@@ -27,7 +27,7 @@ export default function YearEndTaxPage() {
             <span className="text-orange-500">미리 계산해보세요</span>
           </h1>
           <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-            2025년 귀속 연말정산, 예상 환급금을 미리 계산하고<br className="hidden sm:block" />
+            2026년 귀속 연말정산, 예상 환급금을 미리 계산하고<br className="hidden sm:block" />
             절세 전략을 세워보세요.
           </p>
 

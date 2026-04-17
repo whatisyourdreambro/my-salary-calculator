@@ -14,7 +14,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({
     url,
-    title = "Moneysalary - 2025년 연봉 실수령액 계산기",
+    title = "Moneysalary - 2026년 연봉 실수령액 계산기",
     description = "내 연봉의 실제 수령액을 확인해보세요!",
     imageUrl = "https://www.moneysalary.com/logo-full.png",
     className = "",

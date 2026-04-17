@@ -22,15 +22,15 @@ const tableHeaders = [
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "DataSet",
-  name: "2025년 시급 실수령액 표",
-  description: "2025년 최신 세법 기준 시급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
+  name: "2026년 시급 실수령액 표",
+  description: "2026년 최신 세법 기준 시급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
   url: "https://www.moneysalary.com/table/hourly",
   creator: {
     "@type": "Organization",
     name: "Moneysalary",
   },
   license: "https://www.moneysalary.com",
-  keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "2025년"],
+  keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "2026년"],
 };
 
 function HourlyTable() {
@@ -45,10 +45,10 @@ function HourlyTable() {
       />
       <main className="w-full bg-background">
         <TableHero
-          badgeText="2025년 최신 세법 기준"
+          badgeText="2026년 최신 세법 기준"
           title={
             <>
-              2025 시급 실수령액 <br className="sm:hidden" />
+              2026 시급 실수령액 <br className="sm:hidden" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
                 미리보기
               </span>
@@ -56,7 +56,7 @@ function HourlyTable() {
           }
           description={
             <>
-              2025년 최저시급은 10,030원입니다. <br className="hidden sm:block" />
+              2026년 최저시급은 10,030원입니다. <br className="hidden sm:block" />
               최저시급과 내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
             </>
           }
@@ -74,7 +74,7 @@ function HourlyTable() {
           <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
-              2025년 vs 2026년 주요 정책 비교
+              2026년 vs 2026년 주요 정책 비교
             </h2>
             <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
               <p className="text-center text-muted-foreground">
@@ -82,7 +82,7 @@ function HourlyTable() {
               </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">2026년</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 국민연금 요율: 9% (근로자 4.5%)</li>
                     <li>- 건강보험 요율: 7.09% (근로자 3.545%)</li>
@@ -108,10 +108,10 @@ function HourlyTable() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
                 <h3 className="font-bold text-xl mb-3">
-                  Q. 2025년 최저시급은 얼마인가요?
+                  Q. 2026년 최저시급은 얼마인가요?
                 </h3>
                 <p className="text-muted-foreground">
-                  2025년 최저시급은 <strong>10,030원</strong>으로 확정되었습니다. 이는 2024년 대비 1.7% 인상된 금액입니다.
+                  2026년 최저시급은 <strong>10,030원</strong>으로 확정되었습니다. 이는 2025년 대비 1.7% 인상된 금액입니다.
                 </p>
                 <Link
                   href="/guides/minimum-wage"

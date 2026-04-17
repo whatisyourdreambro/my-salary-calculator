@@ -16,7 +16,7 @@ export default function MonthlyTableInteractive({
   highlightRows,
 }: MonthlyTableInteractiveProps) {
   const pageConfig = {
-    title: "월급별 실수령액 시뮬레이터 (2025년)",
+    title: "월급별 실수령액 시뮬레이터 (2026년)",
     basePath: "/table/monthly",
     searchPlaceholder: "월급으로 검색...",
     salaryLabel: "월급",

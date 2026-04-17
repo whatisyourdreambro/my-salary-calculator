@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Moneysalary - 2025년 연봉 실수령액 계산기";
+export const alt = "Moneysalary - 2026년 연봉 실수령액 계산기";
 export const size = {
   width: 1200,
   height: 630,
@@ -78,7 +78,7 @@ export default async function Image() {
               marginBottom: 30,
             }}
           >
-            2025년 연봉
+            2026년 연봉
             <br />
             실수령액 계산기
           </div>

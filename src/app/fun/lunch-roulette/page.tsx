@@ -1,127 +1,88 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCw, ChefHat } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Utensils, RefreshCw, Share2 } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
-const MENU_ITEMS = [
-  { name: "짜장면", emoji: "🍜", color: "#2d3748" },
-  { name: "짬뽕", emoji: "🌶️", color: "#c53030" },
-  { name: "김치찌개", emoji: "🍲", color: "#9c4221" },
-  { name: "제육볶음", emoji: "🥩", color: "#744210" },
-  { name: "된장찌개", emoji: "🫕", color: "#6b5b35" },
-  { name: "순대국밥", emoji: "🥣", color: "#4a5568" },
-  { name: "삼겹살", emoji: "🥓", color: "#e53e3e" },
-  { name: "냉면", emoji: "🍱", color: "#2b6cb0" },
-  { name: "도시락", emoji: "🍱", color: "#276749" },
-  { name: "편의점", emoji: "🏪", color: "#553c9a" },
-  { name: "샐러드", emoji: "🥗", color: "#2f855a" },
-  { name: "라면", emoji: "🍜", color: "#b7791f" },
+const MENUS = [
+  "김치찌개", "된장찌개", "제육볶음", "돈까스", "햄버거", 
+  "짜장면", "짬뽕", "마라탕", "초밥", "국밥", "샐러드", "샌드위치"
 ];
 
 export default function LunchRoulettePage() {
+  const [result, setResult] = useState<string | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [result, setResult] = useState<typeof MENU_ITEMS[0] | null>(null);
-  const [rotation, setRotation] = useState(0);
 
   const spin = () => {
-    if (isSpinning) return;
     setIsSpinning(true);
     setResult(null);
-    const extraSpins = 5 + Math.floor(Math.random() * 5);
-    const randomOffset = Math.floor(Math.random() * 360);
-    const newRotation = rotation + extraSpins * 360 + randomOffset;
-    setRotation(newRotation);
 
-    setTimeout(() => {
-      const idx = Math.floor(Math.random() * MENU_ITEMS.length);
-      setResult(MENU_ITEMS[idx]);
-      setIsSpinning(false);
-    }, 3000);
+    let count = 0;
+    const interval = setInterval(() => {
+      setResult(MENUS[Math.floor(Math.random() * MENUS.length)]);
+      count++;
+      if (count > 20) {
+        clearInterval(interval);
+        setResult(MENUS[Math.floor(Math.random() * MENUS.length)]);
+        setIsSpinning(false);
+      }
+    }, 50);
   };
 
   return (
-    <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pt-28 pb-20">
-      {/* Hero */}
-      <section className="text-center pb-12 px-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 mb-5">
-          <ChefHat className="w-8 h-8 text-yellow-500" />
-        </div>
-        <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
-          점심 <span className="text-yellow-500">뭐 먹지?</span>
+    <main className="w-full min-h-screen bg-white dark:bg-black px-4 pt-28 pb-20 font-sans">
+      <div className="text-center mb-12 border-b border-gray-100 dark:border-gray-900 pb-10">
+        <Utensils className="w-12 h-12 text-primary mx-auto mb-4" />
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+          점심 메뉴 추천기
         </h1>
-        <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
-          메뉴 고민은 이제 그만! 룰렛이 결정해드립니다.
+        <p className="text-slate-500 dark:text-slate-400 font-medium">
+          직장인의 최대 난제, 오늘 점심 뭐 먹지?
         </p>
-      </section>
+      </div>
 
-      <div className="max-w-2xl mx-auto px-4">
-        <AdUnit slotId="1122334455" format="auto" label="Lunch Roulette Top Ad" />
-
-        <div className="toss-card p-10 mt-8 text-center">
-          {/* Roulette Visual */}
-          <div className="relative w-64 h-64 mx-auto mb-10">
-            <motion.div
-              className="w-full h-full rounded-full border-8 border-slate-200 dark:border-slate-700 flex items-center justify-center bg-white dark:bg-slate-800 shadow-2xl text-7xl"
-              animate={{ rotate: rotation }}
-              transition={{ duration: 3, ease: "easeOut" }}
-            >
-              {result ? result.emoji : "🎰"}
-            </motion.div>
-            {/* Center dot */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-600 rounded-full shadow-lg z-10" />
-            {/* Pointer */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-r-[12px] border-b-[20px] border-l-transparent border-r-transparent border-b-red-500" />
-          </div>
-
-          <AnimatePresence mode="wait">
+      <div className="max-w-md mx-auto">
+        <div className="toss-card p-10 text-center mb-6 min-h-[250px] flex flex-col items-center justify-center border-t-4 border-t-primary">
+          <motion.div
+            key={result || "empty"}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full"
+          >
             {result ? (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mb-8"
-              >
-                <p className="text-6xl mb-3">{result.emoji}</p>
-                <h2 className="text-4xl font-black text-slate-900 dark:text-white">{result.name}</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">오늘의 런치 픽!</p>
-              </motion.div>
+              <>
+                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">RECOMMENDED MENU</p>
+                <h2 className={`text-4xl font-black ${isSpinning ? 'text-slate-300' : 'text-primary'}`}>
+                  {result}
+                </h2>
+              </>
             ) : (
-              <motion.div key="idle" className="mb-8 h-28 flex items-center justify-center">
-                <p className="text-lg text-slate-400 font-medium">
-                  {isSpinning ? "돌리는 중..." : "버튼을 눌러 오늘의 메뉴를 뽑으세요!"}
-                </p>
-              </motion.div>
+              <p className="text-xl font-medium text-slate-400">버튼을 눌러 추천을 받아보세요.</p>
             )}
-          </AnimatePresence>
+          </motion.div>
+        </div>
 
+        <div className="flex gap-3 mb-8">
           <button
             onClick={spin}
             disabled={isSpinning}
-            className="toss-button-primary disabled:opacity-60 disabled:cursor-not-allowed max-w-sm mx-auto"
+            className="flex-1 py-4 bg-primary hover:bg-primary/90 disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md"
           >
-            {isSpinning ? (
-              <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> 돌리는 중...</>
-            ) : (
-              <><RefreshCw className="w-5 h-5" /> {result ? "다시 뽑기" : "메뉴 뽑기"}</>
-            )}
+            <RefreshCw className={isSpinning ? "animate-spin" : ""} size={18} /> 
+            {isSpinning ? "추천 중..." : "메뉴 추천받기"}
           </button>
+          {result && !isSpinning && (
+            <button
+              onClick={() => navigator.share ? navigator.share({ title: "오늘의 점심 메뉴", text: "오늘 점심은 " + result + " 어때요?", url: window.location.href }) : navigator.clipboard.writeText(window.location.href)}
+              className="px-6 toss-button-secondary rounded-sm border"
+            >
+              <Share2 size={18} />
+            </button>
+          )}
         </div>
 
-        {/* Menu Grid */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-8">
-          {MENU_ITEMS.map((item) => (
-            <div key={item.name} className={"toss-card p-3 text-center cursor-pointer hover:-translate-y-0.5 transition-transform" + (result?.name === item.name ? " border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/20" : "")}>
-              <p className="text-2xl mb-1">{item.emoji}</p>
-              <p className="text-xs font-bold text-slate-700 dark:text-slate-300">{item.name}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8">
-          <AdUnit slotId="9988776655" format="auto" label="Lunch Roulette Bottom Ad" />
-        </div>
+        <AdUnit slotId="1122334455" format="auto" label="Lunch Roulette Ad" />
       </div>
     </main>
   );

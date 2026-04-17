@@ -37,34 +37,31 @@ export default function SalaryTable({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className={`relative overflow-hidden rounded-[1.5rem] p-6 transition-all duration-300 ${isHighlighted
-                  ? "bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-lg"
-                  : "bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 shadow-sm"
+                className={`relative overflow-hidden rounded-[1.5rem] p-5 sm:p-6 transition-all duration-300 ${isHighlighted
+                  ? "bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-lg"
+                  : "bg-white dark:bg-[#080808] border border-slate-200 dark:border-slate-800 shadow-sm"
                   }`}
               >
-                {/* Texture Overlay */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }}></div>
-
                 {/* Visual Accent for Highlighted Rows */}
                 {isHighlighted && (
                   <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
                 )}
 
-                <div className="relative z-10">
-                  <div className="flex justify-between items-center mb-6 pb-4 border-b border-stone-200 dark:border-stone-700">
-                    <span className="text-stone-400 font-bold tracking-widest text-xs uppercase">{headers[0].label}</span>
-                    <span className={`text-2xl font-serif font-bold tracking-tight ${isHighlighted ? 'text-primary' : 'text-foreground'}`}>
+                <div className="relative z-10 w-full">
+                  <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-500 dark:text-slate-400 font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
+                    <span className={`text-xl sm:text-2xl font-bold tracking-tight break-all text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-slate-900 dark:text-white'}`}>
                       {Number(row[headers[0].key]).toLocaleString()}{unit}
                     </span>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-3 w-full">
                     {headers.slice(1).map((header) => (
-                      <div key={header.key as string} className="flex justify-between items-center text-sm group">
-                        <span className="text-stone-500 group-hover:text-stone-400 transition-colors font-medium">{header.label}</span>
-                        <span className={`tabular-nums font-bold ${header.key === 'monthlyNet' || header.key === 'preTax'
-                          ? 'text-foreground text-base'
-                          : 'text-stone-400'
+                      <div key={header.key as string} className="flex justify-between items-center text-sm gap-4">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium shrink-0">{header.label}</span>
+                        <span className={`tabular-nums font-bold text-right break-words ${header.key === 'monthlyNet' || header.key === 'preTax'
+                          ? 'text-slate-900 dark:text-white text-base'
+                          : 'text-slate-500 dark:text-slate-500'
                           }`}>
                           {Number(row[header.key]).toLocaleString()}{unit}
                         </span>

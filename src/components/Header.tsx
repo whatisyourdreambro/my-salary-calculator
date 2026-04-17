@@ -39,8 +39,8 @@ const navConfig: NavItem[] = [
     items: [
       { name: "기업별 연봉 DB", href: "/salary-db" },
       { name: "내 연봉 제보하기", href: "/salary-db/submit" },
-      { name: "2025 연봉 표", href: "/table/annual" },
-      { name: "2025 월급 표", href: "/table/monthly" },
+      { name: "2026 연봉 표", href: "/table/annual" },
+      { name: "2026 월급 표", href: "/table/monthly" },
       { name: "2026 연봉 표", href: "/table/2026/annual" },
       { name: "2026 월급 표", href: "/table/2026/monthly" },
     ],

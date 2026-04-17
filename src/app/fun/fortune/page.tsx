@@ -140,8 +140,8 @@ export default function FortunePage() {
                             className="space-y-8"
                         >
                             <div className="text-center space-y-4 mb-12">
-                                <div className="inline-block p-4 rounded-full bg-red-900/20 border border-red-800/50 mb-4">
-                                    <Scroll className="w-10 h-10 text-red-500" />
+                                <div className="inline-block p-4 rounded-full bg-primary/20 border border-red-800/50 mb-4">
+                                    <Scroll className="w-10 h-10 text-primary" />
                                 </div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700 tracking-tight">
                                     2026 병오년<br />정통 신년운세
@@ -162,7 +162,7 @@ export default function FortunePage() {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="이름을 입력하세요"
-                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 text-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all"
+                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 text-lg focus:border-primary focus:ring-1 focus:ring-red-500 outline-none transition-all"
                                     />
                                 </div>
 
@@ -209,21 +209,21 @@ export default function FortunePage() {
                                         <select
                                             value={year}
                                             onChange={(e) => setYear(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-red-500"
+                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {YEARS.map(y => <option key={y} value={y}>{y}년</option>)}
                                         </select>
                                         <select
                                             value={month}
                                             onChange={(e) => setMonth(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-red-500"
+                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {MONTHS.map(m => <option key={m} value={m}>{m}월</option>)}
                                         </select>
                                         <select
                                             value={day}
                                             onChange={(e) => setDay(Number(e.target.value))}
-                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-red-500"
+                                            className="bg-black/30 border border-zinc-700 rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
                                         >
                                             {DAYS.map(d => <option key={d} value={d}>{d}일</option>)}
                                         </select>
@@ -238,7 +238,7 @@ export default function FortunePage() {
                                     <select
                                         value={time}
                                         onChange={(e) => setTime(e.target.value)}
-                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-red-500"
+                                        className="w-full bg-black/30 border border-zinc-700 rounded-xl px-4 py-3 outline-none focus:border-primary"
                                     >
                                         {TIMES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                                     </select>
@@ -304,8 +304,8 @@ export default function FortunePage() {
                                 <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] pointer-events-none" />
 
                                 {/* Stamp */}
-                                <div className="absolute top-6 right-6 w-20 h-20 border-4 border-red-600 rounded-lg flex items-center justify-center opacity-80 rotate-[-10deg] mix-blend-multiply pointer-events-none">
-                                    <span className="text-red-600 font-serif font-black text-2xl">大吉</span>
+                                <div className="absolute top-6 right-6 w-20 h-20 border-4 border-primary rounded-lg flex items-center justify-center opacity-80 rotate-[-10deg] mix-blend-multiply pointer-events-none">
+                                    <span className="text-primary font-serif font-black text-2xl">大吉</span>
                                 </div>
 
                                 <div className="relative z-10">
@@ -323,7 +323,7 @@ export default function FortunePage() {
 
                                     <div className="space-y-8">
                                         <section>
-                                            <h3 className="flex items-center gap-2 text-xl font-bold text-red-800 mb-3 font-serif">
+                                            <h3 className="flex items-center gap-2 text-xl font-bold text-primary mb-3 font-serif">
                                                 <Sparkles size={20} /> 총운 (Total Luck)
                                             </h3>
                                             <p className="text-lg leading-relaxed text-zinc-700 text-justify">
@@ -355,7 +355,7 @@ export default function FortunePage() {
                                             <div className="flex justify-around text-center">
                                                 <div>
                                                     <p className="text-xs text-zinc-500 mb-1">행운의 색</p>
-                                                    <p className="font-bold text-red-600">{resultData.luckyColor}</p>
+                                                    <p className="font-bold text-primary">{resultData.luckyColor}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-xs text-zinc-500 mb-1">행운의 숫자</p>
@@ -363,7 +363,7 @@ export default function FortunePage() {
                                                 </div>
                                                 <div>
                                                     <p className="text-xs text-zinc-500 mb-1">총점</p>
-                                                    <p className="font-bold text-purple-600 text-xl">{resultData.score}점</p>
+                                                    <p className="font-bold text-primary text-xl">{resultData.score}점</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,7 +383,7 @@ export default function FortunePage() {
                                 </button>
                                 <button
                                     onClick={handleShare}
-                                    className="flex-1 py-4 bg-red-700 hover:bg-red-600 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-red-900/30"
+                                    className="flex-1 py-4 bg-primary hover:bg-primary text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-red-900/30"
                                 >
                                     <Share2 size={20} /> 결과 공유
                                 </button>

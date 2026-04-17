@@ -149,7 +149,7 @@ export default function EscapePlanPage() {
                 <div className="pt-8 border-t border-white/10">
                   <h3 className="text-sm font-medium text-slate-400 mb-2">예상 탈출 시점</h3>
                   {yearsToTarget === 0 ? (
-                    <div className="flex items-center gap-3 text-green-400">
+                    <div className="flex items-center gap-3 text-primary">
                       <Rocket className="w-8 h-8 animate-bounce" />
                       <span className="text-3xl font-bold">지금 당장 사표 가능! 🎉</span>
                     </div>
@@ -160,7 +160,7 @@ export default function EscapePlanPage() {
                       <span className="text-sm text-slate-500 ml-2">({new Date().getFullYear() + Math.floor(yearsToTarget)}년)</span>
                     </div>
                   ) : (
-                    <span className="text-2xl font-bold text-red-400">계획 수정이 필요합니다... 🥲</span>
+                    <span className="text-2xl font-bold text-primary">계획 수정이 필요합니다... 🥲</span>
                   )}
                 </div>
               </div>

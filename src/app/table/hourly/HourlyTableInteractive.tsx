@@ -16,7 +16,7 @@ export default function HourlyTableInteractive({
   highlightRows,
 }: HourlyTableInteractiveProps) {
   const pageConfig = {
-    title: "시급별 실수령액 시뮬레이터 (2025년)",
+    title: "시급별 실수령액 시뮬레이터 (2026년)",
     basePath: "/table/hourly",
     searchPlaceholder: "시급으로 검색...",
     salaryLabel: "시급",

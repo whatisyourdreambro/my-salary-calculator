@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -83,7 +83,7 @@ const StatBar = ({
                     {unit}
                 </span>
                 <span className="text-foreground font-bold">{label}</span>
-                <span className={winner === "b" ? "text-red-500 font-bold" : "text-muted-foreground"}>
+                <span className={winner === "b" ? "text-primary font-bold" : "text-muted-foreground"}>
                     {valueB.toLocaleString()}
                     {unit}
                 </span>
@@ -114,7 +114,7 @@ const StatBar = ({
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${(valueB / (valueA + valueB)) * 100}%` }}
-                        className={`h-full ${winner === "b" ? "bg-red-500" : "bg-red-300/50"}`}
+                        className={`h-full ${winner === "b" ? "bg-primary" : "bg-primary/10/50"}`}
                     />
                 </motion.div>
             </div>
@@ -165,7 +165,7 @@ export default function BattlePage() {
             {/* Hero Section */}
             <section className="relative py-16 text-center overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-red-600/20 rounded-full blur-[120px]" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px]" />
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px]" />
 
                 <div className="relative z-10">
@@ -174,7 +174,7 @@ export default function BattlePage() {
                         animate={{ scale: 1, opacity: 1 }}
                         className="inline-block mb-4"
                     >
-                        <span className="px-4 py-1 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-sm font-bold tracking-widest uppercase">
+                        <span className="px-4 py-1 rounded-full border border-primary/50 bg-primary/10 text-primary text-sm font-bold tracking-widest uppercase">
                             Versus Engine 로딩중...
                         </span>
                     </motion.div>
@@ -300,7 +300,7 @@ export default function BattlePage() {
                                 <div className="bg-gradient-to-r from-zinc-800 to-zinc-900 border border-zinc-700 p-6 rounded-xl text-center relative overflow-hidden">
                                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500" />
                                     <h3 className="text-lg font-bold text-zinc-300 mb-2 flex items-center justify-center gap-2">
-                                        <Trophy className="w-5 h-5 text-yellow-500" />
+                                        <Trophy className="w-5 h-5 text-primary" />
                                         AI ?�판 ?�정
                                     </h3>
                                     <p className="text-xl font-medium text-white leading-relaxed">
@@ -340,10 +340,10 @@ export default function BattlePage() {
                             <motion.div
                                 initial={{ x: 50, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
-                                className="bg-zinc-900/50 border border-red-500/30 p-6 rounded-2xl"
+                                className="bg-zinc-900/50 border border-primary/30 p-6 rounded-2xl"
                             >
                                 <div className="text-6xl mb-4">{result.companyB.logo}</div>
-                                <h2 className="text-2xl font-bold text-red-400 mb-1">{result.companyB.name.ko}</h2>
+                                <h2 className="text-2xl font-bold text-primary mb-1">{result.companyB.name.ko}</h2>
                                 <p className="text-sm text-zinc-400 mb-4">{result.companyB.industry}</p>
 
                                 <div className="space-y-4">
@@ -366,7 +366,7 @@ export default function BattlePage() {
                 ) : (
                     <div className="text-center py-20 animate-pulse">
                         <p className="text-2xl text-zinc-500 font-bold">
-                            연봉 배틀의 <span className="text-red-500">FIGHT!</span> 버튼을 눌러주세요.
+                            연봉 배틀의 <span className="text-primary">FIGHT!</span> 버튼을 눌러주세요.
                         </p>
                     </div>
                 ))}

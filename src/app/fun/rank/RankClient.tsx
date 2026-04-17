@@ -82,7 +82,7 @@ export default function RankClient() {
             {/* Hero Section */}
             <section className="relative pt-28 pb-16 overflow-hidden text-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-purple-400/10 dark:bg-purple-500/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
                 <div className="max-w-5xl mx-auto px-4">
                     <motion.div
@@ -90,13 +90,13 @@ export default function RankClient() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold text-sm mb-6">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary font-bold text-sm mb-6">
                             <Crown className="w-4 h-4" />
                             <span>대한민국 연봉 데이터 분석</span>
                         </div>
                         <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-5 text-slate-900 dark:text-white">
                             나는 대한민국 상위 <br className="sm:hidden" />
-                            <span className="text-purple-600">몇 %일까요?</span>
+                            <span className="text-primary">몇 %일까요?</span>
                         </h1>
                         <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
                             2,000만 직장인 데이터를 기반으로 당신의 정확한 위치를 알려드립니다.
@@ -131,7 +131,7 @@ export default function RankClient() {
                                                 const val = e.target.value.replace(/[^0-9]/g, "");
                                                 setSalaryInput(Number(val).toLocaleString());
                                             }}
-                                            className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-black/50 border border-white/10 rounded-2xl focus:border-purple-500 outline-none transition-all text-white placeholder-zinc-700"
+                                            className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-black/50 border border-white/10 rounded-2xl focus:border-primary outline-none transition-all text-white placeholder-zinc-700"
                                             placeholder="0"
                                             autoFocus
                                         />
@@ -195,19 +195,19 @@ export default function RankClient() {
                                         </AreaChart>
                                     </ResponsiveContainer>
                                     <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-zinc-600 font-mono">
-                                        * 2024년 국세청 통계 자료 기반 (추정치)
+                                        * 2025년 국세청 통계 자료 기반 (추정치)
                                     </div>
                                 </div>
 
                                 {/* Stats Grid */}
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-purple-500/30 transition-colors">
+                                    <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
                                         <Users className="w-8 h-8 mx-auto mb-3 text-blue-400" />
                                         <p className="text-sm text-zinc-500 mb-1">비슷한 연봉</p>
                                         <p className="font-bold text-2xl text-white">약 45만명</p>
                                     </div>
-                                    <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-pink-500/30 transition-colors">
-                                        <Trophy className="w-8 h-8 mx-auto mb-3 text-yellow-400" />
+                                    <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
+                                        <Trophy className="w-8 h-8 mx-auto mb-3 text-primary" />
                                         <p className="text-sm text-zinc-500 mb-1">예상 등급</p>
                                         <p className="font-bold text-2xl text-white">
                                             {percentile <= 10 ? "다이아몬드" : percentile <= 30 ? "플래티넘" : "골드"}
@@ -232,7 +232,7 @@ export default function RankClient() {
                                 </div>
                                 <Link
                                     href="/fun"
-                                    className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-purple-500/30 text-zinc-400 hover:text-purple-400 font-bold transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-primary/30 text-zinc-400 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
                                 >
                                     <TrendingUp size={18} /> 다른 테스트 보러가기
                                 </Link>

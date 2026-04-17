@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,13 +17,13 @@ type Cell = { type: TetrominoType | null; locked: boolean };
 type Grid = Cell[][];
 
 const TETROMINOS: Record<TetrominoType, { shape: number[][]; color: string }> = {
-    I: { shape: [[1, 1, 1, 1]], color: "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" },
-    O: { shape: [[1, 1], [1, 1]], color: "bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.8)]" },
-    T: { shape: [[0, 1, 0], [1, 1, 1]], color: "bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]" },
-    S: { shape: [[0, 1, 1], [1, 1, 0]], color: "bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]" },
-    Z: { shape: [[1, 1, 0], [0, 1, 1]], color: "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]" },
+    I: { shape: [[1, 1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(34,211,238,0.8)]" },
+    O: { shape: [[1, 1], [1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(250,204,21,0.8)]" },
+    T: { shape: [[0, 1, 0], [1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(168,85,247,0.8)]" },
+    S: { shape: [[0, 1, 1], [1, 1, 0]], color: "bg-primary shadow-[0_0_10px_rgba(34,197,94,0.8)]" },
+    Z: { shape: [[1, 1, 0], [0, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(239,68,68,0.8)]" },
     J: { shape: [[1, 0, 0], [1, 1, 1]], color: "bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" },
-    L: { shape: [[0, 0, 1], [1, 1, 1]], color: "bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" },
+    L: { shape: [[0, 0, 1], [1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(249,115,22,0.8)]" },
 };
 
 const createEmptyGrid = (): Grid =>
@@ -254,17 +254,17 @@ export default function TetrisPage() {
                         <div className="space-y-4">
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Score</p>
-                                <p className="text-3xl font-bold text-cyan-400">{score.toLocaleString()}</p>
+                                <p className="text-3xl font-bold text-primary">{score.toLocaleString()}</p>
                             </div>
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Level</p>
-                                <p className="text-2xl font-bold text-purple-400">{level}</p>
+                                <p className="text-2xl font-bold text-primary">{level}</p>
                             </div>
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 flex items-center gap-3">
-                                <Trophy className="w-5 h-5 text-yellow-500" />
+                                <Trophy className="w-5 h-5 text-primary" />
                                 <div>
                                     <p className="text-xs text-slate-400 uppercase tracking-wider">Best</p>
-                                    <p className="text-xl font-bold text-yellow-500">{highScore.toLocaleString()}</p>
+                                    <p className="text-xl font-bold text-primary">{highScore.toLocaleString()}</p>
                                 </div>
                             </div>
                         </div>
@@ -308,7 +308,7 @@ export default function TetrisPage() {
                                 >
                                     {gameOver ? (
                                         <>
-                                            <h2 className="text-4xl font-black text-red-500 mb-2">GAME OVER</h2>
+                                            <h2 className="text-4xl font-black text-primary mb-2">GAME OVER</h2>
                                             <p className="text-slate-300 mb-6">야근 확정! 다시 도전하세요.</p>
                                             <p className="text-2xl font-bold text-white mb-8">Score: {score}</p>
 
@@ -319,7 +319,7 @@ export default function TetrisPage() {
                                             <div className="flex gap-4">
                                                 <button
                                                     onClick={startGame}
-                                                    className="p-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
+                                                    className="p-4 bg-primary hover:bg-primary text-slate-900 rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
                                                 >
                                                     <RefreshCw size={24} />
                                                 </button>
@@ -336,7 +336,7 @@ export default function TetrisPage() {
                                             <h2 className="text-3xl font-black text-white mb-8">READY?</h2>
                                             <button
                                                 onClick={startGame}
-                                                className="group relative px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"
+                                                className="group relative px-8 py-4 bg-primary hover:bg-primary text-slate-900 rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"
                                             >
                                                 <span className="relative z-10 flex items-center gap-2">
                                                     <Play fill="currentColor" /> START GAME
@@ -355,7 +355,7 @@ export default function TetrisPage() {
                 <div className="w-full max-w-[300px] lg:hidden order-3 grid grid-cols-3 gap-4 p-4">
                     <div className="col-start-2">
                         <button
-                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-cyan-500/20 active:border-cyan-500 transition-all"
+                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
                             onClick={() => rotate()}
                         >
                             <RotateCw className="w-8 h-8" />
@@ -363,7 +363,7 @@ export default function TetrisPage() {
                     </div>
                     <div className="col-start-1 row-start-2">
                         <button
-                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-cyan-500/20 active:border-cyan-500 transition-all"
+                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
                             onClick={() => move(-1, 0)}
                         >
                             <ArrowLeft className="w-8 h-8" />
@@ -371,7 +371,7 @@ export default function TetrisPage() {
                     </div>
                     <div className="col-start-2 row-start-2">
                         <button
-                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-cyan-500/20 active:border-cyan-500 transition-all"
+                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
                             onClick={() => move(0, 1)}
                         >
                             <ArrowDown className="w-8 h-8" />
@@ -379,7 +379,7 @@ export default function TetrisPage() {
                     </div>
                     <div className="col-start-3 row-start-2">
                         <button
-                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-cyan-500/20 active:border-cyan-500 transition-all"
+                            className="w-full aspect-square bg-slate-800/80 border border-slate-600 rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
                             onClick={() => move(1, 0)}
                         >
                             <ArrowRight className="w-8 h-8" />

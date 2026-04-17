@@ -66,8 +66,8 @@ export default function RootLayout({
         기본 배경색을 아주 밝은 회색(#F2F4F6)으로 설정하고, 텍스트를 진한 네이비/블랙으로 잡습니다.
         모바일 앵커 광고를 위해 pb-20 여백을 부여합니다.
       */}
-      <body className="antialiased text-slate-900 dark:text-slate-100 bg-background selection:bg-blue-600/10 pb-20 md:pb-0">
-        <NextThemesProvider attribute="class" defaultTheme="light">
+      <body className="antialiased text-slate-900 bg-white selection:bg-primary/10 pb-20 md:pb-0">
+        <NextThemesProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <div className="flex flex-col min-h-screen">
             <Header />
 

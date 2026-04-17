@@ -21,16 +21,16 @@ const tableHeaders = [
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "DataSet",
-  name: "2025년 연봉 실수령액 표",
+  name: "2026년 연봉 실수령액 표",
   description:
-    "2025년 최신 세법 기준 연봉 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
+    "2026년 최신 세법 기준 연봉 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
   url: "https://www.moneysalary.com/table/annual",
   creator: {
     "@type": "Organization",
     name: "Moneysalary",
   },
   license: "https://www.moneysalary.com",
-  keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2025년"],
+  keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
 };
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
@@ -46,10 +46,10 @@ function AnnualTable() {
       />
       <main className="w-full bg-background">
         <TableHero
-          badgeText="2025년 최신 세법 기준"
+          badgeText="2026년 최신 세법 기준"
           title={
             <>
-              2025 연봉 실수령액 <br className="sm:hidden" />
+              2026 연봉 실수령액 <br className="sm:hidden" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
                 대백과
               </span>
@@ -58,7 +58,7 @@ function AnnualTable() {
           description={
             <>
               당신의 진짜 가치를 숫자로 확인하세요. <br className="hidden sm:block" />
-              2025년 최신 세법 기준, 연봉 구간별 상세 공제 내역과 실수령액을 한눈에 비교해 드립니다.
+              2026년 최신 세법 기준, 연봉 구간별 상세 공제 내역과 실수령액을 한눈에 비교해 드립니다.
             </>
           }
         />
@@ -112,7 +112,7 @@ function AnnualTable() {
               {/* SEO Content Section */}
               <div className="bg-zinc-900/40 backdrop-blur-2xl p-8 md:p-12 rounded-3xl border border-white/10">
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
-                  2025년 연봉 실수령액, 무엇이 달라졌나요?
+                  2026년 연봉 실수령액, 무엇이 달라졌나요?
                 </h2>
                 <div className="space-y-8 text-zinc-300 leading-relaxed">
                   <div>
@@ -134,7 +134,7 @@ function AnnualTable() {
                   <div>
                     <h3 className="text-xl font-semibold text-zinc-100 mb-3">3. 4대보험 요율 변동 확인</h3>
                     <p>
-                      장기요양보험료율 등 매년 미세하게 변동되는 4대보험 요율을 2025년 최신 기준으로 완벽하게 반영했습니다.
+                      장기요양보험료율 등 매년 미세하게 변동되는 4대보험 요율을 2026년 최신 기준으로 완벽하게 반영했습니다.
                       건강보험료와 국민연금 상한액 변동까지 고려된 가장 정확한 데이터를 확인하세요.
                     </p>
                   </div>

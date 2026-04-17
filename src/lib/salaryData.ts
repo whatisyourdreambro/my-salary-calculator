@@ -7,7 +7,7 @@ export interface SalaryStat {
   percentiles: { [key: number]: number }; // 백분위별 연봉 데이터 (상위 1% ~ 99%)
 }
 
-// 국가통계포털(KOSIS), 고용노동부 임금직무정보시스템 데이터를 기반으로 재구성한 2024-2025년 기준 데이터
+// 국가통계포털(KOSIS), 고용노동부 임금직무정보시스템 데이터를 기반으로 재구성한 2024-2026년 기준 데이터
 // [참고] 파트너님의 요청에 따라 다양한 직군, 경력, 연령대 키 구조가 반영되어 있습니다.
 //       실제 서비스에서는 각 키에 맞는 정확한 통계 데이터가 필요합니다.
 export const salaryData: Record<string, SalaryStat> = {

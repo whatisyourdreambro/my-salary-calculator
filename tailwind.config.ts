@@ -29,34 +29,34 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#0F4C81", // Trust Blue
+          DEFAULT: "#1428A0", // Samsung Trust Blue
           foreground: "#ffffff",
-          50: "#f0f7ff",
-          100: "#e0effe",
-          200: "#bae0fd",
-          300: "#7cc5fa",
-          400: "#36a9f5",
-          500: "#0c8de3",
-          600: "#006fc1",
-          700: "#0F4C81", // Trust Blue Base
-          800: "#0c406e",
-          900: "#0e365b",
-          950: "#09223b",
+          50: "#f0f2fa",
+          100: "#e0e6f5",
+          200: "#c7d2ec",
+          300: "#9eb6df",
+          400: "#6e92ce",
+          500: "#4971be",
+          600: "#3455a5",
+          700: "#2a4286",
+          800: "#27386d",
+          900: "#24325a",
+          950: "#1428a0", // Base Solid
         },
         secondary: {
-          DEFAULT: "#FFD700", // Warm Gold
-          foreground: "#381f15",
-          50: "#fdfbf7",
-          100: "#fdf8dc", // Light Gold
-          200: "#fbf0b1",
-          300: "#f8e376",
-          400: "#FFD700", // Warm Gold Base
-          500: "#ecc000",
-          600: "#ca9a00",
-          700: "#a17203",
-          800: "#855a0b",
-          900: "#714a0f",
-          950: "#422803",
+          DEFAULT: "#F1F5F9", // Solid Light Gray
+          foreground: "#0F172A",
+          50: "#F8FAFC",
+          100: "#F1F5F9",
+          200: "#E2E8F0",
+          300: "#CBD5E1",
+          400: "#94A3B8",
+          500: "#64748B",
+          600: "#475569",
+          700: "#334155",
+          800: "#1E293B",
+          900: "#0F172A",
+          950: "#020617",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

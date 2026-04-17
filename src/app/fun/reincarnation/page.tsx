@@ -58,10 +58,10 @@ const OCCUPATIONS: LifeAttribute[] = [
 
 const getRarityColor = (rarity: Rarity) => {
   switch (rarity) {
-    case "S": return "text-yellow-500 font-black";
-    case "A": return "text-purple-500 font-black";
+    case "S": return "text-primary font-black";
+    case "A": return "text-primary font-black";
     case "B": return "text-blue-500 font-bold";
-    case "C": return "text-green-500 font-bold";
+    case "C": return "text-primary font-bold";
     case "F": return "text-slate-400 font-medium";
     default: return "text-slate-700 dark:text-slate-300";
   }
@@ -69,10 +69,10 @@ const getRarityColor = (rarity: Rarity) => {
 
 const getRarityBg = (rarity: Rarity) => {
   switch (rarity) {
-    case "S": return "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700/50";
-    case "A": return "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700/50";
+    case "S": return "bg-primary/10 dark:bg-primary/20 border-yellow-200 dark:border-primary/50";
+    case "A": return "bg-primary/10 dark:bg-primary/20 border-purple-200 dark:border-primary/50";
     case "B": return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700/50";
-    case "C": return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700/50";
+    case "C": return "bg-primary/10 dark:bg-primary/20 border-green-200 dark:border-primary/50";
     case "F": return "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700";
     default: return "bg-slate-100 border-slate-200";
   }
@@ -149,16 +149,16 @@ export default function ReincarnationPage() {
       {/* Hero Section */}
       <section className="relative pt-28 pb-14 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-indigo-400/10 dark:bg-indigo-500/15 rounded-full blur-[120px] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10" />
         <div className="max-w-4xl mx-auto px-4">
-          <div className="inline-block mb-5 p-4 rounded-[20px] bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-700/50">
-            <Dna className="w-10 h-10 text-indigo-500" />
+          <div className="inline-block mb-5 p-4 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-indigo-200 dark:border-primary/50">
+            <Dna className="w-10 h-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-white mb-4">
-            LIFE <span className="text-indigo-600">GACHA</span>
+            LIFE <span className="text-primary">GACHA</span>
           </h1>
           <p className="mt-2 text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
-            당신의 현생 연봉이 다음 생의 <span className="text-indigo-600 font-bold">운명(Karma)</span>을 결정합니다.
+            당신의 현생 연봉이 다음 생의 <span className="text-primary font-bold">운명(Karma)</span>을 결정합니다.
           </p>
         </div>
       </section>
@@ -215,7 +215,7 @@ export default function ReincarnationPage() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">영혼 데이터 재구성 중...</h2>
-              <p className="text-indigo-500 dark:text-indigo-400 font-medium">당신의 카르마를 분석하고 있습니다.</p>
+              <p className="text-primary dark:text-primary font-medium">당신의 카르마를 분석하고 있습니다.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -230,7 +230,7 @@ export default function ReincarnationPage() {
             >
               <div className="toss-card p-8 relative overflow-hidden">
                 <div className="text-center mb-8">
-                  <div className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-sm font-bold mb-4">
+                  <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary text-sm font-bold mb-4">
                     REINCARNATION COMPLETE
                   </div>
                   <h2 className="text-3xl font-black text-slate-900 dark:text-white">당신의 다음 생은?</h2>
@@ -310,7 +310,7 @@ export default function ReincarnationPage() {
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[16px] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg"
+                    className="flex-1 py-4 bg-primary hover:bg-primary text-white rounded-[16px] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg"
                   >
                     <Share2 size={18} /> 결과 공유
                   </button>

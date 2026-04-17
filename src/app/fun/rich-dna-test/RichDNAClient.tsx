@@ -61,30 +61,30 @@ const resultTypes = {
         subtitle: "미래의 설계자",
         icon: Rocket,
         description: "당신은 리스크를 두려워하지 않으며, 미래에 대한 확신과 대담한 상상력으로 세상을 놀라게 합니다. 불가능에 도전하여 인류의 역사를 바꿀 '혁신가' 타입입니다.",
-        color: "text-red-400",
+        color: "text-primary",
         gradient: "from-red-500 to-orange-500",
-        bg: "bg-red-900/20",
-        borderColor: "border-red-500/30",
+        bg: "bg-primary/20",
+        borderColor: "border-primary/30",
     },
     rockefeller: {
         title: "존 D. 록펠러",
         subtitle: "시스템의 지배자",
         icon: Factory,
         description: "당신은 압도적인 시장 지배력과 독점적 지위를 통해 부를 축적하는 능력이 탁월합니다. 경쟁자를 압도하고, 거대한 부의 제국을 건설할 '제국 건설자' 타입입니다.",
-        color: "text-emerald-400",
+        color: "text-primary",
         gradient: "from-emerald-600 to-teal-600",
-        bg: "bg-emerald-900/20",
-        borderColor: "border-emerald-500/30",
+        bg: "bg-primary/20",
+        borderColor: "border-primary/30",
     },
     templeton: {
         title: "존 템플턴",
         subtitle: "역발상의 대가",
         icon: Gem,
         description: "당신은 비관론이 극에 달했을 때가 최고의 기회임을 알고 있습니다. 남들이 공포에 떨 때 과감히 투자하고, 위기 속에서 숨겨진 보석을 찾아내는 '영적 투자자' 타입입니다.",
-        color: "text-purple-400",
+        color: "text-primary",
         gradient: "from-purple-500 to-pink-500",
-        bg: "bg-purple-900/20",
-        borderColor: "border-purple-500/30",
+        bg: "bg-primary/20",
+        borderColor: "border-primary/30",
     },
 };
 
@@ -142,14 +142,14 @@ export default function RichDNAClient() {
             {/* Hero Section */}
             <section className="relative pt-28 pb-14 text-center overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-yellow-400/10 dark:bg-yellow-500/15 rounded-full blur-[120px] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 dark:bg-primary/15 rounded-full blur-[120px] -z-10" />
 
                 <div className="max-w-4xl mx-auto px-4">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 mb-6 shadow-md">
-                        <Gem className="w-10 h-10 text-yellow-500" />
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/10 dark:bg-primary/30 border border-yellow-200 dark:border-primary/50 mb-6 shadow-md">
+                        <Gem className="w-10 h-10 text-primary" />
                     </div>
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-4">
-                        부자 DNA <span className="text-yellow-500">테스트</span>
+                        부자 DNA <span className="text-primary">테스트</span>
                     </h1>
                     <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
                         당신 안에 잠든 억만장자의 본능을 꺼우세요.<br />
@@ -173,13 +173,13 @@ export default function RichDNAClient() {
                             >
                                 <div className="relative z-10">
                                     <div className="flex justify-between items-center mb-10">
-                                        <span className="text-sm font-bold text-yellow-400 bg-yellow-500/10 px-4 py-1.5 rounded-full border border-yellow-500/20">
+                                        <span className="text-sm font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">
                                             QUESTION {step + 1}
                                         </span>
                                         <div className="flex items-center gap-2">
                                             <div className="w-24 h-2 bg-zinc-800 rounded-full overflow-hidden">
                                                 <motion.div
-                                                    className="h-full bg-yellow-500"
+                                                    className="h-full bg-primary"
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${((step + 1) / questions.length) * 100}%` }}
                                                 />
@@ -202,13 +202,13 @@ export default function RichDNAClient() {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: idx * 0.1 }}
                                                 onClick={() => handleAnswer(answer.type as keyof typeof scores)}
-                                                className="w-full text-left p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-yellow-500/10 hover:border-yellow-500/50 transition-all duration-300 group relative overflow-hidden active:scale-[0.99]"
+                                                className="w-full text-left p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 group relative overflow-hidden active:scale-[0.99]"
                                             >
                                                 <div className="flex items-center justify-between relative z-10">
-                                                    <span className="text-lg font-medium text-zinc-300 group-hover:text-yellow-400 transition-colors">
+                                                    <span className="text-lg font-medium text-zinc-300 group-hover:text-primary transition-colors">
                                                         {answer.text}
                                                     </span>
-                                                    <ArrowRight className="w-5 h-5 text-zinc-600 group-hover:text-yellow-400 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+                                                    <ArrowRight className="w-5 h-5 text-zinc-600 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
                                                 </div>
                                             </motion.button>
                                         ))}
@@ -287,7 +287,7 @@ export default function RichDNAClient() {
                                     {/* Fun Hub Link */}
                                     <Link
                                         href="/fun"
-                                        className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-yellow-500/30 text-zinc-400 hover:text-yellow-400 font-bold transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-4 rounded-xl bg-zinc-900 border border-white/10 hover:border-primary/30 text-zinc-400 hover:text-primary font-bold transition-all flex items-center justify-center gap-2"
                                     >
                                         <TrendingUp size={18} /> 다른 테스트 보러가기
                                     </Link>

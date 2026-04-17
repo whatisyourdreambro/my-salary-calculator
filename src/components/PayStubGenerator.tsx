@@ -149,7 +149,7 @@ export default function PayStubGenerator() {
                 <p className="text-xs text-gray-500 mt-1">PAYMENT SPECIFICATION</p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg">2025년 11월분</p>
+                <p className="font-bold text-lg">2026년 11월분</p>
                 <p className="text-sm text-gray-600">지급일: 2025.11.25</p>
               </div>
             </div>

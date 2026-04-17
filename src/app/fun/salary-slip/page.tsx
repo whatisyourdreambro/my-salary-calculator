@@ -179,7 +179,7 @@ export default function SalarySlipPage() {
                                         <span className="text-slate-600 font-medium">기본급 (세전)</span>
                                         <span className="font-bold text-slate-900">{monthly.toLocaleString()}원</span>
                                     </div>
-                                    <div className="flex justify-between items-center text-red-500">
+                                    <div className="flex justify-between items-center text-primary">
                                         <span className="font-medium">총 공제액</span>
                                         <span className="font-bold">-{(monthly - netMonthly).toLocaleString()}원</span>
                                     </div>

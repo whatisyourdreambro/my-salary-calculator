@@ -50,9 +50,9 @@ const resultTypes = {
     title: "욜로족 라이언",
     icon: Zap,
     description: "'인생은 한 번뿐!' 현재의 행복을 가장 중시하는 당신. 화끈한 소비로 스트레스를 풀지만, 가끔은 텅장이 될 수 있어요. 멋진 인생을 살지만, 작은 계획이라도 세워보면 어떨까요?",
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
-    bgColor: "bg-orange-500",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    bgColor: "bg-primary",
   },
   plan: {
     title: "계획적인 거북이",
@@ -66,17 +66,17 @@ const resultTypes = {
     title: "알뜰살뜰 다람쥐",
     icon: Squirrel,
     description: "도토리를 모으듯 차곡차곡 쌓이는 통장 잔고를 보며 행복을 느끼는 당신. 절약과 저축의 신이지만, 가끔은 모은 돈으로 자신에게 큰 선물을 해주는 건 어떨까요?",
-    color: "text-green-500",
-    bg: "bg-green-500/10",
-    bgColor: "bg-green-500",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    bgColor: "bg-primary",
   },
   social: {
     title: "인싸 토끼",
     icon: Rabbit,
     description: "혼자보다는 함께일 때 더 큰 행복을 느끼는 당신. 주변 사람들을 챙기느라 지출이 많지만, 그만큼 행복한 추억도 많아요. 하지만 나의 재무 상태도 잊지 말고 챙겨주세요!",
-    color: "text-pink-500",
-    bg: "bg-pink-500/10",
-    bgColor: "bg-pink-500",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    bgColor: "bg-primary",
   },
 };
 
@@ -114,8 +114,8 @@ export default function SpendingTestPage() {
       {/* Hero */}
       <section className="relative pt-28 pb-10 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-pink-400/10 dark:bg-pink-500/10 rounded-full blur-[100px] -z-10" />
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-600 dark:text-pink-400 font-bold text-sm mb-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/10 dark:bg-primary/10 rounded-full blur-[100px] -z-10" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary font-bold text-sm mb-6">
           🐾 소비 성향 분석
         </div>
         <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-4">

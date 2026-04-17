@@ -22,15 +22,15 @@ const tableHeaders = [
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "DataSet",
-  name: "2025년 월급 실수령액 표",
-  description: "2025년 최신 세법 기준 월급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
+  name: "2026년 월급 실수령액 표",
+  description: "2026년 최신 세법 기준 월급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
   url: "https://www.moneysalary.com/table/monthly",
   creator: {
     "@type": "Organization",
     name: "Moneysalary",
   },
   license: "https://www.moneysalary.com",
-  keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2025년"],
+  keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2026년"],
 };
 
 function MonthlyTable() {
@@ -45,10 +45,10 @@ function MonthlyTable() {
       />
       <main className="w-full bg-background">
         <TableHero
-          badgeText="2025년 최신 세법 기준"
+          badgeText="2026년 최신 세법 기준"
           title={
             <>
-              2025 월급 실수령액 <br className="sm:hidden" />
+              2026 월급 실수령액 <br className="sm:hidden" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">
                 미리보기
               </span>
@@ -56,7 +56,7 @@ function MonthlyTable() {
           }
           description={
             <>
-              2025년, 내 월급 통장에는 얼마가 찍힐까요? <br className="hidden sm:block" />
+              2026년, 내 월급 통장에는 얼마가 찍힐까요? <br className="hidden sm:block" />
               최신 정책을 반영한 예상 월급 실수령액을 확인해보세요.
             </>
           }
@@ -74,7 +74,7 @@ function MonthlyTable() {
           <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
-              2025년 vs 2026년 주요 정책 비교
+              2026년 vs 2026년 주요 정책 비교
             </h2>
             <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
               <p className="text-center text-muted-foreground">
@@ -82,7 +82,7 @@ function MonthlyTable() {
               </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">2026년</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 국민연금 요율: 9% (근로자 4.5%)</li>
                     <li>- 건강보험 요율: 7.09% (근로자 3.545%)</li>

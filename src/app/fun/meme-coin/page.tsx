@@ -76,23 +76,23 @@ export default function MemeCoinPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-black text-green-500 font-mono overflow-hidden relative selection:bg-green-500 selection:text-black pt-28">
+    <main className="w-full min-h-screen bg-black text-primary font-mono overflow-hidden relative selection:bg-primary selection:text-black pt-28">
       {/* Matrix Background */}
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none bg-[linear-gradient(0deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent)] bg-[size:50px_50px]" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-12">
         <div className="text-center mb-12 border-b border-green-900/50 pb-8">
-          <div className="inline-block px-4 py-1 border border-green-500 rounded-full text-xs mb-4 animate-pulse">
+          <div className="inline-block px-4 py-1 border border-primary rounded-full text-xs mb-4 animate-pulse">
             LIVE MARKET STATUS: EXTREME GREED
           </div>
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-2">
-            CRYPTO <span className="text-green-500">PANIC</span>
+            CRYPTO <span className="text-primary">PANIC</span>
           </h1>
-          <p className="text-green-700 text-lg">100만원으로 인생역전? 가즈아! 🚀</p>
+          <p className="text-primary text-lg">100만원으로 인생역전? 가즈아! 🚀</p>
         </div>
 
         {/* Ad Unit */}
-        <div className="mb-8 max-w-3xl mx-auto border border-green-900/30 bg-green-900/5 rounded-lg overflow-hidden">
+        <div className="mb-8 max-w-3xl mx-auto border border-green-900/30 bg-primary/5 rounded-lg overflow-hidden">
           <AdUnit slotId="8877665544" format="auto" label="Meme Coin Top Ad" />
         </div>
 
@@ -106,15 +106,15 @@ export default function MemeCoinPage() {
               className="space-y-8"
             >
               {/* Wallet */}
-              <div className="bg-green-900/10 border border-green-500/30 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="bg-primary/10 border border-primary/30 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
-                  <p className="text-green-700 text-sm uppercase">Available Balance</p>
+                  <p className="text-primary text-sm uppercase">Available Balance</p>
                   <p className="text-4xl font-bold text-white tracking-tight">{formatNumber(remainingCapital)} KRW</p>
                 </div>
                 <button
                   onClick={runSimulation}
                   disabled={totalInvested === 0}
-                  className="px-8 py-4 bg-green-600 hover:bg-green-500 text-black font-black text-xl rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)]"
+                  className="px-8 py-4 bg-primary hover:bg-primary text-black font-black text-xl rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)]"
                 >
                   매수 체결 (BUY)
                 </button>
@@ -123,7 +123,7 @@ export default function MemeCoinPage() {
               {/* Coins Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {coins.map(coin => (
-                  <div key={coin.id} className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl hover:border-green-500/50 transition-colors group">
+                  <div key={coin.id} className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl hover:border-primary/50 transition-colors group">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="p-3 rounded-full" style={{ backgroundColor: `${coin.color}20` }}>
                         <coin.icon className="w-8 h-8" style={{ color: coin.color }} />
@@ -143,13 +143,13 @@ export default function MemeCoinPage() {
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => handleInvestmentChange(coin.id as keyof typeof investments, -100000)}
-                        className="py-2 bg-zinc-800 hover:bg-red-900/30 text-red-500 rounded-lg font-bold transition-colors"
+                        className="py-2 bg-zinc-800 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
                       >
                         -10만
                       </button>
                       <button
                         onClick={() => handleInvestmentChange(coin.id as keyof typeof investments, 100000)}
-                        className="py-2 bg-zinc-800 hover:bg-green-900/30 text-green-500 rounded-lg font-bold transition-colors"
+                        className="py-2 bg-zinc-800 hover:bg-primary/30 text-primary rounded-lg font-bold transition-colors"
                       >
                         +10만
                       </button>
@@ -170,16 +170,16 @@ export default function MemeCoinPage() {
             >
               <div className="relative w-32 h-32 mb-8">
                 <motion.div
-                  className="absolute inset-0 border-4 border-green-500/30 border-t-green-500 rounded-full"
+                  className="absolute inset-0 border-4 border-primary/30 border-t-green-500 rounded-full"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Rocket className="w-12 h-12 text-green-500 animate-bounce" />
+                  <Rocket className="w-12 h-12 text-primary animate-bounce" />
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">시장 분석 중...</h2>
-              <p className="text-green-500 animate-pulse">고래들의 움직임을 포착하고 있습니다</p>
+              <p className="text-primary animate-pulse">고래들의 움직임을 포착하고 있습니다</p>
 
               <div className="mt-8 w-full max-w-md">
                 <AdUnit slotId="9988776655" format="rectangle" label="Analyzing Ad" />
@@ -195,7 +195,7 @@ export default function MemeCoinPage() {
               className="space-y-8"
             >
               {/* Event Banner */}
-              <div className={`p-6 rounded-2xl border-2 text-center ${result.profit >= 0 ? 'bg-green-900/20 border-green-500' : 'bg-red-900/20 border-red-500'}`}>
+              <div className={`p-6 rounded-2xl border-2 text-center ${result.profit >= 0 ? 'bg-primary/20 border-primary' : 'bg-primary/20 border-primary'}`}>
                 <h2 className="text-3xl font-black text-white mb-2">
                   {result.profit >= 0 ? "TO THE MOON! 🚀" : "RUG PULL! 📉"}
                 </h2>
@@ -206,19 +206,19 @@ export default function MemeCoinPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
                   <p className="text-zinc-500 text-sm">최종 평가액</p>
-                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {formatNumber(result.finalValue)} 원
                   </p>
                 </div>
                 <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
                   <p className="text-zinc-500 text-sm">수익금</p>
-                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {result.profit > 0 ? '+' : ''}{formatNumber(result.profit)} 원
                   </p>
                 </div>
                 <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800">
                   <p className="text-zinc-500 text-sm">수익률</p>
-                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`text-3xl font-bold ${result.profit >= 0 ? 'text-primary' : 'text-primary'}`}>
                     {result.profitRate.toFixed(2)}%
                   </p>
                 </div>

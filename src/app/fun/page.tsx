@@ -111,18 +111,18 @@ export default function FunLabPage() {
 
                 {/* 카드 그리드 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
-                    <FunCard icon={Dna} title="부자 DNA 테스트" description="당신에게 숨겨진 부자의 본능은 몇 점일까요? 7가지 정밀 질문으로 분석합니다." href="/fun/rich-dna-test" color="text-yellow-500" featured={true} badge="POPULAR" />
-                    <FunCard icon={Brain} title="IQ 테스트" description="상위 1%에 도전하세요. 멘사급 논리력 퀴즈 15문항." href="/fun/iq-test" color="text-emerald-500" badge="NEW" />
+                    <FunCard icon={Dna} title="부자 DNA 테스트" description="당신에게 숨겨진 부자의 본능은 몇 점일까요? 7가지 정밀 질문으로 분석합니다." href="/fun/rich-dna-test" color="text-primary" featured={true} badge="POPULAR" />
+                    <FunCard icon={Brain} title="IQ 테스트" description="상위 1%에 도전하세요. 멘사급 논리력 퀴즈 15문항." href="/fun/iq-test" color="text-primary" badge="NEW" />
                     <FunCard icon={Gamepad2} title="플래피 샐러리맨" description="야근을 피해 퇴근하세요! 극악 난이도의 비행 게임." href="/fun/flappy" color="text-blue-500" />
-                    <FunCard icon={Coins} title="밈코인 모의투자" description="도지, 시바... -99%의 공포를 미리 체험해보세요." href="/fun/meme-coin" color="text-orange-500" />
-                    <FunCard icon={LayoutGrid} title="샐러리맨 테트리스" description="업무가 쌓이기 전에 처리하세요. 추억의 테트리스." href="/fun/tetris" color="text-purple-500" />
-                    <FunCard icon={Trophy} title="연봉/자산 랭킹" description="내 연봉은 대한민국 상위 몇 %일까요? 실시간 데이터 비교." href="/fun/rank" color="text-red-500" />
-                    <FunCard icon={Target} title="소비 성향 테스트" description="나는 욜로족일까 짠돌이일까? 소비 습관 정밀 진단." href="/fun/spending-test" color="text-pink-500" />
-                    <FunCard icon={Ghost} title="환생 테스트" description="다음 생에는 재벌 3세? 아니면 노예? AI 환생 시뮬레이션." href="/fun/reincarnation" color="text-indigo-500" />
-                    <FunCard icon={Utensils} title="점심 메뉴 룰렛" description="결정 장애 해결! 오늘 점심 뭐 먹지 고민 끝." href="/fun/lunch-roulette" color="text-green-500" />
-                    <FunCard icon={Sparkles} title="로또 시뮬레이터" description="10억 당첨될 때까지 얼마나 걸릴까? 인생역전 도전." href="/lotto" color="text-yellow-500" badge="HOT" />
-                    <FunCard icon={Gift} title="주말 당직 룰렛" description="공정한 당직 정하기. 쫄깃한 복불복 게임." href="/fun/weekend-duty" color="text-teal-500" />
-                    <FunCard icon={Wallet} title="금융 MBTI (F-MBTI)" description="나의 금융 성격 유형은? 16가지 유형으로 분석." href="/fun/financial-mbti" color="text-cyan-500" />
+                    <FunCard icon={Coins} title="밈코인 모의투자" description="도지, 시바... -99%의 공포를 미리 체험해보세요." href="/fun/meme-coin" color="text-primary" />
+                    <FunCard icon={LayoutGrid} title="샐러리맨 테트리스" description="업무가 쌓이기 전에 처리하세요. 추억의 테트리스." href="/fun/tetris" color="text-primary" />
+                    <FunCard icon={Trophy} title="연봉/자산 랭킹" description="내 연봉은 대한민국 상위 몇 %일까요? 실시간 데이터 비교." href="/fun/rank" color="text-primary" />
+                    <FunCard icon={Target} title="소비 성향 테스트" description="나는 욜로족일까 짠돌이일까? 소비 습관 정밀 진단." href="/fun/spending-test" color="text-primary" />
+                    <FunCard icon={Ghost} title="환생 테스트" description="다음 생에는 재벌 3세? 아니면 노예? AI 환생 시뮬레이션." href="/fun/reincarnation" color="text-primary" />
+                    <FunCard icon={Utensils} title="점심 메뉴 룰렛" description="결정 장애 해결! 오늘 점심 뭐 먹지 고민 끝." href="/fun/lunch-roulette" color="text-primary" />
+                    <FunCard icon={Sparkles} title="로또 시뮬레이터" description="10억 당첨될 때까지 얼마나 걸릴까? 인생역전 도전." href="/lotto" color="text-primary" badge="HOT" />
+                    <FunCard icon={Gift} title="주말 당직 룰렛" description="공정한 당직 정하기. 쫄깃한 복불복 게임." href="/fun/weekend-duty" color="text-primary" />
+                    <FunCard icon={Wallet} title="금융 MBTI (F-MBTI)" description="나의 금융 성격 유형은? 16가지 유형으로 분석." href="/fun/financial-mbti" color="text-primary" />
                 </div>
 
                 {/* 하단 광고 */}

@@ -109,10 +109,10 @@ export default function InteractiveTable({
   const totalDeductions = result.totalDeduction;
 
   const chartData = useMemo(() => [
-    { name: "국민연금", value: parseFloat(((result.pension / totalDeductions) * 100).toFixed(1)), color: "#3182F6" },
-    { name: "건강보험", value: parseFloat(((result.health / totalDeductions) * 100).toFixed(1)), color: "#60a5fa" },
-    { name: "고용보험", value: parseFloat(((result.employment / totalDeductions) * 100).toFixed(1)), color: "#93c5fd" },
-    { name: "소득세", value: parseFloat((((result.incomeTax + result.localTax) / totalDeductions) * 100).toFixed(1)), color: "#f97316" },
+    { name: "국민연금", value: parseFloat(((result.pension / totalDeductions) * 100).toFixed(1)), color: "#1428A0" },
+    { name: "건강보험", value: parseFloat(((result.health / totalDeductions) * 100).toFixed(1)), color: "#3455a5" },
+    { name: "고용보험", value: parseFloat(((result.employment / totalDeductions) * 100).toFixed(1)), color: "#6e92ce" },
+    { name: "소득세", value: parseFloat((((result.incomeTax + result.localTax) / totalDeductions) * 100).toFixed(1)), color: "#111111" },
   ], [result, totalDeductions]);
 
   const deductionRate = totalDeductions / result.monthlyNet;
@@ -308,12 +308,12 @@ export default function InteractiveTable({
             </h3>
             <div className="space-y-2">
               {[
-                { label: "국민연금", val: result.pension, color: "bg-blue-500" },
-                { label: "건강보험", val: result.health, color: "bg-sky-400" },
-                { label: "장기요양", val: result.longTermCare, color: "bg-cyan-400" },
-                { label: "고용보험", val: result.employment, color: "bg-indigo-400" },
-                { label: "소득세", val: result.incomeTax, color: "bg-orange-400" },
-                { label: "지방소득세", val: result.localTax, color: "bg-amber-400" },
+                { label: "국민연금", val: result.pension, color: "bg-[#1428A0]" },
+                { label: "건강보험", val: result.health, color: "bg-[#3455a5]" },
+                { label: "장기요양", val: result.longTermCare, color: "bg-[#6e92ce]" },
+                { label: "고용보험", val: result.employment, color: "bg-[#9eb6df]" },
+                { label: "소득세", val: result.incomeTax, color: "bg-[#111111] dark:bg-[#eeeeee]" },
+                { label: "지방소득세", val: result.localTax, color: "bg-slate-500" },
               ].map((item) => (
                 <div key={item.label} className="flex justify-between items-center py-2 border-b border-slate-50 dark:border-slate-800 last:border-0">
                   <div className="flex items-center gap-2">

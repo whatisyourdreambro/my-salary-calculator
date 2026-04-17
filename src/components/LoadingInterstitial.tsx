@@ -64,7 +64,7 @@ export default function LoadingInterstitial({ isOpen, onClose }: LoadingIntersti
                             <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
                                 AI가 최신 세법을 분석중입니다...
                             </h2>
-                            <p className="text-muted-foreground">2025년 소득세율 및 4대보험료 적용 중</p>
+                            <p className="text-muted-foreground">2026년 소득세율 및 4대보험료 적용 중</p>
                         </div>
 
                         {/* Progress Bar */}

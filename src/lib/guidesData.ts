@@ -30,7 +30,7 @@ const generateExpertContent = (title: string, category: string, description: str
       단순한 정보 전달을 넘어, 실질적으로 당신의 자산을 불리고 커리어를 성장시키는 데 도움이 되는 구체적인 전략을 제시합니다.
     </p>
     <p>
-      최근 경제 상황과 트렌드를 반영하여, 2025년 현재 시점에서 가장 유효한 방법론을 담았습니다. 
+      최근 경제 상황과 트렌드를 반영하여, 2026년 현재 시점에서 가장 유효한 방법론을 담았습니다. 
       끝까지 읽으신다면 남들보다 한 발 앞선 경쟁력을 갖추게 될 것입니다.
     </p>
   `;
@@ -160,13 +160,13 @@ const generateExpertContent = (title: string, category: string, description: str
 const rawGuides = [
   // --- 연봉 (Salary) : 10 items ---
   {
-    slug: "salary-guide-2025",
-    title: "2025년 연봉 실수령액표: 내 월급의 진실 💸",
-    description: "연봉 1억이면 월 얼마? 2025년 최신 세율과 4대보험 요율을 완벽 반영한 구간별 실수령액 총정리!",
+    slug: "salary-guide-2026",
+    title: "2026년 연봉 실수령액표: 내 월급의 진실 💸",
+    description: "연봉 1억이면 월 얼마? 2026년 최신 세율과 4대보험 요율을 완벽 반영한 구간별 실수령액 총정리!",
     category: "연봉",
-    tags: ["연봉", "실수령액", "2025년", "월급"],
+    tags: ["연봉", "실수령액", "2026년", "월급"],
     level: "초급",
-    publishedDate: "2025-11-01",
+    publishedDate: "2026-11-01",
     views: 150234,
   },
   {
@@ -241,7 +241,7 @@ const rawGuides = [
   },
   {
     slug: "nurse-salary",
-    title: "2025년 간호사 연봉 현실: 3교대 vs 상근직 실수령액 표 💉",
+    title: "2026년 간호사 연봉 현실: 3교대 vs 상근직 실수령액 표 💉",
     description: "대학병원 신규 간호사 초봉부터 5년차, 10년차 연봉 상승률 분석. 나이트 수당과 오프 수당까지 포함한 '진짜' 월급 통장 공개.",
     category: "연봉",
     tags: ["간호사", "3교대", "대학병원"],
@@ -262,7 +262,7 @@ const rawGuides = [
 
   // --- 세금 (Tax) : 10 items ---
   {
-    slug: "year-end-tax-2025",
+    slug: "year-end-tax-2026",
     title: "13월의 월급 만들기: 2025 연말정산 필승 공략집 🧾",
     description: "바뀐 세법 완벽 반영! 남들은 모르는 소득공제, 세액공제 꿀팁으로 환급액 200만원 더 받는 법.",
     category: "세금",

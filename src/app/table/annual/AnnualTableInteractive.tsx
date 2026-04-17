@@ -16,7 +16,7 @@ export default function AnnualTableInteractive({
   highlightRows,
 }: AnnualTableInteractiveProps) {
   const pageConfig = {
-    title: "연봉별 실수령액 시뮬레이터 (2025년)",
+    title: "연봉별 실수령액 시뮬레이터 (2026년)",
     basePath: "/table/annual",
     searchPlaceholder: "연봉으로 검색...",
     salaryLabel: "연봉",

@@ -61,7 +61,7 @@ export default function SalaryDetailDashboard({
 
   const recommendedGuides = [
     annualSalary <= 40000000 && {
-      title: "2025년 최저임금 완벽정리",
+      title: "2026년 최저임금 완벽정리",
       href: "/guides/minimum-wage",
     },
     annualSalary <= 50000000 && {

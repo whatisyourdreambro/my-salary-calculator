@@ -75,7 +75,7 @@ function WeeklyTable2026() {
           <section>
             <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
-              2025년 vs 2026년 주요 정책 비교
+              2026년 vs 2026년 주요 정책 비교
             </h2>
             <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
               <p className="text-center text-muted-foreground">
@@ -83,7 +83,7 @@ function WeeklyTable2026() {
               </p>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">2026년</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 최저시급: 10,030원</li>
                     <li>- 월 환산액: 2,096,270원</li>

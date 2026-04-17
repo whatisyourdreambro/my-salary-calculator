@@ -16,7 +16,7 @@ export default function WeeklyTableInteractive({
   highlightRows,
 }: WeeklyTableInteractiveProps) {
   const pageConfig = {
-    title: "주급별 실수령액 시뮬레이터 (2025년)",
+    title: "주급별 실수령액 시뮬레이터 (2026년)",
     basePath: "/table/weekly",
     searchPlaceholder: "주급으로 검색...",
     salaryLabel: "주급",

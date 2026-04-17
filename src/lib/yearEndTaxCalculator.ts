@@ -43,7 +43,7 @@ export interface TaxResult {
   totalDeductions: number; // 총 공제액 (소득공제 + 세액공제)
 }
 
-// 2025년 귀속 연말정산 계산 함수
+// 2026년 귀속 연말정산 계산 함수
 export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
   const { grossSalary } = inputs;
 

@@ -5,7 +5,7 @@ import AdUnit from "@/components/AdUnit";
 export const metadata: Metadata = {
   title: "주택담보대출 계산기 (DSR 포함) | Moneysalary",
   description:
-    "2025년 최신 DSR 규제 적용! 주택 가격, 대출 금리, 기간을 입력하고 월 상환액과 총 이자, 내 연봉으로 감당 가능한 대출 한도를 확인하세요.",
+    "2026년 최신 DSR 규제 적용! 주택 가격, 대출 금리, 기간을 입력하고 월 상환액과 총 이자, 내 연봉으로 감당 가능한 대출 한도를 확인하세요.",
 };
 
 export default function HomeLoanPage() {

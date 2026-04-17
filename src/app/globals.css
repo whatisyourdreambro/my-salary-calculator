@@ -1,35 +1,27 @@
-/* src/app/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Toss Style Light Mode */
-    --background: 210 20% 98%;
-    /* #F2F4F6 (Toss Light Gray Background) */
-    --foreground: 222 47% 11%;
-    /* #191F28 (Toss Black Text) */
+    /* Samsung Style Light Mode (Solid B/W/B) */
+    --background: 0 0% 100%;       /* Pure White */
+    --foreground: 0 0% 0%;         /* Pure Black */
 
-    --card: 0 0% 100%;
-    /* Pure White */
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;             /* Pure White */
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 218 89% 51%;
-    /* #3182F6 (Toss Blue) */
+    --primary: 228 78% 35%;        /* #1428a0 (Samsung Blue) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    /* #F1F5F9 */
-    --secondary-foreground: 215.4 16.3% 46.9%;
-    /* #4E5968 (Toss Sub Text) */
+    --secondary: 210 40% 96.1%;    /* Very Light Blue-Gray */
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 215.4 16.3% 46.9%; /* Gray */
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
@@ -38,59 +30,48 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
-    /* #E5E8EB (Toss Border) */
     --input: 214.3 31.8% 91.4%;
-    --ring: 218 89% 51%;
+    --ring: 228 78% 35%;           /* #1428a0 */
 
-    --radius: 1.5rem;
-    /* Toss Style Huge Radius for Cards */
+    --radius: 0.75rem;
 
-    /* Chart Colors - Fintech Friendly */
-    --chart-1: 218 89% 51%;
-    /* Blue */
-    --chart-2: 160 84% 39%;
-    /* Mint/Emerald */
-    --chart-3: 250 89% 65%;
-    /* Purple */
-    --chart-4: 340 82% 52%;
-    /* Pink */
-    --chart-5: 40 90% 50%;
-    /* Yellow/Orange */
+    /* Chart Colors - Monochromatic Blue & Grayscale */
+    --chart-1: 228 78% 35%; /* Samsung Blue */
+    --chart-2: 210 40% 96.1%; /* Gray/White */
+    --chart-3: 215 16% 47%; /* Dark Gray */
+    --chart-4: 220 50% 60%; /* Light Blue */
+    --chart-5: 0 0% 0%; /* Black */
   }
 
   .dark {
-    /* Toss Style Dark Mode (Clean Dark) */
-    --background: 222 47% 11%;
-    /* #191F28 */
-    --foreground: 210 40% 98%;
-    /* #F9FAFB */
+    /* Samsung Style Dark Mode (Strict Pitch Black) */
+    --background: 0 0% 0%;         /* Pure Black */
+    --foreground: 0 0% 100%;       /* Pure White */
 
-    --card: 217.2 32.6% 17.5%;
-    /* #1E232E */
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 4%;               /* Very Dark Grey #0a0a0a */
+    --card-foreground: 0 0% 100%;
 
-    --popover: 217.2 32.6% 17.5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 218 89% 65%;
-    /* Brighter Blue for Dark Mode */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 228 78% 55%;        /* Lighter Blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 20%;
-    --secondary-foreground: 215 20.2% 80%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 0 0% 12%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 23%;
-    --input: 217.2 32.6% 23%;
-    --ring: 218 89% 65%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 228 78% 55%;
   }
 }
 
@@ -105,9 +86,8 @@
 
   * {
     @apply border-border;
-    font-family: var(--font-pretendard);
-    letter-spacing: -0.01em;
-    /* 텍스트 렌더링 최적화 */
+    font-family: var(--font-pretendard) !important;
+    letter-spacing: -0.02em;
   }
 
   body {
@@ -115,91 +95,67 @@
     font-feature-settings: "cv11", "ss01", "tnum";
   }
 
-  /* 숫자 등 고정폭을 위한 설정 */
   .font-mono-tabular {
     font-variant-numeric: tabular-nums;
+    font-family: var(--font-pretendard) !important;
   }
 
-  /* 헤딩 타이포그래피 */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold tracking-tight text-slate-800 dark:text-slate-100;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-slate-900 dark:text-gray-100;
   }
 }
 
 @layer utilities {
-
-  /* === Toss Design System v2 - Safe & Premium === */
-
-  /* 카드: 완전 불투명 흰 배경으로 모든 화면에서 안전하게 렌더링 */
   .toss-card {
-    @apply bg-white dark:bg-[#1E232E] border border-slate-100 dark:border-slate-800/80
-           shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]
-           dark:shadow-[0_2px_8px_rgba(0,0,0,0.3),0_8px_24px_rgba(0,0,0,0.4)]
-           rounded-[24px] transition-all duration-200;
+    @apply bg-white dark:bg-[#080808] border border-gray-200 dark:border-gray-800
+           shadow-sm
+           rounded-2xl transition-all duration-200;
   }
 
-  /* 인풋: 포커스 시 블루 글로우 링 */
   .toss-input {
-    @apply bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700
-           focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900
-           focus:ring-4 focus:ring-blue-500/10
-           transition-all duration-200 rounded-[16px] text-lg font-semibold px-5 py-4 w-full;
+    @apply bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700
+           focus:border-primary focus:bg-white dark:focus:bg-black
+           focus:ring-2 focus:ring-primary/20
+           transition-all duration-200 rounded-xl text-base px-4 py-3 w-full text-foreground;
   }
 
-  /* 프라이머리 버튼: 토스 블루 + 누름 피드백 */
   .toss-button-primary {
-    @apply relative overflow-hidden bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4
-           shadow-[0_4px_14px_rgba(49,130,246,0.35)]
-           hover:bg-blue-500 hover:shadow-[0_8px_20px_rgba(49,130,246,0.45)]
-           active:scale-[0.97] active:shadow-[0_2px_6px_rgba(49,130,246,0.2)]
+    @apply relative overflow-hidden bg-primary text-white font-bold rounded-xl px-5 py-3
+           shadow-md
+           hover:bg-primary/90 
+           active:scale-95
            transition-all duration-150
-           w-full flex items-center justify-center gap-2 text-lg;
-  }
-
-  .toss-button-primary::after {
-    content: '';
-    @apply absolute inset-0 rounded-[16px] border border-white/20 pointer-events-none;
-  }
-
-  /* 세컨더리 버튼 */
-  .toss-button-secondary {
-    @apply bg-[#F2F4F6] dark:bg-slate-800 text-[#4E5968] dark:text-slate-300
-           font-bold rounded-[16px] px-6 py-4
-           hover:bg-[#E5E8EB] dark:hover:bg-slate-700
-           active:scale-[0.98] transition-all duration-150
            w-full flex items-center justify-center gap-2;
   }
 
-  /* Legacy aliases */
-  .glass      { @apply toss-card; }
+  .toss-button-secondary {
+    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100
+           font-bold rounded-xl px-5 py-3
+           hover:bg-gray-200 dark:hover:bg-gray-700
+           active:scale-[0.98] transition-all duration-150
+           w-full flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700;
+  }
+
+  .glass { @apply toss-card; }
   .glass-card { @apply toss-card; }
   .glass-input { @apply toss-input; }
 
-  .text-gradient         { @apply text-slate-900 dark:text-white; }
-  .text-gradient-primary { @apply text-blue-600 dark:text-blue-400; }
+  .text-gradient { @apply text-slate-900 dark:text-white; }
+  .text-gradient-primary { @apply text-primary; }
 
-  /* 모바일 네이티브 앱 이질감 제거 */
   .no-tap-highlight {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
   }
 }
 
-/* Custom Scrollbar - Minimal Toss Style */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   @apply bg-transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors;
+  @apply bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors;
 }

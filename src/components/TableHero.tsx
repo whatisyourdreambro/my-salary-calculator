@@ -13,12 +13,9 @@ interface TableHeroProps {
 
 export default function TableHero({ badgeText, title, description, adSlotId = "5492837410" }: TableHeroProps) {
     return (
-        <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 overflow-hidden text-center mb-0">
-            {/* 배경: 라이트는 밝은 파란 그라데이션, 다크는 딥 네이비 */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
-
-            {/* 블루 글로우 오브 */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-[120px] -z-10 pointer-events-none" />
+        <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 overflow-hidden text-center mb-0 bg-white dark:bg-black border-b border-gray-100 dark:border-gray-900">
+            {/* Top Blue Accent Line instead of old giant glow */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
 
             <div className="relative z-10 max-w-3xl mx-auto px-4">
                 <motion.div

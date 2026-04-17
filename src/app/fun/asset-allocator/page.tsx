@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -267,7 +267,7 @@ export default function AssetAllocatorGame() {
                 {/* Game Canvas Container */}
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-[#292524] bg-[#0c0a09]">
                     {/* Canvas Background (Felt Table) */}
-                    <div className="absolute inset-0 bg-emerald-900/20 radial-gradient(circle at center, rgba(38, 89, 76, 0.4) 0%, rgba(12, 10, 9, 0.8) 100%)" />
+                    <div className="absolute inset-0 bg-primary/20 radial-gradient(circle at center, rgba(38, 89, 76, 0.4) 0%, rgba(12, 10, 9, 0.8) 100%)" />
 
                     <canvas
                         ref={canvasRef}
@@ -295,7 +295,7 @@ export default function AssetAllocatorGame() {
                                     <span className="text-2xl">🪙</span> <span className="font-bold text-white">+10</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-stone-400">
-                                    <span className="text-2xl">💣</span> <span className="font-bold text-red-400">-20</span>
+                                    <span className="text-2xl">💣</span> <span className="font-bold text-primary">-20</span>
                                 </div>
                             </div>
 
