@@ -16,26 +16,15 @@ import {
   Globe,
 } from "lucide-react";
 
-// Dynamic imports for performance
 const SalaryCalculator = dynamic(() => import("@/components/SalaryCalculator"));
-const SeveranceCalculator = dynamic(
-  () => import("@/components/SeveranceCalculator")
-);
+const SeveranceCalculator = dynamic(() => import("@/components/SeveranceCalculator"));
 const PayStubGenerator = dynamic(() => import("@/components/PayStubGenerator"));
-const FutureSalaryCalculator = dynamic(
-  () => import("@/components/FutureSalaryCalculator")
-);
+const FutureSalaryCalculator = dynamic(() => import("@/components/FutureSalaryCalculator"));
 const SalaryComparator = dynamic(() => import("@/components/SalaryComparator"));
 const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
-const FreelancerCalculator = dynamic(
-  () => import("@/components/FreelancerCalculator")
-);
-const ExchangeRateImpactCalculator = dynamic(
-  () => import("@/components/ExchangeRateDisplay")
-);
-const YearEndTaxCalculator = dynamic(
-  () => import("@/components/YearEndTaxCalculator")
-);
+const FreelancerCalculator = dynamic(() => import("@/components/FreelancerCalculator"));
+const ExchangeRateImpactCalculator = dynamic(() => import("@/components/ExchangeRateDisplay"));
+const YearEndTaxCalculator = dynamic(() => import("@/components/YearEndTaxCalculator"));
 
 const TABS = {
   SALARY: "salary",
@@ -51,55 +40,16 @@ const TABS = {
 
 type TabValue = (typeof TABS)[keyof typeof TABS];
 
-const TAB_CONFIG: Record<
-  TabValue,
-  { name: string; description: string; icon: React.ElementType }
-> = {
-  [TABS.SALARY]: {
-    name: "정규직 계산기",
-    description: "내 월급의 모든 것",
-    icon: Calculator,
-  },
-  [TABS.SEVERANCE]: {
-    name: "퇴직금 계산기",
-    description: "미래를 위한 자금 계획",
-    icon: PiggyBank,
-  },
-  [TABS.FREELANCER]: {
-    name: "알바/프리랜서",
-    description: "3.3% 및 4대보험 계산",
-    icon: Briefcase,
-  },
-  [TABS.EXCHANGE]: {
-    name: "환율 영향",
-    description: "내 자산가치 변화 분석",
-    icon: Globe,
-  },
-  [TABS.YEAR_END_TAX]: {
-    name: "연말정산 최적화",
-    description: "최상의 환급 시나리오",
-    icon: FileText,
-  },
-  [TABS.PAYSTUB]: {
-    name: "급여명세서",
-    description: "월급 내역 한눈에 보기",
-    icon: FileText,
-  },
-  [TABS.FUTURE]: {
-    name: "미래 연봉",
-    description: "커리어 로드맵 예측",
-    icon: TrendingUp,
-  },
-  [TABS.COMPARATOR]: {
-    name: "연봉 비교",
-    description: "최고의 오퍼 선택하기",
-    icon: GitCompare,
-  },
-  [TABS.RANK]: {
-    name: "연봉 순위",
-    description: "내 소득 위치 확인",
-    icon: BarChart3,
-  },
+const TAB_CONFIG: Record<TabValue, { name: string; icon: React.ElementType }> = {
+  [TABS.SALARY]:       { name: "정규직 계산기",    icon: Calculator },
+  [TABS.SEVERANCE]:    { name: "퇴직금 계산기",    icon: PiggyBank },
+  [TABS.FREELANCER]:   { name: "알바/프리랜서",    icon: Briefcase },
+  [TABS.EXCHANGE]:     { name: "환율 영향",        icon: Globe },
+  [TABS.YEAR_END_TAX]: { name: "연말정산",         icon: FileText },
+  [TABS.PAYSTUB]:      { name: "급여명세서",       icon: FileText },
+  [TABS.FUTURE]:       { name: "미래 연봉",        icon: TrendingUp },
+  [TABS.COMPARATOR]:   { name: "연봉 비교",        icon: GitCompare },
+  [TABS.RANK]:         { name: "연봉 순위",        icon: BarChart3 },
 };
 
 function CalculatorTabsComponent() {
@@ -117,83 +67,73 @@ function CalculatorTabsComponent() {
 
   const renderActiveCalculator = () => {
     switch (activeTab) {
-      case TABS.SEVERANCE:
-        return <SeveranceCalculator />;
-      case TABS.FREELANCER:
-        return <FreelancerCalculator />;
-      case TABS.EXCHANGE:
-        return <ExchangeRateImpactCalculator />;
-      case TABS.YEAR_END_TAX:
-        return <YearEndTaxCalculator />;
-      case TABS.PAYSTUB:
-        return <PayStubGenerator />;
-      case TABS.FUTURE:
-        return <FutureSalaryCalculator />;
-      case TABS.COMPARATOR:
-        return <SalaryComparator />;
-      case TABS.RANK:
-        return <SalaryRank />;
+      case TABS.SEVERANCE:    return <SeveranceCalculator />;
+      case TABS.FREELANCER:   return <FreelancerCalculator />;
+      case TABS.EXCHANGE:     return <ExchangeRateImpactCalculator />;
+      case TABS.YEAR_END_TAX: return <YearEndTaxCalculator />;
+      case TABS.PAYSTUB:      return <PayStubGenerator />;
+      case TABS.FUTURE:       return <FutureSalaryCalculator />;
+      case TABS.COMPARATOR:   return <SalaryComparator />;
+      case TABS.RANK:         return <SalaryRank />;
       case TABS.SALARY:
-      default:
-        return <SalaryCalculator />;
+      default:                return <SalaryCalculator />;
     }
   };
 
+  const tabs = Object.values(TABS) as TabValue[];
+
   return (
     <div className="w-full">
-      {/* Toss Style Segmented Control (Desktop) */}
-      <div className="hidden md:flex justify-center mb-8">
-        <div className="inline-flex bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-[20px]">
-          {(Object.values(TABS) as TabValue[]).map((tab) => {
+      {/* ── 탭 네비게이션: 가로 1행 스크롤 ──────────────────────────── */}
+      <div className="w-full mb-8">
+        {/* 스크롤 컨테이너 */}
+        <div
+          className="flex overflow-x-auto gap-2 pb-1"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+        >
+          {tabs.map((tab) => {
             const { name, icon: Icon } = TAB_CONFIG[tab];
             const isActive = activeTab === tab;
             return (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-5 py-3 text-[15px] font-bold rounded-[16px] transition-all duration-300 flex items-center gap-2 ${isActive
-                  ? "text-blue-600 bg-white dark:bg-slate-700 shadow-[0_2px_12px_#0000000F]"
-                  : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
-                  }`}
+                className={`
+                  flex-none flex items-center gap-2 px-5 py-2.5
+                  rounded-full border text-sm font-bold
+                  whitespace-nowrap transition-all duration-200
+                  ${isActive
+                    ? "bg-primary text-white border-primary shadow-md"
+                    : "bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary"
+                  }
+                `}
               >
-                <Icon className="w-[18px] h-[18px]" />
-                <span className="relative z-10">{name}</span>
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                <span>{name}</span>
               </button>
             );
           })}
         </div>
+
+        {/* 하단 구분선 */}
+        <div className="mt-3 h-px bg-slate-100" />
       </div>
 
-      {/* Toss Style Mobile Nav (Scrollable Pills) */}
-      <div className="md:hidden flex overflow-x-auto hide-scrollbar mb-6 -mx-4 px-4 pb-4 pt-2 gap-2 snap-x">
-        {(Object.values(TABS) as TabValue[]).map((tab) => {
-          const { name, icon: Icon } = TAB_CONFIG[tab];
-          const isActive = activeTab === tab;
-          return (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`flex-none snap-start flex items-center gap-2 px-5 py-3.5 rounded-[18px] transition-all whitespace-nowrap font-bold text-[15px] ${isActive
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md"
-                : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
-                }`}
-            >
-              <Icon className="w-5 h-5" />
-              {name}
-            </button>
-          );
-        })}
-      </div>
-
+      {/* ── 활성 계산기 ───────────────────────────────────────────────── */}
       <div className="w-full">{renderActiveCalculator()}</div>
     </div>
   );
 }
 
-// Suspense for client-side components
 export default function CalculatorTabs() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="flex gap-2 mb-8 overflow-hidden">
+        {[...Array(9)].map((_, i) => (
+          <div key={i} className="flex-none h-10 w-28 rounded-full bg-slate-100 animate-pulse" />
+        ))}
+      </div>
+    }>
       <CalculatorTabsComponent />
     </Suspense>
   );
