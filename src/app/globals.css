@@ -135,7 +135,7 @@
 
   /* Premium Toss Style Utilities - Hyper Optimized */
   .toss-card {
-    @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-2xl border border-white/20 dark:border-slate-700/50 shadow-[0_8px_30px_#00000008] dark:shadow-[0_8px_30px_#00000033] rounded-[24px] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-[0_20px_40px_#00000012] dark:hover:shadow-[0_20px_40px_#00000050] hover:-translate-y-1;
+    @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-2xl border border-white/20 dark:border-slate-700/50 shadow-[0_8px_30px_#00000008] dark:shadow-[0_8px_30px_#00000033] rounded-[24px] transition-all duration-300 ease-out hover:shadow-[0_20px_40px_#00000012] dark:hover:shadow-[0_20px_40px_#00000050] hover:-translate-y-1;
   }
 
   .toss-input {
@@ -143,7 +143,7 @@
   }
 
   .toss-button-primary {
-    @apply relative overflow-hidden bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4 shadow-[0_8px_20px_rgba(49,130,246,0.3)] hover:shadow-[0_12px_28px_rgba(49,130,246,0.4)] hover:bg-blue-500 active:scale-[0.96] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] w-full flex items-center justify-center gap-2 text-lg;
+    @apply relative overflow-hidden bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4 shadow-[0_8px_20px_rgba(49,130,246,0.3)] hover:shadow-[0_12px_28px_rgba(49,130,246,0.4)] hover:bg-blue-500 active:scale-[0.96] transition-all duration-300 ease-out w-full flex items-center justify-center gap-2 text-lg;
   }
 
   /* 3D Press Inner Glow Effect for Primary Button */
