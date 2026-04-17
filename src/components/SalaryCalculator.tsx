@@ -327,41 +327,37 @@ export default function SalaryCalculator() {
   const [activeSheet, setActiveSheet] = useState<"dependents" | "children" | "nonTaxable" | null>(null);
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-6">
       <LoadingInterstitial isOpen={isCalculating} onClose={handleInterstitialClose} />
 
-      {/* ── 2컬럼 레이아웃: 왼쪽 입력 / 오른쪽 결과 ─────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+      {/* ── Row 1: 입력 + 실수령 결과 나란히 ──────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
-        {/* ── 왼쪽: 입력 패널 ──────────────────────────────────────── */}
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8 space-y-6">
-          {/* 배지 + 제목 */}
+        {/* 왼쪽: 입력 패널 */}
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 space-y-5">
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2">
               <span className="bg-blue-50 text-primary text-xs font-bold px-3 py-1 rounded-full">2026 세법 적용</span>
-              <Sparkles size={15} className="text-primary" />
+              <Sparkles size={14} className="text-primary" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">얼마나 받으시나요?</h2>
+            <h2 className="text-xl font-black text-slate-900 tracking-tight">얼마나 받으시나요?</h2>
           </div>
 
-          {/* 금액 입력 */}
           <MoneyInput
             label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
             value={salaryInput}
             onValueChange={setSalaryInput}
           />
 
-          {/* 직장인 / 프리랜서 / 알바 탭 */}
-          <div className="p-1.5 bg-slate-100 rounded-2xl flex">
+          {/* 직장인/프리랜서/알바 탭 */}
+          <div className="p-1 bg-slate-100 rounded-2xl flex">
             {(["regular", "freelancer", "part_time"] as const).map((type) => (
               <button
                 key={type}
                 onClick={() => setIncomeType(type)}
                 className={cn(
-                  "flex-1 py-3 rounded-xl text-[14px] font-bold transition-all",
-                  incomeType === type
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                  "flex-1 py-2.5 rounded-xl text-sm font-bold transition-all",
+                  incomeType === type ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
                 )}
               >
                 {type === "regular" ? "직장인" : type === "freelancer" ? "프리랜서" : "알바"}
@@ -369,142 +365,150 @@ export default function SalaryCalculator() {
             ))}
           </div>
 
-          {/* 연봉/월급 기준 + 비과세 */}
           {incomeType === "regular" && (
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setPayBasis(payBasis === "annual" ? "monthly" : "annual")}
-                className="flex items-center justify-center gap-2 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-700 hover:border-primary hover:text-primary transition-all"
-              >
-                <Calculator size={16} className="text-slate-400" />
-                {payBasis === "annual" ? "연봉 기준" : "월급 기준"}
-              </button>
-              <button
-                onClick={() => setActiveSheet("nonTaxable")}
-                className="flex items-center justify-center gap-2 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-700 hover:border-primary hover:text-primary transition-all"
-              >
-                <Zap size={16} className="text-primary" />
-                비과세 {formatNumber(parseNumber(nonTaxableAmount))}
-              </button>
-            </div>
-          )}
+            <>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setPayBasis(payBasis === "annual" ? "monthly" : "annual")}
+                  className="flex items-center justify-center gap-1.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:border-primary hover:text-primary transition-all"
+                >
+                  <Calculator size={15} className="text-slate-400" />
+                  {payBasis === "annual" ? "연봉 기준" : "월급 기준"}
+                </button>
+                <button
+                  onClick={() => setActiveSheet("nonTaxable")}
+                  className="flex items-center justify-center gap-1.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:border-primary hover:text-primary transition-all"
+                >
+                  <Zap size={15} className="text-primary" />
+                  비과세 {formatNumber(parseNumber(nonTaxableAmount))}
+                </button>
+              </div>
 
-          {/* 부양가족 / 자녀 */}
-          {incomeType === "regular" && (
-            <div className="grid grid-cols-2 gap-4 bg-slate-50 rounded-2xl p-4">
-              <div>
-                <p className="text-xs font-bold text-slate-500 mb-2">부양가족 수 (본인 포함)</p>
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setDependents(Math.max(1, dependents - 1))} className="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center hover:bg-slate-300 transition-colors">−</button>
-                  <span className="font-bold text-slate-900 text-lg w-6 text-center">{dependents}</span>
-                  <button onClick={() => setDependents(Math.min(10, dependents + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+              <div className="grid grid-cols-2 gap-3 bg-slate-50 rounded-2xl p-4">
+                <div>
+                  <p className="text-xs font-bold text-slate-500 mb-2">부양가족 수 (본인 포함)</p>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setDependents(Math.max(1, dependents - 1))} className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 font-bold flex items-center justify-center hover:bg-slate-100 transition-colors">−</button>
+                    <span className="font-bold text-slate-900 text-base w-6 text-center">{dependents}</span>
+                    <button onClick={() => setDependents(Math.min(10, dependents + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 mb-2">8세~20세 자녀</p>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-700 font-bold flex items-center justify-center hover:bg-slate-100 transition-colors">−</button>
+                    <span className="font-bold text-slate-900 text-base w-6 text-center">{children}</span>
+                    <button onClick={() => setChildren(Math.min(10, children + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p className="text-xs font-bold text-slate-500 mb-2">8세~20세 자녀</p>
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center hover:bg-slate-300 transition-colors">−</button>
-                  <span className="font-bold text-slate-900 text-lg w-6 text-center">{children}</span>
-                  <button onClick={() => setChildren(Math.min(10, children + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
-                </div>
-              </div>
-            </div>
+            </>
           )}
 
-          {/* 계산하기 버튼 */}
           <button
             onClick={handleCalculateClick}
-            className="w-full h-14 bg-primary text-white rounded-2xl text-lg font-black hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md"
+            className="w-full h-13 py-3.5 bg-primary rounded-2xl text-base font-black hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md"
           >
-            <Zap size={20} className="text-white" />
+            <Zap size={18} className="text-white" />
             <span className="text-white">결과 확인하기</span>
           </button>
         </div>
 
-        {/* ── 오른쪽: 결과 패널 ──────────────────────────────────────── */}
-        <div className="space-y-6">
+        {/* 오른쪽: 실수령액 결과 */}
+        <div>
           {!showResult ? (
-            /* 초기 상태: 안내 카드 */
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] text-center gap-4">
-              <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center text-5xl">🥔</div>
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col items-center justify-center min-h-[280px] text-center gap-4">
+              <div className="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center text-4xl">🥔</div>
               <div>
-                <p className="font-bold text-slate-700 text-lg mb-1">연봉을 입력하고</p>
-                <p className="text-slate-400 text-sm">결과 확인하기를 누르면<br/>실수령액이 계산됩니다</p>
+                <p className="font-bold text-slate-700 mb-1">연봉을 입력하세요</p>
+                <p className="text-slate-400 text-sm">결과 확인하기를 누르면<br/>실수령액이 바로 계산됩니다</p>
               </div>
             </div>
           ) : (
-            <AnimatePresence>
-              <motion.div
-                id="calculation-result"
-                className="space-y-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {/* 마스코트 + 결과 카드 */}
-                <div className="relative pt-12">
-                  <div className="absolute -top-0 left-1/2 -translate-x-1/2 z-20">
-                    <MungMascot mood={mungMood} />
-                  </div>
-                  <SalaryResultCard
-                    monthlyNet={result.monthlyNet}
-                    totalDeduction={result.totalDeduction}
-                    breakdown={{
-                      pension: result.pension,
-                      health: result.health,
-                      longTermCare: result.longTermCare,
-                      employment: result.employment,
-                      incomeTax: result.incomeTax,
-                      localTax: result.localTax
-                    }}
-                  />
+            <motion.div
+              id="calculation-result"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="space-y-4"
+            >
+              {/* 마스코트 + 결과 카드 */}
+              <div className="relative pt-10">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
+                  <MungMascot mood={mungMood} />
                 </div>
-
-                {/* 공유 / 저장 버튼 */}
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={handleShare}
-                    className="py-4 bg-slate-900 rounded-2xl font-black text-[15px] flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-95 transition-all"
-                  >
-                    <Share2 size={18} className="text-white" />
-                    <span className="text-white">결과 공유</span>
-                  </button>
-                  <button
-                    onClick={handleSaveData}
-                    className="py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-[15px] flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-95 transition-all"
-                  >
-                    <CheckCircle size={18} className="text-slate-900" />
-                    <span className="text-slate-900">저장하기</span>
-                  </button>
-                </div>
-
-                {/* 광고 */}
-                <AdUnit slotId="5492837410" format="auto" />
-
-                {/* 티어 카드 */}
-                <SalaryTierCard annualSalary={annualSalary} />
-
-                {/* 상세 분석 */}
-                <WealthChart monthlyNetSalary={result.monthlyNet} />
-                <DetailedAnalysis
-                  annualSalary={annualSalary}
-                  result={result}
-                  monthlyExpenses={parseNumber(monthlyExpenses)}
+                <SalaryResultCard
+                  monthlyNet={result.monthlyNet}
+                  totalDeduction={result.totalDeduction}
+                  breakdown={{
+                    pension: result.pension,
+                    health: result.health,
+                    longTermCare: result.longTermCare,
+                    employment: result.employment,
+                    incomeTax: result.incomeTax,
+                    localTax: result.localTax,
+                  }}
                 />
-              </motion.div>
-            </AnimatePresence>
+              </div>
+
+              {/* 공유/저장 */}
+              <div className="grid grid-cols-2 gap-3">
+                <button onClick={handleShare} className="py-3 bg-slate-900 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-95 transition-all">
+                  <Share2 size={16} className="text-white" />
+                  <span className="text-white">결과 공유</span>
+                </button>
+                <button onClick={handleSaveData} className="py-3 bg-white border border-slate-200 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-95 transition-all">
+                  <CheckCircle size={16} className="text-slate-900" />
+                  <span className="text-slate-900">저장하기</span>
+                </button>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>
+
+      {/* ── Row 2: 보조 패널 3열 (결과 있을 때만) ──────────────────── */}
+      {showResult && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+        >
+          {/* 1. 연봉 티어 카드 */}
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+            <SalaryTierCard annualSalary={annualSalary} />
+          </div>
+
+          {/* 2. 자산 성장 시뮬레이션 */}
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+            <p className="text-sm font-black text-slate-800 mb-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-4 bg-blue-500 rounded-full inline-block" />
+              자산 성장 시뮬레이션
+            </p>
+            <WealthChart monthlyNetSalary={result.monthlyNet} />
+          </div>
+
+          {/* 3. 월급 상세 분석 */}
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+            <p className="text-sm font-black text-slate-800 mb-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-4 bg-primary rounded-full inline-block" />
+              월급 상세 분석
+            </p>
+            <DetailedAnalysis
+              annualSalary={annualSalary}
+              result={result}
+              monthlyExpenses={parseNumber(monthlyExpenses)}
+            />
+          </div>
+        </motion.div>
+      )}
 
       {/* Bottom Sheet: 비과세 설정 */}
       <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
         <div className="p-8 space-y-6">
           <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
-          <button
-            onClick={() => setActiveSheet(null)}
-            className="w-full py-4 bg-primary text-white font-black rounded-2xl flex items-center justify-center gap-2"
-          >
+          <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-primary font-black rounded-2xl flex items-center justify-center">
             <span className="text-white">저장 후 닫기</span>
           </button>
         </div>
