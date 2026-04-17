@@ -122,10 +122,13 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
   } else {
     earnedIncomeTaxCredit = 715000 + (calculatedTax - 1300000) * 0.3;
   }
-  if (grossSalary > 33000000)
-    earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 740000);
-  if (grossSalary > 70000000)
-    earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 660000);
+  // 근로소득세액공제 한도 (2026 세법)
+  if (grossSalary > 120_000_000)
+    earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 500_000);
+  else if (grossSalary > 70_000_000)
+    earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 660_000);
+  else if (grossSalary > 33_000_000)
+    earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 740_000);
 
   let childTaxCredit = 0;
   if (inputs.children === 1) childTaxCredit = 150000;

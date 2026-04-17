@@ -40,8 +40,14 @@ function getTaxCredit(calculatedTax: number, annualSalary: number): number {
   } else {
     credit = 715000 + (calculatedTax - 1300000) * 0.3;
   }
-  if (annualSalary > 70000000) return Math.min(credit, 660000);
-  if (annualSalary > 33000000) return Math.min(credit, 740000);
+  // 근로소득세액공제 한도 (2026 세법 기준)
+  // 총급여 1.2억 초과 → 50만원 한도
+  // 총급여 7,000만원 초과 ~ 1.2억 이하 → 66만원 한도
+  // 총급여 3,300만원 초과 ~ 7,000만원 이하 → 74만원 한도
+  // 총급여 3,300만원 이하 → 한도 없음
+  if (annualSalary > 120_000_000) return Math.min(credit, 500_000);
+  if (annualSalary > 70_000_000)  return Math.min(credit, 660_000);
+  if (annualSalary > 33_000_000)  return Math.min(credit, 740_000);
   return credit;
 }
 

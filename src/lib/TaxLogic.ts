@@ -65,14 +65,14 @@ function getTaxCredit(calculatedTax: number, annualSalary: number): number {
     credit = 715_000 + (calculatedTax - 1_300_000) * 0.30;
   }
 
-  // Cap on credit based on salary
-  let limit = 740_000;
-  if (annualSalary > 70_000_000) limit = 660_000;
-  if (annualSalary > 33_000_000 && annualSalary <= 70_000_000) limit = 740_000; // Explicit for clarity
-  // Note: Detailed high income limits exist but simplified for 2026 core logic
-  if (annualSalary > 100_000_000) limit = 500_000; // Approximate reduction for high earners
-
-  return Math.min(credit, limit);
+  // 근로소득세액공제 한도 (2026 세법)
+  // 총급여 1.2억 초과 → 50만원
+  // 총급여 7,000만원 초과 → 66만원
+  // 총급여 3,300만원 초과 → 74만원
+  if (annualSalary > 120_000_000) return Math.min(credit, 500_000);
+  if (annualSalary > 70_000_000)  return Math.min(credit, 660_000);
+  if (annualSalary > 33_000_000)  return Math.min(credit, 740_000);
+  return credit;
 }
 
 export function calculateSalary2026(
