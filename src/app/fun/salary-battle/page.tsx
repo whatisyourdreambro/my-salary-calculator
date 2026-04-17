@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -42,7 +42,7 @@ const CompanySelector = ({
                     className="w-full p-4 bg-card border-2 border-border rounded-xl text-lg font-bold appearance-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
                 >
                     <option value="" disabled>
-                        ?�수 ?�장...
+                        ?�수 ?�장...
                     </option>
                     {companies.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -182,7 +182,7 @@ export default function BattlePage() {
                         SALARY <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">FIGHT</span>
                     </h1>
                     <p className="text-zinc-400 text-lg">
-                        계급???�고 붙어보자! ?�나?�한 ?�봉/복�? ?�스매치
+                        계급???�고 붙어보자! ?�나?�한 ?�봉/복�? ?�스매치
                     </p>
                 </div>
             </section>
@@ -207,11 +207,11 @@ export default function BattlePage() {
                                 onChange={(e) => setJobLevel(e.target.value as JobLevel)}
                                 className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
                             >
-                                <option value="entry">?�입 (Entry)</option>
+                                <option value="entry">?�입 (Entry)</option>
                                 <option value="junior">주니??(Junior)</option>
-                                <option value="senior">?�니??(Senior)</option>
+                                <option value="senior">?�니??(Senior)</option>
                                 <option value="lead">리드 (Lead)</option>
-                                <option value="executive">?�원 (Exec)</option>
+                                <option value="executive">?�원 (Exec)</option>
                             </select>
 
                             <button
@@ -301,7 +301,7 @@ export default function BattlePage() {
                                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500" />
                                     <h3 className="text-lg font-bold text-zinc-300 mb-2 flex items-center justify-center gap-2">
                                         <Trophy className="w-5 h-5 text-yellow-500" />
-                                        AI ?�판 ?�정
+                                        AI ?�판 ?�정
                                     </h3>
                                     <p className="text-xl font-medium text-white leading-relaxed">
                                         &quot;{result.verdict}&quot;
@@ -311,21 +311,21 @@ export default function BattlePage() {
                                 {/* Detailed Stat Bars */}
                                 <div className="mt-8 space-y-6">
                                     <StatBar
-                                        label="�?보상 (?�봉+?�센)"
+                                        label="�?보상 (?�봉+?�센)"
                                         valueA={result.metrics.totalComp.a}
                                         valueB={result.metrics.totalComp.b}
                                         unit="??
                                         winner={result.metrics.totalComp.winner}
                                     />
                                     <StatBar
-                                        label="?�질 ?�급 (가?�비)"
+                                        label="?�질 ?�급 (가?�비)"
                                         valueA={Math.round(result.metrics.realHourlyWage.a)}
                                         valueB={Math.round(result.metrics.realHourlyWage.b)}
                                         unit="??
                                         winner={result.metrics.realHourlyWage.winner}
                                     />
                                     <StatBar
-                                        label="?�라�??�수"
+                                        label="?�라�??�수"
                                         valueA={Math.round(result.metrics.workLifeScore.a)}
                                         valueB={Math.round(result.metrics.workLifeScore.b)}
                                         unit="??
@@ -366,7 +366,7 @@ export default function BattlePage() {
                 ) : (
                     <div className="text-center py-20 animate-pulse">
                         <p className="text-2xl text-zinc-500 font-bold">
-                            ?�수�??�택?�고 <span className="text-red-500">FIGHT!</span> 버튼???�르?�요.
+                            ?�수�??�택?�고 <span className="text-red-500">FIGHT!</span> 버튼???�르?�요.
                         </p>
                     </div>
                 ))}

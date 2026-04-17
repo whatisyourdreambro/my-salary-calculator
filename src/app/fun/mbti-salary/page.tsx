@@ -1,4 +1,4 @@
-import MbtiSalary from "@/components/MbtiSalary";
+﻿import MbtiSalary from "@/components/MbtiSalary";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function MbtiSalaryPage() {
     return (
-        <div className="min-h-screen bg-black pt-20 pb-20 px-4">
+        <div className="min-h-screen bg-black pt-20 pb-20 px-4 pt-28">
             <MbtiSalary />
         </div>
     );

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -230,7 +230,7 @@ export default function AssetAllocatorGame() {
     }, []);
 
     return (
-        <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 relative overflow-hidden pt-28">
             {/* Background Texture (Leather/Velvet) */}
             <div className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/dark-leather.png")` }} />

@@ -1,4 +1,4 @@
-import IdealTypeWorldCup from "@/components/IdealTypeWorldCup";
+﻿import IdealTypeWorldCup from "@/components/IdealTypeWorldCup";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function WorldCupPage() {
     return (
-        <div className="min-h-screen pt-20 pb-20">
+        <div className="min-h-screen pt-20 pb-20 pt-28">
             <IdealTypeWorldCup />
         </div>
     );

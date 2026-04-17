@@ -1,4 +1,4 @@
-import WeekendDutyGame from "@/components/WeekendDutyGame";
+﻿import WeekendDutyGame from "@/components/WeekendDutyGame";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function WeekendDutyPage() {
     return (
-        <div className="min-h-screen bg-black pt-20">
+        <div className="min-h-screen bg-black pt-20 pt-28">
             <WeekendDutyGame />
         </div>
     );
