@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, Building2, TrendingUp, Users, ArrowRight } from "lucide-react";
+import { Search, Building2, TrendingUp, Users, ArrowRight, Database } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import AdUnit from "@/components/AdUnit";
 
@@ -16,47 +16,53 @@ export default function SalaryDBPage() {
         : allCompanies;
 
     return (
-        <main className="w-full min-h-screen bg-background pb-20">
+        <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pb-20">
             {/* Hero Section */}
-            <section className="relative py-20 bg-slate-900 text-white overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2" />
+            <section className="relative pt-28 pb-14 overflow-hidden text-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-500/10 dark:bg-blue-600/15 rounded-full blur-[120px] -z-10" />
 
-                <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+                <div className="relative z-10 max-w-4xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <span className="inline-block py-1 px-3 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-bold mb-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-bold text-sm mb-6">
+                            <Database className="w-4 h-4" />
                             Corporate Salary Database
-                        </span>
-                        <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6">
-                            대한민국 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">연봉의 모든 것</span>
+                        </div>
+                        <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+                            대한민국 <span className="text-blue-600">연봉의 모든 것</span>
                         </h1>
-                        <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
+                        <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-2xl mx-auto font-medium">
                             카더라 통신은 그만. <br className="sm:hidden" />
                             실제 데이터에 기반한 기업별 연봉, 복지, 워라밸 정보를 확인하세요.
                         </p>
 
                         {/* Search Bar */}
                         <div className="relative max-w-xl mx-auto">
-                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                                <Search className="w-6 h-6 text-slate-400" />
+                            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                <Search className="w-5 h-5 text-slate-400" />
                             </div>
                             <input
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="기업명, 산업군 검색 (예: 삼성전자, IT)"
-                                className="w-full py-4 pl-14 pr-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg transition-all"
+                                className="toss-input pl-14"
                             />
+                        </div>
+
+                        {/* 상단 광고 */}
+                        <div className="mt-10">
+                            <AdUnit slotId="5492837410" format="auto" label="Salary DB Hero Ad" />
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
                 {/* Company Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredCompanies.map((company, idx) => (
@@ -67,7 +73,7 @@ export default function SalaryDBPage() {
                             transition={{ delay: idx * 0.1 }}
                         >
                             <Link href={`/salary-db/${company.id}`} className="block h-full">
-                                <div className="group h-full bg-card hover:bg-accent/50 border border-border rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden">
+                                <div className="group h-full toss-card p-6 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-200 relative overflow-hidden">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="w-12 h-12 text-4xl flex items-center justify-center bg-secondary rounded-xl group-hover:scale-110 transition-transform">
                                             {company.logo}
