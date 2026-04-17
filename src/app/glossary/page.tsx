@@ -57,30 +57,27 @@ export default function GlossaryPage() {
   };
 
   return (
-    <main className="w-full bg-background min-h-screen pb-20">
+    <main className="w-full bg-slate-50 dark:bg-[#191F28] min-h-screen pb-20">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-black z-0" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20 z-0" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -z-10 animate-pulse-glow" />
+      <section className="relative pt-28 pb-16 overflow-hidden text-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-indigo-400/10 dark:bg-indigo-500/15 rounded-full blur-[120px] -z-10" />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-primary-foreground font-medium text-sm mb-6 shadow-lg shadow-primary/10">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-sm mb-6">
               <BookOpen className="w-4 h-4" />
               <span>금융 문맹 탈출 프로젝트</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 leading-tight drop-shadow-2xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight text-slate-900 dark:text-white mb-5 leading-[1.15]">
               금융 용어, <br className="sm:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-emerald-400">
-                당신의 돈이 말을 거는 순간
-              </span>
+              <span className="text-indigo-600">당신의 돈이 말을 거는 순간</span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto font-light">
+            <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto font-medium">
               더 이상 어렵고 복잡한 용어에 주눅 들지 마세요. <br className="hidden sm:block" />
               당신의 월급봉투와 통장, 그리고 미래를 이해하는 가장 확실한 열쇠를 드립니다.
             </p>
@@ -88,22 +85,19 @@ export default function GlossaryPage() {
 
           {/* Search Bar */}
           <motion.div
-            className="mt-12 max-w-xl mx-auto relative group"
+            className="mt-10 max-w-xl mx-auto relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-500 rounded-full opacity-30 group-hover:opacity-50 blur transition duration-500" />
-            <div className="relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6" />
-              <input
-                type="text"
-                placeholder="궁금한 용어를 검색해보세요 (예: 국민연금, IRP)"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 rounded-full bg-slate-900/90 backdrop-blur-xl border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-2xl text-lg font-medium"
-              />
-            </div>
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="궁금한 용어를 검색해보세요 (예: 국민연금, IRP)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="toss-input pl-14"
+            />
           </motion.div>
         </div>
       </section>
