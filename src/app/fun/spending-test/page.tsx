@@ -110,23 +110,29 @@ export default function SpendingTestPage() {
   };
 
   return (
-    <main className="w-full max-w-4xl mx-auto px-4 py-12 sm:py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+    <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pb-20">
+      {/* Hero */}
+      <section className="relative pt-28 pb-10 px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-orange-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-pink-400/10 dark:bg-pink-500/10 rounded-full blur-[100px] -z-10" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-600 dark:text-pink-400 font-bold text-sm mb-6">
+          🐾 소비 성향 분석
+        </div>
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
           소비 성향 테스트
         </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
           나의 소비 습관은 어떤 동물과 닮았을까요?<br />
           숨겨진 부자 DNA를 찾아보세요.
         </p>
-      </div>
+      </section>
 
       {/* Ad Unit: Top */}
-      <div className="mb-12 max-w-2xl mx-auto">
+      <div className="mb-8 max-w-2xl mx-auto px-4">
         <AdUnit slotId="7788990011" format="auto" label="Spending Test Top Ad" />
       </div>
 
-      <div className="max-w-2xl mx-auto relative min-h-[400px]">
+      <div className="max-w-2xl mx-auto px-4 relative min-h-[400px]">
         <AnimatePresence mode="wait">
           {step < questions.length ? (
             <motion.div

@@ -77,46 +77,39 @@ export default function RankClient() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-zinc-950 pb-20 font-sans relative overflow-x-hidden">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[20%] w-[600px] h-[600px] bg-pink-600/10 rounded-full blur-[120px]" />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-            </div>
+        <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pb-20 font-sans relative overflow-x-hidden">
 
             {/* Hero Section */}
-            <section className="relative py-20 bg-transparent text-white text-center z-10">
+            <section className="relative pt-28 pb-16 overflow-hidden text-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-purple-400/10 dark:bg-purple-500/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
+
                 <div className="max-w-5xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900/50 backdrop-blur-md border border-white/10 text-purple-400 font-medium text-sm mb-6 animate-pulse-soft">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 font-bold text-sm mb-6">
                             <Crown className="w-4 h-4" />
                             <span>대한민국 연봉 데이터 분석</span>
                         </div>
-                        <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6">
+                        <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-5 text-slate-900 dark:text-white">
                             나는 대한민국 상위 <br className="sm:hidden" />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-                                몇 %일까요?
-                            </span>
+                            <span className="text-purple-600">몇 %일까요?</span>
                         </h1>
-                        <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+                        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
                             2,000만 직장인 데이터를 기반으로 당신의 정확한 위치를 알려드립니다.
                         </p>
                     </motion.div>
                 </div>
             </section>
 
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
 
-                {/* Ad Unit: Top */}
                 {/* Ad Unit: Top - REMOVED */}
 
-                <div className="bg-zinc-900/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/10 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-50" />
+                <div className="toss-card overflow-hidden relative">
 
                     <div className="p-8 sm:p-12 relative z-10">
                         {!showResult ? (

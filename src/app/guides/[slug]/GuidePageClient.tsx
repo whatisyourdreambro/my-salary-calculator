@@ -43,56 +43,51 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
     if (!mounted) return null;
 
     return (
-        <main className="min-h-screen bg-background relative selection:bg-primary/20">
+        <main className="min-h-screen bg-slate-50 dark:bg-[#191F28] relative selection:bg-primary/20">
             {/* Reading Progress Bar */}
             <motion.div
-                className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-purple-500 to-indigo-500 z-50 origin-left"
+                className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 z-50 origin-left"
                 style={{ scaleX }}
             />
 
             {/* Hero Section */}
-            <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-zinc-950 z-0" />
-                <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20 z-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background z-10" />
-
-                {/* Animated Background Orbs */}
-                <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px] animate-pulse delay-700" />
+            <div className="relative pt-28 pb-16 overflow-hidden text-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="relative z-20 max-w-4xl mx-auto px-4 text-center mt-10"
+                    className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
                 >
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-primary-foreground/90 text-sm font-bold mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-bold text-sm mb-6">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
                         {guide.category} 가이드
                     </div>
-                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-8 leading-tight drop-shadow-2xl">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6 leading-tight">
                         {guide.title}
                     </h1>
-                    <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-gray-300 font-medium">
+                    <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-slate-500 dark:text-slate-400 font-semibold">
                         <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-primary" />
+                            <Calendar className="w-4 h-4" />
                             <span>{new Date(guide.publishedDate).toLocaleDateString("ko-KR")}</span>
                         </div>
-                        <div className="w-1 h-1 rounded-full bg-gray-600" />
+                        <div className="w-1 h-1 rounded-full bg-slate-300" />
                         <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-primary" />
+                            <Clock className="w-4 h-4" />
                             <span>{readingTime}분 분량</span>
                         </div>
-                        <div className="w-1 h-1 rounded-full bg-gray-600" />
+                        <div className="w-1 h-1 rounded-full bg-slate-300" />
                         <div className="flex items-center gap-2">
-                            <Eye className="w-4 h-4 text-primary" />
+                            <Eye className="w-4 h-4" />
                             <span>{guide.views.toLocaleString()} views</span>
                         </div>
                     </div>
                 </motion.div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 -mt-20 relative z-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-6 relative z-20">
                 <div className="flex flex-col lg:flex-row gap-8 xl:gap-16">
 
                     {/* Sidebar Left (TOC) - Desktop Only */}
@@ -109,7 +104,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                         transition={{ delay: 0.2, duration: 0.6 }}
                         className="flex-1 min-w-0" // prevent overflow
                     >
-                        <div className="glass-card bg-background/60 backdrop-blur-xl p-6 sm:p-10 rounded-3xl shadow-2xl border border-white/10 ring-1 ring-black/5">
+                        <div className="toss-card bg-white dark:bg-[#1E232E] p-6 sm:p-10 rounded-[24px]">
 
                             {/* Smart Summary (TL;DR) */}
                             <div className="mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/10">
@@ -154,7 +149,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                         </div>
 
                         {/* Navigation Footer */}
-                        <div className="mt-8 glass-card bg-background/40 backdrop-blur-md p-6 rounded-2xl border border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="mt-8 toss-card p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                             <Link
                                 href="/guides"
                                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
@@ -211,7 +206,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                     <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
                         {/* Related Calculator Card */}
                         <div className="sticky top-24 space-y-6">
-                            <div className="glass-card bg-background/60 backdrop-blur-xl p-6 rounded-2xl border border-primary/20 shadow-lg relative overflow-hidden group">
+                            <div className="toss-card p-6 relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
                                 <div className="relative z-10">
                                     <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary">
@@ -236,7 +231,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                             <AdUnit slotId="1122334455" format="auto" label="Guide Sidebar Ad" />
 
                             {/* Newsletter / CTA */}
-                            <div className="glass-card bg-background/60 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-lg">
+                            <div className="toss-card p-6">
                                 <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
                                     <BookOpen className="w-5 h-5 text-primary" />
                                     더 똑똑해지는 법
