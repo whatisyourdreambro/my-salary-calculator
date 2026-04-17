@@ -23,15 +23,16 @@ export function calculatePartTimeSalary(
   }
 
   if (taxType === "freelancer") {
-    const incomeTax = income * 0.03;
-    const localTax = incomeTax * 0.1;
-    const totalDeduction = incomeTax + localTax;
+    // 사업소득 원천징수: 3.3% = 소득세 3% + 지방소득세 0.3% (소득세의 10%)
+    const incomeTax = Math.round(income * 0.03);       // 소득세 3%
+    const localTax = Math.round(income * 0.003);       // 지방소득세 0.3%
+    const totalDeduction = incomeTax + localTax;       // 합계 3.3%
     const netPay = income - totalDeduction;
     return {
       netPay: Math.round(netPay),
-      totalDeduction: Math.round(totalDeduction),
-      incomeTax: Math.round(incomeTax),
-      localTax: Math.round(localTax),
+      totalDeduction,
+      incomeTax,
+      localTax,
       nationalPension: 0,
       healthInsurance: 0,
       employmentInsurance: 0,
