@@ -1,14 +1,13 @@
 import React from "react";
 
 interface LogoProps {
-    className?: string; // e.g. "h-8 w-auto" means height is controlled, width auto
+    className?: string;
     showText?: boolean;
 }
 
 export default function Logo({ className = "h-8", showText = false }: LogoProps) {
-    // A highly premium, minimalist corporate logo
-    // Solid Blue Accent Square + Crisp Sans-Serif Text
-    const viewBox = showText ? "0 0 160 32" : "0 0 32 32";
+    // viewBox를 넓게 설정해서 텍스트가 잘리지 않도록 함
+    const viewBox = showText ? "0 0 180 36" : "0 0 32 32";
 
     return (
         <svg
@@ -17,30 +16,38 @@ export default function Logo({ className = "h-8", showText = false }: LogoProps)
             fill="none"
             className={className}
             preserveAspectRatio="xMinYMid meet"
+            style={{ overflow: "visible" }}
         >
-            {/* The Accent Mark - Minimal Blue Square / 'M' abstract */}
-            <g transform="translate(0, 0)">
-                <rect x="0" y="4" width="24" height="24" rx="4" fill="#1428A0" />
-                <path d="M6 18L12 10L18 18" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            {/* 파란 사각형 + M 모양 아이콘 */}
+            <g transform="translate(0, 2)">
+                <rect x="0" y="0" width="28" height="28" rx="6" fill="#1428A0" />
+                <path
+                    d="M7 20L14 10L21 20"
+                    stroke="#ffffff"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                />
             </g>
 
             {showText && (
-                <g transform="translate(34, 22)">
+                <g transform="translate(36, 24)">
                     <text
                         x="0"
-                        fontFamily="var(--font-pretendard), sans-serif"
+                        fontFamily="var(--font-pretendard), -apple-system, sans-serif"
                         fontWeight="900"
-                        fontSize="22"
-                        fill="#000000"
+                        fontSize="20"
+                        fill="currentColor"
                         letterSpacing="-0.04em"
                     >
                         Money
                     </text>
                     <text
-                        x="72"
-                        fontFamily="var(--font-pretendard), sans-serif"
+                        x="68"
+                        fontFamily="var(--font-pretendard), -apple-system, sans-serif"
                         fontWeight="500"
-                        fontSize="22"
+                        fontSize="20"
                         fill="#1428A0"
                         letterSpacing="-0.02em"
                     >

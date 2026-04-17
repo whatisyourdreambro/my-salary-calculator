@@ -197,40 +197,37 @@
    ════════════════════════════════════════════════════════════════════ */
 
 /* ── 남색/파란 배경: 내부 모든 텍스트를 흰색으로 ─────────────────
-   bg-primary, bg-blue-*, bg-indigo-* 등 모든 어두운 파란 계열       */
+   bg-primary, bg-blue-*, bg-indigo-* 등 모든 어두운 파란 계열
+   * (와일드카드)로 모든 하위 요소를 커버                           */
 .bg-primary,
-.bg-primary p,
-.bg-primary span,
-.bg-primary h1, .bg-primary h2, .bg-primary h3,
-.bg-primary h4, .bg-primary h5, .bg-primary h6,
-.bg-primary label, .bg-primary small, .bg-primary strong,
-.bg-primary a, .bg-primary li, .bg-primary div:not([class*="bg-"]) {
+.bg-primary *,
+.toss-button-primary,
+.toss-button-primary * {
   color: #ffffff !important;
 }
 
-/* bg-blue-500 이상 모든 파란 계열 */
-.bg-blue-500, .bg-blue-500 p, .bg-blue-500 span, .bg-blue-500 h1, .bg-blue-500 h2, .bg-blue-500 h3, .bg-blue-500 label,
-.bg-blue-600, .bg-blue-600 p, .bg-blue-600 span, .bg-blue-600 h1, .bg-blue-600 h2, .bg-blue-600 h3, .bg-blue-600 label,
-.bg-blue-700, .bg-blue-700 p, .bg-blue-700 span, .bg-blue-700 h1, .bg-blue-700 h2, .bg-blue-700 h3, .bg-blue-700 label,
-.bg-blue-800, .bg-blue-800 p, .bg-blue-800 span, .bg-blue-800 h1, .bg-blue-800 h2, .bg-blue-800 h3, .bg-blue-800 label,
-.bg-blue-900, .bg-blue-900 p, .bg-blue-900 span, .bg-blue-900 h1, .bg-blue-900 h2, .bg-blue-900 h3, .bg-blue-900 label,
-.bg-indigo-600, .bg-indigo-600 p, .bg-indigo-600 span,
-.bg-indigo-700, .bg-indigo-700 p, .bg-indigo-700 span,
-.bg-indigo-800, .bg-indigo-800 p, .bg-indigo-800 span {
+/* bg-blue-500 이상 모든 파란 계열 (전체 자식 포함) */
+.bg-blue-500, .bg-blue-500 *,
+.bg-blue-600, .bg-blue-600 *,
+.bg-blue-700, .bg-blue-700 *,
+.bg-blue-800, .bg-blue-800 *,
+.bg-blue-900, .bg-blue-900 *,
+.bg-indigo-600, .bg-indigo-600 *,
+.bg-indigo-700, .bg-indigo-700 *,
+.bg-indigo-800, .bg-indigo-800 * {
   color: #ffffff !important;
 }
 
-/* 어두운 회색 계열 배경 */
-.bg-slate-700, .bg-slate-700 p, .bg-slate-700 span, .bg-slate-700 h1, .bg-slate-700 h2, .bg-slate-700 label,
-.bg-slate-800, .bg-slate-800 p, .bg-slate-800 span, .bg-slate-800 h1, .bg-slate-800 h2, .bg-slate-800 label,
-.bg-slate-900, .bg-slate-900 p, .bg-slate-900 span, .bg-slate-900 h1, .bg-slate-900 h2, .bg-slate-900 label,
-.bg-gray-700,  .bg-gray-700 p,  .bg-gray-700 span,
-.bg-gray-800,  .bg-gray-800 p,  .bg-gray-800 span,
-.bg-gray-900,  .bg-gray-900 p,  .bg-gray-900 span,
-.bg-zinc-800,  .bg-zinc-800 p,  .bg-zinc-800 span,
-.bg-zinc-900,  .bg-zinc-900 p,  .bg-zinc-900 span,
-.bg-black,     .bg-black p,     .bg-black span,
-.bg-black h1,  .bg-black h2,    .bg-black h3, .bg-black label {
+/* 어두운 회색 계열 배경 (전체 자식 포함) */
+.bg-slate-700, .bg-slate-700 *,
+.bg-slate-800, .bg-slate-800 *,
+.bg-slate-900, .bg-slate-900 *,
+.bg-gray-700,  .bg-gray-700 *,
+.bg-gray-800,  .bg-gray-800 *,
+.bg-gray-900,  .bg-gray-900 *,
+.bg-zinc-800,  .bg-zinc-800 *,
+.bg-zinc-900,  .bg-zinc-900 *,
+.bg-black,     .bg-black * {
   color: #ffffff !important;
 }
 

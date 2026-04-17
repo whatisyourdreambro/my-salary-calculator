@@ -21,12 +21,12 @@ function HeroGuide({ guide }: { guide: Guide }) {
             <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1">
               <Sparkles className="w-3 h-3" /> Featured
             </span>
-            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-slate-900 text-xs font-bold">
+            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold">
               {guide.category}
             </span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 mb-6 leading-tight max-w-4xl drop-shadow-lg">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight max-w-4xl drop-shadow-lg">
             {guide.title}
           </h2>
 
@@ -179,8 +179,8 @@ export default function GuidesPage() {
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
               className={"px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 " + (selectedCategoryId === category.id
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105'
-                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                  ? 'bg-primary !text-white shadow-lg shadow-blue-500/25 scale-105'
+                  : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200'
                 )}
             >
               {category.name}
