@@ -38,10 +38,16 @@ function calcProgressiveTax(taxableIncome: number): number {
   return 0;
 }
 
-/** 근로소득세액공제 */
-function calcTaxCredit(incomeTax: number): number {
-  if (incomeTax <= 1_300_000) return Math.round(incomeTax * 0.55);
-  return Math.round(715_000 + (incomeTax - 1_300_000) * 0.30);
+/** 근로소득세액공제 (한도 포함) */
+function calcTaxCredit(incomeTax: number, totalIncome: number): number {
+  let credit: number;
+  if (incomeTax <= 1_300_000) credit = Math.round(incomeTax * 0.55);
+  else credit = Math.round(715_000 + (incomeTax - 1_300_000) * 0.30);
+  // 한도 적용 (2026 세법 기준)
+  if (totalIncome > 120_000_000) return Math.min(credit, 500_000);
+  if (totalIncome > 70_000_000)  return Math.min(credit, 660_000);
+  if (totalIncome > 33_000_000)  return Math.min(credit, 740_000);
+  return credit;
 }
 
 interface CalcResult {
@@ -70,7 +76,7 @@ function calculate(
   const empDeductBase = calcEmploymentDeduction(annualSalary);
   const taxableBase = Math.max(0, annualSalary - empDeductBase - personalDeduction);
   const grossTaxBase = calcProgressiveTax(taxableBase);
-  const creditBase = calcTaxCredit(grossTaxBase);
+  const creditBase = calcTaxCredit(grossTaxBase, annualSalary);
   const taxBeforeBonus = Math.max(0, grossTaxBase - creditBase);
 
   // NEW: salary + bonus
@@ -78,7 +84,7 @@ function calculate(
   const empDeductNew = calcEmploymentDeduction(totalIncome);
   const taxableNew = Math.max(0, totalIncome - empDeductNew - personalDeduction);
   const grossTaxNew = calcProgressiveTax(taxableNew);
-  const creditNew = calcTaxCredit(grossTaxNew);
+  const creditNew = calcTaxCredit(grossTaxNew, totalIncome);
   const taxAfterBonus = Math.max(0, grossTaxNew - creditNew);
 
   const bonusTax = Math.max(0, taxAfterBonus - taxBeforeBonus);
@@ -128,18 +134,21 @@ const PRESETS: Preset[] = [
 ];
 
 export default function BonusCalculatorPage() {
-  const [salary, setSalary] = useState(60_000_000);
-  const [bonus, setBonus] = useState(10_000_000);
+  const [salaryStr, setSalaryStr] = useState("60000000");
+  const [bonusStr, setBonusStr] = useState("10000000");
   const [dependents, setDependents] = useState(0);
   const [isSingle, setIsSingle] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
+
+  const salary = Number(salaryStr.replace(/[^0-9]/g, "")) || 0;
+  const bonus  = Number(bonusStr.replace(/[^0-9]/g, "")) || 0;
 
   const r = useMemo(
     () => calculate(salary, bonus, dependents, isSingle),
     [salary, bonus, dependents, isSingle]
   );
 
-  const pct = ((r.netBonus / r.grossBonus) * 100).toFixed(1);
+  const pct = bonus > 0 ? ((r.netBonus / r.grossBonus) * 100).toFixed(1) : "0.0";
 
   return (
     <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
@@ -165,7 +174,7 @@ export default function BonusCalculatorPage() {
           {PRESETS.map((p) => (
             <button
               key={p.label}
-              onClick={() => { setSalary(p.salary); setBonus(p.bonus); }}
+              onClick={() => { setSalaryStr(String(p.salary)); setBonusStr(String(p.bonus)); }}
               className={`p-3 rounded-xl border text-xs font-bold transition-all text-left ${
                 salary === p.salary && bonus === p.bonus
                   ? "bg-primary text-white border-primary"
@@ -188,9 +197,11 @@ export default function BonusCalculatorPage() {
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-2">연간 기본급 (세전, 원)</label>
               <div className="relative">
                 <input
-                  type="number"
-                  value={salary}
-                  onChange={e => setSalary(Number(e.target.value))}
+                  type="text"
+                  inputMode="numeric"
+                  value={salaryStr}
+                  onFocus={e => e.target.select()}
+                  onChange={e => setSalaryStr(e.target.value.replace(/[^0-9]/g, ""))}
                   className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-xl font-black text-slate-900 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none pr-16"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">원</span>
@@ -202,9 +213,11 @@ export default function BonusCalculatorPage() {
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-2">성과급 / 인센티브 (세전, 원)</label>
               <div className="relative">
                 <input
-                  type="number"
-                  value={bonus}
-                  onChange={e => setBonus(Number(e.target.value))}
+                  type="text"
+                  inputMode="numeric"
+                  value={bonusStr}
+                  onFocus={e => e.target.select()}
+                  onChange={e => setBonusStr(e.target.value.replace(/[^0-9]/g, ""))}
                   className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-xl font-black text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none pr-16"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">원</span>
@@ -258,24 +271,24 @@ export default function BonusCalculatorPage() {
         >
           {/* Top: Net Bonus */}
           <div className="bg-primary p-8 text-center">
-            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">실수령 성과급 (세후)</p>
-            <p className="text-5xl font-black text-slate-900 tracking-tight">
+            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">실수령 성과급 (세후)</p>
+            <p className="text-5xl font-black text-white tracking-tight">
               {fmt(r.netBonus)}<span className="text-2xl ml-1">원</span>
             </p>
             <div className="flex justify-center gap-6 mt-5 pt-5 border-t border-white/20">
               <div className="text-center">
-                <p className="text-slate-900/60 text-xs mb-1">세금 합계</p>
-                <p className="text-slate-900 font-black">{fmt(r.totalTax)}원</p>
+                <p className="text-white/60 text-xs mb-1">세금 합계</p>
+                <p className="text-white font-black">{fmt(r.totalTax)}원</p>
               </div>
               <div className="w-px bg-white/20" />
               <div className="text-center">
-                <p className="text-slate-900/60 text-xs mb-1">실효세율</p>
-                <p className="text-slate-900 font-black">{r.effectiveRate.toFixed(1)}%</p>
+                <p className="text-white/60 text-xs mb-1">실효세율</p>
+                <p className="text-white font-black">{r.effectiveRate.toFixed(1)}%</p>
               </div>
               <div className="w-px bg-white/20" />
               <div className="text-center">
-                <p className="text-slate-900/60 text-xs mb-1">수령 비율</p>
-                <p className="text-slate-900 font-black">{pct}%</p>
+                <p className="text-white/60 text-xs mb-1">수령 비율</p>
+                <p className="text-white font-black">{pct}%</p>
               </div>
             </div>
           </div>
@@ -332,7 +345,7 @@ export default function BonusCalculatorPage() {
                     { label: "④ 과세표준 (합산 후)", value: fmt(r.taxableIncomeNew) + "원", sub: "세율이 적용되는 금액" },
                     { label: "⑤ 한계세율 구간", value: r.marginalRate + "%", sub: "성과급 구간의 최고 세율" },
                     { label: "⑥ 산출세액 (합산 후)", value: fmt(calcProgressiveTax(r.taxableIncomeNew)) + "원", sub: "누진세 적용 후" },
-                    { label: "⑦ 근로소득세액공제", value: "-" + fmt(calcTaxCredit(calcProgressiveTax(r.taxableIncomeNew))) + "원", sub: "최대 74만원 (130만원 이하 구간)" },
+                    { label: "⑦ 근로소득세액공제", value: "-" + fmt(calcTaxCredit(calcProgressiveTax(r.taxableIncomeNew), salary + bonus)) + "원", sub: "한도: 1.2억↑ 50만원, 7천↑ 66만원, 3.3천↑ 74만원" },
                     { label: "⑧ 결정세액 (합산 후)", value: fmt(r.taxAfterBonus) + "원", sub: "실제 납부 소득세" },
                     { label: "⑨ 성과급 귀속 소득세", value: fmt(r.bonusTax) + "원", sub: "합산전후 세액 차이" },
                     { label: "⑩ 지방소득세 (×10%)", value: fmt(r.localTax) + "원", sub: "주민세" },
