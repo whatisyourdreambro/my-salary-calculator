@@ -51,7 +51,7 @@ const CompanySelector = ({
                     ))}
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                    ??
+                    원
                 </div>
             </div>
         </div>
@@ -175,14 +175,14 @@ export default function BattlePage() {
                         className="inline-block mb-4"
                     >
                         <span className="px-4 py-1 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-sm font-bold tracking-widest uppercase">
-                            Versus Engine??
+                            Versus Engine 로딩중...
                         </span>
                     </motion.div>
                     <h1 className="text-5xl sm:text-7xl font-black italic tracking-tighter mb-2">
                         SALARY <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-red-500">FIGHT</span>
                     </h1>
                     <p className="text-zinc-400 text-lg">
-                        계급???�고 붙어보자! ?�나?�한 ?�봉/복�? ?�스매치
+                        실전 배틀! 연봉/복지/워라벨 비교
                     </p>
                 </div>
             </section>
@@ -208,8 +208,8 @@ export default function BattlePage() {
                                 className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
                             >
                                 <option value="entry">?�입 (Entry)</option>
-                                <option value="junior">주니??(Junior)</option>
-                                <option value="senior">?�니??(Senior)</option>
+                                <option value="junior">주니어(Junior)</option>
+                                <option value="senior">시니어(Senior)</option>
                                 <option value="lead">리드 (Lead)</option>
                                 <option value="executive">?�원 (Exec)</option>
                             </select>
@@ -255,7 +255,7 @@ export default function BattlePage() {
                                     <div className="bg-zinc-950/50 p-3 rounded-xl">
                                         <p className="text-xs text-zinc-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-white">
-                                            {Math.round(result.metrics.realHourlyWage.a).toLocaleString()}??
+                                            {Math.round(result.metrics.realHourlyWage.a).toLocaleString()}원
                                         </p>
                                     </div>
                                 </div>
@@ -314,21 +314,21 @@ export default function BattlePage() {
                                         label="�?보상 (?�봉+?�센)"
                                         valueA={result.metrics.totalComp.a}
                                         valueB={result.metrics.totalComp.b}
-                                        unit="??
+                                        unit="원"
                                         winner={result.metrics.totalComp.winner}
                                     />
                                     <StatBar
                                         label="?�질 ?�급 (가?�비)"
                                         valueA={Math.round(result.metrics.realHourlyWage.a)}
                                         valueB={Math.round(result.metrics.realHourlyWage.b)}
-                                        unit="??
+                                        unit="점"
                                         winner={result.metrics.realHourlyWage.winner}
                                     />
                                     <StatBar
-                                        label="?�라�??�수"
+                                        label="워라벨"
                                         valueA={Math.round(result.metrics.workLifeScore.a)}
                                         valueB={Math.round(result.metrics.workLifeScore.b)}
-                                        unit="??
+                                        unit="점"
                                         winner={result.metrics.workLifeScore.winner}
                                     />
                                 </div>
@@ -356,7 +356,7 @@ export default function BattlePage() {
                                     <div className="bg-zinc-950/50 p-3 rounded-xl">
                                         <p className="text-xs text-zinc-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-white">
-                                            {Math.round(result.metrics.realHourlyWage.b).toLocaleString()}??
+                                            {Math.round(result.metrics.realHourlyWage.b).toLocaleString()}원
                                         </p>
                                     </div>
                                 </div>
@@ -366,7 +366,7 @@ export default function BattlePage() {
                 ) : (
                     <div className="text-center py-20 animate-pulse">
                         <p className="text-2xl text-zinc-500 font-bold">
-                            ?�수�??�택?�고 <span className="text-red-500">FIGHT!</span> 버튼???�르?�요.
+                            연봉 배틀의 <span className="text-red-500">FIGHT!</span> 버튼을 눌러주세요.
                         </p>
                     </div>
                 ))}
