@@ -1,4 +1,4 @@
-import BmiCalculator from "@/components/calculators/health/BmiCalculator";
+﻿import BmiCalculator from "@/components/calculators/health/BmiCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

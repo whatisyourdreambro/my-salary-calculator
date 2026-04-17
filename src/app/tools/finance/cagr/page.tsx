@@ -1,4 +1,4 @@
-import CagrCalculator from "@/components/calculators/finance/CagrCalculator";
+﻿import CagrCalculator from "@/components/calculators/finance/CagrCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

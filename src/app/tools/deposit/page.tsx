@@ -1,4 +1,4 @@
-import DepositCalculator from "@/components/calculators/DepositCalculator";
+﻿import DepositCalculator from "@/components/calculators/DepositCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

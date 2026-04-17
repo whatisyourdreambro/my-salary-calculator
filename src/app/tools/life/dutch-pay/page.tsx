@@ -1,4 +1,4 @@
-import { DutchPayCalculator } from "@/components/calculators/life/LifeCalculators";
+﻿import { DutchPayCalculator } from "@/components/calculators/life/LifeCalculators";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function DutchPayPage() {
     return (
-        <div className="min-h-screen bg-black pt-20 pb-20 px-4">
+        <div className="min-h-screen bg-black pt-20 pb-20 px-4 pt-28 pb-20">
             <div className="max-w-2xl mx-auto">
                 <h1 className="text-3xl font-bold text-white mb-8">N빵 계산기</h1>
                 <DutchPayCalculator />

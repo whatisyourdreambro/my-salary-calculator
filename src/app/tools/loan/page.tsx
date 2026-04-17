@@ -1,4 +1,4 @@
-import LoanCalculator from "@/components/calculators/LoanCalculator";
+﻿import LoanCalculator from "@/components/calculators/LoanCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import MathCalculators from "@/components/calculators/MathCalculators";
+﻿import MathCalculators from "@/components/calculators/MathCalculators";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import VatCalculator from "@/components/calculators/finance/VatCalculator";
+﻿import VatCalculator from "@/components/calculators/finance/VatCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
