@@ -133,50 +133,60 @@
 
 @layer utilities {
 
-  /* Premium Toss Style Utilities - Hyper Optimized */
+  /* === Toss Design System v2 - Safe & Premium === */
+
+  /* 카드: 완전 불투명 흰 배경으로 모든 화면에서 안전하게 렌더링 */
   .toss-card {
-    @apply bg-white/90 dark:bg-[#1E232E]/90 backdrop-blur-2xl border border-white/20 dark:border-slate-700/50 shadow-[0_8px_30px_#00000008] dark:shadow-[0_8px_30px_#00000033] rounded-[24px] transition-all duration-300 ease-out hover:shadow-[0_20px_40px_#00000012] dark:hover:shadow-[0_20px_40px_#00000050] hover:-translate-y-1;
+    @apply bg-white dark:bg-[#1E232E] border border-slate-100 dark:border-slate-800/80
+           shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]
+           dark:shadow-[0_2px_8px_rgba(0,0,0,0.3),0_8px_24px_rgba(0,0,0,0.4)]
+           rounded-[24px] transition-all duration-200;
   }
 
+  /* 인풋: 포커스 시 블루 글로우 링 */
   .toss-input {
-    @apply bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:border-transparent focus:bg-white dark:focus:bg-slate-900 focus:ring-[3px] focus:ring-blue-500/20 focus:shadow-[0_0_0_1px_#3182F6,0_4px_12px_#3182F620] transition-all duration-300 rounded-[16px] text-lg font-semibold px-5 py-4 w-full;
+    @apply bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700
+           focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900
+           focus:ring-4 focus:ring-blue-500/10
+           transition-all duration-200 rounded-[16px] text-lg font-semibold px-5 py-4 w-full;
   }
 
+  /* 프라이머리 버튼: 토스 블루 + 누름 피드백 */
   .toss-button-primary {
-    @apply relative overflow-hidden bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4 shadow-[0_8px_20px_rgba(49,130,246,0.3)] hover:shadow-[0_12px_28px_rgba(49,130,246,0.4)] hover:bg-blue-500 active:scale-[0.96] transition-all duration-300 ease-out w-full flex items-center justify-center gap-2 text-lg;
+    @apply relative overflow-hidden bg-blue-600 text-white font-bold rounded-[16px] px-6 py-4
+           shadow-[0_4px_14px_rgba(49,130,246,0.35)]
+           hover:bg-blue-500 hover:shadow-[0_8px_20px_rgba(49,130,246,0.45)]
+           active:scale-[0.97] active:shadow-[0_2px_6px_rgba(49,130,246,0.2)]
+           transition-all duration-150
+           w-full flex items-center justify-center gap-2 text-lg;
   }
 
-  /* 3D Press Inner Glow Effect for Primary Button */
   .toss-button-primary::after {
     content: '';
     @apply absolute inset-0 rounded-[16px] border border-white/20 pointer-events-none;
   }
 
+  /* 세컨더리 버튼 */
   .toss-button-secondary {
-    @apply bg-[#F2F4F6] dark:bg-slate-800 text-[#4E5968] dark:text-slate-300 font-bold rounded-[16px] px-6 py-4 hover:bg-[#E5E8EB] dark:hover:bg-slate-700 active:scale-[0.98] transition-all w-full flex items-center justify-center gap-2;
+    @apply bg-[#F2F4F6] dark:bg-slate-800 text-[#4E5968] dark:text-slate-300
+           font-bold rounded-[16px] px-6 py-4
+           hover:bg-[#E5E8EB] dark:hover:bg-slate-700
+           active:scale-[0.98] transition-all duration-150
+           w-full flex items-center justify-center gap-2;
   }
 
-  /* Legacy aliases for safe refactoring */
-  .glass {
-    @apply toss-card;
-  }
+  /* Legacy aliases */
+  .glass      { @apply toss-card; }
+  .glass-card { @apply toss-card; }
+  .glass-input { @apply toss-input; }
 
-  .glass-card {
-    @apply toss-card;
-  }
+  .text-gradient         { @apply text-slate-900 dark:text-white; }
+  .text-gradient-primary { @apply text-blue-600 dark:text-blue-400; }
 
-  .glass-input {
-    @apply toss-input;
-  }
-
-  .text-gradient {
-    @apply text-slate-900 dark:text-white;
-    /* Removed gradient to enforce clean toss aesthetic */
-  }
-
-  .text-gradient-primary {
-    @apply text-blue-600 dark:text-blue-400;
-    /* Flat primary instead of gradient */
+  /* 모바일 네이티브 앱 이질감 제거 */
+  .no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
   }
 }
 
