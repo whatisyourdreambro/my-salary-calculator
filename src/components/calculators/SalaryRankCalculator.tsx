@@ -122,10 +122,7 @@ export default function SalaryRankCalculator() {
                         </button>
                     </div>
 
-                    {/* Ad Unit */}
-                    <div className="mt-10 pt-8 border-t border-slate-200">
-                        <AdUnit slotId="5556667777" format="rectangle" label="Salary Rank Input Ad" />
-                    </div>
+                    
                 </div>
 
                 {/* Result Section */}

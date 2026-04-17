@@ -203,9 +203,7 @@ export default function GuidesPage() {
         </AnimatePresence>
 
         {/* Ad Unit: Top */}
-        <div className="mb-12">
-          <AdUnit slotId="1234567890" format="auto" label="Guides Top Ad" />
-        </div>
+        
 
         {/* Guides Grid */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -243,10 +241,7 @@ export default function GuidesPage() {
           </div>
         )}
 
-        {/* Ad Unit: Bottom */}
-        <div className="mt-20">
-          <AdUnit slotId="0987654321" format="auto" label="Guides Bottom Ad" />
-        </div>
+        
       </div>
     </main>
   );

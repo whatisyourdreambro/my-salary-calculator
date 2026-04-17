@@ -168,9 +168,7 @@ export default function GlossaryPage() {
         </div>
 
         {/* Ad Unit */}
-        <div className="mb-12">
-          <AdUnit slotId="9876543210" format="auto" label="Glossary Top Ad" />
-        </div>
+        
 
         {/* Glossary Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

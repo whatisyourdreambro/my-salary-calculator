@@ -74,15 +74,7 @@ export default function SalaryResultCard({
         </div>
       </div>
 
-      {/* 내부 Native In-feed 광고 */}
-      <div className="w-full bg-slate-50 border border-slate-200/60 rounded-[24px] p-4 flex justify-center mb-4">
-        <AdUnit
-          slotId="4093821736"
-          format="fluid"
-          layoutKey="-fb+5w+4e-db+86"
-          label="Native Salary Result Ad"
-        />
-      </div>
+      
 
       {/* 상세 공제 내역 리스트 */}
       <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/50">

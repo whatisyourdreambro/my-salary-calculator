@@ -241,10 +241,7 @@ export default function RankClient() {
                     </div>
                 </div>
 
-                {/* Ad Unit: Bottom */}
-                <div className="mt-12">
-                    <AdUnit slotId="5678901234" format="auto" label="Rank Page Bottom Ad" />
-                </div>
+                
             </div>
         </main>
     );

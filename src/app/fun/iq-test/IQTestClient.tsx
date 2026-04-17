@@ -312,10 +312,7 @@ export default function IQTestClient() {
                     )}
                 </AnimatePresence>
 
-                {/* Ad Unit: Bottom */}
-                <div className="mt-12">
-                    <AdUnit slotId="9988776655" format="auto" label="IQ Test Bottom Ad" />
-                </div>
+                
             </div>
         </main>
     );

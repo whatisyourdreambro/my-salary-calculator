@@ -131,10 +131,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                                 dangerouslySetInnerHTML={{ __html: guide.content }}
                             />
 
-                            {/* Ad Unit: Content Bottom */}
-                            <div className="my-12">
-                                <AdUnit slotId="5544332211" format="auto" label="Guide Content Bottom Ad" />
-                            </div>
+                            
 
                             {/* Tags */}
                             <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">

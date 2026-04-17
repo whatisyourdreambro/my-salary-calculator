@@ -104,10 +104,7 @@ export default function FunLabPage() {
                     </p>
                 </div>
 
-                {/* 상단 광고 */}
-                <div className="mb-10">
-                    <AdUnit slotId="5492837410" format="auto" label="Fun Hub Top Ad" />
-                </div>
+                
 
                 {/* 카드 그리드 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
@@ -125,10 +122,7 @@ export default function FunLabPage() {
                     <FunCard icon={Wallet} title="금융 MBTI (F-MBTI)" description="나의 금융 성격 유형은? 16가지 유형으로 분석." href="/fun/financial-mbti" color="text-primary" />
                 </div>
 
-                {/* 하단 광고 */}
-                <div className="mt-14">
-                    <AdUnit slotId="1397486615" format="auto" label="Fun Hub Bottom Ad" />
-                </div>
+                
             </div>
         </main>
     );

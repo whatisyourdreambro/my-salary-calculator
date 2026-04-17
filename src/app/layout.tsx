@@ -93,10 +93,7 @@ export default function RootLayout({
 
             <Footer />
 
-            {/* 전역 모바일 하단 고정 앵커 광고 */}
-            <div className="block md:hidden">
-              <AdUnit slotId="6458241606" sticky={true} format="auto" label="모바일 앵커" />
-            </div>
+            
 
           </div>
         </NextThemesProvider>

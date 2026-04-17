@@ -99,9 +99,7 @@ export default function SalaryAmountPage({ params }: Props) {
         </Link>
 
         {/* 상단 배너 광고 */}
-        <div className="w-full max-w-4xl mb-8">
-          <AdUnit slotId="9958502911" format="auto" label="상단 배너" />
-        </div>
+        
 
         <div className="flex items-center gap-2 mb-2">
           <span className="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
@@ -129,9 +127,7 @@ export default function SalaryAmountPage({ params }: Props) {
         />
 
         {/* 결과창 프리미엄 본문 광고 */}
-        <div className="w-full max-w-4xl mt-10">
-          <AdUnit slotId="5584143639" format="auto" label="결과창 프리미엄" />
-        </div>
+        
 
         <div className="w-full mt-10 space-y-12">
           <WealthChart monthlyNetSalary={tax.netPay} />

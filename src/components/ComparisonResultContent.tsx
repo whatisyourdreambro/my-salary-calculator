@@ -184,15 +184,7 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                     </div>
                 </div>
 
-                {/* Ad Slot */}
-                <div className="mt-12">
-                    <AdUnit
-                        slotId="5566778899"
-                        format="auto"
-                        responsive={true}
-                        label="Comparison Bottom"
-                    />
-                </div>
+                
             </div>
         </div>
     );

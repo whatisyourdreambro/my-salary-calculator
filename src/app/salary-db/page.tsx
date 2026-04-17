@@ -54,10 +54,7 @@ export default function SalaryDBPage() {
                             />
                         </div>
 
-                        {/* 상단 광고 */}
-                        <div className="mt-10">
-                            <AdUnit slotId="5492837410" format="auto" label="Salary DB Hero Ad" />
-                        </div>
+                        
                     </motion.div>
                 </div>
             </section>
@@ -132,10 +129,7 @@ export default function SalaryDBPage() {
                     </div>
                 )}
 
-                {/* Ad Unit */}
-                <div className="mt-16">
-                    <AdUnit slotId="1122334455" format="auto" label="Salary DB Bottom" />
-                </div>
+                
             </div>
         </main>
     );

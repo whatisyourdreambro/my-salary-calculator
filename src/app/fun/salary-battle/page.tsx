@@ -371,10 +371,7 @@ export default function BattlePage() {
                     </div>
                 ))}
 
-                {/* Ad Unit */}
-                <div className="mt-16">
-                    <AdUnit slotId="9998887776" format="auto" label="Battle Page Bottom" />
-                </div>
+                
             </div>
         </main>
     );

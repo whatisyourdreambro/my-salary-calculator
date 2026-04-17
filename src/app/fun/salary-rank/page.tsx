@@ -23,15 +23,11 @@ export default function SalaryRankPage() {
                 </p>
             </div>
 
-            <div className="mb-10 max-w-2xl mx-auto">
-                <AdUnit slotId="1122334455" format="auto" label="Salary Rank Top Ad" />
-            </div>
+            
 
             <SalaryRankCalculator />
 
-            <div className="mt-12 max-w-2xl mx-auto">
-                <AdUnit slotId="9988776655" format="auto" label="Salary Rank Bottom Ad" />
-            </div>
+            
         </main>
     );
 }

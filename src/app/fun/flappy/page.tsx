@@ -259,10 +259,7 @@ export default function FlappyGamePage() {
                     )}
                 </div>
 
-                {/* Ad Unit */}
-                <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
-                    <AdUnit slotId="9988776655" format="rectangle" label="Game Bottom Ad" />
-                </div>
+                
             </div>
         </main>
     );

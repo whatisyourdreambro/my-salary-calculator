@@ -92,9 +92,7 @@ export default function MemeCoinPage() {
         </div>
 
         {/* Ad Unit */}
-        <div className="mb-8 max-w-3xl mx-auto border border-primary/30 bg-primary/5 rounded-lg overflow-hidden">
-          <AdUnit slotId="8877665544" format="auto" label="Meme Coin Top Ad" />
-        </div>
+        
 
         <AnimatePresence mode="wait">
           {step === 'invest' && (
@@ -181,9 +179,7 @@ export default function MemeCoinPage() {
               <h2 className="text-2xl font-bold text-slate-900 mb-2">시장 분석 중...</h2>
               <p className="text-primary animate-pulse">고래들의 움직임을 포착하고 있습니다</p>
 
-              <div className="mt-8 w-full max-w-md">
-                <AdUnit slotId="9988776655" format="rectangle" label="Analyzing Ad" />
-              </div>
+              
             </motion.div>
           )}
 

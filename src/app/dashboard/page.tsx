@@ -72,10 +72,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Ad Unit: Dashboard Bottom */}
-        <div className="mt-12">
-          <AdUnit slotId="9988776655" format="auto" label="Dashboard Bottom Ad" />
-        </div>
+        
       </div>
     </main>
   );

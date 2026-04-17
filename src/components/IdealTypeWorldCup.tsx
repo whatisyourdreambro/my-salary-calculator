@@ -163,9 +163,7 @@ export default function IdealTypeWorldCup() {
                             </div>
 
                             {/* Ad Unit */}
-                            <div className="w-full max-w-md mt-8">
-                                <AdUnit slotId="8888888888" format="rectangle" label="World Cup Result" />
-                            </div>
+                            
                         </motion.div>
                     ) : (
                         // Match View

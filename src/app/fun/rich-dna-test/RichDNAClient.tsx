@@ -293,10 +293,7 @@ export default function RichDNAClient() {
                                     </Link>
                                 </div>
 
-                                {/* Bottom Ad */}
-                                <div className="mt-8">
-                                    <AdUnit slotId="9988776655" format="auto" label="DNA Bottom Ad" />
-                                </div>
+                                
 
                             </motion.div>
                         )}

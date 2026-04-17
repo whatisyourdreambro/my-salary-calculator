@@ -21,17 +21,11 @@ export default function HomeLoanPage() {
         </p>
       </div>
 
-      {/* Ad Unit: Top */}
-      <div className="mb-8">
-        <AdUnit slotId="3344556677" format="auto" label="Home Loan Top Ad" />
-      </div>
+      
 
       <HomeLoanSimulator />
 
-      {/* Ad Unit: Bottom */}
-      <div className="mt-12">
-        <AdUnit slotId="7766554433" format="auto" label="Home Loan Bottom Ad" />
-      </div>
+      
     </main>
   );
 }

@@ -334,9 +334,7 @@ export default function InteractiveTable({
       </div>
 
       {/* 테이블 중간 광고 */}
-      <div className="px-0 sm:px-4 lg:px-0 mb-8">
-        <AdUnit slotId="6458241606" format="auto" label="Table Mid Ad" />
-      </div>
+      
 
       {/* 전체 테이블 섹션 */}
       <motion.div

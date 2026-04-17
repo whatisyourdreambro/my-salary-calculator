@@ -128,9 +128,7 @@ export default function SpendingTestPage() {
       </section>
 
       {/* Ad Unit: Top */}
-      <div className="mb-8 max-w-2xl mx-auto px-4">
-        <AdUnit slotId="7788990011" format="auto" label="Spending Test Top Ad" />
-      </div>
+      
 
       <div className="max-w-2xl mx-auto px-4 relative min-h-[400px]">
         <AnimatePresence mode="wait">
@@ -207,10 +205,7 @@ export default function SpendingTestPage() {
                     </p>
                   </div>
 
-                  {/* Ad Unit: Result Middle */}
-                  <div className="my-8 bg-white/50 p-4 rounded-xl">
-                    <AdUnit slotId="1100998877" format="rectangle" label="Spending Test Result Ad" />
-                  </div>
+                  
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button

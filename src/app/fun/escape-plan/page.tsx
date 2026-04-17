@@ -94,9 +94,7 @@ export default function EscapePlanPage() {
       <div className="max-w-5xl mx-auto px-4">
 
         {/* Ad Unit: Top */}
-        <div className="mb-12 max-w-3xl mx-auto">
-          <AdUnit slotId="1122334455" format="auto" label="Escape Plan Top Ad" />
-        </div>
+        
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column: Inputs */}
@@ -114,10 +112,7 @@ export default function EscapePlanPage() {
               </div>
             </div>
 
-            {/* Ad Unit: Side (Mobile only or small desktop) */}
-            <div className="lg:hidden">
-              <AdUnit slotId="5544332211" format="rectangle" label="Escape Plan Side Ad" />
-            </div>
+            
           </div>
 
           {/* Right Column: Dashboard */}
@@ -201,10 +196,7 @@ export default function EscapePlanPage() {
           </p>
         </div>
 
-        {/* Ad Unit: Bottom */}
-        <div className="mt-12">
-          <AdUnit slotId="9988776655" format="auto" label="Escape Plan Bottom Ad" />
-        </div>
+        
       </div>
     </main>
   );

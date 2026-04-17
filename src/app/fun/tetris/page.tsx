@@ -312,9 +312,7 @@ export default function TetrisPage() {
                                             <p className="text-slate-300 mb-6">야근 확정! 다시 도전하세요.</p>
                                             <p className="text-2xl font-bold text-slate-900 mb-8">Score: {score}</p>
 
-                                            <div className="w-full max-w-[280px] mb-6">
-                                                <AdUnit slotId="9988776655" format="rectangle" label="Tetris Game Over" />
-                                            </div>
+                                            
 
                                             <div className="flex gap-4">
                                                 <button
@@ -387,10 +385,7 @@ export default function TetrisPage() {
                     </div>
                 </div>
 
-                {/* Right Panel: Ad (Desktop) */}
-                <div className="hidden lg:block w-64 order-3">
-                    <AdUnit slotId="1122334455" format="vertical" label="Tetris Side Ad" />
-                </div>
+                
 
             </div>
         </main>

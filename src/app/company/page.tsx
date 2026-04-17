@@ -44,9 +44,7 @@ export default function CompanyPage() {
                 </div>
 
                 {/* Ad Unit: Below Search */}
-                <div className="mb-12">
-                    <AdUnit slotId="5566778899" format="auto" label="Company List Top Ad" />
-                </div>
+                
 
                 {/* Company Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -112,10 +110,7 @@ export default function CompanyPage() {
                     ))}
                 </div>
 
-                {/* Ad Unit: Bottom */}
-                <div className="mt-12">
-                    <AdUnit slotId="9988776655" format="auto" label="Company List Bottom Ad" />
-                </div>
+                
 
                 {filteredCompanies.length === 0 && (
                     <div className="text-center py-20">

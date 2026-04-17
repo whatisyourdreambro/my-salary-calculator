@@ -86,10 +86,7 @@ export default function SalarySlugPage({ params }: Props) {
         rankData={rankData}
       />
 
-      {/* 대시보드 하단 프리미엄 본문 광고 */}
-      <div className="mt-12">
-        <AdUnit slotId="5584143639" format="auto" label="결과창 프리미엄" />
-      </div>
+      
     </main>
   );
 }

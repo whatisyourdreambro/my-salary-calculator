@@ -164,10 +164,7 @@ export default function SubmitSalaryPage() {
                     </div>
                 </motion.form>
 
-                {/* Ad Unit */}
-                <div className="mt-12">
-                    <AdUnit slotId="9988776655" format="auto" label="Submit Page Bottom" />
-                </div>
+                
             </div>
         </main>
     );

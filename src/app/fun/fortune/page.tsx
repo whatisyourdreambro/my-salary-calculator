@@ -285,9 +285,7 @@ export default function FortunePage() {
                                 {year}년 {month}월 {day}일의 기운을 읽는 중
                             </p>
 
-                            <div className="mt-12 w-full max-w-sm bg-white/50 p-4 rounded-xl">
-                                <AdUnit slotId="0987654321" format="rectangle" label="Fortune Loading Ad" />
-                            </div>
+                            
                         </motion.div>
                     )}
 

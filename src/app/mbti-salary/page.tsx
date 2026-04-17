@@ -302,10 +302,7 @@ export default function MbtiSalaryPage() {
               </div>
             </div>
 
-            {/* Ad Unit: Result Middle */}
-            <div className="my-8">
-              <AdUnit slotId="7766554433" format="auto" label="MBTI Result Ad" />
-            </div>
+            
 
             {/* [유입 유도] 개인 맞춤형 성장 플랜 및 내부 링크 강화 */}
             <div className="mt-8">

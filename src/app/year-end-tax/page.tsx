@@ -31,10 +31,7 @@ export default function YearEndTaxPage() {
             절세 전략을 세워보세요.
           </p>
 
-          {/* 상단 광고 */}
-          <div className="mt-10">
-            <AdUnit slotId="5492837410" format="auto" label="Year-End Tax Top Ad" />
-          </div>
+          
         </div>
       </section>
 
@@ -42,10 +39,7 @@ export default function YearEndTaxPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-4">
         <YearEndTaxCalculator />
 
-        {/* 하단 광고 */}
-        <div className="mt-12">
-          <AdUnit slotId="1397486615" format="auto" label="Year-End Tax Bottom Ad" />
-        </div>
+        
       </section>
     </main>
   );

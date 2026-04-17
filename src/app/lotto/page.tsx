@@ -154,9 +154,7 @@ export default function LottoPage() {
         </div>
 
         {/* Ad Unit: Top */}
-        <div className="mb-12 max-w-3xl mx-auto">
-          <AdUnit slotId="1122334455" format="auto" label="Lotto Top Ad" />
-        </div>
+        
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Controls */}
@@ -342,10 +340,7 @@ export default function LottoPage() {
                     ))}
                   </div>
 
-                  {/* Ad Unit: Result Bottom */}
-                  <div className="mt-8">
-                    <AdUnit slotId="5566778899" format="rectangle" label="Lotto Result Ad" />
-                  </div>
+                  
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-50">

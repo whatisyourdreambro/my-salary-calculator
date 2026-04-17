@@ -150,10 +150,7 @@ export default function SalaryConverterPage() {
                         </p>
                     </div>
 
-                    {/* Ad Unit */}
-                    <div className="flex items-center justify-center bg-slate-800/30 rounded-3xl border border-slate-700/50">
-                        <AdUnit slotId="1122334455" format="rectangle" label="Global Side" />
-                    </div>
+                    
                 </div>
 
                 {/* Detailed Cards */}
