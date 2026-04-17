@@ -116,25 +116,25 @@ export default function LoanCalculator() {
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-6 rounded-2xl shadow-xl"
+                    className="bg-white backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-xl"
                 >
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <Calculator className="w-5 h-5 text-emerald-400" />
+                    <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <Calculator className="w-5 h-5 text-slate-800" />
                         대출 조건 설정
                     </h2>
 
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 대출 금액
                             </label>
                             <div className="relative">
-                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                                 <input
                                     type="number"
                                     value={amount}
                                     onChange={(e) => setAmount(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                                 />
                             </div>
                             <div className="flex gap-2 mt-2">
@@ -142,7 +142,7 @@ export default function LoanCalculator() {
                                     <button
                                         key={val}
                                         onClick={() => setAmount(val)}
-                                        className="px-3 py-1 text-xs bg-zinc-800 text-zinc-400 rounded-full hover:bg-zinc-700 transition-colors"
+                                        className="px-3 py-1 text-xs bg-slate-100 text-slate-600 rounded-full hover:bg-zinc-700 transition-colors"
                                     >
                                         {val / 10000}만
                                     </button>
@@ -151,38 +151,38 @@ export default function LoanCalculator() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 연 이자율 (%)
                             </label>
                             <div className="relative">
-                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                                 <input
                                     type="number"
                                     step="0.1"
                                     value={rate}
                                     onChange={(e) => setRate(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 대출 기간 (년)
                             </label>
                             <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                                 <input
                                     type="number"
                                     value={term}
                                     onChange={(e) => setTerm(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 상환 방식
                             </label>
                             <div className="grid grid-cols-3 gap-2">
@@ -195,8 +195,8 @@ export default function LoanCalculator() {
                                         key={m.id}
                                         onClick={() => setMethod(m.id as RepaymentMethod)}
                                         className={`py-2 text-sm rounded-lg transition-all ${method === m.id
-                                                ? "bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20"
-                                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                                                ? "bg-primary text-white font-bold shadow-lg shadow-emerald-500/20"
+                                                : "bg-slate-100 text-slate-600 hover:bg-zinc-700"
                                             }`}
                                     >
                                         {m.label}
@@ -211,32 +211,32 @@ export default function LoanCalculator() {
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between"
+                    className="bg-white backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-xl flex flex-col justify-between"
                 >
                     <div>
-                        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                             <PieChart className="w-5 h-5 text-blue-400" />
                             상환 요약
                         </h2>
 
                         <div className="space-y-6">
-                            <div className="p-4 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                                <div className="text-sm text-zinc-400 mb-1">총 상환 금액</div>
-                                <div className="text-3xl font-black text-white tracking-tight">
+                            <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-200">
+                                <div className="text-sm text-slate-600 mb-1">총 상환 금액</div>
+                                <div className="text-3xl font-black text-slate-900 tracking-tight">
                                     {results ? formatMoney(results.totalPayment) : "-"}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                                    <div className="text-sm text-zinc-400 mb-1">총 이자</div>
-                                    <div className="text-xl font-bold text-red-400">
+                                <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-200">
+                                    <div className="text-sm text-slate-600 mb-1">총 이자</div>
+                                    <div className="text-xl font-bold text-primary">
                                         {results ? formatMoney(results.totalInterest) : "-"}
                                     </div>
                                 </div>
-                                <div className="p-4 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                                    <div className="text-sm text-zinc-400 mb-1">월 평균 납입금</div>
-                                    <div className="text-xl font-bold text-emerald-400">
+                                <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-200">
+                                    <div className="text-sm text-slate-600 mb-1">월 평균 납입금</div>
+                                    <div className="text-xl font-bold text-slate-800">
                                         {results ? formatMoney(results.monthlyPayment) : "-"}
                                     </div>
                                 </div>

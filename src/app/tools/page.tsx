@@ -33,7 +33,7 @@ const CATEGORIES = [
         name: "금융 & 투자",
         description: "부자가 되기 위한 필수 계산기",
         icon: TrendingUp,
-        iconColor: "text-emerald-600",
+        iconColor: "text-slate-800",
         iconBg: "bg-emerald-50 dark:bg-emerald-900/30",
         borderColor: "border-emerald-100 dark:border-emerald-800/50",
         tools: [
@@ -102,7 +102,7 @@ const CATEGORIES = [
         name: "건강 & 피트니스",
         description: "내 몸을 위한 스마트한 관리",
         icon: Heart,
-        iconColor: "text-red-600",
+        iconColor: "text-primary",
         iconBg: "bg-red-50 dark:bg-red-900/30",
         borderColor: "border-red-100 dark:border-red-800/50",
         tools: [

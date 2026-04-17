@@ -1,4 +1,4 @@
-﻿import VatCalculator from "@/components/calculators/finance/VatCalculator";
+import VatCalculator from "@/components/calculators/finance/VatCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export default function VatPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-black text-white mb-4">부가세 계산기</h1>
-                    <p className="text-zinc-400">일반과세자 10% 세율 적용</p>
+                    <p className="text-slate-600">일반과세자 10% 세율 적용</p>
                 </div>
                 <VatCalculator />
             </div>

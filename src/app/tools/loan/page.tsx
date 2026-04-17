@@ -1,4 +1,4 @@
-﻿import LoanCalculator from "@/components/calculators/LoanCalculator";
+import LoanCalculator from "@/components/calculators/LoanCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function LoanCalculatorPage() {
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
                         대출 이자 계산기
                     </h1>
-                    <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                         가장 합리적인 상환 계획을 세워보세요. <br className="hidden sm:block" />
                         원리금균등, 원금균등, 만기일시 방식을 모두 지원합니다.
                     </p>

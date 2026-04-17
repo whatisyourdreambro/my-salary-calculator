@@ -39,20 +39,20 @@ export default function VatCalculator() {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-xl">
+        <div className="w-full max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Percent className="w-6 h-6 text-emerald-400" />
+                <Percent className="w-6 h-6 text-slate-800" />
                 부가세(VAT) 계산기
             </h2>
 
             <div className="space-y-6">
                 {/* Type Selector */}
-                <div className="flex bg-zinc-950 rounded-lg p-1 border border-zinc-800">
+                <div className="flex bg-slate-50 rounded-lg p-1 border border-slate-200">
                     <button
                         onClick={() => setType("total")}
                         className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "total"
                                 ? "bg-emerald-600 text-white shadow-sm"
-                                : "text-zinc-500 hover:text-zinc-300"
+                                : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
                         합계금액 기준 (부가세 포함)
@@ -61,7 +61,7 @@ export default function VatCalculator() {
                         onClick={() => setType("supply")}
                         className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "supply"
                                 ? "bg-emerald-600 text-white shadow-sm"
-                                : "text-zinc-500 hover:text-zinc-300"
+                                : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
                         공급가액 기준 (부가세 별도)
@@ -70,7 +70,7 @@ export default function VatCalculator() {
 
                 {/* Input */}
                 <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">
+                    <label className="block text-sm font-medium text-slate-600 mb-2">
                         금액 입력
                     </label>
                     <input
@@ -78,23 +78,23 @@ export default function VatCalculator() {
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
                         placeholder={type === "total" ? "부가세 포함 금액" : "부가세 별도 금액"}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-4 px-4 text-xl text-white font-bold focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-xl text-white font-bold focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                     />
                 </div>
 
                 {/* Result */}
-                <div className="bg-zinc-950 rounded-xl border border-zinc-800/50 p-6 space-y-4">
+                <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-4">
                     <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">공급가액</span>
+                        <span className="text-slate-600">공급가액</span>
                         <span className="text-xl font-bold text-white">{formatMoney(supplyValue)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">부가세 (10%)</span>
-                        <span className="text-xl font-bold text-emerald-400">+{formatMoney(vatValue)}</span>
+                        <span className="text-slate-600">부가세 (10%)</span>
+                        <span className="text-xl font-bold text-slate-800">+{formatMoney(vatValue)}</span>
                     </div>
-                    <div className="h-px bg-zinc-800 my-2" />
+                    <div className="h-px bg-slate-100 my-2" />
                     <div className="flex justify-between items-center">
-                        <span className="text-zinc-400 font-medium">합계금액</span>
+                        <span className="text-slate-600 font-medium">합계금액</span>
                         <span className="text-2xl font-black text-white">{formatMoney(totalValue)}</span>
                     </div>
                 </div>

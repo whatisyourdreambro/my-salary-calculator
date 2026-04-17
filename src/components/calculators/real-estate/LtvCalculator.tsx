@@ -21,13 +21,13 @@ export default function LtvCalculator() {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-zinc-200 dark:border-slate-200 overflow-hidden">
+            <div className="p-6 border-b border-zinc-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                     <Home className="w-5 h-5 text-green-600" />
                     LTV (주택담보대출비율) 계산기
                 </h2>
-                <p className="text-sm text-zinc-500 mt-1">
+                <p className="text-sm text-slate-500 mt-1">
                     주택 가격 대비 대출 금액의 비율을 계산합니다.
                 </p>
             </div>
@@ -68,11 +68,11 @@ export default function LtvCalculator() {
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 text-center border border-green-100 dark:border-green-800"
                     >
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">당신의 LTV는</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-600 mb-1">당신의 LTV는</p>
                         <p className="text-4xl font-black text-green-600 dark:text-green-400">
                             {ltv.toFixed(2)}%
                         </p>
-                        <div className="mt-4 text-xs text-zinc-500 text-left bg-white dark:bg-black/20 p-3 rounded-lg">
+                        <div className="mt-4 text-xs text-slate-500 text-left bg-white dark:bg-black/20 p-3 rounded-lg">
                             <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
                             <p>지역 및 주택 가격에 따라 LTV 한도가 다를 수 있습니다 (예: 투기과열지구 40~50%).</p>
                         </div>
@@ -80,7 +80,7 @@ export default function LtvCalculator() {
                 )}
             </div>
 
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-zinc-200 dark:border-slate-200">
                 <AdUnit slotId="1231231234" format="rectangle" label="LTV Calculator Ad" />
             </div>
         </div>

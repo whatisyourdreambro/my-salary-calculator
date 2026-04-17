@@ -19,13 +19,13 @@ export function DutchPayCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Users className="text-purple-500" /> N빵 (더치페이) 계산기
             </h2>
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">총 금액 (원)</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">총 금액 (원)</label>
                     <input
                         type="text"
                         value={amount}
@@ -35,7 +35,7 @@ export function DutchPayCalculator() {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">인원 수 (명)</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">인원 수 (명)</label>
                     <input
                         type="number"
                         value={people}
@@ -51,8 +51,8 @@ export function DutchPayCalculator() {
                     계산하기
                 </button>
                 {result !== null && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                        <p className="text-zinc-400 mb-2">1인당 부담금 (10원 단위 올림)</p>
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
+                        <p className="text-slate-600 mb-2">1인당 부담금 (10원 단위 올림)</p>
                         <p className="text-5xl font-black text-purple-500">{result.toLocaleString()}원</p>
                     </div>
                 )}
@@ -81,13 +81,13 @@ export function FuelCostCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Fuel className="text-orange-500" /> 유류비 계산기
             </h2>
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">이동 거리 (km)</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">이동 거리 (km)</label>
                     <input
                         type="number"
                         value={distance}
@@ -96,7 +96,7 @@ export function FuelCostCalculator() {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">연비 (km/L)</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">연비 (km/L)</label>
                     <input
                         type="number"
                         value={efficiency}
@@ -105,7 +105,7 @@ export function FuelCostCalculator() {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">리터당 가격 (원)</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">리터당 가격 (원)</label>
                     <input
                         type="number"
                         value={price}
@@ -120,8 +120,8 @@ export function FuelCostCalculator() {
                     계산하기
                 </button>
                 {result !== null && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                        <p className="text-zinc-400 mb-2">예상 유류비</p>
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
+                        <p className="text-slate-600 mb-2">예상 유류비</p>
                         <p className="text-5xl font-black text-orange-500">{result.toLocaleString()}원</p>
                     </div>
                 )}
@@ -156,27 +156,27 @@ export function UnitConverter() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Ruler className="text-cyan-500" /> 단위 변환기
             </h2>
             <div className="space-y-6">
-                <div className="flex gap-4 p-1 bg-black rounded-xl border border-zinc-800">
+                <div className="flex gap-4 p-1 bg-black rounded-xl border border-slate-200">
                     <button
                         onClick={() => { setType("length"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "length" ? "bg-cyan-600 text-white" : "text-zinc-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "length" ? "bg-cyan-600 text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         길이 (cm)
                     </button>
                     <button
                         onClick={() => { setType("weight"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "weight" ? "bg-cyan-600 text-white" : "text-zinc-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${type === "weight" ? "bg-cyan-600 text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         무게 (kg)
                     </button>
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">
+                    <label className="block text-sm font-bold text-slate-600 mb-2">
                         {type === "length" ? "센티미터 (cm)" : "킬로그램 (kg)"}
                     </label>
                     <input
@@ -193,8 +193,8 @@ export function UnitConverter() {
                     변환하기
                 </button>
                 {result && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                        <p className="text-zinc-400 mb-2">변환 결과</p>
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
+                        <p className="text-slate-600 mb-2">변환 결과</p>
                         <p className="text-3xl font-black text-cyan-500">{result}</p>
                     </div>
                 )}

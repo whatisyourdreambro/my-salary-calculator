@@ -1,4 +1,4 @@
-﻿import DepositCalculator from "@/components/calculators/DepositCalculator";
+import DepositCalculator from "@/components/calculators/DepositCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function DepositCalculatorPage() {
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
                         예적금 계산기
                     </h1>
-                    <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                         목돈 굴리기(예금)와 목돈 만들기(적금)의 <br className="hidden sm:block" />
                         만기 수령액을 세금(15.4%)까지 고려하여 정확하게 계산합니다.
                     </p>

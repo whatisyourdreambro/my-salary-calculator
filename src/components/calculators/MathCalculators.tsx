@@ -11,12 +11,12 @@ export default function MathCalculators() {
         <div className="w-full max-w-4xl mx-auto">
             {/* Tabs */}
             <div className="flex justify-center mb-8">
-                <div className="bg-zinc-900 p-1 rounded-xl border border-zinc-800 flex gap-1">
+                <div className="bg-white p-1 rounded-xl border border-slate-200 flex gap-1">
                     <button
                         onClick={() => setActiveTab("percent")}
                         className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "percent"
-                                ? "bg-indigo-500 text-white shadow-lg"
-                                : "text-zinc-400 hover:text-white"
+                                ? "bg-primary text-white shadow-lg"
+                                : "text-slate-600 hover:text-primary"
                             }`}
                     >
                         퍼센트 계산기
@@ -24,8 +24,8 @@ export default function MathCalculators() {
                     <button
                         onClick={() => setActiveTab("unit")}
                         className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "unit"
-                                ? "bg-indigo-500 text-white shadow-lg"
-                                : "text-zinc-400 hover:text-white"
+                                ? "bg-primary text-white shadow-lg"
+                                : "text-slate-600 hover:text-primary"
                             }`}
                     >
                         단위 변환기
@@ -61,8 +61,8 @@ function PercentCalculator() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Case 1 */}
-            <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <div className="bg-white border border-slate-200 p-6 rounded-2xl">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <Percent className="w-4 h-4 text-indigo-400" /> 비율 계산
                 </h3>
                 <div className="space-y-3">
@@ -70,19 +70,19 @@ function PercentCalculator() {
                         <input
                             type="number"
                             placeholder="전체값"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal2(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">의</span>
+                        <span className="text-slate-600">의</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <input
                             type="number"
                             placeholder="비율(%)"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal1(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">% 는?</span>
+                        <span className="text-slate-600">% 는?</span>
                     </div>
                     <div className="mt-4 p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-center">
                         <span className="text-2xl font-black text-indigo-400">{res1.toLocaleString()}</span>
@@ -91,8 +91,8 @@ function PercentCalculator() {
             </div>
 
             {/* Case 2 */}
-            <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <div className="bg-white border border-slate-200 p-6 rounded-2xl">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <Divide className="w-4 h-4 text-indigo-400" /> 비중 계산
                 </h3>
                 <div className="space-y-3">
@@ -100,19 +100,19 @@ function PercentCalculator() {
                         <input
                             type="number"
                             placeholder="일부값"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal1(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">은</span>
+                        <span className="text-slate-600">은</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <input
                             type="number"
                             placeholder="전체값"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal2(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">의 몇 %?</span>
+                        <span className="text-slate-600">의 몇 %?</span>
                     </div>
                     <div className="mt-4 p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-center">
                         <span className="text-2xl font-black text-indigo-400">{res2.toFixed(2)}%</span>
@@ -121,8 +121,8 @@ function PercentCalculator() {
             </div>
 
             {/* Case 3 */}
-            <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <div className="bg-white border border-slate-200 p-6 rounded-2xl">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <ArrowRightLeft className="w-4 h-4 text-indigo-400" /> 증감율 계산
                 </h3>
                 <div className="space-y-3">
@@ -130,22 +130,22 @@ function PercentCalculator() {
                         <input
                             type="number"
                             placeholder="기존값"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal1(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">에서</span>
+                        <span className="text-slate-600">에서</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <input
                             type="number"
                             placeholder="변경값"
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-white"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-900"
                             onChange={(e) => setVal2(Number(e.target.value))}
                         />
-                        <span className="text-zinc-400">으로 변하면?</span>
+                        <span className="text-slate-600">으로 변하면?</span>
                     </div>
                     <div className="mt-4 p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-center">
-                        <span className={`text-2xl font-black ${res3 > 0 ? "text-red-400" : "text-blue-400"}`}>
+                        <span className={`text-2xl font-black ${res3 > 0 ? "text-primary" : "text-blue-400"}`}>
                             {res3 > 0 ? "+" : ""}{res3.toFixed(2)}%
                         </span>
                     </div>
@@ -183,8 +183,8 @@ function UnitConverter() {
     }
 
     return (
-        <div className="bg-zinc-900/50 border border-zinc-800 p-8 rounded-2xl text-center">
-            <p className="text-zinc-400">단위 변환기는 준비 중입니다...</p>
+        <div className="bg-white border border-slate-200 p-8 rounded-2xl text-center">
+            <p className="text-slate-600">단위 변환기는 준비 중입니다...</p>
         </div>
     )
 }

@@ -25,13 +25,13 @@ export function DDayCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Calendar className="text-rose-500" /> D-Day 계산기
             </h2>
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">목표 날짜</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">목표 날짜</label>
                     <input
                         type="date"
                         value={targetDate}
@@ -46,8 +46,8 @@ export function DDayCalculator() {
                     계산하기
                 </button>
                 {result && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                        <p className="text-zinc-400 mb-2">결과</p>
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
+                        <p className="text-slate-600 mb-2">결과</p>
                         <p className="text-5xl font-black text-rose-500">{result}</p>
                     </div>
                 )}
@@ -83,13 +83,13 @@ export function AgeCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Clock className="text-blue-500" /> 만 나이 계산기
             </h2>
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-bold text-zinc-400 mb-2">생년월일</label>
+                    <label className="block text-sm font-bold text-slate-600 mb-2">생년월일</label>
                     <input
                         type="date"
                         value={birthDate}
@@ -105,13 +105,13 @@ export function AgeCalculator() {
                 </button>
                 {result && (
                     <div className="mt-6 grid grid-cols-2 gap-4">
-                        <div className="p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                            <p className="text-zinc-400 mb-2">만 나이</p>
+                        <div className="p-6 bg-black rounded-xl border border-slate-200 text-center">
+                            <p className="text-slate-600 mb-2">만 나이</p>
                             <p className="text-4xl font-black text-blue-500">{result.intl}세</p>
                         </div>
-                        <div className="p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                            <p className="text-zinc-400 mb-2">연 나이</p>
-                            <p className="text-4xl font-black text-zinc-300">{result.korean}세</p>
+                        <div className="p-6 bg-black rounded-xl border border-slate-200 text-center">
+                            <p className="text-slate-600 mb-2">연 나이</p>
+                            <p className="text-4xl font-black text-slate-700">{result.korean}세</p>
                         </div>
                     </div>
                 )}
@@ -153,14 +153,14 @@ export function WorkDayCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Briefcase className="text-green-500" /> 영업일(평일) 계산기
             </h2>
             <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2">시작일</label>
+                        <label className="block text-sm font-bold text-slate-600 mb-2">시작일</label>
                         <input
                             type="date"
                             value={startDate}
@@ -169,7 +169,7 @@ export function WorkDayCalculator() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2">종료일</label>
+                        <label className="block text-sm font-bold text-slate-600 mb-2">종료일</label>
                         <input
                             type="date"
                             value={endDate}
@@ -185,8 +185,8 @@ export function WorkDayCalculator() {
                     계산하기
                 </button>
                 {result !== null && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
-                        <p className="text-zinc-400 mb-2">주말 제외 영업일수</p>
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
+                        <p className="text-slate-600 mb-2">주말 제외 영업일수</p>
                         <p className="text-5xl font-black text-green-500">{result}일</p>
                     </div>
                 )}

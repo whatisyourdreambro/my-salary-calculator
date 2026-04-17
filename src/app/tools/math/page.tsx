@@ -1,4 +1,4 @@
-﻿import MathCalculators from "@/components/calculators/MathCalculators";
+import MathCalculators from "@/components/calculators/MathCalculators";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function MathPage() {
                     <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
                         수학 도구 모음
                     </h1>
-                    <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                         일상 생활에 필요한 퍼센트 계산과 단위 변환을 <br className="hidden sm:block" />
                         직관적인 UI로 해결하세요.
                     </p>

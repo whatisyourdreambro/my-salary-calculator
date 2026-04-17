@@ -1,4 +1,4 @@
-﻿import BmiCalculator from "@/components/calculators/health/BmiCalculator";
+import BmiCalculator from "@/components/calculators/health/BmiCalculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export default function BmiPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-black text-white mb-4">BMI 계산기</h1>
-                    <p className="text-zinc-400">나의 체질량지수(Body Mass Index) 확인하기</p>
+                    <p className="text-slate-600">나의 체질량지수(Body Mass Index) 확인하기</p>
                 </div>
                 <BmiCalculator />
             </div>

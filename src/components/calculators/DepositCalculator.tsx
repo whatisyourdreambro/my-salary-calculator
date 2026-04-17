@@ -66,21 +66,21 @@ export default function DepositCalculator() {
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-6 rounded-2xl shadow-xl"
+                    className="bg-white backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-xl"
                 >
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <PiggyBank className="w-5 h-5 text-pink-400" />
+                    <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <PiggyBank className="w-5 h-5 text-primary" />
                         저축 조건 설정
                     </h2>
 
                     <div className="space-y-6">
                         {/* Type Selector */}
-                        <div className="flex bg-zinc-950 rounded-lg p-1 border border-zinc-800">
+                        <div className="flex bg-slate-50 rounded-lg p-1 border border-slate-200">
                             <button
                                 onClick={() => setType("deposit")}
                                 className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "deposit"
-                                        ? "bg-zinc-800 text-white shadow-sm"
-                                        : "text-zinc-500 hover:text-zinc-300"
+                                        ? "bg-slate-100 text-slate-900 shadow-sm"
+                                        : "text-slate-500 hover:text-slate-700"
                                     }`}
                             >
                                 예금 (목돈 굴리기)
@@ -88,8 +88,8 @@ export default function DepositCalculator() {
                             <button
                                 onClick={() => setType("savings")}
                                 className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "savings"
-                                        ? "bg-zinc-800 text-white shadow-sm"
-                                        : "text-zinc-500 hover:text-zinc-300"
+                                        ? "bg-slate-100 text-slate-900 shadow-sm"
+                                        : "text-slate-500 hover:text-slate-700"
                                     }`}
                             >
                                 적금 (목돈 만들기)
@@ -97,53 +97,53 @@ export default function DepositCalculator() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 {type === "deposit" ? "예치 금액" : "월 납입 금액"}
                             </label>
                             <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₩</span>
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">₩</span>
                                 <input
                                     type="number"
                                     value={amount}
                                     onChange={(e) => setAmount(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 연 이자율 (%)
                             </label>
                             <div className="relative">
-                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                                 <input
                                     type="number"
                                     step="0.1"
                                     value={rate}
                                     onChange={(e) => setRate(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 저축 기간 (개월)
                             </label>
                             <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                                 <input
                                     type="number"
                                     value={term}
                                     onChange={(e) => setTerm(Number(e.target.value))}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-white focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-zinc-400 mb-2">
+                            <label className="block text-sm font-medium text-slate-600 mb-2">
                                 과세 구분
                             </label>
                             <div className="grid grid-cols-3 gap-2">
@@ -156,8 +156,8 @@ export default function DepositCalculator() {
                                         key={t.id}
                                         onClick={() => setTaxType(t.id as TaxType)}
                                         className={`py-2 text-xs sm:text-sm rounded-lg transition-all ${taxType === t.id
-                                                ? "bg-pink-500 text-white font-bold shadow-lg shadow-pink-500/20"
-                                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                                                ? "bg-primary text-white font-bold shadow-lg shadow-primary/20"
+                                                : "bg-slate-100 text-slate-600 hover:bg-zinc-700"
                                             }`}
                                     >
                                         {t.label}
@@ -172,30 +172,30 @@ export default function DepositCalculator() {
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col justify-center"
+                    className="bg-white backdrop-blur-md border border-slate-200 p-6 rounded-2xl shadow-xl flex flex-col justify-center"
                 >
                     <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pink-500/20 text-pink-400 mb-4">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/ text-primary mb-4">
                             <TrendingUp className="w-8 h-8" />
                         </div>
-                        <h3 className="text-zinc-400 font-medium">만기 수령액 (세후)</h3>
-                        <div className="text-4xl sm:text-5xl font-black text-white mt-2 tracking-tight">
+                        <h3 className="text-slate-600 font-medium">만기 수령액 (세후)</h3>
+                        <div className="text-4xl sm:text-5xl font-black text-slate-900 mt-2 tracking-tight">
                             {results ? formatMoney(results.total) : "-"}
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                            <span className="text-zinc-400">원금 합계</span>
-                            <span className="font-bold text-white">{results ? formatMoney(results.principal) : "-"}</span>
+                        <div className="flex justify-between items-center p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                            <span className="text-slate-600">원금 합계</span>
+                            <span className="font-bold text-slate-900">{results ? formatMoney(results.principal) : "-"}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                            <span className="text-zinc-400">세전 이자</span>
-                            <span className="font-bold text-emerald-400">+{results ? formatMoney(results.interest) : "-"}</span>
+                        <div className="flex justify-between items-center p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                            <span className="text-slate-600">세전 이자</span>
+                            <span className="font-bold text-slate-800">+{results ? formatMoney(results.interest) : "-"}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
-                            <span className="text-zinc-400">이자 과세 ({taxType === "normal" ? "15.4%" : taxType === "preferential" ? "9.5%" : "0%"})</span>
-                            <span className="font-bold text-red-400">-{results ? formatMoney(results.taxAmount) : "-"}</span>
+                        <div className="flex justify-between items-center p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                            <span className="text-slate-600">이자 과세 ({taxType === "normal" ? "15.4%" : taxType === "preferential" ? "9.5%" : "0%"})</span>
+                            <span className="font-bold text-primary">-{results ? formatMoney(results.taxAmount) : "-"}</span>
                         </div>
                     </div>
                 </motion.div>

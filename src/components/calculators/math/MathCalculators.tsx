@@ -28,21 +28,21 @@ export function PercentCalculator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Calculator className="text-indigo-500" /> 퍼센트 계산기
             </h2>
             <div className="space-y-6">
-                <div className="flex gap-4 p-1 bg-black rounded-xl border border-zinc-800">
+                <div className="flex gap-4 p-1 bg-black rounded-xl border border-slate-200">
                     <button
                         onClick={() => { setMode("of"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "of" ? "bg-indigo-600 text-white" : "text-zinc-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "of" ? "bg-indigo-600 text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         비율 계산 (X% of Y)
                     </button>
                     <button
                         onClick={() => { setMode("is"); setResult(null); }}
-                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "is" ? "bg-indigo-600 text-white" : "text-zinc-500 hover:text-white"}`}
+                        className={`flex-1 py-2 rounded-lg font-bold transition-colors ${mode === "is" ? "bg-indigo-600 text-white" : "text-slate-500 hover:text-white"}`}
                     >
                         비중 계산 (X is ?% of Y)
                     </button>
@@ -52,22 +52,22 @@ export function PercentCalculator() {
                     {mode === "of" ? (
                         <>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">전체값 (Y)</label>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">전체값 (Y)</label>
                                 <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">비율 (X%)</label>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">비율 (X%)</label>
                                 <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                             </div>
                         </>
                     ) : (
                         <>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">일부값 (X)</label>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">일부값 (X)</label>
                                 <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-2">전체값 (Y)</label>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">전체값 (Y)</label>
                                 <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                             </div>
                         </>
@@ -81,7 +81,7 @@ export function PercentCalculator() {
                     계산하기
                 </button>
                 {result && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-xl font-bold text-white">{result}</p>
                     </div>
                 )}
@@ -118,34 +118,34 @@ export function NumberGenerator() {
     };
 
     return (
-        <div className="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-xl">
+        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Dices className="text-pink-500" /> 랜덤 숫자 생성기
+                <Dices className="text-primary" /> 랜덤 숫자 생성기
             </h2>
             <div className="space-y-6">
                 <div className="grid grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2">최소값</label>
+                        <label className="block text-sm font-bold text-slate-600 mb-2">최소값</label>
                         <input type="number" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2">최대값</label>
+                        <label className="block text-sm font-bold text-slate-600 mb-2">최대값</label>
                         <input type="number" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2">개수</label>
+                        <label className="block text-sm font-bold text-slate-600 mb-2">개수</label>
                         <input type="number" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-black border border-zinc-700 rounded-xl text-white outline-none" />
                     </div>
                 </div>
 
                 <button
                     onClick={generate}
-                    className="w-full py-4 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-500 transition-colors"
+                    className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary transition-colors"
                 >
                     생성하기
                 </button>
                 {result.length > 0 && (
-                    <div className="mt-6 p-6 bg-black rounded-xl border border-zinc-800 text-center">
+                    <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <div className="flex flex-wrap justify-center gap-3">
                             {result.map((n) => (
                                 <div key={n} className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center font-black text-white shadow-lg">

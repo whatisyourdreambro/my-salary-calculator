@@ -24,13 +24,13 @@ export default function DsrCalculator() {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+        <div className="w-full max-w-2xl mx-auto bg-white dark:bg-white rounded-3xl shadow-xl border border-zinc-200 dark:border-slate-200 overflow-hidden">
+            <div className="p-6 border-b border-zinc-200 dark:border-slate-200 bg-zinc-50 dark:bg-white">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                     <Building2 className="w-5 h-5 text-blue-600" />
                     DSR (총부채원리금상환비율) 계산기
                 </h2>
-                <p className="text-sm text-zinc-500 mt-1">
+                <p className="text-sm text-slate-500 mt-1">
                     연소득 대비 연간 대출 원리금 상환액 비율을 계산합니다.
                 </p>
             </div>
@@ -83,11 +83,11 @@ export default function DsrCalculator() {
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 text-center border border-blue-100 dark:border-blue-800"
                     >
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">당신의 DSR은</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-600 mb-1">당신의 DSR은</p>
                         <p className="text-4xl font-black text-blue-600 dark:text-blue-400">
                             {dsr.toFixed(2)}%
                         </p>
-                        <div className="mt-4 text-xs text-zinc-500 text-left bg-white dark:bg-black/20 p-3 rounded-lg">
+                        <div className="mt-4 text-xs text-slate-500 text-left bg-white dark:bg-black/20 p-3 rounded-lg">
                             <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
                             <p>일반적으로 DSR 40% (은행권), 50% (제2금융권) 규제가 적용됩니다.</p>
                         </div>
@@ -95,7 +95,7 @@ export default function DsrCalculator() {
                 )}
             </div>
 
-            <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="p-4 bg-zinc-50 dark:bg-slate-50 border-t border-zinc-200 dark:border-slate-200">
                 <AdUnit slotId="1231231234" format="rectangle" label="DSR Calculator Ad" />
             </div>
         </div>
