@@ -207,8 +207,8 @@ const CurrencyInput = ({
 
   return (
     <div className="space-y-4 group">
-      <label className="text-xs font-bold text-stone-500 uppercase tracking-widest flex items-center gap-2">
-        {Icon && <Icon className="w-4 h-4 text-accent" />}
+      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+        {Icon && <Icon className="w-4 h-4 text-primary" />}
         {label}
       </label>
       <div className="relative">
@@ -216,9 +216,9 @@ const CurrencyInput = ({
           type="text"
           value={value}
           onChange={handleChange}
-          className="w-full py-4 text-3xl font-serif font-bold bg-transparent border-b-2 border-stone-200 dark:border-stone-800 focus:border-primary transition-all text-foreground placeholder-stone-300 outline-none"
+          className="w-full py-4 text-3xl font-sans font-bold bg-transparent border-b-2 border-slate-200  focus:border-primary transition-all text-foreground placeholder-stone-300 outline-none"
         />
-        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-stone-400 font-serif text-xl pointer-events-none group-focus-within:text-primary transition-colors">
+        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-slate-400 font-sans text-xl pointer-events-none group-focus-within:text-primary transition-colors">
           원
         </span>
       </div>
@@ -231,7 +231,7 @@ const CurrencyInput = ({
                 const current = Number(value.replace(/,/g, "")) || 0;
                 onValueChange((current + amount).toLocaleString());
               }}
-              className="px-4 py-2 text-xs font-bold bg-stone-100 dark:bg-stone-900 text-stone-500 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 hover:text-primary transition-all uppercase tracking-wider"
+              className="px-4 py-2 text-xs font-bold bg-slate-100  text-slate-500 rounded-full hover:bg-slate-100 hover:text-primary transition-all uppercase tracking-wider"
             >
               +{amount / 10000}만
             </button>
@@ -315,19 +315,19 @@ export default function FireCalculatorPage() {
     setLifeEvents(lifeEvents.filter((_, i) => i !== index));
 
   return (
-    <main className="w-full min-h-screen bg-stone-50/50 dark:bg-[#0c0a09] pb-20 selection:bg-accent/30 selection:text-accent-foreground">
-      {/* Texture Background */}
-      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")' }} />
+    <main className="w-full min-h-screen bg-white pb-20">
+      {/* Top accent line */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-primary z-50" />
 
       {/* Content Wrapper */}
       <div className="relative z-10 w-full pt-12">
         {/* Header Logo Area */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-stone-200 dark:border-stone-800 bg-white/50 dark:bg-stone-900/50 backdrop-blur-sm text-stone-500 font-serif text-sm tracking-widest uppercase mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-slate-200  bg-white/50 /50 backdrop-blur-sm text-slate-500 font-sans text-sm tracking-widest uppercase mb-6 shadow-sm">
             <Landmark className="w-4 h-4" />
             <span>Private Wealth Management</span>
           </div>
-          <h1 className="text-5xl sm:text-6xl font-serif font-medium text-foreground tracking-tight">
+          <h1 className="text-5xl sm:text-6xl font-sans font-medium text-foreground tracking-tight">
             FIRE Calculator
           </h1>
         </div>
@@ -341,15 +341,15 @@ export default function FireCalculatorPage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="bg-white dark:bg-[#1C1917] p-8 sm:p-20 rounded-[3rem] shadow-2xl border border-stone-100 dark:border-stone-800 text-center relative overflow-hidden group"
+                className="bg-white  p-8 sm:p-20 rounded-[3rem] shadow-2xl border border-slate-100  text-center relative overflow-hidden group"
               >
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
                 <div className="max-w-xl mx-auto space-y-16 relative z-10">
                   <div className="space-y-6">
-                    <p className="text-xl sm:text-2xl font-serif text-stone-500 leading-relaxed">
+                    <p className="text-xl sm:text-2xl font-sans text-slate-500 leading-relaxed">
                       "Financial Independence, Retire Early"<br />
                       <span className="text-foreground font-medium">경제적 자유</span>를 향한 당신의 여정을 설계해드립니다.
                     </p>
@@ -368,12 +368,12 @@ export default function FireCalculatorPage() {
                         transition={{ delay: 0.2 + (i * 0.1) }}
                         className="flex flex-col items-center gap-4 group/item"
                       >
-                        <div className="w-16 h-16 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-100 dark:border-stone-800 flex items-center justify-center text-stone-400 group-hover/item:text-accent group-hover/item:border-accent/30 transition-all duration-500 shadow-sm group-hover/item:shadow-lg">
+                        <div className="w-16 h-16 rounded-2xl bg-slate-50  border border-slate-100  flex items-center justify-center text-slate-400 group-hover/item:text-primary group-hover/item:border-primary/30 transition-all duration-500 shadow-sm group-hover/item:shadow-lg">
                           <Icon className="w-6 h-6" />
                         </div>
                         <div>
-                          <span className="block font-bold font-serif text-foreground text-lg mb-1">{label}</span>
-                          <span className="text-xs text-stone-400 font-bold tracking-widest uppercase">{desc}</span>
+                          <span className="block font-bold font-sans text-foreground text-lg mb-1">{label}</span>
+                          <span className="text-xs text-slate-400 font-bold tracking-widest uppercase">{desc}</span>
                         </div>
                       </motion.div>
                     ))}
@@ -384,7 +384,7 @@ export default function FireCalculatorPage() {
                     onClick={() => setStep("essentials")}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group relative w-full max-w-sm mx-auto py-6 bg-primary text-white font-serif font-bold tracking-wider rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all overflow-hidden"
+                    className="group relative w-full max-w-sm mx-auto py-6 bg-primary text-white font-sans font-bold tracking-wider rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-3">
                       START SIMULATION <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -398,15 +398,15 @@ export default function FireCalculatorPage() {
                 key="calculator"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-[#1C1917] rounded-[3rem] shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden"
+                className="bg-white  rounded-[3rem] shadow-2xl border border-slate-200  overflow-hidden"
               >
                 {/* Modern Step Indicator */}
-                <div className="bg-stone-50 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-8 py-10">
+                <div className="bg-slate-50  border-b border-slate-200  px-8 py-10">
                   <div className="max-w-3xl mx-auto relative">
                     {/* Progress Line */}
-                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-stone-200 dark:bg-stone-800 -translate-y-1/2 rounded-full overflow-hidden">
+                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100  -translate-y-1/2 rounded-full overflow-hidden">
                       <motion.div
-                        className="h-full bg-accent"
+                        className="h-full bg-primary"
                         initial={{ width: "0%" }}
                         animate={{ width: `${(['essentials', 'investment', 'events', 'result'].indexOf(step) / 3) * 100}%` }}
                         transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -434,9 +434,9 @@ export default function FireCalculatorPage() {
                                   backgroundColor: isActive ? "#CC9254" : "var(--background)",
                                   borderColor: isActive ? "#CC9254" : "var(--border)"
                                 }}
-                                className={`w-4 h-4 rounded-full border-2 transition-colors duration-500 ${isActive ? "shadow-[0_0_15px_rgba(204,146,84,0.4)]" : "bg-stone-100 dark:bg-stone-800 border-stone-300 dark:border-stone-700"}`}
+                                className={`w-4 h-4 rounded-full border-2 transition-colors duration-500 ${isActive ? "bg-primary border-primary" : "bg-slate-100 border-slate-300"}`}
                               />
-                              <span className={`text-[10px] font-bold tracking-widest uppercase ${isActive ? "text-accent" : "text-stone-400"}`}>
+                              <span className={`text-[10px] font-bold tracking-widest uppercase ${isActive ? "text-primary" : "text-slate-400"}`}>
                                 {name}
                               </span>
                             </div>
@@ -456,18 +456,18 @@ export default function FireCalculatorPage() {
                       className="space-y-16 max-w-2xl mx-auto w-full"
                     >
                       <div className="text-center">
-                        <h2 className="text-3xl font-serif font-bold text-foreground mb-4">Current Status</h2>
-                        <p className="text-stone-500 font-sans">현재의 재무 상태를 입력해주세요.</p>
+                        <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Current Status</h2>
+                        <p className="text-slate-500 font-sans">현재의 재무 상태를 입력해주세요.</p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                         <div className="space-y-4 group">
-                          <label className="text-xs font-bold text-stone-500 uppercase tracking-widest">현재 나이</label>
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">현재 나이</label>
                           <input
                             type="number"
                             value={inputs.currentAge}
                             onChange={(e) => handleInputChange("currentAge", e.target.value)}
-                            className="w-full py-4 text-3xl font-serif font-bold bg-transparent border-b-2 border-stone-200 dark:border-stone-800 focus:border-primary transition-all text-foreground outline-none"
+                            className="w-full py-4 text-3xl font-sans font-bold bg-transparent border-b-2 border-slate-200  focus:border-primary transition-all text-foreground outline-none"
                           />
                         </div>
                         <CurrencyInput
@@ -496,7 +496,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("investment")}
-                        className="w-full py-5 bg-stone-900 dark:bg-white text-white dark:text-black font-serif font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+                        className="w-full py-5 bg-stone-900 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
                       >
                         NEXT STEP
                       </motion.button>
@@ -511,8 +511,8 @@ export default function FireCalculatorPage() {
                       className="space-y-16 max-w-4xl mx-auto w-full"
                     >
                       <div className="text-center">
-                        <h2 className="text-3xl font-serif font-bold text-foreground mb-4">Investment Strategy</h2>
-                        <p className="text-stone-500">투자 성향에 따른 포트폴리오 전략을 선택하세요.</p>
+                        <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Investment Strategy</h2>
+                        <p className="text-slate-500">투자 성향에 따른 포트폴리오 전략을 선택하세요.</p>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -525,38 +525,38 @@ export default function FireCalculatorPage() {
                             key={id}
                             onClick={() => handleInputChange("investmentStrategy", id as InvestmentStrategy)}
                             className={`group relative p-8 rounded-[2rem] border transition-all text-center space-y-6 overflow-hidden ${inputs.investmentStrategy === id
-                              ? "border-accent bg-accent/5 ring-1 ring-accent/20"
-                              : "border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-stone-300 dark:hover:border-stone-700"
+                              ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                              : "border-slate-200 bg-white hover:border-slate-300"
                               }`}
                           >
-                            <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center transition-all duration-500 ${inputs.investmentStrategy === id ? "bg-accent text-white shadow-lg shadow-accent/30" : "bg-stone-100 dark:bg-stone-800 text-stone-400 group-hover:bg-stone-200 dark:group-hover:bg-stone-700"
-                              }`}>
+                            <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center transition-all duration-500 ${inputs.investmentStrategy === id ? "bg-primary text-white shadow-lg" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"}`}>
+
                               <Icon className="w-6 h-6" />
                             </div>
 
                             <div className="relative z-10">
-                              <p className={`font-serif font-bold text-base mb-2 tracking-widest ${inputs.investmentStrategy === id ? "text-accent" : "text-stone-500"}`}>{label}</p>
-                              <p className="text-xs text-stone-400 leading-relaxed font-sans">{desc}</p>
+                              <p className={`font-sans font-bold text-base mb-2 tracking-widest ${inputs.investmentStrategy === id ? "text-primary" : "text-slate-500"}`}>{label}</p>
+                              <p className="text-xs text-slate-500 leading-relaxed font-sans">{desc}</p>
                             </div>
-                            <div className={`text-3xl font-serif font-black ${inputs.investmentStrategy === id ? "text-foreground" : "text-stone-300"}`}>
+                            <div className={`text-3xl font-sans font-black ${inputs.investmentStrategy === id ? "text-primary" : "text-slate-300"}`}>
                               {returnValue}%
                             </div>
                           </button>
                         ))}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 border-t border-stone-100 dark:border-stone-800">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 border-t border-slate-100 ">
                         <div className="space-y-4">
-                          <label className="text-xs font-bold text-stone-500 uppercase tracking-widest block">소득 상승률 (%)</label>
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block">소득 상승률 (%)</label>
                           <input
                             type="number"
                             value={inputs.salaryGrowthRate}
                             onChange={(e) => handleInputChange("salaryGrowthRate", e.target.value)}
-                            className="w-full py-3 text-xl font-bold bg-transparent border-b border-stone-200 dark:border-stone-800 focus:border-primary outline-none"
+                            className="w-full py-3 text-xl font-bold bg-transparent border-b border-slate-200  focus:border-primary outline-none"
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-bold text-stone-500 uppercase tracking-widest block mb-3">은퇴 후 추가 소득 (월)</label>
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-3">은퇴 후 추가 소득 (월)</label>
                           <input
                             type="text"
                             value={inputs.retirementIncome}
@@ -564,14 +564,14 @@ export default function FireCalculatorPage() {
                               const raw = e.target.value.replace(/[^0-9]/g, "");
                               handleInputChange("retirementIncome", Number(raw).toLocaleString())
                             }}
-                            className="w-full py-3 text-xl font-bold bg-transparent border-b border-stone-200 dark:border-stone-800 focus:border-primary outline-none"
+                            className="w-full py-3 text-xl font-bold bg-transparent border-b border-slate-200  focus:border-primary outline-none"
                           />
                         </div>
                         <div className="space-y-4">
-                          <label className="text-xs font-bold text-stone-500 uppercase tracking-widest flex items-center gap-2">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                             4% 룰 (인출률)
                             <div className="group relative">
-                              <Info className="w-3 h-3 text-stone-400 cursor-help" />
+                              <Info className="w-3 h-3 text-slate-400 cursor-help" />
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 bg-stone-900 text-stone-200 text-xs rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 font-sans z-50">
                                 은퇴 자금의 몇 %를 매년 꺼내 쓸지 결정합니다. 낮을수록 안전합니다.
                               </div>
@@ -582,9 +582,9 @@ export default function FireCalculatorPage() {
                               type="number"
                               value={inputs.withdrawalRate}
                               onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
-                              className="w-full py-3 text-xl font-bold bg-transparent border-b border-stone-200 dark:border-stone-800 focus:border-primary outline-none"
+                              className="w-full py-3 text-xl font-bold bg-transparent border-b border-slate-200  focus:border-primary outline-none"
                             />
-                            <span className="font-bold text-stone-400 font-serif">%</span>
+                            <span className="font-bold text-slate-400 font-sans">%</span>
                           </div>
                         </div>
                       </div>
@@ -592,7 +592,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("events")}
-                        className="w-full py-5 bg-stone-900 dark:bg-white text-white dark:text-black font-serif font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+                        className="w-full py-5 bg-stone-900 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
                       >
                         NEXT STEP
                       </motion.button>
@@ -607,8 +607,8 @@ export default function FireCalculatorPage() {
                       className="space-y-16 max-w-3xl mx-auto w-full"
                     >
                       <div className="text-center">
-                        <h2 className="text-3xl font-serif font-bold text-foreground mb-4">Life Events</h2>
-                        <p className="text-stone-500">결혼, 주택 구입 등 큰 자금의 흐름을 미리 계획하세요.</p>
+                        <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Life Events</h2>
+                        <p className="text-slate-500">결혼, 주택 구입 등 큰 자금의 흐름을 미리 계획하세요.</p>
                       </div>
 
                       <div className="space-y-4 min-h-[300px]">
@@ -619,16 +619,16 @@ export default function FireCalculatorPage() {
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
-                              className="p-6 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl flex items-center gap-6 flex-wrap shadow-sm"
+                              className="p-6 bg-slate-50  border border-slate-200  rounded-3xl flex items-center gap-6 flex-wrap shadow-sm"
                             >
-                              <div className="flex items-center gap-2 bg-white dark:bg-black p-3 rounded-xl border border-stone-100 dark:border-stone-800 shadow-inner">
+                              <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-100  shadow-inner">
                                 <input
                                   type="number"
                                   value={event.year}
                                   onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
                                   className="w-12 text-center bg-transparent font-bold outline-none text-foreground border-none p-0"
                                 />
-                                <span className="text-xs text-stone-400 font-bold uppercase tracking-wider">Years Later</span>
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Years Later</span>
                               </div>
 
                               <input
@@ -636,13 +636,13 @@ export default function FireCalculatorPage() {
                                 placeholder="Event Name (e.g. Wedding)"
                                 value={event.description}
                                 onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
-                                className="flex-grow p-2 bg-transparent border-b border-stone-200 dark:border-stone-700 focus:border-primary outline-none text-foreground placeholder-stone-400 text-lg font-serif"
+                                className="flex-grow p-2 bg-transparent border-b border-slate-200  focus:border-primary outline-none text-foreground placeholder-stone-400 text-lg font-sans"
                               />
 
                               <select
                                 value={event.type}
                                 onChange={(e) => updateLifeEvent(index, "type", e.target.value)}
-                                className="p-2 bg-transparent font-bold text-sm text-stone-500 focus:text-foreground outline-none cursor-pointer"
+                                className="p-2 bg-transparent font-bold text-sm text-slate-500 focus:text-foreground outline-none cursor-pointer"
                               >
                                 <option value="oneTimeExpense">EXPENSE (-)</option>
                                 <option value="oneTimeIncome">INCOME (+)</option>
@@ -653,12 +653,12 @@ export default function FireCalculatorPage() {
                                   type="text"
                                   value={formatNumber(parseNumber(event.amount))}
                                   onChange={(e) => updateLifeEvent(index, "amount", e.target.value.replace(/[^0-9]/g, ""))}
-                                  className="w-32 text-right bg-transparent border-b border-stone-200 dark:border-stone-700 focus:border-primary outline-none font-bold text-xl font-serif text-foreground"
+                                  className="w-32 text-right bg-transparent border-b border-slate-200  focus:border-primary outline-none font-bold text-xl font-sans text-foreground"
                                 />
-                                <span className="text-sm text-stone-400">원</span>
+                                <span className="text-sm text-slate-400">원</span>
                               </div>
 
-                              <button onClick={() => removeLifeEvent(index)} className="p-3 text-stone-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all">
+                              <button onClick={() => removeLifeEvent(index)} className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all">
                                 <Trash2 size={18} />
                               </button>
                             </motion.div>
@@ -667,7 +667,7 @@ export default function FireCalculatorPage() {
 
                         <button
                           onClick={addLifeEvent}
-                          className="w-full py-6 border-2 border-dashed border-stone-200 dark:border-stone-800 rounded-3xl text-stone-400 hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-3 font-bold uppercase tracking-wider text-sm"
+                          className="w-full py-6 border-2 border-dashed border-slate-200  rounded-3xl text-slate-400 hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-3 font-bold uppercase tracking-wider text-sm"
                         >
                           <PlusCircle size={20} /> Add Life Event
                         </button>
@@ -676,7 +676,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("result")}
-                        className="w-full py-5 bg-gradient-to-r from-primary to-emerald-800 text-white font-serif font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
+                        className="w-full py-5 bg-gradient-to-r from-primary to-emerald-800 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
                       >
                         VIEW FULL REPORT
                       </motion.button>
@@ -691,24 +691,24 @@ export default function FireCalculatorPage() {
                     >
                       <div className="text-center space-y-8">
                         {yearsToFire === Infinity ? (
-                          <div className="p-12 bg-stone-100 rounded-[3rem] border border-stone-200">
-                            <h2 className="text-4xl font-serif font-bold text-stone-400 mb-4">Goal Unattainable</h2>
-                            <p className="text-stone-500">현재 조건으로는 목표 달성이 어렵습니다. 투자 전략을 수정해보세요.</p>
+                          <div className="p-12 bg-slate-100 rounded-[3rem] border border-slate-200">
+                            <h2 className="text-4xl font-sans font-bold text-slate-400 mb-4">Goal Unattainable</h2>
+                            <p className="text-slate-500">현재 조건으로는 목표 달성이 어렵습니다. 투자 전략을 수정해보세요.</p>
                           </div>
                         ) : (
-                          <div className="relative p-12 sm:p-20 bg-primary/5 dark:bg-stone-900 rounded-[3rem] border border-primary/10 overflow-hidden">
+                          <div className="relative p-12 sm:p-20 bg-primary/5  rounded-[3rem] border border-primary/10 overflow-hidden">
                             {/* Floral/Abstract Pattern */}
                             <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
 
                             <div className="relative z-10">
-                              <p className="text-sm text-accent font-bold mb-6 uppercase tracking-[0.2em]">Financial Independence</p>
-                              <h2 className="text-7xl sm:text-9xl font-serif font-medium text-foreground mb-8 tracking-tighter">
+                              <p className="text-sm text-primary font-bold mb-6 uppercase tracking-[0.2em]">Financial Independence</p>
+                              <h2 className="text-7xl sm:text-9xl font-sans font-medium text-foreground mb-8 tracking-tighter">
                                 <CountUp end={yearsToFire} duration={2} />
-                                <span className="text-4xl sm:text-6xl text-stone-300 ml-4 italic">Years</span>
+                                <span className="text-4xl sm:text-6xl text-slate-300 ml-4 italic">Years</span>
                               </h2>
-                              <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white dark:bg-black border border-stone-200 dark:border-stone-800 text-2xl text-stone-500 shadow-xl">
+                              <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white border border-slate-200  text-2xl text-slate-500 shadow-xl">
                                 <span className="font-bold text-foreground">{finalAge}세</span>에 은퇴 가능합니다
-                                <Sparkles className="w-5 h-5 text-accent fill-accent" />
+                                <Sparkles className="w-5 h-5 text-primary fill-accent" />
                               </div>
                             </div>
                           </div>
@@ -718,18 +718,18 @@ export default function FireCalculatorPage() {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                           { label: "Final Goal", value: finalTargetAmount, color: "text-foreground" },
-                          { label: "Total Principal", value: totalContributions, color: "text-stone-400" },
-                          { label: "Total Returns", value: totalReturns, color: "text-emerald-600 dark:text-emerald-400" },
+                          { label: "Total Principal", value: totalContributions, color: "text-slate-400" },
+                          { label: "Total Returns", value: totalReturns, color: "text-primary" },
                         ].map((item, i) => (
                           <motion.div
                             key={item.label}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 + (i * 0.1) }}
-                            className="bg-white dark:bg-stone-900 p-8 rounded-[2rem] text-center border border-stone-100 dark:border-stone-800 shadow-sm hover:shadow-md transition-all"
+                            className="bg-white p-8 rounded-[2rem] text-center border border-slate-100 shadow-sm hover:shadow-md transition-all"
                           >
-                            <p className="text-xs text-stone-400 font-bold mb-4 uppercase tracking-[0.15em]">{item.label}</p>
-                            <p className={`text-3xl font-serif font-bold ${item.color}`}>
+                            <p className="text-xs text-slate-400 font-bold mb-4 uppercase tracking-[0.15em]">{item.label}</p>
+                            <p className={`text-3xl font-sans font-bold ${item.color}`}>
                               <CountUp end={item.value} separator="," />원
                             </p>
                           </motion.div>
@@ -746,15 +746,15 @@ export default function FireCalculatorPage() {
                               <div className="p-3 rounded-2xl bg-[#cc9254]/20">
                                 <Palmtree className="w-6 h-6" />
                               </div>
-                              <h3 className="font-serif font-bold text-2xl tracking-tight">Coast FIRE</h3>
+                              <h3 className="font-sans font-bold text-2xl tracking-tight">Coast FIRE</h3>
                             </div>
-                            <p className="text-sm text-stone-500 mb-8 leading-relaxed max-w-xs font-medium">
+                            <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-xs font-medium">
                               지금 은퇴하진 않지만, <br />더 이상 노후 대비 저축을 하지 않아도 되는 상태
                             </p>
-                            <p className="text-4xl font-serif font-bold text-foreground">
+                            <p className="text-4xl font-sans font-bold text-foreground">
                               <CountUp end={coastFireTarget} separator="," />원
                             </p>
-                            <p className="text-xs text-stone-400 mt-3 font-bold uppercase tracking-wider">
+                            <p className="text-xs text-slate-400 mt-3 font-bold uppercase tracking-wider">
                               Target Principal
                             </p>
                           </div>
@@ -768,15 +768,15 @@ export default function FireCalculatorPage() {
                               <div className="p-3 rounded-2xl bg-[#26594c]/20">
                                 <Coffee className="w-6 h-6" />
                               </div>
-                              <h3 className="font-serif font-bold text-2xl tracking-tight">Barista FIRE</h3>
+                              <h3 className="font-sans font-bold text-2xl tracking-tight">Barista FIRE</h3>
                             </div>
-                            <p className="text-sm text-stone-500 mb-8 leading-relaxed max-w-xs font-medium">
+                            <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-xs font-medium">
                               생활비의 50%를 소일거리로 충당하며 <br />반은퇴 상태를 즐기는 목표액
                             </p>
-                            <p className="text-4xl font-serif font-bold text-foreground">
+                            <p className="text-4xl font-sans font-bold text-foreground">
                               <CountUp end={baristaTargetAmount} separator="," />원
                             </p>
-                            <p className="text-xs text-stone-400 mt-3 font-bold uppercase tracking-wider">
+                            <p className="text-xs text-slate-400 mt-3 font-bold uppercase tracking-wider">
                               Target Principal
                             </p>
                           </div>
