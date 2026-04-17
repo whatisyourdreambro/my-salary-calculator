@@ -67,10 +67,10 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
       className="group h-full"
     >
       <Link href={`/guides/${guide.slug}`} className="block h-full">
-        <div className="relative h-full flex flex-col bg-white/[0.03] dark:bg-black/20 hover:bg-white/[0.08] dark:hover:bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] group-hover:border-primary/50">
+        <div className="relative h-full flex flex-col toss-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden group-hover:border-blue-300 dark:group-hover:border-blue-700 transition-all duration-300">
 
           {/* Hover Glow */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           <div className="p-8 flex-grow flex flex-col relative z-10">
             <div className="flex items-center justify-between mb-6">
@@ -159,43 +159,38 @@ export default function GuidesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground pb-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
-
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12"
-        >
-          <div>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-indigo-500">
-                Financial Insight
-              </span>
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              부자가 되는 가장 확실한 지름길, 금융 지식을 탐험하세요.
-            </p>
-          </div>
-
+    <main className="min-h-screen bg-slate-50 dark:bg-[#191F28] text-foreground pb-24">
+      {/* Hero Section */}
+      <section className="relative pt-28 pb-14 overflow-hidden text-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-400/10 dark:bg-blue-500/15 rounded-full blur-[120px] -z-10" />
+        <div className="max-w-4xl mx-auto px-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+            Financial <span className="text-blue-600">Insight</span>
+          </h1>
+          <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto mb-8">
+            부자가 되는 가장 확실한 지름길, 금융 지식을 탐험하세요.
+          </p>
           {/* Search Bar */}
-          <div className="relative w-full md:w-80 group z-30">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <div className="relative max-w-md mx-auto">
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-slate-400" />
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-4 py-3 rounded-2xl bg-secondary/50 border border-transparent focus:bg-background focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+              className="toss-input pl-14"
               placeholder="관심 키워드 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-        </motion.div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Categories */}
-        <div className="flex flex-wrap gap-2 mb-12 sticky top-20 z-20 py-4 bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
+        <div className="flex flex-wrap gap-2 mb-12 sticky top-20 z-20 py-4 bg-slate-50/90 dark:bg-[#191F28]/90 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
           {categories.map(category => (
             <button
               key={category.id}
@@ -272,6 +267,7 @@ export default function GuidesPage() {
         <div className="mt-20">
           <AdUnit slotId="0987654321" format="auto" label="Guides Bottom Ad" />
         </div>
+      </div>
       </div>
     </main>
   );

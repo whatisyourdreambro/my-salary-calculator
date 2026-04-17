@@ -76,7 +76,7 @@ export default function MemeCoinPage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-black text-green-500 font-mono overflow-hidden relative selection:bg-green-500 selection:text-black">
+    <main className="w-full min-h-screen bg-black text-green-500 font-mono overflow-hidden relative selection:bg-green-500 selection:text-black pt-28">
       {/* Matrix Background */}
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none bg-[linear-gradient(0deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(0,255,0,.3)_25%,rgba(0,255,0,.3)_26%,transparent_27%,transparent_74%,rgba(0,255,0,.3)_75%,rgba(0,255,0,.3)_76%,transparent_77%,transparent)] bg-[size:50px_50px]" />
 

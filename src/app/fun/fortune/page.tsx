@@ -125,7 +125,7 @@ export default function FortunePage() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-[#1a1a1a] text-[#e5e5e5] pb-20 overflow-hidden relative font-serif">
+        <main className="w-full min-h-screen bg-[#1a1a1a] text-[#e5e5e5] pb-20 overflow-hidden relative font-serif pt-28">
             {/* Traditional Pattern Background */}
             <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/korean-pattern.png')]" />
 
