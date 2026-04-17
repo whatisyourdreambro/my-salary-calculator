@@ -12,6 +12,7 @@ import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import confetti from "canvas-confetti";
+import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles, ChevronRight } from "lucide-react";
 import type {
   StoredSalaryData,
@@ -385,9 +386,20 @@ export default function SalaryCalculator() {
       </div>
 
       {/* Result Section */}
+      <AnimatePresence>
       {showResult && (
-        <div id="calculation-result" className="px-6 space-y-12 animate-fade-in-up">
-          <div className="flex flex-col items-center relative">
+        <motion.div 
+          id="calculation-result" 
+          className="px-6 space-y-12"
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+          }}
+        >
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 20 } } }} className="flex flex-col items-center relative">
             <div className="absolute -top-16 z-20">
               <MungMascot mood={mungMood} />
             </div>
@@ -403,31 +415,40 @@ export default function SalaryCalculator() {
                 localTax: result.localTax
               }}
             />
-          </div>
+          </motion.div>
 
-          <WealthChart monthlyNetSalary={result.monthlyNet} />
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring" } } }}>
+            <WealthChart monthlyNetSalary={result.monthlyNet} />
+          </motion.div>
 
-          <SalaryTierCard annualSalary={annualSalary} />
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring" } } }}>
+            <SalaryTierCard annualSalary={annualSalary} />
+          </motion.div>
 
           {/* Social / Actions */}
-          <div className="grid grid-cols-2 gap-4">
-            <button onClick={handleShare} className="py-4 bg-slate-900 text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2">
+          <motion.div variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" } } }} className="grid grid-cols-2 gap-4">
+            <button onClick={handleShare} className="py-4 bg-slate-900 text-white rounded-[20px] font-black text-[15px] flex items-center justify-center gap-2 hover:bg-slate-800 active:scale-95 transition-all shadow-lg">
               <Share2 size={18} /> 결과 공유
             </button>
-            <button onClick={handleSaveData} className="py-4 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-sm flex items-center justify-center gap-2">
+            <button onClick={handleSaveData} className="py-4 bg-white border border-slate-200 text-slate-900 rounded-[20px] font-black text-[15px] flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-95 transition-all shadow-lg">
               <CheckCircle size={18} /> 저장하기
             </button>
-          </div>
+          </motion.div>
 
-          <AdUnit slotId="5492837410" format="auto" />
+          <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
+            <AdUnit slotId="5492837410" format="auto" />
+          </motion.div>
 
-          <DetailedAnalysis
-            annualSalary={annualSalary}
-            result={result}
-            monthlyExpenses={parseNumber(monthlyExpenses)}
-          />
-        </div>
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring" } } }}>
+            <DetailedAnalysis
+              annualSalary={annualSalary}
+              result={result}
+              monthlyExpenses={parseNumber(monthlyExpenses)}
+            />
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Bottom Sheets (Same as before but with consistent styling) */}
       <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">

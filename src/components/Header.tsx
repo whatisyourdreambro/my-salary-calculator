@@ -193,7 +193,7 @@ export default function Header() {
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen
-          ? "bg-white/90 dark:bg-[#191F28]/90 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/80 shadow-[0_2px_10px_#00000005] py-3"
+          ? "bg-white/70 dark:bg-[#1E232E]/70 backdrop-blur-3xl border-b border-slate-200/40 dark:border-slate-700/50 shadow-[0_4px_30px_#0000000A] py-3"
           : "bg-transparent border-b border-transparent py-5"
           }`}
         initial={{ y: -100 }}

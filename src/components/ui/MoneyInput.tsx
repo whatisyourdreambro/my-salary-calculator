@@ -2,7 +2,8 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface MoneyInputProps {
@@ -39,11 +40,10 @@ export default function MoneyInput({
         {label}
       </label>
       
-      <div 
-        className={cn(
-          "relative group transition-all duration-300 transform",
-          isFocused ? "scale-105" : "scale-100"
-        )}
+      <motion.div 
+        animate={{ scale: isFocused ? 1.05 : 1 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        className="relative group w-full"
       >
         <input
           ref={inputRef}
@@ -57,12 +57,17 @@ export default function MoneyInput({
           inputMode="numeric"
         />
         
-        {/* Underline Animation */}
-        <div className={cn(
-          "absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-[#FFD700] rounded-full transition-all duration-500",
-          isFocused ? "w-full opacity-100" : "w-12 opacity-30"
-        )} />
-      </div>
+        {/* Premium Pulse Underline Animation */}
+        <motion.div 
+          animate={{ 
+            width: isFocused ? "100%" : "3rem",
+            opacity: isFocused ? 1 : 0.3,
+            boxShadow: isFocused ? "0 0 12px 1px rgba(255,215,0,0.6)" : "none"
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-[#FFD700] rounded-full"
+        />
+      </motion.div>
 
       <div className="mt-8 flex gap-2">
         {[100, 500, 1000].map((amt) => (

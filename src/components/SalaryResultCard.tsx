@@ -6,6 +6,7 @@ import React from "react";
 import CountUp from "react-countup";
 import { Info, ChevronRight, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AdUnit from "./AdUnit";
 
 interface DeductionItemProps {
   label: string;
@@ -65,13 +66,22 @@ export default function SalaryResultCard({
           <span className="text-2xl font-bold text-slate-900">원</span>
         </div>
 
-        {/* 공제액 요약 박스 */}
         <div className="flex items-center justify-between p-5 bg-slate-50 rounded-[20px]">
           <span className="text-[15px] font-semibold text-slate-600">총 공제액</span>
           <span className="font-bold text-[15px] text-blue-600 font-mono-tabular">
             -<CountUp end={totalDeduction} separator="," duration={1} />원
           </span>
         </div>
+      </div>
+
+      {/* 내부 Native In-feed 광고 */}
+      <div className="w-full bg-slate-50 border border-slate-200/60 rounded-[24px] p-4 flex justify-center mb-4">
+        <AdUnit
+          slotId="4093821736"
+          format="fluid"
+          layoutKey="-fb+5w+4e-db+86"
+          label="Native Salary Result Ad"
+        />
       </div>
 
       {/* 상세 공제 내역 리스트 */}
