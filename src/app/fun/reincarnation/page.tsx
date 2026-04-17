@@ -154,7 +154,7 @@ export default function ReincarnationPage() {
           <div className="inline-block mb-5 p-4 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-indigo-200 dark:border-primary/50">
             <Dna className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-white mb-4">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 dark:text-slate-900 mb-4">
             LIFE <span className="text-primary">GACHA</span>
           </h1>
           <p className="mt-2 text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
@@ -214,7 +214,7 @@ export default function ReincarnationPage() {
                   <span className="text-6xl animate-pulse">🧬</span>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">영혼 데이터 재구성 중...</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-900 mb-2">영혼 데이터 재구성 중...</h2>
               <p className="text-primary dark:text-primary font-medium">당신의 카르마를 분석하고 있습니다.</p>
             </motion.div>
           )}
@@ -233,7 +233,7 @@ export default function ReincarnationPage() {
                   <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary text-sm font-bold mb-4">
                     REINCARNATION COMPLETE
                   </div>
-                  <h2 className="text-3xl font-black text-slate-900 dark:text-white">당신의 다음 생은?</h2>
+                  <h2 className="text-3xl font-black text-slate-900 dark:text-slate-900">당신의 다음 생은?</h2>
                 </div>
 
                 <div className="space-y-3">

@@ -85,7 +85,7 @@ export default function MemeCoinPage() {
           <div className="inline-block px-4 py-1 border border-primary rounded-full text-xs mb-4 animate-pulse">
             LIVE MARKET STATUS: EXTREME GREED
           </div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-2">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 mb-2">
             CRYPTO <span className="text-primary">PANIC</span>
           </h1>
           <p className="text-primary text-lg">100만원으로 인생역전? 가즈아! 🚀</p>
@@ -109,7 +109,7 @@ export default function MemeCoinPage() {
               <div className="bg-primary/10 border border-primary/30 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                   <p className="text-primary text-sm uppercase">Available Balance</p>
-                  <p className="text-4xl font-bold text-white tracking-tight">{formatNumber(remainingCapital)} KRW</p>
+                  <p className="text-4xl font-bold text-slate-900 tracking-tight">{formatNumber(remainingCapital)} KRW</p>
                 </div>
                 <button
                   onClick={runSimulation}
@@ -129,7 +129,7 @@ export default function MemeCoinPage() {
                         <coin.icon className="w-8 h-8" style={{ color: coin.color }} />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-white">{coin.name}</h3>
+                        <h3 className="text-xl font-bold text-slate-900">{coin.name}</h3>
                         <p className="text-xs text-slate-500">{coin.fullName}</p>
                       </div>
                     </div>
@@ -137,7 +137,7 @@ export default function MemeCoinPage() {
 
                     <div className="bg-black/50 p-4 rounded-xl mb-4 border border-slate-200">
                       <p className="text-xs text-slate-500 mb-1">내 보유량</p>
-                      <p className="text-xl font-bold text-white">{formatNumber(investments[coin.id as keyof typeof investments])} 원</p>
+                      <p className="text-xl font-bold text-slate-900">{formatNumber(investments[coin.id as keyof typeof investments])} 원</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
@@ -178,7 +178,7 @@ export default function MemeCoinPage() {
                   <Rocket className="w-12 h-12 text-primary animate-bounce" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">시장 분석 중...</h2>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">시장 분석 중...</h2>
               <p className="text-primary animate-pulse">고래들의 움직임을 포착하고 있습니다</p>
 
               <div className="mt-8 w-full max-w-md">
@@ -196,7 +196,7 @@ export default function MemeCoinPage() {
             >
               {/* Event Banner */}
               <div className={`p-6 rounded-2xl border-2 text-center ${result.profit >= 0 ? 'bg-primary/20 border-primary' : 'bg-primary/20 border-primary'}`}>
-                <h2 className="text-3xl font-black text-white mb-2">
+                <h2 className="text-3xl font-black text-slate-900 mb-2">
                   {result.profit >= 0 ? "TO THE MOON! 🚀" : "RUG PULL! 📉"}
                 </h2>
                 <p className="text-xl font-bold">{result.randomEvent.description}</p>

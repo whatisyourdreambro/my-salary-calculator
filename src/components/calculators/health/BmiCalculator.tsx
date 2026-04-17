@@ -35,7 +35,7 @@ export default function BmiCalculator() {
 
     return (
         <div className="w-full max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Scale className="w-6 h-6 text-primary" />
                 BMI (비만도) 계산기
             </h2>
@@ -48,7 +48,7 @@ export default function BmiCalculator() {
                             type="number"
                             value={height}
                             onChange={(e) => setHeight(Number(e.target.value))}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none"
                         />
                     </div>
                     <div>
@@ -57,14 +57,14 @@ export default function BmiCalculator() {
                             type="number"
                             value={weight}
                             onChange={(e) => setWeight(Number(e.target.value))}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 focus:ring-2 focus:ring-primary outline-none"
                         />
                     </div>
                 </div>
 
                 <div className="mt-6 p-6 bg-slate-50 rounded-xl border border-slate-200 text-center">
                     <div className="text-slate-600 mb-2">나의 BMI 지수</div>
-                    <div className="text-4xl font-black text-white mb-2">
+                    <div className="text-4xl font-black text-slate-900 mb-2">
                         {bmi ? bmi.toFixed(1) : "0.0"}
                     </div>
                     <div className={`text-2xl font-bold ${color}`}>

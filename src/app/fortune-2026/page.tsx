@@ -107,7 +107,7 @@ export default function FinancialFortunePage() {
                 <div className="flex items-center justify-center gap-3 mt-4">
                   <span className="text-primary-foreground/70 text-sm">2026 재물 지수</span>
                   <div className="bg-white/20 rounded-full px-4 py-1">
-                    <span className="text-white font-black">{result.score}점 / 100</span>
+                    <span className="text-slate-900 font-black">{result.score}점 / 100</span>
                   </div>
                 </div>
               </div>

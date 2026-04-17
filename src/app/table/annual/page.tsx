@@ -111,7 +111,7 @@ function AnnualTable() {
 
               {/* SEO Content Section */}
               <div className="bg-white/40 backdrop-blur-2xl p-8 md:p-12 rounded-3xl border border-white/10">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-8">
                   2026년 연봉 실수령액, 무엇이 달라졌나요?
                 </h2>
                 <div className="space-y-8 text-slate-600 leading-relaxed">

@@ -48,7 +48,7 @@ export default function DepositCalculator() {
                 <div className="p-3 bg-primary/5 dark:bg-primary/30 rounded-xl">
                     <PiggyBank className="w-6 h-6 text-primary dark:text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">적금 이자 계산기</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-900">적금 이자 계산기</h2>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">

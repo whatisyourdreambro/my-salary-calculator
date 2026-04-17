@@ -26,7 +26,7 @@ export function DDayCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Calendar className="text-primary" /> D-Day 계산기
             </h2>
             <div className="space-y-6">
@@ -84,7 +84,7 @@ export function AgeCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Clock className="text-blue-500" /> 만 나이 계산기
             </h2>
             <div className="space-y-6">
@@ -154,7 +154,7 @@ export function WorkDayCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Briefcase className="text-primary" /> 영업일(평일) 계산기
             </h2>
             <div className="space-y-6">

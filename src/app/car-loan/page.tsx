@@ -292,7 +292,7 @@ export default function CarLoanPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-indigo-500 to-primary/80 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden"
+              className="bg-gradient-to-br from-indigo-500 to-primary/80 rounded-2xl shadow-xl p-6 text-slate-900 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 

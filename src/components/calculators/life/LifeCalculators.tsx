@@ -20,7 +20,7 @@ export function DutchPayCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Users className="text-primary" /> N빵 (더치페이) 계산기
             </h2>
             <div className="space-y-6">
@@ -82,7 +82,7 @@ export function FuelCostCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Fuel className="text-primary" /> 유류비 계산기
             </h2>
             <div className="space-y-6">
@@ -157,7 +157,7 @@ export function UnitConverter() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Ruler className="text-primary" /> 단위 변환기
             </h2>
             <div className="space-y-6">

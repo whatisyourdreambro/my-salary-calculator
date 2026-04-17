@@ -161,7 +161,7 @@ export default function IQTestClient() {
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-primary/10 dark:bg-primary/30 border border-primary dark:border-primary/50 text-primary mb-6 shadow-md">
                         <Brain size={32} />
                     </div>
-                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-4">
                         멘사급 <span className="text-primary">IQ 테스트</span>
                     </h1>
                     <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
@@ -199,7 +199,7 @@ export default function IQTestClient() {
                             </div>
 
                             {/* Question */}
-                            <h2 className="text-xl md:text-2xl font-bold text-white mb-8 leading-relaxed">
+                            <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-8 leading-relaxed">
                                 {questions[currentQuestion].question}
                             </h2>
 
@@ -214,7 +214,7 @@ export default function IQTestClient() {
                                         <span className="inline-block w-6 h-6 rounded-full bg-black/40 text-xs text-center leading-6 mr-3 text-slate-500 group-hover:text-primary">
                                             {String.fromCharCode(65 + index)}
                                         </span>
-                                        <span className="group-hover:text-white transition-colors">
+                                        <span className="group-hover:text-slate-900 transition-colors">
                                             {option}
                                         </span>
                                     </button>
@@ -251,7 +251,7 @@ export default function IQTestClient() {
                                         </div>
                                     </motion.div>
 
-                                    <h2 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">
+                                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-2 tracking-tight">
                                         Test Certified
                                     </h2>
                                     <p className="text-slate-500 mb-10 font-medium">
@@ -269,7 +269,7 @@ export default function IQTestClient() {
                                         {/* Fun Hub Link */}
                                         <Link
                                             href="/fun"
-                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-slate-900 font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
                                         >
                                             <TrendingUp size={18} /> 다른 테스트 하러가기
                                         </Link>
@@ -288,7 +288,7 @@ export default function IQTestClient() {
                                             onClick={() => document.getElementById('answers-list')?.classList.toggle('hidden')}
                                             className="w-full flex items-center justify-between font-bold text-slate-600 mb-2 group"
                                         >
-                                            <span className="flex items-center gap-2 group-hover:text-white transition-colors">
+                                            <span className="flex items-center gap-2 group-hover:text-slate-900 transition-colors">
                                                 <CheckCircle2 className="text-primary" size={20} /> 정답 및 해설 보기
                                             </span>
                                             <span className="text-xs text-zinc-600">Click to toggle</span>

@@ -70,7 +70,7 @@ const MungMascot = ({ mood }: { mood: "normal" | "happy" | "shocked" | "cool" })
     <div className={`relative w-24 h-24 rounded-full border-4 flex items-center justify-center text-5xl shadow-lg transition-all duration-500 transform hover:scale-110 ${getColor()}`}>
       {getEmoji()}
       {mood === "shocked" && (
-        <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce">
+        <div className="absolute -top-2 -right-2 bg-red-500 text-slate-900 text-xs font-bold px-2 py-1 rounded-full animate-bounce">
           세금?!
         </div>
       )}
@@ -336,7 +336,7 @@ export default function SalaryCalculator() {
           <span className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full">2026 심플 계산기</span>
           <Sparkles size={16} className="text-primary" />
         </div>
-        <h1 className="text-[28px] sm:text-[32px] font-black text-slate-900 dark:text-white mb-8 tracking-tight">얼마나 받으시나요?</h1>
+        <h1 className="text-[28px] sm:text-[32px] font-black text-slate-900 dark:text-slate-900 mb-8 tracking-tight">얼마나 받으시나요?</h1>
 
         <MoneyInput
           label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
@@ -454,7 +454,7 @@ export default function SalaryCalculator() {
       <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
         <div className="p-8 space-y-6">
           <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
-          <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-[#0F4C81] text-white font-black rounded-2xl">저장 후 닫기</button>
+          <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-[#0F4C81] text-slate-900 font-black rounded-2xl">저장 후 닫기</button>
         </div>
       </BottomSheet>
     </div>

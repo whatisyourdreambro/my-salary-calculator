@@ -91,7 +91,7 @@ export default function FinancialMBTIPage() {
     <main className="w-full min-h-screen bg-white dark:bg-black px-4 pt-28 pb-20 font-sans">
       <div className="text-center mb-12 border-b border-gray-100 dark:border-gray-900 pb-10">
         <Target className="w-12 h-12 text-primary mx-auto mb-4" />
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-3">
           투자 성향 분석 (MBTI)
         </h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium">
@@ -122,7 +122,7 @@ export default function FinancialMBTIPage() {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-10">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-900 mb-10">
                 {questions[step].question}
               </h2>
 
@@ -153,7 +153,7 @@ export default function FinancialMBTIPage() {
                 <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 font-medium">{resultData?.desc}</p>
                 <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 text-left border border-gray-100 dark:border-gray-800">
                   <p className="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest">Recommended Strategy</p>
-                  <p className="font-bold text-slate-900 dark:text-white">{resultData?.strategy}</p>
+                  <p className="font-bold text-slate-900 dark:text-slate-900">{resultData?.strategy}</p>
                 </div>
               </div>
 

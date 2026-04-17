@@ -101,7 +101,36 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight text-slate-900 dark:text-gray-100;
+    @apply font-bold tracking-tight text-slate-900;
+  }
+
+  /* ── Global safety: all text inputs must be readable ─────────────── */
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    color: #0f172a !important; /* slate-900 */
+    -webkit-text-fill-color: #0f172a;
+  }
+
+  /* Placeholder text */
+  input::placeholder,
+  textarea::placeholder {
+    color: #94a3b8 !important; /* slate-400 */
+    -webkit-text-fill-color: #94a3b8;
+  }
+
+  /* ── Result/value display: any number or text in white/gray boxes ─── */
+  /* Targets spans and p with class text-white that ended up on light bg */
+  /* Force is handled via JS fix; this is a CSS fallback */
+  .bg-white span[class*="text-white"],
+  .bg-white p[class*="text-white"],
+  .bg-slate-50 span[class*="text-white"],
+  .bg-slate-50 p[class*="text-white"],
+  .bg-gray-50 span[class*="text-white"],
+  .bg-gray-50 p[class*="text-white"],
+  .bg-gray-100 span[class*="text-white"],
+  .bg-gray-100 p[class*="text-white"] {
+    color: #0f172a !important;
   }
 }
 

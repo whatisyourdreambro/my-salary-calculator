@@ -70,14 +70,14 @@ export default function CompoundCalculatorPage() {
         <motion.div key={r.finalBalance} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">{years}년 후 최종 자산</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.finalBalance)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">{years}년 후 최종 자산</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.finalBalance)}<span className="text-2xl ml-1">원</span></p>
             <div className="flex justify-center gap-8 mt-5 pt-5 border-t border-white/20">
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">총 납입원금</p><p className="text-white font-black">{fmt(r.totalPrincipal)}원</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">총 납입원금</p><p className="text-slate-900 font-black">{fmt(r.totalPrincipal)}원</p></div>
               <div className="w-px bg-white/20" />
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">이자·수익</p><p className="text-white font-black">{fmt(r.totalInterest)}원</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">이자·수익</p><p className="text-slate-900 font-black">{fmt(r.totalInterest)}원</p></div>
               <div className="w-px bg-white/20" />
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">수익 배율</p><p className="text-white font-black">{(r.finalBalance / r.totalPrincipal).toFixed(2)}배</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">수익 배율</p><p className="text-slate-900 font-black">{(r.finalBalance / r.totalPrincipal).toFixed(2)}배</p></div>
             </div>
           </div>
           <div className="bg-white p-6">

@@ -78,9 +78,9 @@ export default function GiftTaxPage() {
         <motion.div key={r.tax} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">납부 증여세</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.tax)}<span className="text-2xl ml-1">원</span></p>
-            <p className="text-white/70 text-sm mt-2">한계세율: {r.marginalRate}% · 실수령: {fmt(net)}원</p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">납부 증여세</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.tax)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-sm mt-2">한계세율: {r.marginalRate}% · 실수령: {fmt(net)}원</p>
           </div>
           <div className="bg-white p-6 space-y-3">
             {[

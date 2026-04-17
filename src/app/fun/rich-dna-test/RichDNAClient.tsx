@@ -148,7 +148,7 @@ export default function RichDNAClient() {
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/10 dark:bg-primary/30 border border-primary dark:border-primary/50 mb-6 shadow-md">
                         <Gem className="w-10 h-10 text-primary" />
                     </div>
-                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl mb-4">
+                    <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-900 sm:text-6xl mb-4">
                         부자 DNA <span className="text-primary">테스트</span>
                     </h1>
                     <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
@@ -190,7 +190,7 @@ export default function RichDNAClient() {
                                         </div>
                                     </div>
 
-                                    <h2 className="text-3xl sm:text-4xl font-bold mb-10 leading-tight text-white">
+                                    <h2 className="text-3xl sm:text-4xl font-bold mb-10 leading-tight text-slate-900">
                                         {questions[step].question}
                                     </h2>
 
@@ -228,7 +228,7 @@ export default function RichDNAClient() {
                                     {/* Decorative Background */}
                                     <div className={`absolute top-0 left-0 w-full h-48 bg-gradient-to-b ${result.gradient} opacity-20`} />
                                     <div className="absolute -top-24 -right-24 opacity-5 rotate-12">
-                                        <ResultIcon className="w-96 h-96 text-white" />
+                                        <ResultIcon className="w-96 h-96 text-slate-900" />
                                     </div>
 
                                     <div className="p-8 sm:p-16 text-center relative z-10">

@@ -130,7 +130,7 @@ export default function InteractiveTable({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl font-bold tracking-tight mb-8 text-slate-900 dark:text-white flex items-center gap-3">
+          <h2 className="text-2xl font-bold tracking-tight mb-8 text-slate-900 dark:text-slate-900 flex items-center gap-3">
             <span className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-blue-50 dark:bg-blue-900/30 text-blue-600">
               <Calculator className="w-5 h-5" />
             </span>
@@ -145,7 +145,7 @@ export default function InteractiveTable({
                   <Label htmlFor="salary" className="text-sm font-bold text-slate-400 uppercase tracking-wider">
                     {pageConfig.salaryLabel}
                   </Label>
-                  <span className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">
+                  <span className="text-2xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
                     {salary.toLocaleString()}
                     <span className="text-base text-slate-400 font-semibold ml-1">원</span>
                   </span>
@@ -167,7 +167,7 @@ export default function InteractiveTable({
                   <Label htmlFor="dependents" className="text-sm font-bold text-slate-400 uppercase tracking-wider">
                     부양가족
                   </Label>
-                  <span className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">
+                  <span className="text-2xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
                     {dependents}
                     <span className="text-base text-slate-400 font-semibold ml-1">명</span>
                   </span>
@@ -189,7 +189,7 @@ export default function InteractiveTable({
                   <Label htmlFor="non-taxable" className="text-sm font-bold text-slate-400 uppercase tracking-wider">
                     비과세 (월)
                   </Label>
-                  <span className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">
+                  <span className="text-2xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
                     {nonTaxableAmount.toLocaleString()}
                     <span className="text-base text-slate-400 font-semibold ml-1">원</span>
                   </span>
@@ -271,7 +271,7 @@ export default function InteractiveTable({
             <p className="text-xs font-black text-blue-200 uppercase tracking-widest mb-3 relative z-10">
               예상 월 실수령액
             </p>
-            <p className="text-5xl font-black text-white tracking-tight tabular-nums relative z-10">
+            <p className="text-5xl font-black text-slate-900 tracking-tight tabular-nums relative z-10">
               {result.monthlyNet.toLocaleString()}
               <span className="text-2xl text-blue-200 ml-1 font-semibold">원</span>
             </p>

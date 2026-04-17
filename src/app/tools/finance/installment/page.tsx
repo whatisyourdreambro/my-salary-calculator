@@ -71,14 +71,14 @@ export default function InstallmentPage() {
         <motion.div key={r.monthly} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-8">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">월 납부액</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.monthly)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">월 납부액</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.monthly)}<span className="text-2xl ml-1">원</span></p>
             <div className="flex justify-center gap-8 mt-5 pt-5 border-t border-white/20">
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">총 납부액</p><p className="text-white font-black">{fmt(r.totalPayment)}원</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">총 납부액</p><p className="text-slate-900 font-black">{fmt(r.totalPayment)}원</p></div>
               <div className="w-px bg-white/20" />
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">총 이자</p><p className="text-white font-black">{fmt(r.totalInterest)}원</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">총 이자</p><p className="text-slate-900 font-black">{fmt(r.totalInterest)}원</p></div>
               <div className="w-px bg-white/20" />
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">이자 비율</p><p className="text-white font-black">{r.totalPayment > 0 ? (r.totalInterest / r.totalPayment * 100).toFixed(1) : 0}%</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">이자 비율</p><p className="text-slate-900 font-black">{r.totalPayment > 0 ? (r.totalInterest / r.totalPayment * 100).toFixed(1) : 0}%</p></div>
             </div>
           </div>
         </motion.div>

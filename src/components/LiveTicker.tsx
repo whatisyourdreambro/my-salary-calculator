@@ -42,7 +42,7 @@ export default function LiveTicker() {
                     <div className="relative">
                         <div className="absolute inset-0 bg-primary/50 rounded-full animate-ping opacity-75" />
                         <div className="relative bg-primary/50 rounded-full p-1">
-                            <Bell className="w-3 h-3 text-white" />
+                            <Bell className="w-3 h-3 text-slate-900" />
                         </div>
                     </div>
                     <span className="text-sm font-medium truncate flex-1">
@@ -50,7 +50,7 @@ export default function LiveTicker() {
                     </span>
                     <button
                         onClick={() => setIsVisible(false)}
-                        className="text-slate-400 hover:text-white transition-colors text-xs"
+                        className="text-slate-400 hover:text-slate-900 transition-colors text-xs"
                     >
                         닫기
                     </button>

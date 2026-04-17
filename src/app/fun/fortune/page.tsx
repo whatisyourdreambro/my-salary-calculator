@@ -247,7 +247,7 @@ export default function FortunePage() {
                                 <button
                                     onClick={handleAnalyze}
                                     disabled={!name}
-                                    className="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-xl rounded-xl shadow-lg shadow-red-900/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                                    className="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-slate-900 font-bold text-xl rounded-xl shadow-lg shadow-red-900/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                                 >
                                     운세 확인하기
                                 </button>
@@ -280,7 +280,7 @@ export default function FortunePage() {
                                     <span className="text-4xl">🔮</span>
                                 </div>
                             </div>
-                            <h2 className="text-2xl font-bold mb-4 text-white">사주명식을 분석하고 있습니다...</h2>
+                            <h2 className="text-2xl font-bold mb-4 text-slate-900">사주명식을 분석하고 있습니다...</h2>
                             <p className="text-slate-500 animate-pulse">
                                 {year}년 {month}월 {day}일의 기운을 읽는 중
                             </p>
@@ -389,7 +389,7 @@ export default function FortunePage() {
                                         setStep("input");
                                         setName("");
                                     }}
-                                    className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                                 >
                                     <RefreshCw size={20} /> 다시 하기
                                 </button>

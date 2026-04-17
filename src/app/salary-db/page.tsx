@@ -32,7 +32,7 @@ export default function SalaryDBPage() {
                             <Database className="w-4 h-4" />
                             Corporate Salary Database
                         </div>
-                        <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+                        <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-slate-900">
                             대한민국 <span className="text-blue-600">연봉의 모든 것</span>
                         </h1>
                         <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 mb-10 max-w-2xl mx-auto font-medium">

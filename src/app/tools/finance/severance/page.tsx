@@ -151,12 +151,12 @@ export default function SeveranceCalculatorPage() {
         <motion.div key={r.netPay} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">실수령 퇴직금 (세후)</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.netPay)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">실수령 퇴직금 (세후)</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.netPay)}<span className="text-2xl ml-1">원</span></p>
             <div className="flex justify-center gap-6 mt-5 pt-5 border-t border-white/20">
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">세금 합계</p><p className="text-white font-black">{fmt(r.totalTax)}원</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">세금 합계</p><p className="text-slate-900 font-black">{fmt(r.totalTax)}원</p></div>
               <div className="w-px bg-white/20" />
-              <div className="text-center"><p className="text-white/60 text-xs mb-1">실효세율</p><p className="text-white font-black">{r.effectiveRate.toFixed(2)}%</p></div>
+              <div className="text-center"><p className="text-slate-900/60 text-xs mb-1">실효세율</p><p className="text-slate-900 font-black">{r.effectiveRate.toFixed(2)}%</p></div>
             </div>
           </div>
           <div className="bg-white p-6 space-y-3">

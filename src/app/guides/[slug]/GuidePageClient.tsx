@@ -65,7 +65,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
                         <span className="w-2 h-2 rounded-full bg-primary/50" />
                         {guide.category} 가이드
                     </div>
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-6 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-6 leading-tight">
                         {guide.title}
                     </h1>
                     <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-slate-500 dark:text-slate-400 font-semibold">

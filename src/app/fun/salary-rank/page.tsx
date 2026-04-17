@@ -15,7 +15,7 @@ export default function SalaryRankPage() {
     return (
         <main className="w-full min-h-screen bg-slate-50 dark:bg-[#191F28] pt-28 px-4 pb-20 font-sans">
             <div className="text-center mb-12 max-w-2xl mx-auto">
-                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-4">
                     내 연봉은 <span className="text-primary">상위 몇%</span>일까?
                 </h1>
                 <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">

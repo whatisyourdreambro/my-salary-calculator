@@ -56,7 +56,7 @@ export default function DashboardPage() {
             <div className="w-24 h-24 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-8">
               <span className="text-5xl">📊</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+            <h1 className="text-3xl font-black text-slate-900 dark:text-slate-900 mb-4 tracking-tight">
               저장된 데이터가 없습니다.
             </h1>
             <p className="mt-2 text-lg text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto">

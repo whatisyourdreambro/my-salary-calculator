@@ -118,7 +118,7 @@ export default function SpendingTestPage() {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary dark:text-primary font-bold text-sm mb-6">
           🐾 소비 성향 분석
         </div>
-        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-4">
           소비 성향 테스트
         </h1>
         <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">

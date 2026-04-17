@@ -69,7 +69,7 @@ const CalculatorCard = ({
             <ChevronRight className="w-5 h-5 text-blue-600" />
           </div>
         </div>
-        <h3 className="text-[20px] font-bold text-slate-900 dark:text-white mb-2 tracking-tight group-hover:text-blue-600 transition-colors duration-300">{title}</h3>
+        <h3 className="text-[20px] font-bold text-slate-900 dark:text-slate-900 mb-2 tracking-tight group-hover:text-blue-600 transition-colors duration-300">{title}</h3>
         <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-[14px] font-medium">{description}</p>
       </div>
     </Link>
@@ -125,7 +125,7 @@ export default function HomePage() {
             </motion.div>
 
             {/* 메인 타이틀 */}
-            <h1 className="text-5xl sm:text-7xl lg:text-[80px] font-black tracking-tight text-slate-900 dark:text-white mb-7 leading-[1.1]">
+            <h1 className="text-5xl sm:text-7xl lg:text-[80px] font-black tracking-tight text-slate-900 dark:text-slate-900 mb-7 leading-[1.1]">
               내 연봉의 모든 것,<br />
               <span className="text-blue-600">가장 쉽고 정확하게.</span>
             </h1>
@@ -229,7 +229,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-4xl sm:text-[44px] font-black text-slate-900 dark:text-white mb-4 tracking-tight"
+                className="text-4xl sm:text-[44px] font-black text-slate-900 dark:text-slate-900 mb-4 tracking-tight"
               >
                 프리미엄 금융 도구
               </motion.h2>
@@ -267,7 +267,7 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <p className="text-sm font-black text-blue-600 uppercase tracking-widest mb-3">Financial Tools</p>
-              <h2 className="text-3xl sm:text-[40px] font-black text-slate-900 dark:text-white mb-4 tracking-tight">대출 &amp; 예적금</h2>
+              <h2 className="text-3xl sm:text-[40px] font-black text-slate-900 dark:text-slate-900 mb-4 tracking-tight">대출 &amp; 예적금</h2>
               <p className="text-xl text-slate-500 dark:text-slate-400 font-medium">스마트한 레버리지 활용하기</p>
             </div>
             <div className="grid lg:grid-cols-2 gap-8">

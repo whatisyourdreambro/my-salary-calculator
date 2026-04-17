@@ -43,7 +43,7 @@ export default function WhatToBuyPage() {
     <main className="w-full min-h-screen bg-white dark:bg-black px-4 pt-28 pb-20 font-sans">
       <div className="text-center mb-12 border-b border-gray-100 dark:border-gray-900 pb-10">
         <ShoppingBag className="w-12 h-12 text-primary mx-auto mb-4" />
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-3">
           플렉스(FLEX) 계산기
         </h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium">
@@ -58,7 +58,7 @@ export default function WhatToBuyPage() {
               <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">
                 예산 (BUDGET)
               </span>
-              <span className="text-3xl font-black text-slate-900 dark:text-white tabular-nums">
+              <span className="text-3xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
                 {budget.toLocaleString()}<span className="text-lg text-slate-400 ml-1">원</span>
               </span>
             </div>

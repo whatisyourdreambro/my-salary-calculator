@@ -147,7 +147,7 @@ export default function SubmitSalaryPage() {
                     <div className="pt-4">
                         <button
                             disabled={loading}
-                            className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
+                            className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-slate-900 font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
                         >
                             {loading ? (
                                 "제출 중..."

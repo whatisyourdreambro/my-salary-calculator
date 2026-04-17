@@ -67,7 +67,7 @@ export default function QnAPage() {
   return (
     <div className="w-full space-y-12 pb-20">
       {/* Hero Section */}
-      <section className="relative py-20 sm:py-28 overflow-hidden rounded-b-[3rem] bg-gradient-to-br from-gray-900 via-slate-800 to-black text-white text-center shadow-2xl">
+      <section className="relative py-20 sm:py-28 overflow-hidden rounded-b-[3rem] bg-gradient-to-br from-gray-900 via-slate-800 to-black text-slate-900 text-center shadow-2xl">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/30 rounded-full blur-[100px] -z-10 animate-pulse-glow" />
 

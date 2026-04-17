@@ -30,7 +30,7 @@ export default function TableHero({ badgeText, title, description, adSlotId = "5
                     </div>
 
                     {/* 타이틀 */}
-                    <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+                    <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-slate-900">
                         {title}
                     </h1>
 

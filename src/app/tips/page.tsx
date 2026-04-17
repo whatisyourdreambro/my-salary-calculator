@@ -99,7 +99,7 @@ export default function TipsPage() {
           <div key={si}>
             <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-primary">
               <div className="w-10 h-10 rounded-sm bg-primary flex items-center justify-center">
-                <section.icon size={20} className="text-white" />
+                <section.icon size={20} className="text-slate-900" />
               </div>
               <h2 className="text-xl font-black text-slate-900">{section.category}</h2>
             </div>

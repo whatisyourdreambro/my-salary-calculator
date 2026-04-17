@@ -176,7 +176,7 @@ export default function FlappyGamePage() {
         <main className="w-full min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 overflow-hidden">
             <div className="max-w-md w-full space-y-6">
                 <div className="text-center">
-                    <h1 className="text-4xl font-black text-white mb-2 tracking-tight">
+                    <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">
                         FLAPPY <span className="text-blue-500">SALARYMAN</span>
                     </h1>
                     <p className="text-slate-400">세금과 물가를 피해 월급을 지켜라!</p>
@@ -193,7 +193,7 @@ export default function FlappyGamePage() {
 
                     {/* Score Overlay */}
                     {gameState === "playing" && (
-                        <div className="absolute top-8 left-1/2 -translate-x-1/2 text-6xl font-black text-white/20 pointer-events-none select-none">
+                        <div className="absolute top-8 left-1/2 -translate-x-1/2 text-6xl font-black text-slate-900/20 pointer-events-none select-none">
                             {score}
                         </div>
                     )}

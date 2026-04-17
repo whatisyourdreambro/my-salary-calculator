@@ -87,7 +87,7 @@ export default function IRPCalculatorClient() {
             className="mt-8 p-8 bg-primary rounded-xl text-center"
           >
             <p className="text-primary-foreground/70 text-sm font-bold uppercase tracking-widest mb-2">예상 세액공제 환급액</p>
-            <p className="text-5xl font-black text-white tracking-tight">
+            <p className="text-5xl font-black text-slate-900 tracking-tight">
               {result.taxCredit.toLocaleString()}원
             </p>
             <p className="text-primary-foreground/70 text-sm mt-2">

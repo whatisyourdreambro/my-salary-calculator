@@ -14,7 +14,7 @@ export default function Calc2026Page() {
   return (
     <main className="min-h-screen bg-slate-50 pb-20">
       {/* Header Banner */}
-      <div className="bg-[#0F4C81] py-12 text-white">
+      <div className="bg-[#0F4C81] py-12 text-slate-900">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold mb-4">
             <Sparkles size={14} className="text-[#FFD700]" /> 2026년형 업그레이드 완료

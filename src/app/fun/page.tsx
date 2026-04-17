@@ -95,7 +95,7 @@ export default function FunLabPage() {
                         <Zap className="w-4 h-4" />
                         직장인 심심풀이 라이브러리
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-5 tracking-tight">
+                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-slate-900 mb-5 tracking-tight">
                         FUN <span className="text-blue-600">LAB</span>
                     </h1>
                     <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium">

@@ -75,7 +75,7 @@ export default function CompareSelectionPage() {
                         {/* VS Icon */}
                         <div className="flex-shrink-0">
                             <div className="w-16 h-16 bg-gradient-to-br from-primary to-red-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                                <Swords className="w-8 h-8 text-white" />
+                                <Swords className="w-8 h-8 text-slate-900" />
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@ export default function CompareSelectionPage() {
                         <button
                             onClick={handleCompare}
                             disabled={!selectedA || !selectedB}
-                            className="w-full py-4 bg-gradient-to-r from-primary to-red-600 text-white text-xl font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-gradient-to-r from-primary to-red-600 text-slate-900 text-xl font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <span>FIGHT!</span>
                             <ArrowRight className="w-6 h-6" />

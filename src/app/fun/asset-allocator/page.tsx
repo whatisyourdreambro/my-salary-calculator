@@ -244,13 +244,13 @@ export default function AssetAllocatorGame() {
                 <div className="w-full flex justify-between items-center px-6 py-4 bg-[#292524]/80 backdrop-blur-md rounded-2xl border border-[#CBA577]/30 shadow-2xl">
                     <div className="flex flex-col">
                         <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">Net Worth</span>
-                        <span className="text-3xl font-serif font-black text-white tabular-nums">
+                        <span className="text-3xl font-serif font-black text-slate-900 tabular-nums">
                             ${score.toLocaleString()}
                         </span>
                     </div>
 
                     <div className="flex flex-col items-center">
-                        <div className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(203,165,119,0.5)]">
+                        <div className="text-4xl font-black text-slate-900 drop-shadow-[0_0_10px_rgba(203,165,119,0.5)]">
                             {timeLeft}
                         </div>
                         <span className="text-[10px] text-slate-500 uppercase font-bold">Seconds Left</span>
@@ -286,13 +286,13 @@ export default function AssetAllocatorGame() {
 
                             <div className="grid grid-cols-2 gap-4 mb-10 max-w-xs w-full">
                                 <div className="flex items-center gap-2 text-sm text-slate-500">
-                                    <span className="text-2xl">💎</span> <span className="font-bold text-white">+50</span>
+                                    <span className="text-2xl">💎</span> <span className="font-bold text-slate-900">+50</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-slate-500">
-                                    <span className="text-2xl">🧈</span> <span className="font-bold text-white">+30</span>
+                                    <span className="text-2xl">🧈</span> <span className="font-bold text-slate-900">+30</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-slate-500">
-                                    <span className="text-2xl">🪙</span> <span className="font-bold text-white">+10</span>
+                                    <span className="text-2xl">🪙</span> <span className="font-bold text-slate-900">+10</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-slate-500">
                                     <span className="text-2xl">💣</span> <span className="font-bold text-primary">-20</span>
@@ -312,7 +312,7 @@ export default function AssetAllocatorGame() {
                     {gameState === "gameover" && (
                         <div className="absolute inset-0 z-20 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
                             <Trophy className="w-20 h-20 text-[#CBA577] mb-6 drop-shadow-[0_0_20px_rgba(203,165,119,0.5)]" />
-                            <h2 className="text-4xl font-serif font-bold text-white mb-2">SESSION CLOSED</h2>
+                            <h2 className="text-4xl font-serif font-bold text-slate-900 mb-2">SESSION CLOSED</h2>
                             <p className="text-slate-500 mb-8 uppercase tracking-widest text-xs font-bold">Final Net Worth</p>
 
                             <div className="text-7xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400 mb-12">

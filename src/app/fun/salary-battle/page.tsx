@@ -149,7 +149,7 @@ export default function BattlePage() {
     };
 
     return (
-        <main className="w-full min-h-screen bg-slate-50 text-white pb-20 overflow-x-hidden">
+        <main className="w-full min-h-screen bg-slate-50 text-slate-900 pb-20 overflow-x-hidden">
             {/* Game Overlay */}
             <AnimatePresence>
                 {isPlaying && result && (
@@ -248,13 +248,13 @@ export default function BattlePage() {
                                 <div className="space-y-4">
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Total Comp</p>
-                                        <p className="text-xl font-bold text-white">
+                                        <p className="text-xl font-bold text-slate-900">
                                             {(result.metrics.totalComp.a / 10000).toLocaleString()}만원
                                         </p>
                                     </div>
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
-                                        <p className="text-xl font-bold text-white">
+                                        <p className="text-xl font-bold text-slate-900">
                                             {Math.round(result.metrics.realHourlyWage.a).toLocaleString()}원
                                         </p>
                                     </div>
@@ -303,7 +303,7 @@ export default function BattlePage() {
                                         <Trophy className="w-5 h-5 text-primary" />
                                         AI ?�판 ?�정
                                     </h3>
-                                    <p className="text-xl font-medium text-white leading-relaxed">
+                                    <p className="text-xl font-medium text-slate-900 leading-relaxed">
                                         &quot;{result.verdict}&quot;
                                     </p>
                                 </div>
@@ -349,13 +349,13 @@ export default function BattlePage() {
                                 <div className="space-y-4">
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Total Comp</p>
-                                        <p className="text-xl font-bold text-white">
+                                        <p className="text-xl font-bold text-slate-900">
                                             {(result.metrics.totalComp.b / 10000).toLocaleString()}만원
                                         </p>
                                     </div>
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
-                                        <p className="text-xl font-bold text-white">
+                                        <p className="text-xl font-bold text-slate-900">
                                             {Math.round(result.metrics.realHourlyWage.b).toLocaleString()}원
                                         </p>
                                     </div>

@@ -34,7 +34,7 @@ export default function LunchRoulettePage() {
     <main className="w-full min-h-screen bg-white dark:bg-black px-4 pt-28 pb-20 font-sans">
       <div className="text-center mb-12 border-b border-gray-100 dark:border-gray-900 pb-10">
         <Utensils className="w-12 h-12 text-primary mx-auto mb-4" />
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-3">
           점심 메뉴 추천기
         </h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium">

@@ -83,7 +83,7 @@ const CurrencyTicker = () => (
         <div key={i} className="flex items-center gap-3 text-sm font-medium text-slate-500">
           <span className="text-xl grayscale opacity-70">{c.flag}</span>
           <span className="font-serif text-primary/80">{c.id}</span>
-          <span className="text-white font-bold tracking-wider">{c.rate.toLocaleString()}</span>
+          <span className="text-slate-900 font-bold tracking-wider">{c.rate.toLocaleString()}</span>
           <span className="text-xs text-primary flex items-center gap-1">
             <TrendingUp size={10} /> LIVE
           </span>
@@ -469,7 +469,7 @@ export default function ExchangeRateImpactCalculator() {
                         <Gem className="w-6 h-6 text-blue-400" />
                       </div>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Luxury Index</p>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-2xl font-bold text-slate-900">
                         {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Units</span>
                       </p>
                     </div>
@@ -478,7 +478,7 @@ export default function ExchangeRateImpactCalculator() {
                         <Coffee className="w-6 h-6 text-primary" />
                       </div>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Lifestyle Index</p>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-2xl font-bold text-slate-900">
                         {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Cups</span>
                       </p>
                     </div>
@@ -512,13 +512,13 @@ export default function ExchangeRateImpactCalculator() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button onClick={handleReset} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
+          <button onClick={handleReset} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center justify-center gap-2 border border-slate-200">
             <RotateCcw size={18} /> RESET
           </button>
-          <button onClick={handleShareLink} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
+          <button onClick={handleShareLink} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center justify-center gap-2 border border-slate-200">
             <LinkIcon size={18} /> SHARE LINK
           </button>
-          <button onClick={handleShareImage} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
+          <button onClick={handleShareImage} className="w-full py-4 bg-white text-slate-500 font-bold rounded-2xl hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center justify-center gap-2 border border-slate-200">
             <ImageIcon size={18} /> SAVE REPORT
           </button>
         </div>

@@ -72,7 +72,7 @@ export default function SalarySlipPage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 mb-5">
                     <Receipt className="w-8 h-8 text-blue-500" />
                 </div>
-                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-900 mb-3">
                     가상 <span className="text-blue-600">급여명세서</span>
                 </h1>
                 <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
@@ -94,7 +94,7 @@ export default function SalarySlipPage() {
                             exit={{ opacity: 0, y: -20 }}
                             className="toss-card p-8 space-y-5"
                         >
-                            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+                            <h2 className="text-xl font-black text-slate-900 dark:text-slate-900 mb-2">
                                 정보 입력
                             </h2>
 

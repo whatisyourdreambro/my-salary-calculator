@@ -73,7 +73,7 @@ export default function GlossaryPage() {
               <BookOpen className="w-4 h-4" />
               <span>금융 문맹 탈출 프로젝트</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight text-slate-900 dark:text-white mb-5 leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight text-slate-900 dark:text-slate-900 mb-5 leading-[1.15]">
               금융 용어, <br className="sm:hidden" />
               <span className="text-indigo-600">당신의 돈이 말을 거는 순간</span>
             </h1>
@@ -122,7 +122,7 @@ export default function GlossaryPage() {
               </div>
               <button
                 onClick={handleRandomTerm}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
+                className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-slate-900"
                 title="다른 용어 보기"
               >
                 <RotateCw className="w-5 h-5" />
@@ -134,7 +134,7 @@ export default function GlossaryPage() {
                 <div className="p-3 bg-primary/20 rounded-2xl text-primary">
                   <randomTerm.icon className="w-8 h-8" />
                 </div>
-                <h2 className="text-3xl font-bold text-white">{randomTerm.title}</h2>
+                <h2 className="text-3xl font-bold text-slate-900">{randomTerm.title}</h2>
               </div>
               <p className="text-xl text-slate-300 font-light italic mb-6">
                 &quot;{randomTerm.summary}&quot;

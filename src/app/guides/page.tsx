@@ -21,12 +21,12 @@ function HeroGuide({ guide }: { guide: Guide }) {
             <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1">
               <Sparkles className="w-3 h-3" /> Featured
             </span>
-            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold">
+            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-slate-900 text-xs font-bold">
               {guide.category}
             </span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight max-w-4xl drop-shadow-lg">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 mb-6 leading-tight max-w-4xl drop-shadow-lg">
             {guide.title}
           </h2>
 
@@ -73,7 +73,7 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
               )}
             </div>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-900 mb-3 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               {guide.title}
             </h3>
 
@@ -150,7 +150,7 @@ export default function GuidesPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-400/10 dark:bg-blue-500/15 rounded-full blur-[120px] -z-10" />
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-slate-900">
             Financial <span className="text-blue-600">Insight</span>
           </h1>
           <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto mb-8">

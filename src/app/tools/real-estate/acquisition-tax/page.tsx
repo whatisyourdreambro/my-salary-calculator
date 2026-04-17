@@ -86,9 +86,9 @@ export default function AcquisitionTaxPage() {
         <motion.div key={r.total} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">취득세 합계</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.total)}<span className="text-2xl ml-1">원</span></p>
-            <p className="text-white/70 text-sm mt-2">적용 세율: {r.taxRate.toFixed(1)}%</p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">취득세 합계</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.total)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-sm mt-2">적용 세율: {r.taxRate.toFixed(1)}%</p>
           </div>
           <div className="bg-white p-6 space-y-3">
             {[

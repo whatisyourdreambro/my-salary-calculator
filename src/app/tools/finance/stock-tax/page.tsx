@@ -79,10 +79,10 @@ export default function StockTaxPage() {
         <motion.div key={r.total} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
           <div className="bg-primary p-8 text-center">
-            <p className="text-white/70 text-xs font-black uppercase tracking-widest mb-2">납부 세금 합계</p>
-            <p className="text-5xl font-black text-white tracking-tight">{fmt(r.total)}<span className="text-2xl ml-1">원</span></p>
-            <p className="text-white/70 text-sm mt-2">실효세율: {r.effectiveRate.toFixed(1)}%</p>
-            <p className="text-white font-bold mt-1">순수익: {fmt(netProfit - r.total)}원</p>
+            <p className="text-slate-900/70 text-xs font-black uppercase tracking-widest mb-2">납부 세금 합계</p>
+            <p className="text-5xl font-black text-slate-900 tracking-tight">{fmt(r.total)}<span className="text-2xl ml-1">원</span></p>
+            <p className="text-slate-900/70 text-sm mt-2">실효세율: {r.effectiveRate.toFixed(1)}%</p>
+            <p className="text-slate-900 font-bold mt-1">순수익: {fmt(netProfit - r.total)}원</p>
           </div>
           <div className="bg-white p-6 space-y-3">
             {[

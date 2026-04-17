@@ -140,7 +140,7 @@ export default function ToolsHubPage() {
               <Link key={item.href} href={item.href}
                 className="group flex items-center gap-4 p-5 border border-gray-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors flex-shrink-0">
-                  <item.icon size={22} className="text-primary group-hover:text-white transition-colors" />
+                  <item.icon size={22} className="text-primary group-hover:text-slate-900 transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-slate-900 text-sm group-hover:text-primary transition-colors">{item.title}</p>
@@ -157,7 +157,7 @@ export default function ToolsHubPage() {
           <div key={ci} className="mb-14">
             <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-primary">
               <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-                <span className="text-white font-black text-sm">{ci + 1}</span>
+                <span className="text-slate-900 font-black text-sm">{ci + 1}</span>
               </div>
               <h2 className="text-xl font-black text-slate-900">{cat.title}</h2>
               <span className="text-xs text-slate-400 font-medium">{cat.items.length}개</span>
@@ -167,7 +167,7 @@ export default function ToolsHubPage() {
                 <Link key={item.href} href={item.href}
                   className="group flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:border-primary hover:bg-primary/5 transition-all bg-white shadow-sm hover:shadow-md">
                   <div className="w-10 h-10 rounded-lg bg-slate-50 group-hover:bg-primary flex items-center justify-center transition-colors flex-shrink-0">
-                    <item.icon size={18} className="text-slate-400 group-hover:text-white transition-colors" />
+                    <item.icon size={18} className="text-slate-400 group-hover:text-slate-900 transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

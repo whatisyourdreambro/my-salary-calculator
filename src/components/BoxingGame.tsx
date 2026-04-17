@@ -204,7 +204,7 @@ export default function BoxingGame({
                             initial={{ opacity: 0, y: 20, scale: 0.5 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, scale: 1.5 }}
-                            className="text-2xl font-black text-white italic drop-shadow-md"
+                            className="text-2xl font-black text-slate-900 italic drop-shadow-md"
                         >
                             {log[0]}
                         </motion.div>
@@ -225,10 +225,10 @@ export default function BoxingGame({
                             >
                                 <Trophy className="w-32 h-32 text-primary mb-6 drop-shadow-[0_0_30px_rgba(234,179,8,0.8)]" />
                             </motion.div>
-                            <h2 className="text-8xl font-black text-white mb-4 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary/80">
+                            <h2 className="text-8xl font-black text-slate-900 mb-4 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary/80">
                                 KO!
                             </h2>
-                            <p className="text-3xl text-white font-bold mb-12">
+                            <p className="text-3xl text-slate-900 font-bold mb-12">
                                 <span className={winner === "A" ? "text-blue-400" : "text-red-400"}>
                                     {winner === "A" ? companyA.name.ko : companyB.name.ko}
                                 </span>

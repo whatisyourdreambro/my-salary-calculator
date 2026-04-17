@@ -187,7 +187,7 @@ export default function IdealTypeWorldCup() {
                                 />
 
                                 {/* VS Badge (Desktop) */}
-                                <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-red-600 rounded-full items-center justify-center z-30 font-black italic text-2xl text-white border-4 border-background shadow-xl transform rotate-12">
+                                <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-red-600 rounded-full items-center justify-center z-30 font-black italic text-2xl text-slate-900 border-4 border-background shadow-xl transform rotate-12">
                                     VS
                                 </div>
 

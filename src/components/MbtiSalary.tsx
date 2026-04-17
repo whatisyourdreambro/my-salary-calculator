@@ -66,7 +66,7 @@ export default function MbtiSalary() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 {/* Selection Grid */}
                 <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-                    <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                         <Brain className="text-primary" /> MBTI 선택
                     </h3>
                     <div className="grid grid-cols-4 gap-2">
@@ -132,7 +132,7 @@ export default function MbtiSalary() {
                                         <div className={`inline-block px-4 py-1 rounded-full bg-gradient-to-r ${result.color} text-white font-bold text-sm mb-4`}>
                                             RANK #{result.rank}
                                         </div>
-                                        <h3 className="text-5xl font-black text-white mb-2 tracking-tight">
+                                        <h3 className="text-5xl font-black text-slate-900 mb-2 tracking-tight">
                                             {selectedMbti}
                                         </h3>
                                         <p className="text-slate-500 font-medium">{result.desc}</p>
@@ -140,7 +140,7 @@ export default function MbtiSalary() {
 
                                     <div className="bg-black/50 rounded-2xl p-6 backdrop-blur-sm border border-white/5 mb-6 text-center">
                                         <p className="text-slate-500 text-sm font-bold mb-2">평균 연봉 (추정)</p>
-                                        <div className="flex items-center justify-center gap-2 text-4xl font-black text-white">
+                                        <div className="flex items-center justify-center gap-2 text-4xl font-black text-slate-900">
                                             <DollarSign className="w-8 h-8 text-primary" />
                                             {result.avgSalary}만원
                                         </div>

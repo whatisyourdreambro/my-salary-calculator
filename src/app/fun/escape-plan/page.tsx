@@ -80,10 +80,10 @@ export default function EscapePlanPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-primary/80 dark:from-[#0f1623] dark:via-[#191F28] dark:to-[#1a2035] -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-400/10 dark:bg-blue-500/15 rounded-full blur-[120px] -z-10" />
         <div className="max-w-4xl mx-auto px-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-gradient-to-br from-blue-500 to-primary/80 text-white mb-6 shadow-lg shadow-blue-500/30">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-gradient-to-br from-blue-500 to-primary/80 text-slate-900 mb-6 shadow-lg shadow-blue-500/30">
             <DoorOpen size={32} />
           </div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900 dark:text-white">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900 dark:text-slate-900">
             FREEDOM <span className="text-blue-600">DASHBOARD</span>
           </h1>
           <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
@@ -126,7 +126,7 @@ export default function EscapePlanPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden"
+              className="bg-gradient-to-br from-slate-900 to-slate-800 text-slate-900 p-8 rounded-3xl shadow-2xl relative overflow-hidden"
             >
               {/* Background Pattern */}
               <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl" />
@@ -155,7 +155,7 @@ export default function EscapePlanPage() {
                     </div>
                   ) : isFinite(yearsToTarget) ? (
                     <div className="flex items-baseline gap-3">
-                      <span className="text-4xl font-bold text-white">{yearsToTarget.toFixed(1)}</span>
+                      <span className="text-4xl font-bold text-slate-900">{yearsToTarget.toFixed(1)}</span>
                       <span className="text-xl text-slate-400">년 후</span>
                       <span className="text-sm text-slate-500 ml-2">({new Date().getFullYear() + Math.floor(yearsToTarget)}년)</span>
                     </div>
@@ -181,7 +181,7 @@ export default function EscapePlanPage() {
                       <metric.icon size={20} />
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-500 font-medium mb-1">남은 {metric.name}</p>
-                    <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    <p className="text-xl font-bold text-slate-900 dark:text-slate-900">
                       {formatNumber(metric.value)} <span className="text-sm font-normal text-slate-400">{metric.unit}</span>
                     </p>
                   </motion.div>

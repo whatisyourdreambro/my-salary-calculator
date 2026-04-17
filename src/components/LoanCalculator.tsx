@@ -52,7 +52,7 @@ export default function LoanCalculator() {
                 <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
                     <Calculator className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">대출 이자 계산기</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-900">대출 이자 계산기</h2>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">

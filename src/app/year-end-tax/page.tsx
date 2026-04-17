@@ -22,7 +22,7 @@ export default function YearEndTaxPage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/50/10 border border-primary/20 text-primary dark:text-primary font-bold text-sm mb-6">
             💰 13월의 월급
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-slate-900 dark:text-slate-900">
             연말정산 환급금<br />
             <span className="text-primary">미리 계산해보세요</span>
           </h1>

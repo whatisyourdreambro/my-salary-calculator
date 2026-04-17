@@ -100,7 +100,7 @@ export default function SalaryConverterPage() {
                                     type="number"
                                     value={salaryKRW}
                                     onChange={handleSalaryChange}
-                                    className="w-full bg-slate-900 border border-slate-600 rounded-xl py-4 px-4 text-2xl font-bold text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                    className="w-full bg-slate-900 border border-slate-600 rounded-xl py-4 px-4 text-2xl font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                                 />
                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">KRW</span>
                             </div>
@@ -182,7 +182,7 @@ export default function SalaryConverterPage() {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-400">Net Income</span>
-                                    <span className="font-mono font-bold text-white">{Math.round(res.net).toLocaleString()} {res.currency}</span>
+                                    <span className="font-mono font-bold text-slate-900">{Math.round(res.net).toLocaleString()} {res.currency}</span>
                                 </div>
                                 <div className="pt-3 border-t border-slate-600/50 flex justify-between items-center">
                                     <span className="text-sm text-primary font-bold">Real Value (PPP)</span>

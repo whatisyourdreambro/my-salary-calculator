@@ -10,7 +10,7 @@ export default function WorkDayPage() {
     return (
         <div className="min-h-screen bg-black pt-20 pb-20 px-4 pt-28 pb-20">
             <div className="max-w-2xl mx-auto">
-                <h1 className="text-3xl font-bold text-white mb-8">영업일 계산기</h1>
+                <h1 className="text-3xl font-bold text-slate-900 mb-8">영업일 계산기</h1>
                 <WorkDayCalculator />
             </div>
         </div>

@@ -496,7 +496,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("investment")}
-                        className="w-full py-5 bg-stone-900 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+                        className="w-full py-5 bg-stone-900 text-slate-900 font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
                       >
                         NEXT STEP
                       </motion.button>
@@ -592,7 +592,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("events")}
-                        className="w-full py-5 bg-stone-900 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+                        className="w-full py-5 bg-stone-900 text-slate-900 font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
                       >
                         NEXT STEP
                       </motion.button>
@@ -676,7 +676,7 @@ export default function FireCalculatorPage() {
                       <motion.button
                         layoutId="next-button"
                         onClick={() => setStep("result")}
-                        className="w-full py-5 bg-gradient-to-r from-primary to-emerald-800 text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
+                        className="w-full py-5 bg-gradient-to-r from-primary to-emerald-800 text-slate-900 font-sans font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
                       >
                         VIEW FULL REPORT
                       </motion.button>

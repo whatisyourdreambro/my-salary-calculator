@@ -16,7 +16,7 @@ export default function CagrCalculator() {
 
     return (
         <div className="w-full max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-blue-400" />
                 CAGR (연평균 성장률) 계산기
             </h2>
@@ -29,7 +29,7 @@ export default function CagrCalculator() {
                             type="number"
                             value={startValue}
                             onChange={(e) => setStartValue(Number(e.target.value))}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                     <div>
@@ -38,7 +38,7 @@ export default function CagrCalculator() {
                             type="number"
                             value={endValue}
                             onChange={(e) => setEndValue(Number(e.target.value))}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                 </div>
@@ -48,7 +48,7 @@ export default function CagrCalculator() {
                         type="number"
                         value={years}
                         onChange={(e) => setYears(Number(e.target.value))}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                 </div>
 

@@ -29,7 +29,7 @@ export function PercentCalculator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Calculator className="text-indigo-500" /> 퍼센트 계산기
             </h2>
             <div className="space-y-6">
@@ -82,7 +82,7 @@ export function PercentCalculator() {
                 </button>
                 {result && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
-                        <p className="text-xl font-bold text-white">{result}</p>
+                        <p className="text-xl font-bold text-slate-900">{result}</p>
                     </div>
                 )}
             </div>
@@ -119,7 +119,7 @@ export function NumberGenerator() {
 
     return (
         <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Dices className="text-primary" /> 랜덤 숫자 생성기
             </h2>
             <div className="space-y-6">
@@ -148,7 +148,7 @@ export function NumberGenerator() {
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <div className="flex flex-wrap justify-center gap-3">
                             {result.map((n) => (
-                                <div key={n} className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center font-black text-white shadow-lg">
+                                <div key={n} className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center font-black text-slate-900 shadow-lg">
                                     {n}
                                 </div>
                             ))}

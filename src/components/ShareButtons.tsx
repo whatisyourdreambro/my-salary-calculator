@@ -111,7 +111,7 @@ export default function ShareButtons({
                 className="w-10 h-10 rounded-full bg-[#1877F2] flex items-center justify-center shadow-lg shadow-[#1877F2]/30 transition-all border border-[#1877F2]"
                 aria-label="페이스북 공유"
             >
-                <Facebook className="w-5 h-5 text-white" fill="currentColor" />
+                <Facebook className="w-5 h-5 text-slate-900" fill="currentColor" />
             </motion.button>
 
             {/* Twitter/X Share */}
@@ -122,7 +122,7 @@ export default function ShareButtons({
                 className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-lg shadow-black/30 transition-all border border-slate-200"
                 aria-label="트위터 공유"
             >
-                <Twitter className="w-4 h-4 text-white" fill="currentColor" />
+                <Twitter className="w-4 h-4 text-slate-900" fill="currentColor" />
             </motion.button>
 
             {/* Copy Link */}

@@ -82,12 +82,12 @@ export default function SubscriptionCalcClient() {
           {/* Right: Results */}
           <div className="space-y-6">
             <div className="bg-primary rounded-2xl p-6 text-center">
-              <BarChart3 className="w-8 h-8 text-white/70 mx-auto mb-3" />
-              <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">월 구독 총액</p>
-              <p className="text-4xl font-black text-white">{Math.round(monthlyTotal).toLocaleString()}원</p>
+              <BarChart3 className="w-8 h-8 text-slate-900/70 mx-auto mb-3" />
+              <p className="text-slate-900/70 text-xs font-bold uppercase tracking-widest mb-1">월 구독 총액</p>
+              <p className="text-4xl font-black text-slate-900">{Math.round(monthlyTotal).toLocaleString()}원</p>
               <div className="mt-4 pt-4 border-t border-white/20">
-                <p className="text-white/70 text-xs">연간 환산</p>
-                <p className="text-xl font-black text-white">{Math.round(yearlyTotal).toLocaleString()}원</p>
+                <p className="text-slate-900/70 text-xs">연간 환산</p>
+                <p className="text-xl font-black text-slate-900">{Math.round(yearlyTotal).toLocaleString()}원</p>
               </div>
             </div>
 

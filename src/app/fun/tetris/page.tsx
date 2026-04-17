@@ -310,7 +310,7 @@ export default function TetrisPage() {
                                         <>
                                             <h2 className="text-4xl font-black text-primary mb-2">GAME OVER</h2>
                                             <p className="text-slate-300 mb-6">야근 확정! 다시 도전하세요.</p>
-                                            <p className="text-2xl font-bold text-white mb-8">Score: {score}</p>
+                                            <p className="text-2xl font-bold text-slate-900 mb-8">Score: {score}</p>
 
                                             <div className="w-full max-w-[280px] mb-6">
                                                 <AdUnit slotId="9988776655" format="rectangle" label="Tetris Game Over" />
@@ -325,7 +325,7 @@ export default function TetrisPage() {
                                                 </button>
                                                 <button
                                                     onClick={handleShare}
-                                                    className="p-4 bg-slate-700 hover:bg-slate-600 text-white rounded-full font-bold shadow-lg transition-all hover:scale-110"
+                                                    className="p-4 bg-slate-700 hover:bg-slate-600 text-slate-900 rounded-full font-bold shadow-lg transition-all hover:scale-110"
                                                 >
                                                     <Share2 size={24} />
                                                 </button>
@@ -333,7 +333,7 @@ export default function TetrisPage() {
                                         </>
                                     ) : (
                                         <>
-                                            <h2 className="text-3xl font-black text-white mb-8">READY?</h2>
+                                            <h2 className="text-3xl font-black text-slate-900 mb-8">READY?</h2>
                                             <button
                                                 onClick={startGame}
                                                 className="group relative px-8 py-4 bg-primary hover:bg-primary text-white rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"

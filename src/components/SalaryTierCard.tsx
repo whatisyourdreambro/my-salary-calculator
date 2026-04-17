@@ -85,7 +85,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
         {/* Header */}
         <div className="relative z-10 flex justify-between items-start">
           <div>
-            <div className="text-white/80 text-xs font-bold tracking-widest uppercase mb-1">2026 Salary Report</div>
+            <div className="text-slate-900/80 text-xs font-bold tracking-widest uppercase mb-1">2026 Salary Report</div>
             <div className="text-3xl font-black italic tracking-tighter">MONEYSALARY</div>
           </div>
           <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold border border-white/30">
@@ -97,7 +97,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
         <div className="relative z-10 flex flex-col items-center justify-center py-4">
           <MungRankIcon tier={rank.name} />
           <div className="mt-4 text-center">
-            <div className="text-sm font-medium text-white/90 mb-1">내 연봉 티어는?</div>
+            <div className="text-sm font-medium text-slate-900/90 mb-1">내 연봉 티어는?</div>
             <div className="text-5xl font-black tracking-tight drop-shadow-lg mb-2">
               {rank.name}
             </div>
@@ -110,14 +110,14 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
         {/* Footer */}
         <div className="relative z-10 border-t border-white/20 pt-6 flex justify-between items-end">
           <div>
-            <div className="text-white/70 text-[10px] mb-1">Annual Salary</div>
+            <div className="text-slate-900/70 text-[10px] mb-1">Annual Salary</div>
             <div className="text-xl font-bold">{(annualSalary / 10000).toLocaleString()}만원</div>
           </div>
           <div className="text-right">
-            <div className="text-[10px] font-bold text-white/80 leading-tight">
+            <div className="text-[10px] font-bold text-slate-900/80 leading-tight">
               {rank.message}
             </div>
-            <div className="text-[9px] text-white/50 mt-1">moneysalary.com</div>
+            <div className="text-[9px] text-slate-900/50 mt-1">moneysalary.com</div>
           </div>
         </div>
       </div>
