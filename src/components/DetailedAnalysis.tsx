@@ -194,22 +194,17 @@ export default function DetailedAnalysis({
             {deductionDetails.map((item, index) => (
               <div
                 key={item.name}
-                className="flex justify-between items-center p-3 bg-secondary rounded-lg"
+                className="flex justify-between items-center p-3 bg-slate-50 rounded-lg"
               >
                 <div className="flex items-center">
                   <span
                     className="w-2.5 h-2.5 rounded-full mr-3"
-                    style={{
-                      backgroundColor:
-                        DEDUCTION_COLORS[index % DEDUCTION_COLORS.length],
-                    }}
+                    style={{ backgroundColor: DEDUCTION_COLORS[index % DEDUCTION_COLORS.length] }}
                   ></span>
-                  <span className="font-semibold text-base">{item.name}</span>
-                  <span className="text-xs text-muted-foreground ml-2">
-                    ({item.rate})
-                  </span>
+                  <span className="font-semibold text-slate-800 text-base">{item.name}</span>
+                  <span className="text-xs text-slate-500 ml-2">({item.rate})</span>
                 </div>
-                <span className="font-mono font-bold text-base">
+                <span className="font-mono font-bold text-slate-900 text-base">
                   {formatNumber(item.value)}원
                 </span>
               </div>
