@@ -467,31 +467,34 @@ export default function SalaryCalculator() {
         </div>
       </div>
 
-      {/* ── Row 2: 보조 패널 3열 (결과 있을 때만) ──────────────────── */}
+      {/* ── Row 2+3: 보조 패널 (결과 있을 때만) ────────────────────── */}
       {showResult && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          className="space-y-5"
         >
-          {/* 1. 연봉 티어 카드 */}
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-            <SalaryTierCard annualSalary={annualSalary} />
+          {/* Row 2: 티어 카드(왼) + 자산 성장 시뮬레이션(오) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* 연봉 티어 카드 */}
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+              <SalaryTierCard annualSalary={annualSalary} />
+            </div>
+
+            {/* 자산 성장 시뮬레이션 */}
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
+              <p className="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-4 bg-blue-500 rounded-full inline-block" />
+                자산 성장 시뮬레이션
+              </p>
+              <WealthChart monthlyNetSalary={result.monthlyNet} />
+            </div>
           </div>
 
-          {/* 2. 자산 성장 시뮬레이션 */}
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-            <p className="text-sm font-black text-slate-800 mb-3 flex items-center gap-1.5">
-              <span className="w-1.5 h-4 bg-blue-500 rounded-full inline-block" />
-              자산 성장 시뮬레이션
-            </p>
-            <WealthChart monthlyNetSalary={result.monthlyNet} />
-          </div>
-
-          {/* 3. 월급 상세 분석 */}
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-            <p className="text-sm font-black text-slate-800 mb-3 flex items-center gap-1.5">
+          {/* Row 3: 월급 상세 분석 — 전체 너비 */}
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6">
+            <p className="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">
               <span className="w-1.5 h-4 bg-primary rounded-full inline-block" />
               월급 상세 분석
             </p>
@@ -503,6 +506,7 @@ export default function SalaryCalculator() {
           </div>
         </motion.div>
       )}
+
 
       {/* Bottom Sheet: 비과세 설정 */}
       <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
