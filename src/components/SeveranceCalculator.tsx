@@ -289,12 +289,12 @@ export default function SeveranceCalculator() {
                 <div className="mt-6">
                   <Accordion title="세금 계산 과정 & IRP 혜택 보기">
                     <div className="text-xs space-y-2 text-muted-foreground">
-                      <div className="flex justify-between"><span>과세대상 퇴직금:</span><span className="font-mono">{result.details?.retirementIncome.toLocaleString()}원</span></div>
-                      <div className="flex justify-between"><span>└ 근속연수공제:</span><span className="font-mono">-{result.details?.serviceYearDeduction.toLocaleString()}원</span></div>
-                      <div className="flex justify-between"><span>환산급여:</span><span className="font-mono">{result.details?.convertedSalary.toLocaleString()}원</span></div>
-                      <div className="flex justify-between"><span>└ 환산급여공제:</span><span className="font-mono">-{result.details?.convertedSalaryDeduction.toLocaleString()}원</span></div>
-                      <div className="flex justify-between font-bold"><span>과세표준:</span><span className="font-mono">{result.details?.taxBase.toLocaleString()}원</span></div>
-                      <div className="flex justify-between"><span>산출세액:</span><span className="font-mono">{result.details?.calculatedTax.toLocaleString()}원</span></div>
+                      <div className="flex justify-between"><span>과세대상 퇴직금:</span><span className="font-mono">{result.details?.retirementIncome.toLocaleString('ko-KR')}원</span></div>
+                      <div className="flex justify-between"><span>└ 근속연수공제:</span><span className="font-mono">-{result.details?.serviceYearDeduction.toLocaleString('ko-KR')}원</span></div>
+                      <div className="flex justify-between"><span>환산급여:</span><span className="font-mono">{result.details?.convertedSalary.toLocaleString('ko-KR')}원</span></div>
+                      <div className="flex justify-between"><span>└ 환산급여공제:</span><span className="font-mono">-{result.details?.convertedSalaryDeduction.toLocaleString('ko-KR')}원</span></div>
+                      <div className="flex justify-between font-bold"><span>과세표준:</span><span className="font-mono">{result.details?.taxBase.toLocaleString('ko-KR')}원</span></div>
+                      <div className="flex justify-between"><span>산출세액:</span><span className="font-mono">{result.details?.calculatedTax.toLocaleString('ko-KR')}원</span></div>
                     </div>
                     <div className="mt-4 pt-4 border-t border-dashed border-border">
                       <h4 className="font-bold text-sm mb-2 text-center text-foreground">💡 IRP 계좌로 이전 시 혜택</h4>

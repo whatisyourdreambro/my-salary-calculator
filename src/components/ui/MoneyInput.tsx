@@ -13,7 +13,7 @@ interface MoneyInputProps {
   className?: string;
 }
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 export default function MoneyInput({

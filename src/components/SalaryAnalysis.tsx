@@ -11,7 +11,7 @@ interface SalaryAnalysisProps {
   monthlyNet: number;
 }
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const AnalysisCard = ({
   icon: Icon,

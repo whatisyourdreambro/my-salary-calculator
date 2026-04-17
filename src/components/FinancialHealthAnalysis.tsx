@@ -10,7 +10,7 @@ interface FinancialHealthAnalysisProps {
   monthlyExpenses: number;
 }
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 export default function FinancialHealthAnalysis({
   monthlyNet,

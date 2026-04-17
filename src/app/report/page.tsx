@@ -24,7 +24,7 @@ import Link from "next/link";
 import CountUp from "react-countup";
 import { Info, BarChart2, TrendingUp } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const COLORS = ["#0052ff", "#ffc82c", "#00C49F", "#FF8042", "#8884d8"];
 
@@ -164,7 +164,7 @@ const Report = () => {
           <h1 className="text-4xl font-bold text-primary">종합 금융 리포트</h1>
           <p className="text-sm text-gray-500">
             Moneysalary | 최종 업데이트:{" "}
-            {new Date(data.lastUpdated).toLocaleString()}
+            {new Date(data.lastUpdated).toLocaleString('ko-KR')}
           </p>
         </div>
 

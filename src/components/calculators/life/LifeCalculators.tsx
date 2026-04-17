@@ -29,7 +29,7 @@ export function DutchPayCalculator() {
                     <input
                         type="text"
                         value={amount}
-                        onChange={(e) => setAmount(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                        onChange={(e) => setAmount(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                         className="w-full p-4 bg-black border border-slate-200 rounded-xl text-white focus:border-primary outline-none"
                         placeholder="0"
                     />
@@ -53,7 +53,7 @@ export function DutchPayCalculator() {
                 {result !== null && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">1인당 부담금 (10원 단위 올림)</p>
-                        <p className="text-5xl font-black text-primary">{result.toLocaleString()}원</p>
+                        <p className="text-5xl font-black text-primary">{result.toLocaleString('ko-KR')}원</p>
                     </div>
                 )}
             </div>
@@ -122,7 +122,7 @@ export function FuelCostCalculator() {
                 {result !== null && (
                     <div className="mt-6 p-6 bg-black rounded-xl border border-slate-200 text-center">
                         <p className="text-slate-600 mb-2">예상 유류비</p>
-                        <p className="text-5xl font-black text-primary">{result.toLocaleString()}원</p>
+                        <p className="text-5xl font-black text-primary">{result.toLocaleString('ko-KR')}원</p>
                     </div>
                 )}
             </div>

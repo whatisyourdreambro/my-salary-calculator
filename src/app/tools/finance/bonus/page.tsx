@@ -195,7 +195,7 @@ export default function BonusCalculatorPage() {
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">원</span>
               </div>
-              <p className="text-xs text-slate-400 mt-1.5">{fmt(salary)}원 ({(salary / 10000).toLocaleString()}만원)</p>
+              <p className="text-xs text-slate-400 mt-1.5">{fmt(salary)}원 ({(salary / 10000).toLocaleString('ko-KR')}만원)</p>
             </div>
 
             <div>
@@ -209,7 +209,7 @@ export default function BonusCalculatorPage() {
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">원</span>
               </div>
-              <p className="text-xs text-slate-400 mt-1.5">{fmt(bonus)}원 ({(bonus / 10000).toLocaleString()}만원)</p>
+              <p className="text-xs text-slate-400 mt-1.5">{fmt(bonus)}원 ({(bonus / 10000).toLocaleString('ko-KR')}만원)</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

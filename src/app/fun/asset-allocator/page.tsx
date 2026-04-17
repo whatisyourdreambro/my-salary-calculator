@@ -245,7 +245,7 @@ export default function AssetAllocatorGame() {
                     <div className="flex flex-col">
                         <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">Net Worth</span>
                         <span className="text-3xl font-serif font-black text-slate-900 tabular-nums">
-                            ${score.toLocaleString()}
+                            ${score.toLocaleString('ko-KR')}
                         </span>
                     </div>
 
@@ -259,7 +259,7 @@ export default function AssetAllocatorGame() {
                     <div className="flex flex-col items-end">
                         <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">High Score</span>
                         <span className="text-lg font-serif font-bold text-slate-500 tabular-nums">
-                            ${highScore.toLocaleString()}
+                            ${highScore.toLocaleString('ko-KR')}
                         </span>
                     </div>
                 </div>
@@ -316,7 +316,7 @@ export default function AssetAllocatorGame() {
                             <p className="text-slate-500 mb-8 uppercase tracking-widest text-xs font-bold">Final Net Worth</p>
 
                             <div className="text-7xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400 mb-12">
-                                ${score.toLocaleString()}
+                                ${score.toLocaleString('ko-KR')}
                             </div>
 
                             <div className="flex gap-4">
@@ -343,12 +343,7 @@ export default function AssetAllocatorGame() {
                         <div className="flex items-center gap-2">
                             <Monitor className="w-4 h-4" /> Move Mouse
                         </div>
-                        <div className="w-px h-4 
-        param($m)
-        $n = [int]($m.Value -replace 'bg-stone-','')
-        if ($n -ge 900) { 'bg-white' }
-        else { 'bg-slate-50' }
-    " />
+                        <div className="w-px h-4 " />
                         <div className="flex items-center gap-2">
                             <Smartphone className="w-4 h-4" /> Drag Finger
                         </div>

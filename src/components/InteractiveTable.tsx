@@ -146,7 +146,7 @@ export default function InteractiveTable({
                     {pageConfig.salaryLabel}
                   </Label>
                   <span className="text-2xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
-                    {salary.toLocaleString()}
+                    {salary.toLocaleString('ko-KR')}
                     <span className="text-base text-slate-400 font-semibold ml-1">원</span>
                   </span>
                 </div>
@@ -190,7 +190,7 @@ export default function InteractiveTable({
                     비과세 (월)
                   </Label>
                   <span className="text-2xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
-                    {nonTaxableAmount.toLocaleString()}
+                    {nonTaxableAmount.toLocaleString('ko-KR')}
                     <span className="text-base text-slate-400 font-semibold ml-1">원</span>
                   </span>
                 </div>
@@ -272,20 +272,20 @@ export default function InteractiveTable({
               예상 월 실수령액
             </p>
             <p className="text-5xl font-black text-slate-900 tracking-tight tabular-nums relative z-10">
-              {result.monthlyNet.toLocaleString()}
+              {result.monthlyNet.toLocaleString('ko-KR')}
               <span className="text-2xl text-blue-200 ml-1 font-semibold">원</span>
             </p>
 
             <div className="mt-6 pt-5 border-t border-blue-500/40 space-y-2.5 text-sm font-medium relative z-10">
               <div className="flex justify-between items-center">
                 <span className="text-blue-100">세전 (월환산)</span>
-                <span className="font-bold tabular-nums">{Math.round(salary / 12).toLocaleString()}원</span>
+                <span className="font-bold tabular-nums">{Math.round(salary / 12).toLocaleString('ko-KR')}원</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-blue-100">총 공제액</span>
                 <span className="font-bold text-blue-200 tabular-nums">
                   <TrendingDown className="inline w-3.5 h-3.5 mr-1" />
-                  {result.totalDeduction.toLocaleString()}원
+                  {result.totalDeduction.toLocaleString('ko-KR')}원
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -321,7 +321,7 @@ export default function InteractiveTable({
                     <span className="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{item.label}</span>
                   </div>
                   <span className="text-[13px] font-bold text-slate-800 dark:text-slate-200 tabular-nums">
-                    -{item.val.toLocaleString()}원
+                    -{item.val.toLocaleString('ko-KR')}원
                   </span>
                 </div>
               ))}

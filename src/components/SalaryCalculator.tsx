@@ -29,7 +29,7 @@ import LoadingInterstitial from "./LoadingInterstitial";
 import AdUnit from "./AdUnit";
 import BottomSheet from "./BottomSheet";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 // Unified Result Type

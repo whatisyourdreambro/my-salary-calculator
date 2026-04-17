@@ -38,7 +38,7 @@ export default function LtvCalculator() {
                     <input
                         type="text"
                         value={price}
-                        onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                        onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                         className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="500,000,000"
                     />
@@ -49,7 +49,7 @@ export default function LtvCalculator() {
                     <input
                         type="text"
                         value={loan}
-                        onChange={(e) => setLoan(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                        onChange={(e) => setLoan(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                         className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="300,000,000"
                     />

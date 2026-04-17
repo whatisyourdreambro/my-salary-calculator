@@ -99,7 +99,7 @@ export default function SalaryDBPage() {
                                                 <Users className="w-4 h-4" /> 신입 초봉
                                             </span>
                                             <span className="font-bold text-foreground">
-                                                {(company.salary.entry.base / 10000).toLocaleString()}만원
+                                                {(company.salary.entry.base / 10000).toLocaleString('ko-KR')}만원
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">

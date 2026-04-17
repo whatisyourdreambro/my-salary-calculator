@@ -46,7 +46,7 @@ export default function SalaryTable({
                   <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
                     <span className="text-slate-500 font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
                     <span className={`text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-slate-900'}`}>
-                      {Number(row[headers[0].key]).toLocaleString()}{unit}
+                      {Number(row[headers[0].key]).toLocaleString('ko-KR')}{unit}
                     </span>
                   </div>
 
@@ -58,7 +58,7 @@ export default function SalaryTable({
                           ? 'text-slate-900 text-base'
                           : 'text-slate-500'
                           }`}>
-                          {Number(row[header.key]).toLocaleString()}{unit}
+                          {Number(row[header.key]).toLocaleString('ko-KR')}{unit}
                         </span>
                       </div>
                     ))}
@@ -130,7 +130,7 @@ export default function SalaryTable({
                             : `text-right font-medium transition-colors ${isHighlighted && cellIndex !== 0 ? "font-bold text-slate-700" : "text-slate-500 group-hover:text-slate-700"}`
                             }`}
                         >
-                          {Number(row[header.key]).toLocaleString()}
+                          {Number(row[header.key]).toLocaleString('ko-KR')}
                           {unit && <span className="text-xs text-slate-400 ml-0.5 font-normal">{unit}</span>}
                         </td>
                       ))}

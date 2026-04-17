@@ -59,16 +59,16 @@ const EventCard = ({ event, index, updateEvent, removeEvent, simulationYears }: 
             case 'promotion':
                 return <NumberStepper label="연봉 인상률" value={(event as PromotionEvent).salaryIncreasePercent} onValueChange={(v) => updateEvent(index, 'salaryIncreasePercent', v)} unit="%" />;
             case 'job_change':
-                return <CurrencyInput label="새로운 연봉" value={(event as JobChangeEvent).newSalary.toLocaleString()} onValueChange={(v) => updateEvent(index, 'newSalary', Number(v.replace(/,/g, '')))} quickAmounts={[]} />;
+                return <CurrencyInput label="새로운 연봉" value={(event as JobChangeEvent).newSalary.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'newSalary', Number(v.replace(/,/g, '')))} quickAmounts={[]} />;
             case 'education':
                 return <div className="space-y-2">
                     <NumberStepper label="기간" value={(event as EducationEvent).durationYears} onValueChange={(v) => updateEvent(index, 'durationYears', v)} unit="년" />
-                    <CurrencyInput label="기간 중 연소득" value={(event as EducationEvent).incomeDuringEvent.toLocaleString()} onValueChange={(v) => updateEvent(index, 'incomeDuringEvent', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
-                    <CurrencyInput label="연간 비용" value={(event as EducationEvent).costPerYear.toLocaleString()} onValueChange={(v) => updateEvent(index, 'costPerYear', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+                    <CurrencyInput label="기간 중 연소득" value={(event as EducationEvent).incomeDuringEvent.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'incomeDuringEvent', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+                    <CurrencyInput label="연간 비용" value={(event as EducationEvent).costPerYear.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'costPerYear', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
                 </div>;
             case 'side_project':
                 return <div className="space-y-2">
-                    <CurrencyInput label="초기 연 수입" value={(event as SideProjectEvent).initialAnnualIncome.toLocaleString()} onValueChange={(v) => updateEvent(index, 'initialAnnualIncome', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+                    <CurrencyInput label="초기 연 수입" value={(event as SideProjectEvent).initialAnnualIncome.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'initialAnnualIncome', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
                     <NumberStepper label="연간 성장률" value={(event as SideProjectEvent).growthRatePercent} onValueChange={(v) => updateEvent(index, 'growthRatePercent', v)} unit="%" />
                 </div>;
             default:
@@ -182,8 +182,8 @@ export default function CareerPlannerPage() {
             <h2 className="text-xl font-bold mb-4">기본 정보</h2>
             <div className="space-y-4">
               <NumberStepper label="현재 나이" value={inputs.currentAge} onValueChange={(v) => handleInputChange('currentAge', v)} unit="세" min={18} />
-              <CurrencyInput label="초기 연봉" value={inputs.initialSalary.toLocaleString()} onValueChange={(v) => handleInputChange('initialSalary', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
-              <CurrencyInput label="초기 자산" value={inputs.initialAssets.toLocaleString()} onValueChange={(v) => handleInputChange('initialAssets', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+              <CurrencyInput label="초기 연봉" value={inputs.initialSalary.toLocaleString('ko-KR')} onValueChange={(v) => handleInputChange('initialSalary', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+              <CurrencyInput label="초기 자산" value={inputs.initialAssets.toLocaleString('ko-KR')} onValueChange={(v) => handleInputChange('initialAssets', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
               <NumberStepper label="시뮬레이션 기간" value={inputs.simulationYears} onValueChange={(v) => handleInputChange('simulationYears', v)} unit="년" min={1} max={40} />
             </div>
           </div>

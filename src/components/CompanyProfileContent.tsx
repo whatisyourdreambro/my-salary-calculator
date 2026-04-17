@@ -61,7 +61,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                                 {company.industry}
                                             </span>
                                             <span>•</span>
-                                            <span>직원수 {company.employees.toLocaleString()}명</span>
+                                            <span>직원수 {company.employees.toLocaleString('ko-KR')}명</span>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                     신입 초봉
                                 </div>
                                 <div className="text-2xl font-bold text-primary">
-                                    {company.entryLevelSalary.toLocaleString()}만원
+                                    {company.entryLevelSalary.toLocaleString('ko-KR')}만원
                                 </div>
                             </div>
                             <div className="bg-card/30 border border-white/5 rounded-2xl p-6">
@@ -97,7 +97,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                     평균 연봉
                                 </div>
                                 <div className="text-2xl font-bold">
-                                    {company.averageSalary.toLocaleString()}만원
+                                    {company.averageSalary.toLocaleString('ko-KR')}만원
                                 </div>
                             </div>
                             <div className="bg-card/30 border border-white/5 rounded-2xl p-6">
@@ -106,7 +106,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                     임원 평균
                                 </div>
                                 <div className="text-2xl font-bold text-primary">
-                                    {company.executiveSalary.toLocaleString()}만원
+                                    {company.executiveSalary.toLocaleString('ko-KR')}만원
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ export default function CompanyProfileContent({ id }: CompanyProfileContentProps
                                         />
                                         <Tooltip
                                             contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
-                                            formatter={(value: number) => [`${value.toLocaleString()}만원`, '연봉']}
+                                            formatter={(value: number) => [`${value.toLocaleString('ko-KR')}만원`, '연봉']}
                                             labelFormatter={(label) => `${label}년차`}
                                         />
                                         <Area

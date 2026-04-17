@@ -445,11 +445,6 @@ export default function WeekendDutyGame() {
                         <button
                             onClick={handleDownload}
                             className="px-8 py-4 bg-white text-black rounded-xl font-bold hover:
-        param($m)
-        $n = [int]($m.Value -replace 'bg-zinc-','')
-        if ($n -ge 900) { 'bg-white' }
-        elseif ($n -ge 700) { 'bg-slate-100' }
-        else { 'bg-slate-50' }
      transition-colors flex items-center gap-2"
                         >
                             <Download size={20} /> SAVE IMAGE

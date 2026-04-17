@@ -24,7 +24,7 @@ import AdUnit from "@/components/AdUnit";
 import CountUp from "react-countup";
 import ShareButtons from "@/components/ShareButtons";
 
-const formatMoney = (val: number) => `${(val / 10000).toLocaleString()}만원`;
+const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
 
 export default function CompanyDetailClient({ company }: { company: CompanyProfile }) {
     // Prepare Chart Data

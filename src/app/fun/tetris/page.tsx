@@ -254,7 +254,7 @@ export default function TetrisPage() {
                         <div className="space-y-4">
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Score</p>
-                                <p className="text-3xl font-bold text-primary">{score.toLocaleString()}</p>
+                                <p className="text-3xl font-bold text-primary">{score.toLocaleString('ko-KR')}</p>
                             </div>
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Level</p>
@@ -264,7 +264,7 @@ export default function TetrisPage() {
                                 <Trophy className="w-5 h-5 text-primary" />
                                 <div>
                                     <p className="text-xs text-slate-400 uppercase tracking-wider">Best</p>
-                                    <p className="text-xl font-bold text-primary">{highScore.toLocaleString()}</p>
+                                    <p className="text-xl font-bold text-primary">{highScore.toLocaleString('ko-KR')}</p>
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,7 @@ import CountUp from "react-countup";
 import type { StoredFinancialData, StoredHomeLoanData } from "@/app/types";
 import { useRouter } from "next/navigation";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 type RepaymentType = "equalPrincipalAndInterest" | "equalPrincipal";

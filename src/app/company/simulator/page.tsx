@@ -41,7 +41,7 @@ export default function SimulatorPage() {
         { name: "대기업 (Goliath)", net: largeNet, gross: largeSalary, color: "#3B82F6" },
     ];
 
-    const formatCurrency = (val: number) => Math.round(val / 10000).toLocaleString();
+    const formatCurrency = (val: number) => Math.round(val / 10000).toLocaleString('ko-KR');
 
     return (
         <div className="min-h-screen py-12">
@@ -154,7 +154,7 @@ export default function SimulatorPage() {
                                         <Tooltip
                                             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                                             contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
-                                            formatter={(value: number) => [`${value.toLocaleString()}원`, '월 실수령액']}
+                                            formatter={(value: number) => [`${value.toLocaleString('ko-KR')}원`, '월 실수령액']}
                                         />
                                         <Bar dataKey="net" radius={[10, 10, 0, 0]} barSize={80}>
                                             {data.map((entry, index) => (
@@ -169,21 +169,21 @@ export default function SimulatorPage() {
                                 <div className="p-4 bg-primary/50/10 border border-primary/20 rounded-2xl text-center">
                                     <div className="text-sm text-primary font-bold mb-1">David (중소기업)</div>
                                     <div className="text-2xl font-black text-foreground">
-                                        {smeNet.toLocaleString()}원
+                                        {smeNet.toLocaleString('ko-KR')}원
                                     </div>
                                     {isYouth && <div className="text-xs text-primary mt-1">✨ 세금 감면 적용됨</div>}
                                 </div>
                                 <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-center">
                                     <div className="text-sm text-blue-500 font-bold mb-1">Goliath (대기업)</div>
                                     <div className="text-2xl font-black text-foreground">
-                                        {largeNet.toLocaleString()}원
+                                        {largeNet.toLocaleString('ko-KR')}원
                                     </div>
                                 </div>
                             </div>
 
                             <div className="mt-6 text-center">
                                 <p className="text-lg">
-                                    실수령액 차이: <span className="font-bold text-red-500">{Math.abs(largeNet - smeNet).toLocaleString()}원</span>
+                                    실수령액 차이: <span className="font-bold text-red-500">{Math.abs(largeNet - smeNet).toLocaleString('ko-KR')}원</span>
                                 </p>
                                 {Math.abs(largeNet - smeNet) < 300000 && (
                                     <motion.div

@@ -88,10 +88,10 @@ export default function IRPCalculatorClient() {
           >
             <p className="text-primary-foreground/70 text-sm font-bold uppercase tracking-widest mb-2">예상 세액공제 환급액</p>
             <p className="text-5xl font-black text-slate-900 tracking-tight">
-              {result.taxCredit.toLocaleString()}원
+              {result.taxCredit.toLocaleString('ko-KR')}원
             </p>
             <p className="text-primary-foreground/70 text-sm mt-2">
-              공제 대상 납입액: {result.deductibleBase.toLocaleString()}원 × {(result.rate * 100).toFixed(1)}%
+              공제 대상 납입액: {result.deductibleBase.toLocaleString('ko-KR')}원 × {(result.rate * 100).toFixed(1)}%
             </p>
           </motion.div>
 

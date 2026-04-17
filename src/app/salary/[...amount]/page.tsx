@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "정보를 찾을 수 없습니다." };
   }
 
-  const formattedSalary = annualSalary.toLocaleString();
+  const formattedSalary = annualSalary.toLocaleString('ko-KR');
   const title = `연봉 ${formattedSalary}원 (${jobTitle}) 실수령액, 순위 분석 | Moneysalary`;
   const description = `연봉 ${formattedSalary}원 (${jobTitle})의 월 실수령액, 4대 보험 공제 내역, 전국 근로자 대비 순위 및 맞춤형 재테크 가이드를 확인하세요.`;
 

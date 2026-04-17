@@ -42,7 +42,7 @@ const CurrencyInput = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/,/g, "");
     if (!isNaN(Number(rawValue))) {
-      onValueChange(Number(rawValue).toLocaleString());
+      onValueChange(Number(rawValue).toLocaleString('ko-KR'));
     }
   };
 
@@ -67,7 +67,7 @@ const CurrencyInput = ({
               key={amount}
               onClick={() => {
                 const current = Number(value.replace(/,/g, "")) || 0;
-                onValueChange((current + amount).toLocaleString());
+                onValueChange((current + amount).toLocaleString('ko-KR'));
               }}
               className="px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full hover:bg-secondary/80 transition-colors"
             >
@@ -356,7 +356,7 @@ export default function CarLoanPage() {
                                   {car.name}
                                 </h4>
                                 <p className="text-sm text-muted-foreground">
-                                  {Number(car.price).toLocaleString()}원
+                                  {Number(car.price).toLocaleString('ko-KR')}원
                                 </p>
                               </div>
                             </div>
@@ -372,11 +372,11 @@ export default function CarLoanPage() {
                               <div className="bg-secondary/30 p-3 rounded-lg space-y-2 text-sm">
                                 <div className="flex justify-between">
                                   <span className="text-muted-foreground flex items-center gap-1"><Fuel className="w-3 h-3" />유지비 합계</span>
-                                  <span className="font-medium">+{Number(monthlyFuel + monthlyInsurance).toLocaleString()}원</span>
+                                  <span className="font-medium">+{Number(monthlyFuel + monthlyInsurance).toLocaleString('ko-KR')}원</span>
                                 </div>
                                 <div className="flex justify-between pt-2 border-t border-border/50">
                                   <span className="font-bold text-foreground">월 총 지출</span>
-                                  <span className="font-bold text-primary">{Number(monthlyTotalCost).toLocaleString()}원</span>
+                                  <span className="font-bold text-primary">{Number(monthlyTotalCost).toLocaleString('ko-KR')}원</span>
                                 </div>
                               </div>
 
@@ -401,7 +401,7 @@ export default function CarLoanPage() {
                                   <span>기회비용 (S&P500 투자 시 수익)</span>
                                 </div>
                                 <p className="text-sm font-medium text-blue-500">
-                                  +{Math.round(opportunityCost / 10000).toLocaleString()}만원 손해
+                                  +{Math.round(opportunityCost / 10000).toLocaleString('ko-KR')}만원 손해
                                 </p>
                               </div>
                             </div>

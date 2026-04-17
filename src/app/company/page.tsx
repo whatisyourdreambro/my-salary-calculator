@@ -85,7 +85,7 @@ export default function CompanyPage() {
                                                 평균 연봉
                                             </div>
                                             <div className="font-bold text-lg">
-                                                {company.averageSalary.toLocaleString()}만원
+                                                {company.averageSalary.toLocaleString('ko-KR')}만원
                                             </div>
                                         </div>
                                         <div className="bg-secondary/30 rounded-lg p-3">
@@ -94,7 +94,7 @@ export default function CompanyPage() {
                                                 신입 초봉
                                             </div>
                                             <div className="font-bold text-lg text-primary">
-                                                {company.entryLevelSalary.toLocaleString()}만원
+                                                {company.entryLevelSalary.toLocaleString('ko-KR')}만원
                                             </div>
                                         </div>
                                     </div>

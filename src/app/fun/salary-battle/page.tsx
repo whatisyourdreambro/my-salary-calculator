@@ -79,12 +79,12 @@ const StatBar = ({
         <div className="space-y-2">
             <div className="flex justify-between text-sm font-medium">
                 <span className={winner === "a" ? "text-blue-500 font-bold" : "text-muted-foreground"}>
-                    {valueA.toLocaleString()}
+                    {valueA.toLocaleString('ko-KR')}
                     {unit}
                 </span>
                 <span className="text-foreground font-bold">{label}</span>
                 <span className={winner === "b" ? "text-primary font-bold" : "text-muted-foreground"}>
-                    {valueB.toLocaleString()}
+                    {valueB.toLocaleString('ko-KR')}
                     {unit}
                 </span>
             </div>
@@ -249,13 +249,13 @@ export default function BattlePage() {
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Total Comp</p>
                                         <p className="text-xl font-bold text-slate-900">
-                                            {(result.metrics.totalComp.a / 10000).toLocaleString()}만원
+                                            {(result.metrics.totalComp.a / 10000).toLocaleString('ko-KR')}만원
                                         </p>
                                     </div>
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-slate-900">
-                                            {Math.round(result.metrics.realHourlyWage.a).toLocaleString()}원
+                                            {Math.round(result.metrics.realHourlyWage.a).toLocaleString('ko-KR')}원
                                         </p>
                                     </div>
                                 </div>
@@ -350,13 +350,13 @@ export default function BattlePage() {
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Total Comp</p>
                                         <p className="text-xl font-bold text-slate-900">
-                                            {(result.metrics.totalComp.b / 10000).toLocaleString()}만원
+                                            {(result.metrics.totalComp.b / 10000).toLocaleString('ko-KR')}만원
                                         </p>
                                     </div>
                                     <div className="bg-slate-50/50 p-3 rounded-xl">
                                         <p className="text-xs text-slate-500 uppercase">Real Hourly</p>
                                         <p className="text-xl font-bold text-slate-900">
-                                            {Math.round(result.metrics.realHourlyWage.b).toLocaleString()}원
+                                            {Math.round(result.metrics.realHourlyWage.b).toLocaleString('ko-KR')}원
                                         </p>
                                     </div>
                                 </div>

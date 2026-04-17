@@ -25,7 +25,7 @@ import type { StoredFinancialData, StoredFutureSalaryData } from "@/app/types";
 import NumberStepper from "./NumberStepper";
 import { X } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 type CalculatorMode = "predict" | "goal";
 
@@ -255,7 +255,7 @@ export default function FutureSalaryCalculator() {
                 <LineChart data={futureSalaries} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
                   <XAxis dataKey="year" />
-                  <YAxis tickFormatter={(value) => `${(value / 10000).toLocaleString()}만`} />
+                  <YAxis tickFormatter={(value) => `${(value / 10000).toLocaleString('ko-KR')}만`} />
                   <Tooltip formatter={(value: number, name: string) => [`${formatNumber(value)} 원`, name]} />
                   <Legend />
                   <Line type="monotone" dataKey="salary" name="나의 예상 연봉" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} />

@@ -129,7 +129,7 @@ export default function RankClient() {
                                             value={salaryInput}
                                             onChange={(e) => {
                                                 const val = e.target.value.replace(/[^0-9]/g, "");
-                                                setSalaryInput(Number(val).toLocaleString());
+                                                setSalaryInput(Number(val).toLocaleString('ko-KR'));
                                             }}
                                             className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-black/50 border border-white/10 rounded-2xl focus:border-primary outline-none transition-all text-white placeholder-zinc-700"
                                             placeholder="0"
@@ -181,7 +181,7 @@ export default function RankClient() {
                                                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46', borderRadius: '1rem', color: '#fff' }}
                                                 itemStyle={{ color: '#e879f9' }}
                                                 formatter={(value: number) => [`${value.toFixed(1)}%`, '인구 비율']}
-                                                labelFormatter={(label) => `${(label / 10000).toLocaleString()}만원`}
+                                                labelFormatter={(label) => `${(label / 10000).toLocaleString('ko-KR')}만원`}
                                             />
                                             <Area
                                                 type="monotone"

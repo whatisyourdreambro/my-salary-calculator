@@ -85,7 +85,7 @@ function PercentCalculator() {
                         <span className="text-slate-600">% 는?</span>
                     </div>
                     <div className="mt-4 p-3 bg-primary/100/10 border border-indigo-500/30 rounded-xl text-center">
-                        <span className="text-2xl font-black text-indigo-400">{res1.toLocaleString()}</span>
+                        <span className="text-2xl font-black text-indigo-400">{res1.toLocaleString('ko-KR')}</span>
                     </div>
                 </div>
             </div>

@@ -190,62 +190,67 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   LIGHT-MODE TEXT VISIBILITY FIX
-   문제: text-white 클래스가 흰색/회색 배경 위에서 보이지 않는 현상
-   해결: text-white를 기본적으로 어두운 색으로 재정의,
-         실제 어두운 배경(bg-primary 등) 안에서만 흰색으로 복원
+   TEXT VISIBILITY FIX — 전체 사이트 적용
+   핵심 원칙:
+   1. 흰색/회색 배경 → 어두운 텍스트 (기본값)
+   2. 남색/파란/어두운 배경 → 무조건 흰색 텍스트
    ════════════════════════════════════════════════════════════════════ */
 
-/* Step 1: text-white를 기본적으로 어두운 색(slate-900)으로 재정의 */
+/* ── 남색/파란 배경: 내부 모든 텍스트를 흰색으로 ─────────────────
+   bg-primary, bg-blue-*, bg-indigo-* 등 모든 어두운 파란 계열       */
+.bg-primary,
+.bg-primary p,
+.bg-primary span,
+.bg-primary h1, .bg-primary h2, .bg-primary h3,
+.bg-primary h4, .bg-primary h5, .bg-primary h6,
+.bg-primary label, .bg-primary small, .bg-primary strong,
+.bg-primary a, .bg-primary li, .bg-primary div:not([class*="bg-"]) {
+  color: #ffffff !important;
+}
+
+/* bg-blue-500 이상 모든 파란 계열 */
+.bg-blue-500, .bg-blue-500 p, .bg-blue-500 span, .bg-blue-500 h1, .bg-blue-500 h2, .bg-blue-500 h3, .bg-blue-500 label,
+.bg-blue-600, .bg-blue-600 p, .bg-blue-600 span, .bg-blue-600 h1, .bg-blue-600 h2, .bg-blue-600 h3, .bg-blue-600 label,
+.bg-blue-700, .bg-blue-700 p, .bg-blue-700 span, .bg-blue-700 h1, .bg-blue-700 h2, .bg-blue-700 h3, .bg-blue-700 label,
+.bg-blue-800, .bg-blue-800 p, .bg-blue-800 span, .bg-blue-800 h1, .bg-blue-800 h2, .bg-blue-800 h3, .bg-blue-800 label,
+.bg-blue-900, .bg-blue-900 p, .bg-blue-900 span, .bg-blue-900 h1, .bg-blue-900 h2, .bg-blue-900 h3, .bg-blue-900 label,
+.bg-indigo-600, .bg-indigo-600 p, .bg-indigo-600 span,
+.bg-indigo-700, .bg-indigo-700 p, .bg-indigo-700 span,
+.bg-indigo-800, .bg-indigo-800 p, .bg-indigo-800 span {
+  color: #ffffff !important;
+}
+
+/* 어두운 회색 계열 배경 */
+.bg-slate-700, .bg-slate-700 p, .bg-slate-700 span, .bg-slate-700 h1, .bg-slate-700 h2, .bg-slate-700 label,
+.bg-slate-800, .bg-slate-800 p, .bg-slate-800 span, .bg-slate-800 h1, .bg-slate-800 h2, .bg-slate-800 label,
+.bg-slate-900, .bg-slate-900 p, .bg-slate-900 span, .bg-slate-900 h1, .bg-slate-900 h2, .bg-slate-900 label,
+.bg-gray-700,  .bg-gray-700 p,  .bg-gray-700 span,
+.bg-gray-800,  .bg-gray-800 p,  .bg-gray-800 span,
+.bg-gray-900,  .bg-gray-900 p,  .bg-gray-900 span,
+.bg-zinc-800,  .bg-zinc-800 p,  .bg-zinc-800 span,
+.bg-zinc-900,  .bg-zinc-900 p,  .bg-zinc-900 span,
+.bg-black,     .bg-black p,     .bg-black span,
+.bg-black h1,  .bg-black h2,    .bg-black h3, .bg-black label {
+  color: #ffffff !important;
+}
+
+/* ── text-white는 그냥 흰색으로 (남색 배경에서 쓰이므로) ─────────── */
 .text-white {
+  color: #ffffff !important;
+}
+
+/* ── 흰색/회색 배경 위의 잔존 text-white 텍스트: 어두운색으로 오버라이드 ─
+   .bg-white, .bg-slate-50, .bg-gray-50, .bg-gray-100 내부에서
+   text-white 클래스가 있으면 어두운 색으로 강제 */
+.bg-white .text-white,
+.bg-slate-50 .text-white,
+.bg-slate-100 .text-white,
+.bg-gray-50 .text-white,
+.bg-gray-100 .text-white {
   color: #0f172a !important;
 }
 
-/* Step 2: 실제 어두운 배경 위에 있는 text-white는 흰색으로 복원
-   - 같은 요소에 bg-primary와 text-white 모두 있는 경우 (버튼, 뱃지 등)
-   - 어두운 배경 div/section 안의 자식에 text-white가 있는 경우 */
-
-/* bg-primary 배경 위 (파란 배경) */
-.bg-primary .text-white,
-.bg-primary.text-white,
-[class*="bg-primary"] .text-white,
-[class*="bg-primary"].text-white {
-  color: #ffffff !important;
-}
-
-/* bg-blue-* 계열 배경 */
-.bg-blue-500 .text-white, .bg-blue-500.text-white,
-.bg-blue-600 .text-white, .bg-blue-600.text-white,
-.bg-blue-700 .text-white, .bg-blue-700.text-white,
-.bg-blue-800 .text-white, .bg-blue-800.text-white,
-.bg-blue-900 .text-white, .bg-blue-900.text-white,
-.bg-indigo-500 .text-white, .bg-indigo-600 .text-white,
-.bg-indigo-700 .text-white, .bg-indigo-800 .text-white {
-  color: #ffffff !important;
-}
-
-/* bg-slate-700 이상 어두운 회색 배경 */
-.bg-slate-700 .text-white, .bg-slate-700.text-white,
-.bg-slate-800 .text-white, .bg-slate-800.text-white,
-.bg-slate-900 .text-white, .bg-slate-900.text-white,
-.bg-gray-700 .text-white,  .bg-gray-700.text-white,
-.bg-gray-800 .text-white,  .bg-gray-800.text-white,
-.bg-gray-900 .text-white,  .bg-gray-900.text-white,
-.bg-zinc-700 .text-white,  .bg-zinc-800 .text-white,
-.bg-zinc-900 .text-white,
-.bg-neutral-800 .text-white, .bg-neutral-900 .text-white {
-  color: #ffffff !important;
-}
-
-/* 완전 검정 배경 */
-.bg-black .text-white, .bg-black.text-white {
-  color: #ffffff !important;
-}
-
-/* framer-motion 애니메이션 등 인라인 스타일로 어두운 배경을 가진 경우 대비  */
-/* (헤더, 히어로 섹션 등) */
-
-/* ── 입력 필드: 항상 어두운 텍스트 ────────────────────────────── */
+/* ── 입력 필드: 항상 어두운 텍스트 ───────────────────────────────── */
 input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {

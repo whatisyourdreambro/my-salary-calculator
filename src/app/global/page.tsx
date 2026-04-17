@@ -54,7 +54,7 @@ export default function GlobalTaxPage() {
     };
 
     const data = calculateGlobalNet(salaryKRW);
-    const formatCurrency = (val: number) => Math.round(val / 10000).toLocaleString();
+    const formatCurrency = (val: number) => Math.round(val / 10000).toLocaleString('ko-KR');
 
     return (
         <div className="min-h-screen py-12">
@@ -140,7 +140,7 @@ export default function GlobalTaxPage() {
                                         <Tooltip
                                             cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                                             contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
-                                            formatter={(value: number) => [`${Math.round(value).toLocaleString()} KRW`, 'Net Pay']}
+                                            formatter={(value: number) => [`${Math.round(value).toLocaleString('ko-KR')} KRW`, 'Net Pay']}
                                         />
                                         <Bar dataKey="net" radius={[0, 10, 10, 0]} barSize={40}>
                                             {data.map((entry, index) => (

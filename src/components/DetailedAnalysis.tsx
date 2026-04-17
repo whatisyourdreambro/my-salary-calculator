@@ -14,7 +14,7 @@ import {
 import type { CalculationResult } from "@/lib/calculator";
 import { TrendingDown, AlertTriangle, ShieldCheck, Award } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const COLORS = ["hsl(var(--primary))", "hsl(var(--destructive))"];
 const DEDUCTION_COLORS = [

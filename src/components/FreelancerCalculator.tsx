@@ -17,7 +17,7 @@ import {
   LabelList,
 } from "recharts";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 // recharts가 전달하는 props 타입(string | number)과 호환되도록 수정
 interface CustomBarLabelProps {

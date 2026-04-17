@@ -49,7 +49,7 @@ export default function CareerVisuals({ results }: CareerVisualsProps) {
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
                     <XAxis dataKey="age" label={{ value: "나이", position: "insideBottom", offset: -5 }} fontSize={12} />
                     <YAxis tickFormatter={formatYAxis} fontSize={12} />
-                    <Tooltip formatter={(value: number) => [value.toLocaleString() + '원', '순자산']} />
+                    <Tooltip formatter={(value: number) => [value.toLocaleString('ko-KR') + '원', '순자산']} />
                     <Area type="monotone" dataKey="netWorth" strokeWidth={2} stroke="hsl(var(--primary))" fill="url(#colorNetWorth)" />
                     </AreaChart>
                 </ResponsiveContainer>
@@ -62,7 +62,7 @@ export default function CareerVisuals({ results }: CareerVisualsProps) {
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
                     <XAxis dataKey="age" label={{ value: "나이", position: "insideBottom", offset: -5 }} fontSize={12} />
                     <YAxis tickFormatter={formatYAxis} fontSize={12} />
-                    <Tooltip formatter={(value: number) => value.toLocaleString() + '원'} />
+                    <Tooltip formatter={(value: number) => value.toLocaleString('ko-KR') + '원'} />
                     <Legend />
                     <Line type="monotone" dataKey="salary" name="연봉" strokeWidth={2} stroke="hsl(var(--primary))" />
                     <Line type="monotone" dataKey="sideIncome" name="부수입" strokeWidth={2} stroke="hsl(var(--accent))" strokeDasharray="5 5" />

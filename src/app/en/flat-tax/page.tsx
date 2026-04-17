@@ -47,7 +47,7 @@ export default function FlatTaxPage() {
     const isFlatBetter = result.flat.net > result.progressive.net;
     const savings = Math.abs(result.flat.net - result.progressive.net);
 
-    const formatCurrency = (val: number) => Math.round(val).toLocaleString();
+    const formatCurrency = (val: number) => Math.round(val).toLocaleString('ko-KR');
 
     return (
         <div className="min-h-screen py-12">

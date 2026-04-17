@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Coffee, Beer, Plane, Rocket, BedDouble, DoorOpen, Sun, Umbrella, Palmtree } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 // 4% 룰에 기반한 목표 금액 계산

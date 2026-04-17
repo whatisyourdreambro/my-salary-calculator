@@ -41,7 +41,7 @@ export default function DsrCalculator() {
                     <input
                         type="text"
                         value={income}
-                        onChange={(e) => setIncome(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                        onChange={(e) => setIncome(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                         className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent text-lg font-bold"
                         placeholder="50,000,000"
                     />
@@ -53,7 +53,7 @@ export default function DsrCalculator() {
                         <input
                             type="text"
                             value={principal}
-                            onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                            onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                             className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent"
                             placeholder="10,000,000"
                         />
@@ -63,7 +63,7 @@ export default function DsrCalculator() {
                         <input
                             type="text"
                             value={interest}
-                            onChange={(e) => setInterest(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString())}
+                            onChange={(e) => setInterest(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
                             className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-200 bg-transparent"
                             placeholder="2,000,000"
                         />

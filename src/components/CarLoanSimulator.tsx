@@ -20,7 +20,7 @@ import {
   recommendCarsBySalary,
 } from "@/lib/carLoanCalculator";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 type CarWithLoan = {
   car: Car;

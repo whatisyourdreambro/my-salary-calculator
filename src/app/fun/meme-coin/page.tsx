@@ -22,7 +22,7 @@ const events = [
   { description: "🐳 고래의 매집 시작! 전종목 상승!", effect: { doge: 2.0, cat: 2.0, ghost: 2.0 }, type: "pump" },
 ];
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 export default function MemeCoinPage() {
   const [step, setStep] = useState<'invest' | 'analyzing' | 'result'>('invest');

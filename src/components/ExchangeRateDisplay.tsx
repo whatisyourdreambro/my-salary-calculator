@@ -35,7 +35,7 @@ import { motion } from "framer-motion";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
-  return num.toLocaleString();
+  return num.toLocaleString('ko-KR');
 };
 const parseNumber = (str: string) => Number(String(str).replace(/,/g, ""));
 
@@ -83,7 +83,7 @@ const CurrencyTicker = () => (
         <div key={i} className="flex items-center gap-3 text-sm font-medium text-slate-500">
           <span className="text-xl grayscale opacity-70">{c.flag}</span>
           <span className="font-serif text-primary/80">{c.id}</span>
-          <span className="text-slate-900 font-bold tracking-wider">{c.rate.toLocaleString()}</span>
+          <span className="text-slate-900 font-bold tracking-wider">{c.rate.toLocaleString('ko-KR')}</span>
           <span className="text-xs text-primary flex items-center gap-1">
             <TrendingUp size={10} /> LIVE
           </span>
@@ -470,7 +470,7 @@ export default function ExchangeRateImpactCalculator() {
                       </div>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Luxury Index</p>
                       <p className="text-2xl font-bold text-slate-900">
-                        {purchasingPower.bigMacs.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Units</span>
+                        {purchasingPower.bigMacs.toLocaleString('ko-KR')} <span className="text-sm font-normal text-zinc-600">Units</span>
                       </p>
                     </div>
                     <div className="bg-white p-6 rounded-3xl border border-slate-200 flex flex-col items-center justify-center text-center hover:border-primary/30 transition-colors group">
@@ -479,7 +479,7 @@ export default function ExchangeRateImpactCalculator() {
                       </div>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Lifestyle Index</p>
                       <p className="text-2xl font-bold text-slate-900">
-                        {purchasingPower.coffees.toLocaleString()} <span className="text-sm font-normal text-zinc-600">Cups</span>
+                        {purchasingPower.coffees.toLocaleString('ko-KR')} <span className="text-sm font-normal text-zinc-600">Cups</span>
                       </p>
                     </div>
                   </div>

@@ -35,13 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const formattedAmount =
     amount >= 100000000
       ? `${(amount / 100000000).toFixed(1)}억`
-      : `${(amount / 10000).toLocaleString()}만원`;
+      : `${(amount / 10000).toLocaleString('ko-KR')}만원`;
 
   const amountDisplay =
     amount >= 100000000
       ? `${(amount / 100000000).toFixed(1)}억`
       : `${amount / 10000}`;
-  const netDisplay = tax.netPay.toLocaleString();
+  const netDisplay = tax.netPay.toLocaleString('ko-KR');
 
   const ogUrl = `/api/og?amount=${amountDisplay}&net=${netDisplay}`;
 
@@ -64,7 +64,7 @@ export default function SalaryAmountPage({ params }: Props) {
   const formattedAmount =
     amount >= 100000000
       ? `${(amount / 100000000).toFixed(1)}억`
-      : `${(amount / 10000).toLocaleString()}만원`;
+      : `${(amount / 10000).toLocaleString('ko-KR')}만원`;
 
   const jsonLd = {
     "@context": "[https://schema.org](https://schema.org)",

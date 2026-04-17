@@ -314,12 +314,7 @@ export default function FortunePage() {
                                         <h2 className="text-3xl md:text-4xl font-black mb-4 font-serif text-primary">
                                             {resultData.title}
                                         </h2>
-                                        <div className="inline-flex items-center gap-2 px-4 py-1 
-        param($m)
-        $n = [int]($m.Value -replace 'bg-zinc-','')
-        if ($n -ge 900) { 'bg-white' }
-        elseif ($n -ge 700) { 'bg-slate-100' }
-        else { 'bg-slate-50' }
+                                        <div className="inline-flex items-center gap-2 px-4 py-1
      rounded-full text-sm text-zinc-600">
                                             <span>{name}님 ({gender === 'male' ? '남' : '여'})</span>
                                             <span>|</span>
@@ -357,11 +352,6 @@ export default function FortunePage() {
                                         </div>
 
                                         <div className="
-        param($m)
-        $n = [int]($m.Value -replace 'bg-zinc-','')
-        if ($n -ge 900) { 'bg-white' }
-        elseif ($n -ge 700) { 'bg-slate-100' }
-        else { 'bg-slate-50' }
      p-6 rounded-xl border border-slate-200">
                                             <h4 className="font-bold text-center text-primary mb-4">행운의 아이템</h4>
                                             <div className="flex justify-around text-center">

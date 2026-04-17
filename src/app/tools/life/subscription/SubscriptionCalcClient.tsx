@@ -60,7 +60,7 @@ export default function SubscriptionCalcClient() {
                   <button key={i} onClick={() => addPreset(p)}
                     className={`text-left p-3 rounded-xl text-xs font-bold border transition-all ${subs.find(s => s.name === p.name) ? "bg-primary/10 border-primary text-primary" : "border-gray-200 text-slate-700 hover:border-primary hover:bg-slate-50"}`}
                   >
-                    {p.name}<br /><span className="font-normal text-slate-400">{p.amount.toLocaleString()}원/월</span>
+                    {p.name}<br /><span className="font-normal text-slate-400">{p.amount.toLocaleString('ko-KR')}원/월</span>
                   </button>
                 ))}
               </div>
@@ -84,10 +84,10 @@ export default function SubscriptionCalcClient() {
             <div className="bg-primary rounded-2xl p-6 text-center">
               <BarChart3 className="w-8 h-8 text-slate-900/70 mx-auto mb-3" />
               <p className="text-slate-900/70 text-xs font-bold uppercase tracking-widest mb-1">월 구독 총액</p>
-              <p className="text-4xl font-black text-slate-900">{Math.round(monthlyTotal).toLocaleString()}원</p>
+              <p className="text-4xl font-black text-slate-900">{Math.round(monthlyTotal).toLocaleString('ko-KR')}원</p>
               <div className="mt-4 pt-4 border-t border-white/20">
                 <p className="text-slate-900/70 text-xs">연간 환산</p>
-                <p className="text-xl font-black text-slate-900">{Math.round(yearlyTotal).toLocaleString()}원</p>
+                <p className="text-xl font-black text-slate-900">{Math.round(yearlyTotal).toLocaleString('ko-KR')}원</p>
               </div>
             </div>
 
@@ -102,7 +102,7 @@ export default function SubscriptionCalcClient() {
                       <p className="text-xs text-slate-500">{s.period === "monthly" ? "월간" : "연간"}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-black text-primary text-sm">{s.amount.toLocaleString()}원</span>
+                      <span className="font-black text-primary text-sm">{s.amount.toLocaleString('ko-KR')}원</span>
                       <button onClick={() => remove(i)} className="text-slate-300 hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
                     </div>
                   </div>

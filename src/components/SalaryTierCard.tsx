@@ -111,7 +111,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
         <div className="relative z-10 border-t border-white/20 pt-6 flex justify-between items-end">
           <div>
             <div className="text-slate-900/70 text-[10px] mb-1">Annual Salary</div>
-            <div className="text-xl font-bold">{(annualSalary / 10000).toLocaleString()}만원</div>
+            <div className="text-xl font-bold">{(annualSalary / 10000).toLocaleString('ko-KR')}만원</div>
           </div>
           <div className="text-right">
             <div className="text-[10px] font-bold text-slate-900/80 leading-tight">

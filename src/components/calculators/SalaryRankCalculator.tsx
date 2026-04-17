@@ -95,7 +95,7 @@ export default function SalaryRankCalculator() {
                                     value={salary}
                                     onChange={(e) => {
                                         const val = e.target.value.replace(/[^0-9]/g, "");
-                                        setSalary(Number(val).toLocaleString());
+                                        setSalary(Number(val).toLocaleString('ko-KR'));
                                     }}
                                     className="w-full p-6 text-3xl font-black bg-white border border-slate-200 rounded-2xl focus:border-primary/50 outline-none text-slate-900 placeholder-zinc-800 transition-all text-right tracking-tight"
                                     placeholder="0"
@@ -246,11 +246,6 @@ export default function SalaryRankCalculator() {
                                     <button
                                         onClick={handleShare}
                                         className="flex-1 py-4 bg-white text-black font-bold rounded-2xl hover:
-        param($m)
-        $n = [int]($m.Value -replace 'bg-zinc-','')
-        if ($n -ge 900) { 'bg-white' }
-        elseif ($n -ge 700) { 'bg-slate-100' }
-        else { 'bg-slate-50' }
      transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/10"
                                     >
                                         <Share2 className="w-4 h-4" /> SAVE CARD

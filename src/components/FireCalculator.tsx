@@ -24,7 +24,7 @@ import {
   MousePointerClick,
 } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 type CalculationStep =

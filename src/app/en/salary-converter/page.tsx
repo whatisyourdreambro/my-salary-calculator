@@ -135,7 +135,7 @@ export default function SalaryConverterPage() {
                                     <Tooltip
                                         cursor={{ fill: '#334155', opacity: 0.4 }}
                                         contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }}
-                                        formatter={(val: number) => [`$${Math.round(val).toLocaleString()}`, 'Real Value (USD)']}
+                                        formatter={(val: number) => [`$${Math.round(val).toLocaleString('ko-KR')}`, 'Real Value (USD)']}
                                     />
                                     <Bar dataKey="pppAdjustedNetUSD" radius={[0, 4, 4, 0]}>
                                         {results.map((entry, index) => (
@@ -178,16 +178,16 @@ export default function SalaryConverterPage() {
                             <div className="space-y-3">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-400">Gross Income</span>
-                                    <span className="font-mono">{Math.round(res.gross).toLocaleString()} {res.currency}</span>
+                                    <span className="font-mono">{Math.round(res.gross).toLocaleString('ko-KR')} {res.currency}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-400">Net Income</span>
-                                    <span className="font-mono font-bold text-slate-900">{Math.round(res.net).toLocaleString()} {res.currency}</span>
+                                    <span className="font-mono font-bold text-slate-900">{Math.round(res.net).toLocaleString('ko-KR')} {res.currency}</span>
                                 </div>
                                 <div className="pt-3 border-t border-slate-600/50 flex justify-between items-center">
                                     <span className="text-sm text-primary font-bold">Real Value (PPP)</span>
                                     <span className="text-xl font-black text-primary">
-                                        ${Math.round(res.pppAdjustedNetUSD).toLocaleString()}
+                                        ${Math.round(res.pppAdjustedNetUSD).toLocaleString('ko-KR')}
                                     </span>
                                 </div>
                             </div>

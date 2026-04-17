@@ -15,7 +15,7 @@ import type { CalculationResult } from "@/lib/calculator";
 // [수정] SalaryStat 타입을 salaryData에서 직접 가져오도록 변경합니다.
 import type { SalaryStat } from "@/lib/salaryData";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 interface Props {
   annualSalary: number;

@@ -10,7 +10,7 @@ import CountUp from "react-countup";
 import NumberStepper from "./NumberStepper";
 import { X } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 type Offer = {

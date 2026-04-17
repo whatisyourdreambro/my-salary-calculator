@@ -20,7 +20,7 @@ import {
   Cell,
 } from "recharts";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 // 타입 정의 추가
 type CustomTooltipProps = {
@@ -42,7 +42,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
           parseInt(label) * 10000
         )}원`}</p>
         <p className="text-primary font-semibold">{`상위 ${rank}%`}</p>
-        <p className="text-muted-foreground">{`(약 ${rankNum.toLocaleString()}등 이내)`}</p>
+        <p className="text-muted-foreground">{`(약 ${rankNum.toLocaleString('ko-KR')}등 이내)`}</p>
       </div>
     );
   }
@@ -165,7 +165,7 @@ export default function SalaryRank() {
               </p>
               {/* 전체 순위 등수 표시 (선택적) */}
               {/* <p className="font-semibold text-muted-foreground">
-                (대한민국 상위 {rankResult.totalRank?.toLocaleString()}등 이내)
+                (대한민국 상위 {rankResult.totalRank?.toLocaleString('ko-KR')}등 이내)
               </p> */}
 
               <div className="mt-6 pt-6 border-t">

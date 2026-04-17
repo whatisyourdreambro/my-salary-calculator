@@ -23,14 +23,14 @@ export default function TableInteraction({
   const currentSearch = searchParams.get("searchTerm") || "";
 
   const [searchTerm, setSearchTerm] = useState(
-    currentSearch ? parseInt(currentSearch, 10).toLocaleString() : ""
+    currentSearch ? parseInt(currentSearch, 10).toLocaleString('ko-KR') : ""
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const numericValue = value.replace(/[^0-9]/g, "");
     setSearchTerm(
-      numericValue ? parseInt(numericValue, 10).toLocaleString() : ""
+      numericValue ? parseInt(numericValue, 10).toLocaleString('ko-KR') : ""
     );
   };
 

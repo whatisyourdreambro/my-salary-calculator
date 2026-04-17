@@ -8,7 +8,7 @@ import html2canvas from "html2canvas";
 import { Download, HelpCircle, Info, Stamp } from "lucide-react";
 import { motion } from "framer-motion";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
 export default function PayStubGenerator() {

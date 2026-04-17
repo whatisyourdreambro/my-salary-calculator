@@ -40,7 +40,7 @@ export default function SalaryPieChart({ netPay, totalDeduction }: SalaryPieChar
                         ))}
                     </Pie>
                     <Tooltip
-                        formatter={(value: number) => `${value.toLocaleString()}원`}
+                        formatter={(value: number) => `${value.toLocaleString('ko-KR')}원`}
                         contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                     />
                     <Legend verticalAlign="bottom" height={36} />

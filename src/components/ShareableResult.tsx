@@ -8,7 +8,7 @@ import { calculateNetSalary } from "@/lib/calculator";
 import type { AdvancedSettings } from "@/app/types";
 import Link from "next/link";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 interface ShareableResultProps {
   data: string;

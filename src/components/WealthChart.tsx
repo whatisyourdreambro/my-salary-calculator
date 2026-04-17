@@ -25,7 +25,7 @@ const formatKRW = (value: number) => {
   if (value >= 100000000) {
     return `${(value / 100000000).toFixed(1)}억`;
   }
-  return `${(value / 10000).toLocaleString()}만`;
+  return `${(value / 10000).toLocaleString('ko-KR')}만`;
 };
 
 // Custom Mung Marker for the Goal

@@ -26,7 +26,7 @@ interface MyDashboardProps {
   onReset: () => void;
 }
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const HealthScoreGauge = ({ score, rating }: { score: number; rating: string; }) => {
   const scoreColorClass =
@@ -90,7 +90,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
     <div className="w-full space-y-10 animate-fade-in-up">
       <div className="text-center">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">나의 종합 금융 대시보드</h1>
-        <p className="text-muted-foreground">마지막 업데이트: {new Date(data.lastUpdated).toLocaleString()}</p>
+        <p className="text-muted-foreground">마지막 업데이트: {new Date(data.lastUpdated).toLocaleString('ko-KR')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

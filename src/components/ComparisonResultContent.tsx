@@ -105,11 +105,11 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                         <div className="space-y-4 mt-6">
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">평균 연봉</div>
-                                <div className="text-2xl font-bold">{companyA.averageSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold">{companyA.averageSalary.toLocaleString('ko-KR')}만원</div>
                             </div>
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">신입 초봉</div>
-                                <div className="text-2xl font-bold text-primary">{companyA.entryLevelSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold text-primary">{companyA.entryLevelSalary.toLocaleString('ko-KR')}만원</div>
                             </div>
                         </div>
                     </div>
@@ -174,11 +174,11 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
                         <div className="space-y-4 mt-6">
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">평균 연봉</div>
-                                <div className="text-2xl font-bold">{companyB.averageSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold">{companyB.averageSalary.toLocaleString('ko-KR')}만원</div>
                             </div>
                             <div className="p-4 bg-secondary/30 rounded-xl">
                                 <div className="text-sm text-muted-foreground mb-1">신입 초봉</div>
-                                <div className="text-2xl font-bold text-primary">{companyB.entryLevelSalary.toLocaleString()}만원</div>
+                                <div className="text-2xl font-bold text-primary">{companyB.entryLevelSalary.toLocaleString('ko-KR')}만원</div>
                             </div>
                         </div>
                     </div>

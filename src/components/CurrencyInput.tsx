@@ -1,11 +1,12 @@
 // src/components/CurrencyInput.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
-const formatNumber = (num: number) => num.toLocaleString();
-const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
+/** 숫자에 천 단위 콤마를 붙임 (ko-KR) */
+const formatNumber = (num: number) => num.toLocaleString("ko-KR");
+const parseNumber = (str: string) => Number(str.replace(/,/g, "").replace(/[^0-9]/g, "")) || 0;
 
 interface Currency {
   id: string;
@@ -36,27 +37,20 @@ export default function CurrencyInput({
   className,
 }: CurrencyInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  // Remove cursor state complexity for now to simplify and reduce bugs with formatting
-  // const [cursor, setCursor] = useState<number | null>(null);
 
   const symbol =
     currencies?.find((c) => c.id === selectedCurrency)?.symbol || "원";
 
-  // Simplified change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-    if (!inputValue) {
-      onValueChange("0");
-      return;
-    }
-    const numValue = Number(inputValue);
-    onValueChange(formatNumber(numValue));
+    const raw = e.target.value.replace(/[^0-9]/g, "");
+    if (!raw) { onValueChange("0"); return; }
+    onValueChange(formatNumber(Number(raw)));
   };
 
   const handleAmountChange = (amount: number) => {
-    const currentAmount = parseNumber(value) || 0;
-    const newAmount = Math.max(0, currentAmount + amount);
-    onValueChange(formatNumber(newAmount));
+    const current = parseNumber(value);
+    const next = Math.max(0, current + amount);
+    onValueChange(formatNumber(next));
   };
 
   return (
@@ -70,7 +64,7 @@ export default function CurrencyInput({
             <select
               value={selectedCurrency}
               onChange={(e) => onCurrencyChange(e.target.value)}
-              className="bg-transparent font-serif font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
+              className="bg-transparent font-sans font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
             />
             <span className="pointer-events-none absolute right-2 text-slate-500">▼</span>
           </div>
@@ -79,17 +73,17 @@ export default function CurrencyInput({
         <input
           {...(!currencies ? { ref: inputRef } : {})}
           type="text"
+          inputMode="numeric"
           value={value}
           onChange={handleChange}
           className={cn(
-            "w-full py-4 bg-transparent border-b-2 border-slate-200 dark:border-slate-200 text-3xl font-serif font-bold text-foreground placeholder-stone-300 focus:border-primary focus:outline-none transition-all duration-300",
+            "w-full py-4 bg-transparent border-b-2 border-slate-200 text-3xl font-sans font-bold text-slate-900 placeholder-slate-300 focus:border-primary focus:outline-none transition-all duration-300",
             className,
             currencies ? "pl-24" : ""
           )}
           placeholder="0"
-          inputMode="numeric"
         />
-        <span className="absolute inset-y-0 right-0 flex items-center text-slate-500 font-serif text-xl pointer-events-none group-hover:text-primary transition-colors">
+        <span className="absolute inset-y-0 right-0 flex items-center text-slate-500 font-sans text-xl pointer-events-none group-hover:text-primary transition-colors">
           {symbol}
         </span>
       </div>
@@ -99,17 +93,7 @@ export default function CurrencyInput({
           <button
             key={`add-${amount}`}
             onClick={() => handleAmountChange(amount)}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full 
-        param($m)
-        $n = [int]($m.Value -replace 'bg-stone-','')
-        if ($n -ge 900) { 'bg-white' }
-        else { 'bg-slate-50' }
-     dark:bg-white text-slate-500 hover:
-        param($m)
-        $n = [int]($m.Value -replace 'bg-stone-','')
-        if ($n -ge 900) { 'bg-white' }
-        else { 'bg-slate-50' }
-     dark:hover:bg-slate-100 hover:text-primary transition-colors duration-300"
+            className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-slate-100 text-slate-600 hover:bg-primary/10 hover:text-primary transition-colors duration-300"
           >
             +{formatNumber(amount / 10000)}만
           </button>

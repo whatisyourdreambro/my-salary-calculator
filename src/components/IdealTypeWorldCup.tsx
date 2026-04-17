@@ -246,7 +246,7 @@ function ContenderCard({ company, onClick, position }: { company: CompanyProfile
                     <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
                         <div className="text-xs text-muted-foreground uppercase mb-1">평균 연봉</div>
                         <div className="font-bold text-lg">
-                            {(company.salary.entry.base / 10000).toLocaleString()}만원~
+                            {(company.salary.entry.base / 10000).toLocaleString('ko-KR')}만원~
                         </div>
                     </div>
                     <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">

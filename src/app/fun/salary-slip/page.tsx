@@ -105,7 +105,7 @@ export default function SalarySlipPage() {
                                     value={salaryInput}
                                     onChange={(e) => {
                                         const num = e.target.value.replace(/[^0-9]/g, "");
-                                        setSalaryInput(Number(num).toLocaleString());
+                                        setSalaryInput(Number(num).toLocaleString('ko-KR'));
                                     }}
                                     className="toss-input"
                                     placeholder="60,000,000"
@@ -177,16 +177,16 @@ export default function SalarySlipPage() {
                                 <div className="p-6 space-y-4">
                                     <div className="flex justify-between items-center">
                                         <span className="text-slate-600 font-medium">기본급 (세전)</span>
-                                        <span className="font-bold text-slate-900">{monthly.toLocaleString()}원</span>
+                                        <span className="font-bold text-slate-900">{monthly.toLocaleString('ko-KR')}원</span>
                                     </div>
                                     <div className="flex justify-between items-center text-primary">
                                         <span className="font-medium">총 공제액</span>
-                                        <span className="font-bold">-{(monthly - netMonthly).toLocaleString()}원</span>
+                                        <span className="font-bold">-{(monthly - netMonthly).toLocaleString('ko-KR')}원</span>
                                     </div>
                                     <div className="h-px bg-slate-200" />
                                     <div className="flex justify-between items-center">
                                         <span className="text-xl font-black text-slate-900">실수령액</span>
-                                        <span className="text-2xl font-black text-blue-600">{netMonthly.toLocaleString()}원</span>
+                                        <span className="text-2xl font-black text-blue-600">{netMonthly.toLocaleString('ko-KR')}원</span>
                                     </div>
                                 </div>
 

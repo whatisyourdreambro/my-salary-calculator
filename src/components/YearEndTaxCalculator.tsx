@@ -11,7 +11,7 @@ import {
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
 
-const formatNumber = (num: number) => num.toLocaleString();
+const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const AnalysisReport = ({ inputs, result }: { inputs: TaxInputs; result: TaxResult; }) => {
   const earnedIncomeDeduction = inputs.grossSalary - result.taxBase - result.determinedTax > 0
@@ -176,13 +176,13 @@ export default function YearEndTaxCalculator() {
         <Accordion title="1. 기본 정보" defaultOpen={true}>
           <CurrencyInput
             label="총급여액 (연봉)"
-            value={inputs.grossSalary.toLocaleString()}
+            value={inputs.grossSalary.toLocaleString('ko-KR')}
             onValueChange={(v) => handleInputChange("grossSalary", v)}
             quickAmounts={[10000000, 5000000, 1000000]}
           />
           <CurrencyInput
             label="기납부세액 (원천징수된 세금 총액)"
-            value={inputs.prepaidTax.toLocaleString()}
+            value={inputs.prepaidTax.toLocaleString('ko-KR')}
             onValueChange={(v) => handleInputChange("prepaidTax", v)}
             quickAmounts={[500000, 100000, 50000]}
           />
@@ -197,13 +197,13 @@ export default function YearEndTaxCalculator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
             <CurrencyInput
               label="신용카드"
-              value={inputs.creditCard.toLocaleString()}
+              value={inputs.creditCard.toLocaleString('ko-KR')}
               onValueChange={(v) => handleInputChange("creditCard", v)}
               quickAmounts={[5000000, 1000000, 500000]}
             />
             <CurrencyInput
               label="체크카드·현금영수증"
-              value={inputs.debitCardAndCash.toLocaleString()}
+              value={inputs.debitCardAndCash.toLocaleString('ko-KR')}
               onValueChange={(v) => handleInputChange("debitCardAndCash", v)}
               quickAmounts={[5000000, 1000000, 500000]}
             />
@@ -214,13 +214,13 @@ export default function YearEndTaxCalculator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="연금저축/IRP 납입액"
-              value={inputs.pensionSavings.toLocaleString()}
+              value={inputs.pensionSavings.toLocaleString('ko-KR')}
               onValueChange={(v) => handleInputChange("pensionSavings", v)}
               quickAmounts={[3000000, 1000000, 500000]}
             />
             <CurrencyInput
               label="기부금"
-              value={inputs.donation.toLocaleString()}
+              value={inputs.donation.toLocaleString('ko-KR')}
               onValueChange={(v) => handleInputChange("donation", v)}
               quickAmounts={[100000, 50000, 10000]}
             />

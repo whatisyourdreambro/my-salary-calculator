@@ -59,7 +59,7 @@ export default function WhatToBuyPage() {
                 예산 (BUDGET)
               </span>
               <span className="text-3xl font-black text-slate-900 dark:text-slate-900 tabular-nums">
-                {budget.toLocaleString()}<span className="text-lg text-slate-400 ml-1">원</span>
+                {budget.toLocaleString('ko-KR')}<span className="text-lg text-slate-400 ml-1">원</span>
               </span>
             </div>
             <Slider
