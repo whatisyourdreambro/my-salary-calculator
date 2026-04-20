@@ -5,306 +5,580 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import {
+ motion,
+ AnimatePresence,
+ useScroll,
+ useMotionValueEvent,
+} from "framer-motion";
 import Logo from "./Logo";
 import { LayoutDashboard, ChevronDown, Menu, X } from "lucide-react";
 
 type LinkItem = { name: string; href: string; type: "link" };
 type DropdownItem = {
-  name: string;
-  type: "dropdown";
-  items: { name: string; href: string }[];
+ name: string;
+ type: "dropdown";
+ items: { name: string; href: string }[];
 };
 type NavItem = LinkItem | DropdownItem;
 
 const navConfig: NavItem[] = [
-  {
-    name: "커리어 플래너",
-    href: "/pro/career-planner",
-    type: "link"
-  },
-  {
-    name: "연봉 계산기",
-    type: "dropdown",
-    items: [
-      { name: "종합 계산기", href: "/?tab=salary" },
-      { name: "퇴직금 계산기", href: "/?tab=severance" },
-      { name: "프리랜서/알바", href: "/?tab=freelancer" },
-      { name: "연말정산 계산기", href: "/year-end-tax" },
-    ],
-  },
-  {
-    name: "연봉 테이블",
-    type: "dropdown",
-    items: [
-      { name: "기업별 연봉 DB", href: "/salary-db" },
-      { name: "내 연봉 제보하기", href: "/salary-db/submit" },
-      { name: "2026 연봉 표", href: "/table/annual" },
-      { name: "2026 월급 표", href: "/table/monthly" },
-      { name: "2026 연봉 표", href: "/table/2026/annual" },
-      { name: "2026 월급 표", href: "/table/2026/monthly" },
-    ],
-  },
-  {
-    name: "금융 가이드",
-    type: "dropdown",
-    items: [
-      { name: "전체 가이드", href: "/guides" },
-      { name: "직장인 꿀팁 모음", href: "/tips" },
-      { name: "Q&A", href: "/qna" },
-      { name: "용어 사전", href: "/glossary" },
-    ],
-  },
-  {
-    name: "Fun/Lab",
-    type: "dropdown",
-    items: [
-      { name: "전체 보기", href: "/fun" },
-      { name: "멘사급 IQ 테스트", href: "/fun/iq-test" },
-      { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
-      { name: "연봉 상위 1% 계산기", href: "/fun/rank" },
-      { name: "인생 2회차 게임", href: "/fun/reincarnation" },
-      { name: "월급쟁이 테트리스", href: "/fun/tetris" },
-    ],
-  },
-  {
-    name: "계산기 도구",
-    type: "dropdown",
-    items: [
-      { name: "전체 30종 보기", href: "/tools" },
-      { name: "🔥 성과급 세금 계산기", href: "/tools/finance/bonus" },
-      { name: "퇴직금 세금 계산기", href: "/tools/finance/severance" },
-      { name: "복리 계산기", href: "/tools/finance/compound" },
-      { name: "주식 양도소득세", href: "/tools/finance/stock-tax" },
-      { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax" },
-      { name: "증여세 계산기", href: "/tools/real-estate/gift-tax" },
-      { name: "프리랜서 종합소득세", href: "/tools/finance/freelance-tax" },
-      { name: "IRP·연금저축 세액공제", href: "/tools/finance/irp" },
-      { name: "할부 이자 계산기", href: "/tools/finance/installment" },
-      { name: "대출 이자 계산기", href: "/tools/loan" },
-    ],
-  },
-  {
-    name: "생활 금융",
-    type: "dropdown",
-    items: [
-      { name: "자동차 구매", href: "/car-loan" },
-      { name: "FIRE 계산기", href: "/fire-calculator" },
-      { name: "2026 재물운 사주", href: "/fortune-2026" },
-      { name: "로또 번호 생성", href: "/lotto" },
-    ],
-  },
+ {
+ name: "커리어 플래너",
+ href: "/pro/career-planner",
+ type: "link",
+ },
+ {
+ name: "연봉 계산기",
+ type: "dropdown",
+ items: [
+ { name: "종합 계산기", href: "/?tab=salary" },
+ { name: "퇴직금 계산기", href: "/?tab=severance" },
+ { name: "프리랜서/알바", href: "/?tab=freelancer" },
+ { name: "연말정산 계산기", href: "/year-end-tax" },
+ ],
+ },
+ {
+ name: "연봉 테이블",
+ type: "dropdown",
+ items: [
+ { name: "기업별 연봉 DB", href: "/salary-db" },
+ { name: "내 연봉 제보하기", href: "/salary-db/submit" },
+ { name: "2026 연봉 표", href: "/table/annual" },
+ { name: "2026 월급 표", href: "/table/monthly" },
+ { name: "2026 연봉 표", href: "/table/2026/annual" },
+ { name: "2026 월급 표", href: "/table/2026/monthly" },
+ ],
+ },
+ {
+ name: "금융 가이드",
+ type: "dropdown",
+ items: [
+ { name: "전체 가이드", href: "/guides" },
+ { name: "직장인 꿀팁 모음", href: "/tips" },
+ { name: "Q&A", href: "/qna" },
+ { name: "용어 사전", href: "/glossary" },
+ ],
+ },
+ {
+ name: "Fun/Lab",
+ type: "dropdown",
+ items: [
+ { name: "전체 보기", href: "/fun" },
+ { name: "멘사급 IQ 테스트", href: "/fun/iq-test" },
+ { name: "부자 DNA 테스트", href: "/fun/rich-dna-test" },
+ { name: "연봉 상위 1% 계산기", href: "/fun/rank" },
+ { name: "인생 2회차 게임", href: "/fun/reincarnation" },
+ { name: "월급쟁이 테트리스", href: "/fun/tetris" },
+ ],
+ },
+ {
+ name: "계산기 도구",
+ type: "dropdown",
+ items: [
+ { name: "전체 30종 보기", href: "/tools" },
+ { name: "🔥 성과급 세금 계산기", href: "/tools/finance/bonus" },
+ { name: "퇴직금 세금 계산기", href: "/tools/finance/severance" },
+ { name: "복리 계산기", href: "/tools/finance/compound" },
+ { name: "주식 양도소득세", href: "/tools/finance/stock-tax" },
+ { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax" },
+ { name: "증여세 계산기", href: "/tools/real-estate/gift-tax" },
+ { name: "프리랜서 종합소득세", href: "/tools/finance/freelance-tax" },
+ { name: "IRP·연금저축 세액공제", href: "/tools/finance/irp" },
+ { name: "할부 이자 계산기", href: "/tools/finance/installment" },
+ { name: "대출 이자 계산기", href: "/tools/loan" },
+ ],
+ },
+ {
+ name: "생활 금융",
+ type: "dropdown",
+ items: [
+ { name: "자동차 구매", href: "/car-loan" },
+ { name: "FIRE 계산기", href: "/fire-calculator" },
+ { name: "2026 재물운 사주", href: "/fortune-2026" },
+ { name: "로또 번호 생성", href: "/lotto" },
+ ],
+ },
 ];
 
-const Dropdown = ({ item, pathname, isScrolled }: { item: DropdownItem; pathname: string | null; isScrolled: boolean }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
-      <button
-        className={`flex items-center gap-1 py-2 px-4 text-[15px] font-semibold transition-colors duration-200
-          ${isOpen ? "text-blue-600" : "text-slate-600 hover:text-blue-600"}
-        `}
-      >
-        {item.name}
-        <ChevronDown size={14} className={`transition-transform duration-300 ${isOpen ? "rotate-180 text-blue-600" : "text-slate-400 group-hover:text-blue-600"}`} />
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 5 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[220px] bg-white rounded-[20px] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] p-2 z-50"
-          >
-            <div className="flex flex-col gap-1">
-              {item.items.map((subItem) => (
-                <Link
-                  key={subItem.href}
-                  href={subItem.href}
-                  className={`block px-4 py-2.5 text-[14px] rounded-[12px] transition-all font-medium ${pathname === subItem.href
-                    ? "font-bold text-blue-600 bg-blue-50"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                >
-                  {subItem.name}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+/* ── Desktop Dropdown ──────────────────────────────────────────── */
+const Dropdown = ({
+ item,
+ pathname,
+}: {
+ item: DropdownItem;
+ pathname: string | null;
+ isScrolled: boolean;
+}) => {
+ const [isOpen, setIsOpen] = useState(false);
+
+ return (
+ <div
+ className="relative"
+ onMouseEnter={() => setIsOpen(true)}
+ onMouseLeave={() => setIsOpen(false)}
+ >
+ <button
+ style={{
+ color: isOpen ? "#0145F2" : "#3D5E78",
+ display: "flex",
+ alignItems: "center",
+ gap: "4px",
+ padding: "8px 14px",
+ fontSize: "14.5px",
+ fontWeight: 600,
+ background: "none",
+ border: "none",
+ cursor: "pointer",
+ borderRadius: "10px",
+ transition: "color 0.15s ease, background-color 0.15s ease",
+ }}
+ onMouseEnter={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor =
+ "#0145F20D";
+ (e.currentTarget as HTMLElement).style.color = "#0145F2";
+ }}
+ onMouseLeave={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+ (e.currentTarget as HTMLElement).style.color = isOpen
+ ? "#0145F2"
+ : "#3D5E78";
+ }}
+ >
+ {item.name}
+ <ChevronDown
+ size={13}
+ style={{
+ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+ transition: "transform 0.25s ease",
+ color: isOpen ? "#0145F2" : "#7A9AB5",
+ }}
+ />
+ </button>
+
+ <AnimatePresence>
+ {isOpen && (
+ <motion.div
+ initial={{ opacity: 0, y: 8, scale: 0.97 }}
+ animate={{ opacity: 1, y: 0, scale: 1 }}
+ exit={{ opacity: 0, y: 4 }}
+ transition={{ duration: 0.18, ease: "easeOut" }}
+ style={{
+ position: "absolute",
+ top: "100%",
+ left: "50%",
+ transform: "translateX(-50%)",
+ marginTop: "8px",
+ width: "220px",
+ backgroundColor: "#FFFFFF",
+ border: "1.5px solid #DDE4EC",
+ borderRadius: "18px",
+ boxShadow: "0 12px 40px -8px #0145F222, 0 2px 8px -2px #0A182914",
+ padding: "6px",
+ zIndex: 50,
+ }}
+ >
+ <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+ {item.items.map((subItem) => (
+ <Link
+ key={subItem.href}
+ href={subItem.href}
+ style={{
+ display: "block",
+ padding: "9px 14px",
+ fontSize: "13.5px",
+ borderRadius: "12px",
+ fontWeight: pathname === subItem.href ? 700 : 500,
+ color:
+ pathname === subItem.href ? "#0145F2" : "#3D5E78",
+ backgroundColor:
+ pathname === subItem.href ? "#0145F20D" : "transparent",
+ textDecoration: "none",
+ transition:
+ "background-color 0.12s ease, color 0.12s ease",
+ }}
+ onMouseEnter={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor =
+ "#EDF1F5";
+ (e.currentTarget as HTMLElement).style.color = "#0A1829";
+ }}
+ onMouseLeave={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor =
+ pathname === subItem.href ? "#0145F20D" : "transparent";
+ (e.currentTarget as HTMLElement).style.color =
+ pathname === subItem.href ? "#0145F2" : "#3D5E78";
+ }}
+ >
+ {subItem.name}
+ </Link>
+ ))}
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </div>
+ );
 };
 
-const MobileDropdown = ({ item, pathname }: { item: DropdownItem; pathname: string | null }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="border-b border-slate-100 last:border-none">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center px-4 py-4 text-[16px] font-semibold hover:bg-slate-50 transition-colors"
-      >
-        <span className={isOpen ? "text-blue-600" : "text-slate-800"}>{item.name}</span>
-        <ChevronDown size={20} className={`transition-transform duration-300 ${isOpen ? "rotate-180 text-blue-600" : "text-slate-400"}`} />
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden bg-slate-50/50"
-          >
-            <div className="py-2 px-4 space-y-1">
-              {item.items.map((subItem) => (
-                <Link
-                  key={subItem.href}
-                  href={subItem.href}
-                  className={`block px-4 py-3 text-[15px] rounded-[14px] transition-all font-medium ${pathname === subItem.href
-                    ? "font-bold text-blue-600 bg-blue-50"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                    }`}
-                >
-                  {subItem.name}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+/* ── Mobile Dropdown ───────────────────────────────────────────── */
+const MobileDropdown = ({
+ item,
+ pathname,
+ onClose,
+}: {
+ item: DropdownItem;
+ pathname: string | null;
+ onClose: () => void;
+}) => {
+ const [isOpen, setIsOpen] = useState(false);
+
+ return (
+ <div
+ style={{ borderBottom: "1px solid #EDF1F5" }}
+ >
+ <button
+ onClick={() => setIsOpen(!isOpen)}
+ style={{
+ width: "100%",
+ display: "flex",
+ justifyContent: "space-between",
+ alignItems: "center",
+ padding: "16px 20px",
+ fontSize: "16px",
+ fontWeight: 600,
+ background: "none",
+ border: "none",
+ cursor: "pointer",
+ color: isOpen ? "#0145F2" : "#0A1829",
+ transition: "color 0.15s ease",
+ }}
+ >
+ <span>{item.name}</span>
+ <ChevronDown
+ size={18}
+ style={{
+ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+ transition: "transform 0.25s ease",
+ color: isOpen ? "#0145F2" : "#7A9AB5",
+ }}
+ />
+ </button>
+ <AnimatePresence>
+ {isOpen && (
+ <motion.div
+ initial={{ height: 0, opacity: 0 }}
+ animate={{ height: "auto", opacity: 1 }}
+ exit={{ height: 0, opacity: 0 }}
+ style={{ overflow: "hidden" }}
+ >
+ <div style={{ padding: "4px 12px 12px" }}>
+ {item.items.map((subItem) => (
+ <Link
+ key={subItem.href}
+ href={subItem.href}
+ onClick={onClose}
+ style={{
+ display: "block",
+ padding: "11px 16px",
+ fontSize: "15px",
+ borderRadius: "12px",
+ fontWeight: pathname === subItem.href ? 700 : 500,
+ color:
+ pathname === subItem.href ? "#0145F2" : "#3D5E78",
+ backgroundColor:
+ pathname === subItem.href ? "#0145F20D" : "transparent",
+ textDecoration: "none",
+ marginBottom: "2px",
+ transition: "background-color 0.12s ease, color 0.12s ease",
+ }}
+ >
+ {subItem.name}
+ </Link>
+ ))}
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </div>
+ );
 };
 
+/* ── Header ────────────────────────────────────────────────────── */
 export default function Header() {
-  const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const { scrollY } = useScroll();
+ const pathname = usePathname();
+ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+ const [isScrolled, setIsScrolled] = useState(false);
+ const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 20);
-  });
+ useMotionValueEvent(scrollY, "change", (latest) => {
+ setIsScrolled(latest > 20);
+ });
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
+ useEffect(() => {
+ setIsMobileMenuOpen(false);
+ }, [pathname]);
 
-  return (
-    <>
-      <motion.header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen
-          ? "bg-white/70 dark:bg-[#1E232E]/70 backdrop-blur-3xl border-b border-slate-200/40 dark:border-slate-700/50 shadow-[0_4px_30px_#0000000A] py-3"
-          : "bg-transparent border-b border-transparent py-5"
-          }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "circOut" }}
-      >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+ const headerBg = isScrolled || isMobileMenuOpen
+ ? "rgba(255,255,255,0.92)"
+ : "#EDF1F5";
+ const headerBorder = isScrolled || isMobileMenuOpen
+ ? "#DDE4EC"
+ : "transparent";
 
-            {/* Logo Area */}
-            <div className="flex-shrink-0 z-50">
-              <Link href="/" className="flex items-center gap-2 group">
-                <div className="relative transition-transform duration-300 active:scale-95">
-                  <Logo className="h-8 sm:h-9 w-auto text-slate-900" showText={true} />
-                </div>
-              </Link>
-            </div>
+ return (
+ <>
+ <motion.header
+ style={{
+ position: "fixed",
+ top: 0,
+ left: 0,
+ right: 0,
+ zIndex: 50,
+ backgroundColor: headerBg,
+ borderBottom: `1px solid ${headerBorder}`,
+ backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
+ WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
+ boxShadow: isScrolled ? "0 4px 24px -8px #0145F211" : "none",
+ padding: isScrolled ? "10px 0" : "18px 0",
+ transition: "all 0.3s ease",
+ }}
+ initial={{ y: -100 }}
+ animate={{ y: 0 }}
+ transition={{ duration: 0.5, ease: "circOut" }}
+ >
+ <nav
+ style={{
+ maxWidth: "88rem",
+ margin: "0 auto",
+ padding: "0 1.5rem",
+ }}
+ >
+ <div
+ style={{
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "space-between",
+ }}
+ >
+ {/* Logo */}
+ <div style={{ flexShrink: 0, zIndex: 50 }}>
+ <Link
+ href="/"
+ style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+ >
+ <Logo
+ className="h-8 sm:h-9 w-auto"
+ showText={true}
+ style={{ color: "#0145F2" }}
+ />
+ </Link>
+ </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-1">
-              {navConfig.map((item) =>
-                item.type === "dropdown" ? (
-                  <Dropdown key={item.name} item={item} pathname={pathname} isScrolled={isScrolled} />
-                ) : (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`py-2 px-4 text-[15px] font-semibold transition-colors duration-200 rounded-[12px] hover:bg-slate-50 ${pathname === item.href
-                      ? "text-blue-600"
-                      : "text-slate-600 hover:text-blue-600"
-                      }`}
-                  >
-                    {item.name}
-                  </Link>
-                )
-              )}
-            </div>
+ {/* Desktop Nav */}
+ <div
+ className="hidden xl:flex"
+ style={{ alignItems: "center", gap: "2px" }}
+ >
+ {navConfig.map((item) =>
+ item.type === "dropdown" ? (
+ <Dropdown
+ key={item.name}
+ item={item}
+ pathname={pathname}
+ isScrolled={isScrolled}
+ />
+ ) : (
+ <Link
+ key={item.name}
+ href={item.href}
+ style={{
+ padding: "8px 14px",
+ fontSize: "14.5px",
+ fontWeight: 600,
+ borderRadius: "10px",
+ color:
+ pathname === item.href ? "#0145F2" : "#3D5E78",
+ backgroundColor:
+ pathname === item.href ? "#0145F20D" : "transparent",
+ textDecoration: "none",
+ transition: "color 0.15s ease, background-color 0.15s ease",
+ }}
+ onMouseEnter={(e) => {
+ (e.currentTarget as HTMLElement).style.color = "#0145F2";
+ (e.currentTarget as HTMLElement).style.backgroundColor = "#0145F20D";
+ }}
+ onMouseLeave={(e) => {
+ (e.currentTarget as HTMLElement).style.color =
+ pathname === item.href ? "#0145F2" : "#3D5E78";
+ (e.currentTarget as HTMLElement).style.backgroundColor =
+ pathname === item.href ? "#0145F20D" : "transparent";
+ }}
+ >
+ {item.name}
+ </Link>
+ )
+ )}
+ </div>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-2 sm:gap-4 z-50">
-              <Link
-                href="/dashboard"
-                className="hidden sm:flex items-center gap-2 py-2 px-5 text-[14px] font-bold text-white bg-blue-600 rounded-[14px] hover:bg-blue-700 active:scale-95 transition-all shadow-[0_4px_12px_rgba(49,130,246,0.2)]"
-              >
-                <LayoutDashboard size={16} />
-                <span>내 대시보드</span>
-              </Link>
+ {/* Right Actions */}
+ <div
+ style={{
+ display: "flex",
+ alignItems: "center",
+ gap: "12px",
+ zIndex: 50,
+ }}
+ >
+ {/* Dashboard CTA */}
+ <Link
+ href="/dashboard"
+ className="hidden sm:flex"
+ style={{
+ alignItems: "center",
+ gap: "7px",
+ padding: "9px 20px",
+ fontSize: "14px",
+ fontWeight: 700,
+ color: "#FFFFFF",
+ backgroundColor: "#0145F2",
+ border: "2px solid #0145F2",
+ borderRadius: "12px",
+ textDecoration: "none",
+ transition: "background-color 0.15s ease, color 0.15s ease",
+ boxShadow: "0 4px 14px -2px #0145F233",
+ }}
+ onMouseEnter={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor = "#EDF1F5";
+ (e.currentTarget as HTMLElement).style.color = "#0145F2";
+ }}
+ onMouseLeave={(e) => {
+ (e.currentTarget as HTMLElement).style.backgroundColor = "#0145F2";
+ (e.currentTarget as HTMLElement).style.color = "#FFFFFF";
+ }}
+ >
+ <LayoutDashboard size={15} />
+ <span>내 대시보드</span>
+ </Link>
 
-              <div className="xl:hidden">
-                <button
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-700"
-                  aria-label="메뉴 열기"
-                >
-                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </motion.header>
+ {/* Mobile Menu Toggle */}
+ <div className="xl:hidden">
+ <button
+ onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+ style={{
+ padding: "8px",
+ borderRadius: "10px",
+ backgroundColor: isMobileMenuOpen ? "#0145F21A" : "transparent",
+ border: "none",
+ cursor: "pointer",
+ color: "#0145F2",
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ transition: "background-color 0.15s ease",
+ }}
+ aria-label="메뉴 열기"
+ >
+ {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+ </button>
+ </div>
+ </div>
+ </div>
+ </nav>
+ </motion.header>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-white/95 backdrop-blur-2xl xl:hidden pt-24"
-          >
-            <div className="h-full overflow-y-auto pb-20 px-6">
-              <div className="py-2 space-y-4">
-                <Link
-                  href="/dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full py-4 text-[16px] font-bold rounded-[16px] bg-blue-600 text-white shadow-[0_8px_20px_rgba(49,130,246,0.25)] mb-8 active:scale-95 transition-transform"
-                >
-                  <LayoutDashboard size={18} />
-                  내 대시보드 열기
-                </Link>
+ {/* Mobile Menu */}
+ <AnimatePresence>
+ {isMobileMenuOpen && (
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ exit={{ opacity: 0 }}
+ transition={{ duration: 0.18 }}
+ style={{
+ position: "fixed",
+ inset: 0,
+ zIndex: 40,
+ backgroundColor: "rgba(255,255,255,0.97)",
+ backdropFilter: "blur(24px)",
+ WebkitBackdropFilter: "blur(24px)",
+ paddingTop: "80px",
+ overflowY: "auto",
+ }}
+ className="xl:hidden"
+ >
+ <div style={{ padding: "16px 20px 80px" }}>
+ {/* Mobile Dashboard CTA */}
+ <Link
+ href="/dashboard"
+ onClick={() => setIsMobileMenuOpen(false)}
+ style={{
+ display: "flex",
+ alignItems: "center",
+ justifyContent: "center",
+ gap: "8px",
+ width: "100%",
+ padding: "16px",
+ fontSize: "16px",
+ fontWeight: 700,
+ backgroundColor: "#0145F2",
+ color: "#FFFFFF",
+ borderRadius: "16px",
+ textDecoration: "none",
+ marginBottom: "20px",
+ border: "2px solid #0145F2",
+ boxShadow: "0 8px 24px -4px #0145F244",
+ transition: "all 0.15s ease",
+ }}
+ >
+ <LayoutDashboard size={18} />
+ 내 대시보드 열기
+ </Link>
 
-                <div className="bg-white rounded-[24px] overflow-hidden border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                  {navConfig.map((item) =>
-                    item.type === "link" ? (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-4 text-[16px] font-semibold border-b border-slate-100 last:border-none hover:bg-slate-50 transition-colors text-slate-800"
-                      >
-                        {item.name}
-                      </Link>
-                    ) : (
-                      <MobileDropdown key={item.name} item={item} pathname={pathname} />
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
+ {/* Nav items */}
+ <div
+ style={{
+ backgroundColor: "#FFFFFF",
+ borderRadius: "20px",
+ border: "1.5px solid #DDE4EC",
+ overflow: "hidden",
+ }}
+ >
+ {navConfig.map((item) =>
+ item.type === "link" ? (
+ <Link
+ key={item.href}
+ href={item.href}
+ onClick={() => setIsMobileMenuOpen(false)}
+ style={{
+ display: "block",
+ padding: "16px 20px",
+ fontSize: "16px",
+ fontWeight: 600,
+ borderBottom: "1px solid #EDF1F5",
+ color:
+ pathname === item.href ? "#0145F2" : "#0A1829",
+ backgroundColor:
+ pathname === item.href ? "#0145F20D" : "transparent",
+ textDecoration: "none",
+ transition: "color 0.12s ease",
+ }}
+ >
+ {item.name}
+ </Link>
+ ) : (
+ <MobileDropdown
+ key={item.name}
+ item={item}
+ pathname={pathname}
+ onClose={() => setIsMobileMenuOpen(false)}
+ />
+ )
+ )}
+ </div>
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </>
+ );
 }

@@ -1,4 +1,5 @@
 // src/components/Footer.tsx
+"use client";
 
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Github } from "lucide-react";
@@ -6,6 +7,7 @@ import Logo from "./Logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+
   const links = [
     { name: "연봉 계산기", href: "/" },
     { name: "연봉 테이블", href: "/table/annual" },
@@ -17,51 +19,121 @@ export default function Footer() {
     { name: "이용약관", href: "/terms" },
   ];
   const socialLinks = [
-    { icon: <Facebook size={18} />, href: "#" },
-    { icon: <Twitter size={18} />, href: "#" },
-    { icon: <Instagram size={18} />, href: "#" },
-    { icon: <Github size={18} />, href: "#" },
+    { Icon: Facebook, href: "#", label: "Facebook" },
+    { Icon: Twitter, href: "#", label: "Twitter" },
+    { Icon: Instagram, href: "#", label: "Instagram" },
+    { Icon: Github, href: "#", label: "Github" },
   ];
 
   return (
-    <footer className="w-full mt-24 bg-slate-50 text-slate-500 relative border-t border-slate-200/60">
-      <div className="max-w-7xl mx-auto py-16 px-6 sm:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
-
-          {/* Brand Section */}
-          <div className="md:w-1/3 space-y-5">
-            <Link href="/" className="inline-block">
-              <Logo className="h-8 w-auto text-slate-800" showText={true} />
+    <footer
+      style={{
+        width: "100%",
+        marginTop: "6rem",
+        backgroundColor: "#FFFFFF",
+        color: "#3D5E78",
+        borderTop: "1.5px solid #DDE4EC",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "80rem",
+          margin: "0 auto",
+          padding: "5rem 1.5rem 3.5rem",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: "3rem",
+          }}
+        >
+          {/* Brand */}
+          <div style={{ minWidth: "220px", maxWidth: "280px" }}>
+            <Link href="/" style={{ display: "inline-block", marginBottom: "20px" }}>
+              <Logo className="h-8 w-auto" showText={true} />
             </Link>
-            <p className="text-[15px] text-slate-500 leading-relaxed font-medium">
-              우아한 금융 생활의 시작, 머니샐러리.<br />
+            <p
+              style={{
+                fontSize: "14.5px",
+                color: "#3D5E78",
+                lineHeight: 1.7,
+                fontWeight: 500,
+              }}
+            >
+              우아한 금융 생활의 시작, 머니샐러리.
+              <br />
               당신의 가치를 높이는 가장 정확한 기준을 제시합니다.
             </p>
-            <div className="flex space-x-3 pt-2">
-              {socialLinks.map((link, index) => (
+
+            {/* Social Icons */}
+            <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
+              {socialLinks.map(({ Icon, href, label }) => (
                 <a
-                  key={index}
-                  href={link.href}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:shadow-sm transition-all duration-200"
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="footer-social-icon"
+                  style={{
+                    width: "38px",
+                    height: "38px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "999px",
+                    border: "1.5px solid #DDE4EC",
+                    color: "#7A9AB5",
+                    backgroundColor: "#EDF1F5",
+                    textDecoration: "none",
+                    transition: "all 0.15s ease",
+                  }}
                 >
-                  {link.icon}
+                  <Icon size={17} />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Links Section */}
-          <div className="grid grid-cols-2 gap-10 md:w-2/3 md:pl-12">
+          {/* Links */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(120px, 1fr))",
+              gap: "2.5rem",
+              flex: 1,
+              maxWidth: "480px",
+            }}
+          >
             <div>
-              <h3 className="text-[14px] font-bold text-slate-800 mb-6">
+              <h3
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 800,
+                  color: "#0145F2",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: "20px",
+                }}
+              >
                 서비스
               </h3>
-              <ul className="space-y-3.5">
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-[15px] font-medium text-slate-500 hover:text-blue-600 transition-colors inline-block"
+                      className="footer-link"
+                      style={{
+                        fontSize: "14.5px",
+                        fontWeight: 500,
+                        color: "#3D5E78",
+                        textDecoration: "none",
+                        transition: "color 0.15s ease",
+                      }}
                     >
                       {link.name}
                     </Link>
@@ -69,16 +141,33 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
+
             <div>
-              <h3 className="text-[14px] font-bold text-slate-800 mb-6">
+              <h3
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 800,
+                  color: "#0145F2",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: "20px",
+                }}
+              >
                 고객 지원
               </h3>
-              <ul className="space-y-3.5">
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
                 {legalLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-[15px] font-medium text-slate-500 hover:text-blue-600 transition-colors inline-block"
+                      className="footer-link"
+                      style={{
+                        fontSize: "14.5px",
+                        fontWeight: 500,
+                        color: "#3D5E78",
+                        textDecoration: "none",
+                        transition: "color 0.15s ease",
+                      }}
                     >
                       {link.name}
                     </Link>
@@ -90,13 +179,23 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-6 border-t border-slate-200/80 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-medium text-slate-400">
+        <div
+          style={{
+            marginTop: "4rem",
+            paddingTop: "1.5rem",
+            borderTop: "1px solid #DDE4EC",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1rem",
+            fontSize: "13px",
+            fontWeight: 500,
+            color: "#7A9AB5",
+          }}
+        >
           <p>© {currentYear} Moneysalary. All Rights Reserved.</p>
-          <div className="flex items-center gap-6">
-            <p className="hidden md:block">
-              환율 데이터 제공: FKF API
-            </p>
-          </div>
+          <p>환율 데이터 제공: FKF API</p>
         </div>
       </div>
     </footer>

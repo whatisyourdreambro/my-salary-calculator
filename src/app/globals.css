@@ -2,279 +2,472 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* Samsung Style Light Mode (Solid B/W/B) */
-    --background: 0 0% 100%;       /* Pure White */
-    --foreground: 0 0% 0%;         /* Pure Black */
-
-    --card: 0 0% 100%;             /* Pure White */
-    --card-foreground: 0 0% 0%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-
-    --primary: 228 78% 35%;        /* #1428a0 (Samsung Blue) */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 40% 96.1%;    /* Very Light Blue-Gray */
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%; /* Gray */
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 228 78% 35%;           /* #1428a0 */
-
-    --radius: 0.75rem;
-
-    /* Chart Colors - Monochromatic Blue & Grayscale */
-    --chart-1: 228 78% 35%; /* Samsung Blue */
-    --chart-2: 210 40% 96.1%; /* Gray/White */
-    --chart-3: 215 16% 47%; /* Dark Gray */
-    --chart-4: 220 50% 60%; /* Light Blue */
-    --chart-5: 0 0% 0%; /* Black */
-  }
-
-  .dark {
-    /* Samsung Style Dark Mode (Strict Pitch Black) */
-    --background: 0 0% 0%;         /* Pure Black */
-    --foreground: 0 0% 100%;       /* Pure White */
-
-    --card: 0 0% 4%;               /* Very Dark Grey #0a0a0a */
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-
-    --primary: 228 78% 55%;        /* Lighter Blue */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 12%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 228 78% 55%;
-  }
-}
+/* ════════════════════════════════════════════════════════════════════
+ DUOTONE DESIGN SYSTEM — MoneySalary
+ Primary Color: Electric Blue #0145F2
+ Base/BG Color: Canvas Cloud #EDF1F5
+ On-Primary (acc.): White #FFFFFF
+ ════════════════════════════════════════════════════════════════════ */
 
 @layer base {
-  :root {
-    --font-pretendard:
-      "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
-      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol", sans-serif;
-  }
+ :root {
+ /* ── Core Design Tokens ─────────────────────────────────────── */
+ --color-primary: #0145F2; /* Electric Blue */
+ --color-canvas: #EDF1F5; /* Canvas Cloud */
+ --color-on-primary: #FFFFFF; /* Readability on dark bg */
+ --color-canvas-dark: #DDE4EC; /* Slightly deeper canvas */
+ --color-canvas-deeper:#C8D4E0; /* Card borders, dividers */
+ --color-text: #0A1829; /* Darkest readable foreground */
+ --color-text-muted: #3D5E78; /* Secondary text */
+ --color-text-faint: #7A9AB5; /* Placeholder / captions */
 
-  * {
-    @apply border-border;
-    font-family: var(--font-pretendard) !important;
-    letter-spacing: -0.02em;
-  }
+ /* ── Shadcn/Radix UI Token Mapping ─────────────────────────── */
+ --background: 216 43% 95%; /* #EDF1F5 Canvas Cloud */
+ --foreground: 214 56% 10%; /* #0A1829 deep navy */
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "cv11", "ss01", "tnum";
-  }
+ --card: 0 0% 100%;
+ --card-foreground: 214 56% 10%;
 
-  .font-mono-tabular {
-    font-variant-numeric: tabular-nums;
-    font-family: var(--font-pretendard) !important;
-  }
+ --popover: 0 0% 100%;
+ --popover-foreground: 214 56% 10%;
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight text-slate-900;
-  }
+ --primary: 224 96% 48%; /* #0145F2 Electric Blue */
+ --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-  /* ── Global safety: all text inputs must be readable ─────────────── */
-  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
-  select,
-  textarea {
-    color: #0f172a !important; /* slate-900 */
-    -webkit-text-fill-color: #0f172a;
-  }
+ --secondary: 216 43% 95%; /* Canvas Cloud */
+ --secondary-foreground: 214 56% 10%;
 
-  /* Placeholder text */
-  input::placeholder,
-  textarea::placeholder {
-    color: #94a3b8 !important; /* slate-400 */
-    -webkit-text-fill-color: #94a3b8;
-  }
+ --muted: 216 43% 92%; /* DDE4EC */
+ --muted-foreground: 209 32% 36%; /* #3D5E78 */
 
-  /* ── Result/value display: any number or text in white/gray boxes ─── */
-  /* Targets spans and p with class text-white that ended up on light bg */
-  /* Force is handled via JS fix; this is a CSS fallback */
-  .bg-white span[class*="text-white"],
-  .bg-white p[class*="text-white"],
-  .bg-slate-50 span[class*="text-white"],
-  .bg-slate-50 p[class*="text-white"],
-  .bg-gray-50 span[class*="text-white"],
-  .bg-gray-50 p[class*="text-white"],
-  .bg-gray-100 span[class*="text-white"],
-  .bg-gray-100 p[class*="text-white"] {
-    color: #0f172a !important;
-  }
+ --accent: 216 43% 92%;
+ --accent-foreground: 224 96% 48%;
+
+ --destructive: 224 96% 48%; /* Blue for errors too */
+ --destructive-foreground: 0 0% 100%;
+
+ --border: 216 30% 84%; /* #C8D4E0 */
+ --input: 216 30% 84%;
+ --ring: 224 96% 48%; /* Electric Blue focus */
+
+ --radius: 0.75rem;
+
+ /* ── Chart Colors: Electric Blue opacity ladder ─────────────── */
+ --chart-1: 224 96% 48%; /* #0145F2 solid */
+ --chart-2: 224 96% 68%; /* #4D80F5 lighter */
+ --chart-3: 216 43% 85%; /* #C8D4E0 canvas deep */
+ --chart-4: 224 96% 35%; /* #0032B5 deep blue */
+ --chart-5: 216 43% 95%; /* #EDF1F5 canvas */
+ }
+
+ .dark {
+ /* Force light mode — dark mode disabled for duotone system */
+ --background: 216 43% 95%;
+ --foreground: 214 56% 10%;
+ --card: 0 0% 100%;
+ --card-foreground: 214 56% 10%;
+ --popover: 0 0% 100%;
+ --popover-foreground: 214 56% 10%;
+ --primary: 224 96% 48%;
+ --primary-foreground: 0 0% 100%;
+ --secondary: 216 43% 95%;
+ --secondary-foreground: 214 56% 10%;
+ --muted: 216 43% 92%;
+ --muted-foreground: 209 32% 36%;
+ --accent: 216 43% 92%;
+ --accent-foreground: 224 96% 48%;
+ --destructive: 224 96% 48%;
+ --destructive-foreground: 0 0% 100%;
+ --border: 216 30% 84%;
+ --input: 216 30% 84%;
+ --ring: 224 96% 48%;
+ }
 }
 
-@layer utilities {
-  .toss-card {
-    @apply bg-white dark:bg-[#080808] border border-gray-200 dark:border-gray-800
-           shadow-sm
-           rounded-2xl transition-all duration-200;
-  }
+@layer base {
+ :root {
+ --font-pretendard:
+ "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+ system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+ "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+ "Segoe UI Symbol", sans-serif;
+ }
 
-  .toss-input {
-    @apply bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700
-           focus:border-primary focus:bg-white dark:focus:bg-black
-           focus:ring-2 focus:ring-primary/20
-           transition-all duration-200 rounded-xl text-base px-4 py-3 w-full text-foreground;
-  }
+ * {
+ @apply border-border;
+ font-family: var(--font-pretendard) !important;
+ letter-spacing: -0.02em;
+ box-sizing: border-box;
+ }
 
-  .toss-button-primary {
-    @apply relative overflow-hidden bg-primary text-white font-bold rounded-xl px-5 py-3
-           shadow-md
-           hover:bg-primary/90 
-           active:scale-95
-           transition-all duration-150
-           w-full flex items-center justify-center gap-2;
-  }
+ html {
+ scroll-behavior: smooth;
+ }
 
-  .toss-button-secondary {
-    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100
-           font-bold rounded-xl px-5 py-3
-           hover:bg-gray-200 dark:hover:bg-gray-700
-           active:scale-[0.98] transition-all duration-150
-           w-full flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700;
-  }
+ body {
+ background-color: #EDF1F5;
+ color: #0A1829;
+ @apply antialiased;
+ font-feature-settings: "cv11", "ss01", "tnum";
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+ }
 
-  .glass { @apply toss-card; }
-  .glass-card { @apply toss-card; }
-  .glass-input { @apply toss-input; }
+ /* ── Typography Hierarchy ──────────────────────────────────────── */
+ h1 {
+ font-size: clamp(2rem, 5vw, 4rem);
+ font-weight: 900;
+ letter-spacing: -0.04em;
+ line-height: 1.1;
+ color: #0A1829;
+ }
+ h2 {
+ font-size: clamp(1.5rem, 3vw, 2.5rem);
+ font-weight: 800;
+ letter-spacing: -0.03em;
+ line-height: 1.15;
+ color: #0A1829;
+ }
+ h3 {
+ font-size: clamp(1.125rem, 2vw, 1.5rem);
+ font-weight: 700;
+ letter-spacing: -0.025em;
+ line-height: 1.3;
+ color: #0A1829;
+ }
+ h4 { font-weight: 700; letter-spacing: -0.02em; color: #0A1829; }
+ h5 { font-weight: 600; letter-spacing: -0.015em; color: #0A1829; }
+ h6 { font-weight: 600; letter-spacing: -0.01em; color: #0A1829; }
 
-  .text-gradient { @apply text-slate-900 dark:text-white; }
-  .text-gradient-primary { @apply text-primary; }
+ p { color: #3D5E78; }
 
-  .no-tap-highlight {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 hover:bg-gray-400 transition-colors;
+ /* ── Form Inputs: always readable ─────────────────────────────── */
+ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+ select,
+ textarea {
+ color: #0A1829 !important;
+ background-color: #FFFFFF !important;
+ -webkit-text-fill-color: #0A1829 !important;
+ border-color: #C8D4E0;
+ }
+ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus,
+ select:focus,
+ textarea:focus {
+ border-color: #0145F2 !important;
+ outline: none;
+ box-shadow: 0 0 0 3px #0145F222;
+ }
+ input::placeholder,
+ textarea::placeholder {
+ color: #7A9AB5 !important;
+ -webkit-text-fill-color: #7A9AB5 !important;
+ opacity: 1;
+ }
+ input[type="checkbox"],
+ input[type="radio"] {
+ accent-color: #0145F2;
+ }
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   TEXT VISIBILITY FIX — 전체 사이트 적용
-   핵심 원칙:
-   1. 흰색/회색 배경 → 어두운 텍스트 (기본값)
-   2. 남색/파란/어두운 배경 → 무조건 흰색 텍스트
-   ════════════════════════════════════════════════════════════════════ */
+ GLOBAL UTILITY CLASSES — Duotone System
+ ════════════════════════════════════════════════════════════════════ */
 
-/* ── 남색/파란 배경: 내부 모든 텍스트를 흰색으로 ─────────────────
-   bg-primary, bg-blue-*, bg-indigo-* 등 모든 어두운 파란 계열
-   * (와일드카드)로 모든 하위 요소를 커버                           */
-.bg-primary,
-.bg-primary *,
-.toss-button-primary,
-.toss-button-primary * {
-  color: #ffffff !important;
+@layer utilities {
+ /* ── Backgrounds ─────────────────────────────────────────────── */
+ .bg-canvas { background-color: #EDF1F5; }
+ .bg-canvas-dark { background-color: #DDE4EC; }
+ .bg-canvas-deeper{ background-color: #C8D4E0; }
+ .bg-electric { background-color: #0145F2; }
+ .bg-electric-5 { background-color: #0145F20D; }
+ .bg-electric-10 { background-color: #0145F21A; }
+ .bg-electric-15 { background-color: #0145F226; }
+ .bg-electric-20 { background-color: #0145F233; }
+
+ /* ── Text Colors ─────────────────────────────────────────────── */
+ .text-electric { color: #0145F2; }
+ .text-canvas { color: #EDF1F5; }
+ .text-navy { color: #0A1829; }
+ .text-muted-blue { color: #3D5E78; }
+ .text-faint-blue { color: #7A9AB5; }
+
+ /* ── Borders ─────────────────────────────────────────────────── */
+ .border-electric { border-color: #0145F2; }
+ .border-canvas { border-color: #C8D4E0; }
+ .border-canvas-light { border-color: #DDE4EC; }
+
+ /* ── Cards ───────────────────────────────────────────────────── */
+ .duotone-card {
+ background-color: #FFFFFF;
+ border: 1.5px solid #DDE4EC;
+ border-radius: 1.25rem;
+ box-shadow: 0 1px 3px 0 #0A182914, 0 4px 16px -4px #0A182910;
+ transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+ }
+ .duotone-card:hover {
+ border-color: #0145F233;
+ box-shadow: 0 4px 24px -4px #0145F222, 0 1px 4px 0 #0A182910;
+ }
+
+ /* ── Input Fields ────────────────────────────────────────────── */
+ .duotone-input {
+ background-color: #FFFFFF;
+ border: 1.5px solid #DDE4EC;
+ border-radius: 0.75rem;
+ color: #0A1829;
+ padding: 0.75rem 1rem;
+ width: 100%;
+ font-size: 1rem;
+ transition: border-color 0.2s ease, box-shadow 0.2s ease;
+ }
+ .duotone-input:focus {
+ border-color: #0145F2;
+ box-shadow: 0 0 0 3px #0145F222;
+ outline: none;
+ }
+
+ /* ── Buttons ─────────────────────────────────────────────────── */
+ .btn-primary {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 0.5rem;
+ background-color: #0145F2;
+ color: #FFFFFF !important;
+ font-weight: 700;
+ border-radius: 0.875rem;
+ padding: 0.75rem 1.5rem;
+ border: 2px solid #0145F2;
+ cursor: pointer;
+ transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+ box-shadow: 0 4px 16px -2px #0145F233;
+ text-decoration: none;
+ }
+ .btn-primary:hover {
+ background-color: #EDF1F5;
+ color: #0145F2 !important;
+ box-shadow: 0 4px 16px -2px #0145F244;
+ }
+ .btn-primary:active {
+ transform: scale(0.97);
+ background-color: #0145F2;
+ color: #FFFFFF !important;
+ }
+ .btn-primary:disabled {
+ background-color: #C8D4E0;
+ color: #7A9AB5 !important;
+ border-color: #C8D4E0;
+ cursor: not-allowed;
+ box-shadow: none;
+ }
+
+ .btn-secondary {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 0.5rem;
+ background-color: #EDF1F5;
+ color: #0145F2 !important;
+ font-weight: 700;
+ border-radius: 0.875rem;
+ padding: 0.75rem 1.5rem;
+ border: 2px solid #0145F2;
+ cursor: pointer;
+ transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+ text-decoration: none;
+ }
+ .btn-secondary:hover {
+ background-color: #0145F2;
+ color: #FFFFFF !important;
+ }
+ .btn-secondary:active {
+ transform: scale(0.97);
+ }
+ .btn-secondary:disabled {
+ background-color: #EDF1F5;
+ color: #7A9AB5 !important;
+ border-color: #C8D4E0;
+ cursor: not-allowed;
+ }
+
+ .btn-ghost {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 0.5rem;
+ background-color: transparent;
+ color: #0145F2 !important;
+ font-weight: 600;
+ border-radius: 0.75rem;
+ padding: 0.625rem 1rem;
+ border: 2px solid transparent;
+ cursor: pointer;
+ transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+ text-decoration: none;
+ }
+ .btn-ghost:hover {
+ background-color: #0145F21A;
+ border-color: #0145F233;
+ }
+ .btn-ghost:active {
+ transform: scale(0.97);
+ }
+
+ /* ── Badge / Tag ─────────────────────────────────────────────── */
+ .duotone-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 0.375rem;
+ padding: 0.25rem 0.75rem;
+ border-radius: 999px;
+ font-size: 0.75rem;
+ font-weight: 700;
+ letter-spacing: 0.04em;
+ text-transform: uppercase;
+ background-color: #0145F21A;
+ color: #0145F2;
+ border: 1px solid #0145F233;
+ }
+
+ /* ── Dividers ────────────────────────────────────────────────── */
+ .duotone-divider {
+ height: 1px;
+ background-color: #DDE4EC;
+ }
+
+ /* ── Backward-compat aliases (Toss-era class names) ──────────── */
+ .toss-card { @apply duotone-card; }
+ .glass { @apply duotone-card; }
+ .glass-card { @apply duotone-card; }
+ .toss-input { @apply duotone-input; }
+ .glass-input { @apply duotone-input; }
+ .toss-button-primary { @apply btn-primary; }
+ .toss-button-secondary { @apply btn-secondary; }
+ .text-gradient { color: #0A1829; }
+ .text-gradient-primary { color: #0145F2; }
+
+ /* ── No tap highlight ────────────────────────────────────────── */
+ .no-tap-highlight {
+ -webkit-tap-highlight-color: transparent;
+ -webkit-touch-callout: none;
+ }
+
+ /* ── Section spacing helpers ─────────────────────────────────── */
+ .section-xl { padding-top: 7rem; padding-bottom: 7rem; }
+ .section-lg { padding-top: 5rem; padding-bottom: 5rem; }
+ .section-md { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+ .section-sm { padding-top: 2rem; padding-bottom: 2rem; }
+ .page-width { max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem; }
 }
 
-/* bg-blue-500 이상 모든 파란 계열 (전체 자식 포함) */
-.bg-blue-500, .bg-blue-500 *,
-.bg-blue-600, .bg-blue-600 *,
-.bg-blue-700, .bg-blue-700 *,
-.bg-blue-800, .bg-blue-800 *,
-.bg-blue-900, .bg-blue-900 *,
-.bg-indigo-600, .bg-indigo-600 *,
-.bg-indigo-700, .bg-indigo-700 *,
-.bg-indigo-800, .bg-indigo-800 * {
-  color: #ffffff !important;
+/* ════════════════════════════════════════════════════════════════════
+ TEXT VISIBILITY ENFORCEMENT
+ ════════════════════════════════════════════════════════════════════ */
+
+/* Electric Blue (dark) backgrounds → white text mandated */
+.bg-primary, .bg-primary *,
+.bg-electric, .bg-electric *,
+.bg-primary, .bg-primary *,
+.bg-electric, .bg-electric *,
+.bg-electric, .bg-electric *,
+.btn-primary,
+[style*="background: #0145F2"],
+[style*="background-color: #0145F2"],
+[style*="background:#0145F2"] {
+ color: #FFFFFF !important;
 }
 
-/* 어두운 회색 계열 배경 (전체 자식 포함) */
-.bg-slate-700, .bg-slate-700 *,
-.bg-slate-800, .bg-slate-800 *,
-.bg-slate-900, .bg-slate-900 *,
-.bg-gray-700,  .bg-gray-700 *,
-.bg-gray-800,  .bg-gray-800 *,
-.bg-gray-900,  .bg-gray-900 *,
-.bg-zinc-800,  .bg-zinc-800 *,
-.bg-zinc-900,  .bg-zinc-900 *,
-.bg-black,     .bg-black * {
-  color: #ffffff !important;
+/* Canvas / Light backgrounds → dark text */
+.bg-canvas, .bg-canvas *,
+.bg-white, 
+[style*="background: #EDF1F5"],
+[style*="background-color: #EDF1F5"] {
+ color: #0A1829;
 }
 
-/* ── text-white는 그냥 흰색으로 (남색 배경에서 쓰이므로) ─────────── */
-.text-white {
-  color: #ffffff !important;
+/* Prevent white-on-white */
+.bg-white { background-color: #FFFFFF; }
+.bg-canvas { background-color: #EDF1F5 !important; }
+.bg-canvas-dark { background-color: #DDE4EC !important; }
+.bg-canvas-deeper { background-color: #C8D4E0 !important; }
+.bg-canvas { background-color: #EDF1F5 !important; }
+.bg-canvas-dark { background-color: #DDE4EC !important; }
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #EDF1F5; }
+::-webkit-scrollbar-thumb { background: #0145F244; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #0145F288; }
+
+/* ── Selection ────────────────────────────────────────────────── */
+::selection {
+ background-color: #0145F222;
+ color: #0A1829;
 }
 
-/* ── 흰색/회색 배경 위의 잔존 text-white 텍스트: 어두운색으로 오버라이드 ─
-   단, 그 안에 어두운 배경 버튼이 있으면 흰 글자 유지 */
-.bg-white .text-white,
-.bg-slate-50 .text-white,
-.bg-slate-100 .text-white,
-.bg-gray-50 .text-white,
-.bg-gray-100 .text-white {
-  color: #0f172a !important;
+/* ── Focus ring ──────────────────────────────────────────────── */
+:focus-visible {
+ outline: 2.5px solid #0145F2;
+ outline-offset: 2px;
+ border-radius: 4px;
 }
 
-/* ── 어두운 배경 버튼이 흰 컨테이너 안에 있어도 흰 글자 강제 (우선순위 높임) ─ */
-.bg-slate-900 .text-white,
-.bg-slate-800 .text-white,
-.bg-slate-700 .text-white,
-.bg-primary .text-white,
-.bg-blue-600 .text-white,
-.bg-black .text-white,
-button.bg-slate-900,
-button.bg-slate-900 *,
-button.bg-slate-800,
-button.bg-slate-800 *,
-button.bg-primary,
-button.bg-primary *,
-button.bg-blue-600,
-button.bg-blue-600 * {
-  color: #ffffff !important;
+/* ── Recharts / chart text ─────────────────────────────────────── */
+.recharts-text,
+.recharts-label,
+.recharts-legend-item-text,
+.recharts-cartesian-axis-tick-value {
+ fill: #3D5E78 !important;
+ color: #3D5E78 !important;
+}
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+ background-color: #FFFFFF !important;
+ border: 1.5px solid #DDE4EC !important;
+ border-radius: 0.75rem !important;
 }
 
-/* ── 입력 필드: 항상 어두운 텍스트 ───────────────────────────────── */
-input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-  color: #0f172a !important;
-  -webkit-text-fill-color: #0f172a !important;
+/* ── Table styles ──────────────────────────────────────────────── */
+table { border-collapse: collapse; }
+th {
+ background-color: #EDF1F5;
+ color: #0145F2;
+ font-weight: 700;
+ font-size: 0.8125rem;
+ letter-spacing: 0.04em;
+ text-transform: uppercase;
+ padding: 0.875rem 1rem;
+ border-bottom: 2px solid #0145F233;
+}
+td {
+ color: #0A1829;
+ padding: 0.75rem 1rem;
+ border-bottom: 1px solid #DDE4EC;
+ font-size: 0.9375rem;
+}
+tr:hover td { background-color: #0145F208; }
+
+/* ── Font Mono ─────────────────────────────────────────────────── */
+.font-mono-tabular {
+ font-variant-numeric: tabular-nums;
+ font-family: var(--font-pretendard) !important;
+}
+/* ���� Footer hover styles (CSS-only) ���������������������������������������������������������� */
+.footer-link:hover { color: #0145F2 !important; }
+.footer-social-icon:hover {
+  color: #FFFFFF !important;
+  background-color: #0145F2 !important;
+  border-color: #0145F2 !important;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #94a3b8 !important;
-  -webkit-text-fill-color: #94a3b8 !important;
-  opacity: 1;
+/* ���� Radix Switch colors �������������������������������������������������������������������������������� */
+[data-state="checked"] { background-color: #0145F2 !important; }
+[data-state="unchecked"] { background-color: #C8D4E0 !important; }
+
+/* ���� Keyframes ���������������������������������������������������������������������������������������������������� */
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }

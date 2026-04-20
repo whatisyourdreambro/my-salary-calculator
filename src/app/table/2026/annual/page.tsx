@@ -8,59 +8,57 @@ import Link from "next/link";
 import SalaryTable from "@/components/SalaryTable"; // Reusing the generic component
 import TableHero from "@/components/TableHero";
 
-
-
 const tableHeaders = [
-  { key: "preTax", label: "연봉" },
-  { key: "monthlyNet", label: "2026 예상 월 실수령" },
-  { key: "changeValue", label: "변화값 (전년비)" }, // New Column
-  { key: "totalDeduction", label: "공제총액" },
-  { key: "pension", label: "국민연금" },
-  { key: "health", label: "건강보험" },
-  { key: "employment", label: "고용보험" },
-  { key: "incomeTax", label: "소득세" },
+ { key: "preTax", label: "연봉" },
+ { key: "monthlyNet", label: "2026 예상 월 실수령" },
+ { key: "changeValue", label: "변화값 (전년비)" }, // New Column
+ { key: "totalDeduction", label: "공제총액" },
+ { key: "pension", label: "국민연금" },
+ { key: "health", label: "건강보험" },
+ { key: "employment", label: "고용보험" },
+ { key: "incomeTax", label: "소득세" },
 ];
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
 function AnnualTable() {
-  const allData = generateAnnualSalaryTableData2026();
-  const highlightRows = [26000000, 30000000, 50000000, 80000000, 100000000];
+ const allData = generateAnnualSalaryTableData2026();
+ const highlightRows = [26000000, 30000000, 50000000, 80000000, 100000000];
 
-  return (
-    <main className="w-full bg-background min-h-screen pb-20">
-      <TableHero
-        badgeText="2026년 최신 데이터 반영"
-        title={
-          <>
-            2026 연봉 실수령액 <br className="sm:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 whitespace-nowrap">
-              미리보기
-            </span>
-          </>
-        }
-        description={
-          <>
-            2026년, 내 월급은 어떻게 변할까요? <br className="hidden sm:block" />
-            최저임금 인상(10,320원)과 보험료율 전망을 반영한 데이터입니다.
-          </>
-        }
-      />
+ return (
+ <main className="w-full bg-background min-h-screen pb-20">
+ <TableHero
+ badgeText="2026년 최신 데이터 반영"
+ title={
+ <>
+ 2026 연봉 실수령액 <br className="sm:hidden" />
+ <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 whitespace-nowrap">
+ 미리보기
+ </span>
+ </>
+ }
+ description={
+ <>
+ 2026년, 내 월급은 어떻게 변할까요? <br className="hidden sm:block" />
+ 최저임금 인상(10,320원)과 보험료율 전망을 반영한 데이터입니다.
+ </>
+ }
+ />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
-        <SalaryTable
-          headers={tableHeaders}
-          data={allData} // Using allData, but wait, SalaryTable might need checking if it handles large data or pagination
-          highlightRows={highlightRows}
-        />
+ <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+ <SalaryTable
+ headers={tableHeaders}
+ data={allData} // Using allData, but wait, SalaryTable might need checking if it handles large data or pagination
+ highlightRows={highlightRows}
+ />
 
-        <div className="mt-8 text-center text-muted-foreground text-sm">
-          * 본 데이터는 2026년 예상 보험료율 인상안을 반영한 시뮬레이션 결과이며, 실제 확정치와 다를 수 있습니다.
-        </div>
-      </div>
-    </main>
-  );
+ <div className="mt-8 text-center text-muted-foreground text-sm">
+ * 본 데이터는 2026년 예상 보험료율 인상안을 반영한 시뮬레이션 결과이며, 실제 확정치와 다를 수 있습니다.
+ </div>
+ </div>
+ </main>
+ );
 }
 
 export default function AnnualTablePage() {
-  return <AnnualTable />;
+ return <AnnualTable />;
 }
