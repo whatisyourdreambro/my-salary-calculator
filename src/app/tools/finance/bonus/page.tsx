@@ -6,7 +6,7 @@ import CountUp from "react-countup";
 import {
   Gift, ChevronDown, ChevronUp, Info, ArrowRight, Users,
   Share2, Copy, Check, TrendingDown, Zap, Shield,
-  AlertCircle, BarChart3, Sparkles,
+  AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -707,7 +707,7 @@ export default function BonusCalculatorPage() {
 
         {/* ── 절세 팁 카드 ── */}
         <div
-          className="rounded-2xl p-6 mb-8"
+          className="rounded-2xl p-6 mb-6"
           style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
         >
           <div className="flex items-center gap-2 mb-4">
@@ -734,37 +734,246 @@ export default function BonusCalculatorPage() {
           </div>
         </div>
 
-        {/* ── 관련 계산기 ── */}
-        <div>
-          <h2 className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#7A9AB5" }}>
-            관련 계산기
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: "연봉 실수령액 계산기",   href: "/" },
-              { label: "퇴직금 세금 계산기",     href: "/tools/finance/severance" },
-              { label: "IRP 세액공제 계산기",    href: "/tools/finance/irp" },
-              { label: "연말정산 계산기",         href: "/year-end-tax" },
-            ].map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="flex items-center justify-between p-4 rounded-xl transition-all group"
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1.5px solid #DDE4EC",
-                  color: "#3D5E78",
-                  textDecoration: "none",
-                }}
-              >
-                <span className="text-sm font-bold">{l.label}</span>
-                <ArrowRight size={14} style={{ color: "#0145F2" }} />
-              </a>
-            ))}
-          </div>
-        </div>
+        {/* ── 성과급 비교하기 ── */}
+        <BonusComparison baseResult={r} baseSalary={salary} baseBonus={bonus} />
+
+        {/* ── 성과급 용어사전 ── */}
+        <BonusGlossary />
 
       </div>
     </main>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 성과급 비교 컴포넌트
+// ─────────────────────────────────────────────────────────────────────────────
+
+const COMPARE_PRESETS = [
+  {
+    group: "직급별",
+    items: [
+      { label: "사원",  salary: 32_000_000,  bonus: 2_000_000  },
+      { label: "대리",  salary: 42_000_000,  bonus: 4_000_000  },
+      { label: "과장",  salary: 56_000_000,  bonus: 8_000_000  },
+      { label: "차장",  salary: 72_000_000,  bonus: 12_000_000 },
+      { label: "부장",  salary: 92_000_000,  bonus: 18_000_000 },
+      { label: "임원",  salary: 150_000_000, bonus: 40_000_000 },
+    ],
+  },
+  {
+    group: "업종별",
+    items: [
+      { label: "스타트업", salary: 50_000_000,  bonus: 5_000_000  },
+      { label: "중견기업", salary: 55_000_000,  bonus: 8_000_000  },
+      { label: "대기업",   salary: 72_000_000,  bonus: 15_000_000 },
+      { label: "금융권",   salary: 80_000_000,  bonus: 25_000_000 },
+      { label: "IT/테크",  salary: 85_000_000,  bonus: 20_000_000 },
+      { label: "외국계",   salary: 90_000_000,  bonus: 30_000_000 },
+    ],
+  },
+  {
+    group: "비율별",
+    items: [
+      { label: "연봉 10%",  salary: 60_000_000, bonus: 6_000_000  },
+      { label: "연봉 25%",  salary: 60_000_000, bonus: 15_000_000 },
+      { label: "연봉 50%",  salary: 60_000_000, bonus: 30_000_000 },
+      { label: "연봉 100%", salary: 60_000_000, bonus: 60_000_000 },
+      { label: "연봉 150%", salary: 60_000_000, bonus: 90_000_000 },
+      { label: "연봉 200%", salary: 60_000_000, bonus: 120_000_000 },
+    ],
+  },
+];
+
+function BonusComparison({
+  baseResult,
+  baseSalary,
+  baseBonus,
+}: {
+  baseResult: CalcResult;
+  baseSalary: number;
+  baseBonus: number;
+}) {
+  const [activeGroup, setActiveGroup] = useState(0);
+  const group = COMPARE_PRESETS[activeGroup];
+
+  const rows = group.items.map((item) => {
+    const res = calculate(item.salary, item.bonus, 0, false);
+    const isBase = item.salary === baseSalary && item.bonus === baseBonus;
+    return { ...item, res, isBase };
+  });
+
+  const maxNet = Math.max(...rows.map((row) => row.res.netBonus), 1);
+
+  return (
+    <section className="mb-6">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#0145F21A" }}>
+          <BarChart3 size={16} style={{ color: "#0145F2" }} />
+        </div>
+        <div>
+          <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 비교하기</h2>
+          <p className="text-xs" style={{ color: "#7A9AB5" }}>직급·업종·비율별 실수령액 한눈에 비교</p>
+        </div>
+      </div>
+
+      {/* 탭 */}
+      <div className="flex gap-1 p-1 rounded-2xl mb-4" style={{ backgroundColor: "#EDF1F5" }}>
+        {COMPARE_PRESETS.map((g, i) => (
+          <button
+            key={g.group}
+            onClick={() => setActiveGroup(i)}
+            className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all"
+            style={{
+              backgroundColor: activeGroup === i ? "#0145F2" : "transparent",
+              color: activeGroup === i ? "#FFFFFF" : "#7A9AB5",
+              boxShadow: activeGroup === i ? "0 2px 8px #0145F230" : "none",
+            }}
+          >{g.group}</button>
+        ))}
+      </div>
+
+      {/* 테이블 */}
+      <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #DDE4EC", backgroundColor: "#FFFFFF" }}>
+        {/* 헤더 */}
+        <div className="grid grid-cols-12 gap-1 px-4 py-3 text-xs font-black uppercase tracking-widest" style={{ backgroundColor: "#0145F2", color: "rgba(255,255,255,0.75)" }}>
+          <div className="col-span-2">구분</div>
+          <div className="col-span-3 text-right">세전 성과급</div>
+          <div className="col-span-2 text-right">세금</div>
+          <div className="col-span-3 text-right">실수령</div>
+          <div className="col-span-2 text-right">세율</div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div key={activeGroup} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
+            {rows.map((row, i) => {
+              const barPct = (row.res.netBonus / maxNet) * 100;
+              const isTop = row.res.netBonus === Math.max(...rows.map((r) => r.res.netBonus));
+              return (
+                <div key={row.label} style={{ borderBottom: i < rows.length - 1 ? "1px solid #EDF1F5" : "none", backgroundColor: row.isBase ? "#0145F208" : "transparent" }}>
+                  <div className="grid grid-cols-12 gap-1 px-4 py-3.5 items-center">
+                    <div className="col-span-2 flex items-center gap-1">
+                      <span className="text-xs font-black" style={{ color: "#0A1829" }}>{row.label}</span>
+                      {row.isBase && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{ backgroundColor: "#0145F2", color: "#FFF" }}>나</span>}
+                      {isTop && !row.isBase && <span className="text-[11px]">🏆</span>}
+                    </div>
+                    <div className="col-span-3 text-right">
+                      <span className="text-xs font-bold tabular-nums" style={{ color: "#7A9AB5" }}>{toEok(row.bonus)}</span>
+                    </div>
+                    <div className="col-span-2 text-right">
+                      <span className="text-xs font-bold tabular-nums" style={{ color: "#E63B5A" }}>-{toEok(row.res.totalDeduction)}</span>
+                    </div>
+                    <div className="col-span-3 text-right">
+                      <span className="text-xs font-black tabular-nums" style={{ color: "#0145F2" }}>{toEok(row.res.netBonus)}</span>
+                    </div>
+                    <div className="col-span-2 text-right">
+                      <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ backgroundColor: row.res.effectiveRate >= 30 ? "#FEE2E2" : "#EDF1F5", color: row.res.effectiveRate >= 30 ? "#E63B5A" : "#3D5E78" }}>
+                        {row.res.effectiveRate.toFixed(1)}%
+                      </span>
+                    </div>
+                  </div>
+                  {/* 막대 */}
+                  <div className="px-4 pb-2">
+                    <div className="w-full rounded-full overflow-hidden" style={{ height: "4px", backgroundColor: "#EDF1F5" }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${barPct}%` }}
+                        transition={{ duration: 0.45, delay: i * 0.05 }}
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: row.isBase ? "#0145F2" : isTop ? "#10B981" : "#C0D0E8" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* 내 결과 고정 */}
+        <div className="grid grid-cols-12 gap-1 px-4 py-3.5 items-center" style={{ backgroundColor: "#0145F2", borderTop: "2px solid #0145F2" }}>
+          <div className="col-span-2"><span className="text-xs font-black" style={{ color: "#FFFFFF" }}>내 성과급</span></div>
+          <div className="col-span-3 text-right"><span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>{toEok(baseBonus)}</span></div>
+          <div className="col-span-2 text-right"><span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.8)" }}>-{toEok(baseResult.totalDeduction)}</span></div>
+          <div className="col-span-3 text-right"><span className="text-xs font-black tabular-nums" style={{ color: "#FFFFFF" }}>{toEok(baseResult.netBonus)}</span></div>
+          <div className="col-span-2 text-right"><span className="text-xs font-black" style={{ color: "#FFFFFF" }}>{baseResult.effectiveRate.toFixed(1)}%</span></div>
+        </div>
+      </div>
+
+      {/* 인사이트 */}
+      <div className="mt-3 rounded-xl px-4 py-3 flex gap-2 items-start" style={{ backgroundColor: "#0145F20D", border: "1px solid #0145F220" }}>
+        <Sparkles size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
+        <p className="text-xs leading-relaxed" style={{ color: "#3D5E78" }}>
+          <strong style={{ color: "#0145F2" }}>세율 구간 주의:</strong>{" "}
+          연봉 + 성과급 합계가 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
+          IRP·연금저축으로 과세표준을 낮추면 구간 진입을 피할 수 있습니다.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 성과급 용어사전
+// ─────────────────────────────────────────────────────────────────────────────
+
+const GLOSSARY_TERMS = [
+  { term: "성과급 (Performance Bonus)",   emoji: "🎯", def: "개인·팀·회사의 목표 달성도에 따라 기본급 외 추가 지급되는 변동 급여. 취업규칙·근로계약서에 명시된 경우 지급 의무가 생깁니다.", tip: "근로계약서에 지급 기준이 명시되면 회사가 임의 삭감 불가. 계약 시 반드시 확인하세요." },
+  { term: "인센티브 (Incentive)",          emoji: "💡", def: "목표 달성을 독려하기 위한 변동 보상. 영업직 실적 비례 보상을 자주 가리키며, 근로소득으로 분류되어 누진세 적용을 받습니다.", tip: "인센티브가 클수록 연 세금이 급증합니다. 연말 IRP 납입으로 환급을 극대화하세요." },
+  { term: "PS (이익배분제)",               emoji: "📊", def: "회사 영업이익 일부를 직원과 나누는 제도. 회사 전체 실적이 좋아야 지급됩니다. IT 대기업·외국계에서 많이 운영합니다.", tip: "PS는 매년 지급 여부가 달라지므로 생활비 계획에 고정 수입으로 반영하면 위험합니다." },
+  { term: "누진세 (Progressive Tax)",      emoji: "📈", def: "소득이 많을수록 더 높은 세율이 적용되는 구조. 성과급이 클수록 합산 과세표준이 높아져 한계세율 구간이 올라갑니다. 한국은 6%~45% 8단계.", tip: "세전 1억 vs 500만원 성과급의 실효세율은 전혀 다릅니다. 반드시 합산 기준으로 계산하세요." },
+  { term: "한계세율 (Marginal Rate)",       emoji: "⚠️", def: "추가 소득 1원에 적용되는 가장 높은 세율. 성과급 전체에 적용되는 게 아니라, 성과급으로 진입한 구간의 세율입니다.", tip: "한계세율 ≠ 실효세율. 성과급 전체가 35%인 게 아닙니다. 이 계산기로 정확히 확인하세요." },
+  { term: "실효세율 (Effective Rate)",      emoji: "🔢", def: "실제로 낸 총세금 ÷ 성과급. 평균 세율이라고도 합니다. 한계세율보다 항상 낮습니다.", tip: "실효세율 20% = 성과급 1,000만원 중 200만원이 세금. 800만원 실수령." },
+  { term: "근로소득세액공제",               emoji: "🛡️", def: "근로소득자에게만 주어지는 세액공제. 산출세액의 55%(130만원 이하) 또는 30%(초과분)를 차감. 총급여 기준으로 한도 50~74만원 적용.", tip: "성과급으로 총급여가 1.2억을 초과하면 세액공제 한도가 50만원으로 줄어 부담이 더 늘어납니다." },
+  { term: "원천징수 vs 연말정산",           emoji: "💸", def: "회사는 성과급 지급 시 간이세액표 기준으로 미리 세금을 공제합니다. 확정 세액은 다음해 2월 연말정산에서 계산, 차액 환급·추납합니다.", tip: "연말정산 전 IRP 납입으로 공제를 늘리면 환급액을 키울 수 있습니다." },
+  { term: "IRP (개인형 퇴직연금)",          emoji: "🏦", def: "연 최대 900만원 납입, 납입액의 13.2~16.5% 세액공제. 성과급 수령 후 IRP에 추가 납입하면 절세 효과가 극대화됩니다.", tip: "성과급 1,000만원 수령 → IRP 900만원 납입 → 최대 148.5만원 환급 가능." },
+  { term: "4대보험 (성과급 부과)",          emoji: "🔐", def: "성과급도 근로소득이므로 국민연금·건강보험·고용보험이 부과됩니다. 단, 국민연금은 월 617만원 상한이 있어 연봉이 이미 초과하면 추가 없습니다.", tip: "산재보험료는 사업주 전액 부담이므로 근로자 부담 4대보험은 3가지입니다." },
+];
+
+function BonusGlossary() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <section className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#0145F21A" }}>
+          <BookOpen size={16} style={{ color: "#0145F2" }} />
+        </div>
+        <div>
+          <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 핵심 용어사전</h2>
+          <p className="text-xs" style={{ color: "#7A9AB5" }}>계산 전 반드시 알아야 할 10가지</p>
+        </div>
+      </div>
+      <div className="space-y-2">
+        {GLOSSARY_TERMS.map((g, i) => {
+          const isOpen = openIdx === i;
+          return (
+            <motion.div key={g.term} layout className="rounded-2xl overflow-hidden" style={{ border: `1.5px solid ${isOpen ? "#0145F2" : "#DDE4EC"}`, backgroundColor: "#FFFFFF" }}>
+              <button onClick={() => setOpenIdx(isOpen ? null : i)} className="w-full flex items-center justify-between px-5 py-4 text-left">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{g.emoji}</span>
+                  <span className="text-sm font-black" style={{ color: isOpen ? "#0145F2" : "#0A1829" }}>{g.term}</span>
+                </div>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all" style={{ backgroundColor: isOpen ? "#0145F2" : "#EDF1F5", transform: isOpen ? "rotate(180deg)" : "none" }}>
+                  <ChevronDown size={14} style={{ color: isOpen ? "#FFFFFF" : "#7A9AB5" }} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
+                    <div className="px-5 pb-5" style={{ borderTop: "1px solid #EDF1F5" }}>
+                      <p className="text-sm leading-relaxed mt-4 mb-3" style={{ color: "#3D5E78" }}>{g.def}</p>
+                      <div className="flex gap-2 p-3 rounded-xl" style={{ backgroundColor: "#0145F20D" }}>
+                        <Zap size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
+                        <p className="text-xs font-medium leading-relaxed" style={{ color: "#0145F2" }}><strong>TIP.</strong> {g.tip}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
