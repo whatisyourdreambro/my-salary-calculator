@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import dynamic from "next/dynamic";
 import {
@@ -56,6 +56,10 @@ const LoanCalculator = dynamic(
 );
 const DepositCalculator = dynamic(
  () => import("@/components/DepositCalculator"),
+ { ssr: false }
+);
+const ExtraFinancialCalculators = dynamic(
+ () => import("@/components/ExtraFinancialCalculators"),
  { ssr: false }
 );
 
