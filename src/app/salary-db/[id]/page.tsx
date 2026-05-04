@@ -2,9 +2,16 @@ import { Metadata } from "next";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { notFound } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
+import JsonLd from "@/components/JsonLd";
+import { buildCompanyMetadata } from "@/lib/seo";
+import {
+ breadcrumbLd,
+ companyOrganizationLd,
+ faqLd,
+} from "@/lib/structuredData";
 
-// Generate static params for all companies
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
+
 export async function generateStaticParams() {
  const companies = companyRepository.getAll();
  return companies.map((company) => ({
@@ -12,62 +19,76 @@ export async function generateStaticParams() {
  }));
 }
 
-// Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+ params,
+}: {
+ params: { id: string };
+}): Promise<Metadata> {
  const company = companyRepository.getById(params.id);
+ if (!company) return { title: "Company Not Found" };
 
- if (!company) {
- return {
- title: "Company Not Found",
- };
- }
+ const entryTotal =
+ company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
 
- const entryTotal = company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
- const formatMoney = (val: number) => `${Math.round(val / 10000)}만원`;
-
- return {
- title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)} | MoneySalary`,
- description: `${company.name.ko}(${company.name.en})의 2026년 예상 실수령액 및 영끌 연봉 정보. 신입 ${formatMoney(entryTotal)}, 평균 근무시간 ${company.workLife.weeklyHours.real}시간. 초봉부터 임원까지 연봉 로드맵과 숨겨진 복지 혜택까지 확인하세요.`,
- keywords: [
- `${company.name.ko} 연봉`,
- `${company.name.ko} 초봉`,
- `${company.name.ko} 신입연봉`,
- `${company.name.ko} 영끌`,
- "2026 연봉표",
- `${company.name.en} salary`,
- `${company.industry} 연봉`,
- "연봉정보",
- "기업연봉비교",
- "IT기업연봉",
- "대기업연봉",
- ],
- openGraph: {
- title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)}`,
- description: `${company.name.ko}의 2026년 예상 연봉, 워라밸, 기업문화 정보. 신입부터 임원까지 연봉 로드맵 한눈에 보기.`,
- type: "article",
- images: [
- {
- url: "/og-salary-db.png",
- width: 1200,
- height: 630,
- alt: `${company.name.ko} 연봉 정보`,
- },
- ],
- },
- twitter: {
- card: "summary_large_image",
- title: `${company.name.ko} 연봉 2025 (예상) - 신입 영끌 ${formatMoney(entryTotal)}`,
- description: `2026년 예상 실수령액 및 현직자 워라밸 정보 확인하기`,
- },
- };
+ return buildCompanyMetadata({
+ id: company.id,
+ name: company.name.ko,
+ industry: company.industry,
+ averageSalary: entryTotal,
+ });
 }
 
-export default function CompanyDetailPage({ params }: { params: { id: string } }) {
+function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) {
+ if (!company) return [];
+ const koName = company.name.ko;
+ const entryTotal =
+ company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+ const entryManwon = Math.round(entryTotal / 10000).toLocaleString("ko-KR");
+
+ return [
+ {
+ question: `${koName} 평균 연봉은 얼마인가요?`,
+ answer: `${koName}의 신입 영끌 평균 연봉은 약 ${entryManwon}만원입니다 (기본급 + 평균 인센티브 포함). 직급·연차에 따라 변동되며, 동일 업종 평균 대비 위치는 회사 페이지에서 확인 가능합니다.`,
+ },
+ {
+ question: `${koName} 워라밸은 어떤가요?`,
+ answer: `${koName}의 평균 주당 근무시간은 약 ${company.workLife.weeklyHours.real}시간입니다. 표준 주 40시간 대비 차이를 보고 워라밸 수준을 판단할 수 있습니다.`,
+ },
+ {
+ question: `${koName} 신입 초봉으로 받을 수 있는 대출 한도는?`,
+ answer: `신입 영끌 ${entryManwon}만원 기준 DSR 40% 적용 시 연 약 ${Math.round(entryTotal * 0.4 / 10000).toLocaleString("ko-KR")}만원의 원리금 상환 여력이 있습니다. 대출 한도는 머니샐러리 주택담보대출 계산기에서 시뮬레이션 가능합니다.`,
+ },
+ ];
+}
+
+export default function CompanyDetailPage({
+ params,
+}: {
+ params: { id: string };
+}) {
  const company = companyRepository.getById(params.id);
+ if (!company) notFound();
 
- if (!company) {
- notFound();
- }
+ const faqItems = buildCompanyFaq(company);
 
- return <CompanyDetailClient company={company} />;
+ return (
+ <>
+ <JsonLd
+ data={[
+ breadcrumbLd([
+ { name: "홈", path: "/" },
+ { name: "회사별 연봉", path: "/salary-db" },
+ { name: company.name.ko, path: `/salary-db/${company.id}` },
+ ]),
+ companyOrganizationLd({
+ name: company.name.ko,
+ industry: company.industry,
+ description: `${company.name.ko} 평균 연봉, 워라밸, 복지 정보`,
+ }),
+ faqLd(faqItems),
+ ]}
+ />
+ <CompanyDetailClient company={company} />
+ </>
+ );
 }

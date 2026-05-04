@@ -66,6 +66,10 @@ const CoupangBanner = dynamic(
  () => import("@/components/CoupangBanner"),
  { ssr: false }
 );
+const SocialProof = dynamic(
+ () => import("@/components/SocialProof"),
+ { ssr: false }
+);
 
 const websiteStructuredData = {
  "@context": "https://schema.org",
@@ -385,6 +389,9 @@ export default function HomePage() {
  </motion.div>
  </motion.div>
  </section>
+
+ {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
+ <SocialProof />
 
  {/* ═══ Calculator Section ══════════════════════════════════ */}
  <section

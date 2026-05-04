@@ -23,6 +23,7 @@ import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
+import NextActions from "./NextActions";
 import NumberStepper from "./NumberStepper";
 import SalaryPieChart from "./SalaryPieChart";
 import WealthChart from "./WealthChart";
@@ -452,11 +453,14 @@ export default function SalaryCalculator() {
  />
  </div>
 
+ {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
+ <NextActions annualSalary={annualSalary} />
+
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />
 
- {/* 다음 액션 추천 — 평균 PV/세션 향상 */}
- <RelatedCalculators currentPath="/" title="이 결과로 다음 단계는?" />
+ {/* 관련 계산기 cross-link */}
+ <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" />
 
  {/* 공유/저장 */}
  <div className="grid grid-cols-2 gap-3">
