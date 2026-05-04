@@ -78,6 +78,14 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.moneysalary.com",
+    types: {
+      "application/rss+xml": [
+        {
+          url: "https://www.moneysalary.com/rss.xml",
+          title: "머니샐러리 금융 가이드 RSS",
+        },
+      ],
+    },
   },
   verification: {
     google: "1yqyEwZxIAcqg8XFd2AjmAfEEJ4R9Es3tuqaQKerI1A",
