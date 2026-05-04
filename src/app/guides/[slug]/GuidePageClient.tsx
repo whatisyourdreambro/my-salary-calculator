@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
+import CoupangBanner from "@/components/CoupangBanner";
 
 interface GuidePageClientProps {
  guide: Guide;
@@ -130,7 +131,10 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  dangerouslySetInnerHTML={{ __html: guide.content }}
  />
 
- 
+ {/* 본문 끝 — 가장 임팩트 큰 자리 (글 다 읽은 직후) */}
+ <CoupangBanner
+ responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}
+ />
 
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
@@ -236,6 +240,11 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <button className="w-full py-3 bg-secondary text-foreground font-bold rounded-xl hover:bg-foreground hover:text-background transition-colors">
  머니샐러리 즐겨찾기 추가
  </button>
+ </div>
+
+ {/* 데스크톱 전용 사이드바 광고 - 모바일에선 본문 끝 광고로 충분 */}
+ <div className="hidden lg:block">
+ <CoupangBanner size="skyscraper" showDisclosure={false} />
  </div>
  </div>
  </aside>

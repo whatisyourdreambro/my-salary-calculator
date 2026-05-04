@@ -6,6 +6,7 @@ import {
  DollarSign, Percent, Activity, Building2, ChevronRight,
  Divide, Globe, Fuel, RefreshCw, Users, Zap
 } from "lucide-react";
+import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = {
  title: "금융 계산기 모음 2026 | 30가지 세금·재테크 계산기 - 머니샐러리",
@@ -183,6 +184,13 @@ export default function ToolsHubPage() {
  </div>
  </div>
  ))}
+
+ {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이 */}
+ <div className="mt-16">
+ <CoupangBanner
+ responsive={{ mobile: "rectangle", desktop: "leaderboard" }}
+ />
+ </div>
 
  {/* SEO Bottom Content */}
  <div className="mt-16 p-8 bg-canvas border border-canvas rounded-2xl">

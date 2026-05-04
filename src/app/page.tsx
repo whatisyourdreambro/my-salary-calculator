@@ -531,7 +531,9 @@ export default function HomePage() {
  }}
  >
  <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
- <CoupangBanner />
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
  </div>
  </section>
 

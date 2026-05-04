@@ -5,6 +5,7 @@ import { guides, categories, Guide } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import CoupangBanner from '@/components/CoupangBanner';
 function HeroGuide({ guide }: { guide: Guide }) {
  return (
  <div className="relative w-full h-[500px] mb-16 rounded-[2.5rem] overflow-hidden group shadow-2xl shadow-primary/20">
@@ -200,8 +201,12 @@ export default function GuidesPage() {
  )}
  </AnimatePresence>
 
- {/* Ad Unit: Top */}
- 
+ {/* Ad Unit: Top — 쿠팡 파트너스 */}
+ <div className="mb-12">
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ </div>
 
  {/* Guides Grid */}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
