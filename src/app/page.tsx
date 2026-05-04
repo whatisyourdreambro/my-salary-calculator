@@ -62,6 +62,10 @@ const ExtraFinancialCalculators = dynamic(
  () => import("@/components/ExtraFinancialCalculators"),
  { ssr: false }
 );
+const CoupangBanner = dynamic(
+ () => import("@/components/CoupangBanner"),
+ { ssr: false }
+);
 
 const websiteStructuredData = {
  "@context": "https://schema.org",
@@ -515,6 +519,19 @@ export default function HomePage() {
  delay={0.45}
  />
  </div>
+ </div>
+ </section>
+
+ {/* ═══ Coupang Partners Banner — 섹션 구분 자리 ══════════════ */}
+ <section
+ style={{
+ backgroundColor: "#FFFFFF",
+ borderTop: "1px solid #DDE4EC",
+ padding: "2rem 1.5rem",
+ }}
+ >
+ <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <CoupangBanner />
  </div>
  </section>
 

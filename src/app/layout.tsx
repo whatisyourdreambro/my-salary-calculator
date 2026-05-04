@@ -6,7 +6,6 @@ import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { StickyBottomAd } from "@/components/AdPlacement";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -148,12 +147,11 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow w-full pb-[60px] md:pb-0">
+            <main className="flex-grow w-full">
               {children}
             </main>
             <Footer />
           </div>
-          <StickyBottomAd />
         </NextThemesProvider>
 
         {/* Google Analytics 4 */}
