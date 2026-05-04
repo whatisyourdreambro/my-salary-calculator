@@ -1,5 +1,10 @@
 // src/lib/guidesData.ts
 
+import { taxDeepdiveGuides } from "@/lib/guides/tax-deepdive";
+import { negotiationGuides } from "@/lib/guides/negotiation-deepdive";
+import { financeGuides } from "@/lib/guides/finance-deepdive";
+import { companyRealEstateGuides } from "@/lib/guides/company-realestate-deepdive";
+
 export interface Guide {
  slug: string;
  title: string;
@@ -410,8 +415,19 @@ const rawGuides = [
  { slug: "household-ledger-tips", title: "가계부 작성 팁: 뱅크샐러드 vs 엑셀 📒", description: "작심삼일 가계부는 그만! 자동으로 기록하고 소비 분석하기.", category: "기초", tags: ["가계부", "절약", "앱추천"], level: "초급", publishedDate: "2025-02-01", views: 53000 },
 ];
 
+// 모든 raw 가이드 통합 (legacy + 신규 unique 본문)
+const allRawGuides = [
+ ...rawGuides,
+ ...taxDeepdiveGuides,
+ ...negotiationGuides,
+ ...financeGuides,
+ ...companyRealEstateGuides,
+];
+
 // Generate the final guides array with content
-export const guides: Guide[] = (rawGuides as any[]).map(guide => ({
+// — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
+// — 없으면 generateExpertContent fallback (legacy boilerplate)
+export const guides: Guide[] = (allRawGuides as any[]).map(guide => ({
  ...guide,
- content: generateExpertContent(guide.title, guide.category, guide.description, guide.tags)
+ content: guide.content || generateExpertContent(guide.title, guide.category, guide.description, guide.tags)
 }));
