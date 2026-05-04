@@ -70,6 +70,10 @@ const SocialProof = dynamic(
  () => import("@/components/SocialProof"),
  { ssr: false }
 );
+const SeasonalBanner = dynamic(
+ () => import("@/components/SeasonalBanner"),
+ { ssr: false }
+);
 
 const websiteStructuredData = {
  "@context": "https://schema.org",
@@ -392,6 +396,11 @@ export default function HomePage() {
 
  {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
  <SocialProof />
+
+ {/* ═══ 시즌 배너 — 현재 월 자동 인식 ════════════════════════ */}
+ <div className="py-8 bg-canvas">
+ <SeasonalBanner />
+ </div>
 
  {/* ═══ Calculator Section ══════════════════════════════════ */}
  <section
