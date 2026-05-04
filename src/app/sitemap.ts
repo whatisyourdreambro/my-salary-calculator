@@ -49,6 +49,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/year-end-tax-checklist',
  '/retirement-pension-2026',
  '/career-stages-2026',
+ // 100가지 계산기 인덱스
+ '/calc',
  // Calc Pages
  '/calc/2026-year',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
@@ -186,6 +188,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.7,
  },
  ];
+
+ // 100가지 계산기 동적 페이지
+ const { getAllSlugs } = require('@/lib/simpleCalculators');
+ const calcSlugs: string[] = getAllSlugs();
+ calcSlugs.forEach((slug) => {
+ companyUrls.push({
+ url: `${baseUrl}/calc/${slug}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly',
+ priority: 0.7,
+ });
+ });
 
  // Individual company pages — 단일 진입점 사용
  const { allCompanies } = require('@/data/companies');
