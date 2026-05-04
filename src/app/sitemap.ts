@@ -26,10 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fortune-2026',
  '/report',
  '/tips',
- '/table/annual',
- '/table/monthly',
- '/table/weekly',
- '/table/hourly',
+ // 구버전 /table/* 4개 → 301 redirect (next.config.mjs)
  '/table/2026/annual',
  '/table/2026/monthly',
  '/table/2026/weekly',
@@ -84,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fun/financial-mbti',
  '/fun/fortune',
  '/fun/lunch-roulette',
- '/fun/mbti-salary',
+ // /fun/mbti-salary → /mbti-salary 301 redirect (next.config.mjs)
  '/fun/meme-coin',
  '/fun/rank',
  '/fun/reincarnation',
@@ -183,15 +180,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  },
  ];
 
- // Individual company pages
- const { seedCompanies } = require('@/data/seedCompanies');
- const { globalCompanies } = require('@/data/globalCompanies');
- const { krCompanies_Batch2 } = require('@/data/krCompanies_Batch2');
- const { krCompanies_Batch3 } = require('@/data/krCompanies_Batch3');
- const { krCompanies_Batch4 } = require('@/data/krCompanies_Batch4');
- const { krCompanies_Batch5 } = require('@/data/krCompanies_Batch5');
-
- const allCompanies = [...seedCompanies, ...globalCompanies, ...krCompanies_Batch2, ...krCompanies_Batch3, ...krCompanies_Batch4, ...krCompanies_Batch5];
+ // Individual company pages — 단일 진입점 사용
+ const { allCompanies } = require('@/data/companies');
 
  allCompanies.forEach((company: any) => {
  companyUrls.push({

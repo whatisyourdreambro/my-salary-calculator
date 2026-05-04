@@ -57,6 +57,44 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // 중복 라우트 통합 (Phase 2):
+  // - /table/* (구버전) → /table/2026/* (2026 세법 정답)
+  // - /fun/mbti-salary → /mbti-salary (독립 페이지가 더 풍부)
+  // 위험: 일시적 GSC "Page with redirect" 카운트 증가 (정상). 시즌 직전 배포 주의.
+  async redirects() {
+    return [
+      {
+        source: "/table/annual",
+        destination: "/table/2026/annual",
+        permanent: true,
+      },
+      {
+        source: "/table/monthly",
+        destination: "/table/2026/monthly",
+        permanent: true,
+      },
+      {
+        source: "/table/weekly",
+        destination: "/table/2026/weekly",
+        permanent: true,
+      },
+      {
+        source: "/table/hourly",
+        destination: "/table/2026/hourly",
+        permanent: true,
+      },
+      {
+        source: "/fun/mbti-salary",
+        destination: "/mbti-salary",
+        permanent: true,
+      },
+      {
+        source: "/battle",
+        destination: "/fun/salary-battle",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
