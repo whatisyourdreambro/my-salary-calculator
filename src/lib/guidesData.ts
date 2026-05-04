@@ -5,6 +5,7 @@ import { negotiationGuides } from "@/lib/guides/negotiation-deepdive";
 import { financeGuides } from "@/lib/guides/finance-deepdive";
 import { companyRealEstateGuides } from "@/lib/guides/company-realestate-deepdive";
 import { lifecycleGuides } from "@/lib/guides/lifecycle-deepdive";
+import { insuranceInvestmentGuides } from "@/lib/guides/insurance-investment-deepdive";
 
 export interface Guide {
  slug: string;
@@ -424,6 +425,7 @@ const allRawGuides = [
  ...financeGuides,
  ...companyRealEstateGuides,
  ...lifecycleGuides,
+ ...insuranceInvestmentGuides,
 ];
 
 // Generate the final guides array with content
