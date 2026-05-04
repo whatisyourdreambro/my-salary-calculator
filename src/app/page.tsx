@@ -74,6 +74,10 @@ const SeasonalBanner = dynamic(
  () => import("@/components/SeasonalBanner"),
  { ssr: false }
 );
+const FeaturedGuides = dynamic(
+ () => import("@/components/FeaturedGuides"),
+ { ssr: false }
+);
 
 const websiteStructuredData = {
  "@context": "https://schema.org",
@@ -656,6 +660,9 @@ export default function HomePage() {
  </div>
  </div>
  </section>
+
+ {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
+ <FeaturedGuides />
 
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
  <section

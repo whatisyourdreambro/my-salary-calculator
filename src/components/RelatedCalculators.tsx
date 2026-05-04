@@ -3,7 +3,10 @@
 // 페이지 하단 cross-link 추천 카드.
 // 결과창 직하 또는 페이지 끝에 배치하여 평균 세션 페이지뷰 증가.
 
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
  ArrowRight,
  Calculator,
@@ -49,7 +52,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 interface RelatedCalculatorsProps {
- currentPath: string;
+ /** 명시적 경로 (지정 시 auto 무시) */
+ currentPath?: string;
  /** 표시할 개수 (기본 4) */
  limit?: number;
  /** 섹션 제목 (기본: "이런 계산기도 함께 보세요") */
@@ -63,7 +67,9 @@ export default function RelatedCalculators({
  title = "이런 계산기도 함께 보세요",
  className = "",
 }: RelatedCalculatorsProps) {
- const items = getRelatedCalculators(currentPath, limit);
+ const pathname = usePathname();
+ const resolvedPath = currentPath || pathname || "/";
+ const items = getRelatedCalculators(resolvedPath, limit);
 
  if (items.length === 0) return null;
 
