@@ -47,6 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/social-insurance-rates-2026',
  '/tax-changes-2026',
  '/year-end-tax-checklist',
+ '/retirement-pension-2026',
+ '/career-stages-2026',
  // Calc Pages
  '/calc/2026-year',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)

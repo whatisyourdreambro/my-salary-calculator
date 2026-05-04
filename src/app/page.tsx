@@ -12,7 +12,6 @@ import {
  Receipt,
  TrendingUp,
  Zap,
- ChevronRight,
  Shield,
  BarChart3,
  Sparkles,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ToolCard from "@/components/home/ToolCard";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -99,107 +99,7 @@ const websiteStructuredData = {
  },
 };
 
-/* ── Tool Card ─────────────────────────────────────────────────── */
-const ToolCard = ({
- icon: Icon,
- title,
- description,
- href,
- delay = 0,
- wide = false,
-}: {
- icon: React.ElementType;
- title: string;
- description: string;
- href: string;
- iconBg?: string;
- delay?: number;
- wide?: boolean;
-}) => (
- <motion.div
- initial={{ opacity: 0, y: 16 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.4, delay }}
- style={wide ? { gridColumn: "span 2" } : undefined}
- className={wide ? "md:col-span-2" : ""}
- >
- <Link
- href={href}
- style={{
- display: "flex",
- alignItems: "center",
- gap: "16px",
- padding: "18px 20px",
- backgroundColor: "#FFFFFF",
- borderRadius: "16px",
- border: "1.5px solid #DDE4EC",
- textDecoration: "none",
- transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease",
- }}
- onMouseEnter={(e) => {
- const el = e.currentTarget as HTMLElement;
- el.style.borderColor = "#0145F244";
- el.style.boxShadow = "0 4px 24px -4px #0145F222";
- el.style.transform = "translateY(-2px)";
- }}
- onMouseLeave={(e) => {
- const el = e.currentTarget as HTMLElement;
- el.style.borderColor = "#DDE4EC";
- el.style.boxShadow = "none";
- el.style.transform = "none";
- }}
- >
- {/* Icon */}
- <div
- style={{
- width: "46px",
- height: "46px",
- borderRadius: "12px",
- display: "flex",
- alignItems: "center",
- justifyContent: "center",
- flexShrink: 0,
- backgroundColor: "#0145F20D",
- color: "#0145F2",
- border: "1.5px solid #0145F221",
- }}
- >
- <Icon style={{ width: "22px", height: "22px" }} />
- </div>
-
- {/* Text */}
- <div style={{ flex: 1, minWidth: 0 }}>
- <p
- style={{
- fontWeight: 700,
- color: "#0A1829",
- fontSize: "15px",
- marginBottom: "2px",
- letterSpacing: "-0.02em",
- }}
- >
- {title}
- </p>
- <p
- style={{
- color: "#7A9AB5",
- fontSize: "13.5px",
- overflow: "hidden",
- textOverflow: "ellipsis",
- whiteSpace: "nowrap",
- }}
- >
- {description}
- </p>
- </div>
-
- <ChevronRight
- style={{ width: "16px", height: "16px", color: "#C8D4E0", flexShrink: 0 }}
- />
- </Link>
- </motion.div>
-);
+/* ── ToolCard 분리됨 → src/components/home/ToolCard.tsx ──────── */
 
 /* ── Stats Bar ─────────────────────────────────────────────────── */
 const stats = [
