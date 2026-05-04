@@ -78,6 +78,14 @@ const FeaturedGuides = dynamic(
  () => import("@/components/FeaturedGuides"),
  { ssr: false }
 );
+const HeroBadge = dynamic(
+ () => import("@/components/HeroBadge"),
+ { ssr: false, loading: () => <span>2026년 세법 완벽 반영</span> }
+);
+const GuideCategories = dynamic(
+ () => import("@/components/GuideCategories"),
+ { ssr: false }
+);
 
 const websiteStructuredData = {
  "@context": "https://schema.org",
@@ -290,7 +298,7 @@ export default function HomePage() {
  }}
  />
  </span>
- 2026년 세법 완벽 반영
+ <HeroBadge />
  </motion.div>
 
  {/* H1 */}
@@ -663,6 +671,9 @@ export default function HomePage() {
 
  {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
  <FeaturedGuides />
+
+ {/* ═══ Guide Categories — 카테고리별 진입 ══════════════════ */}
+ <GuideCategories />
 
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
  <section
