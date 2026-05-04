@@ -8,6 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
+import { GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 
 interface GuidePageClientProps {
  guide: Guide;
@@ -118,8 +119,10 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </p>
  </div>
 
+ <GuideMidAd />
+
  <div
- className="prose prose-lg max-w-none 
+ className="prose prose-lg max-w-none
  prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-24
  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
  prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary
@@ -158,6 +161,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </div>
 
  {/* 본문 끝 — 가장 임팩트 큰 자리 (글 다 읽은 직후) */}
+ <GuideMidAd />
+
  <CoupangBanner
  responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}
  />
@@ -270,6 +275,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
 
  {/* 데스크톱 전용 사이드바 광고 - 모바일에선 본문 끝 광고로 충분 */}
  <div className="hidden lg:block">
+ <SidebarAd />
  <CoupangBanner size="skyscraper" showDisclosure={false} />
  </div>
  </div>

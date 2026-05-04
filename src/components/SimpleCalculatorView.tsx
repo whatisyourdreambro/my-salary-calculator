@@ -6,8 +6,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Calculator } from "lucide-react";
+import Link from "next/link";
+import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
+import { CalcResultAd } from "./AdPlacement";
+import JsonLd from "./JsonLd";
+import { faqLd } from "@/lib/structuredData";
 
 interface Props {
  slug: string;
@@ -125,12 +129,103 @@ export default function SimpleCalculatorView({ slug }: Props) {
  )}
  </section>
 
+ <CalcResultAd />
+
  {calc.explanation && (
  <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
  <h3 className="text-sm font-black text-navy mb-3">계산 방식</h3>
- <p className="text-sm text-muted-blue leading-relaxed">
+ <p className="text-sm text-muted-blue leading-relaxed whitespace-pre-line">
  {calc.explanation}
  </p>
+ </section>
+ )}
+
+ {calc.formula && (
+ <section className="p-6 bg-canvas-100 rounded-2xl border border-canvas-200 mb-6">
+ <h3 className="text-sm font-black text-navy mb-3 flex items-center gap-2">
+ <Sigma className="w-4 h-4 text-electric" />
+ 계산 공식
+ </h3>
+ <code className="block text-sm text-navy font-mono bg-white p-3 rounded-lg border border-canvas-200 leading-relaxed">
+ {calc.formula}
+ </code>
+ </section>
+ )}
+
+ {calc.faqs && calc.faqs.length > 0 && (
+ <>
+ <JsonLd
+ data={faqLd(
+ calc.faqs.map((f) => ({ question: f.q, answer: f.a }))
+ )}
+ />
+ <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
+ <h3 className="text-sm font-black text-navy mb-4 flex items-center gap-2">
+ <HelpCircle className="w-4 h-4 text-electric" />
+ 자주 묻는 질문
+ </h3>
+ <div className="space-y-3">
+ {calc.faqs.map((item) => (
+ <details
+ key={item.q}
+ className="group p-4 bg-canvas-50 rounded-xl border border-canvas-200"
+ >
+ <summary className="flex items-start justify-between gap-3 cursor-pointer text-sm font-bold text-navy">
+ <span>{item.q}</span>
+ <ArrowRight className="w-4 h-4 text-electric flex-shrink-0 mt-0.5 transition-transform group-open:rotate-90" />
+ </summary>
+ <p className="mt-3 text-sm text-muted-blue leading-relaxed whitespace-pre-line">
+ {item.a}
+ </p>
+ </details>
+ ))}
+ </div>
+ </section>
+ </>
+ )}
+
+ {calc.caveats && calc.caveats.length > 0 && (
+ <section className="p-6 bg-amber-50 rounded-2xl border border-amber-200 mb-6">
+ <h3 className="text-sm font-black text-navy mb-3 flex items-center gap-2">
+ <AlertTriangle className="w-4 h-4 text-amber-600" />
+ 유의사항
+ </h3>
+ <ul className="space-y-2 text-sm text-muted-blue leading-relaxed">
+ {calc.caveats.map((item, idx) => (
+ <li key={idx} className="flex gap-2">
+ <span className="text-amber-600 font-bold">·</span>
+ <span>{item}</span>
+ </li>
+ ))}
+ </ul>
+ </section>
+ )}
+
+ {calc.relatedSlugs && calc.relatedSlugs.length > 0 && (
+ <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
+ <h3 className="text-sm font-black text-navy mb-4">관련 계산기</h3>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ {calc.relatedSlugs
+ .map((s) => getCalculatorBySlug(s))
+ .filter((c): c is NonNullable<typeof c> => Boolean(c))
+ .map((rel) => (
+ <Link
+ key={rel.slug}
+ href={`/calc/${rel.slug}`}
+ className="group flex items-start gap-2 p-3 bg-canvas-50 rounded-xl border border-canvas-200 hover:border-electric transition-all"
+ >
+ <ArrowRight className="w-4 h-4 text-electric flex-shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
+ <div>
+ <p className="text-sm font-bold text-navy group-hover:text-electric transition-colors">
+ {rel.title}
+ </p>
+ <p className="text-xs text-faint-blue mt-1 line-clamp-1">
+ {rel.description}
+ </p>
+ </div>
+ </Link>
+ ))}
+ </div>
  </section>
  )}
  </div>

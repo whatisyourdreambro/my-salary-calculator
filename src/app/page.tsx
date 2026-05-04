@@ -20,6 +20,7 @@ import {
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
+import { HomeTopAd } from "@/components/AdPlacement";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -308,6 +309,11 @@ export default function HomePage() {
 
  {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
  <SocialProof />
+
+ {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
+ <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 1.5rem" }}>
+ <HomeTopAd />
+ </div>
 
  {/* ═══ 시즌 배너 — 현재 월 자동 인식 ════════════════════════ */}
  <div className="py-8 bg-canvas">

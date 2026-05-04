@@ -2,47 +2,113 @@
 
 import { useEffect, useRef } from "react";
 
-/**
- * 결과창 직하 광고 — CTR 최고 구간.
- * AdSense Auto Ads와 별도로 수동 배치하여 사용자가 결과를 본 직후의
- * 시선 종착점을 활용한다.
- */
-export function ResultAd() {
- const ref = useRef<HTMLDivElement>(null);
+const CLIENT_ID = "ca-pub-2873403048341290";
 
- useEffect(() => {
- try {
- if (ref.current && ref.current.clientHeight === 0) {
- // @ts-expect-error adsbygoogle global
- (window.adsbygoogle = window.adsbygoogle || []).push({});
- }
- } catch {
- // AdSense push errors are non-fatal
- }
- }, []);
+type AdSlotProps = {
+  slot: string | undefined;
+  format?: string;
+  layoutKey?: string;
+  style?: React.CSSProperties;
+  containerClassName?: string;
+};
 
- return (
- <div
- ref={ref}
- className="result-ad-container"
- style={{
- width: "100%",
- minHeight: "90px",
- margin: "1.5rem 0",
- display: "flex",
- justifyContent: "center",
- alignItems: "center",
- backgroundColor: "transparent",
- }}
- >
- <ins
- className="adsbygoogle"
- style={{ display: "block", width: "100%", minHeight: "90px" }}
- data-ad-client="ca-pub-2873403048341290"
- data-ad-slot="auto"
- data-ad-format="auto"
- data-full-width-responsive="true"
- />
- </div>
- );
+function AdSlot({
+  slot,
+  format = "auto",
+  layoutKey,
+  style,
+  containerClassName,
+}: AdSlotProps) {
+  const pushed = useRef(false);
+
+  useEffect(() => {
+    if (pushed.current || !slot) return;
+    pushed.current = true;
+    try {
+      // @ts-expect-error adsbygoogle global
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch {
+      // AdSense push errors are non-fatal
+    }
+  }, [slot]);
+
+  if (!slot) return null;
+
+  return (
+    <div
+      className={containerClassName ?? "ad-container"}
+      style={{
+        width: "100%",
+        margin: "1.5rem 0",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        ...style,
+      }}
+    >
+      <span
+        style={{
+          fontSize: "11px",
+          color: "#94A3B8",
+          marginBottom: "4px",
+          textAlign: "center",
+          width: "100%",
+        }}
+      >
+        광고 (Sponsored)
+      </span>
+      <ins
+        className="adsbygoogle"
+        style={{
+          display: "block",
+          width: "100%",
+          minHeight: "90px",
+        }}
+        data-ad-client={CLIENT_ID}
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+        {...(layoutKey ? { "data-ad-layout-key": layoutKey } : {})}
+      />
+    </div>
+  );
 }
+
+export function HomeTopAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP}
+      format="auto"
+    />
+  );
+}
+
+export function CalcResultAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CALC_RESULT}
+      format="auto"
+    />
+  );
+}
+
+export function GuideMidAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID}
+      format="auto"
+    />
+  );
+}
+
+export function SidebarAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR}
+      format="auto"
+      style={{ maxWidth: "300px" }}
+    />
+  );
+}
+
+export const ResultAd = CalcResultAd;

@@ -28,6 +28,11 @@ export interface CalculatorResult {
  note?: string;
 }
 
+export interface CalculatorFaq {
+ q: string;
+ a: string;
+}
+
 export interface CalculatorDef {
  slug: string;
  title: string;
@@ -51,4 +56,12 @@ export interface CalculatorDef {
  compute: (inputs: Record<string, number>) => CalculatorResult;
  /** 결과 하단에 표시될 추가 설명 (선택) */
  explanation?: string;
+ /** 계산 공식 (예: "산출세액 = 과세표준 × 세율 - 누진공제") */
+ formula?: string;
+ /** 자주 묻는 질문 (FAQPage Schema.org 자동 노출) */
+ faqs?: CalculatorFaq[];
+ /** 유의사항·주의 (불릿 리스트) */
+ caveats?: string[];
+ /** 관련 계산기 슬러그 (3~5개 권장) */
+ relatedSlugs?: string[];
 }

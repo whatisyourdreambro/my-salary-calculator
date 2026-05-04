@@ -8,6 +8,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { allCalculators } from "@/lib/simpleCalculators";
+import { HomeTopAd } from "@/components/AdPlacement";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "100가지 금융·생활 계산기 — 한 페이지에서 한눈에",
@@ -61,8 +62,9 @@ export default function CalcIndexPage() {
  </p>
  </div>
 
- {grouped.map((cat) => (
- <section key={cat.id} className="mb-10">
+ {grouped.map((cat, idx) => (
+ <div key={cat.id}>
+ <section className="mb-10">
  <div className="flex items-center gap-2 mb-4">
  <h2 className="text-lg font-black text-navy">{cat.label}</h2>
  <span className="text-xs font-bold text-faint-blue">
@@ -90,6 +92,8 @@ export default function CalcIndexPage() {
  ))}
  </div>
  </section>
+ {idx === 2 && <HomeTopAd />}
+ </div>
  ))}
  </div>
  </main>

@@ -39,7 +39,7 @@ Disallow: /_next/
 # 차단: 사용자 데이터 공유 페이지 (noindex 메타로도 처리됨)
 Disallow: /share/
 
-# AI 크롤러: 학습 데이터 수집 거부 (선택)
+# AI 크롤러: 학습 데이터 수집 거부
 User-agent: GPTBot
 Disallow: /
 
@@ -49,7 +49,62 @@ Disallow: /
 User-agent: anthropic-ai
 Disallow: /
 
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
 User-agent: Google-Extended
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+# SEO 분석 봇: 자원 낭비 방지
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: SerpstatBot
+Disallow: /
+
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: Barkrowler
+Disallow: /
+
+User-agent: ZoominfoBot
 Disallow: /
 
 # 사이트맵 위치 (Google·Naver 등 자동 발견)

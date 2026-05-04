@@ -8,6 +8,7 @@ import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
+import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import { ArrowLeft, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
 import {
@@ -147,6 +148,10 @@ export default function SalaryAmountPage({ params }: Props) {
  }}
  />
 
+ <div className="w-full max-w-4xl mx-auto px-6 mt-6">
+ <CalcResultAd />
+ </div>
+
  <div className="w-full mt-10 space-y-12 max-w-4xl mx-auto">
  <WealthChart monthlyNetSalary={tax.netPay} />
  <SalaryTierCard annualSalary={amount} />
@@ -171,6 +176,10 @@ export default function SalaryAmountPage({ params }: Props) {
  ))}
  </div>
  </section>
+
+ <div className="px-6">
+ <HomeTopAd />
+ </div>
 
  {/* 인근 연봉 리포트 */}
  {neighbors.length > 0 && (
