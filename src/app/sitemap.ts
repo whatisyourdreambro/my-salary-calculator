@@ -40,6 +40,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/about',
  '/privacy',
  '/terms',
+ // Seasonal pages — 시즌 트래픽 핵심
+ '/year-end-tax-2026',
+ '/health-insurance-2026',
+ '/year-end-tax-settlement-2026',
+ '/new-employee-2026',
  // Calc Pages
  '/calc/2026-year',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
