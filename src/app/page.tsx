@@ -224,7 +224,7 @@ export default function HomePage() {
  __html: JSON.stringify(websiteStructuredData),
  }}
  />
- <div style={{ width: "100%", overflowX: "hidden" }}>
+ <div className="w-full overflow-x-hidden">
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
  <section

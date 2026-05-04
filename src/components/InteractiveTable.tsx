@@ -265,31 +265,31 @@ export default function InteractiveTable({
  transition={{ duration: 0.5, delay: 0.1 }}
  >
  {/* 내부 글로우 */}
- <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] pointer-events-none" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
+ <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] pointer-events-none bg-white/10" />
 
- <p className="text-xs font-black uppercase tracking-widest mb-3 relative z-10" style={{ color: 'rgba(255,255,255,0.7)' }}>
+ <p className="text-xs font-black uppercase tracking-widest mb-3 relative z-10 text-white/70">
  예상 월 실수령액
  </p>
- <p className="text-5xl font-black tracking-tight tabular-nums relative z-10" style={{ color: '#FFFFFF' }}>
+ <p className="text-5xl font-black tracking-tight tabular-nums relative z-10 text-white">
  {result.monthlyNet.toLocaleString('ko-KR')}
- <span className="text-2xl ml-1 font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>원</span>
+ <span className="text-2xl ml-1 font-semibold text-white/70">원</span>
  </p>
 
- <div className="mt-6 pt-5 space-y-2.5 text-sm font-medium relative z-10" style={{ borderTop: '1px solid rgba(255,255,255,0.2)' }}>
+ <div className="mt-6 pt-5 space-y-2.5 text-sm font-medium relative z-10 border-t border-white/20">
  <div className="flex justify-between items-center">
- <span style={{ color: 'rgba(255,255,255,0.7)' }}>세전 (월환산)</span>
- <span className="font-bold tabular-nums" style={{ color: '#FFFFFF' }}>{Math.round(salary / 12).toLocaleString('ko-KR')}원</span>
+ <span className="text-white/70">세전 (월환산)</span>
+ <span className="font-bold tabular-nums text-white">{Math.round(salary / 12).toLocaleString('ko-KR')}원</span>
  </div>
  <div className="flex justify-between items-center">
- <span style={{ color: 'rgba(255,255,255,0.7)' }}>총 공제액</span>
- <span className="font-bold tabular-nums" style={{ color: 'rgba(255,255,255,0.8)' }}>
+ <span className="text-white/70">총 공제액</span>
+ <span className="font-bold tabular-nums text-white/80">
  <TrendingDown className="inline w-3.5 h-3.5 mr-1" />
  {result.totalDeduction.toLocaleString('ko-KR')}원
  </span>
  </div>
  <div className="flex justify-between items-center">
- <span style={{ color: 'rgba(255,255,255,0.7)' }}>공제율</span>
- <span className="font-bold tabular-nums" style={{ color: '#FFFFFF' }}>{(deductionRate * 100).toFixed(1)}%</span>
+ <span className="text-white/70">공제율</span>
+ <span className="font-bold tabular-nums text-white">{(deductionRate * 100).toFixed(1)}%</span>
  </div>
  </div>
  </motion.div>
