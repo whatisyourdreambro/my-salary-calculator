@@ -214,7 +214,7 @@ export function buildCompanyMetadata(company: {
  `${company.name} 신입 연봉`,
  ...(company.industry ? [company.industry] : []),
  ],
- ogImage: `${SITE_URL}/api/og?type=company&id=${company.id}`,
+ ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,
  });
 }
 
