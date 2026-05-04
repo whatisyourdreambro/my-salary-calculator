@@ -22,6 +22,7 @@ import type {
 import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
 import { ResultAd } from "./AdPlacement";
+import RelatedCalculators from "./RelatedCalculators";
 import NumberStepper from "./NumberStepper";
 import SalaryPieChart from "./SalaryPieChart";
 import WealthChart from "./WealthChart";
@@ -453,6 +454,9 @@ export default function SalaryCalculator() {
 
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />
+
+ {/* 다음 액션 추천 — 평균 PV/세션 향상 */}
+ <RelatedCalculators currentPath="/" title="이 결과로 다음 단계는?" />
 
  {/* 공유/저장 */}
  <div className="grid grid-cols-2 gap-3">

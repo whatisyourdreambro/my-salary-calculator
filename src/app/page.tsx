@@ -208,14 +208,14 @@ export default function HomePage() {
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
  <section
+ className="hero-section"
  style={{
  position: "relative",
- minHeight: "88vh",
  display: "flex",
  flexDirection: "column",
  alignItems: "center",
  justifyContent: "center",
- padding: "7rem 1.5rem 4rem",
+ padding: "5rem 1.5rem 3rem",
  backgroundColor: "#EDF1F5",
  overflow: "hidden",
  }}

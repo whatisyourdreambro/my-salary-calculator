@@ -37,6 +37,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/guides',
  '/qna',
  '/glossary',
+ '/about',
+ '/privacy',
+ '/terms',
  // Calc Pages
  '/calc/2026-year',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)

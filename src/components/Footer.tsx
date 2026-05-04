@@ -10,13 +10,15 @@ export default function Footer() {
 
   const links = [
     { name: "연봉 계산기", href: "/" },
-    { name: "연봉 테이블", href: "/table/annual" },
+    { name: "연봉 테이블", href: "/table/2026/annual" },
     { name: "금융 가이드", href: "/guides" },
     { name: "용어 사전", href: "/glossary" },
+    { name: "사이트 소개", href: "/about" },
   ];
   const legalLinks = [
     { name: "개인정보처리방침", href: "/privacy" },
     { name: "이용약관", href: "/terms" },
+    { name: "About", href: "/about" },
   ];
   const socialLinks = [
     { Icon: Facebook, href: "#", label: "Facebook" },

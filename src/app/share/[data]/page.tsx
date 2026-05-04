@@ -1,12 +1,19 @@
 // src/app/share/[data]/page.tsx
 
+import type { Metadata } from "next";
 import ShareableResult from "@/components/ShareableResult";
 import { Suspense } from "react";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
 
-
 export const runtime = 'edge';
+
+// 사용자 데이터 기반 공유 페이지 — 검색 색인 불필요
+export const metadata: Metadata = {
+ title: "공유된 연봉 결과 — 머니샐러리",
+ description: "공유된 연봉 계산 결과 페이지",
+ robots: { index: false, follow: false },
+};
 
 type Props = {
  params: { data: string };
