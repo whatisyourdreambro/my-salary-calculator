@@ -134,7 +134,7 @@ export default function RootLayout({
 
         {/* Google Analytics 4 */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-QSGXV6T86R"
+          src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
           strategy="afterInteractive"
         />
         <Script id="ga4-init" strategy="afterInteractive">
@@ -142,7 +142,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-QSGXV6T86R', { send_page_view: true });
+            gtag('config', 'G-EZ8GT7RPEZ', { send_page_view: true });
           `}
         </Script>
 
