@@ -42,6 +42,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/health-insurance-2026',
  '/year-end-tax-settlement-2026',
  '/new-employee-2026',
+ // Info pages — 정보성 검색 트래픽
+ '/tax-rates-2026',
+ '/social-insurance-rates-2026',
+ '/tax-changes-2026',
  // Calc Pages
  '/calc/2026-year',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
