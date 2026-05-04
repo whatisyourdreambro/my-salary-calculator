@@ -2,15 +2,63 @@
 
 import type { Metadata } from "next";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
-export const metadata: Metadata = {
- title: "연말정산 환급금 계산기 (2026년 귀속) | Moneysalary",
+import RelatedCalculators from "@/components/RelatedCalculators";
+import JsonLd from "@/components/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { breadcrumbLd, softwareApplicationLd, faqLd } from "@/lib/structuredData";
+
+export const metadata: Metadata = buildPageMetadata({
+ title: "연말정산 환급금 계산기 - 13월의 월급 미리 보기 (2026)",
  description:
- "13월의 월급, 미리 계산해보세요! 총급여, 신용카드, 의료비 등 항목을 입력하고 2026년 귀속 연말정산 예상 환급금 또는 추가 납부 세액을 확인하세요.",
-};
+ "총급여·신용카드·의료비·연금저축·기부금 입력 → 2026년 귀속 연말정산 예상 환급금 즉시 계산. 놓치기 쉬운 공제 항목과 절세 전략까지 한 번에.",
+ path: "/year-end-tax",
+ keywords: [
+ "연말정산 계산기",
+ "연말정산 환급금",
+ "13월의 월급",
+ "신용카드 공제",
+ "의료비 공제",
+ "연금저축 공제",
+ "2026 연말정산",
+ ],
+});
+
+const FAQ_ITEMS = [
+ {
+ question: "연말정산 환급금은 어떻게 계산되나요?",
+ answer:
+ "근로소득공제 후 과세표준에 누진세율(6~45%)을 적용해 산출세액을 계산하고, 신용카드·의료비·교육비·기부금 등 세액공제를 차감합니다. 미리 낸 원천징수세보다 적으면 환급, 많으면 추가 납부됩니다.",
+ },
+ {
+ question: "신용카드 공제 한도는 어떻게 되나요?",
+ answer:
+ "총급여의 25%를 초과한 금액부터 공제됩니다. 신용카드 15%, 체크카드/현금영수증 30%, 전통시장·대중교통 40% 공제율이 적용되며 최대 300만원(총급여 7천만 이하)까지입니다.",
+ },
+ {
+ question: "연금저축·IRP 세액공제는 얼마까지 받을 수 있나요?",
+ answer:
+ "연금저축 600만원 + IRP 추가 300만원 = 최대 900만원까지 납입 가능합니다. 총급여 5,500만원 이하는 16.5%, 초과는 13.2% 세액공제율이 적용됩니다 (최대 약 148만원 절세).",
+ },
+];
 
 export default function YearEndTaxPage() {
  return (
  <main className="w-full min-h-screen bg-canvas -[#191F28]">
+ <JsonLd
+ data={[
+ breadcrumbLd([
+ { name: "홈", path: "/" },
+ { name: "연말정산 계산기", path: "/year-end-tax" },
+ ]),
+ softwareApplicationLd({
+ name: "연말정산 환급금 계산기",
+ description:
+ "13월의 월급을 미리 계산하는 2026 귀속 연말정산 시뮬레이터.",
+ url: "/year-end-tax",
+ }),
+ faqLd(FAQ_ITEMS),
+ ]}
+ />
  {/* Hero */}
  <section className="relative pt-32 pb-16 px-4 text-center overflow-hidden">
  <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />

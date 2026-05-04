@@ -6,6 +6,8 @@ import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
+import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -100,35 +102,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "머니샐러리",
-    url: "https://www.moneysalary.com",
-    description:
-      "2026년 최신 세법 기준 연봉 실수령액 계산기. 세후 월급, 4대보험, 소득세를 즉시 계산.",
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Web",
-    inLanguage: "ko",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "KRW",
-    },
-    provider: {
-      "@type": "Organization",
-      name: "머니샐러리",
-      url: "https://www.moneysalary.com",
-    },
-    featureList: [
-      "연봉 실수령액 계산",
-      "4대보험 공제 계산",
-      "연말정산 계산기",
-      "FIRE 은퇴 계산기",
-      "퇴직금 계산기",
-    ],
-  };
-
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
@@ -138,10 +111,7 @@ export default function RootLayout({
           crossOrigin=""
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
       </head>
       <body
         className="antialiased"

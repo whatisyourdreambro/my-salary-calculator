@@ -1,11 +1,21 @@
 // src/app/table/monthly/page.tsx
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { generateMonthlySalaryTableData } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import MonthlyTableInteractive from "./MonthlyTableInteractive";
 import TableHero from "@/components/TableHero";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+ title: "월급 실수령액 표 — 월급별 세후 수령액 (구버전)",
+ description:
+ "월급별 실수령액 표. 4대보험·소득세 공제액 한눈에 확인. 최신 2026년 세법 표는 /table/2026/monthly에서 확인하세요.",
+ path: "/table/monthly",
+ keywords: ["월급 실수령액 표", "월급별 세후", "월급 테이블"],
+});
 
 const tableHeaders = [
  { key: "preTax", label: "월급" },

@@ -1,10 +1,26 @@
 
 // src/app/table/2026/monthly/page.tsx
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+ title: "2026 월급 실수령액 표 — 월급별 세후 수령액",
+ description:
+ "2026 최저월급 약 216만원 기준 월급별 실수령액 표. 4대보험·소득세 공제액과 세후 월급을 즉시 확인하세요.",
+ path: "/table/2026/monthly",
+ keywords: [
+ "월급 실수령액 표",
+ "2026 월급 계산기",
+ "월급별 실수령액",
+ "최저월급 2026",
+ "세후 월급 계산",
+ ],
+});
 
 const tableHeaders = [
  { key: "monthlyPreTax", label: "월급 (세전)" },

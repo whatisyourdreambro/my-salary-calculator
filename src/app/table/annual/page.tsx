@@ -1,11 +1,21 @@
 // src/app/table/annual/page.tsx
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { generateAnnualSalaryTableData } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import AnnualTableInteractive from "./AnnualTableInteractive";
 import TableHero from "@/components/TableHero";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+ title: "연봉 실수령액 표 — 연봉별 세후 월급 (구버전)",
+ description:
+ "연봉별 월 실수령액 표. 4대보험·소득세 공제액 한눈에 확인. 최신 2026년 세법 표는 /table/2026/annual에서 확인하세요.",
+ path: "/table/annual",
+ keywords: ["연봉 실수령액 표", "연봉별 세후 월급", "연봉 테이블"],
+});
 
 
 const tableHeaders = [

@@ -7,11 +7,13 @@ import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import Link from "next/link";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "2026 연봉 실수령액 대백과 — 연봉별 세후 월급 전체 표 | 머니샐러리",
+export const metadata: Metadata = buildPageMetadata({
+  title: "2026 연봉 실수령액 표 — 연봉별 세후 월급 한눈에",
   description:
-    "2026년 최신 세법 기준 연봉별 실수령액 전체 표. 연봉 2000만원~2억까지 월 실수령액, 국민연금·건강보험·고용보험·소득세 공제액을 한눈에 확인하세요. 전년 대비 변화액도 표시.",
+    "2026년 세법 기준 연봉 2,000만~2억 전 구간 실수령액 표. 4대보험·소득세 공제액과 전년 대비 변화액까지 한눈에 비교.",
+  path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
     "2026 연봉 계산기",
@@ -25,25 +27,8 @@ export const metadata: Metadata = {
     "연봉 1억 실수령액",
     "4대보험 공제액",
     "2026 세법",
-  ].join(", "),
-  openGraph: {
-    title: "2026 연봉 실수령액 대백과 — 연봉별 세후 월급 전체 표",
-    description:
-      "연봉 2000만원~2억 구간별 2026년 세후 월급, 공제액을 즉시 확인하세요.",
-    url: "https://www.moneysalary.com/table/annual",
-    siteName: "머니샐러리",
-    type: "website",
-    locale: "ko_KR",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "2026 연봉 실수령액 대백과 표 | 머니샐러리",
-    description: "연봉별 세후 월급·공제액 전체 표. 2026 최신 세법 반영.",
-  },
-  alternates: {
-    canonical: "https://www.moneysalary.com/table/annual",
-  },
-};
+  ],
+});
 
 const tableHeaders = [
   { key: "preTax", label: "연봉" },

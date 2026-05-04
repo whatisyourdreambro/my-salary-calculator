@@ -3,12 +3,21 @@
 import { Metadata } from "next";
 import SalaryCalculator from "@/components/SalaryCalculator";
 import { Info, ShieldCheck, Sparkles } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "2026년 연봉계산기 - 최신 세법 및 실수령액 분석 | 머니샐러리",
- description: "2026년 변경되는 국민연금, 건강보험 요율이 적용된 최신 연봉계산기입니다. 실수령액뿐만 아니라 연봉 티어 카드와 미래 자산 시뮬레이션까지 무료로 확인하세요.",
- keywords: ["2026 연봉계산기", "2026 실수령액", "연봉 1억 실수령액", "머니샐러리", "2026년 세법"],
-};
+export const metadata: Metadata = buildPageMetadata({
+ title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
+ description:
+ "2026년 변경 국민연금/건강보험 요율 자동 적용. 실수령액 + 연봉 티어 카드 + 미래 자산 시뮬레이션까지 한 페이지에서 무료로 확인하세요.",
+ path: "/calc/2026-year",
+ keywords: [
+ "2026 연봉계산기",
+ "2026 실수령액",
+ "연봉 1억 실수령액",
+ "2026년 세법",
+ "자산 시뮬레이션",
+ ],
+});
 
 export default function Calc2026Page() {
  return (
