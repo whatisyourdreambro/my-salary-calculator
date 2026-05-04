@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# build artifacts / logs (root level only — _archive/ keeps history)
+/*.log
+/build_*.txt
+/tsc_errors.log
+
+# claude code worktrees and session data
+/.claude/worktrees/
+/.claude/sessions/

@@ -173,12 +173,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
  changeFrequency: 'monthly',
  priority: 0.7,
  },
- {
- url: `${baseUrl}/battle`,
- lastModified: new Date(),
- changeFrequency: 'weekly',
- priority: 0.8,
- },
  ];
 
  // Individual company pages
