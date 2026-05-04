@@ -35,21 +35,15 @@ export default function SalaryNudge({ currentSalary }: { currentSalary?: number 
 
   return (
     <section
+      className="border border-canvas-200 rounded-3xl p-7 mt-8"
       style={{
         background: "linear-gradient(135deg, #EDF1F5 0%, #FFFFFF 100%)",
-        border: "1.5px solid #DDE4EC",
-        borderRadius: "1.5rem",
-        padding: "1.75rem",
-        marginTop: "2rem",
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3
-            className="font-black text-navy"
-            style={{ fontSize: "1.1rem", letterSpacing: "-0.03em" }}
-          >
+          <h3 className="font-black text-navy text-lg tracking-tight">
             💡 다른 연봉도 궁금하신가요?
           </h3>
           <p className="text-faint-blue text-sm mt-0.5">
@@ -58,15 +52,14 @@ export default function SalaryNudge({ currentSalary }: { currentSalary?: number 
         </div>
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-sm font-bold transition-colors"
-          style={{ color: "#0145F2" }}
+          className="flex items-center gap-1 text-sm font-bold text-electric transition-colors"
         >
           {expanded ? "접기" : "전체보기"}
           <ChevronDown
             size={16}
+            className="transition-transform"
             style={{
               transform: expanded ? "rotate(180deg)" : "rotate(0)",
-              transition: "transform 0.2s",
             }}
           />
         </button>
@@ -99,25 +92,22 @@ export default function SalaryNudge({ currentSalary }: { currentSalary?: number 
       </AnimatePresence>
 
       {/* CTA — 체류시간 & 내부 링크 SEO */}
-      <div className="flex flex-wrap gap-2 mt-4 pt-4" style={{ borderTop: "1px solid #DDE4EC" }}>
+      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-canvas-200">
         <Link
-          href="/table/annual"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all"
-          style={{ backgroundColor: "#0145F21A", color: "#0145F2" }}
+          href="/table/2026/annual"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold bg-electric-10 text-electric transition-all hover:bg-electric-15"
         >
           <TrendingUp size={14} /> 연봉 실수령액 대백과표
         </Link>
         <Link
           href="/year-end-tax"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all"
-          style={{ backgroundColor: "#0145F21A", color: "#0145F2" }}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold bg-electric-10 text-electric transition-all hover:bg-electric-15"
         >
           <Zap size={14} /> 연말정산 계산기
         </Link>
         <Link
           href="/fire-calculator"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all"
-          style={{ backgroundColor: "#0145F21A", color: "#0145F2" }}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold bg-electric-10 text-electric transition-all hover:bg-electric-15"
         >
           <ArrowRight size={14} /> FIRE 은퇴 계산기
         </Link>

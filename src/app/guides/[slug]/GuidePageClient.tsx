@@ -131,6 +131,32 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  dangerouslySetInnerHTML={{ __html: guide.content }}
  />
 
+ {/* 데이터 출처·신뢰 배너 — 모든 가이드 자동 적용 (E-E-A-T 강화) */}
+ <div className="mt-10 p-5 bg-secondary/30 rounded-2xl border border-border/50">
+ <div className="flex items-start gap-3">
+ <span className="text-2xl">📚</span>
+ <div className="flex-1 text-sm">
+ <p className="font-bold text-foreground mb-1">
+ 본 가이드의 데이터 출처
+ </p>
+ <p className="text-muted-foreground leading-relaxed">
+ 국세청·국민연금공단·국민건강보험공단·근로복지공단 등 정부 공식 자료 기반.
+ 2026년 세법·요율 반영. 마지막 업데이트:{" "}
+ <strong className="text-foreground">
+ {new Date(guide.publishedDate).toLocaleDateString("ko-KR")}
+ </strong>
+ </p>
+ <p className="text-xs text-muted-foreground mt-2">
+ ※ 정확한 세무·법률 의사결정은{" "}
+ <Link href="/about" className="text-primary font-bold hover:underline">
+ 공식 출처
+ </Link>
+ 와 세무 전문가 상담 권장.
+ </p>
+ </div>
+ </div>
+ </div>
+
  {/* 본문 끝 — 가장 임팩트 큰 자리 (글 다 읽은 직후) */}
  <CoupangBanner
  responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}

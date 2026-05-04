@@ -3,9 +3,17 @@
 import { useState, useMemo } from 'react';
 import { guides, categories, Guide } from '@/lib/guidesData';
 import Link from 'next/link';
-import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
+import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CoupangBanner from '@/components/CoupangBanner';
+
+type SortOption = "latest" | "popular" | "oldest";
+
+const SORT_OPTIONS: { id: SortOption; label: string; icon: React.ElementType }[] = [
+ { id: "latest", label: "최신순", icon: Calendar },
+ { id: "popular", label: "인기순", icon: Eye },
+ { id: "oldest", label: "오래된순", icon: Clock },
+];
 function HeroGuide({ guide }: { guide: Guide }) {
  return (
  <div className="relative w-full h-[500px] mb-16 rounded-[2.5rem] overflow-hidden group shadow-2xl shadow-primary/20">
@@ -101,6 +109,7 @@ const ITEMS_PER_PAGE = 9;
 export default function GuidesPage() {
  const [selectedCategoryId, setSelectedCategoryId] = useState('all');
  const [searchQuery, setSearchQuery] = useState('');
+ const [sortBy, setSortBy] = useState<SortOption>('latest');
  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
  const sortedGuides = useMemo(() => {
@@ -110,9 +119,19 @@ export default function GuidesPage() {
  const featuredGuide = sortedGuides[0];
 
  const filteredGuides = useMemo(() => {
- let result = [...guides].sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+ let result = [...guides];
 
- if (selectedCategoryId === 'all' && !searchQuery) {
+ // 정렬 적용
+ if (sortBy === 'latest') {
+ result.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+ } else if (sortBy === 'popular') {
+ result.sort((a, b) => b.views - a.views);
+ } else if (sortBy === 'oldest') {
+ result.sort((a, b) => new Date(a.publishedDate).getTime() - new Date(b.publishedDate).getTime());
+ }
+
+ // featuredGuide 제외 (전체 보기 + 검색 없음일 때만)
+ if (selectedCategoryId === 'all' && !searchQuery && sortBy === 'latest') {
  result = result.filter(g => g.slug !== featuredGuide.slug);
  }
 
@@ -130,7 +149,7 @@ export default function GuidesPage() {
  }
 
  return result;
- }, [selectedCategoryId, searchQuery, featuredGuide.slug]);
+ }, [selectedCategoryId, searchQuery, sortBy, featuredGuide.slug]);
 
  const visibleGuides = filteredGuides.slice(0, visibleCount);
  const hasMore = visibleCount < filteredGuides.length;
@@ -172,7 +191,7 @@ export default function GuidesPage() {
 
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Categories */}
- <div className="flex flex-wrap gap-2 mb-12 sticky top-20 z-20 py-4 bg-canvas/90 -[#191F28]/90 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
+ <div className="flex flex-wrap gap-2 mb-6 sticky top-20 z-20 py-4 bg-canvas/90 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
  {categories.map(category => (
  <button
  key={category.id}
@@ -185,6 +204,32 @@ export default function GuidesPage() {
  {category.name}
  </button>
  ))}
+ </div>
+
+ {/* 정렬 옵션 */}
+ <div className="flex items-center gap-2 mb-12 flex-wrap">
+ <span className="text-xs font-bold text-faint-blue uppercase tracking-wider mr-2">
+ 정렬
+ </span>
+ {SORT_OPTIONS.map((option) => {
+ const Icon = option.icon;
+ return (
+ <button
+ key={option.id}
+ onClick={() => setSortBy(option.id)}
+ className={"flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all " + (sortBy === option.id
+ ? 'bg-electric-10 text-electric border border-electric/20'
+ : 'bg-white text-muted-blue border border-canvas-200 hover:border-electric/40'
+ )}
+ >
+ <Icon className="w-3.5 h-3.5" />
+ {option.label}
+ </button>
+ );
+ })}
+ <span className="text-xs text-faint-blue ml-auto">
+ 총 {filteredGuides.length}개
+ </span>
  </div>
 
  {/* Featured Hero */}
