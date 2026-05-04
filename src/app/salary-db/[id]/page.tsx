@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { notFound } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
+import CompanyInsights from "@/components/CompanyInsights";
 import JsonLd from "@/components/JsonLd";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
@@ -89,6 +90,7 @@ export default function CompanyDetailPage({
  ]}
  />
  <CompanyDetailClient company={company} />
+ <CompanyInsights company={company} />
  </>
  );
 }
