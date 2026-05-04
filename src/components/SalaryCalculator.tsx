@@ -21,6 +21,7 @@ import type {
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
 import DetailedAnalysis from "./DetailedAnalysis";
+import { ResultAd } from "./AdPlacement";
 import NumberStepper from "./NumberStepper";
 import SalaryPieChart from "./SalaryPieChart";
 import WealthChart from "./WealthChart";
@@ -449,6 +450,9 @@ export default function SalaryCalculator() {
  }}
  />
  </div>
+
+ {/* 결과 직하 광고 — CTR 최고 구간 */}
+ <ResultAd />
 
  {/* 공유/저장 */}
  <div className="grid grid-cols-2 gap-3">

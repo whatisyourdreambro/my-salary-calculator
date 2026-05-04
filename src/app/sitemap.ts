@@ -22,36 +22,88 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fire-calculator',
  '/car-loan',
  '/mbti-salary',
+ '/lotto',
+ '/fortune-2026',
+ '/report',
+ '/tips',
  '/table/annual',
  '/table/monthly',
  '/table/weekly',
  '/table/hourly',
+ '/table/2026/annual',
+ '/table/2026/monthly',
+ '/table/2026/weekly',
+ '/table/2026/hourly',
  '/guides',
  '/qna',
  '/glossary',
+ // Calc Pages
+ '/calc/2026-year',
+ // Tools Hub + sub-tools (high SEO value: long-tail keywords)
+ '/tools',
+ '/tools/loan',
+ '/tools/deposit',
+ '/tools/finance/bonus',
+ '/tools/finance/cagr',
+ '/tools/finance/compound',
+ '/tools/finance/freelance-tax',
+ '/tools/finance/installment',
+ '/tools/finance/irp',
+ '/tools/finance/severance',
+ '/tools/finance/stock-tax',
+ '/tools/finance/vat',
+ '/tools/real-estate/acquisition-tax',
+ '/tools/real-estate/dsr',
+ '/tools/real-estate/gift-tax',
+ '/tools/real-estate/ltv',
+ '/tools/date/age',
+ '/tools/date/d-day',
+ '/tools/date/work-days',
+ '/tools/health/bmi',
+ '/tools/life/dutch-pay',
+ '/tools/life/fuel-cost',
+ '/tools/life/subscription',
+ '/tools/life/unit-converter',
+ '/tools/math',
+ '/tools/math/percent',
+ '/tools/math/number-gen',
+ // Pro Pages
+ '/pro/career-planner',
  // Fun Pages
+ '/fun',
+ '/fun/asset-allocator',
  '/fun/escape-plan',
  '/fun/financial-mbti',
+ '/fun/fortune',
  '/fun/lunch-roulette',
+ '/fun/mbti-salary',
  '/fun/meme-coin',
  '/fun/rank',
  '/fun/reincarnation',
  '/fun/rich-dna-test',
+ '/fun/salary-battle',
+ '/fun/salary-rank',
  '/fun/salary-slip',
  '/fun/spending-test',
+ '/fun/random-draw',
+ '/fun/weekend-duty',
  '/fun/what-to-buy',
+ '/fun/worldcup',
  '/fun/iq-test',
  '/fun/flappy',
- '/fun/lotto',
  '/fun/tetris',
- '/fun',
  // Company Pages
  '/company',
  '/company/compare',
  '/company/simulator',
+ // Salary DB
+ '/salary-db',
+ '/salary-db/submit',
  // Global Pages
  '/en',
  '/en/flat-tax',
+ '/en/salary-converter',
+ '/global',
  ];
 
  const staticUrls = staticRoutes.map((route) => ({
@@ -72,13 +124,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 3. Dynamic Salary Pages
  const salaryUrls: MetadataRoute.Sitemap = [];
 
- // 20m to 100m in 1m increments
- for (let i = 20; i <= 100; i++) {
+ // 20m to 100m in 0.5m increments (long-tail SEO: 3500/4250/5500만원 등)
+ for (let i = 20; i <= 100; i += 0.5) {
+ const amount = Math.round(i * 1000000);
  salaryUrls.push({
- url: `${baseUrl}/salary/${i * 1000000}`,
+ url: `${baseUrl}/salary/${amount}`,
  lastModified: new Date(),
  changeFrequency: 'yearly',
- priority: 0.6,
+ priority: i % 1 === 0 ? 0.7 : 0.55, // 정수형 우선
  });
  }
 

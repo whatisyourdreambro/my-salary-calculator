@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://moneysalary.com/sitemap.xml
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Disallow: /api/
+Disallow: /_next/
+
+Sitemap: https://www.moneysalary.com/sitemap.xml

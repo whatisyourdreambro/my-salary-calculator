@@ -6,6 +6,7 @@ import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { StickyBottomAd } from "@/components/AdPlacement";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -80,9 +81,9 @@ export const metadata: Metadata = {
     canonical: "https://www.moneysalary.com",
   },
   verification: {
-    google: "google-site-verification-token",
+    google: "1yqyEwZxIAcqg8XFd2AjmAfEEJ4R9Es3tuqaQKerI1A",
     other: {
-      "naver-site-verification": "naver-verification-token",
+      "naver-site-verification": "34115e50f205aed3725f94e2400aaddef8c1b691",
     },
   },
 };
@@ -147,12 +148,27 @@ export default function RootLayout({
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow w-full">
+            <main className="flex-grow w-full pb-[60px] md:pb-0">
               {children}
             </main>
             <Footer />
           </div>
+          <StickyBottomAd />
         </NextThemesProvider>
+
+        {/* Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QSGXV6T86R"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QSGXV6T86R', { send_page_view: true });
+          `}
+        </Script>
 
         {/* Google AdSense Auto Ads — 모든 페이지 자동 광고 적용 */}
         <Script
