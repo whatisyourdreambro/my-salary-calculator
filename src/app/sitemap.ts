@@ -59,6 +59,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/january-bonus',
  '/calc/year-end-bonus-tax',
  '/calc/severance-vs-pension',
+ // V2 Season pages (additional 5)
+ '/calc/holiday-bonus',
+ '/calc/vacation-pay',
+ '/calc/child-deduction',
+ '/calc/jeonse-loan',
+ '/calc/housing-subscription',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',
