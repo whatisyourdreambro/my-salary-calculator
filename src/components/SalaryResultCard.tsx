@@ -6,6 +6,7 @@ import React from "react";
 import CountUp from "react-countup";
 import { Info, ChevronRight, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { InArticleAd } from "./AdPlacement";
 interface DeductionItemProps {
  label: string;
  value: number;
@@ -72,7 +73,8 @@ export default function SalaryResultCard({
  </div>
  </div>
 
- 
+ {/* 결과 직하 광고 — viewability 가장 높은 위치 */}
+ <InArticleAd />
 
  {/* 상세 공제 내역 리스트 */}
  <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-canvas/50">

@@ -58,6 +58,19 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // 트리쉐이킹 강화 — lucide/recharts/lib들의 사용분만 번들에 포함
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "recharts",
+      "framer-motion",
+      "@radix-ui/react-label",
+      "@radix-ui/react-slider",
+      "@radix-ui/react-switch",
+    ],
+  },
+  // 빌드 시 production 소스맵 비활성 (번들 크기 감소)
+  productionBrowserSourceMaps: false,
   // 중복 라우트 통합 (Phase 2):
   // - /table/* (구버전) → /table/2026/* (2026 세법 정답)
   // - /fun/mbti-salary → /mbti-salary (독립 페이지가 더 풍부)
