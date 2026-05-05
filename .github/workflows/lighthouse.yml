@@ -1,0 +1,37 @@
+# Lighthouse CI — main push 시 핵심 페이지 자동 측정 (무료, GitHub Actions)
+# 목적: Performance·Accessibility·SEO 점수 회귀 자동 감지
+# 비용: 0원 (퍼블릭 레포 GitHub Actions 무제한 + Lighthouse 자체 무료)
+
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 수동 실행도 가능
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun --collect.staticDistDir=.next --collect.url=http://localhost/ --upload.target=temporary-public-storage || echo "Lighthouse warnings — non-blocking"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        continue-on-error: true # 임계값 위반해도 빌드는 통과 (단계적 도입)
