@@ -9,7 +9,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
-import { CalcResultAd } from "./AdPlacement";
+import { CalcResultAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
 import { faqLd } from "@/lib/structuredData";
 
@@ -43,9 +43,9 @@ export default function SimpleCalculatorView({ slug }: Props) {
 
  if (!calc || !result) {
  return (
- <main className="min-h-screen bg-canvas pt-28">
+ <main className="min-h-screen bg-canvas dark:bg-canvas-950 pt-28">
  <div className="max-w-3xl mx-auto px-4">
- <p className="text-center text-muted-blue">계산기를 불러올 수 없습니다.</p>
+ <p className="text-center text-muted-blue dark:text-canvas-300">계산기를 불러올 수 없습니다.</p>
  </div>
  </main>
  );
@@ -59,22 +59,22 @@ export default function SimpleCalculatorView({ slug }: Props) {
  };
 
  return (
- <main className="min-h-screen bg-canvas pb-20 pt-28">
+ <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-28">
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="text-center mb-10">
  <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-4">
  {calc.categoryLabel}
  </p>
- <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy mb-3">
+ <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 mb-3">
  {calc.title}
  </h1>
- <p className="text-base text-muted-blue leading-relaxed max-w-2xl mx-auto">
+ <p className="text-base text-muted-blue dark:text-canvas-300 leading-relaxed max-w-2xl mx-auto">
  {calc.description}
  </p>
  </div>
 
- <section className="p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200 mb-6">
- <h2 className="text-sm font-black text-navy mb-6 flex items-center gap-2">
+ <section className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">
+ <h2 className="text-sm font-black text-navy dark:text-canvas-50 mb-6 flex items-center gap-2">
  <Calculator className="w-4 h-4 text-electric" />
  입력값
  </h2>
@@ -159,8 +159,10 @@ export default function SimpleCalculatorView({ slug }: Props) {
  calc.faqs.map((f) => ({ question: f.q, answer: f.a }))
  )}
  />
- <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-4 flex items-center gap-2">
+ {/* FAQ 직전 추가 광고 — 결과~FAQ 사이 viewability 최상위 */}
+ <InArticleAd />
+ <section className="p-6 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-800 mb-6">
+ <h3 className="text-sm font-black text-navy dark:text-canvas-50 mb-4 flex items-center gap-2">
  <HelpCircle className="w-4 h-4 text-electric" />
  자주 묻는 질문
  </h3>

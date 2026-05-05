@@ -7,7 +7,11 @@ import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import {
+ autoBreadcrumbLd,
+ softwareApplicationLd,
+ faqLd,
+} from "@/lib/structuredData";
 import { getCalculatorBySlug, getAllSlugs } from "@/lib/simpleCalculators";
 
 export const dynamic = "force-static";
@@ -36,22 +40,27 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  const calc = getCalculatorBySlug(params.slug);
  if (!calc) notFound();
 
- return (
- <>
- <JsonLd
- data={[
- breadcrumbLd([
- { name: "홈", path: "/" },
- { name: "계산기 100", path: "/calc" },
- { name: calc.title, path: `/calc/${calc.slug}` },
- ]),
+ // JSON-LD 데이터 — FAQ가 enrichments.ts에 있으면 자동 노출 (Rich Snippets)
+ const ldData: object[] = [
+ autoBreadcrumbLd(`/calc/${calc.slug}`, { leafName: calc.title }),
  softwareApplicationLd({
  name: calc.title,
  description: calc.description,
  url: `/calc/${calc.slug}`,
  }),
- ]}
- />
+ ];
+
+ if (calc.faqs && calc.faqs.length > 0) {
+ ldData.push(
+ faqLd(
+ calc.faqs.map((f) => ({ question: f.q, answer: f.a }))
+ )
+ );
+ }
+
+ return (
+ <>
+ <JsonLd data={ldData} />
  <SimpleCalculatorView slug={calc.slug} />
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
  <RelatedCalculators currentPath={`/calc/${calc.slug}`} />
