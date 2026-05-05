@@ -117,6 +117,83 @@ export function breadcrumbLd(crumbs: Breadcrumb[]) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// 자동 Breadcrumb 빌더 — 경로만으로 위계 자동 생성
+// 한국어 라벨링, 동적 라우트 자동 인식
+// ─────────────────────────────────────────────────────────────
+const SEGMENT_LABELS: Record<string, string> = {
+ "": "홈",
+ calc: "100가지 계산기",
+ salary: "연봉 표",
+ "salary-db": "회사 연봉 DB",
+ guides: "금융 가이드",
+ tools: "금융 도구",
+ finance: "금융",
+ "real-estate": "부동산",
+ date: "날짜",
+ health: "건강",
+ life: "생활",
+ math: "수학",
+ loan: "대출",
+ deposit: "예적금",
+ fun: "재미있는 도구",
+ company: "회사",
+ compare: "회사 비교",
+ simulator: "시뮬레이터",
+ table: "연봉 테이블",
+ "2026": "2026년",
+ annual: "연간",
+ monthly: "월별",
+ weekly: "주간",
+ hourly: "시간당",
+ pro: "프리미엄",
+ en: "English",
+ about: "사이트 소개",
+ privacy: "개인정보처리방침",
+ terms: "이용약관",
+ qna: "Q&A",
+ tips: "절세 팁",
+ glossary: "용어 사전",
+ dashboard: "대시보드",
+ "fire-calculator": "FIRE 계산기",
+ "year-end-tax": "연말정산",
+ "year-end-tax-2026": "연말정산 2026",
+ "home-loan": "주택담보대출",
+ "car-loan": "자동차 대출",
+ "mbti-salary": "MBTI 연봉",
+};
+
+export interface AutoBreadcrumbOptions {
+ /** 마지막 단계의 한국어 명 (없으면 마지막 segment 사용) */
+ leafName?: string;
+ /** 중간 단계 명 강제 override (예: { "calc": "100가지 계산기" }) */
+ overrides?: Record<string, string>;
+}
+
+/**
+ * 경로를 받아 BreadcrumbList JSON-LD 자동 생성.
+ * 예: /tools/finance/severance → [홈, 금융 도구, 금융, 퇴직금 계산기]
+ */
+export function autoBreadcrumbLd(path: string, options: AutoBreadcrumbOptions = {}) {
+ const segments = path.split("/").filter(Boolean);
+ const crumbs: Breadcrumb[] = [{ name: "홈", path: "/" }];
+
+ let acc = "";
+ segments.forEach((seg, idx) => {
+ acc += `/${seg}`;
+ const isLast = idx === segments.length - 1;
+ const override = options.overrides?.[seg];
+ const label =
+ override ||
+ (isLast && options.leafName) ||
+ SEGMENT_LABELS[seg] ||
+ decodeURIComponent(seg).replace(/-/g, " ");
+ crumbs.push({ name: label, path: acc });
+ });
+
+ return breadcrumbLd(crumbs);
+}
+
+// ─────────────────────────────────────────────────────────────
 // FAQPage — Q&A 콘텐츠
 // ─────────────────────────────────────────────────────────────
 export interface FaqItem {

@@ -53,6 +53,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc',
  // Calc Pages
  '/calc/2026-year',
+ // Season pages — 시즌별 트래픽 폭증 키워드 (11~3월)
+ '/calc/year-end-bonus',
+ '/calc/incentive-tax',
+ '/calc/january-bonus',
+ '/calc/year-end-bonus-tax',
+ '/calc/severance-vs-pension',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',
