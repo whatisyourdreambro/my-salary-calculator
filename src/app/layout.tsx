@@ -12,8 +12,12 @@ import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredDat
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#EDF1F5" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A1829" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -80,6 +84,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.moneysalary.com",
+    languages: {
+      "ko-KR": "https://www.moneysalary.com",
+      "en": "https://www.moneysalary.com/en",
+      "x-default": "https://www.moneysalary.com",
+    },
     types: {
       "application/rss+xml": [
         {
@@ -105,27 +114,39 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link
           rel="stylesheet"
           as="style"
           crossOrigin=""
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              @font-face {
+                font-family: "Pretendard Variable";
+                font-display: swap;
+              }
+            `,
+          }}
+        />
         <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
       </head>
-      <body
-        className="antialiased"
-        style={{ backgroundColor: "#EDF1F5", color: "#0A1829" }}
-      >
+      <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">
+        <a href="#main-content" className="skip-to-content">
+          본문으로 바로가기
+        </a>
         <NextThemesProvider
           attribute="class"
           defaultTheme="light"
-          forcedTheme="light"
-          enableSystem={false}
+          enableSystem={true}
         >
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow w-full">
+            <main id="main-content" className="flex-grow w-full">
               {children}
             </main>
             <Footer />
