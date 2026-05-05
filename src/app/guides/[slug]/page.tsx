@@ -2,6 +2,7 @@
 import { guides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
+import RelatedGuides from "@/components/RelatedGuides";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -84,6 +85,15 @@ export default function GuidePage({ params }: Props) {
  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
  />
  <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
+ <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+ <RelatedGuides
+ currentSlug={guide.slug}
+ category={guide.category}
+ tags={guide.tags}
+ limit={6}
+ title="더 깊이 알아보고 싶다면"
+ />
+ </div>
  </>
  );
 }

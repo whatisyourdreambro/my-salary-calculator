@@ -3,10 +3,12 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { notFound } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
+import CompanySalaryTable from "@/components/CompanySalaryTable";
+import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
- breadcrumbLd,
+ autoBreadcrumbLd,
  companyOrganizationLd,
  faqLd,
 } from "@/lib/structuredData";
@@ -76,11 +78,7 @@ export default function CompanyDetailPage({
  <>
  <JsonLd
  data={[
- breadcrumbLd([
- { name: "홈", path: "/" },
- { name: "회사별 연봉", path: "/salary-db" },
- { name: company.name.ko, path: `/salary-db/${company.id}` },
- ]),
+ autoBreadcrumbLd(`/salary-db/${company.id}`, { leafName: company.name.ko }),
  companyOrganizationLd({
  name: company.name.ko,
  industry: company.industry,
@@ -90,7 +88,15 @@ export default function CompanyDetailPage({
  ]}
  />
  <CompanyDetailClient company={company} />
+ <CompanySalaryTable company={company} />
  <CompanyInsights company={company} />
+ <RelatedCompanies
+ currentId={company.id}
+ industry={company.industry}
+ targetSalary={
+ company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0)
+ }
+ />
  </>
  );
 }
