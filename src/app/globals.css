@@ -71,26 +71,26 @@
  }
 
  .dark {
- /* Force light mode — dark mode disabled for duotone system */
- --background: 216 43% 95%;
- --foreground: 214 56% 10%;
- --card: 0 0% 100%;
- --card-foreground: 214 56% 10%;
- --popover: 0 0% 100%;
- --popover-foreground: 214 56% 10%;
- --primary: 224 96% 48%;
- --primary-foreground: 0 0% 100%;
- --secondary: 216 43% 95%;
- --secondary-foreground: 214 56% 10%;
- --muted: 216 43% 92%;
- --muted-foreground: 209 32% 36%;
- --accent: 216 43% 92%;
- --accent-foreground: 224 96% 48%;
- --destructive: 224 96% 48%;
- --destructive-foreground: 0 0% 100%;
- --border: 216 30% 84%;
- --input: 216 30% 84%;
- --ring: 224 96% 48%;
+ /* Real dark mode — duotone deep navy + electric blue accent */
+ --background: 214 56% 8%;       /* #0A1829 deep navy */
+ --foreground: 216 43% 95%;      /* canvas as text */
+ --card: 214 50% 12%;            /* slightly lighter card */
+ --card-foreground: 216 43% 95%;
+ --popover: 214 50% 12%;
+ --popover-foreground: 216 43% 95%;
+ --primary: 224 96% 60%;         /* brighter electric for contrast */
+ --primary-foreground: 214 56% 8%;
+ --secondary: 214 40% 15%;
+ --secondary-foreground: 216 43% 95%;
+ --muted: 214 35% 18%;
+ --muted-foreground: 209 25% 70%;
+ --accent: 214 40% 18%;
+ --accent-foreground: 224 96% 60%;
+ --destructive: 0 75% 60%;
+ --destructive-foreground: 216 43% 95%;
+ --border: 214 30% 22%;
+ --input: 214 30% 22%;
+ --ring: 224 96% 60%;
  }
 }
 
@@ -121,6 +121,17 @@
  font-feature-settings: "cv11", "ss01", "tnum";
  -webkit-font-smoothing: antialiased;
  -moz-osx-font-smoothing: grayscale;
+ transition: background-color 0.25s ease, color 0.25s ease;
+ }
+ .dark body {
+ background-color: #0A1829;
+ color: #EDF1F5;
+ }
+ .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+ color: #EDF1F5;
+ }
+ .dark p {
+ color: #A8BCCD;
  }
 
  /* ── Typography Hierarchy ──────────────────────────────────────── */
@@ -389,7 +400,7 @@
 
 /* Canvas / Light backgrounds → dark text */
 .bg-canvas, .bg-canvas *,
-.bg-white, 
+.bg-white,
 [style*="background: #EDF1F5"],
 [style*="background-color: #EDF1F5"] {
  color: #0A1829;
@@ -402,6 +413,19 @@
 .bg-canvas-deeper { background-color: #C8D4E0 !important; }
 .bg-canvas { background-color: #EDF1F5 !important; }
 .bg-canvas-dark { background-color: #DDE4EC !important; }
+
+/* ── Dark mode overrides for canvas tints ─────────────────── */
+.dark .bg-white { background-color: #162E4A !important; color: #EDF1F5 !important; }
+.dark .bg-canvas { background-color: #0A1829 !important; color: #EDF1F5 !important; }
+.dark .bg-canvas-dark { background-color: #162E4A !important; }
+.dark .bg-canvas-deeper { background-color: #294460 !important; }
+.dark .text-navy { color: #EDF1F5 !important; }
+.dark .text-muted-blue { color: #A8BCCD !important; }
+.dark .text-faint-blue { color: #7A9AB5 !important; }
+.dark .border-canvas-200 { border-color: #294460 !important; }
+.dark th { background-color: #162E4A; color: #4D80F5; border-bottom-color: #4D80F555; }
+.dark td { color: #EDF1F5; border-bottom-color: #294460; }
+.dark tr:hover td { background-color: #4D80F511; }
 
 /* ── Scrollbar ────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -420,6 +444,47 @@
  outline: 2.5px solid #0145F2;
  outline-offset: 2px;
  border-radius: 4px;
+}
+
+/* ── Skip to content link (a11y) ─────────────────────────────── */
+.skip-to-content {
+ position: absolute;
+ top: -100px;
+ left: 50%;
+ transform: translateX(-50%);
+ z-index: 100;
+ padding: 12px 20px;
+ background-color: #0145F2;
+ color: #FFFFFF;
+ font-weight: 700;
+ border-radius: 0 0 12px 12px;
+ text-decoration: none;
+ transition: top 0.2s ease;
+}
+.skip-to-content:focus {
+ top: 0;
+ outline: none;
+}
+
+/* ── Skeleton shimmer for Suspense fallback ──────────────────── */
+.skeleton-shimmer {
+ background: linear-gradient(
+ 90deg,
+ #DDE4EC 0%,
+ #EDF1F5 50%,
+ #DDE4EC 100%
+ );
+ background-size: 200% 100%;
+ animation: shimmer 1.5s ease-in-out infinite;
+}
+.dark .skeleton-shimmer {
+ background: linear-gradient(
+ 90deg,
+ #162E4A 0%,
+ #294460 50%,
+ #162E4A 100%
+ );
+ background-size: 200% 100%;
 }
 
 /* ── Recharts / chart text ─────────────────────────────────────── */

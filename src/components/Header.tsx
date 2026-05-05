@@ -20,6 +20,7 @@ import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
 import DesktopDropdown from "./header/DesktopDropdown";
 import MobileDropdown from "./header/MobileDropdown";
+import ThemeToggle from "./header/ThemeToggle";
 
 export default function Header() {
  const pathname = usePathname();
@@ -115,6 +116,7 @@ export default function Header() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3 z-50">
+ <ThemeToggle />
  {/* Dashboard CTA */}
  <Link
  href="/dashboard"
