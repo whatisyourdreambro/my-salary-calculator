@@ -6,6 +6,10 @@ import { financeGuides } from "@/lib/guides/finance-deepdive";
 import { companyRealEstateGuides } from "@/lib/guides/company-realestate-deepdive";
 import { lifecycleGuides } from "@/lib/guides/lifecycle-deepdive";
 import { insuranceInvestmentGuides } from "@/lib/guides/insurance-investment-deepdive";
+import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
+import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
+
+export type GuideLang = 'ko' | 'en';
 
 export interface Guide {
  slug: string;
@@ -13,10 +17,12 @@ export interface Guide {
  description: string;
  category: string;
  tags: string[];
- level: '초급' | '중급' | '고급';
+ level: '초급' | '중급' | '고급' | 'Beginner' | 'Intermediate' | 'Advanced';
  publishedDate: string;
  views: number;
  content: string;
+ /** 'ko' | 'en'. 미지정 시 'ko'로 간주 (기존 50개 가이드 호환) */
+ lang?: GuideLang;
 }
 
 export const categories = [
@@ -24,9 +30,21 @@ export const categories = [
  { id: "연봉", name: "💰 연봉/급여" },
  { id: "세금", name: "💸 세금/절세" },
  { id: "투자", name: "📈 투자/재테크" },
+ { id: "주식", name: "📊 주식/반도체" },
  { id: "부동산", name: "🏠 부동산" },
  { id: "커리어", name: "🚀 커리어" },
  { id: "기초", name: "🌱 금융기초" },
+];
+
+export const categoriesEn = [
+ { id: "all", name: "All" },
+ { id: "Salary", name: "💰 Salary & Pay" },
+ { id: "Tax", name: "💸 Tax & Savings" },
+ { id: "Investing", name: "📈 Investing" },
+ { id: "Stocks", name: "📊 Stocks & Semiconductors" },
+ { id: "RealEstate", name: "🏠 Real Estate" },
+ { id: "Career", name: "🚀 Career" },
+ { id: "Basics", name: "🌱 Finance Basics" },
 ];
 
 // Helper function to generate expert-level content
@@ -426,12 +444,21 @@ const allRawGuides = [
  ...companyRealEstateGuides,
  ...lifecycleGuides,
  ...insuranceInvestmentGuides,
+ ...stockDeepdiveGuides,
+ ...stockDeepdiveGuidesEn,
 ];
 
 // Generate the final guides array with content
 // — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
 // — 없으면 generateExpertContent fallback (legacy boilerplate)
+// — lang 미지정 가이드는 'ko'로 정규화 (기존 50개 호환)
 export const guides: Guide[] = (allRawGuides as any[]).map(guide => ({
  ...guide,
+ lang: (guide.lang as GuideLang | undefined) ?? 'ko',
  content: guide.content || generateExpertContent(guide.title, guide.category, guide.description, guide.tags)
 }));
+
+/** 한국어 가이드만 (기존 /guides 라우트용) */
+export const koGuides: Guide[] = guides.filter(g => g.lang === 'ko');
+/** 영어 가이드만 (/en/guides 라우트용) */
+export const enGuides: Guide[] = guides.filter(g => g.lang === 'en');

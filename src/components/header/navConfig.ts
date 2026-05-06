@@ -67,6 +67,21 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
+ name: "주식·재테크",
+ type: "dropdown",
+ items: [
+ { name: "📊 주식 가이드 모아보기", href: "/guides?category=주식" },
+ { name: "🔥 삼성전자 2026 주가 전망", href: "/guides/samsung-electronics-stock-2026" },
+ { name: "🚀 SK하이닉스 주가 분석", href: "/guides/sk-hynix-stock-2026" },
+ { name: "🔄 반도체 사이클 2026", href: "/guides/semiconductor-cycle-2026" },
+ { name: "💼 삼성 직원 자사주 시뮬", href: "/guides/samsung-employee-rsu-stock" },
+ { name: "💰 SK하이닉스 PS·PI·자사주", href: "/guides/sk-hynix-employee-bonus-stock" },
+ { name: "⚖️ 삼성 vs 하이닉스 비교", href: "/guides/samsung-vs-hynix-employee-comparison" },
+ { name: "🧾 반도체 주식 절세 가이드", href: "/guides/chip-stock-tax-guide" },
+ { name: "📈 적립식 vs 일시매수 전략", href: "/guides/kospi-leader-stock-strategy" },
+ ],
+ },
+ {
  name: "계산기 도구",
  type: "dropdown",
  items: [

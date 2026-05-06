@@ -18,12 +18,19 @@ import {
 import Logo from "./Logo";
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
+import { navConfigEn } from "./header/navConfigEn";
 import DesktopDropdown from "./header/DesktopDropdown";
 import MobileDropdown from "./header/MobileDropdown";
 import ThemeToggle from "./header/ThemeToggle";
+import LocaleSwitcher from "./header/LocaleSwitcher";
 
 export default function Header() {
  const pathname = usePathname();
+ const isEnglish = pathname?.startsWith("/en") ?? false;
+ const activeNavConfig = isEnglish ? navConfigEn : navConfig;
+ const dashboardLabel = isEnglish ? "My Dashboard" : "내 대시보드";
+ const mobileMenuAriaLabel = isEnglish ? "Open menu" : "메뉴 열기";
+ const dashboardHref = isEnglish ? "/en" : "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
  const { scrollY } = useScroll();
@@ -75,7 +82,7 @@ export default function Header() {
 
  {/* Desktop Nav */}
  <div className="hidden xl:flex items-center gap-0.5">
- {navConfig.map((item) =>
+ {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
  <DesktopDropdown
  key={item.name}
@@ -116,10 +123,11 @@ export default function Header() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3 z-50">
+ <LocaleSwitcher />
  <ThemeToggle />
  {/* Dashboard CTA */}
  <Link
- href="/dashboard"
+ href={dashboardHref}
  className="hidden sm:flex"
  style={{
  alignItems: "center",
@@ -145,7 +153,7 @@ export default function Header() {
  }}
  >
  <LayoutDashboard size={15} />
- <span>내 대시보드</span>
+ <span>{dashboardLabel}</span>
  </Link>
 
  {/* Mobile Menu Toggle */}
@@ -161,7 +169,7 @@ export default function Header() {
  color: "#0145F2",
  transition: "background-color 0.15s ease",
  }}
- aria-label="메뉴 열기"
+ aria-label={mobileMenuAriaLabel}
  >
  {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
  </button>
@@ -187,9 +195,11 @@ export default function Header() {
  }}
  >
  <div className="px-5 pt-4 pb-20">
+ {/* Locale Switcher (mobile) */}
+ <LocaleSwitcher variant="mobile" />
  {/* Mobile Dashboard CTA */}
  <Link
- href="/dashboard"
+ href={dashboardHref}
  onClick={() => setIsMobileMenuOpen(false)}
  className="flex items-center justify-center gap-2 w-full no-underline mb-5"
  style={{
@@ -205,7 +215,7 @@ export default function Header() {
  }}
  >
  <LayoutDashboard size={18} />
- 내 대시보드 열기
+ {isEnglish ? "Open Dashboard" : "내 대시보드 열기"}
  </Link>
 
  {/* Nav items */}
@@ -213,7 +223,7 @@ export default function Header() {
  className="bg-white rounded-[20px] overflow-hidden"
  style={{ border: "1.5px solid #DDE4EC" }}
  >
- {navConfig.map((item) =>
+ {activeNavConfig.map((item) =>
  item.type === "link" ? (
  <Link
  key={item.href}

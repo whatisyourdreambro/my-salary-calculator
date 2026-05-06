@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { guides } from '@/lib/guidesData';
+import { guides, koGuides, enGuides } from '@/lib/guidesData';
 
 type ChangeFrequency =
  | 'always'
@@ -129,6 +129,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/en',
  '/en/flat-tax',
  '/en/salary-converter',
+ '/en/guides',
  '/global',
  ];
 
@@ -139,13 +140,56 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: route === '/' ? 1.0 : 0.8,
  }));
 
- // 2. Dynamic Guide Pages
- const guideUrls = guides.map((guide) => ({
- url: `${baseUrl}/guides/${guide.slug}`,
+ // 2. Dynamic Guide Pages — 한국어 가이드 (lang === 'ko')
+ // 영어 카운터파트가 있는 슬러그는 alternates로 hreflang 페어 명시
+ const enSlugSet = new Set(enGuides.map((g) => g.slug));
+ const guideUrls: MetadataRoute.Sitemap = koGuides.map((guide) => {
+ const koUrl = `${baseUrl}/guides/${guide.slug}`;
+ const enUrl = `${baseUrl}/en/guides/${guide.slug}`;
+ const hasEn = enSlugSet.has(guide.slug);
+ return {
+ url: koUrl,
  lastModified: new Date(guide.publishedDate),
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
- }));
+ ...(hasEn
+ ? {
+ alternates: {
+ languages: {
+ "ko-KR": koUrl,
+ "en": enUrl,
+ "x-default": koUrl,
+ },
+ },
+ }
+ : {}),
+ };
+ });
+
+ // 2-b. 영어 가이드 페이지 (lang === 'en')
+ const koSlugSet = new Set(koGuides.map((g) => g.slug));
+ const enGuideUrls: MetadataRoute.Sitemap = enGuides.map((guide) => {
+ const koUrl = `${baseUrl}/guides/${guide.slug}`;
+ const enUrl = `${baseUrl}/en/guides/${guide.slug}`;
+ const hasKo = koSlugSet.has(guide.slug);
+ return {
+ url: enUrl,
+ lastModified: new Date(guide.publishedDate),
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.7,
+ ...(hasKo
+ ? {
+ alternates: {
+ languages: {
+ "ko-KR": koUrl,
+ "en": enUrl,
+ "x-default": koUrl,
+ },
+ },
+ }
+ : {}),
+ };
+ });
 
  // 3. Dynamic Salary Pages
  const salaryUrls: MetadataRoute.Sitemap = [];
@@ -225,5 +269,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  });
 
- return [...staticUrls, ...guideUrls, ...salaryUrls, ...companyUrls];
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls];
 }

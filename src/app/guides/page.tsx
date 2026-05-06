@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { guides, categories, Guide } from '@/lib/guidesData';
+import { useState, useMemo, useEffect } from 'react';
+import { koGuides as guides, categories, Guide } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,6 +111,20 @@ export default function GuidesPage() {
  const [searchQuery, setSearchQuery] = useState('');
  const [sortBy, setSortBy] = useState<SortOption>('latest');
  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
+ // Read ?category= and ?q= from URL on mount (header deep links: /guides?category=주식)
+ useEffect(() => {
+ if (typeof window === 'undefined') return;
+ const params = new URLSearchParams(window.location.search);
+ const cat = params.get('category');
+ const q = params.get('q');
+ if (cat && categories.some((c) => c.id === cat)) {
+ setSelectedCategoryId(cat);
+ }
+ if (q) {
+ setSearchQuery(q);
+ }
+ }, []);
 
  const sortedGuides = useMemo(() => {
  return [...guides].sort((a, b) => b.views - a.views);

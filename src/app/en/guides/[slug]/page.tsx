@@ -1,8 +1,6 @@
-
-import { koGuides } from "@/lib/guidesData";
+import { enGuides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
-import GuidePageClient from "./GuidePageClient";
-import RelatedGuides from "@/components/RelatedGuides";
+import EnglishGuideClient from "./EnglishGuideClient";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -12,23 +10,23 @@ interface Props {
 }
 
 export async function generateStaticParams() {
- return koGuides.map((guide) => ({
+ return enGuides.map((guide) => ({
  slug: guide.slug,
  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
- const guide = koGuides.find((g) => g.slug === params.slug);
+ const guide = enGuides.find((g) => g.slug === params.slug);
  if (!guide) return {};
 
  const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
  const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
 
  return {
- title: `${guide.title} | Moneysalary 금융 가이드`,
+ title: `${guide.title} | Moneysalary Guides`,
  description: guide.description,
  alternates: {
- canonical: koUrl,
+ canonical: enUrl,
  languages: {
  "ko-KR": koUrl,
  "en": enUrl,
@@ -39,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  title: guide.title,
  description: guide.description,
  type: 'article',
- locale: 'ko_KR',
- url: koUrl,
+ locale: 'en_US',
+ url: enUrl,
  publishedTime: guide.publishedDate,
  authors: ['Moneysalary'],
  tags: guide.tags,
@@ -53,23 +51,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  };
 }
 
-export default function GuidePage({ params }: Props) {
- const guide = koGuides.find((g) => g.slug === params.slug);
+export default function EnglishGuidePage({ params }: Props) {
+ const guide = enGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {
  notFound();
  }
 
- // Logic to find related guides: Same category, exclude current, top views (Korean only)
- const relatedGuides = koGuides
+ const relatedGuides = enGuides
  .filter((g) => g.category === guide.category && g.slug !== guide.slug)
- .sort((a, b) => b.views - a.views)
  .slice(0, 3);
 
  if (relatedGuides.length < 3) {
- const others = koGuides
+ const others = enGuides
  .filter((g) => g.slug !== guide.slug && !relatedGuides.find(r => r.slug === g.slug))
- .sort((a, b) => b.views - a.views)
  .slice(0, 3 - relatedGuides.length);
  relatedGuides.push(...others);
  }
@@ -79,7 +74,7 @@ export default function GuidePage({ params }: Props) {
  '@type': 'Article',
  headline: guide.title,
  description: guide.description,
- inLanguage: 'ko-KR',
+ inLanguage: 'en',
  author: {
  '@type': 'Organization',
  name: 'Moneysalary',
@@ -87,26 +82,17 @@ export default function GuidePage({ params }: Props) {
  datePublished: guide.publishedDate,
  mainEntityOfPage: {
  '@type': 'WebPage',
- '@id': `https://www.moneysalary.com/guides/${guide.slug}`,
+ '@id': `https://www.moneysalary.com/en/guides/${guide.slug}`,
  },
  };
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
- <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
- <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
- <RelatedGuides
- currentSlug={guide.slug}
- category={guide.category}
- tags={guide.tags}
- limit={6}
- title="더 깊이 알아보고 싶다면"
- />
- </div>
+  <script
+   type="application/ld+json"
+   dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+  />
+  <EnglishGuideClient guide={guide} relatedGuides={relatedGuides} />
  </>
  );
 }
