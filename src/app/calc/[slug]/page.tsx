@@ -132,7 +132,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  <JsonLd data={ldData} />
  <SimpleCalculatorView slug={calc.slug} />
 
- <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14 pb-16">
+ <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14 pb-16">
  <div>
  <div className="max-w-3xl mx-auto">
  <NextActions category={nextActionCategory} />

@@ -312,7 +312,7 @@ export default function HomePage() {
  <SocialProof />
 
  {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
- <div style={{ maxWidth: "88rem", margin: "0 auto", padding: "0 1.5rem" }}>
+ <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 1.5rem" }}>
  <HomeTopAd />
  </div>
 
@@ -325,7 +325,7 @@ export default function HomePage() {
  <section
  id="calculator-section"
  style={{
- maxWidth: "88rem",
+ maxWidth: "80rem",
  margin: "0 auto",
  padding: "5rem 1.5rem",
  }}
@@ -354,7 +354,7 @@ export default function HomePage() {
  padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -471,7 +471,7 @@ export default function HomePage() {
  padding: "2rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
@@ -486,7 +486,7 @@ export default function HomePage() {
  padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -597,7 +597,7 @@ export default function HomePage() {
  textAlign: "center",
  }}
  >
- <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
  <div
  style={{
  width: "56px",

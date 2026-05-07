@@ -88,7 +88,7 @@ export default function YearEndTaxPage() {
  </section>
 
  {/* 계산기 섹션 */}
- <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-4">
+ <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-4">
  <YearEndTaxCalculator />
 
  <div className="max-w-4xl mx-auto mt-10">

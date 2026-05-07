@@ -95,7 +95,7 @@ export default function NewEmployee2026Page() {
  ]}
  />
 
- <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="text-center mb-12">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <TrendingUp className="w-4 h-4" />

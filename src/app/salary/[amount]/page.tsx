@@ -160,7 +160,7 @@ export default function SalaryAmountPage({ params }: Props) {
  />
 
  <div className="pt-8 px-4 sm:px-6 lg:px-8">
- <div className="max-w-screen-2xl mx-auto">
+ <div className="max-w-7xl mx-auto">
  <Link
  href="/"
  className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group"
