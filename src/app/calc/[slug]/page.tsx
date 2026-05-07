@@ -6,11 +6,9 @@ import { notFound } from "next/navigation";
 import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
-import { HomeTopAd } from "@/components/AdPlacement";
+import { HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import NextActions, { type NextActionCategory } from "@/components/NextActions";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import SidebarStack from "@/components/SidebarStack";
 import { buildPageMetadata } from "@/lib/seo";
 import {
  autoBreadcrumbLd,
@@ -20,7 +18,6 @@ import {
  speakableLd,
 } from "@/lib/structuredData";
 import { getCalculatorBySlug, getAllSlugs, type CalculatorDef } from "@/lib/simpleCalculators";
-import { getPartnerForCalcCategory } from "@/lib/partnerConfig";
 
 export const dynamic = "force-static";
 
@@ -44,7 +41,6 @@ export async function generateMetadata({
  });
 }
 
-// 계산기 카테고리 → NextActions 카테고리 매핑
 function mapToNextActionCategory(
  cat: CalculatorDef["category"]
 ): NextActionCategory | undefined {
@@ -70,7 +66,6 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  const calc = getCalculatorBySlug(params.slug);
  if (!calc) notFound();
 
- // JSON-LD 데이터
  const ldData: object[] = [
  autoBreadcrumbLd(`/calc/${calc.slug}`, { leafName: calc.title }),
  softwareApplicationLd({
@@ -88,7 +83,6 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  );
  }
 
- // HowTo LD: explanation/formula가 있으면 4단계로 노출
  if (calc.explanation || calc.formula) {
  const steps = [
  {
@@ -131,7 +125,6 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  })
  );
 
- const partnerId = getPartnerForCalcCategory(calc.category);
  const nextActionCategory = mapToNextActionCategory(calc.category);
 
  return (
@@ -139,26 +132,14 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  <JsonLd data={ldData} />
  <SimpleCalculatorView slug={calc.slug} />
 
- {/* 결과 페이지 후속: NextActions + PartnerSlot + 사이드바 */}
- <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8 pb-16">
+ <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14 pb-16">
  <div>
  <div className="max-w-3xl mx-auto">
  <NextActions category={nextActionCategory} />
 
- {partnerId ? (
- <PartnerSlot
- id={partnerId}
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
- ) : (
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
- )}
 
  <RelatedCalculators currentPath={`/calc/${calc.slug}`} />
 
@@ -168,10 +149,14 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  </div>
  </div>
 
- <SidebarStack
- context="calc"
- partnerId={partnerId ?? "finda-loan-calc"}
- />
+ {/* Desktop sticky sidebar */}
+ <aside
+ className="hidden lg:block lg:sticky lg:top-24 space-y-6 self-start"
+ aria-label="추천·광고"
+ >
+ <SidebarAd />
+ <CoupangBanner size="skyscraper" showDisclosure={false} />
+ </aside>
  </div>
  </>
  );

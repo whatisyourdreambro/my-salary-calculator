@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 종합소득세 신고 가이드 - 5월 종소세 환급금·신고법",
@@ -227,17 +225,9 @@ export default function YearEndTax2026Page() {
  </div>
  </section>
 
- {/* 시즌 메일 구독 — 다음 시즌 재방문 락인 */}
- <EmailCaptureCard context="year-end-tax" />
-
- {/* 핵심 제휴 — 종합소득세 환급(삼쩜삼) */}
- <PartnerSlot
- id="samjeomsam-tax"
- fallback={
+ {/* 쿠팡 파트너스 배너 */}
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
- }
  />
 
  <RelatedCalculators currentPath="/year-end-tax-2026" />

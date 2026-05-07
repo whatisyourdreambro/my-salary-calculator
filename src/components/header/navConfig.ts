@@ -1,6 +1,7 @@
 // src/components/header/navConfig.ts
 //
 // 헤더 네비게이션 설정 데이터.
+// 5개 카테고리로 통합 (이전 8개) → 1024px부터 한 줄 노출 가능.
 // 컴포넌트 로직과 분리하여 메뉴 구조 변경 시 이 파일만 수정.
 
 export type LinkItem = { name: string; href: string; type: "link" };
@@ -13,11 +14,6 @@ export type NavItem = LinkItem | DropdownItem;
 
 export const navConfig: NavItem[] = [
  {
- name: "커리어 플래너",
- href: "/pro/career-planner",
- type: "link",
- },
- {
  name: "연봉 계산기",
  type: "dropdown",
  items: [
@@ -27,10 +23,20 @@ export const navConfig: NavItem[] = [
  { name: "프리랜서/알바", href: "/?tab=freelancer" },
  { name: "연말정산 계산기", href: "/year-end-tax" },
  { name: "FIRE 은퇴 계산기", href: "/fire-calculator" },
+ { name: "전체 30종 도구", href: "/tools" },
+ { name: "🔥 성과급 세금 계산기", href: "/tools/finance/bonus" },
+ { name: "복리 계산기", href: "/tools/finance/compound" },
+ { name: "주식 양도소득세", href: "/tools/finance/stock-tax" },
+ { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax" },
+ { name: "증여세 계산기", href: "/tools/real-estate/gift-tax" },
+ { name: "프리랜서 종합소득세", href: "/tools/finance/freelance-tax" },
+ { name: "IRP·연금저축 세액공제", href: "/tools/finance/irp" },
+ { name: "할부 이자 계산기", href: "/tools/finance/installment" },
+ { name: "대출 이자 계산기", href: "/tools/loan" },
  ],
  },
  {
- name: "연봉 테이블",
+ name: "회사·연봉DB",
  type: "dropdown",
  items: [
  { name: "기업별 연봉 DB", href: "/salary-db" },
@@ -38,6 +44,7 @@ export const navConfig: NavItem[] = [
  { name: "2026 연봉 실수령액 표", href: "/table/2026/annual" },
  { name: "2026 월급 실수령액 표", href: "/table/2026/monthly" },
  { name: "직장인 단계별 자산", href: "/career-stages-2026" },
+ { name: "커리어 플래너", href: "/pro/career-planner" },
  ],
  },
  {
@@ -56,20 +63,13 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "금융 가이드",
+ name: "가이드·재테크",
  type: "dropdown",
  items: [
  { name: "전체 가이드 (50+편)", href: "/guides" },
  { name: "직장인 꿀팁 모음", href: "/tips" },
  { name: "Q&A 자주 묻는 질문", href: "/qna" },
  { name: "금융 용어 사전", href: "/glossary" },
- { name: "사이트 소개", href: "/about" },
- ],
- },
- {
- name: "주식·재테크",
- type: "dropdown",
- items: [
  { name: "📊 주식 가이드 모아보기", href: "/guides?category=주식" },
  { name: "🔥 삼성전자 2026 주가 전망", href: "/guides/samsung-electronics-stock-2026" },
  { name: "🚀 SK하이닉스 주가 분석", href: "/guides/sk-hynix-stock-2026" },
@@ -79,24 +79,7 @@ export const navConfig: NavItem[] = [
  { name: "⚖️ 삼성 vs 하이닉스 비교", href: "/guides/samsung-vs-hynix-employee-comparison" },
  { name: "🧾 반도체 주식 절세 가이드", href: "/guides/chip-stock-tax-guide" },
  { name: "📈 적립식 vs 일시매수 전략", href: "/guides/kospi-leader-stock-strategy" },
- ],
- },
- {
- name: "계산기 도구",
- type: "dropdown",
- items: [
- { name: "🚀 100가지 계산기 모음", href: "/calc" },
- { name: "전체 30종 도구", href: "/tools" },
- { name: "🔥 성과급 세금 계산기", href: "/tools/finance/bonus" },
- { name: "퇴직금 세금 계산기", href: "/tools/finance/severance" },
- { name: "복리 계산기", href: "/tools/finance/compound" },
- { name: "주식 양도소득세", href: "/tools/finance/stock-tax" },
- { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax" },
- { name: "증여세 계산기", href: "/tools/real-estate/gift-tax" },
- { name: "프리랜서 종합소득세", href: "/tools/finance/freelance-tax" },
- { name: "IRP·연금저축 세액공제", href: "/tools/finance/irp" },
- { name: "할부 이자 계산기", href: "/tools/finance/installment" },
- { name: "대출 이자 계산기", href: "/tools/loan" },
+ { name: "사이트 소개", href: "/about" },
  ],
  },
  {

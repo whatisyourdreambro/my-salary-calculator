@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연말정산 + 성과급 가이드 - 13월의 월급·환급금 극대화",
@@ -160,16 +158,9 @@ export default function YearEndTaxSettlement2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="samjeomsam-tax"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="year-end-tax" />
 
  <RelatedCalculators currentPath="/year-end-tax-settlement-2026" />
 

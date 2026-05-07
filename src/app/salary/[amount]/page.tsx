@@ -5,23 +5,12 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryTierCard from "@/components/SalaryTierCard";
-
-// 무거운 recharts 포함 컴포넌트는 클라이언트 사이드만 렌더 → LCP 절감
-const WealthChart = dynamic(() => import("@/components/WealthChart"), {
- ssr: false,
- loading: () => (
- <div className="w-full h-[400px] bg-white rounded-3xl border border-canvas-200 animate-pulse" />
- ),
-});
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { CalcResultAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
-import PartnerSlot from "@/components/PartnerSlot";
-import SidebarStack from "@/components/SidebarStack";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 import FavoritesButton from "@/components/FavoritesButton";
 import { ArrowLeft, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
@@ -32,6 +21,14 @@ import {
  howToLd,
  speakableLd,
 } from "@/lib/structuredData";
+
+// 무거운 recharts 컴포넌트는 클라이언트 사이드만 렌더 → LCP 절감
+const WealthChart = dynamic(() => import("@/components/WealthChart"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[400px] bg-white rounded-3xl border border-canvas-200 animate-pulse" />
+ ),
+});
 
 // [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
 export const runtime = "edge";
@@ -95,7 +92,7 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const manwon = Math.round(amount / 10000);
 
- // 인근 연봉 cross-link (8개: ±200, ±400, ±600, ±800만원)
+ // 인근 연봉 cross-link
  const neighbors = [
  manwon - 800,
  manwon - 400,
@@ -109,7 +106,6 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const faqItems = buildSalaryFaq(amount, tax.netPay, tax.totalDeductions);
 
- // HowTo: "연봉 X만원 실수령액 계산하는 5단계"
  const howTo = howToLd({
  name: `연봉 ${formattedAmount} 실수령액 계산하는 방법`,
  description: `연봉 ${formattedAmount}을 기준으로 4대보험·소득세·실수령액을 단계별로 계산하는 가이드.`,
@@ -163,10 +159,11 @@ export default function SalaryAmountPage({ params }: Props) {
  ]}
  />
 
- <div className="pt-8 px-4 sm:px-6">
+ <div className="pt-8 px-4 sm:px-6 lg:px-8">
+ <div className="max-w-screen-2xl mx-auto">
  <Link
  href="/"
- className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group max-w-6xl mx-auto"
+ className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group"
  >
  <ArrowLeft
  size={16}
@@ -175,7 +172,7 @@ export default function SalaryAmountPage({ params }: Props) {
  <span className="text-xs font-bold">전체 계산기로 돌아가기</span>
  </Link>
 
- <div className="max-w-6xl mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8">
+ <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14">
  {/* Main column */}
  <div className="flex flex-col items-center lg:items-stretch">
  <div className="flex items-center gap-2 mb-2 self-center">
@@ -185,7 +182,7 @@ export default function SalaryAmountPage({ params }: Props) {
  <Sparkles size={14} className="text-[#FFD700]" />
  </div>
 
- <h1 className="text-3xl font-black text-navy text-center mb-6 self-center">
+ <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-navy text-center mb-6 self-center leading-tight">
  연봉 <span className="text-primary">{formattedAmount}</span>의<br />월
  실수령액 분석
  </h1>
@@ -216,28 +213,23 @@ export default function SalaryAmountPage({ params }: Props) {
  <CalcResultAd />
  </div>
 
- {/* 결과 직후 가장 의도 높은 사용자 → NextActions + 핀다 DSR 위젯 */}
+ {/* 결과 직후 — 다음 행동 CTA */}
  <div className="w-full mt-2 px-2">
  <NextActions annualSalary={amount} category="salary" />
  </div>
 
- <div className="w-full mt-2 px-2">
- <PartnerSlot
- id="finda-dsr"
- context={{ annualSalary: amount }}
- fallback={
+ {/* 쿠팡 파트너스 배너 */}
+ <div className="w-full mt-6 px-2">
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "rectangle" }}
  showDisclosure={true}
- />
- }
  />
  </div>
 
  <div className="w-full mt-10 space-y-12">
  <WealthChart monthlyNetSalary={tax.netPay} />
 
- {/* 차트와 티어카드 사이 InArticleAd — viewability 높음 */}
+ {/* 차트와 티어카드 사이 InArticleAd */}
  <div className="px-2">
  <InArticleAd />
  </div>
@@ -269,22 +261,12 @@ export default function SalaryAmountPage({ params }: Props) {
  <HomeTopAd />
  </div>
 
- {/* FAQ 후 환급 PartnerSlot — 사용자가 "환급 더 받기" 단계로 이동 */}
+ {/* FAQ 후 쿠팡 한 번 더 */}
  <div className="px-2">
- <PartnerSlot
- id="toss-tax-refund"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  showDisclosure={false}
  />
- }
- />
- </div>
-
- {/* 시즌 메일 구독 — 연봉 협상 + 연말정산 등 재방문 락인 */}
- <div className="px-2">
- <EmailCaptureCard context="salary-negotiation" />
  </div>
 
  {/* 인근 연봉 리포트 */}
@@ -308,15 +290,21 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
  )}
 
- {/* RelatedCalculators */}
  <div className="px-2 sm:px-6">
  <RelatedCalculators currentPath="/" title="이 연봉으로 다음 단계는?" />
  </div>
  </div>
  </div>
 
- {/* Desktop sticky sidebar */}
- <SidebarStack context="salary" annualSalary={amount} />
+ {/* Desktop sticky sidebar — 광고 + 쿠팡 */}
+ <aside
+ className="hidden lg:block lg:sticky lg:top-24 space-y-6 self-start"
+ aria-label="추천·광고"
+ >
+ <SidebarAd />
+ <CoupangBanner size="skyscraper" showDisclosure={false} />
+ </aside>
+ </div>
  </div>
  </div>
  </main>

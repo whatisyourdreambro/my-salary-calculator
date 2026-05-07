@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 4대보험 요율표 — 국민연금·건강보험·고용보험·산재보험",
@@ -263,16 +261,9 @@ export default function SocialInsuranceRates2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="toss-insurance-home"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="general" />
 
  <RelatedCalculators currentPath="/social-insurance-rates-2026" />
 

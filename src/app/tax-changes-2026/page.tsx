@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 세법 변경사항 — 결혼세액공제 부활·자녀공제 확대 등",
@@ -248,16 +246,9 @@ export default function TaxChanges2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="samjeomsam-tax"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="new-year" />
 
  <RelatedCalculators currentPath="/tax-changes-2026" />
 

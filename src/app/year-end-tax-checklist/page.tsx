@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연말정산 체크리스트 — 12월 마감 전 12가지 점검",
@@ -228,16 +226,9 @@ export default function YearEndTaxChecklistPage() {
  </div>
  </section>
 
- <PartnerSlot
- id="samjeomsam-tax"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="year-end-tax" />
 
  <RelatedCalculators currentPath="/year-end-tax-checklist" />
 

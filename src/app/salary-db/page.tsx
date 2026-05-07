@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Search, Building2, TrendingUp, Users, ArrowRight, Database } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
 export default function SalaryDBPage() {
  const [searchTerm, setSearchTerm] = useState("");
@@ -135,17 +134,11 @@ export default function SalaryDBPage() {
  </div>
  )}
 
- {/* 회사 그리드 후 — 면접/입사 컨텍스트 제휴 */}
+ {/* 회사 그리드 후 광고 + 쿠팡 */}
  <div className="max-w-3xl mx-auto mt-12">
  <InArticleAd />
-
- <PartnerSlot
- id="finda-loan-home"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
- }
  />
  </div>
  </div>

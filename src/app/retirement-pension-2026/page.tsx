@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 퇴직연금 완벽 가이드 — DB·DC·IRP 차이와 선택법",
@@ -169,16 +167,9 @@ export default function RetirementPension2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="toss-insurance-home"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="general" />
 
  <RelatedCalculators currentPath="/retirement-pension-2026" />
 

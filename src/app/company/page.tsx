@@ -6,7 +6,6 @@ import { companies } from "@/lib/companyData";
 import { Search, Building2, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
 export default function CompanyPage() {
  const [searchTerm, setSearchTerm] = useState("");
@@ -123,16 +122,11 @@ export default function CompanyPage() {
  </div>
  )}
 
- {/* 회사 그리드 후 광고 + 핀다 (입사 → 첫 신용대출) */}
+ {/* 회사 그리드 후 광고 + 쿠팡 */}
  <div className="max-w-3xl mx-auto mt-12">
  <InArticleAd />
- <PartnerSlot
- id="finda-loan-home"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
- }
  />
  </div>
  </div>

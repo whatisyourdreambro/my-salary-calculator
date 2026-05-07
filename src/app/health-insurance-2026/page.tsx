@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 건강보험료 정산 가이드 - 7월 정산금·환급·추가 납부",
@@ -190,16 +188,9 @@ export default function HealthInsurance2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="toss-insurance-home"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="general" />
 
  <RelatedCalculators currentPath="/health-insurance-2026" />
 

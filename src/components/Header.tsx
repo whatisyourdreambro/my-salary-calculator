@@ -28,7 +28,7 @@ export default function Header() {
  const pathname = usePathname();
  const isEnglish = pathname?.startsWith("/en") ?? false;
  const activeNavConfig = isEnglish ? navConfigEn : navConfig;
- const dashboardLabel = isEnglish ? "My Dashboard" : "내 대시보드";
+ const dashboardLabel = isEnglish ? "Dashboard" : "대시보드";
  const mobileMenuAriaLabel = isEnglish ? "Open menu" : "메뉴 열기";
  const dashboardHref = isEnglish ? "/en" : "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -67,8 +67,8 @@ export default function Header() {
  animate={{ y: 0 }}
  transition={{ duration: 0.5, ease: "circOut" }}
  >
- <nav className="max-w-[88rem] mx-auto px-6">
- <div className="flex items-center justify-between">
+ <nav className="max-w-screen-2xl mx-auto px-4 sm:px-6">
+ <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
  <Link href="/" className="flex items-center gap-2 no-underline">
@@ -80,8 +80,8 @@ export default function Header() {
  </Link>
  </div>
 
- {/* Desktop Nav */}
- <div className="hidden xl:flex items-center gap-0.5">
+ {/* Desktop Nav — 5개 카테고리, lg(1024px)부터 노출 */}
+ <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
  {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
  <DesktopDropdown
@@ -94,8 +94,8 @@ export default function Header() {
  key={item.name}
  href={item.href}
  style={{
- padding: "8px 14px",
- fontSize: "14.5px",
+ padding: "7px 11px",
+ fontSize: "13.5px",
  fontWeight: 600,
  borderRadius: "10px",
  color: pathname === item.href ? "#0145F2" : "#3D5E78",
@@ -103,6 +103,7 @@ export default function Header() {
  pathname === item.href ? "#0145F20D" : "transparent",
  textDecoration: "none",
  transition: "color 0.15s ease, background-color 0.15s ease",
+ whiteSpace: "nowrap",
  }}
  onMouseEnter={(e) => {
  (e.currentTarget as HTMLElement).style.color = "#0145F2";
@@ -122,18 +123,18 @@ export default function Header() {
  </div>
 
  {/* Right Actions */}
- <div className="flex items-center gap-3 z-50">
+ <div className="flex items-center gap-2 z-50 flex-shrink-0">
  <LocaleSwitcher />
  <ThemeToggle />
- {/* Dashboard CTA */}
+ {/* Dashboard CTA — md+ 에서만 텍스트, sm 이하 아이콘만 */}
  <Link
  href={dashboardHref}
- className="hidden sm:flex"
+ aria-label={dashboardLabel}
+ className="hidden sm:inline-flex items-center"
  style={{
- alignItems: "center",
- gap: "7px",
- padding: "9px 20px",
- fontSize: "14px",
+ gap: "6px",
+ padding: "8px 14px",
+ fontSize: "13.5px",
  fontWeight: 700,
  color: "#FFFFFF",
  backgroundColor: "#0145F2",
@@ -142,6 +143,7 @@ export default function Header() {
  textDecoration: "none",
  transition: "background-color 0.15s ease, color 0.15s ease",
  boxShadow: "0 4px 14px -2px #0145F233",
+ whiteSpace: "nowrap",
  }}
  onMouseEnter={(e) => {
  (e.currentTarget as HTMLElement).style.backgroundColor = "#EDF1F5";
@@ -152,12 +154,12 @@ export default function Header() {
  (e.currentTarget as HTMLElement).style.color = "#FFFFFF";
  }}
  >
- <LayoutDashboard size={15} />
- <span>{dashboardLabel}</span>
+ <LayoutDashboard size={14} />
+ <span className="hidden md:inline">{dashboardLabel}</span>
  </Link>
 
- {/* Mobile Menu Toggle */}
- <div className="xl:hidden">
+ {/* Mobile Menu Toggle — lg 미만에서 노출 */}
+ <div className="lg:hidden">
  <button
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
  className="flex items-center justify-center cursor-pointer"
@@ -187,7 +189,7 @@ export default function Header() {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.18 }}
- className="xl:hidden fixed inset-0 z-40 pt-20 overflow-y-auto"
+ className="lg:hidden fixed inset-0 z-40 pt-20 overflow-y-auto"
  style={{
  backgroundColor: "rgba(255,255,255,0.97)",
  backdropFilter: "blur(24px)",

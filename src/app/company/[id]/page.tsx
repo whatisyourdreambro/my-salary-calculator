@@ -6,6 +6,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import JsonLd from "@/components/JsonLd";
+import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
+import { companies } from "@/lib/companyData";
+import { buildCompanyMetadata } from "@/lib/seo";
+import {
+ breadcrumbLd,
+ companyOrganizationLd,
+} from "@/lib/structuredData";
 
 // framer-motion + recharts 포함 → 클라이언트 전용 렌더로 First Load JS 절감
 const CompanyProfileContent = dynamic(
@@ -19,15 +27,6 @@ const CompanyProfileContent = dynamic(
  ),
  }
 );
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
-import CoupangBanner from "@/components/CoupangBanner";
-import { companies } from "@/lib/companyData";
-import { buildCompanyMetadata } from "@/lib/seo";
-import {
- breadcrumbLd,
- companyOrganizationLd,
-} from "@/lib/structuredData";
 
 export const runtime = "edge";
 
@@ -52,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  id: company.id,
  name: company.name,
  industry: company.industry,
- averageSalary: company.averageSalary * 10000, // companyData는 만원 단위
+ averageSalary: company.averageSalary * 10000,
  });
 }
 
@@ -71,9 +70,6 @@ export default function CompanyProfilePage({ params }: PageProps) {
  </div>
  );
  }
-
- // entryLevelSalary는 만원 단위 → 원 단위로 변환 (PartnerSlot용)
- const entryAnnualSalary = company.entryLevelSalary * 10000;
 
  return (
  <>
@@ -94,22 +90,13 @@ export default function CompanyProfilePage({ params }: PageProps) {
 
  <CompanyProfileContent id={params.id} />
 
- {/* CompanyProfileContent 다음에 광고 + PartnerSlot + Coupang */}
- <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+ <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-6">
  <InArticleAd />
-
- <PartnerSlot
- id="finda-company"
- context={{ annualSalary: entryAnnualSalary }}
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
  <HomeTopAd />
  </div>
  <div className="lg:col-span-1">

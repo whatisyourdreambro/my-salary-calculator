@@ -9,9 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 세율표 한눈에 — 소득세·증여세·상속세·양도세·법인세",
@@ -285,16 +283,9 @@ export default function TaxRates2026Page() {
  </div>
  </section>
 
- <PartnerSlot
- id="samjeomsam-tax"
- fallback={
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- }
- />
-
- <EmailCaptureCard context="year-end-tax" />
 
  <RelatedCalculators currentPath="/tax-rates-2026" />
 

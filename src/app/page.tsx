@@ -21,9 +21,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
 import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
-import PartnerSlot from "@/components/PartnerSlot";
 import NextActions from "@/components/NextActions";
-import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -314,7 +312,7 @@ export default function HomePage() {
  <SocialProof />
 
  {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
- <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 1.5rem" }}>
+ <div style={{ maxWidth: "88rem", margin: "0 auto", padding: "0 1.5rem" }}>
  <HomeTopAd />
  </div>
 
@@ -327,7 +325,7 @@ export default function HomePage() {
  <section
  id="calculator-section"
  style={{
- maxWidth: "80rem",
+ maxWidth: "88rem",
  margin: "0 auto",
  padding: "5rem 1.5rem",
  }}
@@ -356,7 +354,7 @@ export default function HomePage() {
  padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -473,7 +471,7 @@ export default function HomePage() {
  padding: "2rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
@@ -488,7 +486,7 @@ export default function HomePage() {
  padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -584,19 +582,6 @@ export default function HomePage() {
  </div>
  </section>
 
- {/* ═══ 핀다 대출 비교 — 대출/적금 사용자에게 자연스러운 다음 단계 ═══ */}
- <section
- style={{
- backgroundColor: "#FFFFFF",
- borderTop: "1px solid #DDE4EC",
- padding: "2rem 1.5rem",
- }}
- >
- <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
- <PartnerSlot id="finda-loan-home" />
- </div>
- </section>
-
  {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
  <FeaturedGuides />
 
@@ -612,7 +597,7 @@ export default function HomePage() {
  textAlign: "center",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div style={{ maxWidth: "88rem", margin: "0 auto" }}>
  <div
  style={{
  width: "56px",
@@ -662,7 +647,7 @@ export default function HomePage() {
  </div>
  </section>
 
- {/* ═══ 시즌 메일 구독 + 마지막 광고 ═════════════════════════ */}
+ {/* ═══ 마지막 광고 ═════════════════════════════════════════ */}
  <section
  style={{
  backgroundColor: "#FFFFFF",
@@ -671,10 +656,7 @@ export default function HomePage() {
  }}
  >
  <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
- <EmailCaptureCard context="general" />
- <div className="mt-6">
  <InArticleAd />
- </div>
  </div>
  </section>
 
