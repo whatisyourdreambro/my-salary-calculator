@@ -8,13 +8,21 @@ import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import NextActions from "@/components/NextActions";
+import PartnerSlot from "@/components/PartnerSlot";
+import SidebarStack from "@/components/SidebarStack";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
+import FavoritesButton from "@/components/FavoritesButton";
 import { ArrowLeft, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
 import {
  breadcrumbLd,
  faqLd,
  softwareApplicationLd,
+ howToLd,
+ speakableLd,
 } from "@/lib/structuredData";
 
 // [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
@@ -93,6 +101,40 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const faqItems = buildSalaryFaq(amount, tax.netPay, tax.totalDeductions);
 
+ // HowTo: "연봉 X만원 실수령액 계산하는 5단계"
+ const howTo = howToLd({
+ name: `연봉 ${formattedAmount} 실수령액 계산하는 방법`,
+ description: `연봉 ${formattedAmount}을 기준으로 4대보험·소득세·실수령액을 단계별로 계산하는 가이드.`,
+ totalTime: "PT2M",
+ steps: [
+ {
+ name: "비과세 식대 차감",
+ text: "월 식대 20만원(연 240만원)은 비과세로 과세표준에서 제외합니다.",
+ },
+ {
+ name: "4대보험 공제",
+ text: "국민연금 4.5%, 건강보험 3.545%, 장기요양 0.4591%, 고용보험 0.9%를 차감합니다.",
+ },
+ {
+ name: "근로소득공제 적용",
+ text: "총급여에 따라 70~5% 구간별 근로소득공제를 적용합니다.",
+ },
+ {
+ name: "기본·인적공제 차감",
+ text: "본인 150만원, 표준세액공제 13만원 등을 차감해 과세표준을 산출합니다.",
+ },
+ {
+ name: "산출세액 계산",
+ text: "6~45% 8단계 누진세율 적용 후 지방소득세 10%를 더해 최종 세액을 결정합니다.",
+ },
+ ],
+ });
+
+ const speakable = speakableLd({
+ url: `/salary/${params.amount}`,
+ cssSelectors: [".speakable-summary", ".faq-answer"],
+ });
+
  return (
  <main className="min-h-screen bg-transparent pb-10">
  <JsonLd
@@ -108,13 +150,15 @@ export default function SalaryAmountPage({ params }: Props) {
  url: `/salary/${params.amount}`,
  }),
  faqLd(faqItems),
+ howTo,
+ speakable,
  ]}
  />
 
- <div className="pt-8 px-6 flex flex-col items-center">
+ <div className="pt-8 px-4 sm:px-6">
  <Link
  href="/"
- className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group"
+ className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group max-w-6xl mx-auto"
  >
  <ArrowLeft
  size={16}
@@ -123,17 +167,29 @@ export default function SalaryAmountPage({ params }: Props) {
  <span className="text-xs font-bold">전체 계산기로 돌아가기</span>
  </Link>
 
- <div className="flex items-center gap-2 mb-2">
+ <div className="max-w-6xl mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8">
+ {/* Main column */}
+ <div className="flex flex-col items-center lg:items-stretch">
+ <div className="flex items-center gap-2 mb-2 self-center">
  <span className="bg-canvas-dark text-electric text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
  2026 REPORT
  </span>
  <Sparkles size={14} className="text-[#FFD700]" />
  </div>
 
- <h1 className="text-3xl font-black text-navy text-center mb-10">
+ <h1 className="text-3xl font-black text-navy text-center mb-6 self-center">
  연봉 <span className="text-primary">{formattedAmount}</span>의<br />월
  실수령액 분석
  </h1>
+
+ <div className="self-center mb-6">
+ <FavoritesButton title={`연봉 ${formattedAmount} 실수령액`} />
+ </div>
+
+ <div className="speakable-summary self-center max-w-xl text-center text-sm text-muted-blue mb-6">
+ 연봉 {formattedAmount}의 월 실수령액은 약 {(tax.netPay / 10000).toFixed(0)}만원,
+ 4대보험·세금 공제는 월 약 {(tax.totalDeductions / 10000).toFixed(0)}만원입니다.
+ </div>
 
  <SalaryResultCard
  monthlyNet={tax.netPay}
@@ -148,16 +204,40 @@ export default function SalaryAmountPage({ params }: Props) {
  }}
  />
 
- <div className="w-full max-w-4xl mx-auto px-6 mt-6">
+ <div className="w-full mt-6">
  <CalcResultAd />
  </div>
 
- <div className="w-full mt-10 space-y-12 max-w-4xl mx-auto">
+ {/* 결과 직후 가장 의도 높은 사용자 → NextActions + 핀다 DSR 위젯 */}
+ <div className="w-full mt-2 px-2">
+ <NextActions annualSalary={amount} category="salary" />
+ </div>
+
+ <div className="w-full mt-2 px-2">
+ <PartnerSlot
+ id="finda-dsr"
+ context={{ annualSalary: amount }}
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "rectangle" }}
+ showDisclosure={true}
+ />
+ }
+ />
+ </div>
+
+ <div className="w-full mt-10 space-y-12">
  <WealthChart monthlyNetSalary={tax.netPay} />
+
+ {/* 차트와 티어카드 사이 InArticleAd — viewability 높음 */}
+ <div className="px-2">
+ <InArticleAd />
+ </div>
+
  <SalaryTierCard annualSalary={amount} />
 
  {/* FAQ */}
- <section className="px-6">
+ <section className="px-2 sm:px-6">
  <h2 className="text-lg font-black text-navy mb-4">자주 묻는 질문</h2>
  <div className="space-y-3">
  {faqItems.map((item) => (
@@ -169,7 +249,7 @@ export default function SalaryAmountPage({ params }: Props) {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">
  {item.answer}
  </p>
  </details>
@@ -177,13 +257,31 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
  </section>
 
- <div className="px-6">
+ <div className="px-2">
  <HomeTopAd />
+ </div>
+
+ {/* FAQ 후 환급 PartnerSlot — 사용자가 "환급 더 받기" 단계로 이동 */}
+ <div className="px-2">
+ <PartnerSlot
+ id="toss-tax-refund"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ showDisclosure={false}
+ />
+ }
+ />
+ </div>
+
+ {/* 시즌 메일 구독 — 연봉 협상 + 연말정산 등 재방문 락인 */}
+ <div className="px-2">
+ <EmailCaptureCard context="salary-negotiation" />
  </div>
 
  {/* 인근 연봉 리포트 */}
  {neighbors.length > 0 && (
- <div className="pt-8 border-t border-canvas px-6">
+ <div className="pt-8 border-t border-canvas px-2 sm:px-6">
  <h2 className="text-sm font-black text-faint-blue uppercase tracking-widest mb-4 text-center">
  다른 연봉 리포트
  </h2>
@@ -203,9 +301,14 @@ export default function SalaryAmountPage({ params }: Props) {
  )}
 
  {/* RelatedCalculators */}
- <div className="px-6">
+ <div className="px-2 sm:px-6">
  <RelatedCalculators currentPath="/" title="이 연봉으로 다음 단계는?" />
  </div>
+ </div>
+ </div>
+
+ {/* Desktop sticky sidebar */}
+ <SidebarStack context="salary" annualSalary={amount} />
  </div>
  </div>
  </main>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * 쿠팡 파트너스 배너 — 9가지 사이즈 자동 분배 시스템
@@ -99,6 +100,7 @@ export default function CoupangBanner({
  showDisclosure = true,
  style,
 }: CoupangBannerProps) {
+ const pathname = usePathname();
  const [resolvedSize, setResolvedSize] = useState<CoupangBannerSize>(
  responsive ? responsive.desktop : size
  );
@@ -118,8 +120,13 @@ export default function CoupangBanner({
  return () => window.removeEventListener("resize", update);
  }, [responsive, size]);
 
+ // 영문 페이지(/en/*)에서는 한국 트래픽 전용 쿠팡 배너 숨김
+ if (pathname?.startsWith("/en")) return null;
+
  const banner = BANNERS[resolvedSize];
- const imgSrc = `https://ads-partners.coupang.com/banners/${banner.id}?subId=&traceId=${banner.trace}&w=${banner.w}&h=${banner.h}`;
+ // subId: 어느 페이지에서 클릭됐는지 쿠팡 대시보드에서 구분 가능
+ const subId = pathname ? pathname.replace(/[^a-zA-Z0-9-/]/g, "").slice(0, 60) : "";
+ const imgSrc = `https://ads-partners.coupang.com/banners/${banner.id}?subId=${encodeURIComponent(subId)}&traceId=${banner.trace}&w=${banner.w}&h=${banner.h}`;
  const linkHref = `https://link.coupang.com/a/${banner.link}`;
 
  return (

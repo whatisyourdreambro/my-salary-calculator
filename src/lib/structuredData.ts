@@ -301,6 +301,29 @@ export function howToLd(howTo: {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Speakable — 음성 검색(Google Assistant) 노출용
+// FAQPage answer 또는 핵심 문단을 음성 발화 대상으로 지정
+// ─────────────────────────────────────────────────────────────
+export function speakableLd(opts: {
+  url: string;
+  /** 음성 발화 대상 CSS 셀렉터 배열 (예: ["#tldr", ".faq-answer"]) */
+  cssSelectors?: string[];
+  /** XPath 셀렉터 (선택) */
+  xpaths?: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: opts.url.startsWith("http") ? opts.url : `${SITE_URL}${opts.url}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      ...(opts.cssSelectors?.length ? { cssSelector: opts.cssSelectors } : {}),
+      ...(opts.xpaths?.length ? { xpath: opts.xpaths } : {}),
+    },
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
 // Person/Organization (회사 페이지) - 회사 정보 LD
 // ─────────────────────────────────────────────────────────────
 export function companyOrganizationLd(company: {

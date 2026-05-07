@@ -1,21 +1,63 @@
 {
-    "name": "Moneysalary",
-    "short_name": "Moneysalary",
-    "description": "2025년 연봉 실수령액 계산기 | Moneysalary",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#10b981",
-    "icons": [
-        {
-            "src": "/android-chrome-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "머니샐러리 — 2026 연봉 실수령액 계산기",
+  "short_name": "머니샐러리",
+  "description": "2026년 최신 세법 기준 연봉 실수령액·4대보험·연말정산 계산기. 100가지 금융 도구 무료.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0145F2",
+  "lang": "ko-KR",
+  "scope": "/",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "연봉 실수령액 계산",
+      "short_name": "연봉 계산",
+      "description": "연봉 입력 → 월 실수령액 즉시 확인",
+      "url": "/?tab=salary",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "연말정산 환급금 계산",
+      "short_name": "연말정산",
+      "description": "13월의 월급 미리보기",
+      "url": "/year-end-tax-2026",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "회사 연봉 비교",
+      "short_name": "회사 연봉",
+      "description": "기업별 직급 평균 연봉",
+      "url": "/salary-db",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "100가지 계산기",
+      "short_name": "계산기",
+      "description": "대출·보험·세금·투자 100개 도구",
+      "url": "/calc",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    }
+  ]
 }

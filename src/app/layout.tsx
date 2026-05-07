@@ -7,6 +7,7 @@ import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
+import InstallPwaBanner from "@/components/InstallPwaBanner";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 export const viewport: Viewport = {
@@ -151,6 +152,7 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
+          <InstallPwaBanner />
         </NextThemesProvider>
 
         {/* Google Analytics 4 */}

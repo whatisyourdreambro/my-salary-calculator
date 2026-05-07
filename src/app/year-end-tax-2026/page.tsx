@@ -6,8 +6,12 @@ import Link from "next/link";
 import { Calendar, AlertCircle, CheckCircle2, FileText, Calculator, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 종합소득세 신고 가이드 - 5월 종소세 환급금·신고법",
@@ -92,6 +96,10 @@ export default function YearEndTax2026Page() {
  slug: "year-end-tax-2026",
  publishedDate: "2026-05-01",
  }),
+ speakableLd({
+ url: "/year-end-tax-2026",
+ cssSelectors: [".faq-answer", ".speakable-summary"],
+ }),
  ]}
  />
 
@@ -154,6 +162,11 @@ export default function YearEndTax2026Page() {
  </div>
  </section>
 
+ {/* Mid InArticleAd — 가장 viewability 높음 */}
+ <div className="mb-12">
+ <InArticleAd />
+ </div>
+
  {/* Required Documents */}
  <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl font-black text-navy mb-6 flex items-center gap-2">
@@ -206,7 +219,7 @@ export default function YearEndTax2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">
  {item.answer}
  </p>
  </details>
@@ -214,7 +227,24 @@ export default function YearEndTax2026Page() {
  </div>
  </section>
 
+ {/* 시즌 메일 구독 — 다음 시즌 재방문 락인 */}
+ <EmailCaptureCard context="year-end-tax" />
+
+ {/* 핵심 제휴 — 종합소득세 환급(삼쩜삼) */}
+ <PartnerSlot
+ id="samjeomsam-tax"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
  <RelatedCalculators currentPath="/year-end-tax-2026" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );

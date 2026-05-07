@@ -3,6 +3,12 @@ import { koGuides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import JsonLd from "@/components/JsonLd";
+import { speakableLd } from "@/lib/structuredData";
+import { getPartnerForGuideTags } from "@/lib/partnerConfig";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -74,7 +80,7 @@ export default function GuidePage({ params }: Props) {
  relatedGuides.push(...others);
  }
 
- const jsonLd = {
+ const articleLd = {
  '@context': 'https://schema.org',
  '@type': 'Article',
  headline: guide.title,
@@ -85,20 +91,44 @@ export default function GuidePage({ params }: Props) {
  name: 'Moneysalary',
  },
  datePublished: guide.publishedDate,
+ dateModified: guide.publishedDate,
  mainEntityOfPage: {
  '@type': 'WebPage',
  '@id': `https://www.moneysalary.com/guides/${guide.slug}`,
  },
  };
 
+ // 카테고리/태그 기반 PartnerSlot 자동 매칭
+ const partnerId =
+ getPartnerForGuideTags([...(guide.tags ?? []), guide.category ?? ""]) ??
+ "finda-loan-guide";
+
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+ <JsonLd
+ data={[
+ articleLd,
+ speakableLd({
+ url: `/guides/${guide.slug}`,
+ cssSelectors: [".guide-tldr", ".faq-answer"],
+ }),
+ ]}
  />
  <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
+
+ {/* 가이드 본문 후속: 광고 + PartnerSlot + 관련 가이드 */}
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+ <InArticleAd />
+
+ <PartnerSlot
+ id={partnerId}
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
  <RelatedGuides
  currentSlug={guide.slug}
  category={guide.category}
@@ -106,6 +136,10 @@ export default function GuidePage({ params }: Props) {
  limit={6}
  title="더 깊이 알아보고 싶다면"
  />
+
+ <div className="my-8">
+ <HomeTopAd />
+ </div>
  </div>
  </>
  );

@@ -7,24 +7,152 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Home, Building2, Calculator } from "lucide-react";
+import {
+ ArrowRight,
+ Home,
+ Building2,
+ Calculator,
+ Shield,
+ TrendingUp,
+ PiggyBank,
+ Receipt,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export type NextActionCategory =
+ | "salary"
+ | "loan"
+ | "tax"
+ | "insurance"
+ | "investment"
+ | "real-estate";
 
 interface NextActionsProps {
  /** 현재 연봉 (없으면 generic CTA) */
  annualSalary?: number;
+ /** 컨텍스트 카테고리 — 카테고리별로 다른 3 CTA 표시 */
+ category?: NextActionCategory;
  className?: string;
 }
 
-export default function NextActions({ annualSalary, className = "" }: NextActionsProps) {
+interface ActionItem {
+ icon: LucideIcon;
+ title: string;
+ description: string;
+ href: string;
+}
+
+function buildActions(
+ category: NextActionCategory | undefined,
+ annualSalary: number | undefined
+): ActionItem[] {
  const formatManwon = (amount: number) =>
  `${Math.round(amount / 10000).toLocaleString("ko-KR")}만원`;
+ const dsrLimit = annualSalary
+ ? Math.round((annualSalary * 0.4) / 10000).toLocaleString("ko-KR")
+ : null;
 
- const actions = annualSalary
+ // 카테고리별 분기
+ if (category === "loan" || category === "real-estate") {
+ return [
+ {
+ icon: Home,
+ title: "주택담보대출 한도",
+ description: dsrLimit
+ ? `DSR 40% 기준 연 ${dsrLimit}만원 한도`
+ : "DSR/LTV 한도와 월 상환액",
+ href: "/home-loan",
+ },
+ {
+ icon: PiggyBank,
+ title: "전세자금대출 비교",
+ description: "전세금 80% · 금리 비교",
+ href: "/calc/jeonse-loan",
+ },
+ {
+ icon: Calculator,
+ title: "원리금 균등 상환 계산",
+ description: "월 상환액·총이자 분석",
+ href: "/calc/loan-amortization",
+ },
+ ];
+ }
+ if (category === "tax") {
+ return [
+ {
+ icon: Receipt,
+ title: "연말정산 환급금 계산",
+ description: "13월의 월급 미리 받기",
+ href: "/year-end-tax-2026",
+ },
+ {
+ icon: Calculator,
+ title: "종합소득세 신고 도움",
+ description: "5월 종소세 환급 시뮬",
+ href: "/calc/comprehensive-income-tax",
+ },
+ {
+ icon: Building2,
+ title: "이 회사 연봉으로 환급은?",
+ description: "회사별 평균 환급액 비교",
+ href: "/salary-db",
+ },
+ ];
+ }
+ if (category === "insurance") {
+ return [
+ {
+ icon: Shield,
+ title: "건강보험료 자동 계산",
+ description: "직장/지역 가입자 비교",
+ href: "/calc/health-insurance-2026",
+ },
+ {
+ icon: Calculator,
+ title: "실비보험 적정 보험료",
+ description: "나이/성별 평균 보험료",
+ href: "/calc/insurance-premium",
+ },
+ {
+ icon: PiggyBank,
+ title: "노후 대비 보험 시뮬",
+ description: "은퇴 후 필요 자금 분석",
+ href: "/fire-calculator",
+ },
+ ];
+ }
+ if (category === "investment") {
+ return [
+ {
+ icon: TrendingUp,
+ title: "복리 시뮬레이션",
+ description: "월 적립 → 10년 후 자산",
+ href: "/calc/compound-interest",
+ },
+ {
+ icon: Calculator,
+ title: "주식 양도세 계산",
+ description: "2026 금투세 기준",
+ href: "/calc/stock-tax",
+ },
+ {
+ icon: PiggyBank,
+ title: "FIRE 은퇴 자금 계산",
+ description: "조기 은퇴 필요 자산",
+ href: "/fire-calculator",
+ },
+ ];
+ }
+
+ // 기본(salary 또는 미지정) — 연봉 보유 여부에 따른 CTA
+ return annualSalary
  ? [
  {
  icon: Home,
  title: "이 연봉으로 받을 수 있는 대출",
- description: `연봉 ${formatManwon(annualSalary)} → DSR 40% 한도`,
+ description: dsrLimit
+ ? `DSR 40% 기준 연 ${dsrLimit}만원 한도`
+ : `연봉 ${formatManwon(annualSalary)} → DSR 40% 한도`,
  href: "/home-loan",
  },
  {
@@ -34,10 +162,10 @@ export default function NextActions({ annualSalary, className = "" }: NextAction
  href: "/salary-db",
  },
  {
- icon: Calculator,
+ icon: Receipt,
  title: "연말정산 환급금 계산",
  description: "13월의 월급 미리 받기",
- href: "/year-end-tax",
+ href: "/year-end-tax-2026",
  },
  ]
  : [
@@ -57,9 +185,17 @@ export default function NextActions({ annualSalary, className = "" }: NextAction
  icon: Calculator,
  title: "연말정산 시뮬",
  description: "환급금 미리 계산",
- href: "/year-end-tax",
+ href: "/year-end-tax-2026",
  },
  ];
+}
+
+export default function NextActions({
+ annualSalary,
+ category,
+ className = "",
+}: NextActionsProps) {
+ const actions = buildActions(category, annualSalary);
 
  return (
  <section className={`mt-8 ${className}`}>
@@ -69,7 +205,7 @@ export default function NextActions({ annualSalary, className = "" }: NextAction
  const Icon = action.icon;
  return (
  <Link
- key={action.href}
+ key={action.href + action.title}
  href={action.href}
  className="group flex items-start gap-3 p-4 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
  >
