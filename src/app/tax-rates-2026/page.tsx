@@ -6,8 +6,12 @@ import Link from "next/link";
 import { Calculator, ArrowRight, FileText } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 세율표 한눈에 — 소득세·증여세·상속세·양도세·법인세",
@@ -85,6 +89,10 @@ export default function TaxRates2026Page() {
  { name: "2026 세율표", path: "/tax-rates-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ speakableLd({
+ url: "/tax-rates-2026",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
 
@@ -144,6 +152,8 @@ export default function TaxRates2026Page() {
  </p>
  </div>
  </section>
+
+ <InArticleAd />
 
  {/* 증여세·상속세 */}
  <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
@@ -275,7 +285,22 @@ export default function TaxRates2026Page() {
  </div>
  </section>
 
+ <PartnerSlot
+ id="samjeomsam-tax"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="year-end-tax" />
+
  <RelatedCalculators currentPath="/tax-rates-2026" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );

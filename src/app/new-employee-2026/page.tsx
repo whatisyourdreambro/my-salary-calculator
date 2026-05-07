@@ -6,8 +6,12 @@ import Link from "next/link";
 import { TrendingUp, ArrowRight, Calculator, Building2 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 신입 연봉 협상 가이드 - 직군별 평균 초봉·협상 멘트",
@@ -86,6 +90,10 @@ export default function NewEmployee2026Page() {
  slug: "new-employee-2026",
  publishedDate: "2026-05-01",
  }),
+ speakableLd({
+ url: "/new-employee-2026",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
 
@@ -147,6 +155,8 @@ export default function NewEmployee2026Page() {
  </div>
  </section>
 
+ <InArticleAd />
+
  {/* CTAs */}
  <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4">
  <Link
@@ -188,7 +198,23 @@ export default function NewEmployee2026Page() {
  </div>
  </section>
 
+ {/* 신입 = 첫 대출/카드 발급 시즌 — 핀다 한도 비교 */}
+ <PartnerSlot
+ id="finda-loan-home"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="new-employee" />
+
  <RelatedCalculators currentPath="/new-employee-2026" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );

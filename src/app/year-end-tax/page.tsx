@@ -5,7 +5,11 @@ import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, softwareApplicationLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "연말정산 환급금 계산기 - 13월의 월급 미리 보기 (2026)",
@@ -57,6 +61,10 @@ export default function YearEndTaxPage() {
  url: "/year-end-tax",
  }),
  faqLd(FAQ_ITEMS),
+ speakableLd({
+ url: "/year-end-tax",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
  {/* Hero */}
@@ -85,7 +93,26 @@ export default function YearEndTaxPage() {
  <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-4">
  <YearEndTaxCalculator />
 
- 
+ <div className="max-w-4xl mx-auto mt-10">
+ <InArticleAd />
+
+ <PartnerSlot
+ id="samjeomsam-tax"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="year-end-tax" />
+
+ <RelatedCalculators currentPath="/year-end-tax" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
+ </div>
  </section>
  </main>
  );

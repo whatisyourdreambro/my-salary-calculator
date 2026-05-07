@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import MyDashboard from "@/components/MyDashboard";
+import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -82,7 +83,10 @@ export default function DashboardPage() {
  <main className="w-full min-h-screen bg-canvas pt-28 pb-20">
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  {dashboardData ? (
+ <div className="space-y-12">
  <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
+ <DashboardFavoritesSection />
+ </div>
  ) : (
  <div className="space-y-12">
  {/* Empty State Hero */}
@@ -106,6 +110,9 @@ export default function DashboardPage() {
  <ArrowRight className="w-4 h-4" />
  </Link>
  </div>
+
+ {/* 즐겨찾기 + 이메일 구독 (있으면 표시) */}
+ <DashboardFavoritesSection />
 
  {/* Preview Features */}
  <section>

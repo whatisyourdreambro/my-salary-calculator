@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Globe, ArrowRight, BookOpen, TrendingUp, Calculator, Sparkles, Calendar } from "lucide-react";
 import { enGuides } from "@/lib/guidesData";
 import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export default function GlobalLandingPage() {
  const featuredStockGuides = enGuides.slice(0, 6);
@@ -330,6 +331,11 @@ export default function GlobalLandingPage() {
  {/* ═══ Mid-content Ad ═════════════════════════════════════════ */}
  <div className="max-w-5xl mx-auto px-4 mb-12">
  <GuideMidAd />
+ </div>
+
+ {/* ═══ Email Capture (English audience) ═══════════════════════ */}
+ <div className="max-w-2xl mx-auto px-4 mb-12">
+ <EmailCaptureCard context="general" />
  </div>
 
  {/* ═══ Korean Site CTA ═══════════════════════════════════════ */}

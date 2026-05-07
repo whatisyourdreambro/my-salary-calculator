@@ -6,8 +6,12 @@ import Link from "next/link";
 import { Calendar, AlertCircle, ArrowRight, Calculator, TrendingUp, TrendingDown } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 건강보험료 정산 가이드 - 7월 정산금·환급·추가 납부",
@@ -67,6 +71,10 @@ export default function HealthInsurance2026Page() {
  description: "7월 건보료 정산금·환급·분납",
  slug: "health-insurance-2026",
  publishedDate: "2026-05-01",
+ }),
+ speakableLd({
+ url: "/health-insurance-2026",
+ cssSelectors: [".faq-answer"],
  }),
  ]}
  />
@@ -138,6 +146,8 @@ export default function HealthInsurance2026Page() {
  </div>
  </section>
 
+ <InArticleAd />
+
  {/* CTA */}
  <Link
  href="/"
@@ -180,7 +190,22 @@ export default function HealthInsurance2026Page() {
  </div>
  </section>
 
+ <PartnerSlot
+ id="toss-insurance-home"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="general" />
+
  <RelatedCalculators currentPath="/health-insurance-2026" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );

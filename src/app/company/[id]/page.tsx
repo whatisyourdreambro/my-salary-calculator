@@ -4,8 +4,21 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import CompanyProfileContent from "@/components/CompanyProfileContent";
+import dynamic from "next/dynamic";
 import JsonLd from "@/components/JsonLd";
+
+// framer-motion + recharts 포함 → 클라이언트 전용 렌더로 First Load JS 절감
+const CompanyProfileContent = dynamic(
+ () => import("@/components/CompanyProfileContent"),
+ {
+ ssr: false,
+ loading: () => (
+ <div className="min-h-screen flex items-center justify-center">
+ <div className="w-10 h-10 border-4 border-electric-15 border-t-electric rounded-full animate-spin" />
+ </div>
+ ),
+ }
+);
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import PartnerSlot from "@/components/PartnerSlot";
 import CoupangBanner from "@/components/CoupangBanner";

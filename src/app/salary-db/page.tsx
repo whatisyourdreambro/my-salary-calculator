@@ -5,6 +5,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, Building2, TrendingUp, Users, ArrowRight, Database } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
 export default function SalaryDBPage() {
  const [searchTerm, setSearchTerm] = useState("");
  const allCompanies = companyRepository.getAll();
@@ -58,6 +61,11 @@ export default function SalaryDBPage() {
  </section>
 
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+ {/* 검색바 직하 광고 */}
+ <div className="max-w-3xl mx-auto mb-8">
+ <HomeTopAd />
+ </div>
+
  {/* Company Grid */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {filteredCompanies.map((company, idx) => (
@@ -127,7 +135,19 @@ export default function SalaryDBPage() {
  </div>
  )}
 
- 
+ {/* 회사 그리드 후 — 면접/입사 컨텍스트 제휴 */}
+ <div className="max-w-3xl mx-auto mt-12">
+ <InArticleAd />
+
+ <PartnerSlot
+ id="finda-loan-home"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+ </div>
  </div>
  </main>
  );

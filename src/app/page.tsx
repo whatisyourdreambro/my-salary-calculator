@@ -20,7 +20,10 @@ import {
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
-import { HomeTopAd } from "@/components/AdPlacement";
+import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import NextActions from "@/components/NextActions";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -337,6 +340,12 @@ export default function HomePage() {
  >
  <CalculatorTabs />
  </motion.div>
+
+ {/* 계산기 결과 직하 — 사용자 의도 가장 높음 */}
+ <div className="mt-10 max-w-3xl mx-auto">
+ <CalcResultAd />
+ <NextActions />
+ </div>
  </section>
 
  {/* ═══ Premium Tools Grid ══════════════════════════════════ */}
@@ -575,6 +584,19 @@ export default function HomePage() {
  </div>
  </section>
 
+ {/* ═══ 핀다 대출 비교 — 대출/적금 사용자에게 자연스러운 다음 단계 ═══ */}
+ <section
+ style={{
+ backgroundColor: "#FFFFFF",
+ borderTop: "1px solid #DDE4EC",
+ padding: "2rem 1.5rem",
+ }}
+ >
+ <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
+ <PartnerSlot id="finda-loan-home" />
+ </div>
+ </section>
+
  {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
  <FeaturedGuides />
 
@@ -637,6 +659,22 @@ export default function HomePage() {
  가이드 전체 보기
  <ArrowRight style={{ width: "16px", height: "16px" }} />
  </Link>
+ </div>
+ </section>
+
+ {/* ═══ 시즌 메일 구독 + 마지막 광고 ═════════════════════════ */}
+ <section
+ style={{
+ backgroundColor: "#FFFFFF",
+ borderTop: "1px solid #DDE4EC",
+ padding: "3rem 1.5rem",
+ }}
+ >
+ <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
+ <EmailCaptureCard context="general" />
+ <div className="mt-6">
+ <InArticleAd />
+ </div>
  </div>
  </section>
 

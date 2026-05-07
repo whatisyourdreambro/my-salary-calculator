@@ -2,9 +2,17 @@
 
 import { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
-import WealthChart from "@/components/WealthChart";
 import SalaryTierCard from "@/components/SalaryTierCard";
+
+// 무거운 recharts 포함 컴포넌트는 클라이언트 사이드만 렌더 → LCP 절감
+const WealthChart = dynamic(() => import("@/components/WealthChart"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[400px] bg-white rounded-3xl border border-canvas-200 animate-pulse" />
+ ),
+});
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";

@@ -6,8 +6,12 @@ import Link from "next/link";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연말정산 체크리스트 — 12월 마감 전 12가지 점검",
@@ -131,6 +135,10 @@ export default function YearEndTaxChecklistPage() {
  { name: "연말정산 체크리스트", path: "/year-end-tax-checklist" },
  ]),
  faqLd(FAQ_ITEMS),
+ speakableLd({
+ url: "/year-end-tax-checklist",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
 
@@ -199,6 +207,8 @@ export default function YearEndTaxChecklistPage() {
  </div>
  </Link>
 
+ <InArticleAd />
+
  {/* FAQ */}
  <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6">자주 묻는 질문</h2>
@@ -218,7 +228,22 @@ export default function YearEndTaxChecklistPage() {
  </div>
  </section>
 
+ <PartnerSlot
+ id="samjeomsam-tax"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="year-end-tax" />
+
  <RelatedCalculators currentPath="/year-end-tax-checklist" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );

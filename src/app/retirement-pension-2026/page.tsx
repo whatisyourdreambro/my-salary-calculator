@@ -6,8 +6,12 @@ import Link from "next/link";
 import { PiggyBank, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import PartnerSlot from "@/components/PartnerSlot";
+import CoupangBanner from "@/components/CoupangBanner";
+import EmailCaptureCard from "@/components/EmailCaptureCard";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 퇴직연금 완벽 가이드 — DB·DC·IRP 차이와 선택법",
@@ -76,6 +80,10 @@ export default function RetirementPension2026Page() {
  { name: "2026 퇴직연금 가이드", path: "/retirement-pension-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ speakableLd({
+ url: "/retirement-pension-2026",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
 
@@ -121,6 +129,8 @@ export default function RetirementPension2026Page() {
  ))}
  </div>
 
+ <InArticleAd />
+
  {/* CTA */}
  <Link
  href="/tools/finance/irp"
@@ -159,7 +169,22 @@ export default function RetirementPension2026Page() {
  </div>
  </section>
 
+ <PartnerSlot
+ id="toss-insurance-home"
+ fallback={
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ }
+ />
+
+ <EmailCaptureCard context="general" />
+
  <RelatedCalculators currentPath="/retirement-pension-2026" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );
