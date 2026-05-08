@@ -55,7 +55,7 @@ export default function GiftTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-6">
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">증여 금액 (원)</label>
- <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={amount} onChange={e => setAmount(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(amount)}원 ({(amount / 100_000_000).toFixed(2)}억원)</p>
  </div>

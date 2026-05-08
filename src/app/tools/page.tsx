@@ -88,7 +88,14 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
 
 function TagBadge({ label, type }: { label: string; type: "new" | "hot" }) {
  return (
- <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${type === "new" ? "bg-primary text-white" : "bg-canvas-deeper text-white"}`}>
+ <span
+ className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
+ type === "new"
+ ? "bg-electric text-white"
+ : "bg-electric-10 text-electric border border-electric/20"
+ }`}
+ aria-label={type === "new" ? "신규" : "인기"}
+ >
  {label}
  </span>
  );
@@ -103,20 +110,20 @@ export default function ToolsHubPage() {
 
  {/* Hero */}
  <div className="text-center mb-16 pb-12 border-b border-canvas">
- <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-black px-4 py-2 rounded-sm uppercase tracking-widest mb-6">
- <Calculator size={14} /> 2026 세법 전면 업데이트
+ <div className="inline-flex items-center gap-2 bg-electric-10 text-electric border border-electric/20 text-xs font-black px-4 py-2 rounded-md uppercase tracking-widest mb-6">
+ <Calculator size={14} aria-hidden="true" /> 2026 세법 전면 업데이트
  </div>
- <h1 className="text-5xl font-black text-navy tracking-tight mb-4">
- 금융 계산기 <span className="text-primary">{totalCount}종</span> 모음
+ <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-4">
+ 금융 계산기 <span className="text-electric">{totalCount}종</span> 모음
  </h1>
  <p className="text-faint-blue font-medium text-lg max-w-2xl mx-auto">
  성과급·퇴직금·증여세·주식세금까지 — 직장인이 꼭 필요한 모든 금융 계산기를 2026년 최신 세법으로 무료 제공합니다.
  </p>
  {/* Quick Stats */}
- <div className="flex justify-center gap-8 mt-8">
+ <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mt-8">
  {[["30+", "계산기"], ["2026", "세법 기준"], ["무료", "전체 이용"]].map(([val, label]) => (
  <div key={label} className="text-center">
- <p className="text-3xl font-black text-primary">{val}</p>
+ <p className="text-3xl font-black text-electric tabular-nums">{val}</p>
  <p className="text-xs text-faint-blue font-medium mt-1">{label}</p>
  </div>
  ))}
@@ -126,7 +133,7 @@ export default function ToolsHubPage() {
  {/* New Highlights */}
  <div className="mb-16">
  <div className="flex items-center gap-3 mb-6">
- <span className="text-xs font-black bg-primary text-white px-3 py-1 rounded-sm uppercase tracking-widest">NEW</span>
+ <span className="text-xs font-black bg-electric text-white px-3 py-1 rounded-md uppercase tracking-widest">NEW</span>
  <h2 className="text-xl font-black text-navy">신규 추가 계산기</h2>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -156,9 +163,9 @@ export default function ToolsHubPage() {
  {/* All Categories */}
  {CATEGORIES.map((cat, ci) => (
  <div key={ci} className="mb-14">
- <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-primary">
- <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
- <span className="text-navy font-black text-sm">{ci + 1}</span>
+ <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-electric">
+ <div className="w-8 h-8 bg-electric rounded-md flex items-center justify-center" aria-hidden="true">
+ <span className="text-white font-black text-sm">{ci + 1}</span>
  </div>
  <h2 className="text-xl font-black text-navy">{cat.title}</h2>
  <span className="text-xs text-faint-blue font-medium">{cat.items.length}개</span>

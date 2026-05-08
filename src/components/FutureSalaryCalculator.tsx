@@ -203,7 +203,7 @@ export default function FutureSalaryCalculator() {
  </div>
  <div>
  <label className="text-sm font-medium text-muted-foreground">기본 연봉 상승률 (%)</label>
- <input type="number" value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} className={inputStyle} />
+ <input type="number" inputMode="numeric" value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} className={inputStyle} />
  </div>
  <h3 className="text-lg font-bold mt-4 mb-2">커리어 이벤트</h3>
  <div className="space-y-3 max-h-40 overflow-y-auto pr-2">
@@ -223,7 +223,7 @@ export default function FutureSalaryCalculator() {
  <option value="job_change">이직</option>
  </select>
  <div className="w-1/2 relative">
- <input type="number" value={event.value} onChange={(e) => updateEvent(index, "value", e.target.value)} className={`${inputStyle} !mt-0 !p-2 h-full pr-8`} />
+ <input type="number" inputMode="numeric" value={event.value} onChange={(e) => updateEvent(index, "value", e.target.value)} className={`${inputStyle} !mt-0 !p-2 h-full pr-8`} />
  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{event.type === "promotion" ? "%" : "원"}</span>
  </div>
  </div>

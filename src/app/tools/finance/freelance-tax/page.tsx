@@ -52,18 +52,18 @@ export default function FreelanceTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연간 수입 (매출)</label>
- <input type="number" value={revenue} onChange={e => setRevenue(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={revenue} onChange={e => setRevenue(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">필요경비 (장비, 통신비 등 업무 관련 비용)</label>
- <input type="number" value={expenses} onChange={e => setExpenses(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={expenses} onChange={e => setExpenses(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1">영수증·증빙 있는 실제 경비만 인정됩니다</p>
  </div>
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 소득공제 (연금저축, IRP 등)</label>
- <input type="number" value={deductions} onChange={e => setDeductions(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={deductions} onChange={e => setDeductions(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

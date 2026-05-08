@@ -91,7 +91,7 @@ export default function SubmitSalaryPage() {
  <div>
  <label className="block text-sm font-medium mb-1.5">계약 연봉 (기본급)</label>
  <div className="relative">
- <input required type="number" placeholder="5000" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
+ <input required type="number" inputMode="numeric" placeholder="5000" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
  <span className="absolute right-3 top-3 text-sm text-muted-foreground">만원</span>
  </div>
  </div>
@@ -110,14 +110,14 @@ export default function SubmitSalaryPage() {
  <div>
  <label className="block text-sm font-medium mb-1.5">인센티브 (성과급)</label>
  <div className="relative">
- <input type="number" placeholder="1000" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
+ <input type="number" inputMode="numeric" placeholder="1000" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
  <span className="absolute right-3 top-3 text-sm text-muted-foreground">만원</span>
  </div>
  </div>
  <div>
  <label className="block text-sm font-medium mb-1.5">스톡옵션/RSU (연간)</label>
  <div className="relative">
- <input type="number" placeholder="0" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
+ <input type="number" inputMode="numeric" placeholder="0" className="w-full p-3 pr-10 rounded-xl bg-secondary border-none focus:ring-2 focus:ring-primary outline-none" />
  <span className="absolute right-3 top-3 text-sm text-muted-foreground">만원</span>
  </div>
  </div>

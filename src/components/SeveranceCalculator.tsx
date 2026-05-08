@@ -238,7 +238,7 @@ export default function SeveranceCalculator() {
  />
  <div>
  <label htmlFor="dcReturnRate" className="text-sm font-medium text-muted-foreground">연평균 예상 투자수익률 (%)</label>
- <input type="number" id="dcReturnRate" value={dcReturnRate} onChange={(e) => setDcReturnRate(e.target.value)} className={inputStyle} placeholder="예: 5" />
+ <input type="number" inputMode="numeric" id="dcReturnRate" value={dcReturnRate} onChange={(e) => setDcReturnRate(e.target.value)} className={inputStyle} placeholder="예: 5" />
  </div>
  </div>
  </div>

@@ -51,7 +51,7 @@ export default function AcquisitionTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-6">
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">매매 가격 (원)</label>
- <input type="number" value={price} onChange={e => setPrice(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={price} onChange={e => setPrice(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(price)}원 ({(price / 100_000_000).toFixed(2)}억원)</p>
  </div>

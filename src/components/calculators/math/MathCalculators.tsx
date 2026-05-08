@@ -51,22 +51,22 @@ export function PercentCalculator() {
  <>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">비율 (X%)</label>
- <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  ) : (
  <>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">일부값 (X)</label>
- <input type="number" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input type="number" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  )}
@@ -123,15 +123,15 @@ export function NumberGenerator() {
  <div className="grid grid-cols-3 gap-4">
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">최소값</label>
- <input type="number" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">최대값</label>
- <input type="number" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label className="block text-sm font-bold text-muted-blue mb-2">개수</label>
- <input type="number" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <input type="number" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </div>
 

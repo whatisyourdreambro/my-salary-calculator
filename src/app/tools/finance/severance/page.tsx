@@ -105,19 +105,19 @@ export default function SeveranceCalculatorPage() {
  <>
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">3개월 평균 월 급여 (세전)</label>
- <input type="number" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(monthlySalary)}원/월 · 연봉 {fmt(monthlySalary * 12)}원</p>
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수</label>
- <input type="number" min={0} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <input type="number" inputMode="numeric" min={0} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 개월 수</label>
- <input type="number" min={0} max={11} value={workMonths} onChange={e => setWorkMonths(Number(e.target.value))}
+ <input type="number" inputMode="numeric" min={0} max={11} value={workMonths} onChange={e => setWorkMonths(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
@@ -130,12 +130,12 @@ export default function SeveranceCalculatorPage() {
  ) : (
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">수령 예정 퇴직금 (세전)</label>
- <input type="number" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
+ <input type="number" inputMode="numeric" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <div className="mt-4 grid grid-cols-2 gap-4">
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수 (세율 계산용)</label>
- <input type="number" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <input type="number" inputMode="numeric" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
