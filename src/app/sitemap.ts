@@ -53,6 +53,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/unemployment-benefit-2026',
  '/parental-leave-2026',
  '/salary-grade/civil-servant-2026',
+ // Phase 6 신규 시즌 페이지 (부업·이직·은퇴·창업·노마드·신입)
+ '/side-job-2026',
+ '/career-change-2026',
+ '/retirement-prep-2026',
+ '/startup-founder-2026',
+ '/digital-nomad-2026',
+ '/first-job-2026',
  // Phase 5.4 통계 인용 페이지 (백링크 자석)
  '/stats',
  '/stats/korean-salary-distribution-2026',
@@ -186,6 +193,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/unemployment-benefit-2026',
  '/parental-leave-2026',
  '/salary-grade/civil-servant-2026',
+ // Phase 6 신규 시즌 페이지
+ '/side-job-2026',
+ '/career-change-2026',
+ '/retirement-prep-2026',
+ '/startup-founder-2026',
+ '/digital-nomad-2026',
+ '/first-job-2026',
  // Phase 5 핫 페이지
  '/stats',
  '/stats/korean-salary-distribution-2026',

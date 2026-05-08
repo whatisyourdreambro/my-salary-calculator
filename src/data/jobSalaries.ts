@@ -160,6 +160,46 @@ export const JOB_SALARIES: JobSalary[] = [
  { slug: "civil-engineer", name: "토목 엔지니어", category: "건설", entrySalary: 43_000_000, midSalary: 62_000_000, seniorSalary: 90_000_000, avgSalary: 62_000_000, topCompanies: ["현대건설", "GS건설", "포스코건설", "두산건설"], description: "토목·교량·도로·댐.", keywords: ["토목 엔지니어 연봉"] },
  { slug: "logistics-manager", name: "물류 관리자", category: "물류", entrySalary: 40_000_000, midSalary: 58_000_000, seniorSalary: 85_000_000, avgSalary: 58_000_000, topCompanies: ["쿠팡 물류", "CJ대한통운", "롯데글로벌로지스"], description: "창고·운송·SCM. 이커머스 성장으로 수요 큼.", keywords: ["물류 관리자"] },
  { slug: "delivery-driver", name: "택배 기사", category: "물류", entrySalary: 35_000_000, midSalary: 50_000_000, seniorSalary: 75_000_000, avgSalary: 50_000_000, topCompanies: ["CJ대한통운", "롯데택배", "한진택배", "쿠팡"], description: "택배 배송. 지역·물량별 변동 큼. 자영업 형태.", keywords: ["택배 기사 연봉"] },
+
+ // ── Phase 6 확장: IT 추가 (10개) ──────────────────────────
+ { slug: "game-designer", name: "게임 기획자", category: "IT", entrySalary: 40_000_000, midSalary: 58_000_000, seniorSalary: 85_000_000, avgSalary: 58_000_000, topCompanies: ["엔씨소프트", "넥슨", "스마일게이트"], description: "게임 시나리오·시스템·밸런스 설계.", keywords: ["게임 기획자 연봉"] },
+ { slug: "sre", name: "SRE 엔지니어", category: "IT", entrySalary: 55_000_000, midSalary: 80_000_000, seniorSalary: 115_000_000, avgSalary: 80_000_000, topCompanies: ["네이버", "카카오", "쿠팡", "토스"], description: "Site Reliability Engineer — 서비스 안정성.", keywords: ["SRE 연봉", "사이트 신뢰성"] },
+ { slug: "dba", name: "DBA (데이터베이스 관리자)", category: "IT", entrySalary: 45_000_000, midSalary: 65_000_000, seniorSalary: 95_000_000, avgSalary: 65_000_000, topCompanies: ["대기업", "금융사"], description: "Oracle·MySQL·PostgreSQL 관리·튜닝.", keywords: ["DBA 연봉", "데이터베이스 관리"] },
+ { slug: "network-engineer", name: "네트워크 엔지니어", category: "IT", entrySalary: 42_000_000, midSalary: 58_000_000, seniorSalary: 85_000_000, avgSalary: 58_000_000, topCompanies: ["KT", "SKT", "LG U+", "통신사"], description: "Cisco·라우터·방화벽·VPN 운영.", keywords: ["네트워크 엔지니어"] },
+ { slug: "tech-writer", name: "테크 라이터", category: "IT", entrySalary: 40_000_000, midSalary: 55_000_000, seniorSalary: 75_000_000, avgSalary: 55_000_000, topCompanies: ["네이버", "카카오", "오픈소스"], description: "API 문서·기술 블로그·매뉴얼 작성.", keywords: ["테크 라이터", "기술 문서"] },
+ { slug: "system-engineer", name: "시스템 엔지니어", category: "IT", entrySalary: 42_000_000, midSalary: 60_000_000, seniorSalary: 90_000_000, avgSalary: 60_000_000, topCompanies: ["삼성SDS", "LG CNS", "SK C&C"], description: "Linux·Windows 서버 운영·자동화.", keywords: ["시스템 엔지니어"] },
+ { slug: "qa-automation", name: "QA 자동화 엔지니어", category: "IT", entrySalary: 45_000_000, midSalary: 65_000_000, seniorSalary: 90_000_000, avgSalary: 65_000_000, topCompanies: ["네이버", "카카오", "쿠팡"], description: "Selenium·Cypress·Playwright 테스트 자동화.", keywords: ["QA 자동화", "테스트 자동화"] },
+ { slug: "consultant-it", name: "IT 컨설턴트", category: "IT", entrySalary: 55_000_000, midSalary: 80_000_000, seniorSalary: 130_000_000, avgSalary: 80_000_000, topCompanies: ["삼정KPMG", "딜로이트", "EY", "엑센추어"], description: "기업 IT 전략·디지털 전환 컨설팅.", keywords: ["IT 컨설턴트"] },
+ { slug: "3d-modeler", name: "3D 모델러", category: "IT", entrySalary: 38_000_000, midSalary: 55_000_000, seniorSalary: 80_000_000, avgSalary: 55_000_000, topCompanies: ["게임사", "VFX 스튜디오"], description: "Maya·Blender·ZBrush 3D 모델링.", keywords: ["3D 모델러"] },
+ { slug: "sound-engineer", name: "사운드 엔지니어", category: "IT", entrySalary: 35_000_000, midSalary: 52_000_000, seniorSalary: 80_000_000, avgSalary: 52_000_000, topCompanies: ["게임사", "방송사", "음반사"], description: "게임·영상·음악 사운드 디자인.", keywords: ["사운드 엔지니어"] },
+
+ // ── 의료 추가 (5개) ──────────────────────────────────────
+ { slug: "psychiatrist", name: "정신과 전문의", category: "의료", entrySalary: 100_000_000, midSalary: 200_000_000, seniorSalary: 350_000_000, avgSalary: 200_000_000, topCompanies: ["병원", "개원"], description: "정신건강의학과. 상담·약물 치료.", keywords: ["정신과 의사 연봉"] },
+ { slug: "emergency-doctor", name: "응급의학과 전문의", category: "의료", entrySalary: 150_000_000, midSalary: 250_000_000, seniorSalary: 400_000_000, avgSalary: 250_000_000, topCompanies: ["대학병원", "종합병원"], description: "응급실 24시간 교대. 야간수당 큼.", keywords: ["응급의학과 연봉"] },
+ { slug: "clinical-psychologist", name: "임상심리사", category: "의료", entrySalary: 35_000_000, midSalary: 48_000_000, seniorSalary: 70_000_000, avgSalary: 48_000_000, topCompanies: ["병원", "상담센터"], description: "심리검사·상담·재활.", keywords: ["임상심리사"] },
+ { slug: "emt", name: "응급구조사", category: "의료", entrySalary: 35_000_000, midSalary: 48_000_000, seniorSalary: 65_000_000, avgSalary: 48_000_000, topCompanies: ["119 소방", "병원"], description: "응급환자 이송·처치.", keywords: ["응급구조사"] },
+ { slug: "school-nurse", name: "보건교사", category: "의료", entrySalary: 38_000_000, midSalary: 55_000_000, seniorSalary: 75_000_000, avgSalary: 55_000_000, topCompanies: ["학교", "교육청"], description: "학교 보건실. 교육공무원.", keywords: ["보건교사"] },
+
+ // ── 영업 추가 (5개) ──────────────────────────────────────
+ { slug: "auto-sales", name: "자동차 영업", category: "영업", entrySalary: 38_000_000, midSalary: 60_000_000, seniorSalary: 110_000_000, avgSalary: 60_000_000, topCompanies: ["현대차", "기아", "BMW", "벤츠"], description: "자동차 판매. 인센티브 큼.", keywords: ["자동차 영업"] },
+ { slug: "pharma-sales", name: "제약 영업 (MR)", category: "영업", entrySalary: 45_000_000, midSalary: 70_000_000, seniorSalary: 110_000_000, avgSalary: 70_000_000, topCompanies: ["유한양행", "한미약품", "녹십자", "대웅"], description: "병원·약국 약품 영업.", keywords: ["제약 영업", "MR 연봉"] },
+ { slug: "advertising-sales", name: "광고 영업", category: "영업", entrySalary: 40_000_000, midSalary: 60_000_000, seniorSalary: 90_000_000, avgSalary: 60_000_000, topCompanies: ["방송사", "포털", "광고대행사"], description: "광고 매체 판매·기획.", keywords: ["광고 영업"] },
+ { slug: "insurance-sales-pro", name: "보험 영업 (FC/RC)", category: "영업", entrySalary: 35_000_000, midSalary: 70_000_000, seniorSalary: 200_000_000, avgSalary: 70_000_000, topCompanies: ["삼성생명", "한화생명", "교보생명"], description: "FC·RC. 성과급 비중 매우 큼 (90%+).", keywords: ["보험 영업"] },
+ { slug: "saas-sales", name: "SaaS 영업", category: "영업", entrySalary: 50_000_000, midSalary: 80_000_000, seniorSalary: 130_000_000, avgSalary: 80_000_000, topCompanies: ["Salesforce", "Adobe", "토스", "모니터랩"], description: "B2B SaaS 솔루션 영업. 인센티브.", keywords: ["SaaS 영업"] },
+
+ // ── 디자인·미디어 추가 (5개) ─────────────────────────────
+ { slug: "industrial-designer", name: "산업 디자이너", category: "디자인", entrySalary: 38_000_000, midSalary: 55_000_000, seniorSalary: 80_000_000, avgSalary: 55_000_000, topCompanies: ["삼성", "LG", "현대"], description: "제품 외관·UX 디자인.", keywords: ["산업 디자이너"] },
+ { slug: "illustrator", name: "일러스트레이터", category: "디자인", entrySalary: 30_000_000, midSalary: 48_000_000, seniorSalary: 80_000_000, avgSalary: 48_000_000, topCompanies: ["출판", "게임", "프리랜서"], description: "삽화·캐릭터·웹툰 일러스트.", keywords: ["일러스트레이터"] },
+ { slug: "concept-artist", name: "콘셉트 아티스트", category: "디자인", entrySalary: 38_000_000, midSalary: 60_000_000, seniorSalary: 95_000_000, avgSalary: 60_000_000, topCompanies: ["게임사", "VFX"], description: "게임·영화 콘셉트 디자인.", keywords: ["콘셉트 아티스트"] },
+ { slug: "copywriter", name: "카피라이터", category: "미디어", entrySalary: 35_000_000, midSalary: 55_000_000, seniorSalary: 90_000_000, avgSalary: 55_000_000, topCompanies: ["광고대행사", "브랜드"], description: "광고 카피·슬로건·문구.", keywords: ["카피라이터"] },
+ { slug: "content-creator", name: "콘텐츠 크리에이터", category: "미디어", entrySalary: 25_000_000, midSalary: 60_000_000, seniorSalary: 200_000_000, avgSalary: 60_000_000, topCompanies: ["프리랜서", "MCN"], description: "유튜브·인스타·틱톡 크리에이터. 변동 큼.", keywords: ["크리에이터"] },
+
+ // ── 사회·복지 (5개) ──────────────────────────────────────
+ { slug: "social-worker", name: "사회복지사", category: "공공", entrySalary: 30_000_000, midSalary: 42_000_000, seniorSalary: 60_000_000, avgSalary: 42_000_000, topCompanies: ["사회복지관", "지자체"], description: "복지 상담·서비스 연계.", keywords: ["사회복지사"] },
+ { slug: "civil-engineer-public", name: "군무원", category: "공공", entrySalary: 38_000_000, midSalary: 55_000_000, seniorSalary: 80_000_000, avgSalary: 55_000_000, topCompanies: ["국방부", "각 군"], description: "군 행정·기술 공무원.", keywords: ["군무원"] },
+ { slug: "youth-counselor", name: "청년 상담사", category: "공공", entrySalary: 30_000_000, midSalary: 42_000_000, seniorSalary: 58_000_000, avgSalary: 42_000_000, topCompanies: ["청년상담센터", "지자체"], description: "청년 진로·심리 상담.", keywords: ["청년 상담사"] },
+ { slug: "tax-officer", name: "국세청 세무공무원", category: "공공", entrySalary: 35_000_000, midSalary: 52_000_000, seniorSalary: 75_000_000, avgSalary: 52_000_000, topCompanies: ["국세청"], description: "세무조사·납세 관리.", keywords: ["세무공무원", "국세청 직원"] },
+ { slug: "diplomat", name: "외교관", category: "공공", entrySalary: 50_000_000, midSalary: 80_000_000, seniorSalary: 130_000_000, avgSalary: 80_000_000, topCompanies: ["외교부"], description: "외무고시 → 5급 외교관. 해외 근무.", keywords: ["외교관 연봉"] },
 ];
 
 export const JOB_SLUGS: string[] = JOB_SALARIES.map((j) => j.slug);
