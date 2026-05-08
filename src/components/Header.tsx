@@ -67,7 +67,7 @@ export default function Header() {
  animate={{ y: 0 }}
  transition={{ duration: 0.5, ease: "circOut" }}
  >
- <nav className="max-w-7xl mx-auto px-4 sm:px-6">
+ <nav className="max-w-7xl mx-auto px-4 sm:px-6" aria-label={isEnglish ? "Main navigation" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
@@ -93,28 +93,12 @@ export default function Header() {
  <Link
  key={item.name}
  href={item.href}
- style={{
- padding: "7px 11px",
- fontSize: "13.5px",
- fontWeight: 600,
- borderRadius: "10px",
- color: pathname === item.href ? "#0145F2" : "#3D5E78",
- backgroundColor:
- pathname === item.href ? "#0145F20D" : "transparent",
- textDecoration: "none",
- transition: "color 0.15s ease, background-color 0.15s ease",
- whiteSpace: "nowrap",
- }}
- onMouseEnter={(e) => {
- (e.currentTarget as HTMLElement).style.color = "#0145F2";
- (e.currentTarget as HTMLElement).style.backgroundColor = "#0145F20D";
- }}
- onMouseLeave={(e) => {
- (e.currentTarget as HTMLElement).style.color =
- pathname === item.href ? "#0145F2" : "#3D5E78";
- (e.currentTarget as HTMLElement).style.backgroundColor =
- pathname === item.href ? "#0145F20D" : "transparent";
- }}
+ aria-current={pathname === item.href ? "page" : undefined}
+ className={`px-[11px] py-[7px] text-[13.5px] font-semibold rounded-[10px] whitespace-nowrap no-underline transition-colors hover:bg-electric-5 hover:text-electric ${
+ pathname === item.href
+ ? "text-electric bg-electric-5"
+ : "text-muted-blue"
+ }`}
  >
  {item.name}
  </Link>
@@ -130,50 +114,25 @@ export default function Header() {
  <Link
  href={dashboardHref}
  aria-label={dashboardLabel}
- className="hidden sm:inline-flex items-center"
- style={{
- gap: "6px",
- padding: "8px 14px",
- fontSize: "13.5px",
- fontWeight: 700,
- color: "#FFFFFF",
- backgroundColor: "#0145F2",
- border: "2px solid #0145F2",
- borderRadius: "12px",
- textDecoration: "none",
- transition: "background-color 0.15s ease, color 0.15s ease",
- boxShadow: "0 4px 14px -2px #0145F233",
- whiteSpace: "nowrap",
- }}
- onMouseEnter={(e) => {
- (e.currentTarget as HTMLElement).style.backgroundColor = "#EDF1F5";
- (e.currentTarget as HTMLElement).style.color = "#0145F2";
- }}
- onMouseLeave={(e) => {
- (e.currentTarget as HTMLElement).style.backgroundColor = "#0145F2";
- (e.currentTarget as HTMLElement).style.color = "#FFFFFF";
- }}
+ className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-[13.5px] font-bold text-white bg-electric border-2 border-electric rounded-xl no-underline whitespace-nowrap shadow-[0_4px_14px_-2px_#0145F233] hover:bg-canvas hover:text-electric transition-colors"
  >
- <LayoutDashboard size={14} />
+ <LayoutDashboard size={14} aria-hidden="true" />
  <span className="hidden md:inline">{dashboardLabel}</span>
  </Link>
 
  {/* Mobile Menu Toggle — lg 미만에서 노출 */}
  <div className="lg:hidden">
  <button
+ type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className="flex items-center justify-center cursor-pointer"
- style={{
- padding: "8px",
- borderRadius: "10px",
- backgroundColor: isMobileMenuOpen ? "#0145F21A" : "transparent",
- border: "none",
- color: "#0145F2",
- transition: "background-color 0.15s ease",
- }}
+ className={`flex items-center justify-center cursor-pointer p-2 rounded-[10px] border-none text-electric transition-colors hover:bg-electric-10 ${
+ isMobileMenuOpen ? "bg-electric-10" : "bg-transparent"
+ }`}
  aria-label={mobileMenuAriaLabel}
+ aria-expanded={isMobileMenuOpen}
+ aria-controls="mobile-nav-menu"
  >
- {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+ {isMobileMenuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
  </button>
  </div>
  </div>
@@ -185,6 +144,10 @@ export default function Header() {
  <AnimatePresence>
  {isMobileMenuOpen && (
  <motion.div
+ id="mobile-nav-menu"
+ role="dialog"
+ aria-modal="true"
+ aria-label={isEnglish ? "Mobile navigation" : "모바일 메뉴"}
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
@@ -203,44 +166,29 @@ export default function Header() {
  <Link
  href={dashboardHref}
  onClick={() => setIsMobileMenuOpen(false)}
- className="flex items-center justify-center gap-2 w-full no-underline mb-5"
- style={{
- padding: "16px",
- fontSize: "16px",
- fontWeight: 700,
- backgroundColor: "#0145F2",
- color: "#FFFFFF",
- borderRadius: "16px",
- border: "2px solid #0145F2",
- boxShadow: "0 8px 24px -4px #0145F244",
- transition: "all 0.15s ease",
- }}
+ className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
  >
- <LayoutDashboard size={18} />
+ <LayoutDashboard size={18} aria-hidden="true" />
  {isEnglish ? "Open Dashboard" : "내 대시보드 열기"}
  </Link>
 
  {/* Nav items */}
- <div
- className="bg-white rounded-[20px] overflow-hidden"
- style={{ border: "1.5px solid #DDE4EC" }}
+ <nav
+ aria-label={isEnglish ? "Main navigation" : "주 메뉴"}
+ className="bg-white rounded-[20px] overflow-hidden border-[1.5px] border-canvas"
  >
  {activeNavConfig.map((item) =>
  item.type === "link" ? (
  <Link
  key={item.href}
  href={item.href}
+ aria-current={pathname === item.href ? "page" : undefined}
  onClick={() => setIsMobileMenuOpen(false)}
- className="block no-underline border-b border-canvas-100 last:border-b-0"
- style={{
- padding: "16px 20px",
- fontSize: "16px",
- fontWeight: 600,
- color: pathname === item.href ? "#0145F2" : "#0A1829",
- backgroundColor:
- pathname === item.href ? "#0145F20D" : "transparent",
- transition: "color 0.12s ease",
- }}
+ className={`block no-underline border-b border-canvas-100 last:border-b-0 px-5 py-4 text-base font-semibold transition-colors ${
+ pathname === item.href
+ ? "text-electric bg-electric-5"
+ : "text-navy hover:bg-electric-5"
+ }`}
  >
  {item.name}
  </Link>
@@ -253,7 +201,7 @@ export default function Header() {
  />
  )
  )}
- </div>
+ </nav>
  </div>
  </motion.div>
  )}

@@ -84,10 +84,10 @@ export default function SalaryResultCard({
  </div>
 
  <div className="divide-y divide-canvas">
- <DeductionItem label="국민연금" value={breakdown.pension} iconBg="bg-canvas" iconColor="text-electric" />
- <DeductionItem label="건강보험" value={breakdown.health} iconBg="bg-primary/5" iconColor="text-primary" />
- <DeductionItem label="고용보험" value={breakdown.employment} iconBg="bg-primary/10" iconColor="text-electric" />
- <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} iconBg="bg-canvas" iconColor="text-primary" />
+ <DeductionItem label="국민연금" value={breakdown.pension} iconBg="bg-electric-5" iconColor="text-electric" />
+ <DeductionItem label="건강보험" value={breakdown.health} iconBg="bg-electric-10" iconColor="text-electric" />
+ <DeductionItem label="고용보험" value={breakdown.employment} iconBg="bg-electric-15" iconColor="text-electric" />
+ <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} iconBg="bg-electric-20" iconColor="text-electric" />
  </div>
  </div>
 

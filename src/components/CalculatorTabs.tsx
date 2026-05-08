@@ -111,7 +111,7 @@ function CalculatorTabsComponent() {
  disabled={!canScrollLeft}
  className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
  ${canScrollLeft
- ? "bg-white border-canvas text-muted-blue hover:border-primary hover:text-primary shadow-sm"
+ ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
  : "bg-canvas border-canvas text-faint-blue cursor-default"
  }`}
  aria-label="이전 탭"
@@ -122,6 +122,8 @@ function CalculatorTabsComponent() {
  {/* 스크롤 컨테이너 */}
  <div
  ref={scrollRef}
+ role="tablist"
+ aria-label="계산기 종류"
  className="flex-1 flex overflow-x-auto gap-2 pb-0.5"
  style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
  onScroll={checkScroll}
@@ -132,19 +134,24 @@ function CalculatorTabsComponent() {
  return (
  <button
  key={tab}
+ role="tab"
+ aria-selected={isActive}
+ aria-controls={`calc-panel-${tab}`}
+ id={`calc-tab-${tab}`}
+ tabIndex={isActive ? 0 : -1}
  onClick={() => setActiveTab(tab)}
  className={`
  flex-none flex items-center gap-1.5 px-4 py-2.5
  rounded-full border text-sm font-bold
  whitespace-nowrap transition-all duration-200
  ${isActive
- ? "bg-primary border-primary shadow-sm"
- : "bg-white text-muted-blue border-canvas hover:border-primary hover:text-primary"
+ ? "bg-electric border-electric text-white shadow-sm"
+ : "bg-white text-muted-blue border-canvas hover:border-electric hover:text-electric"
  }
  `}
  >
- <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-white" : ""}`} />
- <span className={isActive ? "text-white" : ""}>{name}</span>
+ <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+ <span>{name}</span>
  </button>
  );
  })}
@@ -156,7 +163,7 @@ function CalculatorTabsComponent() {
  disabled={!canScrollRight}
  className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
  ${canScrollRight
- ? "bg-white border-canvas text-muted-blue hover:border-primary hover:text-primary shadow-sm"
+ ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
  : "bg-canvas border-canvas text-faint-blue cursor-default"
  }`}
  aria-label="다음 탭"
@@ -166,10 +173,17 @@ function CalculatorTabsComponent() {
  </div>
 
  {/* 구분선 */}
- <div className="h-px bg-canvas-dark mb-6" />
+ <div className="h-px bg-canvas-dark mb-6" aria-hidden="true" />
 
  {/* ── 활성 계산기 ─────────────────────────────────────────── */}
- <div className="w-full">{renderActiveCalculator()}</div>
+ <div
+ id={`calc-panel-${activeTab}`}
+ role="tabpanel"
+ aria-labelledby={`calc-tab-${activeTab}`}
+ className="w-full"
+ >
+ {renderActiveCalculator()}
+ </div>
  </div>
  );
 }

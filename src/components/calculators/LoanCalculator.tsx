@@ -125,24 +125,29 @@ export default function LoanCalculator() {
 
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-amount" className="block text-sm font-medium text-muted-blue mb-2">
  대출 금액
  </label>
  <div className="relative">
- <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" />
+ <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
+ id="loan-amount"
  type="number"
+ inputMode="numeric"
+ min="0"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  <div className="flex gap-2 mt-2">
  {[10000000, 50000000, 100000000].map((val) => (
  <button
  key={val}
+ type="button"
  onClick={() => setAmount(val)}
- className="px-3 py-1 text-xs bg-canvas-dark text-muted-blue rounded-full hover:bg-canvas-deeper transition-colors"
+ className="px-3 py-1 text-xs bg-canvas-dark text-muted-blue rounded-full hover:bg-electric hover:text-white transition-colors"
+ aria-label={`대출 금액 ${val / 10000}만원으로 설정`}
  >
  {val / 10000}만
  </button>
@@ -151,41 +156,48 @@ export default function LoanCalculator() {
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-rate" className="block text-sm font-medium text-muted-blue mb-2">
  연 이자율 (%)
  </label>
  <div className="relative">
- <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" />
+ <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
+ id="loan-rate"
  type="number"
+ inputMode="decimal"
  step="0.1"
+ min="0"
  value={rate}
  onChange={(e) => setRate(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-term" className="block text-sm font-medium text-muted-blue mb-2">
  대출 기간 (년)
  </label>
  <div className="relative">
- <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" />
+ <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
+ id="loan-term"
  type="number"
+ inputMode="numeric"
+ min="1"
+ max="50"
  value={term}
  onChange={(e) => setTerm(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  </div>
 
- <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <fieldset>
+ <legend className="block text-sm font-medium text-muted-blue mb-2">
  상환 방식
- </label>
- <div className="grid grid-cols-3 gap-2">
+ </legend>
+ <div className="grid grid-cols-3 gap-2" role="radiogroup">
  {[
  { id: "level-payment", label: "원리금균등" },
  { id: "level-principal", label: "원금균등" },
@@ -193,17 +205,20 @@ export default function LoanCalculator() {
  ].map((m) => (
  <button
  key={m.id}
+ type="button"
+ role="radio"
+ aria-checked={method === m.id}
  onClick={() => setMethod(m.id as RepaymentMethod)}
  className={`py-2 text-sm rounded-lg transition-all ${method === m.id
- ? "bg-primary text-white font-bold shadow-lg shadow-primary/20"
- : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper"
+ ? "bg-electric text-white font-bold shadow-lg shadow-primary/20"
+ : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper hover:text-electric"
  }`}
  >
  {m.label}
  </button>
  ))}
  </div>
- </div>
+ </fieldset>
  </div>
  </motion.div>
 

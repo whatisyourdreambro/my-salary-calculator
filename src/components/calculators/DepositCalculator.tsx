@@ -75,21 +75,27 @@ export default function DepositCalculator() {
 
  <div className="space-y-6">
  {/* Type Selector */}
- <div className="flex bg-canvas rounded-lg p-1 border border-canvas">
+ <div className="flex bg-canvas rounded-lg p-1 border border-canvas" role="radiogroup" aria-label="저축 방식">
  <button
+ type="button"
+ role="radio"
+ aria-checked={type === "deposit"}
  onClick={() => setType("deposit")}
  className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "deposit"
- ? "bg-canvas-dark text-navy shadow-sm"
- : "text-faint-blue hover:text-muted-blue"
+ ? "bg-white text-electric shadow-sm border border-electric/20"
+ : "text-faint-blue hover:text-electric"
  }`}
  >
  예금 (목돈 굴리기)
  </button>
  <button
+ type="button"
+ role="radio"
+ aria-checked={type === "savings"}
  onClick={() => setType("savings")}
  className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "savings"
- ? "bg-canvas-dark text-navy shadow-sm"
- : "text-faint-blue hover:text-muted-blue"
+ ? "bg-white text-electric shadow-sm border border-electric/20"
+ : "text-faint-blue hover:text-electric"
  }`}
  >
  적금 (목돈 만들기)
@@ -97,56 +103,66 @@ export default function DepositCalculator() {
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-amount" className="block text-sm font-medium text-muted-blue mb-2">
  {type === "deposit" ? "예치 금액" : "월 납입 금액"}
  </label>
  <div className="relative">
- <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint-blue font-bold">₩</span>
+ <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint-blue font-bold" aria-hidden="true">₩</span>
  <input
+ id="deposit-amount"
  type="number"
+ inputMode="numeric"
+ min="0"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-rate" className="block text-sm font-medium text-muted-blue mb-2">
  연 이자율 (%)
  </label>
  <div className="relative">
- <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" />
+ <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
+ id="deposit-rate"
  type="number"
+ inputMode="decimal"
  step="0.1"
+ min="0"
  value={rate}
  onChange={(e) => setRate(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-term" className="block text-sm font-medium text-muted-blue mb-2">
  저축 기간 (개월)
  </label>
  <div className="relative">
- <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" />
+ <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
+ id="deposit-term"
  type="number"
+ inputMode="numeric"
+ min="1"
+ max="600"
  value={term}
  onChange={(e) => setTerm(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
  />
  </div>
  </div>
 
- <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <fieldset>
+ <legend className="block text-sm font-medium text-muted-blue mb-2">
  과세 구분
- </label>
- <div className="grid grid-cols-3 gap-2">
+ </legend>
+ <div className="grid grid-cols-3 gap-2" role="radiogroup">
  {[
  { id: "normal", label: "일반 (15.4%)" },
  { id: "preferential", label: "세금우대 (9.5%)" },
@@ -154,17 +170,20 @@ export default function DepositCalculator() {
  ].map((t) => (
  <button
  key={t.id}
+ type="button"
+ role="radio"
+ aria-checked={taxType === t.id}
  onClick={() => setTaxType(t.id as TaxType)}
  className={`py-2 text-xs sm:text-sm rounded-lg transition-all ${taxType === t.id
- ? "bg-primary text-white font-bold shadow-lg shadow-primary/20"
- : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper"
+ ? "bg-electric text-white font-bold shadow-lg shadow-primary/20"
+ : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper hover:text-electric"
  }`}
  >
  {t.label}
  </button>
  ))}
  </div>
- </div>
+ </fieldset>
  </div>
  </motion.div>
 

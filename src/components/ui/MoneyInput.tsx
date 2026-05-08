@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useId } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,7 @@ export default function MoneyInput({
 }: MoneyInputProps) {
  const [isFocused, setIsFocused] = useState(false);
  const inputRef = useRef<HTMLInputElement>(null);
+ const inputId = useId();
 
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const inputValue = e.target.value.replace(/[^0-9]/g, "");
@@ -36,55 +37,61 @@ export default function MoneyInput({
 
  return (
  <div className={cn("w-full flex flex-col items-center py-8", className)}>
- <label className="text-xs font-black text-[#0F4C81] uppercase tracking-[0.2em] mb-4 opacity-60">
+ <label htmlFor={inputId} className="text-xs font-black text-muted-blue uppercase tracking-[0.2em] mb-4 opacity-70">
  {label}
  </label>
- 
- <motion.div 
- animate={{ scale: isFocused ? 1.05 : 1 }}
+
+ <motion.div
+ animate={{ scale: isFocused ? 1.03 : 1 }}
  transition={{ type: "spring", stiffness: 400, damping: 25 }}
  className="relative group w-full"
  >
  <input
+ id={inputId}
  ref={inputRef}
  type="text"
  value={value}
  onChange={handleChange}
  onFocus={() => setIsFocused(true)}
  onBlur={() => setIsFocused(false)}
- className="w-full bg-transparent text-5xl sm:text-7xl font-black text-center text-[#0F4C81] focus:outline-none placeholder-blue-100 font-mono-tabular"
+ className="w-full bg-transparent text-5xl sm:text-7xl font-black text-center text-navy tracking-tight focus:outline-none tabular-nums"
  placeholder="0"
  inputMode="numeric"
+ aria-label={label}
  />
- 
- {/* Premium Pulse Underline Animation */}
- <motion.div 
- animate={{ 
+
+ {/* Electric Blue Underline Animation */}
+ <motion.div
+ animate={{
  width: isFocused ? "100%" : "3rem",
- opacity: isFocused ? 1 : 0.3,
- boxShadow: isFocused ? "0 0 12px 1px rgba(255,215,0,0.6)" : "none"
+ opacity: isFocused ? 1 : 0.4,
+ boxShadow: isFocused ? "0 0 12px 1px rgba(1,69,242,0.45)" : "none"
  }}
  transition={{ type: "spring", stiffness: 300, damping: 30 }}
- className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-[#FFD700] rounded-full"
+ className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-electric rounded-full"
  />
  </motion.div>
 
- <div className="mt-8 flex gap-2">
+ <div className="mt-8 flex gap-2 flex-wrap justify-center">
  {[100, 500, 1000].map((amt) => (
  <button
  key={amt}
+ type="button"
  onClick={() => {
  const current = parseNumber(value);
  onValueChange(formatNumber(current + amt * 10000));
  }}
- className="px-4 py-2 bg-canvas-dark hover:bg-[#FFD700] hover:text-[#381f15] text-faint-blue text-xs font-bold rounded-full transition-all active:scale-90"
+ className="px-4 py-2 bg-canvas-dark hover:bg-electric hover:text-white text-muted-blue text-xs font-bold rounded-full transition-all active:scale-95"
+ aria-label={`${amt}만원 추가`}
  >
  +{amt}만
  </button>
  ))}
  <button
+ type="button"
  onClick={() => onValueChange("0")}
- className="px-4 py-2 bg-canvas-deeper text-electric text-xs font-bold rounded-full hover:bg-canvas-deeper active:scale-90 transition-all"
+ className="px-4 py-2 bg-canvas-deeper text-electric text-xs font-bold rounded-full hover:bg-electric hover:text-white active:scale-95 transition-all"
+ aria-label="입력값 초기화"
  >
  초기화
  </button>
