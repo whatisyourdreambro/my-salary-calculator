@@ -151,9 +151,9 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
  initial={{ scale: 0.8, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: 0.5, type: "spring" }}
- className="bg-gradient-to-br from-primary/20 to-primary/80/20 border border-primary/50 rounded-3xl p-6 text-center relative overflow-hidden"
+ className="bg-gradient-to-br from-primary/20 to-primary/30 border border-primary/50 rounded-3xl p-6 text-center relative overflow-hidden"
  >
- <div className="absolute inset-0 bg-primary/50/10 blur-xl" />
+ <div className="absolute inset-0 bg-primary/10 blur-xl" />
  <Trophy className="w-12 h-12 text-primary mx-auto mb-2" />
  <h3 className="text-lg font-bold text-primary mb-1">연봉 킹</h3>
  <div className="text-2xl font-black">{winner.name}</div>

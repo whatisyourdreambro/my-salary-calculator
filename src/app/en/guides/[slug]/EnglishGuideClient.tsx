@@ -42,7 +42,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  if (!mounted) return null;
 
  return (
- <main className="min-h-screen bg-canvas -[#191F28] relative selection:bg-primary/20">
+ <main className="min-h-screen bg-canvas relative selection:bg-primary/20">
  {/* Reading Progress Bar */}
  <motion.div
  className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-[#0145F2] to-primary/80 z-50 origin-left"
@@ -51,8 +51,8 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
 
  {/* Hero Section */}
  <div className="relative pt-28 pb-16 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10 pointer-events-none" />
+ <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
  <motion.div
  initial={{ opacity: 0, y: 30 }}
@@ -60,7 +60,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  transition={{ duration: 0.8 }}
  className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
  >
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric 400 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <span className="w-2 h-2 rounded-full bg-primary/50" />
  {guide.category} Guide
  </div>
@@ -103,7 +103,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  transition={{ delay: 0.2, duration: 0.6 }}
  className="flex-1 min-w-0"
  >
- <div className="toss-card bg-white -[#1E232E] p-6 sm:p-10 rounded-[24px]">
+ <div className="duotone-card bg-white p-6 sm:p-10 rounded-[24px]">
 
  {/* Smart Summary (TL;DR) */}
  <div className="mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/10">
@@ -177,7 +177,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </div>
 
  {/* Navigation Footer */}
- <div className="mt-8 toss-card p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+ <div className="mt-8 duotone-card p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
  <Link
  href="/en/guides"
  className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
@@ -234,7 +234,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
  {/* Related Calculator Card */}
  <div className="sticky top-24 space-y-6">
- <div className="toss-card p-6 relative overflow-hidden group">
+ <div className="duotone-card p-6 relative overflow-hidden group">
  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
  <div className="relative z-10">
  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary">
@@ -257,7 +257,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </div>
 
  {/* Newsletter / CTA */}
- <div className="toss-card p-6">
+ <div className="duotone-card p-6">
  <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
  <BookOpen className="w-5 h-5 text-primary" />
  Smarter Every Week

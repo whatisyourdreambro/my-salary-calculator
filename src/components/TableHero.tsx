@@ -22,7 +22,7 @@ export default function TableHero({ badgeText, title, description, adSlotId = "5
  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
  >
  {/* 배지 */}
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 /20 border border-electric/20 text-electric 400 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <TrendingUp className="w-4 h-4" />
  <span>{badgeText}</span>
  </div>

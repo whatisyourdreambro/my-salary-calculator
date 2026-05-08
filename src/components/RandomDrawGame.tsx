@@ -591,7 +591,7 @@ export default function RandomDrawGame() {
  initial={{ x: 50, opacity: 0 }}
  animate={{ x: 0, opacity: 1 }}
  className={`flex items-center gap-3 rounded-xl p-3 border ${specialPrize
- ? "bg-primary/50/20 border-primary/50"
+ ? "bg-primary/20 border-primary/50"
  : "bg-white/5 border-white/5"
  }`}
  >

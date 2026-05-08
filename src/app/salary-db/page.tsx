@@ -16,11 +16,11 @@ export default function SalaryDBPage() {
  : allCompanies;
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] pb-20">
+ <main className="w-full min-h-screen bg-canvas pb-20">
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
 
  <div className="relative z-10 max-w-4xl mx-auto px-4">
  <motion.div
@@ -28,7 +28,7 @@ export default function SalaryDBPage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6 }}
  >
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric 400 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <Database className="w-4 h-4" />
  Corporate Salary Database
  </div>
@@ -75,13 +75,13 @@ export default function SalaryDBPage() {
  transition={{ delay: idx * 0.1 }}
  >
  <Link href={`/salary-db/${company.id}`} className="block h-full">
- <div className="group h-full toss-card p-6 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-200 relative overflow-hidden">
+ <div className="group h-full duotone-card p-6 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-200 relative overflow-hidden">
  <div className="flex justify-between items-start mb-4">
  <div className="w-12 h-12 text-4xl flex items-center justify-center bg-secondary rounded-xl group-hover:scale-110 transition-transform">
  {company.logo}
  </div>
  <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${company.tier === 'conglomerate' ? 'bg-canvas-dark text-electric 900/30 300' :
- company.tier === 'unicorn' ? 'bg-primary/10 text-primary /30 ' :
+ company.tier === 'unicorn' ? 'bg-primary/10 text-primary/30 ' :
  'bg-canvas-dark text-muted-blue '
  }`}>
  {company.tier}

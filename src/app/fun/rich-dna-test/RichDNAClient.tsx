@@ -136,15 +136,15 @@ export default function RichDNAClient() {
  };
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] font-sans relative overflow-hidden">
+ <main className="w-full min-h-screen bg-canvas font-sans relative overflow-hidden">
 
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 text-center overflow-hidden">
- <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
 
  <div className="max-w-4xl mx-auto px-4">
- <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/10 /30 border border-primary /50 mb-6 shadow-md">
+ <div className="inline-flex items-center justify-center w-20 h-20 rounded-[24px] bg-primary/30 border border-primary/50 mb-6 shadow-md">
  <Gem className="w-10 h-10 text-primary" />
  </div>
  <h1 className="text-4xl font-black tracking-tight text-navy sm:text-6xl mb-4">
@@ -168,7 +168,7 @@ export default function RichDNAClient() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -20 }}
- className="toss-card p-8 sm:p-12 relative overflow-hidden"
+ className="duotone-card p-8 sm:p-12 relative overflow-hidden"
  >
  <div className="relative z-10">
  <div className="flex justify-between items-center mb-10">
@@ -222,7 +222,7 @@ export default function RichDNAClient() {
  className="space-y-8"
  >
  {/* Certificate Card */}
- <div className={`toss-card overflow-hidden relative border-2 ${result.borderColor}`}>
+ <div className={`duotone-card overflow-hidden relative border-2 ${result.borderColor}`}>
 
  {/* Decorative Background */}
  <div className={`absolute top-0 left-0 w-full h-48 bg-gradient-to-b ${result.gradient} opacity-20`} />

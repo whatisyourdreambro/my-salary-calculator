@@ -67,11 +67,11 @@ const getRarityColor = (rarity: Rarity) => {
 
 const getRarityBg = (rarity: Rarity) => {
  switch (rarity) {
- case "S": return "bg-primary/10 /20 border-primary /50";
- case "A": return "bg-primary/10 /20 border-primary /50";
- case "B": return "bg-canvas 900/20 border-electric /50";
- case "C": return "bg-primary/10 /20 border-primary /50";
- case "F": return "bg-canvas-dark /50 border-canvas ";
+ case "S": return "bg-primary/10 border-primary/50";
+ case "A": return "bg-primary/10 border-primary/50";
+ case "B": return "bg-canvas 900/20 border-electric/50";
+ case "C": return "bg-primary/10 border-primary/50";
+ case "F": return "bg-canvas-dark/50 border-canvas ";
  default: return "bg-canvas-dark border-canvas";
  }
 };
@@ -143,13 +143,13 @@ export default function ReincarnationPage() {
  };
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] font-sans pb-20">
+ <main className="w-full min-h-screen bg-canvas font-sans pb-20">
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 text-center overflow-hidden">
- <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
- <div className="inline-block mb-5 p-4 rounded-[20px] bg-primary/10 /30 border border-electric /50">
+ <div className="inline-block mb-5 p-4 rounded-[20px] bg-primary/30 border border-electric/50">
  <Dna className="w-10 h-10 text-primary" />
  </div>
  <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-navy mb-4">
@@ -171,7 +171,7 @@ export default function ReincarnationPage() {
  exit={{ opacity: 0, y: -20 }}
  className="w-full max-w-md space-y-8"
  >
- <div className="toss-card p-8">
+ <div className="duotone-card p-8">
  <CurrencyInput
  label="현생의 연봉 (Karma Point)"
  value={salary}
@@ -226,7 +226,7 @@ export default function ReincarnationPage() {
  animate={{ opacity: 1, y: 0 }}
  className="w-full max-w-lg"
  >
- <div className="toss-card p-8 relative overflow-hidden">
+ <div className="duotone-card p-8 relative overflow-hidden">
  <div className="text-center mb-8">
  <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold mb-4">
  REINCARNATION COMPLETE
@@ -237,7 +237,7 @@ export default function ReincarnationPage() {
  <div className="space-y-3">
  {/* Country */}
  <div className={`p-4 rounded-2xl border ${getRarityBg(result.country.rarity)} flex items-center gap-4`}>
- <div className="p-3 rounded-xl bg-white/60 /20">
+ <div className="p-3 rounded-xl bg-white/60">
  <Globe2 className={`w-5 h-5 ${getRarityColor(result.country.rarity)}`} />
  </div>
  <div className="flex-1">
@@ -250,7 +250,7 @@ export default function ReincarnationPage() {
 
  {/* Spoon */}
  <div className={`p-4 rounded-2xl border ${getRarityBg(result.spoon.rarity)} flex items-center gap-4`}>
- <div className="p-3 rounded-xl bg-white/60 /20">
+ <div className="p-3 rounded-xl bg-white/60">
  <Crown className={`w-5 h-5 ${getRarityColor(result.spoon.rarity)}`} />
  </div>
  <div className="flex-1">
@@ -263,7 +263,7 @@ export default function ReincarnationPage() {
 
  {/* Talent */}
  <div className={`p-4 rounded-2xl border ${getRarityBg(result.talent.rarity)} flex items-center gap-4`}>
- <div className="p-3 rounded-xl bg-white/60 /20">
+ <div className="p-3 rounded-xl bg-white/60">
  <Zap className={`w-5 h-5 ${getRarityColor(result.talent.rarity)}`} />
  </div>
  <div className="flex-1">
@@ -276,7 +276,7 @@ export default function ReincarnationPage() {
 
  {/* Occupation */}
  <div className={`p-4 rounded-2xl border ${getRarityBg(result.occupation.rarity)} flex items-center gap-4`}>
- <div className="p-3 rounded-xl bg-white/60 /20">
+ <div className="p-3 rounded-xl bg-white/60">
  <Briefcase className={`w-5 h-5 ${getRarityColor(result.occupation.rarity)}`} />
  </div>
  <div className="flex-1">
@@ -288,8 +288,8 @@ export default function ReincarnationPage() {
  </div>
 
  {/* Life Span */}
- <div className="p-4 rounded-2xl border border-canvas bg-canvas-dark /50 flex items-center gap-4">
- <div className="p-3 rounded-xl bg-white/60 /20">
+ <div className="p-4 rounded-2xl border border-canvas bg-canvas-dark/50 flex items-center gap-4">
+ <div className="p-3 rounded-xl bg-white/60">
  <Skull className="w-5 h-5 text-faint-blue" />
  </div>
  <div>

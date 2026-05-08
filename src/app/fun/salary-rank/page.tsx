@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function SalaryRankPage() {
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] pt-28 px-4 pb-20 font-sans">
+ <main className="w-full min-h-screen bg-canvas pt-28 px-4 pb-20 font-sans">
  <div className="text-center mb-12 max-w-2xl mx-auto">
  <h1 className="text-4xl font-black tracking-tight text-navy mb-4">
  내 연봉은 <span className="text-primary">상위 몇%</span>일까?

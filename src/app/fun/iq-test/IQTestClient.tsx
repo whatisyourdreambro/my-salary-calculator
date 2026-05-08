@@ -150,14 +150,14 @@ export default function IQTestClient() {
  };
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] font-sans relative">
+ <main className="w-full min-h-screen bg-canvas font-sans relative">
 
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 text-center overflow-hidden">
- <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-primary/10 /30 border border-primary /50 text-primary mb-6 shadow-md">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-primary/30 border border-primary/50 text-primary mb-6 shadow-md">
  <Brain size={32} />
  </div>
  <h1 className="text-4xl font-black tracking-tight text-navy mb-4">
@@ -180,7 +180,7 @@ export default function IQTestClient() {
  initial={{ opacity: 0, x: 20 }}
  animate={{ opacity: 1, x: 0 }}
  exit={{ opacity: 0, x: -20 }}
- className="toss-card p-8"
+ className="duotone-card p-8"
  >
  {/* Progress Bar */}
  <div className="mb-8">

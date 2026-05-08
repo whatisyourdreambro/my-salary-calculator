@@ -139,7 +139,7 @@ export default function LottoPage() {
  <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
  {/* Header */}
  <div className="text-center mb-12">
- <div className="inline-block p-4 rounded-full bg-primary/50/10 mb-6 border border-primary/20 animate-bounce-slow">
+ <div className="inline-block p-4 rounded-full bg-primary/10 mb-6 border border-primary/20 animate-bounce-slow">
  <Clover className="w-10 h-10 text-primary" />
  </div>
  <h1 className="text-4xl font-black tracking-tight sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-primary/50 to-primary/80">

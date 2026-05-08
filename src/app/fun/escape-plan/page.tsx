@@ -72,11 +72,11 @@ export default function EscapePlanPage() {
  ];
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] text-navy 100 font-sans pb-20">
+ <main className="w-full min-h-screen bg-canvas text-navy font-sans pb-20">
  {/* Hero */}
  <section className="relative pt-28 pb-14 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
  <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-gradient-to-br from-blue-500 to-primary/80 text-navy mb-6 shadow-lg shadow-primary-md">
  <DoorOpen size={32} />
@@ -185,7 +185,7 @@ export default function EscapePlanPage() {
  </div>
 
  {/* Bottom Section: Motivation */}
- <div className="mt-12 bg-canvas 900/10 rounded-3xl p-8 text-center border border-electric /30">
+ <div className="mt-12 bg-canvas 900/10 rounded-3xl p-8 text-center border border-electric/30">
  <Palmtree className="w-12 h-12 text-electric mx-auto mb-4" />
  <h3 className="text-2xl font-bold text-blue-900 100 mb-2">자유를 향한 여정</h3>
  <p className="text-electric 300 max-w-2xl mx-auto">

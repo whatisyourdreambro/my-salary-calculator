@@ -165,7 +165,7 @@ export default function SalaryConverterPage() {
  <div className="text-4xl mb-2">{res.flag}</div>
  <h3 className="text-lg font-bold">{res.countryName}</h3>
  </div>
- <div className={`px-3 py-1 rounded-full text-xs font-bold ${res.effectiveRate > 30 ? 'bg-canvas-deeper/20 text-electric' : 'bg-primary/50/20 text-primary'}`}>
+ <div className={`px-3 py-1 rounded-full text-xs font-bold ${res.effectiveRate > 30 ? 'bg-canvas-deeper/20 text-electric' : 'bg-primary/20 text-primary'}`}>
  Tax {res.effectiveRate.toFixed(1)}%
  </div>
  </div>

@@ -176,7 +176,7 @@ const Report = () => {
  </h2>
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
  {salary && (
- <div className="p-3 bg-canvas /50 rounded-xl">
+ <div className="p-3 bg-canvas/50 rounded-xl">
  <p className="text-sm font-semibold text-muted-blue ">
  월 실수령액
  </p>
@@ -186,7 +186,7 @@ const Report = () => {
  </div>
  )}
  {rank !== null && (
- <div className="p-3 bg-canvas /50 rounded-xl">
+ <div className="p-3 bg-canvas/50 rounded-xl">
  <p className="text-sm font-semibold text-muted-blue ">
  연봉 순위
  </p>
@@ -194,7 +194,7 @@ const Report = () => {
  </div>
  )}
  {severance && (
- <div className="p-3 bg-canvas /50 rounded-xl">
+ <div className="p-3 bg-canvas/50 rounded-xl">
  <p className="text-sm font-semibold text-muted-blue ">
  예상 퇴직금
  </p>
@@ -208,7 +208,7 @@ const Report = () => {
  </div>
  )}
  {homeLoan && (
- <div className="p-3 bg-canvas /50 rounded-xl">
+ <div className="p-3 bg-canvas/50 rounded-xl">
  <p className="text-sm font-semibold text-muted-blue ">
  월 상환액
  </p>
@@ -256,14 +256,14 @@ const Report = () => {
  </ResponsiveContainer>
  </div>
  <div className="text-sm space-y-2">
- <div className="flex justify-between p-2 bg-canvas /50 rounded">
+ <div className="flex justify-between p-2 bg-canvas/50 rounded">
  <span>실수령액 비중:</span>
  <strong className="text-primary">
  {financialRatios.netToGrossRatio}%
  </strong>
  </div>
  {homeLoan && (
- <div className="flex justify-between p-2 bg-canvas /50 rounded">
+ <div className="flex justify-between p-2 bg-canvas/50 rounded">
  <span>소득 대비 부채 비율(DTI):</span>
  <strong className="text-danger">
  {financialRatios.debtToIncomeRatio}%
@@ -315,7 +315,7 @@ const Report = () => {
  </button>
  <Link
  href="/dashboard"
- className="w-full text-center py-3 bg-canvas-deeper font-semibold rounded-lg hover:bg-gray-300 :bg-gray-600 transition"
+ className="w-full text-center py-3 bg-canvas-deeper font-semibold rounded-lg hover:bg-gray-300 transition"
  >
  대시보드로 돌아가기
  </Link>

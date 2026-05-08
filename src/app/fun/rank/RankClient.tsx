@@ -76,12 +76,12 @@ export default function RankClient() {
  };
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] pb-20 font-sans relative overflow-x-hidden">
+ <main className="w-full min-h-screen bg-canvas pb-20 font-sans relative overflow-x-hidden">
 
  {/* Hero Section */}
  <section className="relative pt-28 pb-16 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10 pointer-events-none" />
+ <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
  <div className="max-w-5xl mx-auto px-4">
  <motion.div
@@ -108,7 +108,7 @@ export default function RankClient() {
 
  {/* Ad Unit: Top - REMOVED */}
 
- <div className="toss-card overflow-hidden relative">
+ <div className="duotone-card overflow-hidden relative">
 
  <div className="p-8 sm:p-12 relative z-10">
  {!showResult ? (

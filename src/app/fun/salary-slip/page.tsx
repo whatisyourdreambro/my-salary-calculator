@@ -65,10 +65,10 @@ export default function SalarySlipPage() {
  const netMonthly = Math.round((receiptData.monthlyNet || salary * 0.75) / 12);
 
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28] pt-28 px-4 pb-20 font-sans">
+ <main className="w-full min-h-screen bg-canvas pt-28 px-4 pb-20 font-sans">
  {/* Hero */}
  <div className="text-center mb-10 max-w-2xl mx-auto">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-canvas 900/30 border border-electric /50 mb-5">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-[20px] bg-electric-10 border border-electric/50 mb-5">
  <Receipt className="w-8 h-8 text-electric" />
  </div>
  <h1 className="text-4xl font-black tracking-tight text-navy mb-3">
@@ -89,7 +89,7 @@ export default function SalarySlipPage() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -20 }}
- className="toss-card p-8 space-y-5"
+ className="duotone-card p-8 space-y-5"
  >
  <h2 className="text-xl font-black text-navy mb-2">
  정보 입력

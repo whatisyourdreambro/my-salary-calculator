@@ -175,27 +175,27 @@ export default function DepositCalculator() {
  className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl flex flex-col justify-center"
  >
  <div className="text-center mb-8">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/ text-primary mb-4">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-electric-10 text-electric mb-4">
  <TrendingUp className="w-8 h-8" />
  </div>
  <h3 className="text-muted-blue font-medium">만기 수령액 (세후)</h3>
- <div className="text-4xl sm:text-5xl font-black text-navy mt-2 tracking-tight">
+ <div className="text-3xl sm:text-4xl md:text-5xl font-black text-navy mt-2 tracking-tight tabular-nums break-all">
  {results ? formatMoney(results.total) : "-"}
  </div>
  </div>
 
  <div className="space-y-4">
- <div className="flex justify-between items-center p-3 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <span className="text-muted-blue">원금 합계</span>
- <span className="font-bold text-navy">{results ? formatMoney(results.principal) : "-"}</span>
+ <span className="font-bold text-navy tabular-nums whitespace-nowrap">{results ? formatMoney(results.principal) : "-"}</span>
  </div>
- <div className="flex justify-between items-center p-3 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <span className="text-muted-blue">세전 이자</span>
- <span className="font-bold text-navy">+{results ? formatMoney(results.interest) : "-"}</span>
+ <span className="font-bold text-navy tabular-nums whitespace-nowrap">+{results ? formatMoney(results.interest) : "-"}</span>
  </div>
- <div className="flex justify-between items-center p-3 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <span className="text-muted-blue">이자 과세 ({taxType === "normal" ? "15.4%" : taxType === "preferential" ? "9.5%" : "0%"})</span>
- <span className="font-bold text-primary">-{results ? formatMoney(results.taxAmount) : "-"}</span>
+ <span className="font-bold text-electric tabular-nums whitespace-nowrap">-{results ? formatMoney(results.taxAmount) : "-"}</span>
  </div>
  </div>
  </motion.div>

@@ -41,7 +41,7 @@ export default function LunchRoulettePage() {
  </div>
 
  <div className="max-w-md mx-auto">
- <div className="toss-card p-10 text-center mb-6 min-h-[250px] flex flex-col items-center justify-center border-t-4 border-t-primary">
+ <div className="duotone-card p-10 text-center mb-6 min-h-[250px] flex flex-col items-center justify-center border-t-4 border-t-primary">
  <motion.div
  key={result || "empty"}
  initial={{ opacity: 0, scale: 0.8 }}

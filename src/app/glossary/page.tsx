@@ -56,11 +56,11 @@ export default function GlossaryPage() {
  };
 
  return (
- <main className="w-full bg-canvas -[#191F28] min-h-screen pb-20">
+ <main className="w-full bg-canvas min-h-screen pb-20">
  {/* Hero Section */}
  <section className="relative pt-28 pb-16 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /100/15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
 
  <div className="relative z-10 max-w-4xl mx-auto px-4">
  <motion.div
@@ -68,7 +68,7 @@ export default function GlossaryPage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6 }}
  >
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/100/10 border border-electric/20 text-electric 400 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <BookOpen className="w-4 h-4" />
  <span>금융 문맹 탈출 프로젝트</span>
  </div>
@@ -180,7 +180,7 @@ export default function GlossaryPage() {
  animate={{ opacity: 1, scale: 1 }}
  exit={{ opacity: 0, scale: 0.9 }}
  transition={{ duration: 0.3, delay: index * 0.05 }}
- className="group relative bg-card/50 backdrop-blur-sm /30 border border-border/50 rounded-3xl p-6 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col h-full"
+ className="group relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl p-6 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col h-full"
  >
  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

@@ -105,7 +105,7 @@ export default function FinancialMBTIPage() {
  initial={{ opacity: 0, y: 15 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -15 }}
- className="toss-card p-8 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+ className="duotone-card p-8 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
  >
  <div className="flex justify-between items-center mb-10">
  <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-sm uppercase tracking-widest">
@@ -129,7 +129,7 @@ export default function FinancialMBTIPage() {
  <button
  key={idx}
  onClick={() => handleAnswer(questions[step].axis, answer.value)}
- className="w-full text-left p-5 rounded-xl border border-canvas bg-white hover:border-primary hover:bg-canvas :bg-electric font-medium text-muted-blue transition-all"
+ className="w-full text-left p-5 rounded-xl border border-canvas bg-white hover:border-primary hover:bg-canvas font-medium text-muted-blue transition-all"
  >
  {answer.text}
  </button>
@@ -143,7 +143,7 @@ export default function FinancialMBTIPage() {
  animate={{ opacity: 1, scale: 1 }}
  className="space-y-6"
  >
- <div className="toss-card p-10 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-t-4 border-t-primary">
+ <div className="duotone-card p-10 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-t-4 border-t-primary">
  <div className="inline-block px-4 py-1.5 bg-canvas-dark text-muted-blue text-sm font-bold tracking-widest uppercase mb-4 rounded-sm">
  {result} TYPE
  </div>

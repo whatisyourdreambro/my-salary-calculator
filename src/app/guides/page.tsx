@@ -16,13 +16,13 @@ const SORT_OPTIONS: { id: SortOption; label: string; icon: React.ElementType }[]
 ];
 function HeroGuide({ guide }: { guide: Guide }) {
  return (
- <div className="relative w-full h-[500px] mb-16 rounded-[2.5rem] overflow-hidden group shadow-2xl shadow-primary/20">
+ <div className="relative w-full h-[360px] sm:h-[440px] md:h-[500px] mb-12 md:mb-16 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden group shadow-2xl shadow-primary/20">
  <div className="absolute inset-0 bg-gradient-to-br from-[#0145F2] to-[#0D5BFF] z-0" />
  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/30 transition-all duration-1000" />
- <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/100/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 group-hover:bg-primary/100/30 transition-all duration-1000" />
+ <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 group-hover:bg-primary/30 transition-all duration-1000" />
 
- <div className="absolute bottom-0 left-0 w-full p-8 sm:p-12 z-20">
+ <div className="absolute bottom-0 left-0 w-full p-6 sm:p-8 md:p-12 z-20">
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
  <div className="flex items-center gap-2 mb-4">
  <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1">
@@ -33,17 +33,17 @@ function HeroGuide({ guide }: { guide: Guide }) {
  </span>
  </div>
 
- <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight max-w-4xl drop-shadow-lg">
+ <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-tight max-w-4xl drop-shadow-lg">
  {guide.title}
  </h2>
 
- <p className="text-lg text-faint-blue mb-8 max-w-2xl line-clamp-2">
+ <p className="text-base sm:text-lg text-white/80 mb-6 sm:mb-8 max-w-2xl line-clamp-2">
  {guide.description}
  </p>
 
  <Link
  href={"/guides/" + guide.slug}
- className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white text-black font-bold text-lg hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105"
+ className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-white text-navy font-bold text-base sm:text-lg hover:bg-electric hover:text-white transition-all duration-300 transform hover:scale-105"
  >
  지금 읽기 <ArrowRight className="w-5 h-5" />
  </Link>
@@ -64,13 +64,13 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
  className="group h-full"
  >
  <Link href={"/guides/" + guide.slug} className="block h-full">
- <div className="relative h-full flex flex-col toss-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden group-hover:border-electric :border-electric transition-all duration-300">
+ <div className="relative h-full flex flex-col duotone-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden group-hover:border-electric transition-all duration-300">
 
  <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
  <div className="p-8 flex-grow flex flex-col relative z-10">
  <div className="flex items-center justify-between mb-6">
- <span className="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-primary/10 text-electric 400 text-xs font-bold border border-electric/20">
+ <span className="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-electric-10 text-electric text-xs font-bold border border-electric/20">
  {guide.category}
  </span>
  {guide.views > 10000 && (
@@ -80,7 +80,7 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
  )}
  </div>
 
- <h3 className="text-xl font-bold text-navy mb-3 leading-snug group-hover:text-electric :text-electric transition-colors">
+ <h3 className="text-xl font-bold text-navy mb-3 leading-snug group-hover:text-electric transition-colors">
  {guide.title}
  </h3>
 
@@ -93,7 +93,7 @@ function GuideCard({ guide, index }: { guide: Guide; index: number }) {
  <Calendar className="w-3 h-3" />
  <span>{new Date(guide.publishedDate).toLocaleDateString('ko-KR')}</span>
  </div>
- <div className="flex items-center gap-1 font-bold text-muted-blue group-hover:text-electric :text-electric transition-colors">
+ <div className="flex items-center gap-1 font-bold text-muted-blue group-hover:text-electric transition-colors">
  Read More <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
  </div>
  </div>
@@ -176,11 +176,11 @@ export default function GuidesPage() {
  };
 
  return (
- <main className="min-h-screen bg-canvas -[#191F28] text-foreground pb-24">
+ <main className="min-h-screen bg-canvas text-foreground pb-24">
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /15 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
  <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
  Financial <span className="text-electric">Insight</span>
@@ -278,7 +278,7 @@ export default function GuidesPage() {
 
  {/* Empty State */}
  {visibleGuides.length === 0 && (
- <div className="text-center py-32 rounded-[2rem] bg-canvas-dark /50 border border-dashed border-canvas ">
+ <div className="text-center py-32 rounded-[2rem] bg-canvas-dark/50 border border-dashed border-canvas ">
  <BookOpen className="w-16 h-16 text-faint-blue mx-auto mb-4 opacity-50" />
  <h3 className="text-2xl font-bold text-muted-blue mb-2">검색 결과가 없습니다</h3>
  <p className="text-faint-blue mb-6">다른 키워드로 검색하거나 카테고리를 변경해보세요.</p>

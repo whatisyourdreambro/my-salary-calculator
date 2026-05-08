@@ -124,13 +124,13 @@ export default function InteractiveTable({
 
  {/* === 입력 패널 === */}
  <motion.div
- className="lg:col-span-2 toss-card p-7 sm:p-10"
+ className="lg:col-span-2 duotone-card p-7 sm:p-10"
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6 }}
  >
  <h2 className="text-2xl font-bold tracking-tight mb-8 text-navy flex items-center gap-3">
- <span className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-canvas 900/30 text-electric">
+ <span className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-electric-10 text-electric">
  <Calculator className="w-5 h-5" />
  </span>
  {pageConfig.title}
@@ -205,7 +205,7 @@ export default function InteractiveTable({
  </div>
 
  {/* 중소기업 토글 */}
- <div className="flex items-center justify-between p-5 bg-canvas /50 rounded-[16px] border border-canvas ">
+ <div className="flex items-center justify-between p-5 bg-canvas/50 rounded-[16px] border border-canvas ">
  <Label htmlFor="sme-youth" className="text-sm font-bold text-muted-blue cursor-pointer">
  중소기업 청년 감면 적용
  </Label>
@@ -214,7 +214,7 @@ export default function InteractiveTable({
  </div>
 
  {/* 차트 */}
- <div className="bg-canvas /40 rounded-[20px] p-6 border border-canvas flex flex-col justify-center">
+ <div className="bg-canvas/40 rounded-[20px] p-6 border border-canvas flex flex-col justify-center">
  <h4 className="text-xs font-black text-faint-blue mb-5 text-center uppercase tracking-widest">
  공제 비율 분석
  </h4>
@@ -296,12 +296,12 @@ export default function InteractiveTable({
 
  {/* 상세 공제 내역 */}
  <motion.div
- className="toss-card p-6"
+ className="duotone-card p-6"
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.5, delay: 0.2 }}
  >
- <h3 className="text-sm font-black text-navy 100 mb-4 flex items-center gap-2">
+ <h3 className="text-sm font-black text-navy mb-4 flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-electric" />
  상세 공제 내역
  </h3>

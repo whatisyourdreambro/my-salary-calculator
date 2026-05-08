@@ -268,10 +268,11 @@ export default function HomePage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.4 }}
  style={{
- marginTop: "4rem",
+ marginTop: "clamp(2rem, 5vw, 4rem)",
  display: "flex",
  justifyContent: "center",
- gap: "3rem",
+ columnGap: "clamp(1.25rem, 4vw, 3rem)",
+ rowGap: "1rem",
  padding: "1.5rem 0",
  borderTop: "1px solid #DDE4EC",
  borderBottom: "1px solid #DDE4EC",
@@ -312,7 +313,7 @@ export default function HomePage() {
  <SocialProof />
 
  {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
- <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 1.5rem" }}>
+ <div className="page-width">
  <HomeTopAd />
  </div>
 
@@ -322,14 +323,7 @@ export default function HomePage() {
  </div>
 
  {/* ═══ Calculator Section ══════════════════════════════════ */}
- <section
- id="calculator-section"
- style={{
- maxWidth: "80rem",
- margin: "0 auto",
- padding: "5rem 1.5rem",
- }}
- >
+ <section id="calculator-section" className="page-width section-lg">
  <motion.div
  initial={{ opacity: 0, y: 24 }}
  whileInView={{ opacity: 1, y: 0 }}
@@ -348,13 +342,13 @@ export default function HomePage() {
 
  {/* ═══ Premium Tools Grid ══════════════════════════════════ */}
  <section
+ className="section-lg"
  style={{
  backgroundColor: "#EDF1F5",
  borderTop: "1px solid #DDE4EC",
- padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div className="page-width">
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -465,13 +459,13 @@ export default function HomePage() {
 
  {/* ═══ Coupang Partners Banner — 섹션 구분 자리 ══════════════ */}
  <section
+ className="section-sm"
  style={{
  backgroundColor: "#FFFFFF",
  borderTop: "1px solid #DDE4EC",
- padding: "2rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div className="page-width">
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
@@ -480,13 +474,13 @@ export default function HomePage() {
 
  {/* ═══ Loan & Deposit Section ══════════════════════════════ */}
  <section
+ className="section-lg"
  style={{
  backgroundColor: "#FFFFFF",
  borderTop: "1px solid #DDE4EC",
- padding: "5rem 1.5rem",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div className="page-width">
  <div style={{ marginBottom: "2.5rem" }}>
  <p
  className="duotone-badge"
@@ -590,14 +584,14 @@ export default function HomePage() {
 
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
  <section
+ className="section-lg"
  style={{
  backgroundColor: "#EDF1F5",
  borderTop: "1px solid #DDE4EC",
- padding: "5rem 1.5rem",
  textAlign: "center",
  }}
  >
- <div style={{ maxWidth: "80rem", margin: "0 auto" }}>
+ <div className="page-width">
  <div
  style={{
  width: "56px",

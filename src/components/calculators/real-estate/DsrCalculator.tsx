@@ -82,10 +82,10 @@ export default function DsrCalculator() {
  className="bg-canvas 900/20 rounded-xl p-6 text-center border border-electric "
  >
  <p className="text-sm text-faint-blue mb-1">당신의 DSR은</p>
- <p className="text-4xl font-black text-electric 400">
+ <p className="text-4xl font-black text-electric">
  {dsr.toFixed(2)}%
  </p>
- <div className="mt-4 text-xs text-faint-blue text-left bg-white /20 p-3 rounded-lg">
+ <div className="mt-4 text-xs text-faint-blue text-left bg-white/20 p-3 rounded-lg">
  <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
  <p>일반적으로 DSR 40% (은행권), 50% (제2금융권) 규제가 적용됩니다.</p>
  </div>

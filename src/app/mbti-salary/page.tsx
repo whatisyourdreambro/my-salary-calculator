@@ -168,7 +168,7 @@ export default function MbtiSalaryPage() {
  </p>
  <button
  onClick={handleStart}
- className="mt-10 px-12 py-4 bg-electric text-white font-bold rounded-full text-lg hover:bg-electric :bg-canvas-deeper transition-transform transform hover:scale-105 shadow-lg shadow-violet-500/30"
+ className="mt-10 px-12 py-4 bg-electric text-white font-bold rounded-full text-lg hover:bg-electric transition-transform transform hover:scale-105 shadow-lg shadow-violet-500/30"
  >
  운명 확인하기
  </button>
@@ -176,7 +176,7 @@ export default function MbtiSalaryPage() {
  )}
 
  {step === "quiz" && (
- <div className="w-full max-w-2xl bg-light-card/80 /30 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-canvas /20 animate-fade-in-up">
+ <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-canvas animate-fade-in-up">
  <div className="w-full bg-canvas-deeper rounded-full h-2.5 mb-8">
  <div
  className="bg-gradient-to-r from-primary to-[#3D7FF5] 400 h-2.5 rounded-full transition-all duration-500"
@@ -199,7 +199,7 @@ export default function MbtiSalaryPage() {
  <button
  key={index}
  onClick={() => handleAnswer(option.type)}
- className="w-full text-left p-5 border-2 border-canvas rounded-lg bg-canvas-dark/50 /50 hover:border-primary :border-primary hover:bg-primary/10 :bg-primary/30 transition-all transform hover:scale-105"
+ className="w-full text-left p-5 border-2 border-canvas rounded-lg bg-canvas-dark/50 hover:border-primary hover:bg-primary/10 transition-all transform hover:scale-105"
  >
  <p className="text-lg font-semibold">{option.text}</p>
  </button>
@@ -225,7 +225,7 @@ export default function MbtiSalaryPage() {
  {/* [바이럴 핵심] 공유/저장될 결과 리포트 영역 */}
  <div
  ref={resultRef}
- className="bg-gradient-to-br from-gray-100 to-gray-200 900 800 p-8 rounded-2xl shadow-2xl border border-canvas /20"
+ className="bg-gradient-to-br from-gray-100 to-gray-200 900 800 p-8 rounded-2xl shadow-2xl border border-canvas"
  >
  <p className="text-center font-semibold text-primary 300">
  당신의 인생 연봉 그래프는...
@@ -240,7 +240,7 @@ export default function MbtiSalaryPage() {
  {result.keywords.map((tag) => (
  <span
  key={tag}
- className="bg-canvas-deeper /10 text-xs px-2 py-1 rounded-full"
+ className="bg-canvas-deeper text-xs px-2 py-1 rounded-full"
  >
  {tag}
  </span>
@@ -285,13 +285,13 @@ export default function MbtiSalaryPage() {
 
  {/* [가치 증대] 개인 맞춤형 분석 추가 */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
- <div className="bg-canvas-deeper/50 /5 p-4 rounded-lg">
+ <div className="bg-canvas-deeper/50 p-4 rounded-lg">
  <h4 className="font-bold text-lg text-primary ">
  Financial DNA: 강점
  </h4>
  <p className="text-sm mt-2">{result.dna.strength}</p>
  </div>
- <div className="bg-canvas-deeper/50 /5 p-4 rounded-lg">
+ <div className="bg-canvas-deeper/50 p-4 rounded-lg">
  <h4 className="font-bold text-lg text-electric ">
  Financial DNA: 약점
  </h4>
@@ -314,10 +314,10 @@ export default function MbtiSalaryPage() {
  return (
  <div
  key={plan.step}
- className="p-4 border border-canvas /20 rounded-xl bg-light-card /5 hover:bg-canvas-dark :bg-white/10 transition-colors"
+ className="p-4 border border-canvas rounded-xl bg-white/5 hover:bg-canvas-dark transition-colors"
  >
  <div className="flex items-start gap-4">
- <div className="bg-primary/10 /100/20 text-primary p-3 rounded-full">
+ <div className="bg-primary/20 text-primary p-3 rounded-full">
  <Icon className="w-6 h-6" />
  </div>
  <div>
@@ -347,21 +347,21 @@ export default function MbtiSalaryPage() {
  <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
  <button
  onClick={handleDownload}
- className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 :bg-gray-600 transition"
+ className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition"
  >
  <Download size={18} />
  이미지 저장
  </button>
  <button
  onClick={handleShare}
- className="w-full py-3 bg-primary text-black /50 font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/50 :bg-primary transition"
+ className="w-full py-3 bg-primary text-black font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/50 transition"
  >
  <Share2 size={18} />
  결과 공유
  </button>
  <button
  onClick={handleReset}
- className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 :bg-gray-600 transition"
+ className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition"
  >
  <RefreshCw size={18} />
  다시하기

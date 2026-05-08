@@ -31,7 +31,6 @@ const FunCard = ({
  title,
  description,
  href,
- color,
  featured = false,
  badge
 }: {
@@ -39,31 +38,24 @@ const FunCard = ({
  title: string;
  description: string;
  href: string;
- color: string;
+ color?: string;
  featured?: boolean;
  badge?: string;
 }) => (
  <Link
  href={href}
- className={`group relative overflow-hidden rounded-[24px] border border-canvas /80 bg-white -[#1E232E]
- shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] -[0_4px_24px_rgba(0,0,0,0.4)]
- hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] :shadow-[0_8px_40px_rgba(0,0,0,0.5)]
- hover:-translate-y-1 transition-all duration-200 block h-full ${featured ? 'md:col-span-2 md:row-span-2' : ''}`}
+ className={`group duotone-card relative overflow-hidden block h-full hover:-translate-y-1 transition-transform duration-200 ${featured ? 'md:col-span-2 md:row-span-2' : ''}`}
  >
- {/* 호버 그라데이션 */}
- <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${color.replace('text-', 'from-').split('-')[0]}-50/80 via-transparent to-transparent -${color.split('-')[1]}-900/20`} />
+ {/* 호버 그라데이션 (Electric Blue 통일) */}
+ <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-electric/5 via-transparent to-transparent pointer-events-none" />
 
- <div className={`relative z-10 flex flex-col h-full ${featured ? 'p-9' : 'p-6'}`}>
+ <div className={`relative z-10 flex flex-col h-full ${featured ? 'p-7 sm:p-9' : 'p-5 sm:p-6'}`}>
  <div className="flex items-start justify-between mb-5">
- <div className={`
- ${featured ? 'w-16 h-16' : 'w-12 h-12'}
- rounded-[18px] bg-canvas border border-canvas 
- flex items-center justify-center group-hover:scale-110 transition-all duration-300
- `}>
- <Icon className={`${featured ? 'w-8 h-8' : 'w-6 h-6'} text-faint-blue group-hover:${color} transition-colors duration-300`} />
+ <div className={`${featured ? 'w-16 h-16' : 'w-12 h-12'} rounded-[18px] bg-electric-5 border border-electric/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-electric-10 transition-all duration-300`}>
+ <Icon className={`${featured ? 'w-8 h-8' : 'w-6 h-6'} text-electric transition-colors duration-300`} />
  </div>
  {badge && (
- <span className="px-3 py-1 rounded-full text-xs font-black bg-canvas text-electric 900/30 400 border border-electric ">
+ <span className="px-3 py-1 rounded-full text-xs font-black bg-electric-10 text-electric border border-electric/20">
  {badge}
  </span>
  )}
@@ -85,15 +77,15 @@ const FunCard = ({
 
 export default function FunLabPage() {
  return (
- <main className="min-h-screen bg-canvas -[#191F28] pt-28 pb-20 px-4">
+ <main className="min-h-screen bg-canvas pt-28 pb-20 px-4">
  <div className="max-w-7xl mx-auto">
  {/* Hero 헤더 */}
  <div className="text-center mb-16">
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric 400 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <Zap className="w-4 h-4" />
  직장인 심심풀이 라이브러리
  </div>
- <h1 className="text-5xl md:text-7xl font-black text-navy mb-5 tracking-tight">
+ <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-navy mb-5 tracking-tight">
  FUN <span className="text-electric">LAB</span>
  </h1>
  <p className="text-faint-blue text-lg md:text-xl max-w-2xl mx-auto font-medium">

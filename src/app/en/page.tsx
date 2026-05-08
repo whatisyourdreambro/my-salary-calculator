@@ -229,7 +229,7 @@ export default function GlobalLandingPage() {
  className="group h-full"
  >
  <Link href={`/en/guides/${guide.slug}`} className="block h-full no-underline">
- <div className="relative h-full flex flex-col toss-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden transition-all duration-300">
+ <div className="relative h-full flex flex-col duotone-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden transition-all duration-300">
  <div className="p-7 flex flex-col flex-grow relative z-10">
  <div className="flex items-center justify-between mb-5">
  <span

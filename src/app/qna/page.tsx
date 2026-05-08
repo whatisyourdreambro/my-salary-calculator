@@ -100,7 +100,7 @@ export default function QnAPage() {
  initial={{ y: 20, opacity: 0 }}
  animate={{ y: 0, opacity: 1 }}
  transition={{ delay: 0.2 }}
- className="glass-card p-6 rounded-3xl shadow-2xl border border-white/20 backdrop-blur-xl bg-white/80 /80"
+ className="glass-card p-6 rounded-3xl shadow-2xl border border-white/20 backdrop-blur-xl bg-white/80"
  >
  <div className="relative mb-6">
  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
@@ -235,7 +235,7 @@ export default function QnAPage() {
 
  {/* Tip */}
  {item.answer.tip && (
- <div className="p-5 bg-primary/50/10 rounded-2xl border border-primary/20">
+ <div className="p-5 bg-primary/10 rounded-2xl border border-primary/20">
  <p className="text-base">
  <span className="font-bold text-primary mr-2 flex items-center gap-2 mb-2">
  <Sparkles className="w-4 h-4" />

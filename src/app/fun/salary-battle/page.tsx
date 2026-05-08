@@ -113,7 +113,7 @@ const StatBar = ({
  <motion.div
  initial={{ width: 0 }}
  animate={{ width: `${(valueB / (valueA + valueB)) * 100}%` }}
- className={`h-full ${winner === "b" ? "bg-primary" : "bg-primary/10/50"}`}
+ className={`h-full ${winner === "b" ? "bg-primary" : "bg-primary/10"}`}
  />
  </motion.div>
  </div>

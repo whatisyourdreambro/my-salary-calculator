@@ -51,7 +51,7 @@ export default function WhatToBuyPage() {
  </div>
 
  <div className="max-w-xl mx-auto space-y-6">
- <div className="toss-card p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+ <div className="duotone-card p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
  <div className="mb-8">
  <div className="flex justify-between items-baseline mb-4">
  <span className="text-sm font-bold text-faint-blue uppercase tracking-widest">
@@ -72,10 +72,10 @@ export default function WhatToBuyPage() {
  </div>
 
  <div className="flex gap-4 mb-4">
- <button onClick={() => setBudget(b => b + 10000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper :bg-electric transition-colors">+1만</button>
- <button onClick={() => setBudget(b => b + 100000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper :bg-electric transition-colors">+10만</button>
- <button onClick={() => setBudget(b => b + 1000000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper :bg-electric transition-colors">+100만</button>
- <button onClick={() => setBudget(b => b + 10000000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper :bg-electric transition-colors">+1000만</button>
+ <button onClick={() => setBudget(b => b + 10000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper transition-colors">+1만</button>
+ <button onClick={() => setBudget(b => b + 100000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper transition-colors">+10만</button>
+ <button onClick={() => setBudget(b => b + 1000000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper transition-colors">+100만</button>
+ <button onClick={() => setBudget(b => b + 10000000)} className="flex-1 py-3 bg-canvas-dark text-muted-blue rounded-sm font-bold text-sm hover:bg-canvas-deeper transition-colors">+1000만</button>
  </div>
 
  <button
@@ -94,7 +94,7 @@ export default function WhatToBuyPage() {
  key="result"
  initial={{ opacity: 0, y: 15 }}
  animate={{ opacity: 1, y: 0 }}
- className="toss-card p-10 text-center border-t-4 border-t-primary shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
+ className="duotone-card p-10 text-center border-t-4 border-t-primary shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
  >
  <p className="text-xs font-bold text-faint-blue uppercase tracking-widest mb-6">구매 가능 품목</p>
  <h2 className="text-4xl font-black text-primary mb-2">

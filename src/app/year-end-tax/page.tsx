@@ -45,7 +45,7 @@ const FAQ_ITEMS = [
 
 export default function YearEndTaxPage() {
  return (
- <main className="w-full min-h-screen bg-canvas -[#191F28]">
+ <main className="w-full min-h-screen bg-canvas">
  <JsonLd
  data={[
  breadcrumbLd([
@@ -67,11 +67,11 @@ export default function YearEndTaxPage() {
  />
  {/* Hero */}
  <section className="relative pt-32 pb-16 px-4 text-center overflow-hidden">
- <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -[#0f1623] -[#191F28] -[#1a2035] -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 /50/10 rounded-full blur-[120px] -z-10" />
+ <div className="absolute inset-0 bg-gradient-to-br from-primary via-white to-primary/80 -z-10" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-[120px] -z-10" />
 
  <div className="max-w-3xl mx-auto">
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/50/10 border border-primary/20 text-primary font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-bold text-sm mb-6">
  💰 13월의 월급
  </div>
  <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">

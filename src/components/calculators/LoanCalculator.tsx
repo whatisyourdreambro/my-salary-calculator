@@ -215,28 +215,28 @@ export default function LoanCalculator() {
  >
  <div>
  <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
- <PieChart className="w-5 h-5 text-[rgba(255,255,255,0.8)]" />
+ <PieChart className="w-5 h-5 text-electric" />
  상환 요약
  </h2>
 
  <div className="space-y-6">
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <div className="text-sm text-muted-blue mb-1">총 상환 금액</div>
  <div className="text-3xl font-black text-navy tracking-tight">
  {results ? formatMoney(results.totalPayment) : "-"}
  </div>
  </div>
 
- <div className="grid grid-cols-2 gap-4">
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <div className="text-sm text-muted-blue mb-1">총 이자</div>
- <div className="text-xl font-bold text-primary">
+ <div className="text-lg sm:text-xl font-bold text-electric tracking-tight tabular-nums break-all">
  {results ? formatMoney(results.totalInterest) : "-"}
  </div>
  </div>
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
  <div className="text-sm text-muted-blue mb-1">월 평균 납입금</div>
- <div className="text-xl font-bold text-navy">
+ <div className="text-lg sm:text-xl font-bold text-navy tracking-tight tabular-nums break-all">
  {results ? formatMoney(results.monthlyPayment) : "-"}
  </div>
  </div>
@@ -245,28 +245,29 @@ export default function LoanCalculator() {
  </div>
 
  {/* Chart */}
- <div className="h-48 mt-8">
+ <div className="h-56 sm:h-64 md:h-72 mt-8">
  {results && (
  <ResponsiveContainer width="100%" height="100%">
  <AreaChart data={results.schedule}>
  <defs>
  <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
- <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+ <stop offset="5%" stopColor="#0145F2" stopOpacity={0.3} />
+ <stop offset="95%" stopColor="#0145F2" stopOpacity={0} />
  </linearGradient>
  </defs>
- <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+ <CartesianGrid strokeDasharray="3 3" stroke="#DDE4EC" vertical={false} />
  <XAxis dataKey="month" hide />
  <YAxis hide />
  <Tooltip
- contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a" }}
+ contentStyle={{ backgroundColor: "#0A1829", border: "1px solid #294460", borderRadius: "0.75rem", color: "#EDF1F5" }}
  formatter={(value: number) => formatMoney(value)}
  labelFormatter={(label) => `${label}개월차`}
  />
  <Area
  type="monotone"
  dataKey="balance"
- stroke="#10b981"
+ stroke="#0145F2"
+ strokeWidth={2}
  fillOpacity={1}
  fill="url(#colorBalance)"
  />

@@ -411,8 +411,6 @@
 .bg-canvas { background-color: #EDF1F5 !important; }
 .bg-canvas-dark { background-color: #DDE4EC !important; }
 .bg-canvas-deeper { background-color: #C8D4E0 !important; }
-.bg-canvas { background-color: #EDF1F5 !important; }
-.bg-canvas-dark { background-color: #DDE4EC !important; }
 
 /* ── Dark mode overrides for canvas tints ─────────────────── */
 .dark .bg-white { background-color: #162E4A !important; color: #EDF1F5 !important; }

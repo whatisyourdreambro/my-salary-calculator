@@ -64,13 +64,13 @@ export default function LtvCalculator() {
  <motion.div
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
- className="bg-primary/5 /20 rounded-xl p-6 text-center border border-primary "
+ className="bg-primary/5 rounded-xl p-6 text-center border border-primary "
  >
  <p className="text-sm text-faint-blue mb-1">당신의 LTV는</p>
  <p className="text-4xl font-black text-primary ">
  {ltv.toFixed(2)}%
  </p>
- <div className="mt-4 text-xs text-faint-blue text-left bg-white /20 p-3 rounded-lg">
+ <div className="mt-4 text-xs text-faint-blue text-left bg-white/20 p-3 rounded-lg">
  <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
  <p>지역 및 주택 가격에 따라 LTV 한도가 다를 수 있습니다 (예: 투기과열지구 40~50%).</p>
  </div>

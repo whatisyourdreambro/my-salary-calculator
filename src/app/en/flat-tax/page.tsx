@@ -91,7 +91,7 @@ export default function FlatTaxPage() {
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  {/* Progressive Tax Card */}
- <div className={`p-6 rounded-2xl border-2 transition-all ${!isFlatBetter ? 'border-primary bg-primary/50/10' : 'border-white/10 bg-secondary/20'}`}>
+ <div className={`p-6 rounded-2xl border-2 transition-all ${!isFlatBetter ? 'border-primary bg-primary/10' : 'border-white/10 bg-secondary/20'}`}>
  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
  Standard Progressive Tax
  {!isFlatBetter && <CheckCircle className="w-5 h-5 text-primary" />}
@@ -113,7 +113,7 @@ export default function FlatTaxPage() {
  </div>
 
  {/* Flat Tax Card */}
- <div className={`p-6 rounded-2xl border-2 transition-all ${isFlatBetter ? 'border-primary bg-primary/50/10' : 'border-white/10 bg-secondary/20'}`}>
+ <div className={`p-6 rounded-2xl border-2 transition-all ${isFlatBetter ? 'border-primary bg-primary/10' : 'border-white/10 bg-secondary/20'}`}>
  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
  19% Flat Tax
  {isFlatBetter && <CheckCircle className="w-5 h-5 text-primary" />}

@@ -131,7 +131,7 @@ export default function PayStubGenerator() {
  </div>
 
  {/* Pay Stub Preview Section */}
- <div className="lg:col-span-8 flex justify-center bg-canvas-dark /50 p-4 sm:p-8 rounded-3xl border border-border overflow-x-auto">
+ <div className="lg:col-span-8 flex justify-center bg-canvas-dark/50 p-4 sm:p-8 rounded-3xl border border-border overflow-x-auto">
  <div
  ref={payStubRef}
  className="w-[600px] min-w-[600px] bg-white text-navy p-8 shadow-2xl relative overflow-hidden"

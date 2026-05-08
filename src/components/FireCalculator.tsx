@@ -276,7 +276,7 @@ export default function FireCalculator() {
  </div>
 
  <div
- className="bg-card/80 /30 backdrop-blur-md p-4 sm:p-6 md:p-10 rounded-2xl shadow-2xl border"
+ className="bg-white/80 backdrop-blur-md p-4 sm:p-6 md:p-10 rounded-2xl shadow-2xl border"
  key={step}
  >
  {step === "essentials" && (

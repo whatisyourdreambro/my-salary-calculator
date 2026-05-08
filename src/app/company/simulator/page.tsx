@@ -159,7 +159,7 @@ export default function SimulatorPage() {
  </div>
 
  <div className="mt-8 grid grid-cols-2 gap-4">
- <div className="p-4 bg-primary/50/10 border border-primary/20 rounded-2xl text-center">
+ <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-center">
  <div className="text-sm text-primary font-bold mb-1">David (중소기업)</div>
  <div className="text-2xl font-black text-foreground">
  {smeNet.toLocaleString('ko-KR')}원
