@@ -14,6 +14,7 @@ import { selfEmployedGuides } from "@/lib/guides/self-employed-deepdive";
 import { realEstateInvestingGuides } from "@/lib/guides/real-estate-investing-deepdive";
 import { overseasLivingGuides } from "@/lib/guides/overseas-living-deepdive";
 import { expatEssentialGuidesEn } from "@/lib/guides/expat-essential-deepdive-en";
+import { expatFinanceLifeGuidesEn } from "@/lib/guides/expat-finance-life-en";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -458,6 +459,7 @@ const allRawGuides = [
  ...realEstateInvestingGuides,
  ...overseasLivingGuides,
  ...expatEssentialGuidesEn,
+ ...expatFinanceLifeGuidesEn,
 ];
 
 // Generate the final guides array with content
