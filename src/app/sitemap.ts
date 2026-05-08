@@ -76,6 +76,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // Phase 5.5 PR + 5.3 임베드 안내
  '/pr/press-kit',
  '/share/embed-codes',
+ // Phase 7 인터랙티브 도구 6종
+ '/tools/career/negotiation-simulator',
+ '/tools/career/financial-health',
+ '/tools/career/retirement-projection',
+ '/tools/career/job-change-decision',
+ '/tools/tax/savings-checkup',
+ '/tools/real-estate/first-home-plan',
+ '/tools/finance/portfolio-allocator',
  // 100가지 계산기 인덱스
  '/calc',
  // Calc Pages
@@ -214,6 +222,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/salary-stats-monthly',
  '/pr/press-kit',
  '/share/embed-codes',
+ // Phase 7 인터랙티브 도구
+ '/tools/career/negotiation-simulator',
+ '/tools/career/financial-health',
+ '/tools/career/retirement-projection',
+ '/tools/career/job-change-decision',
+ '/tools/tax/savings-checkup',
+ '/tools/real-estate/first-home-plan',
+ '/tools/finance/portfolio-allocator',
  ]);
  const HUB_ROUTES = new Set<string>([
  '/calc',
