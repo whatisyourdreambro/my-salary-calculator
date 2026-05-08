@@ -35,29 +35,13 @@ export default function ThemeToggle() {
 
   return (
     <button
+      type="button"
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex items-center justify-center cursor-pointer transition-all"
-      style={{
-        width: 38,
-        height: 38,
-        padding: "8px",
-        borderRadius: "10px",
-        backgroundColor: "transparent",
-        border: "1.5px solid #DDE4EC",
-        color: "#0145F2",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.backgroundColor = "#0145F21A";
-        (e.currentTarget as HTMLElement).style.borderColor = "#0145F2";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-        (e.currentTarget as HTMLElement).style.borderColor = "#DDE4EC";
-      }}
+      className="flex items-center justify-center cursor-pointer w-[38px] h-[38px] p-2 rounded-[10px] bg-transparent border-[1.5px] border-canvas text-electric transition-colors hover:bg-electric-10 hover:border-electric"
     >
-      <Icon size={17} />
+      <Icon size={17} aria-hidden="true" />
     </button>
   );
 }
