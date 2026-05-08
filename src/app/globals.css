@@ -485,6 +485,25 @@
  background-size: 200% 100%;
 }
 
+/* ── Hide scrollbar (horizontal tab strips) ───────────────────── */
+.no-scrollbar {
+ scrollbar-width: none;
+ -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+ display: none;
+}
+
+/* ── Card hover lift (consistency util) ───────────────────────── */
+.hover-lift {
+ transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.hover-lift:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 8px 24px -4px #0145F222, 0 1px 4px 0 #0A182910;
+ border-color: #0145F233;
+}
+
 /* ── Recharts / chart text ─────────────────────────────────────── */
 .recharts-text,
 .recharts-label,
