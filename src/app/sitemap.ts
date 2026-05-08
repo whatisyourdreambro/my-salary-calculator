@@ -84,6 +84,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/tools/tax/savings-checkup',
  '/tools/real-estate/first-home-plan',
  '/tools/finance/portfolio-allocator',
+ // Phase 8 인터랙티브 4개
+ '/tools/life/budget-analyzer',
+ '/tools/finance/debt-consolidation',
+ '/tools/family/child-cost-projection',
+ '/tools/career/global-job-compare',
  // 100가지 계산기 인덱스
  '/calc',
  // Calc Pages
@@ -230,6 +235,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/tools/tax/savings-checkup',
  '/tools/real-estate/first-home-plan',
  '/tools/finance/portfolio-allocator',
+ '/tools/life/budget-analyzer',
+ '/tools/finance/debt-consolidation',
+ '/tools/family/child-cost-projection',
+ '/tools/career/global-job-compare',
  ]);
  const HUB_ROUTES = new Set<string>([
  '/calc',

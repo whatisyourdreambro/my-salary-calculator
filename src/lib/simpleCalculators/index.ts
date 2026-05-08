@@ -7,6 +7,7 @@ import { batch2Calculators } from "./batch2";
 import { batch3Calculators } from "./batch3";
 import { batch4Calculators } from "./batch4";
 import { batch5Calculators } from "./batch5";
+import { batch6Calculators } from "./batch6";
 import { enrichmentMap } from "./enrichments";
 
 const rawCalculators: CalculatorDef[] = [
@@ -15,6 +16,7 @@ const rawCalculators: CalculatorDef[] = [
  ...batch3Calculators,
  ...batch4Calculators,
  ...batch5Calculators,
+ ...batch6Calculators,
 ];
 
 // enrichments(explanation·formula·faqs·caveats·relatedSlugs)를 슬러그별로 자동 병합

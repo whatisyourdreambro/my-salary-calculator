@@ -10,6 +10,10 @@ import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
 import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
 import { employmentBenefitGuides } from "@/lib/guides/employment-benefit-deepdive";
 import { autoTaxGuides } from "@/lib/guides/auto-tax-deepdive";
+import { selfEmployedGuides } from "@/lib/guides/self-employed-deepdive";
+import { realEstateInvestingGuides } from "@/lib/guides/real-estate-investing-deepdive";
+import { overseasLivingGuides } from "@/lib/guides/overseas-living-deepdive";
+import { expatEssentialGuidesEn } from "@/lib/guides/expat-essential-deepdive-en";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -450,6 +454,10 @@ const allRawGuides = [
  ...stockDeepdiveGuidesEn,
  ...employmentBenefitGuides,
  ...autoTaxGuides,
+ ...selfEmployedGuides,
+ ...realEstateInvestingGuides,
+ ...overseasLivingGuides,
+ ...expatEssentialGuidesEn,
 ];
 
 // Generate the final guides array with content
