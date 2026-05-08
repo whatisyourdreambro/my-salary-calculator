@@ -6,7 +6,7 @@ import Link from "next/link";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd, howToLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -133,6 +133,21 @@ export default function YearEndTaxChecklistPage() {
  { name: "연말정산 체크리스트", path: "/year-end-tax-checklist" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 연말정산 12월 마감 전 점검 8단계",
+ description: "환급금을 극대화하기 위해 12월 31일 전 카테고리별로 점검할 항목들",
+ totalTime: "PT2H",
+ steps: CHECKLIST.map((c) => ({
+ name: c.category,
+ text: c.items.join(" · "),
+ })),
+ }),
+ articleLd({
+ title: "2026 연말정산 체크리스트",
+ description: "12월 마감 전 12가지 점검 항목",
+ slug: "year-end-tax-checklist",
+ publishedDate: "2026-05-01",
+ }),
  speakableLd({
  url: "/year-end-tax-checklist",
  cssSelectors: [".faq-answer"],

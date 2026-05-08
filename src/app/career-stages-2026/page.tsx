@@ -6,7 +6,7 @@ import Link from "next/link";
 import { TrendingUp, ArrowRight, Calculator, User } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, howToLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -119,6 +119,25 @@ export default function CareerStages2026Page() {
  { name: "직장인 커리어 단계별 가이드", path: "/career-stages-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "직장인 단계별 재테크 우선순위 (20대~50대)",
+ description: "본인 연령 단계에 맞는 자산 형성 우선순위와 다음 단계 준비 로드맵",
+ totalTime: "P30Y",
+ steps: STAGES.map((s) => ({
+ name: `${s.emoji} ${s.stage} (평균 ${s.avgSalary})`,
+ text: `${s.priorities.join(" · ")}. 마일스톤: ${s.milestone}.`,
+ })),
+ }),
+ articleLd({
+ title: "직장인 커리어 단계별 평균 연봉·자산",
+ description: "20대~50대 단계별 평균 연봉과 우선순위",
+ slug: "career-stages-2026",
+ publishedDate: "2026-05-01",
+ }),
+ speakableLd({
+ url: "/career-stages-2026",
+ cssSelectors: [".faq-answer"],
+ }),
  ]}
  />
 

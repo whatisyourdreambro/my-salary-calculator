@@ -6,7 +6,7 @@ import Link from "next/link";
 import { TrendingUp, ArrowRight, Calculator, Building2 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -82,6 +82,15 @@ export default function NewEmployee2026Page() {
  { name: "2026 신입 연봉 협상", path: "/new-employee-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 신입 연봉 협상 4단계",
+ description: "오퍼 받은 신입이 시장 가격 조사부터 패키지 전체 협상까지 진행하는 절차",
+ totalTime: "P7D",
+ steps: NEGOTIATION_TIPS.map((tip) => ({
+ name: tip.title,
+ text: tip.body,
+ })),
+ }),
  articleLd({
  title: "2026 신입 연봉 협상 가이드",
  description: "직군별 평균 초봉, 협상 멘트, 패키지 협상법",

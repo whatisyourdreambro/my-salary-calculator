@@ -6,7 +6,7 @@ import Link from "next/link";
 import { TrendingUp, Sparkles, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd, articleLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -152,6 +152,21 @@ export default function TaxChanges2026Page() {
  { name: "2026 세법 변경사항", path: "/tax-changes-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 세법 변경사항을 본인 절세에 적용하는 방법",
+ description: "결혼세액공제·자녀공제·식대 비과세 등 변경 항목을 카테고리별로 점검",
+ totalTime: "PT1H",
+ steps: MAJOR_CHANGES.map((c) => ({
+ name: `${c.emoji} ${c.category}`,
+ text: c.changes.map((ch) => `${ch.title} — ${ch.detail} (${ch.impact})`).join(" / "),
+ })),
+ }),
+ articleLd({
+ title: "2026 세법 변경사항 — 결혼세액공제 부활",
+ description: "2026년 세법 주요 변경 한 페이지 정리",
+ slug: "tax-changes-2026",
+ publishedDate: "2026-05-01",
+ }),
  speakableLd({
  url: "/tax-changes-2026",
  cssSelectors: [".faq-answer"],

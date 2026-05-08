@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Calendar, AlertCircle, ArrowRight, Calculator, TrendingUp, TrendingDown } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -64,6 +64,15 @@ export default function HealthInsurance2026Page() {
  { name: "2026 건강보험료 정산", path: "/health-insurance-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 건강보험료 7월 정산 대응 단계",
+ description: "건보료 정산금이 큰 경우 분납 신청까지 4월~7월 일정에 맞춰 처리하는 방법",
+ totalTime: "P3M",
+ steps: SCHEDULE.map((s) => ({
+ name: `${s.date} — ${s.event}`,
+ text: s.note,
+ })),
+ }),
  articleLd({
  title: "2026 건강보험료 정산 가이드",
  description: "7월 건보료 정산금·환급·분납",

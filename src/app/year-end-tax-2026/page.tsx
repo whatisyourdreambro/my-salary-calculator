@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Calendar, AlertCircle, CheckCircle2, FileText, Calculator, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -87,6 +87,15 @@ export default function YearEndTax2026Page() {
  { name: "2026 종합소득세 신고", path: "/year-end-tax-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 종합소득세 5월 신고 단계별 일정",
+ description: "프리랜서·N잡러·사업자가 5월 종합소득세를 마감 안에 정확히 신고하고 환급받는 일정",
+ totalTime: "P2M",
+ steps: SCHEDULE.map((s) => ({
+ name: `${s.date} — ${s.event}`,
+ text: s.note,
+ })),
+ }),
  articleLd({
  title: "2026 종합소득세 신고 가이드",
  description:

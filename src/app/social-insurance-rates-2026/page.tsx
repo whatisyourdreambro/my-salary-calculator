@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Shield, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd, articleLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -113,6 +113,21 @@ export default function SocialInsuranceRates2026Page() {
  { name: "2026 4대보험 요율", path: "/social-insurance-rates-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 4대보험 본인 부담률 점검하기",
+ description: "월급 명세서의 4대보험 항목별 부담률을 확인하고 본인이 정확히 떼였는지 점검하는 방법",
+ totalTime: "PT15M",
+ steps: INSURANCE_RATES.map((r) => ({
+ name: `${r.name} 본인 ${r.selfRate}`,
+ text: `${r.purpose}. 본인 ${r.selfRate} + 회사 ${r.companyRate} = 총 ${r.totalRate}. 기준: ${r.base}.`,
+ })),
+ }),
+ articleLd({
+ title: "2026 4대보험 요율표",
+ description: "국민연금·건강보험·고용보험·산재보험 본인·회사 부담률",
+ slug: "social-insurance-rates-2026",
+ publishedDate: "2026-05-01",
+ }),
  speakableLd({
  url: "/social-insurance-rates-2026",
  cssSelectors: [".faq-answer"],

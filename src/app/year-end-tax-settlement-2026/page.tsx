@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -63,6 +63,15 @@ export default function YearEndTaxSettlement2026Page() {
  { name: "2026 연말정산 + 성과급 가이드", path: "/year-end-tax-settlement-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "2026 연말정산 환급금 극대화하는 6단계",
+ description: "12월 골든타임에 점검할 6대 공제 항목을 단계별로 진행해 13월의 월급을 늘리는 방법",
+ totalTime: "PT30M",
+ steps: TIPS.map((tip) => ({
+ name: tip.title,
+ text: tip.body,
+ })),
+ }),
  articleLd({
  title: "2026 연말정산 + 성과급 절세 가이드",
  description: "12월 연말정산 공제 항목 + 성과급 세금 전략",

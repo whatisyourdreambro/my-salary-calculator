@@ -36,6 +36,16 @@ export interface PageMetadataOptions {
  publishedTime?: string;
  /** 수정일 */
  modifiedTime?: string;
+ /**
+ * 영문 카운터파트 경로. 지정 시 alternates.languages에 ko-KR/en/x-default 자동 적용.
+ * 예: path="/salary-converter", enPath="/en/salary-converter"
+ */
+ enPath?: string;
+ /**
+ * 한국어 원본 경로 (영문 페이지에서 사용). 지정 시 hreflang 페어 자동 생성.
+ * 예: path="/en/salary-converter", koPath="/salary-converter"
+ */
+ koPath?: string;
 }
 
 /**
@@ -53,12 +63,19 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  ogType = "website",
  publishedTime,
  modifiedTime,
+ enPath,
+ koPath,
  } = options;
 
  const url = `${SITE_URL}${path}`;
  const fullTitle = title.includes(SITE_NAME)
  ? title
  : `${title} | ${SITE_NAME}`;
+
+ // hreflang 페어 자동 생성 — enPath / koPath 중 하나라도 있으면 alternates.languages 채움
+ const koUrl = koPath ? `${SITE_URL}${koPath}` : path.startsWith("/en") ? null : url;
+ const enUrl = enPath ? `${SITE_URL}${enPath}` : path.startsWith("/en") ? url : null;
+ const hasLanguagePair = (koUrl && enUrl) ? true : false;
 
  // OG 이미지: 명시 → 동적 OG 라우트 → 기본값
  const ogImageUrl = ogImage
@@ -75,6 +92,15 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  keywords: allKeywords.join(", "),
  alternates: {
  canonical: url,
+ ...(hasLanguagePair && koUrl && enUrl
+ ? {
+ languages: {
+ "ko-KR": koUrl,
+ "en": enUrl,
+ "x-default": koUrl,
+ },
+ }
+ : {}),
  },
  robots: noIndex
  ? { index: false, follow: false }
@@ -137,6 +163,141 @@ export function buildSalaryAmountMetadata(amount: number): Metadata {
  `연봉 ${formatted}만원 세후`,
  ],
  ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}`,
+ });
+}
+
+/**
+ * /hourly/[amount] 시급 환산 페이지 전용 헬퍼.
+ * 한국 표준 월 209시간(주 40시간 × 4.345 + 주휴수당) 기준.
+ */
+export function buildHourlyAmountMetadata(hourlyWage: number): Metadata {
+ const formatted = hourlyWage.toLocaleString("ko-KR");
+ const monthly = Math.round(hourlyWage * 209);
+ const monthlyManwon = Math.round(monthly / 10000).toLocaleString("ko-KR");
+ const yearlyManwon = Math.round((monthly * 12) / 10000).toLocaleString("ko-KR");
+
+ return buildPageMetadata({
+ title: `시급 ${formatted}원 = 월급·연봉 환산 — 4대보험·실수령액 (2026)`,
+ description: `시급 ${formatted}원의 월 209시간 환산 월급 약 ${monthlyManwon}만원, 연봉 약 ${yearlyManwon}만원. 2026년 4대보험·소득세 차감 후 실수령액과 최저시급 비교까지.`,
+ path: `/hourly/${hourlyWage}`,
+ keywords: [
+ `시급 ${formatted}원`,
+ `시급 ${formatted}원 월급`,
+ `시급 ${formatted}원 연봉`,
+ `시급 ${formatted}원 실수령액`,
+ "시급 연봉 환산",
+ "알바 연봉",
+ ],
+ ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`시급 ${formatted}원 환산`)}`,
+ });
+}
+
+/**
+ * /monthly/[amount] 월급 환산 페이지 전용 헬퍼.
+ */
+export function buildMonthlyAmountMetadata(monthlyWage: number): Metadata {
+ const manwon = Math.round(monthlyWage / 10000).toLocaleString("ko-KR");
+ const yearlyManwon = Math.round((monthlyWage * 12) / 10000).toLocaleString("ko-KR");
+
+ return buildPageMetadata({
+ title: `월급 ${manwon}만원 = 연봉·시급 환산 — 4대보험·실수령액 (2026)`,
+ description: `월급 ${manwon}만원의 연봉 약 ${yearlyManwon}만원, 시급 환산 시 209시간 기준 약 ${Math.round(monthlyWage / 209).toLocaleString("ko-KR")}원. 2026년 세후 실수령액과 동급 직장인 비교.`,
+ path: `/monthly/${monthlyWage}`,
+ keywords: [
+ `월급 ${manwon}만원`,
+ `월급 ${manwon}만원 연봉`,
+ `월급 ${manwon}만원 실수령액`,
+ `월급 ${manwon}만원 시급`,
+ "월급 연봉 환산",
+ ],
+ ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`월급 ${manwon}만원 환산`)}`,
+ });
+}
+
+/**
+ * /year/[year]/tax-rates 연도별 세율 페이지 전용 헬퍼.
+ */
+export function buildYearTaxRatesMetadata(year: number): Metadata {
+ return buildPageMetadata({
+ title: `${year}년 세율표 — 소득세·증여세·상속세·양도세·법인세 누진세율`,
+ description: `${year}년 한국 모든 세금 누진세율표. 근로소득세 6~45%, 증여세·상속세 10~50%, 양도세, 법인세까지 ${year}년 기준 한 페이지 정리.`,
+ path: `/year/${year}/tax-rates`,
+ keywords: [
+ `${year} 세율`,
+ `${year} 소득세율`,
+ `${year} 누진세율`,
+ `${year} 증여세 세율`,
+ `${year} 상속세 세율`,
+ ],
+ ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`${year}년 세율표`)}`,
+ });
+}
+
+/**
+ * /year/[year]/salary/[amount] 연도별 연봉 환산 헬퍼.
+ */
+export function buildYearSalaryMetadata(year: number, amount: number): Metadata {
+ const manwon = Math.round(amount / 10000).toLocaleString("ko-KR");
+ return buildPageMetadata({
+ title: `${year}년 기준 연봉 ${manwon}만원 실수령액 — 그 해 세법 적용`,
+ description: `${year}년 적용 세법 기준 연봉 ${manwon}만원의 월 실수령액과 4대보험·소득세 공제. 현재(2026) 대비 변화와 인플레이션 보정.`,
+ path: `/year/${year}/salary/${amount}`,
+ keywords: [
+ `${year} 연봉 ${manwon}만원`,
+ `${year} 실수령액`,
+ `${year} 연봉 ${manwon}만`,
+ ],
+ ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}`,
+ });
+}
+
+/**
+ * /region/[slug]/cost-of-living 지역별 생활비 헬퍼.
+ */
+export function buildRegionMetadata(region: {
+ slug: string;
+ name: string;
+ avgRent: number;
+ avgFood: number;
+ avgTransport: number;
+}): Metadata {
+ const total = region.avgRent + region.avgFood + region.avgTransport;
+ return buildPageMetadata({
+ title: `${region.name} 생활비 — 월 ${Math.round(total / 10000).toLocaleString("ko-KR")}만원 (2026)`,
+ description: `${region.name}의 평균 월세, 식비, 교통비, 통신비 등 1인 가구 생활비. 본인 연봉 대비 가능 여부와 동급 지역 비교까지 한 페이지로.`,
+ path: `/region/${region.slug}/cost-of-living`,
+ keywords: [
+ `${region.name} 생활비`,
+ `${region.name} 월세`,
+ `${region.name} 1인 가구`,
+ `${region.name} 평균 임금`,
+ `${region.name} 자취 비용`,
+ ],
+ ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`${region.name} 생활비`)}`,
+ });
+}
+
+/**
+ * /job/[slug]/salary 직업별 연봉 헬퍼.
+ */
+export function buildJobMetadata(job: {
+ slug: string;
+ name: string;
+ avgSalary: number;
+}): Metadata {
+ const manwon = Math.round(job.avgSalary / 10000).toLocaleString("ko-KR");
+ return buildPageMetadata({
+ title: `${job.name} 연봉 — 평균 ${manwon}만원·신입~10년차·실수령액 (2026)`,
+ description: `${job.name}의 평균 연봉, 신입~10년차 연봉 분포, 동종업계 회사 TOP10, 4대보험·소득세 차감 후 월 실수령액까지 한 페이지로 정리.`,
+ path: `/job/${job.slug}/salary`,
+ keywords: [
+ `${job.name} 연봉`,
+ `${job.name} 평균 연봉`,
+ `${job.name} 신입 연봉`,
+ `${job.name} 실수령액`,
+ `${job.name} 직업`,
+ ],
+ ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`${job.name} 연봉`)}`,
  });
 }
 

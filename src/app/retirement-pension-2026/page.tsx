@@ -6,7 +6,7 @@ import Link from "next/link";
 import { PiggyBank, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd, howToLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -78,6 +78,21 @@ export default function RetirementPension2026Page() {
  { name: "2026 퇴직연금 가이드", path: "/retirement-pension-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ howToLd({
+ name: "DB·DC·IRP 중 본인에게 맞는 퇴직연금 선택하기",
+ description: "퇴직연금 3종(확정급여형·확정기여형·개인형퇴직연금)의 차이를 비교하고 연령·투자 성향에 맞춰 선택하는 단계",
+ totalTime: "PT30M",
+ steps: COMPARISON.map((c) => ({
+ name: c.name,
+ text: `${c.desc} 적합: ${c.suitable}. 장점: ${c.pros.join(", ")}. 단점: ${c.cons.join(", ")}.`,
+ })),
+ }),
+ articleLd({
+ title: "2026 퇴직연금 가이드 — DB·DC·IRP 비교",
+ description: "확정급여형·확정기여형·개인형퇴직연금 차이",
+ slug: "retirement-pension-2026",
+ publishedDate: "2026-05-01",
+ }),
  speakableLd({
  url: "/retirement-pension-2026",
  cssSelectors: [".faq-answer"],

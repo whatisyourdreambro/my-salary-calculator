@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Calculator, ArrowRight, FileText } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, speakableLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -87,6 +87,12 @@ export default function TaxRates2026Page() {
  { name: "2026 세율표", path: "/tax-rates-2026" },
  ]),
  faqLd(FAQ_ITEMS),
+ articleLd({
+ title: "2026 세율표 한눈에",
+ description: "소득세·증여세·상속세·양도세·법인세 누진세율표",
+ slug: "tax-rates-2026",
+ publishedDate: "2026-05-01",
+ }),
  speakableLd({
  url: "/tax-rates-2026",
  cssSelectors: [".faq-answer"],

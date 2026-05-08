@@ -4,11 +4,13 @@
 import type { CalculatorDef } from "./types";
 import { batch1Calculators } from "./batch1";
 import { batch2Calculators } from "./batch2";
+import { batch3Calculators } from "./batch3";
 import { enrichmentMap } from "./enrichments";
 
 const rawCalculators: CalculatorDef[] = [
  ...batch1Calculators,
  ...batch2Calculators,
+ ...batch3Calculators,
 ];
 
 // enrichments(explanation·formula·faqs·caveats·relatedSlugs)를 슬러그별로 자동 병합

@@ -199,8 +199,14 @@ export async function GET(req: NextRequest) {
  return new ImageResponse(content, {
  width: 1200,
  height: 630,
+ headers: {
+ "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000, immutable",
+ },
  });
  } catch {
- return new Response("Failed to generate the image", { status: 500 });
+ return new Response("Failed to generate the image", {
+ status: 500,
+ headers: { "Cache-Control": "no-store" },
+ });
  }
 }
