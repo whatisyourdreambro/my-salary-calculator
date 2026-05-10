@@ -238,15 +238,15 @@ export default function SimpleCalculatorView({ slug }: Props) {
  )}
 
  {calc.caveats && calc.caveats.length > 0 && (
- <section className="p-6 bg-amber-50 rounded-2xl border border-amber-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-3 flex items-center gap-2">
- <AlertTriangle className="w-4 h-4 text-amber-600" />
+ <section className="p-6 bg-warning-50 rounded-2xl border border-warning-20 mb-6">
+ <h3 className="text-sm font-black text-warning-700 mb-3 flex items-center gap-2">
+ <AlertTriangle className="w-4 h-4 text-warning" aria-hidden="true" />
  유의사항
  </h3>
- <ul className="space-y-2 text-sm text-muted-blue leading-relaxed">
+ <ul className="space-y-2 text-sm text-warning-700/85 leading-relaxed">
  {calc.caveats.map((item, idx) => (
  <li key={idx} className="flex gap-2">
- <span className="text-amber-600 font-bold">·</span>
+ <span className="text-warning font-bold">·</span>
  <span>{item}</span>
  </li>
  ))}

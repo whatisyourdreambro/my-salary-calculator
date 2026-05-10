@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+import { haptic } from "@/lib/haptic";
 
 export default function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -18,6 +21,7 @@ export default function ThemeToggle() {
   }
 
   const cycle = () => {
+    haptic("light");
     if (theme === "light") setTheme("dark");
     else if (theme === "dark") setTheme("system");
     else setTheme("light");
@@ -25,6 +29,7 @@ export default function ThemeToggle() {
 
   const Icon =
     theme === "system" ? Monitor : resolvedTheme === "dark" ? Moon : Sun;
+  const iconKey = theme === "system" ? "monitor" : resolvedTheme === "dark" ? "moon" : "sun";
 
   const label =
     theme === "light"
@@ -39,9 +44,20 @@ export default function ThemeToggle() {
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex items-center justify-center cursor-pointer w-[38px] h-[38px] p-2 rounded-[10px] bg-transparent border-[1.5px] border-canvas text-electric transition-colors hover:bg-electric-10 hover:border-electric"
+      className="relative flex items-center justify-center cursor-pointer w-[38px] h-[38px] rounded-[10px] bg-transparent border-[1.5px] border-canvas-200 text-electric transition-all duration-200 hover:bg-electric-10 hover:border-electric hover:scale-105 active:scale-95 no-tap-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 overflow-hidden"
     >
-      <Icon size={17} aria-hidden="true" />
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={iconKey}
+          initial={{ y: -16, opacity: 0, rotate: -90 }}
+          animate={{ y: 0, opacity: 1, rotate: 0 }}
+          exit={{ y: 16, opacity: 0, rotate: 90 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <Icon size={17} aria-hidden="true" />
+        </motion.span>
+      </AnimatePresence>
     </button>
   );
 }

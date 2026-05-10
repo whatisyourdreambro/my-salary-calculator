@@ -139,7 +139,7 @@ export default function Footer() {
               {trustBadges.map(({ Icon, label }) => (
                 <li
                   key={label}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-electric bg-electric-5 border border-electric-10 rounded-full"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-electric bg-electric-5 border border-electric-10 rounded-full transition-colors duration-200 hover:bg-electric-10 hover:border-electric-20"
                 >
                   <Icon size={13} aria-hidden="true" />
                   {label}

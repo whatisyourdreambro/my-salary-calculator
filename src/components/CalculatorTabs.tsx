@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import {
  TrendingUp, PiggyBank, FileText, GitCompare,
  BarChart3, Calculator, Briefcase, Globe,
@@ -104,15 +105,15 @@ function CalculatorTabsComponent() {
  return (
  <div className="w-full">
  {/* ── 탭 네비게이션: 좌우 화살표 + 스크롤 ──────────────────── */}
- <div className="relative flex items-center gap-1 mb-6">
+ <div className="relative flex items-center gap-2 mb-2">
  {/* 왼쪽 버튼 */}
  <button
  onClick={() => scroll("left")}
  disabled={!canScrollLeft}
- className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
+ className={`flex-none w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 no-tap-highlight
  ${canScrollLeft
- ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
- : "bg-canvas border-canvas text-faint-blue cursor-default"
+ ? "bg-white border-canvas-200 text-muted-blue hover:border-electric hover:text-electric hover:shadow-sm active:scale-95"
+ : "bg-canvas border-transparent text-faint-blue/40 cursor-default"
  }`}
  aria-label="이전 탭"
  >
@@ -124,8 +125,8 @@ function CalculatorTabsComponent() {
  ref={scrollRef}
  role="tablist"
  aria-label="계산기 종류"
- className="flex-1 flex overflow-x-auto gap-2 pb-0.5"
- style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+ className="flex-1 flex overflow-x-auto gap-1.5 pb-0.5 no-scrollbar"
+ style={{ WebkitOverflowScrolling: "touch" }}
  onScroll={checkScroll}
  >
  {tabs.map((tab) => {
@@ -141,17 +142,26 @@ function CalculatorTabsComponent() {
  tabIndex={isActive ? 0 : -1}
  onClick={() => setActiveTab(tab)}
  className={`
- flex-none flex items-center gap-1.5 px-4 py-2.5
- rounded-full border text-sm font-bold
- whitespace-nowrap transition-all duration-200
+ flex-none relative flex items-center gap-1.5 px-4 py-3
+ text-[13.5px] font-bold whitespace-nowrap
+ transition-all duration-200 no-tap-highlight
+ active:scale-[0.97]
  ${isActive
- ? "bg-electric border-electric text-white shadow-sm"
- : "bg-white text-muted-blue border-canvas hover:border-electric hover:text-electric"
+ ? "text-electric"
+ : "text-muted-blue hover:text-electric"
  }
  `}
  >
- <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+ <Icon className="w-[15px] h-[15px] flex-shrink-0" aria-hidden="true" />
  <span>{name}</span>
+ {/* 토스식 active underline */}
+ {isActive && (
+ <motion.span
+ layoutId="active-tab-indicator"
+ className="absolute -bottom-px left-2 right-2 h-[2.5px] bg-electric rounded-full"
+ transition={{ type: "spring", stiffness: 380, damping: 30 }}
+ />
+ )}
  </button>
  );
  })}
@@ -161,10 +171,10 @@ function CalculatorTabsComponent() {
  <button
  onClick={() => scroll("right")}
  disabled={!canScrollRight}
- className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
+ className={`flex-none w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-200 no-tap-highlight
  ${canScrollRight
- ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
- : "bg-canvas border-canvas text-faint-blue cursor-default"
+ ? "bg-white border-canvas-200 text-muted-blue hover:border-electric hover:text-electric hover:shadow-sm active:scale-95"
+ : "bg-canvas border-transparent text-faint-blue/40 cursor-default"
  }`}
  aria-label="다음 탭"
  >
@@ -172,8 +182,8 @@ function CalculatorTabsComponent() {
  </button>
  </div>
 
- {/* 구분선 */}
- <div className="h-px bg-canvas-dark mb-6" aria-hidden="true" />
+ {/* 구분선 — 탭 underline과 시각적으로 연결 */}
+ <div className="h-px bg-canvas-200 dark:bg-canvas-800 mb-6" aria-hidden="true" />
 
  {/* ── 활성 계산기 ─────────────────────────────────────────── */}
  <div

@@ -32,25 +32,28 @@ const CalculatorTabs = dynamic(
  {
  ssr: false,
  loading: () => (
+ <div className="w-full" aria-busy="true" aria-label="계산기 로딩 중">
+ {/* Tab strip skeleton */}
+ <div className="flex items-center gap-2 mb-2">
+ <div className="flex-none w-10 h-10 rounded-full skeleton-shimmer" />
+ <div className="flex-1 flex gap-1.5 overflow-hidden">
+ {[110, 130, 100, 120, 90, 115].map((w, i) => (
  <div
- style={{
- width: "100%",
- height: "12rem",
- display: "flex",
- justifyContent: "center",
- alignItems: "center",
- }}
- >
- <div
- style={{
- width: "36px",
- height: "36px",
- border: "3px solid #DDE4EC",
- borderTop: "3px solid #0145F2",
- borderRadius: "999px",
- animation: "spin 0.7s linear infinite",
- }}
+ key={i}
+ className="flex-none h-10 rounded-full skeleton-shimmer"
+ style={{ width: `${w}px` }}
  />
+ ))}
+ </div>
+ <div className="flex-none w-10 h-10 rounded-full skeleton-shimmer" />
+ </div>
+ <div className="h-px bg-canvas-200 mb-6" />
+ {/* Calculator body skeleton */}
+ <div className="space-y-4">
+ <div className="h-24 rounded-2xl skeleton-shimmer" />
+ <div className="h-40 rounded-2xl skeleton-shimmer" />
+ <div className="h-32 rounded-2xl skeleton-shimmer" />
+ </div>
  </div>
  ),
  }
@@ -135,31 +138,13 @@ export default function HomePage() {
  <div className="w-full overflow-x-hidden">
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
- <section
- className="hero-section"
- style={{
- position: "relative",
- display: "flex",
- flexDirection: "column",
- alignItems: "center",
- justifyContent: "center",
- backgroundColor: "#EDF1F5",
- overflow: "hidden",
- }}
- >
- {/* BG decoration */}
+ <section className="hero-section relative flex flex-col items-center justify-center bg-canvas overflow-hidden">
+ {/* BG decoration — radial gradient (inline 유지: 동적 컬러 mix) */}
  <div
+ aria-hidden="true"
+ className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full pointer-events-none z-0"
  style={{
- position: "absolute",
- top: 0,
- left: "50%",
- transform: "translateX(-50%)",
- width: "700px",
- height: "500px",
- borderRadius: "999px",
- background: "radial-gradient(circle, #0145F211 0%, transparent 70%)",
- pointerEvents: "none",
- zIndex: 0,
+ background: "radial-gradient(circle, rgba(1,69,242,0.07) 0%, transparent 70%)",
  }}
  />
 
@@ -167,73 +152,36 @@ export default function HomePage() {
  initial={{ opacity: 0, y: 28 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
- style={{
- textAlign: "center",
- maxWidth: "760px",
- width: "100%",
- position: "relative",
- zIndex: 1,
- }}
+ className="relative z-10 w-full max-w-[760px] text-center"
  >
  {/* Badge */}
  <motion.div
  initial={{ scale: 0.9, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: 0.15 }}
- className="duotone-badge"
- style={{ marginBottom: "2rem", display: "inline-flex" }}
+ className="duotone-badge inline-flex mb-8"
  >
- <span style={{ position: "relative", display: "flex", width: "8px", height: "8px" }}>
- <span
- style={{
- position: "absolute",
- inset: 0,
- borderRadius: "999px",
- backgroundColor: "#0145F2",
- opacity: 0.6,
- animation: "ping 1.2s cubic-bezier(0,0,0.2,1) infinite",
- }}
- />
- <span
- style={{
- position: "relative",
- display: "inline-flex",
- borderRadius: "999px",
- width: "8px",
- height: "8px",
- backgroundColor: "#0145F2",
- }}
- />
+ <span className="relative flex w-2 h-2" aria-hidden="true">
+ <span className="absolute inset-0 rounded-full bg-electric opacity-60 animate-ping" />
+ <span className="relative inline-flex w-2 h-2 rounded-full bg-electric" />
  </span>
  <HeroBadge />
  </motion.div>
 
- {/* H1 */}
+ {/* H1 — Toss style 큰 fluid 타이포 */}
  <h1
- style={{
- fontSize: "clamp(2.2rem, 6vw, 4.5rem)",
- fontWeight: 900,
- letterSpacing: "-0.045em",
- lineHeight: 1.08,
- color: "#0A1829",
- marginBottom: "1.25rem",
- }}
+ className="font-black tracking-[-0.045em] leading-[1.08] text-navy mb-5"
+ style={{ fontSize: "clamp(2.2rem, 6vw, 4.5rem)" }}
  >
  내 연봉의 모든 것,
  <br />
- <span style={{ color: "#0145F2" }}>가장 쉽고 정확하게.</span>
+ <span className="text-electric">가장 쉽고 정확하게.</span>
  </h1>
 
  {/* Subheading */}
  <p
- style={{
- maxWidth: "520px",
- margin: "0 auto 2.5rem",
- fontSize: "clamp(1rem, 2vw, 1.2rem)",
- color: "#3D5E78",
- fontWeight: 500,
- lineHeight: 1.65,
- }}
+ className="max-w-[520px] mx-auto mb-10 font-medium leading-[1.65] text-muted-blue"
+ style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}
  >
  복잡한 세금 계산부터 숨어있는 환급금까지.
  <br />
