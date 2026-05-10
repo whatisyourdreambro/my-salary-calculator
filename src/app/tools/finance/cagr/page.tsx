@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function CagrPage() {
  return (
  <div className="min-h-screen pt-24 pb-20">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  <div className="text-center mb-12">
  <h1 className="text-4xl font-black text-navy mb-4">CAGR 계산기</h1>
  <p className="text-muted-blue">복리 효과를 고려한 진정한 투자 수익률</p>

@@ -78,7 +78,7 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
 
  return (
  <div className="min-h-screen py-12">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  <Link href="/company/compare" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
  <ArrowLeft className="w-4 h-4 mr-2" />
  다른 기업 비교하기

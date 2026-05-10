@@ -68,6 +68,9 @@
  --chart-3: 216 43% 85%; /* #C8D4E0 canvas deep */
  --chart-4: 224 96% 35%; /* #0032B5 deep blue */
  --chart-5: 216 43% 95%; /* #EDF1F5 canvas */
+
+ /* ── Layout tokens ──────────────────────────────────────────── */
+ --header-height: 72px;
  }
 
  .dark {
@@ -378,7 +381,32 @@
  .section-lg { padding-top: 5rem; padding-bottom: 5rem; }
  .section-md { padding-top: 3.5rem; padding-bottom: 3.5rem; }
  .section-sm { padding-top: 2rem; padding-bottom: 2rem; }
- .page-width { max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+ .page-width {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+ }
+
+ /* ── Section padding (fluid) ──────────────────────────────────── */
+ .section-pad    { padding-top: clamp(2rem, 5vw, 4rem); padding-bottom: clamp(2rem, 5vw, 4rem); }
+ .section-pad-lg { padding-top: clamp(3rem, 7vw, 6rem); padding-bottom: clamp(3rem, 7vw, 6rem); }
+
+ /* ── AdSense slot height reservation (CLS safety) ─────────────── */
+ .ad-slot-home-top { min-height: 120px; }
+ .ad-slot-result   { min-height: 280px; }
+ .ad-slot-sidebar  { min-height: 600px; }
+ .ad-slot-fluid    { min-height: 200px; }
+}
+
+/* ── Responsive overrides for layout utilities ───────────────────── */
+@media (min-width: 640px) {
+ .page-width { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 1024px) {
+ .page-width { padding-left: 2rem; padding-right: 2rem; }
+ .ad-slot-result { min-height: 250px; }
 }
 
 /* ════════════════════════════════════════════════════════════════════

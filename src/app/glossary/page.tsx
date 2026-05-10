@@ -101,7 +101,7 @@ export default function GlossaryPage() {
  </div>
  </section>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+ <div className="page-width -mt-10 relative z-20">
  {/* Today's Term Card */}
  <motion.div
  initial={{ opacity: 0, y: 20 }}

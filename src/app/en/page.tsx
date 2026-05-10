@@ -176,7 +176,7 @@ export default function GlobalLandingPage() {
  </div>
 
  {/* ═══ Featured Stock Guides ═════════════════════════════════ */}
- <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+ <section className="page-width py-16">
  <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
  <div>
  <div

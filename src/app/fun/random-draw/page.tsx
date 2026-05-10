@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function RandomDrawPage() {
  return (
  <div className="min-h-screen pt-24 pb-20 bg-electric pt-28">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  <RandomDrawGame />
  </div>
  </div>

@@ -129,19 +129,7 @@ export default function HomePage() {
  <div className="w-full overflow-x-hidden">
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
- <section
- className="hero-section"
- style={{
- position: "relative",
- display: "flex",
- flexDirection: "column",
- alignItems: "center",
- justifyContent: "center",
- padding: "5rem 1.5rem 3rem",
- backgroundColor: "#EDF1F5",
- overflow: "hidden",
- }}
- >
+ <section className="hero-section relative overflow-hidden bg-canvas px-6 pt-20 pb-12 flex flex-col items-center justify-center">
  {/* BG decoration */}
  <div
  style={{
@@ -162,13 +150,7 @@ export default function HomePage() {
  initial={{ opacity: 0, y: 28 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
- style={{
- textAlign: "center",
- maxWidth: "760px",
- width: "100%",
- position: "relative",
- zIndex: 1,
- }}
+ className="text-center max-w-[760px] w-full relative z-10"
  >
  {/* Badge */}
  <motion.div
@@ -204,61 +186,34 @@ export default function HomePage() {
  </motion.div>
 
  {/* H1 */}
- <h1
- style={{
- fontSize: "clamp(2.2rem, 6vw, 4.5rem)",
- fontWeight: 900,
- letterSpacing: "-0.045em",
- lineHeight: 1.08,
- color: "#0A1829",
- marginBottom: "1.25rem",
- }}
- >
+ <h1 className="font-black text-[clamp(2.2rem,6vw,4.5rem)] tracking-[-0.045em] leading-[1.08] text-navy mb-5">
  내 연봉의 모든 것,
  <br />
- <span style={{ color: "#0145F2" }}>가장 쉽고 정확하게.</span>
+ <span className="text-electric">가장 쉽고 정확하게.</span>
  </h1>
 
  {/* Subheading */}
- <p
- style={{
- maxWidth: "520px",
- margin: "0 auto 2.5rem",
- fontSize: "clamp(1rem, 2vw, 1.2rem)",
- color: "#3D5E78",
- fontWeight: 500,
- lineHeight: 1.65,
- }}
- >
+ <p className="max-w-[520px] mx-auto mb-10 text-[clamp(1rem,2vw,1.2rem)] text-muted-blue font-medium leading-[1.65]">
  복잡한 세금 계산부터 숨어있는 환급금까지.
  <br />
  대한민국 1등 연봉 계산기 머니샐러리.
  </p>
 
  {/* CTA Buttons */}
- <div
- style={{
- display: "flex",
- flexWrap: "wrap",
- justifyContent: "center",
- gap: "12px",
- }}
- >
+ <div className="flex flex-wrap justify-center gap-3">
  <button
  onClick={scrollToCalculator}
- className="btn-primary"
- style={{ fontSize: "16px", padding: "14px 32px" }}
+ className="btn-primary text-base px-8 py-3.5"
  >
- <Zap style={{ width: "18px", height: "18px" }} />
+ <Zap className="w-[18px] h-[18px]" aria-hidden="true" />
  지금 바로 계산하기
  </button>
  <Link
  href="/guides"
- className="btn-secondary"
- style={{ fontSize: "15px", padding: "14px 24px" }}
+ className="btn-secondary text-[15px] px-6 py-3.5"
  >
  금융 가이드 보기
- <ArrowRight style={{ width: "15px", height: "15px" }} />
+ <ArrowRight className="w-[15px] h-[15px]" aria-hidden="true" />
  </Link>
  </div>
 
@@ -267,40 +222,15 @@ export default function HomePage() {
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.4 }}
- style={{
- marginTop: "clamp(2rem, 5vw, 4rem)",
- display: "flex",
- justifyContent: "center",
- columnGap: "clamp(1.25rem, 4vw, 3rem)",
- rowGap: "1rem",
- padding: "1.5rem 0",
- borderTop: "1px solid #DDE4EC",
- borderBottom: "1px solid #DDE4EC",
- flexWrap: "wrap",
- }}
+ className="mt-[clamp(2rem,5vw,4rem)] flex flex-wrap justify-center py-6 border-y border-canvas-200"
+ style={{ columnGap: "clamp(1.25rem, 4vw, 3rem)", rowGap: "1rem" }}
  >
  {stats.map((stat, i) => (
- <div key={i} style={{ textAlign: "center" }}>
- <p
- style={{
- fontSize: "clamp(1.4rem, 3vw, 2rem)",
- fontWeight: 900,
- color: "#0145F2",
- letterSpacing: "-0.04em",
- marginBottom: "2px",
- }}
- >
+ <div key={i} className="text-center">
+ <p className="text-[clamp(1.4rem,3vw,2rem)] font-black text-electric tracking-[-0.04em] mb-0.5">
  {stat.value}
  </p>
- <p
- style={{
- fontSize: "11.5px",
- fontWeight: 700,
- color: "#7A9AB5",
- letterSpacing: "0.04em",
- textTransform: "uppercase",
- }}
- >
+ <p className="text-[11.5px] font-bold text-faint-blue tracking-[0.04em] uppercase">
  {stat.label}
  </p>
  </div>
@@ -376,13 +306,7 @@ export default function HomePage() {
  </p>
  </div>
 
- <div
- style={{
- display: "grid",
- gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
- gap: "12px",
- }}
- >
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
  <ToolCard
  icon={Calculator}
  title="정규직 계산기"
@@ -504,71 +428,22 @@ export default function HomePage() {
  </p>
  </div>
 
- <div
- style={{
- display: "grid",
- gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
- gap: "24px",
- }}
- >
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  <div>
- <h3
- style={{
- fontSize: "15px",
- fontWeight: 700,
- color: "#0A1829",
- marginBottom: "12px",
- display: "flex",
- alignItems: "center",
- gap: "8px",
- }}
- >
- <span
- style={{
- width: "5px",
- height: "20px",
- backgroundColor: "#0145F2",
- borderRadius: "999px",
- display: "inline-block",
- }}
- />
+ <h3 className="text-[15px] font-bold text-navy mb-3 flex items-center gap-2">
+ <span className="inline-block w-[5px] h-5 rounded-full bg-electric" aria-hidden="true" />
  대출 이자 계산기
  </h3>
- <div
- className="duotone-card"
- style={{ padding: "20px" }}
- >
+ <div className="duotone-card p-5">
  <LoanCalculator />
  </div>
  </div>
  <div>
- <h3
- style={{
- fontSize: "15px",
- fontWeight: 700,
- color: "#0A1829",
- marginBottom: "12px",
- display: "flex",
- alignItems: "center",
- gap: "8px",
- }}
- >
- <span
- style={{
- width: "5px",
- height: "20px",
- backgroundColor: "#0145F2",
- borderRadius: "999px",
- display: "inline-block",
- opacity: 0.5,
- }}
- />
+ <h3 className="text-[15px] font-bold text-navy mb-3 flex items-center gap-2">
+ <span className="inline-block w-[5px] h-5 rounded-full bg-electric opacity-50" aria-hidden="true" />
  적금 이자 계산기
  </h3>
- <div
- className="duotone-card"
- style={{ padding: "20px" }}
- >
+ <div className="duotone-card p-5">
  <DepositCalculator />
  </div>
  </div>
@@ -642,14 +517,8 @@ export default function HomePage() {
  </section>
 
  {/* ═══ 마지막 광고 ═════════════════════════════════════════ */}
- <section
- style={{
- backgroundColor: "#FFFFFF",
- borderTop: "1px solid #DDE4EC",
- padding: "3rem 1.5rem",
- }}
- >
- <div style={{ maxWidth: "48rem", margin: "0 auto" }}>
+ <section className="bg-white border-t border-canvas-200 section-pad">
+ <div className="max-w-3xl mx-auto px-6">
  <InArticleAd />
  </div>
  </section>

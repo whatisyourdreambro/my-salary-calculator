@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function BmiPage() {
  return (
  <div className="min-h-screen pt-24 pb-20">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  <div className="text-center mb-12">
  <h1 className="text-4xl font-black text-navy mb-4">BMI 계산기</h1>
  <p className="text-muted-blue">나의 체질량지수(Body Mass Index) 확인하기</p>

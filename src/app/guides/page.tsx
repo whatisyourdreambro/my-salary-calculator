@@ -203,7 +203,7 @@ export default function GuidesPage() {
  </div>
  </section>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  {/* Categories */}
  <div className="flex flex-wrap gap-2 mb-6 sticky top-20 z-20 py-4 bg-canvas/90 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
  {categories.map(category => (

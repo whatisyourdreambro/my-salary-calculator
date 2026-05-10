@@ -86,7 +86,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </motion.div>
  </div>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-6 relative z-20">
+ <div className="page-width pb-24 pt-6 relative z-20">
  <div className="flex flex-col lg:flex-row gap-8 xl:gap-16">
 
  {/* Sidebar Left (TOC) - Desktop Only */}

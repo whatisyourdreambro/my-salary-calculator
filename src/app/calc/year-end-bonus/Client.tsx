@@ -102,7 +102,7 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
         <h2 className="text-xs font-black uppercase tracking-widest mb-4 text-faint-blue">
           직급 선택
         </h2>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
           {scenarios.map((s, i) => {
             const active = i === selectedIdx;
             return (
@@ -188,23 +188,25 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
             전체 직급 성과급 비교 (2026 기준)
           </h3>
         </div>
-        <div className="divide-y divide-canvas-200 dark:divide-canvas-800">
-          {allResults.map((r) => (
-            <div key={r.rank} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center text-sm">
-              <div className="col-span-3 font-black text-navy dark:text-canvas-50">
-                {r.rank}
+        <div className="overflow-x-auto">
+          <div className="min-w-[520px] divide-y divide-canvas-200 dark:divide-canvas-800">
+            {allResults.map((r) => (
+              <div key={r.rank} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center text-sm">
+                <div className="col-span-3 font-black text-navy dark:text-canvas-50">
+                  {r.rank}
+                </div>
+                <div className="col-span-3 text-right text-faint-blue tabular-nums">
+                  연 {toEok(r.salary)}
+                </div>
+                <div className="col-span-3 text-right text-rose-500 tabular-nums">
+                  -{toEok(r.totalDeduction)}
+                </div>
+                <div className="col-span-3 text-right font-black text-electric tabular-nums">
+                  {toEok(r.netBonus)}
+                </div>
               </div>
-              <div className="col-span-3 text-right text-faint-blue tabular-nums">
-                연 {toEok(r.salary)}
-              </div>
-              <div className="col-span-3 text-right text-rose-500 tabular-nums">
-                -{toEok(r.totalDeduction)}
-              </div>
-              <div className="col-span-3 text-right font-black text-electric tabular-nums">
-                {toEok(r.netBonus)}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

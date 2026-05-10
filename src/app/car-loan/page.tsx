@@ -186,7 +186,7 @@ export default function CarLoanPage() {
  </div>
  </section>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+ <div className="page-width -mt-10 relative z-20">
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
  {/* Left Panel: Inputs */}
  <div className="lg:col-span-4 space-y-6">

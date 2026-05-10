@@ -67,7 +67,7 @@ export default function Header() {
  animate={{ y: 0 }}
  transition={{ duration: 0.5, ease: "circOut" }}
  >
- <nav className="max-w-7xl mx-auto px-4 sm:px-6" aria-label={isEnglish ? "Main navigation" : "주 메뉴"}>
+ <nav className="page-width" aria-label={isEnglish ? "Main navigation" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
@@ -152,7 +152,7 @@ export default function Header() {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.18 }}
- className="lg:hidden fixed inset-0 z-40 pt-20 overflow-y-auto"
+ className="lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto"
  style={{
  backgroundColor: "rgba(255,255,255,0.97)",
  backdropFilter: "blur(24px)",

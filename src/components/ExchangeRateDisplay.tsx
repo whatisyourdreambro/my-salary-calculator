@@ -384,7 +384,7 @@ export default function ExchangeRateImpactCalculator() {
       {/* Live Ticker */}
       <CurrencyTicker liveRates={liveRates} isLive={isLive} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-20">
+      <div className="page-width py-12 pb-20">
         {/* Header */}
         <div className="text-center mb-12">
           <div

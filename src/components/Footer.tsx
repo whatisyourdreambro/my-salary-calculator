@@ -115,10 +115,10 @@ export default function Footer() {
 
   return (
     <footer className="w-full mt-24 bg-white dark:bg-canvas-950 text-muted-blue dark:text-canvas-300 border-t-[1.5px] border-canvas-200 dark:border-canvas-800">
-      <div className="max-w-7xl mx-auto px-6 pt-20 pb-14">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+      <div className="page-width pt-20 pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand */}
-          <div className="md:col-span-4">
+          <div className="lg:col-span-4">
             <Link href={brandHomeHref} className="inline-block mb-5" aria-label={brandAriaLabel}>
               <Logo className="h-8 w-auto" showText={true} />
             </Link>
@@ -142,7 +142,7 @@ export default function Footer() {
           </div>
 
           {/* Links - 4 sections */}
-          <div className="md:col-span-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
             {sections.map((section) => (
               <div key={section.title}>
                 <h3 className="text-[11px] font-extrabold text-electric uppercase tracking-[0.1em] mb-5">

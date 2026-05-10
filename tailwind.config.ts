@@ -40,6 +40,9 @@ const config = {
           "sans-serif",
         ],
       },
+      spacing: {
+        header: "var(--header-height)",
+      },
       colors: {
         // ── Semantic tokens → CSS variables ──────────────────────────
         border:     "hsl(var(--border))",

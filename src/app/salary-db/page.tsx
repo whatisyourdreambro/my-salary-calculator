@@ -59,7 +59,7 @@ export default function SalaryDBPage() {
  </div>
  </section>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+ <div className="page-width pt-6">
  {/* 검색바 직하 광고 */}
  <div className="max-w-3xl mx-auto mb-8">
  <HomeTopAd />

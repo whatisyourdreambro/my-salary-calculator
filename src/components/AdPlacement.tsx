@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
+type AdSlotKind = "home-top" | "result" | "sidebar" | "fluid";
+
 type AdSlotProps = {
   slot: string | undefined;
   format?: string;
@@ -11,6 +13,7 @@ type AdSlotProps = {
   layout?: string;
   style?: React.CSSProperties;
   containerClassName?: string;
+  slotKind?: AdSlotKind;
   minHeight?: number;
   fullWidthResponsive?: boolean;
 };
@@ -22,6 +25,7 @@ function AdSlot({
   layout,
   style,
   containerClassName,
+  slotKind,
   minHeight = 90,
   fullWidthResponsive = true,
 }: AdSlotProps) {
@@ -65,17 +69,20 @@ function AdSlot({
 
   if (!slot) return null;
 
+  const baseClass = containerClassName ?? "ad-container";
+  const composedClass = slotKind ? `${baseClass} ad-slot-${slotKind}` : baseClass;
+
   return (
     <div
       ref={containerRef}
-      className={containerClassName ?? "ad-container"}
+      className={composedClass}
       style={{
         width: "100%",
         margin: "1.5rem 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: `${minHeight}px`,
+        ...(slotKind ? null : { minHeight: `${minHeight}px` }),
         ...style,
       }}
     >
@@ -115,6 +122,7 @@ export function HomeTopAd() {
     <AdSlot
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP}
       format="auto"
+      slotKind="home-top"
       minHeight={120}
     />
   );
@@ -125,6 +133,7 @@ export function CalcResultAd() {
     <AdSlot
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CALC_RESULT}
       format="auto"
+      slotKind="result"
       minHeight={250}
     />
   );
@@ -135,6 +144,7 @@ export function GuideMidAd() {
     <AdSlot
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID}
       format="auto"
+      slotKind="result"
       minHeight={250}
     />
   );
@@ -145,6 +155,7 @@ export function SidebarAd() {
     <AdSlot
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR}
       format="auto"
+      slotKind="sidebar"
       style={{ maxWidth: "300px" }}
       minHeight={600}
     />
@@ -158,6 +169,7 @@ export function InArticleAd() {
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID}
       format="fluid"
       layoutKey="-fb+5w+4e-db+86"
+      slotKind="fluid"
       minHeight={200}
       containerClassName="ad-container ad-in-article"
     />

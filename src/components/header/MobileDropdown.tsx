@@ -1,7 +1,6 @@
 // src/components/header/MobileDropdown.tsx
 //
 // 모바일 헤더의 드롭다운 컴포넌트.
-// 인라인 style은 isOpen·pathname 분기와 결합되어 유지.
 
 "use client";
 
@@ -24,29 +23,18 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
  <div className="border-b border-canvas-100">
  <button
  onClick={() => setIsOpen(!isOpen)}
- style={{
- width: "100%",
- display: "flex",
- justifyContent: "space-between",
- alignItems: "center",
- padding: "16px 20px",
- fontSize: "16px",
- fontWeight: 600,
- background: "none",
- border: "none",
- cursor: "pointer",
- color: isOpen ? "#0145F2" : "#0A1829",
- transition: "color 0.15s ease",
- }}
+ aria-expanded={isOpen}
+ className={`w-full flex justify-between items-center px-5 py-4 text-base font-semibold bg-transparent border-0 cursor-pointer transition-colors ${
+ isOpen ? "text-electric" : "text-navy"
+ }`}
  >
  <span>{item.name}</span>
  <ChevronDown
  size={18}
- style={{
- transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
- transition: "transform 0.25s ease",
- color: isOpen ? "#0145F2" : "#7A9AB5",
- }}
+ aria-hidden="true"
+ className={`transition-transform duration-300 ${
+ isOpen ? "rotate-180 text-electric" : "rotate-0 text-faint-blue"
+ }`}
  />
  </button>
  <AnimatePresence>
@@ -58,28 +46,24 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
  className="overflow-hidden"
  >
  <div className="px-3 pb-3 pt-1">
- {item.items.map((subItem) => (
+ {item.items.map((subItem) => {
+ const active = pathname === subItem.href;
+ return (
  <Link
  key={subItem.href}
  href={subItem.href}
  onClick={onClose}
- style={{
- display: "block",
- padding: "11px 16px",
- fontSize: "15px",
- borderRadius: "12px",
- fontWeight: pathname === subItem.href ? 700 : 500,
- color: pathname === subItem.href ? "#0145F2" : "#3D5E78",
- backgroundColor:
- pathname === subItem.href ? "#0145F20D" : "transparent",
- textDecoration: "none",
- marginBottom: "2px",
- transition: "background-color 0.12s ease, color 0.12s ease",
- }}
+ aria-current={active ? "page" : undefined}
+ className={`block px-4 py-[11px] text-[15px] rounded-xl no-underline mb-0.5 transition-colors ${
+ active
+ ? "font-bold text-electric bg-electric-5"
+ : "font-medium text-muted-blue hover:bg-electric-5"
+ }`}
  >
  {subItem.name}
  </Link>
- ))}
+ );
+ })}
  </div>
  </motion.div>
  )}

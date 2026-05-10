@@ -60,7 +60,7 @@ function MonthlyTable() {
  }
  />
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+ <div className="page-width -mt-20 relative z-10">
  <SalaryTable
  headers={tableHeaders}
  data={allData}

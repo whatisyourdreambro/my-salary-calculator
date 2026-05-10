@@ -81,7 +81,7 @@ export default function DashboardPage() {
 
  return (
  <main className="w-full min-h-screen bg-canvas pt-28 pb-20">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="page-width">
  {dashboardData ? (
  <div className="space-y-12">
  <MyDashboard data={dashboardData} onReset={handleResetDashboard} />

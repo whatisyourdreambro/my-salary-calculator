@@ -170,7 +170,7 @@ export default function CareerPlannerPage() {
  };
 
  return (
- <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+ <main className="w-full page-width py-12 sm:py-16">
  <div className="text-center mb-12">
  <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">커리어 패스 시뮬레이터</h1>
  <p className="mt-6 text-lg leading-8 text-muted-foreground">당신의 커리어 여정을 직접 설계하고, 재무 목표 달성 가능성을 확인해보세요.</p>
