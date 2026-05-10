@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,11 @@ const heroSizeClasses = {
   lg: "[--hero-title:clamp(2.25rem,5vw,3.5rem)] mb-10 sm:mb-16",
 } as const;
 
+/**
+ * PageHero — 토스 스타일 stagger 등장 애니메이션 자동 적용.
+ * Badge → Title → Description → Children 순서로 부드럽게 노출.
+ * `prefers-reduced-motion: reduce` 사용자에게는 즉시 노출.
+ */
 export function PageHero({
   badge,
   title,
@@ -104,8 +110,39 @@ export function PageHero({
   className,
   children,
 }: PageHeroProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  // 컨테이너 — 자식 stagger 0.08s씩
+  const containerVariants: Variants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: prefersReducedMotion ? 0 : 0.08,
+        delayChildren: prefersReducedMotion ? 0 : 0.05,
+      },
+    },
+  };
+
+  // 자식 — 부드럽게 위로 슬라이드 + 페이드
+  const itemVariants: Variants = prefersReducedMotion
+    ? {
+        hidden: { opacity: 1 },
+        show: { opacity: 1 },
+      }
+    : {
+        hidden: { opacity: 0, y: 14 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+        },
+      };
+
   return (
-    <header
+    <motion.header
+      initial="hidden"
+      animate="show"
+      variants={containerVariants}
       className={cn(
         heroSizeClasses[size],
         align === "center" && "text-center",
@@ -113,19 +150,31 @@ export function PageHero({
         className
       )}
     >
-      {badge && <div className="mb-4 inline-flex">{badge}</div>}
-      <h1
+      {badge && (
+        <motion.div variants={itemVariants} className="mb-4 inline-flex">
+          {badge}
+        </motion.div>
+      )}
+      <motion.h1
+        variants={itemVariants}
         className="font-black tracking-[-0.04em] leading-[1.1] text-navy dark:text-canvas-50 mb-4"
         style={{ fontSize: "var(--hero-title)" }}
       >
         {title}
-      </h1>
+      </motion.h1>
       {description && (
-        <p className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 leading-relaxed font-medium">
+        <motion.p
+          variants={itemVariants}
+          className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 leading-relaxed font-medium"
+        >
           {description}
-        </p>
+        </motion.p>
       )}
-      {children && <div className="mt-6">{children}</div>}
-    </header>
+      {children && (
+        <motion.div variants={itemVariants} className="mt-6">
+          {children}
+        </motion.div>
+      )}
+    </motion.header>
   );
 }

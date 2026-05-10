@@ -227,6 +227,40 @@ const config = {
           "66%":  { transform: "translate(-20px, 20px) scale(0.9)" },
           "100%": { transform: "translate(0px, 0px) scale(1)" },
         },
+
+        // ── Toss-style 마이크로 인터랙션 ────────────────────────
+        "scale-in": {
+          "0%":   { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "slide-down": {
+          "0%":   { opacity: "0", transform: "translateY(-8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-up-fade": {
+          "0%":   { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-in-right": {
+          "0%":   { opacity: "0", transform: "translateX(-8px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "wiggle": {
+          "0%, 100%": { transform: "rotate(-1deg)" },
+          "50%":       { transform: "rotate(1deg)" },
+        },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%":       { transform: "translateY(-3px)" },
+        },
+        "gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%":       { backgroundPosition: "100% 50%" },
+        },
+        "underline-grow": {
+          "0%":   { transform: "scaleX(0)", transformOrigin: "left" },
+          "100%": { transform: "scaleX(1)", transformOrigin: "left" },
+        },
       },
 
       animation: {
@@ -239,6 +273,16 @@ const config = {
         "pulse-glow":     "pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "spin-slow":      "spin-slow 20s linear infinite",
         "blob":           "blob 10s infinite",
+
+        // Toss 마이크로 인터랙션
+        "scale-in":        "scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-down":      "slide-down 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-up-fade":   "slide-up-fade 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "slide-in-right":  "slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "wiggle":          "wiggle 0.5s ease-in-out",
+        "bounce-subtle":   "bounce-subtle 1.5s ease-in-out infinite",
+        "gradient-shift":  "gradient-shift 6s ease-in-out infinite",
+        "underline-grow":  "underline-grow 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
       },
 
       backgroundImage: {

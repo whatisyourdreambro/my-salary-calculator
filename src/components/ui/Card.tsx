@@ -11,20 +11,22 @@ import { cn } from "@/lib/utils";
  * - outline: 그림자 없이 라인만 (조밀 그리드용)
  * - elevated: 강조 카드, 큰 그림자
  * - filled: canvas 배경, 라인 없음 (보조 영역)
+ *
+ * interactive=true: hover 시 부드럽게 위로 + 그림자 강화 + 클릭 피드백.
  */
 export const cardVariants = cva(
-  "bg-white rounded-2xl transition-all duration-200 ease-out",
+  "bg-white dark:bg-canvas-900 rounded-2xl transition-all duration-200 ease-out",
   {
     variants: {
       variant: {
         default:
-          "border border-canvas-200 shadow-card hover:border-primary-20 hover:shadow-card-hover",
+          "border border-canvas-200 dark:border-canvas-800 shadow-card hover:border-primary-20 hover:shadow-card-hover",
         outline:
-          "border border-canvas-300",
+          "border border-canvas-300 dark:border-canvas-700",
         elevated:
-          "border border-canvas-200 shadow-canvas-md hover:shadow-canvas-lg hover:-translate-y-0.5",
+          "border border-canvas-200 dark:border-canvas-800 shadow-canvas-md hover:shadow-canvas-lg hover:-translate-y-0.5",
         filled:
-          "bg-canvas border border-transparent",
+          "bg-canvas dark:bg-canvas-800 border border-transparent",
       },
       padding: {
         none: "",
@@ -33,7 +35,7 @@ export const cardVariants = cva(
         lg: "p-8",
       },
       interactive: {
-        true: "cursor-pointer hover:-translate-y-0.5",
+        true: "cursor-pointer hover:-translate-y-0.5 hover:shadow-card-hover active:scale-[0.99] active:transition-transform active:duration-100 no-tap-highlight",
         false: "",
       },
     },

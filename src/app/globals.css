@@ -458,6 +458,7 @@
  text-align: center;
  padding-top: clamp(1rem, 4vw, 2.5rem);
  padding-bottom: clamp(2rem, 6vw, 4rem);
+ animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
  }
  .page-hero h1 {
  font-size: clamp(1.875rem, 5vw, 3rem);
@@ -466,6 +467,7 @@
  line-height: 1.1;
  color: #0A1829;
  margin-bottom: 1rem;
+ animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
  }
  .dark .page-hero h1 { color: #EDF1F5; }
  .page-hero > p {
@@ -475,6 +477,7 @@
  line-height: 1.65;
  max-width: 42rem;
  margin: 0 auto;
+ animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
  }
  .dark .page-hero > p { color: #A8BCCD; }
 }
@@ -600,6 +603,82 @@
  transform: translateY(-2px);
  box-shadow: 0 8px 24px -4px #0145F222, 0 1px 4px 0 #0A182910;
  border-color: #0145F233;
+}
+
+/* ── Toss-style 마이크로 인터랙션 유틸 ─────────────────────────── */
+/* 카드/버튼 클릭 피드백 — Tailwind active:scale-95 보다 부드러운 자연스러운 느낌 */
+.tap-feedback {
+ transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tap-feedback:active {
+ transform: scale(0.97);
+}
+
+/* 텍스트 그라디언트 (타이틀 강조) */
+.gradient-text-electric {
+ background: linear-gradient(135deg, #0145F2 0%, #4D80F5 50%, #0145F2 100%);
+ background-size: 200% 100%;
+ background-clip: text;
+ -webkit-background-clip: text;
+ color: transparent;
+ -webkit-text-fill-color: transparent;
+ animation: gradient-shift 6s ease-in-out infinite;
+}
+
+/* Hover underline animation — 토스 nav 링크 스타일 */
+.underline-grow {
+ position: relative;
+}
+.underline-grow::after {
+ content: "";
+ position: absolute;
+ bottom: -2px;
+ left: 0;
+ right: 0;
+ height: 2px;
+ background-color: currentColor;
+ transform: scaleX(0);
+ transform-origin: left;
+ transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.underline-grow:hover::after,
+.underline-grow[aria-current="page"]::after {
+ transform: scaleX(1);
+}
+
+/* Glow on focus/hover (CTA 버튼 등) */
+.glow-primary {
+ transition: box-shadow 0.3s ease, transform 0.15s ease;
+}
+.glow-primary:hover {
+ box-shadow: 0 0 0 4px #0145F222, 0 8px 24px -4px #0145F244;
+}
+
+/* 부드러운 페이드인 (스크롤 reveal 대신 단순 마운트 시) */
+.animate-on-mount {
+ animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-stagger > * { animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.30s; }
+.animate-stagger > *:nth-child(n+7) { animation-delay: 0.35s; }
+
+/* ─── Reduced motion 존중 (접근성 필수) ─────────────────────────
+   prefers-reduced-motion: reduce 사용자에게는 모든 애니메이션을 즉시 완료. */
+@media (prefers-reduced-motion: reduce) {
+ *,
+ *::before,
+ *::after {
+ animation-duration: 0.01ms !important;
+ animation-iteration-count: 1 !important;
+ transition-duration: 0.01ms !important;
+ scroll-behavior: auto !important;
+ }
+ .gradient-text-electric { animation: none; color: #0145F2; -webkit-text-fill-color: #0145F2; }
 }
 
 /* ── Prose / 가이드 콘텐츠 토스 톤 강화 ──────────────────────────
