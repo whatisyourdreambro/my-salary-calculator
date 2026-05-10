@@ -61,7 +61,7 @@ export default function DepositCalculator() {
 
  return (
  <div className="w-full max-w-4xl mx-auto space-y-8">
- <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+ <div className="grid grid-cols-1 gap-6">
  {/* Inputs */}
  <motion.div
  initial={{ opacity: 0, x: -20 }}
@@ -81,24 +81,26 @@ export default function DepositCalculator() {
  role="radio"
  aria-checked={type === "deposit"}
  onClick={() => setType("deposit")}
- className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "deposit"
+ className={`flex-1 py-2 px-2 text-sm font-bold rounded-md transition-all whitespace-nowrap ${type === "deposit"
  ? "bg-white text-electric shadow-sm border border-electric/20"
  : "text-faint-blue hover:text-electric"
  }`}
  >
- 예금 (목돈 굴리기)
+ <span className="hidden sm:inline">예금 (목돈 굴리기)</span>
+ <span className="sm:hidden">예금</span>
  </button>
  <button
  type="button"
  role="radio"
  aria-checked={type === "savings"}
  onClick={() => setType("savings")}
- className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${type === "savings"
+ className={`flex-1 py-2 px-2 text-sm font-bold rounded-md transition-all whitespace-nowrap ${type === "savings"
  ? "bg-white text-electric shadow-sm border border-electric/20"
  : "text-faint-blue hover:text-electric"
  }`}
  >
- 적금 (목돈 만들기)
+ <span className="hidden sm:inline">적금 (목돈 만들기)</span>
+ <span className="sm:hidden">적금</span>
  </button>
  </div>
 
@@ -193,15 +195,12 @@ export default function DepositCalculator() {
  animate={{ opacity: 1, x: 0 }}
  className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl flex flex-col justify-center"
  >
- <div className="text-center mb-8 min-w-0">
+ <div className="text-center mb-8">
  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-electric-10 text-electric mb-4">
  <TrendingUp className="w-8 h-8" />
  </div>
  <h3 className="text-muted-blue font-medium">만기 수령액 (세후)</h3>
- <div
- className="text-2xl sm:text-3xl xl:text-4xl font-black text-navy mt-2 tracking-tight tabular-nums whitespace-nowrap overflow-hidden text-ellipsis px-2"
- title={results ? formatMoney(results.total) : "-"}
- >
+ <div className="text-3xl sm:text-4xl font-black text-navy mt-2 tracking-tight tabular-nums whitespace-nowrap">
  {results ? formatMoney(results.total) : "-"}
  </div>
  </div>
