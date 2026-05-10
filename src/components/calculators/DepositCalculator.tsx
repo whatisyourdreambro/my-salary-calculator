@@ -75,7 +75,7 @@ export default function DepositCalculator() {
 
  <div className="space-y-6">
  {/* Type Selector */}
- <div className="flex bg-canvas rounded-lg p-1 border border-canvas" role="radiogroup" aria-label="저축 방식">
+ <div className="flex gap-1 bg-canvas rounded-lg p-1 border border-canvas" role="radiogroup" aria-label="저축 방식">
  <button
  type="button"
  role="radio"
@@ -193,12 +193,15 @@ export default function DepositCalculator() {
  animate={{ opacity: 1, x: 0 }}
  className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl flex flex-col justify-center"
  >
- <div className="text-center mb-8">
+ <div className="text-center mb-8 min-w-0">
  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-electric-10 text-electric mb-4">
  <TrendingUp className="w-8 h-8" />
  </div>
  <h3 className="text-muted-blue font-medium">만기 수령액 (세후)</h3>
- <div className="text-3xl sm:text-4xl md:text-5xl font-black text-navy mt-2 tracking-tight tabular-nums break-all">
+ <div
+ className="text-2xl sm:text-3xl xl:text-4xl font-black text-navy mt-2 tracking-tight tabular-nums whitespace-nowrap overflow-hidden text-ellipsis px-2"
+ title={results ? formatMoney(results.total) : "-"}
+ >
  {results ? formatMoney(results.total) : "-"}
  </div>
  </div>

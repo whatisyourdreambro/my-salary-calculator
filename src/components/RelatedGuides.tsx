@@ -13,7 +13,15 @@ interface RelatedGuidesProps {
   tags?: string[];
   limit?: number;
   title?: string;
+  /**
+   * 명시적 가이드 슬러그 우선 — cross-link 매핑(crossLink.ts)에서 전달.
+   * 명시 슬러그를 우선 채우고, 부족분은 score 기반 자동 추천으로 보충.
+   */
+  explicitSlugs?: string[];
 }
+
+const NOW_MS = Date.now();
+const FRESHNESS_MS = 1000 * 60 * 60 * 24 * 90; // 90일
 
 function score(target: Guide, currentCategory?: string, currentTags?: string[]): number {
   let s = 0;
@@ -23,6 +31,14 @@ function score(target: Guide, currentCategory?: string, currentTags?: string[]):
     s += overlap * 3;
   }
   s += Math.min(target.views / 1000, 5); // 인기도 약간 가산
+  // publishedDate 신선도 가산 — 90일 이내일수록 가중 (최대 +3)
+  const published = new Date(target.publishedDate).getTime();
+  if (!Number.isNaN(published)) {
+    const ageMs = NOW_MS - published;
+    if (ageMs >= 0 && ageMs <= FRESHNESS_MS) {
+      s += 3 * (1 - ageMs / FRESHNESS_MS);
+    }
+  }
   return s;
 }
 
@@ -32,13 +48,20 @@ export default function RelatedGuides({
   tags,
   limit = 6,
   title = "이런 가이드도 함께 읽어보세요",
+  explicitSlugs,
 }: RelatedGuidesProps) {
-  const candidates = guides
-    .filter((g) => g.slug !== currentSlug)
+  const explicit = (explicitSlugs ?? [])
+    .map((slug) => guides.find((g) => g.slug === slug && g.slug !== currentSlug))
+    .filter((g): g is Guide => Boolean(g));
+
+  const explicitSlugSet = new Set(explicit.map((g) => g.slug));
+  const fallback = guides
+    .filter((g) => g.slug !== currentSlug && !explicitSlugSet.has(g.slug))
     .map((g) => ({ guide: g, score: score(g, category, tags) }))
     .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
     .map((x) => x.guide);
+
+  const candidates = [...explicit, ...fallback].slice(0, limit);
 
   if (candidates.length === 0) return null;
 

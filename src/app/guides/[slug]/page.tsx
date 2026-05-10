@@ -6,7 +6,7 @@ import RelatedGuides from "@/components/RelatedGuides";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
-import { speakableLd } from "@/lib/structuredData";
+import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -77,29 +77,24 @@ export default function GuidePage({ params }: Props) {
  relatedGuides.push(...others);
  }
 
- const articleLd = {
- '@context': 'https://schema.org',
- '@type': 'Article',
- headline: guide.title,
+ const articleSchema = articleLd({
+ title: guide.title,
  description: guide.description,
- inLanguage: 'ko-KR',
- author: {
- '@type': 'Organization',
- name: 'Moneysalary',
- },
- datePublished: guide.publishedDate,
- dateModified: guide.publishedDate,
- mainEntityOfPage: {
- '@type': 'WebPage',
- '@id': `https://www.moneysalary.com/guides/${guide.slug}`,
- },
- };
+ slug: guide.slug,
+ publishedDate: guide.publishedDate,
+ modifiedDate: guide.publishedDate,
+ });
+
+ const breadcrumbSchema = autoBreadcrumbLd(`/guides/${guide.slug}`, {
+ leafName: guide.title,
+ });
 
  return (
  <>
  <JsonLd
  data={[
- articleLd,
+ articleSchema,
+ breadcrumbSchema,
  speakableLd({
  url: `/guides/${guide.slug}`,
  cssSelectors: [".guide-tldr", ".faq-answer"],

@@ -227,8 +227,16 @@ export function articleLd(article: {
  modifiedDate?: string;
  image?: string;
  author?: string;
+ /** ISO 639 언어코드, 기본 ko-KR. 영문 가이드는 "en"으로 전달. */
+ inLanguage?: string;
+ /** 영문 가이드일 경우 /en/guides/{slug} 경로로 빌드 */
+ lang?: "ko" | "en";
 }) {
- const url = `${SITE_URL}/guides/${article.slug}`;
+ const lang = article.lang ?? "ko";
+ const url =
+ lang === "en"
+ ? `${SITE_URL}/en/guides/${article.slug}`
+ : `${SITE_URL}/guides/${article.slug}`;
  const imageUrl = article.image
  ? article.image.startsWith("http")
  ? article.image
@@ -241,6 +249,7 @@ export function articleLd(article: {
  headline: article.title,
  description: article.description,
  image: imageUrl,
+ inLanguage: article.inLanguage ?? (lang === "en" ? "en" : "ko-KR"),
  datePublished: new Date(article.publishedDate).toISOString(),
  dateModified: new Date(
  article.modifiedDate || article.publishedDate

@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+ buildCoupangSubId,
+ inferCoupangCategory,
+ type CoupangCategory,
+} from "@/lib/coupangContextMap";
+import { trackCoupangClick } from "@/lib/analytics";
 
 /**
  * 쿠팡 파트너스 배너 — 9가지 사이즈 자동 분배 시스템
@@ -88,6 +94,11 @@ interface CoupangBannerProps {
  showDisclosure?: boolean;
  /** 외부 컨테이너 인라인 스타일 오버라이드 */
  style?: React.CSSProperties;
+ /**
+  * 쿠팡 subId 카테고리 접두사. 미지정 시 pathname 으로 자동 추론.
+  * 쿠팡 대시보드에서 카테고리별 클릭/전환 분리 분석 가능.
+  */
+ category?: CoupangCategory;
 }
 
 const DISCLOSURE_TEXT =
@@ -99,6 +110,7 @@ export default function CoupangBanner({
  className = "",
  showDisclosure = true,
  style,
+ category,
 }: CoupangBannerProps) {
  const pathname = usePathname();
  const [resolvedSize, setResolvedSize] = useState<CoupangBannerSize>(
@@ -124,8 +136,9 @@ export default function CoupangBanner({
  if (pathname?.startsWith("/en")) return null;
 
  const banner = BANNERS[resolvedSize];
- // subId: 어느 페이지에서 클릭됐는지 쿠팡 대시보드에서 구분 가능
- const subId = pathname ? pathname.replace(/[^a-zA-Z0-9-/]/g, "").slice(0, 60) : "";
+ // subId: 카테고리 접두사 + path → 쿠팡 대시보드에서 카테고리/페이지 단위 분리 측정.
+ const resolvedCategory = category ?? inferCoupangCategory(pathname);
+ const subId = buildCoupangSubId(resolvedCategory, pathname);
  const imgSrc = `https://ads-partners.coupang.com/banners/${banner.id}?subId=${encodeURIComponent(subId)}&traceId=${banner.trace}&w=${banner.w}&h=${banner.h}`;
  const linkHref = `https://link.coupang.com/a/${banner.link}`;
 
@@ -146,6 +159,7 @@ export default function CoupangBanner({
  target="_blank"
  rel="noopener noreferrer"
  referrerPolicy="unsafe-url"
+ onClick={() => trackCoupangClick(resolvedSize, resolvedCategory, pathname ?? undefined)}
  style={{
  display: "block",
  lineHeight: 0,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { trackAdImpression } from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
@@ -65,7 +66,9 @@ function AdSlot({
     } catch {
       // AdSense push errors are non-fatal
     }
-  }, [visible, slot]);
+    // 슬롯별 노출(impression) 카운트 → GA4 에서 슬롯별 실제 노출/RPM 분석
+    trackAdImpression(slotKind ?? "unknown");
+  }, [visible, slot, slotKind]);
 
   if (!slot) return null;
 
@@ -163,10 +166,15 @@ export function SidebarAd() {
 }
 
 // Phase A-6: 인아티클(콘텐츠 사이) fluid 광고 — 가독성↑ CTR↑
+// 별도 슬롯 ID 환경변수가 있으면 우선 사용 (한 페이지 내 동일 슬롯 ID 중복 방지),
+// 미설정 시 GUIDE_MID 슬롯 fallback.
 export function InArticleAd() {
   return (
     <AdSlot
-      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID}
+      slot={
+        process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE ||
+        process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID
+      }
       format="fluid"
       layoutKey="-fb+5w+4e-db+86"
       slotKind="fluid"

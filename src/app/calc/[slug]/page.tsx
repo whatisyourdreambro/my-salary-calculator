@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import RelatedGuides from "@/components/RelatedGuides";
 import JsonLd from "@/components/JsonLd";
 import { HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import NextActions, { type NextActionCategory } from "@/components/NextActions";
@@ -18,6 +19,7 @@ import {
  speakableLd,
 } from "@/lib/structuredData";
 import { getCalculatorBySlug, getAllSlugs, type CalculatorDef } from "@/lib/simpleCalculators";
+import { getCalcRelatedGuideSlugs } from "@/lib/crossLink";
 
 export const dynamic = "force-static";
 
@@ -142,6 +144,13 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  />
 
  <RelatedCalculators currentPath={`/calc/${calc.slug}`} />
+
+ <RelatedGuides
+ currentSlug={`__calc-${calc.slug}`}
+ explicitSlugs={getCalcRelatedGuideSlugs(calc.slug)}
+ limit={3}
+ title="이 계산기와 함께 보면 좋은 가이드"
+ />
 
  <div className="mt-8">
  <HomeTopAd />

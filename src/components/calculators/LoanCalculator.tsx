@@ -235,23 +235,23 @@ export default function LoanCalculator() {
  </h2>
 
  <div className="space-y-6">
- <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0 overflow-hidden">
  <div className="text-sm text-muted-blue mb-1">총 상환 금액</div>
- <div className="text-3xl font-black text-navy tracking-tight">
+ <div className="text-2xl xl:text-3xl font-black text-navy tracking-tight tabular-nums whitespace-nowrap overflow-hidden text-ellipsis" title={results ? formatMoney(results.totalPayment) : "-"}>
  {results ? formatMoney(results.totalPayment) : "-"}
  </div>
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0 overflow-hidden">
  <div className="text-sm text-muted-blue mb-1">총 이자</div>
- <div className="text-lg sm:text-xl font-bold text-electric tracking-tight tabular-nums break-all">
+ <div className="text-base xl:text-lg font-bold text-electric tracking-tight tabular-nums whitespace-nowrap overflow-hidden text-ellipsis" title={results ? formatMoney(results.totalInterest) : "-"}>
  {results ? formatMoney(results.totalInterest) : "-"}
  </div>
  </div>
- <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0">
+ <div className="p-3 sm:p-4 bg-canvas/50 rounded-xl border border-canvas min-w-0 overflow-hidden">
  <div className="text-sm text-muted-blue mb-1">월 평균 납입금</div>
- <div className="text-lg sm:text-xl font-bold text-navy tracking-tight tabular-nums break-all">
+ <div className="text-base xl:text-lg font-bold text-navy tracking-tight tabular-nums whitespace-nowrap overflow-hidden text-ellipsis" title={results ? formatMoney(results.monthlyPayment) : "-"}>
  {results ? formatMoney(results.monthlyPayment) : "-"}
  </div>
  </div>

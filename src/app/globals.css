@@ -591,3 +591,16 @@ tr:hover td { background-color: #0145F208; }
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* ── Reduced motion: 접근성 + CLS 방어 ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .skeleton-shimmer { animation: none !important; }
+}

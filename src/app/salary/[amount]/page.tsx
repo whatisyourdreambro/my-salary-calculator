@@ -7,8 +7,10 @@ import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import RelatedGuides from "@/components/RelatedGuides";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
 import FavoritesButton from "@/components/FavoritesButton";
@@ -257,8 +259,9 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
  </section>
 
+ {/* FAQ 후 — 콘텐츠 흐름과 어울리는 fluid 인아티클 광고 (CTR↑) */}
  <div className="px-2">
- <HomeTopAd />
+ <InArticleAd />
  </div>
 
  {/* FAQ 후 쿠팡 한 번 더 */}
@@ -266,6 +269,7 @@ export default function SalaryAmountPage({ params }: Props) {
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  showDisclosure={false}
+ category="salary"
  />
  </div>
 
@@ -292,6 +296,16 @@ export default function SalaryAmountPage({ params }: Props) {
 
  <div className="px-2 sm:px-6">
  <RelatedCalculators currentPath="/" title="이 연봉으로 다음 단계는?" />
+ </div>
+
+ {/* 핵심 가이드 cross-link — 본인 연봉을 바탕으로 다음 의사결정 도움 */}
+ <div className="px-2 sm:px-6">
+ <RelatedGuides
+ currentSlug={`__salary-${params.amount}`}
+ explicitSlugs={SALARY_PAGE_GUIDES}
+ limit={4}
+ title="연봉을 알았다면 다음은 이걸 읽어보세요"
+ />
  </div>
  </div>
  </div>

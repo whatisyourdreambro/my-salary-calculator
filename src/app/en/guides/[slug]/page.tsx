@@ -1,6 +1,7 @@
 import { enGuides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
 import EnglishGuideClient from "./EnglishGuideClient";
+import { articleLd } from "@/lib/structuredData";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -69,22 +70,14 @@ export default function EnglishGuidePage({ params }: Props) {
  relatedGuides.push(...others);
  }
 
- const jsonLd = {
- '@context': 'https://schema.org',
- '@type': 'Article',
- headline: guide.title,
+ const jsonLd = articleLd({
+ title: guide.title,
  description: guide.description,
- inLanguage: 'en',
- author: {
- '@type': 'Organization',
- name: 'Moneysalary',
- },
- datePublished: guide.publishedDate,
- mainEntityOfPage: {
- '@type': 'WebPage',
- '@id': `https://www.moneysalary.com/en/guides/${guide.slug}`,
- },
- };
+ slug: guide.slug,
+ publishedDate: guide.publishedDate,
+ modifiedDate: guide.publishedDate,
+ lang: "en",
+ });
 
  return (
  <>
