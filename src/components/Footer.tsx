@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Twitter, Instagram, Github } from "lucide-react";
+import { ShieldCheck, FileCheck2, Sparkles, Lock } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -70,12 +70,20 @@ export default function Footer() {
         { name: "이용약관", href: "/terms" },
       ];
 
-  const socialLinks = [
-    { Icon: Facebook, href: "#", label: "Facebook" },
-    { Icon: Twitter, href: "#", label: "Twitter" },
-    { Icon: Instagram, href: "#", label: "Instagram" },
-    { Icon: Github, href: "#", label: "Github" },
-  ];
+  // 1인 운영 사이트 — 가짜 SNS 링크 대신 객관적 신뢰 시그널을 노출.
+  const trustBadges = isEnglish
+    ? [
+        { Icon: FileCheck2, label: "2026 Tax Code" },
+        { Icon: Sparkles, label: "100+ Calculators" },
+        { Icon: ShieldCheck, label: "100% Free" },
+        { Icon: Lock, label: "No Sign-up" },
+      ]
+    : [
+        { Icon: FileCheck2, label: "2026년 최신 세법" },
+        { Icon: Sparkles, label: "100+ 계산기" },
+        { Icon: ShieldCheck, label: "완전 무료" },
+        { Icon: Lock, label: "회원가입 불필요" },
+      ];
 
   const sections: { title: string; items: typeof calculatorLinks }[] = isEnglish
     ? [
@@ -126,19 +134,18 @@ export default function Footer() {
               {brandTagline}
             </p>
 
-            {/* Social Icons */}
-            <div className="flex gap-2 mt-5">
-              {socialLinks.map(({ Icon, href, label }) => (
-                <a
+            {/* Trust Badges — 객관적 신뢰 시그널 (가짜 SNS 대신) */}
+            <ul className="flex flex-wrap gap-2 mt-5 list-none p-0">
+              {trustBadges.map(({ Icon, label }) => (
+                <li
                   key={label}
-                  href={href}
-                  aria-label={label}
-                  className="footer-social-icon w-[38px] h-[38px] flex items-center justify-center rounded-full border-[1.5px] border-canvas-200 dark:border-canvas-700 text-faint-blue bg-canvas dark:bg-canvas-900 no-underline transition-all hover:text-electric"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold text-electric bg-electric-5 border border-electric-10 rounded-full"
                 >
-                  <Icon size={17} />
-                </a>
+                  <Icon size={13} aria-hidden="true" />
+                  {label}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* Links - 4 sections */}

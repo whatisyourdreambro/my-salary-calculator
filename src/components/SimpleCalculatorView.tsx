@@ -6,12 +6,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
+import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma, Share2 } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 import { CalcResultAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
 import { faqLd } from "@/lib/structuredData";
+import ShareButtons from "./ShareButtons";
+import { haptic } from "@/lib/haptic";
+
+// 차트는 결과 카드 진입 시점에만 로드 (recharts ~95KB 지연 로드)
+const ResultBreakdown = dynamic(() => import("./calc/ResultBreakdown"), {
+ ssr: false,
+ loading: () => null,
+});
 
 interface Props {
  slug: string;
@@ -55,8 +64,20 @@ export default function SimpleCalculatorView({ slug }: Props) {
  const num = Number(value.replace(/,/g, ""));
  if (!isNaN(num)) {
  setInputs((prev) => ({ ...prev, [name]: num }));
+ haptic("light");
  }
  };
+
+ // secondary 항목들이 모두 같은 단위(suffix)일 때만 차트 의미 있음.
+ const breakdownItems = useMemo(() => {
+ const sec = result?.secondary;
+ if (!sec || sec.length < 2) return null;
+ const firstSuffix = sec[0].suffix;
+ if (!sec.every((s) => s.suffix === firstSuffix)) return null;
+ // 음수 값이 섞여 있으면 차트 의미 모호 → 제외
+ if (sec.some((s) => s.value < 0)) return null;
+ return sec.map((s) => ({ label: s.label, value: s.value, suffix: s.suffix }));
+ }, [result]);
 
  return (
  <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-28">
@@ -94,8 +115,9 @@ export default function SimpleCalculatorView({ slug }: Props) {
  inputMode="numeric"
  value={inputs[field.name]?.toLocaleString("ko-KR") || ""}
  onChange={(e) => handleChange(field.name, e.target.value)}
- className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
+ className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border-2 border-transparent focus:border-electric focus:outline-none focus:ring-4 focus:ring-primary-10 transition-all duration-150"
  placeholder={field.defaultValue.toLocaleString("ko-KR")}
+ aria-label={field.label}
  />
  {field.hint && (
  <p className="text-xs text-faint-blue mt-2">{field.hint}</p>
@@ -105,11 +127,23 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </div>
  </section>
 
- <section className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
+ <section
+ className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6 shadow-primary-lg"
+ aria-live="polite"
+ aria-atomic="true"
+ >
  <p className="text-xs font-bold opacity-90 mb-2">{result.primary.label}</p>
  <p className="text-4xl sm:text-5xl font-black tracking-tight tabular-nums mb-6">
  {formatNumber(result.primary.value, result.primary.suffix)}
  </p>
+
+ {/* 시각화 차트 — 같은 단위의 보조 항목이 2개 이상일 때만 자동 노출 */}
+ {breakdownItems && (
+ <div className="mb-5 -mx-1">
+ <ResultBreakdown items={breakdownItems} surface="onDark" />
+ </div>
+ )}
+
  {result.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (
@@ -127,6 +161,23 @@ export default function SimpleCalculatorView({ slug }: Props) {
  💡 {result.note}
  </p>
  )}
+ </section>
+
+ {/* 결과 공유 — 토스/네이버 스타일: 결과 직후 강조 */}
+ <section className="p-5 bg-white rounded-2xl border border-canvas-200 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 dark:bg-canvas-900 dark:border-canvas-800">
+ <div className="flex items-start gap-3">
+ <div className="flex h-9 w-9 items-center justify-center rounded-full bg-electric-10 text-electric flex-shrink-0">
+ <Share2 className="h-4 w-4" aria-hidden="true" />
+ </div>
+ <div>
+ <p className="text-sm font-bold text-navy dark:text-canvas-50">결과를 공유해 보세요</p>
+ <p className="text-xs text-faint-blue mt-0.5">친구·가족·SNS로 빠르게 전송</p>
+ </div>
+ </div>
+ <ShareButtons
+ title={`${calc.title} 결과 — Moneysalary`}
+ description={`${calc.title}: ${formatNumber(result.primary.value, result.primary.suffix)}`}
+ />
  </section>
 
  <CalcResultAd />

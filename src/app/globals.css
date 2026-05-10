@@ -2,13 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Responsive hero — 모바일에서는 60vh, 데스크톱은 80vh */
+/* Hero — 토스 스타일: 콘텐츠 기반 높이 + 충분한 상하 여백 */
 .hero-section {
- min-height: 60vh;
+ min-height: 0;
+ padding-top: clamp(5.5rem, 12vw, 8rem);
+ padding-bottom: clamp(3rem, 8vw, 5rem);
+ padding-left: 1.5rem;
+ padding-right: 1.5rem;
 }
 @media (min-width: 768px) {
  .hero-section {
- min-height: 80vh;
+ padding-top: clamp(7rem, 10vw, 10rem);
+ padding-bottom: clamp(4rem, 8vw, 6rem);
  }
 }
 
@@ -53,8 +58,16 @@
  --accent: 216 43% 92%;
  --accent-foreground: 224 96% 48%;
 
- --destructive: 224 96% 48%; /* Blue for errors too */
+ --destructive: 358 75% 59%; /* #E5484D Radix red, accessible on white */
  --destructive-foreground: 0 0% 100%;
+
+ /* ── Semantic feedback colors (Toss-style) ──────────────── */
+ --success: 145 70% 40%; /* #1FAA59 */
+ --success-foreground: 0 0% 100%;
+ --warning: 35 91% 55%; /* #F5A623 */
+ --warning-foreground: 27 70% 6%;
+ --info: 224 96% 48%;
+ --info-foreground: 0 0% 100%;
 
  --border: 216 30% 84%; /* #C8D4E0 */
  --input: 216 30% 84%;
@@ -86,8 +99,14 @@
  --muted-foreground: 209 25% 70%;
  --accent: 214 40% 18%;
  --accent-foreground: 224 96% 60%;
- --destructive: 0 75% 60%;
- --destructive-foreground: 216 43% 95%;
+ --destructive: 358 70% 65%;     /* brighter red for dark contrast */
+ --destructive-foreground: 0 0% 100%;
+ --success: 145 60% 50%;          /* brighter green for dark */
+ --success-foreground: 0 0% 100%;
+ --warning: 35 85% 60%;
+ --warning-foreground: 27 70% 6%;
+ --info: 224 96% 60%;
+ --info-foreground: 214 56% 8%;
  --border: 214 30% 22%;
  --input: 214 30% 22%;
  --ring: 224 96% 60%;

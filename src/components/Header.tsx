@@ -33,10 +33,23 @@ export default function Header() {
  const dashboardHref = isEnglish ? "/en" : "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
+ const [isHidden, setIsHidden] = useState(false);
  const { scrollY } = useScroll();
 
+ // 토스/카카오뱅크 패턴: 아래로 스크롤하면 헤더 숨김, 위로 스크롤하면 즉시 노출.
+ // 모바일 메뉴 열림 상태에서는 절대 숨기지 않음.
  useMotionValueEvent(scrollY, "change", (latest) => {
  setIsScrolled(latest > 20);
+ const previous = scrollY.getPrevious() ?? 0;
+ if (isMobileMenuOpen) {
+ setIsHidden(false);
+ return;
+ }
+ if (latest > previous && latest > 200) {
+ setIsHidden(true);
+ } else if (latest < previous) {
+ setIsHidden(false);
+ }
  });
 
  useEffect(() => {
@@ -61,11 +74,11 @@ export default function Header() {
  WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  boxShadow: isScrolled ? "0 4px 24px -8px #0145F211" : "none",
  padding: isScrolled ? "10px 0" : "18px 0",
- transition: "all 0.3s ease",
+ transition: "background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease",
  }}
  initial={{ y: -100 }}
- animate={{ y: 0 }}
- transition={{ duration: 0.5, ease: "circOut" }}
+ animate={{ y: isHidden ? -120 : 0 }}
+ transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
  >
  <nav className="max-w-7xl mx-auto px-4 sm:px-6" aria-label={isEnglish ? "Main navigation" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
@@ -73,7 +86,7 @@ export default function Header() {
  <div className="flex-shrink-0 z-50">
  <Link href="/" className="flex items-center gap-2 no-underline">
  <Logo
- className="h-8 sm:h-9 w-auto"
+ className="h-9 sm:h-10 w-auto"
  showText={true}
  style={{ color: "#0145F2" }}
  />

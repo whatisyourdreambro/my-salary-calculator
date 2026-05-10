@@ -22,6 +22,10 @@ import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
 import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Section, SectionHeader } from "@/components/ui/Section";
+import { Stat } from "@/components/ui/Stat";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -103,10 +107,12 @@ const websiteStructuredData = {
 
 /* ── ToolCard 분리됨 → src/components/home/ToolCard.tsx ──────── */
 
-/* ── Stats Bar ─────────────────────────────────────────────────── */
-const stats = [
- { value: "2026년", label: "최신 세법" },
- { value: "100+", label: "금융 계산기" },
+/* ── Stats Bar ───────────────────────────────────────────────────
+ number 값은 CountUp 애니메이션, string 값은 그대로 표시.
+ 가짜 사용자 수는 절대 사용하지 않음 — 객관적 숫자만. */
+const stats: Array<{ value: number | string; suffix?: string; label: string }> = [
+ { value: 2026, suffix: "년", label: "최신 세법" },
+ { value: 100, suffix: "+", label: "금융 계산기" },
  { value: "무료", label: "완전 무료" },
 ];
 
@@ -137,7 +143,6 @@ export default function HomePage() {
  flexDirection: "column",
  alignItems: "center",
  justifyContent: "center",
- padding: "5rem 1.5rem 3rem",
  backgroundColor: "#EDF1F5",
  overflow: "hidden",
  }}
@@ -235,75 +240,43 @@ export default function HomePage() {
  대한민국 1등 연봉 계산기 머니샐러리.
  </p>
 
- {/* CTA Buttons */}
- <div
- style={{
- display: "flex",
- flexWrap: "wrap",
- justifyContent: "center",
- gap: "12px",
- }}
- >
- <button
+ {/* CTA Buttons — Toss style: 1차 채움 + 2차 채움(secondary) */}
+ <div className="flex flex-wrap justify-center gap-3">
+ <Button
  onClick={scrollToCalculator}
- className="btn-primary"
- style={{ fontSize: "16px", padding: "14px 32px" }}
+ intent="primary"
+ size="lg"
+ aria-label="지금 바로 계산기로 이동"
  >
- <Zap style={{ width: "18px", height: "18px" }} />
+ <Zap className="h-[18px] w-[18px]" aria-hidden="true" />
  지금 바로 계산하기
- </button>
+ </Button>
  <Link
  href="/guides"
  className="btn-secondary"
  style={{ fontSize: "15px", padding: "14px 24px" }}
  >
  금융 가이드 보기
- <ArrowRight style={{ width: "15px", height: "15px" }} />
+ <ArrowRight className="h-[15px] w-[15px]" aria-hidden="true" />
  </Link>
  </div>
 
- {/* Stats */}
+ {/* Stats — Stat 컴포넌트로 통일 */}
  <motion.div
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.4 }}
- style={{
- marginTop: "clamp(2rem, 5vw, 4rem)",
- display: "flex",
- justifyContent: "center",
- columnGap: "clamp(1.25rem, 4vw, 3rem)",
- rowGap: "1rem",
- padding: "1.5rem 0",
- borderTop: "1px solid #DDE4EC",
- borderBottom: "1px solid #DDE4EC",
- flexWrap: "wrap",
- }}
+ className="mt-8 md:mt-12 py-6 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 border-y border-canvas-200"
  >
  {stats.map((stat, i) => (
- <div key={i} style={{ textAlign: "center" }}>
- <p
- style={{
- fontSize: "clamp(1.4rem, 3vw, 2rem)",
- fontWeight: 900,
- color: "#0145F2",
- letterSpacing: "-0.04em",
- marginBottom: "2px",
- }}
- >
- {stat.value}
- </p>
- <p
- style={{
- fontSize: "11.5px",
- fontWeight: 700,
- color: "#7A9AB5",
- letterSpacing: "0.04em",
- textTransform: "uppercase",
- }}
- >
- {stat.label}
- </p>
- </div>
+ <Stat
+ key={i}
+ value={stat.value}
+ suffix={stat.suffix}
+ label={stat.label}
+ size="md"
+ align="center"
+ />
  ))}
  </motion.div>
  </motion.div>
@@ -312,14 +285,16 @@ export default function HomePage() {
  {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
  <SocialProof />
 
- {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
- <div className="page-width">
- <HomeTopAd />
- </div>
-
  {/* ═══ 시즌 배너 — 현재 월 자동 인식 ════════════════════════ */}
  <div className="py-8 bg-canvas">
  <SeasonalBanner />
+ </div>
+
+ {/* ═══ 광고 (홈 상단) — 의도가 형성된 시점에 노출 ═══════════
+      Hero/SocialProof/SeasonalBanner 로 가치·신뢰·시즌을 인지한 뒤,
+      계산기 진입 직전에 광고를 보여주는 것이 토스/네이버 패턴. */}
+ <div className="page-width">
+ <HomeTopAd />
  </div>
 
  {/* ═══ Calculator Section ══════════════════════════════════ */}
@@ -341,48 +316,19 @@ export default function HomePage() {
  </section>
 
  {/* ═══ Premium Tools Grid ══════════════════════════════════ */}
- <section
- className="section-lg"
- style={{
- backgroundColor: "#EDF1F5",
- borderTop: "1px solid #DDE4EC",
- }}
- >
- <div className="page-width">
- <div style={{ marginBottom: "2.5rem" }}>
- <p
- className="duotone-badge"
- style={{
- display: "inline-flex",
- marginBottom: "1rem",
- }}
- >
- <Sparkles style={{ width: "12px", height: "12px" }} />
+ <Section spacing="lg" background="canvas" divider="top">
+ <SectionHeader
+ badge={
+ <Badge intent="info" size="md">
+ <Sparkles className="h-3 w-3" aria-hidden="true" />
  Premium Tools
- </p>
- <h2
- style={{
- fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
- fontWeight: 900,
- color: "#0A1829",
- letterSpacing: "-0.035em",
- marginBottom: "0.5rem",
- }}
- >
- 프리미엄 금융 도구
- </h2>
- <p style={{ color: "#3D5E78", fontSize: "15px", fontWeight: 500 }}>
- 당신의 재정 건강을 위한 필수 도구들
- </p>
- </div>
+ </Badge>
+ }
+ title="프리미엄 금융 도구"
+ description="당신의 재정 건강을 위한 필수 도구들"
+ />
 
- <div
- style={{
- display: "grid",
- gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
- gap: "12px",
- }}
- >
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
  <ToolCard
  icon={Calculator}
  title="정규직 계산기"
@@ -454,8 +400,7 @@ export default function HomePage() {
  delay={0.45}
  />
  </div>
- </div>
- </section>
+ </Section>
 
  {/* ═══ Coupang Partners Banner — 섹션 구분 자리 ══════════════ */}
  <section
@@ -473,44 +418,14 @@ export default function HomePage() {
  </section>
 
  {/* ═══ Loan & Deposit Section ══════════════════════════════ */}
- <section
- className="section-lg"
- style={{
- backgroundColor: "#FFFFFF",
- borderTop: "1px solid #DDE4EC",
- }}
- >
- <div className="page-width">
- <div style={{ marginBottom: "2.5rem" }}>
- <p
- className="duotone-badge"
- style={{ display: "inline-flex", marginBottom: "1rem" }}
- >
- Financial Tools
- </p>
- <h2
- style={{
- fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
- fontWeight: 900,
- color: "#0A1829",
- letterSpacing: "-0.035em",
- marginBottom: "0.5rem",
- }}
- >
- 대출 &amp; 예적금
- </h2>
- <p style={{ color: "#3D5E78", fontSize: "15px", fontWeight: 500 }}>
- 스마트한 레버리지와 자산 불리기
- </p>
- </div>
+ <Section spacing="lg" background="white" divider="top">
+ <SectionHeader
+ badge={<Badge intent="info" size="md">Financial Tools</Badge>}
+ title="대출 & 예적금"
+ description="스마트한 레버리지와 자산 불리기"
+ />
 
- <div
- style={{
- display: "grid",
- gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
- gap: "24px",
- }}
- >
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  <div>
  <h3
  style={{
@@ -573,8 +488,7 @@ export default function HomePage() {
  </div>
  </div>
  </div>
- </div>
- </section>
+ </Section>
 
  {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
  <FeaturedGuides />
@@ -583,63 +497,25 @@ export default function HomePage() {
  <GuideCategories />
 
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
- <section
- className="section-lg"
- style={{
- backgroundColor: "#EDF1F5",
- borderTop: "1px solid #DDE4EC",
- textAlign: "center",
- }}
- >
- <div className="page-width">
- <div
- style={{
- width: "56px",
- height: "56px",
- borderRadius: "16px",
- backgroundColor: "#0145F21A",
- display: "flex",
- alignItems: "center",
- justifyContent: "center",
- margin: "0 auto 1.5rem",
- border: "1.5px solid #0145F233",
- }}
- >
- <BookOpen style={{ width: "26px", height: "26px", color: "#0145F2" }} />
+ <Section spacing="lg" background="canvas" divider="top" className="text-center">
+ <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-10 border border-primary-20">
+ <BookOpen className="h-[26px] w-[26px] text-primary" aria-hidden="true" />
  </div>
- <h2
- style={{
- fontSize: "clamp(1.375rem, 3vw, 2rem)",
- fontWeight: 900,
- color: "#0A1829",
- letterSpacing: "-0.035em",
- marginBottom: "0.75rem",
- }}
- >
+ <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black tracking-tight text-text mb-3">
  금융 지식 가이드
  </h2>
- <p
- style={{
- color: "#3D5E78",
- marginBottom: "2.5rem",
- maxWidth: "420px",
- margin: "0 auto 2.5rem",
- fontSize: "15px",
- fontWeight: 500,
- }}
- >
+ <p className="mx-auto max-w-md text-[15px] font-medium text-muted-blue mb-10">
  직장인이 꼭 알아야 할 세금, 투자, 절세 꿀팁을 무료로 제공합니다
  </p>
  <Link
  href="/guides"
- className="btn-primary"
- style={{ fontSize: "15.5px", padding: "14px 36px", display: "inline-flex" }}
+ className="btn-primary inline-flex"
+ style={{ fontSize: "15.5px", padding: "14px 36px" }}
  >
  가이드 전체 보기
- <ArrowRight style={{ width: "16px", height: "16px" }} />
+ <ArrowRight className="h-4 w-4" aria-hidden="true" />
  </Link>
- </div>
- </section>
+ </Section>
 
  {/* ═══ 마지막 광고 ═════════════════════════════════════════ */}
  <section

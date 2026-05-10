@@ -11,6 +11,11 @@ const ELECTRIC_BLUE = "#0145F2";
 const CANVAS_CLOUD  = "#EDF1F5";
 const ON_PRIMARY    = "#FFFFFF";
 
+// ── Semantic colors (Toss-style) ──────────────────────────────
+const SUCCESS_GREEN = "#1FAA59"; // 결과 강조, 양수
+const WARNING_AMBER = "#F5A623"; // 주의, 임계
+const DANGER_RED    = "#E5484D"; // 에러, 음수, 손실
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -101,8 +106,38 @@ const config = {
           foreground: ELECTRIC_BLUE,
         },
         destructive: {
-          DEFAULT:    ELECTRIC_BLUE,
+          DEFAULT:    "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        success: {
+          DEFAULT:    SUCCESS_GREEN,
           foreground: ON_PRIMARY,
+          5:   "#1FAA590D",
+          10:  "#1FAA591A",
+          20:  "#1FAA5933",
+          50:  "#E8F7EF",
+          600: "#188048",
+          700: "#136638",
+        },
+        warning: {
+          DEFAULT:    WARNING_AMBER,
+          foreground: "#1A1106",
+          5:   "#F5A6230D",
+          10:  "#F5A6231A",
+          20:  "#F5A62333",
+          50:  "#FEF6E7",
+          600: "#C77F0F",
+          700: "#995F0A",
+        },
+        danger: {
+          DEFAULT:    DANGER_RED,
+          foreground: ON_PRIMARY,
+          5:   "#E5484D0D",
+          10:  "#E5484D1A",
+          20:  "#E5484D33",
+          50:  "#FCE8E9",
+          600: "#C73237",
+          700: "#9C2429",
         },
         muted: {
           DEFAULT:    CANVAS_CLOUD,
@@ -126,6 +161,31 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+
+      // ── Section spacing scale (Toss-style 큰 여백) ─────────────
+      spacing: {
+        "section-xs": "1rem",     // 16px  — 모바일 inline
+        "section-sm": "2rem",     // 32px  — 컴팩트 섹션
+        "section-md": "3.5rem",   // 56px  — 일반 섹션
+        "section-lg": "5rem",     // 80px  — 강조 섹션
+        "section-xl": "7rem",     // 112px — Hero 주변
+        "section-2xl": "9rem",    // 144px — 페이지 최상단
+      },
+
+      // ── Transition durations (마이크로 인터랙션) ─────────────
+      transitionDuration: {
+        "250": "250ms",
+        "400": "400ms",
+      },
+
+      // ── Z-index layers ────────────────────────────────────────
+      zIndex: {
+        "header":   "40",
+        "dropdown": "50",
+        "modal":    "60",
+        "toast":    "70",
+        "tooltip":  "80",
       },
 
       keyframes: {
