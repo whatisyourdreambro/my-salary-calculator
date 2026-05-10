@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function DutchPayPage() {
  return (
- <div className="min-h-screen bg-electric pt-20 pb-20 px-4 pt-28 pb-20">
+ <div className="min-h-screen bg-canvas dark:bg-canvas-950 pt-24 sm:pt-28 pb-20 px-4">
  <div className="max-w-2xl mx-auto">
- <h1 className="text-3xl font-bold text-navy mb-8">N빵 계산기</h1>
+ <h1 className="text-3xl sm:text-4xl font-black tracking-[-0.04em] text-navy dark:text-canvas-50 mb-8 leading-[1.1]">N빵 계산기</h1>
  <DutchPayCalculator />
  </div>
  </div>

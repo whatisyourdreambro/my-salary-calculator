@@ -56,7 +56,7 @@ const FAQ_ITEMS = [
 
 export default function HealthInsurance2026Page() {
  return (
- <main className="min-h-screen bg-canvas pb-20 pt-28">
+ <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-24 sm:pt-28">
  <JsonLd
  data={[
  breadcrumbLd([

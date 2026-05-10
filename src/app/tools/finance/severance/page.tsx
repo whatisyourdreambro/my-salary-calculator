@@ -77,15 +77,19 @@ export default function SeveranceCalculatorPage() {
  );
 
  return (
- <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
+ <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-24 sm:pt-28 px-4 font-sans">
  <div className="max-w-3xl mx-auto">
- <div className="text-center mb-12 pb-10 border-b border-canvas">
- <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-black px-4 py-2 rounded-sm uppercase tracking-widest mb-6">
- <Briefcase size={14} /> 2026 세법 기준
- </div>
- <h1 className="text-4xl font-black text-navy tracking-tight mb-3">퇴직금 세금 계산기</h1>
- <p className="text-faint-blue font-medium text-lg">법정 퇴직금과 실수령액을 2026년 퇴직소득세법으로 계산합니다</p>
- </div>
+ <header className="text-center mb-10 sm:mb-12 pb-8 sm:pb-10 border-b border-canvas-200 dark:border-canvas-800">
+ <span className="inline-flex items-center gap-1.5 bg-primary-10 border border-primary-20 text-electric text-[12px] font-bold px-3 py-1 rounded-full mb-5">
+ <Briefcase size={13} aria-hidden="true" /> 2026 세법 기준
+ </span>
+ <h1 className="text-3xl sm:text-4xl font-black text-navy dark:text-canvas-50 tracking-[-0.04em] mb-3 leading-[1.1]">
+ 퇴직금 세금 계산기
+ </h1>
+ <p className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 font-medium leading-relaxed">
+ 법정 퇴직금과 실수령액을 2026년 퇴직소득세법으로 계산합니다
+ </p>
+ </header>
 
  {/* Mode Toggle */}
  <div className="flex gap-2 mb-8 mt-8 p-1 bg-canvas-dark rounded-xl">

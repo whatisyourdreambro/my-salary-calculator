@@ -41,13 +41,19 @@ export default function FreelanceTaxPage() {
  const r = useMemo(() => calcFreelanceTax(revenue, expenses, deductions), [revenue, expenses, deductions]);
 
  return (
- <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
+ <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-24 sm:pt-28 px-4 font-sans">
  <div className="max-w-3xl mx-auto">
- <div className="text-center mb-12 pb-10 border-b border-canvas">
- <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-black px-4 py-2 rounded-sm uppercase tracking-widest mb-6"><Laptop size={14} /> 2026 세법 기준</div>
- <h1 className="text-4xl font-black text-navy tracking-tight mb-3">프리랜서 종합소득세 계산기</h1>
- <p className="text-faint-blue font-medium">사업소득·프리랜서 수입의 2026년 종합소득세를 계산합니다</p>
- </div>
+ <header className="text-center mb-10 sm:mb-12 pb-8 sm:pb-10 border-b border-canvas-200 dark:border-canvas-800">
+ <span className="inline-flex items-center gap-1.5 bg-primary-10 border border-primary-20 text-electric text-[12px] font-bold px-3 py-1 rounded-full mb-5">
+ <Laptop size={13} aria-hidden="true" /> 2026 세법 기준
+ </span>
+ <h1 className="text-3xl sm:text-4xl font-black text-navy dark:text-canvas-50 tracking-[-0.04em] mb-3 leading-[1.1]">
+ 프리랜서 종합소득세 계산기
+ </h1>
+ <p className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 font-medium leading-relaxed">
+ 사업소득·프리랜서 수입의 2026년 종합소득세를 계산합니다
+ </p>
+ </header>
 
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
