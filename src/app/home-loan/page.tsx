@@ -40,7 +40,8 @@ const FAQ_ITEMS = [
 
 export default function HomeLoanPage() {
  return (
- <main className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+ <main className="w-full min-h-screen bg-canvas dark:bg-canvas-950 pt-24 sm:pt-28 pb-20">
+ <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
  <JsonLd
  data={[
  breadcrumbLd([
@@ -57,19 +58,22 @@ export default function HomeLoanPage() {
  ]}
  />
 
- <div className="text-center mb-10">
- <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-navy">
+ <header className="text-center mb-10 sm:mb-12">
+ <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-10 border border-primary-20 text-electric font-bold text-[12px] mb-5">
  🏡 내 집 마련 시뮬레이터
+ </span>
+ <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-[-0.04em] text-navy dark:text-canvas-50 leading-[1.1] mb-4">
+ 주택담보대출 <span className="text-electric">한도·월 상환액</span>
  </h1>
- <p className="mt-4 text-base lg:text-lg text-muted-blue">
- 주택담보대출, 얼마나 받을 수 있을까? 월 상환액과 DSR을 미리 계산하고
- 똑똑하게 계획하세요.
+ <p className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 max-w-xl mx-auto leading-relaxed font-medium">
+ DSR 40% 규제와 LTV를 모두 반영해, 받을 수 있는 실제 한도와 월 상환액을 즉시 계산합니다.
  </p>
- </div>
+ </header>
 
  <HomeLoanSimulator />
 
  <RelatedCalculators currentPath="/home-loan" />
+ </div>
  </main>
  );
 }

@@ -18,9 +18,9 @@ export default function SalaryDBPage() {
  return (
  <main className="w-full min-h-screen bg-canvas pb-20">
  {/* Hero Section */}
- <section className="relative pt-28 pb-14 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
+ <section className="relative pt-24 pb-12 sm:pt-28 sm:pb-14 overflow-hidden text-center">
+ <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-electric-5 -z-10 dark:from-canvas-950 dark:via-canvas-900 dark:to-canvas-950" />
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" aria-hidden="true" />
 
  <div className="relative z-10 max-w-4xl mx-auto px-4">
  <motion.div
@@ -28,33 +28,33 @@ export default function SalaryDBPage() {
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6 }}
  >
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
- <Database className="w-4 h-4" />
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-10 border border-primary-20 text-electric font-bold text-[12px] mb-6">
+ <Database className="w-3.5 h-3.5" aria-hidden="true" />
  Corporate Salary Database
  </div>
- <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
+ <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-[-0.04em] mb-5 leading-[1.1] text-navy dark:text-canvas-50">
  대한민국 <span className="text-electric">연봉의 모든 것</span>
  </h1>
- <p className="text-lg sm:text-xl text-faint-blue mb-10 max-w-2xl mx-auto font-medium">
- 카더라 통신은 그만. <br className="sm:hidden" />
- 실제 데이터에 기반한 기업별 연봉, 복지, 워라밸 정보를 확인하세요.
+ <p className="text-base sm:text-lg text-muted-blue dark:text-canvas-300 mb-8 sm:mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
+ 카더라 통신은 그만.
+ <br className="sm:hidden" />
+ 실제 데이터에 기반한 기업별 연봉·복지·워라밸 정보를 확인하세요.
  </p>
 
  {/* Search Bar */}
  <div className="relative max-w-xl mx-auto">
  <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
- <Search className="w-5 h-5 text-faint-blue" />
+ <Search className="w-5 h-5 text-faint-blue" aria-hidden="true" />
  </div>
  <input
- type="text"
+ type="search"
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- placeholder="기업명, 산업군 검색 (예: 삼성전자, IT)"
- className="toss-input pl-14"
+ placeholder="기업명·산업군 검색 (예: 삼성전자, IT)"
+ className="w-full pl-14 pr-5 py-3.5 bg-white dark:bg-canvas-900 rounded-2xl text-[15px] font-semibold text-navy dark:text-canvas-50 placeholder:text-faint-blue placeholder:font-medium border-2 border-canvas-200 dark:border-canvas-800 focus:border-electric focus:outline-none focus:ring-4 focus:ring-primary-10 transition-all duration-150 shadow-sm"
+ aria-label="기업 검색"
  />
  </div>
-
- 
  </motion.div>
  </div>
  </section>

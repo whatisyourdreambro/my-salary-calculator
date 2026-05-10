@@ -4,9 +4,12 @@ import {
  Gift, Briefcase, TrendingUp, Home, CreditCard, Laptop,
  Heart, PiggyBank, Calculator, Calendar, Scale, Flame,
  DollarSign, Percent, Activity, Building2, ChevronRight,
- Divide, Globe, Fuel, RefreshCw, Users, Zap
+ Globe, Fuel, RefreshCw, Users, Zap
 } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
+import { PageShell, PageHero } from "@/components/ui/PageShell";
+import { Badge } from "@/components/ui/Badge";
+import { Stat } from "@/components/ui/Stat";
 
 export const metadata: Metadata = {
  title: "금융 계산기 모음 2026 | 30가지 세금·재테크 계산기 - 머니샐러리",
@@ -18,15 +21,13 @@ type CalcItem = {
  desc: string;
  href: string;
  icon: React.ElementType;
- tag?: string;
  isNew?: boolean;
  isHot?: boolean;
 };
 
-const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
+const CATEGORIES: { title: string; items: CalcItem[] }[] = [
  {
  title: "소득세 계산기",
- color: "text-primary",
  items: [
  { title: "연봉 실수령액 계산기", desc: "4대보험·소득세 완벽 계산", href: "/", icon: DollarSign, isHot: true },
  { title: "성과급·인센티브 세금", desc: "2026 연봉합산 세율 적용", href: "/tools/finance/bonus", icon: Gift, isNew: true, isHot: true },
@@ -38,7 +39,6 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
  {
  title: "재테크 · 투자 계산기",
- color: "text-primary",
  items: [
  { title: "복리 계산기", desc: "적립식 투자 미래 자산 시뮬레이션", href: "/tools/finance/compound", icon: Zap, isNew: true },
  { title: "예적금 만기 계산기", desc: "이자·원리금 계산", href: "/tools/deposit", icon: PiggyBank },
@@ -50,7 +50,6 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
  {
  title: "대출 · 부동산 계산기",
- color: "text-primary",
  items: [
  { title: "대출 이자 계산기", desc: "원리금균등·원금균등상환", href: "/tools/loan", icon: Calculator },
  { title: "주택담보대출 계산기", desc: "모기지 상환 시뮬레이션", href: "/home-loan", icon: Home },
@@ -62,7 +61,6 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
  {
  title: "부동산 세금 계산기",
- color: "text-primary",
  items: [
  { title: "취득세 계산기", desc: "주택·토지 취득세·교육세", href: "/tools/real-estate/acquisition-tax", icon: Home, isNew: true },
  { title: "증여세 계산기", desc: "가족 간 증여한도·세율", href: "/tools/real-estate/gift-tax", icon: Heart, isNew: true },
@@ -71,7 +69,6 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
  {
  title: "생활 · 일반 계산기",
- color: "text-primary",
  items: [
  { title: "BMI 비만도 계산기", desc: "체질량지수·비만 등급", href: "/tools/health/bmi", icon: Activity },
  { title: "나이 계산기", desc: "만 나이·한국 나이 계산", href: "/tools/date/age", icon: Calendar },
@@ -86,110 +83,103 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
 ];
 
-function TagBadge({ label, type }: { label: string; type: "new" | "hot" }) {
- return (
- <span
- className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
- type === "new"
- ? "bg-electric text-white"
- : "bg-electric-10 text-electric border border-electric/20"
- }`}
- aria-label={type === "new" ? "신규" : "인기"}
- >
- {label}
- </span>
- );
-}
-
-export default function ToolsHubPage() {
- const totalCount = CATEGORIES.reduce((sum, c) => sum + c.items.length, 0);
-
- return (
- <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
- <div className="max-w-5xl mx-auto">
-
- {/* Hero */}
- <div className="text-center mb-16 pb-12 border-b border-canvas">
- <div className="inline-flex items-center gap-2 bg-electric-10 text-electric border border-electric/20 text-xs font-black px-4 py-2 rounded-md uppercase tracking-widest mb-6">
- <Calculator size={14} aria-hidden="true" /> 2026 세법 전면 업데이트
- </div>
- <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-4">
- 금융 계산기 <span className="text-electric">{totalCount}종</span> 모음
- </h1>
- <p className="text-faint-blue font-medium text-lg max-w-2xl mx-auto">
- 성과급·퇴직금·증여세·주식세금까지 — 직장인이 꼭 필요한 모든 금융 계산기를 2026년 최신 세법으로 무료 제공합니다.
- </p>
- {/* Quick Stats */}
- <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mt-8">
- {[["30+", "계산기"], ["2026", "세법 기준"], ["무료", "전체 이용"]].map(([val, label]) => (
- <div key={label} className="text-center">
- <p className="text-3xl font-black text-electric tabular-nums">{val}</p>
- <p className="text-xs text-faint-blue font-medium mt-1">{label}</p>
- </div>
- ))}
- </div>
- </div>
-
- {/* New Highlights */}
- <div className="mb-16">
- <div className="flex items-center gap-3 mb-6">
- <span className="text-xs font-black bg-electric text-white px-3 py-1 rounded-md uppercase tracking-widest">NEW</span>
- <h2 className="text-xl font-black text-navy">신규 추가 계산기</h2>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
- {[
+const NEW_HIGHLIGHTS = [
  { title: "성과급 세금 계산기", desc: "연봉합산 방식 2026 세법", href: "/tools/finance/bonus", icon: Gift },
  { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase },
  { title: "복리 계산기", desc: "적립식 40년 자산 시뮬레이션", href: "/tools/finance/compound", icon: Zap },
  { title: "주식 양도소득세", desc: "해외주식 250만원 공제 포함", href: "/tools/finance/stock-tax", icon: TrendingUp },
  { title: "취득세 계산기", desc: "주택·토지 취득세 전체 계산", href: "/tools/real-estate/acquisition-tax", icon: Home },
  { title: "증여세 계산기", desc: "가족별 공제한도·세율", href: "/tools/real-estate/gift-tax", icon: Heart },
- ].map((item) => (
- <Link key={item.href} href={item.href}
- className="group flex items-center gap-4 p-5 border border-canvas rounded-2xl hover:border-primary hover:bg-primary/5 transition-all">
- <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors flex-shrink-0">
- <item.icon size={22} className="text-primary group-hover:text-navy transition-colors" />
+];
+
+export default function ToolsHubPage() {
+ const totalCount = CATEGORIES.reduce((sum, c) => sum + c.items.length, 0);
+
+ return (
+ <PageShell background="canvas" container="page" spacing="normal">
+ {/* ── Hero ─────────────────────────────────────────────────── */}
+ <PageHero
+ size="lg"
+ align="center"
+ badge={
+ <Badge intent="info" size="md">
+ <Calculator size={13} aria-hidden="true" />
+ 2026 세법 전면 업데이트
+ </Badge>
+ }
+ title={
+ <>
+ 금융 계산기 <span className="text-electric">{totalCount}종</span> 모음
+ </>
+ }
+ description="성과급·퇴직금·증여세·주식세금까지 — 직장인이 꼭 필요한 모든 금융 계산기를 2026년 최신 세법으로 무료 제공합니다."
+ >
+ <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+ <Stat value={totalCount} suffix="+" label="계산기" size="sm" align="center" />
+ <Stat value={2026} suffix="년" label="세법 기준" size="sm" align="center" />
+ <Stat value="무료" label="전체 이용" size="sm" align="center" />
+ </div>
+ </PageHero>
+
+ {/* ── 신규 추가 ─────────────────────────────────────────────── */}
+ <section className="mb-16" aria-labelledby="new-tools-heading">
+ <div className="flex items-center gap-3 mb-6">
+ <Badge intent="primary" size="sm">NEW</Badge>
+ <h2 id="new-tools-heading" className="text-xl font-black text-navy dark:text-canvas-50">신규 추가 계산기</h2>
+ </div>
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+ {NEW_HIGHLIGHTS.map((item) => (
+ <Link
+ key={item.href}
+ href={item.href}
+ className="group flex items-center gap-4 p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 no-tap-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+ >
+ <div className="w-12 h-12 rounded-xl bg-electric-5 flex items-center justify-center group-hover:bg-electric transition-colors flex-shrink-0">
+ <item.icon size={22} className="text-electric group-hover:text-white transition-colors" aria-hidden="true" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-black text-navy text-sm group-hover:text-primary transition-colors">{item.title}</p>
+ <p className="font-extrabold text-navy dark:text-canvas-50 text-sm group-hover:text-electric transition-colors">{item.title}</p>
  <p className="text-xs text-faint-blue mt-0.5 truncate">{item.desc}</p>
  </div>
- <ChevronRight size={16} className="text-faint-blue group-hover:text-primary transition-colors flex-shrink-0" />
+ <ChevronRight size={16} className="text-faint-blue group-hover:text-electric flex-shrink-0 transition-all group-hover:translate-x-0.5" aria-hidden="true" />
  </Link>
  ))}
  </div>
- </div>
+ </section>
 
- {/* All Categories */}
+ {/* ── All Categories ────────────────────────────────────────── */}
  {CATEGORIES.map((cat, ci) => (
- <div key={ci} className="mb-14">
- <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-electric">
- <div className="w-8 h-8 bg-electric rounded-md flex items-center justify-center" aria-hidden="true">
- <span className="text-white font-black text-sm">{ci + 1}</span>
+ <section key={ci} className="mb-12 sm:mb-14" aria-labelledby={`cat-${ci}-heading`}>
+ <div className="flex items-center gap-3 mb-5 pb-3 border-b-2 border-electric">
+ <div className="w-8 h-8 bg-electric rounded-lg flex items-center justify-center" aria-hidden="true">
+ <span className="text-white font-black text-sm tabular-nums">{ci + 1}</span>
  </div>
- <h2 className="text-xl font-black text-navy">{cat.title}</h2>
- <span className="text-xs text-faint-blue font-medium">{cat.items.length}개</span>
+ <h2 id={`cat-${ci}-heading`} className="text-xl font-black text-navy dark:text-canvas-50">{cat.title}</h2>
+ <span className="text-xs text-faint-blue font-bold tabular-nums">{cat.items.length}개</span>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
  {cat.items.map((item) => (
- <Link key={item.href} href={item.href}
- className="group flex items-center gap-4 p-4 border border-canvas rounded-xl hover:border-primary hover:bg-primary/5 transition-all bg-white shadow-sm hover:shadow-md">
- <div className="w-10 h-10 rounded-lg bg-canvas group-hover:bg-primary flex items-center justify-center transition-colors flex-shrink-0">
- <item.icon size={18} className="text-faint-blue group-hover:text-navy transition-colors" />
+ <Link
+ key={item.href}
+ href={item.href}
+ className="group flex items-center gap-4 p-4 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-xl hover:border-electric hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 no-tap-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+ >
+ <div className="w-10 h-10 rounded-lg bg-canvas dark:bg-canvas-800 group-hover:bg-electric-10 flex items-center justify-center transition-colors flex-shrink-0">
+ <item.icon size={18} className="text-electric transition-colors" aria-hidden="true" />
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <p className="font-bold text-navy text-sm group-hover:text-primary transition-colors">{item.title}</p>
- {item.isNew && <TagBadge label="NEW" type="new" />}
- {item.isHot && <TagBadge label="HOT" type="hot" />}
+ <p className="font-bold text-navy dark:text-canvas-50 text-sm group-hover:text-electric transition-colors">{item.title}</p>
+ {item.isNew && <Badge intent="primary" size="sm">NEW</Badge>}
+ {item.isHot && <Badge intent="info" size="sm">HOT</Badge>}
  </div>
  <p className="text-xs text-faint-blue mt-0.5 truncate">{item.desc}</p>
  </div>
- <ChevronRight size={14} className="text-slate-200 group-hover:text-primary transition-colors flex-shrink-0" />
+ <ChevronRight size={14} className="text-faint-blue group-hover:text-electric flex-shrink-0 transition-all group-hover:translate-x-0.5" aria-hidden="true" />
  </Link>
  ))}
  </div>
- </div>
+ </section>
  ))}
 
  {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이 */}
@@ -200,15 +190,14 @@ export default function ToolsHubPage() {
  </div>
 
  {/* SEO Bottom Content */}
- <div className="mt-16 p-8 bg-canvas border border-canvas rounded-2xl">
- <h2 className="text-lg font-black text-navy mb-3">2026 세법 업데이트 완료</h2>
- <p className="text-sm text-muted-blue leading-relaxed">
+ <div className="mt-16 p-6 sm:p-8 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl">
+ <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">2026 세법 업데이트 완료</h2>
+ <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
  머니샐러리의 모든 금융 계산기는 2026년 최신 세법을 반영합니다. 근로소득세, 퇴직소득세, 양도소득세, 증여세 등
  주요 세목의 세율과 공제한도를 정확히 반영하여 신뢰할 수 있는 참고 자료로 활용하실 수 있습니다.
  단, 실제 납세액은 개인별 공제 항목에 따라 다를 수 있으므로 세무 전문가와 상담하시기를 권고드립니다.
  </p>
  </div>
- </div>
- </main>
+ </PageShell>
  );
 }
