@@ -440,7 +440,7 @@ const semiconductorCycle2026 = `
  </div>
 </div>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💡 단계별 직장인 자산 전략</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💡 단계별 직장인 자산 전략</h2>
 
 <h3 class="text-xl font-bold mt-8 mb-3">정점 구간(현재 추정)에서의 행동 원칙</h3>
 <ul class="space-y-3">
@@ -652,7 +652,7 @@ const chipStockTax = `
  단, 만기 3년 이상 유지 조건과 출금 제한이 있습니다.
 </p>
 
-<h3 class="text-xl function-bold mt-8 mb-3">전략 2. 연금저축펀드/IRP의 ETF 매매</h3>
+<h3 class="text-xl font-bold mt-8 mb-3">전략 2. 연금저축펀드/IRP의 ETF 매매</h3>
 <p>
  연금저축이나 IRP 계좌 안에서 KOSPI 200 ETF 또는 반도체 ETF를 매매하면 매매차익에 대한 세금이 이연됩니다.
  연금 수령 시점에 낮은 세율(연금소득세 3.3~5.5%)로 정산되어 일반 양도세보다 유리합니다.

@@ -11,6 +11,10 @@ export interface CompanyProfile {
  salaryGrowth: { year: number; salary: number }[];
  benefits: string[];
  tags: string[];
+ /** 회사 페이지 하단에 노출할 관련 가이드 슬러그 목록 (옵션) */
+ relatedGuides?: string[];
+ /** 시즌 랜딩 페이지 경로 (옵션, 임금협상 등 이슈성 페이지) */
+ seasonalLandingPath?: string;
 }
 
 export const companies: CompanyProfile[] = [
@@ -33,6 +37,15 @@ export const companies: CompanyProfile[] = [
  ],
  benefits: ["복지포인트 100만원", "사내 병원", "자녀 학자금", "휴양소 지원"],
  tags: ["대기업", "반도체", "성과급"],
+ relatedGuides: [
+ "samsung-wage-negotiation-2026",
+ "samsung-hynix-2026-deepdive",
+ "semiconductor-performance-bonus-tax",
+ "hbm-supercycle-worker-2026",
+ "semiconductor-entry-salary-2026",
+ "chip-rsu-stock-tax-2026",
+ ],
+ seasonalLandingPath: "/samsung-negotiation-2026",
  },
  {
  id: "sk-hynix",
@@ -53,6 +66,15 @@ export const companies: CompanyProfile[] = [
  ],
  benefits: ["해피프라이데이 (월 1회 휴무)", "의료비 지원", "주택 자금 대출"],
  tags: ["대기업", "성과급", "워라밸"],
+ relatedGuides: [
+ "sk-hynix-wage-2026",
+ "samsung-hynix-2026-deepdive",
+ "semiconductor-performance-bonus-tax",
+ "hbm-supercycle-worker-2026",
+ "semiconductor-entry-salary-2026",
+ "chip-rsu-stock-tax-2026",
+ ],
+ seasonalLandingPath: "/samsung-negotiation-2026",
  },
  {
  id: "naver",

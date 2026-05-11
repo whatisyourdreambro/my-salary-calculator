@@ -44,3 +44,39 @@ export function trackCoupangClick(
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
   });
 }
+
+/** 계산기 결과 산출 (사용자가 입력값으로 결과를 본 시점) */
+export function trackCalcSubmit(
+  calcType: string,
+  meta: Record<string, unknown> = {}
+): void {
+  trackEvent("calc_submit", {
+    calc_type: calcType,
+    ...meta,
+  });
+}
+
+/** 가이드/시즌 페이지 CTA 카드 클릭 */
+export function trackGuideCTAClick(
+  slug: string,
+  position: string,
+  pagePath?: string
+): void {
+  trackEvent("guide_cta_click", {
+    slug,
+    position,
+    page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+  });
+}
+
+/** 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시 */
+export function trackCompareView(
+  companyIds: string[],
+  source?: string
+): void {
+  trackEvent("compare_view", {
+    company_ids: companyIds.join(","),
+    company_count: companyIds.length,
+    source: source ?? "",
+  });
+}

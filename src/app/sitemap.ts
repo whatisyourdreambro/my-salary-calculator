@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
-import { guides, koGuides, enGuides } from '@/lib/guidesData';
+import { koGuides, enGuides } from '@/lib/guidesData';
+import { companies } from '@/lib/companyData';
 
 type ChangeFrequency =
  | 'always'
@@ -42,6 +43,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/health-insurance-2026',
  '/year-end-tax-settlement-2026',
  '/new-employee-2026',
+ '/samsung-negotiation-2026',
  // Info pages — 정보성 검색 트래픽
  '/tax-rates-2026',
  '/social-insurance-rates-2026',
@@ -263,6 +265,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
  allCompanies.forEach((company: any) => {
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly',
+ priority: 0.85,
+ });
+ });
+
+ // /company/[id] 동적 페이지 — 별도 라우트, sitemap 누락 빈틈 해결
+ // (이전에 sitemap에 빠져 있어 GSC가 회사 페이지를 발견하지 못하던 문제)
+ companies.forEach((company) => {
+ companyUrls.push({
+ url: `${baseUrl}/company/${company.id}`,
  lastModified: new Date(),
  changeFrequency: 'monthly',
  priority: 0.85,
