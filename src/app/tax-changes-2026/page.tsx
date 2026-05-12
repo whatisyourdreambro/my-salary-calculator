@@ -6,6 +6,7 @@ import Link from "next/link";
 import { TrendingUp, Sparkles, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -168,6 +169,7 @@ export default function TaxChanges2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 세법 <span className="text-electric">변경사항</span>
  </h1>
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  결혼세액공제 부활, 자녀공제 확대, 비과세 항목 등
  직장인이 꼭 알아야 할 2026년 세법 핵심 변경사항.

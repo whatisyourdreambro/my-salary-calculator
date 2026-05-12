@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Calculator, ArrowRight, FileText } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -103,6 +104,7 @@ export default function TaxRates2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 세율표 <span className="text-electric">한눈에</span>
  </h1>
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  한국 모든 세금의 2026년 누진세율을 한 페이지로.
  소득세·증여세·상속세·양도세·법인세까지.

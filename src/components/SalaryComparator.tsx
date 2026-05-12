@@ -5,7 +5,6 @@
 import { useState, useRef } from "react";
 import { calculateNetSalary } from "@/lib/calculator";
 import CurrencyInput from "./CurrencyInput";
-import html2canvas from "html2canvas";
 import CountUp from "react-countup";
 import NumberStepper from "./NumberStepper";
 import { X } from "lucide-react";
@@ -90,10 +89,11 @@ export default function SalaryComparator() {
 
  const bestOffer = results.length > 0 ? results[0] : null;
 
- const handleCapture = () => {
+ const handleCapture = async () => {
  const captureArea = comparatorRef.current;
  if (!captureArea) return;
 
+ const { default: html2canvas } = await import("html2canvas");
  html2canvas(captureArea, { scale: 2, backgroundColor: document.documentElement.classList.contains("dark") ? "#1a202c" : "#ffffff", useCORS: true }).then((canvas) => {
  const link = document.createElement("a");
  link.download = `연봉비교_결과_moneysalary.png`;

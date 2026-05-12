@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Users, Play, RotateCcw, Settings, Check, X, Heart, Frown, Meh, AlertCircle, Download } from "lucide-react";
-import html2canvas from "html2canvas";
 
 // --- Types ---
 type Preference = "HOPE" | "NEUTRAL" | "NON_HOPE" | "UNAVAILABLE";
@@ -180,6 +179,7 @@ export default function WeekendDutyGame() {
 
  const handleDownload = async () => {
  if (resultRef.current) {
+ const { default: html2canvas } = await import("html2canvas");
  const canvas = await html2canvas(resultRef.current, { backgroundColor: "#18181b" });
  const link = document.createElement("a");
  link.download = "Weekend_Duty_Result.png";

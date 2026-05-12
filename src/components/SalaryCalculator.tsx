@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
@@ -11,7 +12,6 @@ import MoneyInput from "./ui/MoneyInput"; // New UI Component
 import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
-import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles, ChevronRight } from "lucide-react";
 import type {
@@ -25,8 +25,19 @@ import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
 import NextActions from "./NextActions";
 import NumberStepper from "./NumberStepper";
-import SalaryPieChart from "./SalaryPieChart";
-import WealthChart from "./WealthChart";
+// 무거운 recharts 컴포넌트는 동적 로드 — 초기 번들 절감
+const SalaryPieChart = dynamic(() => import("./SalaryPieChart"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[300px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
+ ),
+});
+const WealthChart = dynamic(() => import("./WealthChart"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[400px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
+ ),
+});
 import SalaryTierCard from "./SalaryTierCard"; // New Import
 import LoadingInterstitial from "./LoadingInterstitial";
 import BottomSheet from "./BottomSheet";
@@ -228,12 +239,14 @@ export default function SalaryCalculator() {
  const resultElement = document.getElementById("calculation-result");
  if (resultElement) {
  resultElement.scrollIntoView({ behavior: "smooth", block: "center" });
+ import("canvas-confetti").then(({ default: confetti }) => {
  confetti({
  particleCount: 150,
  spread: 70,
  origin: { y: 0.7 },
  colors: ['#0145F2', '#EDF1F5', '#0145F280'], // Trust Blue & Gold
  zIndex: 9999,
+ });
  });
  }
  }, 100);

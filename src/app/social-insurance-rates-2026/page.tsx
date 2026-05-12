@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Shield, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -129,6 +130,7 @@ export default function SocialInsuranceRates2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 4대보험 <span className="text-electric">요율표</span>
  </h1>
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  국민연금·건강보험·고용보험·산재보험 본인·회사 부담률과
  연봉별 월 보험료 시뮬을 한 페이지에서.

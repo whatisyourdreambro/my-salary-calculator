@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -149,6 +150,7 @@ export default function YearEndTaxChecklistPage() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
+ <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  환급금 극대화를 위해 12월 31일 전 챙겨야 할 8개 카테고리·40+ 항목.
  인쇄해서 하나씩 체크하세요.

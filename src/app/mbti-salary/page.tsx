@@ -13,7 +13,6 @@ import {
  CartesianGrid,
  Legend,
 } from "recharts";
-import html2canvas from "html2canvas";
 import Link from "next/link";
 import {
  Share2,
@@ -110,8 +109,9 @@ export default function MbtiSalaryPage() {
  }
  };
 
- const handleDownload = () => {
+ const handleDownload = async () => {
  if (resultRef.current) {
+ const { default: html2canvas } = await import("html2canvas");
  html2canvas(resultRef.current, {
  backgroundColor: null, // 투명 배경 유지
  scale: 2, // 고해상도 이미지 생성

@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, RefreshCw, Trophy, TrendingUp, Users, Crown, CreditCard, Sparkles, CheckCircle2 } from "lucide-react";
 import { calculateSalaryRank } from "@/data/salaryRankData";
-import html2canvas from "html2canvas";
 
 export default function SalaryRankCalculator() {
  const [salary, setSalary] = useState("");
@@ -28,6 +27,7 @@ export default function SalaryRankCalculator() {
  const handleShare = async () => {
  if (cardRef.current) {
  try {
+ const { default: html2canvas } = await import("html2canvas");
  const canvas = await html2canvas(cardRef.current, {
  backgroundColor: "#000000",
  scale: 2

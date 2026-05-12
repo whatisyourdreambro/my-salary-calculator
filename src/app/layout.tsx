@@ -67,21 +67,12 @@ export const metadata: Metadata = {
     title: "머니샐러리 | 2026 연봉 실수령액 계산기",
     description:
       "2026년 최신 세법 반영! 연봉 실수령액 계산기로 세후 월급, 국민연금·건강보험·소득세 공제액을 즉시 계산하세요.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "머니샐러리 — 연봉 실수령액 계산기",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "머니샐러리 | 2026 연봉 실수령액 계산기",
     description:
       "2026년 최신 세법! 세후 월급·4대보험 즉시 계산. 연봉 3000~1억 실수령액 표 무료 제공.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://www.moneysalary.com",

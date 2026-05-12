@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -85,6 +86,7 @@ export default function YearEndTaxSettlement2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  13월의 월급, <span className="text-electric">제대로 받기</span>
  </h1>
+ <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  12월 연말정산은 1년 절세의 골든타임입니다.
  성과급 절세 + 6대 공제 점검으로 환급금을 극대화하세요.

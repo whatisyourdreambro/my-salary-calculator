@@ -157,7 +157,7 @@ export default function CoupangBanner({
  <a
  href={linkHref}
  target="_blank"
- rel="noopener noreferrer"
+ rel="sponsored nofollow noopener noreferrer"
  referrerPolicy="unsafe-url"
  onClick={() => trackCoupangClick(resolvedSize, resolvedCategory, pathname ?? undefined)}
  style={{

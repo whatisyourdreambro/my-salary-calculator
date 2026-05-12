@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
-import html2canvas from "html2canvas";
 import {
   Loader,
   AlertCircle,
@@ -346,9 +345,10 @@ export default function ExchangeRateImpactCalculator() {
     }
   };
 
-  const handleShareImage = () => {
+  const handleShareImage = async () => {
     const element = reportRef.current;
     if (!element) return;
+    const { default: html2canvas } = await import("html2canvas");
     html2canvas(element, {
       scale: 2,
       backgroundColor: "#EDF1F5",

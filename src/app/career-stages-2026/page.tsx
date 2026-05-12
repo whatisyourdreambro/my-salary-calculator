@@ -6,6 +6,7 @@ import Link from "next/link";
 import { TrendingUp, ArrowRight, Calculator, User } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 
@@ -131,6 +132,7 @@ export default function CareerStages2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  단계별 <span className="text-electric">커리어·자산</span> 가이드
  </h1>
+ <PublishedMeta publishedDate="2026-02-15" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  20대 신입부터 50대 임원까지 — 본인 위치 점검과 다음 단계 준비.
  평균 연봉·자산·필수 재테크 로드맵.

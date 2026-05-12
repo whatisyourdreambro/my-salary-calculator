@@ -19,7 +19,6 @@ import {
  YAxis,
  CartesianGrid,
 } from "recharts";
-import html2canvas from "html2canvas";
 import Link from "next/link";
 import CountUp from "react-countup";
 import { Info, BarChart2, TrendingUp } from "lucide-react";
@@ -90,8 +89,9 @@ const Report = () => {
  }
  }, []);
 
- const handleDownload = () => {
+ const handleDownload = async () => {
  if (reportRef.current) {
+ const { default: html2canvas } = await import("html2canvas");
  html2canvas(reportRef.current, {
  backgroundColor: null,
  scale: 2,

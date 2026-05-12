@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import MyDashboard from "@/components/MyDashboard";
+import dynamic from "next/dynamic";
+
+// 무거운 recharts 차트는 동적 로드 — LCP/FCP 개선
+const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[400px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
+ ),
+});
 import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
 import Link from "next/link";

@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Crown, RefreshCw, Share2, Heart } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyProfile } from "@/types/company";
-import confetti from "canvas-confetti";
 // Shuffle array helper
 const shuffle = <T,>(array: T[]): T[] => {
  return [...array].sort(() => Math.random() - 0.5);
@@ -73,7 +72,8 @@ export default function IdealTypeWorldCup() {
  }, 600); // Transition delay
  };
 
- const fireConfetti = () => {
+ const fireConfetti = async () => {
+ const { default: confetti } = await import("canvas-confetti");
  const duration = 3000;
  const end = Date.now() + duration;
 

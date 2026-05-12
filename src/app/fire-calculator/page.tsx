@@ -34,7 +34,6 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
-import confetti from "canvas-confetti";
 
 // --- Types & Utilities ---
 
@@ -279,11 +278,13 @@ export default function FireCalculatorPage() {
 
  useEffect(() => {
  if (step === 'result' && yearsToFire !== Infinity) {
+ import("canvas-confetti").then(({ default: confetti }) => {
  confetti({
  particleCount: 150,
  spread: 70,
  origin: { y: 0.6 },
  colors: ['#cc9254', '#26594C', '#E7E5E4']
+ });
  });
  }
  }, [step, yearsToFire]);

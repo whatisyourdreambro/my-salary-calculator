@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Share2, RefreshCw, DollarSign, TrendingUp } from "lucide-react";
-import html2canvas from "html2canvas";
 const MBTI_DATA: Record<string, { rank: number; avgSalary: string; desc: string; color: string }> = {
  "ENTJ": { rank: 1, avgSalary: "8,500", desc: "타고난 지도자, 연봉도 1위!", color: "from-primary to-indigo-600" },
  "ESTJ": { rank: 2, avgSalary: "8,200", desc: "현실적인 관리자, 확실한 성과!", color: "from-blue-600 to-primary/80" },
@@ -42,6 +41,7 @@ export default function MbtiSalary() {
 
  const handleShare = async () => {
  if (cardRef.current) {
+ const { default: html2canvas } = await import("html2canvas");
  const canvas = await html2canvas(cardRef.current, { backgroundColor: "#000000" });
  const link = document.createElement("a");
  link.download = `MBTI_Salary_${selectedMbti}.png`;

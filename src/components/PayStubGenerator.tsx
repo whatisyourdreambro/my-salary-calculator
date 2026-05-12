@@ -4,7 +4,6 @@ import { useState, useRef, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import { calculateNetSalary } from "@/lib/calculator";
 import type { CalculationResult } from "@/lib/calculator";
-import html2canvas from "html2canvas";
 import { Download, HelpCircle, Info, Stamp } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -45,10 +44,11 @@ export default function PayStubGenerator() {
  const monthlyNonTaxable = useMemo(() => parseNumber(nonTaxableInput), [nonTaxableInput]);
  const monthlyTaxable = monthlyGross - monthlyNonTaxable;
 
- const handleDownload = () => {
+ const handleDownload = async () => {
  const element = payStubRef.current;
  if (!element) return;
 
+ const { default: html2canvas } = await import("html2canvas");
  html2canvas(element, {
  backgroundColor: null,
  scale: 2,

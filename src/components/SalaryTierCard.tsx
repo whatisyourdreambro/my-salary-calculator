@@ -3,7 +3,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import html2canvas from "html2canvas";
 import { calculateSalaryRank } from "@/data/salaryRankData";
 import { Download, Share2, Award, Zap } from "lucide-react";
 
@@ -46,6 +45,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  setIsDownloading(true);
  
  try {
+ const { default: html2canvas } = await import("html2canvas");
  const canvas = await html2canvas(cardRef.current, {
  scale: 2, // High quality
  backgroundColor: null,

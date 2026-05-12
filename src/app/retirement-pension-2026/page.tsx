@@ -6,6 +6,7 @@ import Link from "next/link";
 import { PiggyBank, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -94,6 +95,7 @@ export default function RetirementPension2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  퇴직연금 <span className="text-electric">완벽 가이드</span>
  </h1>
+ <PublishedMeta publishedDate="2026-02-01" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  DB·DC·IRP 3가지 퇴직연금 차이와 본인에게 맞는 선택.
  잘못 고르면 노후 자산 1억 차이.

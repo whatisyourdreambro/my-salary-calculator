@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -180,6 +181,7 @@ export default function SamsungNegotiation2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  삼성전자 2026 <span className="text-electric">임금협상</span> 가이드
  </h1>
+ <PublishedMeta publishedDate="2026-05-12" className="mb-2" />
  <p className="guide-tldr text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  매출 300조·영업이익 50조원대 회복 시점의 임단협. <br />
  5가지 핵심 쟁점, 직급별 예상 인상폭, SK하이닉스 비교까지 한눈에.

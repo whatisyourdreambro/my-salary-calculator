@@ -2,7 +2,15 @@
 
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import SalaryDetailDashboard from "@/components/SalaryDetailDashboard";
+import dynamic from "next/dynamic";
+
+// 무거운 recharts 대시보드는 동적 로드 — 초기 번들 절감
+const SalaryDetailDashboard = dynamic(() => import("@/components/SalaryDetailDashboard"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[600px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
+ ),
+});
 import { calculateNetSalary } from "@/lib/calculator";
 import { salaryData, calculateRank } from "@/lib/salaryData";
 import SalaryNudge from "@/components/SalaryNudge";

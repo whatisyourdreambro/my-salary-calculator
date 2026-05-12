@@ -6,6 +6,7 @@ import Link from "next/link";
 import { TrendingUp, ArrowRight, Calculator, Building2 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -104,6 +105,7 @@ export default function NewEmployee2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 신입 연봉 <span className="text-electric">협상 가이드</span>
  </h1>
+ <PublishedMeta publishedDate="2026-02-15" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  직군별 평균 초봉, 협상 멘트, 패키지 협상까지.
  첫 직장에서 ±10% 차이가 5년 후 ±20% 이상 격차를 만듭니다.

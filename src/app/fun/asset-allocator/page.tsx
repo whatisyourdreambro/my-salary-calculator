@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone, Gem, Coins, Briefcase } from "lucide-react";
-import confetti from "canvas-confetti";
 
 // --- Game Constants & Types ---
 const GRAVITY = 0.5;
@@ -96,11 +95,13 @@ export default function AssetAllocatorGame() {
  }
 
  // Luxury Confetti
+ import("canvas-confetti").then(({ default: confetti }) => {
  confetti({
  particleCount: 200,
  spread: 100,
  origin: { y: 0.6 },
  colors: ['#EDF1F5', '#CBA577', '#ffffff']
+ });
  });
  };
 
