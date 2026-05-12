@@ -239,13 +239,13 @@ export default function HomePage() {
  </motion.div>
  </section>
 
- {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
- <SocialProof />
-
- {/* ═══ 광고 (홈 상단) ═══════════════════════════════════════ */}
+ {/* ═══ 광고 (홈 상단) — Hero 직하, above-fold 노출 ═════════ */}
  <div className="page-width">
  <HomeTopAd />
  </div>
+
+ {/* ═══ Trust signals — E-E-A-T strengthen ══════════════════ */}
+ <SocialProof />
 
  {/* ═══ 시즌 배너 — 현재 월 자동 인식 ════════════════════════ */}
  <div className="py-8 bg-canvas">

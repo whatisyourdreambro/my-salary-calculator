@@ -143,13 +143,14 @@ export function calculateNetSalary(
  };
 }
 
-// [2026년용 추가] 2026년 세법 변경을 가정하여 계산 로직을 복제합니다.
-// TODO: 2026년 실제 세율 및 공제 한도가 확정되면 아래 상수를 업데이트해야 합니다.
-const PENSION_RATE_2026 = 0.045;
-const PENSION_MONTHLY_CAP_2026 = 6200000 * PENSION_RATE_2026; // 예시: 상한액 620만원으로 상향 가정
-const HEALTH_RATE_2026 = 0.036; // 예시: 건강보험 요율 3.6%로 인상 가정
-const LONG_TERM_CARE_RATE_2026 = 0.13; // 예시: 장기요양보험 요율 13%로 인상 가정
-const EMPLOYMENT_INSURANCE_RATE_2026 = 0.009;
+// [2026년 4대보험 요율 — 동결 가정 · 사이트 전역 단일 기준]
+// src/lib/TaxLogic.ts 의 TAX_RATES_2026·CAPS_2026 과 동기화. 변경 시 두 파일 함께 갱신할 것.
+// 보건복지부 2024년 동결 발표 이후 인상 확정 없음(2026-05 기준).
+const PENSION_RATE_2026 = 0.045; // 국민연금 본인부담 4.5% (회사 4.5% 별도)
+const PENSION_MONTHLY_CAP_2026 = 6170000 * PENSION_RATE_2026; // 월 기준소득월액 상한 617만원
+const HEALTH_RATE_2026 = 0.03545; // 건강보험 본인부담 3.545% (7.09% / 2)
+const LONG_TERM_CARE_RATE_2026 = 0.1295; // 장기요양 = 건강보험료 × 12.95%
+const EMPLOYMENT_INSURANCE_RATE_2026 = 0.009; // 고용보험 본인부담 0.9%
 
 export function calculateNetSalary2026(
  annualSalary: number,

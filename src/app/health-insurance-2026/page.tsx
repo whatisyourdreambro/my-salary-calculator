@@ -92,6 +92,17 @@ export default function HealthInsurance2026Page() {
  매년 7월 작년 소득 기준으로 건강보험료가 정산됩니다.
  정산금 부담 줄이는 방법과 환급 시점을 미리 확인하세요.
  </p>
+ <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
+ 📚 공식 출처:{" "}
+ <a
+ href="https://www.nhis.or.kr/nhis/together/wbhaea01400m01.do"
+ target="_blank"
+ rel="noopener noreferrer"
+ className="text-electric font-bold hover:underline"
+ >
+ 국민건강보험공단 보험료 안내
+ </a>
+ </p>
  </div>
 
  {/* Why Section */}

@@ -86,6 +86,22 @@ export default function AboutPage() {
  </p>
  </div>
 
+ {/* 운영자 소개 — E-A-T 신호 */}
+ <section className="mb-16 p-8 bg-white border border-canvas-200 rounded-2xl">
+ <h2 className="text-xl font-black text-navy mb-4">운영자 소개</h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-3">
+ 머니샐러리는 <strong className="text-navy">현직 직장인 1인이 운영</strong>하는
+ 비영리 정보 사이트입니다. &quot;매년 바뀌는 세법과 4대보험 요율을 직접 계산해 비교하고 싶다&quot;는
+ 본인의 필요에서 출발해, 같은 고민을 가진 직장인을 위해 공개 운영하고 있습니다.
+ </p>
+ <p className="text-sm text-muted-blue leading-relaxed">
+ 세무사·노무사·금융기관의 자문 없이 1인이 운영하는 사이트 특성상,
+ 모든 계산식은 <strong className="text-navy">국세청·4대보험 공단의 공식 자료</strong>를
+ 1차 출처로 사용합니다. 실제 납세·금융 의사결정에는 반드시 공식 출처와
+ 전문가 상담을 함께 권장드립니다.
+ </p>
+ </section>
+
  {/* 운영 원칙 */}
  <section className="mb-16">
  <h2 className="text-2xl font-black text-navy mb-8">운영 원칙</h2>

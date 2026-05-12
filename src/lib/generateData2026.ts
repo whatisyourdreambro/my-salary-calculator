@@ -21,12 +21,13 @@ const RATES_2025 = {
  employment: 0.009, // 0.9%
 };
 
-// 2026 Simulated Rates (Based on latest news/announcements as of Dec 2025)
+// 2026 Rates — 동결 가정. src/lib/TaxLogic.ts TAX_RATES_2026 와 동기화.
+// 보건복지부 2024 동결 발표 이후 인상 확정 없음. 인상 시 두 파일 함께 갱신.
 const RATES_2026 = {
- pension: 0.0475, // 9.5% / 2 (Phased increase confirmed)
- health: 0.03595, // 7.19% / 2 (Confirmed increase from 7.09%)
- ltc: 0.1314, // 13.14% of Health (Confirmed ratio)
- employment: 0.009, // Unchanged (Assumption as no announcement)
+ pension: 0.045, // 동결
+ health: 0.03545, // 동결 (7.09% / 2)
+ ltc: 0.1295, // 동결 (12.95% of Health)
+ employment: 0.009, // 동결
 };
 
 function calculateNet(annualSalary: number, rates: typeof RATES_2025) {

@@ -117,6 +117,17 @@ export default function YearEndTax2026Page() {
  프리랜서·N잡러·사업소득자라면 5월 종합소득세를 꼭 신고해야 합니다.
  일정·서류·환급금·절세 전략을 한 페이지에서 확인하세요.
  </p>
+ <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
+ 📚 공식 출처:{" "}
+ <a
+ href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2274&cntntsId=7713"
+ target="_blank"
+ rel="noopener noreferrer"
+ className="text-electric font-bold hover:underline"
+ >
+ 국세청 종합소득세 안내
+ </a>
+ </p>
  </div>
 
  {/* Schedule Calendar */}

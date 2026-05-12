@@ -163,8 +163,9 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* 본문 끝 — 가장 임팩트 큰 자리 (글 다 읽은 직후) */}
  <GuideMidAd />
 
+ {/* 모바일은 banner(320×100)로 축소 — portrait(320×480)는 본문 흐름 차단·이탈 유발 */}
  <CoupangBanner
- responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}
+ responsive={{ mobile: "mobile-banner", desktop: "large-portrait" }}
  />
 
  {/* Tags */}
