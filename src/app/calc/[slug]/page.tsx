@@ -87,14 +87,19 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  );
  }
 
- if (calc.explanation || calc.formula) {
- const steps = [
+ // HowTo schema — 모든 계산기에 적용해 Google SERP의 How-To 리치 결과 노출 기회 확보.
+ // 조건부 적용을 풀어 enrichments 없는 계산기도 step 정보 노출 (calc.fields는 항상 존재).
+ ldData.push(
+ howToLd({
+ name: `${calc.title} 사용법`,
+ description: calc.description,
+ totalTime: "PT1M",
+ steps: [
  {
  name: "필요한 값 준비",
  text:
- calc.fields
- .map((f) => f.label)
- .join(", ") + " 을(를) 미리 확인합니다.",
+ calc.fields.map((f) => f.label).join(", ") +
+ " 을(를) 미리 확인합니다.",
  },
  {
  name: "값 입력",
@@ -104,6 +109,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  name: "결과 확인",
  text:
  calc.explanation?.split("\n")[0] ||
+ calc.formula ||
  `${calc.title}의 결과는 입력값에 따라 자동으로 계산됩니다.`,
  },
  {
@@ -111,16 +117,9 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  text:
  "결과를 바탕으로 관련 계산기·가이드를 통해 다음 단계 의사결정을 진행합니다.",
  },
- ];
- ldData.push(
- howToLd({
- name: `${calc.title} 사용법`,
- description: calc.description,
- totalTime: "PT1M",
- steps,
+ ],
  })
  );
- }
 
  ldData.push(
  speakableLd({

@@ -121,10 +121,15 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
 /**
  * /salary/[amount] 동적 페이지 전용 헬퍼.
  * 연봉 금액을 받아 SEO 친화적 메타데이터 생성.
+ * monthlyNet을 넘기면 OG 이미지에 월 실수령액 숫자를 직접 박아 SNS 공유 CTR 상승.
  */
-export function buildSalaryAmountMetadata(amount: number): Metadata {
+export function buildSalaryAmountMetadata(
+ amount: number,
+ monthlyNet?: number
+): Metadata {
  const manwon = Math.round(amount / 10000);
  const formatted = manwon.toLocaleString("ko-KR");
+ const netParam = monthlyNet ? `&net=${Math.round(monthlyNet)}` : "";
 
  return buildPageMetadata({
  title: `연봉 ${formatted}만원 실수령액 — 4대보험·세금 자동 계산 (2026)`,
@@ -136,7 +141,7 @@ export function buildSalaryAmountMetadata(amount: number): Metadata {
  `연봉 ${formatted}만원 월급`,
  `연봉 ${formatted}만원 세후`,
  ],
- ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}`,
+ ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}${netParam}`,
  });
 }
 
@@ -198,17 +203,25 @@ export function buildCompanyMetadata(company: {
  industry?: string;
  averageSalary?: number;
 }): Metadata {
- const avg = company.averageSalary
- ? `평균 ${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
- : "평균 연봉";
- const industry = company.industry ? ` · ${company.industry}` : "";
+ // SERP CTR — 검색 쿼리("OOO 2026 평균 연봉")와 동일 어순으로 title 재정렬.
+ // 이전엔 "OOO 연봉 — 평균 5000만원 (2026)" 으로 "연봉" 단어가 회사명에 붙어
+ // 검색 키워드 매칭이 분산되던 문제 해결.
+ const avgFigure = company.averageSalary
+ ? `${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
+ : null;
+ const titleSegment = avgFigure
+ ? `2026 평균 연봉 ${avgFigure}`
+ : "2026 연봉 정보";
+ const industrySuffix = company.industry ? ` · ${company.industry}` : "";
 
  return buildPageMetadata({
- title: `${company.name} 연봉 — ${avg} (2026)${industry}`,
+ title: `${company.name} ${titleSegment} — 직급별 실수령액${industrySuffix}`,
  description: `${company.name}의 직급별 평균 연봉과 실수령액을 2026년 세법 기준으로 분석. 같은 업종 평균 대비 차이, 동급 회사 비교, 협상 팁까지 한눈에 확인하세요.`,
  path: `/salary-db/${company.id}`,
  keywords: [
  `${company.name} 연봉`,
+ `${company.name} 2026 연봉`,
+ `${company.name} 평균 연봉`,
  `${company.name} 실수령액`,
  `${company.name} 월급`,
  `${company.name} 신입 연봉`,

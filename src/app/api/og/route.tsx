@@ -53,6 +53,10 @@ const watermarkStyle = {
 
 function renderSalaryOg(amount: string, netPay?: string) {
  const manwon = Math.round(Number(amount) / 10000).toLocaleString("ko-KR");
+ // netPay는 원 단위(예: 3300000)로 전달 → 만원 단위로 포맷해 SNS 카드 가독성 ↑
+ const netManwon = netPay
+ ? Math.round(Number(netPay) / 10000).toLocaleString("ko-KR")
+ : null;
  return (
  <div style={containerStyle}>
  <div style={cardStyle}>
@@ -63,9 +67,9 @@ function renderSalaryOg(amount: string, netPay?: string) {
  연봉 {manwon}만원
  </div>
  <div style={{ color: "white", fontSize: 32, fontWeight: 400, opacity: 0.85, marginBottom: 32 }}>
- 세후 월 실수령액은?
+ 세후 월 실수령액
  </div>
- {netPay && (
+ {netManwon && (
  <div
  style={{
  backgroundColor: CANVAS,
@@ -78,8 +82,8 @@ function renderSalaryOg(amount: string, netPay?: string) {
  alignItems: "baseline",
  }}
  >
- {netPay}
- <span style={{ fontSize: 28, marginLeft: 8 }}>원</span>
+ 월 {netManwon}
+ <span style={{ fontSize: 28, marginLeft: 8 }}>만원</span>
  </div>
  )}
  </div>

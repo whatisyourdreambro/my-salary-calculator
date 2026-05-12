@@ -53,7 +53,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const amount = parseSalaryParam(params.amount);
- return buildSalaryAmountMetadata(amount);
+ // SNS 공유 CTR — 월 실수령액 숫자를 OG 이미지에 직접 박기.
+ const tax = calculateSalary2026(amount, 200000, 1, 0);
+ return buildSalaryAmountMetadata(amount, tax.netPay);
 }
 
 function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: number) {
