@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
 import { koGuides, enGuides } from '@/lib/guidesData';
-import { companies } from '@/lib/companyData';
 
 type ChangeFrequency =
  | 'always'
@@ -259,23 +258,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  });
 
- // Individual company pages — 단일 진입점 사용
+ // Individual company pages — /salary-db/[id]로 단일화
+ // (이전엔 /company/[id]도 sitemap에 있었으나 동일 정보 두 URL이라 카니발 → /salary-db/[id] 308 redirect로 통합)
  const { allCompanies } = require('@/data/companies');
 
  allCompanies.forEach((company: any) => {
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
- lastModified: new Date(),
- changeFrequency: 'monthly',
- priority: 0.85,
- });
- });
-
- // /company/[id] 동적 페이지 — 별도 라우트, sitemap 누락 빈틈 해결
- // (이전에 sitemap에 빠져 있어 GSC가 회사 페이지를 발견하지 못하던 문제)
- companies.forEach((company) => {
- companyUrls.push({
- url: `${baseUrl}/company/${company.id}`,
  lastModified: new Date(),
  changeFrequency: 'monthly',
  priority: 0.85,

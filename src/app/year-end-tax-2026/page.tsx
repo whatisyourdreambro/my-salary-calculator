@@ -7,6 +7,7 @@ import { Calendar, AlertCircle, CheckCircle2, FileText, Calculator, ArrowRight }
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -117,6 +118,7 @@ export default function YearEndTax2026Page() {
  2026 종합소득세 <span className="text-electric">신고 가이드</span>
  </h1>
  <PublishedMeta publishedDate="2026-04-15" updatedDate="2026-05-12" className="mb-2" />
+ <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  프리랜서·N잡러·사업소득자라면 5월 종합소득세를 꼭 신고해야 합니다.
  일정·서류·환급금·절세 전략을 한 페이지에서 확인하세요.

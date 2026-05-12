@@ -7,25 +7,28 @@ import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react"
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 연말정산 체크리스트 — 12월 마감 전 12가지 점검",
+ // 의도: 12월 31일 마감 전 항목별 점검표 (체크 형태). 계산기·전략은 별도 페이지.
+ title: "2026 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표",
  description:
- "연말정산 환급금 극대화를 위한 12월 마감 전 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 등 모든 항목 점검표.",
+ "12월 31일 마감 전 빠짐없이 점검해야 할 연말정산 40+ 항목 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 카테고리별 점검표 형식으로 빠르게 확인.",
  path: "/year-end-tax-checklist",
  ogType: "article",
  publishedTime: "2026-01-10",
  modifiedTime: "2026-05-12",
  keywords: [
  "연말정산 체크리스트",
- "연말정산 12월",
- "연말정산 점검",
- "13월의 월급",
- "환급금 극대화",
+ "12월 마감 연말정산",
+ "연말정산 40가지 점검",
+ "연말정산 점검표",
+ "12월 31일 마감 전",
+ "환급금 극대화 체크",
  ],
 });
 
@@ -154,6 +157,7 @@ export default function YearEndTaxChecklistPage() {
  2026 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
  <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-05-12" className="mb-2" />
+ <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  환급금 극대화를 위해 12월 31일 전 챙겨야 할 8개 카테고리·40+ 항목.
  인쇄해서 하나씩 체크하세요.

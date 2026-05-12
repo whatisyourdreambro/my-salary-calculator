@@ -7,26 +7,28 @@ import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 연말정산 + 성과급 가이드 - 13월의 월급·환급금 극대화",
+ // 의도: 근로자 12월 시즌 가이드 (전략·읽는 콘텐츠). 체크리스트는 별도 페이지(/year-end-tax-checklist), 계산기는 /year-end-tax.
+ title: "근로자 2026 연말정산 + 성과급 절세 가이드 — 12월 시즌",
  description:
- "12월 연말정산 + 성과급 시즌 완벽 가이드. 신용카드·연금저축·기부금 공제 + 성과급 세금 절세 전략까지 한 페이지에서 확인하세요.",
+ "근로자 12월 연말정산 + 성과급 세금 절세 전략 가이드. 한계세율 진입 점검, IRP·연금저축 추가 납입, 신용카드 사용 패턴 최적화까지 근로자 관점에서 정리.",
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
  modifiedTime: "2026-05-12",
  keywords: [
- "2026 연말정산",
- "13월의 월급",
- "성과급 절세",
- "신용카드 공제",
- "연금저축 공제",
- "12월 절세",
+ "근로자 연말정산 2026",
+ "성과급 세금 절세",
+ "성과급 IRP 절세",
+ "12월 연말정산 가이드",
+ "성과급 한계세율",
+ "연봉인상 후 절세",
  ],
 });
 
@@ -91,6 +93,7 @@ export default function YearEndTaxSettlement2026Page() {
  13월의 월급, <span className="text-electric">제대로 받기</span>
  </h1>
  <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-05-12" className="mb-2" />
+ <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  12월 연말정산은 1년 절세의 골든타임입니다.
  성과급 절세 + 6대 공제 점검으로 환급금을 극대화하세요.

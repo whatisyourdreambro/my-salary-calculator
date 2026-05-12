@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
@@ -10,18 +11,19 @@ import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "연말정산 환급금 계산기 - 13월의 월급 미리 보기 (2026)",
+ // 의도: 계산기 도구 (시즌 무관, 연 1회 사용). 시즌 가이드는 별도 페이지.
+ title: "연말정산 환급금 계산기 — 즉시 계산 도구 (2026)",
  description:
- "총급여·신용카드·의료비·연금저축·기부금 입력 → 2026년 귀속 연말정산 예상 환급금 즉시 계산. 놓치기 쉬운 공제 항목과 절세 전략까지 한 번에.",
+ "총급여·신용카드·의료비·연금저축·기부금 입력 → 2026년 귀속 연말정산 예상 환급금을 즉시 계산하는 무료 도구. 시즌 가이드는 별도 페이지(/year-end-tax-settlement-2026, /year-end-tax-checklist).",
  path: "/year-end-tax",
  keywords: [
- "연말정산 계산기",
- "연말정산 환급금",
- "13월의 월급",
- "신용카드 공제",
- "의료비 공제",
- "연금저축 공제",
- "2026 연말정산",
+ "연말정산 환급금 계산기",
+ "연말정산 계산기 무료",
+ "13월의 월급 계산",
+ "신용카드 공제 계산",
+ "의료비 공제 계산",
+ "연금저축 공제 계산",
+ "환급금 미리보기",
  ],
 });
 
@@ -78,6 +80,7 @@ export default function YearEndTaxPage() {
  연말정산 환급금<br />
  <span className="text-primary">미리 계산해보세요</span>
  </h1>
+ <YearEndTaxCluster />
  <p className="text-lg sm:text-xl text-faint-blue leading-relaxed font-medium">
  2026년 귀속 연말정산, 예상 환급금을 미리 계산하고<br className="hidden sm:block" />
  절세 전략을 세워보세요.
