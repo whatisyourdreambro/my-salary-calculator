@@ -8,7 +8,7 @@ import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
 export const metadata: Metadata = buildPageMetadata({
  title: "머니샐러리 소개 - 데이터 출처와 운영 원칙",
  description:
- "머니샐러리는 2026년 최신 세법을 반영한 연봉 실수령액 계산기입니다. 국세청·건강보험공단 공식 데이터를 기반으로 직장인의 금융 의사결정을 돕습니다.",
+ "머니샐러리는 현직 직장인 1인이 운영하는 비영리 정보 사이트입니다. 2026년 최신 세법과 국세청·4대보험 공단 공식 데이터를 기반으로 연봉 실수령액·세금·재테크 계산을 무료 제공합니다.",
  path: "/about",
  keywords: ["머니샐러리", "About", "사이트 소개", "데이터 출처"],
 });

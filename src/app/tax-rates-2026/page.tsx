@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "2026년 한국 모든 세금 누진세율표. 근로소득세 6~45%, 증여세 10~50%, 상속세 10~50%, 양도세 6~45%, 법인세 9~24%까지 한 페이지에서.",
  path: "/tax-rates-2026",
+ ogType: "article",
+ publishedTime: "2026-01-01",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 세율",
  "소득세 세율",

@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "2026년 5월 종합소득세 신고 완벽 가이드. 프리랜서·N잡러·사업소득자의 신고 일정, 필요 서류, 환급금 계산법, 절세 팁까지 한 페이지에서 확인하세요.",
  path: "/year-end-tax-2026",
+ ogType: "article",
+ publishedTime: "2026-04-15",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 종합소득세",
  "5월 종소세",
@@ -93,7 +96,8 @@ export default function YearEndTax2026Page() {
  description:
  "5월 종소세 신고 일정, 필요 서류, 환급금 계산, 절세 팁",
  slug: "year-end-tax-2026",
- publishedDate: "2026-05-01",
+ publishedDate: "2026-04-15",
+ modifiedDate: "2026-05-12",
  }),
  speakableLd({
  url: "/year-end-tax-2026",

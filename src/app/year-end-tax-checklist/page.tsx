@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "연말정산 환급금 극대화를 위한 12월 마감 전 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 등 모든 항목 점검표.",
  path: "/year-end-tax-checklist",
+ ogType: "article",
+ publishedTime: "2026-01-10",
+ modifiedTime: "2026-05-12",
  keywords: [
  "연말정산 체크리스트",
  "연말정산 12월",

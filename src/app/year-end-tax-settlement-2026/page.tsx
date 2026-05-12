@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "12월 연말정산 + 성과급 시즌 완벽 가이드. 신용카드·연금저축·기부금 공제 + 성과급 세금 절세 전략까지 한 페이지에서 확인하세요.",
  path: "/year-end-tax-settlement-2026",
+ ogType: "article",
+ publishedTime: "2026-01-15",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 연말정산",
  "13월의 월급",
@@ -68,7 +71,8 @@ export default function YearEndTaxSettlement2026Page() {
  title: "2026 연말정산 + 성과급 절세 가이드",
  description: "12월 연말정산 공제 항목 + 성과급 세금 전략",
  slug: "year-end-tax-settlement-2026",
- publishedDate: "2026-05-01",
+ publishedDate: "2026-01-15",
+ modifiedDate: "2026-05-12",
  }),
  speakableLd({
  url: "/year-end-tax-settlement-2026",

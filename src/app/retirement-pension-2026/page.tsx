@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "확정급여형(DB)·확정기여형(DC)·개인형퇴직연금(IRP) 차이와 운용 수익률, 세제 혜택. 본인에게 맞는 퇴직연금 선택법.",
  path: "/retirement-pension-2026",
+ ogType: "article",
+ publishedTime: "2026-02-01",
+ modifiedTime: "2026-05-12",
  keywords: [
  "퇴직연금",
  "DB DC 차이",

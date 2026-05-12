@@ -15,6 +15,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "20대 신입~50대 임원까지 단계별 평균 연봉·자산·필수 재테크. 본인 위치 점검과 다음 단계 준비 로드맵.",
  path: "/career-stages-2026",
+ ogType: "article",
+ publishedTime: "2026-02-15",
+ modifiedTime: "2026-05-12",
  keywords: [
  "20대 평균 연봉",
  "30대 평균 자산",

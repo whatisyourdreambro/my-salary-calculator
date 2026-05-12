@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "2026년 4대보험 요율 한 페이지. 국민연금 9%, 건강보험 7.09%, 장기요양보험, 고용보험, 산재보험 본인·회사 부담률과 월급별 보험료 시뮬.",
  path: "/social-insurance-rates-2026",
+ ogType: "article",
+ publishedTime: "2026-01-01",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 4대보험",
  "국민연금 요율",

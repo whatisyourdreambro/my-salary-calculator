@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "매년 7월에 작년 소득 기준 건강보험료가 정산됩니다. 정산금 계산법, 환급/추가 납부 시점, 분납 신청 방법을 한 번에 정리.",
  path: "/health-insurance-2026",
+ ogType: "article",
+ publishedTime: "2026-04-01",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 건강보험료 정산",
  "7월 건보료 정산",
@@ -69,7 +72,8 @@ export default function HealthInsurance2026Page() {
  title: "2026 건강보험료 정산 가이드",
  description: "7월 건보료 정산금·환급·분납",
  slug: "health-insurance-2026",
- publishedDate: "2026-05-01",
+ publishedDate: "2026-04-01",
+ modifiedDate: "2026-05-12",
  }),
  speakableLd({
  url: "/health-insurance-2026",

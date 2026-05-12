@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "2026 신입 연봉 협상 완벽 가이드. 대기업·IT·금융·공기업 직군별 평균 초봉, 협상 멘트, 사이닝 보너스 협상법까지.",
  path: "/new-employee-2026",
+ ogType: "article",
+ publishedTime: "2026-02-15",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 신입 연봉",
  "신입 연봉 협상",
@@ -87,7 +90,8 @@ export default function NewEmployee2026Page() {
  title: "2026 신입 연봉 협상 가이드",
  description: "직군별 평균 초봉, 협상 멘트, 패키지 협상법",
  slug: "new-employee-2026",
- publishedDate: "2026-05-01",
+ publishedDate: "2026-02-15",
+ modifiedDate: "2026-05-12",
  }),
  speakableLd({
  url: "/new-employee-2026",

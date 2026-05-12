@@ -17,6 +17,9 @@ export const metadata: Metadata = buildPageMetadata({
  description:
  "2026년 세법 주요 변경사항 한 페이지. 결혼세액공제 50만 부활, 6세 이하 자녀 추가공제, 출산·입양 세액공제 확대, 신용카드 공제 한도 변동 등.",
  path: "/tax-changes-2026",
+ ogType: "article",
+ publishedTime: "2026-01-01",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 세법",
  "세법 개정",
