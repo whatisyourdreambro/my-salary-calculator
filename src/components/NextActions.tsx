@@ -7,6 +7,7 @@
 "use client";
 
 import Link from "next/link";
+import { trackGuideCTAClick } from "@/lib/analytics";
 import {
  ArrowRight,
  Home,
@@ -207,6 +208,7 @@ export default function NextActions({
  <Link
  key={action.href + action.title}
  href={action.href}
+ onClick={() => trackGuideCTAClick(action.href, "next-action")}
  className="group flex items-start gap-3 p-4 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
  >
  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-electric-10 flex items-center justify-center group-hover:bg-electric group-hover:text-white transition-colors">

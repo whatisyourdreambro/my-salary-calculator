@@ -35,8 +35,10 @@ export async function generateMetadata({
  const calc = getCalculatorBySlug(params.slug);
  if (!calc) return { title: "Not Found" };
 
+ // SERP CTR: title은 검색 쿼리와 매칭되는 calc.title + 연도만. description은 metadata.description으로 분리.
+ // 이전: description.slice(0, 30)으로 자르다가 "...즉시 계산하" 같이 잘려 SERP에서 부자연스러움.
  return buildPageMetadata({
- title: `${calc.title} 2026 - ${calc.description.slice(0, 30)}`,
+ title: `${calc.title} 2026 — 즉시 계산`,
  description: calc.description,
  path: `/calc/${calc.slug}`,
  keywords: calc.keywords,

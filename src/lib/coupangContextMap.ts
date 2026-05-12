@@ -25,16 +25,20 @@ export function inferCoupangCategory(pathname: string | null | undefined): Coupa
   if (!pathname) return "general";
   const p = pathname.toLowerCase();
 
-  // 시즌성 페이지(11~3월 트래픽 핫스팟) — 별도 분리
+  // 시즌성 페이지(11~3월·5월 트래픽 핫스팟) — season 카테고리로 분리해
+  // 쿠팡 대시보드에서 시즌 콘텐츠 RPM을 일반 tax 페이지와 분리 측정.
   if (
     p.includes("year-end-tax") ||
     p.includes("january-bonus") ||
     p.includes("year-end-bonus") ||
     p.includes("incentive-tax") ||
-    p.includes("severance")
+    p.includes("samsung-negotiation") ||
+    p.includes("new-employee-2026")
   ) {
-    return "tax";
+    return "season";
   }
+  // 통상 세금 — 시즌 아님
+  if (p.includes("severance")) return "tax";
 
   if (p.includes("/fire") || p.includes("asset-allocator") || p.includes("/retirement")) {
     return "fire";

@@ -3,9 +3,12 @@
 // 가이드 페이지 cross-link — 같은 카테고리/태그 기반 추천.
 // 페이지 하단에 mount하여 평균 PV/세션·체류 시간 향상.
 
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { guides, type Guide } from "@/lib/guidesData";
+import { trackGuideCTAClick } from "@/lib/analytics";
 
 interface RelatedGuidesProps {
   currentSlug: string;
@@ -76,6 +79,7 @@ export default function RelatedGuides({
           <Link
             key={g.slug}
             href={`/guides/${g.slug}`}
+            onClick={() => trackGuideCTAClick(g.slug, "related-guide")}
             className="group flex flex-col gap-2 p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 hover:border-electric hover:bg-electric-5 transition-all"
           >
             <div className="flex items-center gap-2">
