@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, RefreshCw, TrendingUp } from "lucide-react";
+import PageFooterAds from "@/components/PageFooterAds";
 const FORTUNES = {
  "재물운": [
  "올해 재테크 타이밍: 상반기(1~6월)에 분할 매수로 씨앗을 심고, 하반기부터 결실을 거두는 형국입니다. 주식·ETF보다 안정 자산 비중을 55% 이상 유지하세요.",
@@ -138,6 +139,7 @@ export default function FinancialFortunePage() {
  본 운세 콘텐츠는 전통 사주 이론에 기반한 재미 목적의 참고 정보이며, 실제 투자·금융 결정에 직접 활용하지 마세요.
  </p>
  </div>
+ <PageFooterAds maxWidth="3xl" />
  </main>
  );
 }

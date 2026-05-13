@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import PageFooterAds from "@/components/PageFooterAds";
 import {
  AreaChart,
  Area,
@@ -790,6 +791,7 @@ export default function FireCalculatorPage() {
  </AnimatePresence>
  </div>
  </div>
+ <PageFooterAds maxWidth="4xl" />
  </main>
  );
 }

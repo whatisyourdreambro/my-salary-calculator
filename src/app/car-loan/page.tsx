@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import PageFooterAds from "@/components/PageFooterAds";
 import {
  Car as CarIcon,
  Truck,
@@ -422,10 +423,10 @@ export default function CarLoanPage() {
  )}
  </div>
 
- {/* Bottom Ad */}
  </div>
  </div>
  </div>
+ <PageFooterAds maxWidth="5xl" />
  </main>
  );
 }

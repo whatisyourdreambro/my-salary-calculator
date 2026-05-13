@@ -6,6 +6,12 @@ import { trackAdImpression } from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
+// 페이지별로 이미 렌더된 슬롯 ID 추적 — AdSense "페이지당 동일 슬롯 1회" 정책 강제.
+// SLOT_IN_ARTICLE 미설정 시 InArticleAd 가 GUIDE_MID fallback 했을 때,
+// 같은 페이지의 GuideMidAd 와 동시 노출되면 정책 위반이라 두 번째 호출을 자동 skip.
+// pathname 변경 시 cleanup 으로 다른 페이지에 영향 없음.
+const renderedSlotsByPath = new Map<string, Set<string>>();
+
 type AdSlotKind = "home-top" | "result" | "sidebar" | "fluid" | "guide-mid";
 
 type AdSlotProps = {
@@ -35,17 +41,36 @@ function AdSlot({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pushed = useRef(false);
   const [visible, setVisible] = useState(false);
+  const [allowed, setAllowed] = useState(true);
 
   // 페이지 이동(pathname 변경) 시 광고 상태 reset → 뒤로가기로 돌아왔을 때도 광고 정상 표시
   // (이전: pushed.current 영구 true 가 되어 뒤로가기 시 viewability 0% — 매출 손실)
   useEffect(() => {
     pushed.current = false;
     setVisible(false);
+    setAllowed(true);
   }, [pathname]);
+
+  // 페이지별 슬롯 dedup — 같은 페이지에 동일 슬롯 ID 두 번째 호출은 자동 skip
+  // (AdSense 정책 + GUIDE_MID 같은 fallback 슬롯이 두 컴포넌트에 쓰일 때 안전망)
+  useEffect(() => {
+    if (!slot || !pathname) return;
+    const seen = renderedSlotsByPath.get(pathname) ?? new Set<string>();
+    if (seen.has(slot)) {
+      setAllowed(false);
+      return;
+    }
+    seen.add(slot);
+    renderedSlotsByPath.set(pathname, seen);
+    return () => {
+      seen.delete(slot);
+      if (seen.size === 0) renderedSlotsByPath.delete(pathname);
+    };
+  }, [slot, pathname]);
 
   // Lazy load: viewport 진입 시에만 광고 마운트 → CLS↓ viewability↑
   useEffect(() => {
-    if (!slot || !containerRef.current) return;
+    if (!slot || !containerRef.current || !allowed) return;
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
@@ -64,7 +89,7 @@ function AdSlot({
     );
     observer.observe(target);
     return () => observer.disconnect();
-  }, [slot, pathname]);
+  }, [slot, pathname, allowed]);
 
   useEffect(() => {
     if (!visible || pushed.current || !slot) return;
@@ -79,7 +104,7 @@ function AdSlot({
     trackAdImpression(slotKind ?? "unknown");
   }, [visible, slot, slotKind]);
 
-  if (!slot) return null;
+  if (!slot || !allowed) return null;
 
   const baseClass = containerClassName ?? "ad-container";
   const composedClass = slotKind ? `${baseClass} ad-slot-${slotKind}` : baseClass;
@@ -177,14 +202,17 @@ export function SidebarAd() {
 }
 
 // 인아티클(콘텐츠 사이) fluid 광고 — 가독성↑ CTR↑
-// 정책 안전: NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE 환경변수 미설정 시 null 반환 (광고 미노출).
-// 과거 GUIDE_MID 로 fallback 했으나 같은 페이지에 GuideMidAd + InArticleAd 가 함께 있으면
-// 동일 슬롯 ID 가 한 페이지에 중복 호출되어 AdSense 정책 위반 위험 ("페이지당 동일 슬롯 1회" 규칙).
-// 운영자가 AdSense > 광고 단위 > 인아티클 광고 단위 신규 생성 후 슬롯 ID 를 환경변수에 추가하면 자동 활성.
+// SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로 fallback. 같은 페이지에 GuideMidAd 와 동시 노출되면
+// AdSlot 의 페이지별 dedup 로직이 두 번째 호출을 자동 skip 하므로 "페이지당 동일 슬롯 1회" 정책 안전.
+// 운영자가 AdSense > 광고 단위 > 인아티클 광고 단위 신규 생성 후 슬롯 ID 를 환경변수에 추가하면
+// 자동으로 전용 슬롯으로 전환되어 dedup skip 도 사라짐 (최적 매출 회복).
 export function InArticleAd() {
   return (
     <AdSlot
-      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE}
+      slot={
+        process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE ||
+        process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID
+      }
       format="fluid"
       layoutKey="-fb+5w+4e-db+86"
       slotKind="fluid"

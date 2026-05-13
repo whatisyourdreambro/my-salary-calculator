@@ -6,6 +6,7 @@ import {
  generateLottoSets,
  type GenerationStrategy,
 } from "@/lib/lottoGenerator";
+import PageFooterAds from "@/components/PageFooterAds";
 import { Settings, Sparkles, Loader, Clover, RefreshCw } from "lucide-react";
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
 const getNumberColorClass = (number: number): string => {
@@ -350,6 +351,7 @@ export default function LottoPage() {
  </div>
  </div>
  </div>
+ <PageFooterAds maxWidth="4xl" />
  </main>
  );
 }

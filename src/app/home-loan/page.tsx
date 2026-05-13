@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import PageFooterAds from "@/components/PageFooterAds";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd } from "@/lib/structuredData";
@@ -68,6 +69,8 @@ export default function HomeLoanPage() {
  </div>
 
  <HomeLoanSimulator />
+
+ <PageFooterAds maxWidth="4xl" />
 
  <RelatedCalculators currentPath="/home-loan" />
  </main>

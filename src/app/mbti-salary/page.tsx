@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect, ElementType } from "react";
 import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
+import PageFooterAds from "@/components/PageFooterAds";
 import {
  LineChart,
  Line,
@@ -370,6 +371,7 @@ export default function MbtiSalaryPage() {
  </div>
  )}
  </div>
+ <PageFooterAds maxWidth="3xl" />
  </main>
  );
 }
