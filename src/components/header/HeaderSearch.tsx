@@ -127,19 +127,26 @@ export default function HeaderSearch() {
               onClick={() => setIsOpen(false)}
             />
 
-            {/* 검색 패널 */}
+            {/* 검색 패널
+                모바일(< sm): inset-0 풀스크린, 둥근 모서리 없음, 안전 영역 패딩.
+                sm 이상: 중앙 정렬 floating 모달.
+                min-w-0 + overflow-hidden 으로 child overflow 방지. */}
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
+              initial={{ opacity: 0, y: -10, scale: 0.99 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              exit={{ opacity: 0, y: -8, scale: 0.99 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               role="dialog"
               aria-modal="true"
               aria-label="사이트 검색"
-              className="fixed top-[10vh] left-1/2 -translate-x-1/2 w-[min(92vw,640px)] z-[101] bg-white rounded-3xl shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-[1.5px] border-canvas"
+              className="fixed z-[101] bg-white shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] flex flex-col"
+              style={{
+                paddingTop: "env(safe-area-inset-top, 0)",
+                paddingBottom: "env(safe-area-inset-bottom, 0)",
+              }}
             >
               {/* 입력 영역 */}
-              <div className="flex items-center gap-3 px-5 py-4 border-b border-canvas-100">
+              <div className="flex items-center gap-2 px-4 sm:px-5 py-3 sm:py-4 border-b border-canvas-100 min-w-0">
                 <Search size={18} className="text-electric flex-shrink-0" />
                 <input
                   ref={inputRef}
@@ -147,21 +154,21 @@ export default function HeaderSearch() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleInputKey}
-                  placeholder="계산기·가이드·용어·회사를 한 번에 검색…"
-                  className="flex-1 bg-transparent text-[15px] font-medium text-navy placeholder:text-faint-blue outline-none"
+                  placeholder="계산기·가이드·용어 검색"
+                  className="flex-1 min-w-0 bg-transparent text-[15px] font-medium text-navy placeholder:text-faint-blue outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
                   aria-label="닫기"
-                  className="flex items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors"
+                  className="flex-shrink-0 flex items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors"
                 >
                   <X size={16} />
                 </button>
               </div>
 
-              {/* 결과 영역 */}
-              <div className="max-h-[60vh] overflow-y-auto">
+              {/* 결과 영역 — flex-1로 모바일에서 남는 영역 채움 */}
+              <div className="flex-1 overflow-y-auto overscroll-contain min-w-0">
                 {!query.trim() ? (
                   <div className="px-5 py-10 text-center text-sm text-faint-blue">
                     <p className="mb-3 font-medium">계산기·가이드·용어를 검색해 보세요</p>
@@ -192,12 +199,12 @@ export default function HeaderSearch() {
                             href={entry.href}
                             onClick={() => setIsOpen(false)}
                             onMouseEnter={() => setActiveIndex(idx)}
-                            className={`flex items-center gap-3 px-5 py-3 transition-colors ${
+                            className={`flex items-center gap-2.5 px-4 sm:px-5 py-3 transition-colors min-w-0 ${
                               isActive ? "bg-electric-5" : "hover:bg-canvas-50"
                             }`}
                           >
                             <span
-                              className="flex-shrink-0 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-black tracking-wide rounded-md"
+                              className="flex-shrink-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black tracking-wide rounded-md"
                               style={{ backgroundColor: badge.bg, color: badge.text }}
                             >
                               {entry.category}
@@ -232,9 +239,9 @@ export default function HeaderSearch() {
                 )}
               </div>
 
-              {/* 하단 안내 */}
-              <div className="px-5 py-3 border-t border-canvas-100 bg-canvas-50 flex items-center justify-between text-[11px] text-faint-blue font-medium">
-                <div className="flex items-center gap-3">
+              {/* 하단 안내 — 모바일에서는 키보드 단축키 숨김 (탭 환경) */}
+              <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-t border-canvas-100 bg-canvas-50 flex items-center justify-between text-[11px] text-faint-blue font-medium flex-shrink-0">
+                <div className="hidden sm:flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">↑↓</kbd>
                     탐색
@@ -248,6 +255,7 @@ export default function HeaderSearch() {
                     닫기
                   </span>
                 </div>
+                <span className="sm:hidden">탭해서 이동</span>
                 <span>{results.length} 건</span>
               </div>
             </motion.div>
