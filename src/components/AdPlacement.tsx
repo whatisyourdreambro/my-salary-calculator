@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { trackAdImpression } from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
-type AdSlotKind = "home-top" | "result" | "sidebar" | "fluid";
+type AdSlotKind = "home-top" | "result" | "sidebar" | "fluid" | "guide-mid";
 
 type AdSlotProps = {
   slot: string | undefined;
@@ -30,9 +31,17 @@ function AdSlot({
   minHeight = 90,
   fullWidthResponsive = true,
 }: AdSlotProps) {
+  const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pushed = useRef(false);
   const [visible, setVisible] = useState(false);
+
+  // 페이지 이동(pathname 변경) 시 광고 상태 reset → 뒤로가기로 돌아왔을 때도 광고 정상 표시
+  // (이전: pushed.current 영구 true 가 되어 뒤로가기 시 viewability 0% — 매출 손실)
+  useEffect(() => {
+    pushed.current = false;
+    setVisible(false);
+  }, [pathname]);
 
   // Lazy load: viewport 진입 시에만 광고 마운트 → CLS↓ viewability↑
   useEffect(() => {
@@ -55,7 +64,7 @@ function AdSlot({
     );
     observer.observe(target);
     return () => observer.disconnect();
-  }, [slot]);
+  }, [slot, pathname]);
 
   useEffect(() => {
     if (!visible || pushed.current || !slot) return;
@@ -85,7 +94,9 @@ function AdSlot({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        ...(slotKind ? null : { minHeight: `${minHeight}px` }),
+        // 모든 슬롯에 minHeight 일관 적용 → CLS 방지
+        // (이전: slotKind 있는 슬롯은 minHeight 누락되어 광고 로드 시 페이지 점프 발생)
+        minHeight: `${minHeight}px`,
         ...style,
       }}
     >
@@ -147,7 +158,7 @@ export function GuideMidAd() {
     <AdSlot
       slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID}
       format="auto"
-      slotKind="result"
+      slotKind="guide-mid"
       minHeight={250}
     />
   );
@@ -165,16 +176,15 @@ export function SidebarAd() {
   );
 }
 
-// Phase A-6: 인아티클(콘텐츠 사이) fluid 광고 — 가독성↑ CTR↑
-// 별도 슬롯 ID 환경변수가 있으면 우선 사용 (한 페이지 내 동일 슬롯 ID 중복 방지),
-// 미설정 시 GUIDE_MID 슬롯 fallback.
+// 인아티클(콘텐츠 사이) fluid 광고 — 가독성↑ CTR↑
+// 정책 안전: NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE 환경변수 미설정 시 null 반환 (광고 미노출).
+// 과거 GUIDE_MID 로 fallback 했으나 같은 페이지에 GuideMidAd + InArticleAd 가 함께 있으면
+// 동일 슬롯 ID 가 한 페이지에 중복 호출되어 AdSense 정책 위반 위험 ("페이지당 동일 슬롯 1회" 규칙).
+// 운영자가 AdSense > 광고 단위 > 인아티클 광고 단위 신규 생성 후 슬롯 ID 를 환경변수에 추가하면 자동 활성.
 export function InArticleAd() {
   return (
     <AdSlot
-      slot={
-        process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE ||
-        process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID
-      }
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE}
       format="fluid"
       layoutKey="-fb+5w+4e-db+86"
       slotKind="fluid"

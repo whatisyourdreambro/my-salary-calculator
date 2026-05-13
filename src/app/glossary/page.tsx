@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
+import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 
 const categories = [
  "전체",
@@ -168,8 +170,10 @@ export default function GlossaryPage() {
  ))}
  </div>
 
- {/* Ad Unit */}
- 
+ {/* 카테고리 필터 직후 광고 — 의도 정점 */}
+ <div className="max-w-3xl mx-auto mb-10">
+ <HomeTopAd />
+ </div>
 
  {/* Glossary Grid */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -251,6 +255,16 @@ export default function GlossaryPage() {
  ))}
  </AnimatePresence>
  </div>
+
+ {/* 페이지 하단 광고 + 쿠팡 — 모든 용어 본 후 노출 */}
+ {filteredData.length > 0 && (
+ <div className="mt-16 max-w-3xl mx-auto">
+ <InArticleAd />
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ </div>
+ )}
 
  {filteredData.length === 0 && (
  <div className="text-center py-32">

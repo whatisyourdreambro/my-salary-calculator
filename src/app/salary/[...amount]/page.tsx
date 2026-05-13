@@ -46,6 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { rank } = calculateRank(annualSalary, "all-all-all-all");
 
+  // catch-all 변형 URL (예: /salary/5000/sales-manager) 은 정규 numeric URL 로 canonical 통합 + noindex.
+  // sitemap 에는 /salary/{numeric} 만 포함되어 있고, 외부 링크로 들어와도 색인 분산 방지.
+  const canonicalUrl = `https://www.moneysalary.com/salary/${annualSalary}`;
+
   return {
   title,
   description,
@@ -58,16 +62,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   '실수령액 계산기',
   '세후 월급 계산',
   ].join(', '),
+  robots: {
+  index: false,
+  follow: true,
+  },
   openGraph: {
   title,
   description,
-  url: `https://www.moneysalary.com/salary/${params.amount.join("/")}`,
+  url: canonicalUrl,
   siteName: '머니샐러리',
   type: "website",
   locale: 'ko_KR',
   images: [
   {
-  url: `/api/og?title=${encodeURIComponent(jobTitle)}&salary=${annualSalary}&rank=${rank}`,
+  url: `/api/og?type=salary&amount=${annualSalary}`,
   width: 1200,
   height: 630,
   alt: title,
@@ -80,7 +88,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   description,
   },
   alternates: {
-  canonical: `https://www.moneysalary.com/salary/${params.amount.join('/')}`,
+  canonical: canonicalUrl,
   },
   };
 }

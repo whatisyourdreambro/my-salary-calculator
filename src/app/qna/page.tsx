@@ -18,6 +18,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import type { ElementType } from "react";
 import { qnaData, QnaItem, toQnaSlug } from "@/data/qnaData";
+import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 
 const categories: {
  id: string;
@@ -133,6 +135,11 @@ export default function QnAPage() {
  </motion.div>
  </div>
  </section>
+
+ {/* 검색바 직후 광고 — 사용자 의도 정점 */}
+ <div className="max-w-3xl mx-auto px-4 mt-8">
+ <HomeTopAd />
+ </div>
 
  {/* Q&A List Section */}
  <section className="max-w-4xl mx-auto px-4">
@@ -275,6 +282,16 @@ export default function QnAPage() {
  </div>
  </motion.div>
  ))}
+
+ {/* 페이지 하단 광고 + 쿠팡 — 모든 Q&A 본 후 노출 */}
+ {filteredData.length > 0 && (
+ <div className="mt-16 max-w-3xl mx-auto">
+ <InArticleAd />
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ </div>
+ )}
 
  {filteredData.length === 0 && (
  <div className="text-center py-32">

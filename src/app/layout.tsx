@@ -109,26 +109,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link
-          rel="preload"
-          as="style"
-          crossOrigin=""
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
-        />
+        {/*
+          Pretendard 가변 폰트 — stylesheet 만 사용 (중복 요청 제거).
+          이전: preload + stylesheet 둘 다 같은 URL → 폰트 2번 다운로드 + render-blocking.
+          preconnect 가 이미 있어 CDN 연결 비용은 최소화됨.
+        */}
         <link
           rel="stylesheet"
           crossOrigin=""
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              @font-face {
-                font-family: "Pretendard Variable";
-                font-display: swap;
-              }
-            `,
-          }}
         />
         <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
       </head>
