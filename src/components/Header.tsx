@@ -23,6 +23,7 @@ import DesktopDropdown from "./header/DesktopDropdown";
 import MobileDropdown from "./header/MobileDropdown";
 import ThemeToggle from "./header/ThemeToggle";
 import LocaleSwitcher from "./header/LocaleSwitcher";
+import HeaderSearch from "./header/HeaderSearch";
 
 export default function Header() {
  const pathname = usePathname();
@@ -108,6 +109,7 @@ export default function Header() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-2 z-50 flex-shrink-0">
+ <HeaderSearch />
  <LocaleSwitcher />
  <ThemeToggle />
  {/* Dashboard CTA — md+ 에서만 텍스트, sm 이하 아이콘만 */}
