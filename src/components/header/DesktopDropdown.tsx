@@ -67,13 +67,13 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
         type="button"
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        className={`flex items-center gap-1 px-3.5 py-2 text-[14.5px] font-semibold rounded-[10px] bg-transparent border-none cursor-pointer transition-all duration-200 hover:bg-electric-5 hover:text-electric ${
+        className={`flex items-center gap-0.5 px-2.5 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-[10px] bg-transparent border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:bg-electric-5 hover:text-electric ${
           isOpen ? "text-electric bg-electric-5" : "text-muted-blue"
         }`}
       >
         {item.name}
         <ChevronDown
-          size={13}
+          size={12}
           aria-hidden="true"
           className={`transition-transform duration-300 ${
             isOpen ? "rotate-180 text-electric" : "text-faint-blue"

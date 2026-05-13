@@ -34,7 +34,7 @@ export type NavItem = LinkItem | DropdownItem;
 
 export const navConfig: NavItem[] = [
  {
- name: "연봉 계산기",
+ name: "계산기",
  type: "dropdown",
  description: "직장인 필수 100+ 계산기 모음",
  items: [
@@ -55,7 +55,7 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "회사·연봉DB",
+ name: "연봉DB",
  type: "dropdown",
  description: "실제 데이터 기반 기업 연봉",
  items: [
@@ -69,9 +69,9 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "2026 시즌",
+ name: "시즌",
  type: "dropdown",
- description: "월별 핫스팟 가이드·정보",
+ description: "2026 월별 핫스팟 가이드·정보",
  items: [
  { name: "5월 종합소득세 신고", href: "/year-end-tax-2026", description: "프리랜서·N잡러", badge: "SEASON" },
  { name: "7월 건강보험료 정산", href: "/health-insurance-2026", description: "추가 부과 대응" },
@@ -86,9 +86,9 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "가이드·재테크",
+ name: "가이드",
  type: "dropdown",
- description: "직장인 절세·투자·재테크",
+ description: "직장인 절세·투자·재테크 가이드",
  items: [
  { name: "전체 가이드 (55+편)", href: "/guides", description: "절세·투자·커리어", badge: "MUST" },
  { name: "Q&A 자주 묻는 질문", href: "/qna", description: "직장인 금융 답변" },
@@ -106,7 +106,7 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "생활 금융",
+ name: "생활금융",
  type: "dropdown",
  description: "대출·부동산·해외 비교",
  items: [
@@ -119,7 +119,7 @@ export const navConfig: NavItem[] = [
  ],
  },
  {
- name: "Fun·테스트",
+ name: "Fun",
  type: "dropdown",
  description: "직장인 심심풀이 테스트·게임",
  items: [

@@ -81,8 +81,8 @@ export default function Header() {
  </Link>
  </div>
 
- {/* Desktop Nav — 5개 카테고리, lg(1024px)부터 노출 */}
- <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+ {/* Desktop Nav — 6개 카테고리, lg(1024px)부터 노출. xl 에서 폰트·간격↑ */}
+ <div className="hidden lg:flex items-center gap-0 xl:gap-0.5 flex-1 justify-center min-w-0">
  {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
  <DesktopDropdown
@@ -95,7 +95,7 @@ export default function Header() {
  key={item.name}
  href={item.href}
  aria-current={pathname === item.href ? "page" : undefined}
- className={`px-[11px] py-[7px] text-[13.5px] font-semibold rounded-[10px] whitespace-nowrap no-underline transition-colors hover:bg-electric-5 hover:text-electric ${
+ className={`px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-[10px] whitespace-nowrap no-underline transition-colors hover:bg-electric-5 hover:text-electric ${
  pathname === item.href
  ? "text-electric bg-electric-5"
  : "text-muted-blue"

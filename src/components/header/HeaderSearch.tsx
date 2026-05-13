@@ -88,26 +88,27 @@ export default function HeaderSearch() {
 
   return (
     <>
-      {/* 트리거 버튼 */}
+      {/* 트리거 버튼 — lg 미만 / xl 이상 분기로 너비 조절 */}
+      {/* xl(1280px+): 검색바 + 텍스트 + ⌘K */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="사이트 검색"
-        className="hidden md:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all"
+        className="hidden xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all"
       >
         <Search size={14} />
-        <span>계산기·가이드 검색</span>
+        <span>검색</span>
         <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-canvas-100 text-faint-blue rounded">
           ⌘K
         </kbd>
       </button>
 
-      {/* 모바일 아이콘 버튼 */}
+      {/* lg(1024~1279px) + 모바일: 검색 아이콘만 */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="검색 열기"
-        className="md:hidden inline-flex items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors"
+        className="xl:hidden inline-flex items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors"
       >
         <Search size={20} />
       </button>
