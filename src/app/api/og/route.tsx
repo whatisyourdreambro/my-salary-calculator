@@ -130,6 +130,35 @@ function renderGuideOg(title: string) {
  );
 }
 
+function renderFunOg(title: string) {
+ // /fun 카테고리 — 보라/네온 톤으로 펀 콘텐츠 시각 구분 (SNS 공유 차별화)
+ const FUN_PURPLE = "#7C3AED";
+ const FUN_ACCENT = "#F0ABFC";
+ return (
+ <div
+ style={{
+ ...containerStyle,
+ backgroundColor: FUN_PURPLE,
+ backgroundImage:
+ "radial-gradient(circle at 75% 25%, rgba(240, 171, 252, 0.25) 0%, transparent 55%), radial-gradient(circle at 20% 75%, rgba(255,255,255,0.12) 0%, transparent 50%)",
+ }}
+ >
+ <div style={cardStyle}>
+ <div style={{ color: FUN_ACCENT, fontSize: 26, fontWeight: 900, marginBottom: 14, letterSpacing: "0.08em" }}>
+ 머니샐러리 · FUN
+ </div>
+ <div style={{ color: "white", fontSize: 64, fontWeight: 900, marginBottom: 12, textAlign: "center", lineHeight: 1.15 }}>
+ {title}
+ </div>
+ <div style={{ color: "white", fontSize: 28, fontWeight: 500, opacity: 0.9, marginTop: 12 }}>
+ 지금 바로 무료로 즐기는 머니 게임
+ </div>
+ </div>
+ <div style={watermarkStyle}>moneysalary.com</div>
+ </div>
+ );
+}
+
 function renderCompanyOg(name: string) {
  return (
  <div style={containerStyle}>
@@ -186,6 +215,9 @@ export async function GET(req: NextRequest) {
  } else if (type === "guide") {
  // slug보다 title이 더 사람 읽기 좋아서 title 우선 사용
  content = renderGuideOg(title);
+ } else if (type === "fun") {
+ // /fun 카테고리 — 보라/네온 OG (SNS 공유 시 일반 OG와 시각 구분)
+ content = renderFunOg(title);
  } else if (type === "company") {
  const name = searchParams.get("name") || title;
  content = renderCompanyOg(name);
@@ -196,7 +228,17 @@ export async function GET(req: NextRequest) {
  const netPay = searchParams.get("net") || undefined;
  content = renderSalaryOg(legacyAmount, netPay);
  } else {
+ // path 기반 자동 분기 — buildPageMetadata가 path를 넘기면 카테고리별 OG 자동 적용
+ const path = searchParams.get("path") || "";
+ if (path.startsWith("/fun")) {
+ content = renderFunOg(title);
+ } else if (path.startsWith("/guides")) {
+ content = renderGuideOg(title);
+ } else if (path.startsWith("/salary-db")) {
+ content = renderCompanyOg(title);
+ } else {
  content = renderDefaultOg(title);
+ }
  }
  }
 

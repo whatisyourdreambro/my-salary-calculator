@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, Building2, TrendingUp, Users, ArrowRight, Database } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { Fragment } from "react";
+import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 export default function SalaryDBPage() {
  const [searchTerm, setSearchTerm] = useState("");
@@ -68,8 +69,8 @@ export default function SalaryDBPage() {
  {/* Company Grid */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {filteredCompanies.map((company, idx) => (
+ <Fragment key={company.id}>
  <motion.div
- key={company.id}
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.1 }}
@@ -120,6 +121,13 @@ export default function SalaryDBPage() {
  </div>
  </Link>
  </motion.div>
+ {/* 6번째 카드 직후 중간 광고 — 회사 비교 스크롤 정점 */}
+ {idx === 5 && filteredCompanies.length > 6 && (
+ <div className="md:col-span-2 lg:col-span-3 my-2">
+ <CalcResultAd />
+ </div>
+ )}
+ </Fragment>
  ))}
  </div>
 

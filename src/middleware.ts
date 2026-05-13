@@ -14,6 +14,17 @@ const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|
 const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap)/i;
 
 export function middleware(req: NextRequest) {
+  // 0) non-www → www 301 redirect (canonical host 통합)
+  // 두 호스트 모두 200 응답하면 Google이 중복 콘텐츠로 인식 → 권한 분산.
+  // canonical 메타로도 처리되지만 301이 가장 강력한 신호.
+  const host = req.headers.get("host") || "";
+  if (host === "moneysalary.com") {
+    const url = req.nextUrl.clone();
+    url.host = "www.moneysalary.com";
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 301);
+  }
+
   const ua = req.headers.get("user-agent") || "";
 
   // 1) 화이트리스트는 즉시 통과 (가장 먼저 체크)

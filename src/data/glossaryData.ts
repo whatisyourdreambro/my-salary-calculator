@@ -15,6 +15,31 @@ export interface GlossaryItem {
  tip: string;
 }
 
+/**
+ * 한글 용어명을 URL slug로 변환.
+ * 한글 유지 + 공백·특수문자 → hyphen. Next.js 동적 라우트가 한글 URL 정상 처리.
+ */
+export function toGlossarySlug(title: string): string {
+ return title
+ .trim()
+ .toLowerCase()
+ .replace(/\s+/g, "-")
+ .replace(/[^\w가-힣\-]/g, "")
+ .replace(/-+/g, "-")
+ .replace(/^-+|-+$/g, "");
+}
+
+export function getGlossaryBySlug(slug: string): GlossaryItem | undefined {
+ const decoded = decodeURIComponent(slug);
+ return glossaryData.find((item) => toGlossarySlug(item.title) === toGlossarySlug(decoded));
+}
+
+export function getRelatedGlossaryItems(item: GlossaryItem, limit = 5): GlossaryItem[] {
+ return glossaryData
+ .filter((g) => g.title !== item.title && g.category === item.category)
+ .slice(0, limit);
+}
+
 export const glossaryData: GlossaryItem[] = [
  // --- 4대 보험 & 세금 ---
  {

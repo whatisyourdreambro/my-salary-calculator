@@ -17,6 +17,32 @@ export interface QnaItem {
  };
 }
 
+/**
+ * 질문 문장을 URL slug로 변환.
+ * 한글 + 영문/숫자 유지, 길이 60자로 제한.
+ */
+export function toQnaSlug(question: string): string {
+ return question
+ .trim()
+ .toLowerCase()
+ .replace(/\s+/g, "-")
+ .replace(/[^\w가-힣\-]/g, "")
+ .replace(/-+/g, "-")
+ .replace(/^-+|-+$/g, "")
+ .slice(0, 60);
+}
+
+export function getQnaBySlug(slug: string): QnaItem | undefined {
+ const decoded = decodeURIComponent(slug);
+ return qnaData.find((item) => toQnaSlug(item.question) === toQnaSlug(decoded));
+}
+
+export function getRelatedQna(item: QnaItem, limit = 4): QnaItem[] {
+ return qnaData
+ .filter((q) => q.question !== item.question && q.category === item.category)
+ .slice(0, limit);
+}
+
 export const qnaData: QnaItem[] = [
  // --- 연봉 & 수당 ---
  {

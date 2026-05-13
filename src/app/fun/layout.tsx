@@ -10,6 +10,7 @@
 import type { Metadata } from "next";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 
 export const metadata: Metadata = {
   // 카테고리 단위 robots 기본값 — 개별 page.tsx에서 override 가능
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 export default function FunLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <AutoBreadcrumb />
       {children}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="my-6">

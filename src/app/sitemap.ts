@@ -1,5 +1,7 @@
 import { MetadataRoute } from 'next';
 import { koGuides, enGuides } from '@/lib/guidesData';
+import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
+import { qnaData, toQnaSlug } from '@/data/qnaData';
 
 type ChangeFrequency =
  | 'always'
@@ -26,11 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fortune-2026',
  '/report',
  '/tips',
- // 구버전 /table/* 4개 → 301 redirect (next.config.mjs)
- '/table/2026/annual',
- '/table/2026/monthly',
- '/table/2026/weekly',
- '/table/2026/hourly',
  '/guides',
  '/qna',
  '/glossary',
@@ -271,5 +268,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  });
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls];
+ // 글로서리 동적 페이지 — 용어별 long-tail 키워드
+ const glossaryUrls: MetadataRoute.Sitemap = glossaryData.map((item) => ({
+ url: `${baseUrl}/glossary/${toGlossarySlug(item.title)}`,
+ lastModified: new Date(),
+ changeFrequency: 'yearly',
+ priority: 0.6,
+ }));
+
+ // Q&A 동적 페이지 — 질문별 long-tail
+ const qnaUrls: MetadataRoute.Sitemap = qnaData.map((item) => ({
+ url: `${baseUrl}/qna/${toQnaSlug(item.question)}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly',
+ priority: 0.65,
+ }));
+
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls];
 }

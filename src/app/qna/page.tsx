@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ElementType } from "react";
-import { qnaData, QnaItem } from "@/data/qnaData";
+import { qnaData, QnaItem, toQnaSlug } from "@/data/qnaData";
 
 const categories: {
  id: string;
@@ -249,13 +249,21 @@ export default function QnAPage() {
  )}
 
  {/* Action Button */}
+ <div className="flex flex-col sm:flex-row gap-3">
  <Link
  href={item.answer.action.href}
- className="group/btn flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-foreground hover:bg-primary text-background hover:text-white font-bold rounded-2xl transition-all duration-300 gap-2 mx-auto sm:mx-0 shadow-lg hover:shadow-primary/30 hover:-translate-y-1"
+ className="group/btn flex items-center justify-center px-8 py-4 bg-foreground hover:bg-primary text-background hover:text-white font-bold rounded-2xl transition-all duration-300 gap-2 shadow-lg hover:shadow-primary/30 hover:-translate-y-1"
  >
  {item.answer.action.text}
  <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
  </Link>
+ <Link
+ href={`/qna/${toQnaSlug(item.question)}`}
+ className="flex items-center justify-center px-6 py-4 bg-secondary text-foreground font-bold rounded-2xl border border-border hover:border-primary transition-colors gap-2"
+ >
+ 이 질문 전용 페이지 보기
+ </Link>
+ </div>
  </div>
  </div>
  </motion.div>

@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import {
  Search,
  Sparkles,
  BookOpen,
  Share2,
  RotateCw,
- Hash
+ Hash,
+ ArrowRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { glossaryData } from "@/data/glossaryData";
+import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 
 const categories = [
  "전체",
@@ -237,6 +239,13 @@ export default function GlossaryPage() {
  {item.tip}
  </p>
  </div>
+ <Link
+ href={`/glossary/${toGlossarySlug(item.title)}`}
+ className="inline-flex items-center gap-1 text-sm font-bold text-electric hover:gap-2 transition-all"
+ aria-label={`${item.title} 자세히 보기`}
+ >
+ 자세히 보기 <ArrowRight className="w-4 h-4" />
+ </Link>
  </div>
  </motion.div>
  ))}

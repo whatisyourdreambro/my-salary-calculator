@@ -13,7 +13,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 export const metadata: Metadata = buildPageMetadata({
  title: "직장인 커리어 단계별 평균 연봉·자산 (20대~50대)",
  description:
- "20대 신입~50대 임원까지 단계별 평균 연봉·자산·필수 재테크. 본인 위치 점검과 다음 단계 준비 로드맵.",
+ "20대 신입부터 50대 임원까지 직장인 커리어 단계별 평균 연봉·평균 자산·필수 재테크 체크리스트를 한눈에. 본인 위치를 즉시 점검하고 다음 5년 로드맵을 세워보세요 (2026 최신 통계 기준).",
  path: "/career-stages-2026",
  ogType: "article",
  publishedTime: "2026-02-15",
