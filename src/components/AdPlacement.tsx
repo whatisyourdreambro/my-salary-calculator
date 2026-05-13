@@ -202,10 +202,9 @@ export function SidebarAd() {
 }
 
 // 인아티클(콘텐츠 사이) fluid 광고 — 가독성↑ CTR↑
-// SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로 fallback. 같은 페이지에 GuideMidAd 와 동시 노출되면
-// AdSlot 의 페이지별 dedup 로직이 두 번째 호출을 자동 skip 하므로 "페이지당 동일 슬롯 1회" 정책 안전.
-// 운영자가 AdSense > 광고 단위 > 인아티클 광고 단위 신규 생성 후 슬롯 ID 를 환경변수에 추가하면
-// 자동으로 전용 슬롯으로 전환되어 dedup skip 도 사라짐 (최적 매출 회복).
+// AdSense "인아티클 광고 단위" 전용: data-ad-layout="in-article" + format="fluid" 필수.
+// 이전 코드는 multiplex 광고용 data-ad-layout-key 사용 → 광고 미노출 위험이었음.
+// SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로 fallback. dedup 로직이 정책 위반 방지.
 export function InArticleAd() {
   return (
     <AdSlot
@@ -214,7 +213,7 @@ export function InArticleAd() {
         process.env.NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID
       }
       format="fluid"
-      layoutKey="-fb+5w+4e-db+86"
+      layout="in-article"
       slotKind="fluid"
       minHeight={200}
       containerClassName="ad-container ad-in-article"
