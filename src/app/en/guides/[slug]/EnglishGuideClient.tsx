@@ -8,7 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
-import { GuideMidAd, SidebarAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 
 interface GuidePageClientProps {
  guide: Guide;
@@ -157,8 +157,8 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </div>
  </div>
 
- {/* End of article — highest impact ad slot (right after reading) */}
- <GuideMidAd />
+ {/* End of article — highest impact ad slot (in-article fluid for natural integration) */}
+ <InArticleAd />
 
  <CoupangBanner
  responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}

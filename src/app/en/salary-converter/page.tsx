@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import PageFooterAds from "@/components/PageFooterAds";
 import { GlobalTaxEngine, COUNTRY_NAMES, CountryCode, PPP_INDEX, TaxResult } from "@/lib/global/taxEngine";
 import { Calculator, Globe, TrendingUp, Info } from "lucide-react";
 import {
@@ -190,6 +191,7 @@ export default function SalaryConverterPage() {
  ))}
  </div>
  </div>
+ <PageFooterAds maxWidth="4xl" />
  </main>
  );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import PageFooterAds from "@/components/PageFooterAds";
 import { ArrowLeft, Calculator, Info, CheckCircle, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 export default function FlatTaxPage() {
@@ -160,6 +161,7 @@ export default function FlatTaxPage() {
  </div>
 
  </div>
+ <PageFooterAds maxWidth="4xl" />
  </div>
  );
 }

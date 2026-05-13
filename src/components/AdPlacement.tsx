@@ -108,6 +108,7 @@ function AdSlot({
 
   const baseClass = containerClassName ?? "ad-container";
   const composedClass = slotKind ? `${baseClass} ad-slot-${slotKind}` : baseClass;
+  const isInArticle = layout === "in-article";
 
   return (
     <div
@@ -119,8 +120,6 @@ function AdSlot({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // 모든 슬롯에 minHeight 일관 적용 → CLS 방지
-        // (이전: slotKind 있는 슬롯은 minHeight 누락되어 광고 로드 시 페이지 점프 발생)
         minHeight: `${minHeight}px`,
         ...style,
       }}
@@ -141,13 +140,18 @@ function AdSlot({
           className="adsbygoogle"
           style={{
             display: "block",
-            width: "100%",
-            minHeight: `${minHeight}px`,
+            // in-article fluid 광고는 Google 권장 style="display:block; text-align:center;" 그대로 적용.
+            // 일반 display 광고는 full-width-responsive 활용을 위해 width 100% 명시 + minHeight 로 CLS 방지.
+            ...(isInArticle
+              ? { textAlign: "center" }
+              : { width: "100%", minHeight: `${minHeight}px` }),
           }}
           data-ad-client={CLIENT_ID}
           data-ad-slot={slot}
           data-ad-format={format}
-          data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
+          {...(!isInArticle && {
+            "data-full-width-responsive": fullWidthResponsive ? "true" : "false",
+          })}
           {...(layoutKey ? { "data-ad-layout-key": layoutKey } : {})}
           {...(layout ? { "data-ad-layout": layout } : {})}
         />

@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect, useState, useRef, Suspense } from "react";
+import PageFooterAds from "@/components/PageFooterAds";
 import type { StoredFinancialData } from "@/app/types";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { calculateRank } from "@/lib/salaryData";
@@ -328,6 +329,7 @@ export default function ReportPage() {
  return (
  <Suspense fallback={<div>Loading Report...</div>}>
  <Report />
+ <PageFooterAds maxWidth="4xl" />
  </Suspense>
  );
 }

@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import PageFooterAds from "@/components/PageFooterAds";
 import {
  CareerEvent,
  CareerSimulationInput,
@@ -225,6 +226,7 @@ export default function CareerPlannerPage() {
  </div>
  </div>
  </div>
+ <PageFooterAds maxWidth="5xl" />
  </main>
  );
 }

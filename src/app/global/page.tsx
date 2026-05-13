@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import PageFooterAds from "@/components/PageFooterAds";
 import { ArrowLeft, Globe, DollarSign, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
@@ -152,6 +153,7 @@ export default function GlobalTaxPage() {
  </div>
  </div>
  </div>
+ <PageFooterAds maxWidth="4xl" />
  </div>
  );
 }

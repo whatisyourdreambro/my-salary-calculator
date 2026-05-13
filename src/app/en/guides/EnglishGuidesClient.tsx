@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CoupangBanner from '@/components/CoupangBanner';
+import { HomeTopAd, InArticleAd } from '@/components/AdPlacement';
 
 type SortOption = "latest" | "popular" | "oldest";
 
@@ -287,6 +288,15 @@ export default function EnglishGuidesClient({ guides }: { guides: Guide[] }) {
  </button>
  </div>
  )}
+
+ {/* Page-end ad block — InArticle + Display + Coupang */}
+ <div className="mt-16 max-w-3xl mx-auto space-y-6">
+ <InArticleAd />
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+ <HomeTopAd />
+ </div>
  </div>
  </main>
  );
