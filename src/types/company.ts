@@ -45,7 +45,7 @@ export interface CompanyProfile {
  en: string;
  };
  industry: string;
- tier: "conglomerate" | "unicorn" | "startup" | "foreign";
+ tier: "conglomerate" | "unicorn" | "startup" | "foreign" | "public";
  logo: string; // Path to image or emoji
  description: string;
 

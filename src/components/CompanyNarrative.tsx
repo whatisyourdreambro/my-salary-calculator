@@ -21,6 +21,7 @@ const TIER_LABEL: Record<CompanyProfile["tier"], string> = {
   unicorn: "유니콘 IT/스타트업",
   startup: "성장 단계 스타트업",
   foreign: "외국계",
+  public: "공기업/공공기관",
 };
 
 const REMOTE_LABEL: Record<CompanyProfile["workLife"]["remoteWork"]["policy"], string> = {

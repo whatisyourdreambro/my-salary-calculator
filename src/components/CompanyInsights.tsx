@@ -36,7 +36,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  </h2>
  <div className="space-y-3 text-sm sm:text-base text-muted-blue leading-relaxed">
  <p>
- <strong className="text-navy">{koName}</strong>({enName})는 {company.industry} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : "외국계"}로,{" "}
+ <strong className="text-navy">{koName}</strong>({enName})는 {company.industry} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : company.tier === "public" ? "공기업/공공기관" : "외국계"}로,{" "}
  신입 영끌 연봉 <strong className="text-electric">{formatSalaryKorean(entryTotal)}</strong> 수준을 형성합니다.
  </p>
  <p>
