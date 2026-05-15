@@ -18,7 +18,6 @@ import {
 import Logo from "./Logo";
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
-import { navConfigEn } from "./header/navConfigEn";
 import DesktopDropdown from "./header/DesktopDropdown";
 import MobileDropdown from "./header/MobileDropdown";
 import ThemeToggle from "./header/ThemeToggle";
@@ -27,11 +26,10 @@ import HeaderSearch from "./header/HeaderSearch";
 
 export default function Header() {
  const pathname = usePathname();
- const isEnglish = pathname?.startsWith("/en") ?? false;
- const activeNavConfig = isEnglish ? navConfigEn : navConfig;
- const dashboardLabel = isEnglish ? "Dashboard" : "대시보드";
- const mobileMenuAriaLabel = isEnglish ? "Open menu" : "메뉴 열기";
- const dashboardHref = isEnglish ? "/en" : "/dashboard";
+ const activeNavConfig = navConfig;
+ const dashboardLabel = "대시보드";
+ const mobileMenuAriaLabel = "메뉴 열기";
+ const dashboardHref = "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
  const { scrollY } = useScroll();
@@ -68,7 +66,7 @@ export default function Header() {
  animate={{ y: 0 }}
  transition={{ duration: 0.5, ease: "circOut" }}
  >
- <nav className="page-width" aria-label={isEnglish ? "Main navigation" : "주 메뉴"}>
+ <nav className="page-width" aria-label={"주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
@@ -149,7 +147,7 @@ export default function Header() {
  id="mobile-nav-menu"
  role="dialog"
  aria-modal="true"
- aria-label={isEnglish ? "Mobile navigation" : "모바일 메뉴"}
+ aria-label="모바일 메뉴"
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
@@ -171,12 +169,12 @@ export default function Header() {
  className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
  >
  <LayoutDashboard size={18} aria-hidden="true" />
- {isEnglish ? "Open Dashboard" : "내 대시보드 열기"}
+ 내 대시보드 열기
  </Link>
 
  {/* Nav items */}
  <nav
- aria-label={isEnglish ? "Main navigation" : "주 메뉴"}
+ aria-label={"주 메뉴"}
  className="bg-white rounded-[20px] overflow-hidden border-[1.5px] border-canvas"
  >
  {activeNavConfig.map((item) =>
