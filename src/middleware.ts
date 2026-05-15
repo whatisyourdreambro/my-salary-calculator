@@ -3,15 +3,16 @@ import { NextResponse, type NextRequest } from "next/server";
 // Edge runtime — Cloudflare Pages 호환 (Web API만 사용)
 // Node.js 전용 API 절대 금지: fs, crypto.randomBytes 등
 
-// 차단할 봇 (SEO 분석 봇 + AI 학습 봇 + 스크래퍼)
-const BAD_BOTS = /(SemrushBot|AhrefsBot|MJ12bot|Bytespider|DotBot|PetalBot|SeznamBot|YandexBot|BLEXBot|DataForSeoBot|SerpstatBot|MegaIndex|Barkrowler|ZoominfoBot|ImagesiftBot|Amazonbot|ClaudeBot|PerplexityBot|cohere-ai|MauiBot|SerendeputyBot|MJ12)/i;
+// 차단할 봇 (SEO 분석 봇 + 무단 스크래퍼)
+// ⚠️ ClaudeBot·PerplexityBot·cohere-ai는 AI 검색 유입 통로 → 허용 (robots.ts 정책과 통일)
+const BAD_BOTS = /(SemrushBot|AhrefsBot|MJ12bot|Bytespider|DotBot|PetalBot|SeznamBot|YandexBot|BLEXBot|DataForSeoBot|SerpstatBot|MegaIndex|Barkrowler|ZoominfoBot|ImagesiftBot|MauiBot|SerendeputyBot)/i;
 
 // 의심 User-Agent (보통 사용자가 쓰지 않는 라이브러리/CLI)
 const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|node-fetch|axios|okhttp|aiohttp|HTTrack|wget|scrapy|httpx)/i;
 
-// 절대 차단하면 안 되는 화이트리스트 (정상 검색·광고 봇)
-// AdSense, GA, 검색엔진은 사이트 운영의 생명선
-const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap)/i;
+// 절대 차단하면 안 되는 화이트리스트 (정상 검색·광고 봇 + AI 검색 크롤러)
+// AI 크롤러(ChatGPT·Perplexity·Claude 등)는 AI 검색 유입 통로 → 화이트리스트
+const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap|ClaudeBot|PerplexityBot|GPTBot|Google-Extended|cohere-ai|anthropic-ai|Amazonbot)/i;
 
 export function middleware(req: NextRequest) {
   // 0) non-www → www 301 redirect (canonical host 통합)
