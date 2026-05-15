@@ -2,6 +2,7 @@
 
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import localFont from "next/font/local";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import Header from "@/components/Header";
@@ -9,6 +10,15 @@ import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
+
+// Pretendard 가변 폰트 — self-host (next/font/local).
+// 외부 CDN render-blocking stylesheet 제거 + font-display: swap + 자동 폴백 매칭.
+const pretendard = localFont({
+  src: "./fonts/PretendardVariable.woff2",
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard-local",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -105,21 +115,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning className={pretendard.variable}>
       <head>
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        {/*
-          Pretendard 가변 폰트 — stylesheet 만 사용 (중복 요청 제거).
-          이전: preload + stylesheet 둘 다 같은 URL → 폰트 2번 다운로드 + render-blocking.
-          preconnect 가 이미 있어 CDN 연결 비용은 최소화됨.
-        */}
-        <link
-          rel="stylesheet"
-          crossOrigin=""
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
-        />
         <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
       </head>
       <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">

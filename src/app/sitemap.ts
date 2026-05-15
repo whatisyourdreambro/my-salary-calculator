@@ -31,6 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/guides',
  '/qna',
  '/glossary',
+ // 주제별 허브(필러) 페이지 — 흩어진 계산기·도구를 주제로 묶는 내부 링크 허브
+ '/hub',
+ '/hub/fire',
+ '/hub/invest',
+ '/hub/real-estate',
+ '/hub/tax-saving',
+ '/hub/career',
  '/about',
  '/privacy',
  '/terms',

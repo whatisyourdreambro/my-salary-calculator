@@ -13,11 +13,11 @@ const ContentSecurityPolicy = `
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google;
   frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com https://ep2.adtrafficquality.google;
   frame-ancestors 'self';
-  style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+  style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.kakao.com https://*.adfit.kakao.com https://*.daumcdn.net;
   media-src 'none';
   connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://*.adfit.kakao.com https://*.kakao.com;
-  font-src 'self' https://cdn.jsdelivr.net data:;
+  font-src 'self' data:;
   object-src 'none';
   base-uri 'self';
   form-action 'self';

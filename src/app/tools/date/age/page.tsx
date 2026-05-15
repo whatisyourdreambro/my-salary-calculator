@@ -1,5 +1,6 @@
 ﻿import { AgeCalculator } from "@/components/calculators/date/DateCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "만 나이 계산기 (Age Calculator) - MoneySalary",
@@ -13,6 +14,7 @@ export default function AgePage() {
  <h1 className="text-3xl font-bold text-navy mb-8">만 나이 계산기</h1>
  <AgeCalculator />
  </div>
+ <ToolPageContent path="/tools/date/age" />
  </div>
  );
 }

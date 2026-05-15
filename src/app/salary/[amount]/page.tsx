@@ -14,7 +14,8 @@ import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
 import FavoritesButton from "@/components/FavoritesButton";
-import { ArrowLeft, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
 import {
  breadcrumbLd,
@@ -110,6 +111,12 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const faqItems = buildSalaryFaq(amount, tax.netPay, tax.totalDeductions);
 
+ const breadcrumbItems = [
+ { name: "홈", path: "/" },
+ { name: "연봉별 실수령액", path: "/" },
+ { name: `연봉 ${formattedAmount}`, path: `/salary/${params.amount}` },
+ ];
+
  const howTo = howToLd({
  name: `연봉 ${formattedAmount} 실수령액 계산하는 방법`,
  description: `연봉 ${formattedAmount}을 기준으로 4대보험·소득세·실수령액을 단계별로 계산하는 가이드.`,
@@ -147,11 +154,7 @@ export default function SalaryAmountPage({ params }: Props) {
  <main className="min-h-screen bg-transparent pb-10">
  <JsonLd
  data={[
- breadcrumbLd([
- { name: "홈", path: "/" },
- { name: "연봉별 실수령액", path: "/" },
- { name: `연봉 ${formattedAmount}`, path: `/salary/${params.amount}` },
- ]),
+ breadcrumbLd(breadcrumbItems),
  softwareApplicationLd({
  name: `연봉 ${formattedAmount} 실수령액 계산기`,
  description: `연봉 ${formattedAmount}의 2026년 세법 기준 월 실수령액·세금 공제 분석`,
@@ -163,18 +166,9 @@ export default function SalaryAmountPage({ params }: Props) {
  ]}
  />
 
- <div className="pt-8 px-4 sm:px-6 lg:px-8">
+ <div className="pt-24 px-4 sm:px-6 lg:px-8">
  <div className="max-w-7xl mx-auto">
- <Link
- href="/"
- className="inline-flex items-center gap-2 text-faint-blue hover:text-primary transition-colors mb-6 group"
- >
- <ArrowLeft
- size={16}
- className="group-hover:-translate-x-1 transition-transform"
- />
- <span className="text-xs font-bold">전체 계산기로 돌아가기</span>
- </Link>
+ <Breadcrumbs items={breadcrumbItems} className="mb-6" />
 
  <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14">
  {/* Main column */}

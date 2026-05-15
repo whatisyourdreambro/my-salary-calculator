@@ -1,5 +1,6 @@
 ﻿import { NumberGenerator } from "@/components/calculators/math/MathCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "랜덤 숫자 생성기 (RNG) - MoneySalary",
@@ -13,6 +14,7 @@ export default function NumberGenPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">랜덤 숫자 생성기</h1>
  <NumberGenerator />
  </div>
+ <ToolPageContent path="/tools/math/number-gen" />
  </div>
  );
 }

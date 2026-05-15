@@ -8,7 +8,7 @@
 
 import type { CalculatorDef } from "./types";
 
-type Enrichment = Pick<CalculatorDef, "explanation" | "formula" | "faqs" | "caveats" | "relatedSlugs">;
+export type Enrichment = Pick<CalculatorDef, "explanation" | "formula" | "faqs" | "caveats" | "relatedSlugs">;
 
 export const enrichmentMap: Record<string, Enrichment> = {
   // ═══════ 세금 8개 ═══════════════════════════════════════════

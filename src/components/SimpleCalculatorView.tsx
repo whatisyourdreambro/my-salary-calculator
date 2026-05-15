@@ -11,6 +11,7 @@ import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 import { CalcResultAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
+import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
 
 interface Props {
@@ -61,6 +62,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  return (
  <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-28">
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+ <Breadcrumbs path={`/calc/${slug}`} leafName={calc.title} className="mb-6" />
  <div className="text-center mb-10">
  <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-4">
  {calc.categoryLabel}

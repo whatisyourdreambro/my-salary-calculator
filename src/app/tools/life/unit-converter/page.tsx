@@ -1,5 +1,6 @@
 ﻿import { UnitConverter } from "@/components/calculators/life/LifeCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "단위 변환기 (Unit Converter) - MoneySalary",
@@ -13,6 +14,7 @@ export default function UnitConverterPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">단위 변환기</h1>
  <UnitConverter />
  </div>
+ <ToolPageContent path="/tools/life/unit-converter" />
  </div>
  );
 }

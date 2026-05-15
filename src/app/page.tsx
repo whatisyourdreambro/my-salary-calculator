@@ -89,18 +89,6 @@ const GuideCategories = dynamic(
  { ssr: false }
 );
 
-const websiteStructuredData = {
- "@context": "https://schema.org",
- "@type": "WebSite",
- name: "Moneysalary",
- url: "https://www.moneysalary.com",
- potentialAction: {
- "@type": "SearchAction",
- target: "https://www.moneysalary.com/salary/{search_term_string}",
- "query-input": "required name=search_term_string",
- },
-};
-
 /* ── ToolCard 분리됨 → src/components/home/ToolCard.tsx ──────── */
 
 /* ── Stats Bar ─────────────────────────────────────────────────── */
@@ -120,12 +108,6 @@ export default function HomePage() {
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{
- __html: JSON.stringify(websiteStructuredData),
- }}
- />
  <div className="w-full overflow-x-hidden">
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}

@@ -9,6 +9,7 @@ import { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, SidebarAd } from "@/components/AdPlacement";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface GuidePageClientProps {
  guide: Guide;
@@ -62,6 +63,12 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  transition={{ duration: 0.8 }}
  className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
  >
+ <Breadcrumbs
+ path={`/guides/${guide.slug}`}
+ leafName={guide.title}
+ align="center"
+ className="mb-5"
+ />
  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <span className="w-2 h-2 rounded-full bg-primary/50" />
  {guide.category} 가이드

@@ -1,5 +1,6 @@
 import BmiCalculator from "@/components/calculators/health/BmiCalculator";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "BMI 비만도 계산기 | Moneysalary",
@@ -16,6 +17,7 @@ export default function BmiPage() {
  </div>
  <BmiCalculator />
  </div>
+ <ToolPageContent path="/tools/health/bmi" />
  </div>
  );
 }

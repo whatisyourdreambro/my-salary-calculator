@@ -181,11 +181,11 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  },
  {
  id: "sk-cc",
- name: { ko: "SK C&C", en: "SK C&C" },
+ name: { ko: "SK AX", en: "SK AX" },
  industry: "IT Services",
  tier: "conglomerate",
  logo: "🖥️",
- description: "Creative & Comprehensive.",
+ description: "구 SK C&C. SK그룹의 AI·디지털 전환(DX) 전문 기업.",
  salary: {
  entry: { base: 54000000, incentive: { target: 20, max: 40, avgAmount: 12000000 } },
  junior: { base: 66000000, incentive: { target: 20, max: 40, avgAmount: 18000000 } },

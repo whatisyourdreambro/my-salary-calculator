@@ -27,7 +27,7 @@ export default function robots(): MetadataRoute.Robots {
 
  // ─── 2. 핵심 검색 봇: 한국·글로벌 검색 시장 ─────────────────
  // Yeti = NaverBot, Daum = KakaoBot. 한국 트래픽의 30%+ 비중.
- // Applebot은 일반 검색용 (≠ Applebot-Extended는 AI 학습용으로 아래 차단)
+ // Applebot 포함 — 검색 크롤러는 모두 허용 (AI 크롤러도 차단 안 함).
  {
  userAgent: [
  'Googlebot',
@@ -44,39 +44,13 @@ export default function robots(): MetadataRoute.Robots {
  disallow: corePathDisallow,
  },
 
- // ─── 3. AI 크롤러 차단: 학습 데이터 수집 거부 (운영자 정책) ──
- // Applebot-Extended는 일반 Applebot과 분리된 AI 학습 전용 봇 — 차단
- {
- userAgent: [
- 'GPTBot',
- 'ChatGPT-User',
- 'OAI-SearchBot',
- 'CCBot',
- 'PerplexityBot',
- 'Perplexity-User',
- 'Amazonbot',
- 'AnthropicAI',
- 'anthropic-ai',
- 'Claude-Web',
- 'ClaudeBot',
- 'Claude-SearchBot',
- 'cohere-ai',
- 'Google-Extended',
- 'Applebot-Extended',
- 'Bytespider',
- 'ImagesiftBot',
- 'meta-externalagent',
- 'FacebookBot',
- 'Diffbot',
- 'YouBot',
- 'Timpibot',
- 'Omgilibot',
- 'omgili',
- ],
- disallow: '/',
- },
+ // ─── AI 크롤러: 차단하지 않음 (검색·학습 크롤러 모두 허용) ──
+ // ChatGPT·Perplexity·Claude 등 AI 검색 크롤러는 AI 검색 결과에서
+ // 방문자를 보내주는 유입 통로. 학습 크롤러(GPTBot 등)도 콘텐츠가
+ // 공개 세법 정보라 차단 실익이 없음 → 별도 차단 그룹을 두지 않고
+ // 아래 기본 그룹(User-agent: *)에 흡수되어 일반 검색봇처럼 허용.
 
- // ─── 4. SEO 분석 봇 차단: 서버 자원 낭비 + 경쟁사 정찰 방지 ──
+ // ─── 3. SEO 분석 봇 차단: 서버 자원 낭비 + 경쟁사 정찰 방지 ──
  {
  userAgent: [
  'SemrushBot',
@@ -96,7 +70,7 @@ export default function robots(): MetadataRoute.Robots {
  disallow: '/',
  },
 
- // ─── 5. 기타 모든 봇 기본값 ────────────────────────────────
+ // ─── 4. 기타 모든 봇 기본값 ────────────────────────────────
  // 위에 명시되지 않은 봇은 이 규칙을 따름 (일반 검색 봇과 동일 정책)
  {
  userAgent: '*',

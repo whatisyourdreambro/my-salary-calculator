@@ -5,16 +5,27 @@ import type { CalculatorDef } from "./types";
 import { batch1Calculators } from "./batch1";
 import { batch2Calculators } from "./batch2";
 import { enrichmentMap } from "./enrichments";
+import { enrichmentsExtA } from "./enrichments-ext-a";
+import { enrichmentsExtB } from "./enrichments-ext-b";
+import { enrichmentsExtC } from "./enrichments-ext-c";
 
 const rawCalculators: CalculatorDef[] = [
  ...batch1Calculators,
  ...batch2Calculators,
 ];
 
+// 우선순위 30개(enrichments) + 확장 70개(ext-a/b/c) = 100개 전체 enrichment 병합
+const mergedEnrichments = {
+ ...enrichmentMap,
+ ...enrichmentsExtA,
+ ...enrichmentsExtB,
+ ...enrichmentsExtC,
+};
+
 // enrichments(explanation·formula·faqs·caveats·relatedSlugs)를 슬러그별로 자동 병합
 // 기존 batch에 explanation이 있으면 그대로 유지, enrichments에만 있는 키는 추가 적용
 export const allCalculators: CalculatorDef[] = rawCalculators.map((calc) => {
- const enrichment = enrichmentMap[calc.slug];
+ const enrichment = mergedEnrichments[calc.slug];
  if (!enrichment) return calc;
  return {
  ...calc,

@@ -94,6 +94,7 @@ export const navConfig: NavItem[] = [
  { name: "Q&A 자주 묻는 질문", href: "/qna", description: "직장인 금융 답변" },
  { name: "금융 용어 사전", href: "/glossary", description: "쉽게 풀어쓴 용어" },
  { name: "직장인 꿀팁 모음", href: "/tips", description: "실전 노하우" },
+ { name: "주제별 종합 가이드", href: "/hub", description: "FIRE·투자·부동산·절세·커리어", badge: "NEW" },
  { name: "연말정산 환급 200만원", href: "/guides/year-end-tax-refund-secrets-2026", description: "7가지 비밀", badge: "NEW" },
  { name: "IRP vs 연금저축 vs ISA", href: "/guides/irp-pension-isa-comparison-2026", description: "최적 조합 전략", badge: "NEW" },
  { name: "연봉 협상 실전 시나리오", href: "/guides/salary-negotiation-real-scripts-2026", description: "+18% 인상 스크립트", badge: "NEW" },

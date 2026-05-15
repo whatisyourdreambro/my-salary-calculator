@@ -51,6 +51,7 @@ export default function Footer() {
         { name: "Korean Site →", href: "/" },
       ]
     : [
+        { name: "주제별 가이드", href: "/hub" },
         { name: "금융 가이드", href: "/guides" },
         { name: "용어 사전", href: "/glossary" },
         { name: "회사 연봉 DB", href: "/salary-db" },

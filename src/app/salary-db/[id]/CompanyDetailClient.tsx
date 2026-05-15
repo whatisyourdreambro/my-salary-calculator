@@ -52,7 +52,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  </div>
  <div className="text-center md:text-left">
  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
- <h1 className="text-4xl font-black tracking-tight">{company.name.ko}</h1>
+ <h1 className="text-4xl font-black tracking-tight">{company.name.ko} 연봉</h1>
  <span className="px-2 py-1 rounded bg-primary text-xs font-bold uppercase">
  {company.tier}
  </span>

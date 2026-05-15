@@ -1,5 +1,6 @@
 ﻿import { DDayCalculator } from "@/components/calculators/date/DateCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "D-Day 디데이 계산기 - MoneySalary",
@@ -13,6 +14,7 @@ export default function DDayPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">D-Day 계산기</h1>
  <DDayCalculator />
  </div>
+ <ToolPageContent path="/tools/date/d-day" />
  </div>
  );
 }

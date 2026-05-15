@@ -153,6 +153,7 @@ const SEGMENT_LABELS: Record<string, string> = {
  qna: "Q&A",
  tips: "절세 팁",
  glossary: "용어 사전",
+ hub: "주제별 가이드",
  dashboard: "대시보드",
  "fire-calculator": "FIRE 계산기",
  "year-end-tax": "연말정산",
@@ -170,10 +171,14 @@ export interface AutoBreadcrumbOptions {
 }
 
 /**
- * 경로를 받아 BreadcrumbList JSON-LD 자동 생성.
+ * 경로를 받아 breadcrumb 단계 배열 생성 (순수 함수).
+ * 시각적 Breadcrumbs 컴포넌트와 JSON-LD가 동일 데이터를 공유하도록 분리.
  * 예: /tools/finance/severance → [홈, 금융 도구, 금융, 퇴직금 계산기]
  */
-export function autoBreadcrumbLd(path: string, options: AutoBreadcrumbOptions = {}) {
+export function buildBreadcrumbTrail(
+ path: string,
+ options: AutoBreadcrumbOptions = {}
+): Breadcrumb[] {
  const segments = path.split("/").filter(Boolean);
  const crumbs: Breadcrumb[] = [{ name: "홈", path: "/" }];
 
@@ -190,7 +195,14 @@ export function autoBreadcrumbLd(path: string, options: AutoBreadcrumbOptions = 
  crumbs.push({ name: label, path: acc });
  });
 
- return breadcrumbLd(crumbs);
+ return crumbs;
+}
+
+/**
+ * 경로를 받아 BreadcrumbList JSON-LD 자동 생성.
+ */
+export function autoBreadcrumbLd(path: string, options: AutoBreadcrumbOptions = {}) {
+ return breadcrumbLd(buildBreadcrumbTrail(path, options));
 }
 
 // ─────────────────────────────────────────────────────────────

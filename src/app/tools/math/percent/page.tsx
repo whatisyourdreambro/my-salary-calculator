@@ -1,5 +1,6 @@
 ﻿import { PercentCalculator } from "@/components/calculators/math/MathCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "퍼센트 계산기 (Percentage) - MoneySalary",
@@ -13,6 +14,7 @@ export default function PercentPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">퍼센트 계산기</h1>
  <PercentCalculator />
  </div>
+ <ToolPageContent path="/tools/math/percent" />
  </div>
  );
 }

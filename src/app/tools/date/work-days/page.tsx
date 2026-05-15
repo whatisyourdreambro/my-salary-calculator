@@ -1,5 +1,6 @@
 ﻿import { WorkDayCalculator } from "@/components/calculators/date/DateCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "영업일 계산기 (Business Days) - MoneySalary",
@@ -13,6 +14,7 @@ export default function WorkDayPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">영업일 계산기</h1>
  <WorkDayCalculator />
  </div>
+ <ToolPageContent path="/tools/date/work-days" />
  </div>
  );
 }

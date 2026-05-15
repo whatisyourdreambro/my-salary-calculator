@@ -1,5 +1,6 @@
 import CagrCalculator from "@/components/calculators/finance/CagrCalculator";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "CAGR(연평균 성장률) 계산기 | Moneysalary",
@@ -16,6 +17,7 @@ export default function CagrPage() {
  </div>
  <CagrCalculator />
  </div>
+ <ToolPageContent path="/tools/finance/cagr" />
  </div>
  );
 }

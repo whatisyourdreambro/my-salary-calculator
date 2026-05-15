@@ -9,6 +9,7 @@ import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
  autoBreadcrumbLd,
@@ -119,6 +120,12 @@ export default function CompanyDetailPage({
  faqLd(faqItems),
  ]}
  />
+ <div className="page-width pt-24 pb-3">
+ <Breadcrumbs
+ path={`/salary-db/${company.id}`}
+ leafName={company.name.ko}
+ />
+ </div>
  <CompanyDetailClient company={company} />
 
  {/* 결과 직후 광고 — 회사명 검색 의도 정점 */}

@@ -1,5 +1,6 @@
 import VatCalculator from "@/components/calculators/finance/VatCalculator";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "부가세(VAT) 계산기 | Moneysalary",
@@ -16,6 +17,7 @@ export default function VatPage() {
  </div>
  <VatCalculator />
  </div>
+ <ToolPageContent path="/tools/finance/vat" />
  </div>
  );
 }

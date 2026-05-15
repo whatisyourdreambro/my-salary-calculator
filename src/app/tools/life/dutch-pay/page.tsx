@@ -1,5 +1,6 @@
 ﻿import { DutchPayCalculator } from "@/components/calculators/life/LifeCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "N빵 계산기 (Dutch Pay) - MoneySalary",
@@ -13,6 +14,7 @@ export default function DutchPayPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">N빵 계산기</h1>
  <DutchPayCalculator />
  </div>
+ <ToolPageContent path="/tools/life/dutch-pay" />
  </div>
  );
 }

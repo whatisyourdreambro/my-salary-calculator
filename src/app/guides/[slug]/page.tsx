@@ -3,10 +3,12 @@ import { koGuides } from "@/lib/guidesData";
 import { notFound } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
+import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
+import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -25,34 +27,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const guide = koGuides.find((g) => g.slug === params.slug);
  if (!guide) return {};
 
+ // 표준 헬퍼로 키워드·robots·동적 OG 이미지·Article 타입을 일관 적용.
+ const base = buildGuideMetadata({
+ slug: guide.slug,
+ title: guide.title,
+ description: guide.description,
+ publishedDate: guide.publishedDate,
+ tags: guide.tags,
+ });
+
+ // 가이드는 한·영 버전이 있어 hreflang 대체 링크를 추가 병합.
  const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
  const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
 
  return {
- title: `${guide.title} | Moneysalary 금융 가이드`,
- description: guide.description,
+ ...base,
  alternates: {
- canonical: koUrl,
+ ...base.alternates,
  languages: {
  "ko-KR": koUrl,
  "en": enUrl,
  "x-default": koUrl,
  },
- },
- openGraph: {
- title: guide.title,
- description: guide.description,
- type: 'article',
- locale: 'ko_KR',
- url: koUrl,
- publishedTime: guide.publishedDate,
- authors: ['Moneysalary'],
- tags: guide.tags,
- },
- twitter: {
- card: 'summary_large_image',
- title: guide.title,
- description: guide.description,
  },
  };
 }
@@ -117,6 +113,8 @@ export default function GuidePage({ params }: Props) {
  limit={6}
  title="더 깊이 알아보고 싶다면"
  />
+
+ <GuideRelatedCalcs guideSlug={guide.slug} />
 
  <div className="my-8">
  <HomeTopAd />

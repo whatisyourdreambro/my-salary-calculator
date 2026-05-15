@@ -127,3 +127,30 @@ export const SALARY_PAGE_GUIDES: string[] = [
 export function getCalcRelatedGuideSlugs(calcSlug: string): string[] {
   return CALC_TO_GUIDES[calcSlug] ?? [];
 }
+
+/**
+ * 가이드 → 계산기 역방향 매핑.
+ * CALC_TO_GUIDES를 역으로 집계 — 별도 매핑을 유지하지 않아도 항상 동기화됨.
+ * 가이드 글을 읽은 독자를 관련 계산기(=실전 도구)로 보내 PV/세션 향상.
+ */
+let _guideToCalcsCache: Record<string, string[]> | null = null;
+
+function buildGuideToCalcs(): Record<string, string[]> {
+  if (_guideToCalcsCache) return _guideToCalcsCache;
+  const map: Record<string, string[]> = {};
+  for (const [calcSlug, guideSlugs] of Object.entries(CALC_TO_GUIDES)) {
+    for (const g of guideSlugs) {
+      (map[g] ??= []).push(calcSlug);
+    }
+  }
+  _guideToCalcsCache = map;
+  return map;
+}
+
+/**
+ * 가이드 slug → 이 가이드와 짝지어진 계산기 slug[].
+ * 매핑 없으면 빈 배열.
+ */
+export function getGuideRelatedCalcs(guideSlug: string): string[] {
+  return buildGuideToCalcs()[guideSlug] ?? [];
+}

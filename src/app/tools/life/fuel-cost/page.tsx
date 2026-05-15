@@ -1,5 +1,6 @@
 ﻿import { FuelCostCalculator } from "@/components/calculators/life/LifeCalculators";
 import { Metadata } from "next";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = {
  title: "유류비 계산기 (Fuel Cost) - MoneySalary",
@@ -13,6 +14,7 @@ export default function FuelCostPage() {
  <h1 className="text-3xl font-bold text-navy mb-8">유류비 계산기</h1>
  <FuelCostCalculator />
  </div>
+ <ToolPageContent path="/tools/life/fuel-cost" />
  </div>
  );
 }

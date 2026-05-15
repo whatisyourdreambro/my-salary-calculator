@@ -4,7 +4,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BookOpen, Sparkles, Hash } from "lucide-react";
+import { ArrowRight, BookOpen, Sparkles, Hash } from "lucide-react";
 import {
  glossaryData,
  toGlossarySlug,
@@ -19,6 +19,7 @@ import {
 } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const dynamic = "force-static";
 
@@ -100,13 +101,11 @@ export default function GlossaryDetailPage({
  />
 
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
- <Link
- href="/glossary"
- className="inline-flex items-center gap-2 text-sm text-muted-blue hover:text-electric mb-6"
- >
- <ArrowLeft className="w-4 h-4" />
- 용어 사전 전체로 돌아가기
- </Link>
+ <Breadcrumbs
+ path={`/glossary/${toGlossarySlug(item.title)}`}
+ leafName={item.title}
+ className="mb-6"
+ />
 
  <header className="mb-8">
  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-4">

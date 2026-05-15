@@ -203,29 +203,30 @@ export function buildCompanyMetadata(company: {
  industry?: string;
  averageSalary?: number;
 }): Metadata {
- // SERP CTR — 검색 쿼리("OOO 2026 평균 연봉")와 동일 어순으로 title 재정렬.
- // 이전엔 "OOO 연봉 — 평균 5000만원 (2026)" 으로 "연봉" 단어가 회사명에 붙어
- // 검색 키워드 매칭이 분산되던 문제 해결.
- const avgFigure = company.averageSalary
+ // 네이버 검색 데이터 기준: "{회사} 연봉"·"{회사} 신입 연봉"·"{회사} 초봉"·
+ // "{회사} 직급" 쿼리 비중이 압도적. page.tsx가 넘기는 averageSalary는 실제로
+ // 신입 영끌 수치이므로 "신입 초봉"으로 정확히 라벨링하고, "{회사} 연봉"을
+ // title 맨 앞에 둬 핵심 키워드 매칭을 강화한다 (영문 industry 접미사 제거).
+ const entryFigure = company.averageSalary
  ? `${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
  : null;
- const titleSegment = avgFigure
- ? `2026 평균 연봉 ${avgFigure}`
- : "2026 연봉 정보";
- const industrySuffix = company.industry ? ` · ${company.industry}` : "";
+ const title = entryFigure
+ ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 실수령액`
+ : `${company.name} 연봉 2026 — 신입 초봉·직급별 실수령액 정보`;
 
  return buildPageMetadata({
- title: `${company.name} ${titleSegment} — 직급별 실수령액${industrySuffix}`,
- description: `${company.name}의 직급별 평균 연봉과 실수령액을 2026년 세법 기준으로 분석. 같은 업종 평균 대비 차이, 동급 회사 비교, 협상 팁까지 한눈에 확인하세요.`,
+ title,
+ description: `${company.name} 신입 초봉부터 대리·과장·부장 직급별 평균 연봉과 세후 실수령액을 2026년 기준으로 분석합니다. 동종업계 평균 비교·연봉 협상 팁까지 한눈에 확인하세요.`,
  path: `/salary-db/${company.id}`,
  keywords: [
  `${company.name} 연봉`,
+ `${company.name} 신입 연봉`,
+ `${company.name} 초봉`,
  `${company.name} 2026 연봉`,
  `${company.name} 평균 연봉`,
+ `${company.name} 직급별 연봉`,
  `${company.name} 실수령액`,
  `${company.name} 월급`,
- `${company.name} 신입 연봉`,
- ...(company.industry ? [company.industry] : []),
  ],
  ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,
  });
