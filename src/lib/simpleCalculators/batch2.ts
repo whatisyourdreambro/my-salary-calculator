@@ -1008,6 +1008,93 @@ const FAMILY: CalculatorDef[] = [
  },
 ];
 
+// ─── 실업급여 ───────────────────────────────────────────────
+const UNEMPLOYMENT: CalculatorDef[] = [
+ {
+   slug: "unemployment-benefit",
+   title: "실업급여 계산기",
+   description: "이직 전 평균임금·근무기간으로 구직급여 즉시 계산",
+   category: "salary",
+   categoryLabel: "세금/연봉",
+   keywords: ["실업급여", "구직급여", "실업급여 계산기", "실업급여 얼마"],
+   fields: [
+     {
+       name: "avgMonthly",
+       label: "이직 전 3개월 평균 월급",
+       defaultValue: 3000000,
+       suffix: "원",
+       min: 500000,
+       max: 10000000,
+       hint: "세전 기본급 + 고정수당 기준",
+     },
+     {
+       name: "workMonths",
+       label: "근무 기간",
+       defaultValue: 24,
+       suffix: "개월",
+       min: 1,
+       max: 360,
+       hint: "해당 사업장 근무 기간 (이직일 기준)",
+     },
+   ],
+   compute: ({ avgMonthly, workMonths }) => {
+     // 일일 평균임금
+     const dailyAvg = avgMonthly / 30;
+     // 구직급여 일액 = 일일 평균임금 × 60% (상한: 66,000원, 하한: 최저임금 × 80% ÷ 8시간)
+     const UPPER_LIMIT = 66000;
+     const LOWER_LIMIT = Math.round((10320 * 8 * 0.8)); // 2026년 최저시급 10,320원 기준
+     const dailyBenefit = Math.min(UPPER_LIMIT, Math.max(LOWER_LIMIT, Math.round(dailyAvg * 0.6)));
+
+     // 수급 기간 결정 (고용보험법 기준)
+     let benefitDays = 90;
+     if (workMonths < 12) benefitDays = 90;
+     else if (workMonths < 36) benefitDays = 120;
+     else if (workMonths < 60) benefitDays = 150;
+     else if (workMonths < 120) benefitDays = 180;
+     else if (workMonths < 240) benefitDays = 210;
+     else benefitDays = 240;
+
+     const totalBenefit = dailyBenefit * benefitDays;
+     const monthlyBenefit = Math.round((dailyBenefit * 30));
+
+     return {
+       primary: { label: "예상 총 수급액", value: totalBenefit, suffix: "원" },
+       secondary: [
+         { label: "일일 구직급여", value: dailyBenefit, suffix: "원" },
+         { label: "수급 가능 기간", value: benefitDays, suffix: "일" },
+         { label: "월 환산 수급액", value: monthlyBenefit, suffix: "원" },
+       ],
+       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일. 실제 수급은 워크넷 수급자격 인정 후 지급됩니다.`,
+     };
+   },
+   explanation:
+     "실업급여(구직급여)는 고용보험 가입자가 비자발적으로 이직(권고사직·계약만료 등)했을 때 지급됩니다. 이직 전 18개월 중 고용보험 가입기간이 180일 이상이어야 합니다.",
+   formula:
+     "구직급여 일액 = 이직 전 3개월 평균 일급 × 60% (상한 66,000원/하한 최저임금×80%÷8시간)",
+   faqs: [
+     {
+       q: "실업급여 신청 방법은 어떻게 되나요?",
+       a: "이직 후 → 거주지 관할 고용센터 방문 또는 워크넷(work.go.kr) 온라인 신청 → 수급자격 인정 → 구직활동 인정(2~4주마다) → 실업급여 지급 순서로 진행됩니다. 이직 후 1년 이내에 신청해야 합니다.",
+     },
+     {
+       q: "자진 퇴사하면 실업급여를 못 받나요?",
+       a: "원칙적으로 자발적 이직은 실업급여 수급 대상이 아닙니다. 단, 임금 체불·직장 내 괴롭힘·계약조건 위반·건강 악화 등 불가피한 사정이 있으면 수급 가능합니다. 고용센터에서 정당한 이직 사유를 심사합니다.",
+     },
+     {
+       q: "실업급여 받는 동안 아르바이트를 할 수 있나요?",
+       a: "신고 없이 아르바이트를 하면 부정수급으로 환수·처벌 받을 수 있습니다. 단기·일용직 근무는 취업 신고 후 해당일 수급액이 조정됩니다. 주 15시간 이상 계속 취업 시 수급이 중단됩니다.",
+     },
+   ],
+   caveats: [
+     "이직 전 18개월 중 피보험단위기간(고용보험 가입일수) 180일 이상 필요",
+     "자발적 퇴직은 원칙적 수급 불가 (불가피한 사유 제외)",
+     "수급 기간은 이직일 기준 최대 1년 이내",
+     "2026년 최저시급 10,320원 기준 계산 (법령 변경 시 달라질 수 있음)",
+   ],
+   relatedSlugs: ["severance-pay-quick", "annual-leave-pay-quick", "earned-income-tax-quick"],
+ },
+];
+
 export const batch2Calculators: CalculatorDef[] = [
  ...REAL_ESTATE,
  ...INSURANCE,
@@ -1015,4 +1102,5 @@ export const batch2Calculators: CalculatorDef[] = [
  ...LIFE,
  ...HEALTH,
  ...FAMILY,
+ ...UNEMPLOYMENT,
 ];

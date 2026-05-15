@@ -2,6 +2,8 @@ import { MetadataRoute } from 'next';
 import { koGuides, enGuides } from '@/lib/guidesData';
 import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
 import { qnaData, toQnaSlug } from '@/data/qnaData';
+import { jobsData } from '@/data/jobsData';
+import { industriesData } from '@/data/industriesData';
 
 type ChangeFrequency =
  | 'always'
@@ -199,6 +201,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 3. Dynamic Salary Pages
  const salaryUrls: MetadataRoute.Sitemap = [];
 
+ // 5m to 19.5m in 0.5m increments — 파트타임·아르바이트 연봉 검색
+ for (let i = 5; i < 20; i += 0.5) {
+ const amount = Math.round(i * 1000000);
+ salaryUrls.push({
+ url: `${baseUrl}/salary/${amount}`,
+ lastModified: new Date(),
+ changeFrequency: 'yearly',
+ priority: i % 1 === 0 ? 0.6 : 0.45,
+ });
+ }
+
  // 20m to 100m in 0.5m increments (long-tail SEO: 3500/4250/5500만원 등)
  for (let i = 20; i <= 100; i += 0.5) {
  const amount = Math.round(i * 1000000);
@@ -291,5 +304,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.65,
  }));
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls];
+ // 직업별 연봉 페이지
+ const jobUrls: MetadataRoute.Sitemap = [
+ {
+ url: `${baseUrl}/job`,
+ lastModified: new Date(),
+ changeFrequency: 'weekly',
+ priority: 0.9,
+ },
+ ...jobsData.map((job) => ({
+ url: `${baseUrl}/job/${job.id}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.8,
+ })),
+ ];
+
+ // 산업별 연봉 페이지
+ const industryUrls: MetadataRoute.Sitemap = [
+ {
+ url: `${baseUrl}/industry`,
+ lastModified: new Date(),
+ changeFrequency: 'weekly',
+ priority: 0.9,
+ },
+ ...industriesData.map((industry) => ({
+ url: `${baseUrl}/industry/${industry.id}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.8,
+ })),
+ ];
+
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls];
 }
