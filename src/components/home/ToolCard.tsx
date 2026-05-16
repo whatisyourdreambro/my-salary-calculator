@@ -10,50 +10,59 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 interface ToolCardProps {
- icon: React.ElementType;
- title: string;
- description: string;
- href: string;
- iconBg?: string;
- delay?: number;
- wide?: boolean;
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  href: string;
+  iconBg?: string;
+  delay?: number;
+  wide?: boolean;
+  /** "HOT" | "인기" | "NEW" 등 카드 우상단 뱃지 */
+  badge?: string;
 }
 
 export default function ToolCard({
- icon: Icon,
- title,
- description,
- href,
- delay = 0,
- wide = false,
+  icon: Icon,
+  title,
+  description,
+  href,
+  delay = 0,
+  wide = false,
+  badge,
 }: ToolCardProps) {
- return (
- <motion.div
- initial={{ opacity: 0, y: 16 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.4, delay }}
- className={wide ? "md:col-span-2" : ""}
- >
- <Link
- href={href}
- className="duotone-card no-tap-highlight flex items-center gap-4 px-5 py-4 hover:-translate-y-0.5 group"
- >
- <div className="flex items-center justify-center flex-shrink-0 w-[46px] h-[46px] rounded-xl bg-electric-5 text-electric border border-electric/20 group-hover:bg-electric-10 transition-colors">
- <Icon className="w-[22px] h-[22px]" />
- </div>
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay }}
+      className={wide ? "md:col-span-2" : ""}
+    >
+      <Link
+        href={href}
+        className="relative duotone-card no-tap-highlight flex items-center gap-4 px-5 py-4 hover:-translate-y-0.5 group"
+      >
+        {badge && (
+          <span className="absolute top-2.5 right-9 px-1.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wide bg-electric text-white leading-none">
+            {badge}
+          </span>
+        )}
 
- <div className="flex-1 min-w-0">
- <p className="font-bold text-navy text-[15px] tracking-tight mb-0.5 truncate">
- {title}
- </p>
- <p className="text-faint-blue text-[13.5px] truncate">
- {description}
- </p>
- </div>
+        <div className="flex items-center justify-center flex-shrink-0 w-[46px] h-[46px] rounded-xl bg-electric-5 text-electric border border-electric/20 group-hover:bg-electric-10 transition-colors">
+          <Icon className="w-[22px] h-[22px]" />
+        </div>
 
- <ChevronRight className="text-faint-blue group-hover:text-electric flex-shrink-0 w-4 h-4 transition-colors" />
- </Link>
- </motion.div>
- );
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-navy text-[15px] tracking-tight mb-0.5 truncate">
+            {title}
+          </p>
+          <p className="text-faint-blue text-[13.5px] truncate">
+            {description}
+          </p>
+        </div>
+
+        <ChevronRight className="text-faint-blue group-hover:text-electric flex-shrink-0 w-4 h-4 transition-colors" />
+      </Link>
+    </motion.div>
+  );
 }
