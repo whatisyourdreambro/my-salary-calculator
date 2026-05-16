@@ -10,6 +10,7 @@ import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
 import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
 import { semiconductorDeepdiveGuides } from "@/lib/guides/semiconductor-deepdive";
 import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
+import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -450,6 +451,7 @@ const allRawGuides = [
  ...stockDeepdiveGuidesEn,
  ...semiconductorDeepdiveGuides,
  ...season2026Guides,
+ ...hotKeywordsGuides,
 ];
 
 // Generate the final guides array with content

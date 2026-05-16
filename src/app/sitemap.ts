@@ -139,6 +139,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/en/salary-converter',
  '/en/guides',
  '/global',
+ // 복지·혜택 계산기 — 네이버 핫 키워드 전용 페이지
+ '/unemployment-benefit',
+ '/parental-leave',
+ '/earned-income-credit',
  ];
 
  const staticUrls = staticRoutes.map((route) => ({
