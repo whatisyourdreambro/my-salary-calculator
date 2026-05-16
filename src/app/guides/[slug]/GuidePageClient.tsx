@@ -8,7 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
-import { GuideMidAd, SidebarAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface GuidePageClientProps {
@@ -168,7 +168,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </div>
 
  {/* 본문 끝 — 가장 임팩트 큰 자리 (글 다 읽은 직후) */}
- <GuideMidAd />
+ <InArticleAd />
 
  {/* 모바일은 banner(320×100)로 축소 — portrait(320×480)는 본문 흐름 차단·이탈 유발 */}
  <CoupangBanner

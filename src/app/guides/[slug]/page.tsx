@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
@@ -100,7 +100,7 @@ export default function GuidePage({ params }: Props) {
  <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
 
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
- <InArticleAd />
+ <CalcResultAd />
 
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}

@@ -9,7 +9,7 @@ import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -257,7 +257,7 @@ export default function SalaryAmountPage({ params }: Props) {
 
  {/* FAQ 후 — 콘텐츠 흐름과 어울리는 fluid 인아티클 광고 (CTR↑) */}
  <div className="px-2">
- <InArticleAd />
+ <GuideMidAd />
  </div>
 
  {/* FAQ 후 쿠팡 한 번 더 */}
