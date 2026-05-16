@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.moneysalary.com"),
   title: {
-    default: "머니샐러리 | 2026 연봉 실수령액 계산기 — 세후 월급·4대보험 계산",
+    default: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
     template: "%s | 머니샐러리",
   },
   // 네이버 서치어드바이저 권장 — 80자 이내. 직장인 핵심 도구만 압축 (반복 키워드 X).
@@ -57,6 +57,10 @@ export const metadata: Metadata = {
     "퇴직금 계산기",
     "FIRE 계산기",
   ].join(", "),
+  icons: {
+    icon: [{ url: "/icon", type: "image/png" }],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
   authors: [{ name: "머니샐러리", url: "https://www.moneysalary.com" }],
   creator: "머니샐러리",
   publisher: "머니샐러리",
@@ -75,13 +79,13 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: "https://www.moneysalary.com",
     siteName: "머니샐러리",
-    title: "머니샐러리 | 2026 연봉 실수령액 계산기",
+    title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
     description:
       "2026 최신 세법 직장인 연봉 실수령액 계산기. 4대보험·소득세·연말정산·퇴직금까지 무료 즉시 계산.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "머니샐러리 | 2026 연봉 실수령액 계산기",
+    title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
     description:
       "2026년 최신 세법! 세후 월급·4대보험 즉시 계산. 연봉 3000~1억 실수령액 표 무료 제공.",
   },

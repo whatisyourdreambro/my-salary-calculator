@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
 import {
  AreaChart,
@@ -31,7 +31,11 @@ import {
  Sparkles,
  PiggyBank,
  Landmark,
- Gem
+ Gem,
+ Copy,
+ Download,
+ Twitter,
+ CheckCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
@@ -255,6 +259,8 @@ export default function FireCalculatorPage() {
  withdrawalRate: "4",
  });
  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
+ const shareRef = useRef<HTMLDivElement>(null);
+ const [toast, setToast] = useState<string | null>(null);
 
  const handleInputChange = (
  field: keyof FireInputs,
@@ -289,6 +295,59 @@ export default function FireCalculatorPage() {
  });
  }
  }, [step, yearsToFire]);
+
+ const showToast = (msg: string) => {
+   setToast(msg);
+   setTimeout(() => setToast(null), 2500);
+ };
+
+ const shareText = () => {
+   const lines = [
+     `🔥 나의 FIRE 계획 공개!`,
+     `━━━━━━━━━━━━━━━`,
+     `💰 FIRE 목표액: ${finalTargetAmount.toLocaleString("ko-KR")}원`,
+     yearsToFire === 0
+       ? `🎉 이미 FIRE 달성!`
+       : isFinite(yearsToFire)
+         ? `⏰ 은퇴까지: ${yearsToFire}년 후 (${finalAge}세)`
+         : `⏰ 현재 조건으로는 달성 어렵습니다`,
+     `💼 총 투자 원금: ${totalContributions.toLocaleString("ko-KR")}원`,
+     `📈 총 수익: ${totalReturns.toLocaleString("ko-KR")}원`,
+     ``,
+     `나도 FIRE 계획 세우기 👇`,
+     `https://www.moneysalary.com/fire-calculator`,
+   ];
+   return lines.join("\n");
+ };
+
+ const handleCopy = async () => {
+   try {
+     await navigator.clipboard.writeText(shareText());
+     showToast("클립보드에 복사됐어요!");
+   } catch {
+     showToast("복사에 실패했습니다.");
+   }
+ };
+
+ const handleSaveImage = async () => {
+   if (!shareRef.current) return;
+   try {
+     const { default: html2canvas } = await import("html2canvas");
+     const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
+     const a = document.createElement("a");
+     a.download = "my-fire-plan.png";
+     a.href = canvas.toDataURL("image/png");
+     a.click();
+     showToast("이미지를 저장했어요!");
+   } catch {
+     showToast("이미지 저장에 실패했습니다.");
+   }
+ };
+
+ const handleTweet = () => {
+   const text = encodeURIComponent(shareText());
+   window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+ };
 
  const addLifeEvent = () =>
  setLifeEvents([
@@ -326,7 +385,7 @@ export default function FireCalculatorPage() {
  <div className="text-center mb-12">
  <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-canvas bg-white/50 backdrop-blur-sm text-faint-blue font-sans text-sm tracking-widest uppercase mb-6 shadow-sm">
  <Landmark className="w-4 h-4" />
- <span>Private Wealth Management</span>
+ <span>파이어 계산기</span>
  </div>
  <h1 className="text-5xl sm:text-6xl font-sans font-medium text-foreground tracking-tight">
  FIRE Calculator
@@ -388,7 +447,7 @@ export default function FireCalculatorPage() {
  className="group relative w-full max-w-sm mx-auto py-6 bg-primary text-white font-sans font-bold tracking-wider rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all overflow-hidden"
  >
  <span className="relative z-10 flex items-center justify-center gap-3">
- START SIMULATION <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+ 시뮬레이션 시작 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
  </span>
  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
  </motion.button>
@@ -457,7 +516,7 @@ export default function FireCalculatorPage() {
  className="space-y-16 max-w-2xl mx-auto w-full"
  >
  <div className="text-center">
- <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Current Status</h2>
+ <h2 className="text-3xl font-sans font-bold text-foreground mb-4">현재 재무 상태</h2>
  <p className="text-faint-blue font-sans">현재의 재무 상태를 입력해주세요.</p>
  </div>
 
@@ -497,9 +556,9 @@ export default function FireCalculatorPage() {
  <motion.button
  layoutId="next-button"
  onClick={() => setStep("investment")}
- className="w-full py-5 bg-stone-900 text-navy font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+ className="w-full py-5 bg-primary text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
  >
- NEXT STEP
+ 다음 단계
  </motion.button>
  </motion.div>
  )}
@@ -512,7 +571,7 @@ export default function FireCalculatorPage() {
  className="space-y-16 max-w-4xl mx-auto w-full"
  >
  <div className="text-center">
- <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Investment Strategy</h2>
+ <h2 className="text-3xl font-sans font-bold text-foreground mb-4">투자 전략 선택</h2>
  <p className="text-faint-blue">투자 성향에 따른 포트폴리오 전략을 선택하세요.</p>
  </div>
 
@@ -593,9 +652,9 @@ export default function FireCalculatorPage() {
  <motion.button
  layoutId="next-button"
  onClick={() => setStep("events")}
- className="w-full py-5 bg-stone-900 text-navy font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
+ className="w-full py-5 bg-primary text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl transition-all mt-8 tracking-wide"
  >
- NEXT STEP
+ 다음 단계
  </motion.button>
  </motion.div>
  )}
@@ -608,7 +667,7 @@ export default function FireCalculatorPage() {
  className="space-y-16 max-w-3xl mx-auto w-full"
  >
  <div className="text-center">
- <h2 className="text-3xl font-sans font-bold text-foreground mb-4">Life Events</h2>
+ <h2 className="text-3xl font-sans font-bold text-foreground mb-4">생애 이벤트 계획</h2>
  <p className="text-faint-blue">결혼, 주택 구입 등 큰 자금의 흐름을 미리 계획하세요.</p>
  </div>
 
@@ -629,12 +688,12 @@ export default function FireCalculatorPage() {
  onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
  className="w-12 text-center bg-transparent font-bold outline-none text-foreground border-none p-0"
  />
- <span className="text-xs text-faint-blue font-bold uppercase tracking-wider">Years Later</span>
+ <span className="text-xs text-faint-blue font-bold uppercase tracking-wider">년 후</span>
  </div>
 
  <input
  type="text"
- placeholder="Event Name (e.g. Wedding)"
+ placeholder="이벤트명 (예: 결혼)"
  value={event.description}
  onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
  className="flex-grow p-2 bg-transparent border-b border-canvas focus:border-primary outline-none text-foreground placeholder-stone-400 text-lg font-sans"
@@ -645,8 +704,8 @@ export default function FireCalculatorPage() {
  onChange={(e) => updateLifeEvent(index, "type", e.target.value)}
  className="p-2 bg-transparent font-bold text-sm text-faint-blue focus:text-foreground outline-none cursor-pointer"
  >
- <option value="oneTimeExpense">EXPENSE (-)</option>
- <option value="oneTimeIncome">INCOME (+)</option>
+ <option value="oneTimeExpense">지출 (-)</option>
+ <option value="oneTimeIncome">수입 (+)</option>
  </select>
 
  <div className="flex items-center gap-2 ml-auto">
@@ -670,16 +729,16 @@ export default function FireCalculatorPage() {
  onClick={addLifeEvent}
  className="w-full py-6 border-2 border-dashed border-canvas rounded-3xl text-faint-blue hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-3 font-bold uppercase tracking-wider text-sm"
  >
- <PlusCircle size={20} /> Add Life Event
+ <PlusCircle size={20} /> 이벤트 추가
  </button>
  </div>
 
  <motion.button
  layoutId="next-button"
  onClick={() => setStep("result")}
- className="w-full py-5 bg-gradient-to-r from-primary to-emerald-800 text-navy font-sans font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
+ className="w-full py-5 bg-primary text-white font-sans font-bold rounded-xl text-lg hover:shadow-xl hover:shadow-primary/20 transition-all tracking-wide"
  >
- VIEW FULL REPORT
+ 결과 보기
  </motion.button>
  </motion.div>
  )}
@@ -690,10 +749,11 @@ export default function FireCalculatorPage() {
  animate={{ opacity: 1, scale: 1 }}
  className="space-y-16 w-full"
  >
+ <div ref={shareRef} className="space-y-16">
  <div className="text-center space-y-8">
  {yearsToFire === Infinity ? (
  <div className="p-12 bg-canvas-dark rounded-[3rem] border border-canvas">
- <h2 className="text-4xl font-sans font-bold text-faint-blue mb-4">Goal Unattainable</h2>
+ <h2 className="text-4xl font-sans font-bold text-faint-blue mb-4">목표 달성 불가</h2>
  <p className="text-faint-blue">현재 조건으로는 목표 달성이 어렵습니다. 투자 전략을 수정해보세요.</p>
  </div>
  ) : (
@@ -702,10 +762,10 @@ export default function FireCalculatorPage() {
  <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
 
  <div className="relative z-10">
- <p className="text-sm text-primary font-bold mb-6 uppercase tracking-[0.2em]">Financial Independence</p>
+ <p className="text-sm text-primary font-bold mb-6 uppercase tracking-[0.2em]">경제적 자유 달성</p>
  <h2 className="text-7xl sm:text-9xl font-sans font-medium text-foreground mb-8 tracking-tighter">
  <CountUp end={yearsToFire} duration={2} />
- <span className="text-4xl sm:text-6xl text-faint-blue ml-4 italic">Years</span>
+ <span className="text-4xl sm:text-6xl text-faint-blue ml-4 italic">년</span>
  </h2>
  <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white border border-canvas text-2xl text-faint-blue shadow-xl">
  <span className="font-bold text-foreground">{finalAge}세</span>에 은퇴 가능합니다
@@ -718,9 +778,9 @@ export default function FireCalculatorPage() {
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
  {[
- { label: "Final Goal", value: finalTargetAmount, color: "text-foreground" },
- { label: "Total Principal", value: totalContributions, color: "text-faint-blue" },
- { label: "Total Returns", value: totalReturns, color: "text-primary" },
+ { label: "FIRE 목표액", value: finalTargetAmount, color: "text-foreground" },
+ { label: "총 투자 원금", value: totalContributions, color: "text-faint-blue" },
+ { label: "총 수익", value: totalReturns, color: "text-primary" },
  ].map((item, i) => (
  <motion.div
  key={item.label}
@@ -756,7 +816,7 @@ export default function FireCalculatorPage() {
  <CountUp end={coastFireTarget} separator="," />원
  </p>
  <p className="text-xs text-faint-blue mt-3 font-bold uppercase tracking-wider">
- Target Principal
+ 목표 원금
  </p>
  </div>
  </div>
@@ -778,11 +838,38 @@ export default function FireCalculatorPage() {
  <CountUp end={baristaTargetAmount} separator="," />원
  </p>
  <p className="text-xs text-faint-blue mt-3 font-bold uppercase tracking-wider">
- Target Principal
+ 목표 원금
  </p>
  </div>
  </div>
  </div>
+ </div>
+
+ {isFinite(yearsToFire) && (
+ <motion.div
+ initial={{ opacity: 0, y: 10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: 0.4 }}
+ className="bg-white border border-canvas rounded-3xl p-6 shadow-sm"
+ >
+ <p className="text-sm font-bold text-navy mb-1 text-center">🚀 친구에게 공유하기</p>
+ <p className="text-xs text-faint-blue text-center mb-4">당신의 FIRE 계획을 자랑해보세요!</p>
+ <div className="grid grid-cols-3 gap-3">
+ <button onClick={handleSaveImage} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold">
+ <Download className="w-5 h-5" />
+ 이미지 저장
+ </button>
+ <button onClick={handleCopy} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold">
+ <Copy className="w-5 h-5" />
+ 텍스트 복사
+ </button>
+ <button onClick={handleTweet} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-sky-100 hover:text-sky-600 text-muted-blue transition-all text-xs font-bold">
+ <Twitter className="w-5 h-5" />
+ X 공유
+ </button>
+ </div>
+ </motion.div>
+ )}
  </motion.div>
  )}
  </div>
@@ -792,6 +879,20 @@ export default function FireCalculatorPage() {
  </div>
  </div>
  <PageFooterAds maxWidth="4xl" />
+
+ <AnimatePresence>
+ {toast && (
+ <motion.div
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0, y: 20 }}
+ className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full text-sm font-bold shadow-xl flex items-center gap-2 z-50"
+ >
+ <CheckCheck className="w-4 h-4 text-green-400" />
+ {toast}
+ </motion.div>
+ )}
+ </AnimatePresence>
  </main>
  );
 }

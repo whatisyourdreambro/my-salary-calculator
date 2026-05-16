@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,7 +41,7 @@ const CompanySelector = ({
  className="w-full p-4 bg-card border-2 border-border rounded-xl text-lg font-bold appearance-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
  >
  <option value="" disabled>
- ?�수 ?�장...
+ 회사를 선택하세요...
  </option>
  {companies.map((c) => (
  <option key={c.id} value={c.id}>
@@ -206,11 +206,11 @@ export default function BattlePage() {
  onChange={(e) => setJobLevel(e.target.value as JobLevel)}
  className="bg-canvas-dark border border-canvas rounded-lg px-3 py-1 text-sm font-medium text-center w-full"
  >
- <option value="entry">?�입 (Entry)</option>
+ <option value="entry">신입 (Entry)</option>
  <option value="junior">주니어(Junior)</option>
  <option value="senior">시니어(Senior)</option>
  <option value="lead">리드 (Lead)</option>
- <option value="executive">?�원 (Exec)</option>
+ <option value="executive">임원 (Exec)</option>
  </select>
 
  <button
@@ -300,7 +300,7 @@ export default function BattlePage() {
  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-primary/50 to-red-500" />
  <h3 className="text-lg font-bold text-muted-blue mb-2 flex items-center justify-center gap-2">
  <Trophy className="w-5 h-5 text-primary" />
- AI ?�판 ?�정
+ AI 최종 판정
  </h3>
  <p className="text-xl font-medium text-navy leading-relaxed">
  &quot;{result.verdict}&quot;
@@ -310,14 +310,14 @@ export default function BattlePage() {
  {/* Detailed Stat Bars */}
  <div className="mt-8 space-y-6">
  <StatBar
- label="�?보상 (?�봉+?�센)"
+ label="총보상 (연봉+인센)"
  valueA={result.metrics.totalComp.a}
  valueB={result.metrics.totalComp.b}
  unit="원"
  winner={result.metrics.totalComp.winner}
  />
  <StatBar
- label="?�질 ?�급 (가?�비)"
+ label="실질 시급 (가성비)"
  valueA={Math.round(result.metrics.realHourlyWage.a)}
  valueB={Math.round(result.metrics.realHourlyWage.b)}
  unit="점"
