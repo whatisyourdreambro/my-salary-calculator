@@ -7,7 +7,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles, Flame, Calendar, Star } from "lucide-react";
+import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
 
 interface MobileDropdownProps {
@@ -17,10 +17,10 @@ interface MobileDropdownProps {
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
-  HOT: { bg: "#FFE4E6", text: "#E11D48", label: "HOT", Icon: Flame },
-  NEW: { bg: "#DBEAFE", text: "#1D4ED8", label: "NEW", Icon: Sparkles },
+  HOT:    { bg: "#FFE4E6", text: "#E11D48", label: "HOT",  Icon: Flame },
+  NEW:    { bg: "#DBEAFE", text: "#1D4ED8", label: "NEW",  Icon: Sparkles },
   SEASON: { bg: "#FEF3C7", text: "#B45309", label: "시즌", Icon: Calendar },
-  MUST: { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
+  MUST:   { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
 };
 
 function BadgePill({ badge }: { badge: Badge }) {
@@ -37,11 +37,38 @@ function BadgePill({ badge }: { badge: Badge }) {
   );
 }
 
+const listVariants = {
+  hidden: { height: 0, opacity: 0 },
+  visible: {
+    height: "auto",
+    opacity: 1,
+    transition: {
+      height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+      opacity: { duration: 0.2 },
+      staggerChildren: 0.02,
+      delayChildren: 0.04,
+    },
+  },
+  exit: {
+    height: 0,
+    opacity: 0,
+    transition: {
+      height: { duration: 0.22, ease: "easeIn" },
+      opacity: { duration: 0.15 },
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.18 } },
+};
+
 export default function MobileDropdown({ item, pathname, onClose }: MobileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-canvas-100">
+    <div className="border-b border-canvas-100 last:border-b-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
@@ -57,60 +84,74 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
             </span>
           )}
         </div>
-        <ChevronDown
-          size={18}
-          aria-hidden="true"
-          className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-electric" : "rotate-0 text-faint-blue"
-          }`}
-        />
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex"
+        >
+          <ChevronDown
+            size={18}
+            aria-hidden="true"
+            className={isOpen ? "text-electric" : "text-faint-blue"}
+          />
+        </motion.span>
       </button>
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 pt-1">
-              {item.items.map((subItem, idx) => {
+            {/* 왼쪽 액센트 바 */}
+            <div className="mx-5 mb-2 h-[2px] rounded-full bg-gradient-to-r from-electric/30 to-transparent" />
+
+            <div className="px-3 pb-3 pt-0.5">
+              {item.items.map((subItem) => {
                 const active = pathname === subItem.href;
                 return (
-                  <motion.div
-                    key={subItem.href}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.02, duration: 0.2 }}
-                  >
+                  <motion.div key={subItem.href} variants={itemVariants}>
                     <Link
                       href={subItem.href}
                       onClick={onClose}
                       aria-current={active ? "page" : undefined}
-                      className={`flex flex-col gap-0.5 px-4 py-3 rounded-xl no-underline mb-0.5 transition-colors ${
+                      className={`group flex items-center gap-2 px-4 py-3 rounded-xl no-underline mb-0.5 transition-all duration-150 ${
                         active
                           ? "bg-electric-5 ring-1 ring-electric/20"
                           : "hover:bg-electric-5"
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <span
-                          className={`text-[15px] ${
-                            active
-                              ? "font-bold text-electric"
-                              : "font-semibold text-navy"
-                          }`}
-                        >
-                          {subItem.name}
-                        </span>
-                        {subItem.badge && <BadgePill badge={subItem.badge} />}
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-[15px] ${
+                              active
+                                ? "font-bold text-electric"
+                                : "font-semibold text-navy group-hover:text-electric"
+                            } transition-colors`}
+                          >
+                            {subItem.name}
+                          </span>
+                          {subItem.badge && <BadgePill badge={subItem.badge} />}
+                        </div>
+                        {subItem.description && (
+                          <span className="text-[11.5px] text-faint-blue line-clamp-1">
+                            {subItem.description}
+                          </span>
+                        )}
                       </div>
-                      {subItem.description && (
-                        <span className="text-[11.5px] text-faint-blue line-clamp-1">
-                          {subItem.description}
-                        </span>
-                      )}
+                      <ChevronRight
+                        size={14}
+                        aria-hidden="true"
+                        className={`flex-shrink-0 transition-all duration-150 ${
+                          active
+                            ? "text-electric opacity-100"
+                            : "text-faint-blue opacity-0 group-hover:opacity-60 group-hover:translate-x-0.5"
+                        }`}
+                      />
                     </Link>
                   </motion.div>
                 );

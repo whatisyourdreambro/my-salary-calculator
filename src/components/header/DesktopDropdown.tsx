@@ -8,7 +8,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles, Flame, Calendar, Star } from "lucide-react";
+import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
 
 interface DesktopDropdownProps {
@@ -17,10 +17,10 @@ interface DesktopDropdownProps {
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
-  HOT: { bg: "#FFE4E6", text: "#E11D48", label: "HOT", Icon: Flame },
-  NEW: { bg: "#DBEAFE", text: "#1D4ED8", label: "NEW", Icon: Sparkles },
+  HOT:    { bg: "#FFE4E6", text: "#E11D48", label: "HOT",  Icon: Flame },
+  NEW:    { bg: "#DBEAFE", text: "#1D4ED8", label: "NEW",  Icon: Sparkles },
   SEASON: { bg: "#FEF3C7", text: "#B45309", label: "시즌", Icon: Calendar },
-  MUST: { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
+  MUST:   { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
 };
 
 function BadgePill({ badge }: { badge: Badge }) {
@@ -37,6 +37,43 @@ function BadgePill({ badge }: { badge: Badge }) {
   );
 }
 
+// 드롭다운 위에 표시되는 작은 삼각 화살표
+function Caret() {
+  return (
+    <div
+      className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-white rotate-45 border-l border-t border-canvas"
+      style={{ zIndex: 1 }}
+      aria-hidden="true"
+    />
+  );
+}
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 14, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.22,
+      ease: [0.16, 1, 0.3, 1],
+      staggerChildren: 0.022,
+      delayChildren: 0.04,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 6,
+    scale: 0.97,
+    transition: { duration: 0.16, ease: "easeIn" },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -6 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.18 } },
+};
+
 export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,11 +87,10 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
   };
 
   const handleLeave = () => {
-    // 짧은 지연 — 부드러운 hover ↔ 메뉴 이동
     closeTimerRef.current = setTimeout(() => setIsOpen(false), 120);
   };
 
-  // 항목 수 9개 이상이면 2 column, 미만이면 1 column
+  // 항목 수 9개 이상이면 2 column
   const isWide = item.items.length >= 9;
 
   return (
@@ -72,34 +108,48 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
         }`}
       >
         {item.name}
-        <ChevronDown
-          size={12}
-          aria-hidden="true"
-          className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-electric" : "text-faint-blue"
-          }`}
-        />
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex"
+        >
+          <ChevronDown
+            size={12}
+            aria-hidden="true"
+            className={isOpen ? "text-electric" : "text-faint-blue"}
+          />
+        </motion.span>
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
             role="menu"
-            initial={{ opacity: 0, y: 12, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white border-[1.5px] border-canvas rounded-3xl shadow-[0_24px_60px_-12px_#0145F222,0_4px_16px_-4px_#0A182918] z-50 overflow-hidden ${
-              isWide ? "w-[560px]" : "w-[340px]"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white border-[1.5px] border-canvas rounded-3xl shadow-[0_28px_64px_-12px_#0145F228,0_4px_20px_-4px_#0A182920] z-50 overflow-hidden ${
+              isWide ? "w-[580px]" : "w-[340px]"
             }`}
             style={{
               backgroundImage:
-                "radial-gradient(circle at 0% 0%, rgba(1, 69, 242, 0.04) 0%, transparent 35%)",
+                "radial-gradient(ellipse at 0% 0%, rgba(1,69,242,0.05) 0%, transparent 50%)",
             }}
           >
+            <Caret />
+
+            {/* 상단 컬러 액센트 바 */}
+            <div
+              className="h-[3px] w-full"
+              style={{
+                background: "linear-gradient(90deg, #0145F2 0%, #4F8EFF 60%, transparent 100%)",
+              }}
+            />
+
             {/* Header — 카테고리 제목 + description */}
             {item.description && (
-              <div className="px-5 pt-4 pb-2 border-b border-canvas-100">
+              <div className="px-5 pt-3.5 pb-2.5 border-b border-canvas-100">
                 <p className="text-[11px] font-black text-electric uppercase tracking-widest">
                   {item.name}
                 </p>
@@ -109,45 +159,54 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
 
             {/* Items */}
             <div
-              className={`p-2 ${isWide ? "grid grid-cols-2 gap-1" : "flex flex-col gap-0.5"}`}
+              className={`p-2 ${isWide ? "grid grid-cols-2 gap-0.5" : "flex flex-col gap-0.5"}`}
             >
-              {item.items.map((subItem, idx) => (
-                <motion.div
-                  key={subItem.href}
-                  initial={{ opacity: 0, x: -4 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.018, duration: 0.2 }}
-                >
-                  <Link
-                    href={subItem.href}
-                    role="menuitem"
-                    aria-current={pathname === subItem.href ? "page" : undefined}
-                    className={`group flex flex-col gap-0.5 px-3 py-2.5 rounded-xl no-underline transition-all duration-150 hover:bg-electric-5 hover:translate-x-0.5 ${
-                      pathname === subItem.href
-                        ? "bg-electric-5 ring-1 ring-electric/20"
-                        : ""
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5 justify-between">
-                      <span
-                        className={`text-[13.5px] font-semibold transition-colors ${
-                          pathname === subItem.href
-                            ? "text-electric"
-                            : "text-navy group-hover:text-electric"
-                        }`}
+              {item.items.map((subItem) => {
+                const isActive = pathname === subItem.href;
+                return (
+                  <motion.div key={subItem.href} variants={itemVariants}>
+                    <Link
+                      href={subItem.href}
+                      role="menuitem"
+                      aria-current={isActive ? "page" : undefined}
+                      className={`group flex items-center gap-2 px-3 py-2.5 rounded-xl no-underline transition-all duration-150 hover:bg-electric-5 ${
+                        isActive ? "bg-electric-5 ring-1 ring-electric/20" : ""
+                      }`}
+                    >
+                      {/* 텍스트 영역 */}
+                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`text-[13.5px] font-semibold leading-tight transition-colors ${
+                              isActive
+                                ? "text-electric"
+                                : "text-navy group-hover:text-electric"
+                            }`}
+                          >
+                            {subItem.name}
+                          </span>
+                          {subItem.badge && <BadgePill badge={subItem.badge} />}
+                        </div>
+                        {subItem.description && (
+                          <span className="text-[11.5px] text-faint-blue group-hover:text-muted-blue line-clamp-1 transition-colors">
+                            {subItem.description}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* 호버 시 오른쪽 화살표 */}
+                      <motion.span
+                        initial={{ opacity: 0, x: -4 }}
+                        whileHover={{ opacity: 1, x: 0 }}
+                        className="opacity-0 group-hover:opacity-100 text-electric flex-shrink-0 transition-all duration-150"
+                        aria-hidden="true"
                       >
-                        {subItem.name}
-                      </span>
-                      {subItem.badge && <BadgePill badge={subItem.badge} />}
-                    </div>
-                    {subItem.description && (
-                      <span className="text-[11.5px] text-faint-blue group-hover:text-muted-blue line-clamp-1 transition-colors">
-                        {subItem.description}
-                      </span>
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
+                        <ChevronRight size={13} />
+                      </motion.span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         )}
