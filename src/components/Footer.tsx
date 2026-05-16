@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Twitter, Instagram, Github } from "lucide-react";
+import { CheckCircle2, Shield, Lock } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -71,12 +71,17 @@ export default function Footer() {
         { name: "이용약관", href: "/terms" },
       ];
 
-  const socialLinks = [
-    { Icon: Facebook, href: "#", label: "Facebook" },
-    { Icon: Twitter, href: "#", label: "Twitter" },
-    { Icon: Instagram, href: "#", label: "Instagram" },
-    { Icon: Github, href: "#", label: "Github" },
-  ];
+  const trustBadges = isEnglish
+    ? [
+        { Icon: CheckCircle2, label: "Official Tax Rates" },
+        { Icon: Shield, label: "Google AdSense Approved" },
+        { Icon: Lock, label: "Zero Data Collection" },
+      ]
+    : [
+        { Icon: CheckCircle2, label: "국세청 공식 세율" },
+        { Icon: Shield, label: "Google AdSense 승인" },
+        { Icon: Lock, label: "개인정보 0건 수집" },
+      ];
 
   const sections: { title: string; items: typeof calculatorLinks }[] = isEnglish
     ? [
@@ -127,17 +132,16 @@ export default function Footer() {
               {brandTagline}
             </p>
 
-            {/* Social Icons */}
-            <div className="flex gap-2 mt-5">
-              {socialLinks.map(({ Icon, href, label }) => (
-                <a
+            {/* Trust badges — 실제 인증 항목만 표시 */}
+            <div className="flex flex-wrap gap-2 mt-5">
+              {trustBadges.map(({ Icon, label }) => (
+                <span
                   key={label}
-                  href={href}
-                  aria-label={label}
-                  className="footer-social-icon w-[38px] h-[38px] flex items-center justify-center rounded-full border-[1.5px] border-canvas-200 dark:border-canvas-700 text-faint-blue bg-canvas dark:bg-canvas-900 no-underline transition-all hover:text-electric"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-electric-5 border border-electric/20 text-[11.5px] font-bold text-electric"
                 >
-                  <Icon size={17} />
-                </a>
+                  <Icon size={12} />
+                  {label}
+                </span>
               ))}
             </div>
           </div>

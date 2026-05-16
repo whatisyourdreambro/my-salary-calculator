@@ -628,3 +628,32 @@ tr:hover td { background-color: #0145F208; }
   }
   .skeleton-shimmer { animation: none !important; }
 }
+
+/* ── print: 광고 숨김, 계산 결과만 출력 ──────────────────────────── */
+@media print {
+  header, footer, [class*="ad-slot"], .duotone-badge { display: none !important; }
+  body { background: white !important; color: black !important; }
+  .duotone-card { border: 1px solid #ccc !important; box-shadow: none !important; }
+}
+
+/* ── 고대비 모드 지원 ─────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  .btn-primary { forced-color-adjust: none; background: ButtonText; color: ButtonFace; }
+  .duotone-card { border: 2px solid ButtonText; }
+}
+
+/* ── content-visibility: auto — 뷰포트 밖 섹션 렌더 비용 절감 ──── */
+.section-lg, .section-md {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
+}
+
+/* ── 링크 기본 스타일 접근성 ─────────────────────────────────────── */
+a:not([class]) {
+  color: #0145F2;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:not([class]):hover {
+  text-decoration-thickness: 2px;
+}

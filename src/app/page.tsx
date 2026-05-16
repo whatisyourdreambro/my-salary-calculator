@@ -1,4 +1,4 @@
-﻿"use client";
+﻿﻿"use client";
 
 import dynamic from "next/dynamic";
 import {
@@ -22,6 +22,8 @@ import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
 import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
+import JsonLd from "@/components/JsonLd";
+import { faqLd, howToLd } from "@/lib/structuredData";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -93,10 +95,61 @@ const GuideCategories = dynamic(
 
 /* ── Stats Bar ─────────────────────────────────────────────────── */
 const stats = [
- { value: "2026년", label: "최신 세법" },
+ { value: "2026", label: "세법 즉시 반영" },
  { value: "100+", label: "금융 계산기" },
- { value: "무료", label: "완전 무료" },
+ { value: "5초", label: "실시간 계산" },
 ];
+
+/* ── Home Page Structured Data ─────────────────────────────────── */
+const HOME_FAQ = faqLd([
+ {
+  question: "연봉 계산기로 무엇을 계산할 수 있나요?",
+  answer:
+   "2026년 최신 세법 기준으로 연봉 실수령액, 4대보험(국민연금·건강보험·고용보험·장기요양보험), 소득세, 지방소득세를 즉시 계산할 수 있습니다. 퇴직금, 연말정산 환급액, 주택담보대출 한도까지 100가지 이상의 금융 계산기를 완전 무료로 제공합니다.",
+ },
+ {
+  question: "연봉 실수령액과 세후 월급은 어떻게 다른가요?",
+  answer:
+   "연봉 실수령액은 세금·4대보험을 모두 공제한 연간 총 수령액이고, 세후 월급은 이를 12로 나눈 월별 금액입니다. 예를 들어 연봉 5,000만원이면 2026년 세율 기준 월 실수령액은 약 366만원입니다.",
+ },
+ {
+  question: "4대보험 요율은 얼마인가요?",
+  answer:
+   "2026년 기준 근로자 부담 4대보험 요율: 국민연금 4.5%, 건강보험 3.545%, 장기요양보험(건강보험료의 12.95%), 고용보험 0.9%입니다. 회사가 동일하거나 더 높은 비율을 추가로 부담합니다.",
+ },
+ {
+  question: "머니샐러리 연봉 계산기는 얼마나 정확한가요?",
+  answer:
+   "국세청 소득세법, 국민연금법, 건강보험법, 고용보험법에 근거한 2026년 공식 요율을 사용합니다. 계산 결과는 참고용이며 개인별 공제 항목에 따라 실제 세액과 차이가 있을 수 있습니다.",
+ },
+ {
+  question: "연봉 3000만원 실수령액은 얼마인가요?",
+  answer:
+   "연봉 3,000만원 기준(비과세 식대 20만원, 본인 1인 공제) 2026년 월 실수령액은 약 228만원입니다. 자세한 내역은 머니샐러리 /salary/30000000 페이지에서 확인하세요.",
+ },
+]);
+
+const HOME_HOWTO = howToLd({
+ name: "연봉 실수령액 계산하는 방법 (2026년)",
+ description:
+  "머니샐러리에서 2026년 최신 세법 기준 연봉 실수령액을 단계별로 계산합니다.",
+ totalTime: "PT1M",
+ steps: [
+  {
+   name: "연봉 입력",
+   text: "연봉 계산기에 세전 연봉(예: 5,000만원)을 입력하세요.",
+  },
+  {
+   name: "개인 공제 설정",
+   text: "부양가족 수, 비과세 식대(기본 20만원), 추가 공제 항목을 선택하세요.",
+  },
+  {
+   name: "결과 확인",
+   text:
+    "월 실수령액, 국민연금·건강보험·고용보험·소득세 세부 내역이 즉시 표시됩니다.",
+  },
+ ],
+});
 
 /* ── Homepage ──────────────────────────────────────────────────── */
 export default function HomePage() {
@@ -108,6 +161,7 @@ export default function HomePage() {
 
  return (
  <>
+ <JsonLd data={[HOME_FAQ, HOME_HOWTO]} />
  <div className="w-full overflow-x-hidden">
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
@@ -176,9 +230,9 @@ export default function HomePage() {
 
  {/* Subheading */}
  <p className="max-w-[520px] mx-auto mb-10 text-[clamp(1rem,2vw,1.2rem)] text-muted-blue font-medium leading-[1.65]">
- 복잡한 세금 계산부터 숨어있는 환급금까지.
+ 4대보험·소득세·연말정산·퇴직금까지.
  <br />
- 대한민국 1등 연봉 계산기 머니샐러리.
+ 2026 세법 기준, 5초 만에 정확하게.
  </p>
 
  {/* CTA Buttons */}
@@ -295,6 +349,7 @@ export default function HomePage() {
  description="2026년 최신 세율 · 실수령액 정확 계산"
  href="/?tab=salary"
  delay={0}
+ badge="인기"
  />
  <ToolCard
  icon={PiggyBank}
@@ -323,6 +378,7 @@ export default function HomePage() {
  description="13월의 월급을 위한 필승 시뮬레이션"
  href="/year-end-tax"
  delay={0.2}
+ badge="HOT"
  />
  <ToolCard
  icon={Receipt}
