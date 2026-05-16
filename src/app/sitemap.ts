@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 1. Static Pages
  const staticRoutes = [
  '/',
- '/dashboard',
+ // /dashboard, /report 는 개인 localStorage 페이지(noindex) → 사이트맵 제외
  '/home-loan',
  '/year-end-tax',
  '/fire-calculator',
@@ -29,7 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/mbti-salary',
  '/lotto',
  '/fortune-2026',
- '/report',
  '/tips',
  '/guides',
  '/qna',

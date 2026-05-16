@@ -4,7 +4,8 @@
 import type { AdvancedSettings } from "@/app/types";
 
 const PENSION_RATE = 0.045;
-const PENSION_MONTHLY_CAP = 5900000 * PENSION_RATE;
+// 국민연금 월 기준소득월액 상한 617만원 (2026) — PENSION_MONTHLY_CAP_2026 과 동일
+const PENSION_MONTHLY_CAP = 6170000 * PENSION_RATE;
 const HEALTH_RATE = 0.03545;
 const LONG_TERM_CARE_RATE = 0.1295;
 const EMPLOYMENT_INSURANCE_RATE = 0.009;

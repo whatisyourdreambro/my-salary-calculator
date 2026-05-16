@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 
+// Cloudflare Pages 호환 + 빌드 시 @vercel/og 의 Node fileURLToPath 오류 회피
+export const runtime = "edge";
+
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 

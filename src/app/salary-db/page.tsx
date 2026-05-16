@@ -138,7 +138,7 @@ export default function SalaryDBPage() {
  <h3 className="text-xl font-bold text-foreground mb-2">검색 결과가 없습니다</h3>
  <p className="text-muted-foreground">
  아직 등록되지 않은 기업이거나 검색어를 확인해주세요.<br />
- (현재 Top 3 기업 데이터만 제공 중입니다)
+ (현재 {allCompanies.length.toLocaleString("ko-KR")}개 기업 데이터 제공 중)
  </p>
  </div>
  )}

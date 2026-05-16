@@ -74,7 +74,7 @@ function buildActions(
  icon: Calculator,
  title: "원리금 균등 상환 계산",
  description: "월 상환액·총이자 분석",
- href: "/calc/loan-amortization",
+ href: "/calc/loan-monthly-payment",
  },
  ];
  }
@@ -90,7 +90,7 @@ function buildActions(
  icon: Calculator,
  title: "종합소득세 신고 도움",
  description: "5월 종소세 환급 시뮬",
- href: "/calc/comprehensive-income-tax",
+ href: "/tools/finance/freelance-tax",
  },
  {
  icon: Building2,
@@ -106,13 +106,13 @@ function buildActions(
  icon: Shield,
  title: "건강보험료 자동 계산",
  description: "직장/지역 가입자 비교",
- href: "/calc/health-insurance-2026",
+ href: "/health-insurance-2026",
  },
  {
  icon: Calculator,
- title: "실비보험 적정 보험료",
- description: "나이/성별 평균 보험료",
- href: "/calc/insurance-premium",
+ title: "실손보험 청구 가능액",
+ description: "보장 한도·실손 청구 금액 분석",
+ href: "/calc/medical-expense-coverage",
  },
  {
  icon: PiggyBank,
@@ -128,13 +128,13 @@ function buildActions(
  icon: TrendingUp,
  title: "복리 시뮬레이션",
  description: "월 적립 → 10년 후 자산",
- href: "/calc/compound-interest",
+ href: "/calc/compound-interest-quick",
  },
  {
  icon: Calculator,
  title: "주식 양도세 계산",
  description: "2026 금투세 기준",
- href: "/calc/stock-tax",
+ href: "/calc/stock-capital-gains-quick",
  },
  {
  icon: PiggyBank,
