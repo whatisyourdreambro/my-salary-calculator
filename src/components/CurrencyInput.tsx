@@ -1,7 +1,7 @@
 // src/components/CurrencyInput.tsx
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 /** 숫자에 천 단위 콤마를 붙임 (ko-KR) */
@@ -37,6 +37,14 @@ export default function CurrencyInput({
  className,
 }: CurrencyInputProps) {
  const inputRef = useRef<HTMLInputElement>(null);
+
+ useEffect(() => {
+   const raw = value.replace(/[^0-9]/g, "");
+   if (raw && !value.includes(",") && raw.length > 3) {
+     onValueChange(formatNumber(Number(raw)));
+   }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, []);
 
  const symbol =
  currencies?.find((c) => c.id === selectedCurrency)?.symbol || "원";

@@ -15,11 +15,11 @@ type RepaymentType = "equalPrincipalAndInterest" | "equalPrincipal";
 type UserType = "none" | "newlywed" | "firstTimeBuyer";
 
 export default function HomeLoanSimulator() {
- const [homePrice, setHomePrice] = useState("600000000");
- const [downPayment, setDownPayment] = useState("120000000");
+ const [homePrice, setHomePrice] = useState("600,000,000");
+ const [downPayment, setDownPayment] = useState("120,000,000");
  const [loanTerm, setLoanTerm] = useState(30);
  const [interestRate, setInterestRate] = useState(4.5);
- const [annualIncome, setAnnualIncome] = useState("60000000");
+ const [annualIncome, setAnnualIncome] = useState("60,000,000");
 
  const [userType, setUserType] = useState<UserType>("none");
  const [repaymentType, setRepaymentType] = useState<RepaymentType>(
@@ -269,7 +269,7 @@ export default function HomeLoanSimulator() {
  <div className="mt-auto pt-4">
  <button
  onClick={handleSaveData}
- className="w-full py-3 bg-card text-primary font-bold rounded-lg hover:bg-card/90 transition"
+ className="w-full py-3 bg-white text-[#0145F2] font-bold rounded-lg hover:bg-white/90 transition"
  >
  대시보드에 저장
  </button>
