@@ -3,7 +3,8 @@
 import { useState, useRef } from "react";
 import CurrencyInput from "@/components/CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Globe2, Crown, Briefcase, Zap, Skull, RefreshCw, Download, Copy, CheckCheck, Dna } from "lucide-react";
+import { Sparkles, Globe2, Crown, Briefcase, Zap, Skull, RefreshCw, Download, Dna } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 type Rarity = "S" | "A" | "B" | "C" | "F";
 
@@ -82,7 +83,6 @@ export default function ReincarnationPage() {
   const [salary, setSalary] = useState("50,000,000");
   const [isSpinning, setIsSpinning] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
     country: LifeAttribute;
     spoon: LifeAttribute;
@@ -118,6 +118,13 @@ export default function ReincarnationPage() {
     }, 3000);
   };
 
+  const captureResultImage = async (): Promise<Blob | null> => {
+    if (!resultRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  };
+
   const handleDownload = async () => {
     if (!resultRef.current) return;
     showToast("📸 이미지 저장 중...");
@@ -128,21 +135,6 @@ export default function ReincarnationPage() {
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("✅ 이미지가 저장됐어요!");
-  };
-
-  const handleCopy = async () => {
-    if (!result) return;
-    const text = `[인생 2회차 결과]\n🌏 국적: ${result.country.name} (${result.country.rarity})\n👑 계급: ${result.spoon.name} (${result.spoon.rarity})\n⚡ 재능: ${result.talent.name} (${result.talent.rarity})\n💼 직업: ${result.occupation.name} (${result.occupation.rarity})\n⏳ 수명: ${result.lifeSpan}세\n\n👉 당신의 다음 생은?: ${window.location.href}`;
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    showToast("📋 결과가 복사됐어요!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleTweet = () => {
-    if (!result) return;
-    const text = `[인생 2회차 가챠] 나의 다음 생 결과 🧬\n국적: ${result.country.name} (${result.country.rarity}등급)\n직업: ${result.occupation.name}\n수명: ${result.lifeSpan}세\n#환생시뮬레이터 #머니샐러리`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, "_blank");
   };
 
   const attrRows = result
@@ -313,30 +305,20 @@ export default function ReincarnationPage() {
               </div>
 
               {/* Share buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+              <div className="mb-3">
                 <motion.button
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   onClick={handleDownload}
-                  className="flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-violet-500 to-pink-500 shadow-lg shadow-violet-500/20"
+                  className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-violet-500 to-pink-500 shadow-lg shadow-violet-500/20"
                 >
                   <Download size={18} /> 이미지 저장
                 </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  onClick={handleCopy}
-                  className="flex items-center justify-center gap-2 py-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-                >
-                  {copied ? <CheckCheck size={18} className="text-violet-400" /> : <Copy size={18} />}
-                  {copied ? "복사 완료!" : "텍스트 복사"}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  onClick={handleTweet}
-                  className="flex items-center justify-center gap-2 py-4 bg-black hover:bg-gray-900 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-                >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.258 5.63L18.243 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  X에 공유
-                </motion.button>
+                <ShareButtons
+                  title={`[인생 2회차 가챠] 나의 다음 생은 ${result.country.name}, ${result.occupation.name} 🧬`}
+                  description="현생 연봉이 다음 생의 카르마를 결정한다 - 인생 가챠 2회차"
+                  getShareImage={captureResultImage}
+                  className="justify-center mt-4"
+                />
               </div>
 
               <motion.button

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Utensils, RefreshCw, Share2 } from "lucide-react";
+import { Utensils, RefreshCw } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 const MENUS = [
  "김치찌개", "된장찌개", "제육볶음", "돈까스", "햄버거", 
  "짜장면", "짬뽕", "마라탕", "초밥", "국밥", "샐러드", "샌드위치"
@@ -61,24 +62,23 @@ export default function LunchRoulettePage() {
  </motion.div>
  </div>
 
- <div className="flex gap-3 mb-8">
+ <div className="mb-4">
  <button
  onClick={spin}
  disabled={isSpinning}
- className="flex-1 py-4 bg-primary hover:bg-primary/90 disabled:bg-canvas-deeper disabled:text-faint-blue text-white rounded-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md"
+ className="w-full py-4 bg-primary hover:bg-primary/90 disabled:bg-canvas-deeper disabled:text-faint-blue text-white rounded-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md"
  >
- <RefreshCw className={isSpinning ? "animate-spin" : ""} size={18} /> 
+ <RefreshCw className={isSpinning ? "animate-spin" : ""} size={18} />
  {isSpinning ? "추천 중..." : "메뉴 추천받기"}
  </button>
- {result && !isSpinning && (
- <button
- onClick={() => navigator.share ? navigator.share({ title: "오늘의 점심 메뉴", text: "오늘 점심은 " + result + " 어때요?", url: window.location.href }) : navigator.clipboard.writeText(window.location.href)}
- className="px-6 toss-button-secondary rounded-sm border"
- >
- <Share2 size={18} />
- </button>
- )}
  </div>
+
+ {result && !isSpinning && (
+ <div className="flex flex-col items-center gap-2 mb-8">
+ <p className="text-sm font-bold text-faint-blue">메뉴 공유하기</p>
+ <ShareButtons title={"오늘 점심은 " + result + " 어때요? 점심 메뉴 추천기"} />
+ </div>
+ )}
 
  </div>
  </main>

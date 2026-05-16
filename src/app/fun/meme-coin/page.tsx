@@ -3,7 +3,8 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from "recharts";
-import { Dog, Cat, Ghost, Rocket, TrendingDown, TrendingUp, RefreshCw, Copy, Download, Twitter, CheckCheck, AlertTriangle, Flame } from "lucide-react";
+import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 const INITIAL_CAPITAL = 1_000_000;
 const fmt = (n: number) => n.toLocaleString("ko-KR");
@@ -125,29 +126,11 @@ export default function MemeCoinPage() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  const shareText = () => {
-    if (!result) return "";
-    const emoji = result.profit >= 0 ? "🚀" : "💸";
-    return [
-      `${emoji} 밈코인 모의투자 결과`,
-      `━━━━━━━━━━━━━━━`,
-      `📰 이벤트: ${result.event.desc}`,
-      `💰 투자액: ${fmt(totalInvested)}원`,
-      `📊 최종 평가액: ${fmt(result.finalValue)}원`,
-      `${result.profit >= 0 ? "💹" : "📉"} 수익률: ${result.profitRate >= 0 ? "+" : ""}${result.profitRate.toFixed(1)}%`,
-      ``,
-      `나도 코인 한번 해볼까? 👇`,
-      `https://www.moneysalary.com/fun/meme-coin`,
-    ].join("\n");
-  };
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText());
-      showToast("복사 완료! 친구에게 자랑해보세요 🚀");
-    } catch {
-      showToast("복사에 실패했습니다.");
-    }
+  const captureResultImage = async (): Promise<Blob | null> => {
+    if (!shareRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true, backgroundColor: "#0D1117" });
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
 
   const handleSaveImage = async () => {
@@ -163,10 +146,6 @@ export default function MemeCoinPage() {
     } catch {
       showToast("이미지 저장에 실패했습니다.");
     }
-  };
-
-  const handleTweet = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText())}`, "_blank");
   };
 
   const isProfit = result ? result.profit >= 0 : true;
@@ -489,29 +468,19 @@ export default function MemeCoinPage() {
               <div className="bg-[#161B22] border border-[#30363D] rounded-2xl p-5">
                 <p className="text-sm font-bold text-center mb-1">🚀 친구에게 자랑하기</p>
                 <p className="text-xs text-gray-500 text-center mb-4">결과를 공유하고 친구들도 도전하게 해보세요!</p>
-                <div className="grid grid-cols-3 gap-3">
-                  <button
-                    onClick={handleSaveImage}
-                    className="flex flex-col items-center gap-2 py-4 rounded-xl bg-[#21262D] hover:bg-[#30363D] text-gray-300 hover:text-white transition-all text-xs font-bold"
-                  >
-                    <Download className="w-5 h-5" />
-                    이미지 저장
-                  </button>
-                  <button
-                    onClick={handleCopy}
-                    className="flex flex-col items-center gap-2 py-4 rounded-xl bg-[#21262D] hover:bg-[#30363D] text-gray-300 hover:text-white transition-all text-xs font-bold"
-                  >
-                    <Copy className="w-5 h-5" />
-                    텍스트 복사
-                  </button>
-                  <button
-                    onClick={handleTweet}
-                    className="flex flex-col items-center gap-2 py-4 rounded-xl bg-[#21262D] hover:bg-sky-900/50 text-gray-300 hover:text-sky-400 transition-all text-xs font-bold"
-                  >
-                    <Twitter className="w-5 h-5" />
-                    X 공유
-                  </button>
-                </div>
+                <button
+                  onClick={handleSaveImage}
+                  className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-[#21262D] hover:bg-[#30363D] text-gray-300 hover:text-white transition-all text-sm font-bold"
+                >
+                  <Download className="w-5 h-5" />
+                  이미지 저장
+                </button>
+                <ShareButtons
+                  title={`밈코인 모의투자 결과: 수익률 ${result.profitRate >= 0 ? "+" : ""}${result.profitRate.toFixed(1)}% ${result.profit >= 0 ? "🚀" : "💸"}`}
+                  description="100만원으로 인생역전? CRYPTO PANIC 밈코인 모의투자"
+                  getShareImage={captureResultImage}
+                  className="justify-center mt-4"
+                />
               </div>
 
               <button

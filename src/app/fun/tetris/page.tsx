@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Pause, Trophy, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Pause, Trophy } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 // --- Game Constants & Types ---
 const ROWS = 20;
 const COLS = 10;
@@ -205,16 +206,6 @@ export default function TetrisPage() {
  setActivePiece(null);
  };
 
- const handleShare = () => {
- const text = `직장인 테트리스! 내 야근 점수는 ${score}점! 🏢 #Moneysalary #Tetris`;
- if (navigator.share) {
- navigator.share({ title: "Salaryman Tetris", text, url: window.location.href });
- } else {
- navigator.clipboard.writeText(`${text}\n${window.location.href}`);
- alert("점수가 복사되었습니다!");
- }
- };
-
  // --- Rendering ---
  // Merge active piece into grid for rendering
  const displayGrid = grid.map(row => [...row]);
@@ -312,19 +303,18 @@ export default function TetrisPage() {
 
  
 
- <div className="flex gap-4">
+ <div className="flex justify-center mb-4">
  <button
  onClick={startGame}
  className="p-4 bg-primary hover:bg-primary text-white rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
  >
  <RefreshCw size={24} />
  </button>
- <button
- onClick={handleShare}
- className="p-4 bg-electric hover:bg-slate-600 text-navy rounded-full font-bold shadow-lg transition-all hover:scale-110"
- >
- <Share2 size={24} />
- </button>
+ </div>
+
+ <div className="flex flex-col items-center gap-2">
+ <p className="text-sm font-bold text-faint-blue">점수 공유하기</p>
+ <ShareButtons title={`직장인 테트리스! 내 야근 점수는 ${score}점!`} />
  </div>
  </>
  ) : (

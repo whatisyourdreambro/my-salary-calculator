@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCw, Share2, Target } from "lucide-react";
+import { RefreshCw, Target } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 const questions = [
  {
  axis: 'EI',
@@ -159,12 +160,11 @@ export default function FinancialMBTIPage() {
  <button onClick={reset} className="toss-button-secondary flex-1 rounded-sm border-none shadow-sm">
  <RefreshCw size={18} /> Re-test
  </button>
- <button
- onClick={() => navigator.share ? navigator.share({ title: "투자 성향 분석 결과", text: "나의 투자 성향은 " + result + "!", url: window.location.href }) : navigator.clipboard.writeText(window.location.href)}
- className="flex-1 py-4 bg-primary hover:bg-primary/90 text-white rounded-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md"
- >
- <Share2 size={18} /> Share Result
- </button>
+ </div>
+
+ <div className="flex flex-col items-center gap-2 pt-2">
+ <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
+ <ShareButtons title={"나의 투자 성향은 " + result + "! 투자 성향 MBTI 테스트"} />
  </div>
 
  </motion.div>

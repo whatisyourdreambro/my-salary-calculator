@@ -4,8 +4,9 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, Users, Play, RotateCcw, Settings,
-  X, Heart, Frown, Meh, Download, Copy, CheckCheck, Zap,
+  X, Heart, Frown, Meh, Download, Zap,
 } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 type Preference = "HOPE" | "NEUTRAL" | "NON_HOPE" | "UNAVAILABLE";
 
@@ -40,7 +41,6 @@ export default function WeekendDutyGame() {
   const [shiftsPerDay,    setShiftsPerDay]    = useState(2);
   const [defaultMaxShifts,setDefaultMaxShifts]= useState(2);
   const [toast,           setToast]           = useState<string | null>(null);
-  const [copied,          setCopied]          = useState(false);
 
   const [gameState, setGameState] = useState<GameState>({
     step: "setup",
@@ -141,6 +141,16 @@ export default function WeekendDutyGame() {
     });
   };
 
+  const captureResultImage = async (): Promise<Blob | null> => {
+    if (!resultRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(resultRef.current, {
+      backgroundColor: "#0D1117",
+      scale: 2,
+    });
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  };
+
   const handleDownload = async () => {
     if (!resultRef.current) return;
     showToast("📸 이미지 저장 중...");
@@ -154,24 +164,6 @@ export default function WeekendDutyGame() {
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("✅ 이미지가 저장됐어요!");
-  };
-
-  const handleCopyText = async () => {
-    const lines = gameState.dates.map(date => {
-      const workers = gameState.people.filter(p => p.assignedShifts.includes(date));
-      return `${date}: ${workers.length > 0 ? workers.map(w => w.name).join(", ") : "미배정"}`;
-    });
-    const text = `📋 주말 당직 근무표\n\n${lines.join("\n")}\n\n🎲 머니샐러리 당직 추첨기`;
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    showToast("📋 근무표가 복사됐어요!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleTweet = () => {
-    const workers = gameState.people.filter(p => p.assignedShifts.length > 0);
-    const text = `주말 당직 추첨 완료! ${workers.map(w => `${w.name}(${w.assignedShifts.length}회)`).join(", ")} — 머니샐러리 당직 추첨기로 공정하게 뽑았어요 🎲`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const resetAll = () => {
@@ -466,30 +458,20 @@ export default function WeekendDutyGame() {
           </div>
 
           {/* Share & Actions */}
-          <div className="max-w-4xl mx-auto mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="max-w-4xl mx-auto mt-6">
             <motion.button
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={handleDownload}
-              className="flex items-center justify-center gap-2 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl font-bold text-black transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl font-bold text-black transition-colors"
             >
               <Download size={18} /> 이미지 저장
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              onClick={handleCopyText}
-              className="flex items-center justify-center gap-2 py-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-            >
-              {copied ? <CheckCheck size={18} className="text-emerald-400" /> : <Copy size={18} />}
-              {copied ? "복사 완료!" : "텍스트 복사"}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              onClick={handleTweet}
-              className="flex items-center justify-center gap-2 py-4 bg-black hover:bg-gray-900 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-            >
-              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.258 5.63L18.243 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              X에 공유
-            </motion.button>
+            <ShareButtons
+              title="주말 당직 추첨 완료! 머니샐러리 당직 추첨기로 공정하게 뽑았어요 🎲"
+              description="운명의 룰렛으로 공정하게 당직을 배정하는 주말 당직 추첨기"
+              getShareImage={captureResultImage}
+              className="justify-center mt-4"
+            />
           </div>
 
           <div className="max-w-4xl mx-auto mt-4 flex justify-center">

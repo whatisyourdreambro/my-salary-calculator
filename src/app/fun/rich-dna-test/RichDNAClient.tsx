@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
+import { Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
 import Link from 'next/link';
+import ShareButtons from "@/components/ShareButtons";
 
 const questions = [
  {
@@ -119,21 +120,6 @@ export default function RichDNAClient() {
  // @ts-ignore
  const result = resultTypes[resultKey];
  const ResultIcon = result.icon;
-
- const handleShare = () => {
- const shareUrl = window.location.href;
- if (navigator.share) {
- navigator.share({
- title: "부자 DNA 테스트",
- text: `나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!`,
- url: shareUrl,
- });
- } else {
- navigator.clipboard.writeText(`나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!\n${shareUrl}`)
- .then(() => alert("결과가 클립보드에 복사되었습니다!"))
- .catch(err => console.error("Share failed", err));
- }
- };
 
  return (
  <main className="w-full min-h-screen bg-canvas font-sans relative overflow-hidden">
@@ -277,12 +263,10 @@ export default function RichDNAClient() {
  >
  <RefreshCw size={18} /> 다시 테스트하기
  </button>
- <button
- onClick={handleShare}
- className={`w-full py-4 rounded-xl text-white font-bold transition-all shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${result.gradient} hover:brightness-110`}
- >
- <Share2 size={18} /> 결과 공유하기
- </button>
+ <div className="flex flex-col items-center gap-2 py-1">
+ <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
+ <ShareButtons title={`나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!`} />
+ </div>
  {/* Fun Hub Link */}
  <Link
  href="/fun"

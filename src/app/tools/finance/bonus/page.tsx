@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import {
   Gift, ChevronDown, ChevronUp, Info, ArrowRight, Users,
-  Share2, Copy, Check, TrendingDown, Zap, Shield,
+  TrendingDown, Zap, Shield,
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026 세법 기준 로직 (소득세법 제47조, 제55조, 제59조)
@@ -243,7 +244,6 @@ export default function BonusCalculatorPage() {
   const [dependents, setDependents] = useState(0);
   const [hasSpouse, setHasSpouse]   = useState(false);
   const [showDetail, setShowDetail] = useState(false);
-  const [copied, setCopied]         = useState(false);
 
   const salary = parseInput(salaryFmt);
   const bonus  = parseInput(bonusFmt);
@@ -263,17 +263,8 @@ export default function BonusCalculatorPage() {
     setBonusFmt(formatInput(e.target.value));
   }, []);
 
-  // 공유
-  const handleShare = async () => {
-    const text = `💰 성과급 세금 계산 결과\n세전: ${fmt(bonus)}원\n실수령: ${fmt(r.netBonus)}원 (${receiveRatio}%)\n세금: ${fmt(r.totalDeduction)}원 (${r.effectiveRate.toFixed(1)}%)\n\n머니샐러리에서 내 성과급 세금 계산 → https://www.moneysalary.com/tools/finance/bonus`;
-    if (navigator.share) {
-      await navigator.share({ title: "성과급 세금 계산기", text });
-    } else {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  // 공유 문구
+  const shareText = `💰 성과급 세금 계산 결과 — 세전 ${fmt(bonus)}원의 실수령은 ${fmt(r.netBonus)}원 (${receiveRatio}%)! 성과급 세금 계산기로 확인하세요.`;
 
   // 충격 메시지
   const shockMsg = (() => {
@@ -602,18 +593,15 @@ export default function BonusCalculatorPage() {
         )}
 
         {/* ── 공유 버튼 ── */}
-        <button
-          onClick={handleShare}
-          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all mb-4"
-          style={{
-            backgroundColor: "#0145F2",
-            color: "#FFFFFF",
-            boxShadow: "0 4px 16px #0145F230",
-          }}
+        <div
+          className="w-full flex flex-col items-center gap-3 py-5 rounded-2xl mb-4"
+          style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
         >
-          {copied ? <Check size={18} /> : <Share2 size={18} />}
-          {copied ? "클립보드에 복사됐어요!" : "결과 공유하기 — 친구한테 세금 자랑(?)하기"}
-        </button>
+          <p className="text-sm font-bold" style={{ color: "#3D5E78" }}>
+            결과 공유하기 — 친구한테 세금 자랑(?)하기
+          </p>
+          <ShareButtons title={shareText} />
+        </div>
 
         {/* ── 세금 계산 상세 ── */}
         <button

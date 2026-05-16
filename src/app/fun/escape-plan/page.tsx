@@ -6,8 +6,9 @@ import NumberStepper from "@/components/NumberStepper";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Coffee, Beer, Plane, Rocket, BedDouble, DoorOpen, Palmtree,
-  Copy, Download, Twitter, CheckCheck,
+  Download, CheckCheck,
 } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 const parse = (s: string) => Number(s.replace(/[^0-9]/g, "")) || 0;
@@ -79,37 +80,18 @@ export default function EscapePlanPage() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  const shareText = () => {
-    const lines = [
-      `🔥 나의 회사 탈출 계획 공개!`,
-      `━━━━━━━━━━━━━━━`,
-      `💰 FIRE 목표액: ${fmt(targetAmount)}원`,
-      yearsToTarget === 0
-        ? `🎉 이미 탈출 가능!`
-        : isFinite(yearsToTarget)
-          ? `⏰ 탈출까지: ${yearsToTarget.toFixed(1)}년 후 (${escapeYear}년)`
-          : `⏰ 탈출 계획 수정 필요...`,
-      `📈 현재 진행률: ${progress.toFixed(1)}%`,
-      ``,
-      `그동안 버텨야 할 것들:`,
-      `😴 월요병 ${fmt(funMetrics[0].value)}번`,
-      `☕ 아메리카노 ${fmt(funMetrics[1].value)}잔`,
-      `🍺 야근 식대 ${fmt(funMetrics[2].value)}번`,
-      `✈️ 여름 휴가 ${fmt(funMetrics[3].value)}번`,
-      ``,
-      `내 탈출 날짜는? 👇`,
-      `https://www.moneysalary.com/fun/escape-plan`,
-    ];
-    return lines.join("\n");
-  };
+  const shareTitle = () =>
+    yearsToTarget === 0
+      ? "🔥 나의 회사 탈출 계획: 지금 당장 탈출 가능!"
+      : isFinite(yearsToTarget)
+        ? `🔥 나의 회사 탈출 계획: ${yearsToTarget.toFixed(1)}년 후 (${escapeYear}년) 탈출!`
+        : "🔥 나의 회사 탈출 계획 세우기";
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText());
-      showToast("클립보드에 복사됐어요!");
-    } catch {
-      showToast("복사에 실패했습니다.");
-    }
+  const captureResultImage = async (): Promise<Blob | null> => {
+    if (!shareRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
 
   const handleSaveImage = async () => {
@@ -125,11 +107,6 @@ export default function EscapePlanPage() {
     } catch {
       showToast("이미지 저장에 실패했습니다.");
     }
-  };
-
-  const handleTweet = () => {
-    const text = encodeURIComponent(shareText());
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
   };
 
   return (
@@ -283,29 +260,19 @@ export default function EscapePlanPage() {
                 <p className="text-xs text-faint-blue text-center mb-4">
                   당신의 탈출 계획을 자랑해보세요!
                 </p>
-                <div className="grid grid-cols-3 gap-3">
-                  <button
-                    onClick={handleSaveImage}
-                    className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold"
-                  >
-                    <Download className="w-5 h-5" />
-                    이미지 저장
-                  </button>
-                  <button
-                    onClick={handleCopy}
-                    className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold"
-                  >
-                    <Copy className="w-5 h-5" />
-                    텍스트 복사
-                  </button>
-                  <button
-                    onClick={handleTweet}
-                    className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-sky-100 hover:text-sky-600 text-muted-blue transition-all text-xs font-bold"
-                  >
-                    <Twitter className="w-5 h-5" />
-                    X 공유
-                  </button>
-                </div>
+                <button
+                  onClick={handleSaveImage}
+                  className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-sm font-bold"
+                >
+                  <Download className="w-5 h-5" />
+                  이미지 저장
+                </button>
+                <ShareButtons
+                  title={shareTitle()}
+                  description="회사 탈출까지 남은 시간을 계산하는 FREEDOM DASHBOARD"
+                  getShareImage={captureResultImage}
+                  className="justify-center mt-4"
+                />
               </motion.div>
             )}
           </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { Play, RotateCcw, Share2, Trophy } from "lucide-react";
+import { Play, RotateCcw, Trophy } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 // Game Constants
 const GRAVITY = 0.4; // Reduced from 0.6
 const JUMP_STRENGTH = -8; // Reduced from -10 to match gravity
@@ -235,23 +235,11 @@ export default function FlappyGamePage() {
  <RotateCcw className="w-5 h-5" />
  다시하기
  </button>
- <button
- className="flex-1 py-3 bg-electric hover:bg-slate-600 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
- onClick={() => {
- if (navigator.share) {
- navigator.share({
- title: 'Flappy Salaryman',
- text: `내 점수는 ${score}점! 세금을 피해 월급을 지켰습니다.`,
- url: window.location.href
- });
- } else {
- alert("공유하기를 지원하지 않는 브라우저입니다.");
- }
- }}
- >
- <Share2 className="w-5 h-5" />
- 공유하기
- </button>
+ </div>
+
+ <div className="flex flex-col items-center gap-2 mt-4">
+ <p className="text-sm font-bold text-faint-blue">점수 공유하기</p>
+ <ShareButtons title={`내 점수는 ${score}점! Flappy Salaryman으로 세금을 피해 월급을 지켰습니다.`} />
  </div>
  </div>
  )}

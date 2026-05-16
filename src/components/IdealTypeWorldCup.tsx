@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Crown, RefreshCw, Share2, Heart } from "lucide-react";
+import { Trophy, Crown, RefreshCw, Heart } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyProfile } from "@/types/company";
+import ShareButtons from "@/components/ShareButtons";
 // Shuffle array helper
 const shuffle = <T,>(array: T[]): T[] => {
  return [...array].sort(() => Math.random() - 0.5);
@@ -146,7 +147,7 @@ export default function IdealTypeWorldCup() {
  <p className="text-xl text-muted-foreground">{winner.industry}</p>
  </div>
 
- <div className="flex gap-4">
+ <div className="flex flex-col items-center gap-5">
  <button
  onClick={startNewGame}
  className="flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold text-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25"
@@ -154,10 +155,12 @@ export default function IdealTypeWorldCup() {
  <RefreshCw size={20} />
  다시 하기
  </button>
- <button className="flex items-center gap-2 px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-bold text-lg hover:bg-secondary/80 transition-all">
- <Share2 size={20} />
- 공유하기
- </button>
+ <div className="flex flex-col items-center gap-2">
+ <p className="text-sm font-bold text-muted-foreground">결과 공유하기</p>
+ <ShareButtons
+ title={`내 이상형 기업 월드컵 우승은 ${winner.name.ko}! 당신의 1위 기업은?`}
+ />
+ </div>
  </div>
 
  {/* Ad Unit */}

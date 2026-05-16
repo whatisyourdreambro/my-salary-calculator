@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Share2, RefreshCw, DollarSign, TrendingUp } from "lucide-react";
+import { Brain, Download, RefreshCw, DollarSign } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 const MBTI_DATA: Record<string, { rank: number; avgSalary: string; desc: string; color: string }> = {
  "ENTJ": { rank: 1, avgSalary: "8,500", desc: "타고난 지도자, 연봉도 1위!", color: "from-primary to-indigo-600" },
  "ESTJ": { rank: 2, avgSalary: "8,200", desc: "현실적인 관리자, 확실한 성과!", color: "from-blue-600 to-primary/80" },
@@ -39,15 +40,22 @@ export default function MbtiSalary() {
  }, 1500);
  };
 
- const handleShare = async () => {
+ const handleSaveImage = async () => {
  if (cardRef.current) {
  const { default: html2canvas } = await import("html2canvas");
- const canvas = await html2canvas(cardRef.current, { backgroundColor: "#000000" });
+ const canvas = await html2canvas(cardRef.current, { backgroundColor: "#ffffff" });
  const link = document.createElement("a");
  link.download = `MBTI_Salary_${selectedMbti}.png`;
  link.href = canvas.toDataURL("image/png");
  link.click();
  }
+ };
+
+ const captureCardImage = async (): Promise<Blob | null> => {
+ if (!cardRef.current) return null;
+ const { default: html2canvas } = await import("html2canvas");
+ const canvas = await html2canvas(cardRef.current, { backgroundColor: "#ffffff" });
+ return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
  };
 
  return (
@@ -155,12 +163,18 @@ export default function MbtiSalary() {
  <RefreshCw className="w-4 h-4" /> 다시 하기
  </button>
  <button
- onClick={handleShare}
+ onClick={handleSaveImage}
  className={`flex-1 py-3 bg-gradient-to-r ${result.color} text-white rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg`}
  >
- <Share2 className="w-4 h-4" /> 공유하기
+ <Download className="w-4 h-4" /> 이미지 저장
  </button>
  </div>
+ <ShareButtons
+ title={`내 MBTI(${selectedMbti}) 평균 연봉은 ${result.avgSalary}만원! 전체 ${result.rank}위`}
+ description="MBTI 연봉 순위 - 내 MBTI의 평균 연봉은 얼마일까?"
+ getShareImage={captureCardImage}
+ className="justify-center mt-4"
+ />
  </div>
  </div>
  </motion.div>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Share2, RefreshCw, Scroll, Calendar, Clock, User, ChevronRight } from "lucide-react";
+import { Sparkles, RefreshCw, Scroll, Calendar, Clock, User } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 // --- Constants & Data ---
 
 const YEARS = Array.from({ length: 80 }, (_, i) => 2025 - i); // 2025 down to 1946
@@ -103,23 +104,6 @@ export default function FortunePage() {
  });
  setStep("result");
  }, 3000);
- };
-
- const handleShare = async () => {
- const text = `[2026년 신년운세] ${name}님의 운세: ${resultData.title}\n점수: ${resultData.score}점\n\n지금 바로 확인해보세요!`;
- if (navigator.share) {
- try {
- await navigator.share({
- title: "2026년 병오년 신년운세",
- text: text,
- url: window.location.href,
- });
- } catch (err) {
- console.error("Share failed", err);
- }
- } else {
- navigator.clipboard.writeText(text).then(() => alert("결과가 복사되었습니다!"));
- }
  };
 
  return (
@@ -368,25 +352,21 @@ export default function FortunePage() {
  </div>
  </div>
 
- <div className="flex gap-3">
+ <div className="space-y-4">
  <button
  onClick={() => {
  setStep("input");
  setName("");
  }}
- className="flex-1 py-4 bg-canvas-dark hover:bg-canvas-deeper text-navy rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+ className="w-full py-4 bg-canvas-dark hover:bg-canvas-deeper text-navy rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
  >
  <RefreshCw size={20} /> 다시 하기
  </button>
- <button
- onClick={handleShare}
- className="flex-1 py-4 bg-primary hover:bg-primary text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-red-900/30"
- >
- <Share2 size={20} /> 결과 공유
- </button>
- </div>
 
- <div className="mt-8">
+ <div className="flex flex-col items-center gap-2">
+ <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
+ <ShareButtons title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
+ </div>
  </div>
  </motion.div>
  )}

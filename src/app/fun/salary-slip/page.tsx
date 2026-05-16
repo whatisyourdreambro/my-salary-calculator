@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Receipt, Share2, Printer, RefreshCw, Eye } from "lucide-react";
+import { Receipt, Printer, RefreshCw, Eye } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";
+import ShareButtons from "@/components/ShareButtons";
 
 export default function SalarySlipPage() {
  const [salaryInput, setSalaryInput] = useState("60,000,000");
@@ -45,20 +46,6 @@ export default function SalarySlipPage() {
  setUserName("");
  setEmployeeId("");
  setDepartment("");
- };
-
- const handleShare = () => {
- if (navigator.share) {
- navigator.share({
- title: "가상 급여명세서",
- text: `연봉 ${salaryInput}원의 가상 급여명세서! #Moneysalary #급여명세서`,
- url: window.location.href,
- });
- } else {
- navigator.clipboard.writeText(window.location.href).then(() => {
- alert("링크가 클립보드에 복사되었습니다.");
- });
- }
  };
 
  const monthly = Math.round(salary / 12);
@@ -192,9 +179,13 @@ export default function SalarySlipPage() {
  </div>
  </div>
 
- <div className="flex gap-3 mt-4">
- <button onClick={handleReset} className="toss-button-secondary flex-1"><RefreshCw size={18} /> 다시 만들기</button>
- <button onClick={handleShare} className="flex-1 py-4 bg-primary hover:bg-primary text-white rounded-[16px] font-bold transition-colors flex items-center justify-center gap-2"><Share2 size={18} /> 공유하기</button>
+ <div className="mt-4">
+ <button onClick={handleReset} className="toss-button-secondary w-full"><RefreshCw size={18} /> 다시 만들기</button>
+ </div>
+
+ <div className="flex flex-col items-center gap-2 mt-4">
+ <p className="text-sm font-bold text-faint-blue">공유하기</p>
+ <ShareButtons title={`연봉 ${salaryInput}원의 가상 급여명세서를 만들어봤어요!`} />
  </div>
  </motion.div>
  )}

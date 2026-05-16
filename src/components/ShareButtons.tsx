@@ -1,22 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Share2, Link as LinkIcon, Twitter, Facebook } from "lucide-react";
+import { Link as LinkIcon, Facebook, Twitter, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ShareButtonsProps {
   url?: string;
   title?: string;
   description?: string;
+  /** 카카오 공유 카드 썸네일 */
   imageUrl?: string;
+  /**
+   * 결과 이미지를 가진 페이지(FUN 결과 카드 등)는 이 캡처 함수를 넘긴다.
+   * 넘기면 인스타그램 버튼이 모바일 Web Share API 로 이미지 파일을 직접 공유한다.
+   * (인스타그램은 웹 링크 공유 API 가 없어 이미지 공유가 유일한 정식 경로)
+   */
+  getShareImage?: () => Promise<Blob | null>;
   className?: string;
 }
 
 export default function ShareButtons({
   url,
-  title = "Moneysalary - 2026년 연봉 실수령액 계산기",
+  title = "머니샐러리 - 2026년 연봉 실수령액 계산기",
   description = "내 연봉의 실제 수령액을 확인해보세요!",
   imageUrl = "https://www.moneysalary.com/logo-full.png",
+  getShareImage,
   className = "",
 }: ShareButtonsProps) {
   const [currentUrl, setCurrentUrl] = useState("");
@@ -34,10 +42,11 @@ export default function ShareButtons({
   };
 
   const handleKakaoShare = async () => {
-    // SDK가 로드되어 있으면 Kakao 공유 사용
-    if (typeof window !== "undefined" && (window as any).Kakao?.isInitialized?.()) {
+    // Kakao JS SDK 가 초기화돼 있으면 인앱 공유, 아니면 링크 복사로 폴백.
+    const kakao = (window as any).Kakao;
+    if (kakao?.isInitialized?.()) {
       try {
-        (window as any).Kakao.Share.sendDefault({
+        kakao.Share.sendDefault({
           objectType: "feed",
           content: {
             title,
@@ -45,18 +54,50 @@ export default function ShareButtons({
             imageUrl,
             link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
           },
-          buttons: [{ title: "자세히 보기", link: { mobileWebUrl: currentUrl, webUrl: currentUrl } }],
+          buttons: [
+            {
+              title: "자세히 보기",
+              link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
+            },
+          ],
         });
         return;
       } catch {}
     }
-    // 폴백: 링크 복사 후 안내
     try {
       await navigator.clipboard.writeText(`${title}\n${currentUrl}`);
       showToast("💬 링크 복사 완료! 카카오톡에 붙여넣기 하세요");
     } catch {
       showToast("링크를 복사해 카카오톡으로 공유하세요");
     }
+  };
+
+  const handleInstagramShare = async () => {
+    // 결과 이미지가 있으면 모바일 Web Share API 로 이미지 파일을 직접 공유
+    // (사용자가 공유 시트에서 인스타그램 스토리/피드 선택 가능).
+    if (getShareImage) {
+      try {
+        const blob = await getShareImage();
+        if (blob) {
+          const file = new File([blob], "moneysalary.png", {
+            type: "image/png",
+          });
+          const nav = navigator as any;
+          if (nav.canShare?.({ files: [file] })) {
+            await nav.share({ files: [file], title, text: description });
+            return;
+          }
+        }
+      } catch {}
+    }
+    // 인스타그램은 웹 링크 공유 URL 이 없어 링크 복사 + 인스타 열기로 안내.
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      showToast("📷 링크 복사 완료! 인스타그램 프로필·스토리에 붙여넣으세요");
+    } catch {
+      showToast("링크를 복사해 인스타그램에 공유하세요");
+    }
+    window.open("https://www.instagram.com/", "_blank");
   };
 
   const handleCopyLink = async () => {
@@ -70,14 +111,18 @@ export default function ShareButtons({
 
   const handleFacebookShare = () => {
     window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        currentUrl
+      )}`,
       "_blank"
     );
   };
 
   const handleTwitterShare = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`,
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        title
+      )}&url=${encodeURIComponent(currentUrl)}`,
       "_blank"
     );
   };
@@ -98,6 +143,23 @@ export default function ShareButtons({
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="#371D1E">
             <path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.394 1.36 4.514 3.445 5.882L4.5 20l4.094-2.182A11.3 11.3 0 0 0 12 18c5.523 0 10-3.477 10-7.5S17.523 3 12 3Z" />
           </svg>
+        </motion.button>
+
+        {/* Instagram */}
+        <motion.button
+          whileHover={{ scale: 1.1, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleInstagramShare}
+          className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all"
+          style={{
+            background:
+              "linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4)",
+            boxShadow: "0 10px 15px -3px rgba(221,42,123,0.3)",
+          }}
+          aria-label="인스타그램 공유"
+          title="인스타그램 공유"
+        >
+          <Instagram className="w-5 h-5 text-white" />
         </motion.button>
 
         {/* Facebook */}

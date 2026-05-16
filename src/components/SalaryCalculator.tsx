@@ -13,7 +13,8 @@ import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Copy, CheckCircle, Info, Calculator, Zap, Sparkles, ChevronRight } from "lucide-react";
+import { CheckCircle, Calculator, Zap, Sparkles } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -302,23 +303,20 @@ export default function SalaryCalculator() {
  }
  };
 
- const handleShare = async () => {
+ // 공유용 /share/{base64} 링크 — 입력값을 인코딩해 결과를 그대로 재현
+ const shareUrl = useMemo(() => {
+ if (typeof window === "undefined") return undefined;
  const dataToShare = {
  annualSalary,
  nonTaxableAmount: parseNumber(nonTaxableAmount),
  dependents,
  children,
  };
- const encodedData = btoa(JSON.stringify(dataToShare));
- const shareUrl = `${window.location.origin}/share/${encodedData}`;
-
- try {
- await navigator.clipboard.writeText(shareUrl);
- alert("링크가 복사되었습니다!");
- } catch (error) {
- console.error("Sharing failed", error);
- }
- };
+ const encodedData = btoa(
+ unescape(encodeURIComponent(JSON.stringify(dataToShare)))
+ );
+ return `${window.location.origin}/share/${encodedData}`;
+ }, [annualSalary, nonTaxableAmount, dependents, children]);
 
  const handleCopyResult = async () => {
  try {
@@ -476,14 +474,15 @@ export default function SalaryCalculator() {
  <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" />
 
  {/* 공유/저장 */}
- <div className="grid grid-cols-2 gap-3">
- <button onClick={handleShare} className="py-3 bg-electric rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-electric active:scale-95 transition-all">
- <Share2 size={16} className="text-white" />
- <span className="text-white">결과 공유</span>
- </button>
- <button onClick={handleSaveData} className="py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
+ <div className="bg-white border border-canvas rounded-2xl p-4 flex flex-col items-center gap-3">
+ <p className="text-sm font-bold text-muted-blue">결과 공유하기</p>
+ <ShareButtons
+ url={shareUrl}
+ title="내 연봉 실수령액 계산 결과 — 머니샐러리"
+ />
+ <button onClick={handleSaveData} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
  <CheckCircle size={16} className="text-navy" />
- <span className="text-navy">저장하기</span>
+ <span className="text-navy">대시보드에 저장하기</span>
  </button>
  </div>
  </motion.div>

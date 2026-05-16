@@ -3,7 +3,8 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Turtle, Squirrel, Zap, Rabbit, Download, Copy, CheckCheck } from "lucide-react";
+import { Turtle, Squirrel, Zap, Rabbit, Download } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 const questions = [
   {
@@ -99,7 +100,6 @@ export default function SpendingTestPage() {
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState({ yolo: 0, plan: 0, save: 0, social: 0 });
   const [toast, setToast] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const showToast = (msg: string) => {
@@ -124,6 +124,13 @@ export default function SpendingTestPage() {
 
   const result = step === questions.length ? resultTypes[getResultType()] : null;
 
+  const captureResultImage = async (): Promise<Blob | null> => {
+    if (!resultRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  };
+
   const handleSaveImage = async () => {
     if (!resultRef.current) return;
     showToast("📸 이미지 저장 중...");
@@ -134,21 +141,6 @@ export default function SpendingTestPage() {
     link.href = canvas.toDataURL("image/png");
     link.click();
     showToast("✅ 이미지가 저장됐어요!");
-  };
-
-  const handleCopy = async () => {
-    if (!result) return;
-    const text = `나의 소비 성향은 '${result.title}'!\n${result.emoji} ${result.description}\n\n👉 나도 해보기: ${window.location.href}`;
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    showToast("📋 결과가 복사됐어요! 친구에게 공유해보세요");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleTweet = () => {
-    if (!result) return;
-    const text = `소비 성향 테스트 결과: 나는 '${result.title}' ${result.emoji}\n#소비성향 #머니샐러리`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, "_blank");
   };
 
   const progress = (step / questions.length) * 100;
@@ -273,30 +265,20 @@ export default function SpendingTestPage() {
                 </div>
 
                 {/* Share buttons */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                <div className="mb-4">
                   <motion.button
                     whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                     onClick={handleSaveImage}
-                    className={`flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-black bg-gradient-to-r ${result.gradient} shadow-lg`}
+                    className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-black bg-gradient-to-r ${result.gradient} shadow-lg`}
                   >
                     <Download size={18} /> 이미지 저장
                   </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    onClick={handleCopy}
-                    className="flex items-center justify-center gap-2 py-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-                  >
-                    {copied ? <CheckCheck size={18} className={result.textColor} /> : <Copy size={18} />}
-                    {copied ? "복사 완료!" : "텍스트 복사"}
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    onClick={handleTweet}
-                    className="flex items-center justify-center gap-2 py-4 bg-black hover:bg-gray-900 border border-white/10 rounded-2xl font-bold text-white transition-colors"
-                  >
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.258 5.63L18.243 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    X에 공유
-                  </motion.button>
+                  <ShareButtons
+                    title={`나의 소비 성향은 '${result.title}' ${result.emoji}`}
+                    description="소비 성향 테스트 - 나의 소비 습관은 어떤 동물과 닮았을까?"
+                    getShareImage={captureResultImage}
+                    className="justify-center mt-4"
+                  />
                 </div>
 
                 <motion.button

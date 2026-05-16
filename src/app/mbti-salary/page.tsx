@@ -16,7 +16,6 @@ import {
 } from "recharts";
 import Link from "next/link";
 import {
- Share2,
  Download,
  RefreshCw,
  ArrowRight,
@@ -24,6 +23,7 @@ import {
  BrainCircuit,
  Target,
 } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 // 타이핑 효과를 위한 커스텀 훅 (사용자 경험 극대화)
 const useTypingEffect = (text: string, speed = 50) => {
  const [displayedText, setDisplayedText] = useState("");
@@ -87,27 +87,14 @@ export default function MbtiSalaryPage() {
  setStep("intro");
  };
 
- const handleShare = async () => {
- if (!result) return;
- const shareText = `💸 내 인생 연봉 그래프는 '${result.title}'! 과연 당신의 재물운은? 지금 바로 확인해보세요! 👇`;
- const shareUrl = window.location.href;
-
- try {
- if (navigator.share) {
- await navigator.share({
- title: "인생 연봉 그래프 테스트 | Moneysalary",
- text: shareText,
- url: shareUrl,
+ const captureResultImage = async (): Promise<Blob | null> => {
+ if (!resultRef.current) return null;
+ const { default: html2canvas } = await import("html2canvas");
+ const canvas = await html2canvas(resultRef.current, {
+ backgroundColor: null,
+ scale: 2,
  });
- } else {
- await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
- alert(
- "결과가 클립보드에 복사되었습니다. 원하는 곳에 붙여넣어 공유하세요!"
- );
- }
- } catch (error) {
- console.error("Sharing failed:", error);
- }
+ return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
  };
 
  const handleDownload = async () => {
@@ -345,7 +332,8 @@ export default function MbtiSalaryPage() {
  </div>
  </div>
 
- <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+ <div className="mt-8">
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <button
  onClick={handleDownload}
  className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition"
@@ -354,19 +342,19 @@ export default function MbtiSalaryPage() {
  이미지 저장
  </button>
  <button
- onClick={handleShare}
- className="w-full py-3 bg-primary text-black font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/50 transition"
- >
- <Share2 size={18} />
- 결과 공유
- </button>
- <button
  onClick={handleReset}
  className="w-full py-3 bg-canvas-deeper font-semibold rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition"
  >
  <RefreshCw size={18} />
  다시하기
  </button>
+ </div>
+ <ShareButtons
+ title={`내 인생 연봉 그래프는 '${result.title}'! 과연 당신의 재물운은? 💸`}
+ description="인생 연봉 그래프 테스트 - 당신의 숨겨진 재물운과 미래 연봉을 확인하세요"
+ getShareImage={captureResultImage}
+ className="justify-center mt-4"
+ />
  </div>
  </div>
  )}

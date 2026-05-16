@@ -32,13 +32,12 @@ import {
  PiggyBank,
  Landmark,
  Gem,
- Copy,
  Download,
- Twitter,
  CheckCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
+import ShareButtons from "@/components/ShareButtons";
 
 // --- Types & Utilities ---
 
@@ -301,32 +300,18 @@ export default function FireCalculatorPage() {
    setTimeout(() => setToast(null), 2500);
  };
 
- const shareText = () => {
-   const lines = [
-     `🔥 나의 FIRE 계획 공개!`,
-     `━━━━━━━━━━━━━━━`,
-     `💰 FIRE 목표액: ${finalTargetAmount.toLocaleString("ko-KR")}원`,
-     yearsToFire === 0
-       ? `🎉 이미 FIRE 달성!`
-       : isFinite(yearsToFire)
-         ? `⏰ 은퇴까지: ${yearsToFire}년 후 (${finalAge}세)`
-         : `⏰ 현재 조건으로는 달성 어렵습니다`,
-     `💼 총 투자 원금: ${totalContributions.toLocaleString("ko-KR")}원`,
-     `📈 총 수익: ${totalReturns.toLocaleString("ko-KR")}원`,
-     ``,
-     `나도 FIRE 계획 세우기 👇`,
-     `https://www.moneysalary.com/fire-calculator`,
-   ];
-   return lines.join("\n");
- };
+ const shareTitle = () =>
+   yearsToFire === 0
+     ? "🔥 나의 FIRE 계획: 이미 경제적 자유 달성!"
+     : isFinite(yearsToFire)
+       ? `🔥 나의 FIRE 계획: ${yearsToFire}년 후 (${finalAge}세) 은퇴!`
+       : "🔥 나의 FIRE 계획 세우기";
 
- const handleCopy = async () => {
-   try {
-     await navigator.clipboard.writeText(shareText());
-     showToast("클립보드에 복사됐어요!");
-   } catch {
-     showToast("복사에 실패했습니다.");
-   }
+ const captureResultImage = async (): Promise<Blob | null> => {
+   if (!shareRef.current) return null;
+   const { default: html2canvas } = await import("html2canvas");
+   const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
+   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
  };
 
  const handleSaveImage = async () => {
@@ -342,11 +327,6 @@ export default function FireCalculatorPage() {
    } catch {
      showToast("이미지 저장에 실패했습니다.");
    }
- };
-
- const handleTweet = () => {
-   const text = encodeURIComponent(shareText());
-   window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
  };
 
  const addLifeEvent = () =>
@@ -854,20 +834,16 @@ export default function FireCalculatorPage() {
  >
  <p className="text-sm font-bold text-navy mb-1 text-center">🚀 친구에게 공유하기</p>
  <p className="text-xs text-faint-blue text-center mb-4">당신의 FIRE 계획을 자랑해보세요!</p>
- <div className="grid grid-cols-3 gap-3">
- <button onClick={handleSaveImage} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold">
+ <button onClick={handleSaveImage} className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-sm font-bold">
  <Download className="w-5 h-5" />
  이미지 저장
  </button>
- <button onClick={handleCopy} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-primary/10 hover:text-primary text-muted-blue transition-all text-xs font-bold">
- <Copy className="w-5 h-5" />
- 텍스트 복사
- </button>
- <button onClick={handleTweet} className="flex flex-col items-center gap-2 py-4 rounded-2xl bg-canvas-dark hover:bg-sky-100 hover:text-sky-600 text-muted-blue transition-all text-xs font-bold">
- <Twitter className="w-5 h-5" />
- X 공유
- </button>
- </div>
+ <ShareButtons
+ title={shareTitle()}
+ description="경제적 자유를 향한 여정을 설계하는 FIRE 계산기"
+ getShareImage={captureResultImage}
+ className="justify-center mt-4"
+ />
  </motion.div>
  )}
  </motion.div>

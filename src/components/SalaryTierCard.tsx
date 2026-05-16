@@ -4,7 +4,8 @@
 
 import React, { useRef, useState } from "react";
 import { calculateSalaryRank } from "@/data/salaryRankData";
-import { Download, Share2, Award, Zap } from "lucide-react";
+import { Download, Zap } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 interface SalaryTierCardProps {
  annualSalary: number;
@@ -43,7 +44,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  const downloadImage = async () => {
  if (!cardRef.current) return;
  setIsDownloading(true);
- 
+
  try {
  const { default: html2canvas } = await import("html2canvas");
  const canvas = await html2canvas(cardRef.current, {
@@ -52,7 +53,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  logging: false,
  useCORS: true,
  });
- 
+
  const link = document.createElement("a");
  link.download = `mung-salary-rank-${rank.name.toLowerCase()}.png`;
  link.href = canvas.toDataURL("image/png");
@@ -62,6 +63,18 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  } finally {
  setIsDownloading(false);
  }
+ };
+
+ const captureCardImage = async (): Promise<Blob | null> => {
+ if (!cardRef.current) return null;
+ const { default: html2canvas } = await import("html2canvas");
+ const canvas = await html2canvas(cardRef.current, {
+ scale: 2,
+ backgroundColor: null,
+ logging: false,
+ useCORS: true,
+ });
+ return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
  };
 
  return (
@@ -123,11 +136,11 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  </div>
 
  {/* Actions */}
- <div className="grid grid-cols-2 gap-3">
+ <div>
  <button
  onClick={downloadImage}
  disabled={isDownloading}
- className="flex items-center justify-center gap-2 py-3.5 bg-electric text-white rounded-xl font-bold text-sm hover:bg-electric transition-all active:scale-95 disabled:opacity-50 border-0"
+ className="w-full flex items-center justify-center gap-2 py-3.5 bg-electric text-white rounded-xl font-bold text-sm hover:bg-electric transition-all active:scale-95 disabled:opacity-50 border-0"
  >
  {isDownloading ? (
  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -136,22 +149,12 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  )}
  <span className="text-white">이미지로 저장</span>
  </button>
- <button
- className="flex items-center justify-center gap-2 py-3.5 bg-white text-navy border border-canvas rounded-xl font-bold text-sm hover:bg-canvas transition-all active:scale-95"
- onClick={() => {
- if (navigator.share) {
- navigator.share({
- title: '내 2026 연봉 티어 확인하기',
- text: `내 연봉 티어는 ${rank.name}! 상위 ${rank.percentile}% 입니다.`,
- url: window.location.href,
- });
- } else {
- alert('공유 기능을 지원하지 않는 브라우저입니다.');
- }
- }}
- >
- <Share2 size={16} className="text-navy" /> <span className="text-navy">인스타 공유</span>
- </button>
+ <ShareButtons
+ title={`내 2026 연봉 티어는 ${rank.name}! 상위 ${rank.percentile}%`}
+ description="2026 연봉 티어 카드 - 내 연봉은 어느 등급일까?"
+ getShareImage={captureCardImage}
+ className="justify-center mt-4"
+ />
  </div>
  </div>
  );
