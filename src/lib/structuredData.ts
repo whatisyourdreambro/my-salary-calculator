@@ -58,6 +58,9 @@ export function webApplicationLd() {
  applicationCategory: "FinanceApplication",
  operatingSystem: "Web",
  inLanguage: "ko",
+ alternateName: "연봉 계산기",
+ datePublished: "2024-12-01",
+ dateModified: "2026-01-01",
  offers: {
  "@type": "Offer",
  price: "0",

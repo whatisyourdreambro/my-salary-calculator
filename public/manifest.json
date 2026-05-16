@@ -17,28 +17,16 @@
             "type": "image/x-icon"
         },
         {
-            "src": "/logo-192.png",
+            "src": "/icon",
+            "sizes": "32x32",
             "type": "image/png",
-            "sizes": "192x192",
             "purpose": "any"
         },
         {
-            "src": "/logo-192.png",
+            "src": "/apple-icon",
+            "sizes": "180x180",
             "type": "image/png",
-            "sizes": "192x192",
-            "purpose": "maskable"
-        },
-        {
-            "src": "/logo-512.png",
-            "type": "image/png",
-            "sizes": "512x512",
-            "purpose": "any"
-        },
-        {
-            "src": "/logo-512.png",
-            "type": "image/png",
-            "sizes": "512x512",
-            "purpose": "maskable"
+            "purpose": "any maskable"
         }
     ]
 }
