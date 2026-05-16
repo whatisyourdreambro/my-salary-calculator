@@ -403,7 +403,7 @@ export const krCompanies_Batch26: CompanyProfile[] = [
     lastUpdated: "2026-05-15",
   },
   {
-    id: "posco-e&c",
+    id: "posco-eandc",
     name: { ko: "포스코이앤씨", en: "POSCO E&C" },
     industry: "Construction",
     tier: "conglomerate",

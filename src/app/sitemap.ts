@@ -4,6 +4,7 @@ import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
 import { qnaData, toQnaSlug } from '@/data/qnaData';
 import { jobsData } from '@/data/jobsData';
 import { industriesData } from '@/data/industriesData';
+import { regionsData } from '@/data/regionsData';
 
 type ChangeFrequency =
  | 'always'
@@ -336,5 +337,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
  })),
  ];
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls];
+ // 지역별 연봉 페이지
+ const regionUrls: MetadataRoute.Sitemap = [
+ {
+ url: `${baseUrl}/region`,
+ lastModified: new Date(),
+ changeFrequency: 'weekly',
+ priority: 0.9,
+ },
+ ...regionsData.map((region) => ({
+ url: `${baseUrl}/region/${region.id}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.8,
+ })),
+ ];
+
+ // 급여 환산 테이블 페이지
+ const tableUrls: MetadataRoute.Sitemap = [
+ '/table/annual',
+ '/table/monthly',
+ '/table/weekly',
+ '/table/hourly',
+ '/table/2026/annual',
+ '/table/2026/monthly',
+ '/table/2026/weekly',
+ '/table/2026/hourly',
+ ].map((route) => ({
+ url: `${baseUrl}${route}`,
+ lastModified: new Date(),
+ changeFrequency: 'yearly' as ChangeFrequency,
+ priority: 0.7,
+ }));
+
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
 }
