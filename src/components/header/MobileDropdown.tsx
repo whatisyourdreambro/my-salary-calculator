@@ -43,7 +43,7 @@ const listVariants = {
     height: "auto",
     opacity: 1,
     transition: {
-      height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+      height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
       opacity: { duration: 0.2 },
       staggerChildren: 0.02,
       delayChildren: 0.04,
@@ -53,7 +53,7 @@ const listVariants = {
     height: 0,
     opacity: 0,
     transition: {
-      height: { duration: 0.22, ease: "easeIn" },
+      height: { duration: 0.22, ease: "easeIn" as const },
       opacity: { duration: 0.15 },
     },
   },
@@ -86,7 +86,7 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
         </div>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="inline-flex"
         >
           <ChevronDown

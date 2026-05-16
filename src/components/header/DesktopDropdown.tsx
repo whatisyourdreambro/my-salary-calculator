@@ -56,7 +56,7 @@ const containerVariants = {
     scale: 1,
     transition: {
       duration: 0.22,
-      ease: [0.16, 1, 0.3, 1],
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       staggerChildren: 0.022,
       delayChildren: 0.04,
     },
@@ -65,7 +65,7 @@ const containerVariants = {
     opacity: 0,
     y: 6,
     scale: 0.97,
-    transition: { duration: 0.16, ease: "easeIn" },
+    transition: { duration: 0.16, ease: "easeIn" as const },
   },
 };
 
@@ -110,7 +110,7 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
         {item.name}
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           className="inline-flex"
         >
           <ChevronDown
