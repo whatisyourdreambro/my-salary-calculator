@@ -95,8 +95,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </motion.div>
  </div>
 
- <div className="page-width pb-24 pt-6 relative z-20">
- <div className="flex flex-col lg:flex-row gap-8 xl:gap-16">
+ <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-6 relative z-20">
+ <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
  {/* Sidebar Left (TOC) - Desktop Only */}
  <aside className="hidden lg:block w-[240px] flex-shrink-0">
