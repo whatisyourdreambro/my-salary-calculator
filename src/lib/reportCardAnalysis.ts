@@ -107,7 +107,7 @@ export const generateGrowthPlan = (
  title: "전략 학습: 몸값 올리는 협상의 기술",
  description:
  "당신의 가치는 현재 연봉보다 높을 수 있습니다. 시장 가치를 파악하고, 논리적인 근거로 당신의 가치를 증명하는 실전 협상 기술을 익히세요.",
- link: "/guides/salary-negotiation",
+ link: "/guides/salary-negotiation-secret",
  linkText: "연봉 협상 가이드 전문 읽기",
  });
  } else {
@@ -117,7 +117,7 @@ export const generateGrowthPlan = (
  title: "시장 분석: 더 높은 곳으로의 점프",
  description:
  "현재의 성과에 만족하지 마세요. IT업계 최고 수준의 보상을 제공하는 '네카라쿠배'의 연봉 구조를 분석하고 당신의 다음 커리어를 준비하세요.",
- link: "/guides/nekarakubae-salary",
+ link: "/guides/nekarakubae-salary-truth",
  linkText: "네카라쿠배 연봉 가이드 보기",
  });
  }
@@ -128,7 +128,7 @@ export const generateGrowthPlan = (
  title: "자산 증식: 돈이 일하게 만들기",
  description:
  "근로소득만으로는 경제적 자유를 얻기 어렵습니다. 상승된 연봉을 종잣돈 삼아, 당신이 잠자는 동안에도 자산이 불어나는 투자 파이프라인을 구축하세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 구축 가이드",
  });
 

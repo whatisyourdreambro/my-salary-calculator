@@ -6,6 +6,22 @@ import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import WeeklyTableInteractive from "./WeeklyTableInteractive";
 import TableHero from "@/components/TableHero";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "2026 주급 실수령액 표 — 주급별 월 환산 세후 수령액",
+  description:
+    "2026년 최저시급 10,320원 기준 주급 구간별 월 환산 실수령액 표. 주휴수당 포함 주급과 4대보험·소득세 공제액을 한눈에 확인하세요.",
+  path: "/table/2026/weekly",
+  keywords: [
+    "주급 실수령액",
+    "2026 주급 계산",
+    "주급 월급 환산",
+    "주휴수당 계산",
+    "알바 주급",
+  ],
+});
 
 const tableHeaders = [
  { key: "preTax", label: "주급" },
@@ -73,7 +89,7 @@ function WeeklyTable2026() {
  <section>
  <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
  <TrendingUp className="w-8 h-8 text-primary" />
- 2026년 vs 2026년 주요 정책 비교
+ 2025년 vs 2026년 최저시급 비교
  </h2>
  <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
  <p className="text-center text-muted-foreground">
@@ -81,7 +97,7 @@ function WeeklyTable2026() {
  </p>
  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
  <div>
- <h3 className="font-bold text-xl mb-3 text-center">2026년</h3>
+ <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
  <ul className="space-y-2 text-muted-foreground">
  <li>- 최저시급: 10,030원</li>
  <li>- 월 환산액: 2,096,270원</li>
@@ -119,10 +135,10 @@ function WeeklyTable2026() {
  1주 15시간 이상 근무 시 1일치(8시간) 임금이 추가됩니다. 시급 10,320원 기준 주휴수당은 82,560원입니다.
  </p>
  <Link
- href="/guides/holiday-allowance"
+ href="/guides/annual-leave-allowance"
  className="text-primary font-semibold mt-4 inline-block"
  >
- 주휴수당 자세히 알아보기 →
+ 연차수당 계산법 알아보기 →
  </Link>
  </div>
  </div>

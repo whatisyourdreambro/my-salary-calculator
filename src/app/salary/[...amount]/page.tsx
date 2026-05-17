@@ -24,8 +24,10 @@ type Props = {
 };
 
 function parseSlug(slug: string[]) {
- const annualSalary = parseInt(slug[0], 10) * 10000 || 50000000;
- const jobTitle = slug.slice(1).join(" ") || "직장인"; // 수정된 파싱
+ // slug[0]이 숫자가 아니면 NaN을 반환해 아래 notFound 가드가 동작하도록 한다 (가짜 페이지 렌더 방지)
+ const parsed = parseInt(slug[0], 10);
+ const annualSalary = Number.isNaN(parsed) ? NaN : parsed * 10000;
+ const jobTitle = slug.slice(1).join(" ") || "직장인";
  const conditionKey = "all-all-all-all";
 
  return { annualSalary, jobTitle, conditionKey };

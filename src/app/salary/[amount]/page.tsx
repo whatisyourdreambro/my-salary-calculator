@@ -3,6 +3,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
@@ -36,16 +37,33 @@ const WealthChart = dynamic(() => import("@/components/WealthChart"), {
 // [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
 export const runtime = "edge";
 
-function parseSalaryParam(param: string): number {
+// 색인 가능한 연봉 범위 — 이 범위를 벗어나거나 형식이 잘못된 URL은 notFound (무한 thin-content 방지)
+const MIN_SALARY = 1_000_000; // 연 100만원
+const MAX_SALARY = 1_000_000_000; // 연 10억
+
+function parseSalaryParam(param: string): number | null {
+ let amount: number | null = null;
  const manwonMatch = param.match(/^(\d+)-manwon$/);
- if (manwonMatch) return parseInt(manwonMatch[1]) * 10000;
  const eokMatch = param.match(/^(\d+)-eok$/);
- if (eokMatch) return parseInt(eokMatch[1]) * 100000000;
  const eokHalfMatch = param.match(/^(\d+)-5-eok$/);
- if (eokHalfMatch) return parseInt(eokHalfMatch[1]) * 100000000 + 50000000;
- const numeric = parseInt(param, 10);
- if (!isNaN(numeric) && numeric > 1000) return numeric;
- return 50000000;
+ if (manwonMatch) {
+  amount = parseInt(manwonMatch[1], 10) * 10000;
+ } else if (eokMatch) {
+  amount = parseInt(eokMatch[1], 10) * 100000000;
+ } else if (eokHalfMatch) {
+  amount = parseInt(eokHalfMatch[1], 10) * 100000000 + 50000000;
+ } else if (/^\d+$/.test(param)) {
+  amount = parseInt(param, 10);
+ }
+ if (
+  amount === null ||
+  !Number.isFinite(amount) ||
+  amount < MIN_SALARY ||
+  amount > MAX_SALARY
+ ) {
+  return null;
+ }
+ return amount;
 }
 
 type Props = {
@@ -54,6 +72,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const amount = parseSalaryParam(params.amount);
+ if (amount === null) {
+  return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
+ }
  // SNS 공유 CTR — 월 실수령액 숫자를 OG 이미지에 직접 박기.
  const tax = calculateSalary2026(amount, 200000, 1, 0);
  return buildSalaryAmountMetadata(amount, tax.netPay);
@@ -88,6 +109,9 @@ function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: numb
 
 export default function SalaryAmountPage({ params }: Props) {
  const amount = parseSalaryParam(params.amount);
+ if (amount === null) {
+  notFound();
+ }
  const tax = calculateSalary2026(amount, 200000, 1, 0);
 
  const formattedAmount =

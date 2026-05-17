@@ -60,7 +60,7 @@ export function calculateNetSalary(
  children: number = 0,
  advancedSettings: AdvancedSettings
 ) {
- if (annualSalary <= 0) {
+ if (!Number.isFinite(annualSalary) || annualSalary <= 0) {
  return {
  monthlyNet: 0,
  totalDeduction: 0,
@@ -160,7 +160,7 @@ export function calculateNetSalary2026(
  children: number = 0,
  advancedSettings: AdvancedSettings
 ) {
- if (annualSalary <= 0) {
+ if (!Number.isFinite(annualSalary) || annualSalary <= 0) {
  return {
  monthlyNet: 0,
  totalDeduction: 0,

@@ -49,7 +49,7 @@ const tableJsonLd = {
   description:
     "2026년 최신 세법 기준 연봉 2000만원에서 2억까지 구간별 월 실수령액, 4대보험 공제 내역 데이터셋",
   creator: { "@type": "Organization", name: "머니샐러리" },
-  url: "https://www.moneysalary.com/table/annual",
+  url: "https://www.moneysalary.com/table/2026/annual",
   inLanguage: "ko",
 };
 

@@ -90,7 +90,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 30 },
  ],
  guide: {
- link: "/guides/road-to-100m-part1-tax",
+ link: "/guides/year-end-tax-2026",
  title: "절세 전략 가이드 보기",
  },
  growthPlan: [
@@ -99,7 +99,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "절세 전략 수립",
  description:
  "높은 소득만큼 세금 관리도 중요합니다. 연금저축/IRP를 활용해 절세의 기초를 다지세요.",
- link: "/guides/road-to-100m-part1-tax",
+ link: "/guides/year-end-tax-2026",
  linkText: "절세 전략 가이드 보기",
  },
  {
@@ -107,7 +107,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "투자 포트폴리오 다각화",
  description:
  "부동산, 주식을 넘어 다양한 자산에 분산 투자하여 안정성을 높이세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 구축하기",
  },
  {
@@ -138,7 +138,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 5 },
  ],
  guide: {
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  title: "N잡으로 월 100만원 벌기",
  },
  growthPlan: [
@@ -147,7 +147,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "N잡으로 현금흐름 만들기",
  description:
  "당신의 다양한 재능을 활용해 여러 개의 수입 파이프라인을 구축해보세요.",
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  linkText: "N잡으로 월 100만원 벌기",
  },
  {
@@ -155,7 +155,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "환율의 원리 이해하기",
  description:
  "변동성은 위기이자 기회입니다. 환율의 원리를 이해하고 새로운 투자 기회를 포착하세요.",
- link: "/guides/exchange-rate-impact",
+ link: "/guides/dollar-investment",
  linkText: "환율 가이드 보기",
  },
  {
@@ -186,7 +186,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 20 },
  ],
  guide: {
- link: "/guides/salary-negotiation",
+ link: "/guides/salary-negotiation-secret",
  title: "연봉 협상 전략 가이드",
  },
  growthPlan: [
@@ -195,7 +195,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "연봉 협상의 달인 되기",
  description:
  "뛰어난 공감 능력을 활용해 당신의 가치를 설득력 있게 전달하는 법을 배우세요.",
- link: "/guides/salary-negotiation",
+ link: "/guides/salary-negotiation-secret",
  linkText: "연봉 협상 전략 가이드",
  },
  {
@@ -211,7 +211,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "가치 투자 알아보기",
  description:
  "사람을 보듯, 장기적인 안목으로 가치 있는 기업에 투자하는 법을 배워보세요.",
- link: "/guides/compound-interest",
+ link: "/guides/rule-of-72",
  linkText: "복리의 마법 알아보기",
  },
  ],
@@ -235,7 +235,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 4 },
  ],
  guide: {
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  title: "N잡 가이드 보기",
  },
  growthPlan: [
@@ -244,14 +244,14 @@ const resultTypes: SalaryMBTIType[] = [
  title: "N잡으로 월 100만원 벌기",
  description:
  "당신의 넘치는 열정과 아이디어를 추가 수입으로 연결해보세요.",
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  linkText: "N잡 가이드 보기",
  },
  {
  step: 2,
  title: "디지털 노마드 라이프",
  description: "돈에 얽매이지 않고 자유롭게 사는 삶, 어떻게 가능할까요?",
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  linkText: "첫 월급 재테크 알아보기",
  },
  {
@@ -283,7 +283,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 1.5 },
  ],
  guide: {
- link: "/guides/civil-servant-salary",
+ link: "/guides/public-sector-vs-private",
  title: "공무원 월급 가이드",
  },
  growthPlan: [
@@ -292,7 +292,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "공무원 월급 파헤치기",
  description:
  "기본급 외에 숨겨진 각종 수당을 파악하여 당신의 진짜 소득을 알아보세요.",
- link: "/guides/civil-servant-salary",
+ link: "/guides/public-sector-vs-private",
  linkText: "공무원 월급 가이드",
  },
  {
@@ -300,7 +300,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "장기 투자 계획 수립",
  description:
  "안정성을 바탕으로 S&P 500 ETF 등 우량 자산에 장기 투자하여 자산을 불려나가세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "장기 투자 계획하기",
  },
  {
@@ -332,7 +332,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 3.0 },
  ],
  guide: {
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  title: "첫 월급 재테크 가이드",
  },
  growthPlan: [
@@ -341,7 +341,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "첫 월급 100만원 재테크",
  description:
  "저축만으로는 부족합니다. 당신의 첫 종잣돈을 안전하게 굴리는 법을 배우세요.",
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  linkText: "첫 월급 재테크 가이드",
  },
  {
@@ -349,7 +349,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "복리의 마법 이해하기",
  description:
  "시간을 내 편으로 만드는 가장 확실한 방법, 복리의 원리를 이해하세요.",
- link: "/guides/compound-interest",
+ link: "/guides/rule-of-72",
  linkText: "복리의 마법 알아보기",
  },
  {
@@ -357,7 +357,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "디딤돌 vs 보금자리론",
  description:
  "알뜰하게 모은 돈으로 내 집 마련의 꿈을 이뤄보세요. 정부 지원 대출을 활용하세요.",
- link: "/guides/didimdol-vs-bogeumjari",
+ link: "/guides/first-home-buyer-loan",
  linkText: "정책 대출 비교하기",
  },
  ],
@@ -380,7 +380,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 15 },
  ],
  guide: {
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  title: "투자 파이프라인 구축 가이드",
  },
  growthPlan: [
@@ -389,7 +389,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "월급으로 투자 파이프라인 만들기",
  description:
  "당신의 분석력을 바탕으로 체계적인 투자 시스템을 구축하세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 구축 가이드",
  },
  {
@@ -397,7 +397,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "복리의 마법 활용하기",
  description:
  "장기적인 관점에서 당신의 자산이 눈덩이처럼 불어나는 원리를 활용하세요.",
- link: "/guides/compound-interest",
+ link: "/guides/rule-of-72",
  linkText: "복리의 마법 알아보기",
  },
  {
@@ -429,7 +429,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 3.5 },
  ],
  guide: {
- link: "/guides/nekarakubae-salary",
+ link: "/guides/nekarakubae-salary-truth",
  title: "네카라쿠배 연봉 가이드",
  },
  growthPlan: [
@@ -438,7 +438,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "네카라쿠배 연봉 파헤치기",
  description:
  "업계 최고 수준의 보상 구조를 이해하고 당신의 가치를 객관적으로 파악하세요.",
- link: "/guides/nekarakubae-salary",
+ link: "/guides/nekarakubae-salary-truth",
  linkText: "네카라쿠배 연봉 가이드",
  },
  {
@@ -446,14 +446,14 @@ const resultTypes: SalaryMBTIType[] = [
  title: "연봉 협상 기술 연마",
  description:
  "당신의 높은 가치를 연봉으로 증명하세요. 논리적인 협상 전략이 필요합니다.",
- link: "/guides/salary-negotiation",
+ link: "/guides/salary-negotiation-secret",
  linkText: "연봉 협상 전략 가이드",
  },
  {
  step: 3,
  title: "자산 자동화 시스템 구축",
  description: "높은 소득을 자동으로 투자하여 복리의 마법을 누리세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 자동화 시스템 만들기",
  },
  ],
@@ -476,7 +476,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 5.0 },
  ],
  guide: {
- link: "/guides/bonus-tax",
+ link: "/guides/bonus-tax-rate",
  title: "성과급 세금 가이드 보기",
  },
  growthPlan: [
@@ -485,7 +485,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "성과급 세금 관리",
  description:
  "높은 성과급을 받는 만큼, 세금 관리를 통해 실수령액을 극대화해야 합니다.",
- link: "/guides/bonus-tax",
+ link: "/guides/bonus-tax-rate",
  linkText: "성과급 세금 가이드 보기",
  },
  {
@@ -493,7 +493,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "삼성 vs 하이닉스 연봉 비교",
  description:
  "업계 최고 기업들의 보상 체계를 분석하고 당신의 위치를 점검하세요.",
- link: "/guides/samsung-vs-hynix",
+ link: "/guides/samsung-vs-hynix-employee-comparison",
  linkText: "대기업 연봉 비교 가이드",
  },
  {
@@ -501,7 +501,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "퇴직금 세금 설계",
  description:
  "오랜 근속의 결실인 퇴직금을 세금으로부터 지키는 전략을 미리 세우세요.",
- link: "/guides/severance-tax",
+ link: "/guides/severance-pay-guide",
  linkText: "퇴직금 세금 가이드 보기",
  },
  ],
@@ -525,7 +525,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 2.0 },
  ],
  guide: {
- link: "/guides/didimdol-vs-bogeumjari",
+ link: "/guides/first-home-buyer-loan",
  title: "디딤돌 vs 보금자리론",
  },
  growthPlan: [
@@ -534,7 +534,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "내 집 마련 대출 비교",
  description:
  "꼼꼼한 정보력을 바탕으로 가장 유리한 정부 지원 대출 상품을 찾아보세요.",
- link: "/guides/didimdol-vs-bogeumjari",
+ link: "/guides/first-home-buyer-loan",
  linkText: "디딤돌 vs 보금자리론",
  },
  {
@@ -542,7 +542,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "첫 월급 재테크",
  description:
  "절약뿐만 아니라 소액으로 투자를 시작하여 돈을 불리는 경험을 쌓아보세요.",
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  linkText: "첫 월급 재테크 가이드",
  },
  {
@@ -550,7 +550,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "연말정산 꿀팁",
  description:
  "당신의 정보력을 활용해 놓치기 쉬운 연말정산 공제 항목을 모두 챙기세요.",
- link: "/guides/year-end-tax-settlement",
+ link: "/guides/year-end-tax-2026",
  linkText: "연말정산 가이드",
  },
  ],
@@ -574,7 +574,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 50 },
  ],
  guide: {
- link: "/guides/exchange-rate-impact",
+ link: "/guides/dollar-investment",
  title: "환율 가이드 보기",
  },
  growthPlan: [
@@ -583,7 +583,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "환율의 원리 이해하기",
  description:
  "글로벌 자산 시장의 핵심 지표인 환율을 이해하여 리스크를 관리하세요.",
- link: "/guides/exchange-rate-impact",
+ link: "/guides/dollar-investment",
  linkText: "환율 가이드 보기",
  },
  {
@@ -591,7 +591,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "장기 투자 포트폴리오 구축",
  description:
  "모든 자산을 '한 방'에 걸지 마세요. 안정적인 장기 투자 자산을 반드시 확보해야 합니다.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 만들기",
  },
  {
@@ -639,7 +639,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "최소한의 안전장치, 4대보험",
  description:
  "즐기는 것도 좋지만, 최소한의 사회 안전망이 어떻게 작동하는지는 알아야 합니다.",
- link: "/guides/four-major-insurances",
+ link: "/guides/four-major-insurance-complete",
  linkText: "4대 보험 가이드",
  },
  {
@@ -672,7 +672,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 8.0 },
  ],
  guide: {
- link: "/guides/compound-interest",
+ link: "/guides/rule-of-72",
  title: "복리 가이드 보기",
  },
  growthPlan: [
@@ -681,7 +681,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "복리의 마법, 스노우볼 효과",
  description:
  "당신의 투자 철학과 가장 잘 맞는 복리의 원리를 깊이 있게 이해하고 활용하세요.",
- link: "/guides/compound-interest",
+ link: "/guides/rule-of-72",
  linkText: "복리 가이드 보기",
  },
  {
@@ -689,7 +689,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "투자 파이프라인 구축하기",
  description:
  "당신의 신념을 실현할 수 있는 체계적인 투자 시스템을 만드세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 가이드",
  },
  {
@@ -721,7 +721,7 @@ const resultTypes: SalaryMBTIType[] = [
  { age: 60, salary: 3.0 },
  ],
  guide: {
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  title: "N잡 가이드 보기",
  },
  growthPlan: [
@@ -730,7 +730,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "N잡으로 선한 영향력 넓히기",
  description:
  "당신의 신념을 담은 사이드 프로젝트를 통해 추가 수입과 사회적 가치를 동시에 추구하세요.",
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  linkText: "N잡 가이드 보기",
  },
  {
@@ -746,7 +746,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "첫 월급 재테크 시작하기",
  description:
  "작은 돈이라도 투자를 시작하여 자본주의 시스템을 이해하는 것이 중요합니다.",
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  linkText: "첫 월급 재테크 가이드",
  },
  ],
@@ -786,7 +786,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "월급으로 투자 파이프라인 구축",
  description:
  "노동 소득을 자본 소득으로 전환하는 효율적인 시스템을 만드세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 가이드",
  },
  {
@@ -794,7 +794,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "퇴직금 세금 관리",
  description:
  "조기 은퇴 시 받게 될 퇴직금을 세금으로부터 최대한 지키는 방법을 미리 알아보세요.",
- link: "/guides/severance-tax",
+ link: "/guides/severance-pay-guide",
  linkText: "퇴직금 세금 가이드",
  },
  ],
@@ -834,7 +834,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "N잡으로 수입 다각화",
  description:
  "하나의 일에 얽매이지 않고, 여러가지 일을 통해 수입원을 다각화하여 안정성을 높이세요.",
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  linkText: "N잡 가이드 보기",
  },
  {
@@ -842,7 +842,7 @@ const resultTypes: SalaryMBTIType[] = [
  title: "환율의 영향 알아보기",
  description:
  "전 세계를 무대로 활동한다면, 환율은 당신의 자산 가치를 결정하는 중요한 요소입니다.",
- link: "/guides/exchange-rate-impact",
+ link: "/guides/dollar-investment",
  linkText: "환율 가이드",
  },
  ],

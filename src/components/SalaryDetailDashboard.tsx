@@ -62,19 +62,19 @@ export default function SalaryDetailDashboard({
  const recommendedGuides = [
  annualSalary <= 40000000 && {
  title: "2026년 최저임금 완벽정리",
- href: "/guides/minimum-wage",
+ href: "/guides/minimum-wage-2026",
  },
  annualSalary <= 50000000 && {
- title: "주휴수당 계산법 및 지급 조건",
- href: "/guides/holiday-allowance",
+ title: "연차수당 계산법 및 지급 조건",
+ href: "/guides/annual-leave-allowance",
  },
  annualSalary > 50000000 && {
  title: "연말정산 A to Z: 13월의 월급 제대로 챙기기",
- href: "/guides/year-end-tax-settlement",
+ href: "/guides/year-end-tax-2026",
  },
  annualSalary > 70000000 && {
  title: "퇴직금 세금 계산, 복잡한 과정 한 번에 이해하기",
- href: "/guides/severance-tax",
+ href: "/guides/severance-pay-guide",
  },
  ].filter(Boolean);
 

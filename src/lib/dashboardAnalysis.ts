@@ -105,7 +105,7 @@ export const getFinancialAdvice = (
  title: "저축 습관 개선",
  message:
  "저축률이 낮습니다. 소비 습관을 점검하고 '선저축 후지출'을 실천하여 미래를 위한 씨앗을 심어야 합니다.",
- link: "/guides/first-job-investment",
+ link: "/guides/first-job-financial-setup",
  linkText: "사회초년생 재테크 가이드 보기",
  });
  } else if (savingRate < 50) {
@@ -113,7 +113,7 @@ export const getFinancialAdvice = (
  title: "투자 시작하기",
  message:
  "안정적인 저축 습관을 가지고 있습니다. 이제 S&P 500 ETF 등 우량 자산에 투자하여 자산 증식 속도를 높여보세요.",
- link: "/guides/road-to-100m-part3-invest",
+ link: "/guides/etf-portfolio-2026",
  linkText: "투자 파이프라인 구축 가이드 보기",
  });
  } else {
@@ -121,7 +121,7 @@ export const getFinancialAdvice = (
  title: "소득 파이 키우기",
  message:
  "훌륭한 저축률입니다! 이제 N잡, 부수입 등을 통해 소득의 파이 자체를 키워 경제적 자유를 앞당길 차례입니다.",
- link: "/guides/road-to-100m-part2-sidejob",
+ link: "/guides/side-project-income",
  linkText: "N잡으로 월 100만원 더 벌기",
  });
  }
@@ -144,7 +144,7 @@ export const getFinancialAdvice = (
  title: "몸값 올리기",
  message:
  "나의 시장 가치를 파악하고, 성공적인 이직과 협상을 통해 연봉을 높여 소득 수준을 한 단계 업그레이드할 수 있습니다.",
- link: "/guides/salary-negotiation",
+ link: "/guides/salary-negotiation-secret",
  linkText: "연봉 협상 전략 가이드 보기",
  });
  }

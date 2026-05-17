@@ -55,7 +55,7 @@ export default function SalaryAnalysis({
  을 &apos;선저축 후지출&apos;하는 습관을 만드세요.
  </p>
  <Link
- href="/guides/first-job-investment"
+ href="/guides/first-job-financial-setup"
  className="text-primary font-semibold hover:underline"
  >
  사회초년생 재테크 가이드 →
@@ -75,7 +75,7 @@ export default function SalaryAnalysis({
  돌려받을 수 있습니다. 지금 바로 시작하세요.
  </p>
  <Link
- href="/guides/year-end-tax-settlement"
+ href="/guides/year-end-tax-2026"
  className="text-primary font-semibold hover:underline"
  >
  연말정산 A to Z 가이드 →
@@ -102,7 +102,7 @@ export default function SalaryAnalysis({
  적립식으로 투자하여 복리의 마법을 경험하세요.
  </p>
  <Link
- href="/guides/road-to-100m-part3-invest"
+ href="/guides/etf-portfolio-2026"
  className="text-primary font-semibold hover:underline"
  >
  투자 파이프라인 구축 가이드 →
@@ -122,7 +122,7 @@ export default function SalaryAnalysis({
  상승을 목표로 이직을 준비하세요.
  </p>
  <Link
- href="/guides/salary-negotiation"
+ href="/guides/salary-negotiation-secret"
  className="text-primary font-semibold hover:underline"
  >
  연봉 협상 전략 가이드 →
@@ -150,7 +150,7 @@ export default function SalaryAnalysis({
  세금을 돌려받는 것이 필수입니다.
  </p>
  <Link
- href="/guides/bonus-tax"
+ href="/guides/bonus-tax-rate"
  className="text-primary font-semibold hover:underline"
  >
  성과급 세금 절세 가이드 →
@@ -170,7 +170,7 @@ export default function SalaryAnalysis({
  소득을 목표로 자산 포트폴리오를 다각화하세요.
  </p>
  <Link
- href="/guides/road-to-100m-part2-sidejob"
+ href="/guides/side-project-income"
  className="text-primary font-semibold hover:underline"
  >
  N잡으로 월 100만원 벌기 →

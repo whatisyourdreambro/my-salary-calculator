@@ -104,7 +104,7 @@ export const qnaData: QnaItem[] = [
  "<strong>대처법:</strong> 사직서에 '회사 권유에 의한 사직'임을 명시하고, 대화 녹취나 문자 메시지 등 권고사직의 증거를 확보해야 합니다. 이미 자진 퇴사로 처리되었다면 근로복지공단에 '피보험자격 확인 청구'를 할 수 있습니다."
  ],
  tip: "사직서는 한 번 제출하면 철회하기 어렵습니다. 억울한 상황이라면 절대 서명하지 말고 전문가(노무사)와 상담하세요.",
- action: { text: "실업급여 가이드 보기", href: "/guides/unemployment-benefits" }
+ action: { text: "실업급여 가이드 보기", href: "/guides/unemployment-benefits-complete" }
  }
  },
 
@@ -134,7 +134,7 @@ export const qnaData: QnaItem[] = [
  "<strong>집주인 눈치?:</strong> 집주인 동의 없이 신청 가능합니다. 만약 재계약 불이익이 걱정된다면, 이사 간 후 5년 안에 '경정청구'를 통해 몰아서 환급받을 수도 있습니다."
  ],
  tip: "월세 이체 내역(계좌이체 영수증)과 임대차계약서 사본, 주민등록등본만 있으면 됩니다.",
- action: { text: "월세 세액공제 가이드", href: "/guides/monthly-rent-tax" }
+ action: { text: "월세 세액공제 가이드", href: "/guides/monthly-rent-tax-credit" }
  }
  },
 
@@ -150,7 +150,7 @@ export const qnaData: QnaItem[] = [
  "<strong>특별 중도해지:</strong> 생애최초 주택 구입, 퇴직, 폐업 등의 사유가 있으면 패널티 없이 해지 가능합니다."
  ],
  tip: "월 70만원이 부담스럽다면, 가능한 금액(예: 40~50만원)이라도 납입하여 정부 기여금 혜택을 챙기는 것이 이득입니다.",
- action: { text: "청년 재테크 로드맵", href: "/guides/youth-investment" }
+ action: { text: "청년 재테크 로드맵", href: "/guides/first-job-financial-setup" }
  }
  },
  {
@@ -164,7 +164,7 @@ export const qnaData: QnaItem[] = [
  "<strong>예금자 보호:</strong> 종금형 CMA는 예금자 보호가 되지만, 대부분의 RP형 CMA는 보호되지 않습니다. 하지만 국공채 등에 투자하므로 매우 안전합니다."
  ],
  tip: "비상금이나 카드 값 빠져나가기 전 며칠 동안 잠시 머무는 돈도 CMA에 넣어두면 '자투리 수익'을 챙길 수 있습니다.",
- action: { text: "파킹통장 금리 비교", href: "/guides/cma-comparison" }
+ action: { text: "파킹통장 금리 비교", href: "/guides/split-accounts" }
  }
  },
 
@@ -805,7 +805,7 @@ export const qnaData: QnaItem[] = [
     "<strong>신청 방법:</strong> 중소벤처기업부 청년내일채움공제 홈페이지 또는 취업 기업을 통해 신청."
    ],
    tip: "취업 후 6개월 이내가 신청 가능 기간입니다. 취업 직후 바로 신청하지 않으면 자격이 소멸됩니다. 첫 월급을 받으면 바로 신청하세요.",
-   action: { text: "청년 재테크 로드맵", href: "/guides/youth-investment" }
+   action: { text: "청년 재테크 로드맵", href: "/guides/first-job-financial-setup" }
   }
  },
  {

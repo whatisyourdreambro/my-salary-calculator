@@ -129,9 +129,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/company',
  '/company/compare',
  '/company/simulator',
- // Salary DB
- '/salary-db',
- '/salary-db/submit',
  // Global Pages
  '/en',
  '/en/flat-tax',
@@ -259,12 +256,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
  changeFrequency: 'weekly',
  priority: 0.9,
  },
- {
- url: `${baseUrl}/salary-db/submit`,
- lastModified: new Date(),
- changeFrequency: 'monthly',
- priority: 0.7,
- },
  ];
 
  // 100가지 계산기 동적 페이지
@@ -358,10 +349,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // 급여 환산 테이블 페이지
  const tableUrls: MetadataRoute.Sitemap = [
- '/table/annual',
- '/table/monthly',
- '/table/weekly',
- '/table/hourly',
  '/table/2026/annual',
  '/table/2026/monthly',
  '/table/2026/weekly',

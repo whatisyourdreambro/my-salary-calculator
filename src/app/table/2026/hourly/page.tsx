@@ -6,6 +6,22 @@ import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "2026 시급 실수령액 표 — 시급별 월 환산 세후 수령액",
+  description:
+    "2026년 최저시급 10,320원 기준 시급 구간별 월 환산 실수령액 표. 4대보험·소득세 공제액과 세후 월급을 한눈에 확인하세요.",
+  path: "/table/2026/hourly",
+  keywords: [
+    "시급 실수령액",
+    "2026 최저시급",
+    "시급 계산기",
+    "시급 월급 환산",
+    "알바 실수령액",
+  ],
+});
 
 const tableHeaders = [
  { key: "preTax", label: "시급" },
@@ -73,7 +89,7 @@ function HourlyTable2026() {
  <section>
  <h2 className="text-3xl font-bold text-center mb-10 text-foreground flex items-center justify-center gap-3">
  <TrendingUp className="w-8 h-8 text-primary" />
- 2026년 vs 2026년 주요 정책 비교
+ 2025년 vs 2026년 최저시급 비교
  </h2>
  <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
  <p className="text-center text-muted-foreground">
@@ -81,7 +97,7 @@ function HourlyTable2026() {
  </p>
  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
  <div>
- <h3 className="font-bold text-xl mb-3 text-center">2026년</h3>
+ <h3 className="font-bold text-xl mb-3 text-center">2025년</h3>
  <ul className="space-y-2 text-muted-foreground">
  <li>- 최저시급: 10,030원</li>
  <li>- 월 환산액: 2,096,270원</li>
@@ -111,7 +127,7 @@ function HourlyTable2026() {
  2026년 최저시급은 <strong>10,320원</strong>으로 결정되었습니다. 2026년 10,030원 대비 290원(2.9%) 인상된 금액입니다.
  </p>
  <Link
- href="/guides/minimum-wage"
+ href="/guides/minimum-wage-2026"
  className="text-primary font-semibold mt-4 inline-block"
  >
  최저임금 관련 뉴스 보기 →
