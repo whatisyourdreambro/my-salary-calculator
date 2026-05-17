@@ -1,1 +1,0 @@
-// This file is obsolete and will be deleted. The component has been moved to /src/components/TableInteraction.tsx

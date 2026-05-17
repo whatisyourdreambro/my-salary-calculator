@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Divide, ArrowRightLeft, Percent } from "lucide-react";
+import { UnitConverter } from "@/components/calculators/life/LifeCalculators";
 
 export default function MathCalculators() {
  const [activeTab, setActiveTab] = useState<"percent" | "unit">("percent");
@@ -155,36 +156,4 @@ function PercentCalculator() {
  );
 }
 
-function UnitConverter() {
- // Simple implementation for length and weight
- const [category, setCategory] = useState("length");
- const [value, setValue] = useState<number>(1);
-
- // Length: m to ...
- // Weight: kg to ...
-
- const lengthUnits = {
- m: 1,
- cm: 100,
- mm: 1000,
- km: 0.001,
- inch: 39.3701,
- ft: 3.28084,
- yd: 1.09361,
- pyeong: 0.3025 // 1m2 = 0.3025 pyeong approx? No, 1 pyeong = 3.3058 m2. So 1 m2 = 1/3.3058 pyeong. 
- // Let's stick to Length (Linear) not Area for now.
- };
-
- // Area
- const areaUnits = {
- m2: 1,
- pyeong: 0.3025, // 1 m2 = 0.3025 pyeong
- ft2: 10.7639,
- }
-
- return (
- <div className="bg-white border border-canvas p-8 rounded-2xl text-center">
- <p className="text-muted-blue">단위 변환기는 준비 중입니다...</p>
- </div>
- )
-}
+// 단위 변환기는 검증된 공용 컴포넌트(LifeCalculators)를 재사용한다.
