@@ -165,6 +165,29 @@ export const krCompanies_Batch15: CompanyProfile[] = [
     culture: { score: 7.8, keywords: ["DX", "스마트팩토리", "포스코"], pros: ["포스코그룹 DX 독점 사업으로 안정적 매출 기반", "제조업+IT 융합 커리어의 독특한 경험", "스마트팩토리·AI 분야 선도적 실무 역량 축적"], cons: ["그룹사 SI 계열사 특유의 낮은 연봉 상한", "포스코그룹 의존도에 따른 사업 다각화 한계", "보수적인 제조업 계열 조직 문화"] },
     lastUpdated: "2026-05-15",
   },
+  {
+    id: "posco-holdings",
+    name: { ko: "포스코홀딩스", en: "POSCO Holdings" },
+    industry: "Holding",
+    tier: "conglomerate",
+    logo: "🏭",
+    description: "철강·이차전지소재·리튬을 아우르는 포스코그룹 지주사. 친환경 미래소재를 이끄는 대표 기업.",
+    salary: {
+      entry: { base: 56000000, incentive: { target: 22, max: 45, avgAmount: 16000000 } },
+      junior: { base: 69000000, incentive: { target: 22, max: 45, avgAmount: 21000000 } },
+      senior: { base: 92000000, incentive: { target: 22, max: 45, avgAmount: 33000000 } },
+      lead: { base: 122000000, incentive: { target: 22, max: 45, avgAmount: 46000000 } },
+      executive: { base: 220000000, incentive: { target: 38, max: 75, avgAmount: 92000000 } },
+    },
+    workLife: { weeklyHours: { contract: 40, real: 43 }, vacation: { days: 20, usageRate: 85 }, remoteWork: { policy: "hybrid", description: "서울 대치동 포스코센터 + 포항, 주 1~2일 재택" } },
+    benefits: [
+      { category: "financial", title: "성과 인센티브(PI/PS)", description: "그룹 실적 연동 성과급", value: 16000000 },
+      { category: "family", title: "자녀 학자금", description: "고교·대학 등록금 전액 지원", value: 13000000 },
+      { category: "lifestyle", title: "복지포인트", description: "연 200만원 상당 복지카드", value: 2000000 },
+    ],
+    culture: { score: 8.0, keywords: ["철강", "지주사", "이차전지소재"], pros: ["포스코그룹 지주사의 안정적 재무 기반과 복지", "철강·이차전지소재 미래 사업을 함께 경험", "업계 최고 수준의 자녀 학자금·복지 제도"], cons: ["전통 제조업 그룹 특유의 보수적 조직 문화", "철강 경기 변동에 따른 실적 사이클", "서울·포항 순환 근무 가능성"] },
+    lastUpdated: "2026-05-18",
+  },
 
   // --- HD HYUNDAI GROUP ---
   {

@@ -44,6 +44,8 @@ export interface CompanyProfile {
  ko: string;
  en: string;
  };
+ /** 검색 표기 변형(옛 사명·영문/한글 차이·줄임말 등). data/companyAliases.ts에서 주입됨 */
+ aliases?: string[];
  industry: string;
  tier: "conglomerate" | "unicorn" | "startup" | "foreign" | "public";
  logo: string; // Path to image or emoji

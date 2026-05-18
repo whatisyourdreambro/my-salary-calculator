@@ -202,6 +202,8 @@ export function buildCompanyMetadata(company: {
  name: string;
  industry?: string;
  averageSalary?: number;
+ seniorSalary?: number;
+ aliases?: string[];
 }): Metadata {
  // 네이버 검색 데이터 기준: "{회사} 연봉"·"{회사} 신입 연봉"·"{회사} 초봉"·
  // "{회사} 직급" 쿼리 비중이 압도적. page.tsx가 넘기는 averageSalary는 실제로
@@ -214,9 +216,24 @@ export function buildCompanyMetadata(company: {
  ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 실수령액`
  : `${company.name} 연봉 2026 — 신입 초봉·직급별 실수령액 정보`;
 
+ // 별칭(옛 사명·표기 변형)을 "{별칭} 연봉/초봉" 키워드로 확장
+ const aliasKeywords = (company.aliases ?? []).flatMap((alias) => [
+ `${alias} 연봉`,
+ `${alias} 초봉`,
+ ]);
+
+ // 회사별 고유 설명 — 실제 초봉·시니어 수치를 넣어 검색 결과 클릭률(CTR)을 높인다
+ const seniorFigure = company.seniorSalary
+ ? `${Math.round(company.seniorSalary / 10000).toLocaleString("ko-KR")}만원`
+ : null;
+ const description =
+ entryFigure && seniorFigure
+ ? `${company.name} 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigure} 수준. ${company.name}의 사원·대리·과장·부장 직급별 평균 연봉과 세후 실수령액, 인센티브·복지·워라밸을 2026년 최신 기준으로 분석했습니다.`
+ : `${company.name}의 신입 초봉부터 대리·과장·부장 직급별 평균 연봉과 세후 실수령액을 2026년 기준으로 분석합니다. 동종업계 비교·연봉 협상 팁까지 한눈에 확인하세요.`;
+
  return buildPageMetadata({
  title,
- description: `${company.name} 신입 초봉부터 대리·과장·부장 직급별 평균 연봉과 세후 실수령액을 2026년 기준으로 분석합니다. 동종업계 평균 비교·연봉 협상 팁까지 한눈에 확인하세요.`,
+ description,
  path: `/salary-db/${company.id}`,
  keywords: [
  `${company.name} 연봉`,
@@ -227,6 +244,7 @@ export function buildCompanyMetadata(company: {
  `${company.name} 직급별 연봉`,
  `${company.name} 실수령액`,
  `${company.name} 월급`,
+ ...aliasKeywords,
  ],
  ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,
  });

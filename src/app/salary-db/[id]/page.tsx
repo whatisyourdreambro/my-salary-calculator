@@ -5,6 +5,8 @@ import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
 import CompanyNarrative from "@/components/CompanyNarrative";
+import CompanyFaq from "@/components/CompanyFaq";
+import CompanyIndustryRank from "@/components/CompanyIndustryRank";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
@@ -36,12 +38,16 @@ export async function generateMetadata({
 
  const entryTotal =
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+ const seniorTotal =
+ company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
 
  return buildCompanyMetadata({
  id: company.id,
  name: company.name.ko,
  industry: company.industry,
  averageSalary: entryTotal,
+ seniorSalary: seniorTotal,
+ aliases: company.aliases,
  });
 }
 
@@ -51,6 +57,13 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  const entryTotal =
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
  const entryManwon = Math.round(entryTotal / 10000).toLocaleString("ko-KR");
+ const entryBaseManwon = Math.round(
+ company.salary.entry.base / 10000
+ ).toLocaleString("ko-KR");
+
+ const juniorTotal =
+ company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
+ const juniorManwon = Math.round(juniorTotal / 10000).toLocaleString("ko-KR");
 
  const seniorTotal =
  company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
@@ -67,12 +80,20 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  answer: `${koName}의 신입 영끌 평균 연봉은 약 ${entryManwon}만원입니다 (기본급 + 평균 인센티브 포함). 직급·연차에 따라 변동되며, 시니어 평균은 약 ${seniorManwon}만원 수준입니다.`,
  },
  {
+ question: `${koName} 신입 초봉(첫해 연봉)은 얼마인가요?`,
+ answer: `${koName} 신입 초봉은 기본급 기준 약 ${entryBaseManwon}만원이며, 평균 인센티브를 더한 영끌 초봉은 약 ${entryManwon}만원 수준입니다. 초봉은 직무·학력·입사 연도에 따라 달라질 수 있으며, 위 직급별 연봉표의 신입 행에서 세금 공제 후 실수령액까지 확인할 수 있습니다.`,
+ },
+ {
  question: `${koName} 신입 첫 달 실수령액은 대략 얼마인가요?`,
  answer: `신입 영끌 ${entryManwon}만원 기준 세전 월 평균은 약 ${monthlyEntry}만원입니다. 4대보험·소득세 공제 후 실수령액은 머니샐러리 연봉 실수령액 계산기로 ${entryManwon}만원을 입력해 확인할 수 있습니다.`,
  },
  {
  question: `${koName} 시니어 연봉은 신입 대비 얼마나 오르나요?`,
  answer: `${koName}의 시니어 평균 영끌 연봉은 약 ${seniorManwon}만원으로, 신입 대비 약 ${Math.round(((seniorTotal - entryTotal) / entryTotal) * 100)}% 높습니다. 직급별 추이는 위 표에서 확인할 수 있습니다.`,
+ },
+ {
+ question: `${koName} 대리·과장 직급 연봉은 얼마인가요?`,
+ answer: `${koName}의 대리급(주니어, 3~5년차) 평균 영끌 연봉은 약 ${juniorManwon}만원, 과장급(시니어, 6~10년차)은 약 ${seniorManwon}만원 수준입니다. 신입·주니어·시니어·리드·임원 5단계 직급별 세전 연봉과 세후 실수령액은 위 직급별 연봉표에서 한눈에 비교할 수 있습니다.`,
  },
  {
  question: `${koName} 워라밸은 어떤가요?`,
@@ -93,6 +114,10 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  {
  question: `${koName} 퇴직 시 받을 수 있는 퇴직금은?`,
  answer: `법정 퇴직금은 "최근 3개월 평균 월급 × 근속연수"로 산정됩니다. ${koName} 신입 영끌 기준 1년 근속 시 약 ${Math.round(entryTotal / 12 / 10000).toLocaleString("ko-KR")}만원 수준이며, 머니샐러리 퇴직금 계산기로 본인 근속·급여 기준 정확 산출이 가능합니다.`,
+ },
+ {
+ question: `${koName} 연봉 정보는 2026년 최신 기준인가요?`,
+ answer: `네. 본 페이지의 ${koName} 연봉·실수령액은 2026년 세법(소득세율·4대보험 요율)을 반영해 자동 계산됩니다. 기본급·인센티브 수치는 공개 자료 기반 추정치이며, 실제 금액은 부서·성과·연봉 협상 결과에 따라 달라질 수 있습니다.`,
  },
  ];
 }
@@ -116,6 +141,7 @@ export default function CompanyDetailPage({
  name: company.name.ko,
  industry: company.industry,
  description: `${company.name.ko} 평균 연봉, 워라밸, 복지 정보`,
+ alternateName: company.aliases,
  }),
  faqLd(faqItems),
  ]}
@@ -144,6 +170,13 @@ export default function CompanyDetailPage({
  </div>
 
  <CompanyInsights company={company} />
+
+ {/* 같은 업종 연봉 순위 — 동종사 내부 링크 클러스터 강화 */}
+ <CompanyIndustryRank company={company} />
+
+ {/* 자주 묻는 질문 — JSON-LD faqLd와 동일 Q&A를 본문에도 노출 */}
+ <CompanyFaq companyName={company.name.ko} items={faqItems} />
+
  <RelatedCompanies
  currentId={company.id}
  industry={company.industry}

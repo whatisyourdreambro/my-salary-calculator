@@ -63,6 +63,14 @@ export default function CompanyNarrative({ company }: Props) {
           회사인지 판단할 수 있는 1차 자료를 제공합니다.
         </p>
 
+        {company.aliases && company.aliases.length > 0 && (
+          <p className="text-sm text-faint-blue">
+            참고로 {koName}은(는) <strong>{company.aliases.join(", ")}</strong> 등의
+            이름·표기로도 검색됩니다. 모두 같은 회사이며, 이 페이지에서 통합 연봉
+            정보를 제공합니다.
+          </p>
+        )}
+
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
           1. {koName} 신입 vs 시니어 연봉 격차
         </h3>

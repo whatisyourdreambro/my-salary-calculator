@@ -79,27 +79,42 @@ export const krCompanies: CompanyProfile[] = [
 export { globalCompanies };
 
 /**
- * 모든 회사 단일 배열. 중복 ID는 build 시 검증.
+ * 회사 목록에서 중복을 자동 제거한다.
+ * - 같은 id가 두 번 등장하면 첫 번째만 유지 → 정적 라우트 중복 방지.
+ * - id는 다르지만 한글 회사명이 같으면 첫 번째만 유지 → 같은 회사가
+ *   두 URL로 생성돼 검색 순위가 분산되는 문제 방지.
+ * 데이터 파일을 직접 손대지 않아도 로드 시점에 일관성이 보장된다.
  */
-export const allCompanies: CompanyProfile[] = [
- ...krCompanies,
- ...globalCompanies,
-];
+function dedupeCompanies(companies: CompanyProfile[]): CompanyProfile[] {
+ const seenId = new Set<string>();
+ const seenName = new Set<string>();
+ const unique: CompanyProfile[] = [];
+ const removed: string[] = [];
 
-// 빌드 시 ID 중복 검증 (개발 환경에서만 throw)
-if (process.env.NODE_ENV === "development") {
- const idSet = new Set<string>();
- const duplicates: string[] = [];
- for (const company of allCompanies) {
- if (idSet.has(company.id)) {
- duplicates.push(company.id);
- } else {
- idSet.add(company.id);
+ for (const company of companies) {
+ const nameKey = company.name.ko.trim();
+ if (seenId.has(company.id) || seenName.has(nameKey)) {
+ removed.push(`${company.id}(${nameKey})`);
+ continue;
  }
+ seenId.add(company.id);
+ seenName.add(nameKey);
+ unique.push(company);
  }
- if (duplicates.length > 0) {
+
+ if (process.env.NODE_ENV === "development" && removed.length > 0) {
  console.warn(
- `[companies] Duplicate company IDs detected: ${duplicates.join(", ")}`
+ `[companies] 중복 회사 ${removed.length}건 자동 제거: ${removed.join(", ")}`
  );
  }
+
+ return unique;
 }
+
+/**
+ * 모든 회사 단일 배열 (id·한글명 기준 중복 제거 완료).
+ */
+export const allCompanies: CompanyProfile[] = dedupeCompanies([
+ ...krCompanies,
+ ...globalCompanies,
+]);

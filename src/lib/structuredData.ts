@@ -355,11 +355,16 @@ export function companyOrganizationLd(company: {
  url?: string;
  industry?: string;
  description?: string;
+ /** 별칭(옛 사명·표기 변형) — schema.org alternateName */
+ alternateName?: string[];
 }) {
  return {
  "@context": "https://schema.org",
  "@type": "Organization",
  name: company.name,
+ ...(company.alternateName && company.alternateName.length > 0
+ ? { alternateName: company.alternateName }
+ : {}),
  ...(company.url ? { url: company.url } : {}),
  ...(company.description ? { description: company.description } : {}),
  ...(company.industry ? { industry: company.industry } : {}),

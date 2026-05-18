@@ -123,3 +123,87 @@ export function describeWorkLife(company: CompanyProfile): string {
  }
  return `평균 주 ${real}시간 (계약 대비 +${overhours}시간) — 강도 높음`;
 }
+
+// ─────────────────────────────────────────────────────────────
+// 같은 업종 연봉 순위
+// ─────────────────────────────────────────────────────────────
+
+export interface IndustryRankRow {
+ company: CompanyProfile;
+ rank: number;
+ entryTotal: number;
+}
+
+/**
+ * 같은 업종 회사들을 신입 영끌 연봉 기준으로 정렬한 순위.
+ * 표본이 3개 미만이면 null (순위로서 의미 없음).
+ */
+export function getIndustryRanking(company: CompanyProfile): {
+ rows: IndustryRankRow[];
+ total: number;
+ myRank: number;
+} | null {
+ const peers = allCompanies.filter((c) => c.industry === company.industry);
+ if (peers.length < 3) return null;
+
+ const rows: IndustryRankRow[] = peers
+ .map((c) => ({
+ company: c,
+ entryTotal: c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0),
+ rank: 0,
+ }))
+ .sort((a, b) => b.entryTotal - a.entryTotal)
+ .map((row, index) => ({ ...row, rank: index + 1 }));
+
+ const myRank = rows.find((r) => r.company.id === company.id)?.rank ?? 0;
+ return { rows, total: rows.length, myRank };
+}
+
+/** 업종 영문 코드 → 한글 라벨. 미등록 업종은 원문을 그대로 사용. */
+const INDUSTRY_KO: Record<string, string> = {
+ Pharmaceutical: "제약",
+ Pharma: "제약",
+ Biopharmaceutical: "바이오제약",
+ Game: "게임",
+ Construction: "건설",
+ Platform: "플랫폼",
+ Food: "식품",
+ Fintech: "핀테크",
+ Finance: "금융",
+ Securities: "증권",
+ "Securities / Investment Banking": "증권·IB",
+ "IT Services": "IT 서비스",
+ Banking: "은행",
+ "Banking / Public": "은행(공공)",
+ "Banking / Financial Holding": "은행·금융지주",
+ Retail: "유통",
+ Logistics: "물류",
+ Insurance: "보험",
+ "Insurance (Non-Life)": "손해보험",
+ "Heavy Industry": "중공업",
+ "Healthcare / University Hospital": "대학병원",
+ Energy: "에너지",
+ "Energy / Public": "에너지(공기업)",
+ "Public Finance": "공공 금융",
+ "Finance / Public": "금융(공공)",
+ "Legal Services": "법률 서비스",
+ Entertainment: "엔터테인먼트",
+ "Entertainment / K-pop": "엔터테인먼트(K-pop)",
+ Chemical: "화학",
+ "Accounting / Consulting": "회계·컨설팅",
+ "Management Consulting": "경영 컨설팅",
+ Transportation: "운송",
+ "Transportation / Public": "운송(공기업)",
+ Shipbuilding: "조선",
+ "Semiconductor Equipment": "반도체 장비",
+ "Media / Broadcasting": "미디어·방송",
+ EdTech: "에듀테크",
+ "E-commerce": "이커머스",
+ Defense: "방위산업",
+ "Auto Parts": "자동차 부품",
+};
+
+/** 업종 문자열을 한글 라벨로 변환 (미등록 시 원문 반환). */
+export function industryLabelKo(industry: string): string {
+ return INDUSTRY_KO[industry] || industry;
+}
