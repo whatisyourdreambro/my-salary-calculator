@@ -274,14 +274,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // (이전엔 /company/[id]도 sitemap에 있었으나 동일 정보 두 URL이라 카니발 → /salary-db/[id] 308 redirect로 통합)
  const { allCompanies } = require('@/data/companies');
 
+ // lastModified는 회사별 실제 lastUpdated 날짜 사용 — 매 배포마다 "오늘 수정"으로
+ // 찍히면 Google이 freshness 신호를 무시하므로 정직한 날짜를 넣는다.
  allCompanies.forEach((company: any) => {
+ const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
+ const lastModified =
+ parsed && !Number.isNaN(parsed.getTime()) ? parsed : new Date();
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
- lastModified: new Date(),
+ lastModified,
  changeFrequency: 'monthly',
  priority: 0.85,
  });
  });
+
+ // 회사 비교 페이지 (/salary-db/compare/[slug]) — 화이트리스트 페어만
+ const { getComparePairs } = require('@/lib/salary-data/companyComparePairs');
+ const compareUrls: MetadataRoute.Sitemap = getComparePairs().map(
+ (p: { slug: string }) => ({
+ url: `${baseUrl}/salary-db/compare/${p.slug}`,
+ lastModified: new Date(),
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.6,
+ })
+ );
 
  // 글로서리 동적 페이지 — 용어별 long-tail 키워드
  const glossaryUrls: MetadataRoute.Sitemap = glossaryData.map((item) => ({
@@ -360,5 +376,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.7,
  }));
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...compareUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
 }

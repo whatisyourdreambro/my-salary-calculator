@@ -8,14 +8,18 @@ import CompanyNarrative from "@/components/CompanyNarrative";
 import CompanyFaq from "@/components/CompanyFaq";
 import CompanyIndustryRank from "@/components/CompanyIndustryRank";
 import RelatedCompanies from "@/components/RelatedCompanies";
+import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import UpdatedBadge from "@/components/UpdatedBadge";
+import { industryLabelKo } from "@/lib/companyContentBuilder";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
  autoBreadcrumbLd,
  companyOrganizationLd,
+ datasetLd,
  faqLd,
 } from "@/lib/structuredData";
 
@@ -105,7 +109,7 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  },
  {
  question: `${koName} 같은 업종 내 연봉 수준은 어느 정도인가요?`,
- answer: `${koName}은 ${company.industry} 업종 내에서 신입 ${entryManwon}만원 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`,
+ answer: `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryManwon}만원 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`,
  },
  {
  question: `${koName} 연봉 협상은 어떻게 준비해야 하나요?`,
@@ -139,18 +143,26 @@ export default function CompanyDetailPage({
  autoBreadcrumbLd(`/salary-db/${company.id}`, { leafName: company.name.ko }),
  companyOrganizationLd({
  name: company.name.ko,
- industry: company.industry,
+ industry: industryLabelKo(company.industry),
  description: `${company.name.ko} 평균 연봉, 워라밸, 복지 정보`,
  alternateName: company.aliases,
  }),
  faqLd(faqItems),
+ datasetLd({
+ name: `${company.name.ko} 직급별 연봉·실수령액 데이터`,
+ description: `${company.name.ko}의 신입·주니어·시니어·리드·임원 직급별 평균 연봉, 인센티브, 복지, 워라밸 데이터.`,
+ url: `/salary-db/${company.id}`,
+ dateModified: company.lastUpdated,
+ keywords: [`${company.name.ko} 연봉`, `${company.name.ko} 초봉`, `${company.name.ko} 신입 연봉`],
+ }),
  ]}
  />
- <div className="page-width pt-24 pb-3">
+ <div className="page-width pt-24 pb-3 flex items-center justify-between gap-3 flex-wrap">
  <Breadcrumbs
  path={`/salary-db/${company.id}`}
  leafName={company.name.ko}
  />
+ <UpdatedBadge date={company.lastUpdated} prefix="연봉 데이터" />
  </div>
  <CompanyDetailClient company={company} />
 
@@ -173,6 +185,9 @@ export default function CompanyDetailPage({
 
  {/* 같은 업종 연봉 순위 — 동종사 내부 링크 클러스터 강화 */}
  <CompanyIndustryRank company={company} />
+
+ {/* 업종 허브·경쟁사 비교 — 허브-스포크 내부 링크 */}
+ <CompanyConnections company={company} />
 
  {/* 자주 묻는 질문 — JSON-LD faqLd와 동일 Q&A를 본문에도 노출 */}
  <CompanyFaq companyName={company.name.ko} items={faqItems} />

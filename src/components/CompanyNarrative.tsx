@@ -10,6 +10,7 @@ import {
   formatSalaryKorean,
   describeSalaryGrowth,
   describeWorkLife,
+  industryLabelKo,
 } from "@/lib/companyContentBuilder";
 
 interface Props {
@@ -56,7 +57,7 @@ export default function CompanyNarrative({ company }: Props) {
         <p>
           <strong className="text-navy dark:text-canvas-50">{koName}</strong>은(는){" "}
           <strong>{TIER_LABEL[company.tier]}</strong> 분류의{" "}
-          <strong>{company.industry}</strong> 기업입니다. 신입 영끌 평균 연봉은{" "}
+          <strong>{industryLabelKo(company.industry)}</strong> 기업입니다. 신입 영끌 평균 연봉은{" "}
           <strong>{formatSalaryKorean(entryTotal)}</strong> 수준이며, 시니어급은{" "}
           <strong>{formatSalaryKorean(seniorTotal)}</strong>까지 올라갑니다. 본 페이지는
           기본급·인센티브·스톡옵션·복지·워라밸을 종합해 {koName}이(가) 본인 커리어에 맞는
@@ -95,7 +96,7 @@ export default function CompanyNarrative({ company }: Props) {
               2. 같은 업종 평균 대비 위치
             </h3>
             <p>
-              {company.industry} 업종 내 {benchmark.sampleSize}개 회사 데이터 기준,{" "}
+              {industryLabelKo(company.industry)} 업종 내 {benchmark.sampleSize}개 회사 데이터 기준,{" "}
               {koName}의 신입 평균은 업종 평균(
               {formatSalaryKorean(benchmark.averageEntry)}) 대비{" "}
               <strong>

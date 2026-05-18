@@ -13,6 +13,7 @@ import {
  formatSalaryKorean,
  describeSalaryGrowth,
  describeWorkLife,
+ industryLabelKo,
 } from "@/lib/companyContentBuilder";
 
 interface CompanyInsightsProps {
@@ -36,7 +37,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  </h2>
  <div className="space-y-3 text-sm sm:text-base text-muted-blue leading-relaxed">
  <p>
- <strong className="text-navy">{koName}</strong>({enName})는 {company.industry} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : company.tier === "public" ? "공기업/공공기관" : "외국계"}로,{" "}
+ <strong className="text-navy">{koName}</strong>({enName})는 {industryLabelKo(company.industry)} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : company.tier === "public" ? "공기업/공공기관" : "외국계"}로,{" "}
  신입 영끌 연봉 <strong className="text-electric">{formatSalaryKorean(entryTotal)}</strong> 수준을 형성합니다.
  </p>
  <p>
@@ -61,7 +62,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  <div className="p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl sm:text-2xl font-black text-navy mb-2 flex items-center gap-2">
  <TrendingUp className="w-5 h-5 text-electric" />
- 같은 업종({company.industry}) 평균 대비
+ 같은 업종({industryLabelKo(company.industry)}) 평균 대비
  </h2>
  <p className="text-sm text-faint-blue mb-6">
  표본 {benchmark.sampleSize}개 회사 비교
@@ -122,7 +123,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  className="group p-5 bg-white rounded-2xl border border-canvas-200 hover:border-electric transition-colors"
  >
  <p className="text-xs text-faint-blue font-bold mb-1">
- {peer.industry}
+ {industryLabelKo(peer.industry)}
  </p>
  <p className="font-black text-navy text-sm mb-2 group-hover:text-electric transition-colors">
  {peer.name.ko}

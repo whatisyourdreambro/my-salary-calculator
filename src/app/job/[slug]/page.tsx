@@ -7,6 +7,8 @@ import { faqLd, autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 
 export const dynamic = "force-static";
 
@@ -61,6 +63,12 @@ export default function JobPage({ params }: Props) {
   const relatedJobs = jobsData
     .filter((j) => j.category === job.category && j.id !== job.id)
     .slice(0, 6);
+
+  // 이 직무를 채용하는 등록 기업 (해석 가능한 id만)
+  const relatedCompanies = job.relatedCompanyIds.flatMap((id) => {
+    const c = companyRepository.getById(id);
+    return c ? [c] : [];
+  });
 
   return (
     <>
@@ -216,6 +224,32 @@ export default function JobPage({ params }: Props) {
                     className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                   >
                     {slug.replace(/-quick$/, "").replace(/-/g, " ")}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 이 직무 채용 기업 연봉 */}
+          {relatedCompanies.length > 0 && (
+            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                {job.name} 채용 기업 연봉
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {relatedCompanies.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/salary-db/${c.id}`}
+                    className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors group"
+                  >
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-blue-700 dark:group-hover:text-blue-300 flex items-center gap-2">
+                      <span>{c.logo}</span>
+                      <span>{c.name.ko}</span>
+                    </span>
+                    <span className="text-sm text-blue-600 dark:text-blue-400 font-semibold">
+                      신입 {formatSalaryKorean(c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0))}
+                    </span>
                   </Link>
                 ))}
               </div>

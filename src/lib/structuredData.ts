@@ -370,3 +370,68 @@ export function companyOrganizationLd(company: {
  ...(company.industry ? { industry: company.industry } : {}),
  };
 }
+
+// ─────────────────────────────────────────────────────────────
+// ItemList — 순위/목록 (업종별 회사 연봉 순위 등)
+// ─────────────────────────────────────────────────────────────
+export interface ItemListEntry {
+ name: string;
+ url: string;
+ /** 미지정 시 배열 순서대로 1부터 자동 부여 */
+ position?: number;
+}
+
+export function itemListLd(opts: { name?: string; items: ItemListEntry[] }) {
+ return {
+ "@context": "https://schema.org",
+ "@type": "ItemList",
+ ...(opts.name ? { name: opts.name } : {}),
+ numberOfItems: opts.items.length,
+ itemListElement: opts.items.map((item, index) => ({
+ "@type": "ListItem",
+ position: item.position ?? index + 1,
+ name: item.name,
+ url: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+ })),
+ };
+}
+
+// ─────────────────────────────────────────────────────────────
+// Dataset — 연봉 데이터셋. dateModified로 신선도(freshness) 신호 전달.
+// 회사 페이지·업종 페이지가 보유한 직급별 연봉 데이터를 schema.org Dataset로 표현.
+// ─────────────────────────────────────────────────────────────
+export function datasetLd(opts: {
+ name: string;
+ description: string;
+ url: string;
+ /** ISO 날짜 — 데이터 갱신일 */
+ dateModified?: string;
+ /** ISO 날짜 — 데이터 최초 발행일 */
+ datePublished?: string;
+ keywords?: string[];
+}) {
+ const toIso = (d: string) => {
+ const parsed = new Date(d);
+ return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
+ };
+ const modified = opts.dateModified ? toIso(opts.dateModified) : undefined;
+ const published = opts.datePublished ? toIso(opts.datePublished) : undefined;
+
+ return {
+ "@context": "https://schema.org",
+ "@type": "Dataset",
+ name: opts.name,
+ description: opts.description,
+ url: opts.url.startsWith("http") ? opts.url : `${SITE_URL}${opts.url}`,
+ ...(modified ? { dateModified: modified } : {}),
+ ...(published ? { datePublished: published } : {}),
+ ...(opts.keywords && opts.keywords.length > 0 ? { keywords: opts.keywords } : {}),
+ isAccessibleForFree: true,
+ inLanguage: "ko-KR",
+ creator: {
+ "@type": "Organization",
+ name: ORGANIZATION_NAME,
+ url: SITE_URL,
+ },
+ };
+}
