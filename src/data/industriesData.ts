@@ -26,11 +26,16 @@ export interface IndustryProfile {
   keywords: string[];
   trend: "rising" | "stable" | "declining";
   trendNote: string;
+  /** 표준 업종 id 목록(industryTaxonomy) — /industry 페이지가 실제 회사 집계에 사용 */
+  industryIds?: string[];
+  /** 특정 tier 전체를 집계 (예: 공기업 페이지) */
+  aggregateTier?: "conglomerate" | "unicorn" | "startup" | "foreign" | "public";
 }
 
 export const industriesData: IndustryProfile[] = [
   {
     id: "it-software",
+    industryIds: ["it-software", "fintech"],
     name: "IT·소프트웨어",
     nameEn: "IT & Software",
     emoji: "💻",
@@ -60,6 +65,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "semiconductor",
+    industryIds: ["semiconductor", "electronics"],
     name: "반도체·전자",
     nameEn: "Semiconductor & Electronics",
     emoji: "🔬",
@@ -89,6 +95,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "finance-banking",
+    industryIds: ["bank", "securities", "card-finance", "finance"],
     name: "금융·은행",
     nameEn: "Finance & Banking",
     emoji: "💰",
@@ -118,6 +125,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "pharmaceutical-biotech",
+    industryIds: ["pharma-bio"],
     name: "제약·바이오",
     nameEn: "Pharmaceutical & Biotech",
     emoji: "🧬",
@@ -143,6 +151,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "automotive",
+    industryIds: ["automotive", "mobility"],
     name: "자동차·모빌리티",
     nameEn: "Automotive & Mobility",
     emoji: "🚗",
@@ -168,6 +177,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "construction",
+    industryIds: ["construction"],
     name: "건설·건축",
     nameEn: "Construction & Architecture",
     emoji: "🏗️",
@@ -193,6 +203,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "game",
+    industryIds: ["game"],
     name: "게임",
     nameEn: "Game Industry",
     emoji: "🎮",
@@ -218,6 +229,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "media-entertainment",
+    industryIds: ["media-entertainment"],
     name: "미디어·엔터테인먼트",
     nameEn: "Media & Entertainment",
     emoji: "🎬",
@@ -243,6 +255,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "public-enterprise",
+    aggregateTier: "public",
     name: "공기업·공공기관",
     nameEn: "Public Enterprise",
     emoji: "🏛️",
@@ -272,6 +285,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "education",
+    industryIds: ["education"],
     name: "교육",
     nameEn: "Education",
     emoji: "📚",
@@ -297,6 +311,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "ecommerce-retail",
+    industryIds: ["retail-commerce"],
     name: "이커머스·유통",
     nameEn: "E-commerce & Retail",
     emoji: "🛒",
@@ -322,6 +337,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "consulting-accounting",
+    industryIds: ["consulting"],
     name: "컨설팅·회계법인",
     nameEn: "Consulting & Accounting",
     emoji: "📊",
@@ -347,6 +363,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "healthcare",
+    industryIds: ["healthcare"],
     name: "의료·헬스케어",
     nameEn: "Healthcare",
     emoji: "🏥",
@@ -372,6 +389,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "steel-heavy-industry",
+    industryIds: ["steel", "heavy-industry"],
     name: "철강·중공업",
     nameEn: "Steel & Heavy Industry",
     emoji: "⚙️",
@@ -397,6 +415,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "chemical-energy",
+    industryIds: ["chemical", "energy", "battery"],
     name: "화학·에너지·정유",
     nameEn: "Chemical & Energy",
     emoji: "⚡",
@@ -422,6 +441,7 @@ export const industriesData: IndustryProfile[] = [
   },
   {
     id: "insurance",
+    industryIds: ["insurance"],
     name: "보험",
     nameEn: "Insurance",
     emoji: "🛡️",

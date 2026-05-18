@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { regionsData, getRegionById } from "@/data/regionsData";
+import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd } from "@/lib/structuredData";
 import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -31,6 +32,19 @@ export async function generateMetadata({
     path: `/region/${region.id}`,
     keywords: region.keywords,
   });
+}
+
+// 지역 대표 기업명을 회사 DB와 매칭 (정확 일치 또는 별칭).
+function resolveCompany(name: string) {
+  const norm = (s: string) => s.replace(/\s+/g, "");
+  const target = norm(name);
+  return companyRepository
+    .getAll()
+    .find(
+      (c) =>
+        norm(c.name.ko) === target ||
+        (c.aliases?.some((a) => norm(a) === target) ?? false)
+    );
 }
 
 function OtherRegions({ currentId }: { currentId: string }) {
@@ -291,15 +305,29 @@ export default function RegionDetailPage({
             {region.nameShort} 대표 기업
           </h2>
           <div className="flex flex-wrap gap-3">
-            {region.majorCompanies.map((company) => (
-              <span
-                key={company}
-                className="px-4 py-2 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 rounded-full text-sm font-bold text-navy dark:text-canvas-200"
-              >
-                {company}
-              </span>
-            ))}
+            {region.majorCompanies.map((company) => {
+              const matched = resolveCompany(company);
+              return matched ? (
+                <Link
+                  key={company}
+                  href={`/salary-db/${matched.id}`}
+                  className="px-4 py-2 bg-white dark:bg-canvas-900 border border-electric/30 hover:border-electric rounded-full text-sm font-bold text-navy dark:text-canvas-200 hover:text-electric transition-colors"
+                >
+                  {company} <span className="text-electric">연봉 →</span>
+                </Link>
+              ) : (
+                <span
+                  key={company}
+                  className="px-4 py-2 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 rounded-full text-sm font-bold text-navy dark:text-canvas-200"
+                >
+                  {company}
+                </span>
+              );
+            })}
           </div>
+          <p className="mt-3 text-xs text-muted-blue dark:text-canvas-400">
+            기업명을 누르면 해당 회사의 직급별 연봉·실수령액 상세 페이지로 이동합니다.
+          </p>
         </section>
 
         {/* 중간 광고 */}

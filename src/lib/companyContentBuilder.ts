@@ -5,6 +5,7 @@
 
 import type { CompanyProfile } from "@/types/company";
 import { allCompanies } from "@/data/companies";
+import { normalizeIndustry } from "@/lib/salary-data/industryTaxonomy";
 
 export interface IndustryBenchmark {
  averageEntry: number;
@@ -19,8 +20,9 @@ export interface IndustryBenchmark {
 export function getIndustryBenchmark(
  company: CompanyProfile
 ): IndustryBenchmark | null {
+ const companyIndustryId = normalizeIndustry(company.industry);
  const peers = allCompanies.filter(
- (c) => c.industry === company.industry && c.id !== company.id
+ (c) => normalizeIndustry(c.industry) === companyIndustryId && c.id !== company.id
  );
  if (peers.length < 2) return null;
 
@@ -143,7 +145,10 @@ export function getIndustryRanking(company: CompanyProfile): {
  total: number;
  myRank: number;
 } | null {
- const peers = allCompanies.filter((c) => c.industry === company.industry);
+ const companyIndustryId = normalizeIndustry(company.industry);
+ const peers = allCompanies.filter(
+ (c) => normalizeIndustry(c.industry) === companyIndustryId
+ );
  if (peers.length < 3) return null;
 
  const rows: IndustryRankRow[] = peers
@@ -159,51 +164,6 @@ export function getIndustryRanking(company: CompanyProfile): {
  return { rows, total: rows.length, myRank };
 }
 
-/** 업종 영문 코드 → 한글 라벨. 미등록 업종은 원문을 그대로 사용. */
-const INDUSTRY_KO: Record<string, string> = {
- Pharmaceutical: "제약",
- Pharma: "제약",
- Biopharmaceutical: "바이오제약",
- Game: "게임",
- Construction: "건설",
- Platform: "플랫폼",
- Food: "식품",
- Fintech: "핀테크",
- Finance: "금융",
- Securities: "증권",
- "Securities / Investment Banking": "증권·IB",
- "IT Services": "IT 서비스",
- Banking: "은행",
- "Banking / Public": "은행(공공)",
- "Banking / Financial Holding": "은행·금융지주",
- Retail: "유통",
- Logistics: "물류",
- Insurance: "보험",
- "Insurance (Non-Life)": "손해보험",
- "Heavy Industry": "중공업",
- "Healthcare / University Hospital": "대학병원",
- Energy: "에너지",
- "Energy / Public": "에너지(공기업)",
- "Public Finance": "공공 금융",
- "Finance / Public": "금융(공공)",
- "Legal Services": "법률 서비스",
- Entertainment: "엔터테인먼트",
- "Entertainment / K-pop": "엔터테인먼트(K-pop)",
- Chemical: "화학",
- "Accounting / Consulting": "회계·컨설팅",
- "Management Consulting": "경영 컨설팅",
- Transportation: "운송",
- "Transportation / Public": "운송(공기업)",
- Shipbuilding: "조선",
- "Semiconductor Equipment": "반도체 장비",
- "Media / Broadcasting": "미디어·방송",
- EdTech: "에듀테크",
- "E-commerce": "이커머스",
- Defense: "방위산업",
- "Auto Parts": "자동차 부품",
-};
-
-/** 업종 문자열을 한글 라벨로 변환 (미등록 시 원문 반환). */
-export function industryLabelKo(industry: string): string {
- return INDUSTRY_KO[industry] || industry;
-}
+// 업종 한글 라벨은 표준 분류(industryTaxonomy)에 위임한다.
+// 기존 import 경로 호환을 위해 이 모듈에서도 industryLabelKo를 재노출.
+export { industryLabelKo } from "@/lib/salary-data/industryTaxonomy";

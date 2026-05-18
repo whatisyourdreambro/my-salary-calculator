@@ -6,7 +6,8 @@ import Link from "next/link";
 import { ArrowRight, Building2 } from "lucide-react";
 import { allCompanies } from "@/data/companies";
 import type { CompanyProfile } from "@/types/company";
-import { formatSalaryKorean } from "@/lib/companyContentBuilder";
+import { formatSalaryKorean, industryLabelKo } from "@/lib/companyContentBuilder";
+import { normalizeIndustry } from "@/lib/salary-data/industryTaxonomy";
 
 interface RelatedCompaniesProps {
   currentId: string;
@@ -22,7 +23,7 @@ function totalEntry(c: CompanyProfile): number {
 
 function score(c: CompanyProfile, industry?: string, target?: number): number {
   let s = 0;
-  if (industry && c.industry === industry) s += 10;
+  if (industry && normalizeIndustry(c.industry) === normalizeIndustry(industry)) s += 10;
   if (target) {
     const diff = Math.abs(totalEntry(c) - target);
     const ratio = diff / target;
@@ -66,7 +67,7 @@ export default function RelatedCompanies({
               <p className="text-sm font-bold text-navy dark:text-canvas-50 leading-tight line-clamp-1">
                 {c.name.ko}
               </p>
-              <p className="text-[11px] text-faint-blue line-clamp-1">{c.industry}</p>
+              <p className="text-[11px] text-faint-blue line-clamp-1">{industryLabelKo(c.industry)}</p>
               <p className="text-xs font-black text-electric mt-1">
                 신입 {formatSalaryKorean(entry)}
               </p>
