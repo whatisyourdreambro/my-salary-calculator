@@ -36,9 +36,9 @@ export default function Footer() {
       ]
     : [
         { name: "연말정산 2026", href: "/year-end-tax-2026" },
+        { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026" },
         { name: "13월의 월급", href: "/calc/january-bonus" },
         { name: "성과급 세금", href: "/calc/year-end-bonus" },
-        { name: "퇴직금 계산", href: "/tools/finance/severance" },
         { name: "건강보험 2026", href: "/health-insurance-2026" },
       ];
 

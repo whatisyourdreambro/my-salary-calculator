@@ -47,7 +47,7 @@ export const krCompanies_Batch19: CompanyProfile[] = [
     industry: "Mobility / Platform",
     tier: "unicorn",
     logo: "🚕",
-    description: "카카오T 택시·대리운전·주차 등 이동 플랫폼 1위. 기업가치 7조원 추정, IPO 준비 중.",
+    description: "카카오T 택시·대리운전·주차 등 이동 플랫폼 1위. 기업가치 7조원대, 상장 시점 미정.",
     salary: {
       entry: { base: 60000000, incentive: { target: 15, max: 30, avgAmount: 11000000 } },
       junior: { base: 73000000, incentive: { target: 15, max: 30, avgAmount: 14000000 } },
