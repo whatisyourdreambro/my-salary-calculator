@@ -185,7 +185,8 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  industry: "IT Services",
  tier: "conglomerate",
  logo: "🖥️",
- description: "구 SK C&C. SK그룹의 AI·디지털 전환(DX) 전문 기업.",
+ description:
+ "구 SK C&C. 2024년 사명 변경 후 SK그룹의 AI·디지털 전환(DX) 전문 기업으로 재포지셔닝. 클라우드(SK클라우드존)·AI 솔루션·SI(시스템통합)·BPO 사업. 판교·분당·서울 사무실 + 대전 데이터센터 운영.",
  salary: {
  entry: { base: 54000000, incentive: { target: 20, max: 40, avgAmount: 12000000 } },
  junior: { base: 66000000, incentive: { target: 20, max: 40, avgAmount: 18000000 } },
@@ -193,9 +194,31 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  lead: { base: 115000000, incentive: { target: 20, max: 40, avgAmount: 38000000 } },
  executive: { base: 210000000, incentive: { target: 40, max: 80, avgAmount: 80000000 } },
  },
- workLife: { weeklyHours: { contract: 40, real: 42 }, vacation: { days: 20, usageRate: 90 }, remoteWork: { policy: "hybrid", description: "유연 근무" } },
- benefits: [{ category: "lifestyle", title: "통신비", description: "SKT 지원", value: 1000000 }, { category: "financial", title: "복지포인트", description: "연 200만원", value: 2000000 }],
- culture: { score: 8.5, keywords: ["SK", "판교", "워라밸"], pros: ["SK 그룹의 좋은 복지", "판교 근무", "상대적으로 좋은 워라밸"], cons: ["지주사(SK)와의 관계", "데이터센터 화재 이후 분위기"] },
- lastUpdated: "2025-11-23",
+ workLife: { weeklyHours: { contract: 40, real: 42 }, vacation: { days: 20, usageRate: 90 }, remoteWork: { policy: "hybrid", description: "유연 근무, 주 2일 재택 가능" } },
+ benefits: [
+ { category: "lifestyle", title: "통신비", description: "SKT·SK텔레콤 임직원 통신 지원", value: 1000000 },
+ { category: "financial", title: "복지포인트", description: "연 200만원 + 명절 상여", value: 2000000 },
+ { category: "financial", title: "성과급 PS·PI", description: "전사 성과 PS + 본부별 PI, 호황기 800%대", value: 12000000 },
+ { category: "growth", title: "AI·클라우드 자격증 지원", description: "AWS·Azure·MS 자격증 시험비·교육비", value: 1500000 },
+ { category: "health", title: "사내 검진·심리 상담", description: "본인·배우자 종합검진 + 사내 EAP" },
+ ],
+ culture: {
+ score: 8.5,
+ keywords: ["SK", "판교", "워라밸", "AI/DX", "구SK C&C", "클라우드"],
+ pros: [
+ "SK 그룹의 좋은 복지 (성과급·복지포인트·통신비)",
+ "판교·분당 근무 중심 (출퇴근 편리)",
+ "상대적으로 좋은 워라밸 (주 42시간 평균)",
+ "AI·클라우드 전환 흐름에서 신사업 기회",
+ "사명 변경(SK C&C → SK AX) 후 채용 확대",
+ ],
+ cons: [
+ "지주사(SK)와의 사업 의존도 높음",
+ "데이터센터 화재(2022) 이후 분위기 변화",
+ "SI 프로젝트 시 클라이언트사 상주 가능성",
+ "AI 사업 정착까지 조직 변동성",
+ ],
+ },
+ lastUpdated: "2026-05-22",
  },
 ];

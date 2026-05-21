@@ -7,7 +7,8 @@ export const seedCompanies: CompanyProfile[] = [
  industry: "Semiconductor / Consumer Electronics",
  tier: "conglomerate",
  logo: "🏢",
- description: "대한민국 시가총액 1위, 글로벌 반도체 및 모바일 리더.",
+ description:
+ "대한민국 시가총액 1위, 글로벌 반도체 및 모바일 리더. DS(반도체)·DX(가전·모바일)·하만 사업부 운영. 신입 초봉 5,300만원 + OPI/TAI 성과급으로 영끌 7,800만원 이상. 디바이스솔루션(DS) 사업부가 가장 높은 성과급, 디바이스경험(DX)이 안정적 워라밸.",
  salary: {
  entry: {
  base: 53000000,
@@ -37,17 +38,31 @@ export const seedCompanies: CompanyProfile[] = [
  },
  culture: {
  score: 8.2,
- keywords: ["성과주의", "체계적", "대기업", "복지끝판왕"],
- pros: ["압도적인 성과급(OPI)", "삼시세끼 무료", "최고 수준의 의료비 지원"],
- cons: ["수직적인 문화", "부서 바이 부서(부바부) 심함", "지방 근무 가능성"],
+ keywords: ["성과주의", "체계적", "대기업", "복지끝판왕", "OPI/TAI", "DS·DX사업부", "글로벌커리어"],
+ pros: [
+ "압도적인 성과급(OPI 연봉의 최대 50%)",
+ "삼시세끼 무료 + 사내 병원·약국",
+ "최고 수준의 의료비 지원(가족 포함)",
+ "전 직급 글로벌 출장·해외 법인 파견 기회",
+ "퇴직금·DC형 연금 + 우리사주",
+ ],
+ cons: [
+ "수직적인 문화 (사업부별 편차 큼)",
+ "부서 바이 부서(부바부) 심함",
+ "지방(평택·기흥·온양·구미·천안) 근무 가능성",
+ "DS 사업부 강도 높음, 야간 근무·교대 비중",
+ "OPI 0% 시즌(반도체 다운사이클) 충격 큼",
+ ],
  },
  benefits: [
- { category: "financial", title: "OPI (성과인센티브)", description: "연봉의 최대 50% 지급", value: 25000000 },
+ { category: "financial", title: "OPI (성과인센티브)", description: "연봉의 최대 50% 지급, 반도체 호황기 추가 지급 사례", value: 25000000 },
  { category: "financial", title: "TAI (목표달성장려금)", description: "월 기본급의 최대 100% (연 2회)", value: 6000000 },
- { category: "health", title: "사내 병원/약국", description: "임직원 및 가족 의료비 지원", value: 2000000 },
- { category: "lifestyle", title: "삼시세끼 무료", description: "아침, 점심, 저녁 사내식당 무료 제공", value: 3600000 },
+ { category: "health", title: "사내 병원/약국", description: "임직원 및 가족 의료비 지원, 평택·기흥 종합검진", value: 2000000 },
+ { category: "lifestyle", title: "삼시세끼 무료", description: "아침·점심·저녁 사내식당 무료 제공", value: 3600000 },
+ { category: "family", title: "자녀 학자금", description: "유치원~대학원 학자금 지원, 2자녀 출산 시 추가 지원", value: 18000000 },
+ { category: "growth", title: "글로벌 MBA·박사 파견", description: "선발 시 학비 전액 + 급여 지급", value: 50000000 },
  ],
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-22",
  },
  {
  id: "sk-hynix",
@@ -284,7 +299,8 @@ export const seedCompanies: CompanyProfile[] = [
  industry: "Battery",
  tier: "conglomerate",
  logo: "🔋",
- description: "글로벌 배터리 시장을 선도하는 2차전지 분야의 세계적 기업입니다.",
+ description:
+ "글로벌 배터리 시장을 선도하는 2차전지 분야의 세계적 기업. LG화학에서 분사한 후 코스피 시가총액 상위권으로 직진. 전기차(EV) 배터리·ESS·소형 배터리 사업 + GM·스텔란티스·혼다 등 글로벌 합작 공장 운영. 신입 영끌 6,800만원, 시니어 1억원 수준.",
  salary: {
  entry: { base: 53000000, incentive: { target: 20, max: 40, avgAmount: 15000000 }, signOn: 0 },
  junior: { base: 62000000, incentive: { target: 20, max: 40, avgAmount: 18000000 } },
@@ -299,14 +315,28 @@ export const seedCompanies: CompanyProfile[] = [
  },
  benefits: [
  { category: "financial", title: "복지 포인트", description: "연 200만원 지급", value: 2000000 },
- { category: "health", title: "의료비 지원", description: "본인/가족 실비 지원", value: 1000000 },
+ { category: "health", title: "의료비 지원", description: "본인/가족 실비 지원, 종합검진 연 1회", value: 1000000 },
+ { category: "financial", title: "성과급 PS", description: "전년 실적 연동, 호황기 기본급 400~700% 사례", value: 18000000 },
+ { category: "family", title: "사택·기숙사", description: "오창·대전 근무자 사택 + 자녀 학자금", value: 12000000 },
+ { category: "growth", title: "해외 법인 파견", description: "미국·헝가리·인도네시아 공장 파견 기회", value: 0 },
  ],
  culture: {
  score: 8.3,
- keywords: ["성장", "글로벌", "인화"],
- pros: ["폭발적인 산업 성장성", "LG 특유의 인화 문화", "높은 성과급 기대감"],
- cons: ["오창/대전 등 지방 근무 가능성", "급격한 성장에 따른 성장통"],
+ keywords: ["성장", "글로벌", "인화", "전기차배터리", "GM합작", "ESS"],
+ pros: [
+ "폭발적인 산업 성장성 (EV 시장 확대)",
+ "LG 특유의 인화 문화 + 워라밸 비교적 양호",
+ "높은 성과급 기대감 (호황기 기본급 400~700%)",
+ "글로벌 합작 공장 다수로 해외 파견 기회",
+ "코스피 상위주 + 우리사주 매력",
+ ],
+ cons: [
+ "오창·대전 등 지방 근무 가능성",
+ "급격한 성장에 따른 성장통·조직 변화 잦음",
+ "전기차 캐즘(수요 둔화) 시 성과급 변동성",
+ "공장 근무 시 교대 근무 비중",
+ ],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-22",
  },
 ];
