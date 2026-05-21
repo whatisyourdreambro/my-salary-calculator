@@ -1,4 +1,7 @@
 import LoanCalculator from "@/components/calculators/LoanCalculator";
+import RelatedCalculators from "@/components/RelatedCalculators";
+import { HomeTopAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,6 +23,16 @@ export default function LoanCalculatorPage() {
  </p>
  </div>
  <LoanCalculator />
+
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
+
+ <RelatedCalculators currentPath="/tools/loan" />
+
+ <div className="mt-8">
+ <HomeTopAd />
+ </div>
  </div>
  </div>
  );

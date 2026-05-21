@@ -14,6 +14,7 @@ import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ShareButtons from "@/components/ShareButtons";
 
 export const dynamic = "force-static";
 // 화이트리스트 외 슬러그는 생성하지 않는다 (도어웨이 페이지 방지).
@@ -275,6 +276,13 @@ export default function ComparePage({ params }: Props) {
         <CoupangBanner
           responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
         />
+
+        <div className="my-8">
+          <ShareButtons
+            title={`${a.name.ko} vs ${b.name.ko} 연봉 비교`}
+            description={`${a.name.ko}과 ${b.name.ko}의 직급별 영끌 연봉·복지·문화를 한눈에 비교`}
+          />
+        </div>
       </div>
     </>
   );

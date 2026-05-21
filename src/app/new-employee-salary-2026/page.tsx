@@ -9,6 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { allCompanies } from "@/data/companies";
@@ -255,6 +256,13 @@ export default function NewEmployeeSalary2026Page() {
  </section>
 
  <RelatedCalculators currentPath="/new-employee-salary-2026" />
+
+ <div className="mt-8 max-w-3xl mx-auto">
+ <ShareButtons
+ title="신입 초봉 2026 — 회사 480곳 영끌 TOP 50"
+ description="대기업·IT·금융·공기업·외국계 신입 평균 연봉 종합 인덱스"
+ />
+ </div>
 
  <div className="mt-8">
  <HomeTopAd />
