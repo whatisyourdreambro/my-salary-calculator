@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { BookOpen, TrendingUp, Shield, CreditCard, Home, Briefcase, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = {
  title: "직장인 꿀팁 모음 | 연봉 협상부터 세금 절세까지 - 머니샐러리",
@@ -80,6 +82,8 @@ export default function TipsPage() {
 
  <div className="max-w-4xl mx-auto space-y-16">
  {/* Ad Top */}
+ <HomeTopAd />
+
  {/* Quick Links */}
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
  {relatedLinks.map((link) => (
@@ -110,12 +114,16 @@ export default function TipsPage() {
  </div>
  {si === 1 && (
  <div className="mt-8">
+ <InArticleAd />
  </div>
  )}
  </div>
  ))}
 
  {/* Bottom Ad */}
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ />
  </div>
  </main>
  );

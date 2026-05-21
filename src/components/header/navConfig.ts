@@ -85,6 +85,7 @@ export const navConfig: NavItem[] = [
    { name: "3월 신입 연봉 협상", href: "/new-employee-2026", description: "첫 협상 가이드" },
    { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026", description: "회사 480곳 영끌 인덱스", badge: "NEW" },
    { name: "최저임금 2026", href: "/minimum-wage-2026", description: "시급·월급·연봉 환산표", badge: "NEW" },
+   { name: "건강검진 2026", href: "/health-checkup-2026", description: "대상자·항목·비용·예약", badge: "NEW" },
    { name: "연말정산 체크리스트", href: "/year-end-tax-checklist", description: "12.31 마감 점검" },
    { name: "2026 세율표", href: "/tax-rates-2026", description: "소득세 구간 한눈" },
    { name: "2026 4대보험 요율", href: "/social-insurance-rates-2026", description: "최신 요율표" },
