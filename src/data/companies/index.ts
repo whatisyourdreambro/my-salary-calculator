@@ -37,6 +37,7 @@ import { krCompanies_Batch25 } from "@/data/krCompanies_Batch25";
 import { krCompanies_Batch26 } from "@/data/krCompanies_Batch26";
 import { krCompanies_Batch27 } from "@/data/krCompanies_Batch27";
 import { krCompanies_Batch28 } from "@/data/krCompanies_Batch28";
+import { krCompanies_Batch29 } from "@/data/krCompanies_Batch29";
 
 /**
  * 한국 기업 (대기업·IT·금융·공기업·스타트업 등).
@@ -71,6 +72,7 @@ export const krCompanies: CompanyProfile[] = [
  ...krCompanies_Batch26,
  ...krCompanies_Batch27,
  ...krCompanies_Batch28,
+ ...krCompanies_Batch29,
 ];
 
 /**
