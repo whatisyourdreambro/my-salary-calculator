@@ -5,12 +5,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { regionsData, getRegionById } from "@/data/regionsData";
+import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd } from "@/lib/structuredData";
 import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
+
+// 지역의 topIndustries(한국어 표시명) → /industry/[id] 매칭.
+// 정확 일치 우선, 그 다음 부분 포함(예: "IT·소프트웨어" → "IT").
+function findIndustryByName(name: string) {
+  const direct = industriesData.find((i) => i.name === name);
+  if (direct) return direct;
+  const norm = name.replace(/[·\s/\-]/g, "");
+  return industriesData.find((i) => {
+    const a = i.name.replace(/[·\s/\-]/g, "");
+    return a.includes(norm) || norm.includes(a);
+  });
+}
 
 export const dynamic = "force-static";
 
@@ -279,23 +292,44 @@ export default function RegionDetailPage({
           </p>
         </section>
 
-        {/* 주요 산업 */}
+        {/* 주요 산업 — 매칭되는 /industry/[id]로 cross-link해 PageRank 양방향 흐름 */}
         <section className="mt-8">
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mb-4">
             {region.nameShort} 주요 산업
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {region.topIndustries.map((industry, idx) => (
-              <div
-                key={industry}
-                className="flex items-center gap-3 p-4 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-xl"
-              >
-                <span className="text-xl font-black text-electric opacity-50">
-                  {String(idx + 1).padStart(2, "0")}
-                </span>
-                <span className="font-bold text-navy dark:text-canvas-100">{industry}</span>
-              </div>
-            ))}
+            {region.topIndustries.map((industry, idx) => {
+              const matched = findIndustryByName(industry);
+              const body = (
+                <>
+                  <span className="text-xl font-black text-electric opacity-50">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-bold text-navy dark:text-canvas-100 flex-1">{industry}</span>
+                  {matched && (
+                    <span className="text-electric text-sm font-bold">
+                      평균 {matched.salary.overall.toLocaleString("ko-KR")}만원 →
+                    </span>
+                  )}
+                </>
+              );
+              return matched ? (
+                <Link
+                  key={industry}
+                  href={`/industry/${matched.id}`}
+                  className="group flex items-center gap-3 p-4 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-xl hover:border-electric transition-colors"
+                >
+                  {body}
+                </Link>
+              ) : (
+                <div
+                  key={industry}
+                  className="flex items-center gap-3 p-4 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-xl"
+                >
+                  {body}
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -326,8 +360,44 @@ export default function RegionDetailPage({
             })}
           </div>
           <p className="mt-3 text-xs text-muted-blue dark:text-canvas-400">
-            기업명을 누르면 해당 회사의 직급별 연봉·실수령액 상세 페이지로 이동합니다.
+            기업명을 누르면 해당 회사의 직급별 연봉·실수령액 상세 페이지로 이동합니다.{" "}
+            <Link href="/salary-db" className="text-electric font-bold hover:underline">
+              전체 회사 DB 검색하기 →
+            </Link>
           </p>
+        </section>
+
+        {/* 직업 허브 분기 — region이 dead-end 되지 않도록 직업/회사 차원으로 분기 */}
+        <section className="mt-8 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-2xl p-6">
+          <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">
+            {region.nameShort}에서 일자리 찾기
+          </h2>
+          <p className="text-sm text-muted-blue dark:text-canvas-300 mb-4 leading-6">
+            {region.nameShort} 지역의 평균 연봉을 직업별·산업별로 더 자세히 비교해 보세요.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <Link
+              href="/job"
+              className="flex items-center gap-2 p-3 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 rounded-xl hover:border-electric transition-colors"
+            >
+              <span className="text-electric font-black">→</span>
+              <span className="text-sm font-bold text-navy dark:text-canvas-100">직업별 연봉</span>
+            </Link>
+            <Link
+              href="/industry"
+              className="flex items-center gap-2 p-3 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 rounded-xl hover:border-electric transition-colors"
+            >
+              <span className="text-electric font-black">→</span>
+              <span className="text-sm font-bold text-navy dark:text-canvas-100">산업별 연봉</span>
+            </Link>
+            <Link
+              href="/salary-db"
+              className="flex items-center gap-2 p-3 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 rounded-xl hover:border-electric transition-colors"
+            >
+              <span className="text-electric font-black">→</span>
+              <span className="text-sm font-bold text-navy dark:text-canvas-100">회사별 연봉</span>
+            </Link>
+          </div>
         </section>
 
         {/* 중간 광고 */}

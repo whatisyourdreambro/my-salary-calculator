@@ -6,6 +6,7 @@ import { HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
+import SiblingHubsNav from "@/components/SiblingHubsNav";
 
 export const dynamic = "force-static";
 
@@ -54,6 +55,9 @@ export default function IndustryIndexPage() {
               IT·반도체·금융·의료·자동차 등 주요 산업별 연봉을 비교하고 내 업계 위치를 확인하세요.
             </p>
           </div>
+
+          {/* 형제 허브 — 회사·직업·지역 차원으로 분기 */}
+          <SiblingHubsNav currentPath="/industry" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {sorted.map((industry) => (

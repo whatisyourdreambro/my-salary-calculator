@@ -3,11 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, Building2, TrendingUp, Users, ArrowRight, Database } from "lucide-react";
+import { Search, Building2, TrendingUp, Users, ArrowRight, Database, Briefcase, MapPin, Factory } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { Fragment } from "react";
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+
+// 회사 DB 인덱스의 형제 허브 — 회사 검색 후 다른 차원(직업/산업/지역)으로
+// 한 번 더 분기해 트래픽 엔진 간 PageRank를 양방향으로 흘려보낸다.
+const SIBLING_HUBS: Array<{ href: string; label: string; sub: string; icon: React.ElementType }> = [
+ { href: "/job", label: "직업별 연봉", sub: "직무 평균·신입 초봉", icon: Briefcase },
+ { href: "/industry", label: "산업별 연봉", sub: "업종 순위·동종사", icon: Factory },
+ { href: "/region", label: "지역별 연봉", sub: "17개 시도 분포", icon: MapPin },
+ { href: "/company/compare", label: "회사 비교", sub: "두 회사 정밀 비교", icon: TrendingUp },
+];
 export default function SalaryDBPage() {
  const [searchTerm, setSearchTerm] = useState("");
  const allCompanies = companyRepository.getAll();
@@ -61,6 +70,33 @@ export default function SalaryDBPage() {
  </section>
 
  <div className="page-width pt-6">
+ {/* 형제 허브 진입 — 회사 검색이 의도가 아니면 다른 차원으로 분기 */}
+ <nav
+ aria-label="다른 연봉 데이터 보기"
+ className="max-w-5xl mx-auto mb-8 grid grid-cols-2 md:grid-cols-4 gap-3"
+ >
+ {SIBLING_HUBS.map((h) => {
+ const Icon = h.icon;
+ return (
+ <Link
+ key={h.href}
+ href={h.href}
+ className="group flex items-center gap-3 p-4 bg-white border border-canvas-200 rounded-2xl hover:border-electric hover:shadow-md transition-all"
+ >
+ <div className="w-10 h-10 rounded-xl bg-electric-10 flex items-center justify-center shrink-0">
+ <Icon className="w-5 h-5 text-electric" />
+ </div>
+ <div className="min-w-0">
+ <p className="font-bold text-navy text-sm group-hover:text-electric transition-colors">
+ {h.label}
+ </p>
+ <p className="text-[11.5px] text-faint-blue truncate">{h.sub}</p>
+ </div>
+ </Link>
+ );
+ })}
+ </nav>
+
  {/* 검색바 직하 광고 */}
  <div className="max-w-3xl mx-auto mb-8">
  <HomeTopAd />
