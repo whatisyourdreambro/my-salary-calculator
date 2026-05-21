@@ -162,7 +162,7 @@ export default function NewEmployee2026Page() {
  <InArticleAd />
 
  {/* CTAs */}
- <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4">
+ <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4">
  <Link
  href="/salary-db"
  className="block p-6 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors"
@@ -170,6 +170,14 @@ export default function NewEmployee2026Page() {
  <Building2 className="w-8 h-8 opacity-70 mb-3" />
  <h3 className="text-lg font-black mb-2">회사별 평균 연봉</h3>
  <p className="text-sm opacity-90">동일 직군 회사 비교</p>
+ </Link>
+ <Link
+ href="/new-employee-salary-2026"
+ className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
+ >
+ <TrendingUp className="w-8 h-8 text-electric mb-3" />
+ <h3 className="text-lg font-black mb-2">신입 초봉 TOP 50</h3>
+ <p className="text-sm text-muted-blue">회사 480곳 영끌 순위</p>
  </Link>
  <Link
  href="/"

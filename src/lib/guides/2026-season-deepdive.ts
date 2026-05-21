@@ -187,7 +187,7 @@ export const season2026Guides = [
 <li>ISA는 증권사에서 별도 개설 (자유적립식 추천)</li>
 </ol>
 
-<p class="callout">머니샐러리 <a href="/tools/finance/irp">IRP 절세 계산기</a>로 본인 연봉 기준 정확 환급액, <a href="/calc/fire-target">FIRE 자산 목표 계산기</a>로 노후 필요 자금 동시 확인 가능합니다.</p>
+<p class="callout">머니샐러리 <a href="/tools/finance/irp">IRP 절세 계산기</a>로 본인 연봉 기준 정확 환급액, <a href="/fire-calculator">FIRE 자산 목표 계산기</a>로 노후 필요 자금 동시 확인 가능합니다.</p>
 `,
  },
 
