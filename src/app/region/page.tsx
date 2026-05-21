@@ -9,6 +9,7 @@ import { autoBreadcrumbLd } from "@/lib/structuredData";
 import { HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
+import SiblingHubsNav from "@/components/SiblingHubsNav";
 
 export const dynamic = "force-static";
 
@@ -94,6 +95,9 @@ export default function RegionIndexPage() {
         <div className="mb-10">
           <HomeTopAd />
         </div>
+
+        {/* 형제 허브 — 회사·직업·산업 차원으로 분기 */}
+        <SiblingHubsNav currentPath="/region" />
 
         {/* 지역 카드 그리드 */}
         <section>

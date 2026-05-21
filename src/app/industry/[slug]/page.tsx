@@ -70,10 +70,14 @@ export default function IndustryPage({ params }: Props) {
 
   const relatedJobs = jobsData.filter((j) => industry.topJobIds.includes(j.id));
 
+  // 연봉이 인접한 산업 5개를 결정적으로 골라 PageRank 분산 방지(SSG 빌드 안정성).
+  // 평균 연봉 차이가 작은 순으로 정렬해, 사용자가 같은 연봉대 다른 산업을 비교하기 좋게.
   const relatedIndustries = industriesData
     .filter((i) => i.id !== industry.id)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 5);
+    .map((i) => ({ industry: i, diff: Math.abs(i.salary.overall - industry.salary.overall) }))
+    .sort((a, b) => a.diff - b.diff)
+    .slice(0, 5)
+    .map((x) => x.industry);
 
   const trendStyle = TREND_INFO[industry.trend];
 

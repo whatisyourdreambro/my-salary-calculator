@@ -20,6 +20,7 @@ import {
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
+import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
 import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
 import JsonLd from "@/components/JsonLd";
@@ -418,6 +419,11 @@ export default function HomePage() {
  </div>
  </div>
  </section>
+
+ {/* ═══ Traffic Engines Nav — 회사·직업·산업·지역별 연봉 진입 ═══
+     사이트 유입의 대부분이 "{회사}/{직업}/{지역} 연봉" 검색이므로,
+     홈에서 4개 허브로 직접 보내는 진입로를 Premium Tools 직후에 배치. */}
+ <TrafficEnginesNav />
 
  {/* ═══ Coupang Partners Banner — 섹션 구분 자리 ══════════════ */}
  <section

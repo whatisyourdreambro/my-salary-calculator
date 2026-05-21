@@ -6,6 +6,7 @@ import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
+import SiblingHubsNav from "@/components/SiblingHubsNav";
 
 export const dynamic = "force-static";
 
@@ -86,6 +87,9 @@ export default function JobIndexPage() {
               ))}
             </div>
           </div>
+
+          {/* 형제 허브 — 회사·산업·지역 차원으로 분기 */}
+          <SiblingHubsNav currentPath="/job" />
 
           {/* 카테고리별 직업 목록 */}
           {CATEGORY_ORDER.filter((cat) => jobsByCategory[cat]?.length > 0).map((category) => (
