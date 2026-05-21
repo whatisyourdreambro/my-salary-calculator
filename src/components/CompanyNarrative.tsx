@@ -35,9 +35,19 @@ export default function CompanyNarrative({ company }: Props) {
   const koName = company.name.ko;
   const entryTotal =
     company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+  const juniorTotal =
+    company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
   const seniorTotal =
     company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
+  const leadTotal =
+    company.salary.lead.base + (company.salary.lead.incentive.avgAmount || 0);
+  const executiveTotal =
+    company.salary.executive.base +
+    (company.salary.executive.incentive.avgAmount || 0);
   const monthlyEntry = Math.round(entryTotal / 12);
+  const monthlyJunior = Math.round(juniorTotal / 12);
+  const monthlySenior = Math.round(seniorTotal / 12);
+  const monthlyLead = Math.round(leadTotal / 12);
   const benchmark = getIndustryBenchmark(company);
   const similar = getSimilarSalaryCompanies(company, 4);
   const remotePolicy = REMOTE_LABEL[company.workLife.remoteWork.policy];
@@ -153,10 +163,49 @@ export default function CompanyNarrative({ company }: Props) {
           로 본인 상황 시뮬이 가능합니다.
         </p>
 
+        <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
+          5. {koName} 직급별 연봉 — 사원·대리·과장·부장·임원
+        </h3>
+        <p>
+          {koName}의 직급별 연봉(영끌 기준)은 다음과 같이 분포합니다. 신입(사원)은{" "}
+          <strong>{formatSalaryKorean(entryTotal)}</strong>, 주니어(사원·대리,
+          3~5년차)는 <strong>{formatSalaryKorean(juniorTotal)}</strong>, 시니어(과장·
+          차장, 6~10년차)는 <strong>{formatSalaryKorean(seniorTotal)}</strong>,
+          리드(차장·부장, 11~15년차)는 <strong>{formatSalaryKorean(leadTotal)}</strong>,
+          임원급은 <strong>{formatSalaryKorean(executiveTotal)}</strong> 수준에
+          도달합니다. {koName} 대리 연봉, {koName} 과장 연봉, {koName} 부장 연봉을
+          검색하는 분이라면 위 표를 본인 연차에 대입해 시장가를 가늠할 수 있습니다.
+          단, 인센티브·성과급 비중이 큰 회사일수록 기본급과 영끌 합산의 격차가 크니
+          연봉 협상 시에는 두 수치를 모두 확인하세요.
+        </p>
+
+        <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
+          6. {koName} 월급 실수령액 — 직급별 세전 환산
+        </h3>
+        <p>
+          {koName} 월급은 직급별로 다음과 같이 환산됩니다(세전, 영끌 ÷ 12). 신입{" "}
+          <strong>약 {Math.round(monthlyEntry / 10000).toLocaleString("ko-KR")}만원</strong>,
+          주니어 <strong>약 {Math.round(monthlyJunior / 10000).toLocaleString("ko-KR")}만원</strong>,
+          시니어 <strong>약 {Math.round(monthlySenior / 10000).toLocaleString("ko-KR")}만원</strong>,
+          리드 <strong>약 {Math.round(monthlyLead / 10000).toLocaleString("ko-KR")}만원</strong>{" "}
+          수준입니다. 세후 실수령액은 4대보험(국민연금·건강보험·고용·산재) + 소득세·
+          지방세 공제 후 약 82~87% 수준이며, 부양가족 수와 비과세 항목에 따라 변동
+          폭이 있습니다. {koName} 월급 실수령액의 정확한 금액은{" "}
+          <Link
+            href={`/salary/${entryTotal}`}
+            className="text-electric font-bold underline-offset-2 hover:underline"
+          >
+            연봉 {Math.round(entryTotal / 10000).toLocaleString("ko-KR")}만원
+            실수령액 페이지
+          </Link>
+          에서 확인하거나, 본인 연차 평균 연봉을 위 표에서 골라 머니샐러리 연봉
+          계산기로 시뮬레이션할 수 있습니다.
+        </p>
+
         {similar.length > 0 && (
           <>
             <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-              5. 비슷한 연봉대의 다른 회사
+              7. 비슷한 연봉대의 다른 회사
             </h3>
             <p>
               {koName}과(와) ±15% 이내의 신입 영끌 연봉을 제공하는 회사로는{" "}
@@ -178,7 +227,7 @@ export default function CompanyNarrative({ company }: Props) {
         )}
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          6. {koName} 연봉 협상 시 활용 팁
+          8. {koName} 연봉 협상 시 활용 팁
         </h3>
         <p>
           연봉 협상에서는 다음 3가지 자료를 준비하는 것이 일반적입니다. ① 본 페이지의{" "}
@@ -197,7 +246,7 @@ export default function CompanyNarrative({ company }: Props) {
         </p>
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          7. 다음에 확인할 것
+          9. 다음에 확인할 것
         </h3>
         <ul className="list-disc pl-5 space-y-1">
           <li>

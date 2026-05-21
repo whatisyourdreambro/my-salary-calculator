@@ -86,7 +86,8 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  industry: "Heavy Industry",
  tier: "conglomerate",
  logo: "🚢",
- description: "바다에서 미래를 개척한다.",
+ description:
+ "바다에서 미래를 개척한다. 세계 1위 조선소(연간 LNG·VLCC·컨테이너선 수주). HD현대(지주) 산하 핵심 자회사로 HD한국조선해양에서 분할. 울산 동구 메가 야드 + 군산·전남 분공장. 조선 수주 호황으로 성과급 폭발.",
  salary: {
  entry: { base: 52000000, incentive: { target: 10, max: 20, avgAmount: 8000000 } },
  junior: { base: 64000000, incentive: { target: 10, max: 20, avgAmount: 12000000 } },
@@ -94,10 +95,31 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  lead: { base: 110000000, incentive: { target: 10, max: 20, avgAmount: 25000000 } },
  executive: { base: 200000000, incentive: { target: 20, max: 40, avgAmount: 50000000 } },
  },
- workLife: { weeklyHours: { contract: 40, real: 45 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "office", description: "울산 근무" } },
- benefits: [{ category: "financial", title: "자녀 학자금", description: "전액 지원", value: 10000000 }, { category: "lifestyle", title: "사택 지원", description: "울산 사택", value: 5000000 }],
- culture: { score: 8.0, keywords: ["울산", "현대", "남초"], pros: ["조선업 부활로 인한 성과급 기대", "울산의 왕국 (주거 안정)", "강력한 노조"], cons: ["지방 근무 (울산)", "매우 남성적인 문화", "경기 민감형"] },
- lastUpdated: "2025-11-23",
+ workLife: { weeklyHours: { contract: 40, real: 45 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "office", description: "울산 동구 야드 근무 중심" } },
+ benefits: [
+ { category: "financial", title: "자녀 학자금", description: "유치원~대학원 전액 지원 (조선 빅3 최상위)", value: 15000000 },
+ { category: "lifestyle", title: "사택 지원", description: "울산 사택 + 기숙사 + 통근버스", value: 5000000 },
+ { category: "financial", title: "조선 호황 성과급", description: "수주 잔량 연동 PS, 호황기 기본급 600~900%", value: 18000000 },
+ { category: "health", title: "사내 병원·노조 진료비", description: "노조 협상 의료비 지원", value: 1500000 },
+ { category: "growth", title: "기술 자격증 수당", description: "용접·기관·전기 자격증 인센티브" },
+ ],
+ culture: {
+ score: 8.0,
+ keywords: ["울산", "HD현대", "남초", "조선1위", "수주호황", "강성노조"],
+ pros: [
+ "조선업 부활로 인한 성과급 기대 (수주 잔량 7년치 확보)",
+ "울산의 왕국 (주거 안정·물가 낮음)",
+ "강력한 노조 → 임단협 임금 인상 안정적",
+ "기술 엔지니어 전문성 + 자격증 인센티브",
+ ],
+ cons: [
+ "지방 근무 (울산 동구 야드 중심)",
+ "매우 남성적인 문화 (현장직 비중 높음)",
+ "경기 민감형 (조선 시황 변동성)",
+ "현장 안전사고 리스크",
+ ],
+ },
+ lastUpdated: "2026-05-22",
  },
  {
  id: "hanwha-ocean",
@@ -225,7 +247,8 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  industry: "Transport",
  tier: "conglomerate",
  logo: "🚢",
- description: "대한민국 해운 재건의 주역.",
+ description:
+ "대한민국 해운 재건의 주역. 구 현대상선으로 시작해 산업은행 관리 시절을 거쳐 글로벌 컨테이너 선사 8위로 복귀. 코로나19 해운 호황기에는 기본급 1,800% 성과급으로 화제. 여의도 본사 + 부산·세계 70여 항만 네트워크.",
  salary: {
  entry: { base: 60000000, incentive: { target: 10, max: 50, avgAmount: 10000000 } },
  junior: { base: 75000000, incentive: { target: 10, max: 50, avgAmount: 15000000 } },
@@ -233,9 +256,29 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  lead: { base: 120000000, incentive: { target: 10, max: 50, avgAmount: 35000000 } },
  executive: { base: 220000000, incentive: { target: 30, max: 100, avgAmount: 80000000 } },
  },
- workLife: { weeklyHours: { contract: 40, real: 42 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "hybrid", description: "여의도 근무" } },
- benefits: [{ category: "financial", title: "복지포인트", description: "연 200만원", value: 2000000 }, { category: "lifestyle", title: "건강검진", description: "종합검진", value: 500000 }],
- culture: { score: 8.1, keywords: ["해운", "성과급", "여의도"], pros: ["해운 호황 시 성과급 대박", "여의도 근무", "높은 기본급"], cons: ["산업 사이클에 민감", "매각 이슈로 인한 불안"] },
- lastUpdated: "2025-11-23",
+ workLife: { weeklyHours: { contract: 40, real: 42 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "hybrid", description: "여의도 근무, 주 1~2일 재택" } },
+ benefits: [
+ { category: "financial", title: "복지포인트", description: "연 200만원 + 명절 상여", value: 2000000 },
+ { category: "lifestyle", title: "건강검진", description: "본인·배우자 종합검진", value: 500000 },
+ { category: "financial", title: "성과급 PS", description: "해운 호황기 기본급 1,800% 사례 (2022)", value: 25000000 },
+ { category: "growth", title: "해외 지사 파견", description: "북미·유럽·중동 70개 항만 지사 파견 기회" },
+ { category: "family", title: "자녀 학자금", description: "초~대학교 학자금 지원", value: 8000000 },
+ ],
+ culture: {
+ score: 8.1,
+ keywords: ["해운", "성과급", "여의도", "컨테이너선", "글로벌선사", "매각이슈"],
+ pros: [
+ "해운 호황 시 성과급 대박 (역대 최대 기본급 1,800%)",
+ "여의도 근무 + 글로벌 항만 네트워크",
+ "높은 기본급 (신입 6,000만원~)",
+ "산업은행→민영화 절차로 주주 변화 모니터링 가능",
+ ],
+ cons: [
+ "산업 사이클에 매우 민감 (운임 폭락 시 성과급 0)",
+ "매각 이슈로 인한 불확실성",
+ "해운업 특성상 해외 출장·근무 잦음",
+ ],
+ },
+ lastUpdated: "2026-05-22",
  },
 ];

@@ -48,7 +48,8 @@ export const krCompanies_Batch5: CompanyProfile[] = [
  industry: "Construction",
  tier: "conglomerate",
  logo: "🏗️",
- description: "e편한세상. 건설의 명가 대림.",
+ description:
+ "e편한세상. 건설의 명가 대림(구 대림산업)에서 분할된 건설 사업 부문. 주택(e편한세상·아크로)·플랜트·토목 사업. 시공능력평가 국내 5위권, 해외 화공·정유 플랜트 강자. 종로 본사 + 전국 현장 + 해외(사우디·인도네시아) 프로젝트.",
  salary: {
  entry: { base: 54000000, incentive: { target: 15, max: 30, avgAmount: 10000000 } },
  junior: { base: 66000000, incentive: { target: 15, max: 30, avgAmount: 15000000 } },
@@ -56,10 +57,32 @@ export const krCompanies_Batch5: CompanyProfile[] = [
  lead: { base: 110000000, incentive: { target: 15, max: 30, avgAmount: 35000000 } },
  executive: { base: 200000000, incentive: { target: 30, max: 60, avgAmount: 70000000 } },
  },
- workLife: { weeklyHours: { contract: 40, real: 48 }, vacation: { days: 15, usageRate: 70 }, remoteWork: { policy: "office", description: "현장 근무" } },
- benefits: [{ category: "financial", title: "해외수당", description: "해외 근무 시 1.4배", value: 15000000 }, { category: "lifestyle", title: "미술관", description: "대림미술관 무료", value: 100000 }],
- culture: { score: 7.8, keywords: ["보수적", "안정", "전통"], pros: ["건설업계 탑티어 연봉", "탄탄한 재무 구조", "브랜드 파워"], cons: ["매우 보수적인 문화", "현장 근무의 어려움"] },
- lastUpdated: "2025-11-23",
+ workLife: { weeklyHours: { contract: 40, real: 48 }, vacation: { days: 15, usageRate: 70 }, remoteWork: { policy: "office", description: "본사·현장 사무실 근무 중심" } },
+ benefits: [
+ { category: "financial", title: "해외수당", description: "해외 근무 시 1.4배 + 거주비 별도", value: 15000000 },
+ { category: "lifestyle", title: "대림미술관·디뮤지엄", description: "DL 운영 미술관 임직원·가족 무료", value: 100000 },
+ { category: "family", title: "자녀 학자금", description: "초·중·고 + 대학 학자금 지원", value: 10000000 },
+ { category: "financial", title: "성과급 PS", description: "수주·매출 연동 PS, 1억 클럽 가능", value: 12000000 },
+ { category: "growth", title: "기술사·건축사 자격 수당", description: "기술사·건축사 합격 시 인센티브" },
+ ],
+ culture: {
+ score: 7.8,
+ keywords: ["보수적", "안정", "전통", "e편한세상", "아크로", "해외플랜트"],
+ pros: [
+ "건설업계 탑티어 연봉 (시공능력평가 5위권)",
+ "탄탄한 재무 구조 (오너 일가 우호 지분)",
+ "브랜드 파워 (e편한세상·아크로 주택)",
+ "해외 플랜트 사업으로 해외 경력 기회",
+ "지주사 DL 산하 안정성",
+ ],
+ cons: [
+ "매우 보수적인 문화 (의사결정 느림)",
+ "현장 근무의 어려움 (지방 순환·해외 장기 파견)",
+ "주 48시간 평균 — 워라밸 보통",
+ "주택 경기 침체기 수주 감소 리스크",
+ ],
+ },
+ lastUpdated: "2026-05-22",
  },
  {
  id: "daewoo-enc",
