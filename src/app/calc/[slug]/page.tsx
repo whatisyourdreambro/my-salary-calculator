@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
+import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import NextActions, { type NextActionCategory } from "@/components/NextActions";
@@ -151,6 +152,12 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  explicitSlugs={getCalcRelatedGuideSlugs(calc.slug)}
  limit={3}
  title="이 계산기와 함께 보면 좋은 가이드"
+ />
+
+ <RelatedCompanies
+ currentId="__calc"
+ limit={6}
+ title="인기 회사 연봉 비교"
  />
 
  <div className="mt-8">
