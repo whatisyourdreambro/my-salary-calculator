@@ -71,6 +71,18 @@ export default function Footer() {
         { name: "이용약관", href: "/terms" },
       ];
 
+  // GSC TOP 검색 키워드 보유 회사 — 검색 권위 전역 분산, Sitelinks 노출 유도
+  const popularCompanyLinks = [
+    { name: "삼성전자 연봉", href: "/salary-db/samsung-electronics" },
+    { name: "SK하이닉스 연봉", href: "/salary-db/sk-hynix" },
+    { name: "HMM 연봉", href: "/salary-db/hmm" },
+    { name: "SK AX 연봉", href: "/salary-db/sk-cc" },
+    { name: "HD현대중공업 연봉", href: "/salary-db/hd-hyundai-heavy" },
+    { name: "LG에너지솔루션 연봉", href: "/salary-db/lgensol" },
+    { name: "DL이앤씨 연봉", href: "/salary-db/dl-enc" },
+    { name: "전체 회사 480곳 →", href: "/salary-db" },
+  ];
+
   const trustBadges = isEnglish
     ? [
         { Icon: CheckCircle2, label: "Official Tax Rates" },
@@ -94,6 +106,7 @@ export default function Footer() {
         { title: "계산기", items: calculatorLinks },
         { title: "시즌 페이지", items: seasonLinks },
         { title: "콘텐츠", items: contentLinks },
+        { title: "인기 회사 연봉", items: popularCompanyLinks },
         { title: "정보", items: legalLinks },
       ];
 
@@ -146,8 +159,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links - 4 sections */}
-          <div className="lg:col-span-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Links - 4~5 sections (한글 푸터는 인기 회사 컬럼 추가) */}
+          <div
+            className={`lg:col-span-8 grid grid-cols-2 ${
+              isEnglish ? "lg:grid-cols-4" : "lg:grid-cols-5"
+            } gap-8`}
+          >
             {sections.map((section) => (
               <div key={section.title}>
                 <h3 className="text-[11px] font-extrabold text-electric uppercase tracking-[0.1em] mb-5">

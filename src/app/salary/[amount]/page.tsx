@@ -9,6 +9,7 @@ import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
+import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
@@ -325,6 +326,16 @@ export default function SalaryAmountPage({ params }: Props) {
  explicitSlugs={SALARY_PAGE_GUIDES}
  limit={4}
  title="연봉을 알았다면 다음은 이걸 읽어보세요"
+ />
+ </div>
+
+ {/* 같은 연봉대 회사 — 입력 연봉 ±15% 매칭 회사 6개 */}
+ <div className="px-2 sm:px-6">
+ <RelatedCompanies
+ currentId={`__salary-${params.amount}`}
+ targetSalary={amount}
+ limit={6}
+ title="이 연봉대의 실제 회사들"
  />
  </div>
  </div>
