@@ -48,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/health-insurance-2026',
  '/year-end-tax-settlement-2026',
  '/new-employee-2026',
+ '/new-employee-salary-2026',
  '/samsung-negotiation-2026',
  // Info pages — 정보성 검색 트래픽
  '/tax-rates-2026',
