@@ -1,14 +1,14 @@
 // src/app/calc/page.tsx
-// 100개 계산기 인덱스 페이지
+// 100개 계산기 인덱스 페이지 (검색·카테고리 점프는 CalcIndexClient에서)
 
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Calculator, ArrowRight } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { allCalculators } from "@/lib/simpleCalculators";
 import { HomeTopAd } from "@/components/AdPlacement";
+import CalcIndexClient from "./CalcIndexClient";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "연봉·세금·대출 100가지 계산기 — 한 페이지에서 한눈에",
@@ -82,7 +82,14 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
 export default function CalcIndexPage() {
  const grouped = CATEGORY_ORDER.map((cat) => ({
  ...cat,
- items: allCalculators.filter((c) => c.category === cat.id),
+ items: allCalculators
+ .filter((c) => c.category === cat.id)
+ .map((c) => ({
+ slug: c.slug,
+ title: c.title,
+ description: c.description,
+ category: c.category,
+ })),
  })).filter((g) => g.items.length > 0);
 
  return (
@@ -95,7 +102,7 @@ export default function CalcIndexPage() {
  />
 
  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
- <div className="text-center mb-12">
+ <div className="text-center mb-8">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <Calculator className="w-4 h-4" />
  100가지 단순 계산기
@@ -109,70 +116,11 @@ export default function CalcIndexPage() {
  </p>
  </div>
 
- {/* 8차 추가 — 2026 시즌 핵심 계산기 (정적 라우트 신설분) */}
- <section className="mb-12">
- <div className="flex items-center gap-2 mb-4">
- <h2 className="text-lg font-black text-navy">2026 시즌 핵심 계산기</h2>
- <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-electric text-white">NEW</span>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
- {FEATURED_CALCS.map((calc) => (
- <Link
- key={calc.href}
- href={calc.href}
- className="group flex flex-col p-4 bg-white rounded-2xl border border-electric-20 hover:border-electric hover:shadow-md transition-all relative"
- >
- <span className="absolute top-3 right-3 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-electric-10 text-electric">
- {calc.season}
- </span>
- <p className="font-bold text-navy text-sm mb-1 leading-tight pr-16 group-hover:text-electric transition-colors">
- {calc.title}
- </p>
- <p className="text-xs text-faint-blue line-clamp-2 leading-relaxed flex-1 mt-1">
- {calc.description}
- </p>
- <div className="flex items-center gap-1 text-xs font-bold text-electric mt-3">
- 사용
- <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
- </div>
- </Link>
- ))}
- </div>
- </section>
+ <CalcIndexClient grouped={grouped} featured={FEATURED_CALCS} />
 
- {grouped.map((cat, idx) => (
- <div key={cat.id}>
- <section className="mb-10">
- <div className="flex items-center gap-2 mb-4">
- <h2 className="text-lg font-black text-navy">{cat.label}</h2>
- <span className="text-xs font-bold text-faint-blue">
- ({cat.items.length}개)
- </span>
+ <div className="mt-8">
+ <HomeTopAd />
  </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
- {cat.items.map((calc) => (
- <Link
- key={calc.slug}
- href={`/calc/${calc.slug}`}
- className="group flex flex-col p-4 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
- >
- <p className="font-bold text-navy text-sm mb-1 leading-tight group-hover:text-electric transition-colors">
- {calc.title}
- </p>
- <p className="text-xs text-faint-blue line-clamp-2 leading-relaxed flex-1">
- {calc.description}
- </p>
- <div className="flex items-center gap-1 text-xs font-bold text-electric mt-3">
- 사용
- <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
- </div>
- </Link>
- ))}
- </div>
- </section>
- {idx === 2 && <HomeTopAd />}
- </div>
- ))}
  </div>
  </main>
  );
