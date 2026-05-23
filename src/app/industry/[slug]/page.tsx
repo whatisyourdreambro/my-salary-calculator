@@ -30,11 +30,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? ` DB 등록 ${aggregate.count}개사 회사별 연봉 순위 제공.`
     : "";
 
+  // CTR 강화(7차): 평균 월 실수령 hook + TOP 회사 단서
+  const monthlyNetEstimate = Math.round((industry.salary.overall * 10000) / 12 / 10000 * 0.83);
+  const topCompanyHint = aggregate?.topPayer
+    ? ` 1위 ${aggregate.topPayer.name.ko}.`
+    : "";
+
   return buildPageMetadata({
-    title: `${industry.name} 업계 연봉 2026 — 회사별 순위·신입~경력 평균 연봉`,
-    description: `${industry.name} 업계 평균 연봉 ${industry.salary.overall.toLocaleString()}만원. 신입 ${industry.salary.entry.avg.toLocaleString()}만원~, 시니어 ${industry.salary.senior.avg.toLocaleString()}만원~ 수준.${companyNote} 2026년 최신 기준 실수령액 계산기 제공.`,
+    title: `${industry.name} 업계 연봉 2026 — 평균 ${industry.salary.overall.toLocaleString()}만원·회사별 TOP 순위`,
+    description: `${industry.name} 업계 평균 연봉 ${industry.salary.overall.toLocaleString()}만원(월 약 ${monthlyNetEstimate}만원). 신입 ${industry.salary.entry.avg.toLocaleString()}만원~, 시니어 ${industry.salary.senior.avg.toLocaleString()}만원~.${companyNote}${topCompanyHint} 2026 실수령액 즉시 계산.`,
     path: `/industry/${params.slug}`,
-    keywords: industry.keywords,
+    keywords: [
+      ...industry.keywords,
+      `${industry.name} 연봉`,
+      `${industry.name} 평균 연봉`,
+      `${industry.name} 업계 연봉`,
+      `${industry.name} 회사 연봉`,
+    ],
   });
 }
 

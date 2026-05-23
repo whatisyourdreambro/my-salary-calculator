@@ -124,7 +124,8 @@ export const krCompanies_Batch11: CompanyProfile[] = [
     industry: "Manufacturing",
     tier: "conglomerate",
     logo: "🔋",
-    description: "친환경 모빌리티 소재. 동박에서 반도체 소재까지.",
+    description:
+      "SK그룹 소재 사업의 핵심 축. 2차전지 동박(SK넥실리스), 반도체 소재(SKC솔믹스), 친환경 화학 사업까지 운영하는 글로벌 첨단소재 기업. 신입 영끌 약 6,600만원 수준.",
     salary: {
       entry: { base: 54000000, incentive: { target: 20, max: 45, avgAmount: 12000000 } },
       junior: { base: 67000000, incentive: { target: 20, max: 45, avgAmount: 16000000 } },

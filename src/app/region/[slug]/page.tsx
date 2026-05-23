@@ -39,11 +39,20 @@ export async function generateMetadata({
   const region = getRegionById(params.slug);
   if (!region) return { title: "Not Found" };
 
+  // CTR 강화(7차): 평균 월 실수령 + 검색 키워드 변형 확대
+  const monthlyNetEstimate = Math.round((region.salary.overall * 10000) / 12 / 10000 * 0.83);
+
   return buildPageMetadata({
-    title: `${region.nameShort} 평균 연봉 2026 — 신입~경력별 연봉·실수령액`,
-    description: `${region.name} 평균 연봉 ${region.salary.overall}만원. 신입 ${region.salary.entry.avg}만원~, 시니어 ${region.salary.senior.avg}만원~. 2026년 최신 기준 실수령액 계산기 제공.`,
+    title: `${region.nameShort} 평균 연봉 2026 — ${region.salary.overall.toLocaleString()}만원·월급 약 ${monthlyNetEstimate}만원`,
+    description: `${region.name} 평균 연봉 ${region.salary.overall.toLocaleString()}만원(월 실수령 약 ${monthlyNetEstimate}만원). 신입 ${region.salary.entry.avg.toLocaleString()}만원~, 시니어 ${region.salary.senior.avg.toLocaleString()}만원~. 2026 세법 기준 실수령액 즉시 계산.`,
     path: `/region/${region.id}`,
-    keywords: region.keywords,
+    keywords: [
+      ...region.keywords,
+      `${region.nameShort} 연봉`,
+      `${region.nameShort} 평균 연봉`,
+      `${region.nameShort} 월급`,
+      `${region.name} 연봉`,
+    ],
   });
 }
 

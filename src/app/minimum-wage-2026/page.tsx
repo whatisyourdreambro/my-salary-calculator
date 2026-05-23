@@ -14,16 +14,18 @@ import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "최저임금 2026 — 시급·월급·연봉 환산 + 작년 대비 인상률",
+ title: "2026 최저임금 시급 10,320원 — 주휴 포함 월 2,156,880원 환산표",
  description:
- "2026 최저임금 시급·주휴수당 포함 월급·연봉 환산표. 작년 대비 인상률, 적용 시점(1월 1일), 위반 시 처벌, 주휴수당 계산법까지 한 페이지에서 확인.",
+ "2026 최저시급 10,320원(전년 대비 +290원, 2.9% 인상). 주휴수당 포함 월급 2,156,880원, 연봉 25,882,560원. 시급·월급·연봉 환산표, 적용 시점, 위반 시 처벌까지 한 번에.",
  path: "/minimum-wage-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-05-22",
+ modifiedTime: "2026-05-23",
  keywords: [
  "최저임금 2026",
  "2026 최저임금",
+ "2026 최저시급",
+ "최저시급 10320원",
  "최저임금 시급",
  "최저임금 월급",
  "최저임금 연봉",

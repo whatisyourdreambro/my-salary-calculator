@@ -38,6 +38,28 @@ export const companyAliases: Record<string, string[]> = {
   "kumho-petro": ["금호석화", "금호석유", "Kumho Petrochemical"],
   ohou: ["오늘의 집", "버킷플레이스", "Ohou", "Ohouse", "Bucketplace"],
 
+  // ── GSC CTR 0% 회사 별칭 추가 (7차 점검, 노출은 받는데 클릭 0인 회사들) ──
+  skc: ["에스케이씨", "SKC 동박", "SKC 솔믹스", "SKC 화학", "SKC 코오롱"],
+  "sk-innovation": [
+    "에스케이이노베이션",
+    "SK Innovation",
+    "SK이노",
+    "SKI",
+    "SK이노베이션 정유",
+    "SK이노베이션 신입",
+  ],
+  "naver-cloud": [
+    "네이버 클라우드",
+    "NAVER Cloud",
+    "NCloud",
+    "NCP",
+    "Naver Cloud Platform",
+    "네이버클라우드플랫폼",
+    "네이버 클라우드 신입",
+  ],
+  // 글로벌 — Tesla 직무명 검색에 대응
+  tesla_kr: ["테슬라 어드바이저", "테슬라 한국지사", "Tesla Advisor Korea"],
+
   // ── 글로벌 회사 한국어 표기 ──
   tesla: ["Tesla", "테슬라코리아", "Tesla Korea"],
   amazon: ["Amazon", "아마존코리아", "아마존웹서비스", "Amazon Korea"],

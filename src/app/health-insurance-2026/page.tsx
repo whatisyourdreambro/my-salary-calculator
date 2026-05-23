@@ -13,19 +13,22 @@ import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 건강보험료 정산 가이드 - 7월 정산금·환급·추가 납부",
+ title: "2026 건강보험료 정산 — 7월 정산금 미리 확인 (분납·환급 완벽 가이드)",
  description:
- "매년 7월에 작년 소득 기준 건강보험료가 정산됩니다. 정산금 계산법, 환급/추가 납부 시점, 분납 신청 방법을 한 번에 정리.",
+ "연봉 5천만원이면 7월 정산금 평균 추가 8~15만원 발생 가능. 2026년 건보료 7월 정산 일정, 정산금 계산법, 5회 분납 신청, 환급 받는 시점까지 한 번에 정리.",
  path: "/health-insurance-2026",
  ogType: "article",
  publishedTime: "2026-04-01",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-05-23",
  keywords: [
  "2026 건강보험료 정산",
  "7월 건보료 정산",
  "건보료 환급",
  "건강보험료 추가 납부",
  "건보료 분납",
+ "건강보험료 정산금",
+ "직장가입자 정산",
+ "건강보험료 계산",
  ],
 });
 

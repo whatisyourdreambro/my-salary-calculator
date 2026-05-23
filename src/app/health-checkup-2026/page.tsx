@@ -14,13 +14,13 @@ import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "건강검진 2026 — 대상자·항목·비용·예약 + 미수검 과태료",
+ title: "2026 국민건강검진 — 직장인 무료 검진 + 5대 암검진 본인부담 10%",
  description:
- "2026 국민건강검진 대상자 조회법, 일반·암검진 항목, 비용·자기부담금, 예약 방법, 직장가입자 미수검 과태료(최대 1,000만원)까지 한 페이지 정리.",
+ "직장가입자 일반검진 사무직 격년·비사무직 매년 100% 무료. 5대 암(위·대장·간·유방·자궁경부) 본인부담 10%. 2026 대상자 조회·항목·예약·미수검 과태료(최대 1,000만원) 한 번에 정리.",
  path: "/health-checkup-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-05-22",
+ modifiedTime: "2026-05-23",
  keywords: [
  "건강검진 2026",
  "2026 건강검진",
@@ -30,6 +30,8 @@ export const metadata: Metadata = buildPageMetadata({
  "건강검진 비용",
  "건강검진 미수검 과태료",
  "건강검진 예약",
+ "5대 암검진",
+ "건강검진 본인부담금",
  ],
 });
 

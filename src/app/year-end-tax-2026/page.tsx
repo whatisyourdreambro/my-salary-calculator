@@ -14,21 +14,24 @@ import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 종합소득세 신고 가이드 - 5월 종소세 환급금·신고법",
+ title: "2026 종합소득세 신고 — 5월 1~31일 마감, 프리랜서·N잡 환급금 가이드",
  description:
- "2026년 5월 종합소득세 신고 완벽 가이드. 프리랜서·N잡러·사업소득자의 신고 일정, 필요 서류, 환급금 계산법, 절세 팁까지 한 페이지에서 확인하세요.",
+ "프리랜서 1년 매출 5천만원이면 환급 약 30~80만원. 2026년 5월 1~31일 종합소득세 신고 일정, 필요 서류 7가지, 환급금 계산법, 분납 신청까지 한 페이지에서.",
  path: "/year-end-tax-2026",
  ogType: "article",
  publishedTime: "2026-04-15",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-05-23",
  keywords: [
  "2026 종합소득세",
  "5월 종소세",
  "종합소득세 신고",
+ "종합소득세 마감일",
  "프리랜서 종소세",
  "N잡 종소세",
  "종소세 환급",
+ "종합소득세 환급금",
  "사업소득세",
+ "종소세 분납",
  ],
 });
 

@@ -15,20 +15,23 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 근로자 12월 시즌 가이드 (전략·읽는 콘텐츠). 체크리스트는 별도 페이지(/year-end-tax-checklist), 계산기는 /year-end-tax.
- title: "근로자 2026 연말정산 + 성과급 절세 가이드 — 12월 시즌",
+ title: "2026 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지",
  description:
- "근로자 12월 연말정산 + 성과급 세금 절세 전략 가이드. 한계세율 진입 점검, IRP·연금저축 추가 납입, 신용카드 사용 패턴 최적화까지 근로자 관점에서 정리.",
+ "성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 최대 900만원 납입 시 환급 약 119~149만원. 2026 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.",
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-05-23",
  keywords: [
  "근로자 연말정산 2026",
+ "2026 연말정산",
+ "연말정산 절세",
  "성과급 세금 절세",
  "성과급 IRP 절세",
  "12월 연말정산 가이드",
  "성과급 한계세율",
  "연봉인상 후 절세",
+ "연금저축 환급",
  ],
 });
 

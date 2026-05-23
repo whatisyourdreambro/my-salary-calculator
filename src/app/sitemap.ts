@@ -147,6 +147,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 고RPM 신규 계산기(7차) — 자동차세·주휴수당
  '/auto-tax-2026',
  '/weekly-holiday-allowance-2026',
+ // 고RPM 신규 계산기 추가분(7차 후속) — 종소세·부동산보유세·건보료·국민연금·적금이자
+ '/income-tax-2026',
+ '/property-holding-tax-2026',
+ '/health-insurance-fee-2026',
+ '/national-pension-estimate-2026',
+ '/savings-interest-2026',
  ];
 
  const staticUrls = staticRoutes.map((route) => ({

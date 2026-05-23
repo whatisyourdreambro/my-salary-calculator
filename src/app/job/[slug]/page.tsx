@@ -24,11 +24,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const job = getJobById(params.slug);
   if (!job) return { title: "직업 정보를 찾을 수 없습니다" };
 
+  // CTR 강화(7차): 평균 월급(실수령 추정) 숫자 hook을 description 앞쪽에 배치.
+  const monthlyNetEstimate = Math.round((job.salary.overall * 10000) / 12 / 10000 * 0.83);
   return buildPageMetadata({
-    title: `${job.name} 연봉 2026 — 신입 초봉부터 경력별 평균 연봉·실수령액`,
-    description: `${job.name} 평균 연봉 ${job.salary.overall.toLocaleString()}만원. 신입 초봉 ${job.salary.entry.avg.toLocaleString()}만원, 3~5년 경력 ${job.salary.junior.avg.toLocaleString()}만원, 10년+ 시니어 ${job.salary.senior.avg.toLocaleString()}만원. 2026년 최신 세법 기준 실수령액 즉시 계산.`,
+    title: `${job.name} 연봉 2026 — 평균 ${job.salary.overall.toLocaleString()}만원·월급 약 ${monthlyNetEstimate}만원`,
+    description: `${job.name} 평균 연봉 ${job.salary.overall.toLocaleString()}만원, 월 실수령액 약 ${monthlyNetEstimate}만원. 신입 초봉 ${job.salary.entry.avg.toLocaleString()}만원, 3~5년 ${job.salary.junior.avg.toLocaleString()}만원, 10년+ 시니어 ${job.salary.senior.avg.toLocaleString()}만원. 2026 최신 세법 기준 즉시 계산.`,
     path: `/job/${params.slug}`,
-    keywords: job.keywords,
+    keywords: [
+      ...job.keywords,
+      `${job.name} 연봉`,
+      `${job.name} 월급`,
+      `${job.name} 초봉`,
+      `${job.name} 신입 연봉`,
+      `${job.name} 실수령액`,
+    ],
   });
 }
 

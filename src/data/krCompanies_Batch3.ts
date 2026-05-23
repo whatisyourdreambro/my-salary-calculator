@@ -8,7 +8,8 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  industry: "Energy / Chemical",
  tier: "conglomerate",
  logo: "⛽",
- description: "Green Energy & Materials Company.",
+ description:
+ "SK그룹 정유·화학·배터리 사업의 지주회사. 통칭 '기름집'으로 전통적인 고연봉 + 높은 성과급 구조. 정유 업황에 따라 PS(성과급)가 크게 변동. 신입 영끌 약 8,300만원 수준 (성과급 포함).",
  salary: {
  entry: { base: 58000000, incentive: { target: 30, max: 50, avgAmount: 25000000 } },
  junior: { base: 72000000, incentive: { target: 30, max: 50, avgAmount: 35000000 } },

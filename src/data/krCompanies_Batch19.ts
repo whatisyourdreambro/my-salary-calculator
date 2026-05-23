@@ -87,7 +87,8 @@ export const krCompanies_Batch19: CompanyProfile[] = [
     industry: "Cloud",
     tier: "unicorn",
     logo: "☁️",
-    description: "NAVER CLOUD PLATFORM(NCP) 운영. 공공클라우드 1위, AI·HPC 클라우드 서비스로 글로벌 확장.",
+    description:
+      "NAVER CLOUD PLATFORM(NCP) 운영. 공공클라우드 1위, 하이퍼클로바X 기반 AI·HPC 클라우드 서비스로 글로벌 확장 중. 네이버 그룹 RSU(4년 베스팅) 별도 부여, 주 3일 재택. 신입 영끌 약 7,700만원 수준.",
     salary: {
       entry: { base: 65000000, incentive: { target: 15, max: 30, avgAmount: 12000000 } },
       junior: { base: 80000000, incentive: { target: 15, max: 30, avgAmount: 15000000 } },
