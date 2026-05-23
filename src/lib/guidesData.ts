@@ -14,6 +14,7 @@ import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
 import { hotNewsExtended } from "@/lib/guides/hot-news-2026-extended";
+import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -461,6 +462,8 @@ const allRawGuides = [
  ...hotNewsMay2026,
  // 11차 — 청년·신혼/부동산 심화/직장인 세부 절세/투자 재테크/직업 이직 5개 카테고리 50편
  ...hotNewsExtended,
+ // 12차 — 세금 심화/건강 의료/자산 노후/법률 실용/2026 정책 5개 카테고리 50편 (누적 131편)
+ ...hotNewsDeepDive,
 ];
 
 // Generate the final guides array with content
