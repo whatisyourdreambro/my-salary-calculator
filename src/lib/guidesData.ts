@@ -15,6 +15,7 @@ import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
 import { hotNewsExtended } from "@/lib/guides/hot-news-2026-extended";
 import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
+import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -464,6 +465,8 @@ const allRawGuides = [
  ...hotNewsExtended,
  // 12차 — 세금 심화/건강 의료/자산 노후/법률 실용/2026 정책 5개 카테고리 50편 (누적 131편)
  ...hotNewsDeepDive,
+ // 13차 — 성과급 종류·소득세·4대보험·절세 심화·시점 실전 5개 영역 50편 (누적 181편)
+ ...hotBonusTaxComplete,
 ];
 
 // Generate the final guides array with content
