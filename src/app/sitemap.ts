@@ -59,6 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/year-end-tax-checklist',
  '/retirement-pension-2026',
  '/career-stages-2026',
+ '/salary-raise-2026',
  // 100가지 계산기 인덱스
  '/calc',
  // Calc Pages

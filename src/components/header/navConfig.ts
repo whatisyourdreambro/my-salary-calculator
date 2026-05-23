@@ -46,6 +46,7 @@ export const navConfig: NavItem[] = [
    { name: "FIRE 은퇴 계산기", href: "/fire-calculator", description: "조기 은퇴 자산 시뮬" },
    { name: "성과급 세금", href: "/tools/finance/bonus", description: "보너스 실수령액", badge: "HOT" },
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "영업이익 → 사업부 1인당 분배", badge: "NEW" },
+   { name: "연봉 인상 협상 시뮬", href: "/salary-raise-2026", description: "인상률 + 세후 + 5년 누적", badge: "NEW" },
    { name: "종합소득세 계산기", href: "/income-tax-2026", description: "8단계 누진세율 + 지방세", badge: "NEW" },
    { name: "건강보험료 계산기", href: "/health-insurance-fee-2026", description: "직장·지역 가입자 본인 부담", badge: "NEW" },
    { name: "주휴수당 계산기", href: "/weekly-holiday-allowance-2026", description: "주 15시간+ 알바 필수", badge: "NEW" },
