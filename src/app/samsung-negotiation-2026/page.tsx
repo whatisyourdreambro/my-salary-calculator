@@ -316,13 +316,13 @@ export default function SamsungNegotiation2026Page() {
  </p>
  </Link>
  <Link
- href="/calc/incentive-tax"
+ href="/calc/samsung-bonus"
  className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
  >
  <Calculator className="w-8 h-8 text-electric mb-3" />
- <h3 className="text-lg font-black mb-2">성과급 세후 계산</h3>
+ <h3 className="text-lg font-black mb-2">삼성 OPI·TAI 계산기</h3>
  <p className="text-sm text-muted-blue">
- OPI·PS 받고 실수령액 계산
+ 사업부·평가등급별 세후 실수령
  </p>
  </Link>
  </section>

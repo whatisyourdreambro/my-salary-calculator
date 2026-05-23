@@ -256,6 +256,7 @@ export const hubs: Hub[] = [
         heading: "이직·신입 준비",
         links: [
           { label: "삼성 연봉협상 가이드", href: "/samsung-negotiation-2026", desc: "대기업 연봉협상 전략" },
+          { label: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", desc: "OPI·TAI 세후 실수령" },
           { label: "2026 신입사원 가이드", href: "/new-employee-2026", desc: "사회초년생 필수 금융 세팅" },
           { label: "성과급 세금 계산기", href: "/tools/finance/bonus", desc: "성과급·인센티브 세금 계산" },
         ],
