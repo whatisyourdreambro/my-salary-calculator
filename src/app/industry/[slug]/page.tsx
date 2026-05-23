@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { industriesData, getIndustryById } from "@/data/industriesData";
 import { jobsData } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
@@ -46,7 +46,8 @@ const TREND_INFO = {
 
 export default function IndustryPage({ params }: Props) {
   const industry = getIndustryById(params.slug);
-  if (!industry) notFound();
+  // GSC 404 출혈 차단(7차): 옛 산업 슬러그 → /industry 메인 308
+  if (!industry) permanentRedirect("/industry");
 
   const aggregate = getIndustryAggregate(industry);
 

@@ -1,5 +1,5 @@
 import { enGuides } from "@/lib/guidesData";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd } from "@/lib/structuredData";
 import { Metadata } from "next";
@@ -56,7 +56,8 @@ export default function EnglishGuidePage({ params }: Props) {
  const guide = enGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {
- notFound();
+ // GSC 404 출혈 차단(7차): 옛 영문 가이드 슬러그 → /en/guides 메인 308
+ permanentRedirect("/en/guides");
  }
 
  const relatedGuides = enGuides

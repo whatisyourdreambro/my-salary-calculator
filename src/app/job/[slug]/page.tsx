@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { jobsData, getJobById } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd } from "@/lib/structuredData";
@@ -46,7 +46,8 @@ function SalaryBar({ value, max }: { value: number; max: number }) {
 
 export default function JobPage({ params }: Props) {
   const job = getJobById(params.slug);
-  if (!job) notFound();
+  // GSC 404 출혈 차단(7차): 옛 직업 슬러그 → /job 메인 308
+  if (!job) permanentRedirect("/job");
 
   const maxSalary = job.salary.senior.max;
 

@@ -2,7 +2,7 @@
 // 100개 계산기 동적 라우트 — generateStaticParams로 모두 정적 생성
 
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
@@ -36,13 +36,21 @@ export async function generateMetadata({
  const calc = getCalculatorBySlug(params.slug);
  if (!calc) return { title: "Not Found" };
 
- // SERP CTR: title은 검색 쿼리와 매칭되는 calc.title + 연도만. description은 metadata.description으로 분리.
- // 이전: description.slice(0, 30)으로 자르다가 "...즉시 계산하" 같이 잘려 SERP에서 부자연스러움.
+ // GSC "발견됨-색인 안 됨" 358개 차단(7차): 콘텐츠 풍부도 기준으로 차등 색인.
+ // explanation + faqs 3개+ 있어야 색인 허용. enrichments 없는 thin page는 noindex,follow.
+ // 사이트 전체 평가 보호(thin page 도미노 차단).
+ const isContentRich = !!(
+ calc.explanation &&
+ calc.faqs &&
+ calc.faqs.length >= 3
+ );
+
  return buildPageMetadata({
  title: `${calc.title} 2026 — 즉시 계산`,
  description: calc.description,
  path: `/calc/${calc.slug}`,
  keywords: calc.keywords,
+ noIndex: !isContentRich,
  });
 }
 
@@ -69,7 +77,8 @@ function mapToNextActionCategory(
 
 export default function CalcPage({ params }: { params: { slug: string } }) {
  const calc = getCalculatorBySlug(params.slug);
- if (!calc) notFound();
+ // GSC 404 출혈 차단(7차): 옛 계산기 슬러그 → /calc 메인 308
+ if (!calc) permanentRedirect("/calc");
 
  const ldData: object[] = [
  autoBreadcrumbLd(`/calc/${calc.slug}`, { leafName: calc.title }),

@@ -1,6 +1,6 @@
 
 import { koGuides } from "@/lib/guidesData";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
@@ -57,7 +57,8 @@ export default function GuidePage({ params }: Props) {
  const guide = koGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {
- notFound();
+ // GSC 404 출혈 차단(7차): 옛 가이드 슬러그 → /guides 메인 308
+ permanentRedirect("/guides");
  }
 
  const relatedGuides = koGuides

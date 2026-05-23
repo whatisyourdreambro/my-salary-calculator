@@ -144,6 +144,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/unemployment-benefit',
  '/parental-leave',
  '/earned-income-credit',
+ // 고RPM 신규 계산기(7차) — 자동차세·주휴수당
+ '/auto-tax-2026',
+ '/weekly-holiday-allowance-2026',
  ];
 
  const staticUrls = staticRoutes.map((route) => ({
@@ -263,12 +266,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
  },
  ];
 
- // 100가지 계산기 동적 페이지
- const { getAllSlugs } = require('@/lib/simpleCalculators');
- const calcSlugs: string[] = getAllSlugs();
- calcSlugs.forEach((slug) => {
+ // 100가지 계산기 동적 페이지 — 콘텐츠 풍부(enrichment 보강)된 슬러그만 사이트맵 포함.
+ // GSC "발견됨-색인 안 됨" 358개 차단(7차): thin page는 sitemap에서 제외 + page.tsx에서 noindex.
+ const { allCalculators } = require('@/lib/simpleCalculators');
+ (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown> }>)
+ .filter((c) => c.explanation && c.faqs && c.faqs.length >= 3)
+ .forEach((c) => {
  companyUrls.push({
- url: `${baseUrl}/calc/${slug}`,
+ url: `${baseUrl}/calc/${c.slug}`,
  lastModified: new Date(),
  changeFrequency: 'monthly',
  priority: 0.7,

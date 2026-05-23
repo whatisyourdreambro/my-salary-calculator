@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
@@ -8,12 +8,14 @@ import CompanyNarrative from "@/components/CompanyNarrative";
 import CompanyFaq from "@/components/CompanyFaq";
 import CompanyIndustryRank from "@/components/CompanyIndustryRank";
 import RelatedCompanies from "@/components/RelatedCompanies";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
+import SalaryLookupTracker from "@/components/SalaryLookupTracker";
 import { industryLabelKo } from "@/lib/companyContentBuilder";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
@@ -132,12 +134,18 @@ export default function CompanyDetailPage({
  params: { id: string };
 }) {
  const company = companyRepository.getById(params.id);
- if (!company) notFound();
+ // GSC 404 출혈 차단(7차): 옛 회사 ID 잔재 → /salary-db 메인 308
+ if (!company) permanentRedirect("/salary-db");
 
  const faqItems = buildCompanyFaq(company);
 
  return (
  <>
+ <SalaryLookupTracker
+ companyId={company.id}
+ companyName={company.name.ko}
+ industry={company.industry}
+ />
  <JsonLd
  data={[
  autoBreadcrumbLd(`/salary-db/${company.id}`, { leafName: company.name.ko }),
@@ -199,6 +207,15 @@ export default function CompanyDetailPage({
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0)
  }
  />
+
+ {/* 관련 계산기 — 회사 페이지 방문자의 다음 액션 동선 (세션당 PV ↑) */}
+ <div className="page-width">
+ <RelatedCalculators
+ currentPath={`/salary-db/${company.id}`}
+ limit={4}
+ title="이 회사 연봉으로 시뮬레이션해보세요"
+ />
+ </div>
 
  {/* 페이지 끝 광고 + 쿠팡 + 사이드바 — 회사 페이지 매출 즉효 자리 */}
  <div className="page-width lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14 pb-16 mt-8">

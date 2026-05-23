@@ -86,7 +86,14 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/tools/life/subscription": ["life"],
  "/tools/life/unit-converter": ["life"],
  "/dashboard": ["salary"],
- "/salary-db": ["salary"],
+ // 회사 페이지: 회사명 검색 사용자는 본인 연봉 시뮬레이션·연말정산·퇴직금에 관심 높음 → tax 카테고리 추가
+ "/salary-db": ["salary", "tax"],
+ // 비교 페이지: 두 회사 비교 후 본인 연봉 분석으로 이동 동선
+ "/salary-db/compare": ["salary", "tax"],
+ // 직업·산업·지역 페이지: 본인 연봉 시뮬레이션/세금 계산기로의 cross-link (세션당 PV ↑)
+ "/job": ["salary", "tax"],
+ "/industry": ["salary", "tax"],
+ "/region": ["salary"],
 };
 
 /**
@@ -101,8 +108,16 @@ export function getRelatedCalculators(
  // /salary/[amount] 같은 동적 경로 처리
  const normalizedPath = currentPath.startsWith("/salary/")
  ? "/"
+ : currentPath.startsWith("/salary-db/compare/")
+ ? "/salary-db/compare"
  : currentPath.startsWith("/salary-db/")
  ? "/salary-db"
+ : currentPath.startsWith("/job/")
+ ? "/job"
+ : currentPath.startsWith("/industry/")
+ ? "/industry"
+ : currentPath.startsWith("/region/")
+ ? "/region"
  : currentPath;
 
  const categories = PATH_RECOMMENDATIONS[normalizedPath] || ["salary"];

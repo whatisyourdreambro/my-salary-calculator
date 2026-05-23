@@ -107,6 +107,14 @@ const nextConfig = {
         destination: "/fun/salary-battle",
         permanent: true,
       },
+      // GSC 404 출혈 차단 (7차 점검):
+      // 과거 중복 회사 페이지가 -2 접미사로 생성됐다가 삭제되면서 591개 404 발생.
+      // 원본 슬러그로 301 영구 리디렉션해 크롤링 예산 복구.
+      {
+        source: "/salary-db/:slug([a-z0-9-]+)-2",
+        destination: "/salary-db/:slug",
+        permanent: true,
+      },
     ];
   },
   async headers() {

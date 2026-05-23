@@ -2,7 +2,7 @@
 // 글로서리 용어별 정적 페이지 — long-tail 키워드 ("X 뜻", "X 의미") 노출 50배 증폭.
 
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Sparkles, Hash } from "lucide-react";
 import {
@@ -68,7 +68,8 @@ export default function GlossaryDetailPage({
  params: { slug: string };
 }) {
  const item = getGlossaryBySlug(params.slug);
- if (!item) notFound();
+ // GSC 404 출혈 차단(7차): 옛 용어 슬러그 → /glossary 메인 308
+ if (!item) permanentRedirect("/glossary");
 
  const Icon = item.icon;
  const related = getRelatedGlossaryItems(item, 5);

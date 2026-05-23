@@ -2,7 +2,7 @@
 // Q&A 동적 페이지 — long-tail "X 어떻게 X 하나요?" 키워드 페이지별 분리로 SEO 노출 극대화.
 
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, HelpCircle, Sparkles, GraduationCap } from "lucide-react";
 import {
@@ -49,7 +49,9 @@ export default function QnaDetailPage({
  params: { slug: string };
 }) {
  const item = getQnaBySlug(params.slug);
- if (!item) notFound();
+ // GSC 404 출혈 차단(7차): 옛 한글 슬러그(데이터에서 제거됨) → /qna 메인 308.
+ // notFound 404 대신 영구 리디렉션으로 크롤링 예산 즉시 회복.
+ if (!item) permanentRedirect("/qna");
 
  const related = getRelatedQna(item, 4);
  const slug = toQnaSlug(item.question);

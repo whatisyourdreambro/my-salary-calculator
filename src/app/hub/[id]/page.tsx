@@ -2,7 +2,7 @@
 // 주제별 허브(필러) 페이지 — 5개 허브를 단일 동적 라우트로 정적 생성.
 
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getHubById, getAllHubIds, hubs } from "@/lib/hubs";
@@ -41,7 +41,8 @@ export async function generateMetadata({
 
 export default function HubPage({ params }: { params: { id: string } }) {
   const hub = getHubById(params.id);
-  if (!hub) notFound();
+  // GSC 404 출혈 차단(7차): 옛 허브 ID → /hub 메인 308
+  if (!hub) permanentRedirect("/hub");
 
   const otherHubs = hubs.filter((h) => h.id !== hub.id);
 

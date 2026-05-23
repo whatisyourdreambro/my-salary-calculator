@@ -75,6 +75,12 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  keywords: allKeywords.join(", "),
  alternates: {
  canonical: url,
+ // hreflang 전체 적용(7차): 미국 노출 193·클릭 0 (잘못된 매칭) 차단.
+ // 영문 카운터파트가 있는 페이지는 page별로 languages를 override.
+ languages: {
+ "ko-KR": url,
+ "x-default": url,
+ },
  },
  robots: noIndex
  ? { index: false, follow: false }
@@ -239,11 +245,24 @@ export function buildCompanyMetadata(company: {
  `${company.name} 연봉`,
  `${company.name} 신입 연봉`,
  `${company.name} 초봉`,
+ `${company.name} 신입 초봉`,
  `${company.name} 2026 연봉`,
  `${company.name} 평균 연봉`,
  `${company.name} 직급별 연봉`,
  `${company.name} 실수령액`,
  `${company.name} 월급`,
+ // 직급별 long-tail (사원/대리/과장/부장은 검색 빈도 매우 높음)
+ `${company.name} 사원 연봉`,
+ `${company.name} 대리 연봉`,
+ `${company.name} 과장 연봉`,
+ `${company.name} 부장 연봉`,
+ `${company.name} 시니어 연봉`,
+ // 직장인 관심 요소 (취업·이직 검색 의도)
+ `${company.name} 신입 월급`,
+ `${company.name} 워라밸`,
+ `${company.name} 복지`,
+ `${company.name} 성과급`,
+ `${company.name} 인센티브`,
  ...aliasKeywords,
  ],
  ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,

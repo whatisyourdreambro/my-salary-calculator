@@ -10,16 +10,18 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 시급 실수령액 표 — 시급별 월 환산 세후 수령액",
+  title: "2026 시급 실수령액 표 — 10,320원 기준 시급별 월 환산 실수령액",
   description:
-    "2026년 최저시급 10,320원 기준 시급 구간별 월 환산 실수령액 표. 4대보험·소득세 공제액과 세후 월급을 한눈에 확인하세요.",
+    "2026 최저시급 10,320원(2.9% 인상). 시급 10,320~30,000원 구간별 월 환산 실수령액과 4대보험·소득세 공제액을 즉시 비교. 알바·파트타임 월급 계산도 한눈에.",
   path: "/table/2026/hourly",
   keywords: [
     "시급 실수령액",
     "2026 최저시급",
     "시급 계산기",
     "시급 월급 환산",
+    "최저시급 10320원",
     "알바 실수령액",
+    "파트타임 월급",
   ],
 });
 

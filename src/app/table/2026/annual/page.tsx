@@ -10,9 +10,9 @@ import TableHero from "@/components/TableHero";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 연봉 실수령액 표 — 연봉별 세후 월급 한눈에",
+  title: "2026 연봉 실수령액 표 — 2000만~2억 전 구간 세후 월급 한눈에",
   description:
-    "2026년 세법 기준 연봉 2,000만~2억 전 구간 실수령액 표. 4대보험·소득세 공제액과 전년 대비 변화액까지 한눈에 비교.",
+    "연봉 3000만원이면 월 216만원, 5000만원이면 월 357만원, 1억이면 월 678만원. 2026년 최신 세법 기준 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
   path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
@@ -25,6 +25,7 @@ export const metadata: Metadata = buildPageMetadata({
     "연봉 6000 실수령액",
     "연봉 7000 실수령액",
     "연봉 1억 실수령액",
+    "연봉 8000 실수령액",
     "4대보험 공제액",
     "2026 세법",
   ],

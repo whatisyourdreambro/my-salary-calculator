@@ -10,16 +10,18 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 주급 실수령액 표 — 주급별 월 환산 세후 수령액",
+  title: "2026 주급 실수령액 표 — 주휴수당 포함 월 환산 세후 수령액",
   description:
-    "2026년 최저시급 10,320원 기준 주급 구간별 월 환산 실수령액 표. 주휴수당 포함 주급과 4대보험·소득세 공제액을 한눈에 확인하세요.",
+    "2026 최저시급 10,320원 기준 주 40시간 근무 시 주급 495,360원. 주휴수당 포함 주급별 월 환산 실수령액과 4대보험·소득세 공제액을 한눈에 확인하세요.",
   path: "/table/2026/weekly",
   keywords: [
     "주급 실수령액",
     "2026 주급 계산",
     "주급 월급 환산",
     "주휴수당 계산",
+    "주휴수당 포함 주급",
     "알바 주급",
+    "주 40시간 주급",
   ],
 });
 

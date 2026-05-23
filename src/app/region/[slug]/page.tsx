@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { regionsData, getRegionById } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
@@ -107,7 +107,8 @@ export default function RegionDetailPage({
   params: { slug: string };
 }) {
   const region = getRegionById(params.slug);
-  if (!region) notFound();
+  // GSC 404 출혈 차단(7차): 옛 지역 슬러그 → /region 메인 308
+  if (!region) permanentRedirect("/region");
 
   const breadcrumbSchema = autoBreadcrumbLd(`/region/${region.id}`, {
     overrides: { region: "지역별 연봉" },

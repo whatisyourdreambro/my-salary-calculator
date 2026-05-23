@@ -9,9 +9,9 @@ import TableHero from "@/components/TableHero";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 월급 실수령액 표 — 월급별 세후 수령액",
+ title: "2026 월급 실수령액 표 — 200만~1000만원 전 구간 세후 수령액",
  description:
- "2026 최저월급 약 216만원 기준 월급별 실수령액 표. 4대보험·소득세 공제액과 세후 월급을 즉시 확인하세요.",
+ "월급 250만원이면 세후 약 218만원, 500만원이면 약 410만원. 2026년 최신 4대보험·소득세 자동 계산표를 200만~1000만원 전 구간으로 한눈에 확인하세요. 전년 대비 변화액까지 즉시 비교 가능.",
  path: "/table/2026/monthly",
  keywords: [
  "월급 실수령액 표",
@@ -19,6 +19,12 @@ export const metadata: Metadata = buildPageMetadata({
  "월급별 실수령액",
  "최저월급 2026",
  "세후 월급 계산",
+ "월급 250만원 실수령",
+ "월급 300만원 실수령",
+ "월급 400만원 실수령",
+ "월급 500만원 실수령",
+ "월급 700만원 실수령",
+ "4대보험 공제액",
  ],
 });
 
