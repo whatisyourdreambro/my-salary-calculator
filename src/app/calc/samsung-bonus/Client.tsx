@@ -594,8 +594,8 @@ function MySalaryCalculator({
 }) {
   const [salaryFmt, setSalaryFmt] = useState("80,000,000");
   const [selectedDivId, setSelectedDivId] = useState<string>("memory");
-  const [creditRate, setCreditRate] = useState<number>(30); // 세액공제율 %
-  const [applyInsurance, setApplyInsurance] = useState<boolean>(false);
+  const [creditRate, setCreditRate] = useState<number>(20); // 세액공제율 % (평균 직장인 수준)
+  const [applyInsurance, setApplyInsurance] = useState<boolean>(true); // 디폴트 ON (보수정산 반영)
 
   const salary = parseNumberInput(salaryFmt);
   const selected =
@@ -785,7 +785,8 @@ function MySalaryCalculator({
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
                 자녀·연금·의료비·기부 등 세액공제로 소득세가 줄어드는 비율.
-                평균 직장인 25~35%, IRP·기부 적극 활용 시 35%+.
+                디폴트 20% (평균 직장인). IRP·기부 적극 활용 시 30%+, 단순
+                기본공제만이면 10% 내외.
               </p>
             </div>
 
