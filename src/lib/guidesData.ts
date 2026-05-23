@@ -13,6 +13,7 @@ import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
 import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
+import { hotNewsExtended } from "@/lib/guides/hot-news-2026-extended";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -458,6 +459,8 @@ const allRawGuides = [
  ...hotKeywordsGuidesEn,
  // 10차 점검 — 삼성 임금협상 현황 + 금융 핫이슈 30개 (SEO 폭발 노림)
  ...hotNewsMay2026,
+ // 11차 — 청년·신혼/부동산 심화/직장인 세부 절세/투자 재테크/직업 이직 5개 카테고리 50편
+ ...hotNewsExtended,
 ];
 
 // Generate the final guides array with content
