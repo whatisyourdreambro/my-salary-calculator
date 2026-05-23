@@ -152,6 +152,9 @@ type Division = {
   defaultRatio: number;
 };
 
+// 15차 보정 — 운영자 지적: 영업이익 350조 기준 메모리 791%·공통 553%·파운드리 252%가
+// 보도된 회의록 매칭 수치. 기존 r2=0.7·r3=0.0은 DS공통 16% 과대평가 + 파운드리 부문
+// 풀만 받는 비현실적 설정. 역산 r2≈0.55·r3≈0.05로 보정해 보도 수치에 근사.
 const DIVISIONS: Division[] = [
   {
     id: "memory",
@@ -169,7 +172,7 @@ const DIVISIONS: Division[] = [
     color: "#F59E0B",
     bgTint: "#F59E0B0D",
     defaultCount: 29000,
-    defaultRatio: 0.7,
+    defaultRatio: 0.55, // 보정: 0.7 → 0.55 (DS공통 553% 보도 매칭)
   },
   {
     id: "foundry",
@@ -178,7 +181,7 @@ const DIVISIONS: Division[] = [
     color: "#EF4444",
     bgTint: "#EF44440D",
     defaultCount: 20900,
-    defaultRatio: 0.0,
+    defaultRatio: 0.05, // 보정: 0.0 → 0.05 (파운드리·LSI 252% 보도 매칭)
   },
 ];
 
