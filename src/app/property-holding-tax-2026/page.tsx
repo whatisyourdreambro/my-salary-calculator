@@ -9,6 +9,7 @@ import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/s
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import PropertyHoldingTaxClient from "./PropertyHoldingTaxClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -171,6 +172,9 @@ export default function PropertyHoldingTax2026Page() {
         </section>
 
         <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
+
+        {/* 14차 — RelatedCalculators 추가 (dead-end 차단) */}
+        <RelatedCalculators currentPath="/property-holding-tax-2026" title="보유세와 함께 보면 좋은 도구" />
 
         <section className="my-10">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">함께 보면 좋은 계산기</h2>

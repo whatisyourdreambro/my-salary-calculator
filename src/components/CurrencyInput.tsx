@@ -1,7 +1,7 @@
 // src/components/CurrencyInput.tsx
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useId } from "react";
 import { cn } from "@/lib/utils";
 
 /** 숫자에 천 단위 콤마를 붙임 (ko-KR) */
@@ -37,6 +37,9 @@ export default function CurrencyInput({
  className,
 }: CurrencyInputProps) {
  const inputRef = useRef<HTMLInputElement>(null);
+ // 14차 — 접근성(a11y) 보강: label-input·select 명시 연결 (WCAG 2.1 레벨 A)
+ const inputId = useId();
+ const selectId = useId();
 
  useEffect(() => {
    const raw = value.replace(/[^0-9]/g, "");
@@ -63,13 +66,18 @@ export default function CurrencyInput({
 
  return (
  <div>
- <label className="block text-xs font-bold text-faint-blue uppercase tracking-widest mb-3">
+ <label
+ htmlFor={inputId}
+ className="block text-xs font-bold text-faint-blue dark:text-canvas-400 uppercase tracking-widest mb-3"
+ >
  {label}
  </label>
  <div className="relative group">
  {currencies && onCurrencyChange && selectedCurrency && (
  <div className="absolute left-0 top-0 bottom-0 flex items-center pl-3 z-10">
  <select
+ id={selectId}
+ aria-label={`${label} 통화 선택`}
  value={selectedCurrency}
  onChange={(e) => onCurrencyChange(e.target.value)}
  className="bg-transparent font-sans font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
@@ -79,13 +87,15 @@ export default function CurrencyInput({
  )}
 
  <input
+ id={inputId}
  {...(!currencies ? { ref: inputRef } : {})}
  type="text"
  inputMode="numeric"
  value={value}
  onChange={handleChange}
+ aria-label={label}
  className={cn(
- "w-full py-4 bg-transparent border-b-2 border-canvas text-3xl font-sans font-bold text-navy placeholder-faint-blue focus:border-primary focus:outline-none transition-all duration-300",
+ "w-full py-4 bg-transparent border-b-2 border-canvas dark:border-canvas-700 text-3xl font-sans font-bold text-navy dark:text-canvas-50 placeholder-faint-blue focus:border-primary focus:outline-none transition-all duration-300",
  className,
  currencies ? "pl-24" : ""
  )}
@@ -100,8 +110,10 @@ export default function CurrencyInput({
  {quickAmounts.map((amount) => (
  <button
  key={`add-${amount}`}
+ type="button"
  onClick={() => handleAmountChange(amount)}
- className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-canvas-dark text-muted-blue hover:bg-primary/10 hover:text-primary transition-colors duration-300"
+ aria-label={`${label} ${formatNumber(amount / 10000)}만원 추가`}
+ className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-canvas-dark dark:bg-canvas-800 text-muted-blue dark:text-canvas-300 hover:bg-primary/10 hover:text-primary transition-colors duration-300"
  >
  +{formatNumber(amount / 10000)}만
  </button>

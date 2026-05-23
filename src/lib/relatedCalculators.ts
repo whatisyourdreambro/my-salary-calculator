@@ -102,6 +102,14 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/job": ["salary", "tax"],
  "/industry": ["salary", "tax"],
  "/region": ["salary"],
+ // 14차 — 7차/11차 신설 시즌 계산기 dead-end 차단
+ "/auto-tax-2026": ["realEstate", "tax"],
+ "/weekly-holiday-allowance-2026": ["salary"],
+ "/income-tax-2026": ["tax", "salary"],
+ "/property-holding-tax-2026": ["realEstate", "tax"],
+ "/health-insurance-fee-2026": ["tax", "salary"],
+ "/national-pension-estimate-2026": ["investment", "tax"],
+ "/savings-interest-2026": ["investment", "loan"],
 };
 
 /**

@@ -134,7 +134,7 @@ export const qnaData: QnaItem[] = [
  "<strong>집주인 눈치?:</strong> 집주인 동의 없이 신청 가능합니다. 만약 재계약 불이익이 걱정된다면, 이사 간 후 5년 안에 '경정청구'를 통해 몰아서 환급받을 수도 있습니다."
  ],
  tip: "월세 이체 내역(계좌이체 영수증)과 임대차계약서 사본, 주민등록등본만 있으면 됩니다.",
- action: { text: "월세 세액공제 가이드", href: "/guides/monthly-rent-tax-credit" }
+ action: { text: "월세 세액공제 계산기", href: "/calc/monthly-rent-tax-credit-quick" }
  }
  },
 
@@ -164,7 +164,7 @@ export const qnaData: QnaItem[] = [
  "<strong>예금자 보호:</strong> 종금형 CMA는 예금자 보호가 되지만, 대부분의 RP형 CMA는 보호되지 않습니다. 하지만 국공채 등에 투자하므로 매우 안전합니다."
  ],
  tip: "비상금이나 카드 값 빠져나가기 전 며칠 동안 잠시 머무는 돈도 CMA에 넣어두면 '자투리 수익'을 챙길 수 있습니다.",
- action: { text: "파킹통장 금리 비교", href: "/guides/split-accounts" }
+ action: { text: "적금·예금 이자 비교", href: "/savings-interest-2026" }
  }
  },
 

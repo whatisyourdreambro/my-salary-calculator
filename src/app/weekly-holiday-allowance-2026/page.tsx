@@ -9,6 +9,7 @@ import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/s
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import WeeklyHolidayAllowanceClient from "./WeeklyHolidayAllowanceClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -241,6 +242,9 @@ export default function WeeklyHolidayAllowance2026Page() {
         <CoupangBanner
           responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
         />
+
+        {/* 14차 — RelatedCalculators 추가 (dead-end 차단) */}
+        <RelatedCalculators currentPath="/weekly-holiday-allowance-2026" title="주휴수당과 함께 보면 좋은 도구" />
 
         {/* 관련 도구 */}
         <section className="my-10">

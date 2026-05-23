@@ -9,6 +9,7 @@ import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/s
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import AutoTaxClient from "./AutoTaxClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -205,6 +206,12 @@ export default function AutoTax2026Page() {
 
         <CoupangBanner
           responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+        />
+
+        {/* 14차 — RelatedCalculators 자동 추천 추가 (dead-end 차단) */}
+        <RelatedCalculators
+          currentPath="/auto-tax-2026"
+          title="이 계산과 함께 보면 좋은 도구"
         />
 
         {/* 관련 도구 */}
