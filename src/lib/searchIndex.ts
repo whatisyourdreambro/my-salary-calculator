@@ -40,6 +40,14 @@ const seasonPages: SearchEntry[] = [
  { title: "삼성 신입 연봉 협상", href: "/samsung-negotiation-2026", category: "시즌" },
  { title: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", category: "계산기", description: "OPI·TAI 세후 실수령", priority: 1 },
  { title: "직장인 단계별 자산", href: "/career-stages-2026", category: "시즌", description: "20~50대" },
+ // 7차 신설 7개 정적 계산기 (8차 점검에서 추가) — 사이트 내부 검색 노출
+ { title: "2026 자동차세 계산기", href: "/auto-tax-2026", category: "계산기", description: "배기량·차령·연납 7% 할인", priority: 2 },
+ { title: "2026 주휴수당 계산기", href: "/weekly-holiday-allowance-2026", category: "계산기", description: "최저시급 10,320원 주 40h 82,560원", priority: 2 },
+ { title: "2026 종합소득세 계산기", href: "/income-tax-2026", category: "계산기", description: "8단계 누진세율 + 지방소득세 10%", priority: 1 },
+ { title: "2026 부동산 보유세 계산기", href: "/property-holding-tax-2026", category: "계산기", description: "재산세 7·9월 + 종부세 12월", priority: 2 },
+ { title: "2026 건강보험료 계산기", href: "/health-insurance-fee-2026", category: "계산기", description: "직장/지역 가입자별 4.004%", priority: 1 },
+ { title: "2026 국민연금 예상수령액", href: "/national-pension-estimate-2026", category: "계산기", description: "가입기간 비례 소득대체율 41.5%", priority: 2 },
+ { title: "2026 적금·예금 이자 계산기", href: "/savings-interest-2026", category: "계산기", description: "정기적금/예금, 단리/복리, 세후 이자", priority: 2 },
 ];
 
 const toolPages: SearchEntry[] = [

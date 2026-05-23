@@ -24,12 +24,30 @@ const SEASONAL_CALENDAR: SeasonalContent[] = [
     cta: "신고 가이드 보기",
     deadline: { month: 5, day: 31 },
   },
+  // 8차 점검에서 추가 — 6월 자동차세 1기 분납
   {
-    month: [6, 7],
+    month: [6],
+    title: "6월 자동차세 1기 분납",
+    subtitle: "6/16~30 고지 → 7/31 납부. 배기량·차령별 정확한 금액 미리 확인",
+    href: "/auto-tax-2026",
+    cta: "자동차세 계산",
+    deadline: { month: 7, day: 31 },
+  },
+  {
+    month: [7],
     title: "7월 건강보험료 정산",
     subtitle: "작년 소득 기준 정산금이 7월 급여에서 차감/환급",
     href: "/health-insurance-2026",
     cta: "정산 가이드 보기",
+  },
+  // 8차 점검에서 추가 — 9월 부동산 재산세 2차 + 자동차세 한 번 더
+  {
+    month: [8, 9],
+    title: "9월 부동산 재산세 2차",
+    subtitle: "주택분 50% + 토지분 9/16~30 납부. 공시가별 부담 미리 점검",
+    href: "/property-holding-tax-2026",
+    cta: "보유세 계산",
+    deadline: { month: 9, day: 30 },
   },
   {
     month: [11, 12, 1],

@@ -16,31 +16,38 @@ export interface RelatedItem {
  */
 export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  salary: [
+ { path: "/", title: "연봉 실수령액 계산기", description: "4대보험·세금 자동 공제", icon: "Calculator" },
+ { path: "/weekly-holiday-allowance-2026", title: "주휴수당 계산기", description: "주 15시간+ 알바 필수", icon: "Calendar" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "13월의 월급 미리 계산", icon: "Receipt" },
- { path: "/home-loan", title: "주택담보대출 계산기", description: "내 연봉으로 받을 수 있는 한도", icon: "Home" },
  { path: "/tools/finance/severance", title: "퇴직금 계산기", description: "환산급여 방식 정확 계산", icon: "Briefcase" },
  { path: "/salary-db", title: "회사별 연봉", description: "동급 회사 평균 비교", icon: "Building2" },
  ],
  loan: [
  { path: "/tools/real-estate/dsr", title: "DSR 한도 계산기", description: "총부채원리금상환비율", icon: "Percent" },
  { path: "/tools/real-estate/ltv", title: "LTV 담보인정비율", description: "주택담보대출 한도", icon: "Scale" },
+ { path: "/savings-interest-2026", title: "적금·예금 이자 계산기", description: "정기적금/예금 만기 원리금", icon: "PiggyBank" },
  { path: "/tools/finance/installment", title: "할부 이자 계산기", description: "신용카드 할부·카드론", icon: "CreditCard" },
  { path: "/", title: "연봉 실수령액", description: "내 월급 정확히 계산", icon: "Calculator" },
  ],
  tax: [
+ { path: "/income-tax-2026", title: "종합소득세 계산기", description: "8단계 누진세율 + 지방소득세", icon: "Receipt" },
+ { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자별 4.004%", icon: "Heart" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "환급액 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "2026 연봉합산 세율", icon: "Gift" },
  { path: "/tools/finance/freelance-tax", title: "프리랜서 종합소득세", description: "사업소득 계산", icon: "Laptop" },
  { path: "/tools/finance/irp", title: "IRP·연금저축 절세", description: "최대 900만원 공제", icon: "Building2" },
  ],
  investment: [
+ { path: "/savings-interest-2026", title: "적금·예금 이자 계산기", description: "정기적금/예금 단리·복리", icon: "PiggyBank" },
+ { path: "/national-pension-estimate-2026", title: "국민연금 예상수령액", description: "가입기간별 월 노령연금", icon: "Building2" },
  { path: "/tools/finance/compound", title: "복리 계산기", description: "적립식 자산 시뮬", icon: "Zap" },
  { path: "/tools/finance/cagr", title: "CAGR 연평균 수익률", description: "투자 기간별 수익률", icon: "TrendingUp" },
- { path: "/tools/deposit", title: "예적금 만기 계산기", description: "이자·원리금 계산", icon: "PiggyBank" },
  { path: "/fire-calculator", title: "FIRE 조기은퇴", description: "경제적 자유 시뮬", icon: "Flame" },
  ],
  realEstate: [
+ { path: "/property-holding-tax-2026", title: "부동산 보유세 계산기", description: "재산세 + 종부세 통합 산출", icon: "Home" },
  { path: "/tools/real-estate/acquisition-tax", title: "취득세 계산기", description: "주택·토지 취득세", icon: "Home" },
+ { path: "/auto-tax-2026", title: "자동차세 계산기", description: "배기량·차령·연납 7% 할인", icon: "Calculator" },
  { path: "/tools/real-estate/gift-tax", title: "증여세 계산기", description: "가족 간 증여 한도", icon: "Heart" },
  { path: "/home-loan", title: "주택담보대출", description: "모기지 시뮬레이션", icon: "Home" },
  { path: "/tools/real-estate/dsr", title: "DSR 한도", description: "총부채원리금상환비율", icon: "Percent" },

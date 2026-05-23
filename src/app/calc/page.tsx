@@ -32,6 +32,53 @@ const CATEGORY_ORDER = [
  { id: "family", label: "결혼·육아" },
 ];
 
+// 8차 점검 — 정적 라우트로 신설된 시즌 핵심 계산기들을 인덱스 최상위에 노출.
+// /calc/[slug] 동적 라우트와 별도 페이지라 allCalculators 배열에 없으므로 명시.
+const FEATURED_CALCS: Array<{ href: string; title: string; description: string; season: string }> = [
+ {
+   href: "/income-tax-2026",
+   title: "2026 종합소득세 계산기",
+   description: "8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 산출",
+   season: "5월 시즌",
+ },
+ {
+   href: "/auto-tax-2026",
+   title: "2026 자동차세 계산기",
+   description: "배기량·차령·연납 7% 할인. 6·12월 분납 금액까지 비교",
+   season: "6·12월 시즌",
+ },
+ {
+   href: "/property-holding-tax-2026",
+   title: "2026 부동산 보유세 계산기",
+   description: "재산세(7·9월) + 종합부동산세(12월) 통합 자동 산출",
+   season: "7·9·12월 시즌",
+ },
+ {
+   href: "/health-insurance-fee-2026",
+   title: "2026 건강보험료 계산기",
+   description: "직장/지역 가입자별 본인 부담 + 장기요양보험료까지",
+   season: "연중 핵심",
+ },
+ {
+   href: "/national-pension-estimate-2026",
+   title: "2026 국민연금 예상수령액",
+   description: "가입기간·평균소득으로 만 65세부터 월 노령연금 추정",
+   season: "노후 준비",
+ },
+ {
+   href: "/weekly-holiday-allowance-2026",
+   title: "2026 주휴수당 계산기",
+   description: "최저시급 10,320원 주 40시간 → 82,560원. 근로기준법 제55조",
+   season: "알바·파트타임",
+ },
+ {
+   href: "/savings-interest-2026",
+   title: "2026 적금·예금 이자 계산기",
+   description: "정기적금/예금, 단리/복리, 세후 만기 원리금 + 비과세 옵션",
+   season: "금융상품 비교",
+ },
+];
+
 export default function CalcIndexPage() {
  const grouped = CATEGORY_ORDER.map((cat) => ({
  ...cat,
@@ -61,6 +108,37 @@ export default function CalcIndexPage() {
  자주 쓰는 100가지 계산기를 한곳에서.
  </p>
  </div>
+
+ {/* 8차 추가 — 2026 시즌 핵심 계산기 (정적 라우트 신설분) */}
+ <section className="mb-12">
+ <div className="flex items-center gap-2 mb-4">
+ <h2 className="text-lg font-black text-navy">2026 시즌 핵심 계산기</h2>
+ <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-electric text-white">NEW</span>
+ </div>
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+ {FEATURED_CALCS.map((calc) => (
+ <Link
+ key={calc.href}
+ href={calc.href}
+ className="group flex flex-col p-4 bg-white rounded-2xl border border-electric-20 hover:border-electric hover:shadow-md transition-all relative"
+ >
+ <span className="absolute top-3 right-3 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-electric-10 text-electric">
+ {calc.season}
+ </span>
+ <p className="font-bold text-navy text-sm mb-1 leading-tight pr-16 group-hover:text-electric transition-colors">
+ {calc.title}
+ </p>
+ <p className="text-xs text-faint-blue line-clamp-2 leading-relaxed flex-1 mt-1">
+ {calc.description}
+ </p>
+ <div className="flex items-center gap-1 text-xs font-bold text-electric mt-3">
+ 사용
+ <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+ </div>
+ </Link>
+ ))}
+ </div>
+ </section>
 
  {grouped.map((cat, idx) => (
  <div key={cat.id}>

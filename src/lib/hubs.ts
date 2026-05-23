@@ -70,6 +70,8 @@ export const hubs: Hub[] = [
         heading: "다음 단계",
         links: [
           { label: "IRP 계산기", href: "/tools/finance/irp", desc: "절세하며 은퇴 자산 적립" },
+          { label: "국민연금 예상수령액", href: "/national-pension-estimate-2026", desc: "가입기간별 월 수령액 추정" },
+          { label: "적금·예금 이자 계산기", href: "/savings-interest-2026", desc: "단리/복리·세후 만기 원리금" },
           { label: "금융 가이드", href: "/guides", desc: "재테크·투자 심화 가이드 글" },
           { label: "금융 Q&A", href: "/qna", desc: "사회초년생·재테크 자주 묻는 질문" },
         ],
@@ -111,6 +113,7 @@ export const hubs: Hub[] = [
           { label: "포트폴리오 배분", href: "/calc/portfolio-allocation", desc: "주식·채권·현금 비중별 기대수익" },
           { label: "채권 수익률", href: "/calc/bond-yield-quick", desc: "액면가·쿠폰으로 만기수익률" },
           { label: "복리 계산기", href: "/calc/compound-interest-quick", desc: "장기 적립 투자 미래 자산" },
+          { label: "적금·예금 이자 계산기", href: "/savings-interest-2026", desc: "정기적금/예금 만기 원리금" },
         ],
       },
       {
@@ -156,6 +159,7 @@ export const hubs: Hub[] = [
         heading: "부동산 세금",
         links: [
           { label: "취득세 계산기", href: "/tools/real-estate/acquisition-tax", desc: "주택 취득세 계산" },
+          { label: "부동산 보유세 (재산세+종부세)", href: "/property-holding-tax-2026", desc: "7·9·12월 보유세 통합 산출", },
           { label: "부동산 양도세", href: "/calc/real-estate-capital-gains-quick", desc: "1주택 비과세 vs 일반 양도" },
           { label: "종합부동산세", href: "/calc/comprehensive-property-tax-quick", desc: "공시가 합계로 종부세 산출" },
           { label: "재산세 계산", href: "/calc/property-tax-quick", desc: "공시가격 기준 주택 재산세" },
@@ -193,8 +197,11 @@ export const hubs: Hub[] = [
       {
         heading: "내 세금 구조 파악",
         links: [
+          { label: "종합소득세 계산기", href: "/income-tax-2026", desc: "8단계 누진세율 + 지방소득세" },
           { label: "소득세 누진세율 시뮬", href: "/calc/income-tax-bracket-sim", desc: "과세표준별 산출세액 계산" },
           { label: "근로소득세 간편 계산", href: "/calc/earned-income-tax-quick", desc: "월급 기준 원천징수 추정" },
+          { label: "건강보험료 계산기", href: "/health-insurance-fee-2026", desc: "직장/지역 가입자별 본인 부담" },
+          { label: "자동차세 계산기", href: "/auto-tax-2026", desc: "6·12월 분납·연납 7% 할인" },
           { label: "2026 세율표", href: "/tax-rates-2026", desc: "소득세·4대보험 요율 정리" },
           { label: "2026 세법 개정", href: "/tax-changes-2026", desc: "올해 바뀐 세법 핵심" },
         ],
@@ -238,6 +245,7 @@ export const hubs: Hub[] = [
       {
         heading: "수당·퇴직금 챙기기",
         links: [
+          { label: "주휴수당 계산기", href: "/weekly-holiday-allowance-2026", desc: "주 15시간+ 알바 필수 수당" },
           { label: "시간외 수당 계산", href: "/calc/overtime-pay-quick", desc: "8시간 초과 1.5배 수당" },
           { label: "연차수당 계산", href: "/calc/annual-leave-pay-quick", desc: "미사용 연차 × 통상임금" },
           { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick", desc: "평균임금 × 근속연수" },
