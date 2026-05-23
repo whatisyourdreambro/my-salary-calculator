@@ -75,6 +75,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/child-deduction',
  '/calc/jeonse-loan',
  '/calc/housing-subscription',
+ // 회사별 성과급 계산기 — 시즌 트래픽(1월·7월 지급)
+ '/calc/samsung-bonus',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',

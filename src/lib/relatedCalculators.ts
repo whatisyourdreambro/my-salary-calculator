@@ -64,6 +64,7 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/year-end-tax": ["tax", "salary"],
  "/fire-calculator": ["investment", "salary"],
  "/calc/2026-year": ["salary", "tax"],
+ "/calc/samsung-bonus": ["tax", "salary"],
  "/tools": ["salary", "loan", "tax"],
  "/tools/loan": ["loan"],
  "/tools/deposit": ["investment"],

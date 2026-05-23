@@ -38,6 +38,7 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 세법 변경사항", href: "/tax-changes-2026", category: "시즌" },
  { title: "퇴직연금 DB·DC·IRP", href: "/retirement-pension-2026", category: "시즌" },
  { title: "삼성 신입 연봉 협상", href: "/samsung-negotiation-2026", category: "시즌" },
+ { title: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", category: "계산기", description: "OPI·TAI 세후 실수령", priority: 1 },
  { title: "직장인 단계별 자산", href: "/career-stages-2026", category: "시즌", description: "20~50대" },
 ];
 
