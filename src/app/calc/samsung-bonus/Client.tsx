@@ -4,9 +4,9 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import {
   ChevronDown,
   Sparkles,
-  Calendar,
   PiggyBank,
-  Users,
+  TrendingUp,
+  Building2,
 } from "lucide-react";
 
 // ────────────────────────────────────────────────────────────
@@ -60,102 +60,99 @@ function parseInput(s: string): number {
 }
 
 // ────────────────────────────────────────────────────────────
-// 정적 데이터
+// 내부 상수 (UI 노출 금지)
 // ────────────────────────────────────────────────────────────
 
-// DS 부문 사업부별 인원 (2025 사업보고서 기반 추정치)
-const DS_HEADCOUNT = {
-  memory: 26_226,
-  foundryLsi: 20_356,
-  common: 28_178,
-  total: 74_760,
+// OPI2 = 사업부 영업이익 × 10.5% ÷ 사업부 인원
+// 인원은 내부 분모로만 사용, UI에 직접 표시하지 않음
+const HEADCOUNT_INTERNAL: Record<string, number> = {
+  "ds-memory-up": 26_226,
+  "ds-memory-mid": 26_226,
+  "ds-foundry": 20_356,
+  "ds-common": 28_178,
+  mx: 25_000,
+  "vd-da": 9_000,
+  harman: 18_000,
+  custom: 20_000, // 직접입력 모드 기본값
 };
+
+const OPI2_PROFIT_SHARE = 0.105; // 사업부 영업이익의 10.5%가 OPI2 재원
+
+// ────────────────────────────────────────────────────────────
+// 사업부 프리셋
+// ────────────────────────────────────────────────────────────
 
 type Division = {
   id: string;
   name: string;
-  opi: number;
-  taiH1: number;
-  taiH2: number;
+  opi1: number; // OPI1 지급률 (기본급의 %, 상한 50%)
+  profitTrillion: number; // 사업부 연간 영업이익 (조원, OPI2 산정용)
   note: string;
-  headcount?: number; // DS 부문에 한해 인원수 표기
-  unit?: string; // 단위 그룹
+  unit?: string;
 };
 
 const DIVISIONS: Division[] = [
   {
     id: "ds-memory-up",
     name: "DS 메모리 (호황)",
-    opi: 50,
-    taiH1: 100,
-    taiH2: 100,
-    note: "HBM·D램 슈퍼사이클. 2024~2025 사례 상단.",
-    headcount: DS_HEADCOUNT.memory,
+    opi1: 50,
+    profitTrillion: 22,
+    note: "HBM·D램 슈퍼사이클 — OPI1 상한 + OPI2 풀 최대.",
     unit: "DS",
   },
   {
     id: "ds-memory-mid",
     name: "DS 메모리 (보통)",
-    opi: 30,
-    taiH1: 75,
-    taiH2: 75,
+    opi1: 30,
+    profitTrillion: 12,
     note: "안정 구간 평균치.",
-    headcount: DS_HEADCOUNT.memory,
     unit: "DS",
   },
   {
     id: "ds-foundry",
     name: "DS 파운드리·시스템LSI",
-    opi: 12,
-    taiH1: 50,
-    taiH2: 50,
-    note: "TSMC 격차·적자 누적. 임금협상 인상으로 보전.",
-    headcount: DS_HEADCOUNT.foundryLsi,
+    opi1: 12,
+    profitTrillion: -2,
+    note: "TSMC 격차·적자 누적. OPI2 사실상 0.",
     unit: "DS",
   },
   {
     id: "ds-common",
     name: "DS 공통 (스태프·연구소)",
-    opi: 25,
-    taiH1: 75,
-    taiH2: 75,
-    note: "DS 전체 평균에 준해 지급되는 경우가 많음.",
-    headcount: DS_HEADCOUNT.common,
+    opi1: 25,
+    profitTrillion: 8,
+    note: "DS 평균에 준해 지급되는 경우가 많음.",
     unit: "DS",
   },
   {
     id: "mx",
     name: "MX (모바일·네트워크)",
-    opi: 35,
-    taiH1: 75,
-    taiH2: 100,
+    opi1: 35,
+    profitTrillion: 12,
     note: "갤럭시 플래그십 견조.",
     unit: "DX",
   },
   {
     id: "vd-da",
     name: "VD·DA (영상·생활가전)",
-    opi: 22,
-    taiH1: 50,
-    taiH2: 75,
+    opi1: 22,
+    profitTrillion: 1.5,
     note: "프리미엄 TV·가전 비중에 따라 변동.",
     unit: "DX",
   },
   {
     id: "harman",
     name: "Harman (전장·오디오)",
-    opi: 18,
-    taiH1: 75,
-    taiH2: 75,
+    opi1: 18,
+    profitTrillion: 0.6,
     note: "전장 수주 증가 추세.",
     unit: "기타",
   },
   {
     id: "custom",
     name: "직접 입력",
-    opi: 0,
-    taiH1: 0,
-    taiH2: 0,
+    opi1: 0,
+    profitTrillion: 0,
     note: "본인 사업부 수치로 직접 조정.",
     unit: "직접",
   },
@@ -214,23 +211,20 @@ function useCountUp(target: number, duration = 500): number {
 
 export default function SamsungBonusClient() {
   const [salaryFmt, setSalaryFmt] = useState("80,000,000");
-  const [baseRatio, setBaseRatio] = useState(67); // 기본급 비율 (60~75%)
+  const [baseRatio, setBaseRatio] = useState(67);
   const [divisionId, setDivisionId] = useState<string>("ds-memory-up");
-  const [opi, setOpi] = useState<number>(50);
-  const [taiH1, setTaiH1] = useState<number>(100);
-  const [taiH2, setTaiH2] = useState<number>(100);
+  const [opi1, setOpi1] = useState<number>(50);
+  const [profitTrillionStr, setProfitTrillionStr] = useState<string>("22");
   const [gradeId, setGradeId] = useState<string>("gd");
 
-  // 고급 옵션
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [retroFmt, setRetroFmt] = useState("0"); // 임금협상 소급분
-  const [signingFmt, setSigningFmt] = useState("0"); // 사이닝/리텐션
-  const [irpFmt, setIrpFmt] = useState("0"); // IRP/연금저축 납입
+  const [retroFmt, setRetroFmt] = useState("0");
+  const [irpFmt, setIrpFmt] = useState("0");
 
   const salary = parseInput(salaryFmt);
+  const profitTrillion = Math.max(0, Number(profitTrillionStr) || 0);
   const retroBonus = parseInput(retroFmt);
-  const signing = parseInput(signingFmt);
-  const irpDeposit = Math.min(parseInput(irpFmt), 9_000_000); // 연 900만원 한도
+  const irpDeposit = Math.min(parseInput(irpFmt), 9_000_000);
 
   const division =
     DIVISIONS.find((d) => d.id === divisionId) ?? DIVISIONS[0];
@@ -240,9 +234,8 @@ export default function SamsungBonusClient() {
     setDivisionId(id);
     const d = DIVISIONS.find((x) => x.id === id);
     if (d && id !== "custom") {
-      setOpi(d.opi);
-      setTaiH1(d.taiH1);
-      setTaiH2(d.taiH2);
+      setOpi1(d.opi1);
+      setProfitTrillionStr(String(d.profitTrillion));
     }
   }
 
@@ -251,21 +244,24 @@ export default function SamsungBonusClient() {
     const baseAnnual = salary * ratio;
     const baseMonthly = baseAnnual / 12;
 
-    const opiGross = baseAnnual * (opi / 100) * grade.weight;
-    const taiH1Gross = baseMonthly * (taiH1 / 100) * grade.weight;
-    const taiH2Gross = baseMonthly * (taiH2 / 100) * grade.weight;
-    const taiAnnualGross = taiH1Gross + taiH2Gross;
+    // OPI1 = 기본급 × OPI1% × 평가가중치 (상한 50%)
+    const opi1Gross = baseAnnual * (opi1 / 100) * grade.weight;
 
-    const otherBonus = retroBonus + signing;
-    const totalBonusGross =
-      opiGross + taiAnnualGross + otherBonus;
+    // OPI2 = (사업부 영업이익 × 10.5% / 사업부 인원수) × 평가가중치
+    const headcount = HEADCOUNT_INTERNAL[divisionId] ?? 20_000;
+    const profitWon = profitTrillion * 1_000_000_000_000; // 조원 → 원
+    const opi2Pool = Math.max(0, profitWon) * OPI2_PROFIT_SHARE;
+    const opi2PerPerson = headcount > 0 ? opi2Pool / headcount : 0;
+    const opi2Gross = opi2PerPerson * grade.weight;
+
+    const totalGross = opi1Gross + opi2Gross + retroBonus;
 
     const basicDeduct = 1_500_000;
     const baseTaxable = Math.max(
       0,
       salary - calcEmpDeduction(salary) - basicDeduct
     );
-    const totalIncome = salary + totalBonusGross;
+    const totalIncome = salary + totalGross;
     const totalTaxable = Math.max(
       0,
       totalIncome - calcEmpDeduction(totalIncome) - basicDeduct
@@ -275,52 +271,38 @@ export default function SamsungBonusClient() {
       (calcTax(totalTaxable) - calcTax(baseTaxable)) * 0.7;
     const localTax = incomeTaxOnBonus * 0.1;
 
-    // 4대보험
     const pensionCap = 74_040_000;
     const pensionBase = Math.max(0, pensionCap - salary);
     const nationalPension =
-      Math.min(totalBonusGross, pensionBase) * 0.045;
-    const healthIns = totalBonusGross * 0.03545;
+      Math.min(totalGross, pensionBase) * 0.045;
+    const healthIns = totalGross * 0.03545;
     const longTermCare = healthIns * 0.1295;
-    const employment = totalBonusGross * 0.009;
+    const employment = totalGross * 0.009;
     const insurance =
       nationalPension + healthIns + longTermCare + employment;
 
     const totalDeduct = incomeTaxOnBonus + localTax + insurance;
-    const totalNet = totalBonusGross - totalDeduct;
+    const totalNet = totalGross - totalDeduct;
 
-    const effectiveRate =
-      totalBonusGross > 0 ? totalDeduct / totalBonusGross : 0;
-    const opiNet = opiGross * (1 - effectiveRate);
-    const taiH1Net = taiH1Gross * (1 - effectiveRate);
-    const taiH2Net = taiH2Gross * (1 - effectiveRate);
+    const effectiveRate = totalGross > 0 ? totalDeduct / totalGross : 0;
+    const opi1Net = opi1Gross * (1 - effectiveRate);
+    const opi2Net = opi2Gross * (1 - effectiveRate);
+    const retroNet = retroBonus * (1 - effectiveRate);
 
-    // IRP 절세
-    const baseTax = calcTax(baseTaxable);
-    const baseRate =
-      baseTax > 0 && baseTaxable > 0
-        ? baseTax / baseTaxable
-        : 0;
-    // 5,500만 이하 16.5%, 초과 13.2% (지방세 포함)
     const irpRate = salary <= 55_000_000 ? 0.165 : 0.132;
-    void baseRate;
     const irpRefund = irpDeposit * irpRate;
     const netAfterIrp = totalNet + irpRefund;
 
     return {
       baseAnnual,
       baseMonthly,
-      opiGross,
-      opiNet,
-      taiH1Gross,
-      taiH1Net,
-      taiH2Gross,
-      taiH2Net,
-      taiAnnualGross,
-      taiAnnualNet: taiH1Net + taiH2Net,
+      opi1Gross,
+      opi1Net,
+      opi2Gross,
+      opi2Net,
       retroBonus,
-      signing,
-      totalBonusGross,
+      retroNet,
+      totalGross,
       totalNet,
       totalDeduct,
       incomeTaxOnBonus,
@@ -331,31 +313,21 @@ export default function SamsungBonusClient() {
       longTermCare,
       employment,
       effectiveRate: effectiveRate * 100,
-      bonusToSalaryRatio:
-        salary > 0 ? (totalBonusGross / salary) * 100 : 0,
+      totalToSalaryRatio:
+        salary > 0 ? (totalGross / salary) * 100 : 0,
       irpRefund,
       netAfterIrp,
-      monthlyAfter: (salary + totalBonusGross) / 12,
     };
-  }, [
-    salary,
-    baseRatio,
-    opi,
-    taiH1,
-    taiH2,
-    grade,
-    retroBonus,
-    signing,
-    irpDeposit,
-  ]);
+  }, [salary, baseRatio, opi1, profitTrillion, divisionId, grade, retroBonus, irpDeposit]);
 
   const animatedNet = useCountUp(result.totalNet);
-  const animatedGross = useCountUp(result.totalBonusGross);
+  const animatedOpi1 = useCountUp(result.opi1Net);
+  const animatedOpi2 = useCountUp(result.opi2Net);
   const animatedRefund = useCountUp(result.irpRefund);
 
   return (
     <div className="space-y-5 mb-10">
-      {/* ───── 입력 카드 ───── */}
+      {/* 입력 카드 */}
       <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 space-y-6 transition-shadow hover:shadow-md">
         {/* 연봉 */}
         <div>
@@ -387,24 +359,19 @@ export default function SamsungBonusClient() {
             </span>
           </div>
           <div className="flex flex-wrap gap-2 mt-3">
-            {[60_000_000, 80_000_000, 100_000_000, 140_000_000].map(
-              (v) => (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() =>
-                    setSalaryFmt(v.toLocaleString("ko-KR"))
-                  }
-                  className="text-xs font-bold px-3 py-1.5 rounded-full bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-electric hover:text-white transition-colors"
-                >
-                  {fmtManwon(v)}만
-                </button>
-              )
-            )}
+            {[60_000_000, 80_000_000, 100_000_000, 140_000_000].map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setSalaryFmt(v.toLocaleString("ko-KR"))}
+                className="text-xs font-bold px-3 py-1.5 rounded-full bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-electric hover:text-white transition-colors"
+              >
+                {fmtManwon(v)}만
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* 기본급 비율 슬라이더 */}
         <SliderField
           id="base-ratio"
           label="기본급 비율 (연봉 대비)"
@@ -414,14 +381,14 @@ export default function SamsungBonusClient() {
           max={75}
           step={1}
           unit="%"
-          hint={`연 기본급 ${fmt(result.baseAnnual)}원 · 월 기본급 ${fmt(result.baseMonthly)}원 — 명세서 본봉으로 정확 조정 가능`}
+          hint={`연 기본급 ${fmt(result.baseAnnual)}원 · 월 기본급 ${fmt(result.baseMonthly)}원 — OPI1은 기본급 기준`}
           accentColor="navy"
         />
 
         {/* 사업부 프리셋 */}
         <div>
           <label className="text-xs font-bold uppercase tracking-widest block mb-3 text-faint-blue">
-            소속 사업부 (선택 시 OPI·TAI 자동 입력)
+            소속 사업부 (선택 시 OPI1·영업이익 자동 입력)
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {DIVISIONS.map((d) => {
@@ -439,9 +406,7 @@ export default function SamsungBonusClient() {
                   aria-pressed={active}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-black">
-                      {d.name}
-                    </span>
+                    <span className="text-sm font-black">{d.name}</span>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                         active
@@ -452,16 +417,18 @@ export default function SamsungBonusClient() {
                       {d.unit}
                     </span>
                   </div>
-                  {d.headcount && (
-                    <div
-                      className={`text-[11px] font-bold mt-1 inline-flex items-center gap-1 ${
-                        active ? "opacity-90" : "text-electric"
-                      }`}
-                    >
-                      <Users size={10} />
-                      {d.headcount.toLocaleString("ko-KR")}명
-                    </div>
-                  )}
+                  <div
+                    className={`text-[11px] font-bold mt-1 inline-flex items-center gap-2 ${
+                      active ? "opacity-90" : "text-electric"
+                    }`}
+                  >
+                    <span className="inline-flex items-center gap-0.5">
+                      <TrendingUp size={10} /> OPI1 {d.opi1}%
+                    </span>
+                    <span className="inline-flex items-center gap-0.5">
+                      <Building2 size={10} /> {d.profitTrillion}조
+                    </span>
+                  </div>
                   <p
                     className={`text-[11px] mt-1 leading-relaxed font-medium ${
                       active
@@ -475,64 +442,61 @@ export default function SamsungBonusClient() {
               );
             })}
           </div>
-          {division.unit === "DS" && division.headcount && (
-            <DsHeadcountBar
-              divisionId={divisionId}
-              animated
-            />
-          )}
         </div>
 
-        {/* 슬라이더들 */}
+        {/* OPI1 슬라이더 */}
         <SliderField
-          id="opi"
-          label="OPI 지급률 (기본급의 %)"
-          value={opi}
+          id="opi1"
+          label="OPI1 지급률 (기본급의 %, 상한 50%)"
+          value={opi1}
           onChange={(v) => {
-            setOpi(v);
+            setOpi1(v);
             setDivisionId("custom");
           }}
           min={0}
           max={50}
           step={5}
           unit="%"
-          hint="삼성전자 OPI 상한 = 기본급의 50% (사업부 영업이익 목표 초과분)"
+          hint="기존 OPI 구조 — 사업부 영업이익 목표 초과분에 따라 기본급의 최대 50% 지급"
         />
 
-        <SliderField
-          id="taiH1"
-          label="TAI 상반기 (월 기본급의 %)"
-          value={taiH1}
-          onChange={(v) => {
-            setTaiH1(v);
-            setDivisionId("custom");
-          }}
-          min={0}
-          max={100}
-          step={25}
-          unit="%"
-          hint="상반기 KPI 평가 결과 (0/25/50/75/100%)"
-        />
-
-        <SliderField
-          id="taiH2"
-          label="TAI 하반기 (월 기본급의 %)"
-          value={taiH2}
-          onChange={(v) => {
-            setTaiH2(v);
-            setDivisionId("custom");
-          }}
-          min={0}
-          max={100}
-          step={25}
-          unit="%"
-          hint="하반기 KPI 평가 결과 (0/25/50/75/100%)"
-        />
+        {/* OPI2 영업이익 입력 */}
+        <div>
+          <label
+            htmlFor="profit-input"
+            className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue"
+          >
+            OPI2 산정용 — 사업부 연간 영업이익 (조원)
+          </label>
+          <div className="relative">
+            <input
+              id="profit-input"
+              type="number"
+              step="0.5"
+              min="0"
+              value={profitTrillionStr}
+              onChange={(e) => {
+                setProfitTrillionStr(e.target.value);
+                setDivisionId("custom");
+              }}
+              className="w-full rounded-xl px-4 py-3 text-xl font-black focus:outline-none transition pr-12 text-navy dark:text-canvas-50 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 focus:border-electric"
+              placeholder="22"
+              aria-label="사업부 영업이익 입력 (조원)"
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-faint-blue">
+              조원
+            </span>
+          </div>
+          <p className="text-[11px] text-faint-blue mt-1.5 leading-relaxed">
+            OPI2 = 사업부 영업이익 × 10.5% ÷ 사업부 인원으로 분배. 영업이익이
+            적자(0 이하)면 OPI2 = 0.
+          </p>
+        </div>
 
         {/* 평가등급 */}
         <div>
           <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
-            인사평가 등급 (성과급 가중치)
+            인사평가 등급 (OPI1·OPI2 공통 가중치)
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {GRADES.map((g) => {
@@ -551,16 +515,12 @@ export default function SamsungBonusClient() {
                 >
                   <div className="text-sm font-black">{g.name}</div>
                   <div
-                    className={`text-[10px] mt-1 ${
-                      active ? "opacity-85" : "opacity-70"
-                    }`}
+                    className={`text-[10px] mt-1 ${active ? "opacity-85" : "opacity-70"}`}
                   >
                     ×{g.weight}
                   </div>
                   <div
-                    className={`text-[10px] mt-0.5 ${
-                      active ? "opacity-70" : "opacity-60"
-                    }`}
+                    className={`text-[10px] mt-0.5 ${active ? "opacity-70" : "opacity-60"}`}
                   >
                     {g.share}
                   </div>
@@ -570,7 +530,7 @@ export default function SamsungBonusClient() {
           </div>
         </div>
 
-        {/* 고급 옵션 토글 */}
+        {/* 고급 옵션 */}
         <button
           type="button"
           onClick={() => setAdvancedOpen((v) => !v)}
@@ -578,7 +538,7 @@ export default function SamsungBonusClient() {
           aria-expanded={advancedOpen}
         >
           <span className="text-xs font-black uppercase tracking-widest text-navy dark:text-canvas-50">
-            고급 옵션 — 소급분 · 사이닝 · IRP 절세
+            고급 옵션 — 임금협상 소급분 · IRP 절세
           </span>
           <ChevronDown
             size={16}
@@ -606,13 +566,6 @@ export default function SamsungBonusClient() {
                 onChange={setRetroFmt}
               />
               <MoneyField
-                id="signing"
-                label="사이닝/리텐션 보너스 (선택)"
-                hint="이직·핵심인재 유지용. 통상 1~3년 의무근무 조건"
-                value={signingFmt}
-                onChange={setSigningFmt}
-              />
-              <MoneyField
                 id="irp"
                 label="IRP·연금저축 납입액 (절세 시뮬)"
                 hint={`연 900만원 한도. 연봉 ${salary <= 55_000_000 ? "5,500만 이하 → 환급률 16.5%" : "5,500만 초과 → 환급률 13.2%"}`}
@@ -625,7 +578,7 @@ export default function SamsungBonusClient() {
         </div>
       </div>
 
-      {/* ───── 메인 결과 카드 ───── */}
+      {/* 메인 결과 카드 */}
       <div
         className="rounded-3xl p-7 text-white relative overflow-hidden"
         style={{
@@ -634,7 +587,6 @@ export default function SamsungBonusClient() {
           boxShadow: "0 16px 48px #0145F235",
         }}
       >
-        {/* 데코 도형 */}
         <div
           className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-20 pointer-events-none"
           style={{ background: "radial-gradient(#fff, transparent 70%)" }}
@@ -643,7 +595,7 @@ export default function SamsungBonusClient() {
           className="text-xs font-black uppercase tracking-widest mb-3 inline-flex items-center gap-2"
           style={{ color: "rgba(255,255,255,0.8)" }}
         >
-          <Sparkles size={12} /> 연간 성과급 세후 실수령
+          <Sparkles size={12} /> OPI1 + OPI2 세후 합산 실수령
         </p>
         <p
           className="text-5xl sm:text-6xl font-black mb-3 tracking-tight tabular-nums"
@@ -657,30 +609,80 @@ export default function SamsungBonusClient() {
             className="tabular-nums"
             style={{ color: "rgba(255,255,255,0.95)" }}
           >
-            세전 {fmt(animatedGross)}원
+            세전 {fmt(result.totalGross)}원
           </span>
           <span style={{ color: "rgba(255,255,255,0.75)" }}>
-            공제 -{fmt(result.totalDeduct)}원 ·{" "}
-            {result.effectiveRate.toFixed(1)}%
+            공제 {result.effectiveRate.toFixed(1)}%
           </span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 pt-5 border-t border-white/20">
           <MiniStat
             label="연봉 대비"
-            value={`+${result.bonusToSalaryRatio.toFixed(1)}%`}
+            value={`+${result.totalToSalaryRatio.toFixed(1)}%`}
           />
           <MiniStat
             label={`평가 ${grade.name}`}
             value={`×${grade.weight}`}
           />
           <MiniStat
-            label="월 환산 (성과급 포함)"
-            value={`${fmtManwon(result.monthlyAfter)}만`}
+            label="OPI1 비중"
+            value={
+              result.totalGross > 0
+                ? `${((result.opi1Gross / result.totalGross) * 100).toFixed(0)}%`
+                : "—"
+            }
           />
         </div>
       </div>
 
-      {/* ───── IRP 절세 카드 (입력 시만) ───── */}
+      {/* OPI1 / OPI2 분리 카드 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="rounded-2xl p-5 border bg-electric-5 border-electric-30 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+          <p className="text-xs font-black uppercase tracking-widest text-electric mb-1">
+            OPI1 (기존 · 기본급 50% 상한)
+          </p>
+          <p className="text-[10px] font-bold text-muted-blue mb-3">
+            사업부 영업이익 목표 초과분 기반
+          </p>
+          <p className="text-2xl font-black text-navy dark:text-canvas-50 tabular-nums">
+            {fmt(animatedOpi1)}원
+          </p>
+          <p className="text-xs text-muted-blue mt-1 tabular-nums">
+            세전 {fmt(result.opi1Gross)}원
+          </p>
+        </div>
+        <div className="rounded-2xl p-5 border bg-white dark:bg-canvas-900 border-canvas-200 dark:border-canvas-800 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+          <p className="text-xs font-black uppercase tracking-widest text-navy dark:text-canvas-50 mb-1">
+            OPI2 (신규 · 영업이익 10.5% 풀)
+          </p>
+          <p className="text-[10px] font-bold text-muted-blue mb-3">
+            사업부 영업이익 × 10.5% ÷ 인원수
+          </p>
+          <p className="text-2xl font-black text-navy dark:text-canvas-50 tabular-nums">
+            {fmt(animatedOpi2)}원
+          </p>
+          <p className="text-xs text-muted-blue mt-1 tabular-nums">
+            세전 {fmt(result.opi2Gross)}원
+          </p>
+        </div>
+      </div>
+
+      {/* 소급분 합산 시 */}
+      {retroBonus > 0 && (
+        <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5 animate-[fadeIn_0.4s_ease-out]">
+          <p className="text-xs font-black uppercase tracking-widest text-faint-blue mb-2">
+            임금협상 소급분 (세후)
+          </p>
+          <p className="text-2xl font-black text-navy dark:text-canvas-50 tabular-nums">
+            +{fmt(result.retroNet)}원
+          </p>
+          <p className="text-xs text-muted-blue mt-1">
+            세전 {fmt(retroBonus)}원 · 1월에 OPI와 한꺼번에 입금
+          </p>
+        </div>
+      )}
+
+      {/* IRP 절세 */}
       {irpDeposit > 0 && (
         <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-5 flex items-start gap-4 animate-[fadeIn_0.4s_ease-out]">
           <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
@@ -694,7 +696,7 @@ export default function SamsungBonusClient() {
               +{fmt(animatedRefund)}원
             </p>
             <p className="text-xs text-emerald-800 dark:text-emerald-300 mt-1 leading-relaxed">
-              {fmt(irpDeposit)}원 납입 시 환급 ·{" "}
+              {fmt(irpDeposit)}원 납입 ·{" "}
               {salary <= 55_000_000 ? "16.5%" : "13.2%"} (지방세 포함) 세액공제
               {irpDeposit === 9_000_000 && " · 연 한도 최대 활용"}
             </p>
@@ -705,54 +707,17 @@ export default function SamsungBonusClient() {
         </div>
       )}
 
-      {/* ───── 월별 캐시플로우 ───── */}
-      <MonthlyCashflow
-        opi={result.opiGross}
-        opiNet={result.opiNet}
-        taiH1={result.taiH1Gross}
-        taiH1Net={result.taiH1Net}
-        taiH2={result.taiH2Gross}
-        taiH2Net={result.taiH2Net}
-        retro={result.retroBonus}
-      />
-
-      {/* ───── 세부 분해 ───── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <BreakdownCard
-          label="OPI"
-          subLabel="초과이익성과금 · 1월"
-          gross={result.opiGross}
-          net={result.opiNet}
-          highlight
-        />
-        <BreakdownCard
-          label="TAI 상반기"
-          subLabel="목표달성장려금 · 7월"
-          gross={result.taiH1Gross}
-          net={result.taiH1Net}
-        />
-        <BreakdownCard
-          label="TAI 하반기"
-          subLabel="목표달성장려금 · 다음해 1월"
-          gross={result.taiH2Gross}
-          net={result.taiH2Net}
-        />
-      </div>
-
-      {/* ───── 공제 상세 ───── */}
+      {/* 공제 상세 */}
       <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6">
         <p className="text-xs font-black uppercase tracking-widest text-faint-blue mb-4">
-          공제 항목 상세 (성과급 귀속분)
+          공제 항목 상세 (OPI1 + OPI2 합산 귀속분)
         </p>
         <div className="space-y-2 text-sm">
           <Row
             label="소득세 (누진세율, 세액공제 30% 가정 후)"
             value={result.incomeTaxOnBonus}
           />
-          <Row
-            label="지방소득세 (소득세의 10%)"
-            value={result.localTax}
-          />
+          <Row label="지방소득세 (소득세의 10%)" value={result.localTax} />
           <Row
             label="국민연금 (4.5%, 보수월액 상한 적용)"
             value={result.nationalPension}
@@ -768,10 +733,9 @@ export default function SamsungBonusClient() {
           </div>
         </div>
         <p className="text-xs text-faint-blue mt-4 leading-relaxed">
-          ※ 소득세는 성과급이 연 근로소득에 합산되어 발생하는 누진 증가분
-          기준. 연말정산 시 자녀·연금·의료비·기부 등 추가 세액공제에 따라 환급
-          변동. 국민연금은 보수월액 상한선(2026년 약 617만원, 연 7,404만원)
-          초과분에 부과되지 않습니다.
+          ※ OPI는 연 근로소득에 합산되어 누진세율이 적용됩니다. 연말정산
+          시 자녀·연금·의료비·기부 등 세액공제에 따라 환급 변동.
+          국민연금은 보수월액 상한선(연 7,404만원) 초과분 미부과.
         </p>
       </div>
     </div>
@@ -781,238 +745,6 @@ export default function SamsungBonusClient() {
 // ────────────────────────────────────────────────────────────
 // 하위 컴포넌트
 // ────────────────────────────────────────────────────────────
-
-function DsHeadcountBar({
-  divisionId,
-  animated,
-}: {
-  divisionId: string;
-  animated: boolean;
-}) {
-  const total = DS_HEADCOUNT.total;
-  const segments = [
-    {
-      id: "ds-memory",
-      label: "메모리",
-      count: DS_HEADCOUNT.memory,
-      color: "#0145F2",
-      match: ["ds-memory-up", "ds-memory-mid"],
-    },
-    {
-      id: "ds-foundry",
-      label: "FDRY + S.LSI",
-      count: DS_HEADCOUNT.foundryLsi,
-      color: "#7B92FF",
-      match: ["ds-foundry"],
-    },
-    {
-      id: "ds-common",
-      label: "공통",
-      count: DS_HEADCOUNT.common,
-      color: "#A8B9D6",
-      match: ["ds-common"],
-    },
-  ];
-
-  return (
-    <div className="mt-4 rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4">
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-[11px] font-black uppercase tracking-widest text-faint-blue">
-          DS 부문 사업부별 인원 구조
-        </p>
-        <p className="text-[11px] font-bold text-muted-blue">
-          총 {total.toLocaleString("ko-KR")}명
-        </p>
-      </div>
-      <div className="flex h-3 rounded-full overflow-hidden bg-canvas-200 dark:bg-canvas-700">
-        {segments.map((s) => {
-          const pct = (s.count / total) * 100;
-          const active = s.match.includes(divisionId);
-          return (
-            <div
-              key={s.id}
-              className={`h-full transition-all duration-300 ${
-                animated ? "" : ""
-              }`}
-              style={{
-                width: `${pct}%`,
-                backgroundColor: s.color,
-                opacity: active ? 1 : 0.55,
-                boxShadow: active
-                  ? "inset 0 0 0 2px #fff, 0 0 0 2px " + s.color
-                  : "none",
-              }}
-              title={`${s.label} ${s.count.toLocaleString("ko-KR")}명 (${pct.toFixed(1)}%)`}
-            />
-          );
-        })}
-      </div>
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        {segments.map((s) => {
-          const pct = (s.count / total) * 100;
-          const active = s.match.includes(divisionId);
-          return (
-            <div
-              key={s.id}
-              className={`text-[11px] transition-opacity ${
-                active ? "opacity-100" : "opacity-65"
-              }`}
-            >
-              <div className="flex items-center gap-1.5">
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span className="font-bold text-navy dark:text-canvas-50">
-                  {s.label}
-                </span>
-              </div>
-              <div className="text-faint-blue mt-0.5 tabular-nums">
-                {s.count.toLocaleString("ko-KR")}명 · {pct.toFixed(1)}%
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function MonthlyCashflow({
-  opi,
-  opiNet,
-  taiH1,
-  taiH1Net,
-  taiH2,
-  taiH2Net,
-  retro,
-}: {
-  opi: number;
-  opiNet: number;
-  taiH1: number;
-  taiH1Net: number;
-  taiH2: number;
-  taiH2Net: number;
-  retro: number;
-}) {
-  // 1월: OPI + (전년) TAI 하반기 (= 입력의 taiH2) - 모델 단순화: 현 시점 기준 향후 12개월
-  // 단순 시각화: 1월(OPI + 소급분) / 7월(TAI 상반기) / 내년 1월(TAI 하반기)
-  const events = [
-    {
-      month: "1월",
-      label: "OPI · 소급분",
-      gross: opi + retro,
-      net: opiNet + retro * 0.7, // 소급분 대략 30% 공제 가정
-      color: "#0145F2",
-    },
-    {
-      month: "7월",
-      label: "TAI 상반기",
-      gross: taiH1,
-      net: taiH1Net,
-      color: "#0D5BFF",
-    },
-    {
-      month: "내년 1월",
-      label: "TAI 하반기",
-      gross: taiH2,
-      net: taiH2Net,
-      color: "#7B92FF",
-    },
-  ];
-  const max = Math.max(...events.map((e) => e.gross), 1);
-
-  return (
-    <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6">
-      <p className="text-xs font-black uppercase tracking-widest text-faint-blue mb-4 inline-flex items-center gap-2">
-        <Calendar size={12} /> 월별 캐시플로우 (지급 시점)
-      </p>
-      <div className="space-y-4">
-        {events.map((e) => {
-          const pct = (e.gross / max) * 100;
-          return (
-            <div key={e.month}>
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-navy dark:text-canvas-50 w-16">
-                    {e.month}
-                  </span>
-                  <span className="text-[11px] font-bold text-muted-blue">
-                    {e.label}
-                  </span>
-                </div>
-                <div className="text-right tabular-nums">
-                  <span className="text-sm font-black text-navy dark:text-canvas-50">
-                    {fmt(e.net)}원
-                  </span>
-                  <span className="text-[10px] text-faint-blue ml-2">
-                    세전 {fmt(e.gross)}원
-                  </span>
-                </div>
-              </div>
-              <div className="h-2.5 rounded-full bg-canvas-100 dark:bg-canvas-800 overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${pct}%`,
-                    backgroundColor: e.color,
-                  }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <p className="text-[11px] text-faint-blue mt-4 leading-relaxed">
-        ※ OPI와 TAI 하반기는 모두 1월에 지급되지만, 본 차트는 발생 기준
-        구분을 위해 다른 행에 표기했습니다. 실제 명세서에는 1월에 합산
-        지급됩니다.
-      </p>
-    </div>
-  );
-}
-
-function BreakdownCard({
-  label,
-  subLabel,
-  gross,
-  net,
-  highlight = false,
-}: {
-  label: string;
-  subLabel: string;
-  gross: number;
-  net: number;
-  highlight?: boolean;
-}) {
-  const animatedNet = useCountUp(net);
-  return (
-    <div
-      className={`rounded-2xl p-5 border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${
-        highlight
-          ? "bg-electric-5 border-electric-30"
-          : "bg-white dark:bg-canvas-900 border-canvas-200 dark:border-canvas-800"
-      }`}
-    >
-      <p
-        className={`text-xs font-black uppercase tracking-widest mb-1 ${
-          highlight ? "text-electric" : "text-faint-blue"
-        }`}
-      >
-        {label}
-      </p>
-      <p className="text-[10px] font-bold text-muted-blue mb-3">
-        {subLabel}
-      </p>
-      <p className="text-xl font-black text-navy dark:text-canvas-50 tabular-nums">
-        {fmt(animatedNet)}원
-      </p>
-      <p className="text-xs text-muted-blue mt-1 tabular-nums">
-        세전 {fmt(gross)}원
-      </p>
-    </div>
-  );
-}
 
 function Row({
   label,
@@ -1047,13 +779,7 @@ function Row({
   );
 }
 
-function MiniStat({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p

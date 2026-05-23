@@ -45,7 +45,7 @@ export const navConfig: NavItem[] = [
    { name: "연말정산 계산기", href: "/year-end-tax", description: "환급금 미리보기", badge: "SEASON" },
    { name: "FIRE 은퇴 계산기", href: "/fire-calculator", description: "조기 은퇴 자산 시뮬" },
    { name: "성과급 세금", href: "/tools/finance/bonus", description: "보너스 실수령액", badge: "HOT" },
-   { name: "삼성전자 성과급(OPI·TAI)", href: "/calc/samsung-bonus", description: "사업부·평가등급별 세후", badge: "NEW" },
+   { name: "삼성전자 성과급(OPI1·OPI2)", href: "/calc/samsung-bonus", description: "영업이익 10.5% 풀 반영", badge: "NEW" },
    { name: "복리 계산기", href: "/tools/finance/compound", description: "장기 자산 시뮬" },
    { name: "주식 양도소득세", href: "/tools/finance/stock-tax", description: "주식 매도 시 세금" },
    { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax", description: "주택 매수 세금" },
@@ -93,7 +93,7 @@ export const navConfig: NavItem[] = [
    { name: "2026 세법 변경사항", href: "/tax-changes-2026", description: "올해 핵심 변화", badge: "NEW" },
    { name: "퇴직연금 (DB·DC·IRP)", href: "/retirement-pension-2026", description: "유형별 비교" },
    { name: "삼성 신입 연봉 협상", href: "/samsung-negotiation-2026", description: "반도체 대기업 가이드" },
-   { name: "삼성 OPI·TAI 성과급 계산", href: "/calc/samsung-bonus", description: "1월·7월 지급 세후 실수령", badge: "NEW" },
+   { name: "삼성 OPI1·OPI2 성과급 계산", href: "/calc/samsung-bonus", description: "2026 합의 영업이익 10.5% 풀", badge: "NEW" },
   ],
  },
  {
