@@ -97,6 +97,24 @@ export default function SalaryDBPage() {
  })}
  </nav>
 
+ {/* 모바일 전용 sticky 검색 — 스크롤해도 재검색 쉽게 */}
+ <div className="md:hidden sticky top-16 z-30 -mx-4 px-4 py-2.5 mb-4 bg-canvas/95 backdrop-blur-md border-b border-canvas-200">
+ <div className="relative">
+ <Search
+ className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-faint-blue pointer-events-none"
+ aria-hidden
+ />
+ <input
+ type="text"
+ value={searchTerm}
+ onChange={(e) => setSearchTerm(e.target.value)}
+ placeholder={`${allCompanies.length.toLocaleString("ko-KR")}개 기업 검색`}
+ className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-canvas-200 bg-white text-sm font-medium text-navy placeholder:text-faint-blue focus:outline-none focus:border-electric"
+ aria-label="기업 검색"
+ />
+ </div>
+ </div>
+
  {/* 검색바 직하 광고 */}
  <div className="max-w-3xl mx-auto mb-8">
  <HomeTopAd />
