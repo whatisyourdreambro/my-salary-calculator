@@ -645,11 +645,30 @@ export default function SamsungBonusClient() {
             </div>
           ))}
         </div>
-        <p className="text-[11px] text-faint-blue mt-4 leading-relaxed">
-          가중치는 절대 합이 1일 필요 없는 <strong>상대값</strong>입니다.
-          1.0이 표준, 0.7이 70% 가중, 0.0이면 사업부 분배 제외. 사업부 풀(60%)을
-          Σ(인원×가중치)로 정규화해 분배합니다.
-        </p>
+        <div className="mt-4 space-y-2">
+          <p className="text-[11px] text-faint-blue leading-relaxed">
+            가중치는 절대 합이 1일 필요 없는 <strong>상대값</strong>입니다.
+            1.0이 표준, 0.7이 70% 가중, 0.0이면 사업부 분배 제외. 사업부 풀(60%)을
+            Σ(인원×가중치)로 정규화해 분배합니다.
+          </p>
+          <div
+            className="rounded-lg px-3 py-2.5 text-[11px] leading-relaxed"
+            style={{
+              backgroundColor: "#F59E0B0F",
+              border: "1px solid #F59E0B33",
+            }}
+          >
+            <p className="font-black text-amber-700 dark:text-amber-400 mb-0.5">
+              회의록 기준 (디폴트)
+            </p>
+            <p className="text-muted-blue dark:text-canvas-400">
+              <strong>2026년</strong>: 적자 사업부(파운드리·LSI) 가중치{" "}
+              <strong>0.0</strong> — 부문 풀만 수령. <br />
+              <strong>2027년~</strong>: 사업부 성과에 따라 가변. 흑자 전환 시
+              가중치 ↑ 입력 권장.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* 1인당 평균 결과 */}
@@ -785,6 +804,8 @@ function MySalaryCalculator({
     color: string;
     bgTint: string;
     shortLabel: string;
+    buPart: number;
+    saPart: number;
     total: number;
   }>;
   salaryFmt: string;
@@ -803,7 +824,9 @@ function MySalaryCalculator({
   const personal = useMemo(() => {
     // OPI2 — 특별경영성과금 (영업이익 기반 사업부 분배)
     const ratio = salary / REFERENCE_SALARY;
-    const opi2Manwon = selected.total * ratio;
+    const opi2BuManwon = selected.buPart * ratio; // 부문 균등 40% × 본인비례
+    const opi2SaManwon = selected.saPart * ratio; // 사업부 가중 60% × 본인비례
+    const opi2Manwon = opi2BuManwon + opi2SaManwon;
     const opi2Won = opi2Manwon * 10000;
 
     // OPI1 — 기본 성과인센티브 (연봉의 50%)
@@ -827,6 +850,8 @@ function MySalaryCalculator({
       opi1Manwon,
       opi2Won,
       opi2Manwon,
+      opi2BuManwon,
+      opi2SaManwon,
       totalGrossWon,
       totalGrossManwon,
       netWon: tax.net,
@@ -1036,147 +1061,165 @@ function MySalaryCalculator({
           </div>
         </details>
 
-        {/* 결과 카드 */}
+        {/* 결과 카드 — 정돈된 위계 (세후 강조 → 세전 → OPI 분해 → 산식) */}
         <div
-          className="rounded-2xl p-5 text-white relative overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${selected.color} 0%, ${selected.color}DD 100%)`,
-            boxShadow: `0 12px 32px ${selected.color}30`,
-          }}
+          className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900"
           aria-live="polite"
         >
+          {/* 헤더 — 사업부 라벨 (단색 액센트 바) */}
           <div
-            className="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-20 pointer-events-none"
-            style={{ background: "radial-gradient(#fff, transparent 70%)" }}
-            aria-hidden
-          />
-          <p
-            className="text-[10px] font-black uppercase tracking-[0.2em] mb-3"
-            style={{ color: "rgba(255,255,255,0.8)" }}
+            className="px-5 py-3 flex items-center justify-between"
+            style={{ backgroundColor: selected.color }}
           >
-            {selected.label} · 본인 케이스 · OPI1 + OPI2
-          </p>
-
-          {/* OPI1 / OPI2 분리 표시 */}
-          <div
-            className="grid grid-cols-2 gap-2 mb-4 rounded-xl p-3"
-            style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
-          >
-            <div>
-              <p
-                className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
-                style={{ color: "rgba(255,255,255,0.75)" }}
+            <div className="flex items-center gap-2">
+              <span
+                className="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] font-black text-white"
+                style={{ backgroundColor: "rgba(0,0,0,0.2)" }}
+                aria-hidden
               >
-                OPI1 (연봉 × 50%)
-              </p>
-              <p className="text-lg sm:text-xl font-black tabular-nums">
-                {fmtManwon(animOpi1)}
-              </p>
-              <p
-                className="text-[10px]"
-                style={{ color: "rgba(255,255,255,0.65)" }}
-              >
-                {fmtEok(personal.opi1Manwon)}
+                {selected.shortLabel}
+              </span>
+              <p className="text-sm font-black text-white">
+                {selected.label} 사업부
               </p>
             </div>
-            <div>
-              <p
-                className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
-                style={{ color: "rgba(255,255,255,0.75)" }}
-              >
-                OPI2 (특별경영성과금)
-              </p>
-              <p className="text-lg sm:text-xl font-black tabular-nums">
-                {fmtManwon(animOpi2)}
-              </p>
-              <p
-                className="text-[10px]"
-                style={{ color: "rgba(255,255,255,0.65)" }}
-              >
-                {fmtEok(personal.opi2Manwon)}
-              </p>
-            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/85">
+              본인 케이스
+            </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p
-                className="text-[10px] font-bold mb-1"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                OPI 합산 (세전)
+          {/* 메인 결과 — 세전 합계 / 세후 실수령 */}
+          <div className="grid grid-cols-2 divide-x divide-canvas-200 dark:divide-canvas-800 border-b border-canvas-200 dark:border-canvas-800">
+            <div className="px-5 py-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
+                세전 합계
               </p>
-              <p className="text-2xl sm:text-3xl font-black tabular-nums">
+              <p className="text-2xl sm:text-3xl font-black tabular-nums text-navy dark:text-canvas-50">
                 {fmtManwon(animGross)}
               </p>
-              <p
-                className="text-[11px] mt-0.5"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                {fmtEok(personal.totalGrossManwon)}
+              <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
+                {fmtEok(personal.totalGrossManwon)} · 연봉의{" "}
+                {personal.grossPct.toFixed(0)}%
               </p>
-              <div
-                className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black tabular-nums"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.18)",
-                  color: "#fff",
-                }}
-              >
-                연봉의 {personal.grossPct.toFixed(1)}%
-              </div>
             </div>
-            <div>
+            <div
+              className="px-5 py-5"
+              style={{ backgroundColor: `${selected.color}08` }}
+            >
               <p
-                className="text-[10px] font-bold mb-1"
-                style={{ color: "rgba(255,255,255,0.85)" }}
+                className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5"
+                style={{ color: selected.color }}
               >
                 세후 실수령
               </p>
-              <p className="text-2xl sm:text-3xl font-black tabular-nums">
+              <p
+                className="text-3xl sm:text-4xl font-black tabular-nums"
+                style={{ color: selected.color }}
+              >
                 {fmtManwon(animNet)}
               </p>
-              <p
-                className="text-[11px] mt-0.5"
-                style={{ color: "rgba(255,255,255,0.85)" }}
-              >
-                공제 {personal.effRate.toFixed(1)}%
+              <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
+                {fmtEok(personal.netManwon)} · 공제{" "}
+                {personal.effRate.toFixed(1)}%
               </p>
-              <div
-                className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black tabular-nums"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.18)",
-                  color: "#fff",
-                }}
-              >
-                연봉의 {personal.netPct.toFixed(1)}%
+            </div>
+          </div>
+
+          {/* OPI1 + OPI2 위계적 breakdown */}
+          <div className="px-5 py-4 space-y-3 bg-canvas-50 dark:bg-canvas-800/50">
+            {/* OPI1 한 줄 */}
+            <div className="flex items-center justify-between gap-3 py-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-1 h-8 rounded-full bg-faint-blue/40" aria-hidden />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-faint-blue">
+                    OPI1 · 기본 인센티브
+                  </p>
+                  <p className="text-[10px] text-faint-blue">
+                    연봉 × 50% · 사업부 무관
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-base font-black tabular-nums text-navy dark:text-canvas-50">
+                  {fmtManwon(animOpi1)}
+                </p>
+                <p className="text-[10px] text-faint-blue tabular-nums">
+                  연봉의 50.0%
+                </p>
+              </div>
+            </div>
+
+            {/* OPI2 + 부문/사업부 breakdown */}
+            <div className="rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="w-1 h-8 rounded-full"
+                    style={{ backgroundColor: selected.color }}
+                    aria-hidden
+                  />
+                  <div>
+                    <p
+                      className="text-[10px] font-bold uppercase tracking-[0.15em]"
+                      style={{ color: selected.color }}
+                    >
+                      OPI2 · 특별경영성과금
+                    </p>
+                    <p className="text-[10px] text-faint-blue">
+                      영업이익 기반 · 부문(40%) + 사업부(60%)
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-base font-black tabular-nums text-navy dark:text-canvas-50">
+                    {fmtManwon(animOpi2)}
+                  </p>
+                  <p className="text-[10px] text-faint-blue tabular-nums">
+                    연봉의 {(personal.opi2Multiplier * 100).toFixed(0)}%
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                <div className="rounded-lg px-3 py-2 bg-canvas-50 dark:bg-canvas-800">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-faint-blue mb-0.5">
+                    부문 (균등 40%)
+                  </p>
+                  <p className="text-sm font-black tabular-nums text-navy dark:text-canvas-50">
+                    {fmtManwon(personal.opi2BuManwon)}
+                  </p>
+                </div>
+                <div
+                  className="rounded-lg px-3 py-2"
+                  style={{ backgroundColor: `${selected.color}10` }}
+                >
+                  <p
+                    className="text-[9px] font-bold uppercase tracking-[0.15em] mb-0.5"
+                    style={{ color: selected.color }}
+                  >
+                    사업부 (가중 60%)
+                  </p>
+                  <p
+                    className="text-sm font-black tabular-nums"
+                    style={{ color: selected.color }}
+                  >
+                    {fmtManwon(personal.opi2SaManwon)}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 연봉 대비 산식 한 줄 */}
-          <div
-            className="mt-4 pt-4 border-t"
-            style={{ borderColor: "rgba(255,255,255,0.2)" }}
-          >
-            <p
-              className="text-[10px] uppercase tracking-[0.2em] font-bold mb-1"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-            >
-              산식
-            </p>
-            <p
-              className="text-xs leading-relaxed tabular-nums"
-              style={{ color: "rgba(255,255,255,0.92)" }}
-            >
-              OPI1{" "}
-              <strong>(연봉×50%) {fmtManwon(personal.opi1Manwon)}</strong> +
-              OPI2{" "}
-              <strong>
-                ({personal.opi2Multiplier.toFixed(2)}배){" "}
-                {fmtManwon(personal.opi2Manwon)}
-              </strong>{" "}
-              = 세전{" "}
-              <strong>{fmtManwon(personal.totalGrossManwon)}</strong>
+          {/* 산식 푸터 */}
+          <div className="px-5 py-3 border-t border-canvas-200 dark:border-canvas-800 bg-canvas-50 dark:bg-canvas-800/30">
+            <p className="text-[10px] text-muted-blue dark:text-canvas-400 leading-relaxed tabular-nums">
+              <span className="font-bold text-faint-blue">산식 · </span>
+              OPI1 {fmtManwonInt(personal.opi1Manwon)} + OPI2 (부문{" "}
+              {fmtManwonInt(personal.opi2BuManwon)} + 사업부{" "}
+              {fmtManwonInt(personal.opi2SaManwon)}) ={" "}
+              <strong className="text-navy dark:text-canvas-50">
+                세전 {fmtManwonInt(personal.totalGrossManwon)}만원
+              </strong>
             </p>
           </div>
         </div>
@@ -2356,10 +2399,14 @@ function MultiYearBonusSimulator({
 
     let cumOpi1 = 0;
     let cumOpi2 = 0;
+    let cumOpi2Bu = 0;
+    let cumOpi2Sa = 0;
     let cumGross = 0;
     let cumNet = 0;
     let triggeredCount = 0;
     let blockedCount = 0;
+
+    const personalRatio = salary / REFERENCE_SALARY;
 
     const enriched = rows.map((row) => {
       const profit = Math.max(0, Number(row.profitTrillionFmt) || 0);
@@ -2374,8 +2421,10 @@ function MultiYearBonusSimulator({
       const saUnit = wTotal > 0 ? saFund / wTotal : 0;
       const avgPerPersonManwon = buPer + saUnit * targetWeight;
 
-      // OPI2 — 본인 연봉 비례 (평균 8천 기준)
-      const opi2Manwon = avgPerPersonManwon * (salary / REFERENCE_SALARY);
+      // OPI2 — 부문/사업부 분리 + 본인 연봉 비례
+      const opi2BuManwon = buPer * personalRatio;
+      const opi2SaManwon = saUnit * targetWeight * personalRatio;
+      const opi2Manwon = opi2BuManwon + opi2SaManwon;
       const opi2Won = opi2Manwon * 10000;
 
       // 합산 — 세금은 OPI1+OPI2 합산에 누진세 적용
@@ -2392,6 +2441,8 @@ function MultiYearBonusSimulator({
 
       cumOpi1 += opi1Manwon;
       cumOpi2 += opi2Manwon;
+      cumOpi2Bu += opi2BuManwon;
+      cumOpi2Sa += opi2SaManwon;
       cumGross += totalGrossManwon;
       cumNet += myNetManwon;
       if (ok && profit > 0) triggeredCount++;
@@ -2405,6 +2456,8 @@ function MultiYearBonusSimulator({
         avgPerPersonManwon,
         opi1Manwon,
         opi2Manwon,
+        opi2BuManwon,
+        opi2SaManwon,
         myGrossManwon: totalGrossManwon,
         myNetManwon,
         myDeductManwon: totalGrossManwon - myNetManwon,
@@ -2415,6 +2468,8 @@ function MultiYearBonusSimulator({
       enriched,
       cumOpi1,
       cumOpi2,
+      cumOpi2Bu,
+      cumOpi2Sa,
       cumGross,
       cumNet,
       cumDeduct: cumGross - cumNet,
@@ -2509,114 +2564,136 @@ function MultiYearBonusSimulator({
         color={targetDivision.color}
       />
 
-      {/* 누적 합계 */}
-      <div
-        className="mt-5 rounded-2xl p-5 text-white relative overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${targetDivision.color} 0%, ${targetDivision.color}DD 100%)`,
-          boxShadow: `0 12px 32px ${targetDivision.color}30`,
-        }}
-      >
+      {/* 누적 합계 — 톤다운 정돈 (헤더 띠 + 본문 white) */}
+      <div className="mt-5 rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900">
+        {/* 헤더 띠 */}
         <div
-          className="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-20 pointer-events-none"
-          style={{ background: "radial-gradient(#fff, transparent 70%)" }}
-          aria-hidden
-        />
-        <p
-          className="text-[10px] font-black uppercase tracking-[0.2em] mb-3"
-          style={{ color: "rgba(255,255,255,0.85)" }}
+          className="px-5 py-3 flex items-center justify-between"
+          style={{ backgroundColor: targetDivision.color }}
         >
-          {targetDivision.label} · {rows.length}개 연도 누적 · OPI1+OPI2
-        </p>
-
-        {/* OPI1 / OPI2 누적 분리 */}
-        <div
-          className="grid grid-cols-2 gap-2 mb-4 rounded-xl p-3"
-          style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
-        >
-          <div>
-            <p
-              className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
-              style={{ color: "rgba(255,255,255,0.75)" }}
-            >
-              OPI1 누적 (연봉×50% × 연수)
-            </p>
-            <p className="text-lg sm:text-xl font-black tabular-nums">
-              {fmtManwon(animCumOpi1)}
-            </p>
-            <p
-              className="text-[10px]"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-            >
-              {fmtEok(computed.cumOpi1)}
-            </p>
-          </div>
-          <div>
-            <p
-              className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
-              style={{ color: "rgba(255,255,255,0.75)" }}
-            >
-              OPI2 누적 (특별경영성과금)
-            </p>
-            <p className="text-lg sm:text-xl font-black tabular-nums">
-              {fmtManwon(animCumOpi2)}
-            </p>
-            <p
-              className="text-[10px]"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-            >
-              {fmtEok(computed.cumOpi2)}
-            </p>
-          </div>
+          <p className="text-sm font-black text-white">
+            {targetDivision.label} · {rows.length}개 연도 누적
+          </p>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/85">
+            OPI1 + OPI2
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <p
-              className="text-[10px] font-bold mb-1"
-              style={{ color: "rgba(255,255,255,0.7)" }}
-            >
-              누적 세전 (OPI 합산)
+        {/* 메인 결과: 누적 세전 / 세후 */}
+        <div className="grid grid-cols-2 divide-x divide-canvas-200 dark:divide-canvas-800 border-b border-canvas-200 dark:border-canvas-800">
+          <div className="px-5 py-5">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
+              누적 세전 (합산)
             </p>
-            <p className="text-2xl sm:text-3xl font-black tabular-nums">
+            <p className="text-2xl sm:text-3xl font-black tabular-nums text-navy dark:text-canvas-50">
               {fmtManwon(animCumGross)}
             </p>
-            <p
-              className="text-[11px] mt-0.5"
-              style={{ color: "rgba(255,255,255,0.7)" }}
-            >
+            <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
               {fmtEok(computed.cumGross)}
             </p>
           </div>
-          <div>
+          <div
+            className="px-5 py-5"
+            style={{ backgroundColor: `${targetDivision.color}08` }}
+          >
             <p
-              className="text-[10px] font-bold mb-1"
-              style={{ color: "rgba(255,255,255,0.85)" }}
+              className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5"
+              style={{ color: targetDivision.color }}
             >
               누적 세후
             </p>
-            <p className="text-2xl sm:text-3xl font-black tabular-nums">
+            <p
+              className="text-3xl sm:text-4xl font-black tabular-nums"
+              style={{ color: targetDivision.color }}
+            >
               {fmtManwon(animCumNet)}
             </p>
-            <p
-              className="text-[11px] mt-0.5"
-              style={{ color: "rgba(255,255,255,0.85)" }}
-            >
-              {fmtEok(computed.cumNet)}
+            <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
+              {fmtEok(computed.cumNet)} · 공제 -{fmtManwonInt(computed.cumDeduct)}만원
             </p>
           </div>
         </div>
-        <div className="mt-4 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
-          <span style={{ color: "rgba(255,255,255,0.85)" }}>
-            ✓ 임계값 충족 <strong>{computed.triggeredCount}</strong>년
+
+        {/* OPI 분해: OPI1 / OPI2 / 부문 / 사업부 */}
+        <div className="px-5 py-4 bg-canvas-50 dark:bg-canvas-800/50 space-y-3">
+          <div className="flex items-center justify-between py-1.5">
+            <div className="flex items-center gap-2">
+              <span className="w-1 h-7 rounded-full bg-faint-blue/40" aria-hidden />
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-faint-blue">
+                  OPI1 누적
+                </p>
+                <p className="text-[10px] text-faint-blue">
+                  연봉×50% × {rows.length}년
+                </p>
+              </div>
+            </div>
+            <p className="text-base font-black tabular-nums text-navy dark:text-canvas-50">
+              {fmtManwon(animCumOpi1)}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span
+                  className="w-1 h-7 rounded-full"
+                  style={{ backgroundColor: targetDivision.color }}
+                  aria-hidden
+                />
+                <p
+                  className="text-[10px] font-bold uppercase tracking-[0.15em]"
+                  style={{ color: targetDivision.color }}
+                >
+                  OPI2 누적 · 특별경영성과금
+                </p>
+              </div>
+              <p className="text-base font-black tabular-nums text-navy dark:text-canvas-50">
+                {fmtManwon(animCumOpi2)}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-lg px-3 py-2 bg-canvas-50 dark:bg-canvas-800">
+                <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-faint-blue mb-0.5">
+                  부문 누적 (40%)
+                </p>
+                <p className="text-sm font-black tabular-nums text-navy dark:text-canvas-50">
+                  {fmtManwon(computed.cumOpi2Bu)}
+                </p>
+              </div>
+              <div
+                className="rounded-lg px-3 py-2"
+                style={{ backgroundColor: `${targetDivision.color}10` }}
+              >
+                <p
+                  className="text-[9px] font-bold uppercase tracking-[0.15em] mb-0.5"
+                  style={{ color: targetDivision.color }}
+                >
+                  사업부 누적 (60%)
+                </p>
+                <p
+                  className="text-sm font-black tabular-nums"
+                  style={{ color: targetDivision.color }}
+                >
+                  {fmtManwon(computed.cumOpi2Sa)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 임계값 정보 띠 */}
+        <div className="px-5 py-3 border-t border-canvas-200 dark:border-canvas-800 flex flex-wrap gap-x-4 gap-y-1 text-[10px]">
+          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+            ✓ 임계값 충족 {computed.triggeredCount}년
           </span>
           {computed.blockedCount > 0 && (
-            <span style={{ color: "rgba(255,180,180,0.95)" }}>
-              ⚠ 임계값 미달 <strong>{computed.blockedCount}</strong>년 (0원 처리)
+            <span className="text-rose-500 font-bold">
+              ⚠ 미달 {computed.blockedCount}년 (OPI2만 0)
             </span>
           )}
-          <span style={{ color: "rgba(255,255,255,0.7)" }}>
-            세금·4대보험 누적 -{fmtManwon(computed.cumDeduct)}
+          <span className="text-faint-blue">
+            OPI1은 임계값 무관 매년 지급
           </span>
         </div>
       </div>
@@ -2642,6 +2719,8 @@ function YearProfitRowCard({
     triggered: boolean;
     opi1Manwon: number;
     opi2Manwon: number;
+    opi2BuManwon: number;
+    opi2SaManwon: number;
     myGrossManwon: number;
     myNetManwon: number;
   };
@@ -2727,40 +2806,58 @@ function YearProfitRowCard({
         )}
       </div>
 
-      {/* OPI1 / OPI2 분리 */}
-      <div className="mt-2.5 grid grid-cols-2 gap-2 text-[11px]">
-        <div className="rounded-md px-2.5 py-1.5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+      {/* OPI1 / OPI2 분리 — OPI2는 부문·사업부 세부 */}
+      <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_1.4fr] gap-2 text-[11px]">
+        <div className="rounded-lg px-3 py-2 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            OPI1 (연봉×50%)
+            OPI1 · 연봉×50%
           </p>
-          <p className="font-black tabular-nums text-navy dark:text-canvas-50">
+          <p className="font-black tabular-nums text-sm text-navy dark:text-canvas-50">
             {fmtManwon(row.opi1Manwon)}
           </p>
         </div>
-        <div className="rounded-md px-2.5 py-1.5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
-          <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            OPI2 (특별)
-          </p>
-          <p
-            className="font-black tabular-nums"
-            style={{ color: blocked ? "#EF4444" : "#0A1829" }}
-          >
-            {blocked ? "0원 (미달)" : fmtManwon(row.opi2Manwon)}
-          </p>
-        </div>
-      </div>
-
-      {/* 합산 세전/세후 */}
-      <div className="mt-1.5 grid grid-cols-2 gap-2 text-[11px]">
         <div
-          className="rounded-md px-2.5 py-1.5 border"
+          className="rounded-lg px-3 py-2 border"
           style={{
             backgroundColor: blocked ? "#EF44440A" : "#0145F208",
             borderColor: blocked ? "#EF444433" : "#0145F233",
           }}
         >
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue">
+              OPI2 · 특별경영성과금
+            </p>
+            <p
+              className="font-black tabular-nums text-sm"
+              style={{ color: blocked ? "#EF4444" : "#0A1829" }}
+            >
+              {blocked ? "0원 (미달)" : fmtManwon(row.opi2Manwon)}
+            </p>
+          </div>
+          {!blocked && (
+            <div className="grid grid-cols-2 gap-1.5 text-[10px]">
+              <div className="flex justify-between px-1">
+                <span className="text-faint-blue">부문 40%</span>
+                <span className="tabular-nums font-bold text-muted-blue">
+                  {fmtManwonInt(row.opi2BuManwon)}
+                </span>
+              </div>
+              <div className="flex justify-between px-1">
+                <span className="text-faint-blue">사업부 60%</span>
+                <span className="tabular-nums font-bold text-electric">
+                  {fmtManwonInt(row.opi2SaManwon)}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 합산 세전/세후 */}
+      <div className="mt-1.5 grid grid-cols-2 gap-2 text-[11px]">
+        <div className="rounded-lg px-3 py-2 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            합산 세전
+            합산 세전 (OPI1+OPI2)
           </p>
           <p
             className="font-black tabular-nums text-sm"
@@ -2769,7 +2866,7 @@ function YearProfitRowCard({
             {fmtManwon(row.myGrossManwon)}
           </p>
         </div>
-        <div className="rounded-md px-2.5 py-1.5 bg-electric-5 border border-electric-20">
+        <div className="rounded-lg px-3 py-2 bg-electric-5 border border-electric-20">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
             합산 세후
           </p>

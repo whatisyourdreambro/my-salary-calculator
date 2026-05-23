@@ -341,6 +341,19 @@ export default function SamsungBonusCalculatorPage() {
                     차이.
                   </li>
                   <li>
+                    <strong>보도값과의 차이</strong> — 일부 언론은 영업이익
+                    350조 가정에서 메모리 791%·공통 553%·파운드리 252%로
+                    보도했으나, 본 계산기는 회의록 가중치(1.0/0.7/0.0)와 4:6
+                    분배 모델로 산출해 815%/642%/238%가 나옵니다.
+                    영업이익·평균임금·인원·세부 분배 가정 차이로 발생하며,
+                    회의록 가중치를 1차 출처로 채택했습니다.
+                  </li>
+                  <li>
+                    <strong>2026년 한정</strong> — 적자 사업부(파운드리·LSI)
+                    가중치 0. 2027년 이후는 사업부 성과에 따라 가중치 조정
+                    필요. UI에서 직접 입력하세요.
+                  </li>
+                  <li>
                     세금은 누진세율 기준 추정. 4대보험은 회사 분담분·정산 시점
                     차이로 실제 본인 부담과 다름.
                   </li>
@@ -497,17 +510,23 @@ export default function SamsungBonusCalculatorPage() {
               id="model-title"
               className="text-2xl font-black text-navy dark:text-canvas-50 mb-5"
             >
-              분배 모델 — 어떻게 계산되나
+              분배 모델 — OPI1 + OPI2 어떻게 계산되나
             </h2>
             <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 space-y-4">
               <Step
+                num="A"
+                title="OPI1 (기본 성과인센티브) = 연봉 × 50%"
+                desc="모든 사업부·연도 동일. 임계값 미달 연도에도 지급."
+                highlight
+              />
+              <Step
                 num="1"
-                title="총 재원 산정"
-                desc="영업이익(조원) × 10.5%. 예) 350조 × 10.5% = 36.75조원."
+                title="OPI2 재원 산정 (영업이익 × 10.5%)"
+                desc="예) 350조 × 10.5% = 36.75조원. 영업이익 임계값(26~28년 200조, 29~35년 100조) 미달 시 OPI2만 0."
               />
               <Step
                 num="2"
-                title="부문 40% : 사업부 60% 분할"
+                title="OPI2 → 부문 40% : 사업부 60% 분할"
                 desc="총 재원의 40%는 부문 풀(전체 인원 균등), 60%는 사업부 풀(인원×가중치 분배)."
               />
               <Step
@@ -518,13 +537,13 @@ export default function SamsungBonusCalculatorPage() {
               <Step
                 num="4"
                 title="사업부 1인당 (가중치 분배)"
-                desc="사업부 재원 × (본인 가중치) ÷ Σ(인원×가중치). 가중치 0이면 사업부 분배 0."
+                desc="사업부 재원 × (본인 가중치) ÷ Σ(인원×가중치). 2026 적자 사업부 가중치 0 → 사업부 분배 0."
                 mono
               />
               <Step
                 num="="
-                title="최종 1인당 = 부문 + 사업부"
-                desc="세전 평균. 본인 케이스 세후는 '내 연봉으로 계산' 섹션에서 자동 산출."
+                title="최종 1인당 = OPI1 + OPI2(부문 + 사업부)"
+                desc="세전 합산 평균. 세금은 OPI1+OPI2를 합쳐 누진세 적용."
               />
             </div>
           </section>
