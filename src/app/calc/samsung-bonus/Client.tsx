@@ -153,9 +153,10 @@ type Division = {
   defaultRatio: number;
 };
 
-// 노사 협정 회의록 원본 기준 — 메모리 1.0 : 공통 0.7 : 파운드리·LSI 0.0
-// (보도된 791/553/252% 수치는 평균임금 가정 차이로 약간 다를 수 있으나
-// 합의서·회의록의 가중치가 1차 출처이므로 이 값을 따른다.)
+// 보도값 매칭 보정 — 영업이익 350조 기준 메모리 791%·공통 553%·파운드리 252%
+// 보도 결과에 가장 근접한 가중치 역산. 회의록 원본은 1.0/0.7/0.0이지만 보도값과
+// 정합 불가(공통 16% 과대평가)하므로 보도값 매칭 우선. 사용자가 회의록 원본 값으로
+// UI에서 직접 조정 가능.
 const DIVISIONS: Division[] = [
   {
     id: "memory",
@@ -173,7 +174,7 @@ const DIVISIONS: Division[] = [
     color: "#F59E0B",
     bgTint: "#F59E0B0D",
     defaultCount: 29000,
-    defaultRatio: 0.7,
+    defaultRatio: 0.55, // 보도값 553% 매칭 (회의록 원본 0.7)
   },
   {
     id: "foundry",
@@ -182,7 +183,7 @@ const DIVISIONS: Division[] = [
     color: "#EF4444",
     bgTint: "#EF44440D",
     defaultCount: 20900,
-    defaultRatio: 0.0,
+    defaultRatio: 0.05, // 보도값 252% 매칭 + 2026 적자 사업부 (회의록 원본 0.0)
   },
 ];
 
@@ -658,15 +659,24 @@ export default function SamsungBonusClient() {
               border: "1px solid #F59E0B33",
             }}
           >
-            <p className="font-black text-amber-700 dark:text-amber-400 mb-0.5">
-              회의록 기준 (디폴트)
+            <p className="font-black text-amber-700 dark:text-amber-400 mb-1">
+              디폴트 가중치 — 보도값 매칭 보정
             </p>
-            <p className="text-muted-blue dark:text-canvas-400">
-              <strong>2026년</strong>: 적자 사업부(파운드리·LSI) 가중치{" "}
-              <strong>0.0</strong> — 부문 풀만 수령. <br />
-              <strong>2027년~</strong>: 사업부 성과에 따라 가변. 흑자 전환 시
-              가중치 ↑ 입력 권장.
-            </p>
+            <ul className="text-muted-blue dark:text-canvas-400 space-y-0.5 list-disc pl-4">
+              <li>
+                메모리 <strong>1.0</strong> · 공통 <strong>0.55</strong> ·
+                파운드리·LSI <strong>0.05</strong> → 350조 입력 시 약
+                858/579/269% (보도값 791/553/252%에 근접)
+              </li>
+              <li>
+                회의록 원본은 <strong>1.0 / 0.7 / 0.0</strong> — 위 값으로 직접
+                입력 가능 (단 보도값과 16% 차이 발생)
+              </li>
+              <li>
+                <strong>2026년</strong>: 적자 사업부(파운드리·LSI) 가중치 0
+                근처. <strong>2027년~</strong>: 사업부 성과에 따라 가변.
+              </li>
+            </ul>
           </div>
         </div>
       </section>
