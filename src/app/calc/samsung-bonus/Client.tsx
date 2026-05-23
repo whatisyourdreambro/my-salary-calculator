@@ -1328,27 +1328,25 @@ function CumulativeChart({
     1
   );
 
-  function xPos(i: number) {
-    return data.length <= 1
-      ? padL + innerW / 2
-      : padL + (i / (data.length - 1)) * innerW;
+  const n = enrichedData.length;
+  const groupWidth = innerW / Math.max(n, 1);
+  const barGap = 4;
+  const barWidth = Math.max(8, (groupWidth - barGap * 3) / 2);
+
+  function groupCenter(i: number) {
+    return padL + groupWidth * i + groupWidth / 2;
+  }
+  function barX(i: number, which: "year" | "sell") {
+    const center = groupCenter(i);
+    if (which === "year") return center - barGap / 2 - barWidth;
+    return center + barGap / 2;
   }
   function yPos(v: number) {
     return padT + innerH - (v / maxVal) * innerH;
   }
-
-  const yearPath = enrichedData
-    .map((d, i) => `${i === 0 ? "M" : "L"} ${xPos(i)} ${yPos(d.cumValue)}`)
-    .join(" ");
-  const sellPath = enrichedData
-    .map(
-      (d, i) =>
-        `${i === 0 ? "M" : "L"} ${xPos(i)} ${yPos(d.cumSellPriceValue)}`
-    )
-    .join(" ");
-  const yearArea =
-    yearPath +
-    ` L ${xPos(data.length - 1)} ${padT + innerH} L ${xPos(0)} ${padT + innerH} Z`;
+  function barH(v: number) {
+    return (v / maxVal) * innerH;
+  }
 
   return (
     <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4">
@@ -1360,15 +1358,20 @@ function CumulativeChart({
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto"
         role="img"
-        aria-label="다년도 누적 매도 가능 가치 그래프"
+        aria-label="다년도 누적 매도 가능 가치 막대 그래프"
       >
         <defs>
-          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0145F2" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#0145F2" stopOpacity="0" />
+          <linearGradient id="barBlue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0D5BFF" />
+            <stop offset="100%" stopColor="#0145F2" />
+          </linearGradient>
+          <linearGradient id="barGreen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#34D399" />
+            <stop offset="100%" stopColor="#10B981" />
           </linearGradient>
         </defs>
 
+        {/* 그리드 */}
         {[0.25, 0.5, 0.75, 1].map((g) => (
           <line
             key={g}
@@ -1382,6 +1385,7 @@ function CumulativeChart({
           />
         ))}
 
+        {/* y축 라벨 */}
         {[0, 0.5, 1].map((g) => {
           const v = maxVal * g;
           return (
@@ -1399,72 +1403,101 @@ function CumulativeChart({
           );
         })}
 
-        <path d={yearArea} fill="url(#areaGrad)" />
-        <path
-          d={sellPath}
-          fill="none"
-          stroke="#10B981"
-          strokeWidth="2"
-          strokeDasharray="4 3"
+        {/* x축 baseline */}
+        <line
+          x1={padL}
+          x2={width - padR}
+          y1={padT + innerH}
+          y2={padT + innerH}
+          stroke="#A8B9D6"
+          strokeWidth="0.8"
         />
-        <path d={yearPath} fill="none" stroke="#0145F2" strokeWidth="2.5" />
 
-        {enrichedData.map((d, i) => (
-          <g key={i}>
-            <circle
-              cx={xPos(i)}
-              cy={yPos(d.cumSellPriceValue)}
-              r="3"
-              fill="#10B981"
-              stroke="#fff"
-              strokeWidth="1.5"
-            />
-            <circle
-              cx={xPos(i)}
-              cy={yPos(d.cumValue)}
-              r="4"
-              fill="#0145F2"
-              stroke="#fff"
-              strokeWidth="2"
-            />
-            <rect
-              x={xPos(i) - 18}
-              y={padT}
-              width="36"
-              height={innerH}
-              fill="transparent"
-              onMouseEnter={() => setHoverIdx(i)}
-              onMouseLeave={() => setHoverIdx(null)}
-              onTouchStart={() => setHoverIdx(i)}
-              style={{ cursor: "pointer" }}
-            />
-            <text
-              x={xPos(i)}
-              y={height - padB + 18}
-              textAnchor="middle"
-              fontSize="10"
-              fill="#7B8FA1"
-              fontWeight="700"
-            >
-              {d.year}
-            </text>
-          </g>
-        ))}
+        {/* 그룹 바 */}
+        {enrichedData.map((d, i) => {
+          const isActive = hoverIdx === i;
+          return (
+            <g key={i}>
+              {/* hover 배경 (그룹 전체) */}
+              {isActive && (
+                <rect
+                  x={padL + groupWidth * i}
+                  y={padT}
+                  width={groupWidth}
+                  height={innerH}
+                  fill="#0145F2"
+                  opacity="0.05"
+                  rx="4"
+                  pointerEvents="none"
+                />
+              )}
 
+              {/* 파란 막대 — 그 해 주가 기준 누적 */}
+              <rect
+                x={barX(i, "year")}
+                y={yPos(d.cumValue)}
+                width={barWidth}
+                height={Math.max(0, barH(d.cumValue))}
+                fill="url(#barBlue)"
+                rx="2"
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 2px 6px rgba(1,69,242,0.35))"
+                    : "none",
+                  transition: "filter 0.15s",
+                }}
+              />
+
+              {/* 녹색 막대 — 기준 매도가 누적 */}
+              <rect
+                x={barX(i, "sell")}
+                y={yPos(d.cumSellPriceValue)}
+                width={barWidth}
+                height={Math.max(0, barH(d.cumSellPriceValue))}
+                fill="url(#barGreen)"
+                rx="2"
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 2px 6px rgba(16,185,129,0.35))"
+                    : "none",
+                  transition: "filter 0.15s",
+                }}
+              />
+
+              {/* hover hit-area (그룹 전체) */}
+              <rect
+                x={padL + groupWidth * i}
+                y={padT}
+                width={groupWidth}
+                height={innerH}
+                fill="transparent"
+                onMouseEnter={() => setHoverIdx(i)}
+                onMouseLeave={() => setHoverIdx(null)}
+                onTouchStart={() => setHoverIdx(i)}
+                style={{ cursor: "pointer" }}
+              />
+
+              {/* x축 라벨 */}
+              <text
+                x={groupCenter(i)}
+                y={height - padB + 18}
+                textAnchor="middle"
+                fontSize="10"
+                fill={isActive ? "#0145F2" : "#7B8FA1"}
+                fontWeight="700"
+              >
+                {d.year}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* 호버 툴팁 */}
         {hoverIdx !== null && enrichedData[hoverIdx] && (
           <g pointerEvents="none">
-            <line
-              x1={xPos(hoverIdx)}
-              x2={xPos(hoverIdx)}
-              y1={padT}
-              y2={padT + innerH}
-              stroke="#0145F2"
-              strokeOpacity="0.3"
-              strokeWidth="1"
-            />
             <rect
               x={Math.min(
-                Math.max(xPos(hoverIdx) - 60, padL),
+                Math.max(groupCenter(hoverIdx) - 65, padL),
                 width - padR - 130
               )}
               y={padT - 6}
@@ -1475,7 +1508,7 @@ function CumulativeChart({
             />
             <text
               x={Math.min(
-                Math.max(xPos(hoverIdx) - 60, padL),
+                Math.max(groupCenter(hoverIdx) - 65, padL),
                 width - padR - 130
               ) + 8}
               y={padT + 9}
@@ -1483,11 +1516,11 @@ function CumulativeChart({
               fill="#fff"
               fontWeight="700"
             >
-              {enrichedData[hoverIdx].year}년
+              {enrichedData[hoverIdx].year}년 누적
             </text>
             <text
               x={Math.min(
-                Math.max(xPos(hoverIdx) - 60, padL),
+                Math.max(groupCenter(hoverIdx) - 65, padL),
                 width - padR - 130
               ) + 8}
               y={padT + 24}
@@ -1498,18 +1531,18 @@ function CumulativeChart({
             </text>
             <text
               x={Math.min(
-                Math.max(xPos(hoverIdx) - 60, padL),
+                Math.max(groupCenter(hoverIdx) - 65, padL),
                 width - padR - 130
               ) + 8}
               y={padT + 37}
               fontSize="9"
-              fill="#10B981"
+              fill="#34D399"
             >
-              기준가: {fmtEok(enrichedData[hoverIdx].cumSellPriceValue)}
+              기준 매도가: {fmtEok(enrichedData[hoverIdx].cumSellPriceValue)}
             </text>
             <text
               x={Math.min(
-                Math.max(xPos(hoverIdx) - 60, padL),
+                Math.max(groupCenter(hoverIdx) - 65, padL),
                 width - padR - 130
               ) + 8}
               y={padT + 49}
@@ -1522,22 +1555,23 @@ function CumulativeChart({
         )}
       </svg>
 
+      {/* 범례 */}
       <div className="flex flex-wrap gap-3 mt-2 text-[11px]">
         <span className="inline-flex items-center gap-1.5 text-muted-blue">
           <span
-            className="w-3 h-0.5"
-            style={{ backgroundColor: "#0145F2" }}
+            className="w-3 h-3 rounded-sm"
+            style={{
+              background: "linear-gradient(to bottom, #0D5BFF, #0145F2)",
+            }}
             aria-hidden
           />
           그 해 주가 기준
         </span>
         <span className="inline-flex items-center gap-1.5 text-muted-blue">
           <span
-            className="w-3 h-0.5"
+            className="w-3 h-3 rounded-sm"
             style={{
-              backgroundImage:
-                "linear-gradient(to right, #10B981 50%, transparent 50%)",
-              backgroundSize: "5px 2px",
+              background: "linear-gradient(to bottom, #34D399, #10B981)",
             }}
             aria-hidden
           />
@@ -1545,8 +1579,8 @@ function CumulativeChart({
         </span>
       </div>
       <p className="text-[10px] text-faint-blue mt-2 leading-relaxed">
-        호버하면 연도별 누적 가치 비교. 두 선의 격차가 클수록 주가 변동 영향이
-        큽니다.
+        호버하면 연도별 누적 매도 가능 가치 비교. 두 막대 격차가 클수록 주가
+        변동이 매도 가치에 미치는 영향이 큽니다.
       </p>
     </div>
   );
