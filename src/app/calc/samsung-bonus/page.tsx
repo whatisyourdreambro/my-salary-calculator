@@ -120,6 +120,93 @@ export default function SamsungBonusCalculatorPage() {
 
           <InArticleAd />
 
+          {/* 다년도 RSU 모델 설명 */}
+          <section className="mb-10">
+            <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">
+              다년도 RSU 매도 시뮬레이션 — 어떻게 작동하나
+            </h2>
+            <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 space-y-4">
+              <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+                회의록상 매년 풀리는 주식 매도 제한이 다르고, 여러 해 누적한
+                주식을 한 번에 매도할 때의 가치를 시뮬레이션하는 도구입니다.
+                각 연도 행마다 다음 4가지를 입력하면 누적 매도 가능 주식 수와
+                매도 시 총 가치가 즉시 계산됩니다.
+              </p>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                    1
+                  </div>
+                  <div>
+                    <p className="font-bold text-navy dark:text-canvas-50 mb-1">
+                      그 해 1인당 성과급
+                    </p>
+                    <p className="text-xs text-muted-blue leading-relaxed">
+                      위 시뮬레이터의 결과를 가져오거나 직접 입력. "메모리
+                      1인당으로 채우기" 버튼으로 일괄 적용 가능.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                    2
+                  </div>
+                  <div>
+                    <p className="font-bold text-navy dark:text-canvas-50 mb-1">
+                      주식 비중 (%)
+                    </p>
+                    <p className="text-xs text-muted-blue leading-relaxed">
+                      성과급 중 RSU(주식 보상)로 받는 비중. 디폴트 30%.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center font-black text-emerald-600 text-sm">
+                    3
+                  </div>
+                  <div>
+                    <p className="font-bold text-navy dark:text-canvas-50 mb-1">
+                      풀린 비율 (%) — 회의록상 매도 제한 해제
+                    </p>
+                    <p className="text-xs text-muted-blue leading-relaxed">
+                      그 해 받은 RSU 중 현재 시점에 매도 가능한 누적 비율.
+                      회의록상 매년 다르게 풀리는 정책을 그대로 입력하세요. 예)
+                      가장 오래된 RSU는 100%, 작년 RSU는 25%.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                    4
+                  </div>
+                  <div>
+                    <p className="font-bold text-navy dark:text-canvas-50 mb-1">
+                      그 해 주가 (원)
+                    </p>
+                    <p className="text-xs text-muted-blue leading-relaxed">
+                      RSU 받은 시점의 주가. RSU 주식 수 = 가치 ÷ 그 해 주가.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric flex items-center justify-center font-black text-white text-sm">
+                    =
+                  </div>
+                  <div>
+                    <p className="font-bold text-electric mb-1">
+                      누적 매도 가능 × 기준 매도가
+                    </p>
+                    <p className="text-xs text-muted-blue leading-relaxed">
+                      모든 연도의 매도 가능 주식을 합산하고, 하단의 "기준
+                      매도가"에 일괄 매도한다고 가정한 총 가치를 산출합니다.
+                      주가 변동 시나리오를 빠르게 비교할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* 분배 모델 설명 */}
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">
