@@ -20,9 +20,10 @@ import {
 // ────────────────────────────────────────────────────────────
 // 고정 정책 변수 (공개 노사 합의 보도 기반)
 // ────────────────────────────────────────────────────────────
-const FIXED_RERATE = 10.5; // 영업이익의 10.5%
+const FIXED_RERATE = 10.5; // 영업이익의 10.5% — OPI2(특별경영성과금) 재원
 const FIXED_BU_RATIO = 4; // 부문 : 사업부 = 4 : 6
 const FIXED_SA_RATIO = 6;
+const FIXED_OPI1_RATE = 50; // OPI1(기본 성과인센티브) = 연봉의 50%
 const REFERENCE_SALARY = 80_000_000; // 본인 연봉 비례 기준 (평균 8천만원)
 
 // 회의록 임계값:
@@ -152,9 +153,9 @@ type Division = {
   defaultRatio: number;
 };
 
-// 15차 보정 — 운영자 지적: 영업이익 350조 기준 메모리 791%·공통 553%·파운드리 252%가
-// 보도된 회의록 매칭 수치. 기존 r2=0.7·r3=0.0은 DS공통 16% 과대평가 + 파운드리 부문
-// 풀만 받는 비현실적 설정. 역산 r2≈0.55·r3≈0.05로 보정해 보도 수치에 근사.
+// 노사 협정 회의록 원본 기준 — 메모리 1.0 : 공통 0.7 : 파운드리·LSI 0.0
+// (보도된 791/553/252% 수치는 평균임금 가정 차이로 약간 다를 수 있으나
+// 합의서·회의록의 가중치가 1차 출처이므로 이 값을 따른다.)
 const DIVISIONS: Division[] = [
   {
     id: "memory",
@@ -172,7 +173,7 @@ const DIVISIONS: Division[] = [
     color: "#F59E0B",
     bgTint: "#F59E0B0D",
     defaultCount: 29000,
-    defaultRatio: 0.55, // 보정: 0.7 → 0.55 (DS공통 553% 보도 매칭)
+    defaultRatio: 0.7,
   },
   {
     id: "foundry",
@@ -181,7 +182,7 @@ const DIVISIONS: Division[] = [
     color: "#EF4444",
     bgTint: "#EF44440D",
     defaultCount: 20900,
-    defaultRatio: 0.05, // 보정: 0.0 → 0.05 (파운드리·LSI 252% 보도 매칭)
+    defaultRatio: 0.0,
   },
 ];
 
@@ -800,28 +801,49 @@ function MySalaryCalculator({
     perDivision.find((d) => d.id === selectedDivId) ?? perDivision[0];
 
   const personal = useMemo(() => {
+    // OPI2 — 특별경영성과금 (영업이익 기반 사업부 분배)
     const ratio = salary / REFERENCE_SALARY;
-    const myGrossManwon = selected.total * ratio;
-    const myGrossWon = myGrossManwon * 10000;
+    const opi2Manwon = selected.total * ratio;
+    const opi2Won = opi2Manwon * 10000;
 
-    const tax = calcBonusNet(salary, myGrossWon, creditRate, applyInsurance);
-    const grossPct = salary > 0 ? (myGrossWon / salary) * 100 : 0;
+    // OPI1 — 기본 성과인센티브 (연봉의 50%)
+    const opi1Won = salary * (FIXED_OPI1_RATE / 100);
+    const opi1Manwon = opi1Won / 10000;
+
+    // 합산 — 세금은 OPI1+OPI2 합산 기준으로 누진세 적용
+    const totalGrossWon = opi1Won + opi2Won;
+    const totalGrossManwon = opi1Manwon + opi2Manwon;
+
+    const tax = calcBonusNet(
+      salary,
+      totalGrossWon,
+      creditRate,
+      applyInsurance
+    );
+    const grossPct = salary > 0 ? (totalGrossWon / salary) * 100 : 0;
     const netPct = salary > 0 ? (tax.net / salary) * 100 : 0;
     return {
-      grossWon: myGrossWon,
+      opi1Won,
+      opi1Manwon,
+      opi2Won,
+      opi2Manwon,
+      totalGrossWon,
+      totalGrossManwon,
       netWon: tax.net,
+      netManwon: tax.net / 10000,
       deductWon: tax.deduct,
       effRate: tax.effRate,
       breakdown: tax.breakdown,
-      grossManwon: myGrossManwon,
-      netManwon: tax.net / 10000,
       grossPct,
       netPct,
-      grossMultiplier: salary > 0 ? myGrossWon / salary : 0,
+      grossMultiplier: salary > 0 ? totalGrossWon / salary : 0,
+      opi2Multiplier: salary > 0 ? opi2Won / salary : 0,
     };
   }, [salary, selected, creditRate, applyInsurance]);
 
-  const animGross = useCountUp(personal.grossManwon);
+  const animOpi1 = useCountUp(personal.opi1Manwon);
+  const animOpi2 = useCountUp(personal.opi2Manwon);
+  const animGross = useCountUp(personal.totalGrossManwon);
   const animNet = useCountUp(personal.netManwon);
 
   return (
@@ -1032,15 +1054,57 @@ function MySalaryCalculator({
             className="text-[10px] font-black uppercase tracking-[0.2em] mb-3"
             style={{ color: "rgba(255,255,255,0.8)" }}
           >
-            {selected.label} · 본인 케이스
+            {selected.label} · 본인 케이스 · OPI1 + OPI2
           </p>
+
+          {/* OPI1 / OPI2 분리 표시 */}
+          <div
+            className="grid grid-cols-2 gap-2 mb-4 rounded-xl p-3"
+            style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+          >
+            <div>
+              <p
+                className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
+                style={{ color: "rgba(255,255,255,0.75)" }}
+              >
+                OPI1 (연봉 × 50%)
+              </p>
+              <p className="text-lg sm:text-xl font-black tabular-nums">
+                {fmtManwon(animOpi1)}
+              </p>
+              <p
+                className="text-[10px]"
+                style={{ color: "rgba(255,255,255,0.65)" }}
+              >
+                {fmtEok(personal.opi1Manwon)}
+              </p>
+            </div>
+            <div>
+              <p
+                className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
+                style={{ color: "rgba(255,255,255,0.75)" }}
+              >
+                OPI2 (특별경영성과금)
+              </p>
+              <p className="text-lg sm:text-xl font-black tabular-nums">
+                {fmtManwon(animOpi2)}
+              </p>
+              <p
+                className="text-[10px]"
+                style={{ color: "rgba(255,255,255,0.65)" }}
+              >
+                {fmtEok(personal.opi2Manwon)}
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <p
                 className="text-[10px] font-bold mb-1"
                 style={{ color: "rgba(255,255,255,0.7)" }}
               >
-                세전 성과급
+                OPI 합산 (세전)
               </p>
               <p className="text-2xl sm:text-3xl font-black tabular-nums">
                 {fmtManwon(animGross)}
@@ -1049,7 +1113,7 @@ function MySalaryCalculator({
                 className="text-[11px] mt-0.5"
                 style={{ color: "rgba(255,255,255,0.7)" }}
               >
-                {fmtEok(personal.grossManwon)}
+                {fmtEok(personal.totalGrossManwon)}
               </p>
               <div
                 className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black tabular-nums"
@@ -1104,16 +1168,21 @@ function MySalaryCalculator({
               className="text-xs leading-relaxed tabular-nums"
               style={{ color: "rgba(255,255,255,0.92)" }}
             >
-              연봉{" "}
-              <strong>{(salary / 10000).toLocaleString("ko-KR")}만원</strong> ×{" "}
-              <strong>{personal.grossMultiplier.toFixed(2)}배</strong> = 세전{" "}
-              <strong>{fmtManwon(personal.grossManwon)}</strong>
+              OPI1{" "}
+              <strong>(연봉×50%) {fmtManwon(personal.opi1Manwon)}</strong> +
+              OPI2{" "}
+              <strong>
+                ({personal.opi2Multiplier.toFixed(2)}배){" "}
+                {fmtManwon(personal.opi2Manwon)}
+              </strong>{" "}
+              = 세전{" "}
+              <strong>{fmtManwon(personal.totalGrossManwon)}</strong>
             </p>
           </div>
         </div>
 
         {/* 공제 상세 + 면책 */}
-        {personal.grossWon > 0 && (
+        {personal.totalGrossWon > 0 && (
           <details className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4 group">
             <summary className="cursor-pointer text-xs font-black uppercase tracking-widest text-faint-blue flex items-center justify-between">
               공제 항목 상세
@@ -2281,6 +2350,12 @@ function MultiYearBonusSimulator({
     );
     const targetWeight = ratioNums[targetDivId] || 0;
 
+    // OPI1 = 연봉의 50% — 모든 연도/사업부 동일
+    const opi1Won = salary * (FIXED_OPI1_RATE / 100);
+    const opi1Manwon = opi1Won / 10000;
+
+    let cumOpi1 = 0;
+    let cumOpi2 = 0;
     let cumGross = 0;
     let cumNet = 0;
     let triggeredCount = 0;
@@ -2299,14 +2374,25 @@ function MultiYearBonusSimulator({
       const saUnit = wTotal > 0 ? saFund / wTotal : 0;
       const avgPerPersonManwon = buPer + saUnit * targetWeight;
 
-      // 본인 연봉 비례 (평균 8천 기준)
-      const myGrossManwon = avgPerPersonManwon * (salary / REFERENCE_SALARY);
-      const myGrossWon = myGrossManwon * 10000;
+      // OPI2 — 본인 연봉 비례 (평균 8천 기준)
+      const opi2Manwon = avgPerPersonManwon * (salary / REFERENCE_SALARY);
+      const opi2Won = opi2Manwon * 10000;
 
-      const tax = calcBonusNet(salary, myGrossWon, creditRate, applyInsurance);
+      // 합산 — 세금은 OPI1+OPI2 합산에 누진세 적용
+      const totalGrossManwon = opi1Manwon + opi2Manwon;
+      const totalGrossWon = opi1Won + opi2Won;
+
+      const tax = calcBonusNet(
+        salary,
+        totalGrossWon,
+        creditRate,
+        applyInsurance
+      );
       const myNetManwon = tax.net / 10000;
 
-      cumGross += myGrossManwon;
+      cumOpi1 += opi1Manwon;
+      cumOpi2 += opi2Manwon;
+      cumGross += totalGrossManwon;
       cumNet += myNetManwon;
       if (ok && profit > 0) triggeredCount++;
       if (!ok && profit > 0) blockedCount++;
@@ -2317,14 +2403,18 @@ function MultiYearBonusSimulator({
         threshold: th,
         triggered: ok,
         avgPerPersonManwon,
-        myGrossManwon,
+        opi1Manwon,
+        opi2Manwon,
+        myGrossManwon: totalGrossManwon,
         myNetManwon,
-        myDeductManwon: myGrossManwon - myNetManwon,
+        myDeductManwon: totalGrossManwon - myNetManwon,
       };
     });
 
     return {
       enriched,
+      cumOpi1,
+      cumOpi2,
       cumGross,
       cumNet,
       cumDeduct: cumGross - cumNet,
@@ -2334,6 +2424,8 @@ function MultiYearBonusSimulator({
     };
   }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance]);
 
+  const animCumOpi1 = useCountUp(computed.cumOpi1);
+  const animCumOpi2 = useCountUp(computed.cumOpi2);
   const animCumGross = useCountUp(computed.cumGross);
   const animCumNet = useCountUp(computed.cumNet);
 
@@ -2344,9 +2436,10 @@ function MultiYearBonusSimulator({
         성과급 시뮬레이션
       </p>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
-        사업부를 선택하고 연도별 영업이익만 입력하세요. 위 메인 시뮬의
-        인원·가중치·본인 연봉을 그대로 사용해 임계값 조건까지 자동 적용. 26~28년
-        200조, 29~35년 100조 미달 연도는 자동 0원.
+        사업부를 선택하고 연도별 영업이익만 입력하세요. <strong>OPI1(연봉×50%) +
+        OPI2(특별경영성과금)</strong>을 합산해 세금까지 자동 계산. 위 메인 시뮬의
+        인원·가중치·본인 연봉을 그대로 사용. 26~28년 200조, 29~35년 100조 미달
+        연도는 OPI2만 0원이 되고 OPI1은 그대로 지급.
       </p>
 
       {/* 사업부 선택 */}
@@ -2433,15 +2526,57 @@ function MultiYearBonusSimulator({
           className="text-[10px] font-black uppercase tracking-[0.2em] mb-3"
           style={{ color: "rgba(255,255,255,0.85)" }}
         >
-          {targetDivision.label} · {rows.length}개 연도 누적
+          {targetDivision.label} · {rows.length}개 연도 누적 · OPI1+OPI2
         </p>
+
+        {/* OPI1 / OPI2 누적 분리 */}
+        <div
+          className="grid grid-cols-2 gap-2 mb-4 rounded-xl p-3"
+          style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+        >
+          <div>
+            <p
+              className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
+              OPI1 누적 (연봉×50% × 연수)
+            </p>
+            <p className="text-lg sm:text-xl font-black tabular-nums">
+              {fmtManwon(animCumOpi1)}
+            </p>
+            <p
+              className="text-[10px]"
+              style={{ color: "rgba(255,255,255,0.65)" }}
+            >
+              {fmtEok(computed.cumOpi1)}
+            </p>
+          </div>
+          <div>
+            <p
+              className="text-[9px] font-black uppercase tracking-[0.15em] mb-1"
+              style={{ color: "rgba(255,255,255,0.75)" }}
+            >
+              OPI2 누적 (특별경영성과금)
+            </p>
+            <p className="text-lg sm:text-xl font-black tabular-nums">
+              {fmtManwon(animCumOpi2)}
+            </p>
+            <p
+              className="text-[10px]"
+              style={{ color: "rgba(255,255,255,0.65)" }}
+            >
+              {fmtEok(computed.cumOpi2)}
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <p
               className="text-[10px] font-bold mb-1"
               style={{ color: "rgba(255,255,255,0.7)" }}
             >
-              누적 세전
+              누적 세전 (OPI 합산)
             </p>
             <p className="text-2xl sm:text-3xl font-black tabular-nums">
               {fmtManwon(animCumGross)}
@@ -2505,6 +2640,8 @@ function YearProfitRowCard({
     profit: number;
     threshold: number;
     triggered: boolean;
+    opi1Manwon: number;
+    opi2Manwon: number;
     myGrossManwon: number;
     myNetManwon: number;
   };
@@ -2590,28 +2727,57 @@ function YearProfitRowCard({
         )}
       </div>
 
-      {/* 결과 행 */}
+      {/* OPI1 / OPI2 분리 */}
       <div className="mt-2.5 grid grid-cols-2 gap-2 text-[11px]">
         <div className="rounded-md px-2.5 py-1.5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            세전
+            OPI1 (연봉×50%)
+          </p>
+          <p className="font-black tabular-nums text-navy dark:text-canvas-50">
+            {fmtManwon(row.opi1Manwon)}
+          </p>
+        </div>
+        <div className="rounded-md px-2.5 py-1.5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
+            OPI2 (특별)
           </p>
           <p
             className="font-black tabular-nums"
             style={{ color: blocked ? "#EF4444" : "#0A1829" }}
           >
-            {blocked ? "0원 (미달)" : fmtManwon(row.myGrossManwon)}
+            {blocked ? "0원 (미달)" : fmtManwon(row.opi2Manwon)}
+          </p>
+        </div>
+      </div>
+
+      {/* 합산 세전/세후 */}
+      <div className="mt-1.5 grid grid-cols-2 gap-2 text-[11px]">
+        <div
+          className="rounded-md px-2.5 py-1.5 border"
+          style={{
+            backgroundColor: blocked ? "#EF44440A" : "#0145F208",
+            borderColor: blocked ? "#EF444433" : "#0145F233",
+          }}
+        >
+          <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
+            합산 세전
+          </p>
+          <p
+            className="font-black tabular-nums text-sm"
+            style={{ color: blocked ? "#EF4444" : "#0A1829" }}
+          >
+            {fmtManwon(row.myGrossManwon)}
           </p>
         </div>
         <div className="rounded-md px-2.5 py-1.5 bg-electric-5 border border-electric-20">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            세후
+            합산 세후
           </p>
           <p
-            className="font-black tabular-nums"
+            className="font-black tabular-nums text-sm"
             style={{ color: blocked ? "#EF4444" : "#0145F2" }}
           >
-            {blocked ? "0원" : fmtManwon(row.myNetManwon)}
+            {fmtManwon(row.myNetManwon)}
           </p>
         </div>
       </div>
