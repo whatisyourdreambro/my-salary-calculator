@@ -1,7 +1,7 @@
 // src/app/calc/samsung-bonus/page.tsx
 //
-// 삼성전자 OPI1·OPI2 성과급 계산기.
-// 키워드: "삼성전자 성과급", "OPI 계산", "OPI1 OPI2", "삼성 OPI 계산기"
+// 삼성전자 성과급 시뮬레이터.
+// 영업이익 기반 부문/사업부 풀 분배 모델.
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -21,114 +21,59 @@ import ShareButtons from "@/components/ShareButtons";
 
 const FAQ_ITEMS = [
   {
-    question: "OPI1과 OPI2는 어떻게 다른가요?",
+    question: "이 계산기는 무엇을 시뮬레이션하나요?",
     answer:
-      "OPI1은 기존 운영되던 초과이익성과금으로, 사업부 영업이익 목표 초과분에 따라 기본급의 최대 50%까지 지급됩니다. OPI2는 2026년 노사 합의로 신설되는 추가 풀로, 사업부 연간 영업이익의 10.5%를 재원으로 사업부 소속 인원에게 분배되는 구조입니다. 둘은 별도로 산정되어 합산 지급되며, 평가 등급에 따라 동일한 가중치가 적용됩니다.",
+      "삼성전자의 영업이익 기반 성과급 분배 모델입니다. 회사 전체 영업이익에서 일정 비율(재원비율)을 성과급 풀로 떼고, 그 풀을 다시 '부문(전체 인원 균등 분배)'과 '사업부(인원×사업부 비율로 가중 분배)' 두 갈래로 나눠 사업부별 1인당 평균 성과급을 추정합니다. 본인 호봉·고과 등 개인 변수는 반영하지 않은 사업부 평균 수치입니다.",
   },
   {
-    question: "사업부 영업이익은 어디서 확인하나요?",
+    question: "부문 분배와 사업부 분배의 차이는 무엇인가요?",
     answer:
-      "삼성전자 분기·연간 잠정실적 발표(IR 공시)와 사업보고서에 사업부별 영업이익이 공개됩니다. DS 부문은 메모리/파운드리·시스템LSI로 세분 공시되며, DX 부문은 MX/VD·DA/Harman 등으로 구분됩니다. 본 계산기는 사업부 선택 시 최근 흐름 기반 추정 영업이익을 디폴트로 제시하고, 본인이 직접 조정할 수 있습니다.",
+      "부문 분배는 회사 전체 인원에 균등하게 나누는 방식으로, 어느 사업부 소속이든 동일한 금액을 받습니다. 사업부 분배는 사업부별로 정해진 '사업부 비율(가중치)'에 따라 차등 지급되며, 비율이 0인 사업부는 사업부 분배분이 0이 됩니다. 두 갈래의 비중을 7:3, 5:5처럼 조절할 수 있어 분배 정책 변화의 영향을 한눈에 비교할 수 있습니다.",
   },
   {
-    question: "왜 영업이익이 적자인 사업부는 OPI2가 0인가요?",
+    question: "왜 사업부 비율 0이면 사업부 분배가 0인가요?",
     answer:
-      "OPI2는 사업부 영업이익의 10.5%를 재원으로 분배하므로 영업이익이 0 이하이면 분배할 재원이 없어 OPI2가 산정되지 않습니다. 다만 OPI1은 기본급 기준이고 임금협상 인상분과 별개로 운영되므로, 적자 사업부도 OPI1과 임금 인상 소급분은 받을 수 있습니다.",
+      "사업부 1인당 = 사업부 재원 × (본인 사업부 비율) ÷ Σ(인원×비율) 공식이기 때문입니다. 본인 사업부의 비율이 0이면 분자가 0이 되어 사업부 분배분이 0입니다. 영업이익이 적자이거나 사업부 기여도가 낮은 경우 이 비율을 0~0.3 수준으로 두는 게 현실적입니다.",
   },
   {
-    question: "연봉 8천만원이면 기본급은 얼마로 잡나요?",
+    question: "영업이익은 어떤 기준으로 입력하나요?",
     answer:
-      "삼성전자 기본급은 통상 연봉의 65~70% 수준입니다. 본 계산기는 기본 67%로 가정하므로 연봉 8천만원이면 연 기본급 약 5,360만원, 월 기본급 약 447만원입니다. 명세서의 정확한 본봉 비율로 슬라이더를 조정해 정밀하게 계산할 수 있습니다. OPI1은 기본급 기준이므로 이 값이 정확해야 합니다.",
+      "회사 연결 기준 연간 영업이익(조원)을 입력합니다. 분기 영업이익이면 4배(연환산)로 환산해 넣으면 됩니다. 삼성전자의 경우 2023년 6.6조, 2024년 32.7조, 2025년 호황 시 50~60조 수준이 거론됩니다. 본 계산기는 10조~500조까지 슬라이더로 시뮬레이션 가능합니다.",
   },
   {
-    question: "성과급 받을 때 세금이 왜 그렇게 많이 빠지나요?",
+    question: "재원비율 15%는 너무 높은 것 아닌가요?",
     answer:
-      "OPI는 별도 분리과세가 아니라 근로소득에 합산되어 누진세율(6~45%)이 적용됩니다. 연봉 8천만원 구간은 24% 한계세율이지만 OPI 합산 시 35% 구간까지 진입하는 경우가 많고, 여기에 지방소득세 10%와 4대보험(국민연금·건강·고용·장기요양)이 추가됩니다. 일반적으로 OPI 실효세율은 28~38% 수준입니다.",
+      "보수적으로 보면 5~10% 정도가 현실적이고, 노조 측 요구안이 반영되면 15~20%까지 올라가는 경우가 있습니다. 본 계산기는 시뮬레이션 도구이므로 다양한 시나리오를 직접 조정해보세요. 슬라이더는 1~30% 범위에서 0.5% 단위로 움직입니다.",
   },
   {
-    question: "OPI 세금을 줄일 수 있는 방법이 있나요?",
+    question: "결과 금액에 세금이 포함되어 있나요?",
     answer:
-      "OPI 자체의 세율을 낮출 수는 없지만 환급액을 키울 수 있는 방법은 있습니다. (1) IRP/연금저축 추가 납입(연 900만원 한도, 13.2~16.5% 세액공제), (2) 우리사주조합 출연(연 400만원 한도 비과세), (3) 의료비·교육비·기부금 공제 극대화, (4) 고향사랑기부(10만원까지 100% 세액공제) 등입니다. OPI 수령 직후 IRP에 1년치 한도를 채워두는 게 가장 효과 큽니다.",
+      "본 계산기는 세전 1인당 평균 성과급을 표시합니다. 실제 통장에 들어오는 금액은 누진세율(6~45%) + 지방소득세 10% + 4대보험이 빠진 약 65~70% 수준입니다. 예를 들어 세전 1억원이면 세후 약 6,500~7,000만원이 입금됩니다. 정확한 세후 계산은 별도 성과급 세금 계산기를 참고하세요.",
   },
   {
-    question: "OPI 외에 다른 성과급도 있나요?",
+    question: "SK하이닉스 비교는 어떻게 산출했나요?",
     answer:
-      "있습니다. (1) 임금협상 결과에 따른 1월 1일자 소급분(잠정합의 시점까지의 누적 인상분 일시 지급), (2) 명절선물비·휴양시설·자기개발비 등 복지성 지원, (3) 자사주 보상(임원·핵심인재 한정), (4) 신규 채용 사이닝 보너스 등이 있습니다. 본 계산기는 OPI1·OPI2 두 축과 임금협상 소급분(고급 옵션)을 다룹니다.",
+      "참고 박스의 SK하이닉스 7.14억 추정치는 영업이익 250조, 재원비율 10%, 직원 35,000명, 단일 사업부 균등 분배를 가정한 단순 계산입니다(250조 × 10% / 35,000명 = 약 7.14억). 실제 SK하이닉스는 PS(Profit Sharing) 제도를 별도 운영하며 기본급 기준 1,500% 같은 형태로 지급되므로 직접 비교는 어렵습니다.",
   },
 ];
 
 export const metadata: Metadata = buildToolMetadata({
-  name: "삼성전자 OPI 성과급 계산기",
-  tagline: "OPI1 + OPI2 사업부별 영업이익 10.5% 풀 반영",
+  name: "삼성전자 성과급 시뮬레이터",
+  tagline: "영업이익 × 재원비율 × 부문/사업부 분배 1인당 추정",
   description:
-    "삼성전자 OPI1(기본급 50% 상한)과 OPI2(영업이익 10.5% 풀) 세후 실수령을 사업부·평가등급별로 계산합니다. 2026년 노사 합의로 신설된 OPI2 구조와 절세 팁까지.",
+    "삼성전자 영업이익 기반 성과급 1인당 분배 시뮬레이터. 부문(균등) + 사업부(가중치) 분배 비율을 직접 조절하며 메모리·공통·파운드리 사업부별 평균 성과급을 추정합니다. SK하이닉스 비교 참고치 포함.",
   path: "/calc/samsung-bonus",
   keywords: [
     "삼성전자 성과급",
-    "삼성전자 OPI",
-    "OPI1 OPI2",
-    "삼성 성과급 계산기",
-    "OPI 계산",
-    "삼성 보너스",
-    "초과이익성과금",
-    "삼성전자 성과급 세금",
-    "사업부 영업이익 10.5%",
+    "삼성전자 성과급 계산기",
+    "삼성전자 성과급 시뮬레이터",
+    "삼성 성과급 분배",
+    "삼성 OPI",
+    "사업부 영업이익 분배",
+    "삼성 보너스 계산",
+    "SK하이닉스 성과급 비교",
   ],
 });
-
-const SCENARIOS = [
-  {
-    title: "DS 메모리 호황 · GD 평가",
-    detail:
-      "OPI1 50% + 영업이익 22조 기준 OPI2. HBM·D램 슈퍼사이클 모범 사례.",
-    bonus: "OPI1+OPI2 합산 큰 폭",
-    color: "#0145F2",
-  },
-  {
-    title: "MX 모바일 · VG 평가",
-    detail:
-      "OPI1 35% + 영업이익 12조 기준. 갤럭시 플래그십 견조 + VG 가중 1.1배.",
-    bonus: "OPI1 중심, OPI2 보조",
-    color: "#0D5BFF",
-  },
-  {
-    title: "DS 파운드리 · GD 평가",
-    detail:
-      "OPI1 12% + 영업이익 적자 → OPI2 = 0. 임금협상 인상 소급분으로 보전.",
-    bonus: "OPI1만 일부, OPI2 0",
-    color: "#7B92FF",
-  },
-  {
-    title: "VD·DA 가전 · GD 평가",
-    detail:
-      "OPI1 22% + 영업이익 1.5조. 프리미엄 TV·가전 비중에 따라 변동.",
-    bonus: "균형형 OPI",
-    color: "#A8B9D6",
-  },
-];
-
-const TAX_TIPS = [
-  {
-    title: "IRP·연금저축에 즉시 입금",
-    body:
-      "OPI 1월 입금 직후 연 900만원 한도까지 IRP·연금저축에 넣으면 최대 148.5만원 환급. 자동이체 설정해두면 무의식 절세.",
-  },
-  {
-    title: "우리사주 출연으로 비과세",
-    body:
-      "삼성전자 우리사주조합 출연금은 연 400만원까지 비과세 + 시가 차익 분리과세. 단, 1년 보호예수.",
-  },
-  {
-    title: "가족 의료비·교육비 영수증 정리",
-    body:
-      "OPI로 한계세율이 상승한 해는 의료비·교육비 세액공제 효과가 큼. 연말정산 간소화 자료 사전 확인.",
-  },
-  {
-    title: "고향사랑기부 활용",
-    body:
-      "연 500만원까지 가능. 10만원까지는 전액 세액공제 + 답례품. OPI 받은 해는 더 적극 활용.",
-  },
-];
 
 export default function SamsungBonusCalculatorPage() {
   return (
@@ -136,39 +81,38 @@ export default function SamsungBonusCalculatorPage() {
       <JsonLd
         data={[
           softwareApplicationLd({
-            name: "삼성전자 OPI 성과급 계산기",
+            name: "삼성전자 성과급 시뮬레이터",
             description:
-              "삼성전자 OPI1·OPI2 성과급 세후 실수령을 사업부·영업이익·평가등급별로 계산합니다.",
+              "삼성전자 영업이익 기반 부문/사업부 풀 분배로 사업부별 1인당 성과급을 추정합니다.",
             url: "/calc/samsung-bonus",
           }),
           autoBreadcrumbLd("/calc/samsung-bonus", {
-            leafName: "삼성전자 OPI 성과급 계산기",
+            leafName: "삼성전자 성과급 시뮬레이터",
           }),
           faqLd(FAQ_ITEMS),
         ]}
       />
 
       <main className="min-h-screen pb-32 pt-24 px-4 font-sans bg-canvas dark:bg-canvas-950">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           {/* Hero */}
-          <header className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5 bg-electric-10 text-electric border border-electric-30">
-              <Sparkles size={12} /> 2026 노사합의 OPI2 신설 반영
+          <header className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-5 bg-electric-10 text-electric border border-electric-30">
+              <Sparkles size={12} /> Samsung 성과급 시뮬레이터
             </div>
             <h1
               className="text-4xl sm:text-5xl font-black tracking-tight mb-3 text-navy dark:text-canvas-50"
               style={{ letterSpacing: "-0.04em" }}
             >
-              삼성전자 OPI 성과급 계산기
+              삼성전자 성과급 계산기
             </h1>
-            <p className="text-lg font-medium text-muted-blue dark:text-canvas-300">
-              <strong className="text-electric">OPI1 + OPI2</strong> 사업부 영업이익 ·
-              평가등급별 세후 실수령
+            <p className="text-base sm:text-lg font-medium text-muted-blue dark:text-canvas-300">
+              영업이익 → 부문 + 사업부 분배 →{" "}
+              <strong className="text-electric">1인당 평균</strong>
             </p>
-            <p className="text-sm text-faint-blue mt-3 max-w-xl mx-auto leading-relaxed">
-              기존 OPI1(기본급 50% 상한)에 2026년 노사 합의로 신설된 OPI2(사업부
-              영업이익 10.5% 풀)까지 한 번에. 본인 연봉·사업부·영업이익·평가만
-              입력하면 1월 입금 실수령액이 나옵니다.
+            <p className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed">
+              영업이익·재원비율·부문/사업부 비율을 조절하면 메모리·공통·파운드리
+              사업부별 1인당 평균 성과급이 즉시 산출됩니다.
             </p>
           </header>
 
@@ -176,215 +120,137 @@ export default function SamsungBonusCalculatorPage() {
 
           <InArticleAd />
 
-          {/* OPI1 vs OPI2 설명 */}
+          {/* 분배 모델 설명 */}
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">
-              OPI1 vs OPI2, 구조부터 정확히
+              분배 모델 — 어떻게 계산되나
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-canvas-200 dark:border-canvas-800 p-5 bg-white dark:bg-canvas-900 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
-                  OPI1 (기존)
-                </p>
-                <ul className="space-y-2 text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
-                  <li>
-                    • <strong>산정 방식:</strong> 기본급 × OPI% × 평가가중치
-                  </li>
-                  <li>
-                    • <strong>상한:</strong> 기본급의 50%
-                  </li>
-                  <li>
-                    • <strong>기준:</strong> 사업부 영업이익 목표 초과분
-                  </li>
-                  <li>
-                    • <strong>지급 시기:</strong> 연 1회 (보통 1월)
-                  </li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-canvas-200 dark:border-canvas-800 p-5 bg-white dark:bg-canvas-900 transition-all hover:-translate-y-0.5 hover:shadow-md">
-                <p className="text-xs font-black uppercase tracking-widest text-navy dark:text-canvas-50 mb-2">
-                  OPI2 (신규 · 2026 합의)
-                </p>
-                <ul className="space-y-2 text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
-                  <li>
-                    • <strong>산정 방식:</strong> 영업이익 × 10.5% ÷ 사업부 인원
-                  </li>
-                  <li>
-                    • <strong>상한:</strong> 별도 상한 없음 (영업이익 연동)
-                  </li>
-                  <li>
-                    • <strong>기준:</strong> 사업부 연간 영업이익 직접 연동
-                  </li>
-                  <li>
-                    • <strong>특징:</strong> 적자 사업부는 OPI2 = 0
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <p className="text-xs text-faint-blue mt-3 leading-relaxed">
-              ※ OPI1과 OPI2는 별도로 산정되어 합산 지급되며, 인사평가 등급에 따라
-              동일한 가중치(EX×1.2 / VG×1.1 / GD×1.0 / NI×0.5)가 적용됩니다.
-            </p>
-          </section>
-
-          {/* 시나리오 */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">
-              사업부별 OPI 시나리오 (연봉 8천 기준)
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {SCENARIOS.map((s) => (
-                <div
-                  key={s.title}
-                  className="rounded-2xl bg-white dark:bg-canvas-900 p-5 transition-all hover:-translate-y-0.5 hover:shadow-md"
-                  style={{ borderLeft: `4px solid ${s.color}` }}
-                >
-                  <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-2">
-                    {s.title}
+            <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                  1
+                </div>
+                <div>
+                  <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                    총 재원 산정
                   </p>
-                  <p className="text-xs text-muted-blue mb-3 leading-relaxed">
-                    {s.detail}
-                  </p>
-                  <p
-                    className="text-sm font-black"
-                    style={{ color: s.color }}
-                  >
-                    {s.bonus}
+                  <p className="text-xs text-muted-blue leading-relaxed">
+                    영업이익(조원) × 재원비율(%) = 총 성과급 풀. 예) 영업이익
+                    350조 × 15% = 52.5조원.
                   </p>
                 </div>
-              ))}
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                  2
+                </div>
+                <div>
+                  <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                    부문 ↔ 사업부 분할
+                  </p>
+                  <p className="text-xs text-muted-blue leading-relaxed">
+                    총 재원을 부문비율과 사업부비율로 나눕니다. 예) 7:3이면
+                    부문 36.75조 + 사업부 15.75조. 부문은 균등, 사업부는 가중치
+                    기반.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                  3
+                </div>
+                <div>
+                  <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                    부문 1인당 (균등 분배)
+                  </p>
+                  <p className="text-xs text-muted-blue leading-relaxed">
+                    부문 재원 ÷ 전체 인원. 어느 사업부 소속이든 동일 금액.
+                    예) 36.75조 ÷ 77,300명 ≈ 4,755만원.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
+                  4
+                </div>
+                <div>
+                  <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                    사업부 1인당 (가중치 분배)
+                  </p>
+                  <p className="text-xs text-muted-blue leading-relaxed font-mono">
+                    사업부 재원 × (본인 비율) ÷ Σ(인원×비율)
+                  </p>
+                  <p className="text-xs text-muted-blue leading-relaxed mt-1">
+                    본인 사업부 비율이 0이면 사업부 분배분도 0. 비율이 1.0이면
+                    표준, 0.7이면 70% 가중.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric flex items-center justify-center font-black text-white text-sm">
+                  =
+                </div>
+                <div>
+                  <p className="font-bold text-electric text-sm mb-1">
+                    최종 1인당 = 부문 분배 + 사업부 분배
+                  </p>
+                  <p className="text-xs text-muted-blue leading-relaxed">
+                    세전 평균이며, 실수령은 세금·4대보험 공제 후 약 65~70%
+                    수준.
+                  </p>
+                </div>
+              </div>
             </div>
-            <p className="text-xs text-faint-blue mt-3">
-              ※ 본인 사업부 영업이익·OPI1·평가등급을 위 계산기에 입력하면 정확한
-              세후 금액이 즉시 산출됩니다.
-            </p>
           </section>
 
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
-              인사평가 등급이 OPI에 미치는 영향
+              왜 분배 방식이 중요한가
             </h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              같은 사업부에서도 평가 등급에 따라 OPI가 달라집니다. 본 계산기는
-              다음 가중치를 적용합니다.
-            </p>
-            <div className="not-prose overflow-x-auto rounded-2xl border border-canvas-200 dark:border-canvas-800 my-4">
-              <table className="w-full text-sm bg-white dark:bg-canvas-900">
-                <thead className="bg-canvas dark:bg-canvas-800">
-                  <tr>
-                    <th className="p-4 text-left font-bold text-navy dark:text-canvas-50">
-                      평가 등급
-                    </th>
-                    <th className="p-4 text-left font-bold text-navy dark:text-canvas-50">
-                      비율
-                    </th>
-                    <th className="p-4 text-left font-bold text-electric">
-                      OPI 가중치
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t border-canvas-200 dark:border-canvas-800">
-                    <td className="p-4 font-semibold">EX (최우수)</td>
-                    <td className="p-4 text-muted-blue">상위 ~10%</td>
-                    <td className="p-4 font-black text-electric">×1.2</td>
-                  </tr>
-                  <tr className="border-t border-canvas-200 dark:border-canvas-800">
-                    <td className="p-4 font-semibold">VG (우수)</td>
-                    <td className="p-4 text-muted-blue">상위 ~25%</td>
-                    <td className="p-4 font-bold text-electric">×1.1</td>
-                  </tr>
-                  <tr className="border-t border-canvas-200 dark:border-canvas-800">
-                    <td className="p-4 font-semibold">GD (보통)</td>
-                    <td className="p-4 text-muted-blue">중위 ~55%</td>
-                    <td className="p-4 font-bold text-navy dark:text-canvas-50">
-                      ×1.0
-                    </td>
-                  </tr>
-                  <tr className="border-t border-canvas-200 dark:border-canvas-800">
-                    <td className="p-4 font-semibold">NI (개선필요)</td>
-                    <td className="p-4 text-muted-blue">하위 ~10%</td>
-                    <td className="p-4 font-bold text-rose-500">×0.5</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="text-xs text-faint-blue">
-              ※ 가중치는 공식 발표 수치가 아닌 통상적 운용 관행에 기반한 본
-              계산기 가정치입니다. 사업부별·연도별로 가중치 폭이 달라질 수
-              있습니다.
+              같은 회사 영업이익이라도 분배 정책에 따라 사업부별 격차가 크게
+              달라집니다. <strong>부문 비중이 높을수록(예: 7:3, 8:2)</strong>{" "}
+              사업부 간 격차가 줄어들고, <strong>사업부 비중이 높을수록(예: 3:7, 2:8)</strong>{" "}
+              영업이익 기여가 큰 사업부의 보상이 커집니다. 노사 합의에서 이
+              비율 자체가 핵심 쟁점이 됩니다.
             </p>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-10 mb-4">
-              왜 OPI는 실효세율이 30%를 넘기 쉬울까
+              사업부 비율(가중치)의 의미
             </h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              연봉 8천만원 본봉만 받을 때는 한계세율이 24% 구간(과세표준 5천만~
-              8천8백만)에 머무릅니다. 그런데 OPI1+OPI2 합산으로 연 3천만원이 추가되면
-              과세표준이 35% 구간(8천8백만~1억5천만)에 진입하면서 추가분의 세금
-              부담이 크게 늘어납니다. 여기에 지방소득세 10%, 국민연금 상한선까지의
-              4.5%, 건강보험 3.545% + 장기요양 0.46%, 고용보험 0.9%가 더해져 실효세율
-              30%를 쉽게 넘깁니다.
-            </p>
-            <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              연봉이 1억을 넘는 책임·수석급은 OPI 합산 시 38% 구간(1억5천만 ~3억)
-              일부까지 들어가므로 세금 부담이 더 크고, 그만큼 IRP·연금저축·우리사주
-              한도 활용의 절세 효과가 커집니다.
+              사업부 비율은 사업부의 영업이익 기여도·전략적 중요도를 반영한
+              가중치입니다. 표준 사업부가 1.0이면 호황 사업부는 1.2~1.5,
+              부진/적자 사업부는 0~0.3 수준으로 책정됩니다. 본 계산기 디폴트는
+              메모리 1.0 / 공통 0.7 / 파운드리·시스템LSI 0.0으로 설정되어
+              있어, 적자 사업부는 사업부 분배에서 제외되는 보수적 모델을
+              보여줍니다.
             </p>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-10 mb-4">
-              OPI 받고 바로 해야 할 4가지 절세 액션
+              세후 실수령 환산
             </h2>
-            <div className="not-prose grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {TAX_TIPS.map((tip, i) => (
-                <div
-                  key={tip.title}
-                  className="rounded-2xl border border-canvas-200 dark:border-canvas-800 p-5 bg-white dark:bg-canvas-900 transition-all hover:-translate-y-0.5 hover:shadow-md"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-electric-10 flex items-center justify-center font-black text-electric text-sm">
-                      {i + 1}
-                    </div>
-                    <div>
-                      <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-2">
-                        {tip.title}
-                      </p>
-                      <p className="text-xs text-muted-blue leading-relaxed">
-                        {tip.body}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-10 mb-4">
-              2026 임금협상 핵심 (참고)
-            </h2>
-            <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
-              <li>
-                <strong>평균 인상률 6.5%</strong> = 기본인상 4.0% + 성과인상률 2.5%
-              </li>
-              <li>
-                <strong>OPI2 신설</strong> — 사업부 영업이익의 10.5%를 재원으로
-                추가 지급
-              </li>
-              <li>
-                <strong>가족수당·휴양시설·자기개발비·명절선물비</strong> 복지 항목
-                확대 합의
-              </li>
-              <li>
-                <strong>본인 의료비 한도 상향</strong> — 사내 병원/제휴 의료기관
-                이용 시 적용
-              </li>
-              <li>
-                <strong>소급 적용</strong>: 잠정합의 시점에 1월 1일자 인상분을
-                일시 정산해 지급
-              </li>
+            <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
+              본 계산기는 <strong>세전</strong> 1인당 금액을 표시합니다.
+              실수령은 다음과 같이 줄어듭니다:
+            </p>
+            <ul className="space-y-1 text-muted-blue dark:text-canvas-300 leading-relaxed">
+              <li>• 소득세 (누진세율 24~45% 구간) — 평균 25~30%</li>
+              <li>• 지방소득세 (소득세의 10%)</li>
+              <li>• 4대보험 (국민연금 4.5% / 건강 3.545% / 장기요양 / 고용 0.9%)</li>
+              <li>• 합산 실효세율 약 30~38%</li>
             </ul>
+            <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
+              세전 1억원 = 세후 약 6,500~7,000만원. 세전 5천만원 = 세후 약
+              3,500~3,800만원으로 환산하시면 됩니다.
+            </p>
           </article>
 
-          {/* 경고 박스 */}
+          {/* 경고 */}
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
             <AlertTriangle
               size={20}
@@ -392,18 +258,18 @@ export default function SamsungBonusCalculatorPage() {
             />
             <div>
               <p className="font-black text-amber-900 dark:text-amber-200 mb-1">
-                참고용 계산기입니다
+                참고용 시뮬레이션입니다
               </p>
               <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-                본 계산기는 공개된 노사 합의 보도와 통상적 운영 관행을 바탕으로 한
-                추정 계산이며, 본인 사업부의 실제 OPI1 지급률, OPI2 분배 방식,
-                기본급 비중, 평가등급별 차등 폭과 차이가 있을 수 있습니다. 정확한
-                금액은 삼성전자 사내 HR 시스템의 본인 명세서를 확인하세요.
+                본 계산기는 공개된 노사 합의 보도와 일반적인 영업이익 기반
+                성과급 분배 모델을 기반으로 한 시뮬레이션입니다. 실제 지급은
+                회사·사업부의 정책, 본인 호봉·고과, 평가 등급에 따라 달라지며,
+                본 계산기 결과와 차이가 있을 수 있습니다. 본인 사내 HR 시스템의
+                명세서를 참고하세요.
               </p>
             </div>
           </div>
 
-          {/* 관련 페이지 CTA */}
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
             <Link
               href="/samsung-negotiation-2026"
@@ -456,7 +322,7 @@ export default function SamsungBonusCalculatorPage() {
               {FAQ_ITEMS.map((item, idx) => (
                 <details
                   key={idx}
-                  className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5 group"
+                  className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5 group transition-shadow hover:shadow-md"
                 >
                   <summary className="cursor-pointer font-bold text-navy dark:text-canvas-50 flex items-center justify-between">
                     {item.question}
@@ -478,17 +344,16 @@ export default function SamsungBonusCalculatorPage() {
               className="text-electric flex-shrink-0 mt-1"
             />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              본 계산기는 2026년 소득세법과 삼성전자 공개 노사 합의 보도 기준
-              추정치이며 참고용입니다. 실제 지급은 본인 사업부의 영업이익,
-              평가 등급, 기본급 비중에 따라 달라집니다. 본인 명세서를 함께
-              확인하세요.
+              본 계산기는 2026년 공개 노사 합의 보도와 영업이익 기반 성과급
+              분배 모델 추정치이며 참고용입니다. 실제 지급은 사업부 정책, 본인
+              호봉·평가에 따라 달라집니다.
             </p>
           </div>
 
           <div className="mt-8 mb-8">
             <ShareButtons
-              title="삼성전자 OPI 성과급 계산기 — OPI1+OPI2 세후 실수령"
-              description="2026 노사 합의 OPI2(영업이익 10.5% 풀)까지 반영한 사업부·평가등급별 세후 실수령액."
+              title="삼성전자 성과급 시뮬레이터 — 영업이익 기반 1인당 추정"
+              description="영업이익·재원비율·부문/사업부 분배를 직접 조절하며 사업부별 평균 성과급을 시뮬레이션."
             />
           </div>
 
