@@ -607,6 +607,8 @@ function MySalaryCalculator({
     const myGrossWon = myGrossManwon * 10000;
 
     const tax = calcBonusNet(salary, myGrossWon, creditRate, applyInsurance);
+    const grossPct = salary > 0 ? (myGrossWon / salary) * 100 : 0;
+    const netPct = salary > 0 ? (tax.net / salary) * 100 : 0;
     return {
       grossWon: myGrossWon,
       netWon: tax.net,
@@ -615,6 +617,9 @@ function MySalaryCalculator({
       breakdown: tax.breakdown,
       grossManwon: myGrossManwon,
       netManwon: tax.net / 10000,
+      grossPct,
+      netPct,
+      grossMultiplier: salary > 0 ? myGrossWon / salary : 0,
     };
   }, [salary, selected, creditRate, applyInsurance]);
 
@@ -847,6 +852,15 @@ function MySalaryCalculator({
               >
                 {fmtEok(personal.grossManwon)}
               </p>
+              <div
+                className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black tabular-nums"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.18)",
+                  color: "#fff",
+                }}
+              >
+                연봉의 {personal.grossPct.toFixed(1)}%
+              </div>
             </div>
             <div>
               <p
@@ -864,7 +878,38 @@ function MySalaryCalculator({
               >
                 공제 {personal.effRate.toFixed(1)}%
               </p>
+              <div
+                className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black tabular-nums"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.18)",
+                  color: "#fff",
+                }}
+              >
+                연봉의 {personal.netPct.toFixed(1)}%
+              </div>
             </div>
+          </div>
+
+          {/* 연봉 대비 산식 한 줄 */}
+          <div
+            className="mt-4 pt-4 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.2)" }}
+          >
+            <p
+              className="text-[10px] uppercase tracking-[0.2em] font-bold mb-1"
+              style={{ color: "rgba(255,255,255,0.65)" }}
+            >
+              산식
+            </p>
+            <p
+              className="text-xs leading-relaxed tabular-nums"
+              style={{ color: "rgba(255,255,255,0.92)" }}
+            >
+              연봉{" "}
+              <strong>{(salary / 10000).toLocaleString("ko-KR")}만원</strong> ×{" "}
+              <strong>{personal.grossMultiplier.toFixed(2)}배</strong> = 세전{" "}
+              <strong>{fmtManwon(personal.grossManwon)}</strong>
+            </p>
           </div>
         </div>
 
