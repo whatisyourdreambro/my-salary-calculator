@@ -3,11 +3,30 @@ import { BookOpen, TrendingUp, Shield, CreditCard, Home, Briefcase, ChevronRight
 import Link from "next/link";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "직장인 꿀팁 모음 | 연봉 협상부터 세금 절세까지 - 머니샐러리",
- description: "직장인이라면 꼭 알아야 할 연봉 협상 전략, 절세 꿀팁, 재테크 방법, 퇴직금 극대화 등 검증된 재정 정보를 총망라했습니다.",
-};
+// 9차 점검 — buildPageMetadata 표준화 + JsonLd 추가 (Breadcrumb + Article + FAQ rich result)
+export const metadata: Metadata = buildPageMetadata({
+ title: "2026 직장인 꿀팁 15선 — 연봉 협상부터 절세·재테크·내집마련까지",
+ description:
+ "연봉 협상 평균 +20% 받는 타이밍, IRP·연금저축 최대 148만원 절세, 청약통장 25만원 소득공제 등 5개 카테고리 15가지 검증된 직장인 재정 꿀팁 총정리.",
+ path: "/tips",
+ ogType: "article",
+ publishedTime: "2026-05-23",
+ modifiedTime: "2026-05-23",
+ keywords: [
+ "직장인 꿀팁",
+ "연봉 협상 전략",
+ "직장인 절세",
+ "직장인 재테크",
+ "연말정산 환급",
+ "IRP 연금저축 절세",
+ "청약통장 소득공제",
+ "신생아 특례대출",
+ ],
+});
 
 const tips = [
  {
@@ -65,8 +84,22 @@ const relatedLinks = [
 ];
 
 export default function TipsPage() {
+ // 9차 — JsonLd FAQ Schema: 15개 tip 모두 Q&A 형식으로 SERP rich result 노출
+ const faqItems = tips.flatMap((section) =>
+ section.items.map((item) => ({
+ question: item.title,
+ answer: item.desc,
+ }))
+ );
+
  return (
  <main className="w-full min-h-screen bg-white px-4 pt-28 pb-20 font-sans">
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tips", { leafName: "직장인 꿀팁 모음" }),
+ faqLd(faqItems),
+ ]}
+ />
  {/* Hero */}
  <div className="max-w-4xl mx-auto text-center mb-16 pb-12 border-b border-canvas">
  <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary text-sm font-bold rounded-sm mb-6 uppercase tracking-widest">
