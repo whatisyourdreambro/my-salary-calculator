@@ -12,6 +12,9 @@ import {
   Check,
   Info,
   Settings,
+  AlertCircle,
+  CheckCircle2,
+  Calendar,
 } from "lucide-react";
 
 // ────────────────────────────────────────────────────────────
@@ -21,6 +24,20 @@ const FIXED_RERATE = 10.5; // 영업이익의 10.5%
 const FIXED_BU_RATIO = 4; // 부문 : 사업부 = 4 : 6
 const FIXED_SA_RATIO = 6;
 const REFERENCE_SALARY = 80_000_000; // 본인 연봉 비례 기준 (평균 8천만원)
+
+// 회의록 임계값:
+// • 2026~2028: 영업이익 200조 이상 → 성과급 풀 활성화
+// • 2029~2035 (향후 7년): 영업이익 100조 이상 → 성과급 풀 활성화
+function getThreshold(year: number): number {
+  if (year >= 2026 && year <= 2028) return 200;
+  if (year >= 2029 && year <= 2035) return 100;
+  return 0; // 합의 범위 외 — 임계값 정보 없음
+}
+function getThresholdPeriod(year: number): string {
+  if (year >= 2026 && year <= 2028) return "26~28년 (200조 이상)";
+  if (year >= 2029 && year <= 2035) return "29~35년 (100조 이상)";
+  return "합의 범위 외";
+}
 
 // ────────────────────────────────────────────────────────────
 // 세금 로직
@@ -237,6 +254,7 @@ function useCountUp(target: number, duration = 450): number {
 // ────────────────────────────────────────────────────────────
 
 export default function SamsungBonusClient() {
+  const [year, setYear] = useState(2026); // 적용 연도
   const [profitFmt, setProfitFmt] = useState("350"); // 조원 — 자유 입력
   const [counts, setCounts] = useState<Record<string, string>>(
     Object.fromEntries(
@@ -248,9 +266,15 @@ export default function SamsungBonusClient() {
   );
 
   const profit = Math.max(0, Number(profitFmt) || 0);
+  const threshold = getThreshold(year);
+  // 임계값 정보 없는 연도(범위 외)는 체크 없이 영업이익 그대로 적용
+  const thresholdMet = threshold > 0 ? profit >= threshold : true;
+  const triggered = thresholdMet;
 
   const result = useMemo(() => {
-    const totalFundManwon = profit * 1e8 * (FIXED_RERATE / 100);
+    // 임계값 미달이면 성과급 풀 = 0
+    const effectiveProfit = triggered ? profit : 0;
+    const totalFundManwon = effectiveProfit * 1e8 * (FIXED_RERATE / 100);
     const buFund = totalFundManwon * (FIXED_BU_RATIO / 10);
     const saFund = totalFundManwon * (FIXED_SA_RATIO / 10);
 
@@ -294,7 +318,7 @@ export default function SamsungBonusClient() {
       max,
       ratioSum,
     };
-  }, [profit, counts, ratios]);
+  }, [profit, counts, ratios, triggered]);
 
   return (
     <div className="space-y-4 mb-10">
@@ -310,6 +334,70 @@ export default function SamsungBonusClient() {
           주요 변수
         </p>
 
+        {/* 적용 연도 선택 — 임계값 자동 결정 */}
+        <div className="mb-5">
+          <div className="flex items-end justify-between mb-2">
+            <label
+              htmlFor="year-input"
+              className="text-xs font-bold uppercase tracking-widest text-faint-blue inline-flex items-center gap-1.5"
+            >
+              <Calendar size={11} aria-hidden /> 적용 연도
+            </label>
+            <span
+              className="text-2xl font-black tabular-nums"
+              style={{ color: "#7C83FF" }}
+            >
+              {year}년
+            </span>
+          </div>
+          <input
+            id="year-input"
+            type="range"
+            min={2026}
+            max={2035}
+            step={1}
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+            className="w-full h-2 rounded-full appearance-none cursor-pointer transition-all"
+            style={{
+              background: `linear-gradient(to right, #7C83FF 0%, #7C83FF ${
+                ((year - 2026) / (2035 - 2026)) * 100
+              }%, #DDE4EC ${
+                ((year - 2026) / (2035 - 2026)) * 100
+              }%, #DDE4EC 100%)`,
+              accentColor: "#7C83FF",
+            }}
+            aria-label="적용 연도"
+          />
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {[2026, 2027, 2028, 2029, 2030, 2032, 2035].map((y) => {
+              const active = year === y;
+              return (
+                <button
+                  key={y}
+                  type="button"
+                  onClick={() => setYear(y)}
+                  aria-pressed={active}
+                  className={`text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors ${
+                    active
+                      ? "text-white"
+                      : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:text-white"
+                  }`}
+                  style={{
+                    backgroundColor: active ? "#7C83FF" : undefined,
+                  }}
+                >
+                  {y}
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-[11px] text-faint-blue mt-2 leading-relaxed">
+            회의록 임계값: <strong className="text-navy dark:text-canvas-50">{getThresholdPeriod(year)}</strong>{" "}
+            — 영업이익이 이 기준에 미달하면 성과급 풀 미활성.
+          </p>
+        </div>
+
         {/* 영업이익 자유 입력 — 콤마 포맷 통일 */}
         <div className="mb-5">
           <div className="flex items-end justify-between mb-2">
@@ -321,7 +409,7 @@ export default function SamsungBonusClient() {
             </label>
             <span
               className="text-3xl font-black tabular-nums"
-              style={{ color: "#0145F2" }}
+              style={{ color: triggered ? "#0145F2" : "#EF4444" }}
               aria-live="polite"
             >
               {profit.toLocaleString("ko-KR")}
@@ -350,6 +438,79 @@ export default function SamsungBonusClient() {
               조원
             </span>
           </div>
+          {/* 임계값 게이지 — 영업이익 vs 임계값 시각화 */}
+          {threshold > 0 && (
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] font-bold text-faint-blue">
+                  임계값 기준 ({threshold}조)
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1 text-[11px] font-black ${
+                    triggered ? "text-emerald-600" : "text-rose-500"
+                  }`}
+                >
+                  {triggered ? (
+                    <>
+                      <CheckCircle2 size={12} aria-hidden />
+                      충족 (+{Math.round(((profit - threshold) / threshold) * 100)}%)
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle size={12} aria-hidden />
+                      미달 ({Math.round(((threshold - profit) / threshold) * 100)}% 부족)
+                    </>
+                  )}
+                </span>
+              </div>
+              <div className="relative h-2.5 rounded-full bg-canvas-100 dark:bg-canvas-800 overflow-hidden">
+                {/* 영업이익 막대 */}
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, (profit / (threshold * 1.5)) * 100)}%`,
+                    backgroundColor: triggered ? "#10B981" : "#EF4444",
+                  }}
+                />
+                {/* 임계값 마커 */}
+                <div
+                  className="absolute top-0 bottom-0 w-0.5"
+                  style={{
+                    left: `${(threshold / (threshold * 1.5)) * 100}%`,
+                    backgroundColor: "#0A1829",
+                  }}
+                  aria-hidden
+                />
+                <span
+                  className="absolute -top-0.5 text-[9px] font-black"
+                  style={{
+                    left: `${(threshold / (threshold * 1.5)) * 100}%`,
+                    transform: "translateX(-50%) translateY(-100%)",
+                    color: "#0A1829",
+                  }}
+                  aria-hidden
+                >
+                  ▼ {threshold}조
+                </span>
+              </div>
+              {!triggered && (
+                <div className="mt-2 rounded-lg p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 flex items-start gap-2">
+                  <AlertCircle
+                    size={14}
+                    className="text-rose-500 flex-shrink-0 mt-0.5"
+                    aria-hidden
+                  />
+                  <div className="text-[11px] text-rose-700 dark:text-rose-300 leading-relaxed">
+                    <strong>{year}년 임계값 {threshold}조 미달</strong> — 회의록상
+                    이 연도는 영업이익 {threshold}조 이상일 때만 성과급 풀이
+                    활성화됩니다. 현재 영업이익으로는 사업부별 1인당 성과급이
+                    0원으로 산정됩니다.
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div
             className="flex flex-wrap gap-1.5 mt-2"
             role="group"
