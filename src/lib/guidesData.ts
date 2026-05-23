@@ -12,6 +12,7 @@ import { semiconductorDeepdiveGuides } from "@/lib/guides/semiconductor-deepdive
 import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
 import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
+import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -455,6 +456,8 @@ const allRawGuides = [
  ...hotKeywordsGuides,
  // GSC 404 복구(7차): /en/guides/* 5개 영문 가이드 (loan-types/health-insurance/four-major-insurance/year-end-tax/earned-income-credit)
  ...hotKeywordsGuidesEn,
+ // 10차 점검 — 삼성 임금협상 현황 + 금융 핫이슈 30개 (SEO 폭발 노림)
+ ...hotNewsMay2026,
 ];
 
 // Generate the final guides array with content
