@@ -265,6 +265,12 @@ export default function SamsungBonusClient() {
     Object.fromEntries(DIVISIONS.map((d) => [d.id, String(d.defaultRatio)]))
   );
 
+  // 본인 케이스 state — MySalaryCalculator + MultiYearBonusSimulator 공유
+  const [salaryFmt, setSalaryFmt] = useState("80,000,000");
+  const [selectedDivId, setSelectedDivId] = useState<string>("memory");
+  const [creditRate, setCreditRate] = useState<number>(20);
+  const [applyInsurance, setApplyInsurance] = useState<boolean>(true);
+
   const profit = Math.max(0, Number(profitFmt) || 0);
   const threshold = getThreshold(year);
   // 임계값 정보 없는 연도(범위 외)는 체크 없이 영업이익 그대로 적용
@@ -675,7 +681,17 @@ export default function SamsungBonusClient() {
       </section>
 
       {/* 내 연봉으로 계산 */}
-      <MySalaryCalculator perDivision={result.perDivision} />
+      <MySalaryCalculator
+        perDivision={result.perDivision}
+        salaryFmt={salaryFmt}
+        setSalaryFmt={setSalaryFmt}
+        selectedDivId={selectedDivId}
+        setSelectedDivId={setSelectedDivId}
+        creditRate={creditRate}
+        setCreditRate={setCreditRate}
+        applyInsurance={applyInsurance}
+        setApplyInsurance={setApplyInsurance}
+      />
 
       {/* SK하이닉스 비교 */}
       <aside
@@ -727,8 +743,15 @@ export default function SamsungBonusClient() {
         </div>
       </aside>
 
-      {/* 다년도 RSU 시뮬레이터 */}
-      <MultiYearRSUSimulator memoryPerPerson={result.perDivision[0].total} />
+      {/* 다년도 누적 성과급 시뮬레이터 — 연도별 영업이익 + 임계값 자동 */}
+      <MultiYearBonusSimulator
+        counts={counts}
+        ratios={ratios}
+        salary={parseNumberInput(salaryFmt)}
+        creditRate={creditRate}
+        applyInsurance={applyInsurance}
+        defaultDivId={selectedDivId}
+      />
 
       <p className="text-center text-[11px] text-faint-blue">
         * 만원 단위 반올림 · 공개 노사 합의 보도 기반 추정 시뮬레이터
@@ -743,6 +766,14 @@ export default function SamsungBonusClient() {
 
 function MySalaryCalculator({
   perDivision,
+  salaryFmt,
+  setSalaryFmt,
+  selectedDivId,
+  setSelectedDivId,
+  creditRate,
+  setCreditRate,
+  applyInsurance,
+  setApplyInsurance,
 }: {
   perDivision: Array<{
     id: string;
@@ -752,12 +783,15 @@ function MySalaryCalculator({
     shortLabel: string;
     total: number;
   }>;
+  salaryFmt: string;
+  setSalaryFmt: (v: string) => void;
+  selectedDivId: string;
+  setSelectedDivId: (v: string) => void;
+  creditRate: number;
+  setCreditRate: (v: number) => void;
+  applyInsurance: boolean;
+  setApplyInsurance: (v: boolean) => void;
 }) {
-  const [salaryFmt, setSalaryFmt] = useState("80,000,000");
-  const [selectedDivId, setSelectedDivId] = useState<string>("memory");
-  const [creditRate, setCreditRate] = useState<number>(20); // 세액공제율 % (평균 직장인 수준)
-  const [applyInsurance, setApplyInsurance] = useState<boolean>(true); // 디폴트 ON (보수정산 반영)
-
   const salary = parseNumberInput(salaryFmt);
   const selected =
     perDivision.find((d) => d.id === selectedDivId) ?? perDivision[0];
@@ -2166,3 +2200,682 @@ function ResultCard({
 
 // 사용 안 함 경고 회피
 void Info;
+
+// ────────────────────────────────────────────────────────────
+// 다년도 누적 성과급 시뮬레이터
+// 사업부 선택 + 연도별 영업이익 입력만으로 자동 계산
+// 임계값 자동 적용 (26~28: 200조, 29~35: 100조)
+// 본인 연봉 비례 + 세후 계산 + 누적 막대 그래프
+// ────────────────────────────────────────────────────────────
+
+type YearProfitRow = {
+  id: string;
+  year: number;
+  profitTrillionFmt: string; // 그 해 영업이익 (조)
+};
+
+function MultiYearBonusSimulator({
+  counts,
+  ratios,
+  salary,
+  creditRate,
+  applyInsurance,
+  defaultDivId,
+}: {
+  counts: Record<string, string>;
+  ratios: Record<string, string>;
+  salary: number;
+  creditRate: number;
+  applyInsurance: boolean;
+  defaultDivId: string;
+}) {
+  const [targetDivId, setTargetDivId] = useState<string>(defaultDivId);
+  const [rows, setRows] = useState<YearProfitRow[]>([
+    { id: "y1", year: 2026, profitTrillionFmt: "350" },
+    { id: "y2", year: 2027, profitTrillionFmt: "400" },
+    { id: "y3", year: 2028, profitTrillionFmt: "380" },
+  ]);
+
+  function updateRow(id: string, patch: Partial<YearProfitRow>) {
+    setRows((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, ...patch } : r))
+    );
+  }
+  function addRow() {
+    const last = rows[rows.length - 1];
+    const newYear = last ? Math.min(2036, last.year + 1) : 2026;
+    setRows((prev) => [
+      ...prev,
+      {
+        id: `y${Date.now()}`,
+        year: newYear,
+        profitTrillionFmt: last?.profitTrillionFmt ?? "300",
+      },
+    ]);
+  }
+  function removeRow(id: string) {
+    setRows((prev) =>
+      prev.length > 1 ? prev.filter((r) => r.id !== id) : prev
+    );
+  }
+
+  const targetDivision = DIVISIONS.find((d) => d.id === targetDivId) ?? DIVISIONS[0];
+
+  const computed = useMemo(() => {
+    const countNums = Object.fromEntries(
+      Object.entries(counts).map(([k, v]) => [k, parseNumberInput(v)])
+    );
+    const ratioNums = Object.fromEntries(
+      Object.entries(ratios).map(([k, v]) => [k, Number(v) || 0])
+    );
+    const totalCount = DIVISIONS.reduce(
+      (acc, d) => acc + (countNums[d.id] || 0),
+      0
+    );
+    const wTotal = DIVISIONS.reduce(
+      (acc, d) => acc + (countNums[d.id] || 0) * (ratioNums[d.id] || 0),
+      0
+    );
+    const targetWeight = ratioNums[targetDivId] || 0;
+
+    let cumGross = 0;
+    let cumNet = 0;
+    let triggeredCount = 0;
+    let blockedCount = 0;
+
+    const enriched = rows.map((row) => {
+      const profit = Math.max(0, Number(row.profitTrillionFmt) || 0);
+      const th = getThreshold(row.year);
+      const ok = th === 0 ? true : profit >= th;
+      const effectiveProfit = ok ? profit : 0;
+
+      const totalFundManwon = effectiveProfit * 1e8 * (FIXED_RERATE / 100);
+      const buFund = totalFundManwon * (FIXED_BU_RATIO / 10);
+      const saFund = totalFundManwon * (FIXED_SA_RATIO / 10);
+      const buPer = totalCount > 0 ? buFund / totalCount : 0;
+      const saUnit = wTotal > 0 ? saFund / wTotal : 0;
+      const avgPerPersonManwon = buPer + saUnit * targetWeight;
+
+      // 본인 연봉 비례 (평균 8천 기준)
+      const myGrossManwon = avgPerPersonManwon * (salary / REFERENCE_SALARY);
+      const myGrossWon = myGrossManwon * 10000;
+
+      const tax = calcBonusNet(salary, myGrossWon, creditRate, applyInsurance);
+      const myNetManwon = tax.net / 10000;
+
+      cumGross += myGrossManwon;
+      cumNet += myNetManwon;
+      if (ok && profit > 0) triggeredCount++;
+      if (!ok && profit > 0) blockedCount++;
+
+      return {
+        ...row,
+        profit,
+        threshold: th,
+        triggered: ok,
+        avgPerPersonManwon,
+        myGrossManwon,
+        myNetManwon,
+        myDeductManwon: myGrossManwon - myNetManwon,
+      };
+    });
+
+    return {
+      enriched,
+      cumGross,
+      cumNet,
+      cumDeduct: cumGross - cumNet,
+      triggeredCount,
+      blockedCount,
+      maxVal: Math.max(...enriched.map((r) => r.myGrossManwon), 1),
+    };
+  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance]);
+
+  const animCumGross = useCountUp(computed.cumGross);
+  const animCumNet = useCountUp(computed.cumNet);
+
+  return (
+    <section className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6">
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-2 inline-flex items-center gap-1.5">
+        <Calendar size={11} className="text-electric" aria-hidden /> 다년도 누적
+        성과급 시뮬레이션
+      </p>
+      <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
+        사업부를 선택하고 연도별 영업이익만 입력하세요. 위 메인 시뮬의
+        인원·가중치·본인 연봉을 그대로 사용해 임계값 조건까지 자동 적용. 26~28년
+        200조, 29~35년 100조 미달 연도는 자동 0원.
+      </p>
+
+      {/* 사업부 선택 */}
+      <div className="mb-5">
+        <label
+          id="div-multiyear-label"
+          className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue"
+        >
+          사업부 선택
+        </label>
+        <div
+          className="grid grid-cols-3 gap-2"
+          role="tablist"
+          aria-labelledby="div-multiyear-label"
+        >
+          {DIVISIONS.map((d) => {
+            const active = targetDivId === d.id;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTargetDivId(d.id)}
+                className={`rounded-xl px-3 py-2 text-xs font-black border transition-all inline-flex items-center justify-center gap-1.5 ${
+                  active ? "text-white scale-[1.02] shadow-md" : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
+                }`}
+                style={{
+                  backgroundColor: active ? d.color : undefined,
+                  borderColor: active ? d.color : `${d.color}55`,
+                  color: active ? "#fff" : d.color,
+                }}
+              >
+                {active && <Check size={12} aria-hidden />}
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 연도 행들 */}
+      <div className="space-y-2 mb-3">
+        {computed.enriched.map((r) => (
+          <YearProfitRowCard
+            key={r.id}
+            row={r}
+            canRemove={rows.length > 1}
+            onUpdate={(patch) => updateRow(r.id, patch)}
+            onRemove={() => removeRow(r.id)}
+          />
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={addRow}
+        className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-dashed border-canvas-300 dark:border-canvas-700 text-faint-blue text-xs font-black uppercase tracking-widest hover:border-electric hover:text-electric transition-colors mb-5"
+      >
+        <Plus size={14} aria-hidden /> 연도 추가 (~2036)
+      </button>
+
+      {/* 막대 그래프 */}
+      <BonusBarChart
+        enriched={computed.enriched}
+        maxVal={computed.maxVal}
+        color={targetDivision.color}
+      />
+
+      {/* 누적 합계 */}
+      <div
+        className="mt-5 rounded-2xl p-5 text-white relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${targetDivision.color} 0%, ${targetDivision.color}DD 100%)`,
+          boxShadow: `0 12px 32px ${targetDivision.color}30`,
+        }}
+      >
+        <div
+          className="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-20 pointer-events-none"
+          style={{ background: "radial-gradient(#fff, transparent 70%)" }}
+          aria-hidden
+        />
+        <p
+          className="text-[10px] font-black uppercase tracking-[0.2em] mb-3"
+          style={{ color: "rgba(255,255,255,0.85)" }}
+        >
+          {targetDivision.label} · {rows.length}개 연도 누적
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <p
+              className="text-[10px] font-bold mb-1"
+              style={{ color: "rgba(255,255,255,0.7)" }}
+            >
+              누적 세전
+            </p>
+            <p className="text-2xl sm:text-3xl font-black tabular-nums">
+              {fmtManwon(animCumGross)}
+            </p>
+            <p
+              className="text-[11px] mt-0.5"
+              style={{ color: "rgba(255,255,255,0.7)" }}
+            >
+              {fmtEok(computed.cumGross)}
+            </p>
+          </div>
+          <div>
+            <p
+              className="text-[10px] font-bold mb-1"
+              style={{ color: "rgba(255,255,255,0.85)" }}
+            >
+              누적 세후
+            </p>
+            <p className="text-2xl sm:text-3xl font-black tabular-nums">
+              {fmtManwon(animCumNet)}
+            </p>
+            <p
+              className="text-[11px] mt-0.5"
+              style={{ color: "rgba(255,255,255,0.85)" }}
+            >
+              {fmtEok(computed.cumNet)}
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
+          <span style={{ color: "rgba(255,255,255,0.85)" }}>
+            ✓ 임계값 충족 <strong>{computed.triggeredCount}</strong>년
+          </span>
+          {computed.blockedCount > 0 && (
+            <span style={{ color: "rgba(255,180,180,0.95)" }}>
+              ⚠ 임계값 미달 <strong>{computed.blockedCount}</strong>년 (0원 처리)
+            </span>
+          )}
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>
+            세금·4대보험 누적 -{fmtManwon(computed.cumDeduct)}
+          </span>
+        </div>
+      </div>
+
+      <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
+        ※ 본인 연봉 {(salary / 10000).toLocaleString("ko-KR")}만원 비례 적용 ·
+        세액공제 {creditRate}% · 4대보험 {applyInsurance ? "ON" : "OFF"} (위 본인
+        케이스 가정 동일). 인원·가중치는 메인 시뮬 그대로.
+      </p>
+    </section>
+  );
+}
+
+function YearProfitRowCard({
+  row,
+  canRemove,
+  onUpdate,
+  onRemove,
+}: {
+  row: YearProfitRow & {
+    profit: number;
+    threshold: number;
+    triggered: boolean;
+    myGrossManwon: number;
+    myNetManwon: number;
+  };
+  canRemove: boolean;
+  onUpdate: (patch: Partial<YearProfitRow>) => void;
+  onRemove: () => void;
+}) {
+  const blocked = !row.triggered && row.profit > 0;
+  return (
+    <div
+      className="rounded-xl border p-4 transition-all"
+      style={{
+        borderColor: blocked ? "#EF444455" : row.triggered && row.profit > 0 ? "#10B98155" : "#DDE4EC",
+        backgroundColor: blocked ? "#EF44440A" : "#F8FAFB",
+      }}
+    >
+      <div className="grid grid-cols-[80px_1fr_auto] sm:grid-cols-[100px_1fr_auto] gap-3 items-center">
+        {/* 연도 */}
+        <div>
+          <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue">
+            연도
+          </label>
+          <input
+            type="number"
+            min={2026}
+            max={2036}
+            value={row.year}
+            onChange={(e) =>
+              onUpdate({ year: Math.min(2036, Math.max(2026, Number(e.target.value) || row.year)) })
+            }
+            className="w-full px-2 py-1.5 rounded-md text-base font-black tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 focus:outline-none focus:border-electric text-navy dark:text-canvas-50"
+            aria-label="연도"
+          />
+        </div>
+
+        {/* 영업이익 */}
+        <div>
+          <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue">
+            영업이익 <span className="opacity-70 font-medium">(조)</span>
+            <span
+              className="ml-1.5 inline-block px-1.5 py-0.5 rounded text-[9px] font-black"
+              style={{
+                backgroundColor: row.threshold === 0 ? "#A8B9D622" : blocked ? "#EF444422" : "#10B98122",
+                color: row.threshold === 0 ? "#7B8FA1" : blocked ? "#EF4444" : "#10B981",
+              }}
+            >
+              {row.threshold === 0
+                ? "범위 외"
+                : `임계 ${row.threshold}조`}
+            </span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              inputMode="decimal"
+              value={row.profitTrillionFmt}
+              onChange={(e) => {
+                const v = e.target.value.replace(/[^0-9.]/g, "");
+                onUpdate({ profitTrillionFmt: v });
+              }}
+              className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
+              style={{
+                border: blocked ? "1.5px solid #EF444466" : "1.5px solid #0145F233",
+              }}
+              aria-label={`${row.year}년 영업이익 (조원)`}
+            />
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-faint-blue pointer-events-none">
+              조
+            </span>
+          </div>
+        </div>
+
+        {/* 삭제 */}
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="p-1.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors self-end mb-1"
+            aria-label={`${row.year}년 행 삭제`}
+          >
+            <Trash2 size={14} aria-hidden />
+          </button>
+        )}
+      </div>
+
+      {/* 결과 행 */}
+      <div className="mt-2.5 grid grid-cols-2 gap-2 text-[11px]">
+        <div className="rounded-md px-2.5 py-1.5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
+            세전
+          </p>
+          <p
+            className="font-black tabular-nums"
+            style={{ color: blocked ? "#EF4444" : "#0A1829" }}
+          >
+            {blocked ? "0원 (미달)" : fmtManwon(row.myGrossManwon)}
+          </p>
+        </div>
+        <div className="rounded-md px-2.5 py-1.5 bg-electric-5 border border-electric-20">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
+            세후
+          </p>
+          <p
+            className="font-black tabular-nums"
+            style={{ color: blocked ? "#EF4444" : "#0145F2" }}
+          >
+            {blocked ? "0원" : fmtManwon(row.myNetManwon)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BonusBarChart({
+  enriched,
+  maxVal,
+  color,
+}: {
+  enriched: Array<{
+    year: number;
+    profit: number;
+    triggered: boolean;
+    myGrossManwon: number;
+    myNetManwon: number;
+  }>;
+  maxVal: number;
+  color: string;
+}) {
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+  const n = enriched.length;
+  if (n === 0) return null;
+
+  const width = Math.max(320, n * 50);
+  const height = 280;
+  const padL = 44;
+  const padR = 16;
+  const padT = 24;
+  const padB = 38;
+  const innerW = width - padL - padR;
+  const innerH = height - padT - padB;
+
+  const groupWidth = innerW / Math.max(n, 1);
+  const barWidth = Math.max(10, groupWidth * 0.55);
+
+  function groupCenter(i: number) {
+    return padL + groupWidth * i + groupWidth / 2;
+  }
+  function yPos(v: number) {
+    return padT + innerH - (v / maxVal) * innerH;
+  }
+  function barH(v: number) {
+    return Math.max(0, (v / maxVal) * innerH);
+  }
+
+  return (
+    <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4 overflow-x-auto">
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-2">
+        연도별 본인 케이스 (세전 막대 · 세후 진하게)
+      </p>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto"
+        role="img"
+        aria-label="다년도 누적 성과급 막대 그래프"
+        style={{ minWidth: 320 }}
+      >
+        {/* 그리드 */}
+        {[0.25, 0.5, 0.75, 1].map((g) => (
+          <line
+            key={g}
+            x1={padL}
+            x2={width - padR}
+            y1={padT + innerH * (1 - g)}
+            y2={padT + innerH * (1 - g)}
+            stroke="#DDE4EC"
+            strokeDasharray="2 2"
+            strokeWidth="0.5"
+          />
+        ))}
+        {/* y축 라벨 */}
+        {[0, 0.5, 1].map((g) => {
+          const v = maxVal * g;
+          return (
+            <text
+              key={g}
+              x={padL - 4}
+              y={padT + innerH * (1 - g) + 3}
+              textAnchor="end"
+              fontSize="9"
+              fill="#7B8FA1"
+              fontWeight="700"
+            >
+              {v >= 10000 ? `${(v / 10000).toFixed(1)}억` : `${Math.round(v)}만`}
+            </text>
+          );
+        })}
+        {/* x축 baseline */}
+        <line
+          x1={padL}
+          x2={width - padR}
+          y1={padT + innerH}
+          y2={padT + innerH}
+          stroke="#A8B9D6"
+          strokeWidth="0.8"
+        />
+
+        {/* 막대들 — 세전(연한 색) 위에 세후(진한 색) 오버레이 */}
+        {enriched.map((d, i) => {
+          const blocked = !d.triggered && d.profit > 0;
+          const center = groupCenter(i);
+          const grossY = yPos(d.myGrossManwon);
+          const grossH = barH(d.myGrossManwon);
+          const netY = yPos(d.myNetManwon);
+          const netH = barH(d.myNetManwon);
+          const isHover = hoverIdx === i;
+          return (
+            <g key={i}>
+              {/* 세전 막대 (배경) */}
+              <rect
+                x={center - barWidth / 2}
+                y={grossY}
+                width={barWidth}
+                height={grossH}
+                fill={blocked ? "#EF4444" : color}
+                opacity={blocked ? 0.18 : 0.32}
+                rx="3"
+              />
+              {/* 세후 막대 (전경, 진한) */}
+              {!blocked && (
+                <rect
+                  x={center - barWidth / 2}
+                  y={netY}
+                  width={barWidth}
+                  height={netH}
+                  fill={color}
+                  rx="3"
+                  style={{
+                    filter: isHover
+                      ? `drop-shadow(0 2px 6px ${color}55)`
+                      : "none",
+                  }}
+                />
+              )}
+              {/* 미달 마크 */}
+              {blocked && (
+                <text
+                  x={center}
+                  y={padT + innerH - 6}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="900"
+                  fill="#EF4444"
+                >
+                  ✕
+                </text>
+              )}
+              {/* 호버 hit-area */}
+              <rect
+                x={padL + groupWidth * i}
+                y={padT}
+                width={groupWidth}
+                height={innerH}
+                fill="transparent"
+                onMouseEnter={() => setHoverIdx(i)}
+                onMouseLeave={() => setHoverIdx(null)}
+                onTouchStart={() => setHoverIdx(i)}
+                style={{ cursor: "pointer" }}
+              />
+              {/* x축 라벨 */}
+              <text
+                x={center}
+                y={height - padB + 18}
+                textAnchor="middle"
+                fontSize="10"
+                fill={isHover ? color : "#7B8FA1"}
+                fontWeight="700"
+              >
+                {d.year}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* 호버 툴팁 */}
+        {hoverIdx !== null && enriched[hoverIdx] && (
+          <g pointerEvents="none">
+            <rect
+              x={Math.min(
+                Math.max(groupCenter(hoverIdx) - 65, padL),
+                width - padR - 140
+              )}
+              y={padT - 6}
+              width="140"
+              height="58"
+              rx="6"
+              fill="#0A1829"
+            />
+            <text
+              x={Math.min(
+                Math.max(groupCenter(hoverIdx) - 65, padL),
+                width - padR - 140
+              ) + 8}
+              y={padT + 9}
+              fontSize="10"
+              fill="#fff"
+              fontWeight="700"
+            >
+              {enriched[hoverIdx].year}년 · 영업이익{" "}
+              {enriched[hoverIdx].profit}조
+            </text>
+            <text
+              x={Math.min(
+                Math.max(groupCenter(hoverIdx) - 65, padL),
+                width - padR - 140
+              ) + 8}
+              y={padT + 24}
+              fontSize="9"
+              fill="#A8B9D6"
+            >
+              세전: {fmtManwon(enriched[hoverIdx].myGrossManwon)}
+            </text>
+            <text
+              x={Math.min(
+                Math.max(groupCenter(hoverIdx) - 65, padL),
+                width - padR - 140
+              ) + 8}
+              y={padT + 36}
+              fontSize="9"
+              fill="#fff"
+              fontWeight="700"
+            >
+              세후: {fmtManwon(enriched[hoverIdx].myNetManwon)}
+            </text>
+            {!enriched[hoverIdx].triggered && enriched[hoverIdx].profit > 0 && (
+              <text
+                x={Math.min(
+                  Math.max(groupCenter(hoverIdx) - 65, padL),
+                  width - padR - 140
+                ) + 8}
+                y={padT + 48}
+                fontSize="9"
+                fill="#FCA5A5"
+              >
+                ⚠ 임계값 미달 — 0원
+              </text>
+            )}
+          </g>
+        )}
+      </svg>
+
+      <div className="flex flex-wrap gap-3 mt-2 text-[11px]">
+        <span className="inline-flex items-center gap-1.5 text-muted-blue">
+          <span
+            className="w-3 h-3 rounded-sm"
+            style={{ backgroundColor: color, opacity: 0.32 }}
+            aria-hidden
+          />
+          세전
+        </span>
+        <span className="inline-flex items-center gap-1.5 text-muted-blue">
+          <span
+            className="w-3 h-3 rounded-sm"
+            style={{ backgroundColor: color }}
+            aria-hidden
+          />
+          세후
+        </span>
+        <span className="inline-flex items-center gap-1.5 text-muted-blue">
+          <span className="text-rose-500 font-black">✕</span>
+          임계값 미달 (0원)
+        </span>
+      </div>
+    </div>
+  );
+}
