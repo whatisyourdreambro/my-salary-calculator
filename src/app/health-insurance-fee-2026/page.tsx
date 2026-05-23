@@ -10,6 +10,7 @@ import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import ShareButtons from "@/components/ShareButtons";
 import HealthInsuranceFeeClient from "./HealthInsuranceFeeClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -160,6 +161,11 @@ export default function HealthInsuranceFee2026Page() {
 
         {/* 14차 — RelatedCalculators 추가 (dead-end 차단) */}
         <RelatedCalculators currentPath="/health-insurance-fee-2026" title="건보료와 함께 보면 좋은 도구" />
+
+        {/* 14차 — ShareButtons (공유 유입) */}
+        <div className="my-8">
+          <ShareButtons title="2026 건강보험료 계산기" description="직장/지역 가입자별 본인 부담 + 장기요양" />
+        </div>
 
         <section className="my-10">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">함께 보면 좋은 계산기</h2>

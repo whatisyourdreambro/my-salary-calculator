@@ -10,6 +10,7 @@ import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import ShareButtons from "@/components/ShareButtons";
 import AutoTaxClient from "./AutoTaxClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -213,6 +214,11 @@ export default function AutoTax2026Page() {
           currentPath="/auto-tax-2026"
           title="이 계산과 함께 보면 좋은 도구"
         />
+
+        {/* 14차 — ShareButtons 추가 (공유 유입) */}
+        <div className="my-8">
+          <ShareButtons title="2026 자동차세 계산기" description="배기량·차령별 정확한 자동차세 1분 안에 계산" />
+        </div>
 
         {/* 관련 도구 */}
         <section className="my-10">

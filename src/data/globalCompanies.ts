@@ -32,7 +32,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["업계 최고의 대우와 복지", "똑똑한 동료들", "심리적 안전감이 보장되는 문화"],
  cons: ["대기업병 (느린 의사결정)", "승진 경쟁 치열", "잦은 리오가니제이션"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 2. Apple
  {
@@ -64,7 +64,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["세상을 바꾸는 제품을 만든다는 자부심", "최고의 인재 밀도", "높은 보상"],
  cons: ["극도의 비밀주의", "사내 정치", "높은 업무 강도"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 3. Meta (Facebook)
  {
@@ -96,7 +96,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["Move Fast 문화", "높은 보상과 사이닝 보너스", "젊고 에너제틱한 분위기"],
  cons: ["잦은 퍼포먼스 리뷰(PSC) 압박", "워라밸이 깨지기 쉬움"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 4. Netflix
  {
@@ -129,7 +129,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["업계 압도적 1위 연봉 (All Cash)", "최고의 동료들", "규칙 없는 규칙"],
  cons: ["Keeper Test (성과 못내면 해고)", "극도의 솔직함이 주는 스트레스"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 5. NVIDIA
  {
@@ -161,7 +161,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["폭발적인 주가 상승으로 인한 보상", "AI 시대를 이끈다는 자부심", "젠슨 황의 리더십"],
  cons: ["높은 업무 강도", "빠르게 변하는 기술 트렌드"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 6. Microsoft
  {
@@ -193,7 +193,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["업계 최고의 워라밸", "안정적인 성장", "다양성과 포용성 존중"],
  cons: ["다소 보수적인 분위기", "복잡한 내부 프로세스"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 7. Tesla
  {
@@ -225,7 +225,7 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["인류를 구한다는 미션", "천재들과 일하는 경험", "스톡옵션 대박 기회"],
  cons: ["살인적인 업무 강도", "일론 머스크의 변덕", "워라밸 없음"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
  // 8. Amazon
  {
@@ -257,6 +257,6 @@ export const globalCompanies: CompanyProfile[] = [
  pros: ["엄청난 성장 기회", "AWS라는 강력한 캐시카우", "철저한 리더십 원칙"],
  cons: ["PIP(성과부진자 관리) 공포", "짠물 복지 (Frugality)", "백로딩 베스팅"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-23",
  },
 ];

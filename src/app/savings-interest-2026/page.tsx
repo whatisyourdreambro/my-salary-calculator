@@ -10,6 +10,7 @@ import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import ShareButtons from "@/components/ShareButtons";
 import SavingsInterestClient from "./SavingsInterestClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -184,6 +185,11 @@ export default function SavingsInterest2026Page() {
 
         {/* 14차 — RelatedCalculators 추가 (dead-end 차단) */}
         <RelatedCalculators currentPath="/savings-interest-2026" title="적금·예금과 함께 보면 좋은 도구" />
+
+        {/* 14차 — ShareButtons (공유 유입) */}
+        <div className="my-8">
+          <ShareButtons title="2026 적금·예금 이자 계산기" description="단리/복리 만기 원리금 + 비과세 옵션" />
+        </div>
 
         <section className="my-10">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">함께 보면 좋은 계산기</h2>
