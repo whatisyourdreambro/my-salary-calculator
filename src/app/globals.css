@@ -620,6 +620,14 @@ tr:hover td { background-color: #0145F208; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── 푸터 아코디언: 모바일=토글, sm 이상=항상 펼침 ─────────────── */
+@media (min-width: 640px) {
+  .footer-accordion summary::-webkit-details-marker { display: none; }
+  .footer-accordion:not([open]) > ul {
+    display: flex !important;
+  }
+}
+
 /* ── Reduced motion: 접근성 + CLS 방어 ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,

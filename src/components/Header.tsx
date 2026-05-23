@@ -59,8 +59,10 @@ export default function Header() {
  backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  boxShadow: isScrolled ? "0 4px 24px -8px #0145F211" : "none",
- padding: isScrolled ? "10px 0" : "18px 0",
- transition: "all 0.3s ease",
+ // CLS 방어: padding 고정 (스크롤 상태와 무관)
+ padding: "12px 0",
+ minHeight: 64,
+ transition: "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
  }}
  initial={{ y: -100 }}
  animate={{ y: 0 }}

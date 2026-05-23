@@ -159,30 +159,37 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links - 4~5 sections (한글 푸터는 인기 회사 컬럼 추가) */}
+          {/* Links — 모바일: 아코디언(<details>) / 데스크톱: 풀 그리드 */}
           <div
-            className={`lg:col-span-8 grid grid-cols-2 ${
+            className={`lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 ${
               isEnglish ? "lg:grid-cols-4" : "lg:grid-cols-5"
-            } gap-8`}
+            } gap-2 sm:gap-8`}
           >
-            {sections.map((section) => (
-              <div key={section.title}>
-                <h3 className="text-[11px] font-extrabold text-electric uppercase tracking-[0.1em] mb-5">
+            {sections.map((section, idx) => (
+              <details
+                key={section.title}
+                className="group footer-accordion"
+                open={idx < 2}
+              >
+                <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] font-extrabold text-electric uppercase tracking-[0.1em] py-3 sm:py-0 sm:mb-5 sm:cursor-default border-b border-canvas-200 dark:border-canvas-800 sm:border-0">
                   {section.title}
-                </h3>
-                <ul className="list-none p-0 m-0 flex flex-col gap-3">
+                  <span className="sm:hidden text-base text-electric group-open:rotate-180 transition-transform" aria-hidden>
+                    ▾
+                  </span>
+                </summary>
+                <ul className="list-none p-0 m-0 flex flex-col gap-3 pt-3 sm:pt-0 pb-3 sm:pb-0">
                   {section.items.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="footer-link text-[14.5px] font-medium text-muted-blue dark:text-canvas-300 no-underline transition-colors hover:text-electric"
+                        className="footer-link text-[14.5px] font-medium text-muted-blue dark:text-canvas-300 no-underline transition-colors hover:text-electric inline-block min-h-[24px]"
                       >
                         {link.name}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </details>
             ))}
           </div>
         </div>

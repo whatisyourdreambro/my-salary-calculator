@@ -133,27 +133,37 @@ export default function SalaryDBPage() {
  {company.industry}
  </p>
 
- <div className="space-y-3">
+ <div className="space-y-2.5">
  <div className="flex justify-between items-center text-sm">
  <span className="text-muted-foreground flex items-center gap-1">
- <Users className="w-4 h-4" /> 신입 초봉
+ <Users className="w-4 h-4" /> 신입 → 시니어
  </span>
- <span className="font-bold text-foreground">
- {(company.salary.entry.base / 10000).toLocaleString('ko-KR')}만원
+ <span className="font-bold text-foreground tabular-nums">
+ {(company.salary.entry.base / 10000).toLocaleString('ko-KR')}~{(company.salary.senior.base / 10000).toLocaleString('ko-KR')}만원
  </span>
  </div>
  <div className="flex justify-between items-center text-sm">
  <span className="text-muted-foreground flex items-center gap-1">
  <TrendingUp className="w-4 h-4" /> 평균 인센
  </span>
- <span className="font-bold text-electric">
+ <span className="font-bold text-electric tabular-nums">
  {company.salary.entry.incentive.target}%
+ </span>
+ </div>
+ <div className="flex justify-between items-center text-sm">
+ <span className="text-muted-foreground">📅 주 실근무</span>
+ <span className="font-bold text-foreground tabular-nums">
+ {company.workLife.weeklyHours.real}h
  </span>
  </div>
  </div>
 
- <div className="mt-6 pt-4 border-t border-border flex justify-between items-center text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
- 상세 리포트 보기 <ArrowRight className="w-4 h-4" />
+ <div className="mt-5 pt-4 border-t border-border flex justify-between items-center text-sm font-bold text-primary group-hover:text-electric transition-colors">
+ <span className="inline-flex items-center gap-1">
+ <span className="hidden sm:inline">직급별 연봉·복지·리뷰</span>
+ <span className="sm:hidden">상세 리포트</span>
+ </span>
+ <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
  </div>
  </div>
  </Link>

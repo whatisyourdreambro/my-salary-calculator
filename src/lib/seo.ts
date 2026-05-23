@@ -70,7 +70,9 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  const allKeywords = [...new Set([...DEFAULT_KEYWORDS, ...keywords])];
 
  const metadata: Metadata = {
- title: fullTitle,
+ // title.absolute = layout의 `template: "%s | 머니샐러리"` 중복 적용 차단.
+ // (string 형태로 두면 layout이 또 "| 머니샐러리"를 붙여 사이트명 2번 노출)
+ title: { absolute: fullTitle },
  description,
  keywords: allKeywords.join(", "),
  alternates: {

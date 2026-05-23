@@ -167,15 +167,15 @@ export default function HomePage() {
 
  {/* ═══ Hero ════════════════════════════════════════════════ */}
  <section className="hero-section relative overflow-hidden bg-canvas px-6 pt-20 pb-12 flex flex-col items-center justify-center">
- {/* BG decoration */}
+ {/* BG decoration — 모바일 친화: viewport 추종 */}
  <div
  style={{
  position: "absolute",
  top: 0,
  left: "50%",
  transform: "translateX(-50%)",
- width: "700px",
- height: "500px",
+ width: "min(700px, 90vw)",
+ height: "min(500px, 60vw)",
  borderRadius: "999px",
  background: "radial-gradient(circle, #0145F211 0%, transparent 70%)",
  pointerEvents: "none",
@@ -229,11 +229,14 @@ export default function HomePage() {
  <span className="text-electric">가장 쉽고 정확하게.</span>
  </h1>
 
- {/* Subheading */}
- <p className="max-w-[520px] mx-auto mb-10 text-[clamp(1rem,2vw,1.2rem)] text-muted-blue font-medium leading-[1.65]">
+ {/* Subheading — 구체 수치로 신뢰도↑ */}
+ <p className="max-w-[560px] mx-auto mb-3 text-[clamp(1rem,2vw,1.2rem)] text-muted-blue font-medium leading-[1.65]">
  4대보험·소득세·연말정산·퇴직금까지.
  <br />
  2026 세법 기준, 5초 만에 정확하게.
+ </p>
+ <p className="max-w-[560px] mx-auto mb-10 text-sm text-faint-blue font-medium">
+ 예) 연봉 5,000만원 → 월 실수령 약 357만원 · 연 4,290만원
  </p>
 
  {/* CTA Buttons */}
@@ -243,13 +246,13 @@ export default function HomePage() {
  className="btn-primary text-base px-8 py-3.5"
  >
  <Zap className="w-[18px] h-[18px]" aria-hidden="true" />
- 지금 바로 계산하기
+ 내 연봉 실수령액 5초 계산
  </button>
  <Link
- href="/guides"
+ href="/salary-db"
  className="btn-secondary text-[15px] px-6 py-3.5"
  >
- 금융 가이드 보기
+ 회사별 연봉 비교
  <ArrowRight className="w-[15px] h-[15px]" aria-hidden="true" />
  </Link>
  </div>
