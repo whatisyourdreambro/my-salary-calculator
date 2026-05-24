@@ -7,35 +7,16 @@
 // samsung-bonus 의 calcBonusNet 와 동일 로직을 회사별 계산기에서 재사용
 // 가능하도록 추출. 회사별로 다른 건 "성과급 풀 산정 방식"이지 세금 계산은
 // 동일.
+//
+// 세율·요율 상수는 lib/taxConstants2026.ts 단일 진실 소스에서 import.
+// 2027년 세율 변경 시 taxConstants2026 만 수정하면 모든 계산기에 일괄 반영.
 
-// 2026 종합소득세 누진세율 (소득세법 §55)
-const TAX_BRACKETS_2026 = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-// 근로소득공제 (소득세법 §47)
-function earnedIncomeDeduction(annualSalary: number): number {
-  if (annualSalary <= 5_000_000) return annualSalary * 0.7;
-  if (annualSalary <= 15_000_000) return 3_500_000 + (annualSalary - 5_000_000) * 0.4;
-  if (annualSalary <= 45_000_000) return 7_500_000 + (annualSalary - 15_000_000) * 0.15;
-  if (annualSalary <= 100_000_000) return 12_000_000 + (annualSalary - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (annualSalary - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcIncomeTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS_2026) {
-    if (taxable <= b.limit) return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
+import {
+  INSURANCE_RATES_2026,
+  PENSION_BASE_2026,
+  earnedIncomeDeduction2026 as earnedIncomeDeduction,
+  calcIncomeTax2026 as calcIncomeTax,
+} from "./taxConstants2026";
 
 export interface BonusNetResult {
   /** 세전 성과급 (원) */
@@ -106,7 +87,9 @@ export function calcBonusNet(
 
   const creditMult = 1 - creditRate / 100;
   const incomeTaxDelta = Math.max(0, (taxWithBonus - taxBase) * creditMult);
-  const localTaxDelta = Math.round(incomeTaxDelta * 0.1);
+  const localTaxDelta = Math.round(
+    incomeTaxDelta * INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO,
+  );
 
   // 2) 4대보험 추가 부과 (보수에 합산되므로 성과급도 부과 대상)
   let pensionDelta = 0;
@@ -114,20 +97,19 @@ export function calcBonusNet(
   let empInsDelta = 0;
 
   if (applyInsurance) {
-    // 국민연금 — 보수월액 상한 617만원/월 = 연 7,404만원. 본인 연봉이 이미
-    // 상한 이상이면 성과급 추가 부과 없음 (이미 cap 도달)
-    const PENSION_CAP_ANNUAL = 74_040_000;
-    const remainingPensionRoom = Math.max(0, PENSION_CAP_ANNUAL - salary);
+    // 국민연금 — 보수월액 상한(2026 연 7,404만원). 본인 연봉이 이미 상한
+    // 이상이면 성과급 추가 부과 없음 (cap 도달)
+    const remainingPensionRoom = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
     const pensionTarget = Math.min(bonusWon, remainingPensionRoom);
-    pensionDelta = Math.round(pensionTarget * 0.045);
+    pensionDelta = Math.round(pensionTarget * INSURANCE_RATES_2026.NATIONAL_PENSION);
 
-    // 건강보험 3.545% + 장기요양 (건보의 12.95%) — 상한 없음
-    const healthBase = bonusWon * 0.03545;
-    const longTermCare = healthBase * 0.1295;
+    // 건강보험 + 장기요양 (건보의 12.95%) — 상한 없음
+    const healthBase = bonusWon * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+    const longTermCare = healthBase * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
     healthDelta = Math.round(healthBase + longTermCare);
 
-    // 고용보험 0.9% — 상한 없음
-    empInsDelta = Math.round(bonusWon * 0.009);
+    // 고용보험 — 상한 없음
+    empInsDelta = Math.round(bonusWon * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE);
   }
 
   const totalDeductions =

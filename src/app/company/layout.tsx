@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
+import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "회사 연봉·복지 비교 — 삼성·네이버·카카오 등 65+ 기업",
@@ -30,6 +31,8 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
  ])}
  />
  {children}
+ {/* /company 와 /company/compare, /company/simulator 자동 광고 적용 */}
+ <PageFooterAds maxWidth="5xl" />
  </>
  );
 }

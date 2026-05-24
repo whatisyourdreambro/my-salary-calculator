@@ -864,7 +864,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "기계 설계·해석·제조 공정을 담당하는 엔지니어. 자동차·조선·항공·로봇 산업에서 수요가 높음.",
     requirements: ["기계공학 학위", "CAD(AutoCAD·SolidWorks)·CAE(ANSYS) 능력"],
-    relatedCompanyIds: ["hyundai-motor", "kia", "samsung-electronics"],
+    relatedCompanyIds: ["hyundai", "kia", "samsung-electronics"],
     relatedCalcSlugs: ["overtime-pay-quick", "severance-pay-quick"],
     faqs: [
       { q: "기계공학자 연봉은 얼마인가요?", a: "신입 기계공학자 연봉은 3,500~4,800만원이며, 현대차·삼성 등 대기업은 4,500만원 이상입니다. 경력 10년 수석엔지니어급은 6,500~9,000만원 수준입니다." },
@@ -944,7 +944,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "차량 설계·파워트레인·전기차 개발·자율주행 등을 담당하는 자동차 산업 엔지니어.",
     requirements: ["기계·전기·전자공학 학위", "EV·자율주행 관련 기술 우대"],
-    relatedCompanyIds: ["hyundai-motor", "kia"],
+    relatedCompanyIds: ["hyundai", "kia"],
     relatedCalcSlugs: ["earned-income-tax-quick", "stock-capital-gains-quick"],
     faqs: [
       { q: "자동차 엔지니어 연봉은 얼마인가요?", a: "현대차·기아 신입 엔지니어 연봉(기본+성과)은 5,000~7,000만원 수준입니다. 전기차·자율주행 전문 엔지니어는 시장 수요 증가로 연봉이 빠르게 오르고 있습니다." },
@@ -1251,7 +1251,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "공급망(SCM) 관리·물류 운영·수출입 통관을 담당하는 경영 지원 직군.",
     requirements: ["경영·물류·무역 관련 학과", "물류관리사·관세사 자격증 우대"],
-    relatedCompanyIds: ["cj-logistics", "hyundai-motor", "samsung-electronics"],
+    relatedCompanyIds: ["cj-logistics", "hyundai", "samsung-electronics"],
     relatedCalcSlugs: ["earned-income-tax-quick"],
     faqs: [
       { q: "물류/SCM 담당자 연봉은 얼마인가요?", a: "신입 연봉은 3,000~4,200만원이며, 대기업 SCM팀 경력자는 7,000~9,000만원 수준입니다. 글로벌 물류 전문가는 더 높은 대우를 받습니다." },

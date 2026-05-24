@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import PageFooterAds from "@/components/PageFooterAds";
 
 // /guides 허브 페이지 전용 메타데이터.
 // /guides/[slug] 글 페이지는 자체 generateMetadata 가 우선 적용된다.
@@ -22,5 +23,11 @@ export default function GuidesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {/* 308개 가이드 글 + 메인 = 광고 부재 시 수익 누수 큼. layout 자동 광고. */}
+      <PageFooterAds maxWidth="3xl" />
+    </>
+  );
 }

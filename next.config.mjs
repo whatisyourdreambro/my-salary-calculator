@@ -6,17 +6,18 @@ const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-// 카카오 애드핏 및 구글 애드센스 광고 로딩에 필요한 모든 도메인을 적용한 CSP
-// connect-src 화이트리스트로 타이트닝 (이전: '*' → 광고/분석 도메인만 명시)
+// CSP — AdSense + 쿠팡 파트너스 + Cloudflare Insights 만 허용 (메모리 수익 정책 준수).
+// 카카오 Adfit(*.adfit.kakao.com, t1.daumcdn.net) 은 실제 사용 코드가 없어 2026-05-24
+// 제거. 운영자 명시 지시 시에만 재추가.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google;
-  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://t1.daumcdn.net *.kakao.com *.adfit.kakao.com https://ep2.adtrafficquality.google;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://cdn-cookieyes.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google;
+  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://ep2.adtrafficquality.google;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.kakao.com https://*.adfit.kakao.com https://*.daumcdn.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com;
+  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com;
   media-src 'none';
-  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://*.adfit.kakao.com https://*.kakao.com;
+  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';

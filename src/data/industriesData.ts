@@ -163,7 +163,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "현대차·기아·한국GM·르노코리아 등 완성차 메이커와 현대모비스·만도·현대위아 등 자동차 부품사를 포함하는 제조 업계.",
-    topCompanyIds: ["hyundai-motor", "kia"],
+    topCompanyIds: ["hyundai", "kia"],
     topJobIds: ["automotive-engineer", "mechanical-engineer", "electrical-engineer"],
     faqs: [
       {

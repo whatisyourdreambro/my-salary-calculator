@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import EnglishLocaleSync from "./LocaleSync";
+import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = {
  title: "Salary, Stocks & Tax for Working in Korea | Moneysalary",
@@ -30,6 +31,8 @@ export default function EnglishLayout({
  <div className="en-locale" lang="en">
  <EnglishLocaleSync />
  {children}
+ {/* 영어권 트래픽도 AdSense 가 자동 매칭 (지역별 광고 송출 — Cloudflare 엣지) */}
+ <PageFooterAds maxWidth="3xl" />
  </div>
  );
 }

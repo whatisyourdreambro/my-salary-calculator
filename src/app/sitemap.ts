@@ -163,9 +163,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/savings-interest-2026',
  ];
 
+ // 정적 라우트 lastModified — 매 배포마다 today 로 reset 되면 Google freshness
+ // 신호가 무의미해져 순위 변동성이 커진다. 마지막 실질 콘텐츠 업데이트 날짜를
+ // 고정해 두고, 진짜 페이지가 갱신될 때만 이 상수를 손으로 올린다.
+ const STATIC_LAST_MODIFIED = new Date("2026-05-24");
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly' as ChangeFrequency,
  priority: route === '/' ? 1.0 : 0.8,
  }));

@@ -3,6 +3,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import { qnaData } from "@/data/qnaData";
+import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "연봉·세금 자주 묻는 질문 - 4대보험·연말정산 Q&A",
@@ -42,6 +43,8 @@ export default function QnaLayout({ children }: { children: React.ReactNode }) {
  ]}
  />
  {children}
+ {/* 56개 Q&A 동적 + 메인 = long-tail 검색 트래픽 수익 회복 */}
+ <PageFooterAds maxWidth="3xl" />
  </>
  );
 }
