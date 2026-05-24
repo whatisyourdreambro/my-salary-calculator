@@ -8,61 +8,229 @@ export const seedCompanies: CompanyProfile[] = [
  tier: "conglomerate",
  logo: "🏢",
  description:
- "대한민국 시가총액 1위, 글로벌 반도체 및 모바일 리더. DS(반도체)·DX(가전·모바일)·하만 사업부 운영. 신입 초봉 5,300만원 + OPI/TAI 성과급으로 영끌 7,800만원 이상. 디바이스솔루션(DS) 사업부가 가장 높은 성과급, 디바이스경험(DX)이 안정적 워라밸.",
+ "대한민국 시가총액 1위, 글로벌 반도체·모바일·가전 리더. DS(반도체) / DX(가전·모바일) / 하만 3대 사업부 운영, 임직원 약 12만명. 2026년 임금협약 잠정합의(Base-up 4.1% + 성과인상률 평균 2.1%)로 셀러리캡 전면 상향 — CL2 0.76→0.80억, CL3 1.03→1.10억, CL4 (개발 1.22억/비개발 1.20억) → 개발·비개발 통합 1.30억. 전 직급 가중 평균 영끌 연봉 약 8,000만원(반도체 사이클 평탄화 기준).",
  salary: {
+ // CL1 (신입~사원): base 4,800만 + OPI/TAI 평균 800만 = 영끌 5,600만원.
+ // 셀러리캡(CL1 상한) 약 5,500만원 base. 평균 OPI 회사 인상률에 OPI 변동 ±30% 반영.
  entry: {
- base: 53000000,
- incentive: { target: 50, max: 50, avgAmount: 25000000 },
+ base: 48000000,
+ incentive: { target: 25, max: 50, avgAmount: 8000000 },
  },
+ // CL2 (대리, 3~7년차): base 6,000만 + 평균 OPI 1,200만 = 영끌 7,200만원.
+ // 셀러리캡 약 7,200만원 base. 동기 진급 격차 첫 발생 구간.
  junior: {
- base: 70000000,
- incentive: { target: 50, max: 50, avgAmount: 35000000 },
+ base: 60000000,
+ incentive: { target: 30, max: 50, avgAmount: 12000000 },
  },
+ // CL3 (과장, 7~12년차): base 7,500만 + 평균 OPI 1,700만 = 영끌 9,200만원.
+ // 셀러리캡 약 8,800만원 base. 진급 누락 시 cap에 가까워져 인상폭 정체.
  senior: {
- base: 95000000,
- incentive: { target: 50, max: 50, avgAmount: 45000000 },
+ base: 75000000,
+ incentive: { target: 35, max: 50, avgAmount: 17000000 },
  },
+ // CL4 (차장/부장, 12~18년차): base 9,000만 + 평균 OPI 2,200만 = 영끌 1억 1,200만원.
+ // 셀러리캡 약 1억 500만원 base. 임원 진급 전 마지막 cap, 정체 시 가장 강함.
  lead: {
- base: 130000000,
- incentive: { target: 50, max: 50, avgAmount: 60000000 },
+ base: 90000000,
+ incentive: { target: 40, max: 60, avgAmount: 22000000 },
  },
+ // 임원 (상무·부사장·사장): base 1.5억 + 평균 성과급·RSU 5,000만 = 영끌 2억+.
+ // 임원 cap 은 직무·사업부 적자/흑자별 차등 폭이 매우 큼.
  executive: {
- base: 250000000,
- incentive: { target: 50, max: 50, avgAmount: 120000000 },
+ base: 150000000,
+ incentive: { target: 50, max: 100, avgAmount: 50000000 },
+ stock: { type: "RSU", amount: 50000000, vesting: "3 years" },
  },
  },
+ // ─────────────────────────────────────────────────────────────
+ // 삼성전자 CL(Career Level) 세부 직급 — 2026년 임금협약 잠정합의서 원문 기준.
+ // ⚠️ 셀러리캡 수치는 합의서 명시값(추정 아님):
+ //   - CL4: 개발 1.22억 / 비개발 1.20억 → 개발/비개발 통합 1.30억
+ //   - CL3: 1.03억 → 1.10억
+ //   - CL2: 0.76억 → 0.80억
+ // 임금인상률: 기준인상률(Base-up) 4.1% + 성과인상률 평균 2.1% (CL/고과 차등).
+ // CL1=고졸/전문대졸, CL2=대졸 사원·대리, CL3=과장·차장·책임, CL4=부장·수석.
+ // 정규 진급: CL2 → 9년차 CL3 → 19년차 CL4 (단, 점수제로 연차 무관 진급 확대 추세).
+ // 영끌(총액)은 base + 평균 OPI(연봉의 25~50%) + TAI(월 기본급의 100% × 2회).
+ // 반도체 사이클·사업부 흑/적자에 따라 OPI는 ±30% 변동.
+ // ─────────────────────────────────────────────────────────────
+ careerLevels: [
+ {
+ group: "CL1 (고졸·전문대졸 입사)",
+ promotionNote: "고졸·전문대졸 신입은 CL1 시작. 평균 4~6년 이상 근무 + 점수 충족 시 CL2 진급 가능",
+ salaryCapManwon: 5000,
+ steps: [
+ {
+ label: "CL1-1 (1~2년차)",
+ description: "고졸·전문대졸 입사 신입~2년차. 생산직·기술직 중심",
+ baseManwon: 3800,
+ totalManwon: 4800,
+ },
+ {
+ label: "CL1-2 (3~4년차)",
+ description: "CL1-1 이후 호봉 상승, CL2 진급 직전 구간",
+ baseManwon: 4200,
+ totalManwon: 5400,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "CL2 (대졸 신입 사원·대리)",
+ promotionNote: "대졸 신입 입사 시작점. 정규 진급은 9년차 CL3. 2026년 셀캡 0.76억 → 0.80억 상향(합의서)",
+ salaryCapManwon: 8000,
+ steps: [
+ {
+ label: "CL2 (1~2년차)",
+ description: "대졸 신입 입사. 보도 초봉 5,300만원 + OPI/TAI",
+ baseManwon: 5300,
+ totalManwon: 7200,
+ },
+ {
+ label: "CL2 (3~4년차)",
+ description: "사원 중반. 호봉 + Base-up 4.1% + 성과인상률 2.1% 누적",
+ baseManwon: 6000,
+ totalManwon: 8100,
+ },
+ {
+ label: "CL2 (5~6년차)",
+ description: "사원 후반~대리 진입. 부서별 직책 책임 증가",
+ baseManwon: 6800,
+ totalManwon: 9100,
+ },
+ {
+ label: "CL2 (7~8년차)",
+ description: "대리. CL3 진급 직전 — 2026 신규 셀러리캡 0.80억 도달",
+ baseManwon: 8000,
+ totalManwon: 10500,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "CL3 (과장·차장·책임)",
+ promotionNote: "CL2 → CL3 진급은 평균 9년차. 2026년 셀캡 1.03억 → 1.10억 상향(합의서)",
+ salaryCapManwon: 11000,
+ steps: [
+ {
+ label: "CL3 (1~2년차)",
+ description: "과장 진급 직후. base 상승 + OPI 비중 증가",
+ baseManwon: 8500,
+ totalManwon: 11800,
+ },
+ {
+ label: "CL3 (3~4년차)",
+ description: "과장 중반. 책임자 직책 수당 가능",
+ baseManwon: 9300,
+ totalManwon: 13000,
+ },
+ {
+ label: "CL3 (5~6년차)",
+ description: "책임/차장 진입. 사업부 핵심 인력",
+ baseManwon: 10200,
+ totalManwon: 14200,
+ },
+ {
+ label: "CL3 (7~8년차)",
+ description: "차장 후반. CL4 진급 임박 — 2026 신규 셀러리캡 1.10억 도달",
+ baseManwon: 11000,
+ totalManwon: 15500,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "CL4 (부장·수석)",
+ promotionNote: "정규 진급은 19년차. 2026년 셀캡 (개발 1.22억/비개발 1.20억) → 개발/비개발 통합 1.30억 상향(합의서)",
+ salaryCapManwon: 13000,
+ steps: [
+ {
+ label: "CL4 (1~2년차)",
+ description: "부장 진급 직후. 보도 부장 base 1억~1억 700만",
+ baseManwon: 11200,
+ totalManwon: 16800,
+ },
+ {
+ label: "CL4 (3~4년차)",
+ description: "부장 중반. 직책 책임·팀장 보임 시 추가 수당",
+ baseManwon: 12100,
+ totalManwon: 18000,
+ },
+ {
+ label: "CL4 (5년차+)",
+ description: "수석부장. 2026 신규 셀러리캡 1.30억 도달 — 임원 진급 대기 구간",
+ baseManwon: 13000,
+ totalManwon: 19500,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "임원 (수석·연구위원·상무 이상)",
+ promotionNote: "CL4 → 임원 진급률 약 1%. 보도 임원 평균 연봉 2억 5,600만원",
+ steps: [
+ {
+ label: "상무 (1~3년차)",
+ description: "상무보 진급. base 1.5억 + 성과급/RSU 50%",
+ baseManwon: 15000,
+ totalManwon: 22000,
+ },
+ {
+ label: "상무 (4년차+)·전무",
+ description: "사업부 임원. RSU 비중 증가",
+ baseManwon: 18000,
+ totalManwon: 28000,
+ },
+ {
+ label: "부사장·사장",
+ description: "그룹 핵심 경영진. base + RSU + 장기 인센티브 누적",
+ baseManwon: 30000,
+ totalManwon: 60000,
+ },
+ ],
+ },
+ ],
  workLife: {
  weeklyHours: { contract: 40, real: 48 },
- remoteWork: { policy: "office", description: "원칙적 출근, 부서별 상이" },
+ remoteWork: { policy: "office", description: "원칙적 출근, 사업부·직무별 재택 일부 허용" },
  vacation: { days: 15, usageRate: 85 },
  },
  culture: {
- score: 8.2,
- keywords: ["성과주의", "체계적", "대기업", "복지끝판왕", "OPI/TAI", "DS·DX사업부", "글로벌커리어"],
+ score: 8.0,
+ keywords: ["성과주의", "체계적", "대기업", "OPI/TAI", "DS·DX사업부", "글로벌커리어", "CL셀러리캡"],
  pros: [
- "압도적인 성과급(OPI 연봉의 최대 50%)",
- "삼시세끼 무료 + 사내 병원·약국",
- "최고 수준의 의료비 지원(가족 포함)",
- "전 직급 글로벌 출장·해외 법인 파견 기회",
- "퇴직금·DC형 연금 + 우리사주",
+ "2026 임금협약 — Base-up 4.1% + 성과인상률 평균 2.1%(CL·고과 차등)",
+ "셀러리캡 전면 상향 — CL2 0.80억 / CL3 1.10억 / CL4 1.30억(개발·비개발 통합)",
+ "OPI 성과급(연봉의 최대 50%) + TAI(월 기본급 최대 100% 연 2회)",
+ "자녀출산경조금 대폭 상향 — 첫째 100만 / 둘째 200만 / 셋째이상 500만(2026 신규)",
+ "사내 주택대부 제도 신설(2026) — 무주택 조합원 주거안정 지원",
+ "사내 식당 3끼 무료 + 사내 병원/약국 + 가족 의료비 + 자녀 학자금",
  ],
  cons: [
- "수직적인 문화 (사업부별 편차 큼)",
- "부서 바이 부서(부바부) 심함",
- "지방(평택·기흥·온양·구미·천안) 근무 가능성",
- "DS 사업부 강도 높음, 야간 근무·교대 비중",
- "OPI 0% 시즌(반도체 다운사이클) 충격 큼",
+ "직급별 연봉 셀러리캡(상한) 존재 — 동일 CL에서 base 인상폭 제한",
+ "CL3·CL4 진급 누락 시 base 인상이 회사 인상률(2026년 합산 6.2%)에 수렴",
+ "반도체 다운사이클·DS 사업부 적자 시 OPI 0% — 영끌 30% 감소 위험",
+ "지방 근무(평택·기흥·온양·구미·천안) 비중 높음",
+ "DS 사업부 강도(야간/교대 비중), 부서 바이 부서(부바부) 편차",
  ],
  },
  benefits: [
- { category: "financial", title: "OPI (성과인센티브)", description: "연봉의 최대 50% 지급, 반도체 호황기 추가 지급 사례", value: 25000000 },
- { category: "financial", title: "TAI (목표달성장려금)", description: "월 기본급의 최대 100% (연 2회)", value: 6000000 },
- { category: "health", title: "사내 병원/약국", description: "임직원 및 가족 의료비 지원, 평택·기흥 종합검진", value: 2000000 },
- { category: "lifestyle", title: "삼시세끼 무료", description: "아침·점심·저녁 사내식당 무료 제공", value: 3600000 },
+ { category: "financial", title: "OPI (성과인센티브)", description: "연 1회, 사업부 영업이익 연동. 연봉의 최대 50% — 단, 사업부 적자 시 0% 지급(셀러리캡 상한 도달 시 가장 큰 변동성).", value: 12000000 },
+ { category: "financial", title: "TAI (목표달성장려금)", description: "연 2회(상/하반기), 월 기본급의 최대 100%. OPI보다 변동성 낮음.", value: 6000000 },
+ { category: "financial", title: "성과인상률 (2026 신규)", description: "기준 Base-up 4.1% 외 성과인상률 평균 2.1%를 CL/고과 차등 적용 — 합산 약 6.2%", value: 2000000 },
+ { category: "financial", title: "사내 주택대부 (2026 신규)", description: "무주택 조합원 주거안정 지원 — 임금협약 잠정합의서 명시, 세부 금액·대상은 별도 인사규정", value: 5000000 },
+ { category: "financial", title: "우리사주조합", description: "급여의 일정 비율을 자사주로 매입, 1년 보호예수 후 매도 가능", value: 3000000 },
+ { category: "family", title: "자녀출산경조금 (2026 상향)", description: "첫째 30→100만 / 둘째 50→200만 / 셋째이상 100→500만으로 대폭 상향", value: 1000000 },
  { category: "family", title: "자녀 학자금", description: "유치원~대학원 학자금 지원, 2자녀 출산 시 추가 지원", value: 18000000 },
- { category: "growth", title: "글로벌 MBA·박사 파견", description: "선발 시 학비 전액 + 급여 지급", value: 50000000 },
+ { category: "family", title: "출산·육아 휴직", description: "육아휴직 보장 + 자녀양육수당", value: 2000000 },
+ { category: "health", title: "사내 병원/약국 + 가족 의료비", description: "임직원 및 가족 의료비 지원, 평택·기흥·수원 종합검진 무료", value: 2000000 },
+ { category: "lifestyle", title: "삼시세끼 무료", description: "아침·점심·저녁 사내식당 무료 제공 (전 사업장)", value: 3600000 },
+ { category: "lifestyle", title: "휴양소·콘도 지원", description: "전국 휴양소 + 콘도 회원권 무상 이용", value: 500000 },
+ { category: "lifestyle", title: "변형교대 휴일근무 보상 개선 (2026 신규)", description: "변형교대 지정근무일 휴일근로 시 통상시급 4시간분 추가 지급", value: 1000000 },
+ { category: "growth", title: "글로벌 MBA·박사 파견", description: "선발 시 학비 전액 + 급여 지급 (해외 명문대 위주)", value: 50000000 },
+ { category: "growth", title: "사내 교육·자격증 지원", description: "직무 교육 + 어학·자격증 비용 환급", value: 1500000 },
  ],
- lastUpdated: "2026-05-22",
+ lastUpdated: "2026-05-24",
  },
  {
  id: "sk-hynix",

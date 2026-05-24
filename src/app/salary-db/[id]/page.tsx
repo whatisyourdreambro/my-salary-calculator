@@ -4,6 +4,7 @@ import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
+import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyNarrative from "@/components/CompanyNarrative";
 import CompanyFaq from "@/components/CompanyFaq";
 import CompanyIndustryRank from "@/components/CompanyIndustryRank";
@@ -180,6 +181,10 @@ export default function CompanyDetailPage({
  </div>
 
  <CompanySalaryTable company={company} />
+
+ {/* CL 세부 직급 표 — careerLevels 가 있는 회사(삼성전자 등)만 자동 노출.
+ 5단계 표(CompanySalaryTable) 보다 더 세분화된 호봉/연차별 base+영끌. */}
+ <CompanyCareerLevels company={company} />
 
  {/* 본문 자동 생성 — 업종 평균 비교 + 신/시니어 비교 + DSR 시뮬 */}
  <CompanyNarrative company={company} />
