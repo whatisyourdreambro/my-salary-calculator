@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
+import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 // Pretendard 가변 폰트 — self-host (next/font/local).
@@ -134,6 +135,10 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={true}
         >
+          {/* 모든 페이지 자동 빵부스러기(BreadcrumbList JSON-LD).
+              홈(/) 에서는 컴포넌트 내부에서 null 반환 — 안전.
+              개별 page.tsx 에서 명시적 breadcrumbLd 가 있어도 중복 OK (Google 처리). */}
+          <AutoBreadcrumb />
           <div className="flex flex-col min-h-screen">
             <Header />
             <main id="main-content" className="flex-grow w-full">

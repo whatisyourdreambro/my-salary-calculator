@@ -53,6 +53,21 @@ const COMPANY_BONUS_MAP: Record<
     label: "카카오 성과급·RSU 계산기",
     desc: "PI + RSU 47만주 + 격려금 100만",
   },
+  posco: {
+    calc: "/calc/posco-bonus",
+    label: "포스코 성과급 계산기",
+    desc: "철강 사이클 PI + PS 100~1,000% 시나리오",
+  },
+  "samsung-sdi": {
+    calc: "/calc/samsung-sdi-bonus",
+    label: "삼성SDI 성과급 계산기",
+    desc: "OPI(0~48%) + TAI 사업부별 (배터리 캐즘 반영)",
+  },
+  "lg-chem": {
+    calc: "/calc/lg-chem-bonus",
+    label: "LG화학 성과급 계산기",
+    desc: "PS(0~850%) + PI(고정 200%) 사업부별",
+  },
 };
 
 interface Props {

@@ -33,6 +33,29 @@ export type DropdownItem = {
 export type NavItem = LinkItem | DropdownItem;
 
 export const navConfig: NavItem[] = [
+ // ─── 성과급 카테고리 ────────────────────────────────────
+ // GA 분석상 단일 페이지(/calc/samsung-bonus)가 5/22~23 트래픽 90% 견인.
+ // 회사별 성과급 계산기 11종을 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
+ // 시즌(1·6·12월 OPI/PS 지급) 트래픽 폭증 대응.
+ {
+  name: "성과급",
+  type: "dropdown",
+  description: "회사별 성과급·RSU 계산기 11종 (GA 폭증 검증)",
+  items: [
+   { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
+   { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
+   { name: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", description: "임단협 450% + 1,580만 + 무상주 30주" },
+   { name: "기아 성과급 계산기", href: "/calc/kia-bonus", description: "임단협 450% + 1,600만 + 무상주 53주" },
+   { name: "LG에너지솔루션 성과급", href: "/calc/lg-energy-bonus", description: "배터리 사이클 50~900%" },
+   { name: "HD현대중공업 성과급", href: "/calc/hd-hyundai-bonus", description: "조선 슈퍼사이클 600%+" },
+   { name: "포스코 성과급", href: "/calc/posco-bonus", description: "철강 사이클 PI + PS 100~1,000%", badge: "NEW" },
+   { name: "삼성SDI 성과급", href: "/calc/samsung-sdi-bonus", description: "OPI 0~48% + TAI (배터리 캐즘 반영)", badge: "NEW" },
+   { name: "LG화학 성과급", href: "/calc/lg-chem-bonus", description: "PS(0~850%) + PI(고정 200%)", badge: "NEW" },
+   { name: "네이버 성과급·RSU", href: "/calc/naver-bonus", description: "PI 10~40% + 자사주 RSU" },
+   { name: "카카오 성과급·RSU", href: "/calc/kakao-bonus", description: "PI + RSU 47만주 + 격려금 100만" },
+   { name: "일반 성과급 세금 계산기", href: "/tools/finance/bonus", description: "회사 무관 보너스 세후 실수령", badge: "MUST" },
+  ],
+ },
  {
   name: "계산기",
   type: "dropdown",

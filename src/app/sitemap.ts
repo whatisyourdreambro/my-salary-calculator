@@ -85,6 +85,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/hd-hyundai-bonus',
  '/calc/naver-bonus',
  '/calc/kakao-bonus',
+ '/calc/posco-bonus',
+ '/calc/samsung-sdi-bonus',
+ '/calc/lg-chem-bonus',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',
