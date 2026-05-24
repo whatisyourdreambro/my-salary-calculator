@@ -18,7 +18,15 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const guide = enGuides.find((g) => g.slug === params.slug);
- if (!guide) return {};
+ // 가이드 미존재 시 page 컴포넌트가 /en/guides 로 308 redirect 처리하지만
+ // generateMetadata 는 redirect 전 호출되므로 명시적 Metadata 객체 반환 필수.
+ // 빈 객체({}) 반환은 타입은 통과하나 title/robots 누락으로 GSC noindex 위험.
+ if (!guide) {
+ return {
+ title: "Guide Not Found | Moneysalary",
+ robots: { index: false, follow: false },
+ };
+ }
 
  const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
  const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
