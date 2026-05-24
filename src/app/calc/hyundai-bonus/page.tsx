@@ -245,7 +245,7 @@ export default function HyundaiBonusPage() {
               <p className="text-sm text-faint mt-1">450% + 1,600만 + 무상주 53주</p>
             </Link>
             <Link
-              href="/salary-db/hyundai-motor"
+              href="/salary-db/hyundai"
               className="block rounded-xl border border-canvas-deep p-5 hover:bg-canvas/40 transition"
             >
               <p className="text-xs font-bold text-faint mb-1">📋 회사 정보</p>

@@ -238,7 +238,7 @@ export default function LgEnergyBonusPage() {
               <p className="text-sm text-faint mt-1">OPI + TAI 사업부별 분배</p>
             </Link>
             <Link
-              href="/salary-db/lg-energy-solution"
+              href="/salary-db/lgensol"
               className="block rounded-xl border border-canvas-deep p-5 hover:bg-canvas/40 transition"
             >
               <p className="text-xs font-bold text-faint mb-1">📋 회사 정보</p>
