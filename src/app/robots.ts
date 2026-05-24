@@ -2,16 +2,20 @@ import { MetadataRoute } from 'next';
 
 // 규칙 우선순위 메모:
 // - 같은 path에 Allow/Disallow가 충돌하면 Google은 더 구체적인(긴) 경로 규칙을 따름
-//   예: allow: '/api/og' + disallow: '/api/' → /api/og 는 허용, 그 외 /api/* 는 차단
 // - AdsBot-Google·Mediapartners-Google 은 일반 User-agent: * 규칙을 따르지 않으므로
 //   별도 그룹으로 명시 Allow 처리 (AdSense 광고 매칭 안정성)
 // - /_next/ 차단 시 Googlebot이 JS·CSS 가져오지 못해 렌더링 실패 → 본문 색인 실패
 //   (과거 incident — 절대 다시 차단하지 말 것)
+// - /api/og 는 OG 이미지 생성 API. 과거 Allow였으나 Googlebot이 페이지로 색인해
+//   GSC "색인된 페이지" 자리를 OG URL이 가득 채우는 사고 발생(2026-05-24).
+//   이제는 Disallow + route 응답 헤더 X-Robots-Tag: noindex 로 이중 차단.
+//   SNS·OG 크롤러(Facebook·Twitterbot·Kakao 등)는 robots.txt를 무시하고
+//   og:image meta 를 직접 가져가므로 SNS 미리보기는 정상 동작함.
 
 export default function robots(): MetadataRoute.Robots {
  const baseUrl = "https://www.moneysalary.com";
 
- const corePathAllow = ['/', '/_next/', '/api/og'];
+ const corePathAllow = ['/', '/_next/'];
  const corePathDisallow = ['/private/', '/share/', '/api/'];
 
  return {

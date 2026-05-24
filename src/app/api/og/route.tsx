@@ -245,6 +245,15 @@ export async function GET(req: NextRequest) {
  return new ImageResponse(content, {
  width: 1200,
  height: 630,
+ headers: {
+ // Googlebot 색인 차단 — 이 endpoint는 OG 이미지 API 이지 페이지가 아님.
+ // robots.txt Disallow 와 별도로 응답 헤더에도 noindex 를 박아두면
+ // 이미 색인된 OG URL도 다음 크롤 시 색인에서 제거됨 (2026-05-24 incident 대응).
+ // SNS 미리보기는 og:image meta 로 직접 요청하므로 noindex 영향 없음.
+ "X-Robots-Tag": "noindex, noimageindex, nofollow",
+ // CDN/브라우저 캐시 — OG는 자주 안 바뀌므로 길게 캐시
+ "Cache-Control": "public, max-age=31536000, immutable",
+ },
  });
  } catch {
  return new Response("Failed to generate the image", { status: 500 });
