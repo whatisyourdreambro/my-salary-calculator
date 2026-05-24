@@ -11,12 +11,16 @@ export type TaxResult = {
  netPay: number;
 };
 
-// 2026 Estimated Tax Constants (User Provided & Best Practice Estimates)
+// 2026 4대보험 요율 (보건복지부 2025-08-28·09 고시 반영)
+// - 건강보험 7.09% → 7.19% (근로자 3.545% → 3.595%, +0.05%p)
+// - 장기요양 12.95% → 13.14% (건보료 대비, +0.19%p)
+// - 국민연금·고용보험 동결
+// taxConstants2026.ts 와 동일 — lib 통합 시 한 파일만 수정.
 const TAX_RATES_2026 = {
  NATIONAL_PENSION: 0.045, // 4.5% (Employee share)
- HEALTH_INSURANCE: 0.03545, // 3.545% (Employee share)
- // Long-term care is 12.95% OF the Health Insurance premium
- LONG_TERM_CARE_RATIO: 0.1295, 
+ HEALTH_INSURANCE: 0.03595, // 3.595% (Employee share, 2026 인상)
+ // Long-term care is 13.14% OF the Health Insurance premium (2026 인상)
+ LONG_TERM_CARE_RATIO: 0.1314,
  EMPLOYMENT_INSURANCE: 0.009, // 0.9%
  LOCAL_INCOME_TAX_RATIO: 0.1, // 10% of Income Tax
 };
