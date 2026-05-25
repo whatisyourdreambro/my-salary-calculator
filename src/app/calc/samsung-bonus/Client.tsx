@@ -15,6 +15,7 @@ import {
   AlertCircle,
   CheckCircle2,
   Calendar,
+  Pencil,
 } from "lucide-react";
 
 // ────────────────────────────────────────────────────────────
@@ -2337,7 +2338,17 @@ type YearProfitRow = {
   id: string;
   year: number;
   profitTrillionFmt: string; // 그 해 영업이익 (조)
+  /** manual 모드용 — 그 해 본인 연봉 (만원 단위 입력값). 빈 값/0이면 메인 연봉 사용 */
+  yearlySalaryManwonFmt?: string;
 };
+
+/**
+ * 다년도 연봉 모드.
+ * - fixed: 모든 연도 동일 (메인 시뮬 연봉)
+ * - growth: 첫 해 연봉에 매년 평균 인상률 복리 적용
+ * - manual: 연도별 직접 입력
+ */
+type SalaryMode = "fixed" | "growth" | "manual";
 
 function MultiYearBonusSimulator({
   counts,
@@ -2360,6 +2371,11 @@ function MultiYearBonusSimulator({
     { id: "y2", year: 2027, profitTrillionFmt: "400" },
     { id: "y3", year: 2028, profitTrillionFmt: "380" },
   ]);
+
+  // ── 연봉 모드 (2026-05-25 추가) ──────────────────────────────
+  // 고정/인상률 자동/연도별 직접 입력 3가지 모드. UI 카드로 선택.
+  const [salaryMode, setSalaryMode] = useState<SalaryMode>("fixed");
+  const [growthRate, setGrowthRate] = useState(5); // 평균 인상률 % (디폴트 5%)
 
   function updateRow(id: string, patch: Partial<YearProfitRow>) {
     setRows((prev) =>
@@ -2403,10 +2419,6 @@ function MultiYearBonusSimulator({
     );
     const targetWeight = ratioNums[targetDivId] || 0;
 
-    // OPI1 = 연봉의 50% — 모든 연도/사업부 동일
-    const opi1Won = salary * (FIXED_OPI1_RATE / 100);
-    const opi1Manwon = opi1Won / 10000;
-
     let cumOpi1 = 0;
     let cumOpi2 = 0;
     let cumOpi2Bu = 0;
@@ -2416,9 +2428,25 @@ function MultiYearBonusSimulator({
     let triggeredCount = 0;
     let blockedCount = 0;
 
-    const personalRatio = salary / REFERENCE_SALARY;
+    // 첫 행 연도를 인상률 모드 base year 로 사용
+    const baseYearForGrowth = rows[0]?.year ?? 2026;
 
     const enriched = rows.map((row) => {
+      // ── 연도별 연봉 계산 (모드별) ──────────────────────────
+      let yearSalary = salary;
+      if (salaryMode === "growth") {
+        const yearDiff = Math.max(0, row.year - baseYearForGrowth);
+        yearSalary = salary * Math.pow(1 + growthRate / 100, yearDiff);
+      } else if (salaryMode === "manual") {
+        const manualWon = parseNumberInput(row.yearlySalaryManwonFmt ?? "") * 10000;
+        yearSalary = manualWon > 0 ? manualWon : salary;
+      }
+
+      // OPI1 = 그 해 연봉의 50%
+      const opi1Won = yearSalary * (FIXED_OPI1_RATE / 100);
+      const opi1Manwon = opi1Won / 10000;
+      const personalRatio = yearSalary / REFERENCE_SALARY;
+
       const profit = Math.max(0, Number(row.profitTrillionFmt) || 0);
       const th = getThreshold(row.year);
       const ok = th === 0 ? true : profit >= th;
@@ -2431,18 +2459,18 @@ function MultiYearBonusSimulator({
       const saUnit = wTotal > 0 ? saFund / wTotal : 0;
       const avgPerPersonManwon = buPer + saUnit * targetWeight;
 
-      // OPI2 — 부문/사업부 분리 + 본인 연봉 비례
+      // OPI2 — 부문/사업부 분리 + 그 해 연봉 비례
       const opi2BuManwon = buPer * personalRatio;
       const opi2SaManwon = saUnit * targetWeight * personalRatio;
       const opi2Manwon = opi2BuManwon + opi2SaManwon;
       const opi2Won = opi2Manwon * 10000;
 
-      // 합산 — 세금은 OPI1+OPI2 합산에 누진세 적용
+      // 합산 — 세금은 OPI1+OPI2 합산에 그 해 연봉 기준 누진세 적용
       const totalGrossManwon = opi1Manwon + opi2Manwon;
       const totalGrossWon = opi1Won + opi2Won;
 
       const tax = calcBonusNet(
-        salary,
+        yearSalary,
         totalGrossWon,
         creditRate,
         applyInsurance
@@ -2471,6 +2499,8 @@ function MultiYearBonusSimulator({
         myGrossManwon: totalGrossManwon,
         myNetManwon,
         myDeductManwon: totalGrossManwon - myNetManwon,
+        // 그 해 적용된 연봉 (UI 표시용, 만원 단위)
+        appliedSalaryManwon: yearSalary / 10000,
       };
     });
 
@@ -2487,7 +2517,7 @@ function MultiYearBonusSimulator({
       blockedCount,
       maxVal: Math.max(...enriched.map((r) => r.myGrossManwon), 1),
     };
-  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance]);
+  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance, salaryMode, growthRate]);
 
   const animCumOpi1 = useCountUp(computed.cumOpi1);
   const animCumOpi2 = useCountUp(computed.cumOpi2);
@@ -2546,6 +2576,107 @@ function MultiYearBonusSimulator({
         </div>
       </div>
 
+      {/* 연봉 모드 — 고정 / 자동 인상 / 직접 입력 */}
+      <div className="mb-5">
+        <label
+          id="salary-mode-label"
+          className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue inline-flex items-center gap-1.5"
+        >
+          <User size={11} className="text-electric" aria-hidden />
+          연도별 연봉 모드
+        </label>
+        <div
+          className="grid grid-cols-3 gap-2"
+          role="tablist"
+          aria-labelledby="salary-mode-label"
+        >
+          <SalaryModeCard
+            mode="fixed"
+            active={salaryMode === "fixed"}
+            onClick={() => setSalaryMode("fixed")}
+            title="고정"
+            desc={`매년 ${(salary / 10000).toLocaleString("ko-KR")}만원`}
+            iconName="lock"
+          />
+          <SalaryModeCard
+            mode="growth"
+            active={salaryMode === "growth"}
+            onClick={() => setSalaryMode("growth")}
+            title="자동 인상"
+            desc={`매년 +${growthRate}% 복리`}
+            iconName="trending"
+          />
+          <SalaryModeCard
+            mode="manual"
+            active={salaryMode === "manual"}
+            onClick={() => setSalaryMode("manual")}
+            title="직접 입력"
+            desc="연도별 연봉 수동"
+            iconName="edit"
+          />
+        </div>
+
+        {/* growth 모드 — 인상률 슬라이더 */}
+        {salaryMode === "growth" && (
+          <div
+            className="mt-3 rounded-xl bg-gradient-to-br from-electric-5 to-electric-10 border border-electric-20 p-4"
+            role="region"
+            aria-label="평균 인상률 조정"
+          >
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-faint-blue">
+                평균 인상률 (복리)
+              </span>
+              <span className="text-lg font-black tabular-nums text-electric">
+                +{growthRate}%/년
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={15}
+              step={0.5}
+              value={growthRate}
+              onChange={(e) => setGrowthRate(Number(e.target.value))}
+              className="w-full accent-electric"
+              aria-label="평균 인상률"
+            />
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {[2, 3, 5, 7, 10].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setGrowthRate(r)}
+                  className={`px-2.5 py-1 rounded-md text-[10px] font-black border transition-all ${
+                    growthRate === r
+                      ? "bg-electric text-white border-electric"
+                      : "bg-white dark:bg-canvas-900 border-canvas-200 dark:border-canvas-700 text-faint-blue hover:border-electric"
+                  }`}
+                >
+                  {r}%
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-faint-blue mt-2 leading-relaxed">
+              💡 첫 행 연도({baseYearForGrowthDisplay(rows)}) 기준 매년 복리로
+              인상. 예: 8,000만 + 5% → 1년 후 8,400만, 5년 후 ≈ 10,210만.
+              삼성전자 평균 인상률은 3~6% 수준입니다.
+            </p>
+          </div>
+        )}
+
+        {/* manual 모드 — 안내 */}
+        {salaryMode === "manual" && (
+          <div className="mt-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-3">
+            <p className="text-[11px] text-amber-800 dark:text-amber-200 leading-relaxed">
+              ✏️ 각 연도 카드의 <strong>연봉 입력 필드</strong>에 그 해 본인
+              연봉을 만원 단위로 입력하세요. 빈 칸은 메인 연봉(
+              {(salary / 10000).toLocaleString("ko-KR")}만원)이 사용됩니다.
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* 연도 행들 */}
       <div className="space-y-2 mb-3">
         {computed.enriched.map((r) => (
@@ -2553,6 +2684,8 @@ function MultiYearBonusSimulator({
             key={r.id}
             row={r}
             canRemove={rows.length > 1}
+            salaryMode={salaryMode}
+            defaultSalaryManwon={salary / 10000}
             onUpdate={(patch) => updateRow(r.id, patch)}
             onRemove={() => removeRow(r.id)}
           />
@@ -2720,6 +2853,8 @@ function MultiYearBonusSimulator({
 function YearProfitRowCard({
   row,
   canRemove,
+  salaryMode,
+  defaultSalaryManwon,
   onUpdate,
   onRemove,
 }: {
@@ -2733,8 +2868,11 @@ function YearProfitRowCard({
     opi2SaManwon: number;
     myGrossManwon: number;
     myNetManwon: number;
+    appliedSalaryManwon: number;
   };
   canRemove: boolean;
+  salaryMode: SalaryMode;
+  defaultSalaryManwon: number;
   onUpdate: (patch: Partial<YearProfitRow>) => void;
   onRemove: () => void;
 }) {
@@ -2747,7 +2885,12 @@ function YearProfitRowCard({
         backgroundColor: blocked ? "#EF44440A" : "#F8FAFB",
       }}
     >
-      <div className="grid grid-cols-[80px_1fr_auto] sm:grid-cols-[100px_1fr_auto] gap-3 items-center">
+      {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제 */}
+      <div className={`grid gap-3 items-end ${
+        salaryMode === "manual"
+          ? "grid-cols-[70px_1fr_1fr_auto] sm:grid-cols-[85px_1fr_1fr_auto]"
+          : "grid-cols-[80px_1fr_auto] sm:grid-cols-[100px_1fr_auto]"
+      }`}>
         {/* 연도 */}
         <div>
           <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue">
@@ -2803,6 +2946,32 @@ function YearProfitRowCard({
           </div>
         </div>
 
+        {/* manual 모드 — 연봉 입력 필드 (만원) */}
+        {salaryMode === "manual" && (
+          <div>
+            <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue inline-flex items-center gap-1">
+              <Pencil size={9} aria-hidden /> 연봉 <span className="opacity-70 font-medium">(만원)</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={row.yearlySalaryManwonFmt ?? ""}
+                placeholder={`${defaultSalaryManwon.toLocaleString("ko-KR")}`}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/[^0-9,]/g, "");
+                  onUpdate({ yearlySalaryManwonFmt: v });
+                }}
+                className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none focus:border-electric border border-amber-300 dark:border-amber-700 bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
+                aria-label={`${row.year}년 본인 연봉 (만원)`}
+              />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-faint-blue pointer-events-none">
+                만
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* 삭제 */}
         {canRemove && (
           <button
@@ -2815,6 +2984,34 @@ function YearProfitRowCard({
           </button>
         )}
       </div>
+
+      {/* 자동 인상 / 고정 모드 — 적용된 연봉 작게 표시 */}
+      {salaryMode !== "manual" && (
+        <p className="mt-2 text-[10px] text-faint-blue inline-flex items-center gap-1">
+          {salaryMode === "growth" ? (
+            <>
+              <TrendingUp size={10} className="text-electric" aria-hidden />
+              <span>
+                적용 연봉:{" "}
+                <strong className="text-electric tabular-nums">
+                  {Math.round(row.appliedSalaryManwon).toLocaleString("ko-KR")}만원
+                </strong>{" "}
+                ({row.year}년 자동 적용)
+              </span>
+            </>
+          ) : (
+            <>
+              <Lock size={10} className="text-faint-blue" aria-hidden />
+              <span>
+                고정 연봉:{" "}
+                <strong className="tabular-nums">
+                  {Math.round(row.appliedSalaryManwon).toLocaleString("ko-KR")}만원
+                </strong>
+              </span>
+            </>
+          )}
+        </p>
+      )}
 
       {/* OPI1 / OPI2 분리 — OPI2는 부문·사업부 세부 */}
       <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_1.4fr] gap-2 text-[11px]">
@@ -3154,4 +3351,82 @@ function BonusBarChart({
       </div>
     </div>
   );
+}
+
+// ────────────────────────────────────────────────────────────
+// SalaryModeCard — 다년도 시뮬레이션 연봉 모드 선택 카드.
+// 3개 모드(고정/자동인상/직접입력) 카드형 UI.
+// ────────────────────────────────────────────────────────────
+function SalaryModeCard({
+  mode,
+  active,
+  onClick,
+  title,
+  desc,
+  iconName,
+}: {
+  mode: SalaryMode;
+  active: boolean;
+  onClick: () => void;
+  title: string;
+  desc: string;
+  iconName: "lock" | "trending" | "edit";
+}) {
+  const Icon = iconName === "lock" ? Lock : iconName === "trending" ? TrendingUp : Pencil;
+  // 모드별 색상 — 고정(slate) / 인상(electric) / 입력(amber)
+  const accent =
+    mode === "fixed"
+      ? { color: "#64748B", bg: "#64748B" }
+      : mode === "growth"
+      ? { color: "#0145F2", bg: "#0145F2" }
+      : { color: "#D97706", bg: "#D97706" };
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      className={`relative rounded-xl px-3 py-3 text-left transition-all border-2 group ${
+        active
+          ? "shadow-md scale-[1.02]"
+          : "bg-white dark:bg-canvas-900 hover:scale-[1.01] hover:shadow-sm"
+      }`}
+      style={{
+        backgroundColor: active ? `${accent.bg}12` : undefined,
+        borderColor: active ? accent.color : "#DDE4EC",
+      }}
+    >
+      {/* 활성 시 우상단 체크 */}
+      {active && (
+        <span
+          className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: accent.color }}
+          aria-hidden
+        >
+          <Check size={10} className="text-white" />
+        </span>
+      )}
+      <div
+        className="w-8 h-8 rounded-lg flex items-center justify-center mb-1.5 transition-colors"
+        style={{
+          backgroundColor: active ? accent.color : `${accent.color}15`,
+          color: active ? "#fff" : accent.color,
+        }}
+      >
+        <Icon size={16} aria-hidden />
+      </div>
+      <p
+        className="text-[12px] font-black mb-0.5"
+        style={{ color: active ? accent.color : "#0A1829" }}
+      >
+        {title}
+      </p>
+      <p className="text-[10px] text-faint-blue leading-tight">{desc}</p>
+    </button>
+  );
+}
+
+// 첫 행 연도(인상률 모드 base year) — display 헬퍼
+function baseYearForGrowthDisplay(rows: YearProfitRow[]): number {
+  return rows[0]?.year ?? 2026;
 }
