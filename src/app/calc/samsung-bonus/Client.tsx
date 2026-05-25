@@ -2340,6 +2340,10 @@ type YearProfitRow = {
   profitTrillionFmt: string; // 그 해 영업이익 (조)
   /** manual 모드용 — 그 해 본인 연봉 (만원 단위 입력값). 빈 값/0이면 메인 연봉 사용 */
   yearlySalaryManwonFmt?: string;
+  /** perYearClEnabled 시 그 해 본인 CL (옵션 — 진급 시나리오) */
+  myClPerYear?: MyCl;
+  /** CL4 일 때 그 해 본인 평가 등급 (가/나/일반). 평가 OFF 또는 CL≠CL4 면 무시 */
+  myEvalGrade?: EvalGrade;
 };
 
 /**
@@ -2349,6 +2353,49 @@ type YearProfitRow = {
  * - manual: 연도별 직접 입력
  */
 type SalaryMode = "fixed" | "growth" | "manual";
+
+/** 본인 CL (Career Level) — 삼성전자 직급 체계. CL4 만 가/나고과 분포 적용 대상. */
+type MyCl = "cl1" | "cl2" | "cl3" | "cl4";
+
+/** CL4 평가 등급 — 가(상위)/나(중위)/일반. 가중치 1.4/1.2/1.0. */
+type EvalGrade = "ga" | "na" | "normal";
+
+/** 사업부별 CL4 가/나고과 인원 (문자열로 보관 — 입력값 그대로) */
+type DivEvalCounts = Record<
+  "memory" | "common" | "foundry",
+  { gaCount: string; naCount: string }
+>;
+
+/** 영업이익 일괄 입력 — 구간별 시작/끝 연도와 영업이익 */
+type BulkRange = {
+  id: string;
+  startYear: number;
+  endYear: number;
+  profitTrillionFmt: string;
+};
+
+// ────────────────────────────────────────────────────────────
+// CL4 평가 등급 배수 — 보도 기준 가 1.4 / 나 1.2 / 일반 1.0
+// 사업부 풀(60%) 안에서 효과 인원 가중에 적용. 부문 풀(40%)은 균등 유지.
+// ────────────────────────────────────────────────────────────
+const CL4_EVAL_MULT = {
+  ga: 1.4,
+  na: 1.2,
+  normal: 1.0,
+} as const;
+
+const CL_OPTIONS: { id: MyCl; label: string; desc: string }[] = [
+  { id: "cl1", label: "CL1", desc: "고졸·전문대졸" },
+  { id: "cl2", label: "CL2", desc: "대졸 사원·대리" },
+  { id: "cl3", label: "CL3", desc: "과장·차장" },
+  { id: "cl4", label: "CL4", desc: "부장·수석" },
+];
+
+const EVAL_OPTIONS: { id: EvalGrade; label: string; shortLabel: string; mult: number; color: string }[] = [
+  { id: "normal", label: "일반 (1.0배)", shortLabel: "일반", mult: 1.0, color: "#64748B" },
+  { id: "na", label: "나고과 (1.2배)", shortLabel: "나", mult: 1.2, color: "#10B981" },
+  { id: "ga", label: "가고과 (1.4배)", shortLabel: "가", mult: 1.4, color: "#F59E0B" },
+];
 
 function MultiYearBonusSimulator({
   counts,
@@ -2376,6 +2423,80 @@ function MultiYearBonusSimulator({
   // 고정/인상률 자동/연도별 직접 입력 3가지 모드. UI 카드로 선택.
   const [salaryMode, setSalaryMode] = useState<SalaryMode>("fixed");
   const [growthRate, setGrowthRate] = useState(5); // 평균 인상률 % (디폴트 5%)
+
+  // ── CL4 가/나고과 시스템 (2026-05-25 추가) ──────────────────
+  // 사업부별 CL4 가고과·나고과 인원 설정 → 사업부 풀(60%) 안에서 효과 인원 가중 적용.
+  // ON 이면 CL4 가/나고과 인력은 1.4/1.2배 받고, 나머지(CL1~3 + CL4 일반)는 적게 받음.
+  const [evalEnabled, setEvalEnabled] = useState(false);
+  const [divEvalCounts, setDivEvalCounts] = useState<DivEvalCounts>({
+    memory: { gaCount: "0", naCount: "0" },
+    common: { gaCount: "0", naCount: "0" },
+    foundry: { gaCount: "0", naCount: "0" },
+  });
+
+  // ── 본인 CL ─────────────────────────────────────────────
+  // CL1~CL3: 평가 가중치 1.0 고정 (다른 사람의 가/나고과 영향 받음 → 본인 풀이 줄어듦)
+  // CL4: 연도별 가/나/일반 선택 가능
+  const [myCl, setMyCl] = useState<MyCl>("cl3");
+  const [perYearClEnabled, setPerYearClEnabled] = useState(false); // 연도별 CL 변경 옵션
+
+  // ── 영업이익 일괄 입력 (구간별) ─────────────────────────
+  const [bulkExpanded, setBulkExpanded] = useState(false);
+  const [bulkRanges, setBulkRanges] = useState<BulkRange[]>([
+    { id: "b1", startYear: 2026, endYear: 2028, profitTrillionFmt: "350" },
+  ]);
+
+  function updateBulkRange(id: string, patch: Partial<BulkRange>) {
+    setBulkRanges((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  }
+  function addBulkRange() {
+    const last = bulkRanges[bulkRanges.length - 1];
+    const nextStart = last ? Math.min(2036, last.endYear + 1) : 2026;
+    setBulkRanges((prev) => [
+      ...prev,
+      {
+        id: `b${Date.now()}`,
+        startYear: nextStart,
+        endYear: Math.min(2036, nextStart + 2),
+        profitTrillionFmt: last?.profitTrillionFmt ?? "300",
+      },
+    ]);
+  }
+  function removeBulkRange(id: string) {
+    setBulkRanges((prev) => (prev.length > 1 ? prev.filter((r) => r.id !== id) : prev));
+  }
+  /** 일괄 입력값을 현재 rows 에 적용 — 해당 연도 영업이익 update */
+  function applyBulkRanges() {
+    setRows((prev) =>
+      prev.map((row) => {
+        const matched = bulkRanges.find(
+          (b) => row.year >= b.startYear && row.year <= b.endYear,
+        );
+        if (matched) {
+          return { ...row, profitTrillionFmt: matched.profitTrillionFmt };
+        }
+        return row;
+      }),
+    );
+  }
+  /** 일괄 입력 구간을 rows 로 확장 — 구간에 해당하는 연도들을 자동 생성 */
+  function expandBulkToRows() {
+    const newRows: YearProfitRow[] = [];
+    let idx = 1;
+    bulkRanges.forEach((b) => {
+      for (let y = b.startYear; y <= b.endYear; y++) {
+        if (y < 2026 || y > 2036) continue;
+        newRows.push({
+          id: `auto-${idx++}-${y}`,
+          year: y,
+          profitTrillionFmt: b.profitTrillionFmt,
+        });
+      }
+    });
+    if (newRows.length > 0) {
+      setRows(newRows);
+    }
+  }
 
   function updateRow(id: string, patch: Partial<YearProfitRow>) {
     setRows((prev) =>
@@ -2413,8 +2534,24 @@ function MultiYearBonusSimulator({
       (acc, d) => acc + (countNums[d.id] || 0),
       0
     );
+    // ── 사업부별 효과 인원 (CL4 가/나고과 가중 반영) ──────────
+    // evalEnabled 이면 가 ×1.4, 나 ×1.2, 나머지 ×1.0 합산.
+    // OFF 면 총 인원 그대로.
+    const effCounts: Record<string, number> = {};
+    DIVISIONS.forEach((d) => {
+      const total = countNums[d.id] || 0;
+      if (evalEnabled) {
+        const ga = Math.max(0, parseNumberInput(divEvalCounts[d.id].gaCount));
+        const na = Math.max(0, parseNumberInput(divEvalCounts[d.id].naCount));
+        const rest = Math.max(0, total - ga - na);
+        effCounts[d.id] = ga * CL4_EVAL_MULT.ga + na * CL4_EVAL_MULT.na + rest * CL4_EVAL_MULT.normal;
+      } else {
+        effCounts[d.id] = total;
+      }
+    });
+    // wTotal' = Σ(가중치 × 효과인원) — 사업부 풀 분배의 기준
     const wTotal = DIVISIONS.reduce(
-      (acc, d) => acc + (countNums[d.id] || 0) * (ratioNums[d.id] || 0),
+      (acc, d) => acc + (effCounts[d.id] || 0) * (ratioNums[d.id] || 0),
       0
     );
     const targetWeight = ratioNums[targetDivId] || 0;
@@ -2442,6 +2579,14 @@ function MultiYearBonusSimulator({
         yearSalary = manualWon > 0 ? manualWon : salary;
       }
 
+      // ── 연도별 본인 CL/평가 (옵션) ───────────────────────────
+      const effectiveCl: MyCl =
+        perYearClEnabled && row.myClPerYear ? row.myClPerYear : myCl;
+      const effectiveGrade: EvalGrade =
+        effectiveCl === "cl4" && evalEnabled ? row.myEvalGrade ?? "normal" : "normal";
+      // 본인 사업부 풀 배수 — CL4 + 평가 ON 일 때만 가/나 1.4/1.2 적용
+      const myEvalMult = CL4_EVAL_MULT[effectiveGrade];
+
       // OPI1 = 그 해 연봉의 50%
       const opi1Won = yearSalary * (FIXED_OPI1_RATE / 100);
       const opi1Manwon = opi1Won / 10000;
@@ -2455,13 +2600,17 @@ function MultiYearBonusSimulator({
       const totalFundManwon = effectiveProfit * 1e8 * (FIXED_RERATE / 100);
       const buFund = totalFundManwon * (FIXED_BU_RATIO / 10);
       const saFund = totalFundManwon * (FIXED_SA_RATIO / 10);
+      // 부문 풀은 균등 분배 — 가/나고과 영향 받지 않음
       const buPer = totalCount > 0 ? buFund / totalCount : 0;
+      // 사업부 풀 단위 — 효과 인원 기준
       const saUnit = wTotal > 0 ? saFund / wTotal : 0;
+      // 사업부 평균 (1.0배 기준) — UI 표시용
       const avgPerPersonManwon = buPer + saUnit * targetWeight;
 
-      // OPI2 — 부문/사업부 분리 + 그 해 연봉 비례
+      // OPI2 — 부문(균등) + 사업부(가/나 가중) + 그 해 연봉 비례
       const opi2BuManwon = buPer * personalRatio;
-      const opi2SaManwon = saUnit * targetWeight * personalRatio;
+      // 사업부분에 myEvalMult 적용 (CL4 가/나/일반 배수)
+      const opi2SaManwon = saUnit * targetWeight * myEvalMult * personalRatio;
       const opi2Manwon = opi2BuManwon + opi2SaManwon;
       const opi2Won = opi2Manwon * 10000;
 
@@ -2499,8 +2648,11 @@ function MultiYearBonusSimulator({
         myGrossManwon: totalGrossManwon,
         myNetManwon,
         myDeductManwon: totalGrossManwon - myNetManwon,
-        // 그 해 적용된 연봉 (UI 표시용, 만원 단위)
+        // UI 표시용
         appliedSalaryManwon: yearSalary / 10000,
+        appliedCl: effectiveCl,
+        appliedGrade: effectiveGrade,
+        myEvalMult,
       };
     });
 
@@ -2517,7 +2669,7 @@ function MultiYearBonusSimulator({
       blockedCount,
       maxVal: Math.max(...enriched.map((r) => r.myGrossManwon), 1),
     };
-  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance, salaryMode, growthRate]);
+  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance, salaryMode, growthRate, evalEnabled, divEvalCounts, myCl, perYearClEnabled]);
 
   const animCumOpi1 = useCountUp(computed.cumOpi1);
   const animCumOpi2 = useCountUp(computed.cumOpi2);
@@ -2574,6 +2726,184 @@ function MultiYearBonusSimulator({
             );
           })}
         </div>
+      </div>
+
+      {/* ── 본인 CL 선택 (2026-05-25 추가) ───────────────────── */}
+      <div className="mb-5">
+        <label
+          id="my-cl-label"
+          className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue inline-flex items-center gap-1.5"
+        >
+          <User size={11} className="text-electric" aria-hidden />
+          본인 CL (Career Level)
+        </label>
+        <div
+          className="grid grid-cols-4 gap-2"
+          role="tablist"
+          aria-labelledby="my-cl-label"
+        >
+          {CL_OPTIONS.map((c) => {
+            const active = myCl === c.id;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setMyCl(c.id)}
+                className={`rounded-xl px-2 py-2 text-center border-2 transition-all ${
+                  active ? "border-electric bg-electric-10 scale-[1.02]" : "border-canvas-200 bg-white dark:bg-canvas-900 hover:border-electric/40"
+                }`}
+              >
+                <div className={`text-[13px] font-black ${active ? "text-electric" : "text-navy dark:text-canvas-50"}`}>
+                  {c.label}
+                </div>
+                <div className="text-[9px] text-faint-blue mt-0.5 leading-tight">
+                  {c.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-[10px] text-faint-blue mt-2 leading-relaxed">
+          {myCl === "cl4"
+            ? "🟡 CL4 선택 — 아래 'CL4 가/나고과 설정'에서 본인이 그 해 가/나/일반 등급을 받았는지 연도별로 선택할 수 있어요."
+            : `💡 ${myCl.toUpperCase()} 본인은 평가 가중치 1.0배 고정. 단, CL4 가/나고과 설정 ON 시 회사 사업부 풀에서 가/나고과 인력이 더 가져가므로 본인 OPI2 사업부분이 줄어듭니다.`}
+        </p>
+      </div>
+
+      {/* ── CL4 가/나고과 설정 (2026-05-25 추가) ───────────── */}
+      <div className="mb-5">
+        <button
+          type="button"
+          onClick={() => setEvalEnabled(!evalEnabled)}
+          aria-pressed={evalEnabled}
+          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all ${
+            evalEnabled
+              ? "border-amber-400 bg-amber-50 dark:bg-amber-950/20"
+              : "border-canvas-200 bg-white dark:bg-canvas-900 hover:border-amber-300"
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                evalEnabled ? "bg-amber-500 text-white" : "bg-canvas-100 dark:bg-canvas-800 text-faint-blue"
+              }`}
+            >
+              <AlertCircle size={16} aria-hidden />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-black text-navy dark:text-canvas-50">
+                CL4 가/나고과 분포 설정
+                <span className={`ml-2 text-[10px] font-black px-1.5 py-0.5 rounded ${
+                  evalEnabled ? "bg-amber-500 text-white" : "bg-canvas-200 text-faint-blue"
+                }`}>
+                  {evalEnabled ? "ON" : "OFF"}
+                </span>
+              </p>
+              <p className="text-[10px] text-faint-blue mt-0.5">
+                {evalEnabled
+                  ? "사업부 풀에서 가(1.4배)·나(1.2배) 인력 가중 → 일반 인력 적게 받음"
+                  : "OFF: 모든 인력 1.0배 동일 (기존 동작)"}
+              </p>
+            </div>
+          </div>
+          <div
+            className={`w-10 h-5 rounded-full transition-colors relative ${
+              evalEnabled ? "bg-amber-500" : "bg-canvas-300 dark:bg-canvas-700"
+            }`}
+            aria-hidden
+          >
+            <div
+              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                evalEnabled ? "translate-x-5" : "translate-x-0.5"
+              }`}
+            />
+          </div>
+        </button>
+
+        {evalEnabled && (
+          <div className="mt-3 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-white dark:bg-canvas-900 p-4">
+            <div className="flex items-center justify-between mb-2.5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-amber-700 dark:text-amber-400">
+                사업부별 CL4 가/나고과 인원
+              </p>
+              <p className="text-[9px] text-faint-blue">
+                가 1.4× / 나 1.2× / 일반 1.0×
+              </p>
+            </div>
+            <div className="space-y-2">
+              {DIVISIONS.map((d) => {
+                const ev = divEvalCounts[d.id];
+                const totalCount = parseNumberInput(counts[d.id]);
+                const gaNum = Math.max(0, parseNumberInput(ev.gaCount));
+                const naNum = Math.max(0, parseNumberInput(ev.naCount));
+                const restNum = Math.max(0, totalCount - gaNum - naNum);
+                const exceed = gaNum + naNum > totalCount;
+                return (
+                  <div key={d.id} className="grid grid-cols-[60px_1fr_1fr_1fr] gap-2 items-center">
+                    <span
+                      className="text-[11px] font-black text-center py-1.5 rounded-md"
+                      style={{ backgroundColor: `${d.color}15`, color: d.color }}
+                    >
+                      {d.shortLabel}
+                    </span>
+                    <div>
+                      <label className="text-[9px] font-bold text-amber-600 dark:text-amber-400 block mb-0.5">
+                        가 (1.4배)
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={ev.gaCount}
+                        onChange={(e) =>
+                          setDivEvalCounts((prev) => ({
+                            ...prev,
+                            [d.id]: { ...prev[d.id], gaCount: e.target.value.replace(/[^0-9,]/g, "") },
+                          }))
+                        }
+                        className="w-full px-2 py-1 rounded text-xs font-bold tabular-nums bg-white dark:bg-canvas-900 border border-amber-300 focus:outline-none focus:border-amber-500"
+                        aria-label={`${d.label} 가고과 인원`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 block mb-0.5">
+                        나 (1.2배)
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={ev.naCount}
+                        onChange={(e) =>
+                          setDivEvalCounts((prev) => ({
+                            ...prev,
+                            [d.id]: { ...prev[d.id], naCount: e.target.value.replace(/[^0-9,]/g, "") },
+                          }))
+                        }
+                        className="w-full px-2 py-1 rounded text-xs font-bold tabular-nums bg-white dark:bg-canvas-900 border border-emerald-300 focus:outline-none focus:border-emerald-500"
+                        aria-label={`${d.label} 나고과 인원`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] font-bold text-faint-blue block mb-0.5">
+                        일반 (자동)
+                      </label>
+                      <div className={`px-2 py-1 rounded text-xs font-bold tabular-nums ${
+                        exceed ? "bg-rose-50 text-rose-600" : "bg-canvas-100 dark:bg-canvas-800 text-navy dark:text-canvas-50"
+                      }`}>
+                        {exceed ? "초과!" : restNum.toLocaleString("ko-KR")}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
+              💡 사업부 풀에서 가/나고과 인력이 가중치 더 받음 → 같은 사업부 일반
+              인력은 적게 받음. 보도 기준: 가고과 약 10~15% / 나고과 약 20~30% 분포.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* 연봉 모드 — 고정 / 자동 인상 / 직접 입력 */}
@@ -2677,6 +3007,145 @@ function MultiYearBonusSimulator({
         )}
       </div>
 
+      {/* ── 영업이익 일괄 입력 (구간별) — 토글 가능 ─────────── */}
+      <div className="mb-3">
+        <button
+          type="button"
+          onClick={() => setBulkExpanded(!bulkExpanded)}
+          className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border-2 transition-all ${
+            bulkExpanded
+              ? "border-electric bg-electric-10"
+              : "border-canvas-200 bg-white dark:bg-canvas-900 hover:border-electric/40"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Settings size={14} className={bulkExpanded ? "text-electric" : "text-faint-blue"} aria-hidden />
+            <span className="text-xs font-black uppercase tracking-widest text-navy dark:text-canvas-50">
+              영업이익 일괄 입력 (귀찮은 분들용)
+            </span>
+          </div>
+          <span className="text-xs font-bold text-faint-blue">{bulkExpanded ? "▲" : "▼"}</span>
+        </button>
+
+        {bulkExpanded && (
+          <div className="mt-2 rounded-xl border border-electric-20 bg-electric-5 p-4">
+            <p className="text-[11px] text-faint-blue mb-3 leading-relaxed">
+              📅 구간별로 한 번에 입력 — 예: "2026~2028년 = 350조". 적용하면 위 연도
+              행들의 영업이익이 일괄 변경됩니다. "구간 → 연도 자동 생성" 누르면 위
+              연도 행이 구간 기준으로 재생성됩니다.
+            </p>
+            <div className="space-y-2">
+              {bulkRanges.map((b) => (
+                <div key={b.id} className="grid grid-cols-[1fr_auto_1fr_1fr_auto] gap-2 items-center">
+                  <input
+                    type="number"
+                    min={2026}
+                    max={2036}
+                    value={b.startYear}
+                    onChange={(e) =>
+                      updateBulkRange(b.id, {
+                        startYear: Math.min(2036, Math.max(2026, Number(e.target.value) || b.startYear)),
+                      })
+                    }
+                    className="w-full px-2 py-1.5 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 focus:outline-none focus:border-electric"
+                    aria-label="시작 연도"
+                  />
+                  <span className="text-faint-blue font-bold text-xs">~</span>
+                  <input
+                    type="number"
+                    min={2026}
+                    max={2036}
+                    value={b.endYear}
+                    onChange={(e) =>
+                      updateBulkRange(b.id, {
+                        endYear: Math.min(2036, Math.max(b.startYear, Number(e.target.value) || b.endYear)),
+                      })
+                    }
+                    className="w-full px-2 py-1.5 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 focus:outline-none focus:border-electric"
+                    aria-label="끝 연도"
+                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={b.profitTrillionFmt}
+                      onChange={(e) =>
+                        updateBulkRange(b.id, {
+                          profitTrillionFmt: e.target.value.replace(/[^0-9.]/g, ""),
+                        })
+                      }
+                      className="w-full px-2 py-1.5 pr-7 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-electric-30 focus:outline-none focus:border-electric"
+                      aria-label="영업이익 (조)"
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-faint-blue pointer-events-none">
+                      조
+                    </span>
+                  </div>
+                  {bulkRanges.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeBulkRange(b.id)}
+                      className="p-1.5 rounded-md text-faint-blue hover:text-rose-500"
+                      aria-label="구간 삭제"
+                    >
+                      <Trash2 size={14} aria-hidden />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              <button
+                type="button"
+                onClick={addBulkRange}
+                className="px-3 py-2 rounded-lg text-[11px] font-bold border border-dashed border-canvas-300 text-faint-blue hover:border-electric hover:text-electric transition-colors"
+              >
+                <Plus size={12} className="inline mr-1" /> 구간 추가
+              </button>
+              <button
+                type="button"
+                onClick={applyBulkRanges}
+                className="px-3 py-2 rounded-lg text-[11px] font-black bg-electric text-white hover:opacity-90 transition-opacity"
+              >
+                ✓ 위 연도에 일괄 적용
+              </button>
+              <button
+                type="button"
+                onClick={expandBulkToRows}
+                className="px-3 py-2 rounded-lg text-[11px] font-black bg-amber-500 text-white hover:opacity-90 transition-opacity"
+              >
+                🔄 구간 → 연도 자동 생성
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── 연도별 CL 옵션 (진급 시나리오) ─────────────────── */}
+      <div className="mb-3 flex items-center justify-between px-3 py-2 rounded-lg bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700">
+        <div className="flex items-center gap-2">
+          <Calendar size={12} className="text-faint-blue" aria-hidden />
+          <span className="text-[11px] font-bold text-navy dark:text-canvas-50">
+            연도별 CL 따로 선택 (진급 시나리오)
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => setPerYearClEnabled(!perYearClEnabled)}
+          aria-pressed={perYearClEnabled}
+          className={`w-9 h-5 rounded-full transition-colors relative ${
+            perYearClEnabled ? "bg-electric" : "bg-canvas-300 dark:bg-canvas-700"
+          }`}
+          aria-label="연도별 CL 옵션"
+        >
+          <div
+            className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+              perYearClEnabled ? "translate-x-4" : "translate-x-0.5"
+            }`}
+          />
+        </button>
+      </div>
+
       {/* 연도 행들 */}
       <div className="space-y-2 mb-3">
         {computed.enriched.map((r) => (
@@ -2686,6 +3155,9 @@ function MultiYearBonusSimulator({
             canRemove={rows.length > 1}
             salaryMode={salaryMode}
             defaultSalaryManwon={salary / 10000}
+            evalEnabled={evalEnabled}
+            globalMyCl={myCl}
+            perYearClEnabled={perYearClEnabled}
             onUpdate={(patch) => updateRow(r.id, patch)}
             onRemove={() => removeRow(r.id)}
           />
@@ -2855,6 +3327,9 @@ function YearProfitRowCard({
   canRemove,
   salaryMode,
   defaultSalaryManwon,
+  evalEnabled,
+  globalMyCl,
+  perYearClEnabled,
   onUpdate,
   onRemove,
 }: {
@@ -2869,14 +3344,22 @@ function YearProfitRowCard({
     myGrossManwon: number;
     myNetManwon: number;
     appliedSalaryManwon: number;
+    appliedCl: MyCl;
+    appliedGrade: EvalGrade;
+    myEvalMult: number;
   };
   canRemove: boolean;
   salaryMode: SalaryMode;
   defaultSalaryManwon: number;
+  evalEnabled: boolean;
+  globalMyCl: MyCl;
+  perYearClEnabled: boolean;
   onUpdate: (patch: Partial<YearProfitRow>) => void;
   onRemove: () => void;
 }) {
   const blocked = !row.triggered && row.profit > 0;
+  // CL4 본인이고 평가 ON 이면 가/나/일반 선택 가능
+  const showEvalPicker = row.appliedCl === "cl4" && evalEnabled;
   return (
     <div
       className="rounded-xl border p-4 transition-all"
@@ -3010,6 +3493,81 @@ function YearProfitRowCard({
               </span>
             </>
           )}
+        </p>
+      )}
+
+      {/* ── 연도별 CL 선택 (옵션) ──────────────────────────── */}
+      {perYearClEnabled && (
+        <div className="mt-2.5 flex items-center gap-2 flex-wrap p-2 rounded-md bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700">
+          <span className="text-[10px] font-bold text-faint-blue uppercase tracking-widest mr-1">
+            {row.year}년 CL:
+          </span>
+          {CL_OPTIONS.map((c) => {
+            const active = row.appliedCl === c.id;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => onUpdate({ myClPerYear: c.id })}
+                className={`px-2 py-0.5 rounded text-[10px] font-black border transition-all ${
+                  active
+                    ? "border-electric bg-electric text-white"
+                    : "border-canvas-200 bg-white dark:bg-canvas-900 text-faint-blue hover:border-electric/40"
+                }`}
+              >
+                {c.label}
+              </button>
+            );
+          })}
+          {row.myClPerYear && row.myClPerYear !== globalMyCl && (
+            <button
+              type="button"
+              onClick={() => onUpdate({ myClPerYear: undefined })}
+              className="px-2 py-0.5 rounded text-[10px] font-bold border border-canvas-200 text-faint-blue hover:text-rose-500"
+              aria-label="기본값으로 되돌리기"
+            >
+              ↺ 기본
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── CL4 본인 + 평가 ON 일 때 가/나/일반 선택 ─────────── */}
+      {showEvalPicker && (
+        <div className="mt-2 flex items-center gap-2 flex-wrap p-2 rounded-md bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40">
+          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mr-1">
+            {row.year}년 본인 평가:
+          </span>
+          {EVAL_OPTIONS.map((ev) => {
+            const active = row.appliedGrade === ev.id;
+            return (
+              <button
+                key={ev.id}
+                type="button"
+                onClick={() => onUpdate({ myEvalGrade: ev.id })}
+                className={`px-2.5 py-1 rounded-md text-[10px] font-black border transition-all ${
+                  active ? "text-white scale-[1.02] shadow-sm" : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
+                }`}
+                style={{
+                  backgroundColor: active ? ev.color : undefined,
+                  borderColor: active ? ev.color : `${ev.color}40`,
+                  color: active ? "#fff" : ev.color,
+                }}
+              >
+                {ev.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── 본인 적용 배수 표시 (CL4 가/나 일 때 강조) ─────── */}
+      {row.myEvalMult !== 1.0 && (
+        <p className="mt-1.5 text-[10px] inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400">
+          <strong>📈 본인 사업부 풀 배수 ×{row.myEvalMult}</strong>
+          <span className="text-faint-blue">
+            (OPI2 사업부분: {fmtManwon(row.opi2SaManwon)})
+          </span>
         </p>
       )}
 
