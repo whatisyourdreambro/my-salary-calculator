@@ -1,15 +1,7 @@
 "use client";
 
 import { CompanyProfile } from "@/types/company";
-import {
- AreaChart,
- Area,
- XAxis,
- YAxis,
- CartesianGrid,
- Tooltip,
- ResponsiveContainer,
-} from "recharts";
+import dynamic from "next/dynamic";
 import {
  Briefcase,
  Clock,
@@ -24,6 +16,15 @@ import CountUp from "react-countup";
 import ShareButtons from "@/components/ShareButtons";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
+
+// 무거운 recharts 차트는 클라이언트에서만 + 지연 로드 → 432개 회사 페이지의
+// 초기 번들(First Load JS)에서 recharts(~60kB) 분리. (WealthChart 와 동일 패턴)
+const SalaryRoadmapChart = dynamic(() => import("./SalaryRoadmapChart"), {
+ ssr: false,
+ loading: () => (
+ <div className="h-full w-full animate-pulse rounded-xl bg-canvas-200/40" />
+ ),
+});
 
 export default function CompanyDetailClient({ company }: { company: CompanyProfile }) {
  // Prepare Chart Data
@@ -112,25 +113,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  커리어 연봉 로드맵
  </h2>
  <div className="h-[300px] w-full">
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={salaryData}>
- <defs>
- <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
- <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
- </linearGradient>
- </defs>
- <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
- <XAxis dataKey="level" />
- <YAxis tickFormatter={(val) => `${val / 10000000}천`} />
- <Tooltip
- formatter={(value: number) => formatMoney(value)}
- contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '12px' }}
- />
- <Area type="monotone" dataKey="total" stroke="#3b82f6" fillOpacity={1} fill="url(#colorTotal)" name="총 보상" />
- <Area type="monotone" dataKey="base" stroke="#7A9AB5" fillOpacity={0.5} fill="transparent" strokeDasharray="5 5" name="기본급" />
- </AreaChart>
- </ResponsiveContainer>
+ <SalaryRoadmapChart data={salaryData} />
  </div>
  <p className="text-sm text-muted-foreground mt-4 text-center">
  * 성과급 및 스톡옵션 포함 추정치입니다.

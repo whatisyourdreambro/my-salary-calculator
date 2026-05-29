@@ -166,9 +166,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/savings-interest-2026',
  ];
 
- // 정적 라우트 lastModified — 매 배포마다 today 로 reset 되면 Google freshness
- // 신호가 무의미해져 순위 변동성이 커진다. 마지막 실질 콘텐츠 업데이트 날짜를
- // 고정해 두고, 진짜 페이지가 갱신될 때만 이 상수를 손으로 올린다.
+ // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·
+ // 지역·용어·Q&A·환산표·비교·계산기) 공통 적용. 매 배포마다 new Date() 로 today 가
+ // 찍히면 Google freshness 신호가 무의미해져 순위 변동성이 커지므로, 마지막 실질
+ // 콘텐츠 업데이트 날짜를 고정해 두고 진짜 갱신 시에만 이 상수를 손으로 올린다.
+ // (회사 페이지는 company.lastUpdated 우선, 값이 없을 때만 이 기준일로 폴백)
  const STATIC_LAST_MODIFIED = new Date("2026-05-24");
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
@@ -236,7 +238,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const amount = Math.round(i * 1000000);
  salaryUrls.push({
  url: `${baseUrl}/salary/${amount}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: i % 1 === 0 ? 0.6 : 0.45,
  });
@@ -247,7 +249,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const amount = Math.round(i * 1000000);
  salaryUrls.push({
  url: `${baseUrl}/salary/${amount}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: i % 1 === 0 ? 0.7 : 0.55, // 정수형 우선
  });
@@ -257,7 +259,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  for (let i = 105; i <= 200; i += 5) {
  salaryUrls.push({
  url: `${baseUrl}/salary/${i * 1000000}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: 0.5,
  });
@@ -271,7 +273,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  specials.forEach((s) => {
  salaryUrls.push({
  url: `${baseUrl}/salary/${s}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: 0.7,
  });
@@ -281,7 +283,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const companyUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/salary-db`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
@@ -295,7 +297,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  .forEach((c) => {
  companyUrls.push({
  url: `${baseUrl}/calc/${c.slug}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly',
  priority: 0.7,
  });
@@ -310,7 +312,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  allCompanies.forEach((company: any) => {
  const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
  const lastModified =
- parsed && !Number.isNaN(parsed.getTime()) ? parsed : new Date();
+ parsed && !Number.isNaN(parsed.getTime()) ? parsed : STATIC_LAST_MODIFIED;
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
  lastModified,
@@ -324,7 +326,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const compareUrls: MetadataRoute.Sitemap = getComparePairs().map(
  (p: { slug: string }) => ({
  url: `${baseUrl}/salary-db/compare/${p.slug}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.6,
  })
@@ -333,7 +335,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 글로서리 동적 페이지 — 용어별 long-tail 키워드
  const glossaryUrls: MetadataRoute.Sitemap = glossaryData.map((item) => ({
  url: `${baseUrl}/glossary/${toGlossarySlug(item.title)}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: 0.6,
  }));
@@ -341,7 +343,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // Q&A 동적 페이지 — 질문별 long-tail
  const qnaUrls: MetadataRoute.Sitemap = qnaData.map((item) => ({
  url: `${baseUrl}/qna/${toQnaSlug(item.question)}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly',
  priority: 0.65,
  }));
@@ -350,13 +352,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const jobUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/job`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
  ...jobsData.map((job) => ({
  url: `${baseUrl}/job/${job.id}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.8,
  })),
@@ -366,13 +368,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const industryUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/industry`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
  ...industriesData.map((industry) => ({
  url: `${baseUrl}/industry/${industry.id}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.8,
  })),
@@ -382,13 +384,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const regionUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/region`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
  ...regionsData.map((region) => ({
  url: `${baseUrl}/region/${region.id}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.8,
  })),
@@ -402,7 +404,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/table/2026/hourly',
  ].map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: new Date(),
+ lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly' as ChangeFrequency,
  priority: 0.7,
  }));
