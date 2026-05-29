@@ -3,6 +3,7 @@ import { koGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
+import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -108,10 +109,12 @@ export default function GuidePage({ params }: Props) {
  />
 
  <RelatedGuides
- currentSlug={guide.slug}
- category={guide.category}
- tags={guide.tags}
- limit={6}
+ items={getRelatedGuides({
+ currentSlug: guide.slug,
+ category: guide.category,
+ tags: guide.tags,
+ limit: 6,
+ })}
  title="더 깊이 알아보고 싶다면"
  />
 

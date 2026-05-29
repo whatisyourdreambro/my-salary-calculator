@@ -9,6 +9,7 @@ import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
+import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
@@ -322,9 +323,11 @@ export default function SalaryAmountPage({ params }: Props) {
  {/* 핵심 가이드 cross-link — 본인 연봉을 바탕으로 다음 의사결정 도움 */}
  <div className="px-2 sm:px-6">
  <RelatedGuides
- currentSlug={`__salary-${params.amount}`}
- explicitSlugs={SALARY_PAGE_GUIDES}
- limit={4}
+ items={getRelatedGuides({
+ currentSlug: `__salary-${params.amount}`,
+ explicitSlugs: SALARY_PAGE_GUIDES,
+ limit: 4,
+ })}
  title="연봉을 알았다면 다음은 이걸 읽어보세요"
  />
  </div>

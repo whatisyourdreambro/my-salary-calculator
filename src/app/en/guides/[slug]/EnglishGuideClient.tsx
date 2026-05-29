@@ -5,7 +5,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
-import { Guide } from "@/lib/guidesData";
+import type { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";

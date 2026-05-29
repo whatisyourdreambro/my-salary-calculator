@@ -1,72 +1,28 @@
 // src/components/RelatedGuides.tsx
 //
-// 가이드 페이지 cross-link — 같은 카테고리/태그 기반 추천.
-// 페이지 하단에 mount하여 평균 PV/세션·체류 시간 향상.
+// 가이드 cross-link 카드 (프레젠테이션 전용, 클라이언트).
+// 후보 선별·스코어링은 서버 헬퍼 getRelatedGuides() 가 수행하고, 여기서는
+// content 가 제거된 가벼운 메타데이터(items)만 받아 렌더한다.
+// (이전: guides 전체 배열을 직접 import → 본문 ~888KB 가 클라이언트 번들에 유입되어
+//  /salary/[amount]·/calc/[slug]·/guides/[slug] 등 First Load JS 를 키웠음)
 
 "use client";
 
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
-import { guides, type Guide } from "@/lib/guidesData";
+import type { RelatedGuideItem } from "@/lib/relatedGuides";
 import { trackGuideCTAClick } from "@/lib/analytics";
 
 interface RelatedGuidesProps {
-  currentSlug: string;
-  category?: string;
-  tags?: string[];
-  limit?: number;
+  items: RelatedGuideItem[];
   title?: string;
-  /**
-   * 명시적 가이드 슬러그 우선 — cross-link 매핑(crossLink.ts)에서 전달.
-   * 명시 슬러그를 우선 채우고, 부족분은 score 기반 자동 추천으로 보충.
-   */
-  explicitSlugs?: string[];
-}
-
-const NOW_MS = Date.now();
-const FRESHNESS_MS = 1000 * 60 * 60 * 24 * 90; // 90일
-
-function score(target: Guide, currentCategory?: string, currentTags?: string[]): number {
-  let s = 0;
-  if (currentCategory && target.category === currentCategory) s += 10;
-  if (currentTags) {
-    const overlap = target.tags.filter((t) => currentTags.includes(t)).length;
-    s += overlap * 3;
-  }
-  s += Math.min(target.views / 1000, 5); // 인기도 약간 가산
-  // publishedDate 신선도 가산 — 90일 이내일수록 가중 (최대 +3)
-  const published = new Date(target.publishedDate).getTime();
-  if (!Number.isNaN(published)) {
-    const ageMs = NOW_MS - published;
-    if (ageMs >= 0 && ageMs <= FRESHNESS_MS) {
-      s += 3 * (1 - ageMs / FRESHNESS_MS);
-    }
-  }
-  return s;
 }
 
 export default function RelatedGuides({
-  currentSlug,
-  category,
-  tags,
-  limit = 6,
+  items,
   title = "이런 가이드도 함께 읽어보세요",
-  explicitSlugs,
 }: RelatedGuidesProps) {
-  const explicit = (explicitSlugs ?? [])
-    .map((slug) => guides.find((g) => g.slug === slug && g.slug !== currentSlug))
-    .filter((g): g is Guide => Boolean(g));
-
-  const explicitSlugSet = new Set(explicit.map((g) => g.slug));
-  const fallback = guides
-    .filter((g) => g.slug !== currentSlug && !explicitSlugSet.has(g.slug))
-    .map((g) => ({ guide: g, score: score(g, category, tags) }))
-    .sort((a, b) => b.score - a.score)
-    .map((x) => x.guide);
-
-  const candidates = [...explicit, ...fallback].slice(0, limit);
-
-  if (candidates.length === 0) return null;
+  if (!items || items.length === 0) return null;
 
   return (
     <section className="my-12">
@@ -75,7 +31,7 @@ export default function RelatedGuides({
         <h2 className="text-lg font-black text-navy dark:text-canvas-50">{title}</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {candidates.map((g) => (
+        {items.map((g) => (
           <Link
             key={g.slug}
             href={`/guides/${g.slug}`}

@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Guide, categories as allCategories } from "@/lib/guidesData";
+import type { Guide } from "@/lib/guidesData";
 import { motion } from "framer-motion";
 import { Search, Tag, BarChart, ChevronsRight, Star } from "lucide-react";
 

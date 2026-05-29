@@ -6,6 +6,7 @@ import { permanentRedirect } from "next/navigation";
 import SimpleCalculatorView from "@/components/SimpleCalculatorView";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
+import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { HomeTopAd, SidebarAd } from "@/components/AdPlacement";
@@ -157,9 +158,11 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  <RelatedCalculators currentPath={`/calc/${calc.slug}`} />
 
  <RelatedGuides
- currentSlug={`__calc-${calc.slug}`}
- explicitSlugs={getCalcRelatedGuideSlugs(calc.slug)}
- limit={3}
+ items={getRelatedGuides({
+ currentSlug: `__calc-${calc.slug}`,
+ explicitSlugs: getCalcRelatedGuideSlugs(calc.slug),
+ limit: 3,
+ })}
  title="이 계산기와 함께 보면 좋은 가이드"
  />
 
