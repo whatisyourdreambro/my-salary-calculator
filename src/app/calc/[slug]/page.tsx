@@ -16,7 +16,6 @@ import { buildPageMetadata } from "@/lib/seo";
 import {
  autoBreadcrumbLd,
  softwareApplicationLd,
- faqLd,
  howToLd,
  speakableLd,
 } from "@/lib/structuredData";
@@ -90,13 +89,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  }),
  ];
 
- if (calc.faqs && calc.faqs.length > 0) {
- ldData.push(
- faqLd(
- calc.faqs.map((f) => ({ question: f.q, answer: f.a }))
- )
- );
- }
+ // FAQPage 스키마는 가시 FAQ 섹션과 같은 SimpleCalculatorView 에서 단일 출력(중복 제거).
 
  // HowTo schema — 모든 계산기에 적용해 Google SERP의 How-To 리치 결과 노출 기회 확보.
  // 조건부 적용을 풀어 enrichments 없는 계산기도 step 정보 노출 (calc.fields는 항상 존재).

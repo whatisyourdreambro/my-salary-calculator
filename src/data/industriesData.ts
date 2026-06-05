@@ -465,6 +465,246 @@ export const industriesData: IndustryProfile[] = [
     trend: "stable",
     trendNote: "저금리·저출산으로 생보업계 고전. 비대면·디지털 보험 성장으로 IT 인력 수요 증가.",
   },
+  {
+    id: "food-beverage",
+    industryIds: ["food-beverage"],
+    name: "식품·음료",
+    nameEn: "Food & Beverage",
+    emoji: "🍱",
+    salary: {
+      entry: { min: 3500, max: 5000, avg: 4000 },
+      junior: { min: 4500, max: 6500, avg: 5300 },
+      senior: { min: 6500, max: 10000, avg: 8000 },
+      overall: 5500,
+    },
+    description:
+      "CJ제일제당·농심·오리온·롯데칠성·오뚜기·삼양·동원 등 국내 대형 식품·음료 기업이 속한 업계. 내수 안정성과 K-푸드 수출 성장이 공존합니다.",
+    topCompanyIds: [],
+    topJobIds: ["marketer", "researcher"],
+    faqs: [
+      {
+        q: "식품·음료 업계 평균 연봉은 얼마인가요?",
+        a: "2026년 기준 식품·음료 업계 평균 연봉은 약 5,500만원입니다. CJ제일제당·농심·오리온·롯데칠성 등 대형 식품사 신입은 4,000~5,000만원 수준이며, 영업·마케팅·연구개발(R&D) 직무별로 차이가 있습니다.",
+      },
+      {
+        q: "식품 대기업과 중소 식품회사 연봉 차이는 어느 정도인가요?",
+        a: "CJ·롯데·농심 등 대형 식품사 신입은 4,000만원 이상이지만, 중소 식품회사는 3,000만원대가 많습니다. 성과급·복지·안정성에서 대형사가 유리하며, 영업직은 인센티브 비중이 큽니다.",
+      },
+    ],
+    keywords: ["식품 업계 연봉", "식품회사 연봉", "식품 대기업 연봉", "CJ제일제당 연봉", "식품업계 평균 연봉 2026"],
+    trend: "stable",
+    trendNote: "내수 정체 속 K-푸드 수출(라면·만두·소스) 확대로 글로벌 마케팅·생산 인력 수요 증가.",
+  },
+  {
+    id: "logistics",
+    industryIds: ["logistics"],
+    name: "물류·운송",
+    nameEn: "Logistics & Transport",
+    emoji: "🚚",
+    salary: {
+      entry: { min: 3500, max: 5000, avg: 4200 },
+      junior: { min: 4500, max: 6500, avg: 5500 },
+      senior: { min: 6500, max: 10500, avg: 8000 },
+      overall: 5800,
+    },
+    description:
+      "CJ대한통운·한진·롯데글로벌로지스·현대글로비스 등 물류 기업과 대한항공·아시아나 등 항공운송을 포함하는 업계. 이커머스 성장과 글로벌 SCM 수요가 견인합니다.",
+    topCompanyIds: [],
+    topJobIds: ["logistics-manager"],
+    faqs: [
+      {
+        q: "물류·운송 업계 평균 연봉은 얼마인가요?",
+        a: "2026년 기준 물류·운송 업계 평균 연봉은 약 5,800만원입니다. CJ대한통운·현대글로비스 등 대형 물류사 사무직 신입은 4,000~4,500만원이며, 대한항공·아시아나 등 항공운송은 상대적으로 높습니다.",
+      },
+      {
+        q: "물류 업계는 어떤 직무가 연봉이 높나요?",
+        a: "SCM(공급망관리)·물류기획·해외영업 사무직이 4,000만원대에서 시작하며, 글로벌 물류·이커머스 풀필먼트 확대로 SCM 전문가 수요가 빠르게 늘고 있습니다. 현장·운송 직군은 별도 체계입니다.",
+      },
+    ],
+    keywords: ["물류 업계 연봉", "물류회사 연봉", "택배 회사 연봉", "CJ대한통운 연봉", "물류 SCM 연봉"],
+    trend: "rising",
+    trendNote: "이커머스·풀필먼트 자동화 투자 확대, 글로벌 SCM 인력 수요 증가로 전문직 연봉 상승세.",
+  },
+  {
+    id: "fashion-beauty",
+    industryIds: ["fashion-beauty"],
+    name: "패션·뷰티",
+    nameEn: "Fashion & Beauty",
+    emoji: "💄",
+    salary: {
+      entry: { min: 3300, max: 4800, avg: 3900 },
+      junior: { min: 4500, max: 6500, avg: 5300 },
+      senior: { min: 6500, max: 11000, avg: 8500 },
+      overall: 5600,
+    },
+    description:
+      "아모레퍼시픽·LG생활건강 등 대형 뷰티사, 무신사·F&F·한섬 등 패션 기업, 코스맥스·한국콜마 등 화장품 ODM을 포함합니다. K-뷰티 수출과 패션 플랫폼 성장이 강점.",
+    topCompanyIds: [],
+    topJobIds: ["marketer"],
+    faqs: [
+      {
+        q: "패션·뷰티 업계 평균 연봉은 얼마인가요?",
+        a: "2026년 기준 패션·뷰티 업계 평균 연봉은 약 5,600만원입니다. 아모레퍼시픽·LG생활건강 등 대형 뷰티사 신입은 4,000만원대이며, 무신사 등 패션 플랫폼의 IT·데이터 직군은 IT기업 수준으로 더 높습니다.",
+      },
+      {
+        q: "화장품 회사와 패션 회사 중 어디가 연봉이 높나요?",
+        a: "대형 뷰티사(아모레·LG생활건강)와 패션 플랫폼(무신사)의 사무직은 비슷한 4,000~5,000만원대지만, 플랫폼 기업의 개발·데이터 직군이 가장 높습니다. 화장품 ODM(코스맥스·한국콜마)은 생산·연구 중심입니다.",
+      },
+    ],
+    keywords: ["패션 업계 연봉", "뷰티 업계 연봉", "화장품 회사 연봉", "아모레퍼시픽 연봉", "무신사 연봉"],
+    trend: "rising",
+    trendNote: "K-뷰티 글로벌 수출 호황, 패션 플랫폼·라이브커머스 성장으로 디지털·MD 인력 수요 증가.",
+  },
+  {
+    id: "defense-aerospace",
+    industryIds: ["defense-aerospace"],
+    name: "방위산업·항공우주",
+    nameEn: "Defense & Aerospace",
+    emoji: "🛩️",
+    salary: {
+      entry: { min: 4200, max: 6000, avg: 5000 },
+      junior: { min: 5500, max: 8000, avg: 6800 },
+      senior: { min: 8000, max: 13000, avg: 10000 },
+      overall: 7200,
+    },
+    description:
+      "한화에어로스페이스·한국항공우주(KAI)·LIG넥스원·한화시스템 등 K-방산·항공우주 기업. 사상 최대 방산 수출 호황으로 처우와 채용이 빠르게 개선되고 있습니다.",
+    topCompanyIds: [],
+    topJobIds: ["mechanical-engineer", "electrical-engineer"],
+    faqs: [
+      {
+        q: "방위산업 업계 연봉은 얼마인가요?",
+        a: "2026년 기준 방위산업·항공우주 업계 평균 연봉은 약 7,200만원입니다. 한화에어로스페이스·KAI·LIG넥스원 등 주요 방산사 신입 엔지니어는 성과급 포함 5,000~6,000만원이며, K-방산 수출 호황으로 상승세입니다.",
+      },
+      {
+        q: "방산·항공우주 취업에는 어떤 전공이 유리한가요?",
+        a: "기계·전자·항공우주·재료·소프트웨어 공학이 유리합니다. 방산은 보안 특성상 고용이 안정적이고 정부 R&D 과제와 연계되어, 장기 근속과 전문성 축적에 유리한 산업입니다.",
+      },
+    ],
+    keywords: ["방위산업 연봉", "방산 연봉", "항공우주 연봉", "한화에어로스페이스 연봉", "KAI 연봉"],
+    trend: "rising",
+    trendNote: "폴란드·중동 등 K-방산 수출 사상 최대. 항공우주·무인기·위성 분야 R&D 투자로 엔지니어 수요 급증.",
+  },
+  {
+    id: "travel-leisure",
+    industryIds: ["travel-leisure"],
+    name: "여행·레저",
+    nameEn: "Travel & Leisure",
+    emoji: "✈️",
+    salary: {
+      entry: { min: 3000, max: 4500, avg: 3600 },
+      junior: { min: 4200, max: 6000, avg: 5000 },
+      senior: { min: 6000, max: 10000, avg: 7500 },
+      overall: 5200,
+    },
+    description:
+      "야놀자·여기어때 등 여행·숙박 플랫폼과 하나투어·모두투어 등 전통 여행사, 호텔신라·롯데호텔 등 호텔·레저 기업을 포함합니다. 엔데믹 이후 여행 수요가 회복되며 채용이 늘고 있습니다.",
+    topCompanyIds: [],
+    topJobIds: ["marketer"],
+    faqs: [
+      {
+        q: "여행·레저 업계 평균 연봉은 얼마인가요?",
+        a: "2026년 기준 여행·레저 업계 평균 연봉은 약 5,200만원입니다. 야놀자·여기어때 등 여행 플랫폼의 IT·데이터 직군은 고연봉이며, 전통 여행사·호텔은 영업·서비스직 중심으로 3,000~4,500만원 수준입니다.",
+      },
+      {
+        q: "여행 플랫폼과 전통 여행사 중 연봉이 높은 곳은?",
+        a: "야놀자·여기어때 같은 여행 플랫폼의 개발·기획 직군이 전통 여행사보다 높습니다. 전통 여행사·호텔은 성수기 인센티브와 서비스 수당이 있으나 기본급은 상대적으로 낮은 편입니다.",
+      },
+    ],
+    keywords: ["여행 업계 연봉", "여행사 연봉", "호텔 연봉", "야놀자 연봉", "여행 플랫폼 연봉"],
+    trend: "rising",
+    trendNote: "엔데믹 이후 해외여행 수요 회복, 여행 플랫폼·OTA 경쟁 심화로 IT·마케팅 인력 채용 확대.",
+  },
+  {
+    id: "foreign-company",
+    aggregateTier: "foreign",
+    name: "외국계 기업",
+    nameEn: "Foreign Companies",
+    emoji: "🌐",
+    salary: {
+      entry: { min: 4500, max: 7000, avg: 5500 },
+      junior: { min: 6500, max: 11000, avg: 8500 },
+      senior: { min: 10000, max: 20000, avg: 14000 },
+      overall: 9500,
+    },
+    description:
+      "구글코리아·한국마이크로소프트·AWS코리아 등 글로벌 IT, 한국MSD·화이자코리아 등 외국계 제약, 외국계 금융·소비재 기업. 고연봉·수평적 문화·성과주의가 특징입니다.",
+    topCompanyIds: [],
+    topJobIds: ["software-engineer", "marketer"],
+    faqs: [
+      {
+        q: "외국계 기업 연봉은 얼마인가요?",
+        a: "2026년 기준 외국계 기업 평균 연봉은 약 9,500만원 이상으로 국내 평균보다 높습니다. 구글·마이크로소프트·AWS 등 IT 외국계는 1억원을 넘는 경우가 흔하며, 영어 역량과 직무 전문성이 핵심 요구사항입니다.",
+      },
+      {
+        q: "외국계 기업의 장단점은 무엇인가요?",
+        a: "장점은 높은 연봉, 수평적 문화, 성과 기반 보상, 글로벌 커리어 기회입니다. 단점은 본사 정책에 따른 고용 변동성과 조직 축소 리스크입니다. 직무별로 본사·아태지역 이동 기회가 열려 있습니다.",
+      },
+    ],
+    keywords: ["외국계 연봉", "외국계 기업 연봉", "외국계 회사 연봉", "외국계 연봉 순위", "외국계 IT 연봉"],
+    trend: "rising",
+    trendNote: "글로벌 IT·클라우드·AI 기업의 한국 투자 확대로 고연봉 외국계 채용 증가세.",
+  },
+  {
+    id: "unicorn-startup",
+    aggregateTier: "unicorn",
+    name: "유니콘 스타트업",
+    nameEn: "Unicorn Startups",
+    emoji: "🦄",
+    salary: {
+      entry: { min: 4000, max: 6000, avg: 4800 },
+      junior: { min: 5500, max: 9000, avg: 7000 },
+      senior: { min: 8000, max: 15000, avg: 11000 },
+      overall: 7500,
+    },
+    description:
+      "토스(비바리퍼블리카)·당근·무신사·야놀자 등 기업가치 1조원 이상 유니콘 스타트업. 기본급에 스톡옵션이 더해져 상장·인수 시 큰 보상을 기대할 수 있습니다.",
+    topCompanyIds: [],
+    topJobIds: ["software-engineer", "data-scientist"],
+    faqs: [
+      {
+        q: "유니콘 스타트업 연봉은 얼마인가요?",
+        a: "2026년 기준 유니콘 스타트업 평균 연봉은 약 7,500만원입니다. 토스·당근 등 대형 유니콘의 개발·데이터 직군은 대기업 수준이거나 그 이상이며, 스톡옵션을 포함하면 상장·인수 시 보상이 크게 늘 수 있습니다.",
+      },
+      {
+        q: "스타트업 스톡옵션은 어떻게 봐야 하나요?",
+        a: "스톡옵션은 회사가 상장하거나 인수될 때 큰 보상이 되지만, 실현 전까지는 불확실합니다. 기본급은 대기업과 비슷하거나 약간 낮은 대신 성장 기회와 지분 보상이 매력입니다. 행사가·베스팅 조건을 꼭 확인하세요.",
+      },
+    ],
+    keywords: ["유니콘 스타트업 연봉", "스타트업 연봉", "스타트업 연봉 순위", "토스 연봉", "스타트업 개발자 연봉"],
+    trend: "stable",
+    trendNote: "투자 혹한기 이후 옥석 가리기. 흑자 전환 유니콘 중심으로 우수 인재 영입 경쟁은 지속.",
+  },
+  {
+    id: "large-conglomerate",
+    aggregateTier: "conglomerate",
+    name: "대기업",
+    nameEn: "Large Conglomerates",
+    emoji: "🏢",
+    salary: {
+      entry: { min: 4500, max: 6500, avg: 5200 },
+      junior: { min: 6000, max: 9000, avg: 7200 },
+      senior: { min: 8500, max: 15000, avg: 11000 },
+      overall: 8000,
+    },
+    description:
+      "삼성·현대차·SK·LG·롯데 등 주요 그룹 계열 대기업. 안정적 기본급에 성과급 비중이 크며, 반도체·IT·금융 계열이 초봉 상위권을 형성합니다.",
+    topCompanyIds: [],
+    topJobIds: ["software-engineer", "marketer", "mechanical-engineer"],
+    faqs: [
+      {
+        q: "대기업 평균 연봉은 얼마인가요?",
+        a: "2026년 기준 주요 대기업 평균 연봉은 약 8,000만원입니다. 신입 영끌 연봉은 5,000만원을 넘는 곳이 많고, 성과급(PS·OPI 등) 비중이 커서 회사 실적에 따라 실수령액이 크게 달라집니다.",
+      },
+      {
+        q: "대기업 초봉이 가장 높은 곳은 어디인가요?",
+        a: "반도체(삼성전자·SK하이닉스)·IT 플랫폼·금융 계열이 초봉 상위권입니다. 반도체 호황기에는 신입 영끌 연봉이 7,000만원을 넘기도 하며, 성과급에 따라 동일 그룹 내에서도 계열사별 편차가 큽니다.",
+      },
+    ],
+    keywords: ["대기업 연봉", "대기업 초봉", "대기업 연봉 순위", "대기업 평균 연봉", "대기업 신입 연봉 2026"],
+    trend: "stable",
+    trendNote: "반도체·배터리·바이오 등 주력 산업 실적에 따라 성과급 변동. 수시채용 전환으로 직무 역량 중시.",
+  },
 ];
 
 export function getIndustryById(id: string): IndustryProfile | undefined {

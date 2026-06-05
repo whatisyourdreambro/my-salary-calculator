@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 type TableRow = { [key: string]: string | number };
@@ -12,6 +13,9 @@ interface SalaryTableProps {
  highlightRows?: number[];
  unit?: string;
  adInterval?: number;
+ /** 첫 열(금액)을 `{base}/{첫열값}` 링크로 — 연봉표에서만 전달(월급/주급/시급 표는 단위가 달라 미지정).
+  * 서버→클라 컴포넌트로 함수는 못 넘기므로 문자열 base 만 받아 내부에서 href 를 만든다. */
+ linkColumnBaseHref?: string;
 }
 
 export default function SalaryTable({
@@ -20,6 +24,7 @@ export default function SalaryTable({
  highlightRows = [],
  unit = "원",
  adInterval = 20,
+ linkColumnBaseHref,
 }: SalaryTableProps) {
  return (
  <div className="w-full">
@@ -44,9 +49,16 @@ export default function SalaryTable({
  <div className="relative z-10 w-full">
  <div className="flex justify-between items-center mb-4 pb-3 border-b border-canvas">
  <span className="text-faint-blue font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
- <span className={`text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-navy'}`}>
- {Number(row[headers[0].key]).toLocaleString('ko-KR')}{unit}
- </span>
+ {(() => {
+ const href = linkColumnBaseHref ? `${linkColumnBaseHref}/${row[headers[0].key]}` : undefined;
+ const cls = `text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-navy'}`;
+ const label = `${Number(row[headers[0].key]).toLocaleString('ko-KR')}${unit}`;
+ return href ? (
+ <Link href={href} className={`${cls} hover:underline`}>{label}</Link>
+ ) : (
+ <span className={cls}>{label}</span>
+ );
+ })()}
  </div>
 
  <div className="space-y-2.5 w-full">
@@ -113,7 +125,15 @@ export default function SalaryTable({
  : "hover:bg-canvas"
  }`}
  >
- {headers.map((header, cellIndex) => (
+ {headers.map((header, cellIndex) => {
+ const cellHref = cellIndex === 0 && linkColumnBaseHref ? `${linkColumnBaseHref}/${row[header.key]}` : undefined;
+ const cellInner = (
+ <>
+ {Number(row[header.key]).toLocaleString('ko-KR')}
+ {unit && <span className="text-xs text-faint-blue ml-0.5 font-normal">{unit}</span>}
+ </>
+ );
+ return (
  <td
  key={header.key as string}
  className={`px-6 py-4 whitespace-nowrap text-sm tabular-nums ${cellIndex === 0
@@ -124,10 +144,12 @@ export default function SalaryTable({
  : `text-right font-medium transition-colors ${isHighlighted && cellIndex !== 0 ? "font-bold text-muted-blue" : "text-faint-blue group-hover:text-muted-blue"}`
  }`}
  >
- {Number(row[header.key]).toLocaleString('ko-KR')}
- {unit && <span className="text-xs text-faint-blue ml-0.5 font-normal">{unit}</span>}
+ {cellHref ? (
+ <Link href={cellHref} className="hover:underline hover:text-electric transition-colors">{cellInner}</Link>
+ ) : cellInner}
  </td>
- ))}
+ );
+ })}
  </motion.tr>
  {showAd && (
  <tr className="bg-transparent">

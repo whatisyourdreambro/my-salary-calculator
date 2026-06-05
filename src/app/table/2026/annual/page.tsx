@@ -87,6 +87,7 @@ function AnnualTable() {
           headers={tableHeaders}
           data={allData}
           highlightRows={highlightRows}
+          linkColumnBaseHref="/salary"
         />
 
         {/* SEO 텍스트 콘텐츠 — 체류시간 + 검색엔진 */}

@@ -30,6 +30,14 @@ export const companyAliases: Record<string, string[]> = {
   "hyundai-dept": ["현대백화점그룹", "현백"],
   celltrion: ["쎌트리온"],
 
+  // ── 최상위 트래픽 회사 검색 변형 (전체 점검 2026-06, 핫 키워드 — 실제 검색어 기반) ──
+  // "SK" 없이 "하이닉스 연봉", "현대차/현차 연봉", "배그 회사 연봉" 등 변형 검색 매칭 보강.
+  "sk-hynix": ["하이닉스", "하닉", "에스케이하이닉스", "SK Hynix"],
+  hyundai: ["현대차", "현차", "현대자동차"],
+  kia: ["기아차", "기아자동차"],
+  krafton: ["크래프톤", "배틀그라운드", "배그", "PUBG"],
+  "lg-chem": ["엘지화학", "LG Chem"],
+
   // ── Search Console 노출 키워드 기반 추가 (2026-05) ──
   cosmax: ["Cosmax", "코스맥스 화장품", "코스맥스 코리아"],
   "wonik-ips": ["원익 IPS", "원익아이피에스", "Wonik IPS", "원익 아이피에스"],
