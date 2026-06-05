@@ -261,6 +261,80 @@ export const seedCompanies: CompanyProfile[] = [
  incentive: { target: 50, max: 50, avgAmount: 150000000 },
  },
  },
+ // ─────────────────────────────────────────────────────────────
+ // SK하이닉스 CL 직급 체계 — 보도값 기반(캐치·인크루트·언론 2026), 공개 자료 추정.
+ // 직급 호칭은 TL(테크니컬 리더)로 통일. 기술사무직: CL2(사원)/CL3(대리)/CL4(과장·차장)/CL5(부장).
+ // total(영끌)은 보도 직급별 연봉, base 는 회사 salary 블록과 정합. PS(영업이익 10% 재원)로 연도 변동 큼.
+ // ─────────────────────────────────────────────────────────────
+ careerLevels: [
+ {
+ group: "CL2 (사원·신입)",
+ promotionNote: "대졸 기술사무직 신입 시작점(호칭 TL 통일). 평균 5~6년차 CL3 진급. PS·성과급에 따라 영끌 변동 큼.",
+ salaryCapManwon: 8000,
+ steps: [
+ {
+ label: "CL2 (1~2년차)",
+ description: "대졸 기술사무직 신입. 보도 초봉 6,500~7,000만원(영끌)",
+ baseManwon: 5300,
+ totalManwon: 6800,
+ },
+ {
+ label: "CL2 (3~5년차)",
+ description: "사원 중반. 호봉 상승 + PS 비중 증가",
+ baseManwon: 6000,
+ totalManwon: 7800,
+ },
+ ],
+ },
+ {
+ group: "CL3 (대리)",
+ promotionNote: "보도 대리급 연봉 약 8,500만원(영끌). HBM 호황기 PS로 영끌 상향.",
+ salaryCapManwon: 9000,
+ steps: [
+ {
+ label: "CL3 (대리)",
+ description: "대리 진급. 보도 영끌 약 8,500만원",
+ baseManwon: 6500,
+ totalManwon: 8500,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "CL4 (과장·차장)",
+ promotionNote: "보도 과장·차장급 연봉 약 1억원(영끌). 핵심 실무·리더 구간.",
+ salaryCapManwon: 11000,
+ steps: [
+ {
+ label: "CL4 (과장)",
+ description: "과장 진급. 보도 영끌 약 1억원",
+ baseManwon: 7800,
+ totalManwon: 10000,
+ },
+ {
+ label: "CL4 (차장)",
+ description: "차장. 사업부 핵심 인력",
+ baseManwon: 8800,
+ totalManwon: 11500,
+ isCapReached: true,
+ },
+ ],
+ },
+ {
+ group: "CL5 (부장·수석)",
+ promotionNote: "보도 부장급 연봉 약 1억 3,000만원(영끌). 임원 진급 대기 구간.",
+ salaryCapManwon: 14000,
+ steps: [
+ {
+ label: "CL5 (부장)",
+ description: "부장 진급. 보도 영끌 약 1억 3,000만원",
+ baseManwon: 9800,
+ totalManwon: 13000,
+ isCapReached: true,
+ },
+ ],
+ },
+ ],
  workLife: {
  weeklyHours: { contract: 40, real: 46 },
  remoteWork: { policy: "hybrid", daysPerWeek: 1, description: "거점 오피스 활용 가능" },
