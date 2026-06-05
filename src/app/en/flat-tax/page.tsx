@@ -12,7 +12,7 @@ export default function FlatTaxPage() {
  const calculateTaxes = (gross: number) => {
  // 1. Progressive Tax (Standard)
  // Deductions (Approximate)
- const insurance = gross * (0.045 + 0.03545 + 0.0046 + 0.009);
+ const insurance = gross * (0.0475 + 0.03595 + 0.0047 + 0.009);
  const standardDeduction = 1500000; // Basic
  const taxableProgressive = gross - insurance - standardDeduction;
 

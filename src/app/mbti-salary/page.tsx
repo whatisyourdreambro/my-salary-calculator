@@ -2,18 +2,9 @@
 "use client";
 
 import { useState, useRef, useEffect, ElementType } from "react";
+import dynamic from "next/dynamic";
 import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
 import PageFooterAds from "@/components/PageFooterAds";
-import {
- LineChart,
- Line,
- XAxis,
- YAxis,
- Tooltip,
- ResponsiveContainer,
- CartesianGrid,
- Legend,
-} from "recharts";
 import Link from "next/link";
 import {
  Download,
@@ -24,6 +15,13 @@ import {
  Target,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+
+// 인생 연봉 그래프 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const MbtiSalaryChart = dynamic(() => import("@/components/charts/MbtiSalaryChart"), {
+ ssr: false,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
+
 // 타이핑 효과를 위한 커스텀 훅 (사용자 경험 극대화)
 const useTypingEffect = (text: string, speed = 50) => {
  const [displayedText, setDisplayedText] = useState("");
@@ -236,39 +234,7 @@ export default function MbtiSalaryPage() {
  </div>
 
  <div className="h-72 w-full my-6">
- <ResponsiveContainer width="100%" height="100%">
- <LineChart
- data={result.data}
- margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
- >
- <CartesianGrid
- strokeDasharray="3 3"
- stroke="currentColor"
- strokeOpacity={0.2}
- />
- <XAxis dataKey="age" stroke="currentColor" />
- <YAxis
- tickFormatter={(value) => `${value}억`}
- stroke="currentColor"
- />
- <Tooltip
- contentStyle={{
- backgroundColor: "rgba(30,30,30,0.8)",
- border: "1px solid rgba(255,255,255,0.3)",
- }}
- />
- <Legend />
- <Line
- type="monotone"
- dataKey="salary"
- name="예상 연봉(억)"
- stroke="#8884d8"
- strokeWidth={3}
- dot={{ r: 4 }}
- activeDot={{ r: 8 }}
- />
- </LineChart>
- </ResponsiveContainer>
+ <MbtiSalaryChart data={result.data} />
  </div>
 
  {/* [가치 증대] 개인 맞춤형 분석 추가 */}

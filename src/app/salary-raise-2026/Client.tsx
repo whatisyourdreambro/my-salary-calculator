@@ -42,10 +42,10 @@ function calcAnnualNet(salary: number): number {
   const localTax = incomeTax * 0.1;
 
   // 4대보험 (본인 부담)
-  const pensionCap = 74_040_000;
-  const pension = Math.min(salary, pensionCap) * 0.045;
-  const health = salary * 0.03545;
-  const ltc = health * 0.1295;
+  const pensionCap = 76_440_000;
+  const pension = Math.min(salary, pensionCap) * 0.0475;
+  const health = salary * 0.03595;
+  const ltc = health * 0.1314;
   const employment = salary * 0.009;
   const insurance = pension + health + ltc + employment;
 

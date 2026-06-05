@@ -31,7 +31,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  ],
  tax: [
  { path: "/income-tax-2026", title: "종합소득세 계산기", description: "8단계 누진세율 + 지방소득세", icon: "Receipt" },
- { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자별 4.004%", icon: "Heart" },
+ { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자별 4.067%", icon: "Heart" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "환급액 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "2026 연봉합산 세율", icon: "Gift" },
  { path: "/tools/finance/freelance-tax", title: "프리랜서 종합소득세", description: "사업소득 계산", icon: "Laptop" },

@@ -39,8 +39,8 @@ export function calculatePartTimeSalary(
  };
  } else {
  // 4대보험 적용 (월 60시간 이상 근로자 기준)
- const nationalPension = income * 0.045;
- const healthInsurance = income * 0.03545;
+ const nationalPension = income * 0.0475;
+ const healthInsurance = income * 0.03595;
  const employmentInsurance = income * 0.009;
 
  // 간이세액표에 따른 근로소득세 (1인 가구 기준, 단순 계산)

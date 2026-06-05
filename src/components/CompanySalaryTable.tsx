@@ -45,9 +45,9 @@ function estimateNetSalary(annualSalary: number): {
 
   // 4대보험 (정기 급여 기준)
   const monthlyBase = annualSalary / 12;
-  const pensionMonthly = Math.min(monthlyBase, 6_170_000) * 0.045;
-  const healthMonthly = monthlyBase * 0.03545;
-  const longTermMonthly = healthMonthly * 0.1295;
+  const pensionMonthly = Math.min(monthlyBase, 6_370_000) * 0.0475;
+  const healthMonthly = monthlyBase * 0.03595;
+  const longTermMonthly = healthMonthly * 0.1314;
   const employmentMonthly = monthlyBase * 0.009;
   const totalInsurance =
     (pensionMonthly + healthMonthly + longTermMonthly + employmentMonthly) * 12;

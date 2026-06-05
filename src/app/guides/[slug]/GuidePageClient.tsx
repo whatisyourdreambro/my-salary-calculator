@@ -284,7 +284,6 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* 데스크톱 전용 사이드바 광고 - 모바일에선 본문 끝 광고로 충분 */}
  <div className="hidden lg:block">
  <SidebarAd />
- <CoupangBanner size="skyscraper" showDisclosure={false} />
  </div>
  </div>
  </aside>

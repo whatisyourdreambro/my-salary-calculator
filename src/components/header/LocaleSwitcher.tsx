@@ -9,7 +9,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Globe } from "lucide-react";
-import { enGuides } from "@/lib/guidesData";
+import { EN_GUIDE_SLUGS } from "@/lib/enGuideSlugs";
 
 /** 영어로 사용 가능한 한국어 → 영어 경로 매핑 */
 const KO_TO_EN: Record<string, string> = {
@@ -26,7 +26,7 @@ function getEnglishPath(pathname: string): string {
  const guideMatch = pathname.match(/^\/guides\/(.+)$/);
  if (guideMatch) {
   const slug = guideMatch[1];
-  if (enGuides.some((g) => g.slug === slug)) {
+  if (EN_GUIDE_SLUGS.has(slug)) {
    return `/en/guides/${slug}`;
   }
   return "/en/guides";

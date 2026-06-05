@@ -1,20 +1,19 @@
 ﻿"use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import {
- Radar,
- RadarChart,
- PolarGrid,
- PolarAngleAxis,
- PolarRadiusAxis,
- ResponsiveContainer,
-} from "recharts";
 import { Swords, Trophy, TrendingUp, Clock, Heart, Building2, Search } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyComparator, ComparisonResult } from "@/lib/versusEngine";
 import { CompanyProfile, JobLevel } from "@/types/company";
 import BoxingGame from "@/components/BoxingGame";
+
+// 배틀 RadarChart(recharts)만 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const SalaryBattleRadar = dynamic(() => import("@/components/charts/SalaryBattleRadar"), {
+ ssr: false,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
 
 // --- Components ---
 
@@ -270,29 +269,11 @@ export default function BattlePage() {
  >
  {/* Radar Chart */}
  <div className="h-[300px] w-full mb-8">
- <ResponsiveContainer width="100%" height="100%">
- <RadarChart cx="50%" cy="50%" outerRadius="80%" data={result.radarData}>
- <PolarGrid stroke="#333" />
- <PolarAngleAxis dataKey="subject" tick={{ fill: "#888", fontSize: 12 }} />
- <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
- <Radar
- name={result.companyA.name.ko}
- dataKey="A"
- stroke="#3b82f6"
- strokeWidth={3}
- fill="#3b82f6"
- fillOpacity={0.3}
+ <SalaryBattleRadar
+ data={result.radarData}
+ nameA={result.companyA.name.ko}
+ nameB={result.companyB.name.ko}
  />
- <Radar
- name={result.companyB.name.ko}
- dataKey="B"
- stroke="#ef4444"
- strokeWidth={3}
- fill="#ef4444"
- fillOpacity={0.3}
- />
- </RadarChart>
- </ResponsiveContainer>
  </div>
 
  {/* Verdict Box */}

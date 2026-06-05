@@ -15,8 +15,8 @@ export default function HealthInsuranceFeeClient() {
 
   const result = useMemo(() => {
     if (type === "workplace") {
-      const healthFee = monthlyWage * 0.03545;
-      const longTermCare = healthFee * 0.1295;
+      const healthFee = monthlyWage * 0.03595;
+      const longTermCare = healthFee * 0.1314;
       const totalSelf = healthFee + longTermCare;
       const totalCompany = totalSelf; // 회사도 동일 분담
       return {
@@ -31,7 +31,7 @@ export default function HealthInsuranceFeeClient() {
       // 지역가입자: 점수당 약 208.4원(2024 기준) → 2026 약 220원 가정
       const pointValue = 220;
       const healthFee = regionalScore * pointValue;
-      const longTermCare = healthFee * 0.1295;
+      const longTermCare = healthFee * 0.1314;
       const totalSelf = healthFee + longTermCare;
       return {
         type: "regional" as const,
@@ -129,7 +129,7 @@ export default function HealthInsuranceFeeClient() {
               <span>{fmt(result.healthFee)}원</span>
             </div>
             <div className="flex justify-between text-muted-blue dark:text-canvas-300">
-              <span>장기요양보험료 (건보료의 12.95%)</span>
+              <span>장기요양보험료 (건보료의 13.14%)</span>
               <span>+{fmt(result.longTermCare)}원</span>
             </div>
             {result.type === "workplace" && (
@@ -146,7 +146,7 @@ export default function HealthInsuranceFeeClient() {
         </div>
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 2026년 보험료율: 직장가입자 7.09%(본인 3.545% + 회사 3.545%) + 장기요양 12.95%(건보료의).
+          ※ 2026년 보험료율: 직장가입자 7.19%(본인 3.595% + 회사 3.595%) + 장기요양 13.14%(건보료의).
           지역가입자 점수당 약 220원 가정. 정확한 금액은 건강보험공단(1577-1000) 또는 건보공단 홈페이지에서 조회하세요.
         </p>
       </div>

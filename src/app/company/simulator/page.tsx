@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { ArrowLeft, Building2, Building, Calculator, Info } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+
+// 실수령액 비교 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const SimulatorChart = dynamic(() => import("@/components/charts/SimulatorChart"), {
+ ssr: false,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
+
 export default function SimulatorPage() {
  const [smeSalary, setSmeSalary] = useState(35000000);
  const [largeSalary, setLargeSalary] = useState(45000000);
@@ -12,8 +19,8 @@ export default function SimulatorPage() {
 
  // Simplified Tax Calculation Logic (Approximation)
  const calculateNetPay = (gross: number, isSmeYouth: boolean) => {
- // Deductions (National Pension 4.5%, Health 3.545%, Care 0.46%, Employment 0.9%)
- const insurance = gross * (0.045 + 0.03545 + 0.0046 + 0.009);
+ // Deductions (National Pension 4.75%, Health 3.595%, Care 0.47%, Employment 0.9%)
+ const insurance = gross * (0.0475 + 0.03595 + 0.0047 + 0.009);
 
  // Income Tax (Simplified Progressive Tax)
  let taxable = gross - insurance - 1500000; // Basic deduction approximation
@@ -139,23 +146,7 @@ export default function SimulatorPage() {
  <h3 className="text-xl font-bold mb-8 text-center">월 실수령액 비교</h3>
 
  <div className="flex-1 w-full">
- <ResponsiveContainer width="100%" height="100%">
- <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
- <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
- <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fontSize: 14, fontWeight: 'bold' }} />
- <YAxis hide />
- <Tooltip
- cursor={{ fill: 'rgba(255,255,255,0.05)' }}
- contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
- formatter={(value: number) => [`${value.toLocaleString('ko-KR')}원`, '월 실수령액']}
- />
- <Bar dataKey="net" radius={[10, 10, 0, 0]} barSize={80}>
- {data.map((entry, index) => (
- <Cell key={`cell-${index}`} fill={entry.color} />
- ))}
- </Bar>
- </BarChart>
- </ResponsiveContainer>
+ <SimulatorChart data={data} />
  </div>
 
  <div className="mt-8 grid grid-cols-2 gap-4">

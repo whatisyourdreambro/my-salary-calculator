@@ -68,9 +68,9 @@ export default function YearEndBonusTaxClient() {
 
     // 4대보험 동일 (양쪽 모두 부과)
     const insurance =
-      Math.min(bonus, Math.max(0, 74_040_000 - Math.min(salary, nextSalary))) * 0.045 +
-      bonus * 0.03545 +
-      bonus * 0.03545 * 0.1295 +
+      Math.min(bonus, Math.max(0, 76_440_000 - Math.min(salary, nextSalary))) * 0.0475 +
+      bonus * 0.03595 +
+      bonus * 0.03595 * 0.1314 +
       bonus * 0.009;
 
     const totalA_deduction = incomeTaxBonusA + incomeTaxBonusA * 0.1 + insurance;

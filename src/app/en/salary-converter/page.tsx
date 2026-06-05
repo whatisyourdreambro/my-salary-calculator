@@ -1,20 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import PageFooterAds from "@/components/PageFooterAds";
 import { GlobalTaxEngine, COUNTRY_NAMES, CountryCode, PPP_INDEX, TaxResult } from "@/lib/global/taxEngine";
 import { Calculator, Globe, TrendingUp, Info } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell
-} from "recharts";
+
+// PPP BarChart(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const SalaryConverterChart = dynamic(() => import("@/components/charts/SalaryConverterChart"), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
 
 export default function SalaryConverterPage() {
   const [salaryKRW, setSalaryKRW] = useState<number>(60000000);
@@ -111,23 +108,7 @@ export default function SalaryConverterPage() {
               Real Purchasing Power (Net USD)
             </h3>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={results} layout="vertical" margin={{ left: 40 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#DDE4EC" horizontal={false} />
-                  <XAxis type="number" stroke="#7A9AB5" tickFormatter={(val) => `$${val / 1000}k`} />
-                  <YAxis dataKey="country" type="category" stroke="#3D5E78" width={40} />
-                  <Tooltip
-                    cursor={{ fill: '#EDF1F5', opacity: 0.8 }}
-                    contentStyle={{ backgroundColor: '#fff', borderColor: '#DDE4EC', color: '#0A1829', borderRadius: '8px' }}
-                    formatter={(val: number) => [`$${Math.round(val).toLocaleString('ko-KR')}`, 'Real Value (USD)']}
-                  />
-                  <Bar dataKey="pppAdjustedNetUSD" radius={[0, 4, 4, 0]}>
-                    {results.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.country === 'KR' ? '#0145F2' : '#7A9AB5'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <SalaryConverterChart data={results} />
             </div>
             <p className="text-center text-sm text-canvas-500 mt-4">
               * Adjusted for Cost of Living (PPP). Higher is better.

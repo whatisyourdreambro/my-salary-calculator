@@ -178,7 +178,7 @@ export default function HealthInsurance2026Page() {
  내 월급의 건강보험료 자세히 보기
  </h3>
  <p className="text-sm opacity-90">
- 연봉 입력 시 월별 건강보험료(3.545%)와 장기요양보험까지 자동 계산.
+ 연봉 입력 시 월별 건강보험료(3.595%)와 장기요양보험까지 자동 계산.
  </p>
  </div>
  <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />

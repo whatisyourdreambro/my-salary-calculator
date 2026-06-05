@@ -99,9 +99,9 @@ function AnnualTable() {
               2026년 연봉 실수령액이란?
             </h2>
             <p className="text-faint-blue leading-relaxed mb-4">
-              연봉 실수령액은 세전 연봉에서 <strong className="text-navy">국민연금(4.5%)</strong>,{" "}
-              <strong className="text-navy">건강보험(3.545%)</strong>,{" "}
-              <strong className="text-navy">장기요양보험(건강보험의 12.95%)</strong>,{" "}
+              연봉 실수령액은 세전 연봉에서 <strong className="text-navy">국민연금(4.75%)</strong>,{" "}
+              <strong className="text-navy">건강보험(3.595%)</strong>,{" "}
+              <strong className="text-navy">장기요양보험(건강보험의 13.14%)</strong>,{" "}
               <strong className="text-navy">고용보험(0.9%)</strong>, 그리고{" "}
               <strong className="text-navy">소득세(근로소득 간이세액표 기준)</strong>를
               공제하고 실제로 받는 금액입니다.

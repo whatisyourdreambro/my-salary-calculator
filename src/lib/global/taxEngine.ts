@@ -59,8 +59,8 @@ export class GlobalTaxEngine {
  else if (localGross <= 500000000) tax = 94060000 + (localGross - 300000000) * 0.40;
  else tax = 174060000 + (localGross - 500000000) * 0.42;
 
- // Social (Pension 4.5%, Health 3.545%, Employment 0.9%) ~ Approx 9%
- social = localGross * 0.09;
+ // Social (Pension 4.75%, Health 3.595%, Employment 0.9%) ~ Approx 9.7%
+ social = localGross * 0.097;
  break;
 
  case 'US':

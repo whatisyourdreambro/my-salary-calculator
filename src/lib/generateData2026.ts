@@ -21,13 +21,13 @@ const RATES_2025 = {
  employment: 0.009, // 0.9%
 };
 
-// 2026 Rates — 동결 가정. src/lib/TaxLogic.ts TAX_RATES_2026 와 동기화.
-// 보건복지부 2024 동결 발표 이후 인상 확정 없음. 인상 시 두 파일 함께 갱신.
+// 2026 Rates — 2026 연금개혁·건보 인상 반영. src/lib/taxConstants2026.ts 와 동일.
+// 국민연금 9%→9.5%(2026-01 시행), 건강보험 7.09%→7.19%, 장기요양 12.95%→13.14%.
 const RATES_2026 = {
- pension: 0.045, // 동결
- health: 0.03545, // 동결 (7.09% / 2)
- ltc: 0.1295, // 동결 (12.95% of Health)
- employment: 0.009, // 동결
+ pension: 0.0475, // 9.5% / 2 (2026 연금개혁)
+ health: 0.03595, // 7.19% / 2
+ ltc: 0.1314, // 13.14% of Health
+ employment: 0.009, // 0.9% 동결
 };
 
 function calculateNet(annualSalary: number, rates: typeof RATES_2025) {

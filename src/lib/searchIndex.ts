@@ -46,7 +46,7 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 주휴수당 계산기", href: "/weekly-holiday-allowance-2026", category: "계산기", description: "최저시급 10,320원 주 40h 82,560원", priority: 2 },
  { title: "2026 종합소득세 계산기", href: "/income-tax-2026", category: "계산기", description: "8단계 누진세율 + 지방소득세 10%", priority: 1 },
  { title: "2026 부동산 보유세 계산기", href: "/property-holding-tax-2026", category: "계산기", description: "재산세 7·9월 + 종부세 12월", priority: 2 },
- { title: "2026 건강보험료 계산기", href: "/health-insurance-fee-2026", category: "계산기", description: "직장/지역 가입자별 4.004%", priority: 1 },
+ { title: "2026 건강보험료 계산기", href: "/health-insurance-fee-2026", category: "계산기", description: "직장/지역 가입자별 4.067%", priority: 1 },
  { title: "2026 국민연금 예상수령액", href: "/national-pension-estimate-2026", category: "계산기", description: "가입기간 비례 소득대체율 41.5%", priority: 2 },
  { title: "2026 적금·예금 이자 계산기", href: "/savings-interest-2026", category: "계산기", description: "정기적금/예금, 단리/복리, 세후 이자", priority: 2 },
 ];

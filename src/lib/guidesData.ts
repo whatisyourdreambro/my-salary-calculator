@@ -483,3 +483,16 @@ export const guides: Guide[] = (allRawGuides as any[]).map(guide => ({
 export const koGuides: Guide[] = guides.filter(g => g.lang === 'ko');
 /** 영어 가이드만 (/en/guides 라우트용) */
 export const enGuides: Guide[] = guides.filter(g => g.lang === 'en');
+
+// ─────────────────────────────────────────────────────────────
+// 목록/카드 UI 전용 — 본문(content) 제외 경량 메타.
+// 'use client' 목록 페이지가 koGuides/enGuides 를 직접 import 하면 본문(~888KB)이
+// 클라이언트 번들(First Load JS)에 실린다. 서버 컴포넌트에서 이 카드 배열만 골라
+// 클라 컴포넌트에 props 로 넘기면 본문이 빠져 목록 페이지가 가벼워진다.
+// (content 가 필요한 상세 페이지·sitemap 은 기존 koGuides/enGuides 를 계속 사용)
+// ─────────────────────────────────────────────────────────────
+export type GuideCardMeta = Omit<Guide, 'content'>;
+
+const toCard = ({ content, ...rest }: Guide): GuideCardMeta => rest;
+export const koGuideCards: GuideCardMeta[] = koGuides.map(toCard);
+export const enGuideCards: GuideCardMeta[] = enGuides.map(toCard);

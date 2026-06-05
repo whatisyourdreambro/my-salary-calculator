@@ -3,67 +3,29 @@
 "use client";
 
 import { useEffect, useState, useRef, Suspense } from "react";
+import dynamic from "next/dynamic";
 import PageFooterAds from "@/components/PageFooterAds";
 import type { StoredFinancialData } from "@/app/types";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { calculateRank } from "@/lib/salaryData";
-import {
- PieChart,
- Pie,
- Cell,
- ResponsiveContainer,
- Tooltip,
- Legend,
- BarChart,
- Bar,
- XAxis,
- YAxis,
- CartesianGrid,
-} from "recharts";
 import Link from "next/link";
 import CountUp from "react-countup";
 import { Info, BarChart2, TrendingUp } from "lucide-react";
 
+// 리포트 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const chartLoading = () => (
+ <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />
+);
+const AnnualCompositionPieChart = dynamic(
+ () => import("@/components/charts/ReportCharts").then((m) => m.AnnualCompositionPieChart),
+ { ssr: false, loading: chartLoading }
+);
+const FutureProjectionBarChart = dynamic(
+ () => import("@/components/charts/ReportCharts").then((m) => m.FutureProjectionBarChart),
+ { ssr: false, loading: chartLoading }
+);
+
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
-
-const COLORS = ["#0052ff", "#ffc82c", "#00C49F", "#FF8042", "#8884d8"];
-
-const RADIAN = Math.PI / 180;
-
-// 타입 단언에 사용할 인터페이스를 정의합니다. (인덱스 시그니처 제거)
-interface PieCustomLabelProps {
- cx: number;
- cy: number;
- midAngle: number;
- innerRadius: number;
- outerRadius: number;
- percent: number;
- name: string;
-}
-
-// 1. 함수의 인자 타입을 일반 object로 변경하여 타입 호환성 문제를 해결합니다.
-const renderCustomizedLabel = (props: object) => {
- // 2. 함수 내부에서 'as'를 사용해 props의 타입을 단언해줍니다.
- const { cx, cy, midAngle, innerRadius, outerRadius, percent, name } =
- props as PieCustomLabelProps;
-
- const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
- const x = cx + radius * Math.cos(-midAngle * RADIAN);
- const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
- return (
- <text
- x={x}
- y={y}
- fill="white"
- textAnchor={x > cx ? "start" : "end"}
- dominantBaseline="central"
- className="font-bold text-xs"
- >
- {`${name} ${(percent * 100).toFixed(0)}%`}
- </text>
- );
-};
 
 const Report = () => {
  const [data, setData] = useState<StoredFinancialData | null>(null);
@@ -230,31 +192,7 @@ const Report = () => {
  </h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
  <div className="h-56">
- <ResponsiveContainer width="100%" height="100%">
- <PieChart>
- <Pie
- data={annualCompositionData}
- dataKey="value"
- nameKey="name"
- cx="50%"
- cy="50%"
- outerRadius={80}
- labelLine={false}
- label={renderCustomizedLabel}
- >
- {annualCompositionData.map((entry, index) => (
- <Cell
- key={`cell-${index}`}
- fill={COLORS[index % COLORS.length]}
- />
- ))}
- </Pie>
- <Tooltip
- formatter={(value: number) => `${formatNumber(value)}원`}
- />
- <Legend />
- </PieChart>
- </ResponsiveContainer>
+ <AnnualCompositionPieChart data={annualCompositionData} />
  </div>
  <div className="text-sm space-y-2">
  <div className="flex justify-between p-2 bg-canvas/50 rounded">
@@ -288,21 +226,7 @@ const Report = () => {
  {futureSalary.years}년 후 미래 연봉 예측
  </h2>
  <div className="h-64">
- <ResponsiveContainer width="100%" height="100%">
- <BarChart
- data={futureProjectionData}
- margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
- >
- <CartesianGrid strokeDasharray="3 3" />
- <XAxis dataKey="year" />
- <YAxis tickFormatter={(value) => `${value / 10000}만원`} />
- <Tooltip
- formatter={(value: number) => `${formatNumber(value)}원`}
- />
- <Legend />
- <Bar dataKey="내 연봉" fill="#0052ff" />
- </BarChart>
- </ResponsiveContainer>
+ <FutureProjectionBarChart data={futureProjectionData} />
  </div>
  </section>
  )}

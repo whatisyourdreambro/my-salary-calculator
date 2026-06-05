@@ -59,9 +59,9 @@ export default function IncentiveClient() {
     const combinedIncentiveTax = (calcTax(taxableNew) - calcTax(taxableBase)) * 0.7; // 세액공제 ~30%
     const combinedLocal = combinedIncentiveTax * 0.1;
     const combined4Insurance =
-      Math.min(incentive, Math.max(0, 74_040_000 - salary)) * 0.045 +
-      incentive * 0.03545 +
-      incentive * 0.03545 * 0.1295 +
+      Math.min(incentive, Math.max(0, 76_440_000 - salary)) * 0.0475 +
+      incentive * 0.03595 +
+      incentive * 0.03595 * 0.1314 +
       incentive * 0.009;
     const combinedTotal = combinedIncentiveTax + combinedLocal + combined4Insurance;
     const combinedNet = incentive - combinedTotal;

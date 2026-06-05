@@ -1,4 +1,4 @@
-import { enGuides } from "@/lib/guidesData";
+import { enGuideCards, categoriesEn } from "@/lib/guidesData";
 import EnglishGuidesClient from "./EnglishGuidesClient";
 import type { Metadata } from "next";
 
@@ -25,5 +25,5 @@ export const metadata: Metadata = {
 };
 
 export default function EnglishGuidesIndex() {
- return <EnglishGuidesClient guides={enGuides} />;
+ return <EnglishGuidesClient guides={enGuideCards} categoriesEn={categoriesEn} />;
 }

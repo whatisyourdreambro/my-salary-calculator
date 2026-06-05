@@ -15,7 +15,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 4대보험 요율표 — 국민연금·건강보험·고용보험·산재보험",
  description:
- "2026년 4대보험 요율 한 페이지. 국민연금 9%, 건강보험 7.09%, 장기요양보험, 고용보험, 산재보험 본인·회사 부담률과 월급별 보험료 시뮬.",
+ "2026년 4대보험 요율 한 페이지. 국민연금 9.5%, 건강보험 7.19%, 장기요양보험, 고용보험, 산재보험 본인·회사 부담률과 월급별 보험료 시뮬.",
  path: "/social-insurance-rates-2026",
  ogType: "article",
  publishedTime: "2026-01-01",
@@ -34,7 +34,7 @@ const FAQ_ITEMS = [
  {
  question: "4대보험 본인 부담은 월급의 몇 %인가요?",
  answer:
- "본인 부담은 월급(보수월액)의 약 9.4% 수준입니다. 국민연금 4.5% + 건강보험 3.545% + 장기요양 약 0.46% + 고용보험 0.9% = 약 9.4%. 산재보험은 회사가 100% 부담합니다.",
+ "본인 부담은 월급(보수월액)의 약 9.7% 수준입니다. 국민연금 4.75% + 건강보험 3.595% + 장기요양 약 0.47% + 고용보험 0.9% = 약 9.7%. 산재보험은 회사가 100% 부담합니다.",
  },
  {
  question: "건강보험료는 7월에 왜 갑자기 늘어나나요?",
@@ -51,25 +51,25 @@ const FAQ_ITEMS = [
 const INSURANCE_RATES = [
  {
  name: "국민연금",
- totalRate: "9.0%",
- selfRate: "4.5%",
- companyRate: "4.5%",
- base: "보수월액 기준 (상한 590만)",
+ totalRate: "9.5%",
+ selfRate: "4.75%",
+ companyRate: "4.75%",
+ base: "보수월액 기준 (상한 637만)",
  purpose: "노후 연금 (65세부터 수령)",
  },
  {
  name: "건강보험",
- totalRate: "7.09%",
- selfRate: "3.545%",
- companyRate: "3.545%",
+ totalRate: "7.19%",
+ selfRate: "3.595%",
+ companyRate: "3.595%",
  base: "보수월액",
  purpose: "의료비 보장",
  },
  {
  name: "장기요양보험",
- totalRate: "건강보험의 12.95%",
- selfRate: "약 0.4591%",
- companyRate: "약 0.4591%",
+ totalRate: "건강보험의 13.14%",
+ selfRate: "약 0.4724%",
+ companyRate: "약 0.4724%",
  base: "건강보험료 기준",
  purpose: "노인 장기요양 서비스",
  },
@@ -99,9 +99,9 @@ const SAMPLE_SALARIES = [
 ];
 
 function calculateInsurance(monthly: number) {
- const pension = Math.floor((monthly * 0.045) / 10) * 10;
- const health = Math.floor((monthly * 0.03545) / 10) * 10;
- const longTermCare = Math.floor((health * 0.1295) / 10) * 10;
+ const pension = Math.floor((monthly * 0.0475) / 10) * 10;
+ const health = Math.floor((monthly * 0.03595) / 10) * 10;
+ const longTermCare = Math.floor((health * 0.1314) / 10) * 10;
  const employment = Math.floor((monthly * 0.009) / 10) * 10;
  const total = pension + health + longTermCare + employment;
  return { pension, health, longTermCare, employment, total };

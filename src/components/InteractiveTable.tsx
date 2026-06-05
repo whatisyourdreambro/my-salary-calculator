@@ -2,17 +2,15 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import {
- BarChart,
- Bar,
- XAxis,
- YAxis,
- Tooltip,
- ResponsiveContainer,
- LabelList,
- Cell,
-} from "recharts";
+import dynamic from "next/dynamic";
 import type { SalaryData } from "@/lib/generateData";
+
+// 공제 비율 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+// 시급/주급 테이블이 연봉/월급(130kB)보다 2배 무겁던 비대칭의 원인이었다.
+const DeductionBarChart = dynamic(() => import("@/components/charts/DeductionBarChart"), {
+ ssr: false,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
 import { AdvancedSettings } from "@/app/types";
 import SalaryTable from "@/components/SalaryTable";
 import TableInteraction from "@/components/TableInteraction";
@@ -21,23 +19,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { Calculator, CheckCircle2, TrendingDown } from "lucide-react";
-
-const CustomBarLabel = (props: any) => {
- const { x, y, width, value } = props;
- return (
- <text
- x={x + width / 2}
- y={y}
- fill="#7A9AB5"
- dy={-6}
- textAnchor="middle"
- fontSize={11}
- fontWeight="700"
- >
- {`${value}%`}
- </text>
- );
-};
 
 interface InteractiveTableProps {
  allData: SalaryData[];
@@ -219,37 +200,7 @@ export default function InteractiveTable({
  공제 비율 분석
  </h4>
  <div className="h-56 w-full">
- <ResponsiveContainer width="100%" height="100%">
- <BarChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }} barSize={28}>
- <XAxis
- dataKey="name"
- stroke="#cbd5e1"
- fontSize={11}
- tickLine={false}
- axisLine={false}
- dy={8}
- />
- <Tooltip
- cursor={{ fill: "rgba(0,0,0,0.03)" }}
- contentStyle={{
- backgroundColor: "#fff",
- borderColor: "#e2e8f0",
- borderRadius: "14px",
- color: "#3D5E78",
- fontSize: "13px",
- fontWeight: 600,
- boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
- }}
- formatter={(value: number) => [`${value}%`, "비중"]}
- />
- <Bar dataKey="value" radius={[6, 6, 0, 0]}>
- {chartData.map((entry, index) => (
- <Cell key={`cell-${index}`} fill={entry.color} />
- ))}
- <LabelList dataKey="value" content={<CustomBarLabel />} />
- </Bar>
- </BarChart>
- </ResponsiveContainer>
+ <DeductionBarChart data={chartData} />
  </div>
  </div>
  </div>

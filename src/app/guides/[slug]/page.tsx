@@ -1,12 +1,11 @@
 
-import { koGuides } from "@/lib/guidesData";
+import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
-import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
 import { buildGuideMetadata } from "@/lib/seo";
@@ -37,17 +36,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  tags: guide.tags,
  });
 
- // 가이드는 한·영 버전이 있어 hreflang 대체 링크를 추가 병합.
+ // 가이드 hreflang: 영문 카운터파트가 실제 존재하는 슬러그에만 "en" 선언.
+ // (영문판 없는 글에 en을 달면 /en/guides로 308 리디렉션돼 hreflang 오류 발생 — sitemap.ts와 동일 정책)
  const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
- const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
+ const hasEn = enGuides.some((g) => g.slug === guide.slug);
 
  return {
  ...base,
  alternates: {
  ...base.alternates,
- languages: {
+ languages: hasEn
+ ? {
  "ko-KR": koUrl,
- "en": enUrl,
+ "en": `https://www.moneysalary.com/en/guides/${guide.slug}`,
+ "x-default": koUrl,
+ }
+ : {
+ "ko-KR": koUrl,
  "x-default": koUrl,
  },
  },
@@ -103,10 +108,6 @@ export default function GuidePage({ params }: Props) {
 
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  <CalcResultAd />
-
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
 
  <RelatedGuides
  items={getRelatedGuides({

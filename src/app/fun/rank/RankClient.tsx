@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
- AreaChart,
- Area,
- Tooltip,
- ResponsiveContainer,
- ReferenceLine,
-} from "recharts";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Share2, Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import Link from 'next/link';
+
+// 연봉 분포 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const RankChart = dynamic(() => import("@/components/charts/RankChart"), {
+ ssr: false,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
 
 // Mock Distribution Data
 const generateDistributionData = () => {
@@ -168,31 +168,7 @@ export default function RankClient() {
 
  {/* Chart */}
  <div className="h-80 w-full relative bg-electric/20 rounded-3xl p-4 border border-white/5">
- <ResponsiveContainer width="100%" height="100%">
- <AreaChart data={distributionData}>
- <defs>
- <linearGradient id="colorDensity" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4} />
- <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
- </linearGradient>
- </defs>
- <Tooltip
- contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46', borderRadius: '1rem', color: '#fff' }}
- itemStyle={{ color: '#e879f9' }}
- formatter={(value: number) => [`${value.toFixed(1)}%`, '인구 비율']}
- labelFormatter={(label) => `${(label / 10000).toLocaleString('ko-KR')}만원`}
- />
- <Area
- type="monotone"
- dataKey="density"
- stroke="#d946ef"
- strokeWidth={3}
- fillOpacity={1}
- fill="url(#colorDensity)"
- />
- <ReferenceLine x={salary} stroke="#fff" strokeDasharray="3 3" label={{ position: 'top', value: 'ME', fill: 'white', fontWeight: 'bold' }} />
- </AreaChart>
- </ResponsiveContainer>
+ <RankChart data={distributionData} salary={salary} />
  <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-muted-blue font-mono">
  * 2025년 국세청 통계 자료 기반 (추정치)
  </div>

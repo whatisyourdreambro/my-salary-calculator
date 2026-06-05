@@ -76,7 +76,7 @@ export default function NationalPensionClient() {
             aria-label="가입 중 평균 월소득"
           />
           <p className="mt-2 text-xs text-faint-blue">
-            {fmt(avgIncome / 10000)}만원 (보수월액 상한 590만원까지 보험료 산정)
+            {fmt(avgIncome / 10000)}만원 (보수월액 상한 637만원까지 보험료 산정)
           </p>
         </div>
 

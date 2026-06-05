@@ -102,13 +102,13 @@ function calcBonusNet(
   let longTermCare = 0;
   let employment = 0;
   if (applyInsurance) {
-    // 국민연금: 보수월액 연 7,404만원 상한 — 본봉이 상한 미달일 때만 추가 부과
-    const pensionCap = 74_040_000;
+    // 국민연금: 보수월액 연 7,644만원 상한 — 본봉이 상한 미달일 때만 추가 부과
+    const pensionCap = 76_440_000;
     const pensionBase = Math.max(0, pensionCap - salary);
-    nationalPension = Math.min(bonusWon, pensionBase) * 0.045;
+    nationalPension = Math.min(bonusWon, pensionBase) * 0.0475;
     // 건강·고용은 상한 없음. 다만 보수정산 시점에 일시 부과되며 회사가 일부 분담.
-    healthIns = bonusWon * 0.03545;
-    longTermCare = healthIns * 0.1295;
+    healthIns = bonusWon * 0.03595;
+    longTermCare = healthIns * 0.1314;
     employment = bonusWon * 0.009;
   }
   const insurance = nationalPension + healthIns + longTermCare + employment;
@@ -1063,7 +1063,7 @@ function MySalaryCalculator({
                   className="block text-faint-blue mt-1 leading-relaxed"
                 >
                   성과급은 보수에 합산되어 4대보험 정산 시 추가 부과됩니다.
-                  단 국민연금은 보수월액 상한(연 7,404만원)이 있어 고소득자는
+                  단 국민연금은 보수월액 상한(연 7,644만원)이 있어 고소득자는
                   추가 부과액이 적습니다. 체크하지 않으면 4대보험은
                   포함하지 않고 소득세·지방세만 공제합니다.
                 </span>
@@ -1256,15 +1256,15 @@ function MySalaryCalculator({
               {applyInsurance && (
                 <>
                   <DeductRow
-                    label="국민연금 (4.5% · 보수월액 상한 적용)"
+                    label="국민연금 (4.75% · 보수월액 상한 적용)"
                     value={personal.breakdown.nationalPension}
                   />
                   <DeductRow
-                    label="건강보험 (3.545%)"
+                    label="건강보험 (3.595%)"
                     value={personal.breakdown.healthIns}
                   />
                   <DeductRow
-                    label="장기요양 (건강보험의 12.95%)"
+                    label="장기요양 (건강보험의 13.14%)"
                     value={personal.breakdown.longTermCare}
                   />
                   <DeductRow

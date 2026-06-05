@@ -56,7 +56,7 @@ const earnedIncomeCredit = `
 const fourMajorInsurance = `
 <p class="lead">
   Korea's "Four Major Insurances" — National Pension, Health Insurance, Employment Insurance, and Industrial Accident Insurance — are mandatory for almost all wage earners.
-  In 2026, the combined employee contribution is approximately 9.4% of gross salary, with the employer matching most components.
+  In 2026, the combined employee contribution is approximately 9.7% of gross salary, with the employer matching most components.
 </p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">2026 Contribution Rates</h2>
@@ -71,9 +71,9 @@ const fourMajorInsurance = `
       </tr>
     </thead>
     <tbody>
-      <tr class="border-t border-border"><td class="p-3">National Pension</td><td class="p-3">4.5%</td><td class="p-3">4.5%</td><td class="p-3">9.0%</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Health Insurance</td><td class="p-3">3.545%</td><td class="p-3">3.545%</td><td class="p-3">7.09%</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Long-term Care (12.95% of health)</td><td class="p-3">0.459%</td><td class="p-3">0.459%</td><td class="p-3">0.918%</td></tr>
+      <tr class="border-t border-border"><td class="p-3">National Pension</td><td class="p-3">4.75%</td><td class="p-3">4.75%</td><td class="p-3">9.5%</td></tr>
+      <tr class="border-t border-border"><td class="p-3">Health Insurance</td><td class="p-3">3.595%</td><td class="p-3">3.595%</td><td class="p-3">7.19%</td></tr>
+      <tr class="border-t border-border"><td class="p-3">Long-term Care (13.14% of health)</td><td class="p-3">0.472%</td><td class="p-3">0.472%</td><td class="p-3">0.945%</td></tr>
       <tr class="border-t border-border"><td class="p-3">Employment Insurance</td><td class="p-3">0.9%</td><td class="p-3">0.9%+α</td><td class="p-3">1.8%+α</td></tr>
       <tr class="border-t border-border"><td class="p-3">Industrial Accident</td><td class="p-3">—</td><td class="p-3">~0.7%</td><td class="p-3">~0.7%</td></tr>
     </tbody>
@@ -149,12 +149,12 @@ const yearEndTaxDeductions = `
 const healthInsuranceGuide = `
 <p class="lead">
   Korea's National Health Insurance is a single-payer system covering essentially everyone living in the country.
-  Premiums depend on whether you are a workplace member, regional member, or dependent. For 2026, the basic rate is 7.09% of monthly salary, split evenly between employer and employee.
+  Premiums depend on whether you are a workplace member, regional member, or dependent. For 2026, the basic rate is 7.19% of monthly salary, split evenly between employer and employee.
 </p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">Workplace vs Regional Subscribers</h2>
 <p>
-  <strong>Workplace subscribers (직장가입자)</strong> pay 3.545% of monthly income plus 0.459% long-term care, with employers matching. Coverage extends to dependents at no extra cost.
+  <strong>Workplace subscribers (직장가입자)</strong> pay 3.595% of monthly income plus 0.472% long-term care, with employers matching. Coverage extends to dependents at no extra cost.
 </p>
 <p>
   <strong>Regional subscribers (지역가입자)</strong> — typically self-employed, freelancers, and the unemployed — pay based on a formula that includes income, property, and vehicle value. The single household contribution can be substantially higher than workplace subscribers earning the same amount.

@@ -48,10 +48,10 @@ function quickEstimate(salary: number, bonus: number) {
   const localTax = bonusTax * 0.1;
 
   // 4대보험 (성과급 부분)
-  const pensionBase = Math.min(bonus, Math.max(0, 74_040_000 - salary));
-  const pension = pensionBase * 0.045;
-  const health = bonus * 0.03545;
-  const longTerm = health * 0.1295;
+  const pensionBase = Math.min(bonus, Math.max(0, 76_440_000 - salary));
+  const pension = pensionBase * 0.0475;
+  const health = bonus * 0.03595;
+  const longTerm = health * 0.1314;
   const employment = bonus * 0.009;
 
   const totalDeduction = bonusTax + localTax + pension + health + longTerm + employment;

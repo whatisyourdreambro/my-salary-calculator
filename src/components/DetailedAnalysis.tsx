@@ -48,9 +48,9 @@ export default function DetailedAnalysis({
  ];
 
  const deductionDetails = [
- { name: "국민연금", value: result.pension, rate: "4.5%" },
- { name: "건강보험", value: result.health, rate: "3.545%" },
- { name: "장기요양", value: result.longTermCare, rate: "건강보험의 12.95%" },
+ { name: "국민연금", value: result.pension, rate: "4.75%" },
+ { name: "건강보험", value: result.health, rate: "3.595%" },
+ { name: "장기요양", value: result.longTermCare, rate: "건강보험의 13.14%" },
  { name: "고용보험", value: result.employment, rate: "0.9%" },
  { name: "소득세", value: result.incomeTax, rate: "소득 구간별" },
  { name: "지방소득세", value: result.localTax, rate: "소득세의 10%" },

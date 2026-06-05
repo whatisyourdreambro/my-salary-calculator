@@ -22,12 +22,12 @@ const DATA_SOURCES = [
  {
  name: "국민연금공단",
  url: "https://www.nps.or.kr/jsppage/info/easy/easy_04_01.jsp",
- description: "국민연금 보험료율 (4.5%)",
+ description: "국민연금 보험료율 (4.75%)",
  },
  {
  name: "국민건강보험공단",
  url: "https://www.nhis.or.kr/nhis/together/wbhaea01400m01.do",
- description: "건강보험 요율 (3.545%) + 장기요양보험",
+ description: "건강보험 요율 (3.595%) + 장기요양보험",
  },
  {
  name: "근로복지공단",

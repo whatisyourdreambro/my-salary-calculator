@@ -243,16 +243,16 @@ export const hotKeywordsGuides = [
   publishedDate: "2026-05-16",
   views: 0,
   content: `
-<p class="lead">국민연금은 대한민국 최강의 노후 보장 수단입니다. 2026년 현재 보험료율은 9%이며, 수령 나이와 가입 기간에 따라 월 수십만원에서 백만원 이상을 평생 받을 수 있습니다. 내 예상 수령액과 납부 전략을 지금 확인하세요.</p>
+<p class="lead">국민연금은 대한민국 최강의 노후 보장 수단입니다. 2026년 현재 보험료율은 9.5%이며, 수령 나이와 가입 기간에 따라 월 수십만원에서 백만원 이상을 평생 받을 수 있습니다. 내 예상 수령액과 납부 전략을 지금 확인하세요.</p>
 
 <h2>📊 2026년 국민연금 보험료율</h2>
 <div class="bg-secondary/30 p-6 rounded-xl mt-4 border border-primary/10">
 <table class="w-full text-sm border-collapse">
 <tr class="bg-primary/10"><th class="p-2 text-left">구분</th><th class="p-2 text-right">근로자 부담</th><th class="p-2 text-right">사업주 부담</th><th class="p-2 text-right">합계</th></tr>
-<tr class="border-b"><td class="p-2">직장가입자</td><td class="p-2 text-right font-bold">4.5%</td><td class="p-2 text-right">4.5%</td><td class="p-2 text-right">9%</td></tr>
-<tr><td class="p-2">지역가입자</td><td class="p-2 text-right font-bold">9% (전액 본인)</td><td class="p-2 text-right">-</td><td class="p-2 text-right">9%</td></tr>
+<tr class="border-b"><td class="p-2">직장가입자</td><td class="p-2 text-right font-bold">4.75%</td><td class="p-2 text-right">4.75%</td><td class="p-2 text-right">9.5%</td></tr>
+<tr><td class="p-2">지역가입자</td><td class="p-2 text-right font-bold">9.5% (전액 본인)</td><td class="p-2 text-right">-</td><td class="p-2 text-right">9.5%</td></tr>
 </table>
-<p class="text-sm text-muted-foreground mt-2">※ 기준소득월액: 하한 37만원 ~ 상한 617만원 (2026년 기준). 이 범위 밖은 적용 안 됨.</p>
+<p class="text-sm text-muted-foreground mt-2">※ 기준소득월액: 하한 40만원 ~ 상한 637만원 (2026년 기준). 이 범위 밖은 적용 안 됨.</p>
 </div>
 
 <h2>💰 예상 수령액 계산 기준</h2>
@@ -286,7 +286,7 @@ export const hotKeywordsGuides = [
 <h3 class="text-lg font-bold mt-4">1. 임의가입 (전업주부·학생·무직자)</h3>
 <p>소득이 없어도 자발적으로 국민연금에 가입하여 납부할 수 있습니다.</p>
 <ul>
-<li>최소 월 34,650원(최저 기준소득월액 37만원 × 9% 실제 부담 4.5% 아님 — 지역가입자이므로 9% 전액)부터 납부 가능</li>
+<li>최소 월 약 38,000원(최저 기준소득월액 40만원 × 9.5% 실제 부담 4.75% 아님 — 지역가입자이므로 9.5% 전액)부터 납부 가능</li>
 <li>10년 이상 납부해야 노령연금 수령 자격 발생</li>
 </ul>
 
@@ -445,28 +445,28 @@ export const hotKeywordsGuides = [
   publishedDate: "2026-05-16",
   views: 0,
   content: `
-<p class="lead">직장인이라면 매달 급여에서 4대 보험이 빠져나갑니다. 2026년 기준 근로자 부담 총액은 월 급여의 약 <strong>9.4%</strong>입니다. 내가 정확히 얼마나, 왜 내는지 알아야 제대로 활용할 수 있습니다.</p>
+<p class="lead">직장인이라면 매달 급여에서 4대 보험이 빠져나갑니다. 2026년 기준 근로자 부담 총액은 월 급여의 약 <strong>9.7%</strong>입니다. 내가 정확히 얼마나, 왜 내는지 알아야 제대로 활용할 수 있습니다.</p>
 
 <h2>📊 2026년 4대 보험 보험료율 한눈에 보기</h2>
 <div class="bg-secondary/30 p-6 rounded-xl mt-4 border border-primary/10">
 <table class="w-full text-sm border-collapse">
 <tr class="bg-primary/10"><th class="p-2 text-left">보험 종류</th><th class="p-2 text-right">근로자 부담</th><th class="p-2 text-right">사용자 부담</th><th class="p-2 text-right">합계</th></tr>
-<tr class="border-b"><td class="p-2">국민연금</td><td class="p-2 text-right font-bold">4.5%</td><td class="p-2 text-right">4.5%</td><td class="p-2 text-right">9%</td></tr>
-<tr class="border-b"><td class="p-2">건강보험</td><td class="p-2 text-right font-bold">3.545%</td><td class="p-2 text-right">3.545%</td><td class="p-2 text-right">7.09%</td></tr>
-<tr class="border-b"><td class="p-2">장기요양보험</td><td class="p-2 text-right font-bold">0.459%</td><td class="p-2 text-right">0.459%</td><td class="p-2 text-right">0.918%</td></tr>
+<tr class="border-b"><td class="p-2">국민연금</td><td class="p-2 text-right font-bold">4.75%</td><td class="p-2 text-right">4.75%</td><td class="p-2 text-right">9.5%</td></tr>
+<tr class="border-b"><td class="p-2">건강보험</td><td class="p-2 text-right font-bold">3.595%</td><td class="p-2 text-right">3.595%</td><td class="p-2 text-right">7.19%</td></tr>
+<tr class="border-b"><td class="p-2">장기요양보험</td><td class="p-2 text-right font-bold">0.472%</td><td class="p-2 text-right">0.472%</td><td class="p-2 text-right">0.945%</td></tr>
 <tr class="border-b"><td class="p-2">고용보험 (실업급여분)</td><td class="p-2 text-right font-bold">0.9%</td><td class="p-2 text-right">0.9%</td><td class="p-2 text-right">1.8%</td></tr>
 <tr><td class="p-2">산재보험</td><td class="p-2 text-right font-bold text-green-600">0% (없음)</td><td class="p-2 text-right">업종별 다름</td><td class="p-2 text-right">업종별</td></tr>
 </table>
-<p class="mt-3 font-bold">근로자 총 부담: 약 9.4% (국민연금 4.5% + 건강·장기요양 약 4% + 고용보험 0.9%)</p>
+<p class="mt-3 font-bold">근로자 총 부담: 약 9.7% (국민연금 4.75% + 건강·장기요양 약 4.07% + 고용보험 0.9%)</p>
 </div>
 
 <h2>💰 월급별 4대 보험 실제 공제액 예시</h2>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">월급 (세전)</th><th class="p-2 text-right">국민연금</th><th class="p-2 text-right">건강·장기요양</th><th class="p-2 text-right">고용보험</th><th class="p-2 text-right">합계</th></tr>
-<tr class="border-b"><td class="p-2">200만원</td><td class="p-2 text-right">9만원</td><td class="p-2 text-right">8.1만원</td><td class="p-2 text-right">1.8만원</td><td class="p-2 text-right font-bold">18.9만원</td></tr>
-<tr class="border-b"><td class="p-2">300만원</td><td class="p-2 text-right">13.5만원</td><td class="p-2 text-right">12.2만원</td><td class="p-2 text-right">2.7만원</td><td class="p-2 text-right font-bold">28.4만원</td></tr>
-<tr class="border-b"><td class="p-2">400만원</td><td class="p-2 text-right">18만원</td><td class="p-2 text-right">16.2만원</td><td class="p-2 text-right">3.6만원</td><td class="p-2 text-right font-bold">37.8만원</td></tr>
-<tr><td class="p-2">500만원</td><td class="p-2 text-right">22.5만원</td><td class="p-2 text-right">20.3만원</td><td class="p-2 text-right">4.5만원</td><td class="p-2 text-right font-bold">47.3만원</td></tr>
+<tr class="border-b"><td class="p-2">200만원</td><td class="p-2 text-right">9.5만원</td><td class="p-2 text-right">8.1만원</td><td class="p-2 text-right">1.8만원</td><td class="p-2 text-right font-bold">19.4만원</td></tr>
+<tr class="border-b"><td class="p-2">300만원</td><td class="p-2 text-right">14.3만원</td><td class="p-2 text-right">12.2만원</td><td class="p-2 text-right">2.7만원</td><td class="p-2 text-right font-bold">29.2만원</td></tr>
+<tr class="border-b"><td class="p-2">400만원</td><td class="p-2 text-right">19만원</td><td class="p-2 text-right">16.3만원</td><td class="p-2 text-right">3.6만원</td><td class="p-2 text-right font-bold">38.9만원</td></tr>
+<tr><td class="p-2">500만원</td><td class="p-2 text-right">23.8만원</td><td class="p-2 text-right">20.4만원</td><td class="p-2 text-right">4.5만원</td><td class="p-2 text-right font-bold">48.6만원</td></tr>
 </table>
 
 <h2>🏥 건강보험 피부양자 자격 조건</h2>
@@ -566,14 +566,14 @@ export const hotKeywordsGuides = [
   publishedDate: "2026-05-16",
   views: 0,
   content: `
-<p class="lead">건강보험은 대한민국 국민이라면 누구나 가입해야 하는 의무 보험입니다. 2026년 건강보험료율은 7.09%이며, 직장가입자와 지역가입자의 계산 방식이 완전히 다릅니다. 나에게 유리한 가입 방식과 절세 방법을 알아보겠습니다.</p>
+<p class="lead">건강보험은 대한민국 국민이라면 누구나 가입해야 하는 의무 보험입니다. 2026년 건강보험료율은 7.19%이며, 직장가입자와 지역가입자의 계산 방식이 완전히 다릅니다. 나에게 유리한 가입 방식과 절세 방법을 알아보겠습니다.</p>
 
 <h2>📊 직장가입자 vs 지역가입자 보험료 차이</h2>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">구분</th><th class="p-2">직장가입자</th><th class="p-2">지역가입자</th></tr>
 <tr class="border-b"><td class="p-2 font-bold">부과 기준</td><td class="p-2">보수월액(급여)</td><td class="p-2">소득+재산+자동차</td></tr>
-<tr class="border-b"><td class="p-2 font-bold">보험료율</td><td class="p-2">7.09% (절반 회사 부담)</td><td class="p-2">소득 7.09% + 재산점수</td></tr>
-<tr class="border-b"><td class="p-2 font-bold">실부담률</td><td class="p-2">약 3.545% (+ 장기요양)</td><td class="p-2">전액 본인 부담</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">보험료율</td><td class="p-2">7.19% (절반 회사 부담)</td><td class="p-2">소득 7.19% + 재산점수</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">실부담률</td><td class="p-2">약 3.595% (+ 장기요양)</td><td class="p-2">전액 본인 부담</td></tr>
 <tr><td class="p-2 font-bold">유리한 경우</td><td class="p-2">고소득 직장인</td><td class="p-2">소득·재산이 낮은 경우</td></tr>
 </table>
 

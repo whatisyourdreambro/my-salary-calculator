@@ -126,7 +126,7 @@ function HourlyTable2026() {
  Q. 2026년 최저시급은 얼마인가요?
  </h3>
  <p className="text-muted-foreground">
- 2026년 최저시급은 <strong>10,320원</strong>으로 결정되었습니다. 2026년 10,030원 대비 290원(2.9%) 인상된 금액입니다.
+ 2026년 최저시급은 <strong>10,320원</strong>으로 결정되었습니다. 2025년 10,030원 대비 290원(2.9%) 인상된 금액입니다.
  </p>
  <Link
  href="/guides/minimum-wage-2026"

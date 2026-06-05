@@ -116,6 +116,14 @@ const nextConfig = {
         destination: "/salary-db/:slug",
         permanent: true,
       },
+      // 카니발 해소(전체 점검 2026-06): 레거시 /company 인덱스를 /salary-db로 통합.
+      // /company/[id]는 이미 page에서 redirect, /company/compare(/[slug])는 noindex 처리,
+      // /company/simulator(고유 시뮬레이터)는 유지.
+      {
+        source: "/company",
+        destination: "/salary-db",
+        permanent: true,
+      },
     ];
   },
   async headers() {

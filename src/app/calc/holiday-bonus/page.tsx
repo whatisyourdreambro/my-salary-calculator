@@ -94,8 +94,8 @@ export default function HolidayBonusPage() {
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li><strong>소득세</strong>: 누진세율 6~45% (연봉 합산 기준)</li>
               <li><strong>지방소득세</strong>: 소득세의 10%</li>
-              <li><strong>국민연금</strong>: 4.5% (연봉 7,404만원 상한)</li>
-              <li><strong>건강보험</strong>: 3.545% + 장기요양 0.4591%</li>
+              <li><strong>국민연금</strong>: 4.75% (연봉 7,644만원 상한)</li>
+              <li><strong>건강보험</strong>: 3.595% + 장기요양 0.4724%</li>
               <li><strong>고용보험</strong>: 0.9%</li>
             </ul>
 

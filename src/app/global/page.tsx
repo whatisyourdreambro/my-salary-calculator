@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import PageFooterAds from "@/components/PageFooterAds";
 import { ArrowLeft, Globe } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+
+// 국가별 실수령액 BarChart(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
+const GlobalChart = dynamic(() => import("@/components/charts/GlobalChart"), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+});
 
 export default function GlobalTaxPage() {
   const [salaryKRW, setSalaryKRW] = useState(60000000);
@@ -102,29 +108,7 @@ export default function GlobalTaxPage() {
               <h3 className="text-xl font-bold mb-8 text-center">예상 연간 실수령액 (원화 환산)</h3>
 
               <div className="w-full h-[350px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data} layout="vertical" margin={{ top: 5, right: 30, left: 60, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
-                    <XAxis type="number" hide />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="rgba(255,255,255,0.8)"
-                      tick={{ fontSize: 12, fontWeight: "bold" }}
-                      width={110}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "rgba(255,255,255,0.05)" }}
-                      contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", border: "none", borderRadius: "12px" }}
-                      formatter={(value: number) => [`${Math.round(value).toLocaleString("ko-KR")}원`, "실수령액"]}
-                    />
-                    <Bar dataKey="net" radius={[0, 10, 10, 0]} barSize={40}>
-                      {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <GlobalChart data={data} />
               </div>
 
               <div className="mt-6 text-center text-sm text-muted-foreground">
