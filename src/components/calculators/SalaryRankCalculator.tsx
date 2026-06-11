@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, RefreshCw, Crown, CreditCard, Sparkles, CheckCircle2 } from "lucide-react";
 import { calculateSalaryRank, AGE_GROUPS } from "@/data/salaryRankData";
+import ShareButtons from "@/components/ShareButtons";
 
 export default function SalaryRankCalculator() {
   const [salary, setSalary] = useState("");
@@ -26,21 +27,39 @@ export default function SalaryRankCalculator() {
     }, 2000);
   };
 
+  // 결과 카드를 캔버스로 캡처 — 다운로드/SNS 이미지 공유에서 공용 사용
+  const captureCard = async (): Promise<HTMLCanvasElement | null> => {
+    if (!cardRef.current) return null;
+    const { default: html2canvas } = await import("html2canvas");
+    return html2canvas(cardRef.current, {
+      backgroundColor: "#000000",
+      scale: 2,
+    });
+  };
+
   const handleShare = async () => {
-    if (cardRef.current) {
-      try {
-        const { default: html2canvas } = await import("html2canvas");
-        const canvas = await html2canvas(cardRef.current, {
-          backgroundColor: "#000000",
-          scale: 2,
-        });
-        const link = document.createElement("a");
-        link.download = "Moneysalary_Tier_Card.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      } catch (e) {
-        console.error("Share failed", e);
-      }
+    try {
+      const canvas = await captureCard();
+      if (!canvas) return;
+      const link = document.createElement("a");
+      link.download = "Moneysalary_Tier_Card.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      console.error("Share failed", e);
+    }
+  };
+
+  // 인스타그램 등 이미지 공유용 — ShareButtons.getShareImage 콜백
+  const getShareImage = async (): Promise<Blob | null> => {
+    try {
+      const canvas = await captureCard();
+      if (!canvas) return null;
+      return await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob((blob) => resolve(blob), "image/png")
+      );
+    } catch {
+      return null;
     }
   };
 
@@ -260,6 +279,18 @@ export default function SalaryRankCalculator() {
                   >
                     <Share2 className="w-4 h-4" /> 카드 저장
                   </button>
+                </div>
+
+                {/* SNS 공유 — 결과 카드 이미지를 카카오·인스타·X로 바이럴 */}
+                <div className="mt-5 flex flex-col items-center gap-3">
+                  <p className="text-muted-blue text-xs font-bold">
+                    내 연봉 등급, 친구에게 공유하기
+                  </p>
+                  <ShareButtons
+                    title={`나는 상위 ${result.percentile}%! | 머니샐러리 연봉 등급 테스트`}
+                    description="내 연봉은 전국에서 몇 등일까? 나이대별 연봉 순위를 1초 만에 확인하세요."
+                    getShareImage={getShareImage}
+                  />
                 </div>
               </motion.div>
             )}
