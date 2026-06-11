@@ -1,7 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
+import { SidebarAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import RelatedCalculators from "@/components/RelatedCalculators";
+import JsonLd from "@/components/JsonLd";
+import { faqLd } from "@/lib/structuredData";
 import {
  Car as CarIcon,
  Truck,
@@ -79,6 +83,35 @@ const CurrencyInput = ({
  </div>
  );
 };
+
+// 자동차 할부 FAQ — faqLd(JSON-LD) + 본문 아코디언 공용 (home-loan/page.tsx 패턴)
+const FAQ_ITEMS = [
+ {
+ question: "자동차 할부 월 납부액은 어떻게 계산하나요?",
+ answer:
+ "원리금균등 상환 공식으로 계산합니다. 차량 가격에서 선수금을 뺀 대출 원금에 월 이자율과 할부 개월 수를 적용해 매월 동일한 금액을 납부합니다. 예를 들어 3,000만원을 연 5.5%, 60개월 할부로 구매하면 월 납부액은 약 57만원, 총 이자는 약 440만원입니다. 본 계산기에서 이자율·기간을 조절하며 직접 비교해보세요.",
+ },
+ {
+ question: "연봉 대비 적정 차량 가격은 얼마인가요?",
+ answer:
+ "일반적으로 세전 연봉의 40~70% 구간이 경제적으로 부담 없는 적정선으로 알려져 있습니다. 연봉 5,000만원이면 2,000만~3,500만원 수준입니다. 할부금 외에 보험료·유류비·자동차세·정비비 등 유지비가 월 30만~50만원 추가되므로, 월 총 지출이 월 실수령액의 20%를 넘지 않는지 함께 확인하는 것이 안전합니다.",
+ },
+ {
+ question: "캐피탈 할부와 카드 할부, 어느 쪽이 유리한가요?",
+ answer:
+ "통상 신용도가 좋다면 은행 오토론·제조사 전속 금융(현대캐피탈 등)이 캐피탈·카드 할부보다 금리가 낮은 편입니다. 카드 할부는 한도·기간 제약이 있는 대신 캐시백 프로모션이 있을 수 있습니다. 같은 기간이라도 금리 1%p 차이로 총 이자가 수십만 원 달라지므로, 견적 단계에서 2~3곳 이상 금리를 비교하세요.",
+ },
+ {
+ question: "선수금(선납금)을 늘리면 얼마나 이득인가요?",
+ answer:
+ "선수금을 늘리면 대출 원금이 줄어 월 납부액과 총 이자가 함께 감소합니다. 3,000만원 차량을 연 5.5% 60개월 할부로 살 때 선수금을 0원에서 1,000만원으로 늘리면 총 이자가 약 150만원 줄어듭니다. 다만 비상금까지 선수금에 넣는 것은 위험하므로, 생활비 3~6개월치는 남겨두는 것을 권장합니다.",
+ },
+ {
+ question: "60개월 이상 장기 할부의 단점은 무엇인가요?",
+ answer:
+ "월 납부액은 가벼워지지만 이자를 내는 기간이 길어져 총 이자가 크게 늘어납니다. 또한 차량 감가상각이 빨라 할부 잔액이 차량 시세보다 큰 '깡통 구간'이 생길 수 있어, 중도 매각 시 추가 비용이 발생할 수 있습니다. 가급적 36~60개월 내에서 월 납부액이 감당되는 차량을 고르는 것이 안전합니다.",
+ },
+];
 
 const categoryIcons: { [key: string]: any } = {
  경차: CarIcon,
@@ -158,6 +191,8 @@ export default function CarLoanPage() {
 
  return (
  <main className="w-full bg-background min-h-screen pb-20">
+ <JsonLd data={faqLd(FAQ_ITEMS)} />
+
  {/* Hero Section */}
  <section className="relative py-20 overflow-hidden bg-electric text-white">
  <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
@@ -281,7 +316,10 @@ export default function CarLoanPage() {
  </div>
  </motion.div>
 
- {/* Sidebar Ad */}
+ {/* Sidebar Ad — 데스크톱 전용 (모바일은 인피드 광고로 충분) */}
+ <div className="hidden lg:flex justify-center">
+ <SidebarAd />
+ </div>
  </div>
 
  {/* Right Panel: Results */}
@@ -291,7 +329,7 @@ export default function CarLoanPage() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.2 }}
- className="bg-gradient-to-br from-[#0145F2] to-primary/80 rounded-2xl shadow-xl p-6 text-navy relative overflow-hidden"
+ className="bg-gradient-to-br from-[#0145F2] to-primary/80 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden"
  >
  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
@@ -318,8 +356,8 @@ export default function CarLoanPage() {
  {Object.entries(groupedCars).map(([category, cars], idx) => {
  const Icon = categoryIcons[category] || CarIcon;
  return (
+ <Fragment key={category}>
  <motion.div
- key={category}
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.3 + idx * 0.1 }}
@@ -344,7 +382,7 @@ export default function CarLoanPage() {
  className="group bg-card hover:bg-accent/50 border border-border rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative overflow-hidden"
  >
  {isHighBurden && (
- <div className="absolute top-0 right-0 bg-primary/50 text-white text-xs px-2 py-1 rounded-bl-lg z-10 font-bold">
+ <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg z-10 font-bold">
  주의
  </div>
  )}
@@ -382,13 +420,14 @@ export default function CarLoanPage() {
  <div className="space-y-1">
  <div className="flex justify-between text-xs">
  <span className="text-muted-foreground">월 실수령액 대비 지출</span>
- <span className={`font-bold ${isHighBurden ? "text-primary" : "text-primary"}`}>
+ {/* 고부담(실수령 20% 초과) 시 경고색으로 실제 구분 */}
+ <span className={`font-bold ${isHighBurden ? "text-red-500" : "text-primary"}`}>
  {monthlyPaymentRatio.toFixed(1)}%
  </span>
  </div>
  <div className="h-2 bg-secondary rounded-full overflow-hidden">
  <div
- className={`h-full rounded-full ${isHighBurden ? "bg-primary/50" : "bg-primary/50"}`}
+ className={`h-full rounded-full ${isHighBurden ? "bg-red-500" : "bg-primary/50"}`}
  style={{ width: `${Math.min(monthlyPaymentRatio, 100)}%` }}
  />
  </div>
@@ -409,6 +448,12 @@ export default function CarLoanPage() {
  })}
  </div>
  </motion.div>
+
+ {/* 카테고리 그룹 2~3개마다 인피드 광고 — InArticleAd 는 동일 슬롯 dedup 이라
+ 두 번째 위치는 GuideMidAd 사용 (페이지당 슬롯 1회 정책 준수) */}
+ {idx === 1 && <InArticleAd />}
+ {idx === 4 && <GuideMidAd />}
+ </Fragment>
  );
  })}
 
@@ -425,6 +470,35 @@ export default function CarLoanPage() {
 
  </div>
  </div>
+
+ {/* FAQ — faqLd JSON-LD 와 동일 데이터 (home-loan/page.tsx 패턴) */}
+ <section className="mt-16 mb-4">
+ <h2 className="text-2xl font-bold mb-5 flex items-center gap-2">
+ <ShieldCheck className="w-6 h-6 text-primary" />
+ 자동차 할부, 자주 묻는 질문
+ </h2>
+ <div className="space-y-3">
+ {FAQ_ITEMS.map((item, idx) => (
+ <details
+ key={idx}
+ className="rounded-2xl bg-card border border-border p-5 group transition-shadow hover:shadow-md"
+ >
+ <summary className="cursor-pointer font-bold flex items-center justify-between gap-3">
+ <span>{item.question}</span>
+ <span className="text-primary group-open:rotate-180 transition-transform flex-shrink-0">
+ ▾
+ </span>
+ </summary>
+ <p className="mt-3 text-muted-foreground leading-relaxed text-sm">
+ {item.answer}
+ </p>
+ </details>
+ ))}
+ </div>
+ </section>
+
+ {/* 관련 계산기 — 연봉·대출·DSR cross-link */}
+ <RelatedCalculators currentPath="/car-loan" />
  </div>
  <PageFooterAds maxWidth="5xl" />
  </main>

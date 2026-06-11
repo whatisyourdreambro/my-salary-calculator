@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { InArticleAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
  Baby,
@@ -19,7 +19,16 @@ import {
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
 
-const MONTHS_6_6_LIMIT = [200, 250, 300, 350, 400, 450];
+// 6+6 부모 육아휴직: 첫 6개월 통상임금 100%, 상한 월 250→450만원 (2025 개편: 첫달 250만)
+const MONTHS_6_6_LIMIT = [250, 250, 300, 350, 400, 450];
+
+// 일반 육아휴직 (2025 개편, 사후지급금 폐지 — 매월 전액 지급)
+// 1~3개월 100% (상한 250만) / 4~6개월 100% (상한 200만) / 7개월~ 80% (상한 160만)
+function getGeneralBenefit(month: number) {
+ if (month <= 3) return { rate: 1.0, limit: 2_500_000 };
+ if (month <= 6) return { rate: 1.0, limit: 2_000_000 };
+ return { rate: 0.8, limit: 1_600_000 };
+}
 
 interface FaqItem {
  q: string;
@@ -32,8 +41,8 @@ const FAQ: FaqItem[] = [
   a: "동시에 사용하거나 순차적으로 사용해도 됩니다. 단, 자녀가 생후 18개월이 되기 전까지 사용 기간이 포함되어야 합니다. 아빠가 먼저 사용 후 엄마가 사용해도 각자 6+6 혜택이 적용됩니다.",
  },
  {
-  q: "육아휴직 급여 25%는 왜 나중에 지급하나요?",
-  a: "복직 후 이탈을 방지하기 위한 사후 지급 제도입니다. 매월 급여의 75%는 당월 지급되고, 나머지 25%는 복직 후 6개월 이상 근무 시 일괄 정산됩니다.",
+  q: "육아휴직 급여 사후지급금(25%)이 아직 있나요?",
+  a: "아니요. 2025년 개편으로 사후지급금 제도가 폐지되어 매월 급여 전액이 당월 지급됩니다. 복직 후 별도로 청구할 금액이 없습니다.",
  },
  {
   q: "육아기 근로시간 단축제도는 뭔가요?",
@@ -45,7 +54,7 @@ const FAQ: FaqItem[] = [
  },
  {
   q: "배우자 출산휴가는 얼마나 되나요?",
-  a: "배우자(남성 근로자)는 출산일로부터 90일 이내에 10일의 유급 배우자 출산휴가를 사용할 수 있습니다. 분할 사용도 가능합니다.",
+  a: "배우자(남성 근로자)는 출산일로부터 120일 이내에 20일의 유급 배우자 출산휴가를 사용할 수 있습니다(2025년 개편으로 10일→20일 확대). 120일 이내 3회 분할 사용도 가능합니다.",
  },
 ];
 
@@ -61,23 +70,22 @@ export default function ParentalLeaveContent() {
   const months = [];
 
   if (useParents) {
-   // 6+6: 첫 6개월은 통상임금 100%, 상한은 월별 다름
+   // 6+6: 첫 6개월은 통상임금 100%, 상한은 월별 다름 (250→450만원)
    for (let m = 1; m <= 6; m++) {
     const limit = MONTHS_6_6_LIMIT[m - 1] * 10000;
     const benefit = Math.min(wage, limit);
-    const monthlyPaid = benefit * 0.75;
-    const deferred = benefit * 0.25;
-    months.push({ month: m, benefit, monthlyPaid, deferred, label: `${m}개월`, is6Plus6: true });
+    const rateLabel = `100% (상한 ${MONTHS_6_6_LIMIT[m - 1]}만원)`;
+    months.push({ month: m, benefit, rateLabel, label: `${m}개월`, is6Plus6: true });
    }
   }
 
-  // 7~12개월 (또는 1~12개월 일반): 통상임금 80%, 상한 150만원
+  // 일반 구간 (2025 개편): 1~3개월 100%(상한 250만) / 4~6개월 100%(상한 200만) / 7개월~ 80%(상한 160만)
   const startMonth = useParents ? 7 : 1;
   for (let m = startMonth; m <= 12; m++) {
-   const benefit = Math.min(wage * 0.8, 1500000);
-   const monthlyPaid = benefit * 0.75;
-   const deferred = benefit * 0.25;
-   months.push({ month: m, benefit, monthlyPaid, deferred, label: `${m}개월`, is6Plus6: false });
+   const { rate, limit } = getGeneralBenefit(m);
+   const benefit = Math.min(wage * rate, limit);
+   const rateLabel = `${Math.round(rate * 100)}% (상한 ${limit / 10000}만원)`;
+   months.push({ month: m, benefit, rateLabel, label: `${m}개월`, is6Plus6: false });
   }
 
   const total6Plus6 = months.filter(m => m.is6Plus6).reduce((s, m) => s + m.benefit, 0);
@@ -102,6 +110,8 @@ export default function ParentalLeaveContent() {
      통상임금을 입력하면 월별 육아휴직 급여를 즉시 계산합니다.
     </p>
    </div>
+
+   <HomeTopAd />
 
    {/* 계산기 */}
    <section className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
@@ -165,7 +175,7 @@ export default function ParentalLeaveContent() {
       </div>
       {useParents && (
        <p className="text-xs text-primary mt-2 bg-primary/5 px-3 py-2 rounded-lg">
-        생후 18개월 이내 자녀 대상. 첫 6개월 통상임금 100% 지급 (상한 최대 월 450만원)
+        생후 18개월 이내 자녀 대상. 첫 6개월 통상임금 100% 지급 (상한 월 250만원에서 시작, 최대 월 450만원)
        </p>
       )}
      </div>
@@ -233,9 +243,7 @@ export default function ParentalLeaveContent() {
          </div>
          <div className="text-right">
           <p className="font-bold">{formatNumber(m.benefit)}원</p>
-          <p className="text-xs text-muted-foreground">
-           당월 {formatNumber(m.monthlyPaid)}원 + 사후 {formatNumber(m.deferred)}원
-          </p>
+          <p className="text-xs text-muted-foreground">통상임금 {m.rateLabel}</p>
          </div>
         </div>
        ))}
@@ -243,8 +251,10 @@ export default function ParentalLeaveContent() {
       <div className="mt-4 p-3 bg-secondary/30 rounded-xl text-xs text-muted-foreground flex items-start gap-2">
        <Info className="w-4 h-4 shrink-0 mt-0.5 text-primary" />
        <span>
-        매월 급여의 75%는 당월 지급, 25%는 복직 후 6개월 이상 근무 시 일괄 지급됩니다.
-        상한: 6+6 기간 월별 최대 200~450만원, 일반 기간 월 150만원. 하한: 월 70만원.
+        2025년 개편으로 사후지급금이 폐지되어 매월 급여 전액이 당월 지급됩니다.
+        상한: 1~3개월 250만 / 4~6개월 200만 / 7개월부터 160만 (6+6은 첫 6개월 최대
+        250~450만원). 하한: 월 70만원. 휴직 기간은 부모 각각 3개월 이상 사용 등 조건
+        충족 시 최대 1년 6개월까지 연장됩니다.
        </span>
       </div>
      </section>
@@ -273,7 +283,7 @@ export default function ParentalLeaveContent() {
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">배우자 출산휴가</td>
-        <td className="p-3 text-center">10일 (유급)</td>
+        <td className="p-3 text-center">20일 (유급, 3회 분할 가능)</td>
         <td className="p-3 text-right">통상임금 100%</td>
        </tr>
        <tr className="border-t border-border bg-pink-50 dark:bg-pink-950/10">
@@ -286,8 +296,8 @@ export default function ParentalLeaveContent() {
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">육아휴직 (일반)</td>
-        <td className="p-3 text-center">최대 12개월</td>
-        <td className="p-3 text-right">통상임금 80%<br /><span className="text-xs text-muted-foreground">상한 월 150만원</span></td>
+        <td className="p-3 text-center">최대 1년 6개월<br /><span className="text-xs text-muted-foreground">(부모 각 3개월+ 사용 등 조건부)</span></td>
+        <td className="p-3 text-right">1~6개월 100%, 7개월~ 80%<br /><span className="text-xs text-muted-foreground">상한 월 250→200→160만원</span></td>
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">육아기 근로시간 단축</td>
@@ -306,8 +316,7 @@ export default function ParentalLeaveContent() {
      {[
       { step: "30일 전", title: "회사에 서면 신청", desc: "육아휴직 시작 30일 전까지 사용 기간, 자녀 정보를 포함하여 서면으로 신청." },
       { step: "시작 후", title: "고용24 급여 신청", desc: "육아휴직 시작 후 1개월 이내 고용24(work24.go.kr)에서 육아휴직 급여 신청." },
-      { step: "매월", title: "급여 지급", desc: "매월 25일 고용보험에서 당월분(75%) 지급. 사후분(25%)은 복직 후 신청." },
-      { step: "복직 후", title: "사후 지급분 청구", desc: "복직 후 6개월 이상 근무 시 고용센터에 사후 지급분 신청." },
+      { step: "매월", title: "급여 지급", desc: "매월 고용보험에서 급여 전액 지급 (2025년 개편으로 사후지급금 폐지)." },
      ].map((item, i) => (
       <div key={i} className="flex gap-4 items-start">
        <div className="shrink-0 w-16 text-center">
@@ -403,7 +412,7 @@ export default function ParentalLeaveContent() {
     </div>
    </section>
 
-   <InArticleAd />
+   <GuideMidAd />
   </div>
  );
 }

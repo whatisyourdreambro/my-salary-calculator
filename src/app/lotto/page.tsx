@@ -249,9 +249,9 @@ export default function LottoPage() {
  </div>
  </div>
 
- {/* Recent Winning Numbers (Mock) */}
+ {/* 추천 조합 예시 (고정 샘플 — 실제 당첨 번호 아님) */}
  <div className="bg-card/50 backdrop-blur-xl p-6 rounded-3xl border border-border shadow-lg">
- <h3 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">지난주 당첨 번호</h3>
+ <h3 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">이번 주 추천 조합 예시</h3>
  <div className="flex flex-wrap gap-2 justify-center">
  {[3, 11, 16, 24, 32, 45].map((num) => (
  <div key={num} className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${getNumberColorClass(num)}`}>

@@ -4,6 +4,10 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
+// 최초 페이지 로드(SSR 직후)에는 페이드인을 생략해 LCP 지연을 막는다.
+// 모듈 스코프 플래그 — 클라이언트 라우트 전환부터만 짧은 전환 애니메이션 적용.
+let hasLoadedOnce = false;
+
 export default function Template({ children }: { children: React.ReactNode }) {
  const pathname = usePathname();
 
@@ -14,15 +18,19 @@ export default function Template({ children }: { children: React.ReactNode }) {
  }
  }, [pathname]);
 
+ const isFirstLoad = !hasLoadedOnce;
+ useEffect(() => {
+ hasLoadedOnce = true;
+ }, []);
+
  return (
  <motion.div
- initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
- animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
- exit={{ opacity: 0, y: 6, filter: "blur(2px)" }}
+ initial={isFirstLoad ? false : { opacity: 0, y: 8 }}
+ animate={{ opacity: 1, y: 0 }}
+ exit={{ opacity: 0, y: 4 }}
  transition={{
- duration: 0.5,
+ duration: 0.25,
  ease: [0.22, 1, 0.36, 1], // iOS style custom spring easing
- staggerChildren: 0.1,
  }}
  className="w-full h-full"
  >

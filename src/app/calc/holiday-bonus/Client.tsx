@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -108,6 +109,9 @@ export default function HolidayBonusClient() {
           ))}
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

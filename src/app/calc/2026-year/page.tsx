@@ -23,7 +23,7 @@ export default function Calc2026Page() {
  return (
  <main className="min-h-screen bg-canvas pb-20">
  {/* Header Banner */}
- <div className="bg-[#0F4C81] py-12 text-navy">
+ <div className="bg-[#0F4C81] py-12 text-white">
  <div className="max-w-4xl mx-auto px-4 text-center">
  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold mb-4">
  <Sparkles size={14} className="text-[#FFD700]" /> 2026년형 업그레이드 완료
@@ -50,7 +50,7 @@ export default function Calc2026Page() {
  </div>
  <h3 className="font-bold text-navy">최신 보험 요율</h3>
  <p className="text-xs text-faint-blue leading-relaxed">
- 2026년 예상 건강보험(3.595%) 및 장기요양보험 요율 변화를 선제적으로 반영하여 가장 정확한 실수령액을 산출합니다.
+ 2026년 확정 요율(국민연금 4.75%, 건강보험 3.595%)을 반영하여 가장 정확한 실수령액을 산출합니다.
  </p>
  </div>
  

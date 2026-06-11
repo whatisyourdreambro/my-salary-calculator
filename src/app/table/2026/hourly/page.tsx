@@ -12,7 +12,7 @@ import { buildPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 시급 실수령액 표 — 10,320원 기준 시급별 월 환산 실수령액",
   description:
-    "2026 최저시급 10,320원(2.9% 인상). 시급 10,320~30,000원 구간별 월 환산 실수령액과 4대보험·소득세 공제액을 즉시 비교. 알바·파트타임 월급 계산도 한눈에.",
+    "2026 최저시급 10,320원(2.9% 인상). 시급 9,500~50,000원 구간별 주휴수당 포함 월 209시간 환산 실수령액과 4대보험·소득세 공제액을 즉시 비교. 알바·파트타임 월급 계산도 한눈에.",
   path: "/table/2026/hourly",
   keywords: [
     "시급 실수령액",
@@ -39,7 +39,7 @@ const structuredData = {
  "@context": "https://schema.org",
  "@type": "DataSet",
  name: "2026년 시급 실수령액 표",
- description: "2026년 최신 세법 기준 시급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
+ description: "2026년 최신 세법 기준, 주휴수당 포함 월 209시간 근무 환산 시급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
  url: "https://www.moneysalary.com/table/2026/hourly",
  creator: {
  "@type": "Organization",
@@ -74,7 +74,7 @@ function HourlyTable2026() {
  description={
  <>
  2026년 최저시급은 <strong>10,320원</strong>으로 확정되었습니다. <br className="hidden sm:block" />
- 내 시급에 따른 월 환산 실수령액을 미리 확인해보세요.
+ 주휴수당 포함 월 209시간 기준, 내 시급의 월 환산 실수령액을 미리 확인해보세요.
  </>
  }
  />

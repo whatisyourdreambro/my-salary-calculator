@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "퇴직금 세금 계산기 - 환산급여 방식 퇴직소득세 (2026)",
@@ -10,5 +13,20 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function SeveranceLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tools/finance/severance", { leafName: "퇴직금 세금 계산기" }),
+ softwareApplicationLd({
+ name: "퇴직금 세금 계산기",
+ description: "환산급여 방식 퇴직소득세·세후 실수령 퇴직금 계산",
+ url: "/tools/finance/severance",
+ }),
+ ]}
+ />
+ {children}
+ <ToolPageContent path="/tools/finance/severance" />
+ </>
+ );
 }

@@ -173,6 +173,13 @@ export default function IncomeTax2026Page() {
             <li><strong>기타소득자</strong>: 강연료·원고료 등 연 300만원 초과</li>
             <li><strong>근로소득만 있는 직장인</strong>: 회사 연말정산으로 종결 — 별도 신고 불필요</li>
           </ul>
+          <p>
+            5월 신고 일정·필요 서류·환급 절차는{" "}
+            <Link href="/year-end-tax-2026" className="text-electric font-bold hover:underline">
+              2026 종합소득세 신고 가이드
+            </Link>
+            에서 단계별로 확인할 수 있습니다.
+          </p>
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">절세 핵심 5가지</h2>
           <ol>

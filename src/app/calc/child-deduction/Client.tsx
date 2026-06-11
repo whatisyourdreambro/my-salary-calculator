@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 
@@ -17,17 +18,17 @@ export default function ChildDeductionClient() {
     const personalDeduction = totalChildren * 1_500_000;
     const under6ExtraDeduction = under6 * 1_000_000;
 
-    // 자녀세액공제 (8세~20세, 단순화 7세부터 적용)
+    // 자녀세액공제 (8세~20세, 단순화 7세부터 적용) — 첫째 25만·둘째 30만·셋째 이상 각 40만
     let childTaxCredit = 0;
     if (age7to20 === 1) childTaxCredit = 250_000;
     else if (age7to20 === 2) childTaxCredit = 550_000;
-    else if (age7to20 >= 3) childTaxCredit = 550_000 + (age7to20 - 2) * 300_000;
+    else if (age7to20 >= 3) childTaxCredit = 550_000 + (age7to20 - 2) * 400_000;
 
     // 출산·입양 세액공제
     const birthCredit = newborn === "first" ? 300_000 : newborn === "second" ? 500_000 : newborn === "third" ? 700_000 : 0;
 
     // 한계세율 추정
-    const marginalRate = salary > 150_000_000 ? 0.35 : salary > 88_000_000 ? 0.35 : salary > 50_000_000 ? 0.24 : salary > 14_000_000 ? 0.15 : 0.06;
+    const marginalRate = salary > 150_000_000 ? 0.38 : salary > 88_000_000 ? 0.35 : salary > 50_000_000 ? 0.24 : salary > 14_000_000 ? 0.15 : 0.06;
 
     const incomeReduction = personalDeduction + under6ExtraDeduction;
     const taxFromDeduction = incomeReduction * marginalRate;
@@ -108,6 +109,9 @@ export default function ChildDeductionClient() {
           ))}
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

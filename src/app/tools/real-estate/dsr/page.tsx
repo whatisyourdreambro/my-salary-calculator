@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import DsrCalculator from "@/components/calculators/real-estate/DsrCalculator";
-import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { buildToolMetadata } from "@/lib/seo";
 import {
@@ -297,8 +296,6 @@ export default function DsrPage() {
             정책 상품·은행별 특례·신용 등급에 따라 실제 한도가 다를 수 있습니다.
           </p>
         </div>
-
-        <RelatedCalculators currentPath="/tools/real-estate/dsr" />
       </div>
     </main>
   );

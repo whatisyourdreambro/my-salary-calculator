@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Receipt, Printer, RefreshCw, Eye } from "lucide-react";
+import { Receipt, Printer, RefreshCw, Calculator } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -49,7 +50,8 @@ export default function SalarySlipPage() {
  };
 
  const monthly = Math.round(salary / 12);
- const netMonthly = Math.round((receiptData.monthlyNet || salary * 0.75) / 12);
+ // monthlyNet은 이미 월 단위 값 — 폴백(salary*0.75)만 연봉이므로 /12 적용
+ const netMonthly = Math.round(receiptData.monthlyNet || (salary * 0.75) / 12);
 
  return (
  <main className="w-full min-h-screen bg-canvas pt-28 px-4 pb-20 font-sans">
@@ -187,6 +189,14 @@ export default function SalarySlipPage() {
  <p className="text-sm font-bold text-faint-blue">공유하기</p>
  <ShareButtons title={`연봉 ${salaryInput}원의 가상 급여명세서를 만들어봤어요!`} />
  </div>
+
+ {/* 다음 행동 유도: 실제 실수령액 계산기 */}
+ <Link
+ href="/"
+ className="mt-4 w-full py-4 rounded-xl bg-electric text-white font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+ >
+ <Calculator size={18} /> 내 진짜 연봉 실수령액 계산하기
+ </Link>
  </motion.div>
  )}
  </AnimatePresence>

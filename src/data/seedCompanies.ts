@@ -351,7 +351,7 @@ export const seedCompanies: CompanyProfile[] = [
  { category: "financial", title: "PS (초과이익분배금)", description: "영업이익의 10% 재원 활용", value: 30000000 },
  { category: "family", title: "난임 시술 지원", description: "최대 1000만원 지원", value: 0 },
  ],
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-06-06",
  },
  {
  id: "naver",

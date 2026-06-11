@@ -155,7 +155,7 @@ const COMPARISON = [
  {
  name: "IRP (개인형퇴직연금)",
  desc: "본인 명의 계좌 + 추가 납입 가능.",
- pros: ["연 300만 추가 세액공제", "퇴직금 합산 운용", "55세 후 연금 수령 저세율"],
+ pros: ["연금저축 합산 최대 900만원 세액공제(IRP 단독 900만 가능)", "퇴직금 합산 운용", "55세 후 연금 수령 저세율"],
  cons: ["30% 안전자산 의무", "55세 전 인출 손실 큼"],
  suitable: "절세 + 노후 자금 동시 추구",
  },
@@ -379,7 +379,7 @@ export default function RetirementPension2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
  </details>
  ))}
  </div>

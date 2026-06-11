@@ -8,7 +8,7 @@ import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
 export const metadata: Metadata = buildPageMetadata({
  title: "머니샐러리 소개 - 데이터 출처와 운영 원칙",
  description:
- "머니샐러리는 현직 직장인 1인이 운영하는 비영리 정보 사이트입니다. 2026년 최신 세법과 국세청·4대보험 공단 공식 데이터를 기반으로 연봉 실수령액·세금·재테크 계산을 무료 제공합니다.",
+ "머니샐러리는 현직 직장인 1인이 운영하는 무료 정보 사이트입니다. 2026년 최신 세법과 국세청·4대보험 공단 공식 데이터를 기반으로 연봉 실수령액·세금·재테크 계산을 무료 제공합니다.",
  path: "/about",
  keywords: ["머니샐러리", "About", "사이트 소개", "데이터 출처"],
 });
@@ -91,7 +91,7 @@ export default function AboutPage() {
  <h2 className="text-xl font-black text-navy mb-4">운영자 소개</h2>
  <p className="text-sm text-muted-blue leading-relaxed mb-3">
  머니샐러리는 <strong className="text-navy">현직 직장인 1인이 운영</strong>하는
- 비영리 정보 사이트입니다. &quot;매년 바뀌는 세법과 4대보험 요율을 직접 계산해 비교하고 싶다&quot;는
+ 무료 정보 사이트입니다(광고 수익으로 운영비를 충당합니다). &quot;매년 바뀌는 세법과 4대보험 요율을 직접 계산해 비교하고 싶다&quot;는
  본인의 필요에서 출발해, 같은 고민을 가진 직장인을 위해 공개 운영하고 있습니다.
  </p>
  <p className="text-sm text-muted-blue leading-relaxed">

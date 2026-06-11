@@ -37,12 +37,12 @@ const FAQ_ITEMS = [
   {
     question: "2024년 vs 2026년 삼성SDI OPI 차이는?",
     answer:
-      "2024년 초 지급 OPI: 배터리 32% / 전자재료 18% / 본사 28% — 전기차 호황 마지막 시기. 2026년(2025년 실적 기준): 전기차 캐즘으로 영업적자 전환, 배터리·본사 OPI 0%, 전자재료만 3~5%. 본 계산기 '캐즘' 시나리오가 2026년 현실. 회복기 200%, 호황기 48% 등 시나리오 비교 가능.",
+      "2024년 초 지급 OPI: 배터리 32% / 전자재료 18% / 본사 28% — 전기차 호황 마지막 시기. 2026년(2025년 실적 기준): 전기차 캐즘으로 영업적자 전환, 배터리·본사 OPI 0%, 전자재료만 3~5%. 본 계산기 '캐즘' 시나리오가 2026년 현실. 회복기(연봉의 18%)·평년(28%)·호황기(48%) 등 시나리오 비교 가능.",
   },
   {
     question: "전기차 캐즘이 왜 성과급에 큰 영향?",
     answer:
-      "삼성SDI 매출의 70% 이상이 배터리(중대형 + 소형). 전기차 캐즘(수요 둔화) 시 (1) 매출 감소, (2) ESS 전환 비용, (3) 미국 IRA 정책 불확실성으로 영업이익 급감 → OPI 풀이 사라짐. 다만 전자재료(폴더블·OLED 소재)는 안정적이라 OPI 일부 지급. 2027년 ESS·LFP 시장 회복 시 다시 200%대로 복구 전망.",
+      "삼성SDI 매출의 70% 이상이 배터리(중대형 + 소형). 전기차 캐즘(수요 둔화) 시 (1) 매출 감소, (2) ESS 전환 비용, (3) 미국 IRA 정책 불확실성으로 영업이익 급감 → OPI 풀이 사라짐. 다만 전자재료(폴더블·OLED 소재)는 안정적이라 OPI 일부 지급. 2027년 ESS·LFP 시장 회복 시 연봉의 18~28% 수준(회복기~평년 시나리오)으로 복구 전망.",
   },
   {
     question: "삼성전자 성과급과 비교하면?",
@@ -146,6 +146,65 @@ export default function SamsungSdiBonusPage() {
           <div className="mt-8">
             <CalcResultAd />
           </div>
+
+          {/* 성과급 구조 · 지급 이력 — 본문 콘텐츠 (광고 사이 배치) */}
+          <section
+            className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8"
+            aria-labelledby="sdi-structure-heading"
+          >
+            <h2 id="sdi-structure-heading" className="text-2xl font-black mb-4">
+              삼성SDI 성과급 구조 — OPI · TAI
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">OPI (초과이익성과금)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• <strong>연봉의 0~50%</strong>, 사업부 영업이익 연동</li>
+                  <li>• 연 1회 지급 (보통 1월)</li>
+                  <li>• 사업부별 차등 — 적자 사업부는 0%</li>
+                </ul>
+              </article>
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">TAI (목표달성장려금)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 월 기본급의 <strong>최대 100% × 연 2회</strong> (6·12월)</li>
+                  <li>• 기본급 = 통상 연봉의 1/20</li>
+                  <li>• OPI 대비 변동성이 낮은 안정 항목</li>
+                </ul>
+              </article>
+            </div>
+            <h3 className="font-bold text-lg mb-3">사업부별 OPI 지급 이력 (보도 기준)</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b-2 border-canvas-deep text-left">
+                    <th className="py-2 pr-4 font-bold">지급 시기</th>
+                    <th className="py-2 pr-4 font-bold">배터리</th>
+                    <th className="py-2 pr-4 font-bold">전자재료</th>
+                    <th className="py-2 font-bold">본사</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">2024년 초 (전기차 호황기)</td>
+                    <td className="py-2 pr-4">연봉의 32%</td>
+                    <td className="py-2 pr-4">연봉의 18%</td>
+                    <td className="py-2">연봉의 28%</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-4">2026년 (2025 실적 · 캐즘)</td>
+                    <td className="py-2 pr-4">0%</td>
+                    <td className="py-2 pr-4">3~5%</td>
+                    <td className="py-2">0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-faint mt-3">
+              ※ CEOSCOREDAILY·파이낸셜포스트·전자신문 보도 기반. 실제 지급률은
+              사업부·평가에 따라 달라질 수 있습니다.
+            </p>
+          </section>
 
           <div className="mt-10">
             <InArticleAd />

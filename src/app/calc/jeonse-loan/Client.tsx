@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -106,6 +107,9 @@ export default function JeonseLoanClient() {
           );
         })}
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

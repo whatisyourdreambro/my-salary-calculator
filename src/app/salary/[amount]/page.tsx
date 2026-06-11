@@ -12,7 +12,7 @@ import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -305,7 +305,7 @@ export default function SalaryAmountPage({ params }: Props) {
  {neighbors.map((s) => (
  <Link
  key={s}
- href={`/salary/${s}-manwon`}
+ href={`/salary/${s * 10000}`}
  className="p-4 bg-white border border-canvas rounded-2xl text-xs font-bold text-muted-blue flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
  >
  연봉 {s.toLocaleString("ko-KR")}만원

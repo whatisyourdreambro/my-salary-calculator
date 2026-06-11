@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, RefreshCw } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function CompoundCalculatorPage() {
@@ -89,6 +90,9 @@ export default function CompoundCalculatorPage() {
  </div>
  </div>
  </motion.div>
+
+ {/* 결과 직후 광고 */}
+ <CalcResultAd />
 
  {/* Year Table */}
  <div className="border border-canvas rounded-2xl overflow-hidden mb-8">

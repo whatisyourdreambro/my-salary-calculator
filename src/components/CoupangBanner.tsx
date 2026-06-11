@@ -104,6 +104,12 @@ interface CoupangBannerProps {
 const DISCLOSURE_TEXT =
  "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.";
 
+// 페이지별 쿠팡 배너 렌더 수 추적 — "페이지당 배너 1회" 강제 (AdPlacement.tsx renderedSlotsByPath 패턴).
+// 본문 배너 + layout/PageFooterAds 배너가 같은 페이지에 겹치면 동일 배너와 공정위 고지문이
+// 2회 중복 노출되므로, 먼저 마운트된 인스턴스(본문 쪽)만 살리고 두 번째 이후는 자동 skip.
+// pathname 변경 시 cleanup 으로 뒤로가기/라우트 전환에도 정상 동작.
+const renderedBannersByPath = new Map<string, number>();
+
 export default function CoupangBanner({
  size = "leaderboard",
  responsive,
@@ -116,6 +122,25 @@ export default function CoupangBanner({
  const [resolvedSize, setResolvedSize] = useState<CoupangBannerSize>(
  responsive ? responsive.desktop : size
  );
+ const [allowed, setAllowed] = useState(true);
+
+ // 페이지별 dedup — 같은 페이지에서 두 번째 이후 CoupangBanner 호출은 자동 skip
+ // (effect 가 트리 순서대로 실행되므로 본문 배너가 우선권, PageFooterAds 쪽이 skip 됨)
+ useEffect(() => {
+ if (!pathname) return;
+ const count = renderedBannersByPath.get(pathname) ?? 0;
+ if (count > 0) {
+ setAllowed(false);
+ return;
+ }
+ renderedBannersByPath.set(pathname, count + 1);
+ setAllowed(true);
+ return () => {
+ const current = renderedBannersByPath.get(pathname) ?? 0;
+ if (current <= 1) renderedBannersByPath.delete(pathname);
+ else renderedBannersByPath.set(pathname, current - 1);
+ };
+ }, [pathname]);
 
  useEffect(() => {
  if (!responsive) {
@@ -134,6 +159,9 @@ export default function CoupangBanner({
 
  // 영문 페이지(/en/*)에서는 한국 트래픽 전용 쿠팡 배너 숨김
  if (pathname?.startsWith("/en")) return null;
+
+ // 페이지당 1회 dedup — 두 번째 이후 인스턴스는 렌더하지 않음
+ if (!allowed) return null;
 
  const banner = BANNERS[resolvedSize];
  // subId: 카테고리 접두사 + path → 쿠팡 대시보드에서 카테고리/페이지 단위 분리 측정.

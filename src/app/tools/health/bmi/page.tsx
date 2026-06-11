@@ -1,11 +1,13 @@
 import BmiCalculator from "@/components/calculators/health/BmiCalculator";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "BMI 비만도 계산기 | Moneysalary",
+export const metadata: Metadata = buildPageMetadata({
+ title: "BMI 비만도 계산기",
  description: "신장과 체중을 입력하여 비만도(BMI)를 측정하고 건강 상태를 확인하세요.",
-};
+ path: "/tools/health/bmi",
+});
 
 export default function BmiPage() {
  return (

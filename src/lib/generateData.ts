@@ -107,10 +107,19 @@ export function generateMonthlySalaryTableData2026(): SalaryData[] {
  return data;
 }
 
+// 주급 표 구간 — 현실적인 주급 범위(20만~300만원, 5만원 단위)만 생성
+function buildWeeklyPaySteps(): number[] {
+ const steps: number[] = [];
+ for (let weekly = 200000; weekly <= 3000000; weekly += 50000) {
+ steps.push(weekly);
+ }
+ return steps;
+}
+
 // 주급 실수령액 데이터 생성
 export function generateWeeklyPayTableData(): SalaryData[] {
  const data: SalaryData[] = [];
- for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
+ for (const weekly of buildWeeklyPaySteps()) {
  const results = calculateNetSalary(
  weekly * 52,
  0,
@@ -126,7 +135,7 @@ export function generateWeeklyPayTableData(): SalaryData[] {
 // 2026년 주급 실수령액 데이터 생성
 export function generateWeeklyPayTableData2026(): SalaryData[] {
  const data: SalaryData[] = [];
- for (let weekly = 0; weekly <= 10000000; weekly += 50000) {
+ for (const weekly of buildWeeklyPaySteps()) {
  const results = calculateNetSalary2026(
  weekly * 52,
  0,
@@ -139,12 +148,25 @@ export function generateWeeklyPayTableData2026(): SalaryData[] {
  return data;
 }
 
-// 시급 실수령액 데이터 생성
+// 시급 표 구간 — 9,500~30,000원은 500원 단위(+최저시급 10,320원 행 명시), 30,000~50,000원은 1,000원 단위
+function buildHourlyWageSteps(): number[] {
+ const steps: number[] = [];
+ for (let hourly = 9500; hourly <= 30000; hourly += 500) {
+ steps.push(hourly);
+ }
+ steps.push(10320); // 2026 최저시급 행
+ for (let hourly = 31000; hourly <= 50000; hourly += 1000) {
+ steps.push(hourly);
+ }
+ return steps.sort((a, b) => a - b);
+}
+
+// 시급 실수령액 데이터 생성 — 주휴수당 포함 월 209시간 기준 (시급 × 209 = 월급, × 12 = 연봉)
 export function generateHourlyWageTableData(): SalaryData[] {
  const data: SalaryData[] = [];
- for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
+ for (const hourly of buildHourlyWageSteps()) {
  const results = calculateNetSalary(
- hourly * 40 * 52,
+ hourly * 209 * 12,
  0,
  1,
  0,
@@ -155,12 +177,12 @@ export function generateHourlyWageTableData(): SalaryData[] {
  return data;
 }
 
-// 2026년 시급 실수령액 데이터 생성
+// 2026년 시급 실수령액 데이터 생성 — 주휴수당 포함 월 209시간 기준
 export function generateHourlyWageTableData2026(): SalaryData[] {
  const data: SalaryData[] = [];
- for (let hourly = 0; hourly <= 10000000; hourly += 5000) {
+ for (const hourly of buildHourlyWageSteps()) {
  const results = calculateNetSalary2026(
- hourly * 40 * 52,
+ hourly * 209 * 12,
  0,
  1,
  0,

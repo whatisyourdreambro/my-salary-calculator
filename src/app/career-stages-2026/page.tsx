@@ -2,13 +2,16 @@
 // 직장인 커리어 단계별 평균 연봉·자산 가이드
 
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
-import { TrendingUp, ArrowRight, Calculator, User } from "lucide-react";
+import { TrendingUp, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
+import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "직장인 커리어 단계별 평균 연봉·자산 (20대~50대)",
@@ -145,8 +148,8 @@ export default function CareerStages2026Page() {
  {/* 단계별 카드 */}
  <div className="space-y-6 mb-12">
  {STAGES.map((stage, idx) => (
+ <Fragment key={stage.stage}>
  <section
- key={stage.stage}
  className="p-6 bg-white rounded-2xl border border-canvas-200"
  >
  <div className="flex items-start gap-4 mb-4">
@@ -181,6 +184,9 @@ export default function CareerStages2026Page() {
  </p>
  </div>
  </section>
+ {/* 단계 카드 중간 광고 — 3번째 카드 뒤 1회 */}
+ {idx === 2 && <InArticleAd />}
+ </Fragment>
  ))}
  </div>
 
@@ -224,6 +230,8 @@ export default function CareerStages2026Page() {
 
  <RelatedCalculators currentPath="/career-stages-2026" />
  </div>
+
+ <PageFooterAds maxWidth="4xl" />
  </main>
  );
 }

@@ -19,6 +19,7 @@ const RATES_2025 = {
  health: 0.03545, // 7.09% / 2
  ltc: 0.1295, // 12.95% of health
  employment: 0.009, // 0.9%
+ pensionCap: 277650, // 기준소득월액 상한 617만원 × 4.5%
 };
 
 // 2026 Rates — 2026 연금개혁·건보 인상 반영. src/lib/taxConstants2026.ts 와 동일.
@@ -28,6 +29,7 @@ const RATES_2026 = {
  health: 0.03595, // 7.19% / 2
  ltc: 0.1314, // 13.14% of Health
  employment: 0.009, // 0.9% 동결
+ pensionCap: 302575, // 기준소득월액 상한 637만원 × 4.75% (2026 상향)
 };
 
 function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
@@ -35,9 +37,9 @@ function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
  const nonTaxable = 200000; // Meal allowance
  const taxable = monthlyPreTax - nonTaxable;
 
- // National Pension (Max monthly 6,170,000 -> 277,650 deduction)
+ // National Pension — 연도별 기준소득월액 상한 캡 적용 (2025: 277,650원 / 2026: 302,575원)
  let pension = monthlyPreTax * rates.pension;
- if (pension > 277650) pension = 277650;
+ if (pension > rates.pensionCap) pension = rates.pensionCap;
 
  let health = monthlyPreTax * rates.health;
  let ltc = health * rates.ltc;

@@ -14,6 +14,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
 import { Gift, Calculator, ArrowRight, Sparkles, Info } from "lucide-react";
 import YearEndBonusClient from "./Client";
 
@@ -168,6 +169,9 @@ export default function YearEndBonusPage() {
               </li>
             </ol>
           </article>
+
+          {/* 본문-FAQ 사이 광고 */}
+          <InArticleAd />
 
           {/* FAQ */}
           <section className="mb-10">

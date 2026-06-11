@@ -162,7 +162,7 @@ export default function YearEndTaxSettlement2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">
  {item.answer}
  </p>
  </details>

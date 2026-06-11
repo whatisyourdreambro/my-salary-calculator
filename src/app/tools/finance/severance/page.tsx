@@ -3,29 +3,34 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Info, ArrowRight } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 // 2026 퇴직소득세 계산 (환산급여 방식)
 function calcSeveranceTax(severancePay: number, workYears: number): {
  tax: number; localTax: number; totalTax: number; netPay: number;
  annualizedPay: number; taxableIncome: number; effectiveRate: number;
 } {
  const safePay = Math.max(0, severancePay);
- const safeYears = Math.max(1, workYears);
+ // 근속연수: 1년 미만 단수는 1년으로 본다 (소득세법 시행령)
+ const safeYears = Math.max(1, Math.ceil(workYears));
 
- // 퇴직소득공제: 근속연수 × 200만원 (최대), 2026 기준
- const yearsDeduction = Math.min(safeYears, 20) * 2_000_000
- + Math.max(0, safeYears - 20) * 2_500_000;
+ // 근속연수공제 (현행 4단계, 2023 개정 이후)
+ let yearsDeduction = 0;
+ if (safeYears <= 5) yearsDeduction = safeYears * 1_000_000;
+ else if (safeYears <= 10) yearsDeduction = 5_000_000 + (safeYears - 5) * 2_000_000;
+ else if (safeYears <= 20) yearsDeduction = 15_000_000 + (safeYears - 10) * 2_500_000;
+ else yearsDeduction = 40_000_000 + (safeYears - 20) * 3_000_000;
  const afterYearsDeduction = Math.max(0, safePay - yearsDeduction);
 
  // 환산급여 = (퇴직금 - 근속연수 공제) / 근속연수 × 12
  const annualizedPay = (afterYearsDeduction / safeYears) * 12;
 
- // 환산급여 공제
+ // 환산급여 공제 (현행 구간표)
  let annualizedDeduction = 0;
  if (annualizedPay <= 8_000_000) annualizedDeduction = annualizedPay;
  else if (annualizedPay <= 70_000_000) annualizedDeduction = 8_000_000 + (annualizedPay - 8_000_000) * 0.6;
- else if (annualizedPay <= 140_000_000) annualizedDeduction = 45_200_000 + (annualizedPay - 70_000_000) * 0.55;
- else if (annualizedPay <= 300_000_000) annualizedDeduction = 83_700_000 + (annualizedPay - 140_000_000) * 0.45;
- else annualizedDeduction = 155_700_000 + (annualizedPay - 300_000_000) * 0.35;
+ else if (annualizedPay <= 100_000_000) annualizedDeduction = 45_200_000 + (annualizedPay - 70_000_000) * 0.55;
+ else if (annualizedPay <= 300_000_000) annualizedDeduction = 61_700_000 + (annualizedPay - 100_000_000) * 0.45;
+ else annualizedDeduction = 151_700_000 + (annualizedPay - 300_000_000) * 0.35;
 
  const taxableIncome = Math.max(0, annualizedPay - annualizedDeduction);
 
@@ -171,6 +176,9 @@ export default function SeveranceCalculatorPage() {
  ))}
  </div>
  </motion.div>
+
+ {/* 결과 직후 광고 */}
+ <CalcResultAd />
 
  <div className="p-5 bg-canvas border border-canvas rounded-xl flex gap-3">
  <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />

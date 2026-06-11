@@ -6,7 +6,7 @@
 //
 // 기존 내부 링크(/company/{id})는 자동 이동되므로 일괄 정리할 필요 없음.
 
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export const runtime = "edge";
 
@@ -15,5 +15,5 @@ interface PageProps {
 }
 
 export default function CompanyIdRedirect({ params }: PageProps) {
- redirect(`/salary-db/${params.id}`);
+ permanentRedirect(`/salary-db/${params.id}`);
 }

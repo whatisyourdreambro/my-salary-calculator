@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import PageFooterAds from "@/components/PageFooterAds";
 
 // 무거운 recharts 차트는 동적 로드 — LCP/FCP 개선
 const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
@@ -94,6 +95,8 @@ export default function DashboardPage() {
  <div className="space-y-12">
  <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
  <DashboardFavoritesSection />
+ {/* 대시보드 본문 끝 광고 — 데이터 있는 상태에서만 노출 */}
+ <PageFooterAds maxWidth="5xl" />
  </div>
  ) : (
  <div className="space-y-12">

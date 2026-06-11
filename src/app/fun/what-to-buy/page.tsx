@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Search, Share2, PlusCircle } from "lucide-react";
+import { ShoppingBag, Search } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import ShareButtons from "@/components/ShareButtons";
 
 export default function WhatToBuyPage() {
  const [budget, setBudget] = useState(100000);
@@ -106,6 +107,15 @@ export default function WhatToBuyPage() {
  </p>
  )}
  <p className="text-faint-blue font-medium">{result.desc}</p>
+
+ {/* 결과 공유 */}
+ <div className="flex flex-col items-center gap-2 mt-8">
+ <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
+ <ShareButtons
+ title={`예산 ${budget.toLocaleString('ko-KR')}원으로 '${result.name}' ${result.quantity > 1 ? `${result.quantity}개 ` : ''}플렉스 가능!`}
+ description="플렉스(FLEX) 계산기 - 이 예산으로 뭘 살 수 있을까?"
+ />
+ </div>
  </motion.div>
  )}
  </AnimatePresence>

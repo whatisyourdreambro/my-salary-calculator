@@ -67,7 +67,7 @@ const INSURANCE_RATES = [
  },
  {
  name: "장기요양보험",
- totalRate: "건강보험의 13.14%",
+ totalRate: "건강보험료의 13.14%",
  selfRate: "약 0.4724%",
  companyRate: "약 0.4724%",
  base: "건강보험료 기준",
@@ -99,7 +99,8 @@ const SAMPLE_SALARIES = [
 ];
 
 function calculateInsurance(monthly: number) {
- const pension = Math.floor((monthly * 0.0475) / 10) * 10;
+ // 국민연금은 보수월액 상한 637만원까지만 보험료 산정
+ const pension = Math.floor((Math.min(monthly, 6_370_000) * 0.0475) / 10) * 10;
  const health = Math.floor((monthly * 0.03595) / 10) * 10;
  const longTermCare = Math.floor((health * 0.1314) / 10) * 10;
  const employment = Math.floor((monthly * 0.009) / 10) * 10;
@@ -260,7 +261,7 @@ export default function SocialInsuranceRates2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
  </details>
  ))}
  </div>

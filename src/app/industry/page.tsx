@@ -13,7 +13,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = buildPageMetadata({
   title: "산업별 평균 연봉 2026 — IT·금융·의료·제조 업계 연봉 비교",
   description:
-    "IT·반도체·금융·의료·자동차·건설·게임 등 15개 산업별 평균 연봉을 한눈에 비교하세요. 2026년 최신 기준 신입~경력별 연봉과 실수령액 계산기 제공.",
+    "IT·반도체·금융·의료·자동차·건설·게임 등 24개 산업별 평균 연봉을 한눈에 비교하세요. 2026년 최신 기준 신입~경력별 연봉과 실수령액 계산기 제공.",
   path: "/industry",
   keywords: [
     "산업별 연봉",

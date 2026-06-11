@@ -41,6 +41,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
+// 관련 계산기 버튼 라벨 — 영문 슬러그 → 한글 계산기명 (simpleCalculators 의 title 과 일치)
+const CALC_SLUG_LABELS: Record<string, string> = {
+  "severance-pay-quick": "퇴직금 간편 계산",
+  "overtime-pay-quick": "시간외 수당 계산",
+  "night-shift-pay-quick": "야간 근로 수당 계산",
+  "earned-income-tax-quick": "근로소득세 간편 계산",
+  "income-tax-bracket-sim": "소득세 누진세율 시뮬레이터",
+  "corporate-tax-quick": "법인세 간편 계산",
+  "annual-leave-pay-quick": "연차수당 계산",
+  "stock-capital-gains-quick": "주식 양도세 간편 계산",
+  "dividend-tax-quick": "배당소득세 계산",
+  "dividend-yield-quick": "배당 수익률 계산",
+  "vat-quick": "부가가치세(VAT) 계산",
+  "loan-monthly-payment": "대출 월 상환액 계산",
+  "loan-total-interest": "대출 총 이자 계산",
+  "registration-tax-quick": "등록면허세 계산",
+  "real-estate-capital-gains-quick": "부동산 양도세 간편 계산",
+  "real-estate-flip-cost": "단기 매매 부대비용",
+  "acquisition-tax-quick": "취득세 계산",
+};
+
+// 매핑에 없는 슬러그는 기존 변환(영문 노출) fallback
+function calcSlugLabel(slug: string): string {
+  return CALC_SLUG_LABELS[slug] ?? slug.replace(/-quick$/, "").replace(/-/g, " ");
+}
+
 function SalaryBar({ value, max }: { value: number; max: number }) {
   const pct = Math.min(100, Math.round((value / max) * 100));
   return (
@@ -233,7 +259,7 @@ export default function JobPage({ params }: Props) {
                     href={`/calc/${slug}`}
                     className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                   >
-                    {slug.replace(/-quick$/, "").replace(/-/g, " ")}
+                    {calcSlugLabel(slug)}
                   </Link>
                 ))}
               </div>

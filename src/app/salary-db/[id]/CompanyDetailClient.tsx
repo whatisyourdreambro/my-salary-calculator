@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import CountUp from "react-countup";
 import ShareButtons from "@/components/ShareButtons";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
 
@@ -103,6 +104,9 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  />
  </div>
 
+ {/* Quick Stats 직후 첫 광고 — 회사명 검색 의도 정점 */}
+ <CalcResultAd />
+
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  {/* Left Column: Charts & Analysis */}
  <div className="lg:col-span-2 space-y-8">
@@ -121,7 +125,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  </section>
 
  {/* Life Simulator */}
- <section className="bg-gradient-to-br from-indigo-900 to-primary/80 text-navy rounded-2xl p-8 shadow-xl relative overflow-hidden">
+ <section className="bg-gradient-to-br from-indigo-900 to-primary/80 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
  <h2 className="text-xl font-bold mb-4 flex items-center gap-2 relative z-10">
  <Car className="w-5 h-5" />
@@ -130,7 +134,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  <div className="relative z-10">
  <p className="text-indigo-200 mb-6">
  신입사원으로 입사하여 월급의 50%를 저축한다면,<br />
- <span className="text-navy font-bold">테슬라 Model 3</span>를 사는데 얼마나 걸릴까요?
+ <span className="text-white font-bold">테슬라 Model 3</span>를 사는데 얼마나 걸릴까요?
  </p>
  <div className="flex items-baseline gap-2">
  <span className="text-5xl font-black text-primary">
@@ -143,8 +147,6 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  </p>
  </div>
  </section>
-
- {/* Ad Unit */}
  </div>
 
  {/* Right Column: Details */}

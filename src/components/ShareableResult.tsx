@@ -61,6 +61,12 @@ export default function ShareableResult({ data }: ShareableResultProps) {
 
  const { annualSalary } = decodedData;
 
+ // 연봉 상세 리포트(/salary/[amount])는 원 단위 숫자 URL — 색인 범위(연 100만~10억) 안일 때만 노출
+ const canLinkSalaryReport =
+ typeof annualSalary === "number" &&
+ annualSalary >= 1_000_000 &&
+ annualSalary <= 1_000_000_000;
+
  return (
  <div className="bg-card p-8 rounded-2xl shadow-2xl border animate-fade-in-up">
  <div className="text-center">
@@ -78,12 +84,22 @@ export default function ShareableResult({ data }: ShareableResultProps) {
  <p className="text-muted-foreground">
  (세금 및 4대보험 공제 후)
  </p>
+ <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+ {canLinkSalaryReport && (
+ <Link
+ href={`/salary/${annualSalary}`}
+ className="inline-block py-4 px-8 bg-primary text-primary-foreground font-bold text-lg rounded-lg hover:bg-primary/90 transition-transform transform hover:scale-105 shadow-lg"
+ >
+ 연봉 상세 분석 보기
+ </Link>
+ )}
  <Link
  href="/"
- className="inline-block mt-8 py-4 px-10 bg-accent text-accent-foreground font-bold text-lg rounded-lg hover:bg-accent/90 transition-transform transform hover:scale-105 shadow-lg"
+ className="inline-block py-4 px-8 bg-accent text-accent-foreground font-bold text-lg rounded-lg hover:bg-accent/90 transition-transform transform hover:scale-105 shadow-lg"
  >
  나의 연봉도 계산해보기 →
  </Link>
+ </div>
  </div>
  </div>
  );

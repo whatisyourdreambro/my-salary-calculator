@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "성과급·인센티브 세금 계산기 - 2026 연봉합산 세율",
@@ -10,5 +12,19 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function BonusLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tools/finance/bonus", { leafName: "성과급 세금 계산기" }),
+ softwareApplicationLd({
+ name: "성과급·인센티브 세금 계산기",
+ description: "2026 연봉합산 방식 성과급 소득세·4대보험 실수령액 계산",
+ url: "/tools/finance/bonus",
+ }),
+ ]}
+ />
+ {children}
+ </>
+ );
 }

@@ -38,8 +38,8 @@ export const metadata: Metadata = buildPageMetadata({
 const SCHEDULE = [
  { date: "5월 1일", event: "종합소득세 신고·납부 시작", note: "홈택스 신고 가능" },
  { date: "5월 31일", event: "신고·납부 마감일", note: "마감 임박 가산세 부담" },
- { date: "6월 30일", event: "분납 신청 마감", note: "1,000만원 초과 시 가능" },
  { date: "7월 1일", event: "환급 시작 (예상)", note: "신고 후 약 30일 내 입금" },
+ { date: "7월 31일", event: "분납 2차분 납부 기한", note: "납부세액 1,000만원 초과 시 5월 신고와 함께 분납 신청" },
 ];
 
 const TARGETS = [
@@ -66,7 +66,7 @@ const FAQ_ITEMS = [
  {
  question: "신고하지 않으면 어떻게 되나요?",
  answer:
- "신고기한(5/31)을 넘기면 무신고 가산세 20%, 납부지연 가산세(연 9.125%)가 부과됩니다. 환급 대상이라면 환급금을 못 받습니다. 5년 이내 기한 후 신고는 가능하지만 가산세가 누적됩니다.",
+ "신고기한(5/31)을 넘기면 무신고 가산세 20%, 납부지연 가산세(일 0.022%, 연 약 8.0%)가 부과됩니다. 환급 대상이라면 환급금을 못 받습니다. 5년 이내 기한 후 신고는 가능하지만 가산세가 누적됩니다.",
  },
  {
  question: "필요경비는 어디까지 인정되나요?",
@@ -157,7 +157,7 @@ export default function YearEndTax2026Page() {
  </h1>
  <PublishedMeta publishedDate="2026-04-15" updatedDate="2026-05-12" className="mb-2" />
  <YearEndTaxCluster />
- <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
+ <p className="speakable-summary text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  프리랜서·N잡러·사업소득자라면 5월 종합소득세를 꼭 신고해야 합니다.
  일정·서류·환급금·절세 전략을 한 페이지에서 확인하세요.
  </p>
@@ -257,6 +257,13 @@ export default function YearEndTax2026Page() {
  <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
  </div>
  </Link>
+ <p className="mt-3 text-sm text-muted-blue text-center">
+ 세율 구간별 산출세액이 궁금하다면{" "}
+ <Link href="/income-tax-2026" className="text-electric font-bold hover:underline">
+ 2026 종합소득세 계산기
+ </Link>
+ 에서 누진세율·지방소득세까지 즉시 확인하세요.
+ </p>
  </section>
 
  {/* FAQ */}

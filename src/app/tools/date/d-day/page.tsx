@@ -1,15 +1,17 @@
 ﻿import { DDayCalculator } from "@/components/calculators/date/DateCalculators";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "D-Day 디데이 계산기 - MoneySalary",
+export const metadata: Metadata = buildPageMetadata({
+ title: "D-Day 디데이 계산기",
  description: "시험, 기념일, 전역일 등 중요한 날짜까지 남은 시간을 계산해보세요.",
-};
+ path: "/tools/date/d-day",
+});
 
 export default function DDayPage() {
  return (
- <div className="min-h-screen bg-electric pt-20 pb-20 px-4 pt-28 pb-20">
+ <div className="min-h-screen bg-canvas pt-28 pb-20 px-4">
  <div className="max-w-2xl mx-auto">
  <h1 className="text-3xl font-bold text-navy mb-8">D-Day 계산기</h1>
  <DDayCalculator />

@@ -12,8 +12,9 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  return (
  <div className="w-full overflow-x-hidden">
  {/* ═══ Hero ════════════════════════════════════════════════ */}
+ {/* 다크모드 대응 — 고정 hex 대신 토큰 클래스 (bg-canvas 등) 사용 */}
  <section
- className="hero-section"
+ className="hero-section bg-canvas"
  style={{
  position: "relative",
  display: "flex",
@@ -21,7 +22,6 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  alignItems: "center",
  justifyContent: "center",
  padding: "5rem 1.5rem 3rem",
- backgroundColor: "#EDF1F5",
  overflow: "hidden",
  }}
  >
@@ -56,6 +56,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  initial={{ scale: 0.9, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: 0.15 }}
+ className="border border-primary/20 bg-electric-10 text-electric"
  style={{
  marginBottom: "2rem",
  display: "inline-flex",
@@ -63,9 +64,6 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  gap: "0.5rem",
  padding: "0.5rem 1rem",
  borderRadius: "9999px",
- border: "1px solid #0145F233",
- backgroundColor: "#0145F20D",
- color: "#0145F2",
  fontSize: "13px",
  fontWeight: 700,
  }}
@@ -74,23 +72,23 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </motion.div>
 
  <h1
+ className="text-navy"
  style={{
  fontSize: "clamp(2.25rem, 6vw, 3.75rem)",
  fontWeight: 900,
  letterSpacing: "-0.025em",
  lineHeight: 1.1,
- color: "#0A1829",
  marginBottom: "1.25rem",
  }}
  >
  Salary, Stocks &amp; Tax<br />
- <span style={{ color: "#0145F2" }}>Made Clear in English</span>
+ <span className="text-electric">Made Clear in English</span>
  </h1>
 
  <p
+ className="text-muted-blue"
  style={{
  fontSize: "clamp(1rem, 2vw, 1.25rem)",
- color: "#3D5E78",
  maxWidth: "560px",
  margin: "0 auto 2.25rem",
  lineHeight: 1.6,
@@ -111,14 +109,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  >
  <Link
  href="/en/salary-converter"
+ className="bg-electric text-white"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.5rem",
  padding: "14px 28px",
  borderRadius: "12px",
- backgroundColor: "#0145F2",
- color: "#FFFFFF",
  fontWeight: 700,
  fontSize: "16px",
  textDecoration: "none",
@@ -130,15 +127,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </Link>
  <Link
  href="/en/flat-tax"
+ className="bg-white text-electric border-2 border-electric"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.5rem",
  padding: "14px 28px",
  borderRadius: "12px",
- backgroundColor: "#FFFFFF",
- color: "#0145F2",
- border: "2px solid #0145F2",
  fontWeight: 700,
  fontSize: "16px",
  textDecoration: "none",
@@ -149,15 +144,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </Link>
  <Link
  href="/en/guides"
+ className="bg-white text-muted-blue border border-canvas-200"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.5rem",
  padding: "14px 28px",
  borderRadius: "12px",
- backgroundColor: "#FFFFFF",
- color: "#3D5E78",
- border: "1.5px solid #DDE4EC",
  fontWeight: 700,
  fontSize: "16px",
  textDecoration: "none",
@@ -180,23 +173,23 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
  <div>
  <div
+ className="text-electric"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.5rem",
  fontSize: "14px",
  fontWeight: 700,
- color: "#0145F2",
  marginBottom: "0.5rem",
  }}
  >
  <TrendingUp size={16} /> Trending in 2026
  </div>
  <h2
+ className="text-navy"
  style={{
  fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
  fontWeight: 900,
- color: "#0A1829",
  letterSpacing: "-0.02em",
  }}
  >
@@ -205,13 +198,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </div>
  <Link
  href="/en/guides"
+ className="text-electric"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.25rem",
  fontSize: "14px",
  fontWeight: 700,
- color: "#0145F2",
  textDecoration: "none",
  }}
  >
@@ -233,29 +226,26 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  <div className="p-7 flex flex-col flex-grow relative z-10">
  <div className="flex items-center justify-between mb-5">
  <span
+ className="bg-electric-5 text-electric border border-primary/20"
  style={{
  display: "inline-flex",
  alignItems: "center",
  padding: "0.25rem 0.75rem",
  borderRadius: "8px",
- backgroundColor: "#0145F20D",
- color: "#0145F2",
  fontSize: "11px",
  fontWeight: 700,
- border: "1px solid #0145F233",
  }}
  >
  {guide.category}
  </span>
  <span
+ className="bg-amber-500/10 text-amber-600"
  style={{
  display: "inline-flex",
  alignItems: "center",
  gap: "0.25rem",
  padding: "0.25rem 0.5rem",
  borderRadius: "9999px",
- backgroundColor: "#FFA50015",
- color: "#FF8800",
  fontSize: "11px",
  fontWeight: 700,
  }}
@@ -265,10 +255,10 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </div>
 
  <h3
+ className="text-navy"
  style={{
  fontSize: "18px",
  fontWeight: 700,
- color: "#0A1829",
  marginBottom: "0.75rem",
  lineHeight: 1.4,
  }}
@@ -277,9 +267,9 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </h3>
 
  <p
+ className="text-muted-blue"
  style={{
  fontSize: "14px",
- color: "#3D5E78",
  lineHeight: 1.6,
  marginBottom: "1.25rem",
  flexGrow: 1,
@@ -293,14 +283,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </p>
 
  <div
+ className="border-t border-canvas-200 text-faint-blue"
  style={{
  display: "flex",
  alignItems: "center",
  justifyContent: "space-between",
  paddingTop: "1.25rem",
- borderTop: "1px solid #DDE4EC",
  fontSize: "12px",
- color: "#7A8FA6",
  }}
  >
  <div className="flex items-center gap-1">
@@ -308,12 +297,12 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  <span>{new Date(guide.publishedDate).toLocaleDateString("en-US")}</span>
  </div>
  <div
+ className="text-electric"
  style={{
  display: "flex",
  alignItems: "center",
  gap: "0.25rem",
  fontWeight: 700,
- color: "#0145F2",
  }}
  >
  Read <ArrowRight size={12} />

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -12,10 +11,13 @@ interface SalaryTableProps {
  data: TableRow[];
  highlightRows?: number[];
  unit?: string;
- adInterval?: number;
- /** 첫 열(금액)을 `{base}/{첫열값}` 링크로 — 연봉표에서만 전달(월급/주급/시급 표는 단위가 달라 미지정).
+ /** 첫 열(금액)을 `{base}/{연봉 환산값}` 링크로.
   * 서버→클라 컴포넌트로 함수는 못 넘기므로 문자열 base 만 받아 내부에서 href 를 만든다. */
  linkColumnBaseHref?: string;
+ /** 링크 금액으로 쓸 필드 — 미지정 시 첫 열 값 사용 (월급 표처럼 행에 연봉 원본(preTax)이 있으면 그 키 지정) */
+ linkValueKey?: string;
+ /** 첫 열 값 → 연봉 환산 배수 (월급 ×12, 주급 ×52, 시급 ×2508(209시간×12)). 미지정 시 1(연봉표). */
+ linkValueMultiplier?: number;
 }
 
 export default function SalaryTable({
@@ -23,20 +25,27 @@ export default function SalaryTable({
  data,
  highlightRows = [],
  unit = "원",
- adInterval = 20,
  linkColumnBaseHref,
+ linkValueKey,
+ linkValueMultiplier = 1,
 }: SalaryTableProps) {
+ // 첫 열 링크 href — 월급/주급/시급 값도 연봉으로 환산해 /salary/{연봉} 으로 연결
+ const buildHref = (row: TableRow) => {
+ if (!linkColumnBaseHref) return undefined;
+ const raw = Number(linkValueKey ? row[linkValueKey] : row[headers[0].key]);
+ return `${linkColumnBaseHref}/${Math.round(raw * linkValueMultiplier)}`;
+ };
+
  return (
  <div className="w-full">
  {/* Mobile Card View */}
  <div className="md:hidden space-y-3">
  {data.map((row, index) => {
  const isHighlighted = highlightRows.includes(row[headers[0].key] as number);
- const showAd = (index + 1) % adInterval === 0 && index !== data.length - 1;
 
  return (
- <React.Fragment key={`mobile-${index}`}>
  <motion.div
+ key={`mobile-${index}`}
  initial={{ opacity: 0, y: 20 }}
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
@@ -50,7 +59,7 @@ export default function SalaryTable({
  <div className="flex justify-between items-center mb-4 pb-3 border-b border-canvas">
  <span className="text-faint-blue font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
  {(() => {
- const href = linkColumnBaseHref ? `${linkColumnBaseHref}/${row[headers[0].key]}` : undefined;
+ const href = buildHref(row);
  const cls = `text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-navy'}`;
  const label = `${Number(row[headers[0].key]).toLocaleString('ko-KR')}${unit}`;
  return href ? (
@@ -76,12 +85,6 @@ export default function SalaryTable({
  </div>
  </div>
  </motion.div>
-
- {showAd && (
- <div className="py-4">
- </div>
- )}
- </React.Fragment>
  );
  })}
  </div>
@@ -111,11 +114,10 @@ export default function SalaryTable({
  const isHighlighted = highlightRows.includes(
  row[headers[0].key] as number
  );
- const showAd = (index + 1) % adInterval === 0 && index !== data.length - 1;
 
  return (
- <React.Fragment key={index}>
  <motion.tr
+ key={index}
  initial={{ opacity: 0 }}
  whileInView={{ opacity: 1 }}
  viewport={{ once: true }}
@@ -126,7 +128,7 @@ export default function SalaryTable({
  }`}
  >
  {headers.map((header, cellIndex) => {
- const cellHref = cellIndex === 0 && linkColumnBaseHref ? `${linkColumnBaseHref}/${row[header.key]}` : undefined;
+ const cellHref = cellIndex === 0 ? buildHref(row) : undefined;
  const cellInner = (
  <>
  {Number(row[header.key]).toLocaleString('ko-KR')}
@@ -151,15 +153,6 @@ export default function SalaryTable({
  );
  })}
  </motion.tr>
- {showAd && (
- <tr className="bg-transparent">
- <td colSpan={headers.length} className="p-0 border-y border-canvas">
- <div className="flex justify-center w-full py-6 bg-canvas">
- </div>
- </td>
- </tr>
- )}
- </React.Fragment>
  );
  })}
  </tbody>

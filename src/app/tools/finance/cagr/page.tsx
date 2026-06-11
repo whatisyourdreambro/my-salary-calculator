@@ -1,11 +1,13 @@
 import CagrCalculator from "@/components/calculators/finance/CagrCalculator";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "CAGR(연평균 성장률) 계산기 | Moneysalary",
+export const metadata: Metadata = buildPageMetadata({
+ title: "CAGR(연평균 성장률) 계산기",
  description: "투자의 연평균 성장률(Compound Annual Growth Rate)을 계산하여 성과를 분석하세요.",
-};
+ path: "/tools/finance/cagr",
+});
 
 export default function CagrPage() {
  return (

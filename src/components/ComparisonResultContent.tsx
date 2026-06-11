@@ -1,6 +1,6 @@
 "use client";
 
-import { companies } from "@/lib/companyData";
+import { companies, type CompanyProfile } from "@/lib/companyData";
 import { ArrowLeft, Trophy } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -41,6 +41,19 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
  const maxEntry = Math.max(companyA.entryLevelSalary, companyB.entryLevelSalary, 6000);
  const maxExec = Math.max(companyA.executiveSalary, companyB.executiveSalary, 100000);
 
+ // 성장성 — salaryGrowth(연차별 연봉 곡선)의 1년차 → 최종 연차 상승률 실계산.
+ // 데이터가 부족하면 레이더 차트에서 항목 자체를 제외한다.
+ const growthRate = (c: CompanyProfile): number | null => {
+ const g = c.salaryGrowth;
+ if (!g || g.length < 2) return null;
+ const first = g[0].salary;
+ const last = g[g.length - 1].salary;
+ if (first <= 0) return null;
+ return (last - first) / first;
+ };
+ const growthA = growthRate(companyA);
+ const growthB = growthRate(companyB);
+
  const radarData = [
  {
  subject: "평균 연봉",
@@ -66,13 +79,19 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
  B: Math.min((companyB.employees / 100000) * 100, 100),
  fullMark: 100,
  },
- {
- subject: "성장성", // Mock metric based on salary growth slope
- A: 85,
- B: 90,
- fullMark: 100,
- },
  ];
+
+ if (growthA !== null && growthB !== null) {
+ const maxGrowth = Math.max(growthA, growthB);
+ if (maxGrowth > 0) {
+ radarData.push({
+ subject: "성장성",
+ A: Math.round((growthA / maxGrowth) * 100),
+ B: Math.round((growthB / maxGrowth) * 100),
+ fullMark: 100,
+ });
+ }
+ }
 
  const winner = companyA.averageSalary > companyB.averageSalary ? companyA : companyB;
 
@@ -119,8 +138,9 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
  <div className="w-full h-[300px]">
  <ResponsiveContainer width="100%" height="100%">
  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
- <PolarGrid stroke="rgba(255,255,255,0.1)" />
- <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }} />
+ {/* 라이트/다크 모두 보이는 중간 회색 — 흰색 하드코딩 시 라이트 모드에서 안 보임 */}
+ <PolarGrid stroke="rgba(148,163,184,0.35)" />
+ <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
  <Radar
  name={companyA.name}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { GuideCardMeta } from '@/lib/guidesData';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
@@ -109,8 +110,10 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
 const ITEMS_PER_PAGE = 9;
 
 export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: GuideCardMeta[]; categoriesEn: readonly { id: string; name: string }[] }) {
+ // [slug] 태그 클릭 시 /en/guides?q=tag 로 진입 — q 파라미터를 검색 초기값으로 적용
+ const searchParams = useSearchParams();
  const [selectedCategoryId, setSelectedCategoryId] = useState('all');
- const [searchQuery, setSearchQuery] = useState('');
+ const [searchQuery, setSearchQuery] = useState(searchParams.get('q') ?? '');
  const [sortBy, setSortBy] = useState<SortOption>('latest');
  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
@@ -165,7 +168,8 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <main className="min-h-screen bg-canvas text-foreground pb-24">
  {/* Hero Section */}
  <section className="relative pt-28 pb-14 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
+ {/* 다크모드 대응 — via-white/indigo 고정색 대신 양 모드 안전한 반투명 브랜드 틴트 */}
+ <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 -z-10" />
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
  <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
@@ -246,11 +250,9 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  )}
  </AnimatePresence>
 
- {/* Ad Unit: Top */}
+ {/* Ad Unit: Top — CoupangBanner 는 /en 에서 자동 숨김이라 AdSense 로 교체 */}
  <div className="mb-12">
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
+ <HomeTopAd />
  </div>
 
  {/* Guides Grid */}
@@ -289,13 +291,12 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  </div>
  )}
 
- {/* Page-end ad block — InArticle + Display + Coupang */}
+ {/* Page-end ad block — HomeTopAd 는 상단 슬롯과 동일 슬롯이라 dedup 으로 미노출되어 제거 */}
  <div className="mt-16 max-w-3xl mx-auto space-y-6">
  <InArticleAd />
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
- <HomeTopAd />
  </div>
  </div>
  </main>

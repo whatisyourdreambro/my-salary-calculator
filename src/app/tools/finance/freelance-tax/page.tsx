@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Laptop, Info } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 프리랜서/사업소득 종합소득세
@@ -99,6 +100,10 @@ export default function FreelanceTaxPage() {
  ))}
  </div>
  </motion.div>
+
+ {/* 결과 직후 광고 */}
+ <CalcResultAd />
+
  <div className="p-5 bg-canvas border border-canvas rounded-xl flex gap-3 mb-8">
  <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />
  <p className="text-xs text-muted-blue leading-relaxed">

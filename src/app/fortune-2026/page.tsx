@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, RefreshCw, TrendingUp } from "lucide-react";
+import { Star, RefreshCw, ScrollText } from "lucide-react";
 import PageFooterAds from "@/components/PageFooterAds";
 const FORTUNES = {
  "재물운": [
@@ -136,6 +137,14 @@ export default function FinancialFortunePage() {
 
  <div className="mt-10">
  </div>
+
+ {/* 자매 콘텐츠 상호 링크 */}
+ <Link
+ href="/fun/fortune"
+ className="mt-2 w-full py-4 border border-canvas rounded-xl text-electric font-bold hover:bg-canvas transition-colors flex items-center justify-center gap-2"
+ >
+ <ScrollText size={18} /> 생년월일시로 보는 2026 신년운세 전체보기
+ </Link>
 
  {/* Disclaimer */}
  <p className="text-center text-xs text-faint-blue mt-8 leading-relaxed">

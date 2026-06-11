@@ -146,6 +146,77 @@ export default function PoscoBonusPage() {
             <CalcResultAd />
           </div>
 
+          {/* 성과급 구조 · 지급 이력 — 본문 콘텐츠 (광고 사이 배치) */}
+          <section
+            className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8"
+            aria-labelledby="posco-structure-heading"
+          >
+            <h2 id="posco-structure-heading" className="text-2xl font-black mb-4">
+              포스코 성과급 구조 — 상여금 · PS · PI
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4 mb-6">
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">상여금</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 연 정기 지급, 보통 <strong>400%</strong> 수준</li>
+                  <li>• 업황 영향이 작은 안정 항목</li>
+                </ul>
+              </article>
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">경영성과급 (PS)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 연 1회, <strong>영업이익 연동</strong></li>
+                  <li>• 철강 사이클에 따라 변동 큼</li>
+                </ul>
+              </article>
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">생산성격려금 (PI)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 반기별, <strong>사업장 KPI</strong> 연동</li>
+                  <li>• 포항·광양 사업장별 차등 가능</li>
+                </ul>
+              </article>
+            </div>
+            <h3 className="font-bold text-lg mb-3">철강 사이클별 성과급 시나리오 (기본급 기준)</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b-2 border-canvas-deep text-left">
+                    <th className="py-2 pr-4 font-bold">사이클</th>
+                    <th className="py-2 pr-4 font-bold">성과급 (월 기본급 기준)</th>
+                    <th className="py-2 font-bold">참고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">적자</td>
+                    <td className="py-2 pr-4">100%</td>
+                    <td className="py-2">다운사이클 — 영업이익 절반 수준 (2024~2025)</td>
+                  </tr>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">평년</td>
+                    <td className="py-2 pr-4">400%</td>
+                    <td className="py-2">정기 상여 수준</td>
+                  </tr>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">호황</td>
+                    <td className="py-2 pr-4">800%</td>
+                    <td className="py-2">2025-04 직고용 대상 '경영성과급 최소 800%' 사례</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-4">슈퍼사이클</td>
+                    <td className="py-2 pr-4">1,000%</td>
+                    <td className="py-2">2022~2023 영업이익 7조 돌파기 수준</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-faint mt-3">
+              ※ 국민일보·부산일보 2025-04 직고용 발표 보도 기반. 실제 지급률은
+              사업장·직군·평가에 따라 달라질 수 있습니다.
+            </p>
+          </section>
+
           <div className="mt-10">
             <InArticleAd />
           </div>

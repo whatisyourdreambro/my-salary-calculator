@@ -171,7 +171,7 @@ export default function FlappyGamePage() {
  }, []);
 
  return (
- <main className="w-full min-h-screen bg-electric flex flex-col items-center justify-center p-4 overflow-hidden">
+ <main className="w-full min-h-screen bg-electric flex flex-col items-center justify-center p-4 pb-16 overflow-hidden">
  <div className="max-w-md w-full space-y-6">
  <div className="text-center">
  <h1 className="text-4xl font-black text-navy mb-2 tracking-tight">

@@ -86,12 +86,12 @@ export default function Footer() {
   const trustBadges = isEnglish
     ? [
         { Icon: CheckCircle2, label: "Official Tax Rates" },
-        { Icon: Shield, label: "Google AdSense Approved" },
+        { Icon: Shield, label: "Trusted Ad Standards" },
         { Icon: Lock, label: "Zero Data Collection" },
       ]
     : [
         { Icon: CheckCircle2, label: "국세청 공식 세율" },
-        { Icon: Shield, label: "Google AdSense 승인" },
+        { Icon: Shield, label: "신뢰할 수 있는 광고 게재 기준 준수" },
         { Icon: Lock, label: "개인정보 0건 수집" },
       ];
 

@@ -99,11 +99,10 @@ export const navConfig: NavItem[] = [
   type: "dropdown",
   description: "실제 데이터 기반 연봉 정보",
   items: [
-   { name: "기업별 연봉 DB", href: "/salary-db", description: "414개 기업 평균 연봉", badge: "MUST" },
+   { name: "기업별 연봉 DB", href: "/salary-db", description: "480+개 기업 평균 연봉", badge: "MUST" },
    { name: "직업별 연봉", href: "/job", description: "59개 직종 연봉 비교", badge: "NEW" },
    { name: "산업별 연봉", href: "/industry", description: "16개 산업군 연봉 현황", badge: "NEW" },
    { name: "지역별 연봉", href: "/region", description: "17개 시도 + 판교·여의도", badge: "NEW" },
-   { name: "내 연봉 제보", href: "/salary-db/submit", description: "익명 등록·기여" },
    { name: "2026 연봉 실수령액 표", href: "/table/2026/annual", description: "1천만~2억 한눈" },
    { name: "2026 월급 실수령액 표", href: "/table/2026/monthly", description: "월급 기준 조회" },
    { name: "직장인 단계별 자산", href: "/career-stages-2026", description: "20~50대 연봉·자산" },

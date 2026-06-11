@@ -15,14 +15,15 @@ type TetrominoType = 'I' | 'O' | 'T' | 'S' | 'Z' | 'J' | 'L';
 type Cell = { type: TetrominoType | null; locked: boolean };
 type Grid = Cell[][];
 
+// 블록 7종 각기 다른 색 (그림자 색상과 동일 계열로 복원)
 const TETROMINOS: Record<TetrominoType, { shape: number[][]; color: string }> = {
- I: { shape: [[1, 1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(34,211,238,0.8)]" },
- O: { shape: [[1, 1], [1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(250,204,21,0.8)]" },
- T: { shape: [[0, 1, 0], [1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(168,85,247,0.8)]" },
- S: { shape: [[0, 1, 1], [1, 1, 0]], color: "bg-primary shadow-[0_0_10px_rgba(34,197,94,0.8)]" },
- Z: { shape: [[1, 1, 0], [0, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(239,68,68,0.8)]" },
- J: { shape: [[1, 0, 0], [1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(59,130,246,0.8)]" },
- L: { shape: [[0, 0, 1], [1, 1, 1]], color: "bg-primary shadow-[0_0_10px_rgba(249,115,22,0.8)]" },
+ I: { shape: [[1, 1, 1, 1]], color: "bg-[#22d3ee] shadow-[0_0_10px_rgba(34,211,238,0.8)]" },
+ O: { shape: [[1, 1], [1, 1]], color: "bg-[#facc15] shadow-[0_0_10px_rgba(250,204,21,0.8)]" },
+ T: { shape: [[0, 1, 0], [1, 1, 1]], color: "bg-[#a855f7] shadow-[0_0_10px_rgba(168,85,247,0.8)]" },
+ S: { shape: [[0, 1, 1], [1, 1, 0]], color: "bg-[#22c55e] shadow-[0_0_10px_rgba(34,197,94,0.8)]" },
+ Z: { shape: [[1, 1, 0], [0, 1, 1]], color: "bg-[#ef4444] shadow-[0_0_10px_rgba(239,68,68,0.8)]" },
+ J: { shape: [[1, 0, 0], [1, 1, 1]], color: "bg-[#3b82f6] shadow-[0_0_10px_rgba(59,130,246,0.8)]" },
+ L: { shape: [[0, 0, 1], [1, 1, 1]], color: "bg-[#f97316] shadow-[0_0_10px_rgba(249,115,22,0.8)]" },
 };
 
 const createEmptyGrid = (): Grid =>
@@ -224,7 +225,7 @@ export default function TetrisPage() {
  }
 
  return (
- <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-mono">
+ <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-mono pb-16">
  {/* Cyberpunk Background */}
  <div className="absolute inset-0 z-0 pointer-events-none">
  <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -299,7 +300,7 @@ export default function TetrisPage() {
  <>
  <h2 className="text-4xl font-black text-primary mb-2">GAME OVER</h2>
  <p className="text-faint-blue mb-6">야근 확정! 다시 도전하세요.</p>
- <p className="text-2xl font-bold text-navy mb-8">Score: {score}</p>
+ <p className="text-2xl font-bold text-white mb-8">Score: {score}</p>
 
  
 
@@ -319,7 +320,7 @@ export default function TetrisPage() {
  </>
  ) : (
  <>
- <h2 className="text-3xl font-black text-navy mb-8">READY?</h2>
+ <h2 className="text-3xl font-black text-white mb-8">READY?</h2>
  <button
  onClick={startGame}
  className="group relative px-8 py-4 bg-primary hover:bg-primary text-white rounded-xl font-black text-xl shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all hover:scale-105 overflow-hidden"

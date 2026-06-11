@@ -147,6 +147,72 @@ export default function LgChemBonusPage() {
             <CalcResultAd />
           </div>
 
+          {/* 성과급 구조 · 지급 이력 — 본문 콘텐츠 (광고 사이 배치) */}
+          <section
+            className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8"
+            aria-labelledby="lgchem-structure-heading"
+          >
+            <h2 id="lgchem-structure-heading" className="text-2xl font-black mb-4">
+              LG화학 성과급 구조 — PS · PI
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">PS (Profit Sharing)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 사업부 <strong>영업이익 연동</strong>, 변동 큼 (0~850%)</li>
+                  <li>• 연 1회 지급, 월 기본급 기준 %</li>
+                  <li>• 사업부별 차등 — 적자 사업부는 0%대</li>
+                </ul>
+              </article>
+              <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
+                <h3 className="font-bold mb-2 text-lg">PI (생산성격려금)</h3>
+                <ul className="space-y-1 text-sm leading-relaxed">
+                  <li>• 연간 고정 <strong>기본급의 200%</strong></li>
+                  <li>• 영업이익 적자여도 보장되는 안정 항목</li>
+                  <li>• 노사 합의로 변경 가능성은 있음</li>
+                </ul>
+              </article>
+            </div>
+            <h3 className="font-bold text-lg mb-3">사업부별 PS 지급 이력 (보도 기준)</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b-2 border-canvas-deep text-left">
+                    <th className="py-2 pr-4 font-bold">시기</th>
+                    <th className="py-2 pr-4 font-bold">사업부</th>
+                    <th className="py-2 font-bold">PS (월 기본급 기준)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">2022 호황</td>
+                    <td className="py-2 pr-4">석유화학본부</td>
+                    <td className="py-2">850%</td>
+                  </tr>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">2022 호황</td>
+                    <td className="py-2 pr-4">첨단소재 · 생명과학</td>
+                    <td className="py-2">600%</td>
+                  </tr>
+                  <tr className="border-b border-canvas-deep">
+                    <td className="py-2 pr-4">2022 호황</td>
+                    <td className="py-2 pr-4">배터리 (분사 전)</td>
+                    <td className="py-2">450%</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-4">2024~2025 다운사이클</td>
+                    <td className="py-2 pr-4">석유화학 일부</td>
+                    <td className="py-2">0%대</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-faint mt-3">
+              ※ 서울경제·핀포인트뉴스 보도 기반. 2022년에는 연봉 10~12% 인상 +
+              성과급 720~730% 지급 사례도 보도되었습니다.
+            </p>
+          </section>
+
           <div className="mt-10">
             <InArticleAd />
           </div>

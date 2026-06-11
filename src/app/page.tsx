@@ -21,8 +21,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import ToolCard from "@/components/home/ToolCard";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
-import { HomeTopAd, CalcResultAd, InArticleAd } from "@/components/AdPlacement";
-import NextActions from "@/components/NextActions";
+import { HomeTopAd, GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import { faqLd, howToLd } from "@/lib/structuredData";
 
@@ -111,7 +110,7 @@ const HOME_FAQ = faqLd([
  {
   question: "연봉 실수령액과 세후 월급은 어떻게 다른가요?",
   answer:
-   "연봉 실수령액은 세금·4대보험을 모두 공제한 연간 총 수령액이고, 세후 월급은 이를 12로 나눈 월별 금액입니다. 예를 들어 연봉 5,000만원이면 2026년 세율 기준 월 실수령액은 약 366만원입니다.",
+   "연봉 실수령액은 세금·4대보험을 모두 공제한 연간 총 수령액이고, 세후 월급은 이를 12로 나눈 월별 금액입니다. 예를 들어 연봉 5,000만원이면 2026년 세율 기준 월 실수령액은 약 353만원입니다.",
  },
  {
   question: "4대보험 요율은 얼마인가요?",
@@ -126,7 +125,7 @@ const HOME_FAQ = faqLd([
  {
   question: "연봉 3000만원 실수령액은 얼마인가요?",
   answer:
-   "연봉 3,000만원 기준(비과세 식대 20만원, 본인 1인 공제) 2026년 월 실수령액은 약 228만원입니다. 자세한 내역은 머니샐러리 /salary/30000000 페이지에서 확인하세요.",
+   "연봉 3,000만원 기준(비과세 식대 20만원, 본인 1인 공제) 2026년 월 실수령액은 약 223만원입니다. 자세한 내역은 머니샐러리 /salary/30000000 페이지에서 확인하세요.",
  },
 ]);
 
@@ -183,12 +182,8 @@ export default function HomePage() {
  }}
  />
 
- <motion.div
- initial={{ opacity: 0, y: 28 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
- className="text-center max-w-[760px] w-full relative z-10"
- >
+ {/* H1·부제·CTA 는 LCP 보호를 위해 정적 렌더 — JS 로드 전에도 즉시 표시 */}
+ <div className="text-center max-w-[760px] w-full relative z-10">
  {/* Badge */}
  <motion.div
  initial={{ scale: 0.9, opacity: 0 }}
@@ -236,7 +231,7 @@ export default function HomePage() {
  2026 세법 기준, 5초 만에 정확하게.
  </p>
  <p className="max-w-[560px] mx-auto mb-10 text-sm text-faint-blue font-medium">
- 예) 연봉 5,000만원 → 월 실수령 약 357만원 · 연 4,290만원
+ 예) 연봉 5,000만원 → 월 실수령 약 353만원 · 연 4,234만원
  </p>
 
  {/* CTA Buttons */}
@@ -276,7 +271,7 @@ export default function HomePage() {
  </div>
  ))}
  </motion.div>
- </motion.div>
+ </div>
  </section>
 
  {/* ═══ 광고 (홈 상단) — Hero 직하, above-fold 노출 ═════════ */}
@@ -303,10 +298,11 @@ export default function HomePage() {
  <CalculatorTabs />
  </motion.div>
 
- {/* 계산기 결과 직하 — 사용자 의도 가장 높음 */}
+ {/* 계산기 직하 — 결과 직하 광고(CalcResultAd)는 SalaryCalculator 내부 ResultAd 가
+     담당하므로(동일 슬롯 dedup) 여기는 인아티클 광고만 배치. NextActions 도
+     계산기 내부 결과 화면에서 노출되어 중복 제거. */}
  <div className="mt-10 max-w-3xl mx-auto">
- <CalcResultAd />
- <NextActions />
+ <InArticleAd />
  </div>
  </section>
 
@@ -563,10 +559,10 @@ export default function HomePage() {
  </div>
  </section>
 
- {/* ═══ 마지막 광고 ═════════════════════════════════════════ */}
+ {/* ═══ 마지막 광고 — 중단 InArticleAd 와 슬롯 중복(dedup skip) 방지 위해 GuideMidAd ═══ */}
  <section className="bg-white border-t border-canvas-200 section-pad">
  <div className="max-w-3xl mx-auto px-6">
- <InArticleAd />
+ <GuideMidAd />
  </div>
  </section>
 

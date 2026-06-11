@@ -2,17 +2,10 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
-import {
- AreaChart,
- Area,
- XAxis,
- YAxis,
- Tooltip,
- Legend,
- ResponsiveContainer,
- CartesianGrid,
- ReferenceLine,
-} from "recharts";
+import { CalcResultAd } from "@/components/AdPlacement";
+import RelatedCalculators from "@/components/RelatedCalculators";
+import JsonLd from "@/components/JsonLd";
+import { faqLd } from "@/lib/structuredData";
 import {
  PlusCircle,
  Trash2,
@@ -20,14 +13,11 @@ import {
  Shield,
  Rocket,
  ArrowRight,
- MousePointerClick,
- Flame,
  Target,
  Coins,
  Coffee,
  Palmtree,
  Info,
- CheckCircle2,
  Sparkles,
  PiggyBank,
  Landmark,
@@ -77,6 +67,30 @@ const strategyReturns = {
  aggressive: 10,
 };
 
+// FIRE FAQ — faqLd(JSON-LD) + 본문 아코디언 공용 (home-loan/page.tsx 패턴)
+const FAQ_ITEMS = [
+ {
+ question: "4% 룰은 어떤 근거가 있나요?",
+ answer:
+ "미국 트리니티 대학 연구(Trinity Study)에서 나온 경험칙으로, 주식·채권 혼합 포트폴리오에서 은퇴 자산의 4%를 첫해에 인출하고 이후 물가상승률만큼 늘려 인출해도 30년 이상 자산이 유지될 확률이 높았다는 결과에 기반합니다. 거꾸로 계산하면 '연 생활비 × 25배'가 FIRE 목표액이 됩니다. 다만 미국 시장 과거 데이터 기반이므로, 보수적으로 3~3.5% 인출률을 쓰는 경우도 많습니다.",
+ },
+ {
+ question: "Coast FIRE와 Barista FIRE는 무엇이 다른가요?",
+ answer:
+ "Coast FIRE는 지금까지 모은 자산만으로도 복리 성장을 통해 65세에 은퇴 목표액에 도달할 수 있어, 더 이상 노후 대비 저축을 하지 않아도 되는 상태입니다(일은 계속하되 저축 압박에서 해방). Barista FIRE는 생활비의 절반 정도를 파트타임 소득으로 충당하면서 반은퇴 상태로 사는 전략이라, 필요한 목표 자산이 완전 은퇴 대비 크게 줄어듭니다.",
+ },
+ {
+ question: "은퇴 후 자산을 인출할 때 세금은 어떻게 되나요?",
+ answer:
+ "한국 기준으로 이자·배당소득에는 15.4% 원천징수가 적용되고, 금융소득이 연 2,000만원을 초과하면 금융소득종합과세 대상이 됩니다. 연금저축·IRP 같은 연금계좌에서 연금으로 수령하면 3.3~5.5%의 낮은 연금소득세가 적용되고, ISA 계좌는 비과세·분리과세 혜택이 있습니다. 인출 단계의 세금 설계에 따라 실제 필요 자산이 달라지므로 절세 계좌를 우선 활용하는 것이 유리합니다.",
+ },
+ {
+ question: "이 계산기는 물가상승률을 반영하나요?",
+ answer:
+ "네. 목표 금액이 연 2% 물가상승률만큼 매년 늘어나는 것으로 가정해, 달성 시점의 목표액이 현재 가치 기준보다 커지도록 설계되어 있습니다. 입력하는 수익률은 세전 명목 수익률 기준이며, 실제 수익률·물가에 따라 결과는 달라질 수 있습니다.",
+ },
+];
+
 // --- Calculation Logic ---
 
 const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
@@ -114,7 +128,6 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  return {
  yearsToFire: 0,
  finalAge: parseInt(currentAge, 10),
- chartData: [],
  finalTargetAmount: targetAmount,
  totalContributions: parseNumber(currentSavings),
  totalReturns: 0,
@@ -129,16 +142,6 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  let years = 0;
  const age = parseInt(currentAge, 10);
 
- const chartData = [
- {
- year: 0,
- age: age,
- assets: futureValue,
- contribution: totalContributions,
- target: targetAmount,
- coast: coastFireTarget * Math.pow(1 + annualReturnRate, 0),
- },
- ];
  let currentTargetAmount = targetAmount;
 
  while (futureValue < currentTargetAmount && years < 100) {
@@ -161,22 +164,12 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  }
 
  currentTargetAmount *= 1 + inflationRate; // Target grows with inflation
-
- chartData.push({
- year: years,
- age: age + years,
- assets: Math.round(futureValue),
- contribution: Math.round(totalContributions),
- target: Math.round(currentTargetAmount),
- coast: 0,
- });
  }
 
  const finalYears = years >= 100 ? Infinity : years;
  return {
  yearsToFire: finalYears,
  finalAge: finalYears === Infinity ? Infinity : age + finalYears,
- chartData,
  finalTargetAmount: Math.round(currentTargetAmount),
  totalContributions: Math.round(totalContributions),
  totalReturns: Math.round(futureValue - totalContributions),
@@ -271,7 +264,6 @@ export default function FireCalculatorPage() {
  const {
  yearsToFire,
  finalAge,
- chartData,
  finalTargetAmount,
  totalContributions,
  totalReturns,
@@ -289,7 +281,7 @@ export default function FireCalculatorPage() {
  particleCount: 150,
  spread: 70,
  origin: { y: 0.6 },
- colors: ['#cc9254', '#26594C', '#E7E5E4']
+ colors: ['#0145F2', '#0D5BFF', '#EDF1F5'] // 브랜드 Electric Blue 계열
  });
  });
  }
@@ -356,6 +348,8 @@ export default function FireCalculatorPage() {
 
  return (
  <main className="w-full min-h-screen bg-white pb-20">
+ <JsonLd data={faqLd(FAQ_ITEMS)} />
+
  {/* Top accent line */}
  <div className="fixed top-0 left-0 w-full h-1 bg-primary z-50" />
 
@@ -471,8 +465,8 @@ export default function FireCalculatorPage() {
  <motion.div
  animate={{
  scale: isCurrent ? 1.2 : 1,
- backgroundColor: isActive ? "#CC9254" : "var(--background)",
- borderColor: isActive ? "#CC9254" : "var(--border)"
+ backgroundColor: isActive ? "#0145F2" : "var(--background)",
+ borderColor: isActive ? "#0145F2" : "var(--border)"
  }}
  className={`w-4 h-4 rounded-full border-2 transition-colors duration-500 ${isActive ? "bg-primary border-primary" : "bg-canvas-dark border-canvas"}`}
  />
@@ -738,9 +732,6 @@ export default function FireCalculatorPage() {
  </div>
  ) : (
  <div className="relative p-12 sm:p-20 bg-primary/5 rounded-[3rem] border border-primary/10 overflow-hidden">
- {/* Floral/Abstract Pattern */}
- <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
-
  <div className="relative z-10">
  <p className="text-sm text-primary font-bold mb-6 uppercase tracking-[0.2em]">경제적 자유 달성</p>
  <h2 className="text-7xl sm:text-9xl font-sans font-medium text-foreground mb-8 tracking-tighter">
@@ -778,13 +769,14 @@ export default function FireCalculatorPage() {
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
- <div className="bg-[#cc9254]/10 p-10 rounded-[2.5rem] border border-[#cc9254]/20 relative overflow-hidden group">
- <div className="absolute -right-12 -top-12 text-[#cc9254]/10 group-hover:text-[#cc9254]/20 transition-colors duration-500">
+ {/* 구 팔레트(#cc9254/#26594c) → 브랜드 Electric Blue 계열 토큰 */}
+ <div className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20 relative overflow-hidden group">
+ <div className="absolute -right-12 -top-12 text-primary/10 group-hover:text-primary/20 transition-colors duration-500">
  <Palmtree size={200} />
  </div>
  <div className="relative z-10">
- <div className="flex items-center gap-4 mb-6 text-[#cc9254]">
- <div className="p-3 rounded-2xl bg-[#cc9254]/20">
+ <div className="flex items-center gap-4 mb-6 text-primary">
+ <div className="p-3 rounded-2xl bg-primary/20">
  <Palmtree className="w-6 h-6" />
  </div>
  <h3 className="font-sans font-bold text-2xl tracking-tight">Coast FIRE</h3>
@@ -800,13 +792,13 @@ export default function FireCalculatorPage() {
  </p>
  </div>
  </div>
- <div className="bg-[#26594c]/10 p-10 rounded-[2.5rem] border border-[#26594c]/20 relative overflow-hidden group">
- <div className="absolute -right-12 -top-12 text-[#26594c]/10 group-hover:text-[#26594c]/20 transition-colors duration-500">
+ <div className="bg-[#0D5BFF]/10 p-10 rounded-[2.5rem] border border-[#0D5BFF]/20 relative overflow-hidden group">
+ <div className="absolute -right-12 -top-12 text-[#0D5BFF]/10 group-hover:text-[#0D5BFF]/20 transition-colors duration-500">
  <Coffee size={200} />
  </div>
  <div className="relative z-10">
- <div className="flex items-center gap-4 mb-6 text-[#26594c]">
- <div className="p-3 rounded-2xl bg-[#26594c]/20">
+ <div className="flex items-center gap-4 mb-6 text-[#0D5BFF]">
+ <div className="p-3 rounded-2xl bg-[#0D5BFF]/20">
  <Coffee className="w-6 h-6" />
  </div>
  <h3 className="font-sans font-bold text-2xl tracking-tight">Barista FIRE</h3>
@@ -824,6 +816,9 @@ export default function FireCalculatorPage() {
  </div>
  </div>
  </div>
+
+ {/* 결과 숫자 카드 아래 광고 — shareRef 밖이라 이미지 저장/공유 캡처에는 미포함 */}
+ <CalcResultAd />
 
  {isFinite(yearsToFire) && (
  <motion.div
@@ -852,6 +847,72 @@ export default function FireCalculatorPage() {
  </motion.div>
  )}
  </AnimatePresence>
+ </div>
+
+ {/* ── FIRE 개념 설명 + FAQ — 검색 유입용 본문 콘텐츠 ───────────── */}
+ <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 space-y-10">
+ <section className="bg-canvas rounded-3xl p-8 border border-canvas">
+ <h2 className="text-2xl font-bold text-navy mb-4">4% 룰이란?</h2>
+ <p className="text-sm text-muted-blue leading-relaxed">
+ 은퇴 자산에서 <strong className="text-navy">매년 4%씩 인출해도 30년 이상 자산이 유지될 확률이 높다</strong>는
+ 경험칙입니다(트리니티 연구). 거꾸로 계산하면 <strong className="text-navy">연 생활비 × 25배</strong>가
+ FIRE 목표 자산이 됩니다. 예를 들어 월 생활비 300만원(연 3,600만원)이면 목표액은 9억원입니다.
+ 시장 변동성에 대비해 인출률을 3~3.5%로 낮춰 잡으면 더 보수적인 계획이 됩니다.
+ 본 계산기에서는 인출률을 직접 조절해 목표액 변화를 확인할 수 있습니다.
+ </p>
+ </section>
+
+ <section className="bg-canvas rounded-3xl p-8 border border-canvas">
+ <h2 className="text-2xl font-bold text-navy mb-4">Coast FIRE vs Barista FIRE</h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-3">
+ <strong className="text-navy">Coast FIRE</strong>는 지금까지 모은 자산이 복리로 불어나
+ 65세에 은퇴 목표액에 도달하는 상태입니다. 일은 계속하더라도 더 이상 노후 대비
+ 저축을 하지 않아도 되므로, 소비·커리어 선택의 자유가 커집니다.
+ </p>
+ <p className="text-sm text-muted-blue leading-relaxed">
+ <strong className="text-navy">Barista FIRE</strong>는 생활비의 절반 정도를 파트타임
+ 소득으로 충당하며 반은퇴 상태를 즐기는 전략입니다. 필요한 목표 자산이 완전 은퇴
+ 대비 절반 수준으로 줄어, 더 이른 시점에 실행할 수 있습니다. 결과 화면의 두 카드에서
+ 본인의 Coast·Barista 목표 원금을 확인하세요.
+ </p>
+ </section>
+
+ <section className="bg-canvas rounded-3xl p-8 border border-canvas">
+ <h2 className="text-2xl font-bold text-navy mb-4">세금까지 고려하세요</h2>
+ <p className="text-sm text-muted-blue leading-relaxed">
+ 이자·배당소득에는 15.4% 원천징수가 적용되고, 금융소득이 연 2,000만원을 넘으면
+ 금융소득종합과세 대상이 됩니다. 연금저축·IRP는 연금 수령 시 3.3~5.5%의 낮은
+ 연금소득세가 적용되고 ISA는 비과세·분리과세 혜택이 있어, <strong className="text-navy">절세
+ 계좌를 먼저 채우는 순서</strong>만으로도 같은 자산에서 실수령 현금흐름이 달라집니다.
+ 본 계산기의 수익률은 세전 기준이므로 인출 단계 세금은 별도로 감안하세요.
+ </p>
+ </section>
+
+ {/* FAQ — faqLd JSON-LD 와 동일 데이터 */}
+ <section>
+ <h2 className="text-2xl font-bold text-navy mb-5">자주 묻는 질문</h2>
+ <div className="space-y-3">
+ {FAQ_ITEMS.map((item, idx) => (
+ <details
+ key={idx}
+ className="rounded-2xl bg-white border border-canvas p-5 group transition-shadow hover:shadow-md"
+ >
+ <summary className="cursor-pointer font-bold text-navy flex items-center justify-between gap-3">
+ <span>{item.question}</span>
+ <span className="text-primary group-open:rotate-180 transition-transform flex-shrink-0">
+ ▾
+ </span>
+ </summary>
+ <p className="mt-3 text-muted-blue leading-relaxed text-sm">
+ {item.answer}
+ </p>
+ </details>
+ ))}
+ </div>
+ </section>
+
+ {/* 관련 계산기 cross-link */}
+ <RelatedCalculators currentPath="/fire-calculator" />
  </div>
  </div>
  <PageFooterAds maxWidth="4xl" />

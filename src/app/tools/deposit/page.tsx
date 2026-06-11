@@ -1,13 +1,12 @@
 import DepositCalculator from "@/components/calculators/DepositCalculator";
-import RelatedCalculators from "@/components/RelatedCalculators";
-import { HomeTopAd } from "@/components/AdPlacement";
-import CoupangBanner from "@/components/CoupangBanner";
+import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
- title: "예적금 계산기 (이자/세금) | Moneysalary",
+export const metadata: Metadata = buildPageMetadata({
+ title: "예적금 계산기 (이자/세금)",
  description: "예금, 적금 이자와 세후 수령액을 계산해보세요. 일반과세, 세금우대, 비과세 적용 가능.",
-};
+ path: "/tools/deposit",
+});
 
 export default function DepositCalculatorPage() {
  return (
@@ -23,16 +22,6 @@ export default function DepositCalculatorPage() {
  </p>
  </div>
  <DepositCalculator />
-
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
-
- <RelatedCalculators currentPath="/tools/deposit" />
-
- <div className="mt-8">
- <HomeTopAd />
- </div>
  </div>
  </div>
  );

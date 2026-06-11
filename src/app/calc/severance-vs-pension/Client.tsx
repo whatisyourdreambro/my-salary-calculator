@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -205,6 +206,9 @@ export default function SeveranceClient() {
           IRP 이전 후 만 55세 이후 10년 이상 분할 수령 시 일시 수령 대비 위 금액만큼 더 받습니다.
         </p>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

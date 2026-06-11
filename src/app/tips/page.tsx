@@ -79,8 +79,8 @@ const tips = [
 const relatedLinks = [
  { label: "연봉 계산기", href: "/", desc: "내 실수령액 계산" },
  { label: "연말정산 계산기", href: "/year-end-tax", desc: "환급액 미리 보기" },
- { label: "IRP·연금 계산기", href: "/tools/deposit", desc: "노후 자산 시뮬레이션" },
- { label: "주택청약 가점 계산", href: "/tools/real-estate/dsr", desc: "청약 당첨 가능성 확인" },
+ { label: "IRP·연금 계산기", href: "/tools/finance/irp", desc: "노후 자산 시뮬레이션" },
+ { label: "주택청약 가점 계산", href: "/calc/housing-subscription", desc: "청약 당첨 가능성 확인" },
 ];
 
 export default function TipsPage() {
@@ -133,7 +133,7 @@ export default function TipsPage() {
  <div key={si}>
  <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-primary">
  <div className="w-10 h-10 rounded-sm bg-primary flex items-center justify-center">
- <section.icon size={20} className="text-navy" />
+ <section.icon size={20} className="text-white" />
  </div>
  <h2 className="text-xl font-black text-navy">{section.category}</h2>
  </div>

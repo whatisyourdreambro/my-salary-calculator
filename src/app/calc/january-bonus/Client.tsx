@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -29,6 +30,33 @@ function calcTax(taxable: number): number {
   return 0;
 }
 
+// 근로소득세액공제 (산출세액 기준 + 총급여 구간별 한도)
+function earnedIncomeTaxCredit(grossTax: number, salary: number): number {
+  const base =
+    grossTax <= 1_300_000
+      ? grossTax * 0.55
+      : 715_000 + (grossTax - 1_300_000) * 0.3;
+  const limit =
+    salary > 120_000_000
+      ? 500_000
+      : salary > 70_000_000
+        ? 660_000
+        : salary > 33_000_000
+          ? 740_000
+          : Infinity;
+  return Math.min(base, limit);
+}
+
+// 작년 원천징수세액 단순 추정 (간이세액표 근사) — 기본 인적공제만 반영한 연간 세액.
+// 간이세액표는 카드·의료비·IRP 등 추가 공제를 모르는 상태로 매월 떼므로,
+// 추가 공제가 많을수록 결정세액보다 커져 환급이 발생하는 구조를 근사합니다.
+function estimateAnnualWithholding(salary: number, basicDeduct: number): number {
+  const taxable = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
+  const grossTax = calcTax(taxable);
+  const incomeTax = Math.max(0, grossTax - earnedIncomeTaxCredit(grossTax, salary));
+  return Math.round(incomeTax * 1.1); // 지방소득세 10% 포함
+}
+
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
 }
@@ -48,6 +76,7 @@ export default function JanuaryBonusClient() {
   const [irpFmt, setIrpFmt] = useState("3,000,000");
   const [medicalFmt, setMedicalFmt] = useState("500,000");
   const [donationFmt, setDonationFmt] = useState("100,000");
+  const [withheldFmt, setWithheldFmt] = useState(""); // 작년 원천징수세액 (미입력 시 추정치 사용)
   const [hasSpouse, setHasSpouse] = useState(false);
   const [dependents, setDependents] = useState(0);
 
@@ -56,6 +85,7 @@ export default function JanuaryBonusClient() {
   const irp = parseInput(irpFmt);
   const medical = parseInput(medicalFmt);
   const donation = parseInput(donationFmt);
+  const withheldInput = parseInput(withheldFmt);
 
   const result = useMemo(() => {
     // 인적공제
@@ -69,29 +99,17 @@ export default function JanuaryBonusClient() {
     const cardDeduction = Math.max(0, card - cardThreshold) * 0.15;
     const cardDeductionCapped = Math.min(cardDeduction, 3_000_000);
 
-    // 과세표준 (소득공제 후)
+    // 과세표준 (소득공제 후) — IRP/연금저축은 소득공제가 아닌 세액공제 항목이므로 여기서 빼지 않음
     const taxableIncome = Math.max(
       0,
-      salary - empDeduct - basicDeduct - cardDeductionCapped - irp
+      salary - empDeduct - basicDeduct - cardDeductionCapped
     );
 
     // 산출세액
     const grossTax = calcTax(taxableIncome);
 
-    // 세액공제
-    const baseTaxCredit =
-      grossTax <= 1_300_000
-        ? grossTax * 0.55
-        : 715_000 + (grossTax - 1_300_000) * 0.3;
-    const taxCreditLimit =
-      salary > 120_000_000
-        ? 500_000
-        : salary > 70_000_000
-          ? 660_000
-          : salary > 33_000_000
-            ? 740_000
-            : Infinity;
-    const earnedIncomeCredit = Math.min(baseTaxCredit, taxCreditLimit);
+    // 근로소득세액공제
+    const earnedIncomeCredit = earnedIncomeTaxCredit(grossTax, salary);
 
     // 의료비 세액공제: 총급여 3% 초과분의 15%
     const medicalThreshold = salary * 0.03;
@@ -103,23 +121,26 @@ export default function JanuaryBonusClient() {
         ? donation * (100 / 110) // 100% 환산 (limit calc)
         : 100_000 + (donation - 100_000) * 0.15;
 
-    // IRP 세액공제 (소득공제 대신 별도 세액공제 가정)
+    // IRP/연금저축 세액공제: 한도 900만, 총급여 5,500만 이하 16.5% / 초과 13.2%
     const irpCreditRate = salary > 55_000_000 ? 0.132 : 0.165;
     const irpCredit = Math.min(irp, 9_000_000) * irpCreditRate;
 
     const totalCredit =
       earnedIncomeCredit + medicalCredit + donationCredit + irpCredit;
 
-    // 결정세액 (소득세)
+    // 결정세액 (소득세 + 지방소득세)
     const finalTax = Math.max(0, grossTax - totalCredit);
     const finalLocal = finalTax * 0.1;
     const totalFinalTax = finalTax + finalLocal;
 
-    // 원천징수 추정 (간이세액표: 평균적으로 결정세액의 약 1.05배 가정)
-    const estimatedWithheld = totalFinalTax * 1.08;
+    // 원천징수세액: 직접 입력값 우선, 미입력 시 간이세액표 기반 추정치
+    const isWithheldEstimated = withheldInput <= 0;
+    const withheld = isWithheldEstimated
+      ? estimateAnnualWithholding(salary, basicDeduct)
+      : withheldInput;
 
-    // 환급액 (음수면 추징)
-    const refund = estimatedWithheld - totalFinalTax;
+    // 환급(+) / 추징(−) = 미리 낸 세금(원천징수) − 결정세액
+    const refund = withheld - totalFinalTax;
 
     return {
       taxableIncome,
@@ -127,14 +148,15 @@ export default function JanuaryBonusClient() {
       totalCredit,
       finalTax,
       totalFinalTax,
-      estimatedWithheld,
+      withheld,
+      isWithheldEstimated,
       refund,
       cardDeductionCapped,
       irpCredit,
       medicalCredit,
       donationCredit,
     };
-  }, [salary, card, irp, medical, donation, hasSpouse, dependents]);
+  }, [salary, card, irp, medical, donation, withheldInput, hasSpouse, dependents]);
 
   const isRefund = result.refund >= 0;
 
@@ -175,6 +197,13 @@ export default function JanuaryBonusClient() {
             value={donationFmt}
             onChange={(v) => setDonationFmt(v)}
           />
+          <Field
+            id="withheld"
+            label="작년 원천징수세액 (작년 한 해 미리 낸 세금)"
+            value={withheldFmt}
+            onChange={(v) => setWithheldFmt(v)}
+            placeholder="미입력 시 추정치 사용"
+          />
 
           <div>
             <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
@@ -208,6 +237,10 @@ export default function JanuaryBonusClient() {
             </div>
           </div>
         </div>
+        <p className="text-xs text-faint-blue">
+          💡 원천징수세액은 작년 한 해 급여에서 미리 떼인 소득세+지방소득세 합계입니다(원천징수영수증
+          또는 급여명세서에서 확인). 모르면 비워두세요 — 연봉 기반 간이세액 추정치로 계산됩니다.
+        </p>
       </div>
 
       {/* 결과 카드 */}
@@ -236,17 +269,27 @@ export default function JanuaryBonusClient() {
             {isRefund ? "+" : "-"}
             {fmt(Math.abs(result.refund))}원
           </div>
-          <p className="text-sm font-bold mt-2 mb-4" style={{ color: "rgba(255,255,255,0.85)" }}>
+          <p className="text-sm font-bold mt-2 mb-1" style={{ color: "rgba(255,255,255,0.85)" }}>
             {isRefund ? "1~2월 월급에 환급금 합산 예상" : "1~2월 월급에서 추가 차감 예상"}
           </p>
+          {result.isWithheldEstimated && (
+            <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>
+              원천징수세액 미입력 — 간이세액표 기반 추정치 기준
+            </p>
+          )}
         </div>
 
         {/* 상세 */}
         <div className="bg-white dark:bg-canvas-900 px-6 py-4 space-y-0">
           {[
             { label: "총급여", value: salary },
-            { label: "결정세액 (소득세 + 지방세)", value: result.totalFinalTax, sign: "+" },
-            { label: "원천징수 추정", value: result.estimatedWithheld, sign: "-" },
+            {
+              label: result.isWithheldEstimated
+                ? "원천징수세액 (간이세액표 추정치)"
+                : "원천징수세액 (입력값)",
+              value: result.withheld,
+            },
+            { label: "결정세액 (소득세 + 지방세)", value: result.totalFinalTax },
             { label: "IRP/연금저축 세액공제", value: result.irpCredit, sub: true },
             { label: "의료비 세액공제", value: result.medicalCredit, sub: true },
             { label: "기부금 세액공제", value: result.donationCredit, sub: true },
@@ -276,6 +319,9 @@ export default function JanuaryBonusClient() {
           ))}
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }
@@ -285,11 +331,13 @@ function Field({
   label,
   value,
   onChange,
+  placeholder = "0",
 }: {
   id: string;
   label: string;
   value: string;
   onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -307,7 +355,7 @@ function Field({
           value={value}
           onChange={(e) => onChange(formatInput(e.target.value))}
           className="w-full rounded-xl px-4 py-3 text-base font-black focus:outline-none focus:ring-2 focus:ring-electric/50 transition pr-10 bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50"
-          placeholder="0"
+          placeholder={placeholder}
           aria-label={label}
         />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-faint-blue">

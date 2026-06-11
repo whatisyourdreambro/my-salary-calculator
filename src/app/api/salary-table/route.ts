@@ -39,8 +39,14 @@ export async function GET(request: Request) {
  const endIndex = startIndex + itemsPerPage;
  const paginatedData = filteredData.slice(startIndex, endIndex);
 
- return NextResponse.json({
+ return NextResponse.json(
+ {
  data: paginatedData,
  totalPages,
- });
+ },
+ {
+ // 데이터가 정적(세법 고정)이므로 엣지 1일 캐시 — Cloudflare Worker 반복 실행 방지
+ headers: { "Cache-Control": "public, s-maxage=86400" },
+ }
+ );
 }

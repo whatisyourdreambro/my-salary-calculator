@@ -142,8 +142,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fun/flappy',
  '/fun/tetris',
  // Company Pages
- '/company',
- '/company/compare',
+ // /company(→/salary-db 301)·/company/compare(noindex)는 사이트맵 제외 — 모순 신호 방지
  '/company/simulator',
  // Global Pages
  '/en',

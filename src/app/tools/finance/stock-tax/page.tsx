@@ -101,7 +101,7 @@ export default function StockTaxPage() {
  <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />
  <p className="text-xs text-muted-blue leading-relaxed">
  <strong>해외주식</strong>: 연간 이익 250만원 초과분에 22%(소득세 20%+지방소득세 2%) 적용. 매년 5월 종합소득세 신고 필요.
- <strong>국내주식</strong>: 소액주주 비과세, 대주주(10억원 이상 보유)만 과세 대상.
+ <strong>국내주식</strong>: 소액주주 비과세, 대주주(종목당 50억원 이상 보유, 2024년 상향)만 과세 대상.
  </p>
  </div>
  </div>

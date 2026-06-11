@@ -46,8 +46,9 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Next 내부 자산·robots·sitemap·OG 이미지·favicon은 미들웨어 통과
-    // (Googlebot이 robots.txt와 sitemap을 받아야 정상 색인됨)
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
+    // Next 내부 자산·robots·sitemap·RSS·OG 이미지·favicon은 미들웨어 통과
+    // (Googlebot이 robots.txt와 sitemap을 받아야 정상 색인됨.
+    //  rss.xml은 RSS 수집기 UA가 SUSPICIOUS_UA에 걸려 403 나던 문제 해소)
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
   ],
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 
@@ -14,7 +15,7 @@ export default function HousingSubscriptionClient() {
     const deduction = eligibleForDeduction ? annualPayment * 0.4 : 0;
 
     // 한계세율 추정
-    const marginalRate = salary > 150_000_000 ? 0.35 : salary > 88_000_000 ? 0.35 : salary > 50_000_000 ? 0.24 : salary > 14_000_000 ? 0.15 : 0.06;
+    const marginalRate = salary > 150_000_000 ? 0.38 : salary > 88_000_000 ? 0.35 : salary > 50_000_000 ? 0.24 : salary > 14_000_000 ? 0.15 : 0.06;
     const taxSaving = deduction * marginalRate;
     const yearlyContribution = monthly * 12;
 
@@ -93,6 +94,9 @@ export default function HousingSubscriptionClient() {
           </div>
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

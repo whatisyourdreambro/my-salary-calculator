@@ -268,7 +268,7 @@ export default function IQTestClient() {
  {/* Fun Hub Link */}
  <Link
  href="/fun"
- className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-navy font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+ className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white font-bold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
  >
  <TrendingUp size={18} /> 다른 테스트 하러가기
  </Link>
@@ -296,7 +296,7 @@ export default function IQTestClient() {
  <div id="answers-list" className="hidden space-y-6 mt-6 border-t border-white/5 pt-6">
  {questions.map((q, idx) => (
  <div key={q.id} className="border-b border-white/5 last:border-0 pb-4 last:pb-0">
- <p className="font-bold text-sm mb-2 text-zinc-200">Q{idx + 1}. {q.question}</p>
+ <p className="font-bold text-sm mb-2 text-muted-blue">Q{idx + 1}. {q.question}</p>
  <p className="text-xs text-faint-blue mb-2">정답: <span className="font-bold text-primary">{q.options[q.answer]}</span></p>
  <p className="text-xs text-faint-blue bg-white/5 p-3 rounded-xl">
  💡 {q.explanation}

@@ -23,6 +23,8 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  restDelta: 0.001,
  });
 
+ // 스크롤 진행 바 등 클라이언트 전용 요소에만 부분 적용 —
+ // 본문은 즉시 렌더해 SSR/정적 HTML 에 노출 (이전: 전체 return null → 본문 미렌더로 색인 누락)
  const [mounted, setMounted] = useState(false);
 
  useEffect(() => {
@@ -39,19 +41,20 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  ? { name: "Flat Tax Calculator", href: "/en/flat-tax" }
  : { name: "Salary Converter", href: "/en/salary-converter" };
 
- if (!mounted) return null;
-
  return (
  <main className="min-h-screen bg-canvas relative selection:bg-primary/20">
- {/* Reading Progress Bar */}
+ {/* Reading Progress Bar — 스크롤 의존이라 mount 후에만 렌더 (hydration 안전) */}
+ {mounted && (
  <motion.div
  className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-[#0145F2] to-primary/80 z-50 origin-left"
  style={{ scaleX }}
  />
+ )}
 
  {/* Hero Section */}
  <div className="relative pt-28 pb-16 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
+ {/* 다크모드 대응 — via-white/indigo 고정색 대신 양 모드 안전한 반투명 브랜드 틴트 */}
+ <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 -z-10" />
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
  <motion.div

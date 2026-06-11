@@ -1,5 +1,5 @@
 // src/app/new-employee-2026/page.tsx
-// 3월 신입 연봉 협상 시즌 페이지
+// 신입 연봉 협상 가이드 페이지 (시즌 중립)
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -104,7 +104,7 @@ export default function NewEmployee2026Page() {
  <div className="text-center mb-12">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <TrendingUp className="w-4 h-4" />
- 3월 신입 시즌
+ 2026 신입 연봉 가이드
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 신입 연봉 <span className="text-electric">협상 가이드</span>

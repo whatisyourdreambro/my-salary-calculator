@@ -5,6 +5,11 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import PageFooterAds from "@/components/PageFooterAds";
 import { ArrowLeft, Globe } from "lucide-react";
+import {
+  GlobalTaxEngine,
+  EXCHANGE_RATES,
+  type CountryCode,
+} from "@/lib/global/taxEngine";
 
 // 국가별 실수령액 BarChart(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const GlobalChart = dynamic(() => import("@/components/charts/GlobalChart"), {
@@ -12,28 +17,35 @@ const GlobalChart = dynamic(() => import("@/components/charts/GlobalChart"), {
   loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
 });
 
+// 표시용 환율 — taxEngine 의 EXCHANGE_RATES 에서 파생 (계산·표기 일치)
+const RATES = {
+  USD: Math.round(1 / EXCHANGE_RATES.US), // 1 USD ≈ 1,333원
+  JPY: Math.round((1 / EXCHANGE_RATES.JP) * 100) / 100, // 1 JPY ≈ 9.09원
+  SGD: Math.round(1 / EXCHANGE_RATES.SG), // 1 SGD = 1,000원
+};
+
+const COUNTRIES: { code: CountryCode; name: string; color: string }[] = [
+  { code: "KR", name: "한국 🇰🇷",     color: "#10B981" },
+  { code: "US", name: "미국(CA) 🇺🇸", color: "#3B82F6" },
+  { code: "JP", name: "일본 🇯🇵",     color: "#F59E0B" },
+  { code: "SG", name: "싱가포르 🇸🇬", color: "#8B5CF6" },
+];
+
 export default function GlobalTaxPage() {
   const [salaryKRW, setSalaryKRW] = useState(60000000);
 
-  const RATES = {
-    USD: 1350,
-    JPY: 9,
-    SGD: 1000,
-  };
-
-  const calculateGlobalNet = (grossKRW: number) => {
-    const krNet = grossKRW * 0.84;
-    const usNetKRW = (grossKRW / RATES.USD) * 0.72 * RATES.USD;
-    const jpNetKRW = (grossKRW / RATES.JPY) * 0.78 * RATES.JPY;
-    const sgNetKRW = (grossKRW / RATES.SGD) * 0.92 * RATES.SGD;
-
-    return [
-      { name: "한국 🇰🇷",      net: krNet,    gross: grossKRW, color: "#10B981" },
-      { name: "미국(CA) 🇺🇸",  net: usNetKRW, gross: grossKRW, color: "#3B82F6" },
-      { name: "일본 🇯🇵",      net: jpNetKRW, gross: grossKRW, color: "#F59E0B" },
-      { name: "싱가포르 🇸🇬",  net: sgNetKRW, gross: grossKRW, color: "#8B5CF6" },
-    ];
-  };
+  // 고정 비율(84%/72%/78%/92%) 대신 GlobalTaxEngine 의 국가별 누진 구간 계산 사용
+  const calculateGlobalNet = (grossKRW: number) =>
+    COUNTRIES.map(({ code, name, color }) => {
+      const result = GlobalTaxEngine.calculate(grossKRW, code);
+      // 현지 통화 실수령액 → 원화 환산
+      return {
+        name,
+        net: result.net / EXCHANGE_RATES[code],
+        gross: grossKRW,
+        color,
+      };
+    });
 
   const data = calculateGlobalNet(salaryKRW);
   const fmt = (val: number) => Math.round(val / 10000).toLocaleString("ko-KR");
@@ -91,7 +103,7 @@ export default function GlobalTaxPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">엔화 환율</span>
-                    <span>100 JPY = {RATES.JPY * 100}원</span>
+                    <span>100 JPY = {Math.round(RATES.JPY * 100)}원</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">싱가포르달러</span>
@@ -112,7 +124,7 @@ export default function GlobalTaxPage() {
               </div>
 
               <div className="mt-6 text-center text-sm text-muted-foreground">
-                * 각국 단일 납세자 기준 평균 유효세율 추정치입니다. <br />
+                * 각국 단일 납세자 기준, 누진세율 구간을 적용한 간이 추정치입니다. <br />
                 실제 실수령액은 지역·공제항목에 따라 크게 달라질 수 있습니다.
               </div>
             </div>

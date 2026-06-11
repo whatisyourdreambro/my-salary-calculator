@@ -9,6 +9,7 @@ import {
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026 세법 기준 로직 (소득세법 제47조, 제55조, 제59조)
@@ -566,6 +567,9 @@ export default function BonusCalculatorPage() {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* ── 결과 직후 광고 ── */}
+        <CalcResultAd />
 
         {/* ── 한계세율 경고 배너 ── */}
         {r.marginalRate >= 35 && bonus > 0 && (

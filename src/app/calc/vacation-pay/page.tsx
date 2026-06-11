@@ -5,6 +5,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import VacationPayClient from "./Client";
 
@@ -27,7 +28,7 @@ const FAQ_ITEMS = [
   {
     question: "1년 미만 근무자도 연차수당을 받나요?",
     answer:
-      "네, 1년 미만 근로자도 1개월 개근 시 1일 연차가 발생합니다(최대 11일). 미사용 시 수당으로 받을 수 있으며, 1년 이상 근무하면 추가로 15일이 발생합니다. 4년 차부터 매 2년마다 1일씩 가산되어 최대 25일까지 늘어납니다.",
+      "네, 1년 미만 근로자도 1개월 개근 시 1일 연차가 발생합니다(최대 11일). 미사용 시 수당으로 받을 수 있으며, 1년 이상 근무하면 추가로 15일이 발생합니다. 3년 이상 근속 시(3년차)부터 매 2년마다 1일씩 가산되어 최대 25일까지 늘어납니다.",
   },
   {
     question: "연차수당과 퇴직금에 영향이 있나요?",
@@ -86,6 +87,9 @@ export default function VacationPayPage() {
               <li>최대 25일 (21년차 이후)</li>
             </ul>
           </article>
+
+          {/* 본문-FAQ 사이 광고 */}
+          <InArticleAd />
 
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">자주 묻는 질문</h2>

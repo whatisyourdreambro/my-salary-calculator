@@ -1,11 +1,10 @@
 import MathCalculators from "@/components/calculators/MathCalculators";
-import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
-// 9차 점검 — buildPageMetadata로 표준화 + JsonLd + RelatedCalculators 추가
+// 9차 점검 — buildPageMetadata로 표준화 + JsonLd 추가 (RelatedCalculators는 tools/layout 공통 블록에 위임)
 export const metadata: Metadata = buildPageMetadata({
  title: "퍼센트 계산기 & 단위 변환기 — 할인율·증감율·기본 환산 한 번에",
  description:
@@ -47,7 +46,6 @@ export default function MathPage() {
  </p>
  </div>
  <MathCalculators />
- <RelatedCalculators currentPath="/tools/math" title="이런 계산기도 함께 보세요" />
  </div>
  </div>
  );

@@ -13,7 +13,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   Sparkles,
@@ -243,6 +243,8 @@ export default function SalaryRaisePage() {
               계산하세요. 누진세율·4대보험 반영, 5년 누적 차이까지.
             </p>
           </header>
+
+          <HomeTopAd />
 
           <SalaryRaiseClient />
 

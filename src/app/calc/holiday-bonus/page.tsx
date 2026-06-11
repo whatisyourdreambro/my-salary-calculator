@@ -9,6 +9,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import HolidayBonusClient from "./Client";
 
@@ -108,6 +109,9 @@ export default function HolidayBonusPage() {
               취업규칙에 명시된 정기 지급이라면 정기 상여로 봅니다.
             </p>
           </article>
+
+          {/* 본문-FAQ 사이 광고 */}
+          <InArticleAd />
 
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">자주 묻는 질문</h2>

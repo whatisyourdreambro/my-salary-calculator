@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 // 간단한 누진세 계산 (2026)
 const TAX_BRACKETS = [
@@ -180,6 +181,9 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
           </div>
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
 
       {/* 전체 직급 비교 표 */}
       <div className="rounded-2xl overflow-hidden bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800">

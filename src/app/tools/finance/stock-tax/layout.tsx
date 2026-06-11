@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "주식 양도소득세 계산기 - 해외주식·대주주 (2026)",
@@ -10,5 +13,20 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function StockTaxLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tools/finance/stock-tax", { leafName: "주식 양도소득세 계산기" }),
+ softwareApplicationLd({
+ name: "주식 양도소득세 계산기",
+ description: "해외주식 250만원 공제·대주주 양도소득세 계산",
+ url: "/tools/finance/stock-tax",
+ }),
+ ]}
+ />
+ {children}
+ <ToolPageContent path="/tools/finance/stock-tax" />
+ </>
+ );
 }

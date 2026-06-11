@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "도지코인 키우기 (Meme Coin Clicker) - 100조 부자 되기",
- description: "중독성 강한 코인 채굴 클리커 게임! 광클해서 도지코인을 모으고 화성 갈끄니까~ 가상 화폐 모의 투자 게임.",
+ title: "밈코인 모의투자 시뮬레이션 (CRYPTO PANIC) - 100만원으로 인생역전?",
+ description: "가상 자금 100만원을 밈코인 3종에 배분하고 랜덤 시장 이벤트를 체험하는 모의투자 시뮬레이션. -99% 폭락의 공포를 안전하게 미리 경험해보세요.",
  path: "/fun/meme-coin",
- keywords: ["클리커게임", "코인게임", "도지코인", "비트코인게임", "돈버는게임", "방치형게임"],
+ keywords: ["밈코인 모의투자", "코인 시뮬레이션", "가상 투자 게임", "코인게임", "모의투자"],
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "Meme Coin Clicker",
- "description": "가상 암호화폐 채굴 시뮬레이션 클리커 게임",
+ "name": "CRYPTO PANIC - 밈코인 모의투자",
+ "description": "가상 자금 100만원으로 밈코인 포트폴리오를 구성하고 랜덤 시장 이벤트를 체험하는 모의투자 시뮬레이션 게임",
  "genre": "Simulation",
  "applicationCategory": "Game",
  "operatingSystem": "Any",

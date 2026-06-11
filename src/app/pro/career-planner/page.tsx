@@ -16,6 +16,11 @@ import {
 } from "@/lib/careerPlanner";
 import CurrencyInput from "@/components/CurrencyInput";
 import NumberStepper from "@/components/NumberStepper";
+import RelatedCalculators from "@/components/RelatedCalculators";
+import RelatedGuides from "@/components/RelatedGuides";
+import type { RelatedGuideItem } from "@/lib/relatedGuides";
+import JsonLd from "@/components/JsonLd";
+import { faqLd } from "@/lib/structuredData";
 import { Plus, X, BrainCircuit, TrendingUp, Briefcase, GraduationCap } from "lucide-react";
 import dynamic from "next/dynamic";
 
@@ -37,6 +42,58 @@ const eventTypeNames: { [key in CareerEventType]: string } = {
  education: '학위/휴직',
  side_project: '사이드 프로젝트',
 };
+
+// FAQ — 본문 하단 노출 + faqLd JSON-LD 동시 사용 (thin content 해소)
+const PLANNER_FAQ = [
+ {
+ question: "커리어 패스 시뮬레이터는 어떤 원리로 계산하나요?",
+ answer:
+ "초기 연봉에 매년 기본 인상률을 복리로 적용하고, 승진·이직·학위(휴직)·사이드 프로젝트 이벤트를 해당 연차에 반영합니다. 소득에서 물가 상승률이 적용된 지출을 뺀 저축액을 투자 수익률로 굴려 연도별 자산 흐름을 예측합니다. 결과는 참고용 추정치입니다.",
+ },
+ {
+ question: "연봉 인상률과 투자 수익률은 얼마로 설정하는 것이 현실적인가요?",
+ answer:
+ "국내 기업의 평균 연봉 인상률은 통상 연 3~5% 수준이며, 이직 시에는 10~20% 상승이 일반적입니다. 투자 수익률은 장기 주가지수 평균인 연 7~8%를 기본으로 하되, 보수적으로 보려면 4~5%로 낮춰 시뮬레이션해 보세요.",
+ },
+ {
+ question: "승진 이벤트와 이직 이벤트는 무엇이 다른가요?",
+ answer:
+ "승진은 현재 연봉에 입력한 인상률(%)을 곱해 올리는 방식이고, 이직은 연봉 자체를 새로 입력한 금액으로 교체하는 방식입니다. 큰 폭의 연봉 점프는 이직 이벤트로, 꾸준한 상승은 승진 이벤트로 설계하면 실제 커리어와 비슷한 곡선을 만들 수 있습니다.",
+ },
+ {
+ question: "시뮬레이션의 연봉은 세전인가요, 세후인가요?",
+ answer:
+ "입력하는 연봉은 세전 기준이며, 저축액 계산 시 내부적으로 간이 세후 소득으로 환산해 사용합니다. 정확한 월 실수령액이 궁금하다면 머니샐러리 홈의 연봉 계산기에서 2026년 세법 기준으로 확인하세요.",
+ },
+];
+
+// 추천 가이드 — 클라이언트 페이지라 서버 헬퍼(getRelatedGuides) 대신
+// 가벼운 메타데이터만 하드코딩 (가이드 본문 번들 유입 방지)
+const PLANNER_RELATED_GUIDES: RelatedGuideItem[] = [
+ {
+ slug: "salary-negotiation-secret",
+ title: "연봉협상 필승 전략: '얼마 원하세요?'에 대한 모범 답안 🗣️",
+ description:
+ "협상 테이블에서 절대 쫄지 않는 법! 내 몸값을 20% 이상 점프시키는 구체적인 대화 스크립트와 타이밍.",
+ category: "연봉",
+ level: "중급",
+ },
+ {
+ slug: "salary-guide-2026",
+ title: "2026년 연봉 실수령액표: 내 월급의 진실 💸",
+ description:
+ "연봉 1억이면 월 얼마? 2026년 최신 세율과 4대보험 요율을 완벽 반영한 구간별 실수령액 총정리!",
+ category: "연봉",
+ level: "초급",
+ },
+ {
+ slug: "economic-freedom-fire",
+ title: "경제적 자유(FIRE): 4%의 법칙 🔥",
+ description: "얼마가 있어야 은퇴할까? 파이어족의 자산 인출 전략.",
+ category: "기초",
+ level: "고급",
+ },
+];
 
 const formatYAxis = (tick: any) => {
  if (tick >= 100000000) return `${(tick / 100000000).toFixed(1)}억`;
@@ -226,6 +283,67 @@ export default function CareerPlannerPage() {
  </div>
  </div>
  </div>
+
+ {/* ── 활용법 + FAQ + cross-link — thin content·막다른 페이지 해소 ── */}
+ <JsonLd data={faqLd(PLANNER_FAQ)} />
+
+ <section className="mt-20 max-w-3xl mx-auto">
+ <h2 className="text-2xl font-bold mb-4">커리어 시뮬레이션 활용법</h2>
+ <div className="space-y-4 text-muted-foreground leading-relaxed">
+ <p>
+ 커리어 패스 시뮬레이터는 단순히 &ldquo;연봉이 얼마나 오를까&rdquo;를 넘어,
+ 커리어 선택이 장기 자산에 미치는 영향을 숫자로 보여주는 도구입니다. 현재
+ 나이·연봉·자산과 기본 인상률을 입력한 뒤, 예상되는 승진·이직 시점을
+ 이벤트로 추가하면 연도별 소득과 순자산 곡선이 그려집니다. 같은 조건에서
+ 이벤트만 바꿔가며 여러 시나리오를 비교해 보는 것이 핵심 활용법입니다.
+ </p>
+ <p>
+ 예를 들어 &ldquo;3년차에 연봉 20% 점프 이직&rdquo;과 &ldquo;매년 5%
+ 인상 + 7년차 승진&rdquo; 두 시나리오를 각각 돌려보면, 단기 연봉은
+ 이직이 앞서더라도 투자 수익률과 저축 습관에 따라 10년 뒤 순자산은
+ 달라질 수 있다는 것을 확인할 수 있습니다. 대학원 진학이나 휴직처럼
+ 소득이 줄어드는 구간도 학위/휴직 이벤트로 반영해 기회비용을 미리
+ 가늠해 보세요.
+ </p>
+ <p>
+ 시뮬레이션 결과는 입력한 가정에 따라 달라지는 참고용 추정치입니다. 세금·
+ 4대보험이 정확히 반영된 실수령액은 홈의 연봉 계산기에서, 은퇴 시점
+ 설계는 FIRE 계산기에서 이어서 확인하면 계획의 정밀도를 높일 수
+ 있습니다.
+ </p>
+ </div>
+ </section>
+
+ <section className="mt-12 max-w-3xl mx-auto">
+ <h2 className="text-2xl font-bold mb-4">자주 묻는 질문</h2>
+ <div className="space-y-3">
+ {PLANNER_FAQ.map((item) => (
+ <details
+ key={item.question}
+ className="group p-5 bg-card rounded-xl border border-border"
+ >
+ <summary className="cursor-pointer text-sm font-bold">
+ {item.question}
+ </summary>
+ <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+ {item.answer}
+ </p>
+ </details>
+ ))}
+ </div>
+ </section>
+
+ <div className="max-w-3xl mx-auto">
+ <RelatedCalculators
+ currentPath="/pro/career-planner"
+ title="시뮬레이션 다음 단계 계산기"
+ />
+ <RelatedGuides
+ items={PLANNER_RELATED_GUIDES}
+ title="커리어 설계에 도움 되는 가이드"
+ />
+ </div>
+
  <PageFooterAds maxWidth="5xl" />
  </main>
  );

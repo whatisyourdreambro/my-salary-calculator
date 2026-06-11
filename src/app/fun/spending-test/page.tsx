@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Turtle, Squirrel, Zap, Rabbit, Download } from "lucide-react";
+import { Turtle, Squirrel, Zap, Rabbit, Download, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 
 const questions = [
@@ -288,6 +289,14 @@ export default function SpendingTestPage() {
                 >
                   다시하기
                 </motion.button>
+
+                {/* 다음 콘텐츠 유도: MBTI 연봉 분석 */}
+                <Link
+                  href="/mbti-salary"
+                  className="mt-4 w-full py-4 bg-violet-500/10 border border-violet-500/30 hover:bg-violet-500/20 rounded-2xl font-bold text-violet-300 transition-colors flex items-center justify-center gap-2"
+                >
+                  <TrendingUp size={18} /> MBTI별 인생 연봉 그래프도 보러가기
+                </Link>
               </motion.div>
             )
           )}

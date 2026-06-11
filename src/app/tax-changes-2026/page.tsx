@@ -179,10 +179,11 @@ export default function TaxChanges2026Page() {
  </p>
  </div>
 
- {/* 카테고리별 변경사항 */}
+ {/* 카테고리별 변경사항 — 2번째 섹션 직후 InArticleAd (viewability 상향) */}
  <div className="space-y-8 mb-12">
- {MAJOR_CHANGES.map((cat) => (
- <section key={cat.category}>
+ {MAJOR_CHANGES.map((cat, catIdx) => (
+ <div key={cat.category}>
+ <section>
  <div className="flex items-center gap-3 mb-4">
  <span className="text-3xl">{cat.emoji}</span>
  <h2 className="text-xl sm:text-2xl font-black text-navy">{cat.category}</h2>
@@ -208,10 +209,10 @@ export default function TaxChanges2026Page() {
  ))}
  </div>
  </section>
+ {catIdx === 1 && <InArticleAd />}
+ </div>
  ))}
  </div>
-
- <InArticleAd />
 
  {/* CTA */}
  <Link
@@ -245,7 +246,7 @@ export default function TaxChanges2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
  </details>
  ))}
  </div>

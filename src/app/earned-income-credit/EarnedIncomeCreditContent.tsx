@@ -15,7 +15,7 @@ import {
  Calendar,
  ExternalLink,
 } from "lucide-react";
-import { InArticleAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Link from "next/link";
 
@@ -53,7 +53,7 @@ const HOUSEHOLD_CONFIGS: Record<HouseholdType, HouseholdConfig> = {
  "dual-earner": {
   label: "맞벌이가구",
   description: "신청인 + 배우자 각각 소득 300만원 이상",
-  maxIncome: 3800,
+  maxIncome: 4400,
   peakStart: 800,
   peakEnd: 1700,
   maxBenefit: 330,
@@ -61,8 +61,8 @@ const HOUSEHOLD_CONFIGS: Record<HouseholdType, HouseholdConfig> = {
  },
 };
 
-const PROPERTY_THRESHOLD = 14000; // 재산 1억4천만원 이상 → 50% 감액
-const PROPERTY_MAX = 20000;       // 재산 2억원 이상 → 지급 불가
+const PROPERTY_THRESHOLD = 17000; // 재산 1억7천만원 이상 → 50% 감액
+const PROPERTY_MAX = 24000;       // 재산 2억4천만원 이상 → 지급 불가
 
 function calcBenefit(income: number, cfg: HouseholdConfig): number {
  const { peakStart, peakEnd, maxIncome, maxBenefit } = cfg;
@@ -107,9 +107,9 @@ const APPLY_STEPS = [
 const ELIGIBILITY_CHECKS = [
  { label: "단독가구 소득", value: "연간 2,200만원 미만" },
  { label: "홑벌이가구 소득", value: "연간 3,200만원 미만" },
- { label: "맞벌이가구 소득", value: "연간 3,800만원 미만" },
- { label: "재산 요건", value: "6월 1일 기준 가구원 합산 2억원 미만" },
- { label: "연령 요건", value: "단독가구는 40세 이상 (배우자·자녀 있으면 연령 무관)" },
+ { label: "맞벌이가구 소득", value: "연간 4,400만원 미만" },
+ { label: "재산 요건", value: "6월 1일 기준 가구원 합산 2억 4천만원 미만" },
+ { label: "연령 요건", value: "연령 무관 (단독가구 연령 요건 폐지)" },
  { label: "국적 요건", value: "대한민국 국적 (또는 국적자와 혼인한 외국인)" },
 ];
 
@@ -119,8 +119,8 @@ const FAQ_LIST = [
   a: "네. 일용근로소득, 사업소득, 종교인소득도 포함됩니다. 단, 소득 유형에 따라 계산 방식이 다를 수 있어 국세청 안내를 확인하세요.",
  },
  {
-  q: "재산이 1억4천만원 이상이면 아예 못 받나요?",
-  a: "받을 수 있지만 50% 감액됩니다. 재산이 2억원 이상이면 지급 대상에서 제외됩니다. 재산에는 토지·건물·자동차·금융재산 등이 포함됩니다.",
+  q: "재산이 1억7천만원 이상이면 아예 못 받나요?",
+  a: "받을 수 있지만 50% 감액됩니다. 재산이 2억 4천만원 이상이면 지급 대상에서 제외됩니다. 재산에는 토지·건물·자동차·금융재산 등이 포함됩니다.",
  },
  {
   q: "반기 신청과 정기 신청 중 무엇이 유리한가요?",
@@ -187,6 +187,8 @@ export default function EarnedIncomeCreditContent() {
      가구 유형 + 연간 소득 입력 → 예상 지급액 자동 계산
     </p>
    </div>
+
+   <HomeTopAd />
 
    {/* Calculator Card */}
    <div className="bg-white rounded-2xl border border-canvas-200 shadow-sm p-6 space-y-5">
@@ -257,7 +259,7 @@ export default function EarnedIncomeCreditContent() {
       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-blue text-sm">만원</span>
      </div>
      <p className="text-xs text-muted-blue px-1">
-      토지·건물·자동차·금융재산 합산 / 2억원 미만이어야 신청 가능
+      토지·건물·자동차·금융재산 합산 / 2억 4천만원 미만이어야 신청 가능
      </p>
     </div>
 
@@ -270,7 +272,7 @@ export default function EarnedIncomeCreditContent() {
      {status === "over-property" && (
       <div className="flex items-center gap-2 text-red-600 font-semibold">
        <AlertCircle size={18} />
-       재산 2억원 이상 — 지급 대상 제외
+       재산 2억 4천만원 이상 — 지급 대상 제외
       </div>
      )}
      {status === "over-income" && (
@@ -301,7 +303,7 @@ export default function EarnedIncomeCreditContent() {
        {isPropertyReduced && (
         <div className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2 flex items-center gap-1.5">
          <AlertCircle size={13} />
-         재산 1억4천만원 이상 → 50% 감액 적용 (기준액 {formatWon(baseBenefit)}만원)
+         재산 1억7천만원 이상 → 50% 감액 적용 (기준액 {formatWon(baseBenefit)}만원)
         </div>
        )}
        <div className="grid grid-cols-2 gap-2 pt-1">
@@ -360,8 +362,8 @@ export default function EarnedIncomeCreditContent() {
      </table>
     </div>
     <div className="text-xs text-muted-blue bg-canvas rounded-lg px-3 py-2 space-y-1">
-     <p>• 재산 1억4천만원 이상 2억원 미만: 지급액 50% 감액</p>
-     <p>• 재산 2억원 이상: 지급 불가</p>
+     <p>• 재산 1억 7천만원 이상 2억 4천만원 미만: 지급액 50% 감액</p>
+     <p>• 재산 2억 4천만원 이상: 지급 불가</p>
      <p>• 자녀장려금(18세 미만 자녀 1인당 최대 100만원)과 중복 수급 가능</p>
     </div>
    </div>
@@ -412,7 +414,7 @@ export default function EarnedIncomeCreditContent() {
     </div>
    </div>
 
-   <InArticleAd />
+   <GuideMidAd />
 
    {/* FAQ */}
    <div className="bg-white rounded-2xl border border-canvas-200 shadow-sm p-6 space-y-3">

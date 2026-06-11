@@ -19,13 +19,13 @@ export default function LoadingInterstitial({ isOpen, onClose }: LoadingIntersti
  clearInterval(interval);
  return 100;
  }
- return prev + 2; // 50 steps * 30ms = 1500ms approx
+ return prev + 8; // ~13 steps * 30ms = 400ms approx
  });
  }, 30);
 
  const timer = setTimeout(() => {
  onClose();
- }, 1500);
+ }, 400);
 
  return () => {
  clearInterval(interval);
@@ -73,14 +73,6 @@ export default function LoadingInterstitial({ isOpen, onClose }: LoadingIntersti
  />
  </div>
 
- {/* Premium Ad Slot (300x250) */}
- <div className="flex justify-center py-4">
- <div className="relative">
- <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-background/80 px-3 py-1 rounded-full border border-border text-[10px] text-muted-foreground">
- SPONSORED
- </div>
- </div>
- </div>
  </div>
  </motion.div>
  )}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import LtvCalculator from "@/components/calculators/real-estate/LtvCalculator";
-import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { buildToolMetadata } from "@/lib/seo";
 import {
@@ -291,8 +290,6 @@ export default function LtvPage() {
             특례·다주택자 규제 등은 별도 확인 필수.
           </p>
         </div>
-
-        <RelatedCalculators currentPath="/tools/real-estate/ltv" />
       </div>
     </main>
   );

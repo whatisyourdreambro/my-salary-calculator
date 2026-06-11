@@ -16,7 +16,7 @@ import SavingsInterestClient from "./SavingsInterestClient";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 적금·예금 이자 계산기 — 세후 만기 원리금 즉시 산출",
   description:
-    "월 50만원 × 24개월 연 4% 적금이면 만기 약 1,250만원·세후 이자 약 105만원. 정기적금/정기예금, 단리/복리 모두 지원. 이자소득세 15.4% 자동 차감 + 비과세·세금우대 옵션.",
+    "월 50만원 × 24개월 연 4% 적금이면 만기 약 1,242만원·세후 이자 약 42만원. 정기적금/정기예금, 단리/복리 모두 지원. 이자소득세 15.4% 자동 차감 + 비과세·세금우대 옵션.",
   path: "/savings-interest-2026",
   keywords: [
     "적금 이자 계산기",

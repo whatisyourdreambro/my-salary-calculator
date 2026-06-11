@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "복리 계산기 - 적립식 투자 자산 시뮬레이션 (2026)",
@@ -10,5 +13,20 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CompoundLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tools/finance/compound", { leafName: "복리 계산기" }),
+ softwareApplicationLd({
+ name: "복리 계산기",
+ description: "원금+월 적립+복리 수익률로 미래 자산 시뮬레이션",
+ url: "/tools/finance/compound",
+ }),
+ ]}
+ />
+ {children}
+ <ToolPageContent path="/tools/finance/compound" />
+ </>
+ );
 }

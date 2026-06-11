@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { ArrowLeft, Building2, Building, Calculator, Info } from "lucide-react";
+import { ArrowLeft, Calculator, Info } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 
 // 실수령액 비교 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const SimulatorChart = dynamic(() => import("@/components/charts/SimulatorChart"), {
@@ -17,25 +18,22 @@ export default function SimulatorPage() {
  const [largeSalary, setLargeSalary] = useState(45000000);
  const [isYouth, setIsYouth] = useState(true); // SME Youth Tax Exemption (90% reduction up to 2M)
 
- // Simplified Tax Calculation Logic (Approximation)
+ // 메인 계산기와 동일한 2026 정식 세법 로직(TaxLogic) 재사용 —
+ // 근로소득공제·근로소득세액공제 포함, 비과세 식대 20만원·본인 1인 공제 기준.
+ // 중소기업 청년 소득세 감면(90%, 연 한도 200만원)은 산출 소득세 위에 적용.
  const calculateNetPay = (gross: number, isSmeYouth: boolean) => {
- // Deductions (National Pension 4.75%, Health 3.595%, Care 0.47%, Employment 0.9%)
- const insurance = gross * (0.0475 + 0.03595 + 0.0047 + 0.009);
+ const tax = calculateSalary2026(gross, 200000, 1, 0);
+ if (!isSmeYouth) return tax.netPay; // Monthly Net
 
- // Income Tax (Simplified Progressive Tax)
- let taxable = gross - insurance - 1500000; // Basic deduction approximation
- let tax = 0;
- if (taxable <= 14000000) tax = taxable * 0.06;
- else if (taxable <= 50000000) tax = 840000 + (taxable - 14000000) * 0.15;
- else tax = 6240000 + (taxable - 50000000) * 0.24;
-
- // Apply SME Youth Exemption (90% reduction, max 2M)
- if (isSmeYouth) {
- const reduction = Math.min(tax * 0.9, 2000000);
- tax -= reduction;
- }
-
- return Math.floor((gross - insurance - tax) / 12); // Monthly Net
+ // 감면은 월 소득세 기준 적용 (연 한도 200만원 → 월 약 16.6만원)
+ const reduction = Math.min(tax.incomeTax * 0.9, Math.floor(2000000 / 12));
+ const reducedIncomeTax = Math.max(0, tax.incomeTax - reduction);
+ const reducedLocalTax = Math.floor((reducedIncomeTax * 0.1) / 10) * 10;
+ return (
+ tax.netPay +
+ (tax.incomeTax - reducedIncomeTax) +
+ (tax.localIncomeTax - reducedLocalTax)
+ );
  };
 
  const smeNet = calculateNetPay(smeSalary, isYouth);
@@ -57,9 +55,12 @@ export default function SimulatorPage() {
  </Link>
 
  <div className="text-center mb-12">
- <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
- David vs. Goliath
+ <h1 className="text-3xl md:text-5xl font-black mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+ 중소기업 vs 대기업 실수령액 비교
  </h1>
+ <p className="text-sm font-bold text-faint-blue tracking-wide mb-4">
+ David vs. Goliath
+ </p>
  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
  "연봉이 전부가 아닙니다."<br />
  중소기업 청년 소득세 감면 혜택을 적용하면 실수령액은 어떻게 달라질까요?
@@ -69,7 +70,7 @@ export default function SimulatorPage() {
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
  {/* Controls */}
  <div className="lg:col-span-4 space-y-6">
- <div className="bg-card/40 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+ <div className="bg-white border border-canvas-200 rounded-3xl p-6">
  <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
  <Calculator className="w-5 h-5 text-primary" />
  시뮬레이션 설정
@@ -116,7 +117,7 @@ export default function SimulatorPage() {
  </div>
  </div>
 
- <div className="pt-4 border-t border-white/10">
+ <div className="pt-4 border-t border-canvas-200">
  <div className="flex items-center justify-between">
  <label className="text-sm font-medium text-foreground flex items-center gap-2">
  청년 소득세 감면 (90%)
@@ -142,7 +143,7 @@ export default function SimulatorPage() {
 
  {/* Results */}
  <div className="lg:col-span-8 space-y-6">
- <div className="bg-card/40 backdrop-blur-md border border-white/10 rounded-3xl p-8 min-h-[500px] flex flex-col">
+ <div className="bg-white border border-canvas-200 rounded-3xl p-8 min-h-[500px] flex flex-col">
  <h3 className="text-xl font-bold mb-8 text-center">월 실수령액 비교</h3>
 
  <div className="flex-1 w-full">

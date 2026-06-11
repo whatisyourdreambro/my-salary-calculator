@@ -33,6 +33,12 @@ interface InteractiveTableProps {
  children: number,
  settings: AdvancedSettings
  ) => any;
+ /** 입력 금액 → 세전 월환산 변환 (시급 ×209, 주급 ×52÷12, 월급 그대로, 연봉 ÷12). 미지정 시 연봉 기준(÷12). */
+ toMonthly?: (salary: number) => number;
+ /** 표 첫 열 링크 base (예: "/salary") — SalaryTable 로 그대로 전달 */
+ linkColumnBaseHref?: string;
+ /** 첫 열 값 → 연봉 환산 배수 (시급 ×2508, 주급 ×52) — SalaryTable 로 그대로 전달 */
+ linkValueMultiplier?: number;
  pageConfig: {
  title: string;
  basePath: string;
@@ -50,6 +56,9 @@ export default function InteractiveTable({
  tableHeaders,
  highlightRows,
  calculationFn,
+ toMonthly = (salary) => salary / 12,
+ linkColumnBaseHref,
+ linkValueMultiplier,
  pageConfig,
 }: Omit<InteractiveTableProps, "totalPages" | "paginatedData">) {
  const searchParams = useSearchParams();
@@ -229,7 +238,7 @@ export default function InteractiveTable({
  <div className="mt-6 pt-5 space-y-2.5 text-sm font-medium relative z-10 border-t border-white/20">
  <div className="flex justify-between items-center">
  <span className="text-white/70">세전 (월환산)</span>
- <span className="font-bold tabular-nums text-white">{Math.round(salary / 12).toLocaleString('ko-KR')}원</span>
+ <span className="font-bold tabular-nums text-white">{Math.round(toMonthly(salary)).toLocaleString('ko-KR')}원</span>
  </div>
  <div className="flex justify-between items-center">
  <span className="text-white/70">총 공제액</span>
@@ -305,7 +314,8 @@ export default function InteractiveTable({
  data={paginatedData}
  highlightRows={highlightRows}
  unit="원"
- adInterval={15}
+ linkColumnBaseHref={linkColumnBaseHref}
+ linkValueMultiplier={linkValueMultiplier}
  />
  </motion.div>
  </div>

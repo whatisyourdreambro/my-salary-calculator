@@ -282,7 +282,7 @@ export default function TaxRates2026Page() {
  {item.question}
  <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">{item.answer}</p>
  </details>
  ))}
  </div>

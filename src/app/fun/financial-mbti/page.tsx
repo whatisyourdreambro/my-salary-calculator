@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCw, Target } from "lucide-react";
+import { RefreshCw, Target, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 const questions = [
  {
@@ -161,6 +162,14 @@ export default function FinancialMBTIPage() {
  <RefreshCw size={18} /> Re-test
  </button>
  </div>
+
+ {/* 다음 콘텐츠 유도: MBTI 연봉 분석 */}
+ <Link
+ href="/mbti-salary"
+ className="w-full py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+ >
+ <TrendingUp size={18} /> {result} 유형의 인생 연봉 그래프 보러가기
+ </Link>
 
  <div className="flex flex-col items-center gap-2 pt-2">
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>

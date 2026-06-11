@@ -91,18 +91,20 @@ export function calculateSeveranceTax(
  // 2. 환산급여 계산
  const convertedSalary = (retirementIncome / yearsOfService) * 12;
 
- // 3. 환산급여공제
+ // 3. 환산급여공제 (현행 구간표)
+ // 800만 이하 전액 / ~7,000만 800만+초과분 60% / ~1억 4,520만+초과분 55%
+ // / ~3억 6,170만+초과분 45% / 3억 초과 1억5,170만+초과분 35%
  let convertedSalaryDeduction = 0;
  if (convertedSalary <= 8000000) {
  convertedSalaryDeduction = convertedSalary;
  } else if (convertedSalary <= 70000000) {
  convertedSalaryDeduction = 8000000 + (convertedSalary - 8000000) * 0.6;
- } else if (convertedSalary <= 300000000) {
+ } else if (convertedSalary <= 100000000) {
  convertedSalaryDeduction = 45200000 + (convertedSalary - 70000000) * 0.55;
- } else if (convertedSalary <= 500000000) {
- convertedSalaryDeduction = 171700000 + (convertedSalary - 300000000) * 0.45;
+ } else if (convertedSalary <= 300000000) {
+ convertedSalaryDeduction = 61700000 + (convertedSalary - 100000000) * 0.45;
  } else {
- convertedSalaryDeduction = 261700000 + (convertedSalary - 500000000) * 0.35;
+ convertedSalaryDeduction = 151700000 + (convertedSalary - 300000000) * 0.35;
  }
 
  // 4. 과세표준

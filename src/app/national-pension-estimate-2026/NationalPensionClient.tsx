@@ -8,14 +8,14 @@ function fmt(n: number): string {
 
 /**
  * 단순화된 국민연금 예상수령액 계산:
- *  - 40년 가입 시 소득대체율 41.5%
+ *  - 40년 가입 시 소득대체율 43% (2026년 적용, 연금개혁 반영)
  *  - 가입기간에 비례 감소 (40년 기준 100%)
  *  - 10년 미만은 반환일시금 처리 (월 연금 0)
  */
 function calcMonthlyPension(years: number, avgMonthlyIncome: number): number {
   if (years < 10) return 0;
   const yearRatio = Math.min(1, years / 40);
-  const replacementRate = 0.415; // 40년 기준 41.5%
+  const replacementRate = 0.43; // 40년 기준 43% (2026년 적용)
   return avgMonthlyIncome * replacementRate * yearRatio;
 }
 
@@ -120,9 +120,10 @@ export default function NationalPensionClient() {
         </div>
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 본 계산기는 40년 가입 시 소득대체율 41.5%를 기준으로 한 단순 추정치입니다. 실제 연금액은
-          A값(전체 가입자 평균소득)·B값(본인 평균소득)·물가상승률 등을 반영한 정밀 공식으로 산정되며,
-          국민연금공단(1355) 또는 NPS 홈페이지의 "내 연금 알아보기" 정확한 금액을 확인하세요.
+          ※ 본 계산기는 40년 가입 시 소득대체율 43%(2026년 적용)를 기준으로 한 단순 추정치입니다.
+          실제로는 연도별 소득대체율이 다르지만 40년 전 기간에 43%를 가정해 단순화했습니다. 실제
+          연금액은 A값(전체 가입자 평균소득)·B값(본인 평균소득)·물가상승률 등을 반영한 정밀 공식으로
+          산정되며, 국민연금공단(1355) 또는 NPS 홈페이지의 "내 연금 알아보기" 정확한 금액을 확인하세요.
         </p>
       </div>
     </section>

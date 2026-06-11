@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, RefreshCw, Scroll, Calendar, Clock, User } from "lucide-react";
+import { Sparkles, RefreshCw, Scroll, Calendar, Clock, User, Star } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 // --- Constants & Data ---
 
@@ -108,8 +109,8 @@ export default function FortunePage() {
 
  return (
  <main className="w-full min-h-screen bg-[#1a1a1a] text-[#e5e5e5] pb-20 overflow-hidden relative font-serif pt-28">
- {/* Traditional Pattern Background */}
- <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/korean-pattern.png')]" />
+ {/* 은은한 배경 그라데이션 (외부 텍스처 제거 — CSS 대체) */}
+ <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(220,38,38,0.08)_0%,transparent_60%)]" />
 
  <div className="max-w-xl mx-auto px-4 py-12 relative z-10">
  <AnimatePresence mode="wait">
@@ -126,10 +127,10 @@ export default function FortunePage() {
  <Scroll className="w-10 h-10 text-primary" />
  </div>
  <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700 tracking-tight">
- 2026 병오년<br />정통 신년운세
+ 2026 병오년<br />신년운세
  </h1>
  <p className="text-faint-blue text-lg">
- 붉은 말의 해, 당신의 운명을 미리 확인하세요.
+ 붉은 말의 해, 재미로 보는 한 해 운세를 미리 확인하세요.
  </p>
  </div>
 
@@ -229,7 +230,7 @@ export default function FortunePage() {
  <button
  onClick={handleAnalyze}
  disabled={!name}
- className="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-navy font-bold text-xl rounded-xl shadow-lg shadow-red-900/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+ className="w-full py-4 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-xl rounded-xl shadow-lg shadow-red-900/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
  >
  운세 확인하기
  </button>
@@ -279,8 +280,8 @@ export default function FortunePage() {
  >
  {/* Result Paper */}
  <div className="bg-[#f5f5f0] text-primary rounded-sm p-8 shadow-2xl relative overflow-hidden min-h-[600px] border-l-8 border-canvas">
- {/* Paper Texture Overlay */}
- <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] pointer-events-none" />
+ {/* 한지 느낌 오버레이 (외부 텍스처 제거 — CSS 그라데이션 대체) */}
+ <div className="absolute inset-0 opacity-40 pointer-events-none bg-[linear-gradient(135deg,rgba(0,0,0,0.03)_0%,transparent_40%,rgba(0,0,0,0.04)_100%)]" />
 
  {/* Stamp */}
  <div className="absolute top-6 right-6 w-20 h-20 border-4 border-primary rounded-lg flex items-center justify-center opacity-80 rotate-[-10deg] mix-blend-multiply pointer-events-none">
@@ -367,6 +368,19 @@ export default function FortunePage() {
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
  <ShareButtons title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
  </div>
+
+ {/* 자매 콘텐츠 상호 링크 */}
+ <Link
+ href="/fortune-2026"
+ className="w-full py-4 bg-red-900/30 hover:bg-red-900/50 border border-red-700/40 text-red-300 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+ >
+ <Star size={18} /> 직장인 재물운·연봉운도 보러가기
+ </Link>
+
+ {/* 재미 목적 면책 문구 (fortune-2026과 동일 기준) */}
+ <p className="text-center text-xs text-faint-blue leading-relaxed">
+ 본 운세 콘텐츠는 전통 사주 이론에 기반한 재미 목적의 참고 정보이며, 실제 투자·금융 결정에 직접 활용하지 마세요.
+ </p>
  </div>
  </motion.div>
  )}

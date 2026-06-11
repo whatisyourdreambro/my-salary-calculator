@@ -1,11 +1,13 @@
 import VatCalculator from "@/components/calculators/finance/VatCalculator";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
- title: "부가세(VAT) 계산기 | Moneysalary",
+export const metadata: Metadata = buildPageMetadata({
+ title: "부가세(VAT) 계산기",
  description: "공급가액 또는 합계금액을 기준으로 부가가치세(VAT)를 정확하게 계산합니다.",
-};
+ path: "/tools/finance/vat",
+});
 
 export default function VatPage() {
  return (

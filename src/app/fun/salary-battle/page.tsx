@@ -49,7 +49,7 @@ const CompanySelector = ({
  ))}
  </select>
  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
- 원
+ ▼
  </div>
  </div>
  </div>
@@ -173,7 +173,7 @@ export default function BattlePage() {
  className="inline-block mb-4"
  >
  <span className="px-4 py-1 rounded-full border border-primary/50 bg-primary/10 text-primary text-sm font-bold tracking-widest uppercase">
- Versus Engine 로딩중...
+ Versus Engine — 기업 비교 배틀
  </span>
  </motion.div>
  <h1 className="text-5xl sm:text-7xl font-black italic tracking-tighter mb-2">
@@ -240,7 +240,7 @@ export default function BattlePage() {
  className="bg-white/50 border border-electric/30 p-6 rounded-2xl"
  >
  <div className="text-6xl mb-4">{result.companyA.logo}</div>
- <h2 className="text-2xl font-bold text-[rgba(255,255,255,0.8)] mb-1">{result.companyA.name.ko}</h2>
+ <h2 className="text-2xl font-bold text-navy mb-1">{result.companyA.name.ko}</h2>
  <p className="text-sm text-faint-blue mb-4">{result.companyA.industry}</p>
 
  <div className="space-y-4">
@@ -301,7 +301,7 @@ export default function BattlePage() {
  label="실질 시급 (가성비)"
  valueA={Math.round(result.metrics.realHourlyWage.a)}
  valueB={Math.round(result.metrics.realHourlyWage.b)}
- unit="점"
+ unit="원"
  winner={result.metrics.realHourlyWage.winner}
  />
  <StatBar

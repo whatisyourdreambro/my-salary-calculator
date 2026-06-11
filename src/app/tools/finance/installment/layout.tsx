@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "할부 이자 계산기 - 신용카드·캐피탈·카드론",
@@ -10,5 +13,20 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function InstallmentLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={[
+ autoBreadcrumbLd("/tools/finance/installment", { leafName: "할부 이자 계산기" }),
+ softwareApplicationLd({
+ name: "할부 이자 계산기",
+ description: "할부 원금·기간·이자율로 월 납부액과 총 이자 계산",
+ url: "/tools/finance/installment",
+ }),
+ ]}
+ />
+ {children}
+ <ToolPageContent path="/tools/finance/installment" />
+ </>
+ );
 }

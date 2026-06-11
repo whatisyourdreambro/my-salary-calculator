@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import IRPCalculatorClient from "./IRPCalculatorClient";
-import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import { buildToolMetadata } from "@/lib/seo";
 import {
@@ -305,8 +304,6 @@ export default function IRPPage() {
               공제 항목 합산 결과는 연말정산 계산기에서 확인.
             </p>
           </div>
-
-          <RelatedCalculators currentPath="/tools/finance/irp" />
         </div>
       </main>
     </>

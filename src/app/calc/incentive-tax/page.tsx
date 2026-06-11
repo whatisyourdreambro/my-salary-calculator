@@ -12,6 +12,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, AlertTriangle } from "lucide-react";
 import IncentiveClient from "./Client";
 
@@ -144,6 +145,9 @@ export default function IncentiveTaxPage() {
               </li>
             </ol>
           </article>
+
+          {/* 본문-FAQ 사이 광고 */}
+          <InArticleAd />
 
           {/* 경고 박스 */}
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">

@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
-import { qnaData } from "@/data/qnaData";
 import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -13,35 +10,11 @@ export const metadata: Metadata = buildPageMetadata({
  keywords: ["연봉 FAQ", "세금 자주 묻는 질문", "4대보험 Q&A", "연말정산 질문"],
 });
 
-// HTML strip + 길이 제한 (Google FAQPage 권장: 답변 짧을수록 표시 잘 됨)
-function stripHtml(html: string): string {
- return html.replace(/<[^>]*>/g, "").trim();
-}
-
-function buildAnswerText(item: typeof qnaData[number]): string {
- const conclusion = stripHtml(item.answer.conclusion);
- const details = item.answer.details.slice(0, 3).map(stripHtml).join(" ");
- const tip = item.answer.tip ? ` 팁: ${stripHtml(item.answer.tip)}` : "";
- return `${conclusion} ${details}${tip}`.slice(0, 1500);
-}
-
-const faqItems = qnaData.slice(0, 30).map((item) => ({
- question: item.question,
- answer: buildAnswerText(item),
-}));
-
+// JSON-LD(FAQPage·Breadcrumb)는 /qna 인덱스 page.tsx에서만 선언.
+// layout에 두면 /qna/[slug] 59개 전부에 중복 주입돼 각 페이지의 자체 faqLd와 충돌한다.
 export default function QnaLayout({ children }: { children: React.ReactNode }) {
  return (
  <>
- <JsonLd
- data={[
- breadcrumbLd([
- { name: "홈", path: "/" },
- { name: "자주 묻는 질문", path: "/qna" },
- ]),
- faqLd(faqItems),
- ]}
- />
  {children}
  {/* 56개 Q&A 동적 + 메인 = long-tail 검색 트래픽 수익 회복 */}
  <PageFooterAds maxWidth="3xl" />

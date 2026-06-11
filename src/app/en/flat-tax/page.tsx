@@ -2,27 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import PageFooterAds from "@/components/PageFooterAds";
-import { ArrowLeft, Calculator, Info, CheckCircle, XCircle } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
+import {
+ earnedIncomeDeduction,
+ calcKrProgressiveTax,
+ krSocialInsurance,
+} from "@/lib/global/taxEngine";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 export default function FlatTaxPage() {
  const [annualSalary, setAnnualSalary] = useState(60000000);
 
- // Simplified Tax Logic
+ // Simplified Tax Logic (2026) — taxEngine 의 KR 누진 전 구간(6~45%) 재사용
  const calculateTaxes = (gross: number) => {
  // 1. Progressive Tax (Standard)
- // Deductions (Approximate)
- const insurance = gross * (0.0475 + 0.03595 + 0.0047 + 0.009);
- const standardDeduction = 1500000; // Basic
- const taxableProgressive = gross - insurance - standardDeduction;
+ // Insurance: pension 4.75% (monthly cap 6.37M KRW) + health 3.595% + LTC + employment 0.9%
+ const insurance = krSocialInsurance(gross);
+ const standardDeduction = 1500000; // Basic personal deduction
+ // Earned-income deduction (2026 standard brackets, capped at 20M KRW)
+ const taxableProgressive =
+ gross - earnedIncomeDeduction(gross) - insurance - standardDeduction;
 
- let taxProgressive = 0;
- if (taxableProgressive > 0) {
- if (taxableProgressive <= 14000000) taxProgressive = taxableProgressive * 0.06;
- else if (taxableProgressive <= 50000000) taxProgressive = 840000 + (taxableProgressive - 14000000) * 0.15;
- else if (taxableProgressive <= 88000000) taxProgressive = 6240000 + (taxableProgressive - 50000000) * 0.24;
- else taxProgressive = 15360000 + (taxableProgressive - 88000000) * 0.35;
- }
+ const taxProgressive = calcKrProgressiveTax(taxableProgressive);
 
  // 2. Flat Tax (19%)
  // No deductions allowed for flat tax
@@ -160,8 +161,11 @@ export default function FlatTaxPage() {
  </div>
  </div>
 
+ {/* Ad: right below the comparison result */}
+ <CalcResultAd />
+
  </div>
- <PageFooterAds maxWidth="4xl" />
+ {/* page-end ads are provided by en/layout.tsx (PageFooterAds) — 페이지 자체 중복 제거 */}
  </div>
  );
 }

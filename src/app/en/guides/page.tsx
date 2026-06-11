@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { enGuideCards, categoriesEn } from "@/lib/guidesData";
 import EnglishGuidesClient from "./EnglishGuidesClient";
 import type { Metadata } from "next";
@@ -25,5 +26,10 @@ export const metadata: Metadata = {
 };
 
 export default function EnglishGuidesIndex() {
- return <EnglishGuidesClient guides={enGuideCards} categoriesEn={categoriesEn} />;
+ // useSearchParams(q 검색 초기값)를 쓰는 클라이언트 컴포넌트라 Suspense 경계 필요
+ return (
+  <Suspense>
+   <EnglishGuidesClient guides={enGuideCards} categoriesEn={categoriesEn} />
+  </Suspense>
+ );
 }

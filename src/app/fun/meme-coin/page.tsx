@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle } from "lucide-react";
+import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle, Flame } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 
 // 평가액 추이 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
@@ -476,6 +477,14 @@ export default function MemeCoinPage() {
               >
                 <RefreshCw className="w-4 h-4" /> 다시 투자하기
               </button>
+
+              {/* 다음 행동 유도: 한방 대신 현실적인 경제적 자유 계산 */}
+              <Link
+                href="/fire-calculator"
+                className="w-full py-4 bg-green-500/10 border border-green-500/30 hover:bg-green-500/20 text-green-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+              >
+                <Flame className="w-4 h-4" /> 한방 말고 현실 플랜: 경제적 자유(FIRE) 계산기
+              </Link>
             </motion.div>
           )}
         </AnimatePresence>

@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   // SERP CTR 강화(7차): 숫자 hook + 차별점 명시. 데스크톱 CTR 1.3%→3%+ 목표.
   description:
-    "연봉 5000만원이면 월 357만원, 1억이면 월 678만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 300+개사 비교·실수령액 계산기 200+개 무료 제공.",
+    "연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 480+개사 비교·실수령액 계산기 200+개 무료 제공.",
   keywords: [
     "연봉 계산기",
     "실수령액 계산기",
@@ -82,13 +82,13 @@ export const metadata: Metadata = {
     siteName: "머니샐러리",
     title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
     description:
-      "연봉 5000만원이면 월 357만원, 1억이면 월 678만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 300+개사 비교.",
+      "연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 480+개사 비교.",
   },
   twitter: {
     card: "summary_large_image",
     title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
     description:
-      "연봉 5000만원→월 357만원, 1억→월 678만원. 2026 최신 세법 자동 계산. 회사별 연봉 DB·계산기 200+개 무료.",
+      "연봉 5000만원→월 353만원, 1억→월 650만원. 2026 최신 세법 자동 계산. 회사별 연봉 DB·계산기 200+개 무료.",
   },
   alternates: {
     canonical: "https://www.moneysalary.com",
@@ -122,6 +122,12 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning className={pretendard.variable}>
       <head>
+        {/* AdSense 오리진 — preconnect로 TCP+TLS 핸드셰이크 선행 (dns-prefetch는 폴백 병행) */}
+        <link
+          rel="preconnect"
+          href="https://pagead2.googlesyndication.com"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />

@@ -6,12 +6,12 @@ interface TableHeroProps {
  badgeText: string;
  title: React.ReactNode;
  description: React.ReactNode;
- adSlotId?: string;
 }
 
-export default function TableHero({ badgeText, title, description, adSlotId = "5492837410" }: TableHeroProps) {
+// 상단 여백은 table/2026 layout 의 탭 바가 헤더 높이를 확보하므로 작게 유지
+export default function TableHero({ badgeText, title, description }: TableHeroProps) {
  return (
- <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 overflow-hidden text-center mb-0 bg-white border-b border-canvas ">
+ <section className="relative pt-10 pb-16 sm:pt-12 sm:pb-20 overflow-hidden text-center mb-0 bg-white border-b border-canvas ">
  {/* Top Blue Accent Line instead of old giant glow */}
  <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
 
@@ -36,15 +36,6 @@ export default function TableHero({ badgeText, title, description, adSlotId = "5
  <div className="text-lg sm:text-xl text-faint-blue leading-relaxed font-medium">
  {description}
  </div>
- </motion.div>
-
- {/* 상단 인피드 광고 */}
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- transition={{ delay: 0.4 }}
- className="mt-10"
- >
  </motion.div>
  </div>
  </section>

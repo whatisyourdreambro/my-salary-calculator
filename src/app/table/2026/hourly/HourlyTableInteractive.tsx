@@ -32,8 +32,12 @@ export default function HourlyTableInteractive({
  tableHeaders={tableHeaders}
  highlightRows={highlightRows}
  calculationFn={(salary, nonTaxable, dependents, children, settings) =>
- calculateNetSalary2026(salary * 8 * 209 / 12 * 12, nonTaxable, dependents, children, settings)
+ // 주휴수당 포함 월 209시간 기준: 시급 × 209 = 월급, × 12 = 연봉
+ calculateNetSalary2026(salary * 209 * 12, nonTaxable, dependents, children, settings)
  }
+ toMonthly={(salary) => salary * 209}
+ linkColumnBaseHref="/salary"
+ linkValueMultiplier={209 * 12}
  pageConfig={pageConfig}
  />
  );

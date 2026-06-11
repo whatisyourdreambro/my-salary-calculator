@@ -13,7 +13,7 @@ import RelatedCompanies from "@/components/RelatedCompanies";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
@@ -174,12 +174,8 @@ export default function CompanyDetailPage({
  />
  <UpdatedBadge date={company.lastUpdated} prefix="연봉 데이터" />
  </div>
+ {/* 첫 광고(CalcResultAd)는 CompanyDetailClient 내부 Quick Stats 직후에 배치 */}
  <CompanyDetailClient company={company} />
-
- {/* 결과 직후 광고 — 회사명 검색 의도 정점 */}
- <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
- <CalcResultAd />
- </div>
 
  <CompanySalaryTable company={company} />
 

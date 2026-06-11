@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import PageFooterAds from "@/components/PageFooterAds";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { GlobalTaxEngine, COUNTRY_NAMES, CountryCode, PPP_INDEX, TaxResult } from "@/lib/global/taxEngine";
-import { Calculator, Globe, TrendingUp, Info } from "lucide-react";
+import { Globe, TrendingUp, Info } from "lucide-react";
 
 // PPP BarChart(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const SalaryConverterChart = dynamic(() => import("@/components/charts/SalaryConverterChart"), {
@@ -13,13 +13,20 @@ const SalaryConverterChart = dynamic(() => import("@/components/charts/SalaryCon
   loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
 });
 
+interface ConvertedResult extends TaxResult {
+  netInUSD: number;
+  pppAdjustedNetUSD: number;
+  countryName: string;
+  flag: string;
+}
+
 export default function SalaryConverterPage() {
   const [salaryKRW, setSalaryKRW] = useState<number>(60000000);
-  const [results, setResults] = useState<any[]>([]);
 
-  const calculate = () => {
+  // 입력에서 파생되는 결과 — useState(() => {...}) 변칙 호출 대신 useMemo 로 계산
+  const results = useMemo<ConvertedResult[]>(() => {
     const countries: CountryCode[] = ['KR', 'US', 'JP', 'SG', 'UK'];
-    const data = countries.map(code => {
+    return countries.map(code => {
       const taxResult = GlobalTaxEngine.calculate(salaryKRW, code);
       let netInUSD = 0;
       if (code === 'KR') netInUSD = taxResult.net * 0.00075;
@@ -36,10 +43,7 @@ export default function SalaryConverterPage() {
         flag: COUNTRY_NAMES[code].flag,
       };
     });
-    setResults(data);
-  };
-
-  useState(() => { calculate(); });
+  }, [salaryKRW]);
 
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSalaryKRW(Number(e.target.value));
@@ -86,17 +90,11 @@ export default function SalaryConverterPage() {
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-canvas-500 font-bold text-sm">KRW</span>
               </div>
             </div>
-            <button
-              onClick={calculate}
-              className="w-full md:w-auto px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              <Calculator className="w-5 h-5" />
-              Calculate
-            </button>
           </div>
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-canvas-500">
             <span className="flex items-center gap-1"><Info className="w-4 h-4" /> 1 USD ≈ 1,330 KRW</span>
-            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> Tax rules updated 2026</span>
+            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> Results update as you type</span>
+            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> Simplified estimate (2026 rates)</span>
           </div>
         </div>
 
@@ -167,8 +165,11 @@ export default function SalaryConverterPage() {
             </motion.div>
           ))}
         </div>
+
+        {/* Ad: right below the result cards */}
+        <CalcResultAd />
       </div>
-      <PageFooterAds maxWidth="4xl" />
+      {/* page-end ads are provided by en/layout.tsx (PageFooterAds) — 페이지 자체 중복 제거 */}
     </main>
   );
 }

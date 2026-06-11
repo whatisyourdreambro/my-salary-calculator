@@ -34,6 +34,9 @@ export default function WeeklyTableInteractive({
  calculationFn={(salary, nonTaxable, dependents, children, settings) =>
  calculateNetSalary2026(salary * 52, nonTaxable, dependents, children, settings)
  }
+ toMonthly={(salary) => (salary * 52) / 12}
+ linkColumnBaseHref="/salary"
+ linkValueMultiplier={52}
  pageConfig={pageConfig}
  />
  );

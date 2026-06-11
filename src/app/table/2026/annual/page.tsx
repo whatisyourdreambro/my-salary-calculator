@@ -2,17 +2,15 @@
 // src/app/table/2026/annual/page.tsx
 
 import { Metadata } from "next";
-import { Suspense } from "react";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
-import Link from "next/link";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 연봉 실수령액 표 — 2000만~2억 전 구간 세후 월급 한눈에",
+  title: "2026 연봉 실수령액 표 — 2400만~2억 전 구간 세후 월급 한눈에",
   description:
-    "연봉 3000만원이면 월 216만원, 5000만원이면 월 357만원, 1억이면 월 678만원. 2026년 최신 세법 기준 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
+    "연봉 3000만원이면 월 약 223만원, 5000만원이면 약 353만원, 1억이면 약 650만원. 2026년 최신 세법 기준 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
   path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
@@ -102,23 +100,23 @@ function AnnualTable() {
             <p className="text-faint-blue leading-relaxed mb-4">
               연봉 실수령액은 세전 연봉에서 <strong className="text-navy">국민연금(4.75%)</strong>,{" "}
               <strong className="text-navy">건강보험(3.595%)</strong>,{" "}
-              <strong className="text-navy">장기요양보험(건강보험의 13.14%)</strong>,{" "}
+              <strong className="text-navy">장기요양보험(건강보험료의 13.14%)</strong>,{" "}
               <strong className="text-navy">고용보험(0.9%)</strong>, 그리고{" "}
               <strong className="text-navy">소득세(근로소득 간이세액표 기준)</strong>를
               공제하고 실제로 받는 금액입니다.
             </p>
             <p className="text-faint-blue leading-relaxed mb-4">
-              2026년에는 건강보험료율 소폭 인상이 예정되어 있어, 동일 연봉이라도
-              전년 대비 실수령액이 소폭 감소할 수 있습니다. 위 표의{" "}
+              2026년에는 국민연금(4.5→4.75%)·건강보험(3.545→3.595%) 요율이 인상되어, 동일 연봉이라도
+              전년 대비 실수령액이 소폭 감소합니다. 위 표의{" "}
               <strong className="text-navy">변화값(전년비)</strong> 항목에서 감소폭을
               확인하세요.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
               {[
-                { label: "연봉 3천만원", monthly: "216만원" },
-                { label: "연봉 5천만원", monthly: "357만원" },
-                { label: "연봉 7천만원", monthly: "490만원" },
-                { label: "연봉 1억원",  monthly: "678만원" },
+                { label: "연봉 3천만원", monthly: "약 223만원" },
+                { label: "연봉 5천만원", monthly: "약 353만원" },
+                { label: "연봉 7천만원", monthly: "약 478만원" },
+                { label: "연봉 1억원",  monthly: "약 650만원" },
               ].map((item) => (
                 <div
                   key={item.label}

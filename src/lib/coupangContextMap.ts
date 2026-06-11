@@ -33,12 +33,25 @@ export function inferCoupangCategory(pathname: string | null | undefined): Coupa
     p.includes("year-end-bonus") ||
     p.includes("incentive-tax") ||
     p.includes("samsung-negotiation") ||
-    p.includes("new-employee-2026")
+    p.includes("new-employee")
   ) {
     return "season";
   }
-  // 통상 세금 — 시즌 아님
-  if (p.includes("severance")) return "tax";
+  // 통상 세금 — 시즌 아님 (건보/4대보험 요율 페이지도 세금성 주제라 tax 로 분류)
+  if (
+    p.includes("severance") ||
+    p.includes("income-tax") ||
+    p.includes("tax-rates") ||
+    p.includes("tax-changes") ||
+    p.includes("auto-tax") ||
+    p.includes("property-holding-tax") ||
+    p.includes("minimum-wage") ||
+    p.includes("savings-interest") ||
+    p.includes("/health-insurance") ||
+    p.includes("/social-insurance")
+  ) {
+    return "tax";
+  }
 
   if (p.includes("/fire") || p.includes("asset-allocator") || p.includes("/retirement")) {
     return "fire";
@@ -61,10 +74,6 @@ export function inferCoupangCategory(pathname: string | null | undefined): Coupa
     p.includes("housing-subscription")
   ) {
     return "real-estate";
-  }
-
-  if (p.includes("/health-insurance") || p.includes("/social-insurance")) {
-    return "season";
   }
 
   if (p.startsWith("/guides") || p.startsWith("/en/guides")) return "guide";

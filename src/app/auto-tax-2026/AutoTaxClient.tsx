@@ -39,9 +39,11 @@ export default function AutoTaxClient() {
     const depRate = getDepreciationRate(years);
     const depreciated = baseTax * (1 - depRate);
     const educationTax = depreciated * 0.3;
+    // 1월 연납: 2~12월분(11개월분)의 5% 공제 → 연세액 대비 실질 약 4.6%
+    const yearlyDiscountRate = (11 / 12) * 0.05;
     let total = depreciated + educationTax;
     if (yearlyPayment) {
-      total = total * 0.93; // 1월 연납 7% 할인
+      total = total * (1 - yearlyDiscountRate);
     }
     return {
       baseTax,
@@ -50,7 +52,7 @@ export default function AutoTaxClient() {
       educationTax,
       total,
       halfPayment: Math.round(((depreciated + educationTax) / 2)),
-      yearlyDiscount: (depreciated + educationTax) * 0.07,
+      yearlyDiscount: (depreciated + educationTax) * yearlyDiscountRate,
     };
   }, [cc, years, isElectric, yearlyPayment]);
 
@@ -125,7 +127,7 @@ export default function AutoTaxClient() {
             className="w-4 h-4"
           />
           <span className="text-sm font-medium text-navy dark:text-canvas-100">
-            1월 연납 (약 7% 할인 적용)
+            1월 연납 (2~12월분 5% 공제, 실질 약 4.6%)
           </span>
         </label>
 
@@ -154,7 +156,7 @@ export default function AutoTaxClient() {
             </div>
             {yearlyPayment && (
               <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-bold">
-                <span>1월 연납 할인 (7%)</span>
+                <span>1월 연납 공제 (실질 약 4.6%)</span>
                 <span>-{fmt(result.yearlyDiscount)}원</span>
               </div>
             )}

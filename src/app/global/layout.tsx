@@ -6,7 +6,7 @@ import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 국가별 연봉 비교 — 한국·미국·일본·싱가포르 세후 실수령액",
   description:
-    "연봉 6,000만원이면 한국 세후 약 5,040만원, 미국 약 5,500만원, 싱가포르 약 5,520만원. 4개국 세금 효율을 한눈에 비교하고 해외 취업·이직 가치를 즉시 확인.",
+    "연봉 6,000만원이면 한국 세후 약 4,800만원, 미국(CA) 약 4,400만원, 싱가포르 약 5,800만원. 4개국 세금 효율을 한눈에 비교하고 해외 취업·이직 가치를 즉시 확인.",
   path: "/global",
   keywords: [
     "국가별 연봉 비교",

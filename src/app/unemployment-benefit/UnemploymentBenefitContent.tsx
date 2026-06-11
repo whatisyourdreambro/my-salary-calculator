@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { InArticleAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
  Calculator,
@@ -81,9 +81,12 @@ export default function UnemploymentBenefitContent() {
   const dailyBenefit = dailyWage * 0.6;
 
   const lowerLimit = MIN_WAGE_2026 * 0.8 * hoursPerDay;
-  const clampedDailyBenefit = Math.min(
-   Math.max(dailyBenefit, lowerLimit),
-   DAILY_UPPER_LIMIT
+  // 2026년은 하한액(8시간 기준 66,048원)이 상한액(66,000원)보다 높아
+  // 하한액을 우선 적용 → 8시간 근로자는 사실상 일 66,048원 정액 수준.
+  const isFlatRate = lowerLimit >= DAILY_UPPER_LIMIT;
+  const clampedDailyBenefit = Math.max(
+   Math.min(dailyBenefit, DAILY_UPPER_LIMIT),
+   lowerLimit
   );
 
   const paymentDays = INSURANCE_PERIODS[periodIdx].days[ageGroup];
@@ -95,8 +98,9 @@ export default function UnemploymentBenefitContent() {
    paymentDays,
    totalBenefit,
    monthlyBenefit,
-   isUpperLimit: clampedDailyBenefit >= DAILY_UPPER_LIMIT,
-   isLowerLimit: dailyBenefit < lowerLimit,
+   isFlatRate,
+   isUpperLimit: !isFlatRate && clampedDailyBenefit >= DAILY_UPPER_LIMIT,
+   isLowerLimit: !isFlatRate && dailyBenefit < lowerLimit,
   };
  }, [monthlyWage, workHoursPerDay, ageGroup, periodIdx]);
 
@@ -115,6 +119,8 @@ export default function UnemploymentBenefitContent() {
      월급과 고용보험 가입 기간을 입력하면 예상 수령액을 즉시 계산합니다.
     </p>
    </div>
+
+   <HomeTopAd />
 
    {/* 계산기 */}
    <section className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
@@ -233,6 +239,11 @@ export default function UnemploymentBenefitContent() {
        <p className="text-2xl font-bold text-primary">
         {formatNumber(result.dailyBenefit)}원
        </p>
+       {result.isFlatRate && (
+        <p className="text-xs text-blue-500 mt-1">
+         2026년은 8시간 기준 일 66,048원 정액 수준
+        </p>
+       )}
        {result.isUpperLimit && (
         <p className="text-xs text-orange-500 mt-1">상한액 적용</p>
        )}
@@ -246,7 +257,7 @@ export default function UnemploymentBenefitContent() {
         {formatNumber(result.monthlyBenefit)}원
        </p>
        <p className="text-xs text-muted-foreground mt-1">
-        ({result.paymentDays}일 ÷ 30 × 30일)
+        (일 구직급여 × 30일 기준)
        </p>
       </div>
       <div className="bg-background rounded-xl p-4 text-center border border-border">
@@ -260,7 +271,8 @@ export default function UnemploymentBenefitContent() {
      <div className="bg-background/70 rounded-xl p-4 text-sm text-muted-foreground">
       <p className="flex items-start gap-2">
        <Info className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-       2026년 기준: 상한 일 66,000원, 하한 최저임금(10,320원)의 80% × 1일 소정근로시간.
+       2026년 기준: 하한액은 최저임금(10,320원)의 80% × 1일 소정근로시간으로, 8시간
+       기준 66,048원이 상한액(66,000원)보다 높아 사실상 일 66,048원 정액 수준입니다.
        신청 후 7일 대기기간이 있어 첫 지급은 약 3주 후 시작됩니다.
       </p>
      </div>
@@ -460,7 +472,7 @@ export default function UnemploymentBenefitContent() {
     </div>
    </section>
 
-   <InArticleAd />
+   <GuideMidAd />
   </div>
  );
 }

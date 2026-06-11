@@ -184,7 +184,7 @@ export const hotKeywordsGuides = [
 <tr class="bg-primary/10"><th class="p-2 text-left">가구 유형</th><th class="p-2">소득 기준</th><th class="p-2">재산 기준</th><th class="p-2 text-right">최대 지급액</th></tr>
 <tr class="border-b"><td class="p-2 font-bold">단독 가구</td><td class="p-2">2,200만원 미만</td><td class="p-2">2억 4,000만원 미만</td><td class="p-2 text-right font-bold text-primary">165만원</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">홑벌이 가구</td><td class="p-2">3,200만원 미만</td><td class="p-2">2억 4,000만원 미만</td><td class="p-2 text-right font-bold text-primary">285만원</td></tr>
-<tr><td class="p-2 font-bold">맞벌이 가구</td><td class="p-2">3,800만원 미만</td><td class="p-2">2억 4,000만원 미만</td><td class="p-2 text-right font-bold text-primary">330만원</td></tr>
+<tr><td class="p-2 font-bold">맞벌이 가구</td><td class="p-2">4,400만원 미만</td><td class="p-2">2억 4,000만원 미만</td><td class="p-2 text-right font-bold text-primary">330만원</td></tr>
 </table>
 <p class="text-sm text-muted-foreground mt-2">※ 소득 기준: 전년도 부부 합산 총소득. 근로소득, 사업소득, 기타소득 포함.</p>
 </div>

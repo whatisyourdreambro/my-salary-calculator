@@ -51,7 +51,7 @@ const resultTypes = {
  subtitle: "가치 투자의 현인",
  icon: Castle,
  description: "당신은 기업의 내재 가치를 보고, 시장의 소음에도 흔들리지 않는 강철 멘탈의 소유자입니다. '복리'라는 눈덩이를 굴려 거대한 부를 쌓을 '시간의 마법사' 타입입니다.",
- color: "text-[rgba(255,255,255,0.8)]",
+ color: "text-electric",
  gradient: "from-blue-500 to-primary/80",
  bg: "bg-blue-900/20",
  borderColor: "border-electric/30",
@@ -238,7 +238,7 @@ export default function RichDNAClient() {
  </div>
 
  <div className="bg-white/5 rounded-2xl p-8 mb-10 border border-white/5">
- <p className="text-lg leading-relaxed text-zinc-200 font-medium keep-all">
+ <p className="text-lg leading-relaxed text-muted-blue font-medium keep-all">
  {result.description}
  </p>
  </div>

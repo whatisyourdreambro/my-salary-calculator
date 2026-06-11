@@ -5,6 +5,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Heart } from "lucide-react";
 import ChildDeductionClient from "./Client";
 
@@ -12,12 +13,12 @@ const FAQ_ITEMS = [
   {
     question: "자녀 인적공제와 자녀세액공제는 다른가요?",
     answer:
-      "네, 둘은 별개입니다. (1) 인적공제: 자녀 1명당 150만원이 과세표준에서 차감 (소득공제). (2) 자녀세액공제: 1자녀 25만원, 2자녀 55만원, 3자녀 이상 자녀 1명당 30만원 추가 (세액공제). 두 공제가 모두 적용되어 세금이 크게 줄어듭니다.",
+      "네, 둘은 별개입니다. (1) 인적공제: 자녀 1명당 150만원이 과세표준에서 차감 (소득공제). (2) 자녀세액공제: 1자녀 25만원, 2자녀 55만원, 3자녀 이상 자녀 1명당 40만원 추가 (세액공제). 두 공제가 모두 적용되어 세금이 크게 줄어듭니다.",
   },
   {
     question: "8세 이상 20세 이하 자녀 1명당 자녀세액공제는 얼마인가요?",
     answer:
-      "1자녀 25만원, 2자녀 합계 55만원(2번째 30만원), 3자녀부터 매 명당 30만원 추가입니다. 즉 4자녀면 25 + 30 + 30 + 30 = 115만원. 6세 이하는 자녀세액공제 대상이 아니지만 인적공제는 가능합니다.",
+      "1자녀 25만원, 2자녀 합계 55만원(2번째 30만원), 3자녀부터 매 명당 40만원 추가입니다. 즉 4자녀면 25 + 30 + 40 + 40 = 135만원. 6세 이하는 자녀세액공제 대상이 아니지만 인적공제는 가능합니다.",
   },
   {
     question: "8세 미만 자녀는 어떤 혜택이 있나요?",
@@ -77,9 +78,12 @@ export default function ChildDeductionPage() {
               <li><strong>기본 인적공제</strong>: 자녀 1명당 150만원 (소득공제)</li>
               <li><strong>6세 이하 추가공제</strong>: 1명당 100만원 (소득공제)</li>
               <li><strong>출산·입양 세액공제</strong>: 첫째 30만, 둘째 50만, 셋째 이상 70만원</li>
-              <li><strong>자녀세액공제(8~20세)</strong>: 1자녀 25만, 2자녀 합 55만, 3자녀부터 30만씩 추가</li>
+              <li><strong>자녀세액공제(8~20세)</strong>: 1자녀 25만, 2자녀 합 55만, 3자녀부터 40만씩 추가</li>
             </ul>
           </article>
+
+          {/* 본문-FAQ 사이 광고 */}
+          <InArticleAd />
 
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">자주 묻는 질문</h2>

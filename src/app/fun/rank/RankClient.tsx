@@ -91,14 +91,14 @@ export default function RankClient() {
  >
  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-bold text-sm mb-6">
  <Crown className="w-4 h-4" />
- <span>대한민국 연봉 데이터 분석</span>
+ <span>연봉 분포 시뮬레이터 (간단 버전)</span>
  </div>
  <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-5 text-navy ">
  나는 대한민국 상위 <br className="sm:hidden" />
  <span className="text-primary">몇 %일까요?</span>
  </h1>
  <p className="text-lg text-faint-blue max-w-2xl mx-auto font-medium">
- 2,000만 직장인 데이터를 기반으로 당신의 정확한 위치를 알려드립니다.
+ 통계 기반 자체 추정 모델로 당신의 대략적인 위치를 시뮬레이션해드립니다.
  </p>
  </motion.div>
  </div>
@@ -130,7 +130,7 @@ export default function RankClient() {
  const val = e.target.value.replace(/[^0-9]/g, "");
  setSalaryInput(Number(val).toLocaleString('ko-KR'));
  }}
- className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-electric/50 border border-white/10 rounded-2xl focus:border-primary outline-none transition-all text-white placeholder-zinc-700"
+ className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-white border border-canvas-300 rounded-2xl focus:border-primary outline-none transition-all text-navy placeholder:text-canvas-400"
  placeholder="0"
  autoFocus
  />
@@ -143,7 +143,7 @@ export default function RankClient() {
  <button
  onClick={handleCalculate}
  disabled={!salaryInput}
- className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-navy text-2xl font-black rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:shadow-[0_0_60px_rgba(168,85,247,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+ className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary hover:to-primary/80 text-white text-2xl font-black rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:shadow-[0_0_60px_rgba(168,85,247,0.5)] hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
  >
  내 순위 확인하기
  </button>
@@ -170,14 +170,14 @@ export default function RankClient() {
  <div className="h-80 w-full relative bg-electric/20 rounded-3xl p-4 border border-white/5">
  <RankChart data={distributionData} salary={salary} />
  <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-muted-blue font-mono">
- * 2025년 국세청 통계 자료 기반 (추정치)
+ * 통계 기반 자체 추정 모델 (실제 분포와 다를 수 있음)
  </div>
  </div>
 
  {/* Stats Grid */}
  <div className="grid grid-cols-2 gap-6">
  <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
- <Users className="w-8 h-8 mx-auto mb-3 text-[rgba(255,255,255,0.8)]" />
+ <Users className="w-8 h-8 mx-auto mb-3 text-electric" />
  <p className="text-sm text-faint-blue mb-1">비슷한 연봉</p>
  <p className="font-bold text-2xl text-navy">약 45만명</p>
  </div>
@@ -205,6 +205,12 @@ export default function RankClient() {
  />
  </div>
  </div>
+ <Link
+ href="/fun/salary-rank"
+ className="w-full py-4 rounded-xl bg-electric text-white font-bold transition-all flex items-center justify-center gap-2 hover:opacity-90"
+ >
+ <Trophy size={18} /> 정밀 버전: 내 연봉 순위 계산기
+ </Link>
  <Link
  href="/fun"
  className="w-full py-4 rounded-xl bg-white border border-white/10 hover:border-primary/30 text-faint-blue hover:text-primary font-bold transition-all flex items-center justify-center gap-2"

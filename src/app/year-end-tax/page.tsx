@@ -1,6 +1,7 @@
 // src/app/year-end-tax/page.tsx
 
 import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
@@ -92,20 +93,41 @@ export default function YearEndTaxPage() {
 
  {/* 계산기 섹션 */}
  <section className="page-width pb-20 -mt-4">
+ <div className="max-w-4xl mx-auto">
+ <HomeTopAd />
+ </div>
+
  <YearEndTaxCalculator />
 
  <div className="max-w-4xl mx-auto mt-10">
  <InArticleAd />
+
+ {/* FAQ — speakable(.faq-answer) 대상 */}
+ <div className="mt-10 mb-4">
+ <h2 className="text-xl font-black text-navy mb-6">자주 묻는 질문</h2>
+ <div className="space-y-3">
+ {FAQ_ITEMS.map((item) => (
+ <details
+ key={item.question}
+ className="group p-5 bg-white rounded-2xl border border-canvas-200"
+ >
+ <summary className="flex items-center justify-between cursor-pointer text-sm font-bold text-navy">
+ {item.question}
+ <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
+ </summary>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">
+ {item.answer}
+ </p>
+ </details>
+ ))}
+ </div>
+ </div>
 
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
 
  <RelatedCalculators currentPath="/year-end-tax" />
-
- <div className="mt-8">
- <HomeTopAd />
- </div>
  </div>
  </section>
  </main>

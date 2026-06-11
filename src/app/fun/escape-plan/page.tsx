@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
+import Link from "next/link";
 import CurrencyInput from "@/components/CurrencyInput";
 import NumberStepper from "@/components/NumberStepper";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Coffee, Beer, Plane, Rocket, BedDouble, DoorOpen, Palmtree,
-  Download, CheckCheck,
+  Download, CheckCheck, BookOpen,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -282,10 +283,17 @@ export default function EscapePlanPage() {
         <div className="mt-12 bg-white rounded-3xl p-8 text-center border border-canvas/60 shadow-sm">
           <Palmtree className="w-12 h-12 text-electric mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-navy mb-2">자유를 향한 여정</h3>
-          <p className="text-faint-blue max-w-2xl mx-auto">
+          <p className="text-faint-blue max-w-2xl mx-auto mb-6">
             "가장 큰 부자는 자신의 시간을 마음대로 쓸 수 있는 사람이다." <br />
             오늘의 절약과 투자가 당신의 내일을 자유롭게 만듭니다.
           </p>
+          {/* 다음 행동 유도: 탈출 시기를 앞당기는 연봉협상 가이드 */}
+          <Link
+            href="/guides"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-electric text-white font-bold hover:opacity-90 transition-opacity"
+          >
+            <BookOpen size={18} /> 탈출을 앞당기는 연봉 협상·재테크 가이드 보기
+          </Link>
         </div>
       </div>
 

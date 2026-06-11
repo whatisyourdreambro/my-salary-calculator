@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -71,6 +72,9 @@ export default function VacationPayClient() {
           <div><div className="text-xs text-faint-blue">실수령</div><div className="font-black tabular-nums text-electric">{fmt(result.net)}원</div></div>
         </div>
       </div>
+
+      {/* 결과 직하 광고 */}
+      <CalcResultAd />
     </div>
   );
 }

@@ -41,6 +41,47 @@ export const COUNTRY_NAMES: Record<CountryCode, { name: string; flag: string }> 
  UK: { name: "United Kingdom", flag: "🇬🇧" },
 };
 
+// ─────────────────────────────────────────────────────────────
+// KR helpers (2026) — flat-tax / salary-converter 페이지에서 재사용
+// ─────────────────────────────────────────────────────────────
+
+// 근로소득공제 (2026 표준 구간, 한도 2,000만원) — 총급여(연) 기준
+export function earnedIncomeDeduction(grossAnnual: number): number {
+ if (grossAnnual <= 0) return 0;
+ let deduction: number;
+ if (grossAnnual <= 5_000_000) deduction = grossAnnual * 0.7;
+ else if (grossAnnual <= 15_000_000) deduction = 3_500_000 + (grossAnnual - 5_000_000) * 0.4;
+ else if (grossAnnual <= 45_000_000) deduction = 7_500_000 + (grossAnnual - 15_000_000) * 0.15;
+ else if (grossAnnual <= 100_000_000) deduction = 12_000_000 + (grossAnnual - 45_000_000) * 0.05;
+ else deduction = 14_750_000 + (grossAnnual - 100_000_000) * 0.02;
+ return Math.min(deduction, 20_000_000);
+}
+
+// 한국 소득세 누진세율 (2026, 8구간 6~45%) — 과세표준 기준
+export function calcKrProgressiveTax(taxable: number): number {
+ if (taxable <= 0) return 0;
+ if (taxable <= 14_000_000) return taxable * 0.06;
+ if (taxable <= 50_000_000) return 840_000 + (taxable - 14_000_000) * 0.15;
+ if (taxable <= 88_000_000) return 6_240_000 + (taxable - 50_000_000) * 0.24;
+ if (taxable <= 150_000_000) return 15_360_000 + (taxable - 88_000_000) * 0.35;
+ if (taxable <= 300_000_000) return 37_060_000 + (taxable - 150_000_000) * 0.38;
+ if (taxable <= 500_000_000) return 94_060_000 + (taxable - 300_000_000) * 0.4;
+ if (taxable <= 1_000_000_000) return 174_060_000 + (taxable - 500_000_000) * 0.42;
+ return 384_060_000 + (taxable - 1_000_000_000) * 0.45;
+}
+
+// 국민연금 기준소득월액 상한 (2026): 월 637만원
+export const KR_PENSION_MONTHLY_CAP = 6_370_000;
+
+// 4대보험 본인부담 합계 (2026) — 국민연금 4.75%(상한 적용)·건강 3.595%·장기요양(건보료의 13.14%)·고용 0.9%
+export function krSocialInsurance(grossAnnual: number): number {
+ const pension = Math.min(grossAnnual / 12, KR_PENSION_MONTHLY_CAP) * 12 * 0.0475;
+ const health = grossAnnual * 0.03595;
+ const longTermCare = health * 0.1314;
+ const employment = grossAnnual * 0.009;
+ return pension + health + longTermCare + employment;
+}
+
 export class GlobalTaxEngine {
  static calculate(grossKRW: number, country: CountryCode): TaxResult {
  const localGross = grossKRW * EXCHANGE_RATES[country];
@@ -49,23 +90,17 @@ export class GlobalTaxEngine {
 
  switch (country) {
  case 'KR':
- // Simplified KR Tax (2024)
- // Income Tax
- if (localGross <= 14000000) tax = localGross * 0.06;
- else if (localGross <= 50000000) tax = 840000 + (localGross - 14000000) * 0.15;
- else if (localGross <= 88000000) tax = 6240000 + (localGross - 50000000) * 0.24;
- else if (localGross <= 150000000) tax = 15360000 + (localGross - 88000000) * 0.35;
- else if (localGross <= 300000000) tax = 37060000 + (localGross - 150000000) * 0.38;
- else if (localGross <= 500000000) tax = 94060000 + (localGross - 300000000) * 0.40;
- else tax = 174060000 + (localGross - 500000000) * 0.42;
+ // Simplified KR Tax (2026) — 근로소득공제 반영해 과대계산 완화
+ // Income Tax: 총급여 − 근로소득공제 → 2026 누진세율 6~45% (8구간)
+ tax = calcKrProgressiveTax(localGross - earnedIncomeDeduction(localGross));
 
- // Social (Pension 4.75%, Health 3.595%, Employment 0.9%) ~ Approx 9.7%
- social = localGross * 0.097;
+ // Social (2026): Pension 4.75% (월 637만 상한) + Health 3.595% + 장기요양 + Employment 0.9%
+ social = krSocialInsurance(localGross);
  break;
 
  case 'US':
  // Simplified US Tax (Federal + CA State)
- // Federal (2024 Single)
+ // Federal 2024 single 기준 단순화 (표준공제 미반영 추정치)
  let fedTax = 0;
  if (localGross <= 11600) fedTax = localGross * 0.10;
  else if (localGross <= 47150) fedTax = 1160 + (localGross - 11600) * 0.12;

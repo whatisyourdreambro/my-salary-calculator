@@ -70,14 +70,18 @@ const Report = () => {
  if (!data) {
  return (
  <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
- <h1 className="text-3xl font-bold">리포트 데이터를 불러오는 중...</h1>
- <p className="mt-4">
- 저장된 금융 정보가 없습니다.{" "}
- <Link href="/" className="text-primary font-bold">
- 홈으로 돌아가
- </Link>{" "}
- 계산 결과를 먼저 저장해주세요.
+ <h1 className="text-3xl font-bold">저장된 리포트가 없습니다</h1>
+ <p className="mt-4 text-muted-blue">
+ 홈 계산기에서 연봉을 계산하고 결과를 저장하면
+ <br className="hidden sm:block" />
+ 나만의 종합 금융 리포트가 자동으로 만들어집니다.
  </p>
+ <Link
+ href="/"
+ className="inline-block mt-8 py-3 px-8 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition"
+ >
+ 홈에서 연봉 계산하러 가기 →
+ </Link>
  </main>
  );
  }

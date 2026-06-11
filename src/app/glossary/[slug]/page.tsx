@@ -4,7 +4,7 @@
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Sparkles, Hash } from "lucide-react";
+import { ArrowRight, BookOpen, Sparkles, Hash, TrendingUp, Calculator } from "lucide-react";
 import {
  glossaryData,
  toGlossarySlug,
@@ -84,6 +84,14 @@ export default function GlossaryDetailPage({
  answer: item.analogy,
  },
  {
+ question: `2026년 기준 ${item.title} 핵심 수치는?`,
+ answer: item.stat2026,
+ },
+ {
+ question: `월급 300만원 직장인 기준 ${item.title} 계산 예시는?`,
+ answer: item.example300,
+ },
+ {
  question: `${item.title} 관련 알아두면 좋은 팁은?`,
  answer: item.tip,
  },
@@ -157,9 +165,49 @@ export default function GlossaryDetailPage({
  {item.tip}
  </p>
  </div>
+
+ {/* 2026 확정 수치 — thin content 해소: 용어별 고유 본문 (faqLd와 동일 텍스트) */}
+ <h2 className="text-2xl font-black text-navy dark:text-canvas-50 !mt-10 !mb-4 flex items-center gap-2">
+ <TrendingUp className="w-6 h-6 text-electric" />
+ 2026년 기준 핵심 수치
+ </h2>
+ <p className="text-base leading-7 text-muted-blue dark:text-canvas-300">
+ {item.stat2026}
+ </p>
+
+ {/* 월급 300만원 구체 계산 예시 — 검색 의도("내 경우엔 얼마?") 직접 대응 */}
+ <h2 className="text-2xl font-black text-navy dark:text-canvas-50 !mt-10 !mb-4 flex items-center gap-2">
+ <Calculator className="w-6 h-6 text-electric" />
+ 월급 300만원 직장인 계산 예시
+ </h2>
+ <p className="text-base leading-7 text-muted-blue dark:text-canvas-300">
+ {item.example300}
+ </p>
  </article>
 
  <InArticleAd />
+
+ {/* 관련 페이지 안내 — 용어 → 계산기/가이드 내부링크 */}
+ <section className="mb-10 bg-white dark:bg-canvas-900 p-6 rounded-2xl border border-canvas-200 dark:border-canvas-800">
+ <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">
+ 함께 보면 좋은 페이지
+ </h2>
+ <p className="text-sm leading-6 text-muted-blue dark:text-canvas-300 mb-4">
+ {item.relatedNote}
+ </p>
+ <div className="flex flex-wrap gap-2">
+ {item.relatedLinks.map((link) => (
+ <Link
+ key={link.href}
+ href={link.href}
+ className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-electric-10 text-electric font-bold text-sm hover:bg-electric hover:text-white transition-colors"
+ >
+ {link.label}
+ <ArrowRight className="w-3.5 h-3.5" />
+ </Link>
+ ))}
+ </div>
+ </section>
 
  {related.length > 0 && (
  <section className="mb-10">
