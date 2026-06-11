@@ -286,6 +286,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  changeFrequency: 'weekly',
  priority: 0.9,
  },
+ {
+ url: `${baseUrl}/salary-db/ranking`,
+ lastModified: STATIC_LAST_MODIFIED,
+ changeFrequency: 'weekly',
+ priority: 0.8,
+ },
  ];
 
  // 100가지 계산기 동적 페이지 — 콘텐츠 풍부(enrichment 보강)된 슬러그만 사이트맵 포함.

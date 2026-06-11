@@ -55,6 +55,7 @@ export default function Footer() {
         { name: "금융 가이드", href: "/guides" },
         { name: "용어 사전", href: "/glossary" },
         { name: "회사 연봉 DB", href: "/salary-db" },
+        { name: "대기업 연봉 순위 TOP 30", href: "/salary-db/ranking" },
         { name: "Q&A", href: "/qna" },
         { name: "절세 팁", href: "/tips" },
       ];
