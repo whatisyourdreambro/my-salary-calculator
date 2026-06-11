@@ -108,6 +108,14 @@ export default function CompanyRankingPage() {
       </section>
 
       <div className="page-width max-w-3xl">
+        {/* 면책·출처 고지 — 실명 기업 순위이므로 추정/참고용임을 표 이전에 명확히 */}
+        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[13px] leading-relaxed text-amber-900">
+          <strong className="font-bold">⚠️ 안내</strong> · 본 순위는 공개된 정보와 업계
+          통념을 바탕으로 한 <strong>추정치</strong>이며, 각 기업의 공식 발표 자료가
+          아닙니다. 특정 기업의 실제 연봉·처우를 보장하거나 평가하기 위한 것이 아니며,
+          오로지 참고용입니다. 정정이 필요한 정보가 있다면 사이트 문의를 통해 알려주세요.
+        </div>
+
         <div className="mb-8">
           <HomeTopAd />
         </div>

@@ -100,6 +100,15 @@ export default function CompanyIndustryRank({
         신입 영끌 연봉(기본급 + 평균 인센티브) 기준 · 연봉 데이터 최종 업데이트{" "}
         {company.lastUpdated}
       </p>
+
+      {/* 전체 랭킹 허브로 — 업종 순위 ↔ 전체 순위 양방향 내부링크 */}
+      <Link
+        href="/salary-db/ranking"
+        className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-electric hover:gap-2.5 transition-all"
+      >
+        <Trophy className="w-4 h-4" />
+        전체 대기업 연봉 순위 TOP 30 보기 →
+      </Link>
     </section>
   );
 }
