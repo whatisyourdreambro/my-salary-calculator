@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone, Gem, Coins, Briefcase } from "lucide-react";
+import ShareButtons from "@/components/ShareButtons";
 
 // --- Game Constants & Types ---
 const GRAVITY = 0.5;
@@ -333,6 +334,17 @@ export default function AssetAllocatorGame() {
  >
  EXIT
  </button>
+ </div>
+
+ {/* 점수 자랑 공유 — 바이럴 루프 */}
+ <div className="mt-8 flex flex-col items-center gap-3">
+ <p className="text-white/70 text-xs font-bold uppercase tracking-widest">
+ 내 자산 점수 자랑하기
+ </p>
+ <ShareButtons
+ title={`자산 배분 게임에서 $${score.toLocaleString('ko-KR')} 달성! | 머니샐러리`}
+ description="떨어지는 자산을 받아 순자산을 불려보세요. 당신의 최고 기록은?"
+ />
  </div>
  </div>
  )}
