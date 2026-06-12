@@ -145,6 +145,31 @@ export default function AboutPage() {
  </div>
  </section>
 
+ {/* 회사 연봉 데이터 산출 방법론 — 실명 기업 DB·순위의 법적 방어 핵심 */}
+ <section className="mb-16 p-8 bg-white border border-canvas-200 rounded-2xl">
+ <h2 className="text-xl font-black text-navy mb-4">회사 연봉 데이터는 어떻게 산출하나요?</h2>
+ <div className="space-y-4 text-sm text-muted-blue leading-relaxed">
+ <p>
+ 회사별 연봉 데이터베이스와 연봉 순위에 표시되는 기업별 금액은{" "}
+ <strong className="text-navy">공개된 정보(채용 공고, 사업보고서·감사보고서의
+ 직원 평균 급여, 언론 보도, 공개 커뮤니티의 후기 등)를 종합해 산출한 자체
+ 추정치</strong>입니다. 해당 기업이 공식적으로 발표·확인한 수치가 아닙니다.
+ </p>
+ <p>
+ 이 데이터는 특정 기업의 실제 처우를 보장하거나, 기업의 우열을 평가·단정하기
+ 위한 것이 아니라, 구직자·직장인의 일반적인 참고를 돕기 위한 정보 제공 목적으로만
+ 제공됩니다. 직급·연차·개인 성과·협상 결과에 따라 실제 연봉은 크게 달라질 수
+ 있습니다.
+ </p>
+ <p>
+ 게재된 수치에 사실과 다른 부분이 있다면{" "}
+ <strong className="text-navy">정정 요청을 받는 즉시 신속하게 검토·반영</strong>
+ 합니다. 잘못된 정보를 고의로 유지하지 않으며, 기업·개인의 명예를 훼손할 의도가
+ 전혀 없습니다.
+ </p>
+ </div>
+ </section>
+
  {/* 책임 한계 */}
  <section className="mb-16 p-8 bg-white border border-canvas-200 rounded-2xl">
  <h2 className="text-xl font-black text-navy mb-4">책임 한계</h2>
@@ -157,19 +182,31 @@ export default function AboutPage() {
  </p>
  </section>
 
- {/* 연락처 */}
+ {/* 정정·제보 정책 */}
  <section className="text-center">
- <h2 className="text-2xl font-black text-navy mb-4">문의·제보</h2>
- <p className="text-sm text-muted-blue mb-6">
- 데이터 오류 제보, 새 계산기 요청, 협업 문의를 환영합니다.
+ <h2 className="text-2xl font-black text-navy mb-4">정정 요청·오류 제보</h2>
+ <p className="text-sm text-muted-blue mb-6 max-w-xl mx-auto leading-relaxed">
+ 게재된 계산식·세율·회사 연봉 데이터에 오류가 있거나, 본인 또는 소속 기업과
+ 관련해 정정이 필요한 내용이 있다면 제보해 주세요. 확인 후{" "}
+ <strong className="text-navy">신속하게 정정·반영</strong>하며, 합당한 삭제
+ 요청에도 성실히 응합니다. 자세한 처리 기준은 이용약관을 참고해 주세요.
  </p>
+ <div className="flex items-center justify-center gap-3 flex-wrap">
  <Link
- href="/qna"
+ href="/terms"
  className="inline-flex items-center gap-2 px-6 py-3 bg-electric text-white rounded-xl font-bold hover:bg-blue-600 transition-colors"
  >
- <Mail className="w-4 h-4" />
- 자주 묻는 질문 보기
+ <Shield className="w-4 h-4" />
+ 이용약관·정정 처리 기준
  </Link>
+ <Link
+ href="/qna"
+ className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-canvas-200 text-navy rounded-xl font-bold hover:border-electric transition-colors"
+ >
+ <Mail className="w-4 h-4" />
+ 자주 묻는 질문
+ </Link>
+ </div>
  </section>
 
  <div className="mt-16 pt-8 border-t border-canvas-200 text-center text-xs text-faint-blue">
