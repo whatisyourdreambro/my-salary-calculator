@@ -15,6 +15,7 @@ import CountUp from "react-countup";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, Calculator, Zap, Sparkles } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { trackCalcSubmit } from "@/lib/analytics";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -220,10 +221,21 @@ export default function SalaryCalculator() {
 
  // Analytics - Only fire once per actual result display
  useEffect(() => {
- if (showResult && result.monthlyNet > 0 && typeof (window as any).gtag === "function") {
- (window as any).gtag("event", "conversion", {
- send_to: `${process.env.NEXT_PUBLIC_ADS_ID}/${process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION}`,
+ if (showResult && result.monthlyNet > 0) {
+ // GA4 funnel 이벤트 — 계산 완료(전환율·세그먼트 분석용)
+ trackCalcSubmit("salary", {
+ income_type: incomeType,
+ annual_salary: annualSalary,
+ monthly_net: result.monthlyNet,
  });
+ // Google Ads 전환 — env(ADS_ID/CONVERSION_LABEL)가 설정된 경우에만 발사
+ const adsId = process.env.NEXT_PUBLIC_ADS_ID;
+ const label = process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION;
+ if (adsId && label && typeof (window as any).gtag === "function") {
+ (window as any).gtag("event", "conversion", {
+ send_to: `${adsId}/${label}`,
+ });
+ }
  }
  }, [showResult]); // Trigger only when the result card is actually shown to the user
 
@@ -493,6 +505,7 @@ export default function SalaryCalculator() {
  title={shareMeta.title}
  description={shareMeta.description}
  imageUrl={shareMeta.imageUrl}
+ contentType="salary_result"
  />
  <button onClick={handleSaveData} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
  <CheckCircle size={16} className="text-navy" />
