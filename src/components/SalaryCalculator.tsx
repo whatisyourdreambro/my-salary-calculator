@@ -318,6 +318,18 @@ export default function SalaryCalculator() {
  return `${window.location.origin}/share/${encodedData}`;
  }, [annualSalary, nonTaxableAmount, dependents, children]);
 
+ // 공유 카드 문구·썸네일 — 단톡방 클릭률을 높이는 호기심 훅 + 실제 금액 OG 이미지
+ const shareMeta = useMemo(() => {
+ const netManwon = Math.round(result.monthlyNet / 10000).toLocaleString("ko-KR");
+ const annualManwon = Math.round(annualSalary / 10000).toLocaleString("ko-KR");
+ const origin = typeof window !== "undefined" ? window.location.origin : "";
+ return {
+ title: `💰 연봉 ${annualManwon}만원이면 월 실수령 ${netManwon}만원!`,
+ description: "2026년 세법 기준 내 실수령액. 너도 1초만에 계산해봐 👀",
+ imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&netPay=${result.monthlyNet}`,
+ };
+ }, [annualSalary, result.monthlyNet]);
+
  const handleCopyResult = async () => {
  try {
  await navigator.clipboard.writeText(result.monthlyNet.toString());
@@ -478,7 +490,9 @@ export default function SalaryCalculator() {
  <p className="text-sm font-bold text-muted-blue">결과 공유하기</p>
  <ShareButtons
  url={shareUrl}
- title="내 연봉 실수령액 계산 결과 — 머니샐러리"
+ title={shareMeta.title}
+ description={shareMeta.description}
+ imageUrl={shareMeta.imageUrl}
  />
  <button onClick={handleSaveData} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
  <CheckCircle size={16} className="text-navy" />
