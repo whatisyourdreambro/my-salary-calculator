@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import ShareButtons from "@/components/ShareButtons";
 import {
   Lightbulb,
   User,
@@ -12,6 +13,7 @@ import {
   AlertCircle,
   CheckCircle2,
   Calendar,
+  Share2,
 } from "lucide-react";
 import {
   FIXED_RERATE,
@@ -45,6 +47,9 @@ const MultiYearBonusSimulator = dynamic(
     loading: () => <SimulatorLoading label="다년도 누적 성과급 시뮬레이터" />,
   }
 );
+
+// 결과 공유용 canonical URL (page.tsx의 PAGE_PATH와 동일)
+const SHARE_URL = "https://www.moneysalary.com/calc/samsung-bonus";
 
 function SimulatorLoading({ label }: { label: string }) {
   return (
@@ -1104,6 +1109,36 @@ function MySalaryCalculator({
               </p>
             </div>
           </details>
+        )}
+
+        {/* 결과 공유 — 계산한 본인 성과급을 그대로 공유 (바이럴 루프) */}
+        {personal.totalGrossWon > 0 && (
+          <div className="rounded-2xl border border-electric-30 bg-electric-10 dark:bg-electric/5 p-4">
+            <p className="text-xs font-black text-navy dark:text-canvas-50 mb-1 inline-flex items-center gap-1.5">
+              <Share2 size={13} className="text-electric" aria-hidden /> 내 결과
+              공유하기
+            </p>
+            <p className="text-[11px] text-faint-blue mb-3 leading-relaxed tabular-nums">
+              {selected.label} 사업부 · 세전 {fmtManwonInt(personal.totalGrossManwon)}만원
+              · 세후 {fmtManwonInt(personal.netManwon)}만원 결과를 카카오·링크로
+              공유해보세요.
+            </p>
+            <ShareButtons
+              url={SHARE_URL}
+              title={`삼성전자 ${selected.label} 성과급 — 세전 ${fmtManwonInt(
+                personal.totalGrossManwon
+              )}만원·세후 ${fmtManwonInt(personal.netManwon)}만원 (2026 추정)`}
+              description={`내 연봉 기준 삼성전자 성과급 추정 결과 — OPI1+OPI2 합산 세전 ${fmtManwonInt(
+                personal.totalGrossManwon
+              )}만원, 세금 공제 후 실수령 약 ${fmtManwonInt(
+                personal.netManwon
+              )}만원. 머니샐러리 삼성 성과급 계산기로 본인 케이스를 확인하세요.`}
+              imageUrl={`https://www.moneysalary.com/api/og?type=tool&name=${encodeURIComponent(
+                `삼성 성과급 세후 ${fmtManwonInt(personal.netManwon)}만원`
+              )}`}
+              contentType="samsung_bonus_result"
+            />
+          </div>
         )}
       </div>
     </section>
