@@ -138,16 +138,32 @@ export function buildSalaryAmountMetadata(
  const manwon = Math.round(amount / 10000);
  const formatted = manwon.toLocaleString("ko-KR");
  const netParam = monthlyNet ? `&net=${Math.round(monthlyNet)}` : "";
+ const netManwon = monthlyNet
+ ? Math.round(monthlyNet / 10000).toLocaleString("ko-KR")
+ : null;
+
+ // 검색 의도 = "연봉 X 실수령액이 얼마?" → 답(월 실수령액 숫자)을 제목 맨 앞에 박아
+ // SERP에서 질문에 즉답 → CTR 상승 (GSC: 이 페이지군이 11~13위인데 클릭0인 문제 해결).
+ const title = netManwon
+ ? `연봉 ${formatted}만원 실수령액 월 ${netManwon}만원 (2026 세후 월급)`
+ : `연봉 ${formatted}만원 실수령액 — 2026 세후 월급 계산`;
+
+ const description = netManwon
+ ? `연봉 ${formatted}만원의 월 실수령액은 약 ${netManwon}만원입니다(2026년 최신 세법 기준). 국민연금·건강보험·고용보험·소득세 공제 내역과 세후 월급, 실수령액 표, 같은 연봉대 회사까지 한눈에 확인하세요.`
+ : `연봉 ${formatted}만원의 세후 월급과 국민연금·건강보험·고용보험·소득세 공제액을 2026년 최신 세법 기준으로 즉시 계산합니다. 실수령액 분석·자산 시뮬레이션·동급 회사 비교까지 무료 제공.`;
 
  return buildPageMetadata({
- title: `연봉 ${formatted}만원 실수령액 — 4대보험·세금 자동 계산 (2026)`,
- description: `연봉 ${formatted}만원의 세후 월급, 국민연금·건강보험·고용보험·소득세 공제액을 2026년 최신 세법 기준으로 즉시 계산합니다. 실수령액 분석, 자산 시뮬레이션, 동급 회사 비교까지 무료 제공.`,
+ title,
+ description,
  path: `/salary/${amount}`,
  keywords: [
  `연봉 ${formatted}만원`,
  `연봉 ${formatted}만원 실수령액`,
+ `연봉 ${formatted} 실수령액`,
+ `${formatted}만원 실수령액`,
  `연봉 ${formatted}만원 월급`,
  `연봉 ${formatted}만원 세후`,
+ `${formatted}만원 세후 월급`,
  ],
  ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}${netParam}`,
  });
@@ -220,7 +236,15 @@ export function buildCompanyMetadata(company: {
  const entryFigure = company.averageSalary
  ? `${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
  : null;
- const title = entryFigure
+ const seniorFigureTitle = company.seniorSalary
+ ? `${Math.round(company.seniorSalary / 10000).toLocaleString("ko-KR")}만원`
+ : null;
+ // 제목에 연봉 "범위"(신입~시니어)를 노출 — 상한선이 보여 "{회사} 연봉" 검색의
+ // 클릭을 더 끈다. 범위 정보가 없으면 초봉 단일 수치로 폴백.
+ const title =
+ entryFigure && seniorFigureTitle
+ ? `${company.name} 연봉 2026 — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 실수령액`
+ : entryFigure
  ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 실수령액`
  : `${company.name} 연봉 2026 — 신입 초봉·직급별 실수령액 정보`;
 

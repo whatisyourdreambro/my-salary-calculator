@@ -36,17 +36,24 @@ const DEFAULT_YEAR_ROWS: YearRow[] = [
 ];
 
 export default function MultiYearRSUSimulator({
-  memoryPerPerson,
+  divisionTotals,
 }: {
-  memoryPerPerson: number;
+  divisionTotals: Array<{
+    id: string;
+    label: string;
+    shortLabel: string;
+    color: string;
+    total: number;
+  }>;
 }) {
   const [rows, setRows] = useState<YearRow[]>(DEFAULT_YEAR_ROWS);
   const [sellPriceFmt, setSellPriceFmt] = useState("150,000");
 
   const sellPrice = parseNumberInput(sellPriceFmt);
 
-  function syncFromMemory() {
-    const v = Math.round(memoryPerPerson).toLocaleString("ko-KR");
+  // 선택한 사업부의 1인당 성과급으로 모든 연도 행을 채운다.
+  function fillFromDivision(total: number) {
+    const v = Math.round(total).toLocaleString("ko-KR");
     setRows((prev) => prev.map((r) => ({ ...r, perPersonFmt: v })));
   }
 
@@ -141,13 +148,27 @@ export default function MultiYearRSUSimulator({
         >
           <Coins size={11} className="text-electric" aria-hidden /> 다년도 RSU 매도 시뮬레이션
         </p>
-        <button
-          type="button"
-          onClick={syncFromMemory}
-          className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-electric-5 text-electric border border-electric-30 hover:bg-electric-10 transition-colors inline-flex items-center gap-1"
-        >
-          <TrendingUp size={10} aria-hidden /> 메모리 1인당으로 채우기
-        </button>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] font-bold text-faint-blue inline-flex items-center gap-1">
+            <TrendingUp size={10} aria-hidden /> 1인당으로 채우기:
+          </span>
+          {divisionTotals.map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              onClick={() => fillFromDivision(d.total)}
+              title={`${d.label} 1인당 ${Math.round(d.total).toLocaleString("ko-KR")}만원으로 전체 연도 채우기`}
+              className="text-[10px] font-black px-2 py-1 rounded-lg border transition-colors inline-flex items-center gap-1"
+              style={{
+                color: d.color,
+                borderColor: `${d.color}55`,
+                backgroundColor: `${d.color}0D`,
+              }}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
       </div>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         성과급 중 주식(RSU) 비중 + 매년 풀리는 매도 제한 + 연도별 주가 입력. 누적

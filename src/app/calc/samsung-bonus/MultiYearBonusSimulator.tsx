@@ -31,6 +31,11 @@ import {
   parseNumberInput,
   useCountUp,
 } from "./shared";
+import { SALARY_PERCENTILES, AGE_GROUPS } from "@/data/salaryRankData";
+import {
+  netWorthForAgeGroup,
+  NET_WORTH_SURVEY_LABEL,
+} from "@/data/netWorthData";
 
 // ────────────────────────────────────────────────────────────
 // 다년도 누적 성과급 시뮬레이터
@@ -882,6 +887,7 @@ export default function MultiYearBonusSimulator({
         enriched={computed.enriched}
         maxVal={computed.maxVal}
         color={targetDivision.color}
+        salaryManwon={salary / 10000}
       />
 
       {/* 누적 합계 — 톤다운 정돈 (헤더 띠 + 본문 white) */}
@@ -1356,6 +1362,7 @@ function BonusBarChart({
   enriched,
   maxVal,
   color,
+  salaryManwon,
 }: {
   enriched: Array<{
     year: number;
@@ -1366,11 +1373,22 @@ function BonusBarChart({
   }>;
   maxVal: number;
   color: string;
+  salaryManwon: number;
 }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [view, setView] = useState<"bar" | "pie" | "compare">("bar");
+  const [ageGroup, setAgeGroup] = useState<string>("30s_late");
 
   const n = enriched.length;
   if (n === 0) return null;
+
+  // 누적/평균 — 파이·비교 뷰용 (enriched에서 직접 도출, 추가 가정 없음)
+  const cumGross = enriched.reduce((s, d) => s + d.myGrossManwon, 0);
+  const cumNet = enriched.reduce((s, d) => s + d.myNetManwon, 0);
+  const cumTax = Math.max(0, cumGross - cumNet);
+  const avgGrossManwon = n > 0 ? cumGross / n : 0;
+  // 비교 기준 = 연봉 + 평균 연성과급(세전). 성과급은 보수의 일부이므로 합산해 비교.
+  const myComp = salaryManwon + avgGrossManwon;
 
   const width = Math.max(320, n * 50);
   const height = 280;
@@ -1395,10 +1413,17 @@ function BonusBarChart({
   }
 
   return (
-    <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4 overflow-x-auto">
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-2">
-        연도별 본인 케이스 (세전 막대 · 세후 진하게)
-      </p>
+    <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4">
+      <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue">
+          연도별 본인 케이스
+        </p>
+        <ChartViewToggle view={view} setView={setView} color={color} />
+      </div>
+
+      {view === "bar" && (
+      <div className="overflow-x-auto">
+      <p className="text-[10px] text-faint-blue mb-2">세전 막대 · 세후 진하게</p>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto"
@@ -1612,6 +1637,383 @@ function BonusBarChart({
           임계값 미달 (0원)
         </span>
       </div>
+      </div>
+      )}
+
+      {view === "pie" && (
+        <BonusPieView
+          cumNet={cumNet}
+          cumTax={cumTax}
+          cumGross={cumGross}
+          color={color}
+        />
+      )}
+
+      {view === "compare" && (
+        <AgeCompareView
+          ageGroup={ageGroup}
+          setAgeGroup={setAgeGroup}
+          myComp={myComp}
+          salaryManwon={salaryManwon}
+          avgGrossManwon={avgGrossManwon}
+          color={color}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── 차트 뷰 전환 토글 (막대 / 파이 / 나이대 비교) ───────────────
+function ChartViewToggle({
+  view,
+  setView,
+  color,
+}: {
+  view: "bar" | "pie" | "compare";
+  setView: (v: "bar" | "pie" | "compare") => void;
+  color: string;
+}) {
+  const opts: Array<{ key: "bar" | "pie" | "compare"; label: string }> = [
+    { key: "bar", label: "막대" },
+    { key: "pie", label: "파이" },
+    { key: "compare", label: "나이대 비교" },
+  ];
+  return (
+    <div
+      role="tablist"
+      aria-label="차트 보기 방식"
+      className="inline-flex rounded-lg border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-0.5"
+    >
+      {opts.map((o) => {
+        const active = view === o.key;
+        return (
+          <button
+            key={o.key}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            onClick={() => setView(o.key)}
+            className="px-2.5 py-1 rounded-md text-[11px] font-black transition-colors"
+            style={{
+              backgroundColor: active ? color : "transparent",
+              color: active ? "#fff" : "#7B8FA1",
+            }}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── 파이(도넛) 뷰 — 누적 세후 실수령 vs 세금·공제 ───────────────
+// 모든 값은 enriched 합산에서 직접 계산 (추가 가정/외부 데이터 없음).
+function BonusPieView({
+  cumNet,
+  cumTax,
+  cumGross,
+  color,
+}: {
+  cumNet: number;
+  cumTax: number;
+  cumGross: number;
+  color: string;
+}) {
+  if (cumGross <= 0) {
+    return (
+      <p className="text-xs text-faint-blue py-8 text-center">
+        세전 합계가 0원이라 표시할 구성이 없습니다. 영업이익·연봉을 입력해
+        주세요.
+      </p>
+    );
+  }
+  const netPct = (cumNet / cumGross) * 100;
+  const taxPct = 100 - netPct;
+  // 도넛 — stroke-dasharray로 두 세그먼트 표현
+  const R = 54;
+  const C = 2 * Math.PI * R;
+  const netLen = (netPct / 100) * C;
+  return (
+    <div className="flex flex-col sm:flex-row items-center gap-5 py-2">
+      <svg
+        viewBox="0 0 140 140"
+        className="w-36 h-36 flex-shrink-0"
+        role="img"
+        aria-label={`누적 성과급 구성: 세후 실수령 ${netPct.toFixed(
+          0
+        )}%, 세금·공제 ${taxPct.toFixed(0)}%`}
+      >
+        <g transform="rotate(-90 70 70)">
+          {/* 세금·공제 (배경 전체) */}
+          <circle
+            cx="70"
+            cy="70"
+            r={R}
+            fill="none"
+            stroke={color}
+            strokeOpacity={0.22}
+            strokeWidth="20"
+          />
+          {/* 세후 실수령 (진한 호) */}
+          <circle
+            cx="70"
+            cy="70"
+            r={R}
+            fill="none"
+            stroke={color}
+            strokeWidth="20"
+            strokeDasharray={`${netLen} ${C - netLen}`}
+            strokeLinecap="butt"
+          />
+        </g>
+        <text
+          x="70"
+          y="65"
+          textAnchor="middle"
+          fontSize="11"
+          fill="#7B8FA1"
+          fontWeight="700"
+        >
+          세후 비중
+        </text>
+        <text
+          x="70"
+          y="84"
+          textAnchor="middle"
+          fontSize="20"
+          fill={color}
+          fontWeight="900"
+        >
+          {netPct.toFixed(0)}%
+        </text>
+      </svg>
+      <div className="flex-1 w-full space-y-2">
+        <PieLegendRow
+          dot={color}
+          label="세후 실수령 (누적)"
+          value={fmtManwon(cumNet)}
+          pct={netPct}
+        />
+        <PieLegendRow
+          dot={color}
+          dotOpacity={0.22}
+          label="세금·4대보험 공제 (누적)"
+          value={fmtManwon(cumTax)}
+          pct={taxPct}
+        />
+        <div className="border-t border-canvas-200 dark:border-canvas-700 pt-2 flex items-center justify-between text-xs">
+          <span className="font-bold text-faint-blue">세전 합계</span>
+          <span className="font-black tabular-nums text-navy dark:text-canvas-50">
+            {fmtManwon(cumGross)}
+          </span>
+        </div>
+        <p className="text-[10px] text-faint-blue leading-relaxed">
+          여러 해 누적 성과급 중 실제로 손에 쥐는 비율입니다. 세액공제율·4대보험
+          토글 설정에 따라 달라집니다.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PieLegendRow({
+  dot,
+  dotOpacity = 1,
+  label,
+  value,
+  pct,
+}: {
+  dot: string;
+  dotOpacity?: number;
+  label: string;
+  value: string;
+  pct: number;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2 text-xs">
+      <span className="inline-flex items-center gap-1.5 text-muted-blue min-w-0">
+        <span
+          className="w-3 h-3 rounded-sm flex-shrink-0"
+          style={{ backgroundColor: dot, opacity: dotOpacity }}
+          aria-hidden
+        />
+        <span className="truncate">{label}</span>
+      </span>
+      <span className="tabular-nums font-bold text-navy dark:text-canvas-50 flex-shrink-0">
+        {value}{" "}
+        <span className="text-faint-blue font-normal">
+          ({pct.toFixed(0)}%)
+        </span>
+      </span>
+    </div>
+  );
+}
+
+// ── 나이대 비교 뷰 — 연봉+평균성과급 vs 연령대 연봉 백분위 ───────
+// 데이터: src/data/salaryRankData.ts (통계청·고용노동부 기반 추정치, 참고용).
+// 지어낸 수치 없음. 순자산 비교는 검증된 데이터가 없어 제외.
+function AgeCompareView({
+  ageGroup,
+  setAgeGroup,
+  myComp,
+  salaryManwon,
+  avgGrossManwon,
+  color,
+}: {
+  ageGroup: string;
+  setAgeGroup: (v: string) => void;
+  myComp: number;
+  salaryManwon: number;
+  avgGrossManwon: number;
+  color: string;
+}) {
+  // [상위 1%, 5%, 10%, 25%, 50%(중위), 75%] — 만원
+  const pct = SALARY_PERCENTILES[ageGroup] ?? SALARY_PERCENTILES["30s_late"];
+  const labels = ["상위 1%", "상위 5%", "상위 10%", "상위 25%", "중위(50%)", "상위 75%"];
+  // 내 위치(상위 %) 계산 — 임계값 사이를 선형 보간
+  const tiers = [1, 5, 10, 25, 50, 75];
+  let myTopPct = 99;
+  if (myComp >= pct[0]) myTopPct = 1;
+  else if (myComp <= pct[pct.length - 1]) myTopPct = 90;
+  else {
+    for (let i = 0; i < pct.length - 1; i++) {
+      if (myComp <= pct[i] && myComp >= pct[i + 1]) {
+        const ratio = (myComp - pct[i + 1]) / (pct[i] - pct[i + 1] || 1);
+        myTopPct = Math.round(tiers[i + 1] + ratio * (tiers[i] - tiers[i + 1]));
+        break;
+      }
+    }
+  }
+  const axisMax = Math.max(pct[0], myComp) * 1.05;
+  // 순자산은 '소득'과 단위가 다른 '자산(스톡)'이라 별도 카드로 분리 표시.
+  const netWorth = netWorthForAgeGroup(ageGroup);
+  return (
+    <div className="py-1">
+      {/* 연령대 선택 */}
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <label className="text-[11px] font-bold text-faint-blue">연령대</label>
+        <select
+          value={ageGroup}
+          onChange={(e) => setAgeGroup(e.target.value)}
+          className="text-xs font-bold rounded-lg border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 px-2 py-1 text-navy dark:text-canvas-50"
+          aria-label="비교할 연령대 선택"
+        >
+          {AGE_GROUPS.map((g) => (
+            <option key={g.key} value={g.key}>
+              {g.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 내 위치 배지 */}
+      <div
+        className="rounded-xl px-4 py-3 mb-3 flex items-center justify-between"
+        style={{ backgroundColor: `${color}10` }}
+      >
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue">
+            내 연봉+평균성과급 (세전)
+          </p>
+          <p className="text-xl font-black tabular-nums" style={{ color }}>
+            {fmtManwon(myComp)}
+          </p>
+          <p className="text-[10px] text-faint-blue tabular-nums mt-0.5">
+            연봉 {fmtManwonInt(salaryManwon)}만 + 평균 성과급{" "}
+            {fmtManwonInt(avgGrossManwon)}만
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue">
+            추정 위치
+          </p>
+          <p className="text-xl font-black" style={{ color }}>
+            상위 {myTopPct}%
+          </p>
+        </div>
+      </div>
+
+      {/* 백분위 가로 막대 */}
+      <div className="space-y-1.5">
+        {pct.map((v, i) => {
+          const w = Math.min(100, (v / axisMax) * 100);
+          return (
+            <div key={i} className="flex items-center gap-2">
+              <span className="text-[10px] text-faint-blue w-16 flex-shrink-0 text-right">
+                {labels[i]}
+              </span>
+              <div className="flex-1 h-4 rounded bg-canvas-100 dark:bg-canvas-800 relative overflow-hidden">
+                <div
+                  className="h-full rounded"
+                  style={{ width: `${w}%`, backgroundColor: color, opacity: 0.3 }}
+                />
+              </div>
+              <span className="text-[10px] tabular-nums text-muted-blue w-14 flex-shrink-0">
+                {fmtManwonInt(v)}만
+              </span>
+            </div>
+          );
+        })}
+        {/* 내 위치 막대 (강조) */}
+        <div className="flex items-center gap-2 pt-1">
+          <span
+            className="text-[10px] font-black w-16 flex-shrink-0 text-right"
+            style={{ color }}
+          >
+            나
+          </span>
+          <div className="flex-1 h-4 rounded bg-canvas-100 dark:bg-canvas-800 relative overflow-hidden">
+            <div
+              className="h-full rounded"
+              style={{
+                width: `${Math.min(100, (myComp / axisMax) * 100)}%`,
+                backgroundColor: color,
+              }}
+            />
+          </div>
+          <span
+            className="text-[10px] tabular-nums font-black w-14 flex-shrink-0"
+            style={{ color }}
+          >
+            {fmtManwonInt(myComp)}만
+          </span>
+        </div>
+      </div>
+
+      <p className="text-[10px] text-faint-blue leading-relaxed mt-3">
+        ※ 비교 기준은 연봉 + 평균 연성과급(세전) 합산입니다. 연령대 백분위는
+        통계청·고용노동부 자료 기반 <strong>추정치(참고용)</strong>이며, 실제
+        분포와 차이가 있을 수 있습니다.
+      </p>
+
+      {/* 순자산 카드 — 소득(흐름)과 단위가 다른 자산(스톡)이라 별도 분리 */}
+      {netWorth && (
+        <div className="mt-4 rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-faint-blue mb-1">
+            참고 · 내 또래 평균 순자산
+          </p>
+          <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+            <strong className="text-navy dark:text-canvas-50">
+              {netWorth.label}
+            </strong>{" "}
+            가구의 평균 순자산은{" "}
+            <strong className="tabular-nums" style={{ color }}>
+              약 {(netWorth.avgManwon / 10000).toFixed(1)}억원
+            </strong>{" "}
+            <span className="text-faint-blue tabular-nums">
+              ({netWorth.avgManwon.toLocaleString("ko-KR")}만원)
+            </span>
+            입니다.
+          </p>
+          <p className="text-[10px] text-faint-blue leading-relaxed mt-2">
+            ※ 순자산(자산−부채)은 매년 버는 <strong>소득</strong>과 달리
+            평생에 걸쳐 쌓는 <strong>자산</strong>이라 위 연봉 비교와는 별개
+            지표입니다. 개인이 아닌 <strong>가구(가구주 연령)</strong> 기준
+            평균값. 출처: {NET_WORTH_SURVEY_LABEL}.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
