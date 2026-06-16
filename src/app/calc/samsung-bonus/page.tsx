@@ -131,6 +131,10 @@ export const metadata: Metadata = {
   keywords: [
     // 핵심
     "삼성전자 성과급 계산기",
+    "삼성 성과급 계산기",
+    "삼전 성과급 계산기",
+    "삼성 전자 성과급 계산기",
+    "삼성전자 성과급 시뮬레이터",
     "삼성 성과급 계산",
     "삼성전자 성과급",
     "삼성 보너스",
@@ -299,6 +303,11 @@ export default function SamsungBonusCalculatorPage() {
               재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
               분배 기준 (공개 노사 합의 보도 기반 추정). 사업부 1인당 평균 + 본인
               연봉별 세전·세후 + 다년도 RSU 매도 시뮬.
+            </p>
+            <p className="text-xs text-faint-blue mt-2 max-w-md mx-auto leading-relaxed">
+              <strong>삼성 성과급 계산기</strong>(삼전 성과급 계산기)를
+              찾으셨다면 바로 이 페이지입니다 — OPI(초과이익성과금) 재원부터
+              본인 실수령액까지 한 번에 추정합니다.
             </p>
           </header>
 

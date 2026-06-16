@@ -236,7 +236,15 @@ export function buildCompanyMetadata(company: {
  const entryFigure = company.averageSalary
  ? `${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
  : null;
- const title = entryFigure
+ const seniorFigureTitle = company.seniorSalary
+ ? `${Math.round(company.seniorSalary / 10000).toLocaleString("ko-KR")}만원`
+ : null;
+ // 제목에 연봉 "범위"(신입~시니어)를 노출 — 상한선이 보여 "{회사} 연봉" 검색의
+ // 클릭을 더 끈다. 범위 정보가 없으면 초봉 단일 수치로 폴백.
+ const title =
+ entryFigure && seniorFigureTitle
+ ? `${company.name} 연봉 2026 — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 실수령액`
+ : entryFigure
  ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 실수령액`
  : `${company.name} 연봉 2026 — 신입 초봉·직급별 실수령액 정보`;
 
