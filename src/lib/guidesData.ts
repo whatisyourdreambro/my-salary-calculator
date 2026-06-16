@@ -10,6 +10,7 @@ import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
 import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
 import { semiconductorDeepdiveGuides } from "@/lib/guides/semiconductor-deepdive";
 import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
+import { bonusDeepdiveGuides } from "@/lib/guides/bonus-deepdive";
 import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
@@ -467,6 +468,8 @@ const allRawGuides = [
  ...hotNewsDeepDive,
  // 13차 — 성과급 종류·소득세·4대보험·절세 심화·시점 실전 5개 영역 50편 (누적 181편)
  ...hotBonusTaxComplete,
+ // 14차 — 성과급 시의성 종합(2026 실제 지급액 + 통상임금 대법 판결 + 세금/4대보험 + 계산기 연결)
+ ...bonusDeepdiveGuides,
 ];
 
 // Generate the final guides array with content
