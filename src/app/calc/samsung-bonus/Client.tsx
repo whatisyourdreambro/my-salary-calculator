@@ -600,11 +600,15 @@ export default function SamsungBonusClient() {
         defaultDivId={selectedDivId}
       />
 
-      {/* 다년도 RSU 매도 시뮬레이터 — 상단 메모리 1인당 평균과 연동 */}
+      {/* 다년도 RSU 매도 시뮬레이터 — 상단 사업부별 1인당 평균과 연동 */}
       <MultiYearRSUSimulator
-        memoryPerPerson={
-          result.perDivision.find((d) => d.id === "memory")?.total ?? 0
-        }
+        divisionTotals={result.perDivision.map((d) => ({
+          id: d.id,
+          label: d.label,
+          shortLabel: d.shortLabel,
+          color: d.color,
+          total: d.total,
+        }))}
       />
 
       <p className="text-center text-[11px] text-faint-blue">
