@@ -32,6 +32,10 @@ import {
   useCountUp,
 } from "./shared";
 import { SALARY_PERCENTILES, AGE_GROUPS } from "@/data/salaryRankData";
+import {
+  netWorthForAgeGroup,
+  NET_WORTH_SURVEY_LABEL,
+} from "@/data/netWorthData";
 
 // ────────────────────────────────────────────────────────────
 // 다년도 누적 성과급 시뮬레이터
@@ -1882,6 +1886,8 @@ function AgeCompareView({
     }
   }
   const axisMax = Math.max(pct[0], myComp) * 1.05;
+  // 순자산은 '소득'과 단위가 다른 '자산(스톡)'이라 별도 카드로 분리 표시.
+  const netWorth = netWorthForAgeGroup(ageGroup);
   return (
     <div className="py-1">
       {/* 연령대 선택 */}
@@ -1980,6 +1986,34 @@ function AgeCompareView({
         통계청·고용노동부 자료 기반 <strong>추정치(참고용)</strong>이며, 실제
         분포와 차이가 있을 수 있습니다.
       </p>
+
+      {/* 순자산 카드 — 소득(흐름)과 단위가 다른 자산(스톡)이라 별도 분리 */}
+      {netWorth && (
+        <div className="mt-4 rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-faint-blue mb-1">
+            참고 · 내 또래 평균 순자산
+          </p>
+          <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+            <strong className="text-navy dark:text-canvas-50">
+              {netWorth.label}
+            </strong>{" "}
+            가구의 평균 순자산은{" "}
+            <strong className="tabular-nums" style={{ color }}>
+              약 {(netWorth.avgManwon / 10000).toFixed(1)}억원
+            </strong>{" "}
+            <span className="text-faint-blue tabular-nums">
+              ({netWorth.avgManwon.toLocaleString("ko-KR")}만원)
+            </span>
+            입니다.
+          </p>
+          <p className="text-[10px] text-faint-blue leading-relaxed mt-2">
+            ※ 순자산(자산−부채)은 매년 버는 <strong>소득</strong>과 달리
+            평생에 걸쳐 쌓는 <strong>자산</strong>이라 위 연봉 비교와는 별개
+            지표입니다. 개인이 아닌 <strong>가구(가구주 연령)</strong> 기준
+            평균값. 출처: {NET_WORTH_SURVEY_LABEL}.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
