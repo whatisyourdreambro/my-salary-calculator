@@ -13,7 +13,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   Sparkles,
@@ -621,6 +621,10 @@ export default function SamsungBonusCalculatorPage() {
               ))}
             </div>
           </section>
+
+          {/* 운영자 승인 광고 배치(2026-07-07): 550줄 무수익 콘텐츠 구간 중간 —
+              시나리오 섹션과 RSU 섹션 사이. 타 회사 보너스 계산기와 동일 3유닛 구성. */}
+          <CalcResultAd />
 
           {/* 다년도 RSU 모델 설명 */}
           <section className="mb-10" aria-labelledby="rsu-desc-title">

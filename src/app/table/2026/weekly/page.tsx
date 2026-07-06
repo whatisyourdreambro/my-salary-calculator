@@ -6,6 +6,7 @@ import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import WeeklyTableInteractive from "./WeeklyTableInteractive";
 import TableHero from "@/components/TableHero";
+import { CalcResultAd } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -86,6 +87,9 @@ function WeeklyTable2026() {
  highlightRows={highlightRows}
  />
  </Suspense>
+
+ {/* 운영자 승인 광고 배치(2026-07-07): 표와 본문 사이 — 표 전 구간 무광고였음 */}
+ <CalcResultAd />
 
  <div className="w-full py-16">
  <section>

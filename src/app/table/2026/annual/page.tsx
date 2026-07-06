@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -87,6 +88,9 @@ function AnnualTable() {
           highlightRows={highlightRows}
           linkColumnBaseHref="/salary"
         />
+
+        {/* 운영자 승인 광고 배치(2026-07-07): 177행 표와 SEO 본문 사이 — 표 전 구간 무광고였음 */}
+        <CalcResultAd />
 
         {/* SEO 텍스트 콘텐츠 — 체류시간 + 검색엔진 */}
         <section className="mt-12 mb-8 max-w-4xl mx-auto">
