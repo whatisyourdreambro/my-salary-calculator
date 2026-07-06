@@ -456,26 +456,26 @@ const dependentBonus = `
 // ═══════════════════════════════════════════════════════════════
 
 const bonusPension45 = `
-<p class="lead">성과급에 국민연금 4.75% 부과? — 부분적 YES. 보수월액 상한 637만원(2026)까지만 부과. 월 보수 800만원 직원이 성과급 1억 받아도 추가 국민연금 부과 거의 없음(이미 상한 적용).</p>
+<p class="lead">성과급에 국민연금 4.75% 부과? — 부분적 YES. 보수월액 상한 659만원(2026년 7월~)까지만 부과. 월 보수 800만원 직원이 성과급 1억 받아도 추가 국민연금 부과 거의 없음(이미 상한 적용).</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 2026 국민연금 상한</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">📋 국민연금 상한 (2026.7~2027.6)</h2>
 <ul class="space-y-2 mt-4">
-<li>· 기준소득월액 상한: <strong>637만원</strong></li>
-<li>· 본인 부담 4.75% × 637만 = 약 30.26만원/월</li>
+<li>· 기준소득월액 상한: <strong>659만원</strong></li>
+<li>· 본인 부담 4.75% × 659만 = 약 31.3만원/월</li>
 <li>· 회사 부담 4.75% 동일</li>
-<li>· 보수가 637만 초과해도 30.26만원 고정</li>
+<li>· 보수가 659만 초과해도 31.3만원 고정</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 영향 — 거의 없음</h2>
 <p>월급 700만 직원이 성과급 5,000만 받는 경우:</p>
 <ul class="space-y-2 mt-4">
-<li>· 월급만으로도 이미 상한 637만 초과 → 30.26만원 매월 부과</li>
+<li>· 월급만으로도 이미 상한 659만 초과 → 31.3만원 매월 부과</li>
 <li>· 성과급 추가돼도 국민연금은 변동 없음</li>
 <li>· <strong>국민연금 추가 부담 0원</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 단 — 월급이 낮은 직원은 영향</h2>
-<p>월급 400만 직원이 한 달 성과급 200만 받으면 그 달 보수월액이 올라 국민연금 산정액이 소폭 증가 → 약 9,500원 추가 부담(요율 4.75% 반영).</p>
+<p>월급 400만 직원이 연간 성과급 200만을 받으면 이듬해 7월 기준소득월액 재산정 때 월평균 소득이 약 16.7만원 올라가 → 월 약 7,900원(연 약 95,000원) 추가 부담(요율 4.75% 반영).</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/national-pension-estimate-2026" class="text-primary underline">국민연금 예상수령액</a></li></ul></div>
 `;
@@ -525,11 +525,11 @@ const bonusEmployment09 = `
 `;
 
 const bonusInsuranceCeiling = `
-<p class="lead">4대보험 상한·하한 정리. 국민연금 보수월액 상한 637만, 건강보험 상한 없음, 고용보험 상한 없음, 산재 회사만 부담. 성과급 큰 직원에게 가장 큰 부담은 건강보험(약 4.07%), 그 다음 고용보험(0.9%).</p>
+<p class="lead">4대보험 상한·하한 정리. 국민연금 보수월액 상한 659만(2026년 7월~), 건강보험 상한 없음, 고용보험 상한 없음, 산재 회사만 부담. 성과급 큰 직원에게 가장 큰 부담은 건강보험(약 4.07%), 그 다음 고용보험(0.9%).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 4대보험 본인 부담 정리</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">보험</th><th class="p-3">본인 부담률</th><th class="p-3">상한·하한</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">국민연금</td><td class="p-3">4.75%</td><td class="p-3"><strong>상한 637만원</strong></td></tr>
+<tr class="border-t"><td class="p-3">국민연금</td><td class="p-3">4.75%</td><td class="p-3"><strong>상한 659만원</strong></td></tr>
 <tr class="border-t"><td class="p-3">건강보험</td><td class="p-3">3.595%</td><td class="p-3">상한 없음</td></tr>
 <tr class="border-t"><td class="p-3">장기요양</td><td class="p-3">0.472%</td><td class="p-3">상한 없음</td></tr>
 <tr class="border-t"><td class="p-3">고용보험</td><td class="p-3">0.9%</td><td class="p-3">상한 없음</td></tr>
@@ -1159,10 +1159,10 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "medical-edu-donation-bonus-year-2026", title: "성과급 받는 해 의료비·교육비·기부금 — 환급 효과 12%p 큼", description: "한계세율 35%+ 구간에서 공제 효과 12%p 큼. 임플란트·치아교정·자녀 대학원 등 큰 비용 한 해에 몰아 결제 → 약 200~250만 추가 환급.", category: "세금", tags: ["의료비", "교육비", "기부금", "성과급", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: medicalEduBonus, lang: "ko" },
   { slug: "dependent-deduction-bonus-year-2026", title: "성과급 받는 해 인적공제 — 1인 150만 × 35% = 52만 환급", description: "한계세율 35% 시 인적공제 효과 큼. 부모 2명 + 자녀 2명 + 경로우대 + 의료비 통합 시 약 174만 추가 환급.", category: "세금", tags: ["인적공제", "부양가족", "성과급", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dependentBonus, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
-  { slug: "bonus-pension-45-ceiling-590-2026", title: "성과급 국민연금 4.75% — 보수월액 상한 637만원 적용", description: "국민연금은 637만 상한. 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 9,500원 추가.", category: "기초", tags: ["국민연금", "성과급", "상한", "590만", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusPension45, lang: "ko" },
+  { slug: "bonus-pension-45-ceiling-590-2026", title: "성과급 국민연금 4.75% — 보수월액 상한 659만원 적용", description: "국민연금은 659만 상한(2026년 7월~). 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 월 약 7,900원 추가.", category: "기초", tags: ["국민연금", "성과급", "상한", "659만", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusPension45, lang: "ko" },
   { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 상한 없음, 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 상한 없음. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 7월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
   { slug: "bonus-employment-09-2026", title: "성과급 고용보험 0.9% — 1억 시 90만, 3억 시 270만", description: "고용보험 본인 0.9% + 회사 0.9% + α. 상한 없음. 1억 성과급 시 본인 90만, 3억 시 270만. 실업급여 산정 시 평균임금 베이스 증가 효과.", category: "기초", tags: ["고용보험", "성과급", "실업급여", "0.9%", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusEmployment09, lang: "ko" },
-  { slug: "four-insurance-ceiling-summary-2026", title: "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만", description: "국민연금 4.75% 상한 637만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.", category: "기초", tags: ["4대보험", "상한", "성과급", "건강보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusInsuranceCeiling, lang: "ko" },
+  { slug: "four-insurance-ceiling-summary-2026", title: "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만", description: "국민연금 4.75% 상한 659만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.", category: "기초", tags: ["4대보험", "상한", "성과급", "건강보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusInsuranceCeiling, lang: "ko" },
   { slug: "july-health-adjust-bonus-1eok-2026", title: "성과급 1억 + 7월 건보료 정산 — 추가 400만 부과", description: "성과급 부분은 매월 부과 안 되고 다음해 4월·7월에 정산. 1억 성과급 시 약 400만 추가, 5회 분할 시 7~11월 80만씩 분산.", category: "기초", tags: ["7월정산", "건강보험", "성과급", "분할납부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusHealthAdjust, lang: "ko" },
   { slug: "july-health-adjust-bonus-detail-2026", title: "7월 건보료 정산 흐름 — 성과급별 정산금 80~800만원", description: "4월 통보 → 5~6월 분할 신청 → 7월 1회 차감 → 8~11월 분할. 성과급 2,000만 약 80만, 5,000만 200만, 1억 400만, 2억 800만 정산금.", category: "기초", tags: ["7월정산", "건강보험", "분할", "정산금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: julyAdjust, lang: "ko" },
   { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },

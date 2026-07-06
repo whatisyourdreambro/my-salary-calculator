@@ -12,12 +12,13 @@ import {
   AlertCircle,
   CheckCircle2,
   Calendar,
+  RotateCcw,
+  Columns3,
 } from "lucide-react";
 import {
   FIXED_RERATE,
   FIXED_BU_RATIO,
   FIXED_SA_RATIO,
-  FIXED_OPI1_RATE,
   REFERENCE_SALARY,
   getThreshold,
   getThresholdPeriod,
@@ -75,6 +76,19 @@ export default function SamsungBonusClient() {
   const [selectedDivId, setSelectedDivId] = useState<string>("memory");
   const [creditRate, setCreditRate] = useState<number>(20);
   const [applyInsurance, setApplyInsurance] = useState<boolean>(true);
+  // OPI1(기존 OPI) 지급률 — 상한 50%. 2025년 실적분 실지급: MX 50%·DS 47%·VD 12% 등
+  const [opi1Rate, setOpi1Rate] = useState<number>(50);
+
+  function resetDivisions() {
+    setCounts(
+      Object.fromEntries(
+        DIVISIONS.map((d) => [d.id, d.defaultCount.toLocaleString("ko-KR")])
+      )
+    );
+    setRatios(
+      Object.fromEntries(DIVISIONS.map((d) => [d.id, String(d.defaultRatio)]))
+    );
+  }
 
   const profit = Math.max(0, Number(profitFmt) || 0);
   const threshold = getThreshold(year);
@@ -189,10 +203,10 @@ export default function SamsungBonusClient() {
                   type="button"
                   onClick={() => setYear(y)}
                   aria-pressed={active}
-                  className={`text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors ${
+                  className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full transition-colors ${
                     active
                       ? "text-white"
-                      : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:text-white"
+                      : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-[#7C83FF] hover:text-white"
                   }`}
                   style={{
                     backgroundColor: active ? "#7C83FF" : undefined,
@@ -234,8 +248,10 @@ export default function SamsungBonusClient() {
               inputMode="decimal"
               value={profitFmt}
               onChange={(e) => {
-                const v = e.target.value.replace(/[^0-9.]/g, "");
-                setProfitFmt(v);
+                // 소수점은 첫 번째 하나만 허용 — "1.2.3" 같은 입력이 무경고 0 처리되는 것 방지
+                const raw = e.target.value.replace(/[^0-9.]/g, "");
+                const [head, ...rest] = raw.split(".");
+                setProfitFmt(rest.length > 0 ? `${head}.${rest.join("")}` : head);
               }}
               className="w-full rounded-xl px-4 py-3 text-2xl font-black tabular-nums focus:outline-none transition-all pr-14 text-electric"
               style={{
@@ -252,7 +268,8 @@ export default function SamsungBonusClient() {
           {/* 임계값 게이지 — 영업이익 vs 임계값 시각화 */}
           {threshold > 0 && (
             <div className="mt-3">
-              <div className="flex items-center justify-between mb-1.5">
+              {/* mb-4: 게이지 위 '▼ N조' 마커 라벨 공간 확보 (라벨이 막대 위로 뜸) */}
+              <div className="flex items-center justify-between mb-4">
                 <span className="text-[11px] font-bold text-faint-blue">
                   임계값 기준 ({threshold}조)
                 </span>
@@ -274,7 +291,8 @@ export default function SamsungBonusClient() {
                   )}
                 </span>
               </div>
-              <div className="relative h-2.5 rounded-full bg-canvas-100 dark:bg-canvas-800 overflow-hidden">
+              {/* overflow-hidden 금지 — 마커 라벨이 막대 밖(위)에 렌더된다. 내부 막대는 자체 rounded */}
+              <div className="relative h-2.5 rounded-full bg-canvas-100 dark:bg-canvas-800">
                 {/* 영업이익 막대 */}
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -285,19 +303,17 @@ export default function SamsungBonusClient() {
                 />
                 {/* 임계값 마커 */}
                 <div
-                  className="absolute top-0 bottom-0 w-0.5"
+                  className="absolute top-0 bottom-0 w-0.5 bg-slate-900 dark:bg-canvas-50"
                   style={{
                     left: `${(threshold / (threshold * 1.5)) * 100}%`,
-                    backgroundColor: "#0A1829",
                   }}
                   aria-hidden
                 />
                 <span
-                  className="absolute -top-0.5 text-[9px] font-black"
+                  className="absolute -top-0.5 text-[9px] font-black text-navy whitespace-nowrap"
                   style={{
                     left: `${(threshold / (threshold * 1.5)) * 100}%`,
                     transform: "translateX(-50%) translateY(-100%)",
-                    color: "#0A1829",
                   }}
                   aria-hidden
                 >
@@ -335,7 +351,7 @@ export default function SamsungBonusClient() {
                   type="button"
                   onClick={() => setProfitFmt(String(v))}
                   aria-pressed={active}
-                  className={`text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors ${
+                  className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full transition-colors ${
                     active
                       ? "bg-electric text-white"
                       : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-electric hover:text-white"
@@ -399,13 +415,22 @@ export default function SamsungBonusClient() {
           >
             사업부 설정
           </p>
-          <p className="text-[11px] text-faint-blue">
-            가중치 합계{" "}
-            <span className="text-navy dark:text-canvas-50 font-black tabular-nums">
-              {result.ratioSum.toFixed(1)}
-            </span>{" "}
-            (상대값 — 1.0이 표준)
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-[11px] text-faint-blue">
+              가중치 합계{" "}
+              <span className="text-navy dark:text-canvas-50 font-black tabular-nums">
+                {result.ratioSum.toFixed(1)}
+              </span>{" "}
+              (상대값 — 1.0이 표준)
+            </p>
+            <button
+              type="button"
+              onClick={resetDivisions}
+              className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-canvas-50 dark:bg-canvas-800 text-muted-blue border border-canvas-200 dark:border-canvas-700 hover:border-electric hover:text-electric transition-colors inline-flex items-center gap-1"
+            >
+              <RotateCcw size={10} aria-hidden /> 디폴트로 초기화
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {DIVISIONS.map((d) => (
@@ -490,11 +515,11 @@ export default function SamsungBonusClient() {
           id="avg-result-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1"
         >
-          1인당 성과급 결과 (세전 · 평균 직원 기준)
+          OPI2(특별경영성과금) 1인당 결과 (세전 · 평균 직원 기준)
         </p>
         <p className="text-[11px] text-faint-blue mb-5">
-          이 값은 사업부 평균이며, 본인 케이스는 아래 "내 연봉으로 계산"에서
-          확인.
+          이 값은 영업이익 분배분(OPI2)의 사업부 평균입니다. OPI1(연봉 비례)을
+          합산한 본인 케이스는 아래 "내 연봉으로 계산"에서 확인.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {result.perDivision.map((r) => (
@@ -524,6 +549,8 @@ export default function SamsungBonusClient() {
         setCreditRate={setCreditRate}
         applyInsurance={applyInsurance}
         setApplyInsurance={setApplyInsurance}
+        opi1Rate={opi1Rate}
+        setOpi1Rate={setOpi1Rate}
       />
 
       {/* SK하이닉스 비교 */}
@@ -549,27 +576,27 @@ export default function SamsungBonusClient() {
           />
           <div className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
             <p className="font-black text-emerald-700 dark:text-emerald-400 mb-1">
-              SK하이닉스 성과급 예상치 (2024 실적 기준)
+              SK하이닉스 성과급 확정치 (2025 실적 기준, 2026-02 지급)
             </p>
             <p>
               영업이익{" "}
-              <strong className="text-navy dark:text-canvas-50">23.4조</strong> ·
-              재원비율{" "}
-              <strong className="text-navy dark:text-canvas-50">10%</strong> ·
-              직원{" "}
-              <strong className="text-navy dark:text-canvas-50">35,000명</strong>{" "}
-              기준
+              <strong className="text-navy dark:text-canvas-50">47.2조</strong>{" "}
+              → PS{" "}
+              <strong className="text-navy dark:text-canvas-50">2,964%</strong>{" "}
+              + PI{" "}
+              <strong className="text-navy dark:text-canvas-50">300%</strong>{" "}
+              (기준급=연봉÷20 대비, 상한 1000% 폐지 후 첫 적용)
             </p>
             <p className="mt-1">
-              → 인당 평균{" "}
+              → 연봉 1억 기준 PS 세전{" "}
               <strong
                 className="text-lg font-black"
                 style={{ color: "#10B981" }}
               >
-                ≈ 약 6,700만원
+                ≈ 약 1억 4,820만원
               </strong>
               <span className="text-xs text-faint-blue ml-2">
-                (전사 균등 분배 가정)
+                (80% 즉시 · 20% 2년 이연)
               </span>
             </p>
             <p className="mt-2">
@@ -593,6 +620,7 @@ export default function SamsungBonusClient() {
         creditRate={creditRate}
         applyInsurance={applyInsurance}
         defaultDivId={selectedDivId}
+        opi1Rate={opi1Rate}
       />
 
       {/* 다년도 RSU 매도 시뮬레이터 — 상단 메모리 1인당 평균과 연동 */}
@@ -623,6 +651,8 @@ function MySalaryCalculator({
   setCreditRate,
   applyInsurance,
   setApplyInsurance,
+  opi1Rate,
+  setOpi1Rate,
 }: {
   perDivision: Array<{
     id: string;
@@ -642,10 +672,13 @@ function MySalaryCalculator({
   setCreditRate: (v: number) => void;
   applyInsurance: boolean;
   setApplyInsurance: (v: boolean) => void;
+  opi1Rate: number;
+  setOpi1Rate: (v: number) => void;
 }) {
   const salary = parseNumberInput(salaryFmt);
   const selected =
     perDivision.find((d) => d.id === selectedDivId) ?? perDivision[0];
+  const [compareAll, setCompareAll] = useState(false);
 
   const personal = useMemo(() => {
     // OPI2 — 특별경영성과금 (영업이익 기반 사업부 분배)
@@ -655,8 +688,8 @@ function MySalaryCalculator({
     const opi2Manwon = opi2BuManwon + opi2SaManwon;
     const opi2Won = opi2Manwon * 10000;
 
-    // OPI1 — 기본 성과인센티브 (연봉의 50%)
-    const opi1Won = salary * (FIXED_OPI1_RATE / 100);
+    // OPI1 — 기존 OPI (연봉 대비, 상한 50% — 사용자 조정 가능)
+    const opi1Won = salary * (opi1Rate / 100);
     const opi1Manwon = opi1Won / 10000;
 
     // 합산 — 세금은 OPI1+OPI2 합산 기준으로 누진세 적용
@@ -690,7 +723,28 @@ function MySalaryCalculator({
       grossMultiplier: salary > 0 ? totalGrossWon / salary : 0,
       opi2Multiplier: salary > 0 ? opi2Won / salary : 0,
     };
-  }, [salary, selected, creditRate, applyInsurance]);
+  }, [salary, selected, creditRate, applyInsurance, opi1Rate]);
+
+  // 사업부 3개 동시 비교 — calcBonusNet 순수 함수 3회 호출
+  const compareRows = useMemo(() => {
+    if (!compareAll) return [];
+    const ratio = salary / REFERENCE_SALARY;
+    const opi1Won = salary * (opi1Rate / 100);
+    return perDivision.map((d) => {
+      const opi2Won = (d.buPart + d.saPart) * ratio * 10000;
+      const grossWon = opi1Won + opi2Won;
+      const tax = calcBonusNet(salary, grossWon, creditRate, applyInsurance);
+      return {
+        id: d.id,
+        label: d.label,
+        color: d.color,
+        shortLabel: d.shortLabel,
+        grossManwon: grossWon / 10000,
+        netManwon: tax.net / 10000,
+        effRate: tax.effRate,
+      };
+    });
+  }, [compareAll, perDivision, salary, opi1Rate, creditRate, applyInsurance]);
 
   const animOpi1 = useCountUp(personal.opi1Manwon);
   const animOpi2 = useCountUp(personal.opi2Manwon);
@@ -762,7 +816,7 @@ function MySalaryCalculator({
                   type="button"
                   onClick={() => setSalaryFmt(v.toLocaleString("ko-KR"))}
                   aria-pressed={active}
-                  className={`text-[10px] font-bold px-2.5 py-1 rounded-full transition-colors ${
+                  className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full transition-colors ${
                     active
                       ? "bg-electric text-white"
                       : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-electric hover:text-white"
@@ -775,18 +829,32 @@ function MySalaryCalculator({
           </div>
         </div>
 
-        {/* 사업부 선택 — 탭 ARIA */}
+        {/* 사업부 선택 — 실질은 단일 선택 버튼 그룹 (탭 위젯 아님) */}
         <div>
-          <label
-            id="div-tabs-label"
-            className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue"
-          >
-            내 사업부 선택
-          </label>
+          <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+            <span
+              id="div-select-label"
+              className="text-xs font-bold uppercase tracking-widest text-faint-blue"
+            >
+              내 사업부 선택
+            </span>
+            <button
+              type="button"
+              onClick={() => setCompareAll((v) => !v)}
+              aria-pressed={compareAll}
+              className={`text-[10px] font-black px-2.5 py-1.5 rounded-lg border transition-colors inline-flex items-center gap-1 ${
+                compareAll
+                  ? "bg-electric text-white border-electric"
+                  : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue border-canvas-200 dark:border-canvas-700 hover:border-electric hover:text-electric"
+              }`}
+            >
+              <Columns3 size={10} aria-hidden /> 3개 사업부 비교
+            </button>
+          </div>
           <div
             className="grid grid-cols-3 gap-2"
-            role="tablist"
-            aria-labelledby="div-tabs-label"
+            role="group"
+            aria-labelledby="div-select-label"
           >
             {perDivision.map((d) => {
               const active = selectedDivId === d.id;
@@ -794,8 +862,7 @@ function MySalaryCalculator({
                 <button
                   key={d.id}
                   type="button"
-                  role="tab"
-                  aria-selected={active}
+                  aria-pressed={active}
                   onClick={() => setSelectedDivId(d.id)}
                   className={`rounded-xl px-3 py-2 text-xs font-black border transition-all inline-flex items-center justify-center gap-1.5 ${
                     active
@@ -816,16 +883,98 @@ function MySalaryCalculator({
           </div>
         </div>
 
+        {/* 3개 사업부 동시 비교 — 토글 시 표시 */}
+        {compareAll && compareRows.length > 0 && (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-2"
+            aria-label="사업부 3개 성과급 비교"
+          >
+            {compareRows.map((r) => (
+              <div
+                key={r.id}
+                className="rounded-xl border bg-white dark:bg-canvas-900 p-4"
+                style={{ borderColor: `${r.color}44` }}
+              >
+                <p
+                  className="text-xs font-black mb-2 inline-flex items-center gap-1.5"
+                  style={{ color: r.color }}
+                >
+                  <span
+                    className="w-3 h-3 rounded-full inline-flex items-center justify-center text-[8px] font-black text-white"
+                    style={{ backgroundColor: r.color }}
+                    aria-hidden
+                  >
+                    {r.shortLabel}
+                  </span>
+                  {r.label}
+                </p>
+                <div className="text-[11px] text-muted-blue flex justify-between mb-1">
+                  <span>세전</span>
+                  <span className="font-bold text-navy dark:text-canvas-50 tabular-nums">
+                    {fmtManwon(r.grossManwon)}
+                  </span>
+                </div>
+                <div className="text-[11px] flex justify-between items-baseline">
+                  <span className="text-muted-blue">세후</span>
+                  <span
+                    className="font-black tabular-nums text-base"
+                    style={{ color: r.color }}
+                  >
+                    {fmtManwon(r.netManwon)}
+                  </span>
+                </div>
+                <p className="text-[10px] text-faint-blue mt-1 text-right tabular-nums">
+                  공제 {r.effRate.toFixed(1)}%
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 세금 가정 조정 */}
         <details className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4 group">
           <summary className="cursor-pointer text-xs font-black uppercase tracking-widest text-faint-blue inline-flex items-center gap-1.5 list-none">
-            <Settings size={12} className="text-electric" aria-hidden /> 세금
-            계산 가정 조정
+            <Settings size={12} className="text-electric" aria-hidden /> 계산
+            가정 조정 — OPI1·세금
             <span className="ml-auto text-electric group-open:rotate-180 transition-transform">
               ▾
             </span>
           </summary>
           <div className="mt-4 space-y-4">
+            <div>
+              <div className="flex items-end justify-between mb-1.5">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-faint-blue">
+                  OPI1 지급률 (연봉 대비)
+                </span>
+                <span
+                  className="text-lg font-black tabular-nums"
+                  style={{ color: "#0145F2" }}
+                >
+                  {opi1Rate}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={50}
+                step={1}
+                value={opi1Rate}
+                onChange={(e) => setOpi1Rate(Number(e.target.value))}
+                className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                style={{
+                  background: `linear-gradient(to right, #0145F2 0%, #0145F2 ${
+                    (opi1Rate / 50) * 100
+                  }%, #DDE4EC ${(opi1Rate / 50) * 100}%, #DDE4EC 100%)`,
+                  accentColor: "#0145F2",
+                }}
+                aria-label="OPI1 지급률 (연봉 대비 %)"
+              />
+              <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
+                기존 OPI는 연봉의 최대 50%. 2025년 실적분 실지급률(보도 기준):
+                MX 50% · DS부문 47% · 경영지원 39% · VD·가전 12% 등 — 본인
+                사업부에 맞게 조정하세요.
+              </p>
+            </div>
             <div>
               <div className="flex items-end justify-between mb-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-faint-blue">
@@ -878,9 +1027,11 @@ function MySalaryCalculator({
                   className="block text-faint-blue mt-1 leading-relaxed"
                 >
                   성과급은 보수에 합산되어 4대보험 정산 시 추가 부과됩니다.
-                  단 국민연금은 보수월액 상한(연 7,644만원)이 있어 고소득자는
-                  추가 부과액이 적습니다. 체크하지 않으면 4대보험은
-                  포함하지 않고 소득세·지방세만 공제합니다.
+                  단 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원,
+                  연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.
+                  실제 반영은 이듬해 7월 보수월액 재산정으로 이뤄지는 점도
+                  참고하세요. 체크하지 않으면 4대보험은 포함하지 않고
+                  소득세·지방세만 공제합니다.
                 </span>
               </span>
             </label>
@@ -959,10 +1110,10 @@ function MySalaryCalculator({
                 <span className="w-1 h-8 rounded-full bg-faint-blue/40" aria-hidden />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-faint-blue">
-                    OPI1 · 기본 인센티브
+                    OPI1 · 기존 OPI(초과이익성과금)
                   </p>
                   <p className="text-[10px] text-faint-blue">
-                    연봉 × 50% · 사업부 무관
+                    연봉 × {opi1Rate}% · 가정 조정 가능
                   </p>
                 </div>
               </div>
@@ -971,7 +1122,7 @@ function MySalaryCalculator({
                   {fmtManwon(animOpi1)}
                 </p>
                 <p className="text-[10px] text-faint-blue tabular-nums">
-                  연봉의 50.0%
+                  연봉의 {opi1Rate.toFixed(1)}%
                 </p>
               </div>
             </div>
@@ -1071,7 +1222,7 @@ function MySalaryCalculator({
               {applyInsurance && (
                 <>
                   <DeductRow
-                    label="국민연금 (4.75% · 보수월액 상한 적용)"
+                    label="국민연금 (4.75% · 기준소득월액 상한 적용)"
                     value={personal.breakdown.nationalPension}
                   />
                   <DeductRow
@@ -1169,7 +1320,7 @@ function LabeledCommaInput({
           inputMode="numeric"
           value={value}
           onChange={(e) => onChange(formatNumberInput(e.target.value))}
-          className="w-full rounded-lg px-3 py-2 pr-9 text-sm font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
+          className="w-full rounded-lg px-3 py-2 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
           style={{ border: `1.5px solid ${color}33` }}
           onFocus={(e) => (e.currentTarget.style.borderColor = color)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${color}33`)}
@@ -1207,10 +1358,11 @@ function LabeledDecimalInput({
           inputMode="decimal"
           value={value}
           onChange={(e) => {
-            const v = e.target.value.replace(/[^0-9.]/g, "");
-            onChange(v);
+            const raw = e.target.value.replace(/[^0-9.]/g, "");
+            const [head, ...rest] = raw.split(".");
+            onChange(rest.length > 0 ? `${head}.${rest.join("")}` : head);
           }}
-          className="w-full rounded-lg px-3 py-2 pr-10 text-sm font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
+          className="w-full rounded-lg px-3 py-2 pr-10 text-base font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
           style={{ border: `1.5px solid ${color}33` }}
           onFocus={(e) => (e.currentTarget.style.borderColor = color)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${color}33`)}

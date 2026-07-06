@@ -4,8 +4,8 @@
 import type { AdvancedSettings } from "@/app/types";
 
 const PENSION_RATE = 0.0475;
-// 국민연금 월 기준소득월액 상한 637만원 (2025.7~2026.6) — PENSION_MONTHLY_CAP_2026 과 동일
-const PENSION_MONTHLY_CAP = 6370000 * PENSION_RATE;
+// 국민연금 월 기준소득월액 상한 659만원 (2026.7~2027.6, 직전 2025.7~2026.6은 637만원) — PENSION_MONTHLY_CAP_2026 과 동일
+const PENSION_MONTHLY_CAP = 6590000 * PENSION_RATE;
 const HEALTH_RATE = 0.03595;
 const LONG_TERM_CARE_RATE = 0.1314;
 const EMPLOYMENT_INSURANCE_RATE = 0.009;
@@ -147,9 +147,9 @@ export function calculateNetSalary(
 // [2026년 4대보험 요율 — 사이트 전역 단일 기준]
 // src/lib/taxConstants2026.ts (INSURANCE_RATES_2026·PENSION_BASE_2026) 와 동일 값 유지.
 // 2026 변경: 국민연금 9%→9.5%(본인 4.75%, 2026-01 시행), 건강보험 7.09%→7.19%(본인 3.595%),
-// 장기요양 12.95%→13.14%, 국민연금 상한 617만→637만. (출처: 보건복지부·국민연금공단 2025)
+// 장기요양 12.95%→13.14%, 국민연금 상한 617만→637만(2025.7~2026.6)→659만(2026.7~2027.6). (출처: 보건복지부·국민연금공단 2025·2026)
 const PENSION_RATE_2026 = 0.0475; // 국민연금 본인부담 4.75% (회사 4.75% 별도)
-const PENSION_MONTHLY_CAP_2026 = 6370000 * PENSION_RATE_2026; // 월 기준소득월액 상한 637만원
+const PENSION_MONTHLY_CAP_2026 = 6590000 * PENSION_RATE_2026; // 월 기준소득월액 상한 659만원 (2026.7~2027.6)
 const HEALTH_RATE_2026 = 0.03595; // 건강보험 본인부담 3.595% (7.19% / 2)
 const LONG_TERM_CARE_RATE_2026 = 0.1314; // 장기요양 = 건강보험료 × 13.14%
 const EMPLOYMENT_INSURANCE_RATE_2026 = 0.009; // 고용보험 본인부담 0.9%

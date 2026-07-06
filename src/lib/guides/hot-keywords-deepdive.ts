@@ -252,7 +252,7 @@ export const hotKeywordsGuides = [
 <tr class="border-b"><td class="p-2">직장가입자</td><td class="p-2 text-right font-bold">4.75%</td><td class="p-2 text-right">4.75%</td><td class="p-2 text-right">9.5%</td></tr>
 <tr><td class="p-2">지역가입자</td><td class="p-2 text-right font-bold">9.5% (전액 본인)</td><td class="p-2 text-right">-</td><td class="p-2 text-right">9.5%</td></tr>
 </table>
-<p class="text-sm text-muted-foreground mt-2">※ 기준소득월액: 하한 40만원 ~ 상한 637만원 (2026년 기준). 이 범위 밖은 적용 안 됨.</p>
+<p class="text-sm text-muted-foreground mt-2">※ 기준소득월액: 하한 41만원 ~ 상한 659만원 (2026.7~2027.6 적용). 이 범위 밖은 적용 안 됨.</p>
 </div>
 
 <h2>💰 예상 수령액 계산 기준</h2>
@@ -286,7 +286,7 @@ export const hotKeywordsGuides = [
 <h3 class="text-lg font-bold mt-4">1. 임의가입 (전업주부·학생·무직자)</h3>
 <p>소득이 없어도 자발적으로 국민연금에 가입하여 납부할 수 있습니다.</p>
 <ul>
-<li>최소 월 약 38,000원(최저 기준소득월액 40만원 × 9.5% 실제 부담 4.75% 아님 — 지역가입자이므로 9.5% 전액)부터 납부 가능</li>
+<li>최소 월 약 39,000원(최저 기준소득월액 41만원 × 9.5% 실제 부담 4.75% 아님 — 지역가입자이므로 9.5% 전액)부터 납부 가능</li>
 <li>10년 이상 납부해야 노령연금 수령 자격 발생</li>
 </ul>
 

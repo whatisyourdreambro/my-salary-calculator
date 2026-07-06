@@ -42,7 +42,7 @@ function calcAnnualNet(salary: number): number {
   const localTax = incomeTax * 0.1;
 
   // 4대보험 (본인 부담)
-  const pensionCap = 76_440_000;
+  const pensionCap = 79_080_000; // 국민연금 기준소득월액 상한 월 659만원 (2026.7~2027.6)
   const pension = Math.min(salary, pensionCap) * 0.0475;
   const health = salary * 0.03595;
   const ltc = health * 0.1314;

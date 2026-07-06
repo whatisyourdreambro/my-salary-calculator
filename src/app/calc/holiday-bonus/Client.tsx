@@ -57,7 +57,7 @@ export default function HolidayBonusClient() {
     const incomeTax = (calcTax(taxableNew) - calcTax(taxableBase)) * 0.7;
     const localTax = incomeTax * 0.1;
 
-    const pension = Math.min(bonus, Math.max(0, 76_440_000 - salary)) * 0.0475;
+    const pension = Math.min(bonus, Math.max(0, 79_080_000 - salary)) * 0.0475;
     const health = bonus * 0.03595;
     const longTerm = health * 0.1314;
     const employment = bonus * 0.009;

@@ -49,7 +49,7 @@ function quickEstimate(salary: number, bonus: number) {
   const localTax = bonusTax * 0.1;
 
   // 4대보험 (성과급 부분)
-  const pensionBase = Math.min(bonus, Math.max(0, 76_440_000 - salary));
+  const pensionBase = Math.min(bonus, Math.max(0, 79_080_000 - salary));
   const pension = pensionBase * 0.0475;
   const health = bonus * 0.03595;
   const longTerm = health * 0.1314;
@@ -189,7 +189,7 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
       <div className="rounded-2xl overflow-hidden bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800">
         <div className="px-5 py-4 bg-electric-5">
           <h3 className="font-black text-sm text-navy dark:text-canvas-50">
-            전체 직급 성과급 비교 (2026 기준)
+            전체 직급 성과급 비교 (2026년 7월~ 기준)
           </h3>
         </div>
         <div className="overflow-x-auto">

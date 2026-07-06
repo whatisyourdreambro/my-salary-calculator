@@ -3,7 +3,7 @@
 // 다년도 누적 성과급 시뮬레이터 — Client.tsx 에서 next/dynamic(ssr:false) 으로 지연 로드.
 // 3,900줄 Client 본체에서 분리해 메인 계산기 First Load 를 경량화한다.
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   AlertCircle,
   Calendar,
@@ -21,7 +21,6 @@ import {
   FIXED_RERATE,
   FIXED_BU_RATIO,
   FIXED_SA_RATIO,
-  FIXED_OPI1_RATE,
   REFERENCE_SALARY,
   getThreshold,
   calcBonusNet,
@@ -109,6 +108,7 @@ export default function MultiYearBonusSimulator({
   creditRate,
   applyInsurance,
   defaultDivId,
+  opi1Rate = 50,
 }: {
   counts: Record<string, string>;
   ratios: Record<string, string>;
@@ -116,6 +116,8 @@ export default function MultiYearBonusSimulator({
   creditRate: number;
   applyInsurance: boolean;
   defaultDivId: string;
+  /** OPI1(기존 OPI) 지급률 % — 메인 시뮬 '계산 가정 조정'과 공유 */
+  opi1Rate?: number;
 }) {
   const [targetDivId, setTargetDivId] = useState<string>(defaultDivId);
   const [rows, setRows] = useState<YearProfitRow[]>([
@@ -156,13 +158,13 @@ export default function MultiYearBonusSimulator({
   }
   function addBulkRange() {
     const last = bulkRanges[bulkRanges.length - 1];
-    const nextStart = last ? Math.min(2036, last.endYear + 1) : 2026;
+    const nextStart = last ? Math.min(2035, last.endYear + 1) : 2026;
     setBulkRanges((prev) => [
       ...prev,
       {
         id: `b${Date.now()}`,
         startYear: nextStart,
-        endYear: Math.min(2036, nextStart + 2),
+        endYear: Math.min(2035, nextStart + 2),
         profitTrillionFmt: last?.profitTrillionFmt ?? "300",
       },
     ]);
@@ -170,13 +172,14 @@ export default function MultiYearBonusSimulator({
   function removeBulkRange(id: string) {
     setBulkRanges((prev) => (prev.length > 1 ? prev.filter((r) => r.id !== id) : prev));
   }
-  /** 일괄 입력값을 현재 rows 에 적용 — 해당 연도 영업이익 update */
+  /** 일괄 입력값을 현재 rows 에 적용 — 해당 연도 영업이익 update.
+      구간이 겹치면 나중 구간이 우선 (expandBulkToRows 와 동일 규칙) */
   function applyBulkRanges() {
     setRows((prev) =>
       prev.map((row) => {
-        const matched = bulkRanges.find(
-          (b) => row.year >= b.startYear && row.year <= b.endYear,
-        );
+        const matched = [...bulkRanges]
+          .reverse()
+          .find((b) => row.year >= b.startYear && row.year <= b.endYear);
         if (matched) {
           return { ...row, profitTrillionFmt: matched.profitTrillionFmt };
         }
@@ -184,20 +187,23 @@ export default function MultiYearBonusSimulator({
       }),
     );
   }
-  /** 일괄 입력 구간을 rows 로 확장 — 구간에 해당하는 연도들을 자동 생성 */
+  /** 일괄 입력 구간을 rows 로 확장 — 구간에 해당하는 연도들을 자동 생성.
+      겹치는 연도는 나중 구간이 우선하며 중복 행을 만들지 않는다 (누적 이중 계산 방지) */
   function expandBulkToRows() {
-    const newRows: YearProfitRow[] = [];
-    let idx = 1;
+    const byYear = new Map<number, string>();
     bulkRanges.forEach((b) => {
       for (let y = b.startYear; y <= b.endYear; y++) {
-        if (y < 2026 || y > 2036) continue;
-        newRows.push({
-          id: `auto-${idx++}-${y}`,
-          year: y,
-          profitTrillionFmt: b.profitTrillionFmt,
-        });
+        if (y < 2026 || y > 2035) continue;
+        byYear.set(y, b.profitTrillionFmt);
       }
     });
+    const newRows: YearProfitRow[] = [...byYear.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([y, profitTrillionFmt], i) => ({
+        id: `auto-${i + 1}-${y}`,
+        year: y,
+        profitTrillionFmt,
+      }));
     if (newRows.length > 0) {
       setRows(newRows);
     }
@@ -210,7 +216,7 @@ export default function MultiYearBonusSimulator({
   }
   function addRow() {
     const last = rows[rows.length - 1];
-    const newYear = last ? Math.min(2036, last.year + 1) : 2026;
+    const newYear = last ? Math.min(2035, last.year + 1) : 2026;
     setRows((prev) => [
       ...prev,
       {
@@ -241,13 +247,20 @@ export default function MultiYearBonusSimulator({
     );
     // ── 사업부별 효과 인원 (CL4 가/나고과 가중 반영) ──────────
     // evalEnabled 이면 가 ×1.4, 나 ×1.2, 나머지 ×1.0 합산.
-    // OFF 면 총 인원 그대로.
+    // OFF 면 총 인원 그대로. 가+나 입력이 총원을 넘으면 총원까지로 클램프
+    // (UI에 '초과!' 경고 표시 — 부풀려진 효과 인원으로 계산되지 않게 방어).
     const effCounts: Record<string, number> = {};
     DIVISIONS.forEach((d) => {
       const total = countNums[d.id] || 0;
       if (evalEnabled) {
-        const ga = Math.max(0, parseNumberInput(divEvalCounts[d.id].gaCount));
-        const na = Math.max(0, parseNumberInput(divEvalCounts[d.id].naCount));
+        const ga = Math.min(
+          Math.max(0, parseNumberInput(divEvalCounts[d.id].gaCount)),
+          total
+        );
+        const na = Math.min(
+          Math.max(0, parseNumberInput(divEvalCounts[d.id].naCount)),
+          Math.max(0, total - ga)
+        );
         const rest = Math.max(0, total - ga - na);
         effCounts[d.id] = ga * CL4_EVAL_MULT.ga + na * CL4_EVAL_MULT.na + rest * CL4_EVAL_MULT.normal;
       } else {
@@ -270,8 +283,10 @@ export default function MultiYearBonusSimulator({
     let triggeredCount = 0;
     let blockedCount = 0;
 
-    // 첫 행 연도를 인상률 모드 base year 로 사용
-    const baseYearForGrowth = rows[0]?.year ?? 2026;
+    // 가장 이른 연도를 인상률 모드 base year 로 사용
+    // (행 순서 편집·연도 수정에도 인상률이 올바르게 적용되도록 min 기준)
+    const baseYearForGrowth =
+      rows.length > 0 ? Math.min(...rows.map((r) => r.year)) : 2026;
 
     const enriched = rows.map((row) => {
       // ── 연도별 연봉 계산 (모드별) ──────────────────────────
@@ -292,8 +307,8 @@ export default function MultiYearBonusSimulator({
       // 본인 사업부 풀 배수 — CL4 + 평가 ON 일 때만 가/나 1.4/1.2 적용
       const myEvalMult = CL4_EVAL_MULT[effectiveGrade];
 
-      // OPI1 = 그 해 연봉의 50%
-      const opi1Won = yearSalary * (FIXED_OPI1_RATE / 100);
+      // OPI1 = 그 해 연봉 × 지급률 (디폴트 50%, 메인 시뮬 가정 공유)
+      const opi1Won = yearSalary * (opi1Rate / 100);
       const opi1Manwon = opi1Won / 10000;
       const personalRatio = yearSalary / REFERENCE_SALARY;
 
@@ -374,7 +389,7 @@ export default function MultiYearBonusSimulator({
       blockedCount,
       maxVal: Math.max(...enriched.map((r) => r.myGrossManwon), 1),
     };
-  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance, salaryMode, growthRate, evalEnabled, divEvalCounts, myCl, perYearClEnabled]);
+  }, [rows, counts, ratios, targetDivId, salary, creditRate, applyInsurance, salaryMode, growthRate, evalEnabled, divEvalCounts, myCl, perYearClEnabled, opi1Rate]);
 
   const animCumOpi1 = useCountUp(computed.cumOpi1);
   const animCumOpi2 = useCountUp(computed.cumOpi2);
@@ -388,10 +403,11 @@ export default function MultiYearBonusSimulator({
         성과급 시뮬레이션
       </p>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
-        사업부를 선택하고 연도별 영업이익만 입력하세요. <strong>OPI1(연봉×50%) +
-        OPI2(특별경영성과금)</strong>을 합산해 세금까지 자동 계산. 위 메인 시뮬의
-        인원·가중치·본인 연봉을 그대로 사용. 26~28년 200조, 29~35년 100조 미달
-        연도는 OPI2만 0원이 되고 OPI1은 그대로 지급.
+        사업부를 선택하고 연도별 영업이익만 입력하세요. <strong>OPI1(연봉×
+        {opi1Rate}%) + OPI2(특별경영성과금)</strong>을 합산해 세금까지 자동
+        계산. 위 메인 시뮬의 인원·가중치·본인 연봉·OPI1 지급률을 그대로 사용.
+        26~28년 200조, 29~35년 100조 미달 연도는 OPI2만 0원이 되고 OPI1은
+        그대로 지급.
       </p>
 
       {/* 사업부 선택 */}
@@ -404,7 +420,7 @@ export default function MultiYearBonusSimulator({
         </label>
         <div
           className="grid grid-cols-3 gap-2"
-          role="tablist"
+          role="group"
           aria-labelledby="div-multiyear-label"
         >
           {DIVISIONS.map((d) => {
@@ -413,8 +429,7 @@ export default function MultiYearBonusSimulator({
               <button
                 key={d.id}
                 type="button"
-                role="tab"
-                aria-selected={active}
+                aria-pressed={active}
                 onClick={() => setTargetDivId(d.id)}
                 className={`rounded-xl px-3 py-2 text-xs font-black border transition-all inline-flex items-center justify-center gap-1.5 ${
                   active ? "text-white scale-[1.02] shadow-md" : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
@@ -444,7 +459,7 @@ export default function MultiYearBonusSimulator({
         </label>
         <div
           className="grid grid-cols-4 gap-2"
-          role="tablist"
+          role="group"
           aria-labelledby="my-cl-label"
         >
           {CL_OPTIONS.map((c) => {
@@ -453,8 +468,7 @@ export default function MultiYearBonusSimulator({
               <button
                 key={c.id}
                 type="button"
-                role="tab"
-                aria-selected={active}
+                aria-pressed={active}
                 onClick={() => setMyCl(c.id)}
                 className={`rounded-xl px-2 py-2 text-center border-2 transition-all ${
                   active ? "border-electric bg-electric-10 scale-[1.02]" : "border-canvas-200 bg-white dark:bg-canvas-900 hover:border-electric/40"
@@ -622,7 +636,7 @@ export default function MultiYearBonusSimulator({
         </label>
         <div
           className="grid grid-cols-3 gap-2"
-          role="tablist"
+          role="group"
           aria-labelledby="salary-mode-label"
         >
           <SalaryModeCard
@@ -742,31 +756,46 @@ export default function MultiYearBonusSimulator({
             <div className="space-y-2">
               {bulkRanges.map((b) => (
                 <div key={b.id} className="grid grid-cols-[1fr_auto_1fr_1fr_auto] gap-2 items-center">
+                  {/* 입력 중에는 자유 타이핑 허용, blur 시점에만 2026~2035 클램프
+                      (키 입력마다 즉시 클램프하면 '2030' 타이핑이 불가능해짐) */}
                   <input
                     type="number"
                     min={2026}
-                    max={2036}
-                    value={b.startYear}
+                    max={2035}
+                    value={b.startYear || ""}
                     onChange={(e) =>
                       updateBulkRange(b.id, {
-                        startYear: Math.min(2036, Math.max(2026, Number(e.target.value) || b.startYear)),
+                        startYear: Number(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-2 py-1.5 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 focus:outline-none focus:border-electric"
+                    onBlur={() =>
+                      updateBulkRange(b.id, {
+                        startYear: Math.min(2035, Math.max(2026, b.startYear || 2026)),
+                      })
+                    }
+                    className="w-full px-2 py-1.5 rounded-md text-base font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 focus:outline-none focus:border-electric text-navy dark:text-canvas-50"
                     aria-label="시작 연도"
                   />
                   <span className="text-faint-blue font-bold text-xs">~</span>
                   <input
                     type="number"
                     min={2026}
-                    max={2036}
-                    value={b.endYear}
+                    max={2035}
+                    value={b.endYear || ""}
                     onChange={(e) =>
                       updateBulkRange(b.id, {
-                        endYear: Math.min(2036, Math.max(b.startYear, Number(e.target.value) || b.endYear)),
+                        endYear: Number(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-2 py-1.5 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 focus:outline-none focus:border-electric"
+                    onBlur={() =>
+                      updateBulkRange(b.id, {
+                        endYear: Math.min(
+                          2035,
+                          Math.max(b.startYear || 2026, b.endYear || 2026)
+                        ),
+                      })
+                    }
+                    className="w-full px-2 py-1.5 rounded-md text-base font-bold tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 focus:outline-none focus:border-electric text-navy dark:text-canvas-50"
                     aria-label="끝 연도"
                   />
                   <div className="relative">
@@ -790,7 +819,7 @@ export default function MultiYearBonusSimulator({
                     <button
                       type="button"
                       onClick={() => removeBulkRange(b.id)}
-                      className="p-1.5 rounded-md text-faint-blue hover:text-rose-500"
+                      className="p-2.5 rounded-md text-faint-blue hover:text-rose-500"
                       aria-label="구간 삭제"
                     >
                       <Trash2 size={14} aria-hidden />
@@ -874,7 +903,7 @@ export default function MultiYearBonusSimulator({
         onClick={addRow}
         className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-dashed border-canvas-300 dark:border-canvas-700 text-faint-blue text-xs font-black uppercase tracking-widest hover:border-electric hover:text-electric transition-colors mb-5"
       >
-        <Plus size={14} aria-hidden /> 연도 추가 (~2036)
+        <Plus size={14} aria-hidden /> 연도 추가 (~2035)
       </button>
 
       {/* 막대 그래프 */}
@@ -944,7 +973,7 @@ export default function MultiYearBonusSimulator({
                   OPI1 누적
                 </p>
                 <p className="text-[10px] text-faint-blue">
-                  연봉×50% × {rows.length}년
+                  연봉×{opi1Rate}% × {rows.length}년
                 </p>
               </div>
             </div>
@@ -1065,12 +1094,28 @@ function YearProfitRowCard({
   const blocked = !row.triggered && row.profit > 0;
   // CL4 본인이고 평가 ON 이면 가/나/일반 선택 가능
   const showEvalPicker = row.appliedCl === "cl4" && evalEnabled;
+  // 연도 입력 draft — 입력 중 자유 타이핑, blur 시점에만 2026~2035 클램프 커밋.
+  // (즉시 클램프하면 '2030' 타이핑 시 '2' 입력 순간 2026으로 강제돼 입력 불가)
+  const [yearDraft, setYearDraft] = useState(String(row.year));
+  useEffect(() => {
+    setYearDraft(String(row.year));
+  }, [row.year]);
+  function commitYear() {
+    const n = Number(yearDraft);
+    const clamped = Number.isFinite(n) && n > 0
+      ? Math.min(2035, Math.max(2026, Math.round(n)))
+      : row.year;
+    setYearDraft(String(clamped));
+    if (clamped !== row.year) onUpdate({ year: clamped });
+  }
   return (
     <div
-      className="rounded-xl border p-4 transition-all"
+      className={`rounded-xl border p-4 transition-all ${
+        blocked ? "bg-rose-50 dark:bg-rose-950/20" : "bg-canvas-50 dark:bg-canvas-800"
+      }`}
       style={{
-        borderColor: blocked ? "#EF444455" : row.triggered && row.profit > 0 ? "#10B98155" : "#DDE4EC",
-        backgroundColor: blocked ? "#EF44440A" : "#F8FAFB",
+        // 기본 테두리는 반투명 — 라이트/다크 양쪽에서 자연스럽게
+        borderColor: blocked ? "#EF444455" : row.triggered && row.profit > 0 ? "#10B98155" : "#7A9AB544",
       }}
     >
       {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제 */}
@@ -1085,15 +1130,18 @@ function YearProfitRowCard({
             연도
           </label>
           <input
-            type="number"
-            min={2026}
-            max={2036}
-            value={row.year}
+            type="text"
+            inputMode="numeric"
+            value={yearDraft}
             onChange={(e) =>
-              onUpdate({ year: Math.min(2036, Math.max(2026, Number(e.target.value) || row.year)) })
+              setYearDraft(e.target.value.replace(/[^0-9]/g, "").slice(0, 4))
             }
+            onBlur={commitYear}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.currentTarget.blur();
+            }}
             className="w-full px-2 py-1.5 rounded-md text-base font-black tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 focus:outline-none focus:border-electric text-navy dark:text-canvas-50"
-            aria-label="연도"
+            aria-label="연도 (2026~2035)"
           />
         </div>
 
@@ -1165,7 +1213,7 @@ function YearProfitRowCard({
           <button
             type="button"
             onClick={onRemove}
-            className="p-1.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors self-end mb-1"
+            className="p-2.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors self-end"
             aria-label={`${row.year}년 행 삭제`}
           >
             <Trash2 size={14} aria-hidden />
@@ -1280,7 +1328,7 @@ function YearProfitRowCard({
       <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_1.4fr] gap-2 text-[11px]">
         <div className="rounded-lg px-3 py-2 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
           <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue mb-0.5">
-            OPI1 · 연봉×50%
+            OPI1 · 기존 OPI
           </p>
           <p className="font-black tabular-nums text-sm text-navy dark:text-canvas-50">
             {fmtManwon(row.opi1Manwon)}
@@ -1298,8 +1346,9 @@ function YearProfitRowCard({
               OPI2 · 특별경영성과금
             </p>
             <p
-              className="font-black tabular-nums text-sm"
-              style={{ color: blocked ? "#EF4444" : "#0A1829" }}
+              className={`font-black tabular-nums text-sm ${
+                blocked ? "text-rose-500" : "text-navy"
+              }`}
             >
               {blocked ? "0원 (미달)" : fmtManwon(row.opi2Manwon)}
             </p>
@@ -1330,8 +1379,9 @@ function YearProfitRowCard({
             합산 세전 (OPI1+OPI2)
           </p>
           <p
-            className="font-black tabular-nums text-sm"
-            style={{ color: blocked ? "#EF4444" : "#0A1829" }}
+            className={`font-black tabular-nums text-sm ${
+              blocked ? "text-rose-500" : "text-navy"
+            }`}
           >
             {fmtManwon(row.myGrossManwon)}
           </p>
@@ -1341,8 +1391,9 @@ function YearProfitRowCard({
             합산 세후
           </p>
           <p
-            className="font-black tabular-nums text-sm"
-            style={{ color: blocked ? "#EF4444" : "#0145F2" }}
+            className={`font-black tabular-nums text-sm ${
+              blocked ? "text-rose-500" : "text-electric"
+            }`}
           >
             {fmtManwon(row.myNetManwon)}
           </p>
@@ -1496,7 +1547,7 @@ function BonusBarChart({
                   ✕
                 </text>
               )}
-              {/* 호버 hit-area */}
+              {/* 호버/터치 hit-area — 터치는 같은 막대 재터치 시 툴팁 닫힘 */}
               <rect
                 x={padL + groupWidth * i}
                 y={padT}
@@ -1505,7 +1556,9 @@ function BonusBarChart({
                 fill="transparent"
                 onMouseEnter={() => setHoverIdx(i)}
                 onMouseLeave={() => setHoverIdx(null)}
-                onTouchStart={() => setHoverIdx(i)}
+                onTouchStart={() =>
+                  setHoverIdx((prev) => (prev === i ? null : i))
+                }
                 style={{ cursor: "pointer" }}
               />
               {/* x축 라벨 */}
@@ -1612,6 +1665,31 @@ function BonusBarChart({
           임계값 미달 (0원)
         </span>
       </div>
+
+      {/* 스크린리더용 데이터 표 — 툴팁으로만 제공되는 값의 접근 가능한 대체 */}
+      <table className="sr-only">
+        <caption>연도별 본인 케이스 성과급 (세전·세후)</caption>
+        <thead>
+          <tr>
+            <th scope="col">연도</th>
+            <th scope="col">영업이익 (조원)</th>
+            <th scope="col">세전 (만원)</th>
+            <th scope="col">세후 (만원)</th>
+            <th scope="col">임계값 충족</th>
+          </tr>
+        </thead>
+        <tbody>
+          {enriched.map((d, i) => (
+            <tr key={`${d.year}-${i}`}>
+              <td>{d.year}</td>
+              <td>{d.profit}</td>
+              <td>{Math.round(d.myGrossManwon).toLocaleString("ko-KR")}</td>
+              <td>{Math.round(d.myNetManwon).toLocaleString("ko-KR")}</td>
+              <td>{d.triggered ? "충족" : "미달 (OPI2 0원)"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -1646,8 +1724,7 @@ function SalaryModeCard({
   return (
     <button
       type="button"
-      role="tab"
-      aria-selected={active}
+      aria-pressed={active}
       onClick={onClick}
       className={`relative rounded-xl px-3 py-3 text-left transition-all border-2 group ${
         active
@@ -1679,8 +1756,8 @@ function SalaryModeCard({
         <Icon size={16} aria-hidden />
       </div>
       <p
-        className="text-[12px] font-black mb-0.5"
-        style={{ color: active ? accent.color : "#0A1829" }}
+        className={`text-[12px] font-black mb-0.5 ${active ? "" : "text-navy"}`}
+        style={active ? { color: accent.color } : undefined}
       >
         {title}
       </p>

@@ -70,8 +70,8 @@ export function calcKrProgressiveTax(taxable: number): number {
  return 384_060_000 + (taxable - 1_000_000_000) * 0.45;
 }
 
-// 국민연금 기준소득월액 상한 (2026): 월 637만원
-export const KR_PENSION_MONTHLY_CAP = 6_370_000;
+// 국민연금 기준소득월액 상한 (2026.7~2027.6): 월 659만원
+export const KR_PENSION_MONTHLY_CAP = 6_590_000;
 
 // 4대보험 본인부담 합계 (2026) — 국민연금 4.75%(상한 적용)·건강 3.595%·장기요양(건보료의 13.14%)·고용 0.9%
 export function krSocialInsurance(grossAnnual: number): number {
@@ -94,7 +94,7 @@ export class GlobalTaxEngine {
  // Income Tax: 총급여 − 근로소득공제 → 2026 누진세율 6~45% (8구간)
  tax = calcKrProgressiveTax(localGross - earnedIncomeDeduction(localGross));
 
- // Social (2026): Pension 4.75% (월 637만 상한) + Health 3.595% + 장기요양 + Employment 0.9%
+ // Social (2026): Pension 4.75% (월 659만 상한, 2026.7~) + Health 3.595% + 장기요양 + Employment 0.9%
  social = krSocialInsurance(localGross);
  break;
 

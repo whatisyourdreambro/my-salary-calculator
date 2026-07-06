@@ -27,12 +27,14 @@ type YearRow = {
   stockPriceFmt: string; // 주가 (원/주, 콤마)
 };
 
+// 주가는 예시값 — 2026년 증권가 목표가(40만원대 후반 보도) 언저리 시나리오.
+// 사용자가 본인 시점 실제 주가로 수정해 사용하는 것을 전제로 한다.
 const DEFAULT_YEAR_ROWS: YearRow[] = [
-  { id: "y1", year: 2026, perPersonFmt: "6,000", stockRatio: 30, vestedPct: 100, stockPriceFmt: "85,000" },
-  { id: "y2", year: 2027, perPersonFmt: "8,000", stockRatio: 30, vestedPct: 75, stockPriceFmt: "100,000" },
-  { id: "y3", year: 2028, perPersonFmt: "10,000", stockRatio: 30, vestedPct: 50, stockPriceFmt: "120,000" },
-  { id: "y4", year: 2029, perPersonFmt: "9,000", stockRatio: 30, vestedPct: 25, stockPriceFmt: "110,000" },
-  { id: "y5", year: 2030, perPersonFmt: "7,500", stockRatio: 30, vestedPct: 0, stockPriceFmt: "95,000" },
+  { id: "y1", year: 2026, perPersonFmt: "6,000", stockRatio: 30, vestedPct: 100, stockPriceFmt: "300,000" },
+  { id: "y2", year: 2027, perPersonFmt: "8,000", stockRatio: 30, vestedPct: 75, stockPriceFmt: "350,000" },
+  { id: "y3", year: 2028, perPersonFmt: "10,000", stockRatio: 30, vestedPct: 50, stockPriceFmt: "400,000" },
+  { id: "y4", year: 2029, perPersonFmt: "9,000", stockRatio: 30, vestedPct: 25, stockPriceFmt: "380,000" },
+  { id: "y5", year: 2030, perPersonFmt: "7,500", stockRatio: 30, vestedPct: 0, stockPriceFmt: "350,000" },
 ];
 
 export default function MultiYearRSUSimulator({
@@ -41,13 +43,26 @@ export default function MultiYearRSUSimulator({
   memoryPerPerson: number;
 }) {
   const [rows, setRows] = useState<YearRow[]>(DEFAULT_YEAR_ROWS);
-  const [sellPriceFmt, setSellPriceFmt] = useState("150,000");
+  const [sellPriceFmt, setSellPriceFmt] = useState("450,000");
+  // '채우기'로 덮어쓰기 직전 상태 — 실수 클릭 복구용 (1회)
+  const [undoRows, setUndoRows] = useState<YearRow[] | null>(null);
 
   const sellPrice = parseNumberInput(sellPriceFmt);
 
   function syncFromMemory() {
+    if (memoryPerPerson <= 0) return;
     const v = Math.round(memoryPerPerson).toLocaleString("ko-KR");
-    setRows((prev) => prev.map((r) => ({ ...r, perPersonFmt: v })));
+    setRows((prev) => {
+      setUndoRows(prev);
+      return prev.map((r) => ({ ...r, perPersonFmt: v }));
+    });
+  }
+
+  function undoSync() {
+    if (undoRows) {
+      setRows(undoRows);
+      setUndoRows(null);
+    }
   }
 
   function updateRow(id: string, patch: Partial<YearRow>) {
@@ -141,18 +156,36 @@ export default function MultiYearRSUSimulator({
         >
           <Coins size={11} className="text-electric" aria-hidden /> 다년도 RSU 매도 시뮬레이션
         </p>
-        <button
-          type="button"
-          onClick={syncFromMemory}
-          className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-electric-5 text-electric border border-electric-30 hover:bg-electric-10 transition-colors inline-flex items-center gap-1"
-        >
-          <TrendingUp size={10} aria-hidden /> 메모리 1인당으로 채우기
-        </button>
+        <div className="flex items-center gap-1.5">
+          {undoRows && (
+            <button
+              type="button"
+              onClick={undoSync}
+              className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-canvas-50 dark:bg-canvas-800 text-muted-blue border border-canvas-200 dark:border-canvas-700 hover:text-rose-500 transition-colors"
+            >
+              ↺ 되돌리기
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={syncFromMemory}
+            disabled={memoryPerPerson <= 0}
+            className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-electric-5 text-electric border border-electric-30 hover:bg-electric-10 transition-colors inline-flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+            title={
+              memoryPerPerson <= 0
+                ? "상단 시뮬 OPI2가 0원(임계값 미달 등)이라 채울 값이 없습니다"
+                : undefined
+            }
+          >
+            <TrendingUp size={10} aria-hidden /> 메모리 OPI2 1인당으로 채우기
+          </button>
+        </div>
       </div>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         성과급 중 주식(RSU) 비중 + 매년 풀리는 매도 제한 + 연도별 주가 입력. 누적
         매도 가능 주식이 자동 합산되고, 하단 기준 매도가로 통합 매도 시 가치까지
-        즉시 산출됩니다.
+        즉시 산출됩니다. '채우기' 버튼은 OPI2(영업이익 분배분) 기준이며, OPI1
+        포함 총액으로 보려면 직접 입력으로 조정하세요.
       </p>
 
       {/* 좌: 행 / 우: 누적 그래프 */}
@@ -241,7 +274,7 @@ export default function MultiYearRSUSimulator({
             role="group"
             aria-label="기준 매도가 빠른선택"
           >
-            {[80000, 100000, 150000, 200000, 300000].map((p) => {
+            {[250000, 300000, 400000, 500000, 700000].map((p) => {
               const active = sellPrice === p;
               return (
                 <button
@@ -249,7 +282,7 @@ export default function MultiYearRSUSimulator({
                   type="button"
                   onClick={() => setSellPriceFmt(p.toLocaleString("ko-KR"))}
                   aria-pressed={active}
-                  className={`text-[10px] font-black px-2.5 py-1 rounded-full border transition-colors ${
+                  className={`text-[10px] font-black px-2.5 py-1.5 rounded-full border transition-colors ${
                     active
                       ? "bg-electric text-white border-electric"
                       : "bg-white dark:bg-canvas-900 text-muted-blue border-canvas-200 dark:border-canvas-700 hover:border-electric"
@@ -303,6 +336,11 @@ export default function MultiYearRSUSimulator({
 // ────────────────────────────────────────────────────────────
 // 누적 그래프
 // ────────────────────────────────────────────────────────────
+
+// fmtEok은 1억 미만에서 빈 문자열을 반환 — 툴팁 값이 공백이 되지 않게 만원 폴백
+function fmtEokOrManwon(manwon: number): string {
+  return manwon >= 10000 ? fmtEok(manwon) : fmtManwon(manwon);
+}
 
 function CumulativeChart({
   data,
@@ -473,7 +511,7 @@ function CumulativeChart({
                 }}
               />
 
-              {/* hover hit-area (그룹 전체) */}
+              {/* hover/터치 hit-area — 터치는 같은 그룹 재터치 시 툴팁 닫힘 */}
               <rect
                 x={padL + groupWidth * i}
                 y={padT}
@@ -482,7 +520,9 @@ function CumulativeChart({
                 fill="transparent"
                 onMouseEnter={() => setHoverIdx(i)}
                 onMouseLeave={() => setHoverIdx(null)}
-                onTouchStart={() => setHoverIdx(i)}
+                onTouchStart={() =>
+                  setHoverIdx((prev) => (prev === i ? null : i))
+                }
                 style={{ cursor: "pointer" }}
               />
 
@@ -536,7 +576,7 @@ function CumulativeChart({
               fontSize="9"
               fill="#7C83FF"
             >
-              그 해 주가: {fmtEok(enrichedData[hoverIdx].cumValue)}
+              그 해 주가: {fmtEokOrManwon(enrichedData[hoverIdx].cumValue)}
             </text>
             <text
               x={Math.min(
@@ -547,7 +587,8 @@ function CumulativeChart({
               fontSize="9"
               fill="#34D399"
             >
-              기준 매도가: {fmtEok(enrichedData[hoverIdx].cumSellPriceValue)}
+              기준 매도가:{" "}
+              {fmtEokOrManwon(enrichedData[hoverIdx].cumSellPriceValue)}
             </text>
             <text
               x={Math.min(
@@ -591,6 +632,31 @@ function CumulativeChart({
         호버하면 연도별 누적 매도 가능 가치 비교. 두 막대 격차가 클수록 주가
         변동이 매도 가치에 미치는 영향이 큽니다.
       </p>
+
+      {/* 스크린리더용 데이터 표 — 툴팁 전용 값의 접근 가능한 대체 */}
+      <table className="sr-only">
+        <caption>연도별 누적 매도 가능 가치</caption>
+        <thead>
+          <tr>
+            <th scope="col">연도</th>
+            <th scope="col">그 해 주가 기준 누적 (만원)</th>
+            <th scope="col">기준 매도가 기준 누적 (만원)</th>
+            <th scope="col">누적 매도 가능 주식 (주)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {enrichedData.map((d, i) => (
+            <tr key={`${d.year}-${i}`}>
+              <td>{d.year}</td>
+              <td>{Math.round(d.cumValue).toLocaleString("ko-KR")}</td>
+              <td>
+                {Math.round(d.cumSellPriceValue).toLocaleString("ko-KR")}
+              </td>
+              <td>{Math.round(d.cumShares).toLocaleString("ko-KR")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -638,7 +704,7 @@ function YearRowCard({
           <button
             type="button"
             onClick={onRemove}
-            className="p-1.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+            className="p-2.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
             aria-label={`${row.year}년 행 삭제`}
           >
             <Trash2 size={14} aria-hidden />
@@ -744,7 +810,7 @@ function CompactCommaInput({
           inputMode="numeric"
           value={value}
           onChange={(e) => onChange(formatNumberInput(e.target.value))}
-          className="w-full rounded-md px-2 py-1.5 pr-9 text-sm font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
+          className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
           style={{ border: "1.5px solid #0145F233" }}
           onFocus={(e) => (e.currentTarget.style.borderColor = "#0145F2")}
           onBlur={(e) => (e.currentTarget.style.borderColor = "#0145F233")}
@@ -787,7 +853,7 @@ function CompactPercentInput({
           step={5}
           min={0}
           max={max}
-          className="w-full rounded-md px-2 py-1.5 pr-7 text-sm font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
+          className="w-full rounded-md px-2 py-1.5 pr-7 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
           style={{ border: `1.5px solid ${accent}33` }}
           onFocus={(e) => (e.currentTarget.style.borderColor = accent)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${accent}33`)}

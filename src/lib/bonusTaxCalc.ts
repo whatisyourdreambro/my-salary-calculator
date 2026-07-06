@@ -44,7 +44,7 @@ export interface BonusNetResult {
  *
  * 누진세율 특성상 "기존 연봉 기준 세금" vs "연봉+성과급 합산 세금"의 차이를
  * 성과급에 귀속시키는 방식(marginal). 4대보험은 보수에 합산되어 추가 부과되는데
- * 국민연금은 보수월액 상한(2026년 기준 연 7,644만원, 월 637만원) 적용.
+ * 국민연금은 보수월액 상한(2026.7~2027.6 기준 연 7,908만원, 월 659만원) 적용.
  *
  * @param salary 본인 연 기본 연봉 (원)
  * @param bonusWon 세전 성과급 (원)
@@ -97,7 +97,7 @@ export function calcBonusNet(
   let empInsDelta = 0;
 
   if (applyInsurance) {
-    // 국민연금 — 보수월액 상한(2026 연 7,644만원). 본인 연봉이 이미 상한
+    // 국민연금 — 보수월액 상한(2026.7~2027.6 연 7,908만원). 본인 연봉이 이미 상한
     // 이상이면 성과급 추가 부과 없음 (cap 도달)
     const remainingPensionRoom = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
     const pensionTarget = Math.min(bonusWon, remainingPensionRoom);

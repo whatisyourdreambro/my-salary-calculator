@@ -54,7 +54,7 @@ const INSURANCE_RATES = [
  totalRate: "9.5%",
  selfRate: "4.75%",
  companyRate: "4.75%",
- base: "보수월액 기준 (상한 637만)",
+ base: "보수월액 기준 (상한 659만, 2026.7~2027.6)",
  purpose: "노후 연금 (65세부터 수령)",
  },
  {
@@ -99,8 +99,8 @@ const SAMPLE_SALARIES = [
 ];
 
 function calculateInsurance(monthly: number) {
- // 국민연금은 보수월액 상한 637만원까지만 보험료 산정
- const pension = Math.floor((Math.min(monthly, 6_370_000) * 0.0475) / 10) * 10;
+ // 국민연금은 보수월액 상한 659만원(2026.7~2027.6)까지만 보험료 산정
+ const pension = Math.floor((Math.min(monthly, 6_590_000) * 0.0475) / 10) * 10;
  const health = Math.floor((monthly * 0.03595) / 10) * 10;
  const longTermCare = Math.floor((health * 0.1314) / 10) * 10;
  const employment = Math.floor((monthly * 0.009) / 10) * 10;

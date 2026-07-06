@@ -4,6 +4,12 @@
 // Client.tsx 본체와 next/dynamic 으로 분리 로드되는 시뮬레이터 2종이 함께 사용한다.
 
 import { useState, useEffect, useRef } from "react";
+import {
+  INSURANCE_RATES_2026,
+  PENSION_BASE_2026,
+  earnedIncomeDeduction2026,
+  calcIncomeTax2026,
+} from "@/lib/taxConstants2026";
 
 // ────────────────────────────────────────────────────────────
 // 고정 정책 변수 (공개 노사 합의 보도 기반)
@@ -29,36 +35,10 @@ export function getThresholdPeriod(year: number): string {
 }
 
 // ────────────────────────────────────────────────────────────
-// 세금 로직
+// 세금 로직 — 세율·요율은 단일 진실 소스(taxConstants2026.ts)에서 import.
+// 2027년 요율 변경 시 taxConstants2026.ts만 수정하면 이 계산기도 일괄 반영된다.
+// (반환 shape는 UI가 4대보험 4개 행을 분리 렌더링하므로 유지)
 // ────────────────────────────────────────────────────────────
-
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function calcEmpDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit)
-      return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
 
 // 세금/4대보험 계산. credit = 세액공제율(0~50%), applyInsurance = 4대보험 추가 부과 적용 여부
 export function calcBonusNet(
@@ -73,30 +53,32 @@ export function calcBonusNet(
   const basicDeduct = 1_500_000;
   const baseTaxable = Math.max(
     0,
-    salary - calcEmpDeduction(salary) - basicDeduct
+    salary - earnedIncomeDeduction2026(salary) - basicDeduct
   );
   const total = salary + bonusWon;
   const totalTaxable = Math.max(
     0,
-    total - calcEmpDeduction(total) - basicDeduct
+    total - earnedIncomeDeduction2026(total) - basicDeduct
   );
-  const grossIncomeTaxOnBonus = calcTax(totalTaxable) - calcTax(baseTaxable);
+  const grossIncomeTaxOnBonus =
+    calcIncomeTax2026(totalTaxable) - calcIncomeTax2026(baseTaxable);
   const incomeTaxOnBonus = grossIncomeTaxOnBonus * (1 - credit / 100);
-  const localTax = incomeTaxOnBonus * 0.1;
+  const localTax = incomeTaxOnBonus * INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO;
 
   let nationalPension = 0;
   let healthIns = 0;
   let longTermCare = 0;
   let employment = 0;
   if (applyInsurance) {
-    // 국민연금: 보수월액 연 7,644만원 상한 — 본봉이 상한 미달일 때만 추가 부과
-    const pensionCap = 76_440_000;
-    const pensionBase = Math.max(0, pensionCap - salary);
-    nationalPension = Math.min(bonusWon, pensionBase) * 0.0475;
+    // 국민연금: 기준소득월액 연 상한(2026-07~2027-06: 월 659만 = 연 7,908만원)
+    // — 본봉이 상한 미달일 때만 추가 부과
+    const pensionBase = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
+    nationalPension =
+      Math.min(bonusWon, pensionBase) * INSURANCE_RATES_2026.NATIONAL_PENSION;
     // 건강·고용은 상한 없음. 다만 보수정산 시점에 일시 부과되며 회사가 일부 분담.
-    healthIns = bonusWon * 0.03595;
-    longTermCare = healthIns * 0.1314;
-    employment = bonusWon * 0.009;
+    healthIns = bonusWon * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+    longTermCare = healthIns * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+    employment = bonusWon * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
   }
   const insurance = nationalPension + healthIns + longTermCare + employment;
 

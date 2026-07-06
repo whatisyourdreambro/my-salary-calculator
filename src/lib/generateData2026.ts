@@ -29,7 +29,7 @@ const RATES_2026 = {
  health: 0.03595, // 7.19% / 2
  ltc: 0.1314, // 13.14% of Health
  employment: 0.009, // 0.9% 동결
- pensionCap: 302575, // 기준소득월액 상한 637만원 × 4.75% (2026 상향)
+ pensionCap: 313025, // 기준소득월액 상한 659만원 × 4.75% (2026.7~2027.6 적용)
 };
 
 function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
@@ -37,7 +37,7 @@ function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
  const nonTaxable = 200000; // Meal allowance
  const taxable = monthlyPreTax - nonTaxable;
 
- // National Pension — 연도별 기준소득월액 상한 캡 적용 (2025: 277,650원 / 2026: 302,575원)
+ // National Pension — 연도별 기준소득월액 상한 캡 적용 (2025: 277,650원 / 2026.7~2027.6: 313,025원)
  let pension = monthlyPreTax * rates.pension;
  if (pension > rates.pensionCap) pension = rates.pensionCap;
 
@@ -87,7 +87,7 @@ export function generateAnnualSalaryTableData2026(): SalaryData[] {
  const monthlyPreTax = salary / 12;
  const rates = RATES_2026;
  let pension = monthlyPreTax * rates.pension;
- if (pension > 280000) pension = 280000; // slightly higher cap for 2026
+ if (pension > 313025) pension = 313025; // 기준소득월액 상한 659만원 × 4.75% (2026.7~2027.6)
 
  const health = monthlyPreTax * rates.health;
  const ltc = health * rates.ltc;
