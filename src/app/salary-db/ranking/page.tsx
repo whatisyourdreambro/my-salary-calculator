@@ -190,8 +190,56 @@ export default function CompanyRankingPage() {
           <InArticleAd />
         </div>
 
-        {/* 다음 액션 — 다른 허브로 분기 */}
+        {/* 다음 액션 — 연봉 순위 검색 클러스터 상호 순환 (2026-07-06 감사 보강) */}
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/new-employee-salary-2026"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              신입 초봉 TOP 50
+              <span className="block text-xs font-medium text-faint-blue">
+                2026 신입 영끌 연봉 순위
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
+          <Link
+            href="/industry/large-conglomerate"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              대기업 연봉 순위
+              <span className="block text-xs font-medium text-faint-blue">
+                4대 그룹·주요 대기업 비교
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
+          <Link
+            href="/industry/public-enterprise"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              공기업 연봉 순위
+              <span className="block text-xs font-medium text-faint-blue">
+                공공기관·공기업 연봉 비교
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
+          <Link
+            href="/industry/foreign-company"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              외국계 연봉 순위
+              <span className="block text-xs font-medium text-faint-blue">
+                외국계 기업 연봉 비교
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
           <Link
             href="/salary-db"
             className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"

@@ -174,7 +174,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 찍히면 Google freshness 신호가 무의미해져 순위 변동성이 커지므로, 마지막 실질
  // 콘텐츠 업데이트 날짜를 고정해 두고 진짜 갱신 시에만 이 상수를 손으로 올린다.
  // (회사 페이지는 company.lastUpdated 우선, 값이 없을 때만 이 기준일로 폴백)
- const STATIC_LAST_MODIFIED = new Date("2026-05-24");
+ // 2026-07-06: 국민연금 상한 659만 전수 갱신 + 삼성 TAI 신설 + 기술 SEO 전면 수정 반영
+ const STATIC_LAST_MODIFIED = new Date("2026-07-06");
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
  lastModified: STATIC_LAST_MODIFIED,

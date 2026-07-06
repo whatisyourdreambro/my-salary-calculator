@@ -858,7 +858,7 @@ export const qnaData: QnaItem[] = [
     "<strong>중도금 대출:</strong> 분양가 9억원 이하 주택의 생애 최초 구매자는 HUG 보증으로 중도금 대출 보증료 우대."
    ],
    tip: "생애 최초는 부부 기준입니다. 결혼 전 배우자가 주택을 소유했다면 해당 혜택을 받지 못합니다. 혼인신고 전후 시점을 잘 고려하세요.",
-   action: { text: "주택 취득세 계산기", href: "/tools/real-estate" }
+   action: { text: "주택 취득세 계산기", href: "/tools/real-estate/acquisition-tax" }
   }
  },
 
@@ -922,7 +922,7 @@ export const qnaData: QnaItem[] = [
     "<strong>3년 만기 전략:</strong> ISA 3년 의무 기간 후 연금계좌로 이전 → 절세 극대화. 연간 2,000만원 한도 납입."
    ],
    tip: "ISA와 연금저축·IRP를 함께 운용하면 세금을 합법적으로 대폭 줄일 수 있습니다. 투자 수익에 세금을 내지 않으면서 노후 자금을 쌓는 절세 황금루트입니다.",
-   action: { text: "IRP 세액공제 계산기", href: "/tools/finance/irp-calculator" }
+   action: { text: "IRP 세액공제 계산기", href: "/tools/finance/irp" }
   }
  },
  {
@@ -937,7 +937,7 @@ export const qnaData: QnaItem[] = [
     "<strong>절세 방법:</strong> ISA 계좌 내 배당소득은 200~400만원 비과세. 연금저축·IRP 내 ETF 분배금은 인출 전까지 과세 없음."
    ],
    tip: "배당 투자를 계획한다면 ISA 계좌를 최대한 활용하세요. 국내 ETF 분배금을 ISA로 수령하면 2,000만원 한도 내 비과세, 초과분도 9.9% 분리과세로 절세 효과 큽니다.",
-   action: { text: "주식·배당 세금 계산기", href: "/tools/finance" }
+   action: { text: "주식·배당 세금 계산기", href: "/tools/finance/stock-tax" }
   }
  },
 

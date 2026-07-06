@@ -47,7 +47,7 @@ export default function HomeSeoSection() {
             공제 항목은 크게 네 가지입니다.{" "}
             <strong className="text-navy">국민연금 4.75%</strong>,{" "}
             <strong className="text-navy">건강보험 3.595%</strong>(여기에 건강보험료의
-            12.95%가 장기요양보험으로 추가),{" "}
+            13.14%가 장기요양보험으로 추가),{" "}
             <strong className="text-navy">고용보험 0.9%</strong>가 4대보험으로
             빠져나가고, 여기에 부양가족 수와 비과세 식대(월 20만원)에 따라 달라지는{" "}
             <strong className="text-navy">근로소득세</strong>와 그 10%인{" "}

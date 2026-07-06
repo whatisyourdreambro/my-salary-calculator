@@ -965,7 +965,9 @@ export const jobsData: JobProfile[] = [
     description: "건물 설계·감리·인허가를 담당하는 건축 전문직. 건축사 면허 취득 후 독립 개업 가능.",
     requirements: ["건축학과 5년제 졸업", "건축사 면허 취득 (건축사 시험 합격)"],
     relatedCompanyIds: [],
-    relatedCalcSlugs: ["registration-tax-quick", "acquisition-tax-quick"],
+    // acquisition-tax-quick은 simpleCalculators에 없는 슬러그(→ /calc 308)라
+    // 실존하는 부대비용 계산기로 교체 (2026-07-06 감사)
+    relatedCalcSlugs: ["registration-tax-quick", "real-estate-flip-cost"],
     faqs: [
       { q: "건축사 연봉은 얼마인가요?", a: "설계사무소 신입 건축사 연봉은 3,200~4,500만원이며, 대형 설계사무소·건설사는 더 높습니다. 개업 건축사는 프로젝트에 따라 수입이 크게 달라집니다." },
     ],

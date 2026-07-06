@@ -2,7 +2,6 @@
 
 import { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryTierCard from "@/components/SalaryTierCard";
@@ -28,13 +27,9 @@ import {
  speakableLd,
 } from "@/lib/structuredData";
 
-// 무거운 recharts 컴포넌트는 클라이언트 사이드만 렌더 → LCP 절감
-const WealthChart = dynamic(() => import("@/components/WealthChart"), {
- ssr: false,
- loading: () => (
- <div className="w-full h-[400px] bg-white rounded-3xl border border-canvas-200 animate-pulse" />
- ),
-});
+// 무거운 recharts는 클라이언트 래퍼(WealthChartLazy)에서 dynamic(ssr:false) 처리 —
+// 서버 컴포넌트에서 직접 선언하면 코드 분할이 안 돼 첫 로드에 recharts가 포함됨
+import WealthChart from "@/components/WealthChartLazy";
 
 // [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
 export const runtime = "edge";

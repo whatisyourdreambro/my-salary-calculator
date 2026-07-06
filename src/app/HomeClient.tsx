@@ -31,7 +31,9 @@ const CalculatorTabs = dynamic(
  <div
  style={{
  width: "100%",
- height: "12rem",
+ // 실제 계산기 UI 높이 근사치 예약 — 12rem이던 시절 로드 완료 시
+ // 아래 광고·섹션이 수백 px 밀리는 시프트 발생 (2026-07-06 감사)
+ minHeight: "560px",
  display: "flex",
  justifyContent: "center",
  alignItems: "center",
@@ -130,9 +132,10 @@ export default function HomeClient() {
 
  {/* H1·부제·CTA 는 LCP 보호를 위해 정적 렌더 — JS 로드 전에도 즉시 표시 */}
  <div className="text-center max-w-[760px] w-full relative z-10">
- {/* Badge */}
+ {/* Badge — initial=false: opacity 0 시작이면 hydration 전(저속 모바일 수 초)
+ SSR HTML에서 안 보임 (2026-07-06 감사) */}
  <motion.div
- initial={{ scale: 0.9, opacity: 0 }}
+ initial={false}
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: 0.15 }}
  className="duotone-badge"
@@ -198,9 +201,9 @@ export default function HomeClient() {
  </Link>
  </div>
 
- {/* Stats */}
+ {/* Stats — initial=false: SSR 시점부터 표시 (위 배지와 동일 사유) */}
  <motion.div
- initial={{ opacity: 0, y: 16 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.4 }}
  className="mt-[clamp(2rem,5vw,4rem)] flex flex-wrap justify-center py-6 border-y border-canvas-200"

@@ -278,7 +278,7 @@ export default function SamsungNegotiation2026Page() {
  {/* Company Profile CTAs */}
  <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4">
  <Link
- href="/company/samsung-electronics"
+ href="/salary-db/samsung-electronics"
  className="block p-6 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors"
  >
  <Building2 className="w-8 h-8 opacity-70 mb-3" />
@@ -288,7 +288,7 @@ export default function SamsungNegotiation2026Page() {
  </p>
  </Link>
  <Link
- href="/company/sk-hynix"
+ href="/salary-db/sk-hynix"
  className="block p-6 bg-navy rounded-3xl text-white hover:bg-navy/90 transition-colors"
  >
  <Building2 className="w-8 h-8 opacity-70 mb-3" />

@@ -81,7 +81,9 @@ export default function GlossaryExplorer({
       <div className="page-width relative z-20 pt-8">
         {/* Today's Term Card */}
         <div className="max-w-3xl mx-auto mb-16">
-          <div className="bg-gradient-to-br from-[#EDF1F5] to-[#DDE4EC] backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
+          {/* dark: 변형 필수 — 라이트 고정 배경 + .dark의 text-navy 흰색 반전으로
+              다크모드에서 제목이 안 보이던 버그 (2026-07-06 감사) */}
+          <div className="bg-gradient-to-br from-[#EDF1F5] to-[#DDE4EC] dark:from-[#162E4A] dark:to-[#0A1829] backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Sparkles className="w-32 h-32 text-primary" />
             </div>

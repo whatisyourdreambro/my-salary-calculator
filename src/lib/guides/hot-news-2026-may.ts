@@ -125,7 +125,7 @@ const lgensolWage2026 = `
 <p class="font-bold text-primary mb-2">📌 관련 도구</p>
 <ul class="space-y-1 text-sm">
 <li>· <a href="/salary-db/lgensol" class="text-primary underline">LG에너지솔루션 연봉 상세</a></li>
-<li>· <a href="/industry/battery" class="text-primary underline">배터리 업계 연봉 순위</a></li>
+<li>· <a href="/industry/chemical-energy" class="text-primary underline">화학·에너지·배터리 업계 연봉 순위</a></li>
 </ul>
 </div>
 `;
@@ -1557,7 +1557,9 @@ export const hotNewsMay2026: Guide[] = [
     lang: "ko",
   },
   {
-    slug: "one-home-prop-tax-12억-2026",
+    // 한글 포함 슬러그는 프리렌더 시 percent-encoding 불일치로 빌드 시점부터
+    // 308 유령화(한 번도 200인 적 없음, 2026-07-06 감사) — ASCII로 개명 (아래 2편 동일)
+    slug: "one-home-prop-tax-12eok-2026",
     title: "1세대 1주택 종합부동산세 12억 공제 — 공시가 12억 이하 종부세 0원",
     description:
       "1세대 1주택자 종부세 12억 공제 + 고령자·장기보유 최대 80% 추가 감면. 공시가 15억 = 종부세 90만원, 다주택자 600만원 대비 1/7. 부부 공동명의 각자 6억 vs 통합 12억 비교.",
@@ -1739,7 +1741,7 @@ export const hotNewsMay2026: Guide[] = [
     lang: "ko",
   },
   {
-    slug: "youth-housing-dream-1억-2026",
+    slug: "youth-housing-dream-1eok-2026",
     title: "청년주택드림 청약통장 — 만 19~34세, 5년 누적 635만원 혜택 + 1.3억 대출",
     description:
       "만 19~34세, 연소득 5천만원 이하. 4.5% 우대 적금 + 소득공제 600만원 + 청년주택드림 대출 1.3억 자격. 월 50만원 5년 시 총 혜택 635만원.",
@@ -1752,7 +1754,7 @@ export const hotNewsMay2026: Guide[] = [
     lang: "ko",
   },
   {
-    slug: "one-home-capital-gains-12억-2026",
+    slug: "one-home-capital-gains-12eok-2026",
     title: "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 세금 1,265만원",
     description:
       "1세대 1주택 + 보유 2년 + 거주 2년(조정) + 12억 이하 = 양도세 0원. 15억 매도 시 초과분 3억만 과세, 장기보유공제 48% 적용 시 약 1,265만원. 10년+10년 시 80% 공제.",

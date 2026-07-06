@@ -87,9 +87,10 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  // Calculate reading time
  const readingTime = Math.ceil(guide.content.length / 1000);
 
+ // "/salary"는 인덱스 라우트가 없어 404였음(가이드 29편 CTA) — 홈이 계산기 본체 (2026-07-06 정정)
  const relatedCalculator =
  guide.category === "연봉"
- ? { name: "연봉 계산기", href: "/salary" }
+ ? { name: "연봉 계산기", href: "/" }
  : guide.category === "세금"
  ? { name: "연말정산 계산기", href: "/year-end-tax" }
  : guide.category === "커리어"

@@ -252,11 +252,12 @@ export function articleLd(article: {
  lang === "en"
  ? `${SITE_URL}/en/guides/${article.slug}`
  : `${SITE_URL}/guides/${article.slug}`;
+ // 기본 OG는 title 파라미터 필수 — /api/og type=guide 분기가 slug를 무시함 (2026-07-06 정정)
  const imageUrl = article.image
  ? article.image.startsWith("http")
  ? article.image
  : `${SITE_URL}${article.image}`
- : `${SITE_URL}/api/og?type=guide&slug=${article.slug}`;
+ : `${SITE_URL}/api/og?type=guide&title=${encodeURIComponent(article.title)}`;
 
  return {
  "@context": "https://schema.org",

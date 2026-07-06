@@ -22,7 +22,6 @@ import type {
  AdvancedSettings,
 } from "@/app/types";
 import SalaryAnalysis from "./SalaryAnalysis";
-import DetailedAnalysis from "./DetailedAnalysis";
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
 import NextActions from "./NextActions";
@@ -38,6 +37,14 @@ const WealthChart = dynamic(() => import("./WealthChart"), {
  ssr: false,
  loading: () => (
  <div className="w-full h-[400px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
+ ),
+});
+// DetailedAnalysis도 recharts 포함 — 결과 표시 후에만 렌더되므로 위 차트들과
+// 동일하게 dynamic 분리 (정적 import 시 recharts가 첫 로드에 실림, 2026-07-06 감사)
+const DetailedAnalysis = dynamic(() => import("./DetailedAnalysis"), {
+ ssr: false,
+ loading: () => (
+ <div className="w-full h-[300px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
  ),
 });
 import SalaryTierCard from "./SalaryTierCard"; // New Import

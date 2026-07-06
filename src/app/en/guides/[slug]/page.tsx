@@ -2,7 +2,7 @@ import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import EnglishGuideClient from "./EnglishGuideClient";
-import { articleLd } from "@/lib/structuredData";
+import { articleLd, breadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -97,6 +97,14 @@ export default function EnglishGuidePage({ params }: Props) {
  lang: "en",
  });
 
+ // 전역 AutoBreadcrumb 제거(2026-07-06) 후 이 템플릿의 유일한 breadcrumb —
+ // 영문 페이지이므로 영문 라벨 사용 (기존 자동판은 "홈>English>…" 한국어 혼용이었음)
+ const breadcrumbJsonLd = breadcrumbLd([
+ { name: "Home", path: "/en" },
+ { name: "Guides", path: "/en/guides" },
+ { name: guide.title, path: `/en/guides/${guide.slug}` },
+ ]);
+
  // 한↔영 상호 SSR 링크 — /en 트리로 가는 서버 렌더 내부링크가 사실상 0이던
  // 문제(GSC 미색인 원인) 해소. hreflang 게이트와 동일한 실재 확인 사용.
  const hasKo = koGuides.some((g) => g.slug === guide.slug);
@@ -105,7 +113,7 @@ export default function EnglishGuidePage({ params }: Props) {
  <>
   <script
    type="application/ld+json"
-   dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+   dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbJsonLd]) }}
   />
   <EnglishGuideClient guide={guide} relatedGuides={relatedGuides} />
   {hasKo && (

@@ -129,7 +129,7 @@ ${DISCLAIMER_HTML}
  <p class="font-bold text-primary mb-2">📌 함께 보면 좋은 가이드</p>
  <ul class="space-y-1 text-sm">
   <li>· <a href="/samsung-negotiation-2026" class="text-primary underline">삼성전자 2026 임금협상 통합 페이지</a></li>
-  <li>· <a href="/company/samsung-electronics" class="text-primary underline">삼성전자 연봉·복지 회사 프로필</a></li>
+  <li>· <a href="/salary-db/samsung-electronics" class="text-primary underline">삼성전자 연봉·복지 회사 프로필</a></li>
   <li>· <a href="/guides/sk-hynix-wage-2026" class="text-primary underline">SK하이닉스 2026 임금·PS 분석</a></li>
   <li>· <a href="/guides/samsung-hynix-2026-deepdive" class="text-primary underline">삼성 vs 하이닉스 2026 종합 비교</a></li>
   <li>· <a href="/calc/year-end-bonus" class="text-primary underline">성과급(보너스) 세후 계산기</a></li>
@@ -248,7 +248,7 @@ ${DISCLAIMER_HTML}
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
  <p class="font-bold text-primary mb-2">📌 함께 보면 좋은 가이드</p>
  <ul class="space-y-1 text-sm">
-  <li>· <a href="/company/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
+  <li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
   <li>· <a href="/guides/samsung-wage-negotiation-2026" class="text-primary underline">삼성전자 2026 임금협상 분석</a></li>
   <li>· <a href="/guides/samsung-hynix-2026-deepdive" class="text-primary underline">삼성 vs 하이닉스 2026 종합 비교</a></li>
   <li>· <a href="/guides/semiconductor-performance-bonus-tax" class="text-primary underline">반도체 성과급 세금 계산법</a></li>
@@ -396,8 +396,8 @@ ${DISCLAIMER_HTML}
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
  <p class="font-bold text-primary mb-2">📌 함께 보면 좋은 페이지</p>
  <ul class="space-y-1 text-sm">
-  <li>· <a href="/company/samsung-electronics" class="text-primary underline">삼성전자 회사 프로필</a></li>
-  <li>· <a href="/company/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
+  <li>· <a href="/salary-db/samsung-electronics" class="text-primary underline">삼성전자 회사 프로필</a></li>
+  <li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
   <li>· <a href="/samsung-negotiation-2026" class="text-primary underline">2026 임금협상 통합 페이지</a></li>
   <li>· <a href="/guides/samsung-wage-negotiation-2026" class="text-primary underline">삼성전자 임금협상 심층 분석</a></li>
   <li>· <a href="/guides/sk-hynix-wage-2026" class="text-primary underline">SK하이닉스 PS 분석</a></li>
@@ -854,8 +854,8 @@ ${DISCLAIMER_HTML}
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
  <p class="font-bold text-primary mb-2">📌 함께 보면 좋은 페이지</p>
  <ul class="space-y-1 text-sm">
-  <li>· <a href="/company/samsung-electronics" class="text-primary underline">삼성전자 회사 프로필</a></li>
-  <li>· <a href="/company/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
+  <li>· <a href="/salary-db/samsung-electronics" class="text-primary underline">삼성전자 회사 프로필</a></li>
+  <li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 회사 프로필</a></li>
   <li>· <a href="/new-employee-2026" class="text-primary underline">2026 신입 연봉 협상 가이드</a></li>
   <li>· <a href="/salary-db" class="text-primary underline">회사별 연봉 DB</a></li>
   <li>· <a href="/guides/samsung-hynix-2026-deepdive" class="text-primary underline">삼성 vs 하이닉스 종합 비교</a></li>

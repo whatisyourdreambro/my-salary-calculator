@@ -35,12 +35,24 @@ function getEnglishPath(pathname: string): string {
  return "/en";
 }
 
-/** 영어 → 한국어 매핑 */
+/** 영어 → 한국어 매핑 — 실존하는 한국어 페이지만 허용, 없으면 홈 폴백.
+ * (기존의 무조건 /en 제거 방식은 /en/flat-tax → /flat-tax 등 404 링크를 만들었음) */
+const EN_TO_KO: Record<string, string> = Object.fromEntries(
+ Object.entries(KO_TO_EN).map(([ko, en]) => [en, ko])
+);
+
 function getKoreanPath(pathname: string): string {
  if (!pathname.startsWith("/en")) return pathname;
 
- const koPath = pathname.replace(/^\/en/, "") || "/";
- return koPath;
+ if (EN_TO_KO[pathname]) return EN_TO_KO[pathname];
+
+ const guideMatch = pathname.match(/^\/en\/guides\/(.+)$/);
+ if (guideMatch && EN_GUIDE_SLUGS.has(guideMatch[1])) {
+  return `/guides/${guideMatch[1]}`;
+ }
+
+ // EN 전용 페이지(/en/flat-tax, /en/salary-converter 등) — 대응 한국어 페이지 없음
+ return "/";
 }
 
 export default function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {

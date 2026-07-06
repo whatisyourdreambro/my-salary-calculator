@@ -8,6 +8,8 @@ import { Calendar, ArrowRight, Clock } from "lucide-react";
 
 interface SeasonalContent {
   month: number[];
+  /** 같은 달 안에서 노출 기간을 좁힐 때 (예: 성과급 지급 주간) */
+  days?: { from: number; to: number };
   title: string;
   subtitle: string;
   href: string;
@@ -33,12 +35,24 @@ const SEASONAL_CALENDAR: SeasonalContent[] = [
     cta: "자동차세 계산",
     deadline: { month: 7, day: 31 },
   },
+  // 2026-07-06 감사: 7월 양대 실검색 이벤트로 교체 — TAI 지급 주간(7/8) 우선,
+  // 이후 재산세 1기(7/16~31). 기존 "7월 건강보험료 정산" 항목은 사실관계가
+  // 어긋나(직장가입자 연말정산 반영은 4월) 제거.
   {
     month: [7],
-    title: "7월 건강보험료 정산",
-    subtitle: "작년 소득 기준 정산금이 7월 급여에서 차감/환급",
-    href: "/health-insurance-2026",
-    cta: "정산 가이드 보기",
+    days: { from: 1, to: 12 },
+    title: "삼성전자 TAI 지급일 7/8",
+    subtitle: "2026 상반기 사업부별 지급률 확정 — 내 세후 실수령액 바로 확인",
+    href: "/calc/samsung-bonus",
+    cta: "TAI 계산하기",
+  },
+  {
+    month: [7],
+    title: "7월 재산세 1기 납부 (주택분 50%)",
+    subtitle: "7/16~31 납부 — 공시가별 재산세·종부세 부담 미리 점검",
+    href: "/property-holding-tax-2026",
+    cta: "보유세 계산",
+    deadline: { month: 7, day: 31 },
   },
   // 8차 점검에서 추가 — 9월 부동산 재산세 2차 + 자동차세 한 번 더
   {
@@ -76,8 +90,16 @@ function getDaysLeft(deadline: { month: number; day: number }): number {
 }
 
 function getCurrentSeasonal(): SeasonalContent | null {
-  const month = new Date().getMonth() + 1;
-  return SEASONAL_CALENDAR.find((s) => s.month.includes(month)) || null;
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  return (
+    SEASONAL_CALENDAR.find(
+      (s) =>
+        s.month.includes(month) &&
+        (!s.days || (day >= s.days.from && day <= s.days.to))
+    ) || null
+  );
 }
 
 interface SeasonalBannerProps {

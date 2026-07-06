@@ -40,7 +40,7 @@ export default function GlossaryPage() {
     <main className="w-full bg-canvas min-h-screen pb-20">
       {/* Hero Section — 서버 렌더링 (크롤러에 즉시 노출) */}
       <section className="relative pt-28 pb-16 overflow-hidden text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 dark:from-[#0A1829] dark:via-[#0F2236] dark:to-primary/30 -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4">

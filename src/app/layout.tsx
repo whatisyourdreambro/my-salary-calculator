@@ -9,7 +9,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
-import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import WebVitals from "@/components/WebVitals";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
@@ -141,10 +140,10 @@ export default function RootLayout({
           defaultTheme="light"
           enableSystem={true}
         >
-          {/* 모든 페이지 자동 빵부스러기(BreadcrumbList JSON-LD).
-              홈(/) 에서는 컴포넌트 내부에서 null 반환 — 안전.
-              개별 page.tsx 에서 명시적 breadcrumbLd 가 있어도 중복 OK (Google 처리). */}
-          <AutoBreadcrumb />
+          {/* AutoBreadcrumb 전역 주입은 2026-07-06 감사에서 제거 — 페이지 자체
+              breadcrumbLd와 잎 이름이 다른 BreadcrumbList가 1,443쪽에 2중 주입돼
+              구글이 영문 슬러그 잎("bmi quick" 류)을 임의 선택하는 문제.
+              ("중복 OK"였던 기존 주석은 이름 충돌 시 성립하지 않음) */}
           <div className="flex flex-col min-h-screen">
             <Header />
             <main id="main-content" className="flex-grow w-full">

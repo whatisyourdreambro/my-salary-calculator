@@ -13,7 +13,7 @@ import {
   getIndustryBenchmark,
 } from "@/lib/companyContentBuilder";
 import { buildPageMetadata } from "@/lib/seo";
-import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -251,18 +251,23 @@ export default function ComparePage({ params }: Props) {
     answer: `초봉을 우선시한다면 ${entryWinner.name.ko}, 장기 커리어와 시니어 연봉 상승을 본다면 ${seniorWinner.name.ko}가 유리할 수 있습니다. 워라밸은 주당 실근무시간이 짧은 회사를, 안정성은 ${a.tier === "conglomerate" || a.tier === "public" ? a.name.ko : b.tier === "conglomerate" || b.tier === "public" ? b.name.ko : "두 회사 모두 동일 tier"}를 고려하세요. 최종 결정은 본인 커리어 목표·연봉 외 보상·복지 가치와 함께 종합 판단해야 합니다.`,
   });
 
-  const breadcrumb = autoBreadcrumbLd(`/salary-db/compare/${params.slug}`, {
-    leafName: `${a.name.ko} vs ${b.name.ko} 연봉 비교`,
-  });
+  // autoBreadcrumbLd는 중간 세그먼트 /salary-db/compare(인덱스 없음 → 308)를
+  // 크럼으로 만들어 413페이지가 리다이렉트 URL을 가리켰음 — /salary/[amount]와
+  // 동일하게 명시 items로 교체 (2026-07-06 감사)
+  const breadcrumbItems = [
+    { name: "홈", path: "/" },
+    { name: "기업 연봉 DB", path: "/salary-db" },
+    {
+      name: `${a.name.ko} vs ${b.name.ko} 연봉 비교`,
+      path: `/salary-db/compare/${params.slug}`,
+    },
+  ];
 
   return (
     <>
-      <JsonLd data={[breadcrumb, faqLd(faqItems)]} />
+      <JsonLd data={[breadcrumbLd(breadcrumbItems), faqLd(faqItems)]} />
       <div className="page-width pt-24 pb-3">
-        <Breadcrumbs
-          path={`/salary-db/compare/${params.slug}`}
-          leafName={`${a.name.ko} vs ${b.name.ko}`}
-        />
+        <Breadcrumbs items={breadcrumbItems} />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

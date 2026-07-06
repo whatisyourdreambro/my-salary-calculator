@@ -37,7 +37,7 @@ const tableHeaders = [
 
 const structuredData = {
  "@context": "https://schema.org",
- "@type": "DataSet",
+ "@type": "Dataset",
  name: "2026년 주급 실수령액 표",
  description: "2026년 최신 세법 기준 주급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
  url: "https://www.moneysalary.com/table/2026/weekly",
