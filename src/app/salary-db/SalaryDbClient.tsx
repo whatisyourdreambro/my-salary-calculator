@@ -7,7 +7,7 @@
 import { useMemo, useState, Fragment } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, Building2, TrendingUp, Users, ArrowRight, Database, Briefcase, MapPin, Factory } from "lucide-react";
+import { Search, Building2, TrendingUp, Users, ArrowRight, Database, Briefcase, MapPin, Factory, Trophy } from "lucide-react";
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
@@ -50,6 +50,7 @@ const TIER_BADGE_CLASS: Record<CompanyIndexItem["tier"], string> = {
 // 회사 DB 인덱스의 형제 허브 — 회사 검색 후 다른 차원(직업/산업/지역)으로
 // 한 번 더 분기해 트래픽 엔진 간 PageRank를 양방향으로 흘려보낸다.
 const SIBLING_HUBS: Array<{ href: string; label: string; sub: string; icon: React.ElementType }> = [
+ { href: "/salary-db/ranking", label: "연봉 순위 TOP 30", sub: "총보상 기준 대기업 랭킹", icon: Trophy },
  { href: "/job", label: "직업별 연봉", sub: "직무 평균·신입 초봉", icon: Briefcase },
  { href: "/industry", label: "산업별 연봉", sub: "업종 순위·동종사", icon: Factory },
  { href: "/region", label: "지역별 연봉", sub: "17개 시도 분포", icon: MapPin },

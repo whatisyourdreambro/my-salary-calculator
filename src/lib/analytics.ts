@@ -112,6 +112,24 @@ export function trackCalcStart(
   });
 }
 
+/**
+ * SNS 공유 클릭 — 바이럴 루프의 핵심 측정 지표.
+ * 채널(kakao/instagram/facebook/twitter/copy)별로 어디서 공유가 일어나는지,
+ * 어떤 결과 페이지가 가장 많이 공유되는지(viral coefficient) 추적.
+ */
+export function trackShare(
+  channel: string,
+  contentType: string,
+  pagePath?: string
+): void {
+  trackEvent("share", {
+    method: channel,
+    content_type: contentType,
+    page_path:
+      pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+  });
+}
+
 /** 즐겨찾기/북마크 클릭 — 재방문률 향상 측정 */
 export function trackBookmarkClick(
   targetPath: string,

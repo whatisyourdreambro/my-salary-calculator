@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import AutoBreadcrumb from "@/components/AutoBreadcrumb";
+import WebVitals from "@/components/WebVitals";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 // Pretendard 가변 폰트 — self-host (next/font/local).
@@ -154,6 +155,9 @@ export default function RootLayout({
           </div>
           <InstallPwaBanner />
         </NextThemesProvider>
+
+        {/* 실사용자 Core Web Vitals → GA4 (속도 개선 효과 측정) */}
+        <WebVitals />
 
         {/* Google Analytics 4 */}
         <Script

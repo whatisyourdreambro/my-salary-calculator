@@ -8,6 +8,8 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyComparator, ComparisonResult } from "@/lib/versusEngine";
 import { CompanyProfile, JobLevel } from "@/types/company";
 import BoxingGame from "@/components/BoxingGame";
+import Link from "next/link";
+import ShareButtons from "@/components/ShareButtons";
 
 // 배틀 RadarChart(recharts)만 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const SalaryBattleRadar = dynamic(() => import("@/components/charts/SalaryBattleRadar"), {
@@ -231,6 +233,7 @@ export default function BattlePage() {
 
  {/* Battle Arena */}
  {result && (showResult ? (
+ <>
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in-up">
  {/* Left Stats (Player 1) */}
  <div className="lg:col-span-3 order-2 lg:order-1 text-center lg:text-left space-y-6">
@@ -343,6 +346,24 @@ export default function BattlePage() {
  </motion.div>
  </div>
  </div>
+
+ {/* 공유 CTA + 코어 페이지 전환 동선 — 바이럴 유입을 계산기로 연결 */}
+ <div className="mt-10 flex flex-col items-center gap-4 border-t border-canvas-200 pt-8">
+ <p className="text-sm font-bold text-faint-blue">
+ 이 매치업, 친구에게 공유하기
+ </p>
+ <ShareButtons
+ title={`${result.companyA.name.ko} vs ${result.companyB.name.ko} 연봉 배틀 결과 | 머니샐러리`}
+ description="두 회사의 총보상·실질 시급·워라밸을 1:1로 비교했어요. 우리 회사도 배틀시켜 보세요!"
+ />
+ <Link
+ href="/"
+ className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-electric hover:underline"
+ >
+ 내 연봉 실수령액도 계산해보기 →
+ </Link>
+ </div>
+ </>
  ) : (
  <div className="text-center py-20 animate-pulse">
  <p className="text-2xl text-faint-blue font-bold">

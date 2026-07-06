@@ -3,7 +3,7 @@ import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { jobsData, getJobById } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
-import { faqLd, autoBreadcrumbLd } from "@/lib/structuredData";
+import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -100,6 +100,18 @@ export default function JobPage({ params }: Props) {
     .filter((j) => j.category === job.category && j.id !== job.id)
     .slice(0, 6);
 
+  // ItemList 스키마 — 같은 카테고리 직무 목록으로 SERP 캐러셀 리치결과 노출 기회 확보.
+  const rankSchema =
+    relatedJobs.length >= 3
+      ? itemListLd({
+          name: `${job.category} 직무별 연봉`,
+          items: relatedJobs.map((j) => ({
+            name: `${j.name} 연봉`,
+            url: `/job/${j.id}`,
+          })),
+        })
+      : null;
+
   // 이 직무를 채용하는 등록 기업 (해석 가능한 id만)
   const relatedCompanies = job.relatedCompanyIds.flatMap((id) => {
     const c = companyRepository.getById(id);
@@ -108,7 +120,7 @@ export default function JobPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={[breadcrumb, faqSchema]} />
+      <JsonLd data={[breadcrumb, faqSchema, ...(rankSchema ? [rankSchema] : [])]} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <HomeTopAd />
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link as LinkIcon, Facebook, Twitter, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { trackShare } from "@/lib/analytics";
 
 interface ShareButtonsProps {
   url?: string;
@@ -10,6 +11,8 @@ interface ShareButtonsProps {
   description?: string;
   /** 카카오 공유 카드 썸네일 */
   imageUrl?: string;
+  /** 공유 콘텐츠 종류 (예: salary_result, company, guide, fun) — GA4에서 어떤 결과가 가장 많이 공유되는지 측정 */
+  contentType?: string;
   /**
    * 결과 이미지를 가진 페이지(FUN 결과 카드 등)는 이 캡처 함수를 넘긴다.
    * 넘기면 인스타그램 버튼이 모바일 Web Share API 로 이미지 파일을 직접 공유한다.
@@ -25,6 +28,7 @@ export default function ShareButtons({
   description = "내 연봉의 실제 수령액을 확인해보세요!",
   imageUrl = "https://www.moneysalary.com/logo-full.png",
   getShareImage,
+  contentType = "page",
   className = "",
 }: ShareButtonsProps) {
   const [currentUrl, setCurrentUrl] = useState("");
@@ -42,6 +46,7 @@ export default function ShareButtons({
   };
 
   const handleKakaoShare = async () => {
+    trackShare("kakao", contentType);
     // Kakao JS SDK 가 초기화돼 있으면 인앱 공유, 아니면 링크 복사로 폴백.
     const kakao = (window as any).Kakao;
     if (kakao?.isInitialized?.()) {
@@ -73,6 +78,7 @@ export default function ShareButtons({
   };
 
   const handleInstagramShare = async () => {
+    trackShare("instagram", contentType);
     // 결과 이미지가 있으면 모바일 Web Share API 로 이미지 파일을 직접 공유
     // (사용자가 공유 시트에서 인스타그램 스토리/피드 선택 가능).
     if (getShareImage) {
@@ -101,6 +107,7 @@ export default function ShareButtons({
   };
 
   const handleCopyLink = async () => {
+    trackShare("copy", contentType);
     try {
       await navigator.clipboard.writeText(currentUrl);
       showToast("🔗 링크가 복사됐어요!");
@@ -110,6 +117,7 @@ export default function ShareButtons({
   };
 
   const handleFacebookShare = () => {
+    trackShare("facebook", contentType);
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
         currentUrl
@@ -119,6 +127,7 @@ export default function ShareButtons({
   };
 
   const handleTwitterShare = () => {
+    trackShare("twitter", contentType);
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(
         title

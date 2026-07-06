@@ -15,6 +15,7 @@ import CountUp from "react-countup";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, Calculator, Zap, Sparkles } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { trackCalcSubmit } from "@/lib/analytics";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -220,10 +221,21 @@ export default function SalaryCalculator() {
 
  // Analytics - Only fire once per actual result display
  useEffect(() => {
- if (showResult && result.monthlyNet > 0 && typeof (window as any).gtag === "function") {
- (window as any).gtag("event", "conversion", {
- send_to: `${process.env.NEXT_PUBLIC_ADS_ID}/${process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION}`,
+ if (showResult && result.monthlyNet > 0) {
+ // GA4 funnel 이벤트 — 계산 완료(전환율·세그먼트 분석용)
+ trackCalcSubmit("salary", {
+ income_type: incomeType,
+ annual_salary: annualSalary,
+ monthly_net: result.monthlyNet,
  });
+ // Google Ads 전환 — env(ADS_ID/CONVERSION_LABEL)가 설정된 경우에만 발사
+ const adsId = process.env.NEXT_PUBLIC_ADS_ID;
+ const label = process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION;
+ if (adsId && label && typeof (window as any).gtag === "function") {
+ (window as any).gtag("event", "conversion", {
+ send_to: `${adsId}/${label}`,
+ });
+ }
  }
  }, [showResult]); // Trigger only when the result card is actually shown to the user
 
@@ -317,6 +329,18 @@ export default function SalaryCalculator() {
  );
  return `${window.location.origin}/share/${encodedData}`;
  }, [annualSalary, nonTaxableAmount, dependents, children]);
+
+ // 공유 카드 문구·썸네일 — 단톡방 클릭률을 높이는 호기심 훅 + 실제 금액 OG 이미지
+ const shareMeta = useMemo(() => {
+ const netManwon = Math.round(result.monthlyNet / 10000).toLocaleString("ko-KR");
+ const annualManwon = Math.round(annualSalary / 10000).toLocaleString("ko-KR");
+ const origin = typeof window !== "undefined" ? window.location.origin : "";
+ return {
+ title: `💰 연봉 ${annualManwon}만원이면 월 실수령 ${netManwon}만원!`,
+ description: "2026년 세법 기준 내 실수령액. 너도 1초만에 계산해봐 👀",
+ imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&netPay=${result.monthlyNet}`,
+ };
+ }, [annualSalary, result.monthlyNet]);
 
  const handleCopyResult = async () => {
  try {
@@ -478,7 +502,10 @@ export default function SalaryCalculator() {
  <p className="text-sm font-bold text-muted-blue">결과 공유하기</p>
  <ShareButtons
  url={shareUrl}
- title="내 연봉 실수령액 계산 결과 — 머니샐러리"
+ title={shareMeta.title}
+ description={shareMeta.description}
+ imageUrl={shareMeta.imageUrl}
+ contentType="salary_result"
  />
  <button onClick={handleSaveData} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
  <CheckCircle size={16} className="text-navy" />

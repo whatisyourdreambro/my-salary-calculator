@@ -10,6 +10,7 @@ import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
 import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
 import { semiconductorDeepdiveGuides } from "@/lib/guides/semiconductor-deepdive";
 import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
+import { bonusDeepdiveGuides } from "@/lib/guides/bonus-deepdive";
 import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
 import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
@@ -274,10 +275,10 @@ const rawGuides = [
  },
  {
  slug: "nurse-salary",
- title: "2026년 간호사 연봉 현실: 3교대 vs 상근직 실수령액 표 💉",
- description: "대학병원 신규 간호사 초봉부터 5년차, 10년차 연봉 상승률 분석. 나이트 수당과 오프 수당까지 포함한 '진짜' 월급 통장 공개.",
+ title: "간호사 연봉 2026: 신규·5년차·수간호사 월급 실수령액 표 💉",
+ description: "간호사 평균 연봉과 신규 초봉, 5년차·10년차·수간호사 월급을 한눈에. 대학병원 3교대 나이트·오프 수당을 포함한 '진짜' 실수령액을 2026년 기준으로 정리했습니다.",
  category: "연봉",
- tags: ["간호사", "3교대", "대학병원"],
+ tags: ["간호사 연봉", "수간호사", "간호사 5년차", "간호사 월급", "3교대", "대학병원"],
  level: "중급",
  publishedDate: "2025-11-15",
  views: 185000,
@@ -467,6 +468,8 @@ const allRawGuides = [
  ...hotNewsDeepDive,
  // 13차 — 성과급 종류·소득세·4대보험·절세 심화·시점 실전 5개 영역 50편 (누적 181편)
  ...hotBonusTaxComplete,
+ // 14차 — 성과급 시의성 종합(2026 실제 지급액 + 통상임금 대법 판결 + 세금/4대보험 + 계산기 연결)
+ ...bonusDeepdiveGuides,
 ];
 
 // Generate the final guides array with content

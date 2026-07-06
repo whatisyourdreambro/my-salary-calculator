@@ -38,9 +38,15 @@ const DEFAULT_YEAR_ROWS: YearRow[] = [
 ];
 
 export default function MultiYearRSUSimulator({
-  memoryPerPerson,
+  divisionTotals,
 }: {
-  memoryPerPerson: number;
+  divisionTotals: Array<{
+    id: string;
+    label: string;
+    shortLabel: string;
+    color: string;
+    total: number;
+  }>;
 }) {
   const [rows, setRows] = useState<YearRow[]>(DEFAULT_YEAR_ROWS);
   const [sellPriceFmt, setSellPriceFmt] = useState("450,000");
@@ -49,9 +55,11 @@ export default function MultiYearRSUSimulator({
 
   const sellPrice = parseNumberInput(sellPriceFmt);
 
-  function syncFromMemory() {
-    if (memoryPerPerson <= 0) return;
-    const v = Math.round(memoryPerPerson).toLocaleString("ko-KR");
+  // 선택한 사업부의 1인당 성과급(OPI2 기준)으로 모든 연도 행을 채운다.
+  // 덮어쓰기 직전 상태를 보관해 실수 클릭을 1회 복구할 수 있다.
+  function fillFromDivision(total: number) {
+    if (total <= 0) return;
+    const v = Math.round(total).toLocaleString("ko-KR");
     setRows((prev) => {
       setUndoRows(prev);
       return prev.map((r) => ({ ...r, perPersonFmt: v }));
@@ -156,7 +164,31 @@ export default function MultiYearRSUSimulator({
         >
           <Coins size={11} className="text-electric" aria-hidden /> 다년도 RSU 매도 시뮬레이션
         </p>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] font-bold text-faint-blue inline-flex items-center gap-1">
+            <TrendingUp size={10} aria-hidden /> OPI2 1인당으로 채우기:
+          </span>
+          {divisionTotals.map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              onClick={() => fillFromDivision(d.total)}
+              disabled={d.total <= 0}
+              title={
+                d.total <= 0
+                  ? "상단 시뮬 OPI2가 0원(임계값 미달 등)이라 채울 값이 없습니다"
+                  : `${d.label} 1인당 ${Math.round(d.total).toLocaleString("ko-KR")}만원으로 전체 연도 채우기`
+              }
+              className="text-[10px] font-black px-2 py-1.5 rounded-lg border transition-colors inline-flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{
+                color: d.color,
+                borderColor: `${d.color}55`,
+                backgroundColor: `${d.color}0D`,
+              }}
+            >
+              {d.label}
+            </button>
+          ))}
           {undoRows && (
             <button
               type="button"
@@ -166,19 +198,6 @@ export default function MultiYearRSUSimulator({
               ↺ 되돌리기
             </button>
           )}
-          <button
-            type="button"
-            onClick={syncFromMemory}
-            disabled={memoryPerPerson <= 0}
-            className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-electric-5 text-electric border border-electric-30 hover:bg-electric-10 transition-colors inline-flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
-            title={
-              memoryPerPerson <= 0
-                ? "상단 시뮬 OPI2가 0원(임계값 미달 등)이라 채울 값이 없습니다"
-                : undefined
-            }
-          >
-            <TrendingUp size={10} aria-hidden /> 메모리 OPI2 1인당으로 채우기
-          </button>
         </div>
       </div>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
