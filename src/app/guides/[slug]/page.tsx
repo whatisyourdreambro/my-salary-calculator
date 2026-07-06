@@ -1,6 +1,7 @@
 
 import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
+import Link from "next/link";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
@@ -107,6 +108,18 @@ export default function GuidePage({ params }: Props) {
  <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
 
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+ {/* 한↔영 상호 SSR 링크 — /en 트리 크롤 경로·링크 신호 확보 (hreflang과 동일 게이트) */}
+ {enGuides.some((g) => g.slug === guide.slug) && (
+ <div className="mb-6">
+ <Link
+ href={`/en/guides/${guide.slug}`}
+ hrefLang="en"
+ className="inline-flex items-center gap-2 text-sm font-bold text-electric hover:underline"
+ >
+ 🇺🇸 Read this guide in English →
+ </Link>
+ </div>
+ )}
  <CalcResultAd />
 
  <RelatedGuides

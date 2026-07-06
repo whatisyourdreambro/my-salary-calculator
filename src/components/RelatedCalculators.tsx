@@ -60,6 +60,8 @@ interface RelatedCalculatorsProps {
  /** 섹션 제목 (기본: "이런 계산기도 함께 보세요") */
  title?: string;
  className?: string;
+ /** /calc/[slug] 전용: 계산기 데이터 category (서버에서 문자열만 전달) */
+ calcCategory?: string;
 }
 
 export default function RelatedCalculators({
@@ -67,10 +69,11 @@ export default function RelatedCalculators({
  limit = 4,
  title = "이런 계산기도 함께 보세요",
  className = "",
+ calcCategory,
 }: RelatedCalculatorsProps) {
  const pathname = usePathname();
  const resolvedPath = currentPath || pathname || "/";
- const items = getRelatedCalculators(resolvedPath, limit);
+ const items = getRelatedCalculators(resolvedPath, limit, calcCategory);
 
  if (items.length === 0) return null;
 

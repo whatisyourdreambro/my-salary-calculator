@@ -148,7 +148,10 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
 
- <RelatedCalculators currentPath={`/calc/${calc.slug}`} />
+ <RelatedCalculators
+ currentPath={`/calc/${calc.slug}`}
+ calcCategory={calc.category}
+ />
 
  <RelatedGuides
  items={getRelatedGuides({

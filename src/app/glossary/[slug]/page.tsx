@@ -6,7 +6,6 @@ import { permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Sparkles, Hash, TrendingUp, Calculator } from "lucide-react";
 import {
- glossaryData,
  toGlossarySlug,
  getGlossaryBySlug,
  getRelatedGlossaryItems,
@@ -21,13 +20,10 @@ import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export const dynamic = "force-static";
-
-export async function generateStaticParams() {
- return glossaryData.map((item) => ({
- slug: toGlossarySlug(item.title),
- }));
-}
+// 한글 슬러그는 프리렌더(force-static) 시 Cloudflare Pages가 비ASCII 정적 파일을
+// 서빙하지 못해 전 URL이 404였음(2026-07-06 실측 — 출시 후 한 번도 200인 적 없음).
+// 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
+export const runtime = "edge";
 
 export async function generateMetadata({
  params,
@@ -68,7 +64,7 @@ export default function GlossaryDetailPage({
  params: { slug: string };
 }) {
  const item = getGlossaryBySlug(params.slug);
- // GSC 404 출혈 차단(7차): 옛 용어 슬러그 → /glossary 메인 308
+ // 데이터에 없는 슬러그 → /glossary 메인 308 (edge 렌더라 프로덕션에서 실제 동작)
  if (!item) permanentRedirect("/glossary");
 
  const Icon = item.icon;

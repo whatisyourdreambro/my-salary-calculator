@@ -6,6 +6,7 @@
 import type { CompanyProfile } from "@/types/company";
 import { allCompanies } from "@/data/companies";
 import { normalizeIndustry } from "@/lib/salary-data/industryTaxonomy";
+import { formatSalaryKorean } from "@/lib/seo";
 
 export interface IndustryBenchmark {
  averageEntry: number;
@@ -80,22 +81,9 @@ export function getSimilarSalaryCompanies(
  .slice(0, limit);
 }
 
-/**
- * 연봉 액수를 한글 표기로 포맷 (예: 5,200만원 / 1억 200만원).
- */
-export function formatSalaryKorean(amount: number): string {
- const eok = Math.floor(amount / 100000000);
- const remaining = amount % 100000000;
- const manwon = Math.round(remaining / 10000);
-
- if (eok > 0 && manwon > 0) {
- return `${eok}억 ${manwon.toLocaleString("ko-KR")}만원`;
- }
- if (eok > 0) {
- return `${eok}억원`;
- }
- return `${manwon.toLocaleString("ko-KR")}만원`;
-}
+// formatSalaryKorean은 seo.ts로 이동(2026-07-06) — 이 파일은 allCompanies 전체를
+// import해서 metadata 헬퍼가 쓰기엔 무거움. 기존 소비처 호환을 위해 재수출.
+export { formatSalaryKorean };
 
 /**
  * 직급별 연봉 차이 텍스트 생성 (예: "신입 vs 시니어 약 3배 차이").

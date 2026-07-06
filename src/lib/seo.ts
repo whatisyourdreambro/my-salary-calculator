@@ -219,6 +219,25 @@ export function buildGuideMetadata(guide: {
 }
 
 /**
+ * 연봉 액수를 한글 표기로 포맷 (예: 5,200만원 / 1억 200만원).
+ * companyContentBuilder에 있던 것을 이동 — 그 파일은 allCompanies 전체를
+ * import해서 edge 라우트 메타데이터에서 쓰기엔 번들이 무거움.
+ */
+export function formatSalaryKorean(amount: number): string {
+ const eok = Math.floor(amount / 100000000);
+ const remaining = amount % 100000000;
+ const manwon = Math.round(remaining / 10000);
+
+ if (eok > 0 && manwon > 0) {
+ return `${eok}억 ${manwon.toLocaleString("ko-KR")}만원`;
+ }
+ if (eok > 0) {
+ return `${eok}억원`;
+ }
+ return `${manwon.toLocaleString("ko-KR")}만원`;
+}
+
+/**
  * /salary-db/[id] 회사 페이지 전용 헬퍼.
  */
 export function buildCompanyMetadata(company: {
@@ -227,26 +246,35 @@ export function buildCompanyMetadata(company: {
  industry?: string;
  averageSalary?: number;
  seniorSalary?: number;
+ juniorSalary?: number;
+ leadSalary?: number;
  aliases?: string[];
+ /** 직급별 상세 연봉표(careerLevels) 보유 여부 — 삼성전자·SK하이닉스 등 */
+ hasCareerLevels?: boolean;
+ /** 데이터 갱신일 (YYYY-MM-DD) — description 신뢰 신호 */
+ lastUpdated?: string;
 }): Metadata {
  // 네이버 검색 데이터 기준: "{회사} 연봉"·"{회사} 신입 연봉"·"{회사} 초봉"·
  // "{회사} 직급" 쿼리 비중이 압도적. page.tsx가 넘기는 averageSalary는 실제로
  // 신입 영끌 수치이므로 "신입 초봉"으로 정확히 라벨링하고, "{회사} 연봉"을
  // title 맨 앞에 둬 핵심 키워드 매칭을 강화한다 (영문 industry 접미사 제거).
+ // 금액은 1억 이상에서 "1억 2,500만원" 표기(formatSalaryKorean) — "12,500만원"은
+ // SERP 가독성이 나빠 CTR을 깎는다 (GSC 데스크톱 CTR 8.1% 개선, 2026-07-06).
  const entryFigure = company.averageSalary
- ? `${Math.round(company.averageSalary / 10000).toLocaleString("ko-KR")}만원`
+ ? formatSalaryKorean(company.averageSalary)
  : null;
  const seniorFigureTitle = company.seniorSalary
- ? `${Math.round(company.seniorSalary / 10000).toLocaleString("ko-KR")}만원`
+ ? formatSalaryKorean(company.seniorSalary)
  : null;
  // 제목에 연봉 "범위"(신입~시니어)를 노출 — 상한선이 보여 "{회사} 연봉" 검색의
- // 클릭을 더 끈다. 범위 정보가 없으면 초봉 단일 수치로 폴백.
+ // 클릭을 더 끈다. 꼬리의 "직급별 연봉표"는 "{회사} 직급별 연봉" 쿼리 매칭 훅.
+ // (기존 꼬리 "실수령액"은 데스크톱 SERP에서 잘리던 위치라 description으로 이동)
  const title =
  entryFigure && seniorFigureTitle
- ? `${company.name} 연봉 2026 — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 실수령액`
+ ? `${company.name} 연봉 2026 — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 직급별 연봉표`
  : entryFigure
- ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 실수령액`
- : `${company.name} 연봉 2026 — 신입 초봉·직급별 실수령액 정보`;
+ ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 연봉표`
+ : `${company.name} 연봉 2026 — 신입 초봉·직급별 연봉표 정보`;
 
  // 별칭(옛 사명·표기 변형)을 "{별칭} 연봉/초봉" 키워드로 확장
  const aliasKeywords = (company.aliases ?? []).flatMap((alias) => [
@@ -254,13 +282,30 @@ export function buildCompanyMetadata(company: {
  `${alias} 초봉`,
  ]);
 
- // 회사별 고유 설명 — 실제 초봉·시니어 수치를 넣어 검색 결과 클릭률(CTR)을 높인다
- const seniorFigure = company.seniorSalary
- ? `${Math.round(company.seniorSalary / 10000).toLocaleString("ko-KR")}만원`
+ // 회사별 고유 설명 — title 수치 반복 대신 title에 없는 주니어·리드 실수치와
+ // 갱신일을 추가해 SERP에서 새 정보를 준다. 직급 라벨은 페이지 본문(신입/주니어/
+ // 시니어/리드)과 일치시켜 메타-본문 정합성 유지.
+ const juniorFigure = company.juniorSalary
+ ? formatSalaryKorean(company.juniorSalary)
  : null;
+ const leadFigure = company.leadSalary
+ ? formatSalaryKorean(company.leadSalary)
+ : null;
+ const updatedLabel = (() => {
+ if (!company.lastUpdated) return "2026년 최신";
+ const d = new Date(company.lastUpdated);
+ return Number.isNaN(d.getTime())
+ ? "2026년 최신"
+ : `${d.getFullYear()}년 ${d.getMonth() + 1}월 업데이트`;
+ })();
+ const tableLabel = company.hasCareerLevels
+ ? "공식 직급(CL)별 상세 연봉표"
+ : "직급별 연봉표";
  const description =
- entryFigure && seniorFigure
- ? `${company.name} 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigure} 수준. ${company.name}의 사원·대리·과장·부장 직급별 평균 연봉과 세후 실수령액, 인센티브·복지·워라밸을 2026년 최신 기준으로 분석했습니다.`
+ entryFigure && seniorFigureTitle && juniorFigure && leadFigure
+ ? `${company.name} 연봉 2026: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함). ${tableLabel}와 세후 실수령액, 성과급·복지·워라밸까지 ${updatedLabel} 기준 총정리.`
+ : entryFigure && seniorFigureTitle
+ ? `${company.name} 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle} 수준. ${company.name}의 ${tableLabel}와 세후 실수령액, 인센티브·복지·워라밸을 ${updatedLabel} 기준으로 분석했습니다.`
  : `${company.name}의 신입 초봉부터 대리·과장·부장 직급별 평균 연봉과 세후 실수령액을 2026년 기준으로 분석합니다. 동종업계 비교·연봉 협상 팁까지 한눈에 확인하세요.`;
 
  return buildPageMetadata({

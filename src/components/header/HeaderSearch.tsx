@@ -10,7 +10,17 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowRight, Loader } from "lucide-react";
-import { searchEntries, type SearchEntry, type SearchCategory } from "@/lib/searchIndex";
+import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
+
+// 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
+// 전 페이지 First Load JS에 실려 LCP를 지연시킴 — 검색을 열 때만 동적 로드한다.
+let searchIndexPromise: Promise<typeof import("@/lib/searchIndex")> | null = null;
+function loadSearchIndex() {
+  if (!searchIndexPromise) {
+    searchIndexPromise = import("@/lib/searchIndex");
+  }
+  return searchIndexPromise;
+}
 
 const CATEGORY_BADGE: Record<SearchCategory, { bg: string; text: string }> = {
   계산기: { bg: "#DBEAFE", text: "#1D4ED8" },
@@ -31,13 +41,21 @@ export default function HeaderSearch() {
   const router = useRouter();
 
   // 검색 디바운스 (input 변화에 따라 결과 업데이트)
+  // isOpen 가드: 닫힌 상태(마운트 직후)에 인덱스를 로드하면 지연 로드가 무의미해짐
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const { searchEntries } = await loadSearchIndex();
+      if (cancelled) return;
       setResults(searchEntries(query, 10));
       setActiveIndex(0);
     }, 80);
-    return () => clearTimeout(timer);
-  }, [query]);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, isOpen]);
 
   // Cmd/Ctrl+K 단축키로 열기 + ESC 닫기
   useEffect(() => {
@@ -54,9 +72,10 @@ export default function HeaderSearch() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // 열릴 때 자동 포커스
+  // 열릴 때 자동 포커스 + 인덱스 선로딩 (첫 타이핑 전에 다운로드 시작)
   useEffect(() => {
     if (isOpen) {
+      loadSearchIndex();
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQuery("");

@@ -61,6 +61,45 @@ export default function HomeSeoSection() {
           </p>
         </article>
 
+        {/* 많이 찾는 계산기 — /calc·허브 SSR 내부링크 (GSC 발견됨-미색인 해소, 2026-07-06) */}
+        <div className="mb-16">
+          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-2">
+            많이 찾는 계산기
+          </h2>
+          <p className="text-faint-blue text-[15px] font-medium mb-6">
+            연봉 외에도 세금·대출·보험·생활비까지, 100가지 계산기를 무료로 쓸 수 있어요.
+          </p>
+          <div className="flex flex-wrap gap-2.5">
+            {[
+              { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
+              { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
+              { label: "시간외 수당", href: "/calc/overtime-pay-quick" },
+              { label: "연차수당", href: "/calc/annual-leave-pay-quick" },
+              { label: "내 연봉 가능 대출액", href: "/calc/loan-affordability" },
+              { label: "대출 갈아타기 절감액", href: "/calc/loan-refinance-savings" },
+              { label: "복리 계산기", href: "/calc/compound-interest-quick" },
+              { label: "연평균 수익률(CAGR)", href: "/calc/cagr-quick" },
+              { label: "증여세 간편 계산", href: "/calc/gift-tax-quick" },
+              { label: "자동차보험 견적", href: "/calc/auto-insurance-quick" },
+              { label: "직원 인건비", href: "/calc/employee-cost-quick" },
+              { label: "결혼 평균 비용", href: "/calc/wedding-cost-quick" },
+              { label: "보험 점검 허브", href: "/hub/insurance" },
+              { label: "사장님·프리랜서 허브", href: "/hub/business" },
+              { label: "생활·건강·가족 허브", href: "/hub/daily-life" },
+              { label: "100가지 계산기 전체 →", href: "/calc" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+              >
+                {label}
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* FAQ — JSON-LD(faqLd)와 동일 콘텐츠를 화면에도 노출 */}
         <div>
           <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-6">

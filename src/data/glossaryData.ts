@@ -46,7 +46,13 @@ export function toGlossarySlug(title: string): string {
 }
 
 export function getGlossaryBySlug(slug: string): GlossaryItem | undefined {
- const decoded = decodeURIComponent(slug);
+ // edge 요청 렌더에서는 임의 경로가 그대로 들어옴 — 깨진 % 시퀀스는 500 대신 미매칭 처리
+ let decoded: string;
+ try {
+ decoded = decodeURIComponent(slug);
+ } catch {
+ return undefined;
+ }
  return glossaryData.find((item) => toGlossarySlug(item.title) === toGlossarySlug(decoded));
 }
 

@@ -1,5 +1,6 @@
-import { enGuides } from "@/lib/guidesData";
+import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
+import Link from "next/link";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd } from "@/lib/structuredData";
 import { Metadata } from "next";
@@ -30,16 +31,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
  const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
  const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
+ // 한국어판 실재 확인 후에만 ko hreflang 선언 — 존재하지 않는 대상을 가리키는
+ // hreflang 재발 방지 (guides/[slug]의 hasEn 게이트와 대칭, sitemap.ts와 동일 정책)
+ const hasKo = koGuides.some((g) => g.slug === params.slug);
 
  return {
  title: `${guide.title} | Moneysalary Guides`,
  description: guide.description,
  alternates: {
  canonical: enUrl,
- languages: {
+ languages: hasKo
+ ? {
  "ko-KR": koUrl,
  "en": enUrl,
  "x-default": koUrl,
+ }
+ : {
+ "en": enUrl,
+ "x-default": enUrl,
  },
  },
  openGraph: {
@@ -88,6 +97,10 @@ export default function EnglishGuidePage({ params }: Props) {
  lang: "en",
  });
 
+ // 한↔영 상호 SSR 링크 — /en 트리로 가는 서버 렌더 내부링크가 사실상 0이던
+ // 문제(GSC 미색인 원인) 해소. hreflang 게이트와 동일한 실재 확인 사용.
+ const hasKo = koGuides.some((g) => g.slug === guide.slug);
+
  return (
  <>
   <script
@@ -95,6 +108,17 @@ export default function EnglishGuidePage({ params }: Props) {
    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
   />
   <EnglishGuideClient guide={guide} relatedGuides={relatedGuides} />
+  {hasKo && (
+   <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+    <Link
+     href={`/guides/${guide.slug}`}
+     hrefLang="ko"
+     className="inline-flex items-center gap-2 text-sm font-bold text-electric hover:underline"
+    >
+     🇰🇷 이 가이드를 한국어로 보기 →
+    </Link>
+   </div>
+  )}
  </>
  );
 }

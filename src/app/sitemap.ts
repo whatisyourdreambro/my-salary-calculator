@@ -40,6 +40,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/hub/real-estate',
  '/hub/tax-saving',
  '/hub/career',
+ // 2026-07-06 신설 — /calc 고아 61종에 SSR 인바운드 링크 부여 (GSC 발견됨-미색인 해소)
+ '/hub/insurance',
+ '/hub/business',
+ '/hub/daily-life',
  '/about',
  '/privacy',
  '/terms',
@@ -338,8 +342,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  );
 
  // 글로서리 동적 페이지 — 용어별 long-tail 키워드
+ // 한글 슬러그는 사이트맵 프로토콜상 percent-encoding이 안전 (encodeURIComponent)
  const glossaryUrls: MetadataRoute.Sitemap = glossaryData.map((item) => ({
- url: `${baseUrl}/glossary/${toGlossarySlug(item.title)}`,
+ url: `${baseUrl}/glossary/${encodeURIComponent(toGlossarySlug(item.title))}`,
  lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'yearly',
  priority: 0.6,
@@ -347,7 +352,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // Q&A 동적 페이지 — 질문별 long-tail
  const qnaUrls: MetadataRoute.Sitemap = qnaData.map((item) => ({
- url: `${baseUrl}/qna/${toQnaSlug(item.question)}`,
+ url: `${baseUrl}/qna/${encodeURIComponent(toQnaSlug(item.question))}`,
  lastModified: STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly',
  priority: 0.65,

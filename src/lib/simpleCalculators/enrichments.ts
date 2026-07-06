@@ -374,7 +374,7 @@ export const enrichmentMap: Record<string, Enrichment> = {
       "5인 미만 사업장도 퇴직금 의무 지급 대상입니다(2010년 12월 이후).",
       "퇴직금 청구권 시효는 3년이며, 미지급 시 노동청 신고 가능합니다.",
     ],
-    relatedSlugs: ["earned-income-tax-quick", "annual-leave-pay-quick", "retirement-income-tax-quick", "hourly-to-yearly"],
+    relatedSlugs: ["earned-income-tax-quick", "annual-leave-pay-quick", "retirement-income-tax-quick", "unemployment-benefit"],
   },
 
   // ═══════ 대출 5개 ═══════════════════════════════════════════

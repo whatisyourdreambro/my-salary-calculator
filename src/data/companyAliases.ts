@@ -26,6 +26,8 @@ export const companyAliases: Record<string, string[]> = {
   // ── 줄임말·통칭 ──
   "samsung-biologics": ["삼성바이오", "삼바"],
   "samsung-electronics": ["삼전"],
+  // GSC "삼성메디슨 연봉" 쿼리(순위권·저CTR) 매칭 보강 — 표기 변형만, 추정 수치 아님
+  "samsung-medison": ["메디슨", "삼성 메디슨"],
   cjcheiljedang: ["씨제이제일제당", "제일제당"],
   "hyundai-dept": ["현대백화점그룹", "현백"],
   celltrion: ["쎌트리온"],

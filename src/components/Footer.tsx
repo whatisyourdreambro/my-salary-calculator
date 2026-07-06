@@ -70,6 +70,8 @@ export default function Footer() {
         { name: "사이트 소개", href: "/about" },
         { name: "개인정보처리방침", href: "/privacy" },
         { name: "이용약관", href: "/terms" },
+        // /en 트리 SSR 크롤 경로 — 한국어 페이지에서 영문 트리로 가는 유일한 전역 링크
+        { name: "English (Expats) →", href: "/en" },
       ];
 
   // GSC TOP 검색 키워드 보유 회사 — 검색 권위 전역 분산, Sitelinks 노출 유도

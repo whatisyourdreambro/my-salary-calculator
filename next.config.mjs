@@ -108,12 +108,84 @@ const nextConfig = {
         destination: "/fun/salary-battle",
         permanent: true,
       },
-      // GSC 404 출혈 차단 (7차 점검):
-      // 과거 중복 회사 페이지가 -2 접미사로 생성됐다가 삭제되면서 591개 404 발생.
-      // 원본 슬러그로 301 영구 리디렉션해 크롤링 예산 복구.
+      // GSC 404 출혈 차단 (7차 점검, 2026-07-06 정정):
+      // -2/-3 URL은 main 코드·데이터에서 생성된 적 없음(병합 안 된 브랜치 잔재 +
+      // 외부 유입 추정 — git 전 이력 검증). 원본 슬러그로 영구 리디렉션(308)해 크롤 예산 회수.
+      // 접미사 제거 후 base 슬러그가 실제 id와 다른 3사는 아래 명시 매핑이 먼저 잡는다(1홉).
+      {
+        source: "/salary-db/kia-motors-2",
+        destination: "/salary-db/kia",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/kia-motors-3",
+        destination: "/salary-db/kia",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/kia-motors",
+        destination: "/salary-db/kia",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/market-kurly-2",
+        destination: "/salary-db/kurly",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/market-kurly-3",
+        destination: "/salary-db/kurly",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/market-kurly",
+        destination: "/salary-db/kurly",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/pearl-abyss-2",
+        destination: "/salary-db/pearlabyss",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/pearl-abyss-3",
+        destination: "/salary-db/pearlabyss",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/pearl-abyss",
+        destination: "/salary-db/pearlabyss",
+        permanent: true,
+      },
       {
         source: "/salary-db/:slug([a-z0-9-]+)-2",
         destination: "/salary-db/:slug",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/:slug([a-z0-9-]+)-3",
+        destination: "/salary-db/:slug",
+        permanent: true,
+      },
+      // 2025-09 리디렉션 없이 삭제된 구 영문 qna 4종 → 동일 주제의 살아있는 글로 통합
+      {
+        source: "/qna/interim-severance-pay",
+        destination: "/qna/퇴직금-중간정산-아무-때나-받을-수-있나요",
+        permanent: true,
+      },
+      {
+        source: "/qna/year-end-tax-preview",
+        destination: "/qna/연말정산-13월의-월급이라는데-왜-누구는-토해내나요",
+        permanent: true,
+      },
+      {
+        source: "/qna/health-insurance",
+        destination: "/glossary/건강보험",
+        permanent: true,
+      },
+      {
+        source: "/qna/salary-allowance",
+        destination: "/qna",
         permanent: true,
       },
       // 카니발 해소(전체 점검 2026-06): 레거시 /company 인덱스를 /salary-db로 통합.

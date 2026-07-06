@@ -53,11 +53,56 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/tools/real-estate/dsr", title: "DSR 한도", description: "총부채원리금상환비율", icon: "Percent" },
  ],
  life: [
+ { path: "/hub/daily-life", title: "생활·건강·가족 허브", description: "생활비·건강·육아 계산기 모음", icon: "Users" },
  { path: "/tools/life/dutch-pay", title: "더치페이 계산기", description: "인원별 금액 분배", icon: "Users" },
  { path: "/tools/life/fuel-cost", title: "연비·유류비", description: "주유비용 계산", icon: "Fuel" },
  { path: "/tools/life/subscription", title: "구독 비용", description: "월 총 구독료 분석", icon: "CreditCard" },
  { path: "/tools/life/unit-converter", title: "단위 변환기", description: "길이·무게·온도", icon: "RefreshCw" },
  ],
+ insurance: [
+ { path: "/hub/insurance", title: "보험 점검 허브", description: "보장액·보험료 계산기 모음", icon: "Heart" },
+ { path: "/calc/life-insurance-needs", title: "생명보험 필요 보장액", description: "부양가족 기준 적정 보장액", icon: "Heart" },
+ { path: "/calc/auto-insurance-quick", title: "자동차보험 견적", description: "차종·연령별 평균 보험료", icon: "Calculator" },
+ { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자 본인 부담", icon: "Heart" },
+ ],
+ business: [
+ { path: "/hub/business", title: "사장님·프리랜서 허브", description: "수익·인건비·세금 계산 모음", icon: "Briefcase" },
+ { path: "/calc/business-margin-quick", title: "사업 마진율", description: "매출·원가로 마진율 산출", icon: "TrendingUp" },
+ { path: "/calc/employee-cost-quick", title: "직원 인건비", description: "4대보험 포함 회사 실부담", icon: "Users" },
+ { path: "/tools/finance/freelance-tax", title: "프리랜서 종합소득세", description: "3.3% 원천징수·종소세", icon: "Laptop" },
+ ],
+ health: [
+ { path: "/hub/daily-life", title: "생활·건강·가족 허브", description: "건강·생활비 계산기 모음", icon: "Heart" },
+ { path: "/calc/bmi-quick", title: "BMI 비만도", description: "체중·신장으로 비만도 판정", icon: "Heart" },
+ { path: "/calc/daily-calorie-quick", title: "일일 권장 칼로리", description: "BMR × 활동지수", icon: "Zap" },
+ { path: "/tools/health/bmi", title: "BMI 상세 계산기", description: "성인 비만도 기준표", icon: "Heart" },
+ ],
+ family: [
+ { path: "/hub/daily-life", title: "생활·건강·가족 허브", description: "결혼·육아 비용 계산 모음", icon: "Users" },
+ { path: "/calc/baby-yearly-cost", title: "자녀 양육비 1년차", description: "출산·기저귀·분유 합산", icon: "Heart" },
+ { path: "/calc/education-cost-cumulative", title: "교육비 18년 누적", description: "유치원~대학 누적 교육비", icon: "TrendingUp" },
+ { path: "/parental-leave", title: "육아휴직 급여", description: "월 급여별 수령액 계산", icon: "Calendar" },
+ ],
+};
+
+/**
+ * /calc/[slug] 동적 계산기의 데이터 category → 추천 카탈로그 키 매핑.
+ * 계산기 데이터 전체를 클라이언트 번들에 싣지 않도록, 페이지(서버)에서
+ * calc.category 문자열만 prop으로 내려받아 여기서 변환한다.
+ * 목적: calc 클러스터 내부 순환 링크 형성 (GSC 발견됨-미색인 해소).
+ */
+const CALC_DATA_CATEGORY_MAP: Record<string, string[]> = {
+ salary: ["salary"],
+ tax: ["tax"],
+ loan: ["loan"],
+ investment: ["investment"],
+ "real-estate": ["realEstate", "loan"],
+ insurance: ["insurance"],
+ business: ["business", "tax"],
+ life: ["life"],
+ currency: ["life", "investment"],
+ health: ["health"],
+ family: ["family"],
 };
 
 /**
@@ -127,7 +172,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  */
 export function getRelatedCalculators(
  currentPath: string,
- limit = 4
+ limit = 4,
+ calcCategory?: string
 ): RelatedItem[] {
  // /salary/[amount] 같은 동적 경로 처리
  const normalizedPath = currentPath.startsWith("/salary/")
@@ -144,7 +190,18 @@ export function getRelatedCalculators(
  ? "/region"
  : currentPath;
 
- const categories = PATH_RECOMMENDATIONS[normalizedPath] || ["salary"];
+ // /calc/[slug]: 명시 매핑이 없으면 계산기 데이터 category 기반으로 같은
+ // 클러스터(허브+형제 계산기)를 추천 — 이전엔 전부 salary 폴백이라 calc
+ // 내부 순환 링크가 0이었음.
+ const calcClusterCategories =
+ !PATH_RECOMMENDATIONS[normalizedPath] &&
+ normalizedPath.startsWith("/calc/") &&
+ calcCategory
+ ? CALC_DATA_CATEGORY_MAP[calcCategory]
+ : undefined;
+
+ const categories =
+ PATH_RECOMMENDATIONS[normalizedPath] || calcClusterCategories || ["salary"];
  const seen = new Set<string>([currentPath, normalizedPath]);
  const items: RelatedItem[] = [];
 

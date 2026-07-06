@@ -48,6 +48,10 @@ export async function generateMetadata({
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
  const seniorTotal =
  company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
+ const juniorTotal =
+ company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
+ const leadTotal =
+ company.salary.lead.base + (company.salary.lead.incentive.avgAmount || 0);
 
  return buildCompanyMetadata({
  id: company.id,
@@ -55,7 +59,11 @@ export async function generateMetadata({
  industry: company.industry,
  averageSalary: entryTotal,
  seniorSalary: seniorTotal,
+ juniorSalary: juniorTotal,
+ leadSalary: leadTotal,
  aliases: company.aliases,
+ hasCareerLevels: !!company.careerLevels?.length,
+ lastUpdated: company.lastUpdated,
  });
 }
 

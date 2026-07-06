@@ -331,7 +331,7 @@ export const enrichmentsExtA: Record<string, Enrichment> = {
       "변동금리라면 금리 변동에 따라 실제 총 이자가 달라집니다.",
       "중도상환·거치기간·부대비용은 반영되지 않았습니다.",
     ],
-    relatedSlugs: ["loan-monthly-payment", "level-principal-payment", "bullet-loan", "loan-refinance-savings"],
+    relatedSlugs: ["loan-monthly-payment", "level-principal-payment", "bullet-loan", "loan-refinance-savings", "monthly-installment"],
   },
 
   "level-principal-payment": {

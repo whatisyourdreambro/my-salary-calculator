@@ -93,13 +93,10 @@ export const metadata: Metadata = {
     description:
       "연봉 5000만원→월 353만원, 1억→월 650만원. 2026 최신 세법 자동 계산. 회사별 연봉 DB·계산기 200+개 무료.",
   },
+  // canonical/hreflang은 홈 전용 값이라 src/app/page.tsx로 이동(2026-07-06) —
+  // layout에 두면 alternates 미정의 페이지 전부가 "canonical: 홈"을 상속하는 사고 위험.
+  // RSS 자동발견 링크만 전역 유지 (alternates를 자체 정의한 페이지에는 어차피 미상속).
   alternates: {
-    canonical: "https://www.moneysalary.com",
-    languages: {
-      "ko-KR": "https://www.moneysalary.com",
-      "en": "https://www.moneysalary.com/en",
-      "x-default": "https://www.moneysalary.com",
-    },
     types: {
       "application/rss+xml": [
         {

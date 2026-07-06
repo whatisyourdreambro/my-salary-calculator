@@ -381,7 +381,7 @@ export const enrichmentsExtB: Record<string, Enrichment> = {
       "임대료·인건비·세금 등 판매관리비가 빠지면 실제 순이익률은 더 낮습니다.",
       "적정 마진율은 업종별 편차가 크므로 동종업계 평균과 비교해야 합니다.",
     ],
-    relatedSlugs: ["hourly-billing-rate", "employee-cost-quick", "side-business-net", "corporate-tax-quick"],
+    relatedSlugs: ["hourly-billing-rate", "employee-cost-quick", "side-business-net", "corporate-tax-quick", "business-cashflow-runway"],
   },
 
   "hourly-billing-rate": {
