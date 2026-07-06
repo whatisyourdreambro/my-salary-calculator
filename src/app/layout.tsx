@@ -13,10 +13,12 @@ import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import WebVitals from "@/components/WebVitals";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
-// Pretendard 가변 폰트 — self-host (next/font/local).
-// 외부 CDN render-blocking stylesheet 제거 + font-display: swap + 자동 폴백 매칭.
+// Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
+// 원본 2,009KB가 데스크톱 LCP를 3.0초로 밀어내던 주범(GSC 2026-07-06 이슈)이라
+// KS X 1001 상용 2,350자 + 사이트 실사용 문자 + 기호로 서브셋 → 503KB (-75%).
+// 재생성 방법은 src/app/fonts/README.md 참고. font-display: swap + 자동 폴백 매칭.
 const pretendard = localFont({
-  src: "./fonts/PretendardVariable.woff2",
+  src: "./fonts/PretendardVariable-subset.woff2",
   display: "swap",
   weight: "45 920",
   variable: "--font-pretendard-local",
