@@ -167,6 +167,14 @@ const nextConfig = {
         destination: "/salary-db/:slug",
         permanent: true,
       },
+      // 연봉 제보(준비 중 화면+광고 정책 리스크) — 페이지 내 permanentRedirect는
+      // 정적 라우트에서 CF가 .meta 308을 무시하고 200을 서빙함(2026-07-07 실측)
+      // → 프로덕션 동작이 검증된 config 리다이렉트로 처리
+      {
+        source: "/salary-db/submit",
+        destination: "/salary-db",
+        permanent: true,
+      },
       // 2025-09 리디렉션 없이 삭제된 구 영문 qna 4종 → 동일 주제의 살아있는 글로 통합
       {
         source: "/qna/interim-severance-pay",
