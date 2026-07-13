@@ -221,6 +221,8 @@ export const hubs: Hub[] = [
         heading: "내 세금 구조 파악",
         links: [
           { label: "종합소득세 계산기", href: "/income-tax-2026", desc: "8단계 누진세율 + 지방소득세" },
+          { label: "성과급 세금 계산기", href: "/tools/finance/bonus", desc: "인센티브 연봉합산 세후 실수령" },
+          { label: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", desc: "OPI·TAI 세후 + 절세 시뮬" },
           { label: "소득세 누진세율 시뮬", href: "/calc/income-tax-bracket-sim", desc: "과세표준별 산출세액 계산" },
           { label: "근로소득세 간편 계산", href: "/calc/earned-income-tax-quick", desc: "월급 기준 원천징수 추정" },
           { label: "건강보험료 계산기", href: "/health-insurance-fee-2026", desc: "직장/지역 가입자별 본인 부담" },

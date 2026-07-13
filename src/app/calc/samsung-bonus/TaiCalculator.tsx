@@ -11,6 +11,7 @@ import {
   formatNumberInput,
   parseNumberInput,
   useCountUp,
+  ResultNextLinks,
 } from "./shared";
 import { TAI_RATES_2026_H1 } from "./taiData";
 
@@ -81,8 +82,20 @@ export default function TaiCalculator() {
             <span className="text-xs font-bold uppercase tracking-widest text-faint-blue">
               지급률 (2026 상반기 발표값)
             </span>
-            <span className="text-2xl font-black tabular-nums text-electric">
-              {rate}%
+            <span className="inline-flex items-baseline gap-0.5">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={String(rate)}
+                onChange={(e) => {
+                  const n = Number(e.target.value.replace(/[^0-9]/g, ""));
+                  setRate(Math.min(150, Math.max(0, n)));
+                  setSelectedId("");
+                }}
+                className="w-16 text-right text-2xl font-black tabular-nums text-electric bg-transparent border-b-2 border-electric-30 focus:border-electric focus:outline-none"
+                aria-label="TAI 지급률 직접 입력 (월 기본급 대비 %, 0~150)"
+              />
+              <span className="text-2xl font-black text-electric">%</span>
             </span>
           </div>
           <div
@@ -119,13 +132,20 @@ export default function TaiCalculator() {
           style={{
             background: "linear-gradient(90deg, #0145F210 0%, #7C83FF10 100%)",
           }}
-          aria-live="polite"
         >
+          {/* 카운트업 애니메이션 스팸 방지 — 스크린리더에는 최종값만 전달 */}
+          <p className="sr-only" aria-live="polite">
+            이번 TAI 세전 {fmtManwon(result.onceManwon)}, 연간 2회 기준{" "}
+            {fmtManwon(result.yearlyManwon)}
+          </p>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1">
               이번 TAI (세전)
             </p>
-            <p className="text-3xl font-black tabular-nums text-electric">
+            <p
+              className="text-3xl font-black tabular-nums text-electric"
+              aria-hidden
+            >
               {fmtManwon(animOnce)}
             </p>
           </div>
@@ -141,8 +161,22 @@ export default function TaiCalculator() {
 
         <p className="text-[10px] text-faint-blue leading-relaxed">
           ※ TAI도 OPI와 같이 근로소득에 합산되어 누진세율로 과세됩니다. 하반기
-          지급률은 12월 말 별도 발표되며 상반기와 다를 수 있습니다.
+          지급률은 12월 말 별도 발표되며 상반기와 다를 수 있습니다 — 발표값이
+          다르면 위 지급률 칸에 직접 입력하세요.
         </p>
+
+        <ResultNextLinks
+          links={[
+            {
+              href: "/tools/finance/bonus",
+              label: "TAI 세후 실수령 정밀 계산",
+            },
+            {
+              href: "/?tab=salary#calculator-section",
+              label: "TAI 합산 월급 실수령액",
+            },
+          ]}
+        />
       </div>
     </div>
   );

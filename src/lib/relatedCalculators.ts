@@ -17,10 +17,21 @@ export interface RelatedItem {
 export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  salary: [
  { path: "/", title: "연봉 실수령액 계산기", description: "4대보험·세금 자동 공제", icon: "Calculator" },
+ { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
  { path: "/weekly-holiday-allowance-2026", title: "주휴수당 계산기", description: "주 15시간+ 알바 필수", icon: "Calendar" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "13월의 월급 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/severance", title: "퇴직금 계산기", description: "환산급여 방식 정확 계산", icon: "Briefcase" },
  { path: "/salary-db", title: "회사별 연봉", description: "동급 회사 평균 비교", icon: "Building2" },
+ ],
+ // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
+ // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
+ bonus: [
+ { path: "/", title: "연봉 실수령액 계산기", description: "성과급 합산 연봉 세후 계산", icon: "Calculator" },
+ { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
+ { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: "480+ 기업 평균 연봉·복지 비교", icon: "Building2" },
+ { path: "/tools/finance/irp", title: "IRP·연금저축 절세", description: "성과급 세액공제 환급 극대화", icon: "PiggyBank" },
+ { path: "/fun/salary-rank", title: "연봉 순위 테스트", description: "내 연봉+성과급 상위 몇 %?", icon: "TrendingUp" },
+ { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "회사 무관 일반 성과급 세후", icon: "Gift" },
  ],
  loan: [
  { path: "/tools/real-estate/dsr", title: "DSR 한도 계산기", description: "총부채원리금상환비율", icon: "Percent" },
@@ -31,7 +42,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  ],
  tax: [
  { path: "/income-tax-2026", title: "종합소득세 계산기", description: "8단계 누진세율 + 지방소득세", icon: "Receipt" },
- { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자별 4.067%", icon: "Heart" },
+ { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "본인부담 3.595% + 장기요양 합산 약 4.07%", icon: "Heart" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "환급액 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "2026 연봉합산 세율", icon: "Gift" },
  { path: "/tools/finance/freelance-tax", title: "프리랜서 종합소득세", description: "사업소득 계산", icon: "Laptop" },
@@ -116,15 +127,18 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/year-end-tax": ["tax", "salary"],
  "/fire-calculator": ["investment", "salary"],
  "/calc/2026-year": ["salary", "tax"],
- "/calc/samsung-bonus": ["tax", "salary"],
- // 회사별 성과급 계산기 (2026-05 신규) — 모두 누진세 + 4대보험 marginal 계산
- "/calc/sk-hynix-bonus": ["tax", "salary"],
- "/calc/hyundai-bonus": ["tax", "salary"],
- "/calc/kia-bonus": ["tax", "salary"],
- "/calc/lg-energy-bonus": ["tax", "salary"],
- "/calc/hd-hyundai-bonus": ["tax", "salary"],
- "/calc/naver-bonus": ["tax", "salary"],
- "/calc/kakao-bonus": ["tax", "salary"],
+ // 회사별 성과급 계산기 — bonus 카테고리 우선 (홈 계산기·salary-db·절세로 순환)
+ "/calc/samsung-bonus": ["bonus", "tax"],
+ "/calc/sk-hynix-bonus": ["bonus", "tax"],
+ "/calc/hyundai-bonus": ["bonus", "tax"],
+ "/calc/kia-bonus": ["bonus", "tax"],
+ "/calc/lg-energy-bonus": ["bonus", "tax"],
+ "/calc/hd-hyundai-bonus": ["bonus", "tax"],
+ "/calc/naver-bonus": ["bonus", "tax"],
+ "/calc/kakao-bonus": ["bonus", "tax"],
+ "/calc/posco-bonus": ["bonus", "tax"],
+ "/calc/samsung-sdi-bonus": ["bonus", "tax"],
+ "/calc/lg-chem-bonus": ["bonus", "tax"],
  "/salary-raise-2026": ["salary", "tax"],
  "/tools": ["salary", "loan", "tax"],
  "/tools/loan": ["loan"],

@@ -35,6 +35,19 @@ const CATEGORY_ORDER = [
 // 8차 점검 — 정적 라우트로 신설된 시즌 핵심 계산기들을 인덱스 최상위에 노출.
 // /calc/[slug] 동적 라우트와 별도 페이지라 allCalculators 배열에 없으므로 명시.
 const FEATURED_CALCS: Array<{ href: string; title: string; description: string; season: string }> = [
+ // 사이트 #1 유입·수익 페이지 — 계산기 인덱스에서 그동안 0회 노출이던 것을 최상단 배치
+ {
+   href: "/calc/samsung-bonus",
+   title: "삼성전자 성과급 계산기 (OPI·TAI)",
+   description: "사업부별 1인당·세후 실수령·RSU 매도까지 — 2026 상반기 TAI 반영",
+   season: "1~2월 OPI·7/12월 TAI",
+ },
+ {
+   href: "/calc/sk-hynix-bonus",
+   title: "SK하이닉스 성과급 계산기 (PS·PI)",
+   description: "PS 2964% 상한 폐지 반영 — 기준급 대비 세전·세후 즉시 계산",
+   season: "2월 PS·반기 PI",
+ },
  {
    href: "/income-tax-2026",
    title: "2026 종합소득세 계산기",

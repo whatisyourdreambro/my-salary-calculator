@@ -187,10 +187,16 @@ export default function CompanyDetailPage({
 
  <CompanySalaryTable company={company} />
 
- {/* 회사 전용 성과급 계산기 역링크 — 8개 회사(삼성·SK·현대·기아·LG·HD·네이버·카카오)
-     만 자동 CTA 노출. GA 분석상 단일 성과급 페이지가 트래픽 90% 견인 → 회사 페이지
-     방문자를 해당 계산기로 유도해 시즌 트래픽 곱셈 효과. */}
- <CompanyBonusCalculatorLink companyId={company.id} />
+ {/* 회사 전용 성과급 계산기 역링크 — 매핑 11개사는 대형 CTA, 그 외 회사는
+     신입 연봉 실수령(/salary/{amount})·일반 성과급 계산기 fallback CTA.
+     GA 분석상 단일 성과급 페이지가 트래픽 90% 견인 → 회사 페이지
+     방문자를 계산기로 유도해 시즌 트래픽 곱셈 효과. */}
+ <CompanyBonusCalculatorLink
+   companyId={company.id}
+   entryTotalWon={
+     company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0)
+   }
+ />
 
  {/* CL 세부 직급 표 — careerLevels 가 있는 회사(삼성전자 등)만 자동 노출.
  5단계 표(CompanySalaryTable) 보다 더 세분화된 호봉/연차별 base+영끌. */}

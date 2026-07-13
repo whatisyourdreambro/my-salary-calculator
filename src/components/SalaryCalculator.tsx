@@ -4,16 +4,15 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import MoneyInput from "./ui/MoneyInput"; // New UI Component
 import SalaryResultCard from "./SalaryResultCard"; // New UI Component
-import CurrencyInput from "./CurrencyInput";
-import CountUp from "react-countup";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, Calculator, Zap, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { trackCalcSubmit } from "@/lib/analytics";
 import type {
@@ -21,18 +20,10 @@ import type {
  StoredFinancialData,
  AdvancedSettings,
 } from "@/app/types";
-import SalaryAnalysis from "./SalaryAnalysis";
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
 import NextActions from "./NextActions";
-import NumberStepper from "./NumberStepper";
 // 무거운 recharts 컴포넌트는 동적 로드 — 초기 번들 절감
-const SalaryPieChart = dynamic(() => import("./SalaryPieChart"), {
- ssr: false,
- loading: () => (
- <div className="w-full h-[300px] bg-canvas-100 dark:bg-canvas-800 rounded-3xl animate-pulse" />
- ),
-});
 const WealthChart = dynamic(() => import("./WealthChart"), {
  ssr: false,
  loading: () => (
@@ -177,7 +168,9 @@ export default function SalaryCalculator() {
 
  const annualSalary = useMemo(() => {
  const salary = parseNumber(salaryInput);
- if (incomeType !== "regular") return salary;
+ // 프리랜서/알바 입력은 월 소득(freelancerCalculator 기준) — 연 환산해야
+ // NextActions(DSR 한도)·티어카드·공유 문구가 연봉으로 올바르게 표시된다
+ if (incomeType !== "regular") return salary * 12;
 
  let annual = payBasis === "annual" ? salary : salary * 12;
  if (severanceType === "included" && annual > 0) {
@@ -226,7 +219,9 @@ export default function SalaryCalculator() {
  setMungMood(newMood);
  }, [annualSalary, nonTaxableAmount, dependents, children, incomeType, salaryInput]);
 
- // Analytics - Only fire once per actual result display
+ // Analytics — 결과가 실제 표시된 시점 + 재계산마다 발화
+ // (deps가 [showResult]뿐이면 두 번째 계산부터 이벤트가 누락돼 GA4 퍼널 과소집계)
+ const [calcCount, setCalcCount] = useState(0);
  useEffect(() => {
  if (showResult && result.monthlyNet > 0) {
  // GA4 funnel 이벤트 — 계산 완료(전환율·세그먼트 분석용)
@@ -244,10 +239,12 @@ export default function SalaryCalculator() {
  });
  }
  }
- }, [showResult]); // Trigger only when the result card is actually shown to the user
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [showResult, calcCount]); // 결과 표시 시점 + 계산 버튼 클릭마다
 
  const handleCalculateClick = () => {
  setIsCalculating(true);
+ setCalcCount((c) => c + 1);
  runCalculation();
  };
 
@@ -518,6 +515,14 @@ export default function SalaryCalculator() {
  <CheckCircle size={16} className="text-navy" />
  <span className="text-navy">대시보드에 저장하기</span>
  </button>
+ {/* 공유(비교 심리) 맥락과 이어지는 다음 행동 */}
+ <Link
+ href="/company/compare"
+ className="inline-flex items-center gap-1 text-xs font-bold text-electric hover:underline"
+ >
+ 친구 회사 연봉은? 두 회사 비교하기
+ <ArrowRight size={12} aria-hidden />
+ </Link>
  </div>
  </motion.div>
  )}
@@ -537,6 +542,23 @@ export default function SalaryCalculator() {
  {/* 연봉 티어 카드 */}
  <div className="bg-white rounded-3xl border border-canvas shadow-sm p-5">
  <SalaryTierCard annualSalary={annualSalary} />
+ {/* 티어 확인 직후 — 상위 % 심리를 회사 DB·순위로 연결 */}
+ <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+ <Link
+ href="/salary-db/ranking"
+ className="inline-flex items-center gap-1 text-xs font-bold text-electric hover:underline"
+ >
+ 이 티어 연봉 주는 회사 보기
+ <ArrowRight size={12} aria-hidden />
+ </Link>
+ <Link
+ href="/fun/salary-rank"
+ className="inline-flex items-center gap-1 text-xs font-bold text-electric hover:underline"
+ >
+ 또래 중 내 연봉 순위는?
+ <ArrowRight size={12} aria-hidden />
+ </Link>
+ </div>
  </div>
 
  {/* 자산 성장 시뮬레이션 */}

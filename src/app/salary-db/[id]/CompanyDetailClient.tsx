@@ -2,6 +2,7 @@
 
 import { CompanyProfile } from "@/types/company";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import {
  Briefcase,
  Clock,
@@ -10,13 +11,24 @@ import {
  Trophy,
  Zap,
  Car,
- TrendingUp
+ TrendingUp,
+ ArrowRight
 } from "lucide-react";
 import CountUp from "react-countup";
 import ShareButtons from "@/components/ShareButtons";
 import { CalcResultAd } from "@/components/AdPlacement";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
+
+// 히어로 배지 — 영문 enum(CONGLOMERATE 등) raw 노출 방지 한글 매핑
+// (SalaryDbClient 의 TIER_LABEL 과 동일 규칙)
+const TIER_LABEL_KO: Record<string, string> = {
+ conglomerate: "대기업",
+ unicorn: "유니콘",
+ startup: "스타트업",
+ foreign: "외국계",
+ public: "공기업",
+};
 
 // 무거운 recharts 차트는 클라이언트에서만 + 지연 로드 → 432개 회사 페이지의
 // 초기 번들(First Load JS)에서 recharts(~60kB) 분리. (WealthChart 와 동일 패턴)
@@ -55,8 +67,8 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  <div className="text-center md:text-left">
  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
  <h1 className="text-4xl font-black tracking-tight">{company.name.ko} 연봉 2026</h1>
- <span className="px-2 py-1 rounded bg-primary text-xs font-bold uppercase">
- {company.tier}
+ <span className="px-2 py-1 rounded bg-primary text-xs font-bold">
+ {TIER_LABEL_KO[company.tier] ?? company.tier}
  </span>
  </div>
  <p className="text-faint-blue text-lg max-w-2xl">{company.description}</p>
@@ -145,6 +157,13 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  <p className="text-sm text-indigo-300 mt-2">
  (약 {Math.ceil(monthsToTesla / 12)}년 소요 예상)
  </p>
+ <Link
+ href="/car-loan"
+ className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-white/90 underline underline-offset-4 hover:text-white transition-colors"
+ >
+ 자동차 할부·대출로 앞당기면? 계산해 보기
+ <ArrowRight className="w-4 h-4" aria-hidden />
+ </Link>
  </div>
  </section>
  </div>

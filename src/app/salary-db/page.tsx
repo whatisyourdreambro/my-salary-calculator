@@ -6,6 +6,8 @@
 // (메타데이터·JSON-LD 는 layout.tsx 담당)
 
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import JsonLd from "@/components/JsonLd";
+import { itemListLd } from "@/lib/structuredData";
 import SalaryDbClient, { type CompanyIndexItem } from "./SalaryDbClient";
 
 export default function SalaryDBPage() {
@@ -23,5 +25,20 @@ export default function SalaryDBPage() {
  weeklyHoursReal: c.workLife.weeklyHours.real,
  }));
 
- return <SalaryDbClient companies={companies} />;
+ // 목록 페이지 ItemList 구조화데이터 — 신입 연봉 상위 30개사만
+ // ("회사명 연봉" SERP 리치결과·사이트링크 기회. breadcrumb 은 layout 담당)
+ const top30 = [...companies]
+ .sort((a, b) => b.entryBase - a.entryBase)
+ .slice(0, 30)
+ .map((c) => ({
+ name: `${c.nameKo} 연봉`,
+ url: `/salary-db/${c.id}`,
+ }));
+
+ return (
+ <>
+ <JsonLd data={itemListLd({ name: "회사별 연봉 데이터베이스", items: top30 })} />
+ <SalaryDbClient companies={companies} />
+ </>
+ );
 }

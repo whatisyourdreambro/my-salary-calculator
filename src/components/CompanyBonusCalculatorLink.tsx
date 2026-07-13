@@ -72,11 +72,64 @@ const COMPANY_BONUS_MAP: Record<
 
 interface Props {
   companyId: string;
+  /** 원 단위 신입 총보상 — 미매핑 회사 fallback CTA(/salary/{amount})용 */
+  entryTotalWon?: number;
 }
 
-export default function CompanyBonusCalculatorLink({ companyId }: Props) {
+export default function CompanyBonusCalculatorLink({
+  companyId,
+  entryTotalWon,
+}: Props) {
   const target = COMPANY_BONUS_MAP[companyId];
-  if (!target) return null;
+
+  // 미매핑 회사(~470여 곳): 연봉표 직후 최고 의도 지점이 비지 않도록
+  // 축소형 fallback CTA — 신입 연봉 실수령액 상세 + 일반 성과급 계산기
+  if (!target) {
+    const amount =
+      entryTotalWon && entryTotalWon >= 1_000_000 && entryTotalWon <= 1_000_000_000
+        ? Math.round(entryTotalWon)
+        : null;
+    return (
+      <section className="page-width py-6" aria-label="연봉·성과급 계산기 바로가기">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link
+            href={amount ? `/salary/${amount}` : "/"}
+            className="group flex items-center gap-3 rounded-2xl border border-canvas-200 bg-white p-5 hover:border-electric hover:shadow-md transition-all"
+          >
+            <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-electric-10 flex items-center justify-center">
+              <Calculator className="w-5 h-5 text-electric" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-navy text-sm mb-0.5">
+                이 회사 신입 연봉, 실수령액은?
+              </p>
+              <p className="text-xs text-faint-blue">
+                세금·4대보험 공제 후 월 실수령 즉시 확인
+              </p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-faint-blue group-hover:text-electric group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
+          <Link
+            href="/tools/finance/bonus"
+            className="group flex items-center gap-3 rounded-2xl border border-canvas-200 bg-white p-5 hover:border-electric hover:shadow-md transition-all"
+          >
+            <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-electric-10 flex items-center justify-center">
+              <Calculator className="w-5 h-5 text-electric" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-navy text-sm mb-0.5">
+                성과급 세금 계산기
+              </p>
+              <p className="text-xs text-faint-blue">
+                인센티브 세후 실수령액 시뮬레이션
+              </p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-faint-blue group-hover:text-electric group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="page-width py-6" aria-labelledby="bonus-calc-cta-heading">

@@ -71,6 +71,12 @@ export default function HomeSeoSection() {
           </p>
           <div className="flex flex-wrap gap-2.5">
             {[
+              // 수익 #1 페이지 — 홈 SSR HTML의 유일한 상시 링크 (PageRank + 동선)
+              {
+                label: "삼성전자 성과급(OPI·TAI) 계산기",
+                href: "/calc/samsung-bonus",
+              },
+              { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
               { label: "시간외 수당", href: "/calc/overtime-pay-quick" },

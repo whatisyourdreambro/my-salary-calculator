@@ -818,7 +818,16 @@ export default function SamsungBonusCalculatorPage() {
             </ul>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               가정에 따라 실효세율 20~38% 범위로 달라지므로, 본 계산기의 가정
-              조정 패널로 본인 상황에 맞게 시뮬레이션하세요.
+              조정 패널로 본인 상황에 맞게 시뮬레이션하세요. 세액공제 여력을
+              늘리는 대표 수단은 IRP·연금저축(합산 연 900만원 한도 세액공제)
+              입니다 —{" "}
+              <Link
+                href="/tools/finance/irp"
+                className="font-bold text-electric underline underline-offset-2"
+              >
+                IRP 세액공제 계산기
+              </Link>
+              로 성과급 입금 직후 납입 시 환급 효과를 확인해 보세요.
             </p>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-10 mb-4">

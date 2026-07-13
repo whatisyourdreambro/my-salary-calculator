@@ -28,7 +28,9 @@ import {
   fmtManwonInt,
   fmtEok,
   parseNumberInput,
+  sanitizeDecimalInput,
   useCountUp,
+  ResultNextLinks,
 } from "./shared";
 import { SALARY_PERCENTILES, AGE_GROUPS } from "@/data/salaryRankData";
 import {
@@ -204,11 +206,25 @@ export default function MultiYearBonusSimulator({
     });
     const newRows: YearProfitRow[] = [...byYear.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([y, profitTrillionFmt], i) => ({
-        id: `auto-${i + 1}-${y}`,
-        year: y,
-        profitTrillionFmt,
-      }));
+      .map(([y, profitTrillionFmt], i) => {
+        // 같은 연도의 기존 행에서 수동 연봉·연도별 CL·평가 등급을 승계 —
+        // 구간 확장이 사용자가 입력한 부가 필드를 지우지 않도록 보존
+        const existing = rows.find((r) => r.year === y);
+        return {
+          id: `auto-${i + 1}-${y}`,
+          year: y,
+          profitTrillionFmt,
+          ...(existing?.yearlySalaryManwonFmt
+            ? { yearlySalaryManwonFmt: existing.yearlySalaryManwonFmt }
+            : {}),
+          ...(existing?.myClPerYear
+            ? { myClPerYear: existing.myClPerYear }
+            : {}),
+          ...(existing?.myEvalGrade
+            ? { myEvalGrade: existing.myEvalGrade }
+            : {}),
+        };
+      });
     if (newRows.length > 0) {
       setRows(newRows);
     }
@@ -221,7 +237,12 @@ export default function MultiYearBonusSimulator({
   }
   function addRow() {
     const last = rows[rows.length - 1];
-    const newYear = last ? Math.min(2035, last.year + 1) : 2026;
+    // 이미 있는 연도를 건너뛰고 2035까지 첫 빈 연도 탐색 —
+    // 같은 해 중복 행이 누적 합계를 이중 합산하는 것을 방지
+    const used = new Set(rows.map((r) => r.year));
+    let newYear = last ? last.year + 1 : 2026;
+    while (newYear <= 2035 && used.has(newYear)) newYear++;
+    if (newYear > 2035) return; // 합의 범위(2026~2035) 소진
     setRows((prev) => [
       ...prev,
       {
@@ -712,8 +733,8 @@ export default function MultiYearBonusSimulator({
               ))}
             </div>
             <p className="text-[10px] text-faint-blue mt-2 leading-relaxed">
-              💡 첫 행 연도({baseYearForGrowthDisplay(rows)}) 기준 매년 복리로
-              인상. 예: 8,000만 + 5% → 1년 후 8,400만, 5년 후 ≈ 10,210만.
+              💡 가장 이른 연도({baseYearForGrowthDisplay(rows)}) 기준 매년
+              복리로 인상. 예: 8,000만 + 5% → 1년 후 8,400만, 5년 후 ≈ 10,210만.
               삼성전자 평균 인상률은 3~6% 수준입니다.
             </p>
           </div>
@@ -810,7 +831,7 @@ export default function MultiYearBonusSimulator({
                       value={b.profitTrillionFmt}
                       onChange={(e) =>
                         updateBulkRange(b.id, {
-                          profitTrillionFmt: e.target.value.replace(/[^0-9.]/g, ""),
+                          profitTrillionFmt: sanitizeDecimalInput(e.target.value),
                         })
                       }
                       className="w-full px-2 py-1.5 pr-7 rounded-md text-sm font-bold tabular-nums bg-white dark:bg-canvas-900 border border-electric-30 focus:outline-none focus:border-electric"
@@ -964,7 +985,12 @@ export default function MultiYearBonusSimulator({
               {fmtManwon(animCumNet)}
             </p>
             <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
-              {fmtEok(computed.cumNet)} · 공제 -{fmtManwonInt(computed.cumDeduct)}만원
+              {[
+                fmtEok(computed.cumNet),
+                `공제 -${fmtManwonInt(computed.cumDeduct)}만원`,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </p>
           </div>
         </div>
@@ -1052,6 +1078,21 @@ export default function MultiYearBonusSimulator({
           </span>
         </div>
       </div>
+
+      {/* 누적 결과 직하 다음 액션 — 장기 자산 관점이 열리는 순간 */}
+      <ResultNextLinks
+        className="mt-4"
+        links={[
+          {
+            href: "/tools/finance/compound",
+            label: "누적 성과급 매년 투자하면? 복리 계산",
+          },
+          {
+            href: "/fire-calculator",
+            label: "이 누적액이면 조기은퇴 언제? FIRE 계산",
+          },
+        ]}
+      />
 
       <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
         ※ 본인 연봉 {(salary / 10000).toLocaleString("ko-KR")}만원 비례 적용 ·
@@ -1173,8 +1214,7 @@ function YearProfitRowCard({
               inputMode="decimal"
               value={row.profitTrillionFmt}
               onChange={(e) => {
-                const v = e.target.value.replace(/[^0-9.]/g, "");
-                onUpdate({ profitTrillionFmt: v });
+                onUpdate({ profitTrillionFmt: sanitizeDecimalInput(e.target.value) });
               }}
               className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
               style={{
@@ -1890,6 +1930,14 @@ function BonusPieView({
           여러 해 누적 성과급 중 실제로 손에 쥐는 비율입니다. 세액공제율·4대보험
           토글 설정에 따라 달라집니다.
         </p>
+        <ResultNextLinks
+          links={[
+            {
+              href: "/tools/finance/bonus",
+              label: "성과급 세금만 따로 정밀 계산",
+            },
+          ]}
+        />
       </div>
     </div>
   );
@@ -2092,6 +2140,21 @@ function AgeCompareView({
           </p>
         </div>
       )}
+
+      {/* 비교 욕구 정점 — 정밀 연봉 순위·회사별 비교로 연결 */}
+      <ResultNextLinks
+        className="mt-4"
+        links={[
+          {
+            href: "/fun/salary-rank",
+            label: "전 연령·상위 0.1%까지 정밀 연봉 순위",
+          },
+          {
+            href: "/salary-db/ranking",
+            label: "대기업 연봉 순위 TOP 30",
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -2168,7 +2231,8 @@ function SalaryModeCard({
   );
 }
 
-// 첫 행 연도(인상률 모드 base year) — display 헬퍼
+// 인상률 모드 base year display 헬퍼 — 실제 계산(computed의 baseYearForGrowth)과
+// 동일하게 최소 연도 기준. 행 순서 편집 시 표시·계산 불일치 방지.
 function baseYearForGrowthDisplay(rows: YearProfitRow[]): number {
-  return rows[0]?.year ?? 2026;
+  return rows.length > 0 ? Math.min(...rows.map((r) => r.year)) : 2026;
 }

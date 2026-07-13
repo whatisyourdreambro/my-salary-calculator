@@ -46,6 +46,16 @@ const SEASONAL_CALENDAR: SeasonalContent[] = [
     href: "/calc/samsung-bonus",
     cta: "TAI 계산하기",
   },
+  // TAI 지급(7/8) 후에도 명세서 확인·세금 검색 수요가 1~2주 이어짐 —
+  // 재산세 납부 개시(7/16) 전날까지 후속 배너로 시즌 트래픽 연장
+  {
+    month: [7],
+    days: { from: 13, to: 15 },
+    title: "삼성전자 TAI 지급 완료 — 내 실수령 맞았나?",
+    subtitle: "명세서와 비교 — 사업부별 지급률·세후 실수령 확인",
+    href: "/calc/samsung-bonus",
+    cta: "TAI 세후 확인",
+  },
   {
     month: [7],
     title: "7월 재산세 1기 납부 (주택분 50%)",

@@ -296,7 +296,7 @@ export default function HomeClient() {
  icon={Calculator}
  title="정규직 계산기"
  description="2026년 최신 세율 · 실수령액 정확 계산"
- href="/?tab=salary"
+ href="/?tab=salary#calculator-section"
  delay={0}
  badge="인기"
  />
@@ -304,21 +304,21 @@ export default function HomeClient() {
  icon={PiggyBank}
  title="퇴직금 계산기"
  description="예상 퇴직금과 IRP 절세 효과 분석"
- href="/?tab=severance"
+ href="/?tab=severance#calculator-section"
  delay={0.05}
  />
  <ToolCard
  icon={Briefcase}
  title="알바/프리랜서"
  description="3.3% 공제 및 주휴수당 계산"
- href="/?tab=freelancer"
+ href="/?tab=freelancer#calculator-section"
  delay={0.1}
  />
  <ToolCard
  icon={Globe}
  title="환율 영향"
  description="내 연봉의 글로벌 구매력 비교"
- href="/?tab=exchange"
+ href="/?tab=exchange#calculator-section"
  delay={0.15}
  />
  <ToolCard
@@ -340,7 +340,7 @@ export default function HomeClient() {
  icon={TrendingUp}
  title="미래 연봉 예측"
  description="커리어 성장 곡선과 은퇴 목표 분석"
- href="/?tab=future"
+ href="/?tab=future#calculator-section"
  delay={0.3}
  />
  <ToolCard
@@ -354,7 +354,7 @@ export default function HomeClient() {
  icon={BarChart3}
  title="연봉 순위"
  description="전국 소득 분포에서 내 위치 확인"
- href="/?tab=rank"
+ href="/?tab=rank#calculator-section"
  delay={0.4}
  />
  <ToolCard

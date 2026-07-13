@@ -84,7 +84,7 @@ function buildActions(
  icon: Receipt,
  title: "연말정산 환급금 계산",
  description: "13월의 월급 미리 받기",
- href: "/year-end-tax-2026",
+ href: "/year-end-tax",
  },
  {
  icon: Calculator,
@@ -94,8 +94,8 @@ function buildActions(
  },
  {
  icon: Building2,
- title: "이 회사 연봉으로 환급은?",
- description: "회사별 평균 환급액 비교",
+ title: "회사별 연봉·초봉 비교",
+ description: "480+ 기업 평균 연봉·복지",
  href: "/salary-db",
  },
  ];
@@ -166,7 +166,7 @@ function buildActions(
  icon: Receipt,
  title: "연말정산 환급금 계산",
  description: "13월의 월급 미리 받기",
- href: "/year-end-tax-2026",
+ href: "/year-end-tax",
  },
  ]
  : [
@@ -186,7 +186,7 @@ function buildActions(
  icon: Calculator,
  title: "연말정산 시뮬",
  description: "환급금 미리 계산",
- href: "/year-end-tax-2026",
+ href: "/year-end-tax",
  },
  ];
 }

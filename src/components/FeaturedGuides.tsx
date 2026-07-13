@@ -7,22 +7,31 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
 import { guides } from "@/lib/guidesData";
 
-// 시즌 우선 노출 슬러그 (2026-05 반도체 임금협상 시즌)
-const PRIORITY_SLUGS = [
- "samsung-wage-negotiation-2026",
- "sk-hynix-wage-2026",
-];
+// 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. CF Pages는 배포마다 재빌드)
+const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
+ // 임금협상 시즌 (3~5월)
+ negotiation: ["samsung-wage-negotiation-2026", "sk-hynix-wage-2026"],
+ // 성과급 지급 시즌 (6~8월 TAI·12~2월 OPI/PS)
+ bonus: ["samsung-opi-tai-complete-2026", "sk-hynix-ps-history-2026-prospect"],
+};
+
+function getSeasonSlugs(): string[] {
+ const month = new Date().getMonth() + 1;
+ if ([6, 7, 8, 12, 1, 2].includes(month)) return PRIORITY_SLUGS_BY_SEASON.bonus;
+ return PRIORITY_SLUGS_BY_SEASON.negotiation;
+}
 
 export default function FeaturedGuides() {
+ const prioritySlugs = getSeasonSlugs();
  // 1) 시즌 우선 슬러그를 첫 자리에 고정
- const prioritized = PRIORITY_SLUGS
+ const prioritized = prioritySlugs
  .map((slug) => guides.find((g) => g.slug === slug && g.lang !== "en"))
  .filter((g): g is NonNullable<typeof g> => Boolean(g));
 
  // 2) 인기 가이드 — views 기준 상위 + unique 본문(boilerplate 제외)
  const popular = [...guides]
  .filter((g) => g.lang !== "en")
- .filter((g) => !PRIORITY_SLUGS.includes(g.slug))
+ .filter((g) => !prioritySlugs.includes(g.slug))
  .sort((a, b) => b.views - a.views)
  .filter((g) => g.content && g.content.length > 1500)
  .slice(0, 8 - prioritized.length);
@@ -63,7 +72,7 @@ export default function FeaturedGuides() {
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
  {items.map((guide, idx) => {
- const isSeasonal = PRIORITY_SLUGS.includes(guide.slug);
+ const isSeasonal = prioritySlugs.includes(guide.slug);
  return (
  <Link
  key={guide.slug}

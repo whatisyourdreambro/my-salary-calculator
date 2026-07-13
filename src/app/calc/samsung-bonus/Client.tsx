@@ -34,6 +34,7 @@ import {
   formatNumberInput,
   parseNumberInput,
   useCountUp,
+  ResultNextLinks,
 } from "./shared";
 
 // 하단 시뮬레이터 2종 — 별도 청크로 지연 로드 (First Load 경량화, 클라이언트 전용)
@@ -541,6 +542,15 @@ export default function SamsungBonusClient() {
             />
           ))}
         </div>
+        <ResultNextLinks
+          className="mt-4"
+          links={[
+            {
+              href: "/salary-db/samsung-electronics",
+              label: "삼성전자 직급(CL)별 연봉표·복지 보기",
+            },
+          ]}
+        />
       </section>
 
       {/* 내 연봉으로 계산 */}
@@ -1014,8 +1024,14 @@ function MySalaryCalculator({
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
                 자녀·연금·의료비·기부 등 세액공제로 소득세가 줄어드는 비율.
-                디폴트 20% (평균 직장인). IRP·기부 적극 활용 시 30%+, 단순
-                기본공제만이면 10% 내외.
+                디폴트 20% (평균 직장인).{" "}
+                <Link
+                  href="/tools/finance/irp"
+                  className="font-bold text-electric underline underline-offset-2"
+                >
+                  IRP
+                </Link>
+                ·기부 적극 활용 시 30%+, 단순 기본공제만이면 10% 내외.
               </p>
             </div>
 
@@ -1047,11 +1063,15 @@ function MySalaryCalculator({
           </div>
         </details>
 
-        {/* 결과 카드 — 정돈된 위계 (세후 강조 → 세전 → OPI 분해 → 산식) */}
-        <div
-          className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900"
-          aria-live="polite"
-        >
+        {/* 결과 카드 — 정돈된 위계 (세후 강조 → 세전 → OPI 분해 → 산식)
+            aria-live는 카운트업 애니메이션 스팸을 피하기 위해 최종값만 담은
+            sr-only 노드로 분리 */}
+        <div className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900">
+          <p className="sr-only" aria-live="polite">
+            {selected.label} 사업부 본인 케이스 — 세전 합계{" "}
+            {fmtManwon(personal.totalGrossManwon)}, 세후 실수령{" "}
+            {fmtManwon(personal.netManwon)}
+          </p>
           {/* 헤더 — 사업부 라벨 (단색 액센트 바) */}
           <div
             className="px-5 py-3 flex items-center justify-between"
@@ -1084,8 +1104,12 @@ function MySalaryCalculator({
                 {fmtManwon(animGross)}
               </p>
               <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
-                {fmtEok(personal.totalGrossManwon)} · 연봉의{" "}
-                {personal.grossPct.toFixed(0)}%
+                {[
+                  fmtEok(personal.totalGrossManwon),
+                  `연봉의 ${personal.grossPct.toFixed(0)}%`,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
             </div>
             <div
@@ -1105,8 +1129,9 @@ function MySalaryCalculator({
                 {fmtManwon(animNet)}
               </p>
               <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
-                {fmtEok(personal.netManwon)} · 공제{" "}
-                {personal.effRate.toFixed(1)}%
+                {[fmtEok(personal.netManwon), `공제 ${personal.effRate.toFixed(1)}%`]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
             </div>
           </div>
@@ -1210,6 +1235,26 @@ function MySalaryCalculator({
           </div>
         </div>
 
+        {/* 결과 직하 다음 액션 — 세후 확인 직후가 페이지 최대 참여 순간 */}
+        {personal.totalGrossWon > 0 && (
+          <ResultNextLinks
+            links={[
+              {
+                href: "/?tab=salary#calculator-section",
+                label: "성과급 합산 연봉 실수령액 계산",
+              },
+              {
+                href: "/fun/salary-rank",
+                label: "내 연봉+성과급, 또래 상위 몇 %?",
+              },
+              {
+                href: "/tools/finance/irp",
+                label: "세액공제 올리는 IRP 절세",
+              },
+            ]}
+          />
+        )}
+
         {/* 공제 상세 + 면책 */}
         {personal.totalGrossWon > 0 && (
           <details className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4 group">
@@ -1260,7 +1305,22 @@ function MySalaryCalculator({
                 {creditRate}% 가정은 사용자 조정 가능.{" "}
                 {applyInsurance
                   ? "4대보험은 보수 정산 방식에 따라 회사가 일부 분담하므로 실제 본인 부담은 더 작을 수 있습니다."
-                  : "4대보험 추가 부과를 적용하지 않은 상태입니다. 위의 토글을 켜면 부과 결과를 확인할 수 있습니다."}
+                  : "4대보험 추가 부과를 적용하지 않은 상태입니다. 위의 토글을 켜면 부과 결과를 확인할 수 있습니다."}{" "}
+                요율 상세는{" "}
+                <Link
+                  href="/social-insurance-rates-2026"
+                  className="font-bold text-electric underline underline-offset-2"
+                >
+                  2026 4대보험 요율표
+                </Link>
+                , 환급 가능액은{" "}
+                <Link
+                  href="/year-end-tax"
+                  className="font-bold text-electric underline underline-offset-2"
+                >
+                  연말정산 계산기
+                </Link>
+                에서 확인하세요.
               </p>
             </div>
           </details>

@@ -12,6 +12,7 @@ import {
   formatNumberInput,
   parseNumberInput,
   useCountUp,
+  ResultNextLinks,
 } from "./shared";
 
 // ────────────────────────────────────────────────────────────
@@ -57,13 +58,12 @@ export default function MultiYearRSUSimulator({
 
   // 선택한 사업부의 1인당 성과급(OPI2 기준)으로 모든 연도 행을 채운다.
   // 덮어쓰기 직전 상태를 보관해 실수 클릭을 1회 복구할 수 있다.
+  // (setUndoRows는 setRows 업데이터 밖에서 호출 — 업데이터는 순수 함수 유지)
   function fillFromDivision(total: number) {
     if (total <= 0) return;
     const v = Math.round(total).toLocaleString("ko-KR");
-    setRows((prev) => {
-      setUndoRows(prev);
-      return prev.map((r) => ({ ...r, perPersonFmt: v }));
-    });
+    setUndoRows(rows);
+    setRows((prev) => prev.map((r) => ({ ...r, perPersonFmt: v })));
   }
 
   function undoSync() {
@@ -333,19 +333,38 @@ export default function MultiYearRSUSimulator({
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1">
             매도 시 총 가치
           </p>
+          {/* 카운트업 스팸 방지 — 스크린리더에는 최종값만 전달 */}
+          <p className="sr-only" aria-live="polite">
+            매도 시 총 가치 {fmtManwon(computed.totalSellAtPriceManwon)}
+          </p>
           <p
             className="text-4xl sm:text-5xl font-black tabular-nums text-navy dark:text-canvas-50"
-            aria-live="polite"
+            aria-hidden
           >
             {fmtManwon(animatedTotalSell)}
           </p>
-          <p className="text-sm text-electric font-bold mt-1">
+          <p className="text-sm text-electric font-bold mt-1" aria-hidden>
             {fmtEok(animatedTotalSell)}
           </p>
           <p className="text-[11px] text-faint-blue mt-2 leading-relaxed">
             누적 매도 가능 {fmtPlain(computed.cumVestedShares)}주 ×{" "}
             {fmtPlain(sellPrice)}원/주
           </p>
+
+          {/* 매도 의사결정 직전 — 세금·절세 다음 액션 */}
+          <ResultNextLinks
+            className="mt-4"
+            links={[
+              {
+                href: "/tools/finance/stock-tax",
+                label: "이 금액 매도 시 양도세 계산",
+              },
+              {
+                href: "/guides/chip-stock-tax-guide",
+                label: "RSU·자사주 절세 4원칙 가이드",
+              },
+            ]}
+          />
         </div>
       </div>
     </section>
@@ -375,7 +394,10 @@ function CumulativeChart({
 }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
-  const width = 320;
+  const n = data.length;
+  // 행 수 비례 가변 폭 — 행이 많아져도 그룹당 2막대+간격이 겹치지 않게
+  // (BonusBarChart 와 동일한 접근)
+  const width = Math.max(320, 60 + n * 52);
   const height = 360;
   const padL = 42;
   const padR = 18;
@@ -394,7 +416,6 @@ function CumulativeChart({
     1
   );
 
-  const n = enrichedData.length;
   const groupWidth = innerW / Math.max(n, 1);
   const barGap = 4;
   const barWidth = Math.max(8, (groupWidth - barGap * 3) / 2);
@@ -560,24 +581,24 @@ function CumulativeChart({
           );
         })}
 
-        {/* 호버 툴팁 */}
+        {/* 호버 툴팁 — 값은 모두 '누적' (sr-only 표 헤더와 동일 표현) */}
         {hoverIdx !== null && enrichedData[hoverIdx] && (
           <g pointerEvents="none">
             <rect
               x={Math.min(
-                Math.max(groupCenter(hoverIdx) - 65, padL),
-                width - padR - 130
+                Math.max(groupCenter(hoverIdx) - 75, padL),
+                width - padR - 150
               )}
               y={padT - 6}
-              width="130"
+              width="150"
               height="62"
               rx="6"
               fill="#0A1829"
             />
             <text
               x={Math.min(
-                Math.max(groupCenter(hoverIdx) - 65, padL),
-                width - padR - 130
+                Math.max(groupCenter(hoverIdx) - 75, padL),
+                width - padR - 150
               ) + 8}
               y={padT + 9}
               fontSize="10"
@@ -588,31 +609,31 @@ function CumulativeChart({
             </text>
             <text
               x={Math.min(
-                Math.max(groupCenter(hoverIdx) - 65, padL),
-                width - padR - 130
+                Math.max(groupCenter(hoverIdx) - 75, padL),
+                width - padR - 150
               ) + 8}
               y={padT + 24}
               fontSize="9"
               fill="#7C83FF"
             >
-              그 해 주가: {fmtEokOrManwon(enrichedData[hoverIdx].cumValue)}
+              그 해 주가 기준: {fmtEokOrManwon(enrichedData[hoverIdx].cumValue)}
             </text>
             <text
               x={Math.min(
-                Math.max(groupCenter(hoverIdx) - 65, padL),
-                width - padR - 130
+                Math.max(groupCenter(hoverIdx) - 75, padL),
+                width - padR - 150
               ) + 8}
               y={padT + 37}
               fontSize="9"
               fill="#34D399"
             >
-              기준 매도가:{" "}
+              기준 매도가 기준:{" "}
               {fmtEokOrManwon(enrichedData[hoverIdx].cumSellPriceValue)}
             </text>
             <text
               x={Math.min(
-                Math.max(groupCenter(hoverIdx) - 65, padL),
-                width - padR - 130
+                Math.max(groupCenter(hoverIdx) - 75, padL),
+                width - padR - 150
               ) + 8}
               y={padT + 49}
               fontSize="9"
@@ -702,18 +723,31 @@ function YearRowCard({
   onUpdate: (patch: Partial<YearRow>) => void;
   onRemove: () => void;
 }) {
+  // 연도 입력 draft — 타이핑 중간값('2', '202')이 상태·차트 x축에 커밋되지
+  // 않도록 blur 시 검증 후 커밋 (MultiYearBonusSimulator 의 yearDraft 패턴)
+  const [yearDraft, setYearDraft] = useState<string | null>(null);
+  function commitYear() {
+    if (yearDraft === null) return;
+    const n = Math.round(Number(yearDraft));
+    if (Number.isFinite(n) && n >= 2000 && n <= 2099) {
+      onUpdate({ year: n });
+    }
+    setYearDraft(null); // 범위 밖·미완성 입력은 기존 연도로 복귀
+  }
   return (
     <div className="rounded-xl border border-canvas-200 dark:border-canvas-800 bg-canvas-50 dark:bg-canvas-800 p-4 transition-all hover:border-electric/40">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <input
             type="number"
-            value={row.year}
-            onChange={(e) =>
-              onUpdate({ year: Number(e.target.value) || row.year })
-            }
+            value={yearDraft ?? String(row.year)}
+            onChange={(e) => setYearDraft(e.target.value)}
+            onBlur={commitYear}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+            }}
             className="w-20 px-2 py-1 rounded-md text-lg font-black tabular-nums bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 focus:outline-none focus:border-electric text-navy dark:text-canvas-50"
-            aria-label="연도"
+            aria-label="연도 (2000~2099)"
           />
           <span className="text-[10px] font-black uppercase tracking-widest text-faint-blue">
             년

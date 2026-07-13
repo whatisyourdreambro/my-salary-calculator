@@ -39,7 +39,8 @@ export default function SalaryRoadmapChart({
  </defs>
  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
  <XAxis dataKey="level" />
- <YAxis tickFormatter={(val) => `${val / 10000000}천`} />
+ {/* 값은 원 단위 — 천만으로 나눴으므로 라벨도 '천만' (예: 6.3천만 = 6,300만원) */}
+ <YAxis tickFormatter={(val) => `${val / 10000000}천만`} />
  <Tooltip
  formatter={(value: number) => formatMoney(value)}
  contentStyle={{

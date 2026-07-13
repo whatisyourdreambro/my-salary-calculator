@@ -35,7 +35,9 @@ export default function Footer() {
         { name: "Chip Stock Tax Guide", href: "/en/guides/chip-stock-tax-guide" },
       ]
     : [
-        { name: "연말정산 2026", href: "/year-end-tax-2026" },
+        // /year-end-tax-2026 은 실제로는 종합소득세(5월 종소세) 페이지 — 라벨 일치화
+        { name: "종합소득세 2026", href: "/year-end-tax-2026" },
+        { name: "삼성 성과급 계산기", href: "/calc/samsung-bonus" },
         { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026" },
         { name: "13월의 월급", href: "/calc/january-bonus" },
         { name: "성과급 세금", href: "/calc/year-end-bonus" },

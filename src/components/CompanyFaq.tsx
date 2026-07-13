@@ -5,11 +5,43 @@
 // 않았다. 같은 Q&A를 본문으로 함께 렌더링해 검색 노출(콘텐츠 깊이)과
 // 체류시간을 동시에 강화하고, JSON-LD와 본문 내용을 일치시킨다.
 
+import { Fragment } from "react";
+import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 interface FaqItem {
   question: string;
   answer: string;
+}
+
+// FAQ 답변 속 계산기 언급을 실제 링크로 — 본문 렌더에서만 치환하고
+// JSON-LD(faqLd)는 plain text 유지해 구조화데이터 규격을 보존한다.
+const FAQ_LINK_MAP: Array<{ phrase: string; href: string }> = [
+  { phrase: "연봉 실수령액 계산기", href: "/" },
+  { phrase: "DSR 계산기", href: "/tools/real-estate/dsr" },
+  { phrase: "퇴직금 계산기", href: "/tools/finance/severance" },
+];
+
+const FAQ_LINK_PATTERN = new RegExp(
+  `(${FAQ_LINK_MAP.map((m) => m.phrase).join("|")})`,
+  "g"
+);
+
+function linkifyAnswer(answer: string) {
+  return answer.split(FAQ_LINK_PATTERN).map((part, i) => {
+    const match = FAQ_LINK_MAP.find((m) => m.phrase === part);
+    return match ? (
+      <Link
+        key={i}
+        href={match.href}
+        className="font-bold text-electric underline underline-offset-2"
+      >
+        {part}
+      </Link>
+    ) : (
+      <Fragment key={i}>{part}</Fragment>
+    );
+  });
 }
 
 export default function CompanyFaq({
@@ -44,7 +76,7 @@ export default function CompanyFaq({
               <ChevronDown className="w-4 h-4 flex-shrink-0 text-electric transition-transform group-open:rotate-180" />
             </summary>
             <p className="faq-answer mt-3 text-sm leading-7 text-muted-blue dark:text-canvas-300">
-              {item.answer}
+              {linkifyAnswer(item.answer)}
             </p>
           </details>
         ))}

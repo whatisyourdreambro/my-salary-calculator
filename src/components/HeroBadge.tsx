@@ -13,9 +13,13 @@ interface SeasonalCopy {
  emoji: string;
 }
 
+// 7월: "건강보험료 정산 시즌" 문구는 사실관계 오류(직장가입자 연말정산 반영은
+// 4월)로 2026-07-06 감사에서 배너 제거된 주장 — 배지도 동일하게 교체.
+// 7월 실제 양대 이슈: 삼성 TAI 지급(7/8)·재산세 1기(7/16~31).
 const SEASONAL_COPY: SeasonalCopy[] = [
  { month: [4, 5], badge: "5월 종합소득세 신고 시즌", emoji: "📋" },
- { month: [6, 7], badge: "7월 건강보험료 정산 시즌", emoji: "🏥" },
+ { month: [6], badge: "6월 자동차세 1기 분납 시즌", emoji: "🚗" },
+ { month: [7], badge: "7월 성과급(TAI)·재산세 시즌", emoji: "💰" },
  { month: [11, 12, 1], badge: "13월의 월급 — 연말정산 시즌", emoji: "🎁" },
  { month: [2, 3], badge: "3월 신입 연봉 협상 시즌", emoji: "🚀" },
 ];

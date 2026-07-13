@@ -4,6 +4,9 @@
 // Client.tsx 본체와 next/dynamic 으로 분리 로드되는 시뮬레이터 2종이 함께 사용한다.
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { trackGuideCTAClick } from "@/lib/analytics";
 import {
   INSURANCE_RATES_2026,
   PENSION_BASE_2026,
@@ -187,6 +190,51 @@ export function formatNumberInput(raw: string): string {
 }
 export function parseNumberInput(s: string): number {
   return Number(s.replace(/[^0-9]/g, "")) || 0;
+}
+// 소수점 입력 정리 — 두 번째 이후의 '.'을 제거해 "3.5.0" 같은
+// NaN 유발 입력을 차단한다 (NaN → 0 으로 조용히 계산되는 사고 방지)
+export function sanitizeDecimalInput(raw: string): string {
+  const cleaned = raw.replace(/[^0-9.]/g, "");
+  const firstDot = cleaned.indexOf(".");
+  if (firstDot === -1) return cleaned;
+  return (
+    cleaned.slice(0, firstDot + 1) +
+    cleaned.slice(firstDot + 1).replace(/\./g, "")
+  );
+}
+
+// ────────────────────────────────────────────────────────────
+// 결과 직하 다음 액션 링크 — 계산 결과를 확인한 피크 순간에
+// 사이트 내 다른 서비스로 이어주는 컴팩트 pill 링크 행.
+// (광고 컴포넌트와 무관 — 결과 카드 내부/각주 옆에만 배치)
+// ────────────────────────────────────────────────────────────
+
+export function ResultNextLinks({
+  links,
+  className = "",
+}: {
+  links: { href: string; label: string }[];
+  className?: string;
+}) {
+  return (
+    <div className={`flex flex-wrap gap-2 ${className}`}>
+      {links.map((l) => (
+        <Link
+          key={l.href + l.label}
+          href={l.href}
+          onClick={() => trackGuideCTAClick(l.href, "next-action")}
+          className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+        >
+          {l.label}
+          <ArrowRight
+            size={12}
+            className="group-hover:translate-x-0.5 transition-transform"
+            aria-hidden
+          />
+        </Link>
+      ))}
+    </div>
+  );
 }
 
 export function useCountUp(target: number, duration = 450): number {
