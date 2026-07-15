@@ -13,7 +13,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -100,6 +100,9 @@ export default function QnaDetailPage({
  </div>
  </div>
  </section>
+
+ {/* 본문 중간 광고 — Key Point와 상세 설명 사이 (운영자 승인 2026-07-13) */}
+ <GuideMidAd />
 
  {/* Details — 상세 설명 */}
  <section className="mb-10">

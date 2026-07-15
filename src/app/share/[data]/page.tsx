@@ -83,10 +83,14 @@ export default function SharePage({ params }: Props) {
  <Suspense fallback={<div>결과를 불러오는 중...</div>}>
  <ShareableResult data={params.data} />
  </Suspense>
- {/* 결과 카드 직하 광고 — 과밀 방지를 위해 1개만 배치 */}
+ {/* 결과 카드 직하 광고 — 과밀 방지를 위해 1개만 배치.
+     디코드 실패(잘못된 공유 링크) 시에는 콘텐츠 없는 오류 화면이므로
+     광고 미노출 (AdSense 무가치 화면 게재 정책 방어, 운영자 승인 2026-07-13) */}
+ {decoded && (
  <div className="w-full mt-8">
  <CalcResultAd />
  </div>
+ )}
 
  {/* 다음 액션 + 관련 계산기 — 유입 방문자를 사이트 탐색으로 유도 */}
  <div className="w-full mt-8 space-y-6">

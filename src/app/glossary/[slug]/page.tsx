@@ -16,7 +16,7 @@ import {
  autoBreadcrumbLd,
  faqLd,
 } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -160,6 +160,11 @@ export default function GlossaryDetailPage({
  <p className="text-base leading-7 text-muted-blue dark:text-canvas-300">
  {item.tip}
  </p>
+ </div>
+
+ {/* 본문 중간 광고 — 개념 설명과 수치 섹션 사이 (운영자 승인 2026-07-13) */}
+ <div className="not-prose">
+ <GuideMidAd />
  </div>
 
  {/* 2026 확정 수치 — thin content 해소: 용어별 고유 본문 (faqLd와 동일 텍스트) */}

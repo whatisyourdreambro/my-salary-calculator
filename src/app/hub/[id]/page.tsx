@@ -10,7 +10,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const dynamic = "force-static";
@@ -108,6 +108,12 @@ export default function HubPage({ params }: { params: { id: string } }) {
               {si === 1 && (
                 <div className="mt-8">
                   <InArticleAd />
+                </div>
+              )}
+              {/* 스크롤 깊은 지점 슬롯 보강 — 4번째 섹션 직후 (운영자 승인 2026-07-13) */}
+              {si === 3 && (
+                <div className="mt-8">
+                  <GuideMidAd />
                 </div>
               )}
             </section>

@@ -11,7 +11,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 
 const TOP_N = 30;
 
@@ -264,6 +264,11 @@ export default function CompanyRankingPage() {
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />
           </Link>
+        </div>
+
+        {/* 페이지 끝 슬롯 보강 — 다음 액션 탐색 후 이탈 직전 (운영자 승인 2026-07-13) */}
+        <div className="mt-10">
+          <GuideMidAd />
         </div>
       </div>
     </main>
