@@ -116,9 +116,9 @@ export const navConfig: NavItem[] = [
   description: "2026 월별 핫스팟 가이드·정보",
   items: [
    { name: "5월 종합소득세 신고", href: "/year-end-tax-2026", description: "프리랜서·N잡러", badge: "SEASON" },
-   { name: "6·12월 자동차세 계산기", href: "/auto-tax-2026", description: "배기량·차령·연납 7% 할인", badge: "NEW" },
+   { name: "6·12월 자동차세 계산기", href: "/auto-tax-2026", description: "배기량·차령·연납 5% 공제", badge: "NEW" },
    { name: "7·9월 부동산 보유세", href: "/property-holding-tax-2026", description: "재산세 + 종부세 통합", badge: "NEW" },
-   { name: "7월 건강보험료 정산", href: "/health-insurance-2026", description: "추가 부과 대응" },
+   { name: "건보료 연말정산 (4월 반영)", href: "/health-insurance-2026", description: "정산금·분납·환급" },
    { name: "12월 연말정산·성과급", href: "/year-end-tax-settlement-2026", description: "근로자 절세 전략" },
    { name: "3월 신입 연봉 협상", href: "/new-employee-2026", description: "첫 협상 가이드" },
    { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026", description: "회사 480곳 영끌 인덱스", badge: "NEW" },

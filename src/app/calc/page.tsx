@@ -57,7 +57,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/auto-tax-2026",
    title: "2026 자동차세 계산기",
-   description: "배기량·차령·연납 7% 할인. 6·12월 분납 금액까지 비교",
+   description: "배기량·차령·연납 5% 공제. 6·12월 분납 금액까지 비교",
    season: "6·12월 시즌",
  },
  {

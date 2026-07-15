@@ -339,7 +339,7 @@ export const taxDeepdiveGuides = [
 <h2>💡 추가 절세 팁</h2>
 <div class="bg-card p-6 rounded-xl border border-border shadow-sm">
 <ul class="list-disc list-inside space-y-2">
-<li><strong>건강보험료 정산 시 7월 부담 분산</strong>: 작년 연봉이 크게 올랐다면 7월 정산금 분납 신청 (5회)</li>
+<li><strong>건강보험료 정산 부담 분산</strong>: 작년 연봉이 크게 올랐다면 4월 정산금 분할 납부 신청 (12회 이내)</li>
 <li><strong>국민연금 임의가입</strong>: 소득이 낮은 시기에는 임의가입으로 가입 기간 연장하여 노후 연금 수령액 증가</li>
 <li><strong>퇴직금 IRP 이전</strong>: 퇴직금 일시 수령 시 퇴직소득세 부담. IRP 이전 시 운용 + 은퇴 시점에 분할 인출 → 세 부담 분산</li>
 <li><strong>임원 보수 vs 직원 급여</strong>: 임원은 보수 + 퇴직금 별도 처리 가능 (회사 정책)</li>

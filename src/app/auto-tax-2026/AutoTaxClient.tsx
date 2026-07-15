@@ -32,11 +32,15 @@ export default function AutoTaxClient() {
   const result = useMemo(() => {
     let baseTax: number;
     if (isElectric) {
-      baseTax = 130000;
+      // 전기차('그 밖의 승용자동차') 비영업용 본세 10만원 정액 —
+      // 지방교육세 30%(3만원)를 더해 총 13만원. 이전 코드는 13만원에 교육세를
+      // 또 가산해 16.9만원으로 과대 계산했음 (2026-07-13 사실검증 정정).
+      // 정액세라 차령 경감도 미적용.
+      baseTax = 100000;
     } else {
       baseTax = cc * getCCRate(cc);
     }
-    const depRate = getDepreciationRate(years);
+    const depRate = isElectric ? 0 : getDepreciationRate(years);
     const depreciated = baseTax * (1 - depRate);
     const educationTax = depreciated * 0.3;
     // 1월 연납: 2~12월분(11개월분)의 5% 공제 → 연세액 대비 실질 약 4.6%
@@ -72,7 +76,7 @@ export default function AutoTaxClient() {
             className="w-4 h-4"
           />
           <span className="text-sm font-medium text-navy dark:text-canvas-100">
-            전기차 (배기량 무관 연 13만원 정액)
+            전기차 (배기량 무관 — 본세 10만원 + 교육세 3만원 = 연 13만원)
           </span>
         </label>
 

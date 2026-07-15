@@ -28,8 +28,8 @@ export default function HealthInsuranceFeeClient() {
         annual: totalSelf * 12,
       };
     } else {
-      // 지역가입자: 점수당 약 208.4원(2024 기준) → 2026 약 220원 가정
-      const pointValue = 220;
+      // 지역가입자 부과점수당 금액: 2026년 211.5원 확정 (국민건강보험법 시행령)
+      const pointValue = 211.5;
       const healthFee = regionalScore * pointValue;
       const longTermCare = healthFee * 0.1314;
       const totalSelf = healthFee + longTermCare;
@@ -111,7 +111,7 @@ export default function HealthInsuranceFeeClient() {
               aria-label="부과 점수"
             />
             <p className="mt-2 text-xs text-faint-blue">
-              ※ 소득·재산·자동차 점수 합산. 평균 자영업자 약 1,500~2,500점. 정확한 점수는 건보공단에서 조회.
+              ※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 평균 자영업자 약 1,500~2,500점. 정확한 점수는 건보공단에서 조회.
             </p>
           </div>
         )}
@@ -147,7 +147,7 @@ export default function HealthInsuranceFeeClient() {
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
           ※ 2026년 보험료율: 직장가입자 7.19%(본인 3.595% + 회사 3.595%) + 장기요양 13.14%(건보료의).
-          지역가입자 점수당 약 220원 가정. 정확한 금액은 건강보험공단(1577-1000) 또는 건보공단 홈페이지에서 조회하세요.
+          지역가입자 점수당 211.5원(2026년 확정) 기준. 정확한 금액은 건강보험공단(1577-1000) 또는 건보공단 홈페이지에서 조회하세요.
         </p>
       </div>
     </section>

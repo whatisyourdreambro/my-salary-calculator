@@ -58,7 +58,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  realEstate: [
  { path: "/property-holding-tax-2026", title: "부동산 보유세 계산기", description: "재산세 + 종부세 통합 산출", icon: "Home" },
  { path: "/tools/real-estate/acquisition-tax", title: "취득세 계산기", description: "주택·토지 취득세", icon: "Home" },
- { path: "/auto-tax-2026", title: "자동차세 계산기", description: "배기량·차령·연납 7% 할인", icon: "Calculator" },
+ { path: "/auto-tax-2026", title: "자동차세 계산기", description: "배기량·차령·연납 5% 공제", icon: "Calculator" },
  { path: "/tools/real-estate/gift-tax", title: "증여세 계산기", description: "가족 간 증여 한도", icon: "Heart" },
  { path: "/home-loan", title: "주택담보대출", description: "모기지 시뮬레이션", icon: "Home" },
  { path: "/tools/real-estate/dsr", title: "DSR 한도", description: "총부채원리금상환비율", icon: "Percent" },
@@ -175,6 +175,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/income-tax-2026": ["tax", "salary"],
  "/property-holding-tax-2026": ["realEstate", "tax"],
  "/health-insurance-fee-2026": ["tax", "salary"],
+ // 건보 정산 가이드 — tax 2순위가 건보료 계산기라 주제 정합 추천이 자동 노출
+ "/health-insurance-2026": ["tax", "salary"],
  "/national-pension-estimate-2026": ["investment", "tax"],
  "/savings-interest-2026": ["investment", "loan"],
 };

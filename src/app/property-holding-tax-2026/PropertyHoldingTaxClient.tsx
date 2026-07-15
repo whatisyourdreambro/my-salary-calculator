@@ -1,24 +1,47 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-// 재산세 (주택분, 만원 단위 변환 후 적용)
-function calcPropertyTax(publishedValue: number, fairMarketRatio = 0.6): number {
+// 재산세 (주택분) — 1세대 1주택 특례 반영 (2026년 기준, 행안부·지방세법)
+// · 공정시장가액비율: 1세대1주택 43~45% 특례(공시 3억 이하 43% / 3~6억 44% /
+//   6억 초과 45% — 2026년 유지 확정), 그 외 일반 60%
+// · 특례세율: 1세대1주택 & 공시가 9억 이하 → 표준세율 대비 구간별 0.05%p 인하
+//   (지방세법 제111조의2, 2026년 납부분까지 연장)
+function calcPropertyTax(publishedValue: number, isSpecialOneHome: boolean): number {
+  const fairMarketRatio = isSpecialOneHome
+    ? publishedValue <= 300_000_000
+      ? 0.43
+      : publishedValue <= 600_000_000
+      ? 0.44
+      : 0.45
+    : 0.6;
   const taxableBase = publishedValue * fairMarketRatio;
+
+  if (isSpecialOneHome && publishedValue <= 900_000_000) {
+    // 특례세율 0.05~0.35% (누진공제 3만/12만/42만원)
+    if (taxableBase <= 60_000_000) return taxableBase * 0.0005;
+    if (taxableBase <= 150_000_000) return 30_000 + (taxableBase - 60_000_000) * 0.001;
+    if (taxableBase <= 300_000_000) return 120_000 + (taxableBase - 150_000_000) * 0.002;
+    return 420_000 + (taxableBase - 300_000_000) * 0.0035;
+  }
+  // 표준세율 0.1~0.4% (누진공제 6만/19.5만/57만원)
   if (taxableBase <= 60_000_000) return taxableBase * 0.001;
   if (taxableBase <= 150_000_000) return 60_000 + (taxableBase - 60_000_000) * 0.0015;
   if (taxableBase <= 300_000_000) return 195_000 + (taxableBase - 150_000_000) * 0.0025;
   return 570_000 + (taxableBase - 300_000_000) * 0.004;
 }
 
-// 종합부동산세 (일반세율, 1세대 1주택 12억 공제)
+// 종합부동산세 (일반세율 기준)
+// 기본공제: 1세대 1주택 12억원, 그 외 인별 9억원 (2023년 개정 — 다주택자도 9억.
+// 이전 코드가 다주택 공제 0원으로 계산해 최대 12배 과대산출하던 것을 정정)
 function calcComprehensiveTax(
   publishedValue: number,
   isOnlyOneHome: boolean,
-  numHomes: number,
   fairMarketRatio = 0.6
 ): number {
-  const deduction = isOnlyOneHome ? 1_200_000_000 : numHomes === 1 ? 900_000_000 : 0;
+  const deduction = isOnlyOneHome ? 1_200_000_000 : 900_000_000;
   const afterDeduction = Math.max(0, publishedValue - deduction);
   const taxableBase = afterDeduction * fairMarketRatio;
 
@@ -42,9 +65,10 @@ export default function PropertyHoldingTaxClient() {
   const [isOnlyOneHome, setIsOnlyOneHome] = useState(true);
 
   const result = useMemo(() => {
-    const propertyTax = calcPropertyTax(publishedValue);
+    const special = isOnlyOneHome && numHomes === 1;
+    const propertyTax = calcPropertyTax(publishedValue, special);
     const educationTax = propertyTax * 0.2; // 지방교육세 20%
-    const comprehensiveTax = calcComprehensiveTax(publishedValue, isOnlyOneHome && numHomes === 1, numHomes);
+    const comprehensiveTax = calcComprehensiveTax(publishedValue, special);
     const totalRegional = propertyTax + educationTax;
     const total = totalRegional + comprehensiveTax;
     return { propertyTax, educationTax, comprehensiveTax, totalRegional, total };
@@ -107,7 +131,8 @@ export default function PropertyHoldingTaxClient() {
               className="w-4 h-4"
             />
             <span className="text-sm font-medium text-navy dark:text-canvas-100">
-              1세대 1주택자 (12억 공제 + 우대세율 적용)
+              1세대 1주택자 (종부세 12억 공제 + 재산세 특례세율·공정시장가액비율
+              43~45% 적용)
             </span>
           </label>
         )}
@@ -121,7 +146,7 @@ export default function PropertyHoldingTaxClient() {
           </p>
           <div className="space-y-1 text-sm pt-3 border-t border-electric-20">
             <div className="flex justify-between text-muted-blue dark:text-canvas-300">
-              <span>재산세 (7·9월 분납)</span>
+              <span>재산세 (7·9월 분납 · 20만원 이하는 7월 일괄)</span>
               <span>{fmt(result.propertyTax)}원</span>
             </div>
             <div className="flex justify-between text-muted-blue dark:text-canvas-300">
@@ -139,10 +164,31 @@ export default function PropertyHoldingTaxClient() {
           </div>
         </div>
 
+        {/* 결과 직하 다음 액션 — 보유세 확인 직후 절세·자금 계획으로 연결 */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/tools/real-estate/gift-tax"
+            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+          >
+            공동명의·증여로 줄이려면? 증여세 계산
+            <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" aria-hidden />
+          </Link>
+          <Link
+            href="/tools/real-estate/acquisition-tax"
+            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+          >
+            매수 계획이면 취득세 먼저 계산
+            <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" aria-hidden />
+          </Link>
+        </div>
+
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 공정시장가액비율 60% 가정 (정부 정책에 따라 변동). 1세대 1주택 우대세율, 세부담상한제,
-          고령자·장기보유 세액공제는 단순화되어 있습니다. 정확한 금액은 위택스(wetax.go.kr) 또는
-          국세청 홈택스에서 확인하세요.
+          ※ 2026년 기준 — 1세대 1주택은 공정시장가액비율 43~45% 특례와
+          특례세율(공시 9억 이하)을 반영하며, 그 외는 60%·표준세율 기준입니다.
+          도시지역분 재산세(과표의 0.14%), 종부세의 재산세 중복분 공제,
+          3주택 이상 중과세율(과표 12억 초과분 2.0~5.0%), 과세표준상한제·세부담상한은
+          단순화를 위해 미반영 — 실제 고지액과 차이가 날 수 있습니다. 정확한 금액은
+          위택스(wetax.go.kr)·홈택스에서 확인하세요.
         </p>
       </div>
     </section>

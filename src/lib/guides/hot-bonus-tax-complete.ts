@@ -496,13 +496,13 @@ const bonusHealth3545 = `
 <li>· 본인 부담: 1억 × 4.07% = <strong>약 407만원</strong></li>
 <li>· 회사 부담: 동일 약 407만원</li>
 <li>· 합계 814만원이 건강보험공단에 납부</li>
-<li>· 4월 정기 부과 + 7월 정산으로 사후 부과</li>
+<li>· 매월 정기 부과 + 다음해 4월 연말정산으로 사후 부과</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 7월 건보료 정산 폭탄 주의</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 4월 건보료 정산 폭탄 주의</h2>
 <p>매월 정기 부과 외 7월에 작년 소득 기준 정산. 성과급 큰 해는 7월에 매달 100~200만원 추가 부과 가능. 미리 대비.</p>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li><li>· <a href="/health-insurance-2026" class="text-primary underline">7월 건보료 정산 가이드</a></li></ul></div>
+<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li><li>· <a href="/health-insurance-2026" class="text-primary underline">건보료 연말정산 가이드</a></li></ul></div>
 `;
 
 const bonusEmployment09 = `
@@ -549,14 +549,14 @@ const bonusInsuranceCeiling = `
 `;
 
 const bonusHealthAdjust = `
-<p class="lead">성과급 1억 받았는데 건보료 정산 200만원 추가? — 7월 건강보험 정산 결과. 매월 정기 부과는 통상 월급 기준만 적용, 성과급 부분은 다음해 4월·7월에 정산 부과. 큰 폭의 정산금 발생.</p>
+<p class="lead">성과급 1억 받았는데 건보료 정산 200만원 추가? — 4월 건강보험 연말정산 결과. 매월 정기 부과는 통상 월급 기준만 적용, 성과급 부분은 다음해 4월 연말정산에서 부과. 큰 폭의 정산금 발생.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 7월 건보료 정산 구조</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">📋 4월 건보료 연말정산 구조</h2>
 <ul class="space-y-3 mt-4">
-<li><strong>① 4월</strong>: 작년 소득 기준 보수월액 재산정</li>
-<li><strong>② 5~6월</strong>: 추가 부과 산정</li>
-<li><strong>③ 7월</strong>: 정산금 7월 급여에서 차감 (5회 분할 신청 가능)</li>
-<li><strong>④ 8월~</strong>: 새 보수월액으로 정기 부과</li>
+<li><strong>① 1~3월</strong>: 작년 보수총액 확정 (2026년부터 국세청 자료 연계로 약 61% 자동 처리)</li>
+<li><strong>② 4월</strong>: 정산 차액을 4월분 보험료에 일시 반영·고지</li>
+<li><strong>③ ~5월 초</strong>: 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 신청</li>
+<li><strong>④ 이후</strong>: 새 보수월액으로 정기 부과</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 정산금 시뮬</h2>
@@ -571,23 +571,23 @@ const bonusHealthAdjust = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 미리 대비</h2>
 <ul class="space-y-2 mt-4">
-<li>· 성과급 받는 해는 7월 정산 약 200~500만원 부담 예상</li>
-<li>· 5회 분할 신청으로 7~11월 분산</li>
+<li>· 성과급 받은 다음해 4월 정산 약 200~500만원 부담 예상</li>
+<li>· 분할 납부 신청(12회 이내)으로 부담 분산</li>
 <li>· 별도 적립금 마련 권장</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-2026" class="text-primary underline">7월 건보료 정산 가이드</a></li><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li></ul></div>
+<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-2026" class="text-primary underline">건보료 연말정산 가이드</a></li><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li></ul></div>
 `;
 
 const julyAdjust = `
-<p class="lead">7월 건강보험료 정산은 모든 직장인이 받는 부담. 성과급 큰 직원은 매년 200~1,000만원 추가 부과 가능. 정산 통보 후 일시 부담 어려우면 5회 분할 신청(7~11월)으로 충격 완화.</p>
+<p class="lead">4월 건강보험료 연말정산은 모든 직장인이 받는 부담. 성과급 큰 직원은 매년 200~1,000만원 추가 부과 가능. 정산액이 당월 보험료 이상이면 분할 납부 신청(12회 이내)으로 충격 완화.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 7월 정산 흐름</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">📋 4월 정산 흐름</h2>
 <ol class="space-y-2 mt-4">
-<li><strong>1. 4월</strong>: 건강보험공단에서 작년 소득 기준 정산금 통보 (SMS·우편)</li>
-<li><strong>2. 5~6월</strong>: 분할 신청 가능 (5회·10회)</li>
-<li><strong>3. 7월</strong>: 7월 급여에서 정산금 1회분 차감</li>
-<li><strong>4. 8~11월</strong>: 나머지 분할 차감 (분할 신청 시)</li>
+<li><strong>1. 1~3월</strong>: 작년 보수총액 확정 (국세청 자료 연계)</li>
+<li><strong>2. 4월</strong>: 정산금 4월분 보험료에 반영·고지</li>
+<li><strong>3. ~5월 초</strong>: 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 신청 (이자 없음)</li>
+<li><strong>4. 이후</strong>: 분할 선택 시 다음 달부터 나눠 차감</li>
 </ol>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급별 정산금 추정</h2>
@@ -598,7 +598,7 @@ const julyAdjust = `
 <tr class="border-t"><td class="p-3">2억</td><td class="p-3">약 800만</td></tr>
 </tbody></table></div>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-2026" class="text-primary underline">7월 건보료 정산 가이드</a></li></ul></div>
+<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-2026" class="text-primary underline">건보료 연말정산 가이드</a></li></ul></div>
 `;
 
 const dependentBeforeBonus = `
@@ -625,7 +625,7 @@ const dependentBeforeBonus = `
 `;
 
 const incomeAdjustmentTotal = `
-<p class="lead">성과급 + 임대소득 + 금융소득 + 사업소득 다 합쳐 종합과세 + 4대보험 정산. 한 해 누적 소득이 1억+ 되면 다음해 5월 종소세 + 7월 건보료 정산으로 추가 1,000만~3,000만원 부담 가능.</p>
+<p class="lead">성과급 + 임대소득 + 금융소득 + 사업소득 다 합쳐 종합과세 + 4대보험 정산. 한 해 누적 소득이 1억+ 되면 다음해 4월 건보료 정산 + 5월 종소세로 추가 1,000만~3,000만원 부담 가능.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 종합 정산 시뮬 (영끌 2억)</h2>
 <p>연봉 7,000만 + 성과급 5,000만 + 임대소득 3,000만 + 배당 2,000만 + 사업소득 3,000만:</p>
@@ -649,7 +649,7 @@ const incomeAdjustmentTotal = `
 `;
 
 const retireBonusFourInsurance = `
-<p class="lead">퇴직금 + 성과급 같은 해 받으면 4대보험 부담 점프. 퇴직금은 4대보험 면제(국민연금·건강보험·고용보험 미부과), 단 성과급은 정상 부과. 7월 건보료 정산도 영향. 퇴직 시점 결정에 신중.</p>
+<p class="lead">퇴직금 + 성과급 같은 해 받으면 4대보험 부담 점프. 퇴직금은 4대보험 면제(국민연금·건강보험·고용보험 미부과), 단 성과급은 정상 부과. 4월 건보료 정산도 영향. 퇴직 시점 결정에 신중.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 퇴직금 vs 성과급 4대보험</h2>
 <ul class="space-y-3 mt-4">
@@ -672,7 +672,7 @@ const retireBonusFourInsurance = `
 `;
 
 const optionalContinueAfterBonus = `
-<p class="lead">성과급 큰 직원이 퇴직 시 임의계속가입 신청은 거의 무조건 유리. 작년 성과급 큰 보수월액 기준으로 7월 정산금이 부과되지만, 임의계속가입은 직장가입자 시절 보수월액 기준 보험료 유지.</p>
+<p class="lead">성과급 큰 직원이 퇴직 시 임의계속가입 신청은 거의 무조건 유리. 작년 성과급 큰 보수월액 기준으로 4월 정산금이 부과되지만, 임의계속가입은 직장가입자 시절 보수월액 기준 보험료 유지.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 임의계속가입 신청</h2>
 <ul class="space-y-2 mt-4">
@@ -942,13 +942,13 @@ const opiTaiTimingCompare = `
 `;
 
 const december1January = `
-<p class="lead">12월 인센티브 vs 1월 인센티브 — 같은 금액이라도 세금 차이 거의 없음 (연간 합산이므로). 단 7월 건보료 정산 시점, IRP·연금저축 한도 도달, 신용카드 25% 기준선 달성에는 큰 영향. 12월 지급은 그 해 정산 직결, 1월 지급은 다음해.</p>
+<p class="lead">12월 인센티브 vs 1월 인센티브 — 같은 금액이라도 세금 차이 거의 없음 (연간 합산이므로). 단 건보료 연말정산(다음해 4월) 시점, IRP·연금저축 한도 도달, 신용카드 25% 기준선 달성에는 큰 영향. 12월 지급은 그 해 정산 직결, 1월 지급은 다음해.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 12월 vs 1월 영향</h2>
 <ul class="space-y-3 mt-4">
 <li><strong>① 연말정산</strong>: 12월 지급은 당해, 1월 지급은 다음해 정산</li>
 <li><strong>② IRP·연금저축 한도</strong>: 12월 31일까지 납입 분만 당해 공제 → 12월 지급 받고 즉시 납입 가능</li>
-<li><strong>③ 7월 건보료 정산</strong>: 12월 지급은 그 해 정산, 1월 지급은 다음해 정산</li>
+<li><strong>③ 건보료 연말정산(4월)</strong>: 12월 지급분은 다음해 4월 정산, 1월 지급분은 그 다음해 4월 정산</li>
 <li><strong>④ 신용카드 한도</strong>: 12월 지급으로 25% 기준선 추가 도달 어려움</li>
 </ul>
 
@@ -956,7 +956,7 @@ const december1January = `
 `;
 
 const moveCompanyBonus = `
-<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 종합소득세 신고 시 둘 다 합산. 7월 건보료 정산도 양쪽 통합.</p>
+<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 종합소득세 신고 시 둘 다 합산. 4월 건보료 정산도 양쪽 통합.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 이직 중 성과급 처리</h2>
 <ul class="space-y-2 mt-4">
@@ -1107,14 +1107,14 @@ const rsuVestingSameBonus = `
 `;
 
 const bonusPropertySell = `
-<p class="lead">성과급 받은 해 부동산 매도 시 종합 세금 점검 필수. 성과급은 근로소득 종합과세 + 부동산 양도세 분류과세(별도)지만, 7월 건보료 정산에서 임대소득·양도소득 모두 반영. 합산 부담 추정.</p>
+<p class="lead">성과급 받은 해 부동산 매도 시 종합 세금 점검 필수. 성과급은 근로소득 종합과세 + 부동산 양도세 분류과세(별도)지만, 건보료 정산·보수 외 소득 부과에서도 임대소득 등이 반영될 수 있음. 합산 부담 추정.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 종합 세금 점검</h2>
 <ul class="space-y-3 mt-4">
 <li><strong>① 근로소득 + 성과급</strong>: 종합과세 누진세율</li>
 <li><strong>② 부동산 양도</strong>: 분류과세 (종합과세와 별도)</li>
 <li><strong>③ 양도세 신고</strong>: 양도일 다음달 말일까지 예정신고 → 확정신고는 다음해 5월</li>
-<li><strong>④ 7월 건보료 정산</strong>: 임대소득·금융소득·양도소득 모두 반영</li>
+<li><strong>④ 건보료 부과</strong>: 보수 외 소득(임대·금융 등) 2천만원 초과 시 소득월액보험료 추가 반영</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 성과급 5,000만 + 부동산 양도차익 5억 (1주택자)</h2>
@@ -1149,7 +1149,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   { slug: "bonus-bracket-jump-2026", title: "성과급 한계세율 점프 — 1.2억+1억 시 추가 3,800만원 세금", description: "8단계 누진세율 6~45%. 성과급 받으면 한 단계 점프 흔함. 연봉 1.2억+성과급 1억 시 35%→38% 점프 → 추가 3,800만원 세금.", category: "세금", tags: ["성과급", "한계세율", "누진세율", "8단계", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusBracketJump, lang: "ko" },
-  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 영끌 1.7억 시 약 1억 1,708만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 종합소득세 + 지방세 + 4대보험 + 7월 정산 = 약 5,300만. 실수령 약 1.17억(약 69%).", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
+  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 영끌 1.7억 시 약 1억 1,708만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 종합소득세 + 지방세 + 4대보험 + 다음해 4월 건보 정산 = 약 5,300만. 실수령 약 1.17억(약 69%).", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
   { slug: "bonus-5000-net-payment-2026", title: "성과급 5,000만 실수령 — 약 3,180만, IRP 활용 시 3,330만", description: "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,820만. 실수령 약 3,180만 (63.6%). IRP 900만 만기 시 약 150만 환급 추가.", category: "세금", tags: ["성과급", "실수령액", "5000만", "IRP", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonus5000, lang: "ko" },
   { slug: "income-tax-8-step-bracket-2026", title: "2026 종합소득세 8단계 누진세율 완벽 — 초과분만 높은 세율", description: "6~45% 8단계 누진세율 + 누진공제 + 지방세 10%. 초과분만 높은 세율 적용. 8,800만→8,801만 되어도 추가 1만에만 35% 적용.", category: "세금", tags: ["누진세율", "8단계", "종합소득세", "지방소득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bracket8Step, lang: "ko" },
   { slug: "salary-bonus-calc-8step-2026", title: "성과급 + 연봉 합산 세금 계산 8단계 — 직접 계산 vs 계산기", description: "총소득 → 근로소득공제 → 인적공제 → 과세표준 → 산출세액 → 세액공제 → 결정세액 → 납부세액. 8단계 계산 → 머니샐러리 계산기 활용.", category: "세금", tags: ["성과급계산법", "8단계", "연말정산", "산출세액", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: salaryBonusCalc, lang: "ko" },
@@ -1160,11 +1160,11 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "dependent-deduction-bonus-year-2026", title: "성과급 받는 해 인적공제 — 1인 150만 × 35% = 52만 환급", description: "한계세율 35% 시 인적공제 효과 큼. 부모 2명 + 자녀 2명 + 경로우대 + 의료비 통합 시 약 174만 추가 환급.", category: "세금", tags: ["인적공제", "부양가족", "성과급", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dependentBonus, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
   { slug: "bonus-pension-45-ceiling-590-2026", title: "성과급 국민연금 4.75% — 보수월액 상한 659만원 적용", description: "국민연금은 659만 상한(2026년 7월~). 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 월 약 7,900원 추가.", category: "기초", tags: ["국민연금", "성과급", "상한", "659만", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusPension45, lang: "ko" },
-  { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 상한 없음, 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 상한 없음. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 7월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
+  { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 상한 없음, 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 상한 없음. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
   { slug: "bonus-employment-09-2026", title: "성과급 고용보험 0.9% — 1억 시 90만, 3억 시 270만", description: "고용보험 본인 0.9% + 회사 0.9% + α. 상한 없음. 1억 성과급 시 본인 90만, 3억 시 270만. 실업급여 산정 시 평균임금 베이스 증가 효과.", category: "기초", tags: ["고용보험", "성과급", "실업급여", "0.9%", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusEmployment09, lang: "ko" },
   { slug: "four-insurance-ceiling-summary-2026", title: "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만", description: "국민연금 4.75% 상한 659만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.", category: "기초", tags: ["4대보험", "상한", "성과급", "건강보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusInsuranceCeiling, lang: "ko" },
-  { slug: "july-health-adjust-bonus-1eok-2026", title: "성과급 1억 + 7월 건보료 정산 — 추가 400만 부과", description: "성과급 부분은 매월 부과 안 되고 다음해 4월·7월에 정산. 1억 성과급 시 약 400만 추가, 5회 분할 시 7~11월 80만씩 분산.", category: "기초", tags: ["7월정산", "건강보험", "성과급", "분할납부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusHealthAdjust, lang: "ko" },
-  { slug: "july-health-adjust-bonus-detail-2026", title: "7월 건보료 정산 흐름 — 성과급별 정산금 80~800만원", description: "4월 통보 → 5~6월 분할 신청 → 7월 1회 차감 → 8~11월 분할. 성과급 2,000만 약 80만, 5,000만 200만, 1억 400만, 2억 800만 정산금.", category: "기초", tags: ["7월정산", "건강보험", "분할", "정산금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: julyAdjust, lang: "ko" },
+  { slug: "july-health-adjust-bonus-1eok-2026", title: "성과급 1억 + 4월 건보료 정산 — 추가 400만 부과", description: "성과급 부분은 매월 부과 안 되고 다음해 4월 연말정산에서 부과. 1억 성과급 시 약 400만 추가, 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 가능.", category: "기초", tags: ["건보료정산", "건강보험", "성과급", "분할납부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusHealthAdjust, lang: "ko" },
+  { slug: "july-health-adjust-bonus-detail-2026", title: "4월 건보료 정산 흐름 — 성과급별 정산금 80~800만원", description: "1~3월 보수총액 확정 → 4월분 보험료에 정산 반영 → 12회 이내 분할 신청. 성과급 2,000만 약 80만, 5,000만 200만, 1억 400만, 2억 800만 정산금.", category: "기초", tags: ["건보료정산", "건강보험", "분할", "정산금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: julyAdjust, lang: "ko" },
   { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
   { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "retire-with-bonus-4insurance-2026", title: "퇴직금 + 성과급 같은 해 — IRP 이전 시 절세 1,500만", description: "퇴직금 4대보험 면제 + 환산급여 우대. 성과급은 정상 부과. 5억 퇴직금 IRP 이전 시 즉시 세금 0원 → 연금 분할로 1,500만 절감.", category: "기초", tags: ["퇴직금", "성과급", "IRP", "4대보험", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: retireBonusFourInsurance, lang: "ko" },
@@ -1190,5 +1190,5 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "executive-severance-limit-bonus-deep-2026", title: "임원 퇴직금 한도 초과 + 성과급 — 5억 시 1.08억 세금", description: "한도 3억 + 초과 2억 시 초과분 근로소득세 7,800만 (한계 38%). 한도 내 5억이면 5,000만. 정관 한도 미리 점검.", category: "커리어", tags: ["임원", "퇴직금한도", "근로소득세", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveSeveranceLimitDeep, lang: "ko" },
   { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 1억 차익 1,860만 차이", description: "일반: 행사 근로소득 3,800만 + 매도 양도 220만 = 4,020만. 적격(벤처·중소): 양도세 2,160만만. 차이 1,860만.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
   { slug: "bonus-rsu-same-year-2026", title: "성과급 + RSU 베스팅 같은 해 — 영끌 2.7억 시 총 7,900만 부담", description: "연봉 1.2억 + 성과급 5,000만 + RSU 1억 베스팅 = 영끌 2.7억. 근로 5,200만 + 양도 1,700만 + 정산 1,000만 = 7,900만. 분할 매도로 600만 절감.", category: "주식", tags: ["RSU", "성과급", "베스팅", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: rsuVestingSameBonus, lang: "ko" },
-  { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 7월 건보료 정산 모두 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
+  { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
 ];

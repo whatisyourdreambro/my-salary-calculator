@@ -226,7 +226,7 @@ export const hubs: Hub[] = [
           { label: "소득세 누진세율 시뮬", href: "/calc/income-tax-bracket-sim", desc: "과세표준별 산출세액 계산" },
           { label: "근로소득세 간편 계산", href: "/calc/earned-income-tax-quick", desc: "월급 기준 원천징수 추정" },
           { label: "건강보험료 계산기", href: "/health-insurance-fee-2026", desc: "직장/지역 가입자별 본인 부담" },
-          { label: "자동차세 계산기", href: "/auto-tax-2026", desc: "6·12월 분납·연납 7% 할인" },
+          { label: "자동차세 계산기", href: "/auto-tax-2026", desc: "6·12월 분납·연납 5% 공제" },
           { label: "2026 세율표", href: "/tax-rates-2026", desc: "소득세·4대보험 요율 정리" },
           { label: "2026 세법 개정", href: "/tax-changes-2026", desc: "올해 바뀐 세법 핵심" },
         ],

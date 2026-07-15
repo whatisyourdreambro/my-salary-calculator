@@ -339,7 +339,7 @@ const rawGuides = [
  },
  { slug: "monthly-rent-tax-credit", title: "월세 세액공제: 집주인 동의 없이 신청하기 🏠", description: "낸 월세의 최대 17%를 돌려받는 효자 공제 항목. 신청 방법과 필수 서류.", category: "세금", tags: ["월세", "세액공제", "연말정산"], level: "초급", publishedDate: "2025-11-15", views: 60000 },
  { slug: "cash-receipt-guide", title: "현금영수증: 연말정산의 숨은 1인치 🧾", description: "소득공제율 30%, 신용카드보다 2배 높은 혜택 챙기기. 발급 거부 시 대처법까지.", category: "세금", tags: ["현금영수증", "소득공제", "절세"], level: "초급", publishedDate: "2025-10-05", views: 45000 },
- { slug: "car-tax-annual-payment", title: "자동차세 연납 신청: 1년에 10% 할인 🚗", description: "1월에 미리 내면 세금이 줄어든다? 위택스 신청 방법과 카드 무이자 할부 팁.", category: "세금", tags: ["자동차세", "연납", "절세"], level: "초급", publishedDate: "2025-01-05", views: 52000 },
+ { slug: "car-tax-annual-payment", title: "자동차세 연납 신청: 1월에 5% 공제 🚗", description: "1월에 미리 내면 세금이 줄어든다? 위택스 신청 방법과 카드 무이자 할부 팁.", category: "세금", tags: ["자동차세", "연납", "절세"], level: "초급", publishedDate: "2025-01-05", views: 52000 },
  { slug: "real-estate-tax-comprehensive", title: "종합부동산세: 1주택자 공제 한도 상향 🏘️", description: "부자세? 이제는 중산층도 알아야 할 종부세 계산 구조와 절세 전략.", category: "세금", tags: ["종부세", "부동산", "세금"], level: "고급", publishedDate: "2025-11-25", views: 38000 },
  { slug: "financial-income-tax", title: "금융소득 종합과세: 이자만 2천만원? 💰", description: "예금 이자와 배당금 합계 2천만원 초과 시 세금 폭탄 피하기.", category: "세금", tags: ["금융소득", "이자", "배당"], level: "고급", publishedDate: "2025-05-10", views: 29000 },
  { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "정치자금, 종교단체, 고향사랑기부제... 100% 환급 꿀팁.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },

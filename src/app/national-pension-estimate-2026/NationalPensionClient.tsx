@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -11,12 +14,18 @@ function fmt(n: number): string {
  *  - 40년 가입 시 소득대체율 43% (2026년 적용, 연금개혁 반영)
  *  - 가입기간에 비례 감소 (40년 기준 100%)
  *  - 10년 미만은 반환일시금 처리 (월 연금 0)
+ *  - 기준소득월액 상·하한 클램프 — 상한(월 659만원) 초과 소득은 연금 산정에
+ *    반영되지 않으므로 고소득 입력 시 불가능한 연금액이 나오지 않게 방어
  */
 function calcMonthlyPension(years: number, avgMonthlyIncome: number): number {
   if (years < 10) return 0;
+  const clampedIncome = Math.min(
+    Math.max(avgMonthlyIncome, PENSION_BASE_2026.MIN_MONTHLY),
+    PENSION_BASE_2026.MAX_MONTHLY
+  );
   const yearRatio = Math.min(1, years / 40);
   const replacementRate = 0.43; // 40년 기준 43% (2026년 적용)
-  return avgMonthlyIncome * replacementRate * yearRatio;
+  return clampedIncome * replacementRate * yearRatio;
 }
 
 export default function NationalPensionClient() {
@@ -76,7 +85,8 @@ export default function NationalPensionClient() {
             aria-label="가입 중 평균 월소득"
           />
           <p className="mt-2 text-xs text-faint-blue">
-            {fmt(avgIncome / 10000)}만원 (보수월액 상한 659만원까지 보험료 산정, 2026.7~2027.6)
+            {fmt(avgIncome / 10000)}만원 (기준소득월액 상한 659만원까지만 보험료·연금
+            산정에 반영, 2026.7~2027.6)
           </p>
         </div>
 
@@ -119,11 +129,30 @@ export default function NationalPensionClient() {
           )}
         </div>
 
+        {/* 결과 직하 다음 액션 — 연금 부족분 대비·다른 공제 확인으로 연결 */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/tools/finance/irp"
+            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+          >
+            국민연금만으론 부족? IRP·연금저축 절세
+            <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" aria-hidden />
+          </Link>
+          <Link
+            href="/fire-calculator"
+            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+          >
+            은퇴 필요 자금 전체 계산 (FIRE)
+            <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" aria-hidden />
+          </Link>
+        </div>
+
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
           ※ 본 계산기는 40년 가입 시 소득대체율 43%(2026년 적용)를 기준으로 한 단순 추정치입니다.
           실제로는 연도별 소득대체율이 다르지만 40년 전 기간에 43%를 가정해 단순화했습니다. 실제
           연금액은 A값(전체 가입자 평균소득)·B값(본인 평균소득)·물가상승률 등을 반영한 정밀 공식으로
-          산정되며, 국민연금공단(1355) 또는 NPS 홈페이지의 "내 연금 알아보기" 정확한 금액을 확인하세요.
+          산정되며, 국민연금공단(1355) 또는 NPS 홈페이지의 &quot;내 연금 알아보기&quot;에서 정확한
+          금액을 확인하세요.
         </p>
       </div>
     </section>

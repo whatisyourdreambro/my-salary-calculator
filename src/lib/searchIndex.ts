@@ -29,7 +29,7 @@ export interface SearchEntry {
 
 const seasonPages: SearchEntry[] = [
  { title: "2026 종합소득세 신고 가이드", href: "/year-end-tax-2026", category: "시즌", description: "5월 프리랜서·N잡러" },
- { title: "2026 건강보험료 정산", href: "/health-insurance-2026", category: "시즌", description: "7월 추가 부과 대응" },
+ { title: "2026 건강보험료 정산", href: "/health-insurance-2026", category: "시즌", description: "4월 정산·분납·환급" },
  { title: "2026 연말정산 + 성과급", href: "/year-end-tax-settlement-2026", category: "시즌", description: "12월 근로자 절세" },
  { title: "2026 신입 연봉 협상", href: "/new-employee-2026", category: "시즌", description: "3월 첫 협상" },
  { title: "연말정산 체크리스트", href: "/year-end-tax-checklist", category: "시즌", description: "12월 31일 마감" },
@@ -42,7 +42,7 @@ const seasonPages: SearchEntry[] = [
  { title: "직장인 단계별 자산", href: "/career-stages-2026", category: "시즌", description: "20~50대" },
  { title: "연봉 인상 협상 시뮬레이터", href: "/salary-raise-2026", category: "계산기", description: "인상률·5년 누적 효과", priority: 1 },
  // 7차 신설 7개 정적 계산기 (8차 점검에서 추가) — 사이트 내부 검색 노출
- { title: "2026 자동차세 계산기", href: "/auto-tax-2026", category: "계산기", description: "배기량·차령·연납 7% 할인", priority: 2 },
+ { title: "2026 자동차세 계산기", href: "/auto-tax-2026", category: "계산기", description: "배기량·차령·연납 5% 공제", priority: 2 },
  { title: "2026 주휴수당 계산기", href: "/weekly-holiday-allowance-2026", category: "계산기", description: "최저시급 10,320원 주 40h 82,560원", priority: 2 },
  { title: "2026 종합소득세 계산기", href: "/income-tax-2026", category: "계산기", description: "8단계 누진세율 + 지방소득세 10%", priority: 1 },
  { title: "2026 부동산 보유세 계산기", href: "/property-holding-tax-2026", category: "계산기", description: "재산세 7·9월 + 종부세 12월", priority: 2 },
