@@ -33,6 +33,16 @@ const PAGE_DESC =
 
 const FAQ_ITEMS = [
   {
+    question: "2026년 상반기 PI는 언제 발표되나요?",
+    answer:
+      "2026년 7월 13일 기준 아직 발표 전입니다. 최근 2년 패턴상 상반기 PI는 7월 하순에 사내 공지됩니다 — 2024년 상반기분은 7월 25일 공지, 2025년 상반기분은 7월 23일 공지·7월 28일 급여와 함께 지급됐고 두 번 모두 최대치인 기본급의 150%였습니다(복수 언론 보도 기준). 보도된 산정 기준은 반기 영업이익률 30% 이상이면 150%, 15~30%면 125%, 0~15%면 100%입니다. 발표 즉시 본 페이지에 반영할 예정이며, 그 전에는 위 계산기에서 PI 150%·125% 시나리오를 선택해 미리 시뮬레이션해 보세요.",
+  },
+  {
+    question: "직전 PI·PS는 얼마나 지급됐나요?",
+    answer:
+      "보도 기준으로 2025년 하반기 PI는 월 기본급의 150%가 2026년 1월 30일 지급됐고, 2025년 연간 PS는 기본급의 2,964%(상한 1,000% 폐지 후 첫 적용)가 2026년 2월 5일 지급됐습니다. PI는 2024년 상반기부터 최근 반기까지 연속으로 최대치 150%가 적용돼 왔습니다.",
+  },
+  {
     question: "SK하이닉스 PS는 어떻게 계산되나요?",
     answer:
       "PS(Profit Sharing, 초과이익분배금)는 회사 연간 영업이익의 10%를 전 직원에게 분배하는 제도입니다. 2025년 9월 노사 합의로 기존 '기본급 1,000% 상한'이 폐지되어, 영업이익이 클수록 1인당 지급액이 비례 증가합니다. 본 계산기는 영업이익(조원) ÷ 직원 수(약 35,000명) × 10% 로 1인당 평균을 추정하고, 본인 연봉 비례 보정으로 개인 PS를 산출합니다. 80%는 당해 지급되고 20%는 2년에 걸쳐 이연됩니다.",
@@ -94,6 +104,9 @@ export const metadata: Metadata = {
     "SK하이닉스 성과급",
     "SK하이닉스 PS",
     "SK하이닉스 PI",
+    "SK하이닉스 PI 상반기",
+    "SK하이닉스 PI 지급일",
+    "SK하이닉스 생산성격려금",
     "SK하이닉스 성과급 계산기",
     "하이닉스 성과급 2026",
     "하이닉스 PS 계산",
@@ -161,6 +174,28 @@ export default function SkHynixBonusPage() {
               />
             </div>
           </header>
+
+          {/* 시즌 노티스 — 2026 상반기 PI 발표 임박 (발표 시 이 블록을 확정값으로 교체) */}
+          <aside
+            className="mb-6 rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 sm:p-6"
+            aria-label="2026 상반기 PI 발표 일정 안내"
+          >
+            <p className="text-xs font-black uppercase tracking-widest text-primary mb-2">
+              ⏰ 2026 상반기 PI 발표 임박
+            </p>
+            <p className="text-sm leading-relaxed text-navy">
+              <strong>7월 13일 기준 아직 발표 전</strong>입니다. 최근 2년 모두{" "}
+              <strong>7월 하순 사내 공지</strong> 관례였습니다 — 2024년 7/25
+              공지, 2025년 7/23 공지·7/28 지급, 두 해 모두 최대치{" "}
+              <strong className="text-primary">기본급 150%</strong>(복수 언론
+              보도). 산정 기준은 반기 영업이익률 30% 이상 150% / 15~30% 125% /
+              0~15% 100%로 보도됐습니다.
+            </p>
+            <p className="text-xs text-faint mt-2 leading-relaxed">
+              발표 즉시 이 페이지에 확정값을 반영합니다. 그 전에는 아래
+              계산기에서 PI 150%·125% 시나리오로 미리 계산해 보세요.
+            </p>
+          </aside>
 
           {/* Calculator */}
           <SkHynixBonusClient />

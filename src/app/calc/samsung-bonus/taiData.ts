@@ -18,6 +18,8 @@ export type TaiRate = {
 export const TAI_RATES_2026_H1: TaiRate[] = [
   { id: "memory", division: "메모리", group: "DS", rate: 100 },
   { id: "lab", division: "반도체연구소·SAIT·DS공통", group: "DS", rate: 100 },
+  // CSS 100%는 지급일(7/8) 전후 보도로 추가 확인 (뉴시스·파이낸셜뉴스 2026-07-06)
+  { id: "css", division: "CSS (화합물반도체솔루션)", group: "DS", rate: 100 },
   { id: "lsi", division: "시스템LSI", group: "DS", rate: 75 },
   { id: "foundry", division: "파운드리", group: "DS", rate: 75 },
   { id: "mx", division: "MX (스마트폰)", group: "DX", rate: 50 },
