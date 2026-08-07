@@ -128,6 +128,7 @@ export default function HealthCheckup2026Page() {
  title: "건강검진 2026 — 대상·항목·비용·예약 종합",
  description: "직장인·지역가입자 일반·암검진 대상자, 비용 자기부담금, 예약 방법, 미수검 과태료",
  slug: "health-checkup-2026",
+ url: "/health-checkup-2026",
  publishedDate: "2026-05-22",
  modifiedDate: "2026-05-22",
  }),

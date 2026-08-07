@@ -342,7 +342,7 @@ export default function SalaryCalculator() {
  return {
  title: `💰 연봉 ${annualManwon}만원이면 월 실수령 ${netManwon}만원!`,
  description: "2026년 세법 기준 내 실수령액. 너도 1초만에 계산해봐 👀",
- imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&netPay=${result.monthlyNet}`,
+ imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&net=${result.monthlyNet}`,
  };
  }, [annualSalary, result.monthlyNet]);
 

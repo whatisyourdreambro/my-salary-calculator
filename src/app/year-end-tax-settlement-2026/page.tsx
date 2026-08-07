@@ -76,6 +76,7 @@ export default function YearEndTaxSettlement2026Page() {
  title: "2026 연말정산 + 성과급 절세 가이드",
  description: "12월 연말정산 공제 항목 + 성과급 세금 전략",
  slug: "year-end-tax-settlement-2026",
+ url: "/year-end-tax-settlement-2026",
  publishedDate: "2026-01-15",
  modifiedDate: "2026-05-12",
  }),

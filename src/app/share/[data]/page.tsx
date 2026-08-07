@@ -53,7 +53,8 @@ export function generateMetadata({ params }: Props): Metadata {
  const netManwon = Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR");
  const title = `💰 연봉 ${annualManwon}만원이면 월 실수령 ${netManwon}만원!`;
  const description = `2026년 세법 기준 실수령액이에요. 내 연봉도 1초만에 계산해볼까요? 👀`;
- const ogImage = `/api/og?type=salary&amount=${decoded.annualSalary}&netPay=${decoded.monthlyNet}`;
+ // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정)
+ const ogImage = `/api/og?type=salary&amount=${decoded.annualSalary}&net=${decoded.monthlyNet}`;
 
  return {
  title,

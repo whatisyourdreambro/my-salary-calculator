@@ -891,6 +891,27 @@ export default function SamsungBonusCalculatorPage() {
               </span>
             </Link>
             <Link
+              href="/calc/celltrion-bonus"
+              className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
+                다른 기업 계산기
+              </p>
+              <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                셀트리온 성과급 계산기
+              </p>
+              <p className="text-xs text-muted-blue mb-3">
+                연봉의 최대 50~53% — 1월 선지급 + 3월 잔여 확정 구조
+              </p>
+              <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
+                계산해 보기{" "}
+                <ArrowRight
+                  className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+                  aria-hidden
+                />
+              </span>
+            </Link>
+            <Link
               href="/salary-db/samsung-electronics"
               className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
             >

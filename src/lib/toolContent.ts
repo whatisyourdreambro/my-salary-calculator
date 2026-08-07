@@ -23,6 +23,13 @@ export interface ToolFaqItem {
 }
 
 export interface ToolContent {
+  /**
+   * SoftwareApplication JSON-LD name — 자체 layout이 LD를 주입하지 않는
+   * 페이지만 채운다 (ToolPageContent가 name+description 있을 때만 주입).
+   */
+  name?: string;
+  /** SoftwareApplication JSON-LD description (페이지 metadata description 재사용) */
+  description?: string;
   sections: ToolContentSectionData[];
   faqs: ToolFaqItem[];
   disclaimer?: string;
@@ -31,6 +38,8 @@ export interface ToolContent {
 /** 도구 페이지 경로(예: "/tools/finance/cagr") → 콘텐츠 */
 export const toolContent: Record<string, ToolContent> = {
   "/tools/finance/cagr": {
+    name: "CAGR(연평균 성장률) 계산기",
+    description: "투자의 연평균 성장률(Compound Annual Growth Rate)을 계산하여 성과를 분석하세요.",
     sections: [
       {
         heading: "CAGR(연평균 성장률)란?",
@@ -78,6 +87,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/finance/vat": {
+    name: "부가세(VAT) 계산기",
+    description: "공급가액 또는 합계금액을 기준으로 부가가치세(VAT)를 정확하게 계산합니다.",
     sections: [
       {
         heading: "부가가치세(VAT)란?",
@@ -134,6 +145,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/date/age": {
+    name: "만 나이 계산기",
+    description: "생년월일을 입력하면 만 나이와 연 나이를 정확하게 계산해드립니다.",
     sections: [
       {
         heading: "만 나이란 무엇인가요?",
@@ -181,6 +194,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/date/d-day": {
+    name: "D-Day 디데이 계산기",
+    description: "시험, 기념일, 전역일 등 중요한 날짜까지 남은 시간을 계산해보세요.",
     sections: [
       {
         heading: "D-day 계산이란?",
@@ -228,6 +243,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/date/work-days": {
+    name: "영업일 계산기",
+    description: "주말을 제외한 실제 근무일(영업일) 수를 계산해보세요.",
     sections: [
       {
         heading: "근무일수(영업일)란?",
@@ -275,6 +292,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/health/bmi": {
+    name: "BMI 비만도 계산기",
+    description: "신장과 체중을 입력하여 비만도(BMI)를 측정하고 건강 상태를 확인하세요.",
     sections: [
       {
         heading: "BMI(체질량지수)란?",
@@ -331,6 +350,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/life/dutch-pay": {
+    name: "N빵(더치페이) 계산기",
+    description: "회식, 모임, 여행 경비를 인원수대로 정확하게 나누어 계산합니다.",
     sections: [
       {
         heading: "더치페이 계산이란?",
@@ -378,6 +399,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/life/fuel-cost": {
+    name: "연비·유류비 계산기",
+    description: "이동 거리와 연비를 입력하여 예상 주유비를 계산해보세요.",
     sections: [
       {
         heading: "주유비 계산의 원리",
@@ -425,6 +448,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/life/subscription": {
+    name: "구독 서비스 비용 계산기",
+    description: "넷플릭스, 유튜브 프리미엄, 멜론, 쿠팡로켓와우 등 모든 구독 서비스의 월 / 연간 총 지출을 계산하고 절약 포인트를 찾아드립니다.",
     sections: [
       {
         heading: "구독료 관리가 필요한 이유",
@@ -472,6 +497,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/life/unit-converter": {
+    name: "단위 변환기",
+    description: "길이, 무게 등 다양한 단위를 간편하게 변환하세요.",
     sections: [
       {
         heading: "단위 변환기란?",
@@ -529,6 +556,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/math/number-gen": {
+    name: "랜덤 숫자 생성기",
+    description: "로또 번호 생성, 추첨 등 다양한 용도의 랜덤 숫자를 생성해보세요.",
     sections: [
       {
         heading: "랜덤 숫자 생성기란?",
@@ -576,6 +605,8 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   "/tools/math/percent": {
+    name: "퍼센트 계산기",
+    description: "전체값에 대한 비율, 비율에 대한 값 등 다양한 퍼센트 계산을 지원합니다.",
     sections: [
       {
         heading: "퍼센트 계산이란?",

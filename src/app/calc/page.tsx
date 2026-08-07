@@ -49,6 +49,18 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    season: "2월 PS·반기 PI",
  },
  {
+   href: "/calc/celltrion-bonus",
+   title: "셀트리온 성과급 계산기",
+   description: "연봉의 최대 50%(2025년분)~53%(2024년분) — 1월 선지급 + 3월 잔여 확정 구조 반영",
+   season: "1월 지급 시즌",
+ },
+ {
+   href: "/calc/hyundai-rotem-bonus",
+   title: "현대로템 성과급 계산기",
+   description: "2025 임단협 타결안 기본급 450% + 1,620만원 — 세전·세후 실수령 즉시 계산",
+   season: "12월 임단협 시즌",
+ },
+ {
    href: "/income-tax-2026",
    title: "2026 종합소득세 계산기",
    description: "8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 산출",

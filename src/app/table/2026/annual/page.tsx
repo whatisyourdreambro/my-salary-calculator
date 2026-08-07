@@ -7,6 +7,8 @@ import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -42,17 +44,18 @@ const tableHeaders = [
   { key: "incomeTax", label: "소득세" },
 ];
 
-// JSON-LD for table page
-const tableJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  name: "2026년 연봉별 실수령액 데이터",
-  description:
-    "2026년 최신 세법 기준 연봉 2000만원에서 2억까지 구간별 월 실수령액, 4대보험 공제 내역 데이터셋",
-  creator: { "@type": "Organization", name: "머니샐러리" },
-  url: "https://www.moneysalary.com/table/2026/annual",
-  inLanguage: "ko",
-};
+// JSON-LD for table page — datasetLd 빌더로 dateModified(신선도 신호) 부여 + breadcrumb
+const tableJsonLd = [
+  datasetLd({
+    name: "2026년 연봉별 실수령액 데이터",
+    description:
+      "2026년 최신 세법 기준 연봉 2000만원에서 2억까지 구간별 월 실수령액, 4대보험 공제 내역 데이터셋",
+    url: "/table/2026/annual",
+    dateModified: "2026-08-07",
+    keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
+  }),
+  autoBreadcrumbLd("/table/2026/annual", { leafName: "2026 연봉 실수령액 표" }),
+];
 
 function AnnualTable() {
   const allData = generateAnnualSalaryTableData2026();
@@ -60,10 +63,7 @@ function AnnualTable() {
 
   return (
     <main className="w-full bg-background min-h-screen pb-20">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(tableJsonLd) }}
-      />
+      <JsonLd data={tableJsonLd} />
       <TableHero
         badgeText="2026년 최신 데이터 반영"
         title={

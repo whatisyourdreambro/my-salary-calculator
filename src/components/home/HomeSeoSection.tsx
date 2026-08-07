@@ -113,6 +113,76 @@ export default function HomeSeoSection() {
           </div>
         </div>
 
+        {/* 연봉 데이터 탐색 — 트래픽 엔진 허브 4종 SSR 내부링크 (2026-08-07)
+            /job·/industry·/region 인덱스는 헤더 메가메뉴(조건부 렌더)에서만 노출돼
+            SSR HTML 기준 준고아였다. PageRank 최상위인 홈에서 직접 연결한다. */}
+        <div className="mb-16">
+          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-2">
+            연봉 데이터 탐색
+          </h2>
+          <p className="text-faint-blue text-[15px] font-medium mb-6">
+            480곳 회사·100개 직업·업종·지역별 연봉 데이터를 차원별로 살펴보세요.
+          </p>
+          <div className="flex flex-wrap gap-2.5 mb-5">
+            {[
+              { label: "회사별 연봉 DB", href: "/salary-db" },
+              { label: "직업별 연봉", href: "/job" },
+              { label: "업종별 연봉", href: "/industry" },
+              { label: "지역별 연봉", href: "/region" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+              >
+                {label}
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+          <h3 className="text-[15px] font-bold text-navy mb-3">인기 업종 연봉</h3>
+          <div className="flex flex-wrap gap-2.5 mb-5">
+            {[
+              { label: "반도체·전자 연봉", href: "/industry/semiconductor" },
+              { label: "금융·은행 연봉", href: "/industry/finance-banking" },
+              { label: "IT·소프트웨어 연봉", href: "/industry/it-software" },
+              { label: "게임 업계 연봉", href: "/industry/game" },
+              { label: "공기업 연봉", href: "/industry/public-enterprise" },
+              { label: "대기업 평균 연봉", href: "/industry/large-conglomerate" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+              >
+                {label}
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+          <h3 className="text-[15px] font-bold text-navy mb-3">인기 회사 연봉</h3>
+          <div className="flex flex-wrap gap-2.5">
+            {[
+              // Footer 인기 회사 목록(GSC TOP 검색 키워드)과 동일한 실존 id 사용
+              { label: "삼성전자 연봉", href: "/salary-db/samsung-electronics" },
+              { label: "SK하이닉스 연봉", href: "/salary-db/sk-hynix" },
+              { label: "HMM 연봉", href: "/salary-db/hmm" },
+              { label: "LG에너지솔루션 연봉", href: "/salary-db/lgensol" },
+              { label: "네이버 연봉", href: "/salary-db/naver" },
+              { label: "카카오 연봉", href: "/salary-db/kakao" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+              >
+                {label}
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* FAQ — JSON-LD(faqLd)와 동일 콘텐츠를 화면에도 노출 */}
         <div>
           <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-6">

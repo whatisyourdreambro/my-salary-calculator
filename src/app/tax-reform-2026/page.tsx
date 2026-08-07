@@ -107,6 +107,7 @@ export default function TaxReform2026Page() {
             description:
               "7월 말 발표 예정인 2026년 세법개정안(2027년 시행분)의 일정과 보도 기준 예상 내용, 이미 시행 중인 작년 확정분과의 구분 정리",
             slug: "tax-reform-2026",
+            url: "/tax-reform-2026",
             publishedDate: "2026-07-16",
             modifiedDate: "2026-07-16",
           }),

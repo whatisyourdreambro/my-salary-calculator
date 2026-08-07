@@ -87,11 +87,19 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
       base: comp.base,
       incentive: comp.incentive.avgAmount || 0,
       stock: stockValue,
+      stockType: comp.stock?.type,
+      signOn: comp.signOn || 0,
       total,
       totalWithStock,
       ...net,
     };
   });
+
+  // 주식보상(RSU·스톡옵션) 데이터가 실제로 있는 회사만 열 추가.
+  // amount: 0 으로 입력된 회사(예: 전액 현금 보상)는 열 없이 기존과 동일 렌더.
+  const hasStock = rows.some((row) => row.stock > 0);
+  // 사인온 보너스가 있는 직급만 표 하단에 별도 명시 (1회성 — 연봉 합산 금지).
+  const signOnRows = rows.filter((row) => row.signOn > 0);
 
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -112,6 +120,9 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
               <th className="px-4 py-3 text-right font-black">기본급</th>
               <th className="px-4 py-3 text-right font-black">인센티브</th>
               <th className="px-4 py-3 text-right font-black">총 연봉</th>
+              {hasStock && (
+                <th className="px-4 py-3 text-right font-black">주식보상 포함</th>
+              )}
               <th className="px-4 py-3 text-right font-black">세금·4대보험</th>
               <th className="px-4 py-3 text-right font-black">연 실수령</th>
               <th className="px-4 py-3 text-right font-black">월 실수령</th>
@@ -133,6 +144,23 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
                 <td className="px-4 py-3.5 text-right font-black text-navy dark:text-canvas-50 tabular-nums">
                   {fmt(row.total)}원
                 </td>
+                {hasStock && (
+                  <td className="px-4 py-3.5 text-right tabular-nums">
+                    {row.stock > 0 ? (
+                      <>
+                        <div className="font-black text-violet-600 dark:text-violet-400">
+                          {fmt(row.totalWithStock)}원
+                        </div>
+                        <div className="text-xs text-faint-blue mt-0.5">
+                          {row.stockType === "Option" ? "스톡옵션" : "RSU"} 연{" "}
+                          {fmt(row.stock)}원
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-faint-blue">—</span>
+                    )}
+                  </td>
+                )}
                 <td className="px-4 py-3.5 text-right text-rose-500 tabular-nums">
                   -{fmt(row.totalDeduction)}원
                 </td>
@@ -147,6 +175,22 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
           </tbody>
         </table>
       </div>
+
+      {/* 사인온 보너스 — 데이터가 있는 회사만 표 하단에 명시 (1회성, 연봉 미합산) */}
+      {signOnRows.length > 0 && (
+        <div className="mt-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-4">
+          <p className="text-sm font-black text-amber-800 dark:text-amber-300 mb-1">
+            입사 시 사인온 보너스 별도 지급
+          </p>
+          <p className="text-sm text-amber-800 dark:text-amber-300">
+            {signOnRows
+              .map((row) => `${row.label} 약 ${fmt(row.signOn)}원`)
+              .join(" · ")}
+            {" — "}입사 첫 해에만 지급되는 일회성 금액으로, 위 표의 연봉·실수령액
+            합계에는 포함하지 않았습니다.
+          </p>
+        </div>
+      )}
 
       {/* 인사이트 텍스트 (SEO 본문) */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -182,6 +226,13 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
       <p className="text-xs text-faint-blue mt-4 text-center">
         * 본인 1인 기본공제, 세액공제 평균 적용 추정치. 부양가족·연말정산 변수에 따라 실제 금액은 다를 수 있습니다.
       </p>
+      {hasStock && (
+        <p className="text-xs text-faint-blue mt-2 text-center">
+          * 주식보상(RSU·스톡옵션)은 베스팅 일정에 따라 나눠 취득되며 취득·행사
+          시점에 별도 과세됩니다. 위 표의 세금·실수령액은 현금 보상(기본급+인센티브)
+          기준입니다.
+        </p>
+      )}
     </section>
   );
 }

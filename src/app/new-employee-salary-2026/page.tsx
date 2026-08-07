@@ -112,6 +112,7 @@ export default function NewEmployeeSalary2026Page() {
  title: "신입 초봉 2026 — 회사 480곳 영끌 TOP 50",
  description: "대기업·IT·금융·공기업·외국계 신입 평균 연봉 종합 인덱스",
  slug: "new-employee-salary-2026",
+ url: "/new-employee-salary-2026",
  publishedDate: "2026-05-22",
  modifiedDate: "2026-05-22",
  }),

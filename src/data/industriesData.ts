@@ -254,8 +254,45 @@ export const industriesData: IndustryProfile[] = [
     trendNote: "K-드라마·K-팝 글로벌 흥행으로 콘텐츠 IP 수익 급증. 넷플릭스·디즈니+ 한국 투자 확대.",
   },
   {
+    id: "telecom",
+    industryIds: ["telecom"],
+    name: "통신",
+    nameEn: "Telecom",
+    emoji: "📡",
+    // salary는 DB 등록 통신사 5곳(SK텔레콤·KT·LG유플러스·SK브로드밴드·KT AI Lab)의
+    // 영끌 연봉(기본급+평균 인센티브) 실집계를 100만원 단위로 반올림한 값 (2026-08-07 산출).
+    // overall = entry/junior/senior 평균의 산술평균. 외부 출처 추정치 아님.
+    salary: {
+      entry: { min: 6000, max: 8300, avg: 6900 },
+      junior: { min: 7600, max: 11000, avg: 8800 },
+      senior: { min: 10300, max: 15000, avg: 12000 },
+      overall: 9200,
+    },
+    description:
+      "SK텔레콤·KT·LG유플러스 통신 3사가 이끄는 업계. 유무선 네트워크라는 안정적 내수 기반 위에 AI·클라우드·데이터센터·미디어로 사업을 확장하고 있으며, 높은 복지 수준과 고용 안정성이 특징입니다.",
+    topCompanyIds: ["skt", "kt", "lg-uplus"],
+    topJobIds: ["software-engineer", "electrical-engineer"],
+    faqs: [
+      {
+        q: "통신 업계 연봉은 어느 정도 수준인가요?",
+        a: "통신 3사는 안정적인 내수 기반과 강한 노조·복지 덕분에 국내 대기업 중에서도 처우가 상위권에 속합니다. 아래 회사별 연봉 순위 표에서 머니샐러리 DB에 등록된 통신사들의 신입·시니어 연봉 집계를 회사별로 확인할 수 있습니다.",
+      },
+      {
+        q: "통신사 취업에는 어떤 직무·전공이 유리한가요?",
+        a: "네트워크·인프라 직무는 전자·통신·컴퓨터공학 전공이 많고, AI·클라우드·미디어 등 신사업 확대로 소프트웨어 개발 직군 채용도 늘고 있습니다. 영업·마케팅·경영지원 등 비공학 직무도 꾸준히 선발합니다.",
+      },
+    ],
+    keywords: ["통신사 연봉", "통신 업계 연봉", "SKT 연봉", "KT 연봉", "LG유플러스 연봉"],
+    trend: "stable",
+    trendNote: "유무선 내수 시장은 성숙기이나 AI·데이터센터·B2B 신사업 투자 확대로 IT 직군 채용 수요는 유지.",
+  },
+  {
     id: "public-enterprise",
     aggregateTier: "public",
+    // 집계는 aggregateTier(tier="public" 전체)가 우선 — industryIds는 업종 원문이
+    // "Public Health / Insurance" 등으로 표준 업종 "public"에 떨어지는 공공기관
+    // 회사 페이지(CompanyConnections)가 이 허브를 직접 찾을 수 있게 하는 매칭용.
+    industryIds: ["public"],
     name: "공기업·공공기관",
     nameEn: "Public Enterprise",
     emoji: "🏛️",
@@ -412,6 +449,39 @@ export const industriesData: IndustryProfile[] = [
     keywords: ["철강 업계 연봉", "중공업 연봉", "조선 업계 연봉", "포스코 연봉", "현대중공업 연봉"],
     trend: "stable",
     trendNote: "조선업 LNG선·컨테이너선 수주 회복세. 수소·친환경 에너지 전환으로 신규 투자 증가.",
+  },
+  {
+    id: "manufacturing",
+    industryIds: ["manufacturing"],
+    name: "기계·제조",
+    nameEn: "Machinery & Manufacturing",
+    emoji: "🏭",
+    // salary는 DB 등록 기계·제조 8곳(한국타이어·SKC·한화모멘텀·LS엠트론·LS아이앤디·
+    // 두산로보틱스·한국과학기술연구원·한국생산기술연구원)의 영끌 연봉(기본급+평균 인센티브)
+    // 실집계를 100만원 단위로 반올림한 값 (2026-08-07 산출). overall = 3레벨 평균의 산술평균.
+    salary: {
+      entry: { min: 5100, max: 6600, avg: 5800 },
+      junior: { min: 6200, max: 8300, avg: 7100 },
+      senior: { min: 7900, max: 11400, avg: 9600 },
+      overall: 7500,
+    },
+    description:
+      "한국타이어·SKC·한화모멘텀·LS엠트론·두산로보틱스 등 기계·소재·자동화 장비 기업과 한국과학기술연구원(KIST) 같은 공공 R&D 기관이 속한 제조 업계. 스마트팩토리·로봇 자동화 전환이 진행 중입니다.",
+    topCompanyIds: ["hankook-tire", "skc", "doosan-robotics"],
+    topJobIds: ["mechanical-engineer", "electrical-engineer"],
+    faqs: [
+      {
+        q: "기계·제조 업계 연봉은 어느 정도 수준인가요?",
+        a: "대기업 계열 기계·소재사는 안정적인 기본급에 성과급이 더해지는 구조이며, 공공 연구기관은 상대적으로 기본급 중심입니다. 아래 회사별 연봉 순위 표에서 머니샐러리 DB에 등록된 기업들의 신입·시니어 연봉 집계를 회사별로 확인할 수 있습니다.",
+      },
+      {
+        q: "제조업 취업에는 어떤 전공이 유리한가요?",
+        a: "기계·전기전자·재료·산업공학 전공이 핵심입니다. 최근에는 로봇·자동화·스마트팩토리 전환으로 제어·소프트웨어 역량을 갖춘 엔지니어 수요가 빠르게 늘고 있습니다.",
+      },
+    ],
+    keywords: ["제조업 연봉", "기계 업계 연봉", "한국타이어 연봉", "두산로보틱스 연봉", "제조 대기업 연봉"],
+    trend: "stable",
+    trendNote: "스마트팩토리·로봇 자동화 투자 확대로 설비·제어·로봇 엔지니어 수요가 꾸준한 흐름.",
   },
   {
     id: "chemical-energy",

@@ -48,10 +48,18 @@ const FALLBACK_HEADERS = {
 // Noto Sans KR 전체(수 MB)를 올리거나 폰트 없이 한글을 렌더하면 엣지 CPU 한도
 // 초과(Cloudflare error 1102)로 503이 나므로, &text= 서브셋(수 KB)만 받아
 // satori에 전달한다 (2026-06-11 OG 503 incident 대응).
+// 동일 서브셋 재요청 시 외부 fetch 2회를 생략하는 메모리 캐시 (isolate 생존 동안 유효).
+// OG 텍스트는 페이지 제목·금액 조합으로 종류가 유한해 무한 성장 위험이 낮다.
+const fontCache = new Map<string, ArrayBuffer>();
+
 async function loadGoogleFont(text: string): Promise<ArrayBuffer> {
   const subset = Array.from(new Set(text)).join("");
+  const cached = fontCache.get(subset);
+  if (cached) return cached;
+  // 외부 fetch 지연이 Worker CPU/wall-time 한도까지 번지지 않도록 3초 타임아웃
   const cssRes = await fetch(
-    `https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&text=${encodeURIComponent(subset)}`
+    `https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&text=${encodeURIComponent(subset)}`,
+    { signal: AbortSignal.timeout(3000) }
   );
   if (!cssRes.ok) throw new Error("font css fetch failed");
   const css = await cssRes.text();
@@ -60,9 +68,11 @@ async function loadGoogleFont(text: string): Promise<ArrayBuffer> {
     /src:\s*url\((.+?)\)\s*format\('(opentype|truetype|woff)'\)/
   );
   if (!match) throw new Error("font url not found in css");
-  const fontRes = await fetch(match[1]);
+  const fontRes = await fetch(match[1], { signal: AbortSignal.timeout(3000) });
   if (!fontRes.ok) throw new Error("font file fetch failed");
-  return fontRes.arrayBuffer();
+  const fontData = await fontRes.arrayBuffer();
+  fontCache.set(subset, fontData);
+  return fontData;
 }
 
 const containerStyle = {
@@ -313,7 +323,9 @@ export async function GET(req: NextRequest) {
 
     if (type === "salary") {
       const amount = searchParams.get("amount") || "50000000";
-      const netPay = searchParams.get("net") || undefined;
+      // netPay는 구버전 공유 URL 하위호환 (카톡에 이미 뿌려진 링크 대응)
+      const netPay =
+        searchParams.get("net") || searchParams.get("netPay") || undefined;
       og = renderSalaryOg(amount, netPay);
     } else if (type === "tool") {
       const name = searchParams.get("name") || title;
@@ -331,7 +343,8 @@ export async function GET(req: NextRequest) {
       // legacy 호환: amount 단독 query는 salary로 처리
       const legacyAmount = searchParams.get("amount");
       if (legacyAmount) {
-        const netPay = searchParams.get("net") || undefined;
+        const netPay =
+          searchParams.get("net") || searchParams.get("netPay") || undefined;
         og = renderSalaryOg(legacyAmount, netPay);
       } else {
         // path 기반 자동 분기 — buildPageMetadata가 path를 넘기면 카테고리별 OG 자동 적용

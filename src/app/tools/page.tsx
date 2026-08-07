@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { itemListLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "금융 계산기 모음 2026 | 30가지 세금·재테크 계산기 - 머니샐러리",
@@ -106,8 +108,15 @@ function TagBadge({ label, type }: { label: string; type: "new" | "hot" }) {
 export default function ToolsHubPage() {
  const totalCount = CATEGORIES.reduce((sum, c) => sum + c.items.length, 0);
 
+ // 허브 ItemList 구조화데이터 — 카테고리 전체 계산기 목록 (salary-db/page.tsx 패턴)
+ const toolListItems = CATEGORIES.flatMap((cat) => cat.items).map((item) => ({
+ name: item.title,
+ url: item.href,
+ }));
+
  return (
  <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
+ <JsonLd data={itemListLd({ name: "금융 계산기 모음", items: toolListItems })} />
  <div className="max-w-5xl mx-auto">
 
  {/* Hero */}

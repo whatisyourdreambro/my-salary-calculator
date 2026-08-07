@@ -5,7 +5,11 @@ import PageFooterAds from "@/components/PageFooterAds";
 import { SidebarAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
-import { faqLd } from "@/lib/structuredData";
+import {
+ autoBreadcrumbLd,
+ faqLd,
+ softwareApplicationLd,
+} from "@/lib/structuredData";
 import {
  Car as CarIcon,
  Truck,
@@ -191,7 +195,18 @@ export default function CarLoanPage() {
 
  return (
  <main className="w-full bg-background min-h-screen pb-20">
- <JsonLd data={faqLd(FAQ_ITEMS)} />
+ <JsonLd
+ data={[
+ faqLd(FAQ_ITEMS),
+ softwareApplicationLd({
+ name: "자동차 할부 계산기",
+ description:
+ "차량 가격, 선납금, 할부 기간, 이자율을 입력하면 월 납부액과 총 상환 금액, 총 이자를 즉시 계산합니다. 신차·중고차 할부 비교부터 캐피탈 vs 카드론까지 한 번에.",
+ url: "/car-loan",
+ }),
+ autoBreadcrumbLd("/car-loan", { leafName: "자동차 할부 계산기" }),
+ ]}
+ />
 
  {/* Hero Section */}
  <section className="relative py-20 overflow-hidden bg-electric text-white">

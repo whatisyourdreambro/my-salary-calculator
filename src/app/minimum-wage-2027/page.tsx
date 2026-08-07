@@ -135,6 +135,7 @@ export default function MinimumWage2027Page() {
             description:
               "2027년 최저임금 10,700원 의결(+380원, 3.7%). 월 2,236,300원 환산, 표결 결과, 확정 고시 일정, 실수령액 참고치 종합",
             slug: "minimum-wage-2027",
+            url: "/minimum-wage-2027",
             publishedDate: "2026-07-16",
             modifiedDate: "2026-07-16",
           }),

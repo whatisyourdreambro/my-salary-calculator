@@ -96,6 +96,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/posco-bonus',
  '/calc/samsung-sdi-bonus',
  '/calc/lg-chem-bonus',
+ '/calc/celltrion-bonus',
+ '/calc/hyundai-rotem-bonus',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',
@@ -151,7 +153,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/fun/tetris',
  // Company Pages
  // /company(→/salary-db 301)·/company/compare(noindex)는 사이트맵 제외 — 모순 신호 방지
- '/company/simulator',
+ // /company/simulator도 제외 (2026-08-07) — 내부 링크 0건 완전 고아 상태라 사이트맵 등재가 모순 신호
  // Global Pages
  '/en',
  '/en/flat-tax',

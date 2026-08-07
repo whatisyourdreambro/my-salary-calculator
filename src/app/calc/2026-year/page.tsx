@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import SalaryCalculator from "@/components/SalaryCalculator";
 import { Info, ShieldCheck, Sparkles } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
@@ -22,6 +24,17 @@ export const metadata: Metadata = buildPageMetadata({
 export default function Calc2026Page() {
  return (
  <main className="min-h-screen bg-canvas pb-20">
+ <JsonLd
+ data={[
+ softwareApplicationLd({
+ name: "2026 연봉 계산기 PRO",
+ description:
+ "2026년 변경 국민연금/건강보험 요율 자동 적용. 실수령액 + 연봉 티어 카드 + 미래 자산 시뮬레이션까지 한 페이지에서 무료로 확인하세요.",
+ url: "/calc/2026-year",
+ }),
+ autoBreadcrumbLd("/calc/2026-year", { leafName: "2026 연봉 계산기 PRO" }),
+ ]}
+ />
  {/* Header Banner */}
  <div className="bg-[#0F4C81] py-12 text-white">
  <div className="max-w-4xl mx-auto px-4 text-center">

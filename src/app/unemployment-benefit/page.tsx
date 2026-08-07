@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import UnemploymentBenefitContent from "./UnemploymentBenefitContent";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "실업급여 계산기 2026 — 수령액·기간·신청 조건 즉시 계산",
@@ -60,10 +60,19 @@ export default function UnemploymentBenefitPage() {
 
  const faq = faqLd(FAQ_ITEMS);
 
+ // breadcrumb 은 위에서 이미 주입 — SoftwareApplication 만 추가 (BreadcrumbList 중복 금지)
+ const app = softwareApplicationLd({
+  name: "실업급여 계산기",
+  description:
+   "2026년 실업급여(구직급여) 수령액을 즉시 계산. 월급·가입기간 입력 → 예상 지급액과 지급 일수 자동 계산. 자진 퇴사 예외 조건, 신청 방법, 구직활동 요건까지 완벽 가이드.",
+  url: "/unemployment-benefit",
+ });
+
  return (
   <main className="w-full min-h-screen bg-canvas">
    <JsonLd data={breadcrumb} />
    <JsonLd data={faq} />
+   <JsonLd data={app} />
    <UnemploymentBenefitContent />
   </main>
  );

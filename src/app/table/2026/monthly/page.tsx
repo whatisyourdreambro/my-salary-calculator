@@ -7,6 +7,8 @@ import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -62,27 +64,18 @@ const FAQ_ITEMS = [
  },
 ];
 
-// JSON-LD for table page — Dataset + FAQ
+// JSON-LD for table page — datasetLd 빌더로 dateModified(신선도 신호) 부여 + FAQ + breadcrumb
 const monthlyJsonLd = [
- {
- "@context": "https://schema.org",
- "@type": "Dataset",
+ datasetLd({
  name: "2026년 월급별 실수령액 데이터",
  description:
  "2026년 최신 세법 기준 월급 200만원에서 1000만원 이상까지 구간별 실수령액, 4대보험 공제 내역 데이터셋",
- creator: { "@type": "Organization", name: "머니샐러리" },
- url: "https://www.moneysalary.com/table/2026/monthly",
- inLanguage: "ko",
- },
- {
- "@context": "https://schema.org",
- "@type": "FAQPage",
- mainEntity: FAQ_ITEMS.map((item) => ({
- "@type": "Question",
- name: item.question,
- acceptedAnswer: { "@type": "Answer", text: item.answer },
- })),
- },
+ url: "/table/2026/monthly",
+ dateModified: "2026-08-07",
+ keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2026년"],
+ }),
+ faqLd(FAQ_ITEMS),
+ autoBreadcrumbLd("/table/2026/monthly", { leafName: "2026 월급 실수령액 표" }),
 ];
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
@@ -95,10 +88,7 @@ function MonthlyTable() {
 
  return (
  <main className="w-full bg-background min-h-screen pb-20">
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(monthlyJsonLd) }}
- />
+ <JsonLd data={monthlyJsonLd} />
  <TableHero
  badgeText="2026년 최신 데이터 반영"
  title={

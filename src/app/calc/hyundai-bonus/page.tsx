@@ -252,6 +252,14 @@ export default function HyundaiBonusPage() {
               <p className="font-black text-lg">현대차 연봉·복지 DB →</p>
               <p className="text-sm text-faint mt-1">직급별 평균 연봉, 워라밸 전체</p>
             </Link>
+            <Link
+              href="/calc/hyundai-rotem-bonus"
+              className="block rounded-xl border-2 border-primary/30 bg-primary/5 p-5 hover:bg-primary/10 transition"
+            >
+              <p className="text-xs font-bold text-primary mb-1">📊 그룹사 계산기</p>
+              <p className="font-black text-lg">현대로템 성과급 계산기 →</p>
+              <p className="text-sm text-faint mt-1">2025 타결안 450% + 1,620만원</p>
+            </Link>
           </section>
 
           <div className="mt-10">

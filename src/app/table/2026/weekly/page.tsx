@@ -10,6 +10,8 @@ import SeasonalLinks from "../SeasonalLinks";
 import { CalcResultAd } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 주급 실수령액 표 — 주휴수당 포함 월 환산 세후 수령액",
@@ -37,19 +39,17 @@ const tableHeaders = [
  { key: "incomeTax", label: "소득세" },
 ];
 
-const structuredData = {
- "@context": "https://schema.org",
- "@type": "Dataset",
+// datasetLd 빌더로 dateModified(신선도 신호) 부여 + breadcrumb
+const structuredData = [
+ datasetLd({
  name: "2026년 주급 실수령액 표",
  description: "2026년 최신 세법 기준 주급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
- url: "https://www.moneysalary.com/table/2026/weekly",
- creator: {
- "@type": "Organization",
- name: "Moneysalary",
- },
- license: "https://www.moneysalary.com",
+ url: "/table/2026/weekly",
+ dateModified: "2026-08-07",
  keywords: ["주급", "실수령액", "세후 월급", "주급 테이블", "2026년"],
-};
+ }),
+ autoBreadcrumbLd("/table/2026/weekly", { leafName: "2026 주급 실수령액 표" }),
+];
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
 function WeeklyTable2026() {
@@ -58,10 +58,7 @@ function WeeklyTable2026() {
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
- />
+ <JsonLd data={structuredData} />
  <main className="w-full bg-background">
  <TableHero
  badgeText="2026년 최신 데이터 반영"

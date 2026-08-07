@@ -139,6 +139,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/calc/posco-bonus": ["bonus", "tax"],
  "/calc/samsung-sdi-bonus": ["bonus", "tax"],
  "/calc/lg-chem-bonus": ["bonus", "tax"],
+ "/calc/celltrion-bonus": ["bonus", "tax"],
+ "/calc/hyundai-rotem-bonus": ["bonus", "tax"],
  "/salary-raise-2026": ["salary", "tax"],
  "/tools": ["salary", "loan", "tax"],
  "/tools/loan": ["loan"],

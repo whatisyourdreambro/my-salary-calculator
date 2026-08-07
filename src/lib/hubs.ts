@@ -294,7 +294,10 @@ export const hubs: Hub[] = [
         heading: "회사·연봉 비교",
         links: [
           { label: "회사 연봉 DB", href: "/salary-db", desc: "기업별 직급별 연봉 데이터" },
+          { label: "직업별 연봉", href: "/job", desc: "100+ 직종 평균 연봉·실수령액" },
+          { label: "업종별 연봉", href: "/industry", desc: "업계별 평균·회사 연봉 순위" },
           { label: "회사 비교", href: "/company", desc: "동종업계 회사 연봉 비교" },
+          { label: "커리어 패스 시뮬레이터", href: "/pro/career-planner", desc: "이직·승진 시나리오별 연봉 성장" },
           { label: "연차별 커리어 단계", href: "/career-stages-2026", desc: "연차별 연봉·역량 로드맵" },
         ],
       },

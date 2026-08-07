@@ -4,6 +4,7 @@ import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
+import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
@@ -186,6 +187,11 @@ export default function CompanyDetailPage({
  <CompanyDetailClient company={company} />
 
  <CompanySalaryTable company={company} />
+
+ {/* 회사 고유 심층 지표 — 전국 순위·실질 시급·복지 가치·15년 누적 소득.
+ 회사마다 실제 값이 달라지는 카드로 thin content 판정 대응. 데이터 없는
+ 지표는 카드 자체를 렌더하지 않음 (추정 금지). */}
+ <CompanyUniqueStats company={company} />
 
  {/* 회사 전용 성과급 계산기 역링크 — 매핑 11개사는 대형 CTA, 그 외 회사는
      신입 연봉 실수령(/salary/{amount})·일반 성과급 계산기 fallback CTA.

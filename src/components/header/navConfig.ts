@@ -35,12 +35,12 @@ export type NavItem = LinkItem | DropdownItem;
 export const navConfig: NavItem[] = [
  // ─── 성과급 카테고리 ────────────────────────────────────
  // GA 분석상 단일 페이지(/calc/samsung-bonus)가 5/22~23 트래픽 90% 견인.
- // 회사별 성과급 계산기 11종을 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
+ // 회사별 성과급 계산기 13종을 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
  // 시즌(1·6·12월 OPI/PS 지급) 트래픽 폭증 대응.
  {
   name: "성과급",
   type: "dropdown",
-  description: "회사별 성과급·RSU 계산기 11종 (GA 폭증 검증)",
+  description: "회사별 성과급·RSU 계산기 13종 (GA 폭증 검증)",
   items: [
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
    { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
@@ -53,6 +53,8 @@ export const navConfig: NavItem[] = [
    { name: "LG화학 성과급", href: "/calc/lg-chem-bonus", description: "PS(0~850%) + PI(고정 200%)", badge: "NEW" },
    { name: "네이버 성과급·RSU", href: "/calc/naver-bonus", description: "PI 10~40% + 자사주 RSU" },
    { name: "카카오 성과급·RSU", href: "/calc/kakao-bonus", description: "PI + RSU 47만주 + 격려금 100만" },
+   { name: "셀트리온 성과급", href: "/calc/celltrion-bonus", description: "연봉의 최대 50~53% 시나리오", badge: "NEW" },
+   { name: "현대로템 성과급", href: "/calc/hyundai-rotem-bonus", description: "450% + 1,620만 타결안 계산", badge: "NEW" },
    { name: "일반 성과급 세금 계산기", href: "/tools/finance/bonus", description: "회사 무관 보너스 세후 실수령", badge: "MUST" },
   ],
  },
@@ -76,6 +78,8 @@ export const navConfig: NavItem[] = [
    { name: "HD현대중공업 성과급", href: "/calc/hd-hyundai-bonus", description: "조선 슈퍼사이클 600%+", badge: "NEW" },
    { name: "네이버 성과급·RSU", href: "/calc/naver-bonus", description: "PI 10~40% + 자사주 RSU", badge: "NEW" },
    { name: "카카오 성과급·RSU", href: "/calc/kakao-bonus", description: "PI + RSU 47만주(237억)", badge: "NEW" },
+   { name: "셀트리온 성과급 계산기", href: "/calc/celltrion-bonus", description: "연봉의 최대 50~53% 등급별", badge: "NEW" },
+   { name: "현대로템 성과급 계산기", href: "/calc/hyundai-rotem-bonus", description: "450% + 1,620만 임단협 타결안", badge: "NEW" },
    { name: "연봉 인상 협상 시뮬", href: "/salary-raise-2026", description: "인상률 + 세후 + 5년 누적", badge: "NEW" },
    { name: "종합소득세 계산기", href: "/income-tax-2026", description: "8단계 누진세율 + 지방세", badge: "NEW" },
    { name: "건강보험료 계산기", href: "/health-insurance-fee-2026", description: "직장·지역 가입자 본인 부담", badge: "NEW" },
@@ -140,6 +144,8 @@ export const navConfig: NavItem[] = [
    { name: "HD현대중공업 성과급", href: "/calc/hd-hyundai-bonus", description: "조선 슈퍼사이클 + 노조 영업이익 30%", badge: "NEW" },
    { name: "네이버 성과급·RSU", href: "/calc/naver-bonus", description: "정기 PI + 자사주 RSU 465억", badge: "NEW" },
    { name: "카카오 성과급·RSU", href: "/calc/kakao-bonus", description: "RSU 47만주 + 격려금 100만", badge: "NEW" },
+   { name: "1월 셀트리온 성과급", href: "/calc/celltrion-bonus", description: "연봉의 최대 50% — 1월 선지급", badge: "NEW" },
+   { name: "12월 현대로템 성과급", href: "/calc/hyundai-rotem-bonus", description: "임단협 450%+1,620만 타결안", badge: "NEW" },
   ],
  },
  {

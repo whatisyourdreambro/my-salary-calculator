@@ -161,6 +161,7 @@ export default function SamsungNegotiation2026Page() {
  title: "삼성전자 2026 임금협상 - 5월 12일 본격 시작",
  description: "5가지 핵심 쟁점, 직급별 예상 인상폭, 소급분 가계 준비까지",
  slug: "samsung-negotiation-2026",
+ url: "/samsung-negotiation-2026",
  publishedDate: "2026-05-12",
  modifiedDate: "2026-05-12",
  }),

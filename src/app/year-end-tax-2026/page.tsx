@@ -135,6 +135,7 @@ export default function YearEndTax2026Page() {
  description:
  "5월 종소세 신고 일정, 필요 서류, 환급금 계산, 절세 팁",
  slug: "year-end-tax-2026",
+ url: "/year-end-tax-2026",
  publishedDate: "2026-04-15",
  modifiedDate: "2026-05-12",
  }),

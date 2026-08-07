@@ -1,6 +1,8 @@
 import DepositCalculator from "@/components/calculators/DepositCalculator";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "예적금 계산기 (이자/세금)",
@@ -11,6 +13,17 @@ export const metadata: Metadata = buildPageMetadata({
 export default function DepositCalculatorPage() {
  return (
  <div className="min-h-screen pt-24 pb-20">
+ <JsonLd
+ data={[
+ softwareApplicationLd({
+ name: "예적금 계산기",
+ description:
+ "예금, 적금 이자와 세후 수령액을 계산해보세요. 일반과세, 세금우대, 비과세 적용 가능.",
+ url: "/tools/deposit",
+ }),
+ autoBreadcrumbLd("/tools/deposit", { leafName: "예적금 계산기" }),
+ ]}
+ />
  <div className="page-width">
  <div className="text-center mb-12">
  <h1 className="text-4xl md:text-5xl font-black text-navy mb-4 tracking-tight">

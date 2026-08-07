@@ -190,11 +190,18 @@ export function buildBreadcrumbTrail(
  acc += `/${seg}`;
  const isLast = idx === segments.length - 1;
  const override = options.overrides?.[seg];
+ // 잘못된 % 인코딩 세그먼트에서 decodeURIComponent가 URIError를 던지면 원본 seg 사용
+ let decoded: string;
+ try {
+ decoded = decodeURIComponent(seg);
+ } catch {
+ decoded = seg;
+ }
  const label =
  override ||
  (isLast && options.leafName) ||
  SEGMENT_LABELS[seg] ||
- decodeURIComponent(seg).replace(/-/g, " ");
+ decoded.replace(/-/g, " ");
  crumbs.push({ name: label, path: acc });
  });
 
@@ -246,10 +253,19 @@ export function articleLd(article: {
  inLanguage?: string;
  /** 영문 가이드일 경우 /en/guides/{slug} 경로로 빌드 */
  lang?: "ko" | "en";
+ /**
+  * 기본 /guides/{slug} 경로 대신 사용할 실제 경로 override.
+  * 시즌 페이지 등 guides 밖 라우트에서 필수 (예: "/tax-reform-2026").
+  * 미지정 시 기존 동작(/guides/{slug}) 유지.
+  */
+ url?: string;
 }) {
  const lang = article.lang ?? "ko";
- const url =
- lang === "en"
+ const url = article.url
+ ? article.url.startsWith("http")
+ ? article.url
+ : `${SITE_URL}${article.url}`
+ : lang === "en"
  ? `${SITE_URL}/en/guides/${article.slug}`
  : `${SITE_URL}/guides/${article.slug}`;
  // 기본 OG는 title 파라미터 필수 — /api/og type=guide 분기가 slug를 무시함 (2026-07-06 정정)

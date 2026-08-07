@@ -229,6 +229,38 @@ const nextConfig = {
           }
         ],
       },
+      // GSC 5xx 대응 (2026-08): 세법 고정 콘텐츠 3종은 엣지 6시간 캐시로
+      // 구글봇 크롤을 Worker 실행 없이 CDN에서 흡수 (edge SSR CPU 한도 초과 방지).
+      // headers()는 매칭되는 모든 규칙을 적용하되 같은 키는 나중 규칙이 이기므로,
+      // 아래 규칙들은 반드시 전역 규칙(/:path*) 뒤에 있어야 s-maxage=1을 오버라이드한다.
+      // (보안 헤더는 전역 규칙에서 그대로 상속됨 — Cache-Control 키만 교체)
+      {
+        source: "/salary/:amount*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/glossary/:slug*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/qna/:slug*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
 };

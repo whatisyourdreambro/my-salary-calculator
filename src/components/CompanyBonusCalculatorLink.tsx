@@ -68,6 +68,16 @@ const COMPANY_BONUS_MAP: Record<
     label: "LG화학 성과급 계산기",
     desc: "PS(0~850%) + PI(고정 200%) 사업부별",
   },
+  celltrion: {
+    calc: "/calc/celltrion-bonus",
+    label: "셀트리온 성과급 계산기",
+    desc: "연봉의 최대 50~53% 등급별 — 1월 선지급 + 3월 잔여",
+  },
+  "hyundai-rotem": {
+    calc: "/calc/hyundai-rotem-bonus",
+    label: "현대로템 성과급 계산기",
+    desc: "임단협 타결안 기본급 450% + 1,620만원",
+  },
 };
 
 interface Props {

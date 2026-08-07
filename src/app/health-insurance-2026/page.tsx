@@ -102,6 +102,7 @@ export default function HealthInsurance2026Page() {
  title: "2026 건강보험료 연말정산 가이드",
  description: "4월 건보료 정산금·환급·분납 + 7월 국민연금 재산정",
  slug: "health-insurance-2026",
+ url: "/health-insurance-2026",
  publishedDate: "2026-04-01",
  modifiedDate: "2026-07-13",
  }),

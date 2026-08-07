@@ -61,6 +61,11 @@ export default function Footer() {
         { name: "금융 가이드", href: "/guides" },
         { name: "용어 사전", href: "/glossary" },
         { name: "회사 연봉 DB", href: "/salary-db" },
+        // 직업·업종·지역 허브 인덱스 — 헤더 메가메뉴가 조건부 렌더라 SSR HTML에 없어
+        // 푸터가 유일한 전역 크롤 진입로 (준고아 해소, 2026-08-07)
+        { name: "직업별 연봉", href: "/job" },
+        { name: "업종별 연봉", href: "/industry" },
+        { name: "지역별 연봉", href: "/region" },
         { name: "대기업 연봉 순위 TOP 30", href: "/salary-db/ranking" },
         { name: "Q&A", href: "/qna" },
         { name: "절세 팁", href: "/tips" },

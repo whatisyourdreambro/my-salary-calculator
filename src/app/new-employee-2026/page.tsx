@@ -90,6 +90,7 @@ export default function NewEmployee2026Page() {
  title: "2026 신입 연봉 협상 가이드",
  description: "직군별 평균 초봉, 협상 멘트, 패키지 협상법",
  slug: "new-employee-2026",
+ url: "/new-employee-2026",
  publishedDate: "2026-02-15",
  modifiedDate: "2026-05-12",
  }),

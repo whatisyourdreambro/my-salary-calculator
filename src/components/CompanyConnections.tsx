@@ -11,9 +11,14 @@ import { getComparePairs } from "@/lib/salary-data/companyComparePairs";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 
 export default function CompanyConnections({ company }: { company: CompanyProfile }) {
-  const industryHub = company.industryId
-    ? industriesData.find((p) => p.industryIds?.includes(company.industryId as string))
-    : undefined;
+  // 1순위: 표준 업종 id가 industryIds에 등록된 업종 허브.
+  // 2순위(폴백): 업종 미커버 회사도 tier 집계 허브(공기업·외국계·유니콘·대기업)로 연결.
+  // tier "startup"은 대응 허브가 없어 폴백 불발 → 기존 null 가드가 처리.
+  const industryHub =
+    (company.industryId
+      ? industriesData.find((p) => p.industryIds?.includes(company.industryId as string))
+      : undefined) ??
+    industriesData.find((p) => p.aggregateTier === company.tier);
 
   const comparePairs = getComparePairs()
     .filter((p) => p.aId === company.id || p.bId === company.id)

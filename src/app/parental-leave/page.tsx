@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import ParentalLeaveContent from "./ParentalLeaveContent";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "육아휴직 급여 계산기 2026 — 6+6 부모 육아휴직 수령액 즉시 계산",
@@ -60,10 +60,19 @@ export default function ParentalLeavePage() {
 
  const faq = faqLd(FAQ_ITEMS);
 
+ // breadcrumb 은 위에서 이미 주입 — SoftwareApplication 만 추가 (BreadcrumbList 중복 금지)
+ const app = softwareApplicationLd({
+  name: "육아휴직 급여 계산기",
+  description:
+   "2026년 육아휴직 급여를 즉시 계산. 1~3개월 통상임금 100%(상한 250만원)·사후지급금 폐지 반영. 6+6 부모 육아휴직 최대 월 450만원, 배우자 출산휴가 20일, 신청 조건까지 완벽 가이드.",
+  url: "/parental-leave",
+ });
+
  return (
   <main className="w-full min-h-screen bg-canvas">
    <JsonLd data={breadcrumb} />
    <JsonLd data={faq} />
+   <JsonLd data={app} />
    <ParentalLeaveContent />
   </main>
  );

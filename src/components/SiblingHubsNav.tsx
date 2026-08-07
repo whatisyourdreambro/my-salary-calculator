@@ -7,7 +7,7 @@
 // 사용자를 다른 차원으로 분기시켜 PageRank 양방향 흐름 + 체류시간을 늘린다.
 
 import Link from "next/link";
-import { Building2, Briefcase, MapPin, Factory, GitCompare } from "lucide-react";
+import { Building2, Briefcase, MapPin, Factory, Trophy } from "lucide-react";
 
 const HUBS: Array<{
   href: string;
@@ -19,7 +19,8 @@ const HUBS: Array<{
   { href: "/job", label: "직업별 연봉", sub: "100+ 직종 평균·실수령액", icon: Briefcase },
   { href: "/industry", label: "산업별 연봉", sub: "15개 업종 순위·동종사 비교", icon: Factory },
   { href: "/region", label: "지역별 연봉", sub: "17개 시도 + 판교·여의도 분포", icon: MapPin },
-  { href: "/company/compare", label: "회사 비교", sub: "두 회사 정밀 1:1 비교", icon: GitCompare },
+  // /company/compare는 noindex라 크롤 자산 낭비 — 색인되는 랭킹 페이지로 교체 (2026-08-07)
+  { href: "/salary-db/ranking", label: "연봉 랭킹", sub: "대기업 연봉 순위 TOP 30", icon: Trophy },
 ];
 
 interface Props {

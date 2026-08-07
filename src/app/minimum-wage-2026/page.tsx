@@ -112,6 +112,7 @@ export default function MinimumWage2026Page() {
  title: "최저임금 2026 — 시급·월급·연봉 환산 + 인상률·위반 처벌",
  description: "주휴수당 포함 월급 환산, 적용 시점, 위반 시 처벌, 신고 방법 종합",
  slug: "minimum-wage-2026",
+ url: "/minimum-wage-2026",
  publishedDate: "2026-05-22",
  modifiedDate: "2026-05-22",
  }),
