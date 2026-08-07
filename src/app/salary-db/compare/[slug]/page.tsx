@@ -11,6 +11,14 @@ import {
   formatSalaryKorean,
   industryLabelKo,
   getIndustryBenchmark,
+  getOverallRank,
+  getRealHourlyWage,
+  getBenefitsValue,
+  getCumulativeIncome,
+} from "@/lib/companyContentBuilder";
+import type {
+  RealHourlyWage,
+  BenefitsValueSummary,
 } from "@/lib/companyContentBuilder";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
@@ -146,6 +154,117 @@ function topBenefits(c: CompanyProfile, n = 2): string[] {
     .map((b) => b.title);
 }
 
+/** 원 단위 금액 표기 — 만원 미만 단위가 의미 있는 실질 시급 전용. */
+function formatWon(amount: number): string {
+  return `${Math.round(amount).toLocaleString("ko-KR")}원`;
+}
+
+/** 데이터 심층 비교에 쓰는 페어별 지표 묶음. 없는 지표는 null (추정 금지). */
+interface DeepStats {
+  aEntry: number;
+  bEntry: number;
+  aSenior: number;
+  bSenior: number;
+  aHourly: RealHourlyWage | null;
+  bHourly: RealHourlyWage | null;
+  aBenefits: BenefitsValueSummary | null;
+  bBenefits: BenefitsValueSummary | null;
+  /** 15년차 누적 세전 소득 (원). 직급 데이터 미비 시 null */
+  aCum15: number | null;
+  bCum15: number | null;
+}
+
+/**
+ * 종합 판정문 — 회사 쌍마다 실제 데이터 조건에 따라 다른 결론이 나오도록 분기.
+ * ① 연봉-실질시급 역전형 ② 초봉-시니어 교차형 ③ 신입동급-장기격차형
+ * ④ 완전 동급형 ⑤ 복지 주도형 ⑥ 전 구간 우세형 ⑦ 누적 동일형 ⑧ 누적 제한형.
+ * 판정 근거 데이터가 없으면 null (추정 금지).
+ */
+function deepVerdictText(
+  a: CompanyProfile,
+  b: CompanyProfile,
+  s: DeepStats
+): string | null {
+  const entryDiffPct = pct(
+    Math.max(s.aEntry, s.bEntry),
+    Math.min(s.aEntry, s.bEntry)
+  );
+  const salaryWinner = s.aEntry >= s.bEntry ? a : b;
+  const seniorWinner = s.aSenior >= s.bSenior ? a : b;
+
+  // ① 역전형 — 연봉 우위와 실질 시급 우위가 다른 회사
+  if (s.aHourly && s.bHourly && entryDiffPct >= 3) {
+    const hourlyWinner = s.aHourly.hourly >= s.bHourly.hourly ? a : b;
+    if (hourlyWinner.id !== salaryWinner.id) {
+      return `신입 영끌 연봉은 ${salaryWinner.name.ko}가 높지만, 주 실근무시간을 반영한 실질 시급은 ${hourlyWinner.name.ko}가 더 높습니다. 근무 강도까지 계산에 넣으면 단순 연봉 비교가 뒤집히는 조합입니다.`;
+    }
+  }
+
+  // ② 교차형 — 초봉 우위와 시니어 연봉 우위가 갈림 (초봉 동률이면 제외)
+  if (s.aEntry !== s.bEntry && seniorWinner.id !== salaryWinner.id) {
+    let cumTail = "";
+    if (s.aCum15 !== null && s.bCum15 !== null && s.aCum15 !== s.bCum15) {
+      const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
+      cumTail = ` 15년 누적 세전 소득 기준으로는 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다.`;
+    }
+    return `초봉은 ${salaryWinner.name.ko}, 시니어 연봉은 ${seniorWinner.name.ko}가 앞서는 교차형 조합입니다. 초기 보상과 장기 상승 곡선 중 무엇을 우선할지에 따라 유불리가 갈립니다.${cumTail}`;
+  }
+
+  // ③ 신입동급-장기격차형 — 초봉은 3% 미만 격차인데 15년 누적은 1억 이상 벌어짐
+  if (
+    entryDiffPct < 3 &&
+    s.aCum15 !== null &&
+    s.bCum15 !== null &&
+    Math.abs(s.aCum15 - s.bCum15) >= 100000000
+  ) {
+    const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
+    return `신입 시점 영끌 연봉은 사실상 동일하지만, 직급별 상승 곡선 차이로 15년 누적 세전 소득은 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다. 장기 근속을 전제할수록 격차가 커지는 조합입니다.`;
+  }
+
+  // ④ 동급형 — 연봉·실질 시급 격차 모두 3% 미만
+  if (s.aHourly && s.bHourly && entryDiffPct < 3) {
+    const hourlyDiffPct = pct(
+      Math.max(s.aHourly.hourly, s.bHourly.hourly),
+      Math.min(s.aHourly.hourly, s.bHourly.hourly)
+    );
+    if (hourlyDiffPct < 3) {
+      return `${a.name.ko}와 ${b.name.ko}는 신입 영끌 연봉과 실질 시급 격차가 모두 3% 미만으로 사실상 동급입니다. 이 조합에서는 연봉표보다 복지 금전가치·재택 정책·기업 문화 점수 같은 비금전 지표가 실질적인 결정 변수가 됩니다.`;
+    }
+  }
+
+  // ⑤ 복지 주도형 — 연봉 격차는 작은데 복지 금전가치 격차가 1.5배 이상
+  if (s.aBenefits && s.bBenefits && entryDiffPct < 10) {
+    const hi = Math.max(
+      s.aBenefits.totalAnnualValue,
+      s.bBenefits.totalAnnualValue
+    );
+    const lo = Math.min(
+      s.aBenefits.totalAnnualValue,
+      s.bBenefits.totalAnnualValue
+    );
+    if (lo > 0 && hi >= lo * 1.5) {
+      const benefitsWinner =
+        s.aBenefits.totalAnnualValue >= s.bBenefits.totalAnnualValue ? a : b;
+      return `연봉 격차는 약 ${entryDiffPct}%로 크지 않은 반면, 금액 환산 가능한 복지는 ${benefitsWinner.name.ko}가 연 ${formatSalaryKorean(hi)} 상당으로 앞섭니다. 총보상 격차의 상당 부분이 연봉이 아니라 복지에서 오는 조합입니다.`;
+    }
+  }
+
+  // ⑥·⑦·⑧ 누적 기반 판정
+  if (s.aCum15 !== null && s.bCum15 !== null) {
+    const diff = Math.abs(s.aCum15 - s.bCum15);
+    const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
+    if (cumWinner.id === salaryWinner.id && diff >= 100000000) {
+      return `신입·시니어·15년 누적 전 구간에서 ${cumWinner.name.ko}가 앞서는 조합으로, 15년 재직 가정 시 세전 누적 격차가 약 ${formatSalaryKorean(diff)}까지 벌어집니다. 장기 재직을 전제한다면 격차가 구조적입니다.`;
+    }
+    if (diff < 10000000) {
+      return `15년 누적 세전 소득 격차가 1,000만원 미만으로, 장기 보상 총량은 사실상 동일한 조합입니다. 연봉 이외의 근무 조건이 결정 변수가 됩니다.`;
+    }
+    return `15년 누적 세전 소득은 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(diff)} 앞서지만, 연 단위로 나누면 격차가 크지 않아 복지·워라밸 조건에 따라 체감 우위가 바뀔 수 있는 조합입니다.`;
+  }
+
+  return null;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pair = getComparePairBySlug(params.slug);
   if (!pair) return { title: "회사 비교를 찾을 수 없습니다" };
@@ -198,6 +317,48 @@ export default function ComparePage({ params }: Props) {
   const aTopBenefits = topBenefits(a);
   const bTopBenefits = topBenefits(b);
 
+  // ── 데이터 심층 비교 지표 — 페어마다 실제 값이 달라지는 고유 데이터 주입 ──
+  // (413페이지 동일 템플릿 → thin content 판정 대응. 없는 지표는 행 자체를 생략)
+  const aRank = getOverallRank(a);
+  const bRank = getOverallRank(b);
+  const aHourly = getRealHourlyWage(a);
+  const bHourly = getRealHourlyWage(b);
+  const aBenefitsValue = getBenefitsValue(a);
+  const bBenefitsValue = getBenefitsValue(b);
+  const aCum15 =
+    getCumulativeIncome(a)?.find((p) => p.years === 15) ?? null;
+  const bCum15 =
+    getCumulativeIncome(b)?.find((p) => p.years === 15) ?? null;
+
+  const entryDiffPct = pct(Math.max(aEntry, bEntry), Math.min(aEntry, bEntry));
+  const hourlyWinner =
+    aHourly && bHourly ? (aHourly.hourly >= bHourly.hourly ? a : b) : null;
+  const hourlyReversal = !!(
+    hourlyWinner &&
+    entryDiffPct >= 3 &&
+    hourlyWinner.id !== entryWinner.id
+  );
+
+  const verdict = deepVerdictText(a, b, {
+    aEntry,
+    bEntry,
+    aSenior,
+    bSenior,
+    aHourly,
+    bHourly,
+    aBenefits: aBenefitsValue,
+    bBenefits: bBenefitsValue,
+    aCum15: aCum15?.cumulative ?? null,
+    bCum15: bCum15?.cumulative ?? null,
+  });
+
+  const hasDeepSection = !!(
+    (aRank && bRank) ||
+    (aHourly && bHourly) ||
+    (aBenefitsValue && bBenefitsValue) ||
+    (aCum15 && bCum15)
+  );
+
   const faqItems = [
     {
       question: `${a.name.ko}와 ${b.name.ko} 중 신입 연봉이 더 높은 곳은?`,
@@ -246,9 +407,16 @@ export default function ComparePage({ params }: Props) {
     });
   }
 
+  if (aRank && bRank) {
+    faqItems.push({
+      question: `${a.name.ko}와 ${b.name.ko}의 전국 연봉 순위는 어떻게 되나요?`,
+      answer: `연봉 DB 보유 ${aRank.total}개사를 신입 영끌 연봉 기준으로 정렬하면 ${a.name.ko}는 ${aRank.rank}위(상위 ${aRank.percentile}%), ${b.name.ko}는 ${bRank.rank}위(상위 ${bRank.percentile}%)로, 순위 격차는 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`,
+    });
+  }
+
   faqItems.push({
     question: `${a.name.ko} vs ${b.name.ko} 어디로 입사하는 게 좋을까요?`,
-    answer: `초봉을 우선시한다면 ${entryWinner.name.ko}, 장기 커리어와 시니어 연봉 상승을 본다면 ${seniorWinner.name.ko}가 유리할 수 있습니다. 워라밸은 주당 실근무시간이 짧은 회사를, 안정성은 ${a.tier === "conglomerate" || a.tier === "public" ? a.name.ko : b.tier === "conglomerate" || b.tier === "public" ? b.name.ko : "두 회사 모두 동일 tier"}를 고려하세요. 최종 결정은 본인 커리어 목표·연봉 외 보상·복지 가치와 함께 종합 판단해야 합니다.`,
+    answer: `초봉을 우선시한다면 ${entryWinner.name.ko}, 장기 커리어와 시니어 연봉 상승을 본다면 ${seniorWinner.name.ko}가 유리할 수 있습니다. 워라밸은 주당 실근무시간이 짧은 회사를, 안정성은 ${a.tier === "conglomerate" || a.tier === "public" ? a.name.ko : b.tier === "conglomerate" || b.tier === "public" ? b.name.ko : "두 회사 모두 동일 tier"}를 고려하세요. 최종 결정은 본인 커리어 목표·연봉 외 보상·복지 가치와 함께 종합 판단해야 합니다.${verdict ? ` ${verdict}` : ""}`,
   });
 
   // autoBreadcrumbLd는 중간 세그먼트 /salary-db/compare(인덱스 없음 → 308)를
@@ -373,6 +541,129 @@ export default function ComparePage({ params }: Props) {
         </section>
 
         <InArticleAd />
+
+        {/* 데이터 심층 비교 — 페어마다 실제 값이 달라지는 고유 지표 4종.
+            두 회사 모두 데이터가 있는 지표만 렌더 (없으면 행 생략, 추정 금지) */}
+        {hasDeepSection && (
+          <section className="my-8">
+            <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">
+              데이터 심층 비교: 숫자로 보는 {a.name.ko} vs {b.name.ko}
+            </h2>
+            <div className="space-y-3">
+              {aRank && bRank && (
+                <div className="p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+                  <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                    전국 연봉 순위
+                  </p>
+                  <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+                    {a.name.ko}{" "}
+                    <strong className="text-electric">{aRank.rank}위</strong>
+                    (상위 {aRank.percentile}%) vs {b.name.ko}{" "}
+                    <strong className="text-electric">{bRank.rank}위</strong>
+                    (상위 {bRank.percentile}%)
+                    {aRank.rank !== bRank.rank
+                      ? ` — 순위 격차 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`
+                      : " — 전국 순위가 나란히 붙어 있습니다."}
+                  </p>
+                  <p className="mt-1 text-xs text-faint-blue">
+                    ※ 연봉 DB 보유 {aRank.total}개사를 신입 영끌 연봉(기본급+평균
+                    인센티브) 기준으로 정렬한 순위입니다.
+                  </p>
+                </div>
+              )}
+              {aHourly && bHourly && (
+                <div className="p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+                  <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                    실질 시급 (실근무시간 반영)
+                  </p>
+                  <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+                    {a.name.ko} 약{" "}
+                    <strong className="text-electric">
+                      {formatWon(aHourly.hourly)}
+                    </strong>
+                    (주 {aHourly.weeklyRealHours}시간) vs {b.name.ko} 약{" "}
+                    <strong className="text-electric">
+                      {formatWon(bHourly.hourly)}
+                    </strong>
+                    (주 {bHourly.weeklyRealHours}시간).{" "}
+                    {hourlyReversal && hourlyWinner
+                      ? `연봉은 ${entryWinner.name.ko}가 높지만, 실근무시간을 반영한 시간당 보상은 ${hourlyWinner.name.ko}가 앞서는 역전 사례입니다.`
+                      : `${compareText(a.name.ko, aHourly.hourly, b.name.ko, bHourly.hourly)}입니다.`}
+                  </p>
+                  <p className="mt-1 text-xs text-faint-blue">
+                    ※ 신입 영끌 연봉을 연간 실근무시간(주 실근무시간 × 52주)으로
+                    나눈 값입니다.
+                  </p>
+                </div>
+              )}
+              {aBenefitsValue && bBenefitsValue && (
+                <div className="p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+                  <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                    복지 금전가치 (연 환산)
+                  </p>
+                  <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+                    {a.name.ko} 연 약{" "}
+                    <strong className="text-electric">
+                      {formatSalaryKorean(aBenefitsValue.totalAnnualValue)}
+                    </strong>
+                    ({aBenefitsValue.countedItems}개 항목) vs {b.name.ko} 연 약{" "}
+                    <strong className="text-electric">
+                      {formatSalaryKorean(bBenefitsValue.totalAnnualValue)}
+                    </strong>
+                    ({bBenefitsValue.countedItems}개 항목) —{" "}
+                    {compareText(
+                      a.name.ko,
+                      aBenefitsValue.totalAnnualValue,
+                      b.name.ko,
+                      bBenefitsValue.totalAnnualValue
+                    )}
+                    입니다.
+                  </p>
+                  <p className="mt-1 text-xs text-faint-blue">
+                    ※ 금액 환산 가능한 복지 항목만 합산한 연 환산액이며, 연봉표에
+                    이미 반영된 성과급·주식·사인온 항목은 제외했습니다.
+                  </p>
+                </div>
+              )}
+              {aCum15 && bCum15 && (
+                <div className="p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700">
+                  <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                    15년 누적 세전 소득
+                  </p>
+                  <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+                    {a.name.ko} 약{" "}
+                    <strong className="text-electric">
+                      {formatSalaryKorean(aCum15.cumulative)}
+                    </strong>{" "}
+                    vs {b.name.ko} 약{" "}
+                    <strong className="text-electric">
+                      {formatSalaryKorean(bCum15.cumulative)}
+                    </strong>
+                    .{" "}
+                    {Math.abs(aCum15.cumulative - bCum15.cumulative) < 10000000
+                      ? "누적 격차가 1,000만원 미만으로 사실상 동일한 수준입니다."
+                      : `15년 재직 가정 시 ${(aCum15.cumulative >= bCum15.cumulative ? a : b).name.ko}가 약 ${formatSalaryKorean(Math.abs(aCum15.cumulative - bCum15.cumulative))} 더 모으는 격차입니다.`}
+                  </p>
+                  <p className="mt-1 text-xs text-faint-blue">
+                    ※ 직급별 평균 영끌 연봉을 연차 구간(신입 1~2년·주니어
+                    3~5년·시니어 6~10년·리드 11~15년차)에 대입해 단순 합산한 세전
+                    추정치입니다.
+                  </p>
+                </div>
+              )}
+              {verdict && (
+                <div className="p-4 rounded-2xl bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700">
+                  <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                    종합 판정
+                  </p>
+                  <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+                    {verdict}
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* 인센티브·주식 보상 구조 */}
         <section className="my-8">

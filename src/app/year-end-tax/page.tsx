@@ -1,6 +1,7 @@
 // src/app/year-end-tax/page.tsx
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -20,6 +21,8 @@ export const metadata: Metadata = buildPageMetadata({
  keywords: [
  "연말정산 환급금 계산기",
  "연말정산 계산기 무료",
+ "연말정산 미리보기",
+ "2026 연말정산 달라지는 점",
  "13월의 월급 계산",
  "신용카드 공제 계산",
  "의료비 공제 계산",
@@ -43,6 +46,11 @@ const FAQ_ITEMS = [
  question: "연금저축·IRP 세액공제는 얼마까지 받을 수 있나요?",
  answer:
  "연금저축 600만원 + IRP 추가 300만원 = 최대 900만원까지 납입 가능합니다. 총급여 5,500만원 이하는 16.5%, 초과는 13.2% 세액공제율이 적용됩니다 (최대 약 148만원 절세).",
+ },
+ {
+ question: "2026년 귀속 연말정산에서 달라지는 점은 무엇인가요?",
+ answer:
+ "올해 소득분에는 신용카드 소득공제 자녀 추가 한도(1명 +50만원, 2명 이상 +100만원), 출산·보육수당 비과세 월 20만원, 교육비 세액공제 확대, 월세 세액공제 주말부부 각자 신청 등이 적용됩니다. 8월 3일 발표된 2026 세제개편안(인적공제 소득요건 300만원 완화 등)은 국회 통과 시 2027년 소득분부터 적용되므로 올해 정산에는 반영되지 않습니다.",
  },
 ];
 
@@ -101,6 +109,43 @@ export default function YearEndTaxPage() {
 
  <div className="max-w-4xl mx-auto mt-10">
  <InArticleAd />
+
+ {/* 2026년 귀속 확정 변경사항 — "연말정산 미리보기" 검색 의도 대응 */}
+ <section className="mt-10 p-6 bg-white rounded-2xl border border-canvas-200">
+ <h2 className="text-lg font-black text-navy mb-3">
+ 2026년 귀속 연말정산, 미리보기 전 달라진 점 확인
+ </h2>
+ <ul className="space-y-2 text-sm text-muted-blue leading-relaxed list-disc pl-5">
+ <li>
+ <strong>신용카드 공제 자녀 추가 한도</strong> — 자녀 1명 +50만원,
+ 2명 이상 +100만원 (총급여 7천만원 초과자는 절반)
+ </li>
+ <li>
+ <strong>출산·보육수당 비과세</strong> — 자녀 1인당 월 20만원까지
+ </li>
+ <li>
+ <strong>교육비 세액공제 확대</strong> — 자녀 소득요건 폐지, 9세 미만
+ 예체능 학원비 포함
+ </li>
+ <li>
+ <strong>월세 세액공제</strong> — 주말부부 각자 신청 가능 (부부합산
+ 한도 연 1,000만원)
+ </li>
+ </ul>
+ <p className="text-xs text-faint-blue leading-relaxed mt-4">
+ ※ 8월 3일 발표된 2026 세제개편안(인적공제 소득요건 300만원 완화 등)은
+ 국회 통과 시 2027년 소득분부터 적용 — 올해 정산과는 무관합니다. 상세
+ 내용은{" "}
+ <Link href="/tax-reform-2026" className="text-electric font-bold hover:underline">
+ 2026 세법개정안 총정리
+ </Link>
+ , 올해 시행분 전체 목록은{" "}
+ <Link href="/tax-changes-2026" className="text-electric font-bold hover:underline">
+ 2026 세법 변경사항
+ </Link>
+ 에서 확인하세요.
+ </p>
+ </section>
 
  {/* FAQ — speakable(.faq-answer) 대상 */}
  <div className="mt-10 mb-4">

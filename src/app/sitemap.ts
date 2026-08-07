@@ -338,14 +338,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
 
  // 회사 비교 페이지 (/salary-db/compare/[slug]) — 화이트리스트 페어만
+ // lastModified는 페어를 구성하는 두 회사 lastUpdated 중 최신값 사용 (2026-08-07).
+ // 413페이지 전부 동일 날짜(STATIC_LAST_MODIFIED)면 freshness 신호가 무의미해져
+ // GSC "발견됨-색인 안 됨" 템플릿 판정을 강화하므로, 회사 데이터의 실제 갱신일을 따른다.
  const { getComparePairs } = require('@/lib/salary-data/companyComparePairs');
+ const companyUpdatedMap = new Map<string, Date>();
+ allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
+ if (!company.lastUpdated) return;
+ const parsed = new Date(company.lastUpdated);
+ if (!Number.isNaN(parsed.getTime())) companyUpdatedMap.set(company.id, parsed);
+ });
  const compareUrls: MetadataRoute.Sitemap = getComparePairs().map(
- (p: { slug: string }) => ({
+ (p: { slug: string; aId: string; bId: string }) => {
+ const aDate = companyUpdatedMap.get(p.aId);
+ const bDate = companyUpdatedMap.get(p.bId);
+ const lastModified =
+ aDate && bDate
+ ? (aDate.getTime() >= bDate.getTime() ? aDate : bDate)
+ : aDate ?? bDate ?? STATIC_LAST_MODIFIED;
+ return {
  url: `${baseUrl}/salary-db/compare/${p.slug}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.6,
- })
+ };
+ }
  );
 
  // 글로서리 동적 페이지 — 용어별 long-tail 키워드

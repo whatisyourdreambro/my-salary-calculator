@@ -3,7 +3,7 @@
 // 회사 데이터에서 자동 SEO 콘텐츠 섹션을 생성하는 헬퍼.
 // 같은 업종 평균 대비 차이, 같은 연봉대 cross-link 등을 동적 계산.
 
-import type { CompanyProfile } from "@/types/company";
+import type { CompanyProfile, JobLevel } from "@/types/company";
 import { allCompanies } from "@/data/companies";
 import { normalizeIndustry } from "@/lib/salary-data/industryTaxonomy";
 import { formatSalaryKorean } from "@/lib/seo";
@@ -349,6 +349,50 @@ export function getBenefitsValue(
     industryAvg,
     diffPercent,
   };
+}
+
+// ─────────────────────────────────────────────────────────────
+// 동일 급여 그룹 (near-duplicate 완화)
+//
+// 발전 5사+강원랜드처럼 5직급 base 연봉 튜플이 완전히 동일한 회사
+// 그룹이 46개 존재(2026-08-07 실측, 최대 6개사). 이 페이지들은 표·FAQ
+// 숫자까지 같아져 구글이 near-duplicate로 판정할 위험이 있다 —
+// CompanySalaryGroupNotice가 이 함수로 그룹을 노출해 "본 DB 수치 기준
+// 동일"임을 명시하고 상호 링크 + 회사 고유 차별 요소를 서술한다.
+// 그룹핑은 모듈 로드 시 1회만 수행 (434개 페이지가 각각 호출).
+// ─────────────────────────────────────────────────────────────
+
+const SALARY_TUPLE_LEVELS: JobLevel[] = [
+  "entry",
+  "junior",
+  "senior",
+  "lead",
+  "executive",
+];
+
+function salaryTupleKey(c: CompanyProfile): string {
+  return SALARY_TUPLE_LEVELS.map((level) => c.salary[level].base).join("|");
+}
+
+const salaryGroupMap: Map<string, CompanyProfile[]> = (() => {
+  const map = new Map<string, CompanyProfile[]>();
+  for (const c of allCompanies) {
+    const key = salaryTupleKey(c);
+    const bucket = map.get(key);
+    if (bucket) bucket.push(c);
+    else map.set(key, [c]);
+  }
+  return map;
+})();
+
+/**
+ * 5직급 base 연봉 튜플이 완전히 동일한 다른 회사 목록.
+ * 그룹이 없으면(=이 회사만의 튜플이면) 빈 배열.
+ */
+export function getSalaryGroupPeers(company: CompanyProfile): CompanyProfile[] {
+  const group = salaryGroupMap.get(salaryTupleKey(company));
+  if (!group || group.length < 2) return [];
+  return group.filter((c) => c.id !== company.id);
 }
 
 export interface CumulativeIncomePoint {

@@ -21,9 +21,10 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/year-end-tax-checklist",
  ogType: "article",
  publishedTime: "2026-01-10",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-08-07",
  keywords: [
  "연말정산 체크리스트",
+ "2026 연말정산 달라지는 점",
  "12월 마감 연말정산",
  "연말정산 40가지 점검",
  "연말정산 점검표",
@@ -48,9 +49,24 @@ const FAQ_ITEMS = [
  answer:
  "환급은 미리 떼인 세금을 돌려받는 것이고, 추가 납부는 부족분 정산. 환급이 많을수록 1년간 무이자 대출 효과(미리 떼인 만큼)인데, 매월 받는 게 더 유리. 추가 납부는 절세 항목 미활용 신호.",
  },
+ {
+ question: "올해(2026년 귀속) 연말정산에서 새로 챙길 항목은?",
+ answer:
+ "신용카드 공제 자녀 추가 한도(1명 +50만, 2명 이상 +100만), 출산·보육수당 비과세 월 20만원, 교육비 공제 확대(자녀 소득요건 폐지·9세 미만 예체능 학원비), 월세 주말부부 각자 신청이 올해 적용됩니다. 8월 3일 발표된 세제개편안(부양가족 소득요건 300만원 완화 등)은 국회 통과 시 2027년분부터라 올해는 해당 없음.",
+ },
 ];
 
 const CHECKLIST = [
+ {
+ category: "🆕 올해(2026년 귀속) 달라진 것부터 확인",
+ items: [
+ "신용카드 공제: 자녀 1명 +50만, 2명 이상 +100만 추가 한도 (총급여 7천만 초과는 절반)",
+ "출산·보육수당 비과세 월 20만원 — 급여명세서에서 적용 여부 확인",
+ "교육비: 자녀 소득요건 폐지, 9세 미만 예체능 학원비도 공제 포함",
+ "월세: 주말부부 각자 신청 가능 (부부합산 한도 연 1,000만원)",
+ "8·3 발표 세제개편안(부양가족 소득요건 300만원 완화 등)은 2027년분부터 — 올해 적용 안 됨",
+ ],
+ },
  {
  category: "💳 신용카드·체크카드",
  items: [
@@ -96,6 +112,7 @@ const CHECKLIST = [
  "1인당 150만 소득공제",
  "경로 (만 70세 이상) +100만, 장애인 +200만, 부녀자 +50만",
  "부양가족 소득 100만 초과 여부 확인 (초과 시 자격 박탈)",
+ "※ 소득요건 300만원 완화는 8·3 세제개편안 — 국회 통과 시 2027년분부터, 올해는 100만원 기준",
  "맞벌이 부부 → 누진세율 높은 쪽이 신청",
  ],
  },
@@ -156,11 +173,11 @@ export default function YearEndTaxChecklistPage() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-08-07" className="mb-2" />
  <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
- 환급금 극대화를 위해 12월 31일 전 챙겨야 할 8개 카테고리·40+ 항목.
- 인쇄해서 하나씩 체크하세요.
+ 환급금 극대화를 위해 12월 31일 전 챙겨야 할 9개 카테고리·40+ 항목.
+ 올해 달라진 것부터 확인하고, 인쇄해서 하나씩 체크하세요.
  </p>
  </div>
 
@@ -194,6 +211,15 @@ export default function YearEndTaxChecklistPage() {
  </section>
  ))}
  </div>
+
+ <p className="text-xs text-faint-blue -mt-6 mb-12">
+ ※ 8월 3일 발표된 2026 세제개편안(2027년분부터 적용 예정, 국회 통과
+ 필요)의 상세 내용은{" "}
+ <Link href="/tax-reform-2026" className="text-electric font-bold hover:underline">
+ 2026 세법개정안 총정리
+ </Link>
+ 에서 확인하세요.
+ </p>
 
  {/* CTA */}
  <Link

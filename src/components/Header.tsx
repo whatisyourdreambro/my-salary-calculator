@@ -11,7 +11,6 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
  motion,
- AnimatePresence,
  useScroll,
  useMotionValueEvent,
 } from "framer-motion";
@@ -142,19 +141,19 @@ export default function Header() {
  </nav>
  </motion.header>
 
- {/* Mobile Menu */}
- <AnimatePresence>
- {isMobileMenuOpen && (
- <motion.div
+ {/* Mobile Menu — SEO: 항상 DOM에 렌더하고 열림/닫힘은 CSS(visibility/opacity)로만
+ 제어. 조건부 렌더({isMobileMenuOpen && ...})로 되돌리면 SSR HTML에서 내비 링크가
+ 사라져 크롤러가 못 보게 되므로 금지. invisible은 닫힘 상태 탭 포커스도 제외함 */}
+ <div
  id="mobile-nav-menu"
  role="dialog"
  aria-modal="true"
  aria-label="모바일 메뉴"
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- transition={{ duration: 0.18 }}
- className="lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto"
+ className={`lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto transition-[opacity,visibility] duration-[180ms] ${
+ isMobileMenuOpen
+ ? "visible opacity-100"
+ : "invisible opacity-0 pointer-events-none"
+ }`}
  style={{
  backgroundColor: "rgba(255,255,255,0.97)",
  backdropFilter: "blur(24px)",
@@ -205,9 +204,7 @@ export default function Header() {
  )}
  </nav>
  </div>
- </motion.div>
- )}
- </AnimatePresence>
+ </div>
  </>
  );
 }

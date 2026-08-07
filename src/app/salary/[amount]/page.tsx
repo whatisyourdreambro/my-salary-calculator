@@ -26,17 +26,27 @@ import {
  howToLd,
  speakableLd,
 } from "@/lib/structuredData";
+import {
+ MIN_SALARY,
+ MAX_SALARY,
+ getStaticSalaryAmounts,
+ getSalaryNeighborAmounts,
+} from "@/lib/salaryStaticParams";
 
 // 무거운 recharts는 클라이언트 래퍼(WealthChartLazy)에서 dynamic(ssr:false) 처리 —
 // 서버 컴포넌트에서 직접 선언하면 코드 분할이 안 돼 첫 로드에 recharts가 포함됨
 import WealthChart from "@/components/WealthChartLazy";
 
-// [필수] Cloudflare Pages 호환을 위해 순수 Edge 런타임만 선언합니다.
-export const runtime = "edge";
+// [2026-08-07] edge 매 요청 SSR → 빌드 타임 정적 생성 전환.
+// 구글봇 크롤 시 CF Worker CPU 한도 초과(GSC 5xx)의 근본 원인 제거.
+// 슬러그는 순수 숫자(ASCII)라 CF Pages 한글 프리렌더 404 함정 없음.
+// 집합 밖 URL은 404 (dynamicParams=false — CF Pages는 폴백 렌더 불가).
+// 내부 링크 전 지점의 amount 집합은 src/lib/salaryStaticParams.ts 가 단일 소스.
+export const dynamicParams = false;
 
-// 색인 가능한 연봉 범위 — 이 범위를 벗어나거나 형식이 잘못된 URL은 notFound (무한 thin-content 방지)
-const MIN_SALARY = 1_000_000; // 연 100만원
-const MAX_SALARY = 1_000_000_000; // 연 10억
+export function generateStaticParams(): { amount: string }[] {
+ return getStaticSalaryAmounts().map((amount) => ({ amount: String(amount) }));
+}
 
 function parseSalaryParam(param: string): number | null {
  let amount: number | null = null;
@@ -116,19 +126,9 @@ export default function SalaryAmountPage({ params }: Props) {
  ? `${(amount / 100000000).toFixed(1)}억`
  : `${(amount / 10000).toLocaleString("ko-KR")}만원`;
 
- const manwon = Math.round(amount / 10000);
-
- // 인근 연봉 cross-link
- const neighbors = [
- manwon - 800,
- manwon - 400,
- manwon - 200,
- manwon + 200,
- manwon + 400,
- manwon + 800,
- manwon + 1200,
- manwon + 2000,
- ].filter((n) => n >= 2000 && n <= 30000);
+ // 인근 연봉 cross-link — 정적 생성 집합(사이트맵 격자) 안의 값만 가리키도록
+ // generateStaticParams 와 같은 격자 함수를 공유 (내부 404 링크 0건)
+ const neighbors = getSalaryNeighborAmounts(amount);
 
  const faqItems = buildSalaryFaq(amount, tax.netPay, tax.totalDeductions);
 
@@ -300,10 +300,10 @@ export default function SalaryAmountPage({ params }: Props) {
  {neighbors.map((s) => (
  <Link
  key={s}
- href={`/salary/${s * 10000}`}
+ href={`/salary/${s}`}
  className="p-4 bg-white border border-canvas rounded-2xl text-xs font-bold text-muted-blue flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
  >
- 연봉 {s.toLocaleString("ko-KR")}만원
+ 연봉 {Math.round(s / 10000).toLocaleString("ko-KR")}만원
  <ChevronRight size={14} className="text-faint-blue" />
  </Link>
  ))}

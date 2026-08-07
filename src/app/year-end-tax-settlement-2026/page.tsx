@@ -21,10 +21,12 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
- modifiedTime: "2026-05-23",
+ modifiedTime: "2026-08-07",
  keywords: [
  "근로자 연말정산 2026",
  "2026 연말정산",
+ "2026 연말정산 달라지는 점",
+ "연말정산 미리보기",
  "연말정산 절세",
  "성과급 세금 절세",
  "성과급 IRP 절세",
@@ -60,6 +62,11 @@ const FAQ_ITEMS = [
  answer:
  "네. IRP는 연 300만원까지 추가 세액공제(연금저축 600만 + IRP 300만 = 900만원). 연봉 5,500만원 이하는 16.5% 공제. 100만원 납입 시 약 16.5만원 절세.",
  },
+ {
+ question: "2026년 귀속 연말정산에서 달라지는 점은 무엇인가요?",
+ answer:
+ "올해 소득분에는 신용카드 소득공제 자녀 추가 한도(1명 +50만원, 2명 이상 +100만원), 출산·보육수당 비과세 월 20만원, 교육비 세액공제 확대(자녀 소득요건 폐지, 9세 미만 예체능 학원비 포함), 월세 세액공제 주말부부 각자 신청 등이 적용됩니다. 8월 3일 발표된 2026 세제개편안(인적공제 소득요건 300만원 완화 등)은 국회 통과 시 2027년 소득분부터 적용되므로 올해 연말정산과는 무관합니다.",
+ },
 ];
 
 export default function YearEndTaxSettlement2026Page() {
@@ -78,7 +85,7 @@ export default function YearEndTaxSettlement2026Page() {
  slug: "year-end-tax-settlement-2026",
  url: "/year-end-tax-settlement-2026",
  publishedDate: "2026-01-15",
- modifiedDate: "2026-05-12",
+ modifiedDate: "2026-08-07",
  }),
  speakableLd({
  url: "/year-end-tax-settlement-2026",
@@ -96,7 +103,7 @@ export default function YearEndTaxSettlement2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  13월의 월급, <span className="text-electric">제대로 받기</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-08-07" className="mb-2" />
  <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  12월 연말정산은 1년 절세의 골든타임입니다.
@@ -125,6 +132,73 @@ export default function YearEndTaxSettlement2026Page() {
  </section>
 
  <InArticleAd />
+
+ {/* 2026년 귀속 확정 변경사항 — 시즌 검색 의도("2026 연말정산 달라지는 점") 대응 */}
+ <section className="mb-12">
+ <h2 className="text-xl font-black text-navy mb-2">
+ 2026 연말정산 달라지는 점 — 올해 확정 적용 항목
+ </h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-4">
+ 올해(2026년) 소득분 연말정산에는 작년 개정으로 확정된 아래 항목이
+ 적용됩니다. 미리보기 단계에서 빠뜨리기 쉬운 신설·확대 공제부터
+ 챙기세요.
+ </p>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ {[
+ {
+ title: "신용카드 공제 자녀 추가 한도",
+ body: "자녀 1명 +50만원, 2명 이상 +100만원 한도 추가 (총급여 7천만원 초과자는 절반).",
+ },
+ {
+ title: "출산·보육수당 비과세 월 20만원",
+ body: "자녀 1인당 월 20만원까지 비과세. 급여명세서에서 적용 여부 확인.",
+ },
+ {
+ title: "교육비 세액공제 확대",
+ body: "자녀 소득요건 폐지, 9세 미만 자녀의 예체능 학원비도 공제 대상 포함.",
+ },
+ {
+ title: "월세 세액공제 — 주말부부 각자 신청",
+ body: "주말부부는 각자 신청 가능 (부부합산 한도 연 1,000만원).",
+ },
+ ].map((item) => (
+ <div
+ key={item.title}
+ className="p-5 bg-white rounded-2xl border border-canvas-200"
+ >
+ <p className="font-bold text-navy text-sm mb-1">{item.title}</p>
+ <p className="text-xs text-muted-blue leading-relaxed">{item.body}</p>
+ </div>
+ ))}
+ </div>
+ <div className="mt-4 p-5 bg-canvas-100 rounded-2xl border border-canvas-200">
+ <p className="text-sm text-muted-blue leading-relaxed">
+ ⚠️ <strong>8월 3일 발표된 2026 세제개편안</strong>(부양가족 인적공제
+ 소득요건 300만원 완화, 월세 세액공제 한도 1,200만원 등)은 국회 통과
+ 시 <strong>2027년 소득분부터</strong> 적용됩니다. 올해 연말정산과는
+ 무관하니 혼동하지 마세요. 발표 내용은{" "}
+ <Link
+ href="/tax-reform-2026"
+ className="text-electric font-bold hover:underline"
+ >
+ 2026 세법개정안 총정리
+ </Link>
+ 에서, 올해 시행분 전체 목록은{" "}
+ <Link
+ href="/tax-changes-2026"
+ className="text-electric font-bold hover:underline"
+ >
+ 2026 세법 변경사항
+ </Link>
+ 에서 확인하세요.
+ </p>
+ <p className="text-xs text-faint-blue leading-relaxed mt-3">
+ 💡 국세청 홈택스의 &lsquo;연말정산 미리보기&rsquo; 서비스는 예년 기준 10월
+ 말~11월에 열립니다. 그 전에는 아래 계산기로 예상 환급금을 먼저
+ 확인해보세요.
+ </p>
+ </div>
+ </section>
 
  {/* CTAs */}
  <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4">

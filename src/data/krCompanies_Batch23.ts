@@ -227,7 +227,8 @@ export const krCompanies_Batch23: CompanyProfile[] = [
     id: "meritz-fire",
     name: { ko: "메리츠화재", en: "Meritz Fire & Marine Insurance" },
     industry: "Insurance (Non-Life)",
-    tier: "startup",
+    // 2026-08-07: startup → conglomerate 정정 (메리츠금융지주 계열 대형 손보사 — 스타트업 허브 오노출 방지)
+    tier: "conglomerate",
     logo: "🔥",
     description: "성과주의 최강 보험사. 업계 최고 인센티브 구조로 탑 설계사·영업직 집결, 급성장 손보사.",
     salary: {

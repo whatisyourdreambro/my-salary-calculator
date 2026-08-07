@@ -10,6 +10,17 @@ import Link from "next/link";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
+// /salary/[amount]는 정적 생성(dynamicParams=false)이라 사이트맵 격자 밖 금액은 404.
+// 클라이언트 번들에 무거운 데이터 모듈(salaryStaticParams)을 싣지 않도록 격자 스냅을
+// 순수 수학으로 복제: 5백만~1억은 50만 단위, 1억~2억은 5백만 단위 격자 (sitemap.ts와 동일).
+const snapToSalaryGrid = (amount: number): number => {
+ if (amount <= 5_000_000) return 5_000_000;
+ if (amount <= 100_000_000) return Math.round(amount / 500_000) * 500_000;
+ const r = Math.round(amount / 5_000_000) * 5_000_000;
+ if (r < 105_000_000) return 100_000_000;
+ return Math.min(r, 200_000_000);
+};
+
 interface ShareableResultProps {
  data: string;
 }
@@ -87,7 +98,7 @@ export default function ShareableResult({ data }: ShareableResultProps) {
  <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
  {canLinkSalaryReport && (
  <Link
- href={`/salary/${annualSalary}`}
+ href={`/salary/${snapToSalaryGrid(annualSalary)}`}
  className="inline-block py-4 px-8 bg-primary text-primary-foreground font-bold text-lg rounded-lg hover:bg-primary/90 transition-transform transform hover:scale-105 shadow-lg"
  >
  연봉 상세 분석 보기

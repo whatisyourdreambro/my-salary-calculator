@@ -4,6 +4,7 @@ import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
+import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
 import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
@@ -187,6 +188,11 @@ export default function CompanyDetailPage({
  <CompanyDetailClient company={company} />
 
  <CompanySalaryTable company={company} />
+
+ {/* 동일 급여 그룹 안내 — 5직급 base 튜플이 동일한 회사(발전 공기업 등)만
+ 렌더. 표 숫자가 같은 페이지끼리 상호 링크 + "본 DB 수치 기준 동일" 명시로
+ near-duplicate 판정 완화 (2026-08-07). 그룹 없으면 null. */}
+ <CompanySalaryGroupNotice company={company} />
 
  {/* 회사 고유 심층 지표 — 전국 순위·실질 시급·복지 가치·15년 누적 소득.
  회사마다 실제 값이 달라지는 카드로 thin content 판정 대응. 데이터 없는

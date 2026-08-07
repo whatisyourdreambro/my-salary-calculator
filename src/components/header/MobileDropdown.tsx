@@ -1,12 +1,16 @@
 // src/components/header/MobileDropdown.tsx
 //
 // 모바일 헤더의 드롭다운 컴포넌트. description + badge 지원.
+//
+// SEO: 아코디언 패널은 항상 DOM에 렌더하고 열림/닫힘은 CSS(grid-rows 0fr↔1fr +
+// visibility/opacity)로만 제어한다. 조건부 렌더({isOpen && ...})로 되돌리면
+// SSR HTML에서 링크가 사라져 크롤러가 내비 링크를 못 보게 되므로 금지.
 
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
 
@@ -36,33 +40,6 @@ function BadgePill({ badge }: { badge: Badge }) {
     </span>
   );
 }
-
-const listVariants = {
-  hidden: { height: 0, opacity: 0 },
-  visible: {
-    height: "auto",
-    opacity: 1,
-    transition: {
-      height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-      opacity: { duration: 0.2 },
-      staggerChildren: 0.02,
-      delayChildren: 0.04,
-    },
-  },
-  exit: {
-    height: 0,
-    opacity: 0,
-    transition: {
-      height: { duration: 0.22, ease: "easeIn" as const },
-      opacity: { duration: 0.15 },
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -10 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.18 } },
-};
 
 export default function MobileDropdown({ item, pathname, onClose }: MobileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,69 +74,68 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
         </motion.span>
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            variants={listVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="overflow-hidden"
-          >
-            {/* 왼쪽 액센트 바 */}
-            <div className="mx-5 mb-2 h-[2px] rounded-full bg-gradient-to-r from-electric/30 to-transparent" />
+      {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), grid-rows 0fr↔1fr로 높이 애니메이션 */}
+      <div
+        className={`grid transition-[grid-template-rows,opacity,visibility] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isOpen
+            ? "visible grid-rows-[1fr] opacity-100"
+            : "invisible grid-rows-[0fr] opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="overflow-hidden min-h-0">
+          {/* 왼쪽 액센트 바 */}
+          <div className="mx-5 mb-2 h-[2px] rounded-full bg-gradient-to-r from-electric/30 to-transparent" />
 
-            <div className="px-3 pb-3 pt-0.5">
-              {item.items.map((subItem) => {
-                const active = pathname === subItem.href;
-                return (
-                  <motion.div key={subItem.href} variants={itemVariants}>
-                    <Link
-                      href={subItem.href}
-                      onClick={onClose}
-                      aria-current={active ? "page" : undefined}
-                      className={`group flex items-center gap-2 px-4 py-3 rounded-xl no-underline mb-0.5 transition-all duration-150 ${
-                        active
-                          ? "bg-electric-5 ring-1 ring-electric/20"
-                          : "hover:bg-electric-5"
-                      }`}
-                    >
-                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-[15px] ${
-                              active
-                                ? "font-bold text-electric"
-                                : "font-semibold text-navy group-hover:text-electric"
-                            } transition-colors`}
-                          >
-                            {subItem.name}
-                          </span>
-                          {subItem.badge && <BadgePill badge={subItem.badge} />}
-                        </div>
-                        {subItem.description && (
-                          <span className="text-[11.5px] text-faint-blue line-clamp-1">
-                            {subItem.description}
-                          </span>
-                        )}
+          <div className="px-3 pb-3 pt-0.5">
+            {item.items.map((subItem) => {
+              const active = pathname === subItem.href;
+              return (
+                <div key={subItem.href}>
+                  <Link
+                    href={subItem.href}
+                    onClick={onClose}
+                    aria-current={active ? "page" : undefined}
+                    className={`group flex items-center gap-2 px-4 py-3 rounded-xl no-underline mb-0.5 transition-all duration-150 ${
+                      active
+                        ? "bg-electric-5 ring-1 ring-electric/20"
+                        : "hover:bg-electric-5"
+                    }`}
+                  >
+                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-[15px] ${
+                            active
+                              ? "font-bold text-electric"
+                              : "font-semibold text-navy group-hover:text-electric"
+                          } transition-colors`}
+                        >
+                          {subItem.name}
+                        </span>
+                        {subItem.badge && <BadgePill badge={subItem.badge} />}
                       </div>
-                      <ChevronRight
-                        size={14}
-                        aria-hidden="true"
-                        className={`flex-shrink-0 transition-all duration-150 ${
-                          active
-                            ? "text-electric opacity-100"
-                            : "text-faint-blue opacity-0 group-hover:opacity-60 group-hover:translate-x-0.5"
-                        }`}
-                      />
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                      {subItem.description && (
+                        <span className="text-[11.5px] text-faint-blue line-clamp-1">
+                          {subItem.description}
+                        </span>
+                      )}
+                    </div>
+                    <ChevronRight
+                      size={14}
+                      aria-hidden="true"
+                      className={`flex-shrink-0 transition-all duration-150 ${
+                        active
+                          ? "text-electric opacity-100"
+                          : "text-faint-blue opacity-0 group-hover:opacity-60 group-hover:translate-x-0.5"
+                      }`}
+                    />
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

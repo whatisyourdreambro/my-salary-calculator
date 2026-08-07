@@ -120,7 +120,7 @@ export const navConfig: NavItem[] = [
   description: "2026 월별 핫스팟 가이드·정보",
   items: [
    { name: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027", description: "+3.7%·월 223.6만원 환산", badge: "HOT" },
-   { name: "2026 세법개정안 (7월 말 발표)", href: "/tax-reform-2026", description: "예고 내용·직장인 영향 정리", badge: "NEW" },
+   { name: "2026 세법개정안 (8·3 확정 발표)", href: "/tax-reform-2026", description: "발표 내용·직장인 영향 정리", badge: "HOT" },
    { name: "5월 종합소득세 신고", href: "/year-end-tax-2026", description: "프리랜서·N잡러", badge: "SEASON" },
    { name: "6·12월 자동차세 계산기", href: "/auto-tax-2026", description: "배기량·차령·연납 5% 공제", badge: "NEW" },
    { name: "7·9월 부동산 보유세", href: "/property-holding-tax-2026", description: "재산세 + 종부세 통합", badge: "NEW" },
