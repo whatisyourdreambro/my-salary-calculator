@@ -61,8 +61,8 @@ export default function SalaryDetailDashboard({
 
  const recommendedGuides = [
  annualSalary <= 40000000 && {
- title: "2026년 최저임금 완벽정리",
- href: "/guides/minimum-wage-2026",
+ title: "2026년 최저임금 완벽정리 — 시급·월급·연봉 환산",
+ href: "/minimum-wage-2026",
  },
  annualSalary <= 50000000 && {
  title: "연차수당 계산법 및 지급 조건",

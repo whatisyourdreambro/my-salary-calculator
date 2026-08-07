@@ -6,6 +6,7 @@ import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import WeeklyTableInteractive from "./WeeklyTableInteractive";
 import TableHero from "@/components/TableHero";
+import SeasonalLinks from "../SeasonalLinks";
 import { CalcResultAd } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -149,6 +150,9 @@ function WeeklyTable2026() {
  </div>
  </div>
  </section>
+
+ {/* 7월 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
+ <SeasonalLinks className="px-4 sm:px-6" />
  </div>
  </main>
  </>

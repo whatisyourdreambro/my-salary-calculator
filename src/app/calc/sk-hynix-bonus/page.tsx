@@ -6,6 +6,9 @@
 // PI(생산성 격려금): 반기별 영업이익률 기반, 기본급의 최대 150% × 2회.
 // 80% 당해 지급, 20% 2년 이연 (10%/년).
 // 기본급 = 통상 연봉 / 20.
+//
+// 2026-07-16 갱신: 성과급 일부 '자사주 지급 전환' 검토 보도(뉴스웨이) 섹션 추가
+// — 검토 단계·미확정임을 명시. 2026 상반기 PI는 여전히 미발표(확정 지급률 기재 금지).
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -29,13 +32,18 @@ const PAGE_PATH = "/calc/sk-hynix-bonus";
 const PAGE_TITLE = "SK하이닉스 성과급 계산기 2026";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const PAGE_DESC =
-  "SK하이닉스 PS·PI 성과급 계산기. 영업이익(조원)·본인 연봉만 입력하면 PS(영업이익 10% 풀) + PI(반기 기본급 150% × 2회) 합산 세전·세후 실수령액이 즉시 계산됩니다. 2025-09 노사합의(기본급 1,000% 상한 폐지) 반영. 2025년 PS+PI 3,264% 지급 사례 포함.";
+  "SK하이닉스 PS·PI 성과급 계산기. 영업이익(조원)·본인 연봉만 입력하면 PS(영업이익 10% 풀) + PI(반기 기본급 150% × 2회) 합산 세전·세후 실수령액이 즉시 계산됩니다. 2025-09 노사합의(기본급 1,000% 상한 폐지) 반영. 2025년 PS+PI 3,264% 지급 사례, 성과급 일부 자사주 지급 검토 보도(2026-07)까지 정리.";
 
 const FAQ_ITEMS = [
   {
     question: "2026년 상반기 PI는 언제 발표되나요?",
     answer:
-      "2026년 7월 13일 기준 아직 발표 전입니다. 최근 2년 패턴상 상반기 PI는 7월 하순에 사내 공지됩니다 — 2024년 상반기분은 7월 25일 공지, 2025년 상반기분은 7월 23일 공지·7월 28일 급여와 함께 지급됐고 두 번 모두 최대치인 기본급의 150%였습니다(복수 언론 보도 기준). 보도된 산정 기준은 반기 영업이익률 30% 이상이면 150%, 15~30%면 125%, 0~15%면 100%입니다. 발표 즉시 본 페이지에 반영할 예정이며, 그 전에는 위 계산기에서 PI 150%·125% 시나리오를 선택해 미리 시뮬레이션해 보세요.",
+      "2026년 7월 16일 기준 아직 발표 전입니다. 최근 2년 패턴상 상반기 PI는 7월 하순에 사내 공지됩니다 — 2024년 상반기분은 7월 25일 공지, 2025년 상반기분은 7월 23일 공지·7월 28일 급여와 함께 지급됐고 두 번 모두 최대치인 기본급의 150%였습니다(복수 언론 보도 기준). 보도된 산정 기준은 반기 영업이익률 30% 이상이면 150%, 15~30%면 125%, 0~15%면 100%, -10~0%면 50%, -10% 미만이면 0%입니다. 발표 즉시 본 페이지에 반영할 예정이며, 그 전에는 위 계산기에서 PI 150%·125% 시나리오를 선택해 미리 시뮬레이션해 보세요.",
+  },
+  {
+    question: "성과급을 현금 대신 자사주로 준다는 게 사실인가요?",
+    answer:
+      "아직 확정된 것은 없습니다. 2026년 7월 16일 뉴스웨이 보도에 따르면 SK하이닉스는 성과급 재원인 '영업이익의 10%' 기준은 그대로 유지하되, 지급 방식의 일부를 현금에서 자사주(자기주식)로 전환하는 방안을 검토 중인 것으로 알려졌습니다. 시행 여부·시기·자사주 비중 등은 모두 미정인 검토 단계이며, 본 계산기는 현행 제도(현금 지급) 기준으로 계산합니다. 확정 발표가 나오면 즉시 이 페이지에 반영하겠습니다.",
   },
   {
     question: "직전 PI·PS는 얼마나 지급됐나요?",
@@ -129,6 +137,9 @@ export const metadata: Metadata = {
     title: PAGE_TITLE_FULL,
     description: PAGE_DESC,
   },
+  other: {
+    "article:modified_time": "2026-07-16",
+  },
 };
 
 export default function SkHynixBonusPage() {
@@ -137,11 +148,14 @@ export default function SkHynixBonusPage() {
       <JsonLd
         data={[
           autoBreadcrumbLd(PAGE_PATH, { leafName: "SK하이닉스 성과급" }),
-          softwareApplicationLd({
-            name: PAGE_TITLE,
-            description: PAGE_DESC,
-            url: `${SITE_URL}${PAGE_PATH}`,
-          }),
+          {
+            ...softwareApplicationLd({
+              name: PAGE_TITLE,
+              description: PAGE_DESC,
+              url: `${SITE_URL}${PAGE_PATH}`,
+            }),
+            dateModified: "2026-07-16",
+          },
           faqLd(FAQ_ITEMS),
           howToLd({
             name: "SK하이닉스 PS·PI 성과급 계산하는 방법",
@@ -184,16 +198,19 @@ export default function SkHynixBonusPage() {
               ⏰ 2026 상반기 PI 발표 임박
             </p>
             <p className="text-sm leading-relaxed text-navy">
-              <strong>7월 13일 기준 아직 발표 전</strong>입니다. 최근 2년 모두{" "}
+              <strong>7월 16일 기준 아직 발표 전</strong>입니다. 최근 2년 모두{" "}
               <strong>7월 하순 사내 공지</strong> 관례였습니다 — 2024년 7/25
               공지, 2025년 7/23 공지·7/28 지급, 두 해 모두 최대치{" "}
               <strong className="text-primary">기본급 150%</strong>(복수 언론
               보도). 산정 기준은 반기 영업이익률 30% 이상 150% / 15~30% 125% /
-              0~15% 100%로 보도됐습니다.
+              0~15% 100% / -10~0% 50% / -10% 미만 0%로 보도됐습니다.
             </p>
             <p className="text-xs text-faint mt-2 leading-relaxed">
               발표 즉시 이 페이지에 확정값을 반영합니다. 그 전에는 아래
-              계산기에서 PI 150%·125% 시나리오로 미리 계산해 보세요.
+              계산기에서 PI 150%·125% 시나리오로 미리 계산해 보세요. 한편
+              7/16에는 성과급 일부를 자사주로 지급하는 방안을 회사가{" "}
+              <strong>검토 중</strong>이라는 보도도 나왔습니다 — 아직 확정이
+              아니며, 아래 별도 섹션에 정리했습니다.
             </p>
           </aside>
 
@@ -233,6 +250,35 @@ export default function SkHynixBonusPage() {
                 </ul>
               </article>
             </div>
+          </section>
+
+          {/* 자사주 전환 검토 보도 — 확정 아님 (2026-07-16) */}
+          <section
+            className="mt-8 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8"
+            aria-labelledby="treasury-stock-heading"
+          >
+            <h2
+              id="treasury-stock-heading"
+              className="text-xl sm:text-2xl font-black mb-3 flex items-center gap-2"
+            >
+              <Info className="w-5 h-5 text-primary" />
+              성과급 일부 &lsquo;자사주 지급&rsquo; 검토 보도 — 아직 확정
+              아닙니다
+            </h2>
+            <p className="text-sm leading-relaxed text-navy">
+              2026년 7월 16일 뉴스웨이 보도에 따르면, SK하이닉스는 성과급
+              재원인 <strong>&lsquo;영업이익의 10%&rsquo; 기준은 그대로
+              유지</strong>하되 지급 방식의 일부를 현금에서{" "}
+              <strong>자사주(자기주식)로 전환하는 방안을 검토 중</strong>인
+              것으로 알려졌습니다.
+            </p>
+            <p className="text-sm leading-relaxed text-navy mt-3">
+              강조하면, 이는 <strong className="text-primary">검토 단계일 뿐
+              확정된 사항이 아닙니다</strong>. 시행 여부·도입 시기·자사주
+              비중은 모두 미정입니다. 본 계산기는 현행 제도(현금 지급 기준)
+              그대로 계산하며, 회사가 확정 내용을 발표하면 즉시 이 페이지에
+              반영하겠습니다.
+            </p>
           </section>
 
           <div className="mt-10">

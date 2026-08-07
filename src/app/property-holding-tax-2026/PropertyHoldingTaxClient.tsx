@@ -146,7 +146,7 @@ export default function PropertyHoldingTaxClient() {
           </p>
           <div className="space-y-1 text-sm pt-3 border-t border-electric-20">
             <div className="flex justify-between text-muted-blue dark:text-canvas-300">
-              <span>재산세 (7·9월 분납 · 20만원 이하는 7월 일괄)</span>
+              <span>재산세 (7·9월 분납 · 20만원 이하는 조례상 7월 일괄 가능)</span>
               <span>{fmt(result.propertyTax)}원</span>
             </div>
             <div className="flex justify-between text-muted-blue dark:text-canvas-300">

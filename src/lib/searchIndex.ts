@@ -28,6 +28,10 @@ export interface SearchEntry {
 }
 
 const seasonPages: SearchEntry[] = [
+ // 2026-07-16 — 7월 시즌: 2027 최저임금 의결·세법개정안 선점 + 기존 미등록 갭(최저임금 2026) 해소
+ { title: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027", category: "시즌", description: "+3.7% 인상, 월 2,236,300원 환산", priority: 1 },
+ { title: "2026 최저임금 (현행)", href: "/minimum-wage-2026", category: "시즌", description: "시급 10,320원·월 2,156,880원", priority: 2 },
+ { title: "2026 세법개정안 정리", href: "/tax-reform-2026", category: "시즌", description: "7월 말 발표 예정·직장인 영향", priority: 2 },
  { title: "2026 종합소득세 신고 가이드", href: "/year-end-tax-2026", category: "시즌", description: "5월 프리랜서·N잡러" },
  { title: "2026 건강보험료 정산", href: "/health-insurance-2026", category: "시즌", description: "4월 정산·분납·환급" },
  { title: "2026 연말정산 + 성과급", href: "/year-end-tax-settlement-2026", category: "시즌", description: "12월 근로자 절세" },

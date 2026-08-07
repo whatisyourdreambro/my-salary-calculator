@@ -18,6 +18,9 @@ export const metadata: Metadata = buildPageMetadata({
   description:
     "월 50만원 × 24개월 연 4% 적금이면 만기 약 1,242만원·세후 이자 약 42만원. 정기적금/정기예금, 단리/복리 모두 지원. 이자소득세 15.4% 자동 차감 + 비과세·세금우대 옵션.",
   path: "/savings-interest-2026",
+  ogType: "article",
+  publishedTime: "2026-06-11",
+  modifiedTime: "2026-07-16",
   keywords: [
     "적금 이자 계산기",
     "예금 이자 계산기",
@@ -29,6 +32,9 @@ export const metadata: Metadata = buildPageMetadata({
     "비과세 적금",
     "세금우대 적금",
     "적금 만기 원리금",
+    // 2026-07-16 기준금리 인상 시의성 쿼리
+    "기준금리 인상 예금 금리",
+    "기준금리 2.75%",
   ],
 });
 
@@ -107,6 +113,27 @@ export default function SavingsInterest2026Page() {
             상품 가입 전 본인 저축 계획에 맞춰 최적 상품을 비교하세요.
           </p>
         </header>
+
+        {/* 2026-07-16 한국은행 기준금리 2.50%→2.75% 인상 — 시의성 안내 (기존 본문 수치 불변) */}
+        <div className="mb-8 p-5 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-700 border-l-4 border-l-electric">
+          <p className="text-sm font-black text-navy dark:text-canvas-50 mb-2">
+            기준금리 2.75% 인상 — 예·적금 금리 상승 국면
+          </p>
+          <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+            한국은행이 2026년 7월 16일 기준금리를 연 2.50%에서 2.75%로 0.25%p
+            인상했습니다. 2023년 1월 이후 3년 6개월 만의 인상인 데다 한은이
+            추가 인상 가능성까지 시사해, 기준금리 인상이 시차를 두고 시중은행
+            예·적금 금리에 반영되는 국면입니다. 금리가 오르는 시기에는 가입
+            시점과 만기 설계에 따라 세후 이자 차이가 커지므로, 가입 전{" "}
+            <Link
+              href="/tools/deposit"
+              className="font-bold text-electric underline underline-offset-2"
+            >
+              예금/적금 만기 계산기
+            </Link>
+            로 상품별 세후 원리금을 비교해 보세요.
+          </p>
+        </div>
 
         <HomeTopAd />
 

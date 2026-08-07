@@ -1,5 +1,7 @@
 // src/app/property-holding-tax-2026/page.tsx
 // 부동산 보유세 계산기 — 7월·9월 재산세 + 12월 종부세 시즌
+// 2026-07-16 시즌 갱신: 7월분 납부기간(7/16~7/31) 시작 반영 — 납부지연가산세·
+// 납부 방법·서울시 부과 규모·카드 무이자 안내 추가
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -13,10 +15,32 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
 import PropertyHoldingTaxClient from "./PropertyHoldingTaxClient";
 
+// ─────────────────────────────────────────────────────────────
+// 2026년 재산세 납부기간 상수 — ★9월 2기분 시즌 때 이 블록만 갱신★
+// 1) CURRENT_PERIOD를 PERIOD_SEPT로 교체하면 배지·헤더·메타 설명이 함께 바뀜
+// 2) 본문의 "7월분 납부 안내" 섹션(서울시 부과 규모·카드 무이자 일정)은
+//    7월 전용 수치이므로 9월 시즌 때 수동 점검 필요
+// ─────────────────────────────────────────────────────────────
+const PERIOD_JULY = {
+  label: "7월분(1기분)",
+  range: "7월 16일(목)~7월 31일(금)",
+  rangeShort: "7/16~7/31",
+  deadline: "7월 31일(금)",
+  scope: "주택분 1/2 + 건축물·선박·항공기분",
+};
+const PERIOD_SEPT = {
+  label: "9월분(2기분)",
+  range: "9월 16일~9월 30일",
+  rangeShort: "9/16~9/30",
+  deadline: "9월 30일",
+  scope: "주택분 나머지 1/2 + 토지분",
+};
+// 현재 시즌에 강조할 납부기간 — ★9월 2기분 시즌 때 PERIOD_SEPT로 교체★
+const CURRENT_PERIOD = PERIOD_JULY;
+
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 부동산 보유세 계산기 — 재산세 + 종합부동산세 동시 산출",
-  description:
-    "공시가 10억 1주택자 보유세 약 200~280만원, 15억 약 350~500만원. 2026 재산세(7·9월) + 종합부동산세(12월) 동시 자동 계산. 공정시장가액·세부담상한·1세대1주택 특례까지 반영.",
+  description: `${CURRENT_PERIOD.label} 재산세 납부기간 ${CURRENT_PERIOD.rangeShort} — 대상은 ${CURRENT_PERIOD.scope}. 공시가 10억 1주택자 보유세 약 200~280만원. 재산세(7·9월)+종합부동산세(12월) 동시 자동 계산, 공정시장가액비율·1세대 1주택 특례 반영.`,
   path: "/property-holding-tax-2026",
   keywords: [
     "부동산 보유세",
@@ -24,12 +48,19 @@ export const metadata: Metadata = buildPageMetadata({
     "종합부동산세 계산기",
     "2026 보유세",
     "재산세 7월",
+    "재산세 납부기간",
     "재산세 9월",
     "종부세 12월",
+    "재산세 카드 납부",
+    "납부지연가산세",
+    "위택스 재산세",
     "1세대 1주택 종부세",
     "다주택자 종부세",
     "공시지가 보유세",
   ],
+  ogType: "article",
+  publishedTime: "2026-05-22",
+  modifiedTime: "2026-07-16",
 });
 
 const FAQS = [
@@ -39,7 +70,7 @@ const FAQS = [
   },
   {
     q: "공시가격과 시세는 어떻게 다른가요?",
-    a: "공시가격은 정부(국토교통부)가 매년 4월 발표하는 공식 가격으로 시세의 약 60~70% 수준입니다. 보유세는 공시가격에 공정시장가액비율을 곱한 과세표준에 세율을 적용해 산출합니다. 2026년 적용 비율은 재산세의 경우 1세대 1주택 43~45%(공시 3억 이하 43%·3~6억 44%·6억 초과 45% 특례)·그 외 60%, 종부세는 60%입니다.",
+    a: "공시가격은 정부(국토교통부)가 매년 4월 발표하는 공식 가격으로 시세의 약 60~70% 수준입니다. 보유세는 공시가격에 공정시장가액비율을 곱한 과세표준에 세율을 적용해 산출합니다. 2026년 적용 비율은 재산세의 경우 1세대 1주택 43~45%(공시 3억 이하 43%·3~6억 44%·6억 초과 45% — 전년과 동일)·다주택자와 법인은 60%, 종부세는 60%입니다.",
   },
   {
     q: "1세대 1주택자 종부세 공제 12억원이 무엇인가요?",
@@ -55,7 +86,15 @@ const FAQS = [
   },
   {
     q: "재산세 납부 일정은 어떻게 되나요?",
-    a: "주택분은 7월 16~31일(1/2)과 9월 16~30일(1/2) 두 번 분납이 원칙이지만, 연 세액 20만원 이하면 7월에 전액 일괄 부과됩니다. 건축물·선박·항공기분은 7월, 토지분은 9월에 납부하며, 종합부동산세는 12월 1~15일에 납부합니다. 위택스(wetax.go.kr) 또는 자동 이체 신청으로 편리하게 처리할 수 있습니다.",
+    a: `주택분은 7월(${PERIOD_JULY.range}, 1/2)과 9월(${PERIOD_SEPT.range}, 나머지 1/2) 두 번 분납이 원칙이지만, 주택분 세액이 20만원 이하면 자치단체 조례에 따라 7월에 전액 일시 부과될 수 있습니다. 건축물·선박·항공기분은 7월, 토지분은 9월에 납부하며, 종합부동산세는 12월 1~15일에 납부합니다. 위택스(wetax.go.kr, 전국)나 서울시 이택스·STAX 앱, 간편결제·은행 ATM으로 납부할 수 있고 자동이체 신청도 가능합니다.`,
+  },
+  {
+    q: "재산세를 기한 내에 못 내면 가산세가 얼마나 붙나요?",
+    a: `납부기한이 지나면 즉시 3%의 납부지연가산세가 붙습니다. 세목별 세액이 45만원 이상이면 여기에 매월 0.66%가 추가로 붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. 2026년 7월분 재산세 기한은 ${PERIOD_JULY.deadline}이므로 하루라도 늦지 않게 납부하는 것이 좋습니다.`,
+  },
+  {
+    q: "재산세를 신용카드로 내면 수수료가 있나요?",
+    a: "없습니다. 재산세 같은 지방세는 신용카드로 납부해도 수수료가 0원입니다(납부대행 수수료가 붙는 국세와 다른 점). 2026년 7월 기준 서울시 이택스에는 카드사 무이자(부분무이자) 할부 이벤트도 안내되어 있습니다 — 우리·현대·삼성·롯데·KB국민 7/1~7/31, BC 7/1~9/30, NH농협 연중. 캐시백·적립 등 세부 혜택 조건은 카드사·시기별로 달라지므로 결제 전 각 카드사 앱에서 확인하세요.",
   },
 ];
 
@@ -94,15 +133,16 @@ export default function PropertyHoldingTax2026Page() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <header className="mb-8">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-3">
-            7·9·12월 보유세 시즌
+            {CURRENT_PERIOD.label} 재산세 납부기간 {CURRENT_PERIOD.rangeShort}
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 leading-tight mb-3">
             2026 부동산 보유세 계산기
           </h1>
           <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
             주택 공시가격을 입력하면 7·9월 재산세와 12월 종합부동산세를 동시에 계산합니다. 1세대
-            1주택 12억 공제, 다주택자 중과, 세부담상한제까지 반영. 2026년 공시가격 발표(4월) 후 본인
-            연 보유세 부담을 미리 확인하세요.
+            1주택 12억 공제, 다주택자 공제 9억, 공정시장가액비율 특례까지 반영.{" "}
+            {CURRENT_PERIOD.label} 재산세 고지서를 받았다면 계산기로 내 세액 수준을 확인하고,{" "}
+            {CURRENT_PERIOD.deadline}까지 위택스·이택스에서 납부하세요.
           </p>
         </header>
 
@@ -111,6 +151,62 @@ export default function PropertyHoldingTax2026Page() {
         <PropertyHoldingTaxClient />
 
         <CalcResultAd />
+
+        {/* 2026-07-16 시즌 섹션 — 서울시 부과 규모·카드 무이자 일정은 7월 전용 수치 (9월 2기분 시 갱신) */}
+        <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
+          <h2 className="text-xl font-black text-navy dark:text-canvas-50">
+            2026년 7월분 재산세 — {PERIOD_JULY.range} 납부
+          </h2>
+          <p>
+            2026년 7월분 재산세 납부기간은 <strong>{PERIOD_JULY.range}</strong>입니다. 이번 7월분
+            대상은 <strong>{PERIOD_JULY.scope}</strong>이고, 토지분과 주택분 나머지 1/2(2기분)은{" "}
+            {PERIOD_SEPT.range}에 부과됩니다. 주택분 세액이 20만원 이하이면 자치단체 조례에 따라
+            7월에 전액 일시 부과될 수 있습니다.
+          </p>
+
+          <h3 className="text-lg font-black text-navy dark:text-canvas-50 mt-8">
+            기한을 넘기면 — 즉시 3% 납부지연가산세
+          </h3>
+          <p>
+            납부기한({PERIOD_JULY.deadline})이 지나면 <strong>즉시 3%의 납부지연가산세</strong>가
+            붙습니다. 세목별 세액이 45만원 이상이면 여기에 <strong>매월 0.66%가 추가</strong>로
+            붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. 하루 차이로 세금의 3%가 더 나가는
+            구조이므로, 기한 내 납부가 가장 확실한 절세입니다.
+          </p>
+
+          <h3 className="text-lg font-black text-navy dark:text-canvas-50 mt-8">
+            서울시 7월분 부과 규모 — 2조 6,387억원, 고지서 500만건
+          </h3>
+          <p>
+            서울시는 올해 7월분 재산세 <strong>2조 6,387억원</strong>을 확정하고 고지서 약{" "}
+            <strong>500만건</strong>을 발송했습니다. 전년 대비 <strong>11.7% 늘어난</strong> 규모로,
+            이 중 주택분이 1조 9,545억원(+15.0%) — 공시가격 상승이 주된 원인입니다. 자치구별로는
+            강남구 4,654억원, 서초구 3,093억원, 송파구 2,838억원 순으로 많습니다. 고지서 금액이
+            작년보다 늘었다면, 위 계산기에 올해 공시가격을 넣어 세액이 맞게 나온 것인지 확인해
+            보세요.
+          </p>
+
+          <h3 className="text-lg font-black text-navy dark:text-canvas-50 mt-8">
+            납부 방법 — 신용카드 수수료 0원
+          </h3>
+          <ul>
+            <li><strong>위택스(wetax.go.kr)</strong> — 전국 공통 온라인 납부</li>
+            <li><strong>이택스(etax.seoul.go.kr)·STAX 앱</strong> — 서울시</li>
+            <li>네이버페이·카카오페이 등 간편결제, 은행 ATM</li>
+          </ul>
+          <p>
+            재산세는 지방세라 <strong>신용카드로 내도 납부 수수료가 0원</strong>입니다(납부대행
+            수수료가 붙는 국세와 다른 점). 서울시 이택스에는 카드사 무이자(부분무이자) 할부
+            이벤트도 안내되어 있습니다 — 우리·현대·삼성·롯데·KB국민 카드는 7/1~7/31, BC는
+            7/1~9/30, NH농협은 연중 적용. 캐시백·적립 등 세부 혜택 조건은 카드사와 시기에 따라
+            달라지므로 결제 전 각 카드사 앱에서 확인하세요.
+          </p>
+          <p>
+            고지서 1장의 세액이 250만원을 초과하면 지방세법에 따라 분할납부를 신청할 수 있는
+            것으로 안내됩니다. 신청 절차는 고지서 안내면 또는 관할 자치단체·위택스에서 확인할 수
+            있습니다.
+          </p>
+        </section>
 
         <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
           <h2 className="text-xl font-black text-navy dark:text-canvas-50">
@@ -131,7 +227,11 @@ export default function PropertyHoldingTax2026Page() {
             <li>1.5억~3억: 19.5만원 + 1.5억 초과분의 <strong>0.25%</strong></li>
             <li>3억 초과: 57만원 + 3억 초과분의 <strong>0.4%</strong></li>
           </ul>
-          <p>※ 1세대 1주택자는 9억원 이하 주택에 한해 0.05~0.35% 우대세율 적용 (한시 특례).</p>
+          <p>
+            ※ 1세대 1주택자는 공시 9억원 이하 주택에 한해 표준세율보다 구간별 0.05%p 낮은
+            0.05~0.35% 특례세율이 적용됩니다 — 2026년 납부분까지 한시 적용되는 것으로 안내되어
+            있습니다.
+          </p>
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             2026 종합부동산세 (일반) 세율

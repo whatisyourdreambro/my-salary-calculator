@@ -18,13 +18,17 @@ import {
   Info,
   ArrowRight,
   ShieldCheck,
+  TrendingUp,
 } from "lucide-react";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "주택담보대출 계산기 - DSR/LTV 한도·월 상환액 (2026)",
   description:
-    "2026년 최신 DSR 40% 규제 반영. 주택 가격·대출 금리·기간을 입력하면 월 상환액, 총 이자, 내 연봉으로 받을 수 있는 대출 한도를 즉시 계산하세요. 원리금균등 vs 원금균등 비교까지.",
+    "2026년 7월 기준금리 2.75% 시대, 내 이자 부담은? DSR 40%·스트레스 DSR 반영. 주택 가격·대출 금리·기간을 입력하면 월 상환액, 총 이자, 내 연봉으로 받을 수 있는 대출 한도를 즉시 계산하세요.",
   path: "/home-loan",
+  ogType: "article",
+  publishedTime: "2026-05-23",
+  modifiedTime: "2026-07-16",
   keywords: [
     "주택담보대출 계산기",
     "주담대 계산기",
@@ -40,14 +44,46 @@ export const metadata: Metadata = buildPageMetadata({
     "2026 주담대",
     "스트레스 DSR",
     "DSR 40%",
+    // 2026-07-16 기준금리 인상 시의성 쿼리
+    "기준금리 인상",
+    "기준금리 2.75%",
+    "금리 인상 주담대",
+    "금리 인상 이자 부담",
   ],
 });
+
+// 2026-07-16 기준금리 2.50%→2.75% 인상 반영.
+// 아래 수치는 원리금균등 공식 M = P·r·(1+r)^n / ((1+r)^n − 1), r=연이율/12, n=360으로
+// node 실계산해 검증한 값 (2026-07-16). 연 4.00%→4.25%는 이해를 돕기 위한 가정 예시.
+const RATE_HIKE_ROWS = [
+  {
+    principal: "2억원",
+    before: "954,831원",
+    after: "983,880원",
+    monthlyDiff: "+29,049원",
+    totalDiff: "약 1,046만원",
+  },
+  {
+    principal: "3억원",
+    before: "1,432,246원",
+    after: "1,475,820원",
+    monthlyDiff: "+43,574원",
+    totalDiff: "약 1,569만원",
+  },
+  {
+    principal: "5억원",
+    before: "2,387,076원",
+    after: "2,459,699원",
+    monthlyDiff: "+72,623원",
+    totalDiff: "약 2,614만원",
+  },
+];
 
 const FAQ_ITEMS = [
   {
     question: "주택담보대출 한도는 어떻게 결정되나요?",
     answer:
-      "DSR(총부채원리금상환비율)과 LTV(담보인정비율) 두 가지로 결정됩니다. 2026년 기준 DSR 40%, 규제지역 LTV 50% 이내에서 더 작은 금액이 한도가 됩니다. 또한 스트레스 DSR이 추가 적용되어 변동금리 대출의 경우 가산금리(+0.5~1.5%p)를 반영해 한도가 축소될 수 있습니다.",
+      "DSR(총부채원리금상환비율)과 LTV(담보인정비율) 두 가지로 결정됩니다. 2026년 기준 DSR 40%, 규제지역 LTV 50% 이내에서 더 작은 금액이 한도가 됩니다. 또한 스트레스 DSR이 추가 적용되어 변동금리 대출은 실제 금리에 스트레스 금리를 얹어 한도를 계산합니다 — 수도권·규제지역 주담대는 3단계(스트레스 금리 3.0%, 100% 적용)라 한도가 크게 축소될 수 있습니다.",
   },
   {
     question: "DSR 40% 규제는 무엇인가요?",
@@ -67,7 +103,7 @@ const FAQ_ITEMS = [
   {
     question: "스트레스 DSR이 뭔가요?",
     answer:
-      "변동금리·혼합금리 대출에서 미래 금리 인상 위험을 미리 한도에 반영하는 제도. 2026년 기준 1단계 가산금리 +0.38%p (변동), +0.75%p (혼합). 단계별로 강화될 예정. 고정금리는 가산 없음. 변동금리로 대출받으려면 한도가 5~15% 축소될 수 있어 사전 확인 필요.",
+      "변동금리·혼합금리 대출에서 미래 금리 인상 위험을 미리 한도에 반영하는 제도. 2026년 기준 수도권·규제지역 주담대는 3단계(스트레스 금리 3.0%, 적용비율 100%), 비규제 지방 주담대는 2단계(1.5%)가 2026년 말까지 유지됩니다. 신용대출 등 기타대출의 스트레스 금리는 1.5%. 만기까지 금리가 고정되는 대출일수록 가산 부담이 줄어드는 구조라, 변동금리로 대출받으려면 한도 축소 폭을 사전 확인해야 합니다.",
   },
   {
     question: "전세대출도 DSR에 포함되나요?",
@@ -187,7 +223,7 @@ export default function HomeLoanPage() {
 
       <header className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-5 bg-electric-10 text-electric border border-electric-30">
-          <Home size={12} aria-hidden /> 2026 DSR/LTV 반영
+          <Home size={12} aria-hidden /> 기준금리 2.75% · 2026 DSR/LTV 반영
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-navy mb-4">
           주택담보대출 <span className="text-electric">계산기</span>
@@ -199,6 +235,101 @@ export default function HomeLoanPage() {
       </header>
 
       <HomeLoanSimulator />
+
+      {/* 2026-07-16 기준금리 인상 시의성 섹션 */}
+      <section className="mt-12 mb-12">
+        <h2 className="text-2xl font-black text-navy mb-5 flex items-center gap-2">
+          <TrendingUp className="w-6 h-6 text-electric" aria-hidden />
+          2026년 7월, 기준금리 2.75% 시대 — 내 이자 부담은?
+        </h2>
+        <div className="rounded-2xl bg-white border border-canvas-200 p-6">
+          <p className="text-sm text-muted-blue leading-relaxed mb-4">
+            한국은행 금융통화위원회가 2026년 7월 16일 기준금리를 연 2.50%에서{" "}
+            <strong className="text-navy">2.75%로 0.25%p 인상</strong>
+            했습니다. 2023년 1월 이후 3년 6개월 만의 인상으로, 금통위원 7명
+            만장일치 결정이었습니다. 3%대 물가와 고환율, 가계부채가 배경으로
+            꼽히며, 한은은 &ldquo;금리인상 기조를 이어나갈 필요&rdquo;가
+            있다며 추가 인상 가능성까지 시사했습니다.
+          </p>
+          <p className="text-sm text-muted-blue leading-relaxed mb-2">
+            기준금리가 오르면 시차를 두고 은행 조달금리(코픽스 등)가 올라
+            변동금리 주담대의 이자 부담이 커집니다. 0.25%p가 작아 보여도 30년
+            만기 대출에서는 총 이자가 천만원 단위로 달라집니다. 아래는 30년
+            원리금균등 기준, 금리가 0.25%p 오를 때(예: 연 4.00%→4.25% 가정)의
+            변화입니다.
+          </p>
+          <div className="overflow-x-auto mt-4">
+            <table className="w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b-2 border-canvas-200">
+                  <th className="py-3 px-2 text-left text-navy font-bold">
+                    대출 원금
+                  </th>
+                  <th className="py-3 px-2 text-right text-navy font-bold">
+                    연 4.00% 월 상환액
+                  </th>
+                  <th className="py-3 px-2 text-right text-navy font-bold">
+                    연 4.25% 월 상환액
+                  </th>
+                  <th className="py-3 px-2 text-right text-navy font-bold">
+                    월 증가
+                  </th>
+                  <th className="py-3 px-2 text-right text-navy font-bold">
+                    30년 총 이자 증가
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {RATE_HIKE_ROWS.map((row) => (
+                  <tr key={row.principal} className="border-b border-canvas">
+                    <td className="py-3 px-2 font-bold text-navy">
+                      {row.principal}
+                    </td>
+                    <td className="py-3 px-2 text-right text-muted-blue font-mono">
+                      {row.before}
+                    </td>
+                    <td className="py-3 px-2 text-right text-muted-blue font-mono">
+                      {row.after}
+                    </td>
+                    <td className="py-3 px-2 text-right font-bold text-electric font-mono">
+                      {row.monthlyDiff}
+                    </td>
+                    <td className="py-3 px-2 text-right font-bold text-navy font-mono">
+                      {row.totalDiff}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-faint-blue mt-3 leading-relaxed">
+            ※ 연 4.00%→4.25%는 이해를 돕기 위한 가정 예시입니다. 실제 시중
+            주담대 금리는 은행·상품·신용도별로 다르며, 기준금리 인상분이
+            대출금리에 그대로 반영되는 것도 아닙니다. 본인 금리 조건은 위
+            계산기에 직접 입력해 비교하세요.
+          </p>
+          <p className="text-sm text-muted-blue leading-relaxed mt-4">
+            변동금리 대출을 이용 중이라면 위 계산기에 현재 금리와 0.25%p 올린
+            금리를 각각 넣어 월 상환액 변화를 확인해 보세요. 신규 대출을
+            준비 중이라면 스트레스 DSR(수도권·규제지역 3단계)까지 반영된 내
+            한도를{" "}
+            <Link
+              href="/tools/real-estate/dsr"
+              className="font-bold text-electric underline underline-offset-2"
+            >
+              DSR 계산기
+            </Link>
+            에서 먼저 확인하는 것이 안전합니다.
+          </p>
+          <p className="text-xs text-faint-blue mt-3 leading-relaxed">
+            한편 하반기 들어 일부 은행의 주담대 한도가 조기 소진됐다는 보도가
+            이어졌고, 정부가 7월 14일 발표한 하반기 경제성장전략에는
+            전세대출보증 축소·DSR 적용 범위 확대 방침이 담긴 것으로
+            보도됐습니다. 대출 환경이 전반적으로 깐깐해지는 국면인 만큼 자금
+            계획은 여유 있게 잡는 것이 좋습니다.
+          </p>
+        </div>
+      </section>
 
       {/* 단계별 사용법 */}
       <section className="mt-12 mb-12">
@@ -283,14 +414,19 @@ export default function HomeLoanPage() {
         </p>
 
         <h2 className="text-2xl font-black text-navy mt-8 mb-4">
-          스트레스 DSR — 2024년부터 단계별 강화
+          스트레스 DSR — 수도권·규제지역은 3단계 적용
         </h2>
         <p className="text-muted-blue leading-relaxed">
-          변동·혼합금리 대출에 미래 금리 인상 위험을 미리 반영하는 제도. 2026년
-          기준 1단계가 적용되어 변동금리에 +0.38%p, 혼합금리에 +0.75%p의 가산금리가
-          DSR 계산 시 적용됩니다. 단계별 강화 예정이라 변동금리 대출 한도는
-          점점 줄어드는 추세. 고정금리는 가산 없음이라 한도가 더 큽니다. 다만
-          고정금리는 금리 자체가 변동보다 0.3~0.5%p 높아 트레이드오프 존재.
+          변동·혼합금리 대출에 미래 금리 인상 위험을 미리 반영하는 제도.
+          2026년 기준 <strong>수도권·규제지역 주담대는 3단계</strong>가
+          적용되어 스트레스 금리 3.0%가 100% 반영되고,{" "}
+          <strong>비규제 지방 주담대는 2단계(스트레스 금리 1.5%)</strong>가
+          2026년 말까지 유지됩니다(3단계 적용 6개월 유예). 신용대출·기타대출의
+          스트레스 금리는 1.5%. 여기에 2026년 7월 기준금리 인상(2.50%→2.75%)까지
+          겹치면서 변동금리 대출은 한도와 이자 부담이 동시에 커지는
+          국면입니다. 만기까지 금리가 고정되는 대출일수록 가산 부담이 줄어드는
+          구조지만, 고정금리는 금리 자체가 변동보다 높은 경우가 많아
+          트레이드오프가 존재합니다.
         </p>
 
         <h2 className="text-2xl font-black text-navy mt-8 mb-4">
@@ -480,9 +616,10 @@ export default function HomeLoanPage() {
           aria-hidden
         />
         <p className="text-xs text-muted-blue leading-relaxed">
-          본 계산기는 2026 DSR 40% + 스트레스 DSR 1단계 + LTV 규제지역 50%/비규제
-          70% 기준 추정치입니다. 은행·상품·신용 상태별로 실제 한도·금리가 다를 수
-          있어 사전 상담을 권장합니다.
+          본 계산기는 2026 DSR 40% + LTV 규제지역 50%/비규제 70% 기준
+          추정치입니다. 스트레스 DSR(수도권·규제지역 3단계, 비규제 지방
+          2단계)과 은행·상품·신용 상태에 따라 실제 한도·금리가 다를 수 있어
+          사전 상담을 권장합니다.
         </p>
       </div>
 

@@ -54,12 +54,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/new-employee-2026',
  '/new-employee-salary-2026',
  '/minimum-wage-2026',
+ // 2026-07-16 신설 — 2027 최저임금 의결(7/14) 직후 검색 폭발 대응
+ '/minimum-wage-2027',
  '/health-checkup-2026',
  '/samsung-negotiation-2026',
  // Info pages — 정보성 검색 트래픽
  '/tax-rates-2026',
  '/social-insurance-rates-2026',
  '/tax-changes-2026',
+ // 2026-07-16 신설 — 세법개정안 7월 말 발표 선점 페이지 (발표 당일 갱신)
+ '/tax-reform-2026',
  '/year-end-tax-checklist',
  '/retirement-pension-2026',
  '/career-stages-2026',
@@ -174,8 +178,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 찍히면 Google freshness 신호가 무의미해져 순위 변동성이 커지므로, 마지막 실질
  // 콘텐츠 업데이트 날짜를 고정해 두고 진짜 갱신 시에만 이 상수를 손으로 올린다.
  // (회사 페이지는 company.lastUpdated 우선, 값이 없을 때만 이 기준일로 폴백)
- // 2026-07-06: 국민연금 상한 659만 전수 갱신 + 삼성 TAI 신설 + 기술 SEO 전면 수정 반영
- const STATIC_LAST_MODIFIED = new Date("2026-07-06");
+ // 2026-07-16: 2027 최저임금·세법개정안 신설 + 재산세·국민연금·대출 페이지 시즌 갱신
+ const STATIC_LAST_MODIFIED = new Date("2026-07-16");
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
  lastModified: STATIC_LAST_MODIFIED,

@@ -177,6 +177,14 @@ export default function TaxChanges2026Page() {
  결혼세액공제 부활, 자녀공제 확대, 비과세 항목 등
  직장인이 꼭 알아야 할 2026년 세법 핵심 변경사항.
  </p>
+ <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
+ 📅 이 페이지는 <strong>이미 2026년에 시행 중인</strong> 확정분 정리입니다. 7월 말
+ 발표 예정인 <strong>2027년 시행분</strong>은{" "}
+ <Link href="/tax-reform-2026" className="text-electric font-bold hover:underline">
+ 2026 세법개정안 총정리
+ </Link>
+ 에서 확인하세요.
+ </p>
  </div>
 
  {/* 카테고리별 변경사항 — 2번째 섹션 직후 InArticleAd (viewability 상향) */}

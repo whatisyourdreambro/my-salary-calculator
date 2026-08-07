@@ -190,6 +190,63 @@ export default function CompanyRankingPage() {
           <InArticleAd />
         </div>
 
+        {/* 7월 성과급 시즌 크로스셀 — 회사 연봉 순위 방문자를 성과급 클러스터로 라우팅 (2026-07-16) */}
+        <div className="mt-12">
+          <h2 className="text-xl font-black text-navy mb-4">
+            7월 성과급 시즌 — 내 성과급 세후 얼마?
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href="/calc/samsung-bonus"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                삼성전자 성과급 계산기
+                <span className="block text-xs font-medium text-faint-blue">
+                  OPI·TAI 세후 실수령액 시뮬레이션
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+            <Link
+              href="/calc/sk-hynix-bonus"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                SK하이닉스 성과급 계산기
+                <span className="block text-xs font-medium text-faint-blue">
+                  7월 하순 상반기 PI 발표 예정 — 미리 계산
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+            <Link
+              href="/tools/finance/bonus"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                성과급 세금 계산기
+                <span className="block text-xs font-medium text-faint-blue">
+                  회사 무관 일반 성과급 세후 계산
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+            <Link
+              href="/tools/finance/irp"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                IRP·연금저축 절세 계산기
+                <span className="block text-xs font-medium text-faint-blue">
+                  성과급 받은 달, 세액공제 환급 극대화
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+          </div>
+        </div>
+
         {/* 다음 액션 — 연봉 순위 검색 클러스터 상호 순환 (2026-07-06 감사 보강) */}
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link

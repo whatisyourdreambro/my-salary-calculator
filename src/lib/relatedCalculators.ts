@@ -179,6 +179,10 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/health-insurance-2026": ["tax", "salary"],
  "/national-pension-estimate-2026": ["investment", "tax"],
  "/savings-interest-2026": ["investment", "loan"],
+ // 2026-07-16 — 7월 시즌 신설 페이지 dead-end 차단
+ "/minimum-wage-2026": ["salary", "tax"],
+ "/minimum-wage-2027": ["salary", "tax"],
+ "/tax-reform-2026": ["tax", "realEstate"],
 };
 
 /**

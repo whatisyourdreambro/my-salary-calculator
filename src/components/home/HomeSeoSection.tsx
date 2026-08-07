@@ -76,6 +76,13 @@ export default function HomeSeoSection() {
                 label: "삼성전자 성과급(OPI·TAI) 계산기",
                 href: "/calc/samsung-bonus",
               },
+              // 7월 시즌 SSR 링크 (2026-07-16) — PI 발표 임박 + 최저임금 의결 + 재산세 납부기간
+              {
+                label: "SK하이닉스 성과급(PS·PI) 계산기",
+                href: "/calc/sk-hynix-bonus",
+              },
+              { label: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027" },
+              { label: "7월 재산세 납부 (7/16~31)", href: "/property-holding-tax-2026" },
               { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },

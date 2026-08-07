@@ -58,6 +58,17 @@ const SEASONAL_CALENDAR: SeasonalContent[] = [
     href: "/calc/samsung-bonus",
     cta: "TAI 세후 확인",
   },
+  // SK하이닉스 상반기 PI — 최근 2년 7월 하순 공지(2024 7/25, 2025 7/23) 패턴.
+  // 발표 예상 주간(7/20~28)에만 재산세보다 우선 노출 — 발표 당일 검색 폭증 대비.
+  // 확정 지급률은 스케줄 작업(sk-hynix-pi-announcement-watch)이 발표 확인 후 반영.
+  {
+    month: [7],
+    days: { from: 20, to: 28 },
+    title: "SK하이닉스 상반기 PI 발표 임박",
+    subtitle: "최근 2년 연속 최대치 150% — 발표 전에 내 예상 세후 수령액 미리 계산",
+    href: "/calc/sk-hynix-bonus",
+    cta: "PI 계산하기",
+  },
   {
     month: [7],
     title: "7월 재산세 1기 납부 (주택분 50%)",

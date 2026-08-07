@@ -25,7 +25,8 @@ export const TAI_RATES_2026_H1: TaiRate[] = [
   { id: "mx", division: "MX (스마트폰)", group: "DX", rate: 50 },
   { id: "vd", division: "VD (영상디스플레이)", group: "DX", rate: 50 },
   { id: "network", division: "네트워크", group: "DX", rate: 50 },
-  { id: "biz", division: "경영지원", group: "DX", rate: 50 },
+  // 보도 원문 표기는 "SR·경영지원·기타" (지급률 50%로 동일)
+  { id: "biz", division: "SR·경영지원·기타", group: "DX", rate: 50 },
   { id: "medical", division: "의료기기·한국총괄", group: "DX", rate: 75 },
   { id: "da", division: "생활가전 (DA)", group: "DX", rate: 25 },
 ];

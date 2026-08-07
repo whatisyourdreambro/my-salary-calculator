@@ -36,8 +36,12 @@ export default function Footer() {
       ]
     : [
         // /year-end-tax-2026 은 실제로는 종합소득세(5월 종소세) 페이지 — 라벨 일치화
-        { name: "종합소득세 2026", href: "/year-end-tax-2026" },
+        // 2026-07-16: 7월 시즌 3종(2027 최저임금·SK PI·재산세) 추가
+        { name: "2027 최저임금 확정", href: "/minimum-wage-2027" },
         { name: "삼성 성과급 계산기", href: "/calc/samsung-bonus" },
+        { name: "SK하이닉스 성과급 계산기", href: "/calc/sk-hynix-bonus" },
+        { name: "7·9월 재산세 계산기", href: "/property-holding-tax-2026" },
+        { name: "종합소득세 2026", href: "/year-end-tax-2026" },
         { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026" },
         { name: "13월의 월급", href: "/calc/january-bonus" },
         { name: "성과급 세금", href: "/calc/year-end-bonus" },

@@ -1,11 +1,16 @@
 // src/app/national-pension-estimate-2026/page.tsx
 // 국민연금 예상수령액 계산기 — 40·50대 검색 폭증 키워드
+//
+// 2026-07-16 시즌 보강: "7월 월급 실수령액 줄어든 이유" 검색 피크(급여일 25일 전후) 대응.
+// 기준소득월액 상·하한 재산정(상한 637만→659만·하한 40만→41만, 적용 2026.7~2027.6,
+// 복지부 고시 7/1 시행)을 첫 화면 즉답 박스 + 본문 상세 섹션으로 답한다.
+// ★주의: 이 7월 이벤트는 "건강보험 정산"이 아님 — 건보 연말정산 반영은 4월(별개 제도).
 
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd, speakableLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -16,8 +21,9 @@ import NationalPensionClient from "./NationalPensionClient";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 국민연금 예상수령액 계산기 — 가입기간·평균소득별 월 연금액",
   description:
-    "가입 30년 평균소득 400만원이면 월 약 129만원, 40년 가입 시 월 약 172만원 수령 예상(40년 전 기간 소득대체율 43% 가정 단순화). 2026 국민연금 가입기간·소득대체율 43%·노령연금 수급 시점까지 즉시 확인.",
+    "가입 30년 평균소득 400만원이면 월 약 129만원, 40년 가입 시 월 약 172만원 수령 예상(40년 전 기간 소득대체율 43% 가정 단순화). 7월부터 기준소득월액 상한 659만원 — 7월 월급 국민연금 공제액이 늘어난 이유까지 확인.",
   path: "/national-pension-estimate-2026",
+  modifiedTime: "2026-07-16",
   keywords: [
     "국민연금 계산기",
     "국민연금 예상수령액",
@@ -28,6 +34,12 @@ export const metadata: Metadata = buildPageMetadata({
     "국민연금 수령 시점",
     "조기노령연금",
     "국민연금 임의가입",
+    // 7월 시즌 쿼리 (기준소득월액 상·하한 재산정, 2026-07-16)
+    "국민연금 상한액",
+    "국민연금 659만원",
+    "기준소득월액",
+    "7월 월급 실수령액",
+    "국민연금 보험료 인상",
   ],
 });
 
@@ -35,6 +47,10 @@ const FAQS = [
   {
     q: "7월부터 국민연금 보험료가 왜 바뀌었나요?",
     a: "매년 7월 1일, 전년도 소득총액을 기준으로 국민연금 기준소득월액이 정기 재산정되기 때문입니다. 월급이 오르지 않아도 작년 소득 변동에 따라 7월분부터 보험료가 달라질 수 있습니다. 특히 2026년 7월부터는 기준소득월액 상한이 월 637만원에서 659만원으로, 하한이 40만원에서 41만원으로 인상되어, 월 소득 659만원 이상 가입자는 보험료가 월 약 2만 1천원(본인부담은 그 절반 수준) 오릅니다. 참고로 직장가입자 건강보험료 연말정산은 4월분 보험료에 반영되는 별개 제도입니다.",
+  },
+  {
+    q: "7월 월급 실수령액이 줄었는데 건강보험료 정산 때문인가요?",
+    a: "아닙니다. 직장가입자 건강보험료 연말정산은 매년 4월분 보험료에 반영되는 별개 제도이고, 7월 공제액 변화는 국민연금 기준소득월액 상·하한 재산정 때문입니다. 2026년 7월부터 상한이 월 637만원에서 659만원으로 올라, 월소득 659만원 이상 직장가입자는 본인부담 국민연금이 월 313,025원으로 약 10,450원 늘었습니다(회사 분담분 포함 최고 보험료는 월 626,050원, +20,900원). 반면 월소득 41만~637만원 구간(전체 가입자의 약 86%)은 이번 상·하한 조정의 직접 영향이 없습니다. 다만 7월은 전년도 소득 기준으로 개인별 기준소득월액도 정기 재산정되는 달이라, 작년에 연봉이 올랐다면 이 구간이어도 공제액이 함께 늘 수 있습니다.",
   },
   {
     q: "국민연금 수령 시점은 언제부터인가요?",
@@ -51,6 +67,10 @@ const FAQS = [
   {
     q: "국민연금 보험료는 얼마를 내나요?",
     a: "직장가입자는 기준소득월액의 9.5%(본인 4.75% + 회사 4.75%)를 분담합니다. 지역가입자(자영업·프리랜서)는 본인이 9.5% 전액 부담합니다. 기준소득월액 상한 659만원(2026.7~2027.6)까지 적용되어 월 최대 보험료는 약 62.6만원(본인 부담 약 31.3만원)이며, 그 이상 소득은 추가 보험료 없습니다.",
+  },
+  {
+    q: "국민연금 보험료율 9.5%는 앞으로도 계속 오르나요?",
+    a: "네, 법으로 정해진 일정입니다. 연금개혁에 따라 보험료율은 2026년부터 매년 0.5%p씩 인상되어 2033년 13%에 도달합니다. 2026년 적용 요율은 9.5%(직장가입자 본인 4.75% + 회사 4.75%)입니다. 요율 인상과 별개로 매년 7월에는 기준소득월액 상·하한이 재산정되므로, 월급이 그대로여도 국민연금 공제액은 달라질 수 있습니다.",
   },
   {
     q: "조기노령연금을 받으면 얼마나 손해인가요?",
@@ -88,6 +108,10 @@ export default function NationalPensionEstimate2026Page() {
             totalTime: "PT1M",
             steps: HOWTO_STEPS,
           }),
+          speakableLd({
+            url: "/national-pension-estimate-2026",
+            cssSelectors: [".faq-answer"],
+          }),
         ]}
       />
 
@@ -113,12 +137,121 @@ export default function NationalPensionEstimate2026Page() {
 
         <HomeTopAd />
 
+        {/* 2026-07-16 시즌 즉답 박스 — "7월 월급 실수령액 줄어든 이유" 검색을 첫 화면에서 응답 */}
+        <section className="my-6 p-5 sm:p-6 rounded-2xl bg-electric-5 border border-electric-20">
+          <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
+            7월 급여명세서 체크
+          </p>
+          <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-2">
+            7월 월급에서 국민연금 공제액이 늘었다면 — 상한 659만원 인상 때문입니다
+          </h2>
+          <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
+            2026년 7월 1일부터 국민연금{" "}
+            <strong className="text-navy dark:text-canvas-50">
+              기준소득월액 상한이 월 637만원에서 659만원으로
+            </strong>
+            , 하한이 40만원에서 41만원으로 조정됐습니다(적용기간 2026.7~2027.6). 월소득 659만원
+            이상 직장가입자는 본인부담 보험료가{" "}
+            <strong className="text-navy dark:text-canvas-50">월 약 10,450원</strong> 늘고, 월소득
+            41만~637만원 구간(전체 가입자의 약 86%)은 이번 조정의 직접 영향이 없습니다. 흔히
+            혼동하는 건강보험료 연말정산은 4월분 보험료에 반영되는 별개 제도입니다.{" "}
+            <Link href="#july-pension-change" className="font-bold text-electric hover:underline">
+              자세한 이유·인상표 보기 ↓
+            </Link>
+          </p>
+        </section>
+
         <NationalPensionClient />
 
         <CalcResultAd />
 
         <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
-          <h2 className="text-xl font-black text-navy dark:text-canvas-50">
+          {/* 2026-07-16 — 7월 기준소득월액 상·하한 재산정 상세 (복지부 고시 7/1 시행) */}
+          <h2
+            id="july-pension-change"
+            className="scroll-mt-24 text-xl font-black text-navy dark:text-canvas-50"
+          >
+            7월 급여명세서에서 국민연금 공제액이 늘어난 이유
+          </h2>
+          <p>
+            매년 7월 1일은 국민연금 <strong>기준소득월액 상·하한이 재산정</strong>되는 날입니다.
+            보건복지부 고시에 따라 2026년 7월 1일부터 상한이 월 637만원에서{" "}
+            <strong>659만원</strong>으로, 하한이 월 40만원에서 <strong>41만원</strong>으로
+            인상됐습니다(적용기간 2026년 7월~2027년 6월). 국민연금 보험료는 실제 월급 그대로가
+            아니라 이 기준소득월액에 보험료율 9.5%를 곱해 계산하므로, 상한이 오르면 그동안 상한에
+            묶여 있던 고소득 가입자의 보험료가 올라갑니다.
+          </p>
+          <div className="overflow-x-auto my-4">
+            <table className="w-full text-sm border border-canvas-200 dark:border-canvas-700">
+              <thead className="bg-canvas-50 dark:bg-canvas-800 font-bold">
+                <tr>
+                  <th className="px-3 py-2 text-left">구분</th>
+                  <th className="px-3 py-2 text-right">2026년 6월까지</th>
+                  <th className="px-3 py-2 text-right">2026년 7월부터</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-canvas-100 dark:border-canvas-700">
+                  <td className="px-3 py-2">기준소득월액 상한</td>
+                  <td className="px-3 py-2 text-right">월 637만원</td>
+                  <td className="px-3 py-2 text-right font-bold">월 659만원</td>
+                </tr>
+                <tr className="border-t border-canvas-100 dark:border-canvas-700">
+                  <td className="px-3 py-2">기준소득월액 하한</td>
+                  <td className="px-3 py-2 text-right">월 40만원</td>
+                  <td className="px-3 py-2 text-right font-bold">월 41만원</td>
+                </tr>
+                <tr className="border-t border-canvas-100 dark:border-canvas-700">
+                  <td className="px-3 py-2">최고 보험료 (총액, 9.5%)</td>
+                  <td className="px-3 py-2 text-right">월 605,150원</td>
+                  <td className="px-3 py-2 text-right font-bold">월 626,050원 (+20,900원)</td>
+                </tr>
+                <tr className="border-t border-canvas-100 dark:border-canvas-700">
+                  <td className="px-3 py-2">직장가입자 본인부담 최고</td>
+                  <td className="px-3 py-2 text-right">월 302,575원</td>
+                  <td className="px-3 py-2 text-right font-bold">월 313,025원 (약 +10,450원)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul>
+            <li>
+              <strong>월소득 659만원 이상</strong>: 본인부담 국민연금이 월 약 10,450원 인상 —
+              회사도 같은 금액을 분담해 총 +20,900원
+            </li>
+            <li>
+              <strong>월소득 637만~659만원</strong>: 기존에는 상한(637만원)까지만 부과됐지만 이제
+              본인 소득까지 부과 기준이 올라가, 초과분만큼 본인부담이 0~10,450원 사이에서 인상
+            </li>
+            <li>
+              <strong>월소득 41만~637만원 (전체 가입자의 약 86%)</strong>: 이번 상·하한 조정의
+              직접 영향 없음. 단, 7월은 전년도 소득총액을 기준으로 개인별 기준소득월액도 정기
+              재산정되는 달이라, 작년에 연봉이 올랐다면 이 구간이어도 공제액이 함께 늘 수 있습니다
+            </li>
+          </ul>
+          <div className="my-4 p-4 rounded-2xl bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-sm">
+            <p className="font-bold text-navy dark:text-canvas-50 mb-1">
+              “7월 건강보험 정산”이 아닙니다
+            </p>
+            <p className="text-muted-blue dark:text-canvas-300">
+              직장가입자 건강보험료 연말정산은 매년 <strong>4월분 보험료</strong>에 반영되는 별개
+              제도입니다. 7월 공제액 변화의 원인은 국민연금 기준소득월액 재산정입니다. 건보료
+              정산이 궁금하다면{" "}
+              <Link href="/health-insurance-2026" className="font-bold text-electric hover:underline">
+                건강보험료 연말정산 가이드
+              </Link>
+              를 참고하세요.
+            </p>
+          </div>
+          <p>
+            더 낸 보험료가 사라지는 것은 아닙니다. 연금액을 산정할 때도 같은 기준소득월액을 쓰기
+            때문에, 상한 인상으로 보험료 산정 기준이 오르면 노후에 받을 연금액 산정에도
+            반영됩니다. 위 계산기에서 평균 월소득을 조정해 직접 확인해 보세요. 참고로 이번 7월
+            변화와 별개로, 보험료율 자체도 2026년부터 매년 0.5%p씩 인상되어 2033년 13%에 도달하는
+            법정 일정이 진행 중입니다(2026년 적용 9.5%).
+          </p>
+
+          <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             국민연금 = "최소 10년 가입 → 만 65세부터 평생 지급"
           </h2>
           <p>
@@ -178,7 +311,7 @@ export default function NationalPensionEstimate2026Page() {
                 <summary className="flex items-center justify-between cursor-pointer text-sm font-bold text-navy dark:text-canvas-50">
                   Q. {faq.q}
                 </summary>
-                <p className="mt-3 text-sm leading-7 text-muted-blue dark:text-canvas-300">{faq.a}</p>
+                <p className="faq-answer mt-3 text-sm leading-7 text-muted-blue dark:text-canvas-300">{faq.a}</p>
               </details>
             ))}
           </div>

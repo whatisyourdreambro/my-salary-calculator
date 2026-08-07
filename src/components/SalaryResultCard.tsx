@@ -3,6 +3,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import CountUp from "react-countup";
 import { Info, ChevronRight, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -89,6 +90,15 @@ export default function SalaryResultCard({
  <DeductionItem label="고용보험" value={breakdown.employment} iconBg="bg-electric-15" iconColor="text-electric" />
  <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} iconBg="bg-electric-20" iconColor="text-electric" />
  </div>
+
+ {/* 국민연금 공제액 → 예상수령액 페이지 동선 (2026-07-16 — 7월 상한 재산정 시즌 갭 해소) */}
+ <Link
+ href="/national-pension-estimate-2026"
+ className="mt-3 flex items-center justify-between px-2 py-2.5 rounded-xl text-[13px] font-semibold text-muted-blue hover:text-electric transition-colors"
+ >
+ <span>이 국민연금, 나중에 얼마나 돌려받을까? 예상수령액 확인</span>
+ <ChevronRight size={15} className="flex-shrink-0" />
+ </Link>
  </div>
 
  {/* 안내 문구 */}

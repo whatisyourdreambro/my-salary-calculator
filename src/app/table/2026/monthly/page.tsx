@@ -7,6 +7,7 @@ import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
+import SeasonalLinks from "../SeasonalLinks";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 월급 실수령액 표 — 200만~1000만원 전 구간 세후 수령액",
@@ -187,6 +188,9 @@ function MonthlyTable() {
  </div>
  </div>
  </section>
+
+ {/* 7월 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
+ <SeasonalLinks />
 
  <div className="mt-4 text-center text-faint-blue text-sm pb-8">
  * 본 데이터는 2026년 예상 보험료율 인상안을 반영한 시뮬레이션 결과입니다.

@@ -6,6 +6,7 @@ import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
+import SeasonalLinks from "../SeasonalLinks";
 import { CalcResultAd } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -132,11 +133,20 @@ function HourlyTable2026() {
  <p className="text-muted-foreground">
  2026년 최저시급은 <strong>10,320원</strong>으로 결정되었습니다. 2025년 10,030원 대비 290원(2.9%) 인상된 금액입니다.
  </p>
+ <p className="text-muted-foreground mt-3">
+ 한편 2027년 최저임금은 <strong>10,700원</strong>으로 의결되어, 내년에는 시급이 한 번 더 오릅니다.
+ </p>
  <Link
- href="/guides/minimum-wage-2026"
+ href="/minimum-wage-2026"
  className="text-primary font-semibold mt-4 inline-block"
  >
- 최저임금 관련 뉴스 보기 →
+ 2026 최저임금 시급·월급·연봉 환산표 →
+ </Link>
+ <Link
+ href="/minimum-wage-2027"
+ className="text-primary font-semibold mt-2 block"
+ >
+ 2027 최저임금 10,700원 총정리 →
  </Link>
  </div>
  <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
@@ -155,6 +165,9 @@ function HourlyTable2026() {
  </div>
  </div>
  </section>
+
+ {/* 7월 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
+ <SeasonalLinks className="px-4 sm:px-6" />
  </div>
  </main>
  </>

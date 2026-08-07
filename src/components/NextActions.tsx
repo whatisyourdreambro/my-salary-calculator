@@ -70,11 +70,13 @@ function buildActions(
  description: "전세금 80% · 금리 비교",
  href: "/calc/jeonse-loan",
  },
+ // 2026-07-16 — 원리금 상환 계산(대출 계산기와 기능 중복)을 재산세로 교체.
+ // 재산세는 7·9월 납부 시즌 고CPC 페이지 — 대출·부동산 사용자와 문맥 정합.
  {
- icon: Calculator,
- title: "원리금 균등 상환 계산",
- description: "월 상환액·총이자 분석",
- href: "/calc/loan-monthly-payment",
+ icon: Receipt,
+ title: "재산세·보유세 계산",
+ description: "7·9월 재산세 납부 — 공시가별 부담 확인",
+ href: "/property-holding-tax-2026",
  },
  ];
  }
