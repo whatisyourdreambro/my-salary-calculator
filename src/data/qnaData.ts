@@ -2,6 +2,7 @@
  Wallet, Landmark, Briefcase, TrendingUp, GraduationCap, Home,
  CreditCard, Calculator, FileText, ShieldCheck
 } from "lucide-react";
+import { recoverMojibakeUtf8 } from "@/data/glossaryData";
 
 export interface QnaItem {
  category: string;
@@ -47,6 +48,11 @@ export function getQnaBySlug(slug: string): QnaItem | undefined {
  } catch {
  break;
  }
+ }
+ // Latin-1 모지바케 복구 — glossaryData.recoverMojibakeUtf8와 동일 근거
+ for (const c of [...candidates]) {
+ const r = recoverMojibakeUtf8(c);
+ if (r) candidates.push(r);
  }
  for (const c of candidates) {
  const found = qnaData.find((item) => toQnaSlug(item.question) === toQnaSlug(c));

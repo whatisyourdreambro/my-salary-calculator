@@ -62,11 +62,35 @@ export function getGlossaryBySlug(slug: string): GlossaryItem | undefined {
  break;
  }
  }
+ // Latin-1 모지바케 복구: 구버전 빌드 툴체인이 UTF-8 바이트를 Latin-1 문자로
+ // 해석해 넘기는 경우("연봉" → "ì—°ë´‰") 원문 복원 후보를 추가한다.
+ for (const c of [...candidates]) {
+ const r = recoverMojibakeUtf8(c);
+ if (r) candidates.push(r);
+ }
  for (const c of candidates) {
  const found = glossaryData.find((item) => toGlossarySlug(item.title) === toGlossarySlug(c));
  if (found) return found;
  }
  return undefined;
+}
+
+/** 문자열 전체가 0x00~0xFF 범위이고 그 바이트열이 유효한 UTF-8이면 재해석 결과를 반환 */
+export function recoverMojibakeUtf8(s: string): string | null {
+ let hasHighByte = false;
+ for (const ch of s) {
+ const code = ch.charCodeAt(0);
+ if (code > 0xff) return null; // Latin-1 범위 밖 문자 → 모지바케 아님
+ if (code >= 0x80) hasHighByte = true;
+ }
+ if (!hasHighByte) return null; // 순수 ASCII → 복구 불필요
+ try {
+ const bytes = Uint8Array.from(s, (c) => c.charCodeAt(0));
+ const d = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+ return d !== s ? d : null;
+ } catch {
+ return null;
+ }
 }
 
 export function getRelatedGlossaryItems(item: GlossaryItem, limit = 5): GlossaryItem[] {
