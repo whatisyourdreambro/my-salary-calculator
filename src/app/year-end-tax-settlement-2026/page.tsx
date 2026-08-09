@@ -224,6 +224,47 @@ export default function YearEndTaxSettlement2026Page() {
  </Link>
  </section>
 
+ {/* 공제 항목별 정밀 계산기 — 연말정산 클러스터 내부링크 */}
+ <section className="mb-12">
+ <h2 className="text-xl font-black text-navy mb-2">공제 항목별 정밀 계산기</h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-4">
+ 6대 점검 중 신용카드·의료비·월세는 전용 계산기로 예상 공제액을 미리
+ 계산할 수 있습니다.
+ </p>
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ <Link
+ href="/credit-card-deduction-2026"
+ className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-3">💳</div>
+ <h3 className="text-base font-black mb-2">신용카드 소득공제 계산기</h3>
+ <p className="text-sm text-muted-blue">
+ 25% 문턱·자녀 수별 한도 반영 — 12월 한도 채우기 전 확인
+ </p>
+ </Link>
+ <Link
+ href="/medical-tax-credit-2026"
+ className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-3">🏥</div>
+ <h3 className="text-base font-black mb-2">의료비 세액공제 계산기</h3>
+ <p className="text-sm text-muted-blue">
+ 실손 차감·총급여 3% 문턱·난임 30%까지 반영 계산
+ </p>
+ </Link>
+ <Link
+ href="/rent-tax-credit-2026"
+ className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-3">🏠</div>
+ <h3 className="text-base font-black mb-2">월세 세액공제 계산기</h3>
+ <p className="text-sm text-muted-blue">
+ 15%·17% 자동 판정, 연 1,000만원 한도 최대 170만원
+ </p>
+ </Link>
+ </div>
+ </section>
+
  {/* FAQ */}
  <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6">자주 묻는 질문</h2>

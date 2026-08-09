@@ -368,6 +368,28 @@ export default function CreditCardDeduction2026Page() {
                 2027년 카드공제 개편 내용
               </p>
             </Link>
+            <Link
+              href="/medical-tax-credit-2026"
+              className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
+            >
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                의료비 세액공제 계산기
+              </p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">
+                실손 차감·3% 문턱 반영 계산
+              </p>
+            </Link>
+            <Link
+              href="/rent-tax-credit-2026"
+              className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
+            >
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                월세 세액공제 계산기
+              </p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">
+                15%·17% 자동 판정, 최대 170만원
+              </p>
+            </Link>
           </div>
         </section>
       </div>

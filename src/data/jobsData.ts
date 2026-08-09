@@ -20,6 +20,32 @@ export interface JobSalaryRange {
   avg: number;
 }
 
+/**
+ * 정부 공식 임금통계 (선택).
+ * 출처: 한국고용정보원 워크넷/워크피디아 재직자조사, 인사혁신처 봉급표 등
+ * 검증된 정부·공공 통계만 기입 — 임의 추정치 금지.
+ */
+export interface JobOfficialStats {
+  /** 중위(50분위) 연봉, 만원 단위 */
+  medianAnnualManwon: number;
+  /** 하위 25% 연봉, 만원 단위 */
+  lowerQuartileManwon?: number;
+  /** 상위 25% 연봉, 만원 단위 */
+  upperQuartileManwon?: number;
+  /** 평균 연봉, 만원 단위 (별도 출처인 경우 note에 명시) */
+  avgAnnualManwon?: number;
+  /** 통계 기준 연도 */
+  year: string;
+  /** 조사 기관·통계명 */
+  source: string;
+  /** 출처 원문 URL */
+  sourceUrl?: string;
+  /** 통계상 직종명이 사이트 직업명과 다를 때 명시 */
+  classification?: string;
+  /** 표본·조사 방식 등 해석 주의사항 */
+  note?: string;
+}
+
 export interface JobProfile {
   id: string;
   name: string;
@@ -37,6 +63,8 @@ export interface JobProfile {
   relatedCalcSlugs: string[];
   faqs: Array<{ q: string; a: string }>;
   keywords: string[];
+  /** 정부 공식 임금통계 — 있는 직업만 페이지에 공식 통계 카드 노출 */
+  officialStats?: JobOfficialStats;
 }
 
 export const jobsData: JobProfile[] = [
@@ -63,6 +91,16 @@ export const jobsData: JobProfile[] = [
       { q: "간호사 3교대 수당은 얼마나 되나요?", a: "야간근무수당은 통상임금의 50% 가산이 법정 기준입니다. 실제로 상급종합병원 기준 야간수당만 월 30~70만원 추가 지급되는 경우가 많아 연봉 외 실질 소득이 높아집니다." },
     ],
     keywords: ["간호사 연봉", "간호사 월급", "간호사 신입 연봉", "간호사 평균 연봉", "간호사 실수령액", "간호사 연봉 2026"],
+    officialStats: {
+      medianAnnualManwon: 4500,
+      lowerQuartileManwon: 3600,
+      upperQuartileManwon: 5375,
+      avgAnnualManwon: 4745,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007494",
+      note: "하위/중위/상위는 2023년 워크넷 재직자 조사(연봉). avgAnnualManwon 4,745만원은 별도 출처: 보건복지부 보건의료인력 실태조사(2020년 기준, 2022.7 발표) 요양기관 근무 간호사 평균.",
+    },
   },
   {
     id: "doctor",
@@ -106,6 +144,16 @@ export const jobsData: JobProfile[] = [
       { q: "치과의사 개원 비용은 얼마인가요?", a: "치과 개원에는 보통 2억~5억원의 초기 비용이 필요합니다(장비·인테리어·보증금 등). 개원 후 손익분기점까지 1~2년이 걸리는 경우가 많습니다." },
     ],
     keywords: ["치과의사 연봉", "치과의사 월급", "치과의사 평균 연봉", "치과의사 실수령액", "페이닥터 연봉", "치과 개원의 연봉"],
+    officialStats: {
+      medianAnnualManwon: 9700,
+      lowerQuartileManwon: 8000,
+      upperQuartileManwon: 12000,
+      avgAnnualManwon: 19490,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007472",
+      note: "워크넷 조사는 봉직의 중심 표본(직업당 약 30명 자기보고)이라 개원의 소득 반영 한계. avgAnnualManwon 1억9,490만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균 — 개원의 포함이라 워크넷 중위보다 크게 높음.",
+    },
   },
   {
     id: "pharmacist",
@@ -127,6 +175,16 @@ export const jobsData: JobProfile[] = [
       { q: "약사 근무 조건은 어떤가요?", a: "병원 약사는 3교대 근무가 있을 수 있으며 야간수당이 추가됩니다. 약국 근무 약사는 보통 주 5~6일이며 평균 주 48~52시간 근무합니다. 프리랜서 파트타임 약사도 가능합니다." },
     ],
     keywords: ["약사 연봉", "약사 월급", "약사 평균 연봉", "약사 실수령액", "약사 신입 연봉", "약사 연봉 2026"],
+    officialStats: {
+      medianAnnualManwon: 6500,
+      lowerQuartileManwon: 4662,
+      upperQuartileManwon: 7459,
+      avgAnnualManwon: 8416,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=301&searchCrCd=303001",
+      note: "하위/중위/상위는 2021년 워크넷 조사. avgAnnualManwon 8,416만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균(개국 약사 포함).",
+    },
   },
   {
     id: "oriental-medicine-doctor",
@@ -147,6 +205,16 @@ export const jobsData: JobProfile[] = [
       { q: "한의사 연봉은 얼마인가요?", a: "봉직 한의사(취업) 초봉은 3,000~5,000만원이며, 개원 한의사는 위치·전문성에 따라 5,000만원~1억원 이상입니다. 피부·다이어트 특화 한의원은 높은 수익을 올리기도 합니다." },
     ],
     keywords: ["한의사 연봉", "한의사 월급", "한의사 평균 연봉", "한의사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 10000,
+      lowerQuartileManwon: 8000,
+      upperQuartileManwon: 13000,
+      avgAnnualManwon: 10860,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007542",
+      note: "avgAnnualManwon 1억860만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균. 두 정부 통계가 유사 수준으로 상호 부합.",
+    },
   },
   {
     id: "physical-therapist",
@@ -167,6 +235,14 @@ export const jobsData: JobProfile[] = [
       { q: "물리치료사 연봉은 얼마인가요?", a: "신입 물리치료사 연봉은 2,700~3,500만원이며, 3~5년 경력이면 3,200~4,200만원, 10년 이상이면 3,800~5,200만원 수준입니다. 상급종합병원·재활병원은 대체로 급여가 높습니다." },
     ],
     keywords: ["물리치료사 연봉", "물리치료사 월급", "물리치료사 평균 연봉", "물리치료사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 3800,
+      lowerQuartileManwon: 3300,
+      upperQuartileManwon: 4500,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007501",
+    },
   },
   {
     id: "radiographer",
@@ -187,6 +263,14 @@ export const jobsData: JobProfile[] = [
       { q: "방사선사 연봉은 얼마인가요?", a: "신입 방사선사 연봉은 2,900~3,800만원 수준이며, 경력 10년 이상이면 4,200~5,500만원까지 오를 수 있습니다. 상급종합병원은 야간·위험수당 포함 시 연봉이 더 높습니다." },
     ],
     keywords: ["방사선사 연봉", "방사선사 월급", "방사선사 평균 연봉", "방사선사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 5000,
+      lowerQuartileManwon: 3800,
+      upperQuartileManwon: 6450,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000001017",
+    },
   },
   {
     id: "veterinarian",
@@ -207,6 +291,15 @@ export const jobsData: JobProfile[] = [
       { q: "수의사 연봉은 얼마인가요?", a: "소동물(반려동물) 임상 수의사 초봉은 3,000~4,500만원이며, 개원 수의사는 5,000만원~1억5,000만원 수준입니다. 반려동물 산업 성장으로 수요가 크게 늘고 있습니다." },
     ],
     keywords: ["수의사 연봉", "수의사 월급", "수의사 평균 연봉", "수의사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 6216,
+      lowerQuartileManwon: 5749,
+      upperQuartileManwon: 6786,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=301&searchCrCd=302001",
+      note: "인접 코드 K000007497은 '수의사보조원'(중위 3,200만원)으로 별개 직종 — 혼동 주의.",
+    },
   },
 
   // ─── 공무원/공공 ──────────────────────────────────────
@@ -231,6 +324,14 @@ export const jobsData: JobProfile[] = [
       { q: "공무원 연금은 얼마나 받나요?", a: "2015년 이후 입직자는 기여율 9%, 퇴직 후 10년 이상 재직 시 수령 가능합니다. 30년 재직 시 퇴직 전 평균 기준소득의 약 40~50%를 연금으로 수령합니다." },
     ],
     keywords: ["9급 공무원 연봉", "공무원 9급 월급", "9급 공무원 신입 연봉", "공무원 연봉", "공무원 월급 2026"],
+    officialStats: {
+      medianAnnualManwon: 3428,
+      year: "2026",
+      source: "인사혁신처 2026년 공무원 봉급표·공무원보수규정 개정(2025.12.30 국무회의 통과, 인사혁신처 발표 인용 보도)",
+      sourceUrl: "https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/",
+      classification: "일반직공무원 9급 초임(1호봉)",
+      note: "중위값 아님 — 2026년 9급 초임(1호봉) 연 보수 3,428만원(월평균 286만원)은 '봉급+공통수당 포함' 인사혁신처 발표치. 기본급만은 월 2,133,000원(연 2,560만원, 인사혁신처 봉급표 실측). 2026년 보수 전체 3.5% 인상, 7~9급 초임 봉급은 6.6% 인상.",
+    },
   },
   {
     id: "civil-servant-7",
@@ -292,6 +393,15 @@ export const jobsData: JobProfile[] = [
       { q: "소방관 3교대 수당은 얼마인가요?", a: "소방관은 24시간 맞교대 또는 3조 2교대 근무를 합니다. 야간근무수당·위험직무수당·화재진압수당 등이 추가되어 기본급 대비 수당 비중이 높은 편입니다." },
     ],
     keywords: ["소방관 연봉", "소방관 월급", "소방관 평균 연봉", "소방공무원 연봉", "소방관 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 4300,
+      lowerQuartileManwon: 3575,
+      upperQuartileManwon: 5000,
+      year: "2023",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007495",
+      note: "재직자 조사 기반(수당 포함 실수령 성격). 별도로 인사혁신처 2026 봉급표에 '경찰·소방공무원' 전용 봉급표 존재.",
+    },
   },
   {
     id: "police-officer",
@@ -312,6 +422,15 @@ export const jobsData: JobProfile[] = [
       { q: "경찰관 연봉은 얼마인가요?", a: "순경 신임 연봉은 수당 포함 약 2,800~3,500만원이며, 야간·교대수당이 추가됩니다. 경감·경정급 중간간부는 4,500~6,000만원 수준입니다." },
     ],
     keywords: ["경찰관 연봉", "경찰 월급", "경찰 평균 연봉", "순경 연봉", "경찰공무원 연봉"],
+    officialStats: {
+      medianAnnualManwon: 3900,
+      lowerQuartileManwon: 3315,
+      upperQuartileManwon: 4662,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=240&searchCrCd=240101",
+      note: "2021년 조사로 소방관(2023 조사)보다 기준 연도가 오래됨. 별도로 경찰·소방공무원 봉급표 존재.",
+    },
   },
   {
     id: "soldier",
@@ -352,6 +471,15 @@ export const jobsData: JobProfile[] = [
       { q: "검사 연봉은 얼마인가요?", a: "신임 검사(3호봉) 기준 연봉은 수당 포함 약 6,000~8,000만원입니다. 부장검사·고검장급은 1억원 이상이며, 퇴직 후 변호사 개업 시 수입이 크게 증가합니다." },
     ],
     keywords: ["검사 연봉", "검사 월급", "검사 평균 연봉", "검사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 7479.6,
+      lowerQuartileManwon: 7000,
+      upperQuartileManwon: 8000,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=221&searchCrCd=221102",
+      note: "실제 보수는 「검사의 보수에 관한 법률」 별도 봉급표(호봉제) 적용 — 워크넷 조사값은 재직자 자기보고 기반.",
+    },
   },
   {
     id: "judge",
@@ -372,6 +500,15 @@ export const jobsData: JobProfile[] = [
       { q: "판사 연봉은 얼마인가요?", a: "법관 1호봉 기준 연봉은 약 7,000~9,000만원이며, 고법판사·대법관으로 올라갈수록 높아집니다. 로스쿨 제도 이후 판사 임용이 변호사 경력 중심으로 변화했습니다." },
     ],
     keywords: ["판사 연봉", "판사 월급", "판사 평균 연봉", "법관 연봉"],
+    officialStats: {
+      medianAnnualManwon: 7770,
+      lowerQuartileManwon: 6216,
+      upperQuartileManwon: 8500,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=221&searchCrCd=221101",
+      note: "실제 보수는 「법관의 보수에 관한 법률」 별도 봉급표 적용 — 워크넷 조사값은 재직자 자기보고 기반.",
+    },
   },
 
   // ─── 교육 ────────────────────────────────────────────
@@ -395,6 +532,16 @@ export const jobsData: JobProfile[] = [
       { q: "초등교사 방학 기간은 얼마나 되나요?", a: "여름방학 약 5주, 겨울방학 약 5주로 총 10주 수준입니다. 방학 중에도 연수·행정업무가 있어 실제 휴가는 3~4주 정도입니다." },
     ],
     keywords: ["초등교사 연봉", "초등교사 월급", "교사 연봉", "교사 평균 연봉", "임용 후 연봉", "교사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 4072,
+      lowerQuartileManwon: 3471,
+      upperQuartileManwon: 5180,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=211&searchCrCd=212201",
+      classification: "초등학교교사",
+      note: "실제 보수는 교육공무원(유·초·중·고 교원) 봉급표 + 각종 수당 체계. 워크넷 조사값은 재직자 자기보고 기반.",
+    },
   },
   {
     id: "secondary-teacher",
@@ -415,6 +562,16 @@ export const jobsData: JobProfile[] = [
       { q: "중고등교사 연봉은 얼마인가요?", a: "초등교사와 동일한 공무원 봉급표를 따릅니다. 신임 기준 3,000~3,600만원이며, 10년 이상 경력 부장교사는 5,000~6,500만원 수준입니다." },
     ],
     keywords: ["중등교사 연봉", "고등교사 연봉", "교사 연봉", "교사 월급", "중고등 교사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4540,
+      lowerQuartileManwon: 3885,
+      upperQuartileManwon: 5950,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=211&searchCrCd=212101",
+      classification: "중·고등학교교사",
+      note: "교육공무원 봉급표는 초등교사와 동일하나 재직자 조사에서는 중·고등이 다소 높게 응답됨.",
+    },
   },
   {
     id: "kindergarten-teacher",
@@ -435,6 +592,15 @@ export const jobsData: JobProfile[] = [
       { q: "유치원교사 연봉은 얼마인가요?", a: "국공립 유치원 교사는 공무원 봉급표를 따라 3,000~4,000만원 수준입니다. 사립 유치원은 기관에 따라 차이가 크며 2,400~3,500만원 수준입니다." },
     ],
     keywords: ["유치원교사 연봉", "유치원 교사 월급", "유아교사 연봉", "유치원교사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 3000,
+      lowerQuartileManwon: 2797,
+      upperQuartileManwon: 3315,
+      year: "2021",
+      source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
+      sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=211&searchCrCd=213001",
+      note: "사립 유치원 교사 다수 포함된 조사값. 국공립 유치원 교사는 교육공무원 봉급표 적용으로 이보다 높은 편.",
+    },
   },
   {
     id: "childcare-teacher",
@@ -476,6 +642,16 @@ export const jobsData: JobProfile[] = [
       { q: "대학교수가 되려면 어떻게 해야 하나요?", a: "일반적으로 박사학위 취득 → 포스닥/연구원 → 조교수 공채 순서입니다. SCI 논문 실적과 연구비(과제) 수주 능력이 중요합니다." },
     ],
     keywords: ["대학교수 연봉", "교수 월급", "교수 평균 연봉", "조교수 연봉", "부교수 연봉", "정교수 연봉"],
+    officialStats: {
+      medianAnnualManwon: 8000,
+      lowerQuartileManwon: 7000,
+      upperQuartileManwon: 10000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000906",
+      classification: "대학 교수",
+      note: "직업당 평균 30명 재직자 설문 기반 자기보고 통계. 워크넷 구 페이지(2021 조사)보다 최신인 2025 조사값.",
+    },
   },
 
   // ─── IT/개발 ──────────────────────────────────────────
@@ -500,6 +676,16 @@ export const jobsData: JobProfile[] = [
       { q: "비전공자도 개발자가 될 수 있나요?", a: "가능합니다. 부트캠프·독학을 통해 비전공자 개발자로 취업하는 사례가 많습니다. 다만 대형 IT기업은 CS 기초와 알고리즘 능력을 중요시합니다." },
     ],
     keywords: ["개발자 연봉", "소프트웨어 개발자 연봉", "프로그래머 연봉", "개발자 월급", "IT 개발자 연봉", "개발자 신입 연봉"],
+    officialStats: {
+      medianAnnualManwon: 9150,
+      lowerQuartileManwon: 6700,
+      upperQuartileManwon: 10900,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001176",
+      classification: "응용소프트웨어개발자",
+      note: "참고: 시스템소프트웨어개발자는 별도 직종(하위 4,900/중위 8,100/상위 11,000). 2021 조사(중위 3,729.6) 대비 큰 상승 — 표본 30명 자기보고 특성상 변동 큼.",
+    },
   },
   {
     id: "frontend-developer",
@@ -520,6 +706,16 @@ export const jobsData: JobProfile[] = [
       { q: "프론트엔드 개발자 연봉은 얼마인가요?", a: "신입 프론트엔드 개발자 연봉은 3,800~5,200만원이며, 경력 3~5년이면 5,500~8,500만원, 10년 이상 시니어는 7,500만~1억4,000만원 수준입니다." },
     ],
     keywords: ["프론트엔드 개발자 연봉", "프론트엔드 연봉", "React 개발자 연봉", "프론트엔드 개발자 월급"],
+    officialStats: {
+      medianAnnualManwon: 6390,
+      lowerQuartileManwon: 4975,
+      upperQuartileManwon: 8000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001106",
+      classification: "웹개발자(웹 프로그래머)",
+      note: "정부 직업분류에 프론트/백엔드 구분 없음. 프론트엔드는 웹개발자(웹 프로그래머)가 최근접 직종.",
+    },
   },
   {
     id: "backend-developer",
@@ -540,6 +736,16 @@ export const jobsData: JobProfile[] = [
       { q: "백엔드 개발자 연봉은 얼마인가요?", a: "신입 백엔드 개발자 연봉은 4,000~5,500만원이며, 경력 5년 이상은 7,000~1억원, 아키텍처·테크리드급은 1억원 이상입니다." },
     ],
     keywords: ["백엔드 개발자 연봉", "백엔드 연봉", "서버 개발자 연봉", "Java 개발자 연봉", "Python 개발자 연봉"],
+    officialStats: {
+      medianAnnualManwon: 9150,
+      lowerQuartileManwon: 6700,
+      upperQuartileManwon: 10900,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001176",
+      classification: "응용소프트웨어개발자",
+      note: "정부 직업분류에 백엔드 별도 직종 없음 — 응용소프트웨어개발자로 분류(소프트웨어 개발자 항목과 동일값).",
+    },
   },
   {
     id: "data-scientist",
@@ -560,6 +766,15 @@ export const jobsData: JobProfile[] = [
       { q: "데이터 사이언티스트 연봉은 얼마인가요?", a: "신입 데이터 사이언티스트 연봉은 4,500~6,500만원이며, 경력 5년 이상은 8,000만~1억3,000만원입니다. AI/ML 전문성이 높을수록 대우가 좋아집니다." },
     ],
     keywords: ["데이터 사이언티스트 연봉", "데이터 분석가 연봉", "머신러닝 엔지니어 연봉", "AI 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 6100,
+      lowerQuartileManwon: 5000,
+      upperQuartileManwon: 10250,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001080",
+      classification: "데이터분석가(빅데이터분석가)",
+    },
   },
   {
     id: "ai-engineer",
@@ -580,6 +795,16 @@ export const jobsData: JobProfile[] = [
       { q: "AI 엔지니어 연봉은 얼마인가요?", a: "2026년 기준 신입 AI 엔지니어 연봉은 5,000~7,500만원이며, 네이버·카카오·삼성리서치 등 대형 AI 연구소는 더 높습니다. 경력 5년 이상 AI 리서처는 1억~2억원도 흔합니다." },
     ],
     keywords: ["AI 엔지니어 연봉", "머신러닝 엔지니어 연봉", "딥러닝 연봉", "AI 개발자 연봉", "LLM 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 9150,
+      lowerQuartileManwon: 6700,
+      upperQuartileManwon: 10900,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001176",
+      classification: "응용소프트웨어개발자(인공지능 SW 개발자 포함)",
+      note: "정부·공공 통계에 AI 엔지니어 단독 직종 없음(KNOW 538개 전수 확인). KOSA SW기술자 임금실태조사(국가승인통계 제375001호)와 커리어넷 직업백과 모두 인공지능 개발자를 '응용소프트웨어개발자' 범주로 분류 — 동일 관행 적용.",
+    },
   },
   {
     id: "devops-engineer",
@@ -600,6 +825,16 @@ export const jobsData: JobProfile[] = [
       { q: "DevOps 엔지니어 연봉은 얼마인가요?", a: "신입 DevOps 엔지니어 연봉은 4,200~5,800만원이며, 클라우드 아키텍트급 경력자는 1억원 이상도 가능합니다." },
     ],
     keywords: ["DevOps 엔지니어 연봉", "클라우드 엔지니어 연봉", "SRE 연봉", "인프라 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 6400,
+      lowerQuartileManwon: 5500,
+      upperQuartileManwon: 7150,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001132",
+      classification: "정보 시스템 운영자",
+      note: "DevOps 단독 직종 통계 없음 — 최근접 직종 '정보 시스템 운영자'로 매핑(운영 중심 직종이라 개발 겸업 DevOps 실임금보다 보수적일 수 있음).",
+    },
   },
   {
     id: "ux-ui-designer",
@@ -620,6 +855,15 @@ export const jobsData: JobProfile[] = [
       { q: "UX/UI 디자이너 연봉은 얼마인가요?", a: "신입 UX/UI 디자이너 연봉은 3,200~4,500만원이며, 대형 IT기업(네이버·카카오)은 4,000만원 이상 신입도 있습니다. 경력 5년 이상은 6,000~9,000만원 수준입니다." },
     ],
     keywords: ["UX 디자이너 연봉", "UI 디자이너 연봉", "UX UI 디자이너 연봉", "프로덕트 디자이너 연봉"],
+    officialStats: {
+      medianAnnualManwon: 5000,
+      lowerQuartileManwon: 4100,
+      upperQuartileManwon: 6650,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000890",
+      classification: "UX/UI디자이너",
+    },
   },
   {
     id: "game-developer",
@@ -640,6 +884,15 @@ export const jobsData: JobProfile[] = [
       { q: "게임 개발자 연봉은 얼마인가요?", a: "신입 게임 개발자 연봉은 3,800~5,500만원이며, 크래프톤·엔씨소프트·넥슨 등 대형 게임사는 신입도 5,000만원 이상입니다. 경력 시니어는 1억원 이상 가능합니다." },
     ],
     keywords: ["게임 개발자 연봉", "게임 프로그래머 연봉", "Unity 개발자 연봉", "게임 개발자 월급"],
+    officialStats: {
+      medianAnnualManwon: 6480,
+      lowerQuartileManwon: 3925,
+      upperQuartileManwon: 8500,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007580",
+      classification: "게임프로그래머",
+    },
   },
 
   // ─── 금융 ────────────────────────────────────────────
@@ -662,6 +915,16 @@ export const jobsData: JobProfile[] = [
       { q: "투자은행원 연봉은 얼마인가요?", a: "IB 신입 애널리스트 연봉은 7,000~1억원이며, 성과 보너스 포함 시 1.5억~2억원까지 가능합니다. 5년 이상 경력 VP급은 2억~5억원, 파트너(MD)급은 10억원 이상도 있습니다." },
     ],
     keywords: ["투자은행원 연봉", "IB 연봉", "투자은행 연봉", "금융권 연봉", "증권사 IB 연봉"],
+    officialStats: {
+      medianAnnualManwon: 10500,
+      lowerQuartileManwon: 8825,
+      upperQuartileManwon: 15000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001179",
+      classification: "투자분석가",
+      note: "IB(기업금융) 단독 직종 통계 없음 — 최근접 직종 '투자분석가'로 매핑. 참고: 증권·외환딜러도 별도 직종 존재.",
+    },
   },
   {
     id: "fund-manager",
@@ -682,6 +945,15 @@ export const jobsData: JobProfile[] = [
       { q: "펀드매니저 연봉은 얼마인가요?", a: "신입 펀드매니저는 5,000~7,500만원이며, 운용 실적에 따른 성과보수가 붙어 경력자는 1억~4억원도 가능합니다. 헤지펀드 운용역은 성과에 따라 수십억원도 받습니다." },
     ],
     keywords: ["펀드매니저 연봉", "자산운용사 연봉", "펀드매니저 월급", "CFA 연봉"],
+    officialStats: {
+      medianAnnualManwon: 9500,
+      lowerQuartileManwon: 7000,
+      upperQuartileManwon: 12000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000987",
+      classification: "자산운용가(펀드매니저)",
+    },
   },
   {
     id: "cpa",
@@ -703,6 +975,15 @@ export const jobsData: JobProfile[] = [
       { q: "공인회계사 시험 난이도는 어떤가요?", a: "1차(합격률 15~20%)와 2차(합격률 20~25%)로 구성됩니다. 평균 합격까지 2~3년이 소요되며, 회계·세법·재무관리 등 광범위한 시험 범위를 커버해야 합니다." },
     ],
     keywords: ["공인회계사 연봉", "CPA 연봉", "회계사 연봉", "회계사 월급", "회계법인 연봉"],
+    officialStats: {
+      medianAnnualManwon: 11000,
+      lowerQuartileManwon: 8000,
+      upperQuartileManwon: 15000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007449",
+      classification: "회계사",
+    },
   },
   {
     id: "tax-accountant",
@@ -723,6 +1004,15 @@ export const jobsData: JobProfile[] = [
       { q: "세무사 연봉은 얼마인가요?", a: "세무법인 취업 신입 세무사 연봉은 3,500~5,000만원이며, 개업 세무사는 5~10년 내에 연 8,000만~2억원까지 가능합니다. 세무조사 대리·양도세 전문 세무사는 수입이 더 높습니다." },
     ],
     keywords: ["세무사 연봉", "세무사 월급", "세무사 평균 연봉", "세무사 실수령액", "세무사 개업 수입"],
+    officialStats: {
+      medianAnnualManwon: 9500,
+      lowerQuartileManwon: 7500,
+      upperQuartileManwon: 13000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007525",
+      classification: "세무사",
+    },
   },
   {
     id: "banker",
@@ -744,6 +1034,16 @@ export const jobsData: JobProfile[] = [
       { q: "은행원 워라밸은 어떤가요?", a: "지점 근무는 대면 고객 응대로 스트레스가 있으나, 본점 이동 후에는 개선됩니다. 재택·하이브리드 근무 도입이 확대 중입니다." },
     ],
     keywords: ["은행원 연봉", "은행원 월급", "은행원 평균 연봉", "시중은행 연봉", "KB 연봉", "신한은행 연봉"],
+    officialStats: {
+      medianAnnualManwon: 7000,
+      lowerQuartileManwon: 6225,
+      upperQuartileManwon: 10250,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001136",
+      classification: "은행 사무원(출납창구제외)",
+      note: "창구 텔러는 '출납 창구 사무원'으로 별도 직종(더 낮음). 본 값은 출납창구 제외 은행 사무원 기준.",
+    },
   },
   {
     id: "actuary",
@@ -764,6 +1064,16 @@ export const jobsData: JobProfile[] = [
       { q: "보험계리사 연봉은 얼마인가요?", a: "신입 보험계리사 연봉은 5,000~7,000만원이며, 경력 10년 이상 수석계리사는 1억~1억8,000만원까지 가능합니다. 준계리사 단계에서도 높은 연봉을 받습니다." },
     ],
     keywords: ["보험계리사 연봉", "계리사 연봉", "보험계리사 월급", "보험계리사 평균 연봉"],
+    officialStats: {
+      medianAnnualManwon: 7550,
+      lowerQuartileManwon: 5950,
+      upperQuartileManwon: 10500,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001163",
+      classification: "금융상품개발원",
+      note: "보험계리사 단독 정부 직종 통계 없음. KNOW 체계상 보험·금융상품 설계(구 '보험상품개발자' 포함) 직종인 '금융상품개발원'으로 매핑 — 계리사 자격자 단독 임금과는 차이 가능.",
+    },
   },
 
   // ─── 법률 ────────────────────────────────────────────
@@ -787,6 +1097,16 @@ export const jobsData: JobProfile[] = [
       { q: "변호사 시험 합격률은 얼마인가요?", a: "로스쿨 졸업자 대상 변호사 시험 합격률은 약 50~55% 수준입니다. 수험 기간은 5회 이내로 제한되므로 철저한 준비가 필요합니다." },
     ],
     keywords: ["변호사 연봉", "변호사 월급", "변호사 평균 연봉", "로펌 연봉", "변호사 실수령액", "변호사 신입 연봉"],
+    officialStats: {
+      medianAnnualManwon: 10000,
+      lowerQuartileManwon: 9000,
+      upperQuartileManwon: 12000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007482",
+      classification: "변호사",
+      note: "재직자(고용) 기준 설문 — 개업 변호사 사업소득 편차는 반영 한계.",
+    },
   },
   {
     id: "patent-attorney",
@@ -807,6 +1127,15 @@ export const jobsData: JobProfile[] = [
       { q: "변리사 연봉은 얼마인가요?", a: "특허법인 신입 변리사 연봉은 4,500~6,500만원이며, 경력 5년 이상 파트너급은 1억~2억5,000만원까지 가능합니다. 이공계 박사 출신 변리사는 개업 시 수입이 더 높습니다." },
     ],
     keywords: ["변리사 연봉", "변리사 월급", "변리사 평균 연봉", "특허 변리사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 10000,
+      lowerQuartileManwon: 8000,
+      upperQuartileManwon: 13000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007470",
+      classification: "변리사",
+    },
   },
   {
     id: "real-estate-agent",
@@ -828,6 +1157,16 @@ export const jobsData: JobProfile[] = [
       { q: "공인중개사 시험 합격률은 얼마인가요?", a: "1차 합격률은 약 30~40%, 2차는 약 25~35%입니다. 인기 자격증이라 경쟁이 치열하며, 대부분 6개월~1년 준비합니다." },
     ],
     keywords: ["공인중개사 연봉", "공인중개사 월급", "공인중개사 수입", "부동산 중개사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4800,
+      lowerQuartileManwon: 4000,
+      upperQuartileManwon: 6525,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007536",
+      classification: "부동산 컨설턴트 및 중개사",
+      note: "개업(자영) 공인중개사의 중개보수 수입 편차는 임금 통계에 반영 한계.",
+    },
   },
 
   // ─── 공학/제조 ────────────────────────────────────────
@@ -850,6 +1189,15 @@ export const jobsData: JobProfile[] = [
       { q: "반도체 엔지니어 연봉은 얼마인가요?", a: "삼성전자·SK하이닉스 신입 반도체 엔지니어 연봉(기본급+성과급)은 약 7,000~9,000만원 수준입니다. AI·HBM 호황으로 2024~2025년 성과급이 크게 올랐으며, 경력 10년 시니어는 1억2,000만~1억8,000만원 수준입니다." },
     ],
     keywords: ["반도체 엔지니어 연봉", "삼성전자 엔지니어 연봉", "SK하이닉스 연봉", "반도체 개발자 연봉"],
+    officialStats: {
+      medianAnnualManwon: 8000,
+      lowerQuartileManwon: 6000,
+      upperQuartileManwon: 10000,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 — 한국직업정보 재직자조사 2025",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001184",
+      classification: "반도체공학 기술자 및 연구원",
+    },
   },
   {
     id: "mechanical-engineer",
@@ -870,6 +1218,17 @@ export const jobsData: JobProfile[] = [
       { q: "기계공학자 연봉은 얼마인가요?", a: "신입 기계공학자 연봉은 3,500~4,800만원이며, 현대차·삼성 등 대기업은 4,500만원 이상입니다. 경력 10년 수석엔지니어급은 6,500~9,000만원 수준입니다." },
     ],
     keywords: ["기계공학자 연봉", "기계 엔지니어 연봉", "기계공학 연봉", "자동차 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 6806,
+      lowerQuartileManwon: 4960,
+      upperQuartileManwon: 9475,
+      avgAnnualManwon: 7522,
+      year: "2025",
+      source: "한국고용정보원 임금직업포털 워크피디아 맞춤형 임금정보 — 고용노동부 고용형태별근로실태조사(최근 3개년)+사업체노동력조사 연계 추정",
+      sourceUrl: "https://www.wagework.go.kr/pt/c/a/retrieveCstmWageSrch.do?topPageId=PT07000000&pageId=PT07010000",
+      classification: "기계·로봇공학 기술자 및 시험원(KSCO 소분류 235)",
+      note: "KNOW에 일반 기계공학기술자 직종 없음(건설기계·플랜트·자동차 등으로 세분). 표준직업분류 소분류 235 전체 연간임금(하위25/중위/상위25/평균, 만원). 로봇공학 포함 소분류라 순수 기계공학보다 다소 넓은 범위.",
+    },
   },
   {
     id: "electrical-engineer",
@@ -890,6 +1249,16 @@ export const jobsData: JobProfile[] = [
       { q: "전기 엔지니어 연봉은 얼마인가요?", a: "신입 전기 엔지니어 연봉은 3,800~5,200만원이며, 전기기사·전기공사기사 자격증 보유 시 우대됩니다. 경력 10년 이상은 6,500~1억원 수준입니다." },
     ],
     keywords: ["전기 엔지니어 연봉", "전기공학 연봉", "전기기사 연봉", "전기 기술자 연봉"],
+    officialStats: {
+      medianAnnualManwon: 7500,
+      lowerQuartileManwon: 6000,
+      upperQuartileManwon: 11000,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 고용노동부 임금직업포털 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000826",
+      classification: "전기기기·제품개발기술자 및 연구원",
+      note: "KNOW 표기 '평균(50%)'은 중위값. 직업당 평균 30명 재직자 자기보고 표본 기반. 인접 직종: 송·배전설비기술자(2023 조사 6,000/7,000/9,500)",
+    },
   },
   {
     id: "civil-engineer",
@@ -910,6 +1279,16 @@ export const jobsData: JobProfile[] = [
       { q: "토목 엔지니어 연봉은 얼마인가요?", a: "신입 토목 엔지니어 연봉은 3,000~4,200만원이며, 현장 수당이 붙을 경우 더 높습니다. 경력 10년 이상 수석은 6,000~9,000만원 수준입니다." },
     ],
     keywords: ["토목 엔지니어 연봉", "토목공학 연봉", "토목기사 연봉", "건설 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 7000,
+      lowerQuartileManwon: 5150,
+      upperQuartileManwon: 9000,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001073",
+      classification: "토목시공기술자 및 견적원",
+      note: "설계 쪽인 토목구조설계기술자는 4,475/5,750/7,500(2025)으로 더 낮음. 시공·견적이 종사자 다수라 대표값으로 채택",
+    },
   },
   {
     id: "chemical-engineer",
@@ -930,6 +1309,16 @@ export const jobsData: JobProfile[] = [
       { q: "화학 엔지니어 연봉은 얼마인가요?", a: "신입 화학 엔지니어 연봉은 3,800~5,200만원이며, LG화학·롯데케미칼 등 대기업은 4,500만원 이상입니다. 경력 10년 이상은 7,000~1억원 수준입니다." },
     ],
     keywords: ["화학 엔지니어 연봉", "화학공학 연봉", "석유화학 연봉", "배터리 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 8000,
+      lowerQuartileManwon: 5375,
+      upperQuartileManwon: 10250,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000865",
+      classification: "석유화학공학기술자 및 연구원",
+      note: "KNOW에 통합 '화학공학기술자' 직종 없음(석유화학/고무플라스틱/도료농약/비누화장품/의약품으로 세분). 석유화학이 대표 직종. 화학공학 시험원은 4,225/6,000/8,000(2025)",
+    },
   },
   {
     id: "automotive-engineer",
@@ -950,6 +1339,15 @@ export const jobsData: JobProfile[] = [
       { q: "자동차 엔지니어 연봉은 얼마인가요?", a: "현대차·기아 신입 엔지니어 연봉(기본+성과)은 5,000~7,000만원 수준입니다. 전기차·자율주행 전문 엔지니어는 시장 수요 증가로 연봉이 빠르게 오르고 있습니다." },
     ],
     keywords: ["자동차 엔지니어 연봉", "현대차 연봉", "기아 연봉", "자동차 연봉", "전기차 엔지니어 연봉"],
+    officialStats: {
+      medianAnnualManwon: 6650,
+      lowerQuartileManwon: 5375,
+      upperQuartileManwon: 10000,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001185",
+      classification: "자동차공학기술자",
+    },
   },
   {
     id: "architect",
@@ -972,6 +1370,16 @@ export const jobsData: JobProfile[] = [
       { q: "건축사 연봉은 얼마인가요?", a: "설계사무소 신입 건축사 연봉은 3,200~4,500만원이며, 대형 설계사무소·건설사는 더 높습니다. 개업 건축사는 프로젝트에 따라 수입이 크게 달라집니다." },
     ],
     keywords: ["건축사 연봉", "건축사 월급", "건축 설계사 연봉", "건축사 실수령액"],
+    officialStats: {
+      medianAnnualManwon: 5500,
+      lowerQuartileManwon: 4000,
+      upperQuartileManwon: 8250,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001014",
+      classification: "건축가(건축설계사)",
+      note: "2023 조사(adiga 미러)에서는 4,575/5,700/7,725였음. KNOW '건축가'는 면허 건축사와 설계 실무자를 포괄하므로 개업 건축사 소득과는 차이 가능",
+    },
   },
 
   // ─── 경영/서비스 ───────────────────────────────────────
@@ -994,6 +1402,16 @@ export const jobsData: JobProfile[] = [
       { q: "마케터 연봉은 얼마인가요?", a: "신입 마케터 연봉은 3,000~4,200만원이며, 대형 IT기업(네이버·카카오)은 4,000만원 이상입니다. 성과 기반 퍼포먼스 마케터나 그로스해커는 경력이 쌓이면 7,000만~1억원도 가능합니다." },
     ],
     keywords: ["마케터 연봉", "마케터 월급", "마케팅 연봉", "디지털 마케터 연봉", "퍼포먼스 마케터 연봉"],
+    officialStats: {
+      medianAnnualManwon: 5550,
+      lowerQuartileManwon: 4225,
+      upperQuartileManwon: 7625,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001069",
+      classification: "광고·홍보·마케팅사무원",
+      note: "KNOW에 '마케팅전문가' 단일 직종 없음. 실무 담당자 기준으로 사무원 직종 채택. 전문가급 참고: 광고 및 홍보 전문가 4,900/5,700/9,000, 상품 기획 전문가 5,400/6,120/8,625(모두 2025)",
+    },
   },
   {
     id: "management-consultant",
@@ -1014,6 +1432,16 @@ export const jobsData: JobProfile[] = [
       { q: "경영 컨설턴트 연봉은 얼마인가요?", a: "McKinsey·BCG·Bain 빅3 신입 어소시에이트 연봉은 7,000만~1억원이며, 성과 보너스 포함 시 1억~1억5,000만원입니다. 5년 이상 매니저급은 2억원 이상입니다." },
     ],
     keywords: ["컨설턴트 연봉", "경영 컨설턴트 연봉", "McKinsey 연봉", "BCG 연봉", "컨설팅 연봉"],
+    officialStats: {
+      medianAnnualManwon: 8228,
+      lowerQuartileManwon: 5575,
+      upperQuartileManwon: 11750,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000944",
+      classification: "경영 및 진단 전문가",
+      note: "2023 조사(adiga)에서는 5,100/7,000/8,800. 외국계 전략펌(빅3)과는 별개의 국내 전반 통계",
+    },
   },
   {
     id: "flight-attendant",
@@ -1035,6 +1463,16 @@ export const jobsData: JobProfile[] = [
       { q: "항공승무원 경쟁률은 어떤가요?", a: "대형 항공사 신입 공채 경쟁률은 100:1 이상으로 매우 높습니다. 외모·영어 능력·서비스 마인드·체력이 주요 선발 기준입니다." },
     ],
     keywords: ["항공승무원 연봉", "스튜어디스 연봉", "캐빈크루 연봉", "대한항공 승무원 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4700,
+      lowerQuartileManwon: 4000,
+      upperQuartileManwon: 5325,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007506",
+      classification: "항공기객실승무원",
+      note: "2021 조사(adiga 커리어넷 코드 페이지)에서는 3,937/4,450/5,300이었음",
+    },
   },
   {
     id: "pilot",
@@ -1055,6 +1493,16 @@ export const jobsData: JobProfile[] = [
       { q: "파일럿 연봉은 얼마인가요?", a: "대한항공·아시아나 부기장 초임은 연 6,000~9,000만원이며, 기장(Captain)이 되면 1억3,000만~2억원 수준입니다. 해외 항공사로 이직 시 연 2억원 이상도 가능합니다." },
     ],
     keywords: ["파일럿 연봉", "기장 연봉", "부기장 연봉", "조종사 연봉", "파일럿 월급"],
+    officialStats: {
+      medianAnnualManwon: 9925,
+      lowerQuartileManwon: 8375,
+      upperQuartileManwon: 12000,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000007552",
+      classification: "항공기조종사",
+      note: "2023 조사 보도 인용치는 8,000/10,205/12,216으로 유사 규모. 기장/부기장 통합 통계이며 대형사 기장급 실지급과는 차이 가능",
+    },
   },
   {
     id: "hr-specialist",
@@ -1075,6 +1523,16 @@ export const jobsData: JobProfile[] = [
       { q: "HR 담당자 연봉은 얼마인가요?", a: "신입 HR 담당자 연봉은 3,000~4,200만원이며, 대기업 HR 팀장급은 7,000만~9,500만원 수준입니다. CHRO(최고인사책임자)는 1억원 이상입니다." },
     ],
     keywords: ["HR 담당자 연봉", "인사담당자 연봉", "채용 담당자 연봉", "HR 연봉"],
+    officialStats: {
+      medianAnnualManwon: 5400,
+      lowerQuartileManwon: 4200,
+      upperQuartileManwon: 6500,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001196",
+      classification: "인사·교육·훈련사무원",
+      note: "전문가급인 인적자원전문가(헤드헌팅·HR컨설팅 포함)는 5,000/6,250/7,375(2025). 사이트 정의가 기업 인사 실무 담당자라 사무원 직종 채택",
+    },
   },
 
   // ─── 미디어/창작 ───────────────────────────────────────
@@ -1097,6 +1555,16 @@ export const jobsData: JobProfile[] = [
       { q: "기자 연봉은 얼마인가요?", a: "KBS·MBC·SBS 등 주요 방송사 신입 기자 연봉은 4,000~6,000만원이며, 조선·중앙·동아 등 주요 신문사도 비슷한 수준입니다. 경력 10년 이상 부장급은 7,000만~1억원 수준입니다." },
     ],
     keywords: ["기자 연봉", "기자 월급", "기자 평균 연봉", "방송기자 연봉", "신문기자 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4450,
+      lowerQuartileManwon: 4000,
+      upperQuartileManwon: 5525,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000937",
+      classification: "신문기자",
+      note: "KNOW는 기자를 매체별로 세분: 방송기자 3,700/5,000/7,125, 잡지기자 별도(모두 2025). 통합 '기자' 직종 없음 — 페이지에서 신문/방송 병기 권장",
+    },
   },
   {
     id: "producer-director",
@@ -1117,6 +1585,16 @@ export const jobsData: JobProfile[] = [
       { q: "PD 연봉은 얼마인가요?", a: "공채 PD 신입 연봉은 3,500~5,500만원이며, 경력 10년 이상 CP·국장급은 8,000만~1억3,000만원 수준입니다. 프리랜서 PD나 OTT 오리지널 PD는 수익이 더 높을 수 있습니다." },
     ],
     keywords: ["PD 연봉", "방송 PD 연봉", "연출가 연봉", "PD 월급", "방송사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 5510,
+      lowerQuartileManwon: 4425,
+      upperQuartileManwon: 6625,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001138",
+      classification: "방송연출가",
+      note: "지상파 공채 PD와 외주 제작사 PD를 포괄한 통계",
+    },
   },
   {
     id: "game-designer",
@@ -1159,6 +1637,16 @@ export const jobsData: JobProfile[] = [
       { q: "바이오 연구원 연봉은 얼마인가요?", a: "신입 바이오 연구원(학사)은 4,000~5,000만원, 석사 신입은 4,500~6,000만원, 박사 신입은 5,000~7,000만원 수준입니다. 삼성바이오로직스·셀트리온 등 대형 바이오 기업은 더 높습니다." },
     ],
     keywords: ["바이오 연구원 연봉", "생명공학 연봉", "바이오텍 연봉", "제약 연구원 연봉"],
+    officialStats: {
+      medianAnnualManwon: 6300,
+      lowerQuartileManwon: 5425,
+      upperQuartileManwon: 8050,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001140",
+      classification: "생명과학 연구원",
+      note: "기업·출연연 포괄. 생명과학 시험원(학사급 실무)은 4,750/5,500/8,500(2025)",
+    },
   },
   {
     id: "clinical-researcher",
@@ -1199,6 +1687,15 @@ export const jobsData: JobProfile[] = [
       { q: "영양사 연봉은 얼마인가요?", a: "신입 영양사 연봉은 2,500~3,300만원 수준이며, 병원영양사·임상영양사는 더 높습니다. 상급종합병원 임상영양사 경력자는 4,000~5,000만원까지 가능합니다." },
     ],
     keywords: ["영양사 연봉", "영양사 월급", "영양사 평균 연봉", "임상영양사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 3700,
+      lowerQuartileManwon: 3500,
+      upperQuartileManwon: 4525,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001144",
+      classification: "영양사",
+    },
   },
   {
     id: "social-worker",
@@ -1219,6 +1716,16 @@ export const jobsData: JobProfile[] = [
       { q: "사회복지사 연봉은 얼마인가요?", a: "신입 사회복지사 연봉은 2,400~3,200만원 수준이며, 공공 사회복지직(공무원)은 3,000만원 이상입니다. 경력이 쌓이고 관리자급이 되면 4,000~5,000만원까지 가능합니다." },
     ],
     keywords: ["사회복지사 연봉", "사회복지사 월급", "사회복지사 평균 연봉", "사회복지 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4200,
+      lowerQuartileManwon: 3000,
+      upperQuartileManwon: 4925,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000857",
+      classification: "사회복지사",
+      note: "보건복지부 '사회복지시설 종사자 인건비 가이드라인'(연도별 호봉표)이 별도 존재 — 시설 종사자 기본급 기준으로 페이지 보강 시 활용 가능",
+    },
   },
   {
     id: "counselor",
@@ -1239,6 +1746,16 @@ export const jobsData: JobProfile[] = [
       { q: "심리상담사 연봉은 얼마인가요?", a: "신입 심리상담사 연봉은 2,500~3,500만원이며, 개인 개업 상담사는 회기 수에 따라 수입이 달라집니다. 수요 증가로 기업 EAP 상담사, 학교 상담사 등 취업 경로가 다양해지고 있습니다." },
     ],
     keywords: ["심리상담사 연봉", "상담사 연봉", "심리상담사 월급", "임상심리사 연봉"],
+    officialStats: {
+      medianAnnualManwon: 4200,
+      lowerQuartileManwon: 3600,
+      upperQuartileManwon: 5500,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000001049",
+      classification: "심리상담전문가",
+      note: "임상심리사(심리치료사)는 별도 직종(K000008503)으로 존재",
+    },
   },
   {
     id: "logistics-manager",
@@ -1259,6 +1776,16 @@ export const jobsData: JobProfile[] = [
       { q: "물류/SCM 담당자 연봉은 얼마인가요?", a: "신입 연봉은 3,000~4,200만원이며, 대기업 SCM팀 경력자는 7,000~9,000만원 수준입니다. 글로벌 물류 전문가는 더 높은 대우를 받습니다." },
     ],
     keywords: ["물류 담당자 연봉", "SCM 연봉", "물류관리사 연봉", "공급망관리 연봉"],
+    officialStats: {
+      medianAnnualManwon: 5615,
+      lowerQuartileManwon: 4200,
+      upperQuartileManwon: 7200,
+      year: "2025",
+      source: "한국고용정보원 한국직업정보(KNOW) 재직자조사 — 워크피디아 직업내비게이션(기준연도 2025)",
+      sourceUrl: "https://www.wagework.go.kr/pt/b/a/retrieveOccpNvgtDtal.do?konetOccpCd=K000000843",
+      classification: "자재관리 사무원(물류사무원)",
+      note: "구 항목 '물류사무원'(K000000855)은 2023 기준 4,800/6,500/8,000으로 조회됨. KNOW에 '물류관리전문가' 단일 직종 없음",
+    },
   },
 ];
 

@@ -414,6 +414,70 @@ export function itemListLd(opts: { name?: string; items: ItemListEntry[] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Occupation — 직업 페이지 (Google estimated salary 리치결과)
+// estimatedSalary는 MonetaryAmountDistribution — median 또는
+// percentile10/25/75/90 중 최소 1개 필수. 값 단위: KRW(원).
+// 수치는 반드시 데이터에 실존하는 값만 전달 — 임의 수치 금지.
+// ─────────────────────────────────────────────────────────────
+export interface OccupationSalaryDistribution {
+ /** 중위값, KRW(원) */
+ median?: number;
+ /** 하위 10%, KRW(원) */
+ percentile10?: number;
+ /** 하위 25%, KRW(원) */
+ percentile25?: number;
+ /** 상위 25%, KRW(원) */
+ percentile75?: number;
+ /** 상위 10%, KRW(원) */
+ percentile90?: number;
+}
+
+export function occupationLd(opts: {
+ /** 직업명 (예: "간호사") */
+ name: string;
+ description: string;
+ /** 페이지 경로 또는 절대 URL — mainEntityOfPage로 주입 */
+ url: string;
+ /** 연봉 분포 — median·percentile 중 존재하는 값만 */
+ estimatedSalary: OccupationSalaryDistribution;
+ /** 통계상 직종명이 페이지 직업명과 다를 때 (schema.org alternateName) */
+ alternateName?: string;
+}) {
+ const url = opts.url.startsWith("http") ? opts.url : `${SITE_URL}${opts.url}`;
+ const dist = opts.estimatedSalary;
+ const distribution: Record<string, unknown> = {
+ "@type": "MonetaryAmountDistribution",
+ name: "base",
+ currency: "KRW",
+ duration: "P1Y", // 연봉 기준 (ISO 8601)
+ ...(dist.median !== undefined ? { median: dist.median } : {}),
+ ...(dist.percentile10 !== undefined ? { percentile10: dist.percentile10 } : {}),
+ ...(dist.percentile25 !== undefined ? { percentile25: dist.percentile25 } : {}),
+ ...(dist.percentile75 !== undefined ? { percentile75: dist.percentile75 } : {}),
+ ...(dist.percentile90 !== undefined ? { percentile90: dist.percentile90 } : {}),
+ };
+
+ return {
+ "@context": "https://schema.org",
+ "@type": "Occupation",
+ name: opts.name,
+ ...(opts.alternateName ? { alternateName: opts.alternateName } : {}),
+ description: opts.description,
+ mainEntityOfPage: {
+ "@type": "WebPage",
+ "@id": url,
+ },
+ estimatedSalary: [distribution],
+ occupationLocation: [
+ {
+ "@type": "Country",
+ name: "대한민국",
+ },
+ ],
+ };
+}
+
+// ─────────────────────────────────────────────────────────────
 // Dataset — 연봉 데이터셋. dateModified로 신선도(freshness) 신호 전달.
 // 회사 페이지·업종 페이지가 보유한 직급별 연봉 데이터를 schema.org Dataset로 표현.
 // ─────────────────────────────────────────────────────────────

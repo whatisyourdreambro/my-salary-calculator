@@ -3,8 +3,9 @@ import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { jobsData, getJobById } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
-import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
+import { faqLd, autoBreadcrumbLd, itemListLd, occupationLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import JobOfficialStats from "@/components/JobOfficialStats";
 import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
@@ -118,9 +119,31 @@ export default function JobPage({ params }: Props) {
     return c ? [c] : [];
   });
 
+  // Occupation 스키마 (구글 연봉 리치결과) — 정부 공식 통계(officialStats)가 있는
+  // 직업만 주입. 임의 수치 금지 원칙: 공식 조사값(중위·사분위, 만원→원 환산)만 사용.
+  const occupationSchema = job.officialStats
+    ? occupationLd({
+        name: job.name,
+        description: job.description,
+        url: `/job/${job.id}`,
+        estimatedSalary: {
+          median: job.officialStats.medianAnnualManwon * 10000,
+          ...(job.officialStats.lowerQuartileManwon !== undefined
+            ? { percentile25: job.officialStats.lowerQuartileManwon * 10000 }
+            : {}),
+          ...(job.officialStats.upperQuartileManwon !== undefined
+            ? { percentile75: job.officialStats.upperQuartileManwon * 10000 }
+            : {}),
+        },
+        ...(job.officialStats.classification
+          ? { alternateName: job.officialStats.classification }
+          : {}),
+      })
+    : null;
+
   return (
     <>
-      <JsonLd data={[breadcrumb, faqSchema, ...(rankSchema ? [rankSchema] : [])]} />
+      <JsonLd data={[breadcrumb, faqSchema, ...(rankSchema ? [rankSchema] : []), ...(occupationSchema ? [occupationSchema] : [])]} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <HomeTopAd />
 
@@ -197,6 +220,15 @@ export default function JobPage({ params }: Props) {
           </section>
 
           <CalcResultAd />
+
+          {/* 정부 공식 통계 (officialStats 보유 52종만 렌더) */}
+          {job.officialStats && (
+            <JobOfficialStats
+              jobName={job.name}
+              dbOverallManwon={job.salary.overall}
+              stats={job.officialStats}
+            />
+          )}
 
           {/* 실수령액 바로 계산 */}
           <section className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 mb-6 text-white">

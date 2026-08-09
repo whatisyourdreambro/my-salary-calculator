@@ -361,6 +361,28 @@ export default function RentTaxCredit2026Page() {
                 4대보험·소득세 자동 공제
               </p>
             </Link>
+            <Link
+              href="/credit-card-deduction-2026"
+              className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
+            >
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                신용카드 소득공제 계산기
+              </p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">
+                25% 문턱·자녀 수별 한도 반영 계산
+              </p>
+            </Link>
+            <Link
+              href="/medical-tax-credit-2026"
+              className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
+            >
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                의료비 세액공제 계산기
+              </p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">
+                실손 차감·3% 문턱 반영 계산
+              </p>
+            </Link>
           </div>
         </section>
       </div>

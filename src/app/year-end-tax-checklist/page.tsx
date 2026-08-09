@@ -221,6 +221,49 @@ export default function YearEndTaxChecklistPage() {
  에서 확인하세요.
  </p>
 
+ {/* 공제 항목별 정밀 계산기 — 연말정산 클러스터 내부링크 */}
+ <section className="mb-12">
+ <h2 className="text-xl font-black text-navy mb-2">
+ 체크한 항목, 계산기로 공제액 확인
+ </h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-4">
+ 신용카드·의료비·월세 카테고리는 전용 계산기로 예상 공제액을 바로
+ 계산할 수 있습니다.
+ </p>
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+ <Link
+ href="/credit-card-deduction-2026"
+ className="block p-6 bg-white rounded-2xl border border-canvas-200 hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-2">💳</div>
+ <p className="font-bold text-navy text-sm mb-1">신용카드 소득공제 계산기</p>
+ <p className="text-xs text-muted-blue leading-relaxed">
+ 25% 문턱·자녀 수별 한도 반영 공제액 계산
+ </p>
+ </Link>
+ <Link
+ href="/medical-tax-credit-2026"
+ className="block p-6 bg-white rounded-2xl border border-canvas-200 hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-2">🏥</div>
+ <p className="font-bold text-navy text-sm mb-1">의료비 세액공제 계산기</p>
+ <p className="text-xs text-muted-blue leading-relaxed">
+ 실손 차감·3% 문턱·난임 30% 반영 계산
+ </p>
+ </Link>
+ <Link
+ href="/rent-tax-credit-2026"
+ className="block p-6 bg-white rounded-2xl border border-canvas-200 hover:border-electric transition-colors"
+ >
+ <div className="text-2xl mb-2">🏠</div>
+ <p className="font-bold text-navy text-sm mb-1">월세 세액공제 계산기</p>
+ <p className="text-xs text-muted-blue leading-relaxed">
+ 15%·17% 자동 판정, 최대 170만원
+ </p>
+ </Link>
+ </div>
+ </section>
+
  {/* CTA */}
  <Link
  href="/year-end-tax"
