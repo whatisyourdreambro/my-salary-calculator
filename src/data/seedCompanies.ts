@@ -3,6 +3,15 @@ import { CompanyProfile } from "@/types/company";
 export const seedCompanies: CompanyProfile[] = [
  {
  id: "samsung-electronics",
+ disclosed: {
+ avgSalaryManwon: 15800,
+ fiscalYear: "2025",
+ avgTenureYears: 13.7,
+ source:
+ "뉴시스 2026-03-18 '가고싶은 대기업 투톱 SK하이닉스·삼성전자 공식 평균연봉 비교' — 2025년 사업보고서 인용 (등기임원 제외)",
+ sourceUrl: "https://www.newsis.com/view/NISX20260317_0003552314",
+ note: "전년 1억3,000만원 대비 21.5% 증가. DS·DX 전 사업부문 합산 수치이며, 평균 근속 13.7년도 같은 사업보고서 기준(직원 12만8,881명).",
+ },
  name: { ko: "삼성전자", en: "Samsung Electronics" },
  industry: "Semiconductor / Consumer Electronics",
  tier: "conglomerate",
@@ -234,6 +243,15 @@ export const seedCompanies: CompanyProfile[] = [
  },
  {
  id: "sk-hynix",
+ disclosed: {
+ avgSalaryManwon: 18500,
+ fiscalYear: "2025",
+ avgTenureYears: 13.4,
+ source:
+ "뉴시스 2026-03-18 — 2025년 사업보고서 인용 (아이뉴스24 2026-03 보도 동일 수치)",
+ sourceUrl: "https://www.newsis.com/view/NISX20260317_0003552314",
+ note: "전년 1억1,700만원 대비 58.1% 급증한 역대 최고치. HBM 호황 성과급 반영으로 삼성전자를 역전. 직원 수 3만4,549명.",
+ },
  name: { ko: "SK하이닉스", en: "SK Hynix" },
  industry: "Semiconductor",
  tier: "conglomerate",
@@ -355,6 +373,15 @@ export const seedCompanies: CompanyProfile[] = [
  },
  {
  id: "naver",
+ disclosed: {
+ avgSalaryManwon: 14600,
+ fiscalYear: "2025",
+ avgTenureYears: 7.7,
+ source:
+ "DART NAVER 사업보고서(2025.12) 직원 등 현황, 2026-03-13 제출 (겟뉴스 2026-03 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260313001021",
+ note: "직원 5,047명. 1인 평균 급여 1억4,600만원은 스톡옵션 행사차익 포함 값(제외 시 1억4,300만원). 남 1억6,000만/여 1억2,600만원.",
+ },
  name: { ko: "네이버", en: "NAVER" },
  industry: "IT / Internet",
  tier: "unicorn",
@@ -407,6 +434,15 @@ export const seedCompanies: CompanyProfile[] = [
  // 4. Kakao
  {
  id: "kakao",
+ disclosed: {
+ avgSalaryManwon: 10900,
+ fiscalYear: "2025",
+ avgTenureYears: 6.25,
+ source:
+ "DART 카카오 사업보고서(2025.12) 직원 등 현황, 2026-03-18 제출 (뉴시스 2026-03-18 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260318001423",
+ note: "직원 3,922명, 평균 근속 6년 3개월. 남 1억2,200만/여 9,200만원. 전년 대비 +700만원.",
+ },
  name: { ko: "카카오", en: "Kakao" },
  industry: "IT/Platform",
  tier: "conglomerate",
@@ -505,6 +541,15 @@ export const seedCompanies: CompanyProfile[] = [
  // 7. Hyundai Motor
  {
  id: "hyundai",
+ disclosed: {
+ avgSalaryManwon: 13100,
+ fiscalYear: "2025",
+ avgTenureYears: 15.7,
+ source:
+ "뉴시스 2026-03-18 '현대차, 작년 직원 평균 급여 1억3100만원…전년比 5.6%↑' — 2025년 사업보고서 인용",
+ sourceUrl: "https://www.newsis.com/view/NISX20260318_0003553411",
+ note: "남 1억3,100만/여 1억1,800만원(공시 전체값). 평균 근속 15년 8개월(약 15.7년)도 같은 사업보고서 인용 보도에서 확인.",
+ },
  name: { ko: "현대자동차", en: "Hyundai Motor" },
  industry: "Automotive",
  tier: "conglomerate",
@@ -537,6 +582,15 @@ export const seedCompanies: CompanyProfile[] = [
  // 8. LG Energy Solution
  {
  id: "lgensol",
+ disclosed: {
+ avgSalaryManwon: 11200,
+ fiscalYear: "2025",
+ avgTenureYears: 8.2,
+ source:
+ "에너지경제 2026-03-12 — 2025년 사업보고서 인용 (등기임원 제외, 직원 1만2,922명·기간제 225명 포함)",
+ sourceUrl: "https://m.ekn.kr/view.php?key=20260312027067373",
+ note: "평균 근속 8년 2개월을 8.2년으로 표기. 성과급 호황기였던 2023년(1억2,300만원) 대비 낮아졌다가 회복 중.",
+ },
  name: { ko: "LG에너지솔루션", en: "LG Energy Solution" },
  industry: "Battery",
  tier: "conglomerate",

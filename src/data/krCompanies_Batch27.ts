@@ -35,6 +35,14 @@ export const krCompanies_Batch27: CompanyProfile[] = [
   },
   {
     id: "deloitte-anjin",
+    disclosed: {
+      avgSalaryManwon: 11711,
+      fiscalYear: "2024/25 회계연도(2025년 5월 결산)",
+      source:
+        "뉴시스 2025-10-02 '회계법인 연봉 판도 흔들렸다' — 회계법인 사업보고서(금감원 제출) 기반 1인당 평균 보수",
+      sourceUrl: "https://www.newsis.com/view/NISX20251002_0003353751",
+      note: "상장기업식 DART '직원 등 현황' 공시가 아닌 보도 기반 수치로 참고용. 유한회사지만 공인회계사법상 금감원 제출 사업보고서를 기반으로 한 보도값(빅4 중 최저). 직전 연도(2024년 5월 결산)는 1억1,473만원.",
+    },
     name: { ko: "딜로이트안진", en: "Deloitte Anjin" },
     industry: "Accounting / Consulting",
     tier: "foreign",

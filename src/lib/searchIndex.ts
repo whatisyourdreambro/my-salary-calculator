@@ -66,6 +66,10 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 건강보험료 계산기", href: "/health-insurance-fee-2026", category: "계산기", description: "본인부담 3.595% + 장기요양 합산 약 4.07%", priority: 1 },
  { title: "2026 국민연금 예상수령액", href: "/national-pension-estimate-2026", category: "계산기", description: "가입기간 비례 소득대체율 43%", priority: 2 },
  { title: "2026 적금·예금 이자 계산기", href: "/savings-interest-2026", category: "계산기", description: "정기적금/예금, 단리/복리, 세후 이자", priority: 2 },
+ // 2026-08-08 — 연말정산 롱테일 계산기 3종 (12~2월 시즌 선점)
+ { title: "신용카드 소득공제 계산기", href: "/credit-card-deduction-2026", category: "계산기", description: "총급여 25% 문턱·결제수단별 공제율·한도 자동 계산", priority: 1 },
+ { title: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", category: "계산기", description: "총급여별 15~17%·연 1,000만 한도 — 최대 170만원 환급", priority: 1 },
+ { title: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", category: "계산기", description: "총급여 3% 문턱·난임 30%·실손 차감 반영", priority: 1 },
 ];
 
 const toolPages: SearchEntry[] = [

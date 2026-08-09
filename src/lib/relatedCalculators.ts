@@ -185,6 +185,10 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/minimum-wage-2026": ["salary", "tax"],
  "/minimum-wage-2027": ["salary", "tax"],
  "/tax-reform-2026": ["tax", "realEstate"],
+ // 2026-08-08 — 연말정산 롱테일 계산기 3종
+ "/credit-card-deduction-2026": ["tax", "salary"],
+ "/rent-tax-credit-2026": ["tax", "realEstate"],
+ "/medical-tax-credit-2026": ["tax", "salary"],
 };
 
 /**

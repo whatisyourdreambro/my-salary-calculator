@@ -42,6 +42,14 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  },
  {
  id: "mirae-asset",
+ disclosed: {
+ avgSalaryManwon: 15700,
+ fiscalYear: "2025",
+ source:
+ "연합인포맥스 2026-03-17 — 금융감독원 전자공시 2025년 사업보고서 기준 (2024년 1억3,700만원 대비 +2,000만원)",
+ sourceUrl: "https://kbthink.com/news-list/view.html?newsId=20260317081824399",
+ note: "일부 보도의 1억7,000만원은 지배구조·보수체계 연차보고서(임직원 포함) 기준으로 별개 지표.",
+ },
  name: { ko: "미래에셋증권", en: "Mirae Asset" },
  industry: "Finance",
  tier: "conglomerate",
@@ -61,6 +69,14 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  },
  {
  id: "samsung-fire",
+ disclosed: {
+ avgSalaryManwon: 15869,
+ fiscalYear: "2025",
+ source:
+ "세계일보 2026-04-02(금융감독원 전자공시 기준)·뉴스1 2026-04-03 — 2025년 직원 평균 연봉 1억5,869만원",
+ sourceUrl: "https://v.daum.net/v/20260402050336779",
+ note: "보험업계 2위(1위 코리안리 1억7,700만원). CEO스코어데일리 2026-04-03 집계(1억5,900만원, 전년 1억5,000만원)와 부합.",
+ },
  name: { ko: "삼성화재", en: "Samsung Fire & Marine" },
  industry: "Finance",
  tier: "conglomerate",
@@ -82,6 +98,15 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  // --- HEAVY INDUSTRY ---
  {
  id: "hd-hyundai-heavy",
+ disclosed: {
+ avgSalaryManwon: 11422,
+ fiscalYear: "2025",
+ avgTenureYears: 4,
+ source:
+ "DART HD현대중공업 사업보고서(2025.12) 직원 등 현황, 2026-03-20 제출 (딜사이트 2026-04-03 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260320000859",
+ note: "공시 1인 평균 114,217천원(약 1억1,422만원). 직원 1만8,880명(기간제 3,527명 포함). 평균 근속 4.0년은 2025-12-01 HD현대미포 흡수합병·법인 재산정 기준의 공시값(피합병법인 1~11월 급여는 총액에서 제외). 조선업 성과급 호조로 전년 대비 급등.",
+ },
  name: { ko: "HD현대중공업", en: "HD Hyundai Heavy" },
  industry: "Heavy Industry",
  tier: "conglomerate",

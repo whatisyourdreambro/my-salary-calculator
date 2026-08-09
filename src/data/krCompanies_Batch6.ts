@@ -28,6 +28,14 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   // --- AUTOMOTIVE / AUTO PARTS ---
   {
     id: "kia",
+    disclosed: {
+      avgSalaryManwon: 13400,
+      fiscalYear: "2025",
+      source:
+        "파이낸셜뉴스 2026-03-12 및 M투데이 — 금융감독원 제출 2025년도 사업보고서 인용 (전년 1억3,600만원 대비 1.4% 감소)",
+      sourceUrl: "https://www.fnnews.com/news/202603121734196765",
+      note: "남 1억3,500만/여 1억1,600만원, 전체 평균 1억3,400만원은 공시 전체값.",
+    },
     name: { ko: "기아", en: "Kia" },
     industry: "Automotive",
     tier: "conglomerate",
@@ -94,6 +102,14 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   },
   {
     id: "hl-mando",
+    disclosed: {
+      avgSalaryManwon: 10700,
+      fiscalYear: "2024",
+      source:
+        "뉴스투데이 2025-04-14 '직장 돋보기 분석' — 금융감독원 2024년 사업보고서 인용 (남 1억900만/여 7,800만, 전체 1억700만원)",
+      sourceUrl: "https://www.news2day.co.kr/article/20250414500254",
+      note: "전체 평균은 공시 원문의 전체값 사용. 2025 사업연도 사업보고서는 2026-03-18 제출됐으나 공시 인용 보도 미확보로 2024년 수치 유지.",
+    },
     name: { ko: "HL만도", en: "HL Mando" },
     industry: "Auto Parts",
     tier: "conglomerate",
@@ -162,6 +178,15 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   },
   {
     id: "samsung-sdi",
+    disclosed: {
+      avgSalaryManwon: 9500,
+      fiscalYear: "2025",
+      avgTenureYears: 12.6,
+      source:
+        "DART 삼성SDI 사업보고서(2025.12) 직원 등 현황, 2026-03-10 제출 (뉴스투데이 2026-04-09 보도 교차 확인)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260310002954",
+      note: "직원 1만2,826명. 에너지솔루션 부문 남 9,800만/여 7,800만원, 전자재료 부문 남 1억400만/여 8,700만원. 배터리 불황으로 2024년(9,700만원)에 이어 낮은 수준 지속.",
+    },
     name: { ko: "삼성SDI", en: "Samsung SDI" },
     industry: "Battery",
     tier: "conglomerate",
@@ -230,6 +255,15 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   // --- DEFENSE / AEROSPACE ---
   {
     id: "hanwha-aerospace",
+    disclosed: {
+      avgSalaryManwon: 12400,
+      fiscalYear: "2025",
+      avgTenureYears: 13,
+      source:
+        "DART 한화에어로스페이스 사업보고서(2025.12) 직원 등 현황, 2026-03-16 제출 (소비자가만드는신문 2026-03-26 보도 교차 확인)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260316001112",
+      note: "직원 8,168명(기간제 596명 포함), 연간 급여총액 1조154억원. 전년 1억1,800만원 대비 +5.1%로 방산업계 최고.",
+    },
     name: { ko: "한화에어로스페이스", en: "Hanwha Aerospace" },
     industry: "Defense",
     tier: "conglomerate",
@@ -252,6 +286,15 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   },
   {
     id: "kai",
+    disclosed: {
+      avgSalaryManwon: 11600,
+      fiscalYear: "2024",
+      source:
+        "뉴데일리경제 2025-07-03 '4대 방산기업 평균 연봉 1억 넘어' — 2024년 사업보고서 인용 (남 1억1,800만/여 8,200만, 전체 1억1,600만원)",
+      sourceUrl:
+        "https://biz.newdaily.co.kr/site/data/html/2025/07/03/2025070300091.html",
+      note: "전체 평균은 공시 전체값 사용. 2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지.",
+    },
     name: { ko: "한국항공우주산업", en: "Korea Aerospace Industries (KAI)" },
     industry: "Aerospace",
     tier: "conglomerate",
@@ -274,6 +317,14 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   },
   {
     id: "hyundai-rotem",
+    disclosed: {
+      avgSalaryManwon: 12000,
+      fiscalYear: "2024",
+      source:
+        "뉴스투데이 2025-05-26 '직장 돋보기 분석' 및 EBN·뉴데일리 — 2024년 사업보고서 인용 (전체 직원 4,182명 평균 1억2,000만원, 방산 4사 중 최고)",
+      sourceUrl: "https://www.news2day.co.kr/article/20250526500003",
+      note: "2025년 실적 급증(영업이익 1조원대)으로 실제 FY2025 평균은 더 높을 수 있으나, 공시 인용 보도 확인 전까지 2024년 수치 유지(추정 금지 원칙).",
+    },
     name: { ko: "현대로템", en: "Hyundai Rotem" },
     industry: "Defense",
     tier: "conglomerate",
@@ -320,6 +371,15 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   // --- ENERGY / HEAVY INDUSTRY ---
   {
     id: "doosan-enerbility",
+    disclosed: {
+      avgSalaryManwon: 10000,
+      fiscalYear: "2025",
+      avgTenureYears: 13,
+      source:
+        "DART 두산에너빌리티 사업보고서(2025.12) 직원 등 현황, 2026-03-20 제출",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260320001246",
+      note: "직원 6,233명(기간제 1,427명 포함), 남 1억400만원(근속 14년)/여 5,700만원(근속 6년). 원전·SMR 호황으로 2022년 7,700만원 대비 크게 올라 첫 1억원 도달. 중도퇴직자 460명 인건비 포함 기준.",
+    },
     name: { ko: "두산에너빌리티", en: "Doosan Enerbility" },
     industry: "Energy",
     tier: "conglomerate",

@@ -225,6 +225,14 @@ export const krCompanies_Batch23: CompanyProfile[] = [
   // ── Insurance ─────────────────────────────────────────────────────────────
   {
     id: "meritz-fire",
+    disclosed: {
+      avgSalaryManwon: 14397,
+      fiscalYear: "2025",
+      source:
+        "세계일보 2026-04-02 — 금융감독원 전자공시 기준 2025년 직원 평균 보수 1억4,397만원",
+      sourceUrl: "https://v.daum.net/v/20260402050336779",
+      note: "2024년은 1억3,164만원(머니S 2025-03-06, 임직원 기준).",
+    },
     name: { ko: "메리츠화재", en: "Meritz Fire & Marine Insurance" },
     industry: "Insurance (Non-Life)",
     // 2026-08-07: startup → conglomerate 정정 (메리츠금융지주 계열 대형 손보사 — 스타트업 허브 오노출 방지)

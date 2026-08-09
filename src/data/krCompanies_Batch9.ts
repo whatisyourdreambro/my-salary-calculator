@@ -4,6 +4,15 @@ export const krCompanies_Batch9: CompanyProfile[] = [
   // --- BANKING ---
   {
     id: "shinhan-bank",
+    disclosed: {
+      avgSalaryManwon: 12300,
+      fiscalYear: "2025",
+      avgTenureYears: 15.4,
+      source:
+        "이데일리 2026-03-19 '4대 은행장 연봉킹' — 2025년 사업보고서 공시 인용 (근속 15년5개월)",
+      sourceUrl: "https://v.daum.net/v/20260319111404479",
+      note: "남성 평균 1억4,400만원으로 4대 은행 중 남성 최고.",
+    },
     name: { ko: "신한은행", en: "Shinhan Bank" },
     industry: "Banking",
     tier: "conglomerate",
@@ -23,6 +32,14 @@ export const krCompanies_Batch9: CompanyProfile[] = [
   },
   {
     id: "kb-bank",
+    disclosed: {
+      avgSalaryManwon: 12300,
+      fiscalYear: "2025",
+      avgTenureYears: 17.3,
+      source:
+        "이데일리 2026-03-19 — 2025년 사업보고서 공시 인용 (근속 17년3개월, 4대 은행 중 최장)",
+      sourceUrl: "https://v.daum.net/v/20260319111404479",
+    },
     name: { ko: "KB국민은행", en: "KB Kookmin Bank" },
     industry: "Banking",
     tier: "conglomerate",
@@ -42,6 +59,15 @@ export const krCompanies_Batch9: CompanyProfile[] = [
   },
   {
     id: "woori-bank",
+    disclosed: {
+      avgSalaryManwon: 12200,
+      fiscalYear: "2025",
+      avgTenureYears: 16.3,
+      source:
+        "이데일리 2026-03-19 — 2025년 사업보고서 공시 인용 (근속 16년4개월)",
+      sourceUrl: "https://v.daum.net/v/20260319111404479",
+      note: "4대 은행 중 유일한 1억2,200만원(나머지 3사는 1억2,300만원).",
+    },
     name: { ko: "우리은행", en: "Woori Bank" },
     industry: "Banking",
     tier: "conglomerate",
@@ -219,6 +245,15 @@ export const krCompanies_Batch9: CompanyProfile[] = [
   // --- INSURANCE ---
   {
     id: "db-insurance",
+    disclosed: {
+      avgSalaryManwon: 13700,
+      fiscalYear: "2025",
+      avgTenureYears: 12.8,
+      source:
+        "뉴스투데이 2026-05-09 — 금융감독원 전자공시(DART) 2025년 사업보고서 기준 평균연봉 1억3,700만원, 근속 12년10개월",
+      sourceUrl: "https://www.news2day.co.kr/article/20260506500138",
+      note: "전년 1억1,800만원 대비 16% 급등(CEO스코어데일리 2026-04-03 보도 교차 부합).",
+    },
     name: { ko: "DB손해보험", en: "DB Insurance" },
     industry: "Insurance",
     tier: "conglomerate",

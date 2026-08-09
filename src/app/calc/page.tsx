@@ -61,6 +61,24 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    season: "12월 임단협 시즌",
  },
  {
+   href: "/credit-card-deduction-2026",
+   title: "신용카드 소득공제 계산기",
+   description: "총급여 25% 문턱부터 결제수단별 공제율·자녀 수별 한도까지 자동 계산",
+   season: "12~2월 연말정산",
+ },
+ {
+   href: "/rent-tax-credit-2026",
+   title: "월세 세액공제 계산기",
+   description: "총급여별 15~17% 자동 판정, 연 1,000만원 한도 — 최대 170만원 환급",
+   season: "12~2월 연말정산",
+ },
+ {
+   href: "/medical-tax-credit-2026",
+   title: "의료비 세액공제 계산기",
+   description: "총급여 3% 문턱·난임 30%·실손보험금 차감까지 반영한 세액공제액",
+   season: "12~2월 연말정산",
+ },
+ {
    href: "/income-tax-2026",
    title: "2026 종합소득세 계산기",
    description: "8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 산출",

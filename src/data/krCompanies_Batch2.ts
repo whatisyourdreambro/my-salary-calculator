@@ -4,6 +4,15 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  // --- BIO / PHARMA ---
  {
  id: "samsung-biologics",
+ disclosed: {
+ avgSalaryManwon: 11400,
+ fiscalYear: "2025",
+ avgTenureYears: 5.3,
+ source:
+ "MTN 머니투데이방송 2026-03-19 — 금융감독원 전자공시(DART) 2025년 사업보고서 인용 (대표·임원 제외 직원 평균 보수)",
+ sourceUrl: "https://v.daum.net/v/20260319104050381",
+ note: "2021년 7,900만원 대비 4년 새 44% 증가. 평균 근속 5.3년은 2025년 기준(이직률 1.9% 역대 최저, 비즈니스포스트 2026-06-01 확인).",
+ },
  name: { ko: "삼성바이오로직스", en: "Samsung Biologics" },
  industry: "Bio / Pharma",
  tier: "conglomerate",
@@ -23,6 +32,14 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  },
  {
  id: "celltrion",
+ disclosed: {
+ avgSalaryManwon: 10300,
+ fiscalYear: "2024",
+ source:
+ "메디칼업저버 2025-04-17 — DART 2024년 사업보고서 재정리 (의약품 제조 상위 30사 분석, 1인 평균 1억300만원)",
+ sourceUrl: "https://www.monews.co.kr/news/articleView.html?idxno=403602",
+ note: "2025 사업연도 사업보고서는 2026-03 제출됐으나 공시 인용 보도 미확보로 2024년 수치 유지. 셀트리온제약(평균 7,700만원대)과는 별개 회사.",
+ },
  name: { ko: "셀트리온", en: "Celltrion" },
  industry: "Bio / Pharma",
  tier: "conglomerate",
@@ -82,6 +99,14 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  },
  {
  id: "kakaobank",
+ disclosed: {
+ avgSalaryManwon: 12200,
+ fiscalYear: "2025",
+ source:
+ "머니투데이 2026-03-12 '인뱅도 1억 연봉 시대' — 은행연합회 공시 '2025년 지배구조 및 보수체계 연차보고서' 기준 임직원 평균 보수",
+ sourceUrl: "https://www.mt.co.kr/finance/2026/03/12/2026031215263114559",
+ note: "DART 사업보고서가 아닌 은행연합회 연차보고서 공시 기준(임직원 평균 보수, 스톡옵션 행사이익 포함 여부에 따라 변동 큼). 전년 1억1,400만원. 케이뱅크 1억200만·토스뱅크 1억2,000만원과 비교 보도.",
+ },
  name: { ko: "카카오뱅크", en: "Kakao Bank" },
  industry: "Fintech",
  tier: "conglomerate",
@@ -143,6 +168,15 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  // --- TELCO ---
  {
  id: "skt",
+ disclosed: {
+ avgSalaryManwon: 16300,
+ fiscalYear: "2025",
+ avgTenureYears: 13.7,
+ source:
+ "DART SK텔레콤 사업보고서(2025.12) 직원 등 현황, 2026-03-18 제출 (글로벌이코노믹 2026-03-25 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260318000532",
+ note: "직원 5,316명, 연간 급여총액 8,645억원. 통신 3사 중 최고.",
+ },
  name: { ko: "SK텔레콤", en: "SK Telecom" },
  industry: "Telco / AI",
  tier: "conglomerate",
@@ -162,6 +196,15 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  },
  {
  id: "kt",
+ disclosed: {
+ avgSalaryManwon: 11800,
+ fiscalYear: "2025",
+ avgTenureYears: 19.3,
+ source:
+ "DART 케이티 사업보고서(2025.12) 직원 현황, 2026-03-23 제출 (글로벌이코노믹 2026-03-25 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260323001553",
+ note: "직원 1만4,701명(무기계약 14,121명 + 기간제 580명, 기간제에 미등기임원 포함). 전년 대비 +7.27%.",
+ },
  name: { ko: "KT", en: "KT" },
  industry: "Telco / AI",
  tier: "conglomerate",
@@ -223,6 +266,15 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  // --- CONGLOMERATE / MANUFACTURING ---
  {
  id: "lgelectronics",
+ disclosed: {
+ avgSalaryManwon: 11700,
+ fiscalYear: "2025",
+ avgTenureYears: 13.8,
+ source:
+ "DART LG전자 [기재정정] 사업보고서(2025.12), 2026-07-06 접수 최신본 (비즈니스포스트 2026-03 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260706000276",
+ note: "직원 3만4,144명, 연간 급여총액 4조1,366억원(평균 인원 3만5,251명 기준 산출). 2024년(1억1,700만원)과 동일 수준.",
+ },
  name: { ko: "LG전자", en: "LG Electronics" },
  industry: "Consumer Electronics",
  tier: "conglomerate",

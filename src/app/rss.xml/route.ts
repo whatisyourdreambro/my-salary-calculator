@@ -1,7 +1,9 @@
 // src/app/rss.xml/route.ts
 
 import { NextResponse } from "next/server";
-import { guides } from "@/lib/guidesData";
+// koGuides만 발행 — guides(전체)를 쓰면 en 가이드 13편이 같은 /guides/{slug} URL·guid로
+// 이중 발행되어 RSS guid 중복이 생김 (2026-08-08 URL 전수 감사에서 실측)
+import { koGuides } from "@/lib/guidesData";
 
 const escapeXml = (unsafe: string) => {
  return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -29,7 +31,7 @@ function generateRssFeed() {
  "2026년 최신 세법 기준 연봉·세금·재테크 가이드. 직장인의 돈 공부, 머니샐러리에서 시작하세요.";
  const lastBuildDate = new Date().toUTCString();
 
- const sortedGuides = [...guides].sort(
+ const sortedGuides = [...koGuides].sort(
  (a, b) =>
  new Date(b.publishedDate).getTime() -
  new Date(a.publishedDate).getTime()

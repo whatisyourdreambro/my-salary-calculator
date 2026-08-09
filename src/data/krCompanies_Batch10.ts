@@ -198,6 +198,15 @@ export const krCompanies_Batch10: CompanyProfile[] = [
   // --- TELECOM ---
   {
     id: "lg-uplus",
+    disclosed: {
+      avgSalaryManwon: 11700,
+      fiscalYear: "2025",
+      avgTenureYears: 11.3,
+      source:
+        "DART LG유플러스 사업보고서(2025.12) 직원 등 현황, 2026-03-13 제출 (글로벌이코노믹 2026-03-25 보도 교차 확인)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260313000442",
+      note: "직원 9,765명. 공시 주석 기준 통신상품 판매·유지보수 종사자 제외 시 1인 평균 1억3,500만원(사무직군 실질 수준은 더 높음).",
+    },
     name: { ko: "LG유플러스", en: "LG Uplus" },
     industry: "Telecom",
     tier: "conglomerate",

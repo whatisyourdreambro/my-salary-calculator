@@ -72,6 +72,14 @@ export const krCompanies_Batch8: CompanyProfile[] = [
   // --- PUBLIC ENERGY ---
   {
     id: "kepco",
+    disclosed: {
+      avgSalaryManwon: 9638,
+      fiscalYear: "2025",
+      source:
+        "매일경제 2026-05-06 '발전 공기업 연봉 1억원 시대' — 알리오(공공기관 경영정보 공개시스템) 2025년 정규직 평균보수 인용",
+      sourceUrl: "https://v.daum.net/v/20260506150304666",
+      note: "금감원 사업보고서가 아닌 알리오(ALIO) 공시 기준(정규직 1인당 평균보수). 상장사인 한전은 DART 사업보고서에도 직원 현황이 공시되나 산정 방식 차이로 소폭 다를 수 있음. 취업포털의 8,000만~9,100만원대 참고치는 구버전 데이터.",
+    },
     name: { ko: "한국전력공사", en: "KEPCO" },
     industry: "Energy",
     tier: "conglomerate",
@@ -118,6 +126,15 @@ export const krCompanies_Batch8: CompanyProfile[] = [
   // --- CHEMICAL ---
   {
     id: "lg-chem",
+    disclosed: {
+      avgSalaryManwon: 10700,
+      fiscalYear: "2025",
+      avgTenureYears: 14,
+      source:
+        "DART LG화학 사업보고서(2025.12) 직원 등 현황, 2026-03-13 제출",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260313001195",
+      note: "직원 1만2,869명, 연간 급여총액 1조4,201억원. 석유화학 불황으로 2022년(1억2,000만원) 대비 하락. 부문별: 석유화학 남 1억1,200만/여 7,800만, 첨단소재 남 1억1,000만/여 8,400만, 생명과학 남 1억800만/여 9,100만원.",
+    },
     name: { ko: "LG화학", en: "LG Chem" },
     industry: "Chemical",
     tier: "conglomerate",

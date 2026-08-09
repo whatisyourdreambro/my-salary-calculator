@@ -4,6 +4,15 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  // --- ENERGY / CHEMICAL ---
  {
  id: "sk-innovation",
+ disclosed: {
+ avgSalaryManwon: 14600,
+ fiscalYear: "2025",
+ avgTenureYears: 10.9,
+ source:
+ "DART SK이노베이션 사업보고서(2025.12) 직원 등 현황, 2026-03-16 제출",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260316000827",
+ note: "직원 2,064명(SK E&S CIC 포함, 2024-11 합병 반영). 2024년(1억6,800만원) 대비 하락 — 합병에 따른 인적 구성 변화 영향. 지주부문 소수 정예 구조라 평균이 높은 편.",
+ },
  name: { ko: "SK이노베이션", en: "SK Innovation" },
  industry: "Energy / Chemical",
  tier: "conglomerate",
@@ -24,6 +33,15 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  },
  {
  id: "s-oil",
+ disclosed: {
+ avgSalaryManwon: 15400,
+ fiscalYear: "2024",
+ avgTenureYears: 17.8,
+ source:
+ "뉴스투데이 2025-09-15 — 금융감독원 공시 2024년 사업보고서 기준 (평균연봉 약 1억5,400만원, 근속 17.8년)",
+ sourceUrl: "https://www.news2day.co.kr/article/20250914500030",
+ note: "2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지. 취업포털의 1억7,000만원대 수치는 기준연도 확인이 불가해 채택하지 않음.",
+ },
  name: { ko: "S-OIL", en: "S-OIL" },
  industry: "Energy",
  tier: "conglomerate",
@@ -123,6 +141,15 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  },
  {
  id: "samsung-cnt",
+ disclosed: {
+ avgSalaryManwon: 12300,
+ fiscalYear: "2025",
+ avgTenureYears: 15,
+ source:
+ "DART 삼성물산 사업보고서(2025.12) 직원 등 현황, 2026-03-12 제출 (스마트투데이 2026-03-13 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260312000856",
+ note: "직원 9,261명(건설·상사·패션·리조트 합산), 남 1억3,200만/여 9,200만원. 전년(1억3,400만원) 대비 감소.",
+ },
  name: { ko: "삼성물산", en: "Samsung C&T" },
  industry: "Construction / Trade",
  tier: "conglomerate",
@@ -144,6 +171,15 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  // --- IT / SI ---
  {
  id: "samsung-sds",
+ disclosed: {
+ avgSalaryManwon: 13800,
+ fiscalYear: "2025",
+ avgTenureYears: 17.2,
+ source:
+ "DART 삼성에스디에스 사업보고서(2025.12) 직원 등 현황, 2026-03-10 제출 (지디넷코리아 2026-03-10~11 보도 교차 확인)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260310002989",
+ note: "직원 1만1,219명(본사 기준, 등기임원 제외). 남 1억4,500만/여 1억2,000만원(보도 기준). 전년 1억3,400만원 대비 +3%.",
+ },
  name: { ko: "삼성SDS", en: "Samsung SDS" },
  industry: "IT Services",
  tier: "conglomerate",

@@ -23,6 +23,14 @@ export const krCompanies_Batch11: CompanyProfile[] = [
   },
   {
     id: "korea-zinc",
+    disclosed: {
+      avgSalaryManwon: 11100,
+      fiscalYear: "2024",
+      source:
+        "전자신문 2025-10-01 — 금융감독원 전자공시 기준 2024년 직원 1인 평균 급여액 1억1,100만원(2023년 1억248만원 대비 +8.3%)",
+      sourceUrl: "https://v.daum.net/v/20251001112647786",
+      note: "금속·철강 상장사 중 포스코홀딩스에 이은 2위 수준. 2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지.",
+    },
     name: { ko: "고려아연", en: "Korea Zinc" },
     industry: "Metal",
     tier: "conglomerate",
@@ -142,6 +150,14 @@ export const krCompanies_Batch11: CompanyProfile[] = [
   // --- PHARMA / BIO ---
   {
     id: "chong-kun-dang",
+    disclosed: {
+      avgSalaryManwon: 8100,
+      fiscalYear: "2024",
+      source:
+        "헬스조선 2025-03-25 — 2024년 사업보고서 기준 직원 평균 연봉 8,100만원(전년 대비 +3.9%)",
+      sourceUrl: "https://v.daum.net/v/UxTuNjsdOj",
+      note: "2025 사업연도 수치는 공시 인용 보도 미확보로 2024년 수치 유지.",
+    },
     name: { ko: "종근당", en: "Chong Kun Dang" },
     industry: "Pharma",
     tier: "conglomerate",

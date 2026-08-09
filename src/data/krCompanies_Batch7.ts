@@ -4,6 +4,14 @@ export const krCompanies_Batch7: CompanyProfile[] = [
   // --- BANKING ---
   {
     id: "hana-bank",
+    disclosed: {
+      avgSalaryManwon: 12300,
+      fiscalYear: "2025",
+      avgTenureYears: 15.5,
+      source: "이데일리 2026-03-19 — 2025년 사업보고서 공시 인용 (근속 15년6개월)",
+      sourceUrl: "https://v.daum.net/v/20260319111404479",
+      note: "4대 은행(신한·KB국민·하나 1억2,300만, 우리 1억2,200만원) 중 동률 최고 수준.",
+    },
     name: { ko: "하나은행", en: "Hana Bank" },
     industry: "Banking",
     tier: "conglomerate",
@@ -26,6 +34,15 @@ export const krCompanies_Batch7: CompanyProfile[] = [
   },
   {
     id: "ibk",
+    disclosed: {
+      avgSalaryManwon: 9426,
+      fiscalYear: "2025",
+      avgTenureYears: 16.3,
+      source:
+        "토요경제 2026-06-02 — 은행연합회 경영현황공개보고서 기준 2025년 임직원 1인당 근로소득 9,426만원(전년 8,897만원). 근속 16.3년은 머니투데이 2026-05-05 보도 기준",
+      sourceUrl: "http://sateconomy.co.kr/news/view/1065575366612263",
+      note: "금감원 DART 사업보고서 공시가 아닌 은행연합회 공시 기반 보도 수치(임원 포함 근로소득)로 참고용. 취업포털의 1억1,000만원대 수치(기준연도·산식 불명)와 상충하므로 참고만 권장.",
+    },
     name: { ko: "IBK기업은행", en: "IBK (Industrial Bank of Korea)" },
     industry: "Banking",
     tier: "conglomerate",
@@ -72,6 +89,14 @@ export const krCompanies_Batch7: CompanyProfile[] = [
   // --- SECURITIES ---
   {
     id: "korea-investment",
+    disclosed: {
+      avgSalaryManwon: 18174,
+      fiscalYear: "2025",
+      source:
+        "매경이코노미 2026-03-25 — 리더스인덱스 500대 기업(211개사) 분석, 2025년 직원 평균 연봉 1억8,174만원으로 전체 1위",
+      sourceUrl: "https://v.daum.net/v/xFdmwJmjyO",
+      note: "리더스인덱스 집계는 공시 데이터 기반(SK하이닉스 1억8,076만원 상회). 경향신문 2026-03-25 동일 집계 보도로 교차 확인.",
+    },
     name: { ko: "한국투자증권", en: "Korea Investment & Securities" },
     industry: "Securities",
     tier: "conglomerate",

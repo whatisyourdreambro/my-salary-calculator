@@ -6,6 +6,7 @@ import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
 import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
 import CompanyUniqueStats from "@/components/CompanyUniqueStats";
+import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
@@ -188,6 +189,11 @@ export default function CompanyDetailPage({
  <CompanyDetailClient company={company} />
 
  <CompanySalaryTable company={company} />
+
+ {/* 공시 기준 평균연봉 — 금감원 DART 사업보고서·알리오 등 공식 공시 인용값.
+ disclosed 필드가 있는 회사만 렌더 (추정 금지). 추정 기반 연봉표 직후에
+ 배치해 "공식 수치"로 권위 차별화 + 동일 급여 그룹 페이지에 고유 숫자 부여. */}
+ <CompanyDisclosedSalary company={company} />
 
  {/* 동일 급여 그룹 안내 — 5직급 base 튜플이 동일한 회사(발전 공기업 등)만
  렌더. 표 숫자가 같은 페이지끼리 상호 링크 + "본 DB 수치 기준 동일" 명시로

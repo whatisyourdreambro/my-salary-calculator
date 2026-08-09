@@ -173,6 +173,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/health-insurance-fee-2026',
  '/national-pension-estimate-2026',
  '/savings-interest-2026',
+ // 연말정산 롱테일 계산기 3종 (2026-08-08) — 12~2월 시즌 선점, 고RPM 세금 주제
+ '/credit-card-deduction-2026',
+ '/rent-tax-credit-2026',
+ '/medical-tax-credit-2026',
  ];
 
  // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·
@@ -275,19 +279,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  }
 
- // Special popular amounts
- const specials = [
- 24000000, 26000000, 28000000, 32000000, 35000000, 38000000, 42000000,
- 45000000, 55000000, 65000000, 75000000, 85000000, 95000000,
- ];
- specials.forEach((s) => {
- salaryUrls.push({
- url: `${baseUrl}/salary/${s}`,
- lastModified: STATIC_LAST_MODIFIED,
- changeFrequency: 'yearly',
- priority: 0.7,
- });
- });
+ // (2026-08-08) 구 "Special popular amounts" 13건 제거 — 전량 20~100m 0.5m 격자에
+ // 이미 포함돼 사이트맵 중복 URL 13건을 만들던 블록 (URL 전수 감사에서 실측).
+ // salaryStaticParams.ts는 자체 고정 목록으로 해당 금액을 계속 정적 생성하므로 무영향.
 
  // 4. Company Database Pages
  const companyUrls: MetadataRoute.Sitemap = [

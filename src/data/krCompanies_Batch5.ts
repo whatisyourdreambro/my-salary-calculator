@@ -4,6 +4,14 @@ export const krCompanies_Batch5: CompanyProfile[] = [
  // --- PHARMA / BIO ---
  {
  id: "yuhan",
+ disclosed: {
+ avgSalaryManwon: 10000,
+ fiscalYear: "2025",
+ source:
+ "MTN 머니투데이방송 2026-03-19 — 2025년 사업보고서 기준(대표이사·임원 제외 직원 기준) 평균 연봉 1억원",
+ sourceUrl: "https://v.daum.net/v/20260319104050381",
+ note: "2024년 9,700만원에서 상승. 전통 제약사 중 최고 수준.",
+ },
  name: { ko: "유한양행", en: "Yuhan" },
  industry: "Pharma",
  tier: "conglomerate",

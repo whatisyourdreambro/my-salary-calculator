@@ -51,6 +51,14 @@ export const krCompanies_Batch32: CompanyProfile[] = [
   },
   {
     id: "korea-southern-power",
+    disclosed: {
+      avgSalaryManwon: 10127,
+      fiscalYear: "2025",
+      source:
+        "매일경제 2026-05-06 '발전 공기업 연봉 1억원 시대' — 알리오(공공기관 경영정보 공개시스템) 2025년 정규직 평균보수 인용",
+      sourceUrl: "https://v.daum.net/v/20260506150304666",
+      note: "금감원 사업보고서가 아닌 알리오(ALIO) 공시 기준 정규직 1인당 평균보수.",
+    },
     name: { ko: "한국남부발전", en: "Korea Southern Power" },
     industry: "Energy / Public",
     tier: "public",
@@ -95,6 +103,14 @@ export const krCompanies_Batch32: CompanyProfile[] = [
   },
   {
     id: "korea-midland-power",
+    disclosed: {
+      avgSalaryManwon: 10233,
+      fiscalYear: "2025",
+      source:
+        "매일경제 2026-05-06 '발전 공기업 연봉 1억원 시대' — 알리오(공공기관 경영정보 공개시스템) 2025년 정규직 평균보수 인용",
+      sourceUrl: "https://v.daum.net/v/20260506150304666",
+      note: "금감원 사업보고서가 아닌 알리오(ALIO) 공시 기준 정규직 1인당 평균보수. 발전 공기업 중 한수원(1억847만원)에 이은 2위.",
+    },
     name: { ko: "한국중부발전", en: "Korea Midland Power" },
     industry: "Energy / Public",
     tier: "public",

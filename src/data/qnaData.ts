@@ -33,14 +33,26 @@ export function toQnaSlug(question: string): string {
 }
 
 export function getQnaBySlug(slug: string): QnaItem | undefined {
- // edge 요청 렌더에서는 임의 경로가 그대로 들어옴 — 깨진 % 시퀀스는 500 대신 미매칭 처리
- let decoded: string;
+ // CF edge(workerd)는 런타임에 따라 params.slug가 원문/1회 인코딩/이중 인코딩으로
+ // 도착할 수 있음 — 2026-08-08 실측: 실존 한글 슬러그 전량 미매칭→목차 308의 원인.
+ // 최대 2회 디코드한 모든 후보 형태로 매칭 (깨진 % 시퀀스는 미매칭 처리).
+ const candidates: string[] = [slug];
+ let cur = slug;
+ for (let i = 0; i < 2; i++) {
  try {
- decoded = decodeURIComponent(slug);
+ const d = decodeURIComponent(cur);
+ if (d === cur) break;
+ candidates.push(d);
+ cur = d;
  } catch {
- return undefined;
+ break;
  }
- return qnaData.find((item) => toQnaSlug(item.question) === toQnaSlug(decoded));
+ }
+ for (const c of candidates) {
+ const found = qnaData.find((item) => toQnaSlug(item.question) === toQnaSlug(c));
+ if (found) return found;
+ }
+ return undefined;
 }
 
 export function getRelatedQna(item: QnaItem, limit = 4): QnaItem[] {

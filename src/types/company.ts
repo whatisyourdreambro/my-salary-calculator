@@ -98,6 +98,27 @@ export interface CompanyProfile {
   */
  careerLevels?: CareerLevelGroup[];
 
+ /**
+  * 옵션 — 공시 기준 평균연봉 (금융감독원 전자공시 DART 사업보고서·
+  * 공공기관 알리오 등 공식 공시, 또는 이를 인용한 언론 보도 수치).
+  * 추정치 기재 절대 금지 — 출처가 확인된 공시·보도 값만 넣는다.
+  * UI 노출: CompanyDisclosedSalary 컴포넌트가 disclosed 있을 때만 렌더.
+  */
+ disclosed?: {
+  /** 만원 단위 — 공시 기준 직원 1인 평균 급여액 */
+  avgSalaryManwon: number;
+  /** 사업연도 표기. 예: "2025", "2024/25 회계연도(2025년 5월 결산)" */
+  fiscalYear: string;
+  /** 평균 근속연수(년). 공시·보도로 확인된 경우만 기재 */
+  avgTenureYears?: number;
+  /** 출처 설명 — 매체·보도일·공시명 명시 */
+  source: string;
+  /** 출처 링크 (있으면 외부 링크로 노출, rel="nofollow noopener") */
+  sourceUrl?: string;
+  /** 산정 기준·주의점 등 부가 설명 */
+  note?: string;
+ };
+
  // Work Life & Culture
  workLife: WorkLifeBalance;
  culture: {
