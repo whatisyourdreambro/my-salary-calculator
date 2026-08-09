@@ -13,16 +13,20 @@ export const metadata: Metadata = {
 
 export default function DebugParamPage({
   params,
+  searchParams,
 }: {
   params: { slug: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 }) {
-  const s = String(params.slug ?? "");
+  const s = String(params?.slug ?? "");
   const codes = Array.from(s).map((c) => c.charCodeAt(0)).join(",");
   return (
     <main style={{ fontFamily: "monospace", padding: 24 }}>
       <div id="raw">raw:{s}</div>
       <div id="len">len:{s.length}</div>
       <div id="codes">codes:{codes}</div>
+      <div id="pj">params:{JSON.stringify(params)}</div>
+      <div id="sp">searchParams:{JSON.stringify(searchParams)}</div>
     </main>
   );
 }
