@@ -223,7 +223,7 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  tier: "conglomerate",
  logo: "🖥️",
  description:
- "구 SK C&C. 2024년 사명 변경 후 SK그룹의 AI·디지털 전환(DX) 전문 기업으로 재포지셔닝. 클라우드(SK클라우드존)·AI 솔루션·SI(시스템통합)·BPO 사업. 판교·분당·서울 사무실 + 대전 데이터센터 운영.",
+ "구 SK C&C. 2025년 6월 사명 변경 후 SK그룹의 AI·디지털 전환(DX) 전문 기업으로 재포지셔닝. 클라우드(SK클라우드존)·AI 솔루션·SI(시스템통합)·BPO 사업. 판교·분당·서울 사무실 + 대전 데이터센터 운영.",
  salary: {
  entry: { base: 54000000, incentive: { target: 20, max: 40, avgAmount: 12000000 } },
  junior: { base: 66000000, incentive: { target: 20, max: 40, avgAmount: 18000000 } },

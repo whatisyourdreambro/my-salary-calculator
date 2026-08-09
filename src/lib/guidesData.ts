@@ -17,6 +17,10 @@ import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
 import { hotNewsExtended } from "@/lib/guides/hot-news-2026-extended";
 import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
 import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
+import { autumn2026Guides } from "@/lib/guides/autumn-2026-season";
+import { companySalaryDeepdive2026 } from "@/lib/guides/company-salary-deepdive-2026";
+import { jobSalaryDeepdive2026 } from "@/lib/guides/job-salary-deepdive-2026";
+import { financeRpm2026Guides } from "@/lib/guides/finance-rpm-2026";
 
 export type GuideLang = 'ko' | 'en';
 
@@ -472,6 +476,12 @@ const allRawGuides = [
  ...hotBonusTaxComplete,
  // 14차 — 성과급 시의성 종합(2026 실제 지급액 + 통상임금 대법 판결 + 세금/4대보험 + 계산기 연결)
  ...bonusDeepdiveGuides,
+ // 15차 (2026-08-09) — 게시글 17편: 가을 시즌 4(추석 상여·미리보기·OPI/PS 전망) +
+ // GSC 30~60위 확인 키워드 저격 10(회사 5·직업 5) + 고RPM 금융 3. 전부 출처 검증 콘텐츠.
+ ...autumn2026Guides,
+ ...companySalaryDeepdive2026,
+ ...jobSalaryDeepdive2026,
+ ...financeRpm2026Guides,
 ];
 
 // Generate the final guides array with content
