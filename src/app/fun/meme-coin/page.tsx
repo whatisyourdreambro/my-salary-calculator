@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle, Flame } from "lucide-react";

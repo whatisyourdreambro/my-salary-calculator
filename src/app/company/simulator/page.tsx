@@ -3,7 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { ArrowLeft, Calculator, Info } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 

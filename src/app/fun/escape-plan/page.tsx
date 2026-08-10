@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import CurrencyInput from "@/components/CurrencyInput";
 import NumberStepper from "@/components/NumberStepper";
 import { motion, AnimatePresence } from "framer-motion";

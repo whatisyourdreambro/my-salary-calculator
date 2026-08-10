@@ -2,7 +2,7 @@
 // 2026 4대보험 요율 종합
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Shield, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

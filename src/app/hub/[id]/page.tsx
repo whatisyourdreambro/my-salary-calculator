@@ -3,7 +3,7 @@
 
 import { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { getHubById, getAllHubIds, hubs } from "@/lib/hubs";
 import { buildPageMetadata } from "@/lib/seo";

@@ -2,7 +2,7 @@
 // 신입 연봉 협상 가이드 페이지 (시즌 중립)
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, Building2 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

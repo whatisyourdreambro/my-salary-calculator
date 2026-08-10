@@ -5,7 +5,7 @@
 // /tools/finance/bonus와 차별화: 직급별·연봉별 성과급 시나리오 표 중심.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,

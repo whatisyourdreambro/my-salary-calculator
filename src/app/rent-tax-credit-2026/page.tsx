@@ -3,7 +3,7 @@
 // 2026년 귀속(현행법, 조세특례제한법 제95조의2) 기준. 국세청 공식 안내(2026-08 조회) 검증분.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

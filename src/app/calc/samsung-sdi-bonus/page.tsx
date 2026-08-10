@@ -5,7 +5,7 @@
 // 2025-26: 전기차 캐즘 → 배터리 OPI 0%, 전자재료 3~5%
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

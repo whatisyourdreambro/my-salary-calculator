@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen, Sparkles, Hash, TrendingUp, Calculator } from "lucide-react";
 import {
  toGlossarySlug,

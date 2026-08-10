@@ -1,7 +1,7 @@
 // src/app/region/page.tsx
 // 지역별 평균 연봉 허브 페이지 — "서울 평균 연봉", "부산 연봉" 등 지역 검색어 커버
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import type { Metadata } from "next";
 import { regionsData } from "@/data/regionsData";
 import { buildPageMetadata } from "@/lib/seo";

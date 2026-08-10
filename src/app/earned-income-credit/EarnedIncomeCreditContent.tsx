@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 
 type HouseholdType = "single" | "one-earner" | "dual-earner";
 

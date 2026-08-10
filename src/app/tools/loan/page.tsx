@@ -1,6 +1,6 @@
 import LoanCalculator from "@/components/calculators/LoanCalculator";
 import JsonLd from "@/components/JsonLd";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";

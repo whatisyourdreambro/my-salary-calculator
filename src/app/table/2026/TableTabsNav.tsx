@@ -3,7 +3,7 @@
 // src/app/table/2026/TableTabsNav.tsx
 // 연봉|월급|주급|시급 4개 실수령액 표 상호 링크 탭 — table/2026 layout 공통
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 
 const TABS = [

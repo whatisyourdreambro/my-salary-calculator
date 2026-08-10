@@ -2,7 +2,7 @@
 // 주휴수당 계산기 — 알바·파트타임 검색량 매우 높은 키워드 전용 페이지
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

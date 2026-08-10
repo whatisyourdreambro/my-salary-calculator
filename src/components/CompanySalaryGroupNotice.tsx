@@ -11,7 +11,7 @@
 // 사실 표현 주의: "급여체계가 같다"고 단정하지 않는다 — DB 등록 수치가
 // 동일하다는 사실만 말한다.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, Copy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import { getSalaryGroupPeers } from "@/lib/companyContentBuilder";

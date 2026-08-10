@@ -6,7 +6,7 @@
 // 2026 노조 요구: 기본급 +14.96만 / 성과급 30%(순이익 비례) / 상여 800%.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

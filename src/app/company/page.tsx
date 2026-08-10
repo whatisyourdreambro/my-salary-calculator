@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { companies } from "@/lib/companyData";
 import { Search, Building2, TrendingUp, Users } from "lucide-react";
 import { motion } from "framer-motion";

@@ -5,7 +5,7 @@
 // 1인당 평균 약 670만원. 정기 PI 10~40% + 격려금 100만(2026).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

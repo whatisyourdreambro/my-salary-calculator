@@ -6,7 +6,7 @@
 // 소비증가분 추가공제(전년 대비 5% 초과분 10%)는 2025년 사용분까지만 확인되어 미반영.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

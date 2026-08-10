@@ -1,7 +1,7 @@
 
 import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";

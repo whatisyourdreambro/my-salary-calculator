@@ -6,7 +6,7 @@
 // 주의: 광고 슬롯(layout GuideMidAd·페이지 내 CalcResultAd·PageFooterAds)과 겹치지 않는
 // 본문 콘텐츠 영역에만 배치할 것. 광고 위치는 절대 이동 금지.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, Flame } from "lucide-react";
 
 const SEASONAL_LINKS = [

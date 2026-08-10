@@ -5,7 +5,7 @@
 // 5월 22~23일 트래픽 폭증의 90%가 단일 성과급 페이지였음 (GA 분석).
 // 회사 페이지 방문자 → 성과급 계산기 동선 강화로 폭증 페이지 트래픽 회수.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calculator, ArrowRight } from "lucide-react";
 
 // 회사 ID → 계산기 경로 + 라벨 매핑

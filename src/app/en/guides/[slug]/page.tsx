@@ -1,6 +1,6 @@
 import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd, breadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";

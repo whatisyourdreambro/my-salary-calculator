@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 import { Globe, ArrowRight, BookOpen, TrendingUp, Calculator, Sparkles, Calendar } from "lucide-react";
 import type { GuideCardMeta } from "@/lib/guidesData";

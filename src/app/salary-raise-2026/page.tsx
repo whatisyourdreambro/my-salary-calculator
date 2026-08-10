@@ -4,7 +4,7 @@
 // 키워드: "연봉 인상", "연봉 협상", "인상률 계산", "이직 인상률", "월급 인상"
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

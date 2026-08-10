@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, CheckCircle2, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 
 // 15 Logic Questions (Preserved)
 const questions = [

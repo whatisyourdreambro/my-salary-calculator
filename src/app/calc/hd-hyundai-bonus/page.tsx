@@ -5,7 +5,7 @@
 // 2026 노조 요구: 영업이익 30% 성과배분 (영업이익 2조 기준 1인당 7,000만+).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

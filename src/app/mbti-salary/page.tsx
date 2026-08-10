@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, ElementType } from "react";
 import dynamic from "next/dynamic";
 import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
 import PageFooterAds from "@/components/PageFooterAds";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
  Download,
  RefreshCw,

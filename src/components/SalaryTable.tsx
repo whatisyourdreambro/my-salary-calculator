@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 
 type TableRow = { [key: string]: string | number };

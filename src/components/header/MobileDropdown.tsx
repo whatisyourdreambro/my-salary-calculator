@@ -9,7 +9,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";

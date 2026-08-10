@@ -2,7 +2,7 @@
 
 import { companies, type CompanyProfile } from "@/lib/companyData";
 import { ArrowLeft, Trophy } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 import {
  Radar,

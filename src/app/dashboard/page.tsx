@@ -13,7 +13,7 @@ const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
 });
 import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { useRouter } from "next/navigation";
 import {
  Calculator,

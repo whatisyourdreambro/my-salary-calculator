@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, RefreshCw, ScrollText } from "lucide-react";
 import PageFooterAds from "@/components/PageFooterAds";

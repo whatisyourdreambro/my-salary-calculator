@@ -4,7 +4,7 @@
 // 직고용 대상 상여 400% + 성과급 최소 800% 사례 반영.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

@@ -2,7 +2,7 @@
 // 종합소득세 계산기 — 5월 신고 시즌 핵심 키워드 + 금융 카테고리 고RPM
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

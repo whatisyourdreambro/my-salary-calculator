@@ -2,7 +2,7 @@
 // 건강보험료 계산기 — 직장가입자 / 지역가입자 / 피부양자 전환 시점 확인
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

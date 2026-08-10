@@ -2,7 +2,7 @@
 // 12월 연말정산 + 성과급 시즌 페이지
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

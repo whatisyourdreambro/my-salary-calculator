@@ -3,7 +3,7 @@
 // 반도체 가이드 7개로 깊은 회유, 회사 페이지 2개로 추가 트래픽 분산.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
  TrendingUp,
  ArrowRight,

@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, HelpCircle, Sparkles, GraduationCap } from "lucide-react";
 import {
  toQnaSlug,

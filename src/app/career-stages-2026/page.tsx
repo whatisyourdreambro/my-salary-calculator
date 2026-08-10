@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import { Fragment } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

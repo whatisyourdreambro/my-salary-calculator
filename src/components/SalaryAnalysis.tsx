@@ -3,7 +3,7 @@
 "use client";
 
 import { TrendingUp, PiggyBank, Shield, BarChart2 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
 
 interface SalaryAnalysisProps {

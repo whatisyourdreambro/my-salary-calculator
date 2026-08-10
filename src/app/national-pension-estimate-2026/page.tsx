@@ -7,7 +7,7 @@
 // ★주의: 이 7월 이벤트는 "건강보험 정산"이 아님 — 건보 연말정산 반영은 4월(별개 제도).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd, speakableLd } from "@/lib/structuredData";

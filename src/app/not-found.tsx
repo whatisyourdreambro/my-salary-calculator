@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Home, Search, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift } from "lucide-react";
 
 const SUGGESTED_LINKS = [

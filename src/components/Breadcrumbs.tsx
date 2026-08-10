@@ -4,7 +4,7 @@
 // structuredData.ts의 buildBreadcrumbTrail을 공유해 JSON-LD와 항상 일치.
 // 순수 의존성만 사용 — 서버·클라이언트 컴포넌트 양쪽에서 사용 가능.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ChevronRight } from "lucide-react";
 import { buildBreadcrumbTrail, type Breadcrumb } from "@/lib/structuredData";
 

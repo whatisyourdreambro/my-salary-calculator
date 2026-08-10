@@ -2,7 +2,7 @@
 
 import { CompanyProfile } from "@/types/company";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
  Briefcase,
  Clock,

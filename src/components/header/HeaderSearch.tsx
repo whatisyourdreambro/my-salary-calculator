@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowRight, Loader } from "lucide-react";
 import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";

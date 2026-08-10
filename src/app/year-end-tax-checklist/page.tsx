@@ -2,7 +2,7 @@
 // 연말정산 체크리스트 — 12월 마감 전 점검 항목
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

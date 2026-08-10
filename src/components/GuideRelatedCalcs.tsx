@@ -4,7 +4,7 @@
 // crossLink의 getGuideRelatedCalcs로 슬러그를 받아 100개 계산기 중 매칭되는 것만 카드로 노출.
 // 서버 컴포넌트 — 추가 클라이언트 JS 없음.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calculator, ArrowRight } from "lucide-react";
 import { getGuideRelatedCalcs } from "@/lib/crossLink";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";

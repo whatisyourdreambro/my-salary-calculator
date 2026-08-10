@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
  Gift, Briefcase, TrendingUp, Home, CreditCard, Laptop,
  Heart, PiggyBank, Calculator, Calendar, Scale, Flame,

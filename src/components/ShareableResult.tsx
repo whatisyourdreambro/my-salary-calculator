@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import CountUp from "react-countup";
 import { calculateNetSalary } from "@/lib/calculator";
 import type { AdvancedSettings } from "@/app/types";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 

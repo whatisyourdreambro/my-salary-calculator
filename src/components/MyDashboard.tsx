@@ -8,7 +8,7 @@ import {
  getFinancialAdvice,
 } from "@/lib/dashboardAnalysis";
 import CountUp from "react-countup";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Sparkles, RefreshCw } from "lucide-react";
 import {
  RadialBarChart,

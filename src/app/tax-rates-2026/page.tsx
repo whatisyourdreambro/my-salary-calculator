@@ -2,7 +2,7 @@
 // 2026년 한국 세율표 종합 — 소득세·증여세·상속세·양도세·법인세
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, FileText } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

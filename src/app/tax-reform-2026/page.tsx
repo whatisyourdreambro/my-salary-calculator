@@ -6,7 +6,7 @@
 //       뉴스핌·서울경제·파이낸셜뉴스 2026.8.3 보도. 전 항목 국회 통과 필요.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Calculator, FileText, TrendingUp } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

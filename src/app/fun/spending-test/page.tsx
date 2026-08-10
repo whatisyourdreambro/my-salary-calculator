@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Turtle, Squirrel, Zap, Rabbit, Download, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";

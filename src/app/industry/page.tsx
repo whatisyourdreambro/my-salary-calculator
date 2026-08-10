@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { industriesData } from "@/data/industriesData";
 import { buildPageMetadata } from "@/lib/seo";
 import { HomeTopAd } from "@/components/AdPlacement";

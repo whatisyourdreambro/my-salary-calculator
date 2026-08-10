@@ -8,7 +8,7 @@
 // 2026년 노사 성과배분 갈등 진행 중 보도(뉴스웨이) — 시즌 aside에서 "확정 아님" 명시.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

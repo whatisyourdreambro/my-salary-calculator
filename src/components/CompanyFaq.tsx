@@ -6,7 +6,7 @@
 // 체류시간을 동시에 강화하고, JSON-LD와 본문 내용을 일치시킨다.
 
 import { Fragment } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ChevronDown } from "lucide-react";
 
 interface FaqItem {

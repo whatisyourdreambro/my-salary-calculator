@@ -3,7 +3,7 @@
 // 확정 수치: 시급 10,700원 (고용노동부 보도자료, 제14차 전원회의 의결)
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, FileText, Calendar } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

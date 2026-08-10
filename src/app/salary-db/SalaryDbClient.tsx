@@ -5,7 +5,7 @@
 // 목록 표시·검색에 필요한 필드만 추린 경량 인덱스를 props 로 내려준다.
 
 import { useMemo, useState, Fragment } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Search, Building2, TrendingUp, Users, ArrowRight, Database, Briefcase, MapPin, Factory, Trophy, Calculator } from "lucide-react";
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";

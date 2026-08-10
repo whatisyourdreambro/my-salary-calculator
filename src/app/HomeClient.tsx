@@ -18,7 +18,7 @@ import {
  BookOpen,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import ToolCard from "@/components/home/ToolCard";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
 import { HomeTopAd, GuideMidAd, InArticleAd } from "@/components/AdPlacement";

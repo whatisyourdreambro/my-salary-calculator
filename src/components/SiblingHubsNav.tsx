@@ -6,7 +6,7 @@
 // 사이트 유입의 대부분이 "{회사}/{직업}/{지역} 연봉" 검색이라, 한 허브에 들어온
 // 사용자를 다른 차원으로 분기시켜 PageRank 양방향 흐름 + 체류시간을 늘린다.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Building2, Briefcase, MapPin, Factory, Trophy } from "lucide-react";
 
 const HUBS: Array<{

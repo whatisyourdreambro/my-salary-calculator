@@ -1,7 +1,7 @@
 // 홈페이지 하단 SEO 콘텐츠 섹션 — 서버 렌더링.
 // 기존 홈은 계산기 위젯 위주라 크롤러가 읽을 본문 텍스트가 거의 없었다.
 // 여기서 "실수령액 계산 방법" 설명 + FAQ + 인기 연봉 구간 내부링크를 정적 HTML로 제공한다.
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { HOME_FAQ_ITEMS, POPULAR_SALARY_LINKS } from "@/lib/homeContent";
 

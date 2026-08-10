@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { generateHourlyWageTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
 import SeasonalLinks from "../SeasonalLinks";

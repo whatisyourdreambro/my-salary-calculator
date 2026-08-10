@@ -3,7 +3,7 @@
 // 메인 페이지 인기 가이드 8개 카드. 시즌 이슈(2026-05 반도체 임금협상)
 // 가이드를 첫 슬롯에 우선 노출하여 메인 → 가이드 유입을 강화.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
 import { guides } from "@/lib/guidesData";
 

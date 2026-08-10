@@ -4,7 +4,7 @@
 // qnaData(80KB)는 더 이상 import하지 않고, 서버에서 slug까지 계산된
 // items를 props로 받는다 → 클라이언트 번들 경량화.
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   HelpCircle,
   Search,

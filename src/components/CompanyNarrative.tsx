@@ -2,7 +2,7 @@
 // companyContentBuilder의 기존 헬퍼들을 조합해 7~9 문단의 SEO용 텍스트 본문을 만들어
 // "회사명 + 연봉" long-tail 검색에 thin content가 아닌 deep content로 응답.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import type { CompanyProfile } from "@/types/company";
 import {
   getIndustryBenchmark,

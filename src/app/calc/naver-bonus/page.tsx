@@ -6,7 +6,7 @@
 // 정기 PI: 기본급의 10~40% 연 1회.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

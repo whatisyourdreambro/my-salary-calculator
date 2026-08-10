@@ -1,7 +1,7 @@
 // src/app/salary/[amount]/page.tsx
 
 import { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryTierCard from "@/components/SalaryTierCard";

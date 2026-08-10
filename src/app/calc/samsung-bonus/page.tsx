@@ -4,7 +4,7 @@
 // title.absolute로 사이트명 한 번만 적용 (layout template과 중복 방지).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

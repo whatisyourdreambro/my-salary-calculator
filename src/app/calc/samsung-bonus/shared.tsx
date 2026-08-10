@@ -4,7 +4,7 @@
 // Client.tsx 본체와 next/dynamic 으로 분리 로드되는 시뮬레이터 2종이 함께 사용한다.
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { trackGuideCTAClick } from "@/lib/analytics";
 import {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import PageFooterAds from "@/components/PageFooterAds";
 import { ArrowLeft, Globe } from "lucide-react";
 import {

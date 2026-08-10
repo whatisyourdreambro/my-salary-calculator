@@ -4,7 +4,7 @@
 // 근거: 소득세법 제59조의4 제1항 + 국세청 국세상담센터(call.nts.go.kr) 2026-08-08 확인.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

@@ -6,7 +6,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Star, Trash2, ExternalLink } from "lucide-react";
 import {
   FAVORITES_KEY,

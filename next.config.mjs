@@ -219,13 +219,18 @@ const nextConfig = {
         ],
       },
       {
-        // 모든 경로에 보안 헤더 및 기본 캐시 정책 적용
+        // 모든 경로에 보안 헤더 및 기본 캐시 정책 적용.
+        // [2026-08-10] s-maxage=1 → 3600: 사실상 무캐시였던 전역 정책이 매 요청을
+        // Worker로 보내 무료 플랜 일 10만 요청 한도 초과의 주범이었음. 콘텐츠는
+        // 배포 시에만 바뀌고(개인화는 전부 클라이언트 localStorage) Pages가 배포
+        // 시 캐시를 퍼지하므로 1시간 엣지 캐시는 안전. max-age=0으로 브라우저는
+        // 항상 재검증(엣지에서 즉시 응답).
         source: "/:path*",
         headers: [
           ...securityHeaders,
           {
             key: "Cache-Control",
-            value: "public, s-maxage=1, stale-while-revalidate=59",
+            value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
           }
         ],
       },
@@ -261,6 +266,47 @@ const nextConfig = {
           },
         ],
       },
+      // [2026-08-10] 요청 한도 대응 — 배포 시에만 변하는 고트래픽 정적 콘텐츠
+      // 라우트군을 기존 3종과 동일한 6시간 엣지 캐시로 확대. 크롤러·프리페치·
+      // 재방문 요청을 CDN에서 흡수해 Worker 호출을 줄인다.
+      ...[
+        "/table/:path*",
+        "/calc/:path*",
+        "/job/:slug*",
+        "/region/:slug*",
+        "/industry/:slug*",
+        "/salary-db/:path*",
+        "/hub/:path*",
+        "/guides/:slug*",
+      ].map((source) => ({
+        source,
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400",
+          },
+        ],
+      })),
+      // 크롤러가 고빈도로 가져가는 메타 파일·생성 이미지 라우트 — 내용이 사실상
+      // 고정이므로 길게 캐시해 Worker 호출을 차단.
+      ...[
+        "/sitemap.xml",
+        "/rss.xml",
+        "/robots.txt",
+        "/icon",
+        "/apple-icon",
+        "/opengraph-image",
+        "/api/og",
+        "/api/salary-table",
+      ].map((source) => ({
+        source,
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400",
+          },
+        ],
+      })),
     ];
   },
 };

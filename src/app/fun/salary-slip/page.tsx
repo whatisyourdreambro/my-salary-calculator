@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Receipt, Printer, RefreshCw, Calculator } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";

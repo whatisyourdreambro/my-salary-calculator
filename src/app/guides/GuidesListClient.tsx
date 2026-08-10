@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import type { GuideCardMeta } from '@/lib/guidesData';
-import Link from 'next/link';
+import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CoupangBanner from '@/components/CoupangBanner';

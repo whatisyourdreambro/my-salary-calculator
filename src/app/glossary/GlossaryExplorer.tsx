@@ -5,7 +5,7 @@
 // 이 컴포넌트는 경량 검색 인덱스(index)만으로 표시/숨김을 제어한다.
 // → 96KB glossaryData·framer-motion이 이 페이지의 클라이언트 번들에서 제거됨.
 import { useState, useMemo, type ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Search, Sparkles, RotateCw, ArrowRight } from "lucide-react";
 
 export interface GlossaryIndexItem {

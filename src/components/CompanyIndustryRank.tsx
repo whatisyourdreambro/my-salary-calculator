@@ -5,7 +5,7 @@
 // 같은 업종 회사끼리 내부 링크를 촘촘히 연결해 토픽 클러스터를 형성하고,
 // "{업종} 연봉 순위" 검색 의도에 대응하며, 사용자의 다음 페이지 이동을 유도한다.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import {

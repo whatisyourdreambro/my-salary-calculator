@@ -8,7 +8,7 @@ import PageFooterAds from "@/components/PageFooterAds";
 import type { StoredFinancialData } from "@/app/types";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { calculateRank } from "@/lib/salaryData";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import CountUp from "react-countup";
 import { Info, BarChart2, TrendingUp } from "lucide-react";
 

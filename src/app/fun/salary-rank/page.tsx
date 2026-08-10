@@ -1,6 +1,6 @@
 import SalaryRankCalculator from "@/components/calculators/SalaryRankCalculator";
 import { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({

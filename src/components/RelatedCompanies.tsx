@@ -2,7 +2,7 @@
 //
 // 회사 페이지 cross-link — 같은 업종 또는 비슷한 연봉대 회사 추천.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, Building2 } from "lucide-react";
 import { allCompanies } from "@/data/companies";
 import type { CompanyProfile } from "@/types/company";

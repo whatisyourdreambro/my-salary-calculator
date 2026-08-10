@@ -2,7 +2,7 @@
 // 6~7월 건강검진 시즌 페이지 — 일반/암검진 대상자·항목·비용·예약 종합
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Stethoscope, FileText, AlertCircle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

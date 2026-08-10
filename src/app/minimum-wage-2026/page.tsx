@@ -2,7 +2,7 @@
 // 최저임금 2026 시즌 페이지 — 매년 8월 공표·10월 확정 시즌 검색 폭증
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, FileText, Calendar } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

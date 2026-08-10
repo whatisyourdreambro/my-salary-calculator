@@ -1,7 +1,7 @@
 // src/components/Footer.tsx
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { CheckCircle2, Shield, Lock } from "lucide-react";
 import Logo from "./Logo";

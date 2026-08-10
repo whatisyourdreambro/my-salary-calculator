@@ -7,7 +7,7 @@
 // 2025년 실적분 최대 50% 수준 (1월 약 43% 선지급 + 3월 평가 확정 후 잔여).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

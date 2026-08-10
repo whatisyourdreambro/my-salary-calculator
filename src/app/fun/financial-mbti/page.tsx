@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, Target, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";

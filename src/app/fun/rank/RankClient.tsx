@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Share2, Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
-import Link from 'next/link';
+import Link from "@/components/AppLink";
 
 // 연봉 분포 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const RankChart = dynamic(() => import("@/components/charts/RankChart"), {

@@ -1,7 +1,7 @@
 // 용어 카드 — 서버 컴포넌트.
 // 96KB glossaryData를 클라이언트 번들에서 제거하기 위해 카드 마크업은 서버에서 렌더링하고,
 // 상호작용(공유 버튼)만 ShareTermButton 클라이언트 아일랜드로 분리한다.
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Hash, Sparkles, ArrowRight } from "lucide-react";
 import type { GlossaryItem } from "@/data/glossaryData";
 import { toGlossarySlug } from "@/data/glossaryData";

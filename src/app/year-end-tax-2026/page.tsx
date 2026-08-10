@@ -2,7 +2,7 @@
 // 5월 종합소득세 시즌 페이지 — 프리랜서·N잡러 대상
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calendar, AlertCircle, CheckCircle2, FileText, Calculator, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

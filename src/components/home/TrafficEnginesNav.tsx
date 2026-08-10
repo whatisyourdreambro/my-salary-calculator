@@ -4,7 +4,7 @@
 // 사이트 유입의 대부분이 "{회사명}/{직업}/{지역} 연봉" 검색이므로,
 // 홈에서 이 4개 허브로의 1-클릭 진입로가 PageRank 분배·CTR·체류시간 모두에 결정적.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Building2, Briefcase, MapPin, Factory, ArrowRight } from "lucide-react";
 
 const ENGINES: Array<{

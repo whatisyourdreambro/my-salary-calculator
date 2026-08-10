@@ -2,7 +2,7 @@
 // "신입 초봉 2026" 키워드 인덱스 — 회사 데이터 자동 집계
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, Building2, Crown } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

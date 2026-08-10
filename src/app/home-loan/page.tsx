@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import PageFooterAds from "@/components/PageFooterAds";

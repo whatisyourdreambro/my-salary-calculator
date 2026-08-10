@@ -3,7 +3,7 @@
 // 메인 페이지 가이드 카테고리별 진입 카드.
 // 50+ 가이드를 카테고리로 한눈에 보여주고 빠른 진입 유도.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
  Wallet,
  Receipt,

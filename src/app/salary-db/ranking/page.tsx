@@ -5,7 +5,7 @@
 // 랭킹해 상위 30개사를 표로 보여주고, 각 행을 /salary-db/[id] 회사 페이지로 연결해
 // 회사 상세 페이지에 내부 링크 주스를 전달한다.
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, Trophy } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";

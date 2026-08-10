@@ -8,7 +8,7 @@
 
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen } from "lucide-react";
 import type { RelatedGuideItem } from "@/lib/relatedGuides";
 import { trackGuideCTAClick } from "@/lib/analytics";

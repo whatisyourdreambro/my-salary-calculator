@@ -11,7 +11,7 @@
 // — 검토 단계·미확정임을 명시. 2026 상반기 PI는 여전히 미발표(확정 지급률 기재 금지).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

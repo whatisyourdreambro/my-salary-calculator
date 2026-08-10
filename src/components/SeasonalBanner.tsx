@@ -3,7 +3,7 @@
 // 현재 월을 기반으로 가장 관련성 높은 시즌 페이지를 자동 노출.
 // deadline 있는 경우 D-Day 카운트다운으로 긴급감 부여.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
 
 interface SeasonalContent {

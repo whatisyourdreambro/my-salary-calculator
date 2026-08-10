@@ -5,7 +5,7 @@
 // 시즌: 매년 1~3월 검색량 폭증
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,

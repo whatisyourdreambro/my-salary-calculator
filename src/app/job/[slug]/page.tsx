@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { permanentRedirect } from "next/navigation";
 import { jobsData, getJobById } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";

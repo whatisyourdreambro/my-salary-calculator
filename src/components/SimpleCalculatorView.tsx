@@ -6,7 +6,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 import { CalcResultAd, InArticleAd } from "./AdPlacement";

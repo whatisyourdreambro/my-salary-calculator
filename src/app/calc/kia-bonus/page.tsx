@@ -5,7 +5,7 @@
 // 기아는 5년 연속 무파업 타결. 현대차 그룹과 동일 패턴이지만 무상주 53주 (현대차 30주).
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

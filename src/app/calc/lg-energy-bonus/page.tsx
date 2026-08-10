@@ -5,7 +5,7 @@
 // 2022 870~900% / 2023 340~380% / 2024 50% / 2025 75%.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

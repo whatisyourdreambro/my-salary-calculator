@@ -4,7 +4,7 @@
 // 키워드: "퇴직금 퇴직연금 차이", "DB DC 비교", "퇴직금 vs IRP"
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,

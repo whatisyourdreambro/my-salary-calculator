@@ -2,7 +2,7 @@
 // 자동차세 계산기 — 6월 8~30일 / 12월 9~31일 시즌 트래픽 폭증 키워드 전용 페이지
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";

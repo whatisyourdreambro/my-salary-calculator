@@ -1,7 +1,7 @@
 // src/app/year-end-tax/page.tsx
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
 import {
   Lightbulb,

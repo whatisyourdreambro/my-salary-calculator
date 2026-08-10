@@ -5,7 +5,7 @@
 // PS 720~730% + PI 200% (연간 고정) 구조.
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,

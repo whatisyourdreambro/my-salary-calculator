@@ -2,7 +2,7 @@
 // 주제별 허브 인덱스 — 5개 허브로 가는 진입점.
 
 import { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { hubs } from "@/lib/hubs";
 import { buildPageMetadata } from "@/lib/seo";

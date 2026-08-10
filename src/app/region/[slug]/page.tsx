@@ -2,7 +2,7 @@
 // 지역별 연봉 상세 페이지 — "{지역} 평균 연봉" 롱테일 검색어 커버
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { permanentRedirect } from "next/navigation";
 import { regionsData, getRegionById } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";

@@ -2,7 +2,7 @@
 // 2026 퇴직연금 종합 가이드 — DB·DC·IRP 비교
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { PiggyBank, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";

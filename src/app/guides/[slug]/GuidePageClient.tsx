@@ -2,7 +2,7 @@
 
 import { Calendar, Eye, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";

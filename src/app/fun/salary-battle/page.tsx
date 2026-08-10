@@ -8,7 +8,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyComparator, ComparisonResult } from "@/lib/versusEngine";
 import { CompanyProfile, JobLevel } from "@/types/company";
 import BoxingGame from "@/components/BoxingGame";
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
 
 // 배틀 RadarChart(recharts)만 지연 로드 — recharts가 무거워 First Load 에서 제외.

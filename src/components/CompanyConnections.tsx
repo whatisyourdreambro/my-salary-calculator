@@ -3,7 +3,7 @@
 // 회사 페이지 → 업종 허브·경쟁사 비교 페이지로 가는 내부 링크 섹션.
 // 허브-스포크 구조를 완성해 크롤 자산을 집중시킨다.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { ArrowRight, BarChart3, GitCompare } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import { industriesData } from "@/data/industriesData";

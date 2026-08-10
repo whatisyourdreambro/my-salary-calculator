@@ -4,7 +4,7 @@
 // CompanyDetailClient의 그래프/카드와 별도로, 검색 친화적인 텍스트 콘텐츠 제공.
 // 페이지마다 unique 콘텐츠가 자동으로 생성되어 thin content 페널티 회피.
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { TrendingUp, Award, ArrowRight, Building2 } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import {

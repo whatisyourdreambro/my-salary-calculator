@@ -6,7 +6,7 @@
 
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
