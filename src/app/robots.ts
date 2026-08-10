@@ -32,20 +32,31 @@ export default function robots(): MetadataRoute.Robots {
  // ─── 2. 핵심 검색 봇: 한국·글로벌 검색 시장 ─────────────────
  // Yeti = NaverBot, Daum = KakaoBot. 한국 트래픽의 30%+ 비중.
  // Applebot 포함 — 검색 크롤러는 모두 허용 (AI 크롤러도 차단 안 함).
+ // [2026-08-10] CF Workers 일 요청 한도 대응 — Crawl-delay를 존중하는
+ // 봇(Bing·Naver·Daum)은 별도 그룹으로 분리해 크롤 속도 제한.
+ // Google은 Crawl-delay를 무시하므로(자체 조절) 기존 그룹 유지.
  {
  userAgent: [
  'Googlebot',
  'Googlebot-Image',
  'Googlebot-News',
- 'Bingbot',
- 'NaverBot',
- 'Yeti',
- 'Daum',
  'DuckDuckBot',
  'Applebot',
  ],
  allow: corePathAllow,
  disallow: corePathDisallow,
+ },
+ {
+ userAgent: 'Bingbot',
+ allow: corePathAllow,
+ disallow: corePathDisallow,
+ crawlDelay: 10,
+ },
+ {
+ userAgent: ['NaverBot', 'Yeti', 'Daum'],
+ allow: corePathAllow,
+ disallow: corePathDisallow,
+ crawlDelay: 5,
  },
 
  // ─── AI 크롤러: 차단하지 않음 (검색·학습 크롤러 모두 허용) ──
@@ -76,10 +87,13 @@ export default function robots(): MetadataRoute.Robots {
 
  // ─── 4. 기타 모든 봇 기본값 ────────────────────────────────
  // 위에 명시되지 않은 봇은 이 규칙을 따름 (일반 검색 봇과 동일 정책)
+ // Crawl-delay는 best-effort — 무시하는 봇(GPTBot·Amazonbot 등)은
+ // 엣지 캐시(s-maxage)가 Worker 도달을 흡수 (next.config.mjs).
  {
  userAgent: '*',
  allow: corePathAllow,
  disallow: corePathDisallow,
+ crawlDelay: 10,
  },
  ],
  sitemap: `${baseUrl}/sitemap.xml`,

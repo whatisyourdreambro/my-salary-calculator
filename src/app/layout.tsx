@@ -64,6 +64,9 @@ export const metadata: Metadata = {
     icon: [{ url: "/icon", type: "image/png" }],
     apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
   },
+  // src/app/manifest.json(매 요청 Worker 경유) → public/manifest.webmanifest 정적
+  // 서빙 전환(2026-08-10, 요청 한도 대응). _routes.json 에서 Worker 우회 처리.
+  manifest: "/manifest.webmanifest",
   authors: [{ name: "머니샐러리", url: "https://www.moneysalary.com" }],
   creator: "머니샐러리",
   publisher: "머니샐러리",

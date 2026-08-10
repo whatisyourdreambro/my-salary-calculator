@@ -331,33 +331,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  });
 
- // 회사 비교 페이지 (/salary-db/compare/[slug]) — 화이트리스트 페어만
- // lastModified는 페어를 구성하는 두 회사 lastUpdated 중 최신값 사용 (2026-08-07).
- // 413페이지 전부 동일 날짜(STATIC_LAST_MODIFIED)면 freshness 신호가 무의미해져
- // GSC "발견됨-색인 안 됨" 템플릿 판정을 강화하므로, 회사 데이터의 실제 갱신일을 따른다.
- const { getComparePairs } = require('@/lib/salary-data/companyComparePairs');
- const companyUpdatedMap = new Map<string, Date>();
- allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
- if (!company.lastUpdated) return;
- const parsed = new Date(company.lastUpdated);
- if (!Number.isNaN(parsed.getTime())) companyUpdatedMap.set(company.id, parsed);
- });
- const compareUrls: MetadataRoute.Sitemap = getComparePairs().map(
- (p: { slug: string; aId: string; bId: string }) => {
- const aDate = companyUpdatedMap.get(p.aId);
- const bDate = companyUpdatedMap.get(p.bId);
- const lastModified =
- aDate && bDate
- ? (aDate.getTime() >= bDate.getTime() ? aDate : bDate)
- : aDate ?? bDate ?? STATIC_LAST_MODIFIED;
- return {
- url: `${baseUrl}/salary-db/compare/${p.slug}`,
- lastModified,
- changeFrequency: 'monthly' as ChangeFrequency,
- priority: 0.6,
- };
- }
- );
+ // [2026-08-10 제거] 회사 비교 413페이지(/salary-db/compare/[slug]) 사이트맵 등재 중단.
+ // 전체 사이트맵 1,865 URL의 22%를 차지하면서 GSC "발견됨-색인 안 됨" 상태의
+ // priority 0.6 템플릿 페이지 — 재크롤 수요만 유발해 CF Workers 일 요청 한도를
+ // 압박했다. 페이지 자체는 유지되고 내부 링크로 접근 가능 — 크롤 광고만 중단.
+ // (복원 시: git log에서 compareUrls 블록 참조)
 
  // 글로서리 동적 페이지 — 용어별 long-tail 키워드
  // 한글 슬러그는 사이트맵 프로토콜상 percent-encoding이 안전 (encodeURIComponent)
@@ -437,5 +415,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.7,
  }));
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...compareUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
 }

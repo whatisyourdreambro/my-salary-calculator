@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/ads.txt",
+    "/app-ads.txt",
+    "/favicon.ico",
+    "/favicon.svg",
+    "/grid.svg",
+    "/icon-192.png",
+    "/icon-512.png",
+    "/icon-maskable-192.png",
+    "/icon-maskable-512.png",
+    "/logo-full.png",
+    "/logo.svg",
+    "/security.txt",
+    "/.well-known/*",
+    "/manifest.webmanifest",
+    "/naver226c8e8c348e204e98efbcf23514d286.html"
+  ]
+}

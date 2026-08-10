@@ -1,0 +1,42 @@
+# _routes.json 으로 Worker를 우회하는 정적 자산의 캐시 헤더.
+# (Worker 우회 경로에는 next.config.mjs headers() 가 적용되지 않으므로 여기서 지정)
+# AdSense 크롤러가 고빈도로 가져가는 ads.txt 류는 1일, 불변 이미지류는 1년 캐시.
+
+/ads.txt
+  Cache-Control: public, max-age=86400
+
+/app-ads.txt
+  Cache-Control: public, max-age=86400
+
+/security.txt
+  Cache-Control: public, max-age=86400
+
+/.well-known/*
+  Cache-Control: public, max-age=86400
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=86400
+
+/favicon.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/grid.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/logo.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/logo-full.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon-192.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon-512.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon-maskable-192.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/icon-maskable-512.png
+  Cache-Control: public, max-age=31536000, immutable
