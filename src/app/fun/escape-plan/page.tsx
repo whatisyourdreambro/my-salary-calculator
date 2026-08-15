@@ -10,6 +10,7 @@ import {
   Download, CheckCheck, BookOpen,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 const parse = (s: string) => Number(s.replace(/[^0-9]/g, "")) || 0;
@@ -248,6 +249,9 @@ export default function EscapePlanPage() {
               )}
             </div>
             {/* /캡처 영역 끝 */}
+
+            {/* 결과 인접 광고 */}
+            <InArticleAd />
 
             {/* 공유 섹션 */}
             {isFinite(yearsToTarget) && (

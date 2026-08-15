@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { industriesData } from "@/data/industriesData";
 import { buildPageMetadata } from "@/lib/seo";
-import { HomeTopAd } from "@/components/AdPlacement";
+import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
@@ -102,6 +102,11 @@ export default function IndustryIndexPage() {
                 </p>
               </Link>
             ))}
+          </div>
+
+          {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 */}
+          <div className="mt-8">
+            <MultiplexAd />
           </div>
 
           <CoupangBanner />

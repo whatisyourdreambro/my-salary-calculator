@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -236,6 +236,8 @@ export default function MinimumWage2026Page() {
  </p>
  </section>
 
+ <CalcResultAd />
+
  {/* CTAs */}
  <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4">
  <Link
@@ -263,6 +265,8 @@ export default function MinimumWage2026Page() {
  <p className="text-sm text-muted-blue">최저임금과 함께 매년 변경</p>
  </Link>
  </section>
+
+ <GuideMidAd />
 
  {/* FAQ */}
  <section className="mb-12 max-w-3xl mx-auto">

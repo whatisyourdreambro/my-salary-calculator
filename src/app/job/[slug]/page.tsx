@@ -6,7 +6,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd, itemListLd, occupationLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import JobOfficialStats from "@/components/JobOfficialStats";
-import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
@@ -289,6 +289,8 @@ export default function JobPage({ params }: Props) {
               </div>
             </section>
           )}
+
+          <GuideMidAd />
 
           {/* 관련 계산기 */}
           {job.relatedCalcSlugs.length > 0 && (

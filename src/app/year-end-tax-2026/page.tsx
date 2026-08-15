@@ -10,7 +10,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -199,6 +199,10 @@ export default function YearEndTax2026Page() {
  </div>
  </section>
 
+ <div className="mb-12">
+ <CalcResultAd />
+ </div>
+
  {/* Who needs to file */}
  <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6 flex items-center gap-2">
@@ -266,6 +270,10 @@ export default function YearEndTax2026Page() {
  에서 누진세율·지방소득세까지 즉시 확인하세요.
  </p>
  </section>
+
+ <div className="mb-12">
+ <GuideMidAd />
+ </div>
 
  {/* FAQ */}
  <section className="mb-12">

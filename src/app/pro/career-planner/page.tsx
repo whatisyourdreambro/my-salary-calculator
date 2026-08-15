@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
+import { CalcResultAd } from "@/components/AdPlacement";
 import {
  CareerEvent,
  CareerSimulationInput,
@@ -283,6 +284,9 @@ export default function CareerPlannerPage() {
  </div>
  </div>
  </div>
+
+ {/* 시뮬레이션 결과 직하 광고 — 하단 PageFooterAds 와는 활용법·FAQ 섹션으로 간격 확보 */}
+ <CalcResultAd />
 
  {/* ── 활용법 + FAQ + cross-link — thin content·막다른 페이지 해소 ── */}
  <JsonLd data={faqLd(PLANNER_FAQ)} />

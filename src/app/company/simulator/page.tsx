@@ -6,6 +6,7 @@ import { ArrowLeft, Calculator, Info } from "lucide-react";
 import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 // 실수령액 비교 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const SimulatorChart = dynamic(() => import("@/components/charts/SimulatorChart"), {
@@ -164,6 +165,11 @@ export default function SimulatorPage() {
  {largeNet.toLocaleString('ko-KR')}원
  </div>
  </div>
+ </div>
+
+ {/* 결과 직하 광고 — company/layout 의 PageFooterAds 와는 아래 차이 요약 섹션으로 간격 확보 */}
+ <div className="mt-6">
+ <CalcResultAd />
  </div>
 
  <div className="mt-6 text-center">

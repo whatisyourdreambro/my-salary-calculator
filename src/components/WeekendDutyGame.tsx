@@ -7,6 +7,7 @@ import {
   X, Heart, Frown, Meh, Download, Zap,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 type Preference = "HOPE" | "NEUTRAL" | "NON_HOPE" | "UNAVAILABLE";
 
@@ -455,6 +456,11 @@ export default function WeekendDutyGame() {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* 결과 인접 광고 */}
+          <div className="max-w-4xl mx-auto mt-6">
+            <InArticleAd />
           </div>
 
           {/* Share & Actions */}

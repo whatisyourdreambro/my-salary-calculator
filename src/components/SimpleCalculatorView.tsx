@@ -9,7 +9,7 @@ import { useState, useMemo } from "react";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
-import { CalcResultAd, InArticleAd } from "./AdPlacement";
+import { CalcResultAd, GuideMidAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
@@ -141,6 +141,9 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </p>
  </section>
  )}
+
+ {/* 계산 방식 ↔ 공식 사이 — 이 페이지에서 유일하게 GUIDE_MID 슬롯 미사용이었음 (Phase 1) */}
+ {calc.explanation && <GuideMidAd />}
 
  {calc.formula && (
  <section className="p-6 bg-canvas-100 rounded-2xl border border-canvas-200 mb-6">

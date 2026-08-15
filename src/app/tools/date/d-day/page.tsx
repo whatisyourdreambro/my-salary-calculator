@@ -1,4 +1,5 @@
 ﻿import { DDayCalculator } from "@/components/calculators/date/DateCalculators";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
@@ -15,6 +16,8 @@ export default function DDayPage() {
  <div className="max-w-2xl mx-auto">
  <h1 className="text-3xl font-bold text-navy mb-8">D-Day 계산기</h1>
  <DDayCalculator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/date/d-day" />
  </div>

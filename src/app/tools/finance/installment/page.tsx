@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CreditCard } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function InstallmentPage() {
@@ -35,6 +36,9 @@ export default function InstallmentPage() {
  <h1 className="text-4xl font-black text-navy tracking-tight mb-3">할부 이자 계산기</h1>
  <p className="text-faint-blue font-medium">월 납부액과 총 이자를 즉시 계산합니다</p>
  </div>
+
+ {/* 페이지 끝 배치는 tools/layout 하단 InArticleAd와 연속 광고가 되어 금지 → 헤더 직후 배치 */}
+ <CalcResultAd />
 
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
  {presets.map(p => (
@@ -80,6 +84,7 @@ export default function InstallmentPage() {
  </div>
  </div>
  </motion.div>
+
  </div>
  </main>
  );

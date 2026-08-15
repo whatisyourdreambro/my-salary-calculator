@@ -7,6 +7,7 @@ import {
  type GenerationStrategy,
 } from "@/lib/lottoGenerator";
 import PageFooterAds from "@/components/PageFooterAds";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Settings, Sparkles, Loader, Clover, RefreshCw } from "lucide-react";
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
 const getNumberColorClass = (number: number): string => {
@@ -293,6 +294,9 @@ export default function LottoPage() {
  {new Date().toLocaleDateString()}
  </span>
  </div>
+
+ {/* 결과 영역 광고 — 번호 그리드 위 배치 (그리드 아래는 PageFooterAds 와 연속이라 불가) */}
+ <CalcResultAd />
 
  <div className="grid gap-4">
  {revealedSets.map((set, index) => (

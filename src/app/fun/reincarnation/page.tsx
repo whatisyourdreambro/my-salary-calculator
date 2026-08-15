@@ -5,6 +5,7 @@ import CurrencyInput from "@/components/CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Globe2, Crown, Briefcase, Zap, Skull, RefreshCw, Download, Dna } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 type Rarity = "S" | "A" | "B" | "C" | "F";
 
@@ -302,6 +303,11 @@ export default function ReincarnationPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* 결과 인접 광고 */}
+              <div className="mb-3">
+                <InArticleAd />
               </div>
 
               {/* Share buttons */}

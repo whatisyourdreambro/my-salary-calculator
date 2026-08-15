@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -136,6 +136,8 @@ export default function NewEmployee2026Page() {
  ))}
  </div>
  </section>
+
+ <GuideMidAd />
 
  {/* Negotiation Steps */}
  <section className="mb-12">

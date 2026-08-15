@@ -1,4 +1,5 @@
 ﻿import { WorkDayCalculator } from "@/components/calculators/date/DateCalculators";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
@@ -15,6 +16,8 @@ export default function WorkDayPage() {
  <div className="max-w-2xl mx-auto">
  <h1 className="text-3xl font-bold text-navy mb-8">영업일 계산기</h1>
  <WorkDayCalculator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/date/work-days" />
  </div>

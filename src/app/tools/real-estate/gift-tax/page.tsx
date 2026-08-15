@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Heart, Info } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 증여세 계산
@@ -142,6 +143,9 @@ export default function GiftTaxPage() {
  ))}
  </div>
  </motion.div>
+
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
 
  <div className="p-5 bg-canvas border border-canvas rounded-xl flex gap-3 mb-8">
  <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />

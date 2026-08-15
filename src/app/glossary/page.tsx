@@ -4,7 +4,7 @@
 // GlossaryExplorer 클라이언트 아일랜드가 경량 인덱스로 처리한다.
 import { BookOpen } from "lucide-react";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import GlossaryCard from "./GlossaryCard";
 import GlossaryExplorer, {
@@ -75,6 +75,11 @@ export default function GlossaryPage() {
           </>
         }
       />
+
+      {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (목록이 클라이언트 컴포넌트라 page 쪽 하단 배치) */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        <MultiplexAd />
+      </div>
     </main>
   );
 }

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { jobsData, jobsByCategory, JobCategory } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
@@ -142,6 +142,11 @@ export default function JobIndexPage() {
               연봉 데이터를 제공하고 있습니다. 각 직업 페이지에서 신입~경력별 상세 연봉과
               실수령액을 계산해보세요.
             </p>
+          </div>
+
+          {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (기존 광고와 요약 섹션 간격 확보) */}
+          <div className="mt-8">
+            <MultiplexAd />
           </div>
         </div>
       </div>

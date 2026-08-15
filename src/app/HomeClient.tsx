@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 import Link from "@/components/AppLink";
 import ToolCard from "@/components/home/ToolCard";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
-import { HomeTopAd, GuideMidAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, GuideMidAd, Display2Ad } from "@/components/AdPlacement";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -247,11 +247,11 @@ export default function HomeClient() {
  <CalculatorTabs />
  </motion.div>
 
- {/* 계산기 직하 — 결과 직하 광고(CalcResultAd)는 SalaryCalculator 내부 ResultAd 가
-     담당하므로(동일 슬롯 dedup) 여기는 인아티클 광고만 배치. NextActions 도
-     계산기 내부 결과 화면에서 노출되어 중복 제거. */}
+ {/* 계산기 직하 — 이전의 InArticleAd 는 SalaryResultCard 내부 "결과 직하" 광고
+     (동일 fluid 슬롯)를 dedup 으로 영구 차단하고 있었다 (사이트 최고 CTR 자리 사망).
+     Display2Ad 로 교체: 신규 유닛 발급 전엔 미렌더, 결과 직하 광고는 즉시 부활. */}
  <div className="mt-10 max-w-3xl mx-auto">
- <InArticleAd />
+ <Display2Ad />
  </div>
  </section>
 

@@ -9,7 +9,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import HolidayBonusClient from "./Client";
 
@@ -114,6 +114,9 @@ export default function HolidayBonusPage() {
               <li><strong>건강보험</strong>: 3.595% + 장기요양 0.4724%</li>
               <li><strong>고용보험</strong>: 0.9%</li>
             </ul>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               명절 상여금 vs 정기 보너스

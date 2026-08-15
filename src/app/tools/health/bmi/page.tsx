@@ -1,4 +1,5 @@
 import BmiCalculator from "@/components/calculators/health/BmiCalculator";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
@@ -18,6 +19,8 @@ export default function BmiPage() {
  <p className="text-muted-blue">나의 체질량지수(Body Mass Index) 확인하기</p>
  </div>
  <BmiCalculator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/health/bmi" />
  </div>

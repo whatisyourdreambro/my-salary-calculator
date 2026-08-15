@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { regionsData } from "@/data/regionsData";
 import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
-import { HomeTopAd } from "@/components/AdPlacement";
+import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import SiblingHubsNav from "@/components/SiblingHubsNav";
@@ -230,6 +230,11 @@ export default function RegionIndexPage() {
             </Link>
           </div>
         </section>
+
+        {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (쿠팡 배너와 인사이트 섹션 간격 확보) */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

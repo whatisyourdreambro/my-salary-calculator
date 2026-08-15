@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle, Flame } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // 평가액 추이 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const MemeCoinChart = dynamic(() => import("@/components/charts/MemeCoinChart"), {
@@ -451,6 +452,9 @@ export default function MemeCoinPage() {
                   })}
                 </div>
               </div>
+
+              {/* 결과 인접 광고 */}
+              <InArticleAd />
 
               {/* Share section */}
               <div className="bg-[#161B22] border border-[#30363D] rounded-2xl p-5">

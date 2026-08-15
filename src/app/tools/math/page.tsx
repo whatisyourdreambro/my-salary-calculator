@@ -1,5 +1,6 @@
 import MathCalculators from "@/components/calculators/MathCalculators";
 import JsonLd from "@/components/JsonLd";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
@@ -45,6 +46,9 @@ export default function MathPage() {
  직관적인 UI로 해결하세요.
  </p>
  </div>
+ {/* 계산기 결과가 탭 내부 실시간 표시라 결과 직하 특정 불가 — 첫 섹션(헤더) 직후 배치.
+     페이지 끝 배치는 tools/layout 하단 InArticleAd와 연속 광고가 되어 금지 */}
+ <CalcResultAd />
  <MathCalculators />
  </div>
  </div>

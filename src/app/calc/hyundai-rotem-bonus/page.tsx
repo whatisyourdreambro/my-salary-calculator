@@ -17,7 +17,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { TrainFront, AlertTriangle, Info } from "lucide-react";
 import HyundaiRotemBonusClient from "./Client";
@@ -239,6 +239,10 @@ export default function HyundaiRotemBonusPage() {
               ))}
             </div>
           </section>
+
+          <div className="mt-10">
+            <GuideMidAd />
+          </div>
 
           <aside className="mt-10 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm">
             <p className="flex items-start gap-2">

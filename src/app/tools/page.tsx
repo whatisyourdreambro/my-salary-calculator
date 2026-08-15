@@ -7,6 +7,7 @@ import {
  Divide, Globe, Fuel, RefreshCw, Users, Zap
 } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
+import { MultiplexAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { itemListLd } from "@/lib/structuredData";
@@ -202,6 +203,11 @@ export default function ToolsHubPage() {
  </div>
  </div>
  ))}
+
+ {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 */}
+ <div className="mt-16">
+ <MultiplexAd />
+ </div>
 
  {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이 */}
  <div className="mt-16">

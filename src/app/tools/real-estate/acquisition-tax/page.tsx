@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Home, Info } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 취득세율 — 아파트·단독주택 모두 주택 세율 체계 적용, 토지는 4%
@@ -117,6 +118,9 @@ export default function AcquisitionTaxPage() {
  ))}
  </div>
  </motion.div>
+
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
 
  <div className="p-5 bg-canvas border border-canvas rounded-xl flex gap-3 mb-8">
  <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />

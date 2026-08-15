@@ -6,6 +6,7 @@ import { Trophy, Crown, RefreshCw, Heart } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { CompanyProfile } from "@/types/company";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 // Shuffle array helper
 const shuffle = <T,>(array: T[]): T[] => {
  return [...array].sort(() => Math.random() - 0.5);
@@ -145,6 +146,11 @@ export default function IdealTypeWorldCup() {
  {winner.name.ko}
  </h2>
  <p className="text-xl text-muted-foreground">{winner.industry}</p>
+ </div>
+
+ {/* 결과 인접 광고 */}
+ <div className="w-full max-w-2xl">
+ <InArticleAd />
  </div>
 
  <div className="flex flex-col items-center gap-5">

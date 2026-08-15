@@ -3,6 +3,7 @@ import Link from "@/components/AppLink";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import PageFooterAds from "@/components/PageFooterAds";
+import { CalcResultAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -235,6 +236,9 @@ export default function HomeLoanPage() {
       </header>
 
       <HomeLoanSimulator />
+
+      {/* 계산 결과 직하 광고 — 하단 PageFooterAds 와는 본문 섹션들로 간격 확보 */}
+      <CalcResultAd />
 
       {/* 2026-07-16 기준금리 인상 시의성 섹션 */}
       <section className="mt-12 mb-12">

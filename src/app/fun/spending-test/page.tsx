@@ -6,6 +6,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Turtle, Squirrel, Zap, Rabbit, Download, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 const questions = [
   {
@@ -263,6 +264,11 @@ export default function SpendingTestPage() {
                   <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-400 text-center">
                     {result.tip}
                   </div>
+                </div>
+
+                {/* 결과 인접 광고 */}
+                <div className="mb-4">
+                  <InArticleAd />
                 </div>
 
                 {/* Share buttons */}

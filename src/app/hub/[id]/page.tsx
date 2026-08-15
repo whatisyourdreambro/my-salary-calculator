@@ -10,7 +10,12 @@ import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import {
+  HomeTopAd,
+  InArticleAd,
+  GuideMidAd,
+  CalcResultAd,
+} from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const dynamic = "force-static";
@@ -105,6 +110,12 @@ export default function HubPage({ params }: { params: { id: string } }) {
                   </Link>
                 ))}
               </div>
+              {/* 첫 섹션 직후 슬롯 — 상단 광고(HomeTop)와 섹션 1개 간격 유지 */}
+              {si === 0 && (
+                <div className="mt-8">
+                  <CalcResultAd />
+                </div>
+              )}
               {si === 1 && (
                 <div className="mt-8">
                   <InArticleAd />

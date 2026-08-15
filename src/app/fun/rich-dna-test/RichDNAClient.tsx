@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
 import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 const questions = [
  {
@@ -254,6 +255,9 @@ export default function RichDNAClient() {
  {/* Gold Foil Effect Bottom */}
  <div className="h-2 bg-gradient-to-r from-primary via-primary/50 to-primary/80" />
  </div>
+
+ {/* 결과 인접 광고 */}
+ <InArticleAd />
 
  {/* Action Buttons */}
  <div className="flex flex-col gap-4 max-w-sm mx-auto">

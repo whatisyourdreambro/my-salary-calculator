@@ -7,7 +7,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { allCalculators } from "@/lib/simpleCalculators";
-import { HomeTopAd } from "@/components/AdPlacement";
+import { MultiplexAd } from "@/components/AdPlacement";
 import CalcIndexClient from "./CalcIndexClient";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -161,8 +161,10 @@ export default function CalcIndexPage() {
 
  <CalcIndexClient grouped={grouped} featured={FEATURED_CALCS} />
 
+ {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함.
+    HOME_TOP 은 calc/layout.tsx 하단에서 이미 제공 (page 중복 시 슬롯 dedup 충돌) */}
  <div className="mt-8">
- <HomeTopAd />
+ <MultiplexAd />
  </div>
  </div>
  </main>

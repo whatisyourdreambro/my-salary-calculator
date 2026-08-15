@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -210,6 +210,8 @@ export default function HealthCheckup2026Page() {
  </div>
  </section>
 
+ <CalcResultAd />
+
  {/* 비용 */}
  <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl font-black text-navy mb-6 flex items-center gap-2">
@@ -258,6 +260,8 @@ export default function HealthCheckup2026Page() {
  <p className="text-sm text-muted-blue">세후 월급 즉시 계산</p>
  </Link>
  </section>
+
+ <GuideMidAd />
 
  {/* FAQ */}
  <section className="mb-12 max-w-3xl mx-auto">

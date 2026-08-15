@@ -4,6 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import PageFooterAds from "@/components/PageFooterAds";
+import { GuideMidAd } from "@/components/AdPlacement";
 import { ArrowLeft, Globe } from "lucide-react";
 import {
   GlobalTaxEngine,
@@ -128,6 +129,10 @@ export default function GlobalTaxPage() {
                 실제 실수령액은 지역·공제항목에 따라 크게 달라질 수 있습니다.
               </div>
             </div>
+
+            {/* 본문 중간 광고 — 차트 카드와 국가별 요약 타일 사이,
+                하단 PageFooterAds 와는 타일 섹션으로 간격 확보 */}
+            <GuideMidAd />
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {data.map((item) => (

@@ -12,7 +12,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Calendar } from "lucide-react";
 import YearEndBonusTaxClient from "./Client";
 
@@ -116,6 +116,9 @@ export default function YearEndBonusTaxPage() {
                 3월이라 자금 운용 측면에서 분할 지급이 유리한 경우도 있음
               </li>
             </ul>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               연말 보너스 절세 5가지 핵심

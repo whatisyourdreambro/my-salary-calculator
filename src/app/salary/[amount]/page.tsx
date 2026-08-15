@@ -11,7 +11,7 @@ import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -254,6 +254,11 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
 
  <SalaryTierCard annualSalary={amount} />
+
+ {/* 티어카드 ↔ FAQ 사이 — 이 페이지에서 유일하게 HOME_TOP 슬롯 미사용이었음 (Phase 1) */}
+ <div className="px-2">
+ <HomeTopAd />
+ </div>
 
  {/* FAQ */}
  <section className="px-2 sm:px-6">

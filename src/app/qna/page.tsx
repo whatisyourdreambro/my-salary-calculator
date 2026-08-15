@@ -6,6 +6,7 @@
 // props로 전달한다 → 클라이언트 번들에서 데이터 모듈 제거.
 import { MessageCircle } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
+import { MultiplexAd } from "@/components/AdPlacement";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import { qnaData, toQnaSlug } from "@/data/qnaData";
 import QnaPageClient, { type QnaListItem } from "./QnaPageClient";
@@ -71,6 +72,11 @@ export default function QnaPage() {
         </section>
 
         <QnaPageClient items={listItems} />
+
+        {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (layout PageFooterAds 위) */}
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <MultiplexAd />
+        </div>
       </div>
     </>
   );

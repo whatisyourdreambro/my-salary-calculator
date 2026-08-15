@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, RefreshCw, ScrollText } from "lucide-react";
 import PageFooterAds from "@/components/PageFooterAds";
+import { GuideMidAd } from "@/components/AdPlacement";
 const FORTUNES = {
  "재물운": [
  "올해 재테크 타이밍: 상반기(1~6월)에 분할 매수로 씨앗을 심고, 하반기부터 결실을 거두는 형국입니다. 주식·ETF보다 안정 자산 비중을 55% 이상 유지하세요.",
@@ -134,6 +135,10 @@ export default function FinancialFortunePage() {
  </motion.div>
  )}
  </AnimatePresence>
+
+ {/* 본문 중간 광고 — 운세 결과 영역과 자매 콘텐츠 링크 사이,
+ 하단 PageFooterAds 와는 링크·안내문 섹션으로 간격 확보 */}
+ <GuideMidAd />
 
  <div className="mt-10">
  </div>

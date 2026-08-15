@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { CreditCard, PlusCircle, Trash2, BarChart3 } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 type Subscription = { name: string; amount: number; period: "monthly" | "yearly" };
 
 const PRESETS: Subscription[] = [
@@ -107,6 +108,9 @@ export default function SubscriptionCalcClient() {
  </div>
  </div>
  </div>
+
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
 
  <div className="mt-8">
  </div>

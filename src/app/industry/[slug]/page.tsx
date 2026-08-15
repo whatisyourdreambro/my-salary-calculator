@@ -8,7 +8,7 @@ import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { getIndustryAggregate } from "@/lib/salary-data/industryAggregates";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const dynamic = "force-static";
@@ -272,6 +272,8 @@ export default function IndustryPage({ params }: Props) {
               </div>
             </section>
           )}
+
+          <GuideMidAd />
 
           {/* 다른 업계 */}
           <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">

@@ -13,7 +13,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -242,6 +242,8 @@ export default function TaxReform2026Page() {
           </div>
         </section>
 
+        <CalcResultAd />
+
         {/* 2부 — 무엇이 담겼나 (8/3 발표 내용, 전 항목 국회 통과 필요) */}
         <section className="mb-12 max-w-3xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-black text-navy mb-2 flex items-center gap-2">
@@ -443,6 +445,8 @@ export default function TaxReform2026Page() {
             <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
           </div>
         </Link>
+
+        <GuideMidAd />
 
         {/* FAQ */}
         <section className="mb-12 max-w-3xl mx-auto">

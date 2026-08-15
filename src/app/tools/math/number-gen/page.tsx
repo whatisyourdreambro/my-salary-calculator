@@ -1,6 +1,7 @@
 ﻿import { NumberGenerator } from "@/components/calculators/math/MathCalculators";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -15,6 +16,8 @@ export default function NumberGenPage() {
  <div className="max-w-2xl mx-auto">
  <h1 className="text-3xl font-bold text-navy mb-8">랜덤 숫자 생성기</h1>
  <NumberGenerator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/math/number-gen" />
  </div>

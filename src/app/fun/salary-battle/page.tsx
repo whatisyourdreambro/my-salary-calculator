@@ -10,6 +10,7 @@ import { CompanyProfile, JobLevel } from "@/types/company";
 import BoxingGame from "@/components/BoxingGame";
 import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // 배틀 RadarChart(recharts)만 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const SalaryBattleRadar = dynamic(() => import("@/components/charts/SalaryBattleRadar"), {
@@ -345,6 +346,11 @@ export default function BattlePage() {
  </div>
  </motion.div>
  </div>
+ </div>
+
+ {/* 결과 인접 광고 */}
+ <div className="mt-10">
+ <InArticleAd />
  </div>
 
  {/* 공유 CTA + 코어 페이지 전환 동선 — 바이럴 유입을 계산기로 연결 */}

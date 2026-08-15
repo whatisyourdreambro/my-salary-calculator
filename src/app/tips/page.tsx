@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BookOpen, TrendingUp, Shield, CreditCard, Home, Briefcase, ChevronRight } from "lucide-react";
 import Link from "@/components/AppLink";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
@@ -148,6 +148,11 @@ export default function TipsPage() {
  {si === 1 && (
  <div className="mt-8">
  <InArticleAd />
+ </div>
+ )}
+ {si === 3 && (
+ <div className="mt-8">
+ <GuideMidAd />
  </div>
  )}
  </div>

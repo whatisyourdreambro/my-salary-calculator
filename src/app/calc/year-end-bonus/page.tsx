@@ -14,7 +14,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Gift, Calculator, ArrowRight, Sparkles, Info } from "lucide-react";
 import YearEndBonusClient from "./Client";
 
@@ -150,6 +150,9 @@ export default function YearEndBonusPage() {
               스타트업·중소기업은 평균보다 낮은 편입니다. PS(이익배분제)를 운영하는 기업은
               실적이 좋은 해에 추가 성과급이 지급되기도 합니다.
             </p>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               성과급 절세 4가지 핵심 전략

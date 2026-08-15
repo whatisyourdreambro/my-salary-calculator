@@ -13,7 +13,12 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import {
+ HomeTopAd,
+ InArticleAd,
+ GuideMidAd,
+ CalcResultAd,
+} from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -181,6 +186,10 @@ export default function QnaDetailPage({
  </div>
  </section>
  )}
+
+ {/* 답변 소비 완료 지점 광고 — 관련 질문과 추천 도구 사이. 관련 질문이 없으면
+ 쿠팡 배너와 연속 배치가 되므로 함께 생략 (연속 광고 금지 규칙) */}
+ {related.length > 0 && <CalcResultAd />}
 
  <section className="mt-10 bg-white dark:bg-canvas-900 p-6 rounded-2xl border border-canvas-200 dark:border-canvas-800">
  <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">

@@ -10,7 +10,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { allCompanies } from "@/data/companies";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
@@ -160,6 +160,8 @@ export default function NewEmployeeSalary2026Page() {
  종합 패키지로 비교하세요.
  </p>
  </section>
+
+ <GuideMidAd />
 
  {/* TOP 50 표 */}
  <section className="mb-12">

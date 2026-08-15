@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, RefreshCw, Scroll, Calendar, Clock, User, Star } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 // --- Constants & Data ---
 
 const YEARS = Array.from({ length: 80 }, (_, i) => 2025 - i); // 2025 down to 1946
@@ -352,6 +353,9 @@ export default function FortunePage() {
  </div>
  </div>
  </div>
+
+ {/* 결과 인접 광고 */}
+ <InArticleAd />
 
  <div className="space-y-4">
  <button

@@ -1,6 +1,7 @@
 import LoanCalculator from "@/components/calculators/LoanCalculator";
 import JsonLd from "@/components/JsonLd";
 import Link from "@/components/AppLink";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
@@ -65,6 +66,9 @@ export default function LoanCalculatorPage() {
  </p>
  </div>
  <LoanCalculator />
+
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
 
  {/* 2026-07-16 기준금리 인상 시의성 섹션 */}
  <section className="max-w-3xl mx-auto mt-14">

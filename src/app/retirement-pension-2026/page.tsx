@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -255,6 +255,8 @@ export default function RetirementPension2026Page() {
  </div>
  </section>
 
+ <CalcResultAd />
+
  {/* 연령대별 추천 전략 */}
  <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6">
@@ -346,6 +348,8 @@ export default function RetirementPension2026Page() {
  </li>
  </ul>
  </article>
+
+ <GuideMidAd />
 
  {/* CTA */}
  <Link

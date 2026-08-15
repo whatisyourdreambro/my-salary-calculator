@@ -6,6 +6,7 @@ import { Info, ShieldCheck, Sparkles } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
+import { GuideMidAd } from "@/components/AdPlacement";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
@@ -54,6 +55,9 @@ export default function Calc2026Page() {
  <div className="bg-white rounded-3xl shadow-2xl p-2 sm:p-4 mb-12">
  <SalaryCalculator />
  </div>
+
+ {/* 본문 중간 광고 */}
+ <GuideMidAd />
 
  {/* 2026 Changes Info */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

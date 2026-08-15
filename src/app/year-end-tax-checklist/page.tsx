@@ -10,7 +10,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -195,6 +195,10 @@ export default function YearEndTaxChecklistPage() {
  </div>
  </div>
 
+ <div className="mb-12">
+ <CalcResultAd />
+ </div>
+
  {/* 카테고리별 체크리스트 */}
  <div className="space-y-6 mb-12">
  {CHECKLIST.map((cat) => (
@@ -220,6 +224,10 @@ export default function YearEndTaxChecklistPage() {
  </Link>
  에서 확인하세요.
  </p>
+
+ <div className="mb-12">
+ <GuideMidAd />
+ </div>
 
  {/* 공제 항목별 정밀 계산기 — 연말정산 클러스터 내부링크 */}
  <section className="mb-12">

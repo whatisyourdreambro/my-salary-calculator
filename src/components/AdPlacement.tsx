@@ -12,7 +12,14 @@ const CLIENT_ID = "ca-pub-2873403048341290";
 // pathname 변경 시 cleanup 으로 다른 페이지에 영향 없음.
 const renderedSlotsByPath = new Map<string, Set<string>>();
 
-type AdSlotKind = "home-top" | "result" | "sidebar" | "fluid" | "guide-mid";
+type AdSlotKind =
+  | "home-top"
+  | "result"
+  | "sidebar"
+  | "fluid"
+  | "guide-mid"
+  | "multiplex"
+  | "display-2";
 
 type AdSlotProps = {
   slot: string | undefined;
@@ -42,6 +49,7 @@ function AdSlot({
   const pushed = useRef(false);
   const [visible, setVisible] = useState(false);
   const [allowed, setAllowed] = useState(true);
+  const [unfilled, setUnfilled] = useState(false);
 
   // 페이지 이동(pathname 변경) 시 광고 상태 reset → 뒤로가기로 돌아왔을 때도 광고 정상 표시
   // (이전: pushed.current 영구 true 가 되어 뒤로가기 시 viewability 0% — 매출 손실)
@@ -49,6 +57,7 @@ function AdSlot({
     pushed.current = false;
     setVisible(false);
     setAllowed(true);
+    setUnfilled(false);
   }, [pathname]);
 
   // 페이지별 슬롯 dedup — 같은 페이지에 동일 슬롯 ID 두 번째 호출은 자동 skip
@@ -125,6 +134,23 @@ function AdSlot({
     trackAdImpression(slotKind ?? "unknown");
   }, [visible, slot, slotKind]);
 
+  // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
+  // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
+  useEffect(() => {
+    if (!visible) return;
+    const container = containerRef.current;
+    if (!container) return;
+    const ins = container.querySelector("ins.adsbygoogle");
+    if (!ins) return;
+    const check = () => {
+      if (ins.getAttribute("data-ad-status") === "unfilled") setUnfilled(true);
+    };
+    check();
+    const mo = new MutationObserver(check);
+    mo.observe(ins, { attributes: true, attributeFilter: ["data-ad-status"] });
+    return () => mo.disconnect();
+  }, [visible, pathname]);
+
   if (!slot || !allowed) return null;
 
   const baseClass = containerClassName ?? "ad-container";
@@ -143,6 +169,7 @@ function AdSlot({
         alignItems: "center",
         minHeight: `${minHeight}px`,
         ...style,
+        ...(unfilled ? { display: "none" } : {}),
       }}
     >
       <span
@@ -242,6 +269,34 @@ export function InArticleAd() {
       slotKind="fluid"
       minHeight={200}
       containerClassName="ad-container ad-in-article"
+    />
+  );
+}
+
+// 멀티플렉스(관련 콘텐츠형) — 콘솔에서 유닛 발급 후 .env 에
+// NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX 추가 시 자동 활성화. 미설정 시 렌더 안 함.
+// 가이드 본문 하단·목록 페이지 하단 전용(체류 이탈 지점에서 CTR 가장 높은 포맷).
+export function MultiplexAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX}
+      format="autorelaxed"
+      slotKind="multiplex"
+      minHeight={280}
+    />
+  );
+}
+
+// 범용 디스플레이 2번 유닛 — 기존 5슬롯의 페이지당 1회 dedup 상한을 넘어
+// 같은 페이지에 디스플레이 광고를 하나 더 배치할 때 사용.
+// 콘솔 발급 후 NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 추가 시 자동 활성화.
+export function Display2Ad() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2}
+      format="auto"
+      slotKind="display-2"
+      minHeight={250}
     />
   );
 }

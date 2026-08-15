@@ -104,11 +104,14 @@ interface CoupangBannerProps {
 const DISCLOSURE_TEXT =
  "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.";
 
-// 페이지별 쿠팡 배너 렌더 수 추적 — "페이지당 배너 1회" 강제 (AdPlacement.tsx renderedSlotsByPath 패턴).
-// 본문 배너 + layout/PageFooterAds 배너가 같은 페이지에 겹치면 동일 배너와 공정위 고지문이
-// 2회 중복 노출되므로, 먼저 마운트된 인스턴스(본문 쪽)만 살리고 두 번째 이후는 자동 skip.
+// 페이지별 쿠팡 배너 렌더 추적 — "페이지당 최대 2회 + 같은 사이즈 중복 금지" 강제.
+// (이전 1회 하드캡은 본문 배너가 사이드바 skyscraper 를 전역에서 죽여 데스크톱
+// 쿠팡 인벤토리가 통째로 0이었음 — 2026-08-15 수익 개선 Phase 1 에서 완화.)
+// 같은 사이즈 2회는 동일 배너 이미지가 중복 노출되므로 여전히 차단.
+// 공정위 고지문은 첫 번째 인스턴스만 표시(중복 고지 방지).
 // pathname 변경 시 cleanup 으로 뒤로가기/라우트 전환에도 정상 동작.
-const renderedBannersByPath = new Map<string, number>();
+const MAX_BANNERS_PER_PAGE = 2;
+const renderedBannersByPath = new Map<string, CoupangBannerSize[]>();
 
 export default function CoupangBanner({
  size = "leaderboard",
@@ -123,24 +126,31 @@ export default function CoupangBanner({
  responsive ? responsive.desktop : size
  );
  const [allowed, setAllowed] = useState(true);
+ const [bannerIndex, setBannerIndex] = useState(0);
 
- // 페이지별 dedup — 같은 페이지에서 두 번째 이후 CoupangBanner 호출은 자동 skip
- // (effect 가 트리 순서대로 실행되므로 본문 배너가 우선권, PageFooterAds 쪽이 skip 됨)
+ // 페이지별 dedup — 최대 2회, 같은 사이즈 중복 금지.
+ // (effect 가 트리 순서대로 실행되므로 본문 배너가 우선권)
  useEffect(() => {
  if (!pathname) return;
- const count = renderedBannersByPath.get(pathname) ?? 0;
- if (count > 0) {
+ // 사이즈 키는 마운트 시점 기준(데스크톱 기본값) — resize 로 바뀌어도 등록 키는 고정
+ const sizeKey = responsive ? responsive.desktop : size;
+ const sizes = renderedBannersByPath.get(pathname) ?? [];
+ if (sizes.length >= MAX_BANNERS_PER_PAGE || sizes.includes(sizeKey)) {
  setAllowed(false);
  return;
  }
- renderedBannersByPath.set(pathname, count + 1);
+ sizes.push(sizeKey);
+ renderedBannersByPath.set(pathname, sizes);
+ setBannerIndex(sizes.length - 1);
  setAllowed(true);
  return () => {
- const current = renderedBannersByPath.get(pathname) ?? 0;
- if (current <= 1) renderedBannersByPath.delete(pathname);
- else renderedBannersByPath.set(pathname, current - 1);
+ const current = renderedBannersByPath.get(pathname) ?? [];
+ const idx = current.indexOf(sizeKey);
+ if (idx >= 0) current.splice(idx, 1);
+ if (current.length === 0) renderedBannersByPath.delete(pathname);
+ else renderedBannersByPath.set(pathname, current);
  };
- }, [pathname]);
+ }, [pathname, responsive, size]);
 
  useEffect(() => {
  if (!responsive) {
@@ -211,7 +221,7 @@ export default function CoupangBanner({
  }}
  />
  </a>
- {showDisclosure && (
+ {showDisclosure && bannerIndex === 0 && (
  <p
  style={{
  fontSize: "11px",

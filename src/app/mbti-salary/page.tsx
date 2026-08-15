@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, ElementType } from "react";
 import dynamic from "next/dynamic";
 import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
 import PageFooterAds from "@/components/PageFooterAds";
+import { GuideMidAd } from "@/components/AdPlacement";
 import Link from "@/components/AppLink";
 import {
  Download,
@@ -254,7 +255,9 @@ export default function MbtiSalaryPage() {
  </div>
  </div>
 
- 
+ {/* 본문 중간 광고 — 결과 리포트(이미지 캡처 영역 밖)와 성장 플랜 사이,
+ 하단 PageFooterAds 와는 성장 플랜·버튼 섹션으로 간격 확보 */}
+ <GuideMidAd />
 
  {/* [유입 유도] 개인 맞춤형 성장 플랜 및 내부 링크 강화 */}
  <div className="mt-8">

@@ -1,4 +1,5 @@
 import VatCalculator from "@/components/calculators/finance/VatCalculator";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
@@ -18,6 +19,8 @@ export default function VatPage() {
  <p className="text-muted-blue">일반과세자 10% 세율 적용</p>
  </div>
  <VatCalculator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/finance/vat" />
  </div>

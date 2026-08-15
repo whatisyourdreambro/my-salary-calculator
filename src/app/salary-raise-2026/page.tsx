@@ -13,7 +13,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   Sparkles,
@@ -276,6 +276,8 @@ export default function SalaryRaisePage() {
             </div>
           </section>
 
+          <CalcResultAd />
+
           {/* 협상 체크리스트 */}
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">
@@ -356,6 +358,8 @@ export default function SalaryRaisePage() {
               </li>
             </ul>
           </article>
+
+          <GuideMidAd />
 
           {/* 경고 */}
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">

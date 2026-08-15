@@ -13,7 +13,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   Sparkles,
@@ -774,6 +774,9 @@ export default function SamsungBonusCalculatorPage() {
               />
             </div>
           </section>
+
+          {/* 분배 모델 ↔ 본문 해설 사이 광고 */}
+          <GuideMidAd />
 
           {/* 본문 */}
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10">

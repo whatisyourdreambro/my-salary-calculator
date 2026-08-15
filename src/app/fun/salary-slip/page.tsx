@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Receipt, Printer, RefreshCw, Calculator } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 export default function SalarySlipPage() {
  const [salaryInput, setSalaryInput] = useState("60,000,000");
@@ -179,6 +180,11 @@ export default function SalarySlipPage() {
  <div className="p-4 bg-canvas text-center text-xs text-faint-blue border-t border-canvas">
  이 명세서는 MoneySalary에서 자동 생성된 가상 문서입니다.
  </div>
+ </div>
+
+ {/* 결과 인접 광고 */}
+ <div className="mt-4">
+ <InArticleAd />
  </div>
 
  <div className="mt-4">

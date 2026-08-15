@@ -9,7 +9,7 @@ import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
-import { CalcResultAd, InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 
@@ -385,6 +385,11 @@ export default function RegionDetailPage({
             </Link>
           </p>
         </section>
+
+        {/* 본문 중간 광고 */}
+        <div className="mt-10">
+          <GuideMidAd />
+        </div>
 
         {/* 직업 허브 분기 — region이 dead-end 되지 않도록 직업/회사 차원으로 분기 */}
         <section className="mt-8 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-2xl p-6">

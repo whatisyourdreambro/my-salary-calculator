@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -208,6 +208,8 @@ export default function TaxRates2026Page() {
  </div>
  </section>
 
+ <CalcResultAd />
+
  {/* 양도세 */}
  <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl sm:text-2xl font-black text-navy mb-2">
@@ -249,6 +251,8 @@ export default function TaxRates2026Page() {
  </table>
  </div>
  </section>
+
+ <GuideMidAd />
 
  {/* CTA */}
  <Link

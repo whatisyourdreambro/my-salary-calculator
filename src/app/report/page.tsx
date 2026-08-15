@@ -5,6 +5,7 @@
 import { useEffect, useState, useRef, Suspense } from "react";
 import dynamic from "next/dynamic";
 import PageFooterAds from "@/components/PageFooterAds";
+import { GuideMidAd } from "@/components/AdPlacement";
 import type { StoredFinancialData } from "@/app/types";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { calculateRank } from "@/lib/salaryData";
@@ -235,6 +236,12 @@ const Report = () => {
  </section>
  )}
  </div>
+
+ {/* 본문 중간 광고 — 리포트 카드(이미지 저장 캡처 영역 밖)와 버튼 섹션 사이 */}
+ <div className="mt-8">
+ <GuideMidAd />
+ </div>
+
  <div className="mt-8 flex flex-col sm:flex-row gap-4">
  <button
  onClick={handleDownload}

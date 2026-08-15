@@ -13,7 +13,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Briefcase, Building2 } from "lucide-react";
 import SeveranceClient from "./Client";
 
@@ -163,6 +163,9 @@ export default function SeveranceVsPensionPage() {
               <li>④ <strong>환산급여공제</strong> 차감 후 누진세율 적용</li>
               <li>⑤ <strong>최종 퇴직소득세</strong> = 산출세액 × 근속연수 ÷ 12</li>
             </ol>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               IRP 연금 수령의 절세 효과

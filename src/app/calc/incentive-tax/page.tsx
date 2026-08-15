@@ -12,7 +12,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, AlertTriangle } from "lucide-react";
 import IncentiveClient from "./Client";
 
@@ -126,6 +126,9 @@ export default function IncentiveTaxPage() {
                 일반 기업 스톡옵션은 <strong className="text-rose-500">근로소득 합산과세</strong>만 가능
               </li>
             </ul>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               인센티브 절세 핵심 4가지

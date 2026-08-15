@@ -24,7 +24,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import CompareViewTracker from "@/components/CompareViewTracker";
-import { CalcResultAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { CalcResultAd, HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ShareButtons from "@/components/ShareButtons";
@@ -500,6 +500,8 @@ export default function ComparePage({ params }: Props) {
             ※ 영끌 연봉 = 기본급 + 평균 인센티브. 공개 자료 기반 추정치이며 부서·성과에 따라 다를 수 있습니다.
           </p>
         </section>
+
+        <GuideMidAd />
 
         {/* 상세 분석 (확장) */}
         <section className="my-8 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">

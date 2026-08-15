@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Share2, RefreshCw, Crown, CreditCard, Sparkles, CheckCircle2 } from "lucide-react";
 import { calculateSalaryRank, AGE_GROUPS } from "@/data/salaryRankData";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 export default function SalaryRankCalculator() {
   const [salary, setSalary] = useState("");
@@ -263,6 +264,11 @@ export default function SalaryRankCalculator() {
                       <p className="text-muted-blue font-mono">12/99</p>
                     </div>
                   </div>
+                </div>
+
+                {/* 결과 인접 광고 */}
+                <div className="mt-4">
+                  <InArticleAd />
                 </div>
 
                 {/* 액션 버튼 */}

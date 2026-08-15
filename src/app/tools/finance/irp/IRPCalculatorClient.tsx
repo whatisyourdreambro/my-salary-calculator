@@ -5,6 +5,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
+import { CalcResultAd } from "@/components/AdPlacement";
 
 export default function IRPCalculatorClient() {
  const [salary, setSalary] = useState(50000000);
@@ -73,6 +74,9 @@ export default function IRPCalculatorClient() {
  공제 대상 납입액: {result.deductibleBase.toLocaleString('ko-KR')}원 × {(result.rate * 100).toFixed(1)}%
  </p>
  </motion.div>
+
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
 
  {/* 안내 */}
  <div className="mt-6 p-4 bg-canvas border border-canvas rounded-xl flex gap-3">

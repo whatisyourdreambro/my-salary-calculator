@@ -1,4 +1,5 @@
 import DepositCalculator from "@/components/calculators/DepositCalculator";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
@@ -34,6 +35,10 @@ export default function DepositCalculatorPage() {
  만기 수령액을 세금(15.4%)까지 고려하여 정확하게 계산합니다.
  </p>
  </div>
+ {/* 결과 영역이 공용 컴포넌트(홈에서도 사용) 내부라 직접 삽입 불가.
+ 페이지 끝 배치는 tools/layout 하단 InArticleAd와 연속 광고가 되어 금지 →
+ 첫 주요 섹션(헤더) 직후 배치 */}
+ <CalcResultAd />
  <DepositCalculator />
  </div>
  </div>

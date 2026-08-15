@@ -10,7 +10,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -200,6 +200,8 @@ export default function YearEndTaxSettlement2026Page() {
  </div>
  </section>
 
+ <CalcResultAd />
+
  {/* CTAs */}
  <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4">
  <Link
@@ -264,6 +266,8 @@ export default function YearEndTaxSettlement2026Page() {
  </Link>
  </div>
  </section>
+
+ <GuideMidAd />
 
  {/* FAQ */}
  <section className="mb-12">

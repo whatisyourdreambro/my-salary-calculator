@@ -8,7 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
-import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface GuidePageClientProps {
@@ -248,6 +248,9 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "large-portrait" }}
  />
+
+ {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 콘솔 유닛 발급 후 env 추가 시 자동 활성화 */}
+ <MultiplexAd />
 
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">

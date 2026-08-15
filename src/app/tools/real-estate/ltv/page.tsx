@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import LtvCalculator from "@/components/calculators/real-estate/LtvCalculator";
 import JsonLd from "@/components/JsonLd";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,
@@ -132,6 +133,9 @@ export default function LtvPage() {
         </header>
 
         <LtvCalculator />
+
+        {/* 결과 직하 광고 */}
+        <CalcResultAd />
 
         {/* 단계별 사용법 */}
         <section className="mt-12 mb-10">

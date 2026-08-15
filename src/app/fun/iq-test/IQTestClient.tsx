@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Brain, CheckCircle2, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import Link from "@/components/AppLink";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // 15 Logic Questions (Preserved)
 const questions = [
@@ -279,6 +280,11 @@ export default function IQTestClient() {
  title={`나의 멘사급 IQ 테스트 결과: ${score}점`}
  description={`상위 1%에 도전해보세요! #MoneySalary #IQTest`}
  />
+ </div>
+
+ {/* 결과 인접 광고 */}
+ <div className="mb-12">
+ <InArticleAd />
  </div>
 
  {/* Answers Section */}

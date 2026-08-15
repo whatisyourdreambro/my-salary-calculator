@@ -14,7 +14,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Calendar, Gift } from "lucide-react";
 import JanuaryBonusClient from "./Client";
 
@@ -143,6 +143,9 @@ export default function JanuaryBonusPage() {
                 다름.
               </li>
             </ol>
+
+            {/* 본문 중간 광고 */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               연말정산 일정표 (2026년)

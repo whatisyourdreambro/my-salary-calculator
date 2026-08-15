@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import DsrCalculator from "@/components/calculators/real-estate/DsrCalculator";
 import JsonLd from "@/components/JsonLd";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,
@@ -137,6 +138,9 @@ export default function DsrPage() {
         </header>
 
         <DsrCalculator />
+
+        {/* 결과 직하 광고 */}
+        <CalcResultAd />
 
         {/* 단계별 사용법 */}
         <section className="mt-12 mb-10">

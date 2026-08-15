@@ -20,7 +20,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Sparkles, Coins, AlertTriangle, Info } from "lucide-react";
 import SkHynixBonusClient from "./Client";
@@ -251,6 +251,11 @@ export default function SkHynixBonusPage() {
               </article>
             </div>
           </section>
+
+          {/* 정책 개요 ↔ 자사주 검토 섹션 사이 광고 */}
+          <div className="mt-8">
+            <GuideMidAd />
+          </div>
 
           {/* 자사주 전환 검토 보도 — 확정 아님 (2026-07-16) */}
           <section

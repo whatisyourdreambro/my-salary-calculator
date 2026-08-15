@@ -1,4 +1,5 @@
 import CagrCalculator from "@/components/calculators/finance/CagrCalculator";
+import { CalcResultAd } from "@/components/AdPlacement";
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
@@ -18,6 +19,8 @@ export default function CagrPage() {
  <p className="text-muted-blue">복리 효과를 고려한 진정한 투자 수익률</p>
  </div>
  <CagrCalculator />
+ {/* 결과 직하 광고 */}
+ <CalcResultAd />
  </div>
  <ToolPageContent path="/tools/finance/cagr" />
  </div>

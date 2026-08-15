@@ -16,7 +16,7 @@ import RelatedCompanies from "@/components/RelatedCompanies";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
-import { InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
@@ -199,6 +199,11 @@ export default function CompanyDetailPage({
  렌더. 표 숫자가 같은 페이지끼리 상호 링크 + "본 DB 수치 기준 동일" 명시로
  near-duplicate 판정 완화 (2026-08-07). 그룹 없으면 null. */}
  <CompanySalaryGroupNotice company={company} />
+
+ {/* 연봉표 직후 중간 광고 — 이 페이지에서 유일하게 GUIDE_MID 슬롯 미사용이었음 (Phase 1) */}
+ <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
+ <GuideMidAd />
+ </div>
 
  {/* 회사 고유 심층 지표 — 전국 순위·실질 시급·복지 가치·15년 누적 소득.
  회사마다 실제 값이 달라지는 카드로 thin content 판정 대응. 데이터 없는

@@ -7,6 +7,7 @@ import CountUp from "react-countup";
 import { Share2, Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import Link from "@/components/AppLink";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // 연봉 분포 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const RankChart = dynamic(() => import("@/components/charts/RankChart"), {
@@ -173,6 +174,9 @@ export default function RankClient() {
  * 통계 기반 자체 추정 모델 (실제 분포와 다를 수 있음)
  </div>
  </div>
+
+ {/* 결과 인접 광고 */}
+ <InArticleAd />
 
  {/* Stats Grid */}
  <div className="grid grid-cols-2 gap-6">

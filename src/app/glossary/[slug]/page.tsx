@@ -16,7 +16,12 @@ import {
  autoBreadcrumbLd,
  faqLd,
 } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import {
+ HomeTopAd,
+ InArticleAd,
+ GuideMidAd,
+ CalcResultAd,
+} from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -209,6 +214,10 @@ export default function GlossaryDetailPage({
  ))}
  </div>
  </section>
+
+ {/* 본문 소비 완료 지점 광고 — 관련 페이지 안내와 카테고리 다른 용어 사이.
+ 관련 용어가 없으면 쿠팡 배너와 연속 배치가 되므로 함께 생략 (연속 광고 금지 규칙) */}
+ {related.length > 0 && <CalcResultAd />}
 
  {related.length > 0 && (
  <section className="mb-10">
