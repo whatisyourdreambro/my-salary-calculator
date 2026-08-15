@@ -150,6 +150,13 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <Eye className="w-4 h-4" />
  <span>{guide.views.toLocaleString('ko-KR')} views</span>
  </div>
+ <div className="w-1 h-1 rounded-full bg-slate-300" />
+ {/* 상단 컴팩트 공유 — 본문 하단 ShareButtons(대표)와 별개 보조 UI */}
+ <ShareButtons
+ variant="compact"
+ title={guide.title}
+ contentType="guide"
+ />
  </div>
  </motion.div>
  </div>

@@ -221,6 +221,26 @@ export default function ShareButtons({
   const handleWebShare = async () => {
     trackShare("webshare", contentType);
     try {
+      // 결과 이미지가 있으면 이미지 파일까지 함께 공유 (카톡 사진·스토리 유입)
+      if (getShareImage) {
+        try {
+          const blob = await getShareImage();
+          if (blob) {
+            const file = new File([blob], "moneysalary.png", { type: "image/png" });
+            const nav = navigator as Navigator & {
+              canShare?: (data: { files: File[] }) => boolean;
+            };
+            if (nav.canShare?.({ files: [file] })) {
+              await nav.share({
+                files: [file],
+                title: shareTitle,
+                text: `${shareDesc}\n${shareUrl}`,
+              });
+              return;
+            }
+          }
+        } catch {}
+      }
       await navigator.share({ title: shareTitle, text: shareDesc, url: shareUrl });
     } catch {
       // 사용자가 공유 시트를 닫은 경우(AbortError) — 무시

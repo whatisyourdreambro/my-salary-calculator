@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
@@ -14,6 +14,7 @@ import JsonLd from "./JsonLd";
 import ShareSection from "./ShareSection";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
+import { SITE_CONFIG } from "@/lib/seo";
 
 interface Props {
  slug: string;
@@ -29,6 +30,7 @@ const formatNumber = (v: number, suffix?: string): string => {
 
 export default function SimpleCalculatorView({ slug }: Props) {
  const calc = getCalculatorBySlug(slug);
+ const resultCardRef = useRef<HTMLElement | null>(null);
  const [inputs, setInputs] = useState<Record<string, number>>(() => {
  if (!calc) return {};
  const init: Record<string, number> = {};
@@ -38,10 +40,64 @@ export default function SimpleCalculatorView({ slug }: Props) {
  return init;
  });
 
+ // 결과 재현 링크(?v=base64) 복원 — 공유받은 사람이 보낸 사람과 같은 결과를 봄.
+ // SSR 프리렌더는 기본값으로 렌더하고 마운트 후 적용 (hydration mismatch 회피).
+ useEffect(() => {
+ if (!calc) return;
+ try {
+ const v = new URLSearchParams(window.location.search).get("v");
+ if (!v) return;
+ const data = JSON.parse(atob(v)) as Record<string, unknown>;
+ const restored: Record<string, number> = {};
+ let valid = false;
+ calc.fields.forEach((f) => {
+ const n = Number(data[f.name]);
+ if (Number.isFinite(n) && n >= 0) {
+ restored[f.name] = n;
+ valid = true;
+ }
+ });
+ if (valid) setInputs((prev) => ({ ...prev, ...restored }));
+ } catch {
+ // 잘못된 공유 링크 — 기본값 유지
+ }
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [slug]);
+
  const result = useMemo(() => {
  if (!calc) return null;
  return calc.compute(inputs);
  }, [calc, inputs]);
+
+ // 입력이 기본값 그대로면 깔끔한 canonical, 바꿨으면 결과 재현 링크로 공유
+ const shareUrl = useMemo(() => {
+ const base = `${SITE_CONFIG.url}/calc/${slug}`;
+ if (!calc) return base;
+ const isDefault = calc.fields.every((f) => inputs[f.name] === f.defaultValue);
+ if (isDefault) return base;
+ try {
+ return `${base}?v=${btoa(JSON.stringify(inputs))}`;
+ } catch {
+ return base;
+ }
+ }, [calc, slug, inputs]);
+
+ // 결과 카드 캡처 → 인스타·시스템 공유에서 이미지 파일로 전송
+ const getShareImage = async (): Promise<Blob | null> => {
+ if (!resultCardRef.current) return null;
+ try {
+ const { default: html2canvas } = await import("html2canvas");
+ const canvas = await html2canvas(resultCardRef.current, {
+ backgroundColor: "#0145F2",
+ scale: 2,
+ });
+ return await new Promise<Blob | null>((resolve) =>
+ canvas.toBlob((blob) => resolve(blob), "image/png")
+ );
+ } catch {
+ return null;
+ }
+ };
 
  if (!calc || !result) {
  return (
@@ -108,7 +164,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </div>
  </section>
 
- <section className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
+ <section ref={resultCardRef} className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
  <p className="text-xs font-bold opacity-90 mb-2">{result.primary.label}</p>
  <p className="text-4xl sm:text-5xl font-black tracking-tight tabular-nums mb-6">
  {formatNumber(result.primary.value, result.primary.suffix)}
@@ -132,11 +188,14 @@ export default function SimpleCalculatorView({ slug }: Props) {
  )}
  </section>
 
- {/* 결과 직하 = 공유 의도가 생기는 지점. 광고(CalcResultAd)보다 위에 배치 */}
+ {/* 결과 직하 = 공유 의도가 생기는 지점. 광고(CalcResultAd)보다 위에 배치.
+     제목에 실시간 결과 수치 포함 + 입력 재현 링크 + 결과 카드 이미지 공유 */}
  <ShareSection
  contentType="calc_result"
- title={calc.title}
+ title={`${calc.title} — ${result.primary.label} ${formatNumber(result.primary.value, result.primary.suffix)}`}
  description={calc.description}
+ url={shareUrl}
+ getShareImage={getShareImage}
  className="mb-6"
  />
 

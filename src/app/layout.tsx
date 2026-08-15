@@ -11,6 +11,7 @@ import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import WebVitals from "@/components/WebVitals";
 import KakaoScript from "@/components/KakaoScript";
+import CopyAttribution from "@/components/CopyAttribution";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 // Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
@@ -160,6 +161,9 @@ export default function RootLayout({
 
         {/* 실사용자 Core Web Vitals → GA4 (속도 개선 효과 측정) */}
         <WebVitals />
+
+        {/* 본문 100자+ 복사 시 출처 링크 자동 첨부 (펌글 → 자연 유입) */}
+        <CopyAttribution />
 
         {/* Google Analytics 4 */}
         <Script

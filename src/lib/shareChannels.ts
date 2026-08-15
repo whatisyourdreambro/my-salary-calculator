@@ -110,15 +110,32 @@ interface KakaoSdkGlobal {
   Share?: { sendDefault: (settings: Record<string, unknown>) => void };
 }
 
+const HOME_URL = "https://www.moneysalary.com";
+
 /**
  * Kakao SDK 초기화 시 피드 공유창 오픈 (ShareButtons·FloatingShareBar 공용).
  * false 반환 시 호출측이 폴백(링크 복사) 처리한다.
+ * 버튼 2개: [자세히 보기 → 공유 페이지] + [내 연봉 계산하기 → 홈]
+ * — 공유 1건당 유입 접점을 2배로 (홈 공유 시엔 중복이라 1개만).
  */
 export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
   if (typeof window === "undefined") return false;
   const kakao = (window as unknown as { Kakao?: KakaoSdkGlobal }).Kakao;
   if (!kakao?.isInitialized?.()) return false;
   try {
+    const buttons: Record<string, unknown>[] = [
+      {
+        title: p.buttonTitle ?? "자세히 보기",
+        link: { mobileWebUrl: p.url, webUrl: p.url },
+      },
+    ];
+    const isHome = p.url.replace(/\/+$/, "") === HOME_URL;
+    if (!isHome) {
+      buttons.push({
+        title: "내 연봉 계산하기",
+        link: { mobileWebUrl: HOME_URL, webUrl: HOME_URL },
+      });
+    }
     kakao.Share?.sendDefault({
       objectType: "feed",
       content: {
@@ -127,12 +144,7 @@ export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
         imageUrl: p.imageUrl,
         link: { mobileWebUrl: p.url, webUrl: p.url },
       },
-      buttons: [
-        {
-          title: p.buttonTitle ?? "자세히 보기",
-          link: { mobileWebUrl: p.url, webUrl: p.url },
-        },
-      ],
+      buttons,
     });
     return true;
   } catch {

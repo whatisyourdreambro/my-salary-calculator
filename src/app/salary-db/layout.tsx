@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
+import FloatingShareBar from "@/components/FloatingShareBar";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "회사별 연봉 데이터베이스 — 430+ 기업 평균 연봉·복지·워라밸",
@@ -33,6 +34,9 @@ export default function SalaryDbLayout({ children }: { children: React.ReactNode
      layout 자동 광고로 회사 검색 트래픽 수익 회복. /salary-db/submit 도 포함되지만
      폼 페이지라 별 영향 없음. */}
  <PageFooterAds maxWidth="5xl" />
+ {/* "{회사명} 연봉" 검색 = 최대 유입 엔진. 히어로 공유가 스크롤 밖으로
+     사라진 뒤에도 모바일에서 공유 접점 유지 (광고·PWA 배너 감지 시 자동 숨김) */}
+ <FloatingShareBar />
  </>
  );
 }
