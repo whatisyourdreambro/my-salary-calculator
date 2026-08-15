@@ -669,3 +669,12 @@ a:not([class]) {
 a:not([class]):hover {
   text-decoration-thickness: 2px;
 }
+
+/* ── SNS 공유 토스트 등장 (ShareButtons v2 — framer-motion 대체) ──── */
+@keyframes share-toast-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.share-toast {
+  animation: share-toast-in 0.25s ease-out both;
+}

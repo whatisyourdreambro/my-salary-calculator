@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import WebVitals from "@/components/WebVitals";
+import KakaoScript from "@/components/KakaoScript";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 
 // Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
@@ -181,6 +182,9 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+
+        {/* Kakao 공유 SDK — NEXT_PUBLIC_KAKAO_JS_KEY 있을 때만 로드 (없으면 null) */}
+        <KakaoScript />
       </body>
     </html>
   );
