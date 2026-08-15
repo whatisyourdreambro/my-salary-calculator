@@ -204,6 +204,464 @@ const nextConfig = {
         destination: "/salary-db",
         permanent: true,
       },
+      // ─────────────────────────────────────────────────────────────────
+      // 레거시 가이드 90건 301 (2026-08-15 수익 개선 Phase 2):
+      // 과거 삭제된 /guides/* URL(빈 디렉터리 잔재 91개 중 살아있는
+      // nurse-salary 1건 제외)을 주제 일치 페이지로 영구 리디렉션.
+      // 전 타깃은 .next 빌드 산출물로 실존 검증 완료. 페이지 내
+      // permanentRedirect는 CF Pages 정적 라우트에서 미동작(실측)이라
+      // 반드시 이 config 경로만 사용한다.
+      // ─────────────────────────────────────────────────────────────────
+      {
+        source: "/guides/2025-changing-tax-laws-what-s-favorable-for-me",
+        destination: "/tax-changes-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/2025-large-corp-new-hire-salary-top10",
+        destination: "/new-employee-salary-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/2025-promising-jobs-top-10",
+        destination: "/guides/industry-best-jobs-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/2025-salary-guide",
+        destination: "/guides/salary-guide-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/4-day-week",
+        destination: "/hub/career",
+        permanent: true,
+      },
+      {
+        source: "/guides/bitcoin-crypto-investment-is-now-the-time",
+        destination: "/guides/bitcoin-halving-strategy",
+        permanent: true,
+      },
+      {
+        source: "/guides/bonus-payment-criteria-why-is-my-company-s-low",
+        destination: "/guides/performance-pay-complete-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/bonus-tax",
+        destination: "/guides/bonus-tax-rate",
+        permanent: true,
+      },
+      {
+        source: "/guides/burnout-syndrome-what-office-workers-must-know",
+        destination: "/guides/burnout-syndrome",
+        permanent: true,
+      },
+      {
+        source: "/guides/car-tax-how-much-can-i-save-by-paying-annually",
+        destination: "/guides/car-tax-annual-payment",
+        permanent: true,
+      },
+      {
+        source: "/guides/career-change-can-non-majors-become-it-developers",
+        destination: "/guides/career-change-mid-level",
+        permanent: true,
+      },
+      {
+        source: "/guides/career-description-key-to-job-change-success",
+        destination: "/guides/resume-writing-tips",
+        permanent: true,
+      },
+      {
+        source: "/guides/child-tax-credit-benefits-not-to-miss",
+        destination: "/calc/child-deduction",
+        permanent: true,
+      },
+      {
+        source: "/guides/civil-servant-salary",
+        destination: "/job/civil-servant-9",
+        permanent: true,
+      },
+      {
+        source: "/guides/compound-interest",
+        destination: "/tools/finance/compound",
+        permanent: true,
+      },
+      {
+        source: "/guides/comprehensive-income-tax-filing-complete-guide-for-n-jobbers",
+        destination: "/guides/n-job-tax-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/contract-worker-salary-negotiation-for-permanent-conversion",
+        destination: "/guides/salary-negotiation-script-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/didimdol-vs-bogeumjari",
+        destination: "/guides/newlywed-didimdol-bomgijari-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/dividend-stock-investment-how-to-receive-regularly-like-rent",
+        destination: "/guides/dividend-vs-growth-tax-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/dollar-cost-averaging-how-to-maximize-compound-interest",
+        destination: "/calc/dollar-cost-average",
+        permanent: true,
+      },
+      {
+        source: "/guides/donation-tax-credit-year-end-tax-settlement-효자-item",
+        destination: "/guides/donation-tax-credit",
+        permanent: true,
+      },
+      {
+        source: "/guides/education-expense-tax-credit-are-student-loans-deductible",
+        destination: "/guides/child-education-deduction-limit-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/etf-investment-from-stock-selection-to-trading-strategy",
+        destination: "/guides/etf-investment-starter",
+        permanent: true,
+      },
+      {
+        source: "/guides/exchange-rate-deep-dive",
+        destination: "/guides/currency-exchange-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/exchange-rate-impact",
+        destination: "/calc/exchange-impact-quick",
+        permanent: true,
+      },
+      {
+        source: "/guides/first-job-investment",
+        destination: "/guides/first-job-financial-setup",
+        permanent: true,
+      },
+      {
+        source: "/guides/foreign-company-salary-how-different-from-domestic",
+        destination: "/guides/foreign-company-korea-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/four-major-insurances",
+        destination: "/guides/four-major-insurance-complete",
+        permanent: true,
+      },
+      {
+        source: "/guides/freelancer-hourly-rate-guide-to-setting-fair-price",
+        destination: "/calc/hourly-billing-rate",
+        permanent: true,
+      },
+      {
+        source: "/guides/gold-investment-charm-and-methods-of-safe-haven-assets",
+        destination: "/guides/gold-investment-methods",
+        permanent: true,
+      },
+      {
+        source: "/guides/holiday-allowance",
+        destination: "/weekly-holiday-allowance-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/housing-subscription-savings-how-to-make-a-1st-priority-account",
+        destination: "/guides/subscription-account-tips",
+        permanent: true,
+      },
+      {
+        source: "/guides/housing-subscription-savings-priority",
+        destination: "/calc/housing-subscription",
+        permanent: true,
+      },
+      {
+        source: "/guides/how-to-find-a-company-with-good-work-life-balance",
+        destination: "/guides/employer-blacklist-check-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/how-to-read-economic-indicators-utilizing-for-investment",
+        destination: "/hub/invest",
+        permanent: true,
+      },
+      {
+        source: "/guides/hyundai-salary",
+        destination: "/salary-db/hyundai",
+        permanent: true,
+      },
+      {
+        source: "/guides/industry-trends-2025",
+        destination: "/industry",
+        permanent: true,
+      },
+      {
+        source: "/guides/inheritance-tax-vs-gift-tax-preparing-for-asset-transfer",
+        destination: "/guides/inheritance-tax-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/investment-psychology-how-to-overcome-fear-and-greed",
+        destination: "/hub/invest",
+        permanent: true,
+      },
+      {
+        source: "/guides/isa-account-all-about-the-all-purpose-tax-saving-account",
+        destination: "/guides/isa-account-guide",
+        permanent: true,
+      },
+      {
+        source: "/guides/it-developer-salary-comparison-by-role",
+        destination: "/job/software-engineer",
+        permanent: true,
+      },
+      {
+        source: "/guides/jeonse-deposit-return-guarantee-should-i-join",
+        destination: "/guides/rent-deposit-protection",
+        permanent: true,
+      },
+      {
+        source: "/guides/job-change-success-strategy-200-percent-use-of-headhunters",
+        destination: "/guides/job-change-salary-jump-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/job-competency-enhancement-online-courses-vs-study-groups",
+        destination: "/hub/career",
+        permanent: true,
+      },
+      {
+        source: "/guides/linkedin-profile-how-to-make-headhunters-contact-you",
+        destination: "/guides/linkedin-networking",
+        permanent: true,
+      },
+      {
+        source: "/guides/medical-expense-tax-credit-how-to-keep-receipts-carefully",
+        destination: "/medical-tax-credit-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/minimum-wage",
+        destination: "/minimum-wage-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/naver-vs-kakao",
+        destination: "/salary-db/compare/naver-vs-kakao",
+        permanent: true,
+      },
+      {
+        source: "/guides/nekarakubae-salary",
+        destination: "/guides/nekarakubae-salary-truth",
+        permanent: true,
+      },
+      {
+        source: "/guides/non-salary-allowances-benefits-not-to-miss",
+        destination: "/guides/tax-free-meal-commute-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/nurse-5yr-salary",
+        destination: "/job/nurse",
+        permanent: true,
+      },
+      {
+        source: "/guides/office-worker-self-development-time-management-know-how",
+        destination: "/hub/career",
+        permanent: true,
+      },
+      {
+        source: "/guides/overseas-bond-investment-pursuing-stable-returns",
+        destination: "/guides/us-treasury-bond",
+        permanent: true,
+      },
+      {
+        source: "/guides/p2p-investment-temptation-and-risk-of-high-returns",
+        destination: "/guides/p2p-investment-risk",
+        permanent: true,
+      },
+      {
+        source: "/guides/pension-savings-fund-vs-irp-which-is-right-for-me",
+        destination: "/guides/irp-pension-isa-comparison-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/portfolio-construction-creating-my-own-investment-strategy",
+        destination: "/calc/portfolio-allocation",
+        permanent: true,
+      },
+      {
+        source: "/guides/portfolio-secret-to-increasing-acceptance-rate",
+        destination: "/guides/resume-writing-tips",
+        permanent: true,
+      },
+      {
+        source: "/guides/property-tax-relationship-between-public-housing-price-and-tax",
+        destination: "/property-holding-tax-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/public-enterprise-salary-reality-in-blind-recruitment-era",
+        destination: "/guides/public-company-salary-ranking-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/re-employment-after-resignation-unemployment-benefits-and-career-management",
+        destination: "/unemployment-benefit",
+        permanent: true,
+      },
+      {
+        source: "/guides/real-estate-investment-apartment-vs-officetel-vs-commercial",
+        destination: "/guides/officetel-investment",
+        permanent: true,
+      },
+      {
+        source: "/guides/retirement-pension-dc-vs-db-which-is-better-for-me",
+        destination: "/retirement-pension-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/road-to-100m-part1-tax",
+        destination: "/hub/tax-saving",
+        permanent: true,
+      },
+      {
+        source: "/guides/road-to-100m-part2-sidejob",
+        destination: "/guides/side-project-income",
+        permanent: true,
+      },
+      {
+        source: "/guides/road-to-100m-part3-invest",
+        destination: "/hub/invest",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-100m-net-income-how-to-avoid-tax-bomb",
+        destination: "/salary/100000000",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-30m-net-income-and-financial-strategy",
+        destination: "/salary/30000000",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-4500",
+        destination: "/salary/45000000",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-60m-net-income-and-tax-reduction",
+        destination: "/salary/60000000",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-80m-net-income-and-asset-growth-strategy",
+        destination: "/salary/80000000",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-negotiation-in-interview-how-to-succeed",
+        destination: "/guides/salary-negotiation-real-scripts-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-negotiation",
+        destination: "/guides/salary-negotiation-secret",
+        permanent: true,
+      },
+      {
+        source: "/guides/sales-salary-secret-to-earning-100m-plus-with-incentives",
+        destination: "/guides/performance-pay-complete-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/samsung-vs-hynix",
+        destination: "/guides/samsung-vs-hynix-employee-comparison",
+        permanent: true,
+      },
+      {
+        source: "/guides/severance-pay",
+        destination: "/tools/finance/severance",
+        permanent: true,
+      },
+      {
+        source: "/guides/severance-tax",
+        destination: "/calc/retirement-income-tax-quick",
+        permanent: true,
+      },
+      {
+        source: "/guides/side-projects-shortcut-to-career-growth",
+        destination: "/guides/side-project-income",
+        permanent: true,
+      },
+      {
+        source: "/guides/sme-salary-how-to-earn-as-much-as-large-corps",
+        destination: "/guides/big-corp-vs-mid-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/startup-salary-dream-of-stock-option-jackpot",
+        destination: "/guides/stock-options-rsu-valuation",
+        permanent: true,
+      },
+      {
+        source: "/guides/stock-investment-first-steps-for-beginners",
+        destination: "/guides/stock-investment-beginner-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/stock-transfer-income-tax-must-read-for-overseas-investors",
+        destination: "/guides/capital-gains-tax-stock",
+        permanent: true,
+      },
+      {
+        source: "/guides/subscription-lottery-winning-strategy-secret-to-increasing-points",
+        destination: "/guides/youth-subscription-60points-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/unemployment-benefits",
+        destination: "/unemployment-benefit",
+        permanent: true,
+      },
+      {
+        source: "/guides/us-stock-investment-how-to-deal-with-exchange-rate-fluctuations",
+        destination: "/guides/dollar-investment",
+        permanent: true,
+      },
+      {
+        source: "/guides/value-investing-vs-growth-investing-which-style-is-right-for-me",
+        destination: "/hub/invest",
+        permanent: true,
+      },
+      {
+        source: "/guides/vat-what-sole-proprietors-must-know",
+        destination: "/guides/vat-filing-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/workplace-bullying-how-to-deal-with-it-wisely",
+        destination: "/guides/sexual-harassment-protection-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/year-end-tax-monthly-rent",
+        destination: "/guides/monthly-rent-tax-credit",
+        permanent: true,
+      },
+      {
+        source: "/guides/year-end-tax-settlement",
+        destination: "/year-end-tax",
+        permanent: true,
+      },
+      {
+        source: "/guides/yef-2026-preview",
+        destination: "/guides/hometax-year-end-preview-2026",
+        permanent: true,
+      },
     ];
   },
   async headers() {

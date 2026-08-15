@@ -21,6 +21,31 @@ import { autumn2026Guides } from "@/lib/guides/autumn-2026-season";
 import { companySalaryDeepdive2026 } from "@/lib/guides/company-salary-deepdive-2026";
 import { jobSalaryDeepdive2026 } from "@/lib/guides/job-salary-deepdive-2026";
 import { financeRpm2026Guides } from "@/lib/guides/finance-rpm-2026";
+import { legacyRewrite1 } from "@/lib/guides/legacy-rewrite-1";
+import { legacyRewrite2 } from "@/lib/guides/legacy-rewrite-2";
+import { legacyRewrite3 } from "@/lib/guides/legacy-rewrite-3";
+import { legacyRewrite4 } from "@/lib/guides/legacy-rewrite-4";
+import { legacyRewrite5 } from "@/lib/guides/legacy-rewrite-5";
+import { legacyRewrite6 } from "@/lib/guides/legacy-rewrite-6";
+import { legacyRewrite7 } from "@/lib/guides/legacy-rewrite-7";
+import { legacyRewrite8 } from "@/lib/guides/legacy-rewrite-8";
+import { legacyRewrite9 } from "@/lib/guides/legacy-rewrite-9";
+import { legacyRewrite10 } from "@/lib/guides/legacy-rewrite-10";
+
+// 레거시 rawGuides 50편의 고유 본문 (2026-08-15 재작성 — 전편 출처 검증).
+// generateExpertContent 템플릿 본문을 대체한다.
+const legacyRewriteContent: Record<string, string> = {
+  ...legacyRewrite1,
+  ...legacyRewrite2,
+  ...legacyRewrite3,
+  ...legacyRewrite4,
+  ...legacyRewrite5,
+  ...legacyRewrite6,
+  ...legacyRewrite7,
+  ...legacyRewrite8,
+  ...legacyRewrite9,
+  ...legacyRewrite10,
+};
 
 export type GuideLang = 'ko' | 'en';
 
@@ -486,13 +511,20 @@ const allRawGuides = [
 
 // Generate the final guides array with content
 // — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
-// — 없으면 generateExpertContent fallback (legacy boilerplate)
+// — 없으면 legacyRewriteContent(2026-08-15 재작성 본문) 사용
+// — 그마저 없으면 generateExpertContent fallback (남아있으면 안 되는 상태)
+// — 재작성 본문 사용 시 publishedDate 를 실제 갱신일로 정정 (repo 관행:
+//   발행일 = 실제 갱신일. salary-guide-2026 의 2026-07-06 정정 선례)
 // — lang 미지정 가이드는 'ko'로 정규화 (기존 50개 호환)
-export const guides: Guide[] = (allRawGuides as any[]).map(guide => ({
+export const guides: Guide[] = (allRawGuides as any[]).map(guide => {
+ const rewritten = !guide.content && legacyRewriteContent[guide.slug];
+ return {
  ...guide,
  lang: (guide.lang as GuideLang | undefined) ?? 'ko',
- content: guide.content || generateExpertContent(guide.title, guide.category, guide.description, guide.tags)
-}));
+ content: guide.content || legacyRewriteContent[guide.slug] || generateExpertContent(guide.title, guide.category, guide.description, guide.tags),
+ ...(rewritten ? { publishedDate: "2026-08-15" } : {}),
+ };
+});
 
 /** 한국어 가이드만 (기존 /guides 라우트용) */
 export const koGuides: Guide[] = guides.filter(g => g.lang === 'ko');
