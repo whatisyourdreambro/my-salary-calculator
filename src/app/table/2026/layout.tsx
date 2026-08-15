@@ -1,5 +1,6 @@
 import { GuideMidAd } from "@/components/AdPlacement";
 import PageFooterAds from "@/components/PageFooterAds";
+import AutoShareSection from "@/components/AutoShareSection";
 import TableTabsNav from "./TableTabsNav";
 
 export default function Table2026Layout({ children }: { children: React.ReactNode }) {
@@ -14,6 +15,7 @@ export default function Table2026Layout({ children }: { children: React.ReactNod
         </div>
       </div>
       {children}
+      <AutoShareSection contentType="page" maxWidth="5xl" />
       <PageFooterAds maxWidth="5xl" />
     </>
   );

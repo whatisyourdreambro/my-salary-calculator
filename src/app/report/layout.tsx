@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "내 재무 리포트 — 저장한 연봉·자산 분석",
@@ -15,5 +16,10 @@ export default function ReportLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <AutoShareSection contentType="page" maxWidth="3xl" />
+    </>
+  );
 }

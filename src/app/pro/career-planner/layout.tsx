@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "커리어 플래너 - 승진·이직 시나리오별 연봉 시뮬",
@@ -10,5 +11,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CareerPlannerLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ {children}
+ <AutoShareSection contentType="tool" maxWidth="4xl" />
+ </>
+ );
 }

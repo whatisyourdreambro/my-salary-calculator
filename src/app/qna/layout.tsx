@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "연봉·세금 자주 묻는 질문 - 4대보험·연말정산 Q&A",
@@ -16,6 +17,7 @@ export default function QnaLayout({ children }: { children: React.ReactNode }) {
  return (
  <>
  {children}
+ <AutoShareSection contentType="page" maxWidth="3xl" />
  {/* 56개 Q&A 동적 + 메인 = long-tail 검색 트래픽 수익 회복 */}
  <PageFooterAds maxWidth="3xl" />
  </>

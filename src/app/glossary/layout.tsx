@@ -4,6 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { glossaryData } from "@/data/glossaryData";
 import PageFooterAds from "@/components/PageFooterAds";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "금융 용어 사전 - 4대보험·세금·재테크 핵심 용어 100+",
@@ -43,6 +44,7 @@ export default function GlossaryLayout({ children }: { children: React.ReactNode
  ]}
  />
  {children}
+ <AutoShareSection contentType="page" maxWidth="3xl" />
  {/* 58개 용어 동적 + 메인 = 정의 검색 트래픽 광고 적용 */}
  <PageFooterAds maxWidth="3xl" />
  </>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "연봉 MBTI 테스트 — 나의 머니 성향 유형 분석",
@@ -20,5 +21,10 @@ export default function MbtiSalaryLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <AutoShareSection contentType="fun" maxWidth="3xl" />
+    </>
+  );
 }

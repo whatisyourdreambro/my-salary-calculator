@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "자동차 할부 계산기 - 월 납부액·잔금·총 이자 (2026)",
@@ -17,5 +18,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CarLoanLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ {children}
+ <AutoShareSection contentType="tool" maxWidth="4xl" />
+ </>
+ );
 }

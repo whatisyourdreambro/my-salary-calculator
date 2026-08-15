@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "FIRE 조기은퇴 계산기 - 경제적 자유 시뮬레이션 (2026)",
@@ -17,5 +18,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function FireCalculatorLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ {children}
+ <AutoShareSection contentType="tool" maxWidth="4xl" />
+ </>
+ );
 }

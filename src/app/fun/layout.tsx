@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import AutoBreadcrumb from "@/components/AutoBreadcrumb";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = {
   // 카테고리 단위 robots 기본값 — 개별 page.tsx에서 override 가능
@@ -25,6 +26,8 @@ export default function FunLayout({ children }: { children: React.ReactNode }) {
     <>
       <AutoBreadcrumb />
       {children}
+      {/* 페이지에 인라인 공유 버튼이 없을 때만 나타나는 fallback (광고 블록 앞) */}
+      <AutoShareSection contentType="fun" maxWidth="3xl" />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="my-6">
           <CalcResultAd />

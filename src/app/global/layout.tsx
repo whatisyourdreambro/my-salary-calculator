@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import AutoShareSection from "@/components/AutoShareSection";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -40,6 +41,7 @@ export default function GlobalLayout({
         ]}
       />
       {children}
+      <AutoShareSection contentType="tool" maxWidth="5xl" />
     </>
   );
 }

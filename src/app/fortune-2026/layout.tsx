@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 운세 — 직장인 재물·연봉 운세 한 번에",
@@ -10,5 +11,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function Fortune2026Layout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ {children}
+ <AutoShareSection contentType="fun" maxWidth="3xl" />
+ </>
+ );
 }

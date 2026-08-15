@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
+import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "회사별 연봉 데이터베이스 — 430+ 기업 평균 연봉·복지·워라밸",
@@ -26,6 +27,8 @@ export default function SalaryDbLayout({ children }: { children: React.ReactNode
  return (
  <>
  {children}
+ {/* 회사 상세([id])·비교는 자체 공유 UI 보유(자동 억제) — 메인·랭킹 등만 노출 */}
+ <AutoShareSection contentType="company" maxWidth="5xl" />
  {/* 회사 페이지(/salary-db/[id]) 는 자체 광고 풍부하지만 메인·비교 페이지는 부족.
      layout 자동 광고로 회사 검색 트래픽 수익 회복. /salary-db/submit 도 포함되지만
      폼 페이지라 별 영향 없음. */}
