@@ -194,6 +194,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/civil-servant-pay-2026',
  '/basic-pension-2026',
  '/year-end-tax-mid-resign',
+ // 시즌 선점 2종 (2026-08-16 3차) — 추석 상여금(9월 피크)·2027 공무원 봉급 전망(예산안~확정)
+ '/chuseok-bonus-2026',
+ '/civil-servant-pay-2027',
  ];
 
  // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·

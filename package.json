@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",

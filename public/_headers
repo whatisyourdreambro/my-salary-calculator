@@ -40,3 +40,6 @@
 
 /icon-maskable-512.png
   Cache-Control: public, max-age=31536000, immutable
+
+/b112e39a5933ca97201c83a7c5d7d91e.txt
+  Cache-Control: public, max-age=86400
