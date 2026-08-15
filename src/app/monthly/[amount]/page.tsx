@@ -17,6 +17,7 @@ import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 // InArticleAd 는 SalaryResultCard 내부(결과 직하)가 담당 — 여기서 또 쓰면 dedup 사망
 import { CalcResultAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
@@ -349,6 +350,8 @@ export default function MonthlyPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        <ShareSection contentType="salary_result" className="mt-8" />
 
         <div className="mt-8">
           <CoupangBanner

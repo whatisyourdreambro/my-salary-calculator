@@ -7,6 +7,7 @@ import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -229,6 +230,8 @@ export default function CareerStages2026Page() {
  </section>
 
  <RelatedCalculators currentPath="/career-stages-2026" />
+
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
 
  <PageFooterAds maxWidth="4xl" />

@@ -5,6 +5,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import PageFooterAds from "@/components/PageFooterAds";
 import { CalcResultAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   breadcrumbLd,
@@ -625,6 +626,10 @@ export default function HomeLoanPage() {
           2단계)과 은행·상품·신용 상태에 따라 실제 한도·금리가 다를 수 있어
           사전 상담을 권장합니다.
         </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ShareSection contentType="calc_result" />
       </div>
 
       <PageFooterAds maxWidth="4xl" />

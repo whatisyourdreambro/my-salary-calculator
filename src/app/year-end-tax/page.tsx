@@ -7,6 +7,7 @@ import YearEndTaxCalculator from "@/components/YearEndTaxCalculator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
@@ -208,6 +209,8 @@ export default function YearEndTaxPage() {
  ))}
  </div>
  </div>
+
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
 
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}

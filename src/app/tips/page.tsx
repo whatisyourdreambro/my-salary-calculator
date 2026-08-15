@@ -4,6 +4,7 @@ import Link from "@/components/AppLink";
 import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -159,6 +160,8 @@ export default function TipsPage() {
  ))}
 
  {/* Bottom Ad */}
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />

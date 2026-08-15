@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import EarnedIncomeCreditContent from "./EarnedIncomeCreditContent";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd, softwareApplicationLd } from "@/lib/structuredData";
 
@@ -75,6 +76,9 @@ export default function EarnedIncomeCreditPage() {
    <JsonLd data={faq} />
    <JsonLd data={app} />
    <EarnedIncomeCreditContent />
+   <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <ShareSection contentType="tool" />
+   </div>
   </main>
  );
 }

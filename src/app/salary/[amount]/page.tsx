@@ -11,6 +11,7 @@ import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
@@ -340,6 +341,7 @@ export default function SalaryAmountPage({ params }: Props) {
  limit={6}
  title="이 연봉대의 실제 회사들"
  />
+ <ShareSection contentType="salary_result" className="mt-8" />
  </div>
  </div>
  </div>

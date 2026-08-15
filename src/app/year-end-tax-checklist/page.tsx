@@ -6,6 +6,7 @@ import Link from "@/components/AppLink";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
@@ -311,6 +312,8 @@ export default function YearEndTaxChecklistPage() {
  ))}
  </div>
  </section>
+
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
 
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}

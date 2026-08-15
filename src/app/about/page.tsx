@@ -3,6 +3,7 @@ import Link from "@/components/AppLink";
 import { Calculator, Database, Shield, ExternalLink, Mail } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import ShareSection from "@/components/ShareSection";
 import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -208,6 +209,8 @@ export default function AboutPage() {
  </Link>
  </div>
  </section>
+
+ <ShareSection contentType="page" className="mt-12" />
 
  <div className="mt-16 pt-8 border-t border-canvas-200 text-center text-xs text-faint-blue">
  <p>© {new Date().getFullYear()} 머니샐러리 — 모든 콘텐츠는 정보 제공 목적입니다.</p>
