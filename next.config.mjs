@@ -752,6 +752,7 @@ const nextConfig = {
       ...[
         "/sitemap.xml",
         "/rss.xml",
+        "/rss-companies.xml",
         "/robots.txt",
         "/icon",
         "/apple-icon",
