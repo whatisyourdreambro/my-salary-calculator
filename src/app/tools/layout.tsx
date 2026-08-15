@@ -6,6 +6,8 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import CalcFunnelTracker from "@/components/CalcFunnelTracker";
+import AutoShareSection from "@/components/AutoShareSection";
+import FloatingShareBar from "@/components/FloatingShareBar";
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +15,8 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       {/* calc_start → calc_submit 퍼널 계측 (전체 /tools/* 공통) */}
       <CalcFunnelTracker />
       {children}
+      {/* 페이지에 인라인 공유 버튼이 없을 때만 나타나는 fallback (광고 블록 앞) */}
+      <AutoShareSection contentType="tool" maxWidth="5xl" />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="my-6">
           <InArticleAd />
@@ -25,6 +29,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
         </div>
         <HomeTopAd />
       </div>
+      <FloatingShareBar />
     </>
   );
 }

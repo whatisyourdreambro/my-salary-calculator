@@ -24,16 +24,10 @@ import {
   SHARE_CHANNELS,
   channelLabel,
   openShareWindow,
+  tryKakaoFeedShare,
   type ShareChannelId,
 } from "@/lib/shareChannels";
 import { registerPrimary } from "@/lib/shareRegistry";
-
-interface KakaoSdk {
-  isInitialized?: () => boolean;
-  Share?: {
-    sendDefault: (settings: Record<string, unknown>) => void;
-  };
-}
 
 interface ShareButtonsProps {
   url?: string;
@@ -213,27 +207,14 @@ export default function ShareButtons({
   const handleKakaoShare = async () => {
     trackShare("kakao", contentType);
     // Kakao JS SDK 가 초기화돼 있으면 인앱 공유, 아니면 링크 복사로 폴백.
-    const kakao = (window as unknown as { Kakao?: KakaoSdk }).Kakao;
-    if (kakao?.isInitialized?.()) {
-      try {
-        kakao.Share?.sendDefault({
-          objectType: "feed",
-          content: {
-            title: shareTitle,
-            description: shareDesc,
-            imageUrl: shareImage,
-            link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
-          },
-          buttons: [
-            {
-              title: locale === "en" ? "View" : "자세히 보기",
-              link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
-            },
-          ],
-        });
-        return;
-      } catch {}
-    }
+    const opened = tryKakaoFeedShare({
+      url: shareUrl,
+      title: shareTitle,
+      description: shareDesc,
+      imageUrl: shareImage,
+      buttonTitle: locale === "en" ? "View" : "자세히 보기",
+    });
+    if (opened) return;
     await copyToClipboard(`${shareTitle}\n${shareUrl}`, S.kakaoCopied, S.kakaoCopyFail);
   };
 

@@ -11,6 +11,7 @@ import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 import { CalcResultAd, GuideMidAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
+import ShareSection from "./ShareSection";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
 
@@ -130,6 +131,14 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </p>
  )}
  </section>
+
+ {/* 결과 직하 = 공유 의도가 생기는 지점. 광고(CalcResultAd)보다 위에 배치 */}
+ <ShareSection
+ contentType="calc_result"
+ title={calc.title}
+ description={calc.description}
+ className="mb-6"
+ />
 
  <CalcResultAd />
 

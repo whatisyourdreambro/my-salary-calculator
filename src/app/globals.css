@@ -678,3 +678,12 @@ a:not([class]):hover {
 .share-toast {
   animation: share-toast-in 0.25s ease-out both;
 }
+
+/* ── 모바일 떠있는 공유 pill 등장 (FloatingShareBar) ─────────────── */
+@keyframes share-bar-in {
+  from { opacity: 0; transform: translate(-50%, 16px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.share-bar-in {
+  animation: share-bar-in 0.3s ease-out both;
+}

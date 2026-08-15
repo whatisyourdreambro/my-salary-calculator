@@ -8,6 +8,7 @@ import { faqLd, howToLd } from "@/lib/structuredData";
 import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
+import FloatingShareBar from "@/components/FloatingShareBar";
 
 // canonical/hreflang은 홈 전용 값 — 루트 layout에 두면 alternates를 자체 정의하지
 // 않는 모든 페이지에 "canonical: 홈"이 상속되는 사고 위험이 있어 여기로 이동(2026-07-06).
@@ -36,6 +37,8 @@ export default function HomePage() {
       <JsonLd data={[faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
       <HomeClient />
       <HomeSeoSection />
+      {/* 모바일 전용 — 스크롤 후 하단 공유 pill (앵커 광고·PWA 배너 감지 시 자동 숨김) */}
+      <FloatingShareBar />
     </>
   );
 }

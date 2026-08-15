@@ -99,3 +99,43 @@ export function channelLabel(id: ShareChannelId, locale: "ko" | "en"): string {
 export function openShareWindow(url: string): void {
   window.open(url, "_blank", "noopener,noreferrer,width=600,height=560");
 }
+
+export interface KakaoFeedPayload extends SharePayload {
+  imageUrl: string;
+  buttonTitle?: string;
+}
+
+interface KakaoSdkGlobal {
+  isInitialized?: () => boolean;
+  Share?: { sendDefault: (settings: Record<string, unknown>) => void };
+}
+
+/**
+ * Kakao SDK 초기화 시 피드 공유창 오픈 (ShareButtons·FloatingShareBar 공용).
+ * false 반환 시 호출측이 폴백(링크 복사) 처리한다.
+ */
+export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
+  if (typeof window === "undefined") return false;
+  const kakao = (window as unknown as { Kakao?: KakaoSdkGlobal }).Kakao;
+  if (!kakao?.isInitialized?.()) return false;
+  try {
+    kakao.Share?.sendDefault({
+      objectType: "feed",
+      content: {
+        title: p.title,
+        description: p.description ?? "",
+        imageUrl: p.imageUrl,
+        link: { mobileWebUrl: p.url, webUrl: p.url },
+      },
+      buttons: [
+        {
+          title: p.buttonTitle ?? "자세히 보기",
+          link: { mobileWebUrl: p.url, webUrl: p.url },
+        },
+      ],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
