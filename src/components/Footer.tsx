@@ -94,7 +94,7 @@ export default function Footer() {
     { name: "HD현대중공업 연봉", href: "/salary-db/hd-hyundai-heavy" },
     { name: "LG에너지솔루션 연봉", href: "/salary-db/lgensol" },
     { name: "DL이앤씨 연봉", href: "/salary-db/dl-enc" },
-    { name: "전체 회사 480곳 →", href: "/salary-db" },
+    { name: "전체 회사 434곳 →", href: "/salary-db" },
   ];
 
   const trustBadges = isEnglish

@@ -252,7 +252,7 @@ export default function MinimumWage2026Page() {
  >
  <FileText className="w-8 h-8 text-electric mb-3" />
  <h3 className="text-lg font-black mb-2">신입 초봉 TOP 50</h3>
- <p className="text-sm text-muted-blue">회사 480곳 영끌 순위</p>
+ <p className="text-sm text-muted-blue">회사 434곳 영끌 순위</p>
  </Link>
  <Link
  href="/social-insurance-rates-2026"

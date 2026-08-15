@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { trackAdImpression } from "@/lib/analytics";
+import { trackAdImpression, trackAdUnitClick } from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
@@ -90,6 +90,27 @@ function AdSlot({
     observer.observe(target);
     return () => observer.disconnect();
   }, [slot, pathname, allowed]);
+
+  // 광고 클릭 감지 — iframe 내부 클릭은 이벤트가 버블되지 않으므로
+  // window blur 시점에 activeElement 가 이 슬롯의 iframe 인지로 판별 (페이지당 슬롯별 1회)
+  const clickTracked = useRef(false);
+  useEffect(() => {
+    clickTracked.current = false;
+  }, [pathname]);
+  useEffect(() => {
+    if (!visible || !slot) return;
+    const onBlur = () => {
+      if (clickTracked.current) return;
+      const el = containerRef.current;
+      const active = document.activeElement;
+      if (el && active && active.tagName === "IFRAME" && el.contains(active)) {
+        clickTracked.current = true;
+        trackAdUnitClick(slotKind ?? "unknown", slot);
+      }
+    };
+    window.addEventListener("blur", onBlur);
+    return () => window.removeEventListener("blur", onBlur);
+  }, [visible, slot, slotKind, pathname]);
 
   useEffect(() => {
     if (!visible || pushed.current || !slot) return;

@@ -1,9 +1,12 @@
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 
 export default function CalcLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* calc_start → calc_submit 퍼널 계측 (전체 /calc/* 공통, 문서 레벨 입력 감지) */}
+      <CalcFunnelTracker />
       {children}
       {/* 하단은 HOME_TOP 슬롯 사용 — CALC_RESULT 슬롯은 각 페이지의 "결과 직하" 배치 전용으로 비워둠
           (dedup: layout 이 CalcResultAd 를 쓰면 슬롯을 선점해 페이지 쪽 결과 직하 광고가 죽음) */}

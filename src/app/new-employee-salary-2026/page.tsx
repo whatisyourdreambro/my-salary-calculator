@@ -19,9 +19,9 @@ import type { CompanyProfile } from "@/types/company";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "신입 초봉 2026 — 회사 480곳 영끌 연봉 TOP 50",
+ title: "신입 초봉 2026 — 회사 434곳 영끌 연봉 TOP 50",
  description:
- "2026년 신입 사원 초봉 TOP 50. 대기업·IT·금융·공기업·외국계 회사별 영끌(기본급+성과급) 신입 평균 연봉. 머니샐러리 회사 480곳 데이터 자동 집계.",
+ "2026년 신입 사원 초봉 TOP 50. 대기업·IT·금융·공기업·외국계 회사별 영끌(기본급+성과급) 신입 평균 연봉. 머니샐러리 회사 434곳 데이터 자동 집계.",
  path: "/new-employee-salary-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
@@ -109,7 +109,7 @@ export default function NewEmployeeSalary2026Page() {
  ]),
  faqLd(FAQ_ITEMS),
  articleLd({
- title: "신입 초봉 2026 — 회사 480곳 영끌 TOP 50",
+ title: "신입 초봉 2026 — 회사 434곳 영끌 TOP 50",
  description: "대기업·IT·금융·공기업·외국계 신입 평균 연봉 종합 인덱스",
  slug: "new-employee-salary-2026",
  url: "/new-employee-salary-2026",
@@ -123,14 +123,14 @@ export default function NewEmployeeSalary2026Page() {
  <div className="text-center mb-12">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <Crown className="w-4 h-4" />
- 회사 480곳 자동 집계
+ 회사 434곳 자동 집계
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  신입 초봉 2026 <span className="text-electric">영끌 TOP 50</span>
  </h1>
  <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-05-22" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
- 머니샐러리 회사 데이터베이스 480곳의 신입 영끌(기본급 + 인센티브 평균) 연봉을
+ 머니샐러리 회사 데이터베이스 434곳의 신입 영끌(기본급 + 인센티브 평균) 연봉을
  자동 집계한 TOP 50 순위입니다. 같은 직군이라도 회사별로 1,500만원 이상 차이가
  날 수 있어, 첫 직장 선택과 연봉 협상에서 시장가 비교가 필수입니다.
  </p>
@@ -142,7 +142,7 @@ export default function NewEmployeeSalary2026Page() {
  신입 초봉은 첫 직장 선택의 결정적 변수입니다. 통계청 발표(2025) 기준 국내
  대졸 신입 평균 연봉은 약 4,200만원이지만, 5대 그룹(삼성·SK·현대차·LG·롯데) 신입
  영끌은 6,500~8,500만원, IT 톱티어(네카라쿠배·토스·당근)는 6,500~7,500만원으로
- 시장 평균의 1.5~2배 수준입니다. 본 페이지는 회사 480곳의 신입 영끌(기본급 +
+ 시장 평균의 1.5~2배 수준입니다. 본 페이지는 회사 434곳의 신입 영끌(기본급 +
  성과급 평균) 데이터를 자동 정렬해 한눈에 볼 수 있는 인덱스를 제공합니다.
  </p>
  <p className="text-sm leading-7 text-muted-blue mt-4">
@@ -260,7 +260,7 @@ export default function NewEmployeeSalary2026Page() {
 
  <div className="mt-8 max-w-3xl mx-auto">
  <ShareButtons
- title="신입 초봉 2026 — 회사 480곳 영끌 TOP 50"
+ title="신입 초봉 2026 — 회사 434곳 영끌 TOP 50"
  description="대기업·IT·금융·공기업·외국계 신입 평균 연봉 종합 인덱스"
  />
  </div>

@@ -97,7 +97,7 @@ function buildActions(
  {
  icon: Building2,
  title: "회사별 연봉·초봉 비교",
- description: "480+ 기업 평균 연봉·복지",
+ description: "430+ 기업 평균 연봉·복지",
  href: "/salary-db",
  },
  ];

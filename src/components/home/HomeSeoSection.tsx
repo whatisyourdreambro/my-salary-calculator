@@ -121,7 +121,7 @@ export default function HomeSeoSection() {
             연봉 데이터 탐색
           </h2>
           <p className="text-faint-blue text-[15px] font-medium mb-6">
-            480곳 회사·100개 직업·업종·지역별 연봉 데이터를 차원별로 살펴보세요.
+            434곳 회사·59개 직업·업종·지역별 연봉 데이터를 차원별로 살펴보세요.
           </p>
           <div className="flex flex-wrap gap-2.5 mb-5">
             {[

@@ -23,6 +23,7 @@ import type {
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import CompareViewTracker from "@/components/CompareViewTracker";
 import { CalcResultAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -434,6 +435,7 @@ export default function ComparePage({ params }: Props) {
   return (
     <>
       <JsonLd data={[breadcrumbLd(breadcrumbItems), faqLd(faqItems)]} />
+      <CompareViewTracker companyIds={[a.id, b.id]} source="compare-page" />
       <div className="page-width pt-24 pb-3">
         <Breadcrumbs items={breadcrumbItems} />
       </div>

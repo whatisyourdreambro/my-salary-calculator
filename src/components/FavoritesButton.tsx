@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { trackBookmarkClick } from "@/lib/analytics";
 
 export const FAVORITES_KEY = "msy_favorites";
 
@@ -81,6 +82,7 @@ export default function FavoritesButton({
         ];
     saveFavorites(next);
     setActive(!exists);
+    trackBookmarkClick(resolvedPath, exists ? "remove" : "add");
   };
 
   if (variant === "icon") {

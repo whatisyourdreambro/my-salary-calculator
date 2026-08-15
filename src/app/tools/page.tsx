@@ -12,8 +12,8 @@ import JsonLd from "@/components/JsonLd";
 import { itemListLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "금융 계산기 모음 2026 | 30가지 세금·재테크 계산기 - 머니샐러리",
- description: "성과급 세금 계산기, 퇴직금, 증여세, 취득세, 주식 양도세, 연봉 계산기 등 2026년 세법 기준 30가지 금융 계산기를 무료로 이용하세요.",
+ title: "금융 계산기 모음 2026 | 26가지 세금·재테크 계산기 - 머니샐러리",
+ description: "성과급 세금 계산기, 퇴직금, 증여세, 취득세, 주식 양도세, 연봉 계산기 등 2026년 세법 기준 26가지 금융 계산기를 무료로 이용하세요.",
  path: "/tools",
 });
 

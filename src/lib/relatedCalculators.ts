@@ -28,7 +28,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  bonus: [
  { path: "/", title: "연봉 실수령액 계산기", description: "성과급 합산 연봉 세후 계산", icon: "Calculator" },
  { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
- { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: "480+ 기업 평균 연봉·복지 비교", icon: "Building2" },
+ { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: "430+ 기업 평균 연봉·복지 비교", icon: "Building2" },
  { path: "/tools/finance/irp", title: "IRP·연금저축 절세", description: "성과급 세액공제 환급 극대화", icon: "PiggyBank" },
  { path: "/fun/salary-rank", title: "연봉 순위 테스트", description: "내 연봉+성과급 상위 몇 %?", icon: "TrendingUp" },
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "회사 무관 일반 성과급 세후", icon: "Gift" },

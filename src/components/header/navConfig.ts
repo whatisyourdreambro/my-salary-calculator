@@ -106,7 +106,7 @@ export const navConfig: NavItem[] = [
   type: "dropdown",
   description: "실제 데이터 기반 연봉 정보",
   items: [
-   { name: "기업별 연봉 DB", href: "/salary-db", description: "480+개 기업 평균 연봉", badge: "MUST" },
+   { name: "기업별 연봉 DB", href: "/salary-db", description: "430+개 기업 평균 연봉", badge: "MUST" },
    { name: "직업별 연봉", href: "/job", description: "59개 직종 연봉 비교", badge: "NEW" },
    { name: "산업별 연봉", href: "/industry", description: "16개 산업군 연봉 현황", badge: "NEW" },
    { name: "지역별 연봉", href: "/region", description: "17개 시도 + 판교·여의도", badge: "NEW" },
@@ -133,7 +133,7 @@ export const navConfig: NavItem[] = [
    { name: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", description: "연 1,000만 한도 최대 170만", badge: "NEW" },
    { name: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", description: "난임 30%·무한도 대상 구분", badge: "NEW" },
    { name: "3월 신입 연봉 협상", href: "/new-employee-2026", description: "첫 협상 가이드" },
-   { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026", description: "회사 480곳 영끌 인덱스", badge: "NEW" },
+   { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026", description: "회사 434곳 영끌 인덱스", badge: "NEW" },
    { name: "최저임금 2026", href: "/minimum-wage-2026", description: "시급·월급·연봉 환산표", badge: "NEW" },
    { name: "건강검진 2026", href: "/health-checkup-2026", description: "대상자·항목·비용·예약", badge: "NEW" },
    { name: "연말정산 체크리스트", href: "/year-end-tax-checklist", description: "12.31 마감 점검" },

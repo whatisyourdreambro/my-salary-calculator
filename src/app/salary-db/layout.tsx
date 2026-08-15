@@ -3,9 +3,9 @@ import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "회사별 연봉 데이터베이스 — 480+ 기업 평균 연봉·복지·워라밸",
+ title: "회사별 연봉 데이터베이스 — 430+ 기업 평균 연봉·복지·워라밸",
  description:
- "삼성전자, 네이버, 카카오, 현대차, SK하이닉스 등 480+ 한국 기업의 직급별 연봉, 복지, 워라밸 데이터를 한눈에 비교하세요. 같은 업종 평균과 차이도 자동 계산.",
+ "삼성전자, 네이버, 카카오, 현대차, SK하이닉스 등 430+ 한국 기업의 직급별 연봉, 복지, 워라밸 데이터를 한눈에 비교하세요. 같은 업종 평균과 차이도 자동 계산.",
  path: "/salary-db",
  keywords: [
  "회사별 연봉",
