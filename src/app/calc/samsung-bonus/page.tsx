@@ -454,6 +454,12 @@ export default function SamsungBonusCalculatorPage() {
             </p>
           </section>
 
+          {/* TAI 계산 완료 지점 쿠팡 — 페이지당 2회 캡 완화(Phase 1)로 가능해진
+              중간 배치. 하단 leaderboard와 사이즈가 달라 dedup 통과 */}
+          <CoupangBanner
+            responsive={{ mobile: "square", desktop: "rectangle" }}
+          />
+
           {/* ═══ OPI 실제 지급률 — 2025년 실적분 (2026-01-30 지급) ═══ */}
           <section className="mb-10" aria-labelledby="opi-actual-title">
             <h2
@@ -887,6 +893,48 @@ export default function SamsungBonusCalculatorPage() {
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 자세히 보기{" "}
+                <ArrowRight
+                  className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+                  aria-hidden
+                />
+              </span>
+            </Link>
+            <Link
+              href="/calc/samsung-display-bonus"
+              className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
+                삼성 계열 계산기
+              </p>
+              <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                삼성디스플레이 성과급 계산기
+              </p>
+              <p className="text-xs text-muted-blue mb-3">
+                같은 OPI·TAI 제도 — 2025 실적분 OPI 36% 지급
+              </p>
+              <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
+                계산해 보기{" "}
+                <ArrowRight
+                  className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+                  aria-hidden
+                />
+              </span>
+            </Link>
+            <Link
+              href="/calc/samsung-biologics-bonus"
+              className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
+                삼성 계열 계산기
+              </p>
+              <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                삼성바이오로직스 성과급 계산기
+              </p>
+              <p className="text-xs text-muted-blue mb-3">
+                OPI 연봉 50% 상한 연속 지급 — 삼성 계열 최고 수준
+              </p>
+              <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
+                계산해 보기{" "}
                 <ArrowRight
                   className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
                   aria-hidden
