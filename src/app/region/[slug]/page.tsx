@@ -11,6 +11,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
 
 // 지역의 topIndustries(한국어 표시명) → /industry/[id] 매칭.
@@ -467,6 +468,12 @@ export default function RegionDetailPage({
 
         {/* 다른 지역 비교 */}
         <OtherRegions currentId={region.id} />
+
+        <ShareSection
+          heading="우리 지역 연봉, 친구에게도 알려주세요"
+          contentType="page"
+          className="mt-10"
+        />
 
         {/* 쿠팡 배너 */}
         <div className="mt-10">

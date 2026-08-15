@@ -9,6 +9,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ShareSection from "@/components/ShareSection";
 
 export const dynamic = "force-static";
 
@@ -56,6 +57,7 @@ export default function HubIndexPage() {
             </Link>
           ))}
         </div>
+        <ShareSection contentType="page" className="mt-10" />
       </div>
     </main>
   );

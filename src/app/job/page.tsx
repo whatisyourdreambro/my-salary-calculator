@@ -4,6 +4,7 @@ import { jobsData, jobsByCategory, JobCategory } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
 import { HomeTopAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import SiblingHubsNav from "@/components/SiblingHubsNav";
@@ -131,6 +132,8 @@ export default function JobIndexPage() {
               </div>
             </section>
           ))}
+
+          <ShareSection contentType="page" className="mt-8 mb-8" />
 
           <InArticleAd />
           <CoupangBanner />

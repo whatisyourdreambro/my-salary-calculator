@@ -4,6 +4,7 @@ import { industriesData } from "@/data/industriesData";
 import { buildPageMetadata } from "@/lib/seo";
 import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import SiblingHubsNav from "@/components/SiblingHubsNav";
@@ -103,6 +104,8 @@ export default function IndustryIndexPage() {
               </Link>
             ))}
           </div>
+
+          <ShareSection contentType="page" className="mt-8" />
 
           {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 */}
           <div className="mt-8">

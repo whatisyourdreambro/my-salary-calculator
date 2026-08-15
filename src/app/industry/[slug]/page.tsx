@@ -10,6 +10,7 @@ import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 
 export const dynamic = "force-static";
 
@@ -301,6 +302,12 @@ export default function IndustryPage({ params }: Props) {
               </Link>
             </div>
           </section>
+
+          <ShareSection
+            heading="이 업계 연봉, 동료에게도 알려주세요"
+            contentType="page"
+            className="mb-8"
+          />
 
           <CoupangBanner />
         </div>

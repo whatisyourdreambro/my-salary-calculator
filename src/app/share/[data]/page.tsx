@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { calculateNetSalary } from "@/lib/calculator";
 import NextActions from "@/components/NextActions";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import ShareSection from "@/components/ShareSection";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
 
@@ -90,6 +91,16 @@ export default function SharePage({ params }: Props) {
  {decoded && (
  <div className="w-full mt-8">
  <CalcResultAd />
+ </div>
+ )}
+
+ {/* 재공유 루프 — 공유받고 들어온 사람이 다시 단톡방에 퍼뜨리는 지점 */}
+ {decoded && (
+ <div className="w-full mt-8">
+ <ShareSection
+ heading="이 결과, 다른 친구에게도 공유해 보세요"
+ contentType="salary_result"
+ />
  </div>
  )}
 

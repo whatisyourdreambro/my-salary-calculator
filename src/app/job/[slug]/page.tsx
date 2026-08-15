@@ -8,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import JobOfficialStats from "@/components/JobOfficialStats";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 
@@ -370,6 +371,12 @@ export default function JobPage({ params }: Props) {
               </div>
             </section>
           )}
+
+          <ShareSection
+            heading="이 직업 연봉, 친구에게도 알려주세요"
+            contentType="page"
+            className="mb-8"
+          />
 
           <CoupangBanner />
         </div>

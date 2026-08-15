@@ -17,6 +17,7 @@ import {
   CalcResultAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import ShareSection from "@/components/ShareSection";
 
 export const dynamic = "force-static";
 
@@ -130,6 +131,8 @@ export default function HubPage({ params }: { params: { id: string } }) {
             </section>
           ))}
         </div>
+
+        <ShareSection contentType="page" className="mt-10" />
 
         <div className="mt-10">
           <CoupangBanner
