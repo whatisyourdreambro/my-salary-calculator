@@ -3,6 +3,7 @@ import { koGuides, enGuides } from '@/lib/guidesData';
 import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
 import { qnaData, toQnaSlug } from '@/data/qnaData';
 import { jobsData } from '@/data/jobsData';
+import { getStaticMonthlyAmounts } from '@/lib/monthlyStaticParams';
 import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 
@@ -98,6 +99,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/lg-chem-bonus',
  '/calc/celltrion-bonus',
  '/calc/hyundai-rotem-bonus',
+ // 성과급 계산기 확장 10종 (2026-08-15 Phase 3) — 보도값·공시 확보 회사만 신설.
+ // 쿠팡·토스(정기 성과급 제도 없음)·HMM·크래프톤(최신 보도값 없음)은 의도적 제외.
+ '/calc/samsung-display-bonus',
+ '/calc/samsung-biologics-bonus',
+ '/calc/lg-display-bonus',
+ '/calc/sk-innovation-bonus',
+ '/calc/s-oil-bonus',
+ '/calc/gs-caltex-bonus',
+ '/calc/doosan-enerbility-bonus',
+ '/calc/hyundai-mobis-bonus',
+ '/calc/hanwha-aerospace-bonus',
+ '/calc/kepco-bonus',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
  '/tools/loan',
@@ -177,6 +190,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/credit-card-deduction-2026',
  '/rent-tax-credit-2026',
  '/medical-tax-credit-2026',
+ // 정부 공표 데이터 페이지 3종 (2026-08-15 Phase 3) — 봉급표(1월 폭증)·기초연금·중도퇴사 연말정산
+ '/civil-servant-pay-2026',
+ '/basic-pension-2026',
+ '/year-end-tax-mid-resign',
  ];
 
  // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·
@@ -282,6 +299,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // (2026-08-08) 구 "Special popular amounts" 13건 제거 — 전량 20~100m 0.5m 격자에
  // 이미 포함돼 사이트맵 중복 URL 13건을 만들던 블록 (URL 전수 감사에서 실측).
  // salaryStaticParams.ts는 자체 고정 목록으로 해당 금액을 계속 정적 생성하므로 무영향.
+
+ // 3-1. 월급 축 /monthly/{amount} (2026-08-15 Phase 3 신설) —
+ // 격자는 src/lib/monthlyStaticParams.ts 와 반드시 동일 유지 (정적 생성 단일 소스).
+ // "월급 300만원 실수령액" 계열 쿼리 전용 랜딩. 100만 단위 정수는 우선순위 상향.
+ for (const m of getStaticMonthlyAmounts()) {
+ salaryUrls.push({
+ url: `${baseUrl}/monthly/${m}`,
+ lastModified: STATIC_LAST_MODIFIED,
+ changeFrequency: 'yearly',
+ priority: m % 1_000_000 === 0 ? 0.65 : 0.5,
+ });
+ }
 
  // 4. Company Database Pages
  const companyUrls: MetadataRoute.Sitemap = [

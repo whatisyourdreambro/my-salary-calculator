@@ -21,9 +21,12 @@ export default function Footer() {
     : [
         { name: "연봉 계산기", href: "/" },
         { name: "연봉 테이블", href: "/table/2026/annual" },
+        // 월급 축 신설(2026-08-15) — /monthly/* 트리의 전역 SSR 크롤 진입로
+        { name: "월급 300만원 실수령액", href: "/monthly/3000000" },
         { name: "100가지 계산기", href: "/calc" },
         { name: "FIRE 계산기", href: "/fire-calculator" },
         { name: "주택담보대출", href: "/home-loan" },
+        { name: "기초연금 계산기", href: "/basic-pension-2026" },
       ];
 
   const seasonLinks = isEnglish
@@ -46,6 +49,9 @@ export default function Footer() {
         { name: "13월의 월급", href: "/calc/january-bonus" },
         { name: "성과급 세금", href: "/calc/year-end-bonus" },
         { name: "건강보험 2026", href: "/health-insurance-2026" },
+        // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
+        { name: "공무원 봉급표 2026", href: "/civil-servant-pay-2026" },
+        { name: "중도퇴사 연말정산", href: "/year-end-tax-mid-resign" },
       ];
 
   const contentLinks = isEnglish

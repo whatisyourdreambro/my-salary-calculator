@@ -9,6 +9,7 @@
 //   /year-end-tax-checklist             : 12월 마감 전 체크리스트
 //   /year-end-tax-2026                  : 프리랜서 5월 종소세 가이드
 //   /income-tax-2026                    : 종소세 계산기 (누진세율 산출)
+//   /year-end-tax-mid-resign            : 중도퇴사·이직자 연말정산 (2026-08-15 신설)
 
 "use client";
 
@@ -21,6 +22,7 @@ const PAGES = [
  { path: "/year-end-tax-checklist", label: "12월 체크리스트", hint: "마감 전 40+ 항목" },
  { path: "/year-end-tax-2026", label: "프리랜서 5월", hint: "종소세 신고" },
  { path: "/income-tax-2026", label: "종소세 계산기", hint: "누진세율 즉시 산출" },
+ { path: "/year-end-tax-mid-resign", label: "중도퇴사·이직", hint: "퇴사 후 환급 방법" },
 ];
 
 export default function YearEndTaxCluster({ className = "" }: { className?: string }) {

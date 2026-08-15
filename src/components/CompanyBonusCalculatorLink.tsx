@@ -78,6 +78,57 @@ const COMPANY_BONUS_MAP: Record<
     label: "현대로템 성과급 계산기",
     desc: "임단협 타결안 기본급 450% + 1,620만원",
   },
+  // ── 확장 10종 (2026-08-15 Phase 3, 보도값 확보 회사만 신설) ──
+  "samsung-display": {
+    calc: "/calc/samsung-display-bonus",
+    label: "삼성디스플레이 성과급 계산기",
+    desc: "OPI 연봉 36% + TAI 반기 최대 100% (2026-01 지급 기준)",
+  },
+  "samsung-biologics": {
+    calc: "/calc/samsung-biologics-bonus",
+    label: "삼성바이오로직스 성과급 계산기",
+    desc: "OPI 연봉 50% 상한 연속 도달 + TAI 100%",
+  },
+  "lg-display": {
+    calc: "/calc/lg-display-bonus",
+    label: "LG디스플레이 성과급 계산기",
+    desc: "경영성과급 기본급 150% — 4년 만의 지급 재개 (2026-02)",
+  },
+  "sk-innovation": {
+    calc: "/calc/sk-innovation-bonus",
+    label: "SK이노베이션 성과급 계산기",
+    desc: "PS+LTI+STI 합산 660% — 계열사 차등 0~800%",
+  },
+  "s-oil": {
+    calc: "/calc/s-oil-bonus",
+    label: "S-Oil 성과급 계산기",
+    desc: "경영성과급 기본급 250% (최대 1,500% 이력)",
+  },
+  "gs-caltex": {
+    calc: "/calc/gs-caltex-bonus",
+    label: "GS칼텍스 성과급 계산기",
+    desc: "기본연봉의 25% (2026) — 호황기 50% 이력",
+  },
+  "doosan-enerbility": {
+    calc: "/calc/doosan-enerbility-bonus",
+    label: "두산에너빌리티 성과급 계산기",
+    desc: "연봉 27% 재원 평가 차등 — 상한 기본급 530%",
+  },
+  "hyundai-mobis": {
+    calc: "/calc/hyundai-mobis-bonus",
+    label: "현대모비스 성과급 계산기",
+    desc: "임단협 450% + 1,420만 + 우리사주 17주 (2025 타결)",
+  },
+  "hanwha-aerospace": {
+    calc: "/calc/hanwha-aerospace-bonus",
+    label: "한화에어로스페이스 성과급 계산기",
+    desc: "사업부별 최대 725% (2026-02 지급) — 방산 슈퍼사이클",
+  },
+  kepco: {
+    calc: "/calc/kepco-bonus",
+    label: "한국전력 성과급 계산기",
+    desc: "공기업 경영평가 A등급 — 월 기본급 200% 상당",
+  },
 };
 
 interface Props {

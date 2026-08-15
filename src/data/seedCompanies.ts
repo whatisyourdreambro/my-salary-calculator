@@ -413,6 +413,34 @@ export const seedCompanies: CompanyProfile[] = [
  incentive: { target: 50, max: 100, avgAmount: 150000000 },
  },
  },
+ // 직급별 연봉 — 사업보고서 공시(2025)·잡코리아 집계 초봉 보도·데이터뉴스(임원) 기반. 추정 창작 금지.
+ careerLevels: [
+ {
+ group: "리더-팀원 2단계 (2014년 직급 폐지)",
+ promotionNote:
+ "네이버는 2014년 직급을 폐지하고 '리더-팀원' 2단계 체계 운영(비즈워치 2020-11). 2021년부터 기술직군에 5단계 비공개 '레벨' 제도가 있으나 레벨별 연봉은 비공개. 별도로 2021~2023년 전 직원에 매년 1,000만원 상당 스톡그랜트 지급(한국경제 2021-04). 성과 평가에 따라 최대 연봉의 50% 성과급(아시아경제 2025-08).",
+ steps: [
+ {
+ label: "팀원 (신입·공채 초봉)",
+ description:
+ "1년차. 공채 초봉 5,250만원 — 잡코리아 집계 기준(남도일보 2024-03 보도 인용). 2021년 IT업계 개발직군 초임 5,000만원 공식화 흐름(한경매거진 2021-02)",
+ totalManwon: 5250,
+ },
+ {
+ label: "팀원 (전사 평균)",
+ description:
+ "평균 근속 7년4개월. 2025년 사업보고서(2026-03 공시) 기준 직원 평균 1억4,600만원, 전년 대비 약 1,700만원 증가(게트뉴스 2026-03). 2024년 기준 1억2,900만원(머니투데이 2025-03)",
+ totalManwon: 14600,
+ },
+ {
+ label: "미등기임원 (舊 책임리더급)",
+ description:
+ "임원. 2021년 사업보고서 기준 미등기임원 평균 4억630만원 — 임원 제외 직원 평균의 3.6배(데이터뉴스 2022-07). 책임리더(비등기임원)는 2019-03 도입 후 2024-04 폐지, 현재 C레벨-부문장(임원)-리더 체계(이데일리 2024-04)",
+ totalManwon: 40630,
+ },
+ ],
+ },
+ ],
  workLife: {
  weeklyHours: { contract: 40, real: 42 },
  remoteWork: { policy: "remote", description: "Type R(Remote) / Type O(Office) 선택 가능" },
@@ -429,7 +457,7 @@ export const seedCompanies: CompanyProfile[] = [
  { category: "financial", title: "스톡그랜트", description: "매년 1천만원 상당 자사주 지급", value: 10000000 },
  { category: "lifestyle", title: "커넥티드 워크", description: "원격 근무 지원금 (월 15만원)", value: 1800000 },
  ],
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-08-15",
  },
  // 4. Kakao
  {
@@ -455,6 +483,36 @@ export const seedCompanies: CompanyProfile[] = [
  lead: { base: 130000000, incentive: { target: 25, max: 50, avgAmount: 30000000 }, stock: { type: "RSU", amount: 50000000, vesting: "4 years" } },
  executive: { base: 250000000, incentive: { target: 50, max: 100, avgAmount: 100000000 }, stock: { type: "RSU", amount: 100000000, vesting: "4 years" } },
  },
+ // 직급별 연봉 — 2025년 사업보고서 공시(새턴경제 2026-06)·머니투데이 2025-03 기반. 추정 창작 금지.
+ // 신입 초봉은 비공시·개별 협상제이고 채용 플랫폼 추정치는 공시 평균과 괴리가 커 수치 미기재
+ // (권위 출처 확보 시 갱신).
+ careerLevels: [
+ {
+ group: "크루 단일 체계 (직급·직위 없음)",
+ promotionNote:
+ "카카오는 직급·직위 없이 전 임직원이 영어이름 호칭의 '크루'로 근무(이데일리 보도). 초봉은 비공시·입사 시 개별 협상제. 임직원 보상 격차는 2026-06 카카오 창사 첫 파업의 배경으로 보도(허프포스트코리아 2026-06).",
+ steps: [
+ {
+ label: "크루 (전사 평균)",
+ description:
+ "평균 근속 5년6개월. 2025년 사업보고서 기준 직원 3,922명 평균 1억900만원(남 1억2,200만/여 9,200만 — 새턴경제 2026-06). 2024년 기준 1억200만원(머니투데이 2025-03)",
+ totalManwon: 10900,
+ },
+ {
+ label: "미등기임원",
+ description:
+ "임원. 2025년 사업보고서 기준 미등기임원 53명 평균 4억3,700만원(스톡옵션 행사차익 제외 시 4억1,700만원) — 직원 평균의 약 4배(새턴경제 2026-06)",
+ totalManwon: 43700,
+ },
+ {
+ label: "등기이사",
+ description:
+ "경영진. 2025년 사업보고서 기준 등기이사 3명 평균 보수 8억6,700만원. 정신아 대표 보수총액 13억6,100만원(새턴경제 2026-06)",
+ totalManwon: 86700,
+ },
+ ],
+ },
+ ],
  workLife: {
  weeklyHours: { contract: 40, real: 42 },
  vacation: { days: 25, usageRate: 95 },
@@ -471,7 +529,7 @@ export const seedCompanies: CompanyProfile[] = [
  pros: ["자유로운 연차 사용", "3년마다 돌아오는 안식휴가", "수평적인 소통 문화"],
  cons: ["잦은 조직 개편", "부서바부서(케바케) 심함"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-08-15",
  },
  // 5. Coupang
  {
@@ -562,6 +620,57 @@ export const seedCompanies: CompanyProfile[] = [
  lead: { base: 110000000, incentive: { target: 30, max: 50, avgAmount: 45000000 } },
  executive: { base: 200000000, incentive: { target: 50, max: 100, avgAmount: 100000000 } },
  },
+ // 직급별 연봉 — 2024-07 온라인 확산 연봉표 보도(오토데일리·세계일보, ★사측 부인 참고치)·
+ // 생산직 채용 보도(스마트에프엔·한국경제 2023) 기반. 추정 창작 금지.
+ careerLevels: [
+ {
+ group: "사무·연구직 — 매니저·책임매니저 (2019년 직급 개편)",
+ promotionNote:
+ "2019년 직급 개편으로 사원·대리는 '매니저', 과장~부장은 '책임매니저'로 통합. 아래 수치는 2024-07 온라인 확산 연봉표 보도 기준(오토데일리·세계일보)으로, ★사측이 '정확하지 않은 내용'이라고 부인한 참고치. 전 직원 평균연봉 1억2,400만원(2024 사업보고서 공시)과는 교차 확인됨. 책임매니저부터 연봉제(개인 성과 차등).",
+ steps: [
+ {
+ label: "매니저 G1 (옛 사원)",
+ description:
+ "1~4년차. 사원 1년차 계약연봉 5,040만~5,251만 + 성과급 3,800만 + 복지포인트·명절휴가비 400만 = 총 약 9,451만원 (2024-07 확산 연봉표 보도, 사측 부인 참고치)",
+ baseManwon: 5040,
+ totalManwon: 9451,
+ },
+ {
+ label: "매니저 G2 (옛 대리)",
+ description:
+ "5~8년차. 대리 1년차 계약연봉 6,051만 + 성과급 4,000만 + 복지 포함 총 약 1억400만원 (동일 연봉표, 사측 부인 참고치)",
+ baseManwon: 6051,
+ totalManwon: 10400,
+ },
+ {
+ label: "책임매니저 G3~G4 (옛 과장~부장)",
+ description:
+ "9년차 이상. 책임(옛 과장) 진입 1년차 계약연봉 8,446만 + 성과급 5,200만 = 총 약 1억4,046만원 (동일 연봉표, 사측 부인 참고치). 책임매니저부터 연봉제",
+ baseManwon: 8446,
+ totalManwon: 14046,
+ },
+ ],
+ },
+ {
+ group: "기술직(생산직) — 호봉제",
+ promotionNote:
+ "생산직은 매니저 직급 체계와 별개의 호봉제. 2023년 '킹산직' 채용 당시 평균 연봉 1억원 수준으로 널리 보도(한국경제 2023-12).",
+ steps: [
+ {
+ label: "기술직 신입",
+ description:
+ "1년차. 연봉 5,000만~6,000만원(위키트리·스마트에프엔 2023-03 채용 보도, 하단값 표기)",
+ totalManwon: 5000,
+ },
+ {
+ label: "기술직 중견",
+ description:
+ "14년차 안팎. 평균 연봉 9,600만원, 16년차 약 1억3,000만원(스마트에프엔 2023-03 보도)",
+ totalManwon: 9600,
+ },
+ ],
+ },
+ ],
  workLife: {
  weeklyHours: { contract: 40, real: 40 },
  vacation: { days: 20, usageRate: 95 },
@@ -577,7 +686,7 @@ export const seedCompanies: CompanyProfile[] = [
  pros: ["강력한 노조와 고용 안정성", "높은 성과급", "차량 할인 혜택"],
  cons: ["수직적인 군대 문화 (부서바부서)", "보수적인 의사결정"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-08-15",
  },
  // 8. LG Energy Solution
  {

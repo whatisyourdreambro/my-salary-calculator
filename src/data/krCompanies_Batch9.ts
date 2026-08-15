@@ -25,10 +25,51 @@ export const krCompanies_Batch9: CompanyProfile[] = [
       lead: { base: 125000000, incentive: { target: 20, max: 40, avgAmount: 35000000 } },
       executive: { base: 230000000, incentive: { target: 35, max: 70, avgAmount: 90000000 } },
     },
+    // 직급별 연봉 — 보수체계 연차보고서 공시(뉴스1 2026-03)·금감원 국감자료(이데일리 2023-10)·
+    // KPI뉴스 2023-08(신입 초봉) 기반. 추정 창작 금지.
+    careerLevels: [
+      {
+        group: "행원 → 책임자 → 관리자 (공시·보도 기준)",
+        promotionNote:
+          "직급 사다리는 행원-대리-과장-차장-부부장-부장(지점장) 순이며 2021년부터 호칭만 프로·매니저 등으로 변경(이데일리·헤럴드경제). 행원·책임자·관리자급 수치는 보수체계 연차보고서 공시 기반 평균 총급여(2024년)로, 성과급 포함 총액이며 계약직을 분리하지 않은 통계라 정규 행원 실제값보다 낮게 집계됐을 수 있음.",
+        steps: [
+          {
+            label: "신입 행원 (초봉)",
+            description:
+              "1년차. 대졸 신입 초봉 5,090만원(KPI뉴스 2023-08, 금감원·채용플랫폼 집계). 뉴스투데이 2020-08 보도에서도 신입 5,500만원(잡코리아·금감원)",
+            totalManwon: 5090,
+          },
+          {
+            label: "행원급 평균",
+            description:
+              "1~8년차 안팎. 2024년 기준 남 7,500·여 6,800만원(표기값은 중간값) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도",
+            totalManwon: 7150,
+          },
+          {
+            label: "책임자급 (과장·차장)",
+            description:
+              "8~15년차 안팎. 2024년 기준 남 1억3,500·여 1억2,700만원(표기값은 중간값) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도",
+            totalManwon: 13100,
+          },
+          {
+            label: "관리자급 (부부장·부지점장 이상)",
+            description:
+              "20년차 이상. 2024년 기준 남 1억7,000·여 1억7,500만원(표기값은 중간값) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도",
+            totalManwon: 17250,
+          },
+          {
+            label: "지점장급 (상위 10% 평균)",
+            description:
+              "지점장·본부 부서장. 2022년 기준 상위 10% 평균 2억220만원 — 금감원 국정감사 자료, 이데일리 2023-10 보도. 전체 평균연봉은 2022년 1억1,297만원(동일 자료), 2025년 사업보고서 기준 1억2,300만원(뉴스투데이 2026-03)",
+            totalManwon: 20220,
+          },
+        ],
+      },
+    ],
     workLife: { weeklyHours: { contract: 40, real: 44 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "office", description: "영업점 중심 근무" } },
     benefits: [{ category: "financial", title: "자녀 학자금", description: "대학까지 전액 지원", value: 12000000 }, { category: "financial", title: "사내대출", description: "저금리 주택자금 대출", value: 5000000 }],
     culture: { score: 8.3, keywords: ["리딩뱅크", "안정", "성과급"], pros: ["국내 최고 수준의 은행 연봉과 성과급", "높은 고용 안정성", "탄탄한 복지 제도"], cons: ["영업점 실적 압박", "보수적인 조직 문화"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-08-15",
   },
   {
     id: "kb-bank",
@@ -52,10 +93,51 @@ export const krCompanies_Batch9: CompanyProfile[] = [
       lead: { base: 127000000, incentive: { target: 20, max: 40, avgAmount: 36000000 } },
       executive: { base: 235000000, incentive: { target: 35, max: 70, avgAmount: 92000000 } },
     },
+    // 직급별 연봉 — 보수체계 연차보고서 공시(뉴스1 2026-03)·금감원 국감자료(이데일리 2023-10)·
+    // KPI뉴스 2023-08(신입 초봉)·뉴스핌 2019-01(L0~L4 체계) 기반. 추정 창작 금지.
+    careerLevels: [
+      {
+        group: "L1 행원 → L2 책임자 → L3 관리자 → L4 지점장 (공시·보도 기준)",
+        promotionNote:
+          "직급체계는 L0(사무직 전환)-L1(행원·대리)-L2(과·차장)-L3(수석차장·팀장·부지점장)-L4(지점장) — 뉴스핌 2019-01. L1~L3 수치는 보수체계 연차보고서 공시 기반 평균 총급여(2025년)로 성과급 포함 총액. 국민은행은 행원급과 계약직을 분리 집계.",
+        steps: [
+          {
+            label: "신입 행원 (L1 초임)",
+            description:
+              "1년차. 대졸 신입 초봉 5,110만원(KPI뉴스 2023-08, 금감원·채용플랫폼 집계). 뉴스투데이 2020-08 보도에서는 신입 5,500만원",
+            totalManwon: 5110,
+          },
+          {
+            label: "행원급 평균 (L1, 행원·대리)",
+            description:
+              "1~8년차 안팎. 2025년 기준 남 9,000·여 9,500만원(표기값은 중간값, 여성이 더 높음) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도",
+            totalManwon: 9250,
+          },
+          {
+            label: "책임자급 (L2, 과장·차장)",
+            description:
+              "8~15년차 안팎. 2025년 기준 남 1억4,000·여 1억3,800만원(표기값은 중간값) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도. 2020년 차장급 8,914만원 보도(뉴스투데이, 잡코리아 기반)와 비교하면 5년 새 큰 폭 상승",
+            totalManwon: 13900,
+          },
+          {
+            label: "관리자급 (L3 이상, 팀장·부지점장)",
+            description:
+              "15~20년차 이상. 2025년 기준 남 1억8,800·여 1억8,100만원(표기값은 중간값) — 보수체계 연차보고서 공시, 뉴스1 2026-03 보도. 이데일리 2023-10(국감자료)도 입행 15년차 팀장·부지점장급 평균 약 1억5,000만원으로 보도",
+            totalManwon: 18450,
+          },
+          {
+            label: "지점장급 (L4, 상위 10% 평균)",
+            description:
+              "지점장·본부 부서장. 2022년 기준 상위 10% 평균 2억941만원 — 5대 은행 중 1위. 금감원 국정감사 자료, 이데일리·비즈니스포스트 2023-10 보도. 전체 평균연봉은 2022년 1억2,292만원(동일 자료)",
+            totalManwon: 20941,
+          },
+        ],
+      },
+    ],
     workLife: { weeklyHours: { contract: 40, real: 44 }, vacation: { days: 20, usageRate: 78 }, remoteWork: { policy: "office", description: "영업점 중심 근무" } },
     benefits: [{ category: "financial", title: "자녀 학자금", description: "대학까지 전액 지원", value: 12000000 }, { category: "health", title: "종합건강검진", description: "본인·배우자 검진 지원", value: 1500000 }],
     culture: { score: 8.2, keywords: ["1등은행", "안정", "복지"], pros: ["국내 1위 은행의 압도적 규모와 안정성", "업계 최상위 복지 수준", "다양한 직무 경험 기회"], cons: ["조직 규모가 커 의사결정이 느림", "영업 실적 부담"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-08-15",
   },
   {
     id: "woori-bank",
@@ -80,10 +162,39 @@ export const krCompanies_Batch9: CompanyProfile[] = [
       lead: { base: 120000000, incentive: { target: 20, max: 40, avgAmount: 32000000 } },
       executive: { base: 220000000, incentive: { target: 35, max: 70, avgAmount: 85000000 } },
     },
+    // 직급별 연봉 — 2025년 지배구조 및 보수체계 연차보고서 공시(데일리머니 2026-03·뉴스1 2026-03·
+    // 머니투데이 2026-03) 기반. 추정 창작 금지.
+    careerLevels: [
+      {
+        group: "행원급 → 책임자급 → 관리자급 (2025년 공시 기준)",
+        promotionNote:
+          "직급 사다리는 행원(행원A·행원B/계장~대리) → 책임자(과장·차장) → 관리자(부부장·부장·지점장 이상) 순. 수치는 2025년 지배구조 및 보수체계 연차보고서 공시 기반 평균 총급여(성과급 포함)이며, 연차 범위는 통상적 승진 관행 기준 안내값. 신입 첫해 총보상은 시중은행 통상 6,500만~7,000만원 수준(성과급·복지성 급여 포함, 머니투데이 2026-05 보도).",
+        steps: [
+          {
+            label: "행원급 (행원A·행원B/계장~대리)",
+            description:
+              "입행 1~9년차 안팎. 2025년 기준 행원급 이하 평균 총급여 남 8,300만·여 8,400만원 — 보수체계 연차보고서 공시, 데일리머니 2026-03·뉴스1 2026-03 보도",
+            totalManwon: 8400,
+          },
+          {
+            label: "책임자급 (과장·차장)",
+            description:
+              "10~19년차 안팎. 2025년 기준 책임자급 평균 총급여 남녀 동일 1억3,500만원 — 보수체계 연차보고서 공시, 데일리머니 2026-03 보도",
+            totalManwon: 13500,
+          },
+          {
+            label: "관리자급 (부부장·부장·지점장 이상)",
+            description:
+              "20년차 이상 안팎. 2025년 기준 관리자급(부점장급 이상) 평균 총급여 남 1억8,300만·여 1억9,200만원(단순평균 약 1억8,600만원 표기) — 보수체계 연차보고서 공시, 데일리머니 2026-03 보도. 전체 임직원 평균 보수는 약 1억2,100만원(2025)",
+            totalManwon: 18600,
+          },
+        ],
+      },
+    ],
     workLife: { weeklyHours: { contract: 40, real: 45 }, vacation: { days: 20, usageRate: 76 }, remoteWork: { policy: "office", description: "영업점 중심 근무" } },
     benefits: [{ category: "financial", title: "자녀 학자금", description: "대학까지 전액 지원", value: 11000000 }, { category: "lifestyle", title: "휴양시설", description: "제휴 콘도·리조트 이용", value: 1000000 }],
     culture: { score: 7.9, keywords: ["전통", "안정", "보수적"], pros: ["역사 깊은 시중은행의 안정성", "탄탄한 학자금·대출 복지", "공채 기수 문화의 끈끈함"], cons: ["4대 은행 중 보수적인 편", "영업점 실적 압박"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-08-15",
   },
   {
     id: "kbank",

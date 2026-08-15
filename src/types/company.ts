@@ -55,8 +55,8 @@ export interface CareerLevelStep {
  label: string;
  /** 연차/배경 설명. 예: "고졸·전문대졸 입사 1~2년차" */
  description: string;
- /** 만원 단위 — base 연봉 (계약 연봉) */
- baseManwon: number;
+ /** 만원 단위 — base 연봉 (계약 연봉). 공시가 총급여만 제공하는 경우(은행 보수체계 연차보고서 등) 생략 가능 — 생략 시 UI는 "—" 표시 */
+ baseManwon?: number;
  /** 만원 단위 — 영끌 평균 (base + 평균 OPI/TAI/RSU). 안 적으면 base 그대로 표시 */
  totalManwon?: number;
  /** 셀러리캡(직급 base 상한) 표시용. 단계가 cap에 근접/도달했을 때 강조 */

@@ -189,10 +189,39 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  lead: { base: 140000000, incentive: { target: 40, max: 60, avgAmount: 60000000 } },
  executive: { base: 250000000, incentive: { target: 50, max: 100, avgAmount: 120000000 } },
  },
+ // 직급별 연봉 — 사업보고서 공시(글로벌이코노믹 2026-03·SR타임스)·헤럴드경제 2024-09(초봉)·
+ // 아주경제 2022-03(임원) 기반. 추정 창작 금지.
+ careerLevels: [
+ {
+ group: "매니저 단일 호칭 (직급체계 폐지)",
+ promotionNote:
+ "SK텔레콤은 2006년 사원~부장 직위를 폐지하고 팀장 등 직책자를 제외한 전원을 '매니저' 단일 호칭으로 통일(전자신문 2016-08), 2019년 8월 직급체계 완전 폐지(뉴데일리 2019-07) — 전통적 직급별 연봉표는 존재하지 않음. 아래는 공시·보도 기준 구간별 수치.",
+ steps: [
+ {
+ label: "매니저 (신입·대졸 초임)",
+ description:
+ "1년차. 신입 초봉 6,000만원대 — 헤럴드경제 2024-09 보도(기본급/성과급 구분 미상). 격주 주4일(해피프라이데이)·연 54일 휴무 병기 보도",
+ totalManwon: 6000,
+ },
+ {
+ label: "매니저 (전사 평균)",
+ description:
+ "평균 근속 13.7년. 2025년 사업보고서(2026-03 공시) 기준 직원 5,316명 1인 평균 급여 1억6,300만원 — 이통3사 1위(글로벌이코노믹 2026-03). 2024년 기준 1억6,100만원(SR타임스). 2025년 상반기에만 평균 9,200만원 지급 보도(헤럴드경제 2025-08)",
+ totalManwon: 16300,
+ },
+ {
+ label: "임원 (미등기)",
+ description:
+ "임원. 2021년 사업보고서 기준 미등기임원 1인 평균 5억3,000만원 — 이통3사 최고(아주경제 2022-03). 2024년 기준 약 5억1,800만원(91명) 보도",
+ totalManwon: 53000,
+ },
+ ],
+ },
+ ],
  workLife: { weeklyHours: { contract: 40, real: 40 }, vacation: { days: 25, usageRate: 95 }, remoteWork: { policy: "hybrid", description: "거점 오피스 (Sphere)" } },
  benefits: [{ category: "lifestyle", title: "통신비", description: "전액 지원", value: 1200000 }, { category: "financial", title: "복지포인트", description: "연 300만원", value: 3000000 }],
  culture: { score: 9.2, keywords: ["신의직장", "워라밸", "복지"], pros: ["최고의 워라밸", "높은 연봉과 성과급", "수평적 호칭"], cons: ["성장성 정체", "통신업의 한계"] },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-08-15",
  },
  {
  id: "kt",
@@ -287,10 +316,38 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  lead: { base: 115000000, incentive: { target: 20, max: 40, avgAmount: 35000000 } },
  executive: { base: 220000000, incentive: { target: 40, max: 80, avgAmount: 80000000 } },
  },
+ // 직급별 초임 — 2025년 노사 합의 보도(조세금융신문·뉴스핌·아시아경제 2025-03-12) 기반. 추정 창작 금지.
+ careerLevels: [
+ {
+ group: "사원-선임-책임 3단계 (2025년 노사 합의 초임)",
+ promotionNote:
+ "직급 체계는 2017년부터 사원-선임-책임 3단계(P1/P2/P3, 아시아경제 2017-04). 2025년 노사 합의로 평균 임금인상률 4.3%, 직급별 초임 100만원 인상(3월 급여 소급 적용). 아래는 초임 기본급 기준 — 직급 내 연차·고과 인상분 미포함이라 실제 재직자 연봉은 이보다 높음. 성과급(PS·PI)은 사업본부·개인 고과별 상이해 별도(전사 공통 보도값 없음). 직전 추이: 2024년 신입 5,200만원(한국경제 2024-04), 2023년 5,100만원(핀포인트뉴스 2023-03).",
+ steps: [
+ {
+ label: "사원 (P1)",
+ description:
+ "1~4년차. 2025년 노사 합의 대졸 신입 초임 5,300만원(조세금융신문·뉴스핌·아시아경제 2025-03-12)",
+ baseManwon: 5300,
+ },
+ {
+ label: "선임 (P2)",
+ description:
+ "5~8년차. 2025년 선임 초임 6,200만원(조세금융신문 2025-03-12, 종전 대비 100만원 인상). 진급 연한(사원 4년 후 선임)은 LG그룹 공통 체계 기준",
+ baseManwon: 6200,
+ },
+ {
+ label: "책임 (P3)",
+ description:
+ "9년차 이상. 2025년 책임 초임 7,750만원(조세금융신문 2025-03-12). 초임 기준 — 책임 내 연차·고과·장기성과 인상분 미포함이라 실제 책임급 재직자 연봉은 이보다 높음",
+ baseManwon: 7750,
+ },
+ ],
+ },
+ ],
  workLife: { weeklyHours: { contract: 40, real: 45 }, vacation: { days: 20, usageRate: 85 }, remoteWork: { policy: "hybrid", description: "팀바팀" } },
  benefits: [{ category: "lifestyle", title: "가전 할인", description: "임직원몰 할인", value: 3000000 }, { category: "financial", title: "복지포인트", description: "연 100만원", value: 1000000 }],
  culture: { score: 8.1, keywords: ["인화", "가전", "안정"], pros: ["대기업의 안정성", "가전 제품 할인", "무난한 분위기"], cons: ["보수적인 문화", "모바일 사업 철수 후 활력 저하"] },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-08-15",
  },
  {
  id: "posco",

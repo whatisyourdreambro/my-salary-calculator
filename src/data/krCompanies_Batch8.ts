@@ -147,13 +147,43 @@ export const krCompanies_Batch8: CompanyProfile[] = [
       lead: { base: 125000000, incentive: { target: 20, max: 45, avgAmount: 45000000 } },
       executive: { base: 240000000, incentive: { target: 40, max: 80, avgAmount: 100000000 } },
     },
+    // 직급별 초임 — 핀포인트뉴스 2023-03 단독 보도(2023년 기준)·서울경제 2021-03 기반. 추정 창작 금지.
+    // 2024년 이후 직급별 초임 보도 미확보 — '2023년 보도 기준' 명시 유지.
+    careerLevels: [
+      {
+        group: "사원-선임-책임 3단계 (2023년 보도 초임 기준)",
+        promotionNote:
+          "직급 체계는 LG그룹 공통 사원-선임-책임 3단계. 아래는 2023년 보도 기준 초임 기본급 — 직급 내 연차·고과 인상분 미포함. 연간 고정 생산성격려금(PI) 기본급의 200%와 경영성과급 별도(2022년분은 기본급의 720~730%가 2023-02 지급된 호황기 값으로 변동 큼). 2023년 연봉인상은 일괄 6% + 고과등급별 4~6% 추가(핀포인트뉴스 2023-03).",
+        steps: [
+          {
+            label: "사원",
+            description:
+              "1~4년차. 2023년 사원 초임 기본급 5,100만원(핀포인트뉴스 2023-03 단독, LG그룹 계열 초임 5,100만원 보도와 교차 일치). PI 연 200% 포함 시 실연봉 약 5,610만원(기사 명시값). 2021년 초임은 4,300→4,600만원 인상(서울경제 2021-03)",
+            baseManwon: 5100,
+            totalManwon: 5610,
+          },
+          {
+            label: "선임",
+            description:
+              "5~8년차. 2023년 선임 초임 기본급 5,900만원(핀포인트뉴스 2023-03). 2021년에는 5,000→5,300만원 인상(서울경제 2021-03). 초임 기준이므로 선임 내 연차·고과 인상분 미포함. PI 연 200%·경영성과급 별도",
+            baseManwon: 5900,
+          },
+          {
+            label: "책임",
+            description:
+              "9년차 이상. 2023년 책임 초임 기본급 7,250만원(핀포인트뉴스 2023-03). 2021년에는 6,100→6,500만원 인상(서울경제 2021-03). 초임 기준 — 책임급 재직자 실연봉은 연차·고과에 따라 이보다 높음",
+            baseManwon: 7250,
+          },
+        ],
+      },
+    ],
     workLife: { weeklyHours: { contract: 40, real: 44 }, vacation: { days: 20, usageRate: 85 }, remoteWork: { policy: "hybrid", description: "직무별 유연근무 운영" } },
     benefits: [
       { category: "financial", title: "자녀 학자금", description: "대학 등록금 전액 지원", value: 12000000 },
       { category: "health", title: "종합건강검진", description: "본인 및 배우자 검진 지원", value: 1500000 },
     ],
     culture: { score: 8.3, keywords: ["배터리", "성과급", "글로벌"], pros: ["국내 화학·배터리 산업 선두 기업", "높은 성과급과 체계적 처우", "LG 계열의 안정적 복지"], cons: ["석유화학 업황 변동에 따른 성과급 등락", "사업부별 분위기 편차"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-08-15",
   },
   {
     id: "hanwha-solutions",

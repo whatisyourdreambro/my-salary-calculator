@@ -2,6 +2,7 @@
 // src/app/table/2026/monthly/page.tsx
 
 import type { Metadata } from "next";
+import Link from "@/components/AppLink";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
@@ -117,6 +118,23 @@ function MonthlyTable() {
 
  {/* 운영자 승인 광고 배치(2026-07-07): 표와 SEO 본문 사이 — 표 전 구간 무광고였음 */}
  <CalcResultAd />
+
+ {/* 월급 축 상세 리포트 진입로 (2026-08-15 Phase 3) — /monthly/* 트리 크롤·탐색 허브.
+     금액은 monthlyStaticParams 격자 위 값만 사용 (내부 404 방지) */}
+ <section className="mt-10 max-w-4xl mx-auto">
+ <h2 className="text-lg font-black text-navy mb-4">월급별 상세 리포트</h2>
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+ {[2_000_000, 2_500_000, 3_000_000, 3_500_000, 4_000_000, 4_500_000, 5_000_000, 6_000_000].map((m) => (
+ <Link
+ key={m}
+ href={`/monthly/${m}`}
+ className="p-3 bg-white rounded-xl border border-canvas-200 text-center text-sm font-bold text-navy hover:border-primary transition-colors"
+ >
+ 월급 {Math.round(m / 10_000).toLocaleString("ko-KR")}만원
+ </Link>
+ ))}
+ </div>
+ </section>
 
  {/* SEO 텍스트 콘텐츠 — 체류시간 + 검색엔진 */}
  <section className="mt-12 mb-8 max-w-4xl mx-auto">

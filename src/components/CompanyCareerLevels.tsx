@@ -130,7 +130,7 @@ export default function CompanyCareerLevels({ company }: Props) {
                         </div>
                       </td>
                       <td className="py-3 pr-4 text-right tabular-nums font-semibold">
-                        {fmt(step.baseManwon)}
+                        {typeof step.baseManwon === "number" ? fmt(step.baseManwon) : "—"}
                       </td>
                       <td className="py-3 pr-4 text-right tabular-nums font-bold text-primary">
                         {step.totalManwon ? fmt(step.totalManwon) : "—"}
