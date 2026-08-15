@@ -39,13 +39,14 @@ export default function AutoShareSection({
     () => true // 서버 스냅숏: 항상 억제 (SSR HTML에 미포함)
   );
 
-  // 페이지 인라인의 등록 effect(트리 순서상 먼저 실행)가 끝난 뒤에만 노출 —
-  // 첫 커밋에서 fallback과 인라인이 한 프레임 공존하는 깜빡임 방지.
+  // 페이지 인라인의 등록 effect(커밋 시 동기 실행 — 타이머보다 항상 먼저)가
+  // 끝난 뒤에만 노출 — fallback과 인라인이 한 프레임 공존하는 깜빡임 방지.
+  // rAF는 백그라운드 탭에서 실행이 보류되므로 setTimeout(0) 사용.
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(false);
-    const raf = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(raf);
+    const timer = setTimeout(() => setReady(true), 0);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   if (!ready || suppressed) return null;
