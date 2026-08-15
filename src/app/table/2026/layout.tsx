@@ -15,8 +15,9 @@ export default function Table2026Layout({ children }: { children: React.ReactNod
         </div>
       </div>
       {children}
-      <AutoShareSection contentType="page" maxWidth="5xl" />
       <PageFooterAds maxWidth="5xl" />
+      {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+      <AutoShareSection contentType="page" maxWidth="5xl" className="pb-16" />
     </>
   );
 }

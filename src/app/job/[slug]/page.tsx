@@ -372,13 +372,13 @@ export default function JobPage({ params }: Props) {
             </section>
           )}
 
+          <CoupangBanner />
+
           <ShareSection
             heading="이 직업 연봉, 친구에게도 알려주세요"
             contentType="page"
-            className="mb-8"
+            className="mt-8"
           />
-
-          <CoupangBanner />
         </div>
       </div>
     </>

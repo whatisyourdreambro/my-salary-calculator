@@ -105,14 +105,14 @@ export default function IndustryIndexPage() {
             ))}
           </div>
 
-          <ShareSection contentType="page" className="mt-8" />
-
           {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 */}
           <div className="mt-8">
             <MultiplexAd />
           </div>
 
           <CoupangBanner />
+
+          <ShareSection contentType="page" className="mt-8" />
         </div>
       </div>
     </>

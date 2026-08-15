@@ -230,11 +230,13 @@ export default function CareerStages2026Page() {
  </section>
 
  <RelatedCalculators currentPath="/career-stages-2026" />
-
- <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
 
  <PageFooterAds maxWidth="4xl" />
+
+ <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" />
+ </div>
  </main>
  );
 }

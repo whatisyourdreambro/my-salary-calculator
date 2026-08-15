@@ -132,13 +132,13 @@ export default function HubPage({ params }: { params: { id: string } }) {
           ))}
         </div>
 
-        <ShareSection contentType="page" className="mt-10" />
-
         <div className="mt-10">
           <CoupangBanner
             responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
           />
         </div>
+
+        <ShareSection contentType="page" className="mt-10" />
 
         <nav className="mt-12 pt-8 border-t border-canvas-200 dark:border-canvas-800">
           <h2 className="text-sm font-black text-faint-blue uppercase tracking-widest mb-4">

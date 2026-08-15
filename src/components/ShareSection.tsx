@@ -55,9 +55,9 @@ export default function ShareSection({
 
   return (
     <section
-      className={`p-5 sm:p-6 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-800 ${className}`}
+      className={`p-4 sm:p-5 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-800 ${className}`}
     >
-      <p className="text-sm font-black text-navy dark:text-canvas-50 mb-4">
+      <p className="text-sm font-black text-navy dark:text-canvas-50 mb-3">
         {resolvedHeading}
       </p>
       <ShareButtons contentType={contentType} locale={locale} {...rest} />

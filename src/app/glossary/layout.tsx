@@ -44,9 +44,10 @@ export default function GlossaryLayout({ children }: { children: React.ReactNode
  ]}
  />
  {children}
- <AutoShareSection contentType="page" maxWidth="3xl" />
  {/* 58개 용어 동적 + 메인 = 정의 검색 트래픽 광고 적용 */}
  <PageFooterAds maxWidth="3xl" />
+ {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+ <AutoShareSection contentType="page" maxWidth="3xl" className="pb-16" />
  </>
  );
 }

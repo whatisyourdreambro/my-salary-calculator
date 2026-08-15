@@ -214,8 +214,6 @@ export default function NewEmployee2026Page() {
  </div>
  </section>
 
- <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
-
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
@@ -225,6 +223,8 @@ export default function NewEmployee2026Page() {
  <div className="mt-8">
  <HomeTopAd />
  </div>
+
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
  </main>
  );

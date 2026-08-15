@@ -303,13 +303,13 @@ export default function IndustryPage({ params }: Props) {
             </div>
           </section>
 
+          <CoupangBanner />
+
           <ShareSection
             heading="이 업계 연봉, 동료에게도 알려주세요"
             contentType="page"
-            className="mb-8"
+            className="mt-8"
           />
-
-          <CoupangBanner />
         </div>
       </div>
     </>

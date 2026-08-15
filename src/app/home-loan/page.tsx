@@ -628,13 +628,13 @@ export default function HomeLoanPage() {
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ShareSection contentType="calc_result" />
-      </div>
-
       <PageFooterAds maxWidth="4xl" />
 
       <RelatedCalculators currentPath="/home-loan" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <ShareSection contentType="calc_result" />
+      </div>
     </main>
   );
 }

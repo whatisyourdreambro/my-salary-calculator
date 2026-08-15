@@ -27,10 +27,10 @@ export default function GuidesLayout({
   return (
     <>
       {children}
-      {/* 글 페이지는 자체 공유 UI 보유(자동 억제) — 허브 등 미보유 페이지만 노출 */}
-      <AutoShareSection contentType="guide" maxWidth="3xl" />
       {/* 308개 가이드 글 + 메인 = 광고 부재 시 수익 누수 큼. layout 자동 광고. */}
       <PageFooterAds maxWidth="3xl" />
+      {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+      <AutoShareSection contentType="guide" maxWidth="3xl" className="pb-16" />
     </>
   );
 }

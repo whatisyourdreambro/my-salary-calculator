@@ -32,10 +32,10 @@ export default function EnglishLayout({
  <div className="en-locale" lang="en">
  <EnglishLocaleSync />
  {children}
- {/* 영문 가이드 글은 자체 공유 UI 보유(자동 억제) — 미보유 페이지만 노출 */}
- <AutoShareSection contentType="page" locale="en" maxWidth="3xl" />
  {/* 영어권 트래픽도 AdSense 가 자동 매칭 (지역별 광고 송출 — Cloudflare 엣지) */}
  <PageFooterAds maxWidth="3xl" />
+ {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+ <AutoShareSection contentType="page" locale="en" maxWidth="3xl" className="pb-16" />
  </div>
  );
 }

@@ -469,18 +469,18 @@ export default function RegionDetailPage({
         {/* 다른 지역 비교 */}
         <OtherRegions currentId={region.id} />
 
-        <ShareSection
-          heading="우리 지역 연봉, 친구에게도 알려주세요"
-          contentType="page"
-          className="mt-10"
-        />
-
         {/* 쿠팡 배너 */}
         <div className="mt-10">
           <CoupangBanner
             responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
           />
         </div>
+
+        <ShareSection
+          heading="우리 지역 연봉, 친구에게도 알려주세요"
+          contentType="page"
+          className="mt-10"
+        />
 
         {/* 다음 단계 */}
         <section className="mt-10 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-2xl p-6">

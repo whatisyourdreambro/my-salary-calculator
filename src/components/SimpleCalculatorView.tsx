@@ -188,8 +188,11 @@ export default function SimpleCalculatorView({ slug }: Props) {
  )}
  </section>
 
- {/* 결과 직하 = 공유 의도가 생기는 지점. 광고(CalcResultAd)보다 위에 배치.
-     제목에 실시간 결과 수치 포함 + 입력 재현 링크 + 결과 카드 이미지 공유 */}
+ {/* ★수익 우선: CalcResultAd는 "결과 직하 viewability 최상위" 슬롯 —
+     반드시 결과 바로 아래 유지. 공유 섹션은 광고 아래 배치 (2026-08-16
+     광고 수익 급락 대응 — 공유 섹션이 광고를 밀어내면 RPM 하락) */}
+ <CalcResultAd />
+
  <ShareSection
  contentType="calc_result"
  title={`${calc.title} — ${result.primary.label} ${formatNumber(result.primary.value, result.primary.suffix)}`}
@@ -198,8 +201,6 @@ export default function SimpleCalculatorView({ slug }: Props) {
  getShareImage={getShareImage}
  className="mb-6"
  />
-
- <CalcResultAd />
 
  {calc.explanation && (
  <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">

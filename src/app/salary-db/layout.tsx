@@ -28,12 +28,12 @@ export default function SalaryDbLayout({ children }: { children: React.ReactNode
  return (
  <>
  {children}
- {/* 회사 상세([id])·비교는 자체 공유 UI 보유(자동 억제) — 메인·랭킹 등만 노출 */}
- <AutoShareSection contentType="company" maxWidth="5xl" />
  {/* 회사 페이지(/salary-db/[id]) 는 자체 광고 풍부하지만 메인·비교 페이지는 부족.
      layout 자동 광고로 회사 검색 트래픽 수익 회복. /salary-db/submit 도 포함되지만
      폼 페이지라 별 영향 없음. */}
  <PageFooterAds maxWidth="5xl" />
+ {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+ <AutoShareSection contentType="company" maxWidth="5xl" className="pb-16" />
  {/* "{회사명} 연봉" 검색 = 최대 유입 엔진. 히어로 공유가 스크롤 밖으로
      사라진 뒤에도 모바일에서 공유 접점 유지 (광고·PWA 배너 감지 시 자동 숨김) */}
  <FloatingShareBar />

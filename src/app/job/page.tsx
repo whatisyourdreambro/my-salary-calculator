@@ -133,8 +133,6 @@ export default function JobIndexPage() {
             </section>
           ))}
 
-          <ShareSection contentType="page" className="mt-8 mb-8" />
-
           <InArticleAd />
           <CoupangBanner />
 
@@ -151,6 +149,8 @@ export default function JobIndexPage() {
           <div className="mt-8">
             <MultiplexAd />
           </div>
+
+          <ShareSection contentType="page" className="mt-8" />
         </div>
       </div>
     </>

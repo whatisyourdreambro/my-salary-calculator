@@ -10,8 +10,6 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
       {/* calc_start → calc_submit 퍼널 계측 (전체 /calc/* 공통, 문서 레벨 입력 감지) */}
       <CalcFunnelTracker />
       {children}
-      {/* 페이지에 인라인 공유 버튼이 없을 때만 나타나는 fallback (광고 블록 앞) */}
-      <AutoShareSection contentType="calc_result" maxWidth="4xl" />
       {/* 하단은 HOME_TOP 슬롯 사용 — CALC_RESULT 슬롯은 각 페이지의 "결과 직하" 배치 전용으로 비워둠
           (dedup: layout 이 CalcResultAd 를 쓰면 슬롯을 선점해 페이지 쪽 결과 직하 광고가 죽음) */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-10 space-y-6">
@@ -21,6 +19,8 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
         />
         <HomeTopAd />
       </div>
+      {/* 공유 fallback은 광고 블록 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
+      <AutoShareSection contentType="calc_result" maxWidth="4xl" className="pb-10" />
       <FloatingShareBar />
     </>
   );

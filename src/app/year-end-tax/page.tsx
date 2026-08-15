@@ -210,13 +210,13 @@ export default function YearEndTaxPage() {
  </div>
  </div>
 
- <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
-
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
 
  <RelatedCalculators currentPath="/year-end-tax" />
+
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
  </section>
  </main>

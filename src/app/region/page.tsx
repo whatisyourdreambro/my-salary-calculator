@@ -232,12 +232,12 @@ export default function RegionIndexPage() {
           </div>
         </section>
 
-        <ShareSection contentType="page" className="mt-10" />
-
         {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (쿠팡 배너와 인사이트 섹션 간격 확보) */}
         <div className="mt-10 max-w-3xl mx-auto">
           <MultiplexAd />
         </div>
+
+        <ShareSection contentType="page" className="mt-10" />
       </div>
     </main>
   );

@@ -351,8 +351,6 @@ export default function MonthlyPage({ params }: Props) {
           </section>
         )}
 
-        <ShareSection contentType="salary_result" className="mt-8" />
-
         <div className="mt-8">
           <CoupangBanner
             responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
@@ -362,6 +360,8 @@ export default function MonthlyPage({ params }: Props) {
         <div className="mt-6">
           <HomeTopAd />
         </div>
+
+        <ShareSection contentType="salary_result" className="mt-8" />
 
         <RelatedCalculators
           currentPath={`/monthly/${monthly}`}
