@@ -107,6 +107,10 @@ export const metadata: Metadata = {
           url: "https://www.moneysalary.com/rss.xml",
           title: "머니샐러리 금융 가이드 RSS",
         },
+        {
+          url: "https://www.moneysalary.com/rss-companies.xml",
+          title: "머니샐러리 회사 연봉 업데이트 RSS",
+        },
       ],
     },
   },

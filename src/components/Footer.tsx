@@ -75,6 +75,9 @@ export default function Footer() {
         { name: "대기업 연봉 순위 TOP 30", href: "/salary-db/ranking" },
         { name: "Q&A", href: "/qna" },
         { name: "절세 팁", href: "/tips" },
+        // RSS 가시화 — 피드 리더 재방문·자연 백링크 (XML 라우트라 prefetch 금지 → external)
+        { name: "RSS · 새 가이드 구독", href: "/rss.xml", external: true },
+        { name: "RSS · 회사 연봉 소식", href: "/rss-companies.xml", external: true },
       ];
 
   const legalLinks = isEnglish
@@ -200,12 +203,23 @@ export default function Footer() {
                 <ul className="list-none p-0 m-0 flex flex-col gap-3 pt-3 sm:pt-0 pb-3 sm:pb-0">
                   {section.items.map((link) => (
                     <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="footer-link text-[14.5px] font-medium text-muted-blue dark:text-canvas-300 no-underline transition-colors hover:text-electric inline-block min-h-[24px]"
-                      >
-                        {link.name}
-                      </Link>
+                      {"external" in link && link.external ? (
+                        // XML 피드 등 — Next prefetch가 붙으면 Worker 요청 낭비라 일반 <a>
+                        <a
+                          href={link.href}
+                          title="Feedly 등 RSS 리더에 이 주소를 등록하세요"
+                          className="footer-link text-[14.5px] font-medium text-muted-blue dark:text-canvas-300 no-underline transition-colors hover:text-electric inline-block min-h-[24px]"
+                        >
+                          {link.name}
+                        </a>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="footer-link text-[14.5px] font-medium text-muted-blue dark:text-canvas-300 no-underline transition-colors hover:text-electric inline-block min-h-[24px]"
+                        >
+                          {link.name}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
