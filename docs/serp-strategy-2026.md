@@ -151,7 +151,10 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
   위젯 내부 하단 브랜드 링크는 `utm_source=widget` — 유입 채널 구분.
 - 위젯은 robots Disallow(`/widget/`) + X-Robots-Tag noindex. /embed는 색인 대상.
 - 배포 후 프로덕션 `www.moneysalary.com/widget/salary` 응답 헤더 실측 필수
-  (`content-security-policy: ... frame-ancestors *`). 실측 결과: (배포 후 기록)
+  (`content-security-policy: ... frame-ancestors *`). 실측 결과: ✅ 2026-08-17
+  200 OK + 핸들러 CSP(frame-ancestors * 포함)·x-robots-tag noindex·캐시 헤더
+  전부 정상. 예측대로 next.config headers()분(XFO 등)은 프로덕션에 미방출 —
+  핸들러 직접 세팅이 정본이라는 설계 확정.
 - 티스토리 실붙임 테스트: 운영자 티스토리 테스트 포스트에 HTML 모드로 스니펫
   삽입 → 계산기 표시 + 크레딧 링크 확인. 결과: (운영자 확인 후 기록)
 - 위젯 세법 상수는 `src/lib/calculator.ts` 단일 소스 — 세율 갱신 시 자동 반영,
