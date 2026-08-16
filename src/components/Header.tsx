@@ -22,6 +22,7 @@ import MobileDropdown from "./header/MobileDropdown";
 import ThemeToggle from "./header/ThemeToggle";
 import LocaleSwitcher from "./header/LocaleSwitcher";
 import HeaderSearch from "./header/HeaderSearch";
+import FavoritesBadge from "./header/FavoritesBadge";
 
 export default function Header() {
  const pathname = usePathname();
@@ -111,6 +112,8 @@ export default function Header() {
  <HeaderSearch />
  <LocaleSwitcher />
  <ThemeToggle />
+ {/* 즐겨찾기 배지 — 저장 0개면 미렌더 (재방문 루프 진입점) */}
+ <FavoritesBadge />
  {/* Dashboard CTA — md+ 에서만 텍스트, sm 이하 아이콘만 */}
  <Link
  href={dashboardHref}
