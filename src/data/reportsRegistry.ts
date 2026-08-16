@@ -6,6 +6,11 @@
 // src/app/insights/<slug>/page.tsx 에 개별 폴더 라우트로 만들고, 여기에는
 // 메타만 등재한다. 슬러그는 ASCII 필수 (한글 슬러그 프리렌더는 CF Pages 404).
 
+import {
+  entryReportCompanyCount,
+  entryReportIndustryCount,
+} from "@/lib/salary-data/entrySalaryReport";
+
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */
   slug: string;
@@ -21,9 +26,9 @@ export interface ReportMeta {
 export const reportsRegistry: ReportMeta[] = [
   {
     slug: "entry-salary-by-industry-2026",
-    title: "2026 업종별 신입 초봉 순위 — 413개사 데이터 분석",
-    description:
-      "머니샐러리가 국내 413개사 연봉 데이터를 30개 업종으로 집계한 신입 초봉(기본급+평균 인센티브) 순위 리포트. 출처 표기 시 자유 인용.",
+    // 회사·업종 수는 집계 단일 소스에서 파생 — 하드코딩 시 본문과 불일치 사고
+    title: `2026 업종별 신입 초봉 순위 — ${entryReportCompanyCount}개사 데이터 분석`,
+    description: `머니샐러리가 국내 ${entryReportCompanyCount}개사 연봉 데이터를 ${entryReportIndustryCount}개 업종으로 집계한 신입 초봉(기본급+평균 인센티브) 순위 리포트. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-17",
     updatedDate: "2026-08-17",
     keywords: [

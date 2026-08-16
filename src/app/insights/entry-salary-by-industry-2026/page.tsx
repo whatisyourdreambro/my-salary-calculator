@@ -7,7 +7,11 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { ArrowRight, BarChart3 } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
-import { buildIndustryAggregate } from "@/lib/salary-data/industryAggregates";
+import {
+  entryReportRows,
+  entryReportCompanyCount,
+  ENTRY_REPORT_MIN_COMPANIES,
+} from "@/lib/salary-data/entrySalaryReport";
 import { getIndustryMeta } from "@/lib/salary-data/industryTaxonomy";
 import { industriesData } from "@/data/industriesData";
 import { jobsData } from "@/data/jobsData";
@@ -29,7 +33,7 @@ export const dynamic = "force-static";
 
 const SLUG = "entry-salary-by-industry-2026";
 const PATH = `/insights/${SLUG}`;
-const MIN_COMPANIES = 5; // n<5 업종은 표본 부족으로 순위 제외
+const MIN_COMPANIES = ENTRY_REPORT_MIN_COMPANIES;
 const report = getReportBySlug(SLUG)!;
 
 export const metadata: Metadata = buildPageMetadata({
@@ -50,27 +54,10 @@ function manwonNum(krw: number): number {
   return Math.round(krw / 10000);
 }
 
-// ── 집계 (모듈 로드 시 1회 — force-static이라 빌드 시 실행) ──────────────
+// ── 집계 (순위·회사 수는 entrySalaryReport 단일 소스 — 제목·본문 동기화) ──
 function buildReportData() {
-  const domestic = companyRepository
-    .getAll()
-    .filter((c) => c.tier !== "foreign");
-
-  const byIndustry = new Map<string, typeof domestic>();
-  for (const c of domestic) {
-    const id = c.industryId ?? "etc";
-    if (id === "etc") continue; // 표준 분류 불가 회사는 집계 제외
-    const list = byIndustry.get(id);
-    if (list) list.push(c);
-    else byIndustry.set(id, [c]);
-  }
-
-  const ranked = Array.from(byIndustry.entries())
-    .map(([id, list]) => ({ id, agg: buildIndustryAggregate(list)! }))
-    .filter((x) => x.agg && x.agg.count >= MIN_COMPANIES)
-    .sort((a, b) => b.agg.avgEntry - a.agg.avgEntry);
-
-  const totalCompanies = ranked.reduce((sum, x) => sum + x.agg.count, 0);
+  const ranked = entryReportRows;
+  const totalCompanies = entryReportCompanyCount;
 
   // /industry/[slug] 링크: 표준 업종 id → industriesData 프로필 역매핑
   const industryPageByTaxonomy = new Map<string, string>();
@@ -302,9 +289,9 @@ export default function EntrySalaryByIndustryReport() {
           <ul className="space-y-1.5 text-[14px] leading-[1.8] text-muted-blue font-medium list-disc pl-5">
             <li>
               집계 대상: 머니샐러리 회사 연봉 DB{" "}
-              {companyRepository.getAll().length}개사 중 국내 기업{" "}
-              <strong className="text-navy">{data.totalCompanies}개사</strong>
-              (외국계 제외, 표준 업종 분류 불가 기업 제외)
+              {companyRepository.getAll().length}개사 중 순위 업종에 속한 국내
+              기업 <strong className="text-navy">{data.totalCompanies}개사</strong>
+              (외국계·표준 업종 분류 불가 기업·표본 부족 업종 소속 기업 제외)
             </li>
             <li>
               신입 초봉 = 계약 기본급 + 평균 인센티브 (일회성 보상 제외)
