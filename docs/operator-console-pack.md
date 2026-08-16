@@ -33,9 +33,10 @@
    - `https://www.moneysalary.com/chuseok-bonus-2026`
    - `https://www.moneysalary.com/civil-servant-pay-2027`
 
-## 6. 카카오 JS 키 발급 (10분) ☐
-- 절차는 [kakao-share-setup.md](./kakao-share-setup.md) 4단계 그대로.
-- 효과: 전 페이지 카카오 버튼이 "링크 복사"→"진짜 공유창+버튼 2개"로 승격.
+## 6. 카카오 JS 키 발급 (10분) ✅ 완료 (2026-08-16)
+- 운영자가 키 발급·전달 → 코드에 반영 완료(.env.production — CF 대시보드 등록 불필요).
+- ☐ **남은 확인 1개**: developers.kakao.com → 내 애플리케이션 → [플랫폼] > Web에
+  `https://www.moneysalary.com` 이 등록돼 있는지 확인 (미등록이면 공유창에 도메인 오류).
 
 ---
 

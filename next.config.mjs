@@ -9,19 +9,21 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // CSP — AdSense + 쿠팡 파트너스 + Cloudflare Insights 만 허용 (메모리 수익 정책 준수).
 // 카카오 Adfit(*.adfit.kakao.com, t1.daumcdn.net) 은 실제 사용 코드가 없어 2026-05-24
 // 제거. 운영자 명시 지시 시에만 재추가.
+// 카카오 공유 SDK(t1.kakaocdn.net script / sharer.kakao.com form / kapi.kakao.com)는
+// 운영자가 JS 키를 발급·제공(2026-08-16)하여 허용 — 광고 아닌 공유 전용.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net;
   frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://ep2.adtrafficquality.google;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com;
   media-src 'none';
-  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com;
+  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';
-  form-action 'self';
+  form-action 'self' https://sharer.kakao.com;
 `
   .replace(/\s{2,}/g, " ")
   .trim();
