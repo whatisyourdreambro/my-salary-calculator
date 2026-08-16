@@ -106,7 +106,7 @@ function buildHtml(): string {
   <p class="title">💰 2026 연봉 <span>실수령액</span> 계산기</p>
   <div class="row">
     <label for="salary">연봉</label>
-    <input id="salary" type="number" inputmode="numeric" min="500" max="100000" step="100" value="5000">
+    <input id="salary" type="number" inputmode="numeric" min="500" max="20000" step="100" value="5000">
     <span class="unit">만원</span>
   </div>
   <div class="result">
@@ -119,7 +119,7 @@ function buildHtml(): string {
 <script>
 (function () {
   var GRID = ${gridJson};
-  var MIN = ${GRID_MIN}, STEP = ${GRID_STEP};
+  var MIN = ${GRID_MIN}, MAX = ${GRID_MAX}, STEP = ${GRID_STEP};
   var input = document.getElementById("salary");
   var out = document.getElementById("net");
   function netOf(annualWon) {
@@ -132,6 +132,11 @@ function buildHtml(): string {
   function render() {
     var manwon = parseFloat(input.value);
     if (!isFinite(manwon) || manwon <= 0) { out.textContent = "—"; return; }
+    if (manwon * 10000 > MAX) {
+      // 그리드 상한(2억) 초과 — 틀린 값을 조용히 보여주는 대신 본편으로 안내
+      out.innerHTML = "<small>2억 초과는 아래 버튼으로</small>";
+      return;
+    }
     var net = netOf(manwon * 10000);
     var netManwon = Math.round(net / 10000);
     out.innerHTML = "월 " + netManwon.toLocaleString("ko-KR") + "<small>만원</small>";
