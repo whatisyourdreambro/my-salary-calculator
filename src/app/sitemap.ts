@@ -6,6 +6,7 @@ import { jobsData } from '@/data/jobsData';
 import { getStaticMonthlyAmounts } from '@/lib/monthlyStaticParams';
 import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
+import { reportsRegistry } from '@/data/reportsRegistry';
 
 type ChangeFrequency =
  | 'always'
@@ -434,6 +435,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
  })),
  ];
 
+ // 데이터 리포트 (/insights) — 분기 발행, reportsRegistry가 단일 소스.
+ // lastModified는 리포트별 실제 갱신일(updatedDate) — freshness 신호 정직 유지.
+ const reportUrls: MetadataRoute.Sitemap = [
+ {
+ url: `${baseUrl}/insights`,
+ lastModified: STATIC_LAST_MODIFIED,
+ changeFrequency: 'weekly',
+ priority: 0.8,
+ },
+ ...reportsRegistry.map((report) => {
+ const parsed = new Date(report.updatedDate);
+ return {
+ url: `${baseUrl}/insights/${report.slug}`,
+ lastModified: Number.isNaN(parsed.getTime()) ? STATIC_LAST_MODIFIED : parsed,
+ changeFrequency: 'monthly' as ChangeFrequency,
+ priority: 0.85,
+ };
+ }),
+ ];
+
  // 급여 환산 테이블 페이지
  const tableUrls: MetadataRoute.Sitemap = [
  '/table/2026/annual',
@@ -447,5 +468,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.7,
  }));
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...tableUrls];
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...reportUrls, ...tableUrls];
 }
