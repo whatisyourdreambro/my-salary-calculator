@@ -69,8 +69,90 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
 
 | 시기 | 실행 |
 |---|---|
-| 8월 말 | 데이터 리포트 1호: "업종별 신입 초봉 순위" (기존 데이터 재가공, 코드 1일) |
-| 9월 | 임베드 위젯 + /embed 안내 페이지. 블로그 발행분에 브랜드 표기 규칙 적용 |
+| 8월 말 | ✅ 데이터 리포트 1호: "업종별 신입 초봉 순위" (2026-08-17 배포, 예정 앞당김) |
+| 9월 | ✅ 임베드 위젯 + /embed 안내 페이지 (2026-08-17 리포트 1호와 동시 배포). 블로그 발행분에 브랜드 표기 규칙 적용은 9월 과제 유지 |
 | 10월 | 리포트 2호: "성과급 실지급률" (1월 시즌 예고편 — 기자 인용 타깃) |
 | 12~1월 | 성과급 24h 대응 + 리포트 3호(성과급 발표 총정리) — 인용 피크 노림 |
 | 분기마다 | GSC 백링크 리포트로 인용 추적, 리포트 주제 조정 |
+
+---
+
+# 실행 플레이북 (2026-08-17 심화 — 기둥 1·4 구현 완료 기준)
+
+## 구현 현황
+
+- **/insights** 데이터 리포트 섹션 신설 (기둥 1). `/report`는 개인용 noindex 페이지가
+  선점하고 있어 `/insights` 사용 — 오타 유입 위험 있는 `/reports`는 의도적으로 배제.
+- 리포트 1호 `/insights/entry-salary-by-industry-2026` — 순위·수치는 전부 빌드 시
+  자체 DB에서 집계(하드코딩 0). 실서비스 회사 수는 **434개사**(485는 중복 제거 전
+  원시 수치 — 리포트·노출 텍스트에 485 쓰지 말 것), 국내 집계 대상 413개사.
+- `CitationCopyButton` — 인용문 + "출처: 머니샐러리 데이터 리포트 (URL)" 복사,
+  GA4 `citation_copy` 이벤트. (전역 CopyAttribution은 드래그 복사 전용 —
+  clipboard.writeText에는 발동하지 않아 버튼이 출처를 직접 내장)
+- `reportsRegistry`(src/data/reportsRegistry.ts) = 발행 목록 단일 소스 →
+  sitemap 자동 등재 → postbuild IndexNow 전량 자동 핑.
+- OG: `/api/og?type=report` + `path=/insights` 자동 분기. 공유 헤딩 `report` 키.
+- **/widget/salary** (기둥 4) — edge Route Handler가 광고·GA·카카오 스크립트가
+  전혀 없는 자가완결 HTML 서빙(iframe 내 AdSense 실행 = 정책 리스크 → 원천 차단).
+  iframe 허용 헤더(CSP frame-ancestors *)는 **핸들러가 응답에 직접 세팅**이 정본 —
+  next-on-pages는 next.config headers()를 정적 라우트에 안 내보내는 실측(2026-08-16)
+  때문. next.config의 /widget/:path* 규칙은 dev 패리티용(동일 값).
+- **/embed** 안내 페이지 — 스니펫의 **크레딧 `<a>` 링크가 백링크 본체**
+  (iframe 자체는 링크 주스 0). "크레딧 링크 유지 = 무료 이용 조건"으로 명시.
+
+## 리포트 발행 파이프라인 (2호부터 이 순서대로)
+
+1. **데이터 소스 선정 + 신뢰 등급 표기** — 자체 DB(추정 포함) / 금감원 공시(43개사,
+   `disclosed` 필드) / 정부 통계(jobsData `officialStats` 54종). 리포트 방법론
+   섹션에 등급 명시 필수 — 명시 없이는 발행 금지(인용 역풍 방지).
+2. **집계 검증** — 대표 수치 3개 이상 수기 재검산 (스크래치 node 스크립트).
+3. **페이지 골격 체크리스트** — force-static · ASCII 슬러그(한글 슬러그 프리렌더
+   404) · datasetLd+articleLd+faqLd+breadcrumbLd · CitationCopyButton 2개 이상 ·
+   방법론 섹션 · FAQ 4문 이상 · 크로스링크(기존 랭킹 페이지와 상호보완 명시) ·
+   광고는 기존 컴포넌트를 본문 사이 배치(신규 UI는 항상 광고 아래).
+4. **등재** — reportsRegistry에 추가(+updatedDate) → sitemap·인덱스 자동 반영.
+
+## 발행 체크리스트 (리포트·위젯 공통)
+
+1. `npm run build` 단독 실행, 종료코드 0 직접 확인 (파이프로 가리지 말 것).
+2. DOM 검사 — 표 행수·JSON-LD Dataset·광고→공유 순서.
+3. `/api/og?type=report&title=...` 200 + image/png 확인.
+4. main push → CF 배포 → IndexNow postbuild 자동 (CF 로그 `[indexnow]` 확인).
+5. **운영자**: GSC URL 검사 → 색인 요청 (신규 리포트 URL).
+6. **운영자**: 네이버 블로그 요약판 발행 (본문에 "머니샐러리" 브랜드 표기 +
+   리포트 URL 링크).
+7. 2주 후: GSC 백링크 리포트 + GA4 referral + `citation_copy`/`embed_code_copy`
+   이벤트 확인.
+
+## 분기 캘린더
+
+| 시기 | 할 일 |
+|---|---|
+| 8월 (완료) | 리포트 1호 + 위젯 + /embed 배포. 네이버 요약판 7호 발행(운영자) |
+| 9월 | 티스토리·워드프레스 재테크 블로거에 /embed 알리기(커뮤니티·블로그 댓글 아님 — 자연 발견 유도: 관련 가이드 글에 /embed 내부링크). GSC 저격 Round 2(9/13 재측정과 함께) |
+| 10월 | 리포트 2호 "성과급 실지급률"(bonusData 전사 ETL 선행) — ★GSC 신규 페이지 버킷 C 10월 말 마감 전 발행 |
+| 12~1월 | 리포트 3호 "성과급 발표 총정리" — 발표 24h 내 갱신, 인용 피크 |
+| 분기마다 | GSC 백링크 리포트 확인 → 인용 발생 주제로 다음 리포트 조정. reportsRegistry updatedDate 갱신 시 sitemap lastModified 자동 반영 |
+
+## 리포트 2호 설계 메모 (10월 착수용)
+
+- **23개 성과급 계산기 Client.tsx는 수정 금지** (시즌 검증 트래픽 — 회귀 리스크).
+  `src/data/bonusData.ts` 신설: Client 파일의 SCENARIOS/DIVISIONS 상수를 **전사**한
+  `CompanyBonusProfile{companyId, calcSlug, nameKo, scheme, sourceFile, payouts[]}`.
+  `sourceFile`로 원본 추적. **Client 시나리오 갱신 시 bonusData 동기화** 체크 필수.
+- payouts는 `percentOfBase`(기본급 대비 %) / `percentOfSalary`(연봉 대비 %) /
+  `fixedAmountManwon`(정액) 분리 — **기준이 다른 값 혼합 랭킹 금지**.
+- 리포트 2호는 1호 골격 재사용. 방법론에 "보도·공시 100%, 추정 없음"으로 1호와
+  신뢰 등급 차이 명시. 연도별 추이는 연도축 데이터가 실존하는 기업 한정.
+
+## 위젯 운영 메모
+
+- 스니펫 구조: iframe + 크레딧 앵커(`utm_source=embed&utm_medium=widget`).
+  위젯 내부 하단 브랜드 링크는 `utm_source=widget` — 유입 채널 구분.
+- 위젯은 robots Disallow(`/widget/`) + X-Robots-Tag noindex. /embed는 색인 대상.
+- 배포 후 프로덕션 `www.moneysalary.com/widget/salary` 응답 헤더 실측 필수
+  (`content-security-policy: ... frame-ancestors *`). 실측 결과: (배포 후 기록)
+- 티스토리 실붙임 테스트: 운영자 티스토리 테스트 포스트에 HTML 모드로 스니펫
+  삽입 → 계산기 표시 + 크레딧 링크 확인. 결과: (운영자 확인 후 기록)
+- 위젯 세법 상수는 `src/lib/calculator.ts` 단일 소스 — 세율 갱신 시 자동 반영,
+  별도 관리 불필요. 매년 7월 연금 상한 갱신 시 위젯도 자동 갱신됨.
