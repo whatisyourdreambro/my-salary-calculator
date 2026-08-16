@@ -30,8 +30,8 @@ export const companyAliases: Record<string, string[]> = {
   "samsung-medison": ["메디슨", "삼성 메디슨"],
 
   // ── GSC Round 1 (2026-08-16, 3개월 전체 쿼리 데이터 기반) ──
-  // 실제 유입 쿼리에 등장했으나 별칭 미등록이던 표기 변형 7개사
-  etri: ["에트리", "한국전자통신연구원"],
+  // 실제 유입 쿼리에 등장했으나 별칭 미등록이던 표기 변형
+  // (etri는 기존 항목이 있어 아래쪽 원본에 병합 — 중복 키 금지)
   kai: ["카이", "한국항공우주산업", "한국항공우주"],
   "hl-mando": ["만도", "HL 만도"],
   "megazone-cloud": ["메가존", "메가존 클라우드"],
@@ -105,7 +105,8 @@ export const companyAliases: Record<string, string[]> = {
   "bc-card": ["비씨카드"],
   kamco: ["캠코", "KAMCO"],
   khug: ["HUG", "허그"],
-  etri: ["ETRI", "전자통신연구원"],
+  // GSC Round 1(2026-08-16): "에트리"/"에트 리" 한글 표기 쿼리 확인 → 병합
+  etri: ["ETRI", "전자통신연구원", "에트리", "한국전자통신연구원"],
   kbs: ["한국방송공사", "케이비에스"],
   "gm-korea": ["GM코리아", "한국GM", "지엠코리아", "쉐보레"],
   "kepco-kps": ["케이피에스"],
