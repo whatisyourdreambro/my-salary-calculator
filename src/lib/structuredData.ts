@@ -128,6 +128,7 @@ const SEGMENT_LABELS: Record<string, string> = {
  calc: "100가지 계산기",
  salary: "연봉 표",
  "salary-db": "회사 연봉 DB",
+ insights: "데이터 리포트",
  guides: "금융 가이드",
  tools: "금융 도구",
  finance: "금융",

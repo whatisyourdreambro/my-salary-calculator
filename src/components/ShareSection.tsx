@@ -25,6 +25,10 @@ const HEADINGS: Record<string, { ko: string; en: string }> = {
     en: "Send this calculator to someone who needs it",
   },
   fun: { ko: "친구랑 같이 해봐요", en: "Try it with your friends" },
+  report: {
+    ko: "이 리포트, 필요한 사람에게 공유하세요",
+    en: "Share this data report",
+  },
   page: { ko: "이 페이지 공유하기", en: "Share this page" },
 };
 

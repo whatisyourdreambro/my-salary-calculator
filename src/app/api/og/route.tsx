@@ -270,6 +270,33 @@ function renderCompanyOg(name: string): OgRender {
   return { node, text };
 }
 
+function renderReportOg(title: string): OgRender {
+  // /insights 데이터 리포트 — 기자·블로거 인용용 카드. 라벨로 "데이터 리포트" 정체성 명시.
+  const node = (
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <div style={{ color: CANVAS, fontSize: 26, fontWeight: 900, marginBottom: 14, letterSpacing: "0.04em" }}>
+          머니샐러리 데이터 리포트
+        </div>
+        <div style={{ color: "white", fontSize: 58, fontWeight: 900, marginBottom: 12, textAlign: "center", lineHeight: 1.18 }}>
+          {title}
+        </div>
+        <div style={{ color: "white", fontSize: 26, fontWeight: 500, opacity: 0.85, marginTop: 12 }}>
+          출처 표기 시 자유 인용 · 원문 데이터 공개
+        </div>
+      </div>
+      <div style={watermarkStyle}>moneysalary.com</div>
+    </div>
+  );
+  const text = [
+    "머니샐러리 데이터 리포트",
+    title,
+    "출처 표기 시 자유 인용 · 원문 데이터 공개",
+    "moneysalary.com",
+  ].join(" ");
+  return { node, text };
+}
+
 function renderDefaultOg(title: string): OgRender {
   const node = (
     <div style={containerStyle}>
@@ -339,6 +366,8 @@ export async function GET(req: NextRequest) {
     } else if (type === "company") {
       const name = searchParams.get("name") || title;
       og = renderCompanyOg(name);
+    } else if (type === "report") {
+      og = renderReportOg(title);
     } else {
       // legacy 호환: amount 단독 query는 salary로 처리
       const legacyAmount = searchParams.get("amount");
@@ -351,6 +380,8 @@ export async function GET(req: NextRequest) {
         const path = searchParams.get("path") || "";
         if (path.startsWith("/fun")) {
           og = renderFunOg(title);
+        } else if (path.startsWith("/insights")) {
+          og = renderReportOg(title);
         } else if (path.startsWith("/guides")) {
           og = renderGuideOg(title);
         } else if (path.startsWith("/salary-db")) {
