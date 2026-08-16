@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import CountUp from "react-countup";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 import { CalcResultAd } from "@/components/AdPlacement";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
@@ -78,6 +79,10 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  description={`${company.name.ko}의 신입 초봉, 평균 연봉, 복지 정보를 확인하세요.`}
  className="justify-center md:justify-start"
  />
+ </div>
+ {/* 재방문 루프 — 회사 페이지가 즐겨찾기 효과 최대 지점 ("{회사명} 연봉" 재검색 대체) */}
+ <div className="mt-4 flex justify-center md:justify-start">
+ <FavoritesButton title={`${company.name.ko} 연봉`} className="!bg-white/10 !border-white/25 !text-white hover:!border-white/60" />
  </div>
  </div>
  </div>

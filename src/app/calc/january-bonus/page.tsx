@@ -13,6 +13,7 @@ import {
   faqLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import FavoritesButton from "@/components/FavoritesButton";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Calendar, Gift } from "lucide-react";
@@ -92,6 +93,7 @@ export default function JanuaryBonusPage() {
             <p className="text-lg font-medium text-muted-blue dark:text-canvas-300">
               내 환급액 <strong className="text-electric">미리 확인</strong>하고 절세 전략 세우기
             </p>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           <JanuaryBonusClient />

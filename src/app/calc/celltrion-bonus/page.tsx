@@ -21,6 +21,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import { FlaskConical, AlertTriangle, Info } from "lucide-react";
 import CelltrionBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -147,6 +148,7 @@ export default function CelltrionBonusPage() {
             <div className="mt-5">
               <ShareButtons title={PAGE_TITLE_FULL} description={PAGE_DESC} />
             </div>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           <CelltrionBonusClient />

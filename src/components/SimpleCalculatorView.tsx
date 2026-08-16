@@ -12,6 +12,7 @@ import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 import { CalcResultAd, GuideMidAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
 import ShareSection from "./ShareSection";
+import FavoritesButton from "./FavoritesButton";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
 import { SITE_CONFIG } from "@/lib/seo";
@@ -130,6 +131,9 @@ export default function SimpleCalculatorView({ slug }: Props) {
  <p className="text-base text-muted-blue dark:text-canvas-300 leading-relaxed max-w-2xl mx-auto">
  {calc.description}
  </p>
+ <div className="mt-4 flex justify-center">
+ <FavoritesButton path={`/calc/${slug}`} title={calc.title} />
+ </div>
  </div>
 
  <section className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">

@@ -13,6 +13,7 @@ import {
   faqLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import FavoritesButton from "@/components/FavoritesButton";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Gift, Calculator, ArrowRight, Sparkles, Info } from "lucide-react";
@@ -105,6 +106,7 @@ export default function YearEndBonusPage() {
             <p className="text-lg font-medium text-muted-blue dark:text-canvas-300">
               직급별 평균 성과급으로 <strong className="text-electric">실수령액 즉시 비교</strong>
             </p>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           {/* Client Calculator */}

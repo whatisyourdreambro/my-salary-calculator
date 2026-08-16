@@ -18,6 +18,7 @@ import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
+import FavoritesButton from "@/components/FavoritesButton";
 // InArticleAd 는 SalaryResultCard 내부(결과 직하)가 담당 — 여기서 또 쓰면 dedup 사망
 import { CalcResultAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
@@ -169,6 +170,14 @@ export default function MonthlyPage({ params }: Props) {
           <br />
           실수령액 분석
         </h1>
+
+        <div className="flex justify-center mb-4">
+          <FavoritesButton
+            path={`/monthly/${monthly}`}
+            title={`월급 ${m}만원 실수령액`}
+            variant="icon"
+          />
+        </div>
 
         <p className="speakable-summary max-w-xl mx-auto text-center text-sm text-muted-blue mb-8">
           세전 월급 {m}만원의 2026년 실수령액은 약 {netManwon}만원, 4대보험·세금

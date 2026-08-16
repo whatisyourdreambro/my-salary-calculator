@@ -22,6 +22,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import { Fuel, AlertTriangle, Info } from "lucide-react";
 import SOilBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -175,6 +176,7 @@ export default function SOilBonusPage() {
             <div className="mt-5">
               <ShareButtons title={PAGE_TITLE_FULL} description={PAGE_DESC} />
             </div>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           {/* 2026년(2025 실적분) 미확정 노티스 — 확정 보도 시 이 블록을 확정값으로 교체 */}

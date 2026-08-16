@@ -8,6 +8,7 @@ import {
   faqLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import FavoritesButton from "@/components/FavoritesButton";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
@@ -99,6 +100,7 @@ export default function HolidayBonusPage() {
             <p className="text-lg font-medium text-muted-blue dark:text-canvas-300">
               설·추석 보너스 <strong className="text-electric">실수령액 즉시 계산</strong>
             </p>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           <HolidayBonusClient />

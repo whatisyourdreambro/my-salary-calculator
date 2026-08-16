@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
 import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -156,6 +157,11 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  variant="compact"
  title={guide.title}
  contentType="guide"
+ />
+ <FavoritesButton
+ variant="icon"
+ path={`/guides/${guide.slug}`}
+ title={guide.title}
  />
  </div>
  </motion.div>

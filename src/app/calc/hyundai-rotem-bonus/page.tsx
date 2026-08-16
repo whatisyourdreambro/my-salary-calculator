@@ -22,6 +22,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import { TrainFront, AlertTriangle, Info } from "lucide-react";
 import HyundaiRotemBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -153,6 +154,7 @@ export default function HyundaiRotemBonusPage() {
             <div className="mt-5">
               <ShareButtons title={PAGE_TITLE_FULL} description={PAGE_DESC} />
             </div>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           {/* 시즌 노티스 — 2026 성과배분 갈등 진행 중 (확정 시 이 블록을 확정값으로 교체) */}

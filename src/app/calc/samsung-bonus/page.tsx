@@ -31,6 +31,7 @@ import {
   TAI_PAY_DATE,
 } from "./taiData";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -377,6 +378,7 @@ export default function SamsungBonusCalculatorPage() {
               찾으셨다면 바로 이 페이지입니다 — OPI(초과이익성과금) 재원부터
               본인 실수령액까지 한 번에 추정합니다.
             </p>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           <SamsungBonusClient />

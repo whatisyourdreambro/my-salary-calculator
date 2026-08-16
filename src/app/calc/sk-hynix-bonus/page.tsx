@@ -25,6 +25,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import { Sparkles, Coins, AlertTriangle, Info } from "lucide-react";
 import SkHynixBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
+import FavoritesButton from "@/components/FavoritesButton";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -187,6 +188,7 @@ export default function SkHynixBonusPage() {
                 description={PAGE_DESC}
               />
             </div>
+            <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
           {/* 시즌 노티스 — 2026 상반기 PI 발표 임박 (발표 시 이 블록을 확정값으로 교체) */}
