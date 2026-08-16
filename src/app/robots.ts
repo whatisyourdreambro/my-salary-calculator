@@ -16,7 +16,9 @@ export default function robots(): MetadataRoute.Robots {
  const baseUrl = "https://www.moneysalary.com";
 
  const corePathAllow = ['/', '/_next/'];
- const corePathDisallow = ['/private/', '/share/', '/api/'];
+ // /widget/ = 임베드 iframe 전용(자가완결 HTML, X-Robots-Tag noindex 병행) —
+ // 색인 대상은 안내 페이지 /embed 쪽이다.
+ const corePathDisallow = ['/private/', '/share/', '/api/', '/widget/'];
 
  return {
  rules: [

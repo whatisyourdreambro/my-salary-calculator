@@ -28,6 +28,13 @@ const ContentSecurityPolicy = `
   .replace(/\s{2,}/g, " ")
   .trim();
 
+// /widget/* 임베드 위젯 전용 CSP — 외부 블로그 iframe 허용(frame-ancestors *).
+// 정본은 라우트 핸들러(src/app/widget/salary/route.ts)가 직접 세팅하는 응답 헤더다
+// (next-on-pages가 headers()를 정적 라우트에 안 내보내는 실측 2026-08-16).
+// 이 값은 dev 패리티용 — 핸들러와 반드시 동일 값 유지 (다르면 CSP 중복 시 교집합 강제).
+const widgetCsp =
+  "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors *; base-uri 'none'; form-action 'none'";
+
 const securityHeaders = [
   {
     key: "Strict-Transport-Security",
@@ -692,6 +699,21 @@ const nextConfig = {
             key: "Cache-Control",
             value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
           }
+        ],
+      },
+      // 임베드 위젯 — 전역 CSP(frame-ancestors 'self')·XFO(SAMEORIGIN)를 교체해
+      // 외부 블로그 iframe 삽입 허용. 전역 규칙 뒤에 있어야 같은 키를 이긴다.
+      // XFO는 allow-all 표현이 없어 무효값(ALLOWALL)으로 덮음 — 모던 브라우저는
+      // CSP frame-ancestors가 있으면 XFO를 무시하므로 무해.
+      {
+        source: "/widget/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: widgetCsp },
+          { key: "X-Frame-Options", value: "ALLOWALL" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+          },
         ],
       },
       // GSC 5xx 대응 (2026-08): 세법 고정 콘텐츠 3종은 엣지 6시간 캐시로
