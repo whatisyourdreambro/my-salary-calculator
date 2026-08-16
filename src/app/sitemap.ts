@@ -46,6 +46,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/hub/insurance',
  '/hub/business',
  '/hub/daily-life',
+ // 임베드 위젯 안내 (2026-08-17) — /widget/salary 자체는 noindex라 미등재
+ '/embed',
  '/about',
  '/privacy',
  '/terms',
