@@ -28,6 +28,16 @@ export const companyAliases: Record<string, string[]> = {
   "samsung-electronics": ["삼전"],
   // GSC "삼성메디슨 연봉" 쿼리(순위권·저CTR) 매칭 보강 — 표기 변형만, 추정 수치 아님
   "samsung-medison": ["메디슨", "삼성 메디슨"],
+
+  // ── GSC Round 1 (2026-08-16, 3개월 전체 쿼리 데이터 기반) ──
+  // 실제 유입 쿼리에 등장했으나 별칭 미등록이던 표기 변형 7개사
+  etri: ["에트리", "한국전자통신연구원"],
+  kai: ["카이", "한국항공우주산업", "한국항공우주"],
+  "hl-mando": ["만도", "HL 만도"],
+  "megazone-cloud": ["메가존", "메가존 클라우드"],
+  "housing-finance": ["주금공", "한국주택금융공사"],
+  "hyosung-tns": ["효성 TNS", "효성티앤에스"],
+  dunamu: ["업비트", "업비트 운영사"],
   cjcheiljedang: ["씨제이제일제당", "제일제당"],
   "hyundai-dept": ["현대백화점그룹", "현백"],
   celltrion: ["쎌트리온"],

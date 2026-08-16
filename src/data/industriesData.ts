@@ -386,15 +386,43 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "McKinsey·BCG·Bain 전략컨설팅과 삼일PwC·삼정KPMG·안진Deloitte·한영EY 등 Big4 회계법인을 포함하는 고연봉 전문 서비스 업계.",
-    topCompanyIds: [],
+    // GSC Round 1 (2026-08-16): 컨설팅 쿼리 15종+ 유입 확인 — 비어 있던 회사 링크
+    // 메쉬 연결 (랜딩 38위·회사 페이지 13~31위의 상호 부스트)
+    topCompanyIds: [
+      "mckinsey-korea",
+      "bcg-korea",
+      "bain-korea",
+      "pwc-korea",
+      "kpmg-korea",
+      "deloitte-anjin",
+      "ey-hanyoung",
+      "accenture-korea",
+    ],
     topJobIds: ["management-consultant", "cpa"],
     faqs: [
       {
         q: "컨설팅·회계법인 연봉은 얼마인가요?",
         a: "McKinsey·BCG 빅3 신입 어소시에이트는 성과 보너스 포함 1억~1억5,000만원이며, Big4 회계법인 신입 회계사는 5,000~7,000만원, 시니어 매니저는 1억~1억5,000만원입니다.",
       },
+      {
+        q: "빅4 회계법인(삼일·삼정·안진·한영) 연봉 순위는 어떻게 되나요?",
+        a: "빅4 간 초봉 차이는 크지 않아 신입 회계사 기준 5,000만원대 중후반으로 비슷하며, 성과급·야근수당 정책과 승진 속도에서 차이가 납니다. 각 법인별 직급별 상세 연봉은 아래 회사 페이지에서 확인하세요.",
+      },
     ],
-    keywords: ["컨설팅 연봉", "회계법인 연봉", "컨설팅 회사 연봉", "McKinsey 연봉", "Big4 연봉"],
+    keywords: [
+      "컨설팅 연봉",
+      "회계법인 연봉",
+      "컨설팅 회사 연봉",
+      "McKinsey 연봉",
+      "Big4 연봉",
+      "빅4 컨설팅 연봉",
+      "컨설팅펌 연봉",
+      "딜로이트 연봉",
+      "PwC 연봉",
+      "삼정KPMG 연봉",
+      "EY한영 연봉",
+      "컨설턴트 연봉",
+    ],
     trend: "rising",
     trendNote: "디지털 전환·AI 전략 수요 증가로 컨설팅 수요 급증. 데이터·기술 컨설팅 파트너 처우 급등.",
   },
