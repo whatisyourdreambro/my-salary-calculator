@@ -7,7 +7,7 @@
 import { useMemo, useState, Fragment } from "react";
 import Link from "@/components/AppLink";
 import { Search, Building2, TrendingUp, Users, ArrowRight, Database, Briefcase, MapPin, Factory, Trophy, Calculator } from "lucide-react";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import RelatedCalculators from "@/components/RelatedCalculators";
 
@@ -297,6 +297,14 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  {idx === 5 && filteredCompanies.length > 6 && (
  <div className="md:col-span-2 lg:col-span-3 my-2">
  <CalcResultAd />
+ </div>
+ )}
+ {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2
+     추가 배치 — 18번째 카드 직후(CalcResultAd와 InArticleAd 사이 스크롤 중간).
+     env NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 미설정 시 자동 미렌더. */}
+ {idx === 17 && filteredCompanies.length > 18 && (
+ <div className="md:col-span-2 lg:col-span-3 my-2">
+ <Display2Ad />
  </div>
  )}
  </Fragment>
