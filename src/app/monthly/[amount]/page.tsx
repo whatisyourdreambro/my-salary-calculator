@@ -20,7 +20,7 @@ import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import FavoritesButton from "@/components/FavoritesButton";
 // InArticleAd 는 SalaryResultCard 내부(결과 직하)가 담당 — 여기서 또 쓰면 dedup 사망
-import { CalcResultAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, HomeTopAd, Display2Ad } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -249,6 +249,13 @@ export default function MonthlyPage({ params }: Props) {
             </table>
           </div>
         </section>
+
+        {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2
+            추가 배치 — 상여금 환산표 직후, 기존 광고와 1스크린+ 간격.
+            env NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 미설정 시 자동 미렌더. */}
+        <div className="mt-8">
+          <Display2Ad />
+        </div>
 
         {/* ── 월급 고유 콘텐츠 ② 시급·주급 환산 + 국민연금 상한 ── */}
         <section className="mt-8 p-6 bg-white rounded-2xl border border-canvas-200">
