@@ -7,6 +7,7 @@ import Link from "@/components/AppLink";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
 import SeasonalLinks from "../SeasonalLinks";
+import FavoritesButton from "@/components/FavoritesButton";
 import { CalcResultAd } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -163,8 +164,13 @@ function HourlyTable2026() {
  </div>
  </section>
 
- {/* 7월 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
+ {/* 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
  <SeasonalLinks className="px-4 sm:px-6" />
+
+ {/* 즐겨찾기 락인 — 재방문 수요 큰 표 페이지 (2026-08-17, 광고 아래 영역) */}
+ <div className="mt-6 flex justify-center">
+ <FavoritesButton path="/table/2026/hourly" title="2026 시급 실수령액 표" />
+ </div>
  </div>
  </main>
  </>

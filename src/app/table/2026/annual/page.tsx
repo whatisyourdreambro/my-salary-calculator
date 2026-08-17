@@ -10,6 +10,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
+import FavoritesButton from "@/components/FavoritesButton";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 연봉 실수령액 표 — 2400만~2억 전 구간 세후 월급 한눈에",
@@ -136,8 +137,13 @@ function AnnualTable() {
           </div>
         </section>
 
-        {/* 7월 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
+        {/* 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
         <SeasonalLinks />
+
+        {/* 즐겨찾기 락인 — 표는 "내 연봉 구간 다시 보기" 재방문 수요가 큼 (2026-08-17, 광고 아래 영역) */}
+        <div className="mt-6 flex justify-center">
+          <FavoritesButton path="/table/2026/annual" title="2026 연봉 실수령액 표" />
+        </div>
 
         <div className="mt-4 text-center text-faint-blue text-sm pb-8">
           * 본 데이터는 2026년 예상 보험료율 인상안을 반영한 시뮬레이션 결과이며, 실제 확정치와 다를 수 있습니다.
