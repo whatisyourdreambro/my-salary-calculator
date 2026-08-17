@@ -73,6 +73,8 @@ export default function Footer() {
         { name: "업종별 연봉", href: "/industry" },
         { name: "지역별 연봉", href: "/region" },
         { name: "대기업 연봉 순위 TOP 30", href: "/salary-db/ranking" },
+        // 데이터 리포트 섹션 전역 진입로 — 내부링크 준고아 해소 (2026-08-17 감사)
+        { name: "데이터 리포트", href: "/insights" },
         { name: "Q&A", href: "/qna" },
         { name: "절세 팁", href: "/tips" },
         // RSS 가시화 — 피드 리더 재방문·자연 백링크 (XML 라우트라 prefetch 금지 → external)

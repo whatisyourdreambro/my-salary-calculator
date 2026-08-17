@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
-import { TrendingUp, Building2, Crown } from "lucide-react";
+import { TrendingUp, Building2, Crown, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -195,6 +195,26 @@ export default function NewEmployeeSalary2026Page() {
  </section>
 
  <InArticleAd />
+
+ {/* 데이터 리포트 1호 크로스링크 — 회사 단위(이 페이지)와 업종 단위(리포트)는
+     상호보완 관계. 광고 아래 배치 (신규 UI 광고 위 금지 규칙, 2026-08-17) */}
+ <Link
+ href="/insights/entry-salary-by-industry-2026"
+ className="group flex items-center justify-between gap-4 p-5 mb-12 rounded-2xl bg-electric/5 border border-electric/30 hover:border-electric transition-colors"
+ >
+ <span className="min-w-0">
+ <span className="block text-xs font-bold text-electric mb-1">
+ 머니샐러리 데이터 리포트
+ </span>
+ <span className="block font-black text-navy leading-snug">
+ 회사가 아닌 업종으로 보면? — 2026 업종별 신입 초봉 순위
+ </span>
+ <span className="block text-xs font-medium text-faint-blue mt-1">
+ 업종별 평균·중앙값·1위 기업까지 — 증권·핀테크가 상위권
+ </span>
+ </span>
+ <ArrowRight className="w-5 h-5 text-electric shrink-0 group-hover:translate-x-0.5 transition-transform" />
+ </Link>
 
  {/* 카테고리별 TOP 10 */}
  {[

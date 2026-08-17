@@ -190,10 +190,11 @@ export default function CompanyRankingPage() {
           <InArticleAd />
         </div>
 
-        {/* 7월 성과급 시즌 크로스셀 — 회사 연봉 순위 방문자를 성과급 클러스터로 라우팅 (2026-07-16) */}
+        {/* 성과급·상여금 시즌 크로스셀 — 회사 연봉 순위 방문자를 성과급 클러스터로 라우팅
+            (2026-07-16 신설, 2026-08-17 시즌 문구 갱신 — 7월 만료 표기 제거) */}
         <div className="mt-12">
           <h2 className="text-xl font-black text-navy mb-4">
-            7월 성과급 시즌 — 내 성과급 세후 얼마?
+            성과급·상여금 시즌 — 내 성과급 세후 얼마?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link
@@ -215,7 +216,7 @@ export default function CompanyRankingPage() {
               <span className="font-bold text-navy">
                 SK하이닉스 성과급 계산기
                 <span className="block text-xs font-medium text-faint-blue">
-                  7월 하순 상반기 PI 발표 예정 — 미리 계산
+                  상반기 PI 발표 반영 — 내 세후 실수령 확인
                 </span>
               </span>
               <ArrowRight className="w-5 h-5 text-electric" />
@@ -257,6 +258,18 @@ export default function CompanyRankingPage() {
               신입 초봉 TOP 50
               <span className="block text-xs font-medium text-faint-blue">
                 2026 신입 영끌 연봉 순위
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
+          <Link
+            href="/insights/entry-salary-by-industry-2026"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              업종별 신입 초봉 순위
+              <span className="block text-xs font-medium text-faint-blue">
+                데이터 리포트 — 업종별 평균·중앙값 집계
               </span>
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />
