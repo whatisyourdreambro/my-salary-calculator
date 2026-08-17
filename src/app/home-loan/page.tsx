@@ -3,7 +3,7 @@ import Link from "@/components/AppLink";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import PageFooterAds from "@/components/PageFooterAds";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
@@ -382,6 +382,14 @@ export default function HomeLoanPage() {
           ※ 본인 케이스를 위 계산기로 직접 시뮬해 정확한 월 상환액·한도 확인.
         </p>
       </section>
+
+      {/* 본문 중간 광고 — CalcResultAd(242행)~PageFooterAds 사이 ~390줄 무광고 구간
+          해소 (2026-08-17 수익 감사, 운영자 승인). 고단가 대출 키워드 페이지.
+          ★InArticleAd 금지: PageFooterAds에 이미 포함 — 같은 슬롯은 경로당 1회
+          중복 방지로 하단 것이 조용히 사라져 "추가"가 아니라 "이동"이 됨. */}
+      <div className="mb-12">
+        <GuideMidAd />
+      </div>
 
       {/* 체크리스트 */}
       <section className="mb-12">
