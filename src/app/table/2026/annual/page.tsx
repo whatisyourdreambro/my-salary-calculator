@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
@@ -136,6 +136,13 @@ function AnnualTable() {
             </div>
           </div>
         </section>
+
+        {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2 추가
+            배치 — 본문(SEO 섹션)과 시즌 링크 사이. CalcResultAd와 1스크린+ 간격.
+            env NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 미설정 시 자동 미렌더. */}
+        <div className="mt-10">
+          <Display2Ad />
+        </div>
 
         {/* 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
         <SeasonalLinks />

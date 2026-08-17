@@ -8,7 +8,7 @@ import WeeklyTableInteractive from "./WeeklyTableInteractive";
 import TableHero from "@/components/TableHero";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -148,6 +148,12 @@ function WeeklyTable2026() {
  </div>
  </div>
  </section>
+
+ {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2 추가 배치.
+     env NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 미설정 시 자동 미렌더. */}
+ <div className="mt-10 px-4 sm:px-6">
+ <Display2Ad />
+ </div>
 
  {/* 시즌 크로스링크 — 표 유입을 시즌 피크 페이지로 라우팅 (2026-07-16, 광고 슬롯과 무관한 본문 영역) */}
  <SeasonalLinks className="px-4 sm:px-6" />
