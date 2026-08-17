@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import ShareableResult from "@/components/ShareableResult";
 import { CalcResultAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 import { Suspense } from "react";
 import { calculateNetSalary } from "@/lib/calculator";
 import NextActions from "@/components/NextActions";
@@ -91,6 +92,17 @@ export default function SharePage({ params }: Props) {
  {decoded && (
  <div className="w-full mt-8">
  <CalcResultAd />
+ </div>
+ )}
+ {/* 쿠팡 배너 — 카톡 공유 유입 랜딩의 쿠팡 인벤토리 0 해소 (2026-08-17 수익
+     감사, 운영자 승인 — 2026-07-13 "광고 1개" 결정은 AdSense 유닛 기준이며
+     이번 승인으로 쿠팡 1개 추가. 위치는 기존 광고 아래 고정, 위 배치 금지) */}
+ {decoded && (
+ <div className="w-full mt-4">
+ <CoupangBanner
+ responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+ category="salary"
+ />
  </div>
  )}
 
