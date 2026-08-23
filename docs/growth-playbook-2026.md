@@ -64,6 +64,12 @@
 - **/monthly 격자**: src/lib/monthlyStaticParams.ts 가 단일 소스 — sitemap과 동기 유지.
 - **jobsData officialStats**: 워크피디아 재직자조사 연 1회 갱신(직업당 표본 ~30명 설문 — 공무원 계열은 봉급표 병기 원칙).
 - **기초연금**: 매년 1월 기준연금액·선정기준액 고시 → /basic-pension-2026 갱신.
+- **★DART 공시 연봉 (연 1회, 매년 4월 중순)**: 사업보고서 마감(3/31)+정정 2주 후
+  `node scripts/dart-etl.mjs fetch --year 직전연도 --force` → `emit` → `diff` 실행.
+  골든 diff(수기 vs DART ±10%) 통과 확인 → dartDisclosed/dartInjection 커밋.
+  키는 저장소 밖 `~\.moneysalary-secrets\dart.key` → env DART_API_KEY 주입 (커밋 전
+  40hex 스캔 게이트 필수). 신규 상장사는 `match` 재실행 → corpCodeMap 검수 추가.
+  8월에 반기보고서로 점검 실행만(급여 수치 갱신 금지 — 6개월 누적 왜곡).
 - **레거시 가이드 50편**: 2026-08-15 재작성 완료 — 연 1회(8월) 수치 재점검.
 
 ## 5. 효과 검증 지표 (기준선: 2026-08-15)
