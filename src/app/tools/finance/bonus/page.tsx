@@ -9,7 +9,7 @@ import {
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026 세법 기준 로직 (소득세법 제47조, 제55조, 제59조)
@@ -728,6 +728,13 @@ export default function BonusCalculatorPage() {
 
         {/* ── 성과급 비교하기 ── */}
         <BonusComparison baseResult={r} baseSalary={salary} baseBonus={bonus} />
+
+        {/* 비교와 용어사전 사이 중간 광고 — GUIDE_MID 는 이 페이지·tools/layout
+            (IN_ARTICLE·쿠팡·HOME_TOP) 미사용이라 무충돌. tools 27종 중 유일한
+            장문(700행+) 페이지 선별 배치 (운영자 일괄 승인 2026-08-23) */}
+        <div className="mb-6">
+          <GuideMidAd />
+        </div>
 
         {/* ── 성과급 용어사전 ── */}
         <BonusGlossary />
