@@ -213,6 +213,14 @@ const nextConfig = {
         destination: "/salary-db",
         permanent: true,
       },
+      {
+        // /salary-db/compare 인덱스(슬러그 없음)는 page 미존재 404였음 —
+        // 가이드 2곳(company-salary-deepdive-2026)이 링크 중이라 DB 허브로 흡수.
+        // /salary-db/compare/[slug] 상세 413쌍에는 영향 없음 (정확 경로만 매칭).
+        source: "/salary-db/compare",
+        destination: "/salary-db",
+        permanent: true,
+      },
       // ─────────────────────────────────────────────────────────────────
       // 레거시 가이드 90건 301 (2026-08-15 수익 개선 Phase 2):
       // 과거 삭제된 /guides/* URL(빈 디렉터리 잔재 91개 중 살아있는

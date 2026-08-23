@@ -84,6 +84,7 @@ export const CANONICAL_INDUSTRIES: IndustryMeta[] = [
     aliases: [
       "Semiconductor", "Semiconductor Equipment", "Semiconductor/IC Design",
       "Semiconductor / Consumer Electronics", "Semiconductor / AI",
+      "Semiconductor Materials",
       "Display", "Display Equipment",
     ],
   },
@@ -153,6 +154,7 @@ export const CANONICAL_INDUSTRIES: IndustryMeta[] = [
       "Energy", "Energy / Public", "Utilities / Water", "Solar Energy",
       "Solar / EV Charging", "Energy/Refinery", "Energy/Gas", "Energy / Nuclear",
       "Energy / Manufacturing", "Energy / Hydrogen", "Energy / Chemical",
+      "Oil & Refining",
       "R&D / Nuclear", "Environment",
     ],
   },
@@ -163,7 +165,7 @@ export const CANONICAL_INDUSTRIES: IndustryMeta[] = [
     aliases: [
       "Retail", "E-commerce", "Retail / Luxury", "Retail / Convenience",
       "Luxury Retail", "Home Shopping", "Home Shopping / Commerce",
-      "Convenience / Retail", "Commerce", "Platform/Commerce",
+      "Convenience / Retail", "Commerce", "Platform/Commerce", "H&B Retail",
       "E-commerce / Food", "E-commerce / Cloud", "Trading", "Trading/Services",
     ],
   },

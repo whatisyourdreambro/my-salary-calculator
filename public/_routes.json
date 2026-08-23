@@ -16,6 +16,7 @@
     "/security.txt",
     "/.well-known/*",
     "/manifest.webmanifest",
+    "/sw.js",
     "/naver226c8e8c348e204e98efbcf23514d286.html",
     "/b112e39a5933ca97201c83a7c5d7d91e.txt"
   ]

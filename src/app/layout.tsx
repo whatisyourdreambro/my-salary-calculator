@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
+import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 import WebVitals from "@/components/WebVitals";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
@@ -161,6 +162,7 @@ export default function RootLayout({
             <Footer />
           </div>
           <InstallPwaBanner />
+          <RegisterServiceWorker />
         </NextThemesProvider>
 
         {/* 실사용자 Core Web Vitals → GA4 (속도 개선 효과 측정) */}
