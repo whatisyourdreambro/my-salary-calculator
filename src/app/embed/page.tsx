@@ -12,16 +12,18 @@ import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import ShareSection from "@/components/ShareSection";
 import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import EmbedSnippetClient from "./EmbedSnippetClient";
+import { EMBED_WIDGETS } from "./widgets";
 
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "내 블로그에 연봉 계산기 달기 — 무료 임베드 위젯",
+  title: "내 블로그에 연봉·연말정산 계산기 달기 — 무료 임베드 위젯",
   description:
-    "티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액 계산기를 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.",
+    "티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액 계산기·연말정산 환급 계산기를 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.",
   path: "/embed",
   keywords: [
     "연봉 계산기 위젯",
+    "연말정산 계산기 위젯",
     "블로그 계산기 임베드",
     "티스토리 계산기",
     "연봉 계산기 붙이기",
@@ -53,7 +55,12 @@ const faqs = [
   {
     question: "계산 결과는 어떤 기준인가요?",
     answer:
-      "2026년 세법(4대보험 요율·간이세액) 기준이며, 부양가족 1인·비과세 식대 월 20만원을 가정한 추정치입니다. 부양가족 수·비과세액을 조정한 정확한 계산은 머니샐러리 본 사이트에서 할 수 있습니다.",
+      "연봉 위젯은 2026년 세법(4대보험 요율·간이세액) 기준, 부양가족 1인·비과세 식대 월 20만원 가정 추정치입니다. 연말정산 위젯은 2026년 귀속 기준, 본인 1인 공제·4대보험만 반영한 보수적 추정입니다. 정확한 계산은 각 위젯의 버튼으로 연결되는 머니샐러리 본 사이트에서 할 수 있습니다.",
+  },
+  {
+    question: "위젯 종류가 여러 개인가요?",
+    answer:
+      "네. 현재 연봉 실수령액 계산기와 연말정산 환급 계산기 2종을 제공합니다. 글 주제에 맞는 위젯의 코드를 복사해 쓰면 됩니다 — 연말정산 시즌 글에는 환급 계산기가 잘 어울립니다.",
   },
 ];
 
@@ -79,11 +86,12 @@ export default function EmbedGuidePage() {
             <span>무료 임베드 위젯</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-navy mb-5 leading-[1.15]">
-            내 블로그에 <span className="text-electric">연봉 계산기</span> 달기
+            내 블로그에 <span className="text-electric">계산기 위젯</span> 달기
           </h1>
           <p className="text-lg text-faint-blue leading-relaxed font-medium">
-            재테크·취업 블로그에 코드 한 번 붙여넣기면 끝. 방문자가 글을 읽다가
-            바로 실수령액을 계산할 수 있어 체류시간이 늘어납니다.{" "}
+            재테크·취업 블로그에 코드 한 번 붙여넣기면 끝. 연봉 실수령액·연말정산
+            환급 계산기 2종 — 방문자가 글을 읽다가 바로 계산할 수 있어 체류시간이
+            늘어납니다.{" "}
             <strong className="text-navy">광고·추적 스크립트 없는 경량 위젯</strong>
             입니다.
           </p>
@@ -91,41 +99,42 @@ export default function EmbedGuidePage() {
       </section>
 
       <div className="page-width max-w-3xl">
-        {/* 라이브 미리보기 */}
-        <section className="mb-10">
-          <h2 className="text-xl font-black text-navy mb-4">미리보기</h2>
-          <div className="flex justify-center rounded-3xl border border-canvas-200 bg-white p-4 sm:p-8">
-            <iframe
-              src="/widget/salary"
-              width="100%"
-              height="380"
-              style={{
-                border: "1px solid #e2e8f0",
-                borderRadius: 12,
-                maxWidth: 480,
-              }}
-              title="2026 연봉 실수령액 계산기"
-              loading="lazy"
-            />
-          </div>
-        </section>
-
-        <div className="mb-10">
-          <HomeTopAd />
-        </div>
-
-        {/* 임베드 코드 */}
-        <section className="mb-6">
-          <h2 className="text-xl font-black text-navy mb-2">
-            1분 설치 — 코드 복사해서 붙여넣기
-          </h2>
-          <p className="text-[14px] leading-[1.8] text-muted-blue font-medium mb-4">
-            아래 코드를 복사해 블로그 편집기의 <strong className="text-navy">HTML 모드</strong>
-            에 붙여넣으세요. 크레딧 링크(&ldquo;by 머니샐러리&rdquo;)를 그대로 두는
-            것이 무료 이용 조건입니다.
-          </p>
-          <EmbedSnippetClient />
-        </section>
+        {/* 위젯별 스택 섹션 — 미리보기 + 스니펫 (다중 위젯, 2026-08-23) */}
+        {EMBED_WIDGETS.map((w, i) => (
+          <section key={w.id} id={w.anchor} className="mb-12 scroll-mt-24">
+            <h2 className="text-xl font-black text-navy mb-1">
+              {i + 1}. {w.title}
+            </h2>
+            <p className="text-[13px] leading-[1.7] text-faint-blue font-medium mb-4">
+              {w.basis}
+            </p>
+            <div className="flex justify-center rounded-3xl border border-canvas-200 bg-white p-4 sm:p-8 mb-4">
+              <iframe
+                src={w.src}
+                width="100%"
+                height={w.height}
+                style={{
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 12,
+                  maxWidth: 480,
+                }}
+                title={w.title}
+                loading="lazy"
+              />
+            </div>
+            <p className="text-[14px] leading-[1.8] text-muted-blue font-medium mb-3">
+              아래 코드를 복사해 블로그 편집기의{" "}
+              <strong className="text-navy">HTML 모드</strong>에 붙여넣으세요. 크레딧
+              링크(&ldquo;by 머니샐러리&rdquo;)를 그대로 두는 것이 무료 이용 조건입니다.
+            </p>
+            <EmbedSnippetClient snippet={w.snippet} widgetId={w.id} />
+            {i === 0 && (
+              <div className="mt-10">
+                <HomeTopAd />
+              </div>
+            )}
+          </section>
+        ))}
 
         {/* 이용 조건 안내 */}
         <section className="mb-10">
