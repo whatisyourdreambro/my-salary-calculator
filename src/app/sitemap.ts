@@ -270,6 +270,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
  };
  });
 
+ // 2-a. 가이드 카테고리 허브 7종 (G9, 2026-08-23) — guideCategories.ts 단일 소스
+ const { GUIDE_CATEGORY_HUBS } = require('@/lib/guideCategories');
+ (GUIDE_CATEGORY_HUBS as Array<{ slug: string }>).forEach((h) => {
+ guideUrls.push({
+ url: `${baseUrl}/guides/category/${h.slug}`,
+ lastModified: STATIC_LAST_MODIFIED,
+ changeFrequency: 'weekly',
+ priority: 0.7,
+ });
+ });
+
  // 2-b. 영어 가이드 페이지 (lang === 'en')
  const koSlugSet = new Set(koGuides.map((g) => g.slug));
  const enGuideUrls: MetadataRoute.Sitemap = enGuides.map((guide) => {

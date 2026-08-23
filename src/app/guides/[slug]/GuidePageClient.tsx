@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
+import { hubSlugByCategoryId } from "@/lib/guideCategories";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
@@ -129,10 +130,22 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  align="center"
  className="mb-5"
  />
+ {/* 카테고리 배지 → 허브 링크 (G9 메쉬, 2026-08-23): 342편 전부에서
+ /guides/category/* 인바운드 생성. 허브 미등재 카테고리는 기존 배지 유지 */}
+ {hubSlugByCategoryId[guide.category] ? (
+ <Link
+ href={`/guides/category/${hubSlugByCategoryId[guide.category]}`}
+ className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6 hover:bg-primary/20 transition-colors"
+ >
+ <span className="w-2 h-2 rounded-full bg-primary/50" />
+ {guide.category} 가이드 전체 보기
+ </Link>
+ ) : (
  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
  <span className="w-2 h-2 rounded-full bg-primary/50" />
  {guide.category} 가이드
  </div>
+ )}
  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-navy mb-6 leading-tight">
  {guide.title}
  </h1>

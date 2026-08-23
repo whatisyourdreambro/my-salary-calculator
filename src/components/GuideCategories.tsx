@@ -13,7 +13,10 @@ import {
  Sparkles,
  ArrowRight,
 } from "lucide-react";
-import { guides } from "@/lib/guidesData";
+// 카드 메타만 사용 — content 포함 guides 를 import 하면 이 (lazy) 청크에
+// 가이드 본문 전체가 딸려 들어간다 (2026-08-23 번들 절감)
+import { koGuideCards } from "@/lib/guidesData";
+import { hubSlugByCategoryId } from "@/lib/guideCategories";
 
 const CATEGORY_META: Record<
  string,
@@ -53,7 +56,7 @@ const CATEGORY_META: Record<
 
 export default function GuideCategories() {
  // 카테고리별 가이드 수 집계
- const counts = guides.reduce<Record<string, number>>((acc, g) => {
+ const counts = koGuideCards.reduce<Record<string, number>>((acc, g) => {
  acc[g.category] = (acc[g.category] || 0) + 1;
  return acc;
  }, {});
@@ -85,7 +88,11 @@ export default function GuideCategories() {
  return (
  <Link
  key={cat.name}
- href={`/guides?q=${encodeURIComponent(cat.name)}`}
+ href={
+ hubSlugByCategoryId[cat.name]
+ ? `/guides/category/${hubSlugByCategoryId[cat.name]}`
+ : `/guides?q=${encodeURIComponent(cat.name)}`
+ }
  className="group flex flex-col items-center text-center p-5 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
  >
  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 ${cat.color}`}>

@@ -170,7 +170,7 @@ export const navConfig: NavItem[] = [
    { name: "연봉 협상 실전 시나리오", href: "/guides/salary-negotiation-real-scripts-2026", description: "+18% 인상 스크립트", badge: "NEW" },
    { name: "신혼부부 세금 혜택", href: "/guides/newlywed-tax-benefits-2026", description: "결혼 1년 13가지", badge: "NEW" },
    { name: "직장인 부업 + 종소세", href: "/guides/side-hustle-tax-2026", description: "월 100만원 부업", badge: "NEW" },
-   { name: "주식 가이드 모음", href: "/guides?category=주식", description: "삼성·하이닉스·반도체" },
+   { name: "주식 가이드 모음", href: "/guides/category/stock", description: "삼성·하이닉스·반도체" },
    { name: "삼성전자 2026 주가", href: "/guides/samsung-electronics-stock-2026", description: "전망·시나리오" },
    { name: "SK하이닉스 주가 분석", href: "/guides/sk-hynix-stock-2026", description: "AI 메모리 사이클" },
    { name: "반도체 주식 절세", href: "/guides/chip-stock-tax-guide", description: "RSU·자사주 절세" },
