@@ -9,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -150,8 +150,13 @@ export default function MinimumWage2026Page() {
  </p>
  </div>
 
+ {/* 데스크톱 2컬럼 — calc/[slug] 정본 패턴 (사이드바 광고, 운영자 일괄 승인
+ 2026-08-23). 히어로는 그리드 밖 전폭, 좌측 컬럼은 max-w-3xl 단일 래퍼 */}
+ <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14">
+ <div className="min-w-0 max-w-3xl mx-auto lg:mx-0 w-full">
+
  {/* 핵심 본문 */}
- <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+ <section className="mb-12 prose prose-slate">
  <p className="text-sm leading-7 text-muted-blue">
  최저임금은 근로자의 생활 안정을 위해 국가가 정한 임금의 하한선입니다. 매년
  최저임금위원회에서 결정해 8월 5일 이전 고시 → 다음 해 1월 1일부터 적용됩니다.
@@ -269,7 +274,7 @@ export default function MinimumWage2026Page() {
  <GuideMidAd />
 
  {/* FAQ */}
- <section className="mb-12 max-w-3xl mx-auto">
+ <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6">최저임금 자주 묻는 질문</h2>
  <div className="space-y-3">
  {FAQ_ITEMS.map((item) => (
@@ -295,7 +300,7 @@ export default function MinimumWage2026Page() {
 
  <RelatedCalculators currentPath="/minimum-wage-2026" />
 
- <div className="mt-8 max-w-3xl mx-auto">
+ <div className="mt-8">
  <ShareButtons
  title="최저임금 2026 — 시급·월급·연봉 환산표"
  description="주휴수당 포함 월급, 작년 대비 인상률, 위반 처벌 한눈에"
@@ -304,6 +309,17 @@ export default function MinimumWage2026Page() {
 
  <div className="mt-8">
  <HomeTopAd />
+ </div>
+ </div>
+
+ {/* Desktop sticky sidebar — 광고 + 쿠팡 (salary/[amount] 동일 조합) */}
+ <aside
+ className="hidden lg:block lg:sticky lg:top-24 space-y-6 self-start"
+ aria-label="추천·광고"
+ >
+ <SidebarAd />
+ <CoupangBanner size="skyscraper" showDisclosure={false} />
+ </aside>
  </div>
  </div>
  </main>
