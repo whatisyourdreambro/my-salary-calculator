@@ -10,6 +10,7 @@ import {
   entryReportCompanyCount,
   entryReportIndustryCount,
 } from "@/lib/salary-data/entrySalaryReport";
+import { dartReportStats } from "@/lib/salary-data/dartReport";
 
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */
@@ -24,6 +25,23 @@ export interface ReportMeta {
 }
 
 export const reportsRegistry: ReportMeta[] = [
+  {
+    slug: "listed-avg-salary-top100-2026",
+    // 회사 수는 dartReport 집계 단일 소스에서 파생 — 하드코딩 금지
+    title: `${dartReportStats.rankYear} 공시 기준 평균연봉 TOP 100 — 상장사 ${dartReportStats.companyCount.toLocaleString("ko-KR")}곳 전수 분석`,
+    description: `머니샐러리가 금융감독원 전자공시(DART) 사업보고서 '직원 등의 현황'을 전수 수집해 집계한 ${dartReportStats.rankYear}년 평균연봉 순위. 급여총액÷인원 가중 평균, 추정치 0. 출처 표기 시 자유 인용.`,
+    publishedDate: "2026-08-23",
+    updatedDate: "2026-08-23",
+    keywords: [
+      "상장사 평균연봉",
+      "평균연봉 순위",
+      "연봉 높은 회사",
+      "대기업 평균연봉",
+      "공시 연봉",
+      "사업보고서 평균연봉",
+      "머니샐러리 데이터 리포트",
+    ],
+  },
   {
     slug: "entry-salary-by-industry-2026",
     // 회사·업종 수는 집계 단일 소스에서 파생 — 하드코딩 시 본문과 불일치 사고
