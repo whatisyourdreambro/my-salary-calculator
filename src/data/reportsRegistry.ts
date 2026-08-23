@@ -11,6 +11,11 @@ import {
   entryReportIndustryCount,
 } from "@/lib/salary-data/entrySalaryReport";
 import { dartReportStats } from "@/lib/salary-data/dartReport";
+import { BONUS_PROFILES } from "@/data/bonusData";
+
+// 성과급 리포트(serp 전략 2호 과제) 카운트 — bonusData 단일 소스에서 파생 (하드코딩 금지 원칙)
+const bonusCompanyCount = new Set(BONUS_PROFILES.map((p) => p.calcSlug)).size;
+const bonusPayoutCount = BONUS_PROFILES.reduce((s, p) => s + p.payouts.length, 0);
 
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */
@@ -25,6 +30,23 @@ export interface ReportMeta {
 }
 
 export const reportsRegistry: ReportMeta[] = [
+  {
+    slug: "bonus-payout-history-2026",
+    // 회사·건수는 bonusData 단일 소스에서 파생 — 하드코딩 금지
+    title: `2026 대기업 성과급 실지급률 총정리 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건 전수`,
+    description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 실제 성과급 지급률 ${bonusPayoutCount}건을 보도·공시 교차 확인으로 집계. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
+    publishedDate: "2026-08-23",
+    updatedDate: "2026-08-23",
+    keywords: [
+      "성과급 지급률",
+      "대기업 성과급",
+      "삼성전자 성과급",
+      "SK하이닉스 PS",
+      "OPI 지급률",
+      "성과급 순위",
+      "머니샐러리 데이터 리포트",
+    ],
+  },
   {
     slug: "listed-avg-salary-top100-2026",
     // 회사 수는 dartReport 집계 단일 소스에서 파생 — 하드코딩 금지
