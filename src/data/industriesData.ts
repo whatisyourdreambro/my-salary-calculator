@@ -77,7 +77,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "삼성전자·SK하이닉스가 이끄는 세계 최상위 반도체 업계. HBM·AI반도체 수요 급증으로 연봉이 빠르게 오르고 있는 한국 최고 대우 산업 중 하나.",
-    topCompanyIds: ["samsung-electronics", "sk-hynix", "lg-electronics"],
+    topCompanyIds: ["samsung-electronics", "sk-hynix", "lgelectronics"],
     topJobIds: ["semiconductor-engineer", "electrical-engineer"],
     faqs: [
       {
@@ -241,7 +241,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "CJ ENM·JTBC·SBS·MBC·KBS·SM엔터·YG엔터·HYBE 등 방송·OTT·음악·영화 엔터테인먼트 업계.",
-    topCompanyIds: [],
+    topCompanyIds: ["hybe", "sm-entertainment", "jyp-entertainment", "yg-entertainment", "cj-enm", "studio-dragon"],
     topJobIds: ["journalist", "producer-director"],
     faqs: [
       {
@@ -334,7 +334,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "국공립·사립학교 교원, 대학교수, 학원·에듀테크 기업, EBS·대교·웅진씽크빅 등 교육 서비스 전반.",
-    topCompanyIds: [],
+    topCompanyIds: ["megastudy", "visang-education", "class101"],
     topJobIds: ["elementary-teacher", "secondary-teacher", "professor"],
     faqs: [
       {
@@ -577,7 +577,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "CJ제일제당·농심·오리온·롯데칠성·오뚜기·삼양·동원 등 국내 대형 식품·음료 기업이 속한 업계. 내수 안정성과 K-푸드 수출 성장이 공존합니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["cj-cheiljedang", "nongshim", "orion", "ottogi", "hitejinro", "lotte-wellfood"],
     topJobIds: ["marketer", "researcher"],
     faqs: [
       {
@@ -607,7 +607,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "CJ대한통운·한진·롯데글로벌로지스·현대글로비스 등 물류 기업과 대한항공·아시아나 등 항공운송을 포함하는 업계. 이커머스 성장과 글로벌 SCM 수요가 견인합니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["cj-logistics", "hyundai-glovis", "hanjin"],
     topJobIds: ["logistics-manager"],
     faqs: [
       {
@@ -637,7 +637,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "아모레퍼시픽·LG생활건강 등 대형 뷰티사, 무신사·F&F·한섬 등 패션 기업, 코스맥스·한국콜마 등 화장품 ODM을 포함합니다. K-뷰티 수출과 패션 플랫폼 성장이 강점.",
-    topCompanyIds: [],
+    topCompanyIds: ["amorepacific", "lg-hnh", "musinsa", "shinsegae-intl"],
     topJobIds: ["marketer"],
     faqs: [
       {
@@ -667,7 +667,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "한화에어로스페이스·한국항공우주(KAI)·LIG넥스원·한화시스템 등 K-방산·항공우주 기업. 사상 최대 방산 수출 호황으로 처우와 채용이 빠르게 개선되고 있습니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["hanwha-aerospace", "kai", "lig-nex1", "hanwha-systems", "hyundai-rotem"],
     topJobIds: ["mechanical-engineer", "electrical-engineer"],
     faqs: [
       {
@@ -697,7 +697,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "야놀자·여기어때 등 여행·숙박 플랫폼과 하나투어·모두투어 등 전통 여행사, 호텔신라·롯데호텔 등 호텔·레저 기업을 포함합니다. 엔데믹 이후 여행 수요가 회복되며 채용이 늘고 있습니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["yanolja", "hotel-shilla", "kangwon-land"],
     topJobIds: ["marketer"],
     faqs: [
       {
@@ -727,7 +727,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "구글코리아·한국마이크로소프트·AWS코리아 등 글로벌 IT, 한국MSD·화이자코리아 등 외국계 제약, 외국계 금융·소비재 기업. 고연봉·수평적 문화·성과주의가 특징입니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["google", "apple", "microsoft", "amazon", "meta", "netflix"],
     topJobIds: ["software-engineer", "marketer"],
     faqs: [
       {
@@ -757,7 +757,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "토스(비바리퍼블리카)·당근·무신사·야놀자 등 기업가치 1조원 이상 유니콘 스타트업. 기본급에 스톡옵션이 더해져 상장·인수 시 큰 보상을 기대할 수 있습니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["toss", "dunamu", "kurly", "musinsa", "yanolja", "zigbang"],
     topJobIds: ["software-engineer", "data-scientist"],
     faqs: [
       {
@@ -790,7 +790,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "머니샐러리 DB에서 대기업·유니콘·외국계·공기업 분류에 속하지 않는 성장 기업·강소기업을 모은 그룹. IT·클라우드부터 바이오·소재·장비까지 업종이 다양하며, 성장 단계와 보상 구조의 회사별 편차가 큰 것이 특징입니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["daangn-market", "bucketplace", "ridi", "socar", "class101"],
     topJobIds: ["software-engineer", "marketer"],
     faqs: [
       {
@@ -826,7 +826,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "삼성·현대차·SK·LG·롯데 등 주요 그룹 계열 대기업. 안정적 기본급에 성과급 비중이 크며, 반도체·IT·금융 계열이 초봉 상위권을 형성합니다.",
-    topCompanyIds: [],
+    topCompanyIds: ["samsung-electronics", "hyundai", "sk-hynix", "lgelectronics", "posco", "hyundai-glovis"],
     topJobIds: ["software-engineer", "marketer", "mechanical-engineer"],
     faqs: [
       {

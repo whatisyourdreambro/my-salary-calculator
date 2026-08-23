@@ -7,8 +7,9 @@
 // 수치·출처는 데이터 파일의 disclosed 필드에만 기재 — 이 컴포넌트에서
 // 추정·가공 금지. 추정치와의 관계는 정직하게 설명한다.
 
-import { ShieldCheck, ExternalLink } from "lucide-react";
+import { ShieldCheck, ExternalLink, Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
+import Link from "@/components/AppLink";
 
 /** 만원 단위 → "1억 5,800만원" 한국식 표기 */
 function formatManwon(manwon: number): string {
@@ -28,8 +29,11 @@ function formatTenure(years: number): string {
 
 export default function CompanyDisclosedSalary({
   company,
+  dartRank,
 }: {
   company: CompanyProfile;
+  /** DART 전수 랭킹 TOP 100 진입 시 순위 — 서버(page)에서 dartTop100 조회 후 전달 */
+  dartRank?: { rank: number; companyCount: number; rankYear: string } | null;
 }) {
   const d = company.disclosed;
   if (!d) return null;
@@ -72,6 +76,20 @@ export default function CompanyDisclosedSalary({
         {d.note && (
           <p className="text-xs leading-6 text-muted-blue dark:text-canvas-300 mb-3">
             {d.note}
+          </p>
+        )}
+
+        {dartRank && (
+          <p className="mb-3">
+            <Link
+              href="/insights/listed-avg-salary-top100-2026"
+              className="inline-flex items-center gap-1.5 rounded-full bg-electric/10 px-3 py-1.5 text-xs font-bold text-electric hover:bg-electric/20 transition-colors"
+            >
+              <Trophy size={13} className="flex-shrink-0" aria-hidden="true" />
+              {dartRank.rankYear} 공시 평균연봉 — 상장사{" "}
+              {dartRank.companyCount.toLocaleString("ko-KR")}곳 중{" "}
+              <strong>{dartRank.rank}위</strong> · TOP 100 리포트 보기 →
+            </Link>
           </p>
         )}
 

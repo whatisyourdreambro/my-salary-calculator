@@ -16,6 +16,7 @@ import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import FavoritesButton from "@/components/FavoritesButton";
@@ -378,6 +379,15 @@ export default function MonthlyPage({ params }: Props) {
         </div>
 
         <ShareSection contentType="salary_result" className="mt-8" />
+
+        {/* 이 월급대 실제 회사 — 연봉 환산 ±15% 매칭. /salary/[amount]:338 검증
+            패턴 복제 (G5 메쉬, 2026-08-23). 광고 블록 전부 아래 위치 준수. */}
+        <RelatedCompanies
+          currentId={`__monthly-${monthly}`}
+          targetSalary={annual}
+          limit={6}
+          title="이 월급대의 실제 회사들"
+        />
 
         <RelatedCalculators
           currentPath={`/monthly/${monthly}`}
