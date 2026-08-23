@@ -27,7 +27,7 @@ import {
   speakableLd,
 } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -174,8 +174,13 @@ export default function CivilServantPay2026Page() {
 
         <HomeTopAd />
 
+        {/* 데스크톱 2컬럼 — calc/[slug] 정본 패턴 (사이드바 광고, 운영자 일괄 승인
+            2026-08-23). 히어로·상단 광고는 그리드 밖 전폭, 좌측 컬럼 max-w-3xl 단일 래퍼 */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14">
+          <div className="min-w-0 max-w-3xl mx-auto lg:mx-0 w-full">
+
         {/* 핵심 요약 */}
-        <section className="mt-10 mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mt-10 mb-12 prose prose-slate">
           <p className="text-sm leading-7 text-muted-blue">
             공무원 봉급표는 인사혁신처가 매년 12월 말 국무회의 의결(공무원보수규정 개정)을
             거쳐 확정하며, 다음 해 1월 1일부터 시행됩니다. 2026년 봉급표는 2025년 12월 30일
@@ -235,7 +240,7 @@ export default function CivilServantPay2026Page() {
         <CalcResultAd />
 
         {/* 인상률 해설 */}
-        <section className="mt-10 mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mt-10 mb-12 prose prose-slate">
           <h2 className="text-lg font-black text-navy mb-3">
             인상률 3.5% — 2017년 이후 최고, 저연차는 6.6%
           </h2>
@@ -290,7 +295,7 @@ export default function CivilServantPay2026Page() {
         <InArticleAd />
 
         {/* 봉급 ≠ 실수령 */}
-        <section className="mt-10 mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mt-10 mb-12 prose prose-slate">
           <h2 className="text-lg font-black text-navy mb-3 flex items-center gap-2">
             <Calculator className="w-5 h-5 text-electric" />
             봉급표 금액 ≠ 실수령액 — 통장에 들어오는 돈 계산 흐름
@@ -381,7 +386,7 @@ export default function CivilServantPay2026Page() {
         <GuideMidAd />
 
         {/* FAQ */}
-        <section className="mt-10 mb-12 max-w-3xl mx-auto">
+        <section className="mt-10 mb-12">
           <h2 className="text-xl font-black text-navy mb-6">공무원 봉급 자주 묻는 질문</h2>
           <div className="space-y-3">
             {FAQ_ITEMS.map((item) => (
@@ -407,11 +412,22 @@ export default function CivilServantPay2026Page() {
 
         <RelatedCalculators currentPath="/civil-servant-pay-2026" />
 
-        <div className="mt-8 max-w-3xl mx-auto">
+        <div className="mt-8">
           <ShareButtons
             title="2026 공무원 봉급표 — 9급~5급 호봉별 월급"
             description="3.5% 인상 확정, 9급 초임 연 3,428만원. 경찰·소방 초임과 수당 구조까지 한눈에"
           />
+        </div>
+          </div>
+
+          {/* Desktop sticky sidebar — 광고 + 쿠팡 (salary/[amount] 동일 조합) */}
+          <aside
+            className="hidden lg:block lg:sticky lg:top-24 space-y-6 self-start"
+            aria-label="추천·광고"
+          >
+            <SidebarAd />
+            <CoupangBanner size="skyscraper" showDisclosure={false} />
+          </aside>
         </div>
       </div>
     </main>
