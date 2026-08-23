@@ -17,6 +17,7 @@ import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedCompanies from "@/components/RelatedCompanies";
+import SeasonalLinks from "@/app/table/2026/SeasonalLinks";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import FavoritesButton from "@/components/FavoritesButton";
@@ -394,6 +395,9 @@ export default function MonthlyPage({ params }: Props) {
           limit={4}
           title="함께 보면 좋은 계산기"
         />
+
+        {/* 시즌 크로스링크 — 표 4종 공용 블록 재사용 (G8 메쉬, 2026-08-23) */}
+        <SeasonalLinks />
       </div>
     </main>
   );

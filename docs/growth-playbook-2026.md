@@ -43,7 +43,9 @@
 | 8월 말 | 광고 보강·신규 페이지 배포 완료 (이번에 완료) | ✅ 완료 |
 | 8월 말 | ★SK하이닉스 임단협 총투표 결과 → sk-hynix-bonus/psData.ts `AGREEMENT_2026.status` 변경(가결 "ratified"/부결 "rejected") + sitemap 날짜 갱신 | 필수 |
 | 8/23 완료 | SK하이닉스 잠정합의 반영 업그레이드 + 삼성 온페이지 SEO + 성과급 허브(/calc/bonus-calculators) 신설 | ✅ 완료 |
+| 9월 초 | ★광고 실험 #1(Display2) 판정 — 운영자 AdSense CSV(8/3~8/16 vs 8/18~8/31) → docs/ad-experiments.md 표 기입, 군별 유지/revert. 통과 시 실험 #2(D2a 12곳+car-loan InArticle→Display2) 진행 | 필수 |
 | 9월 | 네이버 블로그 개시, 연말정산 예습 콘텐츠 발행 | 진행 |
+| 10월 중순 | ★DART lite Phase 1(/salary-db/listed 218곳, 8/23 배포) 28일 색인률 측정 — GSC 커버리지에서 색인 ≥60%면 Phase 2 +300곳(dartLite.ts 코호트 상수 확대), 미달이면 게이팅 강화(직원 하한 상향)만 | 필수 |
 | 10월 말 | 홈택스 연말정산 미리보기 오픈 대응 — 관련 페이지 수치 총점검 | 필수 |
 | 11월~1월 | **구조 변경 동결** — 콘텐츠 수치 갱신만. 주간 모니터링 강화 | 원칙 |
 | 12월 초 | 삼성 TAI 하반기 지급률 발표 → src/app/calc/samsung-bonus/taiData.ts 갱신 + 허브(/calc/bonus-calculators) 캘린더·뉴스 동시 갱신 (Claude 지시) | 필수 |
@@ -74,7 +76,7 @@
 
 ## 5. 효과 검증 지표 (기준선: 2026-08-15)
 
-- 기준선: GSC 일 6클릭(2026-08-07), 월 수익 10~50만원, sitemap ~1,870 URL → 이번 확장 후 ~2,000 URL
+- 기준선: GSC 일 6클릭(2026-08-07), 월 수익 10~50만원. sitemap 실측 ~1,580 URL(2026-08-23 코드 기준 — compare 413 제거 후 문서 수치가 과대였음) → DART lite 219 + 가이드 허브 7 확장 후 **~1,800 URL**
 - 배포 후 2주: AdSense 페이지 RPM 전/후, GA4 ad_impression slot_kind 분포(홈 fluid 노출 발생 = 결과 직하 부활 증거), coupang_click 추이(사이드바 skyscraper 복구 효과)
 - 배포 후 4~8주: GSC 신규 URL 색인율(/monthly·성과급 계산기·봉급표), 재작성 가이드 50편 CTR 전후 비교, 404 리포트 감소
 - 월간: calc_start→calc_submit 퍼널(계산기별), compare_view 소비 분포, 네이버 referral 세그먼트

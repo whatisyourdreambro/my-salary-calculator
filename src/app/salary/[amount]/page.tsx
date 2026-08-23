@@ -15,6 +15,7 @@ import ShareSection from "@/components/ShareSection";
 import { CalcResultAd, GuideMidAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
+import SeasonalLinks from "@/app/table/2026/SeasonalLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import FavoritesButton from "@/components/FavoritesButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -341,6 +342,12 @@ export default function SalaryAmountPage({ params }: Props) {
  title="이 연봉대의 실제 회사들"
  />
  <ShareSection contentType="salary_result" className="mt-8" />
+ </div>
+
+ {/* 시즌 크로스링크 — 표 4종 공용 블록 재사용 (G8 메쉬, 2026-08-23).
+ 광고·기존 블록 전부 아래. 시즌 교체는 SeasonalLinks.tsx 한 곳에서 */}
+ <div className="px-2 sm:px-6">
+ <SeasonalLinks />
  </div>
  </div>
  </div>
