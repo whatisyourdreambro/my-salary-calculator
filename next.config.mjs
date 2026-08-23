@@ -11,10 +11,13 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // 제거. 운영자 명시 지시 시에만 재추가.
 // 카카오 공유 SDK(t1.kakaocdn.net script / sharer.kakao.com form / kapi.kakao.com)는
 // 운영자가 JS 키를 발급·제공(2026-08-16)하여 허용 — 광고 아닌 공유 전용.
+// fundingchoicesmessages.google.com — AdSense CMP(EEA 동의 메시지). 운영자가 콘솔에서
+// CMP 게시 시 이 도메인의 스크립트·iframe 이 로드됨 — CMP 게시 전에 반드시 이 CSP 가
+// 먼저 배포돼 있어야 유럽 방문자 화면에서 동의창이 차단되지 않는다 (2026-08-23).
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net;
-  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://ep2.adtrafficquality.google;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net https://fundingchoicesmessages.google.com;
+  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com;

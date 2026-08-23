@@ -20,6 +20,14 @@
 1. AdSense → 개인 정보 보호 및 메시지 → **유럽 규정 메시지** → 만들기
 2. 사이트 moneysalary.com 선택 → 기본 스타일로 **게시**
 - 효과: /en·/global의 유럽 방문자에게 광고 송출 재개.
+- 코드측 선행 작업(CSP에 fundingchoicesmessages.google.com 허용)은 2026-08-23 배포 완료 —
+  바로 게시해도 됩니다.
+
+## 3-1. (참고) Google Ads 전환 추적 env 2종 — 의도적 미설정
+- 코드에 `NEXT_PUBLIC_ADS_ID` / `NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION`
+  (src/components/SalaryCalculator.tsx) 가드가 있으나 **어느 env에도 값이 없어 no-op**.
+- 이는 Google Ads(유료 광고 집행) 전환 태그용 — AdSense 수익과 무관하며, 광고 캠페인을
+  집행할 계획이 없는 한 **설정하지 않는 것이 맞습니다**. 캠페인 시작 시에만 값 요청.
 
 ## 4. 네이버 서치어드바이저 RSS 2건 제출 (5분) ☐
 1. searchadvisor.naver.com → 웹마스터 도구 → moneysalary.com → 요청 → **RSS 제출**
