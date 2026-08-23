@@ -7,6 +7,7 @@ import { reportsRegistry } from "@/data/reportsRegistry";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
+import { GuideMidAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -76,6 +77,12 @@ export default function InsightsIndexPage() {
             ))}
           </div>
         </section>
+
+        {/* 리포트 목록 직후 중간 광고 — GUIDE_MID 슬롯은 이 페이지·layout(PageFooterAds:
+            IN_ARTICLE+HOME_TOP) 미사용이라 무충돌 (운영자 일괄 승인 2026-08-23) */}
+        <div className="mb-12">
+          <GuideMidAd />
+        </div>
 
         {/* 인용 정책 */}
         <section className="mb-12">
