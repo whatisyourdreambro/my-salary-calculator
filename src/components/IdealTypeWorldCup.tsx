@@ -1,35 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Crown, RefreshCw, Heart } from "lucide-react";
-import { companyRepository } from "@/lib/salary-data/CompanyRepository";
-import { CompanyProfile } from "@/types/company";
+import { Crown, RefreshCw, Heart } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd } from "@/components/AdPlacement";
+
+// 서버(page.tsx)가 내려주는 경량 인덱스 — 회사 전체 프로필(~860KB)을 클라 번들에
+// 싣지 않기 위한 5필드 축약형 (SalaryDbClient 경량 인덱스 패턴).
+export interface WorldcupCompany {
+ logo: string;
+ nameKo: string;
+ industry: string;
+ entryBase: number;
+ cultureScore: number;
+}
+
 // Shuffle array helper
 const shuffle = <T,>(array: T[]): T[] => {
  return [...array].sort(() => Math.random() - 0.5);
 };
 
-export default function IdealTypeWorldCup() {
- const [candidates, setCandidates] = useState<CompanyProfile[]>([]);
- const [currentRound, setCurrentRound] = useState<CompanyProfile[]>([]);
- const [nextRound, setNextRound] = useState<CompanyProfile[]>([]);
+export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCompany[] }) {
+ const [candidates, setCandidates] = useState<WorldcupCompany[]>([]);
+ const [currentRound, setCurrentRound] = useState<WorldcupCompany[]>([]);
+ const [nextRound, setNextRound] = useState<WorldcupCompany[]>([]);
  const [currentPairIndex, setCurrentPairIndex] = useState(0);
- const [winner, setWinner] = useState<CompanyProfile | null>(null);
+ const [winner, setWinner] = useState<WorldcupCompany | null>(null);
  const [roundName, setRoundName] = useState("16강");
  const [isTransitioning, setIsTransitioning] = useState(false);
 
- // Initialize Game
- useEffect(() => {
- startNewGame();
- }, []);
-
- const startNewGame = () => {
- const allCompanies = companyRepository.getAll();
+ const startNewGame = useCallback(() => {
  // Pick 16 random companies
- const selected = shuffle(allCompanies).slice(0, 16);
+ const selected = shuffle(companies).slice(0, 16);
  setCandidates(selected);
  setCurrentRound(selected);
  setNextRound([]);
@@ -37,9 +40,14 @@ export default function IdealTypeWorldCup() {
  setWinner(null);
  setRoundName("16강");
  setIsTransitioning(false);
- };
+ }, [companies]);
 
- const handleSelect = (selected: CompanyProfile) => {
+ // Initialize Game
+ useEffect(() => {
+ startNewGame();
+ }, [startNewGame]);
+
+ const handleSelect = (selected: WorldcupCompany) => {
  if (isTransitioning) return;
  setIsTransitioning(true);
 
@@ -143,7 +151,7 @@ export default function IdealTypeWorldCup() {
 
  <div className="text-center space-y-2">
  <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/50 to-primary/80">
- {winner.name.ko}
+ {winner.nameKo}
  </h2>
  <p className="text-xl text-muted-foreground">{winner.industry}</p>
  </div>
@@ -164,7 +172,7 @@ export default function IdealTypeWorldCup() {
  <div className="flex flex-col items-center gap-2">
  <p className="text-sm font-bold text-muted-foreground">결과 공유하기</p>
  <ShareButtons
- title={`내 이상형 기업 월드컵 우승은 ${winner.name.ko}! 당신의 1위 기업은?`}
+ title={`내 이상형 기업 월드컵 우승은 ${winner.nameKo}! 당신의 1위 기업은?`}
  />
  </div>
  </div>
@@ -211,7 +219,7 @@ export default function IdealTypeWorldCup() {
  );
 }
 
-function ContenderCard({ company, onClick, position }: { company: CompanyProfile, onClick: () => void, position: "left" | "right" }) {
+function ContenderCard({ company, onClick, position }: { company: WorldcupCompany, onClick: () => void, position: "left" | "right" }) {
  if (!company) return null;
 
  return (
@@ -240,7 +248,7 @@ function ContenderCard({ company, onClick, position }: { company: CompanyProfile
  </motion.div>
 
  <h3 className="text-3xl md:text-4xl font-black mb-2 text-foreground group-hover:text-primary transition-colors">
- {company.name.ko}
+ {company.nameKo}
  </h3>
 
  <p className="text-lg text-muted-foreground font-medium mb-6">
@@ -251,14 +259,14 @@ function ContenderCard({ company, onClick, position }: { company: CompanyProfile
  <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
  <div className="text-xs text-muted-foreground uppercase mb-1">평균 연봉</div>
  <div className="font-bold text-lg">
- {(company.salary.entry.base / 10000).toLocaleString('ko-KR')}만원~
+ {(company.entryBase / 10000).toLocaleString('ko-KR')}만원~
  </div>
  </div>
  <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
  <div className="text-xs text-muted-foreground uppercase mb-1">워라밸</div>
  <div className="font-bold text-lg flex items-center justify-center gap-1">
  <span className="text-primary">★</span>
- {company.culture.score}
+ {company.cultureScore}
  </div>
  </div>
  </div>
