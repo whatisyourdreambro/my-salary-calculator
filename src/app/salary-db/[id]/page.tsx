@@ -210,7 +210,7 @@ export default function CompanyDetailPage({
  지표는 카드 자체를 렌더하지 않음 (추정 금지). */}
  <CompanyUniqueStats company={company} />
 
- {/* 회사 전용 성과급 계산기 역링크 — 매핑 11개사는 대형 CTA, 그 외 회사는
+ {/* 회사 전용 성과급 계산기 역링크 — 매핑 23개사는 대형 CTA, 그 외 회사는
      신입 연봉 실수령(/salary/{amount})·일반 성과급 계산기 fallback CTA.
      GA 분석상 단일 성과급 페이지가 트래픽 90% 견인 → 회사 페이지
      방문자를 계산기로 유도해 시즌 트래픽 곱셈 효과. */}

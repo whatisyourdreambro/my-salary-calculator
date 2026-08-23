@@ -16,6 +16,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Monitor, AlertTriangle, Info, Coins } from "lucide-react";
@@ -368,6 +369,8 @@ export default function LgDisplayBonusPage() {
               responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
             />
           </div>
+
+          <BonusClusterLinks currentSlug="lg-display-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}

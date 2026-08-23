@@ -986,6 +986,27 @@ export default function SamsungBonusCalculatorPage() {
           {/* 관련 페이지 */}
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
             <Link
+              href="/calc/bonus-calculators"
+              className="block p-5 bg-white dark:bg-canvas-900 border-2 border-electric-30 rounded-2xl hover:border-electric transition-colors group"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
+                성과급 허브
+              </p>
+              <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
+                성과급 계산기 23종 전체 보기
+              </p>
+              <p className="text-xs text-muted-blue mb-3">
+                SK하이닉스·현대차 등 회사별 최신 지급률 + 2026 시즌 캘린더
+              </p>
+              <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
+                전체 목록 보기{" "}
+                <ArrowRight
+                  className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+                  aria-hidden
+                />
+              </span>
+            </Link>
+            <Link
               href="/samsung-negotiation-2026"
               className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
             >

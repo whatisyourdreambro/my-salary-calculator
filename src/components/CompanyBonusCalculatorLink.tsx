@@ -188,6 +188,14 @@ export default function CompanyBonusCalculatorLink({
             <ArrowRight className="w-4 h-4 text-faint-blue group-hover:text-electric group-hover:translate-x-0.5 transition-all flex-shrink-0" />
           </Link>
         </div>
+        <p className="mt-2 text-xs text-faint-blue">
+          <Link
+            href="/calc/bonus-calculators"
+            className="font-bold underline underline-offset-2 hover:text-electric transition"
+          >
+            삼성전자·SK하이닉스 등 회사별 성과급 계산기 23종 전체 보기 →
+          </Link>
+        </p>
       </section>
     );
   }
@@ -220,6 +228,14 @@ export default function CompanyBonusCalculatorLink({
           </div>
         </div>
       </Link>
+      <p className="mt-2 text-xs text-faint">
+        <Link
+          href="/calc/bonus-calculators"
+          className="font-bold underline underline-offset-2 hover:text-primary transition"
+        >
+          다른 회사 성과급 계산기 23종 전체 보기 →
+        </Link>
+      </p>
     </section>
   );
 }

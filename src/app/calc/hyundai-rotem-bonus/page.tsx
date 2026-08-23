@@ -17,6 +17,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { TrainFront, AlertTriangle, Info } from "lucide-react";
@@ -282,6 +283,8 @@ export default function HyundaiRotemBonusPage() {
           <div className="mt-10">
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
           </div>
+
+          <BonusClusterLinks currentSlug="hyundai-rotem-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}

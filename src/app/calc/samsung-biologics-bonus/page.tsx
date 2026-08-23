@@ -14,6 +14,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { FlaskConical, AlertTriangle, Info } from "lucide-react";
@@ -285,6 +286,8 @@ export default function SamsungBiologicsBonusPage() {
           <div className="mt-10">
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
           </div>
+
+          <BonusClusterLinks currentSlug="samsung-biologics-bonus" />
 
           <RelatedCalculators currentPath={PAGE_PATH} limit={4} title="다음 계산기도 함께 보세요" />
 

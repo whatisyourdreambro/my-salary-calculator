@@ -21,10 +21,12 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Sparkles, Coins, Info, ShieldCheck } from "lucide-react";
 import SkHynixBonusClient from "./Client";
+import StockScenarioSection from "./StockScenarioSection";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import {
@@ -516,6 +518,8 @@ export default function SkHynixBonusPage() {
                 </p>
               </div>
             </div>
+
+            <StockScenarioSection />
           </section>
 
           <div className="mt-10">
@@ -648,6 +652,8 @@ export default function SkHynixBonusPage() {
               responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
             />
           </div>
+
+          <BonusClusterLinks currentSlug="sk-hynix-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}

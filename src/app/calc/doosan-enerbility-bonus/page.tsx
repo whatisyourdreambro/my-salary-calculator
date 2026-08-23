@@ -18,6 +18,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Zap, Coins, AlertTriangle, Info } from "lucide-react";
@@ -337,6 +338,8 @@ export default function DoosanEnerbilityBonusPage() {
               responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
             />
           </div>
+
+          <BonusClusterLinks currentSlug="doosan-enerbility-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}

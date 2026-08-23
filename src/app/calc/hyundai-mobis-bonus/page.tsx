@@ -15,6 +15,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Cog, AlertTriangle, Info } from "lucide-react";
@@ -313,6 +314,8 @@ export default function HyundaiMobisBonusPage() {
           <div className="mt-10">
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
           </div>
+
+          <BonusClusterLinks currentSlug="hyundai-mobis-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}

@@ -16,6 +16,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { FlaskConical, AlertTriangle, Info } from "lucide-react";
@@ -247,6 +248,8 @@ export default function CelltrionBonusPage() {
           <div className="mt-10">
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
           </div>
+
+          <BonusClusterLinks currentSlug="celltrion-bonus" />
 
           <RelatedCalculators
             currentPath={PAGE_PATH}
