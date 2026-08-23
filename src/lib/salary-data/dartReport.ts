@@ -40,6 +40,8 @@ export interface DartRankRow {
   nameKo: string;
   /** /salary-db/{id} 페이지가 있으면 내부 링크 */
   companyId?: string;
+  /** 종목코드 — companyId 없는 행의 /salary-db/listed/{stockCode} 링크용 (코호트 등재 시만) */
+  stockCode: string;
   avgSalaryManwon: number;
   employeeCount: number;
   avgTenureYears?: number;
@@ -62,6 +64,7 @@ function toRow(d: DartDisclosedEntry, rank: number): DartRankRow {
     corpCode: d.corpCode,
     nameKo: decodeName(d.corpNameKo),
     companyId: companyIdByCorp.get(d.corpCode),
+    stockCode: d.stockCode,
     avgSalaryManwon: d.avgSalaryManwonRaw,
     employeeCount: d.employeeCount,
     avgTenureYears: d.avgTenureYears,

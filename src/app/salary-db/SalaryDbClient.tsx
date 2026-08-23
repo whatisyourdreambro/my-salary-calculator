@@ -51,6 +51,8 @@ const TIER_BADGE_CLASS: Record<CompanyIndexItem["tier"], string> = {
 // 한 번 더 분기해 트래픽 엔진 간 PageRank를 양방향으로 흘려보낸다.
 const SIBLING_HUBS: Array<{ href: string; label: string; sub: string; icon: React.ElementType }> = [
  { href: "/salary-db/ranking", label: "연봉 순위 TOP 30", sub: "총보상 기준 대기업 랭킹", icon: Trophy },
+ // 상장사 공시 lite 허브 (2026-08-23 신설) — DB 미등재 상장사 공시 연봉 진입로
+ { href: "/salary-db/listed", label: "상장사 공시 연봉", sub: "DART 사업보고서 공식 수치", icon: Factory },
  { href: "/job", label: "직업별 연봉", sub: "직무 평균·신입 초봉", icon: Briefcase },
  { href: "/industry", label: "산업별 연봉", sub: "업종 순위·동종사", icon: Factory },
  { href: "/region", label: "지역별 연봉", sub: "17개 시도 분포", icon: MapPin },

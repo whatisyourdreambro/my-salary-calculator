@@ -15,6 +15,7 @@ import {
   dartReportStats,
   DART_INDUSTRY_MIN_COMPANIES,
 } from "@/lib/salary-data/dartReport";
+import { listedCohortStockCodes } from "@/lib/salary-data/dartLite";
 import { getReportBySlug } from "@/data/reportsRegistry";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -192,6 +193,14 @@ export default function ListedAvgSalaryTop100Report() {
                       {row.companyId ? (
                         <Link
                           href={`/salary-db/${row.companyId}`}
+                          className="underline decoration-canvas-200 underline-offset-2 hover:text-electric transition"
+                        >
+                          {row.nameKo}
+                        </Link>
+                      ) : listedCohortStockCodes.has(row.stockCode) ? (
+                        // lite 페이지(공시 전용) 보유 행 — 코호트 등재분만 링크 (밖은 404)
+                        <Link
+                          href={`/salary-db/listed/${row.stockCode}`}
                           className="underline decoration-canvas-200 underline-offset-2 hover:text-electric transition"
                         >
                           {row.nameKo}

@@ -394,6 +394,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
  });
 
+ // 상장사 공시 lite 페이지 (Phase 1, 2026-08-23) — 코호트는 dartLite.ts 단일 소스
+ // (generateStaticParams와 동일 집합 — 코호트 밖 URL은 404라 사이트맵 등재 불가).
+ // lastModified는 DART 데이터 기준일로 정직 표기.
+ const { listedCohort, DART_LITE_DATE } = require('@/lib/salary-data/dartLite');
+ const dartLiteDate = new Date(DART_LITE_DATE);
+ companyUrls.push({
+ url: `${baseUrl}/salary-db/listed`,
+ lastModified: dartLiteDate,
+ changeFrequency: 'monthly',
+ priority: 0.7,
+ });
+ (listedCohort as Array<{ stockCode: string }>).forEach((c) => {
+ companyUrls.push({
+ url: `${baseUrl}/salary-db/listed/${c.stockCode}`,
+ lastModified: dartLiteDate,
+ changeFrequency: 'monthly',
+ priority: 0.6,
+ });
+ });
+
  // [2026-08-10 제거] 회사 비교 413페이지(/salary-db/compare/[slug]) 사이트맵 등재 중단.
  // 전체 사이트맵 1,865 URL의 22%를 차지하면서 GSC "발견됨-색인 안 됨" 상태의
  // priority 0.6 템플릿 페이지 — 재크롤 수요만 유발해 CF Workers 일 요청 한도를
