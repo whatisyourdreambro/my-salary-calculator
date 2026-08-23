@@ -63,7 +63,8 @@ async function apiJson(path, params, retries = 3) {
   const url = `${API}/${path}?crtfc_key=${KEY}&${new URLSearchParams(params)}`;
   for (let i = 0; i < retries; i++) {
     try {
-      const res = await fetch(url);
+      // 타임아웃 필수 — 무제한 대기 시 동시성 배치 전체가 행 (2026-08-23 실측)
+      const res = await fetch(url, { signal: AbortSignal.timeout(20_000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const j = await res.json();
       if (j.status === "020") fail("일일 호출 한도 초과(020) — 내일 재실행 (캐시 유지됨)");
@@ -363,6 +364,9 @@ async function fetchHist() {
   const dir = join(EMP_HIST_CACHE, year);
   mkdirSync(dir, { recursive: true });
   const entries = getTargets();
+  // ★동시성 4 유지 — 8로 올렸다가 DART가 ECONNRESET으로 차단한 실측(2026-08-23).
+  // 본 fetch와 동일한 보수적 페이스가 안전하다.
+  const HIST_CONCURRENCY = 4;
   let done = 0, skipped = 0, noData = 0, errs = 0;
 
   async function processOne(e) {
@@ -383,10 +387,10 @@ async function fetchHist() {
     }
   }
 
-  for (let i = 0; i < entries.length; i += CONCURRENCY) {
-    await Promise.all(entries.slice(i, i + CONCURRENCY).map(processOne));
-    done = Math.min(i + CONCURRENCY, entries.length);
-    if (done % 200 < CONCURRENCY) log(`fetch-hist ${year} ${done}/${entries.length} (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  for (let i = 0; i < entries.length; i += HIST_CONCURRENCY) {
+    await Promise.all(entries.slice(i, i + HIST_CONCURRENCY).map(processOne));
+    done = Math.min(i + HIST_CONCURRENCY, entries.length);
+    if (done % 200 < HIST_CONCURRENCY) log(`fetch-hist ${year} ${done}/${entries.length} (skip ${skipped}, no-data ${noData}, err ${errs})`);
   }
   log(`fetch-hist ${year} 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
 }
