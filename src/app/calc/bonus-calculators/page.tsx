@@ -3,7 +3,9 @@
 // 성과급 계산기 허브 — 회사별 성과급 계산기 23종의 토픽 허브.
 // 제네릭 "성과급 계산기" 검색 의도(목록·비교) 대응. 세금 계산 의도는
 // /tools/finance/bonus 가 담당 — 상호 CTA 로 의도 분리를 명시한다.
-// 광고는 calc/layout.tsx 하단 유닛만 상속 — 이 페이지에 광고 코드 없음.
+// 광고: calc/layout.tsx 하단 스택(IN_ARTICLE·쿠팡·HOME_TOP) 상속 + 본문
+// GuideMid(카드 그리드 직후)·Multiplex(FAQ 직후 목록 하단) — 상속 슬롯과
+// 무충돌 확인, 운영자 일괄 승인 2026-08-23.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -25,6 +27,7 @@ import {
   BONUS_NEWS_2026,
 } from "@/data/bonusCalcHub";
 import { Sparkles, CalendarDays, Newspaper, ArrowRight, Calculator } from "lucide-react";
+import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -272,6 +275,11 @@ export default function BonusCalculatorsHubPage() {
             ))}
           </section>
 
+          {/* 카드 그리드 직후 중간 광고 — GUIDE_MID 이 페이지·상속 layout 미사용 */}
+          <div className="mb-12">
+            <GuideMidAd />
+          </div>
+
           {/* 시즌 캘린더 */}
           <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="calendar-heading">
             <h2 id="calendar-heading" className="text-2xl font-black mb-4 flex items-center gap-2">
@@ -417,6 +425,12 @@ export default function BonusCalculatorsHubPage() {
               ))}
             </div>
           </section>
+
+          {/* 목록 하단 멀티플렉스(관련 콘텐츠형) — layout 푸터 광고와는
+              RelatedCalculators 그리드가 사이에 있어 연속 광고 아님 */}
+          <div className="mb-12">
+            <MultiplexAd />
+          </div>
 
           <RelatedCalculators
             currentPath={PAGE_PATH}
