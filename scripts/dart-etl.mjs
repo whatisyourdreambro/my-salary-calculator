@@ -127,21 +127,25 @@ async function corpCodes() {
     const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`));
     return m ? m[1].trim() : "";
   };
+  const unlisted = [];
   let m;
   while ((m = re.exec(xml))) {
     const b = m[1];
     const stock = pick(b, "stock_code");
-    if (!/^\d{6}$/.test(stock)) continue; // 상장사만
-    entries.push({
+    const entry = {
       corpCode: pick(b, "corp_code"),
       corpName: pick(b, "corp_name"),
       corpNameEn: pick(b, "corp_eng_name") || undefined,
-      stockCode: stock,
+      stockCode: /^\d{6}$/.test(stock) ? stock : "",
       modifyDate: pick(b, "modify_date"),
-    });
+    };
+    if (entry.stockCode) entries.push(entry);
+    // 비상장도 이름만 보관 — 기존 회사 매칭 fallback 용
+    // (비상장 대형 법인도 사업보고서 제출 시 empSttus 조회 가능: 현대카드·GS칼텍스·발전공기업 등)
+    else unlisted.push({ corpCode: entry.corpCode, corpName: entry.corpName });
   }
-  writeFileSync(out, JSON.stringify({ downloadedAt: new Date().toISOString().slice(0, 10), entries }, null, 1));
-  log(`상장사 ${entries.length}곳 저장 → scripts/.dart-cache/corpCode.json`);
+  writeFileSync(out, JSON.stringify({ downloadedAt: new Date().toISOString().slice(0, 10), entries, unlisted }, null, 1));
+  log(`상장사 ${entries.length}곳 + 비상장 ${unlisted.length}곳 저장 → scripts/.dart-cache/corpCode.json`);
 }
 
 // ── 기존 회사 데이터 추출 (regex — 사람 검수 전제) ──────────
@@ -202,8 +206,15 @@ function extractExistingCompanies() {
 function match() {
   const corpFile = join(CACHE, "corpCode.json");
   if (!existsSync(corpFile)) fail("corpCode.json 없음 — 먼저 corp-codes 실행");
-  const { entries } = JSON.parse(readFileSync(corpFile, "utf8"));
+  const { entries, unlisted = [] } = JSON.parse(readFileSync(corpFile, "utf8"));
   const { companies, aliasMap } = extractExistingCompanies();
+
+  // 비상장 정확 일치 인덱스 (fallback — 사업보고서 제출 여부는 fetch에서 판별)
+  const byKoUnlisted = new Map();
+  for (const e of unlisted) {
+    const k = normKo(e.corpName);
+    byKoUnlisted.set(k, byKoUnlisted.has(k) ? "DUP" : e);
+  }
 
   const byKo = new Map();
   const byEn = new Map();
@@ -228,6 +239,12 @@ function match() {
     const enHit = c.en ? byEn.get(normEn(c.en)) : null;
     if (enHit && enHit !== "DUP") {
       auto[c.id] = { corpCode: enHit.corpCode, matchedBy: "auto-exact-en", dartName: enHit.corpName };
+      continue;
+    }
+    // 비상장 공시법인 정확 일치 (현대카드·GS칼텍스·발전공기업 등)
+    const unHit = byKoUnlisted.get(normKo(c.ko));
+    if (unHit && unHit !== "DUP") {
+      auto[c.id] = { corpCode: unHit.corpCode, matchedBy: "auto-exact-ko-unlisted", dartName: unHit.corpName };
       continue;
     }
     // 별칭 정확 일치 → 후보 제안 (자동 채택 금지)
@@ -261,19 +278,35 @@ function match() {
   log(`다음: match-auto/proposals 검수 → src/data/dart/corpCodeMap.ts 작성`);
 }
 
-// ═══════════ ③ fetch ═══════════
-async function fetchData() {
+// 수집·집계 대상 = 상장사 전체 + (match-auto 의 비상장 매칭분)
+function getTargets() {
   const corpFile = join(CACHE, "corpCode.json");
   if (!existsSync(corpFile)) fail("corpCode.json 없음 — 먼저 corp-codes 실행");
   const { entries } = JSON.parse(readFileSync(corpFile, "utf8"));
+  const autoFile = join(CACHE, "match-auto.json");
+  if (existsSync(autoFile)) {
+    const auto = JSON.parse(readFileSync(autoFile, "utf8"));
+    const listedSet = new Set(entries.map((e) => e.corpCode));
+    for (const m of Object.values(auto)) {
+      if (m.matchedBy === "auto-exact-ko-unlisted" && !listedSet.has(m.corpCode)) {
+        entries.push({ corpCode: m.corpCode, corpName: m.dartName, stockCode: "", modifyDate: "" });
+      }
+    }
+  }
+  return entries;
+}
+
+// ═══════════ ③ fetch ═══════════
+const CONCURRENCY = 4;
+
+async function fetchData() {
+  const entries = getTargets();
   const baseYear = Number(yearArg || new Date().getFullYear() - 1);
   let done = 0, skipped = 0, noData = 0, errs = 0;
 
-  for (const e of entries) {
-    done++;
-    if (done % 100 === 0) log(`fetch ${done}/${entries.length} (cache-skip ${skipped}, no-data ${noData}, err ${errs})`);
+  async function processOne(e) {
     const empOut = join(EMP_CACHE, `${e.corpCode}.json`);
-    if (existsSync(empOut) && !FORCE) { skipped++; continue; }
+    if (existsSync(empOut) && !FORCE) { skipped++; return; }
     try {
       let saved = false;
       for (const year of [baseYear, baseYear - 1]) {
@@ -296,6 +329,12 @@ async function fetchData() {
       errs++;
       log(`err ${e.corpCode} ${e.corpName}: ${err.message}`);
     }
+  }
+
+  for (let i = 0; i < entries.length; i += CONCURRENCY) {
+    await Promise.all(entries.slice(i, i + CONCURRENCY).map(processOne));
+    done = Math.min(i + CONCURRENCY, entries.length);
+    if (done % 200 < CONCURRENCY) log(`fetch ${done}/${entries.length} (cache-skip ${skipped}, no-data ${noData}, err ${errs})`);
   }
   log(`fetch 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
 }
@@ -337,9 +376,7 @@ function aggregate(list) {
 
 // ═══════════ ④ emit ═══════════
 function emit() {
-  const corpFile = join(CACHE, "corpCode.json");
-  if (!existsSync(corpFile)) fail("corpCode.json 없음");
-  const { entries } = JSON.parse(readFileSync(corpFile, "utf8"));
+  const entries = getTargets();
   const results = [];
   const excluded = { V1: 0, V2: 0, V3: 0, V6: 0, "no-cache": 0, "no-data": 0 };
   const v3Queue = [];
