@@ -46,7 +46,8 @@
 | 9월 초 | ★광고 실험 #1(Display2) 판정 — 운영자 AdSense CSV(8/3~8/16 vs 8/18~8/31) → docs/ad-experiments.md 표 기입, 군별 유지/revert. 통과 시 실험 #2(D2a 12곳+car-loan InArticle→Display2) 진행 | 필수 |
 | 9월 | 네이버 블로그 개시, 연말정산 예습 콘텐츠 발행 | 진행 |
 | 10월 중순 | ★DART lite Phase 1(/salary-db/listed 218곳, 8/23 배포) 28일 색인률 측정 — GSC 커버리지에서 색인 ≥60%면 Phase 2 +300곳(dartLite.ts 코호트 상수 확대), 미달이면 게이팅 강화(직원 하한 상향)만 | 필수 |
-| 10월 말 | 홈택스 연말정산 미리보기 오픈 대응 — 관련 페이지 수치 총점검 | 필수 |
+| 10월 초 | SeasonalLinks 추석→연말정산 세트 교체 — 이번엔 /year-end-tax-2027(허브)·/year-end-tax-preview·/embed(연말정산 위젯) 링크 포함 (1파일 320페이지 일괄) | 필수 |
+| 10월 말 | 홈택스 연말정산 미리보기 오픈 대응 — /year-end-tax-preview 확정 일정·메뉴 경로 갱신 + /year-end-tax-2027 캘린더·뉴스 갱신 + 관련 페이지 수치 총점검 | 필수 |
 | 11월~1월 | **구조 변경 동결** — 콘텐츠 수치 갱신만. 주간 모니터링 강화 | 원칙 |
 | 12월 초 | 삼성 TAI 하반기 지급률 발표 → src/app/calc/samsung-bonus/taiData.ts 갱신 + 허브(/calc/bonus-calculators) 캘린더·뉴스 동시 갱신 (Claude 지시) | 필수 |
 | 12월 말 | 공무원 봉급표 2027 확정 → /civil-servant-pay-2026 갱신, OPI/PS 전망 가이드 갱신 | 필수 |
