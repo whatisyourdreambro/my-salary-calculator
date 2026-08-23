@@ -4,7 +4,7 @@
 // GlossaryExplorer 클라이언트 아일랜드가 경량 인덱스로 처리한다.
 import { BookOpen } from "lucide-react";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
-import { HomeTopAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+import { HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import GlossaryCard from "./GlossaryCard";
 import GlossaryExplorer, {
@@ -68,7 +68,7 @@ export default function GlossaryPage() {
         topAd={<HomeTopAd />}
         bottomAd={
           <>
-            <InArticleAd />
+            <GuideMidAd />
             <CoupangBanner
               responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
             />

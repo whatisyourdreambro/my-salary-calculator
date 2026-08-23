@@ -277,9 +277,8 @@ export default function ListedAvgSalaryTop100Report() {
           </div>
         </section>
 
-        <div className="mt-8">
-          <InArticleAd />
-        </div>
+        {/* 표 하단 IN_ARTICLE 금지 — 상단(히어로 직하)이 같은 슬롯을 먼저 선점해
+            dedup 으로 렌더되지 않던 죽은 유닛 (2026-08-23 ad-audit 적발·제거). */}
 
         {/* 방법론 */}
         <section

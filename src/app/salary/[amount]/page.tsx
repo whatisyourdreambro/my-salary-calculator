@@ -12,7 +12,7 @@ import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
-import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -249,10 +249,9 @@ export default function SalaryAmountPage({ params }: Props) {
  <div className="w-full mt-10 space-y-12">
  <WealthChart monthlyNetSalary={tax.netPay} />
 
- {/* 차트와 티어카드 사이 InArticleAd */}
- <div className="px-2">
- <InArticleAd />
- </div>
+ {/* 차트와 티어카드 사이 광고 금지 — IN_ARTICLE 슬롯은 SalaryResultCard의
+ "결과 직하" 광고가 먼저 선점하므로 여기 두면 dedup 으로 렌더 자체가 안 됨
+ (죽은 유닛, 2026-08-23 ad-audit 적발·제거). 이 자리는 실험 #2c 후보. */}
 
  <SalaryTierCard annualSalary={amount} />
 
