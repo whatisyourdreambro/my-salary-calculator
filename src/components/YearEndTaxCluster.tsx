@@ -1,10 +1,13 @@
 // src/components/YearEndTaxCluster.tsx
 //
-// 연말정산 관련 4페이지 cross-link cluster.
+// 연말정산 관련 페이지 cross-link cluster.
 // 같은 도메인(연말정산·종소세)의 다른 의도 페이지를 명확히 안내해
 // 검색엔진과 사용자 모두에게 카니발이 아닌 의도 차이임을 신호.
+// 정밀 계산기 3종(카드·의료비·월세)은 칩 과밀을 피해 허브가 연결한다.
 //
+//   /year-end-tax-2027                  : ★허브 — 시즌 전체 로드맵 (2026-08-23 신설)
 //   /year-end-tax                       : 계산기 도구 (시즌 무관)
+//   /year-end-tax-preview               : 홈택스 미리보기 이용법 (2026-08-23 신설)
 //   /year-end-tax-settlement-2026       : 근로자 12월 시즌 가이드
 //   /year-end-tax-checklist             : 12월 마감 전 체크리스트
 //   /year-end-tax-2026                  : 프리랜서 5월 종소세 가이드
@@ -17,7 +20,9 @@ import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
+ { path: "/year-end-tax-2027", label: "2027 총정리", hint: "시즌 전체 로드맵·일정" },
  { path: "/year-end-tax", label: "계산기", hint: "도구·즉시 계산" },
+ { path: "/year-end-tax-preview", label: "미리보기", hint: "홈택스 미리보기 이용법" },
  { path: "/year-end-tax-settlement-2026", label: "근로자 12월", hint: "성과급·절세 전략" },
  { path: "/year-end-tax-checklist", label: "12월 체크리스트", hint: "마감 전 40+ 항목" },
  { path: "/year-end-tax-2026", label: "프리랜서 5월", hint: "종소세 신고" },

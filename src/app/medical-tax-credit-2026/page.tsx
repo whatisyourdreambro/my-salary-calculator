@@ -11,6 +11,7 @@ import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/s
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
 import MedicalTaxCreditClient from "./Client";
@@ -137,6 +138,9 @@ export default function MedicalTaxCredit2026Page() {
         <MedicalTaxCreditClient />
 
         <CalcResultAd />
+
+        {/* 연말정산 클러스터 칩 — 메쉬 비대칭 해소 (2026-08-23). 광고 아래 배치 준수 */}
+        <YearEndTaxCluster />
 
         {/* 가이드 콘텐츠 — thin page 방어 */}
         <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">

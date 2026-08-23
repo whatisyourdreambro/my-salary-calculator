@@ -53,6 +53,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/terms',
  // Seasonal pages — 시즌 트래픽 핵심
  '/year-end-tax-2026',
+ '/year-end-tax-2027',
+ '/year-end-tax-preview',
  '/health-insurance-2026',
  '/year-end-tax-settlement-2026',
  '/new-employee-2026',
