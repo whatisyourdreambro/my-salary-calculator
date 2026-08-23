@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 import Link from "@/components/AppLink";
 import ToolCard from "@/components/home/ToolCard";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
-import { HomeTopAd, GuideMidAd, Display2Ad } from "@/components/AdPlacement";
+import { HomeTopAd, GuideMidAd, Display2Ad, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -449,6 +449,15 @@ export default function HomeClient() {
  {/* ═══ Guide Categories — 카테고리별 진입 ══════════════════ */}
  <GuideCategories />
 
+ {/* ═══ 홈 커버리지 확장(운영자 일괄 승인 2026-08-23): IN_ARTICLE 슬롯은
+ 홈에서 미사용이라 무충돌. 하단 GuideMid 와는 Guide CTA 섹션이 사이에
+ 있어 연속 광고 아님. 결과 직하 Display2 위·앞은 불변. ═══ */}
+ <section className="bg-white section-pad">
+ <div className="max-w-3xl mx-auto px-6">
+ <InArticleAd />
+ </div>
+ </section>
+
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
  <section
  className="section-lg"
@@ -512,6 +521,14 @@ export default function HomeClient() {
  <section className="bg-white border-t border-canvas-200 section-pad">
  <div className="max-w-3xl mx-auto px-6">
  <GuideMidAd />
+ </div>
+ </section>
+
+ {/* ═══ 최하단 exit 멀티플렉스(관련 콘텐츠형) — MULTIPLEX 슬롯 홈 미사용,
+ 목록형 하단이라는 설계 용도 그대로 (운영자 일괄 승인 2026-08-23) ═══ */}
+ <section className="bg-white section-pad">
+ <div className="max-w-5xl mx-auto px-6">
+ <MultiplexAd />
  </div>
  </section>
 
