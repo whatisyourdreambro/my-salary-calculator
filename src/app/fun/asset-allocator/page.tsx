@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone, Gem, Coins, Briefcase } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // --- Game Constants & Types ---
 const GRAVITY = 0.5;
@@ -360,6 +361,14 @@ export default function AssetAllocatorGame() {
  <div className="flex items-center gap-2">
  <Smartphone className="w-4 h-4" /> Drag Finger
  </div>
+ </div>
+ )}
+
+ {/* 게임오버 시에만 게임 영역 아래 광고 — 오버레이 내부는 오클릭 정책 리스크라
+ 금지, 본문 흐름에만 둔다. fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
+ {gameState === "gameover" && (
+ <div className="w-full max-w-2xl mx-auto mt-6">
+ <InArticleAd />
  </div>
  )}
  </div>

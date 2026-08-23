@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, Target, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 const questions = [
  {
  axis: 'EI',
@@ -175,6 +176,10 @@ export default function FinancialMBTIPage() {
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
  <ShareButtons title={"나의 투자 성향은 " + result + "! 투자 성향 MBTI 테스트"} />
  </div>
+
+ {/* 결과 화면 한정 광고 — fun/layout(CALC_RESULT·쿠팡·HOME_TOP)과 무충돌.
+ 결과·공유 아래 배치 (운영자 일괄 승인 2026-08-23) */}
+ <InArticleAd />
 
  </motion.div>
  )}

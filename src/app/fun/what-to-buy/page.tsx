@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Search } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 
 export default function WhatToBuyPage() {
  const [budget, setBudget] = useState(100000);
@@ -119,6 +120,9 @@ export default function WhatToBuyPage() {
  </motion.div>
  )}
  </AnimatePresence>
+
+ {/* 결과 화면 한정 광고 — fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
+ {result && <InArticleAd />}
 
  </div>
  </main>

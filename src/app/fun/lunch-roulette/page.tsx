@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Utensils, RefreshCw } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 const MENUS = [
  "김치찌개", "된장찌개", "제육볶음", "돈까스", "햄버거", 
  "짜장면", "짬뽕", "마라탕", "초밥", "국밥", "샐러드", "샌드위치"
@@ -79,6 +80,9 @@ export default function LunchRoulettePage() {
  <ShareButtons title={"오늘 점심은 " + result + " 어때요? 점심 메뉴 추천기"} />
  </div>
  )}
+
+ {/* 결과 화면 한정 광고 — fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
+ {result && !isSpinning && <InArticleAd />}
 
  </div>
  </main>

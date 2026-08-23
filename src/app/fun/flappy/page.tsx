@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, RotateCcw, Trophy } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
+import { InArticleAd } from "@/components/AdPlacement";
 // Game Constants
 const GRAVITY = 0.4; // Reduced from 0.6
 const JUMP_STRENGTH = -8; // Reduced from -10 to match gravity
@@ -245,7 +246,10 @@ export default function FlappyGamePage() {
  )}
  </div>
 
- 
+ {/* 게임오버 시에만 게임 영역 아래 광고 — 오버레이 내부는 오클릭 정책 리스크라
+ 금지, 본문 흐름에만 둔다. fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
+ {gameState === "gameover" && <InArticleAd />}
+
  </div>
  </main>
  );
