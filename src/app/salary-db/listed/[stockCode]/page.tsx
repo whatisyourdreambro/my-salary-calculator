@@ -260,6 +260,65 @@ export default function ListedCompanyPage({ params }: Props) {
           </p>
         </section>
 
+        {/* 3개년 연봉 추이 — fetch-hist 수집 연도가 있는 회사만 렌더 (추정 0) */}
+        {c.history && c.history.length > 0 && (
+          <section className="mb-8 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="history-heading">
+            <h2 id="history-heading" className="text-lg sm:text-xl font-black text-navy mb-4">
+              공시 평균연봉 추이
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[420px]">
+                <thead>
+                  <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
+                    <th className="py-2 px-3 font-bold">사업연도</th>
+                    <th className="py-2 px-3 font-bold">평균연봉</th>
+                    <th className="py-2 px-3 font-bold">직원 수</th>
+                    <th className="py-2 px-3 font-bold">전년 대비</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { fiscalYear: c.fiscalYear, avgSalaryManwonRaw: c.avgSalaryManwon, employeeCount: c.employeeCount },
+                    ...c.history,
+                  ].map((row, i, arr) => {
+                    const prev = arr[i + 1];
+                    const delta =
+                      prev != null
+                        ? Math.round(((row.avgSalaryManwonRaw - prev.avgSalaryManwonRaw) / prev.avgSalaryManwonRaw) * 100)
+                        : null;
+                    return (
+                      <tr key={row.fiscalYear} className="border-b border-canvas-200/60">
+                        <td className="py-2 px-3 font-bold text-navy">
+                          {row.fiscalYear}
+                          {i === 0 && <span className="ml-1 text-[10px] font-normal text-faint-blue">최신</span>}
+                        </td>
+                        <td className="py-2 px-3 tabular-nums font-black text-electric">
+                          {fmtManwon(row.avgSalaryManwonRaw)}
+                        </td>
+                        <td className="py-2 px-3 tabular-nums text-muted-blue">
+                          {row.employeeCount.toLocaleString("ko-KR")}명
+                        </td>
+                        <td className="py-2 px-3 tabular-nums font-bold">
+                          {delta == null ? (
+                            <span className="text-faint-blue">—</span>
+                          ) : (
+                            <span className={delta >= 0 ? "text-primary" : "text-navy"}>
+                              {delta >= 0 ? `+${delta}` : delta}%
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-muted-blue">
+              각 연도 사업보고서 공시 원값 기준. 성과급 지급 시점에 따라 연도별 변동이 클 수 있습니다.
+            </p>
+          </section>
+        )}
+
         {/* 유사 연봉 상장사 — lite 상호 메쉬 */}
         {neighbors.length > 0 && (
           <section className="mb-8" aria-labelledby="neighbors-heading">

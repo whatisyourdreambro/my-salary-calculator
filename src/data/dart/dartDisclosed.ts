@@ -18,6 +18,8 @@ export interface DartDisclosedEntry {
   rceptNo: string;
   ksicCode?: string;
   flags?: string[];
+  /** 과년도 공시 이력 (최신 연도 우선, fetch-hist 수집분 — 추이 표시용) */
+  history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
 }
 
 export const DART_DATA_DATE = "2026-08-23";

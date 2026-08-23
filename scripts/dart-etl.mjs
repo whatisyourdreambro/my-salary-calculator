@@ -24,6 +24,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const CACHE = join(__dirname, ".dart-cache");
 const EMP_CACHE = join(CACHE, "emp");
+// 과년도 이력 캐시 — 연도별 분리 (emp/ 는 현행 연도 전용이라 불변 유지.
+// 2026-08-23 3개년 추이용 신설: fetch-hist --year YYYY → emp-hist/YYYY/{corp}.json)
+const EMP_HIST_CACHE = join(CACHE, "emp-hist");
 const COMPANY_CACHE = join(CACHE, "company");
 const OUT_DIR = join(ROOT, "src", "data", "dart");
 
@@ -45,8 +48,8 @@ function fail(msg) {
   process.exit(1);
 }
 
-if (!cmd || !["corp-codes", "match", "fetch", "emit", "diff", "all"].includes(cmd)) {
-  fail("서브커맨드 필요: corp-codes | match | fetch | emit | diff | all");
+if (!cmd || !["corp-codes", "match", "fetch", "fetch-hist", "emit", "diff", "all"].includes(cmd)) {
+  fail("서브커맨드 필요: corp-codes | match | fetch | fetch-hist | emit | diff | all");
 }
 if (!KEY && cmd !== "match" && cmd !== "emit" && cmd !== "diff") {
   fail("DART_API_KEY 환경변수가 없습니다. 키 파일에서 주입 후 재실행하세요.");
@@ -351,6 +354,43 @@ async function fetchData() {
   log(`fetch 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
 }
 
+// ═══════════ ③-b fetch-hist (과년도 이력 — 3개년 추이용, 2026-08-23) ═══════════
+// emp/ (현행 연도)와 분리된 emp-hist/{year}/ 캐시에 저장. 폴백 연도 조회 없음
+// (요청 연도 사업보고서만). 기존 fetch·emit의 현행 데이터는 일절 건드리지 않는다.
+async function fetchHist() {
+  if (!yearArg || !/^\d{4}$/.test(String(yearArg))) fail("fetch-hist 는 --year YYYY 필수");
+  const year = String(yearArg);
+  const dir = join(EMP_HIST_CACHE, year);
+  mkdirSync(dir, { recursive: true });
+  const entries = getTargets();
+  let done = 0, skipped = 0, noData = 0, errs = 0;
+
+  async function processOne(e) {
+    const out = join(dir, `${e.corpCode}.json`);
+    if (existsSync(out) && !FORCE) { skipped++; return; }
+    try {
+      const j = await apiJson("empSttus.json", { corp_code: e.corpCode, bsns_year: year, reprt_code: "11011" });
+      await sleep(100);
+      if (j.status === "000" && Array.isArray(j.list) && j.list.length) {
+        writeFileSync(out, JSON.stringify({ year: Number(year), list: j.list }, null, 0));
+      } else {
+        noData++;
+        writeFileSync(out, JSON.stringify({ year: null, list: [] }));
+      }
+    } catch (err) {
+      errs++;
+      log(`hist err ${e.corpCode} ${e.corpName}: ${err.message}`);
+    }
+  }
+
+  for (let i = 0; i < entries.length; i += CONCURRENCY) {
+    await Promise.all(entries.slice(i, i + CONCURRENCY).map(processOne));
+    done = Math.min(i + CONCURRENCY, entries.length);
+    if (done % 200 < CONCURRENCY) log(`fetch-hist ${year} ${done}/${entries.length} (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  }
+  log(`fetch-hist ${year} 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
+}
+
 // ── 집계 (성별합계 행 기반 가중평균) ─────────────────────────
 function aggregate(list) {
   const rows = list.map((r) => ({
@@ -434,6 +474,41 @@ function emit() {
     });
   }
 
+  // ── 과년도 이력 병합 (emp-hist/{year}/, 2026-08-23 3개년 추이) ──
+  // primary(현행) 수치는 절대 불변 — history 필드만 추가. 각 연도에 primary와
+  // 동일한 V1~V3 위생 게이트를 적용하고, 실패 연도는 조용히 제외(추정 금지).
+  const histYears = existsSync(EMP_HIST_CACHE)
+    ? readdirSync(EMP_HIST_CACHE).filter((d) => /^\d{4}$/.test(d)).sort().reverse()
+    : [];
+  if (histYears.length) {
+    let histAttached = 0;
+    for (const r of results) {
+      const history = [];
+      for (const y of histYears) {
+        if (y === r.fiscalYear) continue; // primary 연도 중복 방지
+        const f = join(EMP_HIST_CACHE, y, `${r.corpCode}.json`);
+        if (!existsSync(f)) continue;
+        const { list } = JSON.parse(readFileSync(f, "utf8"));
+        if (!list || !list.length) continue;
+        const agg = aggregate(list);
+        if (!agg || agg.totalHead == null || agg.totalHead < 30) continue;
+        if (agg.avgWon == null || agg.avgWon <= 0) continue;
+        const manwon = agg.avgWon / 10_000;
+        if (manwon < 1200 || manwon > 30000) continue;
+        history.push({
+          fiscalYear: y,
+          avgSalaryManwonRaw: Math.round(manwon),
+          employeeCount: agg.totalHead,
+        });
+      }
+      if (history.length) {
+        r.history = history; // 최신 연도 우선 정렬 (histYears가 내림차순)
+        histAttached++;
+      }
+    }
+    log(`history 병합: ${histYears.join(",")} — ${histAttached}곳에 이력 부착`);
+  }
+
   results.sort((a, b) => b.employeeCount * b.avgSalaryManwonRaw - a.employeeCount * a.avgSalaryManwonRaw);
   mkdirSync(OUT_DIR, { recursive: true });
   const today = new Date().toISOString().slice(0, 10);
@@ -457,6 +532,8 @@ export interface DartDisclosedEntry {
   rceptNo: string;
   ksicCode?: string;
   flags?: string[];
+  /** 과년도 공시 이력 (최신 연도 우선, fetch-hist 수집분 — 추이 표시용) */
+  history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
 }
 
 export const DART_DATA_DATE = "${today}";
@@ -570,6 +647,7 @@ const run = {
   "corp-codes": corpCodes,
   match,
   fetch: fetchData,
+  "fetch-hist": fetchHist,
   emit,
   diff: diffCmd,
   all: async () => { await corpCodes(); match(); await fetchData(); emit(); diffCmd(); },

@@ -28,6 +28,8 @@ export const DART_LITE_DATE = DART_DATA_DATE;
 const EMPLOYEE_MIN = 500;
 const TOP_BY_EMPLOYEE = 150;
 const TOP_BY_SALARY = 150;
+/** 현행(primary) 사업연도 — 매년 4월 DART 갱신 시 이 상수만 올린다 */
+const PRIMARY_FISCAL_YEAR = "2025";
 
 function decodeName(s: string): string {
   return s
@@ -66,11 +68,16 @@ export interface DartLiteCompany {
   industryTotal: number;
   /** 업종 직원 수 가중 평균 (만원, 업종 5곳 미만이면 null) */
   industryWeightedAvgManwon: number | null;
+  /** 과년도 공시 이력 (최신 우선 — fetch-hist 수집분, 없으면 undefined) */
+  history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
 }
 
 // ── 모수: FY2025 + 무플래그 + 상장 전수 (순위 컨텍스트용 — 삼성전자 등 포함) ──
 const listedEligible: DartDisclosedEntry[] = dartDisclosed.filter(
-  (d) => d.fiscalYear === "2025" && !(d.flags && d.flags.length) && d.stockCode !== ""
+  (d) =>
+    d.fiscalYear === PRIMARY_FISCAL_YEAR &&
+    !(d.flags && d.flags.length) &&
+    d.stockCode !== ""
 );
 
 const listedBySalary = [...listedEligible].sort(
@@ -129,6 +136,7 @@ function toLite(d: DartDisclosedEntry): DartLiteCompany {
     industryTotal,
     industryWeightedAvgManwon:
       industryTotal >= 5 ? industryWeighted.get(industryId) ?? null : null,
+    ...(d.history && d.history.length ? { history: d.history } : {}),
   };
 }
 
