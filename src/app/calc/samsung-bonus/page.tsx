@@ -10,8 +10,10 @@ import {
   autoBreadcrumbLd,
   faqLd,
   howToLd,
+  speakableLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -275,6 +277,9 @@ export const metadata: Metadata = {
       )}`,
     ],
   },
+  other: {
+    "article:modified_time": "2026-08-23",
+  },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -330,6 +335,19 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
+            dateModified: "2026-08-23",
+            featureList: [
+              "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
+              "TAI(목표달성장려금) 2026 상반기 지급률 자동 적용",
+              "본인 연봉 기준 세전·세후 실수령액",
+              "CL 직급·가고과 평가 반영 다년도 누적 시뮬레이션",
+              "다년도 RSU 매도 가치 시뮬레이션",
+              "SK하이닉스 성과급 비교",
+            ],
+          }),
+          speakableLd({
+            url: PAGE_PATH,
+            cssSelectors: ["#calc-hero-summary", ".faq-answer"],
           }),
           autoBreadcrumbLd(PAGE_PATH, {
             leafName: "삼성전자 성과급 계산기",
@@ -348,6 +366,12 @@ export default function SamsungBonusCalculatorPage() {
       <main className="min-h-screen pb-32 pt-24 px-4 font-sans bg-canvas dark:bg-canvas-950">
         <div className="max-w-2xl mx-auto">
           {/* Hero */}
+          <Breadcrumbs
+            path={PAGE_PATH}
+            leafName="삼성전자 성과급 계산기"
+            align="center"
+            className="mb-4"
+          />
           <header className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-5 bg-electric-10 text-electric border border-electric-30">
               <Sparkles size={12} aria-hidden /> Samsung 성과급 시뮬레이터
@@ -357,6 +381,9 @@ export default function SamsungBonusCalculatorPage() {
               style={{ letterSpacing: "-0.04em" }}
             >
               삼성전자 성과급 계산기
+              <span className="block text-2xl sm:text-3xl mt-2 text-electric">
+                2026 OPI·TAI 세후 실수령
+              </span>
             </h1>
             <p className="text-base sm:text-lg font-medium text-muted-blue dark:text-canvas-300">
               영업이익 → 부문 40% + 사업부 60% 분배 →{" "}
@@ -373,10 +400,15 @@ export default function SamsungBonusCalculatorPage() {
               </strong>{" "}
               미니 계산기.
             </p>
-            <p className="text-xs text-faint-blue mt-2 max-w-md mx-auto leading-relaxed">
-              <strong>삼성 성과급 계산기</strong>(삼전 성과급 계산기)를
-              찾으셨다면 바로 이 페이지입니다 — OPI(초과이익성과금) 재원부터
-              본인 실수령액까지 한 번에 추정합니다.
+            <p
+              id="calc-hero-summary"
+              className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed"
+            >
+              <strong>삼성 성과급 계산기</strong>·
+              <strong>삼전 성과급 계산기</strong>로 찾아오셨다면 맞는
+              페이지입니다. OPI(초과이익성과금) 재원 분배, TAI(목표달성장려금)
+              지급률, 본인 연봉 세후 실수령과 다년도 RSU 매도까지 이 한
+              페이지에서 추정합니다.
             </p>
             <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
@@ -786,6 +818,79 @@ export default function SamsungBonusCalculatorPage() {
           {/* 분배 모델 ↔ 본문 해설 사이 광고 */}
           <GuideMidAd />
 
+          {/* CL 직급·평가등급 배수표 — 다년도 시뮬레이터(ssr:false) 안의 핵심
+              제도 설명을 서버 렌더로 노출 ("삼성 CL4 성과급"·"가고과 성과급" 대응) */}
+          <section className="mb-10 mt-10" aria-labelledby="cl-mult-title">
+            <h2
+              id="cl-mult-title"
+              className="text-2xl font-black text-navy dark:text-canvas-50 mb-2"
+            >
+              삼성 CL 직급·평가등급별 성과급 배수
+            </h2>
+            <p className="text-sm text-muted-blue dark:text-canvas-300 mb-4 leading-relaxed">
+              삼성전자 직급 체계(CL, Career Level)에서 성과급 차등은 주로{" "}
+              <strong>CL4의 평가 등급</strong>에서 발생합니다 — 가고과 1.4배 ·
+              나고과 1.2배 · 일반 1.0배(보도 기준). CL1~CL3은 평가 배수 없이
+              1.0배가 적용되지만, 같은 사업부 풀 안에서 가/나고과 인력이 더
+              가져가는 만큼 영향을 받습니다. 아래 다년도 시뮬레이터에서 본인
+              직급·등급을 연도별로 설정할 수 있습니다.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse min-w-[480px]">
+                <thead>
+                  <tr className="border-b-2 border-canvas-200 dark:border-canvas-800 text-left">
+                    <th className="py-2 pr-3 font-bold">구분</th>
+                    <th className="py-2 pr-3 font-bold">대상</th>
+                    <th className="py-2 pr-3 font-bold">성과급 배수</th>
+                    <th className="py-2 font-bold">비고</th>
+                  </tr>
+                </thead>
+                <tbody className="text-muted-blue dark:text-canvas-300">
+                  <tr className="border-b border-canvas-200/60 dark:border-canvas-800/60">
+                    <td className="py-2 pr-3 font-bold">CL1</td>
+                    <td className="py-2 pr-3">고졸·전문대졸</td>
+                    <td className="py-2 pr-3 tabular-nums">1.0배</td>
+                    <td className="py-2">평가 배수 미적용</td>
+                  </tr>
+                  <tr className="border-b border-canvas-200/60 dark:border-canvas-800/60">
+                    <td className="py-2 pr-3 font-bold">CL2</td>
+                    <td className="py-2 pr-3">대졸 사원·대리</td>
+                    <td className="py-2 pr-3 tabular-nums">1.0배</td>
+                    <td className="py-2">평가 배수 미적용</td>
+                  </tr>
+                  <tr className="border-b border-canvas-200/60 dark:border-canvas-800/60">
+                    <td className="py-2 pr-3 font-bold">CL3</td>
+                    <td className="py-2 pr-3">과장·차장</td>
+                    <td className="py-2 pr-3 tabular-nums">1.0배</td>
+                    <td className="py-2">평가 배수 미적용</td>
+                  </tr>
+                  <tr className="border-b border-canvas-200/60 dark:border-canvas-800/60">
+                    <td className="py-2 pr-3 font-bold">CL4 가고과</td>
+                    <td className="py-2 pr-3">부장·수석 상위 평가</td>
+                    <td className="py-2 pr-3 tabular-nums font-black text-electric">1.4배</td>
+                    <td className="py-2">분포 약 10~15% (보도 기준)</td>
+                  </tr>
+                  <tr className="border-b border-canvas-200/60 dark:border-canvas-800/60">
+                    <td className="py-2 pr-3 font-bold">CL4 나고과</td>
+                    <td className="py-2 pr-3">부장·수석 중위 평가</td>
+                    <td className="py-2 pr-3 tabular-nums font-black text-electric">1.2배</td>
+                    <td className="py-2">분포 약 20~30% (보도 기준)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-3 font-bold">CL4 일반</td>
+                    <td className="py-2 pr-3">부장·수석 일반 평가</td>
+                    <td className="py-2 pr-3 tabular-nums">1.0배</td>
+                    <td className="py-2">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2 text-xs text-faint-blue leading-relaxed">
+              * 배수·분포는 복수 언론 보도 기반 추정이며 회사 공식 기준이
+              아닙니다. 실제 평가·분배 정책은 회사 비공개 영역입니다.
+            </p>
+          </section>
+
           {/* 본문 */}
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
@@ -1053,7 +1158,7 @@ export default function SamsungBonusCalculatorPage() {
                       ▾
                     </span>
                   </summary>
-                  <p className="mt-3 text-muted-blue dark:text-canvas-300 leading-relaxed text-sm">
+                  <p className="mt-3 text-muted-blue dark:text-canvas-300 leading-relaxed text-sm faq-answer">
                     {item.answer}
                   </p>
                 </details>

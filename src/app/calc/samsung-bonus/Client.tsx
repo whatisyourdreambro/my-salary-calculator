@@ -158,12 +158,12 @@ export default function SamsungBonusClient() {
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 transition-shadow hover:shadow-md"
         aria-labelledby="profit-section-title"
       >
-        <p
+        <h2
           id="profit-section-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-5"
         >
-          주요 변수
-        </p>
+          주요 변수 — 영업이익·적용 연도
+        </h2>
 
         {/* 적용 연도 선택 — 임계값 자동 결정 */}
         <div className="mb-5">
@@ -415,12 +415,12 @@ export default function SamsungBonusClient() {
         aria-labelledby="division-section-title"
       >
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <p
+          <h2
             id="division-section-title"
             className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue"
           >
             사업부 설정
-          </p>
+          </h2>
           <div className="flex items-center gap-3">
             <p className="text-[11px] text-faint-blue">
               가중치 합계{" "}
@@ -517,12 +517,12 @@ export default function SamsungBonusClient() {
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
         aria-labelledby="avg-result-title"
       >
-        <p
+        <h2
           id="avg-result-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1"
         >
           OPI2(특별경영성과금) 1인당 결과 (세전 · 평균 직원 기준)
-        </p>
+        </h2>
         <p className="text-[11px] text-faint-blue mb-5">
           이 값은 영업이익 분배분(OPI2)의 사업부 평균입니다. OPI1(연봉 비례)을
           합산한 본인 케이스는 아래 "내 연봉으로 계산"에서 확인.
@@ -575,14 +575,15 @@ export default function SamsungBonusClient() {
           background: "#10B98108",
           border: "1px solid #10B98133",
         }}
-        aria-label="SK하이닉스 비교 참고 박스"
+        aria-labelledby="hynix-compare-title"
       >
-        <p
+        <h2
+          id="hynix-compare-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] mb-2"
           style={{ color: "#10B981" }}
         >
-          참고 · 비교
-        </p>
+          SK하이닉스 성과급과 비교
+        </h2>
         <div className="flex items-start gap-3">
           <Lightbulb
             className="w-5 h-5 mt-0.5 flex-shrink-0"
@@ -614,6 +615,11 @@ export default function SamsungBonusClient() {
                 (80% 즉시 · 20% 2년 이연)
               </span>
             </p>
+            <p className="mt-1 text-xs">
+              2026년분부터는 2026-08-20 임단협 잠정합의 기준{" "}
+              <strong>현금 40% + 자사주 60%</strong> 지급으로 개편될
+              전망입니다(총투표 전).
+            </p>
             <p className="mt-2">
               <Link
                 href="/calc/sk-hynix-bonus"
@@ -628,6 +634,19 @@ export default function SamsungBonusClient() {
       </aside>
 
       {/* 다년도 누적 성과급 시뮬레이터 — 연도별 영업이익 + 임계값 자동 */}
+      {/* 크롤러 가시 요약 — 시뮬레이터 본체는 ssr:false 라 서버 HTML에 없음 */}
+      <div className="mt-2">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1">
+          다년도 누적 성과급 시뮬레이터 — CL 직급·가고과 반영
+        </h2>
+        <p className="text-[11px] text-faint-blue mb-3 leading-relaxed">
+          본인 CL 직급(CL1 고졸·전문대졸 / CL2 대졸 사원·대리 / CL3 과장·차장 /
+          CL4 부장·수석)과 연도별 영업이익 시나리오를 설정하면 여러 해 누적
+          세전·세후 성과급을 계산합니다. CL4는 평가 등급에 따라 가고과 1.4배 ·
+          나고과 1.2배 · 일반 1.0배가 적용됩니다(보도 기준 분포: 가고과 약
+          10~15%, 나고과 약 20~30%).
+        </p>
+      </div>
       <MultiYearBonusSimulator
         counts={counts}
         ratios={ratios}
@@ -639,6 +658,18 @@ export default function SamsungBonusClient() {
       />
 
       {/* 다년도 RSU 매도 시뮬레이터 — 상단 사업부별 1인당 평균과 연동 */}
+      {/* 크롤러 가시 요약 — 시뮬레이터 본체는 ssr:false 라 서버 HTML에 없음 */}
+      <div className="mt-2">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1">
+          다년도 RSU 매도 시뮬레이션
+        </h2>
+        <p className="text-[11px] text-faint-blue mb-3 leading-relaxed">
+          특별경영성과급의 자사주(RSU) 지급분을 베스팅 일정(즉시 3분의 1 ·
+          1~2년 잠금)에 따라 연도별 매도 가치로 환산합니다. 사업부별 1인당
+          평균과 연동되며, 주가 시나리오를 바꿔 누적 수령액을 비교할 수
+          있습니다.
+        </p>
+      </div>
       <MultiYearRSUSimulator
         divisionTotals={result.perDivision.map((d) => ({
           id: d.id,
@@ -775,13 +806,13 @@ function MySalaryCalculator({
       className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
       aria-labelledby="my-calc-title"
     >
-      <p
+      <h2
         id="my-calc-title"
         className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1 inline-flex items-center gap-1.5"
       >
         <User size={11} className="text-electric" aria-hidden /> 내 연봉으로
         계산 — 세전·세후
-      </p>
+      </h2>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         평균 결과는 평균 직원 연봉 8,000만원 기준입니다. 본인 연봉에 비례해
         받는 성과급과 세금 공제 후 실수령액을 계산합니다.
@@ -800,6 +831,7 @@ function MySalaryCalculator({
               id="my-salary"
               type="text"
               inputMode="numeric"
+              enterKeyHint="done"
               value={salaryFmt}
               onChange={(e) =>
                 setSalaryFmt(formatNumberInput(e.target.value))

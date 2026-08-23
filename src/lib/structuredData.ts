@@ -81,20 +81,30 @@ export function softwareApplicationLd(tool: {
  name: string;
  description: string;
  url: string;
+ /** 주요 기능 목록 (선택) — 리치 결과 보강용 */
+ featureList?: string[];
+ datePublished?: string;
+ dateModified?: string;
 }) {
+ const absUrl = tool.url.startsWith("http") ? tool.url : `${SITE_URL}${tool.url}`;
  return {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
+ "@id": `${absUrl}#software`,
  name: tool.name,
  description: tool.description,
- url: tool.url.startsWith("http") ? tool.url : `${SITE_URL}${tool.url}`,
+ url: absUrl,
  applicationCategory: "FinanceApplication",
  operatingSystem: "Web",
+ inLanguage: "ko",
  offers: {
  "@type": "Offer",
  price: "0",
  priceCurrency: "KRW",
  },
+ ...(tool.featureList?.length ? { featureList: tool.featureList } : {}),
+ ...(tool.datePublished ? { datePublished: tool.datePublished } : {}),
+ ...(tool.dateModified ? { dateModified: tool.dateModified } : {}),
  };
 }
 

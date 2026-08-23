@@ -35,10 +35,10 @@ export default function TaiCalculator() {
 
   return (
     <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6">
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1 inline-flex items-center gap-1.5">
+      <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1 inline-flex items-center gap-1.5">
         <Target size={11} className="text-electric" aria-hidden /> TAI 미니
         계산기 — 이번 지급분
-      </p>
+      </h3>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         TAI는 <strong>월 기본급 대비 %</strong>로 지급됩니다. 사업부를 누르면
         2026년 상반기 실제 발표 지급률이 적용됩니다.
