@@ -11,6 +11,7 @@ import {
   TAX_BRACKETS_2026,
   earnedIncomeDeduction2026,
 } from "@/lib/taxConstants2026";
+import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -21,15 +22,7 @@ function fmtMan(n: number): string {
   return `${Math.round(n / 10000).toLocaleString("ko-KR")}만원`;
 }
 
-const SALARY_THRESHOLD = 70_000_000; // 문화비·한도 구분 기준 총급여 7,000만원
-
-/** 기본공제 한도 — 2026년 귀속부터 자녀(손자녀 포함) 수에 따라 상향 (최대 2명분) */
-function baseLimit(isLow: boolean, children: number): number {
-  const c = Math.min(children, 2);
-  return isLow
-    ? [3_000_000, 3_500_000, 4_000_000][c]
-    : [2_500_000, 2_750_000, 3_000_000][c];
-}
+// 공제율·한도·문턱 계산의 정본은 src/lib/cardDeduction2026.ts (엔진과 공유)
 
 /** 간이 과세표준 기준 한계세율 (소득세법 §55 누진세율표) */
 function marginalRate(taxable: number): number {
@@ -85,51 +78,20 @@ export default function CreditCardDeductionClient() {
   const [culture, setCulture] = useState(0); // 문화비 (7천만 이하만)
 
   const result = useMemo(() => {
-    const isLow = salary <= SALARY_THRESHOLD;
-    // 총급여 7,000만원 초과자의 문화비는 문화비 공제 대상이 아님 — 계산에서 제외
-    // (실제로는 결제수단별 일반 사용분으로 분류해야 하므로 입력 안내로 처리)
-    const cultureEff = isLow ? culture : 0;
+    // 계산 정본은 공유 모듈(src/lib/cardDeduction2026.ts) — 연말정산 엔진과
+    // 동일 로직 사용 (2026-08-23 정합화, 골든 시나리오 6종 일치 검증)
+    const r = calcCardDeduction2026({
+      grossSalary: salary,
+      children,
+      creditCard: credit,
+      checkCash,
+      traditionalMarket: traditional,
+      publicTransport: transit,
+      culture,
+    });
 
-    const M = salary * 0.25; // 최저사용금액 (총급여의 25%)
-    const totalUse = credit + checkCash + traditional + transit + cultureEff;
-
-    // 결제수단별 공제액 (차감 전)
-    const A = credit * 0.15;
-    const B = checkCash * 0.3;
-    const C = cultureEff * 0.3;
-    const D = traditional * 0.4;
-    const E = transit * 0.4;
-    const gross = A + B + C + D + E;
-
-    // 최저사용금액 차감액 T — 공제율 낮은 결제수단(신용→30%그룹→40%그룹)부터 소진
-    const mid = checkCash + cultureEff; // 30% 그룹
-    let T: number;
-    let tCase: 1 | 2 | 3;
-    if (credit >= M) {
-      T = M * 0.15;
-      tCase = 1;
-    } else if (credit + mid >= M) {
-      T = credit * 0.15 + (M - credit) * 0.3;
-      tCase = 2;
-    } else {
-      T = credit * 0.15 + mid * 0.3 + (M - credit - mid) * 0.4;
-      tCase = 3;
-    }
-
-    const S = Math.max(0, gross - T); // 한도 적용 전 공제액
-
-    // 한도 — 2026년 귀속: 자녀 수에 따른 기본공제 한도 상향 신규 적용
-    const L1 = baseLimit(isLow, children);
-    const L2 = isLow ? 3_000_000 : 2_000_000; // 추가공제 한도
-    // 추가공제 대상: 전통시장 + 대중교통 (+ 총급여 7천만 이하는 문화비 포함)
-    const extraEligible = D + E + (isLow ? C : 0);
-    const baseDeduction = Math.min(S, L1);
-    const extraDeduction = Math.min(Math.max(S - L1, 0), extraEligible, L2);
-    const finalDeduction = baseDeduction + extraDeduction;
-
-    const thresholdMet = totalUse > M;
-    const shortfall = Math.max(0, M - totalUse);
-    const progressPct = M > 0 ? Math.min(100, (totalUse / M) * 100) : 0;
+    const progressPct =
+      r.minUsage > 0 ? Math.min(100, (r.totalUse / r.minUsage) * 100) : 0;
 
     // 예상 절세액 — 간이 과세표준(총급여 − 근로소득공제 − 본인 인적공제 150만) 기준
     // 한계세율 × 1.1 (지방소득세 10% 포함). 실제 과세표준은 개인별 공제에 따라 달라짐.
@@ -138,34 +100,34 @@ export default function CreditCardDeductionClient() {
       salary - earnedIncomeDeduction2026(salary) - 1_500_000
     );
     const rate = marginalRate(estTaxable);
-    const saving = finalDeduction * rate * 1.1;
+    const saving = r.finalDeduction * rate * 1.1;
 
     return {
-      isLow,
-      M,
-      totalUse,
-      A,
-      B,
-      C,
-      D,
-      E,
-      gross,
-      T,
-      tCase,
-      S,
-      L1,
-      L2,
-      extraEligible,
-      baseDeduction,
-      extraDeduction,
-      finalDeduction,
-      thresholdMet,
-      shortfall,
+      isLow: r.isLowSalary,
+      M: r.minUsage,
+      totalUse: r.totalUse,
+      A: r.byMethod.credit,
+      B: r.byMethod.checkCash,
+      C: r.byMethod.culture,
+      D: r.byMethod.traditional,
+      E: r.byMethod.transit,
+      gross: r.grossBeforeThreshold,
+      T: r.thresholdDeducted,
+      tCase: r.thresholdCase,
+      S: r.beforeCap,
+      L1: r.baseCap,
+      L2: r.extraCap,
+      extraEligible: r.extraEligible,
+      baseDeduction: r.baseDeduction,
+      extraDeduction: r.extraDeduction,
+      finalDeduction: r.finalDeduction,
+      thresholdMet: r.thresholdMet,
+      shortfall: r.shortfall,
       progressPct,
       rate,
       saving,
-      capped: S > finalDeduction + 0.5, // 한도로 잘렸는지
-      cultureIgnored: !isLow && culture > 0,
+      capped: r.beforeCap > r.finalDeduction + 0.5, // 한도로 잘렸는지
+      cultureIgnored: r.cultureIgnored,
     };
   }, [salary, children, credit, checkCash, traditional, transit, culture]);
 

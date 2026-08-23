@@ -10,6 +10,7 @@ import {
 } from "@/lib/yearEndTaxCalculator";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
@@ -120,13 +121,18 @@ const OptimizationSlider = ({
  </div>
 );
 
+// 기본값 총급여 — 4대보험 기본값은 이 값에서 요율로 파생 (드리프트 방지)
+const DEFAULT_SALARY = 50_000_000;
+
 export default function YearEndTaxCalculator() {
  const [inputs, setInputs] = useState<TaxInputs>({
- grossSalary: 50000000,
+ grossSalary: DEFAULT_SALARY,
  prepaidTax: 2500000,
- nationalPension: 2250000,
- healthInsurance: 1772500,
- employmentInsurance: 450000,
+ // 4대보험 기본값 — taxConstants2026 요율에서 파생 (2026-08-23: 2025 요율
+ // 하드코딩 잔존 버그 수정. 2027 요율 변경 시 자동 반영)
+ nationalPension: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.NATIONAL_PENSION),
+ healthInsurance: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.HEALTH_INSURANCE),
+ employmentInsurance: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE),
  dependents: 1,
  disabledDependents: 0,
  seniorDependents: 0,
@@ -245,6 +251,11 @@ export default function YearEndTaxCalculator() {
  }`}
  >
  <CountUp end={Math.abs(result.finalRefund)} separator="," duration={0.5} /> 원
+ </p>
+ {/* 지방세 기준 고지 — 엔진(소득세 기준)과 안내 문구(16.5% 등 지방세 포함)
+ 의 표기 정합 (2026-08-23) */}
+ <p className="text-xs text-muted-foreground mt-1">
+ 소득세 기준이며, 지방소득세(소득세의 10%)는 별도로 환급·납부됩니다.
  </p>
  </div>
 

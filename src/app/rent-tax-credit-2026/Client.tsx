@@ -5,13 +5,14 @@
 // 국세청 공식 안내(nts.go.kr, 2026-08 조회)로 검증된 파라미터만 사용.
 
 import { useMemo, useState } from "react";
+import { RENT_CREDIT_2026 } from "@/lib/taxConstants2026";
 
-// ── 2026년 귀속 현행법 파라미터 ──────────────────────────────
-const RENT_CREDIT_CAP = 10_000_000; // 공제 대상 월세 한도 (연)
-const SALARY_CAP = 80_000_000; // 총급여 상한 (초과 시 공제 대상 아님)
-const SALARY_17_MAX = 55_000_000; // 17% 구간 상한 (경계 포함 → 17%)
-const RATE_HIGH = 0.17; // 총급여 5,500만원 이하
-const RATE_LOW = 0.15; // 총급여 5,500만원 초과 ~ 8,000만원 이하
+// ── 2026년 귀속 현행법 파라미터 — 정본은 taxConstants2026 (엔진과 공유) ──
+const RENT_CREDIT_CAP = RENT_CREDIT_2026.CAP;
+const SALARY_CAP = RENT_CREDIT_2026.SALARY_CAP;
+const SALARY_17_MAX = RENT_CREDIT_2026.SALARY_17_MAX;
+const RATE_HIGH = RENT_CREDIT_2026.RATE_HIGH;
+const RATE_LOW = RENT_CREDIT_2026.RATE_LOW;
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");

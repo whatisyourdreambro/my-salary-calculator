@@ -1,3 +1,16 @@
+// 연말정산(2026년 귀속 — 정산은 2027년 1~2월) 계산 엔진.
+// 2026-08-23 정합화: 근로소득공제·세율표는 taxConstants2026, 카드공제는
+// cardDeduction2026(정밀 계산기와 동일 로직), 월세는 RENT_CREDIT_2026 공유 —
+// 페이지·정밀 계산기와 수치 드리프트 원천 차단. 결과는 소득세 기준이며
+// 지방소득세(소득세의 10%)는 미포함 (UI에서 별도 고지).
+
+import {
+  earnedIncomeDeduction2026,
+  calcIncomeTax2026,
+  RENT_CREDIT_2026,
+} from "@/lib/taxConstants2026";
+import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
+
 // 연말정산 항목별 입력을 위한 인터페이스 정의
 export interface TaxInputs {
  grossSalary: number; // 총급여액
@@ -47,19 +60,8 @@ export interface TaxResult {
 export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const { grossSalary } = inputs;
 
- // 1. 근로소득공제
- let earnedIncomeDeduction = 0;
- if (grossSalary <= 5000000) {
- earnedIncomeDeduction = grossSalary * 0.7;
- } else if (grossSalary <= 15000000) {
- earnedIncomeDeduction = 3500000 + (grossSalary - 5000000) * 0.4;
- } else if (grossSalary <= 45000000) {
- earnedIncomeDeduction = 7500000 + (grossSalary - 15000000) * 0.15;
- } else if (grossSalary <= 100000000) {
- earnedIncomeDeduction = 12000000 + (grossSalary - 45000000) * 0.05;
- } else {
- earnedIncomeDeduction = 14750000 + (grossSalary - 100000000) * 0.02;
- }
+ // 1. 근로소득공제 — taxConstants2026 정본 사용 (2,000만원 캡 포함)
+ const earnedIncomeDeduction = earnedIncomeDeduction2026(grossSalary);
  const earnedIncomeAmount = grossSalary - earnedIncomeDeduction;
 
  // 2. 소득공제
@@ -76,18 +78,16 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const housingSubscriptionDeduction =
  Math.min(inputs.housingSubscription, 3000000) * 0.4;
 
- const totalCardUsage =
- inputs.creditCard +
- inputs.debitCardAndCash +
- inputs.traditionalMarket +
- inputs.publicTransport;
- const cardUsageThreshold = grossSalary * 0.25;
- let cardDeduction = 0;
- if (totalCardUsage > cardUsageThreshold) {
- const overAmount = totalCardUsage - cardUsageThreshold;
- // 실제로는 사용처별로 계산해야 하지만 간소화
- cardDeduction = Math.min(overAmount * 0.15, 3000000);
- }
+ // 카드공제 — 정밀 계산기와 동일한 공유 모듈 (결제수단별 15/30/40%·
+ // 자녀 한도 상향·전통시장/대중교통 추가한도. 2026-08-23 간소화판 대체)
+ const cardDeduction = calcCardDeduction2026({
+ grossSalary,
+ children: inputs.children,
+ creditCard: inputs.creditCard,
+ checkCash: inputs.debitCardAndCash,
+ traditionalMarket: inputs.traditionalMarket,
+ publicTransport: inputs.publicTransport,
+ }).finalDeduction;
 
  const totalIncomeDeduction =
  personalDeduction +
@@ -98,22 +98,9 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  // 3. 과세표준
  const taxBase = Math.max(0, earnedIncomeAmount - totalIncomeDeduction);
 
- // 4. 산출세액
- let calculatedTax = 0;
- if (taxBase <= 14000000) calculatedTax = taxBase * 0.06;
- else if (taxBase <= 50000000)
- calculatedTax = 840000 + (taxBase - 14000000) * 0.15;
- else if (taxBase <= 88000000)
- calculatedTax = 6240000 + (taxBase - 50000000) * 0.24;
- else if (taxBase <= 150000000)
- calculatedTax = 15360000 + (taxBase - 88000000) * 0.35;
- else if (taxBase <= 300000000)
- calculatedTax = 37060000 + (taxBase - 150000000) * 0.38;
- else if (taxBase <= 500000000)
- calculatedTax = 94060000 + (taxBase - 300000000) * 0.4;
- else if (taxBase <= 1000000000)
- calculatedTax = 174060000 + (taxBase - 500000000) * 0.42;
- else calculatedTax = 384060000 + (taxBase - 1000000000) * 0.45;
+ // 4. 산출세액 — taxConstants2026 누진세율표 정본 사용 (수학적 동치,
+ // 경계값 1,400만/5,000만/8,800만 일치 확인)
+ const calculatedTax = calcIncomeTax2026(taxBase);
 
  // 5. 세액공제
  let earnedIncomeTaxCredit = 0;
@@ -142,9 +129,15 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const medicalCredit =
  Math.max(0, inputs.medicalExpenses - grossSalary * 0.03) * 0.15;
  const educationCredit = inputs.educationExpenses * 0.15;
+ // 월세 세액공제 — 총급여 8,000만 초과는 대상 아님 (RENT_CREDIT_2026 정본,
+ // 2026-08-23 상한 미적용 버그 수정)
  const rentCredit =
- Math.min(inputs.monthlyRent, 10000000) *
- (grossSalary <= 55000000 ? 0.17 : 0.15);
+ grossSalary > RENT_CREDIT_2026.SALARY_CAP
+ ? 0
+ : Math.min(inputs.monthlyRent, RENT_CREDIT_2026.CAP) *
+ (grossSalary <= RENT_CREDIT_2026.SALARY_17_MAX
+ ? RENT_CREDIT_2026.RATE_HIGH
+ : RENT_CREDIT_2026.RATE_LOW);
 
  const totalTaxCredit =
  earnedIncomeTaxCredit +

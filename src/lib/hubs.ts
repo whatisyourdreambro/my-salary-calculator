@@ -213,8 +213,15 @@ export const hubs: Hub[] = [
         heading: "연말정산 준비",
         links: [
           { label: "연말정산 계산기", href: "/year-end-tax", desc: "환급·추가납부 종합 계산" },
-          { label: "2026 연말정산 가이드", href: "/year-end-tax-2026", desc: "올해 달라진 공제·일정 정리" },
-          { label: "월세 세액공제", href: "/calc/monthly-rent-tax-credit-quick", desc: "무주택 세대주 월세 환급" },
+          { label: "연말정산 체크리스트", href: "/year-end-tax-checklist", desc: "12/31 마감 전 40+ 항목 점검" },
+          { label: "12월 연말정산 가이드", href: "/year-end-tax-settlement-2026", desc: "성과급 절세·시즌 전략" },
+          { label: "중도퇴사 연말정산", href: "/year-end-tax-mid-resign", desc: "퇴사·이직자 정산 방법" },
+          { label: "신용카드 공제 계산기", href: "/credit-card-deduction-2026", desc: "결제수단별 정밀 계산" },
+          { label: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", desc: "3% 문턱·한도 자동 계산" },
+          { label: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", desc: "요건 판정 + 환급액 계산" },
+          // 슬러그 주의: /year-end-tax-2026 은 실제로는 5월 종합소득세(프리랜서)
+          // 가이드 — 설명 오기 정정 (2026-08-23)
+          { label: "프리랜서 5월 종합소득세", href: "/year-end-tax-2026", desc: "프리랜서·N잡러 신고 가이드" },
         ],
       },
       {
