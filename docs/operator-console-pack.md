@@ -10,11 +10,13 @@
 - 사이트의 하단 공유 바는 앵커 광고를 감지하면 스스로 숨도록 이미 코딩돼 있어 충돌 없음.
 - 켠 날짜를 메모해 두세요(효과 측정 기준일).
 
-## 2. GUIDE_MID 광고 단위 타입 확인 (10분) ☐
-1. AdSense → 광고 → **광고 단위별** → 슬롯 ID **6458241606** 검색
-2. 유형이 "**앵커**"로 돼 있으면 → 새 **디스플레이 광고** 단위 생성 → 새 슬롯 ID 복사
-3. Cloudflare Pages → Settings → Environment variables → `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID` 값 교체(Production+Preview) → Retry deployment
-- 유형이 이미 "디스플레이"면 아무것도 안 해도 됨 → 체크만.
+## 2. GUIDE_MID 광고 단위 타입 확인 ✅ 완료 (2026-08-24)
+- 운영자 확인 결과 구 슬롯 6458241606은 **앵커 타입 확정** → 신규 디스플레이 유닛
+  "머니샐러리_가이드중간(1848295488)" 발급 → .env.production 교체·배포 완료.
+- 구 앵커 유닛은 콘솔에 보존(삭제 금지 — 하단 고정 앵커는 Auto ads 항목 1과 별개).
+- ☐ **확인 1개**: Cloudflare Pages → Settings → Environment variables에
+  `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 값을 1848295488로
+  맞춰주세요(대시보드 값이 파일보다 우선). 목록에 없으면 할 일 없음.
 
 ## 3. EEA 동의 메시지(CMP) 게시 (10분) ☐
 1. AdSense → 개인 정보 보호 및 메시지 → **유럽 규정 메시지** → 만들기
