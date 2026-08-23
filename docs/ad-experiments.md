@@ -42,9 +42,35 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
 
 ---
 
+## 실험 #2 — Display2 확산 2단계 (상태: 설계 완료, 실험 #1 판정 통과 시 진행)
+
+**전제**: 실험 #1 판정(9월 초, 위 표 기입) 통과. 판정 전 적용 금지 — display-2 단독
+수익 측정을 오염시킴.
+
+**적용 대상 (군별 독립 커밋·14일 비교)**:
+- **#2a**: GuideMid 기사용이라 D1에서 수리 못 한 성과급 12곳(doosan-enerbility·
+  gs-caltex·hanwha-aerospace·hyundai-mobis·hyundai-rotem·kepco·lg-display·s-oil·
+  samsung·samsung-display·sk-hynix·sk-innovation) + car-loan(469행) — page 중단
+  `InArticleAd`→`Display2Ad` 교체. 유닛 순증이 아니라 **dedup으로 죽어 있던
+  layout/PageFooterAds 하단 InArticle 부활 + display-2 중단 진입**.
+- **#2b**: glossary 인덱스 topAd `HomeTopAd`→`Display2Ad` (footer HomeTop 부활).
+- **#2c**: 실험 #1 보류 3군(salary-db/[id]·salary/[amount]·calc/[slug]) — #1
+  판정에서 기존 슬롯 잠식 0 확인된 경우에만, 기존 유닛과 1스크린+ 간격 1개씩.
+  salary/[amount]는 254행 부근(2026-08-23 죽은 유닛 제거 자리 — 주석 참조).
+
+**판정**: #1과 동일 기준(RPM +5%↑ AND unfilled 급증 없음 AND 잠식 없음), 군별
+독립 revert. 커밋 전 `node scripts/ad-audit.mjs --diff` 필수.
+
+---
+
 ## 승인 배치 기록 (실험 아닌 단발 승인)
 
 - 2026-08-17 **/home-loan 본문 중간 GuideMidAd 1개** — CalcResultAd~PageFooterAds
   사이 ~390줄 무광고 구간 해소. InArticleAd는 dedup 함정으로 회피.
 - 2026-08-17 **/share/[data] CoupangBanner 1개** — 카톡 공유 랜딩 쿠팡 인벤토리 0
   해소. 기존 CalcResultAd 아래 배치.
+- 2026-08-23 **마스터플랜 일괄 승인 배치** (운영자 계획 승인 = 광고 배치 일괄 승인,
+  배치별 독립 커밋): D1 dedup 복원 15곳(InArticle→GuideMid)·D3 glossary 부분 복원·
+  죽은 유닛 2곳 제거·C1 홈 3→5유닛·C2 성과급 허브 0→2유닛·C3 fun 게임 6종 결과
+  한정 InArticle·C4 insights 인덱스 GuideMid·C5 tools/finance/bonus GuideMid.
+  검증 게이트: scripts/ad-audit.mjs (전 커밋 ERROR 0 통과).
