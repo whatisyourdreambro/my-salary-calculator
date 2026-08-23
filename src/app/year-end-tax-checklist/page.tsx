@@ -11,7 +11,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -99,7 +99,7 @@ const CHECKLIST = [
  {
  category: "🏠 월세·주택",
  items: [
- "총급여 7천만 이하 무주택자만 가능 (한도 750만의 17%)",
+ "총급여 8천만 이하 무주택자만 가능 (한도 1,000만의 15~17%)",
  "월세 영수증 또는 계좌이체 명세서 (집주인 동의 불필요)",
  "임대차 계약서 사본",
  "주택청약저축 매월 10만 자동이체 (40% 소득공제)",
@@ -181,6 +181,11 @@ export default function YearEndTaxChecklistPage() {
  올해 달라진 것부터 확인하고, 인쇄해서 하나씩 체크하세요.
  </p>
  </div>
+
+ {/* 데스크톱 2컬럼 — calc/[slug] 정본 패턴 (사이드바 광고, 운영자 일괄 승인
+ 2026-08-23). 히어로는 그리드 밖 전폭 유지 */}
+ <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14">
+ <div className="min-w-0">
 
  {/* 12월 31일 데드라인 알림 */}
  <div className="mb-12 p-6 bg-electric-10 border border-electric/20 rounded-3xl">
@@ -324,6 +329,17 @@ export default function YearEndTaxChecklistPage() {
  </div>
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+ </div>
+
+ {/* Desktop sticky sidebar — 광고 + 쿠팡 (salary/[amount] 동일 조합) */}
+ <aside
+ className="hidden lg:block lg:sticky lg:top-24 space-y-6 self-start"
+ aria-label="추천·광고"
+ >
+ <SidebarAd />
+ <CoupangBanner size="skyscraper" showDisclosure={false} />
+ </aside>
+ </div>
  </div>
  </main>
  );
