@@ -26,6 +26,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
  // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
  bonus: [
+ { path: "/calc/bonus-calculators", title: "성과급 계산기 23종 모음", description: "회사별 최신 지급률·시즌 캘린더 한눈에", icon: "Gift" },
  { path: "/", title: "연봉 실수령액 계산기", description: "성과급 합산 연봉 세후 계산", icon: "Calculator" },
  { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
  { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: "430+ 기업 평균 연봉·복지 비교", icon: "Building2" },
@@ -141,6 +142,19 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/calc/lg-chem-bonus": ["bonus", "tax"],
  "/calc/celltrion-bonus": ["bonus", "tax"],
  "/calc/hyundai-rotem-bonus": ["bonus", "tax"],
+ // 확장 10종 (2026-08-15 Phase 3) — 2026-08-23 클러스터 순환 링크 보강
+ "/calc/samsung-display-bonus": ["bonus", "tax"],
+ "/calc/samsung-biologics-bonus": ["bonus", "tax"],
+ "/calc/lg-display-bonus": ["bonus", "tax"],
+ "/calc/sk-innovation-bonus": ["bonus", "tax"],
+ "/calc/s-oil-bonus": ["bonus", "tax"],
+ "/calc/gs-caltex-bonus": ["bonus", "tax"],
+ "/calc/doosan-enerbility-bonus": ["bonus", "tax"],
+ "/calc/hyundai-mobis-bonus": ["bonus", "tax"],
+ "/calc/hanwha-aerospace-bonus": ["bonus", "tax"],
+ "/calc/kepco-bonus": ["bonus", "tax"],
+ // 성과급 허브 자신의 하단 추천
+ "/calc/bonus-calculators": ["bonus", "salary"],
  "/salary-raise-2026": ["salary", "tax"],
  "/tools": ["salary", "loan", "tax"],
  "/tools/loan": ["loan"],

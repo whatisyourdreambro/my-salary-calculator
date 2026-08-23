@@ -35,6 +35,13 @@ const CATEGORY_ORDER = [
 // 8차 점검 — 정적 라우트로 신설된 시즌 핵심 계산기들을 인덱스 최상위에 노출.
 // /calc/[slug] 동적 라우트와 별도 페이지라 allCalculators 배열에 없으므로 명시.
 const FEATURED_CALCS: Array<{ href: string; title: string; description: string; season: string }> = [
+ // 성과급 허브 — 23종 전체 목록·시즌 캘린더 (2026-08-23 신설)
+ {
+   href: "/calc/bonus-calculators",
+   title: "성과급 계산기 23종 모음",
+   description: "삼성전자·SK하이닉스·현대차 등 회사별 최신 지급률 반영 — 시즌 캘린더·FAQ까지",
+   season: "연중 · 1~2월 피크",
+ },
  // 사이트 #1 유입·수익 페이지 — 계산기 인덱스에서 그동안 0회 노출이던 것을 최상단 배치
  {
    href: "/calc/samsung-bonus",
@@ -45,7 +52,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/sk-hynix-bonus",
    title: "SK하이닉스 성과급 계산기 (PS·PI)",
-   description: "PS 2964% 상한 폐지 반영 — 기준급 대비 세전·세후 즉시 계산",
+   description: "2026 잠정합의(현금 40%+자사주 60%) 반영 — 신구 체계 비교·세후 즉시 계산",
    season: "2월 PS·반기 PI",
  },
  {

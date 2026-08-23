@@ -137,6 +137,11 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
 ## 리포트 2호 설계 메모 (10월 착수용)
 
 - **23개 성과급 계산기 Client.tsx는 수정 금지** (시즌 검증 트래픽 — 회귀 리스크).
+  - ★예외 (2026-08-23, 운영자 지시): ① sk-hynix-bonus — 임단협 잠정합의(현금
+    40%+자사주 60%) 반영 전면 업그레이드. 상수는 `psData.ts`로 이관됨 — 향후
+    bonusData.ts 전사 시 psData.ts를 소스로 사용. ② samsung-bonus — heading
+    태그 전환·SEO 정적 텍스트 추가 등 계산 로직/상수 무접촉 저위험 수정.
+    SCENARIOS/DIVISIONS·계산 함수 임의 변경 금지는 여전히 유효.
   `src/data/bonusData.ts` 신설: Client 파일의 SCENARIOS/DIVISIONS 상수를 **전사**한
   `CompanyBonusProfile{companyId, calcSlug, nameKo, scheme, sourceFile, payouts[]}`.
   `sourceFile`로 원본 추적. **Client 시나리오 갱신 시 bonusData 동기화** 체크 필수.
