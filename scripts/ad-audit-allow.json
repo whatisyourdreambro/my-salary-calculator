@@ -1,0 +1,32 @@
+[
+  {
+    "route": "/guides/[slug]",
+    "slot": "GUIDE_MID",
+    "reason": "오탐 — GuidePageClient 202/212는 segments.length===1 vs >=2 상호 배타 분기라 동시 렌더 불가"
+  },
+  {
+    "route": "/guides/[slug]",
+    "slot": "IN_ARTICLE",
+    "reason": "오탐 — GuidePageClient 223/258은 segments.length>=3 vs <3 상호 배타 분기라 동시 렌더 불가"
+  },
+  {
+    "route": "/car-loan",
+    "slot": "IN_ARTICLE",
+    "reason": "알려진 충돌(하단 PageFooterAds InArticle 양보) — 중단 469를 실험 #2a에서 Display2로 이관 예정 (docs/ad-experiments.md)"
+  },
+  {
+    "route": "/career-stages-2026",
+    "slot": "IN_ARTICLE",
+    "reason": "임시 — 배치 A2(D1)에서 189행 InArticle→GuideMid 교체 후 이 항목 제거"
+  },
+  {
+    "route": "/salary/[amount]",
+    "slot": "IN_ARTICLE",
+    "reason": "임시 — 배치 A2에서 254행 죽은 유닛 제거(SalaryResultCard 결과 직하가 슬롯 선점) 후 이 항목 제거"
+  },
+  {
+    "route": "/insights/listed-avg-salary-top100-2026",
+    "slot": "IN_ARTICLE",
+    "reason": "임시 — 배치 A2에서 281행 죽은 유닛 제거(160행이 슬롯 선점) 후 이 항목 제거"
+  }
+]

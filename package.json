@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
+    "ad-audit": "node scripts/ad-audit.mjs",
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped"
   },
   "dependencies": {
