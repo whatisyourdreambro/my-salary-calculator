@@ -25,11 +25,14 @@
 - 코드측 선행 작업(CSP에 fundingchoicesmessages.google.com 허용)은 2026-08-23 배포 완료 —
   바로 게시해도 됩니다.
 
-## 3-1. (참고) Google Ads 전환 추적 env 2종 — 의도적 미설정
-- 코드에 `NEXT_PUBLIC_ADS_ID` / `NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION`
-  (src/components/SalaryCalculator.tsx) 가드가 있으나 **어느 env에도 값이 없어 no-op**.
-- 이는 Google Ads(유료 광고 집행) 전환 태그용 — AdSense 수익과 무관하며, 광고 캠페인을
-  집행할 계획이 없는 한 **설정하지 않는 것이 맞습니다**. 캠페인 시작 시에만 값 요청.
+## 3-1. (참고) Google Ads 전환 추적 env — 대시보드에 설정돼 있음 (2026-08-24 정정)
+- `NEXT_PUBLIC_ADS_ID` / `NEXT_PUBLIC_CONVERSION_LABEL_*` 는 **Cloudflare Pages
+  대시보드에 실제 설정돼 있음**을 운영자 스크린샷으로 확인 — 저장소에서 안 보여
+  "잠자는 코드"로 기록했던 이전 감사(2026-08-23)는 오판. Google Ads 전환 추적이
+  살아 있는 설정이므로 코드(src/components/SalaryCalculator.tsx의 gtag 가드)를
+  삭제하지 말 것.
+- 참고: 대시보드 env는 같은 이름의 .env.production 값보다 **우선** 적용됨 —
+  AdSense 슬롯류는 대시보드에 없어(확인됨) .env.production이 정본.
 
 ## 4. 네이버 서치어드바이저 RSS 2건 제출 (5분) ☐
 1. searchadvisor.naver.com → 웹마스터 도구 → moneysalary.com → 요청 → **RSS 제출**
