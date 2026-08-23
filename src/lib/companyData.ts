@@ -62,8 +62,9 @@ export const companies: CompanyProfile[] = [
  industry: "반도체",
  description: "글로벌 메모리 반도체 강자, 성과급의 제왕.",
  logo: "bg-canvas-deeper",
- employees: 30000,
- averageSalary: 14000,
+ // 2025 사업보고서 기준 — seedCompanies.ts 와 정합 (2026-08-23)
+ employees: 34549,
+ averageSalary: 18500,
  entryLevelSalary: 5500,
  executiveSalary: 75000,
  salaryGrowth: [
