@@ -15,7 +15,7 @@ import {
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
-import { InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Beaker, AlertTriangle, Info } from "lucide-react";
 import LgChemBonusClient from "./Client";
@@ -217,7 +217,7 @@ export default function LgChemBonusPage() {
           </section>
 
           <div className="mt-10">
-            <InArticleAd />
+            <GuideMidAd />
           </div>
 
           <section className="mt-12">

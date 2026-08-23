@@ -5,7 +5,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd } from "@/components/AdPlacement";
 import { Sparkles, Info, Home } from "lucide-react";
 import HousingSubscriptionClient from "./Client";
 
@@ -83,7 +83,7 @@ export default function HousingSubscriptionPage() {
           </article>
 
           {/* 본문-FAQ 사이 광고 */}
-          <InArticleAd />
+          <GuideMidAd />
 
           <section className="mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mb-5">자주 묻는 질문</h2>

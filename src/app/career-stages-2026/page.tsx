@@ -11,7 +11,7 @@ import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd } from "@/components/AdPlacement";
 import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -186,7 +186,7 @@ export default function CareerStages2026Page() {
  </div>
  </section>
  {/* 단계 카드 중간 광고 — 3번째 카드 뒤 1회 */}
- {idx === 2 && <InArticleAd />}
+ {idx === 2 && <GuideMidAd />}
  </Fragment>
  ))}
  </div>
