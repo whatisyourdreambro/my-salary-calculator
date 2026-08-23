@@ -209,11 +209,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // (회사 페이지는 company.lastUpdated 우선, 값이 없을 때만 이 기준일로 폴백)
  // 2026-07-16: 2027 최저임금·세법개정안 신설 + 재산세·국민연금·대출 페이지 시즌 갱신
  const STATIC_LAST_MODIFIED = new Date("2026-07-16");
+
+ // 라우트별 오버라이드 — 핵심 수익/시즌 페이지를 전역 기준일·priority 와 차등화.
+ // 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
+ // 동시에만 갱신한다 (매 배포 자동 갱신 금지 — 위 freshness 원칙과 동일).
+ // 2026-08-23: SK하이닉스 임단협 잠정합의 반영 + 삼성 온페이지 개편.
+ const ROUTE_OVERRIDES: Record<
+ string,
+ { lastModified?: Date; priority?: number; changeFrequency?: ChangeFrequency }
+ > = {
+ '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-23'), priority: 0.9 },
+ };
+ // 나머지 회사별 성과급 계산기 21종 — 시즌 클러스터로 0.85 상향
+ for (const route of staticRoutes) {
+ if (
+ route.startsWith('/calc/') &&
+ route.endsWith('-bonus') &&
+ !ROUTE_OVERRIDES[route] &&
+ !['/calc/holiday-bonus', '/calc/january-bonus', '/calc/year-end-bonus'].includes(route)
+ ) {
+ ROUTE_OVERRIDES[route] = { priority: 0.85 };
+ }
+ }
+
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: STATIC_LAST_MODIFIED,
- changeFrequency: 'weekly' as ChangeFrequency,
- priority: route === '/' ? 1.0 : 0.8,
+ lastModified: ROUTE_OVERRIDES[route]?.lastModified ?? STATIC_LAST_MODIFIED,
+ changeFrequency:
+ ROUTE_OVERRIDES[route]?.changeFrequency ?? ('weekly' as ChangeFrequency),
+ priority: route === '/' ? 1.0 : ROUTE_OVERRIDES[route]?.priority ?? 0.8,
  }));
 
  // 2. Dynamic Guide Pages — 한국어 가이드 (lang === 'ko')
