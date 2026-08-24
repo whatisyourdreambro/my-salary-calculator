@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "vitest run",
     "verify:tax": "node scripts/verify-tax-constants.mjs",
+    "verify:sitemap": "tsx scripts/verify-sitemap.ts",
     "analyze": "ANALYZE=true next build",
     "ad-audit": "node scripts/ad-audit.mjs",
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped"
@@ -45,6 +46,7 @@
     "eslint-config-next": "^14.2.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.12",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.11"
