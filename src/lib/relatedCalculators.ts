@@ -22,6 +22,8 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/year-end-tax", title: "연말정산 계산기", description: "13월의 월급 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/severance", title: "퇴직금 계산기", description: "환산급여 방식 정확 계산", icon: "Briefcase" },
  { path: "/salary-db", title: "회사별 연봉", description: "동급 회사 평균 비교", icon: "Building2" },
+ // 인바운드 0 해소 (2026-08-24) — 홈이 current 인 페이지에서 대체 노출
+ { path: "/calc/2026-year", title: "2026 연봉 계산기 PRO", description: "티어 카드·자산 시뮬 포함 종합판", icon: "Calculator" },
  ],
  // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
  // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
@@ -70,6 +72,8 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/tools/life/fuel-cost", title: "연비·유류비", description: "주유비용 계산", icon: "Fuel" },
  { path: "/tools/life/subscription", title: "구독 비용", description: "월 총 구독료 분석", icon: "CreditCard" },
  { path: "/tools/life/unit-converter", title: "단위 변환기", description: "길이·무게·온도", icon: "RefreshCw" },
+ // 인바운드 0 해소 (2026-08-24) — life 클러스터에서 퍼센트·단위 도구로 순환
+ { path: "/tools/math", title: "퍼센트·단위 변환 계산기", description: "할인율·증감율·환산 한 페이지", icon: "Percent" },
  ],
  insurance: [
  { path: "/hub/insurance", title: "보험 점검 허브", description: "보장액·보험료 계산기 모음", icon: "Heart" },

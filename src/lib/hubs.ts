@@ -259,6 +259,7 @@ export const hubs: Hub[] = [
           { label: "프리랜서 세금 계산기", href: "/tools/finance/freelance-tax", desc: "3.3% 원천징수·종소세" },
           { label: "부업 순수입 계산", href: "/calc/side-business-net", desc: "필요경비·세금 차감 순수입" },
           { label: "부가가치세 계산", href: "/calc/vat-quick", desc: "공급가액 기준 VAT 10%" },
+          { label: "월 100만 부수입 + 세금 가이드", href: "/guides/side-income-tax-pipeline", desc: "부수입 채널 6가지와 종소세 신고 정리" },
         ],
       },
     ],
@@ -278,10 +279,23 @@ export const hubs: Hub[] = [
         heading: "내 연봉 실수령액",
         links: [
           { label: "연봉 실수령액 계산기", href: "/", desc: "4대보험·소득세 자동 계산" },
+          { label: "2026 연봉 계산기 PRO", href: "/calc/2026-year", desc: "티어 카드·자산 시뮬 포함 종합판" },
           { label: "시급 → 연봉 환산", href: "/calc/hourly-to-yearly", desc: "시급·근무시간으로 연봉 환산" },
           { label: "연봉 → 시급 환산", href: "/calc/yearly-to-hourly", desc: "내 노동의 시간당 가치" },
           { label: "주급 계산", href: "/calc/weekly-pay", desc: "월급 → 주급 환산" },
           { label: "일급 계산", href: "/calc/daily-pay", desc: "월급·연봉 → 일급 환산" },
+        ],
+      },
+      {
+        // 2026-08-24 내부 링크 보강 — 표 4종·데이터 리포트 허브 편입
+        heading: "연봉 표·데이터 리포트",
+        links: [
+          { label: "2026 연봉 실수령액 표", href: "/table/2026/annual", desc: "2400만~2억 전 구간 세후 월급" },
+          { label: "2026 월급 실수령액 표", href: "/table/2026/monthly", desc: "월급 200만~1000만 세후 수령액" },
+          { label: "2026 주급 실수령액 표", href: "/table/2026/weekly", desc: "주휴수당 포함 월 환산 실수령" },
+          { label: "2026 시급 실수령액 표", href: "/table/2026/hourly", desc: "최저시급 10,320원 기준 월 환산" },
+          { label: "데이터 리포트", href: "/insights", desc: "공시·자체 DB 집계 연봉 리포트" },
+          { label: "대기업 성과급 실지급률", href: "/insights/bonus-payout-history-2026", desc: "실제 지급률 전수 집계 리포트" },
         ],
       },
       {
@@ -438,6 +452,7 @@ export const hubs: Hub[] = [
           { label: "증감률 계산", href: "/calc/increase-decrease-percent", desc: "값 변화의 증감률 %" },
           { label: "X%의 N 계산", href: "/calc/percent-of", desc: "전체값의 X% 즉시 계산" },
           { label: "A는 B의 몇 %?", href: "/calc/what-percent", desc: "두 값의 비율 계산" },
+          { label: "퍼센트·단위 변환 계산기", href: "/tools/math", desc: "할인율·증감율·단위 변환 한 페이지" },
         ],
       },
       {
@@ -471,6 +486,16 @@ export const hubs: Hub[] = [
           { label: "어린이집 보육료", href: "/calc/childcare-fee", desc: "유형·시간별 월 보육료" },
           { label: "양육비 산정", href: "/calc/alimony-quick", desc: "양육비 산정기준표 참고" },
           { label: "육아휴직 급여 계산기", href: "/parental-leave", desc: "월 급여별 육아휴직 수령액" },
+        ],
+      },
+      {
+        // 2026-08-24 내부 링크 보강 — /fun 트리 허브 편입
+        heading: "쉬어가기 — 재미 도구",
+        links: [
+          { label: "FUN LAB 전체 보기", href: "/fun", desc: "직장인 테스트·게임·운세 모음" },
+          { label: "내 연봉 순위 계산기", href: "/fun/salary-rank", desc: "내 연봉은 전국 상위 몇 %?" },
+          { label: "점심 메뉴 룰렛", href: "/fun/lunch-roulette", desc: "오늘 점심 뭐 먹지 고민 끝" },
+          { label: "로또 번호 생성기", href: "/lotto", desc: "통계 패턴 기반 행운 번호 추천" },
         ],
       },
     ],
