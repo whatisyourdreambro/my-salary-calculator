@@ -4,7 +4,7 @@ import { permanentRedirect } from "next/navigation";
 import { industriesData, getIndustryById } from "@/data/industriesData";
 import { jobsData } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
-import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
+import { faqLd, autoBreadcrumbLd, itemListLd, datasetLd } from "@/lib/structuredData";
 import { getIndustryAggregate } from "@/lib/salary-data/industryAggregates";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import JsonLd from "@/components/JsonLd";
@@ -82,6 +82,15 @@ export default function IndustryPage({ params }: Props) {
         })
       : null;
 
+  // Dataset — salary-db/[id] 검증 패턴 복제 (신선도 신호, 2026-08-24 JSON-LD 보강)
+  const datasetSchema = datasetLd({
+    name: `${industry.name} 업계 연봉 데이터`,
+    description: `${industry.name} 업계의 신입·주니어·시니어 경력별 평균 연봉과 회사별 연봉 순위 데이터. 2026년 기준.`,
+    url: `/industry/${industry.id}`,
+    dateModified: "2026-08-24",
+    keywords: [`${industry.name} 연봉`, `${industry.name} 평균 연봉`, `${industry.name} 회사 연봉`],
+  });
+
   const relatedJobs = jobsData.filter((j) => industry.topJobIds.includes(j.id));
 
   // 연봉이 인접한 산업 5개를 결정적으로 골라 PageRank 분산 방지(SSG 빌드 안정성).
@@ -97,7 +106,13 @@ export default function IndustryPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={rankSchema ? [breadcrumb, faqSchema, rankSchema] : [breadcrumb, faqSchema]} />
+      <JsonLd
+        data={
+          rankSchema
+            ? [breadcrumb, faqSchema, datasetSchema, rankSchema]
+            : [breadcrumb, faqSchema, datasetSchema]
+        }
+      />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <HomeTopAd />
 

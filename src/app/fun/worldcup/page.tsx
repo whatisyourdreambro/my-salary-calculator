@@ -4,6 +4,8 @@ import IdealTypeWorldCup, {
 import { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import JsonLd from "@/components/JsonLd";
+import { softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "기업 이상형 월드컵 - 나의 꿈의 직장 찾기",
@@ -25,6 +27,13 @@ export default function WorldCupPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-20 pt-28">
+      <JsonLd
+        data={softwareApplicationLd({
+          name: "기업 이상형 월드컵",
+          description: "16강 토너먼트로 나의 꿈의 직장을 찾는 기업 이상형 월드컵 게임",
+          url: "/fun/worldcup",
+        })}
+      />
       <IdealTypeWorldCup companies={companies} />
     </div>
   );

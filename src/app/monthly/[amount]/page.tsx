@@ -28,7 +28,13 @@ import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
+import {
+  breadcrumbLd,
+  faqLd,
+  howToLd,
+  softwareApplicationLd,
+  speakableLd,
+} from "@/lib/structuredData";
 import { isStaticSalaryAmount, sitemapGridAmounts } from "@/lib/salaryStaticParams";
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
@@ -152,12 +158,48 @@ export default function MonthlyPage({ params }: Props) {
     { name: `월급 ${m}만원`, path: `/monthly/${monthly}` },
   ];
 
+  // /salary/[amount] 와 동일 구조의 SoftwareApplication + HowTo 리치결과
+  // (2026-08-24 JSON-LD 커버리지 보강 — 월급 축에만 빠져 있던 2종 추가)
+  const howTo = howToLd({
+    name: `월급 ${m}만원 실수령액 계산하는 방법`,
+    description: `세전 월급 ${m}만원을 기준으로 4대보험·소득세·실수령액을 단계별로 계산하는 가이드.`,
+    totalTime: "PT2M",
+    steps: [
+      {
+        name: "비과세 식대 차감",
+        text: "월 식대 20만원(연 240만원)은 비과세로 과세표준에서 제외합니다.",
+      },
+      {
+        name: "4대보험 공제",
+        text: "국민연금 4.75%, 건강보험 3.595%, 장기요양 0.4724%, 고용보험 0.9%를 차감합니다.",
+      },
+      {
+        name: "근로소득공제 적용",
+        text: "총급여에 따라 70~5% 구간별 근로소득공제를 적용합니다.",
+      },
+      {
+        name: "기본·인적공제 차감",
+        text: "본인 150만원, 표준세액공제 13만원 등을 차감해 과세표준을 산출합니다.",
+      },
+      {
+        name: "산출세액 계산",
+        text: "6~45% 8단계 누진세율 적용 후 지방소득세 10%를 더해 최종 세액을 결정합니다.",
+      },
+    ],
+  });
+
   return (
     <main className="min-h-screen bg-canvas pb-20 pt-24">
       <JsonLd
         data={[
           breadcrumbLd(breadcrumbItems),
+          softwareApplicationLd({
+            name: `월급 ${m}만원 실수령액 계산기`,
+            description: `세전 월급 ${m}만원의 2026년 세법 기준 실수령액·세금 공제 분석`,
+            url: `/monthly/${monthly}`,
+          }),
           faqLd(faqItems),
+          howTo,
           speakableLd({
             url: `https://www.moneysalary.com/monthly/${monthly}`,
             cssSelectors: [".speakable-summary", ".faq-answer"],

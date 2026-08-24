@@ -28,6 +28,8 @@ import {
  Building2
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import { itemListLd } from '@/lib/structuredData';
 
 export const metadata: Metadata = buildPageMetadata({
  title: '직장인 심심풀이 라이브러리 | 머니샐러리 FUN',
@@ -35,6 +37,36 @@ export const metadata: Metadata = buildPageMetadata({
  path: '/fun',
  keywords: ['직장인 심리테스트', '직장인 게임', '연봉 테스트', '무료 심심풀이'],
 });
+
+// 아래 FunCard 목록과 동일한 항목 — ItemList 리치결과용 (2026-08-24 JSON-LD 보강)
+const FUN_ITEMS = [
+ // 테스트 & 계산
+ { name: '부자 DNA 테스트', url: '/fun/rich-dna-test' },
+ { name: 'IQ 테스트', url: '/fun/iq-test' },
+ { name: '소비 성향 테스트', url: '/fun/spending-test' },
+ { name: '금융 MBTI (F-MBTI)', url: '/fun/financial-mbti' },
+ { name: 'MBTI 연봉 분석', url: '/mbti-salary' },
+ { name: '환생 테스트', url: '/fun/reincarnation' },
+ { name: '연봉 분포 시뮬레이터', url: '/fun/rank' },
+ { name: '내 연봉 순위 계산기', url: '/fun/salary-rank' },
+ { name: '가상 급여명세서', url: '/fun/salary-slip' },
+ { name: '노비 탈출 계산기', url: '/fun/escape-plan' },
+ { name: '플렉스 계산기', url: '/fun/what-to-buy' },
+ // 게임
+ { name: '플래피 샐러리맨', url: '/fun/flappy' },
+ { name: '샐러리맨 테트리스', url: '/fun/tetris' },
+ { name: '밈코인 모의투자', url: '/fun/meme-coin' },
+ { name: '자산 배분 게임', url: '/fun/asset-allocator' },
+ { name: '연봉 배틀', url: '/fun/salary-battle' },
+ { name: '기업 이상형 월드컵', url: '/fun/worldcup' },
+ { name: '랜덤 추첨 마블 레이스', url: '/fun/random-draw' },
+ { name: '주말 당직 룰렛', url: '/fun/weekend-duty' },
+ { name: '점심 메뉴 룰렛', url: '/fun/lunch-roulette' },
+ { name: '로또 시뮬레이터', url: '/lotto' },
+ // 운세
+ { name: '2026 신년운세', url: '/fun/fortune' },
+ { name: '직장인 재물운·연봉운', url: '/fortune-2026' },
+];
 
 const FunCard = ({
  icon: Icon,
@@ -88,6 +120,12 @@ const FunCard = ({
 export default function FunLabPage() {
  return (
  <main className="min-h-screen bg-canvas pt-28 pb-20 px-4">
+ <JsonLd
+ data={itemListLd({
+ name: '직장인 심심풀이 라이브러리 — 테스트·게임·운세',
+ items: FUN_ITEMS,
+ })}
+ />
  <div className="max-w-7xl mx-auto">
  {/* Hero 헤더 */}
  <div className="text-center mb-16">

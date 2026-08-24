@@ -8,7 +8,7 @@ import { regionsData, getRegionById } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
-import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
+import { faqLd, autoBreadcrumbLd, itemListLd, datasetLd } from "@/lib/structuredData";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
@@ -135,6 +135,15 @@ export default function RegionDetailPage({
       .map((r) => ({ name: `${r.nameShort} 평균 연봉`, url: `/region/${r.id}` })),
   });
 
+  // Dataset — salary-db/[id] 검증 패턴 복제 (신선도 신호, 2026-08-24 JSON-LD 보강)
+  const datasetSchema = datasetLd({
+    name: `${region.name} 평균 연봉 데이터`,
+    description: `${region.name}의 신입·주니어·시니어 경력별 평균 연봉과 주요 산업·대표 기업 데이터. 2026년 기준.`,
+    url: `/region/${region.id}`,
+    dateModified: "2026-08-24",
+    keywords: [`${region.nameShort} 연봉`, `${region.nameShort} 평균 연봉`, `${region.nameShort} 월급`],
+  });
+
   // 실수령액 계산기 링크용 원 단위 변환
   const overallWon = region.salary.overall * 10000;
   const entryWon = region.salary.entry.avg * 10000;
@@ -143,7 +152,7 @@ export default function RegionDetailPage({
 
   return (
     <main className="w-full min-h-screen bg-canvas pb-20">
-      <JsonLd data={[breadcrumbSchema, faqSchema, rankSchema]} />
+      <JsonLd data={[breadcrumbSchema, faqSchema, datasetSchema, rankSchema]} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
         {/* 브레드크럼 */}

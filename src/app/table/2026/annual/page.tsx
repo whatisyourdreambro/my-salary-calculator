@@ -8,7 +8,7 @@ import TableHero from "@/components/TableHero";
 import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
 
@@ -45,6 +45,31 @@ const tableHeaders = [
   { key: "incomeTax", label: "소득세" },
 ];
 
+// FAQ — monthly 표가 이미 쓰는 패턴을 연봉 축으로 신설 (2026-08-24 JSON-LD 보강).
+// 수치는 본문 SEO 섹션(연봉 3천 220만·5천 348만·1억 643만, 요율 4.75%/3.595%)과 동일 소스.
+const FAQ_ITEMS = [
+  {
+    question: "연봉 5000만원의 월 실수령액은 얼마인가요?",
+    answer:
+      "2026년 최신 세법 기준 월 약 348만원입니다. 부양가족이 없는 1인 직장인 기준이며, 비과세 식대 포함 여부와 부양가족 수에 따라 달라질 수 있습니다. 위 표에서 전 구간을 확인하세요.",
+  },
+  {
+    question: "연봉에서 공제되는 항목은 무엇인가요?",
+    answer:
+      "국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%가 공제되고, 여기에 근로소득 간이세액표 기준 소득세와 소득세의 10%인 지방소득세가 추가로 공제됩니다.",
+  },
+  {
+    question: "2026년에는 같은 연봉인데 왜 실수령액이 줄어드나요?",
+    answer:
+      "2026년에 국민연금 요율이 4.5%에서 4.75%로, 건강보험 요율이 3.545%에서 3.595%로 인상되어 동일 연봉이라도 전년 대비 실수령액이 소폭 감소합니다. 감소폭은 표의 변화값(전년비) 항목에서 확인할 수 있습니다.",
+  },
+  {
+    question: "연봉 1억이면 월 실수령액은 얼마인가요?",
+    answer:
+      "2026년 기준 월 약 643만원입니다. 연봉 1억은 최고 구간 세율이 아니라 8단계 누진세율 구간을 차례로 통과한 결과이며, 연금저축·IRP 세액공제 등 공제 항목에 따라 실제 금액은 달라질 수 있습니다.",
+  },
+];
+
 // JSON-LD for table page — datasetLd 빌더로 dateModified(신선도 신호) 부여 + breadcrumb
 const tableJsonLd = [
   datasetLd({
@@ -55,6 +80,7 @@ const tableJsonLd = [
     dateModified: "2026-08-24",
     keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
   }),
+  faqLd(FAQ_ITEMS),
   autoBreadcrumbLd("/table/2026/annual", { leafName: "2026 연봉 실수령액 표" }),
 ];
 
@@ -132,6 +158,24 @@ function AnnualTable() {
                 >
                   <div className="text-xs font-bold text-faint-blue mb-1">{item.label}</div>
                   <div className="text-lg font-black text-electric">월 {item.monthly}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ — monthly 표와 동일 패턴 (FAQPage JSON-LD와 본문 정합, 2026-08-24) */}
+        <section className="mb-8 max-w-4xl mx-auto">
+          <div
+            className="rounded-2xl p-8"
+            style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+          >
+            <h2 className="text-2xl font-black text-navy mb-6">자주 묻는 질문</h2>
+            <div className="space-y-6">
+              {FAQ_ITEMS.map((item) => (
+                <div key={item.question}>
+                  <h3 className="font-bold text-navy mb-2">Q. {item.question}</h3>
+                  <p className="text-faint-blue leading-relaxed text-sm">{item.answer}</p>
                 </div>
               ))}
             </div>

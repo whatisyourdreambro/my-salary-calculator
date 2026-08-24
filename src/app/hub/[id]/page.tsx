@@ -7,7 +7,7 @@ import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { getHubById, getAllHubIds, hubs } from "@/lib/hubs";
 import { buildPageMetadata } from "@/lib/seo";
-import { autoBreadcrumbLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import {
@@ -55,7 +55,16 @@ export default function HubPage({ params }: { params: { id: string } }) {
   return (
     <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20">
       <JsonLd
-        data={[autoBreadcrumbLd(`/hub/${hub.id}`, { leafName: hub.title })]}
+        data={[
+          autoBreadcrumbLd(`/hub/${hub.id}`, { leafName: hub.title }),
+          // 허브 링크 목록 ItemList — hubs.ts sections 링크 배열 재사용 (2026-08-24 JSON-LD 보강)
+          itemListLd({
+            name: `${hub.title.split(" — ")[0]} — 핵심 도구·페이지 목록`,
+            items: hub.sections.flatMap((section) =>
+              section.links.map((link) => ({ name: link.label, url: link.href }))
+            ),
+          }),
+        ]}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">

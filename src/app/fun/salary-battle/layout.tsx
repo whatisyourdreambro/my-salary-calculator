@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "연봉 배틀 — 회사별 총보상·실질시급·워라벨 즉시 비교",
@@ -10,5 +12,17 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function SalaryBattleLayout({ children }: { children: React.ReactNode }) {
- return <>{children}</>;
+ return (
+ <>
+ <JsonLd
+ data={softwareApplicationLd({
+ name: "연봉 배틀",
+ description:
+ "두 회사의 연봉·인센티브·4대보험 총보상과 실질 시급, 워라벨을 레이더 차트로 비교하는 도구",
+ url: "/fun/salary-battle",
+ })}
+ />
+ {children}
+ </>
+ );
 }

@@ -2,6 +2,8 @@ import SalaryRankCalculator from "@/components/calculators/SalaryRankCalculator"
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "내 연봉 순위 계산기 - 나는 상위 몇%일까?",
@@ -13,6 +15,13 @@ export const metadata: Metadata = buildPageMetadata({
 export default function SalaryRankPage() {
  return (
  <main className="w-full min-h-screen bg-canvas pt-28 px-4 pb-20 font-sans">
+ <JsonLd
+ data={softwareApplicationLd({
+ name: "내 연봉 순위 계산기",
+ description: "대한민국 연봉 분포에서 내 연봉의 상위 퍼센트 위치를 확인하는 계산기",
+ url: "/fun/salary-rank",
+ })}
+ />
  <div className="text-center mb-12 max-w-2xl mx-auto">
  <h1 className="text-4xl font-black tracking-tight text-navy mb-4">
  내 연봉은 <span className="text-primary">상위 몇%</span>일까?

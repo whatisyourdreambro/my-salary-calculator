@@ -8,7 +8,7 @@ import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
-import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
+import { speakableLd, articleLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
@@ -103,6 +103,11 @@ export default function GuidePage({ params }: Props) {
  url: `/guides/${guide.slug}`,
  cssSelectors: [".guide-tldr", ".faq-answer"],
  }),
+ // 본문 "자주 묻는 질문" 섹션이 실존하는 가이드만 FAQPage 리치결과 주입
+ // (guidesData 빌드 타임 파서가 본문에서 추출 — 본문·스키마 정합 보장)
+ ...(guide.faq?.length
+ ? [faqLd(guide.faq.map((f) => ({ question: f.q, answer: f.a })))]
+ : []),
  ]}
  />
  <GuidePageClient guide={guide} relatedGuides={relatedGuides} />

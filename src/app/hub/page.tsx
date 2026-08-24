@@ -6,10 +6,11 @@ import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { hubs } from "@/lib/hubs";
 import { buildPageMetadata } from "@/lib/seo";
-import { autoBreadcrumbLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ShareSection from "@/components/ShareSection";
+import { MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -25,7 +26,17 @@ export default function HubIndexPage() {
   return (
     <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20">
       <JsonLd
-        data={[autoBreadcrumbLd("/hub", { leafName: "주제별 종합 가이드" })]}
+        data={[
+          autoBreadcrumbLd("/hub", { leafName: "주제별 종합 가이드" }),
+          // 허브 목록 ItemList — hubs.ts 데이터 재사용 (2026-08-24 JSON-LD 보강)
+          itemListLd({
+            name: "주제별 종합 가이드 목록",
+            items: hubs.map((hub) => ({
+              name: hub.title.split(" — ")[0],
+              url: `/hub/${hub.id}`,
+            })),
+          }),
+        ]}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
         <Breadcrumbs path="/hub" leafName="주제별 종합 가이드" className="mb-6" />
@@ -56,6 +67,11 @@ export default function HubIndexPage() {
               </span>
             </Link>
           ))}
+        </div>
+        {/* 실험 #3d: 완전 무광고였던 허브 인덱스 — 목록 하단 Multiplex (목록 페이지 관행).
+            /hub/[id]는 5슬롯 보유, 인덱스만 0이던 비대칭 해소 */}
+        <div className="mt-10">
+          <MultiplexAd />
         </div>
         <ShareSection contentType="page" className="mt-10" />
       </div>

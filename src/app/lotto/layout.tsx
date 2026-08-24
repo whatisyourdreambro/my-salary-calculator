@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import AutoShareSection from "@/components/AutoShareSection";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "로또 번호 생성기 — 통계 기반 행운 번호 자동 추천",
@@ -22,6 +24,7 @@ export default function LottoLayout({
 }) {
   return (
     <>
+      <JsonLd data={autoBreadcrumbLd("/lotto", { leafName: "로또 번호 생성기" })} />
       {children}
       <AutoShareSection contentType="fun" maxWidth="3xl" />
     </>
