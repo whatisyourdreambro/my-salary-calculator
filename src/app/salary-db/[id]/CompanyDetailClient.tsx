@@ -256,7 +256,13 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  );
 }
 
-function StatCard({ icon: Icon, label, value, sub, color }: any) {
+function StatCard({ icon: Icon, label, value, sub, color }: {
+ icon: React.ElementType;
+ label: string;
+ value: string;
+ sub: string;
+ color: string;
+}) {
  return (
  <div className="bg-card border border-border p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
  <div className="flex items-center gap-3 mb-2">

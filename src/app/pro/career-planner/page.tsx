@@ -100,7 +100,7 @@ const PLANNER_RELATED_GUIDES: RelatedGuideItem[] = [
 const EventCard = ({ event, index, updateEvent, removeEvent, simulationYears }: {
  event: CareerEvent;
  index: number;
- updateEvent: (index: number, field: string, value: any) => void;
+ updateEvent: (index: number, field: string, value: string | number) => void;
  removeEvent: (index: number) => void;
  simulationYears: number;
 }) => {
@@ -165,7 +165,7 @@ export default function CareerPlannerPage() {
 
  const [results, setResults] = useState<SimulationYearOutput[]>([]);
 
- const handleInputChange = (field: keyof CareerSimulationInput, value: any) => {
+ const handleInputChange = (field: Exclude<keyof CareerSimulationInput, "events">, value: number) => {
  setInputs((prev) => ({ ...prev, [field]: value }));
  };
 
@@ -187,7 +187,7 @@ export default function CareerPlannerPage() {
  setInputs(prev => ({ ...prev, events: prev.events.filter((_, i) => i !== index) }));
  };
 
- const updateEvent = (index: number, field: string, value: any) => {
+ const updateEvent = (index: number, field: string, value: string | number) => {
  const newEvents = [...inputs.events];
  let eventToUpdate = { ...newEvents[index] };
 
@@ -210,7 +210,7 @@ export default function CareerPlannerPage() {
  break;
  }
  } else {
- (eventToUpdate as any)[field] = value;
+ (eventToUpdate as Record<string, string | number>)[field] = value;
  }
 
  newEvents[index] = eventToUpdate;

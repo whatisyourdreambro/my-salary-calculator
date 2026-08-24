@@ -195,7 +195,7 @@ const CurrencyInput = ({
  value: string;
  onValueChange: (val: string) => void;
  quickAmounts?: number[];
- icon?: any;
+ icon?: React.ElementType;
 }) => {
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const rawValue = e.target.value.replace(/,/g, "");
@@ -262,7 +262,7 @@ export default function FireCalculatorPage() {
  field: keyof FireInputs,
  value: string | InvestmentStrategy
  ) => {
- setInputs((prev) => ({ ...prev, [field]: value as any }));
+ setInputs((prev) => ({ ...prev, [field]: value as FireInputs[typeof field] }));
  };
 
  const {
@@ -342,7 +342,6 @@ export default function FireCalculatorPage() {
  value: string | number
  ) => {
  const newEvents = [...lifeEvents];
- // @ts-ignore
  newEvents[index] = { ...newEvents[index], [field]: value };
  setLifeEvents(newEvents);
  };

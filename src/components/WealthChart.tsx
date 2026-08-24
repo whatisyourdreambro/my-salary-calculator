@@ -27,8 +27,12 @@ const formatKRW = (value: number) => {
  return `${(value / 10000).toLocaleString('ko-KR')}만`;
 };
 
+interface MungGoalMarkerProps {
+ viewBox: { x: number; y: number };
+}
+
 // Custom Mung Marker for the Goal
-const MungGoalMarker = (props: any) => {
+const MungGoalMarker = (props: MungGoalMarkerProps) => {
  const { viewBox } = props;
  return (
  <svg

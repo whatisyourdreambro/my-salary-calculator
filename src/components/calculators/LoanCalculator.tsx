@@ -13,12 +13,27 @@ const LoanChart = dynamic(() => import("@/components/charts/LoanChart"), {
 
 type RepaymentMethod = "level-payment" | "level-principal" | "bullet";
 
+interface ScheduleRow {
+ month: number;
+ payment: number;
+ principal: number;
+ interest: number;
+ balance: number;
+}
+
+interface LoanResults {
+ monthlyPayment: number;
+ totalInterest: number;
+ totalPayment: number;
+ schedule: ScheduleRow[];
+}
+
 export default function LoanCalculator() {
  const [amount, setAmount] = useState(100000000); // 1億
  const [rate, setRate] = useState(3.5);
  const [term, setTerm] = useState(10); // Years
  const [method, setMethod] = useState<RepaymentMethod>("level-payment");
- const [results, setResults] = useState<any>(null);
+ const [results, setResults] = useState<LoanResults | null>(null);
 
  useEffect(() => {
  calculateLoan();

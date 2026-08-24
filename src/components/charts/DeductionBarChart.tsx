@@ -19,8 +19,15 @@ interface ChartDatum {
  color: string;
 }
 
-const CustomBarLabel = (props: any) => {
- const { x, y, width, value } = props;
+interface CustomBarLabelProps {
+ x?: number;
+ y?: number;
+ width?: number;
+ value?: number;
+}
+
+const CustomBarLabel = (props: CustomBarLabelProps) => {
+ const { x, y, width, value } = props as Required<CustomBarLabelProps>;
  return (
  <text
  x={x + width / 2}

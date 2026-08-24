@@ -63,7 +63,7 @@ export default function AcquisitionTaxPage() {
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 유형</label>
  <div className="grid grid-cols-3 gap-2">
  {[{v:"apt",l:"아파트"},{v:"single",l:"단독주택"},{v:"land",l:"토지"}].map(t => (
- <button key={t.v} onClick={() => setPropType(t.v as any)}
+ <button key={t.v} onClick={() => setPropType(t.v as "apt" | "single" | "land")}
  className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${propType === t.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>
  {t.l}
  </button>

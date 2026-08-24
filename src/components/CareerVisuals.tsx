@@ -15,10 +15,10 @@ import {
  Area,
 } from "recharts";
 
-const formatYAxis = (tick: any) => {
+const formatYAxis = (tick: number) => {
  if (tick >= 100000000) return `${(tick / 100000000).toFixed(1)}억`;
  if (tick >= 10000) return `${Math.round(tick / 10000)}만`;
- return tick;
+ return tick as unknown as string;
 };
 
 interface CareerVisualsProps {

@@ -398,7 +398,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // lastModified는 회사별 실제 lastUpdated 날짜 사용 — 매 배포마다 "오늘 수정"으로
  // 찍히면 Google이 freshness 신호를 무시하므로 정직한 날짜를 넣는다.
- allCompanies.forEach((company: any) => {
+ allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
  const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
  const lastModified =
  parsed && !Number.isNaN(parsed.getTime()) ? parsed : STATIC_LAST_MODIFIED;

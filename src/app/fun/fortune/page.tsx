@@ -84,7 +84,15 @@ export default function FortunePage() {
  const [calendar, setCalendar] = useState<"solar" | "lunar">("solar");
 
  // Result State
- const [resultData, setResultData] = useState<any>(null);
+ const [resultData, setResultData] = useState<{
+ title: string;
+ totalLuck: string;
+ wealthLuck: string;
+ careerLuck: string;
+ score: number;
+ luckyColor: string;
+ luckyNumber: number;
+ } | null>(null);
 
  const handleAnalyze = () => {
  if (!name) return;

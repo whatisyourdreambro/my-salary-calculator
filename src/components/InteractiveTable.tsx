@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { SalaryData } from "@/lib/generateData";
+import type { CalculationResult } from "@/lib/calculator";
 
 // 공제 비율 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 // 시급/주급 테이블이 연봉/월급(130kB)보다 2배 무겁던 비대칭의 원인이었다.
@@ -32,7 +33,7 @@ interface InteractiveTableProps {
  dependents: number,
  children: number,
  settings: AdvancedSettings
- ) => any;
+ ) => CalculationResult;
  /** 입력 금액 → 세전 월환산 변환 (시급 ×209, 주급 ×52÷12, 월급 그대로, 연봉 ÷12). 미지정 시 연봉 기준(÷12). */
  toMonthly?: (salary: number) => number;
  /** 표 첫 열 링크 base (예: "/salary") — SalaryTable 로 그대로 전달 */

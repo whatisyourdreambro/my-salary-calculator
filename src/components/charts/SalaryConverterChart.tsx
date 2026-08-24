@@ -14,7 +14,12 @@ import {
   Cell,
 } from "recharts";
 
-export default function SalaryConverterChart({ data }: { data: any[] }) {
+interface ConverterDatum {
+  country: string;
+  pppAdjustedNetUSD: number;
+}
+
+export default function SalaryConverterChart({ data }: { data: ConverterDatum[] }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data} layout="vertical" margin={{ left: 40 }}>

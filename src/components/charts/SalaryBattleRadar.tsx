@@ -12,12 +12,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+interface RadarDatum {
+  subject: string;
+  A: number;
+  B: number;
+}
+
 export default function SalaryBattleRadar({
   data,
   nameA,
   nameB,
 }: {
-  data: any[];
+  data: RadarDatum[];
   nameA: string;
   nameB: string;
 }) {

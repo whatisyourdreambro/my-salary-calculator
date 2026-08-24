@@ -516,7 +516,9 @@ const allRawGuides = [
 // — 재작성 본문 사용 시 publishedDate 를 실제 갱신일로 정정 (repo 관행:
 //   발행일 = 실제 갱신일. salary-guide-2026 의 2026-07-06 정정 선례)
 // — lang 미지정 가이드는 'ko'로 정규화 (기존 50개 호환)
-export const guides: Guide[] = (allRawGuides as any[]).map(guide => {
+// allRawGuides 원소 타입: content(레거시 50편)·lang(ko 기본) 이 아직 없을 수 있는 Guide
+type RawGuide = Omit<Guide, 'content' | 'lang'> & { content?: string; lang?: GuideLang };
+export const guides: Guide[] = (allRawGuides as RawGuide[]).map(guide => {
  const rewritten = !guide.content && legacyRewriteContent[guide.slug];
  return {
  ...guide,

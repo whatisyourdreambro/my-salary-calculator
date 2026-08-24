@@ -6,6 +6,7 @@ import {
   Calendar, Users, Play, RotateCcw, Settings,
   X, Heart, Frown, Meh, Download, Zap,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd } from "@/components/AdPlacement";
 
@@ -29,7 +30,7 @@ interface GameState {
   logs: string[];
 }
 
-const PREF_CONFIG: Record<Preference, { icon: any; color: string; bg: string; label: string; weight: number }> = {
+const PREF_CONFIG: Record<Preference, { icon: LucideIcon; color: string; bg: string; label: string; weight: number }> = {
   HOPE:       { icon: Heart,  color: "text-emerald-400", bg: "bg-emerald-500/20 border-emerald-500/40", label: "희망",   weight: 100 },
   NEUTRAL:    { icon: Meh,    color: "text-sky-400",     bg: "bg-sky-500/20 border-sky-500/40",         label: "가능",   weight: 10 },
   NON_HOPE:   { icon: Frown,  color: "text-amber-400",   bg: "bg-amber-500/20 border-amber-500/40",     label: "비희망", weight: 1 },

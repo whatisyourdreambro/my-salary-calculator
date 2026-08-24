@@ -27,10 +27,19 @@ const FORTUNES = {
 const ZODIAC_NAMES = ["쥐", "소", "호랑이", "토끼", "용", "뱀", "말", "양", "원숭이", "닭", "개", "돼지"];
 const ELEMENTS = ["목(木)", "화(火)", "토(土)", "금(金)", "수(水)"];
 
+interface FortuneResult {
+ zodiac: string;
+ element: string;
+ moneyFortune: string;
+ careerFortune: string;
+ salaryFortune: string;
+ score: number;
+}
+
 export default function FinancialFortunePage() {
  const [birthYear, setBirthYear] = useState(1990);
  const [birthMonth, setBirthMonth] = useState(1);
- const [result, setResult] = useState<any | null>(null);
+ const [result, setResult] = useState<FortuneResult | null>(null);
 
  const calculate = () => {
  const zodiacIdx = (birthYear - 4) % 12;

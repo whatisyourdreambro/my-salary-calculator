@@ -9,7 +9,12 @@ import { InArticleAd } from "@/components/AdPlacement";
 
 export default function WhatToBuyPage() {
  const [budget, setBudget] = useState(100000);
- const [result, setResult] = useState<any | null>(null);
+ const [result, setResult] = useState<{
+ name: string;
+ price: number;
+ desc: string;
+ quantity: number;
+ } | null>(null);
  const [isSearching, setIsSearching] = useState(false);
 
  const ITEMS = [

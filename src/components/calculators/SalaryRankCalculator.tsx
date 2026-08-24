@@ -10,7 +10,7 @@ import { InArticleAd } from "@/components/AdPlacement";
 export default function SalaryRankCalculator() {
   const [salary, setSalary] = useState("");
   const [ageGroup, setAgeGroup] = useState("30s_early");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<ReturnType<typeof calculateSalaryRank> | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 

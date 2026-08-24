@@ -5,7 +5,8 @@ import {
  Umbrella, Key, Lock, Percent,
  Receipt, ReceiptText, Banknote, TrendingDown, Split, RefreshCw,
  Layers, UserX, Users, Anchor, Gift, Baby, Clock, Hourglass,
- ArrowLeftRight, Equal, ShieldAlert, Globe2
+ ArrowLeftRight, Equal, ShieldAlert, Globe2,
+ type LucideIcon
 } from "lucide-react";
 
 export interface GlossaryRelatedLink {
@@ -15,7 +16,7 @@ export interface GlossaryRelatedLink {
 
 export interface GlossaryItem {
  title: string;
- icon: any;
+ icon: LucideIcon;
  category: string;
  summary: string;
  content: string;

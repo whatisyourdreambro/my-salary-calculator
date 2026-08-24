@@ -97,7 +97,7 @@ export default function SeveranceCalculatorPage() {
  {[{ v: "calculate", l: "법정 퇴직금 자동계산" }, { v: "custom", l: "퇴직금 직접 입력" }].map(m => (
  <button
  key={m.v}
- onClick={() => setMode(m.v as any)}
+ onClick={() => setMode(m.v as "custom" | "calculate")}
  className={`flex-1 py-3 rounded-lg text-sm font-black transition-all ${mode === m.v ? "bg-white shadow text-primary" : "text-faint-blue"}`}
  >
  {m.l}

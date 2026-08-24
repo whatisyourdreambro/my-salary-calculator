@@ -114,7 +114,7 @@ const FAQ_ITEMS = [
  },
 ];
 
-const categoryIcons: { [key: string]: any } = {
+const categoryIcons: { [key: string]: React.ElementType } = {
  경차: CarIcon,
  소형: CarIcon,
  준중형: CarIcon,

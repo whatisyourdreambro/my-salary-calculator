@@ -26,7 +26,7 @@ const MBTI_DATA: Record<string, { rank: number; avgSalary: string; desc: string;
 export default function MbtiSalary() {
  const [selectedMbti, setSelectedMbti] = useState<string | null>(null);
  const [isAnalyzing, setIsAnalyzing] = useState(false);
- const [result, setResult] = useState<any>(null);
+ const [result, setResult] = useState<(typeof MBTI_DATA)[string] | null>(null);
  const cardRef = useRef<HTMLDivElement>(null);
 
  const handleSelect = (mbti: string) => {

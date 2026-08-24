@@ -225,8 +225,8 @@ export default function SalaryCalculator() {
  // Google Ads 전환 — env(ADS_ID/CONVERSION_LABEL)가 설정된 경우에만 발사
  const adsId = process.env.NEXT_PUBLIC_ADS_ID;
  const label = process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION;
- if (adsId && label && typeof (window as any).gtag === "function") {
- (window as any).gtag("event", "conversion", {
+ if (adsId && label && typeof window.gtag === "function") {
+ window.gtag("event", "conversion", {
  send_to: `${adsId}/${label}`,
  });
  }

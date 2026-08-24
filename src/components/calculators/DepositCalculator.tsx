@@ -7,13 +7,21 @@ import { PiggyBank, Calendar, Percent, TrendingUp } from "lucide-react";
 type SavingsType = "deposit" | "savings"; // 예금(Lump sum) vs 적금(Monthly)
 type TaxType = "normal" | "preferential" | "none"; // 일반(15.4), 우대(9.5), 비과세(0)
 
+interface DepositResults {
+ principal: number;
+ interest: number;
+ taxAmount: number;
+ afterTaxInterest: number;
+ total: number;
+}
+
 export default function DepositCalculator() {
  const [type, setType] = useState<SavingsType>("deposit");
  const [amount, setAmount] = useState(10000000); // Principal or Monthly
  const [rate, setRate] = useState(3.5);
  const [term, setTerm] = useState(12); // Months
  const [taxType, setTaxType] = useState<TaxType>("normal");
- const [results, setResults] = useState<any>(null);
+ const [results, setResults] = useState<DepositResults | null>(null);
 
  useEffect(() => {
  calculate();

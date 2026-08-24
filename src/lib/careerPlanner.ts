@@ -110,19 +110,19 @@ export function runCareerSimulation(
  eventDescription = event.description;
  switch (event.type) {
  case "promotion":
- currentSalary *= (1 + (event as any).salaryIncreasePercent / 100);
+ currentSalary *= (1 + event.salaryIncreasePercent / 100);
  break;
  case "job_change":
- currentSalary = (event as any).newSalary;
+ currentSalary = event.newSalary;
  break;
  case "side_project":
  // This is simplified. A real model would handle multiple side projects.
- currentSideIncome = (event as any).initialAnnualIncome;
+ currentSideIncome = event.initialAnnualIncome;
  break;
  case "education":
  // This is highly simplified. A real model would handle the duration.
- currentSalary = (event as any).incomeDuringEvent;
- investedAssets -= (event as any).costPerYear;
+ currentSalary = event.incomeDuringEvent;
+ investedAssets -= event.costPerYear;
  break;
  }
  }

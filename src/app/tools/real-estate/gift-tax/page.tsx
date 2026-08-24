@@ -84,7 +84,7 @@ export default function GiftTaxPage() {
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">증여 관계</label>
  <div className="grid grid-cols-2 gap-2">
  {relations.map(r => (
- <button key={r.v} onClick={() => setRelation(r.v as any)}
+ <button key={r.v} onClick={() => setRelation(r.v as "spouse" | "child" | "parent" | "other")}
  className={`p-4 rounded-xl border text-left transition-all ${relation === r.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary hover:bg-primary/5"}`}>
  <p className="font-bold text-sm">{r.l}</p>
  <p className={`text-xs mt-0.5 ${relation === r.v ? "text-white/70" : "text-faint-blue"}`}>공제한도: {r.deduct}</p>

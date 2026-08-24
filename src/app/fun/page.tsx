@@ -44,7 +44,7 @@ const FunCard = ({
  featured = false,
  badge
 }: {
- icon: any;
+ icon: React.ElementType;
  title: string;
  description: string;
  href: string;
