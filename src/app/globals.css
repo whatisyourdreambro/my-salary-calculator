@@ -438,15 +438,16 @@ body {
  ════════════════════════════════════════════════════════════════════ */
 
 /* Electric Blue (dark) backgrounds → white text mandated */
+/* 2026-08-24 점검: React는 인라인 style을 콜론 뒤 공백 없이 직렬화하므로
+   ("background-color:#0145F2") 공백 포함 선택자는 단 한 번도 매치되지 않는
+   죽은 코드였다 — 무공백 변형을 정본으로 두고 공백 변형은 호환용으로 유지. */
 .bg-primary, .bg-primary *,
-.bg-electric, .bg-electric *,
-.bg-primary, .bg-primary *,
-.bg-electric, .bg-electric *,
 .bg-electric, .bg-electric *,
 .btn-primary,
 [style*="background: #0145F2"],
+[style*="background:#0145F2"],
 [style*="background-color: #0145F2"],
-[style*="background:#0145F2"] {
+[style*="background-color:#0145F2"] {
  color: #FFFFFF !important;
 }
 
@@ -454,7 +455,9 @@ body {
 .bg-canvas, .bg-canvas *,
 .bg-white,
 [style*="background: #EDF1F5"],
-[style*="background-color: #EDF1F5"] {
+[style*="background:#EDF1F5"],
+[style*="background-color: #EDF1F5"],
+[style*="background-color:#EDF1F5"] {
  color: #0A1829;
 }
 
@@ -472,7 +475,11 @@ body {
 .dark .text-navy { color: #EDF1F5 !important; }
 .dark .text-muted-blue { color: #A8BCCD !important; }
 .dark .text-faint-blue { color: #7A9AB5 !important; }
+/* 2026-08-24 점검: 본문 강조색 #0145F2는 다크 배경(#0A1829) 대비 2.6:1로 WCAG AA
+   미달(917회 사용) — 다크 전용 밝은 파랑으로 승격 (.dark th와 동일 계열) */
+.dark .text-electric { color: #4D80F5 !important; }
 .dark .border-canvas-200 { border-color: #294460 !important; }
+.dark .border-canvas-deep { border-color: #294460 !important; }
 .dark th { background-color: #162E4A; color: #4D80F5; border-bottom-color: #4D80F555; }
 .dark td { color: #EDF1F5; border-bottom-color: #294460; }
 .dark tr:hover td { background-color: #4D80F511; }

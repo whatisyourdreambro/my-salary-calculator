@@ -70,9 +70,14 @@ const config = {
           90:  "#0145F2E6",
         },
 
+        // 2026-08-24 점검: text-faint(1,357회)·border-canvas-deep(478회)가 미정의
+        // 클래스로 조용히 실패(색 미적용 — 부모 색 상속)하고 있었다. 신규 컴포넌트
+        // 세대의 네이밍(faint / canvas-deep)을 기존 팔레트에 별칭으로 배선.
+        faint: "#7A9AB5", // = faint-blue (globals.css .text-faint-blue)
         canvas: {
           DEFAULT: CANVAS_CLOUD,   // #EDF1F5
           foreground: ELECTRIC_BLUE,
+          deep: "#C8D4E0", // = canvas-300 (globals.css .bg-canvas-deeper 계열)
           // Tints
           50:  "#F8FAFB",
           100: "#EDF1F5",
