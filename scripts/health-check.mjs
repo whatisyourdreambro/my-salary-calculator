@@ -48,6 +48,68 @@ const CHECKS = [
   ["/sitemap.xml", 200, "<loc>", "사이트맵"],
   ["/rss.xml", 200, "<rss", "RSS"],
   ["/robots.txt", 200, null, "robots"],
+  // 커버리지 확대 (2026-08-24): 그간 무감시였던 라우트 축들
+  ["/guides/salary-guide-2026", 200, "실수령", "가이드 대표 slug (최다 조회 15만+)"],
+  ["/insights/bonus-payout-history-2026", 200, null, "인사이트 — 성과급 지급 연혁"],
+  ["/monthly/3000000", 200, null, "월급 축 격자 페이지 (/monthly SSG)"],
+  ["/table/2026/annual", 200, null, "연봉 실수령액 표 (표 4종 대표)"],
+  ["/salary-db/listed", 200, null, "상장사 공시 연봉 DB"],
+  ["/hub", 200, null, "허브 인덱스"],
+  ["/en", 200, null, "영문 랜딩 (/en 축 생존 신호)"],
+  ["/rss-companies.xml", 200, "<rss", "회사 RSS"],
+  ["/manifest.webmanifest", 200, null, "PWA 매니페스트 (설치 배너 전제)"],
+  // IndexNow 키 파일 — 404면 scripts/indexnow-ping.mjs 의 핑 전체가 조용히 무효가 된다
+  ["/b112e39a5933ca97201c83a7c5d7d91e.txt", 200, null, "IndexNow 키 파일"],
+];
+
+// ── 헤더·리디렉션 어서션 (2026-08-24 신설) ────────────────────────────────
+// 상태코드·본문만으로는 못 잡는 "헤더가 조용히 깨지는" 사고 감시.
+// [URL(절대), 설명, assert(res) → 실패 사유 문자열 | 통과 시 null]
+// 주의: 영구 리디렉션은 301/308 둘 다 정상으로 본다 — next.config permanent:true 는
+// 308, CF 리디렉션 룰은 301을 내며 둘 다 SEO 상 동등한 영구 신호다.
+const PERMANENT = [301, 308];
+
+const HEADER_CHECKS = [
+  [
+    BASE + "/widget/salary",
+    "위젯 CSP frame-ancestors * (외부 블로그 임베드 — 전역 CSP가 덮어쓰면 위젯 전멸)",
+    (res) => {
+      if (res.status !== 200) return `status=${res.status}(기대 200)`;
+      const csp = res.headers.get("content-security-policy") || "";
+      if (!csp.includes("frame-ancestors *"))
+        return `CSP에 "frame-ancestors *" 없음: "${csp.slice(0, 120)}"`;
+      return null;
+    },
+  ],
+  [
+    "http://moneysalary.com/",
+    "non-www http → https://www 영구 리디렉션 (도메인 정규화)",
+    (res) => {
+      if (!PERMANENT.includes(res.status))
+        return `status=${res.status}(기대 301/308)`;
+      // http→https 와 non-www→www 가 CF 설정에 따라 1홉 또는 2홉일 수 있어
+      // Location이 최종 정규 호스트(https + www)로 "향하는지"만 본다.
+      const loc = res.headers.get("location") || "";
+      const target = new URL(loc, "http://moneysalary.com");
+      if (target.protocol !== "https:")
+        return `Location이 https가 아님: ${loc}`;
+      if (!["www.moneysalary.com", "moneysalary.com"].includes(target.hostname))
+        return `Location 호스트 이상: ${loc}`;
+      return null;
+    },
+  ],
+  [
+    BASE + "/company",
+    "/company → /salary-db 영구 리디렉션 (카니발 해소 2026-06)",
+    (res) => {
+      if (!PERMANENT.includes(res.status))
+        return `status=${res.status}(기대 301/308)`;
+      const loc = res.headers.get("location") || "";
+      if (new URL(loc, BASE).pathname !== "/salary-db")
+        return `Location이 /salary-db가 아님: ${loc}`;
+      return null;
+    },
+  ],
 ];
 
 const results = [];
@@ -78,17 +140,38 @@ async function check([path, expect, marker, desc]) {
   }
 }
 
-// 동시성 5로 실행
-const queue = [...CHECKS];
+async function checkHeaders([url, desc, assert]) {
+  const path = url.replace(BASE, "") || url;
+  try {
+    const res = await fetch(url, {
+      headers: { "user-agent": UA },
+      redirect: "manual",
+      signal: AbortSignal.timeout(20000),
+    });
+    const reason = assert(res);
+    results.push({ ok: !reason, path, desc, detail: reason || "" });
+    if (reason) failed++;
+  } catch (e) {
+    results.push({ ok: false, path, desc, detail: `요청 실패: ${e.message}` });
+    failed++;
+  }
+}
+
+// 동시성 5로 실행 (본문 체크 + 헤더 어서션 통합 큐)
+const queue = [
+  ...CHECKS.map((c) => () => check(c)),
+  ...HEADER_CHECKS.map((h) => () => checkHeaders(h)),
+];
+const TOTAL = queue.length;
 await Promise.all(
   Array.from({ length: 5 }, async () => {
-    while (queue.length) await check(queue.shift());
+    while (queue.length) await queue.shift()();
   })
 );
 
-console.log(`\n=== moneysalary.com 헬스체크 (${CHECKS.length}건) ===\n`);
+console.log(`\n=== moneysalary.com 헬스체크 (${TOTAL}건) ===\n`);
 for (const r of results) {
   console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.path}  [${r.desc}] ${r.ok ? "" : "— " + r.detail}`);
 }
-console.log(`\n결과: ${CHECKS.length - failed}/${CHECKS.length} 통과${failed ? ` — 실패 ${failed}건!` : ""}`);
+console.log(`\n결과: ${TOTAL - failed}/${TOTAL} 통과${failed ? ` — 실패 ${failed}건!` : ""}`);
 process.exit(failed ? 1 : 0);
