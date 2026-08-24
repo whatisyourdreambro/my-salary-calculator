@@ -27,11 +27,8 @@ export default function NaverBonusClient() {
 
   const calc = useMemo(() => {
     const salaryWon = salaryManwon * 10_000;
-    // 기본급(월) = 연봉 / 12 (네이버는 별도 상여 없는 연봉제 가정)
-    const monthlyBasicWon = salaryWon / 12;
 
-    const piWon = monthlyBasicWon * (piPercent / 100) * 12; // 연 PI = 월 기본급 × % × 12 (단순화: 연봉 × %)
-    // 다시 보면 PI는 연봉 대비 %로 보는 게 일반적 — 연봉 × % 로 단순화
+    // PI는 연봉 대비 %로 보는 게 일반적 — 연봉 × % 로 단순화
     const piWonSimple = salaryWon * (piPercent / 100);
 
     const rsuValueWon = rsuShares * stockPrice;

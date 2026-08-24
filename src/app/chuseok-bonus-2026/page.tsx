@@ -171,7 +171,7 @@ export default function ChuseokBonus2026Page() {
           </div>
           <p className="text-sm text-muted-blue leading-relaxed mt-4">
             2025년 추석에 상여금을 지급한 기업은 <strong>56.9%</strong>였습니다. 지급
-            방식은 "별도 상여"(49.7%)와 "정기 상여에 포함"(45.7%)이 비슷하게 갈리고,
+            방식은 &quot;별도 상여&quot;(49.7%)와 &quot;정기 상여에 포함&quot;(45.7%)이 비슷하게 갈리고,
             중소기업일수록 현금 대신 선물로 대체하는 비율이 높습니다. 참고로 2024년
             조사에서는 지급 기업이 47.7%(평균 66만 5,600원)까지 떨어진 적도 있어, 지급
             여부는 해마다 경기 상황에 따라 출렁입니다.
@@ -197,8 +197,8 @@ export default function ChuseokBonus2026Page() {
           </p>
           <ul className="text-sm leading-7 text-muted-blue list-disc pl-5">
             <li>
-              <strong>근로계약서·취업규칙에 명시</strong> — "설·추석에 각 ○○만원(또는
-              월봉급의 ○%)을 지급한다"고 적혀 있으면 임금의 일부라 지급 의무가 있습니다.
+              <strong>근로계약서·취업규칙에 명시</strong> — &quot;설·추석에 각 ○○만원(또는
+              월봉급의 ○%)을 지급한다&quot;고 적혀 있으면 임금의 일부라 지급 의무가 있습니다.
             </li>
             <li>
               <strong>단체협약에 명시</strong> — 노조가 있는 회사라면 단체협약의 명절
@@ -206,7 +206,7 @@ export default function ChuseokBonus2026Page() {
             </li>
             <li>
               <strong>지급 관행의 임금성</strong> — 규정에 없어도 수년간 전 직원에게
-              정기적·일률적으로 지급해 왔다면 '관행에 의한 임금'으로 인정될 수 있고, 이
+              정기적·일률적으로 지급해 왔다면 &apos;관행에 의한 임금&apos;으로 인정될 수 있고, 이
               경우 회사가 일방적으로 중단하면 임금체불 문제가 됩니다.
             </li>
           </ul>
@@ -224,7 +224,7 @@ export default function ChuseokBonus2026Page() {
               <strong>현금(떡값·상여금)</strong> — 금액과 무관하게 전부 근로소득 과세.
             </li>
             <li>
-              <strong>상품권</strong> — 현금과 동일하게 과세. "상품권이라 비과세"는 오해.
+              <strong>상품권</strong> — 현금과 동일하게 과세. &quot;상품권이라 비과세&quot;는 오해.
             </li>
             <li>
               <strong>선물세트 등 현물</strong> — 원칙적으로 시가 상당액이 근로소득.

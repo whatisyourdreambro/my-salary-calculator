@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Pause, Trophy } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Trophy } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd } from "@/components/AdPlacement";
 // --- Game Constants & Types ---
 const ROWS = 20;
 const COLS = 10;
-const BLOCK_SIZE = 30; // Base size, responsive via CSS
 const TICK_RATE_MS = 800; // Initial speed
 const SPEED_INCREMENT = 0.95; // Speed multiplier per level
 

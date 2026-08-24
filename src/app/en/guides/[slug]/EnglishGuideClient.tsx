@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Eye, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, Share2, BookOpen, Sparkles } from "lucide-react";
+import { Calendar, Eye, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
 import { useEffect, useState } from "react";
@@ -266,7 +266,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  Smarter Every Week
  </h3>
  <p className="text-muted-foreground text-sm mb-4">
- Don't miss our weekly finance guides.
+ Don&apos;t miss our weekly finance guides.
  </p>
  <Link
  href="/en/guides"

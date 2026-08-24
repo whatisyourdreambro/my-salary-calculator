@@ -9,7 +9,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ArrowRight, Loader } from "lucide-react";
+import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시

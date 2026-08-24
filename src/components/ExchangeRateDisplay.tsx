@@ -14,7 +14,6 @@ import {
   TrendingUp,
   TrendingDown,
   Coffee,
-  Crown,
   Gem,
   Wifi,
   WifiOff,
@@ -375,9 +374,6 @@ export default function ExchangeRateImpactCalculator() {
   const inputStyle =
     "w-full p-4 mt-1 bg-white border border-canvas rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary transition disabled:opacity-50 text-navy font-medium";
   const textInputStyle = `${inputStyle} text-center font-mono text-lg`;
-
-  // Current rate label for display
-  const currentUsdKrw = liveRates["USD"] > 0 ? (1 / liveRates["USD"]) : 0;
 
   return (
     <div className="animate-fade-in-up bg-canvas min-h-screen">

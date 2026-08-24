@@ -273,6 +273,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  });
 
  // 2-a. 가이드 카테고리 허브 7종 (G9, 2026-08-23) — guideCategories.ts 단일 소스
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드 (사이트맵 생성 시점에만 필요)
  const { GUIDE_CATEGORY_HUBS } = require('@/lib/guideCategories');
  (GUIDE_CATEGORY_HUBS as Array<{ slug: string }>).forEach((h) => {
  guideUrls.push({
@@ -377,6 +378,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // 100가지 계산기 동적 페이지 — 콘텐츠 풍부(enrichment 보강)된 슬러그만 사이트맵 포함.
  // GSC "발견됨-색인 안 됨" 358개 차단(7차): thin page는 sitemap에서 제외 + page.tsx에서 noindex.
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드
  const { allCalculators } = require('@/lib/simpleCalculators');
  (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown> }>)
  .filter((c) => c.explanation && c.faqs && c.faqs.length >= 3)
@@ -391,6 +393,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // Individual company pages — /salary-db/[id]로 단일화
  // (이전엔 /company/[id]도 sitemap에 있었으나 동일 정보 두 URL이라 카니발 → /salary-db/[id] 308 redirect로 통합)
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드
  const { allCompanies } = require('@/data/companies');
 
  // lastModified는 회사별 실제 lastUpdated 날짜 사용 — 매 배포마다 "오늘 수정"으로
@@ -410,6 +413,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 상장사 공시 lite 페이지 (Phase 1, 2026-08-23) — 코호트는 dartLite.ts 단일 소스
  // (generateStaticParams와 동일 집합 — 코호트 밖 URL은 404라 사이트맵 등재 불가).
  // lastModified는 DART 데이터 기준일로 정직 표기.
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 800KB) 지연 로드
  const { listedCohort, DART_LITE_DATE } = require('@/lib/salary-data/dartLite');
  const dartLiteDate = new Date(DART_LITE_DATE);
  companyUrls.push({

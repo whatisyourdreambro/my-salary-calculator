@@ -29,7 +29,7 @@ export default function CareerVisuals({ results }: CareerVisualsProps) {
  if (results.length === 0) {
  return (
  <div className="text-center p-10 border-2 border-dashed border-border rounded-xl min-h-[600px] flex items-center justify-center">
- <p className="text-muted-foreground">입력값을 설정하고 '결과 보기'를 눌러주세요. 📊</p>
+ <p className="text-muted-foreground">입력값을 설정하고 &apos;결과 보기&apos;를 눌러주세요. 📊</p>
  </div>
  );
  }

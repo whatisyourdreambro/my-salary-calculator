@@ -160,7 +160,7 @@ export default function IncentiveTaxPage() {
                 일반 인센티브는 분리과세 불가
               </p>
               <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-                회사가 '인센티브'로 명명했더라도 정기·비정기 보너스는 모두 근로소득에 합산되어
+                회사가 &apos;인센티브&apos;로 명명했더라도 정기·비정기 보너스는 모두 근로소득에 합산되어
                 누진세율이 적용됩니다. 분리과세는 벤처 스톡옵션 등 법적으로 명시된 경우에만
                 가능하며, 회사 임의로 적용할 수 없습니다.
               </p>

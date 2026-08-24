@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, RefreshCw } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
@@ -10,7 +10,6 @@ export default function CompoundCalculatorPage() {
  const [monthly, setMonthly] = useState(500_000);
  const [rate, setRate] = useState(7);
  const [years, setYears] = useState(20);
- const [mode, setMode] = useState<"yearly" | "monthly">("monthly");
 
  const r = useMemo(() => {
  const monthlyRate = rate / 100 / 12;

@@ -62,10 +62,6 @@ const DepositCalculator = dynamic(
  () => import("@/components/DepositCalculator"),
  { ssr: false }
 );
-const ExtraFinancialCalculators = dynamic(
- () => import("@/components/ExtraFinancialCalculators"),
- { ssr: false }
-);
 const CoupangBanner = dynamic(
  () => import("@/components/CoupangBanner"),
  { ssr: false }

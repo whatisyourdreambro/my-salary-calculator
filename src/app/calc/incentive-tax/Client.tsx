@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 
 const TAX_BRACKETS = [

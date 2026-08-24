@@ -538,8 +538,8 @@ export default function ComparePage({ params }: Props) {
           <p>
             <strong>기업 문화</strong> — 직원이 평가하는 기업 문화 점수는 {a.name.ko}{" "}
             {a.culture.score}점, {b.name.ko} {b.culture.score}점(10점 만점)입니다. {a.name.ko}의
-            핵심 키워드는 '{a.culture.keywords.join(", ")}'이며, {b.name.ko}는 '
-            {b.culture.keywords.join(", ")}'을 강조합니다. 본인 성향과 일치하는 문화 키워드를
+            핵심 키워드는 &apos;{a.culture.keywords.join(", ")}&apos;이며, {b.name.ko}는 &apos;
+            {b.culture.keywords.join(", ")}&apos;을 강조합니다. 본인 성향과 일치하는 문화 키워드를
             선택하는 것이 만족도에 큰 영향을 줍니다.
           </p>
         </section>

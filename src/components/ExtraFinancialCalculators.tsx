@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   TrendingUp,
   Percent,
@@ -327,7 +327,6 @@ function ExchangeCalculator() {
   const rates: Record<string, number> = { USD: 1380, EUR: 1500, JPY: 9.1, CNY: 189 };
 
   const toForeign = amount.num / rates[currency];
-  const fromForeign = amount.num * rates[currency];
 
   return (
     <div>

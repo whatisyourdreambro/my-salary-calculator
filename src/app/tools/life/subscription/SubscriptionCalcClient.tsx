@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { CreditCard, PlusCircle, Trash2, BarChart3 } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 type Subscription = { name: string; amount: number; period: "monthly" | "yearly" };

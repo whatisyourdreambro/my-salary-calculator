@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Info, ArrowRight } from "lucide-react";
+import { Briefcase, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 // 2026 퇴직소득세 계산 (환산급여 방식)
 function calcSeveranceTax(severancePay: number, workYears: number): {

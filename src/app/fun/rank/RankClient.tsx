@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
-import { Share2, Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
+import { Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import Link from "@/components/AppLink";
 import { InArticleAd } from "@/components/AdPlacement";
@@ -58,21 +58,6 @@ export default function RankClient() {
  const handleCalculate = () => {
  if (salary > 0) {
  setShowResult(true);
- }
- };
-
- const handleShare = () => {
- const text = `내 연봉은 대한민국 상위 ${percentile}%입니다! 당신의 순위도 확인해보세요.`;
- const url = window.location.href;
-
- if (navigator.share) {
- navigator.share({
- title: "연봉 순위 계산기",
- text: text,
- url: url,
- }).catch(console.error);
- } else {
- navigator.clipboard.writeText(`${text}\n${url}`).then(() => alert("결과가 복사되었습니다!"));
  }
  };
 

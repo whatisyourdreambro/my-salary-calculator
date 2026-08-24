@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Play, RotateCcw, Users, Settings, Sparkles, Gift, Plus, Trash2 } from "lucide-react";
+import { Trophy, Play, RotateCcw, Users, Sparkles, Gift, Plus, Trash2 } from "lucide-react";
 
 // --- Types ---
 interface Ball {
@@ -583,7 +583,7 @@ export default function RandomDrawGame() {
  </h3>
  <div className="space-y-2 max-h-[500px] overflow-hidden">
  <AnimatePresence>
- {winners.map((ball, i) => {
+ {winners.map((ball) => {
  const specialPrize = specialPrizes.find(p => p.rank === ball.rank);
  return (
  <motion.div

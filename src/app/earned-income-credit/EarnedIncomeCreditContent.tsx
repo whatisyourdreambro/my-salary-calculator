@@ -347,7 +347,7 @@ export default function EarnedIncomeCreditContent() {
        </tr>
       </thead>
       <tbody>
-       {(Object.keys(HOUSEHOLD_CONFIGS) as HouseholdType[]).map((type, i) => {
+       {(Object.keys(HOUSEHOLD_CONFIGS) as HouseholdType[]).map((type) => {
         const c = HOUSEHOLD_CONFIGS[type];
         return (
          <tr key={type} className={`border-t border-canvas-100 ${household === type ? "bg-electric-5" : ""}`}>

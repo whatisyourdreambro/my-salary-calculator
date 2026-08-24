@@ -20,17 +20,14 @@ import {
  Calculator,
  Gauge,
  Wallet,
- AlertCircle,
  Wrench,
  TrendingUp,
  Fuel,
  ShieldCheck
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import {
- type Car,
- type CarLoanResult,
  calculateCarLoan,
  recommendCarsBySalary,
 } from "@/lib/carLoanCalculator";

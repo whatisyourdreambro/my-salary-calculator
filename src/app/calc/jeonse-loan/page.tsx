@@ -6,7 +6,7 @@ import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structured
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd } from "@/components/AdPlacement";
-import { Sparkles, Info, Home } from "lucide-react";
+import { Info, Home } from "lucide-react";
 import JeonseLoanClient from "./Client";
 
 const FAQ_ITEMS = [

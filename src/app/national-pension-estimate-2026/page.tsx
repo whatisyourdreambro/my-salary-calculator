@@ -252,7 +252,7 @@ export default function NationalPensionEstimate2026Page() {
           </p>
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
-            국민연금 = "최소 10년 가입 → 만 65세부터 평생 지급"
+            국민연금 = &quot;최소 10년 가입 → 만 65세부터 평생 지급&quot;
           </h2>
           <p>
             국민연금은 최소 10년(120개월) 이상 가입한 사람이 노령연금 수급 연령에 도달하면 평생 매월

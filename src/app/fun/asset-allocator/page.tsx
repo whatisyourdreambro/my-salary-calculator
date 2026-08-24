@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Play, RotateCcw, Monitor, Smartphone, Gem, Coins, Briefcase } from "lucide-react";
+import { Trophy, Play, RotateCcw, Monitor, Smartphone } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd } from "@/components/AdPlacement";
 
 // --- Game Constants & Types ---
-const GRAVITY = 0.5;
 const BASKET_WIDTH = 100;
 const BASKET_HEIGHT = 80;
 const ITEM_SIZE = 50;
@@ -284,7 +282,7 @@ export default function AssetAllocatorGame() {
  ASSET RUN
  </h1>
  <p className="text-stone-300 mb-8 font-serif italic text-lg opacity-80">
- "Catch the Gems, Avoid the Debt"
+ &quot;Catch the Gems, Avoid the Debt&quot;
  </p>
 
  <div className="grid grid-cols-2 gap-4 mb-10 max-w-xs w-full">

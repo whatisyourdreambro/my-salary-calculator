@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Percent, ArrowRight } from "lucide-react";
+import { Percent } from "lucide-react";
 
 export default function VatCalculator() {
  const [amount, setAmount] = useState<number | "">("");

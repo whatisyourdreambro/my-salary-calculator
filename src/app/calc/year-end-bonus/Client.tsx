@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "@/components/AppLink";
-import { ArrowRight } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 
 // 간단한 누진세 계산 (2026)

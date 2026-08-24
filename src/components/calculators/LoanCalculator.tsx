@@ -29,7 +29,7 @@ export default function LoanCalculator() {
  const totalMonths = term * 12;
  let monthlyPayment = 0;
  let totalInterest = 0;
- let schedule = [];
+ const schedule = [];
 
  let balance = amount;
 

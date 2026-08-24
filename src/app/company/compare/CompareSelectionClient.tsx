@@ -3,18 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { companies } from "@/lib/companyData";
-import { ArrowRight, Swords, Search } from "lucide-react";
+import { ArrowRight, Swords } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CompareSelectionPage() {
  const router = useRouter();
  const [selectedA, setSelectedA] = useState<string | null>(null);
  const [selectedB, setSelectedB] = useState<string | null>(null);
- const [searchTerm, setSearchTerm] = useState("");
-
- const filteredCompanies = companies.filter((c) =>
- c.name.toLowerCase().includes(searchTerm.toLowerCase())
- );
 
  const handleCompare = () => {
  if (selectedA && selectedB) {

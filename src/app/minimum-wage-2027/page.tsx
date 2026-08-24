@@ -21,10 +21,6 @@ const HOURLY_2027 = 10700;
 const MONTHLY_2027 = HOURLY_2027 * 209; // 2,236,300원 (주 40시간, 월 209시간)
 const YEARLY_2027 = MONTHLY_2027 * 12; // 26,835,600원
 
-// 현행 2026년 최저임금 (2026-12-31까지 적용)
-const HOURLY_2026 = 10320;
-const MONTHLY_2026 = HOURLY_2026 * 209; // 2,156,880원
-
 const DEFAULT_SETTINGS: AdvancedSettings = {
   isSmeYouth: false,
   disabledDependents: 0,

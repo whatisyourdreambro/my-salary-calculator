@@ -26,7 +26,6 @@ import {
 
 // ── 2026 공표 상수 ──────────────────────────────────────────
 const BASE_PENSION = 349_700; // 기준연금액(월)
-const COUPLE_EACH = 279_760; // 부부 1인당(20% 감액 후)
 const COUPLE_SUM = 559_520; // 부부 합산 최대
 const SELECTION_SINGLE = 2_470_000; // 선정기준액(단독)
 const SELECTION_COUPLE = 3_952_000; // 선정기준액(부부)

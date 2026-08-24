@@ -48,7 +48,6 @@ export class CompanyComparator {
  // Simple normalization logic: (Value / MaxValue) * 100
  // We use arbitrary "Max" baselines for now.
  const MAX_SALARY = 150000000; // 1.5억 baseline for entry/junior
- const MAX_HOURLY = 100000; // 10만원/hr
 
  const scoreMoneyA = Math.min((totalCompA / MAX_SALARY) * 100, 100);
  const scoreMoneyB = Math.min((totalCompB / MAX_SALARY) * 100, 100);

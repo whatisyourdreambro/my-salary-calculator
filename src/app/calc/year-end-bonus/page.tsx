@@ -16,7 +16,7 @@ import JsonLd from "@/components/JsonLd";
 import FavoritesButton from "@/components/FavoritesButton";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
-import { Gift, Calculator, ArrowRight, Sparkles, Info } from "lucide-react";
+import { Calculator, ArrowRight, Sparkles, Info } from "lucide-react";
 import YearEndBonusClient from "./Client";
 
 const FAQ_ITEMS = [

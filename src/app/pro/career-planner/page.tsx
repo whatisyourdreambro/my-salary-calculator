@@ -96,12 +96,6 @@ const PLANNER_RELATED_GUIDES: RelatedGuideItem[] = [
  },
 ];
 
-const formatYAxis = (tick: any) => {
- if (tick >= 100000000) return `${(tick / 100000000).toFixed(1)}억`;
- if (tick >= 10000) return `${Math.round(tick / 10000)}만`;
- return tick;
-};
-
 // Sub-component for rendering individual event inputs
 const EventCard = ({ event, index, updateEvent, removeEvent, simulationYears }: {
  event: CareerEvent;

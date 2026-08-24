@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import {
-  Gift, ChevronDown, ChevronUp, Info, ArrowRight, Users,
-  TrendingDown, Zap, Shield,
+  ChevronDown, ChevronUp, Info, Users,
+  Zap, Shield,
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
@@ -536,8 +536,6 @@ export default function BonusCalculatorPage() {
                 { label: "장기요양보험",            value: r.insurance.longTerm,    sign: "-" },
                 { label: "고용보험 (0.9%)",         value: r.insurance.employment,  sign: "-" },
               ].map((row, i) => {
-                const isLast  = i === 0;
-                const isTotal = false;
                 return (
                   <div
                     key={row.label}

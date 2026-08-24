@@ -14,7 +14,7 @@ import {
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
-import { Sparkles, Info, Briefcase, Building2 } from "lucide-react";
+import { Info, Briefcase } from "lucide-react";
 import SeveranceClient from "./Client";
 
 const FAQ_ITEMS = [

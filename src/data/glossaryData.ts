@@ -1,8 +1,8 @@
 import {
  ShieldCheck, HeartPulse, Briefcase, Hospital, FileText, Wallet, BarChartHorizontal,
- BookUser, HandCoins, LogOut, PiggyBank, TrendingUp, Home, Flame, Landmark,
- CreditCard, Coins, Building, LineChart, Scale, Calculator, GraduationCap,
- Umbrella, Key, Lock, Percent, DollarSign, BriefcaseBusiness, UserCheck,
+ HandCoins, PiggyBank, TrendingUp, Home,
+ Coins, Building, LineChart, Scale, Calculator,
+ Umbrella, Key, Lock, Percent,
  Receipt, ReceiptText, Banknote, TrendingDown, Split, RefreshCw,
  Layers, UserX, Users, Anchor, Gift, Baby, Clock, Hourglass,
  ArrowLeftRight, Equal, ShieldAlert, Globe2

@@ -4,7 +4,7 @@ import {
  Gift, Briefcase, TrendingUp, Home, CreditCard, Laptop,
  Heart, PiggyBank, Calculator, Calendar, Scale, Flame,
  DollarSign, Percent, Activity, Building2, ChevronRight,
- Divide, Globe, Fuel, RefreshCw, Users, Zap
+ Fuel, RefreshCw, Users, Zap
 } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
 import { MultiplexAd } from "@/components/AdPlacement";

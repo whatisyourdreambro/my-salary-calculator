@@ -1,8 +1,4 @@
-﻿import {
- Wallet, Landmark, Briefcase, TrendingUp, GraduationCap, Home,
- CreditCard, Calculator, FileText, ShieldCheck
-} from "lucide-react";
-import { recoverMojibakeUtf8 } from "@/data/glossaryData";
+﻿import { recoverMojibakeUtf8 } from "@/data/glossaryData";
 
 export interface QnaItem {
  category: string;

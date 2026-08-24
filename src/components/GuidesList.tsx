@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import Link from "@/components/AppLink";
 import type { Guide } from "@/lib/guidesData";
 import { motion } from "framer-motion";
-import { Search, Tag, BarChart, ChevronsRight, Star } from "lucide-react";
+import { Search, Tag, ChevronsRight, Star } from "lucide-react";
 
 // Props for the main component
 interface GuidesListProps {

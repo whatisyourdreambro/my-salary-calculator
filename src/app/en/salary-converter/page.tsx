@@ -67,7 +67,7 @@ export default function SalaryConverterPage() {
             </span>
           </h1>
           <p className="text-white/75 text-lg max-w-2xl mx-auto">
-            Compare your salary against the world. We calculate taxes and cost of living to show you the "Real Feel" value of your income in Silicon Valley, Tokyo, and London.
+            Compare your salary against the world. We calculate taxes and cost of living to show you the &quot;Real Feel&quot; value of your income in Silicon Valley, Tokyo, and London.
           </p>
         </div>
       </div>

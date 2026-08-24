@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Calendar, Clock, Briefcase, Calculator, RefreshCw, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { Calendar, Clock, Briefcase } from "lucide-react";
 // --- D-Day Calculator ---
 export function DDayCalculator() {
  const [targetDate, setTargetDate] = useState("");
@@ -137,7 +137,7 @@ export function WorkDayCalculator() {
  }
 
  let count = 0;
- let cur = new Date(start);
+ const cur = new Date(start);
  while (cur <= end) {
  const dayOfWeek = cur.getDay();
  if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0=Sun, 6=Sat

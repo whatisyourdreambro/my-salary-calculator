@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
-import { TrendingUp, Sparkles, ArrowRight, Calculator } from "lucide-react";
+import { Sparkles, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";

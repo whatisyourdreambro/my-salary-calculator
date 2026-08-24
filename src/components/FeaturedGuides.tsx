@@ -71,7 +71,7 @@ export default function FeaturedGuides() {
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
- {items.map((guide, idx) => {
+ {items.map((guide) => {
  const isSeasonal = prioritySlugs.includes(guide.slug);
  return (
  <Link

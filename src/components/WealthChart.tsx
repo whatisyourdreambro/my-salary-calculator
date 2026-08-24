@@ -12,10 +12,9 @@ import {
  Tooltip,
  ResponsiveContainer,
  ReferenceLine,
- Label,
 } from "recharts";
 import { calculateWealthProjection } from "@/lib/wealthCalculator";
-import { TrendingUp, Target, PiggyBank } from "lucide-react";
+import { TrendingUp, Target } from "lucide-react";
 
 interface WealthChartProps {
  monthlyNetSalary: number;
@@ -121,7 +120,7 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <option value={1000000000}>10억 (국민 목표)</option>
  <option value={2000000000}>20억 (여유로운 삶)</option>
  <option value={5000000000}>50억 (부자의 상징)</option>
- <option value={10000000000}>100억 (Mung's Dream)</option>
+ <option value={10000000000}>100억 (Mung&apos;s Dream)</option>
  </select>
  </div>
  </div>
@@ -226,7 +225,7 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="bg-primary/5 rounded-xl p-4 flex gap-3 items-start border border-primary">
  <div className="text-2xl">💡</div>
  <div>
- <h4 className="font-bold text-primary text-sm">Mung's Wealth Tip</h4>
+ <h4 className="font-bold text-primary text-sm">Mung&apos;s Wealth Tip</h4>
  <p className="text-primary text-xs mt-1 leading-relaxed">
  {fireYear 
  ? `현재 저축과 수익률을 유지하면 ${fireYear.age}세에 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 거대해집니다!`

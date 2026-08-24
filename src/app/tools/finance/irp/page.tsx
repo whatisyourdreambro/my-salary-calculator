@@ -201,7 +201,7 @@ export default function IRPPage() {
             <p className="text-muted-blue leading-relaxed">
               기타소득세 16.5% + 그동안 받은 세액공제 환수. 예) 5년 납입 후 인출
               시 약 600~750만원 페널티. 비상 자금이 필요하면 일반 적금이나
-              CMA에서. IRP는 절대 손대지 않는 '잠긴 자금'으로만 활용.
+              CMA에서. IRP는 절대 손대지 않는 &apos;잠긴 자금&apos;으로만 활용.
             </p>
           </article>
 

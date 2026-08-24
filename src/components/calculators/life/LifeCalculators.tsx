@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Users, Fuel, Ruler, ArrowRight, RefreshCw } from "lucide-react";
+import { Users, Fuel, Ruler } from "lucide-react";
 // --- Dutch Pay Calculator ---
 export function DutchPayCalculator() {
  const [amount, setAmount] = useState("");

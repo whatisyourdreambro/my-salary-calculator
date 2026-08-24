@@ -10,11 +10,6 @@ export interface TaxResult {
  effectiveRate: number;
 }
 
-interface TaxBracket {
- threshold: number;
- rate: number;
-}
-
 export const EXCHANGE_RATES: Record<CountryCode, number> = {
  KR: 1,
  US: 0.00075, // 1 KRW = 0.00075 USD (approx 1330 KRW/USD)
@@ -111,7 +106,7 @@ export class GlobalTaxEngine {
  else fedTax = 183647 + (localGross - 609350) * 0.37;
 
  // CA State (Roughly 9.3% for high earners, simplified progressive)
- let stateTax = localGross * 0.08; // Averaged
+ const stateTax = localGross * 0.08; // Averaged
 
  // FICA (7.65%)
  social = localGross * 0.0765;

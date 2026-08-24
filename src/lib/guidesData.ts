@@ -540,6 +540,7 @@ export const enGuides: Guide[] = guides.filter(g => g.lang === 'en');
 // ─────────────────────────────────────────────────────────────
 export type GuideCardMeta = Omit<Guide, 'content'>;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- rest에서 제외 목적
 const toCard = ({ content, ...rest }: Guide): GuideCardMeta => rest;
 export const koGuideCards: GuideCardMeta[] = koGuides.map(toCard);
 export const enGuideCards: GuideCardMeta[] = enGuides.map(toCard);

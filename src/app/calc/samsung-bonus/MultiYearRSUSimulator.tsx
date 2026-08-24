@@ -203,7 +203,7 @@ export default function MultiYearRSUSimulator({
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         성과급 중 주식(RSU) 비중 + 매년 풀리는 매도 제한 + 연도별 주가 입력. 누적
         매도 가능 주식이 자동 합산되고, 하단 기준 매도가로 통합 매도 시 가치까지
-        즉시 산출됩니다. '채우기' 버튼은 OPI2(영업이익 분배분) 기준이며, OPI1
+        즉시 산출됩니다. &apos;채우기&apos; 버튼은 OPI2(영업이익 분배분) 기준이며, OPI1
         포함 총액으로 보려면 직접 입력으로 조정하세요.
       </p>
 

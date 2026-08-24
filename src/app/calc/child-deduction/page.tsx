@@ -6,7 +6,7 @@ import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structured
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd } from "@/components/AdPlacement";
-import { Sparkles, Info, Heart } from "lucide-react";
+import { Info, Heart } from "lucide-react";
 import ChildDeductionClient from "./Client";
 
 const FAQ_ITEMS = [

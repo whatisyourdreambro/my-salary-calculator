@@ -4,8 +4,7 @@ import { useState, useRef, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import { calculateNetSalary } from "@/lib/calculator";
 import type { CalculationResult } from "@/lib/calculator";
-import { Download, HelpCircle, Info, Stamp } from "lucide-react";
-import { motion } from "framer-motion";
+import { Download, HelpCircle, Info } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));

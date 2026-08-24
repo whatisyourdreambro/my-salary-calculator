@@ -399,7 +399,7 @@ export default function FireCalculatorPage() {
  <div className="max-w-xl mx-auto space-y-16 relative z-10">
  <div className="space-y-6">
  <p className="text-xl sm:text-2xl font-sans text-faint-blue leading-relaxed">
- "Financial Independence, Retire Early"<br />
+ &quot;Financial Independence, Retire Early&quot;<br />
  <span className="text-foreground font-medium">경제적 자유</span>를 향한 당신의 여정을 설계해드립니다.
  </p>
  </div>

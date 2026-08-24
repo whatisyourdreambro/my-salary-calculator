@@ -41,9 +41,9 @@ function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
  let pension = monthlyPreTax * rates.pension;
  if (pension > rates.pensionCap) pension = rates.pensionCap;
 
- let health = monthlyPreTax * rates.health;
- let ltc = health * rates.ltc;
- let employment = monthlyPreTax * rates.employment;
+ const health = monthlyPreTax * rates.health;
+ const ltc = health * rates.ltc;
+ const employment = monthlyPreTax * rates.employment;
 
  // Basic Tax simulation (Simplified for mass data generation)
  // This is a rough estimation used for the table generation, distinct from the precise single calculation

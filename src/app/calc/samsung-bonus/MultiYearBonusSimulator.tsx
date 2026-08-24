@@ -775,8 +775,8 @@ export default function MultiYearBonusSimulator({
         {bulkExpanded && (
           <div className="mt-2 rounded-xl border border-electric-20 bg-electric-5 p-4">
             <p className="text-[11px] text-faint-blue mb-3 leading-relaxed">
-              📅 구간별로 한 번에 입력 — 예: "2026~2028년 = 350조". 적용하면 위 연도
-              행들의 영업이익이 일괄 변경됩니다. "구간 → 연도 자동 생성" 누르면 위
+              📅 구간별로 한 번에 입력 — 예: &quot;2026~2028년 = 350조&quot;. 적용하면 위 연도
+              행들의 영업이익이 일괄 변경됩니다. &quot;구간 → 연도 자동 생성&quot; 누르면 위
               연도 행이 구간 기준으로 재생성됩니다.
             </p>
             <div className="space-y-2">

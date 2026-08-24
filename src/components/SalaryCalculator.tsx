@@ -18,7 +18,6 @@ import { trackCalcSubmit } from "@/lib/analytics";
 import type {
  StoredSalaryData,
  StoredFinancialData,
- AdvancedSettings,
 } from "@/app/types";
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
@@ -100,23 +99,16 @@ export default function SalaryCalculator() {
  const router = useRouter();
  const [incomeType, setIncomeType] = useState<IncomeType>("regular");
  const [payBasis, setPayBasis] = useState<"annual" | "monthly">("annual");
- const [severanceType, setSeveranceType] = useState<"separate" | "included">("separate");
+ const [severanceType] = useState<"separate" | "included">("separate");
  const [salaryInput, setSalaryInput] = useState("50,000,000");
  const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
  const [dependents, setDependents] = useState(1);
  const [children, setChildren] = useState(0);
- const [monthlyExpenses, setMonthlyExpenses] = useState("");
- const [copied, setCopied] = useState(false);
+ const [monthlyExpenses] = useState("");
 
  // Phase 1: Interstitial State
  const [isCalculating, setIsCalculating] = useState(false);
  const [showResult, setShowResult] = useState(false);
-
- const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
- isSmeYouth: false,
- disabledDependents: 0,
- seniorDependents: 0,
- });
 
  const [result, setResult] = useState<CalculationResult>({
  monthlyNet: 0,
@@ -271,20 +263,6 @@ export default function SalaryCalculator() {
 
  // ... (Handlers for Seniors/Disabled omitted for brevity but logic remains in state if needed for future extension, keeping UI cleaner for now as per design)
  // Re-adding essential handlers if specific inputs are exposed
- const handleSeniorDependentsChange = (newValue: number) => {
- if (newValue < 0) return;
- if (newValue + advancedSettings.disabledDependents <= dependents) {
- setAdvancedSettings(prev => ({ ...prev, seniorDependents: newValue }));
- }
- };
-
- const handleDisabledDependentsChange = (newValue: number) => {
- if (newValue < 0) return;
- if (newValue + advancedSettings.seniorDependents <= dependents) {
- setAdvancedSettings(prev => ({ ...prev, disabledDependents: newValue }));
- }
- };
-
  const handleSaveData = () => {
  if (incomeType !== "regular") {
  alert("정규직 소득만 대시보드에 저장할 수 있습니다.");
@@ -345,25 +323,6 @@ export default function SalaryCalculator() {
  imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&net=${result.monthlyNet}`,
  };
  }, [annualSalary, result.monthlyNet]);
-
- const handleCopyResult = async () => {
- try {
- await navigator.clipboard.writeText(result.monthlyNet.toString());
- setCopied(true);
- setTimeout(() => setCopied(false), 2000);
- } catch (err) {
- console.error("Failed to copy", err);
- }
- };
-
- const handleReset = () => {
- setIncomeType("regular");
- setPayBasis("annual");
- setSalaryInput("50,000,000");
- setShowResult(false);
- setMungMood("normal");
- localStorage.removeItem("moneysalary-user-input");
- };
 
  const [activeSheet, setActiveSheet] = useState<"dependents" | "children" | "nonTaxable" | null>(null);
 

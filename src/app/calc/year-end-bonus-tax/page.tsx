@@ -13,7 +13,7 @@ import {
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
-import { Sparkles, Info, Calendar } from "lucide-react";
+import { Info, Calendar } from "lucide-react";
 import YearEndBonusTaxClient from "./Client";
 
 const FAQ_ITEMS = [

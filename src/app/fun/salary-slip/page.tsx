@@ -29,8 +29,6 @@ export default function SalarySlipPage() {
  disabledDependents: 0,
  seniorDependents: 0
  });
- const fullReceiptData = { ...receiptData, preTax: salary };
-
  const handlePrint = () => {
  if (salary > 0) {
  setIsPrinting(true);

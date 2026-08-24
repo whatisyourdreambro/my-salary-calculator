@@ -525,7 +525,7 @@ export default function SamsungBonusClient() {
         </h2>
         <p className="text-[11px] text-faint-blue mb-5">
           이 값은 영업이익 분배분(OPI2)의 사업부 평균입니다. OPI1(연봉 비례)을
-          합산한 본인 케이스는 아래 "내 연봉으로 계산"에서 확인.
+          합산한 본인 케이스는 아래 &quot;내 연봉으로 계산&quot;에서 확인.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {result.perDivision.map((r) => (

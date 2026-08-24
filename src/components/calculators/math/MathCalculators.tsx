@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calculator, Dices, RefreshCw } from "lucide-react";
+import { Calculator, Dices } from "lucide-react";
 // --- Percent Calculator ---
 export function PercentCalculator() {
  const [val1, setVal1] = useState("");

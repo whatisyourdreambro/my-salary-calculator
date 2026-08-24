@@ -79,14 +79,12 @@ export default function SalaryRaiseClient() {
     const grossKept = grossDiff > 0 ? (netDiff / grossDiff) * 100 : 0;
 
     // 5년 누적 차이 (단순 동일 인상률 유지 가정)
-    let cum5Gross = 0;
     let cum5Net = 0;
     let salG = current;
     let salN = current;
     for (let i = 0; i < 5; i++) {
       salG = salG * (1 + raisePct / 100);
       salN = salN * (1 + raisePct / 100);
-      cum5Gross += salG - current;
       cum5Net += calcAnnualNet(salG) - calcAnnualNet(current);
     }
 

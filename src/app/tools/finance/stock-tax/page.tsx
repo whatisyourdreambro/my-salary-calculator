@@ -12,15 +12,7 @@ function calcStockTax(profit: number, holdPeriod: "short" | "long", isOverseas: 
  const basicDeduction = isOverseas ? 2_500_000 : 0; // 해외주식 250만원 기본공제
  const taxableProfit = Math.max(0, profit - basicDeduction);
 
- let taxRate = 0;
- if (isOverseas) {
- taxRate = 0.22; // 해외주식: 22% (소득세 20% + 지방소득세 2%)
- } else {
- // 국내 대주주 (소액주주는 비과세)
- taxRate = holdPeriod === "short" ? 0.30 : 0.20;
- }
-
- const combinedTax = Math.round(taxableProfit * taxRate);
+ // 해외주식: 소득세 20% + 지방소득세 2% / 국내 대주주: 단기 30%·장기 20% (소액주주는 비과세)
  const tax = isOverseas ? Math.round(taxableProfit * 0.20) : Math.round(taxableProfit * (holdPeriod === "short" ? 0.30 : 0.20));
  const localTax = isOverseas ? Math.round(taxableProfit * 0.02) : 0;
  const total = tax + localTax;

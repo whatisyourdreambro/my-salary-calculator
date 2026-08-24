@@ -547,7 +547,6 @@ const SALARY: CalculatorDef[] = [
  { name: "days", label: "남은 연차일수", defaultValue: 5, suffix: "일" },
  ],
  compute: ({ monthly, days }) => {
- const dailyWage = monthly / 30 * 8 / 8; // 통상임금 단순화 (월 209시간 기준)
  const daily = monthly / 209 * 8;
  const total = daily * days;
  return {

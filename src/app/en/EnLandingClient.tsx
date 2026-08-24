@@ -95,7 +95,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  fontWeight: 500,
  }}
  >
- Korea's #1 salary calculator now in English. Calculate net pay,
+ Korea&apos;s #1 salary calculator now in English. Calculate net pay,
  analyze Samsung &amp; SK Hynix stocks, and master ESOP / ISA strategies.
  </p>
 

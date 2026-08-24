@@ -204,7 +204,7 @@ export default function PoscoBonusPage() {
                   <tr className="border-b border-canvas-deep">
                     <td className="py-2 pr-4">호황</td>
                     <td className="py-2 pr-4">800%</td>
-                    <td className="py-2">2025-04 직고용 대상 '경영성과급 최소 800%' 사례</td>
+                    <td className="py-2">2025-04 직고용 대상 &apos;경영성과급 최소 800%&apos; 사례</td>
                   </tr>
                   <tr>
                     <td className="py-2 pr-4">슈퍼사이클</td>

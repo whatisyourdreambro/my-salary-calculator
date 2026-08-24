@@ -63,7 +63,7 @@ export default function SimulatorPage() {
  David vs. Goliath
  </p>
  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
- "연봉이 전부가 아닙니다."<br />
+ &quot;연봉이 전부가 아닙니다.&quot;<br />
  중소기업 청년 소득세 감면 혜택을 적용하면 실수령액은 어떻게 달라질까요?
  </p>
  </div>

@@ -169,7 +169,7 @@ export default function HyundaiBonusClient() {
           ))}
         </div>
         <p className="mt-2 text-xs text-faint">
-          급여명세서 '기본급' 또는 '통상임금'. 추정 연봉(기본급 × 18) ={" "}
+          급여명세서 &apos;기본급&apos; 또는 &apos;통상임금&apos;. 추정 연봉(기본급 × 18) ={" "}
           <strong>{fmtEok(calc.estimatedAnnualSalary)}</strong>
         </p>
       </section>
