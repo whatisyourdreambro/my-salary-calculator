@@ -4,6 +4,7 @@ import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd, breadcrumbLd } from "@/lib/structuredData";
+import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
 export const dynamic = 'force-static';
@@ -30,44 +31,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  };
  }
 
- const koUrl = `https://www.moneysalary.com/guides/${guide.slug}`;
- const enUrl = `https://www.moneysalary.com/en/guides/${guide.slug}`;
  // 한국어판 실재 확인 후에만 ko hreflang 선언 — 존재하지 않는 대상을 가리키는
  // hreflang 재발 방지 (guides/[slug]의 hasEn 게이트와 대칭, sitemap.ts와 동일 정책)
  const hasKo = koGuides.some((g) => g.slug === params.slug);
 
- return {
- title: `${guide.title} | Moneysalary Guides`,
- description: guide.description,
- alternates: {
- canonical: enUrl,
- languages: hasKo
- ? {
- "ko-KR": koUrl,
- "en": enUrl,
- "x-default": koUrl,
- }
- : {
- "en": enUrl,
- "x-default": enUrl,
- },
- },
- openGraph: {
+ // en 로케일 수렴 (2026-08-24): buildPageMetadata locale:"en" —
+ // 접미사를 "| Moneysalary Guides"(21자)에서 "| Moneysalary"로 단축하고
+ // og:image(기존 전 가이드 누락) + twitter 카드를 표준 부착.
+ // og:image는 ko 가이드(buildGuideMetadata)·articleLd와 동일한 type=guide 라우트.
+ return buildPageMetadata({
  title: guide.title,
  description: guide.description,
- type: 'article',
- locale: 'en_US',
- url: enUrl,
- publishedTime: guide.publishedDate,
- authors: ['Moneysalary'],
- tags: guide.tags,
- },
- twitter: {
- card: 'summary_large_image',
- title: guide.title,
- description: guide.description,
- },
- };
+ path: `/en/guides/${guide.slug}`,
+ locale: "en",
+ koPath: hasKo ? `/guides/${guide.slug}` : undefined,
+ keywords: guide.tags,
+ ogType: "article",
+ publishedTime: new Date(guide.publishedDate).toISOString(),
+ ogImage: `/api/og?type=guide&title=${encodeURIComponent(guide.title)}`,
+ });
 }
 
 export default function EnglishGuidePage({ params }: Props) {

@@ -8,6 +8,9 @@ import type { Metadata } from "next";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
+// /en 트리 전용 영문 브랜드명 — 한글 접미사("| 머니샐러리")가 영문 SERP에
+// 노출되는 문제를 막는다 (2026-08-24 en 로케일 수렴).
+const EN_SITE_NAME = "Moneysalary";
 const DEFAULT_OG_IMAGE = "/og-image.png";
 const DEFAULT_KEYWORDS = [
  "연봉 계산기",
@@ -36,6 +39,21 @@ export interface PageMetadataOptions {
  publishedTime?: string;
  /** 수정일 */
  modifiedTime?: string;
+ /**
+  * 페이지 로케일. 기본 "ko" — 기존 호출부는 옵션 미지정으로 동작 완전 불변.
+  * "en"이면:
+  *  - title 접미사 "| Moneysalary" (한글 사이트명 미부착, absolute 처리는 기존과 동일)
+  *  - og:locale "en_US" + og:siteName "Moneysalary"
+  *  - 한국어 기본 키워드(DEFAULT_KEYWORDS) 미주입 — 전달된 keywords만 사용
+  *  - hreflang: en=자기 자신, ko-KR/x-default=koPath(한국어판). koPath 미지정 시
+  *    한국어판이 없는 en 전용 페이지로 보고 x-default=자기 자신.
+  */
+ locale?: "ko" | "en";
+ /**
+  * locale "en" 전용: 대응 한국어판 절대 경로 (예: "/guides/isa-guide", 루트는 "/").
+  * ko 헬퍼 호출(기본 locale)에서는 무시된다.
+  */
+ koPath?: string;
 }
 
 /**
@@ -53,12 +71,16 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  ogType = "website",
  publishedTime,
  modifiedTime,
+ locale = "ko",
+ koPath,
  } = options;
 
+ const isEn = locale === "en";
+ const siteName = isEn ? EN_SITE_NAME : SITE_NAME;
  const url = `${SITE_URL}${path}`;
- const fullTitle = title.includes(SITE_NAME)
+ const fullTitle = title.includes(siteName)
  ? title
- : `${title} | ${SITE_NAME}`;
+ : `${title} | ${siteName}`;
 
  // OG 이미지: 명시 → 동적 OG 라우트 → 기본값
  const ogImageUrl = ogImage
@@ -67,22 +89,38 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  : `${SITE_URL}${ogImage}`
  : `${SITE_URL}/api/og?path=${encodeURIComponent(path)}&title=${encodeURIComponent(title)}`;
 
- const allKeywords = [...new Set([...DEFAULT_KEYWORDS, ...keywords])];
+ // en 페이지에 한국어 기본 키워드를 섞으면 어휘 신호가 흐려짐 — 전달분만 사용
+ const allKeywords = isEn
+ ? [...new Set(keywords)]
+ : [...new Set([...DEFAULT_KEYWORDS, ...keywords])];
+
+ // hreflang 구조
+ // ko(기본): ko-KR=자기 자신, x-default=자기 자신 (영문판 있는 페이지는 호출부 override)
+ // en: en=자기 자신, 한국어판(koPath) 존재 시 ko-KR/x-default=한국어판
+ const languages: Record<string, string> = isEn
+ ? koPath
+ ? {
+ "ko-KR": `${SITE_URL}${koPath === "/" ? "" : koPath}`,
+ en: url,
+ "x-default": `${SITE_URL}${koPath === "/" ? "" : koPath}`,
+ }
+ : { en: url, "x-default": url }
+ : {
+ "ko-KR": url,
+ "x-default": url,
+ };
 
  const metadata: Metadata = {
  // title.absolute = layout의 `template: "%s | 머니샐러리"` 중복 적용 차단.
  // (string 형태로 두면 layout이 또 "| 머니샐러리"를 붙여 사이트명 2번 노출)
  title: { absolute: fullTitle },
  description,
- keywords: allKeywords.join(", "),
+ ...(allKeywords.length > 0 ? { keywords: allKeywords.join(", ") } : {}),
  alternates: {
  canonical: url,
  // hreflang 전체 적용(7차): 미국 노출 193·클릭 0 (잘못된 매칭) 차단.
- // 영문 카운터파트가 있는 페이지는 page별로 languages를 override.
- languages: {
- "ko-KR": url,
- "x-default": url,
- },
+ // 영문 카운터파트가 있는 ko 페이지는 page별로 languages를 override.
+ languages,
  },
  robots: noIndex
  ? { index: false, follow: false }
@@ -98,9 +136,9 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  },
  openGraph: {
  type: ogType,
- locale: "ko_KR",
+ locale: isEn ? "en_US" : "ko_KR",
  url,
- siteName: SITE_NAME,
+ siteName,
  title: fullTitle,
  description,
  images: [
@@ -191,11 +229,17 @@ export interface ToolMeta {
  path: string;
  /** 추가 키워드 */
  keywords?: string[];
+ /** OG type override — 시의성 콘텐츠를 겸하는 툴 페이지(예: /tools/loan)는 "article" */
+ ogType?: "website" | "article";
+ /** 발행일 (ogType "article"일 때만 사용) */
+ publishedTime?: string;
+ /** 수정일 */
+ modifiedTime?: string;
 }
 
 /**
  * /tools/* 페이지 전용 헬퍼.
- * 일관된 제목 패턴으로 SEO 강화.
+ * 일관된 제목 패턴("{name} 2026 — {tagline}")으로 SEO 강화.
  */
 export function buildToolMetadata(tool: ToolMeta): Metadata {
  return buildPageMetadata({
@@ -204,6 +248,9 @@ export function buildToolMetadata(tool: ToolMeta): Metadata {
  path: tool.path,
  keywords: tool.keywords,
  ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(tool.name)}`,
+ ogType: tool.ogType,
+ publishedTime: tool.publishedTime,
+ modifiedTime: tool.modifiedTime,
  });
 }
 

@@ -121,7 +121,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <GuideMidAd />
 
  <div
- className="prose prose-lg max-w-none
+ className="prose dark:prose-invert prose-lg max-w-none
  prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-24
  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
  prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary
