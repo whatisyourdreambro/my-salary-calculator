@@ -14,13 +14,16 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // fundingchoicesmessages.google.com — AdSense CMP(EEA 동의 메시지). 운영자가 콘솔에서
 // CMP 게시 시 이 도메인의 스크립트·iframe 이 로드됨 — CMP 게시 전에 반드시 이 CSP 가
 // 먼저 배포돼 있어야 유럽 방문자 화면에서 동의창이 차단되지 않는다 (2026-08-23).
+// 2026-08-24 점검(운영자 승인): 쿠팡 배너 이미지 CDN(*.coupangcdn.com)·AdSense 무결성
+// 픽셀(*.adtrafficquality.google)을 img-src에, 구글 앵커 프레임(www.google.com)을
+// frame-src에 추가 — CSP 적용 환경에서 광고 리소스가 차단되던 누락분.
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net https://fundingchoicesmessages.google.com;
-  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
+  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com;
+  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com https://*.coupangcdn.com https://*.adtrafficquality.google;
   media-src 'none';
   connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
   font-src 'self' data:;
