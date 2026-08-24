@@ -45,27 +45,24 @@ export default function Header() {
  setIsMobileMenuOpen(false);
  }, [pathname]);
 
- const headerBg = isScrolled || isMobileMenuOpen
- ? "rgba(255,255,255,0.92)"
- : "#EDF1F5";
- const headerBorder = isScrolled || isMobileMenuOpen
- ? "#DDE4EC"
- : "transparent";
+ // 2026-08-24 점검: 배경·보더를 인라인 hex → Tailwind 클래스로 이전.
+ // 인라인 스타일은 .dark 오버라이드가 닿지 않아 다크모드에서 헤더만 밝게 남던
+ // 전 페이지 결함의 원인이었다 (클래스 방식은 FOUC 없이 테마 전환에 반응).
+ const headerSurface = isScrolled || isMobileMenuOpen
+ ? "bg-white/[0.92] dark:bg-slate-900/[0.92] border-canvas-200 dark:border-canvas-800"
+ : "bg-canvas border-transparent";
 
  return (
  <>
  <motion.header
- className="fixed top-0 left-0 right-0 z-50"
+ className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${headerSurface}`}
  style={{
- backgroundColor: headerBg,
- borderBottom: `1px solid ${headerBorder}`,
  backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  boxShadow: isScrolled ? "0 4px 24px -8px #0145F211" : "none",
  // CLS 방어: padding 고정 (스크롤 상태와 무관)
  padding: "12px 0",
  minHeight: 64,
- transition: "background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
  }}
  initial={{ y: -100 }}
  animate={{ y: 0 }}
@@ -77,9 +74,8 @@ export default function Header() {
  <div className="flex-shrink-0 z-50">
  <Link href={isEn ? "/en" : "/"} className="flex items-center gap-2 no-underline">
  <Logo
- className="h-8 sm:h-9 w-auto"
+ className="h-8 sm:h-9 w-auto text-electric"
  showText={true}
- style={{ color: "#0145F2" }}
  />
  </Link>
  </div>
@@ -155,13 +151,12 @@ export default function Header() {
  role="dialog"
  aria-modal="true"
  aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
- className={`lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto transition-[opacity,visibility] duration-[180ms] ${
+ className={`lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto bg-white/[0.97] dark:bg-slate-900/[0.97] transition-[opacity,visibility] duration-[180ms] ${
  isMobileMenuOpen
  ? "visible opacity-100"
  : "invisible opacity-0 pointer-events-none"
  }`}
  style={{
- backgroundColor: "rgba(255,255,255,0.97)",
  backdropFilter: "blur(24px)",
  WebkitBackdropFilter: "blur(24px)",
  }}
