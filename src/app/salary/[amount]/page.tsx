@@ -287,14 +287,10 @@ export default function SalaryAmountPage({ params }: Props) {
  <GuideMidAd />
  </div>
 
- {/* FAQ 후 쿠팡 한 번 더 */}
- <div className="px-2">
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- showDisclosure={false}
- category="salary"
- />
- </div>
+ {/* (2026-08-24 죽은 유닛 수리) 종전 이 자리의 "FAQ 후 쿠팡" 2번째 배너가
+ 페이지당 2개 캡을 선점해 데스크톱 사이드바 skyscraper(아래 aside)가
+ 무음 차단되고 있었다 — 415개 URL의 데스크톱 쿠팡 인벤토리가 0이던
+ 문제. 본문 1개 + 사이드바 1개 구성으로 정리 (docs/ad-experiments.md) */}
 
  {/* 인근 연봉 리포트 */}
  {neighbors.length > 0 && (
