@@ -56,7 +56,7 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
  >
  {/* Handle */}
  <div className="w-full flex justify-center pt-4 pb-2 cursor-grab active:cursor-grabbing">
- <div className="w-12 h-1.5 bg-muted-foreground/30 rounded-full" />
+ <div className="w-12 h-1.5 bg-primary/30 rounded-full" />
  </div>
 
  {/* Title */}

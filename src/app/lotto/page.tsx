@@ -307,7 +307,7 @@ export default function LottoPage() {
  >
  <div className="flex flex-col sm:flex-row items-center gap-4 justify-between">
  <div className="flex items-center gap-3">
- <span className="font-black text-muted-foreground/50 text-2xl w-8 text-center">
+ <span className="font-black text-primary/50 text-2xl w-8 text-center">
  {String.fromCharCode(65 + index)}
  </span>
  <div className="flex gap-2">

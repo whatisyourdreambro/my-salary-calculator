@@ -59,26 +59,37 @@ body {
  --background: 216 43% 95%; /* #EDF1F5 Canvas Cloud */
  --foreground: 214 56% 10%; /* #0A1829 deep navy */
 
- --card: 0 0% 100%;
- --card-foreground: 214 56% 10%;
+ /* 2026-08-24 정렬: card/popover/secondary/muted/accent/destructive 토큰이
+    tailwind.config.ts에서 하드코딩 hex(#FFFFFF·#EDF1F5·#0145F2)로 매핑되어
+    다크모드에서도 항상 라이트 색이던 문제 수정 — config를 hsl(var(--…))로
+    되돌리면서, 라이트 픽셀 불변을 위해 :root 값을 기존 hex의 HSL 등가값으로
+    정렬 (#FFFFFF=0 0% 100%, #EDF1F5=210 28.6% 94.5%, #0145F2=223.1 99.2% 47.6%). */
+ --card: 0 0% 100%; /* #FFFFFF */
+ --card-foreground: 223.1 99.2% 47.6%; /* #0145F2 */
 
- --popover: 0 0% 100%;
- --popover-foreground: 214 56% 10%;
+ --popover: 0 0% 100%; /* #FFFFFF */
+ --popover-foreground: 223.1 99.2% 47.6%; /* #0145F2 */
 
  --primary: 224 96% 48%; /* #0145F2 Electric Blue */
  --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
- --secondary: 216 43% 95%; /* Canvas Cloud */
- --secondary-foreground: 214 56% 10%;
+ --secondary: 210 28.6% 94.5%; /* #EDF1F5 Canvas Cloud */
+ --secondary-foreground: 223.1 99.2% 47.6%; /* #0145F2 */
 
- --muted: 216 43% 92%; /* DDE4EC */
- --muted-foreground: 209 32% 36%; /* #3D5E78 */
+ --muted: 210 28.6% 94.5%; /* #EDF1F5 Canvas Cloud */
+ --muted-foreground: 223.1 99.2% 47.6%; /* #0145F2 — 라이트의 60% 알파(#0145F299
+    등가)는 HSL 트리플로 표현 불가 → 알파를 아래 별도 변수로 분리 */
+ --muted-foreground-opacity: 0.6;
 
- --accent: 216 43% 92%;
- --accent-foreground: 224 96% 48%;
+ --accent: 210 28.6% 94.5%; /* #EDF1F5 Canvas Cloud */
+ --accent-foreground: 223.1 99.2% 47.6%; /* #0145F2 */
 
- --destructive: 224 96% 48%; /* Blue for errors too */
+ --destructive: 223.1 99.2% 47.6%; /* #0145F2 — Blue for errors too */
  --destructive-foreground: 0 0% 100%;
+
+ /* 구 --muted-foreground(#3D5E78 계열) 값 보존 — 차트 축·보조 세그먼트가
+    hsl(var(--chart-muted))로 직접 참조 (라이트/다크 픽셀 불변용) */
+ --chart-muted: 209 32% 36%;
 
  --border: 216 30% 84%; /* #C8D4E0 */
  --input: 216 30% 84%;
@@ -111,6 +122,8 @@ body {
  --secondary-foreground: 216 43% 95%;
  --muted: 214 35% 18%;
  --muted-foreground: 209 25% 70%;
+ --muted-foreground-opacity: 1;
+ --chart-muted: 209 25% 70%;
  --accent: 214 40% 18%;
  --accent-foreground: 224 96% 60%;
  --destructive: 0 75% 60%;

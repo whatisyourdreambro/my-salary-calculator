@@ -66,7 +66,7 @@ export default function CareerVisuals({ results }: CareerVisualsProps) {
  <Legend />
  <Line type="monotone" dataKey="salary" name="연봉" strokeWidth={2} stroke="hsl(var(--primary))" />
  <Line type="monotone" dataKey="sideIncome" name="부수입" strokeWidth={2} stroke="hsl(var(--accent))" strokeDasharray="5 5" />
- <Line type="monotone" dataKey="totalIncome" name="총 수입" strokeWidth={2} stroke="hsl(var(--secondary-foreground))" />
+ <Line type="monotone" dataKey="totalIncome" name="총 수입" strokeWidth={2} stroke="hsl(var(--foreground))" />
  </LineChart>
  </ResponsiveContainer>
  </div>

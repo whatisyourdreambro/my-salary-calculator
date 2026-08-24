@@ -50,7 +50,7 @@ export default function CompareSelectionPage() {
  ))}
  </select>
  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
- {!selectedA && <span className="text-muted-foreground/50">선택해주세요</span>}
+ {!selectedA && <span className="text-primary/50">선택해주세요</span>}
  </div>
  </div>
  {selectedA && (
@@ -93,7 +93,7 @@ export default function CompareSelectionPage() {
  ))}
  </select>
  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
- {!selectedB && <span className="text-muted-foreground/50">선택해주세요</span>}
+ {!selectedB && <span className="text-primary/50">선택해주세요</span>}
  </div>
  </div>
  {selectedB && (

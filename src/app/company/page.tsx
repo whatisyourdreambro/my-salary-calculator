@@ -118,7 +118,7 @@ export default function CompanyPage() {
  <div className="text-center py-20">
  <Building2 className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
  <h3 className="text-xl font-bold text-muted-foreground">검색 결과가 없습니다.</h3>
- <p className="text-sm text-muted-foreground/60 mt-2">다른 검색어로 다시 시도해보세요.</p>
+ <p className="text-sm text-primary/60 mt-2">다른 검색어로 다시 시도해보세요.</p>
  </div>
  )}
 

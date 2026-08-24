@@ -53,6 +53,9 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
 
+        // primary는 의도적으로 hex 유지: 아래 5~90 opacity shade 체계가
+        // hex+알파(#0145F2xx) 기반이라 CSS 변수 전환 시 shade 전체 재설계가
+        // 필요함. 라이트/다크 공통 Electric Blue 브랜드 색으로 유지한다.
         primary: {
           DEFAULT:    ELECTRIC_BLUE,   // #0145F2
           foreground: ON_PRIMARY,      // #FFFFFF
@@ -106,29 +109,38 @@ const config = {
           900: "#0A1829",
         },
 
+        // ── 2026-08-24: 다크모드 복원 — 하드코딩 hex → CSS 변수 ────────
+        // 종전에는 아래 6그룹이 hex(#FFFFFF·#EDF1F5·#0145F2)로 고정되어
+        // bg-card 등이 다크모드에서도 항상 라이트 색이었다. globals.css의
+        // :root 값을 기존 hex와 픽셀 등가인 HSL로 정렬한 뒤 변수로 전환.
         secondary: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    "hsl(var(--secondary))",            // light #EDF1F5
+          foreground: "hsl(var(--secondary-foreground))", // light #0145F2
         },
         destructive: {
-          DEFAULT:    ELECTRIC_BLUE,
-          foreground: ON_PRIMARY,
+          DEFAULT:    "hsl(var(--destructive))",            // light #0145F2
+          foreground: "hsl(var(--destructive-foreground))", // light #FFFFFF
         },
         muted: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: `${ELECTRIC_BLUE}99`,
+          DEFAULT:    "hsl(var(--muted))", // light #EDF1F5
+          // 라이트의 60% 알파(구 #0145F299)는 HSL 트리플 변수로 표현 불가 →
+          // 알파를 --muted-foreground-opacity(:root 0.6 / .dark 1)로 분리.
+          // 주의: 알파가 이미 명시되어 text-muted-foreground/50 같은
+          // Tailwind 알파 수정자는 생성되지 않음 — 해당 용례는 primary/50
+          // (동일 픽셀)로 대체되어 있음.
+          foreground: "hsl(var(--muted-foreground) / var(--muted-foreground-opacity, 1))",
         },
         accent: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    "hsl(var(--accent))",            // light #EDF1F5
+          foreground: "hsl(var(--accent-foreground))", // light #0145F2
         },
         popover: {
-          DEFAULT:    ON_PRIMARY,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    "hsl(var(--popover))",            // light #FFFFFF
+          foreground: "hsl(var(--popover-foreground))", // light #0145F2
         },
         card: {
-          DEFAULT:    ON_PRIMARY,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    "hsl(var(--card))",            // light #FFFFFF
+          foreground: "hsl(var(--card-foreground))", // light #0145F2
         },
       },
 

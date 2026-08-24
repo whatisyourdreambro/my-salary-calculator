@@ -206,12 +206,12 @@ export default function SalaryRank() {
  <XAxis
  dataKey="salaryRange"
  tickFormatter={(value) => `${value / 1000}억`} // 억원 단위
- stroke="hsl(var(--muted-foreground))"
+ stroke="hsl(var(--chart-muted))"
  interval={Math.floor(chartDistribution.length / 10)} // 눈금 간격 조정
  />
  <YAxis
  tickFormatter={(value) => `상위 ${value}%`}
- stroke="hsl(var(--muted-foreground))"
+ stroke="hsl(var(--chart-muted))"
  domain={[0, 100]} // Y축 범위 0% ~ 100%
  />
  <Tooltip

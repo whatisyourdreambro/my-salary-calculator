@@ -84,7 +84,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  { name: "연간 총 공제액", value: totalDeduction },
  ].filter((item) => item.value > 0);
 
- const pieChartColors = ["hsl(var(--primary))", "hsl(var(--muted-foreground))"];
+ const pieChartColors = ["hsl(var(--primary))", "hsl(var(--chart-muted))"];
 
  return (
  <div className="w-full space-y-10 animate-fade-in-up">

@@ -60,7 +60,7 @@ const CustomBarLabel = (props: CustomBarLabelProps) => {
  <text
  x={textX}
  y={textY}
- fill="hsl(var(--muted-foreground))"
+ fill="hsl(var(--chart-muted))"
  textAnchor="start"
  className="font-semibold text-sm"
  >
