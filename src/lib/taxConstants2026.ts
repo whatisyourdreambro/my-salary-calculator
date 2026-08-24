@@ -103,3 +103,66 @@ export function calcIncomeTax2026(taxable: number): number {
   }
   return 0;
 }
+
+// ─────────────────────────────────────────────────────────────
+// 자녀세액공제 (소득세법 §59의2) — 2025-01-01 시행 개정 현행
+// 첫째 25만·둘째 30만·셋째 이상 1명당 40만 (8세 이상 기본공제 대상 자녀 기준).
+// 1명 25만 / 2명 55만 / 3명 95만. 출산·입양(첫째 30만·둘째 50만·셋째+ 70만)은 별도.
+// ─────────────────────────────────────────────────────────────
+export const CHILD_TAX_CREDIT_2026 = {
+  FIRST: 250_000,
+  SECOND: 300_000,
+  THIRD_PLUS: 400_000,
+} as const;
+
+export function childTaxCredit2026(children: number): number {
+  if (children <= 0) return 0;
+  if (children === 1) return CHILD_TAX_CREDIT_2026.FIRST;
+  return (
+    CHILD_TAX_CREDIT_2026.FIRST +
+    CHILD_TAX_CREDIT_2026.SECOND +
+    (children - 2) * CHILD_TAX_CREDIT_2026.THIRD_PLUS
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 근로소득세액공제 (소득세법 §59) — 산출세액 130만 이하 55%, 초과분 30%.
+// 총급여 구간별 한도: 3,300만 이하 무한도 / ~7,000만 74만 / ~1.2억 66만 / 초과 50만.
+// ─────────────────────────────────────────────────────────────
+export function earnedIncomeTaxCredit2026(
+  calculatedTax: number,
+  grossSalary: number
+): number {
+  const credit =
+    calculatedTax <= 1_300_000
+      ? calculatedTax * 0.55
+      : 715_000 + (calculatedTax - 1_300_000) * 0.3;
+  if (grossSalary > 120_000_000) return Math.min(credit, 500_000);
+  if (grossSalary > 70_000_000) return Math.min(credit, 660_000);
+  if (grossSalary > 33_000_000) return Math.min(credit, 740_000);
+  return credit;
+}
+
+// ─────────────────────────────────────────────────────────────
+// 2025년 레거시 요율 — "전년 대비 변화액" 산출 전용 (표의 changeValue 기준선).
+// 2026 계산에는 절대 사용하지 말 것. 2027 개정 시 이 블록은 2026 값으로 교체.
+// ─────────────────────────────────────────────────────────────
+export const INSURANCE_RATES_2025_LEGACY = {
+  /** 국민연금 — 근로자 4.5% (연금개혁 전) */
+  NATIONAL_PENSION: 0.045,
+  /** 건강보험 — 근로자 3.545% (전체 7.09%) */
+  HEALTH_INSURANCE: 0.03545,
+  /** 장기요양보험 — 건강보험료의 12.95% */
+  LONG_TERM_CARE_RATIO: 0.1295,
+  /** 고용보험 — 근로자 0.9% */
+  EMPLOYMENT_INSURANCE: 0.009,
+  /** 지방소득세 — 소득세의 10% */
+  LOCAL_INCOME_TAX_RATIO: 0.1,
+} as const;
+
+export const PENSION_BASE_2025_LEGACY = {
+  /** 월 상한 (원) — 2025.7~2026.6 적용 637만원 */
+  MAX_MONTHLY: 6_370_000,
+  /** 월 하한 (원) */
+  MIN_MONTHLY: 400_000,
+} as const;
