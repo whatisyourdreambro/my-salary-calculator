@@ -2,12 +2,20 @@
 //
 // 헤더 통합 검색용 정적 인덱스.
 // 계산기·가이드·글로서리·Q&A·회사·시즌페이지를 단일 배열로 합쳐 빠른 클라이언트 검색 지원.
+//
+// ★ 번들 주의 (2026-08-24 청크 2.3MB → 축소): 이 모듈은 HeaderSearch 가 동적
+//   import 하는 클라이언트 청크다. 가이드·회사·계산기는 원본(koGuides 본문
+//   ~1.5MB / companyRepository 전문 ~680KB / allCalculators enrichment ~290KB)
+//   대신 scripts/generate-search-index.ts 가 미리 뽑아 둔 정적 파생 파일만
+//   import 한다. koGuideCards 같은 "원본에서 런타임 파생" 배열은 원본 모듈
+//   전체가 번들에 딸려 오므로 여기서 쓰면 안 된다. 가이드·회사·계산기 데이터
+//   변경 시: npx tsx scripts/generate-search-index.ts 재실행 (--check 로 드리프트 검증).
 
-import { allCalculators } from "@/lib/simpleCalculators";
-import { koGuides } from "@/lib/guidesData";
+import { calcSearchIndex } from "@/data/calcSearchIndex";
+import { guideSearchIndex } from "@/data/guideSearchIndex";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 import { qnaData, toQnaSlug } from "@/data/qnaData";
-import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { companySearchIndex } from "@/data/companySearchIndex";
 
 export type SearchCategory =
  | "계산기"
@@ -90,14 +98,14 @@ const toolPages: SearchEntry[] = [
  { title: "2026 월급 실수령액 표", href: "/table/2026/monthly", category: "도구" },
 ];
 
-const calculatorEntries: SearchEntry[] = allCalculators.map((c) => ({
+const calculatorEntries: SearchEntry[] = calcSearchIndex.map((c) => ({
  title: c.title,
  href: `/calc/${c.slug}`,
  category: "계산기" as const,
  description: c.description,
 }));
 
-const guideEntries: SearchEntry[] = koGuides.map((g) => ({
+const guideEntries: SearchEntry[] = guideSearchIndex.map((g) => ({
  title: g.title,
  href: `/guides/${g.slug}`,
  category: "가이드" as const,
@@ -118,8 +126,8 @@ const qnaEntries: SearchEntry[] = qnaData.map((q) => ({
  description: q.answer.conclusion.slice(0, 60),
 }));
 
-const companyEntries: SearchEntry[] = companyRepository.getAll().map((c) => ({
- title: c.name.ko,
+const companyEntries: SearchEntry[] = companySearchIndex.map((c) => ({
+ title: c.name,
  href: `/salary-db/${c.id}`,
  category: "회사" as const,
  description: c.industry,
