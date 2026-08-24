@@ -4,6 +4,7 @@
 // 키워드: "연봉 인상", "연봉 협상", "인상률 계산", "이직 인상률", "월급 인상"
 
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -26,10 +27,8 @@ import SalaryRaiseClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
 
 const SITE_URL = "https://www.moneysalary.com";
-const SITE_NAME = "머니샐러리";
 const PAGE_PATH = "/salary-raise-2026";
 const PAGE_TITLE = "연봉 인상 협상 시뮬레이터 2026";
-const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const PAGE_DESC =
   "연봉 인상 협상 시뮬레이터 — 현재 연봉과 인상률을 입력하면 인상 후 세전·세후 실수령액, 월 실수령 차이, 5년 누적 효과까지 즉시 계산. 임금협상·승진·이직 시 인상률 의사결정에 활용하세요.";
 
@@ -96,8 +95,16 @@ const HOW_TO_STEPS = [
 ];
 
 export const metadata: Metadata = {
-  title: { absolute: PAGE_TITLE_FULL },
-  description: PAGE_DESC,
+  // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
+  // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
+  ...buildPageMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESC,
+    path: PAGE_PATH,
+    ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent("연봉 인상 협상 시뮬레이터")}`,
+  }),
+  // 페이지 고유 키워드 — 헬퍼의 DEFAULT_KEYWORDS 병합으로 기존 keywords 출력이
+  // 바뀌지 않도록 기존 값 그대로 override.
   keywords: [
     "연봉 인상",
     "연봉 인상률",
@@ -120,46 +127,6 @@ export const metadata: Metadata = {
     "스카웃 인상률",
     "BATNA 협상",
   ].join(", "),
-  alternates: {
-    canonical: `${SITE_URL}${PAGE_PATH}`,
-    languages: {
-      "ko-KR": `${SITE_URL}${PAGE_PATH}`,
-      "x-default": `${SITE_URL}${PAGE_PATH}`,
-    },
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  openGraph: {
-    type: "website",
-    locale: "ko_KR",
-    url: `${SITE_URL}${PAGE_PATH}`,
-    siteName: SITE_NAME,
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-    images: [
-      {
-        url: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(
-          "연봉 인상 협상 시뮬레이터"
-        )}`,
-        width: 1200,
-        height: 630,
-        alt: PAGE_TITLE,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-  },
 };
 
 const SCENARIOS = [

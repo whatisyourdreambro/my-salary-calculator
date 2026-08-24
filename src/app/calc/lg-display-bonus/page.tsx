@@ -7,6 +7,7 @@
 // 갱신 체크포인트: 매년 1~2월 지급률 발표 시 시나리오·본문 갱신.
 
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -104,8 +105,15 @@ const HOW_TO_STEPS = [
 ];
 
 export const metadata: Metadata = {
-  title: { absolute: PAGE_TITLE_FULL },
-  description: PAGE_DESC,
+  // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
+  // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
+  ...buildPageMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESC,
+    path: PAGE_PATH,
+  }),
+  // 페이지 고유 키워드 — 헬퍼의 DEFAULT_KEYWORDS 병합으로 기존 keywords 출력이
+  // 바뀌지 않도록 기존 값 그대로 override.
   keywords: [
     "LG디스플레이 성과급",
     "LG디스플레이 경영성과급",
@@ -118,20 +126,6 @@ export const metadata: Metadata = {
     "LG디스플레이 연봉",
     "디스플레이 성과급",
   ],
-  alternates: { canonical: `${SITE_URL}${PAGE_PATH}` },
-  openGraph: {
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-    url: `${SITE_URL}${PAGE_PATH}`,
-    siteName: SITE_NAME,
-    locale: "ko_KR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-  },
 };
 
 export default function LgDisplayBonusPage() {

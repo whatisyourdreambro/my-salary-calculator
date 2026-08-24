@@ -10,6 +10,7 @@
 // FY2025 실적분(2026년 초 지급)은 보도 미확보 — 미확정 명시. 2027년 초 갱신 체크포인트.
 
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -100,8 +101,15 @@ const HOW_TO_STEPS = [
 ];
 
 export const metadata: Metadata = {
-  title: { absolute: PAGE_TITLE_FULL },
-  description: PAGE_DESC,
+  // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
+  // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
+  ...buildPageMetadata({
+    title: PAGE_TITLE,
+    description: PAGE_DESC,
+    path: PAGE_PATH,
+  }),
+  // 페이지 고유 키워드 — 헬퍼의 DEFAULT_KEYWORDS 병합으로 기존 keywords 출력이
+  // 바뀌지 않도록 기존 값 그대로 override.
   keywords: [
     "SK이노베이션 성과급",
     "SK이노베이션 PS",
@@ -116,20 +124,6 @@ export const metadata: Metadata = {
     "SK이노베이션 STI",
     "SK이노베이션 성과급 2026",
   ],
-  alternates: { canonical: `${SITE_URL}${PAGE_PATH}` },
-  openGraph: {
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-    url: `${SITE_URL}${PAGE_PATH}`,
-    siteName: SITE_NAME,
-    locale: "ko_KR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: PAGE_TITLE_FULL,
-    description: PAGE_DESC,
-  },
 };
 
 export default function SkInnovationBonusPage() {
