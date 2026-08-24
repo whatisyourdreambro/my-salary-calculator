@@ -5,7 +5,8 @@
 // 기존 /guides 인덱스의 카테고리 필터는 클라이언트 상태라 구글이 카테고리별
 // 목록을 크롤하지 못했다 — 이 허브가 SSR 전체 목록을 처음으로 제공한다.
 // 설정은 src/lib/guideCategories.ts, 목록은 guidesData(서버)에서 파생.
-// 광고는 guides/layout.tsx(PageFooterAds) 상속.
+// 광고: guides/layout.tsx(PageFooterAds) 상속 + 목록 하단 MultiplexAd 1개
+// (실험 #3, 2026-08-24 — MULTIPLEX 는 layout 미사용 슬롯, 목록 페이지 하단 전용 관행).
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -16,6 +17,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { GUIDE_CATEGORY_HUBS } from "@/lib/guideCategories";
 import { koGuideCards } from "@/lib/guidesData";
+import { MultiplexAd } from "@/components/AdPlacement";
 import { BookOpen, ArrowRight, Calculator } from "lucide-react";
 
 export const dynamic = "force-static";
@@ -164,6 +166,9 @@ export default function GuideCategoryHubPage({ params }: Props) {
             에서 찾을 수 있습니다.
           </p>
         </section>
+
+        {/* 실험 #3: 목록 하단 멀티플렉스 — 목록 페이지 하단 전용 관행 (MULTIPLEX, layout 미사용 슬롯) */}
+        <MultiplexAd />
       </div>
     </main>
   );
