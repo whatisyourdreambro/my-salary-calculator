@@ -48,7 +48,9 @@ export const config = {
   matcher: [
     // Next 내부 자산·robots·sitemap·RSS·OG 이미지·favicon은 미들웨어 통과
     // (Googlebot이 robots.txt와 sitemap을 받아야 정상 색인됨.
-    //  rss.xml은 RSS 수집기 UA가 SUSPICIOUS_UA에 걸려 403 나던 문제 해소)
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
+    //  rss.xml은 RSS 수집기 UA가 SUSPICIOUS_UA에 걸려 403 나던 문제 해소.
+    //  rss-companies.xml도 동일 — 네이버 서치어드바이저 수집 채널이 axios류
+    //  UA로 접근하면 403이 나 피드 목적 자체가 무력화되던 비대칭 해소, 2026-08-24)
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|rss-companies.xml|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
   ],
 };
