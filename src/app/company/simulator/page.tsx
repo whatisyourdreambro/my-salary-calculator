@@ -50,7 +50,7 @@ export default function SimulatorPage() {
  return (
  <div className="min-h-screen py-12">
  <div className="page-width">
- <Link href="/company" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
+ <Link href="/salary-db" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
  <ArrowLeft className="w-4 h-4 mr-2" />
  기업 데이터베이스로
  </Link>

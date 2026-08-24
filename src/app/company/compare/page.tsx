@@ -7,7 +7,19 @@
 // (company/[id], compare/[slug])와 동일하게 edge로 고정한다.
 export const runtime = "edge";
 
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 import CompareSelectionClient from "./CompareSelectionClient";
+
+// 카니발 해소 정책(2026-06)에 따라 compare 트리는 noindex.
+// (종전에는 company/layout의 canonical=/company(301 URL)를 상속받던 것을 정정, 2026-08-24)
+export const metadata: Metadata = buildPageMetadata({
+  title: "회사 연봉 비교 — 두 회사 선택",
+  description:
+    "비교할 두 회사를 선택하면 신입 초봉·평균 연봉·복지 혜택을 나란히 비교해 드립니다.",
+  path: "/company/compare",
+  noIndex: true,
+});
 
 export default function CompareSelectionPage() {
   return <CompareSelectionClient />;
