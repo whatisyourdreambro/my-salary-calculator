@@ -4,7 +4,8 @@
 // 코호트·게이팅은 src/lib/salary-data/dartLite.ts 단일 소스 (직원 500+ 상위 약 200곳,
 // 기존 /salary-db/[id] 보유사 제외 — 카니발 방지). dynamicParams=false 로 코호트 밖
 // URL 은 404 — 크롤 예산 자체를 쓰지 않는다 (compare 413 색인 거부 교훈).
-// 광고·공유는 salary-db/layout.tsx 상속 — 이 페이지에 광고 코드 없음.
+// 광고: salary-db/layout.tsx 의 PageFooterAds(InArticle+쿠팡+HomeTop) 상속 + 본문
+// CalcResult·GuideMid·쿠팡 1개 (실험 #3, 2026-08-24 — layout 슬롯과 미충돌, 쿠팡 캡 2/2).
 // 서버 컴포넌트 전용 — dartLite(dartDisclosed 800KB)는 클라 번들 오염 금지.
 
 import type { Metadata } from "next";
@@ -23,6 +24,8 @@ import {
   getSameIndustryExisting,
   DART_LITE_DATE,
 } from "@/lib/salary-data/dartLite";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 import { ShieldCheck, ExternalLink, TrendingUp, Building2, Users } from "lucide-react";
 
 export const dynamic = "force-static";
@@ -226,6 +229,9 @@ export default function ListedCompanyPage({ params }: Props) {
           )}
         </section>
 
+        {/* 실험 #3: 월 실수령 환산 직후 — 계산 결과 소비 직후 지점 (CALC_RESULT, layout 미사용 슬롯) */}
+        <CalcResultAd />
+
         {/* 순위 컨텍스트 */}
         <section className="mb-8 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="rank-heading">
           <h2 id="rank-heading" className="text-lg sm:text-xl font-black text-navy mb-3 inline-flex items-center gap-2">
@@ -259,6 +265,9 @@ export default function ListedCompanyPage({ params }: Props) {
             에서 확인할 수 있습니다.
           </p>
         </section>
+
+        {/* 실험 #3: 순위 컨텍스트 직후 — 본문 중단 (GUIDE_MID, layout 미사용 슬롯) */}
+        <GuideMidAd />
 
         {/* 3개년 연봉 추이 — fetch-hist 수집 연도가 있는 회사만 렌더 (추정 0) */}
         {c.history && c.history.length > 0 && (
@@ -361,6 +370,9 @@ export default function ListedCompanyPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        {/* 실험 #3: FAQ 직전 쿠팡 1개 — layout PageFooterAds 쿠팡 포함 페이지당 2/2 캡 준수 */}
+        <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
         {/* FAQ */}
         <section className="mb-8" aria-labelledby="faq-heading">
