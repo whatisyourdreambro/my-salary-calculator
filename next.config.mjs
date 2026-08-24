@@ -740,7 +740,7 @@ const nextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+            value: "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400",
           },
         ],
       },
@@ -749,7 +749,7 @@ const nextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+            value: "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400",
           },
         ],
       },
@@ -758,7 +758,7 @@ const nextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, s-maxage=21600, stale-while-revalidate=86400",
+            value: "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400",
           },
         ],
       },
@@ -776,6 +776,50 @@ const nextConfig = {
         "/salary-db/:path*",
         "/hub/:path*",
         "/guides/:slug*",
+        // [2026-08-24 점검] 동일 성격인데 전역 1시간만 적용되던 라우트군 확대 —
+        // 시즌 피크(추석·연말정산) 트래픽을 CDN에서 흡수해 Worker 호출 방어.
+        "/monthly/:amount*",
+        "/tools/:path*",
+        "/fun/:path*",
+        "/insights/:path*",
+        "/en/:path*",
+        // 시즌·정책 단독 페이지 36종 (src/app의 *-2026|*-2027|year-end-tax* 디렉터리와 동기)
+        "/auto-tax-2026",
+        "/basic-pension-2026",
+        "/career-stages-2026",
+        "/chuseok-bonus-2026",
+        "/civil-servant-pay-2026",
+        "/civil-servant-pay-2027",
+        "/credit-card-deduction-2026",
+        "/fortune-2026",
+        "/health-checkup-2026",
+        "/health-insurance-2026",
+        "/health-insurance-fee-2026",
+        "/income-tax-2026",
+        "/medical-tax-credit-2026",
+        "/minimum-wage-2026",
+        "/minimum-wage-2027",
+        "/national-pension-estimate-2026",
+        "/new-employee-2026",
+        "/new-employee-salary-2026",
+        "/property-holding-tax-2026",
+        "/rent-tax-credit-2026",
+        "/retirement-pension-2026",
+        "/salary-raise-2026",
+        "/samsung-negotiation-2026",
+        "/savings-interest-2026",
+        "/social-insurance-rates-2026",
+        "/tax-changes-2026",
+        "/tax-rates-2026",
+        "/tax-reform-2026",
+        "/weekly-holiday-allowance-2026",
+        "/year-end-tax",
+        "/year-end-tax-2026",
+        "/year-end-tax-2027",
+        "/year-end-tax-checklist",
+        "/year-end-tax-mid-resign",
+        "/year-end-tax-preview",
+        "/year-end-tax-settlement-2026",
       ].map((source) => ({
         source,
         headers: [
