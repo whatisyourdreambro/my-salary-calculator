@@ -405,6 +405,35 @@ export default function BonusCalculatorsHubPage() {
             limit={4}
             title="다음 계산기도 함께 보세요"
           />
+
+          {/* 관련 데이터 리포트 — /insights 상호링크 (2026-08-24 내부 링크 보강, 광고 아래) */}
+          <section className="mt-12" aria-labelledby="reports-heading">
+            <h2 id="reports-heading" className="text-2xl font-black mb-4">
+              관련 데이터 리포트
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <Link
+                href="/insights/bonus-payout-history-2026"
+                className="block rounded-xl border border-canvas-deep bg-white p-5 hover:bg-canvas/40 transition"
+              >
+                <p className="text-xs font-bold text-faint mb-1">📊 데이터 리포트</p>
+                <p className="font-black text-lg">대기업 성과급 실지급률 총정리 →</p>
+                <p className="text-sm text-faint mt-1">
+                  실제 지급률 전수 집계 — 보도·공시 교차 확인
+                </p>
+              </Link>
+              <Link
+                href="/insights/listed-avg-salary-top100-2026"
+                className="block rounded-xl border border-canvas-deep bg-white p-5 hover:bg-canvas/40 transition"
+              >
+                <p className="text-xs font-bold text-faint mb-1">📊 데이터 리포트</p>
+                <p className="font-black text-lg">공시 기준 평균연봉 TOP 100 →</p>
+                <p className="text-sm text-faint mt-1">
+                  DART 사업보고서 전수 분석 — 추정치 0
+                </p>
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </>

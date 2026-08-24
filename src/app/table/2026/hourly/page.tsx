@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { generateHourlyWageTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "@/components/AppLink";
+import SalaryTable from "@/components/SalaryTable";
 import HourlyTableInteractive from "./HourlyTableInteractive";
 import TableHero from "@/components/TableHero";
 import SeasonalLinks from "../SeasonalLinks";
@@ -86,6 +87,20 @@ function HourlyTable2026() {
  highlightRows={highlightRows}
  />
  </Suspense>
+
+ {/* 전체 표 — annual 과 동일한 서버 렌더 패턴 (2026-08-24).
+     종전엔 useSearchParams 를 쓰는 클라 컴포넌트 안에서만 표가 렌더돼
+     정적 HTML에 /salary 행 링크가 0건이었다(JS 미실행 크롤러 불가시).
+     행 데이터·링크를 서버 HTML에 직접 포함시킨다. */}
+ <div className="page-width">
+ <SalaryTable
+ headers={tableHeaders}
+ data={allData}
+ highlightRows={highlightRows}
+ linkColumnBaseHref="/salary"
+ linkValueMultiplier={209 * 12}
+ />
+ </div>
 
  {/* 운영자 승인 광고 배치(2026-07-07): 표와 본문 사이 — 표 전 구간 무광고였음 */}
  <CalcResultAd />

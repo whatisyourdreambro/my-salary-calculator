@@ -5,6 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
+import { InArticleAd } from "@/components/AdPlacement";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "머니샐러리 소개 - 데이터 출처와 운영 원칙",
@@ -209,6 +210,11 @@ export default function AboutPage() {
  </Link>
  </div>
  </section>
+
+ {/* 실험 #3d: 완전 무광고였던 소개 페이지 — 본문 말미 1유닛만 (E-E-A-T 페이지 특성상 최소 배치) */}
+ <div className="mt-12">
+ <InArticleAd />
+ </div>
 
  <ShareSection contentType="page" className="mt-12" />
 

@@ -40,6 +40,14 @@ interface InteractiveTableProps {
  linkColumnBaseHref?: string;
  /** 첫 열 값 → 연봉 환산 배수 (시급 ×2508, 주급 ×52) — SalaryTable 로 그대로 전달 */
  linkValueMultiplier?: number;
+ /**
+  * true면 내부 페이지네이션 표를 렌더하지 않음 — 시뮬레이터만 담당.
+  * 표를 서버 컴포넌트(page.tsx)에서 직접 SSR 렌더하는 페이지용:
+  * useSearchParams() 를 쓰는 이 컴포넌트는 정적 프리렌더 시 Suspense 폴백으로
+  * 빠져 행 링크가 서버 HTML에서 사라지므로(주급·시급 표 /salary 링크 0건 문제,
+  * 2026-08-24), 초기 행은 page.tsx 의 SalaryTable 이 담당한다.
+  */
+ hideTable?: boolean;
  pageConfig: {
  title: string;
  basePath: string;
@@ -60,6 +68,7 @@ export default function InteractiveTable({
  toMonthly = (salary) => salary / 12,
  linkColumnBaseHref,
  linkValueMultiplier,
+ hideTable = false,
  pageConfig,
 }: Omit<InteractiveTableProps, "totalPages" | "paginatedData">) {
  const searchParams = useSearchParams();
@@ -295,7 +304,8 @@ export default function InteractiveTable({
  {/* 테이블 중간 광고 */}
  
 
- {/* 전체 테이블 섹션 */}
+ {/* 전체 테이블 섹션 — hideTable 시 서버 컴포넌트가 SSR 표를 대신 렌더 */}
+ {!hideTable && (
  <motion.div
  initial={{ opacity: 0, y: 30 }}
  whileInView={{ opacity: 1, y: 0 }}
@@ -319,6 +329,7 @@ export default function InteractiveTable({
  linkValueMultiplier={linkValueMultiplier}
  />
  </motion.div>
+ )}
  </div>
  );
 }

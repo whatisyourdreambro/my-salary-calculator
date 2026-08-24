@@ -37,6 +37,10 @@ export default function WeeklyTableInteractive({
  toMonthly={(salary) => (salary * 52) / 12}
  linkColumnBaseHref="/salary"
  linkValueMultiplier={52}
+ // 표는 page.tsx 가 annual 과 동일하게 SSR 렌더 — 여기선 시뮬레이터만
+ // (useSearchParams 프리렌더 폴백으로 /salary 행 링크가 서버 HTML에서
+ //  사라지던 문제 해소, 2026-08-24)
+ hideTable
  pageConfig={pageConfig}
  />
  );

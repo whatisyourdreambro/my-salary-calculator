@@ -112,6 +112,37 @@ export default function IndustryIndexPage() {
 
           <CoupangBanner />
 
+          {/* 관련 데이터 리포트 — /insights 상호링크 (2026-08-24 내부 링크 보강, 광고 아래) */}
+          <section className="mt-8">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+              관련 데이터 리포트
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link
+                href="/insights/entry-salary-by-industry-2026"
+                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all group"
+              >
+                <p className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  2026 업종별 신입 초봉 순위 →
+                </p>
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  업종별 신입 초봉(기본급+평균 인센티브) 평균·중앙값 집계 리포트
+                </p>
+              </Link>
+              <Link
+                href="/insights/listed-avg-salary-top100-2026"
+                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all group"
+              >
+                <p className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  공시 기준 평균연봉 TOP 100 →
+                </p>
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  금융감독원 DART 사업보고서 전수 집계 — 추정치 0
+                </p>
+              </Link>
+            </div>
+          </section>
+
           <ShareSection contentType="page" className="mt-8" />
         </div>
       </div>

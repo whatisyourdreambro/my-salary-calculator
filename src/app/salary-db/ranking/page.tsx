@@ -340,6 +340,37 @@ export default function CompanyRankingPage() {
         <div className="mt-10">
           <GuideMidAd />
         </div>
+
+        {/* 관련 데이터 리포트 — /insights 상호링크 (2026-08-24 내부 링크 보강, 광고 아래) */}
+        <div className="mt-12">
+          <h2 className="text-xl font-black text-navy mb-4">관련 데이터 리포트</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link
+              href="/insights/listed-avg-salary-top100-2026"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                공시 기준 평균연봉 TOP 100
+                <span className="block text-xs font-medium text-faint-blue">
+                  DART 사업보고서 전수 집계 — 추정치 0
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+            <Link
+              href="/insights/bonus-payout-history-2026"
+              className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+            >
+              <span className="font-bold text-navy">
+                대기업 성과급 실지급률 총정리
+                <span className="block text-xs font-medium text-faint-blue">
+                  보도·공시 교차 확인 전수 집계
+                </span>
+              </span>
+              <ArrowRight className="w-5 h-5 text-electric" />
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );
