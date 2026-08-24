@@ -6,6 +6,8 @@
 // 주의: /year-end-tax-2026 은 프리랜서 5월 종합소득세 가이드(의도 상이) —
 // 본 허브와 카니발 아님을 본문에서 명시. 기존 페이지 무수정 원칙.
 // 광고: GuideMid(로드맵 직후)·Multiplex(하단) — 운영자 일괄 승인 2026-08-23.
+// 실험 #3(2026-08-24): CalcResult(캘린더 직후)·InArticle(뉴스 직후)·쿠팡(최하단) 추가
+// — 조상 layout 광고 없음(PageFooterAds 미상속), 페이지 내 슬롯 중복 0.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -26,7 +28,8 @@ import {
   YEAR_END_NEWS,
 } from "@/data/yearEndTaxHub";
 import { CalendarDays, Newspaper, ArrowRight, Calculator, ClipboardCheck, BookOpen } from "lucide-react";
-import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 
 export const dynamic = "force-static";
 
@@ -191,6 +194,11 @@ export default function YearEndTax2027HubPage() {
             </p>
           </section>
 
+          {/* 실험 #3: 시즌 캘린더 직후 — 일정 소비 완료 지점 (CALC_RESULT, 페이지 미사용 슬롯) */}
+          <div className="mb-12">
+            <CalcResultAd />
+          </div>
+
           {/* 뉴스 */}
           <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="news-heading">
             <h2 id="news-heading" className="text-2xl font-black text-navy mb-4 flex items-center gap-2">
@@ -213,6 +221,11 @@ export default function YearEndTax2027HubPage() {
               에서 다룹니다 (근로자 연말정산과 신고 시기·방법이 다릅니다).
             </p>
           </section>
+
+          {/* 실험 #3: 변경사항 직후 본문 사이 fluid (IN_ARTICLE, 페이지 미사용 슬롯) */}
+          <div className="mb-12">
+            <InArticleAd />
+          </div>
 
           {/* FAQ */}
           <section className="mb-12" aria-labelledby="faq-heading">
@@ -242,6 +255,9 @@ export default function YearEndTax2027HubPage() {
             limit={4}
             title="함께 보면 좋은 계산기"
           />
+
+          {/* 실험 #3: 페이지 최하단 쿠팡 1개 (현재 쿠팡 0 → 1, 캡 2 이내) */}
+          <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
         </div>
       </main>
     </>

@@ -6,6 +6,9 @@
 // 변경점을 확정 반영 (growth-playbook 10월 말 슬롯). 절차는 예년 서비스
 // 기준 텍스트 서술 — 스크린샷 없음, 확정 전 수치 단정 금지.
 // 차별점: 오픈 전에도 가능한 자가 시뮬레이션(/year-end-tax) CTA.
+// 광고: HomeTop(히어로 직후)·GuideMid(절차 직후) + 실험 #3(2026-08-24)
+// InArticle(확인 포인트 직후)·CalcResult(FAQ 직후)·쿠팡(최하단) —
+// 조상 layout 광고 없음(PageFooterAds 미상속), 페이지 내 슬롯 중복 0.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -15,7 +18,8 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { ArrowRight, Calculator, MonitorSmartphone, ListChecks } from "lucide-react";
-import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import CoupangBanner from "@/components/CoupangBanner";
 
 export const dynamic = "force-static";
 
@@ -186,6 +190,9 @@ export default function YearEndTaxPreviewPage() {
               </div>
             </section>
 
+            {/* 실험 #3: 확인 포인트 직후 본문 사이 fluid (IN_ARTICLE, 페이지 미사용 슬롯) */}
+            <InArticleAd />
+
             {/* FAQ */}
             <section className="mb-8" aria-labelledby="faq-heading">
               <h2 id="faq-heading" className="text-2xl font-black text-navy mb-4">자주 묻는 질문</h2>
@@ -199,8 +206,14 @@ export default function YearEndTaxPreviewPage() {
               </div>
             </section>
 
+            {/* 실험 #3: FAQ 직후 (CALC_RESULT, 페이지 미사용 슬롯) */}
+            <CalcResultAd />
+
             {/* 클러스터 칩 — 광고 아래 배치 준수 */}
             <YearEndTaxCluster />
+
+            {/* 실험 #3: 페이지 최하단 쿠팡 1개 (현재 쿠팡 0 → 1, 캡 2 이내) */}
+            <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
           </div>
         </div>
       </main>
