@@ -2,8 +2,10 @@
 //
 // 상장사 공시 연봉 인덱스 허브 — lite 페이지(Phase 1 코호트) 전체 목록.
 // 고아 페이지 방지의 핵심 진입로: 코호트 전 URL 이 여기서 1홉으로 연결된다.
-// 광고는 salary-db/layout.tsx 상속. 서버 컴포넌트 전용 (dartLite 클라 금지).
+// 광고: salary-db/layout.tsx PageFooterAds 상속 + 업종 섹션 3번째 뒤 GuideMid 1개
+// (실험 #3, 2026-08-24 — layout 슬롯과 미충돌). 서버 컴포넌트 전용 (dartLite 클라 금지).
 
+import { Fragment } from "react";
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
@@ -11,6 +13,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { listedCohort, DART_LITE_DATE } from "@/lib/salary-data/dartLite";
+import { GuideMidAd } from "@/components/AdPlacement";
 import { ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-static";
@@ -82,26 +85,30 @@ export default function ListedIndexPage() {
           </p>
         </section>
 
-        {groups.map(([industryKo, list]) => (
-          <section key={industryKo} className="mb-8" aria-label={`${industryKo} 상장사`}>
-            <h2 className="text-lg font-black text-navy mb-3">
-              {industryKo} <span className="text-sm font-bold text-faint-blue">({list.length}곳)</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {list.map((c) => (
-                <Link
-                  key={c.stockCode}
-                  href={`/salary-db/listed/${c.stockCode}`}
-                  className="flex items-baseline justify-between gap-2 rounded-xl border border-canvas-200 bg-white px-4 py-3 hover:border-primary transition"
-                >
-                  <span className="font-bold text-navy text-sm truncate">{c.nameKo}</span>
-                  <span className="text-xs font-bold text-muted-blue tabular-nums shrink-0">
-                    {c.avgSalaryManwon.toLocaleString("ko-KR")}만원
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
+        {groups.map(([industryKo, list], gi) => (
+          <Fragment key={industryKo}>
+            <section className="mb-8" aria-label={`${industryKo} 상장사`}>
+              <h2 className="text-lg font-black text-navy mb-3">
+                {industryKo} <span className="text-sm font-bold text-faint-blue">({list.length}곳)</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {list.map((c) => (
+                  <Link
+                    key={c.stockCode}
+                    href={`/salary-db/listed/${c.stockCode}`}
+                    className="flex items-baseline justify-between gap-2 rounded-xl border border-canvas-200 bg-white px-4 py-3 hover:border-primary transition"
+                  >
+                    <span className="font-bold text-navy text-sm truncate">{c.nameKo}</span>
+                    <span className="text-xs font-bold text-muted-blue tabular-nums shrink-0">
+                      {c.avgSalaryManwon.toLocaleString("ko-KR")}만원
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+            {/* 실험 #3: 업종 섹션 3번째 뒤 본문 중단 1개 (GUIDE_MID — layout PageFooterAds 미사용 슬롯) */}
+            {gi === 2 && <GuideMidAd />}
+          </Fragment>
         ))}
       </div>
     </main>
