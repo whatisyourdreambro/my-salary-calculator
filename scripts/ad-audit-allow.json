@@ -13,5 +13,20 @@
     "route": "/car-loan",
     "slot": "IN_ARTICLE",
     "reason": "알려진 충돌(하단 PageFooterAds InArticle 양보) — 중단 469를 실험 #2a에서 Display2로 이관 예정 (docs/ad-experiments.md)"
+  },
+  {
+    "route": "/calc/[slug]",
+    "slot": "COUPANG",
+    "reason": "의도 구조 — page 쿠팡 2개가 캡을 채우고 calc/layout 쿠팡이 양보(무렌더 폴백). 2026-08-24 점검에서 확인"
+  },
+  {
+    "route": "/calc/samsung-bonus",
+    "slot": "COUPANG",
+    "reason": "의도 구조 — page 쿠팡 2개 + calc/layout 폴백 양보. 2026-08-24 점검에서 확인"
+  },
+  {
+    "route": "/salary-db/[id]",
+    "slot": "COUPANG",
+    "reason": "의도 구조 — page 쿠팡(본문+사이드바) 2개 + layout PageFooterAds 쿠팡 양보. 2026-08-24 점검에서 확인"
   }
 ]

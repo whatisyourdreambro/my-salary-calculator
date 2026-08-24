@@ -6,7 +6,6 @@ import type { GuideCardMeta } from '@/lib/guidesData';
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CoupangBanner from '@/components/CoupangBanner';
 import { HomeTopAd, InArticleAd } from '@/components/AdPlacement';
 
 type SortOption = "latest" | "popular" | "oldest";
@@ -291,12 +290,10 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  </div>
  )}
 
- {/* Page-end ad block — HomeTopAd 는 상단 슬롯과 동일 슬롯이라 dedup 으로 미노출되어 제거 */}
+ {/* Page-end ad block — HomeTopAd 는 상단 슬롯과 동일 슬롯이라 dedup 으로 미노출되어 제거.
+ CoupangBanner 는 컴포넌트가 /en 을 조기 차단해 렌더 0이던 죽은 코드라 정리 (2026-08-24) */}
  <div className="mt-16 max-w-3xl mx-auto space-y-6">
  <InArticleAd />
- <CoupangBanner
- responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
- />
  </div>
  </div>
  </main>

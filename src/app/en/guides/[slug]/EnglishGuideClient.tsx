@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
-import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
 
 interface GuidePageClientProps {
@@ -160,12 +159,9 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </div>
  </div>
 
- {/* End of article — highest impact ad slot (in-article fluid for natural integration) */}
+ {/* End of article — highest impact ad slot (in-article fluid for natural integration).
+ CoupangBanner 는 컴포넌트가 /en 을 조기 차단해 렌더 0이던 죽은 코드라 정리 (2026-08-24) */}
  <InArticleAd />
-
- <CoupangBanner
- responsive={{ mobile: "mobile-portrait", desktop: "large-portrait" }}
- />
 
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
@@ -276,10 +272,10 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </Link>
  </div>
 
- {/* Desktop-only sidebar ad - on mobile, end-of-article ad is enough */}
+ {/* Desktop-only sidebar ad - on mobile, end-of-article ad is enough
+ (쿠팡 skyscraper 는 /en 조기 차단으로 렌더 0이던 죽은 코드라 정리, 2026-08-24) */}
  <div className="hidden lg:block">
  <SidebarAd />
- <CoupangBanner size="skyscraper" showDisclosure={false} />
  </div>
  </div>
  </aside>
