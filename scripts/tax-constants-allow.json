@@ -1,0 +1,14 @@
+{
+  "note": "요율 리터럴 하드코딩 허용목록 — verify-tax-constants.mjs 가 대조. 표시용 텍스트(설명·FAQ 속 '4.75%' 등)와 아직 정본 미수렴 인라인 계산기를 등재한다. 2027 요율 개정 시 이 목록의 파일 전량을 함께 갱신할 것. 인라인 계산기 4곳(calc/*)과 CompanySalaryTable·tools/finance/bonus 의 정본 수렴은 후속 백로그 (docs/inspection-2026-08.md).",
+  "files": [
+    "src/app/calc/holiday-bonus/Client.tsx",
+    "src/app/calc/incentive-tax/Client.tsx",
+    "src/app/calc/year-end-bonus-tax/Client.tsx",
+    "src/app/calc/year-end-bonus/Client.tsx",
+    "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx",
+    "src/app/salary-raise-2026/Client.tsx",
+    "src/app/social-insurance-rates-2026/page.tsx",
+    "src/app/tools/finance/bonus/page.tsx",
+    "src/components/CompanySalaryTable.tsx"
+  ]
+}
