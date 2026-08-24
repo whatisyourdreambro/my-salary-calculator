@@ -17,6 +17,7 @@ import {
 import Logo from "./Logo";
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
+import { navConfigEn } from "./header/navConfigEn";
 import DesktopDropdown from "./header/DesktopDropdown";
 import MobileDropdown from "./header/MobileDropdown";
 import ThemeToggle from "./header/ThemeToggle";
@@ -26,9 +27,11 @@ import FavoritesBadge from "./header/FavoritesBadge";
 
 export default function Header() {
  const pathname = usePathname();
- const activeNavConfig = navConfig;
- const dashboardLabel = "대시보드";
- const mobileMenuAriaLabel = "메뉴 열기";
+ // /en 트리는 영어 메뉴 — 영어판이 있는 페이지만 링크 (navConfigEn 주석 참고)
+ const isEn = pathname === "/en" || pathname.startsWith("/en/");
+ const activeNavConfig = isEn ? navConfigEn : navConfig;
+ const dashboardLabel = isEn ? "Dashboard" : "대시보드";
+ const mobileMenuAriaLabel = isEn ? "Open menu" : "메뉴 열기";
  const dashboardHref = "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
@@ -68,11 +71,11 @@ export default function Header() {
  animate={{ y: 0 }}
  transition={{ duration: 0.5, ease: "circOut" }}
  >
- <nav className="page-width" aria-label={"주 메뉴"}>
+ <nav className="page-width" aria-label={isEn ? "Main menu" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
- <Link href="/" className="flex items-center gap-2 no-underline">
+ <Link href={isEn ? "/en" : "/"} className="flex items-center gap-2 no-underline">
  <Logo
  className="h-8 sm:h-9 w-auto"
  showText={true}
@@ -151,7 +154,7 @@ export default function Header() {
  id="mobile-nav-menu"
  role="dialog"
  aria-modal="true"
- aria-label="모바일 메뉴"
+ aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
  className={`lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto transition-[opacity,visibility] duration-[180ms] ${
  isMobileMenuOpen
  ? "visible opacity-100"
@@ -173,12 +176,12 @@ export default function Header() {
  className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
  >
  <LayoutDashboard size={18} aria-hidden="true" />
- 내 대시보드 열기
+ {isEn ? "Open My Dashboard" : "내 대시보드 열기"}
  </Link>
 
  {/* Nav items */}
  <nav
- aria-label={"주 메뉴"}
+ aria-label={isEn ? "Main menu" : "주 메뉴"}
  className="bg-white rounded-[20px] overflow-hidden border-[1.5px] border-canvas"
  >
  {activeNavConfig.map((item) =>
