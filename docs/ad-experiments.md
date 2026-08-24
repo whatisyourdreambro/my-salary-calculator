@@ -74,3 +74,42 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
   죽은 유닛 2곳 제거·C1 홈 3→5유닛·C2 성과급 허브 0→2유닛·C3 fun 게임 6종 결과
   한정 InArticle·C4 insights 인덱스 GuideMid·C5 tools/finance/bonus GuideMid.
   검증 게이트: scripts/ad-audit.mjs (전 커밋 ERROR 0 통과).
+
+---
+
+## 실험 #3 — 무광고 대량 URL 신규 배치 (상태: 적용, 2026-08-24 재점검 계획 일괄 승인)
+
+**승인 근거**: 2026-08-24 전면 재점검 계획을 운영자가 승인 — "운영자 계획 승인 =
+광고 배치 일괄 승인" 선례(2026-08-23) 적용. Display2Ad는 실험 #1 판정 전이므로
+**전면 미사용** (측정 오염 방지). 배치별 독립 커밋 + `ad-audit.mjs` ERROR/WARN 0.
+
+**적용 대상 (군별 독립 커밋·전/후 14일 비교)**:
+- **#3a** `/salary-db/listed/[stockCode]` ≈218 URL — 본문 유닛 0이던 깨끗한 페이지.
+  월 실수령 환산 직후 CalcResultAd · 순위 컨텍스트 직후 GuideMidAd · FAQ 직전 쿠팡.
+  10월 Phase 2(+300곳) 확대 시 템플릿 자동 적용.
+- **#3b** `/guides/category/[slug]` 7 URL — 목록 하단 MultiplexAd (목록 페이지 관행).
+- **#3c** 연말정산 시즌 2p(`/year-end-tax-2027`·`/year-end-tax-preview`) — 각 +2유닛
+  +쿠팡 1. 11월 구조 동결 전 시한부 항목.
+- **#3d** `/salary-db/listed` 인덱스 GuideMid · `/fun/random-draw` InArticle(C3 누락분
+  균일화) · `/hub`·`/about` 각 1유닛.
+
+**측정·판정**: 실험 #1과 동일 — 군별 RPM(신규 페이지군은 절대 RPM 발생 자체가 순증)
+AND unfilled 급증 없음. 판정일 적용 후 14일(9/7경). 군별 독립 revert.
+
+| 항목 | 값 |
+|---|---|
+| 승인일 | 2026-08-24 (재점검 계획 일괄 승인) |
+| 적용일·커밋 | 2026-08-24 — 군별 독립 커밋 (git log 참조) |
+| 후 14일 판정 | (9/7경 기입) |
+
+## 승인 배치 기록 (실험 아닌 단발 수리, 2026-08-24)
+
+- **/salary/[amount] 데스크톱 쿠팡 복구** — 본문 쿠팡 2개가 페이지당 캡(2)을 선점해
+  사이드바 skyscraper가 무음 차단, 415개 URL의 데스크톱 쿠팡 인벤토리가 0이던
+  문제. FAQ 후 2번째 배너 제거로 본문 1 + 사이드바 1 정리. (2026-08-23 캡 1→2
+  완화가 이 페이지에서는 불충분했음 — 본문 2 + 사이드바 1 구성이라 재발)
+- **/en 쿠팡 사문 호출부 3곳 제거** — CoupangBanner가 /en을 조기 차단(line 171)해
+  렌더 0이던 죽은 코드(EnglishGuideClient 2곳·EnglishGuidesClient 1곳). /en 쿠팡
+  활성화(컴포넌트 내부 수정)는 운영자 판단으로 **미실행** 확정(2026-08-24).
+- **쿠팡 3회 배치 WARN 3건 allowlist 등재** — calc/[slug]·samsung-bonus·
+  salary-db/[id]는 layout 쿠팡이 양보하는 의도 구조임을 사유와 함께 명문화.
