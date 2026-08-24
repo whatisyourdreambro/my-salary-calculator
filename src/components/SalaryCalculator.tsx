@@ -201,7 +201,7 @@ export default function SalaryCalculator() {
  totalDeduction: partTimeResult.totalDeduction,
  pension: partTimeResult.nationalPension,
  health: partTimeResult.healthInsurance,
- longTermCare: 0,
+ longTermCare: partTimeResult.longTermCare,
  employment: partTimeResult.employmentInsurance,
  incomeTax: partTimeResult.incomeTax,
  localTax: partTimeResult.localTax,

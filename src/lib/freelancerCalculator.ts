@@ -1,5 +1,7 @@
 // src/lib/freelancerCalculator.ts
 
+import { INSURANCE_RATES_2026 } from "./taxConstants2026";
+
 /**
  * 3.3% 사업소득 또는 4대보험 적용 아르바이트 급여를 계산합니다.
  * @param income 월 소득 (세전)
@@ -18,6 +20,7 @@ export function calculatePartTimeSalary(
  localTax: 0,
  nationalPension: 0,
  healthInsurance: 0,
+ longTermCare: 0,
  employmentInsurance: 0,
  };
  }
@@ -35,13 +38,18 @@ export function calculatePartTimeSalary(
  localTax,
  nationalPension: 0,
  healthInsurance: 0,
+ longTermCare: 0,
  employmentInsurance: 0,
  };
  } else {
- // 4대보험 적용 (월 60시간 이상 근로자 기준)
- const nationalPension = income * 0.0475;
- const healthInsurance = income * 0.03595;
- const employmentInsurance = income * 0.009;
+ // 4대보험 적용 (월 60시간 이상 근로자 기준) — 요율은 taxConstants2026 정본 사용.
+ // 2026-08 대규모 점검: 장기요양보험(건강보험료의 13.14%) 누락 보완.
+ const nationalPension = income * INSURANCE_RATES_2026.NATIONAL_PENSION;
+ const healthInsurance = income * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+ const longTermCare =
+ healthInsurance * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+ const employmentInsurance =
+ income * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
 
  // 간이세액표에 따른 근로소득세 (1인 가구 기준, 단순 계산)
  const annualIncome = income * 12;
@@ -57,6 +65,7 @@ export function calculatePartTimeSalary(
  const totalDeduction =
  nationalPension +
  healthInsurance +
+ longTermCare +
  employmentInsurance +
  incomeTax +
  localTax;
@@ -69,6 +78,7 @@ export function calculatePartTimeSalary(
  localTax: Math.round(localTax),
  nationalPension: Math.round(nationalPension),
  healthInsurance: Math.round(healthInsurance),
+ longTermCare: Math.round(longTermCare),
  employmentInsurance: Math.round(employmentInsurance),
  };
  }

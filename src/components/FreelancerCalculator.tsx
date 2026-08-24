@@ -91,6 +91,11 @@ export default function FreelancerCalculator() {
  { name: "국민연금", value: result.nationalPension, color: "hsl(var(--secondary))" },
  { name: "건강보험", value: result.healthInsurance, color: "hsl(var(--secondary))" },
  {
+ name: "장기요양보험",
+ value: result.longTermCare,
+ color: "hsl(var(--secondary))",
+ },
+ {
  name: "고용보험",
  value: result.employmentInsurance,
  color: "hsl(var(--secondary))",
