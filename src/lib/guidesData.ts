@@ -33,7 +33,7 @@ import { legacyRewrite9 } from "@/lib/guides/legacy-rewrite-9";
 import { legacyRewrite10 } from "@/lib/guides/legacy-rewrite-10";
 
 // 레거시 rawGuides 50편의 고유 본문 (2026-08-15 재작성 — 전편 출처 검증).
-// generateExpertContent 템플릿 본문을 대체한다.
+// (구 generateExpertContent 템플릿 본문을 대체 — 템플릿은 2026-08 점검에서 제거됨)
 const legacyRewriteContent: Record<string, string> = {
   ...legacyRewrite1,
   ...legacyRewrite2,
@@ -85,141 +85,7 @@ export const categoriesEn = [
  { id: "Basics", name: "🌱 Finance Basics" },
 ];
 
-// Helper function to generate expert-level content
-const generateExpertContent = (title: string, category: string, description: string, tags: string[]) => {
- const intro = `
- <p class="lead">
- ${description} 이 글에서는 <strong>${title}</strong>에 대해 전문가의 시각으로 깊이 있게 파헤쳐 봅니다. 
- 단순한 정보 전달을 넘어, 실질적으로 당신의 자산을 불리고 커리어를 성장시키는 데 도움이 되는 구체적인 전략을 제시합니다.
- </p>
- <p>
- 최근 경제 상황과 트렌드를 반영하여, 2026년 현재 시점에서 가장 유효한 방법론을 담았습니다. 
- 끝까지 읽으신다면 남들보다 한 발 앞선 경쟁력을 갖추게 될 것입니다.
- </p>
- `;
-
- const coreAnalysis = `
- <h2 class="flex items-center gap-2 mt-12 text-2xl font-bold text-primary">
- <span>📊 심층 분석: 왜 지금 이것이 중요한가?</span>
- </h2>
- <p>
- ${category} 분야에서 <strong>${tags[0]}</strong>(은)는 항상 뜨거운 감자입니다. 
- 하지만 많은 사람들이 놓치고 있는 핵심은 '타이밍'과 '디테일'입니다. 
- 통계에 따르면, 제대로 된 전략 없이 접근했을 때의 실패 확률은 70% 이상이라고 합니다.
- </p>
- <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
- <h3 class="text-lg font-bold text-primary mb-4">💡 전문가의 핵심 인사이트</h3>
- <ul class="space-y-3">
- <li class="flex items-start gap-2">
- <span class="text-xl">✅</span>
- <div>
- <strong>시장 흐름 읽기:</strong> 현재 ${category} 시장은 급변하고 있습니다. 
- 과거의 방식인 '${tags[1] || '기존 방식'}'만 고집해서는 살아남기 힘듭니다.
- </div>
- </li>
- <li class="flex items-start gap-2">
- <span class="text-xl">✅</span>
- <div>
- <strong>리스크 관리:</strong> 수익을 좇는 것도 중요하지만, 
- 더 중요한 것은 잃지 않는 것입니다. 안전 장치를 마련하는 구체적인 방법을 알아야 합니다.
- </div>
- </li>
- <li class="flex items-start gap-2">
- <span class="text-xl">✅</span>
- <div>
- <strong>장기적 관점:</strong> 단기적인 성과에 일희일비하지 마세요. 
- 최소 3년 이상을 바라보는 긴 호흡이 필요합니다.
- </div>
- </li>
- </ul>
- </div>
- `;
-
- const detailedStrategy = `
- <h2 class="flex items-center gap-2 mt-12 text-2xl font-bold text-primary">
- <span>🚀 실전 가이드: 단계별 실행 전략</span>
- </h2>
- <p>
- 이론은 충분합니다. 이제 실전에 적용할 때입니다. 
- 다음 3단계 프로세스를 따라 차근차근 실행해 보세요.
- </p>
- 
- <h3 class="text-xl font-bold text-foreground mt-8 mb-4">Step 1. 현황 파악 및 목표 설정</h3>
- <p>
- 자신의 현재 위치를 냉정하게 파악하는 것이 시작입니다. 
- 관련된 수치(연봉, 자산, 세금 등)를 정확하게 계산해 보세요. 
- 머니샐러리의 계산기를 활용하면 1분 만에 정확한 데이터를 얻을 수 있습니다.
- </p>
-
- <h3 class="text-xl font-bold text-foreground mt-8 mb-4">Step 2. 최적의 도구와 방법 선택</h3>
- <p>
- 목표를 달성하기 위한 수단은 다양합니다. 
- ${tags.map(t => `<span class="text-primary font-medium">#${t}</span>`).join(' ')} 
- 등 다양한 옵션 중에서 나에게 가장 잘 맞는 옷을 골라야 합니다. 
- 남들이 한다고 무작정 따라 하는 것은 금물입니다.
- </p>
-
- <h3 class="text-xl font-bold text-foreground mt-8 mb-4">Step 3. 지속적인 모니터링과 리밸런싱</h3>
- <p>
- 한 번 설정했다고 끝이 아닙니다. 
- 분기별로 성과를 점검하고, 변화하는 상황에 맞춰 유연하게 대처해야 합니다. 
- 전문가들은 최소 6개월에 한 번은 전체적인 포트폴리오를 점검할 것을 권장합니다.
- </p>
- `;
-
- const proTips = `
- <h2 class="flex items-center gap-2 mt-12 text-2xl font-bold text-primary">
- <span>💎 Top 1%만 아는 시크릿 팁</span>
- </h2>
- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
- <div class="bg-card p-6 rounded-xl border border-border shadow-sm">
- <h4 class="font-bold text-lg mb-2 text-accent">🚫 흔한 실수 Best 3</h4>
- <ul class="list-disc list-inside text-muted-foreground space-y-1 text-sm">
- <li>제대로 된 조사 없이 '카더라' 통신만 믿는 것</li>
- <li>수수료나 세금 같은 숨은 비용을 간과하는 것</li>
- <li>감정에 휘둘려 원칙 없는 결정을 내리는 것</li>
- </ul>
- </div>
- <div class="bg-card p-6 rounded-xl border border-border shadow-sm">
- <h4 class="font-bold text-lg mb-2 text-primary">✨ 성공을 부르는 습관</h4>
- <ul class="list-disc list-inside text-muted-foreground space-y-1 text-sm">
- <li>매일 아침 경제 뉴스를 10분씩 읽는 습관</li>
- <li>자신의 결정을 기록하고 복기하는 투자 일기 쓰기</li>
- <li>전문가나 멘토와 주기적으로 소통하기</li>
- </ul>
- </div>
- </div>
- `;
-
- const conclusion = `
- <h2 class="flex items-center gap-2 mt-12 text-2xl font-bold text-primary">
- <span>📝 결론 및 요약</span>
- </h2>
- <p>
- <strong>${title}</strong>, 어렵게만 생각하지 마세요. 
- 오늘 다룬 핵심 내용만 기억해도 상위 10% 안에 들 수 있습니다.
- </p>
- <p class="mt-4">
- 지금 당장 시작하는 것이 가장 중요합니다. 
- 완벽한 타이밍을 기다리다가는 영원히 시작하지 못할 수도 있습니다. 
- 작은 것부터 하나씩 실천해 나가세요. 머니샐러리가 당신의 성공적인 금융 라이프를 응원합니다.
- </p>
- <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20 text-center">
- <p class="font-bold text-primary text-lg">더 궁금한 점이 있으신가요?</p>
- <p class="text-muted-foreground mt-2 mb-4">
- 관련된 다른 가이드나 계산기를 통해 더 깊이 있는 정보를 확인해 보세요.
- </p>
- <a href="/guides" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-bold rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-primary/25">
- 금융 가이드 전체 보기
- </a>
- </div>
- `;
-
- // Combine all sections
- return intro + coreAnalysis + detailedStrategy + proTips + conclusion;
-};
-
-// 50 High-Quality Guides with Generated Content
+// 레거시 50편 가이드 메타 (본문은 legacyRewriteContent 에서 주입)
 const rawGuides = [
  // --- 연봉 (Salary) : 10 items ---
  {
@@ -512,7 +378,9 @@ const allRawGuides = [
 // Generate the final guides array with content
 // — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
 // — 없으면 legacyRewriteContent(2026-08-15 재작성 본문) 사용
-// — 그마저 없으면 generateExpertContent fallback (남아있으면 안 되는 상태)
+// — 2026-08 점검: generateExpertContent 템플릿 fallback 제거. 342편 전편이 고유
+//   본문 보유 실측(템플릿 사용 0건) — 본문 없는 가이드는 thin content로 배포되기
+//   전에 빌드 타임에 실패시킨다.
 // — 재작성 본문 사용 시 publishedDate 를 실제 갱신일로 정정 (repo 관행:
 //   발행일 = 실제 갱신일. salary-guide-2026 의 2026-07-06 정정 선례)
 // — lang 미지정 가이드는 'ko'로 정규화 (기존 50개 호환)
@@ -520,10 +388,16 @@ const allRawGuides = [
 type RawGuide = Omit<Guide, 'content' | 'lang'> & { content?: string; lang?: GuideLang };
 export const guides: Guide[] = (allRawGuides as RawGuide[]).map(guide => {
  const rewritten = !guide.content && legacyRewriteContent[guide.slug];
+ const content = guide.content || legacyRewriteContent[guide.slug];
+ if (!content) {
+ throw new Error(
+ `[guidesData] 본문 없는 가이드: ${guide.slug} — content 또는 legacy-rewrite 본문을 추가해야 빌드됩니다`
+ );
+ }
  return {
  ...guide,
  lang: (guide.lang as GuideLang | undefined) ?? 'ko',
- content: guide.content || legacyRewriteContent[guide.slug] || generateExpertContent(guide.title, guide.category, guide.description, guide.tags),
+ content,
  ...(rewritten ? { publishedDate: "2026-08-15" } : {}),
  };
 });
