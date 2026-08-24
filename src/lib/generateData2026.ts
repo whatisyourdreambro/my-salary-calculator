@@ -1,5 +1,26 @@
-
 // src/lib/generateData2026.ts
+//
+// /table/2026/{annual,monthly} 표 + salaryStaticParams SSG 격자의 행 데이터.
+//
+// 2026-08 대규모 점검: 종전에는 "구간별 정률(1.5/3.5/6/10%)" 초간이 추정 엔진이
+// 들어 있어 같은 /table/2026 시리즈의 weekly·hourly(정식 엔진)와 다른 숫자를
+// 냈다. calculator.ts 의 요율 파라미터화 코어로 교체해 표 4종의 엔진을 통일.
+//
+// ★ 격자 불변 제약: preTax 루프(2,400만~2억, 100만 단위 177행)와 SalaryData
+//   shape(health=건보+장기요양 합산, incomeTax=소득세+지방세 합산)·export 이름은
+//   salaryStaticParams·/table 페이지가 그대로 소비하므로 바꾸지 말 것.
+//   (바꾸면 /salary/[amount] SSG 집합·sitemap 정합이 연쇄로 깨진다.)
+
+import type { AdvancedSettings } from "@/app/types";
+import {
+ calculateNetSalaryWithRates,
+ NET_SALARY_RATES_2026,
+ type NetSalaryRates,
+} from "./calculator";
+import {
+ INSURANCE_RATES_2025_LEGACY,
+ PENSION_BASE_2025_LEGACY,
+} from "./taxConstants2026";
 
 export interface SalaryData {
  [key: string]: number;
@@ -13,109 +34,48 @@ export interface SalaryData {
  changeValue: number; // 2026 vs 2025 difference
 }
 
-// 2025 Rates (Base) - Confirmed
-const RATES_2025 = {
- pension: 0.045, // 9% / 2
- health: 0.03545, // 7.09% / 2
- ltc: 0.1295, // 12.95% of health
- employment: 0.009, // 0.9%
- pensionCap: 277650, // 기준소득월액 상한 617만원 × 4.5%
+// 2025 기준선 — "전년 대비 변화액(changeValue)" 산출 전용 (taxConstants2026 레거시 상수)
+const RATES_2025: NetSalaryRates = {
+ pension: INSURANCE_RATES_2025_LEGACY.NATIONAL_PENSION,
+ pensionMonthlyCapBase: PENSION_BASE_2025_LEGACY.MAX_MONTHLY,
+ health: INSURANCE_RATES_2025_LEGACY.HEALTH_INSURANCE,
+ ltcRatio: INSURANCE_RATES_2025_LEGACY.LONG_TERM_CARE_RATIO,
+ employment: INSURANCE_RATES_2025_LEGACY.EMPLOYMENT_INSURANCE,
 };
 
-// 2026 Rates — 2026 연금개혁·건보 인상 반영. src/lib/taxConstants2026.ts 와 동일.
-// 국민연금 9%→9.5%(2026-01 시행), 건강보험 7.09%→7.19%, 장기요양 12.95%→13.14%.
-const RATES_2026 = {
- pension: 0.0475, // 9.5% / 2 (2026 연금개혁)
- health: 0.03595, // 7.19% / 2
- ltc: 0.1314, // 13.14% of Health
- employment: 0.009, // 0.9% 동결
- pensionCap: 313025, // 기준소득월액 상한 659만원 × 4.75% (2026.7~2027.6 적용)
+const defaultAdvancedSettings: AdvancedSettings = {
+ isSmeYouth: false,
+ disabledDependents: 0,
+ seniorDependents: 0,
 };
-
-function calculateNet(annualSalary: number, rates: typeof RATES_2025) {
- const monthlyPreTax = annualSalary / 12;
- const nonTaxable = 200000; // Meal allowance
- const taxable = monthlyPreTax - nonTaxable;
-
- // National Pension — 연도별 기준소득월액 상한 캡 적용 (2025: 277,650원 / 2026.7~2027.6: 313,025원)
- let pension = monthlyPreTax * rates.pension;
- if (pension > rates.pensionCap) pension = rates.pensionCap;
-
- const health = monthlyPreTax * rates.health;
- const ltc = health * rates.ltc;
- const employment = monthlyPreTax * rates.employment;
-
- // Basic Tax simulation (Simplified for mass data generation)
- // This is a rough estimation used for the table generation, distinct from the precise single calculation
- let incomeTax = 0;
- if (annualSalary <= 14000000) incomeTax = 0;
- else if (annualSalary < 30000000) incomeTax = taxable * 0.015;
- else if (annualSalary < 50000000) incomeTax = taxable * 0.035;
- else if (annualSalary < 88000000) incomeTax = taxable * 0.06;
- else incomeTax = taxable * 0.1;
- // Note: The logic above is extremely simplified for table filler purposes as precise Income Tax requires complex bracket logic.
- // We will trust the existing 'generateAnnualSalaryTableData' for 2025 and just add a delta for 2026.
-
- // Actually, to ensure consistency with the existing 2025 table, 
- // we should import the 2025 generator and just apply a modifier.
- // But since I cannot import it easily inside this string block without knowing its export exactness, 
- // I will recreate a robust enough simulator here.
-
- const totalDeduction = pension + health + ltc + employment + incomeTax + (incomeTax * 0.1); // + local tax
- const monthlyNet = monthlyPreTax - totalDeduction;
-
- return Math.floor(monthlyNet);
-}
 
 export function generateAnnualSalaryTableData2026(): SalaryData[] {
  const data: SalaryData[] = [];
 
- // Range from 24,000,000 to 200,000,000 Step 1,000,000
+ // Range from 24,000,000 to 200,000,000 Step 1,000,000 — 격자 불변 (177행)
  for (let salary = 24000000; salary <= 200000000; salary += 1000000) {
-
- // Calculate 2025 Net
- const net2025 = calculateNet(salary, RATES_2025);
-
- // Calculate 2026 Net
- const net2026 = calculateNet(salary, RATES_2026);
-
- // The change is usually negative because taxes/insurance go up
- // But user said "Change Value" (skew), so we show the difference.
- const change = net2026 - net2025;
-
- // recalculate deductions for 2026 display
- const monthlyPreTax = salary / 12;
- const rates = RATES_2026;
- let pension = monthlyPreTax * rates.pension;
- if (pension > 313025) pension = 313025; // 기준소득월액 상한 659만원 × 4.75% (2026.7~2027.6)
-
- const health = monthlyPreTax * rates.health;
- const ltc = health * rates.ltc;
- const employment = monthlyPreTax * rates.employment;
-
- // Re-use simplified tax for display fields (approximate)
- const nonTaxable = 200000;
- const taxable = monthlyPreTax - nonTaxable;
- let incomeTax = 0;
- // Slightly higher tax bracket logic or same
- if (salary > 14000000) {
- if (salary < 30000000) incomeTax = taxable * 0.015;
- else if (salary < 50000000) incomeTax = taxable * 0.035;
- else if (salary < 88000000) incomeTax = taxable * 0.06;
- else incomeTax = taxable * 0.1;
- }
-
- const totalDeduction = pension + health + ltc + employment + incomeTax + (incomeTax * 0.1);
+ // 정식 엔진 — 표 4종(weekly·hourly 포함)·홈 계산기와 동일한 가정
+ // (비과세 0, 부양가족 본인 1인, 자녀 0)
+ const r2026 = calculateNetSalaryWithRates(
+ salary, 0, 1, 0, defaultAdvancedSettings, NET_SALARY_RATES_2026
+ );
+ const r2025 = calculateNetSalaryWithRates(
+ salary, 0, 1, 0, defaultAdvancedSettings, RATES_2025
+ );
 
  data.push({
  preTax: salary,
- monthlyNet: Math.floor(monthlyPreTax - totalDeduction + change), // Adjust to match skew exactly
- totalDeduction: Math.floor(totalDeduction),
- pension: Math.floor(pension),
- health: Math.floor(health + ltc),
- employment: Math.floor(employment),
- incomeTax: Math.floor(incomeTax + (incomeTax * 0.1)),
- changeValue: Math.floor(change)
+ monthlyNet: r2026.monthlyNet,
+ totalDeduction: r2026.totalDeduction,
+ pension: r2026.pension,
+ // 표시 관행 유지: health 컬럼 = 건강보험 + 장기요양 합산
+ health: r2026.health + r2026.longTermCare,
+ employment: r2026.employment,
+ // 표시 관행 유지: incomeTax 컬럼 = 소득세 + 지방소득세 합산
+ incomeTax: r2026.incomeTax + r2026.localTax,
+ // 요율 인상(연금 4.5→4.75%·건보 3.545→3.595%·장기요양 12.95→13.14%)
+ // 반영 전년 대비 변화 — 통상 음수
+ changeValue: r2026.monthlyNet - r2025.monthlyNet,
  });
  }
  return data;

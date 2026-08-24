@@ -50,6 +50,10 @@ export function generateAnnualSalaryTableData(): SalaryData[] {
 }
 
 // 2026년 연봉 실수령액 데이터 생성
+// ★ 동명 함수 주의: /table/2026/{annual,monthly} 표는 generateData2026.ts 의
+//   generateAnnualSalaryTableData2026(2,400만~2억 100만 단위 177행 + changeValue)을,
+//   이 함수(0~5억 고밀도 격자)는 /api/salary-table 이 사용한다. 둘 다 같은
+//   calculator.ts 코어를 쓰므로 같은 연봉이면 같은 값이 나온다 (2026-08 엔진 통일).
 export function generateAnnualSalaryTableData2026(): SalaryData[] {
  const data: SalaryData[] = [];
  for (let salary = 0; salary <= 100000000; salary += 50000) {

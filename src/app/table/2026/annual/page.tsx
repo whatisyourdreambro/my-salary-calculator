@@ -15,7 +15,7 @@ import FavoritesButton from "@/components/FavoritesButton";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 연봉 실수령액 표 — 2400만~2억 전 구간 세후 월급 한눈에",
   description:
-    "연봉 3000만원이면 월 약 223만원, 5000만원이면 약 353만원, 1억이면 약 650만원. 2026년 최신 세법 기준 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
+    "연봉 3000만원이면 월 약 220만원, 5000만원이면 약 348만원, 1억이면 약 643만원. 2026년 최신 세법 기준 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
   path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
@@ -52,7 +52,7 @@ const tableJsonLd = [
     description:
       "2026년 최신 세법 기준 연봉 2000만원에서 2억까지 구간별 월 실수령액, 4대보험 공제 내역 데이터셋",
     url: "/table/2026/annual",
-    dateModified: "2026-08-07",
+    dateModified: "2026-08-24",
     keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
   }),
   autoBreadcrumbLd("/table/2026/annual", { leafName: "2026 연봉 실수령액 표" }),
@@ -118,11 +118,12 @@ function AnnualTable() {
               확인하세요.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+              {/* 수치는 generateData2026(정식 엔진) 결과와 동기 — 2026-08-24 엔진 통일 시 갱신 */}
               {[
-                { label: "연봉 3천만원", monthly: "약 223만원" },
-                { label: "연봉 5천만원", monthly: "약 353만원" },
-                { label: "연봉 7천만원", monthly: "약 478만원" },
-                { label: "연봉 1억원",  monthly: "약 650만원" },
+                { label: "연봉 3천만원", monthly: "약 220만원" },
+                { label: "연봉 5천만원", monthly: "약 348만원" },
+                { label: "연봉 7천만원", monthly: "약 472만원" },
+                { label: "연봉 1억원",  monthly: "약 643만원" },
               ].map((item) => (
                 <div
                   key={item.label}
