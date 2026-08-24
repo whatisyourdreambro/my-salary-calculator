@@ -709,7 +709,7 @@ ${DISCLAIMER_HTML}
 export const stockDeepdiveGuidesEn = [
  {
   slug: "samsung-electronics-stock-2026",
-  title: "Samsung Electronics 2026 Stock Outlook: HBM and Foundry Inflection 📊",
+  title: "Samsung Electronics 2026 Stock Outlook: HBM and Foundry Inflection",
   description: "HBM3E 12-Hi ramp and 2nm GAA break-even potential. Scenario-based buying strategies for working investors.",
   category: "Stocks",
   tags: ["Samsung Electronics", "stock", "HBM", "semiconductor", "2026"],
@@ -721,7 +721,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "samsung-employee-rsu-stock",
-  title: "Samsung Employee Stock Plans: How Much Does a +30% Move Mean to You? 💼",
+  title: "Samsung Employee Stock Plans: How Much Does a +30% Move Mean to You?",
   description: "ESOP, ESOP loans, and executive RSUs. Asset simulation by job level under different price scenarios.",
   category: "Stocks",
   tags: ["Samsung Electronics", "ESOP", "RSU", "employee", "wealth"],
@@ -733,7 +733,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "sk-hynix-stock-2026",
-  title: "SK Hynix Stock Outlook: Will the HBM3E Lead Hold Through 2026? 🚀",
+  title: "SK Hynix Stock Outlook: Will the HBM3E Lead Hold Through 2026?",
   description: "HBM4 roadmap, Cheongju / Icheon / Indiana capacity expansion, and the impact of Samsung's entry.",
   category: "Stocks",
   tags: ["SK Hynix", "stock", "HBM3E", "HBM4", "memory"],
@@ -745,7 +745,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "sk-hynix-employee-bonus-stock",
-  title: "SK Hynix PS / PI Bonuses and ESOP ROI 💰",
+  title: "SK Hynix PS / PI Bonuses and ESOP ROI",
   description: "Got a 50% PS — now what? ESOP vs ISA vs loan paydown. Bonus simulations by tenure included.",
   category: "Stocks",
   tags: ["SK Hynix", "PS", "PI", "bonus", "ESOP"],
@@ -757,7 +757,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "semiconductor-cycle-2026",
-  title: "Semiconductor Cycle 2026: Asset Strategy Through the Memory Peak 🔄",
+  title: "Semiconductor Cycle 2026: Asset Strategy Through the Memory Peak",
   description: "Recovery, expansion, peak, correction — phase-specific rules on ESOP weight, PS use, and fixed costs.",
   category: "Stocks",
   tags: ["semiconductor cycle", "memory", "wealth management", "peak", "professionals"],
@@ -769,7 +769,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "samsung-vs-hynix-employee-comparison",
-  title: "Samsung vs SK Hynix: Pay, Benefits and Employee Stock Compared ⚖️",
+  title: "Samsung vs SK Hynix: Pay, Benefits and Employee Stock Compared",
   description: "Base salary, signing bonus, OPI / TAI vs PS / PI, ESOP design, housing — six decision criteria.",
   category: "Stocks",
   tags: ["Samsung Electronics", "SK Hynix", "new hire pay", "comparison", "career"],
@@ -781,7 +781,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "chip-stock-tax-guide",
-  title: "Tax-Efficient Trading of Chip Stocks: ISA, Pension, Loss Harvesting 🧾",
+  title: "Tax-Efficient Trading of Chip Stocks: ISA, Pension, Loss Harvesting",
   description: "Four tax strategies for working professionals selling Samsung / SK Hynix shares.",
   category: "Stocks",
   tags: ["stock tax", "capital gains", "ISA", "pension", "tax saving"],
@@ -793,7 +793,7 @@ export const stockDeepdiveGuidesEn = [
  },
  {
   slug: "kospi-leader-stock-strategy",
-  title: "KOSPI Leaders (Samsung / SK Hynix) — DCA vs Lump-Sum Strategy 📈",
+  title: "KOSPI Leaders (Samsung / SK Hynix) — DCA vs Lump-Sum Strategy",
   description: "Auto-buy 5–10% of salary, set portfolio caps, and trim at cycle peaks. Allocation by salary band.",
   category: "Stocks",
   tags: ["DCA", "lump-sum", "Samsung Electronics", "SK Hynix", "portfolio"],

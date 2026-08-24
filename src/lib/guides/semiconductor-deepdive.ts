@@ -1015,7 +1015,7 @@ ${DISCLAIMER_HTML}
 export const semiconductorDeepdiveGuides = [
  {
   slug: "samsung-wage-negotiation-2026",
-  title: "삼성전자 2026 임금협상 - 5월 12일 본격 시작, 인상률·OPI·복지 핵심 쟁점 📊",
+  title: "삼성전자 2026 임금협상 - 5월 12일 본격 시작, 인상률·OPI·복지 핵심 쟁점",
   description: "2026년 5월 12일 본격 교섭에 들어간 삼성전자 임금협상. 5가지 핵심 쟁점, 직급별 예상 인상폭, 소급분 가계 준비까지.",
   category: "주식",
   tags: ["삼성전자", "임금협상", "OPI", "TAI", "2026", "노사협상"],
@@ -1027,7 +1027,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "sk-hynix-wage-2026",
-  title: "SK하이닉스 2026 임금협상과 PS 1,500% 시대 - HBM 슈퍼사이클 보상 분석 💰",
+  title: "SK하이닉스 2026 임금협상과 PS 1,500% 시대 - HBM 슈퍼사이클 보상 분석",
   description: "2024년 PS 1,500%를 기록한 SK하이닉스. 2026년 임단협 주요 변수와 PS 받고 해야 할 3가지 행동까지.",
   category: "주식",
   tags: ["SK하이닉스", "임금협상", "PS", "PI", "이익분배금", "2026"],
@@ -1039,7 +1039,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "samsung-hynix-2026-deepdive",
-  title: "삼성전자 vs SK하이닉스 2026 종합 보상 비교 - 호황기·다운사이클까지 ⚖️",
+  title: "삼성전자 vs SK하이닉스 2026 종합 보상 비교 - 호황기·다운사이클까지",
   description: "OPI vs PS, TAI vs PI, 자사주, 사이클 노출도까지 양대 반도체 기업 보상 구조를 사이클별로 비교합니다.",
   category: "주식",
   tags: ["삼성전자", "SK하이닉스", "비교", "성과급", "사이클", "2026"],
@@ -1051,7 +1051,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "semiconductor-performance-bonus-tax",
-  title: "반도체 성과급 세금 완벽 가이드 - OPI·PS·PI 누진세율과 4가지 절세법 🧾",
+  title: "반도체 성과급 세금 완벽 가이드 - OPI·PS·PI 누진세율과 4가지 절세법",
   description: "성과급 받으면 누진세 구간 점프. IRP·ISA·청약저축으로 PS 실수령액을 늘리는 4가지 절세 전략과 실전 시뮬레이션.",
   category: "주식",
   tags: ["성과급세금", "OPI", "PS", "IRP", "ISA", "절세", "반도체"],
@@ -1063,7 +1063,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "hbm-supercycle-worker-2026",
-  title: "HBM 슈퍼사이클 2026 - 반도체 직장인 자산 시나리오 3가지 🚀",
+  title: "HBM 슈퍼사이클 2026 - 반도체 직장인 자산 시나리오 3가지",
   description: "HBM3E·HBM4 로드맵과 2026년 정점 가능성. 강세/조정/다운사이클 시나리오별 자산 배분 가이드와 직장인 체크리스트.",
   category: "주식",
   tags: ["HBM", "슈퍼사이클", "자산배분", "반도체", "직장인", "2026"],
@@ -1075,7 +1075,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "semiconductor-entry-salary-2026",
-  title: "반도체 신입 초봉 2026 - 학사·석사·박사 격차와 5년 누적 보상 시뮬레이션 🎓",
+  title: "반도체 신입 초봉 2026 - 학사·석사·박사 격차와 5년 누적 보상 시뮬레이션",
   description: "삼성전자·SK하이닉스 학력별 초봉 비교(학사 5,300만원 ~ 박사 1억원), 직무별 격차, 5년 누적 보상까지.",
   category: "주식",
   tags: ["신입초봉", "반도체", "학사", "석사", "박사", "삼성전자", "SK하이닉스"],
@@ -1087,7 +1087,7 @@ export const semiconductorDeepdiveGuides = [
  },
  {
   slug: "chip-rsu-stock-tax-2026",
-  title: "반도체 우리사주·RSU·자사주 절세 통합 가이드 2026 💼",
+  title: "반도체 우리사주·RSU·자사주 절세 통합 가이드 2026",
   description: "우리사주 청약, 매입대출, 임원 RSU, 일반 자사주 매도까지. 매수·매도 시점별 세금과 4가지 절세 원칙.",
   category: "주식",
   tags: ["우리사주", "RSU", "자사주", "절세", "양도소득세", "반도체"],

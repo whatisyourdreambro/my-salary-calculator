@@ -804,7 +804,7 @@ ${DISCLAIMER_HTML}
 export const stockDeepdiveGuides = [
  {
   slug: "samsung-electronics-stock-2026",
-  title: "삼성전자 2026년 주가 전망: HBM·파운드리 반등 시나리오 📊",
+  title: "삼성전자 2026년 주가 전망: HBM·파운드리 반등 시나리오",
   description: "HBM3E 12단 양산과 2nm 파운드리 흑자 전환 가능성. 직장인 투자자를 위한 시나리오별 매수 전략.",
   category: "주식",
   tags: ["삼성전자", "주가", "HBM", "반도체", "2026"],
@@ -816,7 +816,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "samsung-employee-rsu-stock",
-  title: "삼성전자 직원 자사주: 주가 +30%일 때 내 자산은? 💼",
+  title: "삼성전자 직원 자사주: 주가 +30%일 때 내 자산은?",
   description: "우리사주조합·매입대출·임원 RSU까지. 직급별 자사주 비중과 주가 변동 시 자산 시뮬레이션.",
   category: "주식",
   tags: ["삼성전자", "우리사주", "RSU", "직원", "자산관리"],
@@ -828,7 +828,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "sk-hynix-stock-2026",
-  title: "SK하이닉스 주가 분석: HBM3E 독점은 2026년에도 유지될까? 🚀",
+  title: "SK하이닉스 주가 분석: HBM3E 독점은 2026년에도 유지될까?",
   description: "HBM4 로드맵, 청주·이천·인디애나 캐파 확장, 그리고 삼성전자 진입의 영향까지 종합 분석.",
   category: "주식",
   tags: ["SK하이닉스", "주가", "HBM3E", "HBM4", "메모리"],
@@ -840,7 +840,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "sk-hynix-employee-bonus-stock",
-  title: "SK하이닉스 직원 PS·PI 보너스와 자사주 ROI 💰",
+  title: "SK하이닉스 직원 PS·PI 보너스와 자사주 ROI",
   description: "PS 50% 받은 다음 날의 선택지: 우리사주 vs ISA vs 대출상환. 직급별 보너스 시뮬레이션 포함.",
   category: "주식",
   tags: ["SK하이닉스", "PS", "PI", "보너스", "자사주"],
@@ -852,7 +852,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "semiconductor-cycle-2026",
-  title: "반도체 사이클 2026: 메모리 정점기 직장인 자산관리 🔄",
+  title: "반도체 사이클 2026: 메모리 정점기 직장인 자산관리",
   description: "회복-확장-정점-조정 4단계 사이클. 단계별 자사주 비중·PS 활용·고정비 관리 원칙.",
   category: "주식",
   tags: ["반도체사이클", "메모리", "자산관리", "정점", "직장인"],
@@ -864,7 +864,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "samsung-vs-hynix-employee-comparison",
-  title: "삼성전자 vs SK하이닉스: 신입 보상·복지·주식 완전 비교 ⚖️",
+  title: "삼성전자 vs SK하이닉스: 신입 보상·복지·주식 완전 비교",
   description: "초봉, 사이닝 보너스, OPI/TAI vs PS/PI, 자사주 제도, 사택까지. 6가지 판단 기준으로 정리.",
   category: "주식",
   tags: ["삼성전자", "SK하이닉스", "신입연봉", "비교", "취업"],
@@ -876,7 +876,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "chip-stock-tax-guide",
-  title: "반도체 주식 세금 절세 가이드: ISA·연금저축 활용법 🧾",
+  title: "반도체 주식 세금 절세 가이드: ISA·연금저축 활용법",
   description: "직장인이 삼성전자/SK하이닉스를 매도할 때 챙겨야 할 4가지 절세 전략. ISA·IRP·손익통산·해외 250만원 공제.",
   category: "주식",
   tags: ["주식세금", "양도소득세", "ISA", "연금저축", "절세"],
@@ -888,7 +888,7 @@ export const stockDeepdiveGuides = [
  },
  {
   slug: "kospi-leader-stock-strategy",
-  title: "코스피 대장주(삼성·SK하이닉스) 적립식 vs 일시매수 전략 📈",
+  title: "코스피 대장주(삼성·SK하이닉스) 적립식 vs 일시매수 전략",
   description: "월급의 5~10% 자동이체로 평단 관리. 연봉별 비중 상한과 정점 신호 시 매도 가이드.",
   category: "주식",
   tags: ["적립식투자", "DCA", "삼성전자", "SK하이닉스", "포트폴리오"],
