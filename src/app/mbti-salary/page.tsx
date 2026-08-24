@@ -163,7 +163,7 @@ export default function MbtiSalaryPage() {
  )}
 
  {step === "quiz" && (
- <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-canvas animate-fade-in-up">
+ <div className="w-full max-w-2xl bg-white/80 dark:bg-canvas-900/80 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-canvas animate-fade-in-up">
  <div className="w-full bg-canvas-deeper rounded-full h-2.5 mb-8">
  <div
  className="bg-gradient-to-r from-primary to-[#3D7FF5] 400 h-2.5 rounded-full transition-all duration-500"

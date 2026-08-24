@@ -292,7 +292,7 @@ export default function RetirementPension2026Page() {
  </section>
 
  {/* 본문 - 심화 */}
- <article className="prose prose-sm sm:prose-base max-w-none mb-12">
+ <article className="prose dark:prose-invert prose-sm sm:prose-base max-w-none mb-12">
  <h2 className="text-xl font-black text-navy mt-8 mb-4">
  DB vs DC, 10년 운용 차이는?
  </h2>

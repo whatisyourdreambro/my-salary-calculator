@@ -168,7 +168,7 @@ export default function HealthCheckup2026Page() {
  </div>
 
  {/* 본문 */}
- <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+ <section className="mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
  <p className="text-sm leading-7 text-muted-blue">
  국민건강검진은 국민건강보험 가입자라면 누구나 받을 수 있는 무료 검진입니다.
  일반건강검진(혈압·혈액·소변 등 17개 항목)은 공단이 전액 부담하고, 암검진(위·대장·

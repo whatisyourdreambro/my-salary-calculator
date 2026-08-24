@@ -212,7 +212,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
 
  <div className="max-w-6xl mx-auto px-4 relative z-20">
  {/* Controls */}
- <div className="bg-white/50 backdrop-blur-md border border-canvas rounded-2xl p-6 mb-12 shadow-2xl">
+ <div className="bg-white/50 dark:bg-canvas-900/50 backdrop-blur-md border border-canvas rounded-2xl p-6 mb-12 shadow-2xl">
  <div className="flex flex-col md:flex-row gap-6 items-center">
  <CompanySelector
  label="Player 1 (Blue Corner)"
@@ -264,7 +264,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  <motion.div
  initial={{ x: -50, opacity: 0 }}
  animate={{ x: 0, opacity: 1 }}
- className="bg-white/50 border border-electric/30 p-6 rounded-2xl"
+ className="bg-white/50 dark:bg-canvas-900/50 border border-electric/30 p-6 rounded-2xl"
  >
  <div className="text-6xl mb-4">{result.companyA.logo}</div>
  <h2 className="text-2xl font-bold text-navy mb-1">{result.companyA.name.ko}</h2>
@@ -292,7 +292,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  <motion.div
  initial={{ scale: 0.9, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="bg-white/80 border border-canvas rounded-3xl p-6 shadow-2xl relative overflow-hidden"
+ className="bg-white/80 dark:bg-canvas-900/80 border border-canvas rounded-3xl p-6 shadow-2xl relative overflow-hidden"
  >
  {/* Radar Chart */}
  <div className="h-[300px] w-full mb-8">
@@ -347,7 +347,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  <motion.div
  initial={{ x: 50, opacity: 0 }}
  animate={{ x: 0, opacity: 1 }}
- className="bg-white/50 border border-primary/30 p-6 rounded-2xl"
+ className="bg-white/50 dark:bg-canvas-900/50 border border-primary/30 p-6 rounded-2xl"
  >
  <div className="text-6xl mb-4">{result.companyB.logo}</div>
  <h2 className="text-2xl font-bold text-primary mb-1">{result.companyB.name.ko}</h2>

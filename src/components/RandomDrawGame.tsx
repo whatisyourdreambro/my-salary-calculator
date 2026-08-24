@@ -455,7 +455,7 @@ export default function RandomDrawGame() {
  value={title}
  onChange={(e) => setTitle(e.target.value)}
  placeholder="예: 오늘 점심 쏘기"
- className="w-full bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-white/50 dark:bg-canvas-900/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
  />
  </div>
 
@@ -465,7 +465,7 @@ export default function RandomDrawGame() {
  value={candidatesText}
  onChange={(e) => setCandidatesText(e.target.value)}
  placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
- className="w-full h-60 bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none resize-none font-mono leading-relaxed"
+ className="w-full h-60 bg-white/50 dark:bg-canvas-900/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none resize-none font-mono leading-relaxed"
  />
  <div className="flex justify-between text-xs text-faint-blue mt-2 px-1">
  <span>엔터로 구분해주세요</span>
@@ -479,7 +479,7 @@ export default function RandomDrawGame() {
  {/* Winner Count */}
  <div>
  <label className="block text-sm font-bold text-faint-blue mb-2">당첨자 수</label>
- <div className="flex items-center gap-4 bg-white/50 border border-canvas rounded-xl p-4">
+ <div className="flex items-center gap-4 bg-white/50 dark:bg-canvas-900/50 border border-canvas rounded-xl p-4">
  <Users className="text-faint-blue" />
  <input
  type="number"
@@ -494,7 +494,7 @@ export default function RandomDrawGame() {
  </div>
 
  {/* Special Prizes */}
- <div className="bg-white/30 border border-canvas rounded-xl p-5">
+ <div className="bg-white/30 dark:bg-canvas-900/30 border border-canvas rounded-xl p-5">
  <div className="flex items-center justify-between mb-4">
  <label className="text-sm font-bold text-primary flex items-center gap-2">
  <Gift className="w-4 h-4" /> 특별상 설정

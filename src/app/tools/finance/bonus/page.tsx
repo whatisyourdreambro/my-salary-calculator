@@ -277,10 +277,9 @@ export default function BonusCalculatorPage() {
   })();
 
   return (
-    <main
-      className="min-h-screen pb-32 pt-24 px-4 font-sans"
-      style={{ backgroundColor: "#EDF1F5" }}
-    >
+    // bg-canvas 유틸 대신 bg-canvas-100 사용: globals의 `.bg-canvas *` 색 강제
+    // 규칙이 하위 텍스트 클래스를 덮어써 라이트 픽셀이 변하는 것을 방지
+    <main className="min-h-screen pb-32 pt-24 px-4 font-sans bg-canvas-100 dark:bg-slate-900">
       <div className="max-w-2xl mx-auto">
 
         {/* ── Hero ── */}
@@ -288,8 +287,7 @@ export default function BonusCalculatorPage() {
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5"
-            style={{ backgroundColor: "#0145F21A", color: "#0145F2", border: "1.5px solid #0145F233" }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5 bg-electric-10 text-electric border-[1.5px] border-[#0145F233]"
           >
             <Sparkles size={12} /> 2026 세법 완벽 반영
           </motion.div>
@@ -297,8 +295,8 @@ export default function BonusCalculatorPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="text-4xl sm:text-5xl font-black tracking-tight mb-3"
-            style={{ color: "#0A1829", letterSpacing: "-0.04em" }}
+            className="text-4xl sm:text-5xl font-black tracking-tight mb-3 text-navy"
+            style={{ letterSpacing: "-0.04em" }}
           >
             성과급 세금 계산기
           </motion.h1>
@@ -306,10 +304,9 @@ export default function BonusCalculatorPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="text-lg font-medium"
-            style={{ color: "#3D5E78" }}
+            className="text-lg font-medium text-muted-blue"
           >
-            소득세 + 4대보험까지 <strong style={{ color: "#0145F2" }}>전부 정확하게</strong> 계산합니다
+            소득세 + 4대보험까지 <strong className="text-electric">전부 정확하게</strong> 계산합니다
           </motion.p>
         </div>
 
@@ -324,19 +321,18 @@ export default function BonusCalculatorPage() {
                   setSalaryFmt(p.salary.toLocaleString("ko-KR"));
                   setBonusFmt(p.bonus.toLocaleString("ko-KR"));
                 }}
-                className="p-3 rounded-xl text-left transition-all text-xs font-bold"
-                style={{
-                  backgroundColor: active ? "#0145F2" : "#FFFFFF",
-                  border: `1.5px solid ${active ? "#0145F2" : "#DDE4EC"}`,
-                  color: active ? "#FFFFFF" : "#3D5E78",
-                  boxShadow: active ? "0 4px 16px #0145F230" : "none",
-                }}
+                className={`p-3 rounded-xl text-left transition-all text-xs font-bold border-[1.5px] ${
+                  active
+                    ? "bg-electric border-electric text-white"
+                    : "bg-white border-canvas-200 text-muted-blue"
+                }`}
+                style={{ boxShadow: active ? "0 4px 16px #0145F230" : "none" }}
               >
-                <div style={{ color: active ? "#FFFFFF" : "#0A1829", fontWeight: 900 }}>{p.label}</div>
-                <div style={{ color: active ? "rgba(255,255,255,0.65)" : "#7A9AB5", marginTop: "2px", fontWeight: 500 }}>
+                <div className={`font-black ${active ? "text-white" : "text-navy"}`}>{p.label}</div>
+                <div className={`mt-0.5 font-medium ${active ? "text-white/65" : "text-faint-blue"}`}>
                   {p.sub}
                 </div>
-                <div style={{ color: active ? "rgba(255,255,255,0.8)" : "#0145F2", fontWeight: 700, marginTop: "4px" }}>
+                <div className={`mt-1 font-bold ${active ? "text-white/80" : "text-electric"}`}>
                   성과급 {toEok(p.bonus)}
                 </div>
               </button>
@@ -346,17 +342,19 @@ export default function BonusCalculatorPage() {
 
         {/* ── 입력 카드 ── */}
         <div
-          className="rounded-2xl p-6 sm:p-8 mb-5"
-          style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC", boxShadow: "0 2px 16px #0145F20A" }}
+          className="rounded-2xl p-6 sm:p-8 mb-5 bg-white border-[1.5px] border-canvas-200"
+          style={{ boxShadow: "0 2px 16px #0145F20A" }}
         >
-          <h2 className="text-xs font-black uppercase tracking-widest mb-5" style={{ color: "#7A9AB5" }}>
+          <h2 className="text-xs font-black uppercase tracking-widest mb-5 text-faint-blue">
             입력 정보
           </h2>
           <div className="space-y-5">
 
-            {/* 연봉 */}
+            {/* 연봉 — 색·포커스 링은 globals.css의 input 전역 규칙이 담당
+                (!border-canvas-200: 전역 border-color(#C8D4E0)보다 기존 인라인
+                값(#DDE4EC)을 유지하기 위한 important) */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+              <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
                 연간 기본급 (세전 연봉)
               </label>
               <div className="relative">
@@ -365,33 +363,20 @@ export default function BonusCalculatorPage() {
                   inputMode="numeric"
                   value={salaryFmt}
                   onChange={handleSalary}
-                  className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-12"
-                  style={{
-                    backgroundColor: "#F8FAFB",
-                    border: "1.5px solid #DDE4EC",
-                    color: "#0A1829",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "#0145F2";
-                    e.target.style.boxShadow = "0 0 0 3px #0145F215";
-                    e.target.select();
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "#DDE4EC";
-                    e.target.style.boxShadow = "none";
-                  }}
+                  className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-12 border-[1.5px] !border-canvas-200 focus:!border-electric"
+                  onFocus={(e) => e.target.select()}
                   placeholder="예: 60,000,000"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold" style={{ color: "#7A9AB5" }}>원</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-faint-blue">원</span>
               </div>
-              <p className="text-xs mt-1.5 font-medium" style={{ color: "#7A9AB5" }}>
+              <p className="text-xs mt-1.5 font-medium text-faint-blue">
                 = {toEok(salary)}
               </p>
             </div>
 
             {/* 성과급 */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+              <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
                 성과급 / 인센티브 (세전)
               </label>
               <div className="relative">
@@ -400,22 +385,13 @@ export default function BonusCalculatorPage() {
                   inputMode="numeric"
                   value={bonusFmt}
                   onChange={handleBonus}
-                  className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-12"
-                  style={{
-                    backgroundColor: "#0145F208",
-                    border: "2px solid #0145F2",
-                    color: "#0145F2",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.boxShadow = "0 0 0 3px #0145F218";
-                    e.target.select();
-                  }}
-                  onBlur={(e) => { e.target.style.boxShadow = "none"; }}
+                  className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-12 border-2 !border-electric"
+                  onFocus={(e) => e.target.select()}
                   placeholder="예: 10,000,000"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold" style={{ color: "#0145F2" }}>원</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-electric">원</span>
               </div>
-              <p className="text-xs mt-1.5 font-medium" style={{ color: "#0145F2" }}>
+              <p className="text-xs mt-1.5 font-medium text-electric">
                 = {toEok(bonus)}
               </p>
             </div>
@@ -423,14 +399,13 @@ export default function BonusCalculatorPage() {
             {/* 부양가족 + 배우자 */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+                <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
                   <Users size={11} className="inline mr-1" />부양가족 (본인 제외)
                 </label>
                 <select
                   value={dependents}
                   onChange={(e) => setDependents(Number(e.target.value))}
-                  className="w-full rounded-xl px-4 py-3.5 font-bold focus:outline-none"
-                  style={{ backgroundColor: "#F8FAFB", border: "1.5px solid #DDE4EC", color: "#0A1829" }}
+                  className="w-full rounded-xl px-4 py-3.5 font-bold focus:outline-none border-[1.5px] !border-canvas-200"
                 >
                   {[0,1,2,3,4,5].map((n) => (
                     <option key={n} value={n}>{n}명</option>
@@ -438,7 +413,7 @@ export default function BonusCalculatorPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+                <label className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">
                   배우자 공제
                 </label>
                 <div className="flex gap-2">
@@ -446,12 +421,11 @@ export default function BonusCalculatorPage() {
                     <button
                       key={String(opt.v)}
                       onClick={() => setHasSpouse(opt.v)}
-                      className="flex-1 py-3.5 rounded-xl text-xs font-bold transition-all"
-                      style={{
-                        backgroundColor: hasSpouse === opt.v ? "#0145F2" : "#F8FAFB",
-                        border: `1.5px solid ${hasSpouse === opt.v ? "#0145F2" : "#DDE4EC"}`,
-                        color: hasSpouse === opt.v ? "#FFFFFF" : "#3D5E78",
-                      }}
+                      className={`flex-1 py-3.5 rounded-xl text-xs font-bold transition-all border-[1.5px] ${
+                        hasSpouse === opt.v
+                          ? "bg-electric border-electric text-white"
+                          : "bg-canvas-50 dark:bg-canvas-900 border-canvas-200 text-muted-blue"
+                      }`}
                     >
                       {opt.label}
                     </button>
@@ -473,19 +447,16 @@ export default function BonusCalculatorPage() {
             className="rounded-2xl overflow-hidden mb-4"
             style={{ boxShadow: "0 8px 40px #0145F225" }}
           >
-            {/* 상단 파란 결과 */}
-            <div
-              className="px-8 py-8 text-center relative overflow-hidden"
-              style={{ background: "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)" }}
-            >
+            {/* 상단 파란 결과 — 라이트/다크 공통 브랜드 그라디언트 */}
+            <div className="px-8 py-8 text-center relative overflow-hidden bg-primary-gradient">
               <div
-                className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl"
-                style={{ backgroundColor: "rgba(255,255,255,0.1)", transform: "translate(30%,-30%)" }}
+                className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl bg-white/10"
+                style={{ transform: "translate(30%,-30%)" }}
               />
-              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-3 text-white/65">
                 실수령 성과급 (세후)
               </p>
-              <div className="text-5xl sm:text-6xl font-black tracking-tight" style={{ color: "#FFFFFF", letterSpacing: "-0.04em" }}>
+              <div className="text-5xl sm:text-6xl font-black tracking-tight text-white" style={{ letterSpacing: "-0.04em" }}>
                 <CountUp
                   end={r.netBonus}
                   duration={0.8}
@@ -494,32 +465,26 @@ export default function BonusCalculatorPage() {
                   preserveValue
                 />
               </div>
-              <p className="text-sm font-bold mt-1 mb-5" style={{ color: "rgba(255,255,255,0.6)" }}>
+              <p className="text-sm font-bold mt-1 mb-5 text-white/60">
                 세전 {fmt(bonus)}원의 실수령
               </p>
 
               {/* 충격 배지 */}
-              <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-5"
-                style={{ backgroundColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}
-              >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-5 bg-white/15 text-white">
                 <span>{shockMsg.emoji}</span>
                 <span>{shockMsg.text}</span>
               </div>
 
               {/* 3열 요약 */}
-              <div
-                className="grid grid-cols-3 gap-1 pt-5"
-                style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}
-              >
+              <div className="grid grid-cols-3 gap-1 pt-5 border-t border-white/20">
                 {[
                   { label: "총 공제액",    value: fmt(r.totalDeduction) + "원" },
                   { label: "실효세율",     value: r.effectiveRate.toFixed(1) + "%" },
                   { label: "실수령 비율",  value: receiveRatio + "%" },
                 ].map((s) => (
                   <div key={s.label} className="text-center">
-                    <div className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>{s.label}</div>
-                    <div className="text-sm font-black" style={{ color: "#FFFFFF" }}>{s.value}</div>
+                    <div className="text-xs mb-1 text-white/55">{s.label}</div>
+                    <div className="text-sm font-black text-white">{s.value}</div>
                   </div>
                 ))}
               </div>
@@ -539,13 +504,14 @@ export default function BonusCalculatorPage() {
                 return (
                   <div
                     key={row.label}
-                    className="flex justify-between items-center py-3"
-                    style={{ borderBottom: i < 6 ? "1px solid #EDF1F5" : "none" }}
+                    className={`flex justify-between items-center py-3 ${
+                      i < 6 ? "border-b border-canvas-100 dark:border-canvas-800" : ""
+                    }`}
                   >
-                    <span className="text-sm font-medium" style={{ color: "#3D5E78" }}>{row.label}</span>
+                    <span className="text-sm font-medium text-muted-blue">{row.label}</span>
                     <span
-                      className="text-sm font-black tabular-nums"
-                      style={{ color: row.sign === "-" ? "#E63B5A" : "#0A1829" }}
+                      className={`text-sm font-black tabular-nums ${row.sign === "-" ? "" : "text-navy"}`}
+                      style={row.sign === "-" ? { color: "#E63B5A" } : undefined}
                     >
                       {row.sign}{fmt(row.value)}원
                     </span>
@@ -553,12 +519,9 @@ export default function BonusCalculatorPage() {
                 );
               })}
               {/* 총계 */}
-              <div
-                className="flex justify-between items-center py-4 mt-1"
-                style={{ borderTop: "2px solid #0145F2" }}
-              >
-                <span className="font-black text-base" style={{ color: "#0A1829" }}>세후 실수령액</span>
-                <span className="text-xl font-black" style={{ color: "#0145F2" }}>
+              <div className="flex justify-between items-center py-4 mt-1 border-t-2 border-electric">
+                <span className="font-black text-base text-navy">세후 실수령액</span>
+                <span className="text-xl font-black text-electric">
                   {fmt(r.netBonus)}원
                 </span>
               </div>
@@ -574,18 +537,14 @@ export default function BonusCalculatorPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl p-5 mb-4 flex gap-3"
-            style={{
-              backgroundColor: "#FFF8E7",
-              border: "1.5px solid #F59E0B44",
-            }}
+            className="rounded-2xl p-5 mb-4 flex gap-3 bg-[#FFF8E7] dark:bg-[#F59E0B1A] border-[1.5px] border-[#F59E0B44]"
           >
-            <AlertCircle size={20} style={{ color: "#F59E0B", flexShrink: 0, marginTop: "2px" }} />
+            <AlertCircle size={20} className="flex-shrink-0 mt-0.5 text-[#F59E0B]" />
             <div>
-              <p className="text-sm font-black mb-1" style={{ color: "#92400E" }}>
+              <p className="text-sm font-black mb-1 text-[#92400E] dark:text-[#FBBF24]">
                 한계세율 {r.marginalRate}% 구간 진입!
               </p>
-              <p className="text-xs leading-relaxed" style={{ color: "#78350F" }}>
+              <p className="text-xs leading-relaxed text-[#78350F] dark:text-[#FDE68A]">
                 성과급으로 인해 소득이 상위 세율 구간에 진입했습니다.
                 IRP 추가 납입(연 900만원 한도, 세액공제 16.5%)이나
                 연금저축으로 절세 효과를 높이는 것을 검토하세요.
@@ -595,11 +554,8 @@ export default function BonusCalculatorPage() {
         )}
 
         {/* ── 공유 버튼 ── */}
-        <div
-          className="w-full flex flex-col items-center gap-3 py-5 rounded-2xl mb-4"
-          style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
-        >
-          <p className="text-sm font-bold" style={{ color: "#3D5E78" }}>
+        <div className="w-full flex flex-col items-center gap-3 py-5 rounded-2xl mb-4 bg-white border-[1.5px] border-canvas-200">
+          <p className="text-sm font-bold text-muted-blue">
             결과 공유하기 — 친구한테 세금 자랑(?)하기
           </p>
           <ShareButtons title={shareText} />
@@ -608,20 +564,17 @@ export default function BonusCalculatorPage() {
         {/* ── 세금 계산 상세 ── */}
         <button
           onClick={() => setShowDetail(!showDetail)}
-          className="w-full flex items-center justify-between px-5 py-4 rounded-2xl mb-4 transition-all"
-          style={{
-            backgroundColor: "#FFFFFF",
-            border: "1.5px solid #DDE4EC",
-            color: "#3D5E78",
-          }}
+          className="w-full flex items-center justify-between px-5 py-4 rounded-2xl mb-4 transition-all bg-white border-[1.5px] border-canvas-200"
         >
-          <span className="font-bold text-sm flex items-center gap-2">
-            <BarChart3 size={16} style={{ color: "#0145F2" }} />
+          {/* 텍스트 색은 span에 부여: globals의 .bg-white 색 규칙이 요소 자체의
+              텍스트 클래스를 덮어쓰는 것을 회피 (라이트 픽셀 유지) */}
+          <span className="font-bold text-sm flex items-center gap-2 text-muted-blue">
+            <BarChart3 size={16} className="text-electric" />
             세금 계산 상세 내역 보기
           </span>
           {showDetail
-            ? <ChevronUp size={18} style={{ color: "#0145F2" }} />
-            : <ChevronDown size={18} style={{ color: "#7A9AB5" }} />
+            ? <ChevronUp size={18} className="text-electric" />
+            : <ChevronDown size={18} className="text-faint-blue" />
           }
         </button>
 
@@ -633,18 +586,15 @@ export default function BonusCalculatorPage() {
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden mb-4"
             >
-              <div
-                className="rounded-2xl overflow-hidden"
-                style={{ border: "1.5px solid #DDE4EC" }}
-              >
-                <div className="px-6 py-4 flex items-center gap-2" style={{ backgroundColor: "#0145F2" }}>
-                  <Zap size={14} style={{ color: "rgba(255,255,255,0.8)" }} />
-                  <h3 className="font-black text-sm" style={{ color: "#FFFFFF" }}>
+              <div className="rounded-2xl overflow-hidden border-[1.5px] border-canvas-200">
+                <div className="px-6 py-4 flex items-center gap-2 bg-electric">
+                  <Zap size={14} className="text-white/80" />
+                  <h3 className="font-black text-sm text-white">
                     2026 근로소득세 계산 과정 (누진세 합산 방식)
                   </h3>
                 </div>
 
-                <div style={{ backgroundColor: "#FFFFFF" }}>
+                <div className="bg-white">
                   {[
                     { step: "①", label: "연봉 + 성과급 합계",    value: fmt(r.totalIncome) + "원",      sub: "총 근로소득" },
                     { step: "②", label: "근로소득공제",           value: "-" + fmt(r.empDeductNew) + "원", sub: "소득 규모별 체감 공제" },
@@ -659,31 +609,29 @@ export default function BonusCalculatorPage() {
                   ].map((row, i) => (
                     <div
                       key={row.step}
-                      className="flex justify-between items-start px-6 py-4"
-                      style={{ borderBottom: i < 9 ? "1px solid #EDF1F5" : "none" }}
+                      className={`flex justify-between items-start px-6 py-4 ${
+                        i < 9 ? "border-b border-canvas-100 dark:border-canvas-800" : ""
+                      }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span
-                          className="text-xs font-black w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                          style={{ backgroundColor: "#0145F21A", color: "#0145F2" }}
-                        >
+                        <span className="text-xs font-black w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-electric-10 text-electric">
                           {i + 1}
                         </span>
                         <div>
-                          <p className="text-sm font-bold" style={{ color: "#0A1829" }}>{row.label}</p>
-                          <p className="text-xs mt-0.5" style={{ color: "#7A9AB5" }}>{row.sub}</p>
+                          <p className="text-sm font-bold text-navy">{row.label}</p>
+                          <p className="text-xs mt-0.5 text-faint-blue">{row.sub}</p>
                         </div>
                       </div>
-                      <p className="text-sm font-black tabular-nums" style={{ color: "#3D5E78" }}>{row.value}</p>
+                      <p className="text-sm font-black tabular-nums text-muted-blue">{row.value}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* 면책 */}
-                <div className="px-6 py-4 flex gap-3" style={{ backgroundColor: "#F8FAFB", borderTop: "1px solid #DDE4EC" }}>
-                  <Info size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
-                  <p className="text-xs leading-relaxed" style={{ color: "#7A9AB5" }}>
-                    본 계산기는 <strong style={{ color: "#0A1829" }}>2026년 소득세법 기준</strong>으로,
+                <div className="px-6 py-4 flex gap-3 bg-canvas-50 dark:bg-canvas-900 border-t border-canvas-200">
+                  <Info size={14} className="flex-shrink-0 mt-0.5 text-electric" />
+                  <p className="text-xs leading-relaxed text-faint-blue">
+                    본 계산기는 <strong className="text-navy">2026년 소득세법 기준</strong>으로,
                     누진세 합산 방식(연간 정산)으로 산출됩니다. 실제 원천징수는 월 지급 시점의
                     간이세액표를 적용하므로 차이가 있을 수 있으며, 연말정산에서 정산됩니다.
                     국민연금 상한액(월 659만원, 2026.7~2027.6)은 연봉 기준으로 적용되어 이미 상한을 초과하면
@@ -696,13 +644,10 @@ export default function BonusCalculatorPage() {
         </AnimatePresence>
 
         {/* ── 절세 팁 카드 ── */}
-        <div
-          className="rounded-2xl p-6 mb-6"
-          style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
-        >
+        <div className="rounded-2xl p-6 mb-6 bg-white border-[1.5px] border-canvas-200">
           <div className="flex items-center gap-2 mb-4">
-            <Shield size={18} style={{ color: "#0145F2" }} />
-            <h3 className="font-black text-sm" style={{ color: "#0A1829" }}>
+            <Shield size={18} className="text-electric" />
+            <h3 className="font-black text-sm text-navy">
               성과급 세금 줄이는 꿀팁
             </h3>
           </div>
@@ -714,10 +659,10 @@ export default function BonusCalculatorPage() {
               { title: "주택청약 납입",      desc: "소득공제 연 최대 300만원 (납입액 40% 공제), 급여 7천만원 이하 적용" },
             ].map((tip) => (
               <div key={tip.title} className="flex gap-3">
-                <Zap size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "3px" }} />
+                <Zap size={14} className="flex-shrink-0 mt-[3px] text-electric" />
                 <div>
-                  <span className="text-sm font-black" style={{ color: "#0A1829" }}>{tip.title}</span>
-                  <span className="text-sm ml-1" style={{ color: "#3D5E78" }}>— {tip.desc}</span>
+                  <span className="text-sm font-black text-navy">{tip.title}</span>
+                  <span className="text-sm ml-1 text-muted-blue">— {tip.desc}</span>
                 </div>
               </div>
             ))}
@@ -805,35 +750,33 @@ function BonusComparison({
   return (
     <section className="mb-6">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#0145F21A" }}>
-          <BarChart3 size={16} style={{ color: "#0145F2" }} />
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-electric-10">
+          <BarChart3 size={16} className="text-electric" />
         </div>
         <div>
-          <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 비교하기</h2>
-          <p className="text-xs" style={{ color: "#7A9AB5" }}>직급·업종·비율별 실수령액 한눈에 비교</p>
+          <h2 className="font-black text-lg text-navy" style={{ letterSpacing: "-0.03em" }}>성과급 비교하기</h2>
+          <p className="text-xs text-faint-blue">직급·업종·비율별 실수령액 한눈에 비교</p>
         </div>
       </div>
 
       {/* 탭 */}
-      <div className="flex gap-1 p-1 rounded-2xl mb-4" style={{ backgroundColor: "#EDF1F5" }}>
+      <div className="flex gap-1 p-1 rounded-2xl mb-4 bg-canvas-100 dark:bg-canvas-900">
         {COMPARE_PRESETS.map((g, i) => (
           <button
             key={g.group}
             onClick={() => setActiveGroup(i)}
-            className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all"
-            style={{
-              backgroundColor: activeGroup === i ? "#0145F2" : "transparent",
-              color: activeGroup === i ? "#FFFFFF" : "#7A9AB5",
-              boxShadow: activeGroup === i ? "0 2px 8px #0145F230" : "none",
-            }}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              activeGroup === i ? "bg-electric text-white" : "bg-transparent text-faint-blue"
+            }`}
+            style={{ boxShadow: activeGroup === i ? "0 2px 8px #0145F230" : "none" }}
           >{g.group}</button>
         ))}
       </div>
 
       {/* 테이블 */}
-      <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid #DDE4EC", backgroundColor: "#FFFFFF" }}>
+      <div className="rounded-2xl overflow-hidden bg-white border-[1.5px] border-canvas-200">
         {/* 헤더 */}
-        <div className="grid grid-cols-12 gap-1 px-4 py-3 text-xs font-black uppercase tracking-widest" style={{ backgroundColor: "#0145F2", color: "rgba(255,255,255,0.75)" }}>
+        <div className="grid grid-cols-12 gap-1 px-4 py-3 text-xs font-black uppercase tracking-widest bg-electric text-white">
           <div className="col-span-2">구분</div>
           <div className="col-span-3 text-right">세전 성과급</div>
           <div className="col-span-2 text-right">세금</div>
@@ -847,31 +790,43 @@ function BonusComparison({
               const barPct = (row.res.netBonus / maxNet) * 100;
               const isTop = row.res.netBonus === Math.max(...rows.map((r) => r.res.netBonus));
               return (
-                <div key={row.label} style={{ borderBottom: i < rows.length - 1 ? "1px solid #EDF1F5" : "none", backgroundColor: row.isBase ? "#0145F208" : "transparent" }}>
+                <div
+                  key={row.label}
+                  className={`${i < rows.length - 1 ? "border-b border-canvas-100 dark:border-canvas-800" : ""} ${
+                    row.isBase ? "bg-[#0145F208]" : "bg-transparent"
+                  }`}
+                >
                   <div className="grid grid-cols-12 gap-1 px-4 py-3.5 items-center">
                     <div className="col-span-2 flex items-center gap-1">
-                      <span className="text-xs font-black" style={{ color: "#0A1829" }}>{row.label}</span>
-                      {row.isBase && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{ backgroundColor: "#0145F2", color: "#FFF" }}>나</span>}
+                      <span className="text-xs font-black text-navy">{row.label}</span>
+                      {row.isBase && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-electric text-white">나</span>}
                       {isTop && !row.isBase && <span className="text-[11px]">🏆</span>}
                     </div>
                     <div className="col-span-3 text-right">
-                      <span className="text-xs font-bold tabular-nums" style={{ color: "#7A9AB5" }}>{toEok(row.bonus)}</span>
+                      <span className="text-xs font-bold tabular-nums text-faint-blue">{toEok(row.bonus)}</span>
                     </div>
                     <div className="col-span-2 text-right">
+                      {/* 시스템 외 강조색(적자 표기)은 인라인 유지 — 다크에서도 가독 */}
                       <span className="text-xs font-bold tabular-nums" style={{ color: "#E63B5A" }}>-{toEok(row.res.totalDeduction)}</span>
                     </div>
                     <div className="col-span-3 text-right">
-                      <span className="text-xs font-black tabular-nums" style={{ color: "#0145F2" }}>{toEok(row.res.netBonus)}</span>
+                      <span className="text-xs font-black tabular-nums text-electric">{toEok(row.res.netBonus)}</span>
                     </div>
                     <div className="col-span-2 text-right">
-                      <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ backgroundColor: row.res.effectiveRate >= 30 ? "#FEE2E2" : "#EDF1F5", color: row.res.effectiveRate >= 30 ? "#E63B5A" : "#3D5E78" }}>
+                      <span
+                        className={`text-xs font-black px-2 py-0.5 rounded-full ${
+                          row.res.effectiveRate >= 30
+                            ? "bg-[#FEE2E2] text-[#E63B5A] dark:bg-[#E63B5A26] dark:text-[#F87171]"
+                            : "bg-canvas-100 dark:bg-canvas-800 text-muted-blue"
+                        }`}
+                      >
                         {row.res.effectiveRate.toFixed(1)}%
                       </span>
                     </div>
                   </div>
                   {/* 막대 */}
                   <div className="px-4 pb-2">
-                    <div className="w-full rounded-full overflow-hidden" style={{ height: "4px", backgroundColor: "#EDF1F5" }}>
+                    <div className="w-full rounded-full overflow-hidden bg-canvas-100 dark:bg-canvas-800" style={{ height: "4px" }}>
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${barPct}%` }}
@@ -888,20 +843,20 @@ function BonusComparison({
         </AnimatePresence>
 
         {/* 내 결과 고정 */}
-        <div className="grid grid-cols-12 gap-1 px-4 py-3.5 items-center" style={{ backgroundColor: "#0145F2", borderTop: "2px solid #0145F2" }}>
-          <div className="col-span-2"><span className="text-xs font-black" style={{ color: "#FFFFFF" }}>내 성과급</span></div>
-          <div className="col-span-3 text-right"><span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>{toEok(baseBonus)}</span></div>
-          <div className="col-span-2 text-right"><span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.8)" }}>-{toEok(baseResult.totalDeduction)}</span></div>
-          <div className="col-span-3 text-right"><span className="text-xs font-black tabular-nums" style={{ color: "#FFFFFF" }}>{toEok(baseResult.netBonus)}</span></div>
-          <div className="col-span-2 text-right"><span className="text-xs font-black" style={{ color: "#FFFFFF" }}>{baseResult.effectiveRate.toFixed(1)}%</span></div>
+        <div className="grid grid-cols-12 gap-1 px-4 py-3.5 items-center bg-electric border-t-2 border-electric">
+          <div className="col-span-2"><span className="text-xs font-black text-white">내 성과급</span></div>
+          <div className="col-span-3 text-right"><span className="text-xs tabular-nums text-white/70">{toEok(baseBonus)}</span></div>
+          <div className="col-span-2 text-right"><span className="text-xs tabular-nums text-white/80">-{toEok(baseResult.totalDeduction)}</span></div>
+          <div className="col-span-3 text-right"><span className="text-xs font-black tabular-nums text-white">{toEok(baseResult.netBonus)}</span></div>
+          <div className="col-span-2 text-right"><span className="text-xs font-black text-white">{baseResult.effectiveRate.toFixed(1)}%</span></div>
         </div>
       </div>
 
       {/* 인사이트 */}
-      <div className="mt-3 rounded-xl px-4 py-3 flex gap-2 items-start" style={{ backgroundColor: "#0145F20D", border: "1px solid #0145F220" }}>
-        <Sparkles size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
-        <p className="text-xs leading-relaxed" style={{ color: "#3D5E78" }}>
-          <strong style={{ color: "#0145F2" }}>세율 구간 주의:</strong>{" "}
+      <div className="mt-3 rounded-xl px-4 py-3 flex gap-2 items-start bg-electric-5 border border-[#0145F220]">
+        <Sparkles size={13} className="flex-shrink-0 mt-0.5 text-electric" />
+        <p className="text-xs leading-relaxed text-muted-blue">
+          <strong className="text-electric">세율 구간 주의:</strong>{" "}
           연봉 + 성과급 합계가 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
           IRP·연금저축으로 과세표준을 낮추면 구간 진입을 피할 수 있습니다.
         </p>
@@ -932,36 +887,45 @@ function BonusGlossary() {
   return (
     <section className="mb-8">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#0145F21A" }}>
-          <BookOpen size={16} style={{ color: "#0145F2" }} />
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-electric-10">
+          <BookOpen size={16} className="text-electric" />
         </div>
         <div>
-          <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 핵심 용어사전</h2>
-          <p className="text-xs" style={{ color: "#7A9AB5" }}>계산 전 반드시 알아야 할 10가지</p>
+          <h2 className="font-black text-lg text-navy" style={{ letterSpacing: "-0.03em" }}>성과급 핵심 용어사전</h2>
+          <p className="text-xs text-faint-blue">계산 전 반드시 알아야 할 10가지</p>
         </div>
       </div>
       <div className="space-y-2">
         {GLOSSARY_TERMS.map((g, i) => {
           const isOpen = openIdx === i;
           return (
-            <motion.div key={g.term} layout className="rounded-2xl overflow-hidden" style={{ border: `1.5px solid ${isOpen ? "#0145F2" : "#DDE4EC"}`, backgroundColor: "#FFFFFF" }}>
+            <motion.div
+              key={g.term}
+              layout
+              className={`rounded-2xl overflow-hidden bg-white border-[1.5px] ${isOpen ? "border-electric" : "border-canvas-200"}`}
+            >
               <button onClick={() => setOpenIdx(isOpen ? null : i)} className="w-full flex items-center justify-between px-5 py-4 text-left">
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{g.emoji}</span>
-                  <span className="text-sm font-black" style={{ color: isOpen ? "#0145F2" : "#0A1829" }}>{g.term}</span>
+                  <span className={`text-sm font-black ${isOpen ? "text-electric" : "text-navy"}`}>{g.term}</span>
                 </div>
-                <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all" style={{ backgroundColor: isOpen ? "#0145F2" : "#EDF1F5", transform: isOpen ? "rotate(180deg)" : "none" }}>
-                  <ChevronDown size={14} style={{ color: isOpen ? "#FFFFFF" : "#7A9AB5" }} />
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+                    isOpen ? "bg-electric" : "bg-canvas-100 dark:bg-canvas-800"
+                  }`}
+                  style={{ transform: isOpen ? "rotate(180deg)" : "none" }}
+                >
+                  <ChevronDown size={14} className={isOpen ? "text-white" : "text-faint-blue"} />
                 </div>
               </button>
               <AnimatePresence>
                 {isOpen && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
-                    <div className="px-5 pb-5" style={{ borderTop: "1px solid #EDF1F5" }}>
-                      <p className="text-sm leading-relaxed mt-4 mb-3" style={{ color: "#3D5E78" }}>{g.def}</p>
-                      <div className="flex gap-2 p-3 rounded-xl" style={{ backgroundColor: "#0145F20D" }}>
-                        <Zap size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
-                        <p className="text-xs font-medium leading-relaxed" style={{ color: "#0145F2" }}><strong>TIP.</strong> {g.tip}</p>
+                    <div className="px-5 pb-5 border-t border-canvas-100 dark:border-canvas-800">
+                      <p className="text-sm leading-relaxed mt-4 mb-3 text-muted-blue">{g.def}</p>
+                      <div className="flex gap-2 p-3 rounded-xl bg-electric-5">
+                        <Zap size={13} className="flex-shrink-0 mt-0.5 text-electric" />
+                        <p className="text-xs font-medium leading-relaxed text-electric"><strong>TIP.</strong> {g.tip}</p>
                       </div>
                     </div>
                   </motion.div>

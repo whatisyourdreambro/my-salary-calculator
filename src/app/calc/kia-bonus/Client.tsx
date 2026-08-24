@@ -153,7 +153,7 @@ export default function KiaBonusClient() {
             className="w-full mt-2 p-3 rounded-lg border border-canvas-deep text-lg font-bold tabular-nums focus:outline-none focus:border-primary"
           />
         </label>
-        <div className="mt-3 grid grid-cols-5 gap-2">
+        <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-2">
           {[300, 400, 500, 600, 700].map((m) => (
             <button
               key={m}

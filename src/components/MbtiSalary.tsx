@@ -102,7 +102,7 @@ export default function MbtiSalary() {
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
- className="absolute inset-0 flex flex-col items-center justify-center text-faint-blue bg-white/50 rounded-3xl border border-canvas border-dashed"
+ className="absolute inset-0 flex flex-col items-center justify-center text-faint-blue bg-white/50 dark:bg-canvas-900/50 rounded-3xl border border-canvas border-dashed"
  >
  <Brain className="w-16 h-16 mb-4 opacity-20" />
  <p>MBTI를 선택하고<br />연봉 순위를 확인하세요!</p>

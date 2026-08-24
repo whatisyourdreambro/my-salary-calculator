@@ -266,7 +266,7 @@ export default function CivilServantPay2027Page() {
         <CalcResultAd />
 
         {/* 권고안 해설 */}
-        <section className="mt-10 mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mt-10 mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
           <h2 className="text-lg font-black text-navy mb-3">
             권고안 {pctMin}~{pctMax}% — 어떻게 나온 숫자인가
           </h2>

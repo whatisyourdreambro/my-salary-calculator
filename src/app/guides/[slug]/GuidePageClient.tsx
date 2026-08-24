@@ -62,7 +62,7 @@ function splitContentByH2(html: string): string[] {
 }
 
 // 분할된 본문 조각마다 동일하게 적용하는 prose 스타일
-const PROSE_CLASS = `prose prose-lg max-w-none
+const PROSE_CLASS = `prose dark:prose-invert prose-lg max-w-none
  prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-24
  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
  prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary

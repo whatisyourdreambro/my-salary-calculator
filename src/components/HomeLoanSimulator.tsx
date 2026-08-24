@@ -269,7 +269,7 @@ export default function HomeLoanSimulator() {
  <div className="mt-auto pt-4">
  <button
  onClick={handleSaveData}
- className="w-full py-3 bg-white text-[#0145F2] font-bold rounded-lg hover:bg-white/90 transition"
+ className="w-full py-3 bg-white text-[#0145F2] font-bold rounded-lg hover:bg-white/90 dark:hover:!bg-canvas-800 transition"
  >
  대시보드에 저장
  </button>

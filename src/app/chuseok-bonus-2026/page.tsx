@@ -186,7 +186,7 @@ export default function ChuseokBonus2026Page() {
         </div>
 
         {/* 지급 의무 */}
-        <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
           <h2 className="text-lg font-black text-navy mb-3 flex items-center gap-2">
             <Scale className="w-5 h-5 text-electric" />
             우리 회사는 안 주는데, 불법인가요? — 지급 의무가 생기는 3가지 경우
@@ -247,7 +247,7 @@ export default function ChuseokBonus2026Page() {
         <InArticleAd />
 
         {/* 연휴 근무 수당 */}
-        <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
           <h2 className="text-lg font-black text-navy mb-3">
             연휴에 일하면? — 2026 추석 근무 수당 기준
           </h2>

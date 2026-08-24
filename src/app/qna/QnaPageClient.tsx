@@ -73,7 +73,7 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
       {/* Search & Filter Section — sticky 제거: 고정 시 광고·본문을 가려 이탈 유발 */}
       <section className="relative z-30 -mt-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="glass-card p-6 rounded-3xl shadow-2xl border border-white/20 backdrop-blur-xl bg-white/80">
+          <div className="glass-card p-6 rounded-3xl shadow-2xl border border-white/20 backdrop-blur-xl bg-white/80 dark:bg-canvas-900/80">
             <div className="relative mb-6">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
                 <Search className="h-6 w-6 text-muted-foreground" />

@@ -171,7 +171,7 @@ export default function MinimumWage2027Page() {
         </div>
 
         {/* 핵심 본문 */}
-        <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+        <section className="mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
           <p className="text-sm leading-7 text-muted-blue">
             2027년에 적용될 최저임금이 <strong>시급 10,700원</strong>으로 결정됐습니다.
             고용노동부 보도자료에 따르면 최저임금위원회는 2026년 7월 14일 제14차

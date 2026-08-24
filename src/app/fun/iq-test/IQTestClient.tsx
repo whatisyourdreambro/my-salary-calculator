@@ -230,7 +230,7 @@ export default function IQTestClient() {
  className="relative"
  >
  {/* Result Card */}
- <div className="bg-white/50 backdrop-blur-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 relative z-10">
+ <div className="bg-white/50 dark:bg-canvas-900/50 backdrop-blur-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10 relative z-10">
  {/* Header Background */}
  <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-primary/50 via-primary/50 to-primary/80 opacity-50" />
 

@@ -156,7 +156,7 @@ export default function MinimumWage2026Page() {
  <div className="min-w-0 max-w-3xl mx-auto lg:mx-0 w-full">
 
  {/* 핵심 본문 */}
- <section className="mb-12 prose prose-slate">
+ <section className="mb-12 prose dark:prose-invert prose-slate">
  <p className="text-sm leading-7 text-muted-blue">
  최저임금은 근로자의 생활 안정을 위해 국가가 정한 임금의 하한선입니다. 매년
  최저임금위원회에서 결정해 8월 5일 이전 고시 → 다음 해 1월 1일부터 적용됩니다.

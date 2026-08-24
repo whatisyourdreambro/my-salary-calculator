@@ -371,7 +371,7 @@ export default function FireCalculatorPage() {
  <div className="relative z-10 w-full pt-12">
  {/* Header Logo Area */}
  <div className="text-center mb-12">
- <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-canvas bg-white/50 backdrop-blur-sm text-faint-blue font-sans text-sm tracking-widest uppercase mb-6 shadow-sm">
+ <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-canvas bg-white/50 dark:bg-canvas-900/50 backdrop-blur-sm text-faint-blue font-sans text-sm tracking-widest uppercase mb-6 shadow-sm">
  <Landmark className="w-4 h-4" />
  <span>파이어 계산기</span>
  </div>

@@ -137,7 +137,7 @@ export default function NewEmployeeSalary2026Page() {
  </div>
 
  {/* 본문 — SEO 텍스트 */}
- <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
+ <section className="mb-12 max-w-3xl mx-auto prose dark:prose-invert prose-slate">
  <p className="text-sm leading-7 text-muted-blue">
  신입 초봉은 첫 직장 선택의 결정적 변수입니다. 통계청 발표(2025) 기준 국내
  대졸 신입 평균 연봉은 약 4,200만원이지만, 5대 그룹(삼성·SK·현대차·LG·롯데) 신입

@@ -180,7 +180,7 @@ export default function CivilServantPay2026Page() {
           <div className="min-w-0 max-w-3xl mx-auto lg:mx-0 w-full">
 
         {/* 핵심 요약 */}
-        <section className="mt-10 mb-12 prose prose-slate">
+        <section className="mt-10 mb-12 prose dark:prose-invert prose-slate">
           <p className="text-sm leading-7 text-muted-blue">
             공무원 봉급표는 인사혁신처가 매년 12월 말 국무회의 의결(공무원보수규정 개정)을
             거쳐 확정하며, 다음 해 1월 1일부터 시행됩니다. 2026년 봉급표는 2025년 12월 30일
@@ -240,7 +240,7 @@ export default function CivilServantPay2026Page() {
         <CalcResultAd />
 
         {/* 인상률 해설 */}
-        <section className="mt-10 mb-12 prose prose-slate">
+        <section className="mt-10 mb-12 prose dark:prose-invert prose-slate">
           <h2 className="text-lg font-black text-navy mb-3">
             인상률 3.5% — 2017년 이후 최고, 저연차는 6.6%
           </h2>
@@ -295,7 +295,7 @@ export default function CivilServantPay2026Page() {
         <InArticleAd />
 
         {/* 봉급 ≠ 실수령 */}
-        <section className="mt-10 mb-12 prose prose-slate">
+        <section className="mt-10 mb-12 prose dark:prose-invert prose-slate">
           <h2 className="text-lg font-black text-navy mb-3 flex items-center gap-2">
             <Calculator className="w-5 h-5 text-electric" />
             봉급표 금액 ≠ 실수령액 — 통장에 들어오는 돈 계산 흐름

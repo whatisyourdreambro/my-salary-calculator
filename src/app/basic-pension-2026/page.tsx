@@ -286,7 +286,7 @@ export default function BasicPension2026Page() {
           <h2 className="text-xl font-black text-navy mb-4">
             소득인정액이란? — 월급·재산 그대로가 아닙니다
           </h2>
-          <div className="prose prose-slate max-w-none">
+          <div className="prose dark:prose-invert prose-slate max-w-none">
             <p className="text-sm leading-7 text-muted-blue">
               기초연금 수급 여부를 가르는 <strong>소득인정액</strong>은 실제 월급이나
               통장 잔액이 아니라, <strong>월 소득평가액 + 재산의 월 소득환산액</strong>

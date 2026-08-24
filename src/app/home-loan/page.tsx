@@ -413,7 +413,7 @@ export default function HomeLoanPage() {
       </section>
 
       {/* 본문 — 전문성 강화 */}
-      <article className="prose prose-sm sm:prose-base max-w-none mb-12">
+      <article className="prose dark:prose-invert prose-sm sm:prose-base max-w-none mb-12">
         <h2 className="text-2xl font-black text-navy mt-8 mb-4">
           DSR 40%와 LTV — 두 규제의 의미
         </h2>

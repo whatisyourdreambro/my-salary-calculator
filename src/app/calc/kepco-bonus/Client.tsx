@@ -122,7 +122,7 @@ export default function KepcoBonusClient() {
               <p className="text-xs font-bold text-faint mb-2">
                 경영평가 등급 프리셋 (공기업 직원 기준 지급률 — 비즈니스포스트 2024-06-17)
               </p>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {GRADE_PRESETS.map((g) => (
                   <button
                     key={g.grade}
@@ -171,7 +171,7 @@ export default function KepcoBonusClient() {
             className="w-full mt-2 p-3 rounded-lg border border-canvas-deep text-lg font-bold tabular-nums focus:outline-none focus:border-primary"
           />
         </label>
-        <div className="mt-3 grid grid-cols-5 gap-2">
+        <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-2">
           {[200, 250, 300, 350, 400].map((m) => (
             <button
               key={m}

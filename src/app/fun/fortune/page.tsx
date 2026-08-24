@@ -143,7 +143,7 @@ export default function FortunePage() {
  </p>
  </div>
 
- <div className="bg-white/80 backdrop-blur-md border border-canvas rounded-3xl p-8 shadow-2xl space-y-6">
+ <div className="bg-white/80 dark:bg-canvas-900/80 backdrop-blur-md border border-canvas rounded-3xl p-8 shadow-2xl space-y-6">
  {/* Name Input */}
  <div className="space-y-2">
  <label className="flex items-center gap-2 text-sm font-medium text-faint-blue">
