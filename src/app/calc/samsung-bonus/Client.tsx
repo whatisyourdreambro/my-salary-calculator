@@ -24,7 +24,7 @@ import {
   REFERENCE_SALARY,
   getThreshold,
   getThresholdPeriod,
-  calcBonusNet,
+  calcSamsungBonusNet,
   DIVISIONS,
   fmtManwon,
   fmtManwonInt,
@@ -746,7 +746,7 @@ function MySalaryCalculator({
     const totalGrossWon = opi1Won + opi2Won;
     const totalGrossManwon = opi1Manwon + opi2Manwon;
 
-    const tax = calcBonusNet(
+    const tax = calcSamsungBonusNet(
       salary,
       totalGrossWon,
       creditRate,
@@ -775,7 +775,7 @@ function MySalaryCalculator({
     };
   }, [salary, selected, creditRate, applyInsurance, opi1Rate]);
 
-  // 사업부 3개 동시 비교 — calcBonusNet 순수 함수 3회 호출
+  // 사업부 3개 동시 비교 — calcSamsungBonusNet 순수 함수 3회 호출
   const compareRows = useMemo(() => {
     if (!compareAll) return [];
     const ratio = salary / REFERENCE_SALARY;
@@ -783,7 +783,7 @@ function MySalaryCalculator({
     return perDivision.map((d) => {
       const opi2Won = (d.buPart + d.saPart) * ratio * 10000;
       const grossWon = opi1Won + opi2Won;
-      const tax = calcBonusNet(salary, grossWon, creditRate, applyInsurance);
+      const tax = calcSamsungBonusNet(salary, grossWon, creditRate, applyInsurance);
       return {
         id: d.id,
         label: d.label,

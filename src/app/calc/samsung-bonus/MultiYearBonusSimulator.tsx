@@ -23,7 +23,7 @@ import {
   FIXED_SA_RATIO,
   REFERENCE_SALARY,
   getThreshold,
-  calcBonusNet,
+  calcSamsungBonusNet,
   fmtManwon,
   fmtManwonInt,
   fmtEok,
@@ -364,7 +364,7 @@ export default function MultiYearBonusSimulator({
       const totalGrossManwon = opi1Manwon + opi2Manwon;
       const totalGrossWon = opi1Won + opi2Won;
 
-      const tax = calcBonusNet(
+      const tax = calcSamsungBonusNet(
         yearSalary,
         totalGrossWon,
         creditRate,

@@ -44,7 +44,7 @@ export function getThresholdPeriod(year: number): string {
 // ────────────────────────────────────────────────────────────
 
 // 세금/4대보험 계산. credit = 세액공제율(0~50%), applyInsurance = 4대보험 추가 부과 적용 여부
-export function calcBonusNet(
+export function calcSamsungBonusNet(
   salary: number,
   bonusWon: number,
   credit: number,
