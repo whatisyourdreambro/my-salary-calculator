@@ -3,13 +3,16 @@ import JsonLd from "@/components/JsonLd";
 import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
 // 9차 점검 — buildPageMetadata로 표준화 + 숫자 hook + JsonLd 추가
 // 2026-07-16 — 기준금리 2.50%→2.75% 인상 시의성 섹션 추가
-export const metadata: Metadata = buildPageMetadata({
- title: "2026 대출 이자 계산기 — 원리금균등·원금균등·만기일시 월 상환액",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+// (시의성 article OG type·발행/수정일은 ToolMeta 패스스루로 유지)
+export const metadata: Metadata = buildToolMetadata({
+ name: "대출 이자 계산기",
+ tagline: "원리금균등·원금균등·만기일시 월 상환액",
  description:
  "1억 대출 연 4.5% 30년 원리금균등 시 월 약 507,000원. 2026년 7월 기준금리 2.75% 인상 반영 — 원리금균등/원금균등/만기일시 3가지 상환 방식별 월 상환액·총 이자 즉시 비교.",
  path: "/tools/loan",

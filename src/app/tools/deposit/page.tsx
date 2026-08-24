@@ -1,13 +1,16 @@
 import DepositCalculator from "@/components/calculators/DepositCalculator";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "예적금 계산기 (이자/세금)",
- description: "예금, 적금 이자와 세후 수령액을 계산해보세요. 일반과세, 세금우대, 비과세 적용 가능.",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "예적금 계산기",
+ tagline: "예금·적금 이자와 세후 수령액 계산",
+ description:
+ "예금, 적금 이자와 세후 수령액을 계산해보세요. 일반과세(15.4%), 세금우대, 비과세 적용 시 실수령 이자를 즉시 비교할 수 있습니다.",
  path: "/tools/deposit",
 });
 

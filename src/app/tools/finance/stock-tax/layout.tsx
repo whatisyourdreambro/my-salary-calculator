@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "주식 양도소득세 계산기 - 해외주식·대주주 (2026)",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "주식 양도소득세 계산기",
+ tagline: "해외주식·대주주 세금 계산",
  description:
  "해외주식·대주주 양도소득세 계산기. 250만원 기본공제, 22% 세율(지방세 포함) 자동 적용. 매수가·매도가 입력만으로 절세 시뮬까지 한 번에.",
  path: "/tools/finance/stock-tax",

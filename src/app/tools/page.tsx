@@ -8,12 +8,14 @@ import {
 } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
 import { MultiplexAd } from "@/components/AdPlacement";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { itemListLd } from "@/lib/structuredData";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "금융 계산기 모음 2026 | 26가지 세금·재테크 계산기 - 머니샐러리",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "금융 계산기 모음",
+ tagline: "세금·재테크 계산기 26가지 무료",
  description: "성과급 세금 계산기, 퇴직금, 증여세, 취득세, 주식 양도세, 연봉 계산기 등 2026년 세법 기준 26가지 금융 계산기를 무료로 이용하세요.",
  path: "/tools",
 });

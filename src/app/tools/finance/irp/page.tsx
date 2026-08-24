@@ -163,7 +163,7 @@ export default function IRPPage() {
             </div>
           </section>
 
-          <article className="prose prose-sm sm:prose-base max-w-none mb-10">
+          <article className="prose dark:prose-invert prose-sm sm:prose-base max-w-none mb-10">
             <h2 className="text-xl font-black text-navy mt-8 mb-4">
               연봉별 환급액 — 매년 받는 13월 보너스
             </h2>

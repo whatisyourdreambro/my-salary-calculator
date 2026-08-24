@@ -162,7 +162,7 @@ export default function DsrPage() {
           </div>
         </section>
 
-        <article className="prose prose-sm sm:prose-base max-w-none mb-10">
+        <article className="prose dark:prose-invert prose-sm sm:prose-base max-w-none mb-10">
           <h2 className="text-xl font-black text-navy mt-8 mb-4">
             DSR 한도 시뮬 — 연봉별
           </h2>

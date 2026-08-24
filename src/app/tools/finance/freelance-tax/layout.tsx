@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "프리랜서 종합소득세 계산기 - 사업소득·필요경비 (2026)",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "프리랜서 종합소득세 계산기",
+ tagline: "사업소득·필요경비 자동 계산",
  description:
  "프리랜서·N잡러 종합소득세 계산기. 사업소득에서 필요경비 차감, 종합소득공제 적용 후 누진세율 자동 계산. 5월 종소세 신고 전 미리 확인하세요.",
  path: "/tools/finance/freelance-tax",

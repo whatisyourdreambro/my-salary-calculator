@@ -155,7 +155,7 @@ export default function LtvPage() {
           </div>
         </section>
 
-        <article className="prose prose-sm sm:prose-base max-w-none mb-10">
+        <article className="prose dark:prose-invert prose-sm sm:prose-base max-w-none mb-10">
           <h2 className="text-xl font-black text-navy mt-8 mb-4">
             2026 LTV 한도 — 케이스별
           </h2>

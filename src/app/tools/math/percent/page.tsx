@@ -2,11 +2,14 @@
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "퍼센트 계산기 (Percentage)",
- description: "전체값에 대한 비율, 비율에 대한 값 등 다양한 퍼센트 계산을 지원합니다.",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "퍼센트 계산기",
+ tagline: "비율·증감률·할인율 즉시 계산",
+ description:
+ "전체값에 대한 비율, 비율에 대한 값 등 다양한 퍼센트 계산을 지원합니다. 할인율·증감률·비중 계산을 입력 즉시 확인하세요.",
  path: "/tools/math/percent",
 });
 

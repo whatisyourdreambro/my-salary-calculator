@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "취득세 계산기 - 주택·토지·교육세·농특세 (2026)",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "취득세 계산기",
+ tagline: "주택·토지 교육세·농특세 자동 계산",
  description:
  "주택·토지 취득가액 입력 → 취득세, 지방교육세, 농어촌특별세 자동 계산. 1주택자/다주택자/조정대상지역 세율 자동 적용, 2026년 최신 기준.",
  path: "/tools/real-estate/acquisition-tax",

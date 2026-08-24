@@ -2,11 +2,14 @@
 import { Metadata } from "next";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "랜덤 숫자 생성기 (RNG)",
- description: "로또 번호 생성, 추첨 등 다양한 용도의 랜덤 숫자를 생성해보세요.",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "랜덤 숫자 생성기",
+ tagline: "로또 번호·추첨용 난수 생성",
+ description:
+ "로또 번호 생성, 추첨 등 다양한 용도의 랜덤 숫자를 생성해보세요. 범위와 개수를 정하면 중복 없는 난수를 즉시 뽑아드립니다.",
  path: "/tools/math/number-gen",
 });
 

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import ToolPageContent from "@/components/tool/ToolPageContent";
 
-export const metadata: Metadata = buildPageMetadata({
- title: "증여세 계산기 - 가족 간 공제한도·세율 (2026)",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "증여세 계산기",
+ tagline: "가족 간 공제한도·세율 자동 적용",
  description:
  "배우자 6억, 직계존비속 5천만(미성년 2천만), 기타친족 1천만 공제한도 자동 적용. 혼인·출산 1억 추가 공제, 신고세액공제 3%까지 반영한 증여세 계산.",
  path: "/tools/real-estate/gift-tax",

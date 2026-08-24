@@ -2,12 +2,14 @@ import MathCalculators from "@/components/calculators/MathCalculators";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildToolMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
 // 9차 점검 — buildPageMetadata로 표준화 + JsonLd 추가 (RelatedCalculators는 tools/layout 공통 블록에 위임)
-export const metadata: Metadata = buildPageMetadata({
- title: "퍼센트 계산기 & 단위 변환기 — 할인율·증감율·기본 환산 한 번에",
+// buildToolMetadata 수렴 (2026-08-24): "{name} 2026 — {tagline}" 표준 패턴 + type=tool OG
+export const metadata: Metadata = buildToolMetadata({
+ name: "퍼센트 계산기 & 단위 변환기",
+ tagline: "할인율·증감율·기본 환산 한 번에",
  description:
  "30,000원 → 20% 할인 = 24,000원, 작년 대비 +15% 증가율 즉시 계산. 비율·비중·증감율·할인율·단위 변환(길이·무게·온도)까지 한 페이지에서.",
  path: "/tools/math",
