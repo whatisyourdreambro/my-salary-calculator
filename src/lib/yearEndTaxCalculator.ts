@@ -7,6 +7,8 @@
 import {
   earnedIncomeDeduction2026,
   calcIncomeTax2026,
+  earnedIncomeTaxCredit2026,
+  childTaxCredit2026,
   RENT_CREDIT_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
@@ -102,25 +104,14 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  // 경계값 1,400만/5,000만/8,800만 일치 확인)
  const calculatedTax = calcIncomeTax2026(taxBase);
 
- // 5. 세액공제
- let earnedIncomeTaxCredit = 0;
- if (calculatedTax <= 1300000) {
- earnedIncomeTaxCredit = calculatedTax * 0.55;
- } else {
- earnedIncomeTaxCredit = 715000 + (calculatedTax - 1300000) * 0.3;
- }
- // 근로소득세액공제 한도 (2026 세법)
- if (grossSalary > 120_000_000)
- earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 500_000);
- else if (grossSalary > 70_000_000)
- earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 660_000);
- else if (grossSalary > 33_000_000)
- earnedIncomeTaxCredit = Math.min(earnedIncomeTaxCredit, 740_000);
+ // 5. 세액공제 — 근로소득세액공제·자녀세액공제는 taxConstants2026 정본 함수 사용
+ const earnedIncomeTaxCredit = earnedIncomeTaxCredit2026(
+ calculatedTax,
+ grossSalary
+ );
 
- let childTaxCredit = 0;
- if (inputs.children === 1) childTaxCredit = 150000;
- else if (inputs.children >= 2)
- childTaxCredit = 350000 + (inputs.children - 2) * 300000;
+ // 자녀세액공제 (소득세법 §59의2, 2025 개정) — 첫째 25만·둘째 30만·셋째+ 40만
+ const childTaxCredit = childTaxCredit2026(inputs.children);
 
  const pensionAccountCredit =
  Math.min(inputs.pensionSavings + inputs.irp, 9000000) *

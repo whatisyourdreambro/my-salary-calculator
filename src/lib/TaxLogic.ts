@@ -7,6 +7,10 @@
 import {
  INSURANCE_RATES_2026,
  PENSION_BASE_2026,
+ earnedIncomeDeduction2026,
+ calcIncomeTax2026,
+ earnedIncomeTaxCredit2026,
+ childTaxCredit2026,
 } from "./taxConstants2026";
 
 export type TaxResult = {
@@ -27,53 +31,8 @@ const CAPS_2026 = {
  NATIONAL_PENSION_MIN_INCOME: PENSION_BASE_2026.MIN_MONTHLY,
 };
 
-/**
- * Calculates the Earned Income Deduction (근로소득공제)
- * Based on 2024-2025 standards (often stable, but checked for 2026 projection)
- */
-function getEarnedIncomeDeduction(annualSalary: number): number {
- if (annualSalary <= 5_000_000) return annualSalary * 0.7;
- if (annualSalary <= 15_000_000) return 3_500_000 + (annualSalary - 5_000_000) * 0.4;
- if (annualSalary <= 45_000_000) return 7_500_000 + (annualSalary - 15_000_000) * 0.15;
- if (annualSalary <= 100_000_000) return 12_000_000 + (annualSalary - 45_000_000) * 0.05;
- return 14_750_000 + (annualSalary - 100_000_000) * 0.02;
-}
-
-/**
- * Calculates Basic Income Tax (기본세율)
- * Progressive tax brackets (Standard Korean Income Tax Brackets)
- */
-function getBaseTax(taxBase: number): number {
- if (taxBase <= 14_000_000) return taxBase * 0.06;
- if (taxBase <= 50_000_000) return 840_000 + (taxBase - 14_000_000) * 0.15;
- if (taxBase <= 88_000_000) return 6_240_000 + (taxBase - 50_000_000) * 0.24;
- if (taxBase <= 150_000_000) return 15_360_000 + (taxBase - 88_000_000) * 0.35;
- if (taxBase <= 300_000_000) return 37_060_000 + (taxBase - 150_000_000) * 0.38;
- if (taxBase <= 500_000_000) return 94_060_000 + (taxBase - 300_000_000) * 0.40;
- if (taxBase <= 1_000_000_000) return 174_060_000 + (taxBase - 500_000_000) * 0.42;
- return 384_060_000 + (taxBase - 1_000_000_000) * 0.45;
-}
-
-/**
- * Calculates Earned Income Tax Credit (근로소득세액공제)
- */
-function getTaxCredit(calculatedTax: number, annualSalary: number): number {
- let credit = 0;
- if (calculatedTax <= 1_300_000) {
- credit = calculatedTax * 0.55;
- } else {
- credit = 715_000 + (calculatedTax - 1_300_000) * 0.30;
- }
-
- // 근로소득세액공제 한도 (2026 세법)
- // 총급여 1.2억 초과 → 50만원
- // 총급여 7,000만원 초과 → 66만원
- // 총급여 3,300만원 초과 → 74만원
- if (annualSalary > 120_000_000) return Math.min(credit, 500_000);
- if (annualSalary > 70_000_000) return Math.min(credit, 660_000);
- if (annualSalary > 33_000_000) return Math.min(credit, 740_000);
- return credit;
-}
+// 근로소득공제(2,000만 캡 포함)·누진세율표·근로소득세액공제·자녀세액공제는
+// 전부 taxConstants2026 정본 함수를 사용한다 (로컬 재구현 제거, 2026-08 대규모 점검).
 
 export function calculateSalary2026(
  annualSalary: number,
@@ -105,7 +64,7 @@ export function calculateSalary2026(
  // Step A: Annual Income -> Tax Base
  const annualNonTaxable = nonTaxableMonthly * 12;
  const taxableIncome = Math.max(0, annualSalary - annualNonTaxable);
- const incomeDeduction = getEarnedIncomeDeduction(taxableIncome);
+ const incomeDeduction = earnedIncomeDeduction2026(taxableIncome);
  
  // Step B: Personal Exemptions
  // Basic: 1.5M per person
@@ -116,16 +75,13 @@ export function calculateSalary2026(
  const taxBase = Math.max(0, taxableIncome - incomeDeduction - personalExemption - annualPension);
  
  // Step C: Calculate Tax
- const calculatedTax = getBaseTax(taxBase);
- 
+ const calculatedTax = calcIncomeTax2026(taxBase);
+
  // Step D: Tax Credits
- const taxCredit = getTaxCredit(calculatedTax, annualSalary);
- 
- // Child Tax Credit (simplified)
- let childCredit = 0;
- if (children === 1) childCredit = 150_000;
- else if (children === 2) childCredit = 300_000;
- else if (children >= 3) childCredit = 300_000 + (children - 2) * 300_000;
+ const taxCredit = earnedIncomeTaxCredit2026(calculatedTax, annualSalary);
+
+ // 자녀세액공제 (소득세법 §59의2) — 정본 함수 사용
+ const childCredit = childTaxCredit2026(children);
  
  const finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childCredit);
  

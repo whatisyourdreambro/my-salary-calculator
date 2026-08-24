@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { childTaxCredit2026 } from "@/lib/taxConstants2026";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 
@@ -19,10 +20,8 @@ export default function ChildDeductionClient() {
     const under6ExtraDeduction = under6 * 1_000_000;
 
     // 자녀세액공제 (8세~20세, 단순화 7세부터 적용) — 첫째 25만·둘째 30만·셋째 이상 각 40만
-    let childTaxCredit = 0;
-    if (age7to20 === 1) childTaxCredit = 250_000;
-    else if (age7to20 === 2) childTaxCredit = 550_000;
-    else if (age7to20 >= 3) childTaxCredit = 550_000 + (age7to20 - 2) * 400_000;
+    // (taxConstants2026 정본 함수 — 연말정산 엔진·실수령액 엔진과 동일 값)
+    const childTaxCredit = childTaxCredit2026(age7to20);
 
     // 출산·입양 세액공제
     const birthCredit = newborn === "first" ? 300_000 : newborn === "second" ? 500_000 : newborn === "third" ? 700_000 : 0;
