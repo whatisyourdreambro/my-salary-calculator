@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import RichDNAClient from './RichDNAClient';
 import { buildPageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = buildPageMetadata({
  title: '부자 DNA 테스트 (무료) - 나의 투자 성향은 워렌버핏? 일론머스크?',
@@ -26,10 +27,7 @@ const jsonLd = {
 export default function RichDnaTestPage() {
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  <RichDNAClient />
  </>
  );

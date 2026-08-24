@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "플래피 샐러리맨 (Flappy Salaryman) - 월급 지키기 게임",
@@ -26,10 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  {children}
  </>
  );

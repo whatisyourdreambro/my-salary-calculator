@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "자산 배분 마스터 (Asset Allocator) - 투자 미니게임",
@@ -26,10 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  {children}
  </>
  );

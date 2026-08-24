@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import IQTestClient from './IQTestClient';
 import { buildPageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = buildPageMetadata({
  title: '멘사급 IQ 테스트 (무료) - 상위 1% 논리력에 도전하세요',
@@ -26,10 +27,7 @@ const jsonLd = {
 export default function IQTestPage() {
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  <IQTestClient />
  </>
  );

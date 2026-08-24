@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "인생 2회차 시뮬레이터 (Life Gacha) - 다음 생은 어디서?",
@@ -26,10 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  {children}
  </>
  );

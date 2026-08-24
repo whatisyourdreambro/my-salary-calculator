@@ -6,6 +6,7 @@
 
 import { usePathname } from "next/navigation";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
+import JsonLd from "@/components/JsonLd";
 
 interface Props {
   /** 마지막(현재) 페이지의 한글 라벨. 미지정 시 slug → " " 변환 자동. */
@@ -16,10 +17,5 @@ export default function AutoBreadcrumb({ leafName }: Props) {
   const pathname = usePathname();
   if (!pathname || pathname === "/") return null;
   const data = autoBreadcrumbLd(pathname, leafName ? { leafName } : {});
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
+  return <JsonLd data={data} />;
 }

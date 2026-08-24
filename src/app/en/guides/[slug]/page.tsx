@@ -1,6 +1,7 @@
 import { koGuides, enGuides } from "@/lib/guidesData";
 import { permanentRedirect } from "next/navigation";
 import Link from "@/components/AppLink";
+import JsonLd from "@/components/JsonLd";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd, breadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";
@@ -111,10 +112,7 @@ export default function EnglishGuidePage({ params }: Props) {
 
  return (
  <>
-  <script
-   type="application/ld+json"
-   dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbJsonLd]) }}
-  />
+  <JsonLd data={[jsonLd, breadcrumbJsonLd]} />
   <EnglishGuideClient guide={guide} relatedGuides={relatedGuides} />
   {hasKo && (
    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">

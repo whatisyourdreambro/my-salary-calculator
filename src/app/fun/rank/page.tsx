@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import RankClient from './RankClient';
 import { buildPageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = buildPageMetadata({
  title: '연봉 분포 시뮬레이터 (2026 최신) - 내 연봉은 상위 몇 %? 간단 버전',
@@ -26,10 +27,7 @@ const jsonLd = {
 export default function SalaryRankPage() {
  return (
  <>
- <script
- type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
- />
+ <JsonLd data={jsonLd} />
  <RankClient />
  </>
  );
