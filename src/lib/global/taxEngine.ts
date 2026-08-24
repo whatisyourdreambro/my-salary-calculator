@@ -1,3 +1,10 @@
+import {
+ INSURANCE_RATES_2026,
+ PENSION_BASE_2026,
+ earnedIncomeDeduction2026,
+ calcIncomeTax2026,
+} from "@/lib/taxConstants2026";
+
 export type CountryCode = 'KR' | 'US' | 'JP' | 'SG' | 'UK';
 
 export interface TaxResult {
@@ -40,40 +47,29 @@ export const COUNTRY_NAMES: Record<CountryCode, { name: string; flag: string }> 
 // KR helpers (2026) — flat-tax / salary-converter 페이지에서 재사용
 // ─────────────────────────────────────────────────────────────
 
-// 근로소득공제 (2026 표준 구간, 한도 2,000만원) — 총급여(연) 기준
+// 근로소득공제 (2026 표준 구간, 한도 2,000만원) — taxConstants2026 정본 위임
 export function earnedIncomeDeduction(grossAnnual: number): number {
  if (grossAnnual <= 0) return 0;
- let deduction: number;
- if (grossAnnual <= 5_000_000) deduction = grossAnnual * 0.7;
- else if (grossAnnual <= 15_000_000) deduction = 3_500_000 + (grossAnnual - 5_000_000) * 0.4;
- else if (grossAnnual <= 45_000_000) deduction = 7_500_000 + (grossAnnual - 15_000_000) * 0.15;
- else if (grossAnnual <= 100_000_000) deduction = 12_000_000 + (grossAnnual - 45_000_000) * 0.05;
- else deduction = 14_750_000 + (grossAnnual - 100_000_000) * 0.02;
- return Math.min(deduction, 20_000_000);
+ return earnedIncomeDeduction2026(grossAnnual);
 }
 
-// 한국 소득세 누진세율 (2026, 8구간 6~45%) — 과세표준 기준
+// 한국 소득세 누진세율 (2026, 8구간 6~45%) — taxConstants2026 정본 위임
 export function calcKrProgressiveTax(taxable: number): number {
- if (taxable <= 0) return 0;
- if (taxable <= 14_000_000) return taxable * 0.06;
- if (taxable <= 50_000_000) return 840_000 + (taxable - 14_000_000) * 0.15;
- if (taxable <= 88_000_000) return 6_240_000 + (taxable - 50_000_000) * 0.24;
- if (taxable <= 150_000_000) return 15_360_000 + (taxable - 88_000_000) * 0.35;
- if (taxable <= 300_000_000) return 37_060_000 + (taxable - 150_000_000) * 0.38;
- if (taxable <= 500_000_000) return 94_060_000 + (taxable - 300_000_000) * 0.4;
- if (taxable <= 1_000_000_000) return 174_060_000 + (taxable - 500_000_000) * 0.42;
- return 384_060_000 + (taxable - 1_000_000_000) * 0.45;
+ return calcIncomeTax2026(taxable);
 }
 
-// 국민연금 기준소득월액 상한 (2026.7~2027.6): 월 659만원
-export const KR_PENSION_MONTHLY_CAP = 6_590_000;
+// 국민연금 기준소득월액 상한 (2026.7~2027.6): 월 659만원 — 정본 재수출
+export const KR_PENSION_MONTHLY_CAP = PENSION_BASE_2026.MAX_MONTHLY;
 
-// 4대보험 본인부담 합계 (2026) — 국민연금 4.75%(상한 적용)·건강 3.595%·장기요양(건보료의 13.14%)·고용 0.9%
+// 4대보험 본인부담 합계 (2026) — 요율은 taxConstants2026 정본 사용
 export function krSocialInsurance(grossAnnual: number): number {
- const pension = Math.min(grossAnnual / 12, KR_PENSION_MONTHLY_CAP) * 12 * 0.0475;
- const health = grossAnnual * 0.03595;
- const longTermCare = health * 0.1314;
- const employment = grossAnnual * 0.009;
+ const pension =
+ Math.min(grossAnnual / 12, KR_PENSION_MONTHLY_CAP) *
+ 12 *
+ INSURANCE_RATES_2026.NATIONAL_PENSION;
+ const health = grossAnnual * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+ const longTermCare = health * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+ const employment = grossAnnual * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
  return pension + health + longTermCare + employment;
 }
 
