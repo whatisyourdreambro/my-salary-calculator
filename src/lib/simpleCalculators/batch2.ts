@@ -2,6 +2,7 @@
 // 부동산 10 + 보험 8 + 사업자 8 + 일상 14 + 건강 5 + 결혼육아 5 = 50개
 
 import type { CalculatorDef } from "./types";
+import { RENT_CREDIT_2026 } from "@/lib/taxConstants2026";
 
 const REAL_ESTATE: CalculatorDef[] = [
  {
@@ -48,7 +49,7 @@ const REAL_ESTATE: CalculatorDef[] = [
  {
  slug: "monthly-rent-tax-credit-quick",
  title: "월세 세액공제 환급",
- description: "월세 × 12 × 17% (총급여 7천만 이하)",
+ description: "월세 × 12 × 17% (총급여 5,500만 이하 기준)",
  category: "real-estate",
  categoryLabel: "부동산",
  keywords: ["월세 세액공제", "월세 환급"],
@@ -56,13 +57,15 @@ const REAL_ESTATE: CalculatorDef[] = [
  { name: "monthly", label: "월세", defaultValue: 600000, suffix: "원" },
  ],
  compute: ({ monthly }) => {
+ // 조특법 §95의2 현행 — 한도 연 1,000만원 (RENT_CREDIT_2026 정본.
+ // 2026-08 점검: 구법 750만 한도 잔재 정정)
  const yearly = monthly * 12;
- const cap = Math.min(yearly, 7500000);
- const credit = cap * 0.17;
+ const cap = Math.min(yearly, RENT_CREDIT_2026.CAP);
+ const credit = cap * RENT_CREDIT_2026.RATE_HIGH;
  return {
  primary: { label: "예상 환급액", value: Math.round(credit), suffix: "원" },
  secondary: [{ label: "공제 한도 적용", value: cap, suffix: "원" }],
- note: "총급여 7천만 이하 무주택 세대주. 한도 750만 × 17%.",
+ note: "무주택 세대주, 한도 연 1,000만원. 총급여 5,500만 이하 17%, 5,500만 초과~8,000만 이하는 15% 적용(8,000만 초과는 대상 아님).",
  };
  },
  },
