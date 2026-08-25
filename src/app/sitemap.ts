@@ -238,12 +238,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
  }
  }
 
+ // /en 정적 4종 hreflang — 실존 KO 짝만 명시(과잉 적용 금지: seo.ts hreflang 사고 이력).
+ // /en·/en/guides 는 KO 카운터파트 존재, flat-tax·salary-converter 는 EN 전용(self).
+ const EN_STATIC_ALTERNATES: Record<string, Record<string, string>> = {
+ '/en': { 'ko-KR': `${baseUrl}/`, en: `${baseUrl}/en`, 'x-default': `${baseUrl}/` },
+ '/en/guides': { 'ko-KR': `${baseUrl}/guides`, en: `${baseUrl}/en/guides`, 'x-default': `${baseUrl}/guides` },
+ '/en/flat-tax': { en: `${baseUrl}/en/flat-tax`, 'x-default': `${baseUrl}/en/flat-tax` },
+ '/en/salary-converter': { en: `${baseUrl}/en/salary-converter`, 'x-default': `${baseUrl}/en/salary-converter` },
+ };
+
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
  lastModified: ROUTE_OVERRIDES[route]?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency:
  ROUTE_OVERRIDES[route]?.changeFrequency ?? ('weekly' as ChangeFrequency),
  priority: route === '/' ? 1.0 : ROUTE_OVERRIDES[route]?.priority ?? 0.8,
+ ...(EN_STATIC_ALTERNATES[route]
+ ? { alternates: { languages: EN_STATIC_ALTERNATES[route] } }
+ : {}),
  }));
 
  // 2. Dynamic Guide Pages — 한국어 가이드 (lang === 'ko')

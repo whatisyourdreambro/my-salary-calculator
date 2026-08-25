@@ -4,7 +4,7 @@ import EnglishGuidesClient from "./EnglishGuidesClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
- title: "Finance Guides for Working in Korea | Moneysalary",
+ title: { absolute: "Finance Guides for Working in Korea | Moneysalary" },
  description:
   "In-depth English guides on Korean salary, semiconductor stocks, employee stock plans, taxes, and personal finance for professionals working in Korea.",
  alternates: {
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
    "x-default": "https://www.moneysalary.com/guides",
   },
  },
+ keywords:
+  "korea finance guides english, samsung stock guide, sk hynix stock, korea esop, korea isa account, expat investing korea",
  openGraph: {
   title: "Finance Guides for Working in Korea | Moneysalary",
   description:
@@ -22,6 +24,13 @@ export const metadata: Metadata = {
   type: "website",
   locale: "en_US",
   url: "https://www.moneysalary.com/en/guides",
+  images: [{ url: "https://www.moneysalary.com/api/og?lang=en&title=Finance+Guides+for+Working+in+Korea", width: 1200, height: 630 }],
+ },
+ twitter: {
+  card: "summary_large_image",
+  title: "Finance Guides for Working in Korea | Moneysalary",
+  description:
+   "In-depth English guides on Korean salary, semiconductor stocks, ESOP, taxes and personal finance.",
  },
 };
 

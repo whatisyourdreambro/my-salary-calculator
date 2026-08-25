@@ -297,6 +297,34 @@ function renderReportOg(title: string): OgRender {
   return { node, text };
 }
 
+// 영어 페이지(/en/*)용 — 크롬 문자열만 영어, 레이아웃·팔레트는 기본 OG 와 동일.
+// Noto Sans KR 서브셋이 라틴 글리프를 포함하므로 폰트 파이프라인 재사용.
+function renderEnOg(title: string): OgRender {
+  const node = (
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <div style={{ color: CANVAS, fontSize: 28, fontWeight: 900, marginBottom: 18, letterSpacing: "0.04em" }}>
+          Moneysalary
+        </div>
+        <div style={{ color: "white", fontSize: 56, fontWeight: 900, marginBottom: 12, textAlign: "center", lineHeight: 1.2 }}>
+          {title}
+        </div>
+        <div style={{ color: "white", fontSize: 26, fontWeight: 500, opacity: 0.85 }}>
+          Korea salary · tax · stocks — in English
+        </div>
+      </div>
+      <div style={watermarkStyle}>moneysalary.com</div>
+    </div>
+  );
+  const text = [
+    "Moneysalary",
+    title,
+    "Korea salary · tax · stocks — in English",
+    "moneysalary.com",
+  ].join(" ");
+  return { node, text };
+}
+
 function renderDefaultOg(title: string): OgRender {
   const node = (
     <div style={containerStyle}>
@@ -344,11 +372,15 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type");
+    const lang = searchParams.get("lang");
     const title = searchParams.get("title") || "연봉 실수령액 계산기";
 
     let og: OgRender;
 
-    if (type === "salary") {
+    if (lang === "en") {
+      // /en 트리 전용 — 영어 타이틀 + 영어 크롬 (한국어 기본 OG 상속 차단)
+      og = renderEnOg(searchParams.get("title") || "Korea Salary Calculator");
+    } else if (type === "salary") {
       const amount = searchParams.get("amount") || "50000000";
       // netPay는 구버전 공유 URL 하위호환 (카톡에 이미 뿌려진 링크 대응)
       const netPay =
