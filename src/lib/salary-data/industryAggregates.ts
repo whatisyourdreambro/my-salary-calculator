@@ -49,7 +49,9 @@ export function buildIndustryAggregate(
   companies: CompanyProfile[]
 ): IndustryAggregate | null {
   const seen = new Set<string>();
+  // 글로벌 기업(isGlobal)은 국내 업종 집계 왜곡 방지 위해 제외
   const unique = companies.filter((c) => {
+    if (c.isGlobal) return false;
     if (seen.has(c.id)) return false;
     seen.add(c.id);
     return true;

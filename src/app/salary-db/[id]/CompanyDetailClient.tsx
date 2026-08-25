@@ -95,7 +95,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  icon={DollarSign}
  label="신입 영끌 연봉"
  value={formatMoney(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0))}
- sub="기본급 + 평균 인센티브"
+ sub="기본급 + 평균 인센티브 (본 DB 추정 기준)"
  color="text-primary"
  />
  <StatCard

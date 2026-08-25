@@ -115,7 +115,7 @@ export default function CompanyNarrative({ company }: Props) {
                   : `${Math.round(((benchmark.averageEntry - entryTotal) / benchmark.averageEntry) * 100)}% 낮은`}
               </strong>{" "}
               수준이며, 업종 내 상위{" "}
-              <strong>{100 - benchmark.percentile}%</strong> 구간에 위치합니다. 시니어
+              <strong>{benchmark.topPercent}%</strong> 구간에 위치합니다. 시니어
               기준으로도 업종 평균(
               {formatSalaryKorean(benchmark.averageSenior)})과 비교해 본인 커리어 후반의
               기대치를 가늠할 수 있습니다.

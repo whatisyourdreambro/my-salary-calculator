@@ -23,6 +23,23 @@ export default function CompanyCareerLevels({ company }: Props) {
   const isSamsung = company.id === "samsung-electronics";
   const isHynix = company.id === "sk-hynix";
 
+  // 산정 기준 괴리 감지 — 상단 요약(신입 영끌: 기본급+평균 인센티브 추정)과
+  // 이 표의 신입 단계(보도·공시 초봉 기준)가 10% 넘게 다르면 기준 차이를 명시.
+  // 예: 삼성전자 요약 5,600만(추정) vs CL2 대졸 신입 7,200만(보도 초봉).
+  // 수치는 그대로 두고 라벨만 붙인다 — 랭킹·비교에는 요약 기준값 하나만 쓰인다.
+  const entryTotalWon =
+    company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+  const hasBasisGap =
+    entryTotalWon > 0 &&
+    company.careerLevels
+      .flatMap((g) => g.steps)
+      .some(
+        (s) =>
+          typeof s.totalManwon === "number" &&
+          s.description?.includes("신입") &&
+          Math.abs(s.totalManwon * 10000 - entryTotalWon) / entryTotalWon > 0.1
+      );
+
   return (
     <section className="page-width py-12" aria-labelledby="career-levels-heading">
       <div className="mb-8 max-w-3xl">
@@ -61,6 +78,15 @@ export default function CompanyCareerLevels({ company }: Props) {
             연차별 인상 구조는 회사마다 다르며, 아래 표는 공개 자료·보도값을
             기반으로 정리한 직급별 base(계약 연봉)와 영끌(평균 총보상)
             추정치입니다.
+          </p>
+        )}
+        {hasBasisGap && (
+          <p className="mt-3 rounded-xl bg-electric-5 border border-electric/20 px-4 py-3 text-sm text-muted-blue leading-relaxed">
+            <strong className="text-electric">산정 기준 안내</strong> — 페이지
+            상단 요약의 신입 영끌은 <strong>기본급+평균 인센티브(본 DB 추정)</strong>{" "}
+            기준이고, 아래 직급별 표의 신입 수치는{" "}
+            <strong>보도·공시 초봉</strong> 기준이라 두 값이 다를 수 있습니다.
+            전국·업종 순위와 회사 비교에는 상단 요약 기준값 하나만 사용합니다.
           </p>
         )}
       </div>

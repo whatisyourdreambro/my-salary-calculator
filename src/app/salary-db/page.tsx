@@ -21,15 +21,24 @@ export default function SalaryDBPage() {
  tier: c.tier,
  logo: c.logo,
  entryBase: c.salary.entry.base,
+ // 신입 영끌(기본급+평균 인센티브) — 상세·랭킹 페이지와 동일 정렬 기준
+ entryTotal: c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0),
  seniorBase: c.salary.senior.base,
  incentiveTarget: c.salary.entry.incentive.target,
  weeklyHoursReal: c.workLife.weeklyHours.real,
  }));
 
- // 목록 페이지 ItemList 구조화데이터 — 신입 연봉 상위 30개사만
- // ("회사명 연봉" SERP 리치결과·사이트링크 기회)
- const top30 = [...companies]
- .sort((a, b) => b.entryBase - a.entryBase)
+ // 목록 페이지 ItemList 구조화데이터 — 신입 영끌 상위 30개사만 (국내 기준,
+ // 글로벌 기업 제외 — "회사명 연봉" SERP 리치결과·사이트링크 기회)
+ const top30 = companyRepository
+ .getAll()
+ .filter((c) => !c.isGlobal)
+ .map((c) => ({
+ id: c.id,
+ nameKo: c.name.ko,
+ entryTotal: c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0),
+ }))
+ .sort((a, b) => b.entryTotal - a.entryTotal)
  .slice(0, 30)
  .map((c) => ({
  name: `${c.nameKo} 연봉`,

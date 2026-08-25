@@ -80,8 +80,9 @@ const FAQ_ITEMS = [
 ];
 
 export default function NewEmployeeSalary2026Page() {
- // 신입 영끌 TOP 50 자동 집계
- const top50 = [...allCompanies]
+ // 신입 영끌 TOP 50 자동 집계 — 국내 기업 기준 (글로벌 기업은 순위 왜곡 방지 위해 제외)
+ const top50 = allCompanies
+ .filter((c) => !c.isGlobal)
  .sort((a, b) => totalEntry(b) - totalEntry(a))
  .slice(0, 50);
 
@@ -91,8 +92,9 @@ export default function NewEmployeeSalary2026Page() {
  .filter((c) => c.tier === "unicorn")
  .sort((a, b) => totalEntry(b) - totalEntry(a))
  .slice(0, 10);
+ // 외국계 표: 국내 채용 외국계(tier foreign) — 글로벌 본사 기업은 제외
  const foreignTop = [...allCompanies]
- .filter((c) => c.tier === "foreign")
+ .filter((c) => c.tier === "foreign" && !c.isGlobal)
  .sort((a, b) => totalEntry(b) - totalEntry(a))
  .slice(0, 10);
  const publicTop = [...allCompanies]

@@ -404,14 +404,14 @@ export default function ComparePage({ params }: Props) {
   if (aBench && bBench) {
     faqItems.push({
       question: `${a.name.ko}와 ${b.name.ko}는 업종 평균 대비 어디에 위치하나요?`,
-      answer: `${a.name.ko}는 ${aIndustry} 업종 ${aBench.sampleSize}개사 중 상위 ${100 - aBench.percentile}% 수준(평균 ${formatSalaryKorean(aBench.averageEntry)}), ${b.name.ko}는 ${bIndustry} 업종 ${bBench.sampleSize}개사 중 상위 ${100 - bBench.percentile}% 수준(평균 ${formatSalaryKorean(bBench.averageEntry)})으로 평가됩니다.`,
+      answer: `${a.name.ko}는 ${aIndustry} 업종 ${aBench.sampleSize}개사 중 상위 ${aBench.topPercent}% 수준(평균 ${formatSalaryKorean(aBench.averageEntry)}), ${b.name.ko}는 ${bIndustry} 업종 ${bBench.sampleSize}개사 중 상위 ${bBench.topPercent}% 수준(평균 ${formatSalaryKorean(bBench.averageEntry)})으로 평가됩니다.`,
     });
   }
 
   if (aRank && bRank) {
     faqItems.push({
       question: `${a.name.ko}와 ${b.name.ko}의 전국 연봉 순위는 어떻게 되나요?`,
-      answer: `연봉 DB 보유 ${aRank.total}개사를 신입 영끌 연봉 기준으로 정렬하면 ${a.name.ko}는 ${aRank.rank}위(상위 ${aRank.percentile}%), ${b.name.ko}는 ${bRank.rank}위(상위 ${bRank.percentile}%)로, 순위 격차는 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`,
+      answer: `연봉 DB 보유 국내 ${aRank.total}개사를 신입 영끌 연봉 기준으로 정렬하면 ${a.name.ko}는 ${aRank.rank}위(상위 ${aRank.topPercent}%), ${b.name.ko}는 ${bRank.rank}위(상위 ${bRank.topPercent}%)로, 순위 격차는 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`,
     });
   }
 
@@ -562,9 +562,9 @@ export default function ComparePage({ params }: Props) {
                   <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300">
                     {a.name.ko}{" "}
                     <strong className="text-electric">{aRank.rank}위</strong>
-                    (상위 {aRank.percentile}%) vs {b.name.ko}{" "}
+                    (상위 {aRank.topPercent}%) vs {b.name.ko}{" "}
                     <strong className="text-electric">{bRank.rank}위</strong>
-                    (상위 {bRank.percentile}%)
+                    (상위 {bRank.topPercent}%)
                     {aRank.rank !== bRank.rank
                       ? ` — 순위 격차 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`
                       : " — 전국 순위가 나란히 붙어 있습니다."}
@@ -749,7 +749,7 @@ export default function ComparePage({ params }: Props) {
                   </p>
                   <p className="text-xs text-muted-blue dark:text-canvas-300 leading-6">
                     {aIndustry} 업종 {aBench.sampleSize}개사 중 신입 영끌{" "}
-                    <strong className="text-electric">상위 {100 - aBench.percentile}%</strong>
+                    <strong className="text-electric">상위 {aBench.topPercent}%</strong>
                     <br />
                     업종 평균: {formatSalaryKorean(aBench.averageEntry)}
                   </p>
@@ -762,7 +762,7 @@ export default function ComparePage({ params }: Props) {
                   </p>
                   <p className="text-xs text-muted-blue dark:text-canvas-300 leading-6">
                     {bIndustry} 업종 {bBench.sampleSize}개사 중 신입 영끌{" "}
-                    <strong className="text-electric">상위 {100 - bBench.percentile}%</strong>
+                    <strong className="text-electric">상위 {bBench.topPercent}%</strong>
                     <br />
                     업종 평균: {formatSalaryKorean(bBench.averageEntry)}
                   </p>

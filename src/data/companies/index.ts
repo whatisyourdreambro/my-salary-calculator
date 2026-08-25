@@ -123,8 +123,10 @@ function dedupeCompanies(companies: CompanyProfile[]): CompanyProfile[] {
 
 /**
  * 모든 회사 단일 배열 (id·한글명 기준 중복 제거 완료).
+ * globalCompanies 유래 항목은 병합 시점에 isGlobal 태깅 — 국내 랭킹 풀 제외용.
+ * (dedupe 이전에 태깅해야 KR 중복과 충돌 시에도 플래그가 결정적으로 유지된다)
  */
 export const allCompanies: CompanyProfile[] = dedupeCompanies([
  ...krCompanies,
- ...globalCompanies,
+ ...globalCompanies.map((c) => ({ ...c, isGlobal: true })),
 ]);

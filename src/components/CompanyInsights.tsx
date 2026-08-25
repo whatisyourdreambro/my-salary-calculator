@@ -95,7 +95,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  {formatSalaryKorean(benchmark.averageSenior)}
  </p>
  <p className="text-xs text-faint-blue">
- 업종 평균 대비 백분위: 상위 {100 - benchmark.percentile}%
+ 업종 평균 대비 백분위: 상위 {benchmark.topPercent}%
  </p>
  </div>
  </div>

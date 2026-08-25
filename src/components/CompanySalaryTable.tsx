@@ -32,6 +32,8 @@ function calcTax(taxable: number): number {
   return 0;
 }
 
+// NOTE: 간이 추정용 인라인 사본 — 정본 엔진은 src/lib/TaxLogic.ts(calculateSalary2026).
+// 요율·산식 변경 금지. 향후 통합 시 TaxLogic 재사용으로 교체할 것 (2026-08 감사 메모).
 function estimateNetSalary(annualSalary: number): {
   totalDeduction: number;
   netAnnual: number;

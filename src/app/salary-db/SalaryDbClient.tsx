@@ -23,6 +23,8 @@ export interface CompanyIndexItem {
  logo: string;
  /** 원 단위 — 신입 base 연봉 */
  entryBase: number;
+ /** 원 단위 — 신입 영끌(기본급+평균 인센티브). 정렬 기준 — 상세 페이지와 통일 */
+ entryTotal: number;
  /** 원 단위 — 시니어 base 연봉 */
  seniorBase: number;
  /** 신입 인센티브 타깃 (%) */
@@ -89,7 +91,9 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
  );
  if (tierFilter !== "all") list = list.filter((c) => c.tier === tierFilter);
- if (sortByEntry) list = [...list].sort((a, b) => b.entryBase - a.entryBase);
+ // 정렬 기준: 신입 영끌(entryTotal) — 상세·랭킹 페이지의 기준과 통일 (기본급만으로
+ // 정렬하면 성과급 비중 큰 회사의 순서가 상세 페이지 순위와 어긋난다)
+ if (sortByEntry) list = [...list].sort((a, b) => b.entryTotal - a.entryTotal);
  return list;
  }, [companies, searchTerm, tierFilter, sortByEntry]);
 
@@ -226,7 +230,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  }`}
  >
  <TrendingUp className="w-3.5 h-3.5" aria-hidden />
- 신입 연봉 높은순
+ 신입 영끌 높은순
  </button>
  </div>
 

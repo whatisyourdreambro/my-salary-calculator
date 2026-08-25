@@ -37,8 +37,14 @@ export default function CompanyUniqueStats({
   const benefitsValue = getBenefitsValue(company);
   const cumulativeIncome = getCumulativeIncome(company);
 
-  // 렌더할 카드가 하나도 없으면 섹션 자체를 생략
-  if (!overallRank && !hourlyWage && !benefitsValue && !cumulativeIncome) {
+  // 렌더할 카드가 하나도 없으면 섹션 자체를 생략 (글로벌 기업은 참고 배지 카드가 있음)
+  if (
+    !company.isGlobal &&
+    !overallRank &&
+    !hourlyWage &&
+    !benefitsValue &&
+    !cumulativeIncome
+  ) {
     return null;
   }
 
@@ -69,26 +75,47 @@ export default function CompanyUniqueStats({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* 1. 전국 연봉 순위 */}
-        {overallRank && (
+        {/* 1. 전국(국내) 연봉 순위 — 글로벌 기업은 국내 순위 대신 참고 배지 */}
+        {company.isGlobal ? (
+          <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5">
+            <p className="text-xs font-black uppercase tracking-widest text-electric mb-2 flex items-center gap-1.5">
+              <Trophy className="w-3.5 h-3.5" />
+              글로벌 기업
+            </p>
+            <p className="text-2xl font-black text-navy dark:text-canvas-50 mb-1">
+              국내 순위 비교 제외
+            </p>
+            <p className="text-sm font-bold text-electric mb-2">글로벌 참고 데이터</p>
+            <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+              {koName}은(는) 해외 본사 기준 보상 체계라 국내 채용 시장과 직접
+              비교가 어려워 국내 연봉 순위에서 제외하고 글로벌 참고용으로
+              제공합니다.
+            </p>
+          </div>
+        ) : overallRank ? (
           <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5">
             <p className="text-xs font-black uppercase tracking-widest text-electric mb-2 flex items-center gap-1.5">
               <Trophy className="w-3.5 h-3.5" />
               전국 연봉 순위
             </p>
             <p className="text-2xl font-black text-navy dark:text-canvas-50 mb-1">
-              {fmt(overallRank.total)}개사 중 {fmt(overallRank.rank)}위
+              국내 {fmt(overallRank.total)}개사 중 {fmt(overallRank.rank)}위
             </p>
-            <p className="text-sm font-bold text-electric mb-2">
-              상위 {overallRank.percentile}%
-            </p>
+            {/* 하위권 회사에 "상위 61%" 같은 오해 소지 표현 방지 — 상위 50% 이내만 백분위 강조 */}
+            {overallRank.topPercent <= 50 && (
+              <p className="text-sm font-bold text-electric mb-2">
+                상위 {overallRank.topPercent}%
+              </p>
+            )}
             <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
-              머니샐러리 연봉 DB 전체 {fmt(overallRank.total)}개 회사의 신입
-              영끌 연봉(기본급+평균 인센티브) 기준으로 {koName}은(는) 상위{" "}
-              {overallRank.percentile}% 구간에 위치합니다.
+              머니샐러리 연봉 DB 국내 {fmt(overallRank.total)}개 회사의 신입
+              영끌 연봉(기본급+평균 인센티브) 기준으로 {koName}은(는){" "}
+              {overallRank.topPercent <= 50
+                ? `상위 ${overallRank.topPercent}% 구간에 위치합니다.`
+                : `${fmt(overallRank.rank)}위에 위치합니다.`}
             </p>
           </div>
-        )}
+        ) : null}
 
         {/* 2. 실질 시급 */}
         {hourlyWage && (

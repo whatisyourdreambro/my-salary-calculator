@@ -42,9 +42,9 @@ export default function CompanyIndustryRank({
         {industryKo} 업종 연봉 순위
       </h2>
       <p className="text-sm text-muted-blue dark:text-canvas-300 mb-6">
-        {company.name.ko}은(는) {industryKo} 업종 {total}개사 중 신입 영끌 연봉{" "}
+        {company.name.ko}은(는) 국내 {industryKo} 업종 {total}개사 중 신입 영끌 연봉{" "}
         <strong className="text-electric">{myRank}위</strong>입니다. 같은 업종 회사의
-        초봉을 한눈에 비교해 보세요.
+        초봉을 한눈에 비교해 보세요. (글로벌 기업은 국내 순위 비교에서 제외)
       </p>
 
       <ol className="space-y-2">

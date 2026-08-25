@@ -46,8 +46,10 @@ const tierLabel: Record<string, string> = {
 
 export default function CompanyRankingPage() {
   // 시니어 기준 총보상 = base + 평균 인센티브(avgAmount 우선, 없으면 base×target%)
+  // 국내 기업만 — 글로벌 기업(isGlobal)은 국내 순위 왜곡 방지 위해 제외
   const ranked = companyRepository
     .getAll()
+    .filter((c) => !c.isGlobal)
     .map((c) => {
       const senior = c.salary.senior;
       const incentive =

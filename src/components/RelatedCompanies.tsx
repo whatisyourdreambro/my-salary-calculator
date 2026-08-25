@@ -39,14 +39,23 @@ export default function RelatedCompanies({
   limit = 6,
   title = "비슷한 회사 비교",
 }: RelatedCompaniesProps) {
+  // targetSalary 지정 시 신입 영끌 ±30% 밖 회사는 후보 제외 — 스코어 컷오프가
+  // 없어 연봉대가 전혀 다른 회사까지 "비슷한 연봉대"로 묶이던 문제 방지.
+  // 글로벌 기업(isGlobal)은 국내 비교 추천에서 제외.
   const candidates = allCompanies
-    .filter((c) => c.id !== currentId)
+    .filter((c) => c.id !== currentId && !c.isGlobal)
+    .filter((c) => {
+      if (!targetSalary) return true;
+      const entry = totalEntry(c);
+      return entry >= targetSalary * 0.7 && entry <= targetSalary * 1.3;
+    })
     .map((c) => ({ company: c, score: score(c, industry, targetSalary) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((x) => x.company);
 
-  if (candidates.length === 0) return null;
+  // 유의미한 비교가 안 되는 1개 이하면 섹션 숨김 (빈 그리드·단독 카드 방지)
+  if (candidates.length < 2) return null;
 
   return (
     <section className="my-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

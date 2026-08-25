@@ -85,6 +85,13 @@ export interface CompanyProfile {
  industry: string;
  /** 표준 업종 id. CompanyRepository가 industry 원문을 정규화해 로드 시점에 주입. */
  industryId?: string;
+ /**
+  * 해외 본사 기준 글로벌 기업 (globalCompanies.ts 유래) — 국내 채용 시장과
+  * 보상 체계가 달라 국내 전국·업종 랭킹 풀에서 제외하고 "글로벌 참고"로 표기.
+  * data/companies/index.ts 병합 시점에 자동 주입 — 개별 데이터 파일에 기재 금지.
+  * (tier:"foreign"은 국내 외국계 자회사도 포함하는 별개 축이라 판별자로 쓰지 않는다)
+  */
+ isGlobal?: boolean;
  tier: "conglomerate" | "unicorn" | "startup" | "foreign" | "public";
  logo: string; // Path to image or emoji
  description: string;
