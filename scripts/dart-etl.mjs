@@ -364,17 +364,21 @@ async function fetchHist() {
   const dir = join(EMP_HIST_CACHE, year);
   mkdirSync(dir, { recursive: true });
   const entries = getTargets();
-  // ★동시성 4 유지 — 8로 올렸다가 DART가 ECONNRESET으로 차단한 실측(2026-08-23).
-  // 본 fetch와 동일한 보수적 페이스가 안전하다.
-  const HIST_CONCURRENCY = 4;
-  let done = 0, skipped = 0, noData = 0, errs = 0;
+  // ★실측(2026-08-23): opendart는 약 1,000건/창 단위로 허용 후 ECONNRESET 재차단.
+  // 동시성 2 + 호출당 250ms 로 창 한도 아래 유지. 연속 에러 30회면 차단 재진입으로
+  // 판단하고 조기 종료(에러 고속 소진 방지 — 캐시 재개형이라 다음 실행이 이어감).
+  const HIST_CONCURRENCY = 2;
+  const HIST_SLEEP_MS = 250;
+  const MAX_CONSECUTIVE_ERRS = 30;
+  let done = 0, skipped = 0, noData = 0, errs = 0, consecutiveErrs = 0, aborted = false;
 
   async function processOne(e) {
     const out = join(dir, `${e.corpCode}.json`);
     if (existsSync(out) && !FORCE) { skipped++; return; }
     try {
       const j = await apiJson("empSttus.json", { corp_code: e.corpCode, bsns_year: year, reprt_code: "11011" });
-      await sleep(100);
+      await sleep(HIST_SLEEP_MS);
+      consecutiveErrs = 0;
       if (j.status === "000" && Array.isArray(j.list) && j.list.length) {
         writeFileSync(out, JSON.stringify({ year: Number(year), list: j.list }, null, 0));
       } else {
@@ -383,16 +387,23 @@ async function fetchHist() {
       }
     } catch (err) {
       errs++;
-      log(`hist err ${e.corpCode} ${e.corpName}: ${err.message}`);
+      consecutiveErrs++;
+      if (errs <= 5) log(`hist err ${e.corpCode} ${e.corpName}: ${err.message}`);
     }
   }
 
   for (let i = 0; i < entries.length; i += HIST_CONCURRENCY) {
     await Promise.all(entries.slice(i, i + HIST_CONCURRENCY).map(processOne));
     done = Math.min(i + HIST_CONCURRENCY, entries.length);
+    if (consecutiveErrs >= MAX_CONSECUTIVE_ERRS) {
+      aborted = true;
+      log(`fetch-hist ${year} 조기 종료 — 연속 에러 ${consecutiveErrs}회(차단 재진입 추정). 캐시 유지, 재실행으로 이어감`);
+      break;
+    }
     if (done % 200 < HIST_CONCURRENCY) log(`fetch-hist ${year} ${done}/${entries.length} (skip ${skipped}, no-data ${noData}, err ${errs})`);
   }
-  log(`fetch-hist ${year} 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  log(`fetch-hist ${year} ${aborted ? "중단" : "완료"}: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  if (aborted) process.exit(3);
 }
 
 // ── 집계 (성별합계 행 기반 가중평균) ─────────────────────────
