@@ -5,7 +5,8 @@
 //   iframe 내 광고 스크립트 실행은 AdSense 정책 리스크 (widget/salary 헤더 주석 참조).
 // - CSP·캐시 헤더는 핸들러가 직접 세팅하는 것이 정본 (next-on-pages 가 config
 //   headers() 를 정적 라우트에 내보내지 않는 실측 — next.config /widget/:path* 는 dev 패리티).
-// - 기존 위젯 2종(salary·year-end-tax)은 무변경 — 신규 위젯부터 이 셸 사용.
+// - 기존 위젯 2종(salary·year-end-tax)도 CSP 상수는 이 모듈로 수렴(2026-08-26) —
+//   헤더 세팅 자체는 여전히 각 핸들러가 직접 수행. 셸(widgetShell)은 신규 위젯용.
 
 /** 위젯 전용 최소 CSP — frame-ancestors * 가 임베드 허용의 핵심 */
 export const WIDGET_CSP =

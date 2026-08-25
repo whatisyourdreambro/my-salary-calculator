@@ -13,6 +13,7 @@
 //   /embed 페이지가 담당한다.
 
 import { calculateNetSalary2026 } from "@/lib/calculator";
+import { WIDGET_CSP } from "../shared";
 
 export const runtime = "edge";
 
@@ -24,11 +25,6 @@ const GRID_STEP = 1_000_000;
 // 위젯 기본 가정 — 표기 문구와 반드시 일치 유지
 const NON_TAXABLE = 2_400_000; // 비과세 식대 월 20만원
 const DEPENDENTS = 1;
-
-// 위젯 전용 최소 CSP — 자가완결 HTML이라 인라인만 허용하면 된다.
-// frame-ancestors * 가 임베드 허용의 핵심 (모던 브라우저는 XFO보다 CSP 우선).
-const WIDGET_CSP =
-  "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors *; base-uri 'none'; form-action 'none'";
 
 function buildGrid(): number[] {
   const grid: number[] = [];

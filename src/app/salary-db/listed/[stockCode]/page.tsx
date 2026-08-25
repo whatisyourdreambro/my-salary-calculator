@@ -5,7 +5,7 @@
 // 기존 /salary-db/[id] 보유사 제외 — 카니발 방지). dynamicParams=false 로 코호트 밖
 // URL 은 404 — 크롤 예산 자체를 쓰지 않는다 (compare 413 색인 거부 교훈).
 // 광고·공유는 salary-db/layout.tsx 상속 — 이 페이지에 광고 코드 없음.
-// 서버 컴포넌트 전용 — dartLite(dartDisclosed 800KB)는 클라 번들 오염 금지.
+// 서버 컴포넌트 전용 — dartLite(dartDisclosed 1.3MB)는 클라 번들 오염 금지.
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";

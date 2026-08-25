@@ -63,10 +63,13 @@ export const KR_PENSION_MONTHLY_CAP = PENSION_BASE_2026.MAX_MONTHLY;
 
 // 4대보험 본인부담 합계 (2026) — 요율은 taxConstants2026 정본 사용
 export function krSocialInsurance(grossAnnual: number): number {
- const pension =
- Math.min(grossAnnual / 12, KR_PENSION_MONTHLY_CAP) *
- 12 *
- INSURANCE_RATES_2026.NATIONAL_PENSION;
+ if (grossAnnual <= 0) return 0;
+ // 기준소득월액 상·하한 클램프 (하한 41만 — 2026.7 갱신, taxConstants2026 정본)
+ const pensionBase = Math.min(
+ Math.max(grossAnnual / 12, PENSION_BASE_2026.MIN_MONTHLY),
+ KR_PENSION_MONTHLY_CAP
+ );
+ const pension = pensionBase * 12 * INSURANCE_RATES_2026.NATIONAL_PENSION;
  const health = grossAnnual * INSURANCE_RATES_2026.HEALTH_INSURANCE;
  const longTermCare = health * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
  const employment = grossAnnual * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;

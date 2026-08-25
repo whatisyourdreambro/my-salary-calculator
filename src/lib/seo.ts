@@ -8,7 +8,6 @@ import type { Metadata } from "next";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
-const DEFAULT_OG_IMAGE = "/og-image.png";
 const DEFAULT_KEYWORDS = [
  "연봉 계산기",
  "실수령액 계산기",
@@ -356,6 +355,5 @@ export function buildCompanyMetadata(company: {
 export const SITE_CONFIG = {
  url: SITE_URL,
  name: SITE_NAME,
- defaultOgImage: DEFAULT_OG_IMAGE,
  defaultKeywords: DEFAULT_KEYWORDS,
 };

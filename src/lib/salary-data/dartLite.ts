@@ -1,7 +1,7 @@
 // src/lib/salary-data/dartLite.ts
 //
 // DART 공시 전용 경량 회사 페이지(/salary-db/listed/[stockCode]) 코호트 — 단일 소스.
-// ★dartDisclosed(약 800KB)를 import 하므로 클라이언트 컴포넌트에서 절대
+// ★dartDisclosed(약 1.3MB)를 import 하므로 클라이언트 컴포넌트에서 절대
 //   import 금지 (서버 컴포넌트·generateStaticParams·sitemap 전용).
 //
 // 게이팅 원칙 (compare 413 색인 거부 교훈 — thin·중복 페이지 방지):

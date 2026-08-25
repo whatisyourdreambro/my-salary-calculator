@@ -23,6 +23,8 @@ export interface NetSalaryRates {
  pension: number;
  /** 국민연금 기준소득월액 상한 (원) — 공제 상한 = 상한 × 요율 */
  pensionMonthlyCapBase: number;
+ /** 국민연금 기준소득월액 하한 (원) — 하한 미만 소득도 하한 기준으로 부과 */
+ pensionMonthlyFloorBase: number;
  /** 건강보험 근로자 부담 요율 */
  health: number;
  /** 장기요양보험 — 건강보험료 대비 비율 */
@@ -34,6 +36,7 @@ export interface NetSalaryRates {
 export const NET_SALARY_RATES_2026: NetSalaryRates = {
  pension: INSURANCE_RATES_2026.NATIONAL_PENSION,
  pensionMonthlyCapBase: PENSION_BASE_2026.MAX_MONTHLY,
+ pensionMonthlyFloorBase: PENSION_BASE_2026.MIN_MONTHLY,
  health: INSURANCE_RATES_2026.HEALTH_INSURANCE,
  ltcRatio: INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO,
  employment: INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE,
@@ -73,10 +76,12 @@ export function calculateNetSalaryWithRates(
  monthlySalary - actualNonTaxableAmount / 12
  );
 
- const pension = Math.min(
- taxableMonthlyIncome * rates.pension,
- rates.pensionMonthlyCapBase * rates.pension
+ // 기준소득월액 상·하한 클램프 (2026.7~: 월 659만 / 41만 — taxConstants2026 정본)
+ const pensionBase = Math.min(
+ Math.max(taxableMonthlyIncome, rates.pensionMonthlyFloorBase),
+ rates.pensionMonthlyCapBase
  );
+ const pension = pensionBase * rates.pension;
  const health = taxableMonthlyIncome * rates.health;
  const longTermCare = health * rates.ltcRatio;
  const employment = taxableMonthlyIncome * rates.employment;

@@ -19,6 +19,7 @@ import {
   calculateNetSalary,
   calculateNetSalary2026,
 } from "@/lib/calculator";
+import { krSocialInsurance } from "@/lib/global/taxEngine";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import {
@@ -93,6 +94,26 @@ describe("근로소득세액공제 (소득세법 §59)", () => {
   });
 });
 
+describe("글로벌 엔진 4대보험 (global/taxEngine.ts)", () => {
+  it("국민연금 하한 클램프 — 월 소득이 하한 미만이어도 하한 기준 부과", () => {
+    const gross = 3_000_000; // 월 25만 < 하한 41만
+    const expected =
+      PENSION_BASE_2026.MIN_MONTHLY *
+        12 *
+        INSURANCE_RATES_2026.NATIONAL_PENSION +
+      gross *
+        INSURANCE_RATES_2026.HEALTH_INSURANCE *
+        (1 + INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO) +
+      gross * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
+    expect(krSocialInsurance(gross)).toBeCloseTo(expected, 6);
+  });
+
+  it("0 이하 소득은 4대보험 0 (하한이 음수·0 소득에 부과되지 않는다)", () => {
+    expect(krSocialInsurance(0)).toBe(0);
+    expect(krSocialInsurance(-1_000_000)).toBe(0);
+  });
+});
+
 describe("실수령액 엔진 (calculator.ts 단일 코어)", () => {
   it("calculateNetSalary2026 은 calculateNetSalary 의 alias 다", () => {
     expect(calculateNetSalary2026).toBe(calculateNetSalary);
@@ -105,6 +126,26 @@ describe("실수령액 엔진 (calculator.ts 단일 코어)", () => {
         PENSION_BASE_2026.MAX_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
       )
     ); // 6,590,000 × 4.75% = 313,025
+  });
+
+  it("국민연금 기준소득월액 하한(월 41만)이 적용된다", () => {
+    // 연 300만 = 월 25만 < 하한 41만 → 하한 기준으로 부과 (2026-08 P2 경계 수정)
+    const r = calculateNetSalary(3_000_000, 0, 1, 0, adv);
+    expect(r.pension).toBe(
+      Math.round(
+        PENSION_BASE_2026.MIN_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
+      )
+    ); // 410,000 × 4.75% = 19,475
+  });
+
+  it("하한 경계(월 41만 정확히)에서는 실소득 기준과 하한 기준이 일치한다", () => {
+    const annual = PENSION_BASE_2026.MIN_MONTHLY * 12; // 4,920,000
+    const r = calculateNetSalary(annual, 0, 1, 0, adv);
+    expect(r.pension).toBe(
+      Math.round(
+        PENSION_BASE_2026.MIN_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
+      )
+    );
   });
 
   it("자녀 2명 = 자녀 0명 대비 연 55만원(월 반영분) 세액 감소", () => {

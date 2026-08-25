@@ -1,7 +1,7 @@
 // src/lib/salary-data/dartReport.ts
 //
 // DART 공시 평균연봉 리포트 집계 — 단일 소스 (서버 전용).
-// ★dartDisclosed(약 800KB)를 import 하므로 클라이언트 컴포넌트에서 절대
+// ★dartDisclosed(약 1.3MB)를 import 하므로 클라이언트 컴포넌트에서 절대
 //   import 금지 (서버 컴포넌트·sitemap·registry 전용).
 // 리포트 제목·본문이 회사 수를 공유하도록 카운트를 여기서 파생
 // (entrySalaryReport.ts 패턴 — 제목 413 vs 본문 402 불일치 사고 방지).

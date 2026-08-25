@@ -83,6 +83,13 @@ export default function robots(): MetadataRoute.Robots {
  'ZoominfoBot',
  'rogerbot',
  'SiteAuditBot',
+ // [2026-08-26] middleware.ts BAD_BOTS(403 차단)와 선언 통일 — 나머지 6종
+ 'Bytespider',
+ 'SeznamBot',
+ 'YandexBot',
+ 'ImagesiftBot',
+ 'MauiBot',
+ 'SerendeputyBot',
  ],
  disallow: '/',
  },

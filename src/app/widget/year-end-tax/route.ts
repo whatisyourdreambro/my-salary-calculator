@@ -12,6 +12,7 @@
 
 import { calculateYearEndTax } from "@/lib/yearEndTaxCalculator";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { WIDGET_CSP } from "../shared";
 
 export const runtime = "edge";
 
@@ -19,9 +20,6 @@ export const runtime = "edge";
 const GRID_MIN = 12_000_000;
 const GRID_MAX = 200_000_000;
 const GRID_STEP = 1_000_000;
-
-const WIDGET_CSP =
-  "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors *; base-uri 'none'; form-action 'none'";
 
 /** 표준 가정 하 연간 4대보험 (근로자 부담분) — 결정세액 그리드 입력용 */
 function derivedInsurance(grossSalary: number) {
