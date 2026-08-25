@@ -4,6 +4,8 @@
 // 사용자가 한 계산기를 끝낸 후 자연스럽게 이동할 다음 도구 추천.
 // 내부 링크 강화로 SEO + 평균 페이지뷰/세션 개선.
 
+import { bonusCalcCountKo, companyCountPlus } from "@/config/site";
+
 export interface RelatedItem {
  path: string;
  title: string;
@@ -26,10 +28,10 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
  // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
  bonus: [
- { path: "/calc/bonus-calculators", title: "성과급 계산기 23종 모음", description: "회사별 최신 지급률·시즌 캘린더 한눈에", icon: "Gift" },
+ { path: "/calc/bonus-calculators", title: `성과급 계산기 ${bonusCalcCountKo} 모음`, description: "회사별 최신 지급률·시즌 캘린더 한눈에", icon: "Gift" },
  { path: "/", title: "연봉 실수령액 계산기", description: "성과급 합산 연봉 세후 계산", icon: "Calculator" },
  { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
- { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: "430+ 기업 평균 연봉·복지 비교", icon: "Building2" },
+ { path: "/salary-db", title: "회사별 연봉 데이터베이스", description: `${companyCountPlus} 기업 평균 연봉·복지 비교`, icon: "Building2" },
  { path: "/tools/finance/irp", title: "IRP·연금저축 절세", description: "성과급 세액공제 환급 극대화", icon: "PiggyBank" },
  { path: "/fun/salary-rank", title: "연봉 순위 테스트", description: "내 연봉+성과급 상위 몇 %?", icon: "TrendingUp" },
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "회사 무관 일반 성과급 세후", icon: "Gift" },

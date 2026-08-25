@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/gen-site-metrics.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -12,7 +13,8 @@
     "verify:sitemap": "tsx scripts/verify-sitemap.ts",
     "analyze": "ANALYZE=true next build",
     "ad-audit": "node scripts/ad-audit.mjs",
-    "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped"
+    "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped",
+    "verify:site": "tsx scripts/gen-site-metrics.ts --check"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",

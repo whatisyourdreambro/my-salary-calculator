@@ -2,6 +2,7 @@
 // 신입 연봉 협상 가이드 페이지 (시즌 중립)
 
 import type { Metadata } from "next";
+import { companyCountKo } from "@/config/site";
 import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, Building2 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
@@ -181,7 +182,7 @@ export default function NewEmployee2026Page() {
  >
  <TrendingUp className="w-8 h-8 text-electric mb-3" />
  <h3 className="text-lg font-black mb-2">신입 초봉 TOP 50</h3>
- <p className="text-sm text-muted-blue">회사 434곳 영끌 순위</p>
+ <p className="text-sm text-muted-blue">회사 {companyCountKo} 영끌 순위</p>
  </Link>
  <Link
  href="/"

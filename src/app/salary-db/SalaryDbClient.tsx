@@ -1,7 +1,7 @@
 "use client";
 
 // 회사 DB 인덱스 — 검색/필터 UI (클라이언트).
-// 485개사 전체 프로필(~860KB)을 번들에 싣지 않도록, 서버 컴포넌트(page.tsx)가
+// 전체 회사 프로필(~860KB)을 번들에 싣지 않도록, 서버 컴포넌트(page.tsx)가
 // 목록 표시·검색에 필요한 필드만 추린 경량 인덱스를 props 로 내려준다.
 
 import { useMemo, useState, Fragment } from "react";
@@ -234,7 +234,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {filteredCompanies.map((company, idx) => (
  <Fragment key={company.id}>
- {/* motion.div(SSR opacity:0 인라인) 제거 — 485개 카드가 하이드레이션
+ {/* motion.div(SSR opacity:0 인라인) 제거 — 수백 개 카드가 하이드레이션
  전까지 투명해지는 LCP 저해 해소. 첫 8개만 CSS 계단식 페이드 */}
  <div
  style={{

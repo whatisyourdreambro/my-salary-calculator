@@ -5,6 +5,7 @@ import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
+import { TOTAL_CALC_LABEL, companyCountPlus } from "@/config/site";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
@@ -44,8 +45,7 @@ export const metadata: Metadata = {
     template: "%s | 머니샐러리",
   },
   // SERP CTR 강화(7차): 숫자 hook + 차별점 명시. 데스크톱 CTR 1.3%→3%+ 목표.
-  description:
-    "연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 430+개사 비교·실수령액 계산기 150+개 무료 제공.",
+  description: `연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB ${companyCountPlus}개사 비교·실수령액 계산기 ${TOTAL_CALC_LABEL}개 무료 제공.`,
   keywords: [
     "연봉 계산기",
     "실수령액 계산기",
@@ -89,14 +89,12 @@ export const metadata: Metadata = {
     url: "https://www.moneysalary.com",
     siteName: "머니샐러리",
     title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
-    description:
-      "연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB 430+개사 비교.",
+    description: `연봉 5000만원이면 월 353만원, 1억이면 월 650만원. 2026 최신 세법 4대보험·소득세 자동 계산. 회사별 연봉 DB ${companyCountPlus}개사 비교.`,
   },
   twitter: {
     card: "summary_large_image",
     title: "2026 연봉 계산기 | 실수령액·세후월급·4대보험 즉시 계산 — 머니샐러리",
-    description:
-      "연봉 5000만원→월 353만원, 1억→월 650만원. 2026 최신 세법 자동 계산. 회사별 연봉 DB·계산기 200+개 무료.",
+    description: `연봉 5000만원→월 353만원, 1억→월 650만원. 2026 최신 세법 자동 계산. 회사별 연봉 DB·계산기 ${TOTAL_CALC_LABEL}개 무료.`,
   },
   // canonical/hreflang은 홈 전용 값이라 src/app/page.tsx로 이동(2026-07-06) —
   // layout에 두면 alternates 미정의 페이지 전부가 "canonical: 홈"을 상속하는 사고 위험.

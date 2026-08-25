@@ -8,6 +8,7 @@
 
 import Link from "@/components/AppLink";
 import { Building2, Briefcase, MapPin, Factory, Trophy } from "lucide-react";
+import { INDUSTRY_COUNT, JOB_COUNT, companyCountPlus, regionLabel } from "@/config/site";
 
 const HUBS: Array<{
   href: string;
@@ -15,10 +16,10 @@ const HUBS: Array<{
   sub: string;
   icon: React.ElementType;
 }> = [
-  { href: "/salary-db", label: "회사별 연봉", sub: "200+ 기업 신입 초봉·직급별 평균", icon: Building2 },
-  { href: "/job", label: "직업별 연봉", sub: "100+ 직종 평균·실수령액", icon: Briefcase },
-  { href: "/industry", label: "산업별 연봉", sub: "15개 업종 순위·동종사 비교", icon: Factory },
-  { href: "/region", label: "지역별 연봉", sub: "17개 시도 + 판교·여의도 분포", icon: MapPin },
+  { href: "/salary-db", label: "회사별 연봉", sub: `${companyCountPlus} 기업 신입 초봉·직급별 평균`, icon: Building2 },
+  { href: "/job", label: "직업별 연봉", sub: `${JOB_COUNT}개 직종 평균·실수령액`, icon: Briefcase },
+  { href: "/industry", label: "산업별 연봉", sub: `${INDUSTRY_COUNT}개 업종 순위·동종사 비교`, icon: Factory },
+  { href: "/region", label: "지역별 연봉", sub: `${regionLabel} 분포`, icon: MapPin },
   // /company/compare는 noindex라 크롤 자산 낭비 — 색인되는 랭킹 페이지로 교체 (2026-08-07)
   { href: "/salary-db/ranking", label: "연봉 랭킹", sub: "대기업 연봉 순위 TOP 30", icon: Trophy },
 ];

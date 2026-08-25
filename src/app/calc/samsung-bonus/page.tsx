@@ -4,6 +4,7 @@
 // title.absolute로 사이트명 한 번만 적용 (layout template과 중복 방지).
 
 import type { Metadata } from "next";
+import { bonusCalcCountKo } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "@/components/AppLink";
 import {
@@ -953,7 +954,7 @@ export default function SamsungBonusCalculatorPage() {
                 성과급 허브
               </p>
               <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
-                성과급 계산기 23종 전체 보기
+                성과급 계산기 {bonusCalcCountKo} 전체 보기
               </p>
               <p className="text-xs text-muted-blue mb-3">
                 SK하이닉스·현대차 등 회사별 최신 지급률 + 2026 시즌 캘린더

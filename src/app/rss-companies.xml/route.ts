@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server";
 import { allCompanies } from "@/data/companies";
+import { companyCountPlus } from "@/config/site";
 
 const escapeXml = (unsafe: string) =>
   unsafe.replace(/[<>&'"]/g, (c) => {
@@ -28,7 +29,7 @@ function generateFeed() {
   const baseUrl = "https://www.moneysalary.com";
   const title = "머니샐러리 회사별 연봉 DB";
   const description =
-    "삼성전자, SK하이닉스, 네이버, 카카오 등 한국 기업 430+곳의 직급별 연봉·복지·워라밸 데이터. 갱신순 피드.";
+    `삼성전자, SK하이닉스, 네이버, 카카오 등 한국 기업 ${companyCountPlus}곳의 직급별 연봉·복지·워라밸 데이터. 갱신순 피드.`;
 
   const companies = [...allCompanies]
     .sort(

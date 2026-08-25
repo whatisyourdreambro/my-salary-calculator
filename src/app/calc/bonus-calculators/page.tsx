@@ -1,6 +1,6 @@
 // src/app/calc/bonus-calculators/page.tsx
 //
-// 성과급 계산기 허브 — 회사별 성과급 계산기 23종의 토픽 허브.
+// 성과급 계산기 허브 — 회사별 성과급 계산기(BONUS_CALCS 전수)의 토픽 허브.
 // 제네릭 "성과급 계산기" 검색 의도(목록·비교) 대응. 세금 계산 의도는
 // /tools/finance/bonus 가 담당 — 상호 CTA 로 의도 분리를 명시한다.
 // 광고: calc/layout.tsx 하단 스택(IN_ARTICLE·쿠팡·HOME_TOP) 상속 + 본문
@@ -9,6 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { bonusCalcCountKo, companyCountKo, companyCountPlus } from "@/config/site";
 import Link from "@/components/AppLink";
 import {
   autoBreadcrumbLd,
@@ -74,7 +75,7 @@ const FAQ_ITEMS = [
   {
     question: "우리 회사가 목록에 없으면 어떻게 계산하나요?",
     answer:
-      "전용 계산기가 없는 회사는 성과급 세금 계산기(/tools/finance/bonus)에 연봉과 성과급 금액만 입력하면 동일한 2026년 세법 기준으로 세후 실수령액이 나옵니다. 회사별 평균 연봉·복지가 궁금하면 480곳 이상을 다루는 회사별 연봉 DB(/salary-db)를 참고하세요. 전용 계산기는 보도·공시로 지급률이 확인되는 회사부터 순차 추가하고 있습니다.",
+      `전용 계산기가 없는 회사는 성과급 세금 계산기(/tools/finance/bonus)에 연봉과 성과급 금액만 입력하면 동일한 2026년 세법 기준으로 세후 실수령액이 나옵니다. 회사별 평균 연봉·복지가 궁금하면 ${companyCountKo}을 다루는 회사별 연봉 DB(/salary-db)를 참고하세요. 전용 계산기는 보도·공시로 지급률이 확인되는 회사부터 순차 추가하고 있습니다.`,
   },
 ];
 
@@ -85,7 +86,7 @@ export const metadata: Metadata = {
     title: PAGE_TITLE,
     description: PAGE_DESC,
     path: PAGE_PATH,
-    ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent("성과급 계산기 23종")}`,
+    ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent(`성과급 계산기 ${bonusCalcCountKo}`)}`,
   }),
   // 페이지 고유 키워드 — 헬퍼의 DEFAULT_KEYWORDS 병합으로 기존 keywords 출력이
   // 바뀌지 않도록 기존 값 그대로 override.
@@ -118,9 +119,9 @@ export default function BonusCalculatorsHubPage() {
     <>
       <JsonLd
         data={[
-          autoBreadcrumbLd(PAGE_PATH, { leafName: "성과급 계산기 23종" }),
+          autoBreadcrumbLd(PAGE_PATH, { leafName: `성과급 계산기 ${bonusCalcCountKo}` }),
           itemListLd({
-            name: "회사별 성과급 계산기 23종",
+            name: `회사별 성과급 계산기 ${bonusCalcCountKo}`,
             items: BONUS_CALCS.map((c) => ({
               name: `${c.company} 성과급 계산기`,
               url: `/calc/${c.slug}`,
@@ -138,7 +139,7 @@ export default function BonusCalculatorsHubPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <Breadcrumbs
             path={PAGE_PATH}
-            leafName="성과급 계산기 23종"
+            leafName={`성과급 계산기 ${bonusCalcCountKo}`}
             className="mb-4"
           />
 
@@ -146,7 +147,7 @@ export default function BonusCalculatorsHubPage() {
           <header className="mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-3">
               <Sparkles className="w-3.5 h-3.5" />
-              대기업 성과급 계산기 23종 · 최신 지급률 반영
+              대기업 성과급 계산기 {bonusCalcCountKo} · 최신 지급률 반영
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
               성과급 계산기 <span className="text-primary">2026</span> —
@@ -365,7 +366,7 @@ export default function BonusCalculatorsHubPage() {
                 <p className="text-xs font-bold text-faint mb-1">🏢 연봉 DB</p>
                 <p className="font-black text-lg">회사별 연봉 데이터베이스 →</p>
                 <p className="text-sm text-faint mt-1">
-                  480+ 기업 평균 연봉·직급별 연봉표
+                  {companyCountPlus} 기업 평균 연봉·직급별 연봉표
                 </p>
               </Link>
             </div>

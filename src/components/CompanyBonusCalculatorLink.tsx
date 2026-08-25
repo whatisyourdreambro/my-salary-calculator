@@ -2,11 +2,11 @@
 //
 // 회사 페이지 → 회사별 성과급 계산기 역링크 CTA.
 // 회사 ID 가 매핑 테이블에 있으면 큰 강조 버튼으로 노출, 없으면 null.
-// 5월 22~23일 트래픽 폭증의 90%가 단일 성과급 페이지였음 (GA 분석).
-// 회사 페이지 방문자 → 성과급 계산기 동선 강화로 폭증 페이지 트래픽 회수.
+// 회사 페이지 방문자 → 성과급 계산기 동선 강화 목적(시즌 수요 대응).
 
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight } from "lucide-react";
+import { bonusCalcCountKo } from "@/config/site";
 
 // 회사 ID → 계산기 경로 + 라벨 매핑
 const COMPANY_BONUS_MAP: Record<
@@ -193,7 +193,7 @@ export default function CompanyBonusCalculatorLink({
             href="/calc/bonus-calculators"
             className="font-bold underline underline-offset-2 hover:text-electric transition"
           >
-            삼성전자·SK하이닉스 등 회사별 성과급 계산기 23종 전체 보기 →
+            삼성전자·SK하이닉스 등 회사별 성과급 계산기 {bonusCalcCountKo} 전체 보기 →
           </Link>
         </p>
       </section>
@@ -233,7 +233,7 @@ export default function CompanyBonusCalculatorLink({
           href="/calc/bonus-calculators"
           className="font-bold underline underline-offset-2 hover:text-primary transition"
         >
-          다른 회사 성과급 계산기 23종 전체 보기 →
+          다른 회사 성과급 계산기 {bonusCalcCountKo} 전체 보기 →
         </Link>
       </p>
     </section>

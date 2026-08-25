@@ -8,6 +8,7 @@
 
 import Link from "@/components/AppLink";
 import { trackGuideCTAClick } from "@/lib/analytics";
+import { companyCountPlus } from "@/config/site";
 import {
  ArrowRight,
  Home,
@@ -97,7 +98,7 @@ function buildActions(
  {
  icon: Building2,
  title: "회사별 연봉·초봉 비교",
- description: "430+ 기업 평균 연봉·복지",
+ description: `${companyCountPlus} 기업 평균 연봉·복지`,
  href: "/salary-db",
  },
  ];

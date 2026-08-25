@@ -8,6 +8,7 @@
 import Link from "@/components/AppLink";
 import { ArrowRight, Gift } from "lucide-react";
 import { BONUS_CALCS } from "@/data/bonusCalcHub";
+import { bonusCalcCountKo } from "@/config/site";
 
 interface Props {
   /** 현재 페이지의 계산기 slug (자기 자신 제외용) */
@@ -20,7 +21,7 @@ export default function BonusClusterLinks({ currentSlug }: Props) {
   const cards: Array<{ href: string; title: string; desc: string; hot?: boolean }> = [
     {
       href: "/calc/bonus-calculators",
-      title: "성과급 계산기 23종 전체 보기",
+      title: `성과급 계산기 ${bonusCalcCountKo} 전체 보기`,
       desc: "회사별 최신 지급률·2026 시즌 캘린더 허브",
       hot: true,
     },

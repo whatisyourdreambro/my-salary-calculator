@@ -4,6 +4,7 @@
 // 키워드: "연봉 인상", "연봉 협상", "인상률 계산", "이직 인상률", "월급 인상"
 
 import type { Metadata } from "next";
+import { companyCountPlus } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "@/components/AppLink";
 import {
@@ -361,7 +362,7 @@ export default function SalaryRaisePage() {
                 회사별 연봉 DB
               </p>
               <p className="text-xs text-muted-blue mb-3">
-                430+ 기업 신입~시니어 평균 연봉 비교
+                {companyCountPlus} 기업 신입~시니어 평균 연봉 비교
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 동급 평균 확인{" "}

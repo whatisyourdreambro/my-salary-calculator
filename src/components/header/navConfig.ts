@@ -3,6 +3,21 @@
 // 헤더 네비게이션 설정 데이터.
 // 6개 카테고리로 통합. 메가 메뉴 스타일 — 항목별 description + badge 지원.
 // 컴포넌트 로직과 분리하여 메뉴 구조 변경 시 이 파일만 수정.
+// 카운트 문자열(회사 수·계산기 수 등)은 src/config/site 에서 파생 — 하드코딩 금지.
+// 시즌 드롭다운 항목은 src/config/seasonLinks 단일 소스에서 파생 (푸터와 공유).
+
+import {
+  INDUSTRY_COUNT,
+  JOB_COUNT,
+  SIMPLE_CALC_COUNT,
+  TOOL_COUNT,
+  bonusCalcCountKo,
+  companyCountPlus,
+  guideCountPlus,
+  regionLabel,
+  simpleCalcCountPlus,
+} from "@/config/site";
+import { headerSeasonItems } from "@/config/seasonLinks";
 
 export type Badge = "HOT" | "NEW" | "SEASON" | "MUST";
 
@@ -34,15 +49,14 @@ export type NavItem = LinkItem | DropdownItem;
 
 export const navConfig: NavItem[] = [
  // ─── 성과급 카테고리 ────────────────────────────────────
- // GA 분석상 단일 페이지(/calc/samsung-bonus)가 5/22~23 트래픽 90% 견인.
- // 회사별 성과급 계산기 13종을 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
- // 시즌(1·6·12월 OPI/PS 지급) 트래픽 폭증 대응.
+ // 회사별 성과급 계산기를 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
+ // 시즌(1·6·12월 OPI/PS 지급) 수요 대응.
  {
   name: "성과급",
   type: "dropdown",
-  description: "삼성·SK하이닉스 등 회사별 성과급 계산기 23종",
+  description: `삼성·SK하이닉스 등 회사별 성과급 계산기 ${bonusCalcCountKo}`,
   items: [
-   { name: "성과급 계산기 전체 보기 (23종)", href: "/calc/bonus-calculators", description: "회사별 최신 지급률·시즌 캘린더 허브", badge: "MUST" },
+   { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 최신 지급률·시즌 캘린더 허브", badge: "MUST" },
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
    { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
    { name: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", description: "임단협 450% + 1,580만 + 무상주 30주" },
@@ -62,9 +76,9 @@ export const navConfig: NavItem[] = [
  {
   name: "계산기",
   type: "dropdown",
-  description: "직장인 필수 100+ 계산기 모음",
+  description: `직장인 필수 ${simpleCalcCountPlus} 계산기 모음`,
   items: [
-   { name: "100가지 계산기 한눈에", href: "/calc", description: "모든 금융 계산기 인덱스", badge: "MUST" },
+   { name: `${SIMPLE_CALC_COUNT}가지 계산기 한눈에`, href: "/calc", description: "모든 금융 계산기 인덱스", badge: "MUST" },
    { name: "종합 연봉 실수령액", href: "/?tab=salary", description: "2026 세후 월급·4대보험" },
    { name: "퇴직금 계산기", href: "/?tab=severance", description: "30일분 평균임금 자동" },
    { name: "프리랜서·알바", href: "/?tab=freelancer", description: "3.3% 원천징수 후 수령액" },
@@ -99,7 +113,7 @@ export const navConfig: NavItem[] = [
    { name: "실업급여 계산기", href: "/unemployment-benefit", description: "수령액·기간 즉시 계산", badge: "HOT" },
    { name: "근로장려금 계산기", href: "/earned-income-credit", description: "단독·홑벌이·맞벌이", badge: "HOT" },
    { name: "육아휴직 급여 계산기", href: "/parental-leave", description: "6+6 부모 육아휴직", badge: "NEW" },
-   { name: "전체 30종 도구", href: "/tools", description: "마이너 계산기까지" },
+   { name: `전체 ${TOOL_COUNT}종 도구`, href: "/tools", description: "마이너 계산기까지" },
   ],
  },
  {
@@ -107,10 +121,10 @@ export const navConfig: NavItem[] = [
   type: "dropdown",
   description: "실제 데이터 기반 연봉 정보",
   items: [
-   { name: "기업별 연봉 DB", href: "/salary-db", description: "430+개 기업 평균 연봉", badge: "MUST" },
-   { name: "직업별 연봉", href: "/job", description: "59개 직종 연봉 비교", badge: "NEW" },
-   { name: "산업별 연봉", href: "/industry", description: "16개 산업군 연봉 현황", badge: "NEW" },
-   { name: "지역별 연봉", href: "/region", description: "17개 시도 + 판교·여의도", badge: "NEW" },
+   { name: "기업별 연봉 DB", href: "/salary-db", description: `${companyCountPlus}개 기업 평균 연봉`, badge: "MUST" },
+   { name: "직업별 연봉", href: "/job", description: `${JOB_COUNT}개 직종 연봉 비교`, badge: "NEW" },
+   { name: "산업별 연봉", href: "/industry", description: `${INDUSTRY_COUNT}개 산업군 연봉 현황`, badge: "NEW" },
+   { name: "지역별 연봉", href: "/region", description: regionLabel, badge: "NEW" },
    { name: "2026 연봉 실수령액 표", href: "/table/2026/annual", description: "1천만~2억 한눈" },
    { name: "2026 월급 실수령액 표", href: "/table/2026/monthly", description: "월급 기준 조회" },
    { name: "직장인 단계별 자산", href: "/career-stages-2026", description: "20~50대 연봉·자산" },
@@ -122,46 +136,15 @@ export const navConfig: NavItem[] = [
   name: "시즌",
   type: "dropdown",
   description: "2026 월별 핫스팟 가이드·정보",
-  items: [
-   { name: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027", description: "+3.7%·월 223.6만원 환산", badge: "HOT" },
-   { name: "연말정산 2027 총정리 허브", href: "/year-end-tax-2027", description: "일정·계산기·단계별 로드맵", badge: "SEASON" },
-   { name: "2026 세법개정안 (8·3 확정 발표)", href: "/tax-reform-2026", description: "발표 내용·직장인 영향 정리", badge: "HOT" },
-   { name: "5월 종합소득세 신고", href: "/year-end-tax-2026", description: "프리랜서·N잡러", badge: "SEASON" },
-   { name: "6·12월 자동차세 계산기", href: "/auto-tax-2026", description: "배기량·차령·연납 5% 공제", badge: "NEW" },
-   { name: "7·9월 부동산 보유세", href: "/property-holding-tax-2026", description: "재산세 + 종부세 통합", badge: "NEW" },
-   { name: "건보료 연말정산 (4월 반영)", href: "/health-insurance-2026", description: "정산금·분납·환급" },
-   { name: "12월 연말정산·성과급", href: "/year-end-tax-settlement-2026", description: "근로자 절세 전략" },
-   { name: "신용카드 소득공제 계산기", href: "/credit-card-deduction-2026", description: "결제수단별 공제율·한도", badge: "NEW" },
-   { name: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", description: "연 1,000만 한도 최대 170만", badge: "NEW" },
-   { name: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", description: "난임 30%·무한도 대상 구분", badge: "NEW" },
-   { name: "3월 신입 연봉 협상", href: "/new-employee-2026", description: "첫 협상 가이드" },
-   { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026", description: "회사 434곳 영끌 인덱스", badge: "NEW" },
-   { name: "최저임금 2026", href: "/minimum-wage-2026", description: "시급·월급·연봉 환산표", badge: "NEW" },
-   { name: "건강검진 2026", href: "/health-checkup-2026", description: "대상자·항목·비용·예약", badge: "NEW" },
-   { name: "연말정산 체크리스트", href: "/year-end-tax-checklist", description: "12.31 마감 점검" },
-   { name: "2026 세율표", href: "/tax-rates-2026", description: "소득세 구간 한눈" },
-   { name: "2026 4대보험 요율", href: "/social-insurance-rates-2026", description: "최신 요율표" },
-   { name: "2026 세법 변경사항", href: "/tax-changes-2026", description: "올해 핵심 변화", badge: "NEW" },
-   { name: "퇴직연금 (DB·DC·IRP)", href: "/retirement-pension-2026", description: "유형별 비교" },
-   { name: "삼성 신입 연봉 협상", href: "/samsung-negotiation-2026", description: "반도체 대기업 가이드" },
-   { name: "삼성 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배", badge: "HOT" },
-   { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "1.48억 받은 2025 사례 포함", badge: "NEW" },
-   { name: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", description: "임단협 잠정합의 + 노조 요구안", badge: "NEW" },
-   { name: "기아 성과급 계산기", href: "/calc/kia-bonus", description: "5년 무파업 합의 450%+1,600만", badge: "NEW" },
-   { name: "LG에너지솔루션 성과급", href: "/calc/lg-energy-bonus", description: "배터리 사이클별 5가지 시나리오", badge: "NEW" },
-   { name: "HD현대중공업 성과급", href: "/calc/hd-hyundai-bonus", description: "조선 슈퍼사이클 + 노조 영업이익 30%", badge: "NEW" },
-   { name: "네이버 성과급·RSU", href: "/calc/naver-bonus", description: "정기 PI + 자사주 RSU 465억", badge: "NEW" },
-   { name: "카카오 성과급·RSU", href: "/calc/kakao-bonus", description: "RSU 47만주 + 격려금 100만", badge: "NEW" },
-   { name: "1월 셀트리온 성과급", href: "/calc/celltrion-bonus", description: "연봉의 최대 50% — 1월 선지급", badge: "NEW" },
-   { name: "12월 현대로템 성과급", href: "/calc/hyundai-rotem-bonus", description: "임단협 450%+1,620만 타결안", badge: "NEW" },
-  ],
+  // 항목은 src/config/seasonLinks 단일 소스에서 파생 — 푸터와 공유 (여기 직접 추가 금지)
+  items: headerSeasonItems,
  },
  {
   name: "가이드",
   type: "dropdown",
   description: "직장인 절세·투자·재테크 가이드",
   items: [
-   { name: "전체 가이드 (120+편)", href: "/guides", description: "절세·투자·커리어", badge: "MUST" },
+   { name: `전체 가이드 (${guideCountPlus}편)`, href: "/guides", description: "절세·투자·커리어", badge: "MUST" },
    { name: "Q&A 자주 묻는 질문", href: "/qna", description: "직장인 금융 답변" },
    { name: "금융 용어 사전", href: "/glossary", description: "쉽게 풀어쓴 용어" },
    { name: "직장인 꿀팁 모음", href: "/tips", description: "실전 노하우" },

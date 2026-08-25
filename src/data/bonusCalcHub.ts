@@ -1,7 +1,7 @@
 // src/data/bonusCalcHub.ts
 //
 // 성과급 계산기 허브(/calc/bonus-calculators)와 BonusClusterLinks 공용
-// 레지스트리 — 회사별 성과급 계산기 23종의 카드 데이터 단일 소스.
+// 레지스트리 — 회사별 성과급 계산기 카드 데이터 단일 소스 (수 = BONUS_CALCS.length).
 //
 // hook(최신 지급률 한줄)의 초기값은 CompanyBonusCalculatorLink 의
 // COMPANY_BONUS_MAP desc 를 전사한 것 — 두 파일은 참조 결합 없이 각자

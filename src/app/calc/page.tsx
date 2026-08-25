@@ -4,6 +4,7 @@
 import type { Metadata } from "next";
 import { Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { bonusCalcCountKo } from "@/config/site";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { allCalculators } from "@/lib/simpleCalculators";
@@ -35,10 +36,10 @@ const CATEGORY_ORDER = [
 // 8차 점검 — 정적 라우트로 신설된 시즌 핵심 계산기들을 인덱스 최상위에 노출.
 // /calc/[slug] 동적 라우트와 별도 페이지라 allCalculators 배열에 없으므로 명시.
 const FEATURED_CALCS: Array<{ href: string; title: string; description: string; season: string }> = [
- // 성과급 허브 — 23종 전체 목록·시즌 캘린더 (2026-08-23 신설)
+ // 성과급 허브 — 회사별 계산기 전체 목록·시즌 캘린더 (2026-08-23 신설)
  {
    href: "/calc/bonus-calculators",
-   title: "성과급 계산기 23종 모음",
+   title: `성과급 계산기 ${bonusCalcCountKo} 모음`,
    description: "삼성전자·SK하이닉스·현대차 등 회사별 최신 지급률 반영 — 시즌 캘린더·FAQ까지",
    season: "연중 · 1~2월 피크",
  },

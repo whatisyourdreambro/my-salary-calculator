@@ -5,6 +5,8 @@
 // 각 허브는 /hub/[id] 라우트로 정적 생성된다.
 // 링크는 모두 실제 존재하는 경로만 사용 (계산기 slug·확인된 도구/페이지 경로).
 
+import { JOB_COUNT, bonusCalcCountKo } from "@/config/site";
+
 export interface HubLink {
   label: string;
   href: string;
@@ -301,7 +303,7 @@ export const hubs: Hub[] = [
         heading: "회사·연봉 비교",
         links: [
           { label: "회사 연봉 DB", href: "/salary-db", desc: "기업별 직급별 연봉 데이터" },
-          { label: "직업별 연봉", href: "/job", desc: "100+ 직종 평균 연봉·실수령액" },
+          { label: "직업별 연봉", href: "/job", desc: `${JOB_COUNT}개 직종 평균 연봉·실수령액` },
           { label: "업종별 연봉", href: "/industry", desc: "업계별 평균·회사 연봉 순위" },
           { label: "회사 비교", href: "/salary-db", desc: "동종업계 회사 연봉 비교" },
           { label: "커리어 패스 시뮬레이터", href: "/pro/career-planner", desc: "이직·승진 시나리오별 연봉 성장" },
@@ -312,7 +314,7 @@ export const hubs: Hub[] = [
         heading: "이직·신입 준비",
         links: [
           { label: "삼성 연봉협상 가이드", href: "/samsung-negotiation-2026", desc: "대기업 연봉협상 전략" },
-          { label: "성과급 계산기 23종 모음", href: "/calc/bonus-calculators", desc: "회사별 최신 지급률·시즌 캘린더" },
+          { label: `성과급 계산기 ${bonusCalcCountKo} 모음`, href: "/calc/bonus-calculators", desc: "회사별 최신 지급률·시즌 캘린더" },
           { label: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", desc: "OPI·TAI 세후 실수령" },
           { label: "2026 신입사원 가이드", href: "/new-employee-2026", desc: "사회초년생 필수 금융 세팅" },
           { label: "성과급 세금 계산기", href: "/tools/finance/bonus", desc: "성과급·인센티브 세금 계산" },

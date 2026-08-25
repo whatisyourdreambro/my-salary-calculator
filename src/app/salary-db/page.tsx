@@ -1,7 +1,7 @@
 // src/app/salary-db/page.tsx — 서버 컴포넌트.
 //
 // 번들 경량화: 이전에는 'use client' 페이지가 companyRepository 를 직접 import
-// 해 485개사 전체 프로필(~860KB)이 클라이언트 번들에 포함됐다. 여기서 목록
+// 해 전체 회사 프로필(~860KB)이 클라이언트 번들에 포함됐다. 여기서 목록
 // 표시·검색에 필요한 필드만 추린 경량 인덱스를 만들어 SalaryDbClient 에 넘긴다.
 // (메타데이터는 layout.tsx 담당. breadcrumb JSON-LD는 이중 주입 방지를 위해
 // layout이 아니라 각 페이지가 주입 — 2026-08-07)

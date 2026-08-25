@@ -6,6 +6,7 @@
 
 import Link from "@/components/AppLink";
 import { Building2, Briefcase, MapPin, Factory, ArrowRight } from "lucide-react";
+import { companyCountPlus } from "@/config/site";
 
 const ENGINES: Array<{
   href: string;
@@ -17,7 +18,7 @@ const ENGINES: Array<{
   {
     href: "/salary-db",
     title: "회사별 연봉",
-    description: "삼성·SK·카카오·네이버 등 200+ 기업 신입 초봉·직급별 평균 연봉",
+    description: `삼성·SK·카카오·네이버 등 ${companyCountPlus} 기업 신입 초봉·직급별 평균 연봉`,
     icon: Building2,
     badge: "BEST",
   },

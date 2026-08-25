@@ -90,9 +90,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/child-deduction',
  '/calc/jeonse-loan',
  '/calc/housing-subscription',
- // 성과급 허브 — 23종 목록·시즌 캘린더 (2026-08-23 신설)
+ // 성과급 허브 — 회사별 계산기 전체 목록·시즌 캘린더 (2026-08-23 신설)
  '/calc/bonus-calculators',
- // 회사별 성과급 계산기 — 시즌 트래픽(1월·7월 지급) + GA 데이터상 단일 페이지 폭증 검증
+ // 회사별 성과급 계산기 — 시즌 트래픽(1월·7월 지급) 수요 대응
  '/calc/samsung-bonus',
  '/calc/sk-hynix-bonus',
  '/calc/hyundai-bonus',

@@ -2,6 +2,7 @@
 // 최저임금 2026 시즌 페이지 — 매년 8월 공표·10월 확정 시즌 검색 폭증
 
 import type { Metadata } from "next";
+import { companyCountKo } from "@/config/site";
 import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, FileText, Calendar } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
@@ -259,7 +260,7 @@ export default function MinimumWage2026Page() {
  >
  <FileText className="w-8 h-8 text-electric mb-3" />
  <h3 className="text-lg font-black mb-2">신입 초봉 TOP 50</h3>
- <p className="text-sm text-muted-blue">회사 434곳 영끌 순위</p>
+ <p className="text-sm text-muted-blue">회사 {companyCountKo} 영끌 순위</p>
  </Link>
  <Link
  href="/social-insurance-rates-2026"

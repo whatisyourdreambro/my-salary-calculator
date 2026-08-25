@@ -5,6 +5,8 @@ import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { CheckCircle2, Shield, Lock } from "lucide-react";
 import Logo from "./Logo";
+import { footerSeasonLinks } from "@/config/seasonLinks";
+import { popularCompanies } from "@/config/popularCompanies";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -29,6 +31,7 @@ export default function Footer() {
         { name: "기초연금 계산기", href: "/basic-pension-2026" },
       ];
 
+  // KR 시즌 링크는 src/config/seasonLinks 단일 소스에서 파생 — 헤더 시즌 드롭다운과 공유
   const seasonLinks = isEnglish
     ? [
         { name: "Samsung 2026 Outlook", href: "/en/guides/samsung-electronics-stock-2026" },
@@ -37,23 +40,7 @@ export default function Footer() {
         { name: "Samsung vs SK Hynix", href: "/en/guides/samsung-vs-hynix-employee-comparison" },
         { name: "Chip Stock Tax Guide", href: "/en/guides/chip-stock-tax-guide" },
       ]
-    : [
-        // /year-end-tax-2026 은 실제로는 종합소득세(5월 종소세) 페이지 — 라벨 일치화
-        // 2026-07-16: 7월 시즌 3종(2027 최저임금·SK PI·재산세) 추가
-        { name: "2027 최저임금 확정", href: "/minimum-wage-2027" },
-        { name: "성과급 계산기 23종", href: "/calc/bonus-calculators" },
-        { name: "삼성 성과급 계산기", href: "/calc/samsung-bonus" },
-        { name: "SK하이닉스 성과급 계산기", href: "/calc/sk-hynix-bonus" },
-        { name: "7·9월 재산세 계산기", href: "/property-holding-tax-2026" },
-        { name: "종합소득세 2026", href: "/year-end-tax-2026" },
-        { name: "신입 초봉 TOP 50", href: "/new-employee-salary-2026" },
-        { name: "13월의 월급", href: "/calc/january-bonus" },
-        { name: "성과급 세금", href: "/calc/year-end-bonus" },
-        { name: "건강보험 2026", href: "/health-insurance-2026" },
-        // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
-        { name: "공무원 봉급표 2026", href: "/civil-servant-pay-2026" },
-        { name: "중도퇴사 연말정산", href: "/year-end-tax-mid-resign" },
-      ];
+    : footerSeasonLinks;
 
   const contentLinks = isEnglish
     ? [
@@ -99,17 +86,8 @@ export default function Footer() {
         { name: "English (Expats) →", href: "/en" },
       ];
 
-  // GSC TOP 검색 키워드 보유 회사 — 검색 권위 전역 분산, Sitelinks 노출 유도
-  const popularCompanyLinks = [
-    { name: "삼성전자 연봉", href: "/salary-db/samsung-electronics" },
-    { name: "SK하이닉스 연봉", href: "/salary-db/sk-hynix" },
-    { name: "HMM 연봉", href: "/salary-db/hmm" },
-    { name: "SK AX 연봉", href: "/salary-db/sk-cc" },
-    { name: "HD현대중공업 연봉", href: "/salary-db/hd-hyundai-heavy" },
-    { name: "LG에너지솔루션 연봉", href: "/salary-db/lgensol" },
-    { name: "DL이앤씨 연봉", href: "/salary-db/dl-enc" },
-    { name: "전체 회사 434곳 →", href: "/salary-db" },
-  ];
+  // 인기 회사 링크는 src/config/popularCompanies 단일 소스에서 파생
+  const popularCompanyLinks = popularCompanies;
 
   const trustBadges = isEnglish
     ? [
