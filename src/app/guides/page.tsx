@@ -1,6 +1,6 @@
 import { koGuideCards, categories } from "@/lib/guidesData";
 import JsonLd from "@/components/JsonLd";
-import { itemListLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { MultiplexAd } from "@/components/AdPlacement";
 import GuidesListClient from "./GuidesListClient";
 
@@ -20,7 +20,7 @@ export default function GuidesPage() {
 
   return (
     <>
-      <JsonLd data={itemListLd({ name: "금융·연봉 가이드", items: topGuides })} />
+      <JsonLd data={[itemListLd({ name: "금융·연봉 가이드", items: topGuides }), autoBreadcrumbLd("/guides")]} />
       <GuidesListClient guides={koGuideCards} categories={categories} />
       {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (layout PageFooterAds 위) */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">

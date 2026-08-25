@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import EnglishLocaleSync from "./LocaleSync";
 import PageFooterAds from "@/components/PageFooterAds";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = {
@@ -40,6 +42,16 @@ export default function EnglishLayout({
 }) {
  return (
  <div className="en-locale" lang="en">
+ <JsonLd
+ data={[
+ softwareApplicationLd({
+ name: "Moneysalary — Korea Salary & Tax Calculator",
+ description: "Net pay calculator and English finance guides for professionals working in Korea.",
+ url: "/en",
+ }),
+ breadcrumbLd([{ name: "Home", path: "/en" }]),
+ ]}
+ />
  <EnglishLocaleSync />
  {children}
  {/* 영어권 트래픽도 AdSense 가 자동 매칭 (지역별 광고 송출 — Cloudflare 엣지) */}

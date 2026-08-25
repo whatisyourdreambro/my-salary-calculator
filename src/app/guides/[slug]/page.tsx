@@ -8,7 +8,8 @@ import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
-import { speakableLd, articleLd, autoBreadcrumbLd } from "@/lib/structuredData";
+import { speakableLd, articleLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
+import { extractGuideFaqs } from "@/lib/guideFaq";
 import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
@@ -93,12 +94,16 @@ export default function GuidePage({ params }: Props) {
  leafName: guide.title,
  });
 
+ // 본문의 "자주 묻는 질문" 섹션에서 빌드 타임 추출 — 가시 콘텐츠와 1:1 (중복 데이터 없음)
+ const guideFaqs = extractGuideFaqs(guide.content);
+
  return (
  <>
  <JsonLd
  data={[
  articleSchema,
  breadcrumbSchema,
+ ...(guideFaqs.length > 0 ? [faqLd(guideFaqs)] : []),
  speakableLd({
  url: `/guides/${guide.slug}`,
  cssSelectors: [".guide-tldr", ".faq-answer"],

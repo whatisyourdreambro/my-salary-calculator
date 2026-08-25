@@ -14,12 +14,15 @@ import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import EmbedSnippetClient from "./EmbedSnippetClient";
 import { EMBED_WIDGETS } from "./widgets";
 
+// 화이트라벨 문의 연락처 — 운영자가 공개용 이메일을 정하면 여기에 기입 (예: "biz@…").
+// 비어 있으면 /qna 안내로 폴백. (레포에 공개 이메일 부재 — 공개 여부는 운영자 결정)
+const EMBED_CONTACT = "";
+
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "내 블로그에 연봉·연말정산 계산기 달기 — 무료 임베드 위젯",
-  description:
-    "티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액 계산기·연말정산 환급 계산기를 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.",
+  title: `내 블로그에 계산기 위젯 달기 — 무료 임베드 ${EMBED_WIDGETS.length}종`,
+  description: `티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액·연말정산 환급·성과급·퇴직금·DSR 계산기 ${EMBED_WIDGETS.length}종을 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.`,
   path: "/embed",
   keywords: [
     "연봉 계산기 위젯",
@@ -45,7 +48,7 @@ const faqs = [
   {
     question: "위젯 크기를 조절할 수 있나요?",
     answer:
-      "iframe 태그의 width·height 값을 바꾸면 됩니다. 기본값(width 100%, height 380, max-width 480px)은 모바일·PC 모두에서 잘 보이도록 맞춘 값이라 그대로 쓰시는 걸 권장합니다.",
+      "iframe 태그의 width·height 값을 바꾸면 됩니다. 기본값(width 100%, max-width 480px, 위젯별 height)은 모바일·PC 모두에서 잘 보이도록 맞춘 값이라 그대로 쓰시는 걸 권장합니다.",
   },
   {
     question: "정말 무료인가요? 조건이 있나요?",
@@ -55,12 +58,12 @@ const faqs = [
   {
     question: "계산 결과는 어떤 기준인가요?",
     answer:
-      "연봉 위젯은 2026년 세법(4대보험 요율·간이세액) 기준, 부양가족 1인·비과세 식대 월 20만원 가정 추정치입니다. 연말정산 위젯은 2026년 귀속 기준, 본인 1인 공제·4대보험만 반영한 보수적 추정입니다. 정확한 계산은 각 위젯의 버튼으로 연결되는 머니샐러리 본 사이트에서 할 수 있습니다.",
+      "위젯마다 각 섹션에 기준을 명시해 두었습니다. 공통적으로 2026년 세법 기준 추정치이며, 정확한 계산은 각 위젯의 버튼으로 연결되는 머니샐러리 본 사이트에서 할 수 있습니다.",
   },
   {
     question: "위젯 종류가 여러 개인가요?",
     answer:
-      "네. 현재 연봉 실수령액 계산기와 연말정산 환급 계산기 2종을 제공합니다. 글 주제에 맞는 위젯의 코드를 복사해 쓰면 됩니다 — 연말정산 시즌 글에는 환급 계산기가 잘 어울립니다.",
+      `네. 현재 연봉 실수령액·연말정산 환급·성과급 세후·퇴직금·DSR 대출 한도 계산기 ${EMBED_WIDGETS.length}종을 제공합니다. 글 주제에 맞는 위젯의 코드를 복사해 쓰면 됩니다 — 연말정산 시즌 글에는 환급 계산기, 성과급 시즌(1~2월) 글에는 성과급 계산기가 잘 어울립니다.`,
   },
 ];
 
@@ -90,8 +93,8 @@ export default function EmbedGuidePage() {
           </h1>
           <p className="text-lg text-faint-blue leading-relaxed font-medium">
             재테크·취업 블로그에 코드 한 번 붙여넣기면 끝. 연봉 실수령액·연말정산
-            환급 계산기 2종 — 방문자가 글을 읽다가 바로 계산할 수 있어 체류시간이
-            늘어납니다.{" "}
+            환급·성과급·퇴직금·DSR 계산기 {EMBED_WIDGETS.length}종 — 방문자가 글을
+            읽다가 바로 계산할 수 있어 체류시간이 늘어납니다.{" "}
             <strong className="text-navy">광고·추적 스크립트 없는 경량 위젯</strong>
             입니다.
           </p>
@@ -99,6 +102,19 @@ export default function EmbedGuidePage() {
       </section>
 
       <div className="page-width max-w-3xl">
+        {/* 위젯 점프 내비 — anchor 필드 활용 (2026-08 5종 확장) */}
+        <nav aria-label="위젯 바로가기" className="mb-10 flex flex-wrap gap-2 justify-center">
+          {EMBED_WIDGETS.map((w, i) => (
+            <a
+              key={w.id}
+              href={`#${w.anchor}`}
+              className="inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors no-underline"
+            >
+              {i + 1}. {w.title}
+            </a>
+          ))}
+        </nav>
+
         {/* 위젯별 스택 섹션 — 미리보기 + 스니펫 (다중 위젯, 2026-08-23) */}
         {EMBED_WIDGETS.map((w, i) => (
           <section key={w.id} id={w.anchor} className="mb-12 scroll-mt-24">
@@ -172,6 +188,42 @@ export default function EmbedGuidePage() {
                 </p>
               </details>
             ))}
+          </div>
+        </section>
+
+        {/* 기업·미디어용 화이트라벨 문의 — 폼 백엔드 없음(살라리DB 제보 폼 제거 선례:
+            AdSense "공사중+광고" 정책 리스크). 연락 채널은 운영자가 EMBED_CONTACT 를
+            채우면 노출되고, 비어 있으면 Q&A 안내로 폴백한다. */}
+        <section id="whitelabel" className="mb-10 scroll-mt-24">
+          <div className="rounded-2xl border-2 border-electric/30 bg-electric-5 p-6">
+            <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
+              For Business
+            </p>
+            <h2 className="text-xl font-black text-navy mb-2">
+              기업·미디어용 화이트라벨 위젯 (유료)
+            </h2>
+            <p className="text-[14px] leading-[1.8] text-muted-blue font-medium mb-3">
+              사내 인트라넷·언론사 기사·핀테크 서비스에 크레딧 없이 브랜드를 입힌
+              계산기 위젯이 필요하신가요? 색상·로고 커스터마이징, 전용 도메인,
+              계산 기준 협의를 지원하는 화이트라벨 플랜을 준비하고 있습니다.
+            </p>
+            <p className="text-[13px] text-faint-blue font-medium">
+              {EMBED_CONTACT ? (
+                <>
+                  문의: <strong className="text-navy">{EMBED_CONTACT}</strong> 로
+                  사용처·트래픽 규모와 함께 연락 주세요.
+                </>
+              ) : (
+                <>
+                  문의는{" "}
+                  <Link href="/qna" className="text-electric font-bold underline underline-offset-2">
+                    Q&A 페이지
+                  </Link>
+                  를 통해 남겨 주세요. 사용처·트래픽 규모를 함께 적어 주시면 빠르게
+                  안내드립니다.
+                </>
+              )}
+            </p>
           </div>
         </section>
 

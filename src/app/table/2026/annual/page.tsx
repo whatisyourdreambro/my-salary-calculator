@@ -8,7 +8,7 @@ import TableHero from "@/components/TableHero";
 import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
 
@@ -45,6 +45,28 @@ const tableHeaders = [
   { key: "incomeTax", label: "소득세" },
 ];
 
+const FAQ_ITEMS = [
+ {
+ question: "연봉 5,000만원의 실수령액은 얼마인가요?",
+ answer:
+ "2026년 기준 비과세 식대 20만원·본인 1인 공제를 적용하면 월 약 353만원입니다. 부양가족 수와 비과세 항목에 따라 달라질 수 있으며, 표의 각 행을 눌러 상세 공제 내역을 확인할 수 있습니다.",
+ },
+ {
+ question: "연봉에서 공제되는 항목은 무엇인가요?",
+ answer:
+ "국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%가 공제되고, 근로소득 간이세액표 기준 소득세와 소득세의 10%인 지방소득세가 추가로 공제됩니다.",
+ },
+ {
+ question: "계약 연봉과 원천징수영수증 금액이 다른 이유는?",
+ answer:
+ "계약 연봉은 세전 총액이고, 원천징수영수증의 총급여는 비과세 항목(식대·차량유지비 등)을 제외한 금액입니다. 성과급이 별도 지급되는 회사는 지급 시점에 따라 연도별 총액이 달라질 수 있습니다.",
+ },
+ {
+ question: "월급 기준 표와는 어떻게 다른가요?",
+ answer:
+ "본 표는 연봉 총액 기준으로 월 실수령액을 환산합니다. 월급(세전 월 급여) 기준으로 확인하려면 월급 실수령액 표를 이용하세요. 상여금 비중이 큰 회사라면 두 표의 결과가 다를 수 있습니다.",
+ },
+];
 // JSON-LD for table page — datasetLd 빌더로 dateModified(신선도 신호) 부여 + breadcrumb
 const tableJsonLd = [
   datasetLd({
@@ -56,6 +78,7 @@ const tableJsonLd = [
     keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
   }),
   autoBreadcrumbLd("/table/2026/annual", { leafName: "2026 연봉 실수령액 표" }),
+ faqLd(FAQ_ITEMS),
 ];
 
 function AnnualTable() {
@@ -137,6 +160,21 @@ function AnnualTable() {
             </div>
           </div>
         </section>
+        {/* 자주 묻는 질문 — monthly 표와 동일 패턴 (가시 FAQ + FAQPage 스키마 쌍) */}
+        <section className="mt-12 px-4 sm:px-6">
+         <div className="max-w-3xl mx-auto">
+         <h2 className="text-2xl font-black text-navy mb-6">자주 묻는 질문</h2>
+         <div className="space-y-6">
+         {FAQ_ITEMS.map((item) => (
+         <div key={item.question}>
+         <h3 className="font-bold text-navy mb-2">Q. {item.question}</h3>
+         <p className="text-faint-blue leading-relaxed text-sm faq-answer">{item.answer}</p>
+         </div>
+         ))}
+         </div>
+         </div>
+        </section>
+
 
         {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2 추가
             배치 — 본문(SEO 섹션)과 시즌 링크 사이. CalcResultAd와 1스크린+ 간격.

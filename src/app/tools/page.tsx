@@ -10,7 +10,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import { MultiplexAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { itemListLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "금융 계산기 모음 2026 | 26가지 세금·재테크 계산기 - 머니샐러리",
@@ -117,7 +117,7 @@ export default function ToolsHubPage() {
 
  return (
  <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
- <JsonLd data={itemListLd({ name: "금융 계산기 모음", items: toolListItems })} />
+ <JsonLd data={[itemListLd({ name: "금융 계산기 모음", items: toolListItems }), autoBreadcrumbLd("/tools")]} />
  <div className="max-w-5xl mx-auto">
 
  {/* Hero */}

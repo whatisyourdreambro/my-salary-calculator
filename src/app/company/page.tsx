@@ -1,5 +1,6 @@
 "use client";
 
+import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import { useState } from "react";
 import Link from "@/components/AppLink";
 import { companies } from "@/lib/companyData";
@@ -18,6 +19,7 @@ export default function CompanyPage() {
 
  return (
  <div className="min-h-screen py-12">
+  <AutoBreadcrumb />
  <div className="page-width">
  {/* Header */}
  <div className="text-center mb-12">

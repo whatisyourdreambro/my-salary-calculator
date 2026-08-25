@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbLd } from "@/lib/structuredData";
 
 // 자체 metadata 미선언 시 부모 en/layout.tsx 의 canonical(/en)을 상속하던 버그 수정 —
 // 자기 자신을 가리키는 canonical 로 교정.
@@ -37,5 +39,15 @@ export default function SalaryConverterLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", path: "/en" },
+          { name: "Salary Converter", path: "/en/salary-converter" },
+        ])}
+      />
+      {children}
+    </>
+  );
 }

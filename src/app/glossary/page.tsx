@@ -7,6 +7,8 @@ import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 import { HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import GlossaryCard from "./GlossaryCard";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd } from "@/lib/structuredData";
 import GlossaryExplorer, {
   type GlossaryIndexItem,
   type GlossaryPick,
@@ -38,6 +40,7 @@ export default function GlossaryPage() {
 
   return (
     <main className="w-full bg-canvas min-h-screen pb-20">
+      <JsonLd data={autoBreadcrumbLd("/glossary")} />
       {/* Hero Section — 서버 렌더링 (크롤러에 즉시 노출) */}
       <section className="relative pt-28 pb-16 overflow-hidden text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 dark:from-[#0A1829] dark:via-[#0F2236] dark:to-primary/30 -z-10" />

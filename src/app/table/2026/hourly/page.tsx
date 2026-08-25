@@ -12,7 +12,7 @@ import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { autoBreadcrumbLd, datasetLd } from "@/lib/structuredData";
+import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 시급 실수령액 표 — 10,320원 기준 시급별 월 환산 실수령액",
@@ -40,6 +40,23 @@ const tableHeaders = [
  { key: "incomeTax", label: "소득세" },
 ];
 
+const FAQ_ITEMS = [
+ {
+ question: "2026년 최저시급은 얼마인가요?",
+ answer:
+ "2026년 최저시급은 10,320원입니다. 주 40시간 근무 시 주휴수당을 포함한 월 환산액(209시간 기준)은 세전 2,156,880원입니다.",
+ },
+ {
+ question: "시급에 주휴수당은 어떻게 포함되나요?",
+ answer:
+ "1주 15시간 이상 근무하면 주휴수당이 발생합니다. 주 40시간 근무 기준 월 환산 시간은 주휴 포함 209시간으로, 시급×209가 세전 월급이 됩니다. 15시간 미만 근무는 주휴수당 대상이 아닙니다.",
+ },
+ {
+ question: "알바도 4대보험과 세금을 공제하나요?",
+ answer:
+ "월 소득과 근로 시간에 따라 다릅니다. 일정 기준 이상이면 4대보험 가입 대상이고, 3.3% 사업소득 원천징수로 처리되는 경우도 있습니다. 본 표는 근로소득 기준 공제를 적용한 참고치입니다.",
+ },
+];
 // datasetLd 빌더로 dateModified(신선도 신호) 부여 + breadcrumb
 const structuredData = [
  datasetLd({
@@ -50,6 +67,7 @@ const structuredData = [
  keywords: ["시급", "실수령액", "세후 월급", "시급 테이블", "2026년"],
  }),
  autoBreadcrumbLd("/table/2026/hourly", { leafName: "2026 시급 실수령액 표" }),
+ faqLd(FAQ_ITEMS),
 ];
 
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
@@ -163,6 +181,21 @@ function HourlyTable2026() {
  </div>
  </div>
  </section>
+ {/* 자주 묻는 질문 — monthly 표와 동일 패턴 (가시 FAQ + FAQPage 스키마 쌍) */}
+ <section className="mt-12 px-4 sm:px-6">
+  <div className="max-w-3xl mx-auto">
+  <h2 className="text-2xl font-black text-navy mb-6">자주 묻는 질문</h2>
+  <div className="space-y-6">
+  {FAQ_ITEMS.map((item) => (
+  <div key={item.question}>
+  <h3 className="font-bold text-navy mb-2">Q. {item.question}</h3>
+  <p className="text-faint-blue leading-relaxed text-sm faq-answer">{item.answer}</p>
+  </div>
+  ))}
+  </div>
+  </div>
+ </section>
+
 
  {/* 실험 #1 (docs/ad-experiments.md, 운영자 승인 2026-08-17): display-2 추가 배치.
      env NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2 미설정 시 자동 미렌더. */}
