@@ -89,7 +89,8 @@
 - **대가성 문구(필수)**: 두 오퍼 모두 disclosure 오버라이드로 LinkPrice 요구 원문 자동 표기 — "이 포스팅은 제휴마케팅이 포함된 광고로 커미션을 지급 받습니다."
 - **노출 방식**: 텍스트 카드(자체 디자인, 대표링크만 사용). LinkPrice 이미지 배너는 미사용 — 배너 코드는 아래에 보관(2차에 이미지형 오퍼 지원 추가 시 사용 가능).
 - **미진행 결정**: 한국정보인증(signgate)·바로빌(barobill)은 승인됐으나 서비스 성격상 보류. 숨고·VPN·쇼핑몰 등 비금융 머천트는 사이트 문맥 불일치로 미진행 원칙(일반 쇼핑 수요는 쿠팡 폴백이 커버). 예외 후보: eSIM·여행(Airalo·도시락eSIM 등)은 /en·/global remittance 개방 시 검토.
-- **A/B 판정**: 2주 후 GA `affiliate_impression/click` × LinkPrice 전환 리포트로 신용점수 2종 승자 판정 → 지면 재배분.
+- **서브ID(u_id) 부착 (2026-08-25, 운영자 승인)**: 두 활성 오퍼 url 에 `&u_id=<offer_id>` 부착 — LinkPrice 리포트의 u_id 열과 GA4 `offer_id` 를 join 하는 측정 키. 오퍼 추가 시에도 동일 규칙 적용(u_id = offers.json 의 id).
+- **A/B 판정**: 2주 후(9/8경) GA `affiliate_impression/click` × LinkPrice 전환 리포트로 신용점수 2종 승자 판정 → 지면 재배분.
 - **배포 후 확인**: ① LinkPrice 등록 매체 = moneysalary.com 일치 ② 오퍼 각 1회 클릭 → 리포트 유입 확인.
 
 <details><summary>보관: LinkPrice 이미지 배너 코드 (미사용)</summary>
