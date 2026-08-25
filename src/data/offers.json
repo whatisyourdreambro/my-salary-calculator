@@ -1,0 +1,97 @@
+[
+  {
+    "id": "loan-compare-01",
+    "vertical": "loan",
+    "pages": [
+      "/home-loan",
+      "/car-loan",
+      "/calc/dsr-quick",
+      "/calc/ltv-quick",
+      "/tools/real-estate/dsr",
+      "/tools/real-estate/ltv",
+      "/calc/mortgage-monthly-quick",
+      "/calc/jeonse-loan-cost",
+      "/calc/jeonse-loan",
+      "/tools/loan"
+    ],
+    "label": "내 조건으로 대출 금리 비교하기",
+    "description": "1분 조회, 신용점수 영향 없음",
+    "url": "PLACEHOLDER",
+    "network": "linkprice",
+    "priority": 1,
+    "active": false
+  },
+  {
+    "id": "card-issue-01",
+    "vertical": "card",
+    "pages": [
+      "/credit-card-deduction-2026",
+      "/year-end-tax",
+      "/year-end-tax-2027"
+    ],
+    "label": "소득공제 유리한 카드 비교·발급",
+    "description": "연말정산 공제율 기준 인기 카드 모음",
+    "url": "PLACEHOLDER",
+    "network": "ilikeclick",
+    "priority": 1,
+    "active": false
+  },
+  {
+    "id": "securities-account-01",
+    "vertical": "securities",
+    "pages": [
+      "/calc/bonus-calculators",
+      "/tools/finance/irp",
+      "/tools/finance/stock-tax",
+      "/retirement-pension-2026"
+    ],
+    "label": "성과급 굴릴 계좌, 수수료 비교 후 개설",
+    "description": "ISA·IRP 세액공제 한도까지 한 번에",
+    "url": "PLACEHOLDER",
+    "network": "adpick",
+    "priority": 1,
+    "active": false,
+    "template": "성과급 {amount}만원 — IRP 납입 시 환급 효과 확인 후 계좌 개설"
+  },
+  {
+    "id": "insurance-direct-01",
+    "vertical": "insurance",
+    "pages": [
+      "/calc/auto-insurance-quick"
+    ],
+    "label": "다이렉트 보험료 1분 견적 비교",
+    "description": "같은 보장, 보험사별 견적 차이 확인",
+    "url": "PLACEHOLDER",
+    "network": "tenping",
+    "priority": 1,
+    "active": false
+  },
+  {
+    "id": "savings-compare-01",
+    "vertical": "savings",
+    "pages": [
+      "/savings-interest-2026",
+      "/tools/deposit"
+    ],
+    "label": "지금 금리 높은 예적금 비교",
+    "description": "은행·저축은행 최고 금리 한눈에",
+    "url": "PLACEHOLDER",
+    "network": "linkprice",
+    "priority": 1,
+    "active": false
+  },
+  {
+    "id": "remittance-wise-01",
+    "vertical": "remittance",
+    "pages": [
+      "/en/*",
+      "/global"
+    ],
+    "label": "Send money abroad with low fees",
+    "description": "Compare real exchange rates before you transfer",
+    "url": "PLACEHOLDER",
+    "network": "linkprice",
+    "priority": 1,
+    "active": false
+  }
+]

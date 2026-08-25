@@ -9,6 +9,7 @@
 import Link from "@/components/AppLink";
 import { trackGuideCTAClick } from "@/lib/analytics";
 import { companyCountPlus } from "@/config/site";
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import {
  ArrowRight,
  Home,
@@ -201,6 +202,12 @@ export default function NextActions({
 }: NextActionsProps) {
  const actions = buildActions(category, annualSalary);
 
+ // 제휴 오퍼 병기 (지시서 §TASK-3-4) — 연봉 문맥은 대출 비교 버티컬.
+ // 오퍼 승인 전(전부 inactive)엔 무렌더라 외관 불변, 내부 링크 카드는 항상 유지.
+ const offerCalcResult = annualSalary
+ ? { amount: Math.round(annualSalary / 10000) }
+ : undefined;
+
  return (
  <section className={`mt-8 ${className}`}>
  <h3 className="text-sm font-black text-navy mb-3 px-1">다음 단계로</h3>
@@ -230,6 +237,7 @@ export default function NextActions({
  );
  })}
  </div>
+ <OfferSlot vertical="loan" calcResult={offerCalcResult} />
  </section>
  );
 }

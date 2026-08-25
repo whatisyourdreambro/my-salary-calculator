@@ -1267,9 +1267,11 @@ function MySalaryCalculator({
           </div>
         </div>
 
-        {/* 결과 직하 다음 액션 — 세후 확인 직후가 페이지 최대 참여 순간 */}
+        {/* 결과 직하 다음 액션 — 세후 확인 직후가 페이지 최대 참여 순간.
+            calcResult: 오퍼 활성 시 "성과급 {amount}만원 …" 보간용 (내부 링크는 유지) */}
         {personal.totalGrossWon > 0 && (
           <ResultNextLinks
+            calcResult={{ amount: Math.round(personal.totalGrossWon / 10000) }}
             links={[
               {
                 href: "/?tab=salary#calculator-section",

@@ -158,3 +158,29 @@ export function trackAdUnitClick(
       pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
   });
 }
+
+/** 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5) */
+export function trackAffiliateClick(
+  offerId: string,
+  page: string,
+  vertical: string
+): void {
+  trackEvent("affiliate_click", {
+    offer_id: offerId,
+    page,
+    vertical,
+  });
+}
+
+/** 제휴 오퍼 노출 — CTR 분모용 (IntersectionObserver 1회 발화, AffiliateSlot 전용) */
+export function trackAffiliateImpression(
+  offerId: string,
+  page: string,
+  vertical: string
+): void {
+  trackEvent("affiliate_impression", {
+    offer_id: offerId,
+    page,
+    vertical,
+  });
+}

@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { trackGuideCTAClick } from "@/lib/analytics";
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import {
   INSURANCE_RATES_2026,
   PENSION_BASE_2026,
@@ -212,27 +213,34 @@ export function sanitizeDecimalInput(raw: string): string {
 export function ResultNextLinks({
   links,
   className = "",
+  calcResult,
 }: {
   links: { href: string; label: string }[];
   className?: string;
+  /** 계산 결과 보간 값 — 오퍼 활성 시 문구 치환용 (예: { amount: 성과급 만원 }) */
+  calcResult?: Record<string, string | number>;
 }) {
   return (
-    <div className={`flex flex-wrap gap-2 ${className}`}>
-      {links.map((l) => (
-        <Link
-          key={l.href + l.label}
-          href={l.href}
-          onClick={() => trackGuideCTAClick(l.href, "next-action")}
-          className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
-        >
-          {l.label}
-          <ArrowRight
-            size={12}
-            className="group-hover:translate-x-0.5 transition-transform"
-            aria-hidden
-          />
-        </Link>
-      ))}
+    <div className={className}>
+      <div className="flex flex-wrap gap-2">
+        {links.map((l) => (
+          <Link
+            key={l.href + l.label}
+            href={l.href}
+            onClick={() => trackGuideCTAClick(l.href, "next-action")}
+            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+          >
+            {l.label}
+            <ArrowRight
+              size={12}
+              className="group-hover:translate-x-0.5 transition-transform"
+              aria-hidden
+            />
+          </Link>
+        ))}
+      </div>
+      {/* 제휴 오퍼 병기 — 승인 전(전부 inactive)엔 무렌더, 내부 링크는 위에서 유지 */}
+      <OfferSlot vertical="securities" calcResult={calcResult} />
     </div>
   );
 }

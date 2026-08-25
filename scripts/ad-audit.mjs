@@ -35,7 +35,8 @@ const SLOT_OF = {
   MultiplexAd: ["MULTIPLEX"],
   Display2Ad: ["DISPLAY_2"],
   PageFooterAds: ["IN_ARTICLE", "HOME_TOP", "COUPANG"], // 합성 래퍼
-  CoupangBanner: ["COUPANG"],
+  CoupangBanner: ["COUPANG"], // 심 경유 — 실제 렌더는 AffiliateSlot(오퍼 무매칭 시 쿠팡 폴백)
+  AffiliateSlot: ["COUPANG"], // 직접 사용처 대비 — 폴백이 쿠팡이므로 동일 슬롯 취급
 };
 const AD_COMPONENT_RE = new RegExp(
   "<(" + Object.keys(SLOT_OF).join("|") + ")\\b",
@@ -92,7 +93,7 @@ function collectSubtree(entry, depth = 0, visited = new Set()) {
   visited.add(entry);
   // 광고 정의 파일 자체는 제외. PageFooterAds 는 SLOT_OF 매핑이 사용처에서 이미
   // 계상하므로 파일 내부로 재귀하면 이중 카운트가 된다 — 제외 필수.
-  if (/AdPlacement\.tsx$|CoupangBanner\.tsx$|PageFooterAds\.tsx$/.test(entry)) return [];
+  if (/AdPlacement\.tsx$|CoupangBanner\.tsx$|CoupangBannerCore\.tsx$|AffiliateSlot\.tsx$|PageFooterAds\.tsx$/.test(entry)) return [];
   const { imports } = parseFile(entry);
   const files = [entry];
   for (const imp of imports) files.push(...collectSubtree(imp, depth + 1, visited));
