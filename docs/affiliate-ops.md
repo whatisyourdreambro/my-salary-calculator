@@ -78,6 +78,32 @@
 - 오퍼 노출 시 "제휴 링크이며 일정 수수료를 받을 수 있습니다." 자동 표기 (오퍼별 `disclosure` 로 오버라이드 가능).
 - 쿠팡 폴백은 기존 쿠팡 파트너스 고지 유지. 이용약관 제7조에 일반 제휴 고지 반영됨.
 
+## 승인·활성 오퍼 현황 (2026-08-25)
+
+| 오퍼 | 머천트 (LinkPrice) | 커미션 | 노출 지면 | 비고 |
+|---|---|---|---|---|
+| `nice-zikimi-01` | NICE지키미 (mycredit1) | 최대 21% | loan 버티컬 광역(주담대·DSR/LTV 등 ~16곳) | PC·모바일웹만 인정, 인정기간 20일, 익익월 6일 지급 |
+| `allcredit-01` | 올크레딧 (allcredit) | 최대 24% | pages 명시 4곳(신용카드 소득공제·자동차·대출여력·중도상환) — **명시 페이지 우선 규칙**으로 NICE 와 지면 분할 A/B | 동일 조건 |
+
+- **매칭 정렬 규칙**: pages 명시 매칭 > 버티컬 광역 매칭 > priority 오름차순 — 같은 버티컬 두 오퍼의 페이지 분할 A/B 근거.
+- **대가성 문구(필수)**: 두 오퍼 모두 disclosure 오버라이드로 LinkPrice 요구 원문 자동 표기 — "이 포스팅은 제휴마케팅이 포함된 광고로 커미션을 지급 받습니다."
+- **노출 방식**: 텍스트 카드(자체 디자인, 대표링크만 사용). LinkPrice 이미지 배너는 미사용 — 배너 코드는 아래에 보관(2차에 이미지형 오퍼 지원 추가 시 사용 가능).
+- **미진행 결정**: 한국정보인증(signgate)·바로빌(barobill)은 승인됐으나 서비스 성격상 보류. 숨고·VPN·쇼핑몰 등 비금융 머천트는 사이트 문맥 불일치로 미진행 원칙(일반 쇼핑 수요는 쿠팡 폴백이 커버). 예외 후보: eSIM·여행(Airalo·도시락eSIM 등)은 /en·/global remittance 개방 시 검토.
+- **A/B 판정**: 2주 후 GA `affiliate_impression/click` × LinkPrice 전환 리포트로 신용점수 2종 승자 판정 → 지면 재배분.
+- **배포 후 확인**: ① LinkPrice 등록 매체 = moneysalary.com 일치 ② 오퍼 각 1회 클릭 → 리포트 유입 확인.
+
+<details><summary>보관: LinkPrice 이미지 배너 코드 (미사용)</summary>
+
+```html
+<!-- NICE지키미 250x250 -->
+<a target="_blank" href="https://click.linkprice.com/click.php?m=mycredit1&a=A100707146&l=AyCu&u_id="><img src="https://img.credit.co.kr/resource/img/linkprice/20230112/B_250x250.jpg" border="0" width="250" height="250"></a>
+<img src="http://track.linkprice.com/lpshow.php?m_id=mycredit1&a_id=A100707146&p_id=0000&l_id=AyCu&l_cd1=2&l_cd2=0" width="1" height="1" border="0" style="display:none">
+<!-- 올크레딧 468x60 -->
+<a target="_blank" href="https://click.linkprice.com/click.php?m=allcredit&a=A100707146&l=0128&u_id="><img src="http://img.linkprice.com/files/glink/allcredit/20170908/59b25bc67db2f_468_60.jpg" border="0" width="468" height="60"></a>
+<img src="http://track.linkprice.com/lpshow.php?m_id=allcredit&a_id=A100707146&p_id=0000&l_id=0128&l_cd1=2&l_cd2=0" width="1" height="1" border="0" style="display:none">
+```
+</details>
+
 ## 알려진 동작
 
 - **다중 슬롯 페이지의 초기 중복**: 한 페이지에 쿠팡 슬롯이 2~3개인 경우(예: /calc/[slug] — 레이아웃 1 + 본문 2), 오퍼 활성 시 첫 페인트에 같은 오퍼 카드가 각 슬롯 위치에 표시됐다가 하이드레이션 직후 1개만 남고 나머지는 쿠팡 폴백으로 전환된다. (SSR 은 형제 슬롯 순서를 알 수 없어 생기는 제약 — 쿠팡 코어의 기존 dedup 방식과 동일한 마운트 후 보정)

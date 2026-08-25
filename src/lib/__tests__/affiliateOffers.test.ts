@@ -129,21 +129,59 @@ describe("inferVertical — 규칙표 vs 실데이터", () => {
   });
 });
 
-describe("matchOffers", () => {
-  it("전부 inactive 인 현재 offers.json 으로는 어떤 페이지에서도 오퍼 0 (폴백 보장)", () => {
-    for (const p of ["/home-loan", "/calc/samsung-bonus", "/credit-card-deduction-2026", "/"]) {
+describe("matchOffers — LinkPrice 활성 2종 (nice-zikimi·allcredit) 시대", () => {
+  const LINKPRICE_DISCLOSURE =
+    "이 포스팅은 제휴마케팅이 포함된 광고로 커미션을 지급 받습니다.";
+
+  it("활성 오퍼는 정확히 2종이고 전부 lase.kr https + LinkPrice 필수 대가성 문구", () => {
+    const active = getAllOffers().filter((o) => o.active);
+    expect(active.map((o) => o.id).sort()).toEqual(["allcredit-01", "nice-zikimi-01"]);
+    for (const o of active) {
+      expect(o.url).toMatch(/^https:\/\/lase\.kr\/click\.php\?m=/);
+      expect(o.disclosure).toBe(LINKPRICE_DISCLOSURE);
+    }
+  });
+
+  it("loan 광역 지면(주담대·DSR 등)은 NICE지키미", () => {
+    for (const p of ["/home-loan", "/calc/dsr-quick", "/tools/real-estate/ltv"]) {
+      expect(matchOffers(p)[0]?.id).toBe("nice-zikimi-01");
+    }
+  });
+
+  it("pages 명시 4곳은 올크레딧 우선 (구체 지정 > 광역 정렬 규칙)", () => {
+    for (const p of [
+      "/credit-card-deduction-2026",
+      "/car-loan",
+      "/calc/loan-affordability",
+      "/calc/prepayment-fee-quick",
+    ]) {
+      const matched = matchOffers(p);
+      expect(matched[0]?.id).toBe("allcredit-01");
+    }
+    // /car-loan 은 loan 버티컬이기도 하므로 NICE 가 차순위로 공존
+    expect(matchOffers("/car-loan").map((o) => o.id)).toEqual([
+      "allcredit-01",
+      "nice-zikimi-01",
+    ]);
+  });
+
+  it("무관 페이지·BLOCKED 페이지는 오퍼 0 (쿠팡 폴백 유지)", () => {
+    for (const p of ["/", "/salary/50000000", "/glossary", "/unemployment-benefit", "/fun/salary-battle"]) {
       expect(matchOffers(p)).toEqual([]);
     }
   });
 
-  it("pages 포함 ‖ vertical 일치 매칭 + priority 정렬 (활성 시나리오 시뮬)", () => {
-    // matchOffers 는 모듈 로드 시점 데이터를 쓰므로, 여기선 필터 규칙 자체를
-    // validateOffers + inferVertical 조합으로 검증한다.
+  it("성과급·보험 등 미승인 버티컬 지면에는 아직 오퍼 없음", () => {
+    for (const p of ["/calc/samsung-bonus", "/calc/auto-insurance-quick", "/tools/finance/irp"]) {
+      expect(matchOffers(p)).toEqual([]);
+    }
+  });
+
+  it("pages 포함 ‖ vertical 일치 매칭 스키마 (시드 오퍼 구조 검증)", () => {
     const { offers } = validateOffers(offersJson);
-    const loanOffer = offers.find((o) => o.vertical === "loan")!;
-    expect(loanOffer.pages).toContain("/home-loan");
-    // /calc/dsr-quick 은 pages 에도, vertical(loan) 로도 매칭돼야 함
-    expect(loanOffer.pages).toContain("/calc/dsr-quick");
+    const seedLoan = offers.find((o) => o.id === "loan-compare-01")!;
+    expect(seedLoan.pages).toContain("/home-loan");
+    expect(seedLoan.pages).toContain("/calc/dsr-quick");
     expect(inferVertical("/calc/dsr-quick")).toBe("loan");
   });
 

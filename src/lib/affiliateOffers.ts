@@ -213,9 +213,12 @@ export function getAllOffers(): Offer[] {
 }
 
 /**
- * 페이지에 노출할 오퍼 목록 — priority 오름차순.
+ * 페이지에 노출할 오퍼 목록.
  * 규칙: BLOCKED 최우선 차단 → active → 2차 버티컬 게이트 →
- *       (pages 명시 매칭 ‖ 버티컬 일치) → priority 정렬.
+ *       (pages 명시 매칭 ‖ 버티컬 일치) →
+ *       정렬: pages 명시 매칭이 버티컬 광역 매칭보다 우선, 그다음 priority 오름차순.
+ * (구체 지정 > 광역 — 같은 버티컬의 두 오퍼를 페이지 분할 A/B 로 운영하는 근거:
+ *  예. 올크레딧은 pages 명시 4곳에서 우선, 나머지 loan 지면은 NICE지키미)
  */
 export function matchOffers(
   pathname: string,
@@ -223,13 +226,20 @@ export function matchOffers(
 ): Offer[] {
   if (!pathname || isBlockedPath(pathname)) return [];
   const pageVertical = verticalOverride ?? inferVertical(pathname);
-  return ALL_OFFERS.filter((o) => {
-    if (!o.active) return false;
-    if (PHASE2_VERTICALS.includes(o.vertical)) return false;
+  return ALL_OFFERS.map((o) => {
+    if (!o.active) return null;
+    if (PHASE2_VERTICALS.includes(o.vertical)) return null;
     const byPage = o.pages?.some((p) => pageMatches(pathname, p)) ?? false;
     const byVertical = pageVertical !== null && o.vertical === pageVertical;
-    return byPage || byVertical;
-  }).sort((a, b) => a.priority - b.priority);
+    if (!byPage && !byVertical) return null;
+    return { offer: o, byPage };
+  })
+    .filter((x): x is { offer: Offer; byPage: boolean } => x !== null)
+    .sort(
+      (a, b) =>
+        Number(b.byPage) - Number(a.byPage) || a.offer.priority - b.offer.priority,
+    )
+    .map((x) => x.offer);
 }
 
 /**

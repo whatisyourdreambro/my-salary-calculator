@@ -182,7 +182,17 @@ function checkSalaryExactValues(path: string, html: string) {
 
 function checkAffiliate(path: string, html: string) {
   const activeMatched = matchOffers(path);
-  const hasOfferAttr = html.includes("data-affiliate-offer");
+  // 렌더된 오퍼는 (id, vertical) 쌍으로 추출 — 슬롯이 vertical 을 명시 오버라이드하는
+  // 경우(예: /salary/* 결과 CTA 의 OfferSlot vertical="loan")가 있어, 경로 추론만으로는
+  // 정당성을 판정할 수 없다. 렌더된 vertical 로 matchOffers 를 재현해 대조한다.
+  const rendered: Array<{ id: string; vertical: string }> = [];
+  for (const m of html.matchAll(
+    /data-affiliate-offer="([^"]+)" data-affiliate-vertical="([^"]+)"/g,
+  )) {
+    rendered.push({ id: m[1], vertical: m[2] });
+  }
+  const hasOfferAttr = rendered.length > 0 || html.includes("data-affiliate-offer");
+
   if (isBlockedPath(path)) {
     if (hasOfferAttr) fail("(c) 제휴", path, "BLOCKED 페이지에 오퍼 렌더됨");
     return;
@@ -190,17 +200,26 @@ function checkAffiliate(path: string, html: string) {
   if (activeMatched.length > 0 && !hasOfferAttr) {
     fail("(c) 제휴", path, `활성 오퍼 ${activeMatched[0].id} 매칭인데 미렌더`);
   }
-  if (activeMatched.length === 0 && hasOfferAttr) {
-    fail("(c) 제휴", path, "매칭 오퍼가 없는데 data-affiliate-offer 렌더됨");
-  }
-  if (hasOfferAttr) {
-    const custom = activeMatched.some((o) => o.disclosure);
-    if (!custom && !html.includes(AFFILIATE_DISCLOSURE_TEXT)) {
-      fail("(c) 제휴", path, "오퍼 노출인데 고지문 없음");
+  // 렌더된 각 오퍼가 (경로, 렌더된 vertical) 기준으로 정당한지 검증
+  const allOffers = getAllOffers();
+  for (const r of [...new Map(rendered.map((x) => [x.id + x.vertical, x])).values()]) {
+    const legit = matchOffers(path, r.vertical as never).some((o) => o.id === r.id);
+    if (!legit) {
+      fail("(c) 제휴", path, `렌더된 오퍼 ${r.id}(vertical=${r.vertical}) 가 매칭 규칙과 불일치`);
+      continue;
+    }
+    const offer = allOffers.find((o) => o.id === r.id);
+    const disclosure = offer?.disclosure ?? AFFILIATE_DISCLOSURE_TEXT;
+    if (!html.includes(disclosure)) {
+      fail("(c) 제휴", path, `오퍼 ${r.id} 노출인데 고지문("${disclosure.slice(0, 20)}…") 없음`);
     }
   }
   // 오퍼 무매칭 대표 페이지: 쿠팡 폴백이 SSR 에 살아 있어야 함
-  if (COUPANG_SSR_PAGES.includes(path) && activeMatched.length === 0) {
+  if (
+    COUPANG_SSR_PAGES.includes(path) &&
+    activeMatched.length === 0 &&
+    rendered.length === 0
+  ) {
     if (!html.includes("ads-partners.coupang.com")) {
       fail("(c) 제휴", path, "쿠팡 폴백 배너가 SSR HTML 에 없음");
     }

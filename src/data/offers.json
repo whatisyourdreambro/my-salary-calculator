@@ -1,5 +1,33 @@
 [
   {
+    "id": "nice-zikimi-01",
+    "vertical": "loan",
+    "label": "대출 전, 내 신용점수부터 확인하세요",
+    "description": "NICE지키미 — 신용점수 조회·변동 알림·관리 (PC·모바일)",
+    "url": "https://lase.kr/click.php?m=mycredit1&a=A100707146&l=0000",
+    "network": "linkprice",
+    "priority": 2,
+    "active": true,
+    "disclosure": "이 포스팅은 제휴마케팅이 포함된 광고로 커미션을 지급 받습니다."
+  },
+  {
+    "id": "allcredit-01",
+    "vertical": "loan",
+    "pages": [
+      "/credit-card-deduction-2026",
+      "/car-loan",
+      "/calc/loan-affordability",
+      "/calc/prepayment-fee-quick"
+    ],
+    "label": "심사 탈락 전에 — KCB 신용등급 확인·관리",
+    "description": "올크레딧 — 신용등급 조회와 올리는 방법까지",
+    "url": "https://lase.kr/click.php?m=allcredit&a=A100707146&l=0000",
+    "network": "linkprice",
+    "priority": 3,
+    "active": true,
+    "disclosure": "이 포스팅은 제휴마케팅이 포함된 광고로 커미션을 지급 받습니다."
+  },
+  {
     "id": "loan-compare-01",
     "vertical": "loan",
     "pages": [
