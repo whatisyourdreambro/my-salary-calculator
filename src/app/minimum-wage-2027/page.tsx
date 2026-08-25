@@ -30,11 +30,11 @@ const DEFAULT_SETTINGS: AdvancedSettings = {
 export const metadata: Metadata = buildPageMetadata({
   title: "2027 최저임금 시급 10,700원 확정 — 월 2,236,300원 환산표",
   description:
-    "2027년 최저임금 시급 10,700원 의결(2026년 10,320원 대비 +380원, 3.7% 인상). 주휴수당 포함 월 2,236,300원, 연 26,835,600원. 표결 결과·심의 경과·8월 5일 확정 고시 일정과 시급·월급·연봉 환산표, 세후 실수령액 참고치까지 한 번에.",
+    "2027년 최저임금 시급 10,700원 확정(2026년 8월 5일 고용노동부 고시, 2026년 10,320원 대비 +380원, 3.7% 인상). 주휴수당 포함 월 2,236,300원, 연 26,835,600원. 표결 결과·심의 경과·확정 고시와 시급·월급·연봉 환산표, 세후 실수령액 참고치까지 한 번에.",
   path: "/minimum-wage-2027",
   ogType: "article",
   publishedTime: "2026-07-16",
-  modifiedTime: "2026-07-16",
+  modifiedTime: "2026-08-26",
   keywords: [
     "2027 최저임금",
     "2027 최저시급",
@@ -58,7 +58,7 @@ const FAQ_ITEMS = [
   {
     question: "2027년 최저임금은 언제부터 적용되나요?",
     answer:
-      "고용노동부 장관이 이의제기 절차를 거쳐 8월 5일까지 확정 고시할 예정이며, 2027년 1월 1일부터 적용됩니다. 그 전까지, 즉 2026년 12월 31일까지는 현행 2026년 최저임금 시급 10,320원(주휴 포함 월 2,156,880원)이 적용됩니다.",
+      "고용노동부가 이의제기 절차를 거쳐 2026년 8월 5일 시급 10,700원으로 확정 고시했으며(민주노총·소상공인연합회의 이의제기는 불수용), 2027년 1월 1일부터 적용됩니다. 그 전까지, 즉 2026년 12월 31일까지는 현행 2026년 최저임금 시급 10,320원(주휴 포함 월 2,156,880원)이 적용됩니다.",
   },
   {
     question: "2026년보다 얼마나 오르나요?",
@@ -129,11 +129,11 @@ export default function MinimumWage2027Page() {
           articleLd({
             title: "2027 최저임금 시급 10,700원 확정 — 월급·연봉 환산 + 표결 결과",
             description:
-              "2027년 최저임금 10,700원 의결(+380원, 3.7%). 월 2,236,300원 환산, 표결 결과, 확정 고시 일정, 실수령액 참고치 종합",
+              "2027년 최저임금 10,700원 확정(2026-08-05 고시, +380원, 3.7%). 월 2,236,300원 환산, 표결 결과, 실수령액 참고치 종합",
             slug: "minimum-wage-2027",
             url: "/minimum-wage-2027",
             publishedDate: "2026-07-16",
-            modifiedDate: "2026-07-16",
+            modifiedDate: "2026-08-26",
           }),
           speakableLd({
             url: "/minimum-wage-2027",
@@ -151,7 +151,7 @@ export default function MinimumWage2027Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2027 최저임금 <span className="text-electric">시급 10,700원</span>
           </h1>
-          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-07-16" className="mb-2" />
+          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-08-26" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             2026년 7월 14일 최저임금위원회 제14차 전원회의에서 2027년 적용 최저임금이
             시급 10,700원으로 의결됐습니다. 2026년 10,320원 대비 380원(3.7%) 인상,
@@ -201,10 +201,10 @@ export default function MinimumWage2027Page() {
             2.5% → 2025년 1.7% → 2026년 2.9% → 2027년 3.7%입니다.
           </p>
 
-          <h2 className="text-lg font-black text-navy mt-8 mb-3">확정 고시 일정과 현행 최저임금</h2>
+          <h2 className="text-lg font-black text-navy mt-8 mb-3">확정 고시와 현행 최저임금</h2>
           <p className="text-sm leading-7 text-muted-blue">
-            의결안은 고용노동부 장관이 이의제기 절차를 거쳐{" "}
-            <strong>8월 5일까지 확정 고시할 예정</strong>이며, 2027년 1월 1일부터
+            의결안은 이의제기 절차(민주노총·소상공인연합회 이의 불수용)를 거쳐{" "}
+            <strong>2026년 8월 5일 고용노동부가 확정 고시했으며</strong>, 2027년 1월 1일부터
             적용됩니다. 그 전까지(2026년 12월 31일까지) 급여·알바비 계산은 현재 적용
             중인 <strong>2026년 시급 10,320원(주휴 포함 월 2,156,880원)</strong>을
             기준으로 해야 합니다. 현행 기준 상세는{" "}
@@ -227,7 +227,7 @@ export default function MinimumWage2027Page() {
             {[
               { hourly: 10030, label: "2025 시급" },
               { hourly: 10320, label: "2026 시급 (현재 적용 중)" },
-              { hourly: 10700, label: "2027 시급 (의결 확정)" },
+              { hourly: 10700, label: "2027 시급 (확정 고시)" },
               { hourly: 11000, label: "시급 11,000원 (참고)" },
               { hourly: 12000, label: "시급 12,000원 (참고)" },
               { hourly: 13000, label: "시급 13,000원 (참고)" },
@@ -249,8 +249,8 @@ export default function MinimumWage2027Page() {
             })}
           </div>
           <p className="text-xs text-faint-blue mt-4">
-            ※ 2027 최저시급 10,700원은 최저임금위원회 의결 수치(고용노동부 보도자료)로,
-            주휴 포함 월 209시간 기준 월 2,236,300원입니다. 8월 5일까지 확정 고시 예정.
+            ※ 2027 최저시급 10,700원은 2026년 8월 5일 고용노동부가 확정 고시한 수치로,
+            주휴 포함 월 209시간 기준 월 2,236,300원입니다.
           </p>
         </section>
 

@@ -21,7 +21,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/minimum-wage-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-07-16",
+ modifiedTime: "2026-08-26",
  keywords: [
  "최저임금 2026",
  "2026 최저임금",
@@ -40,12 +40,12 @@ const FAQ_ITEMS = [
  {
  question: "2027년 최저임금은 언제, 어떻게 결정되나요?",
  answer:
- "최저임금위원회(근로자·사용자·공익위원 각 9명)가 매년 상반기 심의를 거쳐 통상 7월 중 표결로 다음 해 최저임금을 결정하고, 고용노동부장관이 8월 5일까지 고시합니다. 2027년 최저임금은 이 절차에 따라 2026년 7월 14일 전원회의에서 시급 10,700원으로 의결됐습니다. 다만 2026년 12월 31일까지 적용되는 공식 수치는 여전히 10,320원입니다.",
+ "최저임금위원회(근로자·사용자·공익위원 각 9명)가 매년 상반기 심의를 거쳐 통상 7월 중 표결로 다음 해 최저임금을 결정하고, 고용노동부장관이 8월 5일까지 고시합니다. 2027년 최저임금은 이 절차에 따라 2026년 7월 14일 전원회의에서 시급 10,700원으로 의결됐고, 2026년 8월 5일 확정 고시됐습니다. 다만 2026년 12월 31일까지 적용되는 공식 수치는 여전히 10,320원입니다.",
  },
  {
  question: "2027년 최저임금은 얼마가 될까요?",
  answer:
- "시급 10,700원으로 의결됐습니다(2026년 7월 14일 최저임금위원회 전원회의, 2026년 10,320원 대비 +380원·3.7% 인상). 주휴수당 포함 월 환산액은 2,236,300원이며, 고용노동부 장관이 8월 5일까지 확정 고시할 예정으로 2027년 1월 1일부터 적용됩니다. 상세 환산표와 표결 결과는 머니샐러리의 2027 최저임금 페이지에서 확인할 수 있습니다.",
+ "시급 10,700원으로 확정됐습니다(2026년 7월 14일 최저임금위원회 의결 → 2026년 8월 5일 고용노동부 확정 고시, 2026년 10,320원 대비 +380원·3.7% 인상). 주휴수당 포함 월 환산액은 2,236,300원이며 2027년 1월 1일부터 적용됩니다. 상세 환산표와 표결 결과는 머니샐러리의 2027 최저임금 페이지에서 확인할 수 있습니다.",
  },
  {
  question: "2026 최저임금은 언제부터 적용되나요?",
@@ -115,7 +115,7 @@ export default function MinimumWage2026Page() {
  slug: "minimum-wage-2026",
  url: "/minimum-wage-2026",
  publishedDate: "2026-05-22",
- modifiedDate: "2026-05-22",
+ modifiedDate: "2026-08-26",
  }),
  speakableLd({
  url: "/minimum-wage-2026",
@@ -133,7 +133,7 @@ export default function MinimumWage2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  최저임금 2026 <span className="text-electric">시급·월급·연봉</span>
  </h1>
- <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-05-22" className="mb-2" />
+ <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-08-26" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  시급 기준은 매년 8월 5일 고용노동부장관이 고시하고, 다음 해 1월 1일부터 적용됩니다.
  주휴수당 포함 월급은 209시간(주 40시간 × 4.345주) 기준으로 환산합니다.
@@ -184,7 +184,7 @@ export default function MinimumWage2026Page() {
  <p className="text-sm leading-7 text-muted-blue">
  2027년에 적용될 최저임금은 2026년 7월 14일 최저임금위원회 전원회의에서{" "}
  <strong>시급 10,700원(2026년 대비 +380원, 3.7% 인상)</strong>으로
- 의결됐습니다. 표결 결과·확정 고시 일정·월급 환산표는 별도 페이지에
+ 의결·확정 고시됐습니다. 표결 결과·월급 환산표는 별도 페이지에
  정리했습니다. 2026년 12월 31일까지는 현행 시급 10,320원이 그대로 적용됩니다.
  </p>
  <Link
