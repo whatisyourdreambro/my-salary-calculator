@@ -1,0 +1,45 @@
+# CI 게이트 — 테스트·정합성 검증·qa-crawl (2026-08 수익화·정합성 작업에서 신설)
+# 기존 CI 는 lighthouse.yml(성능)뿐이라 verify:*·test 가 어디서도 강제되지 않았다.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run verify:tax
+      - run: npm run verify:site
+      - run: npm run verify:companies
+      - run: npm run verify:sitemap
+      - run: npm run verify:bonus
+      - run: npm run ad-audit
+      - run: npm run build
+      - name: qa-crawl (로컬 프로덕션 서버 기동 후 전 페이지 정합성 크롤)
+        run: |
+          npm run start &
+          SERVER_PID=$!
+          for i in $(seq 1 30); do
+            curl -sf -A "Mozilla/5.0 (ci)" http://localhost:3000/ > /dev/null && break
+            sleep 2
+          done
+          npm run qa:crawl
+          kill $SERVER_PID
+      - name: qa-report 업로드
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report
+          path: qa-report.md
+          if-no-files-found: ignore

@@ -53,3 +53,4 @@ next-env.d.ts
 
 # DART ETL 로컬 캐시 (scripts/dart-etl.mjs) — API 원본 응답, 커밋 금지
 scripts/.dart-cache/
+qa-report.md

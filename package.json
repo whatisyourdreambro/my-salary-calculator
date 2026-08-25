@@ -16,7 +16,8 @@
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped",
     "verify:site": "tsx scripts/gen-site-metrics.ts --check",
     "verify:companies": "tsx scripts/verify-company-data.ts",
-    "verify:bonus": "node scripts/verify-bonus-data.mjs"
+    "verify:bonus": "node scripts/verify-bonus-data.mjs",
+    "qa:crawl": "tsx scripts/qa-crawl.ts"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
