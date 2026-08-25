@@ -23,6 +23,8 @@ export default function SalaryDBPage() {
  entryBase: c.salary.entry.base,
  // 신입 영끌(기본급+평균 인센티브) — 상세·랭킹 페이지와 동일 정렬 기준
  entryTotal: c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0),
+ // 글로벌 본사 기업 — 정렬 시 국내 기업 뒤로 (순위성 노출 방지, 2026-08 점검)
+ isGlobal: c.isGlobal ?? false,
  seniorBase: c.salary.senior.base,
  incentiveTarget: c.salary.entry.incentive.target,
  weeklyHoursReal: c.workLife.weeklyHours.real,

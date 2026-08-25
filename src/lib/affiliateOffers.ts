@@ -130,7 +130,9 @@ const VERTICAL_RULES: Array<[RegExp, OfferVertical]> = [
   [/^\/guides\/category\/(stock|invest)(\/|$)/, "securities"],
   [/^\/hub\/(invest|fire)(\/|$)/, "securities"],
   [
-    /^\/guides\/[a-z0-9-]*(stock|isa\b|isa-|irp|etf|fund|bond|invest)[a-z0-9-]*(\/|$)/,
+    // 하이픈 토큰 경계 강제 — 부분 문자열 오탐 방지 (예: "refund"의 fund, "visa"의 isa
+    // 로 tax-refund·visa 가이드가 증권으로 오분류되던 버그, 2026-08 점검 수정)
+    /^\/guides\/(?:[a-z0-9]+-)*(?:stock|stocks|isa|irp|etf|etfs|fund|funds|bond|bonds|invest|investing|investment|reits|dividend)(?:-[a-z0-9-]+)?(\/|$)/,
     "securities",
   ],
 ];
@@ -194,9 +196,7 @@ export function validateOffers(raw: unknown): { offers: Offer[]; ignored: string
     }
     offers.push(item);
   }
-  return offers.length + ignored.length === (raw as Offer[]).length
-    ? { offers, ignored }
-    : { offers, ignored };
+  return { offers, ignored };
 }
 
 const { offers: ALL_OFFERS, ignored: IGNORED_OFFER_IDS } = validateOffers(offersJson);

@@ -92,6 +92,10 @@ function buildHtml(): string {
   });
 }
 
+// 그리드(40×101 = ~4,000회 퇴직소득세 계산)와 HTML 은 배포 단위 상수 —
+// 요청마다 재계산하지 않도록 모듈 스코프에서 1회 생성 (엣지 CPU 예산 보호).
+const WIDGET_HTML = buildHtml();
+
 export async function GET() {
-  return new Response(buildHtml(), { headers: WIDGET_HEADERS });
+  return new Response(WIDGET_HTML, { headers: WIDGET_HEADERS });
 }

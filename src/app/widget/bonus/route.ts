@@ -12,16 +12,21 @@ import { WIDGET_HEADERS, widgetShell } from "../shared";
 
 export const runtime = "edge";
 
-// 연소득(연봉+성과급 합산) 축 그리드: 1,200만 ~ 4억, 200만원 스텝
-const GRID_MIN = 12_000_000;
+// 연소득(연봉+성과급 합산) 축 그리드: 0 ~ 4억, 200만원 스텝.
+// 기준점 0 — 하한을 1,200만으로 두면 그 미만 연소득에서 공제가 0 으로 눌려
+// 저소득 구간 세후가 과대 표기된다 (2026-08 점검에서 수정: 500만+600만 케이스
+// 공제 749,363원이 0 으로 나오던 버그). 기준점 0 텔레스코핑은 수치 검증 완료(오차 ≤1원).
+const GRID_MIN = 0;
 const GRID_MAX = 400_000_000;
-const GRID_STEP = 2_000_000;
+// 100만원 스텝 — 세법 함수의 꺾임점(공제·과표 구간)이 100만원 배수에 정렬돼
+// 선형보간 오차가 0 이 된다 (200만 스텝은 저소득 구간 최대 -1.85% 오차 실측)
+const GRID_STEP = 1_000_000;
 
-/** G(x) = 연소득 x 에서의 누적 공제(기준점 GRID_MIN 대비) — calcBonusNet 로만 계산 */
+/** G(x) = 연소득 x 에서의 누적 공제(기준점 0 대비) — calcBonusNet 로만 계산 */
 function buildDeductionGrid(): number[] {
   const grid: number[] = [];
   for (let x = GRID_MIN; x <= GRID_MAX; x += GRID_STEP) {
-    grid.push(x <= GRID_MIN ? 0 : Math.round(calcBonusNet(GRID_MIN, x - GRID_MIN).totalDeductions));
+    grid.push(x <= 0 ? 0 : Math.round(calcBonusNet(0, x).totalDeductions));
   }
   return grid;
 }
@@ -85,6 +90,10 @@ function buildHtml(): string {
   });
 }
 
+// 그리드(~200회 세법 계산)와 HTML 은 배포 단위 상수 — 요청마다 재계산하지 않도록
+// 모듈 스코프에서 1회 생성 (엣지 CPU 예산 보호).
+const WIDGET_HTML = buildHtml();
+
 export async function GET() {
-  return new Response(buildHtml(), { headers: WIDGET_HEADERS });
+  return new Response(WIDGET_HTML, { headers: WIDGET_HEADERS });
 }

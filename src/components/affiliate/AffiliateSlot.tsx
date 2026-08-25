@@ -40,8 +40,14 @@ export type AffiliateSlotProps = CoupangBannerProps & {
   offerOnly?: boolean;
 };
 
-// 페이지당 동일 오퍼 중복 노출 방지 (쿠팡 dedup 패턴 준용)
+// 페이지당 동일 오퍼 중복 노출 방지 레지스트리 (쿠팡 dedup 패턴 준용).
+// 변경 시 구독 슬롯에 알림 — 점유 슬롯이 언마운트되면 강등됐던 슬롯이 재승격된다
+// (알림 없이는 승자 언마운트 시 오퍼가 페이지에서 통째로 사라지는 버그, 2026-08 점검 수정).
 const renderedOffersByPath = new Map<string, Set<string>>();
+const registryListeners = new Set<() => void>();
+function notifyRegistry() {
+  registryListeners.forEach((l) => l());
+}
 
 function OfferCard({
   offer,
@@ -93,15 +99,15 @@ function OfferCard({
         target="_blank"
         rel="sponsored nofollow noopener noreferrer"
         onClick={() => trackAffiliateClick(offer.id, pathname, offer.vertical)}
-        className="block rounded-2xl border-2 border-electric/30 bg-electric-5 p-5 hover:border-electric transition-colors no-underline"
+        className="block rounded-2xl border-2 border-electric/30 dark:border-electric/40 bg-electric-5 dark:bg-electric-10 p-5 hover:border-electric transition-colors no-underline"
       >
-        <p className="font-bold text-navy text-[15px] mb-1">{offer.label}</p>
-        <p className="text-sm text-muted-blue leading-relaxed">{description}</p>
+        <p className="font-bold text-navy dark:text-canvas-50 text-[15px] mb-1">{offer.label}</p>
+        <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">{description}</p>
         <span className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-electric">
           바로 확인하기 →
         </span>
       </a>
-      <p className="mt-2 text-[11px] text-faint-blue text-center leading-relaxed font-medium">
+      <p className="mt-2 text-[11px] text-faint-blue dark:text-canvas-400 text-center leading-relaxed font-medium">
         {disclosure}
       </p>
     </div>
@@ -125,28 +131,41 @@ export default function AffiliateSlot({
     ? (matchOffers(pathname, vertical)[0] ?? null)
     : null;
 
-  // 페이지당 동일 오퍼 중복 노출 방지 — 등록만 마운트 후(모듈 상태 렌더 중 변경 금지).
-  // 한 페이지에 슬롯이 2개 이상이고 오퍼가 활성인 드문 경우, 뒤 슬롯이 마운트 후
-  // 폴백으로 강등된다 (쿠팡 코어의 effect dedup 과 동일한 방식).
-  const [demoted, setDemoted] = useState(false);
+  // 페이지당 동일 오퍼 중복 노출 방지 — 점유는 마운트 후(모듈 상태 렌더 중 변경 금지).
+  // claimed: null = 판정 전(SSR·초기 렌더 — 후보를 그대로 렌더해 hydration 일치),
+  // true = 이 슬롯이 점유, false = 다른 슬롯 점유로 강등(폴백 렌더).
+  // 레지스트리 알림 구독으로, 점유 슬롯이 언마운트되면 강등 슬롯이 재승격된다.
+  const [claimed, setClaimed] = useState<boolean | null>(null);
   useEffect(() => {
     if (!pathname || !candidate) return;
-    const shown = renderedOffersByPath.get(pathname) ?? new Set<string>();
-    if (shown.has(candidate.id)) {
-      setDemoted(true);
-      return;
-    }
-    shown.add(candidate.id);
-    renderedOffersByPath.set(pathname, shown);
-    setDemoted(false);
+    let mine = false;
+    const tryClaim = () => {
+      if (mine) return;
+      const shown = renderedOffersByPath.get(pathname) ?? new Set<string>();
+      if (!shown.has(candidate.id)) {
+        shown.add(candidate.id);
+        renderedOffersByPath.set(pathname, shown);
+        mine = true;
+        setClaimed(true);
+        notifyRegistry();
+      } else {
+        setClaimed(false);
+      }
+    };
+    tryClaim();
+    registryListeners.add(tryClaim);
     return () => {
-      const current = renderedOffersByPath.get(pathname);
-      current?.delete(candidate.id);
-      if (current && current.size === 0) renderedOffersByPath.delete(pathname);
+      registryListeners.delete(tryClaim);
+      if (mine) {
+        const current = renderedOffersByPath.get(pathname);
+        current?.delete(candidate.id);
+        if (current && current.size === 0) renderedOffersByPath.delete(pathname);
+        notifyRegistry();
+      }
     };
   }, [pathname, candidate]);
 
-  if (candidate && !demoted && pathname) {
+  if (candidate && claimed !== false && pathname) {
     return (
       <OfferCard offer={candidate} pathname={pathname} calcResult={calcResult} />
     );

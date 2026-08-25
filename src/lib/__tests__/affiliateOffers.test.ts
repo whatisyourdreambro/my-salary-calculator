@@ -117,6 +117,30 @@ describe("inferVertical — 규칙표 vs 실데이터", () => {
     expect(inferVertical("/global")).toBe("remittance");
   });
 
+  it("가이드 증권 규칙은 하이픈 토큰 경계 — refund/visa 오탐 없음 (2026-08 점검 회귀)", () => {
+    // 실존 슬러그 기준: 'refund'의 fund, 'visa'의 isa 부분 문자열 오탐 방지
+    for (const p of [
+      "/guides/tax-refund-mistakes-2026",
+      "/guides/year-end-tax-refund-secrets-2026",
+      "/guides/vat-refund-2026",
+      "/guides/annual-leave-refund-2026",
+      "/guides/digital-nomad-visa-korea-2026",
+    ]) {
+      expect(inferVertical(p)).not.toBe("securities");
+    }
+    // 정상 매칭은 유지
+    for (const p of [
+      "/guides/samsung-electronics-stock-2026",
+      "/guides/isa-vs-pension-savings",
+      "/guides/irp-pension-year-end-2026",
+      "/guides/fund-vs-etf-2026",
+      "/guides/korean-bond-investment",
+      "/guides/reits-investment",
+    ]) {
+      expect(inferVertical(p)).toBe("securities");
+    }
+  });
+
   it("함정 경로 — 잘못 매핑되면 안 되는 페이지", () => {
     // /year-end-tax-2026 은 종합소득세(5월) 페이지 — card 아님
     expect(inferVertical("/year-end-tax-2026")).toBeNull();

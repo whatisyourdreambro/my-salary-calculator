@@ -66,8 +66,11 @@ for (const c of allCompanies) {
 }
 
 // 5. CL 신입 vs entry 영끌 괴리 (10% 초과) — warn
+// (salary.entry 부재 회사는 check 1 이 error 로 잡는다 — 여기선 크래시 없이 건너뛰어
+//  전체 위반 리포트가 끝까지 출력되도록 옵셔널 체이닝)
 for (const c of allCompanies) {
-  const entryTotal = c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0);
+  const entryTotal =
+    (c.salary?.entry?.base ?? 0) + (c.salary?.entry?.incentive?.avgAmount || 0);
   if (entryTotal <= 0) continue;
   for (const g of c.careerLevels ?? []) {
     for (const s of g.steps) {

@@ -25,6 +25,8 @@ export interface CompanyIndexItem {
  entryBase: number;
  /** 원 단위 — 신입 영끌(기본급+평균 인센티브). 정렬 기준 — 상세 페이지와 통일 */
  entryTotal: number;
+ /** 글로벌 본사 기업 — 영끌 정렬 시 국내 기업 뒤로 배치 */
+ isGlobal: boolean;
  /** 원 단위 — 시니어 base 연봉 */
  seniorBase: number;
  /** 신입 인센티브 타깃 (%) */
@@ -91,9 +93,13 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
  );
  if (tierFilter !== "all") list = list.filter((c) => c.tier === tierFilter);
- // 정렬 기준: 신입 영끌(entryTotal) — 상세·랭킹 페이지의 기준과 통일 (기본급만으로
- // 정렬하면 성과급 비중 큰 회사의 순서가 상세 페이지 순위와 어긋난다)
- if (sortByEntry) list = [...list].sort((a, b) => b.entryTotal - a.entryTotal);
+ // 정렬 기준: 신입 영끌(entryTotal) — 상세·랭킹 페이지의 기준과 통일.
+ // 글로벌 본사 기업(isGlobal)은 국내 기업 뒤로 — 디렉터리 정렬이 사실상 랭킹으로
+ // 읽히므로 NVIDIA 등이 최상단을 점유하지 않게 한다 (전국 랭킹 제외 원칙과 일관).
+ if (sortByEntry)
+ list = [...list].sort(
+ (a, b) => Number(a.isGlobal) - Number(b.isGlobal) || b.entryTotal - a.entryTotal
+ );
  return list;
  }, [companies, searchTerm, tierFilter, sortByEntry]);
 

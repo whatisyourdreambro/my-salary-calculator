@@ -93,6 +93,9 @@ function buildHtml(): string {
   });
 }
 
+// HTML 은 배포 단위 상수 — 모듈 스코프 1회 생성 (형제 위젯과 동일 패턴)
+const WIDGET_HTML = buildHtml();
+
 export async function GET() {
-  return new Response(buildHtml(), { headers: WIDGET_HEADERS });
+  return new Response(WIDGET_HTML, { headers: WIDGET_HEADERS });
 }

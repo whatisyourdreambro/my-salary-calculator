@@ -452,7 +452,7 @@ export default function SalaryCalculator() {
  </div>
 
  {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
- <NextActions annualSalary={annualSalary} />
+ <NextActions annualSalary={annualSalary} category="salary" />
 
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />

@@ -10,6 +10,7 @@ import Link from "@/components/AppLink";
 import { trackGuideCTAClick } from "@/lib/analytics";
 import { companyCountPlus } from "@/config/site";
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
+import type { OfferVertical } from "@/lib/affiliateOffers";
 import {
  ArrowRight,
  Home,
@@ -202,8 +203,20 @@ export default function NextActions({
 }: NextActionsProps) {
  const actions = buildActions(category, annualSalary);
 
- // 제휴 오퍼 병기 (지시서 §TASK-3-4) — 연봉 문맥은 대출 비교 버티컬.
- // 오퍼 승인 전(전부 inactive)엔 무렌더라 외관 불변, 내부 링크 카드는 항상 유지.
+ // 제휴 오퍼 병기 (지시서 §TASK-3-4) — 카테고리 문맥에 맞는 버티컬만 매핑.
+ // vertical="loan" 하드코딩 시 활성 대출 오퍼가 보험·저축 등 /calc/[slug] 전
+ // 카테고리(~101곳)에 새어 나가던 버그 수정 (2026-08 점검). 매핑 없는 카테고리
+ // (tax 등)는 슬롯 자체를 렌더하지 않는다. 오퍼 inactive 시엔 어차피 무렌더.
+ const CATEGORY_OFFER_VERTICAL: Partial<Record<NextActionCategory, OfferVertical>> = {
+ salary: "loan", // 연봉 결과 → 대출 여력 문맥 (의도된 결과 연동 CTA)
+ loan: "loan",
+ "real-estate": "loan",
+ insurance: "insurance",
+ investment: "securities",
+ };
+ // category 미지정(생활·사업 등 매핑 외 계산기)은 오퍼 미렌더 — 문맥 없는 노출 금지.
+ // 홈 연봉 계산기는 category="salary" 를 명시해 결과 CTA 오퍼를 유지한다.
+ const offerVertical = category ? CATEGORY_OFFER_VERTICAL[category] : undefined;
  const offerCalcResult = annualSalary
  ? { amount: Math.round(annualSalary / 10000) }
  : undefined;
@@ -237,7 +250,9 @@ export default function NextActions({
  );
  })}
  </div>
- <OfferSlot vertical="loan" calcResult={offerCalcResult} />
+ {offerVertical && (
+ <OfferSlot vertical={offerVertical} calcResult={offerCalcResult} />
+ )}
  </section>
  );
 }
