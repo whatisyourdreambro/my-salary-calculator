@@ -278,8 +278,13 @@ export const BONUS_NEWS_2026: Array<{
   href: string;
 }> = [
   {
+    date: "2026-08-25",
+    text: "SK하이닉스 잠정합의안 총투표 부결 — 전임직 반대 50.08%(25표 차), 노사 재협상 돌입",
+    href: "/calc/sk-hynix-bonus",
+  },
+  {
     date: "2026-08-20",
-    text: "SK하이닉스 임단협 잠정합의 — PS 현금 40%+자사주 60% 개편, 임금 6.3% 인상 (총투표 예정)",
+    text: "SK하이닉스 임단협 잠정합의 — PS 현금 40%+자사주 60% 개편, 임금 6.3% 인상",
     href: "/calc/sk-hynix-bonus",
   },
   {

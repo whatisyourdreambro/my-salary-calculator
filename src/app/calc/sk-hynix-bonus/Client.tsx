@@ -284,9 +284,19 @@ export default function SkHynixBonusClient() {
           4단계 · PS 지급 방식
         </h2>
         <p className="text-sm text-faint mb-4">
-          2026-08-20 임단협 <strong>잠정합의</strong>(총투표 전) 기준 — 2026년
-          성과급부터 현금 40% + 자사주 60%로 개편 예정. 구 체계와 비교해
-          보세요.
+          {AGREEMENT_2026.status === "rejected" ? (
+            <>
+              2026-08-20 잠정합의안(<strong>8/25 총투표 부결 — 재협상 중</strong>)
+              기준 — 부결된 안의 신 체계(현금 40% + 자사주 60%)와 구 체계를
+              비교해 보세요.
+            </>
+          ) : (
+            <>
+              2026-08-20 임단협 <strong>잠정합의</strong> 기준 — 2026년
+              성과급부터 현금 40% + 자사주 60%로 개편 예정. 구 체계와 비교해
+              보세요.
+            </>
+          )}
         </p>
         <div className="grid sm:grid-cols-3 gap-2">
           {PAYOUT_MODES.map((m) => (
@@ -396,7 +406,9 @@ export default function SkHynixBonusClient() {
             {PAYOUT_MODES.find((m) => m.id === payoutMode)?.label}
             {payoutMode !== "old" && (
               <span className="ml-1 font-normal">
-                (잠정합의 기준 · 2026년 성과급부터)
+                {AGREEMENT_2026.status === "rejected"
+                  ? "(부결된 잠정합의안 기준 · 재협상 중)"
+                  : "(잠정합의 기준 · 2026년 성과급부터)"}
               </span>
             )}
           </p>

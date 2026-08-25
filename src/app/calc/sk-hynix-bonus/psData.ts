@@ -6,8 +6,9 @@
 // 향후 docs/serp-strategy-2026.md 의 bonusData.ts ETL(리포트 2호) 소스로 사용.
 //
 // ── 갱신 체크포인트 캘린더 ──────────────────────────────────────
-// 2026-08 말   : 이천 노조 전 조합원 총투표 결과 → AGREEMENT_2026.status 를
-//                "ratified"(가결) 또는 "rejected"(부결)로 변경.
+// 2026-08-25 ✅: 총투표 부결 확정(전임직 반대 50.08%·25표 차, 기술사무직은 가결
+//                66.2%였으나 복수 노조 중 1곳 부결 시 전체 무산) → status="rejected".
+// 재협상 타결 시: 새 잠정합의 내용으로 AGREEMENT_2026 수치·status 갱신 +
 //                page.tsx metadata modified_time + sitemap ROUTE_OVERRIDES 날짜 갱신.
 // 2026-10 말   : Q3 실적 발표 → PROFIT_SCENARIOS hint·runrate 갱신.
 // 2027-01      : 2026 하반기 PI 발표 → PI_2026.h2 확정값 반영.
@@ -20,10 +21,11 @@
 export type AgreementStatus = "tentative" | "ratified" | "rejected";
 
 export const AGREEMENT_2026 = {
-  /** ★ 총투표 결과 확인 후 여기만 변경 */
-  status: "tentative" as AgreementStatus,
+  /** ★ 총투표 결과 확인 후 여기만 변경 — 2026-08-25 부결 확정(복수 언론) */
+  status: "rejected" as AgreementStatus,
   agreedDate: "2026-08-20",
-  voteNote: "2026년 8월 말 이천 노동조합 전 조합원 총투표 예정",
+  voteNote:
+    "2026년 8월 24~25일 전 조합원 총투표에서 부결 — 전임직(생산직) 반대 50.08% vs 찬성 49.92%(25표 차, 투표율 93.81%), 기술사무직은 찬성 66.2% 가결이었으나 한 노조라도 부결 시 전체 무산. 노사 재협상 중",
   wageIncreasePct: 6.3, // 직무급+경력급 합산 기본급 인상률
   poolRate: 0.1, // PS 재원 = 연간 영업이익의 10% (기존 유지)
   capAbolished: true, // 기본급 1,000% 상한 폐지 (2025-09 합의 유지)
@@ -115,8 +117,13 @@ export const SOURCES = [
   { outlet: "헤럴드경제", date: "2026-08-20", fact: "주가 하락 시 현금 보전·기준가 3시점 최저가" },
   { outlet: "머니투데이·SBS·뉴시스", date: "2026-08-20", fact: "임금 6.3% 인상·이연 10%p×2년" },
   { outlet: "블로터", date: "2026-08-20", fact: "2025년 10년 합의(80/20 이연) 1년 만에 개편" },
+  {
+    outlet: "머니투데이·한국일보·뉴스핌 등",
+    date: "2026-08-25",
+    fact: "잠정합의안 총투표 부결 — 전임직 반대 50.08%(25표 차)·기술사무직 가결, 재협상 돌입",
+  },
   { outlet: "복수 언론", date: "2026-07", fact: "2026 상반기 PI 150% 확정(7/28 지급)" },
   { outlet: "SK하이닉스 사업보고서", date: "2026-03", fact: "직원 3만4,549명·2025년 영업이익 47.2조원" },
 ] as const;
 
-export const LAST_UPDATED = "2026-08-23";
+export const LAST_UPDATED = "2026-08-26";
