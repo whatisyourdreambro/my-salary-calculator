@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { koGuides, enGuides } from '@/lib/guidesData';
+import { koGuides, enGuides } from '@/lib/guidesContent';
 import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
 import { qnaData, toQnaSlug } from '@/data/qnaData';
 import { jobsData } from '@/data/jobsData';
@@ -218,13 +218,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
  // 동시에만 갱신한다 (매 배포 자동 갱신 금지 — 위 freshness 원칙과 동일).
  // 2026-08-23: SK하이닉스 임단협 잠정합의 반영 + 삼성 온페이지 개편.
+ // 2026-08-26: SK하이닉스 총투표 부결 반영·최저임금 2027 확정 고시 반영 +
+ //             8/23~25 실질 변경 라우트(임베드·시즌·구조화데이터·EN) 개별 갱신.
  const ROUTE_OVERRIDES: Record<
  string,
  { lastModified?: Date; priority?: number; changeFrequency?: ChangeFrequency }
  > = {
  '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-23'), priority: 0.9 },
- '/calc/bonus-calculators': { lastModified: new Date('2026-08-23'), priority: 0.9 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
+ '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
+ '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
+ '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
+ // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
+ '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
+ '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
+ '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
+ '/civil-servant-pay-2027': { lastModified: new Date('2026-08-23') },
+ // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
+ '/embed': { lastModified: new Date('2026-08-25') },
+ '/en': { lastModified: new Date('2026-08-25') },
+ '/en/flat-tax': { lastModified: new Date('2026-08-25') },
+ '/en/salary-converter': { lastModified: new Date('2026-08-25') },
+ '/en/guides': { lastModified: new Date('2026-08-25') },
  };
  // 나머지 회사별 성과급 계산기 21종 — 시즌 클러스터로 0.85 상향
  for (const route of staticRoutes) {
@@ -425,7 +440,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 상장사 공시 lite 페이지 (Phase 1, 2026-08-23) — 코호트는 dartLite.ts 단일 소스
  // (generateStaticParams와 동일 집합 — 코호트 밖 URL은 404라 사이트맵 등재 불가).
  // lastModified는 DART 데이터 기준일로 정직 표기.
- // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 800KB) 지연 로드
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 1.3MB) 지연 로드
  const { listedCohort, DART_LITE_DATE } = require('@/lib/salary-data/dartLite');
  const dartLiteDate = new Date(DART_LITE_DATE);
  companyUrls.push({
@@ -542,7 +557,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/table/2026/hourly',
  ].map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: STATIC_LAST_MODIFIED,
+ // 2026-08-25 구조화데이터 보강(8b395a7)이 실질 콘텐츠 변경 — 전역 기준일과 차등화
+ lastModified: new Date('2026-08-25'),
  changeFrequency: 'yearly' as ChangeFrequency,
  priority: 0.7,
  }));

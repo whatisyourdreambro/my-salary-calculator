@@ -4,7 +4,9 @@
 // 계산기·가이드·글로서리·Q&A·회사·시즌페이지를 단일 배열로 합쳐 빠른 클라이언트 검색 지원.
 
 import { allCalculators } from "@/lib/simpleCalculators";
-import { koGuides } from "@/lib/guidesData";
+// 카드 메타만 사용 — 본문 포함 guidesContent 를 import 하면 헤더 검색 청크에
+// 가이드 본문 전체가 실린다 (2026-08-26 Phase 4 물리 분리)
+import { koGuideCards } from "@/lib/guidesData";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 import { qnaData, toQnaSlug } from "@/data/qnaData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
@@ -97,7 +99,7 @@ const calculatorEntries: SearchEntry[] = allCalculators.map((c) => ({
  description: c.description,
 }));
 
-const guideEntries: SearchEntry[] = koGuides.map((g) => ({
+const guideEntries: SearchEntry[] = koGuideCards.map((g) => ({
  title: g.title,
  href: `/guides/${g.slug}`,
  category: "가이드" as const,

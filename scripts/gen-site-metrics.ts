@@ -17,7 +17,7 @@ import { BONUS_CALCS } from "../src/data/bonusCalcHub";
 import { jobsData } from "../src/data/jobsData";
 import { industriesData } from "../src/data/industriesData";
 import { regionsData } from "../src/data/regionsData";
-import { koGuides } from "../src/lib/guidesData";
+import { koGuides } from "../src/lib/guidesContent";
 import { allCalculators } from "../src/lib/simpleCalculators/index";
 
 const ROOT = join(__dirname, "..");

@@ -18,6 +18,10 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // 세션 worktree 사본(.claude/worktrees/*) — 유령 파일 수천 개가 lint/tsc 를 오염
+      ".claude/**",
+      // next-on-pages 빌드 산출물 — 압축 번들이 no-unused-expressions 오탐 38건 유발
+      ".vercel/**",
     ],
   },
   {

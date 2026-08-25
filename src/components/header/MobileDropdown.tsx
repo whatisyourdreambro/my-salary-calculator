@@ -10,7 +10,6 @@
 
 import { useState } from "react";
 import Link from "@/components/AppLink";
-import { motion } from "framer-motion";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
 
@@ -61,17 +60,15 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
             </span>
           )}
         </div>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="inline-flex"
+        <span
+          className={`inline-flex transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         >
           <ChevronDown
             size={18}
             aria-hidden="true"
             className={isOpen ? "text-electric" : "text-faint-blue"}
           />
-        </motion.span>
+        </span>
       </button>
 
       {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), grid-rows 0fr↔1fr로 높이 애니메이션 */}

@@ -1,4 +1,4 @@
-import { koGuides, enGuides } from "@/lib/guidesData";
+import { koGuides, enGuides } from "@/lib/guidesContent";
 import { permanentRedirect } from "next/navigation";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";

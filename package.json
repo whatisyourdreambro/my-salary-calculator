@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "tsx scripts/gen-site-metrics.ts",
+    "prebuild": "tsx scripts/gen-guides-meta.ts && tsx scripts/gen-site-metrics.ts",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
     "verify:tax": "node scripts/verify-tax-constants.mjs",
     "verify:sitemap": "tsx scripts/verify-sitemap.ts",

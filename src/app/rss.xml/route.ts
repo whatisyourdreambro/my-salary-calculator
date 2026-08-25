@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server";
 // koGuides만 발행 — guides(전체)를 쓰면 en 가이드 13편이 같은 /guides/{slug} URL·guid로
 // 이중 발행되어 RSS guid 중복이 생김 (2026-08-08 URL 전수 감사에서 실측)
-import { koGuides } from "@/lib/guidesData";
+import { koGuides } from "@/lib/guidesContent";
 
 const escapeXml = (unsafe: string) => {
  return unsafe.replace(/[<>&'"]/g, (c) => {

@@ -5,7 +5,9 @@
 
 import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
-import { guides } from "@/lib/guidesData";
+// 카드 메타만 사용 — 본문 포함 guidesContent 를 import 하면 홈 청크에
+// 가이드 본문 전체가 실린다 (2026-08-26 Phase 4 물리 분리)
+import { koGuideCards } from "@/lib/guidesData";
 
 // 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. CF Pages는 배포마다 재빌드)
 const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
@@ -25,23 +27,21 @@ export default function FeaturedGuides() {
  const prioritySlugs = getSeasonSlugs();
  // 1) 시즌 우선 슬러그를 첫 자리에 고정
  const prioritized = prioritySlugs
- .map((slug) => guides.find((g) => g.slug === slug && g.lang !== "en"))
+ .map((slug) => koGuideCards.find((g) => g.slug === slug))
  .filter((g): g is NonNullable<typeof g> => Boolean(g));
 
  // 2) 인기 가이드 — views 기준 상위 + unique 본문(boilerplate 제외)
- const popular = [...guides]
- .filter((g) => g.lang !== "en")
+ const popular = [...koGuideCards]
  .filter((g) => !prioritySlugs.includes(g.slug))
  .sort((a, b) => b.views - a.views)
- .filter((g) => g.content && g.content.length > 1500)
+ .filter((g) => g.contentChars > 1500)
  .slice(0, 8 - prioritized.length);
 
  const items = [...prioritized, ...popular];
 
  // unique 본문 가이드가 부족하면 fallback (영문 제외 전체에서 views 상위)
  if (items.length < 8) {
- const fallback = [...guides]
- .filter((g) => g.lang !== "en")
+ const fallback = [...koGuideCards]
  .filter((g) => !items.find((it) => it.slug === g.slug))
  .sort((a, b) => b.views - a.views)
  .slice(0, 8 - items.length);

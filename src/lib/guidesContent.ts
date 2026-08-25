@@ -1,0 +1,384 @@
+// src/lib/guidesContent.ts
+//
+// 가이드 "본문 포함 정본" — 30여 개 본문 모듈을 모두 import 해 guides(본문 포함)
+// 배열을 만든다 (2026-08-26 Phase 4: 구 guidesData.ts 에서 물리 분리).
+// ★이 모듈을 import 하면 본문 전체(~1.5MB)가 해당 청크에 실린다 —
+//   본문이 필요한 서버 소비처(상세 페이지·rss.xml·sitemap·relatedGuides·
+//   gen-* 빌드 스크립트)에서만 import 할 것.
+// 목록·홈·검색 등 카드 메타만 필요한 곳은 guidesData.ts(koGuideCards 등)를 사용.
+// 카드 메타 산출물(guidesMeta.generated.ts)은 scripts/gen-guides-meta.ts 가
+// 이 모듈에서 추출한다 — 가이드 추가·수정은 여기(정본)에만 하면 된다.
+import type { Guide, GuideLang } from "./guidesData";
+
+import { taxDeepdiveGuides } from "@/lib/guides/tax-deepdive";
+import { negotiationGuides } from "@/lib/guides/negotiation-deepdive";
+import { financeGuides } from "@/lib/guides/finance-deepdive";
+import { companyRealEstateGuides } from "@/lib/guides/company-realestate-deepdive";
+import { lifecycleGuides } from "@/lib/guides/lifecycle-deepdive";
+import { insuranceInvestmentGuides } from "@/lib/guides/insurance-investment-deepdive";
+import { stockDeepdiveGuides } from "@/lib/guides/stock-deepdive";
+import { stockDeepdiveGuidesEn } from "@/lib/guides/stock-deepdive-en";
+import { semiconductorDeepdiveGuides } from "@/lib/guides/semiconductor-deepdive";
+import { season2026Guides } from "@/lib/guides/2026-season-deepdive";
+import { bonusDeepdiveGuides } from "@/lib/guides/bonus-deepdive";
+import { hotKeywordsGuides } from "@/lib/guides/hot-keywords-deepdive";
+import { hotKeywordsGuidesEn } from "@/lib/guides/hot-keywords-deepdive-en";
+import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
+import { hotNewsExtended } from "@/lib/guides/hot-news-2026-extended";
+import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
+import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
+import { autumn2026Guides } from "@/lib/guides/autumn-2026-season";
+import { companySalaryDeepdive2026 } from "@/lib/guides/company-salary-deepdive-2026";
+import { jobSalaryDeepdive2026 } from "@/lib/guides/job-salary-deepdive-2026";
+import { financeRpm2026Guides } from "@/lib/guides/finance-rpm-2026";
+import { legacyRewrite1 } from "@/lib/guides/legacy-rewrite-1";
+import { legacyRewrite2 } from "@/lib/guides/legacy-rewrite-2";
+import { legacyRewrite3 } from "@/lib/guides/legacy-rewrite-3";
+import { legacyRewrite4 } from "@/lib/guides/legacy-rewrite-4";
+import { legacyRewrite5 } from "@/lib/guides/legacy-rewrite-5";
+import { legacyRewrite6 } from "@/lib/guides/legacy-rewrite-6";
+import { legacyRewrite7 } from "@/lib/guides/legacy-rewrite-7";
+import { legacyRewrite8 } from "@/lib/guides/legacy-rewrite-8";
+import { legacyRewrite9 } from "@/lib/guides/legacy-rewrite-9";
+import { legacyRewrite10 } from "@/lib/guides/legacy-rewrite-10";
+
+// 레거시 rawGuides 50편의 고유 본문 (2026-08-15 재작성 — 전편 출처 검증).
+// (구 generateExpertContent 템플릿 본문을 대체 — 템플릿은 2026-08 점검에서 제거됨)
+const legacyRewriteContent: Record<string, string> = {
+  ...legacyRewrite1,
+  ...legacyRewrite2,
+  ...legacyRewrite3,
+  ...legacyRewrite4,
+  ...legacyRewrite5,
+  ...legacyRewrite6,
+  ...legacyRewrite7,
+  ...legacyRewrite8,
+  ...legacyRewrite9,
+  ...legacyRewrite10,
+};
+
+// 레거시 50편 가이드 메타 (본문은 legacyRewriteContent 에서 주입)
+const rawGuides = [
+ // --- 연봉 (Salary) : 10 items ---
+ {
+ slug: "salary-guide-2026",
+ title: "2026년 연봉 실수령액표: 내 월급의 진실 💸",
+ description: "연봉 1억이면 월 얼마? 2026년 최신 세율과 4대보험 요율을 완벽 반영한 구간별 실수령액 총정리!",
+ category: "연봉",
+ tags: ["연봉", "실수령액", "2026년", "월급"],
+ level: "초급",
+ // 2026-11-01은 미래 날짜 오기(誤記)였음 — JSON-LD·sitemap·화면 표시일이 전부
+ // 미래로 나가 신뢰 신호를 깎아 실제 갱신일로 정정 (2026-07-06 감사)
+ publishedDate: "2026-07-06",
+ views: 150234,
+ },
+ {
+ slug: "salary-negotiation-secret",
+ title: "연봉협상 필승 전략: '얼마 원하세요?'에 대한 모범 답안 🗣️",
+ description: "협상 테이블에서 절대 쫄지 않는 법! 내 몸값을 20% 이상 점프시키는 구체적인 대화 스크립트와 타이밍.",
+ category: "연봉",
+ tags: ["연봉협상", "커리어", "처우협의"],
+ level: "중급",
+ publishedDate: "2025-10-28",
+ views: 98500,
+ },
+ {
+ slug: "nekarakubae-salary-truth",
+ title: "네카라쿠배 개발자 초봉 1억의 진실 💻",
+ description: "소문난 IT 대기업 연봉, 과연 진짜일까? 계약 연봉부터 사이닝 보너스, 스톡옵션(RSU)까지 낱낱이 파헤칩니다.",
+ category: "연봉",
+ tags: ["개발자", "IT", "네카라쿠배", "스톡옵션"],
+ level: "중급",
+ publishedDate: "2025-10-15",
+ views: 120000,
+ },
+ {
+ slug: "minimum-wage-2026",
+ title: "2026년 최저임금 확정! 내 월급은 얼마나 오를까? 📈",
+ description: "최저임금 인상이 내 연봉에 미치는 영향 분석. 주휴수당 포함 시급과 월급 환산액까지 한눈에 확인하세요.",
+ category: "연봉",
+ tags: ["최저임금", "2026년", "급여인상"],
+ level: "초급",
+ publishedDate: "2025-11-10",
+ views: 85000,
+ },
+ {
+ slug: "severance-pay-guide",
+ title: "퇴직금, 퇴직연금(DC/DB) 완벽 가이드: 나갈 때 챙겨야 할 돈 💰",
+ description: "퇴직금 계산법부터 IRP 계좌 이전, 세금 절약 팁까지. 회사를 떠날 때 1원도 손해 보지 않는 방법.",
+ category: "연봉",
+ tags: ["퇴직금", "퇴직연금", "IRP"],
+ level: "중급",
+ publishedDate: "2025-09-20",
+ views: 76000,
+ },
+ {
+ slug: "overtime-pay-calculation",
+ title: "야근수당, 주말수당 계산법: '포괄임금제'의 함정 탈출하기 🌙",
+ description: "내 야근비가 0원? 포괄임금제의 진실과 통상임금 계산법, 그리고 정당한 수당을 요구하는 법.",
+ category: "연봉",
+ tags: ["수당", "포괄임금제", "야근"],
+ level: "중급",
+ publishedDate: "2025-08-15",
+ views: 64000,
+ },
+ {
+ slug: "annual-leave-allowance",
+ title: "연차수당 계산기: 안 쓴 연차, 돈으로 받으면 얼마? 🏖️",
+ description: "연차 사용 촉진 제도와 미사용 연차 수당 계산법. 휴가 대신 돈으로 받는 게 이득일까?",
+ category: "연봉",
+ tags: ["연차", "수당", "휴가"],
+ level: "초급",
+ publishedDate: "2025-11-05",
+ views: 55000,
+ },
+ {
+ slug: "bonus-tax-rate",
+ title: "상여금 세금 폭탄? 보너스 실수령액 미리 계산하기 🎁",
+ description: "기분 좋은 성과급, 세금 떼고 나면 허무하다? 상여금에 적용되는 세율과 절세 전략.",
+ category: "연봉",
+ tags: ["상여금", "보너스", "세금"],
+ level: "중급",
+ publishedDate: "2025-01-10",
+ views: 92000,
+ },
+ {
+ slug: "nurse-salary",
+ title: "간호사 연봉 2026: 신규·5년차·수간호사 월급 실수령액 표 💉",
+ description: "간호사 평균 연봉과 신규 초봉, 5년차·10년차·수간호사 월급을 한눈에. 대학병원 3교대 나이트·오프 수당을 포함한 '진짜' 실수령액을 2026년 기준으로 정리했습니다.",
+ category: "연봉",
+ tags: ["간호사 연봉", "수간호사", "간호사 5년차", "간호사 월급", "3교대", "대학병원"],
+ level: "중급",
+ publishedDate: "2025-11-15",
+ views: 185000,
+ },
+ {
+ slug: "salary-peak-system",
+ title: "임금피크제란? 정년 연장과 월급 삭감의 딜레마 📉",
+ description: "임금피크제 적용 대상과 감액률, 그리고 이에 대응하는 직장인의 생존 전략.",
+ category: "연봉",
+ tags: ["임금피크제", "정년", "노후"],
+ level: "고급",
+ publishedDate: "2025-06-30",
+ views: 32000,
+ },
+
+ // --- 세금 (Tax) : 10 items ---
+ {
+ slug: "year-end-tax-2026",
+ title: "13월의 월급 만들기: 2025 연말정산 필승 공략집 🧾",
+ description: "바뀐 세법 완벽 반영! 남들은 모르는 소득공제, 세액공제 꿀팁으로 환급액 200만원 더 받는 법.",
+ category: "세금",
+ tags: ["연말정산", "환급", "절세"],
+ level: "초급",
+ publishedDate: "2025-12-01",
+ views: 200000,
+ },
+ {
+ slug: "comprehensive-income-tax",
+ title: "N잡러 필수! 5월 종합소득세 신고 A to Z 🚨",
+ description: "유튜버, 배달, 스마트스토어... 부수입이 있다면 필수! 가산세 피하고 절세하는 신고 노하우.",
+ category: "세금",
+ tags: ["종합소득세", "N잡", "프리랜서"],
+ level: "중급",
+ publishedDate: "2025-04-20",
+ views: 110000,
+ },
+ {
+ slug: "gift-tax-exemption",
+ title: "자녀에게 1억 증여해도 세금 0원? 증여세 면제 한도 총정리 🎁",
+ description: "10년 주기 증여 플랜으로 상속세까지 아끼는 부자들의 절세 시크릿.",
+ category: "세금",
+ tags: ["증여세", "상속세", "절세"],
+ level: "고급",
+ publishedDate: "2025-03-15",
+ views: 89000,
+ },
+ {
+ slug: "capital-gains-tax-stock",
+ title: "해외주식 양도소득세: 250만원 공제와 절세 매도 타이밍 🇺🇸",
+ description: "서학개미 필독! 테슬라, 엔비디아 수익 실현 전 꼭 알아야 할 세금 계산법.",
+ category: "세금",
+ tags: ["해외주식", "양도세", "주식"],
+ level: "중급",
+ publishedDate: "2025-11-20",
+ views: 75000,
+ },
+ { slug: "monthly-rent-tax-credit", title: "월세 세액공제: 집주인 동의 없이 신청하기 🏠", description: "낸 월세의 최대 17%를 돌려받는 효자 공제 항목. 신청 방법과 필수 서류.", category: "세금", tags: ["월세", "세액공제", "연말정산"], level: "초급", publishedDate: "2025-11-15", views: 60000 },
+ { slug: "cash-receipt-guide", title: "현금영수증: 연말정산의 숨은 1인치 🧾", description: "소득공제율 30%, 신용카드보다 2배 높은 혜택 챙기기. 발급 거부 시 대처법까지.", category: "세금", tags: ["현금영수증", "소득공제", "절세"], level: "초급", publishedDate: "2025-10-05", views: 45000 },
+ { slug: "car-tax-annual-payment", title: "자동차세 연납 신청: 1월에 5% 공제 🚗", description: "1월에 미리 내면 세금이 줄어든다? 위택스 신청 방법과 카드 무이자 할부 팁.", category: "세금", tags: ["자동차세", "연납", "절세"], level: "초급", publishedDate: "2025-01-05", views: 52000 },
+ { slug: "real-estate-tax-comprehensive", title: "종합부동산세: 1주택자 공제 한도 상향 🏘️", description: "부자세? 이제는 중산층도 알아야 할 종부세 계산 구조와 절세 전략.", category: "세금", tags: ["종부세", "부동산", "세금"], level: "고급", publishedDate: "2025-11-25", views: 38000 },
+ { slug: "financial-income-tax", title: "금융소득 종합과세: 이자만 2천만원? 💰", description: "예금 이자와 배당금 합계 2천만원 초과 시 세금 폭탄 피하기.", category: "세금", tags: ["금융소득", "이자", "배당"], level: "고급", publishedDate: "2025-05-10", views: 29000 },
+ { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "정치자금, 종교단체, 고향사랑기부제... 100% 환급 꿀팁.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },
+
+ // --- 투자 (Investment) : 10 items ---
+ {
+ slug: "isa-account-guide",
+ title: "만능통장 ISA: 3년 만기 1억 만들기 로드맵 💎",
+ description: "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
+ category: "투자",
+ tags: ["ISA", "비과세", "목돈마련"],
+ level: "초급",
+ publishedDate: "2025-02-10",
+ views: 130000,
+ },
+ {
+ slug: "etf-investment-starter",
+ title: "주식 초보를 위한 ETF 투자 가이드: 워렌 버핏도 추천했다 📊",
+ description: "개별 종목 분석 없이 시장 전체에 투자하는 법. S&P500, 나스닥100 적립식 투자의 기적.",
+ category: "투자",
+ tags: ["ETF", "주식초보", "적립식투자"],
+ level: "초급",
+ publishedDate: "2025-01-05",
+ views: 95000,
+ },
+ { slug: "bitcoin-halving-strategy", title: "비트코인 반감기 투자 전략: 4년의 사이클 🪙", description: "4년마다 오는 기회, 반감기 사이클 분석과 매수 적기.", category: "투자", tags: ["비트코인", "가상화폐", "반감기"], level: "고급", publishedDate: "2025-03-20", views: 110000 },
+ { slug: "us-treasury-bond", title: "미국 국채 투자: 안전자산의 매력 🇺🇸", description: "금리 인하 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.", category: "투자", tags: ["채권", "미국국채", "안전자산"], level: "중급", publishedDate: "2025-06-15", views: 67000 },
+ { slug: "gold-investment-methods", title: "금 투자 방법: 골드바 vs KRX 금시장 🥇", description: "전쟁과 인플레를 이기는 불변의 자산, 금 싸게 사는 법.", category: "투자", tags: ["금", "원자재", "안전자산"], level: "초급", publishedDate: "2025-08-20", views: 54000 },
+ { slug: "dollar-investment", title: "달러 환테크: 환율 변동성 활용하기 💵", description: "엔저, 강달러 시대의 똑똑한 외화 투자 전략.", category: "투자", tags: ["달러", "환테크", "환율"], level: "중급", publishedDate: "2025-09-05", views: 49000 },
+ { slug: "reits-investment", title: "리츠(REITs): 커피 한 잔 값으로 건물주 되기 🏢", description: "소액으로 강남 빌딩에 투자하고 매달 월세 배당 받는 법.", category: "투자", tags: ["리츠", "부동산", "배당주"], level: "중급", publishedDate: "2025-04-10", views: 62000 },
+ { slug: "ipo-strategy", title: "공모주 청약: 따상 노리는 실전 팁 📈", description: "균등배정 vs 비례배정, 마이너스 통장 써도 이득일까?", category: "투자", tags: ["공모주", "청약", "주식"], level: "초급", publishedDate: "2025-02-25", views: 88000 },
+ { slug: "robo-advisor", title: "로보어드바이저: AI에게 내 돈 맡겨도 될까? 🤖", description: "핀트, 파운트 등 AI 투자 서비스 수익률 비교 분석.", category: "투자", tags: ["AI투자", "로보어드바이저", "핀테크"], level: "초급", publishedDate: "2025-07-15", views: 43000 },
+ { slug: "pension-savings-fund", title: "연금저축펀드 vs IRP: 나에게 맞는 계좌는? 👴", description: "세액공제 한도와 운용 가능 상품 차이점 완벽 정리.", category: "투자", tags: ["연금저축", "IRP", "노후준비"], level: "중급", publishedDate: "2025-11-30", views: 71000 },
+
+ // --- 부동산 (Real Estate) : 8 items ---
+ {
+ slug: "jeonse-scam-prevention",
+ title: "전세사기 예방 가이드: 내 보증금 지키는 7가지 체크리스트 🏠",
+ description: "등기부등본 보는 법부터 전세보증보험 가입까지. 깡통전세 피하는 안전 장치 완벽 분석.",
+ category: "부동산",
+ tags: ["전세", "부동산", "사기예방"],
+ level: "초급",
+ publishedDate: "2025-08-01",
+ views: 160000,
+ },
+ {
+ slug: "first-home-buyer-loan",
+ title: "생애최초 주택구입 대출: 디딤돌, 보금자리론 금리 비교 🏦",
+ description: "내 집 마련의 꿈, 정부 지원 대출로 앞당기자! 소득 요건, 한도, 금리 우대 혜택 총정리.",
+ category: "부동산",
+ tags: ["대출", "내집마련", "청약"],
+ level: "중급",
+ publishedDate: "2025-09-10",
+ views: 145000,
+ },
+ { slug: "subscription-account-tips", title: "청약 통장: 1순위 조건 만들기 🏗️", description: "납입 인정 금액 상향! 당첨 확률 높이는 청약 통장 관리법.", category: "부동산", tags: ["청약", "아파트", "분양"], level: "초급", publishedDate: "2025-04-05", views: 98000 },
+ { slug: "reconstruction-redevelopment", title: "재건축 vs 재개발: 투자의 차이점 🚧", description: "헌 집 줄게 새 집 다오, 정비사업 단계별 투자 포인트.", category: "부동산", tags: ["재건축", "재개발", "투자"], level: "고급", publishedDate: "2025-10-20", views: 56000 },
+ { slug: "officetel-investment", title: "오피스텔 투자: 주택수 포함 여부 확인 🏢", description: "취득세 중과 피하고 월세 수익 내는 오피스텔 투자법.", category: "부동산", tags: ["오피스텔", "월세", "투자"], level: "중급", publishedDate: "2025-06-25", views: 42000 },
+ { slug: "happy-housing-qualifications", title: "행복주택 입주 자격: 대학생, 사회초년생 🏘️", description: "시세의 60% 수준! 청년들을 위한 공공임대주택 활용법.", category: "부동산", tags: ["행복주택", "임대주택", "청년"], level: "초급", publishedDate: "2025-03-01", views: 81000 },
+ { slug: "youth-housing-station", title: "역세권 청년주택: 서울 역세권에 내 집? 🚇", description: "교통 편리한 곳에 저렴하게 사는 법, 입주 자격 총정리.", category: "부동산", tags: ["청년주택", "서울", "역세권"], level: "초급", publishedDate: "2025-05-15", views: 77000 },
+ { slug: "gap-investment-risk", title: "갭투자: 전세 끼고 아파트 사기 📉", description: "소액으로 아파트 매수? 깡통전세 리스크 관리와 갭투자 원칙.", category: "부동산", tags: ["갭투자", "아파트", "투자"], level: "고급", publishedDate: "2025-11-10", views: 65000 },
+
+ // --- 커리어 (Career) : 7 items ---
+ {
+ slug: "resume-writing-tips",
+ title: "광탈을 부르는 이력서 vs 합격을 부르는 이력서 📝",
+ description: "인사담당자가 3초 만에 뽑고 싶게 만드는 경력기술서 작성법. 성과를 숫자로 증명하라!",
+ category: "커리어",
+ tags: ["이력서", "취업", "이직"],
+ level: "초급",
+ publishedDate: "2025-06-15",
+ views: 88000,
+ },
+ {
+ slug: "linkedin-networking",
+ title: "링크드인으로 해외 취업 제안 받는 프로필 세팅법 🌏",
+ description: "글로벌 헤드헌터들이 검색하는 키워드는 따로 있다? 영문 이력서 없이 기회를 잡는 퍼스널 브랜딩.",
+ category: "커리어",
+ tags: ["링크드인", "해외취업", "네트워킹"],
+ level: "고급",
+ publishedDate: "2025-07-01",
+ views: 72000,
+ },
+ { slug: "burnout-syndrome", title: "번아웃 증후군: 직장인 마음 챙김 🤯", description: "일이 재미없고 무기력하다면? 번아웃 자가진단과 극복법.", category: "커리어", tags: ["번아웃", "멘탈관리", "직장생활"], level: "초급", publishedDate: "2025-09-30", views: 46000 },
+ { slug: "side-project-income", title: "사이드 프로젝트: 월급 외 수익 파이프라인 🚀", description: "퇴근 후 2시간, 내 재능으로 부수입 만드는 현실적 방법.", category: "커리어", tags: ["부업", "사이드프로젝트", "N잡"], level: "중급", publishedDate: "2025-08-10", views: 59000 },
+ { slug: "remote-work-tools", title: "재택근무 효율 높이는 툴 추천 💻", description: "노션, 슬랙, 줌... 프로 일잘러들의 생산성 도구 모음.", category: "커리어", tags: ["재택근무", "생산성", "툴"], level: "초급", publishedDate: "2025-04-25", views: 35000 },
+ { slug: "interview-questions-100", title: "면접 예상 질문 리스트 100 🎤", description: "자기소개부터 마지막 할 말까지, 면접관을 사로잡는 답변.", category: "커리어", tags: ["면접", "취업", "이직"], level: "중급", publishedDate: "2025-02-15", views: 91000 },
+ { slug: "mbti-work-style", title: "MBTI별 업무 스타일과 추천 직무 🧠", description: "나는 계획형 J일까 즉흥형 P일까? 성향에 맞는 일 찾기.", category: "커리어", tags: ["MBTI", "적성", "직무"], level: "초급", publishedDate: "2025-01-20", views: 105000 },
+
+ // --- 기초 (Basics) : 5 items ---
+ {
+ slug: "credit-score-management",
+ title: "신용점수 900점 넘기기: 대출 금리가 달라지는 신용 관리법 💳",
+ description: "신용카드 사용법부터 연체 관리까지. 떨어지긴 쉬워도 올리긴 어려운 신용점수 심폐소생술.",
+ category: "기초",
+ tags: ["신용점수", "대출", "금융상식"],
+ level: "초급",
+ publishedDate: "2025-05-05",
+ views: 60000,
+ },
+ { slug: "economic-freedom-fire", title: "경제적 자유(FIRE): 4%의 법칙 🔥", description: "얼마가 있어야 은퇴할까? 파이어족의 자산 인출 전략.", category: "기초", tags: ["파이어족", "은퇴", "재무설계"], level: "고급", publishedDate: "2025-12-20", views: 78000 },
+ { slug: "rule-of-72", title: "72의 법칙: 자산이 2배 되는 시간 ⏳", description: "복리의 마법을 암산하는 공식. 수익률 10%면 7.2년 걸린다.", category: "기초", tags: ["복리", "투자상식", "수학"], level: "초급", publishedDate: "2025-03-10", views: 41000 },
+ { slug: "split-accounts", title: "통장 쪼개기: 월급 관리의 기본 🏦", description: "급여, 소비, 비상금, 투자. 4개의 통장으로 돈의 흐름 잡기.", category: "기초", tags: ["재테크", "월급관리", "저축"], level: "초급", publishedDate: "2025-01-15", views: 85000 },
+ { slug: "household-ledger-tips", title: "가계부 작성 팁: 뱅크샐러드 vs 엑셀 📒", description: "작심삼일 가계부는 그만! 자동으로 기록하고 소비 분석하기.", category: "기초", tags: ["가계부", "절약", "앱추천"], level: "초급", publishedDate: "2025-02-01", views: 53000 },
+];
+
+// 모든 raw 가이드 통합 (legacy + 신규 unique 본문)
+const allRawGuides = [
+ ...rawGuides,
+ ...taxDeepdiveGuides,
+ ...negotiationGuides,
+ ...financeGuides,
+ ...companyRealEstateGuides,
+ ...lifecycleGuides,
+ ...insuranceInvestmentGuides,
+ ...stockDeepdiveGuides,
+ ...stockDeepdiveGuidesEn,
+ ...semiconductorDeepdiveGuides,
+ ...season2026Guides,
+ ...hotKeywordsGuides,
+ // GSC 404 복구(7차): /en/guides/* 5개 영문 가이드 (loan-types/health-insurance/four-major-insurance/year-end-tax/earned-income-credit)
+ ...hotKeywordsGuidesEn,
+ // 10차 점검 — 삼성 임금협상 현황 + 금융 핫이슈 30개 (SEO 폭발 노림)
+ ...hotNewsMay2026,
+ // 11차 — 청년·신혼/부동산 심화/직장인 세부 절세/투자 재테크/직업 이직 5개 카테고리 50편
+ ...hotNewsExtended,
+ // 12차 — 세금 심화/건강 의료/자산 노후/법률 실용/2026 정책 5개 카테고리 50편 (누적 131편)
+ ...hotNewsDeepDive,
+ // 13차 — 성과급 종류·소득세·4대보험·절세 심화·시점 실전 5개 영역 50편 (누적 181편)
+ ...hotBonusTaxComplete,
+ // 14차 — 성과급 시의성 종합(2026 실제 지급액 + 통상임금 대법 판결 + 세금/4대보험 + 계산기 연결)
+ ...bonusDeepdiveGuides,
+ // 15차 (2026-08-09) — 게시글 17편: 가을 시즌 4(추석 상여·미리보기·OPI/PS 전망) +
+ // GSC 30~60위 확인 키워드 저격 10(회사 5·직업 5) + 고RPM 금융 3. 전부 출처 검증 콘텐츠.
+ ...autumn2026Guides,
+ ...companySalaryDeepdive2026,
+ ...jobSalaryDeepdive2026,
+ ...financeRpm2026Guides,
+];
+
+// Generate the final guides array with content
+// — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
+// — 없으면 legacyRewriteContent(2026-08-15 재작성 본문) 사용
+// — 2026-08 점검: generateExpertContent 템플릿 fallback 제거. 342편 전편이 고유
+//   본문 보유 실측(템플릿 사용 0건) — 본문 없는 가이드는 thin content로 배포되기
+//   전에 빌드 타임에 실패시킨다.
+// — 재작성 본문 사용 시 publishedDate 를 실제 갱신일로 정정 (repo 관행:
+//   발행일 = 실제 갱신일. salary-guide-2026 의 2026-07-06 정정 선례)
+// — lang 미지정 가이드는 'ko'로 정규화 (기존 50개 호환)
+// allRawGuides 원소 타입: content(레거시 50편)·lang(ko 기본) 이 아직 없을 수 있는 Guide
+type RawGuide = Omit<Guide, 'content' | 'lang'> & { content?: string; lang?: GuideLang };
+export const guides: Guide[] = (allRawGuides as RawGuide[]).map(guide => {
+ const rewritten = !guide.content && legacyRewriteContent[guide.slug];
+ const content = guide.content || legacyRewriteContent[guide.slug];
+ if (!content) {
+ throw new Error(
+ `[guidesData] 본문 없는 가이드: ${guide.slug} — content 또는 legacy-rewrite 본문을 추가해야 빌드됩니다`
+ );
+ }
+ return {
+ ...guide,
+ lang: (guide.lang as GuideLang | undefined) ?? 'ko',
+ content,
+ ...(rewritten ? { publishedDate: "2026-08-15" } : {}),
+ };
+});
+
+/** 한국어 가이드만 (기존 /guides 라우트용) */
+export const koGuides: Guide[] = guides.filter(g => g.lang === 'ko');
+/** 영어 가이드만 (/en/guides 라우트용) */
+export const enGuides: Guide[] = guides.filter(g => g.lang === 'en');
+
+// 카드 메타(본문 제외)는 이 모듈에서 직접 export 하지 않는다 —
+// scripts/gen-guides-meta.ts 가 추출해 guidesMeta.generated.ts 로 생성하고,
+// guidesData.ts 가 그것을 koGuideCards/enGuideCards 로 노출한다.

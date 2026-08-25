@@ -12,7 +12,6 @@
 
 import { useState, useRef } from "react";
 import Link from "@/components/AppLink";
-import { motion } from "framer-motion";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
 
@@ -87,17 +86,15 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
         }`}
       >
         {item.name}
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-          className="inline-flex"
+        <span
+          className={`inline-flex transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         >
           <ChevronDown
             size={12}
             aria-hidden="true"
             className={isOpen ? "text-electric" : "text-faint-blue"}
           />
-        </motion.span>
+        </span>
       </button>
 
       {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), 열림/닫힘은 CSS 토글 */}
@@ -173,14 +170,12 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
                   </div>
 
                   {/* 호버 시 오른쪽 화살표 */}
-                  <motion.span
-                    initial={{ opacity: 0, x: -4 }}
-                    whileHover={{ opacity: 1, x: 0 }}
-                    className="opacity-0 group-hover:opacity-100 text-electric flex-shrink-0 transition-all duration-150"
+                  <span
+                    className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-electric flex-shrink-0 transition-all duration-150"
                     aria-hidden="true"
                   >
                     <ChevronRight size={13} />
-                  </motion.span>
+                  </span>
                 </Link>
               </div>
             );

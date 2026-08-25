@@ -6,9 +6,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "@/components/AppLink";
-import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
 
@@ -132,17 +132,16 @@ export default function HeaderSearch() {
         <Search size={20} />
       </button>
 
-      {/* 검색 모달 */}
-      <AnimatePresence>
-        {isOpen && (
+      {/* 검색 모달 — createPortal(document.body): 헤더의 backdrop-filter·슬라이드
+          transform 이 fixed 자손의 containing block 이 되어 inset-0 이 헤더 박스로
+          축소되는 문제를 원천 차단 (2026-08-26 framer 제거 리뷰에서 발견).
+          isOpen 은 사용자 상호작용 이후에만 true — SSR 에서 document 미참조. */}
+      {isOpen &&
+        createPortal(
           <>
             {/* 배경 오버레이 */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="fixed inset-0 z-[100] bg-navy/40 backdrop-blur-sm"
+            <div
+              className="search-overlay-in fixed inset-0 z-[100] bg-navy/40 backdrop-blur-sm"
               onClick={() => setIsOpen(false)}
             />
 
@@ -150,15 +149,11 @@ export default function HeaderSearch() {
                 모바일(< sm): inset-0 풀스크린, 둥근 모서리 없음, 안전 영역 패딩.
                 sm 이상: 중앙 정렬 floating 모달.
                 min-w-0 + overflow-hidden 으로 child overflow 방지. */}
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.99 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            <div
               role="dialog"
               aria-modal="true"
               aria-label="사이트 검색"
-              className="fixed z-[101] bg-white shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] flex flex-col"
+              className="search-panel-in fixed z-[101] bg-white shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] flex flex-col"
               style={{
                 paddingTop: "env(safe-area-inset-top, 0)",
                 paddingBottom: "env(safe-area-inset-bottom, 0)",
@@ -277,10 +272,10 @@ export default function HeaderSearch() {
                 <span className="sm:hidden">탭해서 이동</span>
                 <span>{results.length} 건</span>
               </div>
-            </motion.div>
-          </>
+            </div>
+          </>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }

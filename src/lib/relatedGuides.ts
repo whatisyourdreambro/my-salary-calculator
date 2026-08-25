@@ -8,7 +8,8 @@
 // 넘기면, 가이드 본문이 클라이언트 번들(First Load JS)에 실리지 않는다.
 // (이 모듈은 guides 를 import 하므로 반드시 서버 컴포넌트/페이지에서만 호출할 것)
 
-import { guides, type Guide } from "@/lib/guidesData";
+import { guides } from "@/lib/guidesContent";
+import type { Guide } from "@/lib/guidesData";
 
 export interface RelatedGuideItem {
   slug: string;

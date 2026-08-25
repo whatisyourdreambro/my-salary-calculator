@@ -25,6 +25,7 @@ jobs:
       - run: npm run verify:sitemap
       - run: npm run verify:bonus
       - run: npm run ad-audit
+      - run: npm run lint
       - run: npm run build
       - name: qa-crawl (로컬 프로덕션 서버 기동 후 전 페이지 정합성 크롤)
         run: |

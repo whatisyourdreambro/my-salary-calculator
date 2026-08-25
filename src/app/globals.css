@@ -694,3 +694,99 @@ a:not([class]):hover {
 .share-bar-in {
   animation: share-bar-in 0.3s ease-out both;
 }
+
+/* ── 페이지 전환 페이드 + 헤더 슬라이드 (template/Header framer-motion 셸
+   제거 대체, 2026-08-26 Phase 4) — duration·easing 은 기존 framer 값 그대로 ── */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-fade {
+  /* ★fill 은 backwards 만 — forwards(both)로 종료 transform 이 영구 잔류하면
+     이 래퍼가 fixed 자손(FloatingShareBar·BottomSheet 등)의 containing block 이
+     되어 뷰포트 고정이 깨진다 (transform: translateY(0)도 non-none) */
+  animation: page-fade-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+@keyframes header-slide-in {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+.header-slide-in {
+  /* circOut 근사 — 헤더는 fixed 라 CLS 없음. fill 은 backwards (위와 동일 이유) */
+  animation: header-slide-in 0.5s cubic-bezier(0, 0.55, 0.45, 1) backwards;
+}
+/* 헤더 검색 모달 등장 (HeaderSearch framer-motion 대체) — 패널은 위치용
+   translate 클래스와의 충돌을 피해 opacity 만 애니메이트 */
+@keyframes search-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.search-overlay-in {
+  animation: search-fade-in 0.18s ease-out backwards;
+}
+.search-panel-in {
+  animation: search-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+/* ── 로고 마운트/호버 모션 (Logo.tsx framer-motion 대체, 2026-08-26) ── */
+@keyframes ms-logo-pop {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes ms-logo-draw {
+  from { stroke-dashoffset: 26; opacity: 0; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes ms-logo-word-l {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes ms-logo-word-r {
+  from { opacity: 0; transform: translateX(4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.ms-logo-icon {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ms-logo:hover .ms-logo-icon {
+  transform: scale(1.06);
+}
+.ms-logo-rect {
+  animation: ms-logo-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ms-logo-path {
+  /* d="M7 22L14 12L21 22" 총 길이 ≈ 24.4 — 여유분 26으로 draw 효과 */
+  stroke-dasharray: 26;
+  animation: ms-logo-draw 0.6s ease-out 0.15s backwards;
+}
+.ms-logo-word {
+  transition: transform 0.2s ease-out;
+}
+.ms-logo-word-money {
+  animation: ms-logo-word-l 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+}
+.ms-logo-word-salary {
+  animation: ms-logo-word-r 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+}
+.ms-logo:hover .ms-logo-word-money {
+  transform: translateY(-1px);
+}
+.ms-logo:hover .ms-logo-word-salary {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade,
+  .header-slide-in,
+  .search-overlay-in,
+  .search-panel-in,
+  .ms-logo-rect,
+  .ms-logo-path,
+  .ms-logo-word-money,
+  .ms-logo-word-salary {
+    animation: none;
+  }
+}

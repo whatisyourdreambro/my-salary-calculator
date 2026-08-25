@@ -9,11 +9,6 @@
 import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import {
- motion,
- useScroll,
- useMotionValueEvent,
-} from "framer-motion";
 import Logo from "./Logo";
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
@@ -35,11 +30,16 @@ export default function Header() {
  const dashboardHref = "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
- const { scrollY } = useScroll();
 
- useMotionValueEvent(scrollY, "change", (latest) => {
- setIsScrolled(latest > 20);
- });
+ // 2026-08-26 Phase 4 배포 2: framer useScroll → 순수 passive 리스너.
+ // 루트 Header 의 framer import 는 전 페이지 First Load JS 에 실리므로 제거.
+ // (동일 상태로의 setState 는 React 가 리렌더를 생략 — 스크롤당 비용 없음)
+ useEffect(() => {
+ const onScroll = () => setIsScrolled(window.scrollY > 20);
+ onScroll(); // 앵커 진입 등 초기 스크롤 위치 반영
+ window.addEventListener("scroll", onScroll, { passive: true });
+ return () => window.removeEventListener("scroll", onScroll);
+ }, []);
 
  useEffect(() => {
  setIsMobileMenuOpen(false);
@@ -54,8 +54,8 @@ export default function Header() {
 
  return (
  <>
- <motion.header
- className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${headerSurface}`}
+ <header
+ className={`header-slide-in fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${headerSurface}`}
  style={{
  backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
  WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
@@ -64,9 +64,6 @@ export default function Header() {
  padding: "12px 0",
  minHeight: 64,
  }}
- initial={{ y: -100 }}
- animate={{ y: 0 }}
- transition={{ duration: 0.5, ease: "circOut" }}
  >
  <nav className="page-width" aria-label={isEn ? "Main menu" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
@@ -141,7 +138,7 @@ export default function Header() {
  </div>
  </div>
  </nav>
- </motion.header>
+ </header>
 
  {/* Mobile Menu — SEO: 항상 DOM에 렌더하고 열림/닫힘은 CSS(visibility/opacity)로만
  제어. 조건부 렌더({isMobileMenuOpen && ...})로 되돌리면 SSR HTML에서 내비 링크가
