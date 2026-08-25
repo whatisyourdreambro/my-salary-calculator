@@ -4,7 +4,9 @@
 
 import React from "react";
 import Link from "@/components/AppLink";
-import CountUp from "react-countup";
+// CountUp 직접 사용 금지 — SSR HTML 에 0 이 박힌다. AnimatedNumber 가
+// 서버 렌더에 실수치를 노출하고 마운트 후 카운트업을 재생한다 (2026-08 SSR 수치 복구).
+import AnimatedNumber from "@/components/AnimatedNumber";
 import { Info, ChevronRight, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InArticleAd } from "./AdPlacement";
@@ -25,7 +27,7 @@ const DeductionItem = ({ label, value, iconBg, iconColor }: DeductionItemProps) 
  </div>
  <div className="flex items-center gap-1">
  <div className="font-bold text-navy font-mono-tabular text-[15px]">
- <CountUp end={value} separator="," duration={1} />
+ <AnimatedNumber value={value} duration={1} />
  <span className="text-sm font-medium ml-0.5 text-faint-blue">원</span>
  </div>
  <ChevronRight size={16} className="text-faint-blue group-hover:text-faint-blue transition-colors ml-1" />
@@ -61,7 +63,7 @@ export default function SalaryResultCard({
 
  <div className="flex items-baseline gap-1 mb-8">
  <h2 className="text-[2.75rem] leading-none font-extrabold text-navy font-mono-tabular tracking-tight">
- <CountUp end={monthlyNet} separator="," duration={1.5} />
+ <AnimatedNumber value={monthlyNet} duration={1.5} />
  </h2>
  <span className="text-2xl font-bold text-navy">원</span>
  </div>
@@ -69,7 +71,7 @@ export default function SalaryResultCard({
  <div className="flex items-center justify-between p-5 bg-canvas rounded-[20px]">
  <span className="text-[15px] font-semibold text-muted-blue">총 공제액</span>
  <span className="font-bold text-[15px] text-electric font-mono-tabular">
- -<CountUp end={totalDeduction} separator="," duration={1} />원
+ -<AnimatedNumber value={totalDeduction} duration={1} />원
  </span>
  </div>
  </div>
