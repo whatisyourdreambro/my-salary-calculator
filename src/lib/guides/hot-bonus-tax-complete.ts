@@ -365,8 +365,8 @@ const irpBeforeBonus = `
 <ul class="space-y-2 mt-4">
 <li>· 총급여 5,500만 이하: <strong>16.5% (지방세 포함)</strong></li>
 <li>· 총급여 5,500만 초과: <strong>13.2%</strong></li>
-<li>· 한도: IRP + 연금저축 합산 900만원</li>
-<li>· 만 50세+ 한도 1,200만원 (한시 적용)</li>
+<li>· 한도: IRP + 연금저축 합산 900만원 (전 연령 공통)</li>
+<li>· ISA 만기 자금 전환 시 추가: 전환액의 10%, 최대 300만원 (과거 '50세+ 한시 상향'은 2022년 종료)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 환급 시뮬</h2>
@@ -699,12 +699,12 @@ const optionalContinueAfterBonus = `
 // ═══════════════════════════════════════════════════════════════
 
 const irpMaxBonus = `
-<p class="lead">성과급 받기 직전 IRP 900만원 + 연금저축 600만원 합산 만기 납입 → 한도 1,500만원? 단 한도는 IRP + 연금저축 합산 900만원. 만 50세+는 1,200만원으로 한시 상향. 성과급 받는 해는 한계세율 높아 절세 효과 최대.</p>
+<p class="lead">성과급 받기 직전 IRP 900만원 + 연금저축 600만원 합산 만기 납입 → 한도 1,500만원? 단 세액공제 한도는 <strong>전 연령 공통 IRP + 연금저축 합산 900만원</strong>(연금저축 단독 600만원). 과거 '만 50세 이상 1,200만원 한시 상향'은 2022년 종료된 옛 특례이며, 현재는 ISA 만기 자금 전환분을 합산할 때만 최대 1,200만원까지 가능. 성과급 받는 해는 한계세율 높아 절세 효과 최대.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 2026 IRP·연금저축 한도</h2>
 <ul class="space-y-2 mt-4">
-<li>· IRP + 연금저축 <strong>합산 900만원</strong></li>
-<li>· 만 50세+ 한시 상향: <strong>1,200만원</strong></li>
+<li>· IRP + 연금저축 <strong>합산 900만원</strong> (전 연령 공통, 연금저축 단독 600만원)</li>
+<li>· ISA 만기 전환 시 추가: 전환액의 10%, 최대 300만원 → 합산 최대 <strong>1,200만원</strong></li>
 <li>· 세액공제율: 총급여 5,500만 이하 16.5%, 초과 13.2%</li>
 </ul>
 
@@ -714,7 +714,7 @@ const irpMaxBonus = `
 <li>· IRP 900만 납입 (12월 31일까지)</li>
 <li>· 환급: 900 × 13.2% = 약 119만원</li>
 <li>· 지방세 포함 약 131만원</li>
-<li>· 50세+면 1,200만 납입 → 약 175만원</li>
+<li>· ISA 만기 전환분 합산으로 최대 1,200만 공제 시 → 약 175만원 (아래 참고)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 추가 — ISA 만기 자금 전환</h2>
@@ -856,21 +856,22 @@ const cardCategoryBonus = `
 `;
 
 const monthlyRent17Bonus = `
-<p class="lead">성과급 받는 해 월세 17% 세액공제는 한도 도달 권장. 총급여 1.5억 이하 무주택 세대주만. 월 50만(연 600만) 시 102만 환급 + 한계세율 효과로 사실상 더 큰 절세.</p>
+<p class="lead">성과급 받는 해에도 월세 세액공제(15~17%)는 챙길 수 있는 대표 공제. 단 <strong>총급여 8,000만원 이하</strong> 무주택 세대주만 대상 — 성과급이 더해져 총급여 8,000만원을 넘으면 그해는 공제 대상에서 제외되니 주의. 월 50만(연 600만) 시 최대 102만 환급.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 월세 세액공제 자격</h2>
 <ul class="space-y-2 mt-4">
 <li>· 무주택 세대주 (본인 + 배우자)</li>
-<li>· 총급여 1.5억 이하 (2024 상향)</li>
+<li>· <strong>총급여 8,000만원 이하</strong> (종합소득 7,000만원 이하) — 한도 연 1,000만원</li>
 <li>· 국민주택규모(85㎡) 이하 또는 기준시가 4억 이하</li>
 <li>· 본인 명의 임대차계약서</li>
+<li>· <strong>⚠️ 주의:</strong> 성과급 포함 총급여가 8,000만원을 초과하면 그해는 공제 대상 제외</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 월세 60만 (연 720만)</h2>
 <ul class="space-y-2 mt-4">
-<li>· 한도 750만원 내 적용</li>
-<li>· 17% 세액공제 = 122.4만원 환급</li>
-<li>· 지방세 포함 약 134.6만원</li>
+<li>· 한도 1,000만원 내 적용</li>
+<li>· 총급여 5,500만 이하: 17% = 122.4만원 환급 (지방세 포함 약 134.6만원)</li>
+<li>· 총급여 5,500만 초과~8,000만 이하: 15% = 108만원 환급 (지방세 포함 약 118.8만원)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 5년 경정청구</h2>
@@ -1171,14 +1172,14 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "retire-with-bonus-4insurance-2026", title: "퇴직금 + 성과급 같은 해 — IRP 이전 시 절세 1,500만", description: "퇴직금 4대보험 면제 + 환산급여 우대. 성과급은 정상 부과. 5억 퇴직금 IRP 이전 시 즉시 세금 0원 → 연금 분할로 1,500만 절감.", category: "기초", tags: ["퇴직금", "성과급", "IRP", "4대보험", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: retireBonusFourInsurance, lang: "ko" },
   { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 3년 5,000만 절감", description: "성과급 5,000만 받은 임원 퇴직 후 지역가입자 월 200~300만 vs 임의계속가입 약 월 60만. 36개월 절감 약 5,000만.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
-  { slug: "irp-max-bonus-year-2026", title: "성과급 + IRP 900만 환급 119만, 만 50세+ 1,200만 175만", description: "IRP + 연금저축 합산 900만 (만 50세+ 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.", category: "세금", tags: ["IRP", "연금저축", "성과급", "세액공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: irpMaxBonus, lang: "ko" },
+  { slug: "irp-max-bonus-year-2026", title: "성과급 + IRP 900만 환급 119만, ISA 전환 합산 1,200만 175만", description: "IRP + 연금저축 합산 900만 (전 연령 공통, ISA 만기 전환분 합산 시 최대 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.", category: "세금", tags: ["IRP", "연금저축", "성과급", "세액공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: irpMaxBonus, lang: "ko" },
   { slug: "isa-for-bonus-2026", title: "성과급 일부 ISA 적립 — 5년 운용 시 63만 절감", description: "성과급 2,000만 ISA 적립 → 5년 7% 운용 약 2,800만. 차익 800만 중 200만 비과세 + 600만 9.9% = 60만 세금. 일반 계좌 대비 63만 절감.", category: "투자", tags: ["ISA", "성과급", "비과세", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: isaForBonus, lang: "ko" },
   { slug: "gift-children-with-bonus-2026", title: "성과급 받는 해 자녀 5,000만 증여 — 평생 1.4억+ 비과세", description: "성인 자녀 10년 5,000만 비과세. 본인 성과급 절세 + 자녀 자산 형성 + 세대 간 이전 효과. 10년 반복 시 평생 1.4억+ 비과세.", category: "세금", tags: ["증여", "자녀", "비과세", "5000만", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: giftWithBonus, lang: "ko" },
   { slug: "couple-split-bonus-year-2026", title: "성과급 받는 해 부부 분산 — 의료비 600만 시 45만 절감", description: "본인 한계 35% + 배우자 15% 시 의료비·교육비는 총급여 낮은 쪽이 공제 효과 큼. 600만 의료비 부부 분산으로 45만 추가 환급.", category: "세금", tags: ["부부분산", "의료비", "한계세율", "연말정산", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: coupleSplitBonus, lang: "ko" },
   { slug: "parent-support-bonus-year-2026", title: "성과급 받는 해 부모 부양 — 2명 등록 시 174만 환급", description: "한계세율 35%, 부모 2명 + 만 75세 경로우대 + 의료비 200만 시 인적공제·경로우대·의료비 합산 약 174만 환급.", category: "세금", tags: ["부모부양", "인적공제", "경로우대", "성과급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: parentSupportBonus, lang: "ko" },
   { slug: "medical-edu-donation-concentration-2026", title: "성과급 받는 해 의료비·교육비 집중 — 60~80만 추가 환급", description: "한계세율 35% 시 임플란트·자녀 대학원·기부금 등 큰 비용 한 해에 몰기. 합산 200~250만 환급(한계 24% 대비 +60~80만).", category: "세금", tags: ["의료비집중", "교육비", "기부금", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: medicalEduConcentration, lang: "ko" },
   { slug: "card-30-40-percent-bonus-2026", title: "성과급 받는 해 체크·전통시장 전환 — 70만 추가 환급", description: "성과급으로 25% 기준선↑. 25% 초과분을 체크 30% + 전통시장 40% + 대중교통 40%로 전환. 1,000만 전환 시 약 70만 추가 환급.", category: "세금", tags: ["체크카드", "전통시장", "대중교통", "공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: cardCategoryBonus, lang: "ko" },
-  { slug: "monthly-rent-17-bonus-2026", title: "성과급 받는 해 월세 17% — 월 60만 시 134만 환급", description: "무주택 세대주 + 총급여 1.5억 이하. 월세 60만(연 720만) × 17% = 122만 + 지방세 = 약 134만 환급. 5년 미신청자 경정청구 가능.", category: "세금", tags: ["월세", "세액공제", "무주택", "성과급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: monthlyRent17Bonus, lang: "ko" },
+  { slug: "monthly-rent-17-bonus-2026", title: "성과급 받는 해 월세 15~17% — 월 60만 시 최대 134만 환급", description: "무주택 세대주 + 총급여 8,000만 이하(성과급으로 초과 시 그해 공제 제외). 월세 60만(연 720만) × 17% = 122만 + 지방세 = 약 134만 환급. 5년 미신청자 경정청구 가능.", category: "세금", tags: ["월세", "세액공제", "무주택", "성과급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: monthlyRent17Bonus, lang: "ko" },
   { slug: "housing-25-bonus-2026", title: "성과급 받는 해 청약통장 25만 — 5년 200~230만 환급", description: "매월 25만 납입 시 연 300만 한도 40% = 120만 공제. 한계세율 35% 시 약 42만 환급/년. 5년 누적 200~230만 + 청약 가점 만점.", category: "세금", tags: ["청약통장", "소득공제", "25만", "성과급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: housingSub25Bonus, lang: "ko" },
   { slug: "insurance-100-bonus-2026", title: "성과급 받는 해 보장성 보험 100만 — 12만 환급 챙기기", description: "종신·암·정기·실손·자동차·운전자 합산 100만 한도 12% 공제 = 최대 12만 환급. 본인·부양가족 명의 모두 가능. 저축성·연금보험 제외.", category: "세금", tags: ["보장성보험", "공제", "12%", "성과급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: insurance100Bonus, lang: "ko" },
   // 영역 E — 성과급 시점·실전 10편

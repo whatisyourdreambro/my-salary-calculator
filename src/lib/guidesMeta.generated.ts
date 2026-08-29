@@ -862,7 +862,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2669
+  "contentChars": 2746
  },
  {
   "slug": "crypto-tax-2026",
@@ -948,7 +948,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2483
+  "contentChars": 2531
  },
  {
   "slug": "salary-negotiation-script-2026",
@@ -2258,17 +2258,17 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3286
+  "contentChars": 3312
  },
  {
   "slug": "youth-benefits-2026",
   "title": "2026 청년 지원 정책 총정리 — 월세·취업·적금·소득세 감면",
-  "description": "2026년 청년을 위한 주요 지원 정책 완전 총정리. 청년도약계좌, 청년 월세 지원, 청년내일채움공제, 중소기업 소득세 감면, 청년 전용 대출 상품까지 한 번에.",
+  "description": "2026년 청년을 위한 주요 지원 정책 완전 총정리. 청년도약계좌, 청년 월세 지원, 중소기업 소득세 감면, 청년 전용 대출 상품까지 한 번에. 청년내일채움공제는 2024년 신규 중단(대체 제도 안내 포함).",
   "category": "기초",
   "tags": [
    "청년지원",
    "청년도약계좌",
-   "청년내일채움공제",
+   "청년취업지원",
    "소득세감면",
    "청년월세",
    "2026"
@@ -2277,7 +2277,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2650
+  "contentChars": 2665
  },
  {
   "slug": "etf-beginner",
@@ -2335,7 +2335,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2250
+  "contentChars": 2298
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2483,7 +2483,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "sk-hynix-ps-bonus-2026",
   "title": "SK하이닉스 2026 PS 성과급 — 기본급 2,000% 가능할까",
-  "description": "[8월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 2026년분은 잠정합의 기준 현금 40%+자사주 60% 지급 전망 — 5월 작성 전망 글에 최신 확정치를 병기.",
+  "description": "[8월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 현금 40%+자사주 60% 잠정합의안은 8/25 조합원 총투표 부결로 재협상 중 — 5월 작성 전망 글에 최신 확정치를 병기.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
@@ -2497,7 +2497,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2531
+  "contentChars": 2571
  },
  {
   "slug": "lgensol-wage-negotiation-2026",
@@ -2913,8 +2913,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "multi-home-heavy-tax-2026",
-  "title": "다주택자 양도세 중과 폐지 vs 유지 — 2026년 5월 분기점, 1억 손해 가능",
-  "description": "조정 2주택 +20%p, 3주택+ +30%p 중과. 2022~2025년 한시 폐지 → 2026년 5월 재시행 가능성. 차익 5억 시 폐지 1.4억 vs 재시행 2.5억 = 1.1억 차이.",
+  "title": "다주택자 양도세 중과 재개 — 2026년 5월 10일 분기점, 1억 손해 가능",
+  "description": "조정 2주택 +20%p, 3주택+ +30%p 중과. 한시 배제 종료로 2026-05-10부터 재개(2027~28 완화안은 국회 통과 전). 차익 5억 시 배제 기간 1.4억 vs 재개 후 2.5억 = 1.1억 차이.",
   "category": "부동산",
   "tags": [
    "다주택자",
@@ -2927,7 +2927,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2214
+  "contentChars": 2366
  },
  {
   "slug": "youth-investment-savings-tax-free-2026",
@@ -2950,8 +2950,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "monthly-rent-tax-credit-17-2026",
-  "title": "월세 세액공제 17% — 무주택자 750만원 한도, 매년 100만원 환급",
-  "description": "무주택 세대주 + 총급여 7천만원 이하. 월세 50만원(연 600만원) × 17% = 102만원 환급. 5년 미신청자 경정청구로 누적 400~500만원 환급 가능.",
+  "title": "월세 세액공제 17% — 무주택자 1,000만원 한도, 매년 100만원 환급",
+  "description": "무주택 세대주 + 총급여 8천만원 이하(5,500만 이하 17%·초과 15%). 월세 50만원(연 600만원) × 17% = 102만원 환급. 5년 미신청자 경정청구로 누적 400~500만원 환급 가능.",
   "category": "세금",
   "tags": [
    "월세",
@@ -2965,7 +2965,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1782
+  "contentChars": 1873
  },
  {
   "slug": "credit-card-deduction-30-40-strategy-2026",
@@ -3149,7 +3149,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 840
+  "contentChars": 960
  },
  {
   "slug": "youth-3account-combination-2026",
@@ -5151,7 +5151,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1060
+  "contentChars": 1110
  },
  {
   "slug": "card-25-before-bonus-2026",
@@ -5390,8 +5390,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "irp-max-bonus-year-2026",
-  "title": "성과급 + IRP 900만 환급 119만, 만 50세+ 1,200만 175만",
-  "description": "IRP + 연금저축 합산 900만 (만 50세+ 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.",
+  "title": "성과급 + IRP 900만 환급 119만, ISA 전환 합산 1,200만 175만",
+  "description": "IRP + 연금저축 합산 900만 (전 연령 공통, ISA 만기 전환분 합산 시 최대 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.",
   "category": "세금",
   "tags": [
    "IRP",
@@ -5404,7 +5404,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1104
+  "contentChars": 1291
  },
  {
   "slug": "isa-for-bonus-2026",
@@ -5516,8 +5516,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "monthly-rent-17-bonus-2026",
-  "title": "성과급 받는 해 월세 17% — 월 60만 시 134만 환급",
-  "description": "무주택 세대주 + 총급여 1.5억 이하. 월세 60만(연 720만) × 17% = 122만 + 지방세 = 약 134만 환급. 5년 미신청자 경정청구 가능.",
+  "title": "성과급 받는 해 월세 15~17% — 월 60만 시 최대 134만 환급",
+  "description": "무주택 세대주 + 총급여 8,000만 이하(성과급으로 초과 시 그해 공제 제외). 월세 60만(연 720만) × 17% = 122만 + 지방세 = 약 134만 환급. 5년 미신청자 경정청구 가능.",
   "category": "세금",
   "tags": [
    "월세",
@@ -5530,7 +5530,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 953
+  "contentChars": 1208
  },
  {
   "slug": "housing-25-bonus-2026",
