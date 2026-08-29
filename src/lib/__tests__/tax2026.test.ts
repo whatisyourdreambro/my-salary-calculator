@@ -172,19 +172,20 @@ describe("/table/2026 표 데이터 (generateData2026 — 정식 엔진 통일)"
     expect(rows[rows.length - 1].preTax).toBe(200_000_000);
   });
 
-  it("golden 행 값 (정식 엔진)", () => {
+  it("golden 행 값 (상세 페이지와 동일 엔진·식대 20만 기준 — 2026-08-30 통일)", () => {
     const at = (p: number) => rows.find((r) => r.preTax === p)!;
-    expect(at(30_000_000).monthlyNet).toBe(2_200_954);
-    expect(at(50_000_000).monthlyNet).toBe(3_479_328);
-    expect(at(100_000_000).monthlyNet).toBe(6_434_998);
+    expect(at(30_000_000).monthlyNet).toBe(2_233_220);
+    expect(at(50_000_000).monthlyNet).toBe(3_528_576);
+    expect(at(100_000_000).monthlyNet).toBe(6_495_113);
   });
 
-  it("표 컬럼 관행: health=건보+장기요양, incomeTax=소득세+지방세 합산", () => {
+  it("표 행 = 상세 페이지(/salary/[amount]) 값과 정확히 일치 (같은 함수·같은 기준)", () => {
     const r = rows.find((x) => x.preTax === 50_000_000)!;
-    const core = calculateNetSalary(50_000_000, 0, 1, 0, adv);
-    expect(r.health).toBe(core.health + core.longTermCare);
-    expect(r.incomeTax).toBe(core.incomeTax + core.localTax);
-    expect(r.monthlyNet).toBe(core.monthlyNet);
+    const core = calculateSalary2026(50_000_000, 200_000, 1, 0);
+    expect(r.health).toBe(core.healthInsurance + core.longTermCare);
+    expect(r.incomeTax).toBe(core.incomeTax + core.localIncomeTax);
+    expect(r.monthlyNet).toBe(core.netPay);
+    expect(r.totalDeduction).toBe(core.totalDeductions);
   });
 
   it("changeValue(전년비)는 요율 인상으로 전 구간 음수", () => {

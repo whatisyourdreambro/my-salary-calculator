@@ -34,6 +34,10 @@ const CAPS_2026 = {
 // 근로소득공제(2,000만 캡 포함)·누진세율표·근로소득세액공제·자녀세액공제는
 // 전부 taxConstants2026 정본 함수를 사용한다 (로컬 재구현 제거, 2026-08 대규모 점검).
 
+// 10원 미만 절사(보험료 고지 관례) — 부동소수점 오차로 정확한 경계값(예: 12,600원)이
+// 12,599.99…로 계산되어 한 단계 낮게 절사되는 것을 원 단위 반올림 선행으로 방지
+const floorTo10 = (v: number) => Math.floor(Math.round(v) / 10) * 10;
+
 export function calculateSalary2026(
  annualSalary: number,
  nonTaxableMonthly: number = 200_000,
@@ -41,24 +45,24 @@ export function calculateSalary2026(
  children: number = 0
 ): TaxResult {
  const monthlySalary = annualSalary / 12;
- 
+
  // 1. National Pension
  // Logic: Applied on monthly income, capped at max income
  const pensionBase = Math.min(Math.max(monthlySalary - nonTaxableMonthly, CAPS_2026.NATIONAL_PENSION_MIN_INCOME), CAPS_2026.NATIONAL_PENSION_MAX_INCOME);
- const nationalPension = Math.floor((pensionBase * TAX_RATES_2026.NATIONAL_PENSION) / 10) * 10; // Floor to 10 won
+ const nationalPension = floorTo10(pensionBase * TAX_RATES_2026.NATIONAL_PENSION); // Floor to 10 won
 
  // 2. Health Insurance
  // Logic: Applied on (Monthly Salary - NonTaxable)
  const healthBase = monthlySalary - nonTaxableMonthly;
- const healthInsurance = Math.floor((healthBase * TAX_RATES_2026.HEALTH_INSURANCE) / 10) * 10;
+ const healthInsurance = floorTo10(healthBase * TAX_RATES_2026.HEALTH_INSURANCE);
 
  // 3. Long-term Care Insurance
  // Logic: % of Health Insurance
- const longTermCare = Math.floor((healthInsurance * TAX_RATES_2026.LONG_TERM_CARE_RATIO) / 10) * 10;
+ const longTermCare = floorTo10(healthInsurance * TAX_RATES_2026.LONG_TERM_CARE_RATIO);
 
  // 4. Employment Insurance
  // Logic: Applied on (Monthly Salary - NonTaxable)
- const employmentInsurance = Math.floor((healthBase * TAX_RATES_2026.EMPLOYMENT_INSURANCE) / 10) * 10;
+ const employmentInsurance = floorTo10(healthBase * TAX_RATES_2026.EMPLOYMENT_INSURANCE);
 
  // 5. Income Tax (Simplified Year-End Adjustment Logic for Monthly Withholding)
  // Step A: Annual Income -> Tax Base
@@ -89,7 +93,7 @@ export function calculateSalary2026(
  const incomeTax = Math.floor((finalAnnualTax / 12) / 10) * 10;
  
  // 6. Local Income Tax (10% of Income Tax)
- const localIncomeTax = Math.floor((incomeTax * TAX_RATES_2026.LOCAL_INCOME_TAX_RATIO) / 10) * 10;
+ const localIncomeTax = floorTo10(incomeTax * TAX_RATES_2026.LOCAL_INCOME_TAX_RATIO);
 
  const totalDeductions = nationalPension + healthInsurance + longTermCare + employmentInsurance + incomeTax + localIncomeTax;
  const netPay = Math.floor(monthlySalary - totalDeductions);

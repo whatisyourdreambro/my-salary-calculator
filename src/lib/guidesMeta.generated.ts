@@ -152,7 +152,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 185000,
   "lang": "ko",
-  "contentChars": 5138
+  "contentChars": 5156
  },
  {
   "slug": "salary-peak-system",
