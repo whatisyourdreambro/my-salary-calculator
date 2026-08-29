@@ -15,11 +15,8 @@ export const companyAliases: Record<string, string[]> = {
   "hanwha-ocean": ["대우조선해양", "대우조선"],
   "dl-enc": ["디엘이앤씨", "DL E&C", "대림산업"],
   // 2026-08-30 중복 정본화: posco-holdings id 제거 → 별칭을 posco로 이관
+  // (toss·ohou는 아래쪽 기존 키에 병합 — 중복 키 금지, 2026-08-16 etri 사건 참조)
   posco: ["포스코", "POSCO", "포스코 홀딩스"],
-
-  // ── 중복 정본화로 흡수된 표기 (2026-08-30) ──
-  toss: ["토스", "비바리퍼블리카"],
-  ohou: ["버킷플레이스", "오늘의 집"],
   "cj-oliveyoung": ["올리브영", "올영"],
 
   // ── 영문↔한글 표기 차이 ──
@@ -91,7 +88,7 @@ export const companyAliases: Record<string, string[]> = {
   amazon: ["Amazon", "아마존코리아", "아마존웹서비스", "Amazon Korea"],
 
   // ── 한국 IT 대표 회사 영문 표기 ──
-  toss: ["Toss", "비바리퍼블리카", "토스뱅크", "토스증권"],
+  toss: ["Toss", "토스", "비바리퍼블리카", "토스뱅크", "토스증권"],
   coupang: ["Coupang", "쿠팡 풀필먼트", "쿠팡로지스틱스"],
 
   // ── 사명 변경 (기존 등록 회사 — 새 사명으로도 검색됨) ──
