@@ -156,13 +156,14 @@ export default function HealthCheckup2026Page() {
  </p>
  <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
  📚 공식 출처:{" "}
+ {/* 공단이 검진 안내 페이지 주소를 변경(구 주소 404) — 홈으로 연결 (2026-08-30) */}
  <a
- href="https://www.nhis.or.kr/nhis/healthin/retrieveExmnAdcHmpgInfo.do"
+ href="https://www.nhis.or.kr/nhis/index.do"
  target="_blank"
  rel="noopener noreferrer"
  className="text-electric font-bold hover:underline"
  >
- 국민건강보험공단 건강검진
+ 국민건강보험공단 (건강iN 메뉴 → 건강검진)
  </a>
  </p>
  </div>

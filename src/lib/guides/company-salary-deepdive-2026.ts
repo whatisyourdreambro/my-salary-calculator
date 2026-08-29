@@ -66,7 +66,7 @@ export const companySalaryDeepdive2026 = [
 <li><strong>3사 구도</strong>: 확인 가능한 수치 기준으로는 삼성SDS가 앞서고, LG CNS와 SK AX(추정)가 1억1천만원대에서 비슷한 구간</li>
 <li><strong>방향성</strong>: AX 전환 선언 + 이익 개선 흐름은 긍정적, 다만 매출 규모는 3사 중 최소</li>
 </ul>
-<p>연봉 제안을 받았다면 <a href="/">실수령액 계산기</a>로 세후 월급부터 확인하고, <a href="/salary-db/compare">회사 비교 도구</a>에서 삼성SDS·LG CNS와 직접 견줘 보세요. IT서비스 업계 전체 지형은 <a href="/industry/it-software">IT·소프트웨어 업계 연봉</a> 페이지에 정리돼 있습니다.</p>
+<p>연봉 제안을 받았다면 <a href="/">실수령액 계산기</a>로 세후 월급부터 확인하고, <a href="/salary-db">연봉 데이터베이스</a>에서 삼성SDS·LG CNS와 직접 견줘 보세요. IT서비스 업계 전체 지형은 <a href="/industry/it-software">IT·소프트웨어 업계 연봉</a> 페이지에 정리돼 있습니다.</p>
 `,
   },
 
@@ -132,7 +132,7 @@ export const companySalaryDeepdive2026 = [
 <li><strong>실적은 우상향</strong>: 2025년 역대 최대 매출 6,650억원, 영업이익 870억원, 수출 비중 88% — 보상 재원의 방향은 긍정적</li>
 <li><strong>삼성 계열 프리미엄</strong>: 그룹 공통 성과급·복지 체계가 기준선. 단 규모는 계열사 실적에 연동</li>
 </ul>
-<p>제안받은 연봉이 있다면 <a href="/">연봉 실수령액 계산기</a>로 세후 금액부터 확인하세요. 의료기기·헬스케어 업계 전체 보상 지형은 <a href="/industry/healthcare">헬스케어 업계 연봉</a> 페이지에서, 다른 회사와의 직접 비교는 <a href="/salary-db/compare">회사 비교 도구</a>에서 이어갈 수 있습니다.</p>
+<p>제안받은 연봉이 있다면 <a href="/">연봉 실수령액 계산기</a>로 세후 금액부터 확인하세요. 의료기기·헬스케어 업계 전체 보상 지형은 <a href="/industry/healthcare">헬스케어 업계 연봉</a> 페이지에서, 다른 회사와의 직접 비교는 <a href="/salary-db">연봉 데이터베이스</a>에서 이어갈 수 있습니다.</p>
 `,
   },
 

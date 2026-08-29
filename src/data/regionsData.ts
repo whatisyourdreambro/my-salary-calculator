@@ -493,7 +493,7 @@ export const regionsData: RegionProfile[] = [
   },
   {
     id: "jeonbuk",
-    name: "전라북도",
+    name: "전북특별자치도",
     nameShort: "전북",
     emoji: "🌻",
     salary: {

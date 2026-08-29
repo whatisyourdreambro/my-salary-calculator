@@ -4,6 +4,7 @@
 
 import Link from "@/components/AppLink";
 import type { CompanyProfile } from "@/types/company";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 import {
   getIndustryBenchmark,
   getSimilarSalaryCompanies,
@@ -54,6 +55,18 @@ export default function CompanyNarrative({ company }: Props) {
   const vacation = company.workLife.vacation;
   const dsrCapacity = Math.round((entryTotal * 0.4) / 10000);
 
+  // 실수령률 — 고정 문구(82~87%) 대신 회사별 실제 계산값 (상세 표와 동일 엔진·기준).
+  // 고연봉 회사는 실효 70%대까지 내려가므로 고정 범위는 자체 표와 모순을 만들었다.
+  const netRatio = (annual: number) =>
+    annual > 0
+      ? Math.round(((calculateSalary2026(annual, 200_000, 1, 0).netPay * 12) / annual) * 100)
+      : 0;
+  const entryNetRatio = netRatio(entryTotal);
+  const leadNetRatio = netRatio(leadTotal);
+
+  // 섹션 번호 — 조건부 섹션(업종 평균·비슷한 회사)이 빠져도 결번 없이 이어지도록 카운터
+  let sec = 0;
+
   return (
     <section
       className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
@@ -83,7 +96,7 @@ export default function CompanyNarrative({ company }: Props) {
         )}
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          1. {koName} 신입 vs 시니어 연봉 격차
+          {++sec}. {koName} 신입 vs 시니어 연봉 격차
         </h3>
         <p>
           {describeSalaryGrowth(company)}. 평균적으로 동종업계가 신입→시니어 1.8~2.5배
@@ -103,7 +116,7 @@ export default function CompanyNarrative({ company }: Props) {
         {benchmark && (
           <>
             <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-              2. 같은 업종 평균 대비 위치
+              {++sec}. 같은 업종 평균 대비 위치
             </h3>
             <p>
               {industryLabelKo(company.industry)} 업종 내 {benchmark.sampleSize}개 회사 데이터 기준,{" "}
@@ -124,7 +137,7 @@ export default function CompanyNarrative({ company }: Props) {
         )}
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          3. {koName} 워라밸·근무 환경
+          {++sec}. {koName} 워라밸·근무 환경
         </h3>
         <p>
           {describeWorkLife(company)}. 원격 근무 정책은{" "}
@@ -138,7 +151,7 @@ export default function CompanyNarrative({ company }: Props) {
         </p>
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          4. 신입 첫 달 실수령액 & 대출 한도 시뮬레이션
+          {++sec}. 신입 첫 달 실수령액 & 대출 한도 시뮬레이션
         </h3>
         <p>
           {koName} 신입 영끌 {formatSalaryKorean(entryTotal)} 기준 세전 월 평균은 약{" "}
@@ -164,7 +177,7 @@ export default function CompanyNarrative({ company }: Props) {
         </p>
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          5. {koName} 직급별 연봉 — 사원·대리·과장·부장·임원
+          {++sec}. {koName} 직급별 연봉 — 사원·대리·과장·부장·임원
         </h3>
         <p>
           {koName}의 직급별 연봉(영끌 기준)은 다음과 같이 분포합니다. 신입(사원)은{" "}
@@ -180,7 +193,7 @@ export default function CompanyNarrative({ company }: Props) {
         </p>
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          6. {koName} 월급 실수령액 — 직급별 세전 환산
+          {++sec}. {koName} 월급 실수령액 — 직급별 세전 환산
         </h3>
         <p>
           {koName} 월급은 직급별로 다음과 같이 환산됩니다(세전, 영끌 ÷ 12). 신입{" "}
@@ -188,9 +201,10 @@ export default function CompanyNarrative({ company }: Props) {
           주니어 <strong>약 {Math.round(monthlyJunior / 10000).toLocaleString("ko-KR")}만원</strong>,
           시니어 <strong>약 {Math.round(monthlySenior / 10000).toLocaleString("ko-KR")}만원</strong>,
           리드 <strong>약 {Math.round(monthlyLead / 10000).toLocaleString("ko-KR")}만원</strong>{" "}
-          수준입니다. 세후 실수령액은 4대보험(국민연금·건강보험·고용·산재) + 소득세·
-          지방세 공제 후 약 82~87% 수준이며, 부양가족 수와 비과세 항목에 따라 변동
-          폭이 있습니다. {koName} 월급 실수령액의 정확한 금액은{" "}
+          수준입니다. 세후 실수령액은 4대보험(국민연금·건강보험·고용보험) + 소득세·
+          지방세 공제 후 신입 기준 약 {entryNetRatio}%, 리드급 기준 약 {leadNetRatio}%
+          수준이며, 부양가족 수와 비과세 항목에 따라 변동 폭이 있습니다. {koName} 월급
+          실수령액의 정확한 금액은{" "}
           <Link
             href={`/salary/${entryTotal}`}
             className="text-electric font-bold underline-offset-2 hover:underline"
@@ -205,7 +219,7 @@ export default function CompanyNarrative({ company }: Props) {
         {similar.length > 0 && (
           <>
             <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-              7. 비슷한 연봉대의 다른 회사
+              {++sec}. 비슷한 연봉대의 다른 회사
             </h3>
             <p>
               {koName}과(와) ±15% 이내의 신입 영끌 연봉을 제공하는 회사로는{" "}
@@ -227,7 +241,7 @@ export default function CompanyNarrative({ company }: Props) {
         )}
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          8. {koName} 연봉 협상 시 활용 팁
+          {++sec}. {koName} 연봉 협상 시 활용 팁
         </h3>
         <p>
           연봉 협상에서는 다음 3가지 자료를 준비하는 것이 일반적입니다. ① 본 페이지의{" "}
@@ -246,7 +260,7 @@ export default function CompanyNarrative({ company }: Props) {
         </p>
 
         <h3 className="text-lg font-black text-navy dark:text-canvas-50 !mt-8">
-          9. 다음에 확인할 것
+          {++sec}. 다음에 확인할 것
         </h3>
         <ul className="list-disc pl-5 space-y-1">
           <li>

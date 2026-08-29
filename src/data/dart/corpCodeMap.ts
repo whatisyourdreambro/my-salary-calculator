@@ -117,7 +117,7 @@ export const corpCodeMap: Record<string, CorpCodeMapEntry> = {
   "hd-hyundai-heavy": { corpCode: "01390344", matchedBy: "auto-exact-ko" },
   "hd-hyundai-infracore": { corpCode: "00344287", matchedBy: "auto-exact-en" },
   "hd-hyundai-mipo": { corpCode: "00164609", matchedBy: "manual", note: "에이치디현대미포(010620)", verifiedAt: "2026-08-23" },
-  "hd-korea-shipbuilding": { corpCode: "00164830", matchedBy: "auto-exact-ko" },
+  // hd-korea-shipbuilding: 2026-08-30 중복 정본화로 hd-ksoe에 병합 — 항목 제거
   "hd-ksoe": { corpCode: "00164830", matchedBy: "auto-exact-ko" },
   "hdc-hyundai": { corpCode: "01310269", matchedBy: "manual", note: "IPARK현대산업개발(294870) — 사명변경", verifiedAt: "2026-08-23" },
   "hitejinro": { corpCode: "00150244", matchedBy: "auto-exact-ko" },

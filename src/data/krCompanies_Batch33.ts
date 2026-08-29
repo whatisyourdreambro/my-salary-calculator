@@ -105,37 +105,7 @@ export const krCompanies_Batch33: CompanyProfile[] = [
     },
     lastUpdated: "2026-05-22",
   },
-  {
-    id: "hd-korea-shipbuilding",
-    name: { ko: "HD한국조선해양", en: "HD Korea Shipbuilding & Offshore Engineering" },
-    industry: "Shipbuilding",
-    tier: "conglomerate",
-    logo: "🚢",
-    description:
-      "HD현대 조선 부문 중간 지주사. HD현대중공업·HD현대미포·HD현대삼호중공업을 자회사로 보유. 세계 1위 조선 그룹 본부.",
-    salary: {
-      entry: { base: 55000000, incentive: { target: 22, max: 45, avgAmount: 15000000 } },
-      junior: { base: 70000000, incentive: { target: 22, max: 45, avgAmount: 19000000 } },
-      senior: { base: 102000000, incentive: { target: 28, max: 55, avgAmount: 32000000 } },
-      lead: { base: 130000000, incentive: { target: 32, max: 62, avgAmount: 45000000 } },
-      executive: { base: 240000000, incentive: { target: 40, max: 78, avgAmount: 105000000 } },
-    },
-    workLife: {
-      weeklyHours: { contract: 40, real: 49 },
-      vacation: { days: 20, usageRate: 76 },
-      remoteWork: { policy: "office", description: "조선업 특성상 대부분 현장·사무실 근무" },
-    },
-    benefits: [
-      { category: "financial", title: "조선 호황 성과급", description: "수주 호황기 PS 큰 폭 지급", value: 15000000 },
-      { category: "family", title: "사택·자녀 학자금", description: "울산 사택 + 대학 학자금 지원", value: 20000000 },
-      { category: "growth", title: "해외 프로젝트 파견", description: "선주사 해외 파견 기회" },
-    ],
-    culture: {
-      score: 7.7,
-      keywords: ["조선1위", "HD현대", "지주사"],
-      pros: ["세계 1위 조선 그룹", "조선 호황기 성과급 폭발적", "기술 엔지니어 전문성"],
-      cons: ["조선 시황 변동성", "울산 근무 비중", "수주 압박으로 강도 높음"],
-    },
-    lastUpdated: "2026-05-22",
-  },
+  // 2026-08-30 중복 정본화: hd-korea-shipbuilding은 hd-ksoe(Batch15)와 한글명 동일 —
+  // dedupeCompanies가 조용히 제거해 페이지가 없던 유령 엔트리. 데이터·corpCodeMap에서
+  // 제거하고 /salary-db/hd-korea-shipbuilding → /salary-db/hd-ksoe 308 연결.
 ];

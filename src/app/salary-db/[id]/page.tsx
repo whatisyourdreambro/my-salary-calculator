@@ -23,7 +23,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
 import SalaryLookupTracker from "@/components/SalaryLookupTracker";
-import { industryLabelKo } from "@/lib/companyContentBuilder";
+import { industryLabelKo, getIndustryBenchmark } from "@/lib/companyContentBuilder";
 import { buildCompanyMetadata } from "@/lib/seo";
 import {
  autoBreadcrumbLd,
@@ -126,7 +126,10 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  },
  {
  question: `${koName} 같은 업종 내 연봉 수준은 어느 정도인가요?`,
- answer: `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryManwon}만원 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`,
+ // 벤치마크 없는 회사(글로벌 등)는 본문에 "업종 평균 비교" 섹션이 없음 — 유령 섹션 안내 방지
+ answer: getIndustryBenchmark(company)
+ ? `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryManwon}만원 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`
+ : `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryManwon}만원 수준입니다. 국내 동종사 표본이 부족한 회사는 업종 평균 비교가 제공되지 않으며, 비슷한 연봉대 회사 목록으로 시장 위치를 가늠할 수 있습니다.`,
  },
  {
  question: `${koName} 연봉 협상은 어떻게 준비해야 하나요?`,

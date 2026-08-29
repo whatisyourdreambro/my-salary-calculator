@@ -1401,7 +1401,7 @@ export const jobsData: JobProfile[] = [
     relatedCompanyIds: ["hyundai", "kia"],
     relatedCalcSlugs: ["earned-income-tax-quick", "stock-capital-gains-quick"],
     faqs: [
-      { q: "자동차 엔지니어 연봉은 얼마인가요?", a: "현대차·기아 신입 엔지니어 연봉(기본+성과)은 5,000~7,000만원 수준입니다. 전기차·자율주행 전문 엔지니어는 시장 수요 증가로 연봉이 빠르게 오르고 있습니다." },
+      { q: "자동차 엔지니어 연봉은 얼마인가요?", a: "현대차·기아 신입 엔지니어는 기본급 5,500~6,000만원에 성과급을 더하면 7,500~8,000만원 수준입니다. 전기차·자율주행 전문 엔지니어는 시장 수요 증가로 연봉이 빠르게 오르고 있습니다." },
     ],
     keywords: ["자동차 엔지니어 연봉", "현대차 연봉", "기아 연봉", "자동차 연봉", "전기차 엔지니어 연봉"],
     officialStats: {

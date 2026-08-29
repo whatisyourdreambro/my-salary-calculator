@@ -948,7 +948,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2478
+  "contentChars": 2483
  },
  {
   "slug": "salary-negotiation-script-2026",
@@ -1394,7 +1394,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-15",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2223
+  "contentChars": 2272
  },
  {
   "slug": "stock-investment-beginner-2026",
@@ -1496,7 +1496,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2216
+  "contentChars": 2234
  },
  {
   "slug": "health-insurance-vs-life-insurance",
@@ -2107,7 +2107,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3689
+  "contentChars": 3690
  },
  {
   "slug": "irp-pension-isa-comparison-2026",
@@ -2335,7 +2335,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2252
+  "contentChars": 2250
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2839,7 +2839,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "postpartum-medical-deduction-200man-2026",
   "title": "2026 산후조리원 의료비 공제 200만원 — 출산 환급액 70만원",
-  "description": "총급여 7천만원 이하 직장인. 산후조리원 200만원 한도 의료비 공제 + 출산 의료비 합산. 한계세율 24% 시 약 7만원 환급. 영수증 5년 보관 + 부부 중 총급여 낮은 쪽 공제 유리.",
+  "description": "산후조리원 출산 1회당 200만원 한도 의료비 공제(소득 무관) + 출산 의료비 합산. 한계세율 24% 시 약 7만원 환급. 영수증 5년 보관 + 부부 중 총급여 낮은 쪽 공제 유리.",
   "category": "세금",
   "tags": [
    "산후조리원",
@@ -5861,7 +5861,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4154
+  "contentChars": 4147
  },
  {
   "slug": "samsung-medison-salary-2026",
@@ -5879,7 +5879,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3959
+  "contentChars": 3952
  },
  {
   "slug": "power-company-salary-2026",

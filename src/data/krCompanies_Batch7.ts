@@ -136,13 +136,15 @@ export const krCompanies_Batch7: CompanyProfile[] = [
   // --- SECURITIES ---
   {
     id: "korea-investment",
+    // 2026-08-30 정본 통일: 리더스인덱스 보도값(1억8,174만)과 DART 직접 집계(1억8,407만)가
+    // 리포트 간 233만원 어긋나던 것을 DART 사업보고서 정본으로 통일 (TOP100 리포트와 일치)
     disclosed: {
-      avgSalaryManwon: 18174,
+      avgSalaryManwon: 18407,
       fiscalYear: "2025",
       source:
-        "매경이코노미 2026-03-25 — 리더스인덱스 500대 기업(211개사) 분석, 2025년 직원 평균 연봉 1억8,174만원으로 전체 1위",
-      sourceUrl: "https://v.daum.net/v/xFdmwJmjyO",
-      note: "리더스인덱스 집계는 공시 데이터 기반(SK하이닉스 1억8,076만원 상회). 경향신문 2026-03-25 동일 집계 보도로 교차 확인.",
+        "DART 2025 사업보고서 — 직원 평균 급여 직접 집계 (TOP100 리포트와 동일 소스)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260515000880",
+      note: "리더스인덱스 보도 집계(1억8,174만원, 매경이코노미 2026-03-25)와의 차이는 집계 범위 차이. 증권업 평균연봉 전체 1위 수준.",
     },
     name: { ko: "한국투자증권", en: "Korea Investment & Securities" },
     industry: "Securities",

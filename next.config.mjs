@@ -144,6 +144,11 @@ const nextConfig = {
         destination: "/salary-db/cj-oliveyoung",
         permanent: true,
       },
+      {
+        source: "/salary-db/hd-korea-shipbuilding",
+        destination: "/salary-db/hd-ksoe",
+        permanent: true,
+      },
       // GSC 404 출혈 차단 (7차 점검, 2026-07-06 정정):
       // -2/-3 URL은 main 코드·데이터에서 생성된 적 없음(병합 안 된 브랜치 잔재 +
       // 외부 유입 추정 — git 전 이력 검증). 원본 슬러그로 영구 리디렉션(308)해 크롤 예산 회수.
