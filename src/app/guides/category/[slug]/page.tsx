@@ -77,7 +77,9 @@ export default function GuideCategoryHubPage({ params }: Props) {
       />
 
       <div className="page-width pt-24 pb-3">
-        <Breadcrumbs path={path} leafName={hub.title} overrides={{ category: "가이드" }} />
+        {/* path 자동생성 모드는 중간 세그먼트(/guides/category — 실페이지 아님)를
+            링크로 만들어 404 링크가 됨 → JSON-LD와 같은 crumbs 배열을 명시 전달 */}
+        <Breadcrumbs items={crumbs} />
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -309,9 +309,9 @@ export default function CivilServantPay2026Page() {
             2,133,000원이 아니라 수당 포함 연 3,428만원이 세전 기준이 됩니다.
           </p>
           <p className="text-sm leading-7 text-muted-blue mt-4">
-            9급 초임 연 3,428만원의 월별 공제·실수령 내역은{" "}
-            <Link href="/salary/34280000" className="text-electric font-bold hover:underline">
-              연봉 3,428만원 실수령액 표
+            9급 초임 연 3,428만원의 월별 공제·실수령 내역은 가장 가까운 구간인{" "}
+            <Link href="/salary/34500000" className="text-electric font-bold hover:underline">
+              연봉 3,450만원 실수령액 표
             </Link>
             에서 바로 확인할 수 있고, 9급 공무원의 직급별 연봉 흐름과 직업 정보는{" "}
             <Link href="/job/civil-servant-9" className="text-electric font-bold hover:underline">
@@ -324,12 +324,12 @@ export default function CivilServantPay2026Page() {
         {/* CTA 카드 */}
         <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
-            href="/salary/34280000"
+            href="/salary/34500000"
             className="block p-6 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors"
           >
             <Calculator className="w-8 h-8 opacity-70 mb-3" />
             <h3 className="text-lg font-black mb-2">9급 초임 실수령액</h3>
-            <p className="text-sm opacity-90">연 3,428만원 기준 월 공제 내역 보기</p>
+            <p className="text-sm opacity-90">연 3,428만원과 가장 가까운 3,450만원 구간 보기</p>
           </Link>
           <Link
             href="/job/civil-servant-9"
