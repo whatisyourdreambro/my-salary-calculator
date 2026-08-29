@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "@/components/AppLink";
 import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
@@ -32,6 +32,30 @@ const CATEGORY_BADGE: Record<SearchCategory, { bg: string; text: string }> = {
   도구: { bg: "#CFFAFE", text: "#0E7490" },
 };
 
+// /en 페이지 UI 문구 분기 — 푸터의 /en 분기와 동일 패턴 (검색 인덱스 자체는 공용)
+const SEARCH_STRINGS = {
+  ko: {
+    trigger: "검색",
+    ariaOpen: "검색 열기",
+    ariaSearch: "사이트 검색",
+    ariaClose: "닫기",
+    placeholder: "계산기·가이드·용어 검색",
+    empty: "계산기·가이드·용어를 검색해 보세요",
+    noResults: "검색 결과가 없습니다. 다른 키워드로 검색해 보세요.",
+    chips: ["연말정산", "퇴직금", "삼성전자", "DSR", "IRP", "FIRE"],
+  },
+  en: {
+    trigger: "Search",
+    ariaOpen: "Open search",
+    ariaSearch: "Site search",
+    ariaClose: "Close",
+    placeholder: "Search calculators & guides",
+    empty: "Search calculators, guides, and terms",
+    noResults: "No results. Try a different keyword.",
+    chips: ["Samsung", "SK Hynix", "ISA", "Tax"],
+  },
+} as const;
+
 export default function HeaderSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -39,6 +63,11 @@ export default function HeaderSearch() {
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const S =
+    pathname === "/en" || pathname?.startsWith("/en/")
+      ? SEARCH_STRINGS.en
+      : SEARCH_STRINGS.ko;
 
   // 검색 디바운스 (input 변화에 따라 결과 업데이트)
   // isOpen 가드: 닫힌 상태(마운트 직후)에 인덱스를 로드하면 지연 로드가 무의미해짐
@@ -112,11 +141,11 @@ export default function HeaderSearch() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        aria-label="사이트 검색"
+        aria-label={S.ariaSearch}
         className="hidden xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all"
       >
         <Search size={14} />
-        <span>검색</span>
+        <span>{S.trigger}</span>
         <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-canvas-100 text-faint-blue rounded">
           ⌘K
         </kbd>
@@ -126,7 +155,7 @@ export default function HeaderSearch() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        aria-label="검색 열기"
+        aria-label={S.ariaOpen}
         className="xl:hidden inline-flex items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors"
       >
         <Search size={20} />
@@ -152,7 +181,7 @@ export default function HeaderSearch() {
             <div
               role="dialog"
               aria-modal="true"
-              aria-label="사이트 검색"
+              aria-label={S.ariaSearch}
               className="search-panel-in fixed z-[101] bg-white shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] flex flex-col"
               style={{
                 paddingTop: "env(safe-area-inset-top, 0)",
@@ -168,13 +197,13 @@ export default function HeaderSearch() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleInputKey}
-                  placeholder="계산기·가이드·용어 검색"
+                  placeholder={S.placeholder}
                   className="flex-1 min-w-0 bg-transparent text-[15px] font-medium text-navy placeholder:text-faint-blue outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  aria-label="닫기"
+                  aria-label={S.ariaClose}
                   className="flex-shrink-0 flex items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors"
                 >
                   <X size={16} />
@@ -185,9 +214,9 @@ export default function HeaderSearch() {
               <div className="flex-1 overflow-y-auto overscroll-contain min-w-0">
                 {!query.trim() ? (
                   <div className="px-5 py-10 text-center text-sm text-faint-blue">
-                    <p className="mb-3 font-medium">계산기·가이드·용어를 검색해 보세요</p>
+                    <p className="mb-3 font-medium">{S.empty}</p>
                     <div className="flex flex-wrap justify-center gap-1.5">
-                      {["연말정산", "퇴직금", "삼성전자", "DSR", "IRP", "FIRE"].map((kw) => (
+                      {S.chips.map((kw) => (
                         <button
                           key={kw}
                           onClick={() => setQuery(kw)}
@@ -200,7 +229,7 @@ export default function HeaderSearch() {
                   </div>
                 ) : results.length === 0 ? (
                   <div className="px-5 py-10 text-center text-sm text-faint-blue">
-                    검색 결과가 없습니다. 다른 키워드로 검색해 보세요.
+                    {S.noResults}
                   </div>
                 ) : (
                   <ul className="py-2">

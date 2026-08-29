@@ -142,7 +142,11 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  Sources & Methodology
  </p>
  <p className="text-muted-foreground leading-relaxed">
- Based on Korean government data (NTS, NPS, NHIS, KCOMWEL) and 2026 tax law.
+ {/* 세금·연봉 가이드용 정부 출처 문구가 주식 전망 글에도 그대로 붙던 문제 —
+     카테고리별 분기 (2026-08-30 감사 수정) */}
+ {guide.category === "Stocks" || guide.category === "Investing"
+ ? "Based on public company disclosures, IR materials, and market data. For information only — not investment advice."
+ : "Based on Korean government data (NTS, NPS, NHIS, KCOMWEL) and 2026 tax law."}{" "}
  Last updated:{" "}
  <strong className="text-foreground">
  {new Date(guide.publishedDate).toLocaleDateString("en-US")}
@@ -193,6 +197,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  title={guide.title}
  description={`${guide.category} Guide | Moneysalary`}
  className="justify-end"
+ locale="en"
  />
  </div>
  </div>

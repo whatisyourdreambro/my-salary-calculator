@@ -99,7 +99,7 @@ export const jobsData: JobProfile[] = [
       year: "2023",
       source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
       sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007494",
-      note: "하위/중위/상위는 2023년 워크넷 재직자 조사(연봉). avgAnnualManwon 4,745만원은 별도 출처: 보건복지부 보건의료인력 실태조사(2020년 기준, 2022.7 발표) 요양기관 근무 간호사 평균.",
+      note: "하위/중위/상위는 2023년 워크넷 재직자 조사(연봉). 별도 조사 평균 연봉 4,745만원은 보건복지부 보건의료인력 실태조사(2020년 기준, 2022.7 발표) 요양기관 근무 간호사 평균.",
     },
   },
   {
@@ -152,7 +152,7 @@ export const jobsData: JobProfile[] = [
       year: "2023",
       source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
       sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007472",
-      note: "워크넷 조사는 봉직의 중심 표본(직업당 약 30명 자기보고)이라 개원의 소득 반영 한계. avgAnnualManwon 1억9,490만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균 — 개원의 포함이라 워크넷 중위보다 크게 높음.",
+      note: "워크넷 조사는 봉직의 중심 표본(직업당 약 30명 자기보고)이라 개원의 소득 반영 한계. 별도 조사 평균 연봉 1억9,490만원은 복지부 보건의료인력 실태조사(2020년 기준) 평균 — 개원의 포함이라 워크넷 중위보다 크게 높음.",
     },
   },
   {
@@ -183,7 +183,7 @@ export const jobsData: JobProfile[] = [
       year: "2021",
       source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
       sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=301&searchCrCd=303001",
-      note: "하위/중위/상위는 2021년 워크넷 조사. avgAnnualManwon 8,416만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균(개국 약사 포함).",
+      note: "하위/중위/상위는 2021년 워크넷 조사. 별도 조사 평균 연봉 8,416만원은 복지부 보건의료인력 실태조사(2020년 기준) 평균(개국 약사 포함).",
     },
   },
   {
@@ -213,7 +213,7 @@ export const jobsData: JobProfile[] = [
       year: "2023",
       source: "한국고용정보원 워크넷(고용24) 한국직업정보 재직자 조사 — 대입정보포털(adiga) 수록 원문 확인",
       sourceUrl: "https://www.adiga.kr/jbp/jnf/jobInfoDetail.do?menuId=PCJBPJNF2000&searchCrSeClsfCd=D999&searchCrCd=K000007542",
-      note: "avgAnnualManwon 1억860만원은 별도 출처: 복지부 보건의료인력 실태조사(2020년 기준) 평균. 두 정부 통계가 유사 수준으로 상호 부합.",
+      note: "별도 조사 평균 연봉 1억860만원은 복지부 보건의료인력 실태조사(2020년 기준) 평균. 두 정부 통계가 유사 수준으로 상호 부합.",
     },
   },
   {

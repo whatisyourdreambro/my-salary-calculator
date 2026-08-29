@@ -61,11 +61,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  publishedTime: guide.publishedDate,
  authors: ['Moneysalary'],
  tags: guide.tags,
+ // 페이지가 openGraph를 선언하면 루트 이미지가 상속되지 않음 — EN OG 분기 재사용
+ images: [{ url: `https://www.moneysalary.com/api/og?lang=en&title=${encodeURIComponent(guide.title)}`, width: 1200, height: 630 }],
  },
  twitter: {
  card: 'summary_large_image',
  title: guide.title,
  description: guide.description,
+ images: [`https://www.moneysalary.com/api/og?lang=en&title=${encodeURIComponent(guide.title)}`],
  },
  };
 }

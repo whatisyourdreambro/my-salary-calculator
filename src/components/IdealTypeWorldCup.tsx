@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, RefreshCw, Heart } from "lucide-react";
+import { Crown, RefreshCw } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
 import { InArticleAd } from "@/components/AdPlacement";
 
@@ -117,19 +117,8 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
 
  return (
  <div className="w-full max-w-6xl mx-auto px-4 py-8">
- {/* Header */}
- <div className="text-center mb-8">
- <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-500/10 text-primary text-sm font-bold mb-4 border border-primary/20">
- <Heart size={14} className="fill-current" />
- Ideal Type World Cup
- </div>
- <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-2">
- 기업 이상형 월드컵 🏆
- </h1>
- <p className="text-muted-foreground">
- 당신의 마음속 1위 기업은 어디인가요?
- </p>
- </div>
+ {/* Header 는 page.tsx(서버 렌더)로 승격 — 랜덤 셔플 게이트(candidates===0 → null)로
+     SSR HTML 에 h1 이 통째로 빠지던 문제 수정 (2026-08-30) */}
 
  {/* Game Area */}
  <div className="relative min-h-[600px] flex flex-col justify-center">

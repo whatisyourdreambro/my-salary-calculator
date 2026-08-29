@@ -25,6 +25,17 @@ export default function WorldCupPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-20 pt-28">
+      {/* 헤더는 서버 렌더 — 클라 컴포넌트의 랜덤 셔플 게이트와 무관하게
+          h1 이 항상 SSR HTML 에 존재 (2026-08-30 감사 수정) */}
+      <div className="w-full max-w-6xl mx-auto px-4 pt-8 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-500/10 text-primary text-sm font-bold mb-4 border border-primary/20">
+          Ideal Type World Cup
+        </div>
+        <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-2">
+          기업 이상형 월드컵 🏆
+        </h1>
+        <p className="text-muted-foreground mb-8">당신의 마음속 1위 기업은 어디인가요?</p>
+      </div>
       <IdealTypeWorldCup companies={companies} />
     </div>
   );
