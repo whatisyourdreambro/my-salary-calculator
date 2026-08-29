@@ -168,7 +168,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "처방전 검토·조제·복약 지도를 담당하는 약학 전문직. 약학대학 4년(또는 6년제) 졸업 후 국가시험 합격 필수.",
     requirements: ["약학대학 졸업", "약사 국가시험 합격", "약사 면허증"],
-    relatedCompanyIds: ["yuhan", "hanmi-pharm", "chong-kun-dang"],
+    relatedCompanyIds: ["yuhan", "hanmi", "chong-kun-dang"],
     relatedCalcSlugs: ["earned-income-tax-quick", "overtime-pay-quick"],
     faqs: [
       { q: "약사 연봉은 얼마인가요?", a: "2026년 기준 약사 평균 연봉은 4,000~6,000만원 수준입니다. 대형 병원 약사는 3,500~5,000만원, 개인 약국 근무 약사는 4,000~6,500만원, 개국 약사는 위치에 따라 5,000만원~1억원 이상도 가능합니다." },
@@ -357,7 +357,7 @@ export const jobsData: JobProfile[] = [
     relatedCompanyIds: [],
     relatedCalcSlugs: ["severance-pay-quick", "annual-leave-pay-quick"],
     faqs: [
-      { q: "9급 공무원 신입 연봉은 얼마인가요?", a: "2026년 기준 9급 공무원 신입(1호봉) 기본급은 약 192만원입니다. 각종 수당(직급보조비·가족수당·명절상여 등) 포함 시 연 2,700~3,200만원 수준이며, 경기·서울 지역은 지역수당이 추가됩니다." },
+      { q: "9급 공무원 신입 연봉은 얼마인가요?", a: "2026년 기준 9급 공무원 신입(1호봉) 기본급은 월 2,133,000원(약 213만원)입니다. 각종 수당(직급보조비·가족수당·명절상여 등) 포함 시 연 2,700~3,200만원 수준이며, 경기·서울 지역은 지역수당이 추가됩니다." },
       { q: "9급 공무원 20년 후 연봉은 얼마인가요?", a: "9급으로 입직 후 7급·6급·5급으로 승진하면 20년 후 5급(사무관) 기준 연봉은 약 6,000~7,000만원 수준입니다. 연금 포함 시 실질 보수가 높아집니다." },
       { q: "공무원 연금은 얼마나 받나요?", a: "2015년 이후 입직자는 기여율 9%, 퇴직 후 10년 이상 재직 시 수령 가능합니다. 30년 재직 시 퇴직 전 평균 기준소득의 약 40~50%를 연금으로 수령합니다." },
     ],
@@ -387,7 +387,7 @@ export const jobsData: JobProfile[] = [
     relatedCompanyIds: [],
     relatedCalcSlugs: ["severance-pay-quick", "annual-leave-pay-quick"],
     faqs: [
-      { q: "7급 공무원 연봉은 얼마인가요?", a: "2026년 기준 7급 공무원 1호봉 기본급은 약 216만원이며, 각종 수당 포함 연 3,000~3,600만원 수준입니다. 경력에 따라 4,500만원 이상도 가능합니다." },
+      { q: "7급 공무원 연봉은 얼마인가요?", a: "2026년 기준 7급 공무원 1호봉 기본급은 월 2,317,100원(약 232만원)이며, 각종 수당 포함 연 3,000~3,600만원 수준입니다. 경력에 따라 4,500만원 이상도 가능합니다." },
     ],
     keywords: ["7급 공무원 연봉", "공무원 7급 월급", "7급 공무원 신입 연봉"],
   },
@@ -1004,7 +1004,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "투자자의 자금을 위탁받아 주식·채권·대안투자 등에 운용하는 자산운용 전문가.",
     requirements: ["경영·금융·경제학 학위", "CFA·증권투자권유자문인력 자격증", "리서치 경험"],
-    relatedCompanyIds: ["mirae-asset", "kb-securities", "samsung-asset-management"],
+    relatedCompanyIds: ["mirae-asset", "kb-securities"],
     relatedCalcSlugs: ["dividend-yield-quick", "dividend-tax-quick", "stock-capital-gains-quick"],
     faqs: [
       { q: "펀드매니저 연봉은 얼마인가요?", a: "신입 펀드매니저는 5,000~7,500만원이며, 운용 실적에 따른 성과보수가 붙어 경력자는 1억~4억원도 가능합니다. 헤지펀드 운용역은 성과에 따라 수십억원도 받습니다." },
@@ -1033,7 +1033,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "기업 회계감사·세무조정·M&A 자문 등을 담당하는 회계 전문가. 공인회계사 시험 합격 필수.",
     requirements: ["공인회계사(CPA) 시험 합격", "회계법인 또는 기업 감사팀 근무"],
-    relatedCompanyIds: ["samsung-electronics", "lg-electronics"],
+    relatedCompanyIds: ["samsung-electronics", "lgelectronics"],
     relatedCalcSlugs: ["corporate-tax-quick", "income-tax-bracket-sim", "dividend-tax-quick"],
     faqs: [
       { q: "공인회계사 연봉은 얼마인가요?", a: "4대 회계법인(삼일PwC·삼정KPMG·안진Deloitte·한영EY) 신입 연봉은 5,000~7,000만원이며, 경력 5~10년 매니저·시니어는 9,000만~1억5,000만원입니다. 파트너급은 2억원 이상입니다." },
@@ -1123,7 +1123,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "통계·확률 모델로 보험료·준비금·리스크를 계산하는 고급 금융 전문직. 보험계리사 자격증 필수.",
     requirements: ["수학·통계학·보험수리학 관련 학위", "보험계리사 시험 합격 (FSA·FCIA 등)"],
-    relatedCompanyIds: ["samsung-life", "korea-life"],
+    relatedCompanyIds: ["samsung-life"],
     relatedCalcSlugs: ["income-tax-bracket-sim"],
     faqs: [
       { q: "보험계리사 연봉은 얼마인가요?", a: "신입 보험계리사 연봉은 5,000~7,000만원이며, 경력 10년 이상 수석계리사는 1억~1억8,000만원까지 가능합니다. 준계리사 단계에서도 높은 연봉을 받습니다." },
@@ -1186,7 +1186,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "특허·상표·디자인 등 지식재산권 출원·심판·소송을 대리하는 전문 자격사. 변리사 시험 합격 필수.",
     requirements: ["변리사 시험 합격 (1차·2차)", "이공계 학위 우대 (특허청 심사 분야에 따라)"],
-    relatedCompanyIds: ["samsung-electronics", "lg-electronics", "sk-hynix"],
+    relatedCompanyIds: ["samsung-electronics", "lgelectronics", "sk-hynix"],
     relatedCalcSlugs: ["income-tax-bracket-sim"],
     faqs: [
       { q: "변리사 연봉은 얼마인가요?", a: "특허법인 신입 변리사 연봉은 4,500~6,500만원이며, 경력 5년 이상 파트너급은 1억~2억5,000만원까지 가능합니다. 이공계 박사 출신 변리사는 개업 시 수입이 더 높습니다." },
@@ -1251,7 +1251,7 @@ export const jobsData: JobProfile[] = [
     relatedCompanyIds: ["samsung-electronics", "sk-hynix"],
     relatedCalcSlugs: ["earned-income-tax-quick", "income-tax-bracket-sim", "stock-capital-gains-quick"],
     faqs: [
-      { q: "반도체 엔지니어 연봉은 얼마인가요?", a: "삼성전자·SK하이닉스 신입 반도체 엔지니어 연봉(기본급+성과급)은 약 7,000~9,000만원 수준입니다. AI·HBM 호황으로 2024~2025년 성과급이 크게 올랐으며, 경력 10년 시니어는 1억2,000만~1억8,000만원 수준입니다." },
+      { q: "반도체 엔지니어 연봉은 얼마인가요?", a: "삼성전자·SK하이닉스 신입 반도체 엔지니어의 기본 연봉은 약 5,000~7,000만원이며, OPI·TAI 등 성과급 포함 시 호황기에는 7,000~9,000만원까지 올라갑니다. AI·HBM 호황으로 2024~2025년 성과급이 크게 올랐으며, 경력 10년 시니어는 성과급 포함 1억~1억8,000만원 수준입니다." },
     ],
     keywords: ["반도체 엔지니어 연봉", "삼성전자 엔지니어 연봉", "SK하이닉스 연봉", "반도체 개발자 연봉"],
     officialStats: {
@@ -1308,7 +1308,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "전기·전자 시스템 설계·시공·유지보수를 담당. 한전·SK E&S·건설사·제조사 등 수요 많음.",
     requirements: ["전기공학 학위", "전기기사 또는 전기산업기사 자격증 우대"],
-    relatedCompanyIds: ["kepco", "samsung-electronics", "lg-electronics"],
+    relatedCompanyIds: ["kepco", "samsung-electronics", "lgelectronics"],
     relatedCalcSlugs: ["overtime-pay-quick"],
     faqs: [
       { q: "전기 엔지니어 연봉은 얼마인가요?", a: "신입 전기 엔지니어 연봉은 3,800~5,200만원이며, 전기기사·전기공사기사 자격증 보유 시 우대됩니다. 경력 10년 이상은 6,500~1억원 수준입니다." },
@@ -1338,7 +1338,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "도로·교량·터널·댐 등 사회기반시설을 설계·시공·감리하는 엔지니어.",
     requirements: ["토목공학 학위", "토목기사 자격증 우대"],
-    relatedCompanyIds: ["daewoo-construction", "gs-construction"],
+    relatedCompanyIds: ["daewoo-enc", "gs-enc"],
     relatedCalcSlugs: ["overtime-pay-quick", "severance-pay-quick"],
     faqs: [
       { q: "토목 엔지니어 연봉은 얼마인가요?", a: "신입 토목 엔지니어 연봉은 3,000~4,200만원이며, 현장 수당이 붙을 경우 더 높습니다. 경력 10년 이상 수석은 6,000~9,000만원 수준입니다." },
@@ -1556,7 +1556,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "항공기 내 승객 서비스·안전을 담당하는 캐빈 크루. 대한항공·아시아나항공·저가항공사 등 취업.",
     requirements: ["영어 기본 이상 (국제선은 영어 필수)", "항공사 공채 합격", "신체검사 통과"],
-    relatedCompanyIds: ["korean-air", "asiana-airlines"],
+    relatedCompanyIds: ["korean-air", "asiana"],
     relatedCalcSlugs: ["overtime-pay-quick", "night-shift-pay-quick"],
     faqs: [
       { q: "항공승무원 연봉은 얼마인가요?", a: "대한항공·아시아나항공 신입 승무원 연봉은 국제선 탑승수당·숙박비 포함 시 3,000~4,500만원 수준입니다. 경력 7~10년 사무장급은 5,500~7,000만원까지 오릅니다." },
@@ -1587,7 +1587,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "여객기·화물기를 조종하는 항공 전문직. 자가용·사업용·운송용 조종사 자격증 단계별 취득 필요.",
     requirements: ["항공학과 또는 비행학교 교육", "조종사 면허 취득 (ATPL)", "비행시간 누적"],
-    relatedCompanyIds: ["korean-air", "asiana-airlines"],
+    relatedCompanyIds: ["korean-air", "asiana"],
     relatedCalcSlugs: ["income-tax-bracket-sim"],
     faqs: [
       { q: "파일럿 연봉은 얼마인가요?", a: "대한항공·아시아나 부기장 초임은 연 6,000~9,000만원이며, 기장(Captain)이 되면 1억3,000만~2억원 수준입니다. 해외 항공사로 이직 시 연 2억원 이상도 가능합니다." },
@@ -1652,7 +1652,7 @@ export const jobsData: JobProfile[] = [
     relatedCompanyIds: [],
     relatedCalcSlugs: ["earned-income-tax-quick"],
     faqs: [
-      { q: "기자 연봉은 얼마인가요?", a: "KBS·MBC·SBS 등 주요 방송사 신입 기자 연봉은 4,000~6,000만원이며, 조선·중앙·동아 등 주요 신문사도 비슷한 수준입니다. 경력 10년 이상 부장급은 7,000만~1억원 수준입니다." },
+      { q: "기자 연봉은 얼마인가요?", a: "KBS·MBC·SBS 등 주요 방송사 신입 기자 연봉은 약 3,500~5,000만원이며, 성과급·수당 포함 시 4,000~6,000만원대까지 올라가는 곳도 있습니다. 조선·중앙·동아 등 주요 신문사도 비슷한 수준입니다. 경력 10년 이상 부장급은 6,000만~1억원 수준입니다." },
     ],
     keywords: ["기자 연봉", "기자 월급", "기자 평균 연봉", "방송기자 연봉", "신문기자 연봉"],
     officialStats: {
@@ -1731,7 +1731,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "신약·백신·진단키트·바이오소재를 연구·개발하는 생명과학 전문직. 삼성바이오로직스·셀트리온·한미약품 등 취업.",
     requirements: ["생명공학·분자생물학·의생명과학 학위 (석·박사 우대)", "실험 기술 (세포배양·유전자편집·단백질 분석)"],
-    relatedCompanyIds: ["samsung-bioepis", "celltrion", "hanmi-pharm"],
+    relatedCompanyIds: ["samsung-bioepis", "celltrion", "hanmi"],
     relatedCalcSlugs: ["earned-income-tax-quick", "stock-capital-gains-quick"],
     faqs: [
       { q: "바이오 연구원 연봉은 얼마인가요?", a: "신입 바이오 연구원(학사)은 4,000~5,000만원, 석사 신입은 4,500~6,000만원, 박사 신입은 5,000~7,000만원 수준입니다. 삼성바이오로직스·셀트리온 등 대형 바이오 기업은 더 높습니다." },
@@ -1761,7 +1761,7 @@ export const jobsData: JobProfile[] = [
     },
     description: "임상시험의 계획·수행·모니터링·데이터 관리를 담당. 제약사·CRO(임상시험수탁기관)·병원 근무.",
     requirements: ["생명과학·간호학·약학 관련 학위", "임상시험 GCP 교육 이수"],
-    relatedCompanyIds: ["hanmi-pharm", "chong-kun-dang"],
+    relatedCompanyIds: ["hanmi", "chong-kun-dang"],
     relatedCalcSlugs: ["overtime-pay-quick"],
     faqs: [
       { q: "임상연구원 연봉은 얼마인가요?", a: "신입 CRA/CRC 연봉은 3,500~5,000만원이며, 경력 5년 이상 시니어 CRA는 6,000~8,000만원, 매니저급은 8,000만~1억1,000만원 수준입니다." },
