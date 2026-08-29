@@ -89,6 +89,8 @@ export default function SalaryResultCard({
  <div className="divide-y divide-canvas">
  <DeductionItem label="국민연금" value={breakdown.pension} iconBg="bg-electric-5" iconColor="text-electric" />
  <DeductionItem label="건강보험" value={breakdown.health} iconBg="bg-electric-10" iconColor="text-electric" />
+ {/* 장기요양보험 행 — 누락 시 항목 합 ≠ 총 공제액 (2026-08-30 감사 수정) */}
+ <DeductionItem label="장기요양보험" value={breakdown.longTermCare} iconBg="bg-electric-10" iconColor="text-electric" />
  <DeductionItem label="고용보험" value={breakdown.employment} iconBg="bg-electric-15" iconColor="text-electric" />
  <DeductionItem label="소득세" value={breakdown.incomeTax + breakdown.localTax} iconBg="bg-electric-20" iconColor="text-electric" />
  </div>
