@@ -57,18 +57,25 @@ function parseFile(absPath) {
     return empty;
   }
   // JSX 사용처만 카운트 (import 만 있는 경우 무시). 조건부 렌더도 dedup 위험 기준으로 사용 취급.
+  // text: 사용처 주변 ±수 줄 컨텍스트 — 조건부(늦은 마운트) 휴리스틱·쿠팡 size 추출용.
   const slots = [];
   const lines = text.split("\n");
   for (let i = 0; i < lines.length; i++) {
     let m;
     AD_COMPONENT_RE.lastIndex = 0;
     while ((m = AD_COMPONENT_RE.exec(lines[i]))) {
-      slots.push({ name: m[1], line: i + 1 });
+      slots.push({
+        name: m[1],
+        line: i + 1,
+        text: lines.slice(Math.max(0, i - 1), i + 4).join(" "),
+      });
     }
   }
   // import 해석: 상대경로 + "@/" 별칭. .tsx 만 재귀 대상 (광고 JSX 는 .tsx 에만 존재).
+  // 정적 import 와 dynamic `import("...")`(next/dynamic 지연 로드 포함) 모두 매칭 —
+  // 기존 `import\s` 는 dynamic 형태를 놓쳐 지연 로드된 서브트리의 광고를 미탐했다.
   const imports = [];
-  const importRe = /import\s[^"']*["'](\.{1,2}\/[^"']+|@\/[^"']+)["']/g;
+  const importRe = /import\s*(?:\(\s*)?[^"'()]*["'](\.{1,2}\/[^"']+|@\/[^"']+)["']/g;
   let im;
   while ((im = importRe.exec(text))) {
     const spec = im[1];
@@ -105,7 +112,7 @@ function slotUsages(files) {
   for (const f of files) {
     for (const s of parseFile(f).slots) {
       for (const slot of SLOT_OF[s.name]) {
-        usages.push({ slot, comp: s.name, file: f, line: s.line });
+        usages.push({ slot, comp: s.name, file: f, line: s.line, text: s.text });
       }
     }
   }
@@ -185,6 +192,10 @@ for (const page of findPages(APP)) {
   //    이는 "페이지가 자체 유닛을 가지면 layout 하단은 폴백으로 물러남" 이라는 사이트 전반의
   //    의도된 패턴이라 INFO 로만 보고한다 (2026-08-23 전수 확인: qna/glossary/salary-db/en 등
   //    수십 라우트가 이 구조). 새 배치가 이 목록을 "늘리는지"는 --diff 게이트로 잡는다.
+  //    ⚠️ 방향 한계: "page 가 이긴다"는 가정은 page 유닛이 첫 렌더에 함께 마운트될
+  //    때만 확실하다. showResult 등 조건부로 늦게 마운트되는 유닛은 layout 쪽이
+  //    먼저 등록해 반대로 layout 이 이길 수 있다 — 정규식 휴리스틱으로 조건부
+  //    렌더가 의심되는 사용처는 INFO 에 '늦은 마운트 — layout 승리 가능' 을 병기.
   const layoutSlots = new Map();
   for (const u of layoutUse.filter((u) => u.slot !== "COUPANG"))
     if (!layoutSlots.has(u.slot)) layoutSlots.set(u.slot, u);
@@ -192,8 +203,10 @@ for (const page of findPages(APP)) {
     if (layoutSlots.has(slot) && !isAllowed(route, slot)) {
       const lu = layoutSlots.get(slot);
       const pu = bySlot.get(slot)[0];
+      const lateMount =
+        /showResult|&&\s*[(<]|\?\s*[(<]/.test(pu.text || "");
       infos.push(
-        `${route}  [${slot}] page(${rel(pu.file)}:${pu.line}) 가 layout(${rel(lu.file)}:${lu.line}) 폴백을 대체`
+        `${route}  [${slot}] page(${rel(pu.file)}:${pu.line}) 가 layout(${rel(lu.file)}:${lu.line}) 폴백을 대체${lateMount ? " ※늦은 마운트 — layout 승리 가능" : ""}`
       );
     }
   }
@@ -202,6 +215,37 @@ for (const page of findPages(APP)) {
   const coupangCount = pageUse.concat(layoutUse).filter((u) => u.slot === "COUPANG").length;
   if (coupangCount >= 3 && !isAllowed(route, "COUPANG")) {
     warns.push(`${route}  [COUPANG] ${coupangCount}회 배치 — 캡 2회 초과분은 렌더 안 됨`);
+  }
+
+  // 4) 쿠팡 동일 사이즈키 2회 — CoupangBannerCore dedup 은 같은 사이즈 재등록을
+  //    무음 차단한다(sizes.includes(sizeKey)). 캡(2회) 이내라도 같은 사이즈 2곳이면
+  //    한쪽은 렌더되지 않는다. 신설 검출이므로 INFO(비차단) — ERROR 로 올리면
+  //    prebuild 가 기존 배치 상태에서 막힌다. 사이즈 추출은 ±수 줄 정규식 휴리스틱:
+  //    size="…" > responsive desktop:"…" > 기본값 leaderboard. 합성 래퍼
+  //    (PageFooterAds)는 내부 사이즈 미상이라 제외.
+  const coupangSizeOf = (u) => {
+    if (u.comp !== "CoupangBanner" && u.comp !== "AffiliateSlot") return null;
+    const t = u.text || "";
+    const mSize = t.match(/size=["']([A-Za-z0-9_-]+)["']/);
+    if (mSize) return mSize[1];
+    const mResp = t.match(/desktop:\s*["']([A-Za-z0-9_-]+)["']/);
+    if (mResp) return mResp[1];
+    return "leaderboard"; // CoupangBannerCore 기본값
+  };
+  const coupangBySize = new Map();
+  for (const u of pageUse.concat(layoutUse).filter((u) => u.slot === "COUPANG")) {
+    const key = coupangSizeOf(u);
+    if (!key) continue;
+    if (!coupangBySize.has(key)) coupangBySize.set(key, []);
+    coupangBySize.get(key).push(u);
+  }
+  for (const [sizeKey, us] of coupangBySize) {
+    const uniq = [...new Set(us.map((u) => `${rel(u.file)}:${u.line}`))];
+    if (uniq.length >= 2 && !isAllowed(route, "COUPANG")) {
+      infos.push(
+        `${route}  [COUPANG:${sizeKey}] 동일 사이즈키 ${uniq.length}회 — 뒤쪽 무음 차단: ${uniq.join(" vs ")}`
+      );
+    }
   }
 }
 
@@ -251,7 +295,9 @@ for (const w of warns) console.log("WARN   " + w);
 if (process.argv.includes("--verbose")) {
   for (const i of infos) console.log("INFO   " + i);
 } else if (infos.length) {
-  console.log(`INFO   page→layout 폴백 대체 ${infos.length}건 (--verbose 로 상세)`);
+  console.log(
+    `INFO   ${infos.length}건 — page→layout 폴백 대체·쿠팡 동일 사이즈키 등 (--verbose 로 상세)`
+  );
 }
 if (allow.length) console.log(`\nallowlist ${allow.length}건 적용 (scripts/ad-audit-allow.json)`);
 console.log(

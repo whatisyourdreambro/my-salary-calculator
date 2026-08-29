@@ -14,7 +14,7 @@ import {
  TrendingUp,
  ArrowRight
 } from "lucide-react";
-import CountUp from "react-countup";
+import AnimatedNumber from "@/components/AnimatedNumber";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { CalcResultAd } from "@/components/AdPlacement";
@@ -115,8 +115,8 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  <StatCard
  icon={Zap}
  label="인센티브 포텐"
- value={`최대 ${company.salary.entry.incentive.max}%`}
- sub="연봉 대비 비율"
+ value={company.salary.entry.incentive.max > 0 ? `최대 ${company.salary.entry.incentive.max}%` : "현금 중심 보상"}
+ sub={company.salary.entry.incentive.max > 0 ? "연봉 대비 비율" : "별도 인센티브 없이 연봉 중심 책정"}
  color="text-primary"
  />
  </div>
@@ -155,7 +155,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  </p>
  <div className="flex items-baseline gap-2">
  <span className="text-5xl font-black text-primary">
- <CountUp end={monthsToTesla} duration={2} />
+ <AnimatedNumber value={monthsToTesla} duration={2} />
  </span>
  <span className="text-xl font-bold">개월</span>
  </div>

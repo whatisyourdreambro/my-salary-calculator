@@ -16,10 +16,12 @@ import GlossaryExplorer, {
 
 export default function GlossaryPage() {
   // 경량 검색 인덱스 — 제목/카테고리/검색 키워드만 클라이언트로 전달
+  // content(96KB 본문)는 제외 — 포함하면 본문 전체가 RSC payload 로 이중 직렬화되어
+  // "경량 인덱스" 의도가 무너진다. 검색은 title+summary 로 충분.
   const index: GlossaryIndexItem[] = glossaryData.map((item) => ({
     title: item.title,
     category: item.category,
-    search: `${item.title} ${item.summary} ${item.content}`.toLowerCase(),
+    search: `${item.title} ${item.summary}`.toLowerCase(),
   }));
 
   // Today's Pick 후보 — 카테고리 고르게 8개 샘플링 (빌드 시 고정)

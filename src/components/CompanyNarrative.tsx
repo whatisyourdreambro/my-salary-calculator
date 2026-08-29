@@ -53,6 +53,16 @@ export default function CompanyNarrative({ company }: Props) {
   const similar = getSimilarSalaryCompanies(company, 4);
   const remotePolicy = REMOTE_LABEL[company.workLife.remoteWork.policy];
   const vacation = company.workLife.vacation;
+  // 넷플릭스류 무제한 연차 센티널(999) — 숫자 그대로 노출 금지
+  const unlimitedVacation = vacation.days >= 300;
+  // 전 직급 인센티브 avgAmount 0 = 현금 연봉 중심 보상(쿠팡·넷플릭스·테슬라·아마존·당근 등)
+  const noIncentive = !(
+    (company.salary.entry.incentive.avgAmount || 0) +
+    (company.salary.junior.incentive.avgAmount || 0) +
+    (company.salary.senior.incentive.avgAmount || 0) +
+    (company.salary.lead.incentive.avgAmount || 0) +
+    (company.salary.executive.incentive.avgAmount || 0)
+  );
   const dsrCapacity = Math.round((entryTotal * 0.4) / 10000);
 
   // 실수령률 — 고정 문구(82~87%) 대신 회사별 실제 계산값 (상세 표와 동일 엔진·기준).
@@ -106,11 +116,21 @@ export default function CompanyNarrative({ company }: Props) {
             : seniorTotal / entryTotal >= 1.8
             ? "업계 평균 수준"
             : "다소 완만한 편"}
-          입니다. 인센티브는 신입 평균{" "}
-          {Math.round((company.salary.entry.incentive.avgAmount || 0) / 10000).toLocaleString("ko-KR")}만원,
-          시니어 평균{" "}
-          {Math.round((company.salary.senior.incentive.avgAmount || 0) / 10000).toLocaleString("ko-KR")}만원
-          수준이 보고됩니다.
+          입니다.{" "}
+          {noIncentive ? (
+            <>
+              보상 구조는 별도 인센티브 없이 전액 현금 연봉 중심으로 책정되는
+              것으로 알려져 있어, 기본급 자체가 곧 영끌 연봉에 해당합니다.
+            </>
+          ) : (
+            <>
+              인센티브는 신입 평균{" "}
+              {Math.round((company.salary.entry.incentive.avgAmount || 0) / 10000).toLocaleString("ko-KR")}만원,
+              시니어 평균{" "}
+              {Math.round((company.salary.senior.incentive.avgAmount || 0) / 10000).toLocaleString("ko-KR")}만원
+              수준이 보고됩니다.
+            </>
+          )}
         </p>
 
         {benchmark && (
@@ -145,8 +165,19 @@ export default function CompanyNarrative({ company }: Props) {
           {company.workLife.remoteWork.policy === "hybrid" &&
             company.workLife.remoteWork.daysPerWeek !== undefined &&
             ` (주 ${company.workLife.remoteWork.daysPerWeek}일 출근)`}
-          이며, 연차는 연 {vacation.days}일 부여되고 실사용률은 약 {vacation.usageRate}%로
-          보고됩니다. 워라밸을 우선시한다면 이 수치를 동종사와 직접 비교해 본 뒤
+          이며,{" "}
+          {unlimitedVacation ? (
+            <>
+              연차는 무제한(자율) 운영으로 알려져 있어 정해진 일수 없이 팀·개인
+              자율에 맡겨집니다.
+            </>
+          ) : (
+            <>
+              연차는 연 {vacation.days}일 부여되고 실사용률은 약{" "}
+              {vacation.usageRate}%로 보고됩니다.
+            </>
+          )}{" "}
+          워라밸을 우선시한다면 이 수치를 동종사와 직접 비교해 본 뒤
           판단하는 것을 권장합니다.
         </p>
 

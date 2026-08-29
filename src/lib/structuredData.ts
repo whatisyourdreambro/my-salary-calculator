@@ -25,7 +25,9 @@ export function organizationLd() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// WebSite — 사이트 검색 박스 활성화 (Google sitelinks search box)
+// WebSite — 사이트 아이덴티티만 선언.
+// SearchAction(sitelinks search box)은 제거 — urlTemplate(/salary/{term})이
+// 임의 검색어로 404를 유발했고, 구글이 사이트링크 검색박스를 은퇴시켜 실익 없음.
 // ─────────────────────────────────────────────────────────────
 export function webSiteLd() {
  return {
@@ -33,14 +35,6 @@ export function webSiteLd() {
  "@type": "WebSite",
  name: SITE_NAME,
  url: SITE_URL,
- potentialAction: {
- "@type": "SearchAction",
- target: {
- "@type": "EntryPoint",
- urlTemplate: `${SITE_URL}/salary/{search_term_string}`,
- },
- "query-input": "required name=search_term_string",
- },
  };
 }
 

@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 import { Calendar, Clock, Briefcase } from "lucide-react";
+
+// "YYYY-MM-DD"(date input 값)를 로컬 자정으로 파싱.
+// new Date("YYYY-MM-DD")는 UTC 자정으로 해석되어 UTC- 시간대에서 하루 밀리는
+// off-by-one을 만든다 — split 후 로컬 생성자로 통일.
+function parseLocalDate(ymd: string): Date {
+ const [y, m, d] = ymd.split("-").map(Number);
+ return new Date(y, m - 1, d);
+}
+
 // --- D-Day Calculator ---
 export function DDayCalculator() {
  const [targetDate, setTargetDate] = useState("");
@@ -11,7 +20,7 @@ export function DDayCalculator() {
  if (!targetDate) return;
  const today = new Date();
  today.setHours(0, 0, 0, 0);
- const target = new Date(targetDate);
+ const target = parseLocalDate(targetDate);
  target.setHours(0, 0, 0, 0);
 
  const diffTime = target.getTime() - today.getTime();
@@ -64,7 +73,7 @@ export function AgeCalculator() {
  const calculate = () => {
  if (!birthDate) return;
  const today = new Date();
- const birth = new Date(birthDate);
+ const birth = parseLocalDate(birthDate);
 
  let age = today.getFullYear() - birth.getFullYear();
  const m = today.getMonth() - birth.getMonth();

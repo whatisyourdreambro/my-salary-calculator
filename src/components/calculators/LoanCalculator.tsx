@@ -42,6 +42,14 @@ export default function LoanCalculator() {
  const calculateLoan = () => {
  const monthlyRate = rate / 100 / 12;
  const totalMonths = term * 12;
+
+ // 기간 0/음수/빈 입력(Number("")=0) 가드 — schedule[0]·schedule[totalMonths-1]
+ // 접근 크래시와 0으로 나누기(₩NaN) 방지
+ if (totalMonths < 1) {
+ setResults(null);
+ return;
+ }
+
  let monthlyPayment = 0;
  let totalInterest = 0;
  const schedule = [];
@@ -49,9 +57,11 @@ export default function LoanCalculator() {
  let balance = amount;
 
  if (method === "level-payment") {
- // 원리금균등
+ // 원리금균등 — 이자율 0%면 공식이 0/0=NaN이 되므로 원금 균등 분할 특수식
  monthlyPayment =
- (amount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
+ monthlyRate === 0
+ ? amount / totalMonths
+ : (amount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
  (Math.pow(1 + monthlyRate, totalMonths) - 1);
 
  for (let i = 1; i <= totalMonths; i++) {

@@ -50,14 +50,22 @@ export default function TetrisPage() {
 
  // --- Initialization ---
  useEffect(() => {
+ try {
  const savedHighScore = localStorage.getItem("tetris_highscore");
  if (savedHighScore) setHighScore(parseInt(savedHighScore, 10));
+ } catch {
+ // 프라이버시 모드 등 localStorage 접근 불가 — 최고점 저장만 생략
+ }
  }, []);
 
  useEffect(() => {
  if (score > highScore) {
  setHighScore(score);
+ try {
  localStorage.setItem("tetris_highscore", score.toString());
+ } catch {
+ // 저장 실패 무시 — 게임 진행과 무관
+ }
  }
  }, [score, highScore]);
 

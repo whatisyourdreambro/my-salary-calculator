@@ -147,6 +147,13 @@ function workLifeText(a: CompanyProfile, b: CompanyProfile): string {
   return `${shorter.name.ko}의 주당 실근무시간이 약 ${diff}시간 짧아 워라밸이 상대적으로 양호한 편이며, ${longer.name.ko}는 업무 강도가 높을 수 있습니다.`;
 }
 
+/** 연차 표기 — 300일 이상은 무제한(자율) 센티널(넷플릭스 999 등). 숫자 그대로 노출 금지. */
+function vacationDaysText(c: CompanyProfile): string {
+  return c.workLife.vacation.days >= 300
+    ? "무제한(자율 운영)"
+    : `${c.workLife.vacation.days}일`;
+}
+
 /** 가장 가치 있는 복지 1~2개 추출 (value 기준). */
 function topBenefits(c: CompanyProfile, n = 2): string[] {
   return [...c.benefits]
@@ -389,7 +396,7 @@ export default function ComparePage({ params }: Props) {
     },
     {
       question: `${a.name.ko}와 ${b.name.ko} 워라밸 비교는?`,
-      answer: `평균 주당 실근무시간은 ${a.name.ko} ${a.workLife.weeklyHours.real}시간, ${b.name.ko} ${b.workLife.weeklyHours.real}시간입니다. 연차는 각각 ${a.workLife.vacation.days}일·${b.workLife.vacation.days}일 부여되며, 실제 사용률은 ${a.workLife.vacation.usageRate}% vs ${b.workLife.vacation.usageRate}%입니다. 근무시간이 짧고 연차 사용률이 높을수록 워라밸이 양호한 편입니다.`,
+      answer: `평균 주당 실근무시간은 ${a.name.ko} ${a.workLife.weeklyHours.real}시간, ${b.name.ko} ${b.workLife.weeklyHours.real}시간입니다. 연차는 각각 ${vacationDaysText(a)}·${vacationDaysText(b)}이며, 실제 사용률은 ${a.workLife.vacation.usageRate}% vs ${b.workLife.vacation.usageRate}%입니다. 근무시간이 짧고 연차 사용률이 높을수록 워라밸이 양호한 편입니다.`,
     },
     {
       question: `${a.name.ko}와 ${b.name.ko}의 재택근무·근무 형태는 어떻게 다른가요?`,
@@ -530,7 +537,7 @@ export default function ComparePage({ params }: Props) {
           </p>
           <p>
             <strong>워라밸·근무 환경</strong> — {workLifeText(a, b)} 연차는 각각{" "}
-            {a.workLife.vacation.days}일·{b.workLife.vacation.days}일이며, 실제 사용률은{" "}
+            {vacationDaysText(a)}·{vacationDaysText(b)}이며, 실제 사용률은{" "}
             {a.workLife.vacation.usageRate}% vs {b.workLife.vacation.usageRate}%입니다.
             재택근무 정책은 {a.name.ko}가 {REMOTE_LABEL[a.workLife.remoteWork.policy]}, {b.name.ko}는{" "}
             {REMOTE_LABEL[b.workLife.remoteWork.policy]}로 운영됩니다.
@@ -711,12 +718,12 @@ export default function ComparePage({ params }: Props) {
                 주식 보상
               </div>
               <div className="px-3 py-3 text-center text-muted-blue dark:text-canvas-300">
-                {a.salary.entry.stock
+                {a.salary.entry.stock && a.salary.entry.stock.amount > 0
                   ? `${a.salary.entry.stock.type} ${formatSalaryKorean(a.salary.entry.stock.amount)} (${a.salary.entry.stock.vesting})`
                   : "—"}
               </div>
               <div className="px-3 py-3 text-center text-muted-blue dark:text-canvas-300">
-                {b.salary.entry.stock
+                {b.salary.entry.stock && b.salary.entry.stock.amount > 0
                   ? `${b.salary.entry.stock.type} ${formatSalaryKorean(b.salary.entry.stock.amount)} (${b.salary.entry.stock.vesting})`
                   : "—"}
               </div>

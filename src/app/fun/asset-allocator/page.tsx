@@ -91,7 +91,11 @@ export default function AssetAllocatorGame() {
  if (requestRef.current) cancelAnimationFrame(requestRef.current);
  if (scoreRef.current > highScore) {
  setHighScore(scoreRef.current);
+ try {
  localStorage.setItem("asset_allocator_highscore", scoreRef.current.toString());
+ } catch {
+ // 저장 실패 무시 — 게임 진행과 무관
+ }
  }
 
  // Luxury Confetti
@@ -106,8 +110,12 @@ export default function AssetAllocatorGame() {
  };
 
  useEffect(() => {
+ try {
  const saved = localStorage.getItem("asset_allocator_highscore");
  if (saved) setHighScore(parseInt(saved, 10));
+ } catch {
+ // 프라이버시 모드 등 localStorage 접근 불가 — 최고점 저장만 생략
+ }
  }, []);
 
  // Timer

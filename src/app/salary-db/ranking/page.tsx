@@ -45,16 +45,15 @@ const tierLabel: Record<string, string> = {
 };
 
 export default function CompanyRankingPage() {
-  // 시니어 기준 총보상 = base + 평균 인센티브(avgAmount 우선, 없으면 base×target%)
+  // 시니어 기준 총보상 = base + 평균 인센티브(avgAmount, 없거나 0이면 0 —
+  // 전 소비처(CompanySalaryTable·CompanyNarrative 등)와 동일 표준: target% 추정 합산 금지)
   // 국내 기업만 — 글로벌 기업(isGlobal)은 국내 순위 왜곡 방지 위해 제외
   const ranked = companyRepository
     .getAll()
     .filter((c) => !c.isGlobal)
     .map((c) => {
       const senior = c.salary.senior;
-      const incentive =
-        senior.incentive.avgAmount ??
-        Math.round(senior.base * (senior.incentive.target / 100));
+      const incentive = senior.incentive.avgAmount || 0;
       return {
         id: c.id,
         nameKo: c.name.ko,

@@ -284,7 +284,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  <TrendingUp className="w-4 h-4" /> 평균 인센
  </span>
  <span className="font-bold text-electric tabular-nums">
- {company.incentiveTarget}%
+ {company.incentiveTarget > 0 ? `${company.incentiveTarget}%` : "현금 중심"}
  </span>
  </div>
  <div className="flex justify-between items-center text-sm">

@@ -80,11 +80,17 @@ export const companyAliases: Record<string, string[]> = {
     "네이버클라우드플랫폼",
     "네이버 클라우드 신입",
   ],
-  // 글로벌 — Tesla 직무명 검색에 대응
-  tesla_kr: ["테슬라 어드바이저", "테슬라 한국지사", "Tesla Advisor Korea"],
-
   // ── 글로벌 회사 한국어 표기 ──
-  tesla: ["Tesla", "테슬라코리아", "Tesla Korea"],
+  // (구 tesla_kr 키의 직무명 별칭 3종은 2026-08-30 tesla 로 병합 — tesla_kr id 는
+  //  회사 데이터에 존재하지 않아 죽은 키였음. 중복/유령 키 금지, etri 사건 참조)
+  tesla: [
+    "Tesla",
+    "테슬라코리아",
+    "Tesla Korea",
+    "테슬라 어드바이저",
+    "테슬라 한국지사",
+    "Tesla Advisor Korea",
+  ],
   amazon: ["Amazon", "아마존코리아", "아마존웹서비스", "Amazon Korea"],
 
   // ── 한국 IT 대표 회사 영문 표기 ──

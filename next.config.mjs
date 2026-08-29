@@ -498,7 +498,8 @@ const nextConfig = {
       },
       {
         source: "/guides/naver-vs-kakao",
-        destination: "/salary-db/compare/naver-vs-kakao",
+        // compare 슬러그는 데이터 의존(페어 목록 변경 시 404 위험) — 안정 URL로 교체
+        destination: "/salary-db/naver",
         permanent: true,
       },
       {

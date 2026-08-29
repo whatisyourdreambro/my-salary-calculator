@@ -421,8 +421,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // Individual company pages — /salary-db/[id]로 단일화
  // (이전엔 /company/[id]도 sitemap에 있었으나 동일 정보 두 URL이라 카니발 → /salary-db/[id] 308 redirect로 통합)
+ // raw allCompanies 가 아닌 companyRepository.getAll() 사용 — DART 공시 주입으로
+ // 승격된 lastUpdated 가 사이트맵 lastModified 에도 반영되게 (페이지 렌더와 동일 소스).
  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드
- const { allCompanies } = require('@/data/companies');
+ const { companyRepository } = require('@/lib/salary-data/CompanyRepository');
+ const allCompanies = companyRepository.getAll();
 
  // lastModified는 회사별 실제 lastUpdated 날짜 사용 — 매 배포마다 "오늘 수정"으로
  // 찍히면 Google이 freshness 신호를 무시하므로 정직한 날짜를 넣는다.

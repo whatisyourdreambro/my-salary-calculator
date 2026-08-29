@@ -318,7 +318,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  {/* Detailed Stat Bars */}
  <div className="mt-8 space-y-6">
  <StatBar
- label="총보상 (연봉+인센)"
+ label="총보상 (연봉+인센+주식·사이닝 포함)"
  valueA={result.metrics.totalComp.a}
  valueB={result.metrics.totalComp.b}
  unit="원"

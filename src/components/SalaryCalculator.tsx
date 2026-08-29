@@ -125,10 +125,12 @@ export default function SalaryCalculator() {
  const [mungMood, setMungMood] = useState<"normal" | "happy" | "shocked" | "cool">("normal");
 
  // Load from Local Storage on Mount
+ // getItem 자체도 try 안 — 프라이버시 모드/사이트 데이터 차단 브라우저는
+ // localStorage 접근만으로 SecurityError 를 던진다 (FavoritesButton 패턴)
  useEffect(() => {
+ try {
  const saved = localStorage.getItem("moneysalary-user-input");
  if (saved) {
- try {
  const parsed = JSON.parse(saved);
  if (parsed.salaryInput) setSalaryInput(parsed.salaryInput);
  if (parsed.incomeType) setIncomeType(parsed.incomeType);
@@ -136,9 +138,9 @@ export default function SalaryCalculator() {
  if (parsed.dependents) setDependents(parsed.dependents);
  if (parsed.children) setChildren(parsed.children);
  if (parsed.nonTaxableAmount) setNonTaxableAmount(parsed.nonTaxableAmount);
+ }
  } catch (e) {
  console.error("Failed to load saved inputs", e);
- }
  }
  }, []);
 
@@ -153,7 +155,11 @@ export default function SalaryCalculator() {
  children,
  nonTaxableAmount,
  };
+ try {
  localStorage.setItem("moneysalary-user-input", JSON.stringify(dataToSave));
+ } catch {
+ // 프라이버시 모드·용량 초과 등 저장 실패는 무시 (계산 기능과 무관)
+ }
  }, 1000); // 1 second debounce
  return () => clearTimeout(timer);
  }, [salaryInput, incomeType, payBasis, dependents, children, nonTaxableAmount]);
