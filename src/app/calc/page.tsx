@@ -128,6 +128,13 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    description: "정기적금/예금, 단리/복리, 세후 만기 원리금 + 비과세 옵션",
    season: "금융상품 비교",
  },
+ // 2026-08-30 고아 해소(운영자 결정) — 중기 청년 소득세 감면 반영 실수령 비교 시뮬
+ {
+   href: "/company/simulator",
+   title: "중소 vs 대기업 실수령액 비교 시뮬레이터",
+   description: "중소기업 청년 소득세 감면(90%) 반영 — 연봉 차이의 실제 세후 격차 비교",
+   season: "이직·연봉 협상",
+ },
 ];
 
 export default function CalcIndexPage() {

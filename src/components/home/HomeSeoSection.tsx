@@ -89,6 +89,7 @@ export default function HomeSeoSection() {
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
               { label: "시간외 수당", href: "/calc/overtime-pay-quick" },
               { label: "연차수당", href: "/calc/annual-leave-pay-quick" },
+              { label: "중소 vs 대기업 실수령 비교", href: "/company/simulator" },
               { label: "내 연봉 가능 대출액", href: "/calc/loan-affordability" },
               { label: "대출 갈아타기 절감액", href: "/calc/loan-refinance-savings" },
               { label: "복리 계산기", href: "/calc/compound-interest-quick" },
