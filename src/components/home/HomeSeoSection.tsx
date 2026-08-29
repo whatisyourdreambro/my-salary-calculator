@@ -83,7 +83,7 @@ export default function HomeSeoSection() {
                 href: "/calc/sk-hynix-bonus",
               },
               { label: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027" },
-              { label: "7월 재산세 납부 (7/16~31)", href: "/property-holding-tax-2026" },
+              { label: "9월 재산세 2기분 납부 (9/16~30)", href: "/property-holding-tax-2026" },
               { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
