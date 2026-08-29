@@ -71,39 +71,7 @@ export const krCompanies_Batch33: CompanyProfile[] = [
     },
     lastUpdated: "2026-05-22",
   },
-  {
-    id: "olive-young",
-    name: { ko: "올리브영", en: "Olive Young" },
-    industry: "H&B Retail",
-    tier: "conglomerate",
-    logo: "💄",
-    description:
-      "CJ 계열 H&B 스토어 1위. 전국 1,300개 매장 + 온라인몰. 화장품·건강기능식품 유통 점유율 압도적.",
-    salary: {
-      entry: { base: 42000000, incentive: { target: 15, max: 30, avgAmount: 7000000 } },
-      junior: { base: 53000000, incentive: { target: 15, max: 30, avgAmount: 9000000 } },
-      senior: { base: 78000000, incentive: { target: 20, max: 40, avgAmount: 18000000 } },
-      lead: { base: 100000000, incentive: { target: 25, max: 50, avgAmount: 27000000 } },
-      executive: { base: 180000000, incentive: { target: 32, max: 65, avgAmount: 65000000 } },
-    },
-    workLife: {
-      weeklyHours: { contract: 40, real: 46 },
-      vacation: { days: 18, usageRate: 75 },
-      remoteWork: { policy: "office", description: "본사 사무직 외 매장직은 현장 근무" },
-    },
-    benefits: [
-      { category: "lifestyle", title: "올리브영 임직원 할인", description: "전 품목 할인 + 포인트", value: 1200000 },
-      { category: "financial", title: "CJ 계열 복지포인트", description: "연 100만원 복지포인트", value: 1000000 },
-      { category: "growth", title: "어학·교육 지원", description: "전 직급 어학·자기계발 지원" },
-    ],
-    culture: {
-      score: 7.4,
-      keywords: ["H&B1위", "CJ계열", "유통혁신"],
-      pros: ["H&B 카테고리 압도적 점유율", "CJ 계열 복지", "이커머스 전환 빠름"],
-      cons: ["유통업 특성상 매장 운영 부담", "본사 채용 규모 제한적"],
-    },
-    lastUpdated: "2026-05-22",
-  },
+  // 2026-08-30 중복 정본화: olive-young → krCompanies_Batch19의 cj-oliveyoung으로 병합·제거 (308 redirect)
   {
     id: "sk-siltron",
     name: { ko: "SK실트론", en: "SK Siltron" },

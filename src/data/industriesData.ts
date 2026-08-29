@@ -790,7 +790,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "머니샐러리 DB에서 대기업·유니콘·외국계·공기업 분류에 속하지 않는 성장 기업·강소기업을 모은 그룹. IT·클라우드부터 바이오·소재·장비까지 업종이 다양하며, 성장 단계와 보상 구조의 회사별 편차가 큰 것이 특징입니다.",
-    topCompanyIds: ["daangn-market", "bucketplace", "ridi", "socar", "class101"],
+    topCompanyIds: ["daangn-market", "ohou", "ridi", "socar", "class101"],
     topJobIds: ["software-engineer", "marketer"],
     faqs: [
       {

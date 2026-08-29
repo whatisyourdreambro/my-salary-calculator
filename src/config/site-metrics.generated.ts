@@ -2,7 +2,7 @@
 // 수치가 바뀌면 npm run build(prebuild) 또는 tsx scripts/gen-site-metrics.ts 로 재생성.
 
 /** 회사 DB 수 — allCompanies.length (dedupe 후, 글로벌 포함) */
-export const COMPANY_COUNT = 434;
+export const COMPANY_COUNT = 430;
 /** 회사별 성과급 계산기 수 — BONUS_CALCS.length */
 export const BONUS_CALC_COUNT = 23;
 /** 직업별 연봉 프로필 수 — jobsData.length */

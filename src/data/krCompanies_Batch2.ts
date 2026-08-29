@@ -349,24 +349,27 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  culture: { score: 8.1, keywords: ["인화", "가전", "안정"], pros: ["대기업의 안정성", "가전 제품 할인", "무난한 분위기"], cons: ["보수적인 문화", "모바일 사업 철수 후 활력 저하"] },
  lastUpdated: "2026-08-15",
  },
+ // 2026-08-30 중복 정본화: krCompanies_Batch15의 posco-holdings(동일 회사)를 이 항목으로
+ // 병합·제거 — 급여·워라밸·복지는 posco-holdings의 최신값(2026-05-18), 격주 4일제는 유지.
+ // 업종은 벤치마크 연속성 위해 Steel / Materials 유지. /salary-db/posco-holdings → /salary-db/posco 308
  {
  id: "posco",
- name: { ko: "POSCO홀딩스", en: "POSCO Holdings" },
+ name: { ko: "포스코홀딩스", en: "POSCO Holdings" },
  industry: "Steel / Materials",
  tier: "conglomerate",
  logo: "🏭",
- description: "친환경 미래소재 대표기업.",
+ description: "철강·이차전지소재·리튬을 아우르는 포스코그룹 지주사. 친환경 미래소재를 이끄는 대표 기업.",
  salary: {
- entry: { base: 55000000, incentive: { target: 20, max: 40, avgAmount: 15000000 } },
- junior: { base: 68000000, incentive: { target: 20, max: 40, avgAmount: 20000000 } },
- senior: { base: 90000000, incentive: { target: 20, max: 40, avgAmount: 30000000 } },
- lead: { base: 120000000, incentive: { target: 20, max: 40, avgAmount: 40000000 } },
- executive: { base: 230000000, incentive: { target: 40, max: 80, avgAmount: 90000000 } },
+ entry: { base: 56000000, incentive: { target: 22, max: 45, avgAmount: 16000000 } },
+ junior: { base: 69000000, incentive: { target: 22, max: 45, avgAmount: 21000000 } },
+ senior: { base: 92000000, incentive: { target: 22, max: 45, avgAmount: 33000000 } },
+ lead: { base: 122000000, incentive: { target: 22, max: 45, avgAmount: 46000000 } },
+ executive: { base: 220000000, incentive: { target: 38, max: 75, avgAmount: 92000000 } },
  },
- workLife: { weeklyHours: { contract: 40, real: 42 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "hybrid", description: "격주 4일제 시행" } },
- benefits: [{ category: "lifestyle", title: "격주 4일제", description: "2주 단위 금요일 휴무", value: 3000000 }, { category: "financial", title: "학자금", description: "자녀 전액", value: 10000000 }],
- culture: { score: 8.4, keywords: ["제철보국", "군대", "변화"], pros: ["격주 4일제 도입 등 변화 시도", "높은 연봉", "탄탄한 재무"], cons: ["여전히 강한 군대 문화", "지방 근무(포항/광양) 가능성"] },
- lastUpdated: "2025-11-23",
+ workLife: { weeklyHours: { contract: 40, real: 43 }, vacation: { days: 20, usageRate: 85 }, remoteWork: { policy: "hybrid", description: "서울 대치동 포스코센터 + 포항, 주 1~2일 재택 (격주 4일제 시행)" } },
+ benefits: [{ category: "lifestyle", title: "격주 4일제", description: "2주 단위 금요일 휴무", value: 3000000 }, { category: "financial", title: "성과 인센티브(PI/PS)", description: "그룹 실적 연동 성과급", value: 16000000 }, { category: "family", title: "자녀 학자금", description: "고교·대학 등록금 전액 지원", value: 13000000 }, { category: "lifestyle", title: "복지포인트", description: "연 200만원 상당 복지카드", value: 2000000 }],
+ culture: { score: 8.4, keywords: ["제철보국", "지주사", "변화"], pros: ["격주 4일제 도입 등 변화 시도", "철강·이차전지소재 미래 사업을 함께 경험", "업계 최고 수준의 자녀 학자금·복지 제도"], cons: ["전통 제조업 그룹 특유의 보수적 조직 문화", "철강 경기 변동에 따른 실적 사이클", "서울·포항 순환 근무 가능성"] },
+ lastUpdated: "2026-05-18",
  },
  {
  id: "cjcheiljedang",

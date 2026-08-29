@@ -37,7 +37,7 @@ export const corpCodeMap: Record<string, CorpCodeMapEntry> = {
   "cj-enm": { corpCode: "00265324", matchedBy: "auto-exact-ko" },
   "cj-fresway": { corpCode: "00127954", matchedBy: "auto-exact-ko" },
   "cj-logistics": { corpCode: "00113410", matchedBy: "auto-exact-ko" },
-  "cj-oliveyoung": { corpCode: "01423068", matchedBy: "manual", note: "씨제이올리브영 — olive-young과 동일 회사 중복 id", verifiedAt: "2026-08-23" },
+  "cj-oliveyoung": { corpCode: "01423068", matchedBy: "manual", note: "씨제이올리브영 — 동명 2법인 중 분할신설(2019) 신법인", verifiedAt: "2026-08-23" },
   "cjcheiljedang": { corpCode: "00635134", matchedBy: "auto-exact-ko" },
   "class101": { corpCode: "01543821", matchedBy: "auto-exact-ko-unlisted" },
   "classys": { corpCode: "01061327", matchedBy: "auto-exact-ko" },
@@ -289,7 +289,7 @@ export const corpCodeMap: Record<string, CorpCodeMapEntry> = {
   "nongshim": { corpCode: "00108241", matchedBy: "auto-exact-ko" },
   "nps": { corpCode: "00706742", matchedBy: "auto-exact-ko-unlisted" },
   "oci": { corpCode: "01760738", matchedBy: "auto-exact-ko" },
-  "olive-young": { corpCode: "01423068", matchedBy: "manual", note: "씨제이올리브영 — 동명 2법인 중 분할신설(2019) 신법인. fetch 데이터로 재검증", verifiedAt: "2026-08-23" },
+  // olive-young: 2026-08-30 중복 정본화로 cj-oliveyoung에 병합 — 항목 제거
   "orion": { corpCode: "01238169", matchedBy: "auto-exact-ko" },
   "orion-corp": { corpCode: "01238169", matchedBy: "auto-exact-ko" },
   "osstem-implant": { corpCode: "00341916", matchedBy: "auto-exact-ko" },
@@ -301,7 +301,7 @@ export const corpCodeMap: Record<string, CorpCodeMapEntry> = {
   "posco-eandc": { corpCode: "00100814", matchedBy: "auto-exact-ko-unlisted" },
   "posco-enc": { corpCode: "00100814", matchedBy: "auto-exact-ko-unlisted" },
   "posco-future-m": { corpCode: "00155276", matchedBy: "auto-exact-ko" },
-  "posco-holdings": { corpCode: "00155319", matchedBy: "auto-exact-en" },
+  // posco-holdings: 2026-08-30 중복 정본화로 posco에 병합 — 항목 제거
   "posco-international": { corpCode: "00124504", matchedBy: "auto-exact-ko" },
   "pulmuone": { corpCode: "00155355", matchedBy: "auto-exact-ko" },
   "ridi": { corpCode: "01083587", matchedBy: "auto-exact-ko-unlisted" },
@@ -367,7 +367,7 @@ export const corpCodeMap: Record<string, CorpCodeMapEntry> = {
   "toss": { corpCode: "01212921", matchedBy: "manual", note: "비바리퍼블리카(비상장)", verifiedAt: "2026-08-23" },
   "toss-bank": { corpCode: "01529195", matchedBy: "auto-exact-ko-unlisted" },
   "toss-securities": { corpCode: "01527984", matchedBy: "auto-exact-ko-unlisted" },
-  "toss-viva": { corpCode: "01212921", matchedBy: "manual", note: "비바리퍼블리카 — toss와 동일 회사 중복 id", verifiedAt: "2026-08-23" },
+  // toss-viva: 2026-08-30 중복 정본화로 toss에 병합 — 항목 제거
   "visang-education": { corpCode: "00520887", matchedBy: "auto-exact-ko" },
   "webzen": { corpCode: "00405320", matchedBy: "auto-exact-ko" },
   "wemade": { corpCode: "00444329", matchedBy: "auto-exact-ko" },

@@ -564,24 +564,27 @@ export const seedCompanies: CompanyProfile[] = [
  lastUpdated: "2025-11-23",
  },
  // 6. Viva Republica (Toss)
+ // 2026-08-30 중복 정본화: krCompanies_Batch28의 toss-viva(동일 회사)를 이 항목으로
+ // 병합·제거 — 급여(성과급 포함)·워라밸은 toss-viva의 최신값, 스톡·사이닝은 기존값 유지.
+ // /salary-db/toss-viva → /salary-db/toss 308 (next.config redirects)
  {
  id: "toss",
- name: { ko: "비바리퍼블리카 (토스)", en: "Viva Republica" },
+ name: { ko: "토스(비바리퍼블리카)", en: "Toss (Viva Republica)" },
  industry: "Fintech",
  tier: "unicorn",
  logo: "🔵",
- description: "금융의 모든 것을 토스에서. 대한민국 핀테크 혁신을 주도하는 유니콘입니다.",
+ description: "국내 1위 핀테크 유니콘. 간편송금·토스뱅크·토스증권·토스인슈어런스 금융 슈퍼앱. 기업가치 10조원+.",
  salary: {
- entry: { base: 65000000, incentive: { target: 0, max: 0, avgAmount: 0 }, stock: { type: "Option", amount: 100000000, vesting: "4 years" }, signOn: 20000000 },
- junior: { base: 80000000, incentive: { target: 0, max: 0, avgAmount: 0 }, stock: { type: "Option", amount: 100000000, vesting: "4 years" } },
- senior: { base: 120000000, incentive: { target: 0, max: 0, avgAmount: 0 }, stock: { type: "Option", amount: 200000000, vesting: "4 years" } },
- lead: { base: 180000000, incentive: { target: 0, max: 0, avgAmount: 0 }, stock: { type: "Option", amount: 300000000, vesting: "4 years" } },
- executive: { base: 300000000, incentive: { target: 0, max: 0, avgAmount: 0 }, stock: { type: "Option", amount: 500000000, vesting: "4 years" } },
+ entry: { base: 65000000, incentive: { target: 25, max: 50, avgAmount: 18000000 }, stock: { type: "Option", amount: 100000000, vesting: "4 years" }, signOn: 20000000 },
+ junior: { base: 81000000, incentive: { target: 25, max: 50, avgAmount: 24000000 }, stock: { type: "Option", amount: 100000000, vesting: "4 years" } },
+ senior: { base: 130000000, incentive: { target: 30, max: 60, avgAmount: 45000000 }, stock: { type: "Option", amount: 200000000, vesting: "4 years" } },
+ lead: { base: 163000000, incentive: { target: 35, max: 70, avgAmount: 65000000 }, stock: { type: "Option", amount: 300000000, vesting: "4 years" } },
+ executive: { base: 290000000, incentive: { target: 40, max: 80, avgAmount: 135000000 }, stock: { type: "Option", amount: 500000000, vesting: "4 years" } },
  },
  workLife: {
  weeklyHours: { contract: 40, real: 50 },
- vacation: { days: 25, usageRate: 90 },
- remoteWork: { policy: "office", description: "오피스 퍼스트 (전원 출근)" },
+ vacation: { days: 18, usageRate: 78 },
+ remoteWork: { policy: "hybrid", daysPerWeek: 3, description: "주 3일 출근·2일 재택" },
  },
  benefits: [
  { category: "lifestyle", title: "식대/간식 무제한", description: "법인카드 식대 전액 지원", value: 6000000 },
@@ -592,9 +595,9 @@ export const seedCompanies: CompanyProfile[] = [
  score: 8.2,
  keywords: ["몰입", "자율", "책임"],
  pros: ["업계 최고 대우 (사이닝, 스톡)", "최고의 동료들", "식대 무제한 등 실질적 복지"],
- cons: ["높은 업무 강도 (워라밸 부족)", "오피스 출근 필수", "치열한 생존 경쟁"],
+ cons: ["높은 업무 강도 (워라밸 부족)", "치열한 생존 경쟁"],
  },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-05-15",
  },
  // 7. Hyundai Motor
  {

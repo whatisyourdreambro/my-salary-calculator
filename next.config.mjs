@@ -123,6 +123,27 @@ const nextConfig = {
         destination: "/fun/salary-battle",
         permanent: true,
       },
+      // 회사 중복 정본화 (2026-08-30): 동일 회사 2중 등재 4쌍 병합 — 제거 id → 정본 id
+      {
+        source: "/salary-db/toss-viva",
+        destination: "/salary-db/toss",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/bucketplace",
+        destination: "/salary-db/ohou",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/posco-holdings",
+        destination: "/salary-db/posco",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/olive-young",
+        destination: "/salary-db/cj-oliveyoung",
+        permanent: true,
+      },
       // GSC 404 출혈 차단 (7차 점검, 2026-07-06 정정):
       // -2/-3 URL은 main 코드·데이터에서 생성된 적 없음(병합 안 된 브랜치 잔재 +
       // 외부 유입 추정 — git 전 이력 검증). 원본 슬러그로 영구 리디렉션(308)해 크롤 예산 회수.

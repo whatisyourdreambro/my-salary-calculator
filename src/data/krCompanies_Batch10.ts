@@ -137,13 +137,15 @@ export const krCompanies_Batch10: CompanyProfile[] = [
     culture: { score: 6.8, keywords: ["성장", "강도높음", "물류"], pros: ["새벽배송 시장의 선도 기업", "빠른 성장 속 다양한 경험", "프리미엄 식품 큐레이션 노하우"], cons: ["높은 업무 강도와 빠른 호흡", "흑자 전환 압박과 비용 통제"] },
     lastUpdated: "2026-05-15",
   },
+  // 2026-08-30 중복 정본화: krCompanies_Batch28의 bucketplace(동일 회사)를 이 항목으로
+  // 병합·제거 — 설명·스톡옵션 복지만 이관, 급여·워라밸은 기존값 유지.
   {
     id: "ohou",
     name: { ko: "오늘의집", en: "Ohou (Bucketplace)" },
     industry: "Platform",
     tier: "unicorn",
     logo: "🛋️",
-    description: "라이프스타일 슈퍼앱. 집 꾸미기의 시작.",
+    description: "인테리어·홈리빙 라이프스타일 슈퍼앱(운영사 버킷플레이스). 콘텐츠+커머스+시공 연결, 월 1,000만 사용자.",
     salary: {
       entry: { base: 53000000, incentive: { target: 8, max: 20, avgAmount: 4000000 } },
       junior: { base: 66000000, incentive: { target: 8, max: 20, avgAmount: 6000000 } },
@@ -152,7 +154,7 @@ export const krCompanies_Batch10: CompanyProfile[] = [
       executive: { base: 200000000, incentive: { target: 25, max: 60, avgAmount: 65000000 } },
     },
     workLife: { weeklyHours: { contract: 40, real: 45 }, vacation: { days: 20, usageRate: 83 }, remoteWork: { policy: "hybrid", daysPerWeek: 3, description: "자율 기반 하이브리드 근무" } },
-    benefits: [{ category: "lifestyle", title: "인테리어 지원금", description: "오늘의집 쇼핑 포인트 지원", value: 1500000 }, { category: "growth", title: "도서/세미나비", description: "성장 지원금 제공", value: 1500000 }],
+    benefits: [{ category: "lifestyle", title: "인테리어 지원금", description: "오늘의집 쇼핑 포인트 지원", value: 1500000 }, { category: "growth", title: "도서/세미나비", description: "성장 지원금 제공", value: 1500000 }, { category: "financial", title: "스톡옵션", description: "전 직원 스톡옵션", value: 0 }],
     culture: { score: 7.9, keywords: ["커머스", "프로덕트", "성장"], pros: ["라이프스타일 1위 플랫폼 경험", "프로덕트 중심의 일하는 문화", "빠른 성장과 커리어 기회"], cons: ["커머스 수익화에 대한 압박", "빠른 업무 속도"] },
     lastUpdated: "2026-05-15",
   },

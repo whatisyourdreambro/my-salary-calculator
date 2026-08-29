@@ -14,7 +14,13 @@ export const companyAliases: Record<string, string[]> = {
   hmm: ["에이치엠엠", "현대상선"],
   "hanwha-ocean": ["대우조선해양", "대우조선"],
   "dl-enc": ["디엘이앤씨", "DL E&C", "대림산업"],
-  "posco-holdings": ["포스코", "POSCO"],
+  // 2026-08-30 중복 정본화: posco-holdings id 제거 → 별칭을 posco로 이관
+  posco: ["포스코", "POSCO", "포스코 홀딩스"],
+
+  // ── 중복 정본화로 흡수된 표기 (2026-08-30) ──
+  toss: ["토스", "비바리퍼블리카"],
+  ohou: ["버킷플레이스", "오늘의 집"],
+  "cj-oliveyoung": ["올리브영", "올영"],
 
   // ── 영문↔한글 표기 차이 ──
   lgensol: ["엘지에너지솔루션", "엘지엔솔", "LG엔솔", "LG에너지"],

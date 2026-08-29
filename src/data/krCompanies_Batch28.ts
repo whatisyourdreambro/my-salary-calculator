@@ -1,38 +1,8 @@
 import { CompanyProfile } from "@/types/company";
 
 // Batch28: 핀테크/플랫폼/패션/식품 (25개)
+// 2026-08-30 중복 정본화: toss-viva → seedCompanies의 toss로 병합·제거 (308 redirect)
 export const krCompanies_Batch28: CompanyProfile[] = [
-  {
-    id: "toss-viva",
-    name: { ko: "토스(비바리퍼블리카)", en: "Toss (Viva Republica)" },
-    industry: "Fintech",
-    tier: "unicorn",
-    logo: "💸",
-    description: "국내 1위 핀테크 유니콘. 간편송금·토스뱅크·토스증권·토스인슈어런스 금융 슈퍼앱. 기업가치 10조원+.",
-    salary: {
-      entry: { base: 65000000, incentive: { target: 25, max: 50, avgAmount: 18000000 } },
-      junior: { base: 81000000, incentive: { target: 25, max: 50, avgAmount: 24000000 } },
-      senior: { base: 130000000, incentive: { target: 30, max: 60, avgAmount: 45000000 } },
-      lead: { base: 163000000, incentive: { target: 35, max: 70, avgAmount: 65000000 } },
-      executive: { base: 290000000, incentive: { target: 40, max: 80, avgAmount: 135000000 } },
-    },
-    workLife: {
-      weeklyHours: { contract: 40, real: 50 },
-      vacation: { days: 18, usageRate: 78 },
-      remoteWork: { policy: "hybrid", description: "주 3일 출근·2일 재택" },
-    },
-    benefits: [
-      { category: "financial", title: "스톡옵션", description: "전 직원 스톡옵션 부여", value: 0 },
-      { category: "lifestyle", title: "간식·복지", description: "무제한 간식·점심 제공", value: 600000 },
-    ],
-    culture: {
-      score: 8.5,
-      keywords: ["핀테크유니콘", "금융슈퍼앱", "고성과급"],
-      pros: ["국내 핀테크 최상위 급여", "전 직원 스톡옵션", "빠른 성장·도전 문화"],
-      cons: ["업무 강도 높음", "완벽주의 문화로 스트레스"],
-    },
-    lastUpdated: "2026-05-15",
-  },
   {
     id: "kakaopay",
     name: { ko: "카카오페이", en: "Kakao Pay" },
@@ -218,37 +188,7 @@ export const krCompanies_Batch28: CompanyProfile[] = [
     },
     lastUpdated: "2026-05-15",
   },
-  {
-    id: "bucketplace",
-    name: { ko: "오늘의집(버킷플레이스)", en: "Bucketplace (Ohouse)" },
-    industry: "Interior Platform",
-    tier: "unicorn",
-    logo: "🛋️",
-    description: "인테리어·홈리빙 커머스 플랫폼 유니콘. 콘텐츠+커머스+시공 연결, 월 1,000만 사용자.",
-    salary: {
-      entry: { base: 56000000, incentive: { target: 20, max: 40, avgAmount: 12500000 } },
-      junior: { base: 70000000, incentive: { target: 20, max: 40, avgAmount: 17000000 } },
-      senior: { base: 105000000, incentive: { target: 25, max: 50, avgAmount: 30000000 } },
-      lead: { base: 131000000, incentive: { target: 28, max: 55, avgAmount: 42000000 } },
-      executive: { base: 236000000, incentive: { target: 35, max: 68, avgAmount: 95000000 } },
-    },
-    workLife: {
-      weeklyHours: { contract: 40, real: 46 },
-      vacation: { days: 20, usageRate: 85 },
-      remoteWork: { policy: "hybrid", description: "주 2~3일 재택" },
-    },
-    benefits: [
-      { category: "financial", title: "스톡옵션", description: "전 직원 스톡옵션", value: 0 },
-      { category: "lifestyle", title: "인테리어 구매 할인", description: "오늘의집 구매 임직원 할인", value: 600000 },
-    ],
-    culture: {
-      score: 8.2,
-      keywords: ["인테리어플랫폼", "콘텐츠커머스", "유니콘"],
-      pros: ["홈리빙 시장 1위 플랫폼", "콘텐츠+커머스 통합 경험", "스톡옵션"],
-      cons: ["부동산 경기 연동 수요 변동", "시공 연결 품질 관리 어려움"],
-    },
-    lastUpdated: "2026-05-15",
-  },
+  // 2026-08-30 중복 정본화: bucketplace → krCompanies_Batch10의 ohou로 병합·제거 (308 redirect)
   {
     id: "musinsa",
     name: { ko: "무신사", en: "Musinsa" },
