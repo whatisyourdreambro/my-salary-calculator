@@ -46,7 +46,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     company: "SK하이닉스",
     companyId: "sk-hynix",
     sector: "반도체·디스플레이",
-    hook: "2026 잠정합의 반영 — PS 현금 40%+자사주 60% + PI 150%",
+    hook: "잠정합의안 8/25 총투표 부결·재협상 중 — 신구 체계 비교 시뮬",
     seasonLabel: "2월 PS · 반기 PI",
     badge: "HOT",
   },
