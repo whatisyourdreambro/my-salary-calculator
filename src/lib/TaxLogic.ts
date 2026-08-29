@@ -44,6 +44,21 @@ export function calculateSalary2026(
  dependents: number = 1,
  children: number = 0
 ): TaxResult {
+ // 방어: 연봉 0 이하 입력은 전 항목 0 반환 (음수 공제·음수 실수령 방지).
+ // 정상 입력(연봉 > 0) 경로의 산출값에는 영향 없음.
+ if (annualSalary <= 0) {
+ return {
+ nationalPension: 0,
+ healthInsurance: 0,
+ longTermCare: 0,
+ employmentInsurance: 0,
+ incomeTax: 0,
+ localIncomeTax: 0,
+ totalDeductions: 0,
+ netPay: 0,
+ };
+ }
+
  const monthlySalary = annualSalary / 12;
 
  // 1. National Pension
@@ -53,7 +68,9 @@ export function calculateSalary2026(
 
  // 2. Health Insurance
  // Logic: Applied on (Monthly Salary - NonTaxable)
- const healthBase = monthlySalary - nonTaxableMonthly;
+ // 월급 < 비과세인 극소 연봉에서 보수월액이 음수가 되어 보험료가
+ // 음수로 나오는 것을 방지 (정상 입력에서는 클램프 미작동 — 산출값 동일)
+ const healthBase = Math.max(0, monthlySalary - nonTaxableMonthly);
  const healthInsurance = floorTo10(healthBase * TAX_RATES_2026.HEALTH_INSURANCE);
 
  // 3. Long-term Care Insurance

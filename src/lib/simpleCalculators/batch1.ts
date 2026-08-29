@@ -2,6 +2,7 @@
 // 세금 15 + 연봉 10 + 대출 10 + 투자 15 = 50개
 
 import type { CalculatorDef } from "./types";
+import { calculateSeveranceTax } from "@/lib/severanceCalculator";
 
 // ─── 세금 (Tax) 15개 ───────────────────────────────────────
 const TAX: CalculatorDef[] = [
@@ -203,21 +204,26 @@ const TAX: CalculatorDef[] = [
  { name: "years", label: "근속연수", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ severance, years }) => {
- // 환산급여 = (퇴직금 - 근속연수공제) ÷ 근속연수 × 12
- const yearsDeduction =
- years <= 5 ? years * 1000000 :
- years <= 10 ? 5000000 + (years - 5) * 2000000 :
- years <= 20 ? 15000000 + (years - 10) * 2500000 :
- 40000000 + (years - 20) * 3000000;
- const adjusted = ((severance - yearsDeduction) / years) * 12;
- const tax = adjusted * 0.15 - 1260000; // 단순 추정
+ // 정식 산식 재사용 (severanceCalculator.ts calculateSeveranceTax):
+ // 근속연수공제 → 환산급여 → 환산급여공제 → 누진세율 → ÷12 × 근속연수.
+ // 근속 1년 미만은 1년으로 본다(세법 관행). 표기는 기존 관행대로 소득세만(지방소득세 별도).
+ const totalDays = Math.max(365, Math.ceil(years * 365));
+ const { incomeTax, details } = calculateSeveranceTax(severance, totalDays);
+ // 공제가 퇴직금 이상이면 정식 함수가 details를 0으로 반환 → 0원 공제 오표시 방지
+ if (incomeTax === 0 && details.taxBase === 0) {
  return {
- primary: { label: "예상 퇴직소득세", value: Math.round(Math.max(0, tax)), suffix: "원" },
+ primary: { label: "예상 퇴직소득세", value: 0, suffix: "원" },
+ note: "근속연수공제·환산급여공제가 퇴직금 이상이라 납부할 퇴직소득세가 없습니다.",
+ };
+ }
+ return {
+ primary: { label: "예상 퇴직소득세", value: incomeTax, suffix: "원" },
  secondary: [
- { label: "근속연수공제", value: yearsDeduction, suffix: "원" },
- { label: "환산급여", value: Math.round(adjusted), suffix: "원" },
+ { label: "근속연수공제", value: details.serviceYearDeduction, suffix: "원" },
+ { label: "환산급여", value: details.convertedSalary, suffix: "원" },
+ { label: "환산급여공제", value: details.convertedSalaryDeduction, suffix: "원" },
  ],
- note: "환산급여 방식 단순 추정. 정확한 계산은 국세청 홈택스 모의계산 권장.",
+ note: "정식 환산급여 산식 적용(지방소득세 10% 별도). 정확한 계산은 국세청 홈택스 모의계산 권장.",
  };
  },
  },

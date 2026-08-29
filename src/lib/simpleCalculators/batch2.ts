@@ -1049,13 +1049,13 @@ const UNEMPLOYMENT: CalculatorDef[] = [
      const LOWER_LIMIT = Math.round((10320 * 8 * 0.8)); // 2026년 최저시급 10,320원 기준
      const dailyBenefit = Math.min(UPPER_LIMIT, Math.max(LOWER_LIMIT, Math.round(dailyAvg * 0.6)));
 
-     // 수급 기간 결정 (고용보험법 기준)
-     let benefitDays = 90;
-     if (workMonths < 12) benefitDays = 90;
-     else if (workMonths < 36) benefitDays = 120;
-     else if (workMonths < 60) benefitDays = 150;
-     else if (workMonths < 120) benefitDays = 180;
-     else if (workMonths < 240) benefitDays = 210;
+     // 소정급여일수 — 현행 고용보험법 별표1 (50세 미만 기준)
+     // 가입기간 1년 미만 120 / 1~3년 150 / 3~5년 180 / 5~10년 210 / 10년 이상 240
+     let benefitDays = 120;
+     if (workMonths < 12) benefitDays = 120;
+     else if (workMonths < 36) benefitDays = 150;
+     else if (workMonths < 60) benefitDays = 180;
+     else if (workMonths < 120) benefitDays = 210;
      else benefitDays = 240;
 
      const totalBenefit = dailyBenefit * benefitDays;
@@ -1068,7 +1068,7 @@ const UNEMPLOYMENT: CalculatorDef[] = [
          { label: "수급 가능 기간", value: benefitDays, suffix: "일" },
          { label: "월 환산 수급액", value: monthlyBenefit, suffix: "원" },
        ],
-       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일. 실제 수급은 워크넷 수급자격 인정 후 지급됩니다.`,
+       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일(50세 미만 기준). 50세 이상·장애인은 각 구간 +30일(최대 270일). 실제 수급은 워크넷 수급자격 인정 후 지급됩니다.`,
      };
    },
    explanation:
@@ -1090,6 +1090,7 @@ const UNEMPLOYMENT: CalculatorDef[] = [
      },
    ],
    caveats: [
+     "수급기간은 50세 미만 기준. 50세 이상·장애인은 각 구간 +30일(최대 270일)",
      "이직 전 18개월 중 피보험단위기간(고용보험 가입일수) 180일 이상 필요",
      "자발적 퇴직은 원칙적 수급 불가 (불가피한 사유 제외)",
      "수급 기간은 이직일 기준 최대 1년 이내",

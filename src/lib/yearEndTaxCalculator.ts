@@ -130,6 +130,13 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  ? RENT_CREDIT_2026.RATE_HIGH
  : RENT_CREDIT_2026.RATE_LOW);
 
+ // 기부금 세액공제 — 1천만원 이하 15%, 초과분 30% (소득세법 §59의4)
+ // 유형별 한도(소득 30%·10% 등)·이월공제는 단순화 미반영 — 본 엔진의
+ // 다른 항목(보험료·교육비 한도 미적용 등)과 동일한 정밀도 수준
+ const donationCredit =
+ Math.min(inputs.donation, 10_000_000) * 0.15 +
+ Math.max(0, inputs.donation - 10_000_000) * 0.3;
+
  const totalTaxCredit =
  earnedIncomeTaxCredit +
  childTaxCredit +
@@ -137,6 +144,7 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  insuranceCredit +
  medicalCredit +
  educationCredit +
+ donationCredit +
  rentCredit;
 
  // 6. 최종 결정세액 및 환급액

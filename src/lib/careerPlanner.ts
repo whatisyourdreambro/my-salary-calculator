@@ -1,5 +1,7 @@
 // src/lib/careerPlanner.ts
 
+import { calculateSalary2026 } from "./TaxLogic";
+
 // --- TYPE DEFINITIONS ---
 
 // Event types: Promotion, Job Change, Education/Sabbatical, Start Side Project
@@ -67,14 +69,13 @@ export interface SimulationYearOutput {
 
 // --- SIMULATION LOGIC ---
 
-// A simplified net income calculation for the simulation
+// 시뮬레이션용 세후 연소득 — 정본 엔진(TaxLogic.calculateSalary2026) 재사용.
+// 기존 구간 정률(0.85/0.8/0.75/0.7)은 5,000만·8,000만·1.2억 경계에서 세후액이
+// 역전되는 절벽(예: 5,000만 경계 −249만)이 있어 정식 산식으로 교체.
+// 가정: 비과세 월 20만·부양가족 본인 1인·자녀 0 — 누진세율 구조상 단조 증가 보장.
 function calculateNet(gross: number): number {
- // This is a very rough approximation for simulation purposes.
- // It doesn't account for detailed tax brackets or deductions.
- if (gross <= 50000000) return gross * 0.85;
- if (gross <= 80000000) return gross * 0.8;
- if (gross <= 120000000) return gross * 0.75;
- return gross * 0.7;
+ if (gross <= 0) return 0;
+ return calculateSalary2026(gross, 200_000, 1, 0).netPay * 12;
 }
 
 export function runCareerSimulation(
