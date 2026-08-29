@@ -1043,8 +1043,9 @@ const UNEMPLOYMENT: CalculatorDef[] = [
    compute: ({ avgMonthly, workMonths }) => {
      // 일일 평균임금
      const dailyAvg = avgMonthly / 30;
-     // 구직급여 일액 = 일일 평균임금 × 60% (상한: 66,000원, 하한: 최저임금 × 80% ÷ 8시간)
-     const UPPER_LIMIT = 66000;
+     // 구직급여 일액 = 일일 평균임금 × 60% (상한: 68,100원 — 2026년 이직자 기준,
+     // 하한: 최저시급 × 80% × 8시간 = 66,048원)
+     const UPPER_LIMIT = 68100; // 매년 고시 확인 필요 (2025년까지 66,000원)
      const LOWER_LIMIT = Math.round((10320 * 8 * 0.8)); // 2026년 최저시급 10,320원 기준
      const dailyBenefit = Math.min(UPPER_LIMIT, Math.max(LOWER_LIMIT, Math.round(dailyAvg * 0.6)));
 
@@ -1073,7 +1074,7 @@ const UNEMPLOYMENT: CalculatorDef[] = [
    explanation:
      "실업급여(구직급여)는 고용보험 가입자가 비자발적으로 이직(권고사직·계약만료 등)했을 때 지급됩니다. 이직 전 18개월 중 고용보험 가입기간이 180일 이상이어야 합니다.",
    formula:
-     "구직급여 일액 = 이직 전 3개월 평균 일급 × 60% (상한 66,000원/하한 최저임금×80%÷8시간)",
+     "구직급여 일액 = 이직 전 3개월 평균 일급 × 60% (상한 68,100원/하한 최저시급×80%×8시간=66,048원)",
    faqs: [
      {
        q: "실업급여 신청 방법은 어떻게 되나요?",

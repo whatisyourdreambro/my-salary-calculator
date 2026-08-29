@@ -35,7 +35,8 @@ const INSURANCE_PERIODS = [
 ] as const;
 
 const MIN_WAGE_2026 = 10320;
-const DAILY_UPPER_LIMIT = 66000;
+// 2026년 이직자 기준 상한액 — 매년 고시 확인 필요 (2025년까지 66,000원)
+const DAILY_UPPER_LIMIT = 68100;
 
 interface FaqItem {
  q: string;
@@ -81,8 +82,8 @@ export default function UnemploymentBenefitContent() {
   const dailyBenefit = dailyWage * 0.6;
 
   const lowerLimit = MIN_WAGE_2026 * 0.8 * hoursPerDay;
-  // 2026년은 하한액(8시간 기준 66,048원)이 상한액(66,000원)보다 높아
-  // 하한액을 우선 적용 → 8시간 근로자는 사실상 일 66,048원 정액 수준.
+  // 2026년: 상한 68,100원 > 하한(8시간 기준 66,048원) — 상·하한 사이 구간이 존재.
+  // isFlatRate는 하한≥상한으로 역전되는 해에만 true (과거 2025년까지의 상태).
   const isFlatRate = lowerLimit >= DAILY_UPPER_LIMIT;
   const clampedDailyBenefit = Math.max(
    Math.min(dailyBenefit, DAILY_UPPER_LIMIT),
@@ -241,7 +242,7 @@ export default function UnemploymentBenefitContent() {
        </p>
        {result.isFlatRate && (
         <p className="text-xs text-blue-500 mt-1">
-         2026년은 8시간 기준 일 66,048원 정액 수준
+         하한액이 상한액보다 높아 하한액이 정액 적용됩니다
         </p>
        )}
        {result.isUpperLimit && (
@@ -271,9 +272,9 @@ export default function UnemploymentBenefitContent() {
      <div className="bg-background/70 rounded-xl p-4 text-sm text-muted-foreground">
       <p className="flex items-start gap-2">
        <Info className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-       2026년 기준: 하한액은 최저임금(10,320원)의 80% × 1일 소정근로시간으로, 8시간
-       기준 66,048원이 상한액(66,000원)보다 높아 사실상 일 66,048원 정액 수준입니다.
-       신청 후 7일 대기기간이 있어 첫 지급은 약 3주 후 시작됩니다.
+       2026년 이직자 기준: 상한액은 일 68,100원(월 약 204만원), 하한액은
+       최저시급(10,320원)의 80% × 1일 소정근로시간으로 8시간 기준 66,048원(월 약
+       198만원)입니다. 신청 후 7일 대기기간이 있어 첫 지급은 약 3주 후 시작됩니다.
       </p>
      </div>
     </section>

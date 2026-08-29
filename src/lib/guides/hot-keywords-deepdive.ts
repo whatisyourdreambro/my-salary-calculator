@@ -12,7 +12,7 @@ export const hotKeywordsGuides = [
   publishedDate: "2026-05-16",
   views: 0,
   content: `
-<p class="lead">직장을 잃으면 가장 먼저 떠오르는 것이 <strong>실업급여(구직급여)</strong>입니다. 2026년 기준 실업급여는 퇴직 전 평균임금의 60%, 최대 일 66,000원을 최대 270일간 받을 수 있습니다. 하지만 조건과 절차를 정확히 알아야 한 푼도 놓치지 않습니다.</p>
+<p class="lead">직장을 잃으면 가장 먼저 떠오르는 것이 <strong>실업급여(구직급여)</strong>입니다. 2026년 기준 실업급여는 퇴직 전 평균임금의 60%, 최대 일 68,100원을 최대 270일간 받을 수 있습니다. 하지만 조건과 절차를 정확히 알아야 한 푼도 놓치지 않습니다.</p>
 
 <h2>✅ 실업급여 수급 자격 — 이 3가지를 충족해야 합니다</h2>
 <ol>
@@ -37,8 +37,8 @@ export const hotKeywordsGuides = [
 <h3 class="text-lg font-bold text-primary mb-3">1일 구직급여액 계산식</h3>
 <p><strong>퇴직 전 3개월 평균임금 × 60%</strong></p>
 <ul>
-<li>상한: 일 <strong>66,000원</strong> (월 약 198만원)</li>
-<li>하한: 최저임금의 80% × 1일 소정근로시간</li>
+<li>상한: 일 <strong>68,100원</strong> (월 약 204만원, 2026년 이직자 기준)</li>
+<li>하한: 최저시급의 80% × 1일 소정근로시간 (8시간 기준 66,048원)</li>
 </ul>
 <h3 class="text-lg font-bold text-primary mb-3 mt-4">지급 일수 (50세 미만 기준)</h3>
 <table class="w-full text-sm border-collapse">

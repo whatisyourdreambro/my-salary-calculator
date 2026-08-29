@@ -2201,7 +2201,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3501
+  "contentChars": 3532
  },
  {
   "slug": "parental-leave-complete-guide",
