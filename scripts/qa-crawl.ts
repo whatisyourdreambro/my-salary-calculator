@@ -44,7 +44,9 @@ const DOMESTIC_COUNT = allCompanies.filter((c) => !c.isGlobal).length;
 const FORBIDDEN_STRINGS = ["GA 폭증", "GA 분석", "폭증 검증", "485개사", "(GA "];
 
 // (a) 스테일 카운트 리터럴 — 렌더 HTML 에 나오면 실패
-const STALE_COUNT_STRINGS = ["480곳", "480+", "485개", "430곳"];
+// 2026-08-30 중복 정본화(434→430)로 "430곳"이 현행 파생값이 됨 — 목록에서 제거,
+// 이제 스테일이 된 "434곳"을 추가 (카운트 변동 시 이 목록도 함께 갱신할 것)
+const STALE_COUNT_STRINGS = ["480곳", "480+", "485개", "434곳"];
 
 // 대량 동적 트리 — 센티널 + N개 간격 샘플만 크롤
 const HEAVY_PREFIXES = [
