@@ -75,6 +75,19 @@ export const seasonLinks: SeasonLink[] = [
     href: "/medical-tax-credit-2026",
     header: { name: "의료비 세액공제 계산기", description: "난임 30%·무한도 대상 구분", badge: "NEW" },
   },
+  // R2 (2026-08-31) — 연말정산 공제 4축 완성 + 맞벌이 + 11월 피부양자 시즌
+  {
+    href: "/donation-tax-credit-2026",
+    header: { name: "기부금 세액공제 계산기", description: "정치자금·고향사랑 전액공제·한도", badge: "NEW" },
+  },
+  {
+    href: "/calc/dual-income-year-end",
+    header: { name: "맞벌이 연말정산 몰아주기", description: "자녀·의료비 최적 배분 시뮬", badge: "NEW" },
+  },
+  {
+    href: "/health-insurance-dependent",
+    header: { name: "건보 피부양자 자격 판정기", description: "11월 재산정 — 탈락 기준 확인", badge: "NEW" },
+  },
   {
     href: "/new-employee-2026",
     header: { name: "3월 신입 연봉 협상", description: "첫 협상 가이드" },

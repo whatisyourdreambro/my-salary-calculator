@@ -67,6 +67,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // Info pages — 정보성 검색 트래픽
  '/tax-rates-2026',
  '/social-insurance-rates-2026',
+ // 2027 4대보험 요율표 선발행 (2026-08-31 R2) — 연금 10% 확정·건보 확정 시 갱신
+ '/social-insurance-rates-2027',
  '/tax-changes-2026',
  // 2026-07-16 신설 — 세법개정안 7월 말 발표 선점 페이지 (발표 당일 갱신)
  '/tax-reform-2026',
@@ -92,6 +94,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/annual-leave-days',
  // 국민연금 인상 계산기 (2026-08-30 신설) — 2027-01 요율 10% 시행 이벤트
  '/calc/pension-hike-2027',
+ // R2 신규 계산기 5종 (2026-08-31 승인 배치) — 연말정산 시즌·뉴스 트리거·이직
+ '/calc/dual-income-year-end',
+ '/calc/voluntary-retirement',
+ '/calc/dependent-check',
+ '/calc/smb-income-tax-break',
+ '/calc/offer-compare',
  '/calc/child-deduction',
  '/calc/jeonse-loan',
  '/calc/housing-subscription',
@@ -203,6 +211,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/credit-card-deduction-2026',
  '/rent-tax-credit-2026',
  '/medical-tax-credit-2026',
+ // R2 (2026-08-31) — 공제 4축 완성(기부금) + 건보 피부양자 판정기(11월 재산정 시즌)
+ '/donation-tax-credit-2026',
+ '/health-insurance-dependent',
  // 정부 공표 데이터 페이지 3종 (2026-08-15 Phase 3) — 봉급표(1월 폭증)·기초연금·중도퇴사 연말정산
  '/civil-servant-pay-2026',
  '/basic-pension-2026',
@@ -245,6 +256,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
  '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
  '/civil-servant-pay-2027': { lastModified: new Date('2026-08-23') },
+ // R2 신규 8라우트 (2026-08-31)
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
+ '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
+ '/calc/dependent-check': { lastModified: new Date('2026-08-31') },
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-08-31') },
+ '/calc/offer-compare': { lastModified: new Date('2026-08-31') },
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
+ '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
+ '/social-insurance-rates-2027': { lastModified: new Date('2026-08-31') },
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-08-30') },
  '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },

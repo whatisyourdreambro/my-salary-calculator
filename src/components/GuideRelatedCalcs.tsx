@@ -18,10 +18,22 @@ export default function GuideRelatedCalcs({
   guideSlug,
   limit = 4,
 }: GuideRelatedCalcsProps) {
-  // 정적 라우트 계산기(STATIC_CALC_CARDS)는 simpleCalculators에 없으므로 별도 해석
+  // 정적 라우트 계산기(STATIC_CALC_CARDS)는 simpleCalculators에 없으므로 별도 해석.
+  // 카드에 href가 있으면 /calc/{slug} 대신 그 경로로 링크 (최상위 라우트 계산기).
   const calcs = getGuideRelatedCalcs(guideSlug)
-    .map((slug) => STATIC_CALC_CARDS[slug] ?? getCalculatorBySlug(slug))
-    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+    .map((slug) => {
+      const c = STATIC_CALC_CARDS[slug] ?? getCalculatorBySlug(slug);
+      if (!c) return null;
+      return {
+        slug: c.slug,
+        title: c.title,
+        description: c.description,
+        href: STATIC_CALC_CARDS[slug]?.href ?? `/calc/${c.slug}`,
+      };
+    })
+    .filter((c): c is { slug: string; title: string; description: string; href: string } =>
+      Boolean(c)
+    )
     .slice(0, limit);
 
   if (calcs.length === 0) return null;
@@ -35,7 +47,7 @@ export default function GuideRelatedCalcs({
         {calcs.map((calc) => (
           <Link
             key={calc.slug}
-            href={`/calc/${calc.slug}`}
+            href={calc.href}
             className="group flex flex-col gap-2 p-4 rounded-2xl bg-white border border-canvas-200 hover:border-electric hover:bg-electric-5 transition-all"
           >
             <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center group-hover:bg-electric-10 transition-colors">

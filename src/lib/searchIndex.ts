@@ -83,6 +83,15 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 소방관 봉급표", href: "/firefighter-pay-2026", category: "시즌", description: "소방사 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 공무원 봉급표", href: "/civil-servant-pay-2026", category: "시즌", description: "9급 1호봉 213만원·직급별 봉급표", priority: 1 },
  { title: "2027 공무원 봉급표 전망", href: "/civil-servant-pay-2027", category: "시즌", description: "인상률 권고안 3.4~3.9%·확정 일정", priority: 2 },
+ // 2026-08-31 — R2 신규 8건 (연말정산 시즌 패키지·뉴스 트리거·이직)
+ { title: "맞벌이 연말정산 몰아주기 계산기", href: "/calc/dual-income-year-end", category: "계산기", description: "자녀공제·의료비 귀속 시나리오별 부부 합산 세액 비교", priority: 1 },
+ { title: "기부금 세액공제 계산기", href: "/donation-tax-credit-2026", category: "계산기", description: "정치자금·고향사랑 전액공제·종교 10% 한도·10년 이월", priority: 1 },
+ { title: "부양가족 인적공제 판정기", href: "/calc/dependent-check", category: "계산기", description: "부모님·형제 기본공제 150만원 가능 여부 즉시 판정", priority: 1 },
+ { title: "건강보험 피부양자 자격 판정기", href: "/health-insurance-dependent", category: "계산기", description: "소득 2,000만·재산 5.4억 기준 유지/탈락 판정", priority: 1 },
+ { title: "희망퇴직 위로금 실수령 계산기", href: "/calc/voluntary-retirement", category: "계산기", description: "위로금+퇴직금 합산 퇴직소득세·실수령 즉시 계산", priority: 1 },
+ { title: "중소기업 취업자 소득세 감면 계산기", href: "/calc/smb-income-tax-break", category: "계산기", description: "청년 90%·5년 절감액 — 경정청구 소급까지", priority: 2 },
+ { title: "이직 오퍼 실수령 비교", href: "/calc/offer-compare", category: "계산기", description: "오퍼 최대 10개 세후 월 실수령 순위 비교", priority: 2 },
+ { title: "2027 4대보험 요율표", href: "/social-insurance-rates-2027", category: "시즌", description: "국민연금 10% 확정 — 내 월급 공제 변화", priority: 2 },
 ];
 
 const toolPages: SearchEntry[] = [

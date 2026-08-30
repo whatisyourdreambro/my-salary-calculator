@@ -87,6 +87,49 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    description: "요율 9.5→10% 인상 — 내 월급에서 매달 얼마나 더 빠지는지 즉시 계산",
    season: "12~1월 시행 뉴스 피크",
  },
+ // 2026-08-31 R2 신규 7종 — 연말정산 시즌 패키지 + 뉴스 트리거 + 이직
+ {
+   href: "/calc/dual-income-year-end",
+   title: "맞벌이 연말정산 몰아주기",
+   description: "자녀 기본공제·의료비·교육비·기부금을 누구에게 몰아야 부부 합산 세금이 최소인지 시나리오 비교",
+   season: "12~2월 연말정산",
+ },
+ {
+   href: "/donation-tax-credit-2026",
+   title: "기부금 세액공제 계산기",
+   description: "15%·30% 공제율, 정치자금·고향사랑 전액공제, 유형별 한도·이월까지 자동 계산",
+   season: "12~2월 연말정산",
+ },
+ {
+   href: "/calc/dependent-check",
+   title: "부양가족 인적공제 판정기",
+   description: "관계·나이·소득 몇 문항으로 기본공제 150만원 가능/불가 + 추가공제 즉시 판정",
+   season: "1~2월 연말정산 피크",
+ },
+ {
+   href: "/health-insurance-dependent",
+   title: "건강보험 피부양자 자격 판정기",
+   description: "소득·재산 문항으로 피부양자 유지/탈락 즉시 판정 — 11월 재산정 대비",
+   season: "11월 연례 재산정",
+ },
+ {
+   href: "/calc/voluntary-retirement",
+   title: "희망퇴직 위로금 실수령 계산기",
+   description: "위로금(월급×N개월)+법정퇴직금 합산 퇴직소득세 — 위로금만의 추가 세부담까지",
+   season: "11~1월 구조조정 시즌",
+ },
+ {
+   href: "/calc/smb-income-tax-break",
+   title: "중소기업 취업자 소득세 감면 계산기",
+   description: "청년 90%·5년, 한도 200만원 — 세액공제 연동 축소까지 반영한 절감액",
+   season: "2026-12 일몰 막차",
+ },
+ {
+   href: "/calc/offer-compare",
+   title: "이직 오퍼 실수령 비교",
+   description: "오퍼 최대 10개 총보상을 동일 조건 세후 환산 — 월 실수령 순위·BEST 대비 차액",
+   season: "1~3월 이직 피크",
+ },
  {
    href: "/credit-card-deduction-2026",
    title: "신용카드 소득공제 계산기",

@@ -215,6 +215,15 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/calc/ordinary-wage": ["salary", "tax"],
  "/calc/annual-leave-days": ["salary"],
  "/calc/pension-hike-2027": ["tax", "investment"],
+ // 2026-08-31 — R2 신규 8종 dead-end 차단
+ "/calc/dual-income-year-end": ["tax", "salary"],
+ "/calc/voluntary-retirement": ["salary", "tax"],
+ "/calc/dependent-check": ["tax", "family"],
+ "/calc/smb-income-tax-break": ["tax", "salary"],
+ "/calc/offer-compare": ["salary", "tax"],
+ "/donation-tax-credit-2026": ["tax", "salary"],
+ "/health-insurance-dependent": ["tax", "salary"],
+ "/social-insurance-rates-2027": ["tax", "salary"],
 };
 
 /**

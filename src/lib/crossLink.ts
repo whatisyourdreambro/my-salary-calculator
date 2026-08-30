@@ -109,6 +109,16 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
   "simple-vs-general-vat": ["freelancer-tax-essentials", "individual-vs-corporate-tax"],
   // ───── 환율·해외
   "currency-converter": ["currency-exchange-2026", "dollar-investment"],
+  // ───── R2 신규 8종 (2026-08-31) — 시즌 패키지·뉴스 트리거·이직
+  // 정적 라우트 키는 STATIC_CALC_CARDS에 카드(+href)가 있어야 역링크가 렌더된다.
+  "dual-income-year-end": ["year-end-tax-deductions-guide", "medical-edu-donation-concentration-2026", "marriage-tax-benefits-2026"],
+  "voluntary-retirement": ["voluntary-vs-recommended-resignation-2026", "severance-pay-guide", "unemployment-benefits-complete"],
+  "dependent-check": ["year-end-tax-deductions-guide", "year-end-tax-13-tips-2026", "tax-refund-mistakes-2026"],
+  "smb-income-tax-break": ["big-corp-vs-mid-2026", "income-tax-8-step-bracket-2026", "tax-refund-mistakes-2026"],
+  "offer-compare": ["job-change-salary-jump-2026", "salary-negotiation-script-2026"],
+  "donation-tax-credit-2026": ["donation-tax-credit", "religious-donation-100-percent-2026"],
+  "health-insurance-dependent": ["health-insurance-2026-guide", "four-major-insurance-complete", "national-pension-strategy-2026"],
+  "social-insurance-rates-2027": ["four-major-insurance-complete", "social-insurance-reduction"],
 };
 
 /**
@@ -138,7 +148,7 @@ export function getCalcRelatedGuideSlugs(calcSlug: string): string[] {
  */
 export const STATIC_CALC_CARDS: Record<
   string,
-  { slug: string; title: string; description: string }
+  { slug: string; title: string; description: string; href?: string }
 > = {
   "vacation-pay": {
     slug: "vacation-pay",
@@ -154,6 +164,50 @@ export const STATIC_CALC_CARDS: Record<
     slug: "annual-leave-days",
     title: "연차 개수 계산기",
     description: "입사일 기준 연도별 연차 발생 — 회계연도 방식 비교",
+  },
+  // R2 신규 8종 (2026-08-31). href가 있으면 /calc/{slug} 대신 그 경로로 링크.
+  "dual-income-year-end": {
+    slug: "dual-income-year-end",
+    title: "맞벌이 연말정산 몰아주기 계산기",
+    description: "자녀공제·의료비 귀속 시나리오별 부부 합산 결정세액 비교",
+  },
+  "voluntary-retirement": {
+    slug: "voluntary-retirement",
+    title: "희망퇴직 위로금 실수령 계산기",
+    description: "위로금 세금·퇴직소득세 합산 — 세후 실수령액 즉시 계산",
+  },
+  "dependent-check": {
+    slug: "dependent-check",
+    title: "부양가족 인적공제 판정기",
+    description: "기본공제 150만원 가능 여부 — 나이·소득·동거 요건 즉시 판정",
+  },
+  "smb-income-tax-break": {
+    slug: "smb-income-tax-break",
+    title: "중소기업 취업자 소득세 감면 계산기",
+    description: "청년 90%·5년 — 세액공제 연동 축소까지 반영한 절감액",
+  },
+  "offer-compare": {
+    slug: "offer-compare",
+    title: "이직 오퍼 실수령 비교",
+    description: "오퍼 최대 10개 — 월 실수령액 순위·BEST 대비 차액 비교",
+  },
+  "donation-tax-credit-2026": {
+    slug: "donation-tax-credit-2026",
+    title: "기부금 세액공제 계산기",
+    description: "정치자금·고향사랑 전액공제·유형별 한도·이월 자동 계산",
+    href: "/donation-tax-credit-2026",
+  },
+  "health-insurance-dependent": {
+    slug: "health-insurance-dependent",
+    title: "건강보험 피부양자 자격 판정기",
+    description: "소득 2,000만·재산 5.4억 기준 유지/탈락 즉시 판정",
+    href: "/health-insurance-dependent",
+  },
+  "social-insurance-rates-2027": {
+    slug: "social-insurance-rates-2027",
+    title: "2027 4대보험 요율표",
+    description: "국민연금 10% 확정 — 내 월급 공제 변화 미리 확인",
+    href: "/social-insurance-rates-2027",
   },
 };
 
