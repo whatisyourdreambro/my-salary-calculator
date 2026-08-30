@@ -133,6 +133,7 @@ export const navConfig: NavItem[] = [
    { name: "소방 봉급표 2026", href: "/firefighter-pay-2026", description: "소방사~소방경 계급×호봉", badge: "NEW" },
    { name: "2026 연봉 실수령액 표", href: "/table/2026/annual", description: "1천만~2억 한눈" },
    { name: "2026 월급 실수령액 표", href: "/table/2026/monthly", description: "월급 기준 조회" },
+   { name: "2027 연봉 실수령액 표", href: "/table/2027/annual", description: "연금 5% 인상 선반영", badge: "NEW" },
    { name: "직장인 단계별 자산", href: "/career-stages-2026", description: "20~50대 연봉·자산" },
    { name: "커리어 플래너", href: "/pro/career-planner", description: "이직·승진 시뮬레이션" },
    { name: "내 연봉 리포트", href: "/report", description: "저장한 결과 시각화" },

@@ -589,16 +589,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
  }),
  ];
 
- // 급여 환산 테이블 페이지
+ // 급여 환산 테이블 페이지 (2027년판 4종 — 2026-08-30 선발행, 성장 제안 ④)
  const tableUrls: MetadataRoute.Sitemap = [
  '/table/2026/annual',
  '/table/2026/monthly',
  '/table/2026/weekly',
  '/table/2026/hourly',
+ '/table/2027/annual',
+ '/table/2027/monthly',
+ '/table/2027/weekly',
+ '/table/2027/hourly',
  ].map((route) => ({
  url: `${baseUrl}${route}`,
  // 2026-08-25 구조화데이터 보강(8b395a7)이 실질 콘텐츠 변경 — 전역 기준일과 차등화
- lastModified: new Date('2026-08-25'),
+ lastModified: route.includes('/2027/') ? new Date('2026-08-30') : new Date('2026-08-25'),
  changeFrequency: 'yearly' as ChangeFrequency,
  priority: 0.7,
  }));

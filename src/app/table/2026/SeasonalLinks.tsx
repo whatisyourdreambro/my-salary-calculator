@@ -40,6 +40,11 @@ const SEASONAL_LINKS = [
     title: "2027 최저임금 10,700원 확정",
     description: "내년 시급·월급 얼마나 오르나 미리보기",
   },
+  {
+    href: "/table/2027/annual",
+    title: "2027 연봉 실수령액 표 미리보기",
+    description: "연금 5% 인상 반영 — 내년 세후 월급 선확인",
+  },
 ];
 
 interface SeasonalLinksProps {
