@@ -4,7 +4,9 @@
 // 코호트·집계는 src/lib/salary-data/dartRanking.ts 단일 소스 (상장사 5곳 이상 업종만,
 // dynamicParams=false 로 밖은 404 — compare 413 색인 거부 교훈의 고정 코호트 원칙).
 // /industry/[slug](추정 기반 업계 소개)와는 "상장사 공시 순위" 타이틀로 검색 의도 분리.
-// 광고는 salary-db/layout.tsx 상속 — 이 페이지에 광고 코드 없음 (lite 페이지와 동일).
+// 광고: layout 상속(PageFooterAds) + 본문 20위 경계 GuideMid 1개 (R2 A1 — 운영자 승인
+// 2026-08-31. GuideMid는 이 라우트 유일 미사용 슬롯 — InArticle/HomeTop page 삽입은
+// layout 슬롯을 죽이는 "이동 함정" 금지, Display2는 실험 #1 오염 금지).
 // 서버 컴포넌트 전용 — dartRanking(dartDisclosed 1.3MB)은 클라 번들 오염 금지.
 
 import type { Metadata } from "next";
@@ -22,6 +24,8 @@ import {
   LISTED_TOTAL,
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
+import { GuideMidAd } from "@/components/AdPlacement";
+import type { RankingRow } from "@/lib/salary-data/dartRanking";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -31,6 +35,49 @@ export function generateStaticParams(): { industryId: string }[] {
 }
 
 type Props = { params: { industryId: string } };
+
+function IndustryRankTable({ rows }: { rows: RankingRow[] }) {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
+      <table className="w-full text-sm min-w-[560px]">
+        <thead>
+          <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
+            <th className="py-2.5 px-3 font-bold">순위</th>
+            <th className="py-2.5 px-3 font-bold">회사</th>
+            <th className="py-2.5 px-3 font-bold">평균연봉</th>
+            <th className="py-2.5 px-3 font-bold">직원 수</th>
+            <th className="py-2.5 px-3 font-bold">평균 근속</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.stockCode || row.nameKo} className="border-b border-canvas-200/60">
+              <td className="py-2 px-3 font-bold text-faint-blue tabular-nums">{row.rank}</td>
+              <td className="py-2 px-3 font-bold text-navy">
+                {row.href ? (
+                  <Link href={row.href} className="hover:text-electric hover:underline">
+                    {row.nameKo}
+                  </Link>
+                ) : (
+                  row.nameKo
+                )}
+              </td>
+              <td className="py-2 px-3 tabular-nums font-black text-electric">
+                {fmtManwon(row.avgSalaryManwon)}
+              </td>
+              <td className="py-2 px-3 tabular-nums text-muted-blue">
+                {row.employeeCount.toLocaleString("ko-KR")}명
+              </td>
+              <td className="py-2 px-3 tabular-nums text-muted-blue">
+                {row.avgTenureYears != null ? `${Math.round(row.avgTenureYears * 10) / 10}년` : "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function fmtManwon(manwon: number): string {
   const eok = Math.floor(manwon / 10000);
@@ -180,44 +227,17 @@ export default function IndustryRankingPage({ params }: Props) {
               전체 {r.companyCount}곳 중 상위 {r.topRows.length}곳을 표시합니다.
             </p>
           )}
-          <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
-            <table className="w-full text-sm min-w-[560px]">
-              <thead>
-                <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
-                  <th className="py-2.5 px-3 font-bold">순위</th>
-                  <th className="py-2.5 px-3 font-bold">회사</th>
-                  <th className="py-2.5 px-3 font-bold">평균연봉</th>
-                  <th className="py-2.5 px-3 font-bold">직원 수</th>
-                  <th className="py-2.5 px-3 font-bold">평균 근속</th>
-                </tr>
-              </thead>
-              <tbody>
-                {r.topRows.map((row) => (
-                  <tr key={row.stockCode || row.nameKo} className="border-b border-canvas-200/60">
-                    <td className="py-2 px-3 font-bold text-faint-blue tabular-nums">{row.rank}</td>
-                    <td className="py-2 px-3 font-bold text-navy">
-                      {row.href ? (
-                        <Link href={row.href} className="hover:text-electric hover:underline">
-                          {row.nameKo}
-                        </Link>
-                      ) : (
-                        row.nameKo
-                      )}
-                    </td>
-                    <td className="py-2 px-3 tabular-nums font-black text-electric">
-                      {fmtManwon(row.avgSalaryManwon)}
-                    </td>
-                    <td className="py-2 px-3 tabular-nums text-muted-blue">
-                      {row.employeeCount.toLocaleString("ko-KR")}명
-                    </td>
-                    <td className="py-2 px-3 tabular-nums text-muted-blue">
-                      {row.avgTenureYears != null ? `${Math.round(row.avgTenureYears * 10) / 10}년` : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <IndustryRankTable rows={r.topRows.slice(0, 20)} />
+          {/* 20위 경계(20곳 이하 업종은 표 직후) 본문 광고 — R2 A1 (운영자 승인 2026-08-31) */}
+          <GuideMidAd />
+          {r.topRows.length > 20 && (
+            <>
+              <h3 className="text-base font-black text-navy mt-2 mb-3">
+                21위 ~ {r.topRows.length}위
+              </h3>
+              <IndustryRankTable rows={r.topRows.slice(20)} />
+            </>
+          )}
         </section>
 
         {/* FAQ */}

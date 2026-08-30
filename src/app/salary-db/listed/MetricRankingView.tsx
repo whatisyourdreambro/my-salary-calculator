@@ -2,9 +2,12 @@
 //
 // 지표 랭킹 3종(/salary-db/listed/top-*)의 공용 뷰 — 라우트 아님.
 // 서버 컴포넌트 전용 (rows는 dartRanking에서 페이지가 주입).
-// 광고는 salary-db/layout.tsx 상속 — 광고 코드 없음.
+// 광고: layout 상속(PageFooterAds: InArticle+쿠팡+HomeTop) + 본문 50위 경계 GuideMid 1개
+// (R2 A1 — 운영자 승인 2026-08-31. GuideMid는 이 라우트 유일 미사용 슬롯 — InArticle/HomeTop
+//  page 삽입은 layout 슬롯을 죽이는 "이동 함정"이라 금지, Display2는 실험 #1 오염 금지).
 
 import Link from "@/components/AppLink";
+import { GuideMidAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { breadcrumbLd, faqLd, itemListLd, datasetLd } from "@/lib/structuredData";
@@ -35,6 +38,47 @@ interface MetricConfig {
   methodologyExtra: string;
   datasetName: string;
   rows: RankingRow[];
+}
+
+function RankTable({ cfg, rows }: { cfg: MetricConfig; rows: RankingRow[] }) {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
+      <table className="w-full text-sm min-w-[560px]">
+        <thead>
+          <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
+            <th className="py-2.5 px-3 font-bold">순위</th>
+            <th className="py-2.5 px-3 font-bold">회사</th>
+            <th className="py-2.5 px-3 font-bold">{cfg.valueHeader}</th>
+            <th className="py-2.5 px-3 font-bold">평균연봉</th>
+            <th className="py-2.5 px-3 font-bold">업종</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.stockCode || row.nameKo} className="border-b border-canvas-200/60">
+              <td className="py-2 px-3 font-bold text-faint-blue tabular-nums">{row.rank}</td>
+              <td className="py-2 px-3 font-bold text-navy">
+                {row.href ? (
+                  <Link href={row.href} className="hover:text-electric hover:underline">
+                    {row.nameKo}
+                  </Link>
+                ) : (
+                  row.nameKo
+                )}
+              </td>
+              <td className="py-2 px-3 tabular-nums font-black text-electric">
+                {cfg.renderValue(row)}
+              </td>
+              <td className="py-2 px-3 tabular-nums text-muted-blue">
+                {fmtManwon(row.avgSalaryManwon)}
+              </td>
+              <td className="py-2 px-3 text-muted-blue">{row.industryKo}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
@@ -90,42 +134,17 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             <TrendingUp size={18} className="text-electric" aria-hidden="true" />
             TOP {cfg.rows.length}
           </h2>
-          <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
-            <table className="w-full text-sm min-w-[560px]">
-              <thead>
-                <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
-                  <th className="py-2.5 px-3 font-bold">순위</th>
-                  <th className="py-2.5 px-3 font-bold">회사</th>
-                  <th className="py-2.5 px-3 font-bold">{cfg.valueHeader}</th>
-                  <th className="py-2.5 px-3 font-bold">평균연봉</th>
-                  <th className="py-2.5 px-3 font-bold">업종</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cfg.rows.map((row) => (
-                  <tr key={row.stockCode || row.nameKo} className="border-b border-canvas-200/60">
-                    <td className="py-2 px-3 font-bold text-faint-blue tabular-nums">{row.rank}</td>
-                    <td className="py-2 px-3 font-bold text-navy">
-                      {row.href ? (
-                        <Link href={row.href} className="hover:text-electric hover:underline">
-                          {row.nameKo}
-                        </Link>
-                      ) : (
-                        row.nameKo
-                      )}
-                    </td>
-                    <td className="py-2 px-3 tabular-nums font-black text-electric">
-                      {cfg.renderValue(row)}
-                    </td>
-                    <td className="py-2 px-3 tabular-nums text-muted-blue">
-                      {fmtManwon(row.avgSalaryManwon)}
-                    </td>
-                    <td className="py-2 px-3 text-muted-blue">{row.industryKo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <RankTable cfg={cfg} rows={cfg.rows.slice(0, 50)} />
+
+          {/* 50위 경계 본문 광고 — R2 A1 (운영자 승인 2026-08-31) */}
+          <GuideMidAd />
+
+          {cfg.rows.length > 50 && (
+            <>
+              <h3 className="text-base font-black text-navy mt-2 mb-3">51위 ~ {cfg.rows.length}위</h3>
+              <RankTable cfg={cfg} rows={cfg.rows.slice(50)} />
+            </>
+          )}
         </section>
 
         <section className="mb-8" aria-labelledby="faq-heading">
