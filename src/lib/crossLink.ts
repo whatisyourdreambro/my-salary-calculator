@@ -44,6 +44,8 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
   "alimony-quick": ["career-break-financial-plan", "comprehensive-income-tax-2026"],
   // ───── 휴가·수당·근로
   "vacation-pay": ["annual-leave-allowance", "salary-guide-2026"],
+  "ordinary-wage": ["overtime-pay-calculation", "annual-leave-allowance"],
+  "annual-leave-days": ["annual-leave-allowance", "salary-guide-2026"],
   "holiday-bonus": ["bonus-tax-rate", "salary-guide-2026"],
   "holiday-allowance-quick": ["annual-leave-allowance", "salary-guide-2026"],
   "annual-leave-pay-quick": ["annual-leave-allowance", "salary-guide-2026"],

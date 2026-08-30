@@ -11,7 +11,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { listedCohort, DART_LITE_DATE } from "@/lib/salary-data/dartLite";
-import { ShieldCheck } from "lucide-react";
+import { industryRankings } from "@/lib/salary-data/dartRanking";
+import { ShieldCheck, TrendingUp } from "lucide-react";
 
 export const dynamic = "force-static";
 
@@ -80,6 +81,39 @@ export default function ListedIndexPage() {
             </Link>
             에서 볼 수 있습니다. 데이터 기준일: {DART_LITE_DATE}.
           </p>
+        </section>
+
+        {/* 랭킹 페이지군 진입로 (2026-08-30) — 업종별 순위 28종 + 지표 TOP 100 3종 */}
+        <section className="mb-10 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="ranking-nav-heading">
+          <h2 id="ranking-nav-heading" className="text-lg font-black text-navy mb-1 inline-flex items-center gap-2">
+            <TrendingUp size={18} className="text-electric" aria-hidden="true" />
+            상장사 연봉 순위 모아보기
+          </h2>
+          <p className="text-xs text-muted-blue mb-4">
+            업종별 공시 평균연봉 전수 순위와 인상률·근속·규모 TOP 100.
+          </p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {industryRankings.map((r) => (
+              <Link
+                key={r.industryId}
+                href={`/salary-db/listed/industry/${r.industryId}`}
+                className="rounded-full border border-canvas-200 bg-canvas-50 px-3.5 py-1.5 text-xs font-bold text-navy hover:border-primary transition"
+              >
+                {r.industryKo} 순위 ({r.companyCount})
+              </Link>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            <Link href="/salary-db/listed/top-raise" className="font-bold text-electric hover:underline">
+              연봉 인상률 TOP 100 →
+            </Link>
+            <Link href="/salary-db/listed/top-tenure" className="font-bold text-electric hover:underline">
+              평균 근속 TOP 100 →
+            </Link>
+            <Link href="/salary-db/listed/top-employees" className="font-bold text-electric hover:underline">
+              직원 수 TOP 100 →
+            </Link>
+          </div>
         </section>
 
         {groups.map(([industryKo, list]) => (

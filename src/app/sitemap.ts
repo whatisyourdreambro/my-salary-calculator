@@ -87,6 +87,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // V2 Season pages (additional 5)
  '/calc/holiday-bonus',
  '/calc/vacation-pay',
+ // 근로기준 페어 (2026-08-30 신설) — 통상임금 전합 판결 재검색 수요
+ '/calc/ordinary-wage',
+ '/calc/annual-leave-days',
  '/calc/child-deduction',
  '/calc/jeonse-loan',
  '/calc/housing-subscription',
@@ -461,6 +464,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.6,
  });
  });
+
+ // 상장사 랭킹 페이지군 (2026-08-30) — 업종별 순위 + 지표 TOP 100 3종.
+ // 코호트는 dartRanking.ts 단일 소스 (generateStaticParams와 동일 집합 — 밖은 404).
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 1.3MB) 지연 로드
+ const { industryRankings } = require('@/lib/salary-data/dartRanking');
+ (industryRankings as Array<{ industryId: string }>).forEach((r) => {
+ companyUrls.push({
+ url: `${baseUrl}/salary-db/listed/industry/${r.industryId}`,
+ lastModified: dartLiteDate,
+ changeFrequency: 'monthly',
+ priority: 0.65,
+ });
+ });
+ for (const metricPath of ['top-raise', 'top-tenure', 'top-employees']) {
+ companyUrls.push({
+ url: `${baseUrl}/salary-db/listed/${metricPath}`,
+ lastModified: dartLiteDate,
+ changeFrequency: 'monthly',
+ priority: 0.65,
+ });
+ }
 
  // [2026-08-10 제거] 회사 비교 413페이지(/salary-db/compare/[slug]) 사이트맵 등재 중단.
  // 전체 사이트맵 1,865 URL의 22%를 차지하면서 GSC "발견됨-색인 안 됨" 상태의

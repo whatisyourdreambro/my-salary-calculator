@@ -1,6 +1,7 @@
 // /calc/vacation-pay — 연차수당 계산기
 
 import type { Metadata } from "next";
+import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
@@ -76,7 +77,11 @@ export default function VacationPayPage() {
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">통상임금 계산 방법</h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               <strong>1일 통상임금</strong> = 월 통상임금 ÷ 209시간 × 8시간. 월 통상임금에는 기본급 + 정기 수당이 포함됩니다.
-              간편 추정: 연봉 ÷ 240 (12개월 × 20일).
+              간편 추정: 연봉 ÷ 240 (12개월 × 20일). 정기상여까지 반영한 정확한 값은{" "}
+              <Link href="/calc/ordinary-wage" className="text-electric font-bold hover:underline">
+                통상임금 계산기
+              </Link>
+              에서 계산하세요 (2024 대법원 전합 판결 반영).
             </p>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">연차 발생 일수 (근로기준법)</h2>
@@ -86,6 +91,13 @@ export default function VacationPayPage() {
               <li>3년차부터 매 2년마다 1일 가산</li>
               <li>최대 25일 (21년차 이후)</li>
             </ul>
+            <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
+              입사일 기준·회계연도 기준으로 내 연차가 정확히 몇 개인지는{" "}
+              <Link href="/calc/annual-leave-days" className="text-electric font-bold hover:underline">
+                연차 개수 계산기
+              </Link>
+              에서 확인하세요.
+            </p>
           </article>
 
           {/* 본문-FAQ 사이 광고 */}

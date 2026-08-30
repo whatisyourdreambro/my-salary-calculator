@@ -239,7 +239,18 @@ export default function ListedCompanyPage({ params }: Props) {
             </li>
             {c.industryTotal >= 5 && (
               <li>
-                · {c.industryKo} 업종 상장사 <strong className="text-navy">{c.industryTotal}곳</strong> 중{" "}
+                ·{" "}
+                {c.industryId !== "etc" ? (
+                  <Link
+                    href={`/salary-db/listed/industry/${c.industryId}`}
+                    className="font-bold text-electric hover:underline"
+                  >
+                    {c.industryKo} 업종
+                  </Link>
+                ) : (
+                  <>{c.industryKo} 업종</>
+                )}{" "}
+                상장사 <strong className="text-navy">{c.industryTotal}곳</strong> 중{" "}
                 <strong className="text-primary">{c.industryRank}위</strong>
                 {vsIndustry != null && (
                   <> — 업종 가중 평균({fmtManwon(c.industryWeightedAvgManwon!)}) 대비{" "}
