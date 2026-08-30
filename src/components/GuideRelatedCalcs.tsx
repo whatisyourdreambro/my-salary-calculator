@@ -6,7 +6,7 @@
 
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight } from "lucide-react";
-import { getGuideRelatedCalcs } from "@/lib/crossLink";
+import { getGuideRelatedCalcs, STATIC_CALC_CARDS } from "@/lib/crossLink";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
 
 interface GuideRelatedCalcsProps {
@@ -18,8 +18,9 @@ export default function GuideRelatedCalcs({
   guideSlug,
   limit = 4,
 }: GuideRelatedCalcsProps) {
+  // 정적 라우트 계산기(STATIC_CALC_CARDS)는 simpleCalculators에 없으므로 별도 해석
   const calcs = getGuideRelatedCalcs(guideSlug)
-    .map((slug) => getCalculatorBySlug(slug))
+    .map((slug) => STATIC_CALC_CARDS[slug] ?? getCalculatorBySlug(slug))
     .filter((c): c is NonNullable<typeof c> => Boolean(c))
     .slice(0, limit);
 

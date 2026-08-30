@@ -68,6 +68,25 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    description: "2025 임단협 타결안 기본급 450% + 1,620만원 — 세전·세후 실수령 즉시 계산",
    season: "12월 임단협 시즌",
  },
+ // 2026-08-31 — 8/30 성장 배포 신설 3종 인덱스 등재 (배포 점검 후속: 미등재로 인덱스·검색 발견 불가하던 결함 수리)
+ {
+   href: "/calc/ordinary-wage",
+   title: "통상임금 계산기",
+   description: "2024 대법원 전원합의체 판결 반영 — 시간급 통상임금·연장/야간/휴일수당 파급액 즉시 계산",
+   season: "연중 · 임금협상 이슈",
+ },
+ {
+   href: "/calc/annual-leave-days",
+   title: "연차 개수 계산기",
+   description: "입사일만 넣으면 연도별 연차 발생 내역 — 입사일 vs 회계연도 방식 비교",
+   season: "연중 · 연초 확인",
+ },
+ {
+   href: "/calc/pension-hike-2027",
+   title: "국민연금 인상 계산기 (2027)",
+   description: "요율 9.5→10% 인상 — 내 월급에서 매달 얼마나 더 빠지는지 즉시 계산",
+   season: "12~1월 시행 뉴스 피크",
+ },
  {
    href: "/credit-card-deduction-2026",
    title: "신용카드 소득공제 계산기",

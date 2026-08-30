@@ -21,9 +21,12 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/", title: "연봉 실수령액 계산기", description: "4대보험·세금 자동 공제", icon: "Calculator" },
  { path: "/calc/samsung-bonus", title: "삼성전자 성과급 계산기", description: "OPI·TAI 세후 실수령 시뮬", icon: "Gift" },
  { path: "/weekly-holiday-allowance-2026", title: "주휴수당 계산기", description: "주 15시간+ 알바 필수", icon: "Calendar" },
+ // 2026-08-31 — 8/30 신설 근로기준 페어 추천망 편입 (배포 점검 후속)
+ { path: "/calc/ordinary-wage", title: "통상임금 계산기", description: "2024 전합 판결 반영 — 수당 파급액", icon: "Scale" },
  { path: "/year-end-tax", title: "연말정산 계산기", description: "13월의 월급 미리 계산", icon: "Receipt" },
  { path: "/tools/finance/severance", title: "퇴직금 계산기", description: "환산급여 방식 정확 계산", icon: "Briefcase" },
  { path: "/salary-db", title: "회사별 연봉", description: "동급 회사 평균 비교", icon: "Building2" },
+ { path: "/calc/annual-leave-days", title: "연차 개수 계산기", description: "입사일 기준 연도별 연차 발생", icon: "Calendar" },
  ],
  // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
  // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
@@ -50,6 +53,8 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/tools/finance/bonus", title: "성과급 세금 계산기", description: "2026 연봉합산 세율", icon: "Gift" },
  { path: "/tools/finance/freelance-tax", title: "프리랜서 종합소득세", description: "사업소득 계산", icon: "Laptop" },
  { path: "/tools/finance/irp", title: "IRP·연금저축 절세", description: "최대 900만원 공제", icon: "Building2" },
+ // 2026-08-31 — 8/30 신설 연금 인상 계산기 추천망 편입
+ { path: "/calc/pension-hike-2027", title: "국민연금 인상 계산기", description: "2027 요율 10% — 매달 더 내는 금액", icon: "TrendingUp" },
  ],
  investment: [
  { path: "/savings-interest-2026", title: "적금·예금 이자 계산기", description: "정기적금/예금 단리·복리", icon: "PiggyBank" },
@@ -205,6 +210,11 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/credit-card-deduction-2026": ["tax", "salary"],
  "/rent-tax-credit-2026": ["tax", "realEstate"],
  "/medical-tax-credit-2026": ["tax", "salary"],
+ // 2026-08-31 — 8/30 신설 정적 계산기 dead-end 차단 (배포 점검 후속)
+ "/calc/vacation-pay": ["salary", "tax"],
+ "/calc/ordinary-wage": ["salary", "tax"],
+ "/calc/annual-leave-days": ["salary"],
+ "/calc/pension-hike-2027": ["tax", "investment"],
 };
 
 /**

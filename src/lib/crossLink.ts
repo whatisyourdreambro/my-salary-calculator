@@ -131,6 +131,33 @@ export function getCalcRelatedGuideSlugs(calcSlug: string): string[] {
 }
 
 /**
+ * 정적 라우트 계산기 카드 — simpleCalculators(동적 /calc/[slug] 100종)에 없는
+ * 전용 라우트 계산기를 가이드 역링크(GuideRelatedCalcs)에서 노출하기 위한 최소 카드.
+ * 2026-08-31 배선 결함 수리: CALC_TO_GUIDES에 등재해도 getCalculatorBySlug
+ * 필터에서 탈락해 역링크가 항상 0으로 렌더되던 문제(vacation-pay 포함).
+ */
+export const STATIC_CALC_CARDS: Record<
+  string,
+  { slug: string; title: string; description: string }
+> = {
+  "vacation-pay": {
+    slug: "vacation-pay",
+    title: "연차수당 계산기",
+    description: "미사용 연차 수당 — 통상임금·세금 자동 계산",
+  },
+  "ordinary-wage": {
+    slug: "ordinary-wage",
+    title: "통상임금 계산기",
+    description: "2024 전합 판결 반영 — 시간급·수당 파급액 즉시 계산",
+  },
+  "annual-leave-days": {
+    slug: "annual-leave-days",
+    title: "연차 개수 계산기",
+    description: "입사일 기준 연도별 연차 발생 — 회계연도 방식 비교",
+  },
+};
+
+/**
  * 가이드 → 계산기 역방향 매핑.
  * CALC_TO_GUIDES를 역으로 집계 — 별도 매핑을 유지하지 않아도 항상 동기화됨.
  * 가이드 글을 읽은 독자를 관련 계산기(=실전 도구)로 보내 PV/세션 향상.

@@ -73,6 +73,16 @@ const seasonPages: SearchEntry[] = [
  { title: "신용카드 소득공제 계산기", href: "/credit-card-deduction-2026", category: "계산기", description: "총급여 25% 문턱·결제수단별 공제율·한도 자동 계산", priority: 1 },
  { title: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", category: "계산기", description: "총급여별 15~17%·연 1,000만 한도 — 최대 170만원 환급", priority: 1 },
  { title: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", category: "계산기", description: "총급여 3% 문턱·난임 30%·실손 차감 반영", priority: 1 },
+ // 2026-08-31 — 8/30 성장 배포 6건 검색 인덱스 등재 (배포 점검 후속: 헤더 검색 0건 결함 수리)
+ { title: "통상임금 계산기", href: "/calc/ordinary-wage", category: "계산기", description: "2024 전합 판결 반영 — 시간급·수당 파급액", priority: 1 },
+ { title: "연차 개수 계산기", href: "/calc/annual-leave-days", category: "계산기", description: "입사일 기준 연도별 연차 발생 — 회계연도 비교", priority: 1 },
+ { title: "국민연금 인상 계산기 (2027)", href: "/calc/pension-hike-2027", category: "계산기", description: "요율 9.5→10% — 매달 더 내는 보험료 즉시 계산", priority: 1 },
+ { title: "2026 군인 월급 (병사·간부 봉급표)", href: "/military-pay-2026", category: "시즌", description: "병장 150만원·장병내일준비적금 매칭 55만", priority: 1 },
+ { title: "2026 교사 호봉표", href: "/teacher-pay-2026", category: "시즌", description: "9호봉 249만원~40호봉 620만원·담임수당", priority: 1 },
+ { title: "2026 경찰 봉급표", href: "/police-pay-2026", category: "시즌", description: "순경 1호봉 213만원부터 계급별 호봉표", priority: 2 },
+ { title: "2026 소방관 봉급표", href: "/firefighter-pay-2026", category: "시즌", description: "소방사 1호봉 213만원부터 계급별 호봉표", priority: 2 },
+ { title: "2026 공무원 봉급표", href: "/civil-servant-pay-2026", category: "시즌", description: "9급 1호봉 213만원·직급별 봉급표", priority: 1 },
+ { title: "2027 공무원 봉급표 전망", href: "/civil-servant-pay-2027", category: "시즌", description: "인상률 권고안 3.4~3.9%·확정 일정", priority: 2 },
 ];
 
 const toolPages: SearchEntry[] = [
@@ -91,6 +101,11 @@ const toolPages: SearchEntry[] = [
  { title: "Fun 콘텐츠", href: "/fun", category: "도구", description: "게임·테스트" },
  { title: "2026 연봉 실수령액 표", href: "/table/2026/annual", category: "도구" },
  { title: "2026 월급 실수령액 표", href: "/table/2026/monthly", category: "도구" },
+ // 2026-08-31 — 8/30 신설 2027 표·상장사 랭킹 등재
+ { title: "2027 연봉 실수령액 표", href: "/table/2027/annual", category: "도구", description: "최저임금 223.6만·연금 5% 선반영" },
+ { title: "2027 월급 실수령액 표", href: "/table/2027/monthly", category: "도구" },
+ { title: "상장사 공시 연봉 DB", href: "/salary-db/listed", category: "도구", description: "DART 사업보고서 기준 — 추정 0" },
+ { title: "연봉 인상률 TOP 100 (상장사)", href: "/salary-db/listed/top-raise", category: "도구", description: "공시 기준 전년比 인상률 순위" },
 ];
 
 const calculatorEntries: SearchEntry[] = allCalculators.map((c) => ({

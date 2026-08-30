@@ -22,7 +22,7 @@ const fmt = (n: number) => n.toLocaleString("ko-KR");
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터",
   description:
-    "인사혁신처 확정 2026년 교육공무원(유·초·중등 교원) 호봉표. 신규 교사 통상 시작인 9호봉 월 2,495,600원부터 30호봉 482만원까지, 담임수당 20만원·보직수당 15만원 구조와 실수령액 계산 흐름 총정리 — 공무원보수규정 별표 11 원문 수치.",
+    "인사혁신처 확정 2026년 교육공무원(유·초·중등 교원) 호봉표. 신규 교사 통상 시작인 9호봉 월 2,495,600원부터 40호봉 620만원까지, 담임수당 20만원·보직수당 15만원 구조와 실수령액 계산 흐름 총정리 — 공무원보수규정 별표 11 원문 수치.",
   path: "/teacher-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
@@ -109,7 +109,7 @@ export default function TeacherPay2026Page() {
           </h1>
           <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-08-30" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
-            신규 교사 통상 시작인 9호봉 월 2,495,600원부터 30호봉 482만원까지 — 호봉표 원문
+            신규 교사 통상 시작인 9호봉 월 2,495,600원부터 40호봉 620만원까지 — 호봉표 원문
             수치와 담임·보직수당, 실수령액 계산 흐름을 한 페이지에 정리했습니다.
           </p>
           <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
