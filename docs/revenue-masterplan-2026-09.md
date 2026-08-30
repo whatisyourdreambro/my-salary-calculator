@@ -82,9 +82,9 @@
 | # | 내용 | 권고 | 근거·효과 | 난이도 |
 |---|---|---|---|---|
 | ① | **홈 결과직하 InArticle 부활** — `HomeClient.tsx` 하단 InArticle이 슬롯을 선점해 `SalaryResultCard.tsx:80` 결과직하 유닛이 죽어 있음. 하단 제거로 결과직하 복원 | **✅ 승인·구현 2026-08-30** | 홈=최다 트래픽, 결과 직하=최고 viewability. 하단은 자동광고가 이미 커버(1-4 실측). 배포 후 14일 홈 RPM 관찰 | 하 (1줄) |
-| ② | **쿠팡 동사이즈 31라우트 차별화** — 같은 사이즈 2회 배치라 2번째 배너가 코어에서 차단돼 죽어 있음 | 미승인 보류 (2026-08-30 문의) | 31개 라우트에서 쿠팡 지면 1개씩 부활 | 하 |
+| ② | **쿠팡 동사이즈 라우트 차별화** — 같은 사이즈 2회 배치라 2번째 배너가 코어에서 차단돼 죽어 있음 | **✅ 승인·구현 2026-08-31** (부활 팩 — 실측 23라우트: 성과급 22+/tools, page 배너 square/rectangle 차별화, ad-audit INFO 81→58) | 죽은 쿠팡 지면 23개 부활 | 하 |
 | ③ | **성과급 19곳 layout InArticle → 실험 #2a 통합** | #1 판정 후 진행 | Display2 승리 시 일괄 전환 | 중 |
-| ④ | **OfferSlot 22종 선배치 + 쿠팡 노출 계측** — 현재 OfferSlot은 단 2곳(NextActions·samsung-bonus). 활성 오퍼 2종(NICE지키미·올크레딧) 재사용 | 미승인 보류 (2026-08-30 문의) | CPA 단가 최고 채널의 지면 11배 확장, 추가 비용 0 | 중 |
+| ④ | **OfferSlot 선배치 + 쿠팡 노출 계측** — 현재 OfferSlot은 단 2곳(NextActions·samsung-bonus). 활성 오퍼 2종(NICE지키미·올크레딧) 재사용 | **✅ 승인·구현 2026-08-31** (부활 팩 — 20지면: 정적 5곳〈credit-card는 올크레딧 즉시 노출〉+신용·대출 가이드 13편 슬러그 게이트+기존 2. 쿠팡 계측은 AffiliateSlot 폴백 래퍼 GA4 coupang_impression — Core 무접촉) | CPA 지면 10배 확장, 추가 비용 0 | 중 |
 | ⑤ | **동일 id 35건 중복 2차 정본화** (+수기 disclosed 괴리 3사·FY2024 7곳) | 미승인 보류 (2026-08-30 문의) | 데이터 신뢰도(수익 간접) | 중 |
 | ⑥ | **compare 글로벌 14페어 제외** | 미승인 보류 (2026-08-30 문의) | 색인 거부 이력 페이지 정리 | 하 |
 
@@ -96,8 +96,8 @@
 
 | # | 제안 | 내용 | 권고 |
 |---|---|---|---|
-| A | **/hub 인덱스 + /about 광고 신설** | 0→2유닛 (GuideMid+푸터형). 유일한 무광고 갭 해소 | 미승인 보류 (2026-08-30 문의) |
-| B | **/company 클러스터 보강** | 2.2→3+ 슬롯. `/company/[id]`는 308 리다이렉트 대상이므로 compare·simulator 위주 | 미승인 보류 (2026-08-30 문의) |
+| A | **/hub 인덱스 + /about 광고 신설** | 0→2유닛 (GuideMid+HomeTop). 유일한 무광고 갭 해소 | **✅ 승인·구현 2026-08-31** (부활 팩) |
+| B | **/company 클러스터 보강** | compare 2라우트 GuideMid +1 (simulator는 기존 3유닛이라 제외, /company·[id]는 리다이렉트 제외) | **✅ 승인·구현 2026-08-31** (부활 팩 — compare 트리는 noindex 유지) |
 | C | **연말정산 시즌 3페이지 보강** — `/year-end-tax`·`-2027`·`-preview` 본문 중간 유닛 추가 | 11~1월 피크 트래픽 대비 | **✅ 승인·구현 2026-08-30** — 각 페이지 기존 미사용 슬롯(GuideMid/InArticle)을 본문 하부 콘텐츠 사이에 배치 |
 | D | **/embed 화이트라벨 문의 이메일 확정** | `src/app/embed/page.tsx:17` `EMBED_CONTACT=""` → /qna 폴백 중. 이메일 1개만 정하면 B2B 진입점 활성화 | 운영자 이메일 결정만 필요 |
 | E | **PHASE2_VERTICALS(savings·remittance) 개방 보류 명시** | 코드 1줄로 열 수 있으나 해당 버티컬 오퍼가 전부 PLACEHOLDER — 오퍼 확보 전 개방 무의미 | 보류 (오퍼 승인 후 재론) |
@@ -126,7 +126,7 @@
 
 | 항목 | 내용 | 시점 |
 |---|---|---|
-| **careerLevels 공기업 확대** | 현재 12사 보유. 알리오 XLS 수기 검토로 kepco·khnp·korail·kogas·lh·incheon-airport·korea-expressway·k-water·nps·ibk 10곳 — "{회사명} 직급별 연봉" long-tail. **추정 금지, 보도·공시값만** | 9월 3~4주 |
+| **careerLevels 공기업 확대** | **✅ 2026-08-31 조기 실행** (리서치 5+검증 9 에이전트, 원문 대조) — careerLevels 5곳(kogas·k-water·lh·incheon-airport·nps: 알리오+보수규정 별표 원문 검증) + 알리오 2025 결산 disclosed 9곳 갱신. **직급별 확정치 부재 4곳(kepco·khnp·korail·korea-expressway)은 disclosed만** — 추정 금지 원칙대로 미수록(ibk는 기보유). 갱신 슬롯: 매년 4월 알리오 결산 공시 후 재확인 | ✅ 완료 |
 | **DART lite 색인 게이트** | 28일 색인률 ≥60% → `dartLite.ts` 상수 조정으로 Phase 2 +300곳, 미만 → 인원 하한 상향 | 10월 중순 |
 | **리포트 2호** (`/insights`) | 데이터 리포트→인용 백링크 전략(serp-strategy). 준비 9월 말(opendart 동시성 ≤4 엄수) | 10월 발행 |
 | **GSC 저격 R2** | R1 재측정 9/13 후 CSV 기반 차기 타깃 선정. pos1~2 CTR 0%=사이트링크(정상) 오판 금지 | 9월 3주~ |
