@@ -713,8 +713,8 @@ const irpMaxBonus = `
 <ul class="space-y-2 mt-4">
 <li>· IRP 900만 납입 (12월 31일까지)</li>
 <li>· 환급: 900 × 13.2% = 약 119만원</li>
-<li>· 지방세 포함 약 131만원</li>
-<li>· ISA 만기 전환분 합산으로 최대 1,200만 공제 시 → 약 175만원 (아래 참고)</li>
+<li>· 13.2%는 지방소득세를 포함한 실효 공제율 (별도 가산 없음)</li>
+<li>· ISA 만기 전환분 합산으로 최대 1,200만 공제 시 → 약 158만원 (아래 참고)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 추가 — ISA 만기 자금 전환</h2>
@@ -912,7 +912,7 @@ const insurance100Bonus = `
 <li>· 본인·부양가족 명의 모두 가능</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">⚠️ 제외</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 제외</h2>
 <ul class="space-y-2 mt-4">
 <li>· 저축성 보험·연금보험</li>
 <li>· 변액보험</li>

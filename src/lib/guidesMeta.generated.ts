@@ -1073,7 +1073,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "youth-jump-account-2026",
   "title": "청년도약계좌 2026: 5년 5,000만 만들기 가능한가? 솔직 분석",
-  "description": "청년도약계좌 가입 조건, 정부 기여금 매칭률, 5년 만기 실수령액. 청년희망적금과 비교, 실제 가입할 가치 있는가.",
+  "description": "청년도약계좌 신규 가입 종료(2025-12-31). 기존 가입자 정부 기여금·5년 만기 실수령액과 2026년 6월 출시된 후속 청년미래적금 비교.",
   "category": "투자",
   "tags": [
    "청년도약계좌",
@@ -1085,7 +1085,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-18",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2330
+  "contentChars": 2847
  },
  {
   "slug": "credit-score-up-2026",
@@ -1102,7 +1102,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-15",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2326
+  "contentChars": 2364
  },
  {
   "slug": "fire-movement-realistic-2026",
@@ -1137,7 +1137,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-08",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2749
+  "contentChars": 2765
  },
  {
   "slug": "real-estate-vs-stock",
@@ -1292,7 +1292,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-15",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2425
+  "contentChars": 2467
  },
  {
   "slug": "auto-loan-vs-lease-2026",
@@ -1530,7 +1530,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-22",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2399
+  "contentChars": 2697
  },
  {
   "slug": "vat-filing-2026",
@@ -1547,7 +1547,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-18",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2389
+  "contentChars": 2414
  },
  {
   "slug": "fund-vs-etf-2026",
@@ -1631,7 +1631,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2232
+  "contentChars": 2553
  },
  {
   "slug": "remote-work-tax-2026",
@@ -1683,7 +1683,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3370
+  "contentChars": 3408
  },
  {
   "slug": "samsung-employee-rsu-stock",
@@ -1827,7 +1827,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "en",
-  "contentChars": 4623
+  "contentChars": 4715
  },
  {
   "slug": "samsung-employee-rsu-stock",
@@ -2030,7 +2030,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-14",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6272
+  "contentChars": 6498
  },
  {
   "slug": "hbm-supercycle-worker-2026",
@@ -2107,7 +2107,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3690
+  "contentChars": 3837
  },
  {
   "slug": "irp-pension-isa-comparison-2026",
@@ -2126,7 +2126,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3643
+  "contentChars": 3648
  },
  {
   "slug": "salary-negotiation-real-scripts-2026",
@@ -2163,7 +2163,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3335
+  "contentChars": 3480
  },
  {
   "slug": "side-hustle-tax-2026",
@@ -2182,7 +2182,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4430
+  "contentChars": 4587
  },
  {
   "slug": "unemployment-benefits-complete",
@@ -2703,7 +2703,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1533
+  "contentChars": 1529
  },
  {
   "slug": "side-hustle-n-jab-tax-2026",
@@ -2778,7 +2778,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1830
+  "contentChars": 1826
  },
  {
   "slug": "irp-pension-payout-tax-2026",
@@ -2909,7 +2909,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1736
+  "contentChars": 1732
  },
  {
   "slug": "multi-home-heavy-tax-2026",
@@ -3003,7 +3003,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1793
+  "contentChars": 1789
  },
  {
   "slug": "parental-leave-6plus6-2026",
@@ -3022,7 +3022,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2200
+  "contentChars": 2196
  },
  {
   "slug": "coupang-fulfillment-night-pay-2026",
@@ -3041,7 +3041,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1801
+  "contentChars": 1797
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
@@ -3421,7 +3421,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1014
+  "contentChars": 1010
  },
  {
   "slug": "standard-vs-special-deduction-2026",
@@ -3475,7 +3475,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 957
+  "contentChars": 1120
  },
  {
   "slug": "insurance-100man-limit-2026",
@@ -3565,7 +3565,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 966
+  "contentChars": 962
  },
  {
   "slug": "religious-donation-100-percent-2026",
@@ -3602,7 +3602,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1380
+  "contentChars": 1376
  },
  {
   "slug": "bond-investment-tax-2026",
@@ -3710,7 +3710,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 927
+  "contentChars": 923
  },
  {
   "slug": "fx-gain-tax-2026",
@@ -3746,7 +3746,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 757
+  "contentChars": 753
  },
  {
   "slug": "bond-fund-distribution-tax-2026",
@@ -3854,7 +3854,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 846
+  "contentChars": 842
  },
  {
   "slug": "bonus-payout-timing-2026",
@@ -3890,7 +3890,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 824
+  "contentChars": 820
  },
  {
   "slug": "stock-option-exercise-timing-2026",
@@ -3908,7 +3908,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 906
+  "contentChars": 902
  },
  {
   "slug": "incentive-split-payout-2026",
@@ -3926,7 +3926,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 839
+  "contentChars": 835
  },
  {
   "slug": "overtime-night-holiday-pay-2026",
@@ -3944,7 +3944,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 970
+  "contentChars": 966
  },
  {
   "slug": "employee-stock-ownership-2026",
@@ -4266,7 +4266,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 883
+  "contentChars": 879
  },
  {
   "slug": "dementia-insurance-2026",
@@ -4463,7 +4463,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 872
+  "contentChars": 868
  },
  {
   "slug": "property-downsizing-1home-2026",
@@ -4589,7 +4589,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 956
+  "contentChars": 952
  },
  {
   "slug": "annual-leave-refund-2026",
@@ -4660,7 +4660,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 878
+  "contentChars": 874
  },
  {
   "slug": "youth-monthly-rent-support-2026",
@@ -4786,7 +4786,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 763
+  "contentChars": 759
  },
  {
   "slug": "veteran-benefit-2026",
@@ -5404,7 +5404,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1291
+  "contentChars": 1312
  },
  {
   "slug": "isa-for-bonus-2026",
@@ -5566,7 +5566,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 732
+  "contentChars": 728
  },
  {
   "slug": "opi-vs-tai-timing-tax-2026",
@@ -5842,7 +5842,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6210
+  "contentChars": 6562
  },
  {
   "slug": "sk-ax-salary-2026",

@@ -532,7 +532,7 @@ const usStockTaxSaving = `
 매년 5월 1~31일 종합소득세 신고와 함께 양도소득세 확정신고. 양도차익 발생 시 자동 신고 의무. 미신고 시 가산세 최대 40% 부과.
 </p>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 절세 시뮬</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 절세 시뮬</h2>
 <p>
 미국 ETF에 5,000만원 투자해 2,000만원 차익 시:
 </p>
@@ -721,7 +721,7 @@ const parentSupportDeduction = `
 <li><strong>⑤ 부모 보장성 보험료</strong>: 부모 명의 + 본인이 납입 시 100만원 한도 12% 공제</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">🎯 형제·자매와 협의 — 누가 등록?</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">🎯 형제·자매와 협의 — 누가 등록?</h2>
 <p>
 부모 1인은 자녀 중 1인만 등록 가능. 누가 등록하면 가장 유리한지:
 </p>
@@ -1052,7 +1052,7 @@ const oneHomeCapitalGains = `
 <li><strong>④ 양도가액 12억 이하</strong>: 초과 시 초과분에만 양도세 부과</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 양도가 12억 초과 시</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 양도가 12억 초과 시</h2>
 <p>
 양도가 15억원, 매수가 8억원, 보유 5년 + 거주 4년인 경우:
 </p>
@@ -1320,7 +1320,7 @@ const rentalBusinessPropTax = `
 <li>· <strong>등록</strong>: 렌트홈(rent.go.kr) 또는 시청 임대등록</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 합산 배제 효과</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 합산 배제 효과</h2>
 <p>
 3주택 보유자(본채 + 임대 2채), 총 공시가 18억 가정:
 </p>
@@ -1370,7 +1370,7 @@ const parentalLeave66 = `
 <li><strong>④ 사용 기간 제한</strong>: 자녀 만 18세까지 (영유아는 통상 출산 1~2년 내 권장)</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 1자녀 가정 정부 지원 총액</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 1자녀 가정 정부 지원 총액</h2>
 <div class="overflow-x-auto my-6">
 <table class="w-full text-sm border border-border">
 <thead class="bg-secondary"><tr><th class="p-3">단계</th><th class="p-3">기간</th><th class="p-3">지원금</th></tr></thead>
@@ -1420,7 +1420,7 @@ const coupangFulfillmentPay = `
 <li>· <strong>주휴수당</strong>: 주 15시간+ 근무 + 개근 시 추가 (별도)</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 월급 시뮬 — 야간 풀타임</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 월급 시뮬 — 야간 풀타임</h2>
 <p>
 야간 시급 17,000원 × 주 40시간 × 4.345주 = 약 295만원
 </p>

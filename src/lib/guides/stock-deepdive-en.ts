@@ -79,7 +79,7 @@ const samsungStock2026 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">💡 Three Things Working Investors Should Watch</h2>
 <ul class="space-y-3 mt-4">
  <li><strong>① DCA wins:</strong> Given the volatility, a fixed monthly investment smooths your average cost.</li>
- <li><strong>② Use ISA / pension accounts:</strong> Within Korea's ISA non-taxable cap (KRW 200M), realized gains are tax-free, beating direct purchase materially.</li>
+ <li><strong>② Use ISA / pension accounts:</strong> Within Korea's ISA tax-free cap (KRW 2M in gains, KRW 4M for the lower-income type; contributions capped at KRW 20M/year, KRW 100M total), realized gains are tax-free, beating direct purchase materially.</li>
  <li><strong>③ Employee benefits:</strong> If you work at Samsung, ESPP discounts vs market price require separate analysis (see related guide).</li>
 </ul>
 

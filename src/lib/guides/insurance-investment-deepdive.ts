@@ -121,16 +121,17 @@ export const insuranceInvestmentGuides = [
 <h3>Step 2: 어린이집·유치원 — 교육비 공제</h3>
 <ul>
 <li>어린이집·유치원 보육료: 1인당 300만 한도 15% 세액공제</li>
+<li>취학 전 아동은 학원·체육시설 수강료도 공제 대상 (같은 300만 한도)</li>
 <li>체험학습비: 30만 한도</li>
 <li>교복비: 50만 한도 (중·고등)</li>
 </ul>
 
-<h3>Step 3: 초·중·고등 — 의무교육 + 사교육</h3>
-<p>의무교육비는 무료. 사교육비 한도 1인당 300만 (초중고).</p>
+<h3>Step 3: 초·중·고등 — 공제는 공교육비 중심</h3>
+<p><strong>학원비는 취학 전 아동만 교육비 공제(1인 300만·15%) 가능하고, 초·중·고 학원비는 원칙적으로 공제 불가.</strong> 단 2026년 지출분부터 초등 1·2학년(만 9세 미만) 예체능(음악·미술·체육 등, 일반교과 제외) 학원·체육시설 수강료는 공제 대상으로 확대(2027년 초 연말정산부터 반영). 초·중·고 공제 대상은 아래 공교육비 중심(1인당 300만 한도).</p>
 <ul>
-<li>학원비 (학원에서 신용카드 결제)</li>
+<li>수업료·급식비·방과후학교 수강료</li>
 <li>교복비·체험학습비</li>
-<li>도서비·교재비</li>
+<li>도서비·교재비 (학교에서 구입한 것)</li>
 </ul>
 
 <h3>Step 4: 12년차 — 두 번째 비과세 증여</h3>
@@ -165,7 +166,7 @@ export const insuranceInvestmentGuides = [
 <ul>
 <li><strong>증여 신고 누락</strong>: 비과세 한도 내라도 신고 필수. 자금 출처 입증 어려움</li>
 <li><strong>자녀 통장 부모가 사용</strong>: 증여 후 부모가 사용하면 증여 무효</li>
-<li><strong>학원비 카드 사용 안 함</strong>: 신용카드 결제해야 공제 인정</li>
+<li><strong>교육비 공제와 카드 공제 혼동</strong>: 교육비 세액공제는 결제수단과 무관(교육비 납입증명서 기준). 신용카드 결제는 별개의 신용카드 소득공제 요건일 뿐</li>
 <li><strong>교복비 영수증 분실</strong>: 12월 영수증 정리 필수</li>
 <li><strong>자녀 명의 펀드 보수 누적</strong>: 펀드보다 ETF가 수수료 1/3</li>
 </ul>
@@ -200,7 +201,7 @@ export const insuranceInvestmentGuides = [
 <table class="w-full text-sm">
 <thead><tr><th>구분</th><th>일반과세자</th><th>간이과세자</th></tr></thead>
 <tbody>
-<tr><td>매출 기준</td><td>연 8천만 이상</td><td>연 8천만 미만</td></tr>
+<tr><td>매출 기준</td><td>연 1억 400만원 이상</td><td>연 1억 400만원 미만</td></tr>
 <tr><td>세율</td><td>10%</td><td>업종별 1.5~4%</td></tr>
 <tr><td>세금계산서 발행</td><td>의무</td><td>제한적</td></tr>
 <tr><td>매입세액 공제</td><td>전액 공제</td><td>제한적</td></tr>
@@ -212,7 +213,7 @@ export const insuranceInvestmentGuides = [
 <h2>🎯 어느 쪽이 유리한가?</h2>
 <h3>간이과세자 유리한 경우</h3>
 <ul>
-<li>매출 4천~8천만 사이</li>
+<li>매출 연 1억 400만원 미만</li>
 <li>매입 비중 작음 (서비스업·콘텐츠)</li>
 <li>최종 소비자 대상 (B2C)</li>
 </ul>
@@ -222,7 +223,7 @@ export const insuranceInvestmentGuides = [
 <li>매입 비중 큼 (제조·도매)</li>
 <li>법인 거래 많음 (B2B)</li>
 <li>세금계산서 발행 필수</li>
-<li>매출 8천만+ 예상</li>
+<li>매출 1억 400만원+ 예상</li>
 </ul>
 
 <h2>📅 부가세 신고 일정 (일반과세자)</h2>
@@ -265,7 +266,7 @@ export const insuranceInvestmentGuides = [
 <li><strong>매출 누락</strong>: 카드·현금영수증 매출 누락 시 추징세 + 가산세 20%</li>
 <li><strong>매입세액 공제 누락</strong>: 영수증 분실 시 공제 못 받음</li>
 <li><strong>분기별 신고 깜빡</strong>: 무신고 가산세 20%</li>
-<li><strong>간이→일반 전환 시점 놓침</strong>: 매출 8천 초과 시 자동 전환. 별도 신청 X but 적용 변경</li>
+<li><strong>간이→일반 전환 시점 놓침</strong>: 매출 1억 400만원 초과 시 자동 전환. 별도 신청 X but 적용 변경</li>
 <li><strong>면세사업자 등록 잘못</strong>: 면세 가능 업종 미신고로 부가세 부담</li>
 </ul>
 
@@ -672,7 +673,7 @@ export const insuranceInvestmentGuides = [
 
 <h2>📊 주택 임대소득 과세 기준</h2>
 <ul>
-<li><strong>1주택자</strong>: 9억 이하 임대소득 비과세</li>
+<li><strong>1주택자</strong>: 기준시가 12억원 이하 주택 임대소득 비과세 (2023년 귀속분부터 9억→12억 상향)</li>
 <li><strong>2주택자 이상</strong>: 모든 임대소득 과세</li>
 <li>임대소득 2,000만 이하: 분리과세 vs 종합과세 선택</li>
 <li>임대소득 2,000만 초과: 종합과세 의무</li>
@@ -682,9 +683,9 @@ export const insuranceInvestmentGuides = [
 <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
 <h3>분리과세 (14%)</h3>
 <ul>
-<li>임대소득 1,500만 × 50% (필요경비) = 750만 과세표준</li>
-<li>등록 임대사업자: 200만 추가 공제</li>
-<li>(1,500만 - 750만 - 200만) × 14% = 약 77만</li>
+<li><strong>미등록</strong>: 필요경비 50% + 기본공제 200만 → (1,500만 − 750만 − 200만) × 14% = 약 77만</li>
+<li><strong>등록 임대사업자</strong>: 필요경비 60% + 기본공제 400만 → (1,500만 − 900만 − 400만) × 14% = 약 28만</li>
+<li>※ 기본공제(미등록 200만·등록 400만)는 임대소득 외 종합소득금액 2,000만 이하일 때만 적용</li>
 </ul>
 <h3>종합과세 (누진세율)</h3>
 <ul>
@@ -698,7 +699,7 @@ export const insuranceInvestmentGuides = [
 <h2>🏠 임대사업자 등록 메리트</h2>
 <h3>장점</h3>
 <ul>
-<li><strong>분리과세 추가 공제 200만</strong>: 등록자만 가능</li>
+<li><strong>분리과세 필요경비 60%·기본공제 400만</strong>: 미등록(50%·200만)보다 유리</li>
 <li><strong>장기보유특별공제 80%</strong>: 10년 보유 시 양도세 80% 감면</li>
 <li><strong>건강보험료 부담 완화</strong>: 임대소득 일부만 반영</li>
 <li><strong>재산세 감면</strong>: 일부 지역 50% 감면</li>
@@ -714,7 +715,7 @@ export const insuranceInvestmentGuides = [
 
 <h2>🚀 임대소득 절세 5단계</h2>
 <h3>Step 1: 본인 임대소득 정확히 계산</h3>
-<p>월세 + 보증금 환산 (보증금 × 1.6% ÷ 12 × 보유 개월수).</p>
+<p>월세 + 간주임대료. 간주임대료는 <strong>3주택 이상 보유 시</strong> (보증금 합계 − 3억) × 60% × 정기예금이자율(2025년 귀속 3.1% — 매년 초 시행규칙으로 갱신)로 계산. 2주택 이하는 보증금에 과세하지 않음(월세만).</p>
 
 <h3>Step 2: 분리과세 vs 종합과세 시뮬</h3>
 <p>홈택스 모의계산 또는 세무사 상담. 임대 2,000만 미만이면 보통 분리과세 유리.</p>
@@ -736,7 +737,7 @@ export const insuranceInvestmentGuides = [
 <h2>⚠️ 임대소득 흔한 실수</h2>
 <ul>
 <li><strong>2주택자 신고 누락</strong>: 가산세 20% + 본세</li>
-<li><strong>보증금 환산 누락</strong>: 보증금 5억 = 연 800만 환산 (간주임대료)</li>
+<li><strong>간주임대료 누락</strong>: 3주택 이상이면 보증금 합계 5억 시 (5억 − 3억) × 60% × 3.1% ≈ 연 372만이 임대소득에 가산</li>
 <li><strong>임대사업자 5% 위반</strong>: 등록 자격 박탈 + 혜택 환수</li>
 <li><strong>임차인 신용카드 결제</strong>: 임차인이 월세 신용카드로 결제 시 임대소득으로 인식</li>
 <li><strong>건강보험료 폭증</strong>: 지역가입자는 임대소득 기준 건보료 큼</li>

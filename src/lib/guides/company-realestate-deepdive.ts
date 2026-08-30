@@ -651,8 +651,8 @@ export const companyRealEstateGuides = [
 
 <h2>💎 절세 활용</h2>
 <ul>
-<li><strong>월세 세액공제</strong>: 총급여 7천 이하 무주택자 17% 환급</li>
-<li><strong>전세대출 이자 공제</strong>: 1세대 1주택 무주택자 한도 400만의 40% 공제</li>
+<li><strong>월세 세액공제</strong>: 총급여 8,000만원 이하 무주택자, 월세 15~17% 세액공제 (한도 1,000만)</li>
+<li><strong>전세대출 원리금 상환액 공제</strong>: 무주택 세대주, 전세대출 원리금 상환액의 40% 공제 (한도 400만)</li>
 <li><strong>주택임대료 신용카드 결제</strong>: 신용카드 공제 한도에 포함</li>
 </ul>
 

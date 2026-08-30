@@ -420,7 +420,7 @@ const earnedIncomeDeduction = `
 <li>· 1억 초과: 1,475만 + 2%</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 근로소득세액공제 (산출세액 기준)</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 근로소득세액공제 (산출세액 기준)</h2>
 <ul class="space-y-2 mt-4">
 <li>· 산출세액 130만원 이하: 55%</li>
 <li>· 130만원 초과: 30%</li>
@@ -474,7 +474,7 @@ const medicalEduDonation = `
 `;
 
 const childEducationLimit = `
-<p class="lead">자녀 교육비 세액공제 한도: 미취학 아동 300만원, 초·중·고 300만원, 대학·대학원 900만원. 학원비는 미취학·취학 전만 인정, 자녀 교복·체육복도 일부 포함.</p>
+<p class="lead">자녀 교육비 세액공제 한도: 미취학 아동 300만원, 초·중·고 300만원, 대학·대학원 900만원. 학원비는 원칙적으로 미취학·취학 전만 인정(2026년 지출분부터 초1·2 예체능 한정 확대), 자녀 교복·체육복도 일부 포함.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 자녀 교육비 한도</h2>
 <ul class="space-y-2 mt-4">
@@ -484,10 +484,10 @@ const childEducationLimit = `
 <li>· 본인: 무제한 (대학원 등록금 포함)</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 학원비 — 취학 전만</h2>
-<p>초등학교 입학 후 학원비는 공제 불가. 미취학 아동의 미술·음악·체육 학원은 OK. 단 학원비 영수증 보관 필수.</p>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 학원비 — 원칙은 취학 전만</h2>
+<p>초등학교 입학 후 학원비는 원칙적으로 공제 불가. 미취학 아동의 미술·음악·체육 학원은 OK. 단, <strong>2026년 지출분부터 초등 1·2학년(만 9세 미만) 예체능(음악·미술·체육 등, 일반교과 제외) 학원·체육시설 수강료는 공제 대상으로 확대</strong>(2027년 초 연말정산부터 반영). 학원비 영수증·납입증명서 보관 필수.</p>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>자녀 1명(대학생) 등록금 800만원 + 교복 30만원:</p>
 <ul class="space-y-2 mt-4">
 <li>· 공제 한도 900만원 내</li>
@@ -595,7 +595,7 @@ const foreignFlatTax19 = `
 <li>· 19% 단일세율 + 지방소득세 1.9% = 총 20.9%</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 비교 — 연봉 1억</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 비교 — 연봉 1억</h2>
 <ul class="space-y-2 mt-4">
 <li>· 일반 누진세율: 약 1,500~1,800만원 세금</li>
 <li>· 단일세율 19%: 1,900만원 + 지방세 = 약 2,090만원</li>
@@ -647,7 +647,7 @@ const domesticVsOverseasEtf = `
 <tr class="border-t"><td class="p-3">손익통산</td><td class="p-3">불가</td><td class="p-3">가능</td></tr>
 </tbody></table></div>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬 — 5천만원 → 7천만원</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 5천만원 → 7천만원</h2>
 <ul class="space-y-2 mt-4">
 <li>· 국내 TIGER S&P500: 0원 세금</li>
 <li>· 미국 SPY: (2,000 - 250) × 22% = 385만원 세금</li>
@@ -761,7 +761,7 @@ const usDividendWithholding = `
 <li>· <strong>금융소득 종합과세 대상</strong>: 연 합계 2천만원 초과 시 종합 과세</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>미국 배당주 5천만원 보유, 연 배당 3% (150만원):</p>
 <ul class="space-y-2 mt-4">
 <li>· 미국 원천징수 15%: 22.5만원</li>
@@ -800,7 +800,7 @@ const p2pTax = `
 <li>· 연 합산 2천만원 초과 시 종합과세</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">⚠️ 리스크 — 원금 손실</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 리스크 — 원금 손실</h2>
 <p>P2P는 예금자보호 대상 아님. 부도 시 원금 손실. 금융소득세는 따로 부과되므로 세금 + 원금 손실 이중 부담 가능.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/savings-interest-2026" class="text-primary underline">적금·예금 이자 계산기</a></li></ul></div>
@@ -914,7 +914,7 @@ const childTuitionTaxFree = `
 <li>· <strong>주재원 자녀 학비</strong>: 해외 주재원 자녀 학교비 비과세</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">🎯 활용 — 사내복지기금 등록 회사</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">🎯 활용 — 사내복지기금 등록 회사</h2>
 <p>대기업은 대부분 사내복지기금으로 학자금 지원. 입사 전 회사 복지 항목 확인. 자녀 1명 학자금 연 500만원 비과세 = 한계세율 35% 시 약 175만원 세금 차이.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/salary-db" class="text-primary underline">회사별 연봉·복지</a></li></ul></div>
@@ -948,7 +948,7 @@ const executiveSeveranceLimit = `
 <li>· 부여 RSU·스톡옵션은 별도 처리</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬 — 임원 퇴직 5억</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 임원 퇴직 5억</h2>
 <ul class="space-y-2 mt-4">
 <li>· 한도 내 3억: 퇴직소득세 약 3,000만원</li>
 <li>· 한도 초과 2억: 근로소득 → 약 7,800만원 (한계세율 38%+)</li>
@@ -968,7 +968,7 @@ const stockOptionExercise = `
 <li><strong>적격 요건</strong>: 부여 후 2년 + 행사 후 1년 보유 + 한도 등 조건 충족</li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬 — 1억 차익</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 1억 차익</h2>
 <ul class="space-y-2 mt-4">
 <li>· 일반: 행사 근로소득세 3,800만원 + 매도 양도세 220만원 = 4,020만원</li>
 <li>· 적격: 양도세 약 2,160만원만</li>
@@ -989,7 +989,7 @@ const incentiveSplitPayout = `
 <li>· <strong>차이: 약 350만원 절감</strong></li>
 </ul>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">🎯 회사와 협상</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">🎯 회사와 협상</h2>
 <p>인사팀과 분할 지급 협상 가능. 2~3년 분할 지급 시 회사도 세무상 이점 일부 있어 협상 가능성 큼.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
@@ -1009,7 +1009,7 @@ const overtimeNightHolidayTax = `
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 생산직 비과세 — 연 240만원</h2>
 <p>생산직(공장 근로자 등) 야근수당은 연 240만원까지 비과세. 사무직은 해당 안 됨. 직급·직무별 확인.</p>
 
-<h2 class="mt-12 text-2xl function-bold text-primary">⚠️ 포괄임금제 함정</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 포괄임금제 함정</h2>
 <p>포괄임금제 근로계약 시 월 일정 시간(예: 20시간) 야근 수당 미리 포함. 그 이상은 추가 지급 의무. 미지급 시 노동부 진정.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/weekly-holiday-allowance-2026" class="text-primary underline">주휴수당 계산기</a></li></ul></div>

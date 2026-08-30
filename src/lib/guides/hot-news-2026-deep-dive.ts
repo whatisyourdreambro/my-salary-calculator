@@ -317,7 +317,7 @@ const infertilityTax = `
 <li>· 시술비·약값·검사비 모두 포함</li>
 <li>· 정부 지원금(난임 시술 보조금)도 별도 받을 수 있음</li>
 </ul>
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>난임 시술 800만원 + 일반 의료비 200만원, 총급여 6,000만원:</p>
 <ul class="space-y-2 mt-4">
 <li>· 일반 의료비 200 - 3%(180) = 20만원 × 15% = 3만원</li>
@@ -495,7 +495,7 @@ const childLifecycleSavings = `
 <li><strong>20~30세</strong>: 청년도약·청년주택드림·청년형 장기투자</li>
 <li><strong>30대</strong>: 신혼·디딤돌 대출 + 부담부증여로 자산 본격 이전</li>
 </ol>
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 누적 효과</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 누적 효과</h2>
 <p>0~30세 누적 자녀 자산 약 1.5~2억 (운용 수익 포함). 부모 자산 효율적 이전 + 자녀 사회 진출 준비 자금 확보.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/real-estate/gift-tax" class="text-primary underline">증여세 계산기</a></li></ul></div>
 `;
@@ -627,7 +627,7 @@ const overtimeProof = `
 <li><strong>④ 카톡 출근 인증</strong>: 단톡방 출근/퇴근 메시지</li>
 <li><strong>⑤ 회식·미팅 영수증</strong>: 평일 21시 이후 결제</li>
 </ol>
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 시뮬 — 월 30시간 미지급</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 월 30시간 미지급</h2>
 <ul class="space-y-2 mt-4">
 <li>· 통상시급 15,000원 × 1.5배 × 30시간 = 67.5만원/월</li>
 <li>· 3년 누적: 약 2,430만원</li>
@@ -701,7 +701,7 @@ const employmentEstoppel = `
 <li><strong>4. 위로금 별도 협상</strong>: 통상 1~3개월 임금</li>
 <li><strong>5. 노동부 신고</strong>: 사직서 + 회사 확인서 제출</li>
 </ol>
-<h2 class="mt-12 text-2xl function-bold text-primary">⚠️ 함정 — 일신상 사유</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 함정 — 일신상 사유</h2>
 <p>회사가 "일신상 사유"로 적으라고 강요 시 거부. 실업급여 약 1,000만원 + 위로금 모두 손해.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/unemployment-benefit" class="text-primary underline">실업급여 계산기</a></li></ul></div>
 `;
@@ -811,7 +811,7 @@ const elderCare = `
 <li>· 4~5등급(경증): 일부 도움</li>
 <li>· 인지지원등급: 치매·인지장애</li>
 </ul>
-<h2 class="mt-12 text-2xl function-bold text-primary">💰 본인부담</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 본인부담</h2>
 <p>요양시설 약 200만원/월 중 본인부담 약 30~40만원. 재가서비스 약 100만원/월 중 본인부담 15만원.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li></ul></div>
 `;

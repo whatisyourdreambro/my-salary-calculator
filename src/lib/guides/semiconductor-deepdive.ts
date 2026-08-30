@@ -504,6 +504,11 @@ const semiconductorPerformanceBonusTax = `
     <td class="p-3 font-bold">42%</td>
     <td class="p-3 font-bold">3,594만원</td>
    </tr>
+   <tr class="border-t border-border bg-red-200 dark:bg-red-950/40">
+    <td class="p-3 font-bold">10억원 초과</td>
+    <td class="p-3 font-bold">45%</td>
+    <td class="p-3 font-bold">6,594만원</td>
+   </tr>
   </tbody>
  </table>
 </div>
@@ -529,14 +534,14 @@ const semiconductorPerformanceBonusTax = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">전략 3. 주택청약저축·청년형 우대상품</h3>
 <p>
- 주택청약저축 연 240만원까지 소득공제(40%).
+ 주택청약저축 연 300만원까지 소득공제(40%, 2024년 귀속분부터 한도 상향).
  청년형 절세 상품(연 600만원 한도, 만기 시 비과세)도 30대 초반까지 가능.
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">전략 4. 기부금·의료비·교육비 세액공제 누락 점검</h3>
 <p>
  PS 받은 해는 종합소득이 상위 구간으로 점프하기 쉬워 의료비·교육비 한도 활용도가 높아집니다.
- 1년 의료비 본인 7% 초과분, 자녀 교육비 1인당 300만원까지 공제 가능.
+ 1년 의료비 중 총급여의 3% 초과분, 자녀 교육비 1인당 300만원까지 공제 가능.
 </p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🧮 실전 절세 시뮬레이션</h2>
