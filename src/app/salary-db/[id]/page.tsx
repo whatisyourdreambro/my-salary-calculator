@@ -8,7 +8,7 @@ import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
 import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
 // 서버 전용 DART 집계 — 클라이언트 컴포넌트에서 import 금지 (dartReport.ts 헤더 참조)
-import { dartTop100, dartReportStats } from "@/lib/salary-data/dartReport";
+import { dartTop100, dartReportStats, dartCompanyStatsById } from "@/lib/salary-data/dartReport";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
@@ -210,6 +210,16 @@ export default function CompanyDetailPage({
  rankYear: dartReportStats.rankYear,
  }
  : null;
+ })()}
+ dartStats={(() => {
+ // 증강 팩 ① (2026-08-30): 인상률 배지·3개년 추이 — DART 파생 통계.
+ // 수기 disclosed 값과 DART 원값 괴리 10% 초과 시 미전달 (라벨 혼선 방지).
+ const stats = dartCompanyStatsById.get(company.id);
+ if (!stats || !company.disclosed) return null;
+ const gap =
+ Math.abs(stats.dartSalaryManwon - company.disclosed.avgSalaryManwon) /
+ company.disclosed.avgSalaryManwon;
+ return gap <= 0.1 ? stats : null;
  })()}
  />
 

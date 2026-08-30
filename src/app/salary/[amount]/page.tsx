@@ -10,6 +10,8 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
+// 서버 전용 (dartDisclosed 1.3MB) — 클라 반입 금지
+import ListedSalaryBandTable from "@/components/ListedSalaryBandTable";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { CalcResultAd, GuideMidAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
@@ -338,6 +340,12 @@ export default function SalaryAmountPage({ params }: Props) {
  title="이 연봉대의 실제 회사들"
  />
  <ShareSection contentType="salary_result" className="mt-8" />
+ </div>
+
+ {/* 증강 팩 ① (2026-08-30): 이 연봉대 공시 평균연봉 상장사 — DART 원값.
+ 준중복 해소(페이지별 표 상이) + lite 내부링크. 광고 전부 아래 배치 준수 */}
+ <div className="px-2 sm:px-6">
+ <ListedSalaryBandTable annualWon={amount} />
  </div>
 
  {/* 시즌 크로스링크 — 표 4종 공용 블록 재사용 (G8 메쉬, 2026-08-23).

@@ -16,6 +16,7 @@ import { dartDisclosed, DART_DATA_DATE, type DartDisclosedEntry } from "@/data/d
 import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
+import { listedCohortStockCodes } from "./dartLite";
 
 /** HTML 엔티티 디코드 — DART corp_name 에 &amp; 등이 섞여 있음 (삼성E&A 등) */
 function decodeName(s: string): string {
@@ -124,6 +125,112 @@ export const dartIndustryRows: DartIndustryRow[] = (() => {
   }
   return rows.sort((a, b) => b.weightedAvgManwon - a.weightedAvgManwon);
 })();
+
+// ── DART 증강 팩 (2026-08-30, 성장 제안 ①) — 회사 페이지 배지·그리드 밴드 표 ──
+
+// 상장 전수 (FY2025·무플래그) — 순위 컨텍스트·밴드 표 모수
+const listedEligible = eligible.filter((d) => d.stockCode !== "");
+const listedBySalaryDesc = [...listedEligible].sort(
+  (a, b) => b.avgSalaryManwonRaw - a.avgSalaryManwonRaw
+);
+const listedRankByCorp = new Map<string, number>();
+listedBySalaryDesc.forEach((d, i) => listedRankByCorp.set(d.corpCode, i + 1));
+
+/** 인상률 배지 제외 가드 — 직원 수 ±30% 초과 변동(합병·분할 왜곡) */
+const YOY_EMPLOYEE_CHANGE_MAX = 0.3;
+
+export interface DartCompanyStats {
+  /** DART 공시 평균연봉 (만원, FY2025) — 수기 disclosed 와 괴리 검사용 */
+  dartSalaryManwon: number;
+  /** 전년(FY2024) 대비 인상률 % (소수 1자리) — 비교 불가 시 null */
+  yoyPct: number | null;
+  prevSalaryManwon: number | null;
+  /** 상장 전수 중 평균연봉 순위 — 비상장이면 null */
+  listedRank: number | null;
+  listedTotal: number;
+  /** 과년도 공시 이력 (최신 우선) */
+  history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
+}
+
+/** /salary-db/[id] 회사 id → DART 파생 통계. 클라 번들 반입 금지 (서버 전용) */
+export const dartCompanyStatsById: Map<string, DartCompanyStats> = (() => {
+  const map = new Map<string, DartCompanyStats>();
+  for (const d of eligible) {
+    const companyId = companyIdByCorp.get(d.corpCode);
+    if (!companyId || map.has(companyId)) continue;
+    const prev = d.history?.find((h) => h.fiscalYear === "2024");
+    let yoyPct: number | null = null;
+    let prevSalaryManwon: number | null = null;
+    if (prev && prev.avgSalaryManwonRaw > 0 && prev.employeeCount > 0) {
+      const empChange = Math.abs(d.employeeCount - prev.employeeCount) / prev.employeeCount;
+      if (empChange <= YOY_EMPLOYEE_CHANGE_MAX) {
+        yoyPct =
+          Math.round(
+            ((d.avgSalaryManwonRaw - prev.avgSalaryManwonRaw) / prev.avgSalaryManwonRaw) * 1000
+          ) / 10;
+        prevSalaryManwon = prev.avgSalaryManwonRaw;
+      }
+    }
+    map.set(companyId, {
+      dartSalaryManwon: d.avgSalaryManwonRaw,
+      yoyPct,
+      prevSalaryManwon,
+      listedRank: listedRankByCorp.get(d.corpCode) ?? null,
+      listedTotal: listedEligible.length,
+      ...(d.history && d.history.length ? { history: d.history } : {}),
+    });
+  }
+  return map;
+})();
+
+export interface ListedBandRow {
+  nameKo: string;
+  stockCode: string;
+  /** 상세 프로필 > lite(코호트 등재 시만 — 밖은 404) > null */
+  href: string | null;
+  avgSalaryManwon: number;
+  employeeCount: number;
+  industryKo: string;
+}
+
+/**
+ * 해당 연봉(원) ±5%(3곳 미만 시 ±8% 폴백) 구간의 공시 평균연봉 상장사.
+ * /salary/[amount]·/monthly/[amount] 그리드의 준중복 해소 + lite 내부링크용.
+ * 3곳 미만이면 빈 배열 — 소비처는 섹션 자체를 미렌더 (thin 방지).
+ */
+export function getListedBySalaryBand(annualWon: number, limit = 10): ListedBandRow[] {
+  const manwon = annualWon / 10000;
+  if (manwon <= 0) return [];
+  const pick = (pct: number) =>
+    listedEligible.filter(
+      (d) => Math.abs(d.avgSalaryManwonRaw - manwon) / manwon <= pct
+    );
+  let pool = pick(0.05);
+  if (pool.length < 3) pool = pick(0.08);
+  if (pool.length < 3) return [];
+  return pool
+    .sort(
+      (a, b) =>
+        Math.abs(a.avgSalaryManwonRaw - manwon) - Math.abs(b.avgSalaryManwonRaw - manwon)
+    )
+    .slice(0, limit)
+    .map((d) => {
+      const companyId = companyIdByCorp.get(d.corpCode);
+      const industryId = mapKsicToIndustry(d.ksicCode);
+      return {
+        nameKo: decodeName(d.corpNameKo),
+        stockCode: d.stockCode,
+        href: companyId
+          ? `/salary-db/${companyId}`
+          : listedCohortStockCodes.has(d.stockCode)
+            ? `/salary-db/listed/${d.stockCode}`
+            : null,
+        avgSalaryManwon: d.avgSalaryManwonRaw,
+        employeeCount: d.employeeCount,
+        industryKo: getIndustryMeta(industryId).ko,
+      };
+    });
+}
 
 /** 전체 통계 */
 export const dartReportStats = (() => {

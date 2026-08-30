@@ -17,6 +17,8 @@ import { calculateSalary2026 } from "@/lib/TaxLogic";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import RelatedCompanies from "@/components/RelatedCompanies";
+// 서버 전용 (dartDisclosed 1.3MB) — 클라 반입 금지
+import ListedSalaryBandTable from "@/components/ListedSalaryBandTable";
 import SeasonalLinks from "@/app/table/2026/SeasonalLinks";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
@@ -389,6 +391,15 @@ export default function MonthlyPage({ params }: Props) {
           limit={6}
           title="이 월급대의 실제 회사들"
         />
+
+        {/* 증강 팩 ① (2026-08-30): 이 월급대(연 환산) 공시 평균연봉 상장사 — DART 원값.
+            준중복 해소 + lite 내부링크. 광고 블록 전부 아래 위치 준수 */}
+        <div className="mt-10">
+          <ListedSalaryBandTable
+            annualWon={annual}
+            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 상장사`}
+          />
+        </div>
 
         <RelatedCalculators
           currentPath={`/monthly/${monthly}`}

@@ -13,7 +13,7 @@ import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbLd, faqLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, datasetLd } from "@/lib/structuredData";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { isStaticSalaryAmount } from "@/lib/salaryStaticParams";
 import {
@@ -135,7 +135,20 @@ export default function ListedCompanyPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-transparent pb-10">
-      <JsonLd data={[breadcrumbLd(crumbs), faqLd(faqItems)]} />
+      {/* datasetLd 추가 (2026-08-30 증강 팩 ①) — 공시 데이터 리치결과 신호 */}
+      <JsonLd
+        data={[
+          breadcrumbLd(crumbs),
+          faqLd(faqItems),
+          datasetLd({
+            name: `${c.nameKo} 공시 평균연봉 (${c.fiscalYear} 사업보고서)`,
+            description: `DART 사업보고서 기준 ${c.nameKo}의 평균연봉·직원 수·근속연수 공시 데이터`,
+            url: path,
+            dateModified: DART_LITE_DATE,
+            keywords: [`${c.nameKo} 연봉`, "공시 평균연봉", "DART"],
+          }),
+        ]}
+      />
 
       <div className="page-width pt-24 pb-3">
         <Breadcrumbs path={path} leafName={c.nameKo} overrides={{ listed: "상장사 공시 연봉" }} />

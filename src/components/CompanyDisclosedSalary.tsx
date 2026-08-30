@@ -30,10 +30,23 @@ function formatTenure(years: number): string {
 export default function CompanyDisclosedSalary({
   company,
   dartRank,
+  dartStats,
 }: {
   company: CompanyProfile;
   /** DART 전수 랭킹 TOP 100 진입 시 순위 — 서버(page)에서 dartTop100 조회 후 전달 */
   dartRank?: { rank: number; companyCount: number; rankYear: string } | null;
+  /**
+   * DART 파생 통계 (인상률 배지·3개년 미니 추이) — 서버(page)에서
+   * dartCompanyStatsById 조회 후 전달. 수기 disclosed 와 괴리 10% 초과 시
+   * page 에서 null 로 걸러 전달 (라벨 혼선 방지). 2026-08-30 증강 팩 ①.
+   */
+  dartStats?: {
+    yoyPct: number | null;
+    prevSalaryManwon: number | null;
+    listedRank: number | null;
+    listedTotal: number;
+    history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
+  } | null;
 }) {
   const d = company.disclosed;
   if (!d) return null;
@@ -77,6 +90,58 @@ export default function CompanyDisclosedSalary({
           <p className="text-xs leading-6 text-muted-blue dark:text-canvas-300 mb-3">
             {d.note}
           </p>
+        )}
+
+        {dartStats && dartStats.yoyPct != null && (
+          <p className="mb-3 flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold ${
+                dartStats.yoyPct >= 0
+                  ? "bg-electric/10 text-electric"
+                  : "bg-canvas-100 dark:bg-canvas-800 text-navy dark:text-canvas-100"
+              }`}
+            >
+              전년 대비 {dartStats.yoyPct >= 0 ? `+${dartStats.yoyPct}` : dartStats.yoyPct}%
+              {dartStats.prevSalaryManwon != null && (
+                <span className="font-medium opacity-80">
+                  ({formatManwon(dartStats.prevSalaryManwon)} →)
+                </span>
+              )}
+            </span>
+            {dartStats.listedRank != null && (
+              <span className="text-xs font-bold text-muted-blue dark:text-canvas-300">
+                상장 {dartStats.listedTotal.toLocaleString("ko-KR")}곳 중{" "}
+                {dartStats.listedRank.toLocaleString("ko-KR")}위 · DART 공시 기준
+              </span>
+            )}
+          </p>
+        )}
+
+        {dartStats && dartStats.history && dartStats.history.length > 0 && (
+          <div className="mb-3 overflow-x-auto">
+            <table className="w-full max-w-md text-xs">
+              <thead>
+                <tr className="border-b border-canvas-200 dark:border-canvas-800 text-left text-faint-blue">
+                  <th className="py-1.5 pr-3 font-bold">사업연도</th>
+                  <th className="py-1.5 pr-3 font-bold">공시 평균연봉</th>
+                  <th className="py-1.5 font-bold">직원 수</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dartStats.history.slice(0, 3).map((h) => (
+                  <tr key={h.fiscalYear} className="border-b border-canvas-100 dark:border-canvas-800/60">
+                    <td className="py-1.5 pr-3 font-bold text-navy dark:text-canvas-50">{h.fiscalYear}</td>
+                    <td className="py-1.5 pr-3 tabular-nums text-muted-blue dark:text-canvas-300">
+                      {formatManwon(h.avgSalaryManwonRaw)}
+                    </td>
+                    <td className="py-1.5 tabular-nums text-muted-blue dark:text-canvas-300">
+                      {h.employeeCount.toLocaleString("ko-KR")}명
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
 
         {dartRank && (
