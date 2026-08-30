@@ -11,7 +11,7 @@
     "test": "vitest run",
     "verify:tax": "node scripts/verify-tax-constants.mjs",
     "verify:sitemap": "tsx scripts/verify-sitemap.ts",
-    "analyze": "ANALYZE=true next build",
+    "analyze": "node -e \"process.env.ANALYZE='true'; require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\"",
     "ad-audit": "node scripts/ad-audit.mjs",
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped",
     "verify:site": "tsx scripts/gen-site-metrics.ts --check",

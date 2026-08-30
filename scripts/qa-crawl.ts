@@ -141,7 +141,8 @@ function checkCounts(path: string, html: string) {
   for (const s of STALE_COUNT_STRINGS) {
     if (html.includes(s)) fail("(a) 카운트", path, `스테일 리터럴 "${s}" 노출`);
   }
-  // "N곳" — 회사 수 문맥: 허용값(전체 434 / 국내 426) 외의 3자리 곳 표기 검출
+  // "N곳" — 회사 수 문맥: 허용값(전체 430 / 국내 422) 외의 3자리 곳 표기 검출
+  // (수치는 site-metrics 파생이 정본 — COMPANY_COUNT/DOMESTIC_COUNT 상수가 따라감)
   for (const m of html.matchAll(/회사 (\d{3})곳|전체 회사 (\d{3})곳|(\d{3})곳을 다루는/g)) {
     const n = Number(m[1] ?? m[2] ?? m[3]);
     if (n !== COMPANY_COUNT && n !== DOMESTIC_COUNT) {

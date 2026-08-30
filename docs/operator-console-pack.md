@@ -68,15 +68,16 @@
 
 ---
 
-# 네이버 블로그 발행 스케줄 (원고 6편 재고, docs/naver-blog/)
+# 네이버 블로그 발행 스케줄 (원고 7편 재고, docs/naver-blog/ — 주 1편)
 
 | 주차 | 원고 | 파일 |
 |---|---|---|
-| 9월 1주 | 연말정산 미리보기 | 01-yeonmaljeongsan-preview.md |
-| 9월 2주 | 중도퇴사 연말정산 | 02-junggdotoesa.md |
-| 9월 3주 | 월급 300 실수령 | 03-wolgeup-300.md |
-| 9월 4주 | 공무원 봉급표 | 05-gongmuwon-bonggeup.md |
-| 10월 1주 | 기초연금 | 06-gicho-yeongeum.md |
-| 10월 2주 | 삼성 OPI 전망 | 04-samsung-opi-forecast.md |
+| 9월 1주 | 업종 초봉 랭킹 (리포트 1호 연동 — 최우선) | 07-eopjong-chobong-ranking.md |
+| 9월 2주 | 연말정산 미리보기 | 01-yeonmaljeongsan-preview.md |
+| 9월 3주 | 중도퇴사 연말정산 | 02-junggdotoesa.md |
+| 9월 4주 | 월급 300 실수령 | 03-wolgeup-300.md |
+| 10월 1주 | 공무원 봉급표 | 05-gongmuwon-bonggeup.md |
+| 10월 2주 | 기초연금 | 06-gicho-yeongeum.md |
+| 10월 3주 | 삼성 OPI 전망 | 04-samsung-opi-forecast.md |
 
 발행 요령: 제목·본문 그대로 복사 → 본문 속 사이트 링크 2~3개 유지 → 발행 후 URL을 저에게 알려주시면 유입 추적 확인. 재고 소진 전에 다음 원고를 계속 만들어 드립니다(추석·2027 공무원 등 시즌 연동).

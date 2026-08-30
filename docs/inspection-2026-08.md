@@ -107,6 +107,7 @@ dateModified 2026-08-24로 갱신.
 4. **CI에 lint/typecheck/test 잡 추가** — 현재 lighthouse.yml 하나뿐이며
    `--collect.url=http://localhost/` 구성이라 사실상 무효. 린트 에러가 빌드를
    막지 않으므로(§3) CI가 유일한 자동 방어선이 됨.
+   → **해소 — ci.yml 신설(62c3dcf, 2026-08-26)**.
 5. **`@next/bundle-analyzer` 15.x vs next 14 메이저 불일치** — 동작엔 문제
    없어 기록만. next 15 업그레이드 시 eslint 9와 함께 일괄 정렬.
 6. **bonusTaxCalc.calcBonusNet ↔ calcSamsungBonusNet 병합** — 반환 shape가
@@ -114,6 +115,7 @@ dateModified 2026-08-24로 갱신.
 7. **/company/simulator sitemap 등재 여부** — 2026-06 점검에서 페이지 유지
    판단됐으나 sitemap 미등재 상태. 운영 판단 필요 (verify-sitemap 제외
    목록에 기록).
+   → **해소 — simulator 등재(ba3b8cd, 2026-08-30)**. verify-sitemap 제외 목록에서도 제거.
 8. **generateData.ts ↔ generateData2026.ts 동명 함수** — 용도 구분 주석은
    부착(전자는 /api/salary-table 전용). rename은 후속.
 

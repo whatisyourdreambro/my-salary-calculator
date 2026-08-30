@@ -1914,7 +1914,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
  {
   "corpCode": "00112882",
   "stockCode": "",
-  "corpNameKo": "kyobo-life",
+  "corpNameKo": "교보생명보험",
   "fiscalYear": "2025",
   "avgSalaryManwon": 11400,
   "avgSalaryManwonRaw": 11402,
@@ -4154,7 +4154,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
  {
   "corpCode": "01212921",
   "stockCode": "",
-  "corpNameKo": "toss",
+  "corpNameKo": "비바리퍼블리카",
   "fiscalYear": "2025",
   "avgSalaryManwon": 9400,
   "avgSalaryManwonRaw": 9414,

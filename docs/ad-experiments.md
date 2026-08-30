@@ -48,9 +48,11 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
 수익 측정을 오염시킴.
 
 **적용 대상 (군별 독립 커밋·14일 비교)**:
-- **#2a**: GuideMid 기사용이라 D1에서 수리 못 한 성과급 12곳(doosan-enerbility·
-  gs-caltex·hanwha-aerospace·hyundai-mobis·hyundai-rotem·kepco·lg-display·s-oil·
-  samsung·samsung-display·sk-hynix·sk-innovation) + car-loan(469행) — page 중단
+- **#2a**: GuideMid 기사용이라 D1에서 수리 못 한 성과급 19곳(기존 12 —
+  doosan-enerbility·gs-caltex·hanwha-aerospace·hyundai-mobis·hyundai-rotem·kepco·
+  lg-display·s-oil·samsung·samsung-display·sk-hynix·sk-innovation — +
+  holiday-bonus·incentive-tax·january-bonus·severance-vs-pension·vacation-pay·
+  year-end-bonus·year-end-bonus-tax) + car-loan(466행) — page 중단
   `InArticleAd`→`Display2Ad` 교체. 유닛 순증이 아니라 **dedup으로 죽어 있던
   layout/PageFooterAds 하단 InArticle 부활 + display-2 중단 진입**.
 - **#2b**: glossary 인덱스 topAd `HomeTopAd`→`Display2Ad` (footer HomeTop 부활).

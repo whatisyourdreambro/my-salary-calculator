@@ -6,13 +6,9 @@
 ## 1. 운영자 콘솔 작업 (일회성, 첫 주말 60~90분)
 
 ### AdSense (adsense.google.com)
-1. **광고 단위 → "머니샐러리_모바일_앵커"(슬롯 6458241606) 유닛 타입 확인**
-   - 코드가 이 유닛을 본문 인라인 display로 292개 가이드 등에 렌더 중. 콘솔에서 실제 타입이 "앵커/오버레이"라면 fill 손실 가능성 → 타입이 앵커면: 신규 디스플레이 유닛을 발급해 아래 3번처럼 env 교체 필요(Claude에게 "GUIDE_MID 교체" 지시).
+1. ✅ **완료(2026-08-24)** — "머니샐러리_모바일_앵커"(슬롯 6458241606)는 앵커 타입 확정 → 신규 디스플레이 유닛 "머니샐러리_가이드중간(1848295488)" 발급·GUIDE_MID env 교체·배포 완료 (상세: docs/operator-console-pack.md §2).
 2. **Auto ads(자동 광고) 사이트 설정 확인**: www.moneysalary.com 에 대해 자동 광고 ON + **앵커 광고(모바일 하단 고정) 허용**을 권장. 비네트는 UX 저하 크므로 OFF 권장. (앵커는 모바일 RPM +15~25%의 최대 단일 레버 — 코드 변경 없이 콘솔 토글만으로 켜짐)
-3. **신규 광고 유닛 2개 발급** (광고 단위 → 새 광고 단위):
-   - "머니샐러리_멀티플렉스" — 멀티플렉스 유형 → 발급된 슬롯 ID를 `.env.production` 의 `NEXT_PUBLIC_ADSENSE_SLOT_MULTIPLEX=` 에 추가
-   - "머니샐러리_디스플레이2" — 디스플레이 유형 → `NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY_2=` 에 추가
-   - 커밋·푸시하면 가이드 342편 하단+목록 8종(멀티플렉스), 홈 계산기 직하(디스플레이2)에 자동 활성화. 코드가 이미 배포돼 있어 env만 넣으면 됨.
+3. ✅ **완료** — 신규 광고 유닛 2개(MULTIPLEX·DISPLAY_2) 발급·env 반영 완료. 가이드 하단+목록(멀티플렉스), 홈 계산기 직하(디스플레이2) 활성 — 실험 #1(Display2)이 이 유닛으로 가동 중(docs/ad-experiments.md).
 4. **개인정보 보호 → EEA 동의 메시지(CMP) 생성·게시**: 콘솔 설정만으로 완료. /en·/global 유럽 트래픽 광고 제한 해소.
 
 ### Google Search Console
@@ -34,16 +30,16 @@
 | 토 | 30분 | 네이버 블로그 발행 1편 |
 | 일 | 20분 | Claude 산출물 수치 출처 스팟체크 2~3건 |
 
-블로그 발행 순서(원고 준비됨): 01 연말정산 미리보기(9월 1주) → 02 중도퇴사(9월 2주) → 03 월급 300(9월 3주) → 05 공무원 봉급표(9월 4주) → 06 기초연금(10월 1주) → 04 삼성 OPI 전망(10월 2주). 이후 원고는 Claude에게 "블로그 원고 2편" 지시.
+블로그 발행 순서(원고 7편 준비됨, 주 1편 — docs/operator-console-pack.md 표가 정본): 07 업종 초봉 랭킹(9월 1주) → 01 연말정산 미리보기(9월 2주) → 02 중도퇴사(9월 3주) → 03 월급 300(9월 4주) → 05 공무원 봉급표(10월 1주) → 06 기초연금(10월 2주) → 04 삼성 OPI 전망(10월 3주). 이후 원고는 Claude에게 "블로그 원고 2편" 지시.
 
 ## 3. 시즌 캘린더 (연간 반복)
 
 | 시기 | 작업 | 성격 |
 |---|---|---|
 | 8월 말 | 광고 보강·신규 페이지 배포 완료 (이번에 완료) | ✅ 완료 |
-| 8월 말 | ★SK하이닉스 임단협 총투표 결과 → sk-hynix-bonus/psData.ts `AGREEMENT_2026.status` 변경(가결 "ratified"/부결 "rejected") + sitemap 날짜 갱신 | 필수 |
+| 8월 말 | ★SK하이닉스 임단협 총투표 결과 → sk-hynix-bonus/psData.ts `AGREEMENT_2026.status` 변경(가결 "ratified"/부결 "rejected") + sitemap 날짜 갱신 | ✅ 완료 (8/25 부결 반영, 92f2b81) |
 | 8/23 완료 | SK하이닉스 잠정합의 반영 업그레이드 + 삼성 온페이지 SEO + 성과급 허브(/calc/bonus-calculators) 신설 | ✅ 완료 |
-| 9월 초 | ★광고 실험 #1(Display2) 판정 — 운영자 AdSense CSV(8/3~8/16 vs 8/18~8/31) → docs/ad-experiments.md 표 기입, 군별 유지/revert. 통과 시 실험 #2(D2a 12곳+car-loan InArticle→Display2) 진행 | 필수 |
+| 9월 초 | ★광고 실험 #1(Display2) 판정 — 운영자 AdSense CSV(8/3~8/16 vs 8/18~8/31) → docs/ad-experiments.md 표 기입, 군별 유지/revert. 통과 시 실험 #2(D2a 성과급 19곳(기존 12 + holiday-bonus·incentive-tax·january-bonus·severance-vs-pension·vacation-pay·year-end-bonus·year-end-bonus-tax)+car-loan InArticle→Display2) 진행 | 필수 |
 | 9월 | 네이버 블로그 개시, 연말정산 예습 콘텐츠 발행 | 진행 |
 | 10월 중순 | ★DART lite Phase 1(/salary-db/listed 218곳, 8/23 배포) 28일 색인률 측정 — GSC 커버리지에서 색인 ≥60%면 Phase 2 +300곳(dartLite.ts 코호트 상수 확대), 미달이면 게이팅 강화(직원 하한 상향)만 | 필수 |
 | 10월 초 | SeasonalLinks 추석→연말정산 세트 교체 — 이번엔 /year-end-tax-2027(허브)·/year-end-tax-preview·/embed(연말정산 위젯) 링크 포함 (1파일 320페이지 일괄) | 필수 |

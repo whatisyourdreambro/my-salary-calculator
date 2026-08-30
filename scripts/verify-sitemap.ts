@@ -15,7 +15,6 @@ const APP_DIR = join(process.cwd(), "src", "app");
 const INTENTIONALLY_EXCLUDED = new Set([
   "/company", // next.config 301 → /salary-db (카니발 해소 2026-06)
   "/company/compare", // noindex (카니발 해소 2026-06)
-  "/company/simulator", // 2026-06 점검에서 페이지 유지 판단 — sitemap 등재는 운영 판단 대기
   "/dashboard", // 개인화 페이지 — 검색 유입 가치 없음
   "/report", // 개인화 리포트 — 검색 유입 가치 없음
   "/salary-db/submit", // 익명 제보 폼 — noindex (layout 주석 참조)

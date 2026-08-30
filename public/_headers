@@ -43,3 +43,8 @@
 
 /b112e39a5933ca97201c83a7c5d7d91e.txt
   Cache-Control: public, max-age=86400
+
+# 서비스워커 킬스위치 — SW 파일이 브라우저 HTTP 캐시에 오래 잡히면 잘못된 SW를
+# 즉시 회수할 수 없다. no-cache 로 매 방문 재검증(304)시켜 배포 즉시 교체 보장.
+/sw.js
+  Cache-Control: no-cache

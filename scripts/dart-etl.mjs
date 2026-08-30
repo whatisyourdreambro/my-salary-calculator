@@ -286,7 +286,8 @@ function match() {
 function getTargets() {
   const corpFile = join(CACHE, "corpCode.json");
   if (!existsSync(corpFile)) fail("corpCode.json 없음 — 먼저 corp-codes 실행");
-  const { entries } = JSON.parse(readFileSync(corpFile, "utf8"));
+  const parsed = JSON.parse(readFileSync(corpFile, "utf8"));
+  const { entries } = parsed;
   const seen = new Set(entries.map((e) => e.corpCode));
   const add = (corpCode, corpName) => {
     if (!seen.has(corpCode)) {
@@ -302,12 +303,32 @@ function getTargets() {
     }
   }
   // corpCodeMap 의 수동 매핑분(비상장 포함)도 수집 대상에 포함
+  // ★버그 수정(2026-08-30): 종전 add(corpCode, 사이트 id)가 회사명 자리에 사이트 id를
+  //   넣어 dartDisclosed.corpNameKo 가 "kyobo-life"·"toss" 등으로 오염됐다.
+  //   실명 조회 순서: ① corpCode.json 전체 목록(상장 entries + 비상장 unlisted)
+  //   ② corpCodeMap 항목의 note 필드(수동 검수 실명 — "—"/괄호 이후 부가설명 제거)
+  //   ③ 둘 다 실패 시 사이트 id 폴백 (TODO 실명 — 경고 로그로 표면화)
   const mapFile = join(OUT_DIR, "corpCodeMap.ts");
   if (existsSync(mapFile)) {
+    const nameByCorp = new Map();
+    for (const e of entries) nameByCorp.set(e.corpCode, e.corpName);
+    for (const u of parsed.unlisted || []) {
+      if (!nameByCorp.has(u.corpCode)) nameByCorp.set(u.corpCode, u.corpName);
+    }
     const mapSrc = readFileSync(mapFile, "utf8");
-    const mRe = /"([a-z0-9-]+)":\s*\{\s*corpCode:\s*"(\d+)"/g;
+    const mRe = /"([a-z0-9-]+)":\s*\{\s*corpCode:\s*"(\d+)"([^}]*)\}/g;
     let mm;
-    while ((mm = mRe.exec(mapSrc))) add(mm[2], mm[1]);
+    while ((mm = mRe.exec(mapSrc))) {
+      const [, siteId, corpCode, rest] = mm;
+      const note = rest.match(/note:\s*"([^"]+)"/)?.[1] || "";
+      const noteName = note.split("—")[0].replace(/\(.*$/, "").trim();
+      const name = nameByCorp.get(corpCode) || noteName;
+      if (!name) {
+        // TODO 실명: corpCode.json·note 모두에서 실명 조회 실패 — 사이트 id 임시 사용
+        log(`WARN: 실명 조회 실패 — corpName 에 사이트 id "${siteId}" 사용 (${corpCode}) [TODO 실명]`);
+      }
+      add(corpCode, name || siteId);
+    }
   }
   return entries;
 }
@@ -318,7 +339,10 @@ const CONCURRENCY = 4;
 async function fetchData() {
   const entries = getTargets();
   const baseYear = Number(yearArg || new Date().getFullYear() - 1);
-  let done = 0, skipped = 0, noData = 0, errs = 0;
+  // 서킷브레이커 — fetch-hist 와 동일(2026-08-30 이식): 연속 에러 30회면 opendart
+  // 차단 재진입으로 판단하고 조기 종료(exit 3). 캐시 재개형이라 다음 실행이 이어감.
+  const MAX_CONSECUTIVE_ERRS = 30;
+  let done = 0, skipped = 0, noData = 0, errs = 0, consecutiveErrs = 0, aborted = false;
 
   async function processOne(e) {
     const empOut = join(EMP_CACHE, `${e.corpCode}.json`);
@@ -341,8 +365,10 @@ async function fetchData() {
         await sleep(100);
         writeFileSync(coOut, JSON.stringify(c, null, 0));
       }
+      consecutiveErrs = 0;
     } catch (err) {
       errs++;
+      consecutiveErrs++;
       log(`err ${e.corpCode} ${e.corpName}: ${err.message}`);
     }
   }
@@ -350,9 +376,15 @@ async function fetchData() {
   for (let i = 0; i < entries.length; i += CONCURRENCY) {
     await Promise.all(entries.slice(i, i + CONCURRENCY).map(processOne));
     done = Math.min(i + CONCURRENCY, entries.length);
+    if (consecutiveErrs >= MAX_CONSECUTIVE_ERRS) {
+      aborted = true;
+      log(`fetch 조기 종료 — 연속 에러 ${consecutiveErrs}회(차단 재진입 추정). 캐시 유지, 재실행으로 이어감`);
+      break;
+    }
     if (done % 200 < CONCURRENCY) log(`fetch ${done}/${entries.length} (cache-skip ${skipped}, no-data ${noData}, err ${errs})`);
   }
-  log(`fetch 완료: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  log(`fetch ${aborted ? "중단" : "완료"}: ${done}곳 (skip ${skipped}, no-data ${noData}, err ${errs})`);
+  if (aborted) process.exit(3);
 }
 
 // ═══════════ ③-b fetch-hist (과년도 이력 — 3개년 추이용, 2026-08-23) ═══════════
