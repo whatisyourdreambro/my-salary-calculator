@@ -90,6 +90,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 근로기준 페어 (2026-08-30 신설) — 통상임금 전합 판결 재검색 수요
  '/calc/ordinary-wage',
  '/calc/annual-leave-days',
+ // 국민연금 인상 계산기 (2026-08-30 신설) — 2027-01 요율 10% 시행 이벤트
+ '/calc/pension-hike-2027',
  '/calc/child-deduction',
  '/calc/jeonse-loan',
  '/calc/housing-subscription',
@@ -208,6 +210,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 시즌 선점 2종 (2026-08-16 3차) — 추석 상여금(9월 피크)·2027 공무원 봉급 전망(예산안~확정)
  '/chuseok-bonus-2026',
  '/civil-servant-pay-2027',
+ // 봉급표 버티컬 4종 (2026-08-30 승인 배치 ⑤) — 군인·교사·경찰·소방
+ '/military-pay-2026',
+ '/teacher-pay-2026',
+ '/police-pay-2026',
+ '/firefighter-pay-2026',
  ];
 
  // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·
@@ -238,6 +245,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
  '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
  '/civil-servant-pay-2027': { lastModified: new Date('2026-08-23') },
+ // 봉급표 버티컬 4종 (2026-08-30)
+ '/military-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/police-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/firefighter-pay-2026': { lastModified: new Date('2026-08-30') },
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
  '/en': { lastModified: new Date('2026-08-25') },

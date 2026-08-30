@@ -125,6 +125,12 @@ export const navConfig: NavItem[] = [
    { name: "직업별 연봉", href: "/job", description: `${JOB_COUNT}개 직종 연봉 비교`, badge: "NEW" },
    { name: "산업별 연봉", href: "/industry", description: `${INDUSTRY_COUNT}개 산업군 연봉 현황`, badge: "NEW" },
    { name: "지역별 연봉", href: "/region", description: regionLabel, badge: "NEW" },
+   // 봉급표 버티컬 (2026-08-30 운영자 승인 — 헤더 노출 지시)
+   { name: "공무원 봉급표 2026", href: "/civil-servant-pay-2026", description: "9~5급 호봉별 월급", badge: "HOT" },
+   { name: "군인 월급 2026", href: "/military-pay-2026", description: "병사 봉급·적금 매칭 계산", badge: "NEW" },
+   { name: "교사 호봉표 2026", href: "/teacher-pay-2026", description: "유·초·중등 호봉별 월급", badge: "NEW" },
+   { name: "경찰 봉급표 2026", href: "/police-pay-2026", description: "순경~경감 계급×호봉", badge: "NEW" },
+   { name: "소방 봉급표 2026", href: "/firefighter-pay-2026", description: "소방사~소방경 계급×호봉", badge: "NEW" },
    { name: "2026 연봉 실수령액 표", href: "/table/2026/annual", description: "1천만~2억 한눈" },
    { name: "2026 월급 실수령액 표", href: "/table/2026/monthly", description: "월급 기준 조회" },
    { name: "직장인 단계별 자산", href: "/career-stages-2026", description: "20~50대 연봉·자산" },

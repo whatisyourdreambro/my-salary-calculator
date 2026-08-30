@@ -7,10 +7,12 @@
 //  - header 필드가 있으면 헤더 시즌 드롭다운에 노출 (배열 순서 = 헤더 순서)
 //  - footer 필드가 있으면 푸터에 노출 (footer.order 오름차순)
 //
-// TODO(운영 판단): 아래 3건은 표면 간 비대칭 — 노출 변경은 카피 정책 결정 후 반영.
+// TODO(운영 판단): 아래는 표면 간 비대칭 — 노출 변경은 카피 정책 결정 후 반영.
 //  - /year-end-tax-2027 (연말정산 허브)      : 헤더에만 있음, 푸터 미노출
-//  - /civil-servant-pay-2026, /year-end-tax-mid-resign : 푸터에만 있음, 헤더 미노출
-//  - /civil-servant-pay-2027 라우트는 존재하나 어느 표면에도 미노출 (고아)
+//  - /year-end-tax-mid-resign : 푸터에만 있음, 헤더 미노출
+//  - /civil-servant-pay-2027 라우트는 존재하나 헤더·푸터 미노출 (SeasonalLinks 320p에는 노출)
+//  ※ /civil-servant-pay-2026 은 2026-08-30 운영자 지시로 헤더 연봉DB 메뉴에 노출됨
+//    (navConfig.ts 봉급표 버티컬 블록 — 군인·교사·경찰·소방과 함께).
 import { bonusCalcCountKo, companyCountKo } from "./site";
 
 export type SeasonBadge = "HOT" | "NEW" | "SEASON" | "MUST";

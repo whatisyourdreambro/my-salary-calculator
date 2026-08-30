@@ -379,7 +379,24 @@ export default function CivilServantPay2026Page() {
           <p className="text-xs text-faint-blue mt-4">
             ※ 순경·소방사 1호봉({fmt(2133000)}원)은 일반직 9급 1호봉과 같지만 2호봉부터는
             별도 봉급표가 적용됩니다. 한 계급 위인 경장·소방교 1호봉은 {fmt(2215300)}원입니다.
-            실제 보수는 여기에 위험근무수당 등 직렬별 수당이 추가됩니다.
+            실제 보수는 여기에 위험근무수당 등 직렬별 수당이 추가됩니다. 상위 계급까지의 전체
+            표는{" "}
+            <Link href="/police-pay-2026" className="text-electric font-bold hover:underline">
+              경찰 봉급표
+            </Link>
+            ·
+            <Link href="/firefighter-pay-2026" className="text-electric font-bold hover:underline">
+              소방 봉급표
+            </Link>
+            에서, 교원·군인 봉급은{" "}
+            <Link href="/teacher-pay-2026" className="text-electric font-bold hover:underline">
+              교사 호봉표
+            </Link>
+            ·
+            <Link href="/military-pay-2026" className="text-electric font-bold hover:underline">
+              군인 월급 2026
+            </Link>
+            에서 확인하세요.
           </p>
         </section>
 
