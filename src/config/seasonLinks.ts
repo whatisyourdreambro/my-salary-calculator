@@ -168,6 +168,18 @@ export const seasonLinks: SeasonLink[] = [
   // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
   { href: "/civil-servant-pay-2026", footer: { name: "공무원 봉급표 2026", order: 11 } },
   { href: "/year-end-tax-mid-resign", footer: { name: "중도퇴사 연말정산", order: 12 } },
+  // R2 W3 (2026-08-31) — 8/30 신설 시즌 페이지 링크망 편입 (운영자 승인 R2 실행분).
+  // pension-hike는 2027-01 시행 확정 이벤트(12~1월 뉴스 피크) — 헤더+푸터.
+  {
+    href: "/calc/pension-hike-2027",
+    header: { name: "국민연금 인상 계산기 (2027)", description: "요율 9.5→10% — 월급에서 더 빠지는 금액", badge: "NEW" },
+    footer: { name: "국민연금 인상 계산기", order: 13 },
+  },
+  // 봉급표 버티컬 4종 — 헤더는 연봉DB 메뉴(navConfig)에 기노출이라 푸터만.
+  { href: "/military-pay-2026", footer: { name: "군인 월급 2026", order: 14 } },
+  { href: "/teacher-pay-2026", footer: { name: "교사 호봉표 2026", order: 15 } },
+  { href: "/police-pay-2026", footer: { name: "경찰 봉급표 2026", order: 16 } },
+  { href: "/firefighter-pay-2026", footer: { name: "소방관 봉급표 2026", order: 17 } },
 ];
 
 /** 헤더 시즌 드롭다운 항목 — navConfig 소비용 (배열 순서 유지) */

@@ -31,6 +31,7 @@ export default function CompanyDisclosedSalary({
   company,
   dartRank,
   dartStats,
+  industryLink,
 }: {
   company: CompanyProfile;
   /** DART 전수 랭킹 TOP 100 진입 시 순위 — 서버(page)에서 dartTop100 조회 후 전달 */
@@ -47,6 +48,11 @@ export default function CompanyDisclosedSalary({
     listedTotal: number;
     history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
   } | null;
+  /**
+   * 소속 업종 랭킹 도선 — R2 W1 (2026-08-31). 서버(page)에서
+   * industryRankingByCompanyId 조회 후 전달 (랭킹 페이지 실재 업종만).
+   */
+  industryLink?: { industryId: string; industryKo: string } | null;
 }) {
   const d = company.disclosed;
   if (!d) return null;
@@ -154,6 +160,24 @@ export default function CompanyDisclosedSalary({
               {dartRank.rankYear} 공시 평균연봉 — 상장사{" "}
               {dartRank.companyCount.toLocaleString("ko-KR")}곳 중{" "}
               <strong>{dartRank.rank}위</strong> · TOP 100 리포트 보기 →
+            </Link>
+          </p>
+        )}
+
+        {/* 업종 랭킹 도선 — R2 W1 (2026-08-31): 최대 유입 페이지 → 랭킹 31종 */}
+        {industryLink && (
+          <p className="mb-3 flex flex-wrap gap-2">
+            <Link
+              href={`/salary-db/listed/industry/${industryLink.industryId}`}
+              className="inline-flex items-center rounded-full border border-canvas-200 dark:border-canvas-700 px-3 py-1.5 text-xs font-bold text-navy dark:text-canvas-100 hover:border-electric hover:text-electric transition-colors"
+            >
+              {industryLink.industryKo} 상장사 연봉 순위 →
+            </Link>
+            <Link
+              href="/salary-db/listed/top-raise"
+              className="inline-flex items-center rounded-full border border-canvas-200 dark:border-canvas-700 px-3 py-1.5 text-xs font-bold text-navy dark:text-canvas-100 hover:border-electric hover:text-electric transition-colors"
+            >
+              연봉 인상률 TOP 100 →
             </Link>
           </p>
         )}

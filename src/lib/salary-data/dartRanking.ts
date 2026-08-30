@@ -145,6 +145,26 @@ export function getIndustryRanking(industryId: string): IndustryRanking | null {
   return industryRankingById.get(industryId) ?? null;
 }
 
+/**
+ * companyId → 소속 업종 랭킹 메타 (랭킹 페이지가 실재하는 업종만).
+ * R2 W1 (2026-08-31) — salary-db/[id] 430p 공시 카드에서 업종 랭킹 도선용.
+ * 서버 전용 (dartDisclosed 경유) — 클라이언트 import 금지.
+ */
+export const industryRankingByCompanyId: ReadonlyMap<
+  string,
+  { industryId: string; industryKo: string }
+> = (() => {
+  const m = new Map<string, { industryId: string; industryKo: string }>();
+  for (const d of listedEligible) {
+    const id = companyIdByCorp.get(d.corpCode);
+    if (!id || m.has(id)) continue;
+    const industryId = mapKsicToIndustry(d.ksicCode);
+    if (industryId === "etc" || !industryRankingById.has(industryId)) continue;
+    m.set(id, { industryId, industryKo: getIndustryMeta(industryId).ko });
+  }
+  return m;
+})();
+
 // ── 지표 랭킹 3종 ──
 
 /** 연봉 인상률 TOP 100 — FY2024 history 보유 + 직원 수 급변 제외 */

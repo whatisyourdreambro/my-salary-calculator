@@ -275,6 +275,31 @@ export default function CompanyRankingPage() {
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />
           </Link>
+          {/* R2 W6 (2026-08-31) — 동일 인텐트("연봉 순위") 상장사 공시 랭킹 도선 */}
+          <Link
+            href="/salary-db/listed/top-raise"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              연봉 인상률 TOP 100
+              <span className="block text-xs font-medium text-faint-blue">
+                DART 공시 기준 — 추정 아닌 공식 수치
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
+          <Link
+            href="/salary-db/listed"
+            className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"
+          >
+            <span className="font-bold text-navy">
+              업종별 공시 연봉 순위
+              <span className="block text-xs font-medium text-faint-blue">
+                상장사 업종 28종 공시 평균연봉 순위
+              </span>
+            </span>
+            <ArrowRight className="w-5 h-5 text-electric" />
+          </Link>
           <Link
             href="/industry/large-conglomerate"
             className="flex items-center justify-between p-5 rounded-2xl border border-canvas-200 bg-white hover:border-electric transition-colors"

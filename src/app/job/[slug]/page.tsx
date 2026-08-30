@@ -14,6 +14,20 @@ import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 
 export const dynamic = "force-static";
 
+// R2 W2 (2026-08-31) — 직업 → 공식 봉급표 페이지 매핑 (실재 라우트만).
+// 봉급표 버티컬 4종+공무원 봉급표의 역링크 — "{직업} 월급" 인텐트 정합.
+const JOB_PAY_TABLE_LINKS: Record<string, { href: string; label: string }> = {
+  soldier: { href: "/military-pay-2026", label: "2026 군인 월급 — 병사·간부 봉급표" },
+  "police-officer": { href: "/police-pay-2026", label: "2026 경찰 봉급표 — 순경~경감 호봉표" },
+  firefighter: { href: "/firefighter-pay-2026", label: "2026 소방관 봉급표 — 소방사~소방경 호봉표" },
+  "elementary-teacher": { href: "/teacher-pay-2026", label: "2026 교사 호봉표 — 유·초·중등 교원" },
+  "secondary-teacher": { href: "/teacher-pay-2026", label: "2026 교사 호봉표 — 유·초·중등 교원" },
+  "kindergarten-teacher": { href: "/teacher-pay-2026", label: "2026 교사 호봉표 — 유·초·중등 교원" },
+  "civil-servant-9": { href: "/civil-servant-pay-2026", label: "2026 공무원 봉급표 — 9급~고위직" },
+  "civil-servant-7": { href: "/civil-servant-pay-2026", label: "2026 공무원 봉급표 — 9급~고위직" },
+  "civil-servant-5": { href: "/civil-servant-pay-2026", label: "2026 공무원 봉급표 — 9급~고위직" },
+};
+
 interface Props {
   params: { slug: string };
 }
@@ -101,6 +115,10 @@ export default function JobPage({ params }: Props) {
   const relatedJobs = jobsData
     .filter((j) => j.category === job.category && j.id !== job.id)
     .slice(0, 6);
+
+  // R2 W2 (2026-08-31) — 봉급표 버티컬 역링크 (봉급표→job 일방통행 해소).
+  // 공무원보수규정 별표 원문 봉급표 페이지가 실재하는 직업만 매핑.
+  const payTableLink = JOB_PAY_TABLE_LINKS[job.id];
 
   // ItemList 스키마 — 같은 카테고리 직무 목록으로 SERP 캐러셀 리치결과 노출 기회 확보.
   const rankSchema =
@@ -336,6 +354,24 @@ export default function JobPage({ params }: Props) {
                   </Link>
                 ))}
               </div>
+            </section>
+          )}
+
+          {/* 공식 봉급표 역링크 — R2 W2 (2026-08-31) */}
+          {payTableLink && (
+            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                공식 봉급표로 정확히 보기
+              </h2>
+              <Link
+                href={payTableLink.href}
+                className="inline-flex items-center px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl text-sm font-bold text-blue-700 dark:text-blue-300 transition-colors"
+              >
+                {payTableLink.label} →
+              </Link>
+              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                공무원보수규정 별표 원문 수치 — 호봉·계급별 월 봉급과 수당 구조까지 확인할 수 있습니다.
+              </p>
             </section>
           )}
 

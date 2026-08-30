@@ -9,6 +9,8 @@ import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
 // 서버 전용 DART 집계 — 클라이언트 컴포넌트에서 import 금지 (dartReport.ts 헤더 참조)
 import { dartTop100, dartReportStats, dartCompanyStatsById } from "@/lib/salary-data/dartReport";
+// R2 W1 (2026-08-31) — 공시 카드→업종 랭킹 도선 (서버 전용)
+import { industryRankingByCompanyId } from "@/lib/salary-data/dartRanking";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
@@ -221,6 +223,7 @@ export default function CompanyDetailPage({
  company.disclosed.avgSalaryManwon;
  return gap <= 0.1 ? stats : null;
  })()}
+ industryLink={industryRankingByCompanyId.get(company.id) ?? null}
  />
 
  {/* 동일 급여 그룹 안내 — 5직급 base 튜플이 동일한 회사(발전 공기업 등)만

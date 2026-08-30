@@ -357,6 +357,25 @@ export default function CivilServantPay2027Page() {
 
         <RelatedCalculators currentPath="/civil-servant-pay-2027" />
 
+        {/* 직렬별 봉급표 바로가기 — R2 W5 (2026-08-31): 2026판과의 링크 비대칭 해소 */}
+        <section className="mt-8 max-w-3xl mx-auto" aria-label="직렬별 봉급표">
+          <h2 className="text-sm font-black text-navy mb-3">직렬별 2026 봉급표 바로가기</h2>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/military-pay-2026" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              군인 월급 2026
+            </Link>
+            <Link href="/teacher-pay-2026" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              교사 호봉표 2026
+            </Link>
+            <Link href="/police-pay-2026" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              경찰 봉급표 2026
+            </Link>
+            <Link href="/firefighter-pay-2026" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              소방관 봉급표 2026
+            </Link>
+          </div>
+        </section>
+
         <div className="mt-8 max-w-3xl mx-auto">
           <ShareButtons
             title="2027 공무원 봉급표 전망 — 인상률 권고안 3.4~3.9%"

@@ -16,6 +16,12 @@ const TABS = [
 export default function TableTabsNav() {
  const pathname = usePathname();
 
+ // R2 W4 (2026-08-31) — 2026 현행 표로 연도 교차 링크
+ const to2026 =
+ pathname && pathname.startsWith("/table/2027/")
+ ? pathname.replace("/table/2027/", "/table/2026/")
+ : "/table/2026/annual";
+
  return (
  <nav aria-label="실수령액 표 종류" className="flex justify-center px-4">
  <div className="inline-flex items-center gap-1 p-1 rounded-full bg-canvas border border-canvas">
@@ -36,6 +42,12 @@ export default function TableTabsNav() {
  </Link>
  );
  })}
+ <Link
+ href={to2026}
+ className="px-4 sm:px-5 py-2 rounded-full text-sm font-bold text-electric hover:bg-electric/10 transition-colors whitespace-nowrap"
+ >
+ 2026 현행
+ </Link>
  </div>
  </nav>
  );
