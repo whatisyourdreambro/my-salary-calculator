@@ -10,6 +10,7 @@ import { koGuideCards } from "@/lib/guidesData";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 import { qnaData, toQnaSlug } from "@/data/qnaData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { companyCountKo } from "@/config/site";
 
 export type SearchCategory =
  | "계산기"
@@ -82,7 +83,7 @@ const toolPages: SearchEntry[] = [
  { title: "MBTI 연봉 분석", href: "/mbti-salary", category: "도구" },
  { title: "해외 연봉 비교", href: "/global", category: "도구" },
  { title: "커리어 플래너", href: "/pro/career-planner", category: "도구" },
- { title: "기업별 연봉 DB", href: "/salary-db", category: "도구", description: "60+ 기업", priority: 1 },
+ { title: "기업별 연봉 DB", href: "/salary-db", category: "도구", description: `${companyCountKo} 기업`, priority: 1 },
  { title: "100가지 계산기 인덱스", href: "/calc", category: "도구", priority: 1 },
  { title: "전체 가이드", href: "/guides", category: "도구" },
  { title: "용어 사전", href: "/glossary", category: "도구" },

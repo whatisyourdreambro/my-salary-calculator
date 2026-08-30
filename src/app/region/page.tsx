@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import type { Metadata } from "next";
 import { regionsData } from "@/data/regionsData";
 import { buildPageMetadata } from "@/lib/seo";
+import { REGION_COUNT } from "@/config/site";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -16,8 +17,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "지역별 평균 연봉 2026 — 서울·경기·부산·판교 연봉 비교",
-  description:
-    "서울, 경기, 부산, 판교, 여의도 등 전국 19개 지역 평균 연봉을 한눈에 비교하세요. 신입부터 시니어까지 경력별 연봉과 2026년 최신 실수령액 정보를 제공합니다.",
+  description: `서울, 경기, 부산, 판교, 여의도 등 전국 ${REGION_COUNT}개 지역 평균 연봉을 한눈에 비교하세요. 신입부터 시니어까지 경력별 연봉과 2026년 최신 실수령액 정보를 제공합니다.`,
   path: "/region",
   keywords: [
     "지역별 평균 연봉",
@@ -70,13 +70,13 @@ export default function RegionIndexPage() {
           </h1>
           <p className="text-lg sm:text-xl text-muted-blue dark:text-canvas-300 mb-6 max-w-2xl mx-auto font-medium">
             서울·판교·여의도부터 지방 광역시까지
-            <br className="sm:hidden" /> 19개 지역 연봉을 한눈에 비교하세요.
+            <br className="sm:hidden" /> {REGION_COUNT}개 지역 연봉을 한눈에 비교하세요.
           </p>
 
           {/* 요약 통계 */}
           <div className="flex flex-wrap justify-center gap-6 text-sm font-bold text-muted-blue dark:text-canvas-400">
             <div>
-              <span className="text-electric text-2xl font-black">19</span>
+              <span className="text-electric text-2xl font-black">{REGION_COUNT}</span>
               <span className="ml-1">개 지역</span>
             </div>
             <div>

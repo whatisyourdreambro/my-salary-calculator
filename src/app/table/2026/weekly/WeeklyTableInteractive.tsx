@@ -32,7 +32,8 @@ export default function WeeklyTableInteractive({
  tableHeaders={tableHeaders}
  highlightRows={highlightRows}
  calculationFn={(salary, nonTaxable, dependents, children, settings) =>
- calculateNetSalary2026(salary * 52, nonTaxable, dependents, children, settings)
+ // nonTaxable은 월 입력 → 연 단위 변환(calculator.ts의 nonTaxableAmount는 연 단위, generateData2026과 동일 규약)
+ calculateNetSalary2026(salary * 52, nonTaxable * 12, dependents, children, settings)
  }
  toMonthly={(salary) => (salary * 52) / 12}
  linkColumnBaseHref="/salary"

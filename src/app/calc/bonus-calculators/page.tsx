@@ -9,7 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import { bonusCalcCountKo, companyCountKo, companyCountPlus } from "@/config/site";
+import { BONUS_CALC_COUNT, bonusCalcCountKo, companyCountKo, companyCountPlus } from "@/config/site";
 import Link from "@/components/AppLink";
 import {
   autoBreadcrumbLd,
@@ -36,10 +36,9 @@ export const dynamic = "force-static";
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const PAGE_PATH = "/calc/bonus-calculators";
-const PAGE_TITLE = "성과급 계산기 2026 — 삼성전자·SK하이닉스 등 23개 기업";
+const PAGE_TITLE = `성과급 계산기 2026 — 삼성전자·SK하이닉스 등 ${BONUS_CALC_COUNT}개 기업`;
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
-const PAGE_DESC =
-  "삼성전자 OPI·TAI, SK하이닉스 PS·PI, 현대차·기아 임단협 성과급까지 23개 기업 전용 성과급 계산기 모음. 최신 지급률 반영 세후 실수령 시뮬레이션과 2026 성과급 지급 캘린더·FAQ까지 한 페이지에서.";
+const PAGE_DESC = `삼성전자 OPI·TAI, SK하이닉스 PS·PI, 현대차·기아 임단협 성과급까지 ${BONUS_CALC_COUNT}개 기업 전용 성과급 계산기 모음. 최신 지급률 반영 세후 실수령 시뮬레이션과 2026 성과급 지급 캘린더·FAQ까지 한 페이지에서.`;
 
 const FAQ_ITEMS = [
   {
@@ -151,7 +150,7 @@ export default function BonusCalculatorsHubPage() {
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
               성과급 계산기 <span className="text-primary">2026</span> —
-              삼성전자·SK하이닉스 등 23개 기업
+              삼성전자·SK하이닉스 등 {BONUS_CALC_COUNT}개 기업
             </h1>
             <p
               id="hub-summary"

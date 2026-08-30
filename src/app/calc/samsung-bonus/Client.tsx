@@ -616,9 +616,8 @@ export default function SamsungBonusClient() {
               </span>
             </p>
             <p className="mt-1 text-xs">
-              2026년분부터는 2026-08-20 임단협 잠정합의 기준{" "}
-              <strong>현금 40% + 자사주 60%</strong> 지급으로 개편될
-              전망입니다(총투표 전).
+              잠정합의안(<strong>현금 40% + 자사주 60%</strong>)이 2026-08-25
+              조합원 총투표에서 부결되어 재협상 중입니다.
             </p>
             <p className="mt-2">
               <Link

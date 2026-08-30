@@ -141,8 +141,8 @@ export default function JanuaryBonusPage() {
               <li>
                 <strong className="text-navy dark:text-canvas-50">월세 세액공제</strong>
                 <br />
-                총급여 7천만원 이하 무주택자, 연 750만원 한도, 15~17% 세액공제. 소득에 따라
-                다름.
+                총급여 8,000만원 이하 무주택자, 연 1,000만원 한도, 15~17% 세액공제
+                (총급여 5,500만원 이하는 17%).
               </li>
             </ol>
 

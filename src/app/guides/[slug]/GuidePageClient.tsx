@@ -201,10 +201,10 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
 
  {/* Smart Summary (TL;DR) — guide-tldr/faq-answer: page.tsx speakable 스키마 셀렉터와 일치 */}
  <div className="guide-tldr mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/10">
- <h3 className="flex items-center gap-2 font-bold text-lg text-primary mb-3">
+ <h2 className="flex items-center gap-2 font-bold text-lg text-primary mb-3">
  <Lightbulb className="w-5 h-5" />
  핵심 요약 (TL;DR)
- </h3>
+ </h2>
  <p className="faq-answer text-muted-foreground leading-relaxed">
  {guide.description} 이 가이드를 통해 당신은 <strong>{guide.title}</strong>에 대한 명확한 이해와 구체적인 실행 전략을 얻을 수 있습니다.
  지금 바로 읽고 당신의 금융 지식을 한 단계 업그레이드 하세요.

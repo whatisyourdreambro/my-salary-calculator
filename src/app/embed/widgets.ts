@@ -30,7 +30,7 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
   title="2026 연봉 실수령액 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/?utm_source=embed&utm_medium=widget"
-     target="_blank">2026 연봉 실수령액 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">2026 연봉 실수령액 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "2026년 세법(4대보험 요율·간이세액) 기준, 부양가족 1인·비과세 식대 월 20만원 가정 추정치입니다.",
@@ -46,7 +46,7 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
   title="2026 연말정산 환급 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/year-end-tax?utm_source=embed&utm_medium=widget"
-     target="_blank">2026 연말정산 환급 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">2026 연말정산 환급 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "2026년 귀속 기준, 본인 1인 공제·4대보험만 반영한 보수적 추정입니다. 카드·연금저축 등 공제를 넣은 정확한 계산은 본편 계산기에서 할 수 있습니다.",
@@ -62,7 +62,7 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
   title="2026 성과급 실수령액 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/calc/bonus-calculators?utm_source=embed&utm_medium=widget"
-     target="_blank">2026 성과급 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">2026 성과급 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "2026년 세법 한계세율 기준 — 성과급이 연봉에 합산되며 늘어나는 소득세·4대보험 증가분을 공제로 반영한 추정치입니다. 회사별 지급률(OPI·PS 등) 계산은 본편 회사별 계산기가 담당합니다.",
@@ -78,7 +78,7 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
   title="2026 퇴직금 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/?tab=severance&utm_source=embed&utm_medium=widget"
-     target="_blank">2026 퇴직금 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">2026 퇴직금 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "퇴직 전 3개월 평균임금 30일분 × 근속연수로 세전 퇴직금을 추정하고, 퇴직소득세(근속연수공제·환산급여)를 공제한 값입니다. 입사·퇴사일 기준 일할 계산은 본편에서 지원합니다.",
@@ -94,7 +94,7 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
   title="2026 DSR 대출 한도 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/home-loan?utm_source=embed&utm_medium=widget"
-     target="_blank">2026 DSR 대출 한도 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">2026 DSR 대출 한도 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "DSR 40%·원리금균등 상환 기준 최대 대출 원금 추정치입니다. 기존 대출 보유 시 한도가 줄어들며, 은행·규제지역별 적용 기준이 다를 수 있습니다.",

@@ -7,7 +7,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 
 interface LogoProps {
   className?: string;
@@ -21,6 +21,11 @@ export default function Logo({
   style,
 }: LogoProps) {
   const viewBox = showText ? "0 0 180 36" : "0 0 32 32";
+  // linearGradient id 인스턴스 고유화 — 한 페이지에 로고가 여러 개 렌더될 때
+  // 중복 id 로 그라데이션 참조가 꼬이는 것 방지 (useId 의 ':' 는 url(#) 참조 안전하게 제거)
+  const uid = useId().replace(/:/g, "");
+  const iconGradId = `ms-icon-grad-${uid}`;
+  const salaryGradId = `ms-salary-grad-${uid}`;
 
   return (
     <svg
@@ -33,12 +38,12 @@ export default function Logo({
     >
       <defs>
         {/* M 아이콘 그라데이션 — 일렉트릭 블루 → 라이트 인디고 */}
-        <linearGradient id="ms-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id={iconGradId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#0145F2" />
           <stop offset="100%" stopColor="#5B7FFF" />
         </linearGradient>
         {/* Salary 텍스트 그라데이션 — 일렉트릭 → 인디고 */}
-        <linearGradient id="ms-salary-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id={salaryGradId} x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#0145F2" />
           <stop offset="100%" stopColor="#6366F1" />
         </linearGradient>
@@ -52,7 +57,7 @@ export default function Logo({
           width="28"
           height="28"
           rx="7"
-          fill="url(#ms-icon-grad)"
+          fill={`url(#${iconGradId})`}
           className="ms-logo-rect"
         />
         {/* 상단 subtle gloss */}
@@ -88,7 +93,7 @@ export default function Logo({
             fontFamily="var(--font-pretendard), -apple-system, sans-serif"
             fontWeight="600"
             fontSize="20"
-            fill="url(#ms-salary-grad)"
+            fill={`url(#${salaryGradId})`}
             letterSpacing="-0.02em"
             className="ms-logo-word ms-logo-word-salary"
           >

@@ -28,7 +28,8 @@ interface ShareableResultProps {
 export default function ShareableResult({ data }: ShareableResultProps) {
  const decodedData = useMemo(() => {
  try {
- return JSON.parse(atob(data));
+ // base64 패딩(=)이 URL 인코딩(%3D)돼 들어오므로 decodeURIComponent 후 atob
+ return JSON.parse(atob(decodeURIComponent(data)));
  } catch {
  // [수정] 사용하지 않는 변수 e를 제거했습니다.
  return null;

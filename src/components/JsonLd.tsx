@@ -17,7 +17,14 @@ export default function JsonLd({ data }: JsonLdProps) {
  <script
  key={index}
  type="application/ld+json"
- dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
+ // XSS 하드닝: 데이터에 '</script>' 류 문자열이 섞여도 스크립트 이탈 불가하도록
+ // <, U+2028, U+2029 이스케이프 (JSON 의미·렌더 결과 불변, 방어층)
+ dangerouslySetInnerHTML={{
+ __html: JSON.stringify(item)
+ .replace(/</g, "\\u003c")
+ .replace(/\u2028/g, "\\u2028")
+ .replace(/\u2029/g, "\\u2029"),
+ }}
  />
  ))}
  </>

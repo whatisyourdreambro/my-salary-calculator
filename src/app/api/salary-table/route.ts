@@ -26,7 +26,8 @@ export async function GET(request: Request) {
  const searchTerm = searchParams.get("searchTerm") || "";
  const itemsPerPage = 100;
 
- const dataForType = allData[type] || allData.annual;
+ // __proto__/constructor 등 프로토타입 키로 500 나지 않도록 자기 소유 키만 허용
+ const dataForType = Object.hasOwn(allData, type) ? allData[type] : allData.annual;
 
  const filteredData = searchTerm
  ? dataForType.filter((row) =>
@@ -37,7 +38,11 @@ export async function GET(request: Request) {
  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
  const startIndex = (page - 1) * itemsPerPage;
  const endIndex = startIndex + itemsPerPage;
- const paginatedData = filteredData.slice(startIndex, endIndex);
+ // 극저구간에서 공제 합계가 급여를 넘어 monthlyNet이 음수로 나오는 행 방지 (API 표면 클램프)
+ const paginatedData = filteredData.slice(startIndex, endIndex).map((row) => ({
+ ...row,
+ monthlyNet: Math.max(0, row.monthlyNet),
+ }));
 
  return NextResponse.json(
  {

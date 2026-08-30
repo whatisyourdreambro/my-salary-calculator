@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useId } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import {
@@ -78,13 +78,17 @@ const Accordion = ({
  const [isOpen, setIsOpen] = useState(defaultOpen);
  return (
  <div className="border border-border rounded-lg overflow-hidden">
+ {/* 접근성 표준 패턴: 헤딩이 버튼을 감싸야 함 (button 안 heading 금지) */}
+ <h3 className="text-lg font-semibold">
  <button
  onClick={() => setIsOpen(!isOpen)}
- className="w-full flex justify-between items-center p-4 bg-card hover:bg-secondary/50 transition-colors"
+ aria-expanded={isOpen}
+ className="w-full flex justify-between items-center p-4 bg-card hover:bg-secondary/50 transition-colors text-lg font-semibold"
  >
- <h3 className="text-lg font-semibold">{title}</h3>
+ <span>{title}</span>
  <ChevronDown className={`transform transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`} />
  </button>
+ </h3>
  {isOpen && <div className="p-4 space-y-4 bg-card border-t border-border">{children}</div>}
  </div>
  );
@@ -102,24 +106,30 @@ const OptimizationSlider = ({
  value: number;
  max: number;
  onChange: (value: number) => void;
-}) => (
+}) => {
+ // label htmlFor ↔ input id 연결 (인스턴스 고유)
+ const sliderId = useId();
+ return (
  <div>
  <div className="flex justify-between items-center mb-2">
- <label className="text-sm font-medium text-muted-foreground">{label}</label>
+ <label htmlFor={sliderId} className="text-sm font-medium text-muted-foreground">{label}</label>
  <span className="text-sm font-bold text-primary">{formatNumber(value)}원</span>
  </div>
  <input
+ id={sliderId}
  type="range"
  min="0"
  max={max}
  step={100000}
  value={value}
  onChange={(e) => onChange(Number(e.target.value))}
+ aria-valuetext={`${formatNumber(value)}원`}
  className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
  />
  <p className="text-xs text-muted-foreground mt-2">{tip}</p>
  </div>
-);
+ );
+};
 
 // 기본값 총급여 — 4대보험 기본값은 이 값에서 요율로 파생 (드리프트 방지)
 const DEFAULT_SALARY = 50_000_000;

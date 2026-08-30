@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { industriesData } from "@/data/industriesData";
 import { buildPageMetadata } from "@/lib/seo";
+import { industryCountGae } from "@/config/site";
 import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
@@ -13,8 +14,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "산업별 평균 연봉 2026 — IT·금융·의료·제조 업계 연봉 비교",
-  description:
-    "IT·반도체·금융·의료·자동차·건설·게임 등 27개 산업별 평균 연봉을 한눈에 비교하세요. 2026년 최신 기준 신입~경력별 연봉과 실수령액 계산기 제공.",
+  description: `IT·반도체·금융·의료·자동차·건설·게임 등 ${industryCountGae} 산업별 평균 연봉을 한눈에 비교하세요. 2026년 최신 기준 신입~경력별 연봉과 실수령액 계산기 제공.`,
   path: "/industry",
   keywords: [
     "산업별 연봉",

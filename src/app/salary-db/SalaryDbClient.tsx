@@ -136,6 +136,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
  placeholder="기업명, 산업군 검색 (예: 삼성전자, IT)"
+ aria-label="기업명·산업군 검색"
  className="toss-input pl-14"
  />
  </div>

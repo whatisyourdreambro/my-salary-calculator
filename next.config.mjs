@@ -123,7 +123,7 @@ const nextConfig = {
         destination: "/fun/salary-battle",
         permanent: true,
       },
-      // 회사 중복 정본화 (2026-08-30): 동일 회사 2중 등재 4쌍 병합 — 제거 id → 정본 id
+      // 회사 중복 정본화 (2026-08-30): 동일 회사 2중 등재 5쌍 병합(hd-korea-shipbuilding 포함) — 제거 id → 정본 id
       {
         source: "/salary-db/toss-viva",
         destination: "/salary-db/toss",
@@ -362,7 +362,9 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/guides/donation-tax-credit-year-end-tax-settlement-효자-item",
+        // 비ASCII source는 인코딩 필수 — Next redirects()는 요청 경로를 퍼센트 인코딩 상태로
+        // 매칭하므로 한글 리터럴 source는 영원히 매칭되지 않는다 (효자 → %ED%9A%A8%EC%9E%90)
+        source: "/guides/donation-tax-credit-year-end-tax-settlement-%ED%9A%A8%EC%9E%90-item",
         destination: "/guides/donation-tax-credit",
         permanent: true,
       },

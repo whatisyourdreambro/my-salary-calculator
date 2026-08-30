@@ -137,7 +137,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "한미약품·유한양행·셀트리온·삼성바이오로직스 등 국내 대형 제약·바이오 기업과 글로벌 외국계 제약사가 포함된 업계.",
-    topCompanyIds: ["hanmi-pharm", "yuhan", "celltrion", "samsung-bioepis"],
+    topCompanyIds: ["hanmi", "yuhan", "celltrion", "samsung-bioepis"],
     topJobIds: ["biotech-researcher", "clinical-researcher", "pharmacist"],
     faqs: [
       {
@@ -189,7 +189,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "현대건설·삼성물산·대우건설·GS건설·롯데건설 등 대형 건설사와 건축 설계사무소를 포함하는 업계.",
-    topCompanyIds: ["daewoo-construction", "gs-construction"],
+    topCompanyIds: ["daewoo-enc", "gs-enc"],
     topJobIds: ["civil-engineer", "architect"],
     faqs: [
       {
@@ -577,7 +577,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "CJ제일제당·농심·오리온·롯데칠성·오뚜기·삼양·동원 등 국내 대형 식품·음료 기업이 속한 업계. 내수 안정성과 K-푸드 수출 성장이 공존합니다.",
-    topCompanyIds: ["cj-cheiljedang", "nongshim", "orion", "ottogi", "hitejinro", "lotte-wellfood"],
+    topCompanyIds: ["cjcheiljedang", "nongshim", "orion", "ottogi", "hitejinro", "lotte-wellfood"],
     topJobIds: ["marketer", "researcher"],
     faqs: [
       {
@@ -790,7 +790,7 @@ export const industriesData: IndustryProfile[] = [
     },
     description:
       "머니샐러리 DB에서 대기업·유니콘·외국계·공기업 분류에 속하지 않는 성장 기업·강소기업을 모은 그룹. IT·클라우드부터 바이오·소재·장비까지 업종이 다양하며, 성장 단계와 보상 구조의 회사별 편차가 큰 것이 특징입니다.",
-    topCompanyIds: ["daangn-market", "ohou", "ridi", "socar", "class101"],
+    topCompanyIds: ["daangn", "ohou", "ridi", "socar", "class101"],
     topJobIds: ["software-engineer", "marketer"],
     faqs: [
       {

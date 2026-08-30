@@ -32,15 +32,19 @@ const Accordion = ({
  const [isOpen, setIsOpen] = useState(false);
  return (
  <div className="border border-border rounded-lg overflow-hidden">
+ {/* 접근성 표준 패턴: 헤딩이 버튼을 감싸야 함 (button 안 heading 금지) */}
+ <h3 className="text-md font-semibold">
  <button
  onClick={() => setIsOpen(!isOpen)}
- className="w-full flex justify-between items-center p-4 bg-card hover:bg-secondary/50 transition-colors"
+ aria-expanded={isOpen}
+ className="w-full flex justify-between items-center p-4 bg-card hover:bg-secondary/50 transition-colors text-md font-semibold"
  >
- <h3 className="text-md font-semibold">{title}</h3>
+ <span>{title}</span>
  <ChevronDown
  className={`transform transition-transform duration-200 ${ isOpen ? "rotate-180" : "rotate-0" }`}
  />
  </button>
+ </h3>
  {isOpen && <div className="p-4 space-y-4 bg-card border-t border-border">{children}</div>}
  </div>
  );

@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useId } from "react";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
@@ -22,6 +22,7 @@ interface Props {
 }
 
 const formatNumber = (v: number, suffix?: string): string => {
+ if (!Number.isFinite(v)) return "—"; // NaN/Infinity 공통 가드 (0 나눗셈·로그 등)
  if (suffix === "%") return `${v.toFixed(2)}%`;
  if (Math.abs(v) >= 100000000) return `${(v / 100000000).toFixed(2)}억${suffix || ""}`;
  if (Math.abs(v) >= 10000) return `${(v / 10000).toFixed(0)}만${suffix || ""}`;
@@ -31,6 +32,8 @@ const formatNumber = (v: number, suffix?: string): string => {
 
 export default function SimpleCalculatorView({ slug }: Props) {
  const calc = getCalculatorBySlug(slug);
+ // label htmlFor ↔ input id 연결용 인스턴스 고유 접두사 (간이 계산기 ~100종 일괄)
+ const fieldIdPrefix = useId();
  const resultCardRef = useRef<HTMLElement | null>(null);
  const [inputs, setInputs] = useState<Record<string, number>>(() => {
  if (!calc) return {};
@@ -144,7 +147,10 @@ export default function SimpleCalculatorView({ slug }: Props) {
  <div className="space-y-5">
  {calc.fields.map((field) => (
  <div key={field.name}>
- <label className="block text-sm font-bold text-navy mb-2">
+ <label
+ htmlFor={`${fieldIdPrefix}${field.name}`}
+ className="block text-sm font-bold text-navy mb-2"
+ >
  {field.label}
  {field.suffix && (
  <span className="text-xs text-faint-blue font-medium ml-1">
@@ -153,6 +159,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  )}
  </label>
  <input
+ id={`${fieldIdPrefix}${field.name}`}
  type="text"
  inputMode="numeric"
  value={inputs[field.name]?.toLocaleString("ko-KR") || ""}

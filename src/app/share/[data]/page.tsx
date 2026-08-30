@@ -22,7 +22,8 @@ type Props = {
 // 실패 시 null → 기본 메타데이터로 폴백.
 function decodeShared(data: string): { annualSalary: number; monthlyNet: number } | null {
  try {
- const { annualSalary, nonTaxableAmount, dependents, children } = JSON.parse(atob(data));
+ // base64 패딩(=)이 URL 인코딩(%3D)돼 들어오므로 decodeURIComponent 후 atob
+ const { annualSalary, nonTaxableAmount, dependents, children } = JSON.parse(atob(decodeURIComponent(data)));
  if (typeof annualSalary !== "number" || annualSalary <= 0) return null;
  const { monthlyNet } = calculateNetSalary(
  annualSalary,
