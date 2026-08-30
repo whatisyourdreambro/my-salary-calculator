@@ -99,4 +99,52 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
     basis:
       "DSR 40%·원리금균등 상환 기준 최대 대출 원금 추정치입니다. 기존 대출 보유 시 한도가 줄어들며, 은행·규제지역별 적용 기준이 다를 수 있습니다.",
   },
+  {
+    id: "minimum-wage",
+    anchor: "minimum-wage",
+    title: "최저임금 시급·월급 카드",
+    src: "/widget/minimum-wage",
+    height: 500,
+    snippet: `<iframe src="https://www.moneysalary.com/widget/minimum-wage" width="100%" height="500"
+  style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
+  title="최저임금 시급·월급 위젯" loading="lazy"></iframe>
+<p style="margin:8px 0 0;font-size:13px;">
+  <a href="https://www.moneysalary.com/minimum-wage-2027?utm_source=embed&utm_medium=widget"
+     target="_blank" rel="noopener noreferrer">2027 최저임금 총정리 by 머니샐러리</a>
+</p>`,
+    basis:
+      "고용노동부 확정 고시 수치를 그대로 보여줍니다 — 차기 연도 확정 시급·월급(주휴 포함 209시간)과 현행 시급 병기. 시급을 입력하면 월급·연봉으로 환산됩니다. 연도 없는 에버그린 주소라 한 번 붙이면 매년 최신 확정값으로 자동 갱신됩니다.",
+  },
+  {
+    id: "military-pay",
+    anchor: "military-pay",
+    title: "군인 월급 표 카드",
+    src: "/widget/military-pay",
+    height: 480,
+    snippet: `<iframe src="https://www.moneysalary.com/widget/military-pay" width="100%" height="480"
+  style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
+  title="2026 군인 월급 표 위젯" loading="lazy"></iframe>
+<p style="margin:8px 0 0;font-size:13px;">
+  <a href="https://www.moneysalary.com/military-pay-2026?utm_source=embed&utm_medium=widget"
+     target="_blank" rel="noopener noreferrer">2026 군인 월급 총정리 by 머니샐러리</a>
+</p>`,
+    basis:
+      "공무원보수규정 별표 13 원문 수치 — 2026년 병사(이병~병장) 월 봉급표와 장병내일준비적금 정부 매칭(월 납입 한도·전역 시 일괄 수령) 구조, 하사·소위 초임을 요약합니다.",
+  },
+  {
+    id: "company",
+    anchor: "company",
+    title: "회사 공시연봉 카드",
+    src: "/widget/company?id=samsung-electronics",
+    height: 420,
+    snippet: `<iframe src="https://www.moneysalary.com/widget/company?id=samsung-electronics" width="100%" height="420"
+  style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
+  title="삼성전자 평균연봉 위젯" loading="lazy"></iframe>
+<p style="margin:8px 0 0;font-size:13px;">
+  <a href="https://www.moneysalary.com/salary-db/samsung-electronics?utm_source=embed&utm_medium=widget"
+     target="_blank" rel="noopener noreferrer">삼성전자 연봉 정보 by 머니샐러리</a>
+</p>`,
+    basis:
+      "금융감독원 DART 사업보고서 '직원 등의 현황' 공시값(임원 제외 전 직원 평균연봉·직원수·평균 근속) 기준입니다. 예시는 삼성전자 — 페이지 하단의 회사 선택기에서 원하는 회사의 임베드 코드를 바로 만들 수 있습니다.",
+  },
 ];

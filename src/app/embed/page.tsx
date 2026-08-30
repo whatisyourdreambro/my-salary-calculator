@@ -12,6 +12,7 @@ import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import ShareSection from "@/components/ShareSection";
 import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import EmbedSnippetClient from "./EmbedSnippetClient";
+import EmbedCompanyPicker from "./EmbedCompanyPicker";
 import { EMBED_WIDGETS } from "./widgets";
 
 // 화이트라벨 문의 연락처 — 운영자가 공개용 이메일을 정하면 여기에 기입 (예: "biz@…").
@@ -22,7 +23,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: `내 블로그에 계산기 위젯 달기 — 무료 임베드 ${EMBED_WIDGETS.length}종`,
-  description: `티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액·연말정산 환급·성과급·퇴직금·DSR 계산기 ${EMBED_WIDGETS.length}종을 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.`,
+  description: `티스토리·워드프레스 블로그에 코드 한 번 붙여넣기로 2026 연봉 실수령액·연말정산 환급·성과급·퇴직금·DSR 계산기와 최저임금·군인 월급·회사 공시연봉 카드까지 위젯 ${EMBED_WIDGETS.length}종을 무료로 달 수 있습니다. 광고 없는 경량 위젯, 크레딧 표기만 유지하면 끝.`,
   path: "/embed",
   keywords: [
     "연봉 계산기 위젯",
@@ -63,7 +64,12 @@ const faqs = [
   {
     question: "위젯 종류가 여러 개인가요?",
     answer:
-      `네. 현재 연봉 실수령액·연말정산 환급·성과급 세후·퇴직금·DSR 대출 한도 계산기 ${EMBED_WIDGETS.length}종을 제공합니다. 글 주제에 맞는 위젯의 코드를 복사해 쓰면 됩니다 — 연말정산 시즌 글에는 환급 계산기, 성과급 시즌(1~2월) 글에는 성과급 계산기가 잘 어울립니다.`,
+      `네. 현재 연봉 실수령액·연말정산 환급·성과급 세후·퇴직금·DSR 대출 한도 계산기와 최저임금·군인 월급·회사 공시연봉 카드까지 ${EMBED_WIDGETS.length}종을 제공합니다. 글 주제에 맞는 위젯의 코드를 복사해 쓰면 됩니다 — 연말정산 시즌 글에는 환급 계산기, 알바·급여 글에는 최저임금 카드, 기업 리뷰 글에는 그 회사의 공시연봉 카드가 잘 어울립니다.`,
+  },
+  {
+    question: "회사별 연봉 카드는 어떤 회사를 지원하나요?",
+    answer:
+      "금융감독원 DART에 사업보고서를 제출하는 기업 중 머니샐러리가 공시 데이터를 검증해 둔 기업(280여 곳)을 지원합니다. 페이지 하단의 회사 선택기에서 회사 이름을 검색하면 그 회사 전용 임베드 코드가 바로 생성됩니다.",
   },
 ];
 
@@ -93,8 +99,9 @@ export default function EmbedGuidePage() {
           </h1>
           <p className="text-lg text-faint-blue leading-relaxed font-medium">
             재테크·취업 블로그에 코드 한 번 붙여넣기면 끝. 연봉 실수령액·연말정산
-            환급·성과급·퇴직금·DSR 계산기 {EMBED_WIDGETS.length}종 — 방문자가 글을
-            읽다가 바로 계산할 수 있어 체류시간이 늘어납니다.{" "}
+            환급·성과급·퇴직금·DSR 계산기부터 최저임금·군인 월급·회사 공시연봉
+            카드까지 {EMBED_WIDGETS.length}종 — 방문자가 글을 읽다가 바로 계산할 수
+            있어 체류시간이 늘어납니다.{" "}
             <strong className="text-navy">광고·추적 스크립트 없는 경량 위젯</strong>
             입니다.
           </p>
@@ -258,6 +265,22 @@ export default function EmbedGuidePage() {
         <div className="mb-10">
           <GuideMidAd />
         </div>
+
+        {/* 회사 공시연봉 카드 — 회사 선택기 (2026-08-31 위젯 B2).
+            ★신규 섹션은 기존 광고(GuideMidAd) 아래에만 — 광고 위 삽입 금지 하드 룰. */}
+        <section id="company-picker" className="mb-10 scroll-mt-24">
+          <h2 className="text-xl font-black text-navy mb-1">
+            회사별 공시연봉 카드 만들기
+          </h2>
+          <p className="text-[13px] leading-[1.7] text-faint-blue font-medium mb-4">
+            DART 공시 데이터를 보유한 기업 중에서 회사를 고르면 그 회사 전용
+            평균연봉 카드의 미리보기와 임베드 코드가 생성됩니다. 기업 리뷰·이직
+            후기 글에 붙이기 좋습니다.
+          </p>
+          <div className="rounded-3xl border border-canvas-200 bg-white p-5 sm:p-8">
+            <EmbedCompanyPicker />
+          </div>
+        </section>
 
         {/* 공유 — 광고 아래 (하드 룰) */}
         <ShareSection contentType="tool" />
