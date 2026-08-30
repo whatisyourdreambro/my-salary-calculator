@@ -2,7 +2,7 @@
 // 부동산 10 + 보험 8 + 사업자 8 + 일상 14 + 건강 5 + 결혼육아 5 = 50개
 
 import type { CalculatorDef } from "./types";
-import { RENT_CREDIT_2026 } from "@/lib/taxConstants2026";
+import { RENT_CREDIT_2026, calcIncomeTax2026 } from "@/lib/taxConstants2026";
 
 const REAL_ESTATE: CalculatorDef[] = [
  {
@@ -167,17 +167,32 @@ const REAL_ESTATE: CalculatorDef[] = [
  { name: "price", label: "매수가", defaultValue: 500000000, suffix: "원" },
  ],
  compute: ({ price }) => {
- const acquisitionTax = price * 0.013; // 1주택 1.3%
- const brokerage = Math.min(price * 0.005, 9000000);
+ // 취득세 (1주택 유상취득 기준 구간식):
+ // 6억 이하 1% / 6~9억 (가액(억)×2/3 − 3)% 슬라이딩 / 9억 초과 3%
+ let acqRate = 0.01;
+ if (price > 900000000) acqRate = 0.03;
+ else if (price > 600000000) acqRate = ((price / 100000000) * (2 / 3) - 3) / 100;
+ const acquisitionTax = price * acqRate;
+ const educationTax = acquisitionTax * 0.1; // 지방교육세 = 취득세율의 1/10
+ // 중개보수 상한요율 구간식 (주택 매매, 절대 상한액 없음 — 구간별 한도만 존재)
+ let brokerage = 0;
+ if (price < 50000000) brokerage = Math.min(price * 0.006, 250000);
+ else if (price < 200000000) brokerage = Math.min(price * 0.005, 800000);
+ else if (price < 900000000) brokerage = price * 0.004;
+ else if (price < 1200000000) brokerage = price * 0.005;
+ else if (price < 1500000000) brokerage = price * 0.006;
+ else brokerage = price * 0.007;
  const registration = price * 0.002;
- const total = acquisitionTax + brokerage + registration + 1000000;
+ const total = acquisitionTax + educationTax + brokerage + registration + 1000000;
  return {
  primary: { label: "총 부대비용", value: Math.round(total), suffix: "원" },
  secondary: [
  { label: "취득세 (1주택 기준)", value: Math.round(acquisitionTax), suffix: "원" },
- { label: "중개수수료", value: Math.round(brokerage), suffix: "원" },
+ { label: "지방교육세 (취득세율×1/10)", value: Math.round(educationTax), suffix: "원" },
+ { label: "중개보수 (상한요율)", value: Math.round(brokerage), suffix: "원" },
  { label: "등기비용", value: Math.round(registration), suffix: "원" },
  ],
+ note: "중개보수는 상한요율 기준(협의 가능). 전용 85㎡ 초과는 농어촌특별세 0.2% 별도, 다주택자는 취득세 중과.",
  };
  },
  },
@@ -509,7 +524,7 @@ const BUSINESS: CalculatorDef[] = [
  { label: "일반 부가세", value: Math.round(generalVat), suffix: "원" },
  { label: "간이 절감액", value: Math.round(generalVat - simpleVat), suffix: "원" },
  ],
- note: "매출 8천만 미만 간이과세 가능. 매입 비중 작으면 간이가 유리.",
+ note: "연 매출 1억 400만원 미만 간이과세 가능(2024-07 상향, 부동산임대·과세유흥업은 4,800만원). 매입 비중 작으면 간이가 유리.",
  };
  },
  },
@@ -546,14 +561,16 @@ const BUSINESS: CalculatorDef[] = [
  { name: "expense", label: "필요경비", defaultValue: 3000000, suffix: "원" },
  ],
  compute: ({ revenue, expense }) => {
- const taxable = revenue - expense;
- const tax = taxable > 14000000 ? taxable * 0.15 - 1260000 : taxable * 0.06;
+ const taxable = Math.max(0, revenue - expense);
+ // 부업 소득 단독 과세 가정 — 2026 누진세율 8구간(정본) 적용
+ const tax = calcIncomeTax2026(taxable);
  return {
  primary: { label: "예상 순수입", value: Math.round(taxable - tax), suffix: "원" },
  secondary: [
  { label: "예상 세금", value: Math.round(Math.max(0, tax)), suffix: "원" },
  { label: "월 평균", value: Math.round((taxable - tax) / 12), suffix: "원" },
  ],
+ note: "부업(사업소득)은 근로소득과 합산과세 — 본업이 있으면 실제로는 본업 한계세율(15~45%)이 적용되어 표시액보다 세금이 큼. 본 결과는 부업 소득 단독 과세 가정.",
  };
  },
  },

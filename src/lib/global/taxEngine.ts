@@ -94,15 +94,15 @@ export class GlobalTaxEngine {
 
  case 'US':
  // Simplified US Tax (Federal + CA State)
- // Federal 2024 single 기준 단순화 (표준공제 미반영 추정치)
+ // Federal 2026 single 기준 단순화 (Rev. Proc. 2025-32, 표준공제 미반영 추정치)
  let fedTax = 0;
- if (localGross <= 11600) fedTax = localGross * 0.10;
- else if (localGross <= 47150) fedTax = 1160 + (localGross - 11600) * 0.12;
- else if (localGross <= 100525) fedTax = 5426 + (localGross - 47150) * 0.22;
- else if (localGross <= 191950) fedTax = 17168 + (localGross - 100525) * 0.24;
- else if (localGross <= 243725) fedTax = 39110 + (localGross - 191950) * 0.32;
- else if (localGross <= 609350) fedTax = 55678 + (localGross - 243725) * 0.35;
- else fedTax = 183647 + (localGross - 609350) * 0.37;
+ if (localGross <= 12400) fedTax = localGross * 0.10;
+ else if (localGross <= 50400) fedTax = 1240 + (localGross - 12400) * 0.12;
+ else if (localGross <= 105700) fedTax = 5800 + (localGross - 50400) * 0.22;
+ else if (localGross <= 201775) fedTax = 17966 + (localGross - 105700) * 0.24;
+ else if (localGross <= 256225) fedTax = 41024 + (localGross - 201775) * 0.32;
+ else if (localGross <= 640600) fedTax = 58448 + (localGross - 256225) * 0.35;
+ else fedTax = 192979.25 + (localGross - 640600) * 0.37;
 
  // CA State (Roughly 9.3% for high earners, simplified progressive)
  const stateTax = localGross * 0.08; // Averaged
@@ -142,7 +142,9 @@ export class GlobalTaxEngine {
  else if (localGross <= 240000) tax = 21150 + (localGross - 200000) * 0.19;
  else if (localGross <= 280000) tax = 28750 + (localGross - 240000) * 0.195;
  else if (localGross <= 320000) tax = 36550 + (localGross - 280000) * 0.20;
- else tax = 44550 + (localGross - 320000) * 0.22;
+ else if (localGross <= 500000) tax = 44550 + (localGross - 320000) * 0.22;
+ else if (localGross <= 1000000) tax = 84150 + (localGross - 500000) * 0.23;
+ else tax = 199150 + (localGross - 1000000) * 0.24;
 
  // CPF (Social) - Only for citizens/PR, but let's assume 0 for expats or max cap for locals
  // For simplicity in "Global Talent" context, we often assume expat (0 CPF) or capped. 
@@ -161,8 +163,10 @@ export class GlobalTaxEngine {
  else if (localGross <= 125140) tax = 7540 + (localGross - 50270) * 0.40;
  else tax = 37488 + (localGross - 125140) * 0.45;
 
- // National Insurance (~10% blended)
- if (localGross > 12570) social = (localGross - 12570) * 0.10;
+ // National Insurance (Class 1 employee, 2025/26): 8% between £12,570 and £50,270, 2% above
+ social =
+ 0.08 * Math.max(0, Math.min(localGross, 50270) - 12570) +
+ 0.02 * Math.max(0, localGross - 50270);
  break;
  }
 

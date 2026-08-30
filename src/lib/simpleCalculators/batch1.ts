@@ -3,6 +3,13 @@
 
 import type { CalculatorDef } from "./types";
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
+import {
+ INSURANCE_RATES_2026,
+ PENSION_BASE_2026,
+ calcIncomeTax2026,
+ earnedIncomeDeduction2026,
+ earnedIncomeTaxCredit2026,
+} from "@/lib/taxConstants2026";
 
 // ─── 세금 (Tax) 15개 ───────────────────────────────────────
 const TAX: CalculatorDef[] = [
@@ -15,15 +22,8 @@ const TAX: CalculatorDef[] = [
  keywords: ["소득세 시뮬", "누진세율", "산출세액"],
  fields: [{ name: "base", label: "과세표준", defaultValue: 50000000, suffix: "원" }],
  compute: ({ base }) => {
- let tax = 0;
- if (base <= 14000000) tax = base * 0.06;
- else if (base <= 50000000) tax = base * 0.15 - 1260000;
- else if (base <= 88000000) tax = base * 0.24 - 5760000;
- else if (base <= 150000000) tax = base * 0.35 - 15440000;
- else if (base <= 300000000) tax = base * 0.38 - 19940000;
- else if (base <= 500000000) tax = base * 0.4 - 25940000;
- else if (base <= 1000000000) tax = base * 0.42 - 35940000;
- else tax = base * 0.45 - 65940000;
+ // 2026 누진세율 정본(calcIncomeTax2026) 사용 — 인라인 세율표 중복 제거
+ const tax = calcIncomeTax2026(base);
  const local = tax * 0.1;
  return {
  primary: { label: "산출세액", value: Math.round(tax), suffix: "원" },
@@ -129,11 +129,15 @@ const TAX: CalculatorDef[] = [
  compute: ({ value }) => {
  const threshold = 1200000000; // 1주택자 12억 공제
  const base = Math.max(0, (value - threshold) * 0.6);
+ // 1주택자(2주택 이하) 세율 — 12억 초과 구간은 과표×세율−누진공제 방식 (현행 7단계)
  let tax = 0;
  if (base <= 300000000) tax = base * 0.005;
  else if (base <= 600000000) tax = 1500000 + (base - 300000000) * 0.007;
  else if (base <= 1200000000) tax = 3600000 + (base - 600000000) * 0.01;
- else tax = 9600000 + (base - 1200000000) * 0.014;
+ else if (base <= 2500000000) tax = base * 0.013 - 6000000;
+ else if (base <= 5000000000) tax = base * 0.015 - 11000000;
+ else if (base <= 9400000000) tax = base * 0.02 - 36000000;
+ else tax = base * 0.027 - 101800000;
  return {
  primary: { label: "종부세 (연)", value: Math.round(tax), suffix: "원" },
  secondary: [{ label: "공정시장가액", value: Math.round(base), suffix: "원" }],
@@ -172,23 +176,43 @@ const TAX: CalculatorDef[] = [
  { name: "dependents", label: "부양가족 수", defaultValue: 1, suffix: "명" },
  ],
  compute: ({ monthly, dependents }) => {
- // 단순 추정 (간이세액표 근사)
+ // 간이세액표 근사 — 근로소득공제·인적공제·연금보험료공제·특별공제 근사 반영 후
+ // 2026 누진세율(정본) − 근로소득세액공제(정본) 적용. 상수·산식은 taxConstants2026 정본 사용.
  const yearly = monthly * 12;
- const personal = dependents * 1500000;
- const baseEst = Math.max(0, yearly - 10000000 - personal);
- let tax = 0;
- if (baseEst <= 14000000) tax = baseEst * 0.06;
- else if (baseEst <= 50000000) tax = baseEst * 0.15 - 1260000;
- else if (baseEst <= 88000000) tax = baseEst * 0.24 - 5760000;
- else tax = baseEst * 0.35 - 15440000;
- const monthlyTax = tax / 12;
+ const fam = Math.max(1, Math.round(dependents)); // 본인 포함 공제대상 가족 수
+ const earnedDeduction = earnedIncomeDeduction2026(yearly);
+ const personal = fam * 1500000; // 인적공제 1인 150만
+ // 연금보험료공제 — 4.75%, 기준소득월액 상한(월 659만) 연 환산 클램프
+ const pensionDeduction =
+ Math.min(yearly, PENSION_BASE_2026.MAX_MONTHLY * 12) *
+ INSURANCE_RATES_2026.NATIONAL_PENSION;
+ // 특별공제 근사 (간이세액표 산정 기준 근사):
+ // 1인 310만·2인 360만·3인 이상 500만 기본 + 총급여 구간별 가산율
+ const famBase = fam <= 1 ? 3100000 : fam === 2 ? 3600000 : 5000000;
+ let famRate = 0;
+ if (yearly <= 30000000) famRate = fam >= 3 ? 0.07 : 0.04;
+ else if (yearly <= 45000000) famRate = fam >= 3 ? 0.05 : 0.025;
+ else if (yearly <= 70000000) famRate = fam >= 3 ? 0.03 : 0.02;
+ else famRate = fam >= 3 ? 0.02 : 0.01;
+ const specialDeduction = famBase + yearly * famRate;
+ const taxBase = Math.max(
+ 0,
+ yearly - earnedDeduction - personal - pensionDeduction - specialDeduction
+ );
+ const calculated = calcIncomeTax2026(taxBase);
+ const finalTax = Math.max(
+ 0,
+ calculated - earnedIncomeTaxCredit2026(calculated, yearly)
+ );
+ const monthlyTax = Math.floor(finalTax / 12);
  return {
- primary: { label: "월 원천징수 추정", value: Math.round(monthlyTax), suffix: "원" },
+ primary: { label: "월 원천징수 추정", value: monthlyTax, suffix: "원" },
  secondary: [
- { label: "연 산출세액 추정", value: Math.round(tax), suffix: "원" },
+ { label: "연 결정세액 추정", value: Math.round(finalTax), suffix: "원" },
  { label: "지방소득세 (10%)", value: Math.round(monthlyTax * 0.1), suffix: "원" },
+ { label: "과세표준 추정", value: Math.round(taxBase), suffix: "원" },
  ],
- note: "간이세액표 근사치. 실제는 회사가 적용하는 간이세액표·비과세 항목에 따라 다름.",
+ note: "간이세액표 근사 — 실제 원천징수는 회사 신고 방식에 따라 상이. 비과세 항목·공제 신청 내역에 따라 달라질 수 있습니다.",
  };
  },
  },
@@ -243,19 +267,17 @@ const TAX: CalculatorDef[] = [
  const gain = sell - buy;
  const longTerm = years >= 3 ? 0.06 + Math.min(years - 3, 12) * 0.02 : 0;
  const adjustedGain = gain * (1 - Math.min(longTerm, 0.3));
- let tax = 0;
- if (adjustedGain <= 14000000) tax = adjustedGain * 0.06;
- else if (adjustedGain <= 50000000) tax = adjustedGain * 0.15 - 1260000;
- else if (adjustedGain <= 88000000) tax = adjustedGain * 0.24 - 5760000;
- else if (adjustedGain <= 150000000) tax = adjustedGain * 0.35 - 15440000;
- else tax = adjustedGain * 0.38 - 19940000;
+ // 양도소득 기본공제 250만 차감 후 2026 누진세율 8구간(정본) 적용
+ const taxBase = Math.max(0, adjustedGain - 2500000);
+ const tax = calcIncomeTax2026(taxBase);
  return {
  primary: { label: "예상 양도세", value: Math.round(Math.max(0, tax * 1.1)), suffix: "원" },
  secondary: [
  { label: "양도차익", value: gain, suffix: "원" },
  { label: "장기보유특별공제율", value: longTerm * 100, suffix: "%" },
+ { label: "과세표준 (기본공제 250만 차감)", value: Math.round(taxBase), suffix: "원" },
  ],
- note: "1세대 1주택 12억 비과세 미반영. 정확 계산은 세무사 상담 필수.",
+ note: "지방소득세 10% 포함 추정. 1세대 1주택 12억 비과세 미반영. 정확 계산은 세무사 상담 필수.",
  };
  },
  },
@@ -391,15 +413,21 @@ const SALARY: CalculatorDef[] = [
  { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간" },
  ],
  compute: ({ hourly, weekHours }) => {
- const weekly = hourly * weekHours;
- const monthly = weekly * 4.345;
+ // 주휴수당: 주 15시간 이상 근무 시 min(주 근무시간, 40)/40 × 8시간 유급 가산
+ // 주 40시간 기준 월 환산시간 = (40+8) × 4.345 ≈ 209시간 (통상임금 관행과 일치)
+ const holidayHours = weekHours >= 15 ? (Math.min(weekHours, 40) / 40) * 8 : 0;
+ const monthlyHours = (weekHours + holidayHours) * 4.345;
+ const monthly = hourly * monthlyHours;
  const yearly = monthly * 12;
+ const yearlyNoHoliday = hourly * weekHours * 4.345 * 12;
  return {
- primary: { label: "예상 연봉", value: Math.round(yearly), suffix: "원" },
+ primary: { label: "예상 연봉 (주휴 포함)", value: Math.round(yearly), suffix: "원" },
  secondary: [
- { label: "주급", value: Math.round(weekly), suffix: "원" },
- { label: "월급", value: Math.round(monthly), suffix: "원" },
+ { label: "월급 (주휴 포함)", value: Math.round(monthly), suffix: "원" },
+ { label: "월 환산시간", value: monthlyHours, suffix: "시간" },
+ { label: "주휴 미포함 연봉", value: Math.round(yearlyNoHoliday), suffix: "원" },
  ],
+ note: "주 15시간 이상 근무 시 주휴수당 포함 기준. 15시간 미만은 주휴수당 미발생.",
  };
  },
  },
@@ -815,7 +843,11 @@ const LOAN: CalculatorDef[] = [
  ],
  compute: ({ amount, rate, months }) => {
  const r = rate / 100 / 12;
- const monthly = (amount * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+ // 무이자(수수료율 0%) 가드 — 공식 분모 0 → NaN 방지, 균등분할
+ const monthly =
+ r === 0
+ ? amount / months
+ : (amount * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
  const total = monthly * months;
  return {
  primary: { label: "월 납부액", value: Math.round(monthly), suffix: "원" },
@@ -890,6 +922,12 @@ const INVESTMENT: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ initial, final, years }) => {
+ if (years <= 0) {
+ return {
+ primary: { label: "CAGR", value: NaN, suffix: "%" },
+ note: "기간은 1년 이상이어야 연평균 수익률을 계산할 수 있습니다.",
+ };
+ }
  const cagr = (Math.pow(final / initial, 1 / years) - 1) * 100;
  return {
  primary: { label: "CAGR", value: cagr, suffix: "%" },
@@ -906,6 +944,12 @@ const INVESTMENT: CalculatorDef[] = [
  keywords: ["72의 법칙", "복리"],
  fields: [{ name: "rate", label: "연 수익률", defaultValue: 7, suffix: "%" }],
  compute: ({ rate }) => {
+ if (rate <= 0) {
+ return {
+ primary: { label: "자산 2배 되는 시간", value: NaN, suffix: "년" },
+ note: "수익률이 0% 이하이면 자산은 2배가 되지 않습니다. 양수 수익률을 입력하세요.",
+ };
+ }
  const years = 72 / rate;
  return {
  primary: { label: "자산 2배 되는 시간", value: years, suffix: "년" },
