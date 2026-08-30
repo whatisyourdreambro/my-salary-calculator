@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 import Link from "@/components/AppLink";
 import ToolCard from "@/components/home/ToolCard";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
-import { HomeTopAd, GuideMidAd, Display2Ad, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+import { HomeTopAd, GuideMidAd, Display2Ad, MultiplexAd } from "@/components/AdPlacement";
 
 const CalculatorTabs = dynamic(
  () => import("@/components/CalculatorTabs"),
@@ -445,14 +445,10 @@ export default function HomeClient() {
  {/* ═══ Guide Categories — 카테고리별 진입 ══════════════════ */}
  <GuideCategories />
 
- {/* ═══ 홈 커버리지 확장(운영자 일괄 승인 2026-08-23): IN_ARTICLE 슬롯은
- 홈에서 미사용이라 무충돌. 하단 GuideMid 와는 Guide CTA 섹션이 사이에
- 있어 연속 광고 아님. 결과 직하 Display2 위·앞은 불변. ═══ */}
- <section className="bg-white section-pad">
- <div className="max-w-3xl mx-auto px-6">
- <InArticleAd />
- </div>
- </section>
+ {/* ═══ 하단 InArticle 제거(운영자 승인 2026-08-30, 결정 ①): 이 유닛이
+ IN_ARTICLE 슬롯을 선점해 SalaryResultCard 내부 "결과 직하" 광고를
+ dedup 으로 죽이고 있었음. IN_ARTICLE 은 결과 직하 전용 — 홈 본문에
+ 재추가 금지. 하단 커버리지는 자동광고가 담당(2026-08-30 실측). ═══ */}
 
  {/* ═══ Guide CTA ═══════════════════════════════════════════ */}
  <section

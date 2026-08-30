@@ -26,7 +26,7 @@ import {
   YEAR_END_NEWS,
 } from "@/data/yearEndTaxHub";
 import { CalendarDays, Newspaper, ArrowRight, Calculator, ClipboardCheck, BookOpen } from "lucide-react";
-import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -213,6 +213,11 @@ export default function YearEndTax2027HubPage() {
               에서 다룹니다 (근로자 연말정산과 신고 시기·방법이 다릅니다).
             </p>
           </section>
+
+          {/* 시즌 보강 광고(운영자 승인 2026-08-30, 제안 C) — 뉴스와 FAQ 사이 */}
+          <div className="mb-12">
+            <InArticleAd />
+          </div>
 
           {/* FAQ */}
           <section className="mb-12" aria-labelledby="faq-heading">

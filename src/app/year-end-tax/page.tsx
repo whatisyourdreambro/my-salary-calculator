@@ -10,7 +10,7 @@ import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
-import { InArticleAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -188,6 +188,11 @@ export default function YearEndTaxPage() {
  </Link>
  </div>
  </section>
+
+ {/* 시즌 보강 광고(운영자 승인 2026-08-30, 제안 C) — 계산기 섹션과 FAQ 사이 */}
+ <div className="mt-10">
+ <GuideMidAd />
+ </div>
 
  {/* FAQ — speakable(.faq-answer) 대상 */}
  <div className="mt-10 mb-4">
