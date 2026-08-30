@@ -244,7 +244,7 @@ export default function CelltrionBonusPage() {
           </section>
 
           <div className="mt-10">
-            <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
+            <CoupangBanner responsive={{ mobile: "square", desktop: "rectangle" }} />
           </div>
 
           <BonusClusterLinks currentSlug="celltrion-bonus" />

@@ -356,7 +356,7 @@ export default function SOilBonusPage() {
           {/* 쿠팡 + 관련 계산기 */}
           <div className="mt-10">
             <CoupangBanner
-              responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+              responsive={{ mobile: "square", desktop: "rectangle" }}
             />
           </div>
 

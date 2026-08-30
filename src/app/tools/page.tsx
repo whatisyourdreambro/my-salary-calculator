@@ -209,10 +209,12 @@ export default function ToolsHubPage() {
  <MultiplexAd />
  </div>
 
- {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이 */}
+ {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이.
+     2026-08-31 부활 팩 ②: desktop leaderboard가 tools/layout 푸터 배너와 동일
+     사이즈키라 뒤쪽이 무음 차단되던 것 → rectangle로 차별화 (운영자 승인) */}
  <div className="mt-16">
  <CoupangBanner
- responsive={{ mobile: "rectangle", desktop: "leaderboard" }}
+ responsive={{ mobile: "rectangle", desktop: "rectangle" }}
  />
  </div>
 

@@ -260,7 +260,7 @@ export default function HyundaiBonusPage() {
           </section>
 
           <div className="mt-10">
-            <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
+            <CoupangBanner responsive={{ mobile: "square", desktop: "rectangle" }} />
           </div>
 
           <BonusClusterLinks currentSlug="hyundai-bonus" />
