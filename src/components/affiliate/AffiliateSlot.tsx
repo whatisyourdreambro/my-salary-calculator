@@ -26,7 +26,11 @@ import {
   type Offer,
   type OfferVertical,
 } from "@/lib/affiliateOffers";
-import { trackAffiliateClick, trackAffiliateImpression } from "@/lib/analytics";
+import {
+  trackAffiliateClick,
+  trackAffiliateImpression,
+  trackEvent,
+} from "@/lib/analytics";
 
 export type AffiliateSlotProps = CoupangBannerProps & {
   /** 버티컬 명시 오버라이드 — 미지정 시 pathname 으로 자동 추론 */
@@ -174,8 +178,49 @@ export default function AffiliateSlot({
   // offerOnly 슬롯: 오퍼 없으면 무렌더 (기존 CTA 옆 병기 — 승인 전 외관 불변)
   if (offerOnly) return null;
 
-  // 폴백 — 기존 쿠팡 배너 그대로
-  return <CoupangBannerCore {...coupangProps} />;
+  // 폴백 — 기존 쿠팡 배너 그대로 (+ 노출 계측 래퍼)
+  return <CoupangFallbackWithImpression {...coupangProps} />;
+}
+
+/**
+ * 쿠팡 폴백 + 노출 계측 — 부활 팩 ④ (운영자 승인 2026-08-31).
+ * CoupangBannerCore(보호 컴포넌트)는 무접촉 — 래퍼 div의 IntersectionObserver로
+ * viewport 진입 1회를 GA4 coupang_impression 으로 기록해 오퍼 vs 쿠팡 CTR
+ * 비교 분모를 만든다. traceId·subId·링크는 일절 건드리지 않는다.
+ */
+function CoupangFallbackWithImpression(props: CoupangBannerProps) {
+  const pathname = usePathname();
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const sent = useRef(false);
+  const sizeKey = props.responsive ? props.responsive.desktop : (props.size ?? "leaderboard");
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !sent.current) {
+            sent.current = true;
+            trackEvent("coupang_impression", {
+              page_path: pathname ?? "",
+              size_key: sizeKey,
+            });
+            observer.disconnect();
+          }
+        }
+      },
+      { rootMargin: "0px", threshold: 0.5 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [pathname, sizeKey]);
+
+  return (
+    <div ref={wrapRef}>
+      <CoupangBannerCore {...props} />
+    </div>
+  );
 }
 
 /**

@@ -10,6 +10,8 @@ import { autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ShareSection from "@/components/ShareSection";
+// 부활 팩 P2-A (운영자 승인 2026-08-31) — 유일한 무광고 색인 페이지 0→2유닛
+import { GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -57,7 +59,14 @@ export default function HubIndexPage() {
             </Link>
           ))}
         </div>
+        {/* 부활 팩 P2-A (운영자 승인 2026-08-31): 허브 그리드 직하 + 페이지 끝 */}
+        <div className="mt-10">
+          <GuideMidAd />
+        </div>
         <ShareSection contentType="page" className="mt-10" />
+        <div className="mt-10">
+          <HomeTopAd />
+        </div>
       </div>
     </main>
   );

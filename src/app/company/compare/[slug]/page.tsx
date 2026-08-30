@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import ComparisonResultContent from "@/components/ComparisonResultContent";
 import { companies } from "@/lib/companyData";
 import { buildPageMetadata } from "@/lib/seo";
+// 부활 팩 P2-B (운영자 승인 2026-08-31) — 2유닛 박약 해소: GuideMid 1개 추가
+import { GuideMidAd } from "@/components/AdPlacement";
 
 export const runtime = 'edge';
 
@@ -44,5 +46,13 @@ export function generateMetadata({ params }: PageProps): Metadata {
 }
 
 export default function ComparisonResultPage({ params }: PageProps) {
-  return <ComparisonResultContent slug={params.slug} />;
+  return (
+    <>
+      <ComparisonResultContent slug={params.slug} />
+      {/* 부활 팩 P2-B (운영자 승인 2026-08-31): 비교 결과와 layout 푸터 광고 사이 */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+        <GuideMidAd />
+      </div>
+    </>
+  );
 }

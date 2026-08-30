@@ -27,6 +27,8 @@ import {
 } from "@/data/yearEndTaxHub";
 import { CalendarDays, Newspaper, ArrowRight, Calculator, ClipboardCheck, BookOpen } from "lucide-react";
 import { GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+// 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 
 export const dynamic = "force-static";
 
@@ -218,6 +220,9 @@ export default function YearEndTax2027HubPage() {
           <div className="mb-12">
             <InArticleAd />
           </div>
+
+          {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼 */}
+          <OfferSlot vertical="loan" />
 
           {/* FAQ */}
           <section className="mb-12" aria-labelledby="faq-heading">

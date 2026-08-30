@@ -11,6 +11,25 @@ import { hubSlugByCategoryId } from "@/lib/guideCategories";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
+
+// 부활 팩 ④ (운영자 승인 2026-08-31) — 신용·대출 인텐트 가이드에만 CPA 오퍼 슬롯 배치.
+// 오퍼가 전부 inactive면 무렌더(외관 불변). 인텐트 비정합 주제(노동법·병사 등) 미배치 원칙.
+const OFFER_GUIDE_SLUGS = new Set([
+  "credit-score-up-2026",
+  "credit-score-management",
+  "credit-score-850-strategy-2026",
+  "loan-types-comparison-2026",
+  "minus-loan-vs-credit-loan-2026",
+  "personal-loan-vs-debt-consolidation",
+  "first-home-buyer-loan",
+  "didimdol-newborn-special-loan-2026",
+  "newborn-special-loan-application-2026",
+  "newlywed-loan-limit-2x-2026",
+  "auto-loan-vs-lease-2026",
+  "jeonse-scam-prevention",
+  "jeonse-vs-monthly-rent-2026",
+]);
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface GuidePageClientProps {
@@ -277,6 +296,9 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
 
  {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 콘솔 유닛 발급 후 env 추가 시 자동 활성화 */}
  <MultiplexAd />
+
+ {/* 부활 팩 ④ (운영자 승인 2026-08-31): 신용·대출 가이드 한정 CPA 오퍼 — 전 광고 아래 */}
+ {OFFER_GUIDE_SLUGS.has(guide.slug) && <OfferSlot vertical="loan" />}
 
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">

@@ -16,6 +16,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { ArrowRight, Calculator, MonitorSmartphone, ListChecks } from "lucide-react";
 import { HomeTopAd, GuideMidAd, InArticleAd } from "@/components/AdPlacement";
+// 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 
 export const dynamic = "force-static";
 
@@ -188,6 +190,9 @@ export default function YearEndTaxPreviewPage() {
 
             {/* 시즌 보강 광고(운영자 승인 2026-08-30, 제안 C) — 체크포인트와 FAQ 사이 */}
             <InArticleAd />
+
+            {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼 */}
+            <OfferSlot vertical="loan" />
 
             {/* FAQ */}
             <section className="mb-8" aria-labelledby="faq-heading">

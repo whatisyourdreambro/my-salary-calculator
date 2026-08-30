@@ -11,6 +11,8 @@ import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+// 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -110,6 +112,9 @@ export default function YearEndTaxPage() {
 
  <div className="max-w-4xl mx-auto mt-10">
  <InArticleAd />
+
+ {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼 */}
+ <OfferSlot vertical="loan" />
 
  {/* 2026년 귀속 확정 변경사항 — "연말정산 미리보기" 검색 의도 대응 */}
  <section className="mt-10 p-6 bg-white rounded-2xl border border-canvas-200">

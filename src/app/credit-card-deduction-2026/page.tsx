@@ -11,6 +11,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+// 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯 (allcredit pages 명시 페이지 — 즉시 노출)
+import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
@@ -145,6 +147,9 @@ export default function CreditCardDeduction2026Page() {
         <CreditCardDeductionClient />
 
         <CalcResultAd />
+
+        {/* 부활 팩 ④ (운영자 승인 2026-08-31): CalcResultAd 직후 CPA 오퍼 — 하단 쿠팡은 폴백 유지 */}
+        <OfferSlot vertical="loan" />
 
         {/* 연말정산 클러스터 칩 — 메쉬 비대칭 해소 (2026-08-23). 광고 아래 배치 준수 */}
         <YearEndTaxCluster />

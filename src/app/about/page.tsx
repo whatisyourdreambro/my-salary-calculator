@@ -5,6 +5,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
+// 부활 팩 P2-A (운영자 승인 2026-08-31) — 무광고 색인 페이지 0→2유닛
+import { GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "머니샐러리 소개 - 데이터 출처와 운영 원칙",
@@ -146,6 +148,11 @@ export default function AboutPage() {
  </div>
  </section>
 
+ {/* 부활 팩 P2-A (운영자 승인 2026-08-31): 본문 중간 유닛 */}
+ <div className="mb-16">
+ <GuideMidAd />
+ </div>
+
  {/* 회사 연봉 데이터 산출 방법론 — 실명 기업 DB·순위의 법적 방어 핵심 */}
  <section className="mb-16 p-8 bg-white border border-canvas-200 rounded-2xl">
  <h2 className="text-xl font-black text-navy mb-4">회사 연봉 데이터는 어떻게 산출하나요?</h2>
@@ -211,6 +218,11 @@ export default function AboutPage() {
  </section>
 
  <ShareSection contentType="page" className="mt-12" />
+
+ {/* 부활 팩 P2-A (운영자 승인 2026-08-31): 페이지 끝 유닛 */}
+ <div className="mt-12">
+ <HomeTopAd />
+ </div>
 
  <div className="mt-16 pt-8 border-t border-canvas-200 text-center text-xs text-faint-blue">
  <p>© {new Date().getFullYear()} 머니샐러리 — 모든 콘텐츠는 정보 제공 목적입니다.</p>

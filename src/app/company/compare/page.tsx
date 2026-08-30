@@ -10,6 +10,8 @@ export const runtime = "edge";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import CompareSelectionClient from "./CompareSelectionClient";
+// 부활 팩 P2-B (운영자 승인 2026-08-31) — 2유닛 박약 해소: GuideMid 1개 추가
+import { GuideMidAd } from "@/components/AdPlacement";
 
 // 카니발 해소 정책(2026-06)에 따라 compare 트리는 noindex.
 // (종전에는 company/layout의 canonical=/company(301 URL)를 상속받던 것을 정정, 2026-08-24)
@@ -22,5 +24,13 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CompareSelectionPage() {
-  return <CompareSelectionClient />;
+  return (
+    <>
+      <CompareSelectionClient />
+      {/* 부활 팩 P2-B (운영자 승인 2026-08-31): 선택 UI와 layout 푸터 광고 사이 */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+        <GuideMidAd />
+      </div>
+    </>
+  );
 }
