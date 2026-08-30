@@ -8,6 +8,7 @@
 
 import Link from "@/components/AppLink";
 import { GuideMidAd } from "@/components/AdPlacement";
+import CitationCopyButton from "@/components/CitationCopyButton";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { breadcrumbLd, faqLd, itemListLd, datasetLd } from "@/lib/structuredData";
@@ -38,6 +39,8 @@ interface MetricConfig {
   methodologyExtra: string;
   datasetName: string;
   rows: RankingRow[];
+  /** 인용 복사 버튼 — R2 B4 (운영자 승인 2026-08-31). 데이터 변수 기반 빌드타임 생성만. */
+  citation?: { quote: string; quoteId: string };
 }
 
 function RankTable({ cfg, rows }: { cfg: MetricConfig; rows: RankingRow[] }) {
@@ -183,6 +186,16 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
             성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
+          {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
+          {cfg.citation && (
+            <CitationCopyButton
+              quote={cfg.citation.quote}
+              path={cfg.path}
+              quoteId={cfg.citation.quoteId}
+              sourceLabel="상장사 공시 연봉 DB"
+              className="mt-4"
+            />
+          )}
         </section>
       </div>
     </main>

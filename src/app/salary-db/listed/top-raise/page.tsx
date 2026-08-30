@@ -71,6 +71,11 @@ export default function TopRaisePage() {
         methodologyExtra: `인상률은 2024 공시 대비 증감률로, 두 해 공시가 모두 있는 ${raiseEligibleCount.toLocaleString("ko-KR")}곳을 비교했고 직원 수 ±30% 초과 변동 회사는 제외했습니다.`,
         datasetName: `상장사 연봉 인상률 TOP ${topRaiseRows.length} (${DART_RANKING_YEAR})`,
         rows: topRaiseRows,
+        // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지)
+        citation: {
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 평균연봉 인상률 1위 상장사는 ${top1.nameKo}로, 전년 대비 ${top1.raisePct != null && top1.raisePct >= 0 ? `+${top1.raisePct}` : top1.raisePct}%(${fmtManwon(top1.prevSalaryManwon ?? 0)} → ${fmtManwon(top1.avgSalaryManwon)}) 올랐다. 비교 가능한 상장사 ${raiseEligibleCount.toLocaleString("ko-KR")}곳 기준이며 직원 수 급변 기업은 제외했다.`,
+          quoteId: "top-raise-no1",
+        },
       }}
     />
   );

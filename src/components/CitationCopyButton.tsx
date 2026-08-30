@@ -19,6 +19,11 @@ interface CitationCopyButtonProps {
   path: string;
   /** GA4 quote_id — 어떤 인용문이 복사됐는지 구분 */
   quoteId: string;
+  /**
+   * 복사 문구의 출처 라벨 — 기본 "데이터 리포트"(insights 기존 동작 유지).
+   * R2 B4 (2026-08-31): 상시 랭킹·봉급표 확산용 라벨 분기.
+   */
+  sourceLabel?: string;
   className?: string;
 }
 
@@ -26,6 +31,7 @@ export default function CitationCopyButton({
   quote,
   path,
   quoteId,
+  sourceLabel = "데이터 리포트",
   className = "",
 }: CitationCopyButtonProps) {
   const [copied, setCopied] = useState(false);
@@ -45,7 +51,7 @@ export default function CitationCopyButton({
   };
 
   const handleCopy = async () => {
-    const text = `${quote}\n\n출처: 머니샐러리 데이터 리포트 (${SITE_URL}${path})`;
+    const text = `${quote}\n\n출처: 머니샐러리 ${sourceLabel} (${SITE_URL}${path})`;
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);

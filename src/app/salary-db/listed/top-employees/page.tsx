@@ -41,6 +41,11 @@ export default function TopEmployeesPage() {
         ),
         valueHeader: "직원 수",
         renderValue: (row) => `${row.employeeCount.toLocaleString("ko-KR")}명`,
+        // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지)
+        citation: {
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 수가 가장 많은 상장사는 ${top1.nameKo}(${top1.employeeCount.toLocaleString("ko-KR")}명, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 상장사 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳 전수 기준.`,
+          quoteId: "top-employees-no1",
+        },
         faqItems: [
           {
             question: "직원 수가 가장 많은 상장사는 어디인가요?",

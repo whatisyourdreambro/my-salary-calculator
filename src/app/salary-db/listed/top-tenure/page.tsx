@@ -43,6 +43,11 @@ export default function TopTenurePage() {
         ),
         valueHeader: "평균 근속",
         renderValue: (row) => fmtYears(row.avgTenureYears),
+        // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지)
+        citation: {
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 평균 근속연수가 가장 긴 상장사는 ${top1.nameKo}(${fmtYears(top1.avgTenureYears)}, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 근속연수를 공시한 상장사 ${tenureEligibleCount.toLocaleString("ko-KR")}곳 기준.`,
+          quoteId: "top-tenure-no1",
+        },
         faqItems: [
           {
             question: "평균 근속연수가 가장 긴 상장사는 어디인가요?",

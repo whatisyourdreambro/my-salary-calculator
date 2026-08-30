@@ -16,6 +16,7 @@ import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/c
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 import { TEACHER_PAY_ROWS_2026, TEACHER_ALLOWANCE_2026 } from "@/lib/civilServantPay";
+import CitationCopyButton from "@/components/CitationCopyButton";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -260,6 +261,16 @@ export default function TeacherPay2026Page() {
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
             <RelatedCalculators currentPath="/teacher-pay-2026" />
+
+            {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
+            <div className="mt-8">
+              <CitationCopyButton
+                quote={`2026년 교사(유·초·중등 교원) 월 봉급은 ${TEACHER_PAY_ROWS_2026[0][0]}호봉 ${TEACHER_PAY_ROWS_2026[0][1].toLocaleString("ko-KR")}원부터 ${TEACHER_PAY_ROWS_2026[TEACHER_PAY_ROWS_2026.length - 1][0]}호봉 ${TEACHER_PAY_ROWS_2026[TEACHER_PAY_ROWS_2026.length - 1][1].toLocaleString("ko-KR")}원까지이며, 담임수당은 월 ${TEACHER_ALLOWANCE_2026.homeroom.toLocaleString("ko-KR")}원이다 — 공무원보수규정 별표 11 기준.`}
+                path="/teacher-pay-2026"
+                quoteId="teacher-pay-range"
+                sourceLabel="교사 호봉표"
+              />
+            </div>
 
             <div className="mt-8">
               <ShareButtons

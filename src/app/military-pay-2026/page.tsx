@@ -22,6 +22,7 @@ import {
   MILITARY_OFFICER_STARTING_2026,
   MILITARY_SAVINGS_2026,
 } from "@/lib/civilServantPay";
+import CitationCopyButton from "@/components/CitationCopyButton";
 import SavingsCalc from "./SavingsCalc";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
@@ -290,6 +291,16 @@ export default function MilitaryPay2026Page() {
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
             <RelatedCalculators currentPath="/military-pay-2026" />
+
+            {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
+            <div className="mt-8">
+              <CitationCopyButton
+                quote={`2026년 병장 월 봉급은 ${MILITARY_PAY_2026[MILITARY_PAY_2026.length - 1].pay.toLocaleString("ko-KR")}원이며, 장병내일준비적금 정부 매칭(월 최대 ${MILITARY_SAVINGS_2026.monthlyCap.toLocaleString("ko-KR")}원, 전역 시 일괄 수령)을 더하면 월 ${(MILITARY_PAY_2026[MILITARY_PAY_2026.length - 1].pay + MILITARY_SAVINGS_2026.monthlyCap).toLocaleString("ko-KR")}원 구조다 — 공무원보수규정 별표 13 기준.`}
+                path="/military-pay-2026"
+                quoteId="military-sergeant-pay"
+                sourceLabel="군인 월급 봉급표"
+              />
+            </div>
 
             <div className="mt-8">
               <ShareButtons

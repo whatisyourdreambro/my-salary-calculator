@@ -25,6 +25,7 @@ import {
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
 import { GuideMidAd } from "@/components/AdPlacement";
+import CitationCopyButton from "@/components/CitationCopyButton";
 import type { RankingRow } from "@/lib/salary-data/dartRanking";
 
 export const dynamic = "force-static";
@@ -301,6 +302,14 @@ export default function IndustryRankingPage({ params }: Props) {
             자체 매핑입니다. <strong className="text-navy">신입 초봉이 아니며</strong>, 성과급
             지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
+          {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
+          <CitationCopyButton
+            quote={`${DART_RANKING_YEAR} 사업연도 DART 공시 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉은 직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)}, 중위 ${fmtManwon(r.medianManwon)}이며, 1위는 ${top1.nameKo}(${fmtManwon(top1.avgSalaryManwon)})다.`}
+            path={path}
+            quoteId={`industry-${r.industryId}`}
+            sourceLabel="상장사 공시 연봉 DB"
+            className="mt-4"
+          />
         </section>
       </div>
     </main>

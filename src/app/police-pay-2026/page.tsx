@@ -16,7 +16,8 @@ import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/c
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 import PoliceFireRankTable from "@/components/PoliceFireRankTable";
-import { HAZARD_ALLOWANCE_2026 } from "@/lib/civilServantPay";
+import { HAZARD_ALLOWANCE_2026, POLICE_RANK_ROWS_2026 } from "@/lib/civilServantPay";
+import CitationCopyButton from "@/components/CitationCopyButton";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -240,6 +241,16 @@ export default function PolicePay2026Page() {
             <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
             <RelatedCalculators currentPath="/police-pay-2026" />
+
+            {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
+            <div className="mt-8">
+              <CitationCopyButton
+                quote={`2026년 순경 1호봉 월 봉급은 ${POLICE_RANK_ROWS_2026[0][1].toLocaleString("ko-KR")}원으로 일반직 9급 1호봉과 같으며, 여기에 위험근무수당 월 ${HAZARD_ALLOWANCE_2026.toLocaleString("ko-KR")}원 등 직렬 수당이 더해진다 — 공무원보수규정 별표 10 기준.`}
+                path="/police-pay-2026"
+                quoteId="police-first-step-pay"
+                sourceLabel="경찰 봉급표"
+              />
+            </div>
 
             <div className="mt-8">
               <ShareButtons
