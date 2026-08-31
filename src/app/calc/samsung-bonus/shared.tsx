@@ -24,6 +24,17 @@ export const FIXED_SA_RATIO = 6;
 export const FIXED_OPI1_RATE = 50; // OPI1(기본 성과인센티브) = 연봉의 50%
 export const REFERENCE_SALARY = 80_000_000; // 본인 연봉 비례 기준 (평균 8천만원)
 
+// 초기업노조(SELU) 2026-08 텔레그램 공지 — "27년 교섭 요구안 설계" 항목.
+// 올해 예상 DS부문 영업이익 360~370조, OPI 포함 연봉 8,000만원 기준
+// 메모리 약 7.5억 / 공통 5.2억 / LSI·파운드리 2.7억 규모.
+// 26년 합의된 DS 특별성과급은 단체협약(유효기간 3년)상 제도 자체 변경 불가.
+export const SELU_EST_2026 = {
+  profitLow: 360, // 조원
+  profitHigh: 370,
+  profitMid: 365, // 계산기 디폴트 — 공지 범위 중간값
+  perSalary80mEok: { memory: 7.5, common: 5.2, foundry: 2.7 }, // 억원 · OPI 포함
+} as const;
+
 // 회의록 임계값:
 // • 2026~2028: 영업이익 200조 이상 → 성과급 풀 활성화
 // • 2029~2035 (향후 7년): 영업이익 100조 이상 → 성과급 풀 활성화
@@ -127,10 +138,11 @@ export type Division = {
   defaultRatio: number;
 };
 
-// 보도값 매칭 보정 — 영업이익 350조 기준 메모리 791%·공통 553%·파운드리 252%
-// 보도 결과에 가장 근접한 가중치 역산. 회의록 원본은 1.0/0.7/0.0이지만 보도값과
-// 정합 불가(공통 16% 과대평가)하므로 보도값 매칭 우선. 사용자가 회의록 원본 값으로
-// UI에서 직접 조정 가능.
+// 노조 공지값 매칭 보정 — SELU 2026-08 텔레그램(영업이익 360~370조, OPI 포함
+// 8,000만원 기준 메모리 7.5억·공통 5.2억·LSI·파운드리 2.7억)에 가장 근접한
+// 가중치 역산: 365조 + 1.0/0.55/0.06 → 7.54/5.22/2.69억 (오차 1% 이내).
+// 회의록 원본은 1.0/0.7/0.0이지만 공지값과 정합 불가(공통 과대평가)하므로
+// 공지값 매칭 우선. 사용자가 회의록 원본 값으로 UI에서 직접 조정 가능.
 export const DIVISIONS: Division[] = [
   {
     id: "memory",
@@ -148,7 +160,7 @@ export const DIVISIONS: Division[] = [
     color: "#F59E0B",
     bgTint: "#F59E0B0D",
     defaultCount: 29000,
-    defaultRatio: 0.55, // 보도값 553% 매칭 (회의록 원본 0.7)
+    defaultRatio: 0.55, // 공지값 5.2억 매칭 (회의록 원본 0.7)
   },
   {
     id: "foundry",
@@ -157,7 +169,7 @@ export const DIVISIONS: Division[] = [
     color: "#EF4444",
     bgTint: "#EF44440D",
     defaultCount: 20900,
-    defaultRatio: 0.05, // 보도값 252% 매칭 + 2026 적자 사업부 (회의록 원본 0.0)
+    defaultRatio: 0.06, // 공지값 2.7억 매칭 + 2026 적자 사업부 (회의록 원본 0.0)
   },
 ];
 

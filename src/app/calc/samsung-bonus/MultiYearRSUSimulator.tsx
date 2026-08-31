@@ -30,12 +30,18 @@ type YearRow = {
 
 // 주가는 예시값 — 2026년 증권가 목표가(40만원대 후반 보도) 언저리 시나리오.
 // 사용자가 본인 시점 실제 주가로 수정해 사용하는 것을 전제로 한다.
+// 1인당은 메모리 OPI2(특별경영성과급) 평균 — 영업이익 365(SELU 8월 공지
+// 중간값)/400/380/100/100조 시나리오 기준. 잠정합의서상 특별경영성과급은
+// 전액 자사주(주식 비중 100%), 1/3 즉시 + 1/3 1년 + 1/3 2년 해제.
+// 각 성과연도분은 이듬해 1월 지급이므로 2030년 시점 누적 해제 비율은
+// 26~27년분 100%, 28년분 67%, 29년분 33%, 30년분 0%.
+// 1인당은 세전 기준 — 합의서상 자사주는 세후 지급이라 실제 주식 수는 더 적다.
 const DEFAULT_YEAR_ROWS: YearRow[] = [
-  { id: "y1", year: 2026, perPersonFmt: "6,000", stockRatio: 30, vestedPct: 100, stockPriceFmt: "300,000" },
-  { id: "y2", year: 2027, perPersonFmt: "8,000", stockRatio: 30, vestedPct: 75, stockPriceFmt: "350,000" },
-  { id: "y3", year: 2028, perPersonFmt: "10,000", stockRatio: 30, vestedPct: 50, stockPriceFmt: "400,000" },
-  { id: "y4", year: 2029, perPersonFmt: "9,000", stockRatio: 30, vestedPct: 25, stockPriceFmt: "380,000" },
-  { id: "y5", year: 2030, perPersonFmt: "7,500", stockRatio: 30, vestedPct: 0, stockPriceFmt: "350,000" },
+  { id: "y1", year: 2026, perPersonFmt: "71,000", stockRatio: 100, vestedPct: 100, stockPriceFmt: "300,000" },
+  { id: "y2", year: 2027, perPersonFmt: "78,000", stockRatio: 100, vestedPct: 100, stockPriceFmt: "350,000" },
+  { id: "y3", year: 2028, perPersonFmt: "74,000", stockRatio: 100, vestedPct: 67, stockPriceFmt: "400,000" },
+  { id: "y4", year: 2029, perPersonFmt: "20,000", stockRatio: 100, vestedPct: 33, stockPriceFmt: "380,000" },
+  { id: "y5", year: 2030, perPersonFmt: "20,000", stockRatio: 100, vestedPct: 0, stockPriceFmt: "350,000" },
 ];
 
 export default function MultiYearRSUSimulator({
@@ -88,7 +94,7 @@ export default function MultiYearRSUSimulator({
         id: `y${Date.now()}`,
         year: newYear,
         perPersonFmt: last?.perPersonFmt ?? "6,000",
-        stockRatio: last?.stockRatio ?? 30,
+        stockRatio: last?.stockRatio ?? 100,
         vestedPct: 0,
         stockPriceFmt: last?.stockPriceFmt ?? "100,000",
       },

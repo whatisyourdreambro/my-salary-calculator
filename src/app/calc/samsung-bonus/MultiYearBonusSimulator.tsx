@@ -128,7 +128,8 @@ export default function MultiYearBonusSimulator({
 }) {
   const [targetDivId, setTargetDivId] = useState<string>(defaultDivId);
   const [rows, setRows] = useState<YearProfitRow[]>([
-    { id: "y1", year: 2026, profitTrillionFmt: "350" },
+    // 2026은 SELU 8월 공지 전망(360~370조)의 중간값
+    { id: "y1", year: 2026, profitTrillionFmt: "365" },
     { id: "y2", year: 2027, profitTrillionFmt: "400" },
     { id: "y3", year: 2028, profitTrillionFmt: "380" },
   ]);
@@ -157,7 +158,7 @@ export default function MultiYearBonusSimulator({
   // ── 영업이익 일괄 입력 (구간별) ─────────────────────────
   const [bulkExpanded, setBulkExpanded] = useState(false);
   const [bulkRanges, setBulkRanges] = useState<BulkRange[]>([
-    { id: "b1", startYear: 2026, endYear: 2028, profitTrillionFmt: "350" },
+    { id: "b1", startYear: 2026, endYear: 2028, profitTrillionFmt: "365" },
   ]);
 
   function updateBulkRange(id: string, patch: Partial<BulkRange>) {
@@ -306,6 +307,7 @@ export default function MultiYearBonusSimulator({
     let cumOpi2Sa = 0;
     let cumGross = 0;
     let cumNet = 0;
+    let cumHealthIns = 0; // 건강보험료(장기요양 포함) 누적 — 별도 표시용
     let triggeredCount = 0;
     let blockedCount = 0;
 
@@ -371,6 +373,8 @@ export default function MultiYearBonusSimulator({
         applyInsurance
       );
       const myNetManwon = tax.net / 10000;
+      const myHealthInsManwon =
+        (tax.breakdown.healthIns + tax.breakdown.longTermCare) / 10000;
 
       cumOpi1 += opi1Manwon;
       cumOpi2 += opi2Manwon;
@@ -378,6 +382,7 @@ export default function MultiYearBonusSimulator({
       cumOpi2Sa += opi2SaManwon;
       cumGross += totalGrossManwon;
       cumNet += myNetManwon;
+      cumHealthIns += myHealthInsManwon;
       if (ok && profit > 0) triggeredCount++;
       if (!ok && profit > 0) blockedCount++;
 
@@ -394,6 +399,7 @@ export default function MultiYearBonusSimulator({
         myGrossManwon: totalGrossManwon,
         myNetManwon,
         myDeductManwon: totalGrossManwon - myNetManwon,
+        myHealthInsManwon,
         // UI 표시용
         appliedSalaryManwon: yearSalary / 10000,
         appliedCl: effectiveCl,
@@ -411,6 +417,7 @@ export default function MultiYearBonusSimulator({
       cumGross,
       cumNet,
       cumDeduct: cumGross - cumNet,
+      cumHealthIns,
       triggeredCount,
       blockedCount,
       maxVal: Math.max(...enriched.map((r) => r.myGrossManwon), 1),
@@ -775,7 +782,7 @@ export default function MultiYearBonusSimulator({
         {bulkExpanded && (
           <div className="mt-2 rounded-xl border border-electric-20 bg-electric-5 p-4">
             <p className="text-[11px] text-faint-blue mb-3 leading-relaxed">
-              📅 구간별로 한 번에 입력 — 예: &quot;2026~2028년 = 350조&quot;. 적용하면 위 연도
+              📅 구간별로 한 번에 입력 — 예: &quot;2026~2028년 = 365조&quot;. 적용하면 위 연도
               행들의 영업이익이 일괄 변경됩니다. &quot;구간 → 연도 자동 생성&quot; 누르면 위
               연도 행이 구간 기준으로 재생성됩니다.
             </p>
@@ -995,6 +1002,21 @@ export default function MultiYearBonusSimulator({
           </div>
         </div>
 
+        {/* 건강보험료 분리 표시 — 상한 없이 부과되는 핵심 공제라 별도 노출 */}
+        {applyInsurance && computed.cumHealthIns > 0 && (
+          <div
+            className="px-5 py-2.5 border-b border-canvas-200 dark:border-canvas-800 flex items-center justify-between text-xs"
+            style={{ backgroundColor: "#EF444408" }}
+          >
+            <span className="font-bold text-rose-600 dark:text-rose-400">
+              누적 건강보험료 (장기요양 포함)
+            </span>
+            <span className="font-black tabular-nums text-rose-600 dark:text-rose-400">
+              -{fmtManwonInt(computed.cumHealthIns)}만원
+            </span>
+          </div>
+        )}
+
         {/* OPI 분해: OPI1 / OPI2 / 부문 / 사업부 */}
         <div className="px-5 py-4 bg-canvas-50 dark:bg-canvas-800/50 space-y-3">
           <div className="flex items-center justify-between py-1.5">
@@ -1124,6 +1146,7 @@ function YearProfitRowCard({
     opi2SaManwon: number;
     myGrossManwon: number;
     myNetManwon: number;
+    myHealthInsManwon: number;
     appliedSalaryManwon: number;
     appliedCl: MyCl;
     appliedGrade: EvalGrade;
@@ -1443,6 +1466,11 @@ function YearProfitRowCard({
           >
             {fmtManwon(row.myNetManwon)}
           </p>
+          {row.myHealthInsManwon > 0 && (
+            <p className="text-[9px] text-faint-blue mt-0.5 tabular-nums">
+              건강보험료 -{fmtManwonInt(row.myHealthInsManwon)}만원 포함
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -21,6 +21,7 @@ import {
   FIXED_RERATE,
   FIXED_BU_RATIO,
   FIXED_SA_RATIO,
+  SELU_EST_2026,
   REFERENCE_SALARY,
   getThreshold,
   getThresholdPeriod,
@@ -67,7 +68,8 @@ function SimulatorLoading({ label }: { label: string }) {
 
 export default function SamsungBonusClient() {
   const [year, setYear] = useState(2026); // 적용 연도
-  const [profitFmt, setProfitFmt] = useState("350"); // 조원 — 자유 입력
+  // 조원 — 자유 입력. 디폴트는 SELU 2026-08 공지 전망(360~370조)의 중간값
+  const [profitFmt, setProfitFmt] = useState(String(SELU_EST_2026.profitMid));
   const [counts, setCounts] = useState<Record<string, string>>(
     Object.fromEntries(
       DIVISIONS.map((d) => [d.id, d.defaultCount.toLocaleString("ko-KR")])
@@ -153,6 +155,83 @@ export default function SamsungBonusClient() {
 
   return (
     <div className="space-y-4 mb-10">
+      {/* 초기업노조(SELU) 8월 공지 반영 배너 — 27년 교섭 요구안 설계 항목 */}
+      <aside
+        className="rounded-2xl p-5"
+        style={{ background: "#7C83FF0A", border: "1px solid #7C83FF44" }}
+        aria-labelledby="selu-notice-title"
+      >
+        <h2
+          id="selu-notice-title"
+          className="text-[10px] font-black uppercase tracking-[0.2em] mb-2"
+          style={{ color: "#7C83FF" }}
+        >
+          초기업노조(SELU) 8월 공지 반영 — 2026 전망치
+        </h2>
+        <div className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+          <p>
+            노조 공지 기준 올해 예상 DS부문 영업이익{" "}
+            <strong className="text-navy dark:text-canvas-50">
+              {SELU_EST_2026.profitLow}~{SELU_EST_2026.profitHigh}조
+            </strong>
+            . OPI 포함 연봉 8,000만원 기준 성과급 규모는{" "}
+            <strong className="text-navy dark:text-canvas-50">
+              메모리 약 {SELU_EST_2026.perSalary80mEok.memory}억 · 공통{" "}
+              {SELU_EST_2026.perSalary80mEok.common}억 · LSI·파운드리{" "}
+              {SELU_EST_2026.perSalary80mEok.foundry}억
+            </strong>
+            . 이 계산기의 디폴트(영업이익 {SELU_EST_2026.profitMid}조 · 사업부
+            가중치)는 이 공지값에 맞게 보정되어 있습니다.
+          </p>
+          <p className="mt-1 text-xs text-faint-blue">
+            26년 합의된 DS 특별성과급은 노사 합의 제도(단체협약 유효기간
+            3년)로 제도 자체 변경은 불가 — 영업이익 전망만 바꿔 시뮬레이션할
+            수 있습니다.
+          </p>
+          <div
+            className="flex flex-wrap items-center gap-1.5 mt-3"
+            role="group"
+            aria-label="노조 전망 영업이익 적용"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-widest text-faint-blue mr-1">
+              전망치 적용:
+            </span>
+            {[
+              SELU_EST_2026.profitLow,
+              SELU_EST_2026.profitMid,
+              SELU_EST_2026.profitHigh,
+            ].map((v) => {
+              const active = profitFmt === String(v);
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setProfitFmt(String(v))}
+                  aria-pressed={active}
+                  className={`text-[10px] font-bold px-2.5 py-1.5 rounded-full transition-colors ${
+                    active
+                      ? "text-white"
+                      : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:text-white"
+                  }`}
+                  style={{
+                    backgroundColor: active ? "#7C83FF" : undefined,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active)
+                      e.currentTarget.style.backgroundColor = "#7C83FF";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) e.currentTarget.style.backgroundColor = "";
+                  }}
+                >
+                  {v}조{v === SELU_EST_2026.profitMid ? " (디폴트)" : ""}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </aside>
+
       {/* 영업이익 + 고정 정책 */}
       <section
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 transition-shadow hover:shadow-md"
@@ -236,7 +315,7 @@ export default function SamsungBonusClient() {
               htmlFor="profit-input"
               className="text-xs font-bold uppercase tracking-widest text-faint-blue"
             >
-              회사 연간 영업이익
+              DS부문 연간 영업이익
             </label>
             <span
               className="text-3xl font-black tabular-nums"
@@ -264,8 +343,8 @@ export default function SamsungBonusClient() {
                 backgroundColor: "#0145F208",
                 border: "2px solid #0145F2",
               }}
-              placeholder="350"
-              aria-label="회사 연간 영업이익 (조원)"
+              placeholder="365"
+              aria-label="DS부문 연간 영업이익 (조원)"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-electric">
               조원
@@ -349,7 +428,7 @@ export default function SamsungBonusClient() {
             role="group"
             aria-label="영업이익 빠른선택"
           >
-            {[30, 50, 100, 200, 350, 500, 1000].map((v) => {
+            {[30, 50, 100, 200, 360, 365, 370, 500, 1000].map((v) => {
               const active = profitFmt === String(v);
               return (
                 <button
@@ -491,17 +570,17 @@ export default function SamsungBonusClient() {
             }}
           >
             <p className="font-black text-amber-700 dark:text-amber-400 mb-1">
-              디폴트 가중치 — 보도값 매칭 보정
+              디폴트 가중치 — 노조 8월 공지값 매칭 보정
             </p>
             <ul className="text-muted-blue dark:text-canvas-400 space-y-0.5 list-disc pl-4">
               <li>
                 메모리 <strong>1.0</strong> · 공통 <strong>0.55</strong> ·
-                파운드리·LSI <strong>0.05</strong> → 350조 입력 시 약
-                858/579/269% (보도값 791/553/252%에 근접)
+                파운드리·LSI <strong>0.06</strong> → 365조 입력 시 OPI 포함 약
+                7.54 / 5.22 / 2.69억 (공지값 7.5 / 5.2 / 2.7억에 근접)
               </li>
               <li>
                 회의록 원본은 <strong>1.0 / 0.7 / 0.0</strong> — 위 값으로 직접
-                입력 가능 (단 보도값과 16% 차이 발생)
+                입력 가능 (단 공지값과 공통 기준 차이 발생)
               </li>
               <li>
                 <strong>2026년</strong>: 적자 사업부(파운드리·LSI) 가중치 0
@@ -1020,8 +1099,11 @@ function MySalaryCalculator({
                 aria-label="OPI1 지급률 (연봉 대비 %)"
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
-                기존 OPI는 연봉의 최대 50%. 2025년 실적분 실지급률(보도 기준):
-                MX 50% · DS부문 47% · 경영지원 39% · VD·가전 12% 등 — 본인
+                기존 OPI는 연봉의 최대 50%. 회의록 기준 2026년부터 DS부문 OPI
+                재원은 EVA의 20% → 영업이익의 10%로 변경 — 영업이익
+                360~370조 전망이면 사실상 상한 50%가 예상됩니다(노조 공지
+                추정도 OPI 포함 기준). 2025년 실적분 실지급률(보도 기준): MX
+                50% · DS부문 47% · 경영지원 39% · VD·가전 12% 등 — 본인
                 사업부에 맞게 조정하세요.
               </p>
             </div>
@@ -1100,8 +1182,14 @@ function MySalaryCalculator({
         <div className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900">
           <p className="sr-only" aria-live="polite">
             {selected.label} 사업부 본인 케이스 — 세전 합계{" "}
-            {fmtManwon(personal.totalGrossManwon)}, 세후 실수령{" "}
-            {fmtManwon(personal.netManwon)}
+            {fmtManwon(personal.totalGrossManwon)},
+            {applyInsurance &&
+              ` 건강보험료 ${fmtManwon(
+                (personal.breakdown.healthIns +
+                  personal.breakdown.longTermCare) /
+                  10000
+              )} 포함 총 공제 ${fmtManwon(personal.deductWon / 10000)},`}{" "}
+            최종 세후 실수령 {fmtManwon(personal.netManwon)}
           </p>
           {/* 헤더 — 사업부 라벨 (단색 액센트 바) */}
           <div
@@ -1251,6 +1339,99 @@ function MySalaryCalculator({
               </div>
             </div>
           </div>
+
+          {/* 공제 요약 — 건강보험료 분리 표시 + 최종 세후 실수령.
+              성과급은 건강보험(장기요양 포함)이 상한 없이 부과되는 게 체감
+              공제의 핵심이라 접힌 상세와 별도로 항상 노출한다.
+              성과급 0원(임계값 미달 + OPI1 0%)이면 '-0만원' 행만 남으므로
+              형제 섹션들과 동일하게 게이트한다 */}
+          {personal.totalGrossWon > 0 && (
+          <div className="px-5 py-4 border-t border-canvas-200 dark:border-canvas-800">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-3">
+              공제 내역 요약 — 건강보험료 별도
+            </p>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-blue">소득세 + 지방소득세</span>
+                <span className="font-bold tabular-nums text-navy dark:text-canvas-50">
+                  -
+                  {fmtManwon(
+                    (personal.breakdown.incomeTax +
+                      personal.breakdown.localTax) /
+                      10000
+                  )}
+                </span>
+              </div>
+              <div
+                className="flex items-center justify-between gap-3 rounded-lg px-3 py-2"
+                style={{
+                  backgroundColor: "#EF44440D",
+                  border: "1px solid #EF444433",
+                }}
+              >
+                <span className="font-bold text-rose-600 dark:text-rose-400">
+                  건강보험료 (장기요양 포함)
+                  {applyInsurance && (
+                    <span className="block text-[10px] font-medium text-faint-blue tabular-nums">
+                      건강보험{" "}
+                      {fmtManwon(personal.breakdown.healthIns / 10000)} +
+                      장기요양{" "}
+                      {fmtManwon(personal.breakdown.longTermCare / 10000)}
+                    </span>
+                  )}
+                </span>
+                <span className="font-black tabular-nums text-rose-600 dark:text-rose-400 whitespace-nowrap">
+                  {applyInsurance
+                    ? `-${fmtManwon(
+                        (personal.breakdown.healthIns +
+                          personal.breakdown.longTermCare) /
+                          10000
+                      )}`
+                    : "미적용"}
+                </span>
+              </div>
+              {applyInsurance && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-blue">국민연금 + 고용보험</span>
+                  <span className="font-bold tabular-nums text-navy dark:text-canvas-50">
+                    -
+                    {fmtManwon(
+                      (personal.breakdown.nationalPension +
+                        personal.breakdown.employment) /
+                        10000
+                    )}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center justify-between border-t border-canvas-200 dark:border-canvas-700 pt-2">
+                <span className="font-black text-navy dark:text-canvas-50">
+                  총 공제
+                </span>
+                <span className="font-black tabular-nums text-rose-500">
+                  -{fmtManwon(personal.deductWon / 10000)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-black text-navy dark:text-canvas-50">
+                  최종 세후 실수령
+                </span>
+                <span
+                  className="font-black tabular-nums text-lg"
+                  style={{ color: selected.color }}
+                >
+                  {fmtManwon(personal.netManwon)}
+                </span>
+              </div>
+              {!applyInsurance && (
+                <p className="text-[10px] text-faint-blue leading-relaxed">
+                  4대보험 추가 부과 미적용 가정입니다. 건강보험료까지 반영한
+                  최종 세후를 보려면 위 &quot;계산 가정 조정&quot;에서
+                  4대보험을 켜세요.
+                </p>
+              )}
+            </div>
+          </div>
+          )}
 
           {/* 산식 푸터 */}
           <div className="px-5 py-3 border-t border-canvas-200 dark:border-canvas-800 bg-canvas-50 dark:bg-canvas-800/30">

@@ -278,6 +278,11 @@ export const BONUS_NEWS_2026: Array<{
   href: string;
 }> = [
   {
+    date: "2026-08",
+    text: "초기업노조(SELU) 공지 — 2026 DS 영업이익 360~370조 전망, 연봉 8,000만 기준 OPI 포함 메모리 약 7.5억",
+    href: "/calc/samsung-bonus",
+  },
+  {
     date: "2026-08-25",
     text: "SK하이닉스 잠정합의안 총투표 부결 — 전임직 반대 50.08%(25표 차), 노사 재협상 돌입",
     href: "/calc/sk-hynix-bonus",

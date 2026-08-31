@@ -5823,7 +5823,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6627
+  "contentChars": 7096
  },
  {
   "slug": "sk-hynix-ps-forecast-2027",
@@ -5842,7 +5842,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6562
+  "contentChars": 6624
  },
  {
   "slug": "sk-ax-salary-2026",

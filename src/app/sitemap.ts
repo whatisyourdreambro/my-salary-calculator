@@ -246,7 +246,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  string,
  { lastModified?: Date; priority?: number; changeFrequency?: ChangeFrequency }
  > = {
- '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
+ // 2026-08-31: 초기업노조 8월 공지 반영(영업이익 360~370조 전망·건강보험료 분리 표시)
+ '/calc/samsung-bonus': { lastModified: new Date('2026-08-31'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
