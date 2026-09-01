@@ -141,6 +141,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/tools/deposit',
  '/tools/finance/bonus',
  '/tools/finance/cagr',
+ '/tools/finance/dividend-tax',
  '/tools/finance/compound',
  '/tools/finance/freelance-tax',
  '/tools/finance/installment',

@@ -184,6 +184,7 @@ export const navConfig: NavItem[] = [
    { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax", description: "주택·토지 취득세" },
    { name: "증여세 계산기", href: "/tools/real-estate/gift-tax", description: "가족 간 공제한도" },
    { name: "예적금 만기 계산기", href: "/tools/deposit", description: "이자·세후 수령액" },
+   { name: "배당소득세 계산기", href: "/tools/finance/dividend-tax", description: "금융소득 2천만원 기준", badge: "NEW" },
    { name: "FIRE 조기은퇴", href: "/fire-calculator", description: "은퇴 자산 시뮬" },
    { name: "해외 연봉 비교", href: "/global", description: "한국 vs 일본·미국" },
   ],

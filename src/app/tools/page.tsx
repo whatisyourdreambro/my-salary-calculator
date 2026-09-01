@@ -38,6 +38,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase, isNew: true },
  { title: "프리랜서 종합소득세", desc: "사업소득·필요경비 계산", href: "/tools/finance/freelance-tax", icon: Laptop, isNew: true },
  { title: "주식 양도소득세", desc: "해외주식·대주주 세금 계산", href: "/tools/finance/stock-tax", icon: TrendingUp, isNew: true },
+ { title: "배당소득세 계산기", desc: "금융소득 2천만원 종합과세", href: "/tools/finance/dividend-tax", icon: PiggyBank, isNew: true },
  { title: "연말정산 계산기", desc: "환급액 미리 계산", href: "/year-end-tax", icon: RefreshCw },
  ],
  },

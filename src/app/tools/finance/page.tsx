@@ -14,9 +14,9 @@ import { buildPageMetadata } from "@/lib/seo";
 import ToolHubPage, { type HubCategory } from "@/components/tool/ToolHubPage";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "금융 계산기 모음 2026 | 세금·투자·대출 12종 - 머니샐러리",
+  title: "금융 계산기 모음 2026 | 세금·투자·대출 13종 - 머니샐러리",
   description:
-    "성과급 세금, 퇴직금, 프리랜서 종합소득세, 주식 양도소득세, 복리, IRP 세액공제, 예적금, 대출 이자까지 2026년 세법 기준 금융 계산기 12종을 무료로 이용하세요.",
+    "성과급 세금, 퇴직금, 프리랜서 종합소득세, 주식 양도소득세, 복리, IRP 세액공제, 예적금, 대출 이자까지 2026년 세법 기준 금융 계산기 13종을 무료로 이용하세요.",
   path: "/tools/finance",
 });
 
@@ -28,6 +28,7 @@ const CATEGORIES: HubCategory[] = [
       { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase },
       { title: "프리랜서 종합소득세", desc: "사업소득·필요경비 계산", href: "/tools/finance/freelance-tax", icon: Laptop },
       { title: "주식 양도소득세", desc: "해외주식 250만원 공제 포함", href: "/tools/finance/stock-tax", icon: TrendingUp },
+      { title: "배당소득세 계산기", desc: "금융소득 2천만원 종합과세 판정", href: "/tools/finance/dividend-tax", icon: PiggyBank, isNew: true },
       { title: "부가세(VAT) 계산기", desc: "공급가·세액 역산", href: "/tools/finance/vat", icon: Percent },
       { title: "연말정산 계산기", desc: "환급액 미리 계산", href: "/year-end-tax", icon: RefreshCw },
     ],
@@ -58,10 +59,10 @@ export default function FinanceToolsHubPage() {
       badge="2026 세법 기준"
       badgeIcon={Calculator}
       headingPrefix="금융 계산기"
-      headingAccent="12종"
+      headingAccent="13종"
       headingSuffix="모음"
       lead="성과급 세금부터 퇴직금·주식 양도세·IRP 세액공제까지, 직장인이 실제로 쓰는 금융 계산기를 2026년 최신 세법으로 모았습니다."
-      stats={[["12", "계산기"], ["2026", "세법 기준"], ["무료", "전체 이용"]]}
+      stats={[["13", "계산기"], ["2026", "세법 기준"], ["무료", "전체 이용"]]}
       categories={CATEGORIES}
       crossLinks={[
         { label: "부동산 계산기 모음", href: "/tools/real-estate" },

@@ -26,6 +26,7 @@ const LAYOUT_PROVIDES_APP_LD = new Set([
   "/tools/real-estate/acquisition-tax",
   "/tools/real-estate/gift-tax",
   "/tools/deposit", // page.tsx가 직접 주입 (2026-09-01)
+  "/tools/finance/dividend-tax", // layout.tsx가 직접 주입 (2026-09-01)
 ]);
 
 export default function ToolPageContent({ path }: { path: string }) {
