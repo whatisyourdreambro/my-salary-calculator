@@ -16,4 +16,4 @@ export const GUIDE_COUNT = 329;
 /** /calc/[slug] 퀵 계산기 수 — allCalculators.length */
 export const SIMPLE_CALC_COUNT = 101;
 /** /tools 리프 도구 수 — page.tsx 파일 수(인덱스 제외) */
-export const TOOL_COUNT = 25;
+export const TOOL_COUNT = 29;

@@ -14,7 +14,7 @@ import ToolContentSection from "./ToolContentSection";
 import ToolFaqSection from "./ToolFaqSection";
 import ToolDisclaimer from "./ToolDisclaimer";
 
-// 자체 layout.tsx가 이미 SoftwareApplication + BreadcrumbList를 주입하는 경로.
+// 자체 layout.tsx 또는 page.tsx가 이미 SoftwareApplication + BreadcrumbList를 주입하는 경로.
 // 여기서 또 주입하면 같은 @type이 2회 노출되므로 반드시 스킵한다.
 const LAYOUT_PROVIDES_APP_LD = new Set([
   "/tools/finance/bonus",
@@ -25,6 +25,7 @@ const LAYOUT_PROVIDES_APP_LD = new Set([
   "/tools/finance/stock-tax",
   "/tools/real-estate/acquisition-tax",
   "/tools/real-estate/gift-tax",
+  "/tools/deposit", // page.tsx가 직접 주입 (2026-09-01)
 ]);
 
 export default function ToolPageContent({ path }: { path: string }) {

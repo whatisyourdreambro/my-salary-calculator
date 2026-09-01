@@ -170,14 +170,22 @@ export const navConfig: NavItem[] = [
  {
   name: "생활금융",
   type: "dropdown",
-  description: "대출·부동산·해외 비교",
+  description: "금융·부동산·생활 계산기 모음",
   items: [
+   // 섹션 허브 3종 (2026-09-01 신설) — 하위 도구 26종의 발견성 확보용 최상단 배치.
+   // 종전 6개 중 /about(푸터 중복)·/mbti-salary(Fun 성격)를 빼고 실제 생활금융 도구로 채웠다.
+   { name: "금융 계산기 모음", href: "/tools/finance", description: "세금·투자·대출 12종", badge: "NEW" },
+   { name: "부동산 계산기 모음", href: "/tools/real-estate", description: "취득세·DSR·전세 13종", badge: "NEW" },
+   { name: "생활 계산기 모음", href: "/tools/life", description: "N빵·유류비·나이 10종", badge: "NEW" },
    { name: "주택담보대출 계산", href: "/home-loan", description: "DSR·LTV·월 상환액", badge: "HOT" },
    { name: "자동차 구매·할부", href: "/car-loan", description: "내 연봉 드림카" },
+   { name: "대출 이자 계산기", href: "/tools/loan", description: "원리금·원금균등상환" },
+   { name: "DSR 한도 계산기", href: "/tools/real-estate/dsr", description: "총부채원리금상환비율" },
+   { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax", description: "주택·토지 취득세" },
+   { name: "증여세 계산기", href: "/tools/real-estate/gift-tax", description: "가족 간 공제한도" },
+   { name: "예적금 만기 계산기", href: "/tools/deposit", description: "이자·세후 수령액" },
    { name: "FIRE 조기은퇴", href: "/fire-calculator", description: "은퇴 자산 시뮬" },
    { name: "해외 연봉 비교", href: "/global", description: "한국 vs 일본·미국" },
-   { name: "MBTI 연봉 분석", href: "/mbti-salary", description: "성격 유형별 연봉" },
-   { name: "사이트 소개", href: "/about", description: "운영자·연락처" },
   ],
  },
  {
@@ -191,6 +199,7 @@ export const navConfig: NavItem[] = [
    { name: "IQ 테스트", href: "/fun/iq-test", description: "직장인 IQ 측정" },
    { name: "연봉 배틀", href: "/fun/salary-battle", description: "친구와 연봉 대결" },
    { name: "연봉 랭킹", href: "/fun/salary-rank", description: "내 연봉 상위 %" },
+   { name: "MBTI 연봉 분석", href: "/mbti-salary", description: "성격 유형별 연봉" },
    { name: "탈출 계획", href: "/fun/escape-plan", description: "노비 탈출 시기" },
    { name: "자산 배분 마스터", href: "/fun/asset-allocator", description: "60초 투자 게임" },
    { name: "지출 성향 테스트", href: "/fun/spending-test", description: "나의 소비 패턴" },

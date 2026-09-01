@@ -133,6 +133,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/kepco-bonus',
  // Tools Hub + sub-tools (high SEO value: long-tail keywords)
  '/tools',
+ // 섹션 허브 3종 (2026-09-01 신설) — 하위 도구를 묶는 카테고리 랜딩
+ '/tools/finance',
+ '/tools/real-estate',
+ '/tools/life',
  '/tools/loan',
  '/tools/deposit',
  '/tools/finance/bonus',

@@ -3,6 +3,7 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
+import ToolPageContent from "@/components/tool/ToolPageContent";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -41,6 +42,8 @@ export default function DepositCalculatorPage() {
  <CalcResultAd />
  <DepositCalculator />
  </div>
+ {/* 2026-09-01: 본문·FAQ 보강 (toolContent). 광고 위가 아니라 계산기 아래 배치 */}
+ <ToolPageContent path="/tools/deposit" />
  </div>
  );
 }
