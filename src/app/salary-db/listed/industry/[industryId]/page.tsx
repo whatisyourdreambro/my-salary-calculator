@@ -4,8 +4,9 @@
 // 코호트·집계는 src/lib/salary-data/dartRanking.ts 단일 소스 (상장사 5곳 이상 업종만,
 // dynamicParams=false 로 밖은 404 — compare 413 색인 거부 교훈의 고정 코호트 원칙).
 // /industry/[slug](추정 기반 업계 소개)와는 "상장사 공시 순위" 타이틀로 검색 의도 분리.
-// 광고: layout 상속(PageFooterAds) + 본문 20위 경계 GuideMid 1개 (R2 A1 — 운영자 승인
-// 2026-08-31. GuideMid는 이 라우트 유일 미사용 슬롯 — InArticle/HomeTop page 삽입은
+// 광고: layout 상속(PageFooterAds) + 핵심 지표 직하 CalcResult 1개(전면 최적화 2026-09-02)
+// + 본문 20위 경계 GuideMid 1개 (R2 A1 — 운영자 승인
+// 2026-08-31. CalcResult·GuideMid는 이 라우트 미사용 슬롯이었음(순증) — InArticle/HomeTop page 삽입은
 // layout 슬롯을 죽이는 "이동 함정" 금지, Display2는 실험 #1 오염 금지).
 // 서버 컴포넌트 전용 — dartRanking(dartDisclosed 1.3MB)은 클라 번들 오염 금지.
 
@@ -24,7 +25,7 @@ import {
   LISTED_TOTAL,
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
-import { GuideMidAd } from "@/components/AdPlacement";
+import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CitationCopyButton from "@/components/CitationCopyButton";
 import type { RankingRow } from "@/lib/salary-data/dartRanking";
 
@@ -216,6 +217,9 @@ export default function IndustryRankingPage({ params }: Props) {
             </p>
           </div>
         </section>
+
+        {/* 업종 핵심 지표 카드 직하 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <CalcResultAd />
 
         {/* 순위표 */}
         <section className="mb-8" aria-labelledby="rank-table-heading">

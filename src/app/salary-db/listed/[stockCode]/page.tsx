@@ -4,7 +4,8 @@
 // 코호트·게이팅은 src/lib/salary-data/dartLite.ts 단일 소스 (직원 500+ 상위 약 200곳,
 // 기존 /salary-db/[id] 보유사 제외 — 카니발 방지). dynamicParams=false 로 코호트 밖
 // URL 은 404 — 크롤 예산 자체를 쓰지 않는다 (compare 413 색인 거부 교훈).
-// 광고·공유는 salary-db/layout.tsx 상속 — 이 페이지에 광고 코드 없음.
+// 광고: salary-db/layout.tsx 상속(PageFooterAds) + 실수령 환산 직하 CalcResult·순위/이력↔이웃 경계 GuideMid
+// (전면 최적화 — 운영자 지시 2026-09-02). 공유는 layout 상속.
 // 서버 컴포넌트 전용 — dartLite(dartDisclosed 1.3MB)는 클라 번들 오염 금지.
 
 import type { Metadata } from "next";
@@ -24,6 +25,7 @@ import {
   DART_LITE_DATE,
 } from "@/lib/salary-data/dartLite";
 import { ShieldCheck, ExternalLink, TrendingUp, Building2, Users } from "lucide-react";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -239,6 +241,9 @@ export default function ListedCompanyPage({ params }: Props) {
           )}
         </section>
 
+        {/* 월 실수령 환산 결과 직하 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <CalcResultAd />
+
         {/* 순위 컨텍스트 */}
         <section className="mb-8 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="rank-heading">
           <h2 id="rank-heading" className="text-lg sm:text-xl font-black text-navy mb-3 inline-flex items-center gap-2">
@@ -342,6 +347,9 @@ export default function ListedCompanyPage({ params }: Props) {
             </p>
           </section>
         )}
+
+        {/* 순위·이력 섹션과 이웃 회사 섹션 경계 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <GuideMidAd />
 
         {/* 유사 연봉 상장사 — lite 상호 메쉬 */}
         {neighbors.length > 0 && (

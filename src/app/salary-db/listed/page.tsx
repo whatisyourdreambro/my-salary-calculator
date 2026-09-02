@@ -2,7 +2,8 @@
 //
 // 상장사 공시 연봉 인덱스 허브 — lite 페이지(Phase 1 코호트) 전체 목록.
 // 고아 페이지 방지의 핵심 진입로: 코호트 전 URL 이 여기서 1홉으로 연결된다.
-// 광고는 salary-db/layout.tsx 상속. 서버 컴포넌트 전용 (dartLite 클라 금지).
+// 광고: salary-db/layout.tsx 상속(PageFooterAds) + 순위 진입로·업종 목록 경계 GuideMid 1개
+// (전면 최적화 — 운영자 지시 2026-09-02). 서버 컴포넌트 전용 (dartLite 클라 금지).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -13,6 +14,7 @@ import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { listedCohort, DART_LITE_DATE } from "@/lib/salary-data/dartLite";
 import { industryRankings } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
+import { GuideMidAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -115,6 +117,9 @@ export default function ListedIndexPage() {
             </Link>
           </div>
         </section>
+
+        {/* 순위 진입로 섹션·업종별 목록 경계 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <GuideMidAd />
 
         {groups.map(([industryKo, list]) => (
           <section key={industryKo} className="mb-8" aria-label={`${industryKo} 상장사`}>

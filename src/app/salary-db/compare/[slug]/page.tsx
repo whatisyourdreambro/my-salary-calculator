@@ -24,7 +24,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import CompareViewTracker from "@/components/CompareViewTracker";
-import { CalcResultAd, HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import { CalcResultAd, HomeTopAd, InArticleAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ShareButtons from "@/components/ShareButtons";
@@ -282,9 +282,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const aEntry = Math.round(levelTotal(a, "entry") / 10000).toLocaleString("ko-KR");
   const bEntry = Math.round(levelTotal(b, "entry") / 10000).toLocaleString("ko-KR");
+  // 병기 사명(예: 마이크로소프트 (Microsoft)·삼성E&A (삼성엔지니어링)) 조합 5건은 ' | 머니샐러리' 포함 60자를 넘어 SERP에서 잘림 —
+  // 핵심 키워드("A vs B 연봉 비교 2026")는 유지하고 뒤쪽 수식 구절만 생략. 60자 이내 페이지는 기존 타이틀 그대로.
+  // 전면 최적화 (운영자 지시 2026-09-02)
+  const baseTitle = `${a.name.ko} vs ${b.name.ko} 연봉 비교 2026`;
+  const hookTitle = `${baseTitle} — 초봉·직급별 어디가 높을까`;
+  const title = `${hookTitle} | 머니샐러리`.length <= 60 ? hookTitle : baseTitle;
 
   return buildPageMetadata({
-    title: `${a.name.ko} vs ${b.name.ko} 연봉 비교 2026 — 초봉·직급별 어디가 높을까`,
+    title,
     description: `${a.name.ko} 신입 영끌 약 ${aEntry}만원, ${b.name.ko} 약 ${bEntry}만원. ${a.name.ko}와 ${b.name.ko}의 신입·주니어·시니어 직급별 평균 연봉, 인센티브 구조, 워라밸, 복지를 2026년 기준으로 나란히 비교했습니다.`,
     path: `/salary-db/compare/${params.slug}`,
     keywords: [
@@ -887,6 +893,9 @@ export default function ComparePage({ params }: Props) {
           limit={4}
           title="비교한 연봉으로 시뮬레이션해보세요"
         />
+
+        {/* 본문 끝·관련 계산기 직후 관련콘텐츠형 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <MultiplexAd />
 
         <div className="my-8">
           <ShareButtons

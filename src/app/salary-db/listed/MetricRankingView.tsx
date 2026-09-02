@@ -3,11 +3,13 @@
 // 지표 랭킹 3종(/salary-db/listed/top-*)의 공용 뷰 — 라우트 아님.
 // 서버 컴포넌트 전용 (rows는 dartRanking에서 페이지가 주입).
 // 광고: layout 상속(PageFooterAds: InArticle+쿠팡+HomeTop) + 본문 50위 경계 GuideMid 1개
+// + TOP 100 표 끝·FAQ 경계 CalcResult 1개 (전면 최적화 — 운영자 지시 2026-09-02.
+//   아래 "GuideMid 유일 미사용" 문구는 A1 당시 기준 — 현재 미사용은 Sidebar·Multiplex(A4 게이트)만)
 // (R2 A1 — 운영자 승인 2026-08-31. GuideMid는 이 라우트 유일 미사용 슬롯 — InArticle/HomeTop
 //  page 삽입은 layout 슬롯을 죽이는 "이동 함정"이라 금지, Display2는 실험 #1 오염 금지).
 
 import Link from "@/components/AppLink";
-import { GuideMidAd } from "@/components/AdPlacement";
+import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CitationCopyButton from "@/components/CitationCopyButton";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -149,6 +151,9 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             </>
           )}
         </section>
+
+        {/* TOP 100 표 끝·FAQ 경계 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <CalcResultAd />
 
         <section className="mb-8" aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="text-lg font-black text-navy mb-4">자주 묻는 질문</h2>

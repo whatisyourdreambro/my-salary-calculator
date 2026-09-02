@@ -11,7 +11,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 
 const TOP_N = 30;
 
@@ -247,6 +247,11 @@ export default function CompanyRankingPage() {
               <ArrowRight className="w-5 h-5 text-electric" />
             </Link>
           </div>
+        </div>
+
+        {/* 성과급 크로스셀·다음 액션 그리드 경계 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10">
+          <CalcResultAd />
         </div>
 
         {/* 다음 액션 — 연봉 순위 검색 클러스터 상호 순환 (2026-07-06 감사 보강) */}
