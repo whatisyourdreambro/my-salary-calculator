@@ -192,3 +192,41 @@
 5. 수익 채널은 AdSense+쿠팡+LinkPrice 3종 고정. ilikeclick 가입 금지. DART 키는 리포 밖(`~\.moneysalary-secrets\dart.key`).
 6. 11~1월 구조 동결. 8월 반기보고서로 급여 수치 갱신 금지(연 1회 4월 ETL만).
 7. 실험은 동시 1개, 판정 전 다음 실험 미적용.
+
+---
+
+## 12. 2026-09-02 전면 최적화 배치 (운영자 지시 — 실행 완료)
+
+운영자 지시 "웹사이트 전체 점검 — 모든 페이지·모든 헤더·모든 광고 수익 최적화 및 초고도화"로
+190라우트·프리렌더 2,366장 전수 감사 후 당일 구현. 상세 광고 기록은 `docs/ad-experiments.md`
+승인 배치 기록(2026-09-02) 참조.
+
+### 12-1. 배포된 것
+- **광고 커버리지**: 라우트 107곳 고유 슬롯 증가(합계 705→821), 감소 0. 실험 #1 대상·홈·Display2·A4 게이트·쿠팡 신규 전부 무접촉.
+- **헤더/내비**: 시즌 드롭다운을 9월 실수요 5종(추석 상여·재산세 2기분·공무원 2027·4대보험 2027·연말정산 2027 허브)으로 재정렬, 비시즌(5월 종소세·3월 신입 협상) 하단 이동, NEW 배지 8/30 이후 신설분만 유지(시즌 22→5, 계산기 19→6). 계산기 메뉴의 성과급 중복 8종을 신설 계산기 6종으로 교체. 현대차·기아 라벨의 2025 합의 수치 중립화(페이지 수치 갱신은 12-2 ①). 푸터 계산기 섹션에 연말정산·성과급 세금 계산기 추가. 헤더 검색 인덱스 약 60라우트 등재(/tools 트리 전체·성과급 계산기 10종 자동 파생·시즌 페이지)·검색 칩 9월화.
+- **메타**: /calc title 60자 초과 11건·description 160자 초과 10건 트림, /tools 리프 8종 description 실기능 기반 보강, glossary 58p description 캡, EN 가이드 title 접미·꼬리 이모지 캡(81~92→51~70자), /en/flat-tax·/en/salary-converter 트림, /fun 3p description, /fortune-2026·/lotto·/mbti-salary BreadcrumbList JSON-LD, /en/guides 인덱스 SSR 복원(useSearchParams CSR 강등으로 h1·카드가 정적 HTML에 없던 결함), insights 리포트 updatedDate 정합.
+- **사실 정정(확정 사실만)**: /health-insurance-fee-2026 링크 라벨 "7월 건보료 정산"→4월, /year-end-tax-2026 FAQ 24% 구간 4,600만→5,000만(과표), /social-insurance-rates-2026 FAQ 지역가입자 자동차 부과(2024-02 폐지) 문구.
+
+### 12-2. 운영자 결정 대기 (이번에 건드리지 않은 것)
+| # | 항목 | 비고 |
+|---|---|---|
+| ① | **현대차 2026 임협 타결 반영** — 8/31 찬반투표 가결 보도(성과급 400%+1,270만+주식 15주·기본급 10만) → `/calc/hyundai-bonus` 시나리오·FAQ, 기아도 타결 여부 확인 후 동일 | 수치 변경 → 승인 필요. 뉴스 피크 9/1~ |
+| ② | **공무원 2027 인상률 3.9% 예산안 확정** 보도(9/1) → `/civil-servant-pay-2027` title·description(176자)·타임라인·`civilServantPay.ts` RAISE_2027, SeasonalLinks 4번 라벨 | 수치 변경 → 승인 필요 |
+| ③ | `/tax-changes-2026` FAQ 사실관계 3건(신용카드 한도 구 3단계·6세 이하 100만 근거·결혼세액공제 프레임) | 연말정산 클러스터 내부링크 대상 — 11월 전 |
+| ④ | `/auto-tax-2026` 중고차 일할계산 "관행" 본문 vs FAQ "법정" 상충, 상단 주석 기간 불일치 | 사실 확인 후 정정 |
+| ⑤ | `/samsung-negotiation-2026` title·hero "5월 12일 시작" 시점 프레임 → 타결 여부 확인 후 결과 중심 재작성 | CTR 회복 여지 |
+| ⑥ | **데스크톱 SIDEBAR(300x600) 2컬럼 도입** — 장문 4페이지(mid-resign·tax-reform·sir-2027·dependent)·/home-loan·/calc 정적 19종·/tools | 레이아웃 재설계, 최고 RPM 포맷 |
+| ⑦ | 계산기형 15곳 H1 직하 HomeTopAd(레거시) + /tools 3곳 히어로 직하 CalcResultAd → 결과 직하로 이동 여부 | 9/13 이후 GA4 slot_kind CTR 확인 후 |
+| ⑧ | `/chuseok-bonus-2026` CalcResultAd를 미니 계산기 결과 직하로 이동(순증 아님) | 시즌 중 결정 |
+| ⑨ | insights 리포트 3편 상호 링크 섹션 — 마지막 광고 아래에 두면 레이아웃 쿠팡을 밀어 규칙 2와 충돌해 보류 | 위치 결정 필요 |
+| ⑩ | `/company` 레거시 page.tsx 삭제(308 redirect 중, 빌드 산출물·중복 BreadcrumbList 잔재) | 정리 |
+| ⑪ | **InstallPwaBanner 하단 앵커 광고 미감지** — FloatingShareBar의 3중 감지 공유 유틸화 권고 | 앵커 토글 전 처리 권장 |
+| ⑫ | EN 가이드 데이터 title 축약(이모지·부제) — 11편 여전히 60자 초과 | 콘텐츠 결정 |
+| ⑬ | `/tools/loan`·`/tools/math` toolContent 작성 → GuideMid 자동 +1 | 콘텐츠 |
+| ⑭ | Multiplex 추가 후보 보류분: listed/industry 하단(4유닛 스택 우려)·insights 2차 CalcResult(D+14 후)·irp/dsr/ltv Multiplex(A4 경계 모호) | 이번 배포 판정 후 |
+| ⑮ | 가이드 337편 중 FAQ 섹션 26편만(콘텐츠 갭) | 본문 정본 guidesContent + gen-guides-meta |
+
+### 12-3. 갱신 슬롯 추가
+- **10월 초 교체 세트**: SeasonalLinks.tsx(320p) 9월 세트→연말정산 세트, seasonLinks.ts 헤더 1순위 연말정산 2027 허브, HeaderSearch 칩 "추석 상여금"→"연말정산 미리보기", 연말정산 계산기 3종 SEASON 배지, 푸터 시즌 20링크 정리(봉급표 4종 제외 검토).
+- top-raise 페이지 '전년(2024)' 하드코딩 → DART_RANKING_YEAR 파생 권장(연례 갱신 시). ranking 페이지 '업종 28종' 하드코딩 → industryRankings.length.
+- 12월 세법 확정 시: smb-income-tax-break 일몰 연장 여부, dependent-check 소득요건 300만 개편안, 2027-07 연금 상한.

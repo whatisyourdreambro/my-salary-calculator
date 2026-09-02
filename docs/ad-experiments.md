@@ -76,3 +76,19 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
   죽은 유닛 2곳 제거·C1 홈 3→5유닛·C2 성과급 허브 0→2유닛·C3 fun 게임 6종 결과
   한정 InArticle·C4 insights 인덱스 GuideMid·C5 tools/finance/bonus GuideMid.
   검증 게이트: scripts/ad-audit.mjs (전 커밋 ERROR 0 통과).
+- 2026-09-02 **전면 최적화 배치 (운영자 지시 "모든 페이지·헤더·광고 수익 최적화 및 초고도화")** —
+  190라우트 전수 감사(파인더 11·반박 검증 206·정적 게이트) 후 커버리지 갭에 기존 슬롯만 순증.
+  라우트 107곳 고유 AdSense 슬롯 증가(합계 705→821), 감소 0. 핵심: DART 상장사 219p 2→4
+  (CalcResult 환산 직하+GuideMid 섹션 경계) · /tools 리프 24종 3→4(ToolPageContent 공용 GuideMid,
+  섹션≥2·FAQ 보유 조건) · 신규 /calc 정적 9종 3→4(GuideMid FAQ 경계) · 시즌·세금 단일 페이지 40여 곳
+  +1~2(GuideMid/CalcResult/본문 끝 Multiplex) · 목록형 상세(job 62·industry 27·region 19·hub 8·
+  qna 59·glossary 58·en/guides 13·salary-db/compare 413·insights 3) 본문 끝 Multiplex 1개 ·
+  인덱스 12곳 목록 중간 GuideMid · guides/[slug] 337p·en 가이드 사이드바 300x600 래퍼만 sticky
+  (카드 스택 고정 해제 — 뷰포트 초과로 유닛이 잘리던 문제).
+  **불변 유지**: 실험 #1 대상(/monthly·/table·/salary-db 인덱스)·홈·Display2 신규 0건, A4 게이트
+  (salary-db/[id]·calc/[slug]·salary·monthly·table Multiplex) 0건, 쿠팡 신규 0건, 광고 컴포넌트 내부
+  무변경, 기존 광고 이동·삭제 0건. 검증 게이트: ad-audit ERROR 0(INFO 58 기준선 동일, --diff WARN 2건은
+  사이드바 래퍼 클래스 변경 오탐)·tsc 0·eslint 0·vitest 124/124. 판정: 배포+14일 섹션별 RPM
+  (AdSense 페이지 보고서 — /tools·/salary-db/listed·/calc 신규 9종·시즌 단일 페이지군 비교).
+  기각(재제안 금지 사유 기록): HomeTop 직후 Multiplex 연속 배치(minimum-wage-2026/2027·new-employee·
+  samsung-negotiation 하단), 레이아웃 쿠팡 위로 UI를 미는 리포트 배선 3건, /company(308 redirect) 광고.
