@@ -26,7 +26,7 @@ import {
 } from "@/lib/structuredData";
 import PublishedMeta from "@/components/PublishedMeta";
 import CitationCopyButton from "@/components/CitationCopyButton";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import ChartSection from "./ChartSection";
 
 export const dynamic = "force-static";
@@ -507,6 +507,11 @@ export default function EntrySalaryByIndustryReport() {
             <CitationCopyButton quote={gapQuote} path={PATH} quoteId="cite-gap" />
           </div>
         </section>
+
+        {/* 인용 안내(인용 버튼) 직후 멀티플렉스(관련 콘텐츠형) — MULTIPLEX 슬롯은 이 페이지·insights layout(PageFooterAds) 체인 미사용이라 순증 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mb-10">
+          <MultiplexAd />
+        </div>
 
         {/* FAQ */}
         <section className="mb-10">

@@ -36,7 +36,7 @@ export const reportsRegistry: ReportMeta[] = [
     title: `2026 대기업 성과급 실지급률 총정리 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건 전수`,
     description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 실제 성과급 지급률 ${bonusPayoutCount}건을 보도·공시 교차 확인으로 집계. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
-    updatedDate: "2026-08-23",
+    updatedDate: "2026-08-26",
     keywords: [
       "성과급 지급률",
       "대기업 성과급",
@@ -68,9 +68,9 @@ export const reportsRegistry: ReportMeta[] = [
     slug: "entry-salary-by-industry-2026",
     // 회사·업종 수는 집계 단일 소스에서 파생 — 하드코딩 시 본문과 불일치 사고
     title: `2026 업종별 신입 초봉 순위 — ${entryReportCompanyCount}개사 데이터 분석`,
-    description: `머니샐러리가 국내 ${entryReportCompanyCount}개사 연봉 데이터를 ${entryReportIndustryCount}개 업종으로 집계한 신입 초봉(기본급+평균 인센티브) 순위 리포트. 출처 표기 시 자유 인용.`,
+    description: `머니샐러리가 국내 ${entryReportCompanyCount}개사 연봉 데이터를 ${entryReportIndustryCount}개 업종으로 집계한 2026 신입 초봉(기본급+평균 인센티브) 순위 리포트. 업종별 평균·중앙값·초봉 1위 기업, 공시·정부 통계 교차 검증까지 한눈에. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-17",
-    updatedDate: "2026-08-17",
+    updatedDate: "2026-08-25",
     keywords: [
       "업종별 초봉",
       "업종별 연봉 순위",

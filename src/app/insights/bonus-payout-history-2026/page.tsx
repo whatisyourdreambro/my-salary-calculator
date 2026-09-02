@@ -18,7 +18,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, datasetLd, articleLd, faqLd } from "@/lib/structuredData";
 import PublishedMeta from "@/components/PublishedMeta";
 import CitationCopyButton from "@/components/CitationCopyButton";
-import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -336,6 +336,11 @@ export default function BonusPayoutHistoryReport() {
             </Link>
           </div>
         </section>
+
+        {/* 관련 링크 직후 멀티플렉스(관련 콘텐츠형) — MULTIPLEX 슬롯은 이 페이지·insights layout(PageFooterAds) 체인 미사용이라 순증, 표 3개 분할 아님 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-8">
+          <MultiplexAd />
+        </div>
 
         {/* FAQ */}
         <section className="mt-10" aria-labelledby="faq-heading">
