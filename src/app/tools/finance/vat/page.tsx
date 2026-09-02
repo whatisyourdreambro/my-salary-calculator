@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "부가세(VAT) 계산기",
- description: "공급가액 또는 합계금액을 기준으로 부가가치세(VAT)를 정확하게 계산합니다.",
+ title: "부가세(VAT) 계산기 — 공급가액·합계금액 10% 역산",
+ description: "합계금액(부가세 포함) 또는 공급가액(부가세 별도) 중 하나만 입력하면 부가세 10%와 나머지 금액을 즉시 역산합니다. 예: 합계 110만원 → 공급가액 100만원 + 부가세 10만원.",
  path: "/tools/finance/vat",
 });
 

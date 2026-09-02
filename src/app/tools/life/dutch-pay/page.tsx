@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "N빵 계산기 (Dutch Pay)",
- description: "회식, 모임, 여행 경비를 인원수대로 정확하게 나누어 계산합니다.",
+ title: "N빵 계산기 — 회식·모임 1인당 정산 금액 계산 (Dutch Pay)",
+ description: "회식·모임·여행 총 금액과 인원수만 입력하면 1인당 부담금을 10원 단위 올림으로 즉시 계산합니다. 예: 187,000원을 7명이 나누면 1인당 26,720원.",
  path: "/tools/life/dutch-pay",
 });
 

@@ -5,8 +5,8 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "유류비 계산기 (Fuel Cost)",
- description: "이동 거리와 연비를 입력하여 예상 주유비를 계산해보세요.",
+ title: "유류비 계산기 — 거리·연비·유가로 주유비 계산 (Fuel Cost)",
+ description: "이동 거리(km)·연비(km/L)·리터당 유가(원)를 입력하면 예상 주유비를 즉시 계산합니다. 예: 300km, 연비 12km/L, 1,700원/L → 25L·42,500원. 장거리 여행·출장 교통비 산정에 활용하세요.",
  path: "/tools/life/fuel-cost",
 });
 

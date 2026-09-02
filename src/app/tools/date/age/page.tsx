@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "만 나이 계산기 (Age Calculator)",
- description: "생년월일을 입력하면 만 나이와 연 나이를 정확하게 계산해드립니다.",
+ title: "만 나이 계산기 — 생년월일로 만 나이·연 나이 즉시 계산 (Age Calculator)",
+ description: "생년월일만 입력하면 만 나이와 연 나이(올해 − 출생연도)를 즉시 계산합니다. 2023년 6월 만 나이 통일법 시행 이후 헷갈리는 나이 기준, 주민등록·행정 서류 작성 전에 바로 확인하세요.",
  path: "/tools/date/age",
 });
 

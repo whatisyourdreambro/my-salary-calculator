@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "D-Day 디데이 계산기",
- description: "시험, 기념일, 전역일 등 중요한 날짜까지 남은 시간을 계산해보세요.",
+ title: "D-Day 디데이 계산기 — 수능·시험·전역일 남은 날짜 계산",
+ description: "목표 날짜 하나만 입력하면 오늘 기준 남은 날짜(D-N)와 지난 날짜(D+N)를 즉시 계산합니다. 수능·자격증 시험·전역일·기념일·출산 예정일 카운트다운에 활용하세요.",
  path: "/tools/date/d-day",
 });
 

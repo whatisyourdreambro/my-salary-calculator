@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "영업일 계산기 (Business Days)",
- description: "주말을 제외한 실제 근무일(영업일) 수를 계산해보세요.",
+ title: "영업일 계산기 — 주말 제외 근무일수 계산 (Business Days)",
+ description: "시작일과 종료일 사이 주말(토·일)을 제외한 실제 근무일·영업일 수를 즉시 계산합니다. 연차 소진 계획, 납기·배송 기한, 프로젝트 일정 산정에 활용하세요.",
  path: "/tools/date/work-days",
 });
 

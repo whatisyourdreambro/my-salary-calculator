@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "BMI 비만도 계산기",
- description: "신장과 체중을 입력하여 비만도(BMI)를 측정하고 건강 상태를 확인하세요.",
+ title: "BMI 비만도 계산기 — 신장·체중으로 체질량지수·비만 판정",
+ description: "신장(cm)과 체중(kg)으로 BMI(체질량지수)를 계산하고 한국·아시아 기준(저체중 18.5 미만, 정상 18.5~22.9, 과체중 23~24.9, 비만 25 이상)으로 즉시 판정합니다. 예: 170cm·70kg → BMI 24.2 과체중.",
  path: "/tools/health/bmi",
 });
 

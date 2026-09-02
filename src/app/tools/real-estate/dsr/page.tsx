@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import DsrCalculator from "@/components/calculators/real-estate/DsrCalculator";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import { buildToolMetadata } from "@/lib/seo";
 import {
   softwareApplicationLd,
@@ -161,6 +161,11 @@ export default function DsrPage() {
             ))}
           </div>
         </section>
+
+        {/* 본문 섹션 경계 광고(5단계 ↔ 가이드 본문) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="my-8">
+          <GuideMidAd />
+        </div>
 
         <article className="prose prose-sm sm:prose-base max-w-none mb-10">
           <h2 className="text-xl font-black text-navy mt-8 mb-4">

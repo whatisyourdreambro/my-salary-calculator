@@ -10,6 +10,7 @@ import {
   softwareApplicationLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+import { GuideMidAd } from "@/components/AdPlacement";
 import ToolContentSection from "./ToolContentSection";
 import ToolFaqSection from "./ToolFaqSection";
 import ToolDisclaimer from "./ToolDisclaimer";
@@ -27,6 +28,13 @@ const LAYOUT_PROVIDES_APP_LD = new Set([
   "/tools/real-estate/gift-tax",
   "/tools/deposit", // page.tsx가 직접 주입 (2026-09-01)
   "/tools/finance/dividend-tax", // layout.tsx가 직접 주입 (2026-09-01)
+]);
+
+// page/layout 이 이미 GuideMidAd(GUIDE_MID) 를 직접 배치한 경로 — 같은 슬롯은 경로당 1회만
+// 렌더(dedup)되므로 여기서 또 넣으면 한쪽 유닛이 소멸한다. 반드시 스킵 (이중 방어).
+// 전면 최적화 (운영자 지시 2026-09-02)
+const PAGE_PROVIDES_GUIDE_MID = new Set<string>([
+  "/tools/finance/bonus", // page.tsx 가 GuideMidAd 보유 (toolContent 미등재지만 방어 목적)
 ]);
 
 export default function ToolPageContent({ path }: { path: string }) {
@@ -67,6 +75,12 @@ export default function ToolPageContent({ path }: { path: string }) {
         {content.sections.map((section, i) => (
           <ToolContentSection key={i} section={section} />
         ))}
+        {/* 본문 섹션 끝 ↔ FAQ 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02).
+            콘텐츠 충분 조건(섹션 2개 이상·FAQ 보유)일 때만 렌더. 결과 직하 CalcResultAd 와
+            tools/layout 하단 InArticleAd 사이에 본문·FAQ·유의사항이 끼어 연속 광고가 되지 않는다. */}
+        {content.sections.length >= 2 &&
+          content.faqs.length > 0 &&
+          !PAGE_PROVIDES_GUIDE_MID.has(path) && <GuideMidAd />}
         <ToolFaqSection faqs={content.faqs} />
         {content.disclaimer && <ToolDisclaimer text={content.disclaimer} />}
       </div>

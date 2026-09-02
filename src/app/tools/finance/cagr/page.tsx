@@ -5,8 +5,8 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "CAGR(연평균 성장률) 계산기",
- description: "투자의 연평균 성장률(Compound Annual Growth Rate)을 계산하여 성과를 분석하세요.",
+ title: "CAGR(연평균 성장률) 계산기 — 투자 수익률 연환산",
+ description: "시작 금액·종료 금액·기간(년)만 입력하면 연평균 성장률(CAGR)을 즉시 계산합니다. 예: 1,000만원이 5년 뒤 2,000만원이면 CAGR 약 14.9%. 주식·펀드·부동산 수익률을 연 단위로 비교하세요.",
  path: "/tools/finance/cagr",
 });
 
