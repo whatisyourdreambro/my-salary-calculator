@@ -10,7 +10,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -210,6 +210,9 @@ export default function PropertyHoldingTax2026Page() {
           </p>
         </section>
 
+        {/* 9월 시즌 섹션·본문 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <GuideMidAd />
+
         <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
           <h2 className="text-xl font-black text-navy dark:text-canvas-50">
             보유세 = 재산세 + 종합부동산세
@@ -305,6 +308,11 @@ export default function PropertyHoldingTax2026Page() {
             </Link>
           </div>
         </section>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="my-10">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

@@ -30,6 +30,7 @@ import {
   HomeTopAd,
   CalcResultAd,
   GuideMidAd,
+  MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
@@ -391,6 +392,11 @@ export default function BasicPension2026Page() {
             title="기초연금 계산기 2026 — 월 349,700원 기준 간이 계산"
             description="선정기준액 단독 247만·부부 395.2만, 감액 3종 반영 예상 수령액 계산"
           />
+        </div>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크·공유 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <MultiplexAd />
         </div>
       </div>
     </main>

@@ -4,7 +4,7 @@
 import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import { useState } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import {
  CareerEvent,
  CareerSimulationInput,
@@ -313,6 +313,11 @@ export default function CareerPlannerPage() {
  </p>
  </div>
  </section>
+
+ {/* 활용법·FAQ 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-12 max-w-3xl mx-auto">
+ <GuideMidAd />
+ </div>
 
  <section className="mt-12 max-w-3xl mx-auto">
  <h2 className="text-2xl font-bold mb-4">자주 묻는 질문</h2>

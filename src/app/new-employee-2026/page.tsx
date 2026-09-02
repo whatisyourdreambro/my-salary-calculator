@@ -17,7 +17,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 신입 연봉 협상 가이드 - 직군별 평균 초봉·협상 멘트",
  description:
- "2026 신입 연봉 협상 완벽 가이드. 대기업·IT·금융·공기업 직군별 평균 초봉, 협상 멘트, 사이닝 보너스 협상법까지.",
+ "2026 신입 연봉 협상 완벽 가이드. IT 대기업 5,500~7,500만·5대 그룹 4,800~5,500만·금융 5,000~6,500만·공기업 3,800~4,500만원 등 직군별 평균 초봉, 신입도 ±10% 협상 여지·협상 멘트·오퍼 답변 타이밍, 사이닝 보너스 협상법까지.",
  path: "/new-employee-2026",
  ogType: "article",
  publishedTime: "2026-02-15",

@@ -6,7 +6,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -161,6 +161,9 @@ export default function AutoTax2026Page() {
             나오는 2,000cc 이상 차량 보유자는 연납 공제 효과가 크므로 1월 연납을 추천합니다. 분납이
             기본이며 별도 신청 없이도 분납 고지서가 자동 발송됩니다.
           </p>
+
+          {/* 본문 섹션 경계 광고 (연납 비교 ↔ 전기차 혜택) — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             전기차·친환경차의 자동차세 혜택

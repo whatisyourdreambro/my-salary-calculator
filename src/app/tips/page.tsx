@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BookOpen, TrendingUp, Shield, CreditCard, Home, Briefcase, ChevronRight } from "lucide-react";
 import Link from "@/components/AppLink";
-import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
@@ -165,6 +165,9 @@ export default function TipsPage() {
  />
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
+ {/* 본문 끝 관련콘텐츠형 광고 — 15선 목록·쿠팡 배너·공유 섹션 아래(광고 연속 배치 회피), 전면 최적화 (운영자 지시 2026-09-02) */}
+ <MultiplexAd />
  </div>
  </main>
  );

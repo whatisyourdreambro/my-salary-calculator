@@ -10,7 +10,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
-import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { allCompanies } from "@/data/companies";
 import { companyCountKo } from "@/config/site";
@@ -218,6 +218,9 @@ export default function NewEmployeeSalary2026Page() {
  </span>
  <ArrowRight className="w-5 h-5 text-electric shrink-0 group-hover:translate-x-0.5 transition-transform" />
  </Link>
+
+ {/* 리포트 크로스링크·카테고리 TOP10 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <CalcResultAd />
 
  {/* 카테고리별 TOP 10 */}
  {[

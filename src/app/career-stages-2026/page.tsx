@@ -11,7 +11,7 @@ import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { GuideMidAd } from "@/components/AdPlacement";
+import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import PageFooterAds from "@/components/PageFooterAds";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -209,6 +209,9 @@ export default function CareerStages2026Page() {
  <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
  </div>
  </Link>
+
+ {/* CTA·FAQ 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <CalcResultAd />
 
  {/* FAQ */}
  <section className="mb-12">

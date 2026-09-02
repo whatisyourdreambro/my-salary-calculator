@@ -30,6 +30,7 @@ import {
   HomeTopAd,
   CalcResultAd,
   GuideMidAd,
+  MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
@@ -42,7 +43,7 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "2027 공무원 봉급표 전망 — 인상률 권고안 3.4~3.9%·확정 일정·예상 월급",
   description:
-    "2027년 공무원 봉급 인상률은 공무원보수위원회가 3.4~3.9%를 권고했습니다(사상 첫 노정 합의). 최종 확정은 8월 말 정부 예산안~12월 말 국무회의 의결. 권고안 기준 9급 1호봉 예상 월급 약 220.6만~221.6만원, 9급~5급 호봉별 전망표와 초과근무수당 60% 상향·직급보조비 인상 권고까지 정리.",
+    "2027년 공무원 봉급 인상률은 공무원보수위원회가 3.4~3.9%를 권고했습니다(사상 첫 노정 합의). 최종 확정은 8월 말 정부 예산안~12월 말 국무회의 의결. 권고안 기준 9급 1호봉 예상 월급 약 220.6만~221.6만원, 9급~5급 호봉별 전망표까지 정리.",
   path: "/civil-servant-pay-2027",
   ogType: "article",
   publishedTime: "2026-08-16",
@@ -381,6 +382,11 @@ export default function CivilServantPay2027Page() {
             title="2027 공무원 봉급표 전망 — 인상률 권고안 3.4~3.9%"
             description="사상 첫 노정 합의 권고안 기준 9급~5급 예상 월급과 확정 일정 타임라인"
           />
+        </div>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 직렬별 링크·공유 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <MultiplexAd />
         </div>
       </div>
     </main>

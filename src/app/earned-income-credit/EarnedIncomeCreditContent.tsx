@@ -15,7 +15,7 @@ import {
  Calendar,
  ExternalLink,
 } from "lucide-react";
-import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Link from "@/components/AppLink";
 
@@ -367,6 +367,9 @@ export default function EarnedIncomeCreditContent() {
      <p>• 자녀장려금(18세 미만 자녀 1인당 최대 100만원)과 중복 수급 가능</p>
     </div>
    </div>
+
+   {/* 지급액 구조표·자격 요건 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+   <CalcResultAd />
 
    {/* Eligibility */}
    <div className="bg-white rounded-2xl border border-canvas-200 shadow-sm p-6 space-y-4">

@@ -3,7 +3,7 @@ import Link from "@/components/AppLink";
 import HomeLoanSimulator from "@/components/HomeLoanSimulator";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import PageFooterAds from "@/components/PageFooterAds";
-import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
@@ -639,6 +639,11 @@ export default function HomeLoanPage() {
       <PageFooterAds maxWidth="4xl" />
 
       <RelatedCalculators currentPath="/home-loan" />
+
+      {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+      <div className="my-10">
+        <MultiplexAd />
+      </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <ShareSection contentType="calc_result" />

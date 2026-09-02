@@ -6,7 +6,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -169,6 +169,9 @@ export default function SavingsInterest2026Page() {
             5년 운용 시 5% 금리로 1,000만원 정기예금 → 단리 1,250만원 vs 연복리 1,276만원 vs 월복리 1,283만원.
             기간이 길수록 복리 차이가 커지지만, 시중은행은 대부분 단리 상품이므로 가입 전 약관 확인이 필요합니다.
           </p>
+
+          {/* 본문 섹션 경계 광고 (단리·복리 ↔ 비과세 상품) — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             세금 우회 5가지 비과세·세금우대 상품

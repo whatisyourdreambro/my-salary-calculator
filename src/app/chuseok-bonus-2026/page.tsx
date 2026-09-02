@@ -31,6 +31,7 @@ import {
   HomeTopAd,
   CalcResultAd,
   GuideMidAd,
+  MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
@@ -340,6 +341,11 @@ export default function ChuseokBonus2026Page() {
             title="2026 추석 상여금 — 평균 지급액·지급 의무·떡값 세금"
             description="300인 이상 평균 105.9만원. 우리 회사는 안 줘도 되는 걸까? 통계와 법 기준 총정리"
           />
+        </div>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크·공유 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10 max-w-3xl mx-auto">
+          <MultiplexAd />
         </div>
       </div>
     </main>

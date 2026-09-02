@@ -15,7 +15,7 @@ import {
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   Sparkles,
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
   ...buildPageMetadata({
-    title: PAGE_TITLE,
+    title: `${PAGE_TITLE} — 인상률별 세후 실수령·5년 누적 계산`,
     description: PAGE_DESC,
     path: PAGE_PATH,
     ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent("연봉 인상 협상 시뮬레이터")}`,
@@ -487,6 +487,11 @@ export default function SalaryRaisePage() {
           </div>
 
           <RelatedCalculators currentPath={PAGE_PATH} />
+
+          {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="mt-10">
+            <MultiplexAd />
+          </div>
         </div>
       </main>
 

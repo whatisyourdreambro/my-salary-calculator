@@ -10,13 +10,13 @@ import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd, howToLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 퇴직연금 완벽 가이드 — DB·DC·IRP 차이와 선택법",
  description:
- "확정급여형(DB)·확정기여형(DC)·개인형퇴직연금(IRP) 차이와 운용 수익률, 세제 혜택. 본인에게 맞는 퇴직연금 선택법.",
+ "확정급여형(DB)·확정기여형(DC)·개인형퇴직연금(IRP) 차이와 운용 수익률, 세제 혜택. IRP 900만원 납입 시 환급 최대 148.5만원, 퇴직금 일시 수령 대신 IRP 이전 시 세금 약 50~70% 절감 — 본인에게 맞는 퇴직연금 선택법 5단계.",
  path: "/retirement-pension-2026",
  ogType: "article",
  publishedTime: "2026-02-01",
@@ -401,6 +401,11 @@ export default function RetirementPension2026Page() {
  </div>
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
+ {/* 본문 끝 관련콘텐츠형 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-8">
+ <MultiplexAd />
+ </div>
  </div>
  </main>
  );

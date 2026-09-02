@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
-import { CalcResultAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import JsonLd from "@/components/JsonLd";
 import {
@@ -376,7 +376,7 @@ export default function FireCalculatorPage() {
  <span>파이어 계산기</span>
  </div>
  <h1 className="text-5xl sm:text-6xl font-sans font-medium text-foreground tracking-tight">
- FIRE Calculator
+ FIRE 조기은퇴 계산기
  </h1>
  </div>
 
@@ -901,6 +901,9 @@ export default function FireCalculatorPage() {
  본 계산기의 수익률은 세전 기준이므로 인출 단계 세금은 별도로 감안하세요.
  </p>
  </section>
+
+ {/* 개념 설명·FAQ 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <GuideMidAd />
 
  {/* FAQ — faqLd JSON-LD 와 동일 데이터 */}
  <section>

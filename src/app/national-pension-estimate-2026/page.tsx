@@ -11,7 +11,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd, speakableLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -251,6 +251,9 @@ export default function NationalPensionEstimate2026Page() {
             법정 일정이 진행 중입니다(2026년 적용 9.5%).
           </p>
 
+          {/* 7월 상한 인상 섹션·연금 기본 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
+
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             국민연금 = &quot;최소 10년 가입 → 만 65세부터 평생 지급&quot;
           </h2>
@@ -348,6 +351,11 @@ export default function NationalPensionEstimate2026Page() {
             </Link>
           </div>
         </section>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 관련 링크 직후, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="my-10">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { InArticleAd, GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
+import { InArticleAd, GuideMidAd, HomeTopAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
  Baby,
@@ -308,6 +308,9 @@ export default function ParentalLeaveContent() {
      </table>
     </div>
    </section>
+
+   {/* 제도 비교표·신청 방법 섹션 경계 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+   <CalcResultAd />
 
    {/* 신청 방법 */}
    <section className="bg-card rounded-2xl border border-border p-6 mb-6">

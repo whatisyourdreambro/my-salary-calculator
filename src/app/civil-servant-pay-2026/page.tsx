@@ -27,14 +27,14 @@ import {
   speakableLd,
 } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 공무원 봉급표 — 9급~5급 호봉별 월급·3.5% 인상 확정",
   description:
-    "인사혁신처 확정 2026년 공무원 봉급표. 9급 1호봉 월 2,133,000원(수당 포함 초임 연 3,428만원), 전체 3.5%·저연차 6.6% 인상. 9·8·7·6·5급 1~10호봉 월급표, 경찰(순경)·소방(소방사) 초임, 정액급식비·명절휴가비·직급보조비 수당 구조와 실수령액 계산까지.",
+    "인사혁신처 확정 2026년 공무원 봉급표. 9급 1호봉 월 2,133,000원(수당 포함 초임 연 3,428만원), 전체 3.5%·저연차 6.6% 인상. 9·8·7·6·5급 1~10호봉 월급표, 경찰(순경)·소방(소방사) 초임, 정액급식비·명절휴가비 등 수당 구조와 실수령액까지.",
   path: "/civil-servant-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-15",
@@ -434,6 +434,11 @@ export default function CivilServantPay2026Page() {
             title="2026 공무원 봉급표 — 9급~5급 호봉별 월급"
             description="3.5% 인상 확정, 9급 초임 연 3,428만원. 경찰·소방 초임과 수당 구조까지 한눈에"
           />
+        </div>
+
+        {/* 본문 끝 관련콘텐츠형 광고 — 좌측 컬럼 끝, 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10">
+          <MultiplexAd />
         </div>
           </div>
 

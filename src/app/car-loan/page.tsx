@@ -221,7 +221,7 @@ export default function CarLoanPage() {
  <span>AI 기반 차량 추천 시스템</span>
  </div>
  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
- 내 연봉으로 살 수 있는 <br className="sm:hidden" />
+ 자동차 할부 계산기<span className="hidden sm:inline"> —</span><br className="sm:hidden" /> 내 연봉으로 살 수 있는 <br className="sm:hidden" />
  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
  드림카는 무엇일까요?
  </span>
