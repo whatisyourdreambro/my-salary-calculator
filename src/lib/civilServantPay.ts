@@ -133,6 +133,16 @@ export const HAZARD_ALLOWANCE_2026 = 80000;
  */
 export const RAISE_2027_RECOMMENDED = { min: 0.034, max: 0.039 } as const;
 
+/**
+ * 2027 보수 인상률 — 2027년도 정부 예산안(2026-09-01 국무회의 통과) 3.9%.
+ * 보수위 권고(3.4~3.9%) 상한 채택, 2011년(5.1%) 이후 16년 만 최대 인상.
+ * 7~9급 초임(1호봉)은 공통 인상 외 추가 인상 예정(수치 미공표 — 9급 1호봉 보수
+ * 월 300만원 수준 국정과제). 출처: 머니투데이·아시아경제·서울경제 2026-09-01~02.
+ * 운영자 승인 2026-09-03 반영. ★12월 말 국무회의 의결·봉급표 원문 공표 시
+ * GENERAL_PAY_ROWS_2027 로 교체하고 2027 페이지를 확정표 체제로 전환할 것.
+ */
+export const RAISE_2027_BUDGET = 0.039 as const;
+
 /** 전망치 표기용 — 천원 단위 반올림 (거짓 정밀도 방지) */
 export function forecastRange(base2026: number): { lo: number; hi: number } {
   const round1k = (v: number) => Math.round(v / 1000) * 1000;
@@ -140,4 +150,9 @@ export function forecastRange(base2026: number): { lo: number; hi: number } {
     lo: round1k(base2026 * (1 + RAISE_2027_RECOMMENDED.min)),
     hi: round1k(base2026 * (1 + RAISE_2027_RECOMMENDED.max)),
   };
+}
+
+/** 예산안 3.9% 단순 적용 예상치 — 천원 단위 반올림 (저연차 추가 인상 미반영) */
+export function forecast2027(base2026: number): number {
+  return Math.round((base2026 * (1 + RAISE_2027_BUDGET)) / 1000) * 1000;
 }

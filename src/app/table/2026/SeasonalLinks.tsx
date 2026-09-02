@@ -32,8 +32,8 @@ const SEASONAL_LINKS = [
   },
   {
     href: "/civil-servant-pay-2027",
-    title: "2027 공무원 봉급 인상 전망",
-    description: "인상률 권고안 반영 — 내년 호봉표 미리보기",
+    title: "2027 공무원 봉급 3.9% 인상 확정(예산안)",
+    description: "16년 만 최대 인상 — 9급~5급 내년 예상 월급 미리보기",
   },
   {
     href: "/minimum-wage-2027",
