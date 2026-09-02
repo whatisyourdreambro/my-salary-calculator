@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import type { ElementType } from "react";
 import type { QnaItem } from "@/data/qnaData";
-import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export type QnaListItem = QnaItem & { slug: string };
@@ -115,7 +115,7 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
       {/* Q&A List Section */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="space-y-16">
-          {Object.entries(groupedByCategory).map(([category, categoryItems]) => (
+          {Object.entries(groupedByCategory).map(([category, categoryItems], groupIdx) => (
             <div key={category}>
               <h2 className="flex items-center gap-3 text-2xl font-bold text-foreground mb-8 pl-4 border-l-4 border-primary">
                 {category}
@@ -255,6 +255,12 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
                   );
                 })}
               </div>
+              {/* 2번째 카테고리 그룹 뒤 중간 광고 — GUIDE_MID 는 이 페이지·qna/layout(PageFooterAds) 미사용 슬롯. 그룹 3개 이상일 때만 노출(2개면 하단 InArticleAd 와 연속 배치되므로 제외) — 전면 최적화 (운영자 지시 2026-09-02) */}
+              {groupIdx === 1 && Object.keys(groupedByCategory).length > 2 && (
+                <div className="mt-16 max-w-3xl mx-auto">
+                  <GuideMidAd />
+                </div>
+              )}
             </div>
           ))}
 

@@ -7,7 +7,8 @@ import { regionsData } from "@/data/regionsData";
 import { buildPageMetadata } from "@/lib/seo";
 import { REGION_COUNT } from "@/config/site";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
-import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
+import { Fragment } from "react";
+import { HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
@@ -106,9 +107,9 @@ export default function RegionIndexPage() {
             지역별 평균 연봉 현황
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {sorted.map((region) => (
+            {sorted.map((region, idx) => (
+              <Fragment key={region.id}>
               <Link
-                key={region.id}
                 href={`/region/${region.id}`}
                 className="group block"
               >
@@ -187,6 +188,13 @@ export default function RegionIndexPage() {
                   </div>
                 </div>
               </Link>
+              {/* 6번째 카드 뒤 목록 중간 광고(그리드 전폭) — GUIDE_MID 는 이 페이지 미사용 슬롯(layout 없음) — 전면 최적화 (운영자 지시 2026-09-02) */}
+              {idx === 5 && (
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <GuideMidAd />
+                </div>
+              )}
+              </Fragment>
             ))}
           </div>
         </section>

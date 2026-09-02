@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { Search, ArrowRight, X } from "lucide-react";
+import { GuideMidAd } from "@/components/AdPlacement";
 
 type CalcItem = {
   slug: string;
@@ -217,9 +218,9 @@ export default function CalcIndexClient({
             </div>
           </section>
 
-          {grouped.map((cat) => (
+          {grouped.map((cat, idx) => (
+            <Fragment key={cat.id}>
             <section
-              key={cat.id}
               id={`cat-${cat.id}`}
               className="mb-10 scroll-mt-32"
             >
@@ -250,6 +251,13 @@ export default function CalcIndexClient({
                 ))}
               </div>
             </section>
+            {/* 3번째 카테고리 뒤 섹션 경계 중간 광고 — GUIDE_MID 는 이 페이지·calc/layout(IN_ARTICLE+HOME_TOP) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
+            {idx === 2 && (
+              <div className="mb-10">
+                <GuideMidAd />
+              </div>
+            )}
+            </Fragment>
           ))}
         </>
       )}

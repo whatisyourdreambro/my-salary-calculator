@@ -29,7 +29,7 @@ import {
   BONUS_NEWS_2026,
 } from "@/data/bonusCalcHub";
 import { Sparkles, CalendarDays, Newspaper, ArrowRight, Calculator } from "lucide-react";
-import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
+import { CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -318,6 +318,11 @@ export default function BonusCalculatorsHubPage() {
               명기했습니다.
             </p>
           </section>
+
+          {/* 소식↔도구 링크 섹션 경계 중간 광고 — CALC_RESULT 는 이 허브(결과 카드 없음)·calc/layout(IN_ARTICLE+HOME_TOP) 미사용 슬롯, 413줄 본문 +2 허용 범위 내 1개 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="mb-12">
+            <CalcResultAd />
+          </div>
 
           {/* 일반 도구 링크 */}
           <section className="mb-12" aria-labelledby="tools-heading">

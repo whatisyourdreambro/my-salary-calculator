@@ -7,7 +7,7 @@ import { reportsRegistry } from "@/data/reportsRegistry";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
-import { GuideMidAd } from "@/components/AdPlacement";
+import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 
 export const dynamic = "force-static";
 
@@ -168,6 +168,11 @@ export default function InsightsIndexPage() {
             </Link>
           </div>
         </section>
+
+        {/* 크로스링크 직후 목록 하단 멀티플렉스(관련 콘텐츠형) — layout PageFooterAds 위, env 미설정 시 렌더 안 함 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-12">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

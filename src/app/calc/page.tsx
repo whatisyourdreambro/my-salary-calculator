@@ -14,7 +14,7 @@ import CalcIndexClient from "./CalcIndexClient";
 export const metadata: Metadata = buildPageMetadata({
  title: "연봉·세금·대출 100가지 계산기 — 한 페이지에서 한눈에",
  description:
- "연봉·세금·대출·투자·부동산·보험·사업자·건강·생활까지 100가지 단순 계산기. 한 번에 입력하면 즉시 결과.",
+ "연봉·세금·대출·투자·부동산·보험·사업자·건강·생활까지 100가지 단순 계산기를 한 페이지에 모았습니다. 성과급·연말정산·통상임금·전세대출 등 2026 시즌 핵심 계산기 포함 — 입력하면 즉시 결과.",
  path: "/calc",
  keywords: ["연봉 계산기", "100가지 계산기", "금융 계산기 모음", "생활 계산기", "세금 계산기"],
 });

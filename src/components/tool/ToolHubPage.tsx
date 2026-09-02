@@ -13,7 +13,7 @@
 import Link from "@/components/AppLink";
 import { ChevronRight } from "lucide-react";
 import CoupangBanner from "@/components/CoupangBanner";
-import { MultiplexAd } from "@/components/AdPlacement";
+import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 
@@ -161,6 +161,12 @@ export default function ToolHubPage({
                 </Link>
               ))}
             </div>
+            {/* 2번째 카테고리 뒤 섹션 경계 중간 광고 — GUIDE_MID 는 세 허브·tools/layout(IN_ARTICLE+HOME_TOP) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
+            {ci === 1 && (
+              <div className="mt-10">
+                <GuideMidAd />
+              </div>
+            )}
           </div>
         ))}
 

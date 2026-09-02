@@ -28,10 +28,11 @@ import {
  Building2
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import { GuideMidAd } from '@/components/AdPlacement';
 
 export const metadata: Metadata = buildPageMetadata({
- title: '직장인 심심풀이 라이브러리 | 머니샐러리 FUN',
- description: '부자 DNA, IQ 테스트, 연봉 랭킹, 플래피 샐러리맨 등 직장인을 위한 모든 재미있는 테스트와 게임을 모았습니다.',
+ title: '직장인 심심풀이 테스트·게임 20여 종 무료 모음 | 머니샐러리 FUN',
+ description: '부자 DNA·IQ 테스트, 연봉 순위, 소비 성향, 2026 신년운세, 점심 메뉴 룰렛, 주말 당직 룰렛, 테트리스까지 — 직장인을 위한 무료 테스트·게임 20여 종을 한곳에 모았습니다.',
  path: '/fun',
  keywords: ['직장인 심리테스트', '직장인 게임', '연봉 테스트', '무료 심심풀이'],
 });
@@ -126,6 +127,10 @@ export default function FunLabPage() {
  </div>
  </div>
 
+ {/* 테스트↔게임 섹션 경계 중간 광고 — GUIDE_MID 는 이 페이지·fun/layout(CALC_RESULT+HOME_TOP) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mb-14 max-w-3xl mx-auto">
+ <GuideMidAd />
+ </div>
  {/* 게임 섹션 */}
  <div className="mb-14">
  <h2 className="text-2xl font-black text-navy mb-6 flex items-center gap-2">

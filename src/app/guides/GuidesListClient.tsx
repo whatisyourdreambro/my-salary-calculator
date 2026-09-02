@@ -6,6 +6,7 @@ import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CoupangBanner from '@/components/CoupangBanner';
+import { GuideMidAd } from '@/components/AdPlacement';
 
 type SortOption = "latest" | "popular" | "oldest";
 
@@ -189,7 +190,7 @@ export default function GuidesListClient({
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
  <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
- Financial <span className="text-electric">Insight</span>
+ 금융·연봉 <span className="text-electric">가이드</span>
  </h1>
  <p className="text-lg sm:text-xl text-faint-blue font-medium max-w-2xl mx-auto mb-8">
  부자가 되는 가장 확실한 지름길, 금융 지식을 탐험하세요.
@@ -273,11 +274,24 @@ export default function GuidesListClient({
  />
  </div>
 
- {/* Guides Grid */}
+ {/* Guides Grid — 6번째 카드 뒤 중간 광고를 위해 2블록 분할 (AnimatePresence popLayout 은 motion 자식만 허용해 그리드 안에 광고 셀을 끼울 수 없음) */}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
  <AnimatePresence mode='popLayout'>
- {visibleGuides.map((guide, index) => (
+ {visibleGuides.slice(0, 6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index} />
+ ))}
+ </AnimatePresence>
+ </motion.div>
+ {/* 목록 중간 광고(6번째 카드 뒤) — GUIDE_MID 는 이 페이지·guides/layout(PageFooterAds) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ {visibleGuides.length > 6 && (
+ <div className="my-8 max-w-3xl mx-auto">
+ <GuideMidAd />
+ </div>
+ )}
+ <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+ <AnimatePresence mode='popLayout'>
+ {visibleGuides.slice(6).map((guide, index) => (
+ <GuideCard key={guide.slug} guide={guide} index={index + 6} />
  ))}
  </AnimatePresence>
  </motion.div>

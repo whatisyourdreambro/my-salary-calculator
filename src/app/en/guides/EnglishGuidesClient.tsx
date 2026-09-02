@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
 import type { GuideCardMeta } from '@/lib/guidesData';
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HomeTopAd, InArticleAd } from '@/components/AdPlacement';
+import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
 
 type SortOption = "latest" | "popular" | "oldest";
 
@@ -109,10 +108,17 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
 const ITEMS_PER_PAGE = 9;
 
 export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: GuideCardMeta[]; categoriesEn: readonly { id: string; name: string }[] }) {
- // [slug] 태그 클릭 시 /en/guides?q=tag 로 진입 — q 파라미터를 검색 초기값으로 적용
- const searchParams = useSearchParams();
+ // [slug] 태그 클릭 시 /en/guides?q=tag 로 진입 — q 파라미터를 검색 초기값으로 적용.
+ // useSearchParams 는 정적 프리렌더에서 Suspense 경계까지 CSR 로 빠져 h1·본문이 HTML 에서
+ // 사라졌다(html-audit: h1 0개·본문 1.4KB). GuidesListClient 와 같은 마운트 후 읽기로 전환 —
+ // 전면 최적화 (운영자 지시 2026-09-02)
  const [selectedCategoryId, setSelectedCategoryId] = useState('all');
- const [searchQuery, setSearchQuery] = useState(searchParams.get('q') ?? '');
+ const [searchQuery, setSearchQuery] = useState('');
+ useEffect(() => {
+ if (typeof window === 'undefined') return;
+ const q = new URLSearchParams(window.location.search).get('q');
+ if (q) setSearchQuery(q);
+ }, []);
  const [sortBy, setSortBy] = useState<SortOption>('latest');
  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
@@ -172,7 +178,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
  <div className="max-w-4xl mx-auto px-4">
  <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
- Financial <span className="text-electric">Insight</span>
+ Finance Guides for <span className="text-electric">Working in Korea</span>
  </h1>
  <p className="text-lg sm:text-xl text-faint-blue font-medium max-w-2xl mx-auto mb-8">
  Practical, in-depth guides on working, investing, and saving in Korea.
@@ -254,11 +260,24 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <HomeTopAd />
  </div>
 
- {/* Guides Grid */}
+ {/* Guides Grid — 6번째 카드 뒤 중간 광고를 위해 2블록 분할 (AnimatePresence popLayout 은 motion 자식만 허용해 그리드 안에 광고 셀을 끼울 수 없음) */}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
  <AnimatePresence mode='popLayout'>
- {visibleGuides.map((guide, index) => (
+ {visibleGuides.slice(0, 6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index} />
+ ))}
+ </AnimatePresence>
+ </motion.div>
+ {/* 목록 중간 광고(6번째 카드 뒤) — GUIDE_MID 는 이 페이지·en/layout(PageFooterAds) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ {visibleGuides.length > 6 && (
+ <div className="my-8 max-w-3xl mx-auto">
+ <GuideMidAd />
+ </div>
+ )}
+ <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+ <AnimatePresence mode='popLayout'>
+ {visibleGuides.slice(6).map((guide, index) => (
+ <GuideCard key={guide.slug} guide={guide} index={index + 6} />
  ))}
  </AnimatePresence>
  </motion.div>

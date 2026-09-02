@@ -3,7 +3,8 @@ import Link from "@/components/AppLink";
 import { industriesData } from "@/data/industriesData";
 import { buildPageMetadata } from "@/lib/seo";
 import { industryCountGae } from "@/config/site";
-import { HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
+import { Fragment } from "react";
+import { HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
@@ -61,9 +62,9 @@ export default function IndustryIndexPage() {
           <SiblingHubsNav currentPath="/industry" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sorted.map((industry) => (
+            {sorted.map((industry, idx) => (
+              <Fragment key={industry.id}>
               <Link
-                key={industry.id}
                 href={`/industry/${industry.id}`}
                 className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all group"
               >
@@ -102,6 +103,13 @@ export default function IndustryIndexPage() {
                   {industry.trendNote}
                 </p>
               </Link>
+              {/* 6번째 카드 뒤 목록 중간 광고(그리드 전폭 — 6은 1·2·3열 공배수라 모든 브레이크포인트에서 행 경계에 정확히 걸림) — GUIDE_MID 는 이 페이지 미사용 슬롯(layout 없음) — 전면 최적화 (운영자 지시 2026-09-02) */}
+              {idx === 5 && (
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <GuideMidAd />
+                </div>
+              )}
+              </Fragment>
             ))}
           </div>
 

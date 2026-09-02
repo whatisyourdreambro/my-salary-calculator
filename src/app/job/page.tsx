@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { jobsData, jobsByCategory, JobCategory } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
-import { HomeTopAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+import { Fragment } from "react";
+import { HomeTopAd, GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
@@ -93,8 +94,9 @@ export default function JobIndexPage() {
           <SiblingHubsNav currentPath="/job" />
 
           {/* 카테고리별 직업 목록 */}
-          {CATEGORY_ORDER.filter((cat) => jobsByCategory[cat]?.length > 0).map((category) => (
-            <section key={category} id={category} className="mb-10 scroll-mt-20">
+          {CATEGORY_ORDER.filter((cat) => jobsByCategory[cat]?.length > 0).map((category, idx) => (
+            <Fragment key={category}>
+            <section id={category} className="mb-10 scroll-mt-20">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                 <span>{CATEGORY_EMOJI[category]}</span>
                 <span>{category}</span>
@@ -131,6 +133,13 @@ export default function JobIndexPage() {
                 ))}
               </div>
             </section>
+            {/* 3번째 카테고리(공무원/공공) 뒤 섹션 경계 중간 광고 — GUIDE_MID 는 이 페이지 미사용 슬롯(layout 없음) — 전면 최적화 (운영자 지시 2026-09-02) */}
+            {idx === 2 && (
+              <div className="mb-10">
+                <GuideMidAd />
+              </div>
+            )}
+            </Fragment>
           ))}
 
           <InArticleAd />
