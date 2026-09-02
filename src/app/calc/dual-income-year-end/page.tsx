@@ -10,7 +10,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Users, Info } from "lucide-react";
 import DualIncomeYearEndClient from "./Client";
 
@@ -44,7 +44,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "맞벌이 연말정산 몰아주기 계산기",
-  tagline: "자녀공제·의료비 최적 배분 — 로그인 없이 미리 계획",
+  tagline: "자녀공제·의료비 최적 배분 시뮬레이션",
   description:
     "맞벌이 부부의 총급여·자녀·의료비·교육비·기부금을 입력하면 전부 본인/전부 배우자/최적 배분 시나리오별 부부 합산 결정세액을 비교하고 최적 몰아주기 조합을 제시합니다. 2026년 귀속 기준, 홈택스 로그인 없이 미리 계획.",
   path: "/calc/dual-income-year-end",
@@ -205,6 +205,9 @@ export default function DualIncomeYearEndPage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           {/* 연말정산 시즌 내부 링크 — 광고 아래 고정 배치 */}
           <section className="mb-10">

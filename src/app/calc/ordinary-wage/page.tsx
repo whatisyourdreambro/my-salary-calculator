@@ -8,7 +8,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Scale, Info } from "lucide-react";
 import OrdinaryWageClient from "./Client";
 
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "통상임금 계산기",
-  tagline: "2024 대법원 전원합의체 판결 반영 — 시간급·수당 파급액 즉시 계산",
+  tagline: "2024 대법원 전원합의체 판결 반영 — 시간급·수당 파급액",
   description:
     "기본급·고정수당·정기상여를 입력하면 209시간 기준 시간급 통상임금과 연장·야간·휴일·연차수당 파급액을 즉시 계산합니다. 2024-12 대법원 전합 판결(고정성 폐기·재직조건부 상여 포함) 반영.",
   path: "/calc/ordinary-wage",
@@ -127,6 +127,9 @@ export default function OrdinaryWagePage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />

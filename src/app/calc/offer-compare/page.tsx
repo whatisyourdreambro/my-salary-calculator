@@ -13,7 +13,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { GitCompare, Info } from "lucide-react";
 import OfferCompareClient from "./Client";
 
@@ -47,7 +47,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "이직 오퍼 실수령 비교 계산기",
-  tagline: "오퍼 최대 10개, 같은 조건으로 월 실수령액 순위 비교",
+  tagline: "오퍼 최대 10개, 월 실수령액 순위 비교",
   description:
     "이직 오퍼를 최대 10개까지 등록해 계약 연봉·성과금·기타 수당을 합친 총보상 기준 월 실수령액 순위와 BEST 오퍼 대비 차액을 한 번에 비교합니다. 2026년 4대보험·소득세 기준, 비과세액·부양가족 공통 적용.",
   path: "/calc/offer-compare",
@@ -193,6 +193,9 @@ export default function OfferComparePage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           {/* 내부링크 — 광고 아래 배치 (신규 섹션은 항상 광고 아래 원칙) */}
           <section className="mb-10">

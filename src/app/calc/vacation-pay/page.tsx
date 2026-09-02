@@ -6,7 +6,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import VacationPayClient from "./Client";
 
@@ -116,6 +116,9 @@ export default function VacationPayPage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />

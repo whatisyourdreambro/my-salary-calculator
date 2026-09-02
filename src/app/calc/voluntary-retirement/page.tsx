@@ -14,7 +14,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Briefcase, Info, ArrowRight } from "lucide-react";
 import VoluntaryRetirementClient from "./Client";
 
@@ -53,7 +53,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "희망퇴직 위로금 실수령 계산기",
-  tagline: "위로금 세금·퇴직소득세 합산 — 세후 실수령액 즉시 계산",
+  tagline: "위로금 세금·퇴직소득세 합산 — 세후 실수령액",
   description:
     "희망퇴직 위로금(월급×N개월)과 법정퇴직금을 합산한 퇴직소득세·세후 실수령액을 계산합니다. 위로금에만 붙는 추가 세부담과 한계 실효세율, 실업급여 수급 요건까지. 소득세법 22조 합산 과세 기준.",
   path: "/calc/voluntary-retirement",
@@ -185,6 +185,9 @@ export default function VoluntaryRetirementPage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />

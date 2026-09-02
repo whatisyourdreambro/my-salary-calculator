@@ -12,7 +12,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { BadgePercent, Info } from "lucide-react";
 import SmbTaxBreakClient from "./Client";
 
@@ -51,7 +51,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "중소기업 취업자 소득세 감면 계산기",
-  tagline: "청년 90%·5년 절감액과 감면기간, 경정청구까지",
+  tagline: "청년 90%·5년 절감액·감면기간·경정청구",
   description:
     "조특법 30조 중소기업 취업자 소득세 감면 계산기. 청년 90%·5년, 60세 이상·장애인·경력단절여성 70%·3년, 한도 200만원. 근로소득세액공제 연동 축소(소득세법 59조3항)까지 반영한 홈택스 기준 절감액과 경정청구 5년 소급 방법 안내.",
   path: "/calc/smb-income-tax-break",
@@ -189,6 +189,9 @@ export default function SmbIncomeTaxBreakPage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           {/* 내부링크 — 광고 아래 배치 */}
           <section className="mb-10">

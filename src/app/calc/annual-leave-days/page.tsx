@@ -8,7 +8,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { CalendarDays, Info } from "lucide-react";
 import AnnualLeaveDaysClient from "./Client";
 
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "연차 개수 계산기",
-  tagline: "입사일만 넣으면 연도별 연차 발생 내역 — 입사일 vs 회계연도 비교",
+  tagline: "입사일만 넣으면 연도별 연차 발생 내역·회계연도 비교",
   description:
     "입사일을 입력하면 근로기준법 60조 기준 연차 발생 개수를 연도별로 계산합니다. 1년 미만 월차·비례연차·회계연도 방식 비교, 만 1년 퇴직 시 15일 미발생 판례까지 반영.",
   path: "/calc/annual-leave-days",
@@ -116,6 +116,9 @@ export default function AnnualLeaveDaysPage() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />

@@ -9,7 +9,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { TrendingUp, Info } from "lucide-react";
 import PensionHikeClient from "./Client";
 
@@ -43,7 +43,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "국민연금 인상 계산기",
-  tagline: "2027년 요율 10% 인상 — 내 월급에서 얼마나 더 빠지나",
+  tagline: "2027년 요율 10% — 월급에서 얼마나 더 빠지나",
   description:
     "2027년 1월부터 국민연금 보험료율이 총 9.5%에서 10.0%(근로자 5.0%)로 오릅니다. 월급만 입력하면 매달 더 내는 금액과 연간 부담 증가액을 즉시 계산합니다. 기준소득월액 상한 659만원 반영.",
   path: "/calc/pension-hike-2027",
@@ -123,6 +123,9 @@ export default function PensionHike2027Page() {
               ))}
             </div>
           </section>
+
+          {/* FAQ 직하 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <GuideMidAd />
 
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />

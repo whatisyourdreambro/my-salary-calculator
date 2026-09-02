@@ -46,7 +46,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "연말 보너스 세금 계산기",
-  tagline: "12월 보너스 vs 1월 보너스 — 수령 시점별 세금 비교",
+  tagline: "12월 vs 1월 보너스 — 수령 시점별 세금 비교",
   description:
     "연말 보너스를 12월에 받을지 1월에 받을지, 일시 지급과 분할 지급 중 어느 쪽이 절세에 유리한지 비교합니다. 2026년 누진세율 기준 합산 과세 시뮬레이션.",
   path: "/calc/year-end-bonus-tax",

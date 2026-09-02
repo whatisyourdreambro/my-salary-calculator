@@ -47,7 +47,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "퇴직금 vs 퇴직연금 비교",
-  tagline: "DB · DC · IRP — 어느 방식이 가장 많이 받나?",
+  tagline: "DB·DC·IRP — 어느 방식이 가장 많이 받나?",
   description:
     "퇴직금(법정), 퇴직연금 DB형·DC형, IRP 일시 수령·연금 수령의 실수령액과 세금을 비교 계산합니다. 근속연수·연봉 상승률·운용 수익률에 따라 최적 선택이 달라집니다.",
   path: "/calc/severance-vs-pension",

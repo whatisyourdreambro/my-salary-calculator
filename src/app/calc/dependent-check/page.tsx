@@ -10,7 +10,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Users, Info } from "lucide-react";
 import DependentCheckClient from "./Client";
 
@@ -49,7 +49,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "부양가족 인적공제 판정기",
-  tagline: "관계·나이·소득 몇 문항으로 기본공제 150만원 가능 여부 즉시 판정",
+  tagline: "관계·나이·소득으로 기본공제 150만원 즉시 판정",
   description:
     "부모님·배우자·자녀·형제자매가 연말정산 기본공제(150만원) 대상인지 관계·출생연도·소득·동거 여부로 즉시 판정합니다. 경로우대·장애인 추가공제와 미충족 사유까지 소득세법 50~53조 기준으로 안내.",
   path: "/calc/dependent-check",
@@ -113,6 +113,9 @@ export default function DependentCheckPage() {
               무방하고, 직계존속은 주거 형편상 별거 시 실제 부양하면 인정되며, 형제자매만
               동거(취학·요양·근무·사업상 일시 퇴거는 허용)가 필요합니다(소득세법 53조).
             </p>
+
+            {/* 본문 중간 광고 — 기본공제 요건/추가공제 섹션 경계 — 전면 최적화 (운영자 지시 2026-09-02) */}
+            <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">추가공제 4종 (소득세법 51조)</h2>
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">

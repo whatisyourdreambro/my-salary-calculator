@@ -55,7 +55,7 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "명절·휴가비 상여금 세금 계산기",
-  tagline: "설·추석 보너스와 여름휴가비 실수령액 — 소득세·4대보험 즉시 계산",
+  tagline: "설·추석 보너스와 여름휴가비 실수령액",
   description:
     "설·추석 명절 상여금과 여름휴가비의 세금·4대보험을 2026년 세법 기준으로 계산합니다. 한계세율별 실수령액 비교, 비과세 항목 안내, 지급 의무 여부까지.",
   path: "/calc/holiday-bonus",

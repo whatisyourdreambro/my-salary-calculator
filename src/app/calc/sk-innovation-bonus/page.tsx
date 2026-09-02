@@ -34,7 +34,7 @@ const PAGE_PATH = "/calc/sk-innovation-bonus";
 const PAGE_TITLE = "SK이노베이션 성과급 계산기 2026";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const PAGE_DESC =
-  "SK이노베이션 성과급 계산기. 본인 월 기본급만 입력하면 FY2024 실적분 총 660%(PS 280% + LTI 70% + STI 190% + 하반기 120%) 세전·세후 실수령액이 즉시 계산됩니다. SK엔무브 800%·SK어스온 400%·SK온 0% 계열사 차등 시나리오 비교. FY2025 실적분(2026년)은 미확정.";
+  "SK이노베이션 성과급 계산기. 월 기본급만 입력하면 FY2024 실적분 660%(PS 280%+LTI 70%+STI 190%+하반기 120%) 세전·세후 실수령액 즉시 계산. SK엔무브 800%·SK어스온 400%·SK온 0% 계열사 비교. FY2025 실적분(2026년) 미확정.";
 
 const FAQ_ITEMS = [
   {
