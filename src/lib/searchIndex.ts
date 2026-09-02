@@ -10,7 +10,9 @@ import { koGuideCards } from "@/lib/guidesData";
 import { glossaryData, toGlossarySlug } from "@/data/glossaryData";
 import { qnaData, toQnaSlug } from "@/data/qnaData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
-import { companyCountKo } from "@/config/site";
+import { bonusCalcCountKo, companyCountKo } from "@/config/site";
+// 회사별 성과급 계산기 레지스트리(순수 데이터 10KB, import 0) — 허브 카드와 동일 소스로 검색 등재 (전면 최적화, 운영자 지시 2026-09-02)
+import { BONUS_CALCS } from "@/data/bonusCalcHub";
 
 export type SearchCategory =
  | "계산기"
@@ -48,8 +50,8 @@ const seasonPages: SearchEntry[] = [
  { title: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", category: "계산기", description: "OPI·TAI 세후 실수령", priority: 1 },
  // 2026-08-07 — 기업 성과급 계산기 검색 인덱스 갭 해소 (기존 10종 미등록) + 신규 2종
  { title: "SK하이닉스 성과급 계산기", href: "/calc/sk-hynix-bonus", category: "계산기", description: "PS·PI 세전·세후 즉시 계산", priority: 1 },
- { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "임단협 450% + 1,580만 + 무상주 30주", priority: 2 },
- { title: "기아 성과급 계산기", href: "/calc/kia-bonus", category: "계산기", description: "임단협 450% + 1,600만 + 무상주 53주", priority: 2 },
+ { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "임단협 성과금·격려금·무상주 합산 세전·세후", priority: 1 },
+ { title: "기아 성과급 계산기", href: "/calc/kia-bonus", category: "계산기", description: "임단협 성과금·격려금·무상주 합산 세전·세후", priority: 2 },
  { title: "LG에너지솔루션 성과급 계산기", href: "/calc/lg-energy-bonus", category: "계산기", description: "배터리 사이클 50~900% 시나리오", priority: 2 },
  { title: "HD현대중공업 성과급 계산기", href: "/calc/hd-hyundai-bonus", category: "계산기", description: "조선 슈퍼사이클 600%+", priority: 2 },
  { title: "네이버 성과급·RSU 계산기", href: "/calc/naver-bonus", category: "계산기", description: "PI 10~40% + 자사주 RSU", priority: 2 },
@@ -92,6 +94,28 @@ const seasonPages: SearchEntry[] = [
  { title: "중소기업 취업자 소득세 감면 계산기", href: "/calc/smb-income-tax-break", category: "계산기", description: "청년 90%·5년 절감액 — 경정청구 소급까지", priority: 2 },
  { title: "이직 오퍼 실수령 비교", href: "/calc/offer-compare", category: "계산기", description: "오퍼 최대 10개 세후 월 실수령 순위 비교", priority: 2 },
  { title: "2027 4대보험 요율표", href: "/social-insurance-rates-2027", category: "시즌", description: "국민연금 10% 확정 — 내 월급 공제 변화", priority: 2 },
+ // 2026-09-02 전면 최적화 (운영자 지시) — 헤더 검색 미등재 갭: 9월 시즌·연말정산 허브·전용 계산기 페이지 (제목·설명은 각 페이지 메타 기준)
+ { title: "추석 상여금 2026 — 평균 지급액·세금 총정리", href: "/chuseok-bonus-2026", category: "시즌", description: "기업 규모별 평균·지급 의무·떡값 과세·연휴 근무수당", priority: 1 },
+ { title: "명절 상여금 세금 계산기", href: "/calc/holiday-bonus", category: "계산기", description: "추석·설 상여금 세후 실수령 즉시 계산", priority: 1 },
+ { title: "연말정산 2027 총정리 허브", href: "/year-end-tax-2027", category: "시즌", description: "2026년 귀속 — 일정·계산기·단계별 로드맵", priority: 1 },
+ { title: "홈택스 연말정산 미리보기 이용법", href: "/year-end-tax-preview", category: "시즌", description: "오픈 시점·절차·확인 포인트", priority: 2 },
+ { title: "중도퇴사자 연말정산", href: "/year-end-tax-mid-resign", category: "시즌", description: "퇴사 후 환급 방법·이직 합산·경정청구", priority: 2 },
+ { title: "신입 초봉 2026 TOP 50", href: "/new-employee-salary-2026", category: "시즌", description: `회사 ${companyCountKo} 영끌 연봉 인덱스`, priority: 2 },
+ { title: "2026 국민건강검진 안내", href: "/health-checkup-2026", category: "시즌", description: "직장인 무료 검진 + 5대 암검진 본인부담 10%", priority: 2 },
+ { title: "기초연금 계산기 2026", href: "/basic-pension-2026", category: "계산기", description: "월 349,700원 기준·감액 3종 간이 계산", priority: 2 },
+ { title: "실업급여 계산기 2026", href: "/unemployment-benefit", category: "계산기", description: "수령액·기간·신청 조건 즉시 계산", priority: 1 },
+ { title: "근로장려금 계산기 2026", href: "/earned-income-credit", category: "계산기", description: "단독·홑벌이·맞벌이 수령액 즉시 계산", priority: 1 },
+ { title: "육아휴직 급여 계산기 2026", href: "/parental-leave", category: "계산기", description: "6+6 부모 육아휴직 수령액 즉시 계산", priority: 2 },
+ { title: "2026 연봉 계산기 PRO", href: "/calc/2026-year", category: "계산기", description: "최신 세법·티어 카드·자산 시뮬", priority: 2 },
+ { title: "성과급 세금 계산기", href: "/calc/year-end-bonus", category: "계산기", description: "연말 성과급 세후 실수령", priority: 2 },
+ { title: "연말 보너스 세금 계산기", href: "/calc/year-end-bonus-tax", category: "계산기" },
+ { title: "13월의 월급 시뮬레이터", href: "/calc/january-bonus", category: "계산기", priority: 2 },
+ { title: "인센티브 분리과세 계산기", href: "/calc/incentive-tax", category: "계산기" },
+ { title: "자녀공제 계산기", href: "/calc/child-deduction", category: "계산기" },
+ { title: "청약저축 소득공제 계산기", href: "/calc/housing-subscription", category: "계산기" },
+ { title: "전세대출 계산기", href: "/calc/jeonse-loan", category: "계산기" },
+ { title: "퇴직금 vs 퇴직연금 비교", href: "/calc/severance-vs-pension", category: "계산기" },
+ { title: "연차수당 계산기", href: "/calc/vacation-pay", category: "계산기" },
 ];
 
 const toolPages: SearchEntry[] = [
@@ -115,7 +139,50 @@ const toolPages: SearchEntry[] = [
  { title: "2027 월급 실수령액 표", href: "/table/2027/monthly", category: "도구" },
  { title: "상장사 공시 연봉 DB", href: "/salary-db/listed", category: "도구", description: "DART 사업보고서 기준 — 추정 0" },
  { title: "연봉 인상률 TOP 100 (상장사)", href: "/salary-db/listed/top-raise", category: "도구", description: "공시 기준 전년比 인상률 순위" },
+ // 2026-09-02 전면 최적화 (운영자 지시) — /tools 트리(리프 29종)·허브·전역 진입로가 헤더 검색 0건이던 갭 해소 (제목은 각 페이지 메타 기준)
+ { title: `성과급 계산기 ${bonusCalcCountKo} 허브`, href: "/calc/bonus-calculators", category: "도구", description: "회사별 최신 지급률·시즌 캘린더", priority: 1 },
+ { title: "금융 계산기 모음", href: "/tools/finance", category: "도구", description: "세금·투자·대출 계산기 허브", priority: 2 },
+ { title: "부동산 계산기 모음", href: "/tools/real-estate", category: "도구", description: "취득세·증여세·DSR·LTV·전세", priority: 2 },
+ { title: "생활 계산기 모음", href: "/tools/life", category: "도구", description: "N빵·유류비·구독료·나이·D-Day", priority: 2 },
+ { title: "전체 도구 인덱스", href: "/tools", category: "도구", description: "세금·재테크 계산기 모음" },
+ { title: "배당소득세 계산기 2026", href: "/tools/finance/dividend-tax", category: "계산기", description: "금융소득종합과세 2천만원 기준 비교과세", priority: 1 },
+ { title: "성과급·인센티브 세금 계산기", href: "/tools/finance/bonus", category: "계산기", description: "연봉합산 세율 — 보너스 세후 실수령", priority: 1 },
+ { title: "IRP·연금저축 계산기", href: "/tools/finance/irp", category: "계산기", description: "세액공제 환급액", priority: 1 },
+ { title: "DSR 계산기", href: "/tools/real-estate/dsr", category: "계산기", description: "총부채원리금상환비율 대출 한도", priority: 1 },
+ { title: "LTV 계산기", href: "/tools/real-estate/ltv", category: "계산기", description: "주택담보대출 한도" },
+ { title: "취득세 계산기 2026", href: "/tools/real-estate/acquisition-tax", category: "계산기", description: "주택·토지·교육세·농특세", priority: 2 },
+ { title: "증여세 계산기 2026", href: "/tools/real-estate/gift-tax", category: "계산기", description: "가족 간 공제한도·세율", priority: 2 },
+ { title: "대출 이자 계산기 2026", href: "/tools/loan", category: "계산기", description: "원리금균등·원금균등·만기일시 월 상환액", priority: 2 },
+ { title: "예적금 계산기 (이자·세금)", href: "/tools/deposit", category: "계산기", description: "만기 세후 수령액" },
+ { title: "복리 계산기", href: "/tools/finance/compound", category: "계산기", description: "적립식 투자 자산 시뮬레이션" },
+ { title: "주식 양도소득세 계산기", href: "/tools/finance/stock-tax", category: "계산기", description: "해외주식·대주주 (2026)" },
+ { title: "프리랜서 종합소득세 계산기", href: "/tools/finance/freelance-tax", category: "계산기", description: "사업소득·필요경비 (2026)" },
+ { title: "퇴직금 세금 계산기", href: "/tools/finance/severance", category: "계산기", description: "환산급여 방식 퇴직소득세" },
+ { title: "할부 이자 계산기", href: "/tools/finance/installment", category: "계산기", description: "신용카드·캐피탈·카드론" },
+ { title: "부가세(VAT) 계산기", href: "/tools/finance/vat", category: "계산기" },
+ { title: "CAGR(연평균 성장률) 계산기", href: "/tools/finance/cagr", category: "계산기" },
+ { title: "퍼센트 계산기 & 단위 변환기", href: "/tools/math", category: "도구", description: "할인율·증감율·기본 환산" },
+ { title: "N빵 계산기 (Dutch Pay)", href: "/tools/life/dutch-pay", category: "도구" },
+ { title: "유류비 계산기", href: "/tools/life/fuel-cost", category: "도구" },
+ { title: "구독 서비스 비용 계산기", href: "/tools/life/subscription", category: "도구", description: "월 구독료 총합 분석" },
+ { title: "단위 변환기", href: "/tools/life/unit-converter", category: "도구" },
+ { title: "2026 대기업 연봉 순위 TOP 30", href: "/salary-db/ranking", category: "도구", description: "시니어 기준 총보상 랭킹", priority: 2 },
+ { title: "머니샐러리 데이터 리포트", href: "/insights", category: "도구", description: "연봉·성과급 데이터 분석" },
+ { title: "내 블로그에 계산기 위젯 달기", href: "/embed", category: "도구", description: "무료 임베드 위젯" },
+ { title: "주제별 종합 가이드", href: "/hub", category: "도구", description: "FIRE·투자·부동산·절세·커리어" },
+ { title: "2026 직장인 꿀팁 15선", href: "/tips", category: "도구", description: "연봉 협상·절세·재테크·내집마련" },
 ];
+
+// 회사별 성과급 계산기 — 위 seasonPages 에 수기 등재된 slug 는 제외하고 나머지를 허브 레지스트리(BONUS_CALCS)에서 파생.
+// 두산에너빌리티·한화에어로·삼성바이오·한전 등 10종이 검색 0건이던 갭 해소 (전면 최적화, 운영자 지시 2026-09-02)
+const explicitBonusHrefs = new Set(seasonPages.map((e) => e.href));
+const bonusCalcEntries: SearchEntry[] = BONUS_CALCS.filter((c) => !explicitBonusHrefs.has(`/calc/${c.slug}`)).map((c) => ({
+ title: `${c.company} 성과급 계산기`,
+ href: `/calc/${c.slug}`,
+ category: "계산기" as const,
+ description: c.hook,
+ priority: 2,
+}));
 
 const calculatorEntries: SearchEntry[] = allCalculators.map((c) => ({
  title: c.title,
@@ -160,6 +227,7 @@ export const searchIndex: SearchEntry[] = [
  ...glossaryEntries,
  ...qnaEntries,
  ...companyEntries,
+ ...bonusCalcEntries,
 ];
 
 /**

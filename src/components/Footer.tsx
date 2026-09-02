@@ -29,6 +29,9 @@ export default function Footer() {
         { name: "FIRE 계산기", href: "/fire-calculator" },
         { name: "주택담보대출", href: "/home-loan" },
         { name: "기초연금 계산기", href: "/basic-pension-2026" },
+        // 고수익 시즌 진입로 — 연말정산(10~2월)·성과급 세금(12~1월) 전역 크롤 경로 (전면 최적화, 운영자 지시 2026-09-02)
+        { name: "연말정산 계산기", href: "/year-end-tax" },
+        { name: "성과급 세금 계산기", href: "/tools/finance/bonus" },
       ];
 
   // KR 시즌 링크는 src/config/seasonLinks 단일 소스에서 파생 — 헤더 시즌 드롭다운과 공유
