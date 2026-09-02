@@ -8,7 +8,7 @@ import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { getIndustryAggregate } from "@/lib/salary-data/industryAggregates";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import JsonLd from "@/components/JsonLd";
-import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 
@@ -310,6 +310,11 @@ export default function IndustryPage({ params }: Props) {
             contentType="page"
             className="mt-8"
           />
+
+          {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡·공유 섹션 아래 이탈 지점, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="mt-8">
+            <MultiplexAd />
+          </div>
         </div>
       </div>
     </>

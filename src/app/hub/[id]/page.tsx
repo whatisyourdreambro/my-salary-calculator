@@ -15,6 +15,7 @@ import {
   InArticleAd,
   GuideMidAd,
   CalcResultAd,
+  MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
@@ -159,6 +160,11 @@ export default function HubPage({ params }: { params: { id: string } }) {
             ))}
           </div>
         </nav>
+
+        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 다른 주제 링크 직후, 쿠팡·공유 아래로 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

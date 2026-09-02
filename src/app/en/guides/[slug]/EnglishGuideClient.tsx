@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
 import TableOfContents from "@/components/guides/TableOfContents";
-import { GuideMidAd, InArticleAd, SidebarAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
 
 interface GuidePageClientProps {
  guide: Guide;
@@ -232,12 +232,16 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  ))}
  </div>
  </div>
+
+ {/* End of article — multiplex(related-content) right after Related Reading; below all in-card ads — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <MultiplexAd />
  </motion.article>
 
  {/* Sidebar Right (Widgets) */}
  <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
  {/* Related Calculator Card */}
- <div className="sticky top-24 space-y-6">
+ {/* Un-stick the whole stack — two cards + 300x600 (~1,100px) overflow laptop viewports so the ad was >50% clipped while pinned; only the ad wrapper is sticky below — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="space-y-6 lg:h-full">
  <div className="duotone-card p-6 relative overflow-hidden group">
  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
  <div className="relative z-10">
@@ -279,7 +283,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
 
  {/* Desktop-only sidebar ad - on mobile, end-of-article ad is enough
  (쿠팡 skyscraper 는 /en 조기 차단으로 렌더 0이던 죽은 코드라 정리, 2026-08-24) */}
- <div className="hidden lg:block">
+ <div className="hidden lg:block lg:sticky lg:top-24">
  <SidebarAd />
  </div>
  </div>

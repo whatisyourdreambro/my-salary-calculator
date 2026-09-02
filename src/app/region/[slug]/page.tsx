@@ -9,7 +9,7 @@ import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
-import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
@@ -513,6 +513,11 @@ export default function RegionDetailPage({
             </li>
           </ul>
         </section>
+
+        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡·공유·다음 단계 섹션 전부 아래, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

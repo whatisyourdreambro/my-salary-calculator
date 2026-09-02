@@ -18,6 +18,7 @@ import {
  InArticleAd,
  GuideMidAd,
  CalcResultAd,
+ MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -218,6 +219,11 @@ export default function QnaDetailPage({
  </li>
  </ul>
  </section>
+
+ {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 추천 도구 섹션 직후, 전 광고 아래로 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-10">
+ <MultiplexAd />
+ </div>
  </div>
  </main>
  );

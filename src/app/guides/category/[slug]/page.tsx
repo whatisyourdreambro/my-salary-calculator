@@ -12,6 +12,7 @@ import { notFound } from "next/navigation";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { GuideMidAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { GUIDE_CATEGORY_HUBS } from "@/lib/guideCategories";
@@ -140,6 +141,11 @@ export default function GuideCategoryHubPage({ params }: Props) {
             ))}
           </div>
         </section>
+
+        {/* 최신 5편 ↔ 전체 목록 사이 중간 광고 — guides/layout PageFooterAds 에 없는 GUIDE_MID 슬롯이라 순증 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mb-10">
+          <GuideMidAd />
+        </div>
 
         {/* 전체 목록 (SSR — 크롤 가능) */}
         <section aria-labelledby="all-heading">

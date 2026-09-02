@@ -21,6 +21,7 @@ import {
  InArticleAd,
  GuideMidAd,
  CalcResultAd,
+ MultiplexAd,
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -40,7 +41,7 @@ export async function generateMetadata({
 
  return buildPageMetadata({
  title: `${item.title} 뜻과 의미 — ${item.summary}`,
- description: `${item.title}은(는) ${item.summary}. ${item.content.slice(0, 80)}... 직장인이 꼭 알아야 할 ${item.category} 용어를 쉬운 비유로 설명합니다.`,
+ description: `${item.title}은(는) ${item.summary}. ${item.content.slice(0, 80)}... ${item.category} 용어 쉬운 비유 해설.`,
  path: `/glossary/${toGlossarySlug(item.title)}`,
  keywords: [
  `${item.title} 뜻`,
@@ -278,6 +279,11 @@ export default function GlossaryDetailPage({
  </li>
  </ul>
  </section>
+
+ {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 다음 단계 섹션 직후, 전 광고 아래로 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-10">
+ <MultiplexAd />
+ </div>
  </div>
  </main>
  );

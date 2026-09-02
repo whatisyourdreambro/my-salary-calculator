@@ -369,7 +369,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* Sidebar Right (Widgets) */}
  <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
  {/* Related Calculator Card */}
- <div className="sticky top-24 space-y-6">
+ {/* 스택 전체 sticky 해제 — 카드 2장+300x600 합산 ~1,100px 가 노트북 뷰포트(~950px)를 넘어 광고가 절반 이상 잘려 Active View 50% 미달이던 문제. 광고 래퍼만 sticky(아래) — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="space-y-6 lg:h-full">
  <div className="duotone-card p-6 relative overflow-hidden group">
  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
  <div className="relative z-10">
@@ -410,7 +411,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </div>
 
  {/* 데스크톱 전용 사이드바 광고 - 모바일에선 본문 끝 광고로 충분 */}
- <div className="hidden lg:block">
+ <div className="hidden lg:block lg:sticky lg:top-24">
  <SidebarAd />
  </div>
  </div>
