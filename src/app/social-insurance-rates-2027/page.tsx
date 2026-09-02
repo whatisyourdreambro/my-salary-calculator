@@ -24,7 +24,7 @@ import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
   NET_SALARY_RATES_2027,
@@ -388,6 +388,10 @@ export default function SocialInsuranceRates2027Page() {
           </div>
         </section>
 
+        {/* 2027 관련 링크·FAQ 사이 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mb-12">
+          <CalcResultAd />
+        </div>
         {/* FAQ */}
         <section className="mb-12">
           <h2 className="text-xl font-black text-navy mb-6">자주 묻는 질문</h2>
@@ -418,6 +422,10 @@ export default function SocialInsuranceRates2027Page() {
         </div>
 
         <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <div className="mt-10">
+          <MultiplexAd />
+        </div>
       </div>
     </main>
   );

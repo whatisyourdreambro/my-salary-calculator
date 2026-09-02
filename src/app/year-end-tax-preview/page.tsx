@@ -15,7 +15,7 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { ArrowRight, Calculator, MonitorSmartphone, ListChecks } from "lucide-react";
-import { HomeTopAd, GuideMidAd, InArticleAd } from "@/components/AdPlacement";
+import { HomeTopAd, GuideMidAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 
@@ -207,6 +207,8 @@ export default function YearEndTaxPreviewPage() {
               </div>
             </section>
 
+            {/* FAQ 직후 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+            <CalcResultAd />
             {/* 클러스터 칩 — 광고 아래 배치 준수 */}
             <YearEndTaxCluster />
           </div>

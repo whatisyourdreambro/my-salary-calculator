@@ -13,14 +13,14 @@ import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 세법개정안 확정 발표 — 8월 3일 세제개편안 내용·직장인 영향 총정리",
   description:
-    "2026년 세법개정안(2026 세제개편안)이 8월 3일 확정 발표됐습니다. 소득세 과표·세율은 그대로, 부양가족 인적공제 소득요건 300만원 완화·월세 세액공제 한도 1,200만원·종부세 실거주 공제 14억 차등화 등 발표 내용과 직장인 영향 총정리. 국회 통과 시 대부분 2027년 시행.",
+    "2026년 세법개정안(2026 세제개편안)이 8월 3일 확정 발표됐습니다. 소득세 과표·세율은 그대로, 부양가족 인적공제 소득요건 300만원 완화·월세 세액공제 한도 1,200만원·종부세 실거주 공제 14억 차등화 등 직장인 영향 총정리. 국회 통과 시 대부분 2027년 시행.",
   path: "/tax-reform-2026",
   ogType: "article",
   publishedTime: "2026-07-16",
@@ -476,6 +476,8 @@ export default function TaxReform2026Page() {
         />
 
         <RelatedCalculators currentPath="/tax-reform-2026" />
+        {/* 관련 링크 직후 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <MultiplexAd />
 
         <div className="mt-8 max-w-3xl mx-auto">
           <ShareButtons

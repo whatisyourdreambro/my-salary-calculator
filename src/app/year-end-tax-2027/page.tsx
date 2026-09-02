@@ -26,7 +26,7 @@ import {
   YEAR_END_NEWS,
 } from "@/data/yearEndTaxHub";
 import { CalendarDays, Newspaper, ArrowRight, Calculator, ClipboardCheck, BookOpen } from "lucide-react";
-import { GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
+import { GuideMidAd, InArticleAd, MultiplexAd, CalcResultAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 
@@ -193,6 +193,10 @@ export default function YearEndTax2027HubPage() {
             </p>
           </section>
 
+          {/* 캘린더·뉴스 사이 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="mb-12">
+            <CalcResultAd />
+          </div>
           {/* 뉴스 */}
           <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="news-heading">
             <h2 id="news-heading" className="text-2xl font-black text-navy mb-4 flex items-center gap-2">

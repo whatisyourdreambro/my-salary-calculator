@@ -11,7 +11,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -97,7 +97,7 @@ const FAQ_ITEMS = [
  {
  question: "분리과세와 종합과세 중 어느 게 유리한가요?",
  answer:
- "주택임대소득 2,000만원 이하·금융소득 2,000만원 이하는 분리과세 선택 가능합니다. 본업 종합소득이 4,600만원 초과(과표) 구간(세율 24~45%)이면 분리과세(14~15.4%)가 유리하고, 종합소득 1,400만원 이하면 종합과세가 유리합니다. 홈택스 모의계산으로 둘 다 비교해보세요.",
+ "주택임대소득 2,000만원 이하·금융소득 2,000만원 이하는 분리과세 선택 가능합니다. 본업 종합소득이 5,000만원 초과(과표) 구간(세율 24~45%)이면 분리과세(14~15.4%)가 유리하고, 종합소득 1,400만원 이하면 종합과세가 유리합니다. 홈택스 모의계산으로 둘 다 비교해보세요.",
  },
  {
  question: "사업자 등록 안 한 프리랜서도 신고 가능한가요?",
@@ -311,6 +311,10 @@ export default function YearEndTax2026Page() {
  </div>
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+ {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-10">
+ <MultiplexAd />
+ </div>
  </div>
  </main>
  );

@@ -11,7 +11,7 @@ import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
@@ -194,6 +194,10 @@ export default function DonationTaxCredit2026Page() {
             </li>
           </ol>
 
+          {/* 본문 중간 보강 광고(prose 밖) — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="not-prose">
+            <GuideMidAd />
+          </div>
           {/* 갱신 슬롯: 12월 세법개정 — 고액기부(3천만원 초과분) 40% 특례 연장 여부 확인 후 반영 */}
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             공제율과 한도 — 예시로 확인
@@ -318,6 +322,8 @@ export default function DonationTaxCredit2026Page() {
           />
         </div>
 
+        {/* 관련 링크 직후 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <MultiplexAd />
         {/* 관련 도구 — 연말정산 공제 4축 + 가이드 */}
         <section className="my-10">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">

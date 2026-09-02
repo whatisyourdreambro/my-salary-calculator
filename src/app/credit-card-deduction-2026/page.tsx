@@ -10,7 +10,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯 (allcredit pages 명시 페이지 — 즉시 노출)
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -247,6 +247,8 @@ export default function CreditCardDeduction2026Page() {
           </p>
         </section>
 
+        {/* 가이드 본문 끝 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <GuideMidAd />
         {/* 2027년 귀속 개정 예정 — 국회 통과 필요, 별도 안내 박스 */}
         <aside className="my-8 rounded-2xl p-5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
           <p className="font-black text-amber-900 dark:text-amber-200 mb-2 text-sm">
@@ -327,6 +329,8 @@ export default function CreditCardDeduction2026Page() {
           />
         </div>
 
+        {/* 관련 링크 직후 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <MultiplexAd />
         {/* 관련 도구 */}
         <section className="my-10">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">

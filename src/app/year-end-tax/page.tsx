@@ -10,7 +10,7 @@ import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
-import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -153,6 +153,10 @@ export default function YearEndTaxPage() {
  </p>
  </section>
 
+ {/* 변경사항·항목별 계산기 사이 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mt-10">
+ <CalcResultAd />
+ </div>
  {/* 공제 항목별 정밀 계산기 — 연말정산 클러스터 내부링크 */}
  <section className="mt-10">
  <h2 className="text-xl font-black text-navy mb-2">공제 항목별 정밀 계산기</h2>

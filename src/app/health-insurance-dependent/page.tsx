@@ -9,7 +9,7 @@ import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -286,6 +286,10 @@ export default function HealthInsuranceDependentPage() {
             있으며, 명의자별로 각자 판정하므로 부부라도 본인 명의 재산만 따집니다.
           </p>
 
+          {/* 본문 중간 보강 광고(prose 밖) — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <div className="not-prose">
+            <GuideMidAd />
+          </div>
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
             매년 11월, 공단이 자격을 다시 심사합니다
           </h2>

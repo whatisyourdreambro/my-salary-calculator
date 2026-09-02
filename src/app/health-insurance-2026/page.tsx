@@ -15,7 +15,7 @@ import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -233,6 +233,10 @@ export default function HealthInsurance2026Page() {
  </div>
  </Link>
 
+ {/* CTA·FAQ 사이 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <div className="mb-12">
+ <CalcResultAd />
+ </div>
  {/* FAQ */}
  <section className="mb-12">
  <h2 className="text-xl font-black text-navy mb-6">

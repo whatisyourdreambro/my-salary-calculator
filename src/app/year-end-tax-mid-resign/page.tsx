@@ -21,7 +21,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
-import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
@@ -500,6 +500,8 @@ export default function YearEndTaxMidResignPage() {
         <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
         <RelatedCalculators currentPath="/year-end-tax-mid-resign" />
+        {/* 관련 링크 직후 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <MultiplexAd />
 
         <div className="mt-8 max-w-3xl mx-auto">
           <ShareButtons

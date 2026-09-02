@@ -6,7 +6,7 @@ import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
-import { HomeTopAd, InArticleAd, CalcResultAd } from "@/components/AdPlacement";
+import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -162,6 +162,8 @@ export default function HealthInsuranceFee2026Page() {
         {/* 14차 — RelatedCalculators 추가 (dead-end 차단) */}
         <RelatedCalculators currentPath="/health-insurance-fee-2026" title="건보료와 함께 보면 좋은 도구" />
 
+        {/* 관련 링크 직후 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        <GuideMidAd />
         {/* 14차 — ShareButtons (공유 유입) */}
         <div className="my-8">
           <ShareButtons title="2026 건강보험료 계산기" description="직장/지역 가입자별 본인 부담 + 장기요양" />
@@ -175,7 +177,7 @@ export default function HealthInsuranceFee2026Page() {
               <p className="text-xs text-muted-blue dark:text-canvas-300">4대보험·소득세 자동 공제</p>
             </Link>
             <Link href="/health-insurance-2026" className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors">
-              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">7월 건보료 정산 가이드</p>
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">4월 건보료 정산 가이드</p>
               <p className="text-xs text-muted-blue dark:text-canvas-300">작년 소득 기준 정산금</p>
             </Link>
             <Link href="/national-pension-estimate-2026" className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors">
