@@ -4,25 +4,29 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-// 2025년 잠정합의 / 2026년 노조 요구안 시나리오
+// 2026 임협 타결(8/31 찬반투표 가결) / 2025 합의(전년 실지급) 시나리오
+// 2026 타결 수치 출처: 머니투데이·한국경제 2026-09-01 보도 (찬성 61.55%·투표율 78.63%).
+// 운영자 승인 2026-09-03 — 2026 노조 요구안(800%·순이익 30%) 시나리오는 타결로 종료돼 제거.
 const SCENARIOS = [
   {
+    id: "2026-agreed",
+    label: "2026 임협 타결 (8/31 가결·실제 지급)",
+    bonusPercent: 400,
+    fixedAmount: 12_700_000, // 1,270만원
+    freeShares: 15,
+    voucher: 500_000, // 복지포인트 50만 (원 환산)
+    voucherLabel: "복지포인트 50만",
+    desc: "성과금 400% + 정액 1,270만 / 주식 15주 / 복지포인트 50만 / 기본급 월 +10만 (하계휴가비 +20만 별도)",
+  },
+  {
     id: "2025-agreed",
-    label: "2025 잠정합의 (실제 지급)",
+    label: "2025 합의 (전년 실제 지급)",
     bonusPercent: 450,
     fixedAmount: 15_800_000, // 1,580만원
     freeShares: 30,
     voucher: 200_000,
+    voucherLabel: "전통시장 상품권 20만",
     desc: "성과금 350% + 700만 / 격려금 100% + 380만 / 추가 500만 / 무상주 30주 / 상품권 20만",
-  },
-  {
-    id: "2026-union",
-    label: "2026 노조 요구안 (협상 중)",
-    bonusPercent: 800, // 상여 800%
-    fixedAmount: 0, // 순이익 30% 별도 (시뮬 어려움 — 기본 0)
-    freeShares: 30, // 동일 가정
-    voucher: 200_000,
-    desc: "상여 800% (정률) + 순이익 30% (정액 가변) + 무상주 + 상품권. 최종 합의 미확정.",
   },
 ] as const;
 
@@ -30,14 +34,14 @@ const DEFAULT_SALARY_MANWON = 500; // 월 통상임금 디폴트
 const DEFAULT_HYUNDAI_STOCK = 230_000; // 현대차 보통주 23만원 가정 (2026)
 
 export default function HyundaiBonusClient() {
-  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2025-agreed");
+  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2026-agreed");
   const [monthlyBasicManwon, setMonthlyBasicManwon] = useState(DEFAULT_SALARY_MANWON);
   const [stockPrice, setStockPrice] = useState(DEFAULT_HYUNDAI_STOCK);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [bonusPctOverride, setBonusPctOverride] = useState(450);
-  const [fixedOverride, setFixedOverride] = useState(15_800_000);
-  const [sharesOverride, setSharesOverride] = useState(30);
+  const [bonusPctOverride, setBonusPctOverride] = useState(400);
+  const [fixedOverride, setFixedOverride] = useState(12_700_000);
+  const [sharesOverride, setSharesOverride] = useState(15);
   const [customMode, setCustomMode] = useState(false);
   const [creditRate, setCreditRate] = useState(30);
   const [applyInsurance, setApplyInsurance] = useState(true);
@@ -255,7 +259,7 @@ export default function HyundaiBonusClient() {
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
           <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액" />
           <ResultCard label="무상주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
-          <ResultCard label="상품권" value={fmtManwon(calc.voucherWon)} sub="전통시장 상품권" />
+          <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={scenario.voucherLabel} />
         </div>
 
         <div className="rounded-xl bg-white border border-primary/30 p-5">

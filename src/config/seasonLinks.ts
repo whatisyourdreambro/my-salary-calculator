@@ -41,7 +41,7 @@ export const seasonLinks: SeasonLink[] = [
   },
   {
     href: "/civil-servant-pay-2027",
-    header: { name: "2027 공무원 봉급표 전망", description: "9급~5급 호봉별 내년 예상 월급 미리보기", badge: "SEASON" },
+    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
   },
   {
     href: "/social-insurance-rates-2027",
@@ -147,13 +147,13 @@ export const seasonLinks: SeasonLink[] = [
     footer: { name: "SK하이닉스 성과급 계산기", order: 4 },
   },
   {
-    // 현대차 2026 임협 8/31 가결 보도 — 페이지 수치 갱신 전까지 연도·수치 미기재 라벨 (전면 최적화, 운영자 지시 2026-09-02)
+    // 현대차 2026 임협 8/31 가결 — 페이지 수치 동기화 완료 (운영자 승인 2026-09-03)
     href: "/calc/hyundai-bonus",
-    header: { name: "현대차 성과급 계산기", description: "임단협 성과금·격려금·무상주 합산 세후", badge: "HOT" },
+    header: { name: "현대차 성과급 계산기", description: "2026 타결 400%+1,270만+주식 15주 세후", badge: "HOT" },
   },
   {
     href: "/calc/kia-bonus",
-    header: { name: "기아 성과급 계산기", description: "임단협 성과금·격려금·무상주 합산 세후" },
+    header: { name: "기아 성과급 계산기", description: "2026 타결 400%+1,270만+자사주 47주" },
   },
   {
     href: "/calc/lg-energy-bonus",

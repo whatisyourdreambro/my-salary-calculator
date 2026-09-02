@@ -541,6 +541,20 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     sourceFile: "src/app/calc/hyundai-bonus/Client.tsx",
     payouts: [
       {
+        year: 2026,
+        scheme: "임협 성과금(정률)",
+        percentOfBase: 400,
+        note: "2026 임금협상 타결 — 8/31 찬반투표 가결(찬성 61.55%·투표율 78.63%), 총 60시간 파업 후. 별도 주식 15주·복지포인트 50만·기본급 월 +10만",
+        source: "머니투데이·한국경제 2026-09-01 (현대차 노사 임금협상 최종 타결)",
+      },
+      {
+        year: 2026,
+        scheme: "임협 격려금(정액)",
+        fixedAmountManwon: 1270,
+        note: "2026 타결 — 성과금 400%와 함께 지급되는 정액 1,270만원",
+        source: "머니투데이·한국경제 2026-09-01 (현대차 노사 임금협상 최종 타결)",
+      },
+      {
         year: 2025,
         scheme: "임단협 성과금(정률)",
         percentOfBase: 450,
@@ -565,6 +579,20 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     scheme: "임단협 성과금·격려금",
     sourceFile: "src/app/calc/kia-bonus/Client.tsx",
     payouts: [
+      {
+        year: 2026,
+        scheme: "임단협 성과금(정률)",
+        percentOfBase: 400,
+        note: "2026 타결 — 경영성과금 300%+품질향상 격려금 100% 합산. 8/25 잠정합의·8/28 가결(찬성 64.1%), 6년 연속 무분규. 별도 자사주 47주·특별 포인트 50만·기본급 월 +10만",
+        source: "헤럴드경제 2026-08-25·ZDNet/워크투데이 2026-08-28 (기아 임단협 잠정합의·가결)",
+      },
+      {
+        year: 2026,
+        scheme: "임단협 격려금(정액)",
+        fixedAmountManwon: 1270,
+        note: "2026 타결 — 경영성과금 400만+품질향상 격려금 470만+오토카 어워즈 기념 400만 합산 1,270만원",
+        source: "헤럴드경제 2026-08-25·ZDNet/워크투데이 2026-08-28 (기아 임단협 잠정합의·가결)",
+      },
       {
         year: 2025,
         scheme: "임단협 성과금(정률)",

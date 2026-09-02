@@ -50,8 +50,8 @@ const seasonPages: SearchEntry[] = [
  { title: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", category: "계산기", description: "OPI·TAI 세후 실수령", priority: 1 },
  // 2026-08-07 — 기업 성과급 계산기 검색 인덱스 갭 해소 (기존 10종 미등록) + 신규 2종
  { title: "SK하이닉스 성과급 계산기", href: "/calc/sk-hynix-bonus", category: "계산기", description: "PS·PI 세전·세후 즉시 계산", priority: 1 },
- { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "임단협 성과금·격려금·무상주 합산 세전·세후", priority: 1 },
- { title: "기아 성과급 계산기", href: "/calc/kia-bonus", category: "계산기", description: "임단협 성과금·격려금·무상주 합산 세전·세후", priority: 2 },
+ { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "2026 임협 타결 400% + 1,270만 + 주식 15주 세후", priority: 1 },
+ { title: "기아 성과급 계산기", href: "/calc/kia-bonus", category: "계산기", description: "2026 타결 400% + 1,270만 + 자사주 47주 세후", priority: 2 },
  { title: "LG에너지솔루션 성과급 계산기", href: "/calc/lg-energy-bonus", category: "계산기", description: "배터리 사이클 50~900% 시나리오", priority: 2 },
  { title: "HD현대중공업 성과급 계산기", href: "/calc/hd-hyundai-bonus", category: "계산기", description: "조선 슈퍼사이클 600%+", priority: 2 },
  { title: "네이버 성과급·RSU 계산기", href: "/calc/naver-bonus", category: "계산기", description: "PI 10~40% + 자사주 RSU", priority: 2 },
@@ -84,7 +84,7 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 경찰 봉급표", href: "/police-pay-2026", category: "시즌", description: "순경 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 소방관 봉급표", href: "/firefighter-pay-2026", category: "시즌", description: "소방사 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 공무원 봉급표", href: "/civil-servant-pay-2026", category: "시즌", description: "9급 1호봉 213만원·직급별 봉급표", priority: 1 },
- { title: "2027 공무원 봉급표 전망", href: "/civil-servant-pay-2027", category: "시즌", description: "인상률 권고안 3.4~3.9%·확정 일정", priority: 2 },
+ { title: "2027 공무원 봉급표 — 3.9% 인상 확정(예산안)", href: "/civil-servant-pay-2027", category: "시즌", description: "16년 만 최대 인상·9급~5급 예상 월급·확정 일정", priority: 1 },
  // 2026-08-31 — R2 신규 8건 (연말정산 시즌 패키지·뉴스 트리거·이직)
  { title: "맞벌이 연말정산 몰아주기 계산기", href: "/calc/dual-income-year-end", category: "계산기", description: "자녀공제·의료비 귀속 시나리오별 부부 합산 세액 비교", priority: 1 },
  { title: "기부금 세액공제 계산기", href: "/donation-tax-credit-2026", category: "계산기", description: "정치자금·고향사랑 전액공제·종교 10% 한도·10년 이월", priority: 1 },

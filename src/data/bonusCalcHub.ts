@@ -121,7 +121,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     company: "현대자동차",
     companyId: "hyundai",
     sector: "자동차·중공업·철강",
-    hook: "임단협 450% + 1,580만 + 무상주 30주",
+    hook: "2026 임협 타결 400% + 1,270만 + 주식 15주 (8/31 가결)",
     seasonLabel: "12월 임단협 시즌",
   },
   {
@@ -129,7 +129,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     company: "기아",
     companyId: "kia",
     sector: "자동차·중공업·철강",
-    hook: "임단협 450% + 1,600만 + 무상주 53주",
+    hook: "2026 임단협 타결 400% + 1,270만 + 자사주 47주 (6년 연속 무분규)",
     seasonLabel: "12월 임단협 시즌",
   },
   {

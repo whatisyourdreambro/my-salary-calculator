@@ -4,25 +4,30 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-// 기아 임단협 시나리오 (현대차와 동일 패턴, 무상주·정액 차이)
+// 기아 임단협 시나리오 (현대차와 동일 패턴, 자사주·정액 구성 차이)
+// 2026 타결: 8/25 12차 본교섭 잠정합의 → 8/28 찬반투표 가결(찬성 64.1%·투표율 91.0%), 6년 연속 무분규.
+// 출처: 헤럴드경제 2026-08-25·ZDNet/워크투데이 2026-08-28. 운영자 승인 2026-09-03.
+// 2026 노조 요구안 시나리오는 타결로 종료돼 제거.
 const SCENARIOS = [
   {
+    id: "2026-agreed",
+    label: "2026 임단협 타결 (8/28 가결·실제 지급)",
+    bonusPercent: 400, // 경영성과금 300% + 품질향상 격려금 100%
+    fixedAmount: 12_700_000, // 400만 + 470만 + 오토카 어워즈 기념 400만 = 1,270만원
+    freeShares: 47,
+    voucher: 500_000, // 2026 최대 생산·판매 목표 달성 특별 포인트 50만P (원 환산)
+    voucherLabel: "특별 포인트 50만",
+    desc: "경영성과금 300% + 400만 / 품질향상 격려금 100% + 470만 / 오토카 어워즈 기념 400만 / 자사주 47주 / 특별 포인트 50만 / 기본급 월 +10만",
+  },
+  {
     id: "2025-agreed",
-    label: "2025 잠정합의 (실제 지급)",
+    label: "2025 합의 (전년 실제 지급)",
     bonusPercent: 450,
     fixedAmount: 16_000_000, // 1,600만원
     freeShares: 53,
     voucher: 200_000,
+    voucherLabel: "전통시장 상품권 20만",
     desc: "성과금 350% + 700만 / 격려금 100% + 400만 / World Car 500만 / 무상주 53주 / 상품권 20만",
-  },
-  {
-    id: "2026-union",
-    label: "2026 노조 요구안 (협상 중)",
-    bonusPercent: 800,
-    fixedAmount: 0,
-    freeShares: 53,
-    voucher: 200_000,
-    desc: "상여 800% (정률) + 순이익 30% (정액 가변) + 무상주 + 상품권. 최종 합의 미확정.",
   },
 ] as const;
 
@@ -30,14 +35,14 @@ const DEFAULT_SALARY_MANWON = 500;
 const DEFAULT_KIA_STOCK = 120_000; // 기아 보통주 12만원 (2026)
 
 export default function KiaBonusClient() {
-  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2025-agreed");
+  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2026-agreed");
   const [monthlyBasicManwon, setMonthlyBasicManwon] = useState(DEFAULT_SALARY_MANWON);
   const [stockPrice, setStockPrice] = useState(DEFAULT_KIA_STOCK);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [bonusPctOverride, setBonusPctOverride] = useState(450);
-  const [fixedOverride, setFixedOverride] = useState(16_000_000);
-  const [sharesOverride, setSharesOverride] = useState(53);
+  const [bonusPctOverride, setBonusPctOverride] = useState(400);
+  const [fixedOverride, setFixedOverride] = useState(12_700_000);
+  const [sharesOverride, setSharesOverride] = useState(47);
   const [customMode, setCustomMode] = useState(false);
   const [creditRate, setCreditRate] = useState(30);
   const [applyInsurance, setApplyInsurance] = useState(true);
@@ -244,9 +249,9 @@ export default function KiaBonusClient() {
 
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
-          <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액 (World Car 포함)" />
-          <ResultCard label="무상주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
-          <ResultCard label="상품권" value={fmtManwon(calc.voucherWon)} sub="전통시장 상품권" />
+          <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액 (기념 격려금 포함)" />
+          <ResultCard label="자사주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
+          <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={scenario.voucherLabel} />
         </div>
 
         <div className="rounded-xl bg-white border border-primary/30 p-5">

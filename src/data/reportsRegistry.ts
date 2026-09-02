@@ -36,7 +36,7 @@ export const reportsRegistry: ReportMeta[] = [
     title: `2026 대기업 성과급 실지급률 총정리 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건 전수`,
     description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 실제 성과급 지급률 ${bonusPayoutCount}건을 보도·공시 교차 확인으로 집계. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
-    updatedDate: "2026-08-26",
+    updatedDate: "2026-09-03",
     keywords: [
       "성과급 지급률",
       "대기업 성과급",

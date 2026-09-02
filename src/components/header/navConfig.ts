@@ -59,9 +59,9 @@ export const navConfig: NavItem[] = [
    { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 최신 지급률·시즌 캘린더 허브", badge: "MUST" },
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
    { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
-   // 현대차 2026 임협 8/31 가결 보도 — 페이지 수치 갱신 전까지 연도·수치 미기재 라벨 (전면 최적화, 운영자 지시 2026-09-02)
-   { name: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", description: "임단협 성과금·격려금·무상주 합산 세후", badge: "HOT" },
-   { name: "기아 성과급 계산기", href: "/calc/kia-bonus", description: "임단협 성과금·격려금·무상주 합산 세후" },
+   // 현대차·기아 2026 임협 타결 반영 (운영자 승인 2026-09-03) — 매년 8~9월 타결 시 갱신
+   { name: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", description: "2026 타결 400% + 1,270만 + 주식 15주", badge: "HOT" },
+   { name: "기아 성과급 계산기", href: "/calc/kia-bonus", description: "2026 타결 400% + 1,270만 + 자사주 47주" },
    { name: "LG에너지솔루션 성과급", href: "/calc/lg-energy-bonus", description: "배터리 사이클 50~900%" },
    { name: "HD현대중공업 성과급", href: "/calc/hd-hyundai-bonus", description: "조선 슈퍼사이클 600%+" },
    { name: "포스코 성과급", href: "/calc/posco-bonus", description: "철강 사이클 PI + PS 100~1,000%" },
