@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import AutoShareSection from "@/components/AutoShareSection";
+import JsonLd from "@/components/JsonLd";
+import { autoBreadcrumbLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 운세 — 직장인 재물·연봉 운세 한 번에",
@@ -14,6 +16,8 @@ export default function Fortune2026Layout({ children }: { children: React.ReactN
  return (
  <>
  {children}
+ {/* BreadcrumbList 구조화데이터(홈 > 잎) — 전면 최적화 (운영자 지시 2026-09-02) */}
+ <JsonLd data={autoBreadcrumbLd("/fortune-2026", { leafName: "2026 직장인 운세" })} />
  <AutoShareSection contentType="fun" maxWidth="3xl" />
  </>
  );

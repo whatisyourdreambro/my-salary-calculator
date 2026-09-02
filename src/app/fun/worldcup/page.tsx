@@ -7,7 +7,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "기업 이상형 월드컵 - 나의 꿈의 직장 찾기",
-  description: "당신의 꿈의 직장은 어디인가요? 16강 토너먼트로 알아보는 나의 최애 기업 찾기!",
+  description: "삼성전자·SK하이닉스 등 국내 대표 기업을 16강 토너먼트로 붙여 나의 꿈의 직장을 찾는 기업 이상형 월드컵. 평균 연봉·워라밸 점수를 비교하며 고르고 결과를 공유해보세요.",
   path: "/fun/worldcup",
   keywords: ["기업 이상형 월드컵", "꿈의 직장", "회사 월드컵", "이상형 월드컵"],
 });

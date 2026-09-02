@@ -8,6 +8,17 @@ import { Metadata } from "next";
 
 export const dynamic = 'force-static';
 
+// SERP 타이틀 캡 — 데이터 title(이모지 포함 60~71자) + " | Moneysalary Guides" 조합이 81~92자로
+// 검색결과에서 잘리던 문제(html-audit 15편). 뒤쪽 이모지·긴 접미사만 정리해 60자대로 —
+// h1·OG·twitter 는 원본 title 그대로(검색 의도 단어 삭제 없음). 전면 최적화 (운영자 지시 2026-09-02)
+const SERP_TITLE_SUFFIX = " | Moneysalary";
+// 서로게이트 쌍(📊류)·기호 블록(⚖ 등)·VS16·ZWJ 로 끝나는 꼬리 이모지 — u 플래그 없이 ES2017 호환
+const TRAILING_EMOJI_RE = /(?:[\uD83C-\uD83E][\uDC00-\uDFFF]|[☀-➿]|️|‍)+\s*$/;
+function serpTitle(title: string): string {
+ const base = title.replace(TRAILING_EMOJI_RE, "").trim();
+ return base.length + SERP_TITLE_SUFFIX.length <= 60 ? `${base}${SERP_TITLE_SUFFIX}` : base;
+}
+
 interface Props {
  params: { slug: string };
 }
@@ -37,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const hasKo = koGuides.some((g) => g.slug === params.slug);
 
  return {
- title: `${guide.title} | Moneysalary Guides`,
+ title: { absolute: serpTitle(guide.title) },
  description: guide.description,
  alternates: {
  canonical: enUrl,

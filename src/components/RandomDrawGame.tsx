@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RotateCcw, Users, Sparkles, Gift, Plus, Trash2 } from "lucide-react";
+import { InArticleAd } from "@/components/AdPlacement";
 
 // --- Types ---
 interface Ball {
@@ -637,6 +638,15 @@ export default function RandomDrawGame() {
  </div>
  )}
  </div>
+
+ {/* 레이스 종료(finished) 시에만 캔버스 아래 본문 흐름에 광고 — 오버레이(absolute RESTART·LIVE RANKING) 내부 배치는
+ 오클릭 정책 리스크라 금지. fun/layout(CALC_RESULT·쿠팡·HOME_TOP)과 무충돌, 다른 /fun 결과 화면 C3 배치와 동일 패턴
+ — 전면 최적화 (운영자 지시 2026-09-02) */}
+ {gameState === "finished" && (
+ <div className="w-full max-w-2xl mx-auto mt-6">
+ <InArticleAd />
+ </div>
+ )}
  </div>
  );
 }
