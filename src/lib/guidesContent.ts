@@ -31,6 +31,7 @@ import { autumn2026Guides } from "@/lib/guides/autumn-2026-season";
 import { companySalaryDeepdive2026 } from "@/lib/guides/company-salary-deepdive-2026";
 import { jobSalaryDeepdive2026 } from "@/lib/guides/job-salary-deepdive-2026";
 import { financeRpm2026Guides } from "@/lib/guides/finance-rpm-2026";
+import { semiconductorBonusNews202609Guides } from "@/lib/guides/semiconductor-bonus-news-2026-09";
 import { legacyRewrite1 } from "@/lib/guides/legacy-rewrite-1";
 import { legacyRewrite2 } from "@/lib/guides/legacy-rewrite-2";
 import { legacyRewrite3 } from "@/lib/guides/legacy-rewrite-3";
@@ -345,6 +346,11 @@ const allRawGuides = [
  ...companySalaryDeepdive2026,
  ...jobSalaryDeepdive2026,
  ...financeRpm2026Guides,
+ // 16차 (2026-09-03) — 삼성전자·SK하이닉스 성과급 뉴스 5편.
+ // SK하이닉스 8/25 총투표 부결 이후 재협상 국면(9/2 소통행사까지)과
+ // 삼성전자 8/21 이사회 임직원 보상용 자사주 15조 매입 의결이 축.
+ // 확정/보도/전망을 본문에서 구분 표기 — 전망은 "확정 아님" 명시.
+ ...semiconductorBonusNews202609Guides,
 ];
 
 // Generate the final guides array with content

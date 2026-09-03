@@ -278,9 +278,19 @@ export const BONUS_NEWS_2026: Array<{
   href: string;
 }> = [
   {
+    date: "2026-09-02",
+    text: "SK하이닉스 부결 후 첫 소통행사 — 곽노정 사장 \"세세한 부분 구성원과 함께 고민\", 재교섭 일정은 미발표",
+    href: "/guides/sk-hynix-bonus-renegotiation-sept-2026",
+  },
+  {
     date: "2026-08-25",
     text: "SK하이닉스 잠정합의안 총투표 부결 — 전임직 반대 50.08%(25표 차), 노사 재협상 돌입",
     href: "/calc/sk-hynix-bonus",
+  },
+  {
+    date: "2026-08-21",
+    text: "삼성전자 이사회, 임직원 보상용 자사주 약 15조 매입 의결 — OPI·특별경영성과급 주식보상 재원(취득기한 11/21)",
+    href: "/guides/samsung-bonus-treasury-stock-15-trillion-2026",
   },
   {
     date: "2026-08-20",

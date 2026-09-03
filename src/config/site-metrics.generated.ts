@@ -12,7 +12,7 @@ export const INDUSTRY_COUNT = 27;
 /** 지역 수 — regionsData.length (17개 시도 + 판교·여의도) */
 export const REGION_COUNT = 19;
 /** 한국어 가이드 편수 — koGuides.length */
-export const GUIDE_COUNT = 329;
+export const GUIDE_COUNT = 334;
 /** /calc/[slug] 퀵 계산기 수 — allCalculators.length */
 export const SIMPLE_CALC_COUNT = 101;
 /** /tools 리프 도구 수 — page.tsx 파일 수(인덱스 제외) */

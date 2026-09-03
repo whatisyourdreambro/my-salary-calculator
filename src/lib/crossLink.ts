@@ -11,6 +11,20 @@
  * 가이드가 존재하지 않으면 RelatedGuides가 자동 fallback.
  */
 export const CALC_TO_GUIDES: Record<string, string[]> = {
+  // ───── 반도체 성과급 뉴스 (2026-09-03 게시글 5편) — 정적 라우트 계산기라
+  // STATIC_CALC_CARDS 에 카드가 있어야 가이드 하단 '관련 계산기'가 렌더된다.
+  "samsung-bonus": [
+    "samsung-bonus-treasury-stock-15-trillion-2026",
+    "samsung-special-bonus-q3-preview-2027",
+    "samsung-vs-sk-hynix-stock-bonus-2026",
+    "samsung-opi-forecast-2027",
+  ],
+  "sk-hynix-bonus": [
+    "sk-hynix-bonus-renegotiation-sept-2026",
+    "sk-hynix-ps-cash-vs-stock-scenarios-2026",
+    "samsung-vs-sk-hynix-stock-bonus-2026",
+    "sk-hynix-ps-forecast-2027",
+  ],
   // ───── 시즌성 — 11~3월 트래픽 핫스팟
   "year-end-bonus": ["year-end-tax-2026", "bonus-tax-rate"],
   "year-end-bonus-tax": ["year-end-tax-2026", "bonus-tax-rate"],
@@ -208,6 +222,17 @@ export const STATIC_CALC_CARDS: Record<
     title: "2027 4대보험 요율표",
     description: "국민연금 10% 확정 — 내 월급 공제 변화 미리 확인",
     href: "/social-insurance-rates-2027",
+  },
+  // 반도체 성과급 전용 계산기 2종 (2026-09-03 뉴스 게시글 5편 역링크용)
+  "samsung-bonus": {
+    slug: "samsung-bonus",
+    title: "삼성전자 성과급 계산기",
+    description: "특별경영성과급 10.5% 분배·OPI·TAI — 사업부별 세후 실수령 시뮬레이션",
+  },
+  "sk-hynix-bonus": {
+    slug: "sk-hynix-bonus",
+    title: "SK하이닉스 성과급 계산기",
+    description: "PS 영업이익 10%·PI — 현금·자사주 신구 체계 세후 실수령 시뮬레이션",
   },
 };
 
