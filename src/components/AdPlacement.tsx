@@ -188,10 +188,16 @@ function AdSlot({
           className="adsbygoogle"
           style={{
             display: "block",
-            // in-article fluid 광고는 Google 권장 style="display:block; text-align:center;" 그대로 적용.
+            // in-article fluid 광고도 width 100% 를 반드시 명시할 것 (2026-09-04 수정).
+            // Google 권장 스니펫은 display:block; text-align:center; 뿐이지만 그 전제는 일반 블록 흐름 부모다.
+            // 이 컨테이너는 flexDirection:column + alignItems:center 라(위 컨테이너 style 참조)
+            // 교차축 크기를 명시하지 않은 자식이 내용에 맞춰 축소된다. 빈 <ins> 는 내용이 없어 width 가 0px 이 되고,
+            // AdSense 가 슬롯 크기를 결정하지 못해 광고 요청 자체를 하지 않는다
+            // (data-adsbygoogle-status=done 이지만 data-ad-status 는 null, iframe 0개 — 프로덕션 실측).
+            // 바로 위 라벨 span 이 width:"100%" 를 명시하는 것과 같은 이유. 이 width 를 제거하지 말 것.
             // 일반 display 광고는 full-width-responsive 활용을 위해 width 100% 명시 + minHeight 로 CLS 방지.
             ...(isInArticle
-              ? { textAlign: "center" }
+              ? { width: "100%", textAlign: "center" }
               : { width: "100%", minHeight: `${minHeight}px` }),
           }}
           data-ad-client={CLIENT_ID}
