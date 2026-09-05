@@ -84,8 +84,8 @@ export default function InsightsIndexPage() {
           <GuideMidAd />
         </div>
 
-        {/* 인용 정책 */}
-        <section className="mb-12">
+        {/* 인용 정책 — id 는 리포트 Dataset JSON-LD license URL(/insights#citation-policy)의 앵커 */}
+        <section id="citation-policy" className="mb-12 scroll-mt-24">
           <h2 className="text-xl font-black text-navy mb-3 inline-flex items-center gap-2">
             <Quote className="w-5 h-5 text-electric" />
             인용 정책

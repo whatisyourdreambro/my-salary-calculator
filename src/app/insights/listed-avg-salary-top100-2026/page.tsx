@@ -23,6 +23,7 @@ import { breadcrumbLd, datasetLd, articleLd, faqLd } from "@/lib/structuredData"
 import PublishedMeta from "@/components/PublishedMeta";
 import CitationCopyButton from "@/components/CitationCopyButton";
 import { InArticleAd, GuideMidAd, HomeTopAd, MultiplexAd } from "@/components/AdPlacement";
+import { CITATION_POLICY_URL, DART_CITATION, reportDataUrls } from "../_lib/reportDatasetMeta";
 
 export const dynamic = "force-static";
 
@@ -96,6 +97,14 @@ export default function ListedAvgSalaryTop100Report() {
             datePublished: report.publishedDate,
             dateModified: report.updatedDate,
             keywords: report.keywords,
+            // 원본 데이터 재사용 통로 — /data.csv·/data.json (2026-09-05). 공시 단일 출처라 citation=DART
+            distribution: [
+              { encodingFormat: "text/csv", contentUrl: reportDataUrls(SLUG).csv },
+              { encodingFormat: "application/json", contentUrl: reportDataUrls(SLUG).json },
+            ],
+            license: CITATION_POLICY_URL,
+            temporalCoverage: stats.rankYear,
+            citation: DART_CITATION,
           }),
           articleLd({
             title: report.title,

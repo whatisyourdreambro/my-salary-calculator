@@ -28,6 +28,7 @@ import PublishedMeta from "@/components/PublishedMeta";
 import CitationCopyButton from "@/components/CitationCopyButton";
 import { HomeTopAd, InArticleAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import ChartSection from "./ChartSection";
+import { CITATION_POLICY_URL, DART_CITATION, reportDataUrls } from "../_lib/reportDatasetMeta";
 
 export const dynamic = "force-static";
 
@@ -171,6 +172,15 @@ export default function EntrySalaryByIndustryReport() {
             datePublished: report.publishedDate,
             dateModified: report.updatedDate,
             keywords: report.keywords,
+            // 원본 데이터 재사용 통로 — /data.csv·/data.json (2026-09-05). CSV 는 행마다 estimateIncluded=true
+            // (투명 혼합형). citation 은 교차 검증 섹션의 1차 출처(DART)
+            distribution: [
+              { encodingFormat: "text/csv", contentUrl: reportDataUrls(SLUG).csv },
+              { encodingFormat: "application/json", contentUrl: reportDataUrls(SLUG).json },
+            ],
+            license: CITATION_POLICY_URL,
+            temporalCoverage: "2026",
+            citation: DART_CITATION,
           }),
           articleLd({
             title: report.title,

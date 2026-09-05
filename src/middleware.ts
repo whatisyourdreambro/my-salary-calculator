@@ -51,6 +51,8 @@ export const config = {
     //  rss.xml은 RSS 수집기 UA가 SUSPICIOUS_UA에 걸려 403 나던 문제 해소.
     //  rss-companies.xml도 동일 — 네이버 서치어드바이저 수집 채널이 axios류
     //  UA로 접근하면 403이 나 피드 목적 자체가 무력화되던 비대칭 해소, 2026-08-24)
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|rss-companies.xml|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
+    //  insights/<slug>/data.csv·data.json 은 리포트 원본 데이터 내려받기 — curl·pandas·
+    //  기자 도구 UA(SUSPICIOUS_UA)가 403 나면 재사용 통로 자체가 막히므로 rss 와 동일 제외, 2026-09-05)
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|rss-companies.xml|insights/[a-z0-9-]+/data.csv|insights/[a-z0-9-]+/data.json|api/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html).*)",
   ],
 };
