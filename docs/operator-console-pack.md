@@ -13,7 +13,7 @@
 ## 세션 1 — 9/7 (20분)
 1. ☐ **GA4 데이터 보관 14개월** (1분): analytics.google.com → 왼쪽 아래 관리(톱니) → 데이터 수집 및 수정 → **데이터 보관** → 이벤트 데이터 보관 **14개월** → 저장. 증빙: 저장 화면 캡처.
 2. ☐ **GA4 맞춤 측정기준 5개** (8분): 관리 → 데이터 표시 → **맞춤 정의** → 맞춤 측정기준 만들기 → 범위 **이벤트** → 측정기준 이름·이벤트 매개변수에 같은 값 입력 → 저장. 5개: `slot_kind`, `position`, `calc_type`, `offer_id`, `vertical`. 증빙: 맞춤 정의 목록 캡처 1장. (나머지 8개 `page`·`company_id`·`method`·`content_type`·`size_key`·`target_path`·`metric_name`·`metric_rating`는 9/21)
-3. ☐ **AdSense 광고 단위 CSV 2장** (10분): adsense.google.com → 보고서 → 날짜 **맞춤** 2026-08-03~08-16 → 분류 기준 **광고 단위** → 표 우측 상단 다운로드 CSV → 날짜를 08-17~08-30으로 바꿔 한 번 더. 파일명 `2026-09-07-units-before.csv`·`2026-09-07-units-after.csv`. **원본은 리포에 넣지 않는다**(채팅 첨부만).
+3. ☐ **AdSense 광고 단위 CSV 3장** (12분): adsense.google.com → 보고서 → 날짜 **맞춤** 2026-08-03~08-16 → 분류 기준 **광고 단위** → 표 우측 상단 다운로드 CSV → 날짜를 08-17~08-30으로 바꿔 한 번 더 → 날짜를 **최근 28일**로 바꿔 한 번 더(우발 클릭 의심 유닛 특정용: 어느 유닛의 CTR이 높고 CPC가 낮은지). 파일명 `2026-09-07-units-before.csv`·`2026-09-07-units-after.csv`·`2026-09-07-units-28d.csv`. **원본은 리포에 넣지 않는다**(채팅 첨부만). 9/5에 주신 2번째 CSV가 어떤 필터였는지(광고 단위 전체? 특정 유닛? 기기?) 한 줄 알려주시면 분석 전제를 확정합니다.
 
 ## 9/8 (10분)
 - ☐ 건강보험 요율 결정 결과 한 줄: "인상 총요율 X.XX% (근로자 Y.YYY%) 시행 2027-01-01, 부과체계 변경 없음" 또는 "동결". 키트: `docs/drafts/health-rate-2027-kit.md`.
@@ -51,6 +51,16 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 - ☐ Cloudflare Pages → Settings → Environment variables에 `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 1848295488인지 확인(없으면 할 일 없음).
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
+
+## 분석 스크립트 (Claude 용 — CSV 도착 시 실행, 원본은 리포 밖)
+```
+node scripts/adsense-report.mjs window <일별.csv> <from> <to> [--compare <from2> <to2>] [--md]   # 기간 집계(+두 창 비교·변화율)
+node scripts/adsense-report.mjs join <사이트일별.csv> <subset일별.csv> <from> <to> [--md]        # 날짜 조인 → subset 점유율·나머지 RPM/CTR/CPC
+node scripts/adsense-report.mjs units <광고단위.csv> [--from <d> --to <d>] [--md]                 # 광고 단위별 표 + 우발 클릭/죽은 유닛 플래그
+node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.csv> [--days <n1> <n2>] [--md] # 실험 #1 판정(유지/재검토/판정 불가)
+node scripts/adsense-report.mjs --selftest                                                        # 예시 파일 2개 join 자가 점검
+```
+CSV 는 `C:\Users\ruby1\.moneysalary-secrets\adsense\` 에 두고 절대 경로로 지정. 2026-09-05 실측(6/1~9/4 조인 96일): 수동(추정) 수익 점유 16.2%·클릭 39.7%·CPC $0.015 vs 나머지 $0.050.
 
 ## 참고: 광고 단위 목록 (2026-09-05 캡처 기준)
 사용 중 7개: 가이드중간 1848295488 · 디스플레이2 8284703133 · 멀티플렉스 1910866475 · 인아티클 3302558597 · 상단 9958502911 · 결과창_본문 5584143639 · PC_날개 1397486615. 구 "모바일_앵커" 6458241606은 디스플레이 타입(앵커 아님, 미사용·삭제 금지). 2025-11 생성분 7개(중앙01/02·오른쪽01/02·왼쪽01/02·001)는 미사용. 인피드 유닛은 아직 없음(세션 3).
