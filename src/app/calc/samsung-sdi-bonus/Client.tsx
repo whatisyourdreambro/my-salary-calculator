@@ -4,18 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-const SCENARIOS = [
-  { id: "chasm", label: "캐즘 (0%)", percent: 0, hint: "2026 배터리·본사" },
-  { id: "electromat", label: "전자재료 (5%)", percent: 5, hint: "2026 폴더블 OLED" },
-  { id: "recovery", label: "회복기 (18%)", percent: 18, hint: "2024 전자재료" },
-  { id: "normal", label: "평년 (28%)", percent: 28, hint: "2024 본사" },
-  { id: "boom", label: "호황 (48%)", percent: 48, hint: "전기차 슈퍼사이클" },
-] as const;
-
-const DEFAULT_SALARY_MANWON = 8000;
-const BASIC_RATIO = 20; // 기본급 = 연봉 / 20
-const TAI_HALF = 1.0; // 반기당 월 기본급 100%
-const TAI_PER_YEAR = 2; // 연 2회
+import { SCENARIOS, DEFAULT_SALARY_MANWON, BASIC_RATIO, TAI_HALF, TAI_PER_YEAR } from "./data";
 
 export default function SamsungSdiBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("chasm");

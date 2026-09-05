@@ -4,16 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-const PS_SCENARIOS = [
-  { id: "deficit", label: "적자 (0%)", percent: 0, hint: "다운사이클 2024" },
-  { id: "minimum", label: "최소 (100%)", percent: 100, hint: "회복기 시작" },
-  { id: "normal", label: "평년 (400%)", percent: 400, hint: "안정 흑자" },
-  { id: "specialty", label: "첨단소재 (600%)", percent: 600, hint: "2022 호황 평균" },
-  { id: "petro", label: "석유화학 (850%)", percent: 850, hint: "2022 슈퍼사이클 최대" },
-] as const;
-
-const PI_FIXED_PERCENT = 200; // PI 연간 고정 200%
-const DEFAULT_BASIC_MANWON = 450;
+import { PS_SCENARIOS, PI_FIXED_PERCENT, DEFAULT_BASIC_MANWON } from "./data";
 
 export default function LgChemBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof PS_SCENARIOS)[number]["id"]>("normal");

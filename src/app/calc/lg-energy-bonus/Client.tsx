@@ -4,16 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-// LG에너지솔루션 성과급 시나리오 (배터리 사이클 기반)
-const SCENARIOS = [
-  { id: "deficit", label: "적자기 (50%)", percent: 50, hint: "2024년 실 지급" },
-  { id: "current", label: "최근 (75%)", percent: 75, hint: "2025년 실 지급" },
-  { id: "recovery", label: "회복기 (200%)", percent: 200, hint: "ESS 전환 가정" },
-  { id: "normal", label: "평년 (400%)", percent: 400, hint: "안정 흑자" },
-  { id: "boom", label: "호황 (900%)", percent: 900, hint: "2022년 폭증기" },
-] as const;
-
-const DEFAULT_BASIC_MANWON = 450;
+import { SCENARIOS, DEFAULT_BASIC_MANWON } from "./data";
 
 export default function LgEnergyBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("current");

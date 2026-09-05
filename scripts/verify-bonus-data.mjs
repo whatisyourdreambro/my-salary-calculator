@@ -14,6 +14,12 @@
 //
 // 한계: AST 파서가 아닌 라인 스캔이다. bonusData.ts 의 각 프로필에서
 //       sourceFile 필드가 payouts 배열보다 먼저 와야 한다 (현재 파일 규약).
+//
+// 2026-09-05 확장 (10배 계획 L13b ①): sourceFile 이 …/Client.tsx 이고 같은 폴더에
+//   data.ts(인라인 상수를 분리한 순수 데이터 모듈)가 있으면 두 파일 텍스트를 합쳐
+//   검사한다 — 시나리오 % 는 data.ts 로, 본문 안내문의 금액(예: 2,765만원)은
+//   Client.tsx JSX 에 남아 있으므로 합산 스캔이 필요하다. sourceFile 값 자체는
+//   기존 규약(Client.tsx) 그대로 둔다.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -128,13 +134,23 @@ function manwonVariants(v) {
 
 // ── sourceFile 별 검사 ───────────────────────────────────────
 const fileCache = new Map();
+let dataModuleCount = 0; // Client.tsx 와 합산 스캔한 data.ts 수
 function readSource(rel) {
   if (!fileCache.has(rel)) {
     const abs = path.join(ROOT, rel);
     if (!fs.existsSync(abs)) {
       fileCache.set(rel, null);
     } else {
-      fileCache.set(rel, fs.readFileSync(abs, "utf8"));
+      let text = fs.readFileSync(abs, "utf8");
+      // Client.tsx + 같은 폴더 data.ts 합산 스캔 (2026-09-05 데이터 모듈 분리 대응)
+      if (/[\\/]Client\.tsx$/.test(rel)) {
+        const sibling = path.join(path.dirname(abs), "data.ts");
+        if (fs.existsSync(sibling)) {
+          text += "\n" + fs.readFileSync(sibling, "utf8");
+          dataModuleCount++;
+        }
+      }
+      fileCache.set(rel, text);
     }
   }
   return fileCache.get(rel);
@@ -174,6 +190,7 @@ console.log(
 for (const [slug, cnt] of perCompany) {
   console.log(`  - ${slug}: ${cnt} numeric value(s)`);
 }
+console.log(`  (data.ts 합산 스캔: ${dataModuleCount}개 폴더)`);
 
 if (mismatches.length > 0) {
   console.error(`\n[verify-bonus-data] 불일치 ${mismatches.length}건:`);

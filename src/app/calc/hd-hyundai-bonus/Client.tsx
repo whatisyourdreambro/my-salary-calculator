@@ -4,15 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-// HD현대중공업 시나리오
-const SCENARIOS = [
-  { id: "average", label: "평년 (400%)", percent: 400, hint: "사이클 평균" },
-  { id: "current", label: "2025 연말 (600%)", percent: 600, hint: "통합 HD현대중공업" },
-  { id: "samho", label: "HD현대삼호 (837%)", percent: 837, hint: "사업부별 차등" },
-  { id: "union", label: "2026 노조 요구 (~1,400%)", percent: 1400, hint: "영업이익 30% 분배" },
-] as const;
-
-const DEFAULT_BASIC_MANWON = 450;
+import { SCENARIOS, DEFAULT_BASIC_MANWON } from "./data";
 
 export default function HdHyundaiBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("current");

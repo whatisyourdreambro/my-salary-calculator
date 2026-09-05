@@ -4,17 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock, Coins, MessageCircle } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-const PI_SCENARIOS = [
-  { value: 10, label: "10% (낮음)" },
-  { value: 20, label: "20% (보통)" },
-  { value: 30, label: "30% (높음)" },
-  { value: 40, label: "40% (최상위)" },
-] as const;
-
-const DEFAULT_SALARY_MANWON = 9000;
-const DEFAULT_KAKAO_STOCK = 50_000;
-const DEFAULT_RSU_SHARES = 135; // 평균 1인당 670만원 / 5만 = 135주
-const ENCOURAGEMENT_BONUS = 1_000_000; // 2026 격려금 100만원
+import { PI_SCENARIOS, DEFAULT_SALARY_MANWON, DEFAULT_KAKAO_STOCK, DEFAULT_RSU_SHARES, ENCOURAGEMENT_BONUS } from "./data";
 
 export default function KakaoBonusClient() {
   const [salaryManwon, setSalaryManwon] = useState(DEFAULT_SALARY_MANWON);

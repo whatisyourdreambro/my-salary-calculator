@@ -4,16 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock, Coins, Search } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-const PI_SCENARIOS = [
-  { value: 10, label: "10% (낮은 평가)" },
-  { value: 20, label: "20% (보통)" },
-  { value: 30, label: "30% (높음)" },
-  { value: 40, label: "40% (최상위)" },
-] as const;
-
-const DEFAULT_SALARY_MANWON = 8000; // 네이버 평균 8천만~1억
-const DEFAULT_NAVER_STOCK = 230_000;
-const DEFAULT_RSU_SHARES = 50; // 일반 직원 RSU 가정
+import { PI_SCENARIOS, DEFAULT_SALARY_MANWON, DEFAULT_NAVER_STOCK, DEFAULT_RSU_SHARES } from "./data";
 
 export default function NaverBonusClient() {
   const [salaryManwon, setSalaryManwon] = useState(DEFAULT_SALARY_MANWON);

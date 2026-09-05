@@ -4,14 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-const SCENARIOS = [
-  { id: "deficit", label: "적자기 (100%)", percent: 100, hint: "다운사이클·중국 덤핑" },
-  { id: "normal", label: "평년 (400%)", percent: 400, hint: "철강 안정기" },
-  { id: "boom", label: "호황 (800%)", percent: 800, hint: "직고용 발표 사례 (2025-04)" },
-  { id: "super", label: "슈퍼사이클 (1,000%)", percent: 1000, hint: "2022 영업익 7조 수준" },
-] as const;
-
-const DEFAULT_BASIC_MANWON = 450;
+import { SCENARIOS, DEFAULT_BASIC_MANWON } from "./data";
 
 export default function PoscoBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("normal");
