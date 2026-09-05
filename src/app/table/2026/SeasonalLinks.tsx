@@ -103,7 +103,86 @@ export const SEASONAL_LINKS_OCT: SeasonalLinkSet = {
   ],
 };
 
+// 12월 연말정산 마감 세트 — 12/1 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
+// 라우트 6종 전부 src/app 에 실존 확인. ★TAI 하반기는 발표 전 → 라벨만, 지급률 수치 금지
+// (brief §2-5). 12/31 은 귀속연도 종료일(법정)이라 카피 허용.
+export const SEASONAL_LINKS_DEC: SeasonalLinkSet = {
+  heading: "연말정산 12/31 마감 전 체크 — 12월 시즌 체크리스트",
+  links: [
+    {
+      href: "/year-end-tax-2027",
+      title: "연말정산 2027 총정리 허브 (2026년 귀속)",
+      description: "일정·계산기·단계별 로드맵 — 12/31 전 마지막 점검",
+    },
+    {
+      href: "/calc/samsung-bonus",
+      title: "삼성전자 하반기 TAI 세후 계산기",
+      description: "사업부별 지급률 입력 → 세후 실수령액 즉시 확인",
+    },
+    {
+      href: "/credit-card-deduction-2026",
+      title: "신용카드 소득공제 계산기",
+      description: "총급여 25% 문턱 넘겼나? 연말 결제수단별 공제율·한도 확인",
+    },
+    {
+      href: "/medical-tax-credit-2026",
+      title: "의료비 세액공제 계산기",
+      description: "실손 차감 후 공제액 — 난임 30%·무한도 대상 구분",
+    },
+    {
+      href: "/year-end-tax-checklist",
+      title: "연말정산 체크리스트",
+      description: "12.31 마감 전 놓치기 쉬운 공제 항목 점검",
+    },
+    {
+      href: "/table/2027/annual",
+      title: "2027 연봉 실수령액 표 미리보기",
+      description: "국민연금 10%(근로자 5%) 반영 — 내년 세후 월급 선확인",
+    },
+  ],
+};
+
+// 1월 연말정산 간소화·OPI 세트 — 1/2 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
+// 라우트 6종 전부 src/app 에 실존 확인. ★OPI 는 발표 전 → 라벨만, 지급률 수치 금지.
+// ★간소화 오픈일은 국세청 공지 전 미확인 → 날짜 카피 금지.
+export const SEASONAL_LINKS_JAN: SeasonalLinkSet = {
+  heading: "연말정산 간소화 오픈 — 1월 시즌 체크리스트",
+  links: [
+    {
+      href: "/year-end-tax-2027",
+      title: "연말정산 간소화 서비스 이용 순서 — 2027 허브",
+      description: "간소화 자료 조회부터 회사 제출까지 단계별 로드맵",
+    },
+    {
+      href: "/calc/samsung-bonus",
+      title: "삼성전자 OPI 세후 계산기",
+      description: "발표된 사업부별 지급률 입력 → 세후 실수령액 바로 확인",
+    },
+    {
+      href: "/year-end-tax",
+      title: "연말정산 환급금 계산기",
+      description: "간소화 자료 기준 예상 환급·추가납부액 즉시 계산",
+    },
+    {
+      href: "/credit-card-deduction-2026",
+      title: "신용카드 소득공제 계산기",
+      description: "결제수단별 공제율·한도 — 간소화 자료로 막판 점검",
+    },
+    {
+      href: "/table/2027/annual",
+      title: "2027 연봉 실수령액 표",
+      description: "국민연금 10%(근로자 5%) 적용 — 올해 세후 월급 확인",
+    },
+    {
+      href: "/medical-tax-credit-2026",
+      title: "의료비 세액공제 계산기",
+      description: "실손 차감 후 공제액 — 난임 30%·무한도 대상 구분",
+    },
+  ],
+};
+
 // 9/26 교체: SEASONAL_LINKS_SEP → SEASONAL_LINKS_OCT
+// 12/1·1/2 교체 = 한 줄: SEASONAL_LINKS_OCT → SEASONAL_LINKS_DEC → SEASONAL_LINKS_JAN
 const ACTIVE_SET: SeasonalLinkSet = SEASONAL_LINKS_SEP;
 
 interface SeasonalLinksProps {
@@ -113,7 +192,10 @@ interface SeasonalLinksProps {
 
 export default function SeasonalLinks({ className = "" }: SeasonalLinksProps) {
   return (
-    <section className={`max-w-4xl mx-auto mt-12 mb-4 ${className}`}>
+    <section
+      className={`max-w-4xl mx-auto mt-12 mb-4 ${className}`}
+      data-msy-module="seasonal-links"
+    >
       <div className="flex items-center gap-2 mb-4 px-1">
         <Flame className="w-5 h-5 text-electric" aria-hidden="true" />
         <h2 className="text-lg font-black text-navy">{ACTIVE_SET.heading}</h2>

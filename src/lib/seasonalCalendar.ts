@@ -8,13 +8,23 @@
 // ★ 선택 규칙: find() 첫 매치. 같은 달에 여러 항목이 있으면 days 범위가 있는 항목을
 //   범위 없는(월 전체) 항목보다 앞에 둘 것 — 뒤에 두면 영원히 잡히지 않는다.
 //   (테스트가 이 순서 불변식과 "연중 공백 없음"을 검사한다)
-// ★ 성과급 슬롯(12/15~31 TAI H2·1월 셀트리온/OPI·2월 SK PS)은 이 파일에 아직 없다 —
-//   데이터 non-null 게이트(발표 전 추정 카피 금지)와 함께 L13b(10월)에서 추가.
+// ★ 성과급 슬롯: 1월 OPI(20~31)만 게이트 항목으로 존재(2026-09-05 L13b 선행분 ④) —
+//   getCurrentSeasonal(now, { opiAnnounced: true }) 일 때만 열리고, 기본(false)이면 find()가
+//   카드공제 항목으로 자연 폴스루. 발표값 정본은 src/data/opiAnnouncement.ts (발표 전 null 강제).
+//   12/15~31 TAI H2·2월 SK PS 슬롯은 아직 없다 — 데이터 non-null 게이트와 함께 L13b 에서 추가.
+
+/** 캘린더 항목이 열리기 위해 필요한 외부 발표 게이트 — 호출부가 인자로 주입 */
+export interface SeasonalGates {
+  /** 삼성전자 OPI 발표 확인 여부 (src/data/opiAnnouncement.ts announced) — 기본 false */
+  opiAnnounced?: boolean;
+}
 
 export interface SeasonalContent {
   month: number[];
   /** 같은 달 안에서 노출 기간을 좁힐 때 (예: 성과급 지급 주간) */
   days?: { from: number; to: number };
+  /** 발표 게이트 — 지정 시 해당 게이트가 true 로 주입될 때만 매치 (발표 전 추정 카피 금지) */
+  requires?: keyof SeasonalGates;
   title: string;
   subtitle: string;
   href: string;
@@ -123,6 +133,19 @@ export const SEASONAL_CALENDAR: SeasonalContent[] = [
     href: "/year-end-tax-preview",
     cta: "미리보기 이용법",
   },
+  // 1월 삼성전자 OPI 발표 슬롯(1/20~31) — 2026-09-05 L13b 선행분 ④. 카드공제(15~31) 항목보다
+  // 앞에 두되 requires 게이트로 잠금: getCurrentSeasonal 의 opiAnnounced 가 true 일 때만 매치.
+  // ★ 발표 전 추정 수치·날짜 카피 금지(테스트가 숫자 패턴을 검사). 2/1~5 연장은 별도 결정.
+  //   1월 홈 배너 1순위 = OPI(카드공제보다 우선)는 운영자 확인 항목 — 미확인 시 게이트를 열지 말 것.
+  {
+    month: [1],
+    days: { from: 20, to: 31 },
+    requires: "opiAnnounced",
+    title: "삼성전자 OPI 발표 — 내 세후 실수령은?",
+    subtitle: "사업부별 지급률 확정 — 지급률 입력하면 세후 실수령액 바로 계산",
+    href: "/calc/samsung-bonus",
+    cta: "OPI 계산하기",
+  },
   // 연말정산 공제 항목별 계산기 3종(신용카드·의료비·월세) — 2026-08 클러스터 편입.
   // 11~12월과 1월 초는 아래 "2027 연말정산 허브"(D-12/31 카운트다운)가 그대로 우선.
   // 간소화 서비스가 열리는 1월 중순부터 회사 제출·정산 마무리기인 2월 중순까지 노출하고,
@@ -182,15 +205,23 @@ export function getDaysLeft(
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-/** now 기준 첫 매치 항목 (없으면 null). now 주입은 테스트용 — 기본값은 현재 시각. */
-export function getCurrentSeasonal(now: Date = new Date()): SeasonalContent | null {
+/**
+ * now 기준 첫 매치 항목 (없으면 null). now 주입은 테스트용 — 기본값은 현재 시각.
+ * gates: 발표 게이트 주입(선택). requires 가 있는 항목은 해당 게이트가 true 일 때만 매치되고,
+ * 기본(미주입·false)이면 건너뛰어 다음 항목으로 폴스루한다 — 순수 함수 유지(호출부가 값을 넘김).
+ */
+export function getCurrentSeasonal(
+  now: Date = new Date(),
+  gates: SeasonalGates = {}
+): SeasonalContent | null {
   const month = now.getMonth() + 1;
   const day = now.getDate();
   return (
     SEASONAL_CALENDAR.find(
       (s) =>
         s.month.includes(month) &&
-        (!s.days || (day >= s.days.from && day <= s.days.to))
+        (!s.days || (day >= s.days.from && day <= s.days.to)) &&
+        (!s.requires || gates[s.requires] === true)
     ) || null
   );
 }

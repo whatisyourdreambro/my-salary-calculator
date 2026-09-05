@@ -12,6 +12,7 @@ import {
   getCurrentSeasonal,
   getDaysLeft,
 } from "@/lib/seasonalCalendar";
+import { OPI_2026_ANNOUNCEMENT } from "@/data/opiAnnouncement";
 
 /** 로컬 정오 — 타임존 경계와 무관하게 해당 날짜로 고정 */
 const at = (y: number, m: number, d: number) => new Date(y, m - 1, d, 12, 0, 0);
@@ -88,6 +89,85 @@ describe("SEASONAL_CALENDAR — 순서·카피 불변식", () => {
     expect(
       SEASONAL_CALENDAR.some((s) => s.href === "/year-end-tax-settlement-2026")
     ).toBe(false);
+  });
+});
+
+// 1월 OPI 게이트 슬롯 (2026-09-05 L13b 선행분 ④) — 발표 전 기본값은 카드공제로 폴스루,
+// opiAnnounced:true 주입 시에만 1/20~31 이 /calc/samsung-bonus 로 바뀐다.
+describe("1월 OPI 게이트 — getCurrentSeasonal(now, { opiAnnounced })", () => {
+  const OPI_HREF = "/calc/samsung-bonus";
+  const CARD_HREF = "/credit-card-deduction-2026";
+
+  it("게이트 미주입(기본)·false 는 1/20~31 에 카드공제 — OPI 항목을 건너뛴다", () => {
+    for (const d of [20, 25, 31]) {
+      expect(getCurrentSeasonal(at(2027, 1, d))?.href, `1/${d} 기본`).toBe(CARD_HREF);
+      expect(
+        getCurrentSeasonal(at(2027, 1, d), { opiAnnounced: false })?.href,
+        `1/${d} false`
+      ).toBe(CARD_HREF);
+    }
+  });
+
+  it("opiAnnounced:true 면 1/20~31 만 OPI, 1/15~19 카드공제·1/2 허브·2/1 의료비는 불변", () => {
+    const on = { opiAnnounced: true };
+    expect(getCurrentSeasonal(at(2027, 1, 20), on)?.href).toBe(OPI_HREF);
+    expect(getCurrentSeasonal(at(2027, 1, 31), on)?.href).toBe(OPI_HREF);
+    expect(getCurrentSeasonal(at(2027, 1, 19), on)?.href).toBe(CARD_HREF);
+    expect(getCurrentSeasonal(at(2027, 1, 15), on)?.href).toBe(CARD_HREF);
+    expect(getCurrentSeasonal(at(2027, 1, 2), on)?.href).toBe("/year-end-tax-2027");
+    expect(getCurrentSeasonal(at(2027, 2, 1), on)?.href).toBe("/medical-tax-credit-2026");
+  });
+
+  it("OPI 항목: requires 게이트·days 20~31·카드공제 항목보다 앞·숫자/날짜/deadline 없음", () => {
+    const opiIdx = SEASONAL_CALENDAR.findIndex(
+      (s) => s.requires === "opiAnnounced" && s.month.includes(1)
+    );
+    const cardIdx = SEASONAL_CALENDAR.findIndex(
+      (s) => s.href === CARD_HREF && s.month.includes(1)
+    );
+    expect(opiIdx).toBeGreaterThanOrEqual(0);
+    expect(cardIdx).toBeGreaterThanOrEqual(0);
+    // find() 첫 매치 — 게이트 항목이 뒤에 있으면 열려도 절대 노출되지 않는다
+    expect(opiIdx, "OPI 항목이 카드공제 항목 뒤에 있음").toBeLessThan(cardIdx);
+    const opi = SEASONAL_CALENDAR[opiIdx];
+    expect(opi.href).toBe(OPI_HREF);
+    expect(opi.days).toEqual({ from: 20, to: 31 });
+    expect(opi.deadline).toBeUndefined();
+    // 발표 전 추정 수치 금지 — 지급률 %·날짜·D-day 는 물론 어떤 숫자도 카피에 없어야 한다
+    for (const text of [opi.title, opi.subtitle, opi.cta]) {
+      expect(text, text).not.toMatch(/\d/);
+    }
+  });
+
+  it("게이트 항목은 반드시 days 범위를 갖고, 같은 창을 덮는 게이트 없는 항목이 뒤에 있다(폴스루 보장)", () => {
+    for (const [i, s] of SEASONAL_CALENDAR.entries()) {
+      if (!s.requires) continue;
+      expect(s.days, `${s.href}: 게이트 항목에 days 없음`).toBeDefined();
+      for (const m of s.month) {
+        for (let d = s.days!.from; d <= s.days!.to; d++) {
+          const fallback = SEASONAL_CALENDAR.slice(i + 1).find(
+            (t) =>
+              !t.requires &&
+              t.month.includes(m) &&
+              (!t.days || (d >= t.days.from && d <= t.days.to))
+          );
+          expect(fallback, `${s.href} ${m}/${d}: 게이트 닫힘 시 폴스루 항목 없음`).toBeDefined();
+        }
+      }
+    }
+  });
+
+  it("OPI 발표 정본: 발표 전에는 announced=false·전 필드 null, announced=true 면 전 필드 non-null", () => {
+    const a = OPI_2026_ANNOUNCEMENT;
+    if (a.announced) {
+      expect(a.rate).not.toBeNull();
+      expect(a.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(a.source).not.toBeNull();
+    } else {
+      expect(a.rate).toBeNull();
+      expect(a.date).toBeNull();
+      expect(a.source).toBeNull();
+    }
   });
 });
 

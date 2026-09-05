@@ -98,7 +98,90 @@ export const SEASON_TOP_OCT: SeasonLink[] = [
   },
 ];
 
+// 12월 연말정산 마감 세트 — 12/1 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
+// 1순위 허브, 2순위 삼성 TAI(하반기 발표 전 → 라벨만·수치 금지, SEASON_REST 의 header+footer 를
+// 상단으로 승격 — footer 를 빼면 dedup 으로 푸터 링크가 사라지므로 반드시 동반), 공제 3종 SEASON,
+// 12.31 체크리스트. 공무원 2027·4대보험 2027·재산세 푸터는 OCT 세트 그대로 이월.
+export const SEASON_TOP_DEC: SeasonLink[] = [
+  {
+    href: "/year-end-tax-2027",
+    header: { name: "연말정산 2027 총정리 허브", description: "2026년 귀속 — 12/31 전 마지막 점검 로드맵", badge: "SEASON" },
+    footer: { name: "연말정산 2027 허브", order: 6 },
+  },
+  {
+    href: "/calc/samsung-bonus",
+    header: { name: "삼성전자 하반기 TAI 세후 계산기", description: "사업부별 지급률 입력 — 세후 실수령액", badge: "HOT" },
+    footer: { name: "삼성 성과급 계산기", order: 3 },
+  },
+  {
+    href: "/credit-card-deduction-2026",
+    header: { name: "신용카드 소득공제 계산기", description: "연말 결제수단별 공제율·한도", badge: "SEASON" },
+  },
+  {
+    href: "/medical-tax-credit-2026",
+    header: { name: "의료비 세액공제 계산기", description: "난임 30%·무한도 대상 구분", badge: "SEASON" },
+  },
+  {
+    href: "/year-end-tax-checklist",
+    header: { name: "연말정산 체크리스트", description: "12.31 마감 전 놓친 공제 점검", badge: "SEASON" },
+  },
+  {
+    href: "/civil-servant-pay-2027",
+    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+  },
+  {
+    href: "/social-insurance-rates-2027",
+    header: { name: "2027 4대보험 요율표", description: "국민연금 10% 확정 — 내 월급 공제 변화", badge: "NEW" },
+  },
+  {
+    href: "/property-holding-tax-2026",
+    footer: { name: "재산세·보유세 계산기", order: 5 },
+  },
+];
+
+// 1월 연말정산 간소화·OPI 세트 — 1/2 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
+// 1순위 허브(간소화 순서), 2순위 삼성 OPI(발표 전 → 라벨만·수치 금지, footer 동반 승격),
+// 환급금 계산기·카드공제·2027 연봉표. ★간소화 오픈일 미확인 → 날짜 카피 금지.
+// ★1/2 교체 전 확인: 공무원 2027 봉급표 라벨(예산안 → 확정 여부)·4대보험 2027 은 시행 중 표기.
+export const SEASON_TOP_JAN: SeasonLink[] = [
+  {
+    href: "/year-end-tax-2027",
+    header: { name: "연말정산 간소화 — 2027 허브", description: "간소화 자료 조회부터 회사 제출까지 단계별 순서", badge: "SEASON" },
+    footer: { name: "연말정산 2027 허브", order: 6 },
+  },
+  {
+    href: "/calc/samsung-bonus",
+    header: { name: "삼성전자 OPI 세후 계산기", description: "발표된 사업부별 지급률 입력 — 세후 실수령액", badge: "HOT" },
+    footer: { name: "삼성 성과급 계산기", order: 3 },
+  },
+  {
+    href: "/year-end-tax",
+    header: { name: "연말정산 환급금 계산기", description: "간소화 자료 기준 예상 환급·추가납부액", badge: "SEASON" },
+  },
+  {
+    href: "/credit-card-deduction-2026",
+    header: { name: "신용카드 소득공제 계산기", description: "결제수단별 공제율·한도 막판 점검", badge: "SEASON" },
+  },
+  {
+    href: "/table/2027/annual",
+    header: { name: "2027 연봉 실수령액 표", description: "국민연금 10%(근로자 5%) 적용 — 올해 세후 월급", badge: "NEW" },
+  },
+  {
+    href: "/civil-servant-pay-2027",
+    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+  },
+  {
+    href: "/social-insurance-rates-2027",
+    header: { name: "2027 4대보험 요율표", description: "국민연금 10% 확정 — 내 월급 공제 변화", badge: "NEW" },
+  },
+  {
+    href: "/property-holding-tax-2026",
+    footer: { name: "재산세·보유세 계산기", order: 5 },
+  },
+];
+
 // 9/26 교체: SEASON_TOP_SEP → SEASON_TOP_OCT
+// 12/1·1/2 교체 = 한 줄: SEASON_TOP_OCT → SEASON_TOP_DEC → SEASON_TOP_JAN
 const SEASON_TOP: SeasonLink[] = SEASON_TOP_SEP;
 
 // ── 공통 목록 — 시즌과 무관하게 유지 (상단 블록과 href 가 겹치면 상단이 우선) ──
