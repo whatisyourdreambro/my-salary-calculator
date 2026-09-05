@@ -83,6 +83,9 @@ GA4 개요(1/1~9/5): 활성 사용자 18.0만, 페이지 제목별 조회 1위 �
 | L08b health-check 주간 cron | ✅ 배포 | ci.yml schedule 월 00:00 UTC + workflow_dispatch, 5분 후 1회 재시도. 첫 실행 9/7(월) — 실패 시 GitHub 메일 |
 | L12 건정심 키트 | ✅ 초안 | `docs/drafts/health-rate-2027-kit.md`. 9/8 운영자 한 줄 → 당일 1커밋 |
 | L11a·L02' (운영자) | ☐ 9/7 세션 1 | `docs/operator-console-pack.md` 세션표 |
+| (발견) CI verify:tax 게이트 수리 | ✅ c365ce9 | `pension-hike-2027/Client.tsx` 리터럴로 8/30 이후 ci 워크플로 8회 연속 실패(후속 build·qa-crawl 전부 skip) — 정본 참조로 교체. 헬스체크 cron 알림이 의미를 가지려면 ci 가 녹색이어야 함 |
+
+**배포 검증(2026-09-05 11:45 KST 전파 확인)**: 프로덕션 `rss-companies.xml` 200건 pubDate 2026-08-23 · 회사 페이지 rss+xml link 2건 · 배포 번들(chunk 1613)에서 in-article `<ins>` 스타일 `width:"100%",textAlign:"center"` 및 `ad_unfilled` 마커 확인. 실제 광고 iframe 생성은 임베디드 브라우저(IntersectionObserver 미발화)·Claude in Chrome(미연결)으로 관측 불가 → **확정은 9/7 광고단위 CSV의 3302558597 행**. 참고: `/salary/*` HTML 은 엣지 캐시(max-age 14400)라 배포 후 최대 4시간 이전 청크를 참조 — L08a 캐시 규칙 설계 시 배포 후 Purge 필수 근거.
 
 ---
 
