@@ -11,6 +11,9 @@
 //   node scripts/metrics-ingest.mjs ga4-sources <소스매체.csv> [--json] [--out <결과.json>]
 //   node scripts/metrics-ingest.mjs log --date YYYY-MM-DD [--window "9/13 기준 28일"] [--ga4 <결과.json|텍스트>]
 //                                   [--gsc <결과.json|텍스트>] [--adsense "<adsense-report 요약 텍스트>"] [--note "..."] [--file <로그.md>]
+//                                   [--gsc-block "<텍스트>" | --gsc-block-clicks <n> --gsc-block-impr <n> [--gsc-block-ctr <%>]
+//                                    [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147,190,237"]]
+//                                   [--coverage-exmux <%>] [--coverage-total <%>]
 //   node scripts/metrics-ingest.mjs --selftest
 //
 // 입력(UTF-8, BOM 허용, 영문/한글 UI 모두):
@@ -21,6 +24,34 @@
 //   ga4-sources  — GA4 보고서 → 획득 → 트래픽 획득 → 세션 소스/매체 CSV('# …' 개요 주석 블록 허용, 합계 행 제외).
 //   log          — 집계 1행만 append. 검색어·페이지·URL 원본 목록은 절대 쓰지 않는다.
 // 오류(파일·열 누락·형식)는 한국어 메시지와 함께 exit 1.
+//
+// ── 로그 스키마 v2 (2026-09-06 확장) ──────────────────────────────────────────
+//   열 8개: 날짜 | 창 | GA4 세션·소스 점유 | GSC 커버리지 | GSC 28일 블록 | AdSense | ex-mux 커버리지 | 비고
+//   추가 사유 두 가지 —
+//   (1) GSC 28일 블록: 클릭 총량만으로는 '뉴스 계단'과 '구조적 성장'이 갈리지 않는다. 2026-09-06 실측에서
+//       블록 클릭 147→190→237→535(×1.29→×1.25→×2.26)인데 노출가중순위는 17.23→6.60→9.02→7.20, CTR 은
+//       19.32→19.51→12.23→14.24% 로 오히려 하락 — 마지막 블록의 ×2.26 은 순위·CTR 개선이 아니라 노출량
+//       (27.2→134.2/일) 증가이고 그 순증 클릭의 58.8% 가 /calc/samsung-bonus 단일 페이지의 뉴스 사이클이다.
+//       따라서 블록은 반드시 4지표(클릭·노출·CTR·노출가중순위)를 함께 적재한다.
+//   (2) ex-mux 커버리지: 멀티플렉스(1910866475)는 커버리지 39.51%·미매칭 3,688건(계정 전체 미매칭의 17.58%)
+//       으로 총 커버리지를 혼자 끌어내린다(전 기간 총 93.34% vs ex-mux 94.40%). 멀티플렉스가 배치된 이상
+//       총 커버리지는 사이트 건강 게이트로 쓸 수 없으므로 두 값을 병기한다.
+//   기존 호출 형식(--ga4/--gsc/--adsense/--note)은 그대로 유효하며, 새 열은 값이 없으면 "—" 로 남는다.
+//
+// ── ★AdSense units CSV 의 기간 확정 절차(재조사 금지 메모, 2026-09-06 확정) ────
+//   AdSense '광고 단위' 보고서 CSV 에는 Date 차원이 없다(헤더 23열: Ad unit … Funnel clicks). 즉 그 파일은
+//   특정 창의 값이 아니라 **계정 누적표**이며, 창 판정(실험 전/후, 회수 판정, 특정일 커버리지 분해)에 쓰면 안 된다.
+//   기간을 확정해야 할 때는 아래 2단계를 그대로 반복한다 — 이미 한 번 수행해 결론이 나와 있으므로 재조사 불필요.
+//     1단계(모집단·시작점 대조): 같은 계정의 '일별' 보고서를 임의 구간으로 합산해 units 합계와 7개 지표
+//       (수익·노출·클릭·광고요청·매칭·CTR·커버리지)를 대조한다. 전 지표가 같은 방향으로 1% 내 편차면 동일 모집단이다.
+//       실측: units $131.32/277,178노출/8,966클릭/315,120요청/294,140매칭 vs 일별 누적(2025-11-27~2026-09-05 14:45)
+//             $130.45/274,677/8,904/311,881/291,425 → 잔차 +$0.87/+2,501/+62/+3,239/+2,715, 편차 0.67~1.04%.
+//     2단계(잔차 창 = 시간당 노출률 역산): 같은 subset 을 시각차를 두고 2번 내려받아(report2 mtime 12:06,
+//       report3 14:45) 마지막 날 행의 델타를 취한다. 실측 2h39m 에 +608노출/+756요청 = 시간당 229노출·285요청.
+//       잔차 ÷ 시간당률 = 잔차 창 길이. 3,239÷285≈11.4h, 2,501÷229≈10.9h → 약 11.0~11.4시간, 종료 2026-09-06 02시대
+//       (units 파일 mtime 02:26 과 정합). 즉 '약 1일'도 '14.7시간'도 아니다.
+//   시작일은 【추정】으로만 쓴다 — 2025-11-27 은 운영자가 고른 내보내기 경계일이고 실슬롯 최초 투입은 1720efc(2025-11-24)다.
+//   창 판정이 필요하면 CSV 를 다시 읽지 말고 **날짜 지정 units CSV** 또는 '날짜 및 광고 단위' 교차 보고서를 요청할 것.
 
 import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdtempSync } from "node:fs";
 import path from "node:path";
@@ -32,7 +63,9 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
 const DEFAULT_LOG = path.join(REPO_ROOT, "docs", "metrics-log.md");
 const EXAMPLES_DIR = path.join(SCRIPT_DIR, "metrics-ingest-examples");
 const DEFAULT_SECTION = "/salary-db/listed/";
-const LOG_HEADER = "| 날짜 | 창 | GA4 세션·소스 점유 | GSC 커버리지 | AdSense | 비고 |";
+// 로그 표 헤더 v2(2026-09-06) — 열 8개. v1(6열)은 'GSC 28일 블록'·'ex-mux 커버리지' 두 열이 없다.
+const LOG_HEADER = "| 날짜 | 창 | GA4 세션·소스 점유 | GSC 커버리지 | GSC 28일 블록 | AdSense | ex-mux 커버리지 | 비고 |";
+const LOG_HEADER_V1 = "| 날짜 | 창 | GA4 세션·소스 점유 | GSC 커버리지 | AdSense | 비고 |";
 
 // ── GA4 소스/매체 → 채널 그룹 (구체적인 것부터 검사, 순서 중요) ─────────────────
 // 예: 'blog.naver.com / referral' 은 네이버가 아니라 커뮤니티, 'gemini.google.com' 은 google 이 아니라 AI.
@@ -62,6 +95,9 @@ function usage() {
       "  node scripts/metrics-ingest.mjs ga4-sources <소스매체.csv> [--json] [--out <결과.json>]",
       '  node scripts/metrics-ingest.mjs log --date YYYY-MM-DD [--window "..."] [--ga4 <결과.json|텍스트>] [--gsc <결과.json|텍스트>]',
       '                                  [--adsense "<adsense-report 요약>"] [--note "..."] [--file <로그.md>]',
+      '                                  [--gsc-block "<텍스트>" | --gsc-block-clicks <n> --gsc-block-impr <n> [--gsc-block-ctr <%>]',
+      '                                   [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147,190,237"]]',
+      "                                  [--coverage-exmux <%>] [--coverage-total <%>]",
       "  node scripts/metrics-ingest.mjs --selftest",
       "  CSV 원본은 리포 밖 폴더(C:\\Users\\ruby1\\.moneysalary-secrets\\)에 두고 절대 경로로 넘긴다. 로그에는 집계만 남는다.",
     ].join("\n")
@@ -444,17 +480,107 @@ function resolveCell(raw, expectKind, formatter) {
   return raw;
 }
 
+// 스키마 v2 입력 검증용 예외 — cmdLog 가 fail() 로 바꿔 exit 1, selftest 는 throw 를 그대로 잡는다.
+class BadInput extends Error {}
+const bad = (msg) => {
+  throw new BadInput(msg);
+};
+
+// "535" / "3,757" → 숫자. 음수·비수치는 거부.
+function countArg(raw, label) {
+  if (raw == null) return null;
+  const n = num(raw);
+  if (n == null || !Number.isFinite(n) || n < 0) bad(`${label} 값이 0 이상의 숫자가 아닙니다: "${raw}"`);
+  return n;
+}
+
+// "14.24" / "14.24%" → 0.1424. 0~100 범위의 퍼센트 표기만 받는다(0.14 같은 소수 비율 표기는 지원하지 않음).
+function pctArg(raw, label) {
+  if (raw == null) return null;
+  const n = num(raw);
+  if (n == null || !Number.isFinite(n)) bad(`${label} 값이 숫자가 아닙니다: "${raw}" — 퍼센트로 입력하세요(예: 94.40 또는 94.40%)`);
+  if (n < 0 || n > 100) bad(`${label} 값이 0~100 범위를 벗어납니다: ${n} — 퍼센트 표기(94.40)로 입력하세요`);
+  return n / 100;
+}
+
+const fmtPct2 = (r) => (r == null ? "—" : `${(r * 100).toFixed(2)}%`);
+
+// GSC 28일 블록 4지표: 클릭·노출·CTR·노출가중순위 (+ 선택: 창 라벨·이전 블록 클릭 추이)
+// --gsc-block 텍스트와 구조화 플래그는 배타 — 둘 다 주면 어느 쪽이 정본인지 알 수 없으므로 거부한다.
+function buildGscBlock(o) {
+  const structured = ["gscBlockClicks", "gscBlockImpr", "gscBlockCtr", "gscBlockPos", "gscBlockWindow", "gscBlockPrev"].filter((k) => o[k] != null);
+  if (o.gscBlock != null && structured.length) bad(`--gsc-block(텍스트)와 구조화 플래그(${structured.map((k) => "--" + k.replace(/([A-Z])/g, "-$1").toLowerCase()).join(" ")})는 함께 쓸 수 없습니다 — 하나만 쓰세요`);
+  if (o.gscBlock != null) return o.gscBlock;
+  if (!structured.length) return null;
+
+  const clicks = countArg(o.gscBlockClicks, "--gsc-block-clicks");
+  const impr = countArg(o.gscBlockImpr, "--gsc-block-impr");
+  if (clicks == null || impr == null) bad("--gsc-block-clicks 와 --gsc-block-impr 는 함께 필요합니다(28일 블록은 4지표를 함께 적재)");
+  if (impr === 0) bad("--gsc-block-impr 가 0 이면 CTR·노출가중순위를 정의할 수 없습니다");
+  if (clicks > impr) bad(`클릭(${clicks})이 노출(${impr})보다 많습니다 — 두 값이 뒤바뀌지 않았는지 확인하세요`);
+
+  const derived = clicks / impr;
+  let ctr = pctArg(o.gscBlockCtr, "--gsc-block-ctr");
+  if (ctr == null) ctr = derived;
+  else if (Math.abs(ctr - derived) > 0.005) bad(`--gsc-block-ctr(${fmtPct2(ctr)})가 클릭/노출(${fmtPct2(derived)})과 0.5pt 넘게 어긋납니다 — 창이 다른 값을 섞지 않았는지 확인하세요`);
+
+  const pos = o.gscBlockPos == null ? null : countArg(o.gscBlockPos, "--gsc-block-pos");
+  if (pos != null && (pos < 1 || pos > 200)) bad(`--gsc-block-pos 는 1~200 범위여야 합니다: ${pos}`);
+  if (pos == null) console.log("[log] 경고: --gsc-block-pos 없음 — 노출가중순위 없이는 '노출 증가'와 '순위 개선'을 가를 수 없습니다");
+
+  const parts = [`클릭 ${fmtInt(clicks)}`, `노출 ${fmtInt(impr)}`, `CTR ${fmtPct2(ctr)}`];
+  if (pos != null) parts.push(`노출가중 ${pos.toFixed(2)}위`);
+  let out = (o.gscBlockWindow ? `${o.gscBlockWindow} ` : "") + parts.join(" · ");
+
+  if (o.gscBlockPrev != null) {
+    const prev = String(o.gscBlockPrev)
+      .split(/[,\s→>]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s, i) => countArg(s, `--gsc-block-prev[${i}]`));
+    if (!prev.length) bad('--gsc-block-prev 를 해석할 수 없습니다 — 예: "147,190,237"(오래된 블록부터)');
+    out += ` · 블록추이 ${[...prev, clicks].map((n) => fmtInt(n)).join("→")}`;
+  }
+  return out;
+}
+
+// 수동 유닛 커버리지: 총 / 멀티플렉스 제외(ex-mux) 병기
+function buildCoverage(o) {
+  const exmux = pctArg(o.coverageExmux, "--coverage-exmux");
+  const total = pctArg(o.coverageTotal, "--coverage-total");
+  if (exmux == null && total == null) return null;
+  if (exmux == null) bad("--coverage-total 만으로는 이 열을 채울 수 없습니다 — --coverage-exmux 를 함께 주세요(총 커버리지는 AdSense 열에 이미 있습니다)");
+  if (total != null && exmux < total) {
+    console.log(`[log] 경고: ex-mux(${fmtPct2(exmux)})가 총(${fmtPct2(total)})보다 낮습니다 — 멀티플렉스를 빼면 보통 올라갑니다. 값이 뒤바뀌지 않았는지 확인하세요`);
+  }
+  return total == null ? `ex-mux ${fmtPct2(exmux)}` : `총 ${fmtPct2(total)} · ex-mux ${fmtPct2(exmux)}`;
+}
+
 function cmdLog(pos, opts) {
   if (pos.length) fail(`log 는 위치 인자를 받지 않습니다: ${pos.join(" ")}`);
   const date = argDate(opts.date, "--date");
   const file = opts.file || DEFAULT_LOG;
   if (!existsSync(file)) fail(`로그 파일이 없습니다: ${file} (docs/metrics-log.md 를 먼저 만들거나 --file 로 지정)`);
   const text = readFileSync(file, "utf8");
-  if (!text.includes(LOG_HEADER)) fail(`로그 파일에 표 헤더가 없습니다: ${file}\n  필요한 헤더: ${LOG_HEADER}`);
+  if (!text.includes(LOG_HEADER)) {
+    if (text.includes(LOG_HEADER_V1))
+      fail(`로그 파일이 구 스키마(v1·6열)입니다: ${file}\n  'GSC 28일 블록'·'ex-mux 커버리지' 두 열을 추가하고 기존 행 끝에 | — | 두 칸을 채운 뒤 다시 실행하세요.\n  필요한 헤더: ${LOG_HEADER}`);
+    fail(`로그 파일에 표 헤더가 없습니다: ${file}\n  필요한 헤더: ${LOG_HEADER}`);
+  }
   const ga4 = resolveCell(opts.ga4, "ga4-sources", formatGa4);
   const gsc = resolveCell(opts.gsc, "gsc-coverage", formatGsc);
-  if ([ga4, gsc, opts.adsense, opts.note].every((v) => v == null || v === "—")) fail("기록할 내용이 없습니다: --ga4 / --gsc / --adsense / --note 중 하나 이상");
-  const row = `| ${date} | ${cell(opts.window)} | ${cell(ga4)} | ${cell(gsc)} | ${cell(opts.adsense)} | ${cell(opts.note)} |`;
+  let gscBlock = null;
+  let coverage = null;
+  try {
+    gscBlock = buildGscBlock(opts);
+    coverage = buildCoverage(opts);
+  } catch (e) {
+    if (e instanceof BadInput) fail(e.message);
+    throw e;
+  }
+  if ([ga4, gsc, gscBlock, coverage, opts.adsense, opts.note].every((v) => v == null || v === "—"))
+    fail("기록할 내용이 없습니다: --ga4 / --gsc / --gsc-block* / --coverage-exmux / --adsense / --note 중 하나 이상");
+  const row = `| ${date} | ${cell(opts.window)} | ${cell(ga4)} | ${cell(gsc)} | ${cell(gscBlock)} | ${cell(opts.adsense)} | ${cell(coverage)} | ${cell(opts.note)} |`;
   if (text.includes(`| ${date} |`)) console.log(`[log] 같은 날짜 행이 이미 있습니다(${date}) — 창이 다르면 정상, 아니면 수동 정리`);
   appendFileSync(file, (text.endsWith("\n") ? "" : "\n") + row + "\n", "utf8");
   console.log(`[log] ${file} 에 1행 추가:\n${row}`);
@@ -521,18 +647,73 @@ function selftest() {
   const logFile = path.join(tmp, "metrics-log.md");
   const gscJson = path.join(tmp, "gsc.json");
   const ga4Json = path.join(tmp, "ga4.json");
-  writeFileSync(logFile, `# 임시\n\n${LOG_HEADER}\n|---|---|---|---|---|---|\n`, "utf8");
+  const divider = `|${"---|".repeat(LOG_HEADER.split("|").length - 2)}`;
+  writeFileSync(logFile, `# 임시\n\n${LOG_HEADER}\n${divider}\n`, "utf8");
   writeFileSync(gscJson, JSON.stringify(gsc), "utf8");
   writeFileSync(ga4Json, JSON.stringify(ko), "utf8");
+  // 3a) 기존 호출 형식(v1 플래그만) — 새 열은 "—" 로 남고 열 수는 8개
   const [row] = capture(() =>
     cmdLog([], { date: "2026-09-13", window: "28일", ga4: ga4Json, gsc: gscJson, adsense: "RPM $4.40 | 테스트", note: "selftest", file: logFile })
   );
   const after = readFileSync(logFile, "utf8");
+  const cells = (r) => r.split("|").slice(1, -1).map((c) => c.trim());
   check(
     "log 1행 append(집계만·파이프 이스케이프)",
     after.trim().endsWith(row) && row.includes("세션 1,000") && row.includes("/salary-db/listed/ 색인률 40.0%(2/5)") && row.includes("RPM $4.40 ／ 테스트") && !row.includes("moneysalary.com/salary-db/listed/00"),
     row
   );
+  check(
+    "log 기존 호출 형식 유지(8열·새 열 —)",
+    cells(row).length === 8 && cells(row)[4] === "—" && cells(row)[6] === "—",
+    `열 ${cells(row).length}개 · 블록 "${cells(row)[4]}" · ex-mux "${cells(row)[6]}"`
+  );
+
+  // 3b) 스키마 v2 — 28일 블록 4지표 + ex-mux 커버리지
+  const [row2] = capture(() =>
+    cmdLog([], {
+      date: "2026-09-14",
+      window: "8/07~9/03",
+      gscBlockWindow: "8/07~9/03",
+      gscBlockClicks: "535",
+      gscBlockImpr: "3,757",
+      gscBlockCtr: "14.24%",
+      gscBlockPos: "7.20",
+      gscBlockPrev: "147,190,237",
+      coverageExmux: "94.40",
+      coverageTotal: "93.34",
+      file: logFile,
+    })
+  );
+  check(
+    "log 28일 블록 4지표 + 블록추이",
+    cells(row2)[4] === "8/07~9/03 클릭 535 · 노출 3,757 · CTR 14.24% · 노출가중 7.20위 · 블록추이 147→190→237→535",
+    cells(row2)[4]
+  );
+  check("log ex-mux 커버리지 병기", cells(row2)[6] === "총 93.34% · ex-mux 94.40%", cells(row2)[6]);
+  check("log v2 행도 8열", cells(row2).length === 8);
+
+  // 3c) CTR 자동 계산(--gsc-block-ctr 생략) 과 --gsc-block 텍스트 경로
+  const [row3] = capture(() => cmdLog([], { date: "2026-09-15", gscBlockClicks: "535", gscBlockImpr: "3757", gscBlockPos: "7.2", file: logFile }));
+  check("log CTR 생략 시 클릭/노출로 자동 계산", cells(row3)[4] === "클릭 535 · 노출 3,757 · CTR 14.24% · 노출가중 7.20위", cells(row3)[4]);
+  const [row4] = capture(() => cmdLog([], { date: "2026-09-16", gscBlock: "블록 147→190→237→535(자유 텍스트)", coverageExmux: "94.4%", file: logFile }));
+  check("log --gsc-block 텍스트 경로 · ex-mux 단독", cells(row4)[4].startsWith("블록 147") && cells(row4)[6] === "ex-mux 94.40%", `${cells(row4)[4]} / ${cells(row4)[6]}`);
+
+  // 3d) 입력 검증(BadInput) — 잘못 넣으면 조용히 기록되지 않고 거부돼야 한다
+  const throws = (fn) => {
+    try {
+      capture(fn);
+      return false;
+    } catch (e) {
+      return e instanceof BadInput;
+    }
+  };
+  check("검증: CTR 이 클릭/노출과 어긋나면 거부", throws(() => buildGscBlock({ gscBlockClicks: "535", gscBlockImpr: "3757", gscBlockCtr: "24.0", gscBlockPos: "7.2" })));
+  check("검증: 클릭>노출 거부", throws(() => buildGscBlock({ gscBlockClicks: "3757", gscBlockImpr: "535" })));
+  check("검증: 노출 단독(클릭 없음) 거부", throws(() => buildGscBlock({ gscBlockImpr: "3757" })));
+  check("검증: --gsc-block 텍스트와 구조화 플래그 혼용 거부", throws(() => buildGscBlock({ gscBlock: "x", gscBlockClicks: "1", gscBlockImpr: "2" })));
+  check("검증: 커버리지 0~100 범위 밖 거부", throws(() => buildCoverage({ coverageExmux: "9440" })));
+  check("검증: --coverage-total 단독 거부", throws(() => buildCoverage({ coverageTotal: "93.34" })));
+  check("검증: 빈 입력이면 두 열 모두 null", buildGscBlock({}) === null && buildCoverage({}) === null);
 
   const ok = checks.every(Boolean);
   console.log(`\n[selftest] ${checks.filter(Boolean).length}/${checks.length} → ${ok ? "PASS" : "FAIL"}`);
@@ -556,6 +737,16 @@ function parseArgs(argv) {
     adsense: null,
     note: null,
     file: null,
+    // 스키마 v2(2026-09-06)
+    gscBlock: null,
+    gscBlockClicks: null,
+    gscBlockImpr: null,
+    gscBlockCtr: null,
+    gscBlockPos: null,
+    gscBlockWindow: null,
+    gscBlockPrev: null,
+    coverageExmux: null,
+    coverageTotal: null,
     selftest: false,
     help: false,
   };
@@ -580,6 +771,15 @@ function parseArgs(argv) {
     else if (a === "--adsense") opts.adsense = need(a, i++);
     else if (a === "--note") opts.note = need(a, i++);
     else if (a === "--file") opts.file = need(a, i++);
+    else if (a === "--gsc-block") opts.gscBlock = need(a, i++);
+    else if (a === "--gsc-block-clicks") opts.gscBlockClicks = need(a, i++);
+    else if (a === "--gsc-block-impr" || a === "--gsc-block-impressions") opts.gscBlockImpr = need(a, i++);
+    else if (a === "--gsc-block-ctr") opts.gscBlockCtr = need(a, i++);
+    else if (a === "--gsc-block-pos" || a === "--gsc-block-position") opts.gscBlockPos = need(a, i++);
+    else if (a === "--gsc-block-window") opts.gscBlockWindow = need(a, i++);
+    else if (a === "--gsc-block-prev") opts.gscBlockPrev = need(a, i++);
+    else if (a === "--coverage-exmux") opts.coverageExmux = need(a, i++);
+    else if (a === "--coverage-total") opts.coverageTotal = need(a, i++);
     else if (a.startsWith("--")) fail(`알 수 없는 옵션: ${a}`);
     else pos.push(a);
   }
