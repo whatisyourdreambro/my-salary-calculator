@@ -159,6 +159,27 @@ export function trackAdUnitClick(
   });
 }
 
+/**
+ * 광고 채움 결과 — AdSlot 의 data-ad-status 가 filled/unfilled 로 전이될 때 슬롯당 1회.
+ * ad_impression 은 adsbygoogle.push() 시점의 "요청 수"라 실노출·채움률을 답하지 못한다.
+ * 이 두 이벤트로 슬롯별 채움률(ad_filled ÷ (ad_filled+ad_unfilled))과
+ * '요청은 됐는데 채움 상태가 영영 안 잡히는' 죽은 유닛(27a692c 유형)을 GA4 에서 찾는다.
+ * (2026-09-05 운영자 승인 — 광고 컴포넌트 내부 계측 2줄 예외)
+ */
+export function trackAdFillStatus(
+  slotKind: string,
+  position: string,
+  status: "filled" | "unfilled",
+  pagePath?: string
+): void {
+  trackEvent(status === "filled" ? "ad_filled" : "ad_unfilled", {
+    slot_kind: slotKind,
+    position,
+    page_path:
+      pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+  });
+}
+
 /** 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5) */
 export function trackAffiliateClick(
   offerId: string,

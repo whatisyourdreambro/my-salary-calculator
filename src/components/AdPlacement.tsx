@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { trackAdImpression, trackAdUnitClick } from "@/lib/analytics";
+import {
+  trackAdFillStatus,
+  trackAdImpression,
+  trackAdUnitClick,
+} from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 
@@ -136,20 +140,43 @@ function AdSlot({
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
   // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
+  // + 채움 결과 계측(2026-09-05, 운영자 승인): data-ad-status 가 filled/unfilled 로 전이될 때
+  //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_impression 은 push 시점 "요청 수"라
+  //   실노출·채움률을 답하지 못했고, 실험 판정 기준 'unfilled 급증 없음'이 AdSense CSV(운영자 제공)에만
+  //   의존하던 공백을 메운다. 광고 요청·렌더 로직·슬롯·스타일은 무변경 — 계측 호출만 추가.
+  const fillReported = useRef<string | null>(null);
   useEffect(() => {
-    if (!visible) return;
+    fillReported.current = null;
+  }, [pathname]);
+  useEffect(() => {
+    if (!visible || !slot) return;
+    // 레이아웃 상주 슬롯(calc/tools/table/fun layout 의 HomeTop·InArticle)은 형제 라우트 이동에도
+    // 언마운트되지 않는다. pathname 변경 커밋에서는 위 reset effect 가 pushed.current=false 로 먼저
+    // 내리므로, 이 가드가 이전 페이지의 stale <ins>(data-ad-status 잔존)를 읽는 경로를 막는다 —
+    // 이전 결과가 새 경로로 오귀속되거나(계측), 이전 unfilled 가 새 페이지 컨테이너를 display:none 으로
+    // 굳혀 광고 요청이 영영 안 나가던 경로(2026-09-05 리뷰 발견) 둘 다 차단. 새 ins 는 push effect 가
+    // pushed.current=true 로 만든 뒤 이 effect 가 재실행되며 정상 관찰된다.
+    if (!pushed.current) return;
     const container = containerRef.current;
     if (!container) return;
     const ins = container.querySelector("ins.adsbygoogle");
     if (!ins) return;
     const check = () => {
-      if (ins.getAttribute("data-ad-status") === "unfilled") setUnfilled(true);
+      const status = ins.getAttribute("data-ad-status");
+      if (status === "unfilled") setUnfilled(true);
+      if (
+        (status === "filled" || status === "unfilled") &&
+        fillReported.current !== status
+      ) {
+        fillReported.current = status;
+        trackAdFillStatus(slotKind ?? "unknown", slot, status, pathname);
+      }
     };
     check();
     const mo = new MutationObserver(check);
     mo.observe(ins, { attributes: true, attributeFilter: ["data-ad-status"] });
     return () => mo.disconnect();
-  }, [visible, pathname]);
+  }, [visible, pathname, slot, slotKind]);
 
   if (!slot || !allowed) return null;
 
