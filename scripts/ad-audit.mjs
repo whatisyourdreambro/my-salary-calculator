@@ -7,6 +7,15 @@
 //   node scripts/ad-audit.mjs          — 전 라우트 스캔 (ERROR 있으면 exit 1)
 //   node scripts/ad-audit.mjs --diff   — git diff 기준 "광고 위 새 UI 삽입" 검출 추가
 //                                        (2026-08-16 수익 급락 사건 규칙의 자동 게이트)
+//                                        + 신설 INFO 검출 2종은 diff 모드에서 "증가분(신규 후보)"만 상세 출력
+//   node scripts/ad-audit.mjs --verbose — INFO 상세(신설 검출 2종의 file:line 목록 포함)
+// 신설 INFO 전용 검출(2026-09-05, 10배 계획 adsense-quality-6) — 절대 ERROR/WARN 으로 승격 금지,
+// exit 코드 불변, 자동 수정 없음. 후보 목록은 운영자 콘솔 점검(9/7)·승인 큐(수리)로만 흘러간다:
+//   5) 우발 클릭 인접 후보 — 광고 태그 ±3줄 안에 button/input/role="tab"/공유·즐겨찾기 버튼.
+//      AdSlot 자체 마진(1.5rem)·NextActions 자체 mt-8 은 감안 — 래퍼 클래스(mt-2 등)만으로는 미검출.
+//   6) fixed 헤더 가림 후보 — min-h-screen 래퍼의 첫 렌더 자식이 광고인데 page 서브트리·조상
+//      layout 체인 어디에도 상단 패딩 토큰(pt-2x|pt-[|pt-header|var(--header))이 없음.
+//      Header 는 fixed top-0(--header-height 72px), 루트 <main> 은 상단 패딩 없음.
 // 한계: AST 파서가 아니라 정규식 휴리스틱이다. 오탐/미탐 가능 — 의도적 예외는
 //       scripts/ad-audit-allow.json 에 {route, slot, reason} 으로 등재할 것(reason 필수).
 // 주의: InArticleAd 는 env NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로
@@ -165,14 +174,17 @@ const errors = [];
 const warns = [];
 const infos = [];
 const rel = (f) => path.relative(ROOT, f).split(path.sep).join("/");
+// 신설 검출 5)·6) 입력 — 라우트별 (page 서브트리, layout 체인 서브트리) 파일 목록.
+// SLOT dedup 과 같은 page→layout 해석을 재사용한다(§2-7: layout 이 제공하는 경우 많음).
+const routeFiles = []; // {route, page, pageFiles, layoutFiles}
 
 for (const page of findPages(APP)) {
   const route = routeOf(page);
   const pageFiles = collectSubtree(page);
   const pageUse = slotUsages(pageFiles);
-  const layoutUse = slotUsages(
-    ancestorLayouts(page).flatMap((l) => collectSubtree(l))
-  );
+  const layoutFiles = ancestorLayouts(page).flatMap((l) => collectSubtree(l));
+  const layoutUse = slotUsages(layoutFiles);
+  routeFiles.push({ route, page, pageFiles, layoutFiles });
 
   // 1) page 서브트리 내 동일 AdSense 슬롯 2회 (자기 자신과 충돌)
   const bySlot = new Map();
@@ -249,6 +261,144 @@ for (const page of findPages(APP)) {
   }
 }
 
+// ---------- 5)·6) 신설 INFO 전용 검출 (승격·자동수정 금지, exit 코드 불변) ----------
+// 별도 배열에 담아 기존 INFO 기준선(page→layout 폴백·쿠팡 사이즈키) 집계와 섞이지 않게 한다.
+const adjacencyInfos = []; // {file, line, comp, triggerLine, trigger}
+const headerInfos = []; // {route, file, line, comp}
+
+const readLines = (f) => {
+  try {
+    return fs.readFileSync(f, "utf8").split("\n");
+  } catch {
+    return [];
+  }
+};
+// 주석 줄(JSX {/* */}·// )은 트리거 판정에서 제외 — "공유 섹션" 류 주석 오탐 방지
+const isCommentLine = (s) => /^\s*(\{\s*\/\*|\/\/|\/\*|\*)/.test(s);
+
+// 5) 우발 클릭 인접 후보 — 트리거는 실제 상호작용 요소만. 래퍼 마진 클래스(mt-0~2 등)는
+//    AdSlot 자체 margin 1.5rem(AdPlacement.tsx AdSlot style)·NextActions 자체 mt-8 이 있어
+//    단독 근거로 약하므로 트리거에서 제외한다(검증 노트 1).
+const ADJ_TRIGGER_RE =
+  /<button\b|<input\b|role=["']tab["']|<(?:Auto)?ShareSection\b|<ShareButtons\b|<FavoritesButton\b/;
+const ADJ_WINDOW = 3;
+const scannedFiles = new Set();
+for (const r of routeFiles) for (const f of r.pageFiles.concat(r.layoutFiles)) scannedFiles.add(f);
+for (const f of scannedFiles) {
+  const lines = readLines(f);
+  for (const s of parseFile(f).slots) {
+    const i = s.line - 1;
+    let hit = null;
+    for (let j = Math.max(0, i - ADJ_WINDOW); j <= Math.min(lines.length - 1, i + ADJ_WINDOW); j++) {
+      if (isCommentLine(lines[j])) continue;
+      // 같은 줄이면 광고 태그 자체는 제외하고 나머지 텍스트만 검사
+      const probe = j === i ? lines[j].replace(AD_COMPONENT_RE, "") : lines[j];
+      const m = probe.match(ADJ_TRIGGER_RE);
+      if (m) {
+        hit = { triggerLine: j + 1, trigger: m[0] };
+        break;
+      }
+    }
+    if (hit) adjacencyInfos.push({ file: f, line: s.line, comp: s.name, ...hit });
+  }
+}
+
+// 6) fixed 헤더 가림 후보 — page 서브트리(클라 컴포넌트 포함) 안의 `min-h-screen` 래퍼에서
+//    첫 렌더 자식을 찾는다. 중간에 pt/py 토큰 없는 순수 래퍼 태그(div/section/main/article)는
+//    건너뛴다(py-8 같은 소폭 패딩은 72px 헤더를 못 넘기므로 안전 토큰 아님 — 검증 노트 2).
+//    상단 패딩 토큰은 page 서브트리 + 조상 layout 체인 서브트리 전체에서 찾는다.
+const TOP_PAD_RE = /\bpt-2[0-9]\b|\bpt-\[|\bpt-header\b|var\(--header/;
+const HEADER_WRAPPER_RE = /^\s*<(div|section|main|article)\b[^>]*>\s*$/;
+const AD_TAG_RE = new RegExp("^\\s*<(" + Object.keys(SLOT_OF).join("|") + ")\\b");
+// 전역 크롬은 패딩 판정에서 제외: Header.tsx 의 pt-header 는 fixed 모바일 메뉴 오버레이,
+// Footer.tsx 의 pt-20 은 본문 아래 — 둘 다 광고가 놓이는 본문 흐름의 상단 패딩이 아니다.
+const CHROME_RE = /[\\/]components[\\/](Header|Footer)\.tsx$|[\\/]components[\\/]header[\\/]/;
+const hasTopPad = (files) =>
+  files.some((f) => !CHROME_RE.test(f) && TOP_PAD_RE.test(readLines(f).join("\n")));
+const headerSeen = new Set();
+for (const r of routeFiles) {
+  const chain = r.pageFiles.concat(r.layoutFiles);
+  let padded = null; // 지연 계산
+  for (const f of r.pageFiles) {
+    const lines = readLines(f);
+    for (let i = 0; i < lines.length; i++) {
+      if (!/\bmin-h-screen\b/.test(lines[i]) || !/^\s*</.test(lines[i])) continue;
+      // 여는 태그 끝(>) 까지 전진 (여러 줄 className 대응). 자기 닫힘(/>)이면 자식 없음.
+      let k = i;
+      while (k < lines.length && !/>\s*$/.test(lines[k])) k++;
+      if (k >= lines.length || /\/>\s*$/.test(lines[k])) continue;
+      // 첫 렌더 자식 탐색
+      let child = -1;
+      let hops = 0;
+      for (let j = k + 1; j < lines.length; j++) {
+        const ln = lines[j];
+        if (!ln.trim() || isCommentLine(ln)) continue;
+        if (HEADER_WRAPPER_RE.test(ln) && !TOP_PAD_RE.test(ln) && hops < 2) {
+          hops++;
+          continue;
+        }
+        child = j;
+        break;
+      }
+      if (child < 0) continue;
+      const m = lines[child].match(AD_TAG_RE);
+      if (!m) continue;
+      if (padded === null) padded = hasTopPad(chain);
+      if (padded) continue;
+      const key = `${rel(f)}:${child + 1}`;
+      if (headerSeen.has(key)) continue;
+      headerSeen.add(key);
+      headerInfos.push({ route: r.route, file: f, line: child + 1, comp: m[1], hops });
+    }
+  }
+}
+
+// --diff: 신설 검출은 "증가분(신규 후보)"만 상세 출력 — git diff -U0 HEAD 의 추가 줄 범위와 교차.
+//         WARN 계층 추가 없음(INFO 유지). 기준선 후보는 count 줄로만 보인다.
+const addedRanges = new Map(); // relFile -> [{from,to}]
+if (DIFF_MODE) {
+  let d0 = "";
+  try {
+    // -c core.safecrlf=false: 작업 트리 LF/CRLF 경고(stderr 소음) 억제 — 결과 영향 없음
+    d0 = execSync('git -c core.safecrlf=false diff -U0 HEAD -- "src/**/*.tsx"', {
+      cwd: ROOT,
+      encoding: "utf8",
+      maxBuffer: 32 * 1024 * 1024,
+    });
+  } catch (e) {
+    console.error("git diff -U0 실행 실패:", e.message);
+  }
+  let cur = "";
+  for (const ln of d0.split("\n")) {
+    if (ln.startsWith("+++ b/")) {
+      cur = ln.slice(6);
+      if (!addedRanges.has(cur)) addedRanges.set(cur, []);
+    } else if (ln.startsWith("+++ /dev/null")) {
+      cur = "";
+    }
+    const h = cur && ln.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/);
+    if (h) {
+      const from = Number(h[1]);
+      const len = h[2] === undefined ? 1 : Number(h[2]);
+      if (len > 0) addedRanges.get(cur).push({ from, to: from + len - 1 });
+    }
+  }
+}
+const isAddedLine = (f, line, slack = 0) => {
+  const rs = addedRanges.get(rel(f));
+  if (!rs) return false;
+  return rs.some((r) => line + slack >= r.from && line - slack <= r.to);
+};
+const adjacencyNew = adjacencyInfos.filter(
+  (a) => isAddedLine(a.file, a.line) || isAddedLine(a.file, a.triggerLine)
+);
+const headerNew = headerInfos.filter((h) => isAddedLine(h.file, h.line, ADJ_WINDOW));
+
+const fmtAdj = (a) =>
+  `${rel(a.file)}:${a.line} <${a.comp}> ↔ ${a.trigger} (:${a.triggerLine}) — AdSlot 자체 마진 1.5rem 감안, 실제 간격은 점검 필요`;
+const fmtHdr = (h) =>
+  `${h.route}  ${rel(h.file)}:${h.line} <${h.comp}> min-h-screen 첫 자식${h.hops ? `(래퍼 ${h.hops}단 경유)` : ""} — page·layout 체인에 상단 패딩 토큰 없음(헤더 72px fixed)`;
+
 // ---------- --diff: 광고 위 새 UI 삽입 검출 ----------
 if (DIFF_MODE) {
   let diff = "";
@@ -298,6 +448,20 @@ if (process.argv.includes("--verbose")) {
   console.log(
     `INFO   ${infos.length}건 — page→layout 폴백 대체·쿠팡 동일 사이즈키 등 (--verbose 로 상세)`
   );
+}
+// 신설 INFO 2종 — 안정 count 줄(기준선 비교용) + 상세는 --verbose(전체) 또는 --diff(증가분만).
+console.log(
+  `INFO   우발 클릭 인접 후보 ${adjacencyInfos.length}건 / fixed 헤더 가림 후보 ${headerInfos.length}건 (INFO 전용 — 수리는 승인 큐, --verbose 상세)`
+);
+if (process.argv.includes("--verbose")) {
+  for (const a of adjacencyInfos) console.log("INFO   [인접] " + fmtAdj(a));
+  for (const h of headerInfos) console.log("INFO   [헤더가림] " + fmtHdr(h));
+} else if (DIFF_MODE) {
+  console.log(
+    `INFO   [diff] 신규 후보 — 우발 클릭 인접 ${adjacencyNew.length}건 / fixed 헤더 가림 ${headerNew.length}건`
+  );
+  for (const a of adjacencyNew) console.log("INFO   [diff][인접] " + fmtAdj(a));
+  for (const h of headerNew) console.log("INFO   [diff][헤더가림] " + fmtHdr(h));
 }
 if (allow.length) console.log(`\nallowlist ${allow.length}건 적용 (scripts/ad-audit-allow.json)`);
 console.log(
