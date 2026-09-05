@@ -26,9 +26,13 @@ export type SeasonLink = {
   footer?: { name: string; order: number };
 };
 
-export const seasonLinks: SeasonLink[] = [
-  // ── 9월 시즌 상단 5종 — 전면 최적화 (운영자 지시 2026-09-02) ──────────────
-  // 배열 순서 = 헤더 순서. 10월 초 교체 시 연말정산 2027 허브를 1순위로 올릴 것.
+// ── 시즌 상단 블록 — 교체 단위 (배열 순서 = 헤더 순서) ────────────────────
+// 2026-09-05 L13a: 세트를 상수로 사전 제작해 두고 아래 SEASON_TOP 한 줄만 바꾼다.
+// 상단 블록의 href 가 공통 목록(SEASON_REST)과 겹치면 상단 항목이 우선한다
+// (seasonLinks 조립 시 href 기준 첫 항목만 남김 — 배지·순서 승격용).
+
+// 9월 시즌 상단 5종 — 전면 최적화 (운영자 지시 2026-09-02). 추석 9/25·재산세 2기 9/30 종료.
+export const SEASON_TOP_SEP: SeasonLink[] = [
   {
     href: "/chuseok-bonus-2026",
     header: { name: "2026 추석 상여금 총정리", description: "평균 지급액·지급 의무·떡값 세금", badge: "SEASON" },
@@ -52,6 +56,53 @@ export const seasonLinks: SeasonLink[] = [
     header: { name: "연말정산 2027 총정리 허브", description: "일정·계산기·단계별 로드맵", badge: "SEASON" },
     footer: { name: "연말정산 2027 허브", order: 6 },
   },
+];
+
+// 10월 연말정산 예열 세트 — 9/26(추석 종료 익일) 교체용 사전 제작 (2026-09-05 L13a,
+// masterplan §12-3 10월 세트 정의 승격). 1순위 연말정산 2027 허브, 추석·재산세는 헤더
+// 제거(추석은 푸터도 제거 — 교체 후 '추석' 문구 0건 게이트, 재산세는 푸터만 월 표기 없이
+// 보존), 공제 계산기 3종 SEASON 배지. ★국세청 미리보기 오픈일 미확인 → 날짜 카피 금지.
+export const SEASON_TOP_OCT: SeasonLink[] = [
+  {
+    href: "/year-end-tax-2027",
+    header: { name: "연말정산 2027 총정리 허브", description: "2026년 귀속 — 일정·계산기·단계별 로드맵", badge: "SEASON" },
+    footer: { name: "연말정산 2027 허브", order: 6 },
+  },
+  {
+    href: "/year-end-tax-preview",
+    header: { name: "홈택스 연말정산 미리보기", description: "예상 세액 먼저 확인 — 절차·확인 포인트", badge: "NEW" },
+  },
+  {
+    href: "/credit-card-deduction-2026",
+    header: { name: "신용카드 소득공제 계산기", description: "결제수단별 공제율·한도", badge: "SEASON" },
+  },
+  {
+    href: "/rent-tax-credit-2026",
+    header: { name: "월세 세액공제 계산기", description: "연 1,000만 한도 최대 170만", badge: "SEASON" },
+  },
+  {
+    href: "/medical-tax-credit-2026",
+    header: { name: "의료비 세액공제 계산기", description: "난임 30%·무한도 대상 구분", badge: "SEASON" },
+  },
+  {
+    href: "/civil-servant-pay-2027",
+    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+  },
+  {
+    href: "/social-insurance-rates-2027",
+    header: { name: "2027 4대보험 요율표", description: "국민연금 10% 확정 — 내 월급 공제 변화", badge: "NEW" },
+  },
+  {
+    href: "/property-holding-tax-2026",
+    footer: { name: "재산세·보유세 계산기", order: 5 },
+  },
+];
+
+// 9/26 교체: SEASON_TOP_SEP → SEASON_TOP_OCT
+const SEASON_TOP: SeasonLink[] = SEASON_TOP_SEP;
+
+// ── 공통 목록 — 시즌과 무관하게 유지 (상단 블록과 href 가 겹치면 상단이 우선) ──
+const SEASON_REST: SeasonLink[] = [
   {
     href: "/minimum-wage-2027",
     header: { name: "2027 최저임금 10,700원 확정", description: "+3.7%·월 223.6만원 환산", badge: "HOT" },
@@ -213,6 +264,11 @@ export const seasonLinks: SeasonLink[] = [
   { href: "/police-pay-2026", footer: { name: "경찰 봉급표 2026", order: 16 } },
   { href: "/firefighter-pay-2026", footer: { name: "소방관 봉급표 2026", order: 17 } },
 ];
+
+/** 시즌 상단 블록 + 공통 목록. href 중복은 앞(상단 블록) 항목만 남긴다. */
+export const seasonLinks: SeasonLink[] = [...SEASON_TOP, ...SEASON_REST].filter(
+  (l, i, arr) => arr.findIndex((x) => x.href === l.href) === i
+);
 
 /** 헤더 시즌 드롭다운 항목 — navConfig 소비용 (배열 순서 유지) */
 export const headerSeasonItems: {

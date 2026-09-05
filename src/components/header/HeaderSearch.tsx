@@ -32,6 +32,14 @@ const CATEGORY_BADGE: Record<SearchCategory, { bg: string; text: string }> = {
   도구: { bg: "#CFFAFE", text: "#0E7490" },
 };
 
+// 시즌 검색 칩(ko) — 교체 단위. 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT (L13a)
+const KO_CHIP_SETS = {
+  // 9월 추석 세트 — 전면 최적화 (운영자 지시 2026-09-02)
+  SEP: ["추석 상여금", "연말정산", "성과급", "퇴직금", "삼성전자", "DSR", "IRP"],
+  // 10월 연말정산 예열 세트 (2026-09-05 사전 제작) — 검색 인덱스에 /year-end-tax-preview 존재
+  OCT: ["연말정산 미리보기", "연말정산", "성과급", "퇴직금", "삼성전자", "DSR", "IRP"],
+} as const;
+
 // /en 페이지 UI 문구 분기 — 푸터의 /en 분기와 동일 패턴 (검색 인덱스 자체는 공용)
 const SEARCH_STRINGS = {
   ko: {
@@ -42,8 +50,8 @@ const SEARCH_STRINGS = {
     placeholder: "계산기·가이드·용어 검색",
     empty: "계산기·가이드·용어를 검색해 보세요",
     noResults: "검색 결과가 없습니다. 다른 키워드로 검색해 보세요.",
-    // 9월 시즌 칩 — 전면 최적화 (운영자 지시 2026-09-02). 10월 초 교체 시 "추석 상여금" → "연말정산 미리보기"
-    chips: ["추석 상여금", "연말정산", "성과급", "퇴직금", "삼성전자", "DSR", "IRP"],
+    // 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT
+    chips: KO_CHIP_SETS.SEP,
   },
   en: {
     trigger: "Search",

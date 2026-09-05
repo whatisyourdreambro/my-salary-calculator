@@ -2,180 +2,23 @@
 //
 // 현재 월을 기반으로 가장 관련성 높은 시즌 페이지를 자동 노출.
 // deadline 있는 경우 D-Day 카운트다운으로 긴급감 부여.
+// 캘린더 데이터·선택 로직은 src/lib/seasonalCalendar.ts (순수 함수, vitest 대상) —
+// 이 파일은 마크업만 담당한다 (2026-09-05 L13a 분리, 마크업·위치 무변경).
 
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
-
-interface SeasonalContent {
-  month: number[];
-  /** 같은 달 안에서 노출 기간을 좁힐 때 (예: 성과급 지급 주간) */
-  days?: { from: number; to: number };
-  title: string;
-  subtitle: string;
-  href: string;
-  cta: string;
-  deadline?: { month: number; day: number };
-}
-
-const SEASONAL_CALENDAR: SeasonalContent[] = [
-  {
-    month: [4, 5],
-    title: "5월 종합소득세 신고",
-    subtitle: "프리랜서·N잡러는 5/31까지 꼭 신고해야 환급 가능",
-    href: "/year-end-tax-2026",
-    cta: "신고 가이드 보기",
-    deadline: { month: 5, day: 31 },
-  },
-  // 6월 자동차세 1기분 — 납부기간 6/16~30, 기한 6/30 (지방세법 제128조).
-  // 이전의 "7/31 납부·deadline 7/31"은 재산세 1기 기한과 혼동한 오류였음
-  // (2026-07-13 사실검증 감사에서 정정 — 잘못된 D-day가 납부 지연·가산세 유발 위험)
-  {
-    month: [6],
-    title: "6월 자동차세 1기분 납부",
-    subtitle: "6/16~30 납부 (기한 6/30). 배기량·차령별 정확한 금액 미리 확인",
-    href: "/auto-tax-2026",
-    cta: "자동차세 계산",
-    deadline: { month: 6, day: 30 },
-  },
-  // 2026-07-06 감사: 7월 양대 실검색 이벤트로 교체 — TAI 지급 주간(7/8) 우선,
-  // 이후 재산세 1기(7/16~31). 기존 "7월 건강보험료 정산" 항목은 사실관계가
-  // 어긋나(직장가입자 연말정산 반영은 4월) 제거.
-  {
-    month: [7],
-    days: { from: 1, to: 12 },
-    title: "삼성전자 TAI 지급일 7/8",
-    subtitle: "2026 상반기 사업부별 지급률 확정 — 내 세후 실수령액 바로 확인",
-    href: "/calc/samsung-bonus",
-    cta: "TAI 계산하기",
-  },
-  // TAI 지급(7/8) 후에도 명세서 확인·세금 검색 수요가 1~2주 이어짐 —
-  // 재산세 납부 개시(7/16) 전날까지 후속 배너로 시즌 트래픽 연장
-  {
-    month: [7],
-    days: { from: 13, to: 15 },
-    title: "삼성전자 TAI 지급 완료 — 내 실수령 맞았나?",
-    subtitle: "명세서와 비교 — 사업부별 지급률·세후 실수령 확인",
-    href: "/calc/samsung-bonus",
-    cta: "TAI 세후 확인",
-  },
-  // SK하이닉스 상반기 PI — 최근 2년 7월 하순 공지(2024 7/25, 2025 7/23) 패턴.
-  // 발표 예상 주간(7/20~28)에만 재산세보다 우선 노출 — 발표 당일 검색 폭증 대비.
-  // 확정 지급률은 스케줄 작업(sk-hynix-pi-announcement-watch)이 발표 확인 후 반영.
-  {
-    month: [7],
-    days: { from: 20, to: 28 },
-    title: "SK하이닉스 상반기 PI 발표 임박",
-    subtitle: "최근 2년 연속 최대치 150% — 발표 전에 내 예상 세후 수령액 미리 계산",
-    href: "/calc/sk-hynix-bonus",
-    cta: "PI 계산하기",
-  },
-  {
-    month: [7],
-    title: "7월 재산세 1기 납부 (주택분 50%)",
-    subtitle: "7/16~31 납부 — 공시가별 재산세·종부세 부담 미리 점검",
-    href: "/property-holding-tax-2026",
-    cta: "보유세 계산",
-    deadline: { month: 7, day: 31 },
-  },
-  // 추석(2026-09-25, 연휴 9/24~26) — 상여금·명절휴가비 검색은 8월 말~9월 중순이
-  // 피크. 2026-08-17 감사에서 추석 항목 부재 적발 — 재산세 2차보다 우선 노출.
-  // days가 단일 범위라 8월분·9월분 두 항목으로 분리 (find()는 첫 매치 우선).
-  {
-    month: [8],
-    days: { from: 16, to: 31 },
-    title: "추석 상여금, 우리 회사는 얼마 줄까?",
-    subtitle: "명절휴가비·상여금 평균 지급액과 세후 실수령 — 추석 전에 미리 확인",
-    href: "/chuseok-bonus-2026",
-    cta: "추석 상여금 확인",
-    deadline: { month: 9, day: 25 },
-  },
-  {
-    month: [9],
-    days: { from: 1, to: 26 },
-    title: "추석 상여금, 우리 회사는 얼마 줄까?",
-    subtitle: "명절휴가비·상여금 평균 지급액과 세후 실수령 — 연휴 전 미리 확인",
-    href: "/chuseok-bonus-2026",
-    cta: "추석 상여금 확인",
-    deadline: { month: 9, day: 25 },
-  },
-  // 8차 점검에서 추가 — 9월 부동산 재산세 2차 (추석 항목이 안 잡는 8/1~15와
-  // 9/27~30 납부 마감 직전 구간을 커버 — 마감 구간엔 D-day가 긴급 배지로 전환)
-  {
-    month: [8, 9],
-    title: "9월 부동산 재산세 2차",
-    subtitle: "주택분 50% + 토지분 9/16~30 납부. 공시가별 부담 미리 점검",
-    href: "/property-holding-tax-2026",
-    cta: "보유세 계산",
-    deadline: { month: 9, day: 30 },
-  },
-  // 연말정산 공제 항목별 계산기 3종(신용카드·의료비·월세) — 2026-08 클러스터 편입.
-  // 11~12월과 1월 초는 기존 "12월 연말정산 + 성과급"(D-12/31 카운트다운)이 그대로 우선.
-  // 간소화 서비스가 열리는 1월 중순부터 회사 제출·정산 마무리기인 2월 중순까지 노출하고,
-  // 2/16부터는 기존 "3월 신입 연봉 협상" 항목이 이어받음 (기존 항목 무변경).
-  {
-    month: [1],
-    days: { from: 15, to: 31 },
-    title: "연말정산 간소화 오픈 — 공제액 막판 점검",
-    subtitle: "신용카드 소득공제·의료비·월세 세액공제, 항목별 예상 공제액 즉시 계산",
-    href: "/credit-card-deduction-2026",
-    cta: "카드공제 계산",
-  },
-  {
-    month: [2],
-    days: { from: 1, to: 15 },
-    title: "연말정산 마무리 — 의료비·월세 공제 확인",
-    subtitle: "실손 차감 의료비 공제와 최대 170만원 월세 세액공제, 놓친 항목 최종 점검",
-    href: "/medical-tax-credit-2026",
-    cta: "의료비 공제 계산",
-  },
-  {
-    month: [11, 12, 1],
-    title: "12월 연말정산 + 성과급",
-    subtitle: "13월의 월급 극대화하는 6대 점검 항목",
-    href: "/year-end-tax-settlement-2026",
-    cta: "절세 가이드 보기",
-    deadline: { month: 12, day: 31 },
-  },
-  {
-    month: [2, 3],
-    title: "3월 신입 연봉 협상",
-    subtitle: "직군별 평균 초봉과 ±10% 협상법",
-    href: "/new-employee-2026",
-    cta: "협상 가이드 보기",
-  },
-];
-
-function getDaysLeft(deadline: { month: number; day: number }): number {
-  const now = new Date();
-  const year =
-    deadline.month < now.getMonth() + 1 ? now.getFullYear() + 1 : now.getFullYear();
-  const target = new Date(year, deadline.month - 1, deadline.day, 23, 59, 59);
-  const diff = target.getTime() - now.getTime();
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-}
-
-function getCurrentSeasonal(): SeasonalContent | null {
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  return (
-    SEASONAL_CALENDAR.find(
-      (s) =>
-        s.month.includes(month) &&
-        (!s.days || (day >= s.days.from && day <= s.days.to))
-    ) || null
-  );
-}
+import { getCurrentSeasonal, getDaysLeft } from "@/lib/seasonalCalendar";
 
 interface SeasonalBannerProps {
   className?: string;
 }
 
 export default function SeasonalBanner({ className = "" }: SeasonalBannerProps) {
-  const seasonal = getCurrentSeasonal();
+  const now = new Date();
+  const seasonal = getCurrentSeasonal(now);
   if (!seasonal) return null;
 
-  const daysLeft = seasonal.deadline ? getDaysLeft(seasonal.deadline) : null;
+  const daysLeft = seasonal.deadline ? getDaysLeft(seasonal.deadline, now) : null;
   const isUrgent = daysLeft !== null && daysLeft <= 20;
 
   return (
