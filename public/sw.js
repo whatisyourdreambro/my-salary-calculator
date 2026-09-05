@@ -8,7 +8,9 @@
 // - 광고·GA·카카오 등 cross-origin 요청은 일절 가로채지 않는다 (respondWith 미호출
 //   → 브라우저 기본 네트워크 동작). ★광고 코드 불가침 원칙.
 
-const CACHE_NAME = "msy-static-v1"; // ★sw 수정 시 버전 올릴 것 (activate가 구 캐시 삭제)
+const CACHE_NAME = "msy-static-v2"; // ★sw 수정 시 버전 올릴 것 (activate가 구 캐시 삭제)
+// v2 (2026-09-05): manifest 수정(start_url utm·연말정산 바로가기 /year-end-tax) 반영 —
+// /manifest.webmanifest 는 cache-first 라 버전을 올려야 설치된 클라이언트가 새 manifest 를 받는다.
 
 // /fonts/ 프리픽스는 제거(2026-08-30) — 폰트는 /_next/static/media 로 서빙되어
 // /fonts/ 는 실존하지 않는 죽은 경로였다 (next/font 로컬 폰트 파이프라인).

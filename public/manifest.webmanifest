@@ -2,7 +2,8 @@
   "name": "머니샐러리 — 2026 연봉 실수령액 계산기",
   "short_name": "머니샐러리",
   "description": "2026년 최신 세법 기준 연봉 실수령액·4대보험·연말정산 계산기. 100가지 금융 도구 무료.",
-  "start_url": "/",
+  "id": "/",
+  "start_url": "/?utm_source=pwa&utm_medium=homescreen",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
@@ -60,7 +61,7 @@
       "name": "연말정산 환급금 계산",
       "short_name": "연말정산",
       "description": "13월의 월급 미리보기",
-      "url": "/year-end-tax-2026",
+      "url": "/year-end-tax",
       "icons": [{ "src": "/icon", "sizes": "32x32" }]
     },
     {
