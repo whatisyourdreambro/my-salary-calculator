@@ -6,9 +6,31 @@ on:
   push:
     branches: [main]
   pull_request:
+  # 주간 프로덕션 헬스체크 (2026-09-05) — scripts/health-check.mjs 를 사람이 돌려야만 했던 공백 해소.
+  # 배경: 2026-08 /salary 전량 500 을 수개월 미발견. 실패 시 GitHub 워크플로 실패 알림 메일로 통지.
+  schedule:
+    - cron: "0 0 * * 1" # 매주 월요일 09:00 KST (00:00 UTC)
+  workflow_dispatch:
 
 jobs:
+  health:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 프로덕션 헬스체크 (실패 시 5분 후 1회 재시도 — 배포 전파 중 오탐 방지)
+        run: |
+          if node scripts/health-check.mjs; then exit 0; fi
+          echo "첫 실행 실패 — 300초 후 재시도"
+          sleep 300
+          node scripts/health-check.mjs
+
   verify:
+    if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
