@@ -17,6 +17,60 @@ type ChangeFrequency =
  | 'yearly'
  | 'never';
 
+export type RouteOverride = {
+ lastModified?: Date;
+ priority?: number;
+ changeFrequency?: ChangeFrequency;
+};
+
+// 라우트별 오버라이드 — 핵심 수익/시즌 페이지를 전역 기준일·priority 와 차등화.
+// 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
+// 동시에만 갱신한다 (매 배포 자동 갱신 금지 — 아래 STATIC_LAST_MODIFIED 의
+// freshness 원칙과 동일). 값이 실제 갱신보다 오래되면 scripts/verify-sitemap.ts 가
+// `git log -1 --format=%cI -- src/app<route>` 기준으로 WARN 을 낸다(비차단).
+// export 는 그 게이트 전용 — Next 메타데이터 라우트는 default 만 사용한다.
+// 2026-08-23: SK하이닉스 임단협 잠정합의 반영 + 삼성 온페이지 개편.
+// 2026-08-26: SK하이닉스 총투표 부결 반영·최저임금 2027 확정 고시 반영 +
+//             8/23~25 실질 변경 라우트(임베드·시즌·구조화데이터·EN) 개별 갱신.
+// 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
+//             3.9% 예상표 전환(bbd8623).
+export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
+ '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
+ '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
+ // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
+ // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
+ '/calc/hyundai-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
+ '/calc/kia-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
+ '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
+ '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
+ // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
+ '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
+ '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
+ '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
+ '/civil-servant-pay-2027': { lastModified: new Date('2026-09-03') },
+ // R2 신규 8라우트 (2026-08-31)
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
+ '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
+ '/calc/dependent-check': { lastModified: new Date('2026-08-31') },
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-08-31') },
+ '/calc/offer-compare': { lastModified: new Date('2026-08-31') },
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
+ '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
+ '/social-insurance-rates-2027': { lastModified: new Date('2026-08-31') },
+ // 봉급표 버티컬 4종 (2026-08-30)
+ '/military-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/police-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/firefighter-pay-2026': { lastModified: new Date('2026-08-30') },
+ // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
+ '/embed': { lastModified: new Date('2026-08-25') },
+ '/en': { lastModified: new Date('2026-08-25') },
+ '/en/flat-tax': { lastModified: new Date('2026-08-25') },
+ '/en/salary-converter': { lastModified: new Date('2026-08-25') },
+ '/en/guides': { lastModified: new Date('2026-08-25') },
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
  const baseUrl = "https://www.moneysalary.com";
 
@@ -241,56 +295,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 2026-07-16: 2027 최저임금·세법개정안 신설 + 재산세·국민연금·대출 페이지 시즌 갱신
  const STATIC_LAST_MODIFIED = new Date("2026-07-16");
 
- // 라우트별 오버라이드 — 핵심 수익/시즌 페이지를 전역 기준일·priority 와 차등화.
- // 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
- // 동시에만 갱신한다 (매 배포 자동 갱신 금지 — 위 freshness 원칙과 동일).
- // 2026-08-23: SK하이닉스 임단협 잠정합의 반영 + 삼성 온페이지 개편.
- // 2026-08-26: SK하이닉스 총투표 부결 반영·최저임금 2027 확정 고시 반영 +
- //             8/23~25 실질 변경 라우트(임베드·시즌·구조화데이터·EN) 개별 갱신.
- const ROUTE_OVERRIDES: Record<
- string,
- { lastModified?: Date; priority?: number; changeFrequency?: ChangeFrequency }
- > = {
- '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
- '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
- '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
- '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
- // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
- '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
- '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
- '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
- '/civil-servant-pay-2027': { lastModified: new Date('2026-08-23') },
- // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
- '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
- '/calc/dependent-check': { lastModified: new Date('2026-08-31') },
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-08-31') },
- '/calc/offer-compare': { lastModified: new Date('2026-08-31') },
- '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
- '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
- '/social-insurance-rates-2027': { lastModified: new Date('2026-08-31') },
- // 봉급표 버티컬 4종 (2026-08-30)
- '/military-pay-2026': { lastModified: new Date('2026-08-30') },
- '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },
- '/police-pay-2026': { lastModified: new Date('2026-08-30') },
- '/firefighter-pay-2026': { lastModified: new Date('2026-08-30') },
- // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
- '/embed': { lastModified: new Date('2026-08-25') },
- '/en': { lastModified: new Date('2026-08-25') },
- '/en/flat-tax': { lastModified: new Date('2026-08-25') },
- '/en/salary-converter': { lastModified: new Date('2026-08-25') },
- '/en/guides': { lastModified: new Date('2026-08-25') },
- };
- // 나머지 회사별 성과급 계산기 21종 — 시즌 클러스터로 0.85 상향
+ // 수기 오버라이드(모듈 스코프 ROUTE_OVERRIDES, 아래 참조)의 로컬 사본 — 성과급
+ // 클러스터 priority 루프가 사본만 채워 export 본은 수기 목록 그대로 유지된다
+ // (scripts/verify-sitemap.ts 신선도 게이트가 export 본의 lastModified 만 검사).
+ const routeOverrides: Record<string, RouteOverride> = { ...ROUTE_OVERRIDES };
+ // 나머지 회사별 성과급 계산기 — 시즌 클러스터로 0.85 상향
  for (const route of staticRoutes) {
  if (
  route.startsWith('/calc/') &&
  route.endsWith('-bonus') &&
- !ROUTE_OVERRIDES[route] &&
+ !routeOverrides[route] &&
  !['/calc/holiday-bonus', '/calc/january-bonus', '/calc/year-end-bonus'].includes(route)
  ) {
- ROUTE_OVERRIDES[route] = { priority: 0.85 };
+ routeOverrides[route] = { priority: 0.85 };
  }
  }
 
@@ -305,10 +322,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  const staticUrls = staticRoutes.map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: ROUTE_OVERRIDES[route]?.lastModified ?? STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides[route]?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency:
- ROUTE_OVERRIDES[route]?.changeFrequency ?? ('weekly' as ChangeFrequency),
- priority: route === '/' ? 1.0 : ROUTE_OVERRIDES[route]?.priority ?? 0.8,
+ routeOverrides[route]?.changeFrequency ?? ('weekly' as ChangeFrequency),
+ priority: route === '/' ? 1.0 : routeOverrides[route]?.priority ?? 0.8,
  ...(EN_STATIC_ALTERNATES[route]
  ? { alternates: { languages: EN_STATIC_ALTERNATES[route] } }
  : {}),
