@@ -17,6 +17,16 @@ import { BONUS_PROFILES } from "@/data/bonusData";
 const bonusCompanyCount = new Set(BONUS_PROFILES.map((p) => p.calcSlug)).size;
 const bonusPayoutCount = BONUS_PROFILES.reduce((s, p) => s + p.payouts.length, 0);
 
+/** ISO YYYY-MM-DD 문자열 중 늦은 날짜 (사전순 = 시간순) */
+const laterIsoDate = (a: string, b: string) => (a >= b ? a : b);
+
+// DART TOP100 리포트는 빌드타임 집계라 DART 재수집(dartDisclosed DART_DATA_DATE 갱신)만으로
+// 본문이 바뀐다 → updatedDate를 수기값과 데이터 스냅샷일의 max()로 파생해 sitemap lastmod·
+// Dataset/Article dateModified·RSS pubDate 신선도 신호가 어긋나지 않게 한다 (2026-09-05).
+// dartReportStats는 이미 이 파일이 import하는 dartReport(서버 전용)에서 오므로 클라 번들 노출 증가 없음.
+// bonus 리포트는 bonusData에 검증일 필드가 없어 수동 유지 (필드 신설은 L13b와 함께).
+const LISTED_AVG_SALARY_MANUAL_UPDATED = "2026-08-23";
+
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */
   slug: string;
@@ -53,7 +63,8 @@ export const reportsRegistry: ReportMeta[] = [
     title: `${dartReportStats.rankYear} 공시 기준 평균연봉 TOP 100 — 상장사 ${dartReportStats.companyCount.toLocaleString("ko-KR")}곳 전수 분석`,
     description: `머니샐러리가 금융감독원 전자공시(DART) 사업보고서 '직원 등의 현황'을 전수 수집해 집계한 ${dartReportStats.rankYear}년 평균연봉 순위. 급여총액÷인원 가중 평균, 추정치 0. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
-    updatedDate: "2026-08-23",
+    // 수기 갱신일 vs DART 스냅샷일 max — 본문 수정 시 LISTED_AVG_SALARY_MANUAL_UPDATED 만 올리면 됨
+    updatedDate: laterIsoDate(LISTED_AVG_SALARY_MANUAL_UPDATED, dartReportStats.dataDate),
     keywords: [
       "상장사 평균연봉",
       "평균연봉 순위",
