@@ -10,6 +10,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Users, Info } from "lucide-react";
 import DependentCheckClient from "./Client";
@@ -165,6 +166,9 @@ export default function DependentCheckPage() {
               달라질 수 있으니 홈택스 간소화 자료와 함께 최종 확인하세요.
             </p>
           </div>
+
+          {/* 연말정산 시리즈 클러스터 — 마지막 광고 아래·RelatedCalculators 직전 고정 (L14', 2026-09-05) */}
+          <YearEndTaxCluster />
 
           <RelatedCalculators currentPath="/calc/dependent-check" />
         </div>

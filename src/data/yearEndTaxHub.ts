@@ -54,7 +54,8 @@ export const YEAR_END_STEPS: YearEndStep[] = [
     desc: "간소화 서비스(예년 기준 1월 중순 오픈)에서 자료를 확인하고, 누락분은 영수증을 직접 챙겨 회사에 제출합니다.",
     entries: [
       { href: "/medical-tax-credit-2026", title: "의료비 세액공제 계산기", desc: "3% 문턱 넘는지 먼저 확인", kind: "calculator" },
-      { href: "/year-end-tax", title: "최종 환급액 계산", desc: "간소화 숫자로 정밀 재계산", kind: "calculator" },
+      // 2026-09-05 L14' — /year-end-tax 중복 등재(preview 단계와 중복)를 R2 판정기로 치환 (항목 수 불변)
+      { href: "/calc/dependent-check", title: "부양가족 인적공제 판정기", desc: "회사 제출 전 부모님·자녀 기본공제 가능 여부 판정", kind: "calculator" },
       { href: "/calc/year-end-bonus-tax", title: "연말 상여금 세금 계산기", desc: "12~1월 상여금 세후 확인", kind: "calculator" },
     ],
   },

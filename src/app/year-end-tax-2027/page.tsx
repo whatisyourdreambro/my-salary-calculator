@@ -14,6 +14,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { buildPageMetadata } from "@/lib/seo";
+import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
 import {
   autoBreadcrumbLd,
   faqLd,
@@ -35,9 +36,9 @@ export const dynamic = "force-static";
 const PAGE_PATH = "/year-end-tax-2027";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "연말정산 2027 총정리 — 2026년 귀속, 일정·계산기·단계별 로드맵",
+  title: `연말정산 ${YEAR_END_SEASON.filingYear} 총정리 — ${YEAR_END_SEASON.attributionYear}년 귀속, 일정·계산기·단계별 로드맵`,
   description:
-    "2026년 귀속 연말정산(2027년 1~2월 신고)의 모든 것. 홈택스 미리보기부터 12월 지출 마감, 1월 간소화 제출, 2월 환급 확인까지 단계별 로드맵과 계산기·체크리스트를 한 곳에 모았습니다.",
+    `${YEAR_END_SEASON.attributionYear}년 귀속 연말정산(${YEAR_END_SEASON.filingYear}년 1~2월 신고)의 모든 것. 홈택스 미리보기부터 12월 지출 마감, 1월 간소화 제출, 2월 환급 확인까지 단계별 로드맵과 계산기·체크리스트를 한 곳에 모았습니다.`,
   path: PAGE_PATH,
   keywords: [
     "연말정산 2027",

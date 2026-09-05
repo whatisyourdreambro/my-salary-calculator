@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -16,9 +17,9 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 근로자 12월 시즌 가이드 (전략·읽는 콘텐츠). 체크리스트는 별도 페이지(/year-end-tax-checklist), 계산기는 /year-end-tax.
- title: "2026 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지",
+ title: `${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지`,
  description:
- "성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 최대 900만원 납입 시 환급 약 119~149만원. 2026 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.",
+ `성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 최대 900만원 납입 시 환급 약 119~149만원. ${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.`,
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",

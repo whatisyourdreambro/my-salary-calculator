@@ -56,6 +56,19 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  // 2026-08-31 — 8/30 신설 연금 인상 계산기 추천망 편입
  { path: "/calc/pension-hike-2027", title: "국민연금 인상 계산기", description: "2027 요율 10% — 매달 더 내는 금액", icon: "TrendingUp" },
  ],
+ // 2026-09-05 — L14' 연말정산 클러스터 전용 카테고리. tax 배열 뒤에 append 하면 limit=4 규칙상
+ // 어떤 페이지에서도 도달하지 않는다(리뷰 실측) — 허브·공제 계산기·R2 3종만 이 카테고리를 우선 소비하고
+ // 나머지 tax 우선 페이지 20여 곳의 추천 4종은 그대로 둔다.
+ yearEnd: [
+ { path: "/year-end-tax", title: "연말정산 계산기", description: "환급액 미리 계산", icon: "Receipt" },
+ { path: "/credit-card-deduction-2026", title: "신용카드 공제 계산기", description: "결제수단별 공제액·한도 계산", icon: "CreditCard" },
+ { path: "/rent-tax-credit-2026", title: "월세 세액공제 계산기", description: "요건 판정 + 15%·17% 환급액", icon: "Home" },
+ { path: "/medical-tax-credit-2026", title: "의료비 세액공제 계산기", description: "총급여 3% 문턱·실손 차감 계산", icon: "Heart" },
+ { path: "/donation-tax-credit-2026", title: "기부금 세액공제 계산기", description: "15%·30% 유형별 한도 자동 판정", icon: "Gift" },
+ { path: "/calc/dual-income-year-end", title: "맞벌이 몰아주기 계산기", description: "자녀공제·의료비 최적 배분 비교", icon: "Users" },
+ { path: "/calc/dependent-check", title: "부양가족 인적공제 판정기", description: "기본공제 150만원 가능 여부 즉시 판정", icon: "Users" },
+ { path: "/calc/child-deduction", title: "자녀공제 계산기", description: "인적공제 + 자녀세액공제 합산", icon: "Heart" },
+ ],
  investment: [
  { path: "/savings-interest-2026", title: "적금·예금 이자 계산기", description: "정기적금/예금 단리·복리", icon: "PiggyBank" },
  { path: "/national-pension-estimate-2026", title: "국민연금 예상수령액", description: "가입기간별 월 노령연금", icon: "Building2" },
@@ -132,7 +145,9 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/": ["salary"],
  "/home-loan": ["loan", "realEstate"],
  "/car-loan": ["loan"],
- "/year-end-tax": ["tax", "salary"],
+ // 2026-09-05 — L14' 연말정산 클러스터: yearEnd 카테고리 우선(공제 계산기·R2 3종 순환), 부족분 tax
+ "/year-end-tax": ["yearEnd", "tax"],
+ "/year-end-tax-2027": ["yearEnd", "tax"],
  "/fire-calculator": ["investment", "salary"],
  "/calc/2026-year": ["salary", "tax"],
  // 회사별 성과급 계산기 — bonus 카테고리 우선 (홈 계산기·salary-db·절세로 순환)
@@ -207,21 +222,24 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/minimum-wage-2027": ["salary", "tax"],
  "/tax-reform-2026": ["tax", "realEstate"],
  // 2026-08-08 — 연말정산 롱테일 계산기 3종
- "/credit-card-deduction-2026": ["tax", "salary"],
- "/rent-tax-credit-2026": ["tax", "realEstate"],
- "/medical-tax-credit-2026": ["tax", "salary"],
+ // 2026-09-05 L14' — 공제 계산기 3종은 연말정산 클러스터(yearEnd) 우선, 부족분은 종전 카테고리
+ "/credit-card-deduction-2026": ["yearEnd", "tax"],
+ "/rent-tax-credit-2026": ["yearEnd", "realEstate"],
+ "/medical-tax-credit-2026": ["yearEnd", "tax"],
  // 2026-08-31 — 8/30 신설 정적 계산기 dead-end 차단 (배포 점검 후속)
  "/calc/vacation-pay": ["salary", "tax"],
  "/calc/ordinary-wage": ["salary", "tax"],
  "/calc/annual-leave-days": ["salary"],
  "/calc/pension-hike-2027": ["tax", "investment"],
  // 2026-08-31 — R2 신규 8종 dead-end 차단
- "/calc/dual-income-year-end": ["tax", "salary"],
+ "/calc/dual-income-year-end": ["yearEnd", "tax"],
  "/calc/voluntary-retirement": ["salary", "tax"],
- "/calc/dependent-check": ["tax", "family"],
+ "/calc/dependent-check": ["yearEnd", "family"],
+ // 자녀공제 계산기 — 키 부재로 salary 폴백(홈·삼성·주휴)이 추천되던 문맥 불일치 해소 (2026-09-05 L14')
+ "/calc/child-deduction": ["yearEnd", "family"],
  "/calc/smb-income-tax-break": ["tax", "salary"],
  "/calc/offer-compare": ["salary", "tax"],
- "/donation-tax-credit-2026": ["tax", "salary"],
+ "/donation-tax-credit-2026": ["yearEnd", "tax"],
  "/health-insurance-dependent": ["tax", "salary"],
  "/social-insurance-rates-2027": ["tax", "salary"],
 };

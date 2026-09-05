@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -16,7 +17,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 12월 31일 마감 전 항목별 점검표 (체크 형태). 계산기·전략은 별도 페이지.
- title: "2026 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표",
+ title: `${YEAR_END_SEASON.attributionYear} 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표`,
  description:
  "12월 31일 마감 전 빠짐없이 점검해야 할 연말정산 40+ 항목 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 카테고리별 점검표 형식으로 빠르게 확인.",
  path: "/year-end-tax-checklist",

@@ -9,6 +9,7 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
+import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
@@ -17,9 +18,9 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 계산기 도구 (시즌 무관, 연 1회 사용). 시즌 가이드는 별도 페이지.
- title: "연말정산 환급금 계산기 — 즉시 계산 도구 (2026)",
+ title: `연말정산 환급금 계산기 — 즉시 계산 도구 (${YEAR_END_SEASON.attributionYear})`,
  description:
- "총급여·신용카드·의료비·연금저축·기부금 입력 → 2026년 귀속 연말정산 예상 환급금을 즉시 계산하는 무료 도구. 시즌 가이드는 별도 페이지(/year-end-tax-settlement-2026, /year-end-tax-checklist).",
+ `총급여·신용카드·의료비·연금저축·기부금 입력 → ${YEAR_END_SEASON.attributionYear}년 귀속 연말정산 예상 환급금을 즉시 계산하는 무료 도구. 시즌 가이드는 별도 페이지(/year-end-tax-settlement-2026, /year-end-tax-checklist).`,
  path: "/year-end-tax",
  keywords: [
  "연말정산 환급금 계산기",

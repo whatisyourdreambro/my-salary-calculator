@@ -5,6 +5,7 @@ import { buildToolMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { GuideMidAd } from "@/components/AdPlacement";
 import { Info, Heart } from "lucide-react";
 import ChildDeductionClient from "./Client";
@@ -105,6 +106,9 @@ export default function ChildDeductionPage() {
               본 계산기는 표준 자녀 수·연령 기준 추정치입니다. 부양가족 등록·연소득 요건·중복 공제 여부에 따라 달라질 수 있으니 연말정산 시 정확히 확인하세요.
             </p>
           </div>
+
+          {/* 연말정산 시리즈 클러스터 — 마지막 광고 아래·RelatedCalculators 직전 고정 (L14', 2026-09-05) */}
+          <YearEndTaxCluster />
 
           <RelatedCalculators currentPath="/calc/child-deduction" />
         </div>
