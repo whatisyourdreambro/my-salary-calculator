@@ -92,6 +92,7 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
   clipboard.writeText에는 발동하지 않아 버튼이 출처를 직접 내장)
 - `reportsRegistry`(src/data/reportsRegistry.ts) = 발행 목록 단일 소스 →
   sitemap 자동 등재 → postbuild IndexNow 전량 자동 핑.
+- (2026-09-05 배치 B2·B9) `rss.xml` 에 리포트 3편 합류(`<category>데이터 리포트</category>`, guid=/insights/slug, 채널 pubDate=가이드·리포트 max) + 리포트 원본 `/insights/<slug>/data.csv`·`.json`(source/grade 열 포함, 추정 표기 유지) + Dataset `distribution`/`license`(사이트 인용 정책 URL — 외부 라이선스 채택은 승인 I)/`citation`(DART). 내려받기·위젯 링크는 insights layout **PageFooterAds 아래**만(본문 내 링크는 승인 항목).
 - OG: `/api/og?type=report` + `path=/insights` 자동 분기. 공유 헤딩 `report` 키.
 - **/widget/salary** (기둥 4) — edge Route Handler가 광고·GA·카카오 스크립트가
   전혀 없는 자가완결 HTML 서빙(iframe 내 AdSense 실행 = 정책 리스크 → 원천 차단).
@@ -112,6 +113,7 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
    방법론 섹션 · FAQ 4문 이상 · 크로스링크(기존 랭킹 페이지와 상호보완 명시) ·
    광고는 기존 컴포넌트를 본문 사이 배치(신규 UI는 항상 광고 아래).
 4. **등재** — reportsRegistry에 추가(+updatedDate) → sitemap·인덱스 자동 반영.
+   - (2026-09-05) TOP100(listed-avg-salary) 리포트는 DART 재수집(DART_DATA_DATE 갱신)만으로 updatedDate 가 자동 승격되며, 본문 수기 수정 시에만 `src/data/reportsRegistry.ts` 의 `LISTED_AVG_SALARY_MANUAL_UPDATED` 를 올린다. bonus 리포트 updatedDate 는 여전히 수동(검증일 필드 신설은 L13b 와 동시 처리). updatedDate 갱신 = rss.xml pubDate 재노출이므로 오타 수정으로 올리지 말 것.
 
 ## 발행 체크리스트 (리포트·위젯 공통)
 
@@ -121,7 +123,7 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
 4. main push → CF 배포 → IndexNow postbuild 자동 (CF 로그 `[indexnow]` 확인).
 5. **운영자**: GSC URL 검사 → 색인 요청 (신규 리포트 URL).
 6. **운영자**: 네이버 블로그 요약판 발행 (본문에 "머니샐러리" 브랜드 표기 +
-   리포트 URL 링크).
+   리포트 URL 링크). — **블로그 없음(2026-08-17 확인)이라 개설 전 생략**; 리포트는 rss.xml 에 자동 합류(2026-09-05)하므로 서치어드바이저 RSS(10/5)로 대체.
 7. 2주 후: GSC 백링크 리포트 + GA4 referral + `citation_copy`/`embed_code_copy`
    이벤트 확인.
 

@@ -80,6 +80,12 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
   토스트 8곳(2.8초 노출)은 미적용 — 후속. 검증 게이트: tsc 0·vitest 131/131·eslint 0·ad-audit --diff ERROR 0/WARN 0.
   실험 판정 규칙 개정(§5-4): 광고단위 1축 우선, 창 내 클릭<50 → 28일 연장, 미달 시 '판정 불가·현상 유지'.
 
+- 2026-09-05 **보고(승인 아님) — 수동 유닛 커버리지 하락과 미채움 접힘 구조** (100배 계획 F6·adsense-quality-3/4).
+  수동 광고단위 커버리지 8월 94.0% → 9/3 85.0 · 9/4 83.9 · 9/5 87.5%, 노출 RPM 0.51→0.42. 코드측 후보: 9/2 전면최적화의 본문 끝 Multiplex(목록형 ≈660라우트) · DART lite 219p CalcResult+GuideMid · /tools 24 GuideMid.
+  **단 수동 합계 광고요청/PV 는 감소(8월 ≈1.46 → 9월 ≈1.33)**, 매칭 +38% 가 PV +47~60% 보다 덜 늘어 커버리지가 떨어진 것이라 '9/2 배치가 요청을 늘렸다'는 단순 인과는 미확인 — 경합 가설: 9/3 성과급 뉴스·사내망 유입 믹스 변화(기존 유닛 커버리지도 같이 떨어졌다면 코드 원인 아님), 9/5 반등은 신규 슬롯 컨텍스트 미확정의 자연 회복과 부합.
+  구조: AdPlacement 는 minHeight(home-top 120·result 250·guide-mid 250·fluid 200·multiplex 280·sidebar 600)를 예약한 뒤 `data-ad-status=unfilled` 면 컨테이너를 `display:none` 으로 접는다 → 미채움 12~16% 가 예약 높이 붕괴 경로를 타서 모바일 본문 중간 250~280px 붕괴 = CLS 악화 구조(고위험은 본문 중간 GuideMid·결과 직하 CalcResult, Multiplex 는 본문 끝이라 영향 작음, 사이드바는 모바일 무영향).
+  **판정**: 9/7 광고단위 CSV 의 커버리지 열(유닛 행, 배치 변경 0건 유닛과 같은 창 비교, 9/2~9/4 vs 9/5~ IN_ARTICLE 첫 요청 구간 분리) + GA4 `ad_unfilled × slot_kind × page_path`(9/7 측정기준 등록 이후 적재분) + GSC 핵심 웹 바이탈(CrUX, 9/13 세션) → 9/17 판정 절에 '철회 후보(유닛×페이지군)'·'CLS 회귀' 열. **철회 후보·래퍼 min-height(공백 감수)·unfilled 시 접힘 대신 높이 유지(AdPlacement 내부)는 전부 승인 항목으로만** — 코드 선행 금지. 배수 계상 없음(판정 인프라).
+
 - 2026-08-17 **/home-loan 본문 중간 GuideMidAd 1개** — CalcResultAd~PageFooterAds
   사이 ~390줄 무광고 구간 해소. InArticleAd는 dedup 함정으로 회피.
 - 2026-08-17 **/share/[data] CoupangBanner 1개** — 카톡 공유 랜딩 쿠팡 인벤토리 0
@@ -105,3 +111,4 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
   (AdSense 페이지 보고서 — /tools·/salary-db/listed·/calc 신규 9종·시즌 단일 페이지군 비교).
   기각(재제안 금지 사유 기록): HomeTop 직후 Multiplex 연속 배치(minimum-wage-2026/2027·new-employee·
   samsung-negotiation 하단), 레이아웃 쿠팡 위로 UI를 미는 리포트 배선 3건, /company(308 redirect) 광고.
+  - ad-audit 신설 INFO 2종 기준선(2026-09-05, 10배 계획 adsense-quality-6·100배 계획 B13): 우발 클릭 인접 후보 **41건**(구현 초안의 42는 오기 — `node scripts/ad-audit.mjs` 실측 41) / fixed 헤더 가림 후보 **4건**(/job·/job/[slug]·/industry·/industry/[slug] HomeTopAd — 헤더 72px fixed 가림). INFO 전용·exit 불변·자동 수정 없음. `--diff` 는 신규 후보만 상세 출력. 후보 수리는 승인 큐(10배 계획 §2-1-b ① 우발 클릭 의심 유닛 간격·위치 수리, 100배 계획 §6-A 헤더 오프셋)로만 — 같은 커밋에서 수정 금지. 배치 후 count 줄이 41/4 를 넘으면 증가분을 이 표에 기록.
