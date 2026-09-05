@@ -735,6 +735,7 @@ const nextConfig = {
         // 배포 시에만 바뀌고(개인화는 전부 클라이언트 localStorage) Pages가 배포
         // 시 캐시를 퍼지하므로 1시간 엣지 캐시는 안전. max-age=0으로 브라우저는
         // 항상 재검증(엣지에서 즉시 응답).
+        // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 — 아래 s-maxage 규칙 전부 동일(삭제 금지: 308·로컬 dev 경로는 여전히 사용).
         source: "/:path*",
         headers: [
           ...securityHeaders,
@@ -764,6 +765,7 @@ const nextConfig = {
       // headers()는 매칭되는 모든 규칙을 적용하되 같은 키는 나중 규칙이 이기므로,
       // 아래 규칙들은 반드시 전역 규칙(/:path*) 뒤에 있어야 s-maxage=1을 오버라이드한다.
       // (보안 헤더는 전역 규칙에서 그대로 상속됨 — Cache-Control 키만 교체)
+      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 (/salary/*가 캐시되는 것은 CF 대시보드 규칙 14400 기인).
       {
         source: "/salary/:amount*",
         headers: [
@@ -794,6 +796,7 @@ const nextConfig = {
       // [2026-08-10] 요청 한도 대응 — 배포 시에만 변하는 고트래픽 정적 콘텐츠
       // 라우트군을 기존 3종과 동일한 6시간 엣지 캐시로 확대. 크롤러·프리페치·
       // 재방문 요청을 CDN에서 흡수해 Worker 호출을 줄인다.
+      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만.
       ...[
         // 홈(+/?tab= 쿼리 변형 6종 — CF 캐시 키는 쿼리 포함이라 변형별 캐시)
         "/",
@@ -860,6 +863,7 @@ const nextConfig = {
       })),
       // 크롤러가 고빈도로 가져가는 메타 파일·생성 이미지 라우트 — 내용이 사실상
       // 고정이므로 길게 캐시해 Worker 호출을 차단.
+      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 (sitemap.xml·rss 2종 DYNAMIC 실측, robots.txt만 CF 규칙으로 14400 캐시).
       ...[
         "/sitemap.xml",
         "/rss.xml",

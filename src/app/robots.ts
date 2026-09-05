@@ -32,7 +32,7 @@ export default function robots(): MetadataRoute.Robots {
  },
 
  // ─── 2. 핵심 검색 봇: 한국·글로벌 검색 시장 ─────────────────
- // Yeti = NaverBot, Daum = KakaoBot. 한국 트래픽의 30%+ 비중.
+ // Yeti = NaverBot, Daum = KakaoBot. 네이버 세션 67.7%(GA4 2026-01-01~09-05, Daum 별도 미측정).
  // Applebot 포함 — 검색 크롤러는 모두 허용 (AI 크롤러도 차단 안 함).
  // [2026-08-10] CF Workers 일 요청 한도 대응 — Crawl-delay를 존중하는
  // 봇(Bing·Naver·Daum)은 별도 그룹으로 분리해 크롤 속도 제한.
@@ -66,6 +66,13 @@ export default function robots(): MetadataRoute.Robots {
  // 방문자를 보내주는 유입 통로. 학습 크롤러(GPTBot 등)도 콘텐츠가
  // 공개 세법 정보라 차단 실익이 없음 → 별도 차단 그룹을 두지 않고
  // 아래 기본 그룹(User-agent: *)에 흡수되어 일반 검색봇처럼 허용.
+ // ★ 각주(실측 2026-09-05): 프로덕션 robots.txt는 Cloudflare 관리 블록이 앞에
+ // 주입돼 Amazonbot·Applebot-Extended·Bytespider·CCBot·ClaudeBot·
+ // CloudflareBrowserRenderingCrawler·Google-Extended·GPTBot·meta-externalagent
+ // 9종 Disallow + Content-Signal ai-train=no (코드 선언과 불일치, 해제는
+ // CF 대시보드=결정②). 유입 UA(ChatGPT-User·OAI-SearchBot·PerplexityBot·
+ // Claude-User·Claude-SearchBot)는 비차단. middleware.ts ALLOWED_BOTS 면제
+ // 목록(GPTBot·ClaudeBot·Google-Extended·Amazonbot)도 같은 이유로 일부 사문화.
 
  // ─── 3. SEO 분석 봇 차단: 서버 자원 낭비 + 경쟁사 정찰 방지 ──
  {
@@ -98,6 +105,8 @@ export default function robots(): MetadataRoute.Robots {
  // 위에 명시되지 않은 봇은 이 규칙을 따름 (일반 검색 봇과 동일 정책)
  // Crawl-delay는 best-effort — 무시하는 봇(GPTBot·Amazonbot 등)은
  // 엣지 캐시(s-maxage)가 Worker 도달을 흡수 (next.config.mjs).
+ // ※ 실측 2026-09-05: 프리렌더 HTML에는 그 s-maxage가 미적용(DYNAMIC) —
+ //    L08a CF Cache Rule 적용 전까지는 Worker 직행. 크롤 개방은 그 이후.
  {
  userAgent: '*',
  allow: corePathAllow,
