@@ -9,6 +9,8 @@ import { readdirSync, statSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
+import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
+import { webApplicationLd } from "@/lib/structuredData";
 
 const APP_DIR = join(process.cwd(), "src", "app");
 
@@ -85,6 +87,20 @@ function checkOverrideFreshness(): number {
   return warned;
 }
 
+// WebApplication JSON-LD dateModified ↔ sitemap STATIC_LAST_MODIFIED 정합 게이트 (2026-09-05,
+// L18' 위생 하위 항목) — layout.tsx 가 전 라우트 <head> 에 주입하는 webApplicationLd() 의
+// dateModified 가 sitemap 기준일과 어긋나면 두 신선도 신호가 모순된다. 둘 다
+// src/config/siteDates.ts 단일 상수에서 파생되므로 평소엔 0건 — 누군가 structuredData.ts 에
+// 날짜를 다시 하드코딩하면 여기서 잡힌다. 비차단(WARN) — exit 코드 불변.
+function checkWebApplicationDate(): number {
+  const ld = webApplicationLd() as { dateModified?: string };
+  if (ld.dateModified === STATIC_LAST_MODIFIED_ISO) return 0;
+  console.warn(
+    `[WARN] webApplicationLd dateModified(${ld.dateModified ?? "없음"}) ≠ sitemap STATIC_LAST_MODIFIED(${STATIC_LAST_MODIFIED_ISO}) — src/config/siteDates.ts 단일 상수로 맞추세요.`
+  );
+  return 1;
+}
+
 // 의도적으로 sitemap에서 제외된 정적 라우트 — 사유와 함께 관리
 const INTENTIONALLY_EXCLUDED = new Set([
   "/company", // next.config 301 → /salary-db (카니발 해소 2026-06)
@@ -134,9 +150,10 @@ async function main() {
   }
 
   const staleOverrides = checkOverrideFreshness();
+  const webAppDateMismatch = checkWebApplicationDate();
 
   console.log(
-    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / override 신선도 경고 ${staleOverrides}건`
+    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
   );
   if (fail) {
     console.error(

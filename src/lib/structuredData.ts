@@ -5,6 +5,8 @@
 // 각 함수는 <script type="application/ld+json"> 안에 들어갈
 // JavaScript 객체를 반환. JsonLd 컴포넌트로 주입.
 
+import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
+
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const ORGANIZATION_NAME = "머니샐러리";
@@ -54,7 +56,9 @@ export function webApplicationLd() {
  inLanguage: "ko",
  alternateName: "연봉 계산기",
  datePublished: "2024-12-01",
- dateModified: "2026-01-01",
+ // sitemap STATIC_LAST_MODIFIED 와 단일 상수 공유(src/config/siteDates.ts, 2026-09-05) —
+ // 실질 콘텐츠 갱신 배포 때만 그 상수를 올린다(매 배포 today 금지). verify-sitemap 이 불일치 WARN.
+ dateModified: STATIC_LAST_MODIFIED_ISO,
  offers: {
  "@type": "Offer",
  price: "0",
@@ -495,6 +499,16 @@ export function datasetLd(opts: {
  /** ISO 날짜 — 데이터 최초 발행일 */
  datePublished?: string;
  keywords?: string[];
+ /** 근거 자료(공시 원문 등) — schema.org citation: CreativeWork {name,url}. 출처 URL 이 실재할 때만 전달 */
+ citation?: { name: string; url: string };
+ /** 파생 원본 URL — schema.org isBasedOn (예: DART 사업보고서 rcpNo 링크) */
+ isBasedOn?: string;
+ /** 내려받기 표현 — schema.org distribution: DataDownload[] (CSV/JSON 엔드포인트가 생길 때 전달) */
+ distribution?: { encodingFormat: string; contentUrl: string }[];
+ /** 라이선스 URL 또는 문구 — schema.org license */
+ license?: string;
+ /** 시간 범위 — schema.org temporalCoverage (예: "2025", "2024/2026") */
+ temporalCoverage?: string;
 }) {
  const toIso = (d: string) => {
  const parsed = new Date(d);
@@ -512,6 +526,21 @@ export function datasetLd(opts: {
  ...(modified ? { dateModified: modified } : {}),
  ...(published ? { datePublished: published } : {}),
  ...(opts.keywords && opts.keywords.length > 0 ? { keywords: opts.keywords } : {}),
+ ...(opts.citation
+ ? { citation: { "@type": "CreativeWork", name: opts.citation.name, url: opts.citation.url } }
+ : {}),
+ ...(opts.isBasedOn ? { isBasedOn: opts.isBasedOn } : {}),
+ ...(opts.distribution && opts.distribution.length > 0
+ ? {
+ distribution: opts.distribution.map((d) => ({
+ "@type": "DataDownload",
+ encodingFormat: d.encodingFormat,
+ contentUrl: d.contentUrl.startsWith("http") ? d.contentUrl : `${SITE_URL}${d.contentUrl}`,
+ })),
+ }
+ : {}),
+ ...(opts.license ? { license: opts.license } : {}),
+ ...(opts.temporalCoverage ? { temporalCoverage: opts.temporalCoverage } : {}),
  isAccessibleForFree: true,
  inLanguage: "ko-KR",
  creator: {

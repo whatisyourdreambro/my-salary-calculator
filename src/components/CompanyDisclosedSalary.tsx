@@ -31,11 +31,19 @@ export default function CompanyDisclosedSalary({
   company,
   dartRank,
   dartStats,
+  dartSalaryManwon,
   industryLink,
 }: {
   company: CompanyProfile;
-  /** DART 전수 랭킹 TOP 100 진입 시 순위 — 서버(page)에서 dartTop100 조회 후 전달 */
-  dartRank?: { rank: number; companyCount: number; rankYear: string } | null;
+  /** DART 전수 랭킹 TOP 100 진입 시 순위 — 서버(page)에서 dartTop100 조회 후 전달.
+   *  salaryManwon = 순위 산정 기준값(DART 급여총액÷인원 원값, 만원) — 배지에 인라인 병기 */
+  dartRank?: { rank: number; companyCount: number; rankYear: string; salaryManwon: number } | null;
+  /**
+   * DART ETL 원값(급여총액÷인원, 만원) — 서버(page)에서 dartCompanyStatsById 조회 후 전달.
+   * 카드 헤드라인(수기 disclosed 값)과 5% 넘게 다를 때만 기존 안내 문장 안에 인라인 병기
+   * (새 문단·행 추가 금지 — 광고 위 높이 불변, data-trust-4 2026-09-05). 수치 변경 없음.
+   */
+  dartSalaryManwon?: number | null;
   /**
    * DART 파생 통계 (인상률 배지·3개년 미니 추이) — 서버(page)에서
    * dartCompanyStatsById 조회 후 전달. 수기 disclosed 와 괴리 10% 초과 시
@@ -58,6 +66,13 @@ export default function CompanyDisclosedSalary({
   if (!d) return null;
 
   const koName = company.name.ko;
+  // 헤드라인 값과 DART 산정치 괴리 5% 초과 시만 인라인 병기 — 두 값을 투명 공개
+  const dartGapClause =
+    dartSalaryManwon != null &&
+    d.avgSalaryManwon > 0 &&
+    Math.abs(dartSalaryManwon - d.avgSalaryManwon) / d.avgSalaryManwon > 0.05
+      ? `(DART 급여총액÷인원 산정치 ${dartSalaryManwon.toLocaleString("ko-KR")}만원)`
+      : "";
 
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
@@ -86,7 +101,7 @@ export default function CompanyDisclosedSalary({
           {d.avgSalaryManwon.toLocaleString("ko-KR")}만원입니다. 금융감독원
           전자공시(DART) 사업보고서·공공기관 알리오 등 공식 공시(또는 이를
           인용한 언론 보도)에 기반한 값으로, 임원 제외 여부·성과급 포함 범위
-          등 산정 기준은 출처에 따라 다를 수 있습니다. 위 직급별 연봉표는
+          등 산정 기준은 출처에 따라 다를 수 있습니다{dartGapClause}. 위 직급별 연봉표는
           신입~임원 직급 구조로 나눈 머니샐러리 DB 추정치라, 전 직급·전
           연차를 한 번에 평균 낸 공시 수치와는 차이가 날 수 있습니다 — 두
           수치를 함께 보면 실제 수준을 더 정확히 가늠할 수 있습니다.
@@ -159,7 +174,8 @@ export default function CompanyDisclosedSalary({
               <Trophy size={13} className="flex-shrink-0" aria-hidden="true" />
               {dartRank.rankYear} 공시 평균연봉 — 상장사{" "}
               {dartRank.companyCount.toLocaleString("ko-KR")}곳 중{" "}
-              <strong>{dartRank.rank}위</strong> · TOP 100 리포트 보기 →
+              <strong>{dartRank.rank}위</strong> · DART 산정{" "}
+              {dartRank.salaryManwon.toLocaleString("ko-KR")}만원 기준 · TOP 100 리포트 보기 →
             </Link>
           </p>
         )}

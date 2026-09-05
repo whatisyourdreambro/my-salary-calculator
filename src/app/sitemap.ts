@@ -7,6 +7,7 @@ import { getStaticMonthlyAmounts } from '@/lib/monthlyStaticParams';
 import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
+import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
 
 type ChangeFrequency =
  | 'always'
@@ -25,7 +26,7 @@ export type RouteOverride = {
 
 // 라우트별 오버라이드 — 핵심 수익/시즌 페이지를 전역 기준일·priority 와 차등화.
 // 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
-// 동시에만 갱신한다 (매 배포 자동 갱신 금지 — 아래 STATIC_LAST_MODIFIED 의
+// 동시에만 갱신한다 (매 배포 자동 갱신 금지 — src/config/siteDates.ts STATIC_LAST_MODIFIED 의
 // freshness 원칙과 동일). 값이 실제 갱신보다 오래되면 scripts/verify-sitemap.ts 가
 // `git log -1 --format=%cI -- src/app<route>` 기준으로 WARN 을 낸다(비차단).
 // export 는 그 게이트 전용 — Next 메타데이터 라우트는 default 만 사용한다.
@@ -287,13 +288,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/firefighter-pay-2026',
  ];
 
- // lastModified 기준일 — 정적 라우트 + 공식/데이터 기반 동적 URL(연봉·직업·산업·
- // 지역·용어·Q&A·환산표·비교·계산기) 공통 적용. 매 배포마다 new Date() 로 today 가
- // 찍히면 Google freshness 신호가 무의미해져 순위 변동성이 커지므로, 마지막 실질
- // 콘텐츠 업데이트 날짜를 고정해 두고 진짜 갱신 시에만 이 상수를 손으로 올린다.
- // (회사 페이지는 company.lastUpdated 우선, 값이 없을 때만 이 기준일로 폴백)
- // 2026-07-16: 2027 최저임금·세법개정안 신설 + 재산세·국민연금·대출 페이지 시즌 갱신
- const STATIC_LAST_MODIFIED = new Date("2026-07-16");
+ // lastModified 기준일 STATIC_LAST_MODIFIED — src/config/siteDates.ts 단일 소스
+ // (2026-09-05 호이스팅: webApplicationLd dateModified 와 공유. 갱신 규칙·이력은 그 파일 참조).
+ // 정적 라우트 + 공식/데이터 기반 동적 URL 공통 적용, 회사 페이지는 company.lastUpdated
+ // 우선·값이 없을 때만 폴백. 매 배포 today 금지 원칙은 그대로다.
 
  // 수기 오버라이드(모듈 스코프 ROUTE_OVERRIDES, 아래 참조)의 로컬 사본 — 성과급
  // 클러스터 priority 루프가 사본만 채워 export 본은 수기 목록 그대로 유지된다

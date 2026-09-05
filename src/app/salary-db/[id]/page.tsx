@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import type { CompanyProfile } from "@/types/company";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
@@ -148,6 +149,29 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  ];
 }
 
+/** Dataset JSON-LD citation/isBasedOn 재료 — 공시 출처 URL 이 실재하는 회사만
+ *  (수기 disclosed 우선·없으면 DART 주입분: CompanyRepository.enrich 우선순위 그대로).
+ *  출처명은 URL 호스트로 판정 — DART·알리오 외(언론 보도 등)는 데이터 파일의 source 문구. */
+function disclosedCitation(
+ disclosed: CompanyProfile["disclosed"]
+): { name: string; url: string } | null {
+ const url = disclosed?.sourceUrl;
+ if (!url) return null;
+ let host = "";
+ try {
+ host = new URL(url).hostname;
+ } catch {
+ return null;
+ }
+ const name =
+ host === "dart.fss.or.kr" || host.endsWith(".dart.fss.or.kr")
+ ? "금융감독원 DART 사업보고서"
+ : host === "alio.go.kr" || host.endsWith(".alio.go.kr")
+ ? "알리오 공공기관 경영정보"
+ : disclosed.source;
+ return { name, url };
+}
+
 export default function CompanyDetailPage({
  params,
 }: {
@@ -158,6 +182,10 @@ export default function CompanyDetailPage({
  if (!company) permanentRedirect("/salary-db");
 
  const faqItems = buildCompanyFaq(company);
+ const citation = disclosedCitation(company.disclosed);
+ // DART ETL 원값(급여총액÷인원, 만원) — 수기 disclosed 와의 괴리 투명 공개용 (data-trust-4).
+ // dartStats 의 10% 게이트와 별개로 항상 전달 — 게이트로 걸러진 회사일수록 병기가 필요하다.
+ const dartSalaryManwon = dartCompanyStatsById.get(company.id)?.dartSalaryManwon ?? null;
 
  return (
  <>
@@ -178,10 +206,14 @@ export default function CompanyDetailPage({
  faqLd(faqItems),
  datasetLd({
  name: `${company.name.ko} 직급별 연봉·실수령액 데이터`,
- description: `${company.name.ko}의 신입·주니어·시니어·리드·임원 직급별 평균 연봉, 인센티브, 복지, 워라밸 데이터.`,
+ // 신뢰 등급 명시(google-authority-8, 2026-09-05): 직급별 값은 about 페이지대로 자체 집계·추정치 —
+ // Dataset 노드가 무표기로 인용되지 않도록 description 에 명시. name/keywords 는 불변.
+ description: `${company.name.ko}의 신입·주니어·시니어·리드·임원 직급별 평균 연봉, 인센티브, 복지, 워라밸 데이터 — 공시·보도·공개 후기 종합 자체 집계(추정치 포함).`,
  url: `/salary-db/${company.id}`,
  dateModified: company.lastUpdated,
  keywords: [`${company.name.ko} 연봉`, `${company.name.ko} 초봉`, `${company.name.ko} 신입 연봉`],
+ // 공시 출처가 실재하는 회사만 citation/isBasedOn (DART·알리오 원문 링크 → 권위 근거를 기계에 전달)
+ ...(citation ? { citation, isBasedOn: citation.url } : {}),
  }),
  ]}
  />
@@ -190,7 +222,8 @@ export default function CompanyDetailPage({
  path={`/salary-db/${company.id}`}
  leafName={company.name.ko}
  />
- <UpdatedBadge date={company.lastUpdated} prefix="연봉 데이터" />
+ {/* lastUpdated 는 CompanyRepository.enrich 파생값(데이터일·DART 주입일·실수령액 재계산일 max) — 접두어와 근거 일치 */}
+ <UpdatedBadge date={company.lastUpdated} prefix="연봉·실수령액 데이터" />
  </div>
  {/* 첫 광고(CalcResultAd)는 CompanyDetailClient 내부 Quick Stats 직후에 배치 */}
  <CompanyDetailClient company={company} />
@@ -210,9 +243,12 @@ export default function CompanyDetailPage({
  rank: row.rank,
  companyCount: dartReportStats.companyCount,
  rankYear: dartReportStats.rankYear,
+ // 순위의 산정 기준값(DART 급여총액÷인원 원값) — 카드 헤드라인(수기 값)과 다를 수 있어 배지에 병기
+ salaryManwon: row.avgSalaryManwon,
  }
  : null;
  })()}
+ dartSalaryManwon={dartSalaryManwon}
  dartStats={(() => {
  // 증강 팩 ① (2026-08-30): 인상률 배지·3개년 추이 — DART 파생 통계.
  // 수기 disclosed 값과 DART 원값 괴리 10% 초과 시 미전달 (라벨 혼선 방지).
