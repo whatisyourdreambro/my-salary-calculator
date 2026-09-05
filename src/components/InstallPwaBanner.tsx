@@ -11,6 +11,11 @@
 
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import {
+  BOTTOM_AD_CHECK_INTERVAL_MS,
+  BOTTOM_AD_GRACE_MS,
+  isBottomAdPresent,
+} from "@/lib/bottomAdDetect";
 
 const PV_KEY = "msy_pv_count";
 const DISMISS_KEY = "msy_pwa_dismissed_until";
@@ -25,6 +30,32 @@ interface BeforeInstallPromptEvent extends Event {
 export default function InstallPwaBanner() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
+  // 하단 앵커 광고 양보(2026-09-05, §12-2 ⑪): 이 배너는 fixed bottom-4 z-50 이라 앵커 광고와
+  // 겹치면 광고 가림·우발 클릭 정책 위반 소지. FloatingShareBar 와 같은 3중 감지를 공유 유틸로
+  // 적용 — 로드 4초 유예 후 1초마다 재평가, 광고를 한 번이라도 보면 이 페이지뷰에선 영구 양보.
+  // fail-closed: 감지 확정 전·감지 예외 시에는 숨김.
+  const [adBlocked, setAdBlocked] = useState(true);
+
+  useEffect(() => {
+    if (!deferred) return;
+    const startedAt = Date.now();
+    let yielded = false;
+    const evaluate = () => {
+      try {
+        if (Date.now() - startedAt < BOTTOM_AD_GRACE_MS) {
+          setAdBlocked(true);
+          return;
+        }
+        if (!yielded && isBottomAdPresent()) yielded = true;
+        setAdBlocked(yielded);
+      } catch {
+        setAdBlocked(true);
+      }
+    };
+    evaluate();
+    const interval = setInterval(evaluate, BOTTOM_AD_CHECK_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [deferred]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -75,7 +106,7 @@ export default function InstallPwaBanner() {
     rememberDismiss();
   };
 
-  if (!visible) return null;
+  if (!visible || adBlocked) return null;
 
   return (
     <div

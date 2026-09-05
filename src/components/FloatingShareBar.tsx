@@ -15,53 +15,17 @@ import { Link as LinkIcon, Share2, X } from "lucide-react";
 import { trackShare, trackEvent } from "@/lib/analytics";
 import { SITE_CONFIG } from "@/lib/seo";
 import { tryKakaoFeedShare } from "@/lib/shareChannels";
+// 하단 광고 3중 감지는 공유 유틸로 이동(2026-09-05, §12-2 ⑪) — InstallPwaBanner·BottomSheet 와 공용.
+// 로직·상수(4초 유예·1초 재평가)는 동일. 여기서 정의하던 함수를 되살리지 말 것(이중 관리).
+import {
+  BOTTOM_AD_CHECK_INTERVAL_MS as CHECK_INTERVAL_MS,
+  BOTTOM_AD_GRACE_MS as INITIAL_GRACE_MS,
+  isBottomAdPresent,
+} from "@/lib/bottomAdDetect";
 
 const DISMISS_KEY = "msy_sharebar_dismissed";
 const SCROLL_THRESHOLD = 400;
 const CONTENT_TYPE = "float_bar";
-const CHECK_INTERVAL_MS = 1000;
-// 페이지 로드 직후에는 노출 금지 — 앵커 광고가 자리를 먼저 잡게 양보
-// (광고 수익 우선, 2026-08-16 수익 급락 대응으로 감지 전면 강화)
-const INITIAL_GRACE_MS = 4000;
-
-/**
- * 화면 하단에 고정된 구글 광고(앵커 등)가 하나라도 있으면 true.
- * 마크업 변형에 대비해 3중 감지:
- * 1) ins.adsbygoogle 중 data-anchor-* 속성 보유 (값 무관 — displayed 외 상태 변형 대비)
- * 2) ins.adsbygoogle / adsbygoogle-noablate 가 fixed + 높이 보유
- * 3) googlesyndication/doubleclick iframe의 fixed 조상이 뷰포트 하단 160px 안에 위치
- */
-function isBottomAdPresent(): boolean {
-  const vh = window.innerHeight;
-  const insList = document.querySelectorAll<HTMLElement>(
-    "ins.adsbygoogle, ins.adsbygoogle-noablate"
-  );
-  for (const el of insList) {
-    if (
-      el.hasAttribute("data-anchor-status") ||
-      el.hasAttribute("data-anchor-shown")
-    ) {
-      return true;
-    }
-    const rect = el.getBoundingClientRect();
-    if (rect.height > 0 && getComputedStyle(el).position === "fixed") return true;
-  }
-  const adFrames = document.querySelectorAll<HTMLIFrameElement>(
-    'iframe[src*="googlesyndication"], iframe[src*="doubleclick"], iframe[id^="google_ads_iframe"]'
-  );
-  for (const frame of adFrames) {
-    let node: HTMLElement | null = frame;
-    while (node && node !== document.body) {
-      if (getComputedStyle(node).position === "fixed") {
-        const rect = node.getBoundingClientRect();
-        if (rect.height > 0 && vh - rect.bottom < 160) return true;
-        break;
-      }
-      node = node.parentElement;
-    }
-  }
-  return false;
-}
 
 function isPwaBannerShown(): boolean {
   return !!document.querySelector('[role="dialog"][aria-label="홈 화면에 추가"]');
