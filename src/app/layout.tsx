@@ -15,6 +15,7 @@ import WebVitals from "@/components/WebVitals";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
+import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
 // Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
 // 원본 2,009KB가 데스크톱 LCP를 3.0초로 밀어내던 주범(GSC 2026-07-06 이슈)이라
@@ -98,20 +99,10 @@ export const metadata: Metadata = {
   },
   // canonical/hreflang은 홈 전용 값이라 src/app/page.tsx로 이동(2026-07-06) —
   // layout에 두면 alternates 미정의 페이지 전부가 "canonical: 홈"을 상속하는 사고 위험.
-  // RSS 자동발견 링크만 전역 유지 (alternates를 자체 정의한 페이지에는 어차피 미상속).
+  // RSS 자동발견 링크만 전역 유지. alternates를 자체 정의한 페이지에는 미상속이므로
+  // buildPageMetadata(src/lib/seo.ts)가 같은 상수를 다시 넣는다(2026-09-05).
   alternates: {
-    types: {
-      "application/rss+xml": [
-        {
-          url: "https://www.moneysalary.com/rss.xml",
-          title: "머니샐러리 금융 가이드 RSS",
-        },
-        {
-          url: "https://www.moneysalary.com/rss-companies.xml",
-          title: "머니샐러리 회사 연봉 업데이트 RSS",
-        },
-      ],
-    },
+    types: RSS_FEED_ALTERNATES,
   },
   verification: {
     google: "1yqyEwZxIAcqg8XFd2AjmAfEEJ4R9Es3tuqaQKerI1A",

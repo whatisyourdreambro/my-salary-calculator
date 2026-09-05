@@ -2,9 +2,14 @@
 //
 // 회사 연봉 DB 전용 RSS — 네이버 서치어드바이저 수집 채널용 (2026-08-15 Phase 5).
 // 가이드 피드(/rss.xml)와 분리: guid 축이 달라 중복 없음. lastUpdated 최신순 200개.
+//
+// 소스는 raw allCompanies 가 아닌 companyRepository.getAll() (2026-09-05 수정) — sitemap.ts 와 동일.
+// raw 배열은 DART 공시 주입으로 승격된 lastUpdated(2026-08-23, 239곳)를 모르기 때문에
+// 피드 pubDate 최신이 8/15 에 머물러 네이버 수집기가 갱신을 알 수 없었다(라이브 실측).
+// 정렬은 lastUpdated 내림차순 + id 오름차순(동률 다수 — 배포마다 순서가 흔들리면 수집기가 '변경'으로 오인).
 
 import { NextResponse } from "next/server";
-import { allCompanies } from "@/data/companies";
+import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { companyCountPlus } from "@/config/site";
 
 const escapeXml = (unsafe: string) =>
@@ -31,10 +36,11 @@ function generateFeed() {
   const description =
     `삼성전자, SK하이닉스, 네이버, 카카오 등 한국 기업 ${companyCountPlus}곳의 직급별 연봉·복지·워라밸 데이터. 갱신순 피드.`;
 
-  const companies = [...allCompanies]
+  const companies = [...companyRepository.getAll()]
     .sort(
       (a, b) =>
-        new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+        new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime() ||
+        a.id.localeCompare(b.id)
     )
     .slice(0, 200);
 

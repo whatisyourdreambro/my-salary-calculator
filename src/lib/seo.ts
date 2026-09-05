@@ -38,6 +38,26 @@ export interface PageMetadataOptions {
 }
 
 /**
+ * RSS 자동발견 링크 — layout.tsx 와 buildPageMetadata 가 공유 (2026-09-05).
+ * Next metadata 는 페이지가 alternates 를 자체 정의하면 layout 의 alternates.types 를 상속하지
+ * 않는다. 그래서 buildPageMetadata(회사 페이지 buildCompanyMetadata 포함)를 쓰는 페이지 전부에서
+ * <link rel="alternate" type="application/rss+xml"> 이 사라져 있었다(라이브 HTML 실측 0건).
+ * 네이버 수집기가 회사 페이지에서 피드를 발견할 경로를 복원한다.
+ * src/app/en/** 는 alternates 를 통째로 자체 정의해 이 상수가 적용되지 않는다 — 한국어 피드라 의도적 미적용.
+ */
+export const RSS_FEED_ALTERNATES: NonNullable<
+ NonNullable<Metadata["alternates"]>["types"]
+> = {
+ "application/rss+xml": [
+ { url: `${SITE_URL}/rss.xml`, title: "머니샐러리 금융 가이드 RSS" },
+ {
+ url: `${SITE_URL}/rss-companies.xml`,
+ title: "머니샐러리 회사 연봉 업데이트 RSS",
+ },
+ ],
+};
+
+/**
  * 표준 페이지 메타데이터 생성.
  * 모든 page.tsx의 generateMetadata 또는 export const metadata에서 사용.
  */
@@ -82,6 +102,8 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  "ko-KR": url,
  "x-default": url,
  },
+ // RSS 자동발견 — 자체 alternates 로 layout 값이 끊기므로 여기서 다시 넣는다.
+ types: RSS_FEED_ALTERNATES,
  },
  robots: noIndex
  ? { index: false, follow: false }

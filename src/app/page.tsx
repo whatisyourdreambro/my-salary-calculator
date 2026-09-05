@@ -9,9 +9,11 @@ import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
+import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
 // canonical/hreflang은 홈 전용 값 — 루트 layout에 두면 alternates를 자체 정의하지
 // 않는 모든 페이지에 "canonical: 홈"이 상속되는 사고 위험이 있어 여기로 이동(2026-07-06).
+// RSS 자동발견은 공유 상수(가이드+회사 피드 2건) — 홈만 회사 피드가 빠져 있던 불일치 해소(2026-09-05).
 export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.moneysalary.com",
@@ -20,14 +22,7 @@ export const metadata: Metadata = {
       en: "https://www.moneysalary.com/en",
       "x-default": "https://www.moneysalary.com",
     },
-    types: {
-      "application/rss+xml": [
-        {
-          url: "https://www.moneysalary.com/rss.xml",
-          title: "머니샐러리 금융 가이드 RSS",
-        },
-      ],
-    },
+    types: RSS_FEED_ALTERNATES,
   },
 };
 
