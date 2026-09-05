@@ -1,7 +1,9 @@
 // ─────────────────────────────────────────────────────────────
 // 회사별 평균 연봉·복지 데이터
 //
-// 데이터 기준: 2024년 공시·언론 보도·취업 플랫폼(잡플래닛/사람인) 종합 추정치.
+// 데이터 기준: averageSalary 는 2025 사업보고서(아래 ★), 그 외 필드는 2024년 공시·언론 보도·취업 플랫폼(잡플래닛/사람인) 종합 추정치.
+// ★ averageSalary 6개사는 2025 사업보고서 기준 seedCompanies.ts 수기 disclosed(avgSalaryManwon)와 정합 유지 —
+//   seed 갱신 시 여기도 함께 갱신(id 매핑: hyundai-motor↔hyundai, lg-energy↔lgensol). entryLevelSalary·salaryGrowth 는 출처 미확정 추정치.
 // 출처별로 산정 방식이 달라 ±5~10% 오차 가능. 실제 연봉은 회사 공시자료
 // (사업보고서 직원평균급여) 또는 입사 시 협상안을 기준으로 판단할 것.
 //
@@ -34,7 +36,8 @@ export const companies: CompanyProfile[] = [
  description: "대한민국 시가총액 1위, 글로벌 반도체 및 모바일 리더.",
  logo: "bg-primary",
  employees: 120000,
- averageSalary: 13500,
+ // 2025 사업보고서 기준(등기임원 제외) — seedCompanies.ts(samsung-electronics) 수기 disclosed 와 정합 (2026-09-05)
+ averageSalary: 15800,
  entryLevelSalary: 5300,
  executiveSalary: 80000,
  salaryGrowth: [
@@ -93,7 +96,8 @@ export const companies: CompanyProfile[] = [
  description: "대한민국 대표 검색 포털 및 기술 플랫폼.",
  logo: "bg-primary/50",
  employees: 4500,
- averageSalary: 12000,
+ // 2025 사업보고서 기준 — seedCompanies.ts(naver) 수기 disclosed 와 정합 (2026-09-05)
+ averageSalary: 14600,
  entryLevelSalary: 5000,
  executiveSalary: 60000,
  salaryGrowth: [
@@ -113,7 +117,8 @@ export const companies: CompanyProfile[] = [
  description: "국민 메신저 카카오톡을 기반으로 한 모바일 라이프 플랫폼.",
  logo: "bg-primary",
  employees: 3800,
- averageSalary: 11000,
+ // 2025 사업보고서 기준 — seedCompanies.ts(kakao) 수기 disclosed 와 정합 (2026-09-05)
+ averageSalary: 10900,
  entryLevelSalary: 4800,
  executiveSalary: 55000,
  salaryGrowth: [
@@ -133,7 +138,8 @@ export const companies: CompanyProfile[] = [
  description: "글로벌 Top 3 완성차 업체, 모빌리티 혁신 리더.",
  logo: "bg-blue-900",
  employees: 70000,
- averageSalary: 10500,
+ // 2025 사업보고서 기준 — seedCompanies.ts(id: hyundai) 수기 disclosed 와 정합 (2026-09-05)
+ averageSalary: 13100,
  entryLevelSalary: 5000,
  executiveSalary: 65000,
  salaryGrowth: [
@@ -153,7 +159,8 @@ export const companies: CompanyProfile[] = [
  description: "글로벌 배터리 시장 점유율 1위, 전기차 시대의 심장.",
  logo: "bg-primary",
  employees: 10000,
- averageSalary: 11500,
+ // 2025 사업보고서 기준 — seedCompanies.ts(id: lgensol) 수기 disclosed 와 정합 (2026-09-05)
+ averageSalary: 11200,
  entryLevelSalary: 5200,
  executiveSalary: 70000,
  salaryGrowth: [
