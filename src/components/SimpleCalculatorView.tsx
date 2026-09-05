@@ -74,6 +74,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  }, [calc, inputs]);
 
  // 입력이 기본값 그대로면 깔끔한 canonical, 바꿨으면 결과 재현 링크로 공유
+ // 채널 귀속 utm 은 ShareSection→ShareButtons 가 채널별 withUtm 으로 부여(`?v=` 뒤에 `&utm_…` 결합).
  const shareUrl = useMemo(() => {
  const base = `${SITE_CONFIG.url}/calc/${slug}`;
  if (!calc) return base;

@@ -304,6 +304,8 @@ export default function SalaryCalculator() {
  };
 
  // 공유용 /share/{base64} 링크 — 입력값을 인코딩해 결과를 그대로 재현
+ // 채널 귀속 utm(kakao|copy|webshare… / share)은 ShareButtons 가 채널별로 withUtm 적용 —
+ // 여기서는 붙이지 않는다(채널 미확정·이중 부여 방지). /share/[data] 는 path 세그먼트라 쿼리 무영향.
  const shareUrl = useMemo(() => {
  if (typeof window === "undefined") return undefined;
  const dataToShare = {

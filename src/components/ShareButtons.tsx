@@ -25,6 +25,7 @@ import {
   channelLabel,
   openShareWindow,
   tryKakaoFeedShare,
+  withUtm,
   type ShareChannelId,
 } from "@/lib/shareChannels";
 import { registerPrimary } from "@/lib/shareRegistry";
@@ -164,6 +165,8 @@ export default function ShareButtons({
 
   // 자동 도출: canonical URL(쿼리 없는 pathname 기준) / document.title / 동적 OG
   const shareUrl = url || `${SITE_CONFIG.url}${pathname ?? ""}`;
+  // 채널별 귀속 URL — 실제로 밖으로 나가는 링크에만 utm 부여 (canonical/OG 는 shareUrl 그대로)
+  const channelUrl = (id: ShareChannelId) => withUtm(shareUrl, id);
   const shareTitle =
     title ?? docTitle ?? (locale === "en" ? DEFAULT_TITLE_EN : DEFAULT_TITLE);
   const shareDesc = description ?? S.defaultDesc;
@@ -206,20 +209,22 @@ export default function ShareButtons({
 
   const handleKakaoShare = async () => {
     trackShare("kakao", contentType);
+    const kakaoUrl = channelUrl("kakao");
     // Kakao JS SDK 가 초기화돼 있으면 인앱 공유, 아니면 링크 복사로 폴백.
     const opened = tryKakaoFeedShare({
-      url: shareUrl,
+      url: kakaoUrl,
       title: shareTitle,
       description: shareDesc,
       imageUrl: shareImage,
       buttonTitle: locale === "en" ? "View" : "자세히 보기",
     });
     if (opened) return;
-    await copyToClipboard(`${shareTitle}\n${shareUrl}`, S.kakaoCopied, S.kakaoCopyFail);
+    await copyToClipboard(`${shareTitle}\n${kakaoUrl}`, S.kakaoCopied, S.kakaoCopyFail);
   };
 
   const handleWebShare = async () => {
     trackShare("webshare", contentType);
+    const webShareUrl = channelUrl("webshare");
     try {
       // 결과 이미지가 있으면 이미지 파일까지 함께 공유 (카톡 사진·스토리 유입)
       if (getShareImage) {
@@ -234,14 +239,14 @@ export default function ShareButtons({
               await nav.share({
                 files: [file],
                 title: shareTitle,
-                text: `${shareDesc}\n${shareUrl}`,
+                text: `${shareDesc}\n${webShareUrl}`,
               });
               return;
             }
           }
         } catch {}
       }
-      await navigator.share({ title: shareTitle, text: shareDesc, url: shareUrl });
+      await navigator.share({ title: shareTitle, text: shareDesc, url: webShareUrl });
     } catch {
       // 사용자가 공유 시트를 닫은 경우(AbortError) — 무시
     }
@@ -267,13 +272,13 @@ export default function ShareButtons({
       } catch {}
     }
     // 인스타그램은 웹 링크 공유 URL 이 없어 링크 복사 + 인스타 열기로 안내.
-    await copyToClipboard(shareUrl, S.instaCopied, S.instaCopyFail);
+    await copyToClipboard(channelUrl("instagram"), S.instaCopied, S.instaCopyFail);
     window.open("https://www.instagram.com/", "_blank");
   };
 
   const handleCopyLink = () => {
     trackShare("copy", contentType);
-    void copyToClipboard(shareUrl, S.copied, S.copyFail);
+    void copyToClipboard(channelUrl("copy"), S.copied, S.copyFail);
   };
 
   const handleShare = (id: ShareChannelId) => {
@@ -285,7 +290,7 @@ export default function ShareButtons({
     if (!meta.intentUrl) return;
     trackShare(id, contentType);
     openShareWindow(
-      meta.intentUrl({ url: shareUrl, title: shareTitle, description: shareDesc })
+      meta.intentUrl({ url: channelUrl(id), title: shareTitle, description: shareDesc })
     );
   };
 
@@ -329,7 +334,7 @@ export default function ShareButtons({
     const handleCompact = () => {
       if (canWebShare) return void handleWebShare();
       trackShare("copy", contentType);
-      void copyToClipboard(shareUrl, S.copied, S.copyFail);
+      void copyToClipboard(channelUrl("copy"), S.copied, S.copyFail);
     };
     return (
       <>

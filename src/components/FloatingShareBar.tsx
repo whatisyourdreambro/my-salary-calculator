@@ -14,7 +14,7 @@ import { usePathname } from "next/navigation";
 import { Link as LinkIcon, Share2, X } from "lucide-react";
 import { trackShare, trackEvent } from "@/lib/analytics";
 import { SITE_CONFIG } from "@/lib/seo";
-import { tryKakaoFeedShare } from "@/lib/shareChannels";
+import { tryKakaoFeedShare, withUtm, type ShareChannelId } from "@/lib/shareChannels";
 // 하단 광고 3중 감지는 공유 유틸로 이동(2026-09-05, §12-2 ⑪) — InstallPwaBanner·BottomSheet 와 공용.
 // 로직·상수(4초 유예·1초 재평가)는 동일. 여기서 정의하던 함수를 되살리지 말 것(이중 관리).
 import {
@@ -102,8 +102,9 @@ export default function FloatingShareBar() {
     setTimeout(() => setToast(null), 2800);
   };
 
-  const derive = () => {
-    const url = `${SITE_CONFIG.url}${window.location.pathname}`;
+  // 채널별 귀속 utm(kakao|webshare|copy / share) — canonical 은 pathname 기준이라 OG 무영향
+  const derive = (channel: ShareChannelId) => {
+    const url = withUtm(`${SITE_CONFIG.url}${window.location.pathname}`, channel);
     const title =
       document.title.replace(/\s*[|—-]\s*머니샐러리\s*$/, "").trim() ||
       "머니샐러리 - 2026년 연봉 실수령액 계산기";
@@ -123,7 +124,7 @@ export default function FloatingShareBar() {
 
   const handleKakao = () => {
     trackShare("kakao", CONTENT_TYPE);
-    const { url, title } = derive();
+    const { url, title } = derive("kakao");
     const opened = tryKakaoFeedShare({
       url,
       title,
@@ -137,7 +138,7 @@ export default function FloatingShareBar() {
 
   const handleWebShare = async () => {
     trackShare("webshare", CONTENT_TYPE);
-    const { url, title } = derive();
+    const { url, title } = derive("webshare");
     if (navigator.share) {
       try {
         await navigator.share({ title, url });
@@ -151,7 +152,7 @@ export default function FloatingShareBar() {
 
   const handleCopy = () => {
     trackShare("copy", CONTENT_TYPE);
-    const { url, title } = derive();
+    const { url, title } = derive("copy");
     void copyLink(url, title, false);
   };
 

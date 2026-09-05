@@ -90,6 +90,33 @@ export const SHARE_CHANNELS: Record<ShareChannelId, ChannelMeta> = {
   instagram: { label: "인스타그램", labelEn: "Instagram" },
 };
 
+/**
+ * 공유 URL에 채널 귀속 utm 부여 (순수 함수, 2026-09-05 plan-gap-critic-3).
+ * 카카오 인앱·클립보드 붙여넣기·PWA 실행은 referrer가 없어 GA4에서 전부 (direct)로
+ * 떨어진다 — 채널별 utm_source(kakao|copy|webshare|…)+utm_medium=share 로 분해한다.
+ * - `?` 유무 모두 처리, `#fragment`는 뒤로 보존, `/share/{base64}`·`?v=base64` 값은 손대지 않음
+ * - 이미 utm_source/utm_medium 이 있으면 교체(멱등) — 상위에서 한 번 더 감싸도 안전
+ * - canonical/OG는 pathname 기준(seo.ts)이라 색인 중복 없음. 광고 무접촉.
+ * 주의: utm_medium=share 는 GA4 기본 채널 그룹에서 'Unassigned' — 소스/매체 행으로 읽는다.
+ */
+export function withUtm(
+  url: string,
+  source: ShareChannelId | string,
+  medium = "share"
+): string {
+  const hashIdx = url.indexOf("#");
+  const fragment = hashIdx >= 0 ? url.slice(hashIdx) : "";
+  const noFrag = hashIdx >= 0 ? url.slice(0, hashIdx) : url;
+  const qIdx = noFrag.indexOf("?");
+  const base = qIdx >= 0 ? noFrag.slice(0, qIdx) : noFrag;
+  const query = qIdx >= 0 ? noFrag.slice(qIdx + 1) : "";
+  const kept = query
+    .split("&")
+    .filter((p) => p && !/^utm_(source|medium)=/.test(p));
+  kept.push(`utm_source=${enc(source)}`, `utm_medium=${enc(medium)}`);
+  return `${base}?${kept.join("&")}${fragment}`;
+}
+
 export function channelLabel(id: ShareChannelId, locale: "ko" | "en"): string {
   const meta = SHARE_CHANNELS[id];
   return locale === "en" ? meta.labelEn : meta.label;
@@ -129,11 +156,14 @@ export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
         link: { mobileWebUrl: p.url, webUrl: p.url },
       },
     ];
-    const isHome = p.url.replace(/\/+$/, "") === HOME_URL;
+    // 쿼리(utm)·해시 제거 후 홈 판정 — p.url 은 withUtm 으로 감싸져 들어올 수 있음
+    const isHome = p.url.replace(/[?#].*$/, "").replace(/\/+$/, "") === HOME_URL;
     if (!isHome) {
+      // 홈 버튼도 카카오 귀속 utm — 공유 1건의 두 접점이 모두 kakao / share 로 잡히도록
+      const homeUrl = withUtm(HOME_URL, "kakao");
       buttons.push({
         title: "내 연봉 계산하기",
-        link: { mobileWebUrl: HOME_URL, webUrl: HOME_URL },
+        link: { mobileWebUrl: homeUrl, webUrl: homeUrl },
       });
     }
     kakao.Share?.sendDefault({
