@@ -12,7 +12,7 @@
 
 import { calculateYearEndTax } from "@/lib/yearEndTaxCalculator";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
-import { WIDGET_CSP } from "../shared";
+import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT } from "../shared";
 
 export const runtime = "edge";
 
@@ -192,6 +192,7 @@ function buildHtml(): string {
   render();
 })();
 </script>
+<script>${WIDGET_REFERRER_SCRIPT}</script>
 </body>
 </html>`;
 }

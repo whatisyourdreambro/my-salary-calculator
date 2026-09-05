@@ -13,7 +13,7 @@
 //   /embed 페이지가 담당한다.
 
 import { calculateNetSalary2026 } from "@/lib/calculator";
-import { WIDGET_CSP } from "../shared";
+import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT } from "../shared";
 
 export const runtime = "edge";
 
@@ -141,6 +141,7 @@ function buildHtml(): string {
   render();
 })();
 </script>
+<script>${WIDGET_REFERRER_SCRIPT}</script>
 </body>
 </html>`;
 }

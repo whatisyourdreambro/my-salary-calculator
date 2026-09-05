@@ -7,6 +7,10 @@
 //   headers() 를 정적 라우트에 내보내지 않는 실측 — next.config /widget/:path* 는 dev 패리티).
 // - 기존 위젯 2종(salary·year-end-tax)도 CSP 상수는 이 모듈로 수렴(2026-08-26) —
 //   헤더 세팅 자체는 여전히 각 핸들러가 직접 수행. 셸(widgetShell)은 신규 위젯용.
+// - 임베드 호스트 계측(2026-09-05): WIDGET_REFERRER_SCRIPT 가 document.referrer 호스트를
+//   CTA·brand 링크 utm_content 로 부착 — 셸 위젯 6종은 widgetShell 이, 수기 위젯 2종
+//   (salary·year-end-tax)은 각 핸들러가 동일 상수를 삽입. GA4 '세션 수동 광고 콘텐츠'
+//   측정기준으로 임베드 도메인 집계(R2 B2·B3 KPI). 외부 요청·CSP 변경 없음.
 
 /** 위젯 전용 최소 CSP — frame-ancestors * 가 임베드 허용의 핵심 */
 export const WIDGET_CSP =
@@ -69,6 +73,19 @@ export const WIDGET_STYLE = `
   .brand a { color: var(--sub); text-decoration: none; font-weight: 700; }
 `;
 
+/**
+ * 임베드 호스트 계측 IIFE — 인라인 전용(CSP script-src 'unsafe-inline' 범위, 외부 요청 0회).
+ * iframe 안의 document.referrer 는 기본 referrer policy(strict-origin-when-cross-origin)에서
+ * 부모 페이지 origin → hostname 을 CTA(a.cta)·brand(.brand a) 링크의 utm_content 로 부착한다.
+ * - URL API(searchParams.set)로 결합 — href 에 '?' 유무와 무관하게 안전, 기존 utm 보존.
+ * - referrer 비어있음(직접 열기·no-referrer 정책·프라이버시 브라우저)·파싱 실패 시 href 무변경.
+ * - rel 속성은 건드리지 않는다(noopener 유지). "</script>" 문자열 포함 금지.
+ */
+export const WIDGET_REFERRER_SCRIPT =
+  '(function(){try{var r=document.referrer;if(!r)return;var h=new URL(r).hostname;if(!h)return;' +
+  'var as=document.querySelectorAll("a.cta,.brand a");for(var i=0;i<as.length;i++){try{' +
+  'var u=new URL(as[i].href);u.searchParams.set("utm_content",h);as[i].href=u.href;}catch(e){}}}catch(e){}})();';
+
 export interface WidgetShellOptions {
   /** <title> */
   title: string;
@@ -99,6 +116,7 @@ ${bodyHtml}
 <script>
 ${script}
 </script>
+<script>${WIDGET_REFERRER_SCRIPT}</script>
 </body>
 </html>`;
 }
