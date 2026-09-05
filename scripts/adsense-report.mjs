@@ -32,18 +32,32 @@ const UNIT_NAMES = {
   3302558597: "인아티클/IN_ARTICLE",
   1910866475: "멀티플렉스/MULTIPLEX",
   8284703133: "디스플레이2/DISPLAY_2",
-  6458241606: "구 모바일_앵커(디스플레이·미사용)",
+  6458241606: "구 모바일_앵커(GUIDE_MID 2026-05-05~08-24 · 현재 미배선)",
+  // 사장 유닛 5종 — 2abefc5(2025-11-27) src/app/layout.tsx 하드코딩(좌우 스티키 사이드바 4 + 중앙 배너 1),
+  // c667d2e(2026-02-12) 제거 → 50a41e7(2026-03-02) PC_날개·모바일_앵커로 교체. 현재 요청 0.
+  // ID 근거: git show 2abefc5:src/app/layout.tsx 143~178행(Center 01 / Left 01·02 / Right 01·02 주석).
+  3348584614: "중앙01(사장 2026-02~03)",
+  2717302873: "왼쪽01(사장 2026-02~03)",
+  1464657303: "왼쪽02(사장 2026-02~03)",
+  2773143192: "오른쪽01(사장 2026-02~03)",
+  1404221203: "오른쪽02(사장 2026-02~03)",
 };
 // ID 열이 없고 이름만 있는 내보내기 대비 — 이름 조각 → ID (구체적인 것부터 검사)
 const UNIT_NAME_ALIASES = [
   ["8284703133", ["display_2", "display-2", "display2", "디스플레이2", "디스플레이 2"]],
   ["5584143639", ["calc_result", "결과창"]],
   ["1848295488", ["guide_mid", "가이드중간", "가이드 중간"]],
-  ["1397486615", ["sidebar", "pc_날개", "날개"]],
+  ["1397486615", ["pc_sidebar", "pc_날개", "날개"]], // ★"sidebar" 포괄어 금지 — 사장 유닛 "Left Sidebar 01" 등을 가로챈다(2026-09-06)
   ["3302558597", ["in_article", "in-article", "인아티클", "인 아티클"]],
   ["1910866475", ["multiplex", "멀티플렉스"]],
   ["6458241606", ["anchor", "앵커"]],
   ["9958502911", ["home_top", "상단"]],
+  // 사장 유닛 — 콘솔 이름이 그대로 들어온다(왼쪽01·왼쪽02·오른쪽01·오른쪽02·중앙01)
+  ["1464657303", ["왼쪽02", "왼쪽 02", "left sidebar 02", "left02"]],
+  ["2717302873", ["왼쪽01", "왼쪽 01", "left sidebar 01", "left01"]],
+  ["1404221203", ["오른쪽02", "오른쪽 02", "right sidebar 02", "right02"]],
+  ["2773143192", ["오른쪽01", "오른쪽 01", "right sidebar 01", "right01"]],
+  ["3348584614", ["중앙01", "중앙 01", "center 01", "center01"]],
 ];
 // 실험 #1 판정 대상 (docs/ad-experiments.md)
 const EXP1 = { display2: "8284703133", result: "5584143639", inArticle: "3302558597" };
@@ -686,6 +700,13 @@ function cmdUnits(pos, opts) {
   console.log(
     note("플래그 기준: 우발 클릭 의심 = CTR ≥ 3.5% AND CPC ≤ $0.015 · 죽은 유닛 의심 = 노출 0 또는 채움률 < 50%", opts.md)
   );
+  if (data.mode === "units")
+    console.log(
+      note(
+        "입력에 날짜 열이 없습니다 — 계정 누적표일 수 있습니다(2026-09-06 내보내기 실측). 위 CTR·CPC·채움률은 창 평균이 아니라 생애 누적이므로 '우발 클릭 의심'·'죽은 유닛 의심' 플래그는 창(window) 지표가 아니며 판정은 유보하십시오(창 판정에는 날짜×광고단위 보고서 필요).",
+        opts.md
+      )
+    );
   const unknown = [...groups.values()].filter((g) => !g.unit.id || !UNIT_NAMES[g.unit.id]).length;
   if (unknown) console.log(note(`내장 매핑에 없는 광고 단위 ${unknown}개 — 이름 그대로 표시`, opts.md));
 }
@@ -761,14 +782,37 @@ function cmdExp1(pos, opts) {
   const cond1 = stats.display2.rawEarnA > 0;
   const within = (d) => d == null || d >= -0.1; // 전 창 0 → 잠식 정의 불가 → 통과
   const cond2 = ["result", "inArticle"].every((k) => within(stats[k].dClicks) && within(stats[k].dEarn));
+  // ★측정 설계 게이트 — 아래 중 하나라도 걸리면 '유지'를 낼 수 없다(2026-09-06 정정).
+  //   (a) 전/후가 같은 파일이면 창 자체가 없다. 잠식 표본(결과창+인아티클 클릭 합)은 수천이라
+  //       기존 규칙만으로는 통과해 잘못된 '유지'가 나왔다.
+  //   (b) 실험 유닛(display-2) 후 창 클릭이 50 미만이면 실험 축의 표본이 부족하다.
+  //       잠식 표본은 실험 유닛의 표본이 아니다.
+  const sameInput = path.resolve(beforeFile) === path.resolve(afterFile);
+  const expSample = stats.display2.rawClicksA;
+  const blockers = [];
+  if (sameInput) blockers.push("전/후 입력이 동일 파일 — 창 구성 불가");
+  if (expSample < 50) blockers.push(`실험 유닛(display-2) 후 창 클릭 ${fmtInt(expSample)} < 50`);
   let verdict;
-  if (sample < 50) verdict = "판정 불가·현상 유지 (표본 부족)";
+  if (blockers.length) verdict = `판정 불가·현상 유지 (${blockers.join(" · ")})`;
+  else if (sample < 50) verdict = "판정 불가·현상 유지 (표본 부족)";
   else if (cond1 && cond2) verdict = "유지";
   else verdict = "재검토";
 
   const condRows = [
     {
-      c: "표본: 결과창+인아티클 클릭 합계 (전/후 창 중 작은 쪽)",
+      c: "입력: 전/후 창이 서로 다른 파일",
+      v: sameInput ? "동일 파일" : "서로 다름",
+      s: "서로 다름",
+      ok: sameInput ? "미충족" : "충족",
+    },
+    {
+      c: "실험 유닛 표본: display-2 후 창 클릭",
+      v: fmtInt(expSample),
+      s: "≥ 50",
+      ok: expSample >= 50 ? "충족" : "미충족",
+    },
+    {
+      c: "표본: 결과창+인아티클 클릭 합계 (전/후 창 중 작은 쪽) — 잠식 탐지용(실험 표본 아님)",
       v: `${fmtInt(sampleB)} / ${fmtInt(sampleA)} → ${fmtInt(sample)}`,
       s: "≥ 50",
       ok: sample >= 50 ? "충족" : "미충족",
@@ -827,7 +871,10 @@ function cmdExp1(pos, opts) {
   );
   console.log(`\n판정: ${verdict}`);
   console.log(
-    note("규칙: 표본 < 50 → 판정 불가·현상 유지 / display-2 후 창 수입 > 0 AND 결과창·인아티클 클릭·수입 −10% 이내 → 유지 / 그 외 재검토", opts.md)
+    note(
+      "규칙: 전/후 동일 파일 또는 실험 유닛(display-2) 후 창 클릭 < 50 → 판정 불가·현상 유지('유지' 불가) / 잠식 표본 < 50 → 판정 불가·현상 유지 / display-2 후 창 수입 > 0 AND 결과창·인아티클 클릭·수입 −10% 이내 → 유지 / 그 외 재검토",
+      opts.md
+    )
   );
   for (const [key, name] of targets) {
     const s = stats[key];
