@@ -7,11 +7,14 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
-const RATE_2026 = 0.0475;
-const RATE_2027 = 0.05;
-const BASE_CAP = 6_590_000; // 기준소득월액 상한 (2026-07~2027-06)
-const BASE_FLOOR = 410_000; // 하한
+// 2026 요율·상하한은 정본(taxConstants2026)에서 가져온다 — verify:tax 게이트(정본 밖 리터럴 금지).
+// 2026-08-30 신설 이후 리터럴 하드코딩으로 CI verify:tax 가 매 푸시 실패하던 원인(2026-09-05 수정).
+const RATE_2026 = INSURANCE_RATES_2026.NATIONAL_PENSION;
+const RATE_2027 = 0.05; // 2027-01-01 법정 스케줄(연금개혁법) — 2027 정본 신설 시 이동
+const BASE_CAP = PENSION_BASE_2026.MAX_MONTHLY; // 기준소득월액 상한 (2026-07~2027-06)
+const BASE_FLOOR = PENSION_BASE_2026.MIN_MONTHLY; // 하한
 
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
