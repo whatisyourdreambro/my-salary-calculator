@@ -41,7 +41,7 @@ export default function SiblingHubsNav({
   const siblings = HUBS.filter((h) => h.href !== currentPath);
 
   return (
-    <nav aria-label="연봉 데이터 형제 허브" className="mt-2 mb-6">
+    <nav data-msy-module="sibling-hubs" aria-label="연봉 데이터 형제 허브" className="mt-2 mb-6">
       <div className="text-center mb-4">
         <h2 className="text-base sm:text-lg font-black text-navy dark:text-canvas-50 mb-1">
           {title}

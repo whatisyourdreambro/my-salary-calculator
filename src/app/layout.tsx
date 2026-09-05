@@ -12,6 +12,7 @@ import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 import WebVitals from "@/components/WebVitals";
+import InternalLinkTracker from "@/components/InternalLinkTracker";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
@@ -156,6 +157,9 @@ export default function RootLayout({
 
         {/* 실사용자 Core Web Vitals → GA4 (속도 개선 효과 측정) */}
         <WebVitals />
+
+        {/* 서버 컴포넌트 링크 모듈([data-msy-module]) 클릭 → guide_cta_click(position=모듈) 위임 계측 */}
+        <InternalLinkTracker />
 
         {/* 본문 100자+ 복사 시 출처 링크 자동 첨부 (펌글 → 자연 유입) */}
         <CopyAttribution />

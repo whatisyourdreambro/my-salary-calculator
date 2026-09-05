@@ -58,7 +58,7 @@ export default function RelatedCompanies({
   if (candidates.length < 2) return null;
 
   return (
-    <section className="my-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section data-msy-module="related-companies" className="my-12 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center gap-2 mb-5">
         <Building2 size={20} className="text-electric" />
         <h2 className="text-lg font-black text-navy dark:text-canvas-50">{title}</h2>

@@ -313,7 +313,7 @@ export default function JobPage({ params }: Props) {
 
           {/* 관련 계산기 */}
           {job.relatedCalcSlugs.length > 0 && (
-            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+            <section data-msy-module="job-related-calc" className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                 관련 계산기
               </h2>
@@ -333,7 +333,7 @@ export default function JobPage({ params }: Props) {
 
           {/* 이 직무 채용 기업 연봉 */}
           {relatedCompanies.length > 0 && (
-            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+            <section data-msy-module="job-companies" className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                 {job.name} 채용 기업 연봉
               </h2>
@@ -359,7 +359,7 @@ export default function JobPage({ params }: Props) {
 
           {/* 공식 봉급표 역링크 — R2 W2 (2026-08-31) */}
           {payTableLink && (
-            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+            <section data-msy-module="job-pay-table" className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                 공식 봉급표로 정확히 보기
               </h2>
@@ -377,7 +377,7 @@ export default function JobPage({ params }: Props) {
 
           {/* 같은 카테고리 직업 */}
           {relatedJobs.length > 0 && (
-            <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+            <section data-msy-module="job-siblings" className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                 {job.category} 다른 직업 연봉
               </h2>

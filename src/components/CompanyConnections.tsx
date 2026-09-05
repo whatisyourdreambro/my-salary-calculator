@@ -27,7 +27,7 @@ export default function CompanyConnections({ company }: { company: CompanyProfil
   if (!industryHub && comparePairs.length === 0) return null;
 
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-12">
+    <section data-msy-module="company-connections" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-12">
       <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-5">
         {company.name.ko} 연봉 더 깊이 보기
       </h2>

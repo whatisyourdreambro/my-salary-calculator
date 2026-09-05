@@ -34,6 +34,7 @@ export default function CompanyIndustryRank({
 
   return (
     <section
+      data-msy-module="industry-rank"
       className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
       aria-label={`${industryKo} 업종 연봉 순위`}
     >

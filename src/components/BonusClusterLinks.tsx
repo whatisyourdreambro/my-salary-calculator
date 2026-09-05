@@ -58,7 +58,7 @@ export default function BonusClusterLinks({ currentSlug }: Props) {
   }
 
   return (
-    <section className="mt-10" aria-labelledby="bonus-cluster-heading">
+    <section data-msy-module="bonus-cluster" className="mt-10" aria-labelledby="bonus-cluster-heading">
       <h2
         id="bonus-cluster-heading"
         className="text-lg font-black mb-3 flex items-center gap-2"

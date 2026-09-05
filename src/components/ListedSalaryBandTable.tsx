@@ -30,7 +30,7 @@ export default function ListedSalaryBandTable({
   if (rows.length === 0) return null;
 
   return (
-    <section aria-labelledby="listed-band-heading">
+    <section data-msy-module="listed-band" aria-labelledby="listed-band-heading">
       <h2
         id="listed-band-heading"
         className="text-lg font-black text-navy mb-1 inline-flex items-center gap-2"

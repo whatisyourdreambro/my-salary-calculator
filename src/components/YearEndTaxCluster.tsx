@@ -34,6 +34,7 @@ export default function YearEndTaxCluster({ className = "" }: { className?: stri
  const pathname = usePathname();
  return (
  <nav
+ data-msy-module="year-end-cluster"
  className={`mt-4 mb-2 inline-flex flex-wrap items-center gap-x-1 gap-y-1 px-4 py-2 bg-canvas-100 dark:bg-canvas-800 rounded-xl border border-canvas-200 dark:border-canvas-700 text-xs ${className}`}
  aria-label="연말정산 시즌 페이지 모음"
  >

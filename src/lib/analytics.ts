@@ -56,7 +56,11 @@ export function trackCalcSubmit(
   });
 }
 
-/** 가이드/시즌 페이지 CTA 카드 클릭 */
+/**
+ * 가이드/시즌 페이지 CTA 카드 클릭.
+ * position 값: related-calc · next-action · related-guide (onClick 직접 호출)
+ *   + InternalLinkTracker 가 보내는 data-msy-module id (industry-rank 등, ≤15종).
+ */
 export function trackGuideCTAClick(
   slug: string,
   position: string,
@@ -67,6 +71,16 @@ export function trackGuideCTAClick(
     position,
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
   });
+}
+
+/**
+ * 서버 컴포넌트 링크 모듈 내부 링크 클릭 (InternalLinkTracker 전용).
+ * 새 이벤트명 대신 guide_cta_click 을 재사용 — slug=href, position=모듈 id.
+ * 9/7 등록되는 'position' 맞춤 측정기준 하나로 모듈별 클릭이 분해된다.
+ * href 는 측정기준으로 등록하지 않는다(일 500 고유값 한도 초과 → 절삭).
+ */
+export function trackInternalLinkClick(href: string, moduleId: string): void {
+  trackGuideCTAClick(href, moduleId);
 }
 
 /** 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시 */
