@@ -171,7 +171,9 @@ export class GlobalTaxEngine {
  }
 
  const net = localGross - tax - social;
- const effectiveRate = ((tax + social) / localGross) * 100;
+ // 연봉 입력을 비우면 Number("")===0 이라 localGross 가 0 이 되고
+ // 0/0 → NaN 으로 5개 국가 카드 전부 "Tax NaN%" 가 떴다 (2026-09-06 전수검사).
+ const effectiveRate = localGross > 0 ? ((tax + social) / localGross) * 100 : 0;
 
  return {
  country,

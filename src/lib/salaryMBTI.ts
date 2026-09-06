@@ -855,11 +855,17 @@ export function getResultType(answers: string[]): SalaryMBTIType {
  return acc;
  }, {} as Record<string, number>);
 
+ // 축마다 한쪽 글자만 선택되므로 반대 글자 키는 counts 에 아예 없다.
+ // 종전에는 `counts["E"] >= counts["I"]` 가 `1 >= undefined` = NaN 비교라
+ // 항상 false 가 되어 앞 세 자리가 응답과 무관하게 "I","S","F" 로 고정됐다
+ // (전 32가지 응답 경로가 ISFJ·ISFP 2종으로만 수렴, 그것도 선택과 반대).
+ // 0 으로 정규화해야 실제 선택이 반영된다. — 2026-09-06 전수검사
+ const c = (key: string) => counts[key] ?? 0;
  const mbti =
- (counts["E"] >= counts["I"] ? "E" : "I") +
- (counts["N"] >= counts["S"] ? "N" : "S") +
- (counts["T"] >= counts["F"] ? "T" : "F") +
- (counts["J"] >= counts["P"] ? "J" : "P");
+ (c("E") >= c("I") ? "E" : "I") +
+ (c("N") >= c("S") ? "N" : "S") +
+ (c("T") >= c("F") ? "T" : "F") +
+ (c("J") >= c("P") ? "J" : "P");
 
  return (
  resultTypes.find((r) => r.type === mbti) ||

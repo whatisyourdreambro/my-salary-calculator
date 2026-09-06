@@ -33,7 +33,8 @@ export default function FlatTaxPage() {
  progressive: {
  tax: taxProgressive,
  net: gross - insurance - taxProgressive,
- rate: (taxProgressive / gross) * 100
+   // gross 가 0(입력을 비운 상태)이면 0/0 → NaN 이 그대로 "NaN%" 로 렌더됐다.
+   rate: gross > 0 ? (taxProgressive / gross) * 100 : 0
  },
  flat: {
  tax: taxFlat,

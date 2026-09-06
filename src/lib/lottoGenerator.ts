@@ -20,6 +20,19 @@ const generateSingleSet = (
  const MAX_RETRY = 100; // 무한 루프 방지를 위한 재시도 횟수 제한
  let attempts = 0;
 
+ // 실현 가능성 선검사 — 제외가 너무 많으면 6개를 만들 수 없다.
+ // (호출부가 사용자 입력을 그대로 넘기므로 여기서 막아야 한다)
+ const preExclude = new Set(excludeNumbers);
+ const preInclude = new Set(includeNumbers.filter((n) => !preExclude.has(n)));
+ if (45 - preExclude.size < 6) {
+ throw new Error(
+ `제외할 숫자가 너무 많아 6개를 만들 수 없습니다 (최대 ${45 - 6}개까지 제외 가능).`
+ );
+ }
+ if (preInclude.size > 6) {
+ throw new Error("반드시 포함할 숫자는 6개까지만 지정할 수 있습니다.");
+ }
+
  while (attempts < MAX_RETRY) {
  const includeSet = new Set(includeNumbers);
  const excludeSet = new Set(excludeNumbers);
@@ -67,8 +80,18 @@ const generateSingleSet = (
  attempts++;
  }
 
- // 재시도 횟수 초과 시, 마지막으로 생성된 번호 또는 기본 랜덤 번호를 반환
- // 이 경우는 매우 드물게 발생합니다 (예: 포함/제외 숫자가 너무 많을 때)
+ // 재시도 횟수 초과 시 랜덤 전략으로 1회만 폴백한다.
+ // 종전에는 조건 없이 자기 자신을 재호출해, 제외 숫자가 40개 이상이면
+ // ("random" 도 6개를 못 채우므로) 종료 조건 없이 무한 재귀 → 탭이 수 초
+ // 멈춘 뒤 스택오버플로로 죽었다 (2026-09-06 전수검사).
+ // 실현 불가능한 입력은 아래 선검사에서 이미 걸러지므로, 여기서는 전략만 낮춘다.
+ if (strategy === "random") {
+ // 이미 최하위 전략인데도 실패 — 더 낮출 전략이 없으므로 마지막 조합을 그대로 돌려준다.
+ return Array.from({ length: 45 }, (_, i) => i + 1)
+ .filter((n) => !new Set(excludeNumbers).has(n))
+ .slice(0, 6)
+ .sort((a, b) => a - b);
+ }
  return generateSingleSet(includeNumbers, excludeNumbers, "random");
 };
 

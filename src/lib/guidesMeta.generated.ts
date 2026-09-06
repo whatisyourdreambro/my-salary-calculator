@@ -1160,7 +1160,7 @@ export const guideCards: GuideCardMeta[] = [
   "slug": "side-income-tax-pipeline",
   "title": "월 100만 부수입 만들기 + 세금 처리 완벽 가이드",
   "description": "유튜브·블로그·강의·이커머스 등 부수입 100만 만드는 6가지 채널과 세금 신고 의무. 직장인 부업 가능 여부도 정리.",
-  "category": "재테크",
+  "category": "투자",
   "tags": [
    "부수입",
    "N잡",

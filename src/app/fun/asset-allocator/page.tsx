@@ -33,6 +33,13 @@ export default function AssetAllocatorGame() {
  // --- State ---
  const canvasRef = useRef<HTMLCanvasElement>(null);
  const [gameState, setGameState] = useState<GameState>("start");
+ // gameLoop 은 requestAnimationFrame 으로 다시 예약될 때 자기 렌더의 클로저를
+ // 그대로 들고 간다. 종전에는 루프 재예약 조건이 클로저의 gameState 라
+ // startGame(=="start" 렌더) 이 예약한 첫 프레임에서 조건이 false 가 되어
+ // 루프가 1프레임 만에 멈췄다 — 60초 내내 화면이 정지한 채 0점 게임오버.
+ // flappy/page.tsx 와 같은 방식으로 ref 를 두어 최신 상태를 읽는다.
+ // (2026-09-06 전수검사)
+ const gameStateRef = useRef<GameState>("start");
  const [score, setScore] = useState(0);
  const [timeLeft, setTimeLeft] = useState(60);
  const [highScore, setHighScore] = useState(0);
@@ -73,6 +80,7 @@ export default function AssetAllocatorGame() {
  // --- Game Loop ---
  const startGame = () => {
  setGameState("playing");
+ gameStateRef.current = "playing";
  setScore(0);
  scoreRef.current = 0;
  setTimeLeft(60);
@@ -88,6 +96,7 @@ export default function AssetAllocatorGame() {
 
  const gameOver = () => {
  setGameState("gameover");
+ gameStateRef.current = "gameover";
  if (requestRef.current) cancelAnimationFrame(requestRef.current);
  if (scoreRef.current > highScore) {
  setHighScore(scoreRef.current);
@@ -219,7 +228,7 @@ export default function AssetAllocatorGame() {
  ctx.fillText("💼", basketPos.current.x + BASKET_WIDTH / 2, basketPos.current.y);
  ctx.shadowBlur = 0; // Reset
 
- if (gameState === "playing") {
+ if (gameStateRef.current === "playing") {
  requestRef.current = requestAnimationFrame(gameLoop);
  }
  };

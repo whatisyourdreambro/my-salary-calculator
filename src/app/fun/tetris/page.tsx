@@ -42,6 +42,8 @@ export default function TetrisPage() {
  const [activePiece, setActivePiece] = useState<{ type: TetrominoType; shape: number[][]; x: number; y: number } | null>(null);
  const [score, setScore] = useState(0);
  const [level, setLevel] = useState(1);
+ // 누적 삭제 줄 수 — 10줄마다 레벨업 (레벨 계산의 단일 소스)
+ const [totalLines, setTotalLines] = useState(0);
  const [gameOver, setGameOver] = useState(false);
  const [isPlaying, setIsPlaying] = useState(false);
  const [highScore, setHighScore] = useState(0);
@@ -127,7 +129,15 @@ export default function TetrisPage() {
 
  if (linesCleared > 0) {
  setScore(prev => prev + (linesCleared * 100 * level));
- setLevel(prev => Math.floor((prev * 10 + linesCleared) / 10) || 1);
+ // 한 번에 지울 수 있는 줄은 최대 4줄이라 종전 식
+ // Math.floor((level*10 + linesCleared)/10) 은 항상 현재 레벨을 그대로 돌려줬다
+ // (레벨이 오르려면 한 번에 10줄을 지워야 하는데 10칸 보드에서 불가능) →
+ // 게임 내내 레벨 1 고정, SPEED_INCREMENT 가 사문이었다. 누적 줄 수 기준으로 교체.
+ setTotalLines(prev => {
+ const next = prev + linesCleared;
+ setLevel(Math.floor(next / 10) + 1);
+ return next;
+ });
  }
 
  setGrid(newGrid);
@@ -257,6 +267,10 @@ export default function TetrisPage() {
  <div className="bg-electric/50 p-4 rounded-xl border border-canvas/50">
  <p className="text-xs text-faint-blue uppercase tracking-wider mb-1">Level</p>
  <p className="text-2xl font-bold text-primary">{level}</p>
+ {/* 다음 레벨까지 남은 줄 — 레벨업 기준(10줄)을 화면에 드러낸다 */}
+ <p className="text-[10px] text-faint-blue mt-1">
+ 다음까지 {10 - (totalLines % 10)}줄
+ </p>
  </div>
  <div className="bg-electric/50 p-4 rounded-xl border border-canvas/50 flex items-center gap-3">
  <Trophy className="w-5 h-5 text-primary" />

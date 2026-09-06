@@ -66,7 +66,9 @@ export default function EscapePlanPage() {
     () => calcYears(vals.currentAssets, vals.monthlySaving, returnRate, targetAmount),
     [vals, returnRate, targetAmount],
   );
-  const progress = (vals.currentAssets / targetAmount) * 100;
+  // 월 생활비를 비우면 targetAmount 가 0 이 되어 진행률이 Infinity/NaN 으로 렌더됐다.
+  const progress =
+    targetAmount > 0 ? (vals.currentAssets / targetAmount) * 100 : 0;
   const escapeYear = new Date().getFullYear() + Math.floor(yearsToTarget);
 
   const funMetrics = [
