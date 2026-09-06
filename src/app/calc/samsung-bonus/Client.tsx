@@ -617,7 +617,8 @@ export default function SamsungBonusClient() {
             </p>
             <p className="mt-1 text-xs">
               잠정합의안(<strong>현금 40% + 자사주 60%</strong>)이 2026-08-25
-              조합원 총투표에서 부결되어 재협상 중입니다.
+              조합원 총투표에서 부결됐습니다. <strong>2026-09-06 기준</strong>
+              재협상이 진행 중이며, 타결 시 이 수치는 갱신됩니다.
             </p>
             <p className="mt-2">
               <Link

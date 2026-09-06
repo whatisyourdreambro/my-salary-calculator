@@ -36,7 +36,7 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
- '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
+ '/calc/samsung-bonus': { lastModified: new Date('2026-09-06'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면

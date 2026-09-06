@@ -239,7 +239,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-08-23",
+    "article:modified_time": "2026-09-06",
   },
 };
 
@@ -296,7 +296,7 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-08-23",
+            dateModified: "2026-09-06",
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
               "TAI(목표달성장려금) 2026 상반기 지급률 자동 적용",
@@ -551,7 +551,9 @@ export default function SamsungBonusCalculatorPage() {
                     553%)하므로 보도값 매칭을 우선했습니다. 참고로 이
                     791%/553%/252%는 1월 OPI 실지급률이 아니라, 임금협상 타결
                     보도의 <strong>연봉 1억 가정 시뮬레이션</strong>(OPI+특별
-                    경영성과급 합산액)을 월 기본급 대비로 환산한 수치입니다.
+                    경영성과급 합산액)을 <strong>연봉 대비</strong>로 환산한
+                    수치입니다(이 계산기의 858/579/269%와 같은 척도 — 월 기본급
+                    대비인 것은 TAI 뿐입니다).
                   </li>
                   <li>
                     <strong>2026년 한정</strong> — 회의록상 적자
