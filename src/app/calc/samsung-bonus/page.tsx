@@ -944,8 +944,13 @@ export default function SamsungBonusCalculatorPage() {
             </div>
           </div>
 
-          {/* 관련 페이지 */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+          {/* 관련 페이지 — 8카드 수제 클러스터 그리드.
+              서버 컴포넌트 plain Link 라 onClick 이 없으므로 InternalLinkTracker
+              위임 계측 대상이다(속성만 추가, 마크업·높이 무변경). */}
+          <section
+            data-msy-module="samsung-cluster"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10"
+          >
             <Link
               href="/calc/bonus-calculators"
               className="block p-5 bg-white dark:bg-canvas-900 border-2 border-electric-30 rounded-2xl hover:border-electric transition-colors group"

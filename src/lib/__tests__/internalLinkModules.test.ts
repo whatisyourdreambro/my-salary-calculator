@@ -21,6 +21,7 @@ const MODULES: Record<string, string[]> = {
   "src/components/YearEndTaxCluster.tsx": ["year-end-cluster"],
   "src/components/SiblingHubsNav.tsx": ["sibling-hubs"],
   "src/components/ListedSalaryBandTable.tsx": ["listed-band"],
+  "src/app/calc/samsung-bonus/page.tsx": ["samsung-cluster"],
   "src/app/job/[slug]/page.tsx": [
     "job-related-calc",
     "job-companies",
