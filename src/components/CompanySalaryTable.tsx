@@ -4,61 +4,30 @@
 // thin content 탈출용: 직급 5단계 × 연봉/세금/실수령 자동 계산.
 
 import type { CompanyProfile, JobLevel } from "@/types/company";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
+/** 사이트 공통 기준 — /salary/[amount]·/table 과 같은 비과세 식대 월 20만원 */
+const NON_TAXABLE_MONTHLY = 200_000;
 
-function calcEmpDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit) return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
-
-// NOTE: 간이 추정용 인라인 사본 — 정본 엔진은 src/lib/TaxLogic.ts(calculateSalary2026).
-// 요율·산식 변경 금지. 향후 통합 시 TaxLogic 재사용으로 교체할 것 (2026-08 감사 메모).
+// 세율표·근로소득공제 인라인 사본은 정본 엔진 도입으로 제거했다
+// (verify:tax 의 리터럴 감시 대상도 함께 줄어든다).
+// 정본 엔진 재사용 (2026-09-06 전수검사).
+// 종전에는 산출세액에 일률 ×0.7 을 곱해 근로소득세액공제를 근사하고 비과세
+// 식대(월 20만원)도 빼먹은 인라인 사본을 썼다. 근로소득세액공제는 총급여
+// 구간별 한도(1.2억 초과 20만원)가 있어 고연봉일수록 오차가 폭증했다 —
+// 회사 상세 430쪽의 '리드·임원' 행이 사이트 자체 계산기(/salary/[amount]) 대비
+// 연봉 2억에서 +9.9%, 8억에서 +21.1% 과다, 4,000만에서는 -2.0% 과소였다.
 function estimateNetSalary(annualSalary: number): {
   totalDeduction: number;
   netAnnual: number;
   netMonthly: number;
 } {
-  const basicDeduct = 1_500_000;
-  const empDeduct = calcEmpDeduction(annualSalary);
-  const taxable = Math.max(0, annualSalary - empDeduct - basicDeduct);
-  const incomeTax = calcTax(taxable) * 0.7; // 세액공제 후 추정
-  const localTax = incomeTax * 0.1;
-
-  // 4대보험 (정기 급여 기준)
-  const monthlyBase = annualSalary / 12;
-  const pensionMonthly = Math.min(monthlyBase, 6_590_000) * 0.0475;
-  const healthMonthly = monthlyBase * 0.03595;
-  const longTermMonthly = healthMonthly * 0.1314;
-  const employmentMonthly = monthlyBase * 0.009;
-  const totalInsurance =
-    (pensionMonthly + healthMonthly + longTermMonthly + employmentMonthly) * 12;
-
-  const totalDeduction = incomeTax + localTax + totalInsurance;
-  const netAnnual = annualSalary - totalDeduction;
-  const netMonthly = netAnnual / 12;
-
-  return { totalDeduction, netAnnual, netMonthly };
+  const r = calculateSalary2026(annualSalary, NON_TAXABLE_MONTHLY, 1, 0);
+  return {
+    totalDeduction: r.totalDeductions * 12,
+    netAnnual: r.netPay * 12,
+    netMonthly: r.netPay,
+  };
 }
 
 const RANK_LABELS: Record<JobLevel, { ko: string; range: string }> = {

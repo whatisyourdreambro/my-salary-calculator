@@ -140,6 +140,28 @@ function CalculatorTabsComponent() {
  id={`calc-tab-${tab}`}
  tabIndex={isActive ? 0 : -1}
  onClick={() => setActiveTab(tab)}
+ // roving tabindex 만 있고 화살표 키 핸들러가 없어 9개 탭 중
+ // 활성 1개 외에는 키보드로 도달할 수 없었다 (WAI-ARIA tabs 패턴 위반,
+ // 2026-09-06 전수검사). ←/→/Home/End 로 이동 + 포커스 이동까지 처리한다.
+ onKeyDown={(e) => {
+ const keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+ if (!keys.includes(e.key)) return;
+ e.preventDefault();
+ const i = tabs.indexOf(tab);
+ const next =
+ e.key === "Home"
+ ? 0
+ : e.key === "End"
+ ? tabs.length - 1
+ : e.key === "ArrowLeft"
+ ? (i - 1 + tabs.length) % tabs.length
+ : (i + 1) % tabs.length;
+ const target = tabs[next];
+ setActiveTab(target);
+ requestAnimationFrame(() => {
+ document.getElementById(`calc-tab-${target}`)?.focus();
+ });
+ }}
  className={`
  flex-none flex items-center gap-1.5 px-4 py-2.5
  rounded-full border text-sm font-bold

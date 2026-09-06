@@ -91,10 +91,12 @@ export default function StockTaxPage() {
  </div>
  <div className="bg-white p-6 space-y-3">
  {[
- { label: isOverseas ? "기본 공제 (250만원)" : "기본 공제", value: -r.basicDeduction },
+ { label: "기본 공제 (250만원)", value: -r.basicDeduction },
  { label: "과세 대상 양도차익", value: r.taxableProfit },
  { label: "양도소득세", value: r.tax },
- ...(isOverseas ? [{ label: "지방소득세 (×10%)", value: r.localTax }] : []),
+ // 지방소득세는 국내·해외 모두 부과된다. 종전에는 해외에서만 행을 노출해
+ // 국내 탭에서 항목 합과 '세금 합계'가 어긋났다.
+ { label: "지방소득세 (양도소득세×10%)", value: r.localTax },
  { label: "세금 합계", value: r.total, main: true },
  ].map(item => (
  <div key={item.label} className={`flex justify-between items-center py-2 ${item.main ? "border-t-2 border-primary pt-4" : "border-b border-canvas"}`}>

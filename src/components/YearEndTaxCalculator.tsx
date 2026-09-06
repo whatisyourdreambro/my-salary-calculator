@@ -11,7 +11,7 @@ import {
 } from "@/lib/yearEndTaxCalculator";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
-import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
@@ -141,6 +141,8 @@ export default function YearEndTaxCalculator() {
  prepaidTax: 2500000,
  // 4대보험 기본값 — taxConstants2026 요율에서 파생 (2026-08-23: 2025 요율
  // 하드코딩 잔존 버그 수정. 2027 요율 변경 시 자동 반영)
+ // 아래 3개는 초기 렌더용 시드일 뿐이다 — 실제 계산은 derivedInputs 가
+ // 현재 총급여에서 매번 다시 파생한다(총급여 변경 시 갱신 보장).
  nationalPension: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.NATIONAL_PENSION),
  // 장기요양보험료 포함 (소득세법 §52①1 — 둘 다 전액 소득공제 대상)
  healthInsurance: deriveAnnualHealthPremium(DEFAULT_SALARY),
@@ -167,17 +169,40 @@ export default function YearEndTaxCalculator() {
 
  const [showReport, setShowReport] = useState(false);
 
- const result = useMemo(() => calculateYearEndTax(inputs), [inputs]);
+ // 4대보험 소득공제는 총급여에서 파생돼야 한다. 종전에는 useState 초기값
+ // (DEFAULT_SALARY=5,000만 기준)으로 한 번 계산된 뒤 총급여를 바꿔도 갱신되지
+ // 않았다 — 화면에 4대보험 입력란이 없으므로 사용자가 고칠 수단도 없었다.
+ // 총급여 1억을 넣어도 5,000만원어치 보험료만 공제돼 결정세액이 크게 과대
+ // 표시됐다(2026-09-06 전수검사). 계산 직전에 현재 총급여로 다시 파생한다.
+ const derivedInputs = useMemo(() => {
+ const gross = inputs.grossSalary;
+ const pensionBase = Math.min(
+ Math.max(gross / 12, PENSION_BASE_2026.MIN_MONTHLY),
+ PENSION_BASE_2026.MAX_MONTHLY
+ );
+ return {
+ ...inputs,
+ nationalPension: Math.round(
+ pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12
+ ),
+ healthInsurance: deriveAnnualHealthPremium(gross),
+ employmentInsurance: Math.round(
+ gross * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE
+ ),
+ };
+ }, [inputs]);
+
+ const result = useMemo(() => calculateYearEndTax(derivedInputs), [derivedInputs]);
 
  const initialRefund = useMemo(
  () =>
  calculateYearEndTax({
- ...inputs,
+ ...derivedInputs,
  pensionSavings: 0,
  creditCard: 0,
  donation: 0,
  }).finalRefund,
- [inputs]
+ [derivedInputs]
  );
 
  const handleInputChange = (field: keyof TaxInputs, value: string) => {

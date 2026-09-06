@@ -81,7 +81,15 @@ export default function CurrencyInput({
  value={selectedCurrency}
  onChange={(e) => onCurrencyChange(e.target.value)}
  className="bg-transparent font-sans font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
- />
+ >
+ {/* 종전에는 자기닫힘 태그라 option 이 하나도 없었다 — 드롭다운이 빈 팝업으로
+     열려 통화를 초기값(KRW)에서 바꿀 수 없었다 (2026-09-06 전수검사). */}
+ {currencies.map((c) => (
+ <option key={c.id} value={c.id}>
+ {c.flag} {c.id}
+ </option>
+ ))}
+ </select>
  <span className="pointer-events-none absolute right-2 text-faint-blue">▼</span>
  </div>
  )}

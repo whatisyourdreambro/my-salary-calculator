@@ -7,7 +7,7 @@ const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 취득세율 — 아파트·단독주택 모두 주택 세율 체계 적용, 토지는 4%
 function calcAcquisitionTax(price: number, isFirst: boolean, type: "apt" | "single" | "land", isOver85: boolean): {
- taxRate: number; tax: number; localEdu: number; agriSpecial: number; total: number;
+ taxRate: number; tax: number; localEdu: number; agriSpecial: number; total: number; isHeavyHousing: boolean;
 } {
  let taxRate = 0.04; // 토지 등 일반 부동산 4%
 
@@ -43,7 +43,7 @@ function calcAcquisitionTax(price: number, isFirst: boolean, type: "apt" | "sing
  : 0;
  const total = tax + localEdu + agriSpecial;
 
- return { taxRate: taxRate * 100, tax, localEdu, agriSpecial, total };
+ return { taxRate: taxRate * 100, tax, localEdu, agriSpecial, total, isHeavyHousing };
 }
 
 export default function AcquisitionTaxPage() {
@@ -119,8 +119,19 @@ export default function AcquisitionTaxPage() {
  <div className="bg-white p-6 space-y-3">
  {[
  { label: "취득세", value: r.tax },
- { label: "지방교육세 (취득세×10%)", value: r.localEdu },
- { label: isOver85 ? "농어촌특별세 (0.2%)" : "농어촌특별세 (85㎡ 이하 면제)", value: r.agriSpecial },
+ // 중과(8%) 주택은 부가세 산정 기준이 달라 라벨도 함께 분기해야 한다.
+ {
+ label: r.isHeavyHousing
+ ? "지방교육세 (취득가×0.4%)"
+ : "지방교육세 (취득세×10%)",
+ value: r.localEdu,
+ },
+ {
+ label: isOver85
+ ? `농어촌특별세 (${r.isHeavyHousing ? "0.6%" : "0.2%"})`
+ : "농어촌특별세 (85㎡ 이하 면제)",
+ value: r.agriSpecial,
+ },
  { label: "합계", value: r.total, main: true },
  ].map(item => (
  <div key={item.label} className={`flex justify-between items-center py-2 ${item.main ? "border-t-2 border-primary pt-4" : "border-b border-canvas"}`}>

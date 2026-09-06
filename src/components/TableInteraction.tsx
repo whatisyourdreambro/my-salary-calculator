@@ -19,7 +19,13 @@ export default function TableInteraction({
  const router = useRouter();
  const searchParams = useSearchParams();
 
- const currentPage = parseInt(searchParams.get("page") || "1", 10);
+ // InteractiveTable 과 같은 정규화 — ?page=abc 에서 NaN 이 되어
+ // '이전/다음' 링크가 ?page=NaN 루프에 빠지고 'NaN / 5' 가 표시됐다.
+ const currentPageRaw = Number(searchParams.get("page") ?? "1");
+ const currentPage =
+ Number.isFinite(currentPageRaw) && currentPageRaw >= 1
+ ? Math.floor(currentPageRaw)
+ : 1;
  const currentSearch = searchParams.get("searchTerm") || "";
 
  const [searchTerm, setSearchTerm] = useState(

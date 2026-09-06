@@ -220,6 +220,7 @@ export default function TetrisPage() {
  setGrid(createEmptyGrid());
  setScore(0);
  setLevel(1);
+ setTotalLines(0); // 누적 줄 수도 초기화 — 없으면 2판째 레벨이 이전 판에서 이월된다
  setGameOver(false);
  setIsPlaying(true);
  setActivePiece(null);

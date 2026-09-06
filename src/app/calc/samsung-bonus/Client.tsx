@@ -1060,7 +1060,7 @@ function MySalaryCalculator({
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
                 자녀·연금·의료비·기부 등 세액공제로 소득세가 줄어드는 비율.
-                디폴트 20% (평균 직장인).{" "}
+                디폴트 30% (성과급 계산기 23종 공통값).{" "}
                 <Link
                   href="/tools/finance/irp"
                   className="font-bold text-electric underline underline-offset-2"

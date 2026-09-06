@@ -132,14 +132,31 @@ export default function CoupangBannerCore({
  responsive ? responsive.desktop : size
  );
  const [allowed, setAllowed] = useState(true);
- const [bannerIndex, setBannerIndex] = useState(0);
+ // bannerIndex 는 고지문 판정에서 제거됐다(isDisclosureOwner 로 대체).
+ // 등록 순서는 더 이상 상태로 들고 있지 않는다 — 순서가 바뀌어도 렌더 시점의
+ // renderedBannersByPath 를 직접 보므로 stale 값이 생기지 않는다.
 
  // 페이지별 dedup — 최대 2회, 같은 사이즈 중복 금지.
  // (effect 가 트리 순서대로 실행되므로 본문 배너가 우선권)
+ //
+ // ★ deps 는 반드시 원시값이어야 한다. 호출부 대부분이
+ //   responsive={{ mobile: "...", desktop: "..." }} 인라인 객체를 넘기므로,
+ //   deps 에 responsive 를 두면 부모가 한 번만 리렌더돼도(예: 가이드 상세의
+ //   setMounted(true)) cleanup→setup 이 재실행되어 등록 순서가 뒤집힌다.
+ //   그 결과 두 배너가 모두 bannerIndex!==0 이 되어 공정위 고지문이 페이지에서
+ //   통째로 사라졌다 — 가이드 상세 334쪽에서 100% 재현 (2026-09-06 전수검사).
+ const registrationKey = responsive ? responsive.desktop : size;
+ // 등록 배열의 첫 항목이 곧 고지문 소유자. bannerIndex 를 캡처해 두는 대신
+ // 매 렌더 시점의 배열을 보므로, 다른 배너가 언마운트돼 순서가 바뀌어도
+ // 남은 배너 중 하나가 즉시 소유권을 넘겨받는다.
+ const isDisclosureOwner =
+ allowed &&
+ (renderedBannersByPath.get(pathname ?? "")?.[0] ?? registrationKey) ===
+ registrationKey;
  useEffect(() => {
  if (!pathname) return;
  // 사이즈 키는 마운트 시점 기준(데스크톱 기본값) — resize 로 바뀌어도 등록 키는 고정
- const sizeKey = responsive ? responsive.desktop : size;
+ const sizeKey = registrationKey;
  const sizes = renderedBannersByPath.get(pathname) ?? [];
  if (sizes.length >= MAX_BANNERS_PER_PAGE || sizes.includes(sizeKey)) {
  setAllowed(false);
@@ -147,7 +164,6 @@ export default function CoupangBannerCore({
  }
  sizes.push(sizeKey);
  renderedBannersByPath.set(pathname, sizes);
- setBannerIndex(sizes.length - 1);
  setAllowed(true);
  return () => {
  const current = renderedBannersByPath.get(pathname) ?? [];
@@ -156,7 +172,7 @@ export default function CoupangBannerCore({
  if (current.length === 0) renderedBannersByPath.delete(pathname);
  else renderedBannersByPath.set(pathname, current);
  };
- }, [pathname, responsive, size]);
+ }, [pathname, registrationKey]);
 
  useEffect(() => {
  if (!responsive) {
@@ -227,7 +243,11 @@ export default function CoupangBannerCore({
  }}
  />
  </a>
- {showDisclosure && bannerIndex === 0 && (
+ {/* 고지문은 페이지에 쿠팡 배너가 하나라도 있으면 반드시 하나는 나와야 한다
+     (공정위 추천·보증 심사지침 + 쿠팡 파트너스 약관). 인덱스 0 에만 붙이면
+     등록 순서가 흔들리거나 0번 배너가 오퍼로 승격돼 언마운트될 때 고지문이
+     통째로 사라진다 — 아래 disclosureOwner 로 소유권을 재할당한다. */}
+ {showDisclosure && isDisclosureOwner && (
  <p
  style={{
  fontSize: "11px",

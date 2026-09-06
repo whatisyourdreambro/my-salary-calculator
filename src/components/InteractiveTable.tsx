@@ -105,7 +105,8 @@ export default function InteractiveTable({
 
  const chartData = useMemo(() => [
  { name: "국민연금", value: parseFloat(((result.pension / totalDeductions) * 100).toFixed(1)), color: "#0145F2" },
- { name: "건강보험", value: parseFloat(((result.health / totalDeductions) * 100).toFixed(1)), color: "#3D7FF5" },
+ // health 는 건강보험만이라 장기요양분이 빠져 막대 합이 96.5% 였다.
+ { name: "건강보험+장기요양", value: parseFloat((((result.health + result.longTermCare) / totalDeductions) * 100).toFixed(1)), color: "#3D7FF5" },
  { name: "고용보험", value: parseFloat(((result.employment / totalDeductions) * 100).toFixed(1)), color: "#7AADF5" },
  { name: "소득세", value: parseFloat((((result.incomeTax + result.localTax) / totalDeductions) * 100).toFixed(1)), color: "#A8BCCD" },
  ], [result, totalDeductions]);

@@ -263,7 +263,7 @@ export default function HyundaiBonusClient() {
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
           <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액" />
           <ResultCard label="무상주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
-          <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={scenario.voucherLabel} />
+          <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={customMode ? "직접 입력 모드 — 시나리오 포인트 미포함" : scenario.voucherLabel} />
         </div>
 
         <div className="rounded-xl bg-white border border-primary/30 p-5">

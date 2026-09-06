@@ -114,7 +114,10 @@ export default function WeeklyHolidayAllowanceClient() {
                 {fmt(result.weeklyAllowance)}원
               </p>
               <p className="text-xs text-muted-blue dark:text-canvas-300 mb-4">
-                = 시급 {fmt(hourlyWage)}원 × {result.allowanceHours.toFixed(1)}시간 (주 {weeklyHours}시간 ÷ 40 × 8)
+                = 시급 {fmt(hourlyWage)}원 × {result.allowanceHours.toFixed(1)}시간
+                {weeklyHours > 40
+                  ? " (소정근로 40시간 상한 적용 — 초과분은 연장근로라 주휴수당에 산입되지 않습니다)"
+                  : ` (주 ${weeklyHours}시간 ÷ 40 × 8)`}
               </p>
               <div className="space-y-1 text-sm pt-3 border-t border-electric-20">
                 <div className="flex justify-between text-muted-blue dark:text-canvas-300">

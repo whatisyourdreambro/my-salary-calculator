@@ -13,6 +13,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
+import SalaryTable from "@/components/SalaryTable";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 시급 실수령액 표 — 10,320원 기준 시급별 월 환산 실수령액",
@@ -97,7 +98,23 @@ function HourlyTable2026() {
  }
  />
 
- <Suspense fallback={<div>Loading...</div>}>
+ {/* fallback 은 서버에서 렌더한 실제 표다. HourlyTableInteractive 는 useSearchParams 를
+          쓰므로 CSR 바일아웃이 일어나 프리렌더 HTML 에서 통째로 빠지는데,
+          fallback 이 "Loading..." 이면 크롤러·저사양 클라이언트가 받는 정적
+          HTML 에 표 데이터가 0행이 된다(2026-09-06 전수검사: annual·monthly 는
+          354개 행 링크, weekly·hourly 는 0개). 같은 SalaryTable 을 fallback 으로
+          두면 하이드레이션 전에도 표가 보이고 색인 대상 본문이 생긴다. */}
+        <Suspense
+          fallback={
+            <SalaryTable
+              headers={tableHeaders}
+              data={allData.slice(0, 100)}
+              highlightRows={highlightRows}
+              linkColumnBaseHref="/salary"
+              linkValueMultiplier={2508}
+            />
+          }
+        >
  <HourlyTableInteractive
  allData={allData}
  tableHeaders={tableHeaders}

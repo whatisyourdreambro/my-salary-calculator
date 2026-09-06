@@ -15,10 +15,20 @@ import { MetadataRoute } from 'next';
 export default function robots(): MetadataRoute.Robots {
  const baseUrl = "https://www.moneysalary.com";
 
- const corePathAllow = ['/', '/_next/'];
+ // /api/og 는 전 페이지의 og:image·Article.image 소스다(src/lib/seo.ts).
+ // Disallow: /api/ 안에 묻혀 있으면 Googlebot·Googlebot-Image 가 썸네일을
+ // 못 가져와 SERP 이미지·Discover·리치결과 이미지가 전부 죽는다.
+ // robots.txt 는 더 긴 경로의 Allow 가 이기므로 Disallow: /api/ 와 공존한다.
+ // (2026-09-06 전수검사)
+ const corePathAllow = ['/', '/_next/', '/api/og'];
  // /widget/ = 임베드 iframe 전용(자가완결 HTML, X-Robots-Tag noindex 병행) —
  // 색인 대상은 안내 페이지 /embed 쪽이다.
- const corePathDisallow = ['/private/', '/share/', '/api/', '/widget/'];
+ // /share/ 는 크롤 허용으로 되돌렸다: 페이지 자체가 metadata 에서
+ // robots{index:false} 를 선언하므로 색인은 이미 막혀 있고, robots.txt 로
+ // 크롤까지 막으면 (a) 카카오·페이스북·트위터 크롤러가 OG 태그를 못 읽어
+ // 바이럴 공유 카드가 제목·설명·이미지 전부 빈칸이 되고, (b) noindex 메타를
+ // 읽을 수 없어 URL-only 색인이 오히려 남을 수 있다.
+ const corePathDisallow = ['/private/', '/api/', '/widget/'];
 
  return {
  rules: [
