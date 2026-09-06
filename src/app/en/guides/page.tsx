@@ -38,7 +38,16 @@ export default function EnglishGuidesIndex() {
  // useSearchParams(q 검색 초기값)를 쓰는 클라이언트 컴포넌트라 Suspense 경계 필요
  return (
   <Suspense>
-   <EnglishGuidesClient guides={enGuideCards} categoriesEn={categoriesEn} />
+   {/* 실제 영문 가이드가 존재하는 카테고리만 칩으로 넘긴다.
+       categoriesEn 은 한국어 categories 를 그대로 번역한 목록이라, 영문판이
+       없는 4종(Salary·Investing·Career·Basics)이 "눌러도 항상 0건"인 죽은 칩으로
+       남아 있었다 (2026-09-06 전수검사). */}
+   <EnglishGuidesClient
+    guides={enGuideCards}
+    categoriesEn={categoriesEn.filter(
+     (c) => c.id === "all" || enGuideCards.some((g) => g.category === c.id)
+    )}
+   />
   </Suspense>
  );
 }

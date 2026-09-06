@@ -122,8 +122,13 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  const targetAmount = (annualSpending - annualPension) / safeWithdrawalRate;
 
  // Coast FIRE Target: Amount needed NOW to grow to Target Amount by age 65 without further contributions
- const yearsTo65 = 65 - parseInt(currentAge, 10);
- const coastFireTarget = targetAmount / Math.pow(1 + annualReturnRate, yearsTo65);
+ // 목표액은 65세 시점 기준이어야 한다 — 메인 루프가 매년 currentTargetAmount 를
+ // 물가상승률만큼 올리는 것과 같은 가정(:170). 2026-09-06 전수검사 정정 전에는
+ // 오늘 기준 목표액을 그대로 할인해 기본 입력(30세·월 300만·인출률 4%·7%)에서
+ // 84,296,645원 — 인플레이션을 반영한 값(≈1.68억)의 절반으로 표시됐다.
+ const yearsTo65 = Math.max(0, 65 - parseInt(currentAge, 10));
+ const targetAmountAt65 = targetAmount * Math.pow(1 + inflationRate, yearsTo65);
+ const coastFireTarget = targetAmountAt65 / Math.pow(1 + annualReturnRate, yearsTo65);
 
  // Barista FIRE Target: Target Amount if you cover 50% of expenses with part-time work
  const baristaTargetAmount = (annualSpending * 0.5 - annualPension) / safeWithdrawalRate;

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { jobsData, jobsByCategory, JobCategory } from "@/data/jobsData";
+import { jobCountGae } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
 import { Fragment } from "react";
 import { HomeTopAd, GuideMidAd, InArticleAd, MultiplexAd } from "@/components/AdPlacement";
@@ -13,9 +14,9 @@ import SiblingHubsNav from "@/components/SiblingHubsNav";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "직업별 연봉 완전 가이드 2026 — 59개 핵심 직종 평균 연봉·실수령액",
+  title: `직업별 연봉 완전 가이드 2026 — ${jobCountGae} 핵심 직종 평균 연봉·실수령액`,
   description:
-    "간호사·의사·공무원·교사·개발자·변호사 등 59개 핵심 직업의 2026년 평균 연봉과 신입~경력별 실수령액을 한눈에 확인하세요. 직종별 연봉 비교 및 계산기 제공.",
+    `간호사·의사·공무원·교사·개발자·변호사 등 ${jobCountGae} 핵심 직업의 2026년 평균 연봉과 신입~경력별 실수령액을 한눈에 확인하세요. 직종별 연봉 비교 및 계산기 제공.`,
   path: "/job",
   keywords: [
     "직업별 연봉",
@@ -79,7 +80,7 @@ export default function JobIndexPage() {
               직업별 연봉 완전 가이드 2026
             </h1>
             <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              59개 핵심 직종의 신입~경력별 평균 연봉과 실수령액을 한눈에 비교하세요.
+              {jobCountGae} 핵심 직종의 신입~경력별 평균 연봉과 실수령액을 한눈에 비교하세요.
               2026년 최신 세법 기준 계산기 연동.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">

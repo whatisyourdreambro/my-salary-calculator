@@ -16,8 +16,14 @@ export function PercentCalculator() {
 
  if (mode === "of") {
  // X% of Y = Y * (X/100)
- const res = v2 * (v1 / 100);
- setResult(`${v2}의 ${v1}%는 ${res} 입니다.`);
+ // 표시용 반올림 — 종전에는 부동소수점 원본을 그대로 출력해
+ // "3000의 7%는 210.00000000000003" 같은 결과가 나왔다.
+ const res = Math.round(v2 * (v1 / 100) * 100) / 100;
+ setResult(
+ `${v2.toLocaleString("ko-KR")}의 ${v1}%는 ${res.toLocaleString("ko-KR", {
+ maximumFractionDigits: 2,
+ })} 입니다.`
+ );
  } else {
  // X is what % of Y = (X/Y) * 100
  const res = (v1 / v2) * 100;

@@ -9,12 +9,26 @@ const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 function calcStockTax(profit: number, holdPeriod: "short" | "long", isOverseas: boolean): {
  basicDeduction: number; taxableProfit: number; tax: number; localTax: number; total: number; effectiveRate: number;
 } {
- const basicDeduction = isOverseas ? 2_500_000 : 0; // 해외주식 250만원 기본공제
+ // 양도소득 기본공제 250만원은 국내·해외 모두 적용된다(소득세법 §103).
+ // 2026-09-06 전수검사 정정: 종전에는 해외주식에만 적용했다.
+ const basicDeduction = 2_500_000;
  const taxableProfit = Math.max(0, profit - basicDeduction);
 
- // 해외주식: 소득세 20% + 지방소득세 2% / 국내 대주주: 단기 30%·장기 20% (소액주주는 비과세)
- const tax = isOverseas ? Math.round(taxableProfit * 0.20) : Math.round(taxableProfit * (holdPeriod === "short" ? 0.30 : 0.20));
- const localTax = isOverseas ? Math.round(taxableProfit * 0.02) : 0;
+ // 해외주식: 20% 단일세율
+ // 국내 대주주: 1년 미만 보유 30% / 그 외 과세표준 3억 이하 20%·3억 초과 25%
+ //   (소득세법 §104①11 — 종전에는 3억 초과 구간을 빠뜨리고 전 구간 20% 였다)
+ let tax: number;
+ if (isOverseas) {
+ tax = Math.round(taxableProfit * 0.2);
+ } else if (holdPeriod === "short") {
+ tax = Math.round(taxableProfit * 0.3);
+ } else {
+ const over = Math.max(0, taxableProfit - 300_000_000);
+ tax = Math.round((taxableProfit - over) * 0.2 + over * 0.25);
+ }
+ // 지방소득세는 소득세의 10% — 국내·해외 모두 부과된다
+ // (종전에는 해외에만, 그것도 과세표준 × 2% 로 별도 계산했다).
+ const localTax = Math.round(tax * 0.1);
  const total = tax + localTax;
  const effectiveRate = profit > 0 ? (total / profit) * 100 : 0;
 

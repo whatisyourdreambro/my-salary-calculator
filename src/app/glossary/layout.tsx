@@ -7,7 +7,7 @@ import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "금융 용어 사전 - 4대보험·세금·재테크 핵심 용어 100+",
+ title: `금융 용어 사전 - 4대보험·세금·재테크 핵심 용어 ${glossaryData.length}개`,
  description:
  "직장인이 꼭 알아야 할 4대보험, 세금, 부동산, 투자 용어를 쉬운 비유로 설명합니다. 검색·카테고리·랜덤 학습까지 한 페이지에서.",
  path: "/glossary",

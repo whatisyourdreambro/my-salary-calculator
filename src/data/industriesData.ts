@@ -552,7 +552,7 @@ export const industriesData: IndustryProfile[] = [
     description:
       "삼성생명·삼성화재·한화생명·교보생명·현대해상 등 생명보험·손해보험사. 설계사부터 계리·언더라이팅 전문직까지.",
     topCompanyIds: ["samsung-life", "samsung-fire"],
-    topJobIds: ["actuary", "financial-analyst"],
+    topJobIds: ["actuary", "fund-manager"],
     faqs: [
       {
         q: "보험 업계 연봉은 얼마인가요?",
@@ -578,7 +578,7 @@ export const industriesData: IndustryProfile[] = [
     description:
       "CJ제일제당·농심·오리온·롯데칠성·오뚜기·삼양·동원 등 국내 대형 식품·음료 기업이 속한 업계. 내수 안정성과 K-푸드 수출 성장이 공존합니다.",
     topCompanyIds: ["cjcheiljedang", "nongshim", "orion", "ottogi", "hitejinro", "lotte-wellfood"],
-    topJobIds: ["marketer", "researcher"],
+    topJobIds: ["marketer", "biotech-researcher"],
     faqs: [
       {
         q: "식품·음료 업계 평균 연봉은 얼마인가요?",

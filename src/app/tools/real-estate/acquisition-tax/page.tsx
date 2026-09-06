@@ -26,9 +26,21 @@ function calcAcquisitionTax(price: number, isFirst: boolean, type: "apt" | "sing
  }
 
  const tax = Math.round(price * taxRate);
- const localEdu = Math.round(tax * 0.1); // 지방교육세
- // 농어촌특별세: 전용면적 85㎡ 초과 주택만 0.2% (85㎡ 이하 면제)
- const agriSpecial = (type === "apt" || type === "single") && isOver85 ? Math.round(price * 0.002) : 0;
+ // 다주택 중과(8%) 주택은 부가세 요율이 표준세율 주택과 다르다.
+ // 표준(1~3%): 지방교육세 = 취득세액 × 10%, 농특세 = 취득가 × 0.2%(85㎡ 초과)
+ // 중과(8%):   지방교육세 = 취득가 × 0.4% 고정, 농특세 = 취득가 × 0.6%(85㎡ 초과)
+ // 2026-09-06 전수검사 정정: 중과 구간에도 취득세액 × 10% 를 적용해
+ // 지방교육세가 0.8%(2배)로, 농특세는 0.2%(1/3)로 계산되고 있었다.
+ // 10억·2주택·85㎡ 이하 기준 합계 8,800만 → 8,400만.
+ const isHeavyHousing = (type === "apt" || type === "single") && !isFirst;
+ const localEdu = isHeavyHousing
+ ? Math.round(price * 0.004)
+ : Math.round(tax * 0.1); // 지방교육세
+ // 농어촌특별세: 전용면적 85㎡ 초과 주택만 부과 (85㎡ 이하 면제)
+ const agriSpecial =
+ (type === "apt" || type === "single") && isOver85
+ ? Math.round(price * (isHeavyHousing ? 0.006 : 0.002))
+ : 0;
  const total = tax + localEdu + agriSpecial;
 
  return { taxRate: taxRate * 100, tax, localEdu, agriSpecial, total };

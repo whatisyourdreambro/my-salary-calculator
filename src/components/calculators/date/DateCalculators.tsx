@@ -136,12 +136,15 @@ export function WorkDayCalculator() {
 
  const calculate = () => {
  if (!startDate || !endDate) return;
- const start = new Date(startDate);
- const end = new Date(endDate);
+ // parseLocalDate: new Date("2026-09-07") 은 UTC 자정으로 파싱돼
+ // UTC- 시간대(미주 등) 방문자에게 요일이 하루 밀린다(같은 파일의 D-day·만나이는
+ // 이미 parseLocalDate 를 쓴다 — 이 함수만 누락돼 있었다, 2026-09-06 전수검사).
+ const start = parseLocalDate(startDate);
+ const end = parseLocalDate(endDate);
 
  // Ensure start <= end
  if (start > end) {
- alert("종료일이 시작일보다 빨라야 합니다.");
+ alert("종료일은 시작일보다 뒤여야 합니다.");
  return;
  }
 

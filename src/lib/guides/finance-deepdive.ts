@@ -554,7 +554,9 @@ export const financeGuides = [
  slug: "side-income-tax-pipeline",
  title: "월 100만 부수입 만들기 + 세금 처리 완벽 가이드",
  description: "유튜브·블로그·강의·이커머스 등 부수입 100만 만드는 6가지 채널과 세금 신고 의무. 직장인 부업 가능 여부도 정리.",
- category: "재테크",
+ // 2026-09-06 전수검사: "재테크" 는 guidesData.categories 에 없는 값이라
+ // 카테고리 칩·허브·배지 링크 어디에도 걸리지 않는 고아였다 → 실존 카테고리로 정규화.
+ category: "투자",
  tags: ["부수입", "N잡", "월 100만", "사이드 프로젝트"],
  level: "중급" as const,
  publishedDate: "2026-03-30",

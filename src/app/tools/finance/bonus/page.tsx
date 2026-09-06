@@ -8,6 +8,7 @@ import {
   Zap, Shield,
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
+import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
 import ShareButtons from "@/components/ShareButtons";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 
@@ -60,27 +61,14 @@ function getMarginalRate(taxableIncome: number): number {
   return 45;
 }
 
-/**
- * 근로소득세액공제 (소득세법 제59조)
- * 2025~2026: 총급여액 구간별 한도 적용
- */
-function calcTaxCredit(incomeTax: number, totalIncome: number): number {
-  if (incomeTax <= 0) return 0;
-  // 세액공제액 계산
-  let credit: number;
-  if (incomeTax <= 1_300_000) {
-    credit = Math.round(incomeTax * 0.55);
-  } else {
-    credit = Math.round(715_000 + (incomeTax - 1_300_000) * 0.30);
-  }
-  // 총급여 구간별 한도
-  let limit: number;
-  if (totalIncome > 120_000_000)     limit = 500_000;
-  else if (totalIncome > 70_000_000) limit = 660_000;
-  else if (totalIncome > 33_000_000) limit = 740_000;
-  else                                limit = credit; // 한도 없음(상한 없음)
-  return Math.min(credit, limit);
-}
+// 근로소득세액공제는 taxConstants2026.earnedIncomeTaxCredit2026 이 정본이다.
+// 2026-09-06 전수검사 정정: 여기에 계단식 한도(74만·66만·50만 + 3,300만 이하
+// 무한도)를 별도로 재구현해 두어, 정본이 §59② 체감 산식으로 바뀐 뒤에도
+// 이 페이지만 옛 값을 썼다(총급여 2,800만 + 성과급 500만 기준 세금 182,050원
+// 과소). 재구현을 제거하고 정본을 그대로 부른다.
+const calcTaxCredit = (incomeTax: number, totalIncome: number): number =>
+  incomeTax <= 0 ? 0 : Math.round(earnedIncomeTaxCredit2026(incomeTax, totalIncome));
+
 
 /**
  * 성과급에 대한 4대보험 계산

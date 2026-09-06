@@ -73,7 +73,8 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
   // ───── 세금 일반
   "income-tax-bracket-sim": ["comprehensive-income-tax-2026", "year-end-tax-2026"],
   "earned-income-tax-quick": ["year-end-tax-2026", "salary-guide-2026"],
-  "comprehensive-income-tax-quick": ["comprehensive-income-tax-2026", "year-end-tax-2026"],
+  // 2026-09-06 전수검사: "comprehensive-income-tax-quick" 매핑은 어디에도 없는
+  // 슬러그라 항상 미해결이었다 → 바로 위 income-tax-bracket-sim 매핑에 흡수(제거).
   "dividend-tax-quick": ["financial-income-tax", "capital-gains-tax-stock"],
   "interest-tax-quick": ["financial-income-tax", "isa-account-guide"],
   "stock-capital-gains-quick": ["capital-gains-tax-stock", "chip-stock-tax-guide"],
@@ -92,7 +93,8 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
   "prepayment-fee-quick": ["first-home-buyer-loan", "credit-score-up-2026"],
   "loan-refinance-savings": ["first-home-buyer-loan", "credit-score-up-2026"],
   "monthly-installment": ["credit-score-up-2026", "household-ledger-tips"],
-  "auto-loan-vs-lease-quick": ["auto-loan-vs-lease-2026", "car-tax-annual-payment"],
+  // "auto-loan-vs-lease-quick" 도 실존하지 않는 슬러그였다 → 전용 라우트 /car-loan 카드로 대체.
+  "car-loan": ["auto-loan-vs-lease-2026", "car-tax-annual-payment"],
   // ───── 투자·재테크
   "compound-interest-quick": ["fire-movement-realistic-2026", "isa-vs-pension-savings"],
   "simple-interest-quick": ["household-ledger-tips", "isa-account-guide"],
@@ -233,6 +235,68 @@ export const STATIC_CALC_CARDS: Record<
     slug: "sk-hynix-bonus",
     title: "SK하이닉스 성과급 계산기",
     description: "PS 영업이익 10%·PI — 현금·자사주 신구 체계 세후 실수령 시뮬레이션",
+  },
+  // 2026-09-06 전수검사 보강: CALC_TO_GUIDES 가 참조하지만 simpleCalculators(101종)
+  // 에도 STATIC_CALC_CARDS 에도 없던 실존 정적 라우트 9종. 등재 전에는
+  // getGuideRelatedCalcs 결과가 렌더 단계에서 전량 탈락해 '관련 계산기' 블록이
+  // 통째로 사라졌다(가이드 3편은 매핑이 전부 미해결이라 블록 0건).
+  "year-end-bonus": {
+    slug: "year-end-bonus",
+    title: "연말 성과급 계산기",
+    description: "연말 보너스 세전 → 세후 실수령 즉시 계산",
+  },
+  "year-end-bonus-tax": {
+    slug: "year-end-bonus-tax",
+    title: "성과급 지급 시점 세금 비교",
+    description: "12월 vs 1월 지급 — 어느 쪽이 유리한지 비교",
+  },
+  "incentive-tax": {
+    slug: "incentive-tax",
+    title: "인센티브 세금 계산기",
+    description: "인센티브·상여금 원천징수와 연말정산 정산액",
+  },
+  "january-bonus": {
+    slug: "january-bonus",
+    title: "1월 성과급 세금 계산기",
+    description: "1월 지급 성과급의 소득세·4대보험 실수령",
+  },
+  "holiday-bonus": {
+    slug: "holiday-bonus",
+    title: "명절 상여금 계산기",
+    description: "설·추석 상여금 세후 실수령 즉시 계산",
+  },
+  "severance-vs-pension": {
+    slug: "severance-vs-pension",
+    title: "퇴직금 vs 퇴직연금 비교",
+    description: "일시금 수령과 연금 수령의 세금 차이 비교",
+  },
+  "jeonse-loan": {
+    slug: "jeonse-loan",
+    title: "전세자금대출 계산기",
+    description: "전세대출 월 이자·한도 즉시 계산",
+  },
+  "housing-subscription": {
+    slug: "housing-subscription",
+    title: "주택청약 가점 계산기",
+    description: "청약 가점·소득공제 한도 즉시 확인",
+  },
+  "child-deduction": {
+    slug: "child-deduction",
+    title: "자녀세액공제 계산기",
+    description: "자녀 수별 세액공제·출산 공제 즉시 계산",
+  },
+  // 전용 라우트가 /calc 밖에 있는 경우 href 로 목적지를 명시한다.
+  "car-loan": {
+    slug: "car-loan",
+    title: "자동차 할부·리스 계산기",
+    description: "할부 vs 리스 총비용 비교 — 이자·감가 포함",
+    href: "/car-loan",
+  },
+  severance: {
+    slug: "severance",
+    title: "퇴직금 계산기",
+    description: "평균임금 기준 퇴직금과 퇴직소득세 즉시 계산",
+    href: "/tools/finance/severance",
   },
 };
 

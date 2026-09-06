@@ -1,5 +1,7 @@
 // src/app/hub/page.tsx
-// 주제별 허브 인덱스 — 5개 허브로 가는 진입점.
+// 주제별 허브 인덱스 — hubs.ts 에 정의된 허브 전량으로 가는 진입점.
+// (카운트는 hubs.length 파생 — 종전에는 '5개'가 하드코딩돼 허브 3개 추가 후
+//  메타와 실제 렌더 수가 어긋났다, 2026-09-06 전수검사)
 
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -18,7 +20,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = buildPageMetadata({
   title: "주제별 종합 가이드 — FIRE·투자·부동산·절세·커리어",
   description:
-    "흩어진 계산기와 가이드를 FIRE·주식투자·부동산·절세·커리어 5개 주제로 묶었습니다. 관심 주제의 핵심 도구와 전략을 한 곳에서 확인하세요.",
+    `흩어진 계산기와 가이드를 FIRE·주식투자·부동산·절세·커리어·보험·사업·생활 ${hubs.length}개 주제로 묶었습니다. 관심 주제의 핵심 도구와 전략을 한 곳에서 확인하세요.`,
   path: "/hub",
   keywords: ["금융 종합 가이드", "재테크 가이드", "FIRE", "부동산", "절세", "커리어"],
 });

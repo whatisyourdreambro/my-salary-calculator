@@ -32,7 +32,11 @@ const categories: {
 }[] = [
   { id: "전체", name: "전체보기", icon: HelpCircle },
   { id: "연봉 & 수당", name: "연봉/수당", icon: Wallet },
-  { id: "4대보험 & 세금", name: "4대보험/세금", icon: Landmark },
+  // 2026-09-06 전수검사 정정: 종전 id "4대보험 & 세금" 은 qnaData 에 없는
+  // 값이라 이 칩을 누르면 항상 0건이었다(빈 화면 + 아래 광고 2유닛 동시 소멸).
+  // 실존 카테고리로 교체하고, 아래 CATEGORIES 파생에서 데이터에 없는 id 는
+  // 자동으로 걸러 같은 사고가 조용히 재발하지 않게 한다.
+  { id: "실업급여 & 고용보험", name: "실업급여", icon: Landmark },
   { id: "퇴직 & 이직", name: "퇴직/이직", icon: Briefcase },
   { id: "연말정산 & 세금", name: "연말정산", icon: Calculator },
   { id: "사회초년생 & 재테크", name: "재테크", icon: TrendingUp },
@@ -44,6 +48,15 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("전체");
+
+  // 데이터에 실제로 존재하는 카테고리만 칩으로 노출한다.
+  // 하드코딩 id 에 오타가 나면 종전에는 "누르면 항상 0건"인 죽은 칩이 조용히
+  // 남았다(그리고 하단 광고까지 함께 사라졌다). 여기서 걸러 두면 데이터가
+  // 바뀌어도 죽은 칩이 생기지 않는다.
+  const visibleCategories = useMemo(() => {
+    const present = new Set(items.map((i) => i.category));
+    return categories.filter((c) => c.id === "전체" || present.has(c.id));
+  }, [items]);
 
   const filteredData = useMemo(() => {
     return items.filter((item) => {
@@ -88,7 +101,7 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
             </div>
 
             <div className="flex flex-wrap justify-center gap-2">
-              {categories.map(({ id, name, icon: Icon }) => (
+              {visibleCategories.map(({ id, name, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => setActiveCategory(id)}
@@ -264,15 +277,15 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
             </div>
           ))}
 
-          {/* 페이지 하단 광고 + 쿠팡 — 모든 Q&A 본 후 노출 */}
-          {filteredData.length > 0 && (
-            <div className="mt-16 max-w-3xl mx-auto">
-              <InArticleAd />
-              <CoupangBanner
-                responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
-              />
-            </div>
-          )}
+          {/* 페이지 하단 광고 + 쿠팡 — 목록이 비어도 렌더한다.
+              종전에는 filteredData.length > 0 가드에 묶여 있어, 필터가 0건이면
+              (오타 카테고리·검색어 무매칭) 광고 2유닛이 함께 사라졌다. */}
+          <div className="mt-16 max-w-3xl mx-auto">
+            <InArticleAd />
+            <CoupangBanner
+              responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+            />
+          </div>
 
           {filteredData.length === 0 && (
             <div className="text-center py-32">

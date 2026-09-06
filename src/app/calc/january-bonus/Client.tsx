@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -30,22 +31,11 @@ function calcTax(taxable: number): number {
   return 0;
 }
 
-// 근로소득세액공제 (산출세액 기준 + 총급여 구간별 한도)
-function earnedIncomeTaxCredit(grossTax: number, salary: number): number {
-  const base =
-    grossTax <= 1_300_000
-      ? grossTax * 0.55
-      : 715_000 + (grossTax - 1_300_000) * 0.3;
-  const limit =
-    salary > 120_000_000
-      ? 500_000
-      : salary > 70_000_000
-        ? 660_000
-        : salary > 33_000_000
-          ? 740_000
-          : Infinity;
-  return Math.min(base, limit);
-}
+// 근로소득세액공제는 taxConstants2026.earnedIncomeTaxCredit2026 이 정본이다.
+// 2026-09-06 전수검사 정정: 계단식 한도를 여기서 재구현해 두어 정본이 §59②
+// 체감 산식으로 바뀐 뒤에도 이 계산기만 옛 값을 썼다.
+const earnedIncomeTaxCredit = (grossTax: number, salary: number): number =>
+  earnedIncomeTaxCredit2026(grossTax, salary);
 
 // 작년 원천징수세액 단순 추정 (간이세액표 근사) — 기본 인적공제만 반영한 연간 세액.
 // 간이세액표는 카드·의료비·IRP 등 추가 공제를 모르는 상태로 매월 떼므로,
