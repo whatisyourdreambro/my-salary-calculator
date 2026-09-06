@@ -14,7 +14,7 @@ import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import { motion } from "framer-motion";
 import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
-import { trackCalcSubmit } from "@/lib/analytics";
+import { trackCalcSubmit , salaryBand } from "@/lib/analytics";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -223,10 +223,12 @@ export default function SalaryCalculator() {
  useEffect(() => {
  if (showResult && result.monthlyNet > 0) {
  // GA4 funnel 이벤트 — 계산 완료(전환율·세그먼트 분석용)
+ // 원 단위 금액 대신 500만원 구간 라벨을 보낸다 — /privacy 의
+ // "서버로 전송되지 않습니다" 고지와 정합(2026-09-06 전수검사).
  trackCalcSubmit("salary", {
  income_type: incomeType,
- annual_salary: annualSalary,
- monthly_net: result.monthlyNet,
+ annual_salary_band: salaryBand(annualSalary),
+ monthly_net_band: salaryBand(result.monthlyNet * 12),
  });
  // Google Ads 전환 — env(ADS_ID/CONVERSION_LABEL)가 설정된 경우에만 발사
  const adsId = process.env.NEXT_PUBLIC_ADS_ID;

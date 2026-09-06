@@ -269,7 +269,14 @@ export function getRealHourlyWage(company: CompanyProfile): RealHourlyWage | nul
   let industryAvgHourly: number | null = null;
   let diffPercent: number | null = null;
   if (bucket && bucket.count >= 3) {
-    const peerAvg = (bucket.sum - hourly) / (bucket.count - 1);
+    // industryHourlySum 은 국내 기업만으로 만든다(233~234행). 글로벌 기업은
+    // 애초에 합계에 들어 있지 않으므로 자기 값을 빼면 안 된다 — 종전에는
+    // 무조건 빼서 글로벌 기업 페이지의 '업종 평균'이 크게 낮게 나왔다
+    // (2026-09-06 전수검사). 자기 자신이 표본에 포함된 경우에만 제외한다.
+    const inBucket = !company.isGlobal;
+    const peerSum = inBucket ? bucket.sum - hourly : bucket.sum;
+    const peerCount = inBucket ? bucket.count - 1 : bucket.count;
+    const peerAvg = peerCount > 0 ? peerSum / peerCount : 0;
     if (peerAvg > 0) {
       industryAvgHourly = Math.round(peerAvg);
       diffPercent = Math.round(((hourly - peerAvg) / peerAvg) * 100);

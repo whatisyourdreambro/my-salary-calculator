@@ -45,6 +45,23 @@ export function trackCoupangClick(
   });
 }
 
+/**
+ * 금액을 500만원 구간 라벨로 변환한다 (예: 52,000,000 → "5000-5500만").
+ *
+ * 개인정보 처리방침(/privacy)은 "사용자 입력 데이터(연봉, 부양가족 수 등)는
+ * 브라우저 localStorage 에만 저장되며 서버로 전송되지 않습니다"라고 고지한다.
+ * 그런데 계산 완료 이벤트가 연봉·실수령액을 원 단위 그대로 GA4(구글 서버)로
+ * 보내고 있었다 — 고지와 정면으로 어긋난다(2026-09-04 전수검사).
+ * 구간 라벨은 세그먼트 분석이라는 원래 목적을 유지하면서 개별 금액을 전송하지
+ * 않고, 덤으로 GA4 맞춤 측정기준의 일 500 고유값 한도에도 안전하다.
+ */
+export function salaryBand(amount: number): string {
+  if (!Number.isFinite(amount) || amount <= 0) return "unknown";
+  const step = 5_000_000;
+  const lo = Math.floor(amount / step) * step;
+  return `${lo / 10_000}-${(lo + step) / 10_000}만`;
+}
+
 /** 계산기 결과 산출 (사용자가 입력값으로 결과를 본 시점) */
 export function trackCalcSubmit(
   calcType: string,

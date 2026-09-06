@@ -22,7 +22,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import FavoritesButton from "@/components/FavoritesButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Sparkles, ChevronRight, ArrowRight } from "lucide-react";
-import { buildSalaryAmountMetadata } from "@/lib/seo";
+import { buildSalaryAmountMetadata , formatSalaryKorean } from "@/lib/seo";
 import {
  breadcrumbLd,
  faqLd,
@@ -125,10 +125,11 @@ export default function SalaryAmountPage({ params }: Props) {
  }
  const tax = calculateSalary2026(amount, 200000, 1, 0);
 
- const formattedAmount =
- amount >= 100000000
- ? `${(amount / 100000000).toFixed(1)}억`
- : `${(amount / 10000).toLocaleString("ko-KR")}만원`;
+ // H1 표기는 title·description 과 같은 규칙(formatSalaryKorean)을 쓴다.
+ // 종전 식은 (a) 1만원 미만 끝자리에서 "연봉 2,683.56만원" 같은 소수점을 만들었고
+ // (2026-09-06 전수검사: 43쪽), (b) 1억 이상을 소수 1자리 억으로 뭉개 135쪽이
+ // 16종 H1 을 공유했다(1.1억 하나에 19개 URL). 두 문제를 한 번에 해소한다.
+ const formattedAmount = formatSalaryKorean(amount);
 
  // 인근 연봉 cross-link — 정적 생성 집합(사이트맵 격자) 안의 값만 가리키도록
  // generateStaticParams 와 같은 격자 함수를 공유 (내부 404 링크 0건)

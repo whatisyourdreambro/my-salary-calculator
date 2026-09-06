@@ -461,9 +461,25 @@ export default function ComparePage({ params }: Props) {
           {sameIndustry ? `${aIndustry} 업종 내` : `${aIndustry}와 ${bIndustry} 업종에 속한`}{" "}
           <strong>{a.name.ko}</strong>({TIER_LABEL[a.tier]})와 <strong>{b.name.ko}</strong>
           ({TIER_LABEL[b.tier]})의 직급별 평균 연봉·인센티브 구조·워라밸·복지를 2026년 최신 기준으로
-          나란히 비교합니다. 신입 영끌 연봉 기준{" "}
-          <strong className="text-electric">{entryWinner.name.ko}</strong>가 더 높으며, 시니어
-          기준으로는 <strong className="text-electric">{seniorWinner.name.ko}</strong>가 앞섭니다.{" "}
+          나란히 비교합니다.{" "}
+          {/* 종전에는 동률일 때도 한쪽을 "더 높으며"로 단정해, 표에 같은 숫자가
+              찍힌 비교 페이지 72곳이 본문과 모순됐다 (2026-09-06 전수검사). */}
+          {aEntry === bEntry ? (
+            <>신입 영끌 연봉은 두 회사가 같고, </>
+          ) : (
+            <>
+              신입 영끌 연봉 기준{" "}
+              <strong className="text-electric">{entryWinner.name.ko}</strong>가 더 높으며,{" "}
+            </>
+          )}
+          {aSenior === bSenior ? (
+            <>시니어 기준도 동일합니다.</>
+          ) : (
+            <>
+              시니어 기준으로는{" "}
+              <strong className="text-electric">{seniorWinner.name.ko}</strong>가 앞섭니다.
+            </>
+          )}{" "}
           {overallGapText(a, b)}.
         </p>
 

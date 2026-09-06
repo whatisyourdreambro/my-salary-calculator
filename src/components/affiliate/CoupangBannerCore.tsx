@@ -119,6 +119,14 @@ const DISCLOSURE_TEXT =
 const MAX_BANNERS_PER_PAGE = 2;
 const renderedBannersByPath = new Map<string, CoupangBannerSize[]>();
 
+// 고지문 소유권 변경 구독자 — 배너가 등록/해제될 때 같은 경로의 모든 배너에
+// 재평가를 알린다. 소유자가 언마운트(오퍼 승격 등)돼도 남은 배너가 즉시
+// 고지문을 이어받고, 반대로 두 배너가 동시에 소유권을 주장하는 일도 없다.
+const disclosureSubscribers = new Map<string, Set<() => void>>();
+function notifyDisclosureOwners(pathname: string) {
+  disclosureSubscribers.get(pathname)?.forEach((fn) => fn());
+}
+
 export default function CoupangBannerCore({
  size = "leaderboard",
  responsive,
@@ -146,13 +154,11 @@ export default function CoupangBannerCore({
  //   그 결과 두 배너가 모두 bannerIndex!==0 이 되어 공정위 고지문이 페이지에서
  //   통째로 사라졌다 — 가이드 상세 334쪽에서 100% 재현 (2026-09-06 전수검사).
  const registrationKey = responsive ? responsive.desktop : size;
- // 등록 배열의 첫 항목이 곧 고지문 소유자. bannerIndex 를 캡처해 두는 대신
- // 매 렌더 시점의 배열을 보므로, 다른 배너가 언마운트돼 순서가 바뀌어도
- // 남은 배너 중 하나가 즉시 소유권을 넘겨받는다.
- const isDisclosureOwner =
- allowed &&
- (renderedBannersByPath.get(pathname ?? "")?.[0] ?? registrationKey) ===
- registrationKey;
+ // 등록 배열의 첫 항목이 고지문 소유자다. 첫 렌더에는 아직 등록 전이라
+ // 아무도 소유자가 아니고(=false), 등록 이펙트가 끝난 뒤 구독 알림으로
+ // 정확히 한 배너만 true 가 된다. 렌더 중에 레지스트리를 읽으면 등록 전
+ // 두 배너가 동시에 소유권을 주장해 고지문이 2번 나온다.
+ const [isDisclosureOwner, setIsDisclosureOwner] = useState(false);
  useEffect(() => {
  if (!pathname) return;
  // 사이즈 키는 마운트 시점 기준(데스크톱 기본값) — resize 로 바뀌어도 등록 키는 고정
@@ -165,12 +171,27 @@ export default function CoupangBannerCore({
  sizes.push(sizeKey);
  renderedBannersByPath.set(pathname, sizes);
  setAllowed(true);
+
+ // 소유권 재평가 구독 — 이 경로의 배너가 늘거나 줄 때마다 다시 판정한다.
+ const reevaluate = () =>
+ setIsDisclosureOwner(
+ renderedBannersByPath.get(pathname)?.[0] === sizeKey
+ );
+ const subs = disclosureSubscribers.get(pathname) ?? new Set<() => void>();
+ subs.add(reevaluate);
+ disclosureSubscribers.set(pathname, subs);
+ notifyDisclosureOwners(pathname);
+
  return () => {
  const current = renderedBannersByPath.get(pathname) ?? [];
  const idx = current.indexOf(sizeKey);
  if (idx >= 0) current.splice(idx, 1);
  if (current.length === 0) renderedBannersByPath.delete(pathname);
  else renderedBannersByPath.set(pathname, current);
+ subs.delete(reevaluate);
+ if (subs.size === 0) disclosureSubscribers.delete(pathname);
+ setIsDisclosureOwner(false);
+ notifyDisclosureOwners(pathname);
  };
  }, [pathname, registrationKey]);
 
@@ -218,7 +239,10 @@ export default function CoupangBannerCore({
  href={linkHref}
  target="_blank"
  rel="sponsored nofollow noopener noreferrer"
- referrerPolicy="unsafe-url"
+ // 개인 페이로드가 경로에 실리는 /share/[data] 에서는 전체 URL 을 리퍼러로
+ // 보내지 않는다(연봉 base64 가 쿠팡에 그대로 전달됐다). 그 외에는 기존대로
+ // 전체 URL 을 보내 쿠팡 어트리뷰션을 유지한다.
+ referrerPolicy={pathname?.startsWith("/share/") ? "origin" : "unsafe-url"}
  onClick={() => trackCoupangClick(resolvedSize, resolvedCategory, pathname ?? undefined)}
  style={{
  display: "block",

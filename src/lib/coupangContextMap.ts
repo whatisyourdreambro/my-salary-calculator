@@ -92,8 +92,11 @@ export function buildCoupangSubId(
   category: CoupangCategory,
   pathname: string | null | undefined
 ): string {
-  const rawPath = pathname
-    ? pathname.replace(/[^a-zA-Z0-9-/]/g, "").slice(0, 50)
-    : "";
+  // 개인 페이로드가 실린 경로는 subId 에 넣지 않는다.
+  // /share/[data] 는 base64 로 인코딩된 연봉·부양가족 값을 경로에 담으므로,
+  // 종전처럼 pathname 을 그대로 넣으면 그 조각이 쿠팡 서버로 나간다
+  // (2026-09-06 전수검사). 세그먼트 이름만 남기고 페이로드는 버린다.
+  const safePath = (pathname ?? "").startsWith("/share/") ? "/share" : pathname ?? "";
+  const rawPath = safePath.replace(/[^a-zA-Z0-9-/]/g, "").slice(0, 50);
   return `cat-${category}-${rawPath}`.slice(0, 60);
 }
