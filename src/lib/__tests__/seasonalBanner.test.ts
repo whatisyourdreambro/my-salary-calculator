@@ -6,6 +6,8 @@
 // 배경: find() 첫 매치 규칙이라 days 범위 겹침·순서 실수가 조용히 다른 배너를
 // 노출시킨다. 또 10월 항목 부재로 홈 배너가 한 달 비어 있었다(2026-09 감사).
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   SEASONAL_CALENDAR,
@@ -168,6 +170,35 @@ describe("1월 OPI 게이트 — getCurrentSeasonal(now, { opiAnnounced })", () 
       expect(a.date).toBeNull();
       expect(a.source).toBeNull();
     }
+  });
+});
+
+// 호출부 배선 가드 (2026-09-06) — 위 게이트 계약이 전부 통과해도 SeasonalBanner 가
+// getCurrentSeasonal(now) 로만 부르면 requires 항목은 영원히 열리지 않는다.
+// 실제로 2026-09-05 배치 이후 이 인자가 빠져 있었고, 그 상태에서는 1월에
+// OPI_2026_ANNOUNCEMENT.announced 를 true 로 바꿔도 배너가 바뀌지 않는다.
+// jsdom 이 없어 소스를 스캔한다 (adFillEvents.test.ts 와 같은 방식).
+describe("SeasonalBanner 호출부 — 발표 게이트 주입", () => {
+  const BANNER = readFileSync(
+    resolve(process.cwd(), "src/components/SeasonalBanner.tsx"),
+    "utf8",
+  );
+
+  it("OPI 발표 정본을 import 한다", () => {
+    expect(BANNER).toMatch(
+      /import\s*\{\s*OPI_2026_ANNOUNCEMENT\s*\}\s*from\s*"@\/data\/opiAnnouncement"/,
+    );
+  });
+
+  it("getCurrentSeasonal 호출에 opiAnnounced 게이트를 넘긴다", () => {
+    const call = BANNER.match(/getCurrentSeasonal\([\s\S]*?\);/);
+    expect(call, "getCurrentSeasonal 호출을 찾지 못함").not.toBeNull();
+    expect(call![0]).toContain("opiAnnounced");
+    expect(call![0]).toContain("OPI_2026_ANNOUNCEMENT.announced");
+  });
+
+  it("게이트 없는 1-인자 호출이 남아 있지 않다", () => {
+    expect(BANNER).not.toMatch(/getCurrentSeasonal\(\s*now\s*\)/);
   });
 });
 

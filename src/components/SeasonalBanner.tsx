@@ -8,6 +8,7 @@
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
 import { getCurrentSeasonal, getDaysLeft } from "@/lib/seasonalCalendar";
+import { OPI_2026_ANNOUNCEMENT } from "@/data/opiAnnouncement";
 
 interface SeasonalBannerProps {
   className?: string;
@@ -15,7 +16,11 @@ interface SeasonalBannerProps {
 
 export default function SeasonalBanner({ className = "" }: SeasonalBannerProps) {
   const now = new Date();
-  const seasonal = getCurrentSeasonal(now);
+  // 발표 게이트 주입 — requires:"opiAnnounced" 슬롯(1/20~31 OPI)은 이 인자로만 열린다.
+  // 인자를 빼면 게이트 항목이 영구히 매치되지 않는다 (seasonalCalendar.ts 의 gates 검사).
+  const seasonal = getCurrentSeasonal(now, {
+    opiAnnounced: OPI_2026_ANNOUNCEMENT.announced,
+  });
   if (!seasonal) return null;
 
   const daysLeft = seasonal.deadline ? getDaysLeft(seasonal.deadline, now) : null;
