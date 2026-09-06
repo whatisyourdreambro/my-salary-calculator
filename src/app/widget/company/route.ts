@@ -83,8 +83,15 @@ const FALLBACK_HTML = buildFallbackHtml();
 
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get("id") ?? "";
+  // Object.hasOwn 으로 자기 소유 키만 허용한다. 종전에는 dartInjection["constructor"]
+  // 가 Object.prototype 상속 함수라 truthy 가 되어 안내 카드 대신 500 이 나갔다
+  // (?id=constructor · ?id=tostring 등, 2026-09-06 전수검사 실측).
   const name =
-    ID_RE.test(id) && dartInjection[id] ? dartNameMap[id] : undefined;
+    ID_RE.test(id) &&
+    Object.hasOwn(dartInjection, id) &&
+    Object.hasOwn(dartNameMap, id)
+      ? dartNameMap[id]
+      : undefined;
   const html = name ? buildCompanyHtml(id, name) : FALLBACK_HTML;
   return new Response(html, { headers: WIDGET_HEADERS });
 }

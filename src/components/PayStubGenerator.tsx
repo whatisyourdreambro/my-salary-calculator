@@ -148,8 +148,10 @@ export default function PayStubGenerator() {
  <p className="text-xs text-faint-blue mt-1">PAYMENT SPECIFICATION</p>
  </div>
  <div className="text-right">
+ {/* 귀속월과 지급일의 연도가 어긋나 있었다(2026년 11월분 vs 2025.11.25).
+     이 DOM 이 html2canvas 로 캡처돼 다운로드 이미지에도 그대로 들어간다. */}
  <p className="font-bold text-lg">2026년 11월분</p>
- <p className="text-sm text-muted-blue">지급일: 2025.11.25</p>
+ <p className="text-sm text-muted-blue">지급일: 2026.11.25</p>
  </div>
  </div>
 

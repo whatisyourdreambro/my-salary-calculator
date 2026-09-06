@@ -22,7 +22,11 @@ const allData = {
 export async function GET(request: Request) {
  const { searchParams } = new URL(request.url);
  const type = (searchParams.get("type") || "annual") as keyof typeof allData;
- const page = parseInt(searchParams.get("page") || "1", 10);
+ // page 는 1 이상의 정수만 허용한다. 종전에는 무검증이라
+ // ?page=-1 이 slice(-200,-100) 으로 강등돼 "마지막 부근 실데이터"를 200 으로
+ // 돌려줬고, ?page=abc 는 NaN → 빈 배열을 오류 없이 돌려줬다 (2026-09-06 전수검사).
+ const pageRaw = Number(searchParams.get("page") ?? "1");
+ const page = Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1;
  const searchTerm = searchParams.get("searchTerm") || "";
  const itemsPerPage = 100;
 

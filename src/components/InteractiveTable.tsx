@@ -63,7 +63,12 @@ export default function InteractiveTable({
  pageConfig,
 }: Omit<InteractiveTableProps, "totalPages" | "paginatedData">) {
  const searchParams = useSearchParams();
- const page = parseInt(searchParams.get("page") || "1", 10);
+ // ?page 는 1 이상의 정수만 허용한다. 종전에는 ?page=abc 가 NaN 이 되어
+ // slice(NaN, NaN) → 빈 표가 렌더되고 페이지네이션에 "NaN / 5" 가 노출됐다
+ // (2026-09-06 전수검사 실브라우저 실측).
+ const pageRaw = Number(searchParams.get("page") ?? "1");
+ const page =
+ Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1;
  const searchTerm = searchParams.get("searchTerm") || "";
  const itemsPerPage = 100;
 
