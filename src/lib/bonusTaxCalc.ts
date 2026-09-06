@@ -18,6 +18,15 @@ import {
   calcIncomeTax2026 as calcIncomeTax,
 } from "./taxConstants2026";
 
+/**
+ * 성과급 계산기 23종 공통 세액공제율 디폴트(%).
+ * 자녀·연금·의료비·기부 등으로 소득세가 줄어드는 비율의 가정값이다.
+ * 계산기마다 따로 두면 같은 회사·같은 입력에 세후가 갈리므로(2026-09-06
+ * 전수검사: samsung-bonus 만 20% 라 samsung-display-bonus 와 120만원 차이)
+ * 이 상수 하나만 참조한다.
+ */
+export const DEFAULT_BONUS_CREDIT_RATE = 30;
+
 export interface BonusNetResult {
   /** 세전 성과급 (원) */
   gross: number;
@@ -54,7 +63,7 @@ export interface BonusNetResult {
 export function calcBonusNet(
   salary: number,
   bonusWon: number,
-  creditRate = 30,
+  creditRate = DEFAULT_BONUS_CREDIT_RATE,
   applyInsurance = true,
 ): BonusNetResult {
   if (bonusWon <= 0) {

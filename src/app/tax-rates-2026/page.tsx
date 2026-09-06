@@ -221,7 +221,7 @@ export default function TaxRates2026Page() {
  </p>
  <ul className="space-y-2 text-sm text-muted-blue">
  <li><strong className="text-navy">1세대 1주택자:</strong> 12억 비과세 (2년 보유·거주)</li>
- <li><strong className="text-navy">다주택자 한시 유예:</strong> 일반 누진세율 적용 (정부 발표 따라 변동)</li>
+ <li><strong className="text-navy">다주택자 중과 (2026.5.10 재개):</strong> 조정대상지역 2주택 +20%p·3주택 이상 +30%p — 한시 배제(2022.5.10~2026.5.9) 종료. 2026.8.3 세제개편안의 2027~28년 한시 완화는 국회 통과 전</li>
  <li><strong className="text-navy">장기보유특별공제:</strong> 3~15년 보유, 6%~30% (1세대 1주택은 최대 80%)</li>
  <li><strong className="text-navy">주식 양도세:</strong> 국내 일반인 비과세, 대주주·해외주식 22% (250만 공제)</li>
  </ul>

@@ -60,7 +60,11 @@ export default function KiaBonusClient() {
     const percentBonusWon = monthlyBasicWon * (bp / 100);
     const fixedBonusWon = fx;
     const freeShareValueWon = sh * stockPrice;
-    const voucherWon = scenario.voucher;
+    // 커스텀 입력 시에는 시나리오의 복지포인트·상품권을 합산하지 않는다.
+    // 종전에는 직전에 눌렀던 시나리오의 voucher 가 계속 더해져, 화면에 보이는
+    // 커스텀 입력이 완전히 같아도 총 성과급이 최대 30만원 달라졌다.
+    // (gs-caltex-bonus 가 이미 쓰는 패턴과 통일)
+    const voucherWon = customMode ? 0 : scenario.voucher;
 
     const totalGross = percentBonusWon + fixedBonusWon + freeShareValueWon + voucherWon;
     const tax = calcBonusNet(estimatedAnnualSalary, totalGross, creditRate, applyInsurance);

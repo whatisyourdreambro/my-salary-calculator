@@ -17,6 +17,7 @@ import {
   Columns3,
   Share2,
 } from "lucide-react";
+import { DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
 import {
   FIXED_RERATE,
   FIXED_BU_RATIO,
@@ -80,7 +81,11 @@ export default function SamsungBonusClient() {
   // 본인 케이스 state — MySalaryCalculator + MultiYearBonusSimulator 공유
   const [salaryFmt, setSalaryFmt] = useState("80,000,000");
   const [selectedDivId, setSelectedDivId] = useState<string>("memory");
-  const [creditRate, setCreditRate] = useState<number>(20);
+  // 세액공제율 디폴트는 성과급 계산기 23종 공통값(=bonusTaxCalc 의 문서화된
+  // 기본값 30%)과 맞춘다. 종전 20% 는 이 계산기에만 있어, 같은 삼성 계열
+  // OPI 를 계산하는 /calc/samsung-display-bonus 와 동일 입력에서 세후가
+  // 120만원 갈렸다.
+  const [creditRate, setCreditRate] = useState<number>(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState<boolean>(true);
   // OPI1(기존 OPI) 지급률 — 상한 50%. 2025년 실적분 실지급: MX 50%·DS 47%·VD 12% 등
   const [opi1Rate, setOpi1Rate] = useState<number>(50);

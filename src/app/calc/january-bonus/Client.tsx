@@ -115,11 +115,15 @@ export default function JanuaryBonusClient() {
     const medicalThreshold = salary * 0.03;
     const medicalCredit = Math.max(0, medical - medicalThreshold) * 0.15;
 
-    // 기부금 세액공제: 10만원까지 100%, 초과분 15%
+    // 기부금 세액공제: 10만원까지 100%(지방세 포함 환산 100/110), 초과분 15%.
+    // 종전에는 초과 분기가 100,000 에서 시작해 정확히 10만원 경계에서
+    // 90,909 → 100,000 으로 9,091원 점프했다(디폴트 기부금이 정확히 100,000이라
+    // 첫 화면이 낮은 쪽 분기). 두 분기를 같은 기준점에서 이어 붙인다.
+    const DONATION_FULL_CREDIT = 100_000 * (100 / 110);
     const donationCredit =
       donation <= 100_000
-        ? donation * (100 / 110) // 100% 환산 (limit calc)
-        : 100_000 + (donation - 100_000) * 0.15;
+        ? donation * (100 / 110)
+        : DONATION_FULL_CREDIT + (donation - 100_000) * 0.15;
 
     // IRP/연금저축 세액공제: 한도 900만, 총급여 5,500만 이하 16.5% / 초과 13.2%
     const irpCreditRate = salary > 55_000_000 ? 0.132 : 0.165;

@@ -67,15 +67,21 @@ export default function YearEndBonusTaxClient() {
     const taxableNewB = Math.max(0, totalB - calcEmpDeduction(totalB) - basicDeduct);
     const incomeTaxBonusB = (calcTax(taxableNewB) - calcTax(taxableBaseB)) * 0.7;
 
-    // 4대보험 동일 (양쪽 모두 부과)
-    const insurance =
-      Math.min(bonus, Math.max(0, 79_080_000 - Math.min(salary, nextSalary))) * 0.0475 +
+    // 4대보험 — 국민연금은 연 상한(기준소득월액 상한 × 12)까지만 부과되므로
+    // 시나리오별 기준 연봉으로 각각 계산해야 한다. 종전에는 두 연봉 중 낮은
+    // 쪽으로 한 번만 계산해, 이미 상한을 넘긴 고연봉 시나리오에도 존재하지 않는
+    // 국민연금 공제가 붙었다(올해 1억·다음해 3,000만 입력 시 A 시나리오에
+    // 약 71만원 과다 공제).
+    const insuranceFor = (baseSalary: number) =>
+      Math.min(bonus, Math.max(0, 79_080_000 - baseSalary)) * 0.0475 +
       bonus * 0.03595 +
       bonus * 0.03595 * 0.1314 +
       bonus * 0.009;
+    const insuranceA = insuranceFor(salary);
+    const insuranceB = insuranceFor(nextSalary);
 
-    const totalA_deduction = incomeTaxBonusA + incomeTaxBonusA * 0.1 + insurance;
-    const totalB_deduction = incomeTaxBonusB + incomeTaxBonusB * 0.1 + insurance;
+    const totalA_deduction = incomeTaxBonusA + incomeTaxBonusA * 0.1 + insuranceA;
+    const totalB_deduction = incomeTaxBonusB + incomeTaxBonusB * 0.1 + insuranceB;
 
     const netA = bonus - totalA_deduction;
     const netB = bonus - totalB_deduction;
@@ -91,6 +97,10 @@ export default function YearEndBonusTaxClient() {
     };
   }, [salary, bonus, nextSalary]);
 
+  // 두 시나리오가 사실상 동률이면 어느 쪽에도 '유리' 배지를 붙이지 않는다.
+  // 디폴트(올해·다음해 연봉 동일)에서 diff === 0 인데 12월 카드에 배지가
+  // 붙어, 같은 화면의 FAQ("연말정산에서 합산되어 최종 세금은 동일")와 모순됐다.
+  const isTie = Math.abs(result.diff) <= 1_000;
   const isBetter = result.diff > 0;
 
   return (
@@ -127,11 +137,11 @@ export default function YearEndBonusTaxClient() {
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{
             backgroundColor: "#FFFFFF",
-            border: !isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
-            boxShadow: !isBetter ? "0 8px 24px #0145F220" : "none",
+            border: !isTie && !isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
+            boxShadow: !isTie && !isBetter ? "0 8px 24px #0145F220" : "none",
           }}
         >
-          {!isBetter && (
+          {!isTie && !isBetter && (
             <div className="absolute top-3 right-3 text-[10px] font-black px-2 py-0.5 rounded-full bg-electric text-white">
               유리 ✓
             </div>
@@ -150,11 +160,11 @@ export default function YearEndBonusTaxClient() {
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{
             backgroundColor: "#FFFFFF",
-            border: isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
-            boxShadow: isBetter ? "0 8px 24px #0145F220" : "none",
+            border: !isTie && isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
+            boxShadow: !isTie && isBetter ? "0 8px 24px #0145F220" : "none",
           }}
         >
-          {isBetter && (
+          {!isTie && isBetter && (
             <div className="absolute top-3 right-3 text-[10px] font-black px-2 py-0.5 rounded-full bg-electric text-white">
               유리 ✓
             </div>

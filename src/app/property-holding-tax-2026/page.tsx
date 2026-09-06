@@ -42,7 +42,7 @@ const CURRENT_PERIOD = PERIOD_SEPT;
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 부동산 보유세 계산기 — 재산세 + 종합부동산세 동시 산출",
-  description: `${CURRENT_PERIOD.label} 재산세 납부기간 ${CURRENT_PERIOD.rangeShort} — 대상은 ${CURRENT_PERIOD.scope}. 공시가 10억 1주택자 보유세 약 200~280만원. 재산세(7·9월)+종합부동산세(12월) 동시 자동 계산, 공정시장가액비율·1세대 1주택 특례 반영.`,
+  description: `${CURRENT_PERIOD.label} 재산세 납부기간 ${CURRENT_PERIOD.rangeShort} — 대상은 ${CURRENT_PERIOD.scope}. 공시가 10억 1주택자 재산세+지방교육세 약 140만원(도시지역분 별도). 재산세(7·9월)+종합부동산세(12월) 동시 자동 계산, 공정시장가액비율·1세대 1주택 특례 반영.`,
   path: "/property-holding-tax-2026",
   keywords: [
     "부동산 보유세",
