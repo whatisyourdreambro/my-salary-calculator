@@ -5,6 +5,7 @@ import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import {
  calculateYearEndTax,
+ deriveAnnualHealthPremium,
  TaxInputs,
  TaxResult,
 } from "@/lib/yearEndTaxCalculator";
@@ -141,7 +142,8 @@ export default function YearEndTaxCalculator() {
  // 4대보험 기본값 — taxConstants2026 요율에서 파생 (2026-08-23: 2025 요율
  // 하드코딩 잔존 버그 수정. 2027 요율 변경 시 자동 반영)
  nationalPension: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.NATIONAL_PENSION),
- healthInsurance: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.HEALTH_INSURANCE),
+ // 장기요양보험료 포함 (소득세법 §52①1 — 둘 다 전액 소득공제 대상)
+ healthInsurance: deriveAnnualHealthPremium(DEFAULT_SALARY),
  employmentInsurance: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE),
  dependents: 1,
  disabledDependents: 0,

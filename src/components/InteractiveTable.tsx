@@ -105,7 +105,11 @@ export default function InteractiveTable({
  { name: "소득세", value: parseFloat((((result.incomeTax + result.localTax) / totalDeductions) * 100).toFixed(1)), color: "#A8BCCD" },
  ], [result, totalDeductions]);
 
- const deductionRate = totalDeductions / result.monthlyNet;
+ // 공제율 = 공제액 ÷ 세전. 종전에는 분모가 실수령액(monthlyNet)이라 같은 카드가
+ // 나란히 보여 주는 '세전 (월환산)'·'총 공제액'으로 검산하면 맞지 않았다
+ // (시급 15,000 기준 화면 14.5% vs 실제 12.7%, 시급 50,000 에서는 8.9%p 벌어짐 —
+ //  2026-09-06 전수검사 실브라우저 실측).
+ const deductionRate = totalDeductions / toMonthly(salary);
 
  return (
  <div className="w-full mx-auto py-12 sm:py-16 -mt-4">

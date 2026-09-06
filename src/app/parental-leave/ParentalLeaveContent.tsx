@@ -21,6 +21,8 @@ const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
 
 // 6+6 부모 육아휴직: 첫 6개월 통상임금 100%, 상한 월 250→450만원 (2025 개편: 첫달 250만)
 const MONTHS_6_6_LIMIT = [250, 250, 300, 350, 400, 450];
+/** 육아휴직 급여 하한 (고용보험법 시행령) — 본문 :256·page.tsx FAQ 안내값과 단일 소스 */
+const BENEFIT_FLOOR = 700_000;
 
 // 일반 육아휴직 (2025 개편, 사후지급금 폐지 — 매월 전액 지급)
 // 1~3개월 100% (상한 250만) / 4~6개월 100% (상한 200만) / 7개월~ 80% (상한 160만)
@@ -73,7 +75,7 @@ export default function ParentalLeaveContent() {
    // 6+6: 첫 6개월은 통상임금 100%, 상한은 월별 다름 (250→450만원)
    for (let m = 1; m <= 6; m++) {
     const limit = MONTHS_6_6_LIMIT[m - 1] * 10000;
-    const benefit = Math.min(wage, limit);
+    const benefit = Math.max(BENEFIT_FLOOR, Math.min(wage, limit));
     const rateLabel = `100% (상한 ${MONTHS_6_6_LIMIT[m - 1]}만원)`;
     months.push({ month: m, benefit, rateLabel, label: `${m}개월`, is6Plus6: true });
    }
@@ -83,7 +85,10 @@ export default function ParentalLeaveContent() {
   const startMonth = useParents ? 7 : 1;
   for (let m = startMonth; m <= 12; m++) {
    const { rate, limit } = getGeneralBenefit(m);
-   const benefit = Math.min(wage * rate, limit);
+   // 하한 월 70만원 — 페이지 본문·FAQ(JSON-LD 포함)가 안내하는 값이지만
+   // 종전에는 계산에 반영되지 않아 저임금 근로자에게 실제 지급액보다
+   // 적게 표시됐다(통상임금 80만원이면 월 64만 표시 vs 실지급 70만).
+   const benefit = Math.max(BENEFIT_FLOOR, Math.min(wage * rate, limit));
    const rateLabel = `${Math.round(rate * 100)}% (상한 ${limit / 10000}만원)`;
    months.push({ month: m, benefit, rateLabel, label: `${m}개월`, is6Plus6: false });
   }

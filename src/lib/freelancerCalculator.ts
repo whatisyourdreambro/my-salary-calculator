@@ -4,6 +4,8 @@ import {
  INSURANCE_RATES_2026,
  PENSION_BASE_2026,
  calcIncomeTax2026,
+ earnedIncomeDeduction2026,
+ earnedIncomeTaxCredit2026,
 } from "./taxConstants2026";
 
 /**
@@ -60,12 +62,27 @@ export function calculatePartTimeSalary(
  const employmentInsurance =
  income * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
 
- // 간이세액표에 따른 근로소득세 (1인 가구 기준, 단순 계산)
+ // 근로소득세 (1인 가구 기준) — 월 60시간 이상 4대보험 가입 알바는 세법상
+ // 근로소득자다. 따라서 직장인 탭(TaxLogic.calculateSalary2026)과 같은 정본
+ // 경로를 써야 한다.
+ // 2026-09-06 전수검사 정정: 종전에는 근로소득공제를 일률 30% 로 근사하고,
+ // 바로 위에서 계산한 국민연금(연금보험료공제)과 근로소득세액공제(§59)를
+ // 과세표준·세액에서 빼지 않았다. 같은 화면에서 '직장인' 탭과 '알바' 탭이
+ // 월 최대 10만원 가까이 다른 답을 냈다.
  const annualIncome = income * 12;
- const taxBase = annualIncome - annualIncome * 0.3 - 1500000; // 단순화된 소득공제
- // 2026 누진세율 8구간(정본 calcIncomeTax2026) 적용 — 15% 절단 하드코딩 제거
- const calculatedTax = taxBase > 0 ? calcIncomeTax2026(taxBase) : 0;
- const incomeTax = calculatedTax / 12;
+ const taxBase = Math.max(
+ 0,
+ annualIncome -
+ earnedIncomeDeduction2026(annualIncome) -
+ 1_500_000 -
+ nationalPension * 12
+ );
+ const calculatedTax = calcIncomeTax2026(taxBase);
+ const annualIncomeTax = Math.max(
+ 0,
+ calculatedTax - earnedIncomeTaxCredit2026(calculatedTax, annualIncome)
+ );
+ const incomeTax = annualIncomeTax / 12;
  const localTax = incomeTax * 0.1;
 
  const totalDeduction =

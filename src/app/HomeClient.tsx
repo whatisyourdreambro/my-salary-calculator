@@ -176,7 +176,7 @@ export default function HomeClient() {
  2026 세법 기준, 5초 만에 정확하게.
  </p>
  <p className="max-w-[560px] mx-auto mb-10 text-sm text-faint-blue font-medium">
- 예) 연봉 5,000만원 → 월 실수령 약 353만원 · 연 4,234만원
+ 예) 연봉 5,000만원 → 월 실수령 약 352만원 · 연 4,225만원
  </p>
 
  {/* CTA Buttons */}

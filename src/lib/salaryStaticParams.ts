@@ -31,6 +31,10 @@ import {
   generateWeeklyPayTableData2026,
   generateHourlyWageTableData2026,
 } from "@/lib/generateData";
+import {
+  generateWeeklyPayTableData2027,
+  generateHourlyWageTableData2027,
+} from "@/lib/generateData2027";
 
 // 색인 가능한 연봉 범위 — 범위 밖이거나 형식이 잘못된 URL은 404 (무한 thin-content 방지)
 export const MIN_SALARY = 1_000_000; // 연 100만원
@@ -66,6 +70,12 @@ function tableRowLinkAmounts(): number[] {
   for (const row of generateWeeklyPayTableData2026()) out.push(Math.round(row.preTax * 52));
   // 시급 표: HourlyTableInteractive linkValueMultiplier={209 * 12}
   for (const row of generateHourlyWageTableData2026()) out.push(Math.round(row.preTax * 209 * 12));
+  // 2027 표(/table/2027/*)도 같은 링크 규칙을 쓴다. 연봉·월급 격자는 2026과
+  // 동일하지만 시급·주급 격자는 최저임금 인상분(2027 10,700원)만큼 다르다 —
+  // 종전에는 2027 격자를 빼먹어 /table/2027/hourly 의 최저시급 강조 행 링크
+  // (/salary/26835600)가 내부 404 였다(2026-09-06 전수검사 실브라우저 실측).
+  for (const row of generateWeeklyPayTableData2027()) out.push(Math.round(row.preTax * 52));
+  for (const row of generateHourlyWageTableData2027()) out.push(Math.round(row.preTax * 209 * 12));
   return out;
 }
 

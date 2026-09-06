@@ -17,7 +17,7 @@ import { dartDisclosed, DART_DATA_DATE, type DartDisclosedEntry } from "@/data/d
 import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
-import { listedCohortStockCodes } from "./dartLite";
+import { listedCohortStockCodes, resolveCompanyRouteId } from "./dartLite";
 
 export const DART_RANKING_YEAR = "2025";
 export const DART_RANKING_DATE = DART_DATA_DATE;
@@ -70,7 +70,9 @@ const listedEligible: DartDisclosedEntry[] = dartDisclosed.filter(
 export const LISTED_TOTAL = listedEligible.length;
 
 function linkFor(d: DartDisclosedEntry): string | null {
-  const id = companyIdByCorp.get(d.corpCode);
+  // corpCodeMap 의 id 를 그대로 쓰면 dedupe 로 사라진 회사(15곳)에 대해
+  // 존재하지 않는 /salary-db/{id} 링크가 나간다 — 실재 라우트로 해석한다.
+  const id = resolveCompanyRouteId(companyIdByCorp.get(d.corpCode), d.corpNameKo);
   if (id) return `/salary-db/${id}`;
   if (listedCohortStockCodes.has(d.stockCode)) return `/salary-db/listed/${d.stockCode}`;
   return null;
@@ -156,7 +158,7 @@ export const industryRankingByCompanyId: ReadonlyMap<
 > = (() => {
   const m = new Map<string, { industryId: string; industryKo: string }>();
   for (const d of listedEligible) {
-    const id = companyIdByCorp.get(d.corpCode);
+    const id = resolveCompanyRouteId(companyIdByCorp.get(d.corpCode), d.corpNameKo);
     if (!id || m.has(id)) continue;
     const industryId = mapKsicToIndustry(d.ksicCode);
     if (industryId === "etc" || !industryRankingById.has(industryId)) continue;

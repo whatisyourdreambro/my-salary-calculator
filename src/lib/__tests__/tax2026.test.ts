@@ -13,6 +13,7 @@ import {
   earnedIncomeDeduction2026,
   calcIncomeTax2026,
   earnedIncomeTaxCredit2026,
+  earnedIncomeTaxCreditLimit2026,
   childTaxCredit2026,
 } from "@/lib/taxConstants2026";
 import {
@@ -80,17 +81,43 @@ describe("자녀세액공제 (소득세법 §59의2, 2025 개정)", () => {
 });
 
 describe("근로소득세액공제 (소득세법 §59)", () => {
-  it("총급여 구간별 한도", () => {
-    // 한도 없는 구간 (3,300만 이하)
+  it("총급여 구간별 한도 — §59② 체감 산식", () => {
+    // 2026-09-06 정정: 종전 구현은 각 구간의 상단 값(74만·66만·50만)을 상수로
+    // 고정하고 3,300만 이하에는 한도를 두지 않아 법정 한도보다 최대 연 30만원
+    // 관대했다. 아래 기대값은 소득세법 §59② 산식 그대로다.
+    // 3,300만 이하: 74만 한도 (종전에는 무한도)
     expect(earnedIncomeTaxCredit2026(1_300_000, 30_000_000)).toBe(715_000);
-    // 74만 한도 (3,300만 초과 ~ 7,000만)
-    expect(earnedIncomeTaxCredit2026(2_000_000, 50_000_000)).toBe(740_000);
-    // 66만 한도 (7,000만 초과 ~ 1.2억)
-    expect(earnedIncomeTaxCredit2026(2_000_000, 80_000_000)).toBe(660_000);
-    // 50만 한도 (1.2억 초과)
-    expect(earnedIncomeTaxCredit2026(2_000_000, 130_000_000)).toBe(500_000);
-    // 55% 구간
+    expect(earnedIncomeTaxCredit2026(2_000_000, 30_000_000)).toBe(740_000);
+    // 3,300만 초과~7,000만: 74만 − (총급여−3,300만)×0.008, 최저 66만
+    //   5,000만 → 740,000 − 17,000,000×0.008 = 604,000 < 660,000 → 660,000
+    expect(earnedIncomeTaxCredit2026(2_000_000, 50_000_000)).toBe(660_000);
+    //   3,500만 → 740,000 − 2,000,000×0.008 = 724,000
+    expect(earnedIncomeTaxCredit2026(2_000_000, 35_000_000)).toBe(724_000);
+    // 7,000만 초과~1.2억: 66만 − (총급여−7,000만)×0.5, 최저 50만
+    expect(earnedIncomeTaxCredit2026(2_000_000, 80_000_000)).toBe(500_000);
+    //   7,010만 → 660,000 − 100,000×0.5 = 610,000
+    expect(earnedIncomeTaxCredit2026(2_000_000, 70_100_000)).toBe(610_000);
+    // 1.2억 초과: 50만 − (총급여−1.2억)×0.5, 최저 20만
+    expect(earnedIncomeTaxCredit2026(2_000_000, 130_000_000)).toBe(200_000);
+    //   1.2004억 → 500,000 − 40,000×0.5 = 480,000
+    expect(earnedIncomeTaxCredit2026(2_000_000, 120_040_000)).toBe(480_000);
+    // 55% 구간 (한도에 걸리지 않음)
     expect(earnedIncomeTaxCredit2026(1_000_000, 30_000_000)).toBe(550_000);
+  });
+
+  it("한도 산식이 구간 경계에서 연속", () => {
+    const at = earnedIncomeTaxCreditLimit2026;
+    expect(at(33_000_000)).toBe(740_000);
+    // 경계 바로 위에서 1원 이내 — 계단식 점프가 없다(종전 구현은 여기서 점프했다)
+    expect(Math.abs(at(33_000_001) - 740_000)).toBeLessThan(1);
+    expect(at(70_000_000)).toBe(660_000);
+    expect(Math.abs(at(70_000_001) - 660_000)).toBeLessThan(1);
+    expect(at(120_000_000)).toBe(500_000);
+    expect(Math.abs(at(120_000_001) - 500_000)).toBeLessThan(1);
+    // 각 구간 하한선
+    expect(at(69_000_000)).toBe(660_000);
+    expect(at(119_000_000)).toBe(500_000);
+    expect(at(200_000_000)).toBe(200_000);
   });
 });
 
@@ -174,9 +201,13 @@ describe("/table/2026 표 데이터 (generateData2026 — 정식 엔진 통일)"
 
   it("golden 행 값 (상세 페이지와 동일 엔진·식대 20만 기준 — 2026-08-30 통일)", () => {
     const at = (p: number) => rows.find((r) => r.preTax === p)!;
+    // 2026-09-06 정정 반영 (§59② 체감 한도):
+    //   3,000만 2,233,220 (변화 없음 — 공제가 한도에 걸리지 않는 구간)
+    //   5,000만 3,528,576 → 3,521,236 (월 -7,340원)
+    //   1억     6,495,113 → 6,480,443 (월 -14,670원)
     expect(at(30_000_000).monthlyNet).toBe(2_233_220);
-    expect(at(50_000_000).monthlyNet).toBe(3_528_576);
-    expect(at(100_000_000).monthlyNet).toBe(6_495_113);
+    expect(at(50_000_000).monthlyNet).toBe(3_521_236);
+    expect(at(100_000_000).monthlyNet).toBe(6_480_443);
   });
 
   it("표 행 = 상세 페이지(/salary/[amount]) 값과 정확히 일치 (같은 함수·같은 기준)", () => {

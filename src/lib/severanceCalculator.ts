@@ -28,6 +28,38 @@ function getDaysInLast3Months(endDate: string): number {
 /**
  * 근속연수를 계산합니다. (년, 월, 일)
  */
+/**
+ * 달력 기준 근속연수 (소득세법 §48① — 1년 미만 端數는 1년으로 절상).
+ *
+ * 종전에는 재직일수 ÷ 365 를 올림했다. 재직일수는 마지막 근무일을 포함(+1)하므로
+ * 정확히 N년 근속이라도 기간 안에 윤일(2/29)이 있으면 365N + 윤일수 가 되어
+ * ceil 이 N+1 을 돌려줬다. 2024년이 윤년이라 그 기간을 지나는 "정확히 N년"
+ * 근속자가 전부 한 해씩 부풀려져 근속연수공제를 100만~300만원 더 받고
+ * 퇴직소득세가 과소 산출됐다(2026-09-06 전수검사).
+ * 예: 입사 2023-03-01 · 퇴사 2025-02-28 → 731일 → 종전 3년 / 정정 2년.
+ */
+export function serviceYearsFromDates(
+  startDate: string,
+  endDateInclusive: string
+): number {
+  const start = new Date(startDate);
+  const lastDay = new Date(endDateInclusive);
+  if (isNaN(start.getTime()) || isNaN(lastDay.getTime()) || lastDay < start) return 0;
+  // 마지막 근무일 다음 날을 기간의 끝으로 잡아야 "정확히 N년"이 N년으로 떨어진다.
+  const end = new Date(lastDay.getTime());
+  end.setDate(end.getDate() + 1);
+
+  let fullYears = end.getFullYear() - start.getFullYear();
+  const anniversary = new Date(start.getTime());
+  anniversary.setFullYear(start.getFullYear() + fullYears);
+  if (anniversary.getTime() > end.getTime()) {
+    fullYears -= 1;
+    anniversary.setFullYear(start.getFullYear() + fullYears);
+  }
+  const hasRemainder = end.getTime() > anniversary.getTime();
+  return Math.max(1, hasRemainder ? fullYears + 1 : fullYears);
+}
+
 function getYearsOfService(totalDays: number): {
  years: number;
  months: number;
@@ -49,7 +81,13 @@ function getYearsOfService(totalDays: number): {
  */
 export function calculateSeveranceTax(
  severancePay: number,
- totalDaysOfEmployment: number
+ totalDaysOfEmployment: number,
+ /**
+  * 달력 기준 근속연수. 입·퇴사일을 아는 호출부는 serviceYearsFromDates() 결과를
+  * 넘긴다. 생략하면 재직일수 ÷ 365 올림으로 근사한다(연 단위 일수를 넘기는
+  * 위젯·간이 계산기용 — 이 경로는 윤일 오차가 없다).
+  */
+ serviceYearsOverride?: number
 ) {
  const defaultReturn = {
  incomeTax: 0,
@@ -69,7 +107,10 @@ export function calculateSeveranceTax(
  return defaultReturn;
  }
 
- const yearsOfService = Math.max(1, Math.ceil(totalDaysOfEmployment / 365));
+ const yearsOfService =
+ serviceYearsOverride && serviceYearsOverride > 0
+ ? Math.max(1, Math.round(serviceYearsOverride))
+ : Math.max(1, Math.ceil(totalDaysOfEmployment / 365));
 
  // 1. 근속연수공제
  let serviceYearDeduction = 0;
@@ -207,7 +248,8 @@ export function calculateSeverancePay(
 
  const taxResult = calculateSeveranceTax(
  estimatedSeverancePay,
- totalDaysOfEmployment
+ totalDaysOfEmployment,
+ serviceYearsFromDates(startDate, endDate)
  );
 
  return {
@@ -241,9 +283,20 @@ export function calculateDCseverance(
 
  let totalAccumulation = 0;
 
- // 매년 말에 적립금이 납입되고, 연 복리로 수익이 발생한다고 가정하는 시뮬레이션
- for (let i = 0; i < yearsOfService; i++) {
+ // 매년 말에 적립금이 납입되고, 연 복리로 수익이 발생한다고 가정하는 시뮬레이션.
+ // 종전에는 루프 조건이 소수 근속연수와의 비교라 납입 횟수가 항상 ceil(근속연수)가
+ // 됐다 — 재직 5일 차이로 적립금이 855만원 점프하고, 1.1년 근속이 2회 납입으로
+ // 잡혀 실제의 약 2배가 표시됐다(2026-09-06 전수검사). 정수 연차는 그대로 굴리고
+ // 잔여 기간은 비례 납입 + 비례 수익으로 처리한다.
+ const fullYears = Math.floor(yearsOfService);
+ for (let i = 0; i < fullYears; i++) {
  totalAccumulation = (totalAccumulation + annualContribution) * rate;
+ }
+ const fraction = yearsOfService - fullYears;
+ if (fraction > 0) {
+ totalAccumulation =
+ (totalAccumulation + annualContribution * fraction) *
+ (1 + (returnRate / 100) * fraction);
  }
 
  return {

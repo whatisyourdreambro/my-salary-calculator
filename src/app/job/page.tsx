@@ -65,7 +65,12 @@ export default function JobIndexPage() {
   return (
     <>
       <JsonLd data={[breadcrumb]} />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* pt-header: Header 는 fixed top-0(--header-height 72px)이고 루트 <main> 에는
+          상단 패딩이 없다. 이 서브트리의 첫 자식이 상단 광고라 패딩이 없으면
+          광고 상단 약 40px 이 헤더 뒤로 들어간다(2026-09-06 실브라우저 실측:
+          컨테이너 top=24px vs 헤더 bottom=64px) — 뷰어빌리티 손실 + 라벨 가림.
+          사이트의 다른 페이지들이 쓰는 pt-24/pt-28 과 같은 목적의 최소 패딩. */}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-header">
         <HomeTopAd />
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* 헤더 */}

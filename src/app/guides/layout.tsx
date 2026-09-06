@@ -19,6 +19,20 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
+// hreflang 상호성 보정 (2026-09-06 전수검사).
+// /en/guides 는 ko-KR → /guides 를 선언하는데 /guides 쪽에는 en 선언이 없어
+// 단방향이었다. 구글은 상호 참조가 없는 hreflang 주석을 무시하므로 영문 허브가
+// 영어권 SERP 에서 한국어 허브와 묶이지 못했다. (/guides/[slug] 는 이미
+// 영문판 존재 여부에 따라 en 을 선언한다 — 허브만 누락)
+metadata.alternates = {
+  ...metadata.alternates,
+  languages: {
+    "ko-KR": "https://www.moneysalary.com/guides",
+    en: "https://www.moneysalary.com/en/guides",
+    "x-default": "https://www.moneysalary.com/guides",
+  },
+};
+
 export default function GuidesLayout({
   children,
 }: {

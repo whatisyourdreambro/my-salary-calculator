@@ -115,6 +115,36 @@ const existingNames = new Set(
   companyRepository.getAll().map((c) => normName(c.name.ko))
 );
 
+// ── 회사 상세 링크 해석 (dedupe 생존 id 승계) ──
+// src/data/companies/index.ts 의 dedupeCompanies 는 "한글명 중복"을 이유로
+// 회사 50곳을 제거한다(첫 등장만 유지). corpCodeMap 은 제거된 쪽 id 를 그대로
+// 들고 있어, corp→id 만으로 링크를 만들면 실재하지 않는 /salary-db/{id} 가
+// 나간다(2026-09-06 전수 크롤 실측: corpCodeMap 360개 중 15개가 라우트 없음 —
+// cj-cheiljedang·gs-construction·daewoo-construction 등. 해당 URL 은
+// permanentRedirect 경로를 타고 308 을 받는데, 캐시 재생(x-nextjs-cache: HIT)
+// 시 Location 헤더가 사라져 목적지 없는 308 이 응답된다).
+// 따라서 id 는 반드시 실재 라우트 집합과 대조하고, 사라진 id 는 같은 한글명의
+// 생존 회사 id 로 승계한다.
+const validCompanyIds = new Set(companyRepository.getAll().map((c) => c.id));
+const companyIdByNormName = new Map<string, string>();
+for (const c of companyRepository.getAll()) {
+  const key = normName(c.name.ko);
+  if (!companyIdByNormName.has(key)) companyIdByNormName.set(key, c.id);
+}
+
+/**
+ * corpCodeMap 유래 id 를 실재하는 /salary-db/[id] 라우트로 해석한다.
+ * 반환값이 null 이면 상세 페이지가 없다는 뜻 — 호출부는 lite URL 또는
+ * 링크 없음(null)으로 폴백해야 한다.
+ */
+export function resolveCompanyRouteId(
+  rawId: string | undefined,
+  corpNameKo: string
+): string | null {
+  if (rawId && validCompanyIds.has(rawId)) return rawId;
+  return companyIdByNormName.get(normName(corpNameKo)) ?? null;
+}
+
 function toLite(d: DartDisclosedEntry): DartLiteCompany {
   const industryId = mapKsicToIndustry(d.ksicCode);
   const ir = industryRankByCorp.get(d.corpCode);

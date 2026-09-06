@@ -16,7 +16,7 @@ import FavoritesButton from "@/components/FavoritesButton";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 월급 실수령액 표 — 200만~1000만원 전 구간 세후 수령액",
  description:
- "월급 250만원이면 세후 약 223만원, 500만원이면 약 416만원. 2026년 최신 4대보험·소득세 자동 계산표(비과세 식대 20만원 기준)를 200만~1000만원 전 구간으로 한눈에 확인하세요. 전년 대비 변화액까지 즉시 비교 가능.",
+ "월급 250만원이면 세후 약 223만원, 500만원이면 약 415만원. 2026년 최신 4대보험·소득세 자동 계산표(비과세 식대 20만원 기준)를 200만~1000만원 전 구간으로 한눈에 확인하세요. 전년 대비 변화액까지 즉시 비교 가능.",
  path: "/table/2026/monthly",
  keywords: [
  "월급 실수령액 표",
@@ -166,7 +166,7 @@ function MonthlyTable() {
  { label: "월급 250만원", monthly: "약 223만원" },
  { label: "월급 300만원", monthly: "약 263만원" },
  { label: "월급 400만원", monthly: "약 340만원" },
- { label: "월급 500만원", monthly: "약 416만원" },
+ { label: "월급 500만원", monthly: "약 415만원" },
  ].map((item) => (
  <div
  key={item.label}

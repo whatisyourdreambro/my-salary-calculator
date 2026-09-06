@@ -127,8 +127,34 @@ export function childTaxCredit2026(children: number): number {
 
 // ─────────────────────────────────────────────────────────────
 // 근로소득세액공제 (소득세법 §59) — 산출세액 130만 이하 55%, 초과분 30%.
-// 총급여 구간별 한도: 3,300만 이하 무한도 / ~7,000만 74만 / ~1.2억 66만 / 초과 50만.
+//
+// 한도(§59②)는 계단식 상수가 아니라 구간 안에서 총급여에 비례해 체감하는
+// 산식이다. 2026-09-06 전수검사 정정 전 구현은 각 구간의 '상단 값'(74만·66만·
+// 50만)을 상수로 고정하고 3,300만 이하에는 한도를 두지 않아, 법정 한도보다
+// 최대 연 30만원까지 관대했다(총급여 3,300만 107,000원 / 5,000만 80,000원 /
+// 8,000만 160,000원 / 1.21억 이상 300,000원 과다공제).
+//
+//   1. 총급여 3,300만 이하                 : 74만원
+//   2. 3,300만 초과 ~ 7,000만 이하        : 74만원 − (총급여 − 3,300만) × 8/1,000
+//                                            (66만원 미만이면 66만원)
+//   3. 7,000만 초과 ~ 1억 2,000만 이하    : 66만원 − (총급여 − 7,000만) × 1/2
+//                                            (50만원 미만이면 50만원)
+//   4. 1억 2,000만 초과                    : 50만원 − (총급여 − 1억 2,000만) × 1/2
+//                                            (20만원 미만이면 20만원)
+//
+// ★ grossSalary 인자는 '총급여액'(연봉 − 비과세)이다. 비과세 포함 연봉을 넘기면
+//   비과세 폭만큼 한도 구간이 밀린다(2026-09-06 이전 TaxLogic 이 그랬다).
 // ─────────────────────────────────────────────────────────────
+/** 소득세법 §59② 근로소득세액공제 한도 — 총급여액 기준 구간별 체감 산식 */
+export function earnedIncomeTaxCreditLimit2026(grossSalary: number): number {
+  if (grossSalary <= 33_000_000) return 740_000;
+  if (grossSalary <= 70_000_000)
+    return Math.max(660_000, 740_000 - (grossSalary - 33_000_000) * 0.008);
+  if (grossSalary <= 120_000_000)
+    return Math.max(500_000, 660_000 - (grossSalary - 70_000_000) * 0.5);
+  return Math.max(200_000, 500_000 - (grossSalary - 120_000_000) * 0.5);
+}
+
 export function earnedIncomeTaxCredit2026(
   calculatedTax: number,
   grossSalary: number
@@ -137,10 +163,7 @@ export function earnedIncomeTaxCredit2026(
     calculatedTax <= 1_300_000
       ? calculatedTax * 0.55
       : 715_000 + (calculatedTax - 1_300_000) * 0.3;
-  if (grossSalary > 120_000_000) return Math.min(credit, 500_000);
-  if (grossSalary > 70_000_000) return Math.min(credit, 660_000);
-  if (grossSalary > 33_000_000) return Math.min(credit, 740_000);
-  return credit;
+  return Math.min(credit, earnedIncomeTaxCreditLimit2026(grossSalary));
 }
 
 // ─────────────────────────────────────────────────────────────

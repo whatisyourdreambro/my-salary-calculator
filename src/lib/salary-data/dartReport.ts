@@ -16,7 +16,7 @@ import { dartDisclosed, DART_DATA_DATE, type DartDisclosedEntry } from "@/data/d
 import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
-import { listedCohortStockCodes } from "./dartLite";
+import { listedCohortStockCodes, resolveCompanyRouteId } from "./dartLite";
 
 /** HTML 엔티티 디코드 — DART corp_name 에 &amp; 등이 섞여 있음 (삼성E&A 등) */
 function decodeName(s: string): string {
@@ -64,7 +64,8 @@ function toRow(d: DartDisclosedEntry, rank: number): DartRankRow {
     rank,
     corpCode: d.corpCode,
     nameKo: decodeName(d.corpNameKo),
-    companyId: companyIdByCorp.get(d.corpCode),
+    // 실재 라우트로 해석 — 이 값이 /insights TOP100 표·CSV·JSON 의 링크가 된다.
+    companyId: resolveCompanyRouteId(companyIdByCorp.get(d.corpCode), d.corpNameKo) ?? undefined,
     stockCode: d.stockCode,
     avgSalaryManwon: d.avgSalaryManwonRaw,
     employeeCount: d.employeeCount,
@@ -119,7 +120,9 @@ export const dartIndustryRows: DartIndustryRow[] = (() => {
       topCompany: {
         nameKo: decodeName(top.corpNameKo),
         avgSalaryManwon: top.avgSalaryManwonRaw,
-        companyId: companyIdByCorp.get(top.corpCode),
+        companyId:
+          resolveCompanyRouteId(companyIdByCorp.get(top.corpCode), top.corpNameKo) ??
+          undefined,
       },
     });
   }
@@ -156,7 +159,9 @@ export interface DartCompanyStats {
 export const dartCompanyStatsById: Map<string, DartCompanyStats> = (() => {
   const map = new Map<string, DartCompanyStats>();
   for (const d of eligible) {
-    const companyId = companyIdByCorp.get(d.corpCode);
+    // 생존 id 로 승계 — 미해석 시 해당 회사 상세 페이지가 DART 통계 블록을
+    // 통째로 잃는다(중복 한글명으로 dedupe 된 15곳).
+    const companyId = resolveCompanyRouteId(companyIdByCorp.get(d.corpCode), d.corpNameKo);
     if (!companyId || map.has(companyId)) continue;
     const prev = d.history?.find((h) => h.fiscalYear === "2024");
     let yoyPct: number | null = null;
@@ -215,7 +220,11 @@ export function getListedBySalaryBand(annualWon: number, limit = 10): ListedBand
     )
     .slice(0, limit)
     .map((d) => {
-      const companyId = companyIdByCorp.get(d.corpCode);
+      // 실재 라우트로 해석 — corpCodeMap id 중 15곳은 dedupe 로 페이지가 없다.
+      const companyId = resolveCompanyRouteId(
+        companyIdByCorp.get(d.corpCode),
+        d.corpNameKo
+      );
       const industryId = mapKsicToIndustry(d.ksicCode);
       return {
         nameKo: decodeName(d.corpNameKo),

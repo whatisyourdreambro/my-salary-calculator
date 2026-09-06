@@ -8,7 +8,10 @@
 
 import { useMemo, useState } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { calculateYearEndTax } from "@/lib/yearEndTaxCalculator";
+import {
+  calculateYearEndTax,
+  deriveAnnualHealthPremium,
+} from "@/lib/yearEndTaxCalculator";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
@@ -34,9 +37,7 @@ function derivedInsurance(grossSalary: number) {
     nationalPension: Math.round(
       pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12
     ),
-    healthInsurance: Math.round(
-      grossSalary * INSURANCE_RATES_2026.HEALTH_INSURANCE
-    ),
+    healthInsurance: deriveAnnualHealthPremium(grossSalary),
     employmentInsurance: Math.round(
       grossSalary * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE
     ),

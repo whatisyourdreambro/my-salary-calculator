@@ -24,10 +24,26 @@ interface Props {
 const formatNumber = (v: number, suffix?: string): string => {
  if (!Number.isFinite(v)) return "—"; // NaN/Infinity 공통 가드 (0 나눗셈·로그 등)
  if (suffix === "%") return `${v.toFixed(2)}%`;
- if (Math.abs(v) >= 100000000) return `${(v / 100000000).toFixed(2)}억${suffix || ""}`;
- if (Math.abs(v) >= 10000) return `${(v / 10000).toFixed(0)}만${suffix || ""}`;
+ // 금액(원)은 반드시 원 단위 정확값으로 — 이 사이트의 계산기는 "정확한 금액"이
+ // 존재 이유다. 종전 구현은 1만~1억 구간을 `(v/10000).toFixed(0)만` 으로 압축해
+ // 환산 시급 23,974원을 "2만원"(-16.6%), 주휴수당 82,560원을 "8만원"으로 표시했다
+ // (2026-09-06 전수검사 실브라우저 실측). 1억 이상도 억 단위 2자리라 ±50만원까지
+ // 어긋났다. 압축 표기는 아래 compact 로 옮겨 보조 표기로만 쓴다.
+ if (suffix === "원") return `${Math.round(v).toLocaleString("ko-KR")}원`;
  if (suffix) return `${Math.round(v).toLocaleString("ko-KR")}${suffix}`;
  return v.toLocaleString("ko-KR");
+};
+
+/** 큰 금액의 보조 표기 — "3억 85만" 처럼 감을 잡아 주되 정확값을 대체하지 않는다. */
+const compactKo = (v: number): string | null => {
+ if (!Number.isFinite(v)) return null;
+ const abs = Math.abs(Math.round(v));
+ if (abs < 10000) return null;
+ const sign = v < 0 ? "-" : "";
+ const eok = Math.floor(abs / 100000000);
+ const man = Math.floor((abs % 100000000) / 10000);
+ if (eok > 0) return `${sign}${eok}억${man > 0 ? ` ${man.toLocaleString("ko-KR")}만` : ""}`;
+ return `${sign}${man.toLocaleString("ko-KR")}만`;
 };
 
 export default function SimpleCalculatorView({ slug }: Props) {
@@ -40,6 +56,20 @@ export default function SimpleCalculatorView({ slug }: Props) {
  const init: Record<string, number> = {};
  calc.fields.forEach((f) => {
  init[f.name] = f.defaultValue;
+ });
+ return init;
+ });
+
+ // 입력창에 실제로 찍힌 문자열. 숫자 state 와 분리해야 소수점을 입력할 수 있다.
+ // 종전에는 value 를 inputs[name].toLocaleString() 으로 되돌렸기 때문에,
+ // "3." 을 치는 순간 Number("3.")=3 → 리렌더로 DOM 이 "3" 으로 복구되어
+ // 소수점이 사라졌다. 금리 3.5% 를 입력하면 35% 가 확정돼 월 상환액이 6배로
+ // 계산됐다(2026-09-06 전수검사 실브라우저 실측: 143만원 → 875만원).
+ const [rawInputs, setRawInputs] = useState<Record<string, string>>(() => {
+ if (!calc) return {};
+ const init: Record<string, string> = {};
+ calc.fields.forEach((f) => {
+ init[f.name] = String(f.defaultValue);
  });
  return init;
  });
@@ -61,7 +91,14 @@ export default function SimpleCalculatorView({ slug }: Props) {
  valid = true;
  }
  });
- if (valid) setInputs((prev) => ({ ...prev, ...restored }));
+ if (valid) {
+ setInputs((prev) => ({ ...prev, ...restored }));
+ setRawInputs((prev) => {
+ const next = { ...prev };
+ for (const [k, n] of Object.entries(restored)) next[k] = String(n);
+ return next;
+ });
+ }
  } catch {
  // 잘못된 공유 링크 — 기본값 유지
  }
@@ -114,11 +151,30 @@ export default function SimpleCalculatorView({ slug }: Props) {
  );
  }
 
+ // 표시용 문자열은 사용자가 친 그대로 두고(소수점 입력 중 상태 포함),
+ // 계산에는 파싱된 숫자만 쓴다. 숫자·소수점·선행 부호 외 입력은 무시한다.
  const handleChange = (name: string, value: string) => {
- const num = Number(value.replace(/,/g, ""));
- if (!isNaN(num)) {
+ const cleaned = value.replace(/,/g, "");
+ if (cleaned !== "" && !/^-?\d*\.?\d*$/.test(cleaned)) return;
+ setRawInputs((prev) => ({ ...prev, [name]: cleaned }));
+ const num =
+ cleaned === "" || cleaned === "-" || cleaned === "." || cleaned === "-."
+ ? 0
+ : Number(cleaned);
+ if (Number.isFinite(num)) {
  setInputs((prev) => ({ ...prev, [name]: num }));
  }
+ };
+
+ /** 정수부만 천단위 구분 — 입력 중인 소수부("3." · "3.5")를 보존한다. */
+ const displayValue = (rawValue: string): string => {
+ if (rawValue === "" || rawValue === "-") return rawValue;
+ const negative = rawValue.startsWith("-");
+ const body = negative ? rawValue.slice(1) : rawValue;
+ const [intPart, fracPart] = body.split(".");
+ const grouped = intPart === "" ? "" : Number(intPart).toLocaleString("ko-KR");
+ const decimals = body.includes(".") ? `.${fracPart ?? ""}` : "";
+ return `${negative ? "-" : ""}${grouped}${decimals}`;
  };
 
  return (
@@ -162,8 +218,10 @@ export default function SimpleCalculatorView({ slug }: Props) {
  <input
  id={`${fieldIdPrefix}${field.name}`}
  type="text"
- inputMode="numeric"
- value={inputs[field.name]?.toLocaleString("ko-KR") || ""}
+ // decimal: 모바일 키패드에 소수점 키가 나온다(numeric 은 정수 전용이라
+ // 금리 3.5 를 입력할 방법이 아예 없었다).
+ inputMode="decimal"
+ value={displayValue(rawInputs[field.name] ?? "")}
  onChange={(e) => handleChange(field.name, e.target.value)}
  className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
  placeholder={field.defaultValue.toLocaleString("ko-KR")}
@@ -178,9 +236,18 @@ export default function SimpleCalculatorView({ slug }: Props) {
 
  <section ref={resultCardRef} className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
  <p className="text-xs font-bold opacity-90 mb-2">{result.primary.label}</p>
- <p className="text-4xl sm:text-5xl font-black tracking-tight tabular-nums mb-6">
+ <p className="text-3xl sm:text-5xl font-black tracking-tight tabular-nums break-keep">
  {formatNumber(result.primary.value, result.primary.suffix)}
  </p>
+ {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기 */}
+ {result.primary.suffix === "원" &&
+ typeof result.primary.value === "number" &&
+ compactKo(result.primary.value) && (
+ <p className="text-sm font-bold opacity-80 mt-1">
+ ≈ {compactKo(result.primary.value)}원
+ </p>
+ )}
+ <div className="mb-6" />
  {result.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (

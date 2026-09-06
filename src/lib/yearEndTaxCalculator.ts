@@ -9,6 +9,7 @@ import {
   calcIncomeTax2026,
   earnedIncomeTaxCredit2026,
   childTaxCredit2026,
+  INSURANCE_RATES_2026,
   RENT_CREDIT_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
@@ -72,6 +73,9 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  inputs.seniorDependents * 1000000 +
  inputs.disabledDependents * 2000000;
 
+ // 소득세법 §52①1 — 건강보험료와 '노인장기요양보험료'가 모두 전액 소득공제
+ // 대상이다. inputs.healthInsurance 에는 장기요양보험료를 포함해 넘겨야 한다
+ // (호출부는 deriveAnnualHealthPremium 을 쓸 것).
  const insuranceDeduction =
  inputs.nationalPension +
  inputs.healthInsurance +
@@ -158,4 +162,18 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  grossSalary,
  totalDeductions: Math.round(grossSalary - taxBase),
  };
+}
+
+/**
+ * 총급여에서 연간 건강보험료 + 노인장기요양보험료(건보료 × 13.14%)를 파생한다.
+ *
+ * 2026-09-06 전수검사: /widget/year-end-tax · /calc/dual-income-year-end ·
+ * YearEndTaxCalculator 세 곳이 건보료만 넘기고 장기요양보험료를 빠뜨려
+ * 보험료 소득공제가 그만큼 적게 잡혔다(결정세액 최대 19.8만원 과대 = 환급 과소).
+ * 세 호출부가 같은 함수를 쓰도록 정본화한다.
+ */
+export function deriveAnnualHealthPremium(grossSalary: number): number {
+  const health = grossSalary * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+  const longTermCare = health * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+  return Math.round(health + longTermCare);
 }

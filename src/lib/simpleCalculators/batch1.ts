@@ -10,6 +10,15 @@ import {
  earnedIncomeDeduction2026,
  earnedIncomeTaxCredit2026,
 } from "@/lib/taxConstants2026";
+// 이자율 0%(무이자 할부·0% 프로모션·수익률 0 가정)에서도 정의된 값을 내는
+// 연금·복리 공식 정본. 인라인 P·i/(1-(1+i)^-n) 은 i=0 에서 NaN 이 된다.
+import {
+ annuityPayment,
+ annuityPrincipal,
+ futureValue,
+ monthlyRate,
+ monthsToGoal,
+} from "./finance";
 
 // ─── 세금 (Tax) 15개 ───────────────────────────────────────
 const TAX: CalculatorDef[] = [
@@ -208,9 +217,12 @@ const TAX: CalculatorDef[] = [
  return {
  primary: { label: "월 원천징수 추정", value: monthlyTax, suffix: "원" },
  secondary: [
+ // 라벨에 기간을 명시 — 종전에는 "지방소득세 (10%)" 한 줄만 월 단위라
+ // 바로 위 "연 결정세액"의 10%로 오독됐다(실제로는 0.83%로 보임).
+ { label: "월 지방소득세 (소득세의 10%)", value: Math.round(monthlyTax * 0.1), suffix: "원" },
  { label: "연 결정세액 추정", value: Math.round(finalTax), suffix: "원" },
- { label: "지방소득세 (10%)", value: Math.round(monthlyTax * 0.1), suffix: "원" },
- { label: "과세표준 추정", value: Math.round(taxBase), suffix: "원" },
+ { label: "연 지방소득세 추정", value: Math.round(finalTax * 0.1), suffix: "원" },
+ { label: "연 과세표준 추정", value: Math.round(taxBase), suffix: "원" },
  ],
  note: "간이세액표 근사 — 실제 원천징수는 회사 신고 방식에 따라 상이. 비과세 항목·공제 신청 내역에 따라 달라질 수 있습니다.",
  };
@@ -625,9 +637,8 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
- const r = rate / 100 / 12;
  const n = years * 12;
- const monthly = (amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+ const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
  return {
  primary: { label: "월 상환액", value: Math.round(monthly), suffix: "원" },
@@ -651,9 +662,8 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 30, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
- const r = rate / 100 / 12;
  const n = years * 12;
- const monthly = (amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+ const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
  const interest = total - amount;
  return {
@@ -677,9 +687,8 @@ const LOAN: CalculatorDef[] = [
  compute: ({ yearly, rate, years }) => {
  const annualLimit = yearly * 0.4;
  const monthlyLimit = annualLimit / 12;
- const r = rate / 100 / 12;
  const n = years * 12;
- const principal = (monthlyLimit * (Math.pow(1 + r, n) - 1)) / (r * Math.pow(1 + r, n));
+ const principal = annuityPrincipal(monthlyLimit, monthlyRate(rate), n);
  return {
  primary: { label: "DSR 한도 대출액", value: Math.round(principal), suffix: "원" },
  secondary: [
@@ -773,9 +782,8 @@ const LOAN: CalculatorDef[] = [
  ],
  compute: ({ yearly, rate }) => {
  const monthlyLimit = (yearly * 0.4) / 12;
- const r = rate / 100 / 12;
  const n = 30 * 12;
- const principal = (monthlyLimit * (Math.pow(1 + r, n) - 1)) / (r * Math.pow(1 + r, n));
+ const principal = annuityPrincipal(monthlyLimit, monthlyRate(rate), n);
  return {
  primary: { label: "30년 만기 가능 대출액", value: Math.round(principal), suffix: "원" },
  secondary: [{ label: "월 상환 한도", value: Math.round(monthlyLimit), suffix: "원" }],
@@ -816,11 +824,8 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "잔여기간", defaultValue: 20, suffix: "년" },
  ],
  compute: ({ amount, oldRate, newRate, years }) => {
- const calc = (rate: number) => {
- const r = rate / 100 / 12;
- const n = years * 12;
- return ((amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)) * n - amount;
- };
+ const calc = (rate: number) =>
+ annuityPayment(amount, monthlyRate(rate), years * 12) * (years * 12) - amount;
  const saving = calc(oldRate) - calc(newRate);
  return {
  primary: { label: "총 이자 절감", value: Math.round(saving), suffix: "원" },
@@ -876,9 +881,8 @@ const INVESTMENT: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 20, suffix: "년" },
  ],
  compute: ({ principal, monthly, rate, years }) => {
- const r = rate / 100 / 12;
  const n = years * 12;
- const future = principal * Math.pow(1 + r, n) + monthly * ((Math.pow(1 + r, n) - 1) / r);
+ const future = futureValue(principal, monthly, monthlyRate(rate), n);
  const totalInvested = principal + monthly * n;
  return {
  primary: { label: "미래 자산", value: Math.round(future), suffix: "원" },
@@ -970,8 +974,7 @@ const INVESTMENT: CalculatorDef[] = [
  { name: "rate", label: "연 수익률", defaultValue: 5, suffix: "%" },
  ],
  compute: ({ goal, monthly, rate }) => {
- const r = rate / 100 / 12;
- const months = Math.log(1 + (goal * r) / monthly) / Math.log(1 + r);
+ const months = monthsToGoal(goal, monthly, monthlyRate(rate));
  return {
  primary: { label: "도달 시간", value: months / 12, suffix: "년" },
  secondary: [{ label: "총 월수", value: Math.round(months), suffix: "개월" }],
@@ -1012,9 +1015,8 @@ const INVESTMENT: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ monthly, rate, years }) => {
- const r = rate / 100 / 12;
  const n = years * 12;
- const future = monthly * ((Math.pow(1 + r, n) - 1) / r);
+ const future = futureValue(0, monthly, monthlyRate(rate), n);
  const invested = monthly * n;
  return {
  primary: { label: "최종 자산", value: Math.round(future), suffix: "원" },
@@ -1078,7 +1080,13 @@ const INVESTMENT: CalculatorDef[] = [
  compute: ({ value, inflation, years }) => {
  const future = value / Math.pow(1 + inflation / 100, years);
  return {
- primary: { label: "20년 후 실질 가치", value: Math.round(future), suffix: "원" },
+ // 라벨을 입력 기간에서 생성 — 종전에는 "20년 후"가 하드코딩돼 30년을 입력해도
+ // 값만 바뀌고 라벨은 20년이라 사용자가 결과를 잘못 인용하게 됐다.
+ primary: {
+ label: `${Math.round(years)}년 후 실질 가치`,
+ value: Math.round(future),
+ suffix: "원",
+ },
  secondary: [{ label: "구매력 감소", value: ((value - future) / value) * 100, suffix: "%" }],
  note: "예금만 가지고 있으면 인플레이션에 자산 가치 잠식. ETF 등 운용 필수.",
  };
@@ -1122,11 +1130,8 @@ const INVESTMENT: CalculatorDef[] = [
  { name: "feeDiff", label: "수수료 차이 (%p)", defaultValue: 1.2, suffix: "%p" },
  ],
  compute: ({ monthly, years, rate, feeDiff }) => {
- const calc = (effectiveRate: number) => {
- const r = effectiveRate / 100 / 12;
- const n = years * 12;
- return monthly * ((Math.pow(1 + r, n) - 1) / r);
- };
+ const calc = (effectiveRate: number) =>
+ futureValue(0, monthly, monthlyRate(effectiveRate), years * 12);
  const high = calc(rate);
  const low = calc(rate - feeDiff);
  return {

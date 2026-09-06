@@ -35,6 +35,9 @@ import { isStaticSalaryAmount, sitemapGridAmounts } from "@/lib/salaryStaticPara
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
+/** 이 페이지 전 계산의 비과세 식대 기준 (calculateSalary2026 호출과 공유) */
+const NON_TAXABLE_MONTHLY = 200_000;
+
 export const dynamicParams = false;
 
 export function generateStaticParams(): { amount: string }[] {
@@ -83,7 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
   }
   const annual = monthly * 12;
-  const tax = calculateSalary2026(annual, 200000, 1, 0);
+  const tax = calculateSalary2026(annual, NON_TAXABLE_MONTHLY, 1, 0);
   const m = fmtManwon(monthly);
   const net = fmtManwon(tax.netPay);
   return buildPageMetadata({
@@ -105,7 +108,7 @@ export default function MonthlyPage({ params }: Props) {
   if (monthly === null) notFound();
 
   const annual = monthly * 12;
-  const tax = calculateSalary2026(annual, 200000, 1, 0);
+  const tax = calculateSalary2026(annual, NON_TAXABLE_MONTHLY, 1, 0);
   const m = fmtManwon(monthly);
   const netManwon = fmtManwon(tax.netPay);
   const deductManwon = fmtManwon(tax.totalDeductions);
@@ -115,8 +118,13 @@ export default function MonthlyPage({ params }: Props) {
   const daily = Math.round((monthly / 209) * 8);
   const weekly = Math.round((monthly / 209) * 40);
 
-  // 국민연금 상한(월 659만, 2026-07-01~) 도달 여부
-  const pensionCapped = monthly >= PENSION_BASE_2026.MAX_MONTHLY;
+  // 국민연금 상한(기준소득월액 659만, 2026-07-01~) 도달 여부.
+  // 페이지 전체가 비과세 식대 월 20만원을 전제로 계산하므로(아래 calculateSalary2026
+  // 호출과 동일 기준), 상한 판정도 비과세를 뺀 보수월액으로 해야 한다. 종전에는
+  // 세전 월급을 그대로 비교해 월급 659만~679만 구간에서 "더 올라도 연금 공제가
+  // 늘지 않는다"고 단언했지만 같은 화면의 연금액은 계속 증가했다.
+  const pensionCapped =
+    monthly - NON_TAXABLE_MONTHLY >= PENSION_BASE_2026.MAX_MONTHLY;
 
   // 상여금 시나리오별 연봉 환산 (기본급 대비 %)
   const bonusScenarios = [0, 100, 200, 400, 600, 800].map((pct) => ({

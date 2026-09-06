@@ -10,7 +10,10 @@
 // (카드·연금저축 등 입력 시 실제 환급은 이보다 늘어남 → 본편 CTA).
 // ★가정 문구와 계산 로직 일치 유지 — 아래 상수 변경 시 note 문구도 함께.
 
-import { calculateYearEndTax } from "@/lib/yearEndTaxCalculator";
+import {
+  calculateYearEndTax,
+  deriveAnnualHealthPremium,
+} from "@/lib/yearEndTaxCalculator";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT } from "../shared";
 
@@ -30,7 +33,7 @@ function derivedInsurance(grossSalary: number) {
   );
   return {
     nationalPension: Math.round(pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12),
-    healthInsurance: Math.round(grossSalary * INSURANCE_RATES_2026.HEALTH_INSURANCE),
+    healthInsurance: deriveAnnualHealthPremium(grossSalary),
     employmentInsurance: Math.round(grossSalary * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE),
   };
 }

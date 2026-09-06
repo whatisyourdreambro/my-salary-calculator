@@ -16,7 +16,7 @@ import IncomeTaxClient from "./IncomeTaxClient";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 종합소득세 계산기 — 누진세율 8단계 자동 산출 (지방소득세 포함)",
   description:
-    "연소득 5천만원이면 산출세액 약 678만원, 1억이면 약 1,956만원. 2026 종합소득세 8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 계산.",
+    "연소득 5천만원이면 산출세액 약 624만원, 1억이면 약 1,956만원. 2026 종합소득세 8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 계산.",
   path: "/income-tax-2026",
   keywords: [
     "종합소득세 계산기",

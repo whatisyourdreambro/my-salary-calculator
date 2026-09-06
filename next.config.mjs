@@ -198,6 +198,104 @@ const nextConfig = {
         destination: "/salary-db/pearlabyss",
         permanent: true,
       },
+      // ── dedupe 로 사라진 회사 id → 생존 id (2026-09-06 전수검사) ────────
+      // src/data/companies/index.ts 의 dedupeCompanies 가 "한글명 중복"으로 제거한
+      // 50곳 중, corpCodeMap 에 등재돼 사이트가 실제로 링크를 내보냈던 15곳.
+      // 링크 생성부는 dartLite.resolveCompanyRouteId 로 이미 고쳤지만, 이미 색인·
+      // 북마크된 구 URL 이 남아 있다. 이 규칙이 없으면 그 URL 은 페이지 렌더를 거쳐
+      // permanentRedirect 로 처리되는데, 그 응답은 캐시 재생 시(x-nextjs-cache: HIT)
+      // Location 헤더를 잃어 "목적지 없는 308"이 된다(next start 실측). 라우팅 이전
+      // 단계인 이 규칙으로 처리하면 항상 정상 308 + 정확한 목적지로 나간다.
+      {
+        // CJ제일제당
+        source: "/salary-db/cj-cheiljedang",
+        destination: "/salary-db/cjcheiljedang",
+        permanent: true,
+      },
+      {
+        // 당근마켓
+        source: "/salary-db/daangn-market",
+        destination: "/salary-db/daangn",
+        permanent: true,
+      },
+      {
+        // 대우건설
+        source: "/salary-db/daewoo-construction",
+        destination: "/salary-db/daewoo-enc",
+        permanent: true,
+      },
+      {
+        // GS건설
+        source: "/salary-db/gs-construction",
+        destination: "/salary-db/gs-enc",
+        permanent: true,
+      },
+      {
+        // 한미약품
+        source: "/salary-db/hanmi-pharm",
+        destination: "/salary-db/hanmi",
+        permanent: true,
+      },
+      {
+        // 일동제약
+        source: "/salary-db/ildong-pharmaceutical",
+        destination: "/salary-db/il-dong-pharma",
+        permanent: true,
+      },
+      {
+        // 한국수출입은행
+        source: "/salary-db/kexim",
+        destination: "/salary-db/exim-bank",
+        permanent: true,
+      },
+      {
+        // 한국원자력연구원
+        source: "/salary-db/knrec",
+        destination: "/salary-db/kaeri",
+        permanent: true,
+      },
+      {
+        // 한국공항공사
+        source: "/salary-db/koaca",
+        destination: "/salary-db/korea-airports",
+        permanent: true,
+      },
+      {
+        // 한국도로공사
+        source: "/salary-db/korea-expressway",
+        destination: "/salary-db/korea-highway",
+        permanent: true,
+      },
+      {
+        // KT&G
+        source: "/salary-db/ktng",
+        destination: "/salary-db/ktg",
+        permanent: true,
+      },
+      {
+        // LF
+        source: "/salary-db/lf-corp",
+        destination: "/salary-db/lf",
+        permanent: true,
+      },
+      {
+        // 한국토지주택공사
+        source: "/salary-db/lh-korea",
+        destination: "/salary-db/lh",
+        permanent: true,
+      },
+      {
+        // 오리온
+        source: "/salary-db/orion-corp",
+        destination: "/salary-db/orion",
+        permanent: true,
+      },
+      {
+        // 포스코이앤씨
+        source: "/salary-db/posco-eandc",
+        destination: "/salary-db/posco-enc",
+        permanent: true,
+      },
       {
         source: "/salary-db/:slug([a-z0-9-]+)-2",
         destination: "/salary-db/:slug",

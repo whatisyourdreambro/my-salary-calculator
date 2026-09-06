@@ -3,6 +3,8 @@
 
 import type { CalculatorDef } from "./types";
 import { RENT_CREDIT_2026, calcIncomeTax2026 } from "@/lib/taxConstants2026";
+// 이자율 0% 극한 처리 정본 (batch1 과 동일 사유 — i=0 에서 NaN 방지)
+import { annuityPayment, annuityPrincipal, monthlyRate } from "./finance";
 
 const REAL_ESTATE: CalculatorDef[] = [
  {
@@ -18,9 +20,8 @@ const REAL_ESTATE: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 30, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
- const r = rate / 100 / 12;
  const n = years * 12;
- const monthly = (amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+ const monthly = annuityPayment(amount, monthlyRate(rate), n);
  return {
  primary: { label: "월 상환액", value: Math.round(monthly), suffix: "원" },
  secondary: [{ label: "총 이자", value: Math.round(monthly * n - amount), suffix: "원" }],
@@ -83,9 +84,8 @@ const REAL_ESTATE: CalculatorDef[] = [
  ],
  compute: ({ yearly, savings, rate }) => {
  const monthlyLimit = (yearly * 0.4) / 12;
- const r = rate / 100 / 12;
  const n = 30 * 12;
- const loan = (monthlyLimit * (Math.pow(1 + r, n) - 1)) / (r * Math.pow(1 + r, n));
+ const loan = annuityPrincipal(monthlyLimit, monthlyRate(rate), n);
  const totalAffordable = loan + savings;
  return {
  primary: { label: "매수 가능 가격", value: Math.round(totalAffordable), suffix: "원" },

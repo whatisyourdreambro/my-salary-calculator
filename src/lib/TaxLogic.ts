@@ -99,7 +99,13 @@ export function calculateSalary2026(
  const calculatedTax = calcIncomeTax2026(taxBase);
 
  // Step D: Tax Credits
- const taxCredit = earnedIncomeTaxCredit2026(calculatedTax, annualSalary);
+ // 한도 판정 기준은 '총급여액'(= 연봉 − 비과세)이다. 종전에는 비과세를 포함한
+ // annualSalary 를 넘겨 calculator.ts(총급여 기준)와 결과가 갈렸다.
+ // 비과세 식대 연 240만원 폭만큼, 한도 임계값(3,300만·7,000만·1.2억) 바로 위
+ // 세 구간에서 두 엔진이 다른 한도를 골라 월 최대 14,655원(연 175,860원) 차이가
+ // 났고, /table/2026 과 /table/2027 을 나란히 보면 "요율이 올랐는데 실수령이 늘어난"
+ // 물리적으로 불가능한 행이 3개 노출됐다 (2026-09-06 전수검사 실측).
+ const taxCredit = earnedIncomeTaxCredit2026(calculatedTax, taxableIncome);
 
  // 자녀세액공제 (소득세법 §59의2) — 정본 함수 사용
  const childCredit = childTaxCredit2026(children);

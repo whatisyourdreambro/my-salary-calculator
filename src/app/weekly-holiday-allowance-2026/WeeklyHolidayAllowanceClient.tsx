@@ -21,7 +21,11 @@ export default function WeeklyHolidayAllowanceClient() {
         allowanceHours: 0,
       };
     }
-    const allowanceHours = (weeklyHours / 40) * 8;
+    // 주휴수당은 1주 소정근로시간 기준이고, 소정근로는 법정 40시간(1일 8시간)을
+    // 넘을 수 없다 — 초과분은 연장근로라 주휴수당에 산입되지 않는다.
+    // 슬라이더 상한이 60시간이라 종전 식은 주 48시간에서 9.6시간분(20% 과대),
+    // 60시간에서 12시간분(50% 과대)을 산출했다.
+    const allowanceHours = Math.min(8, (Math.min(weeklyHours, 40) / 40) * 8);
     const weeklyAllowance = hourlyWage * allowanceHours;
     const weeklyBaseline = hourlyWage * weeklyHours;
     const weeklyTotal = weeklyBaseline + weeklyAllowance;
