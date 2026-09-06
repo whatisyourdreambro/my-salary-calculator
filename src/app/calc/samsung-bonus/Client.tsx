@@ -36,6 +36,7 @@ import {
   useCountUp,
   ResultNextLinks,
 } from "./shared";
+import { Display2Ad } from "@/components/AdPlacement";
 
 // 하단 시뮬레이터 2종 — 별도 청크로 지연 로드 (First Load 경량화, 클라이언트 전용)
 const MultiYearRSUSimulator = dynamic(() => import("./MultiYearRSUSimulator"), {
@@ -552,6 +553,18 @@ export default function SamsungBonusClient() {
           ]}
         />
       </section>
+
+      {/* 결과 직후 광고 (2026-09-06 운영자 승인 — ad-experiments 승인 Q).
+          이 페이지는 입력 0으로 첫 페인트에 결과가 렌더되는데, 프로덕션 빌드
+          실측(390x844)상 첫 광고가 y=11,228(13.3 화면)에 있어 상위 42%가
+          무광고 구간이었다(문서 전체 26,968px = 32.0 화면). 결과만 보고
+          이탈하는 방문자는 광고를 하나도 보지 못한다.
+          DISPLAY_2 는 이 라우트에서 미사용 슬롯이라 기존 4유닛과 dedup 충돌 없음.
+          ★위치 불변식: 위는 결과 카드의 </section>, 아래는 MySalaryCalculator 의
+          <section> — 양쪽이 테두리 카드라 버튼·입력과 직접 인접하지 않는다.
+          우발 클릭(= CPC 하락, 이 사이트의 기지 문제)을 피하는 핵심이므로
+          이 사이에 버튼·입력·공유 요소를 넣지 말 것. */}
+      <Display2Ad />
 
       {/* 내 연봉으로 계산 */}
       <MySalaryCalculator
