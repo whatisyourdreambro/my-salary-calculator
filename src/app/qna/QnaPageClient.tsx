@@ -277,15 +277,21 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
             </div>
           ))}
 
-          {/* 페이지 하단 광고 + 쿠팡 — 목록이 비어도 렌더한다.
-              종전에는 filteredData.length > 0 가드에 묶여 있어, 필터가 0건이면
-              (오타 카테고리·검색어 무매칭) 광고 2유닛이 함께 사라졌다. */}
-          <div className="mt-16 max-w-3xl mx-auto">
-            <InArticleAd />
-            <CoupangBanner
-              responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
-            />
-          </div>
+          {/* 페이지 하단 광고 + 쿠팡.
+              이 가드가 광고를 죽이던 원인은 가드 자체가 아니라 위의 죽은 칩 id
+              ("4대보험 & 세금" — qnaData 에 없음)였다. 그 칩을 누른 세션은 항상
+              0건이 되어 광고 2유닛이 함께 사라졌다. 칩 id 를 고쳤으므로 가드는
+              이제 "정말로 검색 결과가 없는 화면"에서만 발동한다.
+              가드를 없애면 아래 '검색 결과가 없습니다' 빈 화면 위에 광고가 남아
+              콘텐츠 없는 지면에 광고를 붙이는 형태가 되므로 유지한다. */}
+          {filteredData.length > 0 && (
+            <div className="mt-16 max-w-3xl mx-auto">
+              <InArticleAd />
+              <CoupangBanner
+                responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
+              />
+            </div>
+          )}
 
           {filteredData.length === 0 && (
             <div className="text-center py-32">
