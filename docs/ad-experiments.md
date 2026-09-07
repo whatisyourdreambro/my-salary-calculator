@@ -53,6 +53,28 @@ CF Pages env 설정 여부를 운영자가 확인해야 실험이 실제 개시�
 
 ---
 
+★**기준선 리셋 2026-09-07 (D0) — 2026-09 전수검사 8커밋 병합·배포**
+
+`claude/website-full-audit-2sktmp` 의 a99c53b~07748da 를 `main` 에 병합(fast-forward, 충돌 0).
+게이트 전량 통과 상태에서 배포: vitest 262 · verify:tax/site/companies/sitemap/bonus OK ·
+ad-audit ERROR 0(fixed 헤더 가림 후보 4 → **0**) · lint error 0 · qa:crawl 239쪽 전 항목 통과.
+
+**이 배포가 광고 축에 만든 변화**(판정 창을 나눠야 하는 이유):
+1. `/job`·`/job/[slug]`·`/industry`·`/industry/[slug]` 91쪽 상단 `HomeTopAd` 가 `pt-header` 로 내려가
+   fixed 헤더 뒤 약 23~40px 가림이 해소됐다(top 24px → 96px). = 승인 대기 '⑮ 헤더 가림 4곳' 이 실행된 것.
+2. 쿠팡 공정위 고지문이 `PageFooterAds` 소비 41지면에서 새로 렌더되며 **그 아래 `HomeTopAd` 를 25~40px 밀어냈다.**
+   고지문은 법적 필수라 되돌릴 수 없다. 무손실 해법은 `PageFooterAds` 순서를
+   `HomeTopAd → InArticleAd → CoupangBanner` 로 바꾸는 것이나 **배치 변경이라 승인 항목**이다.
+3. `/qna` 하단 `InArticleAd`+쿠팡이 죽은 칩("4대보험 & 세금") 세션에서 소멸하던 것이 해소.
+   단 가드(`filteredData.length > 0`)는 유지 — 없애면 "검색 결과가 없습니다" 빈 화면 위에 광고가 남는다.
+4. `/table` 시급·주급 4쪽 프리렌더 본문 0행 → 100행 (LCP/CLS 미측정 — lighthouse.yml D0 실행 결과로 확인).
+
+**판정 영향**: 홈 description(CTR 실험 문자열)이 이 배포에 섞였으므로 9/13·9/20·9/21 판정과
+M01(10/19~26)의 전/후 창은 **D0 경계로 분리**한다. 27a692c(IN_ARTICLE 폭 0px)는 여전히 미병합이며,
+L9(samsung-bonus 첫 광고 깊이 상향)는 그 병합이 선행돼야 효과가 있다.
+
+---
+
 ## 실험 #2 — Display2 확산 2단계 (상태: 설계 완료, 실험 #1 판정 통과 시 진행)
 
 **전제**: 실험 #1 판정 통과. ★**2026-09-06 현재 이 전제는 충족되지 않았다** — 실험 #1은 '판정 불가·현상 유지'로 확정됐고(측정 설계 불성립), 계획 §8-2에 따라 판정 불가는 확장 게이트를 해제하지 않는다. 따라서 **#2a~c 는 계속 잠금**이며, 잠금 해제는 승인 L 확정 + 새 실험 설계(날짜 지정 광고단위 CSV 로 전/후 창을 만들 수 있는 형태) 이후에만. 판정 전 적용 금지 — display-2 단독
