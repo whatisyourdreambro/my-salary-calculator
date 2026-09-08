@@ -11,7 +11,7 @@ import { bonusCalcCountKo } from "@/config/site";
 // 회사 ID → 계산기 경로 + 라벨 매핑
 const COMPANY_BONUS_MAP: Record<
   string,
-  { calc: string; label: string; desc: string }
+  { calc: string; label: string; desc: string; inputHint?: string }
 > = {
   "samsung-electronics": {
     calc: "/calc/samsung-bonus",
@@ -26,12 +26,14 @@ const COMPANY_BONUS_MAP: Record<
   hyundai: {
     calc: "/calc/hyundai-bonus",
     label: "현대차 성과급 계산기",
-    desc: "임단협 450% + 1,580만 + 무상주 30주",
+    desc: "2026·2025 시나리오 비교 · 정률·정액·주식 보상 확인",
+    inputHint: "월 기본급(통상임금)을 입력해 세전·세후 예상액 계산 →",
   },
   kia: {
     calc: "/calc/kia-bonus",
     label: "기아 성과급 계산기",
-    desc: "임단협 450% + 1,600만 + 무상주 53주",
+    desc: "2026·2025 시나리오 비교 · 정률·정액·주식 보상 확인",
+    inputHint: "월 기본급(통상임금)을 입력해 세전·세후 예상액 계산 →",
   },
   lgensol: {
     calc: "/calc/lg-energy-bonus",
@@ -223,7 +225,7 @@ export default function CompanyBonusCalculatorLink({
             </h2>
             <p className="text-sm text-faint leading-relaxed">{target.desc}</p>
             <p className="mt-2 text-xs text-primary font-bold">
-              본인 연봉만 입력하면 세전·세후 실수령액 즉시 계산 →
+              {target.inputHint ?? "입력 기준을 확인하고 세전·세후 예상액 계산 →"}
             </p>
           </div>
         </div>

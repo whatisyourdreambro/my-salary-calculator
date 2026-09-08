@@ -5,6 +5,7 @@
 // 성능: qnaData(80KB)는 서버에서만 import하고, slug를 미리 계산한 데이터를
 // props로 전달한다 → 클라이언트 번들에서 데이터 모듈 제거.
 import { MessageCircle } from "lucide-react";
+import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import { MultiplexAd } from "@/components/AdPlacement";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
@@ -55,7 +56,7 @@ export default function QnaPage() {
           <div className="relative z-10 max-w-3xl mx-auto px-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground font-medium text-sm mb-6">
               <MessageCircle className="w-4 h-4" />
-              <span>무엇이든 물어보세요</span>
+              <span>주제별 자주 묻는 질문</span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6 leading-tight">
               금융에 대한 <br className="sm:hidden" />
@@ -72,6 +73,14 @@ export default function QnaPage() {
         </section>
 
         <QnaPageClient items={listItems} />
+
+        <section className="mx-auto my-8 max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-canvas-200 bg-white p-6 text-sm leading-7 text-muted-blue">
+            <h2 className="mb-2 text-lg font-black text-navy">찾는 답변이 없거나 오류를 발견하셨나요?</h2>
+            <p>이 페이지는 미리 정리한 질문과 답변입니다. 새 문의는 운영자에게 비공개로 보낼 수 있습니다.</p>
+            <Link href="/contact?source=qna&type=explanation" className="mt-3 inline-block font-bold text-electric underline underline-offset-4">비공개 문의 보내기</Link>
+          </div>
+        </section>
 
         {/* 목록 하단 멀티플렉스 — env 미설정 시 렌더 안 함 (layout PageFooterAds 위) */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

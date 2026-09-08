@@ -223,11 +223,11 @@ export default function EmbedGuidePage() {
               ) : (
                 <>
                   문의는{" "}
-                  <Link href="/qna" className="text-electric font-bold underline underline-offset-2">
-                    Q&A 페이지
+                  <Link href="/contact?source=embed&type=business" className="text-electric font-bold underline underline-offset-2">
+                    비공개 서비스 문의
                   </Link>
-                  를 통해 남겨 주세요. 사용처·트래픽 규모를 함께 적어 주시면 빠르게
-                  안내드립니다.
+                  로 보내주세요. 사용처와 필요한 기능을 적고, 개별 회신을 원하면
+                  선택 항목인 이메일을 입력해 주세요.
                 </>
               )}
             </p>

@@ -21,14 +21,14 @@ const TRUST_SIGNALS = [
   {
     icon: CheckCircle2,
     stat: "2026",
-    title: "세법 완벽 반영",
+    title: "2026년 세법 기준",
     description: "국세청·4대보험 공식 요율 기준",
   },
   {
     icon: Shield,
-    stat: "0건",
-    title: "개인정보 미수집",
-    description: "회원가입 없이 완전 무료 이용",
+    stat: "무료",
+    title: "회원가입 없이 계산",
+    description: "원하는 계산기로 결과 바로 확인",
   },
 ];
 

@@ -78,11 +78,13 @@ export default function Footer() {
   const legalLinks = isEnglish
     ? [
         { name: "About", href: "/about" },
+        { name: "Contact (KR)", href: "/contact" },
         { name: "Privacy Policy", href: "/privacy" },
         { name: "Terms of Service", href: "/terms" },
       ]
     : [
         { name: "사이트 소개", href: "/about" },
+        { name: "비공개 문의·오류 신고", href: "/contact" },
         { name: "개인정보처리방침", href: "/privacy" },
         { name: "이용약관", href: "/terms" },
         // /en 트리 SSR 크롤 경로 — 한국어 페이지에서 영문 트리로 가는 유일한 전역 링크
@@ -96,12 +98,12 @@ export default function Footer() {
     ? [
         { Icon: CheckCircle2, label: "Official Tax Rates" },
         { Icon: Shield, label: "Trusted Ad Standards" },
-        { Icon: Lock, label: "Zero Data Collection" },
+        { Icon: Lock, label: "No sign-up required" },
       ]
     : [
         { Icon: CheckCircle2, label: "국세청 공식 세율" },
         { Icon: Shield, label: "신뢰할 수 있는 광고 게재 기준 준수" },
-        { Icon: Lock, label: "개인정보 0건 수집" },
+        { Icon: Lock, label: "회원가입 없이 계산" },
       ];
 
   const sections: { title: string; items: typeof calculatorLinks }[] = isEnglish

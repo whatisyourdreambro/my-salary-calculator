@@ -195,17 +195,17 @@ export default function AboutPage() {
  <h2 className="text-2xl font-black text-navy mb-4">정정 요청·오류 제보</h2>
  <p className="text-sm text-muted-blue mb-6 max-w-xl mx-auto leading-relaxed">
  게재된 계산식·세율·회사 연봉 데이터에 오류가 있거나, 본인 또는 소속 기업과
- 관련해 정정이 필요한 내용이 있다면 제보해 주세요. 확인 후{" "}
- <strong className="text-navy">신속하게 정정·반영</strong>하며, 합당한 삭제
+ 관련해 정정이 필요한 내용이 있다면 제보해 주세요. 근거를 확인해{" "}
+ <strong className="text-navy">필요한 정정·반영을 검토</strong>하며, 합당한 삭제
  요청에도 성실히 응합니다. 자세한 처리 기준은 이용약관을 참고해 주세요.
  </p>
  <div className="flex items-center justify-center gap-3 flex-wrap">
  <Link
- href="/terms"
+ href="/contact?source=about&type=data_correction"
  className="inline-flex items-center gap-2 px-6 py-3 bg-electric text-white rounded-xl font-bold hover:bg-blue-600 transition-colors"
  >
  <Shield className="w-4 h-4" />
- 이용약관·정정 처리 기준
+ 비공개 정정 요청 보내기
  </Link>
  <Link
  href="/qna"
