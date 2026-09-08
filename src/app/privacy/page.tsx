@@ -16,7 +16,9 @@ const SECTIONS = [
  {
  title: "1. 수집하는 개인정보 항목",
  body: [
- "머니샐러리는 회원가입 절차 없이 이용 가능한 서비스로, 별도의 개인정보를 직접 수집하지 않습니다.",
+ "머니샐러리는 회원가입 없이 계산할 수 있습니다. 비공개 문의를 직접 보내는 경우에는 아래 접수 정보를 수집합니다.",
+ "• 비공개 문의: 문의 종류, 관련 페이지 경로, 문의 내용, 접수 번호·시각, 동의 여부, 처리 상태. 회신 이메일은 선택 입력이며, 입력하고 동의한 경우에만 수집합니다. 첨부 파일은 받지 않습니다.",
+ "• 남용 방지: 서버의 비밀 키로 변환한 단기 IP 해시와 접수 횟수를 별도 제한 테이블에 저장합니다. 문의 행에 원본 IP를 저장하거나 이 해시를 연결하지 않습니다. 호스팅 제공자의 접속 로그는 별도로 처리될 수 있습니다.",
  "다만 서비스 운영을 위해 다음 정보가 자동 수집될 수 있습니다:",
  "• 접속 로그 (IP 주소, 접속 시간, 브라우저 종류) — 호스팅 제공자(Cloudflare)가 보안·운영 목적으로 자동 수집",
  "• 계산 입력값 (연봉, 부양가족 수 등) — 계산과 저장은 기본적으로 사용자 브라우저에서 처리합니다. 직접 구현한 계산 분석 이벤트에는 정확한 금액·금액 구간·부양가족 수를 포함하지 않고 계산기 종류와 이용 단계만 전송합니다.",
@@ -30,6 +32,7 @@ const SECTIONS = [
  body: [
  "수집된 정보는 다음 목적 외 사용되지 않습니다:",
  "• 서비스 제공 및 사용자 경험 개선",
+ "• 비공개 문의 검토, 오류·정보 정정 및 개인정보 요청 처리, 선택 이메일을 통한 회신. 문의 본문·이메일·접수 번호를 직접 구현한 Google Analytics 이벤트에 보내지 않으며 사이트에 공개하지 않습니다.",
  "• 사이트 트래픽 분석 (Google Analytics 4)",
  "• 맞춤형 광고 게재 (Google AdSense)",
  "• 제휴 마케팅 추적 (쿠팡 파트너스 — 링크 경유 구매 발생 시 일정액의 수수료를 제공받으며, 구매 가격에는 영향이 없습니다)",
@@ -39,8 +42,9 @@ const SECTIONS = [
  title: "3. 보유 및 이용 기간",
  body: [
  "• localStorage 데이터: 사용자가 직접 삭제하기 전까지 브라우저에 보관됩니다.",
- "• 접속 로그: 호스팅 제공자 정책에 따라 일반적으로 30일 이내 자동 폐기됩니다.",
- "• Google Analytics 데이터: 기본 26개월 후 자동 삭제됩니다.",
+ "• 비공개 문의: 접수일부터 90일을 보유 기준으로 운영자가 삭제 관리합니다. 만료된 문의는 운영 검토 목록에서 제외하며, 만료 데이터와 단기 남용 방지 기록은 운영자가 정리합니다. 자동 삭제를 보장하는 기능은 아니므로 삭제를 원하면 접수 번호와 함께 요청해 주세요.",
+ "• 접속·보안 로그: Cloudflare가 서비스 운영과 보안을 위해 처리하며, 보관기간은 사용하는 로그 기능·서비스 설정과 관련 보관정책에 따라 달라집니다.",
+ "• Google Analytics 데이터: 사용자·이벤트 수준 데이터의 보관기간은 해당 속성의 설정에 따릅니다. 집계 보고서에는 동일한 보관 설정이 적용되지 않습니다.",
  ],
  },
  {
@@ -49,7 +53,7 @@ const SECTIONS = [
  "본 사이트는 다음 제3자 서비스를 사용합니다. 각 제공자의 개인정보 정책을 별도로 확인하시기 바랍니다:",
  "• Google AdSense / Google Analytics — Google LLC (https://policies.google.com/privacy)",
  "• 쿠팡 파트너스 — 쿠팡(주) (https://partners.coupang.com)",
- "• Cloudflare (호스팅) — Cloudflare, Inc. (https://www.cloudflare.com/privacypolicy)",
+ "• Cloudflare (호스팅·비공개 문의 저장) — Cloudflare, Inc. (https://www.cloudflare.com/privacypolicy). 운영자는 인증된 관리 화면에서 문의를 확인하며, 외부 방문자가 문의 목록을 조회하는 기능은 제공하지 않습니다.",
  ],
  },
  {
@@ -72,7 +76,7 @@ const SECTIONS = [
  {
  title: "7. 책임자 및 문의처",
  body: [
- "본 방침에 대한 문의는 사이트 내 연락 채널을 통해 부탁드립니다.",
+ "본 방침과 열람·정정·삭제 요청은 비공개 문의 페이지(/contact)의 개인정보 관련 요청으로 접수할 수 있습니다. 기존 문의에 관한 요청에는 접수 번호를 적어 주세요. 처리에 필요한 범위에서 추가 확인을 요청할 수 있습니다.",
  "방침 변경 시 본 페이지에 즉시 공지합니다.",
  ],
  },
@@ -114,6 +118,8 @@ export default function PrivacyPage() {
  </div>
 
  <div className="mt-16 pt-8 border-t border-canvas-200 text-center text-xs text-faint-blue">
+ <Link href="/contact?source=privacy&type=privacy" className="font-bold text-electric hover:underline">개인정보 관련 비공개 문의</Link>
+ <span className="mx-2">·</span>
  <Link href="/about" className="hover:text-electric">사이트 소개</Link>
  <span className="mx-2">·</span>
  <Link href="/terms" className="hover:text-electric">이용약관</Link>
