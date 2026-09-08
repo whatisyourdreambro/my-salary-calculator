@@ -2,6 +2,8 @@
 
 This endpoint stores private inquiries; it does not send email, publish comments, or promise a reply. The optional reply address is available only to the owner in D1. There is no public read, admin, or deletion endpoint. The receipt confirms database storage, not that an operator has read the inquiry.
 
+The separate three-page fixed helpful/confusing pilot is documented in [feedback operations](feedback-operations.md). It reuses the bindings with a separate table and rate-limit scope; the contact contract and existing quota remain unchanged. Once migration 0002 is applied, include the feedback table in the daily cleanup described there.
+
 ## Runtime and configuration
 
 - Next route: `src/app/api/contact/route.ts`, Edge runtime, POST only.

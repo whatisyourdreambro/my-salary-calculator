@@ -65,11 +65,11 @@ export async function feedbackPayloadHash(value: string): Promise<string> {
 }
 
 /** The IP is used only for this HMAC, never returned or stored with a receipt. */
-export async function feedbackRateKey(secret: string, ip: string, windowStart: number): Promise<string> {
+export async function feedbackRateKey(secret: string, ip: string, windowStart: number, scope: "contact" | "feedback" = "contact"): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
   );
-  return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(`contact\0${windowStart}\0${ip}`)));
+  return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(`${scope}\0${windowStart}\0${ip}`)));
 }
 
 /** Trust only the header Cloudflare supplies; never use X-Forwarded-For. */

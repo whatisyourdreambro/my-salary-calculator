@@ -674,7 +674,7 @@ function CumulativeChart({
       </p>
 
       {/* 스크린리더용 데이터 표 — 툴팁 전용 값의 접근 가능한 대체 */}
-      <table className="sr-only">
+      <div className="sr-only"><table>
         <caption>연도별 누적 매도 가능 가치</caption>
         <thead>
           <tr>
@@ -696,7 +696,7 @@ function CumulativeChart({
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 }

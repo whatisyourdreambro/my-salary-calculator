@@ -4,9 +4,11 @@
 // Client.tsx 본체와 next/dynamic 으로 분리 로드되는 시뮬레이터 2종이 함께 사용한다.
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { observeSamsungModuleView } from "./observeSamsungModuleView";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
-import { trackGuideCTAClick } from "@/lib/analytics";
+import { trackEvent, trackGuideCTAClick } from "@/lib/analytics";
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import {
   INSURANCE_RATES_2026,
@@ -214,21 +216,38 @@ export function ResultNextLinks({
   links,
   className = "",
   calcResult,
+  position,
 }: {
-  links: { href: string; label: string }[];
+  links: { href: string; label: string; primary?: boolean }[];
   className?: string;
+  position?: "samsung-pool-next" | "samsung-personal-next";
   /** 계산 결과 보간 값 — 오퍼 활성 시 문구 치환용 (예: { amount: 성과급 만원 }) */
   calcResult?: Record<string, string | number>;
 }) {
+  const pathname = usePathname();
+  const linkRowRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const element = linkRowRef.current;
+    if (!position || pathname !== "/calc/samsung-bonus" || !element) return;
+    return observeSamsungModuleView(element, () => {
+      trackEvent("module_view", { position, page_path: pathname });
+    });
+  }, [position, pathname]);
+
   return (
     <div className={className}>
-      <div className="flex flex-wrap gap-2">
+      <div
+        ref={linkRowRef}
+        role={position ? "navigation" : undefined}
+        aria-label={position === "samsung-personal-next" ? "개인 결과 다음 단계" : position ? "평균 결과 다음 단계" : undefined}
+        className="flex flex-wrap gap-2"
+      >
         {links.map((l) => (
           <Link
             key={l.href + l.label}
             href={l.href}
-            onClick={() => trackGuideCTAClick(l.href, "next-action")}
-            className="group inline-flex items-center gap-1 text-xs font-bold text-electric bg-electric-5 border border-electric-20 rounded-full px-3 py-1.5 hover:bg-electric hover:text-white transition-colors"
+            onClick={() => trackGuideCTAClick(l.href, position ?? "next-action")}
+            className={`group inline-flex items-center gap-1 text-xs font-bold border rounded-full px-3 py-1.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric ${l.primary ? "min-h-11 text-white bg-electric border-electric hover:bg-electric/90" : "text-electric bg-electric-5 border-electric-20 hover:bg-electric hover:text-white"}`}
           >
             {l.label}
             <ArrowRight

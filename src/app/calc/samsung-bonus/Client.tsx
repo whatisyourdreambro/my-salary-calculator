@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import ShareButtons from "@/components/ShareButtons";
+import PrivateFeedback from "@/components/PrivateFeedback";
 import {
   Lightbulb,
   User,
@@ -172,6 +173,11 @@ export default function SamsungBonusClient() {
 
   return (
     <div className="space-y-4 mb-10">
+      <section aria-label="계산 자료와 가정 구분" className="rounded-2xl border border-electric/20 bg-electric-5 p-4 text-sm leading-relaxed text-muted-blue dark:text-canvas-300">
+        <p><strong className="text-navy dark:text-canvas-50">지급 이력:</strong> 지난 OPI·TAI 지급률은 하단의 보도 기준 자료입니다. 미래 지급률이나 개인 지급액을 확정하지 않습니다.</p>
+        <p className="mt-2"><strong className="text-navy dark:text-canvas-50">모델 가정:</strong> 최초 영업이익 350조원·기준 연봉 8,000만원과 사업부 인원·가중치는 계산용 가정입니다. 실제 확정 실적이나 회사의 개인별 산정 기준이 아닙니다.</p>
+        <p className="mt-2"><strong className="text-navy dark:text-canvas-50">직접 입력:</strong> 영업이익·연봉·사업부·세금 가정을 조정하면 현재 입력을 바탕으로 추정합니다. 초기 예시값을 본인 조건에 맞게 바꿔 주세요.</p>
+      </section>
       {/* 영업이익 + 고정 정책 */}
       <section
         {...poolMeasurement.inputProps}
@@ -543,11 +549,11 @@ export default function SamsungBonusClient() {
           id="avg-result-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1"
         >
-          OPI2(특별경영성과금) 1인당 결과 (세전 · 평균 직원 기준)
+          OPI2 1인당 모델 추정 (세전 · 기준 연봉 적용)
         </h2>
         <p className="text-[11px] text-faint-blue mb-5">
-          이 값은 영업이익 분배분(OPI2)의 사업부 평균입니다. OPI1(연봉 비례)을
-          합산한 본인 케이스는 아래 &quot;내 연봉으로 계산&quot;에서 확인.
+          현재 영업이익·인원·가중치 가정으로 계산한 사업부별 값입니다. 실제 지급액이
+          아니며, OPI1을 합산한 연봉별 추정은 아래 개인 계산에서 확인합니다.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {result.perDivision.map((r) => (
@@ -566,6 +572,7 @@ export default function SamsungBonusClient() {
         </div>
         <ResultNextLinks
           className="mt-4"
+          position="samsung-pool-next"
           links={[
             {
               href: "/salary-db/samsung-electronics",
@@ -590,6 +597,8 @@ export default function SamsungBonusClient() {
         opi1Rate={opi1Rate}
         setOpi1Rate={setOpi1Rate}
       />
+
+      <PrivateFeedback target="samsung_bonus" />
 
       {/* SK하이닉스 비교 */}
       <aside
@@ -840,14 +849,15 @@ function MySalaryCalculator({
     >
       <h2
         id="my-calc-title"
-        className="text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1 inline-flex items-center gap-1.5"
+        tabIndex={-1}
+        className="scroll-mt-28 text-[10px] font-black uppercase tracking-[0.2em] text-faint-blue mb-1 inline-flex items-center gap-1.5"
       >
         <User size={11} className="text-electric" aria-hidden /> 내 연봉으로
         계산 — 세전·세후
       </h2>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
-        평균 결과는 평균 직원 연봉 8,000만원 기준입니다. 본인 연봉에 비례해
-        받는 성과급과 세금 공제 후 실수령액을 계산합니다.
+        처음에는 예시 연봉 8,000만원이 입력되어 있습니다. 연봉과 사업부를 바꾸면
+        기준 연봉에 비례한 모델로 세전·세후를 추정합니다. 회사의 개인별 지급 산식과 다를 수 있습니다.
       </p>
 
       <div className="space-y-4">
@@ -1090,7 +1100,7 @@ function MySalaryCalculator({
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
                 자녀·연금·의료비·기부 등 세액공제로 소득세가 줄어드는 비율.
-                디폴트 30% (성과급 계산기 23종 공통값).{" "}
+                디폴트 {DEFAULT_BONUS_CREDIT_RATE}% (조정 가능한 모델 가정).{" "}
                 <Link
                   href="/tools/finance/irp"
                   className="font-bold text-electric underline underline-offset-2"
@@ -1134,7 +1144,7 @@ function MySalaryCalculator({
             sr-only 노드로 분리 */}
         <div className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900">
           <p className="sr-only" aria-live="polite">
-            {selected.label} 사업부 본인 케이스 — 세전 합계{" "}
+            {selected.label} 사업부 현재 입력 기준 추정 — 세전 합계{" "}
             {fmtManwon(personal.totalGrossManwon)}, 세후 실수령{" "}
             {fmtManwon(personal.netManwon)}
           </p>
@@ -1156,7 +1166,7 @@ function MySalaryCalculator({
               </p>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/85">
-              본인 케이스
+              현재 입력 기준 추정
             </span>
           </div>
 
@@ -1305,19 +1315,17 @@ function MySalaryCalculator({
             calcResult: 오퍼 활성 시 "성과급 {amount}만원 …" 보간용 (내부 링크는 유지) */}
         {personal.totalGrossWon > 0 && (
           <ResultNextLinks
+            position="samsung-personal-next"
             calcResult={{ amount: Math.round(personal.totalGrossWon / 10000) }}
             links={[
               {
-                href: "/?tab=salary#calculator-section",
-                label: "성과급 합산 연봉 실수령액 계산",
+                href: "/salary-db/samsung-electronics",
+                label: "삼성전자 CL 연봉표·공시 기준 확인",
+                primary: true,
               },
               {
-                href: "/fun/salary-rank",
-                label: "내 연봉+성과급, 또래 상위 몇 %?",
-              },
-              {
-                href: "/tools/finance/irp",
-                label: "세액공제 올리는 IRP 절세",
+                href: "/guides/chip-stock-tax-guide",
+                label: "성과급 세금·주식보상 기준 읽기",
               },
             ]}
           />
@@ -1404,7 +1412,7 @@ function MySalaryCalculator({
             <p className="text-[11px] text-faint-blue mb-3 leading-relaxed tabular-nums">
               {selected.label} 사업부 · 세전 {fmtManwonInt(personal.totalGrossManwon)}만원
               · 세후 {fmtManwonInt(personal.netManwon)}만원 결과를 카카오·링크로
-              공유해보세요.
+              공유합니다. 선택한 사업부와 추정 금액이 공유 내용에 포함됩니다.
             </p>
             <ShareButtons
               url={SHARE_URL}

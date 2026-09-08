@@ -3,6 +3,7 @@ import type { CompanyProfile } from "@/types/company";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
+import SamsungCompanySummary, { SamsungSectionAnchor } from "./SamsungCompanySummary";
 import CompanyInsights from "@/components/CompanyInsights";
 import CompanySalaryTable from "@/components/CompanySalaryTable";
 import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
@@ -15,6 +16,7 @@ import { industryRankingByCompanyId } from "@/lib/salary-data/dartRanking";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
+import PrivateFeedback from "@/components/PrivateFeedback";
 import CompanyFaq from "@/components/CompanyFaq";
 import CompanyIndustryRank from "@/components/CompanyIndustryRank";
 import RelatedCompanies from "@/components/RelatedCompanies";
@@ -226,14 +228,20 @@ export default function CompanyDetailPage({
  <UpdatedBadge date={company.lastUpdated} prefix="연봉·실수령액 데이터" />
  </div>
  {/* 첫 광고(CalcResultAd)는 CompanyDetailClient 내부 Quick Stats 직후에 배치 */}
- <CompanyDetailClient company={company} />
+ <CompanyDetailClient
+ company={company}
+ summary={company.id === "samsung-electronics" ? <SamsungCompanySummary company={company} dartSalaryManwon={dartSalaryManwon} /> : undefined}
+ />
 
+ <SamsungSectionAnchor companyId={company.id} id="samsung-salary-table">
  <CompanySalaryTable company={company} />
+ </SamsungSectionAnchor>
 
  {/* 공시 기준 평균연봉 — 금감원 DART 사업보고서·알리오 등 공식 공시 인용값.
  disclosed 필드가 있는 회사만 렌더 (추정 금지). 추정 기반 연봉표 직후에
  배치해 "공식 수치"로 권위 차별화 + 동일 급여 그룹 페이지에 고유 숫자 부여.
  TOP 100 진입사는 순위 배지로 /insights 리포트 역링크 (준고아 해소 2026-08-23). */}
+ <SamsungSectionAnchor companyId={company.id} id="samsung-disclosed-salary">
  <CompanyDisclosedSalary
  company={company}
  dartRank={(() => {
@@ -261,6 +269,7 @@ export default function CompanyDetailPage({
  })()}
  industryLink={industryRankingByCompanyId.get(company.id) ?? null}
  />
+ </SamsungSectionAnchor>
 
  {/* 동일 급여 그룹 안내 — 5직급 base 튜플이 동일한 회사(발전 공기업 등)만
  렌더. 표 숫자가 같은 페이지끼리 상호 링크 + "본 DB 수치 기준 동일" 명시로
@@ -289,7 +298,15 @@ export default function CompanyDetailPage({
 
  {/* CL 세부 직급 표 — careerLevels 가 있는 회사(삼성전자 등)만 자동 노출.
  5단계 표(CompanySalaryTable) 보다 더 세분화된 호봉/연차별 base+영끌. */}
+ <SamsungSectionAnchor companyId={company.id} id="samsung-career-levels">
  <CompanyCareerLevels company={company} />
+ </SamsungSectionAnchor>
+
+ {company.id === "samsung-electronics" && (
+ <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+ <PrivateFeedback target="samsung_company" />
+ </div>
+ )}
 
  {/* 본문 자동 생성 — 업종 평균 비교 + 신/시니어 비교 + DSR 시뮬 */}
  <CompanyNarrative company={company} />

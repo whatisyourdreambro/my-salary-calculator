@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { CompanyProfile } from "@/types/company";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
@@ -40,7 +41,7 @@ const SalaryRoadmapChart = dynamic(() => import("./SalaryRoadmapChart"), {
  ),
 });
 
-export default function CompanyDetailClient({ company }: { company: CompanyProfile }) {
+export default function CompanyDetailClient({ company, summary }: { company: CompanyProfile; summary?: ReactNode }) {
  // Prepare Chart Data
  const salaryData = [
  { level: "신입", base: company.salary.entry.base, total: company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0) },
@@ -89,6 +90,7 @@ export default function CompanyDetailClient({ company }: { company: CompanyProfi
  </div>
 
  <div className="page-width -mt-8 relative z-20 space-y-8">
+ {summary}
  {/* Quick Stats Grid */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <StatCard

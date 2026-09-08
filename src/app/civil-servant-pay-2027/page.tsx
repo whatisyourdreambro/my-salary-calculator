@@ -36,6 +36,8 @@ import {
 } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
+import CivilPayForecastSelector from "./CivilPayForecastSelector";
+import PrivateFeedback from "@/components/PrivateFeedback";
 import {
   GENERAL_PAY_ROWS_2026,
   RAISE_2027_RECOMMENDED,
@@ -70,7 +72,7 @@ const pctMax = (RAISE_2027_RECOMMENDED.max * 100).toFixed(1);
 const pct = (RAISE_2027_BUDGET * 100).toFixed(1);
 
 // 9급 1호봉 예상치 (FAQ·리드문 공용) — 예산안 3.9% 단순 적용, 저연차 추가 인상 미반영
-const g9h1 = forecast2027(2133000);
+const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
 
 const FAQ_ITEMS = [
   {
@@ -81,7 +83,7 @@ const FAQ_ITEMS = [
   {
     question: "3.9%면 9급 1호봉 월급은 얼마가 되나요?",
     answer:
-      `2026년 9급 1호봉 봉급 2,133,000원에 ${pct}%를 단순 적용하면 약 ${fmt(g9h1)}원입니다(천원 단위 반올림, 확정 봉급표 아님). 다만 정부는 7~9급 초임(1호봉)에 공통 인상 외 추가 인상을 예고했고, 9급 1호봉 보수(봉급+수당)를 2027년까지 월 300만원 수준으로 올리는 것이 국정과제라 저연차 실제 인상폭은 이보다 클 전망입니다. 2026년에도 공통 3.5%에 3.1%가 추가돼 저연차는 6.6% 올랐습니다. 통장 기준 보수에는 정액급식비·직급보조비·명절휴가비 등 수당이 더해집니다.`,
+      `2026년 9급 1호봉 봉급 2,133,000원에 ${pct}%를 단순 적용하면 약 ${fmt(g9h1)}원입니다(천원 단위 반올림, 확정 봉급표 아님). 다만 정부는 7~9급 초임(1호봉)에 공통 인상 외 추가 인상을 예고했고, 9급 1호봉 보수(봉급+수당)를 2027년까지 월 300만원 수준으로 올리는 것이 국정과제라 저연차 실제 인상폭은 이보다 클 전망입니다. 2026년에도 공통 3.5%에 3.1%가 추가돼 저연차는 6.6% 올랐습니다. 세전 보수에는 정액급식비·직급보조비·명절휴가비 등 수당이 더해지고, 실제 통장 입금액은 세금·공무원연금 등의 공제를 반영해야 합니다.`,
   },
   {
     question: "공무원보수위원회 권고안에는 인상률 외에 뭐가 있나요?",
@@ -163,6 +165,8 @@ export default function CivilServantPay2027Page() {
           </p>
         </div>
 
+        <CivilPayForecastSelector />
+
         <HomeTopAd />
 
         {/* 확정 일정 타임라인 */}
@@ -218,8 +222,8 @@ export default function CivilServantPay2027Page() {
         </section>
 
         {/* 전망 봉급표 */}
-        <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
-          <h2 className="text-xl font-black text-navy mb-2 flex items-center gap-2">
+        <section id="civil-forecast-table" aria-labelledby="civil-forecast-table-title" className="scroll-mt-24 mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
+          <h2 id="civil-forecast-table-title" className="text-xl font-black text-navy mb-2 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-electric" />
             2027 예상 봉급표 (9급~5급, 1~10호봉) — 예산안 인상률 {pct}% 적용
           </h2>
@@ -227,16 +231,17 @@ export default function CivilServantPay2027Page() {
             ⚠ 예상치(2026 확정 봉급 × (1 + {pct}%), 천원 단위 반올림) — 확정 봉급표 아님 ·
             저연차 추가 인상·국회 심의 조정·수당 미반영
           </p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="급수별 예상 기본급 전체표 (가로 스크롤)">
             <table className="w-full text-sm min-w-[640px]">
+              <caption className="mb-3 text-left text-xs text-muted-blue">월 기본급, 단위: 원. 2026년 확정 봉급을 바탕으로 계산한 2027년 예상액입니다.</caption>
               <thead>
                 <tr className="border-b-2 border-canvas-200 text-navy">
-                  <th className="py-3 px-2 text-left font-black">호봉</th>
-                  <th className="py-3 px-2 text-right font-black">9급 (예상)</th>
-                  <th className="py-3 px-2 text-right font-black">8급 (예상)</th>
-                  <th className="py-3 px-2 text-right font-black">7급 (예상)</th>
-                  <th className="py-3 px-2 text-right font-black">6급 (예상)</th>
-                  <th className="py-3 px-2 text-right font-black">5급 (예상)</th>
+                  <th scope="col" className="py-3 px-2 text-left font-black">호봉</th>
+                  <th scope="col" className="py-3 px-2 text-right font-black">9급 (예상)</th>
+                  <th scope="col" className="py-3 px-2 text-right font-black">8급 (예상)</th>
+                  <th scope="col" className="py-3 px-2 text-right font-black">7급 (예상)</th>
+                  <th scope="col" className="py-3 px-2 text-right font-black">6급 (예상)</th>
+                  <th scope="col" className="py-3 px-2 text-right font-black">5급 (예상)</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,7 +249,7 @@ export default function CivilServantPay2027Page() {
                   const cells = [g9, g8, g7, g6, g5].map((v) => forecast2027(v));
                   return (
                     <tr key={hobong} className="border-b border-canvas-100">
-                      <td className="py-2.5 px-2 font-bold text-navy">{hobong}호봉</td>
+                      <th scope="row" className="py-2.5 px-2 text-left font-bold text-navy">{hobong}호봉</th>
                       {cells.map((v, i) => (
                         <td
                           key={i}
@@ -271,6 +276,8 @@ export default function CivilServantPay2027Page() {
             각 월봉급의 60%) 등 수당이 더해집니다.
           </p>
         </section>
+
+        <PrivateFeedback target="civil_pay_2027" />
 
         <CalcResultAd />
 

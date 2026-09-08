@@ -1754,7 +1754,7 @@ function BonusBarChart({
       )}
 
       {/* 스크린리더용 데이터 표 — 툴팁으로만 제공되는 값의 접근 가능한 대체 */}
-      <table className="sr-only">
+      <div className="sr-only"><table>
         <caption>연도별 본인 케이스 성과급 (세전·세후)</caption>
         <thead>
           <tr>
@@ -1776,7 +1776,7 @@ function BonusBarChart({
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 }

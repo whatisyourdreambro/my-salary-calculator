@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import { bonusCalcCountKo } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
+import { DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -87,7 +88,7 @@ const FAQ_ITEMS = [
   {
     question: "세금 계산 가정을 직접 조정할 수 있나요?",
     answer:
-      "네, '내 연봉으로 계산' 섹션 안의 '계산 가정 조정 — OPI1·세금'에서 (1) 세액공제율을 0~50%까지 슬라이더로 조정 (디폴트 20%, 자녀·연금·의료비·기부 등 공제 반영 비율), (2) 4대보험 추가 부과 적용 여부를 체크박스로 ON/OFF, (3) OPI1 지급률을 0~50%로 조정할 수 있습니다. 성과급은 보수에 합산되어 4대보험 정산되지만, 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원, 연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.",
+      `네, '내 연봉으로 계산' 섹션 안의 '계산 가정 조정 — OPI1·세금'에서 (1) 세액공제율을 0~50%까지 슬라이더로 조정 (디폴트 ${DEFAULT_BONUS_CREDIT_RATE}%, 조정 가능한 모델 가정, 자녀·연금·의료비·기부 등 공제 반영 비율), (2) 4대보험 추가 부과 적용 여부를 체크박스로 ON/OFF, (3) OPI1 지급률을 0~50%로 조정할 수 있습니다. 성과급은 보수에 합산되어 4대보험 정산되지만, 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원, 연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.`,
   },
   {
     question: "사업부 가중치는 무엇인가요?",
@@ -371,6 +372,14 @@ export default function SamsungBonusCalculatorPage() {
               지급률, 본인 연봉 세후 실수령과 다년도 RSU 매도까지 이 한
               페이지에서 추정합니다.
             </p>
+            <nav aria-label="삼성 성과급 계산기 바로가기" className="mt-5 flex flex-wrap justify-center gap-2">
+              <a href="#my-calc-title" className="inline-flex min-h-11 items-center rounded-xl bg-electric px-4 py-2 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
+                내 연봉으로 바로 계산
+              </a>
+              <a href="#opi-actual-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
+                지난 OPI 지급 이력
+              </a>
+            </nav>
             <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 
@@ -459,7 +468,8 @@ export default function SamsungBonusCalculatorPage() {
           <section className="mb-10" aria-labelledby="opi-actual-title">
             <h2
               id="opi-actual-title"
-              className="text-2xl font-black text-navy dark:text-canvas-50 mb-2"
+              tabIndex={-1}
+              className="scroll-mt-28 text-2xl font-black text-navy dark:text-canvas-50 mb-2"
             >
               OPI(초과이익성과금) 실제 지급률 — 2025년 실적분
             </h2>
