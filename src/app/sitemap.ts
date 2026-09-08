@@ -8,6 +8,7 @@ import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
+import { getGuideModifiedDate } from '@/lib/guideDates';
 
 type ChangeFrequency =
  | 'always'
@@ -36,20 +37,26 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
- '/calc/samsung-bonus': { lastModified: new Date('2026-08-23'), priority: 0.95 },
+ '/': { lastModified: new Date('2026-09-09') },
+ '/home-loan': { lastModified: new Date('2026-09-09') },
+ '/about': { lastModified: new Date('2026-09-09') },
+ '/calc/samsung-bonus': { lastModified: new Date('2026-09-09'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
- '/calc/hyundai-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
+ '/calc/hyundai-bonus': { lastModified: new Date('2026-09-09'), priority: 0.85 },
+ '/calc/year-end-bonus': { lastModified: new Date('2026-09-09') },
  '/calc/kia-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
  '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
  '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
- '/chuseok-bonus-2026': { lastModified: new Date('2026-08-23') },
- '/civil-servant-pay-2027': { lastModified: new Date('2026-09-03') },
+ // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
+ '/chuseok-bonus-2026': { lastModified: new Date('2026-08-16') },
+ '/tax-reform-2026': { lastModified: new Date('2026-08-07') },
+ '/civil-servant-pay-2027': { lastModified: new Date('2026-09-09') },
  // R2 신규 8라우트 (2026-08-31)
  '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
  '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
@@ -338,7 +345,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const hasEn = enSlugSet.has(guide.slug);
  return {
  url: koUrl,
- lastModified: new Date(guide.publishedDate),
+ lastModified: new Date(getGuideModifiedDate(guide)),
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasEn
@@ -375,7 +382,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const hasKo = koSlugSet.has(guide.slug);
  return {
  url: enUrl,
- lastModified: new Date(guide.publishedDate),
+ lastModified: new Date(getGuideModifiedDate(guide)),
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasKo

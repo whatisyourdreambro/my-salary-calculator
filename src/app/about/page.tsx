@@ -11,7 +11,7 @@ import { GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 export const metadata: Metadata = buildPageMetadata({
  title: "머니샐러리 소개 - 데이터 출처와 운영 원칙",
  description:
- "머니샐러리는 현직 직장인 1인이 운영하는 무료 정보 사이트입니다. 2026년 최신 세법과 국세청·4대보험 공단 공식 데이터를 기반으로 연봉 실수령액·세금·재테크 계산을 무료 제공합니다.",
+ "머니샐러리의 운영자, 계산 기준과 공식 출처, 회사 연봉 추정 방법, 정보 수정 원칙을 안내합니다. 연봉·세금 계산의 가정과 한계를 확인하세요.",
  path: "/about",
  keywords: ["머니샐러리", "About", "사이트 소개", "데이터 출처"],
 });
@@ -42,21 +42,21 @@ const DATA_SOURCES = [
 const PRINCIPLES = [
  {
  icon: Calculator,
- title: "최신 세법 반영",
+ title: "적용 기준 확인",
  body:
- "2026년 변경되는 국민연금·건강보험 요율과 누진세율을 즉시 반영합니다. 정부 발표 30일 이내 업데이트를 원칙으로 합니다.",
+ "계산에 쓰는 연도와 요율, 공제 가정을 안내합니다. 정부의 발표·예산안과 실제 시행 중인 제도를 구분하고, 변경 근거를 확인해 반영합니다.",
  },
  {
  icon: Database,
- title: "공식 데이터만 사용",
+ title: "출처와 추정 구분",
  body:
- "모든 계산은 국세청·건강보험공단·근로복지공단의 공식 자료를 기반으로 합니다. 추정치는 명시적으로 표기합니다.",
+ "세율과 보험료는 관계 기관 자료를 기준으로 확인합니다. 회사 연봉의 자체 추정치, 사업보고서의 평균 급여, 사용자가 넣은 가정은 서로 구분합니다.",
  },
  {
  icon: Shield,
  title: "개인정보 수집 최소화",
  body:
- "계산 결과는 사용자 브라우저에만 저장(localStorage)됩니다. 서버에 개인 식별 정보를 저장하지 않습니다.",
+ "계산은 기본적으로 브라우저에서 처리합니다. 비공개 문의를 보내면 문의 내용과 선택 이메일을 서버에 저장합니다. 공유 링크·광고·분석의 정보 처리는 개인정보 처리방침에 안내합니다.",
  },
 ];
 
@@ -83,9 +83,9 @@ export default function AboutPage() {
  <span className="text-electric">데이터로 돕습니다</span>
  </h1>
  <p className="text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
- 머니샐러리는 2026년 최신 세법을 반영한 연봉 실수령액 계산기입니다.
- 국세청과 4대 보험 기관의 공식 데이터를 기반으로,
- 직장인이 자신의 소득과 세금을 정확히 이해할 수 있도록 돕습니다.
+ 머니샐러리는 연봉 실수령액과 세금, 회사별 급여 정보를 살펴보는 무료 사이트입니다.
+ 계산에 사용한 기준과 출처, 추정의 한계를 함께 안내해
+ 직장인이 자신의 소득을 비교하고 이해할 수 있도록 돕습니다.
  </p>
  </div>
 
@@ -99,8 +99,8 @@ export default function AboutPage() {
  </p>
  <p className="text-sm text-muted-blue leading-relaxed">
  세무사·노무사·금융기관의 자문 없이 1인이 운영하는 사이트 특성상,
- 모든 계산식은 <strong className="text-navy">국세청·4대보험 공단의 공식 자료</strong>를
- 1차 출처로 사용합니다. 실제 납세·금융 의사결정에는 반드시 공식 출처와
+ 세금·보험료 계산은 <strong className="text-navy">국세청·4대보험 공단의 공식 자료</strong>를
+ 1차 출처로 확인합니다. 회사 급여와 미래 전망에는 아래에 설명한 추정이 포함됩니다. 실제 납세·금융 의사결정에는 공식 출처와
  전문가 상담을 함께 권장드립니다.
  </p>
  </section>
@@ -125,7 +125,7 @@ export default function AboutPage() {
  <section className="mb-16">
  <h2 className="text-2xl font-black text-navy mb-2">데이터 출처</h2>
  <p className="text-sm text-faint-blue mb-8">
- 모든 계산식과 세율은 아래 정부 기관의 공식 자료를 따릅니다.
+ 세금·사회보험 기준을 확인하는 주요 기관입니다. 개별 글의 출처와 적용 시점도 함께 확인해 주세요.
  </p>
  <div className="space-y-3">
  {DATA_SOURCES.map((source) => (
@@ -176,6 +176,17 @@ export default function AboutPage() {
  전혀 없습니다.
  </p>
  </div>
+ </section>
+
+ <section className="mb-16 p-8 bg-white border border-canvas-200 rounded-2xl" aria-labelledby="editorial-method">
+ <h2 id="editorial-method" className="text-xl font-black text-navy mb-4">정보를 확인하고 수정하는 기준</h2>
+ <ul className="list-disc pl-5 space-y-3 text-sm text-muted-blue leading-relaxed">
+ <li>제도 설명은 법령·관계 기관의 발표를 먼저 확인합니다. 발표일, 신청 기한, 시행일이 다르면 구분해 안내합니다.</li>
+ <li>계산 예시는 세전·세후, 연·월 단위, 부양가족 등 결과에 영향을 주는 가정을 함께 표시합니다. 예상액을 지급 확정액으로 안내하지 않습니다.</li>
+ <li>가이드의 발행일은 보존하고, 본문·계산 기준·출처를 실질적으로 바꾼 경우 수정일을 별도로 표시합니다. 날짜만 바꾸어 새 정보처럼 보이게 하지 않습니다.</li>
+ <li>오류 제보는 근거를 확인해 수정합니다. 정정 요청은 아래 비공개 문의로 보내 주세요. 공개 댓글은 운영하지 않습니다.</li>
+ </ul>
+ <p className="mt-4 text-xs text-faint-blue">이 안내 수정일: <time dateTime="2026-09-09">2026년 9월 9일</time></p>
  </section>
 
  {/* 책임 한계 */}

@@ -5,6 +5,7 @@
 // 모든 페이지가 동일한 SEO 베이스라인을 갖도록 한다.
 
 import type { Metadata } from "next";
+import { getGuideModifiedDate } from "./guideDates";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -237,6 +238,7 @@ export function buildGuideMetadata(guide: {
  title: string;
  description: string;
  publishedDate: string;
+ modifiedDate?: string;
  tags?: string[];
 }): Metadata {
  return buildPageMetadata({
@@ -246,6 +248,7 @@ export function buildGuideMetadata(guide: {
  keywords: guide.tags,
  ogType: "article",
  publishedTime: new Date(guide.publishedDate).toISOString(),
+ modifiedTime: new Date(getGuideModifiedDate(guide)).toISOString(),
  // /api/og의 type=guide 분기는 slug가 아닌 title 파라미터를 읽음 — slug만 넘기면
  // 전 가이드 공유 카드가 기본 문구("연봉 실수령액 계산기")로 렌더되던 회귀 정정 (2026-07-06)
  ogImage: `${SITE_URL}/api/og?type=guide&title=${encodeURIComponent(guide.title)}`,
@@ -333,14 +336,14 @@ export function buildCompanyMetadata(company: {
  : `${d.getFullYear()}년 ${d.getMonth() + 1}월 업데이트`;
  })();
  const tableLabel = company.hasCareerLevels
- ? "공식 직급(CL)별 상세 연봉표"
- : "직급별 연봉표";
+ ? "직급(CL)별 추정 연봉표"
+ : "직급별 추정 연봉표";
  const description =
  entryFigure && seniorFigureTitle && juniorFigure && leadFigure
- ? `${company.name} 연봉 2026: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함). ${tableLabel}와 세후 실수령액, 성과급·복지·워라밸까지 ${updatedLabel} 기준 총정리.`
+ ? `${company.name} 연봉 자체 추정치: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함). ${tableLabel}와 세후 실수령액, 성과급·복지를 ${updatedLabel} 기준으로 확인하세요.`
  : entryFigure && seniorFigureTitle
- ? `${company.name} 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle} 수준. ${company.name}의 ${tableLabel}와 세후 실수령액, 인센티브·복지·워라밸을 ${updatedLabel} 기준으로 분석했습니다.`
- : `${company.name}의 신입 초봉부터 대리·과장·부장 직급별 평균 연봉과 세후 실수령액을 2026년 기준으로 분석합니다. 동종업계 비교·연봉 협상 팁까지 한눈에 확인하세요.`;
+ ? `${company.name} 연봉 자체 추정치: 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle}. ${tableLabel}와 세후 실수령액, 인센티브·복지를 ${updatedLabel} 기준으로 확인하세요.`
+ : `${company.name}의 신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 확인하세요.`;
 
  return buildPageMetadata({
  title,

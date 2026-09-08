@@ -61,4 +61,24 @@ describe("가이드 정적 HTML과 탐색 링크", () => {
     expect(anchors.length).toBeGreaterThan(0);
     expect(anchors.every((anchor) => !anchor.includes('rel="nofollow"'))).toBe(true);
   });
+
+  it.each(["ko", "en"])("발행일과 수정일을 구분하고 실제 수정일을 카드·본문에 표시한다: %s", (lang) => {
+    const guide: Guide = { ...cards[1], modifiedDate: "2026-09-09", content: "<h2>수정한 본문</h2>" };
+    const detail = renderToStaticMarkup(lang === "ko"
+      ? createElement(GuidePageClient, { guide, relatedGuides: [] })
+      : createElement(EnglishGuideClient, { guide, relatedGuides: [] }));
+    expect(detail).toMatch(/<time datetime="2026-01-01"/i);
+    expect(detail).toMatch(/<time datetime="2026-09-09"/i);
+    expect(detail).toContain(lang === "ko" ? "발행 " : "Published ");
+    expect(detail).toContain(lang === "ko" ? "수정 " : "Updated ");
+    const categories = [{ id: "all", name: "All" }];
+    const updatedCard: GuideCardMeta = { ...guide, contentChars: 2000 };
+    const list = renderToStaticMarkup(lang === "ko"
+      ? createElement(GuidesListClient, { guides: [cards[0], updatedCard], categories })
+      : createElement(EnglishGuidesClient, { guides: [cards[0], updatedCard], categoriesEn: categories }));
+    const titles = [...list.matchAll(/<h3\b[^>]*>(.*?)<\/h3>/g)].map((match) => match[1]);
+    expect(titles).toEqual(["이전 가이드", "최신 가이드"]);
+    expect(list).toMatch(/<time datetime="2026-09-09"/i);
+    expect(list).toContain(lang === "ko" ? "수정 " : "Updated ");
+  });
 });

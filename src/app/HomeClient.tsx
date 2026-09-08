@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { ReactNode } from "react";
 import {
  Calculator,
  ArrowRight,
@@ -74,10 +75,6 @@ const SeasonalBanner = dynamic(
  () => import("@/components/SeasonalBanner"),
  { ssr: false }
 );
-const FeaturedGuides = dynamic(
- () => import("@/components/FeaturedGuides"),
- { ssr: false }
-);
 const HeroBadge = dynamic(
  () => import("@/components/HeroBadge"),
  { ssr: false, loading: () => <span>2026년 세법 완벽 반영</span> }
@@ -97,7 +94,7 @@ const stats = [
 ];
 
 /* ── Homepage (client island) ──────────────────────────────────── */
-export default function HomeClient() {
+export default function HomeClient({ featuredGuides }: { featuredGuides: ReactNode }) {
  const scrollToCalculator = () => {
  document.getElementById("calculator-section")?.scrollIntoView({
  behavior: "smooth",
@@ -164,16 +161,16 @@ export default function HomeClient() {
 
  {/* H1 */}
  <h1 className="font-black text-[clamp(2.2rem,6vw,4.5rem)] tracking-[-0.045em] leading-[1.08] text-navy mb-5">
- 내 연봉의 모든 것,
+ 2026 연봉 계산기
  <br />
- <span className="text-electric">가장 쉽고 정확하게.</span>
+ <span className="text-electric">세후 월급을 한눈에.</span>
  </h1>
 
  {/* Subheading — 구체 수치로 신뢰도↑ */}
  <p className="max-w-[560px] mx-auto mb-3 text-[clamp(1rem,2vw,1.2rem)] text-muted-blue font-medium leading-[1.65]">
  4대보험·소득세·연말정산·퇴직금까지.
  <br />
- 2026 세법 기준, 5초 만에 정확하게.
+ 내 조건을 입력해 공제액과 예상 실수령액을 확인하세요.
  </p>
  <p className="max-w-[560px] mx-auto mb-10 text-sm text-faint-blue font-medium">
  예) 연봉 5,000만원 → 월 실수령 약 352만원 · 연 4,225만원
@@ -440,7 +437,7 @@ export default function HomeClient() {
  </section>
 
  {/* ═══ Featured Guides — 인기 가이드 4개 cross-link ════════ */}
- <FeaturedGuides />
+ {featuredGuides}
 
  {/* ═══ Guide Categories — 카테고리별 진입 ══════════════════ */}
  <GuideCategories />

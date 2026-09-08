@@ -7,6 +7,7 @@ import { koGuides } from "@/lib/guidesContent";
 // /insights 데이터 리포트 3편 합류 (2026-09-05) — guid는 /insights/<slug> 라 /guides 와 충돌 없음.
 // pubDate=updatedDate(갱신 시 피드 상단 재노출). 10/5 서치어드바이저 rss.xml 제출 전 선행.
 import { reportsRegistry } from "@/data/reportsRegistry";
+import { getGuideModifiedDate } from "@/lib/guideDates";
 
 const REPORT_CATEGORY = "데이터 리포트";
 
@@ -45,7 +46,7 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  title: guide.title,
  url: `${baseUrl}/guides/${guide.slug}`,
  description: guide.description,
- date: guide.publishedDate,
+ date: getGuideModifiedDate(guide),
  categories: [
  ...(guide.category ? [guide.category] : []),
  ...(guide.tags ?? []).slice(0, 5),
@@ -70,7 +71,8 @@ function generateRssFeed() {
  "2026년 최신 세법 기준 연봉·세금·재테크 가이드. 직장인의 돈 공부, 머니샐러리에서 시작하세요.";
  const lastBuildDate = new Date().toUTCString();
 
- // 정렬 첫 항목 = 가이드 최신 발행일·리포트 최신 갱신일 중 max → 채널 pubDate
+ // 가이드도 실제 수정일(없으면 발행일)로 재노출. 원문 발행일과 guid는 보존한다.
+ // 정렬 첫 항목 = 가이드·리포트 최신 갱신일 중 max → 채널 pubDate
  const items = buildFeedItems(baseUrl);
 
  const latestPubDate = items[0]

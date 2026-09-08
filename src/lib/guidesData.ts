@@ -23,6 +23,8 @@ export interface Guide {
  tags: string[];
  level: '초급' | '중급' | '고급' | 'Beginner' | 'Intermediate' | 'Advanced';
  publishedDate: string;
+ /** 실제 본문·근거를 갱신한 날짜(YYYY-MM-DD). 없으면 발행일을 사용한다. */
+ modifiedDate?: string;
  /** 과거 메타데이터 호환용. 실측 출처·기간이 없어 표시·정렬·추천에 사용하지 않는다. */
  views: number;
  content: string;

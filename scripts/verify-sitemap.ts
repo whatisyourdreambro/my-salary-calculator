@@ -11,6 +11,8 @@ import { execFileSync } from "node:child_process";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
 import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
+import { koGuides, enGuides } from "@/lib/guidesContent";
+import { getGuideModifiedDate } from "@/lib/guideDates";
 
 const APP_DIR = join(process.cwd(), "src", "app");
 
@@ -153,10 +155,32 @@ async function main() {
   const staleOverrides = checkOverrideFreshness();
   const webAppDateMismatch = checkWebApplicationDate();
 
+  // 실제 동적 URL 출력도 확인한다. 수정일만 바뀐 글이 발행일로 되돌아가거나
+  // 중복/누락되는 회귀를 정적 라우트 목록 검사와 별개로 차단한다.
+  let guideDateMismatch = 0;
+  for (const [prefix, guides] of [["/guides", koGuides], ["/en/guides", enGuides]] as const) {
+    for (const guide of guides) {
+      const expected = getGuideModifiedDate(guide);
+      const dates = [guide.publishedDate, expected];
+      const validDates = dates.every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date) &&
+        Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 10) === date);
+      const path = `${prefix}/${guide.slug}`;
+      const matches = entries.filter((entry) => new URL(entry.url).pathname === path);
+      const actualDate = matches[0]?.lastModified;
+      const parsedActual = actualDate ? new Date(actualDate) : null;
+      const actual = parsedActual && Number.isFinite(parsedActual.getTime())
+        ? parsedActual.toISOString().slice(0, 10) : undefined;
+      if (!validDates || expected < guide.publishedDate || matches.length !== 1 || actual !== expected) {
+        console.error(`[FAIL] 가이드 날짜/등재 불일치: ${path} published=${guide.publishedDate} modified=${expected} sitemap=${actual ?? "없음"} count=${matches.length}`);
+        guideDateMismatch++;
+      }
+    }
+  }
+
   console.log(
-    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
+    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
   );
-  if (fail) {
+  if (fail || guideDateMismatch) {
     console.error(
       "→ sitemap.ts 에 등재하거나, 의도적 제외라면 이 스크립트의 목록에 사유와 함께 추가하세요."
     );

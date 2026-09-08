@@ -64,7 +64,7 @@ describe("rss.xml — /insights 리포트 합류", () => {
     expect(new Set(guids).size).toBe(guids.length);
   });
 
-  it("item 은 날짜 내림차순, 채널 pubDate = 가이드 발행일·리포트 갱신일 중 최신", async () => {
+  it("item 은 날짜 내림차순, 채널 pubDate = 가이드 수정일(없으면 발행일)·리포트 갱신일 중 최신", async () => {
     const xml = await loadFeed();
     const items = parseItems(xml);
     const times = items.map((i) => new Date(i.pubDate).getTime());
@@ -72,10 +72,20 @@ describe("rss.xml — /insights 리포트 합류", () => {
       expect(times[k - 1]).toBeGreaterThanOrEqual(times[k]);
     }
 
-    const latestGuide = Math.max(...koGuides.map((g) => new Date(g.publishedDate).getTime()));
+    const latestGuide = Math.max(...koGuides.map((g) => new Date(g.modifiedDate ?? g.publishedDate).getTime()));
     const latestReport = Math.max(...reportsRegistry.map((r) => new Date(r.updatedDate).getTime()));
     const channelPubDate = xml.match(/<channel>[\s\S]*?<pubDate>([^<]*)<\/pubDate>/)?.[1] ?? "";
     expect(new Date(channelPubDate).getTime()).toBe(Math.max(latestGuide, latestReport));
+  });
+
+  it("가이드의 실제 수정일을 피드에 반영하고 기존 guid는 보존한다", async () => {
+    const items = parseItems(await loadFeed());
+    for (const guide of koGuides) {
+      const item = items.find((entry) => entry.guid === `${BASE}/guides/${guide.slug}`);
+      expect(item, guide.slug).toBeDefined();
+      expect(new Date(item!.pubDate).toISOString().slice(0, 10), guide.slug)
+        .toBe(guide.modifiedDate ?? guide.publishedDate);
+    }
   });
 
   it("리포트 updatedDate 는 ISO YYYY-MM-DD (listed-avg-salary 는 DART 스냅샷일과 max 파생)", () => {

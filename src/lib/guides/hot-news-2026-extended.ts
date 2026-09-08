@@ -921,20 +921,43 @@ const childTuitionTaxFree = `
 `;
 
 const bonusTiming = `
-<p class="lead">성과급·인센티브 지급 시점에 따라 세금 부담 차이 큼. 같은 1,000만원 보너스라도 1월(연 시작)에 받으면 누진세율 낮은 구간에서 처리, 12월(연 말)에 받으면 누진세율 점프 가능.</p>
+<p class="lead">성과급을 12월 대신 1월에 받으면 세금이 줄어들까요? <strong>입금한 달보다 어느 연도의 소득인지가 먼저입니다.</strong> 같은 귀속연도에 총급여와 공제 조건이 같다면 지급 월이 달라졌다는 이유만으로 최종 소득세가 줄지는 않습니다. 지급 때 뗀 원천징수액과 연말정산 후 확정되는 세액을 구분하세요.</p>
+<p>확인 기준: 2026년 9월 9일. 현행 세법과 국세청의 2026년 3월 11일 사전답변을 확인했으며, 지급일을 바꾸면 특정 금액을 절세한다는 계산은 제시하지 않습니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 시점별 세금 비교</h2>
-<p>연봉 6,000만원 + 보너스 1,000만원:</p>
-<ul class="space-y-2 mt-4">
-<li>· 1월 지급: 1월부터 균등 가산 → 누진세율 24% 적용</li>
-<li>· 12월 지급: 12월에 한 번에 가산 → 일시적 35%+ 점프 가능</li>
-<li>· 연 합산 동일하지만 매월 실수령 변동성 큼</li>
+<h2 id="three-bonus-dates">성과급 명세서에서 확인할 세 가지 날짜</h2>
+<div class="overflow-x-auto" role="region" aria-label="성과급 날짜와 귀속연도 구분" tabindex="0">
+<table class="w-full text-sm">
+<thead><tr><th scope="col">날짜</th><th scope="col">뜻</th><th scope="col">확인할 자료</th></tr></thead>
+<tbody>
+<tr><th scope="row">근로·성과 대상 기간</th><td>어느 기간의 일과 실적에 대한 보상인지</td><td>성과급 지급 규정, 평가 대상 기간</td></tr>
+<tr><th scope="row">지급액 확정일</th><td>지표나 개인별 평가를 반영해 금액을 확정한 날</td><td>개인별 통지, 노사 합의, 확정 내역</td></tr>
+<tr><th scope="row">실제 지급일</th><td>계좌에 돈이 들어온 날</td><td>급여명세서, 입금 내역</td></tr>
+</tbody></table></div>
+<p>급여는 원칙적으로 근로를 제공한 때, 잉여금처분 상여는 처분결의일을 기준으로 귀속을 판단합니다. 성과급은 지급 규정과 금액 확정 방식까지 확인해야 합니다. <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7869&amp;mi=2315">국세청 근로소득 수입시기 안내</a>와 <a href="https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&amp;joBrNo=00&amp;joNo=0049&amp;lsiSeq=286211&amp;urlMode=lsScJoRltInfoR">소득세법 시행령 제49조</a>가 기준입니다.</p>
+
+<h2 id="bonus-attribution-example">올해 확정하고 내년에 나누어 받는다면?</h2>
+<p>국세청은 계량·비계량 평가를 거쳐 개인별 성과급이 확정된 뒤 일부를 다음 연도 이후에 나누어 지급하는 사안에서, <strong>개인별 지급액이 확정된 연도</strong>를 귀속연도로 보았습니다. 이는 해당 사실관계에 대한 답변이며, 모든 성과급을 같은 방식으로 분류하라는 뜻은 아닙니다. <a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000020060">사전-2025-법규소득-1070, 2026년 3월 11일 답변·4월 16일 등록</a>을 참고했습니다.</p>
+<p><strong>가정 사례:</strong> 회사가 2026년에 개인별 성과급 1,000만원을 확정하고 2027년 1월에 입금하기로 했다면, “1월에 받으니 무조건 2027년 소득”으로 계산하지 않습니다. 먼저 회사에 확정 근거와 귀속연도를 확인한 뒤 해당 연도의 다른 급여와 합산합니다.</p>
+
+<h2 id="withholding-vs-final-tax">많이 떼인 달의 세금이 최종 세금은 아닙니다</h2>
+<p>상여 지급 때의 원천징수는 지급대상기간 등의 영향을 받습니다. 연말정산은 해당 연도의 근로소득과 적용 가능한 공제를 반영한 확정 세액에서 이미 낸 세금을 빼 추가 납부 또는 환급을 정합니다. 따라서 “1월은 24%, 12월은 35%”처럼 지급 월만으로 세율을 고정할 수 없습니다. <a href="https://s.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7870&amp;mi=6434">국세청 연말정산·원천징수 안내</a>.</p>
+<ol>
+<li>회사에 성과급 귀속연도와 지급대상기간을 확인합니다.</li>
+<li>명세서에서 세전 상여, 소득세, 지방소득세, 기타 공제를 나누어 봅니다.</li>
+<li>최종 세금 비교에서는 같은 귀속연도의 급여·상여와 같은 공제 조건을 사용합니다.</li>
+<li>현금 계획은 실제 입금일 기준으로 따로 세웁니다. 퇴사 후 지급이면 이전 회사 자료의 합산·정산 여부도 확인합니다.</li>
+</ol>
+
+<h2 id="pension-tax-credit">보너스 직전 IRP 납입은 별도 판단입니다</h2>
+<p>연금계좌 세액공제는 성과급의 한계세율을 곱하는 소득공제가 아닙니다. 일반 한도는 연금저축 연 600만원, 퇴직연금계좌를 합쳐 연 900만원입니다. 국세 공제율은 12% 또는 15%이며, 근로소득만 있다면 총급여 5,500만원 이하 여부가 공제율 기준입니다. <a href="https://j.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&amp;mi=6596">국세청 연금계좌 세액공제 안내</a>.</p>
+<p>이미 낸 금액, 공제 대상 납입액, 남은 세액과 자금 사용 계획을 먼저 확인하세요. 납입액만으로 환급액을 보장할 수 없고, 입금 직전 납입했다는 사실만으로 공제율이 커지지 않습니다. 당장 쓸 생활비를 장기 계좌에 넣기 전에는 해당 금융회사의 중도인출·해지 조건도 확인해야 합니다.</p>
+
+<h2 id="bonus-next-step">내 상황에 맞는 다음 확인</h2>
+<ul>
+<li><a href="/calc/year-end-bonus">연말 성과급 계산기</a>: 명세서를 보기 전 예상 수령액을 확인하는 보조 도구입니다. 귀속연도를 판정하거나 실제 원천징수를 재현하는 증빙은 아닙니다.</li>
+<li><a href="/guides/incentive-split-payout-2026">인센티브 분할 지급 확인표</a>: 확정된 금액과 지급 조건, 퇴사 시 잔액을 구분합니다.</li>
+<li><a href="/year-end-tax-mid-resign">중도퇴사자 연말정산</a>: 이직·퇴사 후 받은 성과급의 서류와 정산 경로를 확인합니다.</li>
 </ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 절세 — 보너스 직전 IRP</h2>
-<p>보너스 지급 직전 IRP·연금저축 900만원 만기 납입 → 한계세율 35~38% 구간에서 절세 효과 최대. 약 119~149만원 환급.</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li></ul></div>
 `;
 
 const executiveSeveranceLimit = `
@@ -979,20 +1002,42 @@ const stockOptionExercise = `
 `;
 
 const incentiveSplitPayout = `
-<p class="lead">대형 인센티브를 한 번에 받으면 한계세율이 점프해 세금 부담 큼. 분할 지급 협상으로 누진세율 구간을 유지하면 같은 인센티브도 세금 30~50% 절감 가능.</p>
+<p class="lead">인센티브를 여러 해에 나누어 받는다고 소득 귀속연도도 자동으로 나뉘지는 않습니다. <strong>개인별 금액이 언제 확정됐는지, 지급을 미룬 것인지, 앞으로 충족해야 할 조건이 남아 있는지</strong>를 먼저 확인하세요. 분할 지급은 입금 일정과 미수령 잔액을 바꾸므로 세금과 현금흐름을 따로 비교해야 합니다.</p>
+<p>확인 기준: 2026년 9월 9일. 이 글은 분할 지급 조건을 검토하는 안내이며, 지급 월에 따른 귀속연도·원천징수 설명은 <a href="/guides/bonus-payout-timing-2026">성과급 지급 시점과 세금</a>에 모았습니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 분할 vs 일시 시뮬</h2>
-<p>인센티브 5,000만원, 연봉 8,000만원 가정:</p>
-<ul class="space-y-2 mt-4">
-<li>· <strong>일시 지급</strong>: 1억 3천 한 해 → 한계세율 35% + 일부 38% → 약 1,850만원 세금</li>
-<li>· <strong>2년 분할</strong>: 각 1억 500 → 한계세율 35% 유지 → 약 1,500만원 (1,500 + 0)</li>
-<li>· <strong>차이: 약 350만원 절감</strong></li>
+<h2 id="split-payout-ruling">국세청이 답한 80%·10%·10% 지급 사례</h2>
+<p><a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000020060">국세청 사전-2025-법규소득-1070</a>은 2026년 3월 11일 답변, 4월 16일 등록된 사안입니다. 개인별 성과급 총액을 정하고 80%는 해당 연도, 나머지는 다음 두 해에 10%씩 지급하는 사실관계를 다뤘습니다. 계량·비계량 평가에 따라 개인별 지급액이 확정된 경우, 일부를 나중에 지급해도 귀속연도는 그 확정 연도라는 답변입니다.</p>
+<p>따라서 “5,000만원을 2년으로 나누면 세금 350만원 절감” 같은 고정 결론을 적용할 수 없습니다. 지급액이 아직 확정되지 않았거나 별도 조건이 남은 계약은 위 사안과 같은지부터 확인해야 합니다.</p>
+
+<h2 id="split-payout-cashflow">5,000만원 분할 사례: 입금 일정만 비교하기</h2>
+<p>아래는 총액이 확정되고 추가 지급 조건이 없다고 가정한 <strong>세전 현금흐름 예시</strong>입니다. 실수령액이나 절세액을 계산한 표가 아닙니다.</p>
+<div class="overflow-x-auto" role="region" aria-label="인센티브 분할 지급 현금흐름 예시" tabindex="0">
+<table class="w-full text-sm">
+<thead><tr><th scope="col">시점</th><th scope="col">해당 시점 지급액</th><th scope="col">아직 받지 않은 금액</th></tr></thead>
+<tbody>
+<tr><th scope="row">확정 연도, 80% 지급</th><td>4,000만원</td><td>1,000만원</td></tr>
+<tr><th scope="row">다음 연도, 10% 지급</th><td>500만원</td><td>500만원</td></tr>
+<tr><th scope="row">그다음 연도, 10% 지급</th><td>500만원</td><td>0원</td></tr>
+</tbody></table></div>
+<p>위 국세청 답변과 같은 사실관계라면, 현금이 나뉘어 들어오더라도 소득 귀속은 확정 연도입니다. 지급·원천징수·정산 일정은 회사 급여 담당자에게 함께 확인해야 합니다.</p>
+
+<h2 id="split-payout-contract-checklist">회사에 서면으로 확인할 여섯 가지</h2>
+<ol>
+<li><strong>총액과 확정일:</strong> 목표 인센티브인지, 개인별로 확정된 금액인지 구분합니다.</li>
+<li><strong>분할 날짜:</strong> 매회 지급액, 지급일, 아직 지급하지 않은 잔액을 확인합니다.</li>
+<li><strong>재직 조건:</strong> 퇴사·휴직·이직하면 잔액 지급 여부나 시점이 바뀌는지 확인합니다.</li>
+<li><strong>추가 조건:</strong> 실적 재평가·감액·반환 조건이 있다면 적용 사유와 계산 방식을 확인합니다.</li>
+<li><strong>귀속·원천징수:</strong> 어느 연도의 근로소득인지, 각 지급 때 얼마를 원천징수하고 어떻게 정산하는지 확인합니다.</li>
+<li><strong>미지급 대응:</strong> 약정일에 지급되지 않을 때 담당 부서와 확인할 문서를 남깁니다.</li>
+</ol>
+<p>회사와 분할 일정을 논의할 때는 세금 감소를 전제로 동의하기보다, 당장 필요한 생활비와 나중에 받을 금액을 함께 비교하세요. 미지급 잔액이 임금체불에 해당하는지는 지급 의무와 약정일 등 구체적인 사실에 따라 판단합니다.</p>
+
+<h2 id="split-payout-next-step">다음 확인</h2>
+<ul>
+<li><a href="/guides/bonus-payout-timing-2026">성과급의 귀속연도와 원천징수 구분</a></li>
+<li><a href="/tools/finance/bonus">성과급 수령액 계산기</a> — 입력 가정에 따른 참고 계산이며, 분할계약의 세무 판정을 대신하지 않습니다.</li>
+<li><a href="/guides/wage-delayed-claim-2026">약정한 지급일을 넘겼을 때 임금체불 확인·신고</a></li>
 </ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 회사와 협상</h2>
-<p>인사팀과 분할 지급 협상 가능. 2~3년 분할 지급 시 회사도 세무상 이점 일부 있어 협상 가능성 큼.</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
 `;
 
 const overtimeNightHolidayTax = `
@@ -1070,9 +1115,9 @@ export const hotNewsExtended: Guide[] = [
   { slug: "tax-free-meal-commute-2026", title: "비과세 식대 20만원 + 통신비 — 연 360만원 세금 부담 없는 소득", description: "월 비과세 식대 20만원 + 통신비 5~10만원 + 자가운전 20만원 + 일직수당. 연 360만원 비과세 → 한계세율 24% 시 86만원 절감.", category: "연봉", tags: ["비과세", "식대", "통신비", "자가운전", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: taxFreeMealCommute, lang: "ko" },
   { slug: "business-trip-expense-tax-2026", title: "출장비 비과세 — 국내 1일 2만원·해외 1일 5만원", description: "실비 영수증 출장비 비과세. 일비 정액은 국내 2만원·해외 5만원까지. 초과분은 근로소득으로 과세.", category: "연봉", tags: ["출장비", "일비", "비과세", "해외출장", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: travelExpenseTax, lang: "ko" },
   { slug: "child-tuition-tax-free-2026", title: "자녀 학자금 비과세 — 사내복지기금 vs 회사 직접 지급", description: "사내복지기금 학자금 지원 비과세 + 본인 대학원 업무 관련 비과세 + 해외 주재원 자녀 학비 비과세. 연 500만원 = 175만원 절감.", category: "연봉", tags: ["자녀학자금", "사내복지기금", "비과세", "주재원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childTuitionTaxFree, lang: "ko" },
-  { slug: "bonus-payout-timing-2026", title: "성과급 지급 시점 절세 — 12월 vs 1월 누진세율 점프", description: "1,000만원 보너스 1월 vs 12월 지급 차이. 보너스 직전 IRP 900만원 만기 납입으로 한계세율 35~38% 구간 환급 119~149만원.", category: "세금", tags: ["성과급", "보너스", "한계세율", "IRP", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusTiming, lang: "ko" },
+  { slug: "bonus-payout-timing-2026", title: "성과급 12월·1월 지급 차이 — 귀속연도와 원천징수 확인", description: "성과급 지급일과 소득 귀속연도는 다를 수 있습니다. 국세청 2026년 답변으로 분할 지급, 최종 세금과 원천징수, IRP 세액공제를 구분합니다.", category: "세금", tags: ["성과급", "귀속연도", "원천징수", "IRP", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: bonusTiming, lang: "ko" },
   { slug: "executive-severance-limit-2026", title: "임원 퇴직금 한도 초과분 — 5억 퇴직 시 1.08억 세금", description: "임원 퇴직금 한도는 일반 직원 × 3~5배. 한도 내 퇴직소득세 + 한도 초과분 근로소득세 누진세율. 5억 퇴직 시 약 1.08억 세금.", category: "커리어", tags: ["임원", "퇴직금", "한도초과", "근로소득세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveSeveranceLimit, lang: "ko" },
   { slug: "stock-option-exercise-timing-2026", title: "스톡옵션 행사 시점 — 일반 vs 적격 시 1,860만원 차이", description: "일반 스톡옵션: 행사 시 근로소득세 + 매도 양도세 22%. 적격 스톡옵션: 매도 시 양도세만. 1억 차익 시 1,860만원 절감.", category: "주식", tags: ["스톡옵션", "행사", "적격스톡옵션", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionExercise, lang: "ko" },
-  { slug: "incentive-split-payout-2026", title: "인센티브 분할 지급 협상 — 5천만원 일시 vs 2년 분할 350만원 절감", description: "인센티브 5,000만원 일시 지급 시 1,850만원 세금 vs 2년 분할 1,500만원. 인사팀 협상으로 분할 가능, 350만원 절감.", category: "연봉", tags: ["인센티브", "분할지급", "절세", "협상", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: incentiveSplitPayout, lang: "ko" },
+  { slug: "incentive-split-payout-2026", title: "인센티브 분할 지급 — 귀속연도·미수령 잔액·퇴사 조건 확인", description: "80%·10%·10% 분할 지급에 관한 국세청 2026년 답변을 확인합니다. 세금이 자동으로 줄지 않는 이유와 지급 일정·재직 조건 확인표를 제공합니다.", category: "연봉", tags: ["인센티브", "분할지급", "귀속연도", "지급조건", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: incentiveSplitPayout, lang: "ko" },
   { slug: "overtime-night-holiday-pay-2026", title: "야근·휴일·시간외 수당 — 50% 가산 + 생산직 연 240만원 비과세", description: "8시간 초과·22~6시 야간·휴일 근로 50% 가산. 야간+시간외 중복 시 100%. 생산직 연 240만원 야근수당 비과세. 포괄임금제 함정 점검.", category: "연봉", tags: ["야근수당", "휴일근로", "시간외수당", "포괄임금제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: overtimeNightHolidayTax, lang: "ko" },
 ];

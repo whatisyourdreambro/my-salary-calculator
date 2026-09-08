@@ -579,23 +579,58 @@ const dismissalProcedure = `
 `;
 
 const wageDelayed = `
-<p class="lead">임금체불 시 노동부 진정 → 시정명령 → 형사처벌(3년 이하 징역 또는 3,000만원 벌금). 임금채권 시효 3년, 그 안에 청구하면 100% + 부가금(200%까지) 가능.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 임금체불 대응 4단계</h2>
-<ol class="space-y-2 mt-4">
-<li><strong>1단계</strong>: 회사에 정중한 지급 요청 (서면·이메일)</li>
-<li><strong>2단계</strong>: 노동부 임금체불 진정 (민원24 또는 노동청 방문)</li>
-<li><strong>3단계</strong>: 노동부 시정명령 후 미이행 시 검찰 송치</li>
-<li><strong>4단계</strong>: 소액재판 (3,000만 이하 빠른 처리)</li>
-</ol>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 체불임금 + 부가금</h2>
-<ul class="space-y-2 mt-4">
-<li>· 원금 + 부가금(원금의 100% = 2배 보상)</li>
-<li>· 지연이자 연 20%</li>
-<li>· 사업주 형사처벌 3년·3천</li>
+<p class="lead">월급이나 지급하기로 한 상여금을 받지 못했다면 <strong>미지급액 정리 → 노동포털 진정 → 대지급금·생계비 융자 대상 확인</strong> 순서로 준비하세요. 임금 회수, 생활비 대출, 법원의 손해배상은 서로 다른 절차입니다. 진정만으로 체불액의 두 배나 세 배가 자동 지급되지는 않습니다.</p>
+<p>확인 기준: <strong>2026년 9월 9일</strong>. 아래 추석 지원은 한시 안내이며, 일반 임금체불 진정과 권리구제는 집중지도 기간이 끝난 뒤에도 이용할 수 있습니다.</p>
+
+<h2 id="chuseok-support-dates">2026 추석 지원, 세 가지 기한을 구분하세요</h2>
+<div class="overflow-x-auto" role="region" aria-label="2026 추석 임금체불 지원 일정" tabindex="0">
+<table class="w-full text-sm">
+<caption>공식 발표별 적용 기간과 신청 전 확인할 사항</caption>
+<thead><tr><th scope="col">지원</th><th scope="col">기간·기한</th><th scope="col">확인할 내용</th></tr></thead>
+<tbody>
+<tr><th scope="row">고용노동부 집중지도</th><td>2026년 9월 1일~9월 23일</td><td>체불 예방·청산 지도 기간. 근로자의 진정 접수 마감일이 아님</td></tr>
+<tr><th scope="row">체불근로자 생계비 융자</th><td>2026년 10월 31일까지 한시 인하 금리 적용</td><td>연 1.0%, 신용보증료 1.0% 별도. 이후 안내 금리는 연 1.5%</td></tr>
+<tr><th scope="row">사업주 체불청산 융자</th><td>2026년 10월 23일까지 IBK기업은행 신청·실행 완료</td><td>근로자의 생계비 대출과 다른 제도. 공단 신청만 끝내면 되는 기한이 아님</td></tr>
+</tbody></table></div>
+<p>출처: <a href="https://moel.go.kr/news/enews/report/enewsView.do?news_seq=19851">고용노동부 2026년 8월 31일 집중지도 발표</a>, <a href="https://moel.go.kr/news/enews/report/enewsView.do?news_seq=19862">2026년 9월 1일 근로복지공단 지원 발표</a>. 날짜가 다른 두 발표를 하나의 신청 마감으로 합치지 않았습니다.</p>
+
+<h2 id="choose-support">진정·대지급금·융자 중 무엇이 필요한가요?</h2>
+<div class="overflow-x-auto" role="region" aria-label="임금체불 해결 방법 비교" tabindex="0">
+<table class="w-full text-sm">
+<thead><tr><th scope="col">지금 필요한 일</th><th scope="col">이용 경로</th><th scope="col">알아둘 차이</th></tr></thead>
+<tbody>
+<tr><th scope="row">체불 사실 확인과 지급 요구</th><td>고용노동부 노동포털 또는 사업장 관할 노동관서</td><td>진정 조사와 실제 돈을 받는 시점은 다를 수 있음</td></tr>
+<tr><th scope="row">사업주 대신 일정 범위의 체불액 지급</th><td>근로복지공단 대지급금</td><td>간이·도산 경로별 요건·한도·청구기한이 다르며 별도 청구 필요</td></tr>
+<tr><th scope="row">체불 중 당장 쓸 생활비</th><td>근로복지넷 생계비 융자</td><td>심사와 상환이 있는 대출. 체불임금이나 지원금을 무상으로 받는 제도가 아님</td></tr>
+<tr><th scope="row">손해배상 청구와 재산을 통한 회수</th><td>법률 상담 후 민사 절차</td><td>형사처벌이나 진정 결과만으로 손해배상액이 자동 확정되지 않음</td></tr>
+</tbody></table></div>
+<p><a href="https://labor.moel.go.kr/minwonSysInfo/wagesolway.do">노동포털의 체불임금 해결 방법</a>에서 내 경로를 확인하세요. 특히 간이대지급금은 임금채권의 일반 소멸시효와 별개의 진정·소송·청구 기한을 확인해야 합니다.</p>
+
+<h2 id="loan-eligibility">연 1.0% 생계비 융자 대상은?</h2>
+<ul>
+<li><strong>재직자:</strong> 신청일 전 1년 동안 1개월분 이상의 임금이 체불된 경우가 발표상 대상입니다.</li>
+<li><strong>퇴직자:</strong> 신청일 전 6개월 이내 퇴직한 경우로, 최종 3개월분의 임금 등과 최종 3년분의 퇴직금 중 체불액을 기준으로 안내합니다.</li>
+<li><strong>신청:</strong> <a href="https://welfare.comwel.or.kr">근로복지넷</a> 또는 근로복지공단 지사. 한도·보증 심사·필요 서류·실행 가능일은 공단에서 확인하세요.</li>
 </ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 시효 3년</h2>
-<p>임금채권 시효 3년. 3년 누적된 미지급 임금도 한 번에 청구 가능.</p>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/weekly-holiday-allowance-2026" class="text-primary underline">주휴수당 계산기</a></li></ul></div>
+<p>공단은 추석 전 대지급금 신속 지원도 발표했습니다. 모든 신청자가 정해진 날에 승인·입금된다는 보장은 아니므로 서류 보완 여부와 처리 상태를 따로 확인해야 합니다. 근거는 위 9월 1일 발표이며, 대출이자와 별도 보증료를 합쳐 단순히 “총비용 1%”라고 표시하면 안 됩니다.</p>
+
+<h2 id="prepare-claim">오늘 준비할 체불 내역과 서류</h2>
+<ol>
+<li><strong>기간별로 나누기:</strong> 일한 기간, 약정 지급일, 세전 약정액, 실제 지급액, 공제 내역, 남은 미지급액을 기록합니다. 월급·상여·수당·퇴직급여를 구분하세요.</li>
+<li><strong>자료 모으기:</strong> 근로계약서, 급여명세서, 계좌 입금 내역, 근무 기록, 지급 약속이 담긴 서면·메시지를 준비합니다. 자료가 일부 없다고 상담을 미루지는 마세요.</li>
+<li><strong>진정 접수:</strong> <a href="https://labor.moel.go.kr">노동포털</a>의 임금체불 진정 또는 관할 노동관서를 이용합니다. 접수 번호와 추가 제출 요청을 보관하세요.</li>
+<li><strong>회수 경로 확인:</strong> 조사 후 체불 확인서, 대지급금 요건, 민사 청구가 필요한지 확인합니다. 상담은 고용노동부 1350, 법률구조 상담은 132를 이용할 수 있습니다.</li>
+</ol>
+<p><strong>상여금도 무조건 체불인가요?</strong> 지급 의무가 있는 임금인지부터 확인해야 합니다. 계약·취업규칙·단체협약·지급 관행과 약정 지급일을 함께 살피세요. 명절이라는 이유만으로 모든 사업장에 동일한 떡값 지급 의무가 생기지는 않습니다. <a href="/chuseok-bonus-2026">추석 상여금 지급 의무와 휴일수당</a>에서 이 구분을 먼저 확인할 수 있습니다.</p>
+
+<h2 id="interest-and-damages">지연이자 20%와 최대 3배 손해배상은 다릅니다</h2>
+<p><a href="https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&amp;joBrNo=00&amp;joNo=0037&amp;lsiSeq=283457&amp;urlMode=lsScJoRltInfoR">근로기준법 제37조</a>와 <a href="https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=147576">시행령 제17·18조</a>에 따른 지연이자율은 연 20%입니다. 재직자의 정기 임금은 정해진 지급일 다음 날부터, 퇴직 등에 따른 금품은 지급 사유 발생일부터 14일이 지난 다음 날부터의 지연 일수를 따집니다. 회생·파산이나 임금의 존재 여부에 관한 적절한 법적 다툼 등 적용제외 사유가 있을 수 있습니다.</p>
+<p><a href="https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&amp;joBrNo=08&amp;joNo=0043&amp;lsiSeq=283457&amp;urlMode=lsScJoRltInfoR">근로기준법 제43조의8</a>은 명백한 고의, 1년 중 총 3개월 이상 체불, 체불 총액이 3개월 이상 통상임금에 해당하는 경우 중 하나를 충족할 때 법원에 3배 이내의 금액을 청구할 수 있도록 합니다. 이 조의 임금등에는 퇴직급여가 제외됩니다. 법원이 체불 경위, 지급 노력, 이미 지급한 지연이자, 재산상태 등을 고려하므로 <strong>원금에 고정 부가금 100%가 자동으로 붙는 제도가 아닙니다.</strong></p>
+<p>재직자 지연이자 확대와 위 손해배상 청구 규정은 <strong>2025년 10월 23일 시행</strong>이며, 시행 이후 발생하는 사유에 관한 적용례를 확인해야 합니다. 과거 체불액 전체에 일률적으로 소급 계산하지 마세요. <a href="https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&amp;chrClsCd=010202&amp;efYd=20251023&amp;joNo=011000&amp;lsiSeq=265959&amp;urlMode=lsInfoP">개정법 부칙 제2·5조</a>가 기준입니다.</p>
+
+<h2 id="claim-deadline">3년 시효만 보고 기다려도 되나요?</h2>
+<p>임금채권의 일반 소멸시효는 3년이며, 권리를 행사할 수 있는 때부터 따집니다. 월별 약정 지급일과 퇴직일을 따로 기록하세요. “노동청에 진정했으니 모든 민사 시효도 해결됐다”라고 단정하지 말고, 기한이 가까우면 청구 방법과 시효 보전 조치를 법률 상담으로 확인하세요. <a href="https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=2&amp;cciNo=4&amp;cnpClsNo=1&amp;csmSeq=1694&amp;menuType=cnpcls&amp;popMenu=ov">법제처 생활법령의 임금 시효 안내</a>를 참고했습니다.</p>
+<p>금액을 정리할 때는 <a href="/weekly-holiday-allowance-2026">주휴수당 계산기</a>와 <a href="/tools/finance/severance">퇴직금 계산기</a>를 보조 자료로 사용할 수 있습니다. 계산 결과는 체불 사실이나 지급 자격을 확정하는 문서가 아니므로 실제 근무·급여 자료와 대조하세요.</p>
 `;
 
 const sexualHarassmentLaw = `
@@ -899,7 +934,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "rental-dispute-protection-2026", title: "임대차 분쟁 5가지 — 보증금 반환·묵시적 갱신·차임 인상", description: "보증금 30일 이내 반환 의무 + 5% 인상 상한 + 묵시적 갱신. 대항력·우선변제권 확보 + 분쟁조정위원회 무료.", category: "기초", tags: ["임대차", "보증금", "임차인권리", "분쟁조정", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: rentalDispute, lang: "ko" },
   { slug: "work-contract-check-7-2026", title: "근로계약서 필수 7항목 — 미체결 시 사업주 500만원 과태료", description: "임금구성·근무시간·휴일·4대보험·시용기간·해고절차·비밀유지. 미체결 시 사업주 500만 과태료 + 분쟁 시 직원 유리.", category: "커리어", tags: ["근로계약서", "근로기준법", "임금", "해고", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: workContractCheck, lang: "ko" },
   { slug: "dismissal-procedure-2026", title: "부당해고 — 3개월 이내 노동위원회 진정 + 복직 + 100% 보상", description: "정당 사유 + 30일 전 통지 필수. 부당해고 시 노동위원회 진정 → 복직 명령 + 그동안 임금 100% 보상.", category: "커리어", tags: ["해고", "부당해고", "노동위원회", "예고수당", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dismissalProcedure, lang: "ko" },
-  { slug: "wage-delayed-claim-2026", title: "임금체불 — 3년 시효 + 부가금 100% + 사업주 3년 징역", description: "원금 + 부가금(2배) + 지연이자 20% + 사업주 3년 이하 징역 또는 3,000만 벌금. 3년 시효 내 청구.", category: "커리어", tags: ["임금체불", "노동부", "부가금", "사업주처벌", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: wageDelayed, lang: "ko" },
+  { slug: "wage-delayed-claim-2026", title: "임금체불 신고·대지급금·생계비 융자 — 2026 추석 지원 기한", description: "노동포털 진정 준비, 대지급금과 대출의 차이, 2026 추석 생계비 융자 금리·기한을 확인하세요. 지연이자와 조건부 손해배상, 시효도 구분합니다.", category: "커리어", tags: ["임금체불", "노동포털", "대지급금", "생계비 융자", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: wageDelayed, lang: "ko" },
   { slug: "sexual-harassment-protection-2026", title: "직장 내 성희롱 대응 — 사업주 1천만 과태료 + 손해배상", description: "증거 확보 → 회사 신고 → 노동부 → 형사 고소. 사업주 미이행 시 1천만 과태료 + 보복 금지 의무.", category: "커리어", tags: ["성희롱", "직장내괴롭힘", "노동부", "사업주의무", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: sexualHarassmentLaw, lang: "ko" },
   { slug: "overtime-proof-claim-2026", title: "야근수당 미지급 — 3년 누적 2,430만 + 부가금 4,860만 청구", description: "출퇴근·교통카드·이메일·카톡 증거 5가지. 월 30시간 미지급 시 3년 2,430만원 + 부가금 100% 시 4,860만원.", category: "커리어", tags: ["야근수당", "시간외수당", "노동부진정", "3년시효", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: overtimeProof, lang: "ko" },
   { slug: "annual-leave-refund-2026", title: "연차수당 — 미사용 일수 × 통상임금, 촉진 안 하면 무조건 지급", description: "1년 80%+ 출근 시 15일+ 연차. 미사용 시 일 통상임금 보상. 사업주 휴가 사용 촉진(7·10월 2회) 시 면제.", category: "커리어", tags: ["연차수당", "통상임금", "휴가사용촉진", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: annualLeaveRefund, lang: "ko" },
