@@ -9,6 +9,7 @@ import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
 import { hubSlugByCategoryId } from "@/lib/guideCategories";
 import { guideSearchHref } from "@/lib/guideDiscovery";
+import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
@@ -36,14 +37,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 interface GuidePageClientProps {
  guide: Guide;
  relatedGuides: Guide[];
-}
-
-// 'YYYY-MM-DD' → 'YYYY.MM.DD' 고정 포맷.
-// toLocaleDateString은 서버/브라우저 환경(ICU·타임존)에 따라 출력이 달라
-// hydration mismatch를 유발하므로 문자열 기반 수동 포맷을 사용한다.
-function formatDate(dateStr: string): string {
- const [y, m, d] = dateStr.split("-");
- return y && m && d ? `${y}.${m}.${d}` : dateStr;
 }
 
 // 본문 HTML을 <h2 시작 위치에서만 분할 — 태그 중간이 잘리지 않도록 보장.
@@ -170,9 +163,12 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {guide.title}
  </h1>
  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-faint-blue font-semibold">
- <div className="flex items-center gap-2">
+ <div className="flex flex-wrap items-center justify-center gap-2">
  <Calendar className="w-4 h-4" />
- <span>{formatDate(guide.publishedDate)}</span>
+ <span>발행 <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate)}</time></span>
+ {getGuideModifiedDate(guide) !== guide.publishedDate && (
+ <span>수정 <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide))}</time></span>
+ )}
  </div>
  <div className="w-1 h-1 rounded-full bg-slate-300" />
  <div className="flex items-center gap-2">
@@ -268,7 +264,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  국세청·국민연금공단·국민건강보험공단·근로복지공단 등 정부 공식 자료 기반.
  2026년 세법·요율 반영. 마지막 업데이트:{" "}
  <strong className="text-foreground">
- {formatDate(guide.publishedDate)}
+ <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide))}</time>
  </strong>
  </p>
  <p className="text-xs text-muted-foreground mt-2">

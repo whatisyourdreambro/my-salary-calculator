@@ -3858,21 +3858,22 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-payout-timing-2026",
-  "title": "성과급 지급 시점 절세 — 12월 vs 1월 누진세율 점프",
-  "description": "1,000만원 보너스 1월 vs 12월 지급 차이. 보너스 직전 IRP 900만원 만기 납입으로 한계세율 35~38% 구간 환급 119~149만원.",
+  "title": "성과급 12월·1월 지급 차이 — 귀속연도와 원천징수 확인",
+  "description": "성과급 지급일과 소득 귀속연도는 다를 수 있습니다. 국세청 2026년 답변으로 분할 지급, 최종 세금과 원천징수, IRP 세액공제를 구분합니다.",
   "category": "세금",
   "tags": [
    "성과급",
-   "보너스",
-   "한계세율",
+   "귀속연도",
+   "원천징수",
    "IRP",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 797
+  "contentChars": 3201
  },
  {
   "slug": "executive-severance-limit-2026",
@@ -3912,21 +3913,22 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "incentive-split-payout-2026",
-  "title": "인센티브 분할 지급 협상 — 5천만원 일시 vs 2년 분할 350만원 절감",
-  "description": "인센티브 5,000만원 일시 지급 시 1,850만원 세금 vs 2년 분할 1,500만원. 인사팀 협상으로 분할 가능, 350만원 절감.",
+  "title": "인센티브 분할 지급 — 귀속연도·미수령 잔액·퇴사 조건 확인",
+  "description": "80%·10%·10% 분할 지급에 관한 국세청 2026년 답변을 확인합니다. 세금이 자동으로 줄지 않는 이유와 지급 일정·재직 조건 확인표를 제공합니다.",
   "category": "연봉",
   "tags": [
    "인센티브",
    "분할지급",
-   "절세",
-   "협상",
+   "귀속연도",
+   "지급조건",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 835
+  "contentChars": 2495
  },
  {
   "slug": "overtime-night-holiday-pay-2026",
@@ -4539,21 +4541,22 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "wage-delayed-claim-2026",
-  "title": "임금체불 — 3년 시효 + 부가금 100% + 사업주 3년 징역",
-  "description": "원금 + 부가금(2배) + 지연이자 20% + 사업주 3년 이하 징역 또는 3,000만 벌금. 3년 시효 내 청구.",
+  "title": "임금체불 신고·대지급금·생계비 융자 — 2026 추석 지원 기한",
+  "description": "노동포털 진정 준비, 대지급금과 대출의 차이, 2026 추석 생계비 융자 금리·기한을 확인하세요. 지연이자와 조건부 손해배상, 시효도 구분합니다.",
   "category": "커리어",
   "tags": [
    "임금체불",
-   "노동부",
-   "부가금",
-   "사업주처벌",
+   "노동포털",
+   "대지급금",
+   "생계비 융자",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1001
+  "contentChars": 5218
  },
  {
   "slug": "sexual-harassment-protection-2026",

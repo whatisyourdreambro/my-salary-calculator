@@ -7,6 +7,7 @@ import { Calendar, ArrowRight, Search, Sparkles, BookOpen, Clock } from 'lucide-
 import { motion, AnimatePresence } from 'framer-motion';
 import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
 import { filterAndSortGuides, readGuideSearchQuery, type GuideSortOrder } from '@/lib/guideDiscovery';
+import { formatGuideDate, getGuideModifiedDate } from '@/lib/guideDates';
 
 type SortOption = GuideSortOrder;
 
@@ -87,7 +88,7 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
  <div className="flex items-center justify-between text-xs text-faint-blue pt-6 border-t border-canvas ">
  <div className="flex items-center gap-2">
  <Calendar className="w-3 h-3" />
- <span>{new Date(guide.publishedDate).toLocaleDateString('en-US')}</span>
+ <span>{getGuideModifiedDate(guide) !== guide.publishedDate ? "Updated " : "Published "}<time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time></span>
  </div>
  <div className="flex items-center gap-1 font-bold text-muted-blue group-hover:text-electric transition-colors">
  Read More <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
@@ -191,7 +192,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  {/* Sort options */}
  <div className="flex items-center gap-2 mb-12 flex-wrap">
  <span className="text-xs font-bold text-faint-blue uppercase tracking-wider mr-2">
- Publication date
+ Updated / published date
  </span>
  {SORT_OPTIONS.map((option) => {
  const Icon = option.icon;

@@ -240,7 +240,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-08-23",
+    "article:modified_time": "2026-09-09",
   },
 };
 
@@ -297,7 +297,7 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-08-23",
+            dateModified: "2026-09-09",
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
               "TAI(목표달성장려금) 2026 상반기 지급률 자동 적용",
@@ -1168,7 +1168,7 @@ export default function SamsungBonusCalculatorPage() {
               본 계산기는 공개된 노사 합의 보도와 영업이익 분배 모델 추정치이며
               참고용입니다. 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
               고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능. 정확한
-              본인 케이스는 회사 명세서 확인.
+              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-09-09">2026-09-09</time>.
             </p>
           </div>
 

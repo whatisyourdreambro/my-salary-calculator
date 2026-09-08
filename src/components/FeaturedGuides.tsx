@@ -31,7 +31,7 @@ export default function FeaturedGuides() {
  .map((slug) => koGuideCards.find((g) => g.slug === slug))
  .filter((g): g is NonNullable<typeof g> => Boolean(g));
 
- // 2) 시즌 후보 다음에는 본문을 갖춘 가이드를 최신 발행일 순서로 선택.
+ // 2) 시즌 후보 다음에는 본문을 갖춘 가이드를 실제 수정일(없으면 발행일) 순서로 선택.
  const recent = [...koGuideCards]
  .filter((g) => !prioritySlugs.includes(g.slug))
  .sort(compareGuideDates)
@@ -61,7 +61,7 @@ export default function FeaturedGuides() {
  <h2 className="text-2xl sm:text-3xl font-black text-navy tracking-tight">
  지금 함께 읽을 가이드
  </h2>
- <p className="text-sm text-muted-blue mt-2">시즌 주제를 먼저, 나머지는 최근 발행된 글부터 골랐습니다.</p>
+ <p className="text-sm text-muted-blue mt-2">시즌 주제를 먼저, 나머지는 최근 수정·발행된 글부터 골랐습니다.</p>
  </div>
  <Link
  href="/guides"

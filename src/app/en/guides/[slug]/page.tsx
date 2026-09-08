@@ -6,6 +6,7 @@ import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd, breadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
+import { getGuideModifiedDate } from "@/lib/guideDates";
 
 export const dynamic = 'force-static';
 
@@ -71,6 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  locale: 'en_US',
  url: enUrl,
  publishedTime: guide.publishedDate,
+ modifiedTime: getGuideModifiedDate(guide),
  authors: ['Moneysalary'],
  tags: guide.tags,
  // 페이지가 openGraph를 선언하면 루트 이미지가 상속되지 않음 — EN OG 분기 재사용
@@ -102,7 +104,7 @@ export default function EnglishGuidePage({ params }: Props) {
  description: guide.description,
  slug: guide.slug,
  publishedDate: guide.publishedDate,
- modifiedDate: guide.publishedDate,
+ modifiedDate: getGuideModifiedDate(guide),
  lang: "en",
  });
 

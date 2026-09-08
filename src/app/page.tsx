@@ -8,6 +8,7 @@ import { faqLd, howToLd } from "@/lib/structuredData";
 import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
+import FeaturedGuides from "@/components/FeaturedGuides";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
@@ -30,7 +31,8 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={[faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
-      <HomeClient />
+      {/* Server-render the discovery links in place; keep the calculator interactive. */}
+      <HomeClient featuredGuides={<FeaturedGuides />} />
       <HomeSeoSection />
       {/* 모바일 전용 — 스크롤 후 하단 공유 pill (앵커 광고·PWA 배너 감지 시 자동 숨김) */}
       <FloatingShareBar />

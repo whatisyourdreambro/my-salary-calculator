@@ -142,7 +142,7 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
             className="text-xs font-black uppercase tracking-widest mb-3"
             style={{ color: "rgba(255,255,255,0.65)" }}
           >
-            {selected.rank} 평균 성과급 실수령
+            {selected.rank} 예시 · 예상 세후 금액
           </p>
           <div
             className="text-5xl sm:text-6xl font-black tracking-tight text-white"

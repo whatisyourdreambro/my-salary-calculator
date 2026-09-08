@@ -1,8 +1,10 @@
-// 가이드 탐색 기준: 목록은 발행일, 관련 글은 같은 주제·태그 다음 발행일.
+// 가이드 탐색 기준: 목록은 실제 수정일(없으면 발행일), 관련 글은 주제·태그 다음 날짜.
 // 출처와 집계 기간이 없는 legacy views 값은 표시·추천에 사용하지 않는다.
+import { getGuideModifiedDate } from "./guideDates";
+
 export type GuideSortOrder = "latest" | "oldest";
 
-type DatedGuide = { slug: string; publishedDate: string };
+type DatedGuide = { slug: string; publishedDate: string; modifiedDate?: string };
 type SearchableGuide = DatedGuide & {
   title: string;
   description: string;
@@ -11,7 +13,7 @@ type SearchableGuide = DatedGuide & {
 };
 
 export function compareGuideDates(a: DatedGuide, b: DatedGuide): number {
-  return b.publishedDate.localeCompare(a.publishedDate) || a.slug.localeCompare(b.slug);
+  return getGuideModifiedDate(b).localeCompare(getGuideModifiedDate(a)) || a.slug.localeCompare(b.slug);
 }
 
 export function filterAndSortGuides<T extends SearchableGuide>(
@@ -28,7 +30,7 @@ export function filterAndSortGuides<T extends SearchableGuide>(
     (!normalized || [guide.title, guide.description, ...guide.tags]
       .some((value) => value.toLocaleLowerCase().includes(normalized))),
   ).sort((a, b) => order === "oldest"
-    ? a.publishedDate.localeCompare(b.publishedDate) || a.slug.localeCompare(b.slug)
+    ? getGuideModifiedDate(a).localeCompare(getGuideModifiedDate(b)) || a.slug.localeCompare(b.slug)
     : compareGuideDates(a, b));
 }
 

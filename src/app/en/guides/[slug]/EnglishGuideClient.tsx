@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
 import { guideSearchHref } from "@/lib/guideDiscovery";
+import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
 import TableOfContents from "@/components/guides/TableOfContents";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
 
@@ -71,9 +72,12 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  {guide.title}
  </h1>
  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-faint-blue font-semibold">
- <div className="flex items-center gap-2">
+ <div className="flex flex-wrap items-center justify-center gap-2">
  <Calendar className="w-4 h-4" />
- <span>{new Date(guide.publishedDate).toLocaleDateString("en-US")}</span>
+ <span>Published <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate, "en")}</time></span>
+ {getGuideModifiedDate(guide) !== guide.publishedDate && (
+ <span>Updated <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time></span>
+ )}
  </div>
  <div className="w-1 h-1 rounded-full bg-slate-300" />
  <div className="flex items-center gap-2">
@@ -145,7 +149,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  : "Based on Korean government data (NTS, NPS, NHIS, KCOMWEL) and 2026 tax law."}{" "}
  Last updated:{" "}
  <strong className="text-foreground">
- {new Date(guide.publishedDate).toLocaleDateString("en-US")}
+ <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time>
  </strong>
  </p>
  <p className="text-xs text-muted-foreground mt-2">

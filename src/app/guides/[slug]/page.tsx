@@ -13,6 +13,7 @@ import { extractGuideFaqs } from "@/lib/guideFaq";
 import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
+import { getGuideModifiedDate } from "@/lib/guideDates";
 
 export const dynamic = 'force-static';
 
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  title: guide.title,
  description: guide.description,
  publishedDate: guide.publishedDate,
+ modifiedDate: guide.modifiedDate,
  tags: guide.tags,
  });
 
@@ -79,7 +81,7 @@ export default function GuidePage({ params }: Props) {
  description: guide.description,
  slug: guide.slug,
  publishedDate: guide.publishedDate,
- modifiedDate: guide.publishedDate,
+ modifiedDate: getGuideModifiedDate(guide),
  });
 
  const breadcrumbSchema = autoBreadcrumbLd(`/guides/${guide.slug}`, {

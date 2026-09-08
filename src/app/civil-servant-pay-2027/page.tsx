@@ -52,7 +52,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2027",
   ogType: "article",
   publishedTime: "2026-08-16",
-  modifiedTime: "2026-09-08",
+  modifiedTime: "2026-09-09",
   // ⚠ 연도 없는 "공무원 봉급표" 단독 키워드 금지 — 2026 페이지 잠식 방지
   keywords: [
     "2027 공무원 봉급표",
@@ -125,7 +125,7 @@ export default function CivilServantPay2027Page() {
             slug: "civil-servant-pay-2027",
             url: "/civil-servant-pay-2027",
             publishedDate: "2026-08-16",
-            modifiedDate: "2026-09-08",
+            modifiedDate: "2026-09-09",
           }),
           // datasetLd는 확정표 발표 후에만 추가 (전망 시뮬레이션은 데이터셋 부적합)
           speakableLd({
@@ -145,7 +145,7 @@ export default function CivilServantPay2027Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2027 공무원 봉급표 <span className="text-electric">{pct}% 적용 예상 봉급</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-09-08" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-09-09" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             2026년 확정 봉급에 예산안 보도 기준 <strong>{pct}% 인상률</strong>을 적용하면
             9급 1호봉의 2027년 기본 봉급은 약 {fmt(g9h1)}원입니다.

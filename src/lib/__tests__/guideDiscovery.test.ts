@@ -45,6 +45,15 @@ describe("가이드 검색과 편집 정렬", () => {
     const tied = [guides[0], { ...guides[0], slug: "another" }, { ...guides[0], slug: "newer", publishedDate: "2026-02-01", views: 0 }];
     expect(rankRelatedGuides(tied, { currentSlug: "other" }).map((g) => g.slug)).toEqual(["newer", "another", "old"]);
   });
+
+  it("수정된 기존 글은 발행일을 보존하면서 최신 목록·추천에 반영된다", () => {
+    const updated = { ...guides[0], modifiedDate: "2026-09-09" };
+    const input = [updated, guides[1], guides[2]];
+    expect(filterAndSortGuides(input).map((guide) => guide.slug)).toEqual(["old", "new", "related"]);
+    expect(filterAndSortGuides(input, { order: "oldest" }).map((guide) => guide.slug)).toEqual(["related", "new", "old"]);
+    expect(rankRelatedGuides(input, { currentSlug: "none" }).map((guide) => guide.slug)).toEqual(["old", "new", "related"]);
+    expect(updated.publishedDate).toBe("2026-01-01");
+  });
 });
 
 describe("검색 URL 범위와 안전한 태그 링크", () => {
