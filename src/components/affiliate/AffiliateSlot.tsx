@@ -16,6 +16,7 @@
 //    scripts/ad-audit.mjs 의 재귀 import 추적이 COUPANG 을 이중 집계하지 않게 한다.
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { observeCoupangImpressions, observeViewableImpression } from "@/lib/adMeasurement";
 import CoupangBannerCore, {
   type CoupangBannerProps,
 } from "./CoupangBannerCore";
@@ -63,26 +64,13 @@ function OfferCard({
   calcResult?: Record<string, string | number>;
 }) {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const impressionSent = useRef(false);
-
-  // 노출 계측 — 뷰포트 진입 1회 (CTR 분모)
+  // 실제 50% 노출을 방문 경로·오퍼별 1회 계측. SPA 이동 시 구독을 새로 시작한다.
   useEffect(() => {
     const el = cardRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && !impressionSent.current) {
-            impressionSent.current = true;
-            trackAffiliateImpression(offer.id, pathname, offer.vertical);
-            observer.disconnect();
-          }
-        }
-      },
-      { rootMargin: "0px", threshold: 0.5 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    if (!el) return;
+    return observeViewableImpression(el, () => {
+      trackAffiliateImpression(offer.id, pathname, offer.vertical);
+    });
   }, [offer.id, offer.vertical, pathname]);
 
   const description =
@@ -184,37 +172,24 @@ export default function AffiliateSlot({
 
 /**
  * 쿠팡 폴백 + 노출 계측 — 부활 팩 ④ (운영자 승인 2026-08-31).
- * CoupangBannerCore(보호 컴포넌트)는 무접촉 — 래퍼 div의 IntersectionObserver로
- * viewport 진입 1회를 GA4 coupang_impression 으로 기록해 오퍼 vs 쿠팡 CTR
- * 비교 분모를 만든다. traceId·subId·링크는 일절 건드리지 않는다.
+ * Core의 실제 렌더 배너를 관찰해 빈 폴백은 제외한다. 크기·카테고리는 Core의
+ * metadata를 읽어 클릭 이벤트와 일치시킨다. traceId·subId·링크는 유지한다.
  */
 function CoupangFallbackWithImpression(props: CoupangBannerProps) {
   const pathname = usePathname();
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const sent = useRef(false);
-  const sizeKey = props.responsive ? props.responsive.desktop : (props.size ?? "leaderboard");
-
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && !sent.current) {
-            sent.current = true;
-            trackEvent("coupang_impression", {
-              page_path: pathname ?? "",
-              size_key: sizeKey,
-            });
-            observer.disconnect();
-          }
-        }
-      },
-      { rootMargin: "0px", threshold: 0.5 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [pathname, sizeKey]);
+    if (!el) return;
+    return observeCoupangImpressions(el, (dimensions) => {
+      trackEvent("coupang_impression", {
+        page_path: pathname ?? "",
+        ...dimensions,
+        // 이전 보고서 키는 유지하되 이제 실제 표시 크기를 담는다.
+        size_key: dimensions.banner_size,
+      });
+    });
+  }, [pathname]);
 
   return (
     <div ref={wrapRef}>

@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState, useMemo, useRef, useEffect, useId } from "react";
+import { useState, useMemo, useRef, useEffect, useId, useCallback } from "react";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
@@ -16,6 +16,8 @@ import FavoritesButton from "./FavoritesButton";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
 import { SITE_CONFIG } from "@/lib/seo";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 
 interface Props {
  slug: string;
@@ -110,6 +112,21 @@ export default function SimpleCalculatorView({ slug }: Props) {
  return calc.compute(inputs);
  }, [calc, inputs]);
 
+ const measurement = useCalculatorMeasurement({
+ calcType: slug,
+ allowNegativeInput: true,
+ valid: Boolean(calc && result &&
+ calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)) &&
+ Number.isFinite(result.primary.value) &&
+ (result.secondary ?? []).every((item) => Number.isFinite(item.value))),
+ resultKey: result,
+ });
+ const measurementResultRef = measurement.resultRef;
+ const setResultRef = useCallback((element: HTMLElement | null) => {
+ resultCardRef.current = element;
+ measurementResultRef(element);
+ }, [measurementResultRef]);
+
  // 입력이 기본값 그대로면 깔끔한 canonical, 바꿨으면 결과 재현 링크로 공유
  // 채널 귀속 utm 은 ShareSection→ShareButtons 가 채널별 withUtm 으로 부여(`?v=` 뒤에 `&utm_…` 결합).
  const shareUrl = useMemo(() => {
@@ -196,7 +213,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </div>
  </div>
 
- <section className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">
+ <section {...measurement.inputProps} className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">
  <h2 className="text-sm font-black text-navy dark:text-canvas-50 mb-6 flex items-center gap-2">
  <Calculator className="w-4 h-4 text-electric" />
  입력값
@@ -234,7 +251,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </div>
  </section>
 
- <section ref={resultCardRef} className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
+ <section ref={setResultRef} className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
  <p className="text-xs font-bold opacity-90 mb-2">{result.primary.label}</p>
  <p className="text-3xl sm:text-5xl font-black tracking-tight tabular-nums break-keep">
  {formatNumber(result.primary.value, result.primary.suffix)}

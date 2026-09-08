@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   trackAdFillStatus,
-  trackAdImpression,
+  trackAdRequestAttempt,
+  trackAdRequestError,
   trackAdUnitClick,
 } from "@/lib/analytics";
 
@@ -128,20 +129,20 @@ function AdSlot({
   useEffect(() => {
     if (!visible || pushed.current || !slot) return;
     pushed.current = true;
+    trackAdRequestAttempt(slotKind ?? "unknown");
     try {
       // @ts-expect-error adsbygoogle global
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
       // AdSense push errors are non-fatal
+      trackAdRequestError(slotKind ?? "unknown");
     }
-    // 슬롯별 노출(impression) 카운트 → GA4 에서 슬롯별 실제 노출/RPM 분석
-    trackAdImpression(slotKind ?? "unknown");
   }, [visible, slot, slotKind]);
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
   // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
   // + 채움 결과 계측(2026-09-05, 운영자 승인): data-ad-status 가 filled/unfilled 로 전이될 때
-  //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_impression 은 push 시점 "요청 수"라
+  //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_request_attempt 는 push 시점 "요청 수"라
   //   실노출·채움률을 답하지 못했고, 실험 판정 기준 'unfilled 급증 없음'이 AdSense CSV(운영자 제공)에만
   //   의존하던 공백을 메운다. 광고 요청·렌더 로직·슬롯·스타일은 무변경 — 계측 호출만 추가.
   const fillReported = useRef<string | null>(null);

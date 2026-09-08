@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Eye, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
+import { Calendar, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
 import { hubSlugByCategoryId } from "@/lib/guideCategories";
+import { guideSearchHref } from "@/lib/guideDiscovery";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
@@ -179,11 +180,6 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <span>{readingTime}분 분량</span>
  </div>
  <div className="w-1 h-1 rounded-full bg-slate-300" />
- <div className="flex items-center gap-2">
- <Eye className="w-4 h-4" />
- <span>{guide.views.toLocaleString('ko-KR')} views</span>
- </div>
- <div className="w-1 h-1 rounded-full bg-slate-300" />
  {/* 상단 컴팩트 공유 — 본문 하단 ShareButtons(대표)와 별개 보조 UI */}
  <ShareButtons
  variant="compact"
@@ -303,7 +299,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
  {guide.tags.map((tag) => (
- <Link key={tag} href={`/guides?q=${tag}`}>
+ <Link key={tag} href={guideSearchHref(tag)} rel="nofollow">
  <span className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-all">
  #{tag}
  </span>

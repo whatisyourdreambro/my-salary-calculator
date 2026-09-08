@@ -15,6 +15,7 @@ import WebVitals from "@/components/WebVitals";
 import InternalLinkTracker from "@/components/InternalLinkTracker";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
+import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
@@ -160,6 +161,8 @@ export default function RootLayout({
 
         {/* 서버 컴포넌트 링크 모듈([data-msy-module]) 클릭 → guide_cta_click(position=모듈) 위임 계측 */}
         <InternalLinkTracker />
+        {/* Version 2 calculation scopes share one page-visit boundary across all routes. */}
+        <CalcFunnelTracker />
 
         {/* 본문 100자+ 복사 시 출처 링크 자동 첨부 (펌글 → 자연 유입) */}
         <CopyAttribution />

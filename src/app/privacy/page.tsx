@@ -19,7 +19,9 @@ const SECTIONS = [
  "머니샐러리는 회원가입 절차 없이 이용 가능한 서비스로, 별도의 개인정보를 직접 수집하지 않습니다.",
  "다만 서비스 운영을 위해 다음 정보가 자동 수집될 수 있습니다:",
  "• 접속 로그 (IP 주소, 접속 시간, 브라우저 종류) — 호스팅 제공자(Cloudflare)가 보안·운영 목적으로 자동 수집",
- "• 사용자 입력 데이터 (연봉, 부양가족 수 등) — 사용자 브라우저의 localStorage에만 저장되며 서버로 전송되지 않습니다",
+ "• 계산 입력값 (연봉, 부양가족 수 등) — 계산과 저장은 기본적으로 사용자 브라우저에서 처리합니다. 직접 구현한 계산 분석 이벤트에는 정확한 금액·금액 구간·부양가족 수를 포함하지 않고 계산기 종류와 이용 단계만 전송합니다.",
+ "• 결과 공유 — 사용자가 결과 공유 기능을 선택하면 입력값이 포함된 결과 링크·문구·이미지가 생성될 수 있습니다. 공유한 상대와 선택한 외부 서비스가 해당 내용을 볼 수 있으며, 결과 링크나 미리보기 요청은 호스팅 서버에 전달될 수 있습니다.",
+ "• 분석 URL — 직접 구현한 분석 이벤트에서는 공유 토큰과 계산 입력 쿼리를 제거하고 캠페인 유입 정보만 남깁니다. Google Analytics의 자동 페이지·링크 측정은 별도로 동작하므로 서비스 설정에 따라 방문 URL과 링크 정보가 수집될 수 있습니다.",
  "• 광고/분석 쿠키 — Google AdSense, Google Analytics 4, 쿠팡 파트너스가 제공하는 쿠키",
  ],
  },
@@ -88,7 +90,7 @@ export default function PrivacyPage() {
 
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="mb-12">
- <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 5월</p>
+ <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 9월 8일</p>
  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy mb-4">
  개인정보 처리방침
  </h1>

@@ -12,6 +12,7 @@ import { speakableLd, articleLd, autoBreadcrumbLd, faqLd } from "@/lib/structure
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
+import { rankRelatedGuides } from "@/lib/guideDiscovery";
 
 export const dynamic = 'force-static';
 
@@ -69,18 +70,9 @@ export default function GuidePage({ params }: Props) {
  permanentRedirect("/guides");
  }
 
- const relatedGuides = koGuides
- .filter((g) => g.category === guide.category && g.slug !== guide.slug)
- .sort((a, b) => b.views - a.views)
- .slice(0, 3);
-
- if (relatedGuides.length < 3) {
- const others = koGuides
- .filter((g) => g.slug !== guide.slug && !relatedGuides.find(r => r.slug === g.slug))
- .sort((a, b) => b.views - a.views)
- .slice(0, 3 - relatedGuides.length);
- relatedGuides.push(...others);
- }
+ const relatedGuides = rankRelatedGuides(koGuides, {
+ currentSlug: guide.slug, category: guide.category, tags: guide.tags,
+ }).slice(0, 3);
 
  const articleSchema = articleLd({
  title: guide.title,
