@@ -9,26 +9,31 @@ import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight, Calculator } from "lucide-react";
 import { calcBonusNet } from "@/lib/bonusTaxCalc";
-import { trackCalcSubmit } from "@/lib/analytics";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 
 const fmtWon = (n: number) => `${Math.round(n).toLocaleString("ko-KR")}원`;
 
 export default function ChuseokBonusClient() {
   const [salary, setSalary] = useState(42_000_000); // 평균 연봉대 기본값
   const [bonus, setBonus] = useState(1_000_000); // 추석 상여 100만원 기본값
-  const [touched, setTouched] = useState(false);
+  const [validInputs, setValidInputs] = useState({ salary: true, bonus: true });
 
   const result = useMemo(() => calcBonusNet(salary, bonus), [salary, bonus]);
+  const measurement = useCalculatorMeasurement({
+    calcType: "chuseok_bonus_mini",
+    valid: validInputs.salary && validInputs.bonus &&
+      isValidCalculationNumber(salary, Number.MIN_VALUE) && isValidCalculationNumber(bonus, 0) && Number.isFinite(result.net),
+    resultKey: result,
+  });
 
   const handleChange =
-    (setter: (v: number) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (setter: (v: number) => void, field: "salary" | "bonus") => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const valid = isValidCalculationNumber(e.target.value, field === "salary" ? Number.MIN_VALUE : 0);
+      setValidInputs((previous) => ({ ...previous, [field]: valid }));
       const num = Number(e.target.value.replace(/,/g, ""));
       if (!isNaN(num) && num >= 0) {
         setter(num);
-        if (!touched) {
-          setTouched(true);
-          trackCalcSubmit("chuseok_bonus_mini");
-        }
       }
     };
 
@@ -42,14 +47,14 @@ export default function ChuseokBonusClient() {
         상여금은 근로소득으로 합산 과세 — 내 연봉 구간의 한계세율과 4대보험이 적용됩니다
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div {...measurement.inputProps} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block text-sm font-bold text-navy mb-2">내 연봉 (원)</label>
           <input
             type="text"
             inputMode="numeric"
             value={salary.toLocaleString("ko-KR")}
-            onChange={handleChange(setSalary)}
+            onChange={handleChange(setSalary, "salary")}
             className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
           />
         </div>
@@ -61,13 +66,13 @@ export default function ChuseokBonusClient() {
             type="text"
             inputMode="numeric"
             value={bonus.toLocaleString("ko-KR")}
-            onChange={handleChange(setBonus)}
+            onChange={handleChange(setBonus, "bonus")}
             className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
           />
         </div>
       </div>
 
-      <div className="p-5 sm:p-6 bg-electric rounded-2xl text-white">
+      <div ref={measurement.resultRef} className="p-5 sm:p-6 bg-electric rounded-2xl text-white">
         <p className="text-xs font-bold opacity-90 mb-1">세후 실수령 추석 상여금</p>
         <p className="text-3xl sm:text-4xl font-black tracking-tight tabular-nums mb-4">
           {fmtWon(result.net)}

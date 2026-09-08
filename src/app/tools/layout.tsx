@@ -5,15 +5,12 @@
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
-import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* calc_start → calc_submit 퍼널 계측 (전체 /tools/* 공통) */}
-      <CalcFunnelTracker />
       {children}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="my-6">

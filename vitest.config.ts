@@ -5,6 +5,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
+  // Next의 jsx:preserve와 별도로 실제 TSX 메타데이터·SSR 모듈을 테스트한다.
+  oxc: { jsx: { runtime: "automatic" } },
   test: {
     include: ["src/**/*.test.ts"],
   },

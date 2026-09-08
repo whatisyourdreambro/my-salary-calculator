@@ -3,15 +3,15 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { GuideCardMeta } from '@/lib/guidesData';
 import Link from "@/components/AppLink";
-import { Calendar, ArrowRight, Search, TrendingUp, Sparkles, BookOpen, Eye, Clock } from 'lucide-react';
+import { Calendar, ArrowRight, Search, Sparkles, BookOpen, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
+import { filterAndSortGuides, readGuideSearchQuery, type GuideSortOrder } from '@/lib/guideDiscovery';
 
-type SortOption = "latest" | "popular" | "oldest";
+type SortOption = GuideSortOrder;
 
 const SORT_OPTIONS: { id: SortOption; label: string; icon: React.ElementType }[] = [
  { id: "latest", label: "Latest", icon: Calendar },
- { id: "popular", label: "Popular", icon: Eye },
  { id: "oldest", label: "Oldest", icon: Clock },
 ];
 
@@ -27,7 +27,7 @@ function HeroGuide({ guide }: { guide: GuideCardMeta }) {
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
  <div className="flex items-center gap-2 mb-4">
  <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center gap-1">
- <Sparkles className="w-3 h-3" /> Featured
+ <Sparkles className="w-3 h-3" /> Latest guide
  </span>
  <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold">
  {guide.category}
@@ -74,11 +74,6 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
  <span className="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-primary/10 text-electric text-xs font-bold border border-electric/20">
  {guide.category}
  </span>
- {guide.views > 10000 && (
- <span className="flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full border border-primary/20">
- <TrendingUp className="w-3 h-3" /> Trending
- </span>
- )}
  </div>
 
  <h3 className="text-xl font-bold text-navy mb-3 leading-snug group-hover:text-electric transition-colors">
@@ -115,49 +110,26 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  const [selectedCategoryId, setSelectedCategoryId] = useState('all');
  const [searchQuery, setSearchQuery] = useState('');
  useEffect(() => {
- if (typeof window === 'undefined') return;
- const q = new URLSearchParams(window.location.search).get('q');
- if (q) setSearchQuery(q);
+ const restoreFilters = () => {
+ setSearchQuery(readGuideSearchQuery(new URLSearchParams(window.location.search)));
+ setVisibleCount(ITEMS_PER_PAGE);
+ };
+ restoreFilters();
+ window.addEventListener('popstate', restoreFilters);
+ return () => window.removeEventListener('popstate', restoreFilters);
  }, []);
  const [sortBy, setSortBy] = useState<SortOption>('latest');
  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
  const sortedGuides = useMemo(() => {
- return [...guides].sort((a, b) => b.views - a.views);
+ return filterAndSortGuides(guides);
  }, [guides]);
 
  const featuredGuide = sortedGuides[0];
 
- const filteredGuides = useMemo(() => {
- let result = [...guides];
-
- if (sortBy === 'latest') {
- result.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
- } else if (sortBy === 'popular') {
- result.sort((a, b) => b.views - a.views);
- } else if (sortBy === 'oldest') {
- result.sort((a, b) => new Date(a.publishedDate).getTime() - new Date(b.publishedDate).getTime());
- }
-
- if (selectedCategoryId === 'all' && !searchQuery && sortBy === 'latest' && featuredGuide) {
- result = result.filter(g => g.slug !== featuredGuide.slug);
- }
-
- if (selectedCategoryId !== 'all') {
- result = result.filter(guide => guide.category === selectedCategoryId);
- }
-
- if (searchQuery) {
- const query = searchQuery.toLowerCase();
- result = result.filter(guide =>
- guide.title.toLowerCase().includes(query) ||
- guide.description.toLowerCase().includes(query) ||
- guide.tags.some(tag => tag.toLowerCase().includes(query))
- );
- }
-
- return result;
- }, [guides, selectedCategoryId, searchQuery, sortBy, featuredGuide]);
+ const filteredGuides = useMemo(() => filterAndSortGuides(guides, {
+ query: searchQuery, category: selectedCategoryId, order: sortBy,
+ }), [guides, selectedCategoryId, searchQuery, sortBy]);
 
  const visibleGuides = filteredGuides.slice(0, visibleCount);
  const hasMore = visibleCount < filteredGuides.length;
@@ -191,8 +163,9 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  type="text"
  className="toss-input pl-14"
  placeholder="Search keywords..."
+ aria-label="Search guide keywords"
  value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
+ onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
  />
  </div>
  </div>
@@ -218,14 +191,14 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  {/* Sort options */}
  <div className="flex items-center gap-2 mb-12 flex-wrap">
  <span className="text-xs font-bold text-faint-blue uppercase tracking-wider mr-2">
- Sort
+ Publication date
  </span>
  {SORT_OPTIONS.map((option) => {
  const Icon = option.icon;
  return (
  <button
  key={option.id}
- onClick={() => setSortBy(option.id)}
+ onClick={() => { setSortBy(option.id); setVisibleCount(ITEMS_PER_PAGE); }}
  className={"flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all " + (sortBy === option.id
  ? 'bg-electric-10 text-electric border border-electric/20'
  : 'bg-white text-muted-blue border border-canvas-200 hover:border-electric/40'
@@ -243,7 +216,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
 
  {/* Featured Hero */}
  <AnimatePresence>
- {selectedCategoryId === 'all' && !searchQuery && featuredGuide && (
+ {selectedCategoryId === 'all' && !searchQuery.trim() && sortBy === 'latest' && featuredGuide && (
  <motion.section
  initial={{ opacity: 0, height: 0 }}
  animate={{ opacity: 1, height: 'auto' }}

@@ -1,11 +1,12 @@
 "use client";
 
-import { Calendar, Eye, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
+import { Calendar, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
 import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
+import { guideSearchHref } from "@/lib/guideDiscovery";
 import TableOfContents from "@/components/guides/TableOfContents";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
 
@@ -78,11 +79,6 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <div className="flex items-center gap-2">
  <Clock className="w-4 h-4" />
  <span>{readingTime} min read</span>
- </div>
- <div className="w-1 h-1 rounded-full bg-slate-300" />
- <div className="flex items-center gap-2">
- <Eye className="w-4 h-4" />
- <span>{guide.views.toLocaleString('en-US')} views</span>
  </div>
  </div>
  </motion.div>
@@ -170,7 +166,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
  {guide.tags.map((tag) => (
- <Link key={tag} href={`/en/guides?q=${tag}`}>
+ <Link key={tag} href={guideSearchHref(tag, "en")} rel="nofollow">
  <span className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-all">
  #{tag}
  </span>

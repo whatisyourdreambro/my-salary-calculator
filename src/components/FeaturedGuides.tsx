@@ -1,6 +1,6 @@
 // src/components/FeaturedGuides.tsx
 //
-// 메인 페이지 인기 가이드 8개 카드. 시즌 이슈(2026-05 반도체 임금협상)
+// 메인 페이지 편집 추천 가이드 8개 카드. 명시된 시즌 이슈
 // 가이드를 첫 슬롯에 우선 노출하여 메인 → 가이드 유입을 강화.
 
 import Link from "@/components/AppLink";
@@ -8,6 +8,7 @@ import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
 // 카드 메타만 사용 — 본문 포함 guidesContent 를 import 하면 홈 청크에
 // 가이드 본문 전체가 실린다 (2026-08-26 Phase 4 물리 분리)
 import { koGuideCards } from "@/lib/guidesData";
+import { compareGuideDates } from "@/lib/guideDiscovery";
 
 // 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. CF Pages는 배포마다 재빌드)
 const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
@@ -30,20 +31,20 @@ export default function FeaturedGuides() {
  .map((slug) => koGuideCards.find((g) => g.slug === slug))
  .filter((g): g is NonNullable<typeof g> => Boolean(g));
 
- // 2) 인기 가이드 — views 기준 상위 + unique 본문(boilerplate 제외)
- const popular = [...koGuideCards]
+ // 2) 시즌 후보 다음에는 본문을 갖춘 가이드를 최신 발행일 순서로 선택.
+ const recent = [...koGuideCards]
  .filter((g) => !prioritySlugs.includes(g.slug))
- .sort((a, b) => b.views - a.views)
+ .sort(compareGuideDates)
  .filter((g) => g.contentChars > 1500)
  .slice(0, 8 - prioritized.length);
 
- const items = [...prioritized, ...popular];
+ const items = [...prioritized, ...recent];
 
- // unique 본문 가이드가 부족하면 fallback (영문 제외 전체에서 views 상위)
+ // 본문 길이 기준 후보가 부족하면 나머지 한국어 가이드를 최신순으로 보충.
  if (items.length < 8) {
  const fallback = [...koGuideCards]
  .filter((g) => !items.find((it) => it.slug === g.slug))
- .sort((a, b) => b.views - a.views)
+ .sort(compareGuideDates)
  .slice(0, 8 - items.length);
  items.push(...fallback);
  }
@@ -55,11 +56,12 @@ export default function FeaturedGuides() {
  <div>
  <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs mb-3">
  <BookOpen className="w-3 h-3" />
- 인기 + 시즌 가이드
+ 편집 추천 · 시즌 가이드
  </p>
  <h2 className="text-2xl sm:text-3xl font-black text-navy tracking-tight">
- 지금 가장 많이 읽히는 가이드
+ 지금 함께 읽을 가이드
  </h2>
+ <p className="text-sm text-muted-blue mt-2">시즌 주제를 먼저, 나머지는 최근 발행된 글부터 골랐습니다.</p>
  </div>
  <Link
  href="/guides"

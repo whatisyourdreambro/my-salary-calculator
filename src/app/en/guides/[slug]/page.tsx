@@ -5,6 +5,7 @@ import JsonLd from "@/components/JsonLd";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd, breadcrumbLd } from "@/lib/structuredData";
 import { Metadata } from "next";
+import { rankRelatedGuides } from "@/lib/guideDiscovery";
 
 export const dynamic = 'force-static';
 
@@ -92,16 +93,9 @@ export default function EnglishGuidePage({ params }: Props) {
  permanentRedirect("/en/guides");
  }
 
- const relatedGuides = enGuides
- .filter((g) => g.category === guide.category && g.slug !== guide.slug)
- .slice(0, 3);
-
- if (relatedGuides.length < 3) {
- const others = enGuides
- .filter((g) => g.slug !== guide.slug && !relatedGuides.find(r => r.slug === g.slug))
- .slice(0, 3 - relatedGuides.length);
- relatedGuides.push(...others);
- }
+ const relatedGuides = rankRelatedGuides(enGuides, {
+ currentSlug: guide.slug, category: guide.category, tags: guide.tags,
+ }).slice(0, 3);
 
  const jsonLd = articleLd({
  title: guide.title,

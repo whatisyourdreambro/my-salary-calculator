@@ -8,8 +8,9 @@
 // 넘기면, 가이드 본문이 클라이언트 번들(First Load JS)에 실리지 않는다.
 // (이 모듈은 guides 를 import 하므로 반드시 서버 컴포넌트/페이지에서만 호출할 것)
 
-import { guides } from "@/lib/guidesContent";
+import { koGuides } from "@/lib/guidesContent";
 import type { Guide } from "@/lib/guidesData";
+import { rankRelatedGuides } from "@/lib/guideDiscovery";
 
 export interface RelatedGuideItem {
   slug: string;
@@ -31,32 +32,6 @@ interface GetRelatedGuidesOptions {
   explicitSlugs?: string[];
 }
 
-const FRESHNESS_MS = 1000 * 60 * 60 * 24 * 90; // 90일
-
-function score(
-  target: Guide,
-  nowMs: number,
-  currentCategory?: string,
-  currentTags?: string[]
-): number {
-  let s = 0;
-  if (currentCategory && target.category === currentCategory) s += 10;
-  if (currentTags) {
-    const overlap = target.tags.filter((t) => currentTags.includes(t)).length;
-    s += overlap * 3;
-  }
-  s += Math.min(target.views / 1000, 5); // 인기도 약간 가산
-  // publishedDate 신선도 가산 — 90일 이내일수록 가중 (최대 +3)
-  const published = new Date(target.publishedDate).getTime();
-  if (!Number.isNaN(published)) {
-    const ageMs = nowMs - published;
-    if (ageMs >= 0 && ageMs <= FRESHNESS_MS) {
-      s += 3 * (1 - ageMs / FRESHNESS_MS);
-    }
-  }
-  return s;
-}
-
 function toItem(g: Guide): RelatedGuideItem {
   return {
     slug: g.slug,
@@ -74,18 +49,14 @@ export function getRelatedGuides({
   limit = 6,
   explicitSlugs,
 }: GetRelatedGuidesOptions): RelatedGuideItem[] {
-  const nowMs = Date.now();
-
-  const explicit = (explicitSlugs ?? [])
-    .map((slug) => guides.find((g) => g.slug === slug && g.slug !== currentSlug))
+  // 링크 대상은 /guides/*이므로 한국어 후보만 사용하고 중복 slug를 제외한다.
+  const explicit = [...new Set(explicitSlugs ?? [])]
+    .map((slug) => koGuides.find((g) => g.slug === slug && g.slug !== currentSlug))
     .filter((g): g is Guide => Boolean(g));
 
   const explicitSlugSet = new Set(explicit.map((g) => g.slug));
-  const fallback = guides
-    .filter((g) => g.slug !== currentSlug && !explicitSlugSet.has(g.slug))
-    .map((g) => ({ guide: g, score: score(g, nowMs, category, tags) }))
-    .sort((a, b) => b.score - a.score)
-    .map((x) => x.guide);
+  const fallback = rankRelatedGuides(koGuides, { currentSlug, category, tags })
+    .filter((g) => !explicitSlugSet.has(g.slug));
 
   return [...explicit, ...fallback].slice(0, limit).map(toItem);
 }

@@ -226,6 +226,8 @@ export default function CoupangBannerCore({
  return (
  <div
  className={`coupang-banner-wrapper ${className}`}
+ data-coupang-banner-size={resolvedSize}
+ data-coupang-category={resolvedCategory}
  style={{
  width: "100%",
  display: "flex",

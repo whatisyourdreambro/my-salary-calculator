@@ -5,6 +5,8 @@
 // - gtag 미로드 상태(스크립트 차단·블로커) 시도 무해
 // - 무료 GA4 한도 (월 10M 이벤트) 내 안전한 사용 가정
 
+import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
@@ -18,16 +20,30 @@ export function trackEvent(
 ): void {
   if (typeof window === "undefined") return;
   try {
-    window.gtag?.("event", name, params);
+    window.gtag?.("event", name, {
+      ...sanitizeAnalyticsParams(name, params),
+      // Event-scoped overrides. Automatic GA history/outbound events are separate.
+      page_location: sanitizeAnalyticsUrl(window.location?.href ?? ""),
+      page_referrer: typeof document !== "undefined" ? sanitizeAnalyticsUrl(document.referrer) : "",
+    });
   } catch {
     // GA4 push errors are non-fatal
   }
 }
 
-/** 광고 노출 (한 번 visible 된 시점) */
-export function trackAdImpression(slotKind: string, pagePath?: string): void {
-  trackEvent("ad_impression", {
+/** 수동 광고 요청 시도 — GA4/AdSense의 실제 ad_impression과 구분한다. */
+export function trackAdRequestAttempt(slotKind: string, pagePath?: string): void {
+  trackEvent("ad_request_attempt", {
     slot_kind: slotKind,
+    page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+  });
+}
+
+/** push 예외 진단. 오류 원문이나 사용자 입력값은 전송하지 않는다. */
+export function trackAdRequestError(slotKind: string, pagePath?: string): void {
+  trackEvent("ad_request_error", {
+    slot_kind: slotKind,
+    error_type: "push_failed",
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
   });
 }
@@ -48,12 +64,9 @@ export function trackCoupangClick(
 /**
  * 금액을 500만원 구간 라벨로 변환한다 (예: 52,000,000 → "5000-5500만").
  *
- * 개인정보 처리방침(/privacy)은 "사용자 입력 데이터(연봉, 부양가족 수 등)는
- * 브라우저 localStorage 에만 저장되며 서버로 전송되지 않습니다"라고 고지한다.
- * 그런데 계산 완료 이벤트가 연봉·실수령액을 원 단위 그대로 GA4(구글 서버)로
- * 보내고 있었다 — 고지와 정면으로 어긋난다(2026-09-04 전수검사).
- * 구간 라벨은 세그먼트 분석이라는 원래 목적을 유지하면서 개별 금액을 전송하지
- * 않고, 덤으로 GA4 맞춤 측정기준의 일 500 고유값 한도에도 안전하다.
+ * Legacy helper preserved for callers/tests. The v2 calculation events do not send
+ * monetary bands either. Upstream had already replaced exact values with bands;
+ * this release removes those bands from calculation telemetry entirely.
  */
 export function salaryBand(amount: number): string {
   if (!Number.isFinite(amount) || amount <= 0) return "unknown";
@@ -62,15 +75,25 @@ export function salaryBand(amount: number): string {
   return `${lo / 10_000}-${(lo + step) / 10_000}만`;
 }
 
-/** 계산기 결과 산출 (사용자가 입력값으로 결과를 본 시점) */
-export function trackCalcSubmit(
-  calcType: string,
-  meta: Record<string, unknown> = {}
-): void {
-  trackEvent("calc_submit", {
+/**
+ * v2 successful calculation: trusted interaction + valid current result visible.
+ * calc_submit was an inconsistent legacy input-idle/recalculate proxy and is retired.
+ * Deliberately no arbitrary metadata argument: input amounts must stay in the browser.
+ */
+export function trackCalcSuccess(calcType: string, pagePath?: string): void {
+  trackEvent("calc_success", calculationParams(calcType, pagePath));
+}
+
+export function trackCalcResultView(calcType: string, origin: "default" | "user", pagePath?: string): void {
+  trackEvent("result_view", { ...calculationParams(calcType, pagePath), result_origin: origin });
+}
+
+function calculationParams(calcType: string, pagePath?: string) {
+  return {
     calc_type: calcType,
-    ...meta,
-  });
+    page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    measurement_version: "2",
+  };
 }
 
 /**
@@ -130,17 +153,14 @@ export function trackSalaryLookup(
 }
 
 /**
- * 계산기 진입 — 사용자가 입력을 시작하기 전에 페이지에 도달한 시점.
- * trackCalcSubmit(calc_submit)과 비교해 funnel 전환율 측정.
+ * v2: first trusted interaction with this calculator's controls, once per page visit.
+ * Page arrival/default results are not a start. Compare only with v2 calc_success.
  */
 export function trackCalcStart(
   calcType: string,
-  meta: Record<string, unknown> = {}
+  pagePath?: string
 ): void {
-  trackEvent("calc_start", {
-    calc_type: calcType,
-    ...meta,
-  });
+  trackEvent("calc_start", calculationParams(calcType, pagePath));
 }
 
 /**
@@ -192,7 +212,7 @@ export function trackAdUnitClick(
 
 /**
  * 광고 채움 결과 — AdSlot 의 data-ad-status 가 filled/unfilled 로 전이될 때 슬롯당 1회.
- * ad_impression 은 adsbygoogle.push() 시점의 "요청 수"라 실노출·채움률을 답하지 못한다.
+ * ad_request_attempt는 adsbygoogle.push() 시점의 진단 요청 수이며 실노출이 아니다.
  * 이 두 이벤트로 슬롯별 채움률(ad_filled ÷ (ad_filled+ad_unfilled))과
  * '요청은 됐는데 채움 상태가 영영 안 잡히는' 죽은 유닛(27a692c 유형)을 GA4 에서 찾는다.
  * (2026-09-05 운영자 승인 — 광고 컴포넌트 내부 계측 2줄 예외)

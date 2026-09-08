@@ -23,6 +23,7 @@ export interface Guide {
  tags: string[];
  level: '초급' | '중급' | '고급' | 'Beginner' | 'Intermediate' | 'Advanced';
  publishedDate: string;
+ /** 과거 메타데이터 호환용. 실측 출처·기간이 없어 표시·정렬·추천에 사용하지 않는다. */
  views: number;
  content: string;
  /** 'ko' | 'en'. 미지정 시 'ko'로 간주 (기존 50개 가이드 호환) */

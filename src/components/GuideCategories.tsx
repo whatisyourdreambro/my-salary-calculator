@@ -17,6 +17,7 @@ import {
 // 가이드 본문 전체가 딸려 들어간다 (2026-08-23 번들 절감)
 import { koGuideCards } from "@/lib/guidesData";
 import { hubSlugByCategoryId } from "@/lib/guideCategories";
+import { guideSearchHref } from "@/lib/guideDiscovery";
 
 const CATEGORY_META: Record<
  string,
@@ -91,8 +92,9 @@ export default function GuideCategories() {
  href={
  hubSlugByCategoryId[cat.name]
  ? `/guides/category/${hubSlugByCategoryId[cat.name]}`
- : `/guides?q=${encodeURIComponent(cat.name)}`
+ : guideSearchHref(cat.name)
  }
+ rel={hubSlugByCategoryId[cat.name] ? undefined : "nofollow"}
  className="group flex flex-col items-center text-center p-5 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
  >
  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 ${cat.color}`}>

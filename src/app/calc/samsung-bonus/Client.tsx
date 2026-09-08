@@ -18,6 +18,8 @@ import {
   Share2,
 } from "lucide-react";
 import { DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import {
   FIXED_RERATE,
   FIXED_BU_RATIO,
@@ -156,10 +158,23 @@ export default function SamsungBonusClient() {
     };
   }, [profit, counts, ratios, triggered]);
 
+  const poolInputsValid = isValidCalculationNumber(profitFmt, 0) &&
+    isValidCalculationNumber(year, 2026, 2035) &&
+    Object.values(counts).every((value) => isValidCalculationNumber(value, 0)) &&
+    Object.values(ratios).every((value) => isValidCalculationNumber(value, 0)) &&
+    Object.values(counts).some((value) => parseNumberInput(value) > 0) && result.ratioSum > 0;
+  const poolMeasurement = useCalculatorMeasurement({
+    calcType: "samsung-bonus-pool",
+    valid: poolInputsValid && Number.isFinite(result.totalFundManwon) &&
+      result.perDivision.every((division) => Number.isFinite(division.total)),
+    resultKey: result,
+  });
+
   return (
     <div className="space-y-4 mb-10">
       {/* 영업이익 + 고정 정책 */}
       <section
+        {...poolMeasurement.inputProps}
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 transition-shadow hover:shadow-md"
         aria-labelledby="profit-section-title"
       >
@@ -418,6 +433,7 @@ export default function SamsungBonusClient() {
       <section
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
         aria-labelledby="division-section-title"
+        {...poolMeasurement.inputProps}
       >
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <h2
@@ -521,6 +537,7 @@ export default function SamsungBonusClient() {
       <section
         className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
         aria-labelledby="avg-result-title"
+        ref={poolMeasurement.resultRef}
       >
         <h2
           id="avg-result-title"
@@ -560,6 +577,7 @@ export default function SamsungBonusClient() {
 
       {/* 내 연봉으로 계산 */}
       <MySalaryCalculator
+        poolInputsValid={poolInputsValid}
         perDivision={result.perDivision}
         salaryFmt={salaryFmt}
         setSalaryFmt={setSalaryFmt}
@@ -696,6 +714,7 @@ export default function SamsungBonusClient() {
 // ────────────────────────────────────────────────────────────
 
 function MySalaryCalculator({
+  poolInputsValid,
   perDivision,
   salaryFmt,
   setSalaryFmt,
@@ -708,6 +727,7 @@ function MySalaryCalculator({
   opi1Rate,
   setOpi1Rate,
 }: {
+  poolInputsValid: boolean;
   perDivision: Array<{
     id: string;
     label: string;
@@ -804,11 +824,19 @@ function MySalaryCalculator({
   const animOpi2 = useCountUp(personal.opi2Manwon);
   const animGross = useCountUp(personal.totalGrossManwon);
   const animNet = useCountUp(personal.netManwon);
+  const personalMeasurement = useCalculatorMeasurement({
+    calcType: "samsung-bonus-personal",
+    valid: poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) &&
+      isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, 50) &&
+      [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite),
+    resultKey: personal,
+  });
 
   return (
     <section
       className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
       aria-labelledby="my-calc-title"
+      onChangeCapture={personalMeasurement.inputProps.onChangeCapture}
     >
       <h2
         id="my-calc-title"
@@ -856,6 +884,7 @@ function MySalaryCalculator({
             className="flex flex-wrap gap-1.5 mt-2"
             role="group"
             aria-label="연봉 빠른선택"
+            onClickCapture={personalMeasurement.inputProps.onClickCapture}
           >
             {[
               50_000_000,
@@ -910,6 +939,7 @@ function MySalaryCalculator({
             className="grid grid-cols-3 gap-2"
             role="group"
             aria-labelledby="div-select-label"
+            onClickCapture={personalMeasurement.inputProps.onClickCapture}
           >
             {perDivision.map((d) => {
               const active = selectedDivId === d.id;
@@ -1131,7 +1161,7 @@ function MySalaryCalculator({
           </div>
 
           {/* 메인 결과 — 세전 합계 / 세후 실수령 */}
-          <div className="grid grid-cols-2 divide-x divide-canvas-200 dark:divide-canvas-800 border-b border-canvas-200 dark:border-canvas-800">
+          <div ref={personalMeasurement.resultRef} className="grid grid-cols-2 divide-x divide-canvas-200 dark:divide-canvas-800 border-b border-canvas-200 dark:border-canvas-800">
             <div className="px-5 py-5">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
                 세전 합계

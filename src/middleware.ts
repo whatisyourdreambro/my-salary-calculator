@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { isGuideSearchVariant } from "@/lib/guideDiscovery";
 
 // Edge runtime — Cloudflare Pages 호환 (Web API만 사용)
 // Node.js 전용 API 절대 금지: fs, crypto.randomBytes 등
@@ -13,6 +14,18 @@ const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|
 // 절대 차단하면 안 되는 화이트리스트 (정상 검색·광고 봇 + AI 검색 크롤러)
 // AI 크롤러(ChatGPT·Perplexity·Claude 등)는 AI 검색 유입 통로 → 화이트리스트
 const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap|ClaudeBot|PerplexityBot|GPTBot|Google-Extended|cohere-ai|anthropic-ai|Amazonbot)/i;
+
+function nextResponse(req: NextRequest) {
+  const response = NextResponse.next();
+  // q 검색은 허브와 같은 정적 HTML/canonical을 쓰는 탐색 화면이다.
+  // 서버 searchParams로 정적 생성을 깨지 않고 응답에서만 색인을 제외한다.
+  // 빈 q·정규 허브·카테고리 허브·개별 가이드는 해당하지 않는다.
+  if (isGuideSearchVariant(req.nextUrl.pathname, req.nextUrl.searchParams)) {
+    response.headers.set("X-Robots-Tag", "noindex, follow");
+    response.headers.set("Cache-Control", "private, no-store");
+  }
+  return response;
+}
 
 export function middleware(req: NextRequest) {
   // 0) non-www → www 301 redirect (canonical host 통합)
@@ -30,7 +43,7 @@ export function middleware(req: NextRequest) {
 
   // 1) 화이트리스트는 즉시 통과 (가장 먼저 체크)
   if (ALLOWED_BOTS.test(ua)) {
-    return NextResponse.next();
+    return nextResponse(req);
   }
 
   // 2) UA 누락 또는 명백한 봇/스크래퍼 차단
@@ -41,7 +54,7 @@ export function middleware(req: NextRequest) {
     });
   }
 
-  return NextResponse.next();
+  return nextResponse(req);
 }
 
 export const config = {

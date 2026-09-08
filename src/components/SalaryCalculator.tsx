@@ -14,7 +14,9 @@ import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import { motion } from "framer-motion";
 import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react";
 import ShareButtons from "@/components/ShareButtons";
-import { trackCalcSubmit , salaryBand } from "@/lib/analytics";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
+import { trackEvent } from "@/lib/analytics";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -217,34 +219,31 @@ export default function SalaryCalculator() {
  setMungMood(newMood);
  }, [annualSalary, nonTaxableAmount, dependents, children, incomeType, salaryInput]);
 
- // Analytics — 결과가 실제 표시된 시점 + 재계산마다 발화
- // (deps가 [showResult]뿐이면 두 번째 계산부터 이벤트가 누락돼 GA4 퍼널 과소집계)
- const [calcCount, setCalcCount] = useState(0);
- useEffect(() => {
- if (showResult && result.monthlyNet > 0) {
- // GA4 funnel 이벤트 — 계산 완료(전환율·세그먼트 분석용)
- // 원 단위 금액 대신 500만원 구간 라벨을 보낸다 — /privacy 의
- // "서버로 전송되지 않습니다" 고지와 정합(2026-09-06 전수검사).
- trackCalcSubmit("salary", {
- income_type: incomeType,
- annual_salary_band: salaryBand(annualSalary),
- monthly_net_band: salaryBand(result.monthlyNet * 12),
- });
- // Google Ads 전환 — env(ADS_ID/CONVERSION_LABEL)가 설정된 경우에만 발사
+ // Snapshot stays local: editing inputs must not count an old visible result as success.
+ const inputSnapshot = JSON.stringify([salaryInput, incomeType, payBasis, nonTaxableAmount, dependents, children]);
+ const [calculatedSnapshot, setCalculatedSnapshot] = useState<string | null>(null);
+ const inputsValid = isValidCalculationNumber(salaryInput, Number.MIN_VALUE) &&
+ isValidCalculationNumber(nonTaxableAmount, 0) && Number.isFinite(annualSalary) &&
+ isValidCalculationNumber(dependents, 1, 20) && isValidCalculationNumber(children, 0, 10);
+ const measurement = useCalculatorMeasurement({
+ calcType: "salary",
+ valid: showResult && !isCalculating && inputsValid && calculatedSnapshot === inputSnapshot &&
+ Object.values(result).every(Number.isFinite) && result.monthlyNet > 0,
+ resultKey: result,
+ onSuccess: () => {
+ // Preserve configured Ads conversion, once on a real successful result, with no money values.
  const adsId = process.env.NEXT_PUBLIC_ADS_ID;
  const label = process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION;
  if (adsId && label && typeof window.gtag === "function") {
- window.gtag("event", "conversion", {
- send_to: `${adsId}/${label}`,
+ trackEvent("conversion", { send_to: `${adsId}/${label}` });
+ }
+ },
  });
- }
- }
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [showResult, calcCount]); // 결과 표시 시점 + 계산 버튼 클릭마다
 
  const handleCalculateClick = () => {
+ if (!inputsValid) return;
  setIsCalculating(true);
- setCalcCount((c) => c + 1);
+ setCalculatedSnapshot(inputSnapshot);
  runCalculation();
  };
 
@@ -344,7 +343,7 @@ export default function SalaryCalculator() {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
  {/* 왼쪽: 입력 패널 */}
- <div className="bg-white rounded-3xl border border-canvas shadow-sm p-6 space-y-5">
+ <div {...measurement.inputProps} className="bg-white rounded-3xl border border-canvas shadow-sm p-6 space-y-5">
  <div>
  <div className="flex items-center gap-2 mb-2">
  <span className="bg-canvas text-primary text-xs font-bold px-3 py-1 rounded-full">2026 세법 적용</span>
@@ -443,7 +442,7 @@ export default function SalaryCalculator() {
  className="space-y-4"
  >
  {/* 마스코트 + 결과 카드 */}
- <div className="relative pt-10">
+ <div ref={measurement.resultRef} className="relative pt-10">
  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
  <MungMascot mood={mungMood} />
  </div>
