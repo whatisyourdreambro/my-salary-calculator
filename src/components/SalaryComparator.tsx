@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { initialOfferComparisonState, offerComparisonReducer, explainOfferDifference } from "@/lib/offerComparison";
 import { trackOfferCompareComplete, trackOfferCompareExplanationView } from "@/lib/analytics";
 import { consumeOfferComparisonHandoff, type OfferComparisonConditions } from "@/lib/offerComparisonHandoff";
+import { prepareOfferComparisonExport } from "@/lib/offerComparisonExport";
 import Link from "@/components/AppLink";
 import CurrencyInput from "./CurrencyInput";
 import { X } from "lucide-react";
@@ -53,13 +54,18 @@ export default function SalaryComparator() {
     const snapshot = comparison;
     const element = resultsRef.current;
     if (!snapshot || !element || capturing) return;
+    const expanded = Array.from(element.querySelectorAll("details"), details => details.open);
     setCapturing(true);
     setShareMessage("");
     try {
       const { default: html2canvas } = await import("html2canvas");
       if (currentComparison.current !== snapshot) return;
       const canvas = await html2canvas(element, { scale: 2,
-        backgroundColor: document.documentElement.classList.contains("dark") ? "#1a202c" : "#ffffff" });
+        backgroundColor: document.documentElement.classList.contains("dark") ? "#1a202c" : "#ffffff",
+        onclone: clonedDocument => {
+          const clonedArea = clonedDocument.getElementById(element.id);
+          if (clonedArea) prepareOfferComparisonExport(clonedArea, expanded);
+        } });
       if (currentComparison.current !== snapshot) return;
       const link = document.createElement("a");
       link.download = "연봉비교_결과_moneysalary.png";
@@ -167,7 +173,7 @@ export default function SalaryComparator() {
             <input type="checkbox" checked={anonymousNames} disabled={capturing} onChange={event => setAnonymousNames(event.target.checked)} />
             아래 결과와 저장 이미지의 회사명을 오퍼 A/B로 표시
           </label>
-          <div ref={resultsRef} className="min-w-0 bg-card p-4 sm:p-6 rounded-xl border border-border space-y-5">
+          <div id={`${id}-export`} ref={resultsRef} className="min-w-0 bg-card p-4 sm:p-6 rounded-xl border border-border space-y-5">
             <h2 ref={headingRef} tabIndex={-1} className="text-xl sm:text-2xl font-bold focus:outline-none">같은 조건의 월 예상 실수령 비교</h2>
             <p className="text-sm text-muted-foreground">월 예상 실수령액이 큰 순서입니다. 연간 세액 추정을 12개월로 나눈 모드이며, 월별 간이세액표 조회나 성과급 지급월 입금액·연말정산 확정 세액은 아닙니다.</p>
             <div className="rounded-lg bg-secondary p-4 text-sm space-y-2">
