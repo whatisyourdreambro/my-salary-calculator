@@ -2,7 +2,7 @@
 
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import localFont from "next/font/local";
+import { siteFontVariables } from "./fonts/siteFonts.generated";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
 import { TOTAL_CALC_LABEL, companyCountPlus } from "@/config/site";
@@ -19,26 +19,6 @@ import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
-
-// 동일 원본의 비중첩 문자 영역. 영문 페이지는 작은 Latin/기호 파일만 사용한다.
-// optional은 느린 첫 방문의 뒤늦은 글꼴 교체를 막는다. 재생성은 fonts/README.md 참고.
-const pretendardLatin = localFont({
-  src: "./fonts/MoneySalaryText-Latin.woff2",
-  display: "optional",
-  preload: false,
-  weight: "45 920",
-  variable: "--font-pretendard-latin",
-  declarations: [{ prop: "unicode-range", value: "U+0000-10FF,U+1200-2FFF,U+AD6D,U+B9D0,U+C0B0,U+C5B4,U+C5F0,U+C815,U+D55C,U+FF00-FFEF" }],
-});
-const pretendard = localFont({
-  src: "./fonts/MoneySalaryText-Korean.woff2",
-  display: "optional",
-  preload: false,
-  weight: "45 920",
-  adjustFontFallback: false,
-  variable: "--font-pretendard-local",
-  declarations: [{ prop: "unicode-range", value: "U+1100-11FF,U+3000-AD6C,U+AD6E-B9CF,U+B9D1-C0AF,U+C0B1-C5B3,U+C5B5-C5EF,U+C5F1-C814,U+C816-D55B,U+D55D-FEFF,U+FFF0-10FFFF" }],
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -130,7 +110,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning className={`${pretendardLatin.variable} ${pretendard.variable}`}>
+    <html lang="ko" suppressHydrationWarning className={siteFontVariables}>
       <head>
         {/* AdSense 오리진 — preconnect로 TCP+TLS 핸드셰이크 선행 (dns-prefetch는 폴백 병행) */}
         <link

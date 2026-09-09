@@ -4,7 +4,6 @@
 
 import { useState, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
-import CountUp from "react-countup";
 import type { StoredFinancialData, StoredHomeLoanData } from "@/app/types";
 import { useRouter } from "next/navigation";
 import Link from "@/components/AppLink";
@@ -201,7 +200,7 @@ export default function HomeLoanSimulator() {
  {repaymentType === "equalPrincipal" ? "첫 달 " : ""}월 상환액
  </p>
  <p className="text-3xl sm:text-4xl lg:text-5xl font-bold my-2">
- <CountUp end={monthlyPayment} separator="," /> 원
+ {formatNumber(Math.round(monthlyPayment))} 원
  </p>
  </div>
  <div className="text-sm space-y-2 mt-4">

@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "a113397cf70cb067a3246056195fee8cde99e998a392503e413e543da9cec761",
+  "selection": "Full rendered text of four priority pages plus calculation/shared UI; remaining characters by Korean-page occurrence count, guide-source frequency as tie-breaker, four bounded groups",
+  "sources": [
+    {
+      "path": ".next/server/app/index.html",
+      "kind": "rendered HTML without scripts/styles",
+      "sourceSha256": "94901b7f723f97da54072a61a6f3fa3c9dee04e515e6292429e265fedc6412cf",
+      "coveredCharacters": 407
+    },
+    {
+      "path": ".next/server/app/calc/samsung-bonus.html",
+      "kind": "rendered HTML without scripts/styles",
+      "sourceSha256": "b9578d2fd8cbcc99d9714483a7fd6408c59ad03472f6299a4602832f500d40e4",
+      "coveredCharacters": 456
+    },
+    {
+      "path": ".next/server/app/guides/wage-delayed-claim-2026.html",
+      "kind": "rendered HTML without scripts/styles",
+      "sourceSha256": "c8afcfc966f62580eabf218ee72781d33b8850e09872143fa5068ebd694fe0e7",
+      "coveredCharacters": 419
+    },
+    {
+      "path": ".next/server/app/home-loan.html",
+      "kind": "rendered HTML without scripts/styles",
+      "sourceSha256": "803de6d3c61290aad6cb1508ad23287cbcf134d8d0c100def24a1b1def9ec50c",
+      "coveredCharacters": 414
+    },
+    {
+      "path": "src/app/HomeClient.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "a5b1fdad70c9d7e86f764b25a480d357d45445adecb23d6bd93a785d0f96ed51",
+      "coveredCharacters": 205
+    },
+    {
+      "path": "src/components/Header.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "3ca2254ab244c469811f16312800ea87dd6959869c673e6fe9bbaee7ac068816",
+      "coveredCharacters": 141
+    },
+    {
+      "path": "src/components/Footer.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "c017de71dbc224ccc43fe16e40d473165a417a69c5e78659361c7c3dee945083",
+      "coveredCharacters": 180
+    },
+    {
+      "path": "src/components/HeroBadge.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "bf33d455f92a5277aa46f5201aec5513ae9e4acc049334710630ff7685f8e8e7",
+      "coveredCharacters": 95
+    },
+    {
+      "path": "src/components/CalculatorTabs.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "fd6f06b85594db015fc9b96a08a765e85bf26bad6a2e09cb7cddfbb9229423f6",
+      "coveredCharacters": 95
+    },
+    {
+      "path": "src/components/SalaryCalculator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "f5df8de0b8e47a7c0bd14fe39c0ea76febcc72842652eac3489c92434720d1f8",
+      "coveredCharacters": 229
+    },
+    {
+      "path": "src/components/SalaryResultCard.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "1285bdea9e85eefcde57a752f6f953ed42e21f44b3d189466c27efb900576308",
+      "coveredCharacters": 112
+    },
+    {
+      "path": "src/components/SalaryTierCard.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "a47c0821591895972120c206618baac6d519179772dcc41992252aa806083c25",
+      "coveredCharacters": 62
+    },
+    {
+      "path": "src/components/NextActions.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "ff42cdb5751d836f97e8665aa6c3bd401f5a80bed768caeadf9c64f016ac49c7",
+      "coveredCharacters": 175
+    },
+    {
+      "path": "src/components/DetailedAnalysis.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "9e1ee2cd4e2716dcc5c43f503a4226944a18061a3d1f8386de2735d05aa1d86b",
+      "coveredCharacters": 127
+    },
+    {
+      "path": "src/components/WealthChart.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "f69b3c63223887c15f7db703ae352822c787f08a5ff43ca866e41886ae0a0135",
+      "coveredCharacters": 81
+    },
+    {
+      "path": "src/components/RelatedCalculators.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "83f30b7fea19d1ebe1b6b9699272eaef5836516c5a426b718445ca5e88702e2b",
+      "coveredCharacters": 61
+    },
+    {
+      "path": "src/components/ResultSharePanel.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "249e310c3f8a2a8c31e31db25105288e576e0f4cf68b2afaca3b830c35a3079e",
+      "coveredCharacters": 79
+    },
+    {
+      "path": "src/components/ShareButtons.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "2a7dceaf119beb569f940bf701df41a9eccb974b038a0cb4e930b00fce8e5a51",
+      "coveredCharacters": 86
+    },
+    {
+      "path": "src/components/PrivateFeedback.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "992b0ce58688c34b299b547de813805a0f98ce7eb20234dda9434e06e01ebcda",
+      "coveredCharacters": 136
+    },
+    {
+      "path": "src/components/HomeLoanSimulator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "640c21f4d293fae07c6036c3a5f7fbee0107bb4f34504e233b5aad54e14d42cf",
+      "coveredCharacters": 141
+    },
+    {
+      "path": "src/components/LoanCalculator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "1b8c6465cd521c87be63bf5a255ca64e13300383487f5353c8b57b1812b5a363",
+      "coveredCharacters": 41
+    },
+    {
+      "path": "src/components/DepositCalculator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "c146c0fdbcbf9430a843240035314ca40654c6e436641e6db04823660731b0da",
+      "coveredCharacters": 35
+    },
+    {
+      "path": "src/components/GuideCategories.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "dbbf039399a87e0a82dfae91698262f4046465435608709ab43c61c168af1f16",
+      "coveredCharacters": 94
+    },
+    {
+      "path": "src/components/SeasonalBanner.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "90e658f594a02c5cba59a99797763558bcfa8d0e0c65194b0d7e5669979bd8c7",
+      "coveredCharacters": 67
+    },
+    {
+      "path": "src/components/SocialProof.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "9c77e71b3e1605d6b762f1e9d5bda80fa3972d77879d10fd6597b94401cc7cb0",
+      "coveredCharacters": 72
+    },
+    {
+      "path": "src/components/CurrencyInput.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "d035ddecfb23a721fbea87053e9b00c7cbcd1c8ca7a9c72c3ffde1a4e0104fa6",
+      "coveredCharacters": 64
+    },
+    {
+      "path": "src/components/ui/MoneyInput.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "866780babb0cb34cd173b7eea2c48bd5b84de665e9a12cdb7b01549e22e5eac6",
+      "coveredCharacters": 10
+    },
+    {
+      "path": "src/components/AdPlacement.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "87d1b56dd92fabbee383cd80cf4f7ba293a0ab05df14496493812236210fdc49",
+      "coveredCharacters": 237
+    },
+    {
+      "path": "src/components/affiliate/CoupangBannerCore.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "cc74756d4dbd419cbdf9854a41003163b968c2e88ff653f9beeb11cd54287e29",
+      "coveredCharacters": 255
+    },
+    {
+      "path": "src/lib/fixedFeedbackContract.ts",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "b206588b8e3cb76c27f982bd27d872aba676bfee151346516c3cabd9b0ae6aa6",
+      "coveredCharacters": 47
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/Client.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "9886cb21ffadb74bd6df4ec0330b3add2c37de543ec7f87eb2737cb5182dcd30",
+      "coveredCharacters": 293
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/MultiYearBonusSimulator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "38d97ec12df65a94d93e5b080a9369cedf25c35c3bf757be4c626c3544d4dcb0",
+      "coveredCharacters": 307
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/MultiYearRSUSimulator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "aa7df07124e306ffc222a40463240f359533b251bae4c4f74478a2d8a60e1cbe",
+      "coveredCharacters": 231
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/page.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "d8313a85466c1d4a903c6b433a5b36f563e3959c5df7b99be7e8d4d74fa09410",
+      "coveredCharacters": 381
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/shared.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "6dcc9f0aa4b5512e2168b9b40e8c6ad29dec4a78007ca37b1a99baafcb04d909",
+      "coveredCharacters": 203
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/TaiCalculator.tsx",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "22a63419cf6e298f7a895079e9e8e9cb5ef84d6bf0ce70a2b1caad066d753345",
+      "coveredCharacters": 126
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/taiData.ts",
+      "kind": "UI source, conservatively including comments",
+      "sourceSha256": "200614b9dc8e4fcf86abebc8076cc8c339d2f66593588a6d89bd48042650dc4d",
+      "coveredCharacters": 106
+    }
+  ],
+  "frequencySnapshot": {
+    "koreanHtmlFiles": 2353,
+    "sha256": "5c1469a1db571fac6120130567d5ea55e8d735bc8b988271b0add1a606868d9d"
+  },
+  "commonCharacters": "가각간갈감값강같갚개객갭거건걸검것게겠겨격견결겹경계고곡골곳공과관괄광교구군굳권귀규균그극근글금급기긴김깊까께꼭꾸꿀꿔뀌끊끌끝나난날남납낭낮내낸너넌널넘넛넣네넷녀년노녹높누눈눌눠뉴느는늘능니닉닌닐님닙닛다단닫달담답당닿대댓더덕던덮데덱델도독돈돌돕동돼됐되된될됨됩두둘뒤듈드득든들듦듬듭등디딤딩따딸때떡떤떻또똑뛰뜸뜻띠라락란람랐랑래랜램랭략량러런럴럽렇레렉렌렛려력련렸령례로록론롤롭롯뢰료루룰룹뤄류률륭르른를름릅리릭린릴림립링마막만많망맞매맥맵맷맹머먹먼멀메며면멸명몇모목몰못무문묻물뭐뭔뮬므미민밀밋및바박밖반받발밝방배백밸버번벌범법베벤벨변별병보복본볼봉부분불붙뷰브블비빈빌빙빠빵뺀뽑뿐사삭살삶삼상새색샐생서석선설섭성세섹센셀셋션셜셨소속손솔송수순술숨숫쉽슈스슬습승시식신실심싶쌓썸쓰쓴쓸씨씩아안않알았앞애액앤앱앵야약양억언얻얼엄업없엇었에엔여역열였영옆예옛오온올옵와완왔왜외왼요욕용우운울움웃워원월웨위유육율융으은을음응의이익인일읽임입있자작잔잘잠잡장재쟁저적전절점접제젯져졌조족존졸종좋좌주죽준줄줍중쥐즈즉즌즐즘증지직진질짐집징짜짧째쪽찍차찬찮찰참창찾채책처천철첫청체쳐초촉총최추축춘출충춰취츠측치칙친침칩칭카칸캐캘캡커컨컬컴컵케켜코콘콤쿠크큰클큼큽키킹타탈탐탕태택탭터턱턴털테텍텐템토톡톤톱통퇴투툴툼트특튼틀티틸팀팁팅파판팝팟팡패팩팸퍼페펙펫펴편평폐포폭폰폴표푸풀품풍프플피픽필핌핑하학할함합핫항해핵핸했행향허험헤헬헷혀현협형혜호혼홈홑화확환활황회획횟효후훅훈훌휴흐흑흔희히힌힘",
+  "extraCharacters": [
+    "「」㎡㎥갇갉갑갓갔갖갤갯갱걱걷겁겐겟겪겸겼곁곤곧곱곽괜괴굴굵굿궁궤귤긋긍길깁깃깎깐깔깜깝깡깥깨꺼꺾껴꼈꼬꼰꼼꼽꽂꽉꽤꾼꿈꿉꿨뀐뀔뀜뀝끄끈끔끗끼낀낄낌낙낡낫났낯낱낼냅냈냉냐냥넉넓넥넵녁념논놀놈농놓놨뇌뇨눔눕눗눴뉘뉩늄늠늦닝닥닷닻댐덜덤덧덩덴돋둑둔둠둡둥둬뒷듀듣듯딕딘딜딥딧딪딱딴땐떠떨떴떼뗀뗐뚜뚫뛴뜁뜨뜯뜰띄랍랙랩랫럭럼럿렀렁렐렘렬렴렵렷롬롱룡룩룬룸뤘뤼륙륜륨릇릿맛맡맨멈멕멘멜멤멥몫몬몸몽묘묵묶뭅뭘뮤뮨믹믿밈밍밑밤밥밴뱅벅벗벡벼벽볍봄봅봇봐봤북붉붐붕븐빅빗빚빛빡빨빼뺍뺐뼈쁘쁜쁨삐삽샌샘샤샵섀섞섬섯섰셈셉셔셰솟솥쇄쇠쇼숙쉐쉘쉬슨슷싫십싱싸싼쌀쌈쌉쌍써썼쎄쏘쏟쏠씀씁씬씽악앉암압앗앙얇얕얹얽엌엑엘엠엣염옥옮옴옷왕웁웅웍웠웰웹윅윈윌윙윤윳읍잃잇잉잊잣잦잭젊젝젠젤젼좁죄죠줌줘줬쥬짓짚짝짠쩍쩡쪼쫄쯤찜착챗챙척첨첼쳤촌촬춤춥췄췌츄층칠칼캔캠캣컷컸켈켐켓켰콕콜콩쾌쿨쿼퀀퀄퀘큐킨킬킵탁탄탑탠탱텀텔텝텨톨톰툰퉁튄튜튠튬틈틱틴팎팔팜팬팹펀펄펌펜펩폼퐁푼풋퓨픈핀핏햇헌헐헝헥혁혈혔혹홀홍횡훑훨훼휘흘흡흥흩힐힙",
+    "　、。〃〈〉《》『』【】〔〕〖〗〘〙〚〛〜〝〞〟ㄱㄲㄳㄴㄵㄶㄷㄸㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅃㅄㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣㅤㆍ갊갗갛갠갬갰갸갹갼걀걋걍걔걘걜걺겄겅겆겉겊겋겔겜겝겡겯겻곈곌곕곗곪곬곯곰곶괆괌괍괏괘괠괩괬괭괵괸괼굄굅굇굉굔굘굡굣굶굻굼굽궂궈궉궐궜궝궷귁귄귈귐귑귓귿긁긔긱긷긺깅깆깍깖깟깠깩깬깰깸깹깻깼깽꺄꺅꺌꺽껀껄껌껍껏껐껑껙껜껨껫껭껸껼꼇꼍꼐꼲꼴꼿꽁꽃꽈꽐꽜꽝꽥꽹꾀꾄꾈꾐꾑꾕꾜꾹꿇꿋꿍꿎꿜꿩꿰꿱꿴꿸뀀뀁뀄뀨끅끎끓끕끙끽낍낏낑낚낟낢낳낵냄냇냑냔냘냠넋넒넙넜넝넨넬넴넸넹녈녑녔녕녘녜녠놂놉놋놔놘놜뇐뇔뇜뇝뇟뇩뇬뇰뇹뇻뇽눅눋눙눼뉜뉠뉨뉵뉼늅늉늑늙늚늡늣늪늬늰늴닒닢닦닭닮닯닳닸닺댁댄댈댑댔댕댜덖덛덞덟덥덫뎀뎁뎃뎄뎅뎌뎐뎔뎠뎡뎨뎬돎돐돔돗돛돝돠돤돨됫됴둣뒀뒈뒝뒨뒬뒵뒹듄듐듕듸딛딨땀땁땃땄땅땋땍땔땜땝땟땠땡떪떫떰떱떳떵떽뗄뚝뛸뜬랄릉맏맺멍뭇밟밭뱀벳볶뵙뷔빔빕뽕뿌샀샷솜쇳숄쉴쉼슐슴싯썩쎈쎌쏜앓얀얘엎엽욜윗잖잰쟤젬좀짤짬쫓챠캉켄콴쿄퀴킷텃퉈팰팻펠펨펼혐홧훗흉",
+    "뗌뗍뗏뗑뗘뗬똔똘똥똬똴뙈뙤뙨뚠뚤뚬뚱뛔뜀뜅뜩뜹띈띌띔띕띤띨띰띱띳띵랏랒랖랗랠랬랴랸럇렙렝롄롑롓롸롼뢍뢨뢴뢸룀룁룃룅룐룔룝룟룻룽뤠뤽륀륄륌륏륑륩륫륵릊릍릎맑맒맘맙맣맬맴맸먀먁먈먕멂멉멋멎멓멧멨멩멱몃몄몌몲몹뫄뫈뫘뫙뫼묀묄묍묏묑묜묠묩묫묽묾뭄뭉뭍뭏뭡뭣뭬뮈뮌뮐뮴뮷믄믈믐믓밂밉밌밗밞밧뱁뱃뱄뱉뱌뱍뱐뱝벋벎벙벚벧벰벱벴벵볏볐볕볘볜봔봬뵀뵈뵉뵌뵐뵘뵤뵨붇붊붑붓붚붜붤붰붸뷕뷘뷜뷩뷴뷸븀븃븅븍븜븝븟빎빤빪빰빱빳빴빻빽뺄뺌뺏뺑뺘뺙뺨뻐뻑뻔뻗뻘뻠뻣뻤뻥뻬뼁뼉뼘뼙뼛뼜뼝뽀뽁뽄뽈뽐뾔뾰뿅뿍뿔뿜뿟뿡쀼쁑쁠쁩삑삔삘삠삡삣삥삯삳삵삿샅샙샛샜샥샨샬샴샹섄섈섐섕섟섣섦섧섶셌셍셕셤셥셧셩셴셸솅솎솖솝솨솩솬솰솽쇈쇌쇔쇗쇘쇤쇨쇰쇱쇽숀숌숍숏숑숟숩숭숯숱숲숴쉈쉑쉔쉠쉥쉭쉰쉿슁슉슘슛슝슥슭싣싹싻쌌쌔쌕쌘쌜쌤쌥쌨쌩썅썬썰썲썹썽쏀쏙쏢쏨쏩쏭쏴쏵쏸쐈쐐쐤쐬쐰쐴쐼쐽쑈쑤쑥쑨쑬쑴쑵쑹쒀쒔쒜쒸쒼쓩쓱쓺쓿씌씐씔씜씰씸씹씻앍앎앝앨앰앳앴얄얌얍얏얗얜얠얩얾엉엊엡엥엮엶엷엾엿옅옇옌옐옘옙옜옭옰옳옹옻왁왈왐왑왓왝왠왬왯왱왹욀욈욉욋욍욘욤욥욧욱",
+    "욹욺웜웝웡웩웬웸웽윔윕윰윱윷윽읊읏읒읓읔읕읖읗읜읠읨읫읾잎잗잚잤잴잼잽잿쟀쟈쟉쟌쟎쟐쟘쟝쟨쟬젓젖젭젱졀졈졉졍졔졺좃좆좇좍좔좝좟좡좨좼좽죈죌죔죕죗죙죡죤죵줅줆줏줴쥑쥔쥘쥠쥡쥣쥰쥴쥼즙즛짇짊짖짙짢짭짯짰짱짹짼쨀쨈쨉쨋쨌쨍쨔쨘쨩쩌쩐쩔쩜쩝쩟쩠쩨쩽쪄쪘쫀쫌쫍쫏쫑쫘쫙쫠쫬쫴쬈쬐쬔쬘쬠쬡쭁쭈쭉쭌쭐쭘쭙쭝쭤쭸쭹쮜쮸쯔쯧쯩찌찐찔찝찡찢찧찹찻찼챈챌챔챕챘챤챦챨챰챵첩첬첵첸쳄쳅쳇쳉쳔쳬쳰촁촐촘촙촛촤촨촹쵠쵤쵬쵭쵯쵱쵸춈춧췐췬췰췸췹췻췽츈츌츔츙츤츨츰츱츳칟칡칫칵캄캅캇캑캤캥캬캭컁컥컫컹켁켑켕켠켤켬켭켯켱켸콥콧콰콱콸쾀쾅쾡쾨쾰쿡쿤쿰쿱쿳쿵퀑퀭퀵퀸퀼큄큅큇큉큔큘큠큭킁킥킴탉탓탔탤탬탯탰탸턍턺텁텄텅텟텡텬텼톄톈톳톺톼퇀퇘퇸툇툉툐툭툽툿퉜퉤튀튁튈튐튑튕튤튱튿틂틉틋틔틘틜틤틥팃팍팖팠팥팼팽퍄퍅퍽펍펏펐펑펭폄폅폈폘폡폣폽폿퐈퐝푀푄푠푤푭푯푹푿풂풉풔풩퓌퓐퓔퓜퓟퓬퓰퓸퓻퓽픔픕픗핍핥핼햄햅햐헉헒헙헛헨헴헵헹혓혠혤혭홅홉홋홰홱홴횃횅횐횔횝횬횰횹횻훔훙훠훤훰훵훽휀휄휑휙휜휠휨휩휫휭휵휸휼흄흇흖흗흙흠흣흰흴흼흽힁힉힛힝힣﻿"
+  ]
+}

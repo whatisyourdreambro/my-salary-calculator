@@ -1,0 +1,258 @@
+{
+  "scope": "Static HTML text estimate, including hidden DOM, excluding scripts/styles/attributes and post-hydration states",
+  "baseline": "d13203c: Latin111712 + Korean413360 =525072 bytes when both are needed",
+  "htmlFiles": 2395,
+  "excluded": {
+    "Error/private HTML": 3,
+    "English HTML": 39
+  },
+  "koreanPages": 2353,
+  "p50Bytes": 317004,
+  "p90Bytes": 317004,
+  "maxBytes": 408272,
+  "pagesAbove525072": 0,
+  "pagesAboveOwnBaseline": 0,
+  "requestPartCount": {
+    "2": 89,
+    "3": 2207,
+    "4": 57
+  },
+  "priorityPages": [
+    {
+      "path": "/calc/samsung-bonus",
+      "proposedBytes": 223592,
+      "baselineBytes": 525072,
+      "deltaBytes": -301480,
+      "parts": [
+        "Latin",
+        "Korean"
+      ]
+    },
+    {
+      "path": "/guides/wage-delayed-claim-2026",
+      "proposedBytes": 223592,
+      "baselineBytes": 525072,
+      "deltaBytes": -301480,
+      "parts": [
+        "Latin",
+        "Korean"
+      ]
+    },
+    {
+      "path": "/home-loan",
+      "proposedBytes": 223592,
+      "baselineBytes": 525072,
+      "deltaBytes": -301480,
+      "parts": [
+        "Latin",
+        "Korean"
+      ]
+    },
+    {
+      "path": "/",
+      "proposedBytes": 223592,
+      "baselineBytes": 525072,
+      "deltaBytes": -301480,
+      "parts": [
+        "Latin",
+        "Korean"
+      ]
+    }
+  ],
+  "guides": {
+    "pages": 341,
+    "p50Bytes": 317004,
+    "p90Bytes": 317004,
+    "maxBytes": 408272,
+    "pagesAbove525072": 0
+  },
+  "salaryDb": {
+    "pages": 1097,
+    "p50Bytes": 317004,
+    "p90Bytes": 317004,
+    "maxBytes": 408272,
+    "pagesAbove525072": 0
+  },
+  "largestPages": [
+    {
+      "path": "/basic-pension-2026",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/calc/holiday-bonus",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/calc/hyundai-rotem-bonus",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/calc/sleep-cycle-quick",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/calc/travel-insurance-quick",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/calc/water-intake-quick",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/car-loan",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/fun",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/fun/meme-coin",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/fun/spending-test",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/fun/weekend-duty",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/glossary",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/guides/annual-leave-allowance",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/guides/burnout-syndrome",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    },
+    {
+      "path": "/guides/car-tax-annual-payment",
+      "proposedBytes": 408272,
+      "baselineBytes": 525072,
+      "deltaBytes": -116800,
+      "parts": [
+        "Latin",
+        "Korean",
+        "KoreanExtra1",
+        "KoreanExtra2"
+      ]
+    }
+  ]
+}

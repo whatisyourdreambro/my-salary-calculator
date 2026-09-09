@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import PrivateFeedback from "@/components/PrivateFeedback";
+import DeferredSection from "@/components/DeferredSection";
 import {
   Lightbulb,
   User,
@@ -41,7 +42,7 @@ import {
   ResultNextLinks,
 } from "./shared";
 
-// 하단 시뮬레이터 2종 — 별도 청크로 지연 로드 (First Load 경량화, 클라이언트 전용)
+// 하단 시뮬레이터는 해당 구역에 접근할 때만 마운트해 첫 계산과의 경쟁을 줄인다.
 const MultiYearRSUSimulator = dynamic(() => import("./MultiYearRSUSimulator"), {
   ssr: false,
   loading: () => <SimulatorLoading label="다년도 RSU 매도 시뮬레이터" />,
@@ -59,7 +60,7 @@ const SHARE_URL = "https://www.moneysalary.com/calc/samsung-bonus";
 
 function SimulatorLoading({ label }: { label: string }) {
   return (
-    <section className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 text-center text-xs text-faint-blue">
+    <section role="status" className="flex min-h-[560px] items-center justify-center rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 text-center text-xs text-faint-blue">
       {label} 불러오는 중…
     </section>
   );
@@ -678,6 +679,7 @@ export default function SamsungBonusClient() {
           10~15%, 나고과 약 20~30%).
         </p>
       </div>
+      <DeferredSection id="multi-year-bonus" label="다년도 누적 성과급 시뮬레이터" minHeight={560}>
       <MultiYearBonusSimulator
         counts={counts}
         ratios={ratios}
@@ -687,6 +689,7 @@ export default function SamsungBonusClient() {
         defaultDivId={selectedDivId}
         opi1Rate={opi1Rate}
       />
+      </DeferredSection>
 
       {/* 다년도 RSU 매도 시뮬레이터 — 상단 사업부별 1인당 평균과 연동 */}
       {/* 크롤러 가시 요약 — 시뮬레이터 본체는 ssr:false 라 서버 HTML에 없음 */}
@@ -701,6 +704,7 @@ export default function SamsungBonusClient() {
           있습니다.
         </p>
       </div>
+      <DeferredSection id="multi-year-rsu" label="다년도 RSU 매도 시뮬레이터" minHeight={560}>
       <MultiYearRSUSimulator
         divisionTotals={result.perDivision.map((d) => ({
           id: d.id,
@@ -710,6 +714,7 @@ export default function SamsungBonusClient() {
           total: d.total,
         }))}
       />
+      </DeferredSection>
 
       <p className="text-center text-[11px] text-faint-blue">
         * 만원 단위 반올림 · 공개 노사 합의 보도 기반 추정 시뮬레이터

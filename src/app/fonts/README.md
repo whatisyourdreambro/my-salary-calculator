@@ -1,87 +1,87 @@
-# 사이트 글꼴과 재생성
+﻿# 사이트 글꼴과 재생성
 
-Pretendard 가변 폰트(v1.3.9)의 **한글 서브셋판** — 원본 2,009KB → 503KB (-75%).
-
-포함 범위:
-
-- ASCII (U+0020-007E)
-- KS X 1001 한글 상용 2,350자 + 빌드 시점 사이트 실사용 한글 전부 (총 ~2,400자)
-- 한글 자모(ㄱ-ㅣ), CJK 기호, 화살표, 도형, 통화(₩), 전각 문자 등 기호 범위
+Pretendard Variable v1.3.9에서 만든 기존 `PretendardVariable-subset.woff2`를 분할합니다.
+원본 파일은 516,040바이트이며, 원본에 있던 3,029개 문자와 가변 굵기 45–920을 보존합니다.
+원저작자 표시와 [SIL Open Font License](./OFL.txt)를 유지하고, 파생 글꼴은 `MoneySalary Text` 이름을 사용합니다.
 
 ## 현재 서비스 파일
 
-기존 `PretendardVariable-subset.woff2`(516,040바이트)는 재생성 원본으로 보존합니다.
-`layout.tsx`는 아래 두 파일을 `unicode-range`로 구분해 사용합니다.
+`siteFonts.generated.ts`의 각 `next/font/local` 선언은 실제 문자 집합과 일치하는 `unicode-range`를 사용합니다.
+`layout.tsx`는 생성된 CSS 변수를 적용하고, `globals.css`의 글꼴 목록이 여섯 범위를 연결합니다.
 
 | 파일 | 바이트 | 문자 수 | 용도 |
 | --- | ---: | ---: | --- |
-| MoneySalaryText-Latin.woff2 | 111,712 | 603 | 영문·기호·통화, 메뉴의 `한국어`와 영어 홈 제목의 `연말정산` |
-| MoneySalaryText-Korean.woff2 | 413,360 | 2,426 | 원본에 있던 나머지 한글·CJK 문자 |
+| MoneySalaryText-Latin.woff2 | 111,712 | 603 | 기존 영문·기호·통화, `한국어`·`연말정산` 표기. 이전 배포 파일과 바이트 단위로 동일 |
+| MoneySalaryText-Korean.woff2 | 111,880 | 642 | 주요 한국어 페이지 본문과 계산·공통 UI의 문자 |
+| MoneySalaryText-KoreanExtra1.woff2 | 93,412 | 446 | 나머지 문자 중 현재 한국어 페이지에 가장 널리 쓰이는 범위 |
+| MoneySalaryText-KoreanExtra2.woff2 | 91,268 | 446 | 나머지 범위 2 |
+| MoneySalaryText-KoreanExtra3.woff2 | 93,796 | 446 | 나머지 범위 3 |
+| MoneySalaryText-KoreanExtra4.woff2 | 105,148 | 446 | 나머지 범위 4 |
 
-두 파일의 문자 합집합은 원본 3,029개와 같고 교집합은 없습니다. 원본에 있던 글자를
-제거하지 않았습니다. 나머지 한글이 포함된 페이지는 두 파일이 필요하며 합계 525,072바이트로
-기존보다 9,032바이트(1.75%) 큽니다. 공통 범위만 필요한 페이지는 작은 파일만 사용합니다.
-영문 가이드 안의 한국어 용어처럼 나머지 한글이 실제로 나오면 두 번째 파일도 내려받습니다.
+여섯 문자 집합의 교집합은 없고 합집합은 원본과 같습니다. 공통 한국어 범위는 홈, 삼성 성과급,
+임금체불 가이드, 주택대출 페이지의 전체 HTML 텍스트에 계산기와 공통 UI 소스의 문자를 더해 선택했습니다.
+UI 소스는 주석과 접근성 문구도 포함하여 보수적으로 수집합니다. 나머지는 한국어 HTML에서 그 문자가
+등장하는 페이지 수로 정렬하고, 가이드 소스의 문자 빈도를 동률 기준으로 사용해 네 묶음으로 나눕니다.
+선택 결과와 입력 자료의 해시는 `korean-subsets.json`에 고정합니다.
 
-파생 파일의 이름은 `MoneySalary Text Latin`, `MoneySalary Text Korean`입니다.
-원저작자 표시와 [SIL Open Font License](./OFL.txt)를 함께 보존합니다.
+## 전송량 검토와 한계
 
-분할 재생성은 앱 빌드와 분리된 작업입니다. 저장소의 패키지 의존성을 추가하지 않습니다.
+2026-09-09 분할 전 운영 빌드의 한국어 HTML 2,353개를 사용한 **예상 요청량**입니다.
+이전 배포의 Latin 111,712 + Korean 413,360 = 525,072바이트를 기준으로 비교합니다.
+
+| 범위 | 페이지 수 | 중앙값 | 90백분위 | 최대 | 525,072바이트 초과 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 한국어 전체 | 2,353 | 317,004 | 317,004 | 408,272 | 0 |
+| 가이드 | 341 | 317,004 | 317,004 | 408,272 | 0 |
+| 회사 연봉 DB 및 관련 경로 | 1,097 | 317,004 | 317,004 | 408,272 | 0 |
+
+홈(`/`), `/calc/samsung-bonus`, `/guides/wage-delayed-claim-2026`, `/home-loan`은 각각
+Latin + 공통 한국어 223,592바이트로 추정됩니다. 이전 두 파일 합계보다 301,480바이트(57.4%) 작습니다.
+영문 공통 범위만 쓰는 페이지는 기존 111,712바이트를 유지합니다.
+
+이 값은 스크립트·스타일을 제외한 전체 HTML 텍스트와 문자 범위의 교집합으로 계산합니다.
+숨겨진 텍스트 때문에 실제 요청보다 클 수 있고, HTML에 없는 상호작용 후 문구 때문에 작을 수도 있습니다.
+첫 화면만의 분석이나 브라우저 네트워크·LCP 실측은 아닙니다. 광고 프레임 자체의 글꼴도 이 분석에 포함하지 않습니다.
+현재 검토 범위에는 여섯 파일을 모두 요청할 페이지가 없지만, 다른 콘텐츠나 동적 결과가 모든 범위를 쓰면
+총 607,216바이트로 이전보다 82,144바이트(15.6%) 커질 수 있습니다. 새 콘텐츠를 추가할 때 분포와 실제 요청을 함께 확인합니다.
+
+원시 요약과 경로별 상위 사례는 `coverage-summary.json`, 계산 방법은 `audit-coverage.py`에 있습니다.
+
+## 재현과 검증
+
+글꼴 재생성은 앱 빌드와 분리된 수동 작업입니다. 저장소의 npm 의존성을 추가하지 않습니다.
+검증한 도구 버전은 Python 3.13, fontTools 4.64.0, Brotli 1.2.0입니다.
 
 ```sh
 python -m pip install fonttools==4.64.0 brotli==1.2.0
 python src/app/fonts/build-subsets.py
 ```
 
-스크립트는 모든 문자와 advance width, 줄 높이, 가변 굵기 축의 보존을 확인하고,
-대표 영문·숫자·통화·한글의 45/400/920 굵기 윤곽이 원본과 같은지 검산합니다.
-출력의 `unicodeRange` 두 값은 `layout.tsx` 선언과 같아야 합니다.
+기본 명령은 보존된 원본과 `korean-subsets.json`만 사용하므로 `.next`가 없어도 분할 파일을 재생성합니다.
+원본 SHA-256 일치, 문자 집합의 합집합·비중첩, 모든 문자의 advance width, 줄 높이, 가변 굵기 축을 검사합니다.
+또한 3,029개 문자 모두의 굵기 400 윤곽과 각 범위의 표본 문자 굵기 45·920 윤곽을 원본과 비교합니다.
+Latin 파일은 기존 파일과 바이트가 같은지도 검사합니다. 결과를 `subset-verification.json`에 기록합니다.
+생성기는 글꼴과 함께 `siteFonts.generated.ts`의 정확한 범위 선언을 갱신합니다.
 
-## 미포함 글자의 동작
+콘텐츠 변화에 맞춰 분할 자체를 바꾸려면 검토할 운영 빌드의 `.next/server/app`을 준비하고 다음 명령을 실행합니다.
 
-서브셋에 없는 희귀 한글(옛한글·비상용 조합)은 시스템 폰트(맑은 고딕 등)로
-폴백 렌더링됨 — 글자는 남으며 글꼴 모양이 다를 수 있습니다.
-
-## 첫 방문과 재방문의 폰트 표시
-
-`layout.tsx`는 `display: "optional"`, `preload: false`를 사용합니다. 느린 연결에서
-폰트가 첫 배치에 늦으면 시스템 폰트로 내용을 표시하고, 현재 페이지에서 뒤늦게
-교체하지 않습니다. 내려받은 폰트는 이후 탐색에서 사용할 수 있습니다.
-따라서 첫 방문과 캐시가 있는 재방문은 글꼴 모양이 다를 수 있으나, 읽고 있는
-본문이 폰트 교체로 움직이지 않게 하는 것이 목적입니다. Latin 파일에 기존과 같은
-자동 Arial 폴백 매칭을 적용하고, 한글과 원본 미포함 문자는 뒤의 글꼴·시스템 폴백으로 이어집니다.
-
-근거: [Chrome의 폰트 로딩 안내](https://web.dev/learn/performance/optimize-web-fonts),
-[optional과 preload의 조합](https://web.dev/articles/preload-critical-assets#cumulative_layout_shift_cls).
-변경 시 한국어/영어 첫 방문, 캐시 재방문, 폰트 요청 실패 상황을 확인합니다.
-
-## 재생성 방법 (신규 콘텐츠에 희귀 글자가 많아졌을 때)
-
-1. 원본 다운로드: https://github.com/orioncactus/pretendard/releases (web/variable/woff2/PretendardVariable.woff2)
-2. `pip install fonttools brotli`
-3. 사용 문자 추출 + 서브셋:
-
-```bash
-# 사용 문자 수집 (KS X 1001 ∪ src 실사용 문자 → subset_chars.txt)
-python - << 'EOF'
-import glob
-ksx = set()
-for lead in range(0xB0, 0xC9):
-    for trail in range(0xA1, 0xFF):
-        try: ksx.add(bytes([lead, trail]).decode('euc-kr'))
-        except UnicodeDecodeError: pass
-used = set()
-for pat in ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.css', 'src/**/*.json']:
-    for f in glob.glob(pat, recursive=True):
-        try: used.update(c for c in open(f, encoding='utf-8').read() if ord(c) > 0x7E)
-        except Exception: pass
-final = set(chr(c) for c in range(0x20, 0x7F)) | ksx | used
-open('subset_chars.txt', 'w', encoding='utf-8').write(''.join(sorted(final)))
-EOF
-
-python -m fontTools.subset PretendardVariable.woff2 \
-  --output-file=PretendardVariable-subset.woff2 --flavor=woff2 \
-  --text-file=subset_chars.txt \
-  --unicodes="U+0020-007E,U+00A0-00FF,U+2000-206F,U+20A9,U+2190-21FF,U+2200-22FF,U+2460-24FF,U+25A0-25FF,U+2600-27BF,U+3000-303F,U+3130-318F,U+FF00-FFEF" \
-  --layout-features="*" --recommended-glyphs
+```sh
+python src/app/fonts/build-subsets.py --refresh-manifest
+python src/app/fonts/audit-coverage.py
 ```
+
+`--refresh-manifest`는 명시된 네 페이지, UI 소스, 한국어 페이지 빈도로 문자 배치를 새로 결정합니다.
+변경된 manifest·woff2·생성 TypeScript·검증 보고서를 함께 검토해야 합니다. 일반 앱 빌드에서 자동 실행하지 않습니다.
+범위 추정 스크립트는 실행 시점의 HTML을 읽으므로, 비교하려는 배포 스냅샷과 결과 파일을 보존한 뒤 실행합니다.
+글꼴 원본 자체를 교체하는 경우에는 이 명령만으로 처리하지 않고 라이선스·문자 범위·기존 화면을 별도로 검토합니다.
+원본 배포처는 [Pretendard 릴리스](https://github.com/orioncactus/pretendard/releases)입니다.
+
+## 첫 방문, 재방문과 미포함 문자
+
+각 범위는 `display: "optional"`, `preload: false`를 유지합니다. 연결이 느려 웹 글꼴이 짧은 초기 표시 시간에
+준비되지 않으면 시스템 글꼴로 읽을 수 있고, 나중에 캐시가 준비된 방문에서는 웹 글꼴을 사용할 수 있습니다.
+기존 Latin의 Arial 대체 매칭과 한국어·희귀 문자의 시스템 대체 목록을 유지합니다.
+이는 시스템 글꼴로 영구 전환하는 변경이 아닙니다. 원본에 없던 희귀 한글·문자는 계속 시스템 글꼴로 표시합니다.
+
+동작 배경은 [Chrome의 웹 글꼴 최적화 안내](https://web.dev/learn/performance/optimize-web-fonts)를 참고합니다.
+출시 전에는 한국어·영어의 실제 요청 파일과 바이트, 첫 방문·캐시 재방문, 폰트 요청 실패 시 가독성과 배치 이동을 확인합니다.

@@ -3,9 +3,6 @@
 // 메인 페이지 Premium Tools 그리드의 카드 컴포넌트.
 // duotone-card 유틸 기반으로 SSR/다크모드 일관성 확보.
 
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "@/components/AppLink";
 import { ChevronRight } from "lucide-react";
 
@@ -15,7 +12,6 @@ interface ToolCardProps {
   description: string;
   href: string;
   iconBg?: string;
-  delay?: number;
   wide?: boolean;
   /** "HOT" | "인기" | "NEW" 등 카드 우상단 뱃지 */
   badge?: string;
@@ -26,18 +22,11 @@ export default function ToolCard({
   title,
   description,
   href,
-  delay = 0,
   wide = false,
   badge,
 }: ToolCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay }}
-      className={wide ? "md:col-span-2" : ""}
-    >
+    <div className={wide ? "md:col-span-2" : ""}>
       <Link
         href={href}
         className="relative duotone-card no-tap-highlight flex items-center gap-4 px-5 py-4 hover:-translate-y-0.5 group"
@@ -63,6 +52,6 @@ export default function ToolCard({
 
         <ChevronRight className="text-faint-blue group-hover:text-electric flex-shrink-0 w-4 h-4 transition-colors" />
       </Link>
-    </motion.div>
+    </div>
   );
 }

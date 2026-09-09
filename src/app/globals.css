@@ -124,7 +124,9 @@ body {
 @layer base {
  :root {
  --font-pretendard:
- var(--font-pretendard-latin), var(--font-pretendard-local), "Pretendard Variable", Pretendard,
+ var(--font-pretendard-latin), var(--font-pretendard-local),
+ var(--font-pretendard-extra-1), var(--font-pretendard-extra-2),
+ var(--font-pretendard-extra-3), var(--font-pretendard-extra-4), "Pretendard Variable", Pretendard,
  -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
  "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;

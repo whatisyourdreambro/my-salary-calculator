@@ -131,10 +131,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
- <motion.div
- initial={{ opacity: 0, y: 30 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.8 }}
+ {/* 제목과 본문은 hydration이나 등장 애니메이션을 기다리지 않고 표시한다. */}
+ <div
  className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
  >
  <Breadcrumbs
@@ -188,7 +186,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  title={guide.title}
  />
  </div>
- </motion.div>
+ </div>
  </div>
 
  <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-6 relative z-20">
@@ -202,10 +200,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </aside>
 
  {/* Main Content */}
- <motion.article
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2, duration: 0.6 }}
+ <article
  className="flex-1 min-w-0" // prevent overflow
  >
  <div className="duotone-card bg-white p-6 sm:p-10 rounded-[24px]">
@@ -356,7 +351,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  ))}
  </div>
  </div>
- </motion.article>
+ </article>
 
  {/* Sidebar Right (Widgets) */}
  <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
