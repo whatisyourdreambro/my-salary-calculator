@@ -17,6 +17,7 @@ interface MobileDropdownProps {
   item: DropdownItem;
   pathname: string | null;
   onClose: () => void;
+  locale?: "ko" | "en";
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
@@ -26,7 +27,7 @@ const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Ico
   MUST:   { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
 };
 
-function BadgePill({ badge }: { badge: Badge }) {
+function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
   const style = BADGE_STYLES[badge];
   const Icon = style.Icon;
   return (
@@ -35,17 +36,18 @@ function BadgePill({ badge }: { badge: Badge }) {
       style={{ backgroundColor: style.bg, color: style.text }}
     >
       <Icon size={9} strokeWidth={2.5} aria-hidden="true" />
-      {style.label}
+      {locale === "en" ? badge === "MUST" ? "PICK" : badge : style.label}
     </span>
   );
 }
 
-export default function MobileDropdown({ item, pathname, onClose }: MobileDropdownProps) {
+export default function MobileDropdown({ item, pathname, onClose, locale = "ko" }: MobileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="border-b border-canvas-100 last:border-b-0">
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         className={`w-full flex justify-between items-center px-5 py-4 text-base font-semibold bg-transparent border-0 cursor-pointer transition-colors ${
@@ -109,7 +111,7 @@ export default function MobileDropdown({ item, pathname, onClose }: MobileDropdo
                         >
                           {subItem.name}
                         </span>
-                        {subItem.badge && <BadgePill badge={subItem.badge} />}
+                        {subItem.badge && <BadgePill badge={subItem.badge} locale={locale} />}
                       </div>
                       {subItem.description && (
                         <span className="text-[11.5px] text-faint-blue line-clamp-1">

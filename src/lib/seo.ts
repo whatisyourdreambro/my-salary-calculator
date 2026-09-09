@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { getGuideModifiedDate } from "./guideDates";
+import { englishPolicyCounterpart } from "./englishSite";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -101,6 +102,7 @@ export function buildPageMetadata(options: PageMetadataOptions): Metadata {
  // 영문 카운터파트가 있는 페이지는 page별로 languages를 override.
  languages: {
  "ko-KR": url,
+ ...(englishPolicyCounterpart(path) ? { en: `${SITE_URL}/en${path}` } : {}),
  "x-default": url,
  },
  // RSS 자동발견 — 자체 alternates 로 layout 값이 끊기므로 여기서 다시 넣는다.

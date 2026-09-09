@@ -1,0 +1,106 @@
+{
+  "name": "Moneysalary — Salary & Money Tools",
+  "short_name": "Moneysalary",
+  "description": "Korean salary estimates and currency-aware tools for borrowing, saving and comparing job offers.",
+  "id": "/en",
+  "start_url": "/en?utm_source=pwa&utm_medium=homescreen",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0145F2",
+  "lang": "en",
+  "scope": "/",
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Korea take-home pay",
+      "short_name": "Salary",
+      "description": "Estimate Korean monthly take-home salary",
+      "url": "/en#calculator",
+      "icons": [
+        {
+          "src": "/icon",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "All calculators",
+      "short_name": "Calculators",
+      "description": "Choose a salary or money calculator",
+      "url": "/en/calculators",
+      "icons": [
+        {
+          "src": "/icon",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "My saved results",
+      "short_name": "Dashboard",
+      "description": "Open results saved in this browser",
+      "url": "/en/dashboard",
+      "icons": [
+        {
+          "src": "/icon",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "English guides",
+      "short_name": "Guides",
+      "description": "Read practical salary, tax and money guides",
+      "url": "/en/guides",
+      "icons": [
+        {
+          "src": "/icon",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ]
+}

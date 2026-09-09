@@ -4,9 +4,9 @@ import EnglishGuidesClient from "./EnglishGuidesClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
- title: { absolute: "Finance Guides for Working in Korea | Moneysalary" },
+ title: { absolute: "English Pay, Tax and Money Guides | Moneysalary" },
  description:
-  "In-depth English guides on Korean salary, semiconductor stocks, employee stock plans, taxes, and personal finance for professionals working in Korea.",
+  "Understand Korean payslips, tax, insurance and employee compensation in English. Read dated sources, eligibility checks and transparent financial examples.",
  alternates: {
   canonical: "https://www.moneysalary.com/en/guides",
   languages: {
@@ -16,21 +16,21 @@ export const metadata: Metadata = {
   },
  },
  keywords:
-  "korea finance guides english, samsung stock guide, sk hynix stock, korea esop, korea isa account, expat investing korea",
+  "korean salary guide english, korea tax insurance, employee compensation, korean payslip, korea job offer",
  openGraph: {
-  title: "Finance Guides for Working in Korea | Moneysalary",
+  title: "English Pay, Tax and Money Guides | Moneysalary",
   description:
-   "Samsung Electronics, SK Hynix, ESOP, ISA, and more — English guides for working professionals in Korea.",
+   "English explanations of pay, tax, insurance and employee compensation, with sources and clear assumptions.",
   type: "website",
   locale: "en_US",
   url: "https://www.moneysalary.com/en/guides",
-  images: [{ url: "https://www.moneysalary.com/api/og?lang=en&title=Finance+Guides+for+Working+in+Korea", width: 1200, height: 630 }],
+  images: [{ url: "https://www.moneysalary.com/api/og?lang=en&title=English+Pay+Tax+and+Money+Guides", width: 1200, height: 630 }],
  },
  twitter: {
   card: "summary_large_image",
-  title: "Finance Guides for Working in Korea | Moneysalary",
+  title: "English Pay, Tax and Money Guides | Moneysalary",
   description:
-   "In-depth English guides on Korean salary, semiconductor stocks, ESOP, taxes and personal finance.",
+   "Pay, insurance, tax and employee-compensation questions explained in English with dated sources.",
  },
 };
 

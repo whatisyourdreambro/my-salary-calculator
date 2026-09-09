@@ -1,5 +1,6 @@
 import { enGuideCards } from "./guidesData";
 import type { SearchEntry } from "./searchIndex";
+import { EN_STATIC_PAGE_ENTRIES } from "./englishRoutes";
 
 /** English search only links to pages with English content. Loaded on demand. */
 export const englishSearchIndex: SearchEntry[] = [
@@ -8,6 +9,7 @@ export const englishSearchIndex: SearchEntry[] = [
   { title: "Gross salary currency converter", href: "/en/salary-converter", category: "계산기", description: "Convert annual and monthly gross salary using an exchange rate you choose.", priority: 1 },
   { title: "English salary and tax guides", href: "/en/guides", category: "가이드", description: "Guides for understanding work, salary and tax in Korea." },
   { title: "Help using Moneysalary", href: "/en/help", category: "도구", description: "Calculator assumptions, official sources, privacy and contact options." },
+  ...EN_STATIC_PAGE_ENTRIES.filter(entry => !["/en", "/en/flat-tax", "/en/salary-converter", "/en/guides", "/en/help"].includes(entry.href)).map(entry => ({ title: entry.title, href: entry.href, description: entry.description, category: entry.href.startsWith("/en/tools/") ? "계산기" as const : "도구" as const })),
   ...enGuideCards.map(guide => ({ title: guide.title, href: `/en/guides/${guide.slug}`, category: "가이드" as const, description: guide.description })),
 ];
 

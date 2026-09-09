@@ -43,7 +43,7 @@ const fourMajorInsurance = `
 <h2>When you leave a job</h2>
 <p>Ask for your workplace-coverage end date, dependent-coverage options and the first regional health-insurance bill. Qualifying former employees can compare voluntary continuation with regional premiums. The application deadline is tied to the first regional bill's payment due date plus two months, not simply the resignation date. See the detailed guide before choosing.</p>
 <h2>Official references and related help</h2>
-<ul><li><a href="https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0095M0.do">NPS 2026 contribution-rate explanation (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379625&amp;mid=a10605040000">MOHW 2026 health rate decision (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379715&amp;mid=a10605040000">MOHW 2026 long-term-care rate decision (Korean)</a></li><li><a href="https://www.nps.or.kr/eng/main.do">National Pension Service (English)</a> — coverage and agreements.</li><li><a href="https://www.nhis.or.kr/english/index.do">NHIS (English)</a> — membership and premium enquiries.</li><li><a href="/en/guides/health-insurance-2026-guide">Health insurance after leaving employment</a></li><li><a href="/en/flat-tax">Compare income-tax methods separately</a></li><li><a href="/">Korean net-salary calculator (Korean; standard coverage assumptions)</a></li></ul>
+<ul><li><a href="https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0095M0.do">NPS 2026 contribution-rate explanation (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379625&amp;mid=a10605040000">MOHW 2026 health rate decision (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379715&amp;mid=a10605040000">MOHW 2026 long-term-care rate decision (Korean)</a></li><li><a href="https://www.nps.or.kr/eng/main.do">National Pension Service (English)</a> — coverage and agreements.</li><li><a href="https://www.nhis.or.kr/english/index.do">NHIS (English)</a> — membership and premium enquiries.</li><li><a href="/en/guides/health-insurance-2026-guide">Health insurance after leaving employment</a></li><li><a href="/en/flat-tax">Compare income-tax methods separately</a></li><li><a href="/en#calculator">Korea take-home salary estimate (English; standard coverage assumptions)</a></li></ul>
 `;
 
 const yearEndTaxDeductions = `
@@ -65,7 +65,7 @@ const yearEndTaxDeductions = `
 <ol><li>Collect your withholding statement and confirm the tax year.</li><li>Check Hometax records against actual payments and reimbursements.</li><li>Agree which spouse may claim each eligible dependent; avoid duplicate claims.</li><li>Separate income deductions from tax credits and apply the tax calculation in that order.</li><li>Compare final tax with tax already withheld. A smaller tax bill can mean a smaller additional payment, not necessarily a refund.</li></ol>
 <p>Do not buy unnecessary services or lock up emergency cash in a pension product just to obtain a credit. Product withdrawal rules, fees and investment loss are separate from tax treatment.</p>
 <h2>Sources and tools</h2>
-<ul><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&amp;mi=6596">NTS other tax credits: pension accounts (Korean)</a></li><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7874&amp;mi=6438">NTS special tax credits: medical, education and donations (Korean)</a></li><li><a href="https://korea.nabo.go.kr/board/file/down.do?fid=33319156">National Assembly Budget Office, 2026 Taxation in Korea (Korean PDF)</a> — monthly-rent conditions.</li><li><a href="/year-end-tax">Year-end estimator (Korean)</a></li><li><a href="/en/help#flat-tax">English comparison model and its omissions</a></li></ul>
+<ul><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&amp;mi=6596">NTS other tax credits: pension accounts (Korean)</a></li><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7874&amp;mi=6438">NTS special tax credits: medical, education and donations (Korean)</a></li><li><a href="https://korea.nabo.go.kr/board/file/down.do?fid=33319156">National Assembly Budget Office, 2026 Taxation in Korea (Korean PDF)</a> — monthly-rent conditions.</li><li><a href="/en#calculator">Korean take-home salary estimate in English</a> ? a simplified model, not a refund calculator.</li><li><a href="/year-end-tax">Year-end estimator (Korean)</a></li><li><a href="/en/help#flat-tax">English comparison model and its omissions</a></li></ul>
 `;
 
 const healthInsuranceGuide = `
@@ -100,7 +100,7 @@ const loanTypesComparison = `
 <p>DSR compares qualifying annual debt service with income under the lender's regulatory calculation. LTV relates lending to collateral value. Applicable limits, stress-rate rules, exemptions and foreign-borrower eligibility depend on the product and current regulation. Neither a household repayment-to-income ratio nor an LTV percentage alone proves approval.</p>
 <ul><li>Ask the lender which existing debts, facility limits and stress assumptions it will count.</li><li>Budget essential living costs, irregular income and emergency reserves separately.</li><li>Confirm renewal, acceleration, early-repayment and collateral risks in the agreement.</li><li>Use the lender's written estimate for the final comparison; do not substitute a generic calculator result for an offer.</li></ul>
 <h2>Resources and tools</h2>
-<ul><li><a href="https://www.fsc.go.kr/eng/index">Financial Services Commission (English)</a> — official policy announcements; consult the applicable current announcement.</li><li><a href="/home-loan">Mortgage repayment calculator (Korean; assumptions stated on the page)</a></li><li><a href="/en/salary-converter">Convert gross salary using an explicit exchange-rate assumption</a></li></ul>
+<ul><li><a href="https://www.fsc.go.kr/eng/index">Financial Services Commission (English)</a> — official policy announcements; consult the applicable current announcement.</li><li><a href="/en/tools/loan">Fixed monthly loan-payment calculator (English)</a> ? use one currency and your own rate and term; fees and approval are separate.</li><li><a href="/home-loan">Mortgage repayment calculator (Korean; assumptions stated on the page)</a></li><li><a href="/en/salary-converter">Convert gross salary using an explicit exchange-rate assumption</a></li></ul>
 `;
 
 export const hotKeywordsGuidesEn: Guide[] = [
@@ -124,7 +124,7 @@ export const hotKeywordsGuidesEn: Guide[] = [
     description:
       "National Pension, Health, Employment, and Industrial Accident insurance — 2026 contribution rates, coverage, and what changes when you leave employment.",
     category: "Tax",
-    tags: ["4대보험", "Korea Social Insurance", "Health", "Pension"],
+    tags: ["Four Major Insurances", "Korea Social Insurance", "Health", "Pension"],
     level: "Beginner",
     publishedDate: "2026-05-23",
     modifiedDate: "2026-09-09",
@@ -138,7 +138,7 @@ export const hotKeywordsGuidesEn: Guide[] = [
     description:
       "Separate income deductions from tax credits, check pension and rent conditions, and understand why a credit is not a guaranteed refund.",
     category: "Tax",
-    tags: ["연말정산", "Year-end Tax", "Korea Tax Credits", "Deductions"],
+    tags: ["Year-end Tax Settlement", "Year-end Tax", "Korea Tax Credits", "Deductions"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
     modifiedDate: "2026-09-09",

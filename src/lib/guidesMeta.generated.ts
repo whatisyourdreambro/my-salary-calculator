@@ -1815,63 +1815,62 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "samsung-electronics-stock-2026",
-  "title": "Samsung Electronics 2026 Stock Outlook: HBM and Foundry Inflection 📊",
-  "description": "HBM3E 12-Hi ramp and 2nm GAA break-even potential. Scenario-based buying strategies for working investors.",
+  "title": "Samsung Electronics in 2026: Read HBM and Compensation Announcements",
+  "description": "Separate Samsung's dated product and compensation announcements from profit assumptions, stock-price forecasts and individual awards.",
   "category": "Stocks",
   "tags": [
    "Samsung Electronics",
-   "stock",
    "HBM",
-   "semiconductor",
+   "company disclosures",
    "2026"
-  ],
-  "level": "Intermediate",
-  "publishedDate": "2026-05-06",
-  "views": 0,
-  "lang": "en",
-  "contentChars": 4715
- },
- {
-  "slug": "samsung-employee-rsu-stock",
-  "title": "Samsung Employee Stock Plans: How Much Does a +30% Move Mean to You? 💼",
-  "description": "ESOP, ESOP loans, and executive RSUs. Asset simulation by job level under different price scenarios.",
-  "category": "Stocks",
-  "tags": [
-   "Samsung Electronics",
-   "ESOP",
-   "RSU",
-   "employee",
-   "wealth"
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 6377
+  "contentChars": 3484
+ },
+ {
+  "slug": "samsung-employee-rsu-stock",
+  "title": "Samsung Employee Shares and RSUs: Read Your Award Terms",
+  "description": "Check grant, vesting, purchase restrictions and tax events. Separate a company announcement from your personal entitlement.",
+  "category": "Stocks",
+  "tags": [
+   "Samsung Electronics",
+   "ESOP",
+   "RSU",
+   "employee compensation"
+  ],
+  "level": "Intermediate",
+  "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
+  "views": 0,
+  "lang": "en",
+  "contentChars": 3562
  },
  {
   "slug": "sk-hynix-stock-2026",
-  "title": "SK Hynix Stock Outlook: Will the HBM3E Lead Hold Through 2026? 🚀",
-  "description": "HBM4 roadmap, Cheongju / Icheon / Indiana capacity expansion, and the impact of Samsung's entry.",
+  "title": "SK hynix HBM in 2026: A Company-Announcement Checklist",
+  "description": "Distinguish product readiness, shipments, financial results and personal bonus assumptions when reading SK hynix news.",
   "category": "Stocks",
   "tags": [
    "SK Hynix",
-   "stock",
-   "HBM3E",
    "HBM4",
+   "company disclosures",
    "memory"
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3796
+  "contentChars": 2897
  },
  {
   "slug": "sk-hynix-employee-bonus-stock",
-  "title": "SK Hynix PS / PI Bonuses and ESOP ROI 💰",
-  "description": "Got a 50% PS — now what? ESOP vs ISA vs loan paydown. Bonus simulations by tenure included.",
+  "title": "SK hynix PS and PI: How to Read a Bonus Notice",
+  "description": "Identify the pay base, performance period and conditions before calculating a gross bonus or planning a share purchase.",
   "category": "Stocks",
   "tags": [
    "SK Hynix",
@@ -1885,80 +1884,82 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 5264
+  "contentChars": 3092
  },
  {
   "slug": "semiconductor-cycle-2026",
-  "title": "Semiconductor Cycle 2026: Asset Strategy Through the Memory Peak 🔄",
-  "description": "Recovery, expansion, peak, correction — phase-specific rules on ESOP weight, PS use, and fixed costs.",
+  "title": "Semiconductor Cycles: A Cash-Flow Checklist for Employees",
+  "description": "Read dated business indicators and test household exposure without assuming a fixed market peak or a guaranteed next-cycle bonus.",
   "category": "Stocks",
   "tags": [
    "semiconductor cycle",
    "memory",
-   "wealth management",
-   "peak",
-   "professionals"
+   "employee compensation",
+   "cash flow"
   ],
   "level": "Advanced",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3172
+  "contentChars": 3202
  },
  {
   "slug": "samsung-vs-hynix-employee-comparison",
-  "title": "Samsung vs SK Hynix: Pay, Benefits and Employee Stock Compared ⚖️",
-  "description": "Base salary, signing bonus, OPI / TAI vs PS / PI, ESOP design, housing — six decision criteria.",
+  "title": "Samsung vs SK hynix: Compare the Actual Job Offer",
+  "description": "A documented comparison of fixed pay, variable bonus, one-time cash, stock terms and scheduled hours; no invented company-wide salary promise.",
   "category": "Stocks",
   "tags": [
    "Samsung Electronics",
    "SK Hynix",
-   "new hire pay",
+   "job offer",
    "comparison",
    "career"
   ],
   "level": "Beginner",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 4262
+  "contentChars": 3441
  },
  {
   "slug": "chip-stock-tax-guide",
-  "title": "Tax-Efficient Trading of Chip Stocks: ISA, Pension, Loss Harvesting 🧾",
-  "description": "Four tax strategies for working professionals selling Samsung / SK Hynix shares.",
+  "title": "Korean Share-Sale Tax: Residence, ISA and Employee Shares",
+  "description": "Define the taxable event, account and shareholder scope; separate ISA contribution limits from profit exemptions and compensation from a later sale.",
   "category": "Stocks",
   "tags": [
    "stock tax",
    "capital gains",
    "ISA",
    "pension",
-   "tax saving"
+   "tax residence"
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 4892
+  "contentChars": 3778
  },
  {
   "slug": "kospi-leader-stock-strategy",
-  "title": "KOSPI Leaders (Samsung / SK Hynix) — DCA vs Lump-Sum Strategy 📈",
-  "description": "Auto-buy 5–10% of salary, set portfolio caps, and trim at cycle peaks. Allocation by salary band.",
+  "title": "DCA vs Lump Sum: A Transparent Share-Purchase Example",
+  "description": "Compare equal cash budgets with explicit price assumptions, then identify what a real backtest and a personal savings plan would require.",
   "category": "Stocks",
   "tags": [
    "DCA",
-   "lump-sum",
+   "lump sum",
    "Samsung Electronics",
    "SK Hynix",
-   "portfolio"
+   "saving"
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3935
+  "contentChars": 3238
  },
  {
   "slug": "samsung-wage-negotiation-2026",
@@ -2406,7 +2407,7 @@ export const guideCards: GuideCardMeta[] = [
   "description": "National Pension, Health, Employment, and Industrial Accident insurance — 2026 contribution rates, coverage, and what changes when you leave employment.",
   "category": "Tax",
   "tags": [
-   "4대보험",
+   "Four Major Insurances",
    "Korea Social Insurance",
    "Health",
    "Pension"
@@ -2416,7 +2417,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3852
+  "contentChars": 3869
  },
  {
   "slug": "year-end-tax-deductions-guide",
@@ -2424,7 +2425,7 @@ export const guideCards: GuideCardMeta[] = [
   "description": "Separate income deductions from tax credits, check pension and rent conditions, and understand why a credit is not a guaranteed refund.",
   "category": "Tax",
   "tags": [
-   "연말정산",
+   "Year-end Tax Settlement",
    "Year-end Tax",
    "Korea Tax Credits",
    "Deductions"
@@ -2434,7 +2435,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 4622
+  "contentChars": 4750
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2470,7 +2471,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3397
+  "contentChars": 3561
  },
  {
   "slug": "samsung-wage-negotiation-status-2026",

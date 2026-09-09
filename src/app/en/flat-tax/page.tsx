@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { compareKoreanIncomeTax, parseWholeKRW, MAX_ANNUAL_KRW } from "@/lib/englishCalculators";
+import EnglishPageShell from "@/components/english/EnglishPageShell";
 
 const money = (value: number) => Math.round(value).toLocaleString("en-US");
 const fieldClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
@@ -21,12 +22,7 @@ export default function FlatTaxPage() {
   const { inputProps, resultRef } = useCalculatorMeasurement({ calcType: "en-flat-tax", valid: result !== null, resultKey: result });
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <Link href="/en" className="inline-flex min-h-11 items-center text-primary underline">English tools</Link>
-      <header className="mb-8 mt-4">
-        <h1 className="text-3xl font-black sm:text-5xl">Korea flat tax vs progressive tax</h1>
-        <p className="mt-4 text-lg text-muted-foreground">Compare annual income tax in a limited resident-employee model. The 19% national flat rate becomes 20.9% when local income tax is included.</p>
-      </header>
+    <EnglishPageShell eyebrow="Calculators · Korean income tax" title="Korea flat tax vs progressive tax" description="Compare annual income tax in a limited resident-employee model. The 19% national flat rate becomes 20.9% when local income tax is included." breadcrumbs={[{ name: "Calculators", href: "/en/calculators" }, { name: "Income-tax comparison", href: "/en/flat-tax" }]}>
       <section aria-labelledby="eligibility" className="mb-8 rounded-2xl border border-border bg-secondary/30 p-5">
         <h2 id="eligibility" className="text-xl font-bold">Check eligibility before comparing</h2>
         <p className="mt-2">The election is for qualifying foreign employees, excluding daily workers and certain related-enterprise employment. Under the law reviewed on 9 September 2026, first work in Korea must start by 31 December 2026; the applicable period is up to 20 years from that first date. An application is required.</p>
@@ -88,9 +84,10 @@ export default function FlatTaxPage() {
       </section>
       <CalcResultAd />
       <nav aria-label="Related English tasks" className="mt-8 flex flex-wrap gap-4">
+        <Link href="/en#calculator" className="inline-flex min-h-11 items-center text-primary underline">Estimate Korean take-home pay</Link>
         <Link href="/en/salary-converter" className="inline-flex min-h-11 items-center text-primary underline">Convert a gross salary</Link>
         <Link href="/en/guides/year-end-tax-deductions-guide" className="inline-flex min-h-11 items-center text-primary underline">Understand year-end deductions</Link>
       </nav>
-    </main>
+    </EnglishPageShell>
   );
 }

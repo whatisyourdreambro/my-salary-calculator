@@ -26,16 +26,16 @@ export default function Header() {
  // /en 트리는 영어 메뉴 — 영어판이 있는 페이지만 링크 (navConfigEn 주석 참고)
  const isEn = pathname === "/en" || pathname.startsWith("/en/");
  const activeNavConfig = isEn ? navConfigEn : navConfig;
- const dashboardLabel = isEn ? "Dashboard (Korean)" : "대시보드";
+ const dashboardLabel = isEn ? "Dashboard" : "대시보드";
  const mobileMenuAriaLabel = isEn ? "Open menu" : "메뉴 열기";
- const dashboardHref = "/dashboard";
+ const dashboardHref = isEn ? "/en/dashboard" : "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
  const mobileDialog = useRef<HTMLDialogElement>(null);
  useModalDialog(isMobileMenuOpen, mobileDialog);
 
  useEffect(() => {
- const wide = window.matchMedia("(min-width: 1024px)");
+ const wide = window.matchMedia("(min-width: 1280px)");
  const closeOnDesktop = () => { if (wide.matches) setIsMobileMenuOpen(false); };
  wide.addEventListener("change", closeOnDesktop);
  return () => wide.removeEventListener("change", closeOnDesktop);
@@ -65,6 +65,7 @@ export default function Header() {
  return (
  <>
  <header
+ lang={isEn ? "en" : "ko"}
  className={`header-slide-in fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${headerSurface}`}
  style={{
  backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
@@ -87,14 +88,15 @@ export default function Header() {
  </Link>
  </div>
 
- {/* Desktop Nav — 6개 카테고리, lg(1024px)부터 노출. xl 에서 폰트·간격↑ */}
- <div className="hidden lg:flex items-center gap-0 xl:gap-0.5 flex-1 justify-center min-w-0">
+ {/* Desktop Nav — 7개 카테고리, xl(1280px)부터 노출. 2xl 에서 폰트·간격↑ */}
+ <div className="hidden xl:flex items-center gap-0 2xl:gap-0.5 flex-1 justify-center min-w-0">
  {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
  <DesktopDropdown
  key={item.name}
  item={item}
  pathname={pathname}
+ locale={isEn ? "en" : "ko"}
  />
  ) : (
  <Link
@@ -124,14 +126,14 @@ export default function Header() {
  <Link
  href={dashboardHref}
  aria-label={dashboardLabel}
- className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-[13.5px] font-bold text-white bg-electric border-2 border-electric rounded-xl no-underline whitespace-nowrap shadow-[0_4px_14px_-2px_#0145F233] hover:bg-canvas hover:text-electric transition-colors"
+ className="hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3.5 py-2 text-[13.5px] font-bold text-white bg-electric border-2 border-electric rounded-xl no-underline whitespace-nowrap shadow-[0_4px_14px_-2px_#0145F233] hover:bg-canvas hover:text-electric transition-colors"
  >
  <LayoutDashboard size={14} aria-hidden="true" />
- <span className="hidden md:inline">{dashboardLabel}</span>
+ <span className="hidden 2xl:inline">{dashboardLabel}</span>
  </Link>
 
- {/* Mobile Menu Toggle — lg 미만에서 노출 */}
- <div className="lg:hidden">
+ {/* Mobile Menu Toggle — xl(1280px) 미만에서 노출 */}
+ <div className="xl:hidden">
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -154,6 +156,7 @@ export default function Header() {
  <dialog
  ref={mobileDialog}
  id="mobile-nav-menu"
+ lang={isEn ? "en" : "ko"}
  onCancel={(event) => { event.preventDefault(); setIsMobileMenuOpen(false); }}
  aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
  className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-y-auto overscroll-contain border-0 bg-white dark:bg-slate-900 text-navy dark:text-canvas-50 backdrop:bg-navy/40"
@@ -178,7 +181,7 @@ export default function Header() {
  className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
  >
  <LayoutDashboard size={18} aria-hidden="true" />
- {isEn ? "Open dashboard (Korean)" : "내 대시보드 열기"}
+ {isEn ? "Open my dashboard" : "내 대시보드 열기"}
  </Link>
 
  {/* Nav items */}
@@ -207,6 +210,7 @@ export default function Header() {
  item={item}
  pathname={pathname}
  onClose={() => setIsMobileMenuOpen(false)}
+ locale={isEn ? "en" : "ko"}
  />
  )
  )}

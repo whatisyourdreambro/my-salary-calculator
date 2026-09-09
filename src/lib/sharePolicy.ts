@@ -8,7 +8,7 @@ export function resolveShareLocale(path: string, explicit?: ShareLocale): ShareL
 }
 
 export function isShareExcludedPath(path: string): boolean {
-  return /^\/(?:api|_next|_not-found|contact|dashboard|report|favorites|widget)(?:\/|$)/.test(path);
+  return /^\/(?:en\/)?(?:api|_next|_not-found|contact|dashboard|report|favorites|widget)(?:\/|$)/.test(path);
 }
 
 export function isLegacyResultPath(path: string): boolean {

@@ -17,7 +17,7 @@ import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
 import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import SkipToContent from "@/components/SkipToContent";
-import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
+import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
 // Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
@@ -131,7 +131,7 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
+        <JsonLd data={[organizationLd(), webSiteLd()]} />
       </head>
       <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">
         <SkipToContent />

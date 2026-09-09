@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import EnglishLocaleSync from "./LocaleSync";
-import PageFooterAds from "@/components/PageFooterAds";
-import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
-import AutoShareSection from "@/components/AutoShareSection";
+import EnglishPageExtras from "@/components/english/EnglishPageExtras";
 
 export const metadata: Metadata = {
+ manifest: "/manifest.en.webmanifest",
  // absolute — 루트 layout 의 "%s | 머니샐러리" 타이틀 템플릿(한국어) 상속 차단
  title: { absolute: "Korea Salary Calculator 2026 & Income Tax Tools | Moneysalary" },
  description: "Estimate Korean monthly take-home pay, compare income-tax methods and convert gross salary in English, with explicit assumptions and official sources.",
@@ -42,22 +40,9 @@ export default function EnglishLayout({
 }) {
  return (
  <div className="en-locale" lang="en">
- <JsonLd
- data={[
- softwareApplicationLd({
- name: "Moneysalary — Korea Salary & Tax Calculator",
- description: "Korean take-home salary estimates, gross salary conversion, limited income-tax comparison and English guides.",
- url: "/en",
- }),
- breadcrumbLd([{ name: "Home", path: "/en" }]),
- ]}
- />
  <EnglishLocaleSync />
  {children}
- {/* 영어권 트래픽도 AdSense 가 자동 매칭 (지역별 광고 송출 — Cloudflare 엣지) */}
- <PageFooterAds maxWidth="3xl" />
- {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
- <AutoShareSection contentType="page" locale="en" maxWidth="3xl" className="pb-16" />
+ <EnglishPageExtras />
  </div>
  );
 }

@@ -36,6 +36,8 @@ export function webSiteLd() {
  "@context": "https://schema.org",
  "@type": "WebSite",
  name: SITE_NAME,
+ alternateName: "Moneysalary",
+ inLanguage: ["ko", "en"],
  url: SITE_URL,
  };
 }
@@ -81,6 +83,7 @@ export function softwareApplicationLd(tool: {
  url: string;
  /** 주요 기능 목록 (선택) — 리치 결과 보강용 */
  featureList?: string[];
+ inLanguage?: "ko" | "en";
  datePublished?: string;
  dateModified?: string;
 }) {
@@ -94,7 +97,7 @@ export function softwareApplicationLd(tool: {
  url: absUrl,
  applicationCategory: "FinanceApplication",
  operatingSystem: "Web",
- inLanguage: "ko",
+ inLanguage: tool.inLanguage ?? "ko",
  offers: {
  "@type": "Offer",
  price: "0",

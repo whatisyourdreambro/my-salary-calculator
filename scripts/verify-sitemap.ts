@@ -106,6 +106,8 @@ function checkWebApplicationDate(): number {
 // 의도적으로 sitemap에서 제외된 정적 라우트 — 사유와 함께 관리
 const INTENTIONALLY_EXCLUDED = new Set([
   "/contact", // 비공개 문의 접수 폼 — page metadata의 noindex에 따라 검색 사이트맵 제외
+  "/en/contact", // English private contact counterpart
+  "/en/dashboard", // English local personal results
   "/company", // next.config 301 → /salary-db (카니발 해소 2026-06)
   "/company/compare", // noindex (카니발 해소 2026-06)
   "/dashboard", // 개인화 페이지 — 검색 유입 가치 없음

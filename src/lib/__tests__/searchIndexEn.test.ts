@@ -11,7 +11,7 @@ describe("English site search", () => {
   it("finds the intended task with mixed case and whitespace", () => {
     expect(searchEnglishEntries("  FOREIGN   tax ")[0].href).toBe("/en/flat-tax");
     expect(searchEnglishEntries("currency")[0].href).toBe("/en/salary-converter");
-    expect(searchEnglishEntries("privacy")[0].href).toBe("/en/help");
+    expect(searchEnglishEntries("privacy")[0].href).toBe("/en/privacy");
   });
   it("does not invent a translation when no English result matches", () => {
     expect(searchEnglishEntries("zznonexistentzz")).toEqual([]);

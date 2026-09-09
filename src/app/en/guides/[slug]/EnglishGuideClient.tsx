@@ -1,289 +1,51 @@
 "use client";
 
-import { Calendar, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
-import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
-import { useEffect, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
-import { guideSearchHref } from "@/lib/guideDiscovery";
 import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
 import { englishGuideContent } from "@/lib/englishGuideContent";
 import { englishGuideNextTask } from "@/lib/englishNavigation";
+import { guideSearchHref } from "@/lib/guideDiscovery";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
+import EnglishPageShell from "@/components/english/EnglishPageShell";
 
-interface GuidePageClientProps {
- guide: Guide;
- relatedGuides: Guide[];
-}
+const categoryLabel: Record<string, string> = { Stocks: "Stocks and employee compensation", Tax: "Tax and insurance", RealEstate: "Housing and borrowing" };
 
-export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageClientProps) {
- const { scrollYProgress } = useScroll();
- const scaleX = useSpring(scrollYProgress, {
- stiffness: 100,
- damping: 30,
- restDelta: 0.001,
- });
+export default function EnglishGuideClient({ guide, relatedGuides }: { guide: Guide; relatedGuides: Guide[] }) {
+  const articleContent = englishGuideContent(guide.content);
+  const nextTask = englishGuideNextTask(guide.slug);
+  const readingTime = Math.max(1, Math.ceil(guide.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length / 200));
+  const contents = <nav aria-label="On this page"><ul className="space-y-2 text-sm">{articleContent.headings.map(heading => <li key={heading.id}><a href={`#${heading.id}`} className="inline-flex min-h-11 items-center rounded-lg text-muted-foreground underline decoration-border underline-offset-4 hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">{heading.text}</a></li>)}</ul></nav>;
 
- // 스크롤 진행 바 등 클라이언트 전용 요소에만 부분 적용 —
- // 본문은 즉시 렌더해 SSR/정적 HTML 에 노출 (이전: 전체 return null → 본문 미렌더로 색인 누락)
- const [mounted, setMounted] = useState(false);
-
- useEffect(() => {
- setMounted(true);
- }, []);
-
- // Calculate reading time
- const readingTime = Math.ceil(guide.content.length / 1000);
-
- const relatedCalculator = englishGuideNextTask(guide.slug);
- const articleContent = englishGuideContent(guide.content);
-
- return (
- <main className="min-h-screen bg-canvas relative selection:bg-primary/20">
- {/* Reading Progress Bar — 스크롤 의존이라 mount 후에만 렌더 (hydration 안전) */}
- {mounted && (
- <motion.div
- className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-[#0145F2] to-primary/80 z-50 origin-left"
- style={{ scaleX }}
- />
- )}
-
- {/* Hero Section */}
- <div className="relative pt-28 pb-16 overflow-hidden text-center">
- {/* 다크모드 대응 — via-white/indigo 고정색 대신 양 모드 안전한 반투명 브랜드 틴트 */}
- <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
-
- <motion.div
- initial={false}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.8 }}
- className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
- >
- <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
- <span className="w-2 h-2 rounded-full bg-primary/50" />
- {guide.category} Guide
- </div>
- <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-navy mb-6 leading-tight">
- {guide.title}
- </h1>
- <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-faint-blue font-semibold">
- <div className="flex flex-wrap items-center justify-center gap-2">
- <Calendar className="w-4 h-4" />
- <span>Published <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate, "en")}</time></span>
- {getGuideModifiedDate(guide) !== guide.publishedDate && (
- <span>Updated <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time></span>
- )}
- </div>
- <div className="w-1 h-1 rounded-full bg-slate-300" />
- <div className="flex items-center gap-2">
- <Clock className="w-4 h-4" />
- <span>{readingTime} min read</span>
- </div>
- </div>
- </motion.div>
- </div>
-
- <div className="page-width pb-24 pt-6 relative z-20">
- <div className="flex flex-col lg:flex-row gap-8 xl:gap-16">
-
- {/* Sidebar Left (TOC) - Desktop Only */}
- <aside className="hidden lg:block w-[240px] flex-shrink-0">
- <div className="sticky top-24">
- <nav aria-label="On this page"><h2 className="mb-4 text-sm font-bold">On this page</h2><ul className="space-y-3 border-l border-border pl-4 text-sm">{articleContent.headings.map((heading) => <li key={heading.id}><a href={`#${heading.id}`} className="inline-flex min-h-11 items-center text-muted-foreground hover:text-primary">{heading.text}</a></li>)}</ul></nav>
- </div>
- </aside>
-
- {/* Main Content */}
- <motion.article
- initial={false}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2, duration: 0.6 }}
- className="flex-1 min-w-0"
- >
- <div className="duotone-card bg-white p-6 sm:p-10 rounded-[24px]">
-
- {/* Smart Summary (TL;DR) */}
- <div className="mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/10">
- <h3 className="flex items-center gap-2 font-bold text-lg text-primary mb-3">
- <Lightbulb className="w-5 h-5" />
- Key Summary (TL;DR)
- </h3>
- <p className="text-muted-foreground leading-relaxed">
- {guide.description}
- </p>
- </div>
-
- <GuideMidAd />
-
- <div
- className="prose prose-lg max-w-none
- prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-28
- prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
- prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary
- prose-p:text-muted-foreground prose-p:leading-8
- prose-strong:text-foreground prose-strong:font-bold
- prose-a:text-primary prose-a:no-underline prose-a:font-bold hover:prose-a:underline
- prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-foreground
- prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-primary"
- dangerouslySetInnerHTML={{ __html: articleContent.html }}
- />
-
- {/* Data Sources / Trust Banner — applied to all guides (E-E-A-T) */}
- <div className="mt-10 p-5 bg-secondary/30 rounded-2xl border border-border/50">
- <div className="flex items-start gap-3">
- <span className="text-2xl">📚</span>
- <div className="flex-1 text-sm">
- <p className="font-bold text-foreground mb-1">
- Sources & Methodology
- </p>
- <p className="text-muted-foreground leading-relaxed">
- {/* 세금·연봉 가이드용 정부 출처 문구가 주식 전망 글에도 그대로 붙던 문제 —
-     카테고리별 분기 (2026-08-30 감사 수정) */}
- Sources and assumptions are stated in the article. Forecasts and examples are not actual pay, tax advice or guaranteed returns.{" "}
- Last updated:{" "}
- <strong className="text-foreground">
- <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time>
- </strong>
- </p>
- <p className="text-xs text-muted-foreground mt-2">
- ※ For specific tax / legal decisions, please consult{" "}
- <Link href="/en/help#tax-resources" className="text-primary font-bold hover:underline">
- the source checklist
- </Link>{" "}
- and a qualified tax professional.
- </p>
- </div>
- </div>
- </div>
-
- {/* End of article — highest impact ad slot (in-article fluid for natural integration).
- CoupangBanner 는 컴포넌트가 /en 을 조기 차단해 렌더 0이던 죽은 코드라 정리 (2026-08-24) */}
- <InArticleAd />
-
- {/* Tags */}
- <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
- {guide.tags.map((tag) => (
- <Link key={tag} href={guideSearchHref(tag, "en")} rel="nofollow">
- <span className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-all">
- #{tag}
- </span>
- </Link>
- ))}
- </div>
- </div>
-
- {/* Navigation Footer */}
- <div className="mt-8 duotone-card p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
- <Link
- href="/en/guides"
- className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
- >
- <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
- <ChevronLeft className="w-5 h-5" />
- </div>
- <span className="font-bold">Back to all guides</span>
- </Link>
-
- <div className="flex items-center gap-4">
- <span className="text-sm font-medium text-muted-foreground">Share this guide</span>
- <ShareButtons
- title={guide.title}
- description={`${guide.category} Guide | Moneysalary`}
- className="justify-end"
- locale="en"
- />
- </div>
- </div>
-
- {/* Related Guides Section */}
- <div className="mt-16">
- <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
- <Sparkles className="w-6 h-6 text-primary" />
- Related Reading
- </h3>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- {relatedGuides.map((relatedGuide) => (
- <Link
- key={relatedGuide.slug}
- href={`/en/guides/${relatedGuide.slug}`}
- className="group flex flex-col h-full bg-secondary/5 border border-white/5 hover:border-primary/30 rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg"
- >
- <div className="p-6 flex flex-col flex-grow">
- <span className="text-xs font-bold text-primary mb-2">{relatedGuide.category}</span>
- <h4 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
- {relatedGuide.title}
- </h4>
- <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
- {relatedGuide.description}
- </p>
- <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground mt-auto">
- <span>Read</span>
- <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
- </div>
- </div>
- </Link>
- ))}
- </div>
- </div>
-
- {/* End of article — multiplex(related-content) right after Related Reading; below all in-card ads — 전면 최적화 (운영자 지시 2026-09-02) */}
- <MultiplexAd />
- </motion.article>
-
- {/* Sidebar Right (Widgets) */}
- <aside className="w-full lg:w-[320px] space-y-6 flex-shrink-0">
- {/* Related Calculator Card */}
- {/* Un-stick the whole stack — two cards + 300x600 (~1,100px) overflow laptop viewports so the ad was >50% clipped while pinned; only the ad wrapper is sticky below — 전면 최적화 (운영자 지시 2026-09-02) */}
- <div className="space-y-6 lg:h-full">
- <div className="duotone-card p-6 relative overflow-hidden group">
- <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
- <div className="relative z-10">
- <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 text-primary">
- <Calculator className="w-6 h-6" />
- </div>
- <h3 className="text-lg font-bold mb-2">
- Next useful step
- </h3>
- <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
- <strong>{relatedCalculator.name}</strong>: check the relevant method and conditions before applying an example to your circumstances.
- </p>
- <Link
- href={relatedCalculator.href}
- className="flex items-center justify-center gap-2 w-full py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:brightness-110 transition-all shadow-lg hover:shadow-primary/25"
- >
- Continue in English <ArrowRight className="w-4 h-4" />
- </Link>
- </div>
- </div>
-
- {/* Newsletter / CTA */}
- <div className="duotone-card p-6">
- <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
- <BookOpen className="w-5 h-5 text-primary" />
- Smarter Every Week
- </h3>
- <p className="text-muted-foreground text-sm mb-4">
- Don&apos;t miss our weekly finance guides.
- </p>
- <Link
- href="/en/guides"
- className="block text-center w-full py-3 bg-secondary text-foreground font-bold rounded-xl hover:bg-foreground hover:text-background transition-colors"
- >
- Browse All Guides
- </Link>
- </div>
-
- {/* Desktop-only sidebar ad - on mobile, end-of-article ad is enough
- (쿠팡 skyscraper 는 /en 조기 차단으로 렌더 0이던 죽은 코드라 정리, 2026-08-24) */}
- <div className="hidden lg:block lg:sticky lg:top-24">
- <SidebarAd />
- </div>
- </div>
- </aside>
- </div>
- </div>
- </main>
- );
+  return <EnglishPageShell eyebrow={categoryLabel[guide.category] ?? guide.category} title={guide.title} description={guide.description} breadcrumbs={[{ name: "Guides", href: "/en/guides" }, { name: guide.title, href: `/en/guides/${guide.slug}` }]}>
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+      <span>Published <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate, "en")}</time></span>
+      {getGuideModifiedDate(guide) !== guide.publishedDate && <span>Updated <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time></span>}
+      <span>About {readingTime} min read</span>
+    </div>
+    <ShareButtons title={guide.title} description={guide.description} locale="en" contentType="guide" variant="compact" register={false} />
+    <details className="rounded-2xl border border-border bg-background p-5 lg:hidden"><summary className="cursor-pointer py-2 text-lg font-bold">On this page</summary><div className="mt-3">{contents}</div></details>
+    <div className="flex min-w-0 flex-col gap-8 lg:flex-row">
+      <article className="min-w-0 flex-1">
+        <div className="rounded-3xl border border-border bg-background p-5 sm:p-8">
+          <section className="guide-tldr mb-8 rounded-2xl border border-primary/20 bg-primary/5 p-5"><h2 className="text-lg font-bold text-primary">Key summary</h2><p className="mt-3 leading-7 text-muted-foreground">{guide.description}</p></section>
+          <GuideMidAd />
+          <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-28 prose-h2:mt-12 prose-h2:mb-6 prose-h2:border-b prose-h2:border-border prose-h2:pb-4 prose-h2:text-2xl prose-h3:mt-8 prose-h3:text-xl prose-p:leading-8 prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-a:underline prose-li:text-muted-foreground prose-table:text-sm" dangerouslySetInnerHTML={{ __html: articleContent.html }} />
+          <section className="mt-8 rounded-xl border border-border bg-secondary/30 p-5"><h2 className="font-bold">Sources and method</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">Use the dated sources and assumptions stated in this guide. An illustration is not an employer promise, tax assessment or investment forecast. Personal eligibility and the applicable income year need separate checks.</p><Link href="/en/help" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-primary underline">Methods, official resources and help →</Link></section>
+          <InArticleAd />
+          <section className="mt-8"><h2 className="mb-3 text-xl font-bold">Use this guide</h2><p className="mb-4 text-sm leading-6 text-muted-foreground">{nextTask.description}</p><Link href={nextTask.href} className="inline-flex min-h-11 items-center rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground">{nextTask.name} →</Link></section>
+          <nav aria-label="Explore guide topics" className="mt-8 flex flex-wrap gap-2">{guide.tags.map(tag => <Link key={tag} href={guideSearchHref(tag, "en")} rel="nofollow" className="inline-flex min-h-11 items-center rounded-full border border-border px-4 py-2 text-sm text-primary hover:bg-secondary">#{tag}</Link>)}</nav>
+          <div className="mt-8 border-t border-border pt-6"><p className="mb-3 font-bold">Share this guide</p><ShareButtons title={guide.title} description={guide.description} locale="en" contentType="guide" /></div>
+        </div>
+        <section className="mt-10"><h2 className="mb-5 text-2xl font-black">Related reading</h2><div className="grid gap-4 sm:grid-cols-2">{relatedGuides.map(related => <Link key={related.slug} href={`/en/guides/${related.slug}`} className="rounded-2xl border border-border bg-background p-5 hover:border-primary"><h3 className="font-bold">{related.title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{related.description}</p></Link>)}</div></section>
+        <MultiplexAd />
+      </article>
+      <aside className="hidden w-64 shrink-0 space-y-6 lg:block">
+        <div className="rounded-2xl border border-border bg-background p-5"><h2 className="mb-3 font-bold">On this page</h2>{contents}</div>
+        <section className="rounded-2xl border border-border bg-background p-5"><h2 className="font-bold">Next useful step</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">{nextTask.description}</p><Link href={nextTask.href} className="mt-3 inline-flex min-h-11 items-center font-bold text-primary underline">{nextTask.name} →</Link></section>
+        <div className="sticky top-24"><SidebarAd /></div>
+      </aside>
+    </div>
+  </EnglishPageShell>;
 }

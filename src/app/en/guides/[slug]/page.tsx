@@ -1,9 +1,9 @@
 import { koGuides, enGuides } from "@/lib/guidesContent";
-import { permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import EnglishGuideClient from "./EnglishGuideClient";
-import { articleLd, breadcrumbLd } from "@/lib/structuredData";
+import { articleLd } from "@/lib/structuredData";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
 import { getGuideModifiedDate } from "@/lib/guideDates";
@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  return {
  title: { absolute: serpTitle(guide.title) },
  description: guide.description,
+ keywords: guide.tags,
  alternates: {
  canonical: enUrl,
  languages: hasKo
@@ -91,8 +92,7 @@ export default function EnglishGuidePage({ params }: Props) {
  const guide = enGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {
- // GSC 404 출혈 차단(7차): 옛 영문 가이드 슬러그 → /en/guides 메인 308
- permanentRedirect("/en/guides");
+ notFound();
  }
 
  const relatedGuides = rankRelatedGuides(enGuides, {
@@ -108,21 +108,13 @@ export default function EnglishGuidePage({ params }: Props) {
  lang: "en",
  });
 
- // 전역 AutoBreadcrumb 제거(2026-07-06) 후 이 템플릿의 유일한 breadcrumb —
- // 영문 페이지이므로 영문 라벨 사용 (기존 자동판은 "홈>English>…" 한국어 혼용이었음)
- const breadcrumbJsonLd = breadcrumbLd([
- { name: "Home", path: "/en" },
- { name: "Guides", path: "/en/guides" },
- { name: guide.title, path: `/en/guides/${guide.slug}` },
- ]);
-
  // 한↔영 상호 SSR 링크 — /en 트리로 가는 서버 렌더 내부링크가 사실상 0이던
  // 문제(GSC 미색인 원인) 해소. hreflang 게이트와 동일한 실재 확인 사용.
  const hasKo = koGuides.some((g) => g.slug === guide.slug);
 
  return (
  <>
-  <JsonLd data={[jsonLd, breadcrumbJsonLd]} />
+  <JsonLd data={jsonLd} />
   <EnglishGuideClient guide={guide} relatedGuides={relatedGuides} />
   {hasKo && (
    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
@@ -131,7 +123,7 @@ export default function EnglishGuidePage({ params }: Props) {
      hrefLang="ko"
      className="inline-flex items-center gap-2 text-sm font-bold text-electric hover:underline"
     >
-     🇰🇷 이 가이드를 한국어로 보기 →
+     Read this guide in Korean (한국어) →
     </Link>
    </div>
   )}

@@ -9,6 +9,8 @@ import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
 import { getGuideModifiedDate } from '@/lib/guideDates';
+import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
+import { englishPolicyCounterpart } from '@/lib/englishSite';
 
 type ChangeFrequency =
  | 'always'
@@ -84,7 +86,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/en/flat-tax': { lastModified: new Date('2026-09-09') },
  '/en/salary-converter': { lastModified: new Date('2026-09-09') },
  '/en/help': { lastModified: new Date('2026-09-09') },
- '/en/guides': { lastModified: new Date('2026-08-25') },
+ '/en/guides': { lastModified: new Date('2026-09-09') },
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -335,7 +337,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/en/help': { en: `${baseUrl}/en/help`, 'x-default': `${baseUrl}/en/help` },
  };
 
- const staticUrls = staticRoutes.map((route) => ({
+ for (const path of EN_INDEXABLE_STATIC_PATHS) {
+   if (!EN_STATIC_ALTERNATES[path]) {
+     const koPath = englishPolicyCounterpart(path);
+     EN_STATIC_ALTERNATES[path] = koPath
+       ? { 'ko-KR': `${baseUrl}${koPath}`, en: `${baseUrl}${path}`, 'x-default': `${baseUrl}${koPath}` }
+       : { en: `${baseUrl}${path}`, 'x-default': `${baseUrl}${path}` };
+     if (koPath) EN_STATIC_ALTERNATES[koPath] = EN_STATIC_ALTERNATES[path];
+   }
+   routeOverrides[path] = { ...routeOverrides[path], lastModified: new Date('2026-09-09') };
+ }
+ EN_STATIC_ALTERNATES['/'] = EN_STATIC_ALTERNATES['/en'];
+ EN_STATIC_ALTERNATES['/guides'] = EN_STATIC_ALTERNATES['/en/guides'];
+
+ const staticUrls = [...new Set([...staticRoutes, ...EN_INDEXABLE_STATIC_PATHS])].map((route) => ({
  url: `${baseUrl}${route}`,
  lastModified: routeOverrides[route]?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency:

@@ -209,7 +209,7 @@ function AdSlot({
           width: "100%",
         }}
       >
-        광고 (Sponsored)
+        {pathname === "/en" || pathname.startsWith("/en/") ? "Advertisement" : "광고 (Sponsored)"}
       </span>
       {visible && (
         <ins
