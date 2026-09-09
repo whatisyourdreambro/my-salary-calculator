@@ -12,7 +12,7 @@ export default function Table2027Layout({ children }: { children: React.ReactNod
     <>
       {/* 연봉|월급|주급|시급 상호 링크 탭 + 표 위 광고 — 2026 layout과 동일 구조.
           GuideMidAd 는 하단 PageFooterAds(InArticleAd·HomeTopAd)와 슬롯이 달라 dedup 충돌 없음. */}
-      <div className="bg-white pt-24 sm:pt-28">
+      <div className="bg-background pt-24 sm:pt-28">
         <TableTabsNav />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <GuideMidAd />

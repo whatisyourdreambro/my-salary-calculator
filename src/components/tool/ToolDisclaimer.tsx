@@ -5,9 +5,9 @@ import { Info } from "lucide-react";
 
 export default function ToolDisclaimer({ text }: { text: string }) {
   return (
-    <div className="p-5 bg-electric-5 border border-electric-20 rounded-2xl flex gap-3">
-      <Info className="w-5 h-5 text-electric flex-shrink-0 mt-0.5" />
-      <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+    <div className="flex gap-3 rounded-xl border border-border bg-secondary p-5 text-foreground">
+      <Info className="mt-0.5 h-5 w-5 shrink-0 text-link" aria-hidden="true" />
+      <p className="text-sm leading-6 text-muted-foreground">
         {text}
       </p>
     </div>

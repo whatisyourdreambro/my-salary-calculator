@@ -42,7 +42,7 @@ export default function ThemeToggle() {
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex items-center justify-center cursor-pointer w-11 h-11 p-2 rounded-[10px] bg-transparent border-[1.5px] border-canvas text-electric transition-colors hover:bg-electric-10 hover:border-electric focus-visible:ring-2 focus-visible:ring-electric"
+      className="ms-interactive hover:!translate-y-0 hover:!shadow-none flex items-center justify-center cursor-pointer w-11 h-11 p-2 rounded-xl bg-transparent border border-border text-foreground hover:bg-secondary"
     >
       <Icon size={17} aria-hidden="true" />
     </button>

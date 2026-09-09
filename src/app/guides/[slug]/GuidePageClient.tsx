@@ -10,6 +10,7 @@ import type { Guide } from "@/lib/guidesData";
 import { hubSlugByCategoryId } from "@/lib/guideCategories";
 import { guideSearchHref } from "@/lib/guideDiscovery";
 import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
+import { prepareGuideHeadings } from "@/lib/guideHeadings";
 import TableOfContents from "@/components/guides/TableOfContents";
 import CoupangBanner from "@/components/CoupangBanner";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
@@ -76,14 +77,14 @@ function splitContentByH2(html: string): string[] {
 
 // 분할된 본문 조각마다 동일하게 적용하는 prose 스타일
 const PROSE_CLASS = `prose prose-lg max-w-none
- prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-24
+ prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-28
  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
- prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary
+ prose-h3:text-xl prose-h3:mt-8 prose-h3:text-foreground
  prose-p:text-muted-foreground prose-p:leading-8
  prose-strong:text-foreground prose-strong:font-bold
- prose-a:text-primary prose-a:no-underline prose-a:font-bold hover:prose-a:underline
+ prose-a:text-link prose-a:underline prose-a:underline-offset-4 prose-a:font-semibold
  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-foreground
- prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-primary`;
+ prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-link prose-table:text-sm`;
 
 export default function GuidePageClient({ guide, relatedGuides }: GuidePageClientProps) {
  const { scrollYProgress } = useScroll();
@@ -113,7 +114,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  : { name: "금융 계산기", href: "/" };
 
  // 본문을 h2 경계로 2~3분할해 사이에 광고 배치 (h2 2개 미만이면 분할 없음)
- const segments = splitContentByH2(guide.content);
+ const articleContent = prepareGuideHeadings(guide.content, splitContentByH2(guide.content));
+ const segments = articleContent.segments;
 
  return (
  <main className="min-h-screen bg-canvas relative selection:bg-primary/20">
@@ -127,13 +129,11 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  )}
 
  {/* Hero Section */}
- <div className="relative pt-28 pb-16 overflow-hidden text-center">
- <div className="absolute inset-0 bg-gradient-to-br from-canvas via-white to-indigo-50 -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
+ <div className="relative border-b border-border bg-card pt-24 pb-10 sm:pb-12 text-center">
 
  {/* 제목과 본문은 hydration이나 등장 애니메이션을 기다리지 않고 표시한다. */}
  <div
- className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
+ className="relative max-w-4xl mx-auto px-4 mt-4"
  >
  <Breadcrumbs
  path={`/guides/${guide.slug}`}
@@ -146,7 +146,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {hubSlugByCategoryId[guide.category] ? (
  <Link
  href={`/guides/category/${hubSlugByCategoryId[guide.category]}`}
- className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6 hover:bg-primary/20 transition-colors"
+ className="ms-button ms-button-secondary mb-6 text-sm"
  >
  <span className="w-2 h-2 rounded-full bg-primary/50" />
  {guide.category} 가이드 전체 보기
@@ -157,10 +157,10 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {guide.category} 가이드
  </div>
  )}
- <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-navy mb-6 leading-tight">
+ <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6 leading-tight break-keep">
  {guide.title}
  </h1>
- <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-faint-blue font-semibold">
+ <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-muted-foreground">
  <div className="flex flex-wrap items-center justify-center gap-2">
  <Calendar className="w-4 h-4" />
  <span>발행 <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate)}</time></span>
@@ -193,9 +193,9 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
  {/* Sidebar Left (TOC) - Desktop Only */}
- <aside className="hidden lg:block w-[240px] flex-shrink-0">
+ <aside className="hidden xl:block w-[220px] flex-shrink-0">
  <div className="sticky top-24">
- <TableOfContents content={guide.content} />
+ <div className="ms-panel"><h2 className="mb-3 text-sm font-semibold text-foreground">이 글에서 확인할 내용</h2><TableOfContents headings={articleContent.headings} /></div>
  </div>
  </aside>
 
@@ -203,19 +203,23 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <article
  className="flex-1 min-w-0" // prevent overflow
  >
- <div className="duotone-card bg-white p-6 sm:p-10 rounded-[24px]">
+ <div className="ms-surface p-5 sm:p-8 xl:p-10">
 
  {/* Smart Summary (TL;DR) — guide-tldr/faq-answer: page.tsx speakable 스키마 셀렉터와 일치 */}
- <div className="guide-tldr mb-10 bg-primary/5 rounded-2xl p-6 border border-primary/10">
- <h2 className="flex items-center gap-2 font-bold text-lg text-primary mb-3">
+ <div className="guide-tldr mb-8 rounded-xl bg-secondary p-5 border border-border">
+ <h2 className="flex items-center gap-2 font-semibold text-lg text-foreground mb-3">
  <Lightbulb className="w-5 h-5" />
- 핵심 요약 (TL;DR)
+ 핵심 요약
  </h2>
  <p className="faq-answer text-muted-foreground leading-relaxed">
- {guide.description} 이 가이드를 통해 당신은 <strong>{guide.title}</strong>에 대한 명확한 이해와 구체적인 실행 전략을 얻을 수 있습니다.
- 지금 바로 읽고 당신의 금융 지식을 한 단계 업그레이드 하세요.
+ {guide.description}
  </p>
  </div>
+
+ {articleContent.headings.length > 0 && <details className="mb-8 rounded-xl border border-border bg-card p-4 xl:hidden">
+ <summary className="min-h-11 cursor-pointer py-3 font-semibold text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">이 글의 목차 · {articleContent.headings.length}개 항목</summary>
+ <TableOfContents headings={articleContent.headings} />
+ </details>}
 
  {/* 분할되지 않는 짧은 글만 본문 앞에 광고 — 분할 시에는 1/3 지점으로 이동 */}
  {segments.length === 1 && <GuideMidAd />}
@@ -250,7 +254,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* 편집 기준과 글별 출처를 구분한다. */}
  <div className="mt-10 p-5 bg-secondary/30 rounded-2xl border border-border/50">
  <div className="flex items-start gap-3">
- <span className="text-2xl">📚</span>
+ <BookOpen className="h-5 w-5 shrink-0 text-link" aria-hidden="true" />
  <div className="flex-1 text-sm">
  <p className="font-bold text-foreground mb-1">
  이 글의 기준과 출처 확인
@@ -264,7 +268,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </p>
  <p className="text-xs text-muted-foreground mt-2">
  작성과 수정 과정은{" "}
- <Link href="/about" className="text-primary font-bold hover:underline">
+ <Link href="/about" className="inline-flex min-h-11 items-center text-link font-semibold underline underline-offset-4">
  편집·검토 기준
  </Link>
  에서 확인할 수 있습니다. 개인별 적용 여부는 본문의 공식 자료와 담당 기관에서 확인해 주세요.
@@ -290,8 +294,8 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* Tags */}
  <div className="mt-8 pt-8 border-t border-border flex flex-wrap gap-2">
  {guide.tags.map((tag) => (
- <Link key={tag} href={guideSearchHref(tag)} rel="nofollow">
- <span className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-all">
+ <Link key={tag} href={guideSearchHref(tag)} rel="nofollow" className="ms-button ms-button-secondary text-sm">
+ <span>
  #{tag}
  </span>
  </Link>
@@ -332,7 +336,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <Link
  key={relatedGuide.slug}
  href={`/guides/${relatedGuide.slug}`}
- className="group flex flex-col h-full bg-secondary/5 border border-white/5 hover:border-primary/30 rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg"
+ className="ms-surface ms-interactive group flex flex-col h-full overflow-hidden"
  >
  <div className="p-6 flex flex-col flex-grow">
  <span className="text-xs font-bold text-primary mb-2">{relatedGuide.category}</span>
@@ -365,15 +369,14 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  <Calculator className="w-6 h-6" />
  </div>
  <h3 className="text-lg font-bold mb-2">
- 이제 실전입니다!
+ 내 조건으로 계산하기
  </h3>
  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
- 이론을 마스터하셨나요?<br />
- <strong>{relatedCalculator.name}</strong>로 내 상황에 맞는 정확한 데이터를 확인해보세요.
+ <strong>{relatedCalculator.name}</strong>에 내 조건을 입력하고 예상 결과와 적용 가정을 확인하세요.
  </p>
  <Link
  href={relatedCalculator.href}
- className="flex items-center justify-center gap-2 w-full py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:brightness-110 transition-all shadow-lg hover:shadow-primary/25"
+ className="ms-button ms-button-primary w-full"
  >
  계산기 바로가기 <ArrowRight className="w-4 h-4" />
  </Link>

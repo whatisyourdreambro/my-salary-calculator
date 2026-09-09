@@ -194,10 +194,10 @@ export default function DoosanEnerbilityBonusClient() {
           회사 실적 + 개인·조직 평가에 따라 차등 지급되는 구조 (조선일보
           2026-05-12). 본인 예상 평가를 반영해 보세요.
         </p>
-        <label className="block text-sm font-bold mb-2">
+        <label htmlFor="ms-doosan-enerbility-bonus-field-0" className="block text-sm font-bold mb-2">
           평가 차등 배율: <span className="text-primary">{evalRate}%</span>
         </label>
-        <input
+        <input id="ms-doosan-enerbility-bonus-field-0"
           type="range"
           min={70}
           max={130}
@@ -225,10 +225,10 @@ export default function DoosanEnerbilityBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-doosan-enerbility-bonus-field-1" className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-doosan-enerbility-bonus-field-1"
                 type="range"
                 min={0}
                 max={50}

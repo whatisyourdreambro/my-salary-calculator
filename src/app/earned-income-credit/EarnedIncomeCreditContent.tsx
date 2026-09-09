@@ -221,11 +221,11 @@ export default function EarnedIncomeCreditContent() {
 
     {/* Annual Income */}
     <div className="space-y-1">
-     <label className="text-sm font-semibold text-navy">
+     <label htmlFor="ms-earned-income-credit-field-0" className="text-sm font-semibold text-navy">
       연간 총소득 <span className="text-muted-blue font-normal">(만원)</span>
      </label>
      <div className="relative">
-      <input
+      <input id="ms-earned-income-credit-field-0"
        type="number"
        value={incomeInput}
        onChange={(e) => setIncomeInput(e.target.value)}
@@ -244,11 +244,11 @@ export default function EarnedIncomeCreditContent() {
 
     {/* Property */}
     <div className="space-y-1">
-     <label className="text-sm font-semibold text-navy">
+     <label htmlFor="ms-earned-income-credit-field-1" className="text-sm font-semibold text-navy">
       가구원 합산 재산 <span className="text-muted-blue font-normal">(만원)</span>
      </label>
      <div className="relative">
-      <input
+      <input id="ms-earned-income-credit-field-1"
        type="number"
        value={propertyInput}
        onChange={(e) => setPropertyInput(e.target.value)}

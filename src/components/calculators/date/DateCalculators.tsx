@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Calendar, Clock, Briefcase } from "lucide-react";
 
 // "YYYY-MM-DD"(date input 값)를 로컬 자정으로 파싱.
@@ -13,6 +13,7 @@ function parseLocalDate(ymd: string): Date {
 
 // --- D-Day Calculator ---
 export function DDayCalculator() {
+ const inputId = useId();
  const [targetDate, setTargetDate] = useState("");
  const [result, setResult] = useState<string | null>(null);
 
@@ -38,8 +39,9 @@ export function DDayCalculator() {
  </h2>
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">목표 날짜</label>
+ <label htmlFor={inputId} className="block text-sm font-bold text-muted-blue mb-2">목표 날짜</label>
  <input
+ id={inputId}
  type="date"
  value={targetDate}
  onChange={(e) => setTargetDate(e.target.value)}
@@ -67,6 +69,7 @@ export function DDayCalculator() {
 
 // --- Age Calculator ---
 export function AgeCalculator() {
+ const inputId = useId();
  const [birthDate, setBirthDate] = useState("");
  const [result, setResult] = useState<{ intl: number; korean: number } | null>(null);
 
@@ -95,8 +98,9 @@ export function AgeCalculator() {
  </h2>
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">생년월일</label>
+ <label htmlFor={inputId} className="block text-sm font-bold text-muted-blue mb-2">생년월일</label>
  <input
+ id={inputId}
  type="date"
  value={birthDate}
  onChange={(e) => setBirthDate(e.target.value)}
@@ -130,6 +134,7 @@ export function AgeCalculator() {
 
 // --- Work Day Calculator ---
 export function WorkDayCalculator() {
+ const inputId = useId();
  const [startDate, setStartDate] = useState("");
  const [endDate, setEndDate] = useState("");
  const [result, setResult] = useState<number | null>(null);
@@ -168,8 +173,9 @@ export function WorkDayCalculator() {
  <div className="space-y-6">
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">시작일</label>
+ <label htmlFor={`${inputId}-start`} className="block text-sm font-bold text-muted-blue mb-2">시작일</label>
  <input
+ id={`${inputId}-start`}
  type="date"
  value={startDate}
  onChange={(e) => setStartDate(e.target.value)}
@@ -177,8 +183,9 @@ export function WorkDayCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">종료일</label>
+ <label htmlFor={`${inputId}-end`} className="block text-sm font-bold text-muted-blue mb-2">종료일</label>
  <input
+ id={`${inputId}-end`}
  type="date"
  value={endDate}
  onChange={(e) => setEndDate(e.target.value)}

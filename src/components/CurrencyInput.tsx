@@ -68,7 +68,7 @@ export default function CurrencyInput({
  <div>
  <label
  htmlFor={inputId}
- className="block text-xs font-bold text-faint-blue dark:text-canvas-400 uppercase tracking-widest mb-3"
+ className="block text-sm font-semibold text-foreground mb-2"
  >
  {label}
  </label>
@@ -80,7 +80,7 @@ export default function CurrencyInput({
  aria-label={`${label} 통화 선택`}
  value={selectedCurrency}
  onChange={(e) => onCurrencyChange(e.target.value)}
- className="bg-transparent font-sans font-bold text-foreground focus:outline-none cursor-pointer appearance-none pr-8"
+ className="min-h-11 rounded-md bg-card font-semibold text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary cursor-pointer appearance-none pr-8"
  >
  {/* 종전에는 자기닫힘 태그라 option 이 하나도 없었다 — 드롭다운이 빈 팝업으로
      열려 통화를 초기값(KRW)에서 바꿀 수 없었다 (2026-09-06 전수검사). */}
@@ -103,13 +103,13 @@ export default function CurrencyInput({
  onChange={handleChange}
  aria-label={label}
  className={cn(
- "w-full py-4 bg-transparent border-b-2 border-canvas dark:border-canvas-700 text-3xl font-sans font-bold text-navy dark:text-canvas-50 placeholder-faint-blue focus:border-primary focus:outline-none transition-all duration-300",
+ "ms-field w-full py-4 pr-14 text-2xl sm:text-3xl font-semibold tabular-nums",
  className,
  currencies ? "pl-24" : ""
  )}
  placeholder="0"
  />
- <span className="absolute inset-y-0 right-0 flex items-center text-faint-blue font-sans text-xl pointer-events-none group-hover:text-primary transition-colors">
+ <span className="absolute inset-y-0 right-4 flex items-center text-muted-foreground text-base pointer-events-none" aria-hidden="true">
  {symbol}
  </span>
  </div>
@@ -121,7 +121,7 @@ export default function CurrencyInput({
  type="button"
  onClick={() => handleAmountChange(amount)}
  aria-label={`${label} ${formatNumber(amount / 10000)}만원 추가`}
- className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full bg-canvas-dark dark:bg-canvas-800 text-muted-blue dark:text-canvas-300 hover:bg-primary/10 hover:text-primary transition-colors duration-300"
+ className="ms-button ms-button-secondary text-sm"
  >
  +{formatNumber(amount / 10000)}만
  </button>

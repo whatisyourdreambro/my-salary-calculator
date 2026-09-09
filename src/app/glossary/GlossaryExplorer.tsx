@@ -69,7 +69,9 @@ export default function GlossaryExplorer({
       {/* Search Bar — 히어로 하단에 겹치도록 배치 */}
       <div className="max-w-xl mx-auto relative px-4 -mt-4 mb-4">
         <Search className="absolute left-9 top-1/2 -translate-y-1/2 text-faint-blue w-5 h-5 pointer-events-none" />
+        <label htmlFor="glossary-search" className="sr-only">금융 용어 검색</label>
         <input
+          id="glossary-search"
           type="text"
           placeholder="궁금한 용어를 검색해보세요 (예: 국민연금, IRP)"
           value={searchTerm}
@@ -97,6 +99,7 @@ export default function GlossaryExplorer({
                 onClick={() => setPickIndex((i) => i + 1)}
                 className="p-2 hover:bg-white/10 rounded-full transition-colors text-faint-blue hover:text-navy"
                 title="다른 용어 보기"
+                aria-label="다른 용어 보기"
               >
                 <RotateCw className="w-5 h-5" />
               </button>

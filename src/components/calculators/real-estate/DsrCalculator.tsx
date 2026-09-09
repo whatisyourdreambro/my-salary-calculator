@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, Calculator, Info } from "lucide-react";
 export default function DsrCalculator() {
+ const fieldId = useId();
  const [income, setIncome] = useState("");
  const [principal, setPrincipal] = useState(""); // Total annual principal repayment
  const [interest, setInterest] = useState(""); // Total annual interest repayment
@@ -35,8 +36,9 @@ export default function DsrCalculator() {
 
  <div className="p-6 space-y-6">
  <div>
- <label className="block text-sm font-bold mb-2">연소득 (원)</label>
+ <label htmlFor={`${fieldId}-income`} className="block text-sm font-bold mb-2">연소득 (원)</label>
  <input
+ id={`${fieldId}-income`}
  type="text"
  value={income}
  onChange={(e) => setIncome(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
@@ -47,8 +49,9 @@ export default function DsrCalculator() {
 
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-bold mb-2">연간 원금 상환액</label>
+ <label htmlFor={`${fieldId}-principal`} className="block text-sm font-bold mb-2">연간 원금 상환액</label>
  <input
+ id={`${fieldId}-principal`}
  type="text"
  value={principal}
  onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
@@ -57,8 +60,9 @@ export default function DsrCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-bold mb-2">연간 이자 상환액</label>
+ <label htmlFor={`${fieldId}-interest`} className="block text-sm font-bold mb-2">연간 이자 상환액</label>
  <input
+ id={`${fieldId}-interest`}
  type="text"
  value={interest}
  onChange={(e) => setInterest(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}

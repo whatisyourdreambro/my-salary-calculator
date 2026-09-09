@@ -24,7 +24,7 @@ export default function TableTabsNav() {
 
  return (
  <nav aria-label="실수령액 표 종류" className="flex justify-center px-4">
- <div className="inline-flex items-center gap-1 p-1 rounded-full bg-canvas border border-canvas">
+ <div className="flex flex-wrap items-center justify-center gap-1 rounded-xl border border-border bg-secondary p-1">
  {TABS.map((tab) => {
  const isActive = pathname?.startsWith(tab.href);
  return (
@@ -32,10 +32,10 @@ export default function TableTabsNav() {
  key={tab.href}
  href={tab.href}
  aria-current={isActive ? "page" : undefined}
- className={`px-4 sm:px-6 py-2 rounded-full text-sm font-bold transition-colors ${
+ className={`inline-flex min-h-11 items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
  isActive
  ? "bg-primary text-white shadow-sm"
- : "text-faint-blue hover:text-navy"
+ : "text-muted-foreground hover:text-foreground"
  }`}
  >
  {tab.label}
@@ -44,7 +44,7 @@ export default function TableTabsNav() {
  })}
  <Link
  href={to2026}
- className="px-4 sm:px-5 py-2 rounded-full text-sm font-bold text-electric hover:bg-electric/10 transition-colors whitespace-nowrap"
+ className="ms-button ms-button-ghost text-sm"
  >
  2026 현행
  </Link>

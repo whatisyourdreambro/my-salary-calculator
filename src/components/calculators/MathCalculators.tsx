@@ -71,6 +71,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="전체값"
+ aria-label="비율 계산 전체값"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal2(Number(e.target.value))}
  />
@@ -80,6 +81,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="비율(%)"
+ aria-label="비율 계산 비율 (%)"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal1(Number(e.target.value))}
  />
@@ -101,6 +103,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="일부값"
+ aria-label="비중 계산 일부값"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal1(Number(e.target.value))}
  />
@@ -110,6 +113,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="전체값"
+ aria-label="비중 계산 전체값"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal2(Number(e.target.value))}
  />
@@ -131,6 +135,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="기존값"
+ aria-label="증감율 계산 기존값"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal1(Number(e.target.value))}
  />
@@ -140,6 +145,7 @@ function PercentCalculator() {
  <input
  type="number"
  placeholder="변경값"
+ aria-label="증감율 계산 변경값"
  className="w-full bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy"
  onChange={(e) => setVal2(Number(e.target.value))}
  />

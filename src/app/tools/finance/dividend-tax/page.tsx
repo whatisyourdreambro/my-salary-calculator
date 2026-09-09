@@ -51,10 +51,11 @@ export default function DividendTaxPage() {
         <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
+              <label htmlFor="dividend-tax-dividend" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
                 연간 배당소득 (원)
               </label>
               <input
+                id="dividend-tax-dividend"
                 type="number"
                 inputMode="numeric"
                 value={dividend}
@@ -63,10 +64,11 @@ export default function DividendTaxPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
+              <label htmlFor="dividend-tax-interest" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
                 연간 이자소득 (원)
               </label>
               <input
+                id="dividend-tax-interest"
                 type="number"
                 inputMode="numeric"
                 value={interest}
@@ -76,10 +78,11 @@ export default function DividendTaxPage() {
             </div>
           </div>
           <div>
-            <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
+            <label htmlFor="dividend-tax-other-base" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
               기타 종합소득 과세표준 (원) — 근로·사업소득 등 공제 후 금액
             </label>
             <input
+              id="dividend-tax-other-base"
               type="number"
               inputMode="numeric"
               value={otherBase}

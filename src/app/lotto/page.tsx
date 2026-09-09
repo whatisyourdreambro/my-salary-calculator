@@ -12,7 +12,7 @@ import { Settings, Sparkles, Loader, Clover, RefreshCw } from "lucide-react";
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
 const getNumberColorClass = (number: number): string => {
  if (number >= 1 && number <= 10)
- return "bg-primary text-black shadow-inner shadow-black/20";
+ return "bg-primary text-primary-foreground shadow-inner shadow-black/20";
  if (number >= 11 && number <= 20)
  return "bg-primary text-white shadow-inner shadow-black/20";
  if (number >= 21 && number <= 30)
@@ -141,15 +141,15 @@ export default function LottoPage() {
  <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
  {/* Header */}
  <div className="text-center mb-12">
- <div className="inline-block p-4 rounded-full bg-primary/10 mb-6 border border-primary/20 animate-bounce-slow">
+ <div className="inline-block p-4 rounded-2xl bg-secondary mb-6 border border-border">
  <Clover className="w-10 h-10 text-primary" />
  </div>
- <h1 className="text-4xl font-black tracking-tight sm:text-6xl mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-primary/50 to-primary/80">
+ <h1 className="ms-title mb-4 text-foreground">
  행운의 로또 생성기
  </h1>
  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
- 과학적인 알고리즘으로 당신의 행운을 찾아드립니다.<br />
- 이번 주 주인공은 바로 당신입니다.
+ 무작위 번호와 조건별 조합을 만들어 보세요.<br />
+ 번호 생성 방식은 당첨 확률을 높이지 않습니다.
  </p>
  </div>
 

@@ -133,11 +133,11 @@ export default function UnemploymentBenefitContent() {
     <div className="space-y-5">
      {/* 월 평균임금 */}
      <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <label htmlFor="ms-unemployment-benefit-field-0" className="block text-sm font-medium text-foreground mb-2">
        퇴직 전 월 평균임금 (세전)
       </label>
       <div className="relative">
-       <input
+       <input id="ms-unemployment-benefit-field-0"
         type="text"
         value={Number(monthlyWage).toLocaleString("ko-KR")}
         onChange={(e) =>

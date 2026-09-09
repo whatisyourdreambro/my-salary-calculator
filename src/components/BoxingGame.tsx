@@ -236,7 +236,7 @@ export default function BoxingGame({
  </p>
  <button
  onClick={onFinish}
- className="px-10 py-4 bg-white text-black font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.5)]"
+ className="px-10 py-4 bg-card text-foreground font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.5)]"
  >
  결과 확인하기
  </button>

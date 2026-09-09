@@ -2,818 +2,394 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ════════════════════════════════════════════════════════════════════
- 모바일 안전망 — 모든 페이지에서 가로 스크롤 방지
- 일부 페이지의 motion·table·차트가 의도치 않게 viewport 초과해 우측 빈 영역
- 발생하던 문제 해결. body 에 가두면 fixed 헤더·모달은 영향 없음.
- ════════════════════════════════════════════════════════════════════ */
-html,
-body {
- overflow-x: hidden;
- max-width: 100vw;
-}
-
-/* iOS Safari 100vh 버그 회피용 — 일부 풀스크린 콘텐츠에 활용 가능 */
-@supports (height: 100dvh) {
- .min-h-screen {
-  min-height: 100dvh;
- }
-}
-
-/* 모바일 안전 영역 (notch·다이내믹아일랜드·홈 인디케이터) */
-body {
- padding-left: env(safe-area-inset-left, 0);
- padding-right: env(safe-area-inset-right, 0);
-}
-
-/* Responsive hero — 모바일에서는 60vh, 데스크톱은 80vh */
-.hero-section {
- min-height: 60vh;
-}
-@media (min-width: 768px) {
- .hero-section {
- min-height: 80vh;
- }
-}
-
-/* ════════════════════════════════════════════════════════════════════
- DUOTONE DESIGN SYSTEM — MoneySalary
- Primary Color: Electric Blue #0145F2
- Base/BG Color: Canvas Cloud #EDF1F5
- On-Primary (acc.): White #FFFFFF
- ════════════════════════════════════════════════════════════════════ */
-
+/* MoneySalary foundation: theme tokens, low-specificity defaults, opt-in components.
+   Numbered legacy colors and result-image palettes remain explicit. */
 @layer base {
- :root {
- /* ── Core Design Tokens ─────────────────────────────────────── */
- --color-primary: #0145F2; /* Electric Blue */
- --color-canvas: #EDF1F5; /* Canvas Cloud */
- --color-on-primary: #FFFFFF; /* Readability on dark bg */
- --color-canvas-dark: #DDE4EC; /* Slightly deeper canvas */
- --color-canvas-deeper:#C8D4E0; /* Card borders, dividers */
- --color-text: #0A1829; /* Darkest readable foreground */
- --color-text-muted: #3D5E78; /* Secondary text */
- --color-text-faint: #7A9AB5; /* Placeholder / captions */
+  :root {
+    color-scheme: light;
+    --background: 216 33% 97%;
+    --foreground: 215 38% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 38% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 38% 16%;
+    --primary: 223.07 99.18% 47.65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 223 99% 41%;
+    --link: 223 88% 42%;
+    --secondary: 216 27% 94%;
+    --secondary-foreground: 215 38% 20%;
+    --muted: 216 24% 93%;
+    --muted-foreground: 215 18% 39%;
+    --accent: 220 85% 96%;
+    --accent-foreground: 223 88% 42%;
+    --destructive: 4 76% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 158 85% 25%;
+    --success-foreground: 0 0% 100%;
+    --warning: 32 92% 32%;
+    --warning-foreground: 0 0% 100%;
+    --border: 216 22% 86%;
+    --input: 215 15% 55%;
+    --ring: 223 88% 42%;
+    --radius: 0.875rem;
+    --header-height: 72px;
+    --page-gutter: clamp(1rem, 3vw, 2rem);
+    --section-space: clamp(2.5rem, 5vw, 4.5rem);
+    --panel-space: clamp(1.125rem, 2.5vw, 2rem);
+    --motion-fast: 140ms;
+    --motion-normal: 200ms;
+    --motion-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --shadow-card: 0 1px 2px hsl(215 40% 12% / 0.035), 0 6px 20px -16px hsl(215 40% 12% / 0.2);
+    --shadow-raised: 0 2px 4px hsl(215 40% 12% / 0.04), 0 12px 28px -16px hsl(215 40% 12% / 0.22);
+    --chart-1: 223 99% 48%;
+    --chart-2: 208 75% 42%;
+    --chart-3: 158 65% 33%;
+    --chart-4: 265 55% 53%;
+    --chart-5: 32 85% 42%;
 
- /* ── Shadcn/Radix UI Token Mapping ─────────────────────────── */
- --background: 216 43% 95%; /* #EDF1F5 Canvas Cloud */
- --foreground: 214 56% 10%; /* #0A1829 deep navy */
+    /* Public aliases used by existing inline styles. */
+    --color-primary: #0145f2;
+    --color-on-primary: #fff;
+    --color-canvas: hsl(var(--background));
+    --color-canvas-dark: hsl(var(--secondary));
+    --color-canvas-deeper: hsl(var(--border));
+    --color-text: hsl(var(--foreground));
+    --color-text-muted: hsl(var(--muted-foreground));
+    --color-text-faint: hsl(var(--muted-foreground));
+    --font-pretendard:
+      var(--font-pretendard-latin), var(--font-pretendard-local),
+      var(--font-pretendard-extra-1), var(--font-pretendard-extra-2),
+      var(--font-pretendard-extra-3), var(--font-pretendard-extra-4),
+      "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", sans-serif;
+  }
 
- --card: 0 0% 100%;
- --card-foreground: 214 56% 10%;
+  .dark {
+    color-scheme: dark;
+    --background: 217 44% 9%;
+    --foreground: 215 33% 94%;
+    --card: 216 42% 13%;
+    --card-foreground: 215 33% 94%;
+    --popover: 216 42% 13%;
+    --popover-foreground: 215 33% 94%;
+    /* Filled brand buttons retain white-on-blue contrast in both themes. */
+    --link: 216 100% 78%;
+    --secondary: 216 32% 18%;
+    --secondary-foreground: 215 33% 94%;
+    --muted: 216 30% 18%;
+    --muted-foreground: 215 26% 74%;
+    --accent: 219 45% 20%;
+    --accent-foreground: 216 100% 78%;
+    --destructive: 6 100% 84%;
+    --destructive-foreground: 217 44% 9%;
+    --success: 152 66% 72%;
+    --success-foreground: 217 44% 9%;
+    --warning: 40 85% 74%;
+    --warning-foreground: 217 44% 9%;
+    --border: 216 25% 28%;
+    --input: 215 22% 53%;
+    --ring: 216 100% 78%;
+    --shadow-card: 0 1px 2px hsl(220 60% 3% / 0.16);
+    --shadow-raised: 0 10px 28px -14px hsl(220 60% 3% / 0.6);
+  }
 
- --popover: 0 0% 100%;
- --popover-foreground: 214 56% 10%;
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: hsl(var(--border));
+  }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  @supports (overflow: clip) { html, body { overflow-x: clip; } }
+  html { scroll-padding-top: calc(var(--header-height) + 1rem); }
+  body {
+    margin: 0;
+    padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-pretendard);
+    font-feature-settings: "cv11", "ss01";
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: -0.012em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :where(h1, h2, h3, h4, h5, h6) { color: inherit; }
+  h1 { font-size: clamp(2rem, 4.2vw, 3.75rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; }
+  h2 { font-size: clamp(1.5rem, 2.8vw, 2.25rem); font-weight: 750; letter-spacing: -0.03em; line-height: 1.25; }
+  h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.35; }
+  :where(h4, h5, h6) { font-weight: 650; line-height: 1.4; }
+  :where(p) { color: inherit; }
+  :where(button, input, select, textarea) { font: inherit; letter-spacing: inherit; }
+  :where(button, [role="button"], a, input, select, textarea) { -webkit-tap-highlight-color: transparent; }
+  :where(button, input, select, textarea):disabled { cursor: not-allowed; }
+  :where(a:not([class])) { color: hsl(var(--content-link, var(--link))); text-decoration: underline; text-underline-offset: 0.2em; }
+  :where(a:not([class])):hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
 
- --primary: 224 96% 48%; /* #0145F2 Electric Blue */
- --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  /* Legacy fields keep a readable light fallback. New ms-field opts into both themes.
+     No !important: explicit field/result styles may override this base. */
+  input:where(:not([type="range"], [type="checkbox"], [type="radio"], [type="hidden"], [type="color"], [type="button"], [type="submit"], [type="reset"])), select, textarea {
+    color: #172435;
+    background-color: #fff;
+    -webkit-text-fill-color: currentColor;
+    border-color: hsl(var(--input));
+    color-scheme: light;
+  }
+  /* A semantic field background needs its matching foreground. Keep this at
+     element specificity so an explicit text utility still wins. */
+  input:where(.bg-background, .bg-card, .bg-secondary, .bg-muted),
+  select:where(.bg-background, .bg-card, .bg-secondary, .bg-muted),
+  textarea:where(.bg-background, .bg-card, .bg-secondary, .bg-muted) {
+    color: hsl(var(--foreground));
+    color-scheme: inherit;
+  }
+  :where(input, textarea)::placeholder { color: #627086; opacity: 1; }
+  :where(input[type="checkbox"], input[type="radio"], input[type="range"]) { accent-color: hsl(var(--primary)); }
 
- --secondary: 216 43% 95%; /* Canvas Cloud */
- --secondary-foreground: 214 56% 10%;
-
- --muted: 216 43% 92%; /* DDE4EC */
- --muted-foreground: 209 32% 36%; /* #3D5E78 */
-
- --accent: 216 43% 92%;
- --accent-foreground: 224 96% 48%;
-
- --destructive: 224 96% 48%; /* Blue for errors too */
- --destructive-foreground: 0 0% 100%;
-
- --border: 216 30% 84%; /* #C8D4E0 */
- --input: 216 30% 84%;
- --ring: 224 96% 48%; /* Electric Blue focus */
-
- --radius: 0.75rem;
-
- /* ── Chart Colors: Electric Blue opacity ladder ─────────────── */
- --chart-1: 224 96% 48%; /* #0145F2 solid */
- --chart-2: 224 96% 68%; /* #4D80F5 lighter */
- --chart-3: 216 43% 85%; /* #C8D4E0 canvas deep */
- --chart-4: 224 96% 35%; /* #0032B5 deep blue */
- --chart-5: 216 43% 95%; /* #EDF1F5 canvas */
-
- /* ── Layout tokens ──────────────────────────────────────────── */
- --header-height: 72px;
- }
-
- .dark {
- /* Real dark mode — duotone deep navy + electric blue accent */
- --background: 214 56% 8%;       /* #0A1829 deep navy */
- --foreground: 216 43% 95%;      /* canvas as text */
- --card: 214 50% 12%;            /* slightly lighter card */
- --card-foreground: 216 43% 95%;
- --popover: 214 50% 12%;
- --popover-foreground: 216 43% 95%;
- --primary: 224 96% 60%;         /* brighter electric for contrast */
- --primary-foreground: 214 56% 8%;
- --secondary: 214 40% 15%;
- --secondary-foreground: 216 43% 95%;
- --muted: 214 35% 18%;
- --muted-foreground: 209 25% 70%;
- --accent: 214 40% 18%;
- --accent-foreground: 224 96% 60%;
- --destructive: 0 75% 60%;
- --destructive-foreground: 216 43% 95%;
- --border: 214 30% 22%;
- --input: 214 30% 22%;
- --ring: 224 96% 60%;
- }
+  :where(table) { border-collapse: collapse; }
+  :where(th) { padding: 0.875rem 1rem; background: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); text-align: start; font-size: 0.8125rem; font-weight: 650; border-bottom: 1px solid hsl(var(--border)); }
+  :where(td) { padding: 0.75rem 1rem; color: inherit; font-size: 0.9375rem; border-bottom: 1px solid hsl(var(--border)); }
+  :where(caption) { color: hsl(var(--content-muted, var(--muted-foreground))); }
+  ::selection { color: hsl(var(--foreground)); background: hsl(var(--link) / 0.2); }
 }
 
-@layer base {
- :root {
- --font-pretendard:
- var(--font-pretendard-latin), var(--font-pretendard-local),
- var(--font-pretendard-extra-1), var(--font-pretendard-extra-2),
- var(--font-pretendard-extra-3), var(--font-pretendard-extra-4), "Pretendard Variable", Pretendard,
- -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
- "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
- "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
- }
+@layer components {
+  /* New contract. Component defaults can be overridden by ordinary utilities. */
+  .ms-page, .page-width {
+    width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: var(--page-gutter);
+  }
+  .ms-section { padding-block: var(--section-space); }
+  .ms-surface, .ms-panel, .duotone-card {
+    --content-foreground: var(--card-foreground);
+    --content-muted: var(--muted-foreground);
+    --content-link: var(--link);
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+  }
+  .ms-panel { padding: var(--panel-space); }
+  .ms-eyebrow { color: hsl(var(--content-link, var(--link))); font-size: 0.75rem; line-height: 1.4; font-weight: 700; letter-spacing: 0.08em; }
+  .ms-title { max-width: 22ch; font-size: clamp(2rem, 4.4vw, 3.75rem); line-height: 1.12; font-weight: 800; letter-spacing: -0.04em; text-wrap: balance; }
+  .ms-description { max-width: 65ch; color: hsl(var(--content-muted, var(--muted-foreground))); font-size: clamp(1rem, 1.4vw, 1.125rem); line-height: 1.75; }
+  .ms-result {
+    --content-foreground: var(--primary-foreground);
+    --content-muted: 220 100% 94%;
+    --content-link: var(--primary-foreground);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: 1px solid hsl(var(--primary));
+    border-radius: var(--radius);
+    padding: var(--panel-space);
+    font-variant-numeric: tabular-nums;
+  }
+  .ms-field, .duotone-input {
+    width: 100%; min-height: 2.875rem;
+    padding: 0.6875rem 0.875rem;
+    border: 1px solid hsl(var(--input)); border-radius: 0.625rem;
+    background: hsl(var(--card)); color: hsl(var(--card-foreground));
+    -webkit-text-fill-color: currentColor;
+    font-size: 1rem; line-height: 1.5; color-scheme: inherit;
+    transition: border-color var(--motion-fast), box-shadow var(--motion-fast);
+  }
+  .ms-field::placeholder, .duotone-input::placeholder { color: hsl(var(--muted-foreground)); }
+  .ms-field:focus-visible, .duotone-input:focus-visible {
+    border-color: hsl(var(--ring)); outline: 2px solid hsl(var(--ring)); outline-offset: 2px;
+  }
+  .ms-field[aria-invalid="true"], .duotone-input[aria-invalid="true"] { border-color: hsl(var(--destructive)); }
+  .ms-field:disabled, .duotone-input:disabled { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); opacity: 0.7; }
 
- * {
- @apply border-border;
- font-family: var(--font-pretendard) !important;
- letter-spacing: -0.02em;
- box-sizing: border-box;
- }
+  .ms-button, .btn-primary, .btn-secondary, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    min-height: 2.75rem; padding: 0.6875rem 1.125rem;
+    border: 1px solid transparent; border-radius: 0.625rem;
+    font-size: 0.9375rem; line-height: 1.4; font-weight: 650; text-align: center;
+    text-decoration: none; cursor: pointer;
+    transition: background-color var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast), transform var(--motion-fast);
+  }
+  .ms-button-primary, .btn-primary {
+    --content-foreground: var(--primary-foreground);
+    --content-muted: 220 100% 94%;
+    --content-link: var(--primary-foreground);
+    background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary));
+  }
+  .ms-button-secondary, .btn-secondary { background: hsl(var(--card)); color: hsl(var(--link)); border-color: hsl(var(--border)); }
+  .ms-button-ghost, .btn-ghost { background: transparent; color: hsl(var(--link)); }
+  .ms-button:disabled, .ms-button[aria-disabled="true"],
+  .btn-primary:disabled, .btn-secondary:disabled, .btn-ghost:disabled {
+    opacity: 0.55; cursor: not-allowed; box-shadow: none;
+  }
+  .ms-tab {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 2.75rem; padding: 0.625rem 1rem; border: 1px solid transparent; border-radius: 0.625rem;
+    color: hsl(var(--muted-foreground)); font-weight: 600;
+    transition: color var(--motion-fast), background-color var(--motion-fast);
+  }
+  .ms-tab[aria-selected="true"], .ms-tab[data-state="active"] {
+    background: hsl(var(--card)); color: hsl(var(--link)); border-color: hsl(var(--border)); box-shadow: var(--shadow-card);
+  }
+  .ms-status-success, .ms-status-warning, .ms-status-error {
+    padding: 0.875rem 1rem; border: 1px solid; border-radius: 0.625rem; font-size: 0.9375rem; line-height: 1.6;
+  }
+  .ms-status-success { background: hsl(var(--success) / 0.07); border-color: hsl(var(--success) / 0.3); color: hsl(var(--success)); }
+  .ms-status-warning { background: hsl(var(--warning) / 0.07); border-color: hsl(var(--warning) / 0.3); color: hsl(var(--warning)); }
+  .ms-status-error { background: hsl(var(--destructive) / 0.07); border-color: hsl(var(--destructive) / 0.3); color: hsl(var(--destructive)); }
+  .dark .ms-status-success { color: #8ae5bb; }
+  .dark .ms-status-warning { color: #f5cf85; }
+  .dark .ms-status-error { color: #ffb4ac; }
+  .ms-interactive, .hover-lift { transition: transform var(--motion-normal) var(--motion-ease), border-color var(--motion-fast), box-shadow var(--motion-normal); }
 
- html {
- scroll-behavior: smooth;
- }
+  /* Former class names remain compatible; no global descendant color resets. */
+  .toss-card, .glass, .glass-card { @apply duotone-card; }
+  .toss-input, .glass-input { @apply duotone-input; }
+  .toss-button-primary { @apply btn-primary; }
+  .toss-button-secondary { @apply btn-secondary; }
+  .duotone-badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border: 1px solid hsl(var(--link) / 0.18); border-radius: 999px; background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); font-size: 0.75rem; line-height: 1.5; font-weight: 650; }
+  .duotone-divider { height: 1px; background: hsl(var(--border)); }
+  .hero-section { min-height: 60vh; }
 
- body {
- background-color: #EDF1F5;
- color: #0A1829;
- @apply antialiased;
- font-feature-settings: "cv11", "ss01", "tnum";
- -webkit-font-smoothing: antialiased;
- -moz-osx-font-smoothing: grayscale;
- transition: background-color 0.25s ease, color 0.25s ease;
- }
- .dark body {
- background-color: #0A1829;
- color: #EDF1F5;
- }
- .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
- color: #EDF1F5;
- }
- .dark p {
- color: #A8BCCD;
- }
+  .skip-to-content {
+    position: absolute; top: 0; left: 1rem; z-index: 100;
+    padding: 0.75rem 1rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+    border-radius: 0 0 0.625rem 0.625rem; font-weight: 700;
+    transform: translateY(-120%); transition: transform var(--motion-fast);
+  }
+  .skip-to-content:focus { transform: translateY(0); }
 
- /* ── Typography Hierarchy ──────────────────────────────────────── */
- h1 {
- font-size: clamp(2rem, 5vw, 4rem);
- font-weight: 900;
- letter-spacing: -0.04em;
- line-height: 1.1;
- color: #0A1829;
- }
- h2 {
- font-size: clamp(1.5rem, 3vw, 2.5rem);
- font-weight: 800;
- letter-spacing: -0.03em;
- line-height: 1.15;
- color: #0A1829;
- }
- h3 {
- font-size: clamp(1.125rem, 2vw, 1.5rem);
- font-weight: 700;
- letter-spacing: -0.025em;
- line-height: 1.3;
- color: #0A1829;
- }
- h4 { font-weight: 700; letter-spacing: -0.02em; color: #0A1829; }
- h5 { font-weight: 600; letter-spacing: -0.015em; color: #0A1829; }
- h6 { font-weight: 600; letter-spacing: -0.01em; color: #0A1829; }
+  .skeleton-shimmer { background: linear-gradient(90deg, hsl(var(--secondary)), hsl(var(--background)), hsl(var(--secondary))); background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite; }
+  .footer-link:hover { color: hsl(var(--link)); }
+  .footer-social-icon:hover { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary)); }
 
- p { color: #3D5E78; }
-
- /* ── Form Inputs: always readable ─────────────────────────────── */
- input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
- select,
- textarea {
- color: #0A1829 !important;
- background-color: #FFFFFF !important;
- -webkit-text-fill-color: #0A1829 !important;
- border-color: #C8D4E0;
- }
- input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus,
- select:focus,
- textarea:focus {
- border-color: #0145F2 !important;
- outline: none;
- box-shadow: 0 0 0 3px #0145F222;
- }
- input::placeholder,
- textarea::placeholder {
- color: #7A9AB5 !important;
- -webkit-text-fill-color: #7A9AB5 !important;
- opacity: 1;
- }
- input[type="checkbox"],
- input[type="radio"] {
- accent-color: #0145F2;
- }
+  /* Radix state is shared by other widgets; scope switch color to its actual role. */
+  [role="switch"][data-state="checked"] { background-color: hsl(var(--primary)); }
+  [role="switch"][data-state="unchecked"] { background-color: hsl(var(--input)); }
 }
-
-/* ════════════════════════════════════════════════════════════════════
- GLOBAL UTILITY CLASSES — Duotone System
- ════════════════════════════════════════════════════════════════════ */
 
 @layer utilities {
- /* ── Backgrounds ─────────────────────────────────────────────── */
- .bg-canvas { background-color: #EDF1F5; }
- .bg-canvas-dark { background-color: #DDE4EC; }
- .bg-canvas-deeper{ background-color: #C8D4E0; }
- .bg-electric { background-color: #0145F2; }
- .bg-electric-5 { background-color: #0145F20D; }
- .bg-electric-10 { background-color: #0145F21A; }
- .bg-electric-15 { background-color: #0145F226; }
- .bg-electric-20 { background-color: #0145F233; }
+  .bg-canvas { background-color: hsl(var(--background)); color: hsl(var(--foreground)); }
+  .bg-canvas-dark { background-color: hsl(var(--secondary)); }
+  .bg-canvas-deeper { background-color: hsl(var(--border)); }
+  .bg-electric { background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+  .bg-electric-5 { background-color: hsl(var(--primary) / 0.05); }
+  .bg-electric-10 { background-color: hsl(var(--primary) / 0.1); }
+  .bg-electric-15 { background-color: hsl(var(--primary) / 0.15); }
+  .bg-electric-20 { background-color: hsl(var(--primary) / 0.2); }
+  .text-electric, .text-gradient-primary { color: hsl(var(--content-link, var(--link))); }
+  .text-canvas { color: #edf1f5; }
+  .text-navy, .text-gradient { color: hsl(var(--content-foreground, var(--foreground))); }
+  .text-muted-blue, .text-faint-blue { color: hsl(var(--content-muted, var(--muted-foreground))); }
+  .border-electric { border-color: hsl(var(--primary)); }
+  .border-canvas { border-color: hsl(var(--border)); }
+  .border-canvas-light { border-color: hsl(var(--border)); }
+  .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .font-mono-tabular { font-variant-numeric: tabular-nums; }
+  .section-xl { padding-block: 7rem; }
+  .section-lg { padding-block: 5rem; }
+  .section-md { padding-block: 3.5rem; }
+  .section-sm { padding-block: 2rem; }
+  .section-pad { padding-block: clamp(2rem, 5vw, 4rem); }
+  .section-pad-lg { padding-block: clamp(3rem, 7vw, 6rem); }
+  .ad-slot-home-top { min-height: 120px; }
+  .ad-slot-result { min-height: 280px; }
+  .ad-slot-sidebar { min-height: 600px; }
+  .ad-slot-fluid { min-height: 200px; }
 
- /* ── Text Colors ─────────────────────────────────────────────── */
- .text-electric { color: #0145F2; }
- .text-canvas { color: #EDF1F5; }
- .text-navy { color: #0A1829; }
- .text-muted-blue { color: #3D5E78; }
- .text-faint-blue { color: #7A9AB5; }
-
- /* ── Borders ─────────────────────────────────────────────────── */
- .border-electric { border-color: #0145F2; }
- .border-canvas { border-color: #C8D4E0; }
- .border-canvas-light { border-color: #DDE4EC; }
-
- /* ── Cards ───────────────────────────────────────────────────── */
- .duotone-card {
- background-color: #FFFFFF;
- border: 1.5px solid #DDE4EC;
- border-radius: 1.25rem;
- box-shadow: 0 1px 3px 0 #0A182914, 0 4px 16px -4px #0A182910;
- transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
- }
- .duotone-card:hover {
- border-color: #0145F233;
- box-shadow: 0 4px 24px -4px #0145F222, 0 1px 4px 0 #0A182910;
- }
-
- /* ── Input Fields ────────────────────────────────────────────── */
- .duotone-input {
- background-color: #FFFFFF;
- border: 1.5px solid #DDE4EC;
- border-radius: 0.75rem;
- color: #0A1829;
- padding: 0.75rem 1rem;
- width: 100%;
- font-size: 1rem;
- transition: border-color 0.2s ease, box-shadow 0.2s ease;
- }
- .duotone-input:focus {
- border-color: #0145F2;
- box-shadow: 0 0 0 3px #0145F222;
- outline: none;
- }
-
- /* ── Buttons ─────────────────────────────────────────────────── */
- .btn-primary {
- display: inline-flex;
- align-items: center;
- justify-content: center;
- gap: 0.5rem;
- background-color: #0145F2;
- color: #FFFFFF !important;
- font-weight: 700;
- border-radius: 0.875rem;
- padding: 0.75rem 1.5rem;
- border: 2px solid #0145F2;
- cursor: pointer;
- transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
- box-shadow: 0 4px 16px -2px #0145F233;
- text-decoration: none;
- }
- .btn-primary:hover {
- background-color: #EDF1F5;
- color: #0145F2 !important;
- box-shadow: 0 4px 16px -2px #0145F244;
- }
- .btn-primary:active {
- transform: scale(0.97);
- background-color: #0145F2;
- color: #FFFFFF !important;
- }
- .btn-primary:disabled {
- background-color: #C8D4E0;
- color: #7A9AB5 !important;
- border-color: #C8D4E0;
- cursor: not-allowed;
- box-shadow: none;
- }
-
- .btn-secondary {
- display: inline-flex;
- align-items: center;
- justify-content: center;
- gap: 0.5rem;
- background-color: #EDF1F5;
- color: #0145F2 !important;
- font-weight: 700;
- border-radius: 0.875rem;
- padding: 0.75rem 1.5rem;
- border: 2px solid #0145F2;
- cursor: pointer;
- transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
- text-decoration: none;
- }
- .btn-secondary:hover {
- background-color: #0145F2;
- color: #FFFFFF !important;
- }
- .btn-secondary:active {
- transform: scale(0.97);
- }
- .btn-secondary:disabled {
- background-color: #EDF1F5;
- color: #7A9AB5 !important;
- border-color: #C8D4E0;
- cursor: not-allowed;
- }
-
- .btn-ghost {
- display: inline-flex;
- align-items: center;
- justify-content: center;
- gap: 0.5rem;
- background-color: transparent;
- color: #0145F2 !important;
- font-weight: 600;
- border-radius: 0.75rem;
- padding: 0.625rem 1rem;
- border: 2px solid transparent;
- cursor: pointer;
- transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
- text-decoration: none;
- }
- .btn-ghost:hover {
- background-color: #0145F21A;
- border-color: #0145F233;
- }
- .btn-ghost:active {
- transform: scale(0.97);
- }
-
- /* ── Badge / Tag ─────────────────────────────────────────────── */
- .duotone-badge {
- display: inline-flex;
- align-items: center;
- gap: 0.375rem;
- padding: 0.25rem 0.75rem;
- border-radius: 999px;
- font-size: 0.75rem;
- font-weight: 700;
- letter-spacing: 0.04em;
- text-transform: uppercase;
- background-color: #0145F21A;
- color: #0145F2;
- border: 1px solid #0145F233;
- }
-
- /* ── Dividers ────────────────────────────────────────────────── */
- .duotone-divider {
- height: 1px;
- background-color: #DDE4EC;
- }
-
- /* ── Backward-compat aliases (Toss-era class names) ──────────── */
- .toss-card { @apply duotone-card; }
- .glass { @apply duotone-card; }
- .glass-card { @apply duotone-card; }
- .toss-input { @apply duotone-input; }
- .glass-input { @apply duotone-input; }
- .toss-button-primary { @apply btn-primary; }
- .toss-button-secondary { @apply btn-secondary; }
- .text-gradient { color: #0A1829; }
- .text-gradient-primary { color: #0145F2; }
-
- /* ── No tap highlight ────────────────────────────────────────── */
- .no-tap-highlight {
- -webkit-tap-highlight-color: transparent;
- -webkit-touch-callout: none;
- }
-
- /* ── Section spacing helpers ─────────────────────────────────── */
- .section-xl { padding-top: 7rem; padding-bottom: 7rem; }
- .section-lg { padding-top: 5rem; padding-bottom: 5rem; }
- .section-md { padding-top: 3.5rem; padding-bottom: 3.5rem; }
- .section-sm { padding-top: 2rem; padding-bottom: 2rem; }
- .page-width {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
- }
-
- /* ── Section padding (fluid) ──────────────────────────────────── */
- .section-pad    { padding-top: clamp(2rem, 5vw, 4rem); padding-bottom: clamp(2rem, 5vw, 4rem); }
- .section-pad-lg { padding-top: clamp(3rem, 7vw, 6rem); padding-bottom: clamp(3rem, 7vw, 6rem); }
-
- /* ── AdSense slot height reservation (CLS safety) ─────────────── */
- .ad-slot-home-top { min-height: 120px; }
- .ad-slot-result   { min-height: 280px; }
- .ad-slot-sidebar  { min-height: 600px; }
- .ad-slot-fluid    { min-height: 200px; }
+  /* Explicit background contexts inherit a foreground instead of painting every
+     descendant. A nested card restores its own semantic foreground. */
+  :where(.bg-primary, .bg-electric) {
+    --content-foreground: var(--primary-foreground);
+    --content-muted: 220 100% 94%;
+    --content-link: var(--primary-foreground);
+    color: hsl(var(--primary-foreground));
+  }
+  :where(.bg-card, .bg-white, .bg-canvas) {
+    --content-foreground: var(--card-foreground);
+    --content-muted: var(--muted-foreground);
+    --content-link: var(--link);
+    color: hsl(var(--card-foreground));
+  }
+  :where(.dark) .bg-white:where(:not(input, select, textarea, [data-share-color-scope], [data-share-color-scope] *)) {
+    background-color: hsl(var(--card));
+  }
+  :where(.dark) .text-primary:where(:not(.bg-primary, .bg-electric, .bg-primary *, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) { color: hsl(var(--link)); }
+  :where(.dark) .border-canvas-200 { border-color: hsl(var(--border)); }
 }
 
-/* ── Responsive overrides for layout utilities ───────────────────── */
-@media (min-width: 640px) {
- .page-width { padding-left: 1.5rem; padding-right: 1.5rem; }
+@media (hover: hover) and (pointer: fine) {
+  .ms-interactive:hover, .hover-lift:hover { transform: translateY(-2px); border-color: hsl(var(--link) / 0.4); box-shadow: var(--shadow-raised); }
+  .ms-button-primary:not(:disabled, [aria-disabled="true"]):hover, .btn-primary:not(:disabled):hover { background-color: hsl(var(--primary-hover)); }
+  .ms-button-secondary:not(:disabled, [aria-disabled="true"]):hover, .btn-secondary:not(:disabled):hover,
+  .ms-button-ghost:not(:disabled, [aria-disabled="true"]):hover, .btn-ghost:not(:disabled):hover { background-color: hsl(var(--accent)); }
+  .ms-tab:not(:disabled):hover { color: hsl(var(--link)); }
 }
-@media (min-width: 1024px) {
- .page-width { padding-left: 2rem; padding-right: 2rem; }
- .ad-slot-result { min-height: 250px; }
-}
+.ms-button:not(:disabled, [aria-disabled="true"]):active,
+.btn-primary:not(:disabled):active, .btn-secondary:not(:disabled):active, .btn-ghost:not(:disabled):active { transform: translateY(1px); }
 
-/* ════════════════════════════════════════════════════════════════════
- TEXT VISIBILITY ENFORCEMENT
- ════════════════════════════════════════════════════════════════════ */
-
-/* Electric Blue (dark) backgrounds → white text mandated */
-/* 2026-08-24 점검: React는 인라인 style을 콜론 뒤 공백 없이 직렬화하므로
-   ("background-color:#0145F2") 공백 포함 선택자는 단 한 번도 매치되지 않는
-   죽은 코드였다 — 무공백 변형을 정본으로 두고 공백 변형은 호환용으로 유지. */
-.bg-primary, .bg-primary *,
-.bg-electric, .bg-electric *,
-.btn-primary,
-[style*="background: #0145F2"],
-[style*="background:#0145F2"],
-[style*="background-color: #0145F2"],
-[style*="background-color:#0145F2"] {
- color: #FFFFFF !important;
-}
-
-/* Keep the legacy light palette, but let dark descendants inherit their foreground.
-   A direct navy color on every descendant hides inline text, links and SVG icons
-   on dark surfaces. Reviewed result-card palettes remain excluded in light mode. */
-:where(html:not(.dark)) .bg-canvas :where(:not([data-share-color-scope], [data-share-color-scope] *)) {
- color: #0A1829;
-}
-.bg-canvas,
-.bg-white,
-[style*="background: #EDF1F5"],
-[style*="background:#EDF1F5"],
-[style*="background-color: #EDF1F5"],
-[style*="background-color:#EDF1F5"] {
- color: #0A1829;
-}
-
-/* Prevent white-on-white */
-.bg-white { background-color: #FFFFFF; }
-.bg-canvas { background-color: #EDF1F5 !important; }
-.bg-canvas-dark { background-color: #DDE4EC !important; }
-.bg-canvas-deeper { background-color: #C8D4E0 !important; }
-
-/* ── Dark mode overrides for canvas tints ─────────────────── */
-.dark .bg-white { background-color: #162E4A !important; color: #EDF1F5 !important; }
-.dark .bg-canvas { background-color: #0A1829 !important; color: #EDF1F5 !important; }
-.dark .bg-canvas-dark { background-color: #162E4A !important; }
-.dark .bg-canvas-deeper { background-color: #294460 !important; }
-.dark .text-navy { color: #EDF1F5 !important; }
-.dark .text-muted-blue { color: #A8BCCD !important; }
-.dark .text-faint-blue { color: #7A9AB5 !important; }
-/* 2026-08-24 점검: 본문 강조색 #0145F2는 다크 배경(#0A1829) 대비 2.6:1로 WCAG AA
-   미달(917회 사용) — 다크 전용 밝은 파랑으로 승격 (.dark th와 동일 계열) */
-.dark .text-electric { color: #4D80F5 !important; }
-/* Primary links use the same fixed blue as text-electric. Keep existing result
-   palettes and white-on-primary button content outside this contrast override. */
-.dark .text-primary:where(:not(.bg-primary, .bg-primary *, .bg-electric, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) {
- color: #4D80F5 !important;
-}
-/* The Tailwind muted utility uses a fixed translucent blue in light mode.
-   Connect it to the existing dark token for definition lists and inherited lists. */
-.dark .text-muted-foreground:where(:not(.bg-primary, .bg-primary *, .bg-electric, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) {
- color: hsl(var(--muted-foreground)) !important;
-}
-/* Form fields have intentionally light surfaces in both themes. In particular,
-   .dark .bg-white must not turn a select dark while its text-fill stays navy. */
-.dark :is(input, select, textarea):not([type="range"]):not([type="checkbox"]):not([type="radio"]) {
- color: #0A1829 !important;
- background-color: #FFFFFF !important;
- -webkit-text-fill-color: #0A1829 !important;
-}
-.dark .border-canvas-200 { border-color: #294460 !important; }
-.dark .border-canvas-deep { border-color: #294460 !important; }
-.dark th { background-color: #162E4A; color: #4D80F5; border-bottom-color: #4D80F555; }
-.dark td { color: #EDF1F5; border-bottom-color: #294460; }
-.dark tr:hover td { background-color: #4D80F511; }
-
-/* ── Scrollbar ────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #EDF1F5; }
-::-webkit-scrollbar-thumb { background: #0145F244; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #0145F288; }
-
-/* ── Selection ────────────────────────────────────────────────── */
-::selection {
- background-color: #0145F222;
- color: #0A1829;
-}
-
-/* ── Focus ring ──────────────────────────────────────────────── */
-:focus-visible {
- outline: 2.5px solid #0145F2;
- outline-offset: 2px;
- border-radius: 4px;
-}
-
-/* ── Skip to content link (a11y) ─────────────────────────────── */
-.skip-to-content {
- position: absolute;
- top: -100px;
- left: 50%;
- transform: translateX(-50%);
- z-index: 100;
- padding: 12px 20px;
- background-color: #0145F2;
- color: #FFFFFF;
- font-weight: 700;
- border-radius: 0 0 12px 12px;
- text-decoration: none;
- transition: top 0.2s ease;
-}
-.skip-to-content:focus {
- top: 0;
- outline: none;
-}
-
-/* ── Skeleton shimmer for Suspense fallback ──────────────────── */
-.skeleton-shimmer {
- background: linear-gradient(
- 90deg,
- #DDE4EC 0%,
- #EDF1F5 50%,
- #DDE4EC 100%
- );
- background-size: 200% 100%;
- animation: shimmer 1.5s ease-in-out infinite;
-}
-.dark .skeleton-shimmer {
- background: linear-gradient(
- 90deg,
- #162E4A 0%,
- #294460 50%,
- #162E4A 100%
- );
- background-size: 200% 100%;
-}
-
-/* ── Hide scrollbar (horizontal tab strips) ───────────────────── */
-.no-scrollbar {
- scrollbar-width: none;
- -ms-overflow-style: none;
-}
-.no-scrollbar::-webkit-scrollbar {
- display: none;
-}
-
-/* ── Card hover lift (consistency util) ───────────────────────── */
-.hover-lift {
- transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.hover-lift:hover {
- transform: translateY(-2px);
- box-shadow: 0 8px 24px -4px #0145F222, 0 1px 4px 0 #0A182910;
- border-color: #0145F233;
-}
-
-/* ── Recharts / chart text ─────────────────────────────────────── */
-.recharts-text,
-.recharts-label,
-.recharts-legend-item-text,
-.recharts-cartesian-axis-tick-value {
- fill: #3D5E78 !important;
- color: #3D5E78 !important;
-}
-.recharts-tooltip-wrapper .recharts-default-tooltip {
- background-color: #FFFFFF !important;
- border: 1.5px solid #DDE4EC !important;
- border-radius: 0.75rem !important;
-}
-
-/* ── Table styles ──────────────────────────────────────────────── */
-table { border-collapse: collapse; }
-th {
- background-color: #EDF1F5;
- color: #0145F2;
- font-weight: 700;
- font-size: 0.8125rem;
- letter-spacing: 0.04em;
- text-transform: uppercase;
- padding: 0.875rem 1rem;
- border-bottom: 2px solid #0145F233;
-}
-td {
- color: #0A1829;
- padding: 0.75rem 1rem;
- border-bottom: 1px solid #DDE4EC;
- font-size: 0.9375rem;
-}
-tr:hover td { background-color: #0145F208; }
-
-/* ── Font Mono ─────────────────────────────────────────────────── */
-.font-mono-tabular {
- font-variant-numeric: tabular-nums;
- font-family: var(--font-pretendard) !important;
-}
-/* ���� Footer hover styles (CSS-only) ���������������������������������������������������������� */
-.footer-link:hover { color: #0145F2 !important; }
-.footer-social-icon:hover {
-  color: #FFFFFF !important;
-  background-color: #0145F2 !important;
-  border-color: #0145F2 !important;
-}
-
-/* ���� Radix Switch colors �������������������������������������������������������������������������������� */
-[data-state="checked"] { background-color: #0145F2 !important; }
-[data-state="unchecked"] { background-color: #C8D4E0 !important; }
-
-/* ���� Keyframes ���������������������������������������������������������������������������������������������������� */
-@keyframes ping {
-  75%, 100% { transform: scale(2); opacity: 0; }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ── 푸터 아코디언: 모바일=토글, sm 이상=항상 펼침 ─────────────── */
+@supports (height: 100dvh) { .min-h-screen { min-height: 100dvh; } }
+@media (min-width: 768px) { .hero-section { min-height: 80vh; } }
+@media (min-width: 1024px) { .ad-slot-result { min-height: 250px; } }
 @media (min-width: 640px) {
   .footer-accordion summary::-webkit-details-marker { display: none; }
-  .footer-accordion:not([open]) > ul {
-    display: flex !important;
-  }
+  .footer-accordion:not([open]) > ul { display: flex !important; }
 }
 
-/* ── Reduced motion: 접근성 + CLS 방어 ─────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.45); border: 2px solid hsl(var(--background)); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.7); }
+
+/* Chart library paints inline attributes; these limited overrides are intentional. */
+.recharts-wrapper :is(.recharts-text, .recharts-label, .recharts-legend-item-text, .recharts-cartesian-axis-tick-value) { fill: hsl(var(--content-muted, var(--muted-foreground))); color: hsl(var(--content-muted, var(--muted-foreground))); }
+.recharts-tooltip-wrapper .recharts-default-tooltip { background-color: hsl(var(--card)) !important; color: hsl(var(--card-foreground)); border: 1px solid hsl(var(--border)) !important; border-radius: 0.625rem; }
+
+/* Overlay motion is brief and only affects opacity/transform. No first-render
+   heading/body invisibility or retained transform containing blocks. */
+@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes share-toast-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes share-bar-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes page-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes search-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.share-toast { animation: share-toast-in 180ms ease-out backwards; }
+.share-bar-in { animation: share-bar-in 180ms ease-out backwards; }
+.page-fade { animation: page-fade-in 140ms ease-out backwards; }
+.search-overlay-in { animation: search-fade-in 140ms ease-out backwards; }
+.search-panel-in { animation: search-fade-in 180ms ease-out backwards; }
+.ms-logo-icon { transform-box: fill-box; transform-origin: center; transition: transform var(--motion-normal) var(--motion-ease); }
+.ms-logo-word { transition: transform var(--motion-normal) var(--motion-ease); }
+.dark .ms-logo-word-money { fill: hsl(var(--foreground)); }
+@media (hover: hover) and (pointer: fine) {
+  .ms-logo:hover .ms-logo-icon { transform: scale(1.04); }
+  .ms-logo:hover .ms-logo-word-money { transform: translateY(-1px); }
+}
+
+/* Accessibility exceptions intentionally outrank animated component utilities. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .skeleton-shimmer { animation: none !important; }
+  .skeleton-shimmer { animation: none; }
+  .ms-interactive:hover, .hover-lift:hover, .ms-logo:hover .ms-logo-icon,
+  .ms-logo:hover .ms-logo-word-money { transform: none; }
 }
-
-/* ── print: 광고 숨김, 계산 결과만 출력 ──────────────────────────── */
 @media print {
-  header, footer, [class*="ad-slot"], .duotone-badge { display: none !important; }
+  header, footer, .ad-slot-home-top, .ad-slot-result, .ad-slot-sidebar, .ad-slot-fluid { display: none !important; }
   body { background: white !important; color: black !important; }
-  .duotone-card { border: 1px solid #ccc !important; box-shadow: none !important; }
+  .ms-surface, .ms-panel, .duotone-card { border: 1px solid #ccc; box-shadow: none; }
 }
-
-/* ── 고대비 모드 지원 ─────────────────────────────────────────────── */
 @media (forced-colors: active) {
-  .btn-primary { forced-color-adjust: none; background: ButtonText; color: ButtonFace; }
-  .duotone-card { border: 2px solid ButtonText; }
-}
-
-/* ── content-visibility: auto — 뷰포트 밖 섹션 렌더 비용 절감 ──── */
-.section-lg, .section-md {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 400px;
-}
-
-/* ── 링크 기본 스타일 접근성 ─────────────────────────────────────── */
-a:not([class]) {
-  color: #0145F2;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
-a:not([class]):hover {
-  text-decoration-thickness: 2px;
-}
-
-/* ── SNS 공유 토스트 등장 (ShareButtons v2 — framer-motion 대체) ──── */
-@keyframes share-toast-in {
-  from { opacity: 0; transform: translate(-50%, 12px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-.share-toast {
-  animation: share-toast-in 0.25s ease-out both;
-}
-
-/* ── 모바일 떠있는 공유 pill 등장 (FloatingShareBar) ─────────────── */
-@keyframes share-bar-in {
-  from { opacity: 0; transform: translate(-50%, 16px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-.share-bar-in {
-  animation: share-bar-in 0.3s ease-out both;
-}
-
-/* ── 페이지 전환 페이드 + 헤더 슬라이드 (template/Header framer-motion 셸
-   제거 대체, 2026-08-26 Phase 4) — duration·easing 은 기존 framer 값 그대로 ── */
-@keyframes page-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.page-fade {
-  /* ★fill 은 backwards 만 — forwards(both)로 종료 transform 이 영구 잔류하면
-     이 래퍼가 fixed 자손(FloatingShareBar·BottomSheet 등)의 containing block 이
-     되어 뷰포트 고정이 깨진다 (transform: translateY(0)도 non-none) */
-  animation: page-fade-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-@keyframes header-slide-in {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
-}
-.header-slide-in {
-  /* circOut 근사 — 헤더는 fixed 라 CLS 없음. fill 은 backwards (위와 동일 이유) */
-  animation: header-slide-in 0.5s cubic-bezier(0, 0.55, 0.45, 1) backwards;
-}
-/* 헤더 검색 모달 등장 (HeaderSearch framer-motion 대체) — 패널은 위치용
-   translate 클래스와의 충돌을 피해 opacity 만 애니메이트 */
-@keyframes search-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.search-overlay-in {
-  animation: search-fade-in 0.18s ease-out backwards;
-}
-.search-panel-in {
-  animation: search-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-/* ── 로고 마운트/호버 모션 (Logo.tsx framer-motion 대체, 2026-08-26) ── */
-@keyframes ms-logo-pop {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes ms-logo-draw {
-  from { stroke-dashoffset: 26; opacity: 0; }
-  to { stroke-dashoffset: 0; opacity: 1; }
-}
-@keyframes ms-logo-word-l {
-  from { opacity: 0; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes ms-logo-word-r {
-  from { opacity: 0; transform: translateX(4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-.ms-logo-icon {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.ms-logo:hover .ms-logo-icon {
-  transform: scale(1.06);
-}
-.ms-logo-rect {
-  animation: ms-logo-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.ms-logo-path {
-  /* d="M7 22L14 12L21 22" 총 길이 ≈ 24.4 — 여유분 26으로 draw 효과 */
-  stroke-dasharray: 26;
-  animation: ms-logo-draw 0.6s ease-out 0.15s backwards;
-}
-.ms-logo-word {
-  transition: transform 0.2s ease-out;
-}
-.ms-logo-word-money {
-  animation: ms-logo-word-l 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
-}
-.dark .ms-logo-word-money {
-  fill: #EDF1F5;
-}
-.ms-logo-word-salary {
-  animation: ms-logo-word-r 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
-}
-.ms-logo:hover .ms-logo-word-money {
-  transform: translateY(-1px);
-}
-.ms-logo:hover .ms-logo-word-salary {
-  transform: translateY(1px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-fade,
-  .header-slide-in,
-  .search-overlay-in,
-  .search-panel-in,
-  .ms-logo-rect,
-  .ms-logo-path,
-  .ms-logo-word-money,
-  .ms-logo-word-salary {
-    animation: none;
-  }
+  .ms-button, .btn-primary, .btn-secondary, .btn-ghost, .ms-field,
+  .ms-surface, .ms-panel, .duotone-card { border-color: ButtonText; }
+  .ms-button:disabled, .ms-button[aria-disabled="true"] { color: GrayText; }
+  :focus-visible { outline-color: Highlight; }
 }

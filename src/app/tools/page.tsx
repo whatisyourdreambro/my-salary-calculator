@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import Link from "@/components/AppLink";
+import ToolHubPage from "@/components/tool/ToolHubPage";
 import {
  Gift, Briefcase, TrendingUp, Home, CreditCard, Laptop,
  Heart, PiggyBank, Calculator, Calendar, Scale, Flame,
- DollarSign, Percent, Activity, Building2, ChevronRight,
+ DollarSign, Percent, Activity, Building2,
  Fuel, RefreshCw, Users, Zap
 } from "lucide-react";
-import CoupangBanner from "@/components/CoupangBanner";
-import { GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
-import JsonLd from "@/components/JsonLd";
-import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "금융 계산기 모음 2026 | 31가지 세금·재테크 계산기 - 머니샐러리",
@@ -33,7 +29,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  title: "소득세 계산기",
  color: "text-primary",
  items: [
- { title: "연봉 실수령액 계산기", desc: "4대보험·소득세 완벽 계산", href: "/", icon: DollarSign, isHot: true },
+ { title: "연봉 실수령액 계산기", desc: "4대보험·소득세와 예상 월급", href: "/", icon: DollarSign, isHot: true },
  { title: "성과급·인센티브 세금", desc: "2026 연봉합산 세율 적용", href: "/tools/finance/bonus", icon: Gift, isNew: true, isHot: true },
  { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase, isNew: true },
  { title: "프리랜서 종합소득세", desc: "사업소득·필요경비 계산", href: "/tools/finance/freelance-tax", icon: Laptop, isNew: true },
@@ -92,149 +88,19 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  },
 ];
 
-function TagBadge({ label, type }: { label: string; type: "new" | "hot" }) {
- return (
- <span
- className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
- type === "new"
- ? "bg-electric text-white"
- : "bg-electric-10 text-electric border border-electric/20"
- }`}
- aria-label={type === "new" ? "신규" : "인기"}
- >
- {label}
- </span>
- );
-}
-
 export default function ToolsHubPage() {
- const totalCount = CATEGORIES.reduce((sum, c) => sum + c.items.length, 0);
-
- // 허브 ItemList 구조화데이터 — 카테고리 전체 계산기 목록 (salary-db/page.tsx 패턴)
- const toolListItems = CATEGORIES.flatMap((cat) => cat.items).map((item) => ({
- name: item.title,
- url: item.href,
- }));
-
- return (
- <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
- <JsonLd data={[itemListLd({ name: "금융 계산기 모음", items: toolListItems }), autoBreadcrumbLd("/tools")]} />
- <div className="max-w-5xl mx-auto">
-
- {/* Hero */}
- <div className="text-center mb-16 pb-12 border-b border-canvas">
- <div className="inline-flex items-center gap-2 bg-electric-10 text-electric border border-electric/20 text-xs font-black px-4 py-2 rounded-md uppercase tracking-widest mb-6">
- <Calculator size={14} aria-hidden="true" /> 2026 세법 전면 업데이트
- </div>
- <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-4">
- 금융 계산기 <span className="text-electric">{totalCount}종</span> 모음
- </h1>
- <p className="text-faint-blue font-medium text-lg max-w-2xl mx-auto">
- 성과급·퇴직금·증여세·주식세금까지 — 직장인이 꼭 필요한 모든 금융 계산기를 2026년 최신 세법으로 무료 제공합니다.
- </p>
- {/* Quick Stats */}
- <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mt-8">
- {[["30+", "계산기"], ["2026", "세법 기준"], ["무료", "전체 이용"]].map(([val, label]) => (
- <div key={label} className="text-center">
- <p className="text-3xl font-black text-electric tabular-nums">{val}</p>
- <p className="text-xs text-faint-blue font-medium mt-1">{label}</p>
- </div>
- ))}
- </div>
- </div>
-
- {/* New Highlights */}
- <div className="mb-16">
- <div className="flex items-center gap-3 mb-6">
- <span className="text-xs font-black bg-electric text-white px-3 py-1 rounded-md uppercase tracking-widest">NEW</span>
- <h2 className="text-xl font-black text-navy">신규 추가 계산기</h2>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
- {[
- { title: "성과급 세금 계산기", desc: "연봉합산 방식 2026 세법", href: "/tools/finance/bonus", icon: Gift },
- { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase },
- { title: "복리 계산기", desc: "적립식 40년 자산 시뮬레이션", href: "/tools/finance/compound", icon: Zap },
- { title: "주식 양도소득세", desc: "해외주식 250만원 공제 포함", href: "/tools/finance/stock-tax", icon: TrendingUp },
- { title: "취득세 계산기", desc: "주택·토지 취득세 전체 계산", href: "/tools/real-estate/acquisition-tax", icon: Home },
- { title: "증여세 계산기", desc: "가족별 공제한도·세율", href: "/tools/real-estate/gift-tax", icon: Heart },
- ].map((item) => (
- <Link key={item.href} href={item.href}
- className="group flex items-center gap-4 p-5 border border-canvas rounded-2xl hover:border-primary hover:bg-primary/5 transition-all">
- <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors flex-shrink-0">
- <item.icon size={22} className="text-primary group-hover:text-navy transition-colors" />
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-black text-navy text-sm group-hover:text-primary transition-colors">{item.title}</p>
- <p className="text-xs text-faint-blue mt-0.5 truncate">{item.desc}</p>
- </div>
- <ChevronRight size={16} className="text-faint-blue group-hover:text-primary transition-colors flex-shrink-0" />
- </Link>
- ))}
- </div>
- </div>
-
- {/* All Categories */}
- {CATEGORIES.map((cat, ci) => (
- <div key={ci} className="mb-14">
- <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-electric">
- <div className="w-8 h-8 bg-electric rounded-md flex items-center justify-center" aria-hidden="true">
- <span className="text-white font-black text-sm">{ci + 1}</span>
- </div>
- <h2 className="text-xl font-black text-navy">{cat.title}</h2>
- <span className="text-xs text-faint-blue font-medium">{cat.items.length}개</span>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
- {cat.items.map((item) => (
- <Link key={item.href} href={item.href}
- className="group flex items-center gap-4 p-4 border border-canvas rounded-xl hover:border-primary hover:bg-primary/5 transition-all bg-white shadow-sm hover:shadow-md">
- <div className="w-10 h-10 rounded-lg bg-canvas group-hover:bg-primary flex items-center justify-center transition-colors flex-shrink-0">
- <item.icon size={18} className="text-faint-blue group-hover:text-navy transition-colors" />
- </div>
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap">
- <p className="font-bold text-navy text-sm group-hover:text-primary transition-colors">{item.title}</p>
- {item.isNew && <TagBadge label="NEW" type="new" />}
- {item.isHot && <TagBadge label="HOT" type="hot" />}
- </div>
- <p className="text-xs text-faint-blue mt-0.5 truncate">{item.desc}</p>
- </div>
- <ChevronRight size={14} className="text-slate-200 group-hover:text-primary transition-colors flex-shrink-0" />
- </Link>
- ))}
- </div>
- {/* 2번째 카테고리(재테크·투자) 뒤 섹션 경계 중간 광고 — GUIDE_MID 는 이 페이지·tools/layout(IN_ARTICLE+HOME_TOP) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
- {ci === 1 && (
- <div className="mt-10">
- <GuideMidAd />
- </div>
- )}
- </div>
- ))}
-
- {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함 */}
- <div className="mt-16">
- <MultiplexAd />
- </div>
-
- {/* 쿠팡 파트너스 — 카테고리 섹션과 SEO 본문 사이.
-     2026-08-31 부활 팩 ②: desktop leaderboard가 tools/layout 푸터 배너와 동일
-     사이즈키라 뒤쪽이 무음 차단되던 것 → rectangle로 차별화 (운영자 승인) */}
- <div className="mt-16">
- <CoupangBanner
- responsive={{ mobile: "rectangle", desktop: "rectangle" }}
- />
- </div>
-
- {/* SEO Bottom Content */}
- <div className="mt-16 p-8 bg-canvas border border-canvas rounded-2xl">
- <h2 className="text-lg font-black text-navy mb-3">2026 세법 업데이트 완료</h2>
- <p className="text-sm text-muted-blue leading-relaxed">
- 머니샐러리의 모든 금융 계산기는 2026년 최신 세법을 반영합니다. 근로소득세, 퇴직소득세, 양도소득세, 증여세 등
- 주요 세목의 세율과 공제한도를 정확히 반영하여 신뢰할 수 있는 참고 자료로 활용하실 수 있습니다.
- 단, 실제 납세액은 개인별 공제 항목에 따라 다를 수 있으므로 세무 전문가와 상담하시기를 권고드립니다.
- </p>
- </div>
- </div>
- </main>
- );
+ const totalCount = CATEGORIES.reduce((sum, category) => sum + category.items.length, 0);
+ return <ToolHubPage
+  path="/tools"
+  leafName="금융 계산기 모음"
+  badge="금융·생활 도구"
+  badgeIcon={Calculator}
+  headingPrefix="필요한 계산을"
+  headingAccent="한곳에서"
+  lead={`급여, 세금, 대출부터 일상 계산까지 ${totalCount}가지 도구를 제공합니다. 주제를 선택하고 내 조건에 맞게 계산해 보세요.`}
+  stats={[]}
+  categories={CATEGORIES}
+  seoHeading="계산 결과를 읽는 방법"
+  seoBody="각 계산기에 표시된 기준 연도, 적용 범위와 입력 단위를 먼저 확인하세요. 세금·급여 결과는 입력한 조건에 따른 추정치이며, 실제 공제와 지급액은 개인별 조건에 따라 달라질 수 있습니다. 결과 아래의 계산 방식과 유의사항을 함께 확인할 수 있습니다."
+ />;
 }

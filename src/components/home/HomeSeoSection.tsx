@@ -8,22 +8,22 @@ import { JOB_COUNT, companyCountKo } from "@/config/site";
 
 export default function HomeSeoSection() {
   return (
-    <section className="section-lg bg-white border-t border-canvas-200">
+    <section className="ms-section border-t border-border bg-background">
       <div className="page-width max-w-3xl">
         {/* 인기 연봉 구간 바로가기 — /salary/[amount] 동적 페이지 내부링크 */}
         <div className="mb-16">
-          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-2">
-            인기 연봉 구간 실수령액 바로보기
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-2">
+            연봉 구간별 실수령액 보기
           </h2>
-          <p className="text-faint-blue text-[15px] font-medium mb-6">
-            자주 찾는 연봉 구간의 2026년 월 실수령액을 한 번에 확인하세요.
+          <p className="text-muted-foreground text-[15px] font-medium mb-6">
+            연봉 구간별 2026년 예상 월 실수령액과 계산 조건을 확인하세요.
           </p>
           <div className="flex flex-wrap gap-2.5">
             {POPULAR_SALARY_LINKS.map(({ label, amount }) => (
               <Link
                 key={amount}
                 href={`/salary/${amount}`}
-                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+                className="ms-button ms-button-secondary !text-sm !font-medium"
               >
                 {label}
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -33,42 +33,41 @@ export default function HomeSeoSection() {
         </div>
 
         {/* 실수령액 계산 방법 설명 — 본문 텍스트 (E-E-A-T·키워드) */}
-        <article className="prose-toss mb-16">
-          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-4">
+        <article className="mb-16">
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-4">
             2026년 연봉 실수령액, 이렇게 계산됩니다
           </h2>
-          <p className="text-[15.5px] leading-[1.8] text-muted-blue font-medium mb-4">
-            회사와 계약한 <strong className="text-navy">세전 연봉</strong>은 통장에
+          <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium mb-4">
+            회사와 계약한 <strong className="text-foreground">세전 연봉</strong>은 통장에
             그대로 들어오지 않습니다. 매달 급여에서 4대보험료와 소득세·지방소득세가
-            원천징수된 뒤 남는 금액이 바로 <strong className="text-navy">실수령액</strong>
-            입니다. 머니샐러리 연봉 계산기는 2026년 최신 요율을 그대로 반영해 이
-            공제 과정을 5초 만에 계산해 줍니다.
+            원천징수된 뒤 남는 금액이 바로 <strong className="text-foreground">실수령액</strong>
+            입니다. 머니샐러리 연봉 계산기는 2026년 계산 기준과 입력 조건으로
+            보험료와 세금의 예상 공제액을 계산합니다.
           </p>
-          <p className="text-[15.5px] leading-[1.8] text-muted-blue font-medium mb-4">
+          <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium mb-4">
             공제 항목은 크게 네 가지입니다.{" "}
-            <strong className="text-navy">국민연금 4.75%</strong>,{" "}
-            <strong className="text-navy">건강보험 3.595%</strong>(여기에 건강보험료의
+            <strong className="text-foreground">국민연금 4.75%</strong>,{" "}
+            <strong className="text-foreground">건강보험 3.595%</strong>(여기에 건강보험료의
             13.14%가 장기요양보험으로 추가),{" "}
-            <strong className="text-navy">고용보험 0.9%</strong>가 4대보험으로
+            <strong className="text-foreground">고용보험 0.9%</strong>가 4대보험으로
             빠져나가고, 여기에 부양가족 수와 비과세 식대(월 20만원)에 따라 달라지는{" "}
-            <strong className="text-navy">근로소득세</strong>와 그 10%인{" "}
-            <strong className="text-navy">지방소득세</strong>가 더해집니다.
+            <strong className="text-foreground">근로소득세</strong>와 그 10%인{" "}
+            <strong className="text-foreground">지방소득세</strong>가 더해집니다.
           </p>
-          <p className="text-[15.5px] leading-[1.8] text-muted-blue font-medium">
-            예를 들어 연봉 5,000만원이라면 월 기본급은 약 416만원이지만, 위 공제액을
-            제하면 실제 입금액은 월 약 352만원 수준입니다. 같은 연봉이라도 부양가족
-            수, 비과세 식대 포함 여부에 따라 실수령액이 달라지므로, 정확한 금액은 본인
-            조건을 입력해 직접 확인하는 것이 가장 좋습니다.
+          <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium">
+            같은 연봉이라도 부양가족 수, 비과세 수당 포함 여부와 보험료 산정 조건에 따라
+            예상 실수령액이 달라집니다. 본인의 조건을 입력한 뒤 공제 내역을 확인하세요.
+            계산 결과는 참고용이며 실제 입금액은 급여명세서와 비교해야 합니다.
           </p>
         </article>
 
-        {/* 많이 찾는 계산기 — /calc·허브 SSR 내부링크 (GSC 발견됨-미색인 해소, 2026-07-06) */}
+        {/* 목적별 계산기 — /calc·허브 SSR 내부링크 (GSC 발견됨-미색인 해소, 2026-07-06) */}
         <div className="mb-16">
-          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-2">
-            많이 찾는 계산기
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-2">
+            목적별 계산기
           </h2>
-          <p className="text-faint-blue text-[15px] font-medium mb-6">
-            연봉 외에도 세금·대출·보험·생활비까지, 100가지 계산기를 무료로 쓸 수 있어요.
+          <p className="text-muted-foreground text-[15px] font-medium mb-6">
+            연봉 외에도 세금·대출·보험·생활비를 목적에 맞게 계산하세요.
           </p>
           <div className="flex flex-wrap gap-2.5">
             {[
@@ -101,12 +100,12 @@ export default function HomeSeoSection() {
               { label: "보험 점검 허브", href: "/hub/insurance" },
               { label: "사장님·프리랜서 허브", href: "/hub/business" },
               { label: "생활·건강·가족 허브", href: "/hub/daily-life" },
-              { label: "100가지 계산기 전체 →", href: "/calc" },
+              { label: "계산기 전체 보기 →", href: "/calc" },
             ].map(({ label, href }) => (
               <Link
                 key={href}
                 href={href}
-                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+                className="ms-button ms-button-secondary !text-sm !font-medium"
               >
                 {label}
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -119,10 +118,10 @@ export default function HomeSeoSection() {
             /job·/industry·/region 인덱스는 헤더 메가메뉴(조건부 렌더)에서만 노출돼
             SSR HTML 기준 준고아였다. PageRank 최상위인 홈에서 직접 연결한다. */}
         <div className="mb-16">
-          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-2">
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-2">
             연봉 데이터 탐색
           </h2>
-          <p className="text-faint-blue text-[15px] font-medium mb-6">
+          <p className="text-muted-foreground text-[15px] font-medium mb-6">
             {companyCountKo} 회사·{JOB_COUNT}개 직업·업종·지역별 연봉 데이터를 차원별로 살펴보세요.
           </p>
           <div className="flex flex-wrap gap-2.5 mb-5">
@@ -135,14 +134,14 @@ export default function HomeSeoSection() {
               <Link
                 key={href}
                 href={href}
-                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+                className="ms-button ms-button-secondary !text-sm !font-medium"
               >
                 {label}
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             ))}
           </div>
-          <h3 className="text-[15px] font-bold text-navy mb-3">인기 업종 연봉</h3>
+          <h3 className="text-[15px] font-bold text-foreground mb-3">업종별 연봉 탐색</h3>
           <div className="flex flex-wrap gap-2.5 mb-5">
             {[
               { label: "반도체·전자 연봉", href: "/industry/semiconductor" },
@@ -155,14 +154,14 @@ export default function HomeSeoSection() {
               <Link
                 key={href}
                 href={href}
-                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+                className="ms-button ms-button-secondary !text-sm !font-medium"
               >
                 {label}
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             ))}
           </div>
-          <h3 className="text-[15px] font-bold text-navy mb-3">인기 회사 연봉</h3>
+          <h3 className="text-[15px] font-bold text-foreground mb-3">회사별 연봉 탐색</h3>
           <div className="flex flex-wrap gap-2.5">
             {[
               // Footer 인기 회사 목록(GSC TOP 검색 키워드)과 동일한 실존 id 사용
@@ -176,7 +175,7 @@ export default function HomeSeoSection() {
               <Link
                 key={href}
                 href={href}
-                className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-canvas border border-canvas-200 text-sm font-bold text-navy hover:border-electric hover:text-electric transition-colors"
+                className="ms-button ms-button-secondary !text-sm !font-medium"
               >
                 {label}
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -187,20 +186,20 @@ export default function HomeSeoSection() {
 
         {/* FAQ — JSON-LD(faqLd)와 동일 콘텐츠를 화면에도 노출 */}
         <div>
-          <h2 className="text-[clamp(1.375rem,3vw,2rem)] font-black text-navy tracking-[-0.035em] mb-6">
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-6">
             자주 묻는 질문
           </h2>
           <div className="space-y-3">
             {HOME_FAQ_ITEMS.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-2xl border border-canvas-200 bg-canvas p-5 [&_summary::-webkit-details-marker]:hidden"
+                className="group rounded-xl border border-border bg-card p-5 [&_summary::-webkit-details-marker]:hidden"
               >
-                <summary className="flex items-center justify-between cursor-pointer font-bold text-navy text-[15.5px]">
+                <summary className="flex min-h-11 items-center justify-between gap-4 rounded-md cursor-pointer font-semibold text-foreground text-base">
                   {item.question}
-                  <ArrowRight className="w-4 h-4 text-faint-blue transition-transform group-open:rotate-90" />
+                  <ArrowRight className="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-90 motion-reduce:transition-none" />
                 </summary>
-                <p className="mt-3 text-[14.5px] leading-[1.75] text-muted-blue font-medium">
+                <p className="mt-3 text-[14.5px] leading-[1.75] text-muted-foreground font-medium">
                   {item.answer}
                 </p>
               </details>

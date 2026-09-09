@@ -43,25 +43,25 @@ export default function CompoundCalculatorPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">초기 투자금 (원)</label>
- <input type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
+ <label htmlFor="compound-principal" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">초기 투자금 (원)</label>
+ <input id="compound-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-bold text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">월 적립금 (원)</label>
- <input type="number" inputMode="numeric" value={monthly} onChange={e => setMonthly(Number(e.target.value))}
+ <label htmlFor="compound-monthly" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">월 적립금 (원)</label>
+ <input id="compound-monthly" type="number" inputMode="numeric" value={monthly} onChange={e => setMonthly(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-bold text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 수익률 ({rate}%)</label>
- <input type="range" min={1} max={20} step={0.5} value={rate} onChange={e => setRate(Number(e.target.value))} className="w-full accent-primary" />
+ <label htmlFor="compound-rate" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 수익률 ({rate}%)</label>
+ <input id="compound-rate" type="range" min={1} max={20} step={0.5} value={rate} onChange={e => setRate(Number(e.target.value))} className="w-full accent-primary" />
  <div className="flex justify-between text-xs text-faint-blue mt-1"><span>1%</span><span className="text-primary font-bold">{rate}%</span><span>20%</span></div>
  </div>
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">투자 기간 ({years}년)</label>
- <input type="range" min={1} max={40} value={years} onChange={e => setYears(Number(e.target.value))} className="w-full accent-primary" />
+ <label htmlFor="compound-years" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">투자 기간 ({years}년)</label>
+ <input id="compound-years" type="range" min={1} max={40} value={years} onChange={e => setYears(Number(e.target.value))} className="w-full accent-primary" />
  <div className="flex justify-between text-xs text-faint-blue mt-1"><span>1년</span><span className="text-primary font-bold">{years}년</span><span>40년</span></div>
  </div>
  </div>

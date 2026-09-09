@@ -146,10 +146,11 @@ export default function FortunePage() {
  <div className="bg-white/80 backdrop-blur-md border border-canvas rounded-3xl p-8 shadow-2xl space-y-6">
  {/* Name Input */}
  <div className="space-y-2">
- <label className="flex items-center gap-2 text-sm font-medium text-faint-blue">
+ <label htmlFor="fortune-name" className="flex items-center gap-2 text-sm font-medium text-faint-blue">
  <User size={16} /> 이름
  </label>
  <input
+ id="fortune-name"
  type="text"
  value={name}
  onChange={(e) => setName(e.target.value)}
@@ -167,6 +168,7 @@ export default function FortunePage() {
  <button
  key={g}
  onClick={() => setGender(g)}
+ aria-pressed={gender === g}
  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${gender === g ? "bg-canvas-deeper text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
  }`}
  >
@@ -182,6 +184,7 @@ export default function FortunePage() {
  <button
  key={c}
  onClick={() => setCalendar(c)}
+ aria-pressed={calendar === c}
  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${calendar === c ? "bg-canvas-deeper text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
  }`}
  >
@@ -199,6 +202,7 @@ export default function FortunePage() {
  </label>
  <div className="grid grid-cols-3 gap-2">
  <select
+ aria-label="생년"
  value={year}
  onChange={(e) => setYear(Number(e.target.value))}
  className="bg-electric/30 border border-canvas rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
@@ -206,6 +210,7 @@ export default function FortunePage() {
  {YEARS.map(y => <option key={y} value={y}>{y}년</option>)}
  </select>
  <select
+ aria-label="생월"
  value={month}
  onChange={(e) => setMonth(Number(e.target.value))}
  className="bg-electric/30 border border-canvas rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
@@ -213,6 +218,7 @@ export default function FortunePage() {
  {MONTHS.map(m => <option key={m} value={m}>{m}월</option>)}
  </select>
  <select
+ aria-label="생일"
  value={day}
  onChange={(e) => setDay(Number(e.target.value))}
  className="bg-electric/30 border border-canvas rounded-xl px-3 py-3 text-center outline-none focus:border-primary"
@@ -224,10 +230,11 @@ export default function FortunePage() {
 
  {/* Time of Birth */}
  <div className="space-y-2">
- <label className="flex items-center gap-2 text-sm font-medium text-faint-blue">
+ <label htmlFor="fortune-birth-time" className="flex items-center gap-2 text-sm font-medium text-faint-blue">
  <Clock size={16} /> 태어난 시간
  </label>
  <select
+ id="fortune-birth-time"
  value={time}
  onChange={(e) => setTime(e.target.value)}
  className="w-full bg-electric/30 border border-canvas rounded-xl px-4 py-3 outline-none focus:border-primary"

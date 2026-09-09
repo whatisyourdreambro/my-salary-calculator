@@ -52,19 +52,19 @@ export default function InstallmentPage() {
 
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 원금 (원)</label>
- <input type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
+ <label htmlFor="installment-principal" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 원금 (원)</label>
+ <input id="installment-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 개월 ({months}개월)</label>
- <input type="range" min={1} max={84} value={months} onChange={e => setMonths(Number(e.target.value))} className="w-full accent-primary" />
+ <label htmlFor="installment-months" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 개월 ({months}개월)</label>
+ <input id="installment-months" type="range" min={1} max={84} value={months} onChange={e => setMonths(Number(e.target.value))} className="w-full accent-primary" />
  <div className="flex justify-between text-xs text-faint-blue mt-1"><span>1개월</span><span className="text-primary font-bold">{months}개월</span><span>84개월</span></div>
  </div>
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 이자율 ({annualRate}%)</label>
- <input type="number" inputMode="numeric" step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
+ <label htmlFor="installment-rate" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 이자율 ({annualRate}%)</label>
+ <input id="installment-rate" type="number" inputMode="numeric" step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

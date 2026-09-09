@@ -81,7 +81,7 @@ function CalculatorTabsComponent() {
  const scroll = (dir: "left" | "right") => {
  const el = scrollRef.current;
  if (!el) return;
- el.scrollBy({ left: dir === "left" ? -200 : 200, behavior: "smooth" });
+ el.scrollBy({ left: dir === "left" ? -200 : 200, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
  };
 
  const renderActiveCalculator = () => {
@@ -104,17 +104,14 @@ function CalculatorTabsComponent() {
  return (
  <div className="w-full">
  {/* ── 탭 네비게이션: 좌우 화살표 + 스크롤 ──────────────────── */}
- <div className="relative flex items-center gap-1 mb-6">
+ <div className="relative flex items-center gap-2 mb-4">
  {/* 왼쪽 버튼 */}
  <button
+ type="button"
  onClick={() => scroll("left")}
  disabled={!canScrollLeft}
- className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
- ${canScrollLeft
- ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
- : "bg-canvas border-canvas text-faint-blue cursor-default"
- }`}
- aria-label="이전 탭"
+ className="ms-button ms-button-secondary h-11 w-11 shrink-0 p-0"
+ aria-label="계산기 목록 왼쪽으로 이동"
  >
  <ChevronLeft className="w-4 h-4" />
  </button>
@@ -124,7 +121,7 @@ function CalculatorTabsComponent() {
  ref={scrollRef}
  role="tablist"
  aria-label="계산기 종류"
- className="flex-1 flex overflow-x-auto gap-2 pb-0.5"
+ className="min-w-0 flex-1 flex overflow-x-auto gap-2 p-1"
  style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
  onScroll={checkScroll}
  >
@@ -134,6 +131,7 @@ function CalculatorTabsComponent() {
  return (
  <button
  key={tab}
+ type="button"
  role="tab"
  aria-selected={isActive}
  aria-controls={`calc-panel-${tab}`}
@@ -159,18 +157,12 @@ function CalculatorTabsComponent() {
  const target = tabs[next];
  setActiveTab(target);
  requestAnimationFrame(() => {
- document.getElementById(`calc-tab-${target}`)?.focus();
+ const button = document.getElementById(`calc-tab-${target}`);
+ button?.focus({ preventScroll: true });
+ button?.scrollIntoView({ block: "nearest", inline: "nearest" });
  });
  }}
- className={`
- flex-none flex items-center gap-1.5 px-4 py-2.5
- rounded-full border text-sm font-bold
- whitespace-nowrap transition-all duration-200
- ${isActive
- ? "bg-electric border-electric text-white shadow-sm"
- : "bg-white text-muted-blue border-canvas hover:border-electric hover:text-electric"
- }
- `}
+ className="ms-tab flex-none flex min-h-11 items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap"
  >
  <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
  <span>{name}</span>
@@ -181,28 +173,26 @@ function CalculatorTabsComponent() {
 
  {/* 오른쪽 버튼 */}
  <button
+ type="button"
  onClick={() => scroll("right")}
  disabled={!canScrollRight}
- className={`flex-none w-9 h-9 rounded-full border flex items-center justify-center transition-all
- ${canScrollRight
- ? "bg-white border-canvas text-muted-blue hover:border-electric hover:text-electric shadow-sm"
- : "bg-canvas border-canvas text-faint-blue cursor-default"
- }`}
- aria-label="다음 탭"
+ className="ms-button ms-button-secondary h-11 w-11 shrink-0 p-0"
+ aria-label="계산기 목록 오른쪽으로 이동"
  >
  <ChevronRight className="w-4 h-4" />
  </button>
  </div>
 
  {/* 구분선 */}
- <div className="h-px bg-canvas-dark mb-6" aria-hidden="true" />
+ <div className="h-px bg-border mb-6" aria-hidden="true" />
 
  {/* ── 활성 계산기 ─────────────────────────────────────────── */}
  <div
  id={`calc-panel-${activeTab}`}
  role="tabpanel"
+ tabIndex={0}
  aria-labelledby={`calc-tab-${activeTab}`}
- className="w-full"
+ className="w-full rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
  >
  {renderActiveCalculator()}
  </div>
@@ -214,13 +204,13 @@ export default function CalculatorTabs() {
  return (
  <Suspense fallback={
  <div className="flex items-center gap-2 mb-6">
- <div className="w-9 h-9 rounded-full bg-canvas-dark animate-pulse" />
+ <div className="w-11 h-11 rounded-xl bg-secondary motion-safe:animate-pulse" />
  <div className="flex-1 flex gap-2 overflow-hidden">
  {[...Array(7)].map((_, i) => (
- <div key={i} className="flex-none h-10 w-28 rounded-full bg-canvas-dark animate-pulse" />
+ <div key={i} className="flex-none h-11 w-28 rounded-xl bg-secondary motion-safe:animate-pulse" />
  ))}
  </div>
- <div className="w-9 h-9 rounded-full bg-canvas-dark animate-pulse" />
+ <div className="w-11 h-11 rounded-xl bg-secondary motion-safe:animate-pulse" />
  </div>
  }>
  <CalculatorTabsComponent />

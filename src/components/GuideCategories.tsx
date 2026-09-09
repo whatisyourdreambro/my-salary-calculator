@@ -26,32 +26,32 @@ const CATEGORY_META: Record<
  연봉: {
  icon: Wallet,
  description: "실수령액·협상·티어",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
  세금: {
  icon: Receipt,
  description: "연말정산·종소세·절세",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
  투자: {
  icon: TrendingUp,
  description: "ETF·ISA·주식·채권",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
  부동산: {
  icon: Home,
  description: "내집 마련·전세·대출",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
  커리어: {
  icon: Briefcase,
  description: "이직·연봉협상·승진",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
  기초: {
  icon: Sparkles,
  description: "신용점수·노후·보험",
- color: "bg-electric-10 text-electric",
+ color: "bg-secondary text-link",
  },
 };
 
@@ -69,17 +69,17 @@ export default function GuideCategories() {
  }));
 
  return (
- <section className="py-16 bg-canvas">
- <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
- <div className="text-center mb-10">
- <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white text-electric font-bold text-xs mb-3 border border-canvas-200">
+ <section className="ms-section border-t border-border bg-background" aria-labelledby="home-category-heading">
+ <div className="page-width">
+ <div className="mb-8 max-w-2xl">
+ <p className="ms-eyebrow mb-3">
  카테고리별
  </p>
- <h2 className="text-2xl sm:text-3xl font-black text-navy tracking-tight mb-2">
+ <h2 id="home-category-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl mb-3">
  어디부터 알아볼까요?
  </h2>
- <p className="text-sm text-muted-blue">
- 100+ 금융 가이드를 카테고리별로 빠르게
+ <p className="ms-description">
+ 급여·세금·투자의 기본부터, 필요한 주제를 골라 읽으세요.
  </p>
  </div>
 
@@ -95,14 +95,14 @@ export default function GuideCategories() {
  : guideSearchHref(cat.name)
  }
  rel={hubSlugByCategoryId[cat.name] ? undefined : "nofollow"}
- className="group flex flex-col items-center text-center p-5 bg-white rounded-2xl border border-canvas-200 hover:border-electric hover:shadow-md transition-all"
+ className="ms-surface ms-interactive group flex flex-col items-start p-5"
  >
- <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 ${cat.color}`}>
- <Icon className="w-6 h-6" />
+ <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${cat.color}`}>
+ <Icon className="w-5 h-5" aria-hidden="true" />
  </div>
- <p className="font-bold text-navy text-sm mb-1">{cat.name}</p>
- <p className="text-xs text-faint-blue mb-2 line-clamp-2">{cat.description}</p>
- <span className="text-xs font-black text-electric mt-auto">
+ <p className="font-semibold text-foreground text-base mb-1">{cat.name}</p>
+ <p className="text-sm leading-6 text-muted-foreground mb-3">{cat.description}</p>
+ <span className="text-xs font-medium text-link mt-auto">
  {cat.count}편
  </span>
  </Link>
@@ -110,13 +110,13 @@ export default function GuideCategories() {
  })}
  </div>
 
- <div className="text-center mt-8">
+ <div className="mt-6">
  <Link
  href="/guides"
- className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-canvas-200 rounded-xl text-navy font-bold text-sm hover:border-electric hover:text-electric transition-colors"
+ className="ms-button ms-button-secondary"
  >
  전체 가이드 보기
- <ArrowRight className="w-4 h-4" />
+ <ArrowRight className="w-4 h-4" aria-hidden="true" />
  </Link>
  </div>
  </div>

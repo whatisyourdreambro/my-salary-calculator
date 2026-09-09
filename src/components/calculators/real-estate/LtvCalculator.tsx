@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { Home, Calculator, Info } from "lucide-react";
 export default function LtvCalculator() {
+ const fieldId = useId();
  const [price, setPrice] = useState("");
  const [loan, setLoan] = useState("");
  const [ltv, setLtv] = useState<number | null>(null);
@@ -32,8 +33,9 @@ export default function LtvCalculator() {
 
  <div className="p-6 space-y-6">
  <div>
- <label className="block text-sm font-bold mb-2">주택 가격 (원)</label>
+ <label htmlFor={`${fieldId}-price`} className="block text-sm font-bold mb-2">주택 가격 (원)</label>
  <input
+ id={`${fieldId}-price`}
  type="text"
  value={price}
  onChange={(e) => setPrice(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
@@ -43,8 +45,9 @@ export default function LtvCalculator() {
  </div>
 
  <div>
- <label className="block text-sm font-bold mb-2">대출 금액 (원)</label>
+ <label htmlFor={`${fieldId}-loan`} className="block text-sm font-bold mb-2">대출 금액 (원)</label>
  <input
+ id={`${fieldId}-loan`}
  type="text"
  value={loan}
  onChange={(e) => setLoan(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}

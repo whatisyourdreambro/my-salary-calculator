@@ -55,21 +55,6 @@ export interface ToolHubPageProps {
   crossLinks?: { label: string; href: string }[];
 }
 
-function TagBadge({ label, type }: { label: string; type: "new" | "hot" }) {
-  return (
-    <span
-      className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
-        type === "new"
-          ? "bg-electric text-white"
-          : "bg-electric-10 text-electric border border-electric/20"
-      }`}
-      aria-label={type === "new" ? "신규" : "인기"}
-    >
-      {label}
-    </span>
-  );
-}
-
 export default function ToolHubPage({
   path,
   leafName,
@@ -90,73 +75,75 @@ export default function ToolHubPage({
     .map((item) => ({ name: item.title, url: item.href }));
 
   return (
-    <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
+    <div className="min-h-screen bg-background pb-16 pt-24 text-foreground sm:pt-28">
       <JsonLd
         data={[
           itemListLd({ name: leafName, items: listItems }),
           autoBreadcrumbLd(path, { leafName }),
         ]}
       />
-      <div className="max-w-5xl mx-auto">
+      <div className="ms-page max-w-5xl">
         {/* Hero */}
-        <div className="text-center mb-16 pb-12 border-b border-canvas">
-          <div className="inline-flex items-center gap-2 bg-electric-10 text-electric border border-electric/20 text-xs font-black px-4 py-2 rounded-md uppercase tracking-widest mb-6">
+        <header className="mb-8 border-b border-border pb-8 sm:mb-10">
+          <div className="ms-eyebrow mb-4 inline-flex items-center gap-2">
             <BadgeIcon size={14} aria-hidden="true" /> {badge}
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-4">
-            {headingPrefix} <span className="text-electric">{headingAccent}</span>
+          <h1 className="ms-title mb-4">
+            {headingPrefix} <span className="text-link">{headingAccent}</span>
             {headingSuffix ? ` ${headingSuffix}` : ""}
           </h1>
-          <p className="text-faint-blue font-medium text-lg max-w-2xl mx-auto">{lead}</p>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mt-8">
+          <p className="ms-description max-w-3xl">{lead}</p>
+          {stats.length > 0 && <div className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
             {stats.map(([val, label]) => (
               <div key={label} className="text-center">
-                <p className="text-3xl font-black text-electric tabular-nums">{val}</p>
-                <p className="text-xs text-faint-blue font-medium mt-1">{label}</p>
+                <p className="text-xl font-bold tabular-nums text-foreground">{val}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{label}</p>
               </div>
             ))}
-          </div>
-        </div>
+          </div>}
+        </header>
+        <nav aria-label="계산기 주제 바로가기" className="mb-8 flex flex-wrap gap-2">
+          {categories.map((category, index) => <a key={category.title} href={`#tool-category-${index}`} className="ms-button ms-button-secondary text-sm">{category.title}<span className="text-muted-foreground">{category.items.length}</span></a>)}
+        </nav>
 
         {/* Categories */}
         {categories.map((cat, ci) => (
-          <div key={cat.title} className="mb-14">
-            <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-electric">
+          <section key={cat.title} id={`tool-category-${ci}`} className="mb-10 scroll-mt-24" aria-labelledby={`tool-heading-${ci}`}>
+            <div className="mb-4 flex items-center gap-3">
               <div
-                className="w-8 h-8 bg-electric rounded-md flex items-center justify-center"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-foreground"
                 aria-hidden="true"
               >
-                <span className="text-white font-black text-sm">{ci + 1}</span>
+                <span className="text-sm font-semibold">{ci + 1}</span>
               </div>
-              <h2 className="text-xl font-black text-navy">{cat.title}</h2>
-              <span className="text-xs text-faint-blue font-medium">{cat.items.length}개</span>
+              <h2 id={`tool-heading-${ci}`} className="text-xl font-bold text-foreground">{cat.title}</h2>
+              <span className="text-sm text-muted-foreground">{cat.items.length}개</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {cat.items.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex items-center gap-4 p-4 border border-canvas rounded-xl hover:border-primary hover:bg-primary/5 transition-all bg-white shadow-sm hover:shadow-md"
+                  className="ms-surface ms-interactive group flex items-start gap-3 p-5"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-canvas group-hover:bg-primary flex items-center justify-center transition-colors flex-shrink-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-link">
                     <item.icon
                       size={18}
-                      className="text-faint-blue group-hover:text-navy transition-colors"
+                      aria-hidden="true"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-bold text-navy text-sm group-hover:text-primary transition-colors">
+                      <p className="text-base font-semibold text-foreground">
                         {item.title}
                       </p>
-                      {item.isNew && <TagBadge label="NEW" type="new" />}
-                      {item.isHot && <TagBadge label="HOT" type="hot" />}
                     </div>
-                    <p className="text-xs text-faint-blue mt-0.5 truncate">{item.desc}</p>
+                    <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.desc}</p>
                   </div>
                   <ChevronRight
                     size={14}
-                    className="text-slate-200 group-hover:text-primary transition-colors flex-shrink-0"
+                    className="mt-1.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none"
+                    aria-hidden="true"
                   />
                 </Link>
               ))}
@@ -167,7 +154,7 @@ export default function ToolHubPage({
                 <GuideMidAd />
               </div>
             )}
-          </div>
+          </section>
         ))}
 
         {/* 다른 허브로 이동 — 3단 구조(인덱스→허브→도구) 내부링크 */}
@@ -177,7 +164,7 @@ export default function ToolHubPage({
               <Link
                 key={l.href}
                 href={l.href}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-canvas rounded-xl text-sm font-bold text-navy hover:border-primary hover:bg-primary/5 transition-all"
+                className="ms-button ms-button-secondary text-sm"
               >
                 {l.label}
                 <ChevronRight size={14} className="text-faint-blue" />
@@ -197,11 +184,11 @@ export default function ToolHubPage({
         </div>
 
         {/* SEO Bottom Content */}
-        <div className="mt-16 p-8 bg-canvas border border-canvas rounded-2xl">
-          <h2 className="text-lg font-black text-navy mb-3">{seoHeading}</h2>
-          <p className="text-sm text-muted-blue leading-relaxed">{seoBody}</p>
+        <div className="ms-surface ms-panel mt-12">
+          <h2 className="mb-3 text-lg font-bold text-foreground">{seoHeading}</h2>
+          <p className="text-base leading-7 text-muted-foreground">{seoBody}</p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

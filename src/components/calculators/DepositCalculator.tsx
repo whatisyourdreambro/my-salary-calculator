@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { PiggyBank, Calendar, Percent, TrendingUp } from "lucide-react";
+import { PiggyBank, TrendingUp } from "lucide-react";
+import SegmentedControl from "@/components/ui/SegmentedControl";
 
 type SavingsType = "deposit" | "savings"; // 예금(Lump sum) vs 적금(Monthly)
 type TaxType = "normal" | "preferential" | "none"; // 일반(15.4), 우대(9.5), 비과세(0)
@@ -22,12 +22,10 @@ export default function DepositCalculator() {
  const [term, setTerm] = useState(12); // Months
  const [taxType, setTaxType] = useState<TaxType>("normal");
  const [results, setResults] = useState<DepositResults | null>(null);
+ const validInputs = Number.isFinite(amount) && amount >= 0 && Number.isFinite(rate) && rate >= 0 && Number.isInteger(term) && term >= 1 && term <= 600;
 
  useEffect(() => {
- calculate();
- }, [type, amount, rate, term, taxType]);
-
- const calculate = () => {
+ if (!validInputs) { setResults(null); return; }
  let principal = 0;
  let interest = 0;
 
@@ -50,6 +48,7 @@ export default function DepositCalculator() {
  const afterTaxInterest = interest - taxAmount;
  const total = principal + afterTaxInterest;
 
+ if (![principal, interest, taxAmount, afterTaxInterest, total].every(Number.isFinite)) { setResults(null); return; }
  setResults({
  principal: Math.round(principal),
  interest: Math.round(interest),
@@ -57,7 +56,7 @@ export default function DepositCalculator() {
  afterTaxInterest: Math.round(afterTaxInterest),
  total: Math.round(total),
  });
- };
+ }, [type, amount, rate, term, taxType, validInputs]);
 
  const formatMoney = (val: number) => {
  return new Intl.NumberFormat("ko-KR", {
@@ -71,53 +70,26 @@ export default function DepositCalculator() {
  <div className="w-full max-w-4xl mx-auto space-y-8">
  <div className="grid grid-cols-1 gap-6">
  {/* Inputs */}
- <motion.div
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl"
+ <section
+ className="ms-panel"
  >
- <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
+ <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
  <PiggyBank className="w-5 h-5 text-primary" />
  저축 조건 설정
  </h2>
+ <p className="mb-6 text-sm leading-6 text-muted-foreground">금액은 원 단위이며 고정 금리·단리로 계산합니다. 적금은 매달 같은 금액을 납입하는 예시로, 실제 납입일과 금융기관의 계산 방식에 따라 달라질 수 있습니다.</p>
 
  <div className="space-y-6">
- {/* Type Selector */}
- <div className="flex gap-1 bg-canvas rounded-lg p-1 border border-canvas" role="radiogroup" aria-label="저축 방식">
- <button
- type="button"
- role="radio"
- aria-checked={type === "deposit"}
- onClick={() => setType("deposit")}
- className={`flex-1 py-2 px-2 text-sm font-bold rounded-md transition-all whitespace-nowrap ${type === "deposit"
- ? "bg-white text-electric shadow-sm border border-electric/20"
- : "text-faint-blue hover:text-electric"
- }`}
- >
- <span className="hidden sm:inline">예금 (목돈 굴리기)</span>
- <span className="sm:hidden">예금</span>
- </button>
- <button
- type="button"
- role="radio"
- aria-checked={type === "savings"}
- onClick={() => setType("savings")}
- className={`flex-1 py-2 px-2 text-sm font-bold rounded-md transition-all whitespace-nowrap ${type === "savings"
- ? "bg-white text-electric shadow-sm border border-electric/20"
- : "text-faint-blue hover:text-electric"
- }`}
- >
- <span className="hidden sm:inline">적금 (목돈 만들기)</span>
- <span className="sm:hidden">적금</span>
- </button>
- </div>
+ <SegmentedControl label="저축 방식" value={type} onChange={setType} options={[
+ { value: "deposit", label: "예금 · 목돈 예치" },
+ { value: "savings", label: "적금 · 매월 납입" },
+ ]} />
 
  <div>
- <label htmlFor="deposit-amount" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-amount" className="block text-sm font-medium text-muted-foreground mb-2">
  {type === "deposit" ? "예치 금액" : "월 납입 금액"}
  </label>
  <div className="relative">
- <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint-blue font-bold" aria-hidden="true">₩</span>
  <input
  id="deposit-amount"
  type="number"
@@ -125,17 +97,16 @@ export default function DepositCalculator() {
  min="0"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
  </div>
 
  <div>
- <label htmlFor="deposit-rate" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-rate" className="block text-sm font-medium text-muted-foreground mb-2">
  연 이자율 (%)
  </label>
  <div className="relative">
- <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
  id="deposit-rate"
  type="number"
@@ -144,17 +115,16 @@ export default function DepositCalculator() {
  min="0"
  value={rate}
  onChange={(e) => setRate(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
  </div>
 
  <div>
- <label htmlFor="deposit-term" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="deposit-term" className="block text-sm font-medium text-muted-foreground mb-2">
  저축 기간 (개월)
  </label>
  <div className="relative">
- <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
  id="deposit-term"
  type="number"
@@ -163,71 +133,49 @@ export default function DepositCalculator() {
  max="600"
  value={term}
  onChange={(e) => setTerm(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
  </div>
 
- <fieldset>
- <legend className="block text-sm font-medium text-muted-blue mb-2">
- 과세 구분
- </legend>
- <div className="grid grid-cols-3 gap-2" role="radiogroup">
- {[
- { id: "normal", label: "일반 (15.4%)" },
- { id: "preferential", label: "세금우대 (9.5%)" },
- { id: "none", label: "비과세 (0%)" },
- ].map((t) => (
- <button
- key={t.id}
- type="button"
- role="radio"
- aria-checked={taxType === t.id}
- onClick={() => setTaxType(t.id as TaxType)}
- className={`py-2 text-xs sm:text-sm rounded-lg transition-all ${taxType === t.id
- ? "bg-electric text-white font-bold shadow-lg shadow-primary/20"
- : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper hover:text-electric"
- }`}
- >
- {t.label}
- </button>
- ))}
+ <SegmentedControl label="과세 구분" value={taxType} onChange={setTaxType} options={[
+ { value: "normal", label: "일반 15.4%" },
+ { value: "preferential", label: "세금우대 9.5%" },
+ { value: "none", label: "비과세 0%" },
+ ]} description="세율은 비교용 선택값입니다. 실제 세금우대·비과세 적용 여부는 가입 상품과 자격을 확인하세요." />
+ {!validInputs && <p role="status" className="ms-status-error rounded-lg p-3 text-sm">금액과 금리는 0 이상, 기간은 1~600개월의 정수로 입력해 주세요.</p>}
  </div>
- </fieldset>
- </div>
- </motion.div>
+ </section>
 
  {/* Summary */}
- <motion.div
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl flex flex-col justify-center"
+ <section
+ className="ms-panel flex flex-col justify-center"
  >
  <div className="text-center mb-8">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-electric-10 text-electric mb-4">
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary text-link mb-4">
  <TrendingUp className="w-8 h-8" />
  </div>
- <h3 className="text-muted-blue font-medium">만기 수령액 (세후)</h3>
- <div className="text-3xl sm:text-4xl font-black text-navy mt-2 tracking-tight tabular-nums whitespace-nowrap">
+ <h3 className="text-muted-foreground font-medium">만기 수령액 (세후)</h3>
+ <div className="text-3xl sm:text-4xl font-black text-foreground mt-2 tracking-tight tabular-nums break-words">
  {results ? formatMoney(results.total) : "-"}
  </div>
  </div>
 
  <div className="space-y-4">
- <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
- <span className="text-muted-blue">원금 합계</span>
- <span className="font-bold text-navy tabular-nums whitespace-nowrap">{results ? formatMoney(results.principal) : "-"}</span>
+ <div className="flex justify-between items-center gap-2 p-3 bg-secondary/50 rounded-xl border border-border min-w-0">
+ <span className="text-muted-foreground">원금 합계</span>
+ <span className="font-bold text-foreground tabular-nums break-words">{results ? formatMoney(results.principal) : "-"}</span>
  </div>
- <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
- <span className="text-muted-blue">세전 이자</span>
- <span className="font-bold text-navy tabular-nums whitespace-nowrap">+{results ? formatMoney(results.interest) : "-"}</span>
+ <div className="flex justify-between items-center gap-2 p-3 bg-secondary/50 rounded-xl border border-border min-w-0">
+ <span className="text-muted-foreground">세전 이자</span>
+ <span className="font-bold text-foreground tabular-nums break-words">+{results ? formatMoney(results.interest) : "-"}</span>
  </div>
- <div className="flex justify-between items-center gap-2 p-3 bg-canvas/50 rounded-xl border border-canvas min-w-0">
- <span className="text-muted-blue">이자 과세 ({taxType === "normal" ? "15.4%" : taxType === "preferential" ? "9.5%" : "0%"})</span>
- <span className="font-bold text-electric tabular-nums whitespace-nowrap">-{results ? formatMoney(results.taxAmount) : "-"}</span>
+ <div className="flex justify-between items-center gap-2 p-3 bg-secondary/50 rounded-xl border border-border min-w-0">
+ <span className="text-muted-foreground">이자 과세 ({taxType === "normal" ? "15.4%" : taxType === "preferential" ? "9.5%" : "0%"})</span>
+ <span className="font-bold text-link tabular-nums break-words">-{results ? formatMoney(results.taxAmount) : "-"}</span>
  </div>
  </div>
- </motion.div>
+ </section>
  </div>
  </div>
  );
