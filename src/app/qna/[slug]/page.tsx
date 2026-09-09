@@ -2,7 +2,7 @@
 // Q&A 동적 페이지 — long-tail "X 어떻게 X 하나요?" 키워드 페이지별 분리로 SEO 노출 극대화.
 
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "@/components/AppLink";
 import { ArrowRight, HelpCircle, Sparkles, GraduationCap } from "lucide-react";
 import {
@@ -34,7 +34,7 @@ export async function generateMetadata({
  params: { slug: string };
 }): Promise<Metadata> {
  const item = getQnaBySlug(params.slug);
- if (!item) return { title: "Not Found" };
+ if (!item) notFound();
 
  // SERP CTR 최적화: 질문 그대로 title + 결론 그대로 description
  return buildPageMetadata({
@@ -51,9 +51,8 @@ export default function QnaDetailPage({
  params: { slug: string };
 }) {
  const item = getQnaBySlug(params.slug);
- // 데이터에 없는 슬러그 → /qna 메인 308 (edge 렌더라 프로덕션에서 실제 동작).
- // ※ 과거 "데이터에서 제거된 슬러그" 서술은 사실무근(git 이력상 제거 0건) — 주석 정정.
- if (!item) permanentRedirect("/qna");
+ // 허브는 이 질문을 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
+ if (!item) notFound();
 
  const related = getRelatedQna(item, 4);
  const slug = toQnaSlug(item.question);

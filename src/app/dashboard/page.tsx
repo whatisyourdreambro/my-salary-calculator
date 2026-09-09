@@ -27,18 +27,18 @@ import {
 const PREVIEW_FEATURES = [
  {
  icon: TrendingUp,
- title: "연봉 변화 타임라인",
- description: "저장된 계산 결과를 시간순으로 비교",
+ title: "최근 저장한 연봉 결과",
+ description: "이 브라우저에 저장한 최신 실수령액 확인",
  },
  {
  icon: PiggyBank,
- title: "자산 성장 시뮬",
- description: "현재 연봉 → 5/10년 후 자산 예측",
+ title: "저장값을 바탕으로 보기",
+ description: "저장한 순위·예상 퇴직금 등 항목별 결과 확인",
  },
  {
  icon: Building2,
- title: "동급 회사 비교",
- description: "비슷한 연봉대 기업 평균과 차이",
+ title: "즐겨찾기 다시 열기",
+ description: "따로 저장한 회사·계산기 페이지 바로가기",
  },
 ];
 
@@ -81,7 +81,7 @@ export default function DashboardPage() {
  <div className="text-center">
  <div className="w-10 h-10 border-4 border-electric-15 border-t-electric rounded-full animate-spin mx-auto mb-4" />
  <p className="text-sm font-semibold text-faint-blue">
- 대시보드 불러오는 중 (로컬에서 로드, 약 1초)...
+ 이 브라우저의 저장 결과를 불러오는 중…
  </p>
  </div>
  </main>
@@ -109,8 +109,8 @@ export default function DashboardPage() {
  내 연봉 대시보드
  </h1>
  <p className="text-base text-muted-blue max-w-md mx-auto mb-8 leading-relaxed">
- 연봉을 계산하고 저장하면 시간에 따른 변화를 추적하고,<br className="hidden sm:block" />
- 동급 회사와 비교할 수 있는 나만의 대시보드가 만들어집니다.
+ 연봉 계산 결과를 저장하면 최신 실수령액을 다시 확인할 수 있습니다.<br className="hidden sm:block" />
+ 항목별 최근 결과와 즐겨찾기는 현재 브라우저에 저장됩니다. 기기 간 동기화나 과거 이력 비교는 제공하지 않습니다.
  </p>
  <Link
  href="/"
@@ -122,7 +122,7 @@ export default function DashboardPage() {
  </Link>
  </div>
 
- {/* 즐겨찾기 + 이메일 구독 (있으면 표시) */}
+ {/* 현재 브라우저에 저장된 즐겨찾기 */}
  <DashboardFavoritesSection />
 
  {/* Preview Features */}

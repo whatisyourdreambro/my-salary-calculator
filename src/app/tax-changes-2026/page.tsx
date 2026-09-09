@@ -14,13 +14,13 @@ import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/A
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 세법 변경사항 — 결혼세액공제 부활·자녀공제 확대 등",
+ title: "2026 세법 변경사항 — 자녀공제·보육수당·적용연도",
  description:
- "2026년 세법 주요 변경사항 한 페이지. 결혼세액공제 50만 부활, 6세 이하 자녀 추가공제, 출산·입양 세액공제 확대, 신용카드 공제 한도 변동 등.",
+ "2026년 귀속 자녀·혼인 공제와 보육수당, 카드 공제 변경을 확인합니다. 계속 적용되는 제도와 새 변경사항, 향후 개편안을 구분하고 공식 출처를 연결합니다.",
  path: "/tax-changes-2026",
  ogType: "article",
  publishedTime: "2026-01-01",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-09-09",
  keywords: [
  "2026 세법",
  "세법 개정",
@@ -33,14 +33,14 @@ export const metadata: Metadata = buildPageMetadata({
 
 const FAQ_ITEMS = [
  {
- question: "2026년 가장 큰 세법 변경은 무엇인가요?",
+ question: "2026년 새 변경사항과 기존 공제는 어떻게 구분하나요?",
  answer:
- "결혼세액공제 50만원 부활(2025년 폐지 후 1년 만 재도입)과 6세 이하 자녀 추가 공제 100만원 신설이 가장 큰 변경입니다. 신혼부부와 어린 자녀를 둔 가정은 매년 100~200만원 추가 환급 가능합니다.",
+ "2026년부터 보육수당 비과세 한도가 자녀 1명당 월 20만원으로 바뀌고 자녀 수에 따른 신용카드 공제 기본 한도가 늘어납니다. 혼인세액공제는 2024~2026년 혼인신고분에 계속 적용되는 생애 1회 제도입니다. 6세 이하 자녀에게 100만원 소득공제가 새로 생긴 것은 아닙니다.",
  },
  {
  question: "결혼세액공제는 어떻게 신청하나요?",
  answer:
- "혼인 신고한 해 또는 다음 해 연말정산 시 자동 적용. 별도 신청은 필요 없으나, 회사 연말정산 자료 제출 시 혼인신고서 사본을 첨부하는 것이 안전합니다. 부부 모두 직장인이면 각 50만원, 합 100만원 환급.",
+ "2024~2026년 중 혼인신고한 해의 소득에 대해 생애 1회 50만원 소득세 세액공제를 확인합니다. 2026년 혼인신고분은 통상 2027년 초 근로소득 연말정산에 반영합니다. 신고 사실과 기존 공제 여부를 확인하고 회사의 소득·세액공제 신고 절차에 따라 자료를 제출하세요. 부부는 각자 판단하며 실제 적용액은 남은 세액 등에 따라 달라집니다.",
  },
  {
  question: "신용카드 공제율이 변경되었나요?",
@@ -55,19 +55,19 @@ const MAJOR_CHANGES = [
  emoji: "💍",
  changes: [
  {
- title: "결혼세액공제 50만원 부활",
- detail: "2024~2026년 혼인신고분 한시 — 혼인 신고한 해 귀속 1회 50만원 세액공제 (소득 요건 없음). 부부 모두 신청 가능 (합 100만원).",
- impact: "신혼부부 +50~100만원",
+ title: "혼인세액공제 — 2024~2026년 신고분 계속 적용",
+ detail: "혼인신고한 해에 거주자 1명당 생애 1회 50만원 소득세 세액공제. 소득 상한은 없지만 실제 공제액은 세액 등을 확인해야 합니다.",
+ impact: "귀속연도·생애 사용 여부 확인",
  },
  {
- title: "출산·입양 세액공제 확대",
- detail: "첫째 30만, 둘째 50만, 셋째 이상 70만원 세액공제 (출생 신고 연도).",
- impact: "다자녀 가정 +30~70만원",
+ title: "출산·입양 세액공제 — 해당 연도 확인",
+ detail: "해당 연도에 출산하거나 입양신고한 공제 대상 자녀는 첫째 30만, 둘째 50만, 셋째 이후 각 70만원 소득세 세액공제. 매년 반복되는 출산 공제가 아닙니다.",
+ impact: "출산일·입양신고일 확인",
  },
  {
- title: "6세 이하 자녀 추가공제 신설",
- detail: "만 6세 이하 자녀 1인당 추가 100만원 소득공제 (누진 24% 구간 시 약 24만원 환급).",
- impact: "어린 자녀 가정 +20~30만원/인",
+ title: "자녀세액공제 — 기본공제 대상 중 만 8세 이상",
+ detail: "기본공제 대상 자녀·손자녀 중 만 8세 이상이 1명 25만, 2명 55만, 3명부터 40만원씩 추가됩니다. 기본 소득공제 150만원과는 별개이며, 6세 이하 추가 100만원 소득공제는 적용하지 않습니다.",
+ impact: "소득공제와 세액공제 구분",
  },
  ],
  },
@@ -77,13 +77,13 @@ const MAJOR_CHANGES = [
  changes: [
  {
  title: "비과세 식대 20만원 유지",
- detail: "월 20만원까지 식대 비과세 (2024년 상향 후 유지). 자가운전 보조금도 월 20만원.",
- impact: "월 1.8만원 4대보험료 절약",
+ detail: "회사에서 식사 등을 제공받지 않는 근로자의 식대는 월 20만원까지 비과세 여부를 확인합니다. 지급 항목과 법정 요건에 따라 달라집니다.",
+ impact: "급여명세서 항목 확인",
  },
  {
- title: "근로소득 간이세액표 조정",
- detail: "물가·인상 반영으로 일부 구간 조정. 매월 원천징수액 변동 가능.",
- impact: "월급 ±1~3만원 차이",
+ title: "보육수당 비과세 한도 — 2026년부터 자녀별 적용",
+ detail: "6세 이하 자녀의 보육과 관련해 회사가 지급하는 급여의 비과세 한도가 근로자당 월 20만원에서 자녀 1명당 월 20만원으로 확대됐습니다. 2026년 1월 1일 이후 지급분부터 적용합니다.",
+ impact: "회사 지급액·대상 자녀 확인",
  },
  ],
  },
@@ -93,13 +93,13 @@ const MAJOR_CHANGES = [
  changes: [
  {
  title: "ISA 한도·비과세 유지",
- detail: "연 2,000만 / 3년 200만 비과세 (서민형 400만). 변동 없음.",
+ detail: "일반적인 ISA 납입한도는 연 2,000만원·총 1억원이며, 순이익 비과세 한도는 일반형 200만원·서민형 등 400만원입니다. 비과세는 매년 반복 한도로 계산하지 말고 가입·해지 요건과 함께 확인하세요.",
  impact: "기존 활용 지속",
  },
  {
  title: "연금저축·IRP 합산 900만 유지",
- detail: "세액공제 16.5% (총급여 5,500만 이하) / 13.2% (초과). 변동 없음.",
- impact: "최대 148만원 환급",
+ detail: "연금저축 600만원, 퇴직연금과 합쳐 일반 세액공제 대상 납입액 900만원 한도. 총급여 5,500만원 이하 소득세 공제율 15%, 초과 12%이며 실제 환급액과는 다릅니다.",
+ impact: "납입·중도인출·남은 세액 확인",
  },
  {
  title: "금융소득 종합과세 기준 2,000만 유지",
@@ -114,17 +114,17 @@ const MAJOR_CHANGES = [
  changes: [
  {
  title: "1세대 1주택 비과세 12억 유지",
- detail: "양도가액 12억까지 비과세. 2년 보유·거주 요건.",
+ detail: "1세대 1주택의 보유·거주 등 비과세 요건을 먼저 확인합니다. 양도가액 12억원 초과 고가주택은 초과 비율에 해당하는 양도차익 과세를 별도로 계산합니다.",
  impact: "기존 동일",
  },
  {
  title: "다주택자 양도세 중과 재개",
- detail: "한시 배제(2022.5.10~2026.5.9) 종료로 2026.5.10부터 중과 재개 — 조정대상지역 2주택 +20%p·3주택 +30%p. 2026.8.3 세제개편안은 2027~28년 한시 완화 예고(국회 통과 전).",
+ detail: "조정대상지역 다주택 양도는 주택 수·보유기간·양도일과 중과 제외 요건을 함께 확인해야 합니다. 2026년 5월 9일까지의 한시 배제와 이후 거래를 구분하고, 계약·잔금에 관한 경과조치도 확인하세요. 향후 개편안만으로 현재 거래 세율을 정하지 않습니다.",
  impact: "다주택자 매도 시점 셈법 중요",
  },
  {
- title: "임대사업자 등록 요건 일부 조정",
- detail: "장기 임대 의무 기간 등 세부 조건 조정 가능. 신규 등록 전 확인.",
+ title: "임대사업자는 등록 유형·의무기간 별도 확인",
+ detail: "등록 시기·유형, 임대 의무기간, 실제 요건 충족 여부에 따라 세제 적용이 달라집니다. 변경될 수 있다는 설명만으로 감면 대상이라고 판단하지 마세요.",
  impact: "임대사업자 영향",
  },
  ],
@@ -134,13 +134,13 @@ const MAJOR_CHANGES = [
  emoji: "🏢",
  changes: [
  {
- title: "법인세 누진 구조 유지",
- detail: "9% (2억 이하) / 19% / 21% / 24% (3,000억 초과). 변동 없음.",
- impact: "기존 동일",
+ title: "법인세율 — 2026년 이후 개시 사업연도",
+ detail: "일반 영리법인은 과세표준 2억 이하 10%, 200억 이하 20%, 3,000억 이하 22%, 초과 25%의 누진세율입니다. 2026년 1월 1일 이후 개시하는 사업연도부터 적용하며 소규모법인 등은 별도 기준을 확인합니다.",
+ impact: "신고 연도와 사업연도 구분",
  },
  {
- title: "간이과세자 기준 매출 8,000만 유지",
- detail: "매출 4,800만~8,000만 간이과세, 8,000만 초과 일반과세 자동 전환.",
+ title: "간이과세 기준 — 1억400만원 미만 여부 확인",
+ detail: "원칙적으로 직전 연도 공급대가 1억400만원 미만인 개인사업자가 대상이며 간이과세 배제 업종 등은 제외됩니다. 부동산임대업·과세유흥장소 등 별도 기준과 과세유형 전환 시기를 확인하세요.",
  impact: "전환 검토 시점",
  },
  ],
@@ -173,18 +173,18 @@ export default function TaxChanges2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 세법 <span className="text-electric">변경사항</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-09-09" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
- 결혼세액공제 부활, 자녀공제 확대, 비과세 항목 등
- 직장인이 꼭 알아야 할 2026년 세법 핵심 변경사항.
+ 2026년 새로 바뀐 항목과 계속 적용되는 공제를 구분했습니다.
+ 자녀·혼인 공제, 회사 보육수당과 주요 세금의 적용 시점을 확인하세요.
  </p>
  <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
- 📅 이 페이지는 <strong>이미 2026년에 시행 중인</strong> 확정분 정리입니다. 8월 3일
- 확정 발표된 <strong>2027년 시행분(세제개편안)</strong>은{" "}
+ 📅 이 페이지는 <strong>2026년 적용 기준</strong>을 다룹니다. 향후 제도 변경을 제안한
+ <strong>2026년 세제개편안</strong>은{" "}
  <Link href="/tax-reform-2026" className="text-electric font-bold hover:underline">
  2026 세법개정안 총정리
  </Link>
- 에서 확인하세요.
+ 에서 별도로 확인하세요. 정부안 발표와 법률 공포·시행은 다르며, 제안 내용을 올해 공제에 적용하지 않습니다.
  </p>
  </div>
 
@@ -225,6 +225,17 @@ export default function TaxChanges2026Page() {
  ))}
  </div>
 
+ <section className="mb-10 p-5 rounded-2xl bg-white border border-canvas-200 text-sm text-muted-blue leading-relaxed">
+ <h2 className="font-bold text-navy mb-3">공식 근거 · 2026년 9월 9일 확인</h2>
+ <ul className="space-y-2">
+ <li><a className="text-electric underline" href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&mi=6596" target="_blank" rel="noopener noreferrer">국세청: 자녀·혼인·연금계좌 공제</a></li>
+ <li><a className="text-electric underline" href="https://www.korea.kr/multi/visualNewsView.do?newsId=148957488" target="_blank" rel="noopener noreferrer">재정경제부: 2026년 보육수당·교육비·카드 공제 변경</a></li>
+ <li><a className="text-electric underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7746" target="_blank" rel="noopener noreferrer">국세청: 2026년 이후 법인세율</a> · <a className="text-electric underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7802&mi=6583" target="_blank" rel="noopener noreferrer">일반·간이과세 구분</a></li>
+ <li><a className="text-electric underline" href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7711&mi=2312" target="_blank" rel="noopener noreferrer">국세청: 양도소득세율과 적용 시점</a></li>
+ </ul>
+ <p className="mt-3">공제액은 현금 지원금이나 확정 환급액이 아닙니다. 개인별 자격·남은 세액과 기납부세액을 함께 확인하세요.</p>
+ </section>
+
  {/* CTA */}
  <Link
  href="/year-end-tax"
@@ -237,7 +248,7 @@ export default function TaxChanges2026Page() {
  2026 연말정산 환급금 미리 보기
  </h3>
  <p className="text-sm opacity-90">
- 결혼·출산·자녀공제 등 신규 항목 자동 반영
+ 소득·공제·이미 낸 세금을 입력하고 정산 결과 비교
  </p>
  </div>
  <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />

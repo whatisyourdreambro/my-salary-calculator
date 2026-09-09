@@ -252,27 +252,27 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </>
  )}
 
- {/* 데이터 출처·신뢰 배너 — 모든 가이드 자동 적용 (E-E-A-T 강화) */}
+ {/* 편집 기준과 글별 출처를 구분한다. */}
  <div className="mt-10 p-5 bg-secondary/30 rounded-2xl border border-border/50">
  <div className="flex items-start gap-3">
  <span className="text-2xl">📚</span>
  <div className="flex-1 text-sm">
  <p className="font-bold text-foreground mb-1">
- 본 가이드의 데이터 출처
+ 이 글의 기준과 출처 확인
  </p>
  <p className="text-muted-foreground leading-relaxed">
- 국세청·국민연금공단·국민건강보험공단·근로복지공단 등 정부 공식 자료 기반.
- 2026년 세법·요율 반영. 마지막 업데이트:{" "}
+ 적용 연도·대상과 출처는 본문에 표시된 조건을 확인해 주세요.
+ 마지막 내용 수정:{" "}
  <strong className="text-foreground">
  <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide))}</time>
  </strong>
  </p>
  <p className="text-xs text-muted-foreground mt-2">
- ※ 정확한 세무·법률 의사결정은{" "}
+ 작성과 수정 과정은{" "}
  <Link href="/about" className="text-primary font-bold hover:underline">
- 공식 출처
+ 편집·검토 기준
  </Link>
- 와 세무 전문가 상담 권장.
+ 에서 확인할 수 있습니다. 개인별 적용 여부는 본문의 공식 자료와 담당 기관에서 확인해 주세요.
  </p>
  </div>
  </div>

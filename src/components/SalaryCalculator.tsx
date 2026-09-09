@@ -5,7 +5,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
@@ -17,6 +17,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import { trackEvent } from "@/lib/analytics";
+import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
 import type {
  StoredSalaryData,
  StoredFinancialData,
@@ -99,6 +100,8 @@ const MungMascot = ({ mood }: { mood: "normal" | "happy" | "shocked" | "cool" })
 
 export default function SalaryCalculator() {
  const router = useRouter();
+ const pathname = usePathname();
+ const [offerHandoffError, setOfferHandoffError] = useState(false);
  const [incomeType, setIncomeType] = useState<IncomeType>("regular");
  const [payBasis, setPayBasis] = useState<"annual" | "monthly">("annual");
  const [severanceType] = useState<"separate" | "included">("separate");
@@ -225,6 +228,20 @@ export default function SalaryCalculator() {
  const inputsValid = isValidCalculationNumber(salaryInput, Number.MIN_VALUE) &&
  isValidCalculationNumber(nonTaxableAmount, 0) && Number.isFinite(annualSalary) &&
  isValidCalculationNumber(dependents, 1, 20) && isValidCalculationNumber(children, 0, 10);
+ const offerConditions = { annualGross: annualSalary, nonTaxableMonthly: parseNumber(nonTaxableAmount), dependents, children };
+ const canHandoffOffer = canHandoffCurrentSalaryResult({ pathname, incomeType, severanceType,
+ showResult, isCalculating, inputsValid, calculatedSnapshot, inputSnapshot, result, conditions: offerConditions });
+ const handleOfferHandoff = () => {
+ if (!canHandoffOffer) return;
+ setOfferHandoffError(false);
+ try {
+ if (writeOfferComparisonHandoff(offerConditions, window.sessionStorage)) {
+ router.push("/calc/offer-compare");
+ return;
+ }
+ } catch { /* Accessing sessionStorage itself can fail in restricted browsers. */ }
+ setOfferHandoffError(true);
+ };
  const measurement = useCalculatorMeasurement({
  calcType: "salary",
  valid: showResult && !isCalculating && inputsValid && calculatedSnapshot === inputSnapshot &&
@@ -462,6 +479,16 @@ export default function SalaryCalculator() {
 
  {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
  <NextActions annualSalary={annualSalary} category="salary" />
+
+ {canHandoffOffer && (
+ <div className="rounded-2xl border border-canvas bg-white p-4">
+ <button type="button" onClick={handleOfferHandoff} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary/90">
+ 현재 조건을 비교기에 가져오기 <ArrowRight size={16} aria-hidden="true" />
+ </button>
+ <p className="mt-2 text-xs text-faint-blue">현재 연봉·비과세·가족 조건을 같은 탭에서 한 번 전달합니다. 비교기에서 확인 후 적용할 수 있어요.</p>
+ {offerHandoffError && <p role="alert" className="mt-2 text-sm text-red-700">브라우저에서 조건을 전달하지 못했습니다. <Link href="/calc/offer-compare" className="underline">비교기에 직접 입력하기</Link></p>}
+ </div>
+ )}
 
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />

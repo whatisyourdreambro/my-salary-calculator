@@ -11,18 +11,13 @@ import type { Guide } from "@/lib/guidesData";
 // ═══════════════════════════════════════════════════════════════
 
 const newlywedAssetTax = `
-<p class="lead">신혼부부는 합산 자산을 활용해 단독보다 큰 절세 효과를 얻을 수 있습니다. 부부 각자 250만원 양도세 공제, 6억 증여세 비과세, 공동명의 종부세 12억 등 부부 합산 시 절감 한도가 2배가 됩니다.</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">👫 신혼부부 절세 5가지 핵심</h2>
-<ol class="space-y-2 mt-4">
-<li><strong>① 부부 합산 양도세 공제</strong>: 부부 각자 연 250만원 → 합산 500만원 비과세. 미국주식·해외주식 매도 시 부부 분할.</li>
-<li><strong>② 6억 증여 비과세</strong>: 배우자 간 10년 6억 비과세. 부동산 공동명의 전환·자산 이전에 활용.</li>
-<li><strong>③ 공동명의 종부세</strong>: 부부 공동명의 1주택은 각자 6억 공제 vs 단독 12억. 공시가 18억 이하는 단독 1주택자가 유리.</li>
-<li><strong>④ 인적공제 활용</strong>: 부부 중 한 명이 무소득이면 인적공제 150만원 + 부모 부양 등록도 1인에게 몰기.</li>
-<li><strong>⑤ 신용카드·의료비 합산</strong>: 의료비·교육비·신용카드는 한 명에게 몰아야 한도 빠르게 도달.</li>
-</ol>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li><li>· <a href="/tools/real-estate/gift-tax" class="text-primary underline">증여세 계산기</a></li></ul></div>
+<p class="lead">혼인했다고 모든 세금의 공제 한도가 두 배가 되지는 않습니다. 부부 각자의 소득, 자산 명의와 지분, 실제 지출자를 나누어 확인해야 합니다.</p>
+<h2>부부 자산·공제를 비교하는 다섯 가지 질문</h2>
+<ol><li><strong>주식은 누가 소유하고 매도했나요?</strong> 국내 상장 장내 소액주주와 국외주식의 과세는 다릅니다. 상대 배우자의 사용하지 않은 공제를 자신의 매도에 합산할 수 있다고 가정하지 마세요.</li><li><strong>명의를 바꾸나요?</strong> 배우자 증여는 기존 10년간 증여 내역, 재산 평가와 이후 처분 과세를 함께 확인해야 합니다. 공동명의 전환 자체의 비용도 별개입니다.</li><li><strong>주택 지분은 얼마인가요?</strong> 개인 주택분 종부세는 인별 9억원 공제가 기본이며 해당하는 1세대 1주택자는 12억원입니다. 50:50 공동명의의 지분별 공제와 1주택자 특례는 고령·장기보유 공제까지 비교해야 합니다.</li><li><strong>부양가족 소득 요건을 충족하나요?</strong> 같은 가족을 부부가 중복 공제할 수 없습니다. 배우자 본인의 소득과 실제 부양 관계를 확인합니다.</li><li><strong>누가 지출했나요?</strong> 신용카드·의료비·교육비는 각각 소득·연령·지출자 조건이 다릅니다. 맞벌이 배우자의 지출을 한쪽에 자유롭게 합산할 수 있는 것은 아닙니다.</li></ol>
+<h2>같은 가격의 집도 결과가 달라지는 이유</h2>
+<p>공시가격 18억원인 주택 한 채를 부부가 50:50으로 소유하고 각자의 다른 주택이 없다면, 지분별 9억원에서 일반 공제 9억원을 빼는 구조를 먼저 비교합니다. 단독명의의 12억원 공제와 결과가 다르며, 취득·증여·처분세까지 포함해 항상 공동명의가 유리하다는 뜻은 아닙니다.</p>
+<p>근거: <a href="https://i.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7735&amp;mi=2353">국세청 종합부동산세 흐름도</a> · <a href="https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=&amp;nttSn=1348384">국세청 주식 과세 대상 안내</a>.</p>
+<p><a href="/guides/one-home-prop-tax-12eok-2026">주택 공제와 과세표준 예시</a> · <a href="/guides/marriage-tax-benefits-2026">혼인 세액공제 조건</a> · <a href="/calc/child-deduction">자녀공제액 확인</a></p>
 `;
 
 const newlywedDidimdolVsBomgijari = `
@@ -1066,7 +1061,7 @@ const overtimeNightHolidayTax = `
 
 export const hotNewsExtended: Guide[] = [
   // 청년·신혼부부 10편
-  { slug: "newlywed-asset-tax-saving-2026", title: "신혼부부 합산 자산 활용 절세 5가지 — 부부 합산 한도 2배 활용", description: "부부 각자 250만원 양도세 공제 + 6억 증여 비과세 + 공동명의 종부세 12억까지. 단독 대비 절세 한도 2배 활용.", category: "세금", tags: ["신혼부부", "절세", "공동명의", "증여세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedAssetTax, lang: "ko" },
+  { slug: "newlywed-asset-tax-saving-2026", title: "신혼부부 자산·공제 확인표 — 공동명의와 맞벌이 비교", description: "부부 공제가 자동으로 두 배가 되지 않는 이유. 종부세 인별 9억원·1주택 12억원, 자산 명의와 지출자, 중복 공제 조건을 구분합니다.", category: "세금", tags: ["신혼부부", "절세", "공동명의", "증여세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: newlywedAssetTax, lang: "ko" },
   { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 5억 30년 시 1.8억 절감", description: "디딤돌 1.6%·한도 5억 vs 보금자리론 3.5%·한도 10억. 부부 소득·집값별 유리한 상품 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
   { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 1.3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 소득공제 600만원 + 1.3억 대출 자격. 5년 누적 635만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },

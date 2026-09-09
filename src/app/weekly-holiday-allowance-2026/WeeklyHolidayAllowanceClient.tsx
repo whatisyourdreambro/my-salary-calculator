@@ -21,10 +21,6 @@ export default function WeeklyHolidayAllowanceClient() {
         allowanceHours: 0,
       };
     }
-    // 주휴수당은 1주 소정근로시간 기준이고, 소정근로는 법정 40시간(1일 8시간)을
-    // 넘을 수 없다 — 초과분은 연장근로라 주휴수당에 산입되지 않는다.
-    // 슬라이더 상한이 60시간이라 종전 식은 주 48시간에서 9.6시간분(20% 과대),
-    // 60시간에서 12시간분(50% 과대)을 산출했다.
     const allowanceHours = Math.min(8, (Math.min(weeklyHours, 40) / 40) * 8);
     const weeklyAllowance = hourlyWage * allowanceHours;
     const weeklyBaseline = hourlyWage * weeklyHours;
@@ -44,8 +40,12 @@ export default function WeeklyHolidayAllowanceClient() {
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
         <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">
-          내 주휴수당 즉시 계산
+          내 주휴수당 조건부 계산
         </h2>
+        <p className="mb-5 text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
+          통상근로자가 주 5일·40시간 근무하는 사업장의 비례 계산입니다. 시급이 일정하고,
+          해당 주의 소정근로일 개근과 1주간 근로관계 유지 요건을 충족했다고 가정합니다.
+        </p>
 
         {/* 시급 */}
         <div className="mb-4">
@@ -81,17 +81,18 @@ export default function WeeklyHolidayAllowanceClient() {
         {/* 주 근무시간 */}
         <div className="mb-4">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
-            1주 소정근로시간: {weeklyHours}시간
+            4주 평균 1주 소정근로시간: {weeklyHours}시간
           </label>
           <input
             type="range"
             value={weeklyHours}
             onChange={(e) => setWeeklyHours(Number(e.target.value))}
             min={1}
-            max={60}
-            step={1}
+            max={40}
+            step={0.25}
             className="w-full"
-            aria-label="1주 소정근로시간"
+            aria-label="4주 평균 1주 소정근로시간"
+            aria-describedby="weekly-hours-help"
           />
           <div className="flex justify-between text-xs text-faint-blue mt-1">
             <span>1시간</span>
@@ -99,8 +100,13 @@ export default function WeeklyHolidayAllowanceClient() {
               15시간 (최소)
             </span>
             <span>40시간 (풀타임)</span>
-            <span>60시간</span>
           </div>
+          <p id="weekly-hours-help" className="mt-3 text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
+            매주 약정 시간이 같으면 그 시간을 넣으세요. 주마다 다르면 산정 기준이 되는 4주의
+            소정근로시간 합계를 4로 나눈 값을 사용합니다. 근로기간이 4주 미만이면 그 기간을
+            평균합니다. 휴게시간·일시적인 대타·연장근로를 실제 근무시간이라는 이유로 더하지 마세요.
+            이 계산기는 변동 근로의 각 주별 지급 요건과 금액을 자동 판정하지 않습니다.
+          </p>
         </div>
 
         {/* 결과 */}
@@ -108,20 +114,20 @@ export default function WeeklyHolidayAllowanceClient() {
           {result.eligible ? (
             <>
               <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
-                주휴수당 (1주)
+                요건 충족 시 주휴수당 (1주)
               </p>
               <p className="text-3xl sm:text-4xl font-black text-electric mb-3">
                 {fmt(result.weeklyAllowance)}원
               </p>
               <p className="text-xs text-muted-blue dark:text-canvas-300 mb-4">
-                = 시급 {fmt(hourlyWage)}원 × {result.allowanceHours.toFixed(1)}시간
+                = 시급 {fmt(hourlyWage)}원 × {result.allowanceHours.toLocaleString("ko-KR", { maximumFractionDigits: 2 })}시간
                 {weeklyHours > 40
                   ? " (소정근로 40시간 상한 적용 — 초과분은 연장근로라 주휴수당에 산입되지 않습니다)"
-                  : ` (주 ${weeklyHours}시간 ÷ 40 × 8)`}
+                  : ` (4주 평균 주 ${weeklyHours}시간 ÷ 40 × 8)`}
               </p>
               <div className="space-y-1 text-sm pt-3 border-t border-electric-20">
                 <div className="flex justify-between text-muted-blue dark:text-canvas-300">
-                  <span>주급 (기본)</span>
+                  <span>주 기본급 단순 환산</span>
                   <span>{fmt(result.weeklyBaseline)}원</span>
                 </div>
                 <div className="flex justify-between text-muted-blue dark:text-canvas-300">
@@ -129,11 +135,11 @@ export default function WeeklyHolidayAllowanceClient() {
                   <span>+{fmt(result.weeklyAllowance)}원</span>
                 </div>
                 <div className="flex justify-between text-navy dark:text-canvas-50 font-bold pt-2 border-t border-electric-20 mt-2">
-                  <span>주급 총액</span>
+                  <span>주급 단순 환산</span>
                   <span>{fmt(result.weeklyTotal)}원</span>
                 </div>
                 <div className="flex justify-between text-electric font-black pt-2">
-                  <span>월 환산 (×4.345주)</span>
+                  <span>월 단순 환산 (×4.345주)</span>
                   <span>{fmt(result.monthlyTotal)}원</span>
                 </div>
               </div>
@@ -141,23 +147,25 @@ export default function WeeklyHolidayAllowanceClient() {
           ) : (
             <>
               <p className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2">
-                주휴수당 대상 아님
+                입력 평균시간이 법정 기준 미만
               </p>
               <p className="text-2xl font-black text-rose-600 mb-3">
                 0원
               </p>
               <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
-                1주 소정근로시간이 15시간 미만(초단시간 근로자)이라 근로기준법상 주휴수당 대상이
-                아닙니다. 주 15시간 이상 근무 약정으로 계약을 변경하면 주휴수당을 받을 수 있습니다.
+                4주 평균(4주 미만 근로 시 해당 기간 평균) 1주 소정근로시간이 15시간 미만이면
+                법정 주휴일 규정 적용 대상에서 제외됩니다. 별도의 유급휴일 지급 약정이 있는지는
+                근로계약·취업규칙에서 확인하세요.
               </p>
             </>
           )}
         </div>
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 주휴수당은 1주 소정근로시간 15시간 이상이면서 약속된 근무일을 모두 출근(개근)했을 때만
-          지급됩니다. 결근이 있으면 그 주의 주휴수당이 발생하지 않습니다. 본 계산기는 근로기준법
-          제55조 기준 추정치이며 실제 지급액은 회사와의 계약 조건에 따라 다를 수 있습니다.
+          주급·월 금액은 입력한 평균시간으로 매주 동일하게 근무한다고 본 세전 단순 환산액입니다.
+          실제 변동 근로의 임금, 연장·야간·휴일 가산수당과 월 최저임금의 209시간 환산을 대신하지
+          않습니다. 개근·휴가·휴업·입퇴사에 따른 주별 조건과 사업장의 통상근로일수가 다르면
+          별도로 확인해야 합니다.
         </p>
       </div>
     </section>

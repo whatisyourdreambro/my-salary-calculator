@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { compoundDisplayRatios } from "@/lib/compoundDisplay";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function CompoundCalculatorPage() {
@@ -27,7 +28,8 @@ export default function CompoundCalculatorPage() {
  return { finalBalance: Math.round(balance), totalPrincipal: Math.round(totalPrincipal), totalInterest: Math.round(balance - totalPrincipal), data };
  }, [principal, monthly, rate, years]);
 
- const barMax = r.data.length > 0 ? r.data[r.data.length - 1].balance : 1;
+ const barMax = Math.max(1, r.data.length > 0 ? r.data[r.data.length - 1].balance : 0);
+ const ratios = compoundDisplayRatios(r.finalBalance, r.totalPrincipal, r.totalInterest);
 
  return (
  <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
@@ -75,18 +77,19 @@ export default function CompoundCalculatorPage() {
  <div className="w-px bg-white/20" />
  <div className="text-center"><p className="text-navy/60 text-xs mb-1">이자·수익</p><p className="text-navy font-black">{fmt(r.totalInterest)}원</p></div>
  <div className="w-px bg-white/20" />
- <div className="text-center"><p className="text-navy/60 text-xs mb-1">수익 배율</p><p className="text-navy font-black">{(r.finalBalance / r.totalPrincipal).toFixed(2)}배</p></div>
+ <div className="text-center"><p className="text-navy/60 text-xs mb-1">수익 배율</p><p className="text-navy font-black">{ratios.multiplier === null ? "—" : `${ratios.multiplier.toFixed(2)}배`}</p></div>
  </div>
  </div>
  <div className="bg-white p-6">
  <div className="h-2 bg-canvas-dark rounded-full overflow-hidden mb-2">
- <div className="h-full bg-primary/30 rounded-full" style={{ width: `${(r.totalPrincipal / r.finalBalance * 100).toFixed(1)}%` }} />
- <div className="h-full bg-primary rounded-full -mt-2" style={{ width: `${(r.totalPrincipal / r.finalBalance * 100).toFixed(1)}%`, maxWidth: '100%' }} />
+ <div className="h-full bg-primary/30 rounded-full" style={{ width: `${ratios.principalPercent.toFixed(1)}%` }} />
+ <div className="h-full bg-primary rounded-full -mt-2" style={{ width: `${ratios.principalPercent.toFixed(1)}%`, maxWidth: '100%' }} />
  </div>
  <div className="flex justify-between text-xs text-faint-blue">
- <span>원금 비율: {(r.totalPrincipal / r.finalBalance * 100).toFixed(1)}%</span>
- <span>수익 비율: {(r.totalInterest / r.finalBalance * 100).toFixed(1)}%</span>
+ <span>원금 비율: {ratios.principalPercent.toFixed(1)}%</span>
+ <span>수익 비율: {ratios.interestPercent.toFixed(1)}%</span>
  </div>
+ {r.totalPrincipal === 0 && <p className="mt-3 text-sm text-faint-blue">투자금이 0원이므로 수익 배율은 계산하지 않습니다. 초기 투자금이나 월 적립금을 입력해보세요.</p>}
  </div>
  </motion.div>
 

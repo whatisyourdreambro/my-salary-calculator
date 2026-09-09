@@ -88,6 +88,16 @@ export function trackCalcResultView(calcType: string, origin: "default" | "user"
   trackEvent("result_view", { ...calculationParams(calcType, pagePath), result_origin: origin });
 }
 
+/** Explicit comparison of at least two valid offers matching the current inputs. */
+export function trackOfferCompareComplete(mode: "first" | "recalculate"): void {
+  trackEvent("offer_compare_complete", { comparison_mode: mode, measurement_version: "1" });
+}
+
+/** User opens the explanation of a current, valid comparison. */
+export function trackOfferCompareExplanationView(): void {
+  trackEvent("offer_compare_explanation_view", { section: "result_basis", measurement_version: "1" });
+}
+
 function calculationParams(calcType: string, pagePath?: string) {
   return {
     calc_type: calcType,

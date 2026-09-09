@@ -653,39 +653,23 @@ const sexualHarassmentLaw = `
 `;
 
 const overtimeProof = `
-<p class="lead">야근·시간외 근무 입증은 출퇴근 기록·교통카드·업무 이메일 시각·카톡 출근 인증 등 일상 데이터. 미지급 야근수당 청구 시 3년 누적까지 한 번에 청구 가능.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 야근 증거 5가지</h2>
-<ol class="space-y-2 mt-4">
-<li><strong>① 출퇴근 기록</strong>: 사내 시스템·태깅 기록</li>
-<li><strong>② 교통카드 내역</strong>: 22시 이후 귀가 기록</li>
-<li><strong>③ 업무 이메일 시각</strong>: 9시 이전·19시 이후 발송 이메일</li>
-<li><strong>④ 카톡 출근 인증</strong>: 단톡방 출근/퇴근 메시지</li>
-<li><strong>⑤ 회식·미팅 영수증</strong>: 평일 21시 이후 결제</li>
-</ol>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 월 30시간 미지급</h2>
-<ul class="space-y-2 mt-4">
-<li>· 통상시급 15,000원 × 1.5배 × 30시간 = 67.5만원/월</li>
-<li>· 3년 누적: 약 2,430만원</li>
-<li>· 부가금 100% 시 4,860만원 청구 가능</li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/weekly-holiday-allowance-2026" class="text-primary underline">주휴수당 계산기</a></li></ul></div>
+<p class="lead">미지급 야근수당은 근로시간과 사용자의 업무 지시·승인, 지급 내역을 함께 정리해야 합니다. 늦게 귀가한 사실만으로 모든 시간이 연장근로로 인정되는 것은 아닙니다.</p>
+<h2>기록을 연결하는 방법</h2><ol><li>출퇴근 시스템의 원본 기록을 확보합니다.</li><li>업무 지시, 승인 메시지와 수행한 업무를 날짜별로 연결합니다.</li><li>이메일·업무 파일의 시각은 실제 근무를 뒷받침하는 자료로 정리합니다.</li><li>교통카드·영수증은 보조 자료이며 개인 활동 시간과 구분합니다.</li><li>급여명세서·근로계약서에서 이미 지급된 수당과 약정을 확인합니다.</li></ol>
+<h2>미지급액 검산 예시</h2><p>상시 5인 이상 사업장, 통상시급 15,000원, 가산 대상 연장근로 월 30시간, 이미 지급한 해당 수당 0원을 가정하면 15,000 × 1.5 × 30 = 월 675,000원입니다. 동일한 조건이 실제 36개월 지속된 경우 단순 합계는 24,300,000원입니다. 야간·휴일 중복, 사업장 규모와 시효는 별도로 확인해야 합니다.</p>
+<h2>자동 100% 부가금은 아닙니다</h2><p>근로기준법 제43조의8은 명백한 고의 또는 법정 반복·규모 요건에 해당하는 체불에 대해 법원에 3배 이내 금액 지급을 청구할 수 있도록 합니다. 자동으로 원금의 두 배나 세 배가 지급되는 규정이 아닙니다. 체불 시점에 따른 적용 여부, 증거와 법원의 판단을 확인해야 합니다.</p>
+<p>임금채권의 일반적인 소멸시효는 3년입니다. 각 지급일부터 확인하고, 진정을 냈다는 이유만으로 민사상 시효가 중단된다고 가정하지 마세요.</p>
+<p>근거: <a href="https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&amp;joBrNo=08&amp;joNo=0043&amp;lsiSeq=283457&amp;urlMode=lsScJoRltInfoR">근로기준법 제43조의8</a>.</p>
+<p><a href="/guides/wage-delayed-claim-2026">임금체불 진정·대지급금 준비</a> · <a href="/calc/ordinary-wage">통상임금 계산</a></p>
 `;
 
 const annualLeaveRefund = `
-<p class="lead">연차 미사용 시 미사용 일수 × 통상임금 = 연차수당. 단 사업주가 휴가 사용 촉진 절차 거치면 미지급 가능. 절차 미이행 시 무조건 지급 의무.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 연차수당 발생 요건</h2>
-<ul class="space-y-2 mt-4">
-<li>· 1년 80% 이상 출근 시 15일+ 연차</li>
-<li>· 미사용 시 매 1일 × 통상임금 보상</li>
-<li>· 사업주 휴가 사용 촉진(7월·10월 2회 안내) 시 면제</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>통상임금 일 20만원, 미사용 연차 10일:</p>
-<ul class="space-y-2 mt-4">
-<li>· 연차수당: 200만원</li>
-<li>· 회사가 촉진 안 했으면 무조건 지급</li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/annual-leave-pay-quick" class="text-primary underline">연차수당 계산기</a></li></ul></div>
+<p class="lead">연차수당은 남은 일수만으로 확정할 수 없습니다. 연차 발생·사용·소멸 시점과 유효한 사용 촉진 여부, 사업장 적용 범위를 먼저 확인하세요.</p>
+<h2>7월·10월 안내면 항상 지급 의무가 없어지나요?</h2><p>아닙니다. 근로기준법 제61조의 일반 연차 촉진은 사용기간이 끝나기 6개월 전을 기준으로 10일 이내에 미사용 일수를 알리고 사용 시기 통보를 서면으로 촉구하는 절차부터 시작합니다. 근로자가 촉구받은 때부터 10일 이내에 통보하지 않으면 사용자가 사용기간 종료 2개월 전까지 사용 시기를 정해 서면으로 통보하는 절차가 필요합니다.</p>
+<p>12월 말에 사용기간이 끝나는 일반적인 사례의 달력을 모든 입사일에 적용하면 안 됩니다. 계속근로 1년 미만에 발생한 연차는 제61조 제2항의 별도 절차를 확인해야 합니다. 구두 안내 두 번만으로 완료되는 절차도 아닙니다.</p>
+<h2>수당 검산 예시</h2><p>수당 지급 대상인 미사용 연차 10일과 적용되는 일 임금 20만원을 가정하면 200만원입니다. 이는 세전 예시이며, 실제 일수·임금 기준·기지급 내역을 먼저 확인해야 합니다. 근로기준법상 연차 적용 대상, 적법한 촉진과 실제 휴가 사용 기회, 사용자 귀책사유에 따라 판단이 달라질 수 있습니다.</p>
+<h2>확인할 자료</h2><ul><li>입사일, 연차 발생일·사용기간, 사용 기록</li><li>근로자별 미사용 일수와 서면 촉구를 받은 날짜</li><li>사용 시기 회신 또는 사용자의 서면 지정</li><li>실제 근무·휴가 기록과 급여명세서</li></ul>
+<p>근거: <a href="https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1012792285">근로기준법 제60조·제61조</a>. 구체적 사실관계는 고용노동부 상담을 통해 확인할 수 있습니다.</p>
+<p><a href="/calc/annual-leave-days">입사일별 연차 발생 계산</a> · <a href="/calc/annual-leave-pay-quick">연차수당 간편 계산</a></p>
 `;
 
 const blacklistEmployer = `
@@ -936,8 +920,8 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "dismissal-procedure-2026", title: "부당해고 — 3개월 이내 노동위원회 진정 + 복직 + 100% 보상", description: "정당 사유 + 30일 전 통지 필수. 부당해고 시 노동위원회 진정 → 복직 명령 + 그동안 임금 100% 보상.", category: "커리어", tags: ["해고", "부당해고", "노동위원회", "예고수당", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dismissalProcedure, lang: "ko" },
   { slug: "wage-delayed-claim-2026", title: "임금체불 신고·대지급금·생계비 융자 — 2026 추석 지원 기한", description: "노동포털 진정 준비, 대지급금과 대출의 차이, 2026 추석 생계비 융자 금리·기한을 확인하세요. 지연이자와 조건부 손해배상, 시효도 구분합니다.", category: "커리어", tags: ["임금체불", "노동포털", "대지급금", "생계비 융자", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: wageDelayed, lang: "ko" },
   { slug: "sexual-harassment-protection-2026", title: "직장 내 성희롱 대응 — 사업주 1천만 과태료 + 손해배상", description: "증거 확보 → 회사 신고 → 노동부 → 형사 고소. 사업주 미이행 시 1천만 과태료 + 보복 금지 의무.", category: "커리어", tags: ["성희롱", "직장내괴롭힘", "노동부", "사업주의무", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: sexualHarassmentLaw, lang: "ko" },
-  { slug: "overtime-proof-claim-2026", title: "야근수당 미지급 — 3년 누적 2,430만 + 부가금 4,860만 청구", description: "출퇴근·교통카드·이메일·카톡 증거 5가지. 월 30시간 미지급 시 3년 2,430만원 + 부가금 100% 시 4,860만원.", category: "커리어", tags: ["야근수당", "시간외수당", "노동부진정", "3년시효", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: overtimeProof, lang: "ko" },
-  { slug: "annual-leave-refund-2026", title: "연차수당 — 미사용 일수 × 통상임금, 촉진 안 하면 무조건 지급", description: "1년 80%+ 출근 시 15일+ 연차. 미사용 시 일 통상임금 보상. 사업주 휴가 사용 촉진(7·10월 2회) 시 면제.", category: "커리어", tags: ["연차수당", "통상임금", "휴가사용촉진", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: annualLeaveRefund, lang: "ko" },
+  { slug: "overtime-proof-claim-2026", title: "야근수당 미지급 — 근로시간 증거와 청구액 확인 방법", description: "출퇴근·업무 지시·급여명세서를 연결하는 방법. 연장근로수당 검산, 3년 시효와 조건부 손해배상을 자동 가산금과 구분합니다.", category: "커리어", tags: ["야근수당", "시간외수당", "노동부진정", "3년시효", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: overtimeProof, lang: "ko" },
+  { slug: "annual-leave-refund-2026", title: "연차수당과 사용 촉진 — 미사용 일수·서면 통보·기한 확인", description: "연차수당 계산 전 확인할 발생·소멸 시점과 사용 촉진 절차. 7월·10월 고정 일정 대신 사용기간과 1년 미만 근로자의 별도 요건을 구분합니다.", category: "커리어", tags: ["연차수당", "통상임금", "휴가사용촉진", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: annualLeaveRefund, lang: "ko" },
   { slug: "employer-blacklist-check-2026", title: "취업 전 회사 평판 조회 5채널 — 임금체불 명단까지", description: "잡플래닛·블라인드·크레딧잡·국세청 폐업·노동부 체불 명단. 별점 2.5 이하 회피, 체불 명단 절대 입사 X.", category: "커리어", tags: ["회사평판", "잡플래닛", "블라인드", "체불사업주", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: blacklistEmployer, lang: "ko" },
   { slug: "employment-insurance-detail-2026", title: "실업급여 — 평균임금 60%·최대 9개월 + 청년 6개월 보장", description: "고용보험 18개월 중 180일 이상 가입 + 비자발적 이직. 평균임금 250만원 시 7개월 1,554만원 수령.", category: "커리어", tags: ["실업급여", "고용보험", "구직급여", "권고사직", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: employmentInsurance, lang: "ko" },
   { slug: "voluntary-vs-recommended-resignation-2026", title: "권고사직 안전 절차 5단계 — \"일신상 사유\" 절대 금지", description: "권고사직 → 실업급여 가능. 단 \"일신상 사유\" 표현 거부 + \"경영상 이유\" 명시. 잘못 처리 시 약 1,000만원 손해.", category: "커리어", tags: ["권고사직", "자진퇴사", "실업급여", "사직서", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: employmentEstoppel, lang: "ko" },

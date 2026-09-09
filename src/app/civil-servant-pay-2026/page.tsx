@@ -38,7 +38,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-15",
-  modifiedTime: "2026-08-15",
+  modifiedTime: "2026-09-09",
   keywords: [
     "공무원 봉급표 2026",
     "2026 공무원 봉급표",
@@ -97,7 +97,7 @@ const FAQ_ITEMS = [
   {
     question: "다음 연도 공무원 봉급표는 언제 발표되나요?",
     answer:
-      "매년 12월 말 국무회의에서 이듬해 공무원 보수규정 개정안이 의결되면서 인상률과 봉급표가 확정·발표되고, 다음 해 1월 1일부터 시행됩니다. 2026년 봉급표도 2025년 12월 30일 국무회의 의결을 거쳐 확정됐습니다. 2027년은 정부 예산안(2026년 9월 1일 국무회의)에 3.9% 인상이 반영돼 16년 만의 최대 인상이 사실상 확정됐으며, 예산안 기준 예상 봉급표는 본 사이트의 2027 공무원 봉급표 페이지에서 미리 확인할 수 있습니다.",
+      "이듬해 봉급은 공무원 보수규정 개정과 별표를 확인해야 확정할 수 있습니다. 예산안·보도에 나온 인상률은 확정 봉급표와 구분합니다. 2027년 전망과 확정 일정, 가정에 따른 예상액은 2027 공무원 봉급표 페이지에서 확인할 수 있습니다.",
   },
 ];
 
@@ -118,7 +118,7 @@ export default function CivilServantPay2026Page() {
             slug: "civil-servant-pay-2026",
             url: "/civil-servant-pay-2026",
             publishedDate: "2026-08-15",
-            modifiedDate: "2026-08-15",
+            modifiedDate: "2026-09-09",
           }),
           datasetLd({
             name: "2026년 공무원 봉급표 데이터 (9급~5급 1~10호봉)",
@@ -126,7 +126,7 @@ export default function CivilServantPay2026Page() {
               "인사혁신처 2026년 공무원 보수규정 기준 일반직 9·8·7·6·5급 1~10호봉 월 봉급액과 경찰(순경)·소방(소방사) 초임 봉급 데이터셋. 2025-12-30 국무회의 의결, 2026-01-01 시행분.",
             url: "/civil-servant-pay-2026",
             datePublished: "2026-08-15",
-            dateModified: "2026-08-15",
+            dateModified: "2026-09-09",
             keywords: [
               "공무원 봉급표",
               "2026 공무원 월급",
@@ -255,7 +255,7 @@ export default function CivilServantPay2026Page() {
               href="/civil-servant-pay-2027"
               className="text-electric font-bold hover:underline"
             >
-              2027 공무원 봉급표(예산안 3.9% 인상 확정)
+              2027 공무원 봉급표 — 전망과 확정 일정
             </Link>
             도 함께 확인하세요.
           </p>

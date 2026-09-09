@@ -2,7 +2,7 @@
 // 글로서리 용어별 정적 페이지 — long-tail 키워드 ("X 뜻", "X 의미") 노출 50배 증폭.
 
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen, Sparkles, Hash, TrendingUp, Calculator } from "lucide-react";
 import {
@@ -37,7 +37,7 @@ export async function generateMetadata({
  params: { slug: string };
 }): Promise<Metadata> {
  const item = getGlossaryBySlug(params.slug);
- if (!item) return { title: "Not Found" };
+ if (!item) notFound();
 
  return buildPageMetadata({
  title: `${item.title} 뜻과 의미 — ${item.summary}`,
@@ -70,8 +70,8 @@ export default function GlossaryDetailPage({
  params: { slug: string };
 }) {
  const item = getGlossaryBySlug(params.slug);
- // 데이터에 없는 슬러그 → /glossary 메인 308 (edge 렌더라 프로덕션에서 실제 동작)
- if (!item) permanentRedirect("/glossary");
+ // 허브는 이 용어를 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
+ if (!item) notFound();
 
  const Icon = item.icon;
  const related = getRelatedGlossaryItems(item, 5);

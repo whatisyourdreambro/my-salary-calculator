@@ -934,8 +934,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "year-end-tax-13-tips-2026",
-  "title": "2026 연말정산 13가지 절세 꿀팁: 환급금 최대 200만원 더 받기",
-  "description": "신용카드 25% 룰, 의료비 3% 룰, 월세 17%, 연금저축 IRP 합산 900만원 등 13월의 월급 극대화 13가지 항목.",
+  "title": "2026 연말정산 공제 조건 13가지 — 대상·한도·증빙 확인",
+  "description": "의료비 3% 문턱, 자녀 만 8세, 연금저축 IRP 한도와 혼인공제 귀속연도 등 13개 공제 조건을 확인합니다. 중복·누락을 피하는 사례와 공식 근거.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -946,9 +946,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-03-10",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2531
+  "contentChars": 4735
  },
  {
   "slug": "salary-negotiation-script-2026",
@@ -1381,8 +1382,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "marriage-tax-benefits-2026",
-  "title": "결혼·출산 세제 혜택 2026: 결혼세액공제 50만 + 자녀 공제",
-  "description": "2026 부활 결혼세액공제 50만, 출산·입양 세액공제, 6세 이하 자녀 추가 공제 - 결혼·출산 시 받을 수 있는 세제 혜택 모음.",
+  "title": "결혼·출산 세제 혜택 2026 — 혼인신고 연도·자녀 공제 요건",
+  "description": "혼인세액공제의 2024~2026년 적용과 생애 1회 요건, 자녀 만 8세 기준, 출산입양 공제를 확인합니다. 공제액과 실제 환급액을 구분하는 사례·준비표.",
   "category": "세금",
   "tags": [
    "결혼세액공제",
@@ -1392,9 +1393,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-04-15",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2272
+  "contentChars": 3573
  },
  {
   "slug": "stock-investment-beginner-2026",
@@ -2092,8 +2094,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
-  "title": "2026 연말정산 환급금 200만원 더 받는 7가지 비밀",
-  "description": "2026년 연말정산에서 환급금 200만원을 추가로 받기 위한 IRP 추가 납입·연금저축·신용카드 황금비율·월세 세액공제·의료비 절차까지 실제 환급액 시뮬레이션과 함께 완벽 정리.",
+  "title": "2026 귀속 연말정산 — 세액공제와 실제 환급금이 다른 이유",
+  "description": "연금계좌·의료비 예시를 검산하고 기납부세액과 결정세액으로 실제 환급을 구분합니다. 연말정산 전 확인할 자료와 공제별 계산기 안내.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -2105,9 +2107,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-13",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3837
+  "contentChars": 1929
  },
  {
   "slug": "irp-pension-isa-comparison-2026",
@@ -2519,8 +2522,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "kakao-rsu-tax-saving-2026",
-  "title": "카카오 RSU 5년 베스팅 + 양도세 절세 5가지 — 1억 매도 시 165만원 절감",
-  "description": "카카오 RSU 베스팅 시 근로소득세 38.5%, 매도 시 양도세 22%. 분할 매도·손익 통산·부부 합산·이월결손금·즉시 매도까지 5가지 절세 전략으로 165만원+ 절감.",
+  "title": "카카오 RSU 세금 — 주식 수령과 매도 과세 확인표",
+  "description": "RSU 수령 시 근로소득과 매도 시 양도소득을 구분합니다. 국내 상장 소액주주 장내거래와 대주주·비상장·국외주식의 차이, 계약·증빙 확인표.",
   "category": "주식",
   "tags": [
    "카카오",
@@ -2532,9 +2535,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1281
+  "contentChars": 1263
  },
  {
   "slug": "toss-rsu-ipo-tax-2026",
@@ -2614,8 +2618,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "one-home-prop-tax-12eok-2026",
-  "title": "1세대 1주택 종합부동산세 12억 공제 — 공시가 12억 이하 종부세 0원",
-  "description": "1세대 1주택자 종부세 12억 공제 + 고령자·장기보유 최대 80% 추가 감면. 공시가 15억 = 종부세 90만원, 다주택자 600만원 대비 1/7. 부부 공동명의 각자 6억 vs 통합 12억 비교.",
+  "title": "1세대 1주택 종부세 12억 공제 — 인별 9억 공제·공동명의 비교",
+  "description": "개인 주택분 기본공제 9억원과 1세대 1주택자 12억원을 구분합니다. 공시가격별 과세표준 검산, 공동명의 특례와 고령·장기보유 공제 확인.",
   "category": "부동산",
   "tags": [
    "종합부동산세",
@@ -2627,9 +2631,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1810
+  "contentChars": 1457
  },
  {
   "slug": "didimdol-newborn-special-loan-2026",
@@ -3045,8 +3050,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
-  "title": "신혼부부 합산 자산 활용 절세 5가지 — 부부 합산 한도 2배 활용",
-  "description": "부부 각자 250만원 양도세 공제 + 6억 증여 비과세 + 공동명의 종부세 12억까지. 단독 대비 절세 한도 2배 활용.",
+  "title": "신혼부부 자산·공제 확인표 — 공동명의와 맞벌이 비교",
+  "description": "부부 공제가 자동으로 두 배가 되지 않는 이유. 종부세 인별 9억원·1주택 12억원, 자산 명의와 지출자, 중복 공제 조건을 구분합니다.",
   "category": "세금",
   "tags": [
    "신혼부부",
@@ -3057,9 +3062,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1008
+  "contentChars": 1324
  },
  {
   "slug": "newlywed-didimdol-bomgijari-2026",
@@ -4578,8 +4584,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "overtime-proof-claim-2026",
-  "title": "야근수당 미지급 — 3년 누적 2,430만 + 부가금 4,860만 청구",
-  "description": "출퇴근·교통카드·이메일·카톡 증거 5가지. 월 30시간 미지급 시 3년 2,430만원 + 부가금 100% 시 4,860만원.",
+  "title": "야근수당 미지급 — 근로시간 증거와 청구액 확인 방법",
+  "description": "출퇴근·업무 지시·급여명세서를 연결하는 방법. 연장근로수당 검산, 3년 시효와 조건부 손해배상을 자동 가산금과 구분합니다.",
   "category": "커리어",
   "tags": [
    "야근수당",
@@ -4590,14 +4596,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 952
+  "contentChars": 1108
  },
  {
   "slug": "annual-leave-refund-2026",
-  "title": "연차수당 — 미사용 일수 × 통상임금, 촉진 안 하면 무조건 지급",
-  "description": "1년 80%+ 출근 시 15일+ 연차. 미사용 시 일 통상임금 보상. 사업주 휴가 사용 촉진(7·10월 2회) 시 면제.",
+  "title": "연차수당과 사용 촉진 — 미사용 일수·서면 통보·기한 확인",
+  "description": "연차수당 계산 전 확인할 발생·소멸 시점과 사용 촉진 절차. 7월·10월 고정 일정 대신 사용기간과 1년 미만 근로자의 별도 요건을 구분합니다.",
   "category": "커리어",
   "tags": [
    "연차수당",
@@ -4607,9 +4614,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 751
+  "contentChars": 1049
  },
  {
   "slug": "employer-blacklist-check-2026",
