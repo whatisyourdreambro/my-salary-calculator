@@ -2,6 +2,7 @@
 // src/app/table/2026/annual/page.tsx
 
 import { Metadata } from "next";
+import Link from "@/components/AppLink";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
@@ -11,11 +12,12 @@ import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
+import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 연봉 실수령액 표 — 2400만~2억 전 구간 세후 월급 한눈에",
   description:
-    "연봉 3000만원이면 월 약 223만원, 5000만원이면 약 352만원, 1억이면 약 648만원. 2026년 최신 세법 기준(비과세 식대 20만원) 4대보험·소득세 자동 공제와 전년 대비 변화액까지 즉시 확인.",
+    "연봉 3000만원은 월 약 223만원, 5000만원은 약 352만원, 1억원은 약 648만원으로 추정합니다. 연봉에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준의 2026년 보험료·세금 공제표입니다. 실제 급여와 다를 수 있습니다.",
   path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
@@ -49,12 +51,12 @@ const FAQ_ITEMS = [
  {
  question: "연봉 5,000만원의 실수령액은 얼마인가요?",
  answer:
- "2026년 기준 비과세 식대 20만원·본인 1인 공제를 적용하면 월 약 352만원입니다. 부양가족 수와 비과세 항목에 따라 달라질 수 있으며, 표의 각 행을 눌러 상세 공제 내역을 확인할 수 있습니다.",
+ `2026년 모델의 예상 월 실수령액은 약 352만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 부양가족 수와 비과세 항목에 따라 달라질 수 있으며, 표의 각 행을 눌러 상세 공제 내역을 확인할 수 있습니다.`,
  },
  {
  question: "연봉에서 공제되는 항목은 무엇인가요?",
  answer:
- "국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%가 공제되고, 근로소득 간이세액표 기준 소득세와 소득세의 10%인 지방소득세가 추가로 공제됩니다.",
+ `근로자 부담 국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%를 항목별 보수 기준과 조건으로 계산합니다. 소득세와 그 10%인 지방소득세도 공제합니다. ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
  },
  {
  question: "계약 연봉과 원천징수영수증 금액이 다른 이유는?",
@@ -72,7 +74,7 @@ const tableJsonLd = [
   datasetLd({
     name: "2026년 연봉별 실수령액 데이터",
     description:
-      "2026년 최신 세법 기준 연봉 2000만원에서 2억까지 구간별 월 실수령액, 4대보험 공제 내역 데이터셋",
+      `2026년 계산 모델의 연봉 2400만원부터 2억원까지 예상 월 실수령액과 보험료·세금 공제 내역. ${SALARY_MODEL_2026.defaultConditions} 기준.`,
     url: "/table/2026/annual",
     dateModified: "2026-08-30",
     keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
@@ -101,7 +103,7 @@ function AnnualTable() {
         description={
           <>
             당신의 진짜 가치를 숫자로 확인하세요. <br className="hidden sm:block" />
-            2026년 최신 세법 기준, 연봉 구간별 상세 공제 내역과 실수령액을 한눈에 비교해 드립니다.
+            2026년 계산 모델로 연봉 구간별 예상 월 실수령액과 공제 내역을 비교합니다.
           </>
         }
       />
@@ -131,8 +133,9 @@ function AnnualTable() {
               <strong className="text-navy">건강보험(3.595%)</strong>,{" "}
               <strong className="text-navy">장기요양보험(건강보험료의 13.14%)</strong>,{" "}
               <strong className="text-navy">고용보험(0.9%)</strong>, 그리고{" "}
-              <strong className="text-navy">소득세(근로소득 간이세액표 기준)</strong>를
-              공제하고 실제로 받는 금액입니다.
+              <strong className="text-navy">소득세·지방소득세</strong>를
+              공제한 금액입니다. 이 표는 항목별 조건을 적용한 예상액이며 실제 지급액과 다를 수 있습니다.
+              {" "}{SALARY_MODEL_2026.incomeTaxMethod} {SALARY_MODEL_2026.limitation}
             </p>
             <p className="text-faint-blue leading-relaxed mb-4">
               2026년에는 국민연금(4.5→4.75%)·건강보험(3.545→3.595%) 요율이 인상되어, 동일 연봉이라도
@@ -192,9 +195,8 @@ function AnnualTable() {
         </div>
 
         <div className="mt-4 text-center text-faint-blue text-sm pb-8">
-          * 본 표는 비과세 식대 월 20만원·본인 1인 공제 기준으로, 각 행을 눌러 들어가는
-          상세 페이지와 동일한 기준입니다. 2026년 보험료율 인상안을 반영한 시뮬레이션
-          결과이며, 실제 확정치와 다를 수 있습니다.
+          * {SALARY_MODEL_2026.defaultConditions} 기준으로, 각 행의 상세 페이지와 같은 계산 모델을 사용합니다.{" "}
+          <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 적용 조건</Link>을 확인하세요.
         </div>
       </div>
     </main>

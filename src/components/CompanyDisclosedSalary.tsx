@@ -9,6 +9,7 @@
 
 import { ShieldCheck, ExternalLink, Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
+import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import Link from "@/components/AppLink";
 
 /** 만원 단위 → "1억 5,800만원" 한국식 표기 */
@@ -62,16 +63,14 @@ export default function CompanyDisclosedSalary({
    */
   industryLink?: { industryId: string; industryKo: string } | null;
 }) {
-  const d = company.disclosed;
+  const { disclosed: d, hasDartGap } = getCompanySalaryBasis(company, { dartSalaryManwon });
   if (!d) return null;
 
   const koName = company.name.ko;
   // 헤드라인 값과 DART 산정치 괴리 5% 초과 시만 인라인 병기 — 두 값을 투명 공개
   const dartGapClause =
-    dartSalaryManwon != null &&
-    d.avgSalaryManwon > 0 &&
-    Math.abs(dartSalaryManwon - d.avgSalaryManwon) / d.avgSalaryManwon > 0.05
-      ? `(DART 급여총액÷인원 산정치 ${dartSalaryManwon.toLocaleString("ko-KR")}만원)`
+    hasDartGap
+      ? `(DART 급여총액÷인원 산정치 ${dartSalaryManwon!.toLocaleString("ko-KR")}만원)`
       : "";
 
   return (

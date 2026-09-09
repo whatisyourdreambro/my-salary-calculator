@@ -30,7 +30,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/home-loan",
   ogType: "article",
   publishedTime: "2026-05-23",
-  modifiedTime: "2026-09-09",
+  modifiedTime: "2026-09-10",
   keywords: [
     "주택담보대출 계산기",
     "주담대 계산기",
@@ -82,7 +82,7 @@ const FAQ_ITEMS = [
   {
     question: "주택담보대출 한도는 어떻게 결정되나요?",
     answer:
-      "LTV·DSR 외에도 주택 소재지·가격·보유 주택 수·대출 목적·금융기관 심사와 별도 금액 한도가 영향을 줍니다. 이 계산기는 입력한 원금의 상환액을 계산하며 승인 한도를 판정하지 않습니다. 소득과 기존 부채를 반영한 한도 예시는 연결된 DSR 계산기에서 따로 확인하세요.",
+      "LTV·DSR 외에도 주택 소재지·가격·보유 주택 수·대출 목적·금융기관 심사와 별도 금액 한도가 영향을 줍니다. 이 계산기는 입력한 원금의 상환액을 계산하며 승인 한도를 판정하지 않습니다. 연결된 DSR 계산기는 연소득·연간 원금·연간 이자를 입력하는 단순 비율 도구입니다. 승인 한도는 금융기관에서 확인하세요.",
   },
   {
     question: "DSR 40%를 적용한다면 어떻게 계산하나요?",
@@ -150,7 +150,7 @@ const HOW_TO_STEPS = [
   },
   {
     name: "한도·상환 부담 검증",
-    text: "연결된 DSR 계산기로 한도 예시를 별도로 살펴보고 은행 심사를 확인합니다. 생활비·비상자금·주택 취득 비용도 자금 계획에 포함하세요.",
+    text: "연결된 DSR 계산기로 연소득 대비 연간 원리금의 비율을 살펴보고 승인 한도는 은행에서 따로 확인합니다. 생활비·비상자금·주택 취득 비용도 자금 계획에 포함하세요.",
   },
 ];
 
@@ -211,9 +211,9 @@ export default function HomeLoanPage() {
           }),
           faqLd(FAQ_ITEMS),
           howToLd({
-            name: "주택담보대출 한도·월 상환액 계산하는 법",
+            name: "주택담보대출 월 상환액 계산과 별도 심사 확인 방법",
             description:
-              "본인 연봉·기존 부채부터 원리금/원금균등 비교, 한도·상환 부담 검증까지 5단계.",
+              "주택 가격·자기 자본·금리·기간으로 상환액을 비교하고 승인 한도는 금융기관에서 따로 확인하는 5단계.",
             steps: HOW_TO_STEPS,
             totalTime: "PT5M",
           }),
@@ -310,14 +310,15 @@ export default function HomeLoanPage() {
           <p className="text-sm text-muted-blue leading-relaxed mt-4">
             변동금리 대출을 이용 중이라면 위 계산기에 현재 금리와 0.25%p 올린
             금리를 각각 넣어 월 상환액 변화를 확인해 보세요. 신규 대출을
-            준비 중이라면 기존 부채와 심사용 금리를 넣은 한도 예시를{" "}
+            준비 중이라면 연소득과 연간 원금·이자 상환액의 비율을{" "}
             <Link
               href="/tools/real-estate/dsr"
               className="font-bold text-electric underline underline-offset-2"
             >
-              DSR 계산기
+              DSR 비율 계산기
             </Link>
-            에서 따로 확인하고 금융기관 심사 결과와 대조하세요.
+            에서 따로 계산할 수 있습니다. 이 도구는 심사용 금리를 입력받거나
+            대출별 원리금을 환산하지 않으므로, 규제상 DSR과 승인 한도는 금융기관에 확인하세요.
           </p>
           <p className="text-xs text-faint-blue mt-3 leading-relaxed">
             본문은 9월 9일 확인한 공식 자료를 기준으로 수정했습니다. 이후 제도·상품 조건이 바뀌면 신청일의 공식 안내를 확인하세요.
@@ -420,8 +421,9 @@ export default function HomeLoanPage() {
         <p className="text-muted-blue leading-relaxed">
           스트레스 DSR은 금리가 오를 때의 상환 부담을 미리 심사하는 제도입니다.
           심사용 가산금리를 이 계산기의 실제 납부 금리에 자동으로 더하지 않습니다.
-          상환액을 보려면 은행이 안내한 대출금리를, 한도 예시를 보려면 DSR 도구의
-          지역·금리 구조·기존 부채 조건을 각각 확인하세요. 전세대출도 주택 보유 수,
+          상환액을 보려면 은행이 안내한 대출금리를 입력하세요. 연결된 DSR 도구는 연소득과
+          연간 원리금의 비율만 계산하며 지역·금리 구조·심사용 만기를 자동 반영하지 않습니다.
+          해당 조건의 심사상 적용은 금융기관에서 확인하세요. 전세대출도 주택 보유 수,
           지역, 신규·증액·기존 연장 여부에 따라 산입 범위가 달라질 수 있습니다.{" "}
           <a href="https://www.fsc.go.kr/po020201/85518" target="_blank" rel="noopener noreferrer">금융위원회 대책 문답의 적용 대상과 예외</a>
           를 참고하되 실제 실행일의 금융기관 안내를 확인하세요.
@@ -508,11 +510,11 @@ export default function HomeLoanPage() {
           className="block p-5 bg-white border border-canvas-200 rounded-2xl hover:border-electric transition-colors group"
         >
           <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
-            상세 한도
+            소득 대비 상환 비율
           </p>
-          <p className="font-bold text-navy text-sm mb-1">DSR 한도 계산기</p>
+          <p className="font-bold text-navy text-sm mb-1">DSR 비율 계산기</p>
           <p className="text-xs text-muted-blue mb-3">
-            소득·기존 부채·심사용 금리로 한도 예시 확인
+            연소득·연간 원금·연간 이자로 비율 계산 · 승인 한도 판정 제외
           </p>
           <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
             DSR 계산{" "}
@@ -527,11 +529,11 @@ export default function HomeLoanPage() {
           className="block p-5 bg-white border border-canvas-200 rounded-2xl hover:border-electric transition-colors group"
         >
           <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
-            담보 한도
+            담보 대비 대출 비율
           </p>
-          <p className="font-bold text-navy text-sm mb-1">LTV 한도 계산기</p>
+          <p className="font-bold text-navy text-sm mb-1">LTV 비율 계산기</p>
           <p className="text-xs text-muted-blue mb-3">
-            주택가 대비 대출 한도 (규제·비규제)
+            주택 가격과 대출 금액으로 비율 계산 · 지역별 한도 판정 제외
           </p>
           <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
             LTV 계산{" "}

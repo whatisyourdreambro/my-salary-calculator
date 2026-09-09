@@ -4,6 +4,7 @@
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { HOME_FAQ_ITEMS, POPULAR_SALARY_LINKS } from "@/lib/homeContent";
+import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 import { JOB_COUNT, companyCountKo } from "@/config/site";
 
 export default function HomeSeoSection() {
@@ -45,12 +46,13 @@ export default function HomeSeoSection() {
             보험료와 세금의 예상 공제액을 계산합니다.
           </p>
           <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium mb-4">
-            공제 항목은 크게 네 가지입니다.{" "}
+            이 모델의 근로자 부담 보험료는{" "}
             <strong className="text-foreground">국민연금 4.75%</strong>,{" "}
             <strong className="text-foreground">건강보험 3.595%</strong>(여기에 건강보험료의
             13.14%가 장기요양보험으로 추가),{" "}
-            <strong className="text-foreground">고용보험 0.9%</strong>가 4대보험으로
-            빠져나가고, 여기에 부양가족 수와 비과세 식대(월 20만원)에 따라 달라지는{" "}
+            <strong className="text-foreground">고용보험 0.9%</strong>입니다.
+            보험료는 비과세를 뺀 보수와 항목별 조건으로 계산하며, 국민연금에는 기준소득월액 상·하한이 적용됩니다.
+            여기에 부양가족 수와 비과세액에 따라 달라지는{" "}
             <strong className="text-foreground">근로소득세</strong>와 그 10%인{" "}
             <strong className="text-foreground">지방소득세</strong>가 더해집니다.
           </p>
@@ -58,6 +60,8 @@ export default function HomeSeoSection() {
             같은 연봉이라도 부양가족 수, 비과세 수당 포함 여부와 보험료 산정 조건에 따라
             예상 실수령액이 달라집니다. 본인의 조건을 입력한 뒤 공제 내역을 확인하세요.
             계산 결과는 참고용이며 실제 입금액은 급여명세서와 비교해야 합니다.
+            {" "}{SALARY_MODEL_2026.incomeTaxMethod} {SALARY_MODEL_2026.limitation}{" "}
+            <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 적용 조건</Link>을 확인하세요.
           </p>
         </article>
 

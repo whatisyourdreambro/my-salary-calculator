@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { CompanyProfile } from "@/types/company";
+import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import SamsungCompanySummaryLinks from "./SamsungCompanySummaryLinks";
 
 export function SamsungSectionAnchor({
@@ -19,11 +20,8 @@ export default function SamsungCompanySummary({ company, dartSalaryManwon }: {
   dartSalaryManwon: number | null;
 }) {
   if (company.id !== "samsung-electronics") return null;
-  const disclosed = company.disclosed;
-  const entryTotal = company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+  const { disclosed, entryTotalWon: entryTotal, hasDartGap } = getCompanySalaryBasis(company, { dartSalaryManwon });
   const hasCareerLevels = Boolean(company.careerLevels?.length);
-  const hasDartGap = disclosed && dartSalaryManwon != null && disclosed.avgSalaryManwon > 0 &&
-    Math.abs(dartSalaryManwon - disclosed.avgSalaryManwon) / disclosed.avgSalaryManwon > 0.05;
   const linkClass = "inline-flex min-h-11 items-center rounded-xl border border-electric/25 px-3 py-2 text-sm font-bold text-electric hover:bg-electric/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric";
 
   return (

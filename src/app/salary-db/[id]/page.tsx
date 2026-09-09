@@ -30,6 +30,7 @@ import UpdatedBadge from "@/components/UpdatedBadge";
 import SalaryLookupTracker from "@/components/SalaryLookupTracker";
 import { industryLabelKo, getIndustryBenchmark } from "@/lib/companyContentBuilder";
 import { buildCompanyMetadata } from "@/lib/seo";
+import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import {
  autoBreadcrumbLd,
  companyOrganizationLd,
@@ -54,8 +55,7 @@ export async function generateMetadata({
  const company = companyRepository.getById(params.id);
  if (!company) return { title: "Company Not Found" };
 
- const entryTotal =
- company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+ const { entryTotalWon: entryTotal } = getCompanySalaryBasis(company);
  const seniorTotal =
  company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
  const juniorTotal =
@@ -80,12 +80,8 @@ export async function generateMetadata({
 function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) {
  if (!company) return [];
  const koName = company.name.ko;
- const entryTotal =
- company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
+ const { entryTotalWon: entryTotal } = getCompanySalaryBasis(company);
  const entryManwon = Math.round(entryTotal / 10000).toLocaleString("ko-KR");
- const entryBaseManwon = Math.round(
- company.salary.entry.base / 10000
- ).toLocaleString("ko-KR");
 
  const juniorTotal =
  company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
@@ -101,17 +97,10 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  const dsrCapacity = Math.round((entryTotal * 0.4) / 10000).toLocaleString("ko-KR");
 
  return [
+ ...buildCompanySalaryFaq(company),
  {
- question: `${koName} 평균 연봉은 얼마인가요?`,
- answer: `${koName}의 신입 영끌 평균 연봉은 약 ${entryManwon}만원입니다 (기본급 + 평균 인센티브 포함). 직급·연차에 따라 변동되며, 시니어 평균은 약 ${seniorManwon}만원 수준입니다.`,
- },
- {
- question: `${koName} 신입 초봉(첫해 연봉)은 얼마인가요?`,
- answer: `${koName} 신입 초봉은 기본급 기준 약 ${entryBaseManwon}만원이며, 평균 인센티브를 더한 영끌 초봉은 약 ${entryManwon}만원 수준입니다. 초봉은 직무·학력·입사 연도에 따라 달라질 수 있으며, 위 직급별 연봉표의 신입 행에서 세금 공제 후 실수령액까지 확인할 수 있습니다.`,
- },
- {
- question: `${koName} 신입 첫 달 실수령액은 대략 얼마인가요?`,
- answer: `신입 영끌 ${entryManwon}만원 기준 세전 월 평균은 약 ${monthlyEntry}만원입니다. 4대보험·소득세 공제 후 실수령액은 머니샐러리 연봉 실수령액 계산기로 ${entryManwon}만원을 입력해 확인할 수 있습니다.`,
+ question: `${koName} 신입 연봉의 월평균과 실수령액은 어떻게 보나요?`,
+ answer: `신입 세전 총연봉 추정 ${entryManwon}만원을 12개월로 나눈 월평균은 약 ${monthlyEntry}만원입니다. 첫 달 입금액이 아니며, 입사 시점·성과급 지급 시기·공제 조건에 따라 실제 월급은 달라집니다. 머니샐러리 연봉 실수령액 계산기에 연봉과 본인 공제 조건을 입력해 참고용 실수령액을 비교하세요.`,
  },
  {
  question: `${koName} 시니어 연봉은 신입 대비 얼마나 오르나요?`,
@@ -126,8 +115,8 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  answer: `${koName}의 평균 주당 근무시간은 약 ${realHours}시간으로, 표준 주 40시간 대비 ${overtimeRatio > 0 ? `약 ${overtimeRatio}% 더 일하는 편` : "오히려 짧거나 비슷"}입니다. 워라밸을 중요시한다면 인근 동종사와 비교해 보는 것을 권장합니다.`,
  },
  {
- question: `${koName} 입사 시 받을 수 있는 대출 한도는?`,
- answer: `신입 영끌 ${entryManwon}만원 기준 DSR 40% 적용 시 연 약 ${dsrCapacity}만원의 원리금 상환 여력이 있습니다. 정확한 한도는 머니샐러리 DSR 계산기 또는 주택담보대출 계산기로 시뮬레이션해 보세요.`,
+ question: `${koName} 연봉으로 대출 상환 부담을 어떻게 가늠하나요?`,
+ answer: `신입 세전 총연봉 추정 ${entryManwon}만원의 40%는 연 약 ${dsrCapacity}만원입니다. 연소득 대비 원리금 상환 비율을 보는 단순 비교이며, 실제 대출 한도나 승인 결과가 아닙니다. 다른 부채·금리·만기·상품별 적용 기준을 확인하고, 머니샐러리 DSR 계산기에 본인 조건을 입력해 참고 비율을 비교하세요.`,
  },
  {
  question: `${koName} 같은 업종 내 연봉 수준은 어느 정도인가요?`,
@@ -142,7 +131,7 @@ function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) 
  },
  {
  question: `${koName} 퇴직 시 받을 수 있는 퇴직금은?`,
- answer: `법정 퇴직금은 "최근 3개월 평균 월급 × 근속연수"로 산정됩니다. ${koName} 신입 영끌 기준 1년 근속 시 약 ${Math.round(entryTotal / 12 / 10000).toLocaleString("ko-KR")}만원 수준이며, 머니샐러리 퇴직금 계산기로 본인 근속·급여 기준 정확 산출이 가능합니다.`,
+ answer: `신입 추정 총연봉의 월평균에 근속 1년을 곱한 단순 참고값은 약 ${Math.round(entryTotal / 12 / 10000).toLocaleString("ko-KR")}만원입니다. 연봉표만으로 실제 퇴직금을 확정할 수 없습니다. 머니샐러리 퇴직금 계산기에 실제 임금 이력과 재직기간을 입력하고, 적용 요건과 평균임금 산정 범위를 확인하세요.`,
  },
  {
  question: `${koName} 연봉 정보는 2026년 최신 기준인가요?`,

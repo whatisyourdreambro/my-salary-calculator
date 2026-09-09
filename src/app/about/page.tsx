@@ -5,6 +5,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
+import { SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 // 부활 팩 P2-A (운영자 승인 2026-08-31) — 무광고 색인 페이지 0→2유닛
 import { GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 
@@ -18,9 +19,9 @@ export const metadata: Metadata = buildPageMetadata({
 
 const DATA_SOURCES = [
  {
- name: "국세청 — 근로소득 간이세액표 2026",
- url: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2272&cntntsId=7711",
- description: "근로소득세 원천징수 기준",
+ name: "국세청 — 근로소득 원천징수 안내",
+ url: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6583",
+ description: "실제 월 급여에 적용하는 근로소득 간이세액표 안내",
  },
  {
  name: "국민연금공단",
@@ -121,6 +122,32 @@ export default function AboutPage() {
  </div>
  </section>
 
+ <section id="salary-calculation-method" className="ms-surface mb-16 p-6 sm:p-8" aria-labelledby="salary-method-title">
+ <h2 id="salary-method-title" className="mb-4 text-xl font-semibold text-foreground">연봉 실수령액 계산 기준</h2>
+ <div className="space-y-4 text-sm leading-7 text-muted-foreground">
+ <p>
+ 2026년 연봉 계산기와 연봉표의 기본 예시는 <strong className="text-foreground">{SALARY_MODEL_2026.defaultConditions}</strong> 조건입니다.
+ 세전 연봉을 12로 나누어 월 급여를 계산하며, 실제 상여금 지급월이나 입사월의 급여를 따로 재현하지 않습니다.
+ </p>
+ <ol className="list-decimal space-y-2 pl-5">
+ <li>입력한 연봉과 비과세 금액으로 근로자 부담 보험료를 추정합니다.</li>
+ <li>연간 비과세 금액, 근로소득공제, 인적공제와 국민연금 공제를 반영한 과세표준에 누진세율을 적용합니다.</li>
+ <li>근로소득·자녀 세액공제를 반영한 예상 연 세액을 월평균으로 나누고, 지방소득세와 보험료를 합해 공제합니다.</li>
+ </ol>
+ <p><strong className="text-foreground">{SALARY_MODEL_2026.incomeTaxMethod}</strong> {SALARY_MODEL_2026.limitation}</p>
+ <p>
+ 현재 2026년 모형의 국민연금 상·하한은 2026년 7월~2027년 6월 기준입니다.
+ 과거 지급월별 보험료 고지나 정산액을 계산하는 기능은 제공하지 않습니다.
+ 다른 연도의 표는 해당 페이지의 적용 기준도 함께 확인해 주세요.
+ </p>
+ <p>
+ 실제 매월 급여의 원천징수 방법은{" "}
+ <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6583" target="_blank" rel="noopener noreferrer" className="font-medium text-link underline underline-offset-4">국세청 근로소득 간이세액표 안내</a>에서 확인할 수 있습니다.
+ </p>
+ <Link href="/#calculator-section" className="ms-button ms-button-secondary">내 조건으로 연봉 계산하기</Link>
+ </div>
+ </section>
+
  {/* 데이터 출처 */}
  <section className="mb-16">
  <h2 className="text-2xl font-black text-navy mb-2">데이터 출처</h2>
@@ -158,10 +185,16 @@ export default function AboutPage() {
  <h2 className="text-xl font-black text-navy mb-4">회사 연봉 데이터는 어떻게 산출하나요?</h2>
  <div className="space-y-4 text-sm text-muted-blue leading-relaxed">
  <p>
- 회사별 연봉 데이터베이스와 연봉 순위에 표시되는 기업별 금액은{" "}
+ 회사별 연봉 데이터베이스의 직급별 기본급과 성과급 예시는{" "}
  <strong className="text-navy">공개된 정보(채용 공고, 사업보고서·감사보고서의
  직원 평균 급여, 언론 보도, 공개 커뮤니티의 후기 등)를 종합해 산출한 자체
  추정치</strong>입니다. 해당 기업이 공식적으로 발표·확인한 수치가 아닙니다.
+ </p>
+ <p>
+ 별도로 출처와 사업연도를 표시한 <strong className="text-navy">직원 평균 급여</strong>는
+ 공시 자료 또는 공시의 급여 총액과 인원으로 산정한 값입니다. 신입 기본급이나
+ 개인의 제안 연봉과는 대상·산정 범위가 다릅니다. 각 항목의 출처, 연도,
+ 성과급 포함 여부와 산정 설명을 확인해 주세요.
  </p>
  <p>
  이 데이터는 특정 기업의 실제 처우를 보장하거나, 기업의 우열을 평가·단정하기
@@ -186,7 +219,7 @@ export default function AboutPage() {
  <li>가이드의 발행일은 보존하고, 본문·계산 기준·출처를 실질적으로 바꾼 경우 수정일을 별도로 표시합니다. 날짜만 바꾸어 새 정보처럼 보이게 하지 않습니다.</li>
  <li>오류 제보는 근거를 확인해 수정합니다. 정정 요청은 아래 비공개 문의로 보내 주세요. 공개 댓글은 운영하지 않습니다.</li>
  </ul>
- <p className="mt-4 text-xs text-faint-blue">이 안내 수정일: <time dateTime="2026-09-09">2026년 9월 9일</time></p>
+ <p className="mt-4 text-xs text-faint-blue">이 안내 수정일: <time dateTime="2026-09-10">2026년 9월 10일</time></p>
  </section>
 
  {/* 책임 한계 */}

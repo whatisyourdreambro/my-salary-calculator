@@ -198,7 +198,7 @@ export default function HomeLoanSimulator() {
  </div>
  </div>
  <div className="mt-auto pt-4">
- <Link href="/tools/real-estate/dsr" className="flex min-h-11 items-center justify-center text-center underline underline-offset-4 mb-4 text-sm font-semibold">소득·기존 부채를 넣어 DSR 한도 따로 계산</Link>
+ <Link href="/tools/real-estate/dsr" className="flex min-h-11 items-center justify-center text-center underline underline-offset-4 mb-4 text-sm font-semibold">연소득·연간 원리금으로 DSR 비율 따로 계산</Link>
  <button
  type="button"
  onClick={handleSaveData}

@@ -18,12 +18,12 @@ export default function Table2027Layout({ children }: { children: React.ReactNod
           <GuideMidAd />
         </div>
         {/* 고지 배너 — 광고 아래 (신규 UI는 광고 아래 원칙). 확정/미확정 요율 명시.
-            ★갱신 슬롯: 건보(9월)·장기요양(10~11월)·간이세액표(내년 2월) 확정 시 문구 갱신 */}
+            ★갱신 슬롯: 건보(9월)·장기요양(10~11월) 확정 시 문구 갱신 */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
           <p className="rounded-xl bg-electric/5 border border-electric/20 px-4 py-3 text-xs leading-5 text-muted-blue">
             <strong className="text-navy">2027년 확정 반영:</strong> 국민연금 근로자 5.0%(요율
             인상)·최저시급 10,700원. <strong className="text-navy">미확정(2026 기준 준용):</strong>{" "}
-            건강보험·장기요양·간이세액표 — 확정 발표 시 즉시 갱신합니다. 올해 기준은{" "}
+            건강보험·장기요양 — 확정 발표 시 즉시 갱신합니다. 소득세는 2026년 연간 누진세액 추정의 월 환산이며 실제 월별 간이세액표 조회 결과는 아닙니다. 올해 기준은{" "}
             <Link href="/table/2026/annual" className="font-bold text-electric hover:underline">
               2026 실수령액 표
             </Link>

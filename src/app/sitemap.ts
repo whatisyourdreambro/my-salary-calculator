@@ -39,9 +39,17 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
- '/': { lastModified: new Date('2026-09-09') },
- '/home-loan': { lastModified: new Date('2026-09-09') },
- '/about': { lastModified: new Date('2026-09-09') },
+ '/': { lastModified: new Date('2026-09-10') },
+ '/home-loan': { lastModified: new Date('2026-09-10') },
+ '/about': { lastModified: new Date('2026-09-10') },
+ '/tools/loan': { lastModified: new Date('2026-09-10') },
+ '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
+ '/table/2026/annual': { lastModified: new Date('2026-09-10') },
+ '/table/2026/monthly': { lastModified: new Date('2026-09-10') },
+ '/table/2027/annual': { lastModified: new Date('2026-09-10') },
+ '/table/2027/monthly': { lastModified: new Date('2026-09-10') },
+ '/table/2027/weekly': { lastModified: new Date('2026-09-10') },
+ '/table/2027/hourly': { lastModified: new Date('2026-09-10') },
  '/calc/samsung-bonus': { lastModified: new Date('2026-09-09'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
@@ -88,6 +96,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/en/help': { lastModified: new Date('2026-09-09') },
  '/en/guides': { lastModified: new Date('2026-09-09') },
 };
+
+// 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
+// 데이터 갱신일·계산 엔진 적용일과 구분하며, 이후 일반 배포 때 자동 갱신하지 않는다.
+const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-10');
+const COMPANY_FAQ_REVIEW_DATE = new Date('2026-09-10');
 
 export default function sitemap(): MetadataRoute.Sitemap {
  const baseUrl = "https://www.moneysalary.com";
@@ -308,8 +321,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // lastModified 기준일 STATIC_LAST_MODIFIED — src/config/siteDates.ts 단일 소스
  // (2026-09-05 호이스팅: webApplicationLd dateModified 와 공유. 갱신 규칙·이력은 그 파일 참조).
- // 정적 라우트 + 공식/데이터 기반 동적 URL 공통 적용, 회사 페이지는 company.lastUpdated
- // 우선·값이 없을 때만 폴백. 매 배포 today 금지 원칙은 그대로다.
+ // 개별 오버라이드가 없는 정적·동적 URL에 적용한다. 회사 상세는 데이터 수정일과
+ // FAQ 본문 수정일 중 최신값을 사용한다. 매 배포 today 금지 원칙은 그대로다.
 
  // 수기 오버라이드(모듈 스코프 ROUTE_OVERRIDES, 아래 참조)의 로컬 사본 — 성과급
  // 클러스터 priority 루프가 사본만 채워 export 본은 수기 목록 그대로 유지된다
@@ -432,7 +445,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const amount = Math.round(i * 1000000);
  salaryUrls.push({
  url: `${baseUrl}/salary/${amount}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: SALARY_METHOD_REVIEW_DATE,
  changeFrequency: 'yearly',
  priority: i % 1 === 0 ? 0.6 : 0.45,
  });
@@ -443,7 +456,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const amount = Math.round(i * 1000000);
  salaryUrls.push({
  url: `${baseUrl}/salary/${amount}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: SALARY_METHOD_REVIEW_DATE,
  changeFrequency: 'yearly',
  priority: i % 1 === 0 ? 0.7 : 0.55, // 정수형 우선
  });
@@ -453,7 +466,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  for (let i = 105; i <= 200; i += 5) {
  salaryUrls.push({
  url: `${baseUrl}/salary/${i * 1000000}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: SALARY_METHOD_REVIEW_DATE,
  changeFrequency: 'yearly',
  priority: 0.5,
  });
@@ -514,12 +527,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const { companyRepository } = require('@/lib/salary-data/CompanyRepository');
  const allCompanies = companyRepository.getAll();
 
- // lastModified는 회사별 실제 lastUpdated 날짜 사용 — 매 배포마다 "오늘 수정"으로
- // 찍히면 Google이 freshness 신호를 무시하므로 정직한 날짜를 넣는다.
+ // 페이지 수정일은 회사 데이터 또는 FAQ 본문을 실제로 바꾼 날 중 최신값.
+ // Dataset·데이터 배지의 lastUpdated는 원본 데이터 날짜를 그대로 유지한다.
  allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
  const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
- const lastModified =
+ const dataModified =
  parsed && !Number.isNaN(parsed.getTime()) ? parsed : STATIC_LAST_MODIFIED;
+ const lastModified = dataModified > COMPANY_FAQ_REVIEW_DATE ? dataModified : COMPANY_FAQ_REVIEW_DATE;
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
  lastModified,
@@ -674,7 +688,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  ].map((route) => ({
  url: `${baseUrl}${route}`,
  // 2026-08-25 구조화데이터 보강(8b395a7)이 실질 콘텐츠 변경 — 전역 기준일과 차등화
- lastModified: route.includes('/2027/') ? new Date('2026-08-30') : new Date('2026-08-25'),
+ lastModified: routeOverrides[route]?.lastModified ?? (route.includes('/2027/') ? new Date('2026-08-30') : new Date('2026-08-25')),
  changeFrequency: 'yearly' as ChangeFrequency,
  priority: 0.7,
  }));
