@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Scale } from "lucide-react";
 
 export default function BmiCalculator() {
+ const inputId = useId();
  const [height, setHeight] = useState<number | "">(""); // cm
  const [weight, setWeight] = useState<number | "">(""); // kg
 
@@ -43,8 +44,9 @@ export default function BmiCalculator() {
  <div className="space-y-4">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">신장 (cm)</label>
+ <label htmlFor={`${inputId}-height`} className="block text-sm font-medium text-muted-blue mb-2">신장 (cm)</label>
  <input
+ id={`${inputId}-height`}
  type="number"
  value={height}
  onChange={(e) => setHeight(Number(e.target.value))}
@@ -52,8 +54,9 @@ export default function BmiCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">체중 (kg)</label>
+ <label htmlFor={`${inputId}-weight`} className="block text-sm font-medium text-muted-blue mb-2">체중 (kg)</label>
  <input
+ id={`${inputId}-weight`}
  type="number"
  value={weight}
  onChange={(e) => setWeight(Number(e.target.value))}

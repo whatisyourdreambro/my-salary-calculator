@@ -79,11 +79,11 @@ export default function SimulatorPage() {
 
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-medium text-muted-foreground mb-2">
+ <label htmlFor="ms-simulator-field-0" className="block text-sm font-medium text-muted-foreground mb-2">
  중소기업 연봉 (David)
  </label>
  <div className="flex items-center gap-2">
- <input
+ <input id="ms-simulator-field-0"
  type="range"
  min="24000000"
  max="60000000"
@@ -99,11 +99,11 @@ export default function SimulatorPage() {
  </div>
 
  <div>
- <label className="block text-sm font-medium text-muted-foreground mb-2">
+ <label htmlFor="ms-simulator-field-1" className="block text-sm font-medium text-muted-foreground mb-2">
  대기업 연봉 (Goliath)
  </label>
  <div className="flex items-center gap-2">
- <input
+ <input id="ms-simulator-field-1"
  type="range"
  min="30000000"
  max="80000000"
@@ -120,7 +120,7 @@ export default function SimulatorPage() {
 
  <div className="pt-4 border-t border-canvas-200">
  <div className="flex items-center justify-between">
- <label className="text-sm font-medium text-foreground flex items-center gap-2">
+ <label htmlFor="ms-simulator-field-2" className="text-sm font-medium text-foreground flex items-center gap-2">
  청년 소득세 감면 (90%)
  <div className="group relative">
  <Info className="w-4 h-4 text-muted-foreground cursor-help" />
@@ -129,7 +129,7 @@ export default function SimulatorPage() {
  </div>
  </div>
  </label>
- <input
+ <input id="ms-simulator-field-2"
  type="checkbox"
  checked={isYouth}
  onChange={(e) => setIsYouth(e.target.checked)}

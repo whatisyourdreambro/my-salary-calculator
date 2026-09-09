@@ -79,6 +79,7 @@ export default function DashboardPage() {
  return (
  <main className="flex items-center justify-center min-h-[60vh] bg-canvas">
  <div className="text-center">
+ <h1 className="mb-6 text-2xl font-bold text-foreground">나의 재무 대시보드</h1>
  <div className="w-10 h-10 border-4 border-electric-15 border-t-electric rounded-full animate-spin mx-auto mb-4" />
  <p className="text-sm font-semibold text-faint-blue">
  이 브라우저의 저장 결과를 불러오는 중…

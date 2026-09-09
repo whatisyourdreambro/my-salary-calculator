@@ -7,31 +7,29 @@ import { cn } from "@/lib/utils"
 const Slider = React.forwardRef<
  React.ElementRef<typeof SliderPrimitive.Root>,
  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className, id, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-describedby": ariaDescribedBy, "aria-valuetext": ariaValueText, ...props }, ref) => (
  <SliderPrimitive.Root
  ref={ref}
  className={cn(
- "relative flex w-full touch-none select-none items-center",
+ "relative flex min-h-11 w-full touch-none select-none items-center",
  className
  )}
  {...props}
  >
  <SliderPrimitive.Track
- style={{ backgroundColor: "#DDE4EC" }}
- className="relative h-2 w-full grow overflow-hidden rounded-full"
+ className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary"
  >
  <SliderPrimitive.Range
- style={{ backgroundColor: "#0145F2" }}
- className="absolute h-full"
+ className="absolute h-full bg-primary"
  />
  </SliderPrimitive.Track>
  <SliderPrimitive.Thumb
- style={{
- borderColor: "#0145F2",
- backgroundColor: "#FFFFFF",
- boxShadow: "0 2px 8px #0145F233",
- }}
- className="block h-5 w-5 rounded-full border-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+ id={id}
+ aria-label={ariaLabel}
+ aria-labelledby={ariaLabelledBy}
+ aria-describedby={ariaDescribedBy}
+ aria-valuetext={ariaValueText}
+ className="relative block h-6 w-6 rounded-full border-2 border-primary bg-card shadow-sm ring-offset-background before:absolute before:-inset-2.5 before:rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
  />
  </SliderPrimitive.Root>
 ))

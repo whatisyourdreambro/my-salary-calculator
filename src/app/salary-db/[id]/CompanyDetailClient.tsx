@@ -15,7 +15,6 @@ import {
  TrendingUp,
  ArrowRight
 } from "lucide-react";
-import AnimatedNumber from "@/components/AnimatedNumber";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { CalcResultAd } from "@/components/AdPlacement";
@@ -59,44 +58,42 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  return (
  <main className="w-full min-h-screen bg-background pb-20">
  {/* Hero Header */}
- <div className="relative bg-electric text-white py-16 overflow-hidden">
- <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
- <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-primary/20 to-transparent" />
-
- <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-8">
- <div className="w-24 h-24 text-6xl flex items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20">
- {company.logo}
+ <header className="border-b border-border bg-card py-8 sm:py-12">
+ <div className="ms-page flex flex-col items-start gap-5 md:flex-row md:gap-6">
+ <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-secondary text-2xl font-bold text-link" aria-hidden="true">
+ {company.name.ko.slice(0, 1)}
  </div>
- <div className="text-center md:text-left">
- <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
- <h1 className="text-4xl font-black tracking-tight">{company.name.ko} 연봉 2026</h1>
- <span className="px-2 py-1 rounded bg-primary text-xs font-bold">
+ <div className="min-w-0">
+ <div className="mb-4 flex flex-wrap items-center gap-3">
+ <h1 className="ms-title">{company.name.ko} 연봉 2026</h1>
+ <span className="rounded-lg border border-border bg-secondary px-2.5 py-1 text-sm font-medium text-foreground">
  {TIER_LABEL_KO[company.tier] ?? company.tier}
  </span>
  </div>
- <p className="text-faint-blue text-lg max-w-2xl">{company.description}</p>
+ <p className="ms-description max-w-3xl">{company.description}</p>
+ <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">공시 자료와 머니샐러리 DB의 추정값을 구분해 확인하세요. 회사 평균과 개인의 계약 연봉은 다를 수 있습니다.</p>
  <div className="mt-6">
  <ShareButtons
  title={`${company.name.ko} 연봉 및 기업 정보 | Moneysalary`}
  description={`${company.name.ko}의 신입 초봉, 평균 연봉, 복지 정보를 확인하세요.`}
- className="justify-center md:justify-start"
+ className="justify-start"
  />
  </div>
  {/* 재방문 루프 — 회사 페이지가 즐겨찾기 효과 최대 지점 ("{회사명} 연봉" 재검색 대체) */}
- <div className="mt-4 flex justify-center md:justify-start">
- <FavoritesButton title={`${company.name.ko} 연봉`} className="!bg-white/10 !border-white/25 !text-white hover:!border-white/60" />
+ <div className="mt-4 flex justify-start">
+ <FavoritesButton title={`${company.name.ko} 연봉`} />
  </div>
  </div>
  </div>
- </div>
+ </header>
 
- <div className="page-width -mt-8 relative z-20 space-y-8">
+ <div className="page-width relative space-y-8 pt-8">
  {summary}
  {/* Quick Stats Grid */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <StatCard
  icon={DollarSign}
- label="신입 영끌 연봉"
+ label="신입 총보상 추정"
  value={formatMoney(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0))}
  sub="기본급 + 평균 인센티브 (본 DB 추정 기준)"
  color="text-primary"
@@ -117,7 +114,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  />
  <StatCard
  icon={Zap}
- label="인센티브 포텐"
+ label="인센티브 범위"
  value={company.salary.entry.incentive.max > 0 ? `최대 ${company.salary.entry.incentive.max}%` : "현금 중심 보상"}
  sub={company.salary.entry.incentive.max > 0 ? "연봉 대비 비율" : "별도 인센티브 없이 연봉 중심 책정"}
  color="text-primary"
@@ -145,35 +142,34 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  </section>
 
  {/* Life Simulator */}
- <section className="bg-gradient-to-br from-indigo-900 to-primary/80 text-white rounded-2xl p-8 shadow-xl relative overflow-hidden">
- <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
- <h2 className="text-xl font-bold mb-4 flex items-center gap-2 relative z-10">
+ <section className="ms-surface ms-panel">
+ <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
  <Car className="w-5 h-5" />
  목표 금액 모으기
  </h2>
  <div className="relative z-10">
- <p className="text-indigo-200 mb-6">
+ <p className="mb-6 text-base leading-7 text-muted-foreground">
  DB의 신입 영끌 연봉으로 계산한 월 실수령 추정액의 50%를 저축한다면,<br />
- <span className="text-white font-bold">목표 6,000만원</span>까지 얼마나 걸릴까요?
+ <span className="font-semibold text-foreground">목표 6,000만원</span>까지 얼마나 걸릴까요?
  </p>
  <div className="flex items-baseline gap-2">
- <span className="text-5xl font-black text-primary">
- {monthsToGoal === null ? "—" : <AnimatedNumber value={monthsToGoal} duration={2} />}
+ <span className="text-4xl font-bold tabular-nums text-link">
+ {monthsToGoal === null ? "—" : monthsToGoal.toLocaleString("ko-KR")}
  </span>
  <span className="text-xl font-bold">개월</span>
  </div>
- <p className="text-sm text-indigo-300 mt-2">
+ <p className="mt-3 text-sm text-muted-foreground">
  {monthsToGoal === null ? "급여 자료를 확인해 주세요." : `(약 ${Math.ceil(monthsToGoal / 12)}년 · 현재 저축액 0원, 이자·물가 변화 제외)`}
  </p>
- <p className="text-xs text-white/80 mt-3 leading-relaxed">
+ <p className="mt-3 text-sm leading-6 text-muted-foreground">
  본인 1명·자녀 0명·월 비과세 20만원, 연간 세액을 월로 나눈 간이 추정입니다.
  성과급도 12개월에 나눠 받는 가정이므로 실제 월급·지급 시점과 다릅니다.
  </p>
  <Link
  href="/car-loan"
- className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-white/90 underline underline-offset-4 hover:text-white transition-colors"
+ className="ms-button ms-button-secondary mt-5 text-sm"
  >
- 자동차 할부·대출로 앞당기면? 계산해 보기
+ 자동차 할부 상환액 비교하기
  <ArrowRight className="w-4 h-4" aria-hidden />
  </Link>
  </div>
@@ -217,13 +213,13 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  <div className="pt-4 border-t border-border">
  <div className="grid grid-cols-2 gap-4">
  <div>
- <p className="text-xs font-bold text-electric mb-2">PROS 👍</p>
+ <p className="mb-2 text-sm font-semibold text-foreground">장점으로 기록된 항목</p>
  <ul className="text-xs space-y-1 text-muted-foreground">
  {company.culture.pros.map(p => <li key={p}>• {p}</li>)}
  </ul>
  </div>
  <div>
- <p className="text-xs font-bold text-electric mb-2">CONS 👎</p>
+ <p className="mb-2 text-sm font-semibold text-foreground">확인이 필요한 항목</p>
  <ul className="text-xs space-y-1 text-muted-foreground">
  {company.culture.cons.map(c => <li key={c}>• {c}</li>)}
  </ul>
@@ -271,7 +267,7 @@ function StatCard({ icon: Icon, label, value, sub, color }: {
  color: string;
 }) {
  return (
- <div className="bg-card border border-border p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+ <div className="ms-surface p-5">
  <div className="flex items-center gap-3 mb-2">
  <div className={`p-2 rounded-lg bg-secondary ${color}`}>
  <Icon className="w-5 h-5" />

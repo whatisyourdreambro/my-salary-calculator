@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Users, Fuel, Ruler } from "lucide-react";
 // --- Dutch Pay Calculator ---
 export function DutchPayCalculator() {
+ const inputId = useId();
  const [amount, setAmount] = useState("");
  const [people, setPeople] = useState("");
  const [result, setResult] = useState<number | null>(null);
@@ -23,8 +24,9 @@ export function DutchPayCalculator() {
  </h2>
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">총 금액 (원)</label>
+ <label htmlFor={`${inputId}-amount`} className="block text-sm font-bold text-muted-blue mb-2">총 금액 (원)</label>
  <input
+ id={`${inputId}-amount`}
  type="text"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
@@ -33,8 +35,9 @@ export function DutchPayCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">인원 수 (명)</label>
+ <label htmlFor={`${inputId}-people`} className="block text-sm font-bold text-muted-blue mb-2">인원 수 (명)</label>
  <input
+ id={`${inputId}-people`}
  type="number"
  value={people}
  onChange={(e) => setPeople(e.target.value)}
@@ -63,6 +66,7 @@ export function DutchPayCalculator() {
 
 // --- Fuel Cost Calculator ---
 export function FuelCostCalculator() {
+ const inputId = useId();
  const [distance, setDistance] = useState("");
  const [efficiency, setEfficiency] = useState("");
  const [price, setPrice] = useState("");
@@ -84,8 +88,9 @@ export function FuelCostCalculator() {
  </h2>
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">이동 거리 (km)</label>
+ <label htmlFor={`${inputId}-distance`} className="block text-sm font-bold text-muted-blue mb-2">이동 거리 (km)</label>
  <input
+ id={`${inputId}-distance`}
  type="number"
  value={distance}
  onChange={(e) => setDistance(e.target.value)}
@@ -93,8 +98,9 @@ export function FuelCostCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">연비 (km/L)</label>
+ <label htmlFor={`${inputId}-efficiency`} className="block text-sm font-bold text-muted-blue mb-2">연비 (km/L)</label>
  <input
+ id={`${inputId}-efficiency`}
  type="number"
  value={efficiency}
  onChange={(e) => setEfficiency(e.target.value)}
@@ -102,8 +108,9 @@ export function FuelCostCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">리터당 가격 (원)</label>
+ <label htmlFor={`${inputId}-price`} className="block text-sm font-bold text-muted-blue mb-2">리터당 가격 (원)</label>
  <input
+ id={`${inputId}-price`}
  type="number"
  value={price}
  onChange={(e) => setPrice(e.target.value)}
@@ -131,6 +138,7 @@ export function FuelCostCalculator() {
 
 // --- Unit Converter ---
 export function UnitConverter() {
+ const inputId = useId();
  const [value, setValue] = useState("");
  const [type, setType] = useState<"length" | "weight">("length");
  const [result, setResult] = useState<string | null>(null);
@@ -172,10 +180,11 @@ export function UnitConverter() {
  </button>
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">
+ <label htmlFor={inputId} className="block text-sm font-bold text-muted-blue mb-2">
  {type === "length" ? "센티미터 (cm)" : "킬로그램 (kg)"}
  </label>
  <input
+ id={inputId}
  type="number"
  value={value}
  onChange={(e) => setValue(e.target.value)}

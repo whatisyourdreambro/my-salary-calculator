@@ -189,40 +189,41 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  };
 
  return (
- <main className="min-h-screen bg-canvas dark:bg-canvas-950 pb-20 pt-28">
+ <div className="min-h-screen bg-background pb-16 pt-24 text-foreground sm:pt-28">
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
  <Breadcrumbs path={`/calc/${slug}`} leafName={calc.title} className="mb-6" />
- <div className="text-center mb-10">
- <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-4">
+ <header className="mb-8 border-b border-border pb-7">
+ <p className="ms-eyebrow mb-3">
  {calc.categoryLabel}
  </p>
- <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 mb-3">
+ <h1 className="ms-title mb-4">
  {calc.title}
  </h1>
- <p className="text-base text-muted-blue dark:text-canvas-300 leading-relaxed max-w-2xl mx-auto">
+ <p className="ms-description max-w-2xl">
  {calc.description}
  </p>
- <div className="mt-4 flex justify-center">
+ <div className="mt-4 flex">
  <FavoritesButton path={`/calc/${slug}`} title={calc.title} />
  </div>
- </div>
+ </header>
 
- <section {...measurement.inputProps} className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">
- {shareToken && !restored && <p role="status" className="mb-4 text-sm text-amber-800">공유 링크의 입력값을 확인할 수 없어 기본값을 표시합니다. 입력값과 범위를 확인해 주세요.</p>}
- <h2 className="text-sm font-black text-navy dark:text-canvas-50 mb-6 flex items-center gap-2">
+ <section {...measurement.inputProps} className="ms-surface ms-panel mb-6" aria-labelledby={`${fieldIdPrefix}input-heading`}>
+ {shareToken && !restored && <p role="status" className="ms-status-warning mb-4 rounded-xl p-3 text-sm">공유 링크의 입력값을 확인할 수 없어 기본값을 표시합니다. 입력값과 범위를 확인해 주세요.</p>}
+ <h2 id={`${fieldIdPrefix}input-heading`} className="mb-2 flex items-center gap-2 text-xl font-bold text-foreground">
  <Calculator className="w-4 h-4 text-electric" />
- 입력값
+ 내 조건 입력
  </h2>
+ <p className="mb-6 text-sm leading-6 text-muted-foreground">처음 보이는 값은 예시입니다. 단위를 확인하고 내 조건으로 바꾸면 결과가 갱신됩니다.</p>
  <div className="space-y-5">
  {calc.fields.map((field) => (
  <div key={field.name}>
  <label
  htmlFor={`${fieldIdPrefix}${field.name}`}
- className="block text-sm font-bold text-navy mb-2"
+ className="mb-2 block text-base font-semibold text-foreground"
  >
  {field.label}
  {field.suffix && (
- <span className="text-xs text-faint-blue font-medium ml-1">
+ <span className="ml-1 text-sm font-normal text-muted-foreground">
  ({field.suffix})
  </span>
  )}
@@ -235,36 +236,38 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  inputMode="decimal"
  value={displayValue(rawInputs[field.name] ?? "")}
  aria-invalid={!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)}
+ aria-describedby={`${fieldIdPrefix}${field.name}-help`}
  onChange={(e) => handleChange(field.name, e.target.value)}
- className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
+ className="ms-field w-full text-lg font-semibold tabular-nums"
  placeholder={field.defaultValue.toLocaleString("ko-KR")}
  />
- {field.hint && (
- <p className="text-xs text-faint-blue mt-2">{field.hint}</p>
- )}
+ <p id={`${fieldIdPrefix}${field.name}-help`} className="mt-2 text-sm leading-6 text-muted-foreground">
+ {field.hint}
+ {!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max) && <span className="block text-destructive">{field.min !== undefined && field.max !== undefined ? `${field.min.toLocaleString("ko-KR")}~${field.max.toLocaleString("ko-KR")}${field.suffix ?? ""} 범위의 숫자를 입력해 주세요.` : "허용 범위의 숫자를 입력해 주세요."}</span>}
+ </p>
  </div>
  ))}
  </div>
  </section>
 
- <section ref={setResultRef} className="p-6 sm:p-8 bg-electric rounded-3xl text-white mb-6">
- <p className="text-xs font-bold opacity-90 mb-2">{result.primary.label}</p>
- <p className="text-3xl sm:text-5xl font-black tracking-tight tabular-nums break-keep">
- {formatNumber(result.primary.value, result.primary.suffix)}
+ <section ref={setResultRef} className="mb-6 rounded-2xl bg-primary p-5 text-primary-foreground sm:p-8" aria-label="현재 조건의 계산 결과">
+ <p className="mb-2 text-sm font-medium text-primary-foreground">{result.primary.label}</p>
+ <p className="break-words text-[clamp(1.75rem,6vw,2.75rem)] font-bold leading-tight tracking-tight text-primary-foreground tabular-nums">
+ {resultValid ? formatNumber(result.primary.value, result.primary.suffix) : "입력값 확인"}
  </p>
  {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기 */}
- {result.primary.suffix === "원" &&
+ {resultValid && result.primary.suffix === "원" &&
  typeof result.primary.value === "number" &&
  compactKo(result.primary.value) && (
- <p className="text-sm font-bold opacity-80 mt-1">
+ <p className="mt-2 text-sm text-primary-foreground">
  ≈ {compactKo(result.primary.value)}원
  </p>
  )}
  <div className="mb-6" />
- {result.secondary && result.secondary.length > 0 && (
+ {resultValid && result.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (
- <div key={idx} className="flex justify-between items-center">
+ <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
  <span className="text-sm text-white/80">{item.label}</span>
  <span className="font-bold tabular-nums text-white">
  {formatNumber(item.value, item.suffix)}
@@ -273,9 +276,9 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  ))}
  </div>
  )}
- {result.note && (
+ {resultValid && result.note && (
  <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
- 💡 {result.note}
+ {result.note}
  </p>
  )}
  </section>
@@ -297,12 +300,12 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  url={shareUrl}
  getShareImage={getShareImage}
  className="mb-6"
- /> : <p role="status" className="mb-6 text-sm text-amber-800">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
+ /> : <p role="status" className="ms-status-warning mb-6 rounded-xl p-4 text-sm">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
 
  {calc.explanation && (
- <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-3">계산 방식</h3>
- <p className="text-sm text-muted-blue leading-relaxed whitespace-pre-line">
+ <section className="ms-surface ms-panel mb-6">
+ <h2 className="mb-4 text-xl font-bold text-foreground">계산 방식</h2>
+ <p className="whitespace-pre-line text-base leading-7 text-muted-foreground">
  {calc.explanation}
  </p>
  </section>
@@ -312,12 +315,12 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  {calc.explanation && <GuideMidAd />}
 
  {calc.formula && (
- <section className="p-6 bg-canvas-100 rounded-2xl border border-canvas-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-3 flex items-center gap-2">
+ <section className="ms-surface ms-panel mb-6">
+ <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
  <Sigma className="w-4 h-4 text-electric" />
  계산 공식
- </h3>
- <code className="block text-sm text-navy font-mono bg-white p-3 rounded-lg border border-canvas-200 leading-relaxed">
+ </h2>
+ <code className="block overflow-x-auto rounded-xl border border-border bg-secondary p-4 text-sm leading-7 text-foreground">
  {calc.formula}
  </code>
  </section>
@@ -332,22 +335,22 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  />
  {/* FAQ 직전 추가 광고 — 결과~FAQ 사이 viewability 최상위 */}
  <InArticleAd />
- <section className="p-6 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-800 mb-6">
- <h3 className="text-sm font-black text-navy dark:text-canvas-50 mb-4 flex items-center gap-2">
+ <section className="ms-surface ms-panel mb-6">
+ <h2 className="mb-5 flex items-center gap-2 text-xl font-bold text-foreground">
  <HelpCircle className="w-4 h-4 text-electric" />
  자주 묻는 질문
- </h3>
+ </h2>
  <div className="space-y-3">
  {calc.faqs.map((item) => (
  <details
  key={item.q}
- className="group p-4 bg-canvas-50 rounded-xl border border-canvas-200"
+ className="group rounded-xl border border-border bg-background px-4"
  >
- <summary className="flex items-start justify-between gap-3 cursor-pointer text-sm font-bold text-navy">
+ <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 py-4 text-base font-semibold text-foreground">
  <span>{item.q}</span>
  <ArrowRight className="w-4 h-4 text-electric flex-shrink-0 mt-0.5 transition-transform group-open:rotate-90" />
  </summary>
- <p className="mt-3 text-sm text-muted-blue leading-relaxed whitespace-pre-line">
+ <p className="faq-answer whitespace-pre-line border-t border-border py-4 text-base leading-7 text-muted-foreground">
  {item.a}
  </p>
  </details>
@@ -358,12 +361,12 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  )}
 
  {calc.caveats && calc.caveats.length > 0 && (
- <section className="p-6 bg-amber-50 rounded-2xl border border-amber-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-3 flex items-center gap-2">
+ <section className="ms-status-warning mb-6 rounded-2xl p-5 sm:p-6">
+ <h2 className="mb-3 flex items-center gap-2 text-xl font-bold">
  <AlertTriangle className="w-4 h-4 text-amber-600" />
  유의사항
- </h3>
- <ul className="space-y-2 text-sm text-muted-blue leading-relaxed">
+ </h2>
+ <ul className="space-y-2 text-base leading-7">
  {calc.caveats.map((item, idx) => (
  <li key={idx} className="flex gap-2">
  <span className="text-amber-600 font-bold">·</span>
@@ -375,8 +378,8 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  )}
 
  {calc.relatedSlugs && calc.relatedSlugs.length > 0 && (
- <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">
- <h3 className="text-sm font-black text-navy mb-4">관련 계산기</h3>
+ <section className="ms-surface ms-panel mb-6">
+ <h2 className="mb-4 text-xl font-bold text-foreground">관련 계산기</h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {calc.relatedSlugs
  .map((s) => getCalculatorBySlug(s))
@@ -385,14 +388,14 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  <Link
  key={rel.slug}
  href={`/calc/${rel.slug}`}
- className="group flex items-start gap-2 p-3 bg-canvas-50 rounded-xl border border-canvas-200 hover:border-electric transition-all"
+ className="ms-surface ms-interactive group flex items-start gap-3 p-4"
  >
  <ArrowRight className="w-4 h-4 text-electric flex-shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
  <div>
- <p className="text-sm font-bold text-navy group-hover:text-electric transition-colors">
+ <p className="text-base font-semibold text-foreground">
  {rel.title}
  </p>
- <p className="text-xs text-faint-blue mt-1 line-clamp-1">
+ <p className="mt-1 text-sm leading-6 text-muted-foreground">
  {rel.description}
  </p>
  </div>
@@ -402,6 +405,6 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  </section>
  )}
  </div>
- </main>
+ </div>
  );
 }

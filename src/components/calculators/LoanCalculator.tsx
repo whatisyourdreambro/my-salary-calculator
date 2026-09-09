@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
-import { DollarSign, Calendar, Percent, PieChart, Calculator } from "lucide-react";
+import { PieChart, Calculator } from "lucide-react";
+import SegmentedControl from "@/components/ui/SegmentedControl";
 
 // 잔액 추이 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const LoanChart = dynamic(() => import("@/components/charts/LoanChart"), {
  ssr: false,
- loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+ loading: () => <div className="h-full w-full rounded-xl bg-secondary motion-safe:animate-pulse" />,
 });
 
 type RepaymentMethod = "level-payment" | "level-principal" | "bullet";
@@ -34,12 +34,10 @@ export default function LoanCalculator() {
  const [term, setTerm] = useState(10); // Years
  const [method, setMethod] = useState<RepaymentMethod>("level-payment");
  const [results, setResults] = useState<LoanResults | null>(null);
+ const validInputs = Number.isFinite(amount) && amount >= 0 && Number.isFinite(rate) && rate >= 0 && Number.isInteger(term) && term >= 1 && term <= 50;
 
  useEffect(() => {
- calculateLoan();
- }, [amount, rate, term, method]);
-
- const calculateLoan = () => {
+ if (!validInputs) { setResults(null); return; }
  const monthlyRate = rate / 100 / 12;
  const totalMonths = term * 12;
 
@@ -114,13 +112,14 @@ export default function LoanCalculator() {
  schedule[totalMonths - 1].balance = 0;
  }
 
+ if (![monthlyPayment, totalInterest, amount + totalInterest].every(Number.isFinite)) { setResults(null); return; }
  setResults({
  monthlyPayment: Math.round(monthlyPayment),
  totalInterest: Math.round(totalInterest),
  totalPayment: Math.round(amount + totalInterest),
  schedule,
  });
- };
+ }, [amount, rate, term, method, validInputs]);
 
  const formatMoney = (val: number) => {
  return new Intl.NumberFormat("ko-KR", {
@@ -134,23 +133,21 @@ export default function LoanCalculator() {
  <div className="w-full max-w-4xl mx-auto space-y-8">
  <div className="grid grid-cols-1 gap-6">
  {/* Inputs */}
- <motion.div
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl"
+ <section
+ className="ms-panel"
  >
- <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
- <Calculator className="w-5 h-5 text-navy" />
+ <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+ <Calculator className="w-5 h-5 text-foreground" />
  대출 조건 설정
  </h2>
+ <p className="mb-6 text-sm leading-6 text-muted-foreground">금액은 원 단위로 입력하세요. 입력한 연 이자율이 전 기간 유지되는 예시이며, 수수료와 거치기간은 포함하지 않습니다.</p>
 
  <div className="space-y-6">
  <div>
- <label htmlFor="loan-amount" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-amount" className="block text-sm font-medium text-muted-foreground mb-2">
  대출 금액
  </label>
  <div className="relative">
- <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
  id="loan-amount"
  type="number"
@@ -158,16 +155,16 @@ export default function LoanCalculator() {
  min="0"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
- <div className="flex gap-2 mt-2">
+ <div className="flex flex-wrap gap-2 mt-2">
  {[10000000, 50000000, 100000000].map((val) => (
  <button
  key={val}
  type="button"
  onClick={() => setAmount(val)}
- className="px-3 py-1 text-xs bg-canvas-dark text-muted-blue rounded-full hover:bg-electric hover:text-white transition-colors"
+ className="ms-button ms-button-secondary text-sm"
  aria-label={`대출 금액 ${val / 10000}만원으로 설정`}
  >
  {val / 10000}만
@@ -177,11 +174,10 @@ export default function LoanCalculator() {
  </div>
 
  <div>
- <label htmlFor="loan-rate" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-rate" className="block text-sm font-medium text-muted-foreground mb-2">
  연 이자율 (%)
  </label>
  <div className="relative">
- <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
  id="loan-rate"
  type="number"
@@ -190,17 +186,16 @@ export default function LoanCalculator() {
  min="0"
  value={rate}
  onChange={(e) => setRate(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
  </div>
 
  <div>
- <label htmlFor="loan-term" className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor="loan-term" className="block text-sm font-medium text-muted-foreground mb-2">
  대출 기간 (년)
  </label>
  <div className="relative">
- <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-faint-blue" aria-hidden="true" />
  <input
  id="loan-term"
  type="number"
@@ -209,73 +204,52 @@ export default function LoanCalculator() {
  max="50"
  value={term}
  onChange={(e) => setTerm(Number(e.target.value))}
- className="w-full bg-canvas border border-canvas rounded-xl py-3 pl-10 pr-4 text-navy tabular-nums focus:ring-2 focus:ring-electric focus:border-electric outline-none transition-all"
+ className="ms-field w-full tabular-nums"
  />
  </div>
  </div>
 
- <fieldset>
- <legend className="block text-sm font-medium text-muted-blue mb-2">
- 상환 방식
- </legend>
- <div className="grid grid-cols-3 gap-2" role="radiogroup">
- {[
- { id: "level-payment", label: "원리금균등" },
- { id: "level-principal", label: "원금균등" },
- { id: "bullet", label: "만기일시" },
- ].map((m) => (
- <button
- key={m.id}
- type="button"
- role="radio"
- aria-checked={method === m.id}
- onClick={() => setMethod(m.id as RepaymentMethod)}
- className={`py-2 text-sm rounded-lg transition-all ${method === m.id
- ? "bg-electric text-white font-bold shadow-lg shadow-primary/20"
- : "bg-canvas-dark text-muted-blue hover:bg-canvas-deeper hover:text-electric"
- }`}
- >
- {m.label}
- </button>
- ))}
+ <SegmentedControl label="상환 방식" value={method} onChange={setMethod} options={[
+ { value: "level-payment", label: "원리금균등" },
+ { value: "level-principal", label: "원금균등" },
+ { value: "bullet", label: "만기일시" },
+ ]} />
+ {!validInputs && <p role="status" className="ms-status-error rounded-lg p-3 text-sm">금액과 금리는 0 이상, 대출 기간은 1~50년의 정수로 입력해 주세요.</p>}
  </div>
- </fieldset>
- </div>
- </motion.div>
+ </section>
 
  {/* Summary */}
- <motion.div
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- className="bg-white backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl flex flex-col justify-between"
+ <section
+ className="ms-panel flex flex-col justify-between"
  >
  <div>
- <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
- <PieChart className="w-5 h-5 text-electric" />
+ <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+ <PieChart className="w-5 h-5 text-link" />
  상환 요약
  </h2>
 
  <div className="space-y-6">
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
- <div className="text-sm text-muted-blue mb-1">총 상환 금액</div>
- <div className="text-2xl sm:text-3xl font-black text-navy tracking-tight tabular-nums whitespace-nowrap">
+ <div className="p-4 bg-secondary/50 rounded-xl border border-border">
+ <div className="text-sm text-muted-foreground mb-1">총 상환 금액</div>
+ <div className="text-2xl sm:text-3xl font-black text-foreground tracking-tight tabular-nums break-words">
  {results ? formatMoney(results.totalPayment) : "-"}
  </div>
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
- <div className="text-sm text-muted-blue mb-1">총 이자</div>
- <div className="text-lg sm:text-xl font-bold text-electric tracking-tight tabular-nums whitespace-nowrap">
+ <div className="p-4 bg-secondary/50 rounded-xl border border-border">
+ <div className="text-sm text-muted-foreground mb-1">총 이자</div>
+ <div className="text-lg sm:text-xl font-bold text-link tracking-tight tabular-nums break-words">
  {results ? formatMoney(results.totalInterest) : "-"}
  </div>
  </div>
- <div className="p-4 bg-canvas/50 rounded-xl border border-canvas">
- <div className="text-sm text-muted-blue mb-1">월 평균 납입금</div>
- <div className="text-lg sm:text-xl font-bold text-navy tracking-tight tabular-nums whitespace-nowrap">
+ <div className="p-4 bg-secondary/50 rounded-xl border border-border">
+ <div className="text-sm text-muted-foreground mb-1">{method === "level-principal" ? "첫 달 납입금" : method === "bullet" ? "매월 이자 · 만기 전" : "매월 납입금"}</div>
+ <div className="text-lg sm:text-xl font-bold text-foreground tracking-tight tabular-nums break-words">
  {results ? formatMoney(results.monthlyPayment) : "-"}
  </div>
  </div>
+ {method === "bullet" && <p className="mt-4 text-sm leading-6 text-muted-foreground">만기에는 표시한 이자와 함께 대출 원금 {formatMoney(amount)}을 상환합니다.</p>}
  </div>
  </div>
  </div>
@@ -286,7 +260,7 @@ export default function LoanCalculator() {
  <LoanChart schedule={results.schedule} formatMoney={formatMoney} />
  )}
  </div>
- </motion.div>
+ </section>
  </div>
  </div>
  );

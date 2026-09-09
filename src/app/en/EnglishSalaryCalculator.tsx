@@ -11,7 +11,7 @@ import EnglishResultNextTasks from "@/components/english/EnglishResultNextTasks"
 import { getEnglishSalaryNextTasks } from "@/lib/englishResultTasks";
 
 const formatKRW = (value: number) => value.toLocaleString("en-US");
-const inputClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
+const inputClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
 
 export default function EnglishSalaryCalculator() {
   const [salary, setSalary] = useState("60000000");

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Percent } from "lucide-react";
 
 export default function VatCalculator() {
+ const amountId = useId();
  const [amount, setAmount] = useState<number | "">("");
  const [type, setType] = useState<"supply" | "total">("total"); // 공급가액 기준 vs 합계금액 기준
 
@@ -69,10 +70,11 @@ export default function VatCalculator() {
 
  {/* Input */}
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">
+ <label htmlFor={amountId} className="block text-sm font-medium text-muted-blue mb-2">
  금액 입력
  </label>
  <input
+ id={amountId}
  type="number"
  value={amount}
  onChange={(e) => setAmount(Number(e.target.value))}

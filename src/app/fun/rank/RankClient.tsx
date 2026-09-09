@@ -104,12 +104,13 @@ export default function RankClient() {
  className="space-y-12"
  >
  <div className="text-center">
- <label className="block text-lg font-medium text-faint-blue mb-6">
+ <label htmlFor="rank-annual-salary" className="block text-lg font-medium text-faint-blue mb-6">
  세전 연봉을 입력하세요
  </label>
  <div className="relative max-w-md mx-auto group">
  <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity" />
  <input
+ id="rank-annual-salary"
  type="text"
  value={salaryInput}
  onChange={(e) => {

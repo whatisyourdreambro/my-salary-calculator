@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { TrendingUp } from "lucide-react";
 
 export default function CagrCalculator() {
+ const fieldId = useId();
  const [startValue, setStartValue] = useState<number | "">("");
  const [endValue, setEndValue] = useState<number | "">("");
  const [years, setYears] = useState<number | "">("");
@@ -24,8 +25,9 @@ export default function CagrCalculator() {
  <div className="space-y-4">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">시작 금액</label>
+ <label htmlFor={`${fieldId}-start`} className="block text-sm font-medium text-muted-blue mb-2">시작 금액</label>
  <input
+ id={`${fieldId}-start`}
  type="number"
  value={startValue}
  onChange={(e) => setStartValue(Number(e.target.value))}
@@ -33,8 +35,9 @@ export default function CagrCalculator() {
  />
  </div>
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">종료 금액</label>
+ <label htmlFor={`${fieldId}-end`} className="block text-sm font-medium text-muted-blue mb-2">종료 금액</label>
  <input
+ id={`${fieldId}-end`}
  type="number"
  value={endValue}
  onChange={(e) => setEndValue(Number(e.target.value))}
@@ -43,8 +46,9 @@ export default function CagrCalculator() {
  </div>
  </div>
  <div>
- <label className="block text-sm font-medium text-muted-blue mb-2">기간 (년)</label>
+ <label htmlFor={`${fieldId}-years`} className="block text-sm font-medium text-muted-blue mb-2">기간 (년)</label>
  <input
+ id={`${fieldId}-years`}
  type="number"
  value={years}
  onChange={(e) => setYears(Number(e.target.value))}

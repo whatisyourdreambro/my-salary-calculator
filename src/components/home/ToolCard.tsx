@@ -1,8 +1,3 @@
-// src/components/home/ToolCard.tsx
-//
-// 메인 페이지 Premium Tools 그리드의 카드 컴포넌트.
-// duotone-card 유틸 기반으로 SSR/다크모드 일관성 확보.
-
 import Link from "@/components/AppLink";
 import { ChevronRight } from "lucide-react";
 
@@ -13,45 +8,17 @@ interface ToolCardProps {
   href: string;
   iconBg?: string;
   wide?: boolean;
-  /** "HOT" | "인기" | "NEW" 등 카드 우상단 뱃지 */
   badge?: string;
 }
 
-export default function ToolCard({
-  icon: Icon,
-  title,
-  description,
-  href,
-  wide = false,
-  badge,
-}: ToolCardProps) {
-  return (
-    <div className={wide ? "md:col-span-2" : ""}>
-      <Link
-        href={href}
-        className="relative duotone-card no-tap-highlight flex items-center gap-4 px-5 py-4 hover:-translate-y-0.5 group"
-      >
-        {badge && (
-          <span className="absolute top-2.5 right-9 px-1.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wide bg-electric text-white leading-none">
-            {badge}
-          </span>
-        )}
-
-        <div className="flex items-center justify-center flex-shrink-0 w-[46px] h-[46px] rounded-xl bg-electric-5 text-electric border border-electric/20 group-hover:bg-electric-10 transition-colors">
-          <Icon className="w-[22px] h-[22px]" />
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <p className="font-bold text-navy text-[15px] tracking-tight mb-0.5 truncate">
-            {title}
-          </p>
-          <p className="text-faint-blue text-[13.5px] truncate">
-            {description}
-          </p>
-        </div>
-
-        <ChevronRight className="text-faint-blue group-hover:text-electric flex-shrink-0 w-4 h-4 transition-colors" />
-      </Link>
-    </div>
-  );
+/** Whole-card target; descriptions wrap so mobile readers can choose before opening. */
+export default function ToolCard({ icon: Icon, title, description, href, wide = false, badge }: ToolCardProps) {
+  return <Link href={href} className={`ms-surface ms-interactive group flex h-full min-w-0 items-start gap-4 p-5 no-underline ${wide ? "md:col-span-2" : ""}`}>
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-link"><Icon className="h-5 w-5" aria-hidden="true" /></span>
+    <span className="min-w-0 flex-1">
+      <span className="flex flex-wrap items-center gap-2"><span className="font-semibold leading-6 text-foreground">{title}</span>{badge && <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">{badge}</span>}</span>
+      <span className="mt-1.5 block text-sm leading-6 text-muted-foreground">{description}</span>
+    </span>
+    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+  </Link>;
 }

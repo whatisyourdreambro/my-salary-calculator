@@ -9,27 +9,27 @@ export default function ToolContentSection({
   section: ToolContentSectionData;
 }) {
   return (
-    <section className="p-6 bg-white dark:bg-canvas-900 rounded-2xl border border-canvas-200 dark:border-canvas-800">
-      <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">
+    <section className="ms-surface ms-panel">
+      <h2 className="mb-4 text-xl font-bold text-foreground">
         {section.heading}
       </h2>
       {section.paragraphs?.map((p, i) => (
         <p
           key={i}
-          className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed mb-3 last:mb-0"
+          className="mb-4 text-base leading-7 text-muted-foreground last:mb-0"
         >
           {p}
         </p>
       ))}
       {section.list &&
         (section.list.ordered ? (
-          <ol className="list-decimal pl-5 space-y-1.5 text-sm text-muted-blue dark:text-canvas-300 mt-2">
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-base leading-7 text-muted-foreground">
             {section.list.items.map((it, i) => (
               <li key={i}>{it}</li>
             ))}
           </ol>
         ) : (
-          <ul className="space-y-1.5 text-sm text-muted-blue dark:text-canvas-300 mt-2">
+          <ul className="mt-3 space-y-2 text-base leading-7 text-muted-foreground">
             {section.list.items.map((it, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-electric font-bold">·</span>
@@ -39,12 +39,12 @@ export default function ToolContentSection({
           </ul>
         ))}
       {section.table && (
-        <div className="overflow-x-auto mt-3">
+        <div className="mt-5 overflow-x-auto rounded-xl border border-border" role="region" aria-label={`${section.heading} 표`} tabIndex={0}>
           <table className="w-full text-sm">
             <thead>
               <tr>
                 {section.table.headers.map((h, i) => (
-                  <th key={i}>{h}</th>
+                  <th key={i} scope="col">{h}</th>
                 ))}
               </tr>
             </thead>

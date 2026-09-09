@@ -1,69 +1,15 @@
-// src/components/SocialProof.tsx
-//
-// 메인 페이지 E-E-A-T 신뢰 시그널.
-// 실제 측정 가능한 데이터만 표시 — 가짜 수치 절대 금지.
-
-import { CheckCircle2, FileText, Shield, Zap } from "lucide-react";
-
-const TRUST_SIGNALS = [
-  {
-    icon: Zap,
-    stat: "5초",
-    title: "즉시 계산",
-    description: "입력하는 즉시 실시간 결과",
-  },
-  {
-    icon: FileText,
-    stat: "100+",
-    title: "금융 계산기",
-    description: "연봉·대출·세금·부동산 전 분야",
-  },
-  {
-    icon: CheckCircle2,
-    stat: "2026",
-    title: "2026년 세법 기준",
-    description: "국세청·4대보험 공식 요율 기준",
-  },
-  {
-    icon: Shield,
-    stat: "무료",
-    title: "회원가입 없이 계산",
-    description: "원하는 계산기로 결과 바로 확인",
-  },
+import Link from "@/components/AppLink";
+import { BookOpen, SlidersHorizontal, FileCheck2 } from "lucide-react";
+const PRINCIPLES = [
+  { Icon: SlidersHorizontal, title: "조건을 먼저 확인합니다", description: "연봉에 포함된 수당과 비과세액, 부양가족 조건을 구분해 입력하세요." },
+  { Icon: FileCheck2, title: "예상액과 실제 급여를 구분합니다", description: "보험료 산정과 회사의 원천징수 방식에 따라 급여명세서와 차이가 날 수 있습니다." },
+  { Icon: BookOpen, title: "계산 기준을 함께 읽습니다", description: "공식 자료를 참고한 계산과 자체 추정 정보를 각 페이지에서 확인하세요." },
 ];
-
 export default function SocialProof() {
-  return (
-    <section className="py-10 px-4 bg-white border-y border-canvas-200">
-      <div className="max-w-5xl mx-auto">
-        <p className="text-center text-[11px] font-extrabold text-faint-blue uppercase tracking-[0.12em] mb-8">
-          머니샐러리를 신뢰할 수 있는 이유
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-canvas-200">
-          {TRUST_SIGNALS.map((signal) => {
-            const Icon = signal.icon;
-            return (
-              <div
-                key={signal.title}
-                className="flex flex-col items-center text-center px-4 py-6 bg-white"
-              >
-                <div className="w-11 h-11 rounded-2xl bg-electric-10 border border-electric/20 flex items-center justify-center mb-3">
-                  <Icon className="w-5 h-5 text-electric" />
-                </div>
-                <p className="text-[1.5rem] font-black text-electric tracking-tight leading-none mb-1">
-                  {signal.stat}
-                </p>
-                <p className="font-bold text-navy text-[13.5px] mb-1">
-                  {signal.title}
-                </p>
-                <p className="text-[12px] text-faint-blue leading-relaxed">
-                  {signal.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="border-y border-border bg-card" aria-labelledby="home-method-heading">
+    <div className="page-width py-8 sm:py-10">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2"><h2 id="home-method-heading" className="text-sm font-semibold text-foreground">결과를 읽는 세 가지 기준</h2><Link href="/about" className="inline-flex min-h-11 items-center text-sm font-semibold text-link underline underline-offset-4">계산·데이터 운영 원칙</Link></div>
+      <div className="grid gap-6 md:grid-cols-3 md:gap-8">{PRINCIPLES.map(({ Icon, title, description }) => <div key={title} className="flex items-start gap-3"><Icon className="mt-0.5 h-5 w-5 shrink-0 text-link" aria-hidden="true" /><div><h3 className="text-sm font-semibold text-foreground">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p></div></div>)}</div>
+    </div>
+  </section>;
 }

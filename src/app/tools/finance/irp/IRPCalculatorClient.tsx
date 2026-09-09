@@ -2,12 +2,13 @@
 
 // 계산기 폼 + 결과만 담당하는 클라이언트 컴포넌트.
 // 제목·FAQ·JSON-LD·가이드 본문은 서버 컴포넌트인 page.tsx가 보유한다 (이중 H1/FAQ 방지).
-import { useState, useMemo } from "react";
+import { useId, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 
 export default function IRPCalculatorClient() {
+ const fieldId = useId();
  const [salary, setSalary] = useState(50000000);
  const [irpAmount, setIrpAmount] = useState(9000000);
  const [pensionAmount, setPensionAmount] = useState(0);
@@ -24,8 +25,9 @@ export default function IRPCalculatorClient() {
  <div className="bg-white border border-canvas rounded-2xl p-8 shadow-sm">
  <div className="space-y-6">
  <div>
- <label className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연간 총급여 (원)</label>
+ <label htmlFor={`${fieldId}-salary`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연간 총급여 (원)</label>
  <input
+ id={`${fieldId}-salary`}
  type="number"
  value={salary}
  onChange={e => setSalary(Number(e.target.value))}
@@ -37,8 +39,9 @@ export default function IRPCalculatorClient() {
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 납입액 (최대 900만원)</label>
+ <label htmlFor={`${fieldId}-irp`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 납입액 (최대 900만원)</label>
  <input
+ id={`${fieldId}-irp`}
  type="number"
  value={irpAmount}
  max={9000000}
@@ -47,8 +50,9 @@ export default function IRPCalculatorClient() {
  />
  </div>
  <div>
- <label className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 납입액 (최대 600만원)</label>
+ <label htmlFor={`${fieldId}-pension`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 납입액 (최대 600만원)</label>
  <input
+ id={`${fieldId}-pension`}
  type="number"
  value={pensionAmount}
  max={6000000}

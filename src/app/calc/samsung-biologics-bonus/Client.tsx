@@ -169,11 +169,11 @@ export default function SamsungBiologicsBonusClient() {
         {includeTai && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-samsung-biologics-bonus-field-0" className="block text-sm font-bold mb-2">
                 상반기 TAI: <span className="text-primary">{taiH1Percent}%</span>
                 <span className="ml-2 text-[10px] font-normal text-faint">2025년 100% 확정 지급</span>
               </label>
-              <input
+              <input id="ms-samsung-biologics-bonus-field-0"
                 type="range" min={0} max={100} step={25}
                 value={taiH1Percent}
                 onChange={(e) => setTaiH1Percent(Number(e.target.value))}
@@ -181,11 +181,11 @@ export default function SamsungBiologicsBonusClient() {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-samsung-biologics-bonus-field-1" className="block text-sm font-bold mb-2">
                 하반기 TAI: <span className="text-primary">{taiH2Percent}%</span>
                 <span className="ml-2 text-[10px] font-normal text-faint">2025년 확정치 미확정 — 가정값</span>
               </label>
-              <input
+              <input id="ms-samsung-biologics-bonus-field-1"
                 type="range" min={0} max={100} step={25}
                 value={taiH2Percent}
                 onChange={(e) => setTaiH2Percent(Number(e.target.value))}
@@ -208,10 +208,10 @@ export default function SamsungBiologicsBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-samsung-biologics-bonus-field-2" className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input type="range" min={0} max={50} step={5} value={creditRate}
+              <input id="ms-samsung-biologics-bonus-field-2" type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}
                 className="w-full accent-primary" />
             </div>

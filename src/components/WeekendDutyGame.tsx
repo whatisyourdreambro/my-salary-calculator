@@ -204,10 +204,11 @@ export default function WeekendDutyGame() {
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
-            <label className="flex items-center gap-2 text-lg font-bold text-white mb-4">
+            <label htmlFor="weekend-duty-dates" className="flex items-center gap-2 text-lg font-bold text-white mb-4">
               <Calendar className="text-emerald-400" size={20} /> 대상 날짜
             </label>
             <textarea
+              id="weekend-duty-dates"
               value={datesInput}
               onChange={e => setDatesInput(e.target.value)}
               placeholder={"11/23\n11/24\n11/30\n12/07"}
@@ -217,10 +218,11 @@ export default function WeekendDutyGame() {
           </div>
 
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
-            <label className="flex items-center gap-2 text-lg font-bold text-white mb-4">
+            <label htmlFor="weekend-duty-people" className="flex items-center gap-2 text-lg font-bold text-white mb-4">
               <Users className="text-sky-400" size={20} /> 대상 인원
             </label>
             <textarea
+              id="weekend-duty-people"
               value={peopleInput}
               onChange={e => setPeopleInput(e.target.value)}
               placeholder={"김철수\n이영희\n박지성\n최민준"}
@@ -234,17 +236,17 @@ export default function WeekendDutyGame() {
               <div className="text-center">
                 <label className="block text-sm font-bold text-gray-400 mb-3">일일 근무 인원</label>
                 <div className="flex items-center gap-3 bg-black/30 rounded-xl px-4 py-2 border border-white/10">
-                  <button onClick={() => setShiftsPerDay(Math.max(1, shiftsPerDay - 1))} className="text-gray-400 hover:text-white font-bold text-xl w-8">-</button>
+                  <button aria-label="일일 근무 인원 줄이기" onClick={() => setShiftsPerDay(Math.max(1, shiftsPerDay - 1))} className="text-gray-400 hover:text-white font-bold text-xl w-8">-</button>
                   <span className="font-black text-2xl text-emerald-400 w-8 text-center">{shiftsPerDay}</span>
-                  <button onClick={() => setShiftsPerDay(shiftsPerDay + 1)} className="text-gray-400 hover:text-white font-bold text-xl w-8">+</button>
+                  <button aria-label="일일 근무 인원 늘리기" onClick={() => setShiftsPerDay(shiftsPerDay + 1)} className="text-gray-400 hover:text-white font-bold text-xl w-8">+</button>
                 </div>
               </div>
               <div className="text-center">
                 <label className="block text-sm font-bold text-gray-400 mb-3">기본 근무 제한</label>
                 <div className="flex items-center gap-3 bg-black/30 rounded-xl px-4 py-2 border border-white/10">
-                  <button onClick={() => setDefaultMaxShifts(Math.max(1, defaultMaxShifts - 1))} className="text-gray-400 hover:text-white font-bold text-xl w-8">-</button>
+                  <button aria-label="기본 근무 제한 줄이기" onClick={() => setDefaultMaxShifts(Math.max(1, defaultMaxShifts - 1))} className="text-gray-400 hover:text-white font-bold text-xl w-8">-</button>
                   <span className="font-black text-2xl text-sky-400 w-8 text-center">{defaultMaxShifts}</span>
-                  <button onClick={() => setDefaultMaxShifts(defaultMaxShifts + 1)} className="text-gray-400 hover:text-white font-bold text-xl w-8">+</button>
+                  <button aria-label="기본 근무 제한 늘리기" onClick={() => setDefaultMaxShifts(defaultMaxShifts + 1)} className="text-gray-400 hover:text-white font-bold text-xl w-8">+</button>
                 </div>
               </div>
             </div>
@@ -294,9 +296,9 @@ export default function WeekendDutyGame() {
                         <div className="flex items-center justify-between gap-3">
                           <span className="font-bold text-white">{person.name}</span>
                           <div className="flex items-center gap-1.5 bg-black/30 border border-white/10 rounded-lg px-2 py-1">
-                            <button onClick={() => updateMaxShifts(person.id, -1)} className="text-gray-500 hover:text-white w-5 text-center">-</button>
+                            <button aria-label={`${person.name} 근무 제한 줄이기`} onClick={() => updateMaxShifts(person.id, -1)} className="text-gray-500 hover:text-white w-5 text-center">-</button>
                             <span className="font-mono text-emerald-400 font-bold text-sm w-4 text-center">{person.maxShifts}</span>
-                            <button onClick={() => updateMaxShifts(person.id, 1)} className="text-gray-500 hover:text-white w-5 text-center">+</button>
+                            <button aria-label={`${person.name} 근무 제한 늘리기`} onClick={() => updateMaxShifts(person.id, 1)} className="text-gray-500 hover:text-white w-5 text-center">+</button>
                           </div>
                         </div>
                       </td>
@@ -307,6 +309,7 @@ export default function WeekendDutyGame() {
                         return (
                           <td key={date} className="px-2 py-2 text-center">
                             <button
+                              aria-label={`${person.name}, ${date}: ${cfg.label}. 다음 선호도로 변경`}
                               onClick={() => updatePreference(person.id, date)}
                               className={`w-full py-2.5 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all hover:scale-105 ${cfg.bg} ${cfg.color}`}
                             >

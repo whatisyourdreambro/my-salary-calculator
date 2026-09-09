@@ -80,10 +80,10 @@ export default function GlobalTaxPage() {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-2">
+                  <label htmlFor="ms-global-field-0" className="block text-sm font-medium text-muted-foreground mb-2">
                     세전 연간 소득 (원)
                   </label>
-                  <input
+                  <input id="ms-global-field-0"
                     type="range"
                     min="30000000"
                     max="200000000"

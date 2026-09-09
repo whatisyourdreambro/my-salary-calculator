@@ -49,8 +49,8 @@ export default function ChuseokBonusClient() {
 
       <div {...measurement.inputProps} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
-          <label className="block text-sm font-bold text-navy mb-2">내 연봉 (원)</label>
-          <input
+          <label htmlFor="ms-chuseok-bonus-2026-field-0" className="block text-sm font-bold text-navy mb-2">내 연봉 (원)</label>
+          <input id="ms-chuseok-bonus-2026-field-0"
             type="text"
             inputMode="numeric"
             value={salary.toLocaleString("ko-KR")}
@@ -59,10 +59,10 @@ export default function ChuseokBonusClient() {
           />
         </div>
         <div>
-          <label className="block text-sm font-bold text-navy mb-2">
+          <label htmlFor="ms-chuseok-bonus-2026-field-1" className="block text-sm font-bold text-navy mb-2">
             추석 상여금 (원)
           </label>
-          <input
+          <input id="ms-chuseok-bonus-2026-field-1"
             type="text"
             inputMode="numeric"
             value={bonus.toLocaleString("ko-KR")}

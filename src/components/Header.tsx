@@ -59,18 +59,16 @@ export default function Header() {
  // 인라인 스타일은 .dark 오버라이드가 닿지 않아 다크모드에서 헤더만 밝게 남던
  // 전 페이지 결함의 원인이었다 (클래스 방식은 FOUC 없이 테마 전환에 반응).
  const headerSurface = isScrolled || isMobileMenuOpen
- ? "bg-white/[0.92] dark:bg-slate-900/[0.92] border-canvas-200 dark:border-canvas-800"
- : "bg-canvas border-transparent";
+ ? "bg-card border-border"
+ : "bg-background border-border";
 
  return (
  <>
  <header
  lang={isEn ? "en" : "ko"}
- className={`header-slide-in fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300 ${headerSurface}`}
+ className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-150 motion-reduce:transition-none ${headerSurface}`}
  style={{
- backdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
- WebkitBackdropFilter: isScrolled || isMobileMenuOpen ? "blur(20px)" : "none",
- boxShadow: isScrolled ? "0 4px 24px -8px #0145F211" : "none",
+ boxShadow: isScrolled ? "0 4px 16px -12px rgb(15 23 42 / 0.25)" : "none",
  // CLS 방어: padding 고정 (스크롤 상태와 무관)
  padding: "12px 0",
  minHeight: 64,
@@ -80,7 +78,7 @@ export default function Header() {
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
- <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Money Salary home" : "Money Salary — 머니샐러리 홈"} className="flex min-h-11 items-center gap-2 no-underline">
+ <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Money Salary home" : "Money Salary — 머니샐러리 홈"} className="ms-interactive hover:!translate-y-0 hover:!shadow-none flex min-h-11 items-center gap-2 rounded-lg no-underline">
  <Logo
  className="h-6 min-[360px]:h-8 sm:h-9 w-auto text-electric"
  showText={true}
@@ -103,10 +101,10 @@ export default function Header() {
  key={item.name}
  href={item.href}
  aria-current={pathname === item.href ? "page" : undefined}
- className={`px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-[10px] whitespace-nowrap no-underline transition-colors hover:bg-electric-5 hover:text-electric ${
+ className={`ms-interactive hover:!translate-y-0 hover:!shadow-none inline-flex min-h-11 items-center px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-medium rounded-lg whitespace-nowrap no-underline hover:bg-secondary hover:text-link ${
  pathname === item.href
- ? "text-electric bg-electric-5"
- : "text-muted-blue"
+ ? "text-link bg-secondary"
+ : "text-muted-foreground"
  }`}
  >
  {item.name}
@@ -126,7 +124,7 @@ export default function Header() {
  <Link
  href={dashboardHref}
  aria-label={dashboardLabel}
- className="hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3.5 py-2 text-[13.5px] font-bold text-white bg-electric border-2 border-electric rounded-xl no-underline whitespace-nowrap shadow-[0_4px_14px_-2px_#0145F233] hover:bg-canvas hover:text-electric transition-colors"
+ className="ms-interactive hover:!translate-y-0 hover:!shadow-none hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-foreground bg-secondary border border-border rounded-xl no-underline whitespace-nowrap hover:bg-accent"
  >
  <LayoutDashboard size={14} aria-hidden="true" />
  <span className="hidden 2xl:inline">{dashboardLabel}</span>
@@ -137,8 +135,8 @@ export default function Header() {
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className={`flex min-w-11 min-h-11 items-center justify-center cursor-pointer p-2 rounded-[10px] border-none text-electric transition-colors hover:bg-electric-10 ${
- isMobileMenuOpen ? "bg-electric-10" : "bg-transparent"
+ className={`ms-interactive hover:!translate-y-0 hover:!shadow-none flex min-w-11 min-h-11 items-center justify-center cursor-pointer p-2 rounded-xl border-none text-foreground transition-colors hover:bg-secondary ${
+ isMobileMenuOpen ? "bg-secondary" : "bg-transparent"
  }`}
  aria-label={mobileMenuAriaLabel}
  aria-expanded={isMobileMenuOpen}
@@ -159,15 +157,15 @@ export default function Header() {
  lang={isEn ? "en" : "ko"}
  onCancel={(event) => { event.preventDefault(); setIsMobileMenuOpen(false); }}
  aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
- className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-y-auto overscroll-contain border-0 bg-white dark:bg-slate-900 text-navy dark:text-canvas-50 backdrop:bg-navy/40"
+ className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-y-auto overscroll-contain border-0 bg-card text-foreground backdrop:bg-black/40"
  style={{
  paddingTop: "env(safe-area-inset-top, 0)",
  paddingBottom: "env(safe-area-inset-bottom, 0)",
  }}
  >
- <div className="flex items-center justify-between gap-4 border-b border-canvas-200 px-5 py-3">
+ <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-3">
  <p className="font-bold">{isEn ? "Explore Moneysalary" : "머니샐러리 메뉴"}</p>
- <button type="button" autoFocus onClick={() => setIsMobileMenuOpen(false)} aria-label={isEn ? "Close menu" : "메뉴 닫기"} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-electric hover:bg-electric-10 focus-visible:ring-2 focus-visible:ring-electric">
+ <button type="button" autoFocus onClick={() => setIsMobileMenuOpen(false)} aria-label={isEn ? "Close menu" : "메뉴 닫기"} className="ms-button ms-button-ghost min-h-11 min-w-11 !p-2">
  <X size={22} aria-hidden="true" />
  </button>
  </div>
@@ -178,7 +176,7 @@ export default function Header() {
  <Link
  href={dashboardHref}
  onClick={() => setIsMobileMenuOpen(false)}
- className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
+ className="ms-button ms-button-secondary mb-5 w-full justify-center no-underline"
  >
  <LayoutDashboard size={18} aria-hidden="true" />
  {isEn ? "Open my dashboard" : "내 대시보드 열기"}
@@ -187,7 +185,7 @@ export default function Header() {
  {/* Nav items */}
  <nav
  aria-label={isEn ? "Main menu" : "주 메뉴"}
- className="bg-white rounded-[20px] overflow-hidden border-[1.5px] border-canvas"
+ className="overflow-hidden rounded-2xl border border-border bg-background"
  >
  {activeNavConfig.map((item) =>
  item.type === "link" ? (
@@ -196,10 +194,10 @@ export default function Header() {
  href={item.href}
  aria-current={pathname === item.href ? "page" : undefined}
  onClick={() => setIsMobileMenuOpen(false)}
- className={`block no-underline border-b border-canvas-100 last:border-b-0 px-5 py-4 text-base font-semibold transition-colors ${
+ className={`ms-interactive hover:!translate-y-0 hover:!shadow-none block no-underline border-b border-border last:border-b-0 px-5 py-4 text-base font-semibold transition-colors ${
  pathname === item.href
- ? "text-electric bg-electric-5"
- : "text-navy hover:bg-electric-5"
+ ? "text-link bg-secondary"
+ : "text-foreground hover:bg-secondary"
  }`}
  >
  {item.name}

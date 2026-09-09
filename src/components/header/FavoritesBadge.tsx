@@ -37,10 +37,10 @@ export default function FavoritesBadge() {
       lang={isEnglish ? "en" : "ko"}
       aria-label={isEnglish ? `View ${count} saved English pages` : `즐겨찾기 ${count}개 보기`}
       onClick={() => trackBookmarkClick(destination, "header_badge")}
-      className="relative inline-flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full hover:bg-canvas-100 transition-colors"
+      className="ms-interactive hover:!translate-y-0 hover:!shadow-none relative inline-flex min-h-11 min-w-11 items-center justify-center p-2 rounded-xl text-link hover:bg-secondary"
     >
-      <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-      <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-electric text-white text-[10px] font-black flex items-center justify-center leading-none">
+      <Star className="w-5 h-5 fill-current" />
+      <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-electric text-white text-[10px] font-semibold flex items-center justify-center leading-none">
         {count > 9 ? "9+" : count}
       </span>
     </Link>

@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useId } from "react";
 import {
  AreaChart,
  Area,
@@ -50,6 +50,7 @@ const MungGoalMarker = (props: MungGoalMarkerProps) => {
 };
 
 export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
+ const fieldId = useId();
  const [savingsRate, setSavingsRate] = useState(50); // %
  const [annualReturn, setAnnualReturn] = useState(8); // %
  const [fireGoal, setFireGoal] = useState(1000000000); // Default 10억 (1 Billion KRW)
@@ -67,14 +68,14 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="bg-white p-6 rounded-2xl border border-canvas shadow-xl space-y-8">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div>
- <h2 className="text-2xl font-bold text-[#0F4C81] flex items-center gap-2">
+ <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
  <TrendingUp /> 자산 성장 시뮬레이션
  </h2>
  <p className="text-faint-blue text-sm">월 {formatKRW(monthlySavings)}원씩 투자하면 미래의 내 자산은?</p>
  </div>
  <div className="flex items-center gap-2 bg-canvas px-4 py-2 rounded-xl border border-electric">
  <Target className="text-electric" size={20} />
- <span className="text-sm font-semibold text-blue-800">목표: {formatKRW(fireGoal)}원</span>
+ <span className="text-sm font-semibold text-link">목표: {formatKRW(fireGoal)}원</span>
  </div>
  </div>
 
@@ -82,10 +83,10 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div className="space-y-3">
  <div className="flex justify-between">
- <label className="text-sm font-bold text-muted-blue">저축률</label>
- <span className="text-sm font-bold text-[#0F4C81]">{savingsRate}%</span>
+ <label htmlFor={`${fieldId}-savings`} className="text-sm font-bold text-muted-blue">저축률</label>
+ <span className="text-sm font-bold text-link">{savingsRate}%</span>
  </div>
- <input
+ <input id={`${fieldId}-savings`}
  type="range"
  min="0"
  max="100"
@@ -97,10 +98,10 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
 
  <div className="space-y-3">
  <div className="flex justify-between">
- <label className="text-sm font-bold text-muted-blue">기대 수익률 (연)</label>
+ <label htmlFor={`${fieldId}-return`} className="text-sm font-bold text-muted-blue">기대 수익률 (연)</label>
  <span className="text-sm font-bold text-primary">{annualReturn}%</span>
  </div>
- <input
+ <input id={`${fieldId}-return`}
  type="range"
  min="1"
  max="20"
@@ -112,10 +113,10 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
 
  <div className="space-y-3">
  <div className="flex justify-between">
- <label className="text-sm font-bold text-muted-blue">은퇴 목표액</label>
- <span className="text-sm font-bold text-[#FFD700] bg-electric/5 px-2 rounded">{formatKRW(fireGoal)}</span>
+ <label htmlFor={`${fieldId}-goal`} className="text-sm font-bold text-muted-blue">은퇴 목표액</label>
+ <span className="text-sm font-bold text-link bg-secondary px-2 rounded">{formatKRW(fireGoal)}</span>
  </div>
- <select 
+ <select id={`${fieldId}-goal`}
  className="w-full p-2 bg-canvas border border-canvas rounded-lg text-sm font-semibold"
  value={fireGoal}
  onChange={(e) => setFireGoal(Number(e.target.value))}

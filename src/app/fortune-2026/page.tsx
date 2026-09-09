@@ -69,8 +69,8 @@ export default function FinancialFortunePage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 my-8 shadow-sm">
  <div className="grid grid-cols-2 gap-4 mb-6">
  <div>
- <label className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">출생 연도</label>
- <input
+ <label htmlFor="ms-fortune-2026-field-0" className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">출생 연도</label>
+ <input id="ms-fortune-2026-field-0"
  type="number"
  min={1950}
  max={2006}

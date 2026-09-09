@@ -10,7 +10,7 @@ import type { CalculationResult } from "@/lib/calculator";
 // 시급/주급 테이블이 연봉/월급(130kB)보다 2배 무겁던 비대칭의 원인이었다.
 const DeductionBarChart = dynamic(() => import("@/components/charts/DeductionBarChart"), {
  ssr: false,
- loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
+ loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-secondary" />,
 });
 import { AdvancedSettings } from "@/app/types";
 import SalaryTable from "@/components/SalaryTable";
@@ -18,7 +18,7 @@ import TableInteraction from "@/components/TableInteraction";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { motion } from "framer-motion";
+
 import { Calculator, CheckCircle2, TrendingDown } from "lucide-react";
 
 interface InteractiveTableProps {
@@ -124,13 +124,10 @@ export default function InteractiveTable({
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 px-0 sm:px-4 lg:px-0">
 
  {/* === 입력 패널 === */}
- <motion.div
+ <div
  className="lg:col-span-2 duotone-card p-7 sm:p-10"
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.6 }}
  >
- <h2 className="text-2xl font-bold tracking-tight mb-8 text-navy flex items-center gap-3">
+ <h2 className="text-2xl font-bold tracking-tight mb-8 text-foreground flex items-center gap-3">
  <span className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-electric-10 text-electric">
  <Calculator className="w-5 h-5" />
  </span>
@@ -142,16 +139,18 @@ export default function InteractiveTable({
  {/* 연봉 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="salary" className="text-sm font-bold text-faint-blue uppercase tracking-wider">
+ <Label id="salary-label" htmlFor="salary" onClick={() => document.getElementById("salary")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  {pageConfig.salaryLabel}
  </Label>
- <span className="text-2xl font-black text-navy tabular-nums">
+ <span className="text-2xl font-black text-foreground tabular-nums">
  {salary.toLocaleString('ko-KR')}
- <span className="text-base text-faint-blue font-semibold ml-1">원</span>
+ <span className="text-base text-muted-foreground font-semibold ml-1">원</span>
  </span>
  </div>
  <Slider
  id="salary"
+ aria-labelledby="salary-label"
+ aria-valuetext={`${salary.toLocaleString("ko-KR")}원`}
  min={pageConfig.salaryMin}
  max={pageConfig.salaryMax}
  step={pageConfig.salaryStep}
@@ -164,16 +163,18 @@ export default function InteractiveTable({
  {/* 부양가족 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="dependents" className="text-sm font-bold text-faint-blue uppercase tracking-wider">
+ <Label id="dependents-label" htmlFor="dependents" onClick={() => document.getElementById("dependents")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  부양가족
  </Label>
- <span className="text-2xl font-black text-navy tabular-nums">
+ <span className="text-2xl font-black text-foreground tabular-nums">
  {dependents}
- <span className="text-base text-faint-blue font-semibold ml-1">명</span>
+ <span className="text-base text-muted-foreground font-semibold ml-1">명</span>
  </span>
  </div>
  <Slider
  id="dependents"
+ aria-labelledby="dependents-label"
+ aria-valuetext={`${dependents}명`}
  min={1}
  max={10}
  step={1}
@@ -186,16 +187,18 @@ export default function InteractiveTable({
  {/* 비과세 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="non-taxable" className="text-sm font-bold text-faint-blue uppercase tracking-wider">
+ <Label id="non-taxable-label" htmlFor="non-taxable" onClick={() => document.getElementById("non-taxable")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  비과세 (월)
  </Label>
- <span className="text-2xl font-black text-navy tabular-nums">
+ <span className="text-2xl font-black text-foreground tabular-nums">
  {nonTaxableAmount.toLocaleString('ko-KR')}
- <span className="text-base text-faint-blue font-semibold ml-1">원</span>
+ <span className="text-base text-muted-foreground font-semibold ml-1">원</span>
  </span>
  </div>
  <Slider
  id="non-taxable"
+ aria-labelledby="non-taxable-label"
+ aria-valuetext={`월 ${nonTaxableAmount.toLocaleString("ko-KR")}원`}
  min={0}
  max={1000000}
  step={100000}
@@ -206,7 +209,7 @@ export default function InteractiveTable({
  </div>
 
  {/* 중소기업 토글 */}
- <div className="flex items-center justify-between p-5 bg-canvas/50 rounded-[16px] border border-canvas ">
+ <div className="flex items-center justify-between p-5 bg-secondary/50 rounded-[16px] border border-border ">
  <Label htmlFor="sme-youth" className="text-sm font-bold text-muted-blue cursor-pointer">
  중소기업 청년 감면 적용
  </Label>
@@ -215,8 +218,8 @@ export default function InteractiveTable({
  </div>
 
  {/* 차트 */}
- <div className="bg-canvas/40 rounded-[20px] p-6 border border-canvas flex flex-col justify-center">
- <h4 className="text-xs font-black text-faint-blue mb-5 text-center uppercase tracking-widest">
+ <div className="bg-secondary/40 rounded-[20px] p-6 border border-border flex flex-col justify-center">
+ <h4 className="text-xs font-black text-muted-foreground mb-5 text-center uppercase tracking-widest">
  공제 비율 분석
  </h4>
  <div className="h-56 w-full">
@@ -224,55 +227,49 @@ export default function InteractiveTable({
  </div>
  </div>
  </div>
- </motion.div>
+ </div>
 
  {/* === 결과 패널 (스티키) === */}
  <div className="space-y-4 lg:sticky lg:top-24">
  {/* 실수령액 카드 */}
- <motion.div
- className="rounded-[24px] bg-primary p-8 shadow-primary-lg relative overflow-hidden"
- initial={{ opacity: 0, scale: 0.95 }}
- animate={{ opacity: 1, scale: 1 }}
- transition={{ duration: 0.5, delay: 0.1 }}
+ <div
+ className="rounded-2xl bg-primary p-6 relative overflow-hidden"
  >
  {/* 내부 글로우 */}
- <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] pointer-events-none bg-white/10" />
 
- <p className="text-xs font-black uppercase tracking-widest mb-3 relative z-10 text-white/70">
+
+ <p className="text-xs font-black uppercase tracking-widest mb-3 relative z-10 text-white">
  예상 월 실수령액
  </p>
- <p className="text-5xl font-black tracking-tight tabular-nums relative z-10 text-white">
+ <p className="break-words text-3xl font-bold tracking-tight tabular-nums relative z-10 text-white sm:text-4xl">
  {result.monthlyNet.toLocaleString('ko-KR')}
- <span className="text-2xl ml-1 font-semibold text-white/70">원</span>
+ <span className="text-2xl ml-1 font-semibold text-white">원</span>
  </p>
 
  <div className="mt-6 pt-5 space-y-2.5 text-sm font-medium relative z-10 border-t border-white/20">
  <div className="flex justify-between items-center">
- <span className="text-white/70">세전 (월환산)</span>
+ <span className="text-white">세전 (월환산)</span>
  <span className="font-bold tabular-nums text-white">{Math.round(toMonthly(salary)).toLocaleString('ko-KR')}원</span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-white/70">총 공제액</span>
- <span className="font-bold tabular-nums text-white/80">
+ <span className="text-white">총 공제액</span>
+ <span className="font-bold tabular-nums text-white">
  <TrendingDown className="inline w-3.5 h-3.5 mr-1" />
  {result.totalDeduction.toLocaleString('ko-KR')}원
  </span>
  </div>
  <div className="flex justify-between items-center">
- <span className="text-white/70">공제율</span>
+ <span className="text-white">공제율</span>
  <span className="font-bold tabular-nums text-white">{(deductionRate * 100).toFixed(1)}%</span>
  </div>
  </div>
- </motion.div>
+ </div>
 
  {/* 상세 공제 내역 */}
- <motion.div
+ <div
  className="duotone-card p-6"
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.5, delay: 0.2 }}
  >
- <h3 className="text-sm font-black text-navy mb-4 flex items-center gap-2">
+ <h3 className="text-sm font-black text-foreground mb-4 flex items-center gap-2">
  <CheckCircle2 className="w-4 h-4 text-electric" />
  상세 공제 내역
  </h3>
@@ -285,32 +282,28 @@ export default function InteractiveTable({
  { label: "소득세", val: result.incomeTax, color: "#3D5E78" },
  { label: "지방소득세", val: result.localTax, color: "#7A9AB5" },
  ].map((item) => (
- <div key={item.label} className="flex justify-between items-center py-2 border-b border-canvas last:border-0">
+ <div key={item.label} className="flex justify-between items-center py-2 border-b border-border last:border-0">
  <div className="flex items-center gap-2">
  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
- <span className="text-[13px] font-semibold text-faint-blue">{item.label}</span>
+ <span className="text-[13px] font-semibold text-muted-foreground">{item.label}</span>
  </div>
- <span className="text-[13px] font-bold text-navy tabular-nums">
+ <span className="text-[13px] font-bold text-foreground tabular-nums">
  -{item.val.toLocaleString('ko-KR')}원
  </span>
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
 
  {/* 사이드 광고 */}
  </div>
  </div>
 
  {/* 테이블 중간 광고 */}
- 
+
 
  {/* 전체 테이블 섹션 */}
- <motion.div
- initial={{ opacity: 0, y: 30 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.6 }}
+ <div
  >
  <div className="mb-6">
  <TableInteraction
@@ -328,7 +321,7 @@ export default function InteractiveTable({
  linkColumnBaseHref={linkColumnBaseHref}
  linkValueMultiplier={linkValueMultiplier}
  />
- </motion.div>
+ </div>
  </div>
  );
 }

@@ -37,7 +37,7 @@ export default function Breadcrumbs({
   return (
     <nav aria-label="이동 경로" className={className}>
       <ol
-        className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs sm:text-sm text-muted-blue ${
+        className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-muted-foreground ${
           align === "center" ? "justify-center" : ""
         }`}
       >
@@ -56,7 +56,7 @@ export default function Breadcrumbs({
               )}
               {isLast ? (
                 <span
-                  className="font-bold text-navy dark:text-canvas-100 truncate max-w-[60vw] sm:max-w-md"
+                  className="max-w-[65vw] break-words font-medium text-foreground sm:max-w-md"
                   aria-current="page"
                 >
                   {crumb.name}
@@ -64,7 +64,7 @@ export default function Breadcrumbs({
               ) : (
                 <Link
                   href={crumb.path}
-                  className="hover:text-electric transition-colors whitespace-nowrap"
+                  className="inline-flex min-h-8 items-center rounded-md whitespace-nowrap transition-colors hover:text-link"
                 >
                   {crumb.name}
                 </Link>

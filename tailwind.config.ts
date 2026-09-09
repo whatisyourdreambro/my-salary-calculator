@@ -2,16 +2,10 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
 
-// ═══════════════════════════════════════════════════════════════
-//  DUOTONE DESIGN SYSTEM
-//  Primary:    Electric Blue  → #0145F2
-//  Base/BG:    Canvas Cloud   → #EDF1F5
-//  On-primary: White          → #FFFFFF  (accessibility only)
-// ═══════════════════════════════════════════════════════════════
-
+// Keep the legacy numeric palette stable; semantic colors follow the active theme.
 const ELECTRIC_BLUE = "#0145F2";
 const CANVAS_CLOUD  = "#EDF1F5";
-const ON_PRIMARY    = "#FFFFFF";
+const semantic = (token: string) => `hsl(var(--${token}) / <alpha-value>)`;
 
 const config = {
   darkMode: ["class"],
@@ -32,30 +26,43 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: [
-          "Pretendard Variable",
-          "Pretendard",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "system-ui",
-          "Roboto",
-          "sans-serif",
-        ],
+        sans: ["var(--font-pretendard)"],
       },
       spacing: {
         header: "var(--header-height)",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            "--tw-prose-body": "hsl(var(--content-muted, var(--muted-foreground)))",
+            "--tw-prose-headings": "hsl(var(--content-foreground, var(--foreground)))",
+            "--tw-prose-lead": "hsl(var(--content-muted, var(--muted-foreground)))",
+            "--tw-prose-links": "hsl(var(--content-link, var(--link)))",
+            "--tw-prose-bold": "hsl(var(--content-foreground, var(--foreground)))",
+            "--tw-prose-counters": "hsl(var(--content-muted, var(--muted-foreground)))",
+            "--tw-prose-bullets": "hsl(var(--content-link, var(--link)))",
+            "--tw-prose-hr": "hsl(var(--border))",
+            "--tw-prose-quotes": "hsl(var(--content-foreground, var(--foreground)))",
+            "--tw-prose-quote-borders": "hsl(var(--border))",
+            "--tw-prose-captions": "hsl(var(--content-muted, var(--muted-foreground)))",
+            "--tw-prose-code": "hsl(var(--content-foreground, var(--foreground)))",
+            "--tw-prose-th-borders": "hsl(var(--border))",
+            "--tw-prose-td-borders": "hsl(var(--border))",
+          },
+        },
+      },
       colors: {
         // ── Semantic tokens → CSS variables ──────────────────────────
-        border:     "hsl(var(--border))",
-        input:      "hsl(var(--input))",
-        ring:       "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border:     semantic("border"),
+        input:      semantic("input"),
+        ring:       semantic("ring"),
+        background: semantic("background"),
+        foreground: "hsl(var(--content-foreground, var(--foreground)) / <alpha-value>)",
+        link:       "hsl(var(--content-link, var(--link)) / <alpha-value>)",
 
         primary: {
-          DEFAULT:    ELECTRIC_BLUE,   // #0145F2
-          foreground: ON_PRIMARY,      // #FFFFFF
+          DEFAULT:    semantic("primary"),
+          foreground: semantic("primary-foreground"),
           // Opacity shades (all Electric Blue family)
           5:   "#0145F20D",
           10:  "#0145F21A",
@@ -70,14 +77,12 @@ const config = {
           90:  "#0145F2E6",
         },
 
-        // 2026-08-24 점검: text-faint(1,357회)·border-canvas-deep(478회)가 미정의
-        // 클래스로 조용히 실패(색 미적용 — 부모 색 상속)하고 있었다. 신규 컴포넌트
-        // 세대의 네이밍(faint / canvas-deep)을 기존 팔레트에 별칭으로 배선.
-        faint: "#7A9AB5", // = faint-blue (globals.css .text-faint-blue)
+        // Legacy names now follow semantic text/border tokens; numbered shades stay fixed.
+        faint: "hsl(var(--content-muted, var(--muted-foreground)) / <alpha-value>)",
         canvas: {
-          DEFAULT: CANVAS_CLOUD,   // #EDF1F5
-          foreground: ELECTRIC_BLUE,
-          deep: "#C8D4E0", // = canvas-300 (globals.css .bg-canvas-deeper 계열)
+          DEFAULT: semantic("background"),
+          foreground: semantic("foreground"),
+          deep: semantic("border"),
           // Tints
           50:  "#F8FAFB",
           100: "#EDF1F5",
@@ -91,7 +96,7 @@ const config = {
           900: "#162E4A",
         },
 
-        // Keep Tailwind shorthands pointing to duotone family
+        // Existing numbered utility colors are explicit palettes, not theme tokens.
         blue:   { 600: ELECTRIC_BLUE, DEFAULT: ELECTRIC_BLUE },
         slate:  {
           50:  CANVAS_CLOUD,
@@ -107,29 +112,31 @@ const config = {
         },
 
         secondary: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    semantic("secondary"),
+          foreground: semantic("secondary-foreground"),
         },
         destructive: {
-          DEFAULT:    ELECTRIC_BLUE,
-          foreground: ON_PRIMARY,
+          DEFAULT:    semantic("destructive"),
+          foreground: semantic("destructive-foreground"),
         },
         muted: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: `${ELECTRIC_BLUE}99`,
+          DEFAULT:    semantic("muted"),
+          foreground: "hsl(var(--content-muted, var(--muted-foreground)) / <alpha-value>)",
         },
         accent: {
-          DEFAULT:    CANVAS_CLOUD,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    semantic("accent"),
+          foreground: semantic("accent-foreground"),
         },
         popover: {
-          DEFAULT:    ON_PRIMARY,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    semantic("popover"),
+          foreground: semantic("popover-foreground"),
         },
         card: {
-          DEFAULT:    ON_PRIMARY,
-          foreground: ELECTRIC_BLUE,
+          DEFAULT:    semantic("card"),
+          foreground: semantic("card-foreground"),
         },
+        success: { DEFAULT: semantic("success"), foreground: semantic("success-foreground") },
+        warning: { DEFAULT: semantic("warning"), foreground: semantic("warning-foreground") },
       },
 
       borderRadius: {
@@ -148,12 +155,12 @@ const config = {
           to:   { height: "0" },
         },
         "fade-in-up": {
-          "0%":   { opacity: "0", transform: "translateY(20px)" },
+          "0%":   { opacity: "0", transform: "translateY(6px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "reveal-up": {
-          "0%":   { opacity: "0", transform: "translateY(40px) scale(0.95)" },
-          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+          "0%":   { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "shimmer": {
           "0%":   { backgroundPosition: "200% 0" },
@@ -182,8 +189,8 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up":   "accordion-up 0.2s ease-out",
-        "fade-in-up":     "fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        "reveal-up":      "reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fade-in-up":     "fade-in-up 0.18s ease-out backwards",
+        "reveal-up":      "reveal-up 0.22s ease-out backwards",
         "shimmer":        "shimmer 8s linear infinite",
         "float":          "float 6s ease-in-out infinite",
         "pulse-glow":     "pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -193,10 +200,10 @@ const config = {
 
       backgroundImage: {
         "gradient-radial":    "radial-gradient(var(--tw-gradient-stops))",
-        "hero-gradient":      "linear-gradient(to bottom, #EDF1F5, #FFFFFF)",
+        "hero-gradient":      "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))",
         "primary-gradient":   `linear-gradient(135deg, ${ELECTRIC_BLUE} 0%, #0D5BFF 100%)`,
-        "canvas-gradient":    `linear-gradient(135deg, ${CANVAS_CLOUD} 0%, #DDE4EC 100%)`,
-        "duotone-gradient":   `linear-gradient(160deg, ${CANVAS_CLOUD} 0%, #DDE4EC 50%, #C8D4E0 100%)`,
+        "canvas-gradient":    "linear-gradient(135deg, hsl(var(--background)), hsl(var(--secondary)))",
+        "duotone-gradient":   "linear-gradient(160deg, hsl(var(--background)), hsl(var(--secondary)) 50%, hsl(var(--muted)))",
       },
 
       boxShadow: {
@@ -207,8 +214,8 @@ const config = {
         "canvas-sm":   `0 2px 8px -1px #0A182922`,
         "canvas-md":   `0 4px 16px -2px #0A182933`,
         "canvas-lg":   `0 8px 32px -4px #0A182944`,
-        "card":        `0 1px 3px 0 #0A182914, 0 4px 16px -4px #0A182910`,
-        "card-hover":  `0 4px 24px -4px ${ELECTRIC_BLUE}22, 0 1px 4px 0 #0A182910`,
+        "card":        "var(--shadow-card)",
+        "card-hover":  "var(--shadow-raised)",
       },
     },
   },

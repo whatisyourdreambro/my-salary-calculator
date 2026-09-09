@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "@/components/AppLink";
-import { motion } from "framer-motion";
+
 
 type TableRow = { [key: string]: string | number };
 type Header = { key: keyof TableRow; label: string };
@@ -44,23 +44,19 @@ export default function SalaryTable({
  const isHighlighted = highlightRows.includes(row[headers[0].key] as number);
 
  return (
- <motion.div
+ <div
  key={`mobile-${index}`}
- initial={{ opacity: 0, y: 20 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.4 }}
- className={`relative overflow-hidden rounded-2xl p-5 transition-all duration-300 ${isHighlighted
+ className={`relative overflow-hidden rounded-2xl p-5 transition-colors duration-150 ${isHighlighted
  ? "bg-primary/5 border border-primary/20 shadow-sm"
- : "bg-white border border-canvas shadow-sm"
+ : "bg-card border border-border shadow-sm"
  }`}
  >
  <div className="relative z-10 w-full">
- <div className="flex justify-between items-center mb-4 pb-3 border-b border-canvas">
- <span className="text-faint-blue font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
+ <div className="flex justify-between items-center mb-4 pb-3 border-b border-border">
+ <span className="text-muted-foreground font-bold tracking-widest text-xs uppercase shrink-0">{headers[0].label}</span>
  {(() => {
  const href = buildHref(row);
- const cls = `text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-navy'}`;
+ const cls = `text-lg sm:text-xl font-black tracking-tight text-right ml-4 ${isHighlighted ? 'text-primary' : 'text-foreground'}`;
  const label = `${Number(row[headers[0].key]).toLocaleString('ko-KR')}${unit}`;
  return href ? (
  <Link href={href} className={`${cls} hover:underline`}>{label}</Link>
@@ -73,10 +69,10 @@ export default function SalaryTable({
  <div className="space-y-2.5 w-full">
  {headers.slice(1).map((header) => (
  <div key={header.key as string} className="flex justify-between items-center text-sm">
- <span className="text-faint-blue font-medium shrink-0">{header.label}</span>
+ <span className="text-muted-foreground font-medium shrink-0">{header.label}</span>
  <span className={`tabular-nums font-bold text-right ${header.key === 'monthlyNet' || header.key === 'preTax'
- ? 'text-navy text-base'
- : 'text-faint-blue'
+ ? 'text-foreground text-base'
+ : 'text-muted-foreground'
  }`}>
  {Number(row[header.key]).toLocaleString('ko-KR')}{unit}
  </span>
@@ -84,23 +80,23 @@ export default function SalaryTable({
  ))}
  </div>
  </div>
- </motion.div>
+ </div>
  );
  })}
  </div>
 
  {/* Desktop Table View */}
- <div className="hidden md:block relative overflow-hidden rounded-2xl border border-canvas shadow-sm bg-white">
- <div className="overflow-x-auto">
+ <div className="hidden md:block relative overflow-hidden rounded-2xl border border-border shadow-sm bg-card">
+ <div className="overflow-x-auto" role="region" aria-label="실수령액 상세 표" tabIndex={0}>
  <table className="min-w-full text-sm">
- <thead className="bg-canvas border-b border-canvas sticky top-0 z-30">
+ <thead className="bg-secondary border-b border-border sticky top-0 z-30">
  <tr>
  {headers.map((header, headerIndex) => (
  <th
  key={header.key as string}
  scope="col"
- className={`px-6 py-4 text-xs font-bold text-faint-blue uppercase tracking-widest whitespace-nowrap ${headerIndex === 0
- ? "text-left pl-8 sticky left-0 z-20 bg-canvas border-r border-canvas"
+ className={`px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-widest whitespace-nowrap ${headerIndex === 0
+ ? "text-left pl-8 sticky left-0 z-20 bg-secondary border-r border-border"
  : "text-right"
  }`}
  >
@@ -116,15 +112,11 @@ export default function SalaryTable({
  );
 
  return (
- <motion.tr
+ <tr
  key={index}
- initial={{ opacity: 0 }}
- whileInView={{ opacity: 1 }}
- viewport={{ once: true }}
- transition={{ duration: 0.2, delay: index % 10 * 0.03 }}
- className={`group transition-all duration-200 ${isHighlighted
+ className={`group transition-colors duration-150 ${isHighlighted
  ? "bg-primary/5 hover:bg-primary/8"
- : "hover:bg-canvas"
+ : "hover:bg-secondary"
  }`}
  >
  {headers.map((header, cellIndex) => {
@@ -132,18 +124,18 @@ export default function SalaryTable({
  const cellInner = (
  <>
  {Number(row[header.key]).toLocaleString('ko-KR')}
- {unit && <span className="text-xs text-faint-blue ml-0.5 font-normal">{unit}</span>}
+ {unit && <span className="text-xs text-muted-foreground ml-0.5 font-normal">{unit}</span>}
  </>
  );
  return (
  <td
  key={header.key as string}
  className={`px-6 py-4 whitespace-nowrap text-sm tabular-nums ${cellIndex === 0
- ? `text-left font-bold pl-8 sticky left-0 z-10 border-r border-canvas transition-colors ${isHighlighted
+ ? `text-left font-bold pl-8 sticky left-0 z-10 border-r border-border transition-colors ${isHighlighted
  ? 'text-primary bg-primary/5'
- : 'text-navy bg-white group-hover:bg-canvas'
+ : 'text-foreground bg-card group-hover:bg-secondary'
  }`
- : `text-right font-medium transition-colors ${isHighlighted && cellIndex !== 0 ? "font-bold text-muted-blue" : "text-faint-blue group-hover:text-muted-blue"}`
+ : `text-right font-medium transition-colors ${isHighlighted && cellIndex !== 0 ? "font-bold text-muted-blue" : "text-muted-foreground group-hover:text-muted-blue"}`
  }`}
  >
  {cellHref ? (
@@ -152,7 +144,7 @@ export default function SalaryTable({
  </td>
  );
  })}
- </motion.tr>
+ </tr>
  );
  })}
  </tbody>

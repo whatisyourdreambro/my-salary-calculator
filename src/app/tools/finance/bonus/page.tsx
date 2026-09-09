@@ -321,7 +321,7 @@ export default function BonusCalculatorPage() {
                 }}
               >
                 <div style={{ color: active ? "#FFFFFF" : "#0A1829", fontWeight: 900 }}>{p.label}</div>
-                <div style={{ color: active ? "rgba(255,255,255,0.65)" : "#7A9AB5", marginTop: "2px", fontWeight: 500 }}>
+                <div style={{ color: active ? "rgba(255,255,255,0.8)" : "#526176", marginTop: "2px", fontWeight: 500 }}>
                   {p.sub}
                 </div>
                 <div style={{ color: active ? "rgba(255,255,255,0.8)" : "#0145F2", fontWeight: 700, marginTop: "4px" }}>
@@ -337,18 +337,19 @@ export default function BonusCalculatorPage() {
           className="rounded-2xl p-6 sm:p-8 mb-5"
           style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC", boxShadow: "0 2px 16px #0145F20A" }}
         >
-          <h2 className="text-xs font-black uppercase tracking-widest mb-5" style={{ color: "#7A9AB5" }}>
+          <h2 className="text-xs font-black uppercase tracking-widest mb-5" style={{ color: "#526176" }}>
             입력 정보
           </h2>
           <div className="space-y-5">
 
             {/* 연봉 */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+              <label htmlFor="bonus-annual-salary" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
                 연간 기본급 (세전 연봉)
               </label>
               <div className="relative">
                 <input
+                  id="bonus-annual-salary"
                   type="text"
                   inputMode="numeric"
                   value={salaryFmt}
@@ -370,20 +371,21 @@ export default function BonusCalculatorPage() {
                   }}
                   placeholder="예: 60,000,000"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold" style={{ color: "#7A9AB5" }}>원</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold" style={{ color: "#526176" }}>원</span>
               </div>
-              <p className="text-xs mt-1.5 font-medium" style={{ color: "#7A9AB5" }}>
+              <p className="text-xs mt-1.5 font-medium" style={{ color: "#526176" }}>
                 = {toEok(salary)}
               </p>
             </div>
 
             {/* 성과급 */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+              <label htmlFor="bonus-gross-bonus" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
                 성과급 / 인센티브 (세전)
               </label>
               <div className="relative">
                 <input
+                  id="bonus-gross-bonus"
                   type="text"
                   inputMode="numeric"
                   value={bonusFmt}
@@ -411,10 +413,11 @@ export default function BonusCalculatorPage() {
             {/* 부양가족 + 배우자 */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+                <label htmlFor="bonus-dependents" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
                   <Users size={11} className="inline mr-1" />부양가족 (본인 제외)
                 </label>
                 <select
+                  id="bonus-dependents"
                   value={dependents}
                   onChange={(e) => setDependents(Number(e.target.value))}
                   className="w-full rounded-xl px-4 py-3.5 font-bold focus:outline-none"
@@ -426,7 +429,7 @@ export default function BonusCalculatorPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#7A9AB5" }}>
+                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
                   배우자 공제
                 </label>
                 <div className="flex gap-2">
@@ -609,7 +612,7 @@ export default function BonusCalculatorPage() {
           </span>
           {showDetail
             ? <ChevronUp size={18} style={{ color: "#0145F2" }} />
-            : <ChevronDown size={18} style={{ color: "#7A9AB5" }} />
+            : <ChevronDown size={18} style={{ color: "#526176" }} />
           }
         </button>
 
@@ -659,7 +662,7 @@ export default function BonusCalculatorPage() {
                         </span>
                         <div>
                           <p className="text-sm font-bold" style={{ color: "#0A1829" }}>{row.label}</p>
-                          <p className="text-xs mt-0.5" style={{ color: "#7A9AB5" }}>{row.sub}</p>
+                          <p className="text-xs mt-0.5" style={{ color: "#526176" }}>{row.sub}</p>
                         </div>
                       </div>
                       <p className="text-sm font-black tabular-nums" style={{ color: "#3D5E78" }}>{row.value}</p>
@@ -670,7 +673,7 @@ export default function BonusCalculatorPage() {
                 {/* 면책 */}
                 <div className="px-6 py-4 flex gap-3" style={{ backgroundColor: "#F8FAFB", borderTop: "1px solid #DDE4EC" }}>
                   <Info size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
-                  <p className="text-xs leading-relaxed" style={{ color: "#7A9AB5" }}>
+                  <p className="text-xs leading-relaxed" style={{ color: "#526176" }}>
                     본 계산기는 <strong style={{ color: "#0A1829" }}>2026년 소득세법 기준</strong>으로,
                     누진세 합산 방식(연간 정산)으로 산출됩니다. 실제 원천징수는 월 지급 시점의
                     간이세액표를 적용하므로 차이가 있을 수 있으며, 연말정산에서 정산됩니다.
@@ -798,7 +801,7 @@ function BonusComparison({
         </div>
         <div>
           <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 비교하기</h2>
-          <p className="text-xs" style={{ color: "#7A9AB5" }}>직급·업종·비율별 실수령액 한눈에 비교</p>
+          <p className="text-xs" style={{ color: "#526176" }}>직급·업종·비율별 실수령액 한눈에 비교</p>
         </div>
       </div>
 
@@ -811,7 +814,7 @@ function BonusComparison({
             className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all"
             style={{
               backgroundColor: activeGroup === i ? "#0145F2" : "transparent",
-              color: activeGroup === i ? "#FFFFFF" : "#7A9AB5",
+              color: activeGroup === i ? "#FFFFFF" : "#526176",
               boxShadow: activeGroup === i ? "0 2px 8px #0145F230" : "none",
             }}
           >{g.group}</button>
@@ -843,7 +846,7 @@ function BonusComparison({
                       {isTop && !row.isBase && <span className="text-[11px]">🏆</span>}
                     </div>
                     <div className="col-span-3 text-right">
-                      <span className="text-xs font-bold tabular-nums" style={{ color: "#7A9AB5" }}>{toEok(row.bonus)}</span>
+                      <span className="text-xs font-bold tabular-nums" style={{ color: "#526176" }}>{toEok(row.bonus)}</span>
                     </div>
                     <div className="col-span-2 text-right">
                       <span className="text-xs font-bold tabular-nums" style={{ color: "#E63B5A" }}>-{toEok(row.res.totalDeduction)}</span>
@@ -925,7 +928,7 @@ function BonusGlossary() {
         </div>
         <div>
           <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 핵심 용어사전</h2>
-          <p className="text-xs" style={{ color: "#7A9AB5" }}>계산 전 반드시 알아야 할 10가지</p>
+          <p className="text-xs" style={{ color: "#526176" }}>계산 전 반드시 알아야 할 10가지</p>
         </div>
       </div>
       <div className="space-y-2">
@@ -939,7 +942,7 @@ function BonusGlossary() {
                   <span className="text-sm font-black" style={{ color: isOpen ? "#0145F2" : "#0A1829" }}>{g.term}</span>
                 </div>
                 <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all" style={{ backgroundColor: isOpen ? "#0145F2" : "#EDF1F5", transform: isOpen ? "rotate(180deg)" : "none" }}>
-                  <ChevronDown size={14} style={{ color: isOpen ? "#FFFFFF" : "#7A9AB5" }} />
+                  <ChevronDown size={14} style={{ color: isOpen ? "#FFFFFF" : "#526176" }} />
                 </div>
               </button>
               <AnimatePresence>

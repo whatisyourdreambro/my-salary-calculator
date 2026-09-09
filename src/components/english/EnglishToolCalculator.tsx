@@ -29,12 +29,12 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
   const resultSummary = result?.metrics.map(item => `${item.label}: ${displayMetric(item, currency)}`).join('; ') ?? '';
 
   return <div className="min-w-0 space-y-7" data-english-tool={slug}>
-    <section aria-labelledby="tool-input-heading" className="rounded-2xl border border-border bg-background p-4 sm:p-6">
+    <section aria-labelledby="tool-input-heading" className="ms-surface ms-panel">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div><h2 id="tool-input-heading" className="text-xl font-bold">Your inputs</h2><p className="mt-2 text-sm text-muted-foreground">Starting values are examples. Edit them to explore your own scenario.</p></div>
         <div className="w-full sm:w-52">
           <label htmlFor="tool-currency" className="mb-2 block text-sm font-semibold">Display currency</label>
-          <select id="tool-currency" value={currency} onChange={event => { if (isEnglishCurrency(event.target.value)) { setCurrency(event.target.value); setCurrencyChanged(true); } }} aria-describedby="tool-currency-help" className="min-h-11 w-full rounded-xl border border-border bg-background px-3 py-2 text-foreground">
+          <select id="tool-currency" value={currency} onChange={event => { if (isEnglishCurrency(event.target.value)) { setCurrency(event.target.value); setCurrencyChanged(true); } }} aria-describedby="tool-currency-help" className="ms-field w-full">
             {ENGLISH_CURRENCIES.map(code => <option key={code} value={code}>{code}</option>)}
           </select>
         </div>
@@ -47,7 +47,7 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
           const error = englishToolFieldError(field, raw[field.key], currency);
           return <div key={field.key} className="min-w-0">
             <label htmlFor={id} className="mb-2 block font-semibold">{field.label}{field.kind === 'money' ? ` (${currency})` : ''}</label>
-            <input id={id} type="text" inputMode={field.precision === 0 || (field.kind === 'money' && englishCurrencyDigits(currency) === 0) ? 'numeric' : 'decimal'} autoComplete="off" maxLength={24} value={raw[field.key]} onChange={event => setRaw(previous => ({ ...previous, [field.key]: event.target.value }))} aria-invalid={!!error} aria-describedby={`${id}-help${error ? ` ${id}-error` : ''}`} className="min-h-12 w-full min-w-0 rounded-xl border border-border bg-background px-3 py-3 text-lg text-foreground tabular-nums focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" />
+            <input id={id} type="text" inputMode={field.precision === 0 || (field.kind === 'money' && englishCurrencyDigits(currency) === 0) ? 'numeric' : 'decimal'} autoComplete="off" maxLength={24} value={raw[field.key]} onChange={event => setRaw(previous => ({ ...previous, [field.key]: event.target.value }))} aria-invalid={!!error} aria-describedby={`${id}-help${error ? ` ${id}-error` : ''}`} className="ms-field w-full min-w-0 text-lg tabular-nums" />
             <p id={`${id}-help`} className="mt-2 text-sm text-muted-foreground">{field.help}</p>
             {error && <p id={`${id}-error`} className="mt-1 text-sm text-destructive">{error}</p>}
           </div>;
@@ -55,11 +55,11 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
       </div>
     </section>
 
-    {!result && <p role="status" className="rounded-xl border border-border bg-background p-4 text-sm">No current result. Check the highlighted fields. If all inputs are within range, reduce amounts, rates or time horizons to keep the result within the supported numeric range. Earlier results cannot be shared.</p>}
-    {result && <section ref={resultRef} aria-labelledby="tool-result-heading" className="space-y-5 rounded-2xl border border-primary/30 bg-background p-4 sm:p-6" data-english-tool-result>
+    {!result && <p role="status" className="ms-status-warning rounded-xl p-4 text-sm">No current result. Check the highlighted fields. If all inputs are within range, reduce amounts, rates or time horizons to keep the result within the supported numeric range. Earlier results cannot be shared.</p>}
+    {result && <section ref={resultRef} aria-labelledby="tool-result-heading" className="ms-surface ms-panel space-y-5" data-english-tool-result>
       <div><h2 id="tool-result-heading" className="text-xl font-bold">Your current scenario</h2><p className="mt-2 text-sm text-muted-foreground">Recalculated from the inputs above. Rounded display amounts may not reconcile exactly except where a rounding split is explicitly shown.</p></div>
       <dl className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2">
-        {result.metrics.map(item => <div key={item.key} className="min-w-0 rounded-xl bg-canvas p-4 dark:bg-canvas-900">
+        {result.metrics.map(item => <div key={item.key} className="min-w-0 rounded-xl border border-border bg-secondary p-4 text-foreground sm:p-5">
           <dt className="text-sm text-muted-foreground">{item.label}</dt>
           <dd className="mt-2 break-words text-xl font-bold leading-snug tabular-nums sm:text-2xl" data-metric={item.key}>{displayMetric(item, currency)}</dd>
         </div>)}

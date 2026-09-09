@@ -329,6 +329,8 @@ export default function TetrisPage() {
 
  <div className="flex justify-center mb-4">
  <button
+ type="button"
+ aria-label="게임 다시 시작"
  onClick={startGame}
  className="p-4 bg-primary hover:bg-primary text-white rounded-full font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-110"
  >
@@ -366,6 +368,8 @@ export default function TetrisPage() {
  <div className="col-start-2">
  <button
  className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ type="button"
+ aria-label="블록 회전"
  onClick={() => rotate()}
  >
  <RotateCw className="w-8 h-8" />
@@ -374,6 +378,8 @@ export default function TetrisPage() {
  <div className="col-start-1 row-start-2">
  <button
  className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ type="button"
+ aria-label="블록 왼쪽 이동"
  onClick={() => move(-1, 0)}
  >
  <ArrowLeft className="w-8 h-8" />
@@ -382,6 +388,8 @@ export default function TetrisPage() {
  <div className="col-start-2 row-start-2">
  <button
  className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ type="button"
+ aria-label="블록 한 칸 내리기"
  onClick={() => move(0, 1)}
  >
  <ArrowDown className="w-8 h-8" />
@@ -390,6 +398,8 @@ export default function TetrisPage() {
  <div className="col-start-3 row-start-2">
  <button
  className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ type="button"
+ aria-label="블록 오른쪽 이동"
  onClick={() => move(1, 0)}
  >
  <ArrowRight className="w-8 h-8" />

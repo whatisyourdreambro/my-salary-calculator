@@ -33,7 +33,7 @@ describe("Korean home initial rendering", () => {
     expect(html).toContain("2026 연봉 계산기");
     expect(html).toContain('href="#calculator-section"');
     expect(html).toContain("내 연봉 실수령액 계산");
-    expect(html).toContain("머니샐러리를 신뢰할 수 있는 이유");
+    expect(html).toContain("결과를 읽는 세 가지 기준");
     expect(html).toContain("어디부터 알아볼까요?");
     expect(html).toContain("회사·직업·산업·지역별 연봉");
     expect(html).not.toMatch(/opacity:0(?:[;"}]|$)/);

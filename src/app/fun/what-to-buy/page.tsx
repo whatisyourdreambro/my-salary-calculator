@@ -62,14 +62,17 @@ export default function WhatToBuyPage() {
  <div className="duotone-card p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
  <div className="mb-8">
  <div className="flex justify-between items-baseline mb-4">
- <span className="text-sm font-bold text-faint-blue uppercase tracking-widest">
+ <label id="budget-label" htmlFor="budget" onClick={() => document.getElementById("budget")?.focus()} className="text-sm font-bold text-faint-blue uppercase tracking-widest">
  예산 (BUDGET)
- </span>
+ </label>
  <span className="text-3xl font-black text-navy tabular-nums">
  {budget.toLocaleString('ko-KR')}<span className="text-lg text-faint-blue ml-1">원</span>
  </span>
  </div>
  <Slider
+ id="budget"
+ aria-labelledby="budget-label"
+ aria-valuetext={`${budget.toLocaleString("ko-KR")}원`}
  min={1000}
  max={100000000}
  step={1000}

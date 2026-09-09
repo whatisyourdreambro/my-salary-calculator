@@ -450,8 +450,9 @@ export default function RandomDrawGame() {
  {/* Left Column: Inputs */}
  <div className="space-y-6">
  <div>
- <label className="block text-sm font-bold text-faint-blue mb-2">추첨 제목</label>
+ <label htmlFor="random-draw-title" className="block text-sm font-bold text-faint-blue mb-2">추첨 제목</label>
  <input
+ id="random-draw-title"
  type="text"
  value={title}
  onChange={(e) => setTitle(e.target.value)}
@@ -461,8 +462,9 @@ export default function RandomDrawGame() {
  </div>
 
  <div>
- <label className="block text-sm font-bold text-faint-blue mb-2">참가자 명단</label>
+ <label htmlFor="random-draw-candidates" className="block text-sm font-bold text-faint-blue mb-2">참가자 명단</label>
  <textarea
+ id="random-draw-candidates"
  value={candidatesText}
  onChange={(e) => setCandidatesText(e.target.value)}
  placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
@@ -479,10 +481,11 @@ export default function RandomDrawGame() {
  <div className="space-y-8">
  {/* Winner Count */}
  <div>
- <label className="block text-sm font-bold text-faint-blue mb-2">당첨자 수</label>
+ <label htmlFor="random-draw-winners" className="block text-sm font-bold text-faint-blue mb-2">당첨자 수</label>
  <div className="flex items-center gap-4 bg-white/50 border border-canvas rounded-xl p-4">
  <Users className="text-faint-blue" />
  <input
+ id="random-draw-winners"
  type="number"
  min="1"
  max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
@@ -510,10 +513,11 @@ export default function RandomDrawGame() {
  <div className="space-y-3 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
  {specialPrizes.map((prize, idx) => (
  <div key={idx} className="flex items-center gap-2">
- <div className="flex items-center gap-1 bg-canvas rounded-lg px-3 py-2 border border-canvas w-24">
+ <div className="flex shrink-0 items-center gap-1 bg-canvas rounded-lg px-3 py-2 border border-canvas w-24">
  <span className="text-faint-blue text-xs">No.</span>
  <input
  type="number"
+ aria-label={`${idx + 1}번째 특별상 등수`}
  value={prize.rank}
  onChange={(e) => updateSpecialPrize(idx, "rank", Number(e.target.value))}
  className="bg-transparent text-navy font-bold w-full outline-none text-center"
@@ -521,12 +525,14 @@ export default function RandomDrawGame() {
  </div>
  <input
  type="text"
+ aria-label={`${idx + 1}번째 특별상 상품명`}
  value={prize.name}
  onChange={(e) => updateSpecialPrize(idx, "name", e.target.value)}
  placeholder="상품명 (예: 치킨)"
- className="flex-1 bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy text-sm outline-none focus:border-primary/50 transition-colors"
+ className="min-w-0 flex-1 bg-canvas border border-canvas rounded-lg px-3 py-2 text-navy text-sm outline-none focus:border-primary/50 transition-colors"
  />
  <button
+ aria-label={`${idx + 1}번째 특별상 삭제`}
  onClick={() => removeSpecialPrize(idx)}
  className="p-2 text-faint-blue hover:text-electric transition-colors"
  >
@@ -596,7 +602,7 @@ export default function RandomDrawGame() {
  : "bg-white/5 border-white/5"
  }`}
  >
- <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${ball.rank === 1 ? "bg-gradient-to-br from-primary to-primary/80 text-black" :
+ <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black shadow-lg ${ball.rank === 1 ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground" :
  ball.rank === 2 ? "bg-gradient-to-br from-gray-300 to-gray-500 text-black" :
  ball.rank === 3 ? "bg-gradient-to-br from-primary to-primary/80 text-white" :
  "bg-canvas-dark text-faint-blue"
@@ -607,7 +613,7 @@ export default function RandomDrawGame() {
  <div className="flex items-center gap-2">
  <span className="text-navy font-bold text-lg truncate">{ball.name}</span>
  {specialPrize && (
- <span className="text-[10px] font-bold bg-primary/50 text-black px-1.5 py-0.5 rounded-full animate-pulse">
+ <span className="text-[10px] font-bold bg-secondary text-foreground px-1.5 py-0.5 rounded-full animate-pulse">
  {specialPrize.name}
  </span>
  )}
@@ -631,7 +637,7 @@ export default function RandomDrawGame() {
  <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-4 z-20">
  <button
  onClick={() => setGameState("setup")}
- className="px-10 py-4 bg-white text-black font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center gap-2"
+ className="px-10 py-4 bg-card text-foreground font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center gap-2"
  >
  <RotateCcw className="w-5 h-5" /> RESTART
  </button>

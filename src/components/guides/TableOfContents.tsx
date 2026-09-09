@@ -1,91 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import type { GuideHeading } from "@/lib/guideHeadings";
 
-interface TOCItem {
- id: string;
- text: string;
-}
+export default function TableOfContents({ headings }: { headings: GuideHeading[] }) {
+  const [activeId, setActiveId] = useState("");
 
-export default function TableOfContents({ content }: { content: string }) {
- const [headings, setHeadings] = useState<TOCItem[]>([]);
- const [activeId, setActiveId] = useState<string>("");
+  useEffect(() => {
+    setActiveId("");
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]) setActiveId(visible[0].target.id);
+    }, { rootMargin: "-96px 0px -65% 0px" });
+    for (const { id } of headings) {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    }
+    return () => observer.disconnect();
+  }, [headings]);
 
- useEffect(() => {
- // Extract h2 and h3 tags from content string
- // Note: In a real app with markdown, we'd use the AST. 
- // Here we use regex on the HTML string (simple implementation).
- const regex = /<h([2])>(.*?)<\/h\1>/g;
- const matches = [];
- let match;
- while ((match = regex.exec(content)) !== null) {
- // Remove any HTML tags inside the heading text
- const text = match[2].replace(/<[^>]*>?/gm, '');
- const id = text.trim().replace(/\s+/g, '-').toLowerCase();
- matches.push({ id, text });
- }
- setHeadings(matches);
- }, [content]);
+  if (headings.length === 0) return null;
 
- useEffect(() => {
- const observer = new IntersectionObserver(
- (entries) => {
- entries.forEach((entry) => {
- if (entry.isIntersecting) {
- setActiveId(entry.target.id);
- }
- });
- },
- { rootMargin: "0px 0px -80% 0px" }
- );
-
- headings.forEach(({ id }) => {
- const element = document.getElementById(id);
- if (element) observer.observe(element);
- });
-
- return () => observer.disconnect();
- }, [headings]);
-
- const handleClick = (id: string, e: React.MouseEvent) => {
- e.preventDefault();
- const element = document.getElementById(id);
- if (element) {
- const y = element.getBoundingClientRect().top + window.pageYOffset - 100;
- window.scrollTo({ top: y, behavior: "smooth" });
- }
- };
-
- if (headings.length === 0) return null;
-
- return (
- <nav className="hidden lg:block">
- <h4 className="font-bold text-sm text-foreground/70 mb-4 uppercase tracking-wider">
- 목차
- </h4>
- <ul className="space-y-3 text-sm border-l border-border/50 pl-4">
- {headings.map((heading) => (
- <li key={heading.id} className="relative">
- <a
- href={`#${heading.id}`}
- onClick={(e) => handleClick(heading.id, e)}
- className={`block transition-colors duration-200 ${activeId === heading.id
- ? "text-primary font-bold translate-x-1"
- : "text-muted-foreground hover:text-foreground hover:translate-x-1"
- }`}
- >
- {heading.text}
- </a>
- {activeId === heading.id && (
- <motion.div
- layoutId="toc-indicator"
- className="absolute -left-[17px] top-0 h-full w-[2px] bg-primary rounded-full"
- />
- )}
- </li>
- ))}
- </ul>
- </nav>
- );
+  return (
+    <nav aria-label="이 글의 목차">
+      <ol className="space-y-1 border-l border-border pl-3 text-sm">
+        {headings.map((heading, index) => (
+          <li key={heading.id}>
+            <a
+              href={`#${encodeURIComponent(heading.id)}`}
+              aria-current={activeId === heading.id ? "location" : undefined}
+              onClick={() => {
+                const element = document.getElementById(heading.id);
+                if (!element) return;
+                element.tabIndex = -1;
+                element.focus({ preventScroll: true });
+                setActiveId(heading.id);
+              }}
+              className={`flex min-h-11 items-start gap-2 rounded-lg px-2 py-3 leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${activeId === heading.id ? "bg-secondary font-semibold text-link" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}
+            >
+              <span aria-hidden="true" className="shrink-0 tabular-nums text-muted-foreground">{index + 1}.</span>
+              <span>{heading.text}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
 }

@@ -102,6 +102,7 @@ export default function SalaryRankCalculator() {
                   <button
                     key={ag.key}
                     onClick={() => setAgeGroup(ag.key)}
+                    aria-pressed={ageGroup === ag.key}
                     className={`py-3 rounded-xl font-bold text-sm transition-all duration-200 ${
                       ageGroup === ag.key
                         ? "bg-primary text-white shadow-md scale-[1.03]"
@@ -116,11 +117,12 @@ export default function SalaryRankCalculator() {
 
             {/* Salary Input */}
             <div>
-              <label className="block text-xs font-bold text-faint-blue uppercase tracking-widest mb-3">
+              <label htmlFor="salary-rank-annual" className="block text-xs font-bold text-faint-blue uppercase tracking-widest mb-3">
                 연간 연봉 (원)
               </label>
               <div className="relative">
                 <input
+                  id="salary-rank-annual"
                   type="text"
                   value={salary}
                   onChange={(e) => {
@@ -140,7 +142,7 @@ export default function SalaryRankCalculator() {
             <button
               onClick={handleCalculate}
               disabled={isCalculating || !salary}
-              className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 text-black font-black text-xl rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-3 group"
+              className="w-full py-6 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-black text-xl rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-3 group"
             >
               {isCalculating ? (
                 <>
@@ -287,7 +289,7 @@ export default function SalaryRankCalculator() {
                   </button>
                   <button
                     onClick={handleShare}
-                    className="flex-1 py-4 bg-primary text-black font-bold rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg"
+                    className="flex-1 py-4 bg-primary text-primary-foreground font-bold rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg"
                   >
                     <Share2 className="w-4 h-4" /> 카드 저장
                   </button>

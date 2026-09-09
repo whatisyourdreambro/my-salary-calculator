@@ -84,8 +84,9 @@ export default function SalarySlipPage() {
  </h2>
 
  <div className="space-y-2">
- <label className="text-sm font-bold text-faint-blue">연봉 (세전)</label>
+ <label htmlFor="salary-slip-salary" className="text-sm font-bold text-faint-blue">연봉 (세전)</label>
  <input
+ id="salary-slip-salary"
  type="text"
  value={salaryInput}
  onChange={(e) => {
@@ -99,20 +100,20 @@ export default function SalarySlipPage() {
 
  <div className="grid grid-cols-2 gap-4">
  <div className="space-y-2">
- <label className="text-sm font-bold text-faint-blue">회사명 (선택)</label>
- <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="toss-input text-base py-3" placeholder="(주)머니샐러리" />
+ <label htmlFor="salary-slip-company" className="text-sm font-bold text-faint-blue">회사명 (선택)</label>
+ <input id="salary-slip-company" type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="toss-input text-base py-3" placeholder="(주)머니샐러리" />
  </div>
  <div className="space-y-2">
- <label className="text-sm font-bold text-faint-blue">성명 (선택)</label>
- <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="toss-input text-base py-3" placeholder="홍길동" />
+ <label htmlFor="salary-slip-name" className="text-sm font-bold text-faint-blue">성명 (선택)</label>
+ <input id="salary-slip-name" type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="toss-input text-base py-3" placeholder="홍길동" />
  </div>
  <div className="space-y-2">
- <label className="text-sm font-bold text-faint-blue">사번 (선택)</label>
- <input type="text" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="toss-input text-base py-3" placeholder="2024001" />
+ <label htmlFor="salary-slip-employee" className="text-sm font-bold text-faint-blue">사번 (선택)</label>
+ <input id="salary-slip-employee" type="text" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="toss-input text-base py-3" placeholder="2024001" />
  </div>
  <div className="space-y-2">
- <label className="text-sm font-bold text-faint-blue">부서 (선택)</label>
- <input type="text" value={department} onChange={(e) => setDepartment(e.target.value)} className="toss-input text-base py-3" placeholder="개발팀" />
+ <label htmlFor="salary-slip-department" className="text-sm font-bold text-faint-blue">부서 (선택)</label>
+ <input id="salary-slip-department" type="text" value={department} onChange={(e) => setDepartment(e.target.value)} className="toss-input text-base py-3" placeholder="개발팀" />
  </div>
  </div>
 

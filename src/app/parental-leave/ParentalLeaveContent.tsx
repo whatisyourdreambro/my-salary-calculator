@@ -128,11 +128,11 @@ export default function ParentalLeaveContent() {
     <div className="space-y-5">
      {/* 통상임금 */}
      <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <label htmlFor="ms-parental-leave-field-0" className="block text-sm font-medium text-foreground mb-2">
        월 통상임금 (세전)
       </label>
       <div className="relative">
-       <input
+       <input id="ms-parental-leave-field-0"
         type="text"
         value={Number(monthlyWage).toLocaleString("ko-KR")}
         onChange={(e) =>

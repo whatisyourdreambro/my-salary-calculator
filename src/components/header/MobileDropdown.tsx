@@ -8,7 +8,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Link from "@/components/AppLink";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
@@ -32,8 +32,7 @@ function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
   const Icon = style.Icon;
   return (
     <span
-      className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-black tracking-wide flex-shrink-0"
-      style={{ backgroundColor: style.bg, color: style.text }}
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-secondary text-muted-foreground text-[10px] font-medium flex-shrink-0"
     >
       <Icon size={9} strokeWidth={2.5} aria-hidden="true" />
       {locale === "en" ? badge === "MUST" ? "PICK" : badge : style.label}
@@ -42,48 +41,52 @@ function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
 }
 
 export default function MobileDropdown({ item, pathname, onClose, locale = "ko" }: MobileDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const currentSection = item.items.some(link => link.href === pathname);
+  const [isOpen, setIsOpen] = useState(currentSection);
+  const panelId = useId();
+  useEffect(() => { setIsOpen(currentSection); }, [pathname, currentSection]);
 
   return (
-    <div className="border-b border-canvas-100 last:border-b-0">
+    <div className="border-b border-border last:border-b-0">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
-        className={`w-full flex justify-between items-center px-5 py-4 text-base font-semibold bg-transparent border-0 cursor-pointer transition-colors ${
-          isOpen ? "text-electric" : "text-navy"
+        aria-controls={panelId}
+        className={`ms-interactive hover:!translate-y-0 hover:!shadow-none min-h-11 w-full flex justify-between items-center px-5 py-4 text-left text-base font-semibold bg-transparent border-0 cursor-pointer transition-colors ${
+          isOpen ? "text-link" : "text-foreground"
         }`}
       >
         <div className="flex flex-col items-start gap-0.5">
           <span>{item.name}</span>
           {item.description && (
-            <span className="text-[11px] font-medium text-faint-blue">
+            <span className="text-[11px] font-medium text-muted-foreground">
               {item.description}
             </span>
           )}
         </div>
         <span
-          className={`inline-flex transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+          className={`inline-flex transition-transform duration-150 motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`}
         >
           <ChevronDown
             size={18}
             aria-hidden="true"
-            className={isOpen ? "text-electric" : "text-faint-blue"}
+            className={isOpen ? "text-link" : "text-muted-foreground"}
           />
         </span>
       </button>
 
       {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), grid-rows 0fr↔1fr로 높이 애니메이션 */}
       <div
-        className={`grid transition-[grid-template-rows,opacity,visibility] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        id={panelId}
+        className={`grid transition-[grid-template-rows,opacity,visibility] duration-150 motion-reduce:transition-none ${
           isOpen
             ? "visible grid-rows-[1fr] opacity-100"
             : "invisible grid-rows-[0fr] opacity-0 pointer-events-none"
         }`}
       >
         <div className="overflow-hidden min-h-0">
-          {/* 왼쪽 액센트 바 */}
-          <div className="mx-5 mb-2 h-[2px] rounded-full bg-gradient-to-r from-electric/30 to-transparent" />
+          <div className="mx-5 mb-2 border-t border-border" aria-hidden="true" />
 
           <div className="px-3 pb-3 pt-0.5">
             {item.items.map((subItem) => {
@@ -94,10 +97,10 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
                     href={subItem.href}
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
-                    className={`group flex items-center gap-2 px-4 py-3 rounded-xl no-underline mb-0.5 transition-all duration-150 ${
+                    className={`ms-interactive hover:!translate-y-0 hover:!shadow-none group flex min-h-11 items-center gap-2 px-4 py-3 rounded-xl no-underline mb-0.5 transition-colors duration-150 motion-reduce:transition-none ${
                       active
-                        ? "bg-electric-5 ring-1 ring-electric/20"
-                        : "hover:bg-electric-5"
+                        ? "bg-secondary ring-1 ring-border"
+                        : "hover:bg-secondary"
                     }`}
                   >
                     <div className="flex flex-col gap-0.5 flex-1 min-w-0">
@@ -105,8 +108,8 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
                         <span
                           className={`text-[15px] ${
                             active
-                              ? "font-bold text-electric"
-                              : "font-semibold text-navy group-hover:text-electric"
+                              ? "font-bold text-link"
+                              : "font-semibold text-foreground group-hover:text-link"
                           } transition-colors`}
                         >
                           {subItem.name}
@@ -114,7 +117,7 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
                         {subItem.badge && <BadgePill badge={subItem.badge} locale={locale} />}
                       </div>
                       {subItem.description && (
-                        <span className="text-[11.5px] text-faint-blue line-clamp-1">
+                        <span className="text-xs text-muted-foreground leading-5">
                           {subItem.description}
                         </span>
                       )}
@@ -122,10 +125,10 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
                     <ChevronRight
                       size={14}
                       aria-hidden="true"
-                      className={`flex-shrink-0 transition-all duration-150 ${
+                      className={`flex-shrink-0 transition-colors duration-150 motion-reduce:transition-none ${
                         active
-                          ? "text-electric opacity-100"
-                          : "text-faint-blue opacity-0 group-hover:opacity-60 group-hover:translate-x-0.5"
+                          ? "text-link opacity-100"
+                          : "text-muted-foreground"
                       }`}
                     />
                   </Link>

@@ -33,8 +33,7 @@ function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
   const Icon = style.Icon;
   return (
     <span
-      className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-black tracking-wide flex-shrink-0"
-      style={{ backgroundColor: style.bg, color: style.text }}
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-secondary text-muted-foreground text-[10px] font-medium flex-shrink-0"
     >
       <Icon size={9} strokeWidth={2.5} aria-hidden="true" />
       {locale === "en" ? badge === "MUST" ? "PICK" : badge : style.label}
@@ -46,7 +45,7 @@ function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
 function Caret() {
   return (
     <div
-      className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-white rotate-45 border-l border-t border-canvas"
+      className="absolute -top-[7px] left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-card rotate-45 border-l border-t border-border"
       style={{ zIndex: 1 }}
       aria-hidden="true"
     />
@@ -62,6 +61,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
   const menuId = useId();
   const [position, setPosition] = useState({ top: 76, left: 16 });
   const width = item.items.length >= 9 ? 580 : 340;
+  const currentSection = item.items.some(link => link.href === pathname);
 
   useLayoutEffect(() => {
     if (!isOpen || !buttonRef.current) return;
@@ -134,18 +134,18 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setIsOpen(true); focusItem(event.key === "ArrowUp" ? -1 : 0); }
         }}
-        className={`flex min-h-11 items-center gap-0.5 px-2 2xl:px-3 py-2 text-[13px] 2xl:text-[14px] font-semibold rounded-[10px] bg-transparent border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:bg-electric-5 hover:text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
-          isOpen ? "text-electric bg-electric-5" : "text-muted-blue"
+        className={`flex min-h-11 items-center gap-0.5 px-2 2xl:px-3 py-2 text-[13px] 2xl:text-[14px] font-medium rounded-lg bg-transparent border-none cursor-pointer whitespace-nowrap transition-colors duration-150 motion-reduce:transition-none hover:bg-secondary hover:text-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-link ${
+          isOpen || currentSection ? "text-link bg-secondary" : "text-muted-foreground"
         }`}
       >
         {item.name}
         <span
-          className={`inline-flex transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`inline-flex transition-transform duration-150 motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`}
         >
           <ChevronDown
             size={12}
             aria-hidden="true"
-            className={isOpen ? "text-electric" : "text-faint-blue"}
+            className={isOpen ? "text-link" : "text-muted-foreground"}
           />
         </span>
       </button>
@@ -164,38 +164,28 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
             focusItem(event.key === "Home" ? 0 : event.key === "End" ? -1 : index + (event.key === "ArrowDown" ? 1 : -1));
           }
         }}
-        className={`fixed bg-white dark:bg-canvas-950 border-[1.5px] border-canvas rounded-3xl shadow-[0_28px_64px_-12px_#0145F228,0_4px_20px_-4px_#0A182920] z-50 overflow-y-auto overscroll-contain transition-[opacity,transform,visibility] duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed bg-card border border-border rounded-2xl shadow-xl z-50 overflow-y-auto overscroll-contain transition-[opacity,transform,visibility] duration-150 motion-reduce:transition-none ${
           isWide ? "w-[580px]" : "w-[340px]"
         } ${
           isOpen
             ? "visible opacity-100 translate-y-0 scale-100"
-            : "invisible opacity-0 pointer-events-none translate-y-3.5 scale-95"
+            : "invisible opacity-0 pointer-events-none translate-y-1"
         }`}
         style={{
           top: position.top,
           left: position.left,
           maxHeight: `calc(100dvh - ${position.top + 16}px)`,
-          backgroundImage:
-            "radial-gradient(ellipse at 0% 0%, rgba(1,69,242,0.05) 0%, transparent 50%)",
         }}
       >
         <Caret />
 
-        {/* 상단 컬러 액센트 바 */}
-        <div
-          className="h-[3px] w-full"
-          style={{
-            background: "linear-gradient(90deg, #0145F2 0%, #4F8EFF 60%, transparent 100%)",
-          }}
-        />
-
         {/* Header — 카테고리 제목 + description */}
         {item.description && (
-          <div className="px-5 pt-3.5 pb-2.5 border-b border-canvas-100">
-            <p className="text-[11px] font-black text-electric uppercase tracking-widest">
+          <div className="px-5 pt-3.5 pb-2.5 border-b border-border">
+            <p className="text-xs font-semibold text-foreground">
               {item.name}
             </p>
-            <p className="text-xs text-muted-blue mt-0.5">{item.description}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
           </div>
         )}
 
@@ -212,8 +202,8 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
                   onClick={() => setIsOpen(false)}
                   role="menuitem"
                   aria-current={isActive ? "page" : undefined}
-                  className={`group flex min-h-11 items-center gap-2 px-3 py-2.5 rounded-xl no-underline transition-all duration-150 hover:bg-electric-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
-                    isActive ? "bg-electric-5 ring-1 ring-electric/20" : ""
+                  className={`ms-interactive hover:!translate-y-0 hover:!shadow-none group flex min-h-11 items-center gap-2 px-3 py-2.5 rounded-xl no-underline transition-colors duration-150 motion-reduce:transition-none hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-link ${
+                    isActive ? "bg-secondary ring-1 ring-border" : ""
                   }`}
                 >
                   {/* 텍스트 영역 */}
@@ -222,8 +212,8 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
                       <span
                         className={`text-[13.5px] font-semibold leading-tight transition-colors ${
                           isActive
-                            ? "text-electric"
-                            : "text-navy group-hover:text-electric"
+                            ? "text-link"
+                            : "text-foreground group-hover:text-link"
                         }`}
                       >
                         {subItem.name}
@@ -231,7 +221,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
                       {subItem.badge && <BadgePill badge={subItem.badge} locale={locale} />}
                     </div>
                     {subItem.description && (
-                      <span className="text-[11.5px] text-faint-blue group-hover:text-muted-blue line-clamp-1 transition-colors">
+                      <span className="text-xs text-muted-foreground group-hover:text-muted-foreground leading-5 transition-colors">
                         {subItem.description}
                       </span>
                     )}
@@ -239,7 +229,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
 
                   {/* 호버 시 오른쪽 화살표 */}
                   <span
-                    className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-electric flex-shrink-0 transition-all duration-150"
+                    className="text-muted-foreground flex-shrink-0"
                     aria-hidden="true"
                   >
                     <ChevronRight size={13} />

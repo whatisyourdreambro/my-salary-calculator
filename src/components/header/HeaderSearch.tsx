@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "@/components/AppLink";
 import { Search, X, ArrowRight } from "lucide-react";
-import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
+import type { SearchEntry } from "@/lib/searchIndex";
 import { useModalDialog } from "@/hooks/useModalDialog";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
@@ -27,16 +27,6 @@ async function loadSearchIndex(english: boolean) {
   }
   return searchIndexPromise;
 }
-
-const CATEGORY_BADGE: Record<SearchCategory, { bg: string; text: string }> = {
-  계산기: { bg: "#DBEAFE", text: "#1D4ED8" },
-  가이드: { bg: "#DCFCE7", text: "#15803D" },
-  용어: { bg: "#F3E8FF", text: "#7C3AED" },
-  "Q&A": { bg: "#FEF3C7", text: "#B45309" },
-  회사: { bg: "#FFE4E6", text: "#E11D48" },
-  시즌: { bg: "#FED7AA", text: "#C2410C" },
-  도구: { bg: "#CFFAFE", text: "#0E7490" },
-};
 
 // 시즌 검색 칩(ko) — 교체 단위. 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT (L13a)
 const KO_CHIP_SETS = {
@@ -180,12 +170,12 @@ export default function HeaderSearch() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        aria-label={S.ariaSearch}
-        className="hidden min-h-11 xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all focus-visible:ring-2 focus-visible:ring-electric"
+        aria-label={S.ariaOpen}
+        className="ms-interactive hover:!translate-y-0 hover:!shadow-none hidden min-h-11 xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-secondary"
       >
-        <Search size={14} />
+        <Search size={14} aria-hidden="true" />
         <span>{S.trigger}</span>
-        <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-canvas-100 text-faint-blue rounded">
+        <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-secondary text-muted-foreground rounded">
           ⌘K
         </kbd>
       </button>
@@ -195,9 +185,9 @@ export default function HeaderSearch() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={S.ariaOpen}
-        className="xl:hidden inline-flex min-w-11 min-h-11 items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors focus-visible:ring-2 focus-visible:ring-electric"
+        className="ms-interactive hover:!translate-y-0 hover:!shadow-none xl:hidden inline-flex min-w-11 min-h-11 items-center justify-center p-2 rounded-xl text-foreground hover:bg-secondary"
       >
-        <Search size={20} />
+        <Search size={20} aria-hidden="true" />
       </button>
 
       {/* 검색 모달 — createPortal(document.body): 헤더의 backdrop-filter·슬라이드
@@ -220,15 +210,15 @@ export default function HeaderSearch() {
                 if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) setIsOpen(false);
               }}
               aria-label={S.ariaSearch}
-              className="search-panel-in fixed m-0 p-0 h-dvh w-screen max-h-none max-w-none bg-white dark:bg-slate-900 text-navy dark:text-canvas-50 shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-0 border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:h-auto sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] open:flex flex-col backdrop:bg-navy/40 backdrop:backdrop-blur-sm"
+              className="fixed m-0 p-0 h-dvh w-screen max-h-none max-w-none bg-card text-foreground shadow-xl overflow-hidden border-0 border-border inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:h-auto sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-2xl sm:border open:flex flex-col backdrop:bg-black/40"
               style={{
                 paddingTop: "env(safe-area-inset-top, 0)",
                 paddingBottom: "env(safe-area-inset-bottom, 0)",
               }}
             >
               {/* 입력 영역 */}
-              <div className="flex items-center gap-2 px-4 sm:px-5 py-3 sm:py-4 border-b border-canvas-100 min-w-0">
-                <Search size={18} className="text-electric flex-shrink-0" />
+              <div className="flex items-center gap-2 px-4 sm:px-5 py-3 sm:py-4 border-b border-border min-w-0">
+                <Search size={18} className="text-link flex-shrink-0" />
                 <input
                   ref={inputRef}
                   autoFocus
@@ -239,29 +229,29 @@ export default function HeaderSearch() {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleInputKey}
                   placeholder={S.placeholder}
-                  className="flex-1 min-w-0 bg-transparent text-[15px] font-medium text-navy placeholder:text-faint-blue outline-none"
+                  className="ms-field flex-1 min-h-11 min-w-0 text-base font-medium placeholder:text-muted-foreground"
                 />
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
                   aria-label={S.ariaClose}
-                  className="flex-shrink-0 flex min-w-11 min-h-11 items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors focus-visible:ring-2 focus-visible:ring-electric"
+                  className="flex-shrink-0 flex min-w-11 min-h-11 items-center justify-center p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-electric"
                 >
-                  <X size={16} />
+                  <X size={16} aria-hidden="true" />
                 </button>
               </div>
 
               {/* 결과 영역 — flex-1로 모바일에서 남는 영역 채움 */}
               <div className="flex-1 overflow-y-auto overscroll-contain min-w-0">
                 {loadError ? <p role="alert" className="p-5 text-sm">{S.loadError}</p> : !query.trim() ? (
-                  <div className="px-5 py-10 text-center text-sm text-faint-blue">
+                  <div className="px-5 py-10 text-center text-sm text-muted-foreground">
                     <p className="mb-3 font-medium">{S.empty}</p>
                     <div className="flex flex-wrap justify-center gap-1.5">
                       {S.chips.map((kw) => (
                         <button
                           key={kw}
                           onClick={() => setQuery(kw)}
-                          className="min-h-11 px-3 py-1.5 text-xs font-semibold bg-canvas-100 text-muted-blue rounded-full hover:bg-electric-10 hover:text-electric transition-colors focus-visible:ring-2 focus-visible:ring-electric"
+                          className="min-h-11 px-3 py-1.5 text-xs font-semibold bg-secondary text-muted-foreground rounded-full hover:bg-secondary hover:text-link transition-colors focus-visible:ring-2 focus-visible:ring-electric"
                         >
                           {kw}
                         </button>
@@ -269,14 +259,14 @@ export default function HeaderSearch() {
                     </div>
                   </div>
                 ) : loading ? <p role="status" className="p-5 text-sm">{isEn ? "Searching…" : "검색 중…"}</p> : results.length === 0 ? (
-                  <div className="px-5 py-10 text-center text-sm text-faint-blue">
+                  <div className="px-5 py-10 text-center text-sm text-muted-foreground">
                     {S.noResults}
                   </div>
                 ) : (
                   <ul id="site-search-results" className="py-2">
                     {results.map((entry, idx) => {
                       const isActive = idx === activeIndex;
-                      const badge = CATEGORY_BADGE[entry.category];
+
                       return (
                         <li key={`${entry.href}-${idx}`}>
                           <Link
@@ -284,26 +274,26 @@ export default function HeaderSearch() {
                             href={entry.href}
                             onClick={() => setIsOpen(false)}
                             onMouseEnter={() => setActiveIndex(idx)}
-                            className={`flex items-center gap-2.5 px-4 sm:px-5 py-3 transition-colors min-w-0 ${
-                              isActive ? "bg-electric-5" : "hover:bg-canvas-50"
+                            className={`ms-interactive hover:!translate-y-0 hover:!shadow-none flex min-h-11 items-center gap-2.5 px-4 sm:px-5 py-3 transition-colors min-w-0 ${
+                              isActive ? "bg-secondary" : "hover:bg-secondary"
                             }`}
                           >
                             <span
-                              className="flex-shrink-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black tracking-wide rounded-md"
-                              style={{ backgroundColor: badge.bg, color: badge.text }}
+                              className="flex-shrink-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-medium rounded-md bg-background text-muted-foreground border border-border"
+
                             >
                               {isEn ? ({ 계산기: "Calculator", 가이드: "Guide", 용어: "Glossary", "Q&A": "Q&A", 회사: "Company", 시즌: "Seasonal", 도구: "Tool" } as const)[entry.category] : entry.category}
                             </span>
                             <div className="flex-1 min-w-0">
                               <p
                                 className={`text-sm font-bold line-clamp-2 break-words ${
-                                  isActive ? "text-electric" : "text-navy"
+                                  isActive ? "text-link" : "text-foreground"
                                 }`}
                               >
                                 {entry.title}
                               </p>
                               {entry.description && (
-                                <p className="text-xs text-faint-blue mt-0.5 line-clamp-2 break-words">
+                                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 break-words">
                                   {entry.description}
                                 </p>
                               )}
@@ -312,8 +302,8 @@ export default function HeaderSearch() {
                               size={14}
                               className={`flex-shrink-0 transition-all ${
                                 isActive
-                                  ? "text-electric translate-x-0.5"
-                                  : "text-faint-blue"
+                                  ? "text-link translate-x-0.5"
+                                  : "text-muted-foreground"
                               }`}
                             />
                           </Link>
@@ -325,18 +315,18 @@ export default function HeaderSearch() {
               </div>
 
               {/* 하단 안내 — 모바일에서는 키보드 단축키 숨김 (탭 환경) */}
-              <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-t border-canvas-100 bg-canvas-50 flex items-center justify-between text-[11px] text-faint-blue font-medium flex-shrink-0">
+              <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-t border-border bg-secondary flex items-center justify-between text-[11px] text-muted-foreground font-medium flex-shrink-0">
                 <div className="hidden sm:flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">↑↓</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-card border border-border rounded text-[10px]">↑↓</kbd>
                     {isEn ? "Browse" : "탐색"}
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">↵</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-card border border-border rounded text-[10px]">↵</kbd>
                     {isEn ? "Open" : "이동"}
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">ESC</kbd>
+                    <kbd className="px-1.5 py-0.5 bg-card border border-border rounded text-[10px]">ESC</kbd>
                     {isEn ? "Close" : "닫기"}
                   </span>
                 </div>

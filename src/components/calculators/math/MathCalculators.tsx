@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Calculator, Dices } from "lucide-react";
 // --- Percent Calculator ---
 export function PercentCalculator() {
+ const inputId = useId();
  const [val1, setVal1] = useState("");
  const [val2, setVal2] = useState("");
  const [mode, setMode] = useState<"of" | "is">("of"); // of: X% of Y, is: X is what % of Y
@@ -56,23 +57,23 @@ export function PercentCalculator() {
  {mode === "of" ? (
  <>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-whole`} className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
+ <input id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">비율 (X%)</label>
- <input type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-part`} className="block text-sm font-bold text-muted-blue mb-2">비율 (X%)</label>
+ <input id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  ) : (
  <>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">일부값 (X)</label>
- <input type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-part`} className="block text-sm font-bold text-muted-blue mb-2">일부값 (X)</label>
+ <input id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-whole`} className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
+ <input id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  )}
@@ -98,6 +99,7 @@ export function PercentCalculator() {
 
 // --- Number Generator ---
 export function NumberGenerator() {
+ const inputId = useId();
  const [min, setMin] = useState("1");
  const [max, setMax] = useState("45");
  const [count, setCount] = useState("6");
@@ -128,16 +130,16 @@ export function NumberGenerator() {
  <div className="space-y-6">
  <div className="grid grid-cols-3 gap-4">
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">최소값</label>
- <input type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-min`} className="block text-sm font-bold text-muted-blue mb-2">최소값</label>
+ <input id={`${inputId}-min`} type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">최대값</label>
- <input type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-max`} className="block text-sm font-bold text-muted-blue mb-2">최대값</label>
+ <input id={`${inputId}-max`} type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
- <label className="block text-sm font-bold text-muted-blue mb-2">개수</label>
- <input type="number" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <label htmlFor={`${inputId}-count`} className="block text-sm font-bold text-muted-blue mb-2">개수</label>
+ <input id={`${inputId}-count`} type="number" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </div>
 

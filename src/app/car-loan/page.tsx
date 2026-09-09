@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, useId, Fragment } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
 import { SidebarAd, InArticleAd, GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -44,6 +44,7 @@ const CurrencyInput = ({
  onValueChange: (val: string) => void;
  quickAmounts?: number[];
 }) => {
+ const fieldId = useId();
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const rawValue = e.target.value.replace(/,/g, "");
  if (!isNaN(Number(rawValue))) {
@@ -53,9 +54,10 @@ const CurrencyInput = ({
 
  return (
  <div className="space-y-2">
- <label className="text-sm font-medium text-muted-foreground">{label}</label>
+ <label htmlFor={fieldId} className="text-sm font-medium text-muted-foreground">{label}</label>
  <div className="relative">
  <input
+ id={fieldId}
  type="text"
  value={value}
  onChange={handleChange}
@@ -258,10 +260,10 @@ export default function CarLoanPage() {
 
  <div className="space-y-2">
  <div className="flex justify-between">
- <label className="text-sm font-medium text-muted-foreground">할부 기간</label>
+ <label htmlFor="ms-car-loan-field-0" className="text-sm font-medium text-muted-foreground">할부 기간</label>
  <span className="text-sm font-bold text-primary">{loanTerm}개월</span>
  </div>
- <input
+ <input id="ms-car-loan-field-0"
  type="range"
  min="12"
  max="120"
@@ -278,10 +280,10 @@ export default function CarLoanPage() {
 
  <div className="space-y-2">
  <div className="flex justify-between">
- <label className="text-sm font-medium text-muted-foreground">이자율</label>
+ <label htmlFor="ms-car-loan-field-1" className="text-sm font-medium text-muted-foreground">이자율</label>
  <span className="text-sm font-bold text-primary">{interestRate}%</span>
  </div>
- <input
+ <input id="ms-car-loan-field-1"
  type="range"
  min="0"
  max="20"

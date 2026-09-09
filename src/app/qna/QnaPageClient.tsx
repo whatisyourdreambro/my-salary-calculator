@@ -91,7 +91,9 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
                 <Search className="h-6 w-6 text-muted-foreground" />
               </div>
+              <label htmlFor="qna-search" className="sr-only">금융 질문 검색</label>
               <input
+                id="qna-search"
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
