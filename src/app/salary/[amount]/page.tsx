@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -88,23 +89,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  }
  // SNS 공유 CTR — 월 실수령액 숫자를 OG 이미지에 직접 박기.
  const tax = calculateSalary2026(amount, 200000, 1, 0);
- return buildSalaryAmountMetadata(amount, tax.netPay);
+ const metadata = buildSalaryAmountMetadata(amount, tax.netPay);
+ const description = `연봉 ${formatSalaryKorean(amount)}의 예상 월 실수령액은 약 ${Math.round(tax.netPay / 10000).toLocaleString("ko-KR")}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 연간 세액 추정의 월 환산액으로, 실제 급여와 다를 수 있습니다.`;
+ return {
+  ...metadata,
+  description,
+  openGraph: { ...metadata.openGraph, description },
+  twitter: { ...metadata.twitter, description },
+ };
 }
 
 function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: number) {
  const manwon = Math.round(amount / 10000).toLocaleString("ko-KR");
  const netManwon = (monthlyNet / 10000).toFixed(0);
  const deductionManwon = (totalDeduction / 10000).toFixed(0);
- const dsrLimit = Math.round((amount * 0.4) / 10000).toLocaleString("ko-KR");
+ const repaymentReference = Math.round((amount * 0.4) / 10000).toLocaleString("ko-KR");
 
  return [
  {
  question: `연봉 ${manwon}만원의 월 실수령액은 얼마인가요?`,
- answer: `연봉 ${manwon}만원의 2026년 세법 기준 월 실수령액은 약 ${netManwon}만원입니다. 4대보험과 소득세를 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (비과세 식대 20만원 + 본인 1인 공제 적용 기준).`,
+ answer: `연봉 ${manwon}만원의 2026년 예상 월 실수령액은 약 ${netManwon}만원입니다. 보험료와 세금을 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
  },
  {
- question: `연봉 ${manwon}만원으로 받을 수 있는 대출 한도는?`,
- answer: `2026년 DSR 40% 규제 기준, 연봉 ${manwon}만원이면 연간 원리금 상환 한도는 약 ${dsrLimit}만원입니다. 이는 모든 대출(주담대·신용대출·할부 등)을 합산한 한도이며, LTV 규제와 함께 적용됩니다.`,
+ question: `연봉 ${manwon}만원일 때 대출 상환 부담은 어떻게 비교하나요?`,
+ answer: `세전 연봉의 40%를 상환 부담 비교용으로 가정하면 연 ${repaymentReference}만원입니다. 이는 단순 비율 예시이며 대출 가능 금액이나 DSR 심사 결과가 아닙니다. 기존 대출의 원리금, 금리·만기와 금융기관의 인정 소득·심사 조건을 함께 확인해야 합니다.`,
  },
  {
  question: `연봉 ${manwon}만원이면 한국 직장인 중 어느 정도 위치인가요?`,
@@ -113,7 +121,7 @@ function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: numb
  {
  question: "실수령액이 더 늘어나는 방법이 있나요?",
  answer:
- "비과세 식대 20만원 한도 100% 활용, 부양가족 인적공제, 중소기업 취업자 감면(만 34세 이하), 연금저축·IRP 세액공제(최대 900만원 납입), 신용카드 사용액 한도 채우기 등으로 실수령액을 높일 수 있습니다.",
+ "급여명세서의 비과세액과 공제 대상 가족 조건을 확인한 뒤 홈 계산기에 본인의 조건을 입력해 비교하세요. 이 표의 기본 계산에는 중소기업 취업자 감면·의료비·교육비·연금저축 등 별도 공제가 반영되지 않습니다. 실제 적용 가능 여부와 정산액은 회사 급여 담당자나 국세청 자료로 확인해야 합니다.",
  },
  ];
 }
@@ -145,28 +153,28 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const howTo = howToLd({
  name: `연봉 ${formattedAmount} 실수령액 계산하는 방법`,
- description: `연봉 ${formattedAmount}을 기준으로 4대보험·소득세·실수령액을 단계별로 계산하는 가이드.`,
+ description: `연봉 ${formattedAmount}의 2026년 예상 월 수령액 계산 과정. ${SALARY_MODEL_2026.defaultConditions} 기준. ${SALARY_MODEL_2026.limitation}`,
  totalTime: "PT2M",
  steps: [
  {
  name: "비과세 식대 차감",
- text: "월 식대 20만원(연 240만원)은 비과세로 과세표준에서 제외합니다.",
+ text: "연봉에 포함된 월 비과세 20만원(연 240만원)을 제외해 연간 총급여액을 구합니다.",
  },
  {
  name: "4대보험 공제",
- text: "국민연금 4.75%, 건강보험 3.595%, 장기요양 0.4724%, 고용보험 0.9%를 차감합니다.",
+ text: "비과세를 뺀 월 보수에 국민연금 4.75%(기준소득월액 상·하한 적용), 건강보험 3.595%, 고용보험 0.9%를 적용합니다. 장기요양보험은 건강보험료의 13.14%로 계산합니다.",
  },
  {
  name: "근로소득공제 적용",
- text: "총급여에 따라 70~5% 구간별 근로소득공제를 적용합니다.",
+ text: "연간 총급여액에 따라 구간별 근로소득공제를 적용합니다(공제 한도 2,000만원).",
  },
  {
  name: "기본·인적공제 차감",
- text: "본인 150만원, 표준세액공제 13만원 등을 차감해 과세표준을 산출합니다.",
+ text: "근로소득공제 후 본인 기본공제 150만원과 연간 국민연금 보험료 추정액을 차감해 과세표준을 구합니다. 이 페이지는 부양가족 본인 1명·자녀 0명 조건입니다.",
  },
  {
  name: "산출세액 계산",
- text: "6~45% 8단계 누진세율 적용 후 지방소득세 10%를 더해 최종 세액을 결정합니다.",
+ text: "6~45% 누진세율과 근로소득세액공제를 적용한 연간 추정 세액을 12개월로 나누고, 월 소득세의 10%를 지방소득세로 계산합니다. 실제 월별 간이세액표 조회나 연말정산 확정 세액은 아닙니다.",
  },
  ],
  });
@@ -183,7 +191,7 @@ export default function SalaryAmountPage({ params }: Props) {
  breadcrumbLd(breadcrumbItems),
  softwareApplicationLd({
  name: `연봉 ${formattedAmount} 실수령액 계산기`,
- description: `연봉 ${formattedAmount}의 2026년 세법 기준 월 실수령액·세금 공제 분석`,
+ description: `연봉 ${formattedAmount}의 2026년 모델 기준 예상 월 실수령액·세금 공제 분석`,
  url: `/salary/${params.amount}`,
  }),
  faqLd(faqItems),
@@ -216,8 +224,10 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
 
  <div className="speakable-summary self-center max-w-xl text-center text-sm text-muted-blue mb-6">
- 연봉 {formattedAmount}의 월 실수령액은 약 {(tax.netPay / 10000).toFixed(0)}만원,
+ 연봉 {formattedAmount}의 예상 월 실수령액은 약 {(tax.netPay / 10000).toFixed(0)}만원,
  4대보험·세금 공제는 월 약 {(tax.totalDeductions / 10000).toFixed(0)}만원입니다.
+ <p className="mt-2">{SALARY_MODEL_2026.defaultConditions} 기준입니다. {SALARY_MODEL_2026.incomeTaxMethod}{" "}
+ <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 실제 급여와의 차이</Link>를 확인하세요.</p>
  </div>
 
  <SalaryResultCard

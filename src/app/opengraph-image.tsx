@@ -13,10 +13,11 @@ export const contentType = "image/png";
 const BRAND_BLUE = "#0145F2";
 const BRAND_BLUE_DEEP = "#0134B8";
 const CANVAS = "#EDF1F5";
+const OG_SUBTITLE = "연봉·세후 월급·공제 내역 비교";
 
 // 이미지에 들어가는 모든 글자 — Google Fonts 서브셋(&text=) 요청에 그대로 사용
 const OG_TEXT =
-  "머니샐러리 2026년 연봉 실수령액 계산기 최신 세법 완벽 반영 · 4대보험 연말정산 moneysalary.com";
+  `머니샐러리 2026년 연봉 실수령액 계산기 ${OG_SUBTITLE} moneysalary.com`;
 
 // 렌더할 글자만 담은 서브셋 폰트를 Google Fonts에서 동적 로드.
 // Noto Sans KR 전체(수 MB)를 올리거나 폰트 없이 한글을 렌더하면 엣지 CPU 한도
@@ -84,7 +85,7 @@ export default async function Image() {
             </div>
           </div>
           <div style={{ color: CANVAS, fontSize: 28, opacity: 0.9 }}>
-            최신 세법 완벽 반영 · 4대보험 · 연말정산
+            {OG_SUBTITLE}
           </div>
           <div
             style={{

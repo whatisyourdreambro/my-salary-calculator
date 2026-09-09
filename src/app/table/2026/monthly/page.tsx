@@ -12,11 +12,12 @@ import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
+import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 월급 실수령액 표 — 200만~1000만원 전 구간 세후 수령액",
  description:
- "월급 250만원이면 세후 약 223만원, 500만원이면 약 415만원. 2026년 최신 4대보험·소득세 자동 계산표(비과세 식대 20만원 기준)를 200만~1000만원 전 구간으로 한눈에 확인하세요. 전년 대비 변화액까지 즉시 비교 가능.",
+ "세전 월급 250만원은 세후 약 223만원, 500만원은 약 415만원으로 추정합니다. 급여에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준으로, 연봉을 12개월로 나눈 2026년 예상 월 수령액과 공제 내역을 비교하세요.",
  path: "/table/2026/monthly",
  keywords: [
  "월급 실수령액 표",
@@ -47,12 +48,12 @@ const FAQ_ITEMS = [
  {
  question: "월급 250만원의 실수령액은 얼마인가요?",
  answer:
- "2026년 기준(비과세 식대 20만원·본인 1인 공제) 4대보험과 소득세 공제 후 약 223만원을 받습니다. 비과세 항목과 부양가족 수에 따라 금액이 달라질 수 있습니다.",
+ `세전 월급을 연 3,000만원으로 환산하면 2026년 모델의 예상 월 수령액은 약 223만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 실제 지급액은 비과세 항목과 부양가족 수, 급여 정산 방식에 따라 달라질 수 있습니다.`,
  },
  {
  question: "월급에서 공제되는 항목은 무엇인가요?",
  answer:
- "국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%가 공제되고, 여기에 근로소득 간이세액표 기준 소득세와 소득세의 10%인 지방소득세가 추가로 공제됩니다.",
+ `근로자 부담 국민연금 4.75%, 건강보험 3.595%, 장기요양보험(건강보험료의 13.14%), 고용보험 0.9%를 항목별 보수 기준과 조건으로 계산합니다. 소득세와 그 10%인 지방소득세도 공제합니다. ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
  },
  {
  question: "2026년 최저임금 월급은 얼마인가요?",
@@ -71,7 +72,7 @@ const monthlyJsonLd = [
  datasetLd({
  name: "2026년 월급별 실수령액 데이터",
  description:
- "2026년 최신 세법 기준 월급 200만원에서 1000만원 이상까지 구간별 실수령액, 4대보험 공제 내역 데이터셋",
+ `2026년 연봉 표를 12개월로 나눈 세전 월급과 예상 월 수령액·보험료·세금 공제 내역. ${SALARY_MODEL_2026.defaultConditions} 기준.`,
  url: "/table/2026/monthly",
  dateModified: "2026-08-30",
  keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2026년"],
@@ -151,8 +152,9 @@ function MonthlyTable() {
  <strong className="text-navy">건강보험(3.595%)</strong>,{" "}
  <strong className="text-navy">장기요양보험(건강보험료의 13.14%)</strong>,{" "}
  <strong className="text-navy">고용보험(0.9%)</strong>, 그리고{" "}
- <strong className="text-navy">소득세(근로소득 간이세액표 기준)</strong>를
- 공제하고 실제로 통장에 입금되는 금액입니다.
+ <strong className="text-navy">소득세·지방소득세</strong>를
+ 공제한 금액입니다. 이 표는 항목별 조건을 적용한 예상액이며 실제 지급액과 다를 수 있습니다.
+ {" "}{SALARY_MODEL_2026.incomeTaxMethod} {SALARY_MODEL_2026.limitation}
  </p>
  <p className="text-faint-blue leading-relaxed mb-4">
  2026년 최저시급은 10,320원으로, 주휴수당 포함 월 209시간 기준 세전 월급은{" "}
@@ -214,8 +216,8 @@ function MonthlyTable() {
  </div>
 
  <div className="mt-4 text-center text-faint-blue text-sm pb-8">
- * 본 표는 비과세 식대 월 20만원·본인 1인 공제 기준으로, 각 행을 눌러 들어가는
- 상세 페이지와 동일한 기준입니다. 2026년 보험료율 인상안을 반영한 시뮬레이션 결과입니다.
+ * {SALARY_MODEL_2026.defaultConditions} 기준으로, 각 행의 상세 페이지와 같은 계산 모델을 사용합니다.{" "}
+ <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 적용 조건</Link>을 확인하세요.
  </div>
  </div>
  </main>

@@ -42,7 +42,7 @@ export default function DsrCalculator() {
  type="text"
  value={income}
  onChange={(e) => setIncome(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
- className="w-full p-3 rounded-xl border border-canvas bg-transparent text-lg font-bold"
+ className="w-full p-3 rounded-xl border border-canvas bg-transparent text-foreground text-lg font-bold"
  placeholder="50,000,000"
  />
  </div>
@@ -55,7 +55,7 @@ export default function DsrCalculator() {
  type="text"
  value={principal}
  onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
- className="w-full p-3 rounded-xl border border-canvas bg-transparent"
+ className="w-full p-3 rounded-xl border border-canvas bg-transparent text-foreground"
  placeholder="10,000,000"
  />
  </div>
@@ -66,7 +66,7 @@ export default function DsrCalculator() {
  type="text"
  value={interest}
  onChange={(e) => setInterest(Number(e.target.value.replace(/[^0-9]/g, "")).toLocaleString('ko-KR'))}
- className="w-full p-3 rounded-xl border border-canvas bg-transparent"
+ className="w-full p-3 rounded-xl border border-canvas bg-transparent text-foreground"
  placeholder="2,000,000"
  />
  </div>
@@ -91,7 +91,7 @@ export default function DsrCalculator() {
  </p>
  <div className="mt-4 text-xs text-faint-blue text-left bg-white/20 p-3 rounded-lg">
  <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
- <p>일반적으로 DSR 40% (은행권), 50% (제2금융권) 규제가 적용됩니다.</p>
+ <p>입력한 연간 원금·이자의 합계를 연소득으로 나눈 비율입니다. 대출별 산입 기준·규제 상한·승인 한도는 자동 판정하지 않습니다.</p>
  </div>
  </motion.div>
  )}

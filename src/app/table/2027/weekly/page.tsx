@@ -145,7 +145,7 @@ function WeeklyTable2027() {
                   <h3 className="font-bold text-xl mb-3 text-center">미확정 (2026 준용)</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 건강보험·장기요양 요율 (통상 9~11월 결정)</li>
-                    <li>- 간이세액표(소득세) — 변경 예고 없음</li>
+                    <li>- 소득세 — 2026년 연간 누진세액 추정의 월 환산(실제 월별 간이세액표 조회 아님)</li>
                   </ul>
                 </div>
               </div>
