@@ -5,7 +5,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Receipt, Printer, RefreshCw, Calculator } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 export default function SalarySlipPage() {
@@ -191,7 +191,7 @@ export default function SalarySlipPage() {
 
  <div className="flex flex-col items-center gap-2 mt-4">
  <p className="text-sm font-bold text-faint-blue">공유하기</p>
- <ShareButtons title={`연봉 ${salaryInput}원의 가상 급여명세서를 만들어봤어요!`} />
+ <ResultSharePanel resultKey={JSON.stringify([salaryInput, companyName, userName, employeeId, department, date])} title={`연봉 ${salaryInput}원의 가상 급여명세서를 만들어봤어요!`} />
  </div>
 
  {/* 다음 행동 유도: 실제 실수령액 계산기 */}

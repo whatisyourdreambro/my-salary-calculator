@@ -7,7 +7,7 @@ import { breadcrumbLd } from "@/lib/structuredData";
 export const metadata: Metadata = {
   title: { absolute: "Korea Flat Tax 19% vs Progressive Calculator | Moneysalary" },
   description:
-    "Foreign workers in Korea can elect a flat 19% income tax. Compare the flat-tax option against the progressive brackets and see which leaves you more net pay.",
+    "Compare a limited Korean resident-employee income-tax model: 19% national flat tax plus local tax, progressive deductions, eligibility checks and official sources.",
   alternates: {
     canonical: "https://www.moneysalary.com/en/flat-tax",
     languages: {
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Korea Flat Tax 19% vs Progressive Tax Calculator | Moneysalary",
     description:
-      "Foreign workers in Korea: compare the 19% flat tax election against progressive brackets.",
+      "Compare national and local income tax under two methods, with explicit assumptions and eligibility limits.",
   },
 };
 

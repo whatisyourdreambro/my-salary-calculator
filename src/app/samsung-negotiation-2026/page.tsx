@@ -3,6 +3,7 @@
 // 반도체 가이드 7개로 깊은 회유, 회사 페이지 2개로 추가 트래픽 분산.
 
 import type { Metadata } from "next";
+import ShareSection from "@/components/ShareSection";
 import Link from "@/components/AppLink";
 import {
  TrendingUp,
@@ -352,6 +353,7 @@ export default function SamsungNegotiation2026Page() {
  </div>
  </section>
 
+ <ShareSection contentType="guide" className="mb-8" />
  <RelatedCalculators currentPath="/samsung-negotiation-2026" />
 
  <div className="mt-8">

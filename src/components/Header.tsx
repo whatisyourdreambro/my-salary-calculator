@@ -8,7 +8,8 @@
 
 import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useModalDialog } from "@/hooks/useModalDialog";
 import Logo from "./Logo";
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
@@ -25,11 +26,20 @@ export default function Header() {
  // /en 트리는 영어 메뉴 — 영어판이 있는 페이지만 링크 (navConfigEn 주석 참고)
  const isEn = pathname === "/en" || pathname.startsWith("/en/");
  const activeNavConfig = isEn ? navConfigEn : navConfig;
- const dashboardLabel = isEn ? "Dashboard" : "대시보드";
+ const dashboardLabel = isEn ? "Dashboard (Korean)" : "대시보드";
  const mobileMenuAriaLabel = isEn ? "Open menu" : "메뉴 열기";
  const dashboardHref = "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
+ const mobileDialog = useRef<HTMLDialogElement>(null);
+ useModalDialog(isMobileMenuOpen, mobileDialog);
+
+ useEffect(() => {
+ const wide = window.matchMedia("(min-width: 1024px)");
+ const closeOnDesktop = () => { if (wide.matches) setIsMobileMenuOpen(false); };
+ wide.addEventListener("change", closeOnDesktop);
+ return () => wide.removeEventListener("change", closeOnDesktop);
+ }, []);
 
  // 2026-08-26 Phase 4 배포 2: framer useScroll → 순수 passive 리스너.
  // 루트 Header 의 framer import 는 전 페이지 First Load JS 에 실리므로 제거.
@@ -69,9 +79,9 @@ export default function Header() {
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
- <Link href={isEn ? "/en" : "/"} className="flex items-center gap-2 no-underline">
+ <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Moneysalary home" : "머니샐러리 홈"} className="flex min-h-11 items-center gap-2 no-underline">
  <Logo
- className="h-8 sm:h-9 w-auto text-electric"
+ className="h-7 min-[360px]:h-8 sm:h-9 w-auto text-electric"
  showText={true}
  />
  </Link>
@@ -125,7 +135,7 @@ export default function Header() {
  <button
  type="button"
  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className={`flex items-center justify-center cursor-pointer p-2 rounded-[10px] border-none text-electric transition-colors hover:bg-electric-10 ${
+ className={`flex min-w-11 min-h-11 items-center justify-center cursor-pointer p-2 rounded-[10px] border-none text-electric transition-colors hover:bg-electric-10 ${
  isMobileMenuOpen ? "bg-electric-10" : "bg-transparent"
  }`}
  aria-label={mobileMenuAriaLabel}
@@ -140,24 +150,24 @@ export default function Header() {
  </nav>
  </header>
 
- {/* Mobile Menu — SEO: 항상 DOM에 렌더하고 열림/닫힘은 CSS(visibility/opacity)로만
- 제어. 조건부 렌더({isMobileMenuOpen && ...})로 되돌리면 SSR HTML에서 내비 링크가
- 사라져 크롤러가 못 보게 되므로 금지. invisible은 닫힘 상태 탭 포커스도 제외함 */}
- <div
+ {/* Keep navigation links in server HTML; native dialog manages modal keyboard behavior. */}
+ <dialog
+ ref={mobileDialog}
  id="mobile-nav-menu"
- role="dialog"
- aria-modal="true"
+ onCancel={(event) => { event.preventDefault(); setIsMobileMenuOpen(false); }}
  aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
- className={`lg:hidden fixed inset-0 z-40 pt-header overflow-y-auto bg-white/[0.97] dark:bg-slate-900/[0.97] transition-[opacity,visibility] duration-[180ms] ${
- isMobileMenuOpen
- ? "visible opacity-100"
- : "invisible opacity-0 pointer-events-none"
- }`}
+ className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-y-auto overscroll-contain border-0 bg-white dark:bg-slate-900 text-navy dark:text-canvas-50 backdrop:bg-navy/40"
  style={{
- backdropFilter: "blur(24px)",
- WebkitBackdropFilter: "blur(24px)",
+ paddingTop: "env(safe-area-inset-top, 0)",
+ paddingBottom: "env(safe-area-inset-bottom, 0)",
  }}
  >
+ <div className="flex items-center justify-between gap-4 border-b border-canvas-200 px-5 py-3">
+ <p className="font-bold">{isEn ? "Explore Moneysalary" : "머니샐러리 메뉴"}</p>
+ <button type="button" autoFocus onClick={() => setIsMobileMenuOpen(false)} aria-label={isEn ? "Close menu" : "메뉴 닫기"} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-electric hover:bg-electric-10 focus-visible:ring-2 focus-visible:ring-electric">
+ <X size={22} aria-hidden="true" />
+ </button>
+ </div>
  <div className="px-5 pt-4 pb-20">
  {/* Locale Switcher (mobile) */}
  <LocaleSwitcher variant="mobile" />
@@ -168,7 +178,7 @@ export default function Header() {
  className="flex items-center justify-center gap-2 w-full no-underline mb-5 p-4 text-base font-bold bg-electric text-white rounded-2xl border-2 border-electric shadow-[0_8px_24px_-4px_#0145F244] transition-colors hover:bg-canvas hover:text-electric"
  >
  <LayoutDashboard size={18} aria-hidden="true" />
- {isEn ? "Open My Dashboard" : "내 대시보드 열기"}
+ {isEn ? "Open dashboard (Korean)" : "내 대시보드 열기"}
  </Link>
 
  {/* Nav items */}
@@ -202,7 +212,7 @@ export default function Header() {
  )}
  </nav>
  </div>
- </div>
+ </dialog>
  </>
  );
 }

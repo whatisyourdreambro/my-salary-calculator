@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Turtle, Squirrel, Zap, Rabbit, Download, TrendingUp } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 const questions = [
@@ -239,7 +239,7 @@ export default function SpendingTestPage() {
                 transition={{ duration: 0.5 }}
               >
                 {/* Capture target */}
-                <div ref={resultRef} className="bg-[#0D1117] rounded-3xl border border-white/10 p-8 mb-4">
+                <div ref={resultRef} data-share-color-scope className="text-white bg-[#0D1117] rounded-3xl border border-white/10 p-8 mb-4">
                   <p className="text-center text-xs font-bold tracking-widest text-gray-500 mb-6 uppercase">나의 소비 성향</p>
 
                   <motion.div
@@ -280,7 +280,7 @@ export default function SpendingTestPage() {
                   >
                     <Download size={18} /> 이미지 저장
                   </motion.button>
-                  <ShareButtons
+                  <ResultSharePanel resultKey={JSON.stringify([scores, result])}
                     title={`나의 소비 성향은 '${result.title}' ${result.emoji}`}
                     description="소비 성향 테스트 - 나의 소비 습관은 어떤 동물과 닮았을까?"
                     getShareImage={captureResultImage}

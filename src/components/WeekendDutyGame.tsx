@@ -7,7 +7,7 @@ import {
   X, Heart, Frown, Meh, Download, Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 type Preference = "HOPE" | "NEUTRAL" | "NON_HOPE" | "UNAVAILABLE";
@@ -415,7 +415,7 @@ export default function WeekendDutyGame() {
       {/* Step 4: Result */}
       {gameState.step === "result" && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div ref={resultRef} className="bg-[#0D1117] rounded-3xl border border-white/10 p-8 md:p-12 max-w-4xl mx-auto">
+          <div ref={resultRef} data-share-color-scope className="text-white bg-[#0D1117] rounded-3xl border border-white/10 p-8 md:p-12 max-w-4xl mx-auto">
             <div className="text-center mb-10">
               <div className="text-4xl mb-3">🎉</div>
               <h2 className="text-3xl font-black text-white mb-2">최종 근무표</h2>
@@ -473,7 +473,7 @@ export default function WeekendDutyGame() {
             >
               <Download size={18} /> 이미지 저장
             </motion.button>
-            <ShareButtons
+            <ResultSharePanel previewDescription="이미지에 근무 날짜, 참여자 이름과 배정 내역이 포함됩니다. 이 명단을 공유해도 되는지 확인한 뒤 진행하세요." resultKey={JSON.stringify([gameState])}
               title="주말 당직 추첨 완료! 머니샐러리 당직 추첨기로 공정하게 뽑았어요 🎲"
               description="운명의 룰렛으로 공정하게 당직을 배정하는 주말 당직 추첨기"
               getShareImage={captureResultImage}

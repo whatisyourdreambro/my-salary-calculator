@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Utensils, RefreshCw } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 const MENUS = [
  "김치찌개", "된장찌개", "제육볶음", "돈까스", "햄버거", 
@@ -77,7 +77,7 @@ export default function LunchRoulettePage() {
  {result && !isSpinning && (
  <div className="flex flex-col items-center gap-2 mb-8">
  <p className="text-sm font-bold text-faint-blue">메뉴 공유하기</p>
- <ShareButtons title={"오늘 점심은 " + result + " 어때요? 점심 메뉴 추천기"} />
+ <ResultSharePanel resultKey={JSON.stringify([result, isSpinning])} title={"오늘 점심은 " + result + " 어때요? 점심 메뉴 추천기"} />
  </div>
  )}
 

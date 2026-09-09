@@ -1845,9 +1845,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 5789
+  "contentChars": 6377
  },
  {
   "slug": "sk-hynix-stock-2026",
@@ -1881,9 +1882,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 4875
+  "contentChars": 5264
  },
  {
   "slug": "semiconductor-cycle-2026",
@@ -1935,9 +1937,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-06",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3537
+  "contentChars": 4892
  },
  {
   "slug": "kospi-leader-stock-strategy",
@@ -2381,7 +2384,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "earned-income-credit-2026",
-  "title": "2026 Korean Earned Income Tax Credit (EITC) — Complete Guide",
+  "title": "Korean EITC in 2026: Income Year, Eligibility and Application Windows",
   "description": "How Korea's EITC works in 2026: who qualifies, payout amounts up to KRW 3.3 million, application windows, and pitfalls that disqualify eligible households.",
   "category": "Tax",
   "tags": [
@@ -2392,9 +2395,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 2831
+  "contentChars": 3458
  },
  {
   "slug": "four-major-insurance-complete",
@@ -2409,14 +2413,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Beginner",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3175
+  "contentChars": 3852
  },
  {
   "slug": "year-end-tax-deductions-guide",
   "title": "Korean Year-end Tax Settlement (연말정산) — Top Deductions for 2026",
-  "description": "Income deductions vs tax credits, key categories like personal pension, credit card, medical, education, and rent — what wage earners must claim in 2026.",
+  "description": "Separate income deductions from tax credits, check pension and rent conditions, and understand why a credit is not a guaranteed refund.",
   "category": "Tax",
   "tags": [
    "연말정산",
@@ -2426,9 +2431,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 2808
+  "contentChars": 4622
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2443,14 +2449,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 2808
+  "contentChars": 3258
  },
  {
   "slug": "loan-types-comparison-2026",
   "title": "Korean Loans Compared: Mortgage vs Personal Loan vs Credit Line (2026)",
-  "description": "Three major Korean loan instruments, 2026 rates, 30-year cost comparison on KRW 100M, DSR regulatory cap, and when each makes sense.",
+  "description": "Compare repayment schedules, renewal risks and dated lender quotations for Korean mortgages, personal loans and credit lines.",
   "category": "RealEstate",
   "tags": [
    "Korea Loans",
@@ -2460,9 +2467,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3590
+  "contentChars": 3397
  },
  {
   "slug": "samsung-wage-negotiation-status-2026",

@@ -8,7 +8,8 @@ import ShareButtons from "@/components/ShareButtons";
 import type { Guide } from "@/lib/guidesData";
 import { guideSearchHref } from "@/lib/guideDiscovery";
 import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
-import TableOfContents from "@/components/guides/TableOfContents";
+import { englishGuideContent } from "@/lib/englishGuideContent";
+import { englishGuideNextTask } from "@/lib/englishNavigation";
 import { GuideMidAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdPlacement";
 
 interface GuidePageClientProps {
@@ -35,12 +36,8 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  // Calculate reading time
  const readingTime = Math.ceil(guide.content.length / 1000);
 
- const relatedCalculator =
- guide.category === "Stocks"
- ? { name: "Salary Converter", href: "/en/salary-converter" }
- : guide.category === "Tax"
- ? { name: "Flat Tax Calculator", href: "/en/flat-tax" }
- : { name: "Salary Converter", href: "/en/salary-converter" };
+ const relatedCalculator = englishGuideNextTask(guide.slug);
+ const articleContent = englishGuideContent(guide.content);
 
  return (
  <main className="min-h-screen bg-canvas relative selection:bg-primary/20">
@@ -59,7 +56,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
  <motion.div
- initial={{ opacity: 0, y: 30 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.8 }}
  className="relative z-20 max-w-4xl mx-auto px-4 mt-4"
@@ -94,13 +91,13 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  {/* Sidebar Left (TOC) - Desktop Only */}
  <aside className="hidden lg:block w-[240px] flex-shrink-0">
  <div className="sticky top-24">
- <TableOfContents content={guide.content} />
+ <nav aria-label="On this page"><h2 className="mb-4 text-sm font-bold">On this page</h2><ul className="space-y-3 border-l border-border pl-4 text-sm">{articleContent.headings.map((heading) => <li key={heading.id}><a href={`#${heading.id}`} className="inline-flex min-h-11 items-center text-muted-foreground hover:text-primary">{heading.text}</a></li>)}</ul></nav>
  </div>
  </aside>
 
  {/* Main Content */}
  <motion.article
- initial={{ opacity: 0, y: 20 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.2, duration: 0.6 }}
  className="flex-1 min-w-0"
@@ -114,7 +111,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  Key Summary (TL;DR)
  </h3>
  <p className="text-muted-foreground leading-relaxed">
- {guide.description} Read this full guide for a clear, actionable understanding of <strong>{guide.title}</strong>. Take your financial knowledge to the next level.
+ {guide.description}
  </p>
  </div>
 
@@ -122,7 +119,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
 
  <div
  className="prose prose-lg max-w-none
- prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-24
+ prose-headings:font-bold prose-headings:tracking-tight prose-headings:scroll-mt-28
  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-4 prose-h2:border-b prose-h2:border-border
  prose-h3:text-xl prose-h3:mt-8 prose-h3:text-primary
  prose-p:text-muted-foreground prose-p:leading-8
@@ -130,7 +127,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  prose-a:text-primary prose-a:no-underline prose-a:font-bold hover:prose-a:underline
  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-foreground
  prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-primary"
- dangerouslySetInnerHTML={{ __html: guide.content }}
+ dangerouslySetInnerHTML={{ __html: articleContent.html }}
  />
 
  {/* Data Sources / Trust Banner — applied to all guides (E-E-A-T) */}
@@ -144,9 +141,7 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <p className="text-muted-foreground leading-relaxed">
  {/* 세금·연봉 가이드용 정부 출처 문구가 주식 전망 글에도 그대로 붙던 문제 —
      카테고리별 분기 (2026-08-30 감사 수정) */}
- {guide.category === "Stocks" || guide.category === "Investing"
- ? "Based on public company disclosures, IR materials, and market data. For information only — not investment advice."
- : "Based on Korean government data (NTS, NPS, NHIS, KCOMWEL) and 2026 tax law."}{" "}
+ Sources and assumptions are stated in the article. Forecasts and examples are not actual pay, tax advice or guaranteed returns.{" "}
  Last updated:{" "}
  <strong className="text-foreground">
  <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time>
@@ -154,8 +149,8 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  </p>
  <p className="text-xs text-muted-foreground mt-2">
  ※ For specific tax / legal decisions, please consult{" "}
- <Link href="/about" className="text-primary font-bold hover:underline">
- official sources
+ <Link href="/en/help#tax-resources" className="text-primary font-bold hover:underline">
+ the source checklist
  </Link>{" "}
  and a qualified tax professional.
  </p>
@@ -249,17 +244,16 @@ export default function EnglishGuideClient({ guide, relatedGuides }: GuidePageCl
  <Calculator className="w-6 h-6" />
  </div>
  <h3 className="text-lg font-bold mb-2">
- Time to Practice
+ Next useful step
  </h3>
  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
- Got the theory?<br />
- Use the <strong>{relatedCalculator.name}</strong> for accurate numbers in your own situation.
+ <strong>{relatedCalculator.name}</strong>: check the relevant method and conditions before applying an example to your circumstances.
  </p>
  <Link
  href={relatedCalculator.href}
  className="flex items-center justify-center gap-2 w-full py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:brightness-110 transition-all shadow-lg hover:shadow-primary/25"
  >
- Open Calculator <ArrowRight className="w-4 h-4" />
+ Continue in English <ArrowRight className="w-4 h-4" />
  </Link>
  </div>
  </div>

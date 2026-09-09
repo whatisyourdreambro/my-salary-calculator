@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, RefreshCw, Scroll, Calendar, Clock, User, Star } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 // --- Constants & Data ---
 
@@ -378,7 +378,7 @@ export default function FortunePage() {
 
  <div className="flex flex-col items-center gap-2">
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
- <ShareButtons title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
+ <ResultSharePanel resultKey={JSON.stringify([name, gender, year, month, day, time, calendar, resultData])} title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
  </div>
 
  {/* 자매 콘텐츠 상호 링크 */}

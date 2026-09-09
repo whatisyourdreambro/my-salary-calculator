@@ -5,12 +5,13 @@
 // - 3 PV 이상 + 모바일에서만 노출 (UX 보호)
 // - 거부 시 30일간 안 보임 (localStorage 플래그)
 //
-// 락인 시스템: 홈 화면 설치 사용자는 재방문율 5~10배 ↑ → 광고 누적 수익 ↑.
+// A convenience shortcut for returning visitors; no assumed revenue uplift.
 
 "use client";
 
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import {
   BOTTOM_AD_CHECK_INTERVAL_MS,
   BOTTOM_AD_GRACE_MS,
@@ -28,6 +29,8 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function InstallPwaBanner() {
+  const path = usePathname();
+  const english = path === "/en" || path.startsWith("/en/");
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   // 하단 앵커 광고 양보(2026-09-05, §12-2 ⑪): 이 배너는 fixed bottom-4 z-50 이라 앵커 광고와
@@ -110,8 +113,9 @@ export default function InstallPwaBanner() {
 
   return (
     <div
+      data-pwa-install-banner
       role="dialog"
-      aria-label="홈 화면에 추가"
+      aria-label={english ? "Add to home screen" : "홈 화면에 추가"}
       className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md p-4 rounded-2xl bg-navy text-white shadow-2xl flex items-center gap-3 animate-slide-up"
       style={{ animation: "slideUp 0.3s ease-out" }}
     >
@@ -120,22 +124,22 @@ export default function InstallPwaBanner() {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold leading-tight mb-0.5">
-          홈 화면에 머니샐러리 추가
+          {english ? "Keep Moneysalary handy" : "홈 화면에 머니샐러리 추가"}
         </p>
-        <p className="text-xs opacity-80">앱처럼 빠르게 — 1초 실행</p>
+        <p className="text-xs opacity-80">{english ? "Add a shortcut for your next visit" : "다음 방문을 위한 바로가기"}</p>
       </div>
       <button
         type="button"
         onClick={handleInstall}
-        className="px-3 py-2 bg-electric text-white text-xs font-bold rounded-lg hover:bg-blue-600 transition-colors"
+        className="min-h-11 px-3 py-2 bg-electric text-white text-xs font-bold rounded-lg hover:bg-blue-600 transition-colors focus-visible:ring-2 focus-visible:ring-white"
       >
-        추가
+        {english ? "Add" : "추가"}
       </button>
       <button
         type="button"
         onClick={handleDismiss}
-        aria-label="닫기"
-        className="p-1.5 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
+        aria-label={english ? "Dismiss installation prompt" : "설치 안내 닫기"}
+        className="min-h-11 min-w-11 flex items-center justify-center p-1.5 rounded-full hover:bg-white/10 transition-colors flex-shrink-0 focus-visible:ring-2 focus-visible:ring-white"
       >
         <X className="w-4 h-4" />
       </button>

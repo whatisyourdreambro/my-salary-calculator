@@ -1,10 +1,12 @@
 "use client";
 
 // 친근한 헤딩 + ShareButtons 묶음 카드 — 신규 공유 UI 삽입의 표준.
-// 기존 74곳 인라인 ShareButtons는 자체 헤딩을 갖고 있으므로 건드리지 않고,
+// 기존 인라인 ShareButtons는 자체 헤딩을 갖고 있으므로,
 // 새로 공유 버튼이 들어가는 자리에는 이 컴포넌트를 쓴다.
 
-import ShareButtons from "./ShareButtons";
+import ShareButtons, { type ShareButtonsProps } from "./ShareButtons";
+import { useSharePageContext } from "@/hooks/useSharePageContext";
+import { resolveShareLocale } from "@/lib/sharePolicy";
 
 const HEADINGS: Record<string, { ko: string; en: string }> = {
   calc_result: {
@@ -32,30 +34,22 @@ const HEADINGS: Record<string, { ko: string; en: string }> = {
   page: { ko: "이 페이지 공유하기", en: "Share this page" },
 };
 
-interface ShareSectionProps {
-  /** GA4 content_type + 헤딩 문구 선택 (calc_result/guide/company/tool/fun/page…) */
-  contentType?: string;
-  /** 헤딩 직접 지정 시 contentType 매핑보다 우선 */
+interface ShareSectionProps extends Omit<ShareButtonsProps, "variant"> {
   heading?: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  imageUrl?: string;
-  getShareImage?: () => Promise<Blob | null>;
-  locale?: "ko" | "en";
-  register?: boolean;
-  className?: string;
 }
 
 export default function ShareSection({
   contentType = "page",
   heading,
-  locale = "ko",
+  locale: explicitLocale,
   className = "",
   ...rest
 }: ShareSectionProps) {
-  const resolvedHeading =
-    heading ?? (HEADINGS[contentType] ?? HEADINGS.page)[locale];
+  const { pathname, context } = useSharePageContext();
+  const locale = resolveShareLocale(pathname, explicitLocale);
+  if (!context) return null;
+  const type = rest.shareMode !== "result" && ["calc_result", "salary_result"].includes(contentType) ? "tool" : contentType;
+  const resolvedHeading = heading ?? (HEADINGS[type] ?? HEADINGS.page)[locale];
 
   return (
     <section

@@ -2,7 +2,7 @@
 
 // 카테고리 layout 주입용 공유 섹션 fallback.
 // 페이지가 자체 인라인 ShareButtons를 렌더하면(shareRegistry 등록) 스스로 숨는다.
-// - SSR/프리렌더 HTML에는 아예 없음(서버 스냅숏=억제) → hydration mismatch·CLS 없음
+// - 서버 스냅숏은 억제한다. 클라이언트 노출 후의 공간 변화는 별도 UI 검증 대상이다.
 // - 늦게 마운트되는 인라인(fun 결과 카드 등)에도 구독으로 즉시 반응
 // - AutoBreadcrumb 전역 주입 사고(JSON-LD 2중 주입)와 달리 head/JSON-LD 비접촉
 
@@ -10,6 +10,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { hasPrimary, subscribeShareRegistry } from "@/lib/shareRegistry";
 import ShareSection from "./ShareSection";
+import { useSharePageContext } from "@/hooks/useSharePageContext";
 
 const MAX_WIDTH_CLASS = {
   "3xl": "max-w-3xl",
@@ -28,11 +29,12 @@ interface AutoShareSectionProps {
 
 export default function AutoShareSection({
   contentType = "page",
-  locale = "ko",
+  locale,
   maxWidth = "5xl",
   className = "",
 }: AutoShareSectionProps) {
   const pathname = usePathname();
+  const { context } = useSharePageContext();
   const suppressed = useSyncExternalStore(
     subscribeShareRegistry,
     () => hasPrimary(pathname ?? ""),
@@ -49,7 +51,7 @@ export default function AutoShareSection({
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  if (!ready || suppressed) return null;
+  if (!ready || suppressed || !context) return null;
 
   return (
     <div

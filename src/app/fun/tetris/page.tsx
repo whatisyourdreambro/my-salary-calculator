@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Trophy } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 // --- Game Constants & Types ---
 const ROWS = 20;
@@ -338,7 +338,7 @@ export default function TetrisPage() {
 
  <div className="flex flex-col items-center gap-2">
  <p className="text-sm font-bold text-faint-blue">점수 공유하기</p>
- <ShareButtons title={`직장인 테트리스! 내 야근 점수는 ${score}점!`} />
+ <ResultSharePanel resultKey={JSON.stringify([score, level, totalLines, gameOver])} title={`직장인 테트리스! 내 야근 점수는 ${score}점!`} />
  </div>
  </>
  ) : (

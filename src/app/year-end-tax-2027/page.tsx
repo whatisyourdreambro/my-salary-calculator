@@ -8,6 +8,7 @@
 // 광고: GuideMid(로드맵 직후)·Multiplex(하단) — 운영자 일괄 승인 2026-08-23.
 
 import type { Metadata } from "next";
+import ShareSection from "@/components/ShareSection";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -247,6 +248,7 @@ export default function YearEndTax2027HubPage() {
             </div>
           </section>
 
+          <ShareSection contentType="guide" className="mb-12" />
           {/* 목록 하단 멀티플렉스 — 운영자 일괄 승인 2026-08-23 */}
           <div className="mb-12">
             <MultiplexAd />

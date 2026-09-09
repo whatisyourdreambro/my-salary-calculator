@@ -130,6 +130,7 @@ export function openShareWindow(url: string): void {
 export interface KakaoFeedPayload extends SharePayload {
   imageUrl: string;
   buttonTitle?: string;
+  locale?: "ko" | "en";
 }
 
 interface KakaoSdkGlobal {
@@ -148,8 +149,8 @@ const HOME_URL = "https://www.moneysalary.com";
 export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
   if (typeof window === "undefined") return false;
   const kakao = (window as unknown as { Kakao?: KakaoSdkGlobal }).Kakao;
-  if (!kakao?.isInitialized?.()) return false;
   try {
+    if (!kakao?.isInitialized?.() || typeof kakao.Share?.sendDefault !== "function") return false;
     const buttons: Record<string, unknown>[] = [
       {
         title: p.buttonTitle ?? "자세히 보기",
@@ -157,16 +158,17 @@ export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
       },
     ];
     // 쿼리(utm)·해시 제거 후 홈 판정 — p.url 은 withUtm 으로 감싸져 들어올 수 있음
-    const isHome = p.url.replace(/[?#].*$/, "").replace(/\/+$/, "") === HOME_URL;
+    const localeHome = p.locale === "en" ? `${HOME_URL}/en` : HOME_URL;
+    const isHome = p.url.replace(/[?#].*$/, "").replace(/\/+$/, "") === localeHome;
     if (!isHome) {
       // 홈 버튼도 카카오 귀속 utm — 공유 1건의 두 접점이 모두 kakao / share 로 잡히도록
-      const homeUrl = withUtm(HOME_URL, "kakao");
+      const homeUrl = withUtm(localeHome, "kakao");
       buttons.push({
-        title: "내 연봉 계산하기",
+        title: p.locale === "en" ? "Salary calculator" : "내 연봉 계산하기",
         link: { mobileWebUrl: homeUrl, webUrl: homeUrl },
       });
     }
-    kakao.Share?.sendDefault({
+    kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title: p.title,

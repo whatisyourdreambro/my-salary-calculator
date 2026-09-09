@@ -3,170 +3,94 @@
 import { useState } from "react";
 import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
-import {
- earnedIncomeDeduction,
- calcKrProgressiveTax,
- krSocialInsurance,
-} from "@/lib/global/taxEngine";
-import { ArrowLeft, CheckCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { compareKoreanIncomeTax, parseWholeKRW, MAX_ANNUAL_KRW } from "@/lib/englishCalculators";
+
+const money = (value: number) => Math.round(value).toLocaleString("en-US");
+const fieldClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
+
 export default function FlatTaxPage() {
- const [annualSalary, setAnnualSalary] = useState(60000000);
+  const [salary, setSalary] = useState("60000000");
+  const [exempt, setExempt] = useState("0");
+  const [contributions, setContributions] = useState("0");
+  const gross = parseWholeKRW(salary);
+  const exemptAmount = parseWholeKRW(exempt);
+  const paid = parseWholeKRW(contributions);
+  const result = gross !== null && exemptAmount !== null && paid !== null
+    ? compareKoreanIncomeTax(gross, exemptAmount, paid) : null;
+  const { inputProps, resultRef } = useCalculatorMeasurement({ calcType: "en-flat-tax", valid: result !== null, resultKey: result });
 
- // Simplified Tax Logic (2026) — taxEngine 의 KR 누진 전 구간(6~45%) 재사용
- const calculateTaxes = (gross: number) => {
- // 1. Progressive Tax (Standard)
- // Insurance: pension 4.75% (monthly cap 6.37M KRW) + health 3.595% + LTC + employment 0.9%
- const insurance = krSocialInsurance(gross);
- const standardDeduction = 1500000; // Basic personal deduction
- // Earned-income deduction (2026 standard brackets, capped at 20M KRW)
- const taxableProgressive =
- gross - earnedIncomeDeduction(gross) - insurance - standardDeduction;
-
- const taxProgressive = calcKrProgressiveTax(taxableProgressive);
-
- // 2. Flat Tax (19%)
- // No deductions allowed for flat tax
- const taxFlat = gross * 0.19;
-
- return {
- progressive: {
- tax: taxProgressive,
- net: gross - insurance - taxProgressive,
-   // gross 가 0(입력을 비운 상태)이면 0/0 → NaN 이 그대로 "NaN%" 로 렌더됐다.
-   rate: gross > 0 ? (taxProgressive / gross) * 100 : 0
- },
- flat: {
- tax: taxFlat,
- net: gross - insurance - taxFlat, // Insurance is still deducted? Actually Flat Tax usually replaces Income Tax, insurance is separate. Assuming insurance applies to both.
- rate: 19
- }
- };
- };
-
- const result = calculateTaxes(annualSalary);
- const isFlatBetter = result.flat.net > result.progressive.net;
- const savings = Math.abs(result.flat.net - result.progressive.net);
-
- const formatCurrency = (val: number) => Math.round(val).toLocaleString('ko-KR');
-
- return (
- <div className="min-h-screen py-12">
- <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
- <Link href="/en" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
- <ArrowLeft className="w-4 h-4 mr-2" />
- Back to English Hub
- </Link>
-
- 
-
- <div className="text-center mb-12">
- <h1 className="text-3xl md:text-5xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-primary/80">
- 19% Flat Tax Calculator
- </h1>
- <p className="text-xl text-muted-foreground">
- Should you choose the 19% Flat Tax rate? Find out now.
- </p>
- </div>
-
- <div className="bg-card/40 backdrop-blur-md border border-white/10 rounded-3xl p-8 mb-8">
- <div className="mb-8">
- <label className="block text-lg font-bold mb-4">Annual Gross Salary (KRW)</label>
- <input
- type="range"
- min="30000000"
- max="300000000"
- step="1000000"
- value={annualSalary}
- onChange={(e) => setAnnualSalary(Number(e.target.value))}
- className="w-full accent-blue-500 mb-4"
- />
- <div className="flex items-center justify-between">
- <input
- type="number"
- value={annualSalary}
- onChange={(e) => setAnnualSalary(Number(e.target.value))}
- className="bg-secondary/50 border border-border rounded-lg p-2 text-xl font-bold w-48"
- />
- <span className="text-2xl font-bold text-primary">{formatCurrency(annualSalary / 10000)} Man Won</span>
- </div>
- </div>
-
- <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- {/* Progressive Tax Card */}
- <div className={`p-6 rounded-2xl border-2 transition-all ${!isFlatBetter ? 'border-primary bg-primary/10' : 'border-white/10 bg-secondary/20'}`}>
- <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
- Standard Progressive Tax
- {!isFlatBetter && <CheckCircle className="w-5 h-5 text-primary" />}
- </h3>
- <div className="space-y-2">
- <div className="flex justify-between text-sm">
- <span className="text-muted-foreground">Estimated Tax</span>
- <span>{formatCurrency(result.progressive.tax)} KRW</span>
- </div>
- <div className="flex justify-between text-sm">
- <span className="text-muted-foreground">Effective Rate</span>
- <span>{result.progressive.rate.toFixed(1)}%</span>
- </div>
- <div className="pt-4 border-t border-white/10 mt-4">
- <div className="text-sm text-muted-foreground mb-1">Annual Net Pay</div>
- <div className="text-2xl font-black">{formatCurrency(result.progressive.net)} KRW</div>
- </div>
- </div>
- </div>
-
- {/* Flat Tax Card */}
- <div className={`p-6 rounded-2xl border-2 transition-all ${isFlatBetter ? 'border-primary bg-primary/10' : 'border-white/10 bg-secondary/20'}`}>
- <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
- 19% Flat Tax
- {isFlatBetter && <CheckCircle className="w-5 h-5 text-primary" />}
- </h3>
- <div className="space-y-2">
- <div className="flex justify-between text-sm">
- <span className="text-muted-foreground">Fixed Tax</span>
- <span>{formatCurrency(result.flat.tax)} KRW</span>
- </div>
- <div className="flex justify-between text-sm">
- <span className="text-muted-foreground">Fixed Rate</span>
- <span>19.0%</span>
- </div>
- <div className="pt-4 border-t border-white/10 mt-4">
- <div className="text-sm text-muted-foreground mb-1">Annual Net Pay</div>
- <div className="text-2xl font-black">{formatCurrency(result.flat.net)} KRW</div>
- </div>
- </div>
- </div>
- </div>
-
- <div className="mt-8 text-center">
- {isFlatBetter ? (
- <motion.div
- initial={{ scale: 0.9, opacity: 0 }}
- animate={{ scale: 1, opacity: 1 }}
- className="inline-block bg-primary/50 text-white px-6 py-3 rounded-xl font-bold shadow-lg"
- >
- 🎉 The Flat Tax saves you {formatCurrency(savings)} KRW per year!
- </motion.div>
- ) : (
- <motion.div
- initial={{ scale: 0.9, opacity: 0 }}
- animate={{ scale: 1, opacity: 1 }}
- className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg"
- >
- 👍 Stick with the Standard Tax! You save {formatCurrency(savings)} KRW.
- </motion.div>
- )}
- <p className="text-sm text-muted-foreground mt-4 max-w-lg mx-auto">
- * This is a simplified estimation. The Flat Tax (19%) generally benefits high earners (usually above ~140M KRW gross). Consult a tax professional for exact figures.
- </p>
- </div>
- </div>
-
- {/* Ad: right below the comparison result */}
- <CalcResultAd />
-
- </div>
- {/* page-end ads are provided by en/layout.tsx (PageFooterAds) — 페이지 자체 중복 제거 */}
- </div>
- );
+  return (
+    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <Link href="/en" className="inline-flex min-h-11 items-center text-primary underline">English tools</Link>
+      <header className="mb-8 mt-4">
+        <h1 className="text-3xl font-black sm:text-5xl">Korea flat tax vs progressive tax</h1>
+        <p className="mt-4 text-lg text-muted-foreground">Compare annual income tax in a limited resident-employee model. The 19% national flat rate becomes 20.9% when local income tax is included.</p>
+      </header>
+      <section aria-labelledby="eligibility" className="mb-8 rounded-2xl border border-border bg-secondary/30 p-5">
+        <h2 id="eligibility" className="text-xl font-bold">Check eligibility before comparing</h2>
+        <p className="mt-2">The election is for qualifying foreign employees, excluding daily workers and certain related-enterprise employment. Under the law reviewed on 9 September 2026, first work in Korea must start by 31 December 2026; the applicable period is up to 20 years from that first date. An application is required.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Residence status, employment history and remuneration rules need separate confirmation. This tool does not determine eligibility.</p>
+        <Link href="/en/help#flat-tax" className="mt-3 inline-flex min-h-11 items-center text-primary underline">Eligibility checklist and official sources</Link>
+      </section>
+      <section aria-labelledby="inputs" className="rounded-2xl border border-border p-5 sm:p-8">
+        <h2 id="inputs" className="mb-5 text-xl font-bold">Enter annual amounts in KRW</h2>
+        <div {...inputProps} className="space-y-5">
+          <div>
+            <label htmlFor="flat-remuneration" className="mb-2 block font-semibold">Remuneration subject to the flat-tax comparison</label>
+            <input id="flat-remuneration" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-describedby="remuneration-help flat-input-error" aria-invalid={gross === null} className={fieldClass} />
+            <p id="remuneration-help" className="mt-2 text-sm text-muted-foreground">Cash pay and relevant benefits for the year, including items exempt only under the progressive method. Confirm the flat-tax base with payroll; statutory exceptions can apply. Whole KRW, 0–{money(MAX_ANNUAL_KRW)}; omit commas.</p>
+          </div>
+          <div>
+            <label htmlFor="flat-exempt" className="mb-2 block font-semibold">Amount exempt under the progressive method</label>
+            <input id="flat-exempt" type="text" inputMode="numeric" value={exempt} onChange={(event) => setExempt(event.target.value)} aria-describedby="exempt-help flat-input-error" aria-invalid={exemptAmount === null || (gross !== null && exemptAmount > gross)} className={fieldClass} />
+            <p id="exempt-help" className="mt-2 text-sm text-muted-foreground">Only the qualifying exempt amount included above. Enter 0 if none; do not subtract the same amount twice.</p>
+          </div>
+          <div>
+            <label htmlFor="flat-contributions" className="mb-2 block font-semibold">Deductible pension and employee insurance paid</label>
+            <input id="flat-contributions" type="text" inputMode="numeric" value={contributions} onChange={(event) => setContributions(event.target.value)} aria-describedby="contributions-help flat-input-error" aria-invalid={paid === null || (gross !== null && exemptAmount !== null && paid > gross - exemptAmount)} className={fieldClass} />
+            <p id="contributions-help" className="mt-2 text-sm text-muted-foreground">Actual annual contributions eligible for an income deduction. Coverage varies by nationality, visa and agreements; the tool does not assume you pay all four Korean insurances.</p>
+          </div>
+        </div>
+        <p id="flat-input-error" role="status" className="mt-4 text-sm text-muted-foreground">{result ? "Results update below. Review the model assumptions before using the comparison." : "Enter valid non-negative whole KRW amounts. Exemptions cannot exceed remuneration; contributions cannot exceed the remaining salary."}</p>
+        {result && (
+          <div className="mt-8">
+            <div ref={resultRef} className="rounded-2xl bg-secondary/40 p-5" aria-live="polite" aria-atomic="true">
+              <h2 className="text-xl font-bold">Annual income tax in this model</h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {[{ label: "Progressive method", values: result.progressive }, { label: "Flat-tax method", values: result.flat }].map(({ label, values }) => (
+                  <section key={label} className="min-w-0 rounded-xl border border-border bg-background p-4">
+                    <h3 className="font-bold">{label}</h3>
+                    <dl className="mt-3 space-y-2 text-sm">
+                      <div><dt>National income tax</dt><dd className="font-semibold">{money(values.national)} KRW</dd></div>
+                      <div><dt>Local income tax</dt><dd className="font-semibold">{money(values.local)} KRW</dd></div>
+                      <div className="border-t border-border pt-2"><dt>Combined annual tax</dt><dd className="break-words text-xl font-black">{money(values.total)} KRW</dd></div>
+                    </dl>
+                  </section>
+                ))}
+              </div>
+              <p className="mt-4 font-semibold">{result.difference === 0 ? "The modeled tax amounts are equal." : `The ${result.difference > 0 ? "progressive" : "flat-tax"} amount is ${money(Math.abs(result.difference))} KRW lower in this model.`}</p>
+              <p className="mt-2 text-sm">This is not take-home pay, a refund estimate or a recommendation to elect a method.</p>
+            </div>
+            <details className="mt-4 rounded-xl border border-border p-4">
+              <summary className="cursor-pointer py-2 font-semibold">How the progressive amount is calculated</summary>
+              <dl className="mt-3 space-y-2 text-sm">
+                <div><dt>Salary after entered exemptions</dt><dd>{money(result.progressive.gross)} KRW</dd></div>
+                <div><dt>Earned-income deduction</dt><dd>{money(result.progressive.earnedDeduction)} KRW</dd></div>
+                <div><dt>Basic personal deduction</dt><dd>1,500,000 KRW for the employee only</dd></div>
+                <div><dt>Taxable income after these and entered contributions</dt><dd>{money(result.progressive.taxableIncome)} KRW</dd></div>
+                <div><dt>Earned-income tax credit applied</dt><dd>{money(result.progressive.earnedCredit)} KRW</dd></div>
+              </dl>
+              <p className="mt-3 text-sm">National progressive brackets are 6–45%. Other deductions, standard and special credits, dependants, rent, treaty relief and non-resident rules are omitted. Local tax is modeled as 10% of national tax; displayed amounts are rounded to KRW and are not payroll withholding instructions.</p>
+            </details>
+          </div>
+        )}
+      </section>
+      <CalcResultAd />
+      <nav aria-label="Related English tasks" className="mt-8 flex flex-wrap gap-4">
+        <Link href="/en/salary-converter" className="inline-flex min-h-11 items-center text-primary underline">Convert a gross salary</Link>
+        <Link href="/en/guides/year-end-tax-deductions-guide" className="inline-flex min-h-11 items-center text-primary underline">Understand year-end deductions</Link>
+      </nav>
+    </main>
+  );
 }

@@ -11,12 +11,13 @@ import { popularCompanies } from "@/config/popularCompanies";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const pathname = usePathname();
-  const isEnglish = pathname?.startsWith("/en") ?? false;
+  const isEnglish = pathname === "/en" || pathname?.startsWith("/en/") === true;
 
   const calculatorLinks = isEnglish
     ? [
-        { name: "Salary Converter", href: "/en/salary-converter" },
-        { name: "Flat Tax 19% (Expats)", href: "/en/flat-tax" },
+        { name: "Korea Take-home Salary", href: "/en#calculator" },
+        { name: "Gross Salary Converter", href: "/en/salary-converter" },
+        { name: "Income Tax Comparison", href: "/en/flat-tax" },
         { name: "All Calculators (KR)", href: "/calc" },
         { name: "FIRE Calculator (KR)", href: "/fire-calculator" },
       ]
@@ -47,6 +48,7 @@ export default function Footer() {
 
   const contentLinks = isEnglish
     ? [
+        { name: "Methods, Sources & Help", href: "/en/help" },
         { name: "All English Guides", href: "/en/guides" },
         { name: "Samsung Employee ESOP", href: "/en/guides/samsung-employee-rsu-stock" },
         { name: "SK Hynix PS / PI", href: "/en/guides/sk-hynix-employee-bonus-stock" },
@@ -77,10 +79,10 @@ export default function Footer() {
 
   const legalLinks = isEnglish
     ? [
-        { name: "About", href: "/about" },
+        { name: "About (Korean)", href: "/about" },
         { name: "Contact (KR)", href: "/contact" },
-        { name: "Privacy Policy", href: "/privacy" },
-        { name: "Terms of Service", href: "/terms" },
+        { name: "Privacy Policy (Korean)", href: "/privacy" },
+        { name: "Terms (Korean)", href: "/terms" },
       ]
     : [
         { name: "사이트 소개", href: "/about" },
@@ -96,8 +98,8 @@ export default function Footer() {
 
   const trustBadges = isEnglish
     ? [
-        { Icon: CheckCircle2, label: "Official Tax Rates" },
-        { Icon: Shield, label: "Trusted Ad Standards" },
+        { Icon: CheckCircle2, label: "Methods explained" },
+        { Icon: Shield, label: "Sources and limitations" },
         { Icon: Lock, label: "No sign-up required" },
       ]
     : [
@@ -126,7 +128,7 @@ export default function Footer() {
         <>
           Salary intelligence for working in Korea.
           <br />
-          Net pay, stocks, taxes — all in one place.
+          Salary estimates, tax comparisons and guides.
         </>
       )
     : (

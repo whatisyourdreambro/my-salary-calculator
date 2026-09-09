@@ -14,7 +14,7 @@ const SUGGESTED_LINKS = [
 
 export default function NotFound() {
   return (
-    <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center bg-canvas dark:bg-canvas-950 min-h-[80vh]">
+    <main data-page-state="not-found" className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center bg-canvas dark:bg-canvas-950 min-h-[80vh]">
       <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-electric-10 mb-6">
         <span className="text-4xl font-black text-electric">404</span>
       </div>

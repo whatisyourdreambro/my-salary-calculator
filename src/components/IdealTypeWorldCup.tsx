@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, RefreshCw } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 // 서버(page.tsx)가 내려주는 경량 인덱스 — 회사 전체 프로필(~860KB)을 클라 번들에
@@ -160,7 +160,7 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
  </button>
  <div className="flex flex-col items-center gap-2">
  <p className="text-sm font-bold text-muted-foreground">결과 공유하기</p>
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([winner])}
  title={`내 이상형 기업 월드컵 우승은 ${winner.nameKo}! 당신의 1위 기업은?`}
  />
  </div>

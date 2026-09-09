@@ -5,7 +5,7 @@ import Link from "@/components/AppLink";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dog, Cat, Ghost, Rocket, RefreshCw, Download, CheckCheck, AlertTriangle, Flame } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 // 평가액 추이 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
@@ -391,7 +391,7 @@ export default function MemeCoinPage() {
               className="space-y-5"
             >
               {/* Capture zone */}
-              <div ref={shareRef} className="space-y-5 bg-[#0D1117] p-4 rounded-2xl">
+              <div ref={shareRef} data-share-color-scope className="text-white space-y-5 bg-[#0D1117] p-4 rounded-2xl">
                 {/* Event Banner */}
                 <div className={`p-5 rounded-2xl border text-center ${
                   result.event.type === "pump"
@@ -467,7 +467,7 @@ export default function MemeCoinPage() {
                   <Download className="w-5 h-5" />
                   이미지 저장
                 </button>
-                <ShareButtons
+                <ResultSharePanel resultKey={JSON.stringify([investments, result])}
                   title={`밈코인 모의투자 결과: 수익률 ${result.profitRate >= 0 ? "+" : ""}${result.profitRate.toFixed(1)}% ${result.profit >= 0 ? "🚀" : "💸"}`}
                   description="100만원으로 인생역전? CRYPTO PANIC 밈코인 모의투자"
                   getShareImage={captureResultImage}

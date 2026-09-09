@@ -7,8 +7,8 @@ import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = {
  // absolute — 루트 layout 의 "%s | 머니샐러리" 타이틀 템플릿(한국어) 상속 차단
- title: { absolute: "Salary, Stocks & Tax for Working in Korea | Moneysalary" },
- description: "Net pay calculator, Samsung Electronics & SK Hynix stock analysis, ESOP and ISA strategies — English guides for professionals working in Korea.",
+ title: { absolute: "Korea Salary Calculator 2026 & Income Tax Tools | Moneysalary" },
+ description: "Estimate Korean monthly take-home pay, compare income-tax methods and convert gross salary in English, with explicit assumptions and official sources.",
  alternates: {
  canonical: "https://www.moneysalary.com/en",
  languages: {
@@ -19,10 +19,10 @@ export const metadata: Metadata = {
  },
  // 루트 layout(한국어) 상속 차단 — EN 트리는 keywords·twitter·og:image 전부 영어 전용
  keywords:
- "korea salary calculator, korea net pay, korea income tax, expat korea tax, samsung salary, sk hynix salary, korea take home pay",
+ "korea salary calculator 2026, korean take home pay estimate, gross salary converter, korea income tax comparison, foreign employee flat tax",
  openGraph: {
- title: "Salary, Stocks & Tax for Working in Korea | Moneysalary",
- description: "Net pay, Samsung & SK Hynix stocks, ESOP, ISA — English guides for working in Korea.",
+ title: "Korea Salary Calculator 2026 & Income Tax Tools | Moneysalary",
+ description: "Korean take-home salary estimates, gross currency conversion and income-tax comparison in English.",
  type: "website",
  locale: "en_US",
  url: "https://www.moneysalary.com/en",
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
  },
  twitter: {
  card: "summary_large_image",
- title: "Salary, Stocks & Tax for Working in Korea | Moneysalary",
- description: "Net pay calculator, Samsung & SK Hynix stock analysis, ESOP and ISA strategies in English.",
+ title: "Korea Salary Calculator 2026 & Income Tax Tools | Moneysalary",
+ description: "Estimate Korean take-home pay and compare tax methods with explicit assumptions.",
  },
 };
 
@@ -46,7 +46,7 @@ export default function EnglishLayout({
  data={[
  softwareApplicationLd({
  name: "Moneysalary — Korea Salary & Tax Calculator",
- description: "Net pay calculator and English finance guides for professionals working in Korea.",
+ description: "Korean take-home salary estimates, gross salary conversion, limited income-tax comparison and English guides.",
  url: "/en",
  }),
  breadcrumbLd([{ name: "Home", path: "/en" }]),

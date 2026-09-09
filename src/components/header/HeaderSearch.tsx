@@ -11,11 +11,17 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "@/components/AppLink";
 import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry, SearchCategory } from "@/lib/searchIndex";
+import { useModalDialog } from "@/hooks/useModalDialog";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
 // 전 페이지 First Load JS에 실려 LCP를 지연시킴 — 검색을 열 때만 동적 로드한다.
 let searchIndexPromise: Promise<typeof import("@/lib/searchIndex")> | null = null;
-function loadSearchIndex() {
+let englishIndexPromise: Promise<typeof import("@/lib/searchIndexEn")> | null = null;
+async function loadSearchIndex(english: boolean) {
+  if (english) {
+    englishIndexPromise ??= import("@/lib/searchIndexEn");
+    return { searchEntries: (await englishIndexPromise).searchEnglishEntries };
+  }
   if (!searchIndexPromise) {
     searchIndexPromise = import("@/lib/searchIndex");
   }
@@ -57,6 +63,7 @@ const SEARCH_STRINGS = {
     placeholder: "계산기·가이드·용어 검색",
     empty: "계산기·가이드·용어를 검색해 보세요",
     noResults: "검색 결과가 없습니다. 다른 키워드로 검색해 보세요.",
+    loadError: "검색을 불러오지 못했습니다. 닫은 뒤 다시 열어 주세요.",
     // 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT
     chips: KO_CHIP_SETS.SEP,
   },
@@ -66,9 +73,10 @@ const SEARCH_STRINGS = {
     ariaSearch: "Site search",
     ariaClose: "Close",
     placeholder: "Search calculators & guides",
-    empty: "Search calculators, guides, and terms",
+    empty: "Search the English calculators and guides",
     noResults: "No results. Try a different keyword.",
-    chips: ["Samsung", "SK Hynix", "ISA", "Tax"],
+    loadError: "Search could not load. Close and reopen it to try again.",
+    chips: ["Salary", "Flat tax", "Currency", "Insurance", "Help"],
   },
 } as const;
 
@@ -78,8 +86,13 @@ export default function HeaderSearch() {
   const [results, setResults] = useState<SearchEntry[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  useModalDialog(isOpen, dialogRef);
   const router = useRouter();
   const pathname = usePathname();
+  const isEn = pathname === "/en" || pathname?.startsWith("/en/");
   const S =
     pathname === "/en" || pathname?.startsWith("/en/")
       ? SEARCH_STRINGS.en
@@ -90,22 +103,35 @@ export default function HeaderSearch() {
   useEffect(() => {
     if (!isOpen) return;
     let cancelled = false;
+    setLoading(true);
+    setLoadError(false);
     const timer = setTimeout(async () => {
-      const { searchEntries } = await loadSearchIndex();
-      if (cancelled) return;
-      setResults(searchEntries(query, 10));
-      setActiveIndex(0);
+      try {
+        const { searchEntries } = await loadSearchIndex(isEn);
+        if (cancelled) return;
+        setResults(searchEntries(query, 10));
+        setActiveIndex(0);
+      } catch {
+        searchIndexPromise = null;
+        englishIndexPromise = null;
+        if (!cancelled) { setResults([]); setLoadError(true); }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }, 80);
     return () => {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [query, isOpen]);
+  }, [query, isOpen, isEn]);
+
+  useEffect(() => { setIsOpen(false); }, [pathname]);
 
   // Cmd/Ctrl+K 단축키로 열기 + ESC 닫기
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        if (document.querySelector("dialog[open]") && !dialogRef.current?.open) return;
         e.preventDefault();
         setIsOpen(true);
       }
@@ -117,12 +143,9 @@ export default function HeaderSearch() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // 열릴 때 자동 포커스 + 인덱스 선로딩 (첫 타이핑 전에 다운로드 시작)
+  // Native dialog focuses the labelled input and restores the opener on close.
   useEffect(() => {
-    if (isOpen) {
-      loadSearchIndex();
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
+    if (!isOpen) {
       setQuery("");
       setResults([]);
     }
@@ -140,7 +163,7 @@ export default function HeaderSearch() {
   const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((prev) => Math.min(prev + 1, results.length - 1));
+      setActiveIndex((prev) => Math.max(0, Math.min(prev + 1, results.length - 1)));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((prev) => Math.max(prev - 1, 0));
@@ -158,7 +181,7 @@ export default function HeaderSearch() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={S.ariaSearch}
-        className="hidden xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all"
+        className="hidden min-h-11 xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-faint-blue bg-white border border-canvas rounded-xl hover:border-electric/40 hover:text-electric transition-all focus-visible:ring-2 focus-visible:ring-electric"
       >
         <Search size={14} />
         <span>{S.trigger}</span>
@@ -172,7 +195,7 @@ export default function HeaderSearch() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={S.ariaOpen}
-        className="xl:hidden inline-flex items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors"
+        className="xl:hidden inline-flex min-w-11 min-h-11 items-center justify-center p-2 rounded-[10px] text-electric hover:bg-electric-10 transition-colors focus-visible:ring-2 focus-visible:ring-electric"
       >
         <Search size={20} />
       </button>
@@ -184,21 +207,20 @@ export default function HeaderSearch() {
       {isOpen &&
         createPortal(
           <>
-            {/* 배경 오버레이 */}
-            <div
-              className="search-overlay-in fixed inset-0 z-[100] bg-navy/40 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
-            />
-
             {/* 검색 패널
                 모바일(< sm): inset-0 풀스크린, 둥근 모서리 없음, 안전 영역 패딩.
                 sm 이상: 중앙 정렬 floating 모달.
                 min-w-0 + overflow-hidden 으로 child overflow 방지. */}
-            <div
-              role="dialog"
-              aria-modal="true"
+            <dialog
+              ref={dialogRef}
+              onCancel={(event) => { event.preventDefault(); setIsOpen(false); }}
+              onClick={(event) => {
+                if (event.target !== event.currentTarget) return;
+                const bounds = event.currentTarget.getBoundingClientRect();
+                if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) setIsOpen(false);
+              }}
               aria-label={S.ariaSearch}
-              className="search-panel-in fixed z-[101] bg-white shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] flex flex-col"
+              className="search-panel-in fixed m-0 p-0 h-dvh w-screen max-h-none max-w-none bg-white dark:bg-slate-900 text-navy dark:text-canvas-50 shadow-[0_24px_80px_-8px_#0145F244] overflow-hidden border-0 border-canvas inset-0 sm:inset-auto sm:top-[8vh] sm:left-1/2 sm:-translate-x-1/2 sm:h-auto sm:w-[min(92vw,640px)] sm:max-h-[80vh] sm:rounded-3xl sm:border-[1.5px] open:flex flex-col backdrop:bg-navy/40 backdrop:backdrop-blur-sm"
               style={{
                 paddingTop: "env(safe-area-inset-top, 0)",
                 paddingBottom: "env(safe-area-inset-bottom, 0)",
@@ -209,6 +231,9 @@ export default function HeaderSearch() {
                 <Search size={18} className="text-electric flex-shrink-0" />
                 <input
                   ref={inputRef}
+                  autoFocus
+                  aria-label={S.placeholder}
+                  aria-controls="site-search-results"
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -220,7 +245,7 @@ export default function HeaderSearch() {
                   type="button"
                   onClick={() => setIsOpen(false)}
                   aria-label={S.ariaClose}
-                  className="flex-shrink-0 flex items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors"
+                  className="flex-shrink-0 flex min-w-11 min-h-11 items-center justify-center p-1.5 rounded-lg text-faint-blue hover:bg-canvas hover:text-navy transition-colors focus-visible:ring-2 focus-visible:ring-electric"
                 >
                   <X size={16} />
                 </button>
@@ -228,7 +253,7 @@ export default function HeaderSearch() {
 
               {/* 결과 영역 — flex-1로 모바일에서 남는 영역 채움 */}
               <div className="flex-1 overflow-y-auto overscroll-contain min-w-0">
-                {!query.trim() ? (
+                {loadError ? <p role="alert" className="p-5 text-sm">{S.loadError}</p> : !query.trim() ? (
                   <div className="px-5 py-10 text-center text-sm text-faint-blue">
                     <p className="mb-3 font-medium">{S.empty}</p>
                     <div className="flex flex-wrap justify-center gap-1.5">
@@ -236,25 +261,26 @@ export default function HeaderSearch() {
                         <button
                           key={kw}
                           onClick={() => setQuery(kw)}
-                          className="px-3 py-1.5 text-xs font-semibold bg-canvas-100 text-muted-blue rounded-full hover:bg-electric-10 hover:text-electric transition-colors"
+                          className="min-h-11 px-3 py-1.5 text-xs font-semibold bg-canvas-100 text-muted-blue rounded-full hover:bg-electric-10 hover:text-electric transition-colors focus-visible:ring-2 focus-visible:ring-electric"
                         >
                           {kw}
                         </button>
                       ))}
                     </div>
                   </div>
-                ) : results.length === 0 ? (
+                ) : loading ? <p role="status" className="p-5 text-sm">{isEn ? "Searching…" : "검색 중…"}</p> : results.length === 0 ? (
                   <div className="px-5 py-10 text-center text-sm text-faint-blue">
                     {S.noResults}
                   </div>
                 ) : (
-                  <ul className="py-2">
+                  <ul id="site-search-results" className="py-2">
                     {results.map((entry, idx) => {
                       const isActive = idx === activeIndex;
                       const badge = CATEGORY_BADGE[entry.category];
                       return (
                         <li key={`${entry.href}-${idx}`}>
                           <Link
+                            id={`site-search-result-${idx}`}
                             href={entry.href}
                             onClick={() => setIsOpen(false)}
                             onMouseEnter={() => setActiveIndex(idx)}
@@ -266,18 +292,18 @@ export default function HeaderSearch() {
                               className="flex-shrink-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black tracking-wide rounded-md"
                               style={{ backgroundColor: badge.bg, color: badge.text }}
                             >
-                              {entry.category}
+                              {isEn ? ({ 계산기: "Calculator", 가이드: "Guide", 용어: "Glossary", "Q&A": "Q&A", 회사: "Company", 시즌: "Seasonal", 도구: "Tool" } as const)[entry.category] : entry.category}
                             </span>
                             <div className="flex-1 min-w-0">
                               <p
-                                className={`text-sm font-bold truncate ${
+                                className={`text-sm font-bold line-clamp-2 break-words ${
                                   isActive ? "text-electric" : "text-navy"
                                 }`}
                               >
                                 {entry.title}
                               </p>
                               {entry.description && (
-                                <p className="text-xs text-faint-blue mt-0.5 truncate">
+                                <p className="text-xs text-faint-blue mt-0.5 line-clamp-2 break-words">
                                   {entry.description}
                                 </p>
                               )}
@@ -303,21 +329,24 @@ export default function HeaderSearch() {
                 <div className="hidden sm:flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">↑↓</kbd>
-                    탐색
+                    {isEn ? "Browse" : "탐색"}
                   </span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">↵</kbd>
-                    이동
+                    {isEn ? "Open" : "이동"}
                   </span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-white border border-canvas rounded text-[10px]">ESC</kbd>
-                    닫기
+                    {isEn ? "Close" : "닫기"}
                   </span>
                 </div>
-                <span className="sm:hidden">탭해서 이동</span>
-                <span>{results.length} 건</span>
+                <span className="sm:hidden">{isEn ? "Tap a result to open" : "탭해서 이동"}</span>
+                <span role="status" aria-live="polite">
+                  {!loading && query.trim() ? (isEn ? `${results.length} ${results.length === 1 ? "result" : "results"}` : `${results.length} 건`) : ""}
+                  {!loading && query.trim() && results[activeIndex] && <span className="sr-only">{isEn ? ` Highlighted: ${results[activeIndex].title}. Press Enter to open.` : ` 선택: ${results[activeIndex].title}. Enter로 이동할 수 있습니다.`}</span>}
+                </span>
               </div>
-            </div>
+            </dialog>
           </>,
           document.body
         )}

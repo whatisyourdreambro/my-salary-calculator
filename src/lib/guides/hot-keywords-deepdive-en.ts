@@ -7,263 +7,113 @@
 import type { Guide } from "@/lib/guidesData";
 
 const earnedIncomeCredit = `
-<p class="lead">
-  Korea's Earned Income Tax Credit (EITC, 근로장려금) is a refundable tax credit that pays up to KRW 3.3 million annually to working households with modest income.
-  For 2026, the regular application window is May 1–31, with a half-year option available in September. Many eligible households miss out simply because they don't apply.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Who Qualifies in 2026</h2>
-<ul class="space-y-2 mt-4">
-  <li><strong>Single household:</strong> annual income under KRW 22 million, assets under KRW 240 million</li>
-  <li><strong>Single-earner household:</strong> annual income under KRW 32 million, assets under KRW 240 million</li>
-  <li><strong>Dual-earner household:</strong> annual income under KRW 38 million, assets under KRW 240 million</li>
-</ul>
-<p>
-  Income includes wages, business income, and other taxable receipts. Assets count real estate, vehicles, deposits, and securities at fair market value as of June 1.
-  Tenant-owned housing is excluded but jeonse deposits count partially.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Maximum Payouts</h2>
-<p>
-  Single households can receive up to KRW 1.65 million, single-earner households up to KRW 2.85 million, and dual-earner households up to KRW 3.3 million per year.
-  Payments scale by income, peaking in the middle income band, then taper to zero as income approaches the cap.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Application Methods</h2>
-<ol class="space-y-2 mt-4">
-  <li><strong>Regular application (May 1–31):</strong> Files with NTS Hometax or the mobile Sontax app. Payment in late August.</li>
-  <li><strong>Half-year application (Sep 1–15):</strong> Wage earners only. First half paid in late December, balance settled the following June.</li>
-  <li><strong>By phone (1544-9944):</strong> Automated voice service for previously qualified households.</li>
-</ol>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Common Mistakes That Disqualify You</h2>
-<ul class="space-y-2 mt-4">
-  <li>Failing to report a co-resident family member's income (counts toward household income)</li>
-  <li>Assets exceeding KRW 240 million on June 1 (even temporarily, e.g., real estate sale proceeds sitting in bank)</li>
-  <li>Missing the application window — there is no automatic enrollment</li>
-  <li>Not filing comprehensive income tax in May (required prerequisite for self-employed)</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-  <p class="font-bold text-primary mb-2">📌 Related Tools</p>
-  <ul class="space-y-1 text-sm">
-    <li>· <a href="/calc" class="text-primary underline">All 200+ financial calculators</a></li>
-    <li>· <a href="/en/salary-converter" class="text-primary underline">Korean salary converter (KRW)</a></li>
-  </ul>
-</div>
+<p class="lead">Korea's Earned Income Tax Credit (EITC, 근로장려금) supports eligible working households. The application year and income year are different: the regular application held in 2026 covers 2025 income. This guide was reviewed on 9 September 2026.</p>
+<h2>First check the income year and your eligibility</h2>
+<p>For 2025 income, the annual couple-combined income limits are below KRW 22 million for a single household, KRW 32 million for a single-earner household and KRW 44 million for a dual-earner household. Household definitions and qualifying income types matter; gross business sales are not the same as assessed business income.</p>
+<p>Household assets must total less than KRW 240 million at the applicable 1 June assessment date. For the 2025-income regular application, that date is 1 June 2025. Debt is not simply deducted from assets. Use NTS rules for property and rental-deposit valuation rather than market-value guesses.</p>
+<p><strong>English readers:</strong> living or working in Korea alone does not establish eligibility. Nationality, residence and family-status conditions also apply. Ask NTS to check those conditions before relying on the income limits.</p>
+<h2>Which 2026 application applies to you?</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm border border-border"><thead><tr><th scope="col" class="p-3 text-left">Application</th><th scope="col" class="p-3 text-left">Income covered</th><th scope="col" class="p-3 text-left">Window</th></tr></thead><tbody>
+<tr><td class="p-3">Regular</td><td class="p-3">2025 income</td><td class="p-3">1 May–1 June 2026; closed</td></tr>
+<tr><td class="p-3">Late regular</td><td class="p-3">2025 income</td><td class="p-3">2 June–1 December 2026; 95% of the assessed amount</td></tr>
+<tr><td class="p-3">First-half application</td><td class="p-3">2026 earned income</td><td class="p-3">1–15 September 2026; eligible wage-only households</td></tr>
+</tbody></table></div>
+<p>Maximum annual EITC amounts are KRW 1.65 million, KRW 2.85 million and KRW 3.3 million respectively. These are ceilings, not a quote. Income, assets and review results determine the actual amount. Proposed increases for 2027 in the September announcement are not the current 2026 limits.</p>
+<h2>Prepare the application without double-counting</h2>
+<ol><li>Choose the income year and regular or half-year route before collecting figures.</li><li>Check the household classification, spouse income and asset assessment date in Hometax.</li><li>Check whether a prior automatic-application consent has already resulted in an application. Consent is available across age groups, but eligibility must still be met.</li><li>Verify the receipt and review status. An invitation or application does not guarantee payment.</li></ol>
+<p>Use Hometax or Sontax; NTS also provides ARS 1544-9944 and an incentive help line, 1566-3636. Use official channels instead of sending identity or bank documents through this site's contact form.</p>
+<h2>Sources and next steps</h2>
+<ul><li><a href="https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&amp;nttSn=1350768">NTS regular application announcement, 30 April 2026 (Korean)</a></li><li><a href="https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?bbsId=1028&amp;mi=2201&amp;nttSn=1354576">NTS September 2026 first-half application and proposed future changes (Korean)</a></li><li><a href="/en/help#tax-resources">English tax resources and support</a></li></ul>
 `;
 
 const fourMajorInsurance = `
-<p class="lead">
-  Korea's "Four Major Insurances" — National Pension, Health Insurance, Employment Insurance, and Industrial Accident Insurance — are mandatory for almost all wage earners.
-  In 2026, the combined employee contribution is approximately 9.7% of gross salary, with the employer matching most components.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">2026 Contribution Rates</h2>
-<div class="overflow-x-auto my-6">
-  <table class="w-full text-sm border border-border">
-    <thead class="bg-secondary">
-      <tr>
-        <th class="p-3 text-left">Insurance</th>
-        <th class="p-3 text-left">Employee</th>
-        <th class="p-3 text-left">Employer</th>
-        <th class="p-3 text-left">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-t border-border"><td class="p-3">National Pension</td><td class="p-3">4.75%</td><td class="p-3">4.75%</td><td class="p-3">9.5%</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Health Insurance</td><td class="p-3">3.595%</td><td class="p-3">3.595%</td><td class="p-3">7.19%</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Long-term Care (13.14% of health)</td><td class="p-3">0.472%</td><td class="p-3">0.472%</td><td class="p-3">0.945%</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Employment Insurance</td><td class="p-3">0.9%</td><td class="p-3">0.9%+α</td><td class="p-3">1.8%+α</td></tr>
-      <tr class="border-t border-border"><td class="p-3">Industrial Accident</td><td class="p-3">—</td><td class="p-3">~0.7%</td><td class="p-3">~0.7%</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">What Each Covers</h2>
-<ul class="space-y-3 mt-4">
-  <li><strong>National Pension:</strong> Retirement pension after age 65 (10-year minimum contribution). Disability pension also available.</li>
-  <li><strong>Health Insurance:</strong> Hospital visits, prescriptions, dental, and major surgeries. Out-of-pocket caps via the Annual Out-of-Pocket Limit System.</li>
-  <li><strong>Employment Insurance:</strong> Unemployment benefits for 120–270 days based on age and tenure. Also covers parental leave allowance and vocational training.</li>
-  <li><strong>Industrial Accident:</strong> Medical care and disability compensation for work-related injuries. Fully employer-funded.</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">After Leaving Employment</h2>
-<p>
-  When you leave a job, National Pension and Employment Insurance status update automatically through NPS and the Ministry of Employment.
-  Health Insurance, however, requires action: either become a dependent under a family member's policy or convert to "voluntary continued enrollment" within 2 months to avoid steep regional rates.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-  <p class="font-bold text-primary mb-2">📌 Related Tools</p>
-  <ul class="space-y-1 text-sm">
-    <li>· <a href="/" class="text-primary underline">Net salary calculator (KRW)</a></li>
-    <li>· <a href="/en/flat-tax" class="text-primary underline">Foreign worker 19% flat tax option</a></li>
-  </ul>
-</div>
+<p class="lead">Read a Korean payslip as separate lines: gross salary, social insurance, national income tax and local income tax. The four insurance systems have different coverage rules; a foreign employee should not assume that every rate applies automatically.</p>
+<h2>2026 workplace rates at a glance</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm border border-border"><thead><tr><th scope="col" class="p-3 text-left">Insurance</th><th scope="col" class="p-3 text-left">Employee share</th><th scope="col" class="p-3 text-left">What to check</th></tr></thead><tbody>
+<tr><td class="p-3">National Pension</td><td class="p-3">4.75% of the applicable standard monthly income</td><td class="p-3">Coverage, caps and social-security agreement</td></tr>
+<tr><td class="p-3">Health Insurance</td><td class="p-3">3.595% of remuneration basis</td><td class="p-3">Registered remuneration and separate non-salary assessments</td></tr>
+<tr><td class="p-3">Long-term Care</td><td class="p-3">13.14% of health-insurance premium</td><td class="p-3">About 0.472% of remuneration for a covered employee; rounding and exemptions matter</td></tr>
+<tr><td class="p-3">Employment Insurance</td><td class="p-3">0.9% where applicable</td><td class="p-3">Visa, coverage and benefits eligibility</td></tr>
+<tr><td class="p-3">Industrial Accident Insurance</td><td class="p-3">No employee premium</td><td class="p-3">Employer-funded; industry rates vary</td></tr>
+</tbody></table></div>
+<p>Adding the uncapped employee percentages gives roughly 9.7%, but that is not a universal payroll deduction. Each scheme has its own base, coverage and rounding. Income tax is additional and is not part of that sum.</p>
+<h2>Questions to ask before your first payslip</h2>
+<ul><li>Which schemes cover my employment and nationality or visa category?</li><li>Does a social-security agreement or certificate change pension coverage?</li><li>Which pay items and monthly caps are used for each premium?</li><li>Are national and local income tax shown separately from insurance?</li></ul>
+<p>National Pension provides old-age, disability and survivor benefits subject to conditions; the old-age commencement age depends on birth year. Health insurance covers eligible treatment with patient payments and exclusions. Employment insurance benefits require their own contribution and claim conditions. Industrial accident cover concerns work-related injury or illness.</p>
+<h2>When you leave a job</h2>
+<p>Ask for your workplace-coverage end date, dependent-coverage options and the first regional health-insurance bill. Qualifying former employees can compare voluntary continuation with regional premiums. The application deadline is tied to the first regional bill's payment due date plus two months, not simply the resignation date. See the detailed guide before choosing.</p>
+<h2>Official references and related help</h2>
+<ul><li><a href="https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0095M0.do">NPS 2026 contribution-rate explanation (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379625&amp;mid=a10605040000">MOHW 2026 health rate decision (Korean)</a></li><li><a href="https://mohw.go.kr/gallery.es?act=view&amp;bid=0003&amp;list_no=379715&amp;mid=a10605040000">MOHW 2026 long-term-care rate decision (Korean)</a></li><li><a href="https://www.nps.or.kr/eng/main.do">National Pension Service (English)</a> — coverage and agreements.</li><li><a href="https://www.nhis.or.kr/english/index.do">NHIS (English)</a> — membership and premium enquiries.</li><li><a href="/en/guides/health-insurance-2026-guide">Health insurance after leaving employment</a></li><li><a href="/en/flat-tax">Compare income-tax methods separately</a></li><li><a href="/">Korean net-salary calculator (Korean; standard coverage assumptions)</a></li></ul>
 `;
 
 const yearEndTaxDeductions = `
-<p class="lead">
-  Year-end tax settlement (연말정산) is Korea's annual income tax reconciliation for wage earners.
-  Run by employers in January–February, it determines whether you receive a refund or owe additional tax for the prior calendar year.
-  Knowing which deductions to claim can move the needle by several hundred thousand KRW.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Income Deductions (소득공제)</h2>
-<p>These reduce the taxable base before tax brackets are applied. High-bracket earners benefit more.</p>
-<ul class="space-y-2 mt-4">
-  <li><strong>Basic deduction:</strong> KRW 1.5 million per dependent including yourself</li>
-  <li><strong>Credit card / debit card / cash receipts:</strong> 15–40% of spending above 25% of total income</li>
-  <li><strong>Housing fund deduction:</strong> Up to KRW 4 million for jeonse loan principal repayment (homeowners excluded)</li>
-  <li><strong>Personal pension premium:</strong> National Pension and other social insurance fully deductible</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Tax Credits (세액공제)</h2>
-<p>These reduce the final tax bill directly, dollar-for-dollar. Generally more powerful for low-to-mid income earners.</p>
-<ul class="space-y-2 mt-4">
-  <li><strong>Personal pension / IRP:</strong> Up to KRW 9 million combined gets 13.2–16.5% credit (annual limit varies by age)</li>
-  <li><strong>Medical expenses:</strong> 15% credit on spending exceeding 3% of total income</li>
-  <li><strong>Education expenses:</strong> 15% credit, varying caps by recipient (yourself, dependents)</li>
-  <li><strong>Donations:</strong> 15% credit (20% for amounts over KRW 10 million)</li>
-  <li><strong>Monthly rent (월세):</strong> 17% credit on rent paid, up to KRW 7.5 million annual rent</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Tactics That Move the Needle</h2>
-<ul class="space-y-2 mt-4">
-  <li><strong>Spousal strategy:</strong> Concentrate credit card spending on the higher-income spouse if both work</li>
-  <li><strong>Pension max-out:</strong> Fully use the KRW 9 million pension cap — guaranteed 13.2%+ return via the tax credit alone</li>
-  <li><strong>December timing:</strong> Push medical and education spending to December if you're below the threshold for the year</li>
-  <li><strong>Rent receipts:</strong> File with rent paid even if you forgot earlier — claim within 5 years via amended return</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-  <p class="font-bold text-primary mb-2">📌 Related Tools</p>
-  <ul class="space-y-1 text-sm">
-    <li>· <a href="/year-end-tax-2026" class="text-primary underline">2026 year-end tax estimator</a></li>
-    <li>· <a href="/calc" class="text-primary underline">All financial calculators</a></li>
-  </ul>
-</div>
+<p class="lead">Year-end settlement reconciles a wage earner's annual tax with tax already withheld. A tax credit is not a guaranteed cash payment, and an income deduction is not a tax credit. This is an overview of selected current rules reviewed on 9 September 2026, not a completed return.</p>
+<h2>Start with your tax status and income year</h2>
+<p>Employers normally settle the previous calendar year's employment income early in the following year. A settlement during early 2026 concerns 2025 income. Confirm the applicable year, Korean tax residence and any flat-tax election first. Non-resident restrictions and the foreign-worker flat election can remove deductions available in the ordinary resident method.</p>
+<h2>Income deductions reduce the tax base</h2>
+<ul><li>The basic personal deduction is KRW 1.5 million for the taxpayer. Additional family members have relationship, income and sometimes age requirements; the same person cannot be claimed twice.</li><li>Eligible national pension and employee insurance payments are deductions. Private pension savings and IRP contributions belong to a different, tax-credit category.</li><li>The card-spending deduction generally begins after eligible spending exceeds 25% of gross salary. Rates, category caps and eligible family spending vary. Do not route all spending to a higher-paid spouse without comparing thresholds and eligibility.</li></ul>
+<h2>Selected tax credits: rate is not refund</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm border border-border"><thead><tr><th scope="col" class="p-3 text-left">Category</th><th scope="col" class="p-3 text-left">Main rule</th><th scope="col" class="p-3 text-left">Important limit</th></tr></thead><tbody>
+<tr><td class="p-3">Pension savings / IRP</td><td class="p-3">National credit: 15% for gross salary up to KRW 55 million, otherwise 12%; other-income conditions also apply</td><td class="p-3">KRW 6 million pension-savings limit; KRW 9 million combined with eligible retirement-account payments</td></tr>
+<tr><td class="p-3">Medical expenses</td><td class="p-3">Generally 15% on qualifying costs above 3% of gross salary</td><td class="p-3">Reimbursements, recipient caps and special-category rates require separate checks</td></tr>
+<tr><td class="p-3">Education</td><td class="p-3">15% of qualifying expenses</td><td class="p-3">Eligible institutions, recipients and caps differ</td></tr>
+<tr><td class="p-3">Ordinary qualifying donations</td><td class="p-3">15%; 30% on the portion above KRW 10 million</td><td class="p-3">Donation type, limits and carry-forward rules matter</td></tr>
+<tr><td class="p-3">Monthly rent</td><td class="p-3">15% or 17% of qualifying rent, up to KRW 10 million a year</td><td class="p-3">Housing, residence registration, home-ownership and income conditions apply</td></tr>
+</tbody></table></div>
+<p>For rent, the gross-salary ceiling is KRW 80 million, with the 17% rate applying up to KRW 55 million; comprehensive-income conditions also apply. Confirm the complete eligibility rules before claiming. The pension figures often quoted as 13.2% or 16.5% include the associated local-tax effect; they are not the national credit rates and are not an investment-return guarantee.</p>
+<h2>A practical settlement checklist</h2>
+<ol><li>Collect your withholding statement and confirm the tax year.</li><li>Check Hometax records against actual payments and reimbursements.</li><li>Agree which spouse may claim each eligible dependent; avoid duplicate claims.</li><li>Separate income deductions from tax credits and apply the tax calculation in that order.</li><li>Compare final tax with tax already withheld. A smaller tax bill can mean a smaller additional payment, not necessarily a refund.</li></ol>
+<p>Do not buy unnecessary services or lock up emergency cash in a pension product just to obtain a credit. Product withdrawal rules, fees and investment loss are separate from tax treatment.</p>
+<h2>Sources and tools</h2>
+<ul><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&amp;mi=6596">NTS other tax credits: pension accounts (Korean)</a></li><li><a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7874&amp;mi=6438">NTS special tax credits: medical, education and donations (Korean)</a></li><li><a href="https://korea.nabo.go.kr/board/file/down.do?fid=33319156">National Assembly Budget Office, 2026 Taxation in Korea (Korean PDF)</a> — monthly-rent conditions.</li><li><a href="/year-end-tax">Year-end estimator (Korean)</a></li><li><a href="/en/help#flat-tax">English comparison model and its omissions</a></li></ul>
 `;
 
 const healthInsuranceGuide = `
-<p class="lead">
-  Korea's National Health Insurance is a single-payer system covering essentially everyone living in the country.
-  Premiums depend on whether you are a workplace member, regional member, or dependent. For 2026, the basic rate is 7.19% of monthly salary, split evenly between employer and employee.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Workplace vs Regional Subscribers</h2>
-<p>
-  <strong>Workplace subscribers (직장가입자)</strong> pay 3.595% of monthly income plus 0.472% long-term care, with employers matching. Coverage extends to dependents at no extra cost.
-</p>
-<p>
-  <strong>Regional subscribers (지역가입자)</strong> — typically self-employed, freelancers, and the unemployed — pay based on a formula that includes income, property, and vehicle value. The single household contribution can be substantially higher than workplace subscribers earning the same amount.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Becoming a Dependent (피부양자)</h2>
-<p>
-  Joining a working family member's policy as a dependent eliminates your own premium entirely. Eligibility requires:
-</p>
-<ul class="space-y-2 mt-4">
-  <li>Annual income under KRW 20 million (effective from late 2022 reform)</li>
-  <li>Property value under KRW 540 million (lower if income exists)</li>
-  <li>Business income essentially zero, or under KRW 5 million if from passive sources</li>
-</ul>
-<p>
-  These thresholds were tightened in 2022 — many former dependents were converted to regional subscribers, often at premiums of KRW 200–400k per month.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Voluntary Continued Enrollment (임의계속가입)</h2>
-<p>
-  When you leave employment, regional premiums can spike. The voluntary continued enrollment program lets you keep your workplace rate for up to 36 months, paying both the employee and employer portions.
-  Apply within 2 months of leaving employment via NHIS. For long-tenured employees facing high regional rates, this is almost always the right choice.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Out-of-Pocket Maximum (본인부담상한제)</h2>
-<p>
-  Even with insurance, copays can accumulate. The annual out-of-pocket cap ranges from KRW 870k (lowest income decile) to KRW 8.08 million (top decile).
-  Any amount paid beyond your bracket cap is refunded automatically the following August. Keep your NHIS records updated to ensure correct refund routing.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-  <p class="font-bold text-primary mb-2">📌 Related Tools</p>
-  <ul class="space-y-1 text-sm">
-    <li>· <a href="/health-insurance-2026" class="text-primary underline">2026 health insurance season page</a></li>
-    <li>· <a href="/" class="text-primary underline">Net salary calculator</a></li>
-  </ul>
-</div>
+<p class="lead">A health-insurance bill is an assessment of membership and income information, not simply a fixed share of every resident's salary. Foreign residents should confirm their membership category and any exceptions with NHIS.</p>
+<h2>Workplace, regional or dependent?</h2>
+<p>For covered workplace employees in 2026, the remuneration-based health rate is 7.19% split between employee and employer: 3.595% each. Long-term care is separate, at 13.14% of health premium. Extra income and special membership conditions can affect the actual assessment.</p>
+<p>Regional premiums use applicable income and property rules. Vehicle-based regional premiums were abolished from February 2024, so a calculation that still adds a car-value premium is outdated. A regional bill can be higher or lower than workplace contributions; compare the actual assessments.</p>
+<p>Dependent status requires relationship, income, business-income, property and sometimes residence conditions. Property tests use the prescribed tax-assessment basis, not an informal home sale price. Ask NHIS to check your documents rather than relying on a single headline income threshold.</p>
+<h2>Leaving employment: check the first bill</h2>
+<ol><li>Record your last day of work and the workplace-membership end date.</li><li>Ask whether you qualify as a dependent, and what documents are needed.</li><li>Find the payment due date on your first regional premium bill. Confirm the voluntary-continuation application deadline with NHIS before two months have elapsed from that due date.</li><li>Request both the regional assessment and the continuation quotation, including any additional income assessment and long-term care premium.</li></ol>
+<p>Continuation requires a total of at least one year of workplace membership in the 18 months before employment ends. It can run up to 36 months from the day after employment ends, subject to membership changes. It is not a new 36-month period beginning whenever you apply.</p>
+<p>Do not assume that continuation means paying twice your former employee share, or that it is always cheaper. NHIS applies the continuation calculation and any reductions. Compare its quotation with your regional bill, family circumstances and likely re-employment date.</p>
+<h2>Out-of-pocket caps are a separate question</h2>
+<p>The annual cap applies to specified covered patient payments, not every hospital expense. The relevant year, income group, excluded services and long hospital stays affect the result. Use the NHIS notice and current annual table; do not treat an old minimum or maximum as a 2026 refund promise.</p>
+<h2>Sources and related help</h2>
+<ul><li><a href="https://www.nhis.or.kr/static/alim/paper/oldpaper/202212/sub/29.html">NHIS continuation explanation (Korean, 2022 publication)</a> — membership, deadline and period; confirm your current assessment with NHIS.</li><li><a href="https://www.korea.kr/news/policyNewsView.do?newsId=148925627">Ministry of Health and Welfare, 6 February 2024 (Korean)</a> — removal of regional vehicle premiums.</li><li><a href="https://www.nhis.or.kr/english/index.do">NHIS English resources</a></li><li><a href="/en/guides/four-major-insurance-complete">How insurance appears on a payslip</a></li></ul>
 `;
 
 const loanTypesComparison = `
-<p class="lead">
-  Korean borrowers choosing between unsecured personal loans (신용대출), mortgages (주택담보대출), and credit lines (마이너스통장) face very different rate structures.
-  For 2026, mortgage rates sit around 3.8–4.5%, unsecured personal loans 5–8%, and credit lines 6–10%.
-  Picking the wrong instrument can cost tens of millions over a 30-year horizon.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">Three Major Loan Types at a Glance</h2>
-<div class="overflow-x-auto my-6">
-  <table class="w-full text-sm border border-border">
-    <thead class="bg-secondary">
-      <tr>
-        <th class="p-3 text-left">Type</th>
-        <th class="p-3 text-left">Rate (2026)</th>
-        <th class="p-3 text-left">Limit</th>
-        <th class="p-3 text-left">Best Use</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-t border-border"><td class="p-3 font-semibold">Mortgage (주담대)</td><td class="p-3">3.8–4.5%</td><td class="p-3">LTV up to 70%</td><td class="p-3">Home purchase / refinance</td></tr>
-      <tr class="border-t border-border"><td class="p-3 font-semibold">Unsecured Personal (신용대출)</td><td class="p-3">5–8%</td><td class="p-3">1–2× annual income</td><td class="p-3">Lump-sum, fixed need</td></tr>
-      <tr class="border-t border-border"><td class="p-3 font-semibold">Credit Line (마이너스통장)</td><td class="p-3">6–10%</td><td class="p-3">~50% of personal loan limit</td><td class="p-3">Flexible short-term cash flow</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">30-Year Cost on a KRW 100 Million Loan</h2>
-<ul class="space-y-2 mt-4">
-  <li><strong>Mortgage @ 4.2%:</strong> ~KRW 76 million in total interest over 30 years</li>
-  <li><strong>Personal loan @ 6.5%:</strong> ~KRW 127 million in total interest over 30 years</li>
-  <li><strong>Credit line @ 8% (avg utilization):</strong> ~KRW 160+ million if rolled forward</li>
-</ul>
-<p>
-  Where collateral is possible, the mortgage path saves a major working-age decade of net wealth.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">When Each Makes Sense</h2>
-<ul class="space-y-3 mt-4">
-  <li><strong>Mortgage:</strong> Buying a primary residence, refinancing existing high-rate debt secured by property, or HELOC-style cash-out.</li>
-  <li><strong>Personal loan:</strong> Wedding, tuition, medical procedure — a clearly defined, time-bounded lump-sum need. Choose level-payment amortization to avoid balloon shocks.</li>
-  <li><strong>Credit line:</strong> Business smoothing, emergency reserve. Pay down aggressively when cash flow normalizes — these rates compound mercilessly when balances persist.</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">DSR — The Regulator's Hard Limit</h2>
-<p>
-  Korea's Debt Service Ratio (DSR) caps total annual principal-plus-interest repayments at 40% of annual income (50% for second-tier lenders, 70% for some special products).
-  Stacking loans on top of an existing mortgage often hits the DSR ceiling before the headline interest rate matters.
-  Run your numbers in the DSR calculator before applying.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-  <p class="font-bold text-primary mb-2">📌 Related Tools</p>
-  <ul class="space-y-1 text-sm">
-    <li>· <a href="/home-loan" class="text-primary underline">Mortgage calculator (Korean market)</a></li>
-    <li>· <a href="/tools/real-estate/dsr" class="text-primary underline">DSR limit calculator</a></li>
-    <li>· <a href="/tools/real-estate/ltv" class="text-primary underline">LTV limit calculator</a></li>
-  </ul>
-</div>
+<p class="lead">Compare the repayment obligation before comparing a headline interest rate. A mortgage, unsecured instalment loan and revolving credit line do not provide the same repayment schedule or renewal promise. This guide does not quote current offers or guarantee approval.</p>
+<h2>What changes between loan types?</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm border border-border"><thead><tr><th scope="col" class="p-3 text-left">Type</th><th scope="col" class="p-3 text-left">Main feature</th><th scope="col" class="p-3 text-left">Question to ask</th></tr></thead><tbody>
+<tr><td class="p-3">Mortgage</td><td class="p-3">Secured against property; repayment methods vary</td><td class="p-3">Valuation, collateral limit, fixed/variable period and early-repayment fee?</td></tr>
+<tr><td class="p-3">Unsecured personal loan</td><td class="p-3">Underwritten on borrower circumstances without property security</td><td class="p-3">Amortising payments or a final lump sum? Actual term and total cost?</td></tr>
+<tr><td class="p-3">Credit line</td><td class="p-3">Draw and repay within an approved facility</td><td class="p-3">Interest on drawings, fees, renewal review and facility reduction conditions?</td></tr>
+</tbody></table></div>
+<p>Use dated quotations from the same comparison day. Advertised minimum rates may require conditions you do not meet. A credit line that needs periodic renewal should not be modeled as a guaranteed 30-year loan.</p>
+<h2>Compare like with like</h2>
+<p>Keep the borrowed principal, term, repayment method, rate assumption and fees consistent. A smaller monthly payment can reflect a longer term or unpaid principal at maturity rather than a lower cost. If a rate is variable, compare at least one higher-rate scenario and identify when the reset can occur.</p>
+<p>For a simple illustration only: interest on a constant KRW 10 million balance at an assumed 6% annual rate is about KRW 50,000 for one twelfth of a year, before fees and day-count differences. Paying interest alone leaves the KRW 10 million principal to repay. This is arithmetic, not a bank offer.</p>
+<h2>Affordability is different from regulatory approval</h2>
+<p>DSR compares qualifying annual debt service with income under the lender's regulatory calculation. LTV relates lending to collateral value. Applicable limits, stress-rate rules, exemptions and foreign-borrower eligibility depend on the product and current regulation. Neither a household repayment-to-income ratio nor an LTV percentage alone proves approval.</p>
+<ul><li>Ask the lender which existing debts, facility limits and stress assumptions it will count.</li><li>Budget essential living costs, irregular income and emergency reserves separately.</li><li>Confirm renewal, acceleration, early-repayment and collateral risks in the agreement.</li><li>Use the lender's written estimate for the final comparison; do not substitute a generic calculator result for an offer.</li></ul>
+<h2>Resources and tools</h2>
+<ul><li><a href="https://www.fsc.go.kr/eng/index">Financial Services Commission (English)</a> — official policy announcements; consult the applicable current announcement.</li><li><a href="/home-loan">Mortgage repayment calculator (Korean; assumptions stated on the page)</a></li><li><a href="/en/salary-converter">Convert gross salary using an explicit exchange-rate assumption</a></li></ul>
 `;
 
 export const hotKeywordsGuidesEn: Guide[] = [
   {
     slug: "earned-income-credit-2026",
-    title: "2026 Korean Earned Income Tax Credit (EITC) — Complete Guide",
+    title: "Korean EITC in 2026: Income Year, Eligibility and Application Windows",
     description:
       "How Korea's EITC works in 2026: who qualifies, payout amounts up to KRW 3.3 million, application windows, and pitfalls that disqualify eligible households.",
     category: "Tax",
     tags: ["EITC", "Korea Tax", "Earned Income Credit", "2026"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-09",
     views: 0,
     content: earnedIncomeCredit,
     lang: "en",
@@ -277,6 +127,7 @@ export const hotKeywordsGuidesEn: Guide[] = [
     tags: ["4대보험", "Korea Social Insurance", "Health", "Pension"],
     level: "Beginner",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-09",
     views: 0,
     content: fourMajorInsurance,
     lang: "en",
@@ -285,11 +136,12 @@ export const hotKeywordsGuidesEn: Guide[] = [
     slug: "year-end-tax-deductions-guide",
     title: "Korean Year-end Tax Settlement (연말정산) — Top Deductions for 2026",
     description:
-      "Income deductions vs tax credits, key categories like personal pension, credit card, medical, education, and rent — what wage earners must claim in 2026.",
+      "Separate income deductions from tax credits, check pension and rent conditions, and understand why a credit is not a guaranteed refund.",
     category: "Tax",
     tags: ["연말정산", "Year-end Tax", "Korea Tax Credits", "Deductions"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-09",
     views: 0,
     content: yearEndTaxDeductions,
     lang: "en",
@@ -303,6 +155,7 @@ export const hotKeywordsGuidesEn: Guide[] = [
     tags: ["NHIS", "Korea Health Insurance", "Dependents", "Premium"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-09",
     views: 0,
     content: healthInsuranceGuide,
     lang: "en",
@@ -311,11 +164,12 @@ export const hotKeywordsGuidesEn: Guide[] = [
     slug: "loan-types-comparison-2026",
     title: "Korean Loans Compared: Mortgage vs Personal Loan vs Credit Line (2026)",
     description:
-      "Three major Korean loan instruments, 2026 rates, 30-year cost comparison on KRW 100M, DSR regulatory cap, and when each makes sense.",
+      "Compare repayment schedules, renewal risks and dated lender quotations for Korean mortgages, personal loans and credit lines.",
     category: "RealEstate",
     tags: ["Korea Loans", "Mortgage", "Personal Loan", "DSR"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-09",
     views: 0,
     content: loanTypesComparison,
     lang: "en",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, Target, TrendingUp } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 const questions = [
  {
@@ -174,7 +174,7 @@ export default function FinancialMBTIPage() {
 
  <div className="flex flex-col items-center gap-2 pt-2">
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
- <ShareButtons title={"나의 투자 성향은 " + result + "! 투자 성향 MBTI 테스트"} />
+ <ResultSharePanel resultKey={JSON.stringify([answers, result])} title={"나의 투자 성향은 " + result + "! 투자 성향 MBTI 테스트"} />
  </div>
 
  {/* 결과 화면 한정 광고 — fun/layout(CALC_RESULT·쿠팡·HOME_TOP)과 무충돌.

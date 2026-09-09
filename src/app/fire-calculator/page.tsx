@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 
 // --- Types & Utilities ---
 
@@ -308,18 +308,45 @@ export default function FireCalculatorPage() {
        ? `🔥 나의 FIRE 계획: ${yearsToFire}년 후 (${finalAge}세) 은퇴!`
        : "🔥 나의 FIRE 계획 세우기";
 
- const captureResultImage = async (): Promise<Blob | null> => {
+ const captureResultCanvas = async () => {
    if (!shareRef.current) return null;
    const { default: html2canvas } = await import("html2canvas");
-   const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
-   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+   return html2canvas(shareRef.current, {
+     scale: 2, useCORS: true, logging: false, windowWidth: 1024,
+     onclone: (_document, element) => {
+       // Export only: keep the live calculator, responsive layout and ads unchanged.
+       element.style.width = "720px";
+       element.style.maxWidth = "none";
+       element.style.padding = "24px";
+       element.style.backgroundColor = "#ffffff";
+       element.querySelectorAll<HTMLElement>(".grid").forEach((grid) => {
+         // Keep long currency values inside their own card at every source viewport.
+         grid.style.gridTemplateColumns = "minmax(0, 1fr)";
+       });
+       element.querySelectorAll("[data-export-decoration]").forEach((node) => node.remove());
+       const retirement = element.querySelector<HTMLElement>("[data-export-retirement]");
+       if (retirement) {
+         retirement.style.display = "block";
+         retirement.style.whiteSpace = "normal";
+         retirement.style.fontSize = "24px";
+         retirement.style.lineHeight = "1.5";
+       }
+       element.querySelectorAll<HTMLElement>("[data-export-value]").forEach((node) => {
+         node.textContent = node.dataset.exportValue ?? "";
+       });
+     },
+   });
+ };
+
+ const captureResultImage = async (): Promise<Blob | null> => {
+   const canvas = await captureResultCanvas();
+   return canvas ? new Promise((resolve) => canvas.toBlob(resolve, "image/png")) : null;
  };
 
  const handleSaveImage = async () => {
-   if (!shareRef.current) return;
    try {
-     const { default: html2canvas } = await import("html2canvas");
-     const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
+     const canvas = await captureResultCanvas();
+     if (!canvas) return;
      const a = document.createElement("a");
      a.download = "my-fire-plan.png";
      a.href = canvas.toDataURL("image/png");
@@ -754,12 +781,12 @@ export default function FireCalculatorPage() {
  <div className="relative z-10">
  <p className="text-sm text-primary font-bold mb-6 uppercase tracking-[0.2em]">경제적 자유 달성</p>
  <h2 className="text-7xl sm:text-9xl font-sans font-medium text-foreground mb-8 tracking-tighter">
- <CountUp end={yearsToFire} duration={2} />
+ <span data-export-value={yearsToFire}><CountUp end={yearsToFire} duration={2} /></span>
  <span className="text-4xl sm:text-6xl text-faint-blue ml-4 italic">년</span>
  </h2>
- <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white border border-canvas text-2xl text-faint-blue shadow-xl">
+ <div data-export-retirement className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white border border-canvas text-2xl text-faint-blue shadow-xl">
  <span className="font-bold text-foreground">{finalAge}세</span>에 은퇴 가능합니다
- <Sparkles className="w-5 h-5 text-primary fill-accent" />
+ <Sparkles data-export-decoration className="w-5 h-5 text-primary fill-accent" />
  </div>
  </div>
  </div>
@@ -781,7 +808,7 @@ export default function FireCalculatorPage() {
  >
  <p className="text-xs text-faint-blue font-bold mb-4 uppercase tracking-[0.15em]">{item.label}</p>
  <p className={`text-3xl font-sans font-bold ${item.color}`}>
- <CountUp end={item.value} separator="," />원
+ <span data-export-value={Math.round(item.value).toLocaleString("ko-KR")}><CountUp end={item.value} separator="," /></span>원
  </p>
  </motion.div>
  ))}
@@ -790,7 +817,7 @@ export default function FireCalculatorPage() {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  {/* 구 팔레트(#cc9254/#26594c) → 브랜드 Electric Blue 계열 토큰 */}
  <div className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20 relative overflow-hidden group">
- <div className="absolute -right-12 -top-12 text-primary/10 group-hover:text-primary/20 transition-colors duration-500">
+ <div data-export-decoration className="absolute -right-12 -top-12 text-primary/10 group-hover:text-primary/20 transition-colors duration-500">
  <Palmtree size={200} />
  </div>
  <div className="relative z-10">
@@ -804,7 +831,7 @@ export default function FireCalculatorPage() {
  지금 은퇴하진 않지만, <br />더 이상 노후 대비 저축을 하지 않아도 되는 상태
  </p>
  <p className="text-4xl font-sans font-bold text-foreground">
- <CountUp end={coastFireTarget} separator="," />원
+ <span data-export-value={Math.round(coastFireTarget).toLocaleString("ko-KR")}><CountUp end={coastFireTarget} separator="," /></span>원
  </p>
  <p className="text-xs text-faint-blue mt-3 font-bold uppercase tracking-wider">
  목표 원금
@@ -812,7 +839,7 @@ export default function FireCalculatorPage() {
  </div>
  </div>
  <div className="bg-[#0D5BFF]/10 p-10 rounded-[2.5rem] border border-[#0D5BFF]/20 relative overflow-hidden group">
- <div className="absolute -right-12 -top-12 text-[#0D5BFF]/10 group-hover:text-[#0D5BFF]/20 transition-colors duration-500">
+ <div data-export-decoration className="absolute -right-12 -top-12 text-[#0D5BFF]/10 group-hover:text-[#0D5BFF]/20 transition-colors duration-500">
  <Coffee size={200} />
  </div>
  <div className="relative z-10">
@@ -826,7 +853,7 @@ export default function FireCalculatorPage() {
  생활비의 50%를 소일거리로 충당하며 <br />반은퇴 상태를 즐기는 목표액
  </p>
  <p className="text-4xl font-sans font-bold text-foreground">
- <CountUp end={baristaTargetAmount} separator="," />원
+ <span data-export-value={Math.round(baristaTargetAmount).toLocaleString("ko-KR")}><CountUp end={baristaTargetAmount} separator="," /></span>원
  </p>
  <p className="text-xs text-faint-blue mt-3 font-bold uppercase tracking-wider">
  목표 원금
@@ -852,7 +879,7 @@ export default function FireCalculatorPage() {
  <Download className="w-5 h-5" />
  이미지 저장
  </button>
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([inputs, lifeEvents, yearsToFire, finalAge, finalTargetAmount])}
  title={shareTitle()}
  description="경제적 자유를 향한 여정을 설계하는 FIRE 계산기"
  getShareImage={captureResultImage}

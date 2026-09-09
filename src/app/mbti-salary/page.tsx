@@ -15,7 +15,8 @@ import {
  BrainCircuit,
  Target,
 } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
+import { normalizeShareImageText } from "@/lib/shareImage";
 
 // 인생 연봉 그래프 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const MbtiSalaryChart = dynamic(() => import("@/components/charts/MbtiSalaryChart"), {
@@ -92,6 +93,7 @@ export default function MbtiSalaryPage() {
  const canvas = await html2canvas(resultRef.current, {
  backgroundColor: null,
  scale: 2,
+ onclone: (_document, element) => normalizeShareImageText(element, "#0145F2"),
  });
  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
  };
@@ -102,6 +104,7 @@ export default function MbtiSalaryPage() {
  html2canvas(resultRef.current, {
  backgroundColor: null, // 투명 배경 유지
  scale: 2, // 고해상도 이미지 생성
+ onclone: (_document, element) => normalizeShareImageText(element, "#0145F2"),
  }).then((canvas) => {
  const link = document.createElement("a");
  link.download = `내 인생 연봉 그래프_${result?.title}_Moneysalary.png`;
@@ -318,7 +321,7 @@ export default function MbtiSalaryPage() {
  다시하기
  </button>
  </div>
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([answers, result])}
  title={`내 인생 연봉 그래프는 '${result.title}'! 과연 당신의 재물운은? 💸`}
  description="인생 연봉 그래프 테스트 - 당신의 숨겨진 재물운과 미래 연봉을 확인하세요"
  getShareImage={captureResultImage}
