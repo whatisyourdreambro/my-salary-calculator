@@ -61,7 +61,6 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
  layout
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.9 }}
  transition={{ duration: 0.4, delay: index * 0.05 }}
  className="group h-full"
  >
@@ -236,11 +235,9 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
 
  {/* Guides Grid — 6번째 카드 뒤 중간 광고를 위해 2블록 분할 */}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
- <AnimatePresence mode='sync'>
  {visibleGuides.slice(0, 6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index} />
  ))}
- </AnimatePresence>
  </motion.div>
  {/* 목록 중간 광고(6번째 카드 뒤) — GUIDE_MID 는 이 페이지·en/layout(PageFooterAds) 미사용 슬롯 — 전면 최적화 (운영자 지시 2026-09-02) */}
  {visibleGuides.length > 6 && (
@@ -249,11 +246,9 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  </div>
  )}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
- <AnimatePresence mode='sync'>
  {visibleGuides.slice(6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index + 6} />
  ))}
- </AnimatePresence>
  </motion.div>
 
  {/* Empty State */}
