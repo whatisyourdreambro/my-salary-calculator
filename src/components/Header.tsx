@@ -82,7 +82,7 @@ export default function Header() {
  <div className="flex-shrink-0 z-50">
  <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Moneysalary home" : "머니샐러리 홈"} className="flex min-h-11 items-center gap-2 no-underline">
  <Logo
- className="h-7 min-[360px]:h-8 sm:h-9 w-auto text-electric"
+ className="h-6 min-[360px]:h-8 sm:h-9 w-auto text-electric"
  showText={true}
  />
  </Link>
@@ -121,7 +121,7 @@ export default function Header() {
  <LocaleSwitcher />
  <ThemeToggle />
  {/* 즐겨찾기 배지 — 저장 0개면 미렌더 (재방문 루프 진입점) */}
- <FavoritesBadge />
+ <div className="hidden sm:block"><FavoritesBadge /></div>
  {/* Dashboard CTA — md+ 에서만 텍스트, sm 이하 아이콘만 */}
  <Link
  href={dashboardHref}
