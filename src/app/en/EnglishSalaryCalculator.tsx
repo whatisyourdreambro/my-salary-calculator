@@ -5,6 +5,8 @@ import Link from "@/components/AppLink";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { parseWholeKRW } from "@/lib/englishCalculators";
 import { calculateEnglishTakeHome } from "@/lib/englishTakeHome";
+import { saveEnglishSalarySnapshot } from "@/lib/englishSavedResults";
+import ResultSharePanel from "@/components/ResultSharePanel";
 
 const formatKRW = (value: number) => value.toLocaleString("en-US");
 const inputClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
@@ -14,17 +16,27 @@ export default function EnglishSalaryCalculator() {
   const [exempt, setExempt] = useState("200000");
   const [dependents, setDependents] = useState(1);
   const [children, setChildren] = useState(0);
+  const [saveNotice, setSaveNotice] = useState<{ key: string; message: string; ok: boolean } | null>(null);
   const annualSalary = parseWholeKRW(salary);
   const nonTaxableMonthly = parseWholeKRW(exempt);
   const consistentExempt = annualSalary !== null && nonTaxableMonthly !== null && nonTaxableMonthly * 12 <= annualSalary;
   const result = annualSalary !== null && nonTaxableMonthly !== null ? calculateEnglishTakeHome({ annualSalary, nonTaxableMonthly, dependents, children }) : null;
   const measurement = useCalculatorMeasurement({ calcType: "en-salary", valid: result !== null, resultKey: result });
+  const inputKey = JSON.stringify([salary, exempt, dependents, children]);
+  const currentSave = saveNotice?.key === inputKey ? saveNotice : null;
+
+  function saveCurrentResult() {
+    if (!result || annualSalary === null || nonTaxableMonthly === null) return;
+    const saved = saveEnglishSalarySnapshot({ annualSalary, nonTaxableMonthly, dependents, children, ...result });
+    const message = saved.ok ? "Saved in this browser. Open My dashboard to review or delete it." : saved.reason === "full" ? "Your dashboard has 20 saved estimates. Delete a saved estimate there before saving another." : "This estimate could not be saved. Check the inputs and browser storage settings; no previous result was removed.";
+    setSaveNotice({ key: inputKey, message, ok: saved.ok });
+  }
 
   return (
     <section id="calculator" aria-labelledby="english-salary-title" className="mx-auto mt-10 max-w-4xl scroll-mt-28 px-4 sm:px-6">
       <div className="rounded-3xl border border-border bg-background p-5 sm:p-8">
         <h2 id="english-salary-title" className="text-2xl font-black sm:text-3xl">Korea take-home salary estimate · 2026</h2>
-        <p className="mt-3 text-muted-foreground">Estimate average monthly take-home pay from an annual salary. This uses the same simplified regular-employee model as the Korean home calculator, with standard insurance coverage assumed.</p>
+        <p className="mt-3 text-muted-foreground">Estimate average monthly take-home pay from an annual salary, qualifying non-taxable pay and eligible dependents. The estimate assumes standard employee insurance and spreads simplified annual income tax over twelve months.</p>
         <div {...measurement.inputProps} className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="en-salary-annual" className="mb-2 block font-semibold">Annual gross salary (KRW)</label>
@@ -69,6 +81,13 @@ export default function EnglishSalaryCalculator() {
                 ["Local income tax", result.localIncomeTax],
               ].map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 rounded-lg bg-secondary/30 p-3"><dt>{label}</dt><dd className="font-semibold">{formatKRW(Number(value))} KRW</dd></div>)}
             </dl>
+            <div className="mt-5 rounded-xl border border-border p-4">
+              <button type="button" onClick={saveCurrentResult} disabled={currentSave?.ok} className="min-h-11 rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground disabled:opacity-50">{currentSave?.ok ? "Saved in this browser" : "Save this estimate"}</button>
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">Optional: save this KRW estimate and its four inputs on this device. It is separate from Korean dashboard data and is not an account or cloud backup.</p>
+              {currentSave && <p role="status" className="mt-2 text-sm">{currentSave.message}</p>}
+              <Link href="/en/dashboard" className="mt-2 inline-flex min-h-11 items-center text-primary underline">Open My dashboard</Link>
+            </div>
+            <ResultSharePanel className="mt-5" locale="en" resultKey={inputKey} resultIsCurrent={result !== null} pageUrl="https://www.moneysalary.com/en" pageTitle="Korea Salary Calculator 2026" pageDescription="Estimate Korean take-home pay with explicit assumptions." url="https://www.moneysalary.com/en" title="My Korean take-home salary estimate" description={`Estimated average monthly take-home: ${formatKRW(result.netPay)} KRW. Monthly deductions in the simplified 2026 regular-employee model: ${formatKRW(result.totalDeductions)} KRW. Not an actual payslip or refund.`} previewDescription="Only the result text below and a page link will be shared. The link does not restore your salary or family inputs. Continue only if you want to disclose these result amounts." contentType="salary_result" />
           </div>
         )}
         <details className="mt-5 rounded-xl border border-border p-4">

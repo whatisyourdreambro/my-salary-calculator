@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { convertGrossSalary, parseCalculatorAmount, parseWholeKRW } from "@/lib/englishCalculators";
+import EnglishPageShell from "@/components/english/EnglishPageShell";
 
 const initialRates = { USD: "1350", JPY: "9", SGD: "1000", GBP: "1800" };
 const number = (value: number) => value.toLocaleString("en-US", { maximumFractionDigits: 2 });
@@ -21,12 +22,7 @@ export default function SalaryConverterPage() {
   const { inputProps, resultRef } = useCalculatorMeasurement({ calcType: "en-salary-converter", valid, resultKey: [annualKRW, rates] });
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <Link href="/en" className="inline-flex min-h-11 items-center text-primary underline">English tools</Link>
-      <header className="my-8">
-        <h1 className="text-3xl font-black sm:text-5xl">Gross salary currency converter</h1>
-        <p className="mt-4 text-lg text-muted-foreground">Convert an annual Korean salary into annual and monthly amounts using your exchange-rate assumptions.</p>
-      </header>
+    <EnglishPageShell eyebrow="Calculators · Gross currency amounts" title="Gross salary currency converter" description="Convert an annual Korean salary into annual and monthly amounts using your exchange-rate assumptions. Taxes, conversion fees and living costs are excluded." breadcrumbs={[{ name: "Calculators", href: "/en/calculators" }, { name: "Gross salary converter", href: "/en/salary-converter" }]}>
       <section className="rounded-2xl border border-border p-5 sm:p-8" aria-labelledby="converter-inputs">
         <h2 id="converter-inputs" className="text-xl font-bold">Your salary and exchange rates</h2>
         <div {...inputProps} className="mt-5 space-y-6">
@@ -73,10 +69,12 @@ export default function SalaryConverterPage() {
         <p className="mt-3">This is currency arithmetic, not an overseas job-offer or living-standard comparison. Taxes, social insurance, housing, working hours and benefits differ by location and personal circumstances. A twelve-month average is not a promise of each payslip amount.</p>
         <p className="mt-3">For an actual offer, compare gross salary, bonus conditions, benefits and local deductions separately, then use a quote that includes conversion fees.</p>
         <nav aria-label="Related English tasks" className="mt-4 flex flex-wrap gap-4">
+          <Link href="/en#calculator" className="inline-flex min-h-11 items-center text-primary underline">Estimate Korean take-home pay</Link>
+          <Link href="/en/tools/offer-compare" className="inline-flex min-h-11 items-center text-primary underline">Compare gross offers in one currency</Link>
           <Link href="/en/flat-tax" className="inline-flex min-h-11 items-center text-primary underline">Compare Korean income-tax methods</Link>
           <Link href="/en/help#currency" className="inline-flex min-h-11 items-center text-primary underline">Conversion method and limitations</Link>
         </nav>
       </section>
-    </main>
+    </EnglishPageShell>
   );
 }

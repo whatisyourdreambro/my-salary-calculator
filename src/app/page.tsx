@@ -4,7 +4,7 @@
 // 즉시 읽을 수 있도록 HomeSeoSection을 정적 HTML로 제공.
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
-import { faqLd, howToLd } from "@/lib/structuredData";
+import { faqLd, howToLd, webApplicationLd } from "@/lib/structuredData";
 import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={[faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
+      <JsonLd data={[webApplicationLd(), faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
       {/* Server-render the discovery links in place; keep the calculator interactive. */}
       <HomeClient featuredGuides={<FeaturedGuides />} />
       <HomeSeoSection />

@@ -1,22 +1,19 @@
-import type { Metadata } from "next";
 import Link from "@/components/AppLink";
+import EnglishPageShell from "@/components/english/EnglishPageShell";
+import { buildEnglishMetadata } from "@/lib/englishSeo";
 
-export const metadata: Metadata = {
-  title: { absolute: "English Salary Tools: Methods, Sources and Help | Moneysalary" },
+export const metadata = buildEnglishMetadata({
+  title: "English Salary Tools: Methods, Sources and Help",
   description: "Understand the Korean take-home salary estimate, income-tax comparison, gross currency conversion, eligibility checks and data handling.",
-  alternates: { canonical: "https://www.moneysalary.com/en/help", languages: { en: "https://www.moneysalary.com/en/help", "x-default": "https://www.moneysalary.com/en/help" } },
-  openGraph: { title: "English Salary Tools: Methods and Help", description: "Methods, official sources and limitations for Moneysalary's English calculators.", url: "https://www.moneysalary.com/en/help", locale: "en_US", type: "website" },
-};
+  path: "/en/help",
+});
 
 export default function EnglishHelpPage() {
   return (
-    <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <Link href="/en" className="inline-flex min-h-11 items-center text-primary underline">English tools</Link>
-      <h1 className="mt-4 text-3xl font-black sm:text-5xl">Methods, sources and help</h1>
-      <p className="mt-5 text-lg text-muted-foreground">Choose a tool by the question you need to answer: a Korean take-home estimate, a limited income-tax comparison or gross currency arithmetic. These tools do not establish eligibility, an actual payslip or an investment return.</p>
+    <EnglishPageShell title="Methods, sources and help" description="Choose a tool by the question you need to answer: Korean take-home pay, a limited income-tax comparison or a planning scenario. These tools do not establish eligibility, an actual payslip or an investment return." breadcrumbs={[{ name: "Methods and help", href: "/en/help" }]}>
       <p className="mt-3 text-sm text-muted-foreground">Method review: 9 September 2026. Check the applicable tax year in the official source before filing.</p>
       <nav aria-label="Help topics" className="my-8 flex flex-wrap gap-4">
-        {[["#salary", "Take-home pay"], ["#flat-tax", "Income tax"], ["#currency", "Currency"], ["#insurance", "Insurance"], ["#privacy", "Data and support"]].map(([href, label]) => <a key={href} href={href} className="inline-flex min-h-11 items-center text-primary underline">{label}</a>)}
+        {[["#salary", "Take-home pay"], ["#flat-tax", "Income tax"], ["#currency", "Currency"], ["#planning", "Planning tools"], ["#insurance", "Insurance"], ["#privacy", "Data and support"]].map(([href, label]) => <a key={href} href={href} className="inline-flex min-h-11 items-center text-primary underline">{label}</a>)}
       </nav>
       <div className="space-y-10">
         <section id="salary" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
@@ -67,18 +64,25 @@ export default function EnglishHelpPage() {
             <li><Link href="/en/guides/four-major-insurance-complete" className="text-primary underline">Read the English insurance overview</Link></li>
           </ul>
         </section>
+        <section id="planning" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
+          <h2 className="text-2xl font-bold">General planning tools and currency labels</h2>
+          <p className="mt-4">Loan, savings, gross pay, offer and everyday-cost tools use the values and assumptions you enter. Their currency selector changes display and rounding; it does not fetch exchange rates, calculate foreign tax or convert existing inputs. Use one currency throughout a scenario.</p>
+          <p className="mt-3">Each tool states its formula, contribution or payment timing, exclusions and worked example. Constant returns and withdrawal rates are assumptions, not forecasts. A scheduled loan payment is not lender approval. The work-time tool uses the spendable hourly pay you supply rather than deriving a country&apos;s take-home wage.</p>
+          <Link href="/en/tools" className="mt-4 inline-flex min-h-11 items-center text-primary underline">Choose a money planning tool</Link>
+        </section>
         <section id="privacy" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
           <h2 className="text-2xl font-bold">Your inputs and support</h2>
           <p className="mt-4">These English calculators run their arithmetic in your browser. Our calculator interaction events identify the tool and interaction stage; they do not include the salary, family counts, exchange rate or tax result you enter here. Site advertising, analytics and hosting services can still process browser, page and connection information.</p>
           <p className="mt-3">If you choose to share a result elsewhere on the site, review the shared text, link or image for personal details. Do not include salary details, account numbers or identity documents in a support message.</p>
-          <p className="mt-3">The complete site policies and contact form are currently in Korean. These links open Korean pages:</p>
-          <nav aria-label="Site policies in Korean" className="mt-3 flex flex-wrap gap-4">
-            <Link href="/privacy" hrefLang="ko" className="inline-flex min-h-11 items-center text-primary underline">Privacy policy (Korean)</Link>
-            <Link href="/terms" hrefLang="ko" className="inline-flex min-h-11 items-center text-primary underline">Terms (Korean)</Link>
-            <Link href="/contact" hrefLang="ko" className="inline-flex min-h-11 items-center text-primary underline">Private contact (Korean)</Link>
+          <p className="mt-3">Saving a Korean take-home estimate is optional and stores its inputs and results in this browser. English saved estimates use a separate model and currency namespace from Korean dashboard data. Review and delete saved estimates on My dashboard; browser storage is not a cloud backup.</p>
+          <nav aria-label="English policies and support" className="mt-3 flex flex-wrap gap-4">
+            <Link href="/en/privacy" className="inline-flex min-h-11 items-center text-primary underline">Privacy policy</Link>
+            <Link href="/en/terms" className="inline-flex min-h-11 items-center text-primary underline">Terms</Link>
+            <Link href="/en/contact" className="inline-flex min-h-11 items-center text-primary underline">Private contact</Link>
+            <Link href="/en/dashboard" className="inline-flex min-h-11 items-center text-primary underline">My dashboard</Link>
           </nav>
         </section>
       </div>
-    </main>
+    </EnglishPageShell>
   );
 }

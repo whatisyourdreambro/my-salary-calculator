@@ -20,6 +20,7 @@
     "qa:crawl": "tsx scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
     "qa:share": "node scripts/qa-share-coverage.mjs",
+    "qa:english": "tsx scripts/qa-english.ts",
     "ad-depth": "node scripts/ad-depth-audit.mjs"
   },
   "dependencies": {

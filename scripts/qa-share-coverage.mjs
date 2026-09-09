@@ -5,7 +5,10 @@ import ts from 'typescript';
 
 const SHARE_COMPONENTS = new Set(['ShareButtons', 'ShareSection', 'AutoShareSection', 'FloatingShareBar', 'ShareableResult', 'ResultSharePanel']);
 const EXCLUDED = new Map([
+  ['/en/[...missing]', 'English 404 boundary; not a public content page'],
   ['/contact', 'Private contact workflow'],
+  ['/en/contact', 'Private English contact workflow'],
+  ['/en/dashboard', 'English local personal dashboard'],
   ['/dashboard', 'Local personal dashboard'],
   ['/report', 'Local personal report'],
   ['/favorites', 'Local saved items'],

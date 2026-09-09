@@ -1,53 +1,8 @@
-import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd } from "@/lib/structuredData";
+import { softwareApplicationLd } from "@/lib/structuredData";
+import { buildEnglishMetadata } from "@/lib/englishSeo";
 
-// 자체 metadata 미선언 시 부모 en/layout.tsx 의 canonical(/en)을 상속하던 버그 수정 —
-// 자기 자신을 가리키는 canonical 로 교정.
-export const metadata: Metadata = {
-  title: { absolute: "Korea Flat Tax 19% vs Progressive Calculator | Moneysalary" },
-  description:
-    "Compare a limited Korean resident-employee income-tax model: 19% national flat tax plus local tax, progressive deductions, eligibility checks and official sources.",
-  alternates: {
-    canonical: "https://www.moneysalary.com/en/flat-tax",
-    languages: {
-      en: "https://www.moneysalary.com/en/flat-tax",
-      "x-default": "https://www.moneysalary.com/en/flat-tax",
-    },
-  },
-  keywords:
-    "korea flat tax 19 percent, foreign worker tax korea, expat tax korea, flat tax vs progressive tax, korea income tax foreigner",
-  openGraph: {
-    title: "Korea Flat Tax 19% vs Progressive Tax Calculator | Moneysalary",
-    description:
-      "Compare Korea's 19% flat tax for foreign workers against the progressive income tax brackets.",
-    type: "website",
-    locale: "en_US",
-    url: "https://www.moneysalary.com/en/flat-tax",
-    images: [{ url: "https://www.moneysalary.com/api/og?lang=en&title=Korea+Flat+Tax+19+Calculator", width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Korea Flat Tax 19% vs Progressive Tax Calculator | Moneysalary",
-    description:
-      "Compare national and local income tax under two methods, with explicit assumptions and eligibility limits.",
-  },
-};
-
-export default function FlatTaxLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <JsonLd
-        data={breadcrumbLd([
-          { name: "Home", path: "/en" },
-          { name: "Flat Tax 19% Calculator", path: "/en/flat-tax" },
-        ])}
-      />
-      {children}
-    </>
-  );
+export const metadata = buildEnglishMetadata({ title: "Korea Flat Tax 19% vs Progressive Calculator", description: "Compare a limited Korean resident-employee income-tax model: 19% national flat tax plus local tax, progressive deductions, eligibility checks and official sources.", path: "/en/flat-tax" });
+export default function FlatTaxLayout({ children }: { children: React.ReactNode }) {
+  return <><JsonLd data={softwareApplicationLd({ name: "Korea flat tax vs progressive tax", description: "A limited resident-employee income-tax comparison with national and local tax, explicit omissions and separate eligibility checks.", url: "/en/flat-tax", inLanguage: "en" })} />{children}</>;
 }

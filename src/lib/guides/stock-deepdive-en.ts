@@ -1,809 +1,174 @@
-// src/lib/guides/stock-deepdive-en.ts
-//
-// English-language guides for the "Stocks & Semiconductors" category.
-// Same slugs as the Korean version (stock-deepdive.ts) so that hreflang pairs are 1:1.
-// Disclaimer: All content is for informational purposes only — not investment advice.
+import type { Guide } from "@/lib/guidesData";
 
-const DISCLAIMER_HTML = `
-<div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 my-8 text-sm">
- <p class="font-bold text-amber-900 dark:text-amber-200 mb-2">⚠️ Investment Disclaimer</p>
- <p class="text-amber-800 dark:text-amber-300 leading-relaxed">
-  This article is for informational purposes only and does not constitute investment advice or a solicitation to buy or sell any specific security.
-  Stock investing carries the risk of capital loss; all decisions and outcomes are the sole responsibility of the investor.
-  Past performance is not indicative of future results.
- </p>
-</div>
-`;
+const investmentNote = `<p class="text-sm"><strong>Scope:</strong> This is an explanation and planning checklist, not a recommendation to buy, sell or allocate a specified share of your assets. Examples exclude costs and taxes unless stated. Market outcomes and individual employment terms can differ.</p>`;
+const samsungHbm = "https://news.samsung.com/global/samsung-ships-industry-first-commercial-hbm4-with-ultimate-performance-for-ai-computing";
+const samsungReturn = "https://news.samsung.com/global/samsung-electronics-to-implement-largest-ever-shareholder-return-in-2026-estimated-at-krw-90-to-110-trillion";
+const hynixHbm = "https://news.skhynix.com/en/sk-hynix-completes-worlds-first-hbm4-development-and-readies-mass-production/";
+const ntsShares = "https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=&amp;nttSn=1348384";
+const isaSource = "https://www.samsungpop.com/ux/kor/finance/isa/isainfo/intro.do";
 
 const samsungStock2026 = `
-<p class="lead">
- The memory upcycle that began in late 2025 is set to accelerate through 2026, putting Samsung Electronics back in the spotlight.
- Stabilization of HBM3E mass production and visibility on foundry break-even are the two key swing factors for the next 12 months.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 Three Drivers for Samsung's 2026 Stock Story</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">1. HBM3E 12-Hi mass production and NVIDIA supply chain entry</h3>
-<p>
- Samsung's biggest weakness in memory has been being a follower in HBM.
- However, after passing NVIDIA's qualification for HBM3E 12-Hi in late 2025, full shipments are expected to ramp from Q1 2026.
- Capturing roughly 30% of the volume currently held by SK Hynix could add over 5 trillion KRW per quarter to memory operating profit.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">2. Foundry 2nm GAA yield normalization</h3>
-<p>
- The foundry division has been the largest source of operating losses for two consecutive years.
- As 2nm GAA (Gate-All-Around) enters mass production in 2026, foundry could swing from quarterly losses to profitability if mobile AP and AI accelerator orders increase.
- That said, price competitiveness against TSMC remains a persistent challenge.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">3. Continuity of buyback and cancellation policy</h3>
-<p>
- Buybacks and share cancellations in 2024–2025 directly improved EPS.
- Whether a similar capital return program continues in 2026 will heavily influence foreign investor flows.
- Watching for shareholder return announcements at each quarterly results day is a key habit.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 Scenarios: Bear / Base / Bull</h2>
-<p>The table below shows market consensus-based scenarios as relative comparison (not absolute targets).</p>
-
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Scenario</th>
-    <th class="p-3 text-left">Assumption</th>
-    <th class="p-3 text-left">Relative Move</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Bull</td>
-    <td class="p-3">HBM3E share &gt; 30% + 2nm break-even</td>
-    <td class="p-3">+30% to +45% vs base</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Base</td>
-    <td class="p-3">HBM3E share ~15%, narrowing foundry loss</td>
-    <td class="p-3">Current level</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Bear</td>
-    <td class="p-3">HBM entry delayed + memory price re-decline</td>
-    <td class="p-3">-15% to -25% vs base</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💡 Three Things Working Investors Should Watch</h2>
-<ul class="space-y-3 mt-4">
- <li><strong>① DCA wins:</strong> Given the volatility, a fixed monthly investment smooths your average cost.</li>
- <li><strong>② Use ISA / pension accounts:</strong> Within Korea's ISA tax-free cap (KRW 2M in gains, KRW 4M for the lower-income type; contributions capped at KRW 20M/year, KRW 100M total), realized gains are tax-free, beating direct purchase materially.</li>
- <li><strong>③ Employee benefits:</strong> If you work at Samsung, ESPP discounts vs market price require separate analysis (see related guide).</li>
-</ul>
-
-${DISCLAIMER_HTML}
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
- <p class="font-bold text-primary mb-2">📌 Related Guides</p>
- <ul class="space-y-1 text-sm">
-  <li>· <a href="/en/guides/samsung-employee-rsu-stock" class="text-primary underline">Samsung Employee Stock Plans: Asset Impact in Different Price Scenarios</a></li>
-  <li>· <a href="/en/guides/sk-hynix-stock-2026" class="text-primary underline">SK Hynix Stock Outlook: HBM3E Dominance and 2026 Scenarios</a></li>
-  <li>· <a href="/en/guides/semiconductor-cycle-2026" class="text-primary underline">Semiconductor Cycle 2026: Asset Strategy Through Memory Peak</a></li>
- </ul>
-</div>
-`;
+<p class="lead">A product milestone, a company's profit and its share price are three different things. Read Samsung's 2026 announcements by date and scope before applying them to an investment or compensation decision.</p>
+<h2>Start with dated company facts</h2>
+<p>Samsung announced commercial HBM4 shipments and the start of mass production on 12 February 2026. Its 21 August 2026 shareholder-return announcement also described a board-approved share buyback for employee compensation. These are company announcements, not proof that a particular employee will receive a grant or that the share price will rise.</p>
+<p>A headline about production does not by itself establish a customer's purchase volume, a future market share or a quarterly profit contribution. Keep those unreported quantities out of a factual summary.</p>
+<h2>A checklist for the next results release</h2>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Question</th><th scope="col">What to record</th><th scope="col">What it does not prove</th></tr></thead><tbody>
+<tr><td>What was announced?</td><td>Development, qualification, production readiness or commercial shipments; announcement date</td><td>That all stages or customer orders are complete</td></tr>
+<tr><td>What was earned?</td><td>Reporting period, segment revenue and operating profit, where disclosed</td><td>That a product's revenue equals its profit</td></tr>
+<tr><td>What is planned?</td><td>Management's forecast, conditions and intended timing</td><td>That the forecast is an achieved result</td></tr>
+<tr><td>What reaches an employee?</td><td>Actual award notice, eligibility, vesting and tax information</td><td>That a corporate buyback is an individual entitlement</td></tr>
+</tbody></table></div>
+<h2>Use scenarios without inventing a target price</h2>
+<p>Instead of attaching an unsupported stock-return percentage to HBM market share, list which assumptions would need to be true. Compare how those assumptions affect your own cash needs and employer-stock concentration. A price scenario is a hypothesis; it is not market consensus unless a dated, identifiable source actually reports that consensus.</p>
+<h2>If your income and savings depend on the same employer</h2>
+<p>Keep guaranteed cash pay, variable bonus and tradable shares separate. Check whether a cash need could arrive before an award vests or a holding restriction ends. No single portfolio percentage is appropriate merely because two people have the same salary.</p>
+<h2>Sources and a useful next step</h2>
+<ul><li><a href="${samsungHbm}">Samsung: commercial HBM4 announcement, 12 February 2026</a></li><li><a href="${samsungReturn}">Samsung: shareholder-return and employee-compensation buyback announcement, 21 August 2026</a></li><li><a href="/en/guides/samsung-employee-rsu-stock">How to read an employee stock-award notice</a></li><li><a href="/en/tools/offer-compare">Compare the documented cash components of two offers</a></li></ul>
+${investmentNote}`;
 
 const samsungEmployeeRsu = `
-<p class="lead">
- For Samsung Electronics employees, the stock price is more than a passing interest — it is a major component of household assets.
- The Employee Stock Ownership (ESOP) plan, employee stock purchase financing, and Restricted Stock Units (RSUs) for executives and selected roles are all directly tied to Samsung's share price.
- This guide simulates how share price scenarios change employee net worth across job levels.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🏢 Samsung's Employee Stock Programs at a Glance</h2>
-<div class="grid md:grid-cols-3 gap-4 mt-6">
- <div class="bg-card p-5 rounded-xl border border-border">
-  <h4 class="font-bold mb-2">① ESOP Subscription</h4>
-  <p class="text-sm text-muted-foreground">Subscription price, eligibility and lock-up depend on the actual offering and plan documents. A discount or one-year holding period is not universal.</p>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border">
-  <h4 class="font-bold mb-2">② ESOP Loan</h4>
-  <p class="text-sm text-muted-foreground">If financing is offered, check its current rate, subsidy, repayment and employment-exit conditions. Do not assume the company subsidizes every employee purchase.</p>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border">
-  <h4 class="font-bold mb-2">③ Executive RSU / Stock Options</h4>
-  <p class="text-sm text-muted-foreground">RSUs and options are different contracts. Employment-related value can be taxed as earned income when the right becomes taxable or an option is exercised. A later share sale is a separate tax event; check grant terms, tax residence and any special relief.</p>
- </div>
-</div>
-
-<p><a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000011075">NTS RSU income classification (Korean)</a> distinguishes employment-related compensation from other situations. Retirement timing and special plan conditions can change the treatment; a later sale has separate rules.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📈 Asset Simulation by Job Level</h2>
-<p>
- The numbers below are illustrative simulations (actual grants vary widely).
- We assume an employee subscribes ~5% of annual salary to the ESOP each year for 5 years.
-</p>
-
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Item</th>
-    <th class="p-3 text-left">Junior (5 yrs)</th>
-    <th class="p-3 text-left">Mid (10 yrs)</th>
-    <th class="p-3 text-left">Senior (15 yrs)</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3">Salary (assumed)</td>
-    <td class="p-3">KRW 75M</td>
-    <td class="p-3">KRW 110M</td>
-    <td class="p-3">KRW 150M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Annual ESOP buy</td>
-    <td class="p-3">KRW 3.75M</td>
-    <td class="p-3">KRW 5.5M</td>
-    <td class="p-3">KRW 7.5M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">5-year cumulative cost</td>
-    <td class="p-3">~KRW 18.75M</td>
-    <td class="p-3">~KRW 27.5M</td>
-    <td class="p-3">~KRW 37.5M</td>
-   </tr>
-   <tr class="border-t border-border bg-primary/5">
-    <td class="p-3 font-bold">Value if +30%</td>
-    <td class="p-3 font-bold">KRW 24.4M</td>
-    <td class="p-3 font-bold">KRW 35.8M</td>
-    <td class="p-3 font-bold">KRW 48.8M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Value if -20%</td>
-    <td class="p-3 text-red-600">KRW 15M</td>
-    <td class="p-3 text-red-600">KRW 22M</td>
-    <td class="p-3 text-red-600">KRW 30M</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚖️ Three Pitfalls of Heavy ESOP Allocation</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Pitfall 1. Asset concentration risk</h3>
-<p>
- Your salary <em>and</em> a large portion of your savings ride on the same company.
- If the firm hits trouble, both your income and your assets shake at the same time.
- A common rule of thumb: keep employer stock under <strong>20% of total financial assets</strong>.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Pitfall 2. Opportunity cost of the lock-up</h3>
-<p>
- ESOP shares are typically locked for 1 year.
- If the price falls during that period, you cannot sell or rotate into other assets.
- Always check market conditions before subscribing.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Pitfall 3. Effective cost of subsidized loans</h3>
-<p>
- Many employees use ESOP loans to scale their subscription.
- Even with company subsidy, residual interest remains.
- If the share price gain is below your effective interest rate, your real return is negative.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 Recommended Strategy by Level</h2>
-<ul class="space-y-3 mt-4">
- <li><strong>Junior (Staff):</strong> Subscribe ~50% of the cap, allocate the rest to ETFs / pension accounts.</li>
- <li><strong>Mid-level:</strong> Watch concentration. Trim partially when ESOP value exceeds 25% of financial assets.</li>
- <li><strong>Executives / RSU recipients:</strong> Sell 20–30% on vesting for diversification, hold the rest long-term.</li>
-</ul>
-
-${DISCLAIMER_HTML}
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
- <p class="font-bold text-primary mb-2">🛠 Useful Tools</p>
- <ul class="space-y-1 text-sm">
-  <li>· <a href="/salary-db" class="text-primary underline">Korean Company Salary DB</a> — Samsung salary by level</li>
-  <li>· <a href="/calc" class="text-primary underline">100 Calculators</a> — Capital gains tax on stock sales</li>
-  <li>· <a href="/fire-calculator" class="text-primary underline">FIRE Calculator</a> — Retirement simulation including ESOP</li>
- </ul>
-</div>
-`;
+<p class="lead">A company announcement about employee compensation is not your personal award notice. Start with your own grant, purchase or option documents, then separate the stages that change ownership, cash flow and tax.</p>
+<h2>Company fact versus your contract</h2>
+<p>On 21 August 2026, Samsung announced a board-approved share buyback for employee compensation. The announcement does not by itself establish an individual's award quantity, eligible role, vesting date or sale restrictions. Obtain those terms from the employer before valuing a package.</p>
+<h2>Purchase, RSU and option are different arrangements</h2>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Arrangement</th><th scope="col">Information needed</th></tr></thead><tbody>
+<tr><td>Employee share purchase</td><td>Subscription price, employee contribution, eligibility, restrictions and custody rules</td></tr>
+<tr><td>Purchase financed by a loan</td><td>Rate, subsidy if any, repayment schedule and what happens when employment ends</td></tr>
+<tr><td>Restricted stock unit or similar award</td><td>Grant, vesting or delivery conditions, share count and applicable valuation date</td></tr>
+<tr><td>Stock option</td><td>Exercise price, exercise window, vesting and tax treatment of an exercise</td></tr>
+</tbody></table></div>
+<p>A discount, subsidized loan or one-year holding period is not universal. Do not treat an RSU and an option as the same contract.</p>
+<h2>Separate compensation tax from a later sale</h2>
+<p>Employment-related value may be earned income when the right becomes taxable or an option is exercised. A later share sale is a separate event. The NTS RSU interpretation linked below explains one classification context; grant terms, retirement timing, residence and special relief can change the applicable treatment. Ask payroll which event and value were reported.</p>
+<h2>A transparent valuation example</h2>
+<p>For illustration only, 100 delivered shares at an assumed price of KRW 60,000 have a gross market value of KRW 6 million. At KRW 48,000 the same shares are worth KRW 4.8 million. This arithmetic is not a grant forecast or spendable cash: restrictions, compensation tax, sale taxes and fees can change the amount available.</p>
+<h2>Before comparing or selling</h2>
+<ul><li>Keep the award outside guaranteed salary until you understand its conditions.</li><li>Record vesting, restriction-release and tax-payment dates separately.</li><li>Consider the combined exposure of your employment income and savings without relying on a universal allocation rule.</li><li>For a cash-offer comparison, identify share value separately rather than counting it twice as both bonus and salary.</li></ul>
+<h2>Sources and tools</h2>
+<ul><li><a href="${samsungReturn}">Samsung compensation-related buyback announcement, 21 August 2026</a></li><li><a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000011075">NTS RSU income classification (Korean)</a></li><li><a href="/en/guides/chip-stock-tax-guide">Share-sale tax scope and account limits</a></li><li><a href="/en/tools/offer-compare">Gross cash-offer comparison</a></li></ul>
+${investmentNote}`;
 
 const skHynixStock2026 = `
-<p class="lead">
- SK Hynix has enjoyed an early-mover monopoly on HBM3E since 2024, lifting quarterly operating profit above 7 trillion KRW.
- The key question for 2026 is simple: <strong>Can it defend share and margin once Samsung enters at scale?</strong>
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🏆 Three Structural Strengths</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">1. One-year lead on the HBM3E / HBM4 roadmap</h3>
-<p>
- SK Hynix was first to mass-produce HBM3E 8-Hi and 12-Hi.
- HBM4 is targeted for H2 2026 mass production.
- Deep co-design relationships with NVIDIA and AMD form the first line of defense for share retention.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">2. Margin advantage</h3>
-<p>
- HBM commands 5–7x the unit price of commodity DRAM.
- As HBM rose to over 30% of memory revenue, operating margin recovered to 30–40% — historically rare for the industry.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">3. New fabs in Cheongju, Icheon, and Indiana, USA</h3>
-<p>
- The M15X (Cheongju), M16 (Icheon), and Indiana advanced packaging facility together roughly double HBM capacity.
- Capacity expansion is a double-edged sword — if demand softens, prices come under pressure.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ Three Risks for 2026</h2>
-<div class="bg-red-50 dark:bg-red-950/20 p-6 rounded-xl border border-red-200 dark:border-red-800 my-6">
- <ul class="space-y-3">
-  <li><strong>① Samsung's HBM3E 12-Hi ramp</strong> — share dilution can weaken pricing power.</li>
-  <li><strong>② Commodity DRAM / NAND volatility</strong> — 60% of revenue is still commodity memory; cycle peak can hit hard.</li>
-  <li><strong>③ FX and US–China trade policy</strong> — high US/China sales exposure makes tariffs and export controls material variables.</li>
- </ul>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 Scenario Map (relative)</h2>
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Scenario</th>
-    <th class="p-3 text-left">Assumption</th>
-    <th class="p-3 text-left">Move vs Base</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Bull</td>
-    <td class="p-3">HBM share &gt; 60% + HBM4 launch on time</td>
-    <td class="p-3">+25% to +40%</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Base</td>
-    <td class="p-3">HBM share ~50%, stable commodity memory</td>
-    <td class="p-3">Current</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Bear</td>
-    <td class="p-3">HBM ASP cut + commodity slowdown</td>
-    <td class="p-3">-20% to -30%</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 Buy-Timing Checklist</h2>
-<ul class="space-y-3 mt-4">
- <li>✅ DDR5 spot pricing rising for 2 consecutive quarters (demand signal)</li>
- <li>✅ NVIDIA quarterly guidance — data center share &gt; 60%</li>
- <li>✅ Company HBM revenue mix &gt; 35% of memory</li>
- <li>✅ Net foreign buying trend (4-week cumulative positive)</li>
-</ul>
-
-${DISCLAIMER_HTML}
-`;
+<p class="lead">An HBM roadmap explains a product milestone. It does not directly predict SK hynix's share price, a customer's orders or your future bonus. Use a dated evidence checklist to keep those questions separate.</p>
+<h2>What the company actually announced</h2>
+<p>On 12 September 2025, SK hynix announced completion of HBM4 development and preparation for mass production. Readiness and actual customer shipments are different milestones. Use later dated company releases to determine what changed; do not relabel this announcement as evidence that every planned shipment already occurred.</p>
+<h2>Compare the same stage and period</h2>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Item</th><th scope="col">Comparison check</th></tr></thead><tbody>
+<tr><td>Product generation</td><td>Compare the same HBM generation and a specified development or shipment stage.</td></tr>
+<tr><td>Financial performance</td><td>Distinguish quarterly from annual results and revenue from operating profit.</td></tr>
+<tr><td>Capacity</td><td>Separate announced investment, installed equipment and actual output; they are not interchangeable.</td></tr>
+<tr><td>Market-share claim</td><td>Find the source, period, product definition and whether measured by units or revenue.</td></tr>
+</tbody></table></div>
+<h2>Questions for a future results release</h2>
+<ul><li>Which statements describe completed events, and which describe management plans?</li><li>Does the cited metric concern the whole company, memory business or a particular product?</li><li>Does an investment plan specify timing and conditions, or only a planned total?</li><li>What information is still undisclosed? Leave it unknown instead of filling it with a precise scenario return.</li></ul>
+<h2>Connect business uncertainty to your own plan</h2>
+<p>If your salary, bonus and savings depend on one company, consider a cash-flow case with a lower variable bonus and delayed access to shares. This is a household planning scenario, not a forecast of SK hynix's performance. Do not infer a personal PS or PI rate from a press release about HBM demand.</p>
+<h2>Sources and related reading</h2>
+<ul><li><a href="${hynixHbm}">SK hynix HBM4 development and production-readiness announcement, 12 September 2025</a></li><li><a href="/en/guides/semiconductor-cycle-2026">Read semiconductor cycles without assuming a fixed peak date</a></li><li><a href="/en/guides/sk-hynix-employee-bonus-stock">Separate company performance from a bonus notice</a></li></ul>
+${investmentNote}`;
 
 const skHynixEmployeeBonus = `
-<p class="lead">
- SK Hynix is famous for its profit-sharing scheme. PS (Profit Sharing) and PI (Productivity Incentive) together can push annual compensation 50%+ above base salary in good cycle years.
- This guide breaks down how PS and PI work, how employees buy company stock, and the ROI math when bonus money flows into ESOP.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 PS and PI at a Glance</h2>
-
-<div class="grid md:grid-cols-2 gap-4 mt-6">
- <div class="bg-card p-5 rounded-xl border border-border">
-  <h4 class="font-bold mb-2">PS (Profit Sharing)</h4>
-  <p class="text-sm text-muted-foreground mb-2">Tied to company operating profit. Paid once a year (typically Jan–Feb).</p>
-  <ul class="text-xs space-y-1">
-   <li>· Boom: 30–50% of annual salary</li>
-   <li>· Average: 10–20%</li>
-   <li>· Down cycle: 0–5% or skipped</li>
-  </ul>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border">
-  <h4 class="font-bold mb-2">PI (Productivity Incentive)</h4>
-  <p class="text-sm text-muted-foreground mb-2">Half-yearly division KPI evaluation. Paid twice a year.</p>
-  <ul class="text-xs space-y-1">
-   <li>· Top tier: 100–150% of monthly base</li>
-   <li>· Average tier: 50–100%</li>
-   <li>· Differs by division</li>
-  </ul>
- </div>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📈 Bonus Simulation by Level</h2>
-<p>Boom-year assumption: PS 50% of salary, PI total 200% of monthly base.</p>
-
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Item</th>
-    <th class="p-3 text-left">New Hire</th>
-    <th class="p-3 text-left">5 yrs</th>
-    <th class="p-3 text-left">10 yrs</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3">Base salary</td>
-    <td class="p-3">KRW 58M</td>
-    <td class="p-3">KRW 85M</td>
-    <td class="p-3">KRW 120M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">PS (50% of salary)</td>
-    <td class="p-3">KRW 29M</td>
-    <td class="p-3">KRW 42.5M</td>
-    <td class="p-3">KRW 60M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">PI (~200% of monthly base)</td>
-    <td class="p-3">~KRW 9.7M</td>
-    <td class="p-3">~KRW 14.2M</td>
-    <td class="p-3">~KRW 20M</td>
-   </tr>
-   <tr class="border-t border-border bg-primary/5">
-    <td class="p-3 font-bold">Total compensation</td>
-    <td class="p-3 font-bold">KRW 96.7M</td>
-    <td class="p-3 font-bold">KRW 141.7M</td>
-    <td class="p-3 font-bold">KRW 200M</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 What to Do the Day After PS Lands</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Option 1. ESOP subscription</h3>
-<p>
- SK Hynix's ESOP price typically applies a discount versus market.
- Re-investing PS into ESOP during boom years has historically delivered substantial gains in the next up-cycle for many employees.
- The same concentration risk applies, however.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Option 2. ISA + S&amp;P 500 / KOSPI diversification</h3>
-<p>
- An ISA's KRW 20 million annual and KRW 100 million total figures are contribution limits, not tax-free profit limits. Current qualifying net-profit exemptions are KRW 2 million for the general category or KRW 4 million for eligible special categories; excess taxable profit is subject to 9.9% separate tax including local tax.
- Product eligibility, the three-year holding requirement and permitted investments matter. A Korean-listed overseas-index ETF is different from directly buying foreign shares. <a href="https://www.samsungpop.com/ux/kor/finance/isa/isainfo/intro.do">Check the provider's current ISA rules (Korean)</a> before contributing.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Option 3. Mortgage / loan paydown</h3>
-<p>
- If you have a mortgage or unsecured loan, paying down a portion with PS reduces interest cost.
- Especially important for variable-rate loans in a rising rate environment.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ Don't Bake PS Into Fixed Costs</h2>
-<div class="bg-amber-50 dark:bg-amber-950/20 p-6 rounded-xl border border-amber-200 dark:border-amber-800 my-6">
- <p class="font-bold text-amber-900 dark:text-amber-200 mb-3">PS is a highly variable bonus.</p>
- <ul class="space-y-2 text-sm text-amber-800 dark:text-amber-300">
-  <li>· 2018 boom (PS &gt; 50%) → 2019 PS nearly skipped.</li>
-  <li>· Plans assuming 50% PS every year are dangerous.</li>
-  <li>· Fixed costs (mortgage payments) should be sized to base salary only.</li>
- </ul>
-</div>
-
-${DISCLAIMER_HTML}
-`;
+<p class="lead">PS and PI figures are useful only when the pay base, performance period and employment conditions are known. This guide provides a way to read a bonus notice; it does not publish a current SK hynix payout rate or predict one.</p>
+<h2>Read the notice before choosing a percentage</h2>
+<p>Check how the employer defines each payment. A percentage of annual salary, a percentage of monthly basic pay and a fixed cash amount are different bases. Ask which divisions, service periods and employee categories qualify and whether an announced figure is final, proposed or conditional.</p>
+<ul><li>Write the performance year separately from the actual payment date.</li><li>Record the gross base and any cap, floor or prorating rule from the notice.</li><li>Separate an ordinary cash payment from share delivery or a deferred award.</li><li>Check withholding on the payslip; gross arithmetic is not a net-payment quote.</li></ul>
+<h2>A gross example with all assumptions visible</h2>
+<p>Assume annual base pay of KRW 60 million and a hypothetical bonus equal to 10% of that annual base. The resulting KRW 6 million is gross. If a different notice instead says 100% of monthly base pay, the result depends on that monthly base; it is not automatically KRW 60 million. Neither example is an actual PS or PI announcement.</p>
+<h2>Compare uses of the money</h2>
+<p>Before committing a bonus, note near-term cash needs, loan repayment conditions and any purchase restrictions on employer shares. A share purchase can lose value and a loan may have an early-repayment fee. There is no universal salary percentage that must go into ESOP, bonds or any other investment.</p>
+<h2>ISA figures have different meanings</h2>
+<p>KRW 20 million annually and KRW 100 million in total are ISA contribution limits, not tax-free profit limits. Qualifying net-profit exemptions are KRW 2 million for the general category or KRW 4 million for eligible special categories; excess taxable profit is subject to 9.9% separate tax including local tax. Check residence, account eligibility, the three-year requirement and permitted investments. A Korean-listed overseas-index ETF is not the same as directly purchasing foreign shares.</p>
+<h2>Sources and next steps</h2>
+<p>The authoritative source for an individual's bonus is the current employer notice and employment terms. A general company product announcement does not establish the payment. For the account figures, use the provider's current rules below.</p>
+<ul><li><a href="${isaSource}">Samsung Securities ISA account rules (Korean)</a></li><li><a href="/en/tools/bonus">Calculate your own gross bonus scenario</a></li><li><a href="/en/tools/offer-compare">Compare recurring and one-time cash separately</a></li></ul>
+${investmentNote}`;
 
 const semiconductorCycle2026 = `
-<p class="lead">
- The memory semiconductor industry follows roughly 3–4 year cycles.
- After the 2022–2023 downturn, the recovery from 2024 onward is widely expected to peak in 2026.
- This guide outlines a working professional's asset strategy for each phase.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🔄 Four Phases of the Memory Cycle</h2>
-
-<div class="space-y-4 mt-6">
- <div class="bg-card p-5 rounded-xl border border-border border-l-4 border-l-blue-500">
-  <h4 class="font-bold mb-2">① Recovery — H1 2024</h4>
-  <p class="text-sm">Inventory drains, prices bottom. Stock prices rebound first.</p>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border border-l-4 border-l-green-500">
-  <h4 class="font-bold mb-2">② Expansion — H2 2024 to 2025</h4>
-  <p class="text-sm">Demand recovery + price hikes. Operating profit surges. PS / PI bonanza.</p>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border border-l-4 border-l-amber-500">
-  <h4 class="font-bold mb-2">③ Peak — 2026 (estimated)</h4>
-  <p class="text-sm">Capacity additions take effect, price growth slows. Market consensus peak.</p>
- </div>
- <div class="bg-card p-5 rounded-xl border border-border border-l-4 border-l-red-500">
-  <h4 class="font-bold mb-2">④ Correction — 2027–2028 (possible)</h4>
-  <p class="text-sm">Capacity overhang, prices fall. Stocks historically retrace 30–50% from peak.</p>
- </div>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💡 Phase-Specific Asset Rules</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">At the peak (current estimate)</h3>
-<ul class="space-y-3">
- <li><strong>① Check ESOP weight:</strong> Trim if mark-to-market &gt; 30% of financial assets.</li>
- <li><strong>② Move part of PS into safe assets:</strong> Allocate at least 30% of boom-year PS to bond ETFs / deposits.</li>
- <li><strong>③ Don't grow fixed costs:</strong> Don't size new mortgages on peak-year PS — when PS goes to zero next cycle, the burden becomes severe.</li>
- <li><strong>④ Track lock-up release dates:</strong> Calendar your ESOP holding-period expiries.</li>
-</ul>
-
-<h3 class="text-xl font-bold mt-8 mb-3">In a correction (1–2 years out)</h3>
-<ul class="space-y-3">
- <li><strong>① Continue DCA:</strong> Falling prices reduce your average cost — assuming the company's fundamentals remain intact.</li>
- <li><strong>② Run household assuming PS = 0:</strong> Make sure base salary covers fixed costs.</li>
- <li><strong>③ Diversify globally:</strong> Owning US big tech / staples ETFs cushions Korean memory exposure.</li>
-</ul>
-
-${DISCLAIMER_HTML}
-`;
+<p class="lead">A semiconductor cycle is a way to describe changing demand, supply and financial results. It is not a calendar that proves a 2026 peak or a 2027 correction. For an employee, the practical question is how a changing bonus or share value affects cash commitments.</p>
+<h2>Use indicators, not a predetermined peak date</h2>
+<p>Read inventory, pricing commentary, capital investment and financial results for a defined period. Product-specific developments can differ from the wider memory market. A production-readiness announcement is not the same as an order or profit figure. The dated HBM4 announcements below illustrate why stage and date matter.</p>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Observation</th><th scope="col">Question before interpreting it</th></tr></thead><tbody>
+<tr><td>Planned capacity growth</td><td>When can capacity become usable output, and what conditions remain?</td></tr>
+<tr><td>Improved quarterly profit</td><td>Which segment and comparison period? Is the improvement recurring?</td></tr>
+<tr><td>Management outlook</td><td>What assumptions and risks does management state?</td></tr>
+<tr><td>Higher employer bonus</td><td>Which performance period and pay base does the actual notice use?</td></tr>
+</tbody></table></div>
+<h2>Make a household stress test</h2>
+<p>List fixed salary, essential spending and committed debt payments. Then calculate a case with a lower or zero discretionary bonus. If shares are restricted, do not treat their full displayed value as cash available for a bill. This tests your plan's sensitivity; it does not predict a company's next payout.</p>
+<h2>Keep market history and hypothetical examples separate</h2>
+<p>A historical comparison needs the companies, dates, price series, dividends, fees and methodology. Without them, a statement such as a typical 30–50% drawdown is not a measured result. Likewise, an assumed savings return should be labeled as an input, not presented as an inevitable next-cycle recovery.</p>
+<h2>Questions to revisit</h2>
+<ul><li>Could an essential expense arise before an award vests or a restriction ends?</li><li>How much of your future spending relies on an unconfirmed bonus?</li><li>Are employment income and investments exposed to the same company?</li><li>Which new evidence would change your plan, rather than merely confirm a preferred story?</li></ul>
+<h2>Sources and tools</h2>
+<ul><li><a href="${hynixHbm}">SK hynix: HBM4 readiness, 12 September 2025</a></li><li><a href="${samsungHbm}">Samsung: commercial HBM4, 12 February 2026</a></li><li><a href="/en/tools/savings-goal">Test a savings contribution scenario</a></li><li><a href="/en/bonus">Bonus notice checklist</a></li></ul>
+${investmentNote}`;
 
 const samsungVsHynix = `
-<p class="lead">
- Every semiconductor recruiting season brings the same question: "Samsung or SK Hynix?"
- The base salary numbers don't tell the full story. Bonus structure, employee stock programs, benefits, and where each company sits in the cycle matter just as much.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 Comparison Table (2026 estimates)</h2>
-
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Item</th>
-    <th class="p-3 text-left">Samsung Electronics DS</th>
-    <th class="p-3 text-left">SK Hynix</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3">New hire base salary</td>
-    <td class="p-3">KRW 53–58M</td>
-    <td class="p-3">KRW 58–62M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Signing bonus</td>
-    <td class="p-3">None (some role exceptions)</td>
-    <td class="p-3">KRW 3–5M</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Main bonuses</td>
-    <td class="p-3">OPI (yearly) + TAI (semi-annual)</td>
-    <td class="p-3">PS (yearly) + PI (semi-annual)</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Boom-year bonus total</td>
-    <td class="p-3">~50% of base / ~50% of salary</td>
-    <td class="p-3">50%+ of salary (PS alone)</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Employee stock</td>
-    <td class="p-3">ESOP + loan support</td>
-    <td class="p-3">ESOP + loan support</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Housing</td>
-    <td class="p-3">Dorms, company housing, subsidies</td>
-    <td class="p-3">Dorms, company housing, subsidies</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">Healthcare</td>
-    <td class="p-3">Samsung Medical Center priority</td>
-    <td class="p-3">SK group medical support</td>
-   </tr>
-   <tr class="border-t border-border bg-primary/5">
-    <td class="p-3 font-bold">Boom-year total comp (10 yrs)</td>
-    <td class="p-3 font-bold">KRW 150–180M</td>
-    <td class="p-3 font-bold">KRW 180–220M</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 Six Decision Criteria</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">1. Volatility tolerance</h3>
-<p>
- SK Hynix has explosive boom-year bonuses but near-zero in busts.
- Samsung is steadier. Pick based on your tolerance for swing.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">2. Role diversity</h3>
-<p>
- Samsung DS spans memory, foundry, and System LSI — wider role mobility.
- SK Hynix is memory-focused; ideal if you want to go deep on memory.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">3. Location</h3>
-<p>
- Samsung: Hwaseong, Pyeongtaek, Giheung, Cheonan.
- SK Hynix: Icheon, Cheongju, Indiana (US, partial).
- Match your housing plans first.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">4. Brand and global mobility</h3>
-<p>
- Samsung's brand carries enormous global weight — easier for international moves.
- SK Hynix has top-tier recognition in memory circles globally.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">5. Long-term ESOP returns</h3>
-<p>
- Both are exposed to the Korean memory cycle.
- Samsung's non-memory revenue (foundry, MX) cushions the cycle a bit; SK Hynix gets more leverage on memory upswings.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">6. Work-life and culture</h3>
-<p>
- Both have shift-work line operations.
- For office roles, division-level differences exceed company-level differences. Check team culture before signing.
-</p>
-
-${DISCLAIMER_HTML}
-`;
+<p class="lead">Comparing Samsung and SK hynix means comparing the particular role and written offer, not assigning one salary or benefits package to every employee. A company employee-average disclosure cannot establish a new-hire salary, signing bonus or foreign-worker eligibility.</p>
+<h2>Build a documented offer table</h2>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Item</th><th scope="col">What to request for each offer</th></tr></thead><tbody>
+<tr><td>Fixed gross salary</td><td>Currency, annual amount, pay periods and included allowances</td></tr>
+<tr><td>Variable compensation</td><td>Pay base, target versus guarantee, performance period and eligibility</td></tr>
+<tr><td>One-time amount</td><td>Payment date, service requirement and any repayment clause</td></tr>
+<tr><td>Shares or options</td><td>Grant value, vesting, exercise or delivery conditions, restrictions and tax reporting</td></tr>
+<tr><td>Benefits</td><td>Actual role/site eligibility, employee cost and conditions; not an assumed company-wide entitlement</td></tr>
+<tr><td>Working pattern</td><td>Scheduled hours, shifts, on-call obligations, leave and work location</td></tr>
+</tbody></table></div>
+<h2>Compare recurring and first-year cash separately</h2>
+<p>For a hypothetical offer with 60,000 annual fixed pay and 5,000 one-time cash, the first-year total is 65,000 before variable bonus and tax. The next year's recurring fixed amount remains 60,000 unless the contract changes. Keep both offers in the same currency; do not compare one gross amount with another net amount.</p>
+<h2>Read company announcements within their scope</h2>
+<p>Samsung's 21 August 2026 announcement described a buyback for employee compensation, but did not by itself establish your personal grant. SK hynix's 12 September 2025 HBM4 announcement concerned product development and production readiness, not an employee salary schedule. Business news can explain context without replacing employment terms.</p>
+<h2>Questions beyond the headline pay</h2>
+<ul><li>Which team, legal employer and work site appear in the contract?</li><li>Are housing, relocation or medical benefits actually included for this role?</li><li>What happens to a bonus, grant or signing payment if employment ends?</li><li>Which foreign-worker tax and insurance conditions need payroll confirmation?</li><li>Does the scheduled-hours comparison omit unpaid travel or an unpredictable shift pattern?</li></ul>
+<h2>Sources and comparison tools</h2>
+<ul><li><a href="${samsungReturn}">Samsung company announcement, 21 August 2026</a></li><li><a href="${hynixHbm}">SK hynix company announcement, 12 September 2025</a></li><li><a href="/en/tools/offer-compare">Compare the gross cash components of your offers</a></li><li><a href="/en/salary-db">How to interpret salary data</a></li><li><a href="/salary-db">Company salary database (Korean; check each profile's source and scope)</a></li></ul>
+${investmentNote}`;
 
 const chipStockTax = `
-<p><strong>Tax source:</strong> <a href="https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=&amp;nttSn=1348384">NTS share-sale tax guidance, 3 February 2026 (Korean)</a>. Check tax residence, share type and sale venue before applying a general rule.</p>
-<p class="lead">
- If you buy and sell Samsung Electronics or SK Hynix shares through a regular Korean brokerage account, capital gains tax may apply depending on your holdings.
- (Korean stock capital gains tax currently applies to "large shareholders"; rules can change in 2026, so this guide focuses on general principles.)
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📚 Korean Stock Capital Gains Tax Basics</h2>
-<ul class="space-y-3 mt-4">
- <li><strong>Large shareholder rule:</strong> Once your position in a single ticker exceeds the threshold (by value or ownership ratio), capital gains tax applies on sale.</li>
- <li><strong>Small shareholders:</strong> Sales of domestically listed shares on a Korean exchange are generally outside capital gains tax for qualifying small shareholders. This does not cover every off-exchange or unlisted sale, and does not remove dividend or transaction taxes.</li>
- <li><strong>Foreign stocks:</strong> A commonly applicable Korean-resident calculation is 22% including local tax after the applicable KRW 2.5 million annual basic deduction. Residence history, taxable scope and eligible annual netting must be checked; this is not a universal rule for every foreign resident.</li>
-</ul>
-
-<div class="bg-amber-50 dark:bg-amber-950/20 p-6 rounded-xl border border-amber-200 dark:border-amber-800 my-6">
- <p class="font-bold text-amber-900 dark:text-amber-200 mb-2">⚠️ Policy Volatility</p>
- <p class="text-sm text-amber-800 dark:text-amber-300">
-  Expansion of capital gains taxation on Korean stocks is a recurring topic in annual tax revisions.
-  Always verify the latest rules just before selling.
- </p>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💡 Four Tax-Efficient Strategies for Working Professionals</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Strategy 1. Check ISA eligibility and contribution limits</h3>
-<p>
- The ISA's KRW 20 million annual and KRW 100 million total limits concern contributions. The qualifying net-profit exemption is KRW 2 million for general accounts or KRW 4 million for eligible special categories; excess taxable profit is separately taxed at 9.9% including local tax. Check residency, account eligibility and the three-year requirement.
- Small shareholders' exchange-traded domestic listed-share gains are generally already outside capital gains tax in ordinary accounts. An ISA is not automatically an additional exemption for those gains. <a href="https://www.samsungpop.com/ux/kor/finance/isa/isainfo/intro.do">Provider's current ISA rules (Korean)</a>.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Strategy 2. Pension fund / IRP ETF trading</h3>
-<p>
- Inside a pension savings or IRP account, trading KOSPI 200 ETFs or semiconductor ETFs defers tax on capital gains.
- Withdrawal tax depends on the source of the funds, age, qualifying pension conditions and withdrawal method. Early or non-qualifying withdrawals can be treated differently; do not compare a single pension rate with an ordinary account without those conditions.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Strategy 3. Loss harvesting (foreign stocks)</h3>
-<p>
- Within a calendar year, gains and losses on foreign stocks can be netted.
- Selling some loss positions in December reduces the tax on gain positions.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">Strategy 4. Use the KRW 2.5M annual deduction (foreign stocks)</h3>
-<p>
- An applicable annual basic deduction may reduce taxable net gains, but the taxable scope, other gains and losses, fees and market movement also matter. A tax-saving estimate is not a reason to assume a future sale price.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🧮 Pre-Sale Checklist</h2>
-<ul class="space-y-3 mt-4">
- <li>☐ Is ISA capacity remaining?</li>
- <li>☐ Do you meet the large shareholder threshold?</li>
- <li>☐ Are there loss positions in the same year (for netting)?</li>
- <li>☐ Is year-end vs next-year sale better?</li>
- <li>☐ For ESOP shares, has the lock-up expired?</li>
-</ul>
-
-${DISCLAIMER_HTML}
-`;
+<p class="lead">Start with tax residence, the share type, the sale venue and your shareholder status. The same sale amount can fall under different Korean tax rules; a familiar company name or a foreign passport alone does not decide the treatment.</p>
+<h2>Define the taxable event</h2>
+<p>Employment-related stock compensation and a later sale of those shares are separate events. For a sale, use the NTS guidance dated 3 February 2026 below and check the rules for the relevant income year.</p>
+<ul><li>Qualifying small shareholders' sales of domestically listed shares on a Korean exchange are generally outside capital gains tax. This does not cover every off-exchange or unlisted sale, and does not remove dividend or transaction taxes.</li><li>Large-shareholder status can depend on value or ownership-ratio tests. Check the applicable testing date, related-party rules and stock category rather than using only today's account value.</li><li>A commonly applicable Korean-resident foreign-stock calculation is 22% including local tax after the applicable KRW 2.5 million annual basic deduction. Residence history, taxable scope and eligible annual netting must be checked; this is not universal for every foreign resident.</li></ul>
+<h2>ISA contribution limits are not profit exemptions</h2>
+<p>The KRW 20 million annual and KRW 100 million total limits concern contributions. Qualifying net-profit exemptions are KRW 2 million for general accounts or KRW 4 million for eligible special categories; excess taxable profit is separately taxed at 9.9% including local tax. Residence, account eligibility, permitted products and the three-year requirement matter.</p>
+<p>Small shareholders' qualifying exchange-traded domestic listed-share gains are generally already outside capital gains tax in an ordinary account. An ISA is not automatically an extra exemption for those gains. Compare the account's actual mix of taxable income, costs and restrictions.</p>
+<h2>Pension accounts and foreign-stock losses need their own checks</h2>
+<p>Pension withdrawal treatment depends on the source of funds, age, qualifying pension conditions and withdrawal method. Do not compare a single pension tax rate with an ordinary account without those conditions. Permitted investments also differ.</p>
+<p>Where a Korean-resident foreign-stock sale is within the applicable taxable scope, eligible gains and losses in the same tax year may be netted. Confirm the scope, transaction costs, other gains and applicable deduction before considering a sale. A potential tax reduction is not a guaranteed investment gain, and it does not justify assuming a future repurchase price.</p>
+<h2>Prepare a pre-sale file</h2>
+<ol><li>Identify residence history and the relevant tax year.</li><li>Separate compensation income from acquisition cost and later sale proceeds.</li><li>Record exchange or off-exchange venue, dates, fees and share type.</li><li>Check shareholder status and the applicable account rules.</li><li>Reconcile eligible annual gains and losses and ask a qualified adviser about any unresolved treatment.</li></ol>
+<h2>Sources</h2>
+<ul><li><a href="${ntsShares}">NTS share-sale tax guidance, 3 February 2026 (Korean)</a></li><li><a href="${isaSource}">Samsung Securities ISA rules (Korean)</a></li><li><a href="/en/help#tax-resources">English tax resources and model limitations</a></li></ul>
+${investmentNote}`;
 
 const kospiLeaderStrategy = `
-<p class="lead">
- Samsung Electronics and SK Hynix vie for the No. 1 and 2 KOSPI market-cap spots.
- Together they account for over 30% of the KOSPI — owning them is essentially betting on the Korean stock market.
- This guide compares DCA versus lump-sum, and provides allocation guidelines by salary band.
-</p>
+<p class="lead">Dollar-cost averaging and a lump-sum purchase describe when available cash is invested. Neither approach makes a concentrated Samsung or SK hynix position safe. This guide uses transparent arithmetic, not an undocumented historical backtest.</p>
+<h2>Compare an equal cash budget</h2>
+<p>For a fair timing comparison, specify the same total starting cash, the purchase dates and what happens to uninvested cash. Someone investing new salary each month is not in the same starting position as someone who already has the full amount available.</p>
+<h2>A two-purchase illustration</h2>
+<p>Assume 1,200 currency units are available, share prices are 100 for the first purchase and 50 for the second, fractional shares are allowed, and fees, dividends, taxes and interest on cash are all zero. This invented path illustrates sensitivity, not a prediction.</p>
+<div class="overflow-x-auto"><table><thead><tr><th scope="col">Method</th><th scope="col">Shares after both dates</th><th scope="col">Value at the assumed final price of 50</th></tr></thead><tbody>
+<tr><td>All 1,200 invested at 100</td><td>12</td><td>600</td></tr>
+<tr><td>600 at 100, then 600 at 50</td><td>6 + 12 = 18</td><td>900</td></tr>
+</tbody></table></div>
+<p>If the second price were 200 instead, the lump sum would buy 12 shares worth 2,400, while the split purchases would buy 6 + 3 shares worth 1,800. Changing the price path changes the comparison. Both examples omit real-world costs and do not identify a superior method for the future.</p>
+<h2>What a real backtest would need</h2>
+<ul><li>Specific securities, price source and start/end dates.</li><li>Adjusted prices or a stated treatment of dividends, splits and other corporate actions.</li><li>Equal cash budgets, contribution timing and uninvested-cash treatment.</li><li>Fees, taxes, currency and assumptions about fractional shares.</li><li>A consistent return measure and several starting dates, including unfavorable periods.</li></ul>
+<p>No measured 2015–2025 performance result is provided here. General labels such as "solid in most periods" cannot substitute for that evidence.</p>
+<h2>Use salary as a cash-flow input, not a portfolio rule</h2>
+<p>Two people earning the same salary can have different debt, essential spending and near-term needs. Avoid selecting an employer-stock allocation solely from a salary band or an unconfirmed cycle peak. The savings-goal tool can test contributions under your own assumptions without forecasting a stock's return.</p>
+<h2>Related methods and tax context</h2>
+<ul><li><a href="/en/tools/savings-goal">Monthly savings-goal arithmetic</a></li><li><a href="/en/tools/compound-interest">A constant-return contribution scenario</a></li><li><a href="${ntsShares}">NTS share-sale scope, 3 February 2026 (Korean)</a> — relevant tax context, not evidence for the hypothetical investment returns above.</li></ul>
+${investmentNote}`;
 
-<h2 class="mt-12 text-2xl font-bold text-primary">⚖️ DCA vs Lump-Sum: Backtest Summary</h2>
-
-<p>Simple simulation on the past decade (2015–2025):</p>
-
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Strategy</th>
-    <th class="p-3 text-left">Method</th>
-    <th class="p-3 text-left">Volatility</th>
-    <th class="p-3 text-left">Average Return</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">DCA</td>
-    <td class="p-3">Fixed monthly amount</td>
-    <td class="p-3">Low</td>
-    <td class="p-3">Market average ± α</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3 font-semibold">Lump-sum</td>
-    <td class="p-3">Single deployment</td>
-    <td class="p-3">Very high</td>
-    <td class="p-3">-50% to +100% depending on entry</td>
-   </tr>
-   <tr class="border-t border-border bg-primary/5">
-    <td class="p-3 font-bold">Hybrid</td>
-    <td class="p-3 font-bold">50% upfront + 50% over 6 months</td>
-    <td class="p-3 font-bold">Medium</td>
-    <td class="p-3 font-bold">Solid in most periods</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💡 Practical DCA Design</h2>
-
-<h3 class="text-xl font-bold mt-8 mb-3">A. Auto-buy 5–10% of salary every payday</h3>
-<p>
- Set the brokerage's auto-buy feature to fire the day after payday.
- Removing emotion keeps your cost basis steady.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">B. Set a portfolio cap</h3>
-<p>
- Cap combined Samsung + SK Hynix exposure at 30% of financial assets — pause new buys above the cap.
- Reroute new flows into other assets.
-</p>
-
-<h3 class="text-xl font-bold mt-8 mb-3">C. Take partial profits at cycle peak signals</h3>
-<p>
- Years where industry PS &gt; 50% likely indicate cycle peak.
- Trimming 20–30% of holdings into bond ETFs at that point cushions cycle drawdowns.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📈 Allocation by Salary Band</h2>
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">Salary</th>
-    <th class="p-3 text-left">Monthly DCA</th>
-    <th class="p-3 text-left">Allocation Cap</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3">KRW 50M</td>
-    <td class="p-3">KRW 0.25–0.5M</td>
-    <td class="p-3">20%</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">KRW 80M</td>
-    <td class="p-3">KRW 0.5–1.0M</td>
-    <td class="p-3">25%</td>
-   </tr>
-   <tr class="border-t border-border">
-    <td class="p-3">KRW 150M</td>
-    <td class="p-3">KRW 1.0–2.0M</td>
-    <td class="p-3">30%</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<p class="mt-4 text-sm text-muted-foreground">
- ※ The above is a general guideline. Adjust based on your risk tolerance, dependents, and home-buying plans.
-</p>
-
-${DISCLAIMER_HTML}
-`;
-
-export const stockDeepdiveGuidesEn = [
- {
-  slug: "samsung-electronics-stock-2026",
-  title: "Samsung Electronics 2026 Stock Outlook: HBM and Foundry Inflection 📊",
-  description: "HBM3E 12-Hi ramp and 2nm GAA break-even potential. Scenario-based buying strategies for working investors.",
-  category: "Stocks",
-  tags: ["Samsung Electronics", "stock", "HBM", "semiconductor", "2026"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-  views: 0,
-  lang: "en" as const,
-  content: samsungStock2026,
- },
- {
-  slug: "samsung-employee-rsu-stock",
-  title: "Samsung Employee Stock Plans: How Much Does a +30% Move Mean to You? 💼",
-  description: "ESOP, ESOP loans, and executive RSUs. Asset simulation by job level under different price scenarios.",
-  category: "Stocks",
-  tags: ["Samsung Electronics", "ESOP", "RSU", "employee", "wealth"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-    modifiedDate: "2026-09-09",
-  views: 0,
-  lang: "en" as const,
-  content: samsungEmployeeRsu,
- },
- {
-  slug: "sk-hynix-stock-2026",
-  title: "SK Hynix Stock Outlook: Will the HBM3E Lead Hold Through 2026? 🚀",
-  description: "HBM4 roadmap, Cheongju / Icheon / Indiana capacity expansion, and the impact of Samsung's entry.",
-  category: "Stocks",
-  tags: ["SK Hynix", "stock", "HBM3E", "HBM4", "memory"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-  views: 0,
-  lang: "en" as const,
-  content: skHynixStock2026,
- },
- {
-  slug: "sk-hynix-employee-bonus-stock",
-  title: "SK Hynix PS / PI Bonuses and ESOP ROI 💰",
-  description: "Got a 50% PS — now what? ESOP vs ISA vs loan paydown. Bonus simulations by tenure included.",
-  category: "Stocks",
-  tags: ["SK Hynix", "PS", "PI", "bonus", "ESOP"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-    modifiedDate: "2026-09-09",
-  views: 0,
-  lang: "en" as const,
-  content: skHynixEmployeeBonus,
- },
- {
-  slug: "semiconductor-cycle-2026",
-  title: "Semiconductor Cycle 2026: Asset Strategy Through the Memory Peak 🔄",
-  description: "Recovery, expansion, peak, correction — phase-specific rules on ESOP weight, PS use, and fixed costs.",
-  category: "Stocks",
-  tags: ["semiconductor cycle", "memory", "wealth management", "peak", "professionals"],
-  level: "Advanced" as const,
-  publishedDate: "2026-05-06",
-  views: 0,
-  lang: "en" as const,
-  content: semiconductorCycle2026,
- },
- {
-  slug: "samsung-vs-hynix-employee-comparison",
-  title: "Samsung vs SK Hynix: Pay, Benefits and Employee Stock Compared ⚖️",
-  description: "Base salary, signing bonus, OPI / TAI vs PS / PI, ESOP design, housing — six decision criteria.",
-  category: "Stocks",
-  tags: ["Samsung Electronics", "SK Hynix", "new hire pay", "comparison", "career"],
-  level: "Beginner" as const,
-  publishedDate: "2026-05-06",
-  views: 0,
-  lang: "en" as const,
-  content: samsungVsHynix,
- },
- {
-  slug: "chip-stock-tax-guide",
-  title: "Tax-Efficient Trading of Chip Stocks: ISA, Pension, Loss Harvesting 🧾",
-  description: "Four tax strategies for working professionals selling Samsung / SK Hynix shares.",
-  category: "Stocks",
-  tags: ["stock tax", "capital gains", "ISA", "pension", "tax saving"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-    modifiedDate: "2026-09-09",
-  views: 0,
-  lang: "en" as const,
-  content: chipStockTax,
- },
- {
-  slug: "kospi-leader-stock-strategy",
-  title: "KOSPI Leaders (Samsung / SK Hynix) — DCA vs Lump-Sum Strategy 📈",
-  description: "Auto-buy 5–10% of salary, set portfolio caps, and trim at cycle peaks. Allocation by salary band.",
-  category: "Stocks",
-  tags: ["DCA", "lump-sum", "Samsung Electronics", "SK Hynix", "portfolio"],
-  level: "Intermediate" as const,
-  publishedDate: "2026-05-06",
-  views: 0,
-  lang: "en" as const,
-  content: kospiLeaderStrategy,
- },
+export const stockDeepdiveGuidesEn: Guide[] = [
+  { slug: "samsung-electronics-stock-2026", title: "Samsung Electronics in 2026: Read HBM and Compensation Announcements", description: "Separate Samsung's dated product and compensation announcements from profit assumptions, stock-price forecasts and individual awards.", category: "Stocks", tags: ["Samsung Electronics", "HBM", "company disclosures", "2026"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: samsungStock2026 },
+  { slug: "samsung-employee-rsu-stock", title: "Samsung Employee Shares and RSUs: Read Your Award Terms", description: "Check grant, vesting, purchase restrictions and tax events. Separate a company announcement from your personal entitlement.", category: "Stocks", tags: ["Samsung Electronics", "ESOP", "RSU", "employee compensation"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: samsungEmployeeRsu },
+  { slug: "sk-hynix-stock-2026", title: "SK hynix HBM in 2026: A Company-Announcement Checklist", description: "Distinguish product readiness, shipments, financial results and personal bonus assumptions when reading SK hynix news.", category: "Stocks", tags: ["SK Hynix", "HBM4", "company disclosures", "memory"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: skHynixStock2026 },
+  { slug: "sk-hynix-employee-bonus-stock", title: "SK hynix PS and PI: How to Read a Bonus Notice", description: "Identify the pay base, performance period and conditions before calculating a gross bonus or planning a share purchase.", category: "Stocks", tags: ["SK Hynix", "PS", "PI", "bonus", "ESOP"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: skHynixEmployeeBonus },
+  { slug: "semiconductor-cycle-2026", title: "Semiconductor Cycles: A Cash-Flow Checklist for Employees", description: "Read dated business indicators and test household exposure without assuming a fixed market peak or a guaranteed next-cycle bonus.", category: "Stocks", tags: ["semiconductor cycle", "memory", "employee compensation", "cash flow"], level: "Advanced", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: semiconductorCycle2026 },
+  { slug: "samsung-vs-hynix-employee-comparison", title: "Samsung vs SK hynix: Compare the Actual Job Offer", description: "A documented comparison of fixed pay, variable bonus, one-time cash, stock terms and scheduled hours; no invented company-wide salary promise.", category: "Stocks", tags: ["Samsung Electronics", "SK Hynix", "job offer", "comparison", "career"], level: "Beginner", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: samsungVsHynix },
+  { slug: "chip-stock-tax-guide", title: "Korean Share-Sale Tax: Residence, ISA and Employee Shares", description: "Define the taxable event, account and shareholder scope; separate ISA contribution limits from profit exemptions and compensation from a later sale.", category: "Stocks", tags: ["stock tax", "capital gains", "ISA", "pension", "tax residence"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: chipStockTax },
+  { slug: "kospi-leader-stock-strategy", title: "DCA vs Lump Sum: A Transparent Share-Purchase Example", description: "Compare equal cash budgets with explicit price assumptions, then identify what a real backtest and a personal savings plan would require.", category: "Stocks", tags: ["DCA", "lump sum", "Samsung Electronics", "SK Hynix", "saving"], level: "Intermediate", publishedDate: "2026-05-06", modifiedDate: "2026-09-09", views: 0, lang: "en", content: kospiLeaderStrategy },
 ];

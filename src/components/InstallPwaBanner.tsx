@@ -39,6 +39,12 @@ export default function InstallPwaBanner() {
   // fail-closed: 감지 확정 전·감지 예외 시에는 숨김.
   const [adBlocked, setAdBlocked] = useState(true);
 
+  // A captured install prompt belongs to the manifest of the language that created it.
+  useEffect(() => {
+    setDeferred(null);
+    setVisible(false);
+  }, [english]);
+
   useEffect(() => {
     if (!deferred) return;
     const startedAt = Date.now();
@@ -93,7 +99,7 @@ export default function InstallPwaBanner() {
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
+  }, [english]);
 
   const handleInstall = async () => {
     if (!deferred) return;

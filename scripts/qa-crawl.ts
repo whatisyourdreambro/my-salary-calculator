@@ -20,6 +20,7 @@
 import { execSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { EN_ALL_PAGE_PATHS } from "../src/lib/englishRoutes";
 
 import { COMPANY_COUNT, BONUS_CALC_COUNT } from "../src/config/site-metrics.generated";
 import { allCompanies } from "../src/data/companies/index";
@@ -104,7 +105,7 @@ const COUPANG_SSR_PAGES = [
   "/salary/50000000",
 ];
 
-const EN_PAGES = ["/en", "/en/flat-tax", "/en/salary-converter", "/en/guides"];
+const EN_PAGES = EN_ALL_PAGE_PATHS;
 
 type Failure = { check: string; page: string; detail: string };
 const failures: Failure[] = [];
@@ -243,7 +244,10 @@ function checkEnMeta(path: string, html: string) {
     ...html.matchAll(/hreflang="[^"]*"/g),
   ].map((m) => m[0]);
   for (const tag of metas) {
-    if (/[가-힣]/.test(tag)) {
+    // A short parenthetical Korean term can identify a local tax document;
+    // the surrounding title and description must still be English.
+    const withoutLocalGloss = tag.replace(/\([^()]*[가-힣][^()]*\)/g, "");
+    if (/[가-힣]/.test(withoutLocalGloss)) {
       fail("(e) EN 메타", path, `한글 포함: ${tag.slice(0, 90)}`);
       break;
     }
@@ -284,7 +288,7 @@ async function collectPaths(): Promise<string[]> {
     bucket.sort();
     for (let i = 0; i < bucket.length; i += HEAVY_SAMPLE_STEP) sampled.push(bucket[i]);
   }
-  return [...new Set([...light, ...sampled, ...SENTINELS])];
+  return [...new Set([...light, ...sampled, ...SENTINELS, ...EN_PAGES])];
 }
 
 async function crawl(paths: string[]) {

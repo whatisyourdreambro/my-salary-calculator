@@ -78,7 +78,15 @@ jobs:
             sleep 2
           done
           npm run qa:crawl
+          npm run qa:english
           kill $SERVER_PID
+      - name: English page quality ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: english-page-quality
+          path: .artifacts/english-page-quality/
+          if-no-files-found: ignore
       - name: qa-report 업로드
         if: always()
         uses: actions/upload-artifact@v4

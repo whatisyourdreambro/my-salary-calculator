@@ -1,387 +1,61 @@
 "use client";
 
 import Link from "@/components/AppLink";
-import { motion } from "framer-motion";
-import { Globe, ArrowRight, BookOpen, TrendingUp, Calculator, Calendar } from "lucide-react";
 import type { GuideCardMeta } from "@/lib/guidesData";
+import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
+import { EN_SECTIONS } from "@/lib/englishSite";
 import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import EnglishPageShell from "@/components/english/EnglishPageShell";
+import EnglishTaskLinks from "@/components/english/EnglishTaskLinks";
 import EnglishSalaryCalculator from "./EnglishSalaryCalculator";
 
 export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] }) {
- const featuredGuides = guides;
-
- return (
- <div className="w-full overflow-x-hidden">
- {/* ═══ Hero ════════════════════════════════════════════════ */}
- {/* 다크모드 대응 — 고정 hex 대신 토큰 클래스 (bg-canvas 등) 사용 */}
- <section
- className="hero-section bg-canvas"
- style={{
- position: "relative",
- display: "flex",
- flexDirection: "column",
- alignItems: "center",
- justifyContent: "center",
- padding: "5rem 1.5rem 3rem",
- overflow: "hidden",
- }}
- >
- <div
- style={{
- position: "absolute",
- top: 0,
- left: "50%",
- transform: "translateX(-50%)",
- width: "700px",
- height: "500px",
- borderRadius: "999px",
- background: "radial-gradient(circle, #0145F211 0%, transparent 70%)",
- pointerEvents: "none",
- zIndex: 0,
- }}
- />
-
- <motion.div
- initial={false}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
- style={{
- textAlign: "center",
- maxWidth: "760px",
- width: "100%",
- position: "relative",
- zIndex: 1,
- }}
- >
- <motion.div
- initial={false}
- animate={{ scale: 1, opacity: 1 }}
- transition={{ delay: 0.15 }}
- className="border border-primary/20 bg-electric-10 text-electric"
- style={{
- marginBottom: "2rem",
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- padding: "0.5rem 1rem",
- borderRadius: "9999px",
- fontSize: "13px",
- fontWeight: 700,
- }}
- >
- <Globe size={14} /> Working in Korea · English tools
- </motion.div>
-
- <h1
- className="text-navy"
- style={{
- fontSize: "clamp(2.25rem, 6vw, 3.75rem)",
- fontWeight: 900,
- letterSpacing: "-0.025em",
- lineHeight: 1.1,
- marginBottom: "1.25rem",
- }}
- >
- Korea Salary Calculator<br />
- <span className="text-electric">2026 Take-home Estimate</span>
- </h1>
-
- <p
- className="text-muted-blue"
- style={{
- fontSize: "clamp(1rem, 2vw, 1.25rem)",
- maxWidth: "560px",
- margin: "0 auto 2.25rem",
- lineHeight: 1.6,
- fontWeight: 500,
- }}
- >
- Estimate Korean take-home pay, convert gross salary, and check the
- sources and assumptions before making a decision.
- </p>
-
- <div
- style={{
- display: "flex",
- flexWrap: "wrap",
- gap: "0.75rem",
- justifyContent: "center",
- }}
- >
- <Link
- href="/en#calculator"
- className="bg-electric text-white"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- padding: "14px 28px",
- borderRadius: "12px",
- fontWeight: 700,
- fontSize: "16px",
- textDecoration: "none",
- boxShadow: "0 8px 24px -4px #0145F244",
- transition: "all 0.15s ease",
- }}
- >
- <Calculator size={18} /> Estimate Take-home Pay
- </Link>
- <Link
- href="/en/flat-tax"
- className="bg-white text-electric border-2 border-electric"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- padding: "14px 28px",
- borderRadius: "12px",
- fontWeight: 700,
- fontSize: "16px",
- textDecoration: "none",
- transition: "all 0.15s ease",
- }}
- >
- Income Tax Comparison <ArrowRight size={18} />
- </Link>
- <Link
- href="/en/help"
- className="bg-white text-muted-blue border border-canvas-200"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- padding: "14px 28px",
- borderRadius: "12px",
- fontWeight: 700,
- fontSize: "16px",
- textDecoration: "none",
- transition: "all 0.15s ease",
- }}
- >
- <BookOpen size={18} /> Methods &amp; Help
- </Link>
- </div>
- </motion.div>
- </section>
-
- <EnglishSalaryCalculator />
-
- {/* ═══ Top Ad ═════════════════════════════════════════════════ */}
- <div className="max-w-5xl mx-auto px-4 mt-10">
- <HomeTopAd />
- </div>
-
- {/* ═══ Featured Stock Guides ═════════════════════════════════ */}
- <section className="page-width py-16">
- <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
- <div>
- <div
- className="text-electric"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- fontSize: "14px",
- fontWeight: 700,
- marginBottom: "0.5rem",
- }}
- >
- <TrendingUp size={16} /> Start with the question you have
- </div>
- <h2
- className="text-navy"
- style={{
- fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
- fontWeight: 900,
- letterSpacing: "-0.02em",
- }}
- >
- Pay, Insurance &amp; Tax Guides
- </h2>
- </div>
- <Link
- href="/en/guides"
- className="text-electric"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.25rem",
- fontSize: "14px",
- fontWeight: 700,
- textDecoration: "none",
- }}
- >
- All Guides <ArrowRight size={16} />
- </Link>
- </div>
-
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- {featuredGuides.map((guide, index) => (
- <motion.div
- key={guide.slug}
- initial={false}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: index * 0.05, duration: 0.4 }}
- className="group h-full"
- >
- <Link href={`/en/guides/${guide.slug}`} className="block h-full no-underline">
- <div className="relative h-full flex flex-col duotone-card hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden transition-all duration-300">
- <div className="p-7 flex flex-col flex-grow relative z-10">
- <div className="flex items-center justify-between mb-5">
- <span
- className="bg-electric-5 text-electric border border-primary/20"
- style={{
- display: "inline-flex",
- alignItems: "center",
- padding: "0.25rem 0.75rem",
- borderRadius: "8px",
- fontSize: "11px",
- fontWeight: 700,
- }}
- >
- {guide.category}
- </span>
- <span
- className="bg-amber-500/10 text-amber-600"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.25rem",
- padding: "0.25rem 0.5rem",
- borderRadius: "9999px",
- fontSize: "11px",
- fontWeight: 700,
- }}
- >
- English
- </span>
- </div>
-
- <h3
- className="text-navy"
- style={{
- fontSize: "18px",
- fontWeight: 700,
- marginBottom: "0.75rem",
- lineHeight: 1.4,
- }}
- >
- {guide.title}
- </h3>
-
- <p
- className="text-muted-blue"
- style={{
- fontSize: "14px",
- lineHeight: 1.6,
- marginBottom: "1.25rem",
- flexGrow: 1,
- display: "-webkit-box",
- WebkitLineClamp: 3,
- WebkitBoxOrient: "vertical",
- overflow: "hidden",
- }}
- >
- {guide.description}
- </p>
-
- <div
- className="border-t border-canvas-200 text-faint-blue"
- style={{
- display: "flex",
- alignItems: "center",
- justifyContent: "space-between",
- paddingTop: "1.25rem",
- fontSize: "12px",
- }}
- >
- <div className="flex items-center gap-1">
- <Calendar size={12} />
- <span>{new Date(guide.modifiedDate ?? guide.publishedDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
- </div>
- <div
- className="text-electric"
- style={{
- display: "flex",
- alignItems: "center",
- gap: "0.25rem",
- fontWeight: 700,
- }}
- >
- Read <ArrowRight size={12} />
- </div>
- </div>
- </div>
- </div>
- </Link>
- </motion.div>
- ))}
- </div>
- </section>
-
- {/* ═══ Mid-content Ad ═════════════════════════════════════════ */}
- <div className="max-w-5xl mx-auto px-4 mb-12">
- <GuideMidAd />
- </div>
-
- {/* ═══ Korean Site CTA ═══════════════════════════════════════ */}
- <section
- style={{
- background: "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)",
- padding: "4rem 1.5rem",
- }}
- >
- <div
- style={{
- maxWidth: "720px",
- margin: "0 auto",
- textAlign: "center",
- color: "#FFFFFF",
- }}
- >
- <BookOpen size={40} style={{ margin: "0 auto 1rem", opacity: 0.85 }} />
- <h2
- style={{
- fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
- fontWeight: 900,
- marginBottom: "1rem",
- letterSpacing: "-0.02em",
- }}
- >
- Korean version is also available
- </h2>
- <p
- style={{
- fontSize: "1.0625rem",
- lineHeight: 1.6,
- opacity: 0.9,
- marginBottom: "2rem",
- maxWidth: "520px",
- margin: "0 auto 2rem",
- }}
- >
- For additional calculators, Korean guides and the company salary database, visit the Korean site. Pages linked there are in Korean.
- </p>
- <Link
- href="/"
- style={{
- display: "inline-flex",
- alignItems: "center",
- gap: "0.5rem",
- padding: "14px 28px",
- borderRadius: "12px",
- backgroundColor: "#FFFFFF",
- color: "#0145F2",
- fontWeight: 700,
- fontSize: "16px",
- textDecoration: "none",
- transition: "all 0.15s ease",
- }}
- >
- Go to Korean Site <ArrowRight size={18} />
- </Link>
- </div>
- </section>
- </div>
- );
+  return <EnglishPageShell eyebrow="Working in Korea · English tools" title="Korea Salary Calculator 2026" description="Estimate average monthly take-home pay in KRW, understand insurance and tax deductions, then explore tools for bonuses, job offers and everyday money decisions.">
+    <nav aria-label="Start here" className="flex flex-wrap gap-3">
+      <Link href="#calculator" className="inline-flex min-h-11 items-center rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground">Estimate take-home pay</Link>
+      <Link href="/en/calculators" className="inline-flex min-h-11 items-center rounded-xl border border-border bg-background px-5 py-3 font-bold">Choose a calculator</Link>
+      <Link href="/en/dashboard" className="inline-flex min-h-11 items-center rounded-xl border border-border bg-background px-5 py-3 font-bold">My saved estimates</Link>
+    </nav>
+    <EnglishSalaryCalculator />
+    <HomeTopAd />
+    <section aria-labelledby="english-next-tasks">
+      <h2 id="english-next-tasks" className="mb-3 text-2xl font-black sm:text-3xl">Put the result to work</h2>
+      <p className="mb-6 max-w-3xl text-muted-foreground">Take-home pay, a tax comparison and a gross offer answer different questions. Choose the next calculation without treating one as the other.</p>
+      <EnglishTaskLinks label="Useful next calculations" items={[
+        { href: "/en/flat-tax", title: "Compare income-tax methods", description: "A limited comparison of progressive tax and the foreign-employee flat method; eligibility is checked separately." },
+        { href: "/en/tools/offer-compare", title: "Compare two offers", description: "Keep fixed pay, variable bonus and one-time amounts separate in one currency." },
+        { href: "/en/salary-converter", title: "Convert gross salary", description: "Annual and monthly foreign-currency amounts using your exchange-rate assumptions." },
+        { href: "/en/tools/loan", title: "Plan loan payments", description: "Compare the payment schedule with your budget; a result is not lender approval." },
+        { href: "/en/tools/savings-goal", title: "Set a savings goal", description: "See the monthly saving needed under an explicit time and return assumption." },
+        { href: "/en/tools/bonus", title: "Estimate a gross bonus", description: "Apply an assumed percentage to the correct pay base; tax and employer eligibility are separate." },
+      ]} />
+    </section>
+    <section aria-labelledby="english-discovery">
+      <h2 id="english-discovery" className="mb-3 text-2xl font-black sm:text-3xl">Explore by topic</h2>
+      <p className="mb-6 text-muted-foreground">Find bonus, salary, tax, saving and everyday money resources in one place.</p>
+      <EnglishTaskLinks label="Seven English sections" items={EN_SECTIONS} />
+    </section>
+    <section aria-labelledby="english-featured-guides">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div><h2 id="english-featured-guides" className="text-2xl font-black sm:text-3xl">Understand your pay and choices</h2><p className="mt-3 text-muted-foreground">Start with payroll, insurance and tax questions before making a financial commitment.</p></div>
+        <Link href="/en/guides" className="inline-flex min-h-11 items-center font-bold text-primary underline">All English guides →</Link>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{guides.map(guide => <Link key={guide.slug} href={`/en/guides/${guide.slug}`} className="min-w-0 rounded-2xl border border-border bg-background p-6 hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <h3 className="text-lg font-bold leading-snug">{guide.title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{guide.description}</p>
+        <p className="mt-4 text-xs text-muted-foreground">{guide.modifiedDate ? "Updated" : "Published"} <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide), "en")}</time></p>
+      </Link>)}</div>
+    </section>
+    <GuideMidAd />
+    <section aria-labelledby="english-method" className="rounded-2xl border border-border bg-background p-6 sm:p-8">
+      <h2 id="english-method" className="text-2xl font-black">What the salary estimate includes</h2>
+      <p className="mt-4 max-w-3xl leading-7 text-muted-foreground">The form divides annual gross pay into twelve equal months and models standard employee insurance, national tax and local tax. It assumes ordinary resident taxation; nationality, visa, treaties and foreign-worker insurance exceptions need separate checks. The result is an estimate, not a payslip or refund.</p>
+      <Link href="/en/help#salary" className="mt-4 inline-flex min-h-11 items-center font-bold text-primary underline">Calculation method and official sources →</Link>
+      <div className="mt-6 space-y-3">
+        <details className="rounded-xl border border-border p-4"><summary className="cursor-pointer py-2 font-bold">Is the result my actual monthly payslip?</summary><p className="mt-3 text-sm leading-6 text-muted-foreground">No. Irregular bonuses, premium assessments and the official monthly withholding table can change individual months. This simplified annual model is divided by twelve.</p></details>
+        <details className="rounded-xl border border-border p-4"><summary className="cursor-pointer py-2 font-bold">Does being a foreign employee automatically mean 19% tax?</summary><p className="mt-3 text-sm leading-6 text-muted-foreground">No. The flat method has eligibility, remuneration and election conditions. The separate comparison includes local income tax and explains what its progressive model omits.</p></details>
+        <details className="rounded-xl border border-border p-4"><summary className="cursor-pointer py-2 font-bold">Are saved and shared results private?</summary><p className="mt-3 text-sm leading-6 text-muted-foreground">Saving is optional and keeps a snapshot in this browser. A normal page link contains no salary inputs. To share a result, first review the text and explicitly choose it. People receiving it can copy or forward it.</p></details>
+        <details className="rounded-xl border border-border p-4"><summary className="cursor-pointer py-2 font-bold">Can I use these tools outside Korea?</summary><p className="mt-3 text-sm leading-6 text-muted-foreground">The general money tools use your chosen currency and assumptions. Selecting a currency changes display and rounding, not exchange rates or a country&apos;s tax rules. The Korean payroll and income-tax tools remain Korea-specific. Use the separate gross converter when you need an explicit exchange-rate calculation.</p></details>
+      </div>
+    </section>
+  </EnglishPageShell>;
 }

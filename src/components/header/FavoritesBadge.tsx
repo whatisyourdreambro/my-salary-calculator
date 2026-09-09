@@ -9,12 +9,16 @@ import Link from "@/components/AppLink";
 import { Star } from "lucide-react";
 import { loadFavorites, FAVORITES_EVENT } from "@/components/FavoritesButton";
 import { trackBookmarkClick } from "@/lib/analytics";
+import { usePathname } from "next/navigation";
 
 export default function FavoritesBadge() {
   const [count, setCount] = useState(0);
+  const pathname = usePathname();
+  const isEnglish = /^\/en(?:\/|$)/.test(pathname ?? "");
+  const destination = isEnglish ? "/en/dashboard" : "/dashboard";
 
   useEffect(() => {
-    const refresh = () => setCount(loadFavorites().length);
+    const refresh = () => setCount(loadFavorites().filter(item => !isEnglish || /^\/en(?:\/|$)/.test(item.path)).length);
     refresh();
     // 동일 탭(커스텀 이벤트) + 크로스 탭(storage) 모두 반영
     window.addEventListener(FAVORITES_EVENT, refresh);
@@ -23,16 +27,17 @@ export default function FavoritesBadge() {
       window.removeEventListener(FAVORITES_EVENT, refresh);
       window.removeEventListener("storage", refresh);
     };
-  }, []);
+  }, [isEnglish]);
 
   if (count === 0) return null;
 
   return (
     <Link
-      href="/dashboard"
-      aria-label={`즐겨찾기 ${count}개 보기`}
-      onClick={() => trackBookmarkClick("/dashboard", "header_badge")}
-      className="relative p-2 rounded-full hover:bg-canvas-100 transition-colors"
+      href={destination}
+      lang={isEnglish ? "en" : "ko"}
+      aria-label={isEnglish ? `View ${count} saved English pages` : `즐겨찾기 ${count}개 보기`}
+      onClick={() => trackBookmarkClick(destination, "header_badge")}
+      className="relative inline-flex min-h-11 min-w-11 items-center justify-center p-2 rounded-full hover:bg-canvas-100 transition-colors"
     >
       <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
       <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-electric text-white text-[10px] font-black flex items-center justify-center leading-none">

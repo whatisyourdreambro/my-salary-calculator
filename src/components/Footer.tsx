@@ -7,6 +7,7 @@ import { CheckCircle2, Shield, Lock } from "lucide-react";
 import Logo from "./Logo";
 import { footerSeasonLinks } from "@/config/seasonLinks";
 import { popularCompanies } from "@/config/popularCompanies";
+import { EN_SECTIONS } from "@/lib/englishSite";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -18,8 +19,10 @@ export default function Footer() {
         { name: "Korea Take-home Salary", href: "/en#calculator" },
         { name: "Gross Salary Converter", href: "/en/salary-converter" },
         { name: "Income Tax Comparison", href: "/en/flat-tax" },
-        { name: "All Calculators (KR)", href: "/calc" },
-        { name: "FIRE Calculator (KR)", href: "/fire-calculator" },
+        { name: "All Calculators", href: "/en/calculators" },
+        { name: "Bonus Planner", href: "/en/tools/bonus" },
+        { name: "Offer Comparison", href: "/en/tools/offer-compare" },
+        { name: "FIRE Calculator", href: "/en/tools/fire" },
       ]
     : [
         { name: "연봉 계산기", href: "/" },
@@ -38,22 +41,17 @@ export default function Footer() {
   // KR 시즌 링크는 src/config/seasonLinks 단일 소스에서 파생 — 헤더 시즌 드롭다운과 공유
   const seasonLinks = isEnglish
     ? [
-        { name: "Samsung 2026 Outlook", href: "/en/guides/samsung-electronics-stock-2026" },
-        { name: "SK Hynix Stock Analysis", href: "/en/guides/sk-hynix-stock-2026" },
-        { name: "Semiconductor Cycle 2026", href: "/en/guides/semiconductor-cycle-2026" },
-        { name: "Samsung vs SK Hynix", href: "/en/guides/samsung-vs-hynix-employee-comparison" },
-        { name: "Chip Stock Tax Guide", href: "/en/guides/chip-stock-tax-guide" },
+        { name: "Seasonal Checklist", href: "/en/season" },
+        { name: "Bonus Planning", href: "/en/bonus" },
+        { name: "Year-end Tax Deductions", href: "/en/guides/year-end-tax-deductions-guide" },
+        { name: "Health Insurance in 2026", href: "/en/guides/health-insurance-2026-guide" },
       ]
     : footerSeasonLinks;
 
   const contentLinks = isEnglish
     ? [
+        ...EN_SECTIONS.map(section => ({ name: section.title, href: section.href })),
         { name: "Methods, Sources & Help", href: "/en/help" },
-        { name: "All English Guides", href: "/en/guides" },
-        { name: "Samsung Employee ESOP", href: "/en/guides/samsung-employee-rsu-stock" },
-        { name: "SK Hynix PS / PI", href: "/en/guides/sk-hynix-employee-bonus-stock" },
-        { name: "DCA vs Lump-Sum", href: "/en/guides/kospi-leader-stock-strategy" },
-        { name: "Korean Site →", href: "/" },
       ]
     : [
         { name: "주제별 가이드", href: "/hub" },
@@ -79,10 +77,12 @@ export default function Footer() {
 
   const legalLinks = isEnglish
     ? [
-        { name: "About (Korean)", href: "/about" },
-        { name: "Contact (KR)", href: "/contact" },
-        { name: "Privacy Policy (Korean)", href: "/privacy" },
-        { name: "Terms (Korean)", href: "/terms" },
+        { name: "About Moneysalary", href: "/en/about" },
+        { name: "Private Contact", href: "/en/contact" },
+        { name: "Privacy Policy", href: "/en/privacy" },
+        { name: "Terms of Use", href: "/en/terms" },
+        { name: "Saved Results & Pages", href: "/en/dashboard" },
+        { name: "Switch to Korean →", href: "/" },
       ]
     : [
         { name: "사이트 소개", href: "/about" },
@@ -94,7 +94,12 @@ export default function Footer() {
       ];
 
   // 인기 회사 링크는 src/config/popularCompanies 단일 소스에서 파생
-  const popularCompanyLinks = popularCompanies;
+  const popularCompanyLinks = isEnglish ? [
+    { name: "Company Pay Research", href: "/en/salary-db" },
+    { name: "Samsung Employee Pay", href: "/en/guides/samsung-employee-rsu-stock" },
+    { name: "SK Hynix Employee Pay", href: "/en/guides/sk-hynix-employee-bonus-stock" },
+    { name: "Samsung vs SK Hynix", href: "/en/guides/samsung-vs-hynix-employee-comparison" },
+  ] : popularCompanies;
 
   const trustBadges = isEnglish
     ? [
@@ -111,9 +116,10 @@ export default function Footer() {
   const sections: { title: string; items: typeof calculatorLinks }[] = isEnglish
     ? [
         { title: "Calculators", items: calculatorLinks },
-        { title: "Stocks", items: seasonLinks },
-        { title: "Guides", items: contentLinks },
-        { title: "Legal", items: legalLinks },
+        { title: "Seasonal", items: seasonLinks },
+        { title: "Explore", items: contentLinks },
+        { title: "Company Pay", items: popularCompanyLinks },
+        { title: "Information", items: legalLinks },
       ]
     : [
         { title: "계산기", items: calculatorLinks },
@@ -146,7 +152,7 @@ export default function Footer() {
     : "본 사이트의 계산 결과는 참고용이며, 실제 세액과 차이가 있을 수 있습니다.";
 
   return (
-    <footer className="w-full mt-24 bg-white dark:bg-canvas-950 text-muted-blue dark:text-canvas-300 border-t-[1.5px] border-canvas-200 dark:border-canvas-800">
+    <footer lang={isEnglish ? "en" : "ko"} className="w-full mt-24 bg-white dark:bg-canvas-950 text-muted-blue dark:text-canvas-300 border-t-[1.5px] border-canvas-200 dark:border-canvas-800">
       <div className="page-width pt-20 pb-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand */}
@@ -174,9 +180,7 @@ export default function Footer() {
 
           {/* Links — 모바일: 아코디언(<details>) / 데스크톱: 풀 그리드 */}
           <div
-            className={`lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 ${
-              isEnglish ? "lg:grid-cols-4" : "lg:grid-cols-5"
-            } gap-2 sm:gap-8`}
+            className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-8"
           >
             {sections.map((section, idx) => (
               <details

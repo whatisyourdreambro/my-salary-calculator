@@ -451,8 +451,13 @@ body {
  color: #FFFFFF !important;
 }
 
-/* Preserve reviewed result-card palettes inside the legacy canvas color override. */
-.bg-canvas, .bg-canvas :where(:not([data-share-color-scope], [data-share-color-scope] *)),
+/* Keep the legacy light palette, but let dark descendants inherit their foreground.
+   A direct navy color on every descendant hides inline text, links and SVG icons
+   on dark surfaces. Reviewed result-card palettes remain excluded in light mode. */
+:where(html:not(.dark)) .bg-canvas :where(:not([data-share-color-scope], [data-share-color-scope] *)) {
+ color: #0A1829;
+}
+.bg-canvas,
 .bg-white,
 [style*="background: #EDF1F5"],
 [style*="background:#EDF1F5"],
@@ -478,6 +483,23 @@ body {
 /* 2026-08-24 점검: 본문 강조색 #0145F2는 다크 배경(#0A1829) 대비 2.6:1로 WCAG AA
    미달(917회 사용) — 다크 전용 밝은 파랑으로 승격 (.dark th와 동일 계열) */
 .dark .text-electric { color: #4D80F5 !important; }
+/* Primary links use the same fixed blue as text-electric. Keep existing result
+   palettes and white-on-primary button content outside this contrast override. */
+.dark .text-primary:where(:not(.bg-primary, .bg-primary *, .bg-electric, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) {
+ color: #4D80F5 !important;
+}
+/* The Tailwind muted utility uses a fixed translucent blue in light mode.
+   Connect it to the existing dark token for definition lists and inherited lists. */
+.dark .text-muted-foreground:where(:not(.bg-primary, .bg-primary *, .bg-electric, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) {
+ color: hsl(var(--muted-foreground)) !important;
+}
+/* Form fields have intentionally light surfaces in both themes. In particular,
+   .dark .bg-white must not turn a select dark while its text-fill stays navy. */
+.dark :is(input, select, textarea):not([type="range"]):not([type="checkbox"]):not([type="radio"]) {
+ color: #0A1829 !important;
+ background-color: #FFFFFF !important;
+ -webkit-text-fill-color: #0A1829 !important;
+}
 .dark .border-canvas-200 { border-color: #294460 !important; }
 .dark .border-canvas-deep { border-color: #294460 !important; }
 .dark th { background-color: #162E4A; color: #4D80F5; border-bottom-color: #4D80F555; }
@@ -767,6 +789,9 @@ a:not([class]):hover {
 }
 .ms-logo-word-money {
   animation: ms-logo-word-l 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+}
+.dark .ms-logo-word-money {
+  fill: #EDF1F5;
 }
 .ms-logo-word-salary {
   animation: ms-logo-word-r 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;

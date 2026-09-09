@@ -10,7 +10,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useId, useEffect, useLayoutEffect } from "react";
 import Link from "@/components/AppLink";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
@@ -18,6 +18,7 @@ import type { DropdownItem, Badge } from "./navConfig";
 interface DesktopDropdownProps {
   item: DropdownItem;
   pathname: string | null;
+  locale?: "ko" | "en";
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
@@ -27,7 +28,7 @@ const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Ico
   MUST:   { bg: "#DCFCE7", text: "#15803D", label: "추천", Icon: Star },
 };
 
-function BadgePill({ badge }: { badge: Badge }) {
+function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
   const style = BADGE_STYLES[badge];
   const Icon = style.Icon;
   return (
@@ -36,7 +37,7 @@ function BadgePill({ badge }: { badge: Badge }) {
       style={{ backgroundColor: style.bg, color: style.text }}
     >
       <Icon size={9} strokeWidth={2.5} aria-hidden="true" />
-      {style.label}
+      {locale === "en" ? badge === "MUST" ? "PICK" : badge : style.label}
     </span>
   );
 }
@@ -52,9 +53,48 @@ function Caret() {
   );
 }
 
-export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps) {
+export default function DesktopDropdown({ item, pathname, locale = "ko" }: DesktopDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+  const [position, setPosition] = useState({ top: 76, left: 16 });
+  const width = item.items.length >= 9 ? 580 : 340;
+
+  useLayoutEffect(() => {
+    if (!isOpen || !buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    setPosition({ top: rect.bottom + 12, left: Math.max(16, Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - 16)) });
+  }, [isOpen, width]);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !rootRef.current?.contains(event.target)) setIsOpen(false);
+    };
+    const resize = () => setIsOpen(false);
+    document.addEventListener("pointerdown", outside);
+    window.addEventListener("resize", resize);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      window.removeEventListener("resize", resize);
+    };
+  }, [isOpen]);
+
+  useEffect(() => () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); }, []);
+
+  const focusItem = (index: number) => {
+    requestAnimationFrame(() => {
+      const links = panelRef.current?.querySelectorAll<HTMLAnchorElement>("a[role=menuitem]");
+      if (links?.length) links[(index + links.length) % links.length].focus();
+    });
+  };
 
   const handleEnter = () => {
     if (closeTimerRef.current) {
@@ -65,7 +105,9 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
   };
 
   const handleLeave = () => {
-    closeTimerRef.current = setTimeout(() => setIsOpen(false), 120);
+    closeTimerRef.current = setTimeout(() => {
+      if (!rootRef.current?.contains(document.activeElement)) setIsOpen(false);
+    }, 120);
   };
 
   // 항목 수 9개 이상이면 2 column
@@ -73,15 +115,26 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
 
   return (
     <div
+      ref={rootRef}
       className="relative"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
+      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false); }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && isOpen) { event.preventDefault(); event.stopPropagation(); setIsOpen(false); buttonRef.current?.focus(); }
+      }}
     >
       <button
+        ref={buttonRef}
         type="button"
+        aria-controls={menuId}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        className={`flex items-center gap-0.5 px-2.5 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-[10px] bg-transparent border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:bg-electric-5 hover:text-electric ${
+        onClick={(event) => setIsOpen(open => event.detail === 0 ? !open : true)}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setIsOpen(true); focusItem(event.key === "ArrowUp" ? -1 : 0); }
+        }}
+        className={`flex min-h-11 items-center gap-0.5 px-2 2xl:px-3 py-2 text-[13px] 2xl:text-[14px] font-semibold rounded-[10px] bg-transparent border-none cursor-pointer whitespace-nowrap transition-all duration-200 hover:bg-electric-5 hover:text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
           isOpen ? "text-electric bg-electric-5" : "text-muted-blue"
         }`}
       >
@@ -99,8 +152,19 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
 
       {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), 열림/닫힘은 CSS 토글 */}
       <div
+        ref={panelRef}
+        id={menuId}
         role="menu"
-        className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white border-[1.5px] border-canvas rounded-3xl shadow-[0_28px_64px_-12px_#0145F228,0_4px_20px_-4px_#0A182920] z-50 overflow-hidden transition-[opacity,transform,visibility] duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        aria-label={item.name}
+        onKeyDown={(event) => {
+          const links = Array.from(event.currentTarget.querySelectorAll<HTMLAnchorElement>("a[role=menuitem]"));
+          const index = links.indexOf(document.activeElement as HTMLAnchorElement);
+          if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+            event.preventDefault();
+            focusItem(event.key === "Home" ? 0 : event.key === "End" ? -1 : index + (event.key === "ArrowDown" ? 1 : -1));
+          }
+        }}
+        className={`fixed bg-white dark:bg-canvas-950 border-[1.5px] border-canvas rounded-3xl shadow-[0_28px_64px_-12px_#0145F228,0_4px_20px_-4px_#0A182920] z-50 overflow-y-auto overscroll-contain transition-[opacity,transform,visibility] duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isWide ? "w-[580px]" : "w-[340px]"
         } ${
           isOpen
@@ -108,6 +172,9 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
             : "invisible opacity-0 pointer-events-none translate-y-3.5 scale-95"
         }`}
         style={{
+          top: position.top,
+          left: position.left,
+          maxHeight: `calc(100dvh - ${position.top + 16}px)`,
           backgroundImage:
             "radial-gradient(ellipse at 0% 0%, rgba(1,69,242,0.05) 0%, transparent 50%)",
         }}
@@ -142,9 +209,10 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
               <div key={subItem.href}>
                 <Link
                   href={subItem.href}
+                  onClick={() => setIsOpen(false)}
                   role="menuitem"
                   aria-current={isActive ? "page" : undefined}
-                  className={`group flex items-center gap-2 px-3 py-2.5 rounded-xl no-underline transition-all duration-150 hover:bg-electric-5 ${
+                  className={`group flex min-h-11 items-center gap-2 px-3 py-2.5 rounded-xl no-underline transition-all duration-150 hover:bg-electric-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
                     isActive ? "bg-electric-5 ring-1 ring-electric/20" : ""
                   }`}
                 >
@@ -160,7 +228,7 @@ export default function DesktopDropdown({ item, pathname }: DesktopDropdownProps
                       >
                         {subItem.name}
                       </span>
-                      {subItem.badge && <BadgePill badge={subItem.badge} />}
+                      {subItem.badge && <BadgePill badge={subItem.badge} locale={locale} />}
                     </div>
                     {subItem.description && (
                       <span className="text-[11.5px] text-faint-blue group-hover:text-muted-blue line-clamp-1 transition-colors">

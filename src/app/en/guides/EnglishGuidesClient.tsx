@@ -3,13 +3,15 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { GuideCardMeta } from '@/lib/guidesData';
 import Link from "@/components/AppLink";
-import { Calendar, ArrowRight, Search, Sparkles, BookOpen, Clock } from 'lucide-react';
+import { Calendar, ArrowRight, Sparkles, BookOpen, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
 import { filterAndSortGuides, readGuideSearchQuery, type GuideSortOrder } from '@/lib/guideDiscovery';
+import EnglishPageShell from '@/components/english/EnglishPageShell';
 import { formatGuideDate, getGuideModifiedDate } from '@/lib/guideDates';
 
 type SortOption = GuideSortOrder;
+const displayCategory = (category: string) => category === 'RealEstate' ? 'Housing & Loans' : category === 'Tax' ? 'Tax & Insurance' : category;
 
 const SORT_OPTIONS: { id: SortOption; label: string; icon: React.ElementType }[] = [
  { id: "latest", label: "Latest", icon: Calendar },
@@ -31,7 +33,7 @@ function HeroGuide({ guide }: { guide: GuideCardMeta }) {
  <Sparkles className="w-3 h-3" /> Latest guide
  </span>
  <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold">
- {guide.category}
+ {displayCategory(guide.category)}
  </span>
  </div>
 
@@ -72,7 +74,7 @@ function GuideCard({ guide, index }: { guide: GuideCardMeta; index: number }) {
  <div className="p-8 flex-grow flex flex-col relative z-10">
  <div className="flex items-center justify-between mb-6">
  <span className="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-primary/10 text-electric text-xs font-bold border border-electric/20">
- {guide.category}
+ {displayCategory(guide.category)}
  </span>
  </div>
 
@@ -142,42 +144,25 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  };
 
  return (
- <main className="min-h-screen bg-canvas text-foreground pb-24">
- {/* Hero Section */}
- <section className="relative pt-28 pb-14 overflow-hidden text-center">
- {/* 다크모드 대응 — via-white/indigo 고정색 대신 양 모드 안전한 반투명 브랜드 틴트 */}
- <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 -z-10" />
- <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10" />
- <div className="max-w-4xl mx-auto px-4">
- <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight mb-5 leading-[1.15] text-navy ">
- Finance Guides for <span className="text-electric">Working in Korea</span>
- </h1>
- <p className="text-lg sm:text-xl text-faint-blue font-medium max-w-2xl mx-auto mb-8">
- Practical, in-depth guides on working, investing, and saving in Korea.
- </p>
- <div className="relative max-w-md mx-auto">
- <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
- <Search className="h-5 w-5 text-faint-blue" />
- </div>
+ <EnglishPageShell eyebrow="Guides · Working in Korea" title="English pay, tax and money guides" description="Understand a payslip, read a bonus or stock-award notice and compare financial choices. These guides distinguish official facts, personal eligibility and illustrative calculations." breadcrumbs={[{ name: "Guides", href: "/en/guides" }]}>
+ <div className="relative max-w-xl">
  <input
  type="text"
- className="toss-input pl-14"
+ className="toss-input"
  placeholder="Search keywords..."
  aria-label="Search guide keywords"
  value={searchQuery}
  onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
  />
  </div>
- </div>
- </section>
-
- <div className="page-width">
+ <div>
  {/* Categories */}
  <div className="flex flex-wrap gap-2 mb-6 sticky top-20 z-20 py-4 bg-canvas/90 backdrop-blur-xl -mx-4 px-4 sm:static sm:bg-transparent sm:p-0">
  {categoriesEn.map(category => (
  <button
  key={category.id}
  onClick={() => handleCategoryChange(category.id)}
+ aria-pressed={selectedCategoryId === category.id}
  className={"px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 " + (selectedCategoryId === category.id
  ? 'bg-primary !text-white shadow-lg shadow-primary-md scale-105'
  : 'bg-white hover:bg-canvas-dark text-muted-blue border border-canvas'
@@ -199,6 +184,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <button
  key={option.id}
  onClick={() => { setSortBy(option.id); setVisibleCount(ITEMS_PER_PAGE); }}
+ aria-pressed={sortBy === option.id}
  className={"flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all " + (sortBy === option.id
  ? 'bg-electric-10 text-electric border border-electric/20'
  : 'bg-white text-muted-blue border border-canvas-200 hover:border-electric/40'
@@ -209,7 +195,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  </button>
  );
  })}
- <span className="text-xs text-faint-blue ml-auto">
+ <span role="status" className="text-xs text-faint-blue ml-auto">
  Total: {filteredGuides.length}
  </span>
  </div>
@@ -284,6 +270,6 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <InArticleAd />
  </div>
  </div>
- </main>
+ </EnglishPageShell>
  );
 }
