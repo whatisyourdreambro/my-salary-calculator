@@ -10,6 +10,7 @@ import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
 import FeaturedGuides from "@/components/FeaturedGuides";
 import FloatingShareBar from "@/components/FloatingShareBar";
+import AutoShareSection from "@/components/AutoShareSection";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
 // canonical/hreflang은 홈 전용 값 — 루트 layout에 두면 alternates를 자체 정의하지
@@ -34,6 +35,7 @@ export default function HomePage() {
       {/* Server-render the discovery links in place; keep the calculator interactive. */}
       <HomeClient featuredGuides={<FeaturedGuides />} />
       <HomeSeoSection />
+      <AutoShareSection contentType="page" maxWidth="7xl" className="pb-12" />
       {/* 모바일 전용 — 스크롤 후 하단 공유 pill (앵커 광고·PWA 배너 감지 시 자동 숨김) */}
       <FloatingShareBar />
     </>

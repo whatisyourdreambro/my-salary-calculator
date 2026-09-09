@@ -119,7 +119,7 @@ export default function LottoPage() {
  };
 
  return (
- <main className="w-full min-h-screen bg-background text-foreground overflow-hidden pb-20">
+ <main className="relative w-full min-h-screen bg-background text-foreground overflow-hidden pb-20">
  {/* Background Effects */}
  <div className="absolute inset-0 z-0 opacity-10 30 pointer-events-none">
  {[...Array(20)].map((_, i) => (
@@ -305,16 +305,16 @@ export default function LottoPage() {
  className="bg-background border border-border p-5 rounded-2xl shadow-sm hover:shadow-md transition-all animate-in slide-in-from-bottom-4 fade-in duration-500"
  style={{ animationDelay: `${index * 100}ms` }}
  >
- <div className="flex flex-col sm:flex-row items-center gap-4 justify-between">
- <div className="flex items-center gap-3">
+ <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
+ <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row">
  <span className="font-black text-muted-foreground/50 text-2xl w-8 text-center">
  {String.fromCharCode(65 + index)}
  </span>
- <div className="flex gap-2">
+ <div className="grid w-full grid-cols-6 gap-1 sm:flex sm:w-auto sm:gap-2">
  {set.numbers.map((num) => (
  <div
  key={num}
- className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black text-lg sm:text-xl shadow-lg transform transition-transform hover:scale-110 hover:-translate-y-1 ${getNumberColorClass(num)}`}
+ className={`aspect-square w-full min-w-0 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black text-lg sm:text-xl shadow-lg transform transition-transform hover:scale-110 hover:-translate-y-1 ${getNumberColorClass(num)}`}
  >
  {num}
  </div>
