@@ -30,7 +30,7 @@ describe("가이드 검색 응답의 색인 범위", () => {
   it.each([
     "/guides", "/en/guides", "/guides?q=", "/en/guides?q=%20%20",
     "/guides?category=tax", "/guides?utm_source=naver",
-    "/guides/tax?q=tax", "/en/guides/tax?q=tax", "/guides/category/tax?q=tax",
+    "/guides/tax?q=tax", "/en/guides/chip-stock-tax-guide?q=tax", "/guides/category/tax?q=tax",
   ])("일반 허브·빈 검색·고유 글에는 noindex를 추가하지 않는다: %s", (path) => {
     const response = middleware(request(path, "Googlebot/2.1"));
     expect(response.status).toBe(200);
