@@ -45,11 +45,10 @@ export default function SeasonalBanner({ className = "" }: SeasonalBannerProps) 
         <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
           {daysLeft !== null && (
             <span
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
-                isUrgent
-                  ? "bg-red-500 text-white animate-pulse"
-                  : "bg-white/20 text-white"
-              }`}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold"
+              // A dark opaque badge also respects the banner's inherited white text.
+              // Pulsing opacity weakened contrast at the middle of the animation.
+              style={{ backgroundColor: isUrgent ? "#991B1B" : "#0A1829", color: "#FFFFFF" }}
             >
               <Clock className="w-3 h-3" />
               D-{daysLeft}

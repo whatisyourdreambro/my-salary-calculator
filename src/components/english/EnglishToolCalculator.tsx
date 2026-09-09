@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import ResultSharePanel from '@/components/ResultSharePanel';
+import EnglishResultNextTasks from './EnglishResultNextTasks';
+import { getEnglishToolNextTasks } from '@/lib/englishResultTasks';
 import { useCalculatorMeasurement } from '@/hooks/useCalculatorMeasurement';
 import { ENGLISH_CURRENCIES, englishCurrencyDigits, formatEnglishMoney, getEnglishTool, isEnglishCurrency, type EnglishCurrency, type EnglishToolSlug } from '@/lib/englishTools';
 import { ENGLISH_TOOL_DETAILS, calculateEnglishTool, englishToolFieldError, parseEnglishToolInputs, type EnglishToolMetric } from '@/lib/englishToolModels';
@@ -63,6 +65,7 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
         </div>)}
       </dl>
       {result.explanations.length > 0 && <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">{result.explanations.map(text => <li key={text}>{text}</li>)}</ul>}
+      <EnglishResultNextTasks source={slug} plan={getEnglishToolNextTasks(slug, result, currency)} />
       <ResultSharePanel locale="en" resultKey={resultKey} pageUrl={`https://www.moneysalary.com${path}`} pageTitle={tool.title} pageDescription={tool.description} url={`https://www.moneysalary.com${path}`} title={`${tool.title} — my ${currency} scenario`} description={`${inputSummary}. ${resultSummary}. User-entered arithmetic assumptions; no automatic currency conversion or local tax calculation.`} previewDescription="This result text includes every entered amount and assumption shown below. Only approve it if you want other people to receive those details. The page link alone opens the calculator defaults; it does not recreate your scenario." contentType="calculator" />
     </section>}
   </div>;

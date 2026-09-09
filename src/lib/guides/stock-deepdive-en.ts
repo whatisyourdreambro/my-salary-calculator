@@ -117,6 +117,22 @@ const samsungVsHynix = `
 </tbody></table></div>
 <h2>Compare recurring and first-year cash separately</h2>
 <p>For a hypothetical offer with 60,000 annual fixed pay and 5,000 one-time cash, the first-year total is 65,000 before variable bonus and tax. The next year's recurring fixed amount remains 60,000 unless the contract changes. Keep both offers in the same currency; do not compare one gross amount with another net amount.</p>
+<h2 id="worked-offer-example">Worked example: equal annual cash, different hours</h2>
+<p>The following two fictional offers illustrate the arithmetic. They are not Samsung or SK hynix pay figures, a bonus forecast or a recommendation to choose either employer. The bonus is an assumption, not guaranteed salary. Both use KRW and 52 scheduled weeks.</p>
+<p class="text-sm text-muted-foreground sm:hidden">Scroll the table sideways to compare both offers.</p>
+<div class="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" tabindex="0" role="region" aria-label="Illustrative job-offer comparison"><table class="min-w-[30rem] table-fixed [&_th]:!text-foreground [&_th]:normal-case [&_th]:tracking-normal"><caption class="pb-3 text-left font-semibold text-foreground">Illustrative gross offers in KRW</caption><thead><tr><th scope="col">Component</th><th scope="col">Offer A</th><th scope="col">Offer B</th></tr></thead><tbody>
+<tr><th scope="row">Annual fixed pay</th><td>60,000,000</td><td>63,000,000</td></tr>
+<tr><th scope="row">Assumed annual bonus</th><td>6,000,000</td><td>3,000,000</td></tr>
+<tr><th scope="row">Recurring cash under that assumption</th><td>66,000,000</td><td>66,000,000</td></tr>
+<tr><th scope="row">One-time signing payment</th><td>0</td><td>3,000,000</td></tr>
+<tr><th scope="row">First-year cash including signing payment</th><td>66,000,000</td><td>69,000,000</td></tr>
+<tr><th scope="row">Scheduled hours per week</th><td>40</td><td>45</td></tr>
+<tr><th scope="row">Recurring cash per scheduled hour</th><td>31,730.77</td><td>28,205.13</td></tr>
+</tbody></table></div>
+<p>Recurring hourly cash is annual fixed pay plus the assumed annual bonus, divided by weekly hours and 52 weeks. The one-time payment is excluded from that hourly comparison. Offer B has more first-year cash, while Offer A has more recurring cash per scheduled hour under these assumptions. Neither measure captures commute, actual overtime, benefits, career development or uncertainty in the bonus.</p>
+<p>In the <a href="/en/tools/offer-compare">gross job-offer calculator</a>, select KRW and enter the fixed pay, assumed annual bonus, hours and weeks separately. Keep the signing payment outside recurring inputs. To check a lower-bonus case, change only the bonus assumptions and compare again. The calculator opens with its own examples; this article does not transfer these amounts automatically.</p>
+<h2 id="gross-pay-monthly-budget">Before turning gross pay into a monthly budget</h2>
+<p>Dividing annual fixed pay by twelve gives a gross monthly amount, not spendable pay. For a Korea-based role, use the <a href="/en#calculator">Korean take-home salary estimate</a> with its stated coverage and tax assumptions, then confirm exceptions with payroll. The <a href="/en/salary-converter">gross salary converter</a> helps compare currencies using a rate you choose; it does not compare taxes or living costs between countries.</p>
 <h2>Read company announcements within their scope</h2>
 <p>Samsung's 21 August 2026 announcement described a buyback for employee compensation, but did not by itself establish your personal grant. SK hynix's 12 September 2025 HBM4 announcement concerned product development and production readiness, not an employee salary schedule. Business news can explain context without replacing employment terms.</p>
 <h2>Questions beyond the headline pay</h2>

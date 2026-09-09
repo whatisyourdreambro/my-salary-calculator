@@ -145,7 +145,7 @@ export default function Footer() {
         </>
       );
 
-  const brandAriaLabel = isEnglish ? "Moneysalary home" : "머니샐러리 홈";
+  const brandAriaLabel = isEnglish ? "Money Salary home" : "Money Salary — 머니샐러리 홈";
   const brandHomeHref = isEnglish ? "/en" : "/";
   const disclaimer = isEnglish
     ? "Calculations are for reference only and may differ from actual figures."

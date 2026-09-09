@@ -203,7 +203,7 @@ function AdSlot({
       <span
         style={{
           fontSize: "11px",
-          color: "#94A3B8",
+          color: "hsl(var(--muted-foreground))",
           marginBottom: "4px",
           textAlign: "center",
           width: "100%",

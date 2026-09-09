@@ -85,7 +85,6 @@ export default function TrafficEnginesNav() {
                 key={e.href}
                 href={e.href}
                 className="group block h-full duotone-card p-6 hover:-translate-y-1 transition-transform"
-                aria-label={`${e.title} 페이지로 이동`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-[14px] bg-electric-10 border border-electric/20 flex items-center justify-center group-hover:bg-electric group-hover:text-white transition-colors">
