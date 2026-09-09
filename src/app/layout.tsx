@@ -16,6 +16,7 @@ import InternalLinkTracker from "@/components/InternalLinkTracker";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
 import CalcFunnelTracker from "@/components/CalcFunnelTracker";
+import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd, webApplicationLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
@@ -133,9 +134,7 @@ export default function RootLayout({
         <JsonLd data={[organizationLd(), webSiteLd(), webApplicationLd()]} />
       </head>
       <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">
-        <a href="#main-content" className="skip-to-content">
-          본문으로 바로가기
-        </a>
+        <SkipToContent />
         <NextThemesProvider
           attribute="class"
           defaultTheme="light"

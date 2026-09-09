@@ -234,9 +234,9 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  <HomeTopAd />
  </div>
 
- {/* Guides Grid — 6번째 카드 뒤 중간 광고를 위해 2블록 분할 (AnimatePresence popLayout 은 motion 자식만 허용해 그리드 안에 광고 셀을 끼울 수 없음) */}
+ {/* Guides Grid — 6번째 카드 뒤 중간 광고를 위해 2블록 분할 */}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
- <AnimatePresence mode='popLayout'>
+ <AnimatePresence mode='sync'>
  {visibleGuides.slice(0, 6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index} />
  ))}
@@ -249,7 +249,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
  </div>
  )}
  <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
- <AnimatePresence mode='popLayout'>
+ <AnimatePresence mode='sync'>
  {visibleGuides.slice(6).map((guide, index) => (
  <GuideCard key={guide.slug} guide={guide} index={index + 6} />
  ))}

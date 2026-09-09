@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 // --- Game Constants & Types ---
@@ -357,7 +357,7 @@ export default function AssetAllocatorGame() {
  <p className="text-white/70 text-xs font-bold uppercase tracking-widest">
  내 자산 점수 자랑하기
  </p>
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([gameState, score])}
  title={`자산 배분 게임에서 $${score.toLocaleString('ko-KR')} 달성! | 머니샐러리`}
  description="떨어지는 자산을 받아 순자산을 불려보세요. 당신의 최고 기록은?"
  />

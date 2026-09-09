@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+  const isEn = pathname === "/en" || pathname.startsWith("/en/");
 
   useEffect(() => {
     setMounted(true);
@@ -14,7 +17,7 @@ export default function ThemeToggle() {
 
   // hydration mismatch 방지: mount 전에는 빈 자리만 차지
   if (!mounted) {
-    return <div style={{ width: 38, height: 38 }} aria-hidden="true" />;
+    return <div style={{ width: 44, height: 44 }} aria-hidden="true" />;
   }
 
   const cycle = () => {
@@ -28,10 +31,10 @@ export default function ThemeToggle() {
 
   const label =
     theme === "light"
-      ? "라이트 모드 (다크로 전환)"
+      ? (isEn ? "Light theme: switch to dark" : "라이트 모드 (다크로 전환)")
       : theme === "dark"
-        ? "다크 모드 (시스템 설정으로 전환)"
-        : "시스템 설정 (라이트로 전환)";
+        ? (isEn ? "Dark theme: use system setting" : "다크 모드 (시스템 설정으로 전환)")
+        : (isEn ? "System theme: switch to light" : "시스템 설정 (라이트로 전환)");
 
   return (
     <button
@@ -39,7 +42,7 @@ export default function ThemeToggle() {
       onClick={cycle}
       aria-label={label}
       title={label}
-      className="flex items-center justify-center cursor-pointer w-[38px] h-[38px] p-2 rounded-[10px] bg-transparent border-[1.5px] border-canvas text-electric transition-colors hover:bg-electric-10 hover:border-electric"
+      className="flex items-center justify-center cursor-pointer w-11 h-11 p-2 rounded-[10px] bg-transparent border-[1.5px] border-canvas text-electric transition-colors hover:bg-electric-10 hover:border-electric focus-visible:ring-2 focus-visible:ring-electric"
     >
       <Icon size={17} aria-hidden="true" />
     </button>

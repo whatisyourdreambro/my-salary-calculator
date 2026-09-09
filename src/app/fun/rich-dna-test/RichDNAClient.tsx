@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
 import Link from "@/components/AppLink";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 const questions = [
@@ -269,7 +269,7 @@ export default function RichDNAClient() {
  </button>
  <div className="flex flex-col items-center gap-2 py-1">
  <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
- <ShareButtons title={`나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!`} />
+ <ResultSharePanel resultKey={JSON.stringify([scores, result])} title={`나의 부자 DNA는 '${result.title}' 타입! 당신의 DNA도 확인해보세요!`} />
  </div>
  {/* Fun Hub Link */}
  <Link

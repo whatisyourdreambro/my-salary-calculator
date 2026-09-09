@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, CheckCircle2, RefreshCw, TrendingUp } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import Link from "@/components/AppLink";
 import { InArticleAd } from "@/components/AdPlacement";
 
@@ -276,7 +276,7 @@ export default function IQTestClient() {
  </div>
 
  <div className="flex justify-center mb-12">
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([answers, score])}
  title={`나의 멘사급 IQ 테스트 결과: ${score}점`}
  description={`상위 1%에 도전해보세요! #MoneySalary #IQTest`}
  />

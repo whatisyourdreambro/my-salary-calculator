@@ -8,6 +8,7 @@
 // 차별점: 오픈 전에도 가능한 자가 시뮬레이션(/year-end-tax) CTA.
 
 import type { Metadata } from "next";
+import ShareSection from "@/components/ShareSection";
 import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -207,6 +208,7 @@ export default function YearEndTaxPreviewPage() {
               </div>
             </section>
 
+            <ShareSection contentType="guide" className="mb-8" />
             {/* FAQ 직후 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
             <CalcResultAd />
             {/* 클러스터 칩 — 광고 아래 배치 준수 */}

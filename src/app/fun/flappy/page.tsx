@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Play, RotateCcw, Trophy } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 // Game Constants
 const GRAVITY = 0.4; // Reduced from 0.6
@@ -248,7 +248,7 @@ export default function FlappyGamePage() {
 
  <div className="flex flex-col items-center gap-2 mt-4">
  <p className="text-sm font-bold text-faint-blue">점수 공유하기</p>
- <ShareButtons title={`내 점수는 ${score}점! Flappy Salaryman으로 세금을 피해 월급을 지켰습니다.`} />
+ <ResultSharePanel resultKey={JSON.stringify([gameState, score])} title={`내 점수는 ${score}점! Flappy Salaryman으로 세금을 피해 월급을 지켰습니다.`} />
  </div>
  </div>
  )}

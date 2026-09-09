@@ -8,7 +8,7 @@ import { CompanyComparator, ComparisonResult } from "@/lib/versusEngine";
 import type { CompanyProfile, JobLevel } from "@/types/company";
 import BoxingGame from "@/components/BoxingGame";
 import Link from "@/components/AppLink";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 // 배틀 RadarChart(recharts)만 지연 로드 — recharts가 무거워 First Load 에서 제외.
@@ -34,6 +34,7 @@ function loadRepo() {
 }
 
 interface BattleState {
+ inputKey: string;
  companyA: CompanyProfile;
  companyB: CompanyProfile;
  result: ComparisonResult;
@@ -157,7 +158,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  const companyB = companyRepository.getById(companyBId);
  if (!companyA || !companyB) return;
  const result = CompanyComparator.compare(companyA, companyB, jobLevel);
- setBattle({ companyA, companyB, result });
+ setBattle({ companyA, companyB, result, inputKey: JSON.stringify([companyAId, companyBId, jobLevel]) });
  setIsPlaying(true);
  } finally {
  setIsLoading(false);
@@ -381,7 +382,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  <p className="text-sm font-bold text-faint-blue">
  이 매치업, 친구에게 공유하기
  </p>
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([companyAId, companyBId, jobLevel, battle])} resultIsCurrent={battle?.inputKey === JSON.stringify([companyAId, companyBId, jobLevel])}
  title={`${result.companyA.name.ko} vs ${result.companyB.name.ko} 연봉 배틀 결과 | 머니샐러리`}
  description="두 회사의 총보상·실질 시급·워라밸을 1:1로 비교했어요. 우리 회사도 배틀시켜 보세요!"
  />

@@ -5,19 +5,22 @@
 
 "use client";
 
-import { useState, useMemo, useRef, useEffect, useId, useCallback } from "react";
+import { useState, useMemo, useRef, useEffect, useId, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
 import { getCalculatorBySlug } from "@/lib/simpleCalculators";
+import type { CalculatorResult } from "@/lib/simpleCalculators/types";
 import { CalcResultAd, GuideMidAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
-import ShareSection from "./ShareSection";
+import ResultSharePanel from "./ResultSharePanel";
 import FavoritesButton from "./FavoritesButton";
 import Breadcrumbs from "./Breadcrumbs";
 import { faqLd } from "@/lib/structuredData";
 import { SITE_CONFIG } from "@/lib/seo";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
+import { decodeSimpleCalculatorInputs, encodeSimpleCalculatorInputs, validateSimpleCalculatorInputs } from "@/lib/simpleCalculatorShare";
 
 interface Props {
  slug: string;
@@ -49,15 +52,32 @@ const compactKo = (v: number): string | null => {
 };
 
 export default function SimpleCalculatorView({ slug }: Props) {
+ const [shareToken, setShareToken] = useState<string | null>(null);
+ return <>
+ <Suspense fallback={null}><SimpleShareQuery onChange={setShareToken} /></Suspense>
+ <SimpleCalculatorInstance key={`${slug}:${shareToken ?? ""}`} slug={slug} shareToken={shareToken} />
+ </>;
+}
+
+// Keep the static calculator HTML outside the search-parameter Suspense boundary.
+function SimpleShareQuery({ onChange }: { onChange: (token: string | null) => void }) {
+ const params = useSearchParams();
+ const token = params.get("v");
+ useEffect(() => { onChange(token); }, [token, onChange]);
+ return null;
+}
+
+function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: string | null }) {
  const calc = getCalculatorBySlug(slug);
  // label htmlFor ↔ input id 연결용 인스턴스 고유 접두사 (간이 계산기 ~100종 일괄)
  const fieldIdPrefix = useId();
  const resultCardRef = useRef<HTMLElement | null>(null);
+ const restored = useMemo(() => calc && shareToken ? decodeSimpleCalculatorInputs(shareToken, calc) : null, [calc, shareToken]);
  const [inputs, setInputs] = useState<Record<string, number>>(() => {
  if (!calc) return {};
  const init: Record<string, number> = {};
  calc.fields.forEach((f) => {
- init[f.name] = f.defaultValue;
+ init[f.name] = restored?.[f.name] ?? f.defaultValue;
  });
  return init;
  });
@@ -71,54 +91,27 @@ export default function SimpleCalculatorView({ slug }: Props) {
  if (!calc) return {};
  const init: Record<string, string> = {};
  calc.fields.forEach((f) => {
- init[f.name] = String(f.defaultValue);
+ init[f.name] = String(restored?.[f.name] ?? f.defaultValue);
  });
  return init;
  });
 
- // 결과 재현 링크(?v=base64) 복원 — 공유받은 사람이 보낸 사람과 같은 결과를 봄.
- // SSR 프리렌더는 기본값으로 렌더하고 마운트 후 적용 (hydration mismatch 회피).
- useEffect(() => {
- if (!calc) return;
- try {
- const v = new URLSearchParams(window.location.search).get("v");
- if (!v) return;
- const data = JSON.parse(atob(v)) as Record<string, unknown>;
- const restored: Record<string, number> = {};
- let valid = false;
- calc.fields.forEach((f) => {
- const n = Number(data[f.name]);
- if (Number.isFinite(n) && n >= 0) {
- restored[f.name] = n;
- valid = true;
- }
- });
- if (valid) {
- setInputs((prev) => ({ ...prev, ...restored }));
- setRawInputs((prev) => {
- const next = { ...prev };
- for (const [k, n] of Object.entries(restored)) next[k] = String(n);
- return next;
- });
- }
- } catch {
- // 잘못된 공유 링크 — 기본값 유지
- }
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [slug]);
-
- const result = useMemo(() => {
+ const result = useMemo<CalculatorResult | null>(() => {
  if (!calc) return null;
- return calc.compute(inputs);
+ try { return calc.compute(inputs); } catch { return { primary: { label: "계산 결과", value: NaN }, note: "입력값과 허용 범위를 확인해 주세요." }; }
  }, [calc, inputs]);
+
+ const resultValid = Boolean(calc && result && validateSimpleCalculatorInputs(inputs, calc) &&
+ calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)));
+ const resultSnapshot = JSON.stringify([slug, rawInputs, inputs]);
+ const captureSnapshot = useRef<string | null>(null);
+ captureSnapshot.current = resultValid ? resultSnapshot : null;
+ useEffect(() => () => { captureSnapshot.current = null; }, []);
 
  const measurement = useCalculatorMeasurement({
  calcType: slug,
  allowNegativeInput: true,
- valid: Boolean(calc && result &&
- calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)) &&
- Number.isFinite(result.primary.value) &&
- (result.secondary ?? []).every((item) => Number.isFinite(item.value))),
+ valid: resultValid,
  resultKey: result,
  });
  const measurementResultRef = measurement.resultRef;
@@ -134,25 +127,26 @@ export default function SimpleCalculatorView({ slug }: Props) {
  if (!calc) return base;
  const isDefault = calc.fields.every((f) => inputs[f.name] === f.defaultValue);
  if (isDefault) return base;
- try {
- return `${base}?v=${btoa(JSON.stringify(inputs))}`;
- } catch {
- return base;
- }
+ const encoded = encodeSimpleCalculatorInputs(inputs, calc);
+ return encoded ? `${base}?v=${encoded}` : base;
  }, [calc, slug, inputs]);
 
  // 결과 카드 캡처 → 인스타·시스템 공유에서 이미지 파일로 전송
  const getShareImage = async (): Promise<Blob | null> => {
- if (!resultCardRef.current) return null;
+ const element = resultCardRef.current;
+ const snapshot = captureSnapshot.current;
+ if (!element || !snapshot) return null;
  try {
  const { default: html2canvas } = await import("html2canvas");
- const canvas = await html2canvas(resultCardRef.current, {
+ if (captureSnapshot.current !== snapshot || resultCardRef.current !== element) return null;
+ const canvas = await html2canvas(element, {
  backgroundColor: "#0145F2",
  scale: 2,
  });
- return await new Promise<Blob | null>((resolve) =>
+ const blob = await new Promise<Blob | null>((resolve) =>
  canvas.toBlob((blob) => resolve(blob), "image/png")
  );
+ return captureSnapshot.current === snapshot && resultCardRef.current === element ? blob : null;
  } catch {
  return null;
  }
@@ -214,6 +208,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  </div>
 
  <section {...measurement.inputProps} className="p-6 sm:p-8 bg-white dark:bg-canvas-900 rounded-3xl border border-canvas-200 dark:border-canvas-800 mb-6">
+ {shareToken && !restored && <p role="status" className="mb-4 text-sm text-amber-800">공유 링크의 입력값을 확인할 수 없어 기본값을 표시합니다. 입력값과 범위를 확인해 주세요.</p>}
  <h2 className="text-sm font-black text-navy dark:text-canvas-50 mb-6 flex items-center gap-2">
  <Calculator className="w-4 h-4 text-electric" />
  입력값
@@ -239,6 +234,7 @@ export default function SimpleCalculatorView({ slug }: Props) {
  // 금리 3.5 를 입력할 방법이 아예 없었다).
  inputMode="decimal"
  value={displayValue(rawInputs[field.name] ?? "")}
+ aria-invalid={!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)}
  onChange={(e) => handleChange(field.name, e.target.value)}
  className="w-full px-4 py-3 bg-canvas rounded-xl text-base font-bold text-navy border border-transparent focus:border-electric focus:outline-none transition-colors"
  placeholder={field.defaultValue.toLocaleString("ko-KR")}
@@ -289,14 +285,19 @@ export default function SimpleCalculatorView({ slug }: Props) {
      광고 수익 급락 대응 — 공유 섹션이 광고를 밀어내면 RPM 하락) */}
  <CalcResultAd />
 
- <ShareSection
+ {resultValid ? <ResultSharePanel
+ resultKey={resultSnapshot}
+ pageUrl={`${SITE_CONFIG.url}/calc/${slug}`}
+ pageTitle={`${calc.title} | 머니샐러리`}
+ pageDescription={calc.description}
+ previewDescription={`결과 링크에 포함되는 입력: ${calc.fields.map((field) => `${field.label} ${inputs[field.name].toLocaleString("ko-KR")}${field.suffix ?? ""}`).join(" · ")}. 받은 사람은 이를 복원할 수 있습니다. 이미지는 아래 미리보기 그대로 공유됩니다. 기본값도 현재 결과로 공유됩니다.`}
  contentType="calc_result"
  title={`${calc.title} — ${result.primary.label} ${formatNumber(result.primary.value, result.primary.suffix)}`}
  description={calc.description}
  url={shareUrl}
  getShareImage={getShareImage}
  className="mb-6"
- />
+ /> : <p role="status" className="mb-6 text-sm text-amber-800">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
 
  {calc.explanation && (
  <section className="p-6 bg-white rounded-2xl border border-canvas-200 mb-6">

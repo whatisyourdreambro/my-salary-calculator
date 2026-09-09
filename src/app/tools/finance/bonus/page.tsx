@@ -9,7 +9,7 @@ import {
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -590,7 +590,7 @@ export default function BonusCalculatorPage() {
           <p className="text-sm font-bold" style={{ color: "#3D5E78" }}>
             결과 공유하기 — 친구한테 세금 자랑(?)하기
           </p>
-          <ShareButtons title={shareText} />
+          <ResultSharePanel resultKey={JSON.stringify([salaryFmt, bonusFmt, dependents, hasSpouse, r])} title={shareText} />
         </div>
 
         {/* ── 세금 계산 상세 ── */}

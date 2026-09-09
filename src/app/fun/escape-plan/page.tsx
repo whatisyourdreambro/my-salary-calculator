@@ -9,7 +9,7 @@ import {
   Coffee, Beer, Plane, Rocket, BedDouble, DoorOpen, Palmtree,
   Download, CheckCheck, BookOpen,
 } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
@@ -180,7 +180,7 @@ export default function EscapePlanPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-[#0145F2] to-[#0D5BFF] p-8 rounded-3xl shadow-2xl relative overflow-hidden"
+                data-share-color-scope className="text-white bg-gradient-to-br from-[#0145F2] to-[#0D5BFF] p-8 rounded-3xl shadow-2xl relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -273,7 +273,7 @@ export default function EscapePlanPage() {
                   <Download className="w-5 h-5" />
                   이미지 저장
                 </button>
-                <ShareButtons
+                <ResultSharePanel resultKey={JSON.stringify([currentAssets, monthlySaving, monthlyCost, returnRate, yearsToTarget, escapeYear])}
                   title={shareTitle()}
                   description="회사 탈출까지 남은 시간을 계산하는 FREEDOM DASHBOARD"
                   getShareImage={captureResultImage}

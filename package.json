@@ -19,6 +19,7 @@
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
+    "qa:share": "node scripts/qa-share-coverage.mjs",
     "ad-depth": "node scripts/ad-depth-audit.mjs"
   },
   "dependencies": {

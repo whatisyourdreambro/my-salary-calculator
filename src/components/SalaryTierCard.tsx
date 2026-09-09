@@ -5,7 +5,7 @@
 import React, { useRef, useState } from "react";
 import { calculateSalaryRank } from "@/data/salaryRankData";
 import { Download, Zap } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 
 interface SalaryTierCardProps {
  annualSalary: number;
@@ -81,28 +81,28 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  <div className="space-y-4">
  <div className="flex items-center justify-between">
  <h3 className="text-lg font-bold text-navy flex items-center gap-2">
- <Zap size={18} className="text-primary fill-yellow-500"/> 소셜 공유용 티어 카드
+ <Zap size={18} className="text-primary fill-yellow-500"/> 30대 기준 참고 티어 카드
  </h3>
  <p className="text-xs text-faint-blue">이미지로 저장해서 공유해보세요!</p>
  </div>
 
  {/* The Visual Card to Capture */}
  <div 
- ref={cardRef}
- className={`relative w-full aspect-[4/5] sm:aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br ${rank.color} p-8 flex flex-col justify-between text-white border-4 border-white/20`}
+ ref={cardRef} data-share-color-scope
+ className={`relative w-full min-h-[32rem] rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br ${rank.color} p-8 flex flex-col justify-between gap-4 text-white border-4 border-white/20`}
  >
  {/* Background Patterns */}
  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
  <div className="absolute bottom-0 left-0 w-48 h-48 bg-electric/10 rounded-full -ml-24 -mb-24 blur-2xl"></div>
 
  {/* Header */}
- <div className="relative z-10 flex justify-between items-start">
+ <div className="relative z-10 flex flex-wrap gap-3 justify-between items-start">
  <div>
- <div className="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">2026 Salary Report</div>
- <div className="text-3xl font-black italic tracking-tighter text-white">MONEYSALARY</div>
+ <div className="text-white/70 text-xs font-bold mb-1">30대 기준 참고 티어 · 자체 추정표</div>
+ <div className="text-2xl font-black italic tracking-tighter text-white">MONEYSALARY</div>
  </div>
  <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold border border-white/30">
- OFFICIAL RANK
+ REFERENCE
  </div>
  </div>
 
@@ -110,12 +110,12 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  <div className="relative z-10 flex flex-col items-center justify-center py-4">
  <MungRankIcon tier={rank.name} />
  <div className="mt-4 text-center">
- <div className="text-sm font-medium text-white/80 mb-1">내 연봉 티어는?</div>
+ <div className="text-sm font-medium text-white/80 mb-1">30대 참고표에서 내 티어는?</div>
  <div className="text-5xl font-black tracking-tight drop-shadow-lg mb-2">
  {rank.name}
  </div>
  <div className="inline-block bg-electric/20 backdrop-blur-sm px-4 py-1 rounded-full text-xs font-bold border border-white/20">
- 상위 {rank.percentile}% {rank.icon}
+ 참고표 기준 상위 {rank.percentile}% {rank.icon}
  </div>
  </div>
  </div>
@@ -128,11 +128,12 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  </div>
  <div className="text-right">
  <div className="text-[10px] font-bold text-white/80 leading-tight">
- {rank.message}
+ 자체 참고표에 따른 분류<br />공식 전국 순위가 아닙니다
  </div>
  <div className="text-[9px] text-white/50 mt-1">moneysalary.com</div>
  </div>
  </div>
+ <p className="relative z-10 text-[10px] leading-relaxed text-white/80">상위 비율은 이 자체 참고표 기준입니다. 공식 통계의 기준연도와 원자료는 확인되지 않았습니다.</p>
  </div>
 
  {/* Actions */}
@@ -149,9 +150,9 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  )}
  <span className="text-white">이미지로 저장</span>
  </button>
- <ShareButtons
- title={`내 2026 연봉 티어는 ${rank.name}! 상위 ${rank.percentile}%`}
- description="2026 연봉 티어 카드 - 내 연봉은 어느 등급일까?"
+ <ResultSharePanel showPageShare={false} register={false} resultKey={JSON.stringify([annualSalary, rank])}
+ title={`30대 참고표 기준 내 연봉 티어: ${rank.name} · 참고표 상위 ${rank.percentile}%`}
+ description="자체 추정표로 보는 참고 티어입니다. 공식 전국 순위가 아니며 공식 통계 기준연도·원자료가 확인되지 않았습니다."
  getShareImage={captureCardImage}
  className="justify-center mt-4"
  />

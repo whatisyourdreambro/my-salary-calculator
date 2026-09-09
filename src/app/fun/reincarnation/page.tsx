@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import CurrencyInput from "@/components/CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Globe2, Crown, Briefcase, Zap, Skull, RefreshCw, Download, Dna } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
 
 type Rarity = "S" | "A" | "B" | "C" | "F";
@@ -119,10 +119,21 @@ export default function ReincarnationPage() {
     }, 3000);
   };
 
+  const prepareImageClone = (_document: Document, element: HTMLElement) => {
+    // html2canvas can clip the baseline of single-line ellipses. Export full descriptions.
+    element.querySelectorAll<HTMLElement>("p.truncate, h3.truncate").forEach((paragraph) => {
+      paragraph.style.overflow = "visible";
+      paragraph.style.whiteSpace = "normal";
+      paragraph.style.textOverflow = "clip";
+      paragraph.style.lineHeight = "1.6";
+      paragraph.style.paddingBottom = "2px";
+    });
+  };
+
   const captureResultImage = async (): Promise<Blob | null> => {
     if (!resultRef.current) return null;
     const { default: html2canvas } = await import("html2canvas");
-    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
+    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2, onclone: prepareImageClone });
     return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
 
@@ -130,7 +141,7 @@ export default function ReincarnationPage() {
     if (!resultRef.current) return;
     showToast("📸 이미지 저장 중...");
     const { default: html2canvas } = await import("html2canvas");
-    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
+    const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2, onclone: prepareImageClone });
     const link = document.createElement("a");
     link.download = "인생2회차_결과.png";
     link.href = canvas.toDataURL("image/png");
@@ -262,7 +273,7 @@ export default function ReincarnationPage() {
               className="w-full"
             >
               {/* Capture target */}
-              <div ref={resultRef} className="bg-[#0D1117] rounded-3xl border border-white/10 p-8 mb-4">
+              <div ref={resultRef} data-share-color-scope className="text-white bg-[#0D1117] rounded-3xl border border-white/10 p-8 mb-4">
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-400 text-sm font-bold mb-4">
                     <Sparkles size={14} /> 환생 완료
@@ -319,7 +330,7 @@ export default function ReincarnationPage() {
                 >
                   <Download size={18} /> 이미지 저장
                 </motion.button>
-                <ShareButtons
+                <ResultSharePanel resultKey={JSON.stringify([salary, result])}
                   title={`[인생 2회차 가챠] 나의 다음 생은 ${result.country.name}, ${result.occupation.name} 🧬`}
                   description="현생 연봉이 다음 생의 카르마를 결정한다 - 인생 가챠 2회차"
                   getShareImage={captureResultImage}

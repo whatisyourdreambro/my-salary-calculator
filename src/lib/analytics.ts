@@ -6,6 +6,8 @@
 // - 무료 GA4 한도 (월 10M 이벤트) 내 안전한 사용 가정
 
 import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
+import { shareAnalyticsPath, type ShareMode } from "./sharePolicy";
+import type { ShareOutcome, ShareErrorKind } from "./shareTransport";
 
 declare global {
   interface Window {
@@ -174,20 +176,39 @@ export function trackCalcStart(
 }
 
 /**
- * SNS 공유 클릭 — 바이럴 루프의 핵심 측정 지표.
- * 채널(kakao/instagram/facebook/twitter/copy)별로 어디서 공유가 일어나는지,
- * 어떤 결과 페이지가 가장 많이 공유되는지(viral coefficient) 추적.
+ * Historical `share` is an attempt, never a completed post. v2 outcomes are separate.
  */
 export function trackShare(
   channel: string,
   contentType: string,
-  pagePath?: string
+  pagePath?: string,
+  shareMode: ShareMode = "page"
 ): void {
   trackEvent("share", {
-    method: channel,
-    content_type: contentType,
-    page_path:
-      pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    ...shareEventParams(channel, contentType, pagePath, shareMode),
+  });
+}
+
+const SHARE_METHODS = new Set(["kakao", "webshare", "copy", "naver_blog", "facebook", "x", "band", "line", "telegram", "threads", "instagram"]);
+const SHARE_TYPES = new Set(["page", "tool", "calc_result", "salary_result", "company", "guide", "fun", "float_bar", "samsung_bonus", "samsung_bonus_result", "result", "report"]);
+function shareEventParams(channel: string, contentType: string, pagePath: string | undefined, mode: ShareMode) {
+  return {
+    method: SHARE_METHODS.has(channel) ? channel : "other",
+    content_type: SHARE_TYPES.has(contentType) ? contentType : "page",
+    share_mode: mode === "result" ? "result" : "page",
+    event_version: 2,
+    page_path: shareAnalyticsPath(pagePath ?? (typeof location !== "undefined" ? location.pathname : "/")),
+  };
+}
+
+/** Only fixed outcomes; no URL, title, image, result key, error text or user amounts. */
+export function trackShareOutcome(channel: string, contentType: string, outcome: ShareOutcome, pagePath?: string, shareMode: ShareMode = "page", errorKind?: ShareErrorKind): void {
+  const allowed = ["native_handoff", "sdk_requested", "intent_requested", "clipboard_success", "aborted", "error", "manual_copy_shown"];
+  if (!allowed.includes(outcome)) return;
+  trackEvent("share_outcome", {
+    ...shareEventParams(channel, contentType, pagePath, shareMode),
+    outcome,
+    ...(errorKind && ["permission", "unsupported", "invalid", "busy", "unavailable"].includes(errorKind) ? { error_kind: errorKind } : {}),
   });
 }
 

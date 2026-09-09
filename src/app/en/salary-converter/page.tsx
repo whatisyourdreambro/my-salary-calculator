@@ -1,175 +1,82 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { GlobalTaxEngine, COUNTRY_NAMES, CountryCode, PPP_INDEX, TaxResult } from "@/lib/global/taxEngine";
-import { Globe, TrendingUp, Info } from "lucide-react";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
+import { convertGrossSalary, parseCalculatorAmount, parseWholeKRW } from "@/lib/englishCalculators";
 
-// PPP BarChart(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
-const SalaryConverterChart = dynamic(() => import("@/components/charts/SalaryConverterChart"), {
-  ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-canvas-100" />,
-});
-
-interface ConvertedResult extends TaxResult {
-  netInUSD: number;
-  pppAdjustedNetUSD: number;
-  countryName: string;
-  flag: string;
-}
+const initialRates = { USD: "1350", JPY: "9", SGD: "1000", GBP: "1800" };
+const number = (value: number) => value.toLocaleString("en-US", { maximumFractionDigits: 2 });
 
 export default function SalaryConverterPage() {
-  const [salaryKRW, setSalaryKRW] = useState<number>(60000000);
-
-  // 입력에서 파생되는 결과 — useState(() => {...}) 변칙 호출 대신 useMemo 로 계산
-  const results = useMemo<ConvertedResult[]>(() => {
-    const countries: CountryCode[] = ['KR', 'US', 'JP', 'SG', 'UK'];
-    return countries.map(code => {
-      const taxResult = GlobalTaxEngine.calculate(salaryKRW, code);
-      let netInUSD = 0;
-      if (code === 'KR') netInUSD = taxResult.net * 0.00075;
-      else if (code === 'US') netInUSD = taxResult.net;
-      else if (code === 'JP') netInUSD = taxResult.net * (0.00075 / 0.11);
-      else if (code === 'SG') netInUSD = taxResult.net * 0.75;
-      else if (code === 'UK') netInUSD = taxResult.net * 1.25;
-      const pppAdjustedNetUSD = netInUSD / PPP_INDEX[code];
-      return {
-        ...taxResult,
-        netInUSD,
-        pppAdjustedNetUSD,
-        countryName: COUNTRY_NAMES[code].name,
-        flag: COUNTRY_NAMES[code].flag,
-      };
-    });
-  }, [salaryKRW]);
-
-  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSalaryKRW(Number(e.target.value));
-  };
+  const [salary, setSalary] = useState("60000000");
+  const [rates, setRates] = useState(initialRates);
+  const annualKRW = parseWholeKRW(salary);
+  const entries = Object.entries(rates).map(([currency, rawRate]) => {
+    const rate = parseCalculatorAmount(rawRate, 1_000_000);
+    return { currency, rate, result: annualKRW !== null && rate !== null ? convertGrossSalary(annualKRW, rate) : null };
+  });
+  const valid = annualKRW !== null && entries.every(({ result }) => result !== null);
+  const { inputProps, resultRef } = useCalculatorMeasurement({ calcType: "en-salary-converter", valid, resultKey: [annualKRW, rates] });
 
   return (
-    <main className="w-full min-h-screen bg-canvas pb-20">
-      {/* Hero */}
-      <div className="relative bg-primary py-16 overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-white/10 rounded-full blur-[120px]" />
-        <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-white/90 text-sm font-bold mb-6">
-            <Globe className="w-4 h-4" />
-            Global Salary Intelligence
+    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <Link href="/en" className="inline-flex min-h-11 items-center text-primary underline">English tools</Link>
+      <header className="my-8">
+        <h1 className="text-3xl font-black sm:text-5xl">Gross salary currency converter</h1>
+        <p className="mt-4 text-lg text-muted-foreground">Convert an annual Korean salary into annual and monthly amounts using your exchange-rate assumptions.</p>
+      </header>
+      <section className="rounded-2xl border border-border p-5 sm:p-8" aria-labelledby="converter-inputs">
+        <h2 id="converter-inputs" className="text-xl font-bold">Your salary and exchange rates</h2>
+        <div {...inputProps} className="mt-5 space-y-6">
+          <div>
+            <label htmlFor="converter-salary" className="mb-2 block font-semibold">Annual gross salary in KRW</label>
+            <input id="converter-salary" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-invalid={annualKRW === null} aria-describedby="salary-help converter-error" className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xl" />
+            <p id="salary-help" className="mt-2 text-sm text-muted-foreground">Before taxes and employee contributions. Enter whole KRW from 0 to 1,000,000,000 without commas. Include a bonus only if you intend to spread it across all twelve months.</p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-white">
-            Global Salary Converter
-            <span className="block text-white/80 text-3xl md:text-4xl mt-2">
-              Real Purchasing Power (PPP)
-            </span>
-          </h1>
-          <p className="text-white/75 text-lg max-w-2xl mx-auto">
-            Compare your salary against the world. We calculate taxes and cost of living to show you the &quot;Real Feel&quot; value of your income in Silicon Valley, Tokyo, and London.
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 -mt-10 relative z-20">
-        {/* Input Section */}
-        <div className="bg-white border border-canvas-200 rounded-2xl p-8 shadow-card mb-10">
-          <div className="flex flex-col md:flex-row items-end gap-4">
-            <div className="flex-1 w-full">
-              <label className="block text-canvas-600 font-medium mb-2 text-sm">
-                Annual Salary (KRW)
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  value={salaryKRW}
-                  onChange={handleSalaryChange}
-                  className="w-full bg-canvas border border-canvas-200 rounded-xl py-4 px-4 text-2xl font-bold text-foreground focus:ring-2 focus:ring-primary outline-none transition-all"
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-canvas-500 font-bold text-sm">KRW</span>
-              </div>
+          <fieldset>
+            <legend className="font-semibold">Assumed KRW paid for 1 unit of foreign currency</legend>
+            <p id="rates-help" className="mt-2 text-sm text-muted-foreground">Starting values are examples, not live quotes. Replace them with your bank or provider quote. For JPY, use 1 yen, not 100 yen. Fees and spreads are excluded.</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {entries.map(({ currency, rate }) => (
+                <div key={currency}>
+                  <label htmlFor={`rate-${currency}`} className="mb-2 block font-medium">KRW per 1 {currency}</label>
+                  <input id={`rate-${currency}`} type="text" inputMode="decimal" value={rates[currency as keyof typeof rates]} onChange={(event) => setRates((previous) => ({ ...previous, [currency]: event.target.value }))} aria-describedby="rates-help converter-error" aria-invalid={rate === null || rate < 0.000001} className="w-full rounded-xl border border-border bg-background px-4 py-3" />
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-4 text-sm text-canvas-500">
-            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> 1 USD ≈ 1,330 KRW</span>
-            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> Results update as you type</span>
-            <span className="flex items-center gap-1"><Info className="w-4 h-4" /> Simplified estimate (2026 rates)</span>
-          </div>
+          </fieldset>
         </div>
-
-        {/* Chart Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-          <div className="lg:col-span-2 bg-white border border-canvas-200 rounded-2xl p-6 shadow-card">
-            <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-foreground">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              Real Purchasing Power (Net USD)
-            </h3>
-            <div className="h-[300px] w-full">
-              <SalaryConverterChart data={results} />
+        <p id="converter-error" role="status" className="mt-4 text-sm text-muted-foreground">{valid ? "All amounts below are gross. Monthly amounts are annual amounts divided by 12." : "Enter a valid salary and exchange rates from 0.000001 to 1,000,000 KRW per unit. Empty or invalid inputs do not produce a result."}</p>
+        {valid && annualKRW !== null && (
+          <section ref={resultRef} aria-live="polite" aria-atomic="true" className="mt-8" aria-labelledby="gross-results">
+            <h2 id="gross-results" className="text-xl font-bold">Gross annual and monthly amounts</h2>
+            <p className="mt-2 text-sm">KRW: {number(annualKRW)} per year · {number(annualKRW / 12)} per month</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {entries.map(({ currency, result }) => result && (
+                <section key={currency} className="min-w-0 rounded-xl border border-border bg-secondary/30 p-4">
+                  <h3 className="font-bold">{currency}</h3>
+                  <dl className="mt-2 space-y-2">
+                    <div><dt className="text-sm">Annual gross</dt><dd className="break-words text-xl font-bold">{number(result.annual)} {currency}</dd></div>
+                    <div><dt className="text-sm">Monthly gross ÷ 12</dt><dd className="break-words font-semibold">{number(result.monthly)} {currency}</dd></div>
+                  </dl>
+                </section>
+              ))}
             </div>
-            <p className="text-center text-sm text-canvas-500 mt-4">
-              * Adjusted for Cost of Living (PPP). Higher is better.
-            </p>
-          </div>
-          <div className="bg-white border border-canvas-200 rounded-2xl p-6 shadow-card flex flex-col justify-center">
-            <h3 className="text-lg font-bold mb-4 text-foreground">What is PPP?</h3>
-            <p className="text-canvas-600 text-sm leading-relaxed">
-              Purchasing Power Parity (PPP) adjusts income for the cost of living in each country. A $50,000 salary in Seoul goes further than the same amount in San Francisco.
-            </p>
-            <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-xl">
-              <p className="text-primary text-sm font-semibold">Korea&apos;s Hidden Advantage</p>
-              <p className="text-canvas-600 text-xs mt-1">Low housing costs, subsidized healthcare, and affordable dining make Korean salaries stretch further than raw numbers suggest.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Detailed Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map((res) => (
-            <motion.div
-              key={res.country}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`relative p-6 rounded-2xl border bg-white shadow-card ${res.country === 'KR' ? 'border-primary/30 ring-1 ring-primary/20' : 'border-canvas-200'}`}
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <div className="text-4xl mb-2">{res.flag}</div>
-                  <h3 className="text-lg font-bold text-foreground">{res.countryName}</h3>
-                </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-bold ${res.effectiveRate > 30 ? 'bg-canvas-100 text-canvas-700' : 'bg-primary/10 text-primary'}`}>
-                  Tax {res.effectiveRate.toFixed(1)}%
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-canvas-500">Gross Income</span>
-                  <span className="font-mono text-foreground">{Math.round(res.gross).toLocaleString('ko-KR')} {res.currency}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-canvas-500">Net Income</span>
-                  <span className="font-mono font-bold text-foreground">{Math.round(res.net).toLocaleString('ko-KR')} {res.currency}</span>
-                </div>
-                <div className="pt-3 border-t border-canvas-100 flex justify-between items-center">
-                  <span className="text-sm text-primary font-bold">Real Value (PPP)</span>
-                  <span className="text-xl font-black text-primary">
-                    ${Math.round(res.pppAdjustedNetUSD).toLocaleString('ko-KR')}
-                  </span>
-                </div>
-              </div>
-              {res.country === 'KR' && (
-                <div className="absolute top-3 right-3 text-xs bg-primary text-white px-2 py-0.5 rounded-full font-bold">YOU</div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Ad: right below the result cards */}
-        <CalcResultAd />
-      </div>
-      {/* page-end ads are provided by en/layout.tsx (PageFooterAds) — 페이지 자체 중복 제거 */}
+          </section>
+        )}
+      </section>
+      <CalcResultAd />
+      <section className="mt-8 rounded-2xl border border-border p-5" aria-labelledby="conversion-limits">
+        <h2 id="conversion-limits" className="text-xl font-bold">What this comparison tells you</h2>
+        <p className="mt-3">This is currency arithmetic, not an overseas job-offer or living-standard comparison. Taxes, social insurance, housing, working hours and benefits differ by location and personal circumstances. A twelve-month average is not a promise of each payslip amount.</p>
+        <p className="mt-3">For an actual offer, compare gross salary, bonus conditions, benefits and local deductions separately, then use a quote that includes conversion fees.</p>
+        <nav aria-label="Related English tasks" className="mt-4 flex flex-wrap gap-4">
+          <Link href="/en/flat-tax" className="inline-flex min-h-11 items-center text-primary underline">Compare Korean income-tax methods</Link>
+          <Link href="/en/help#currency" className="inline-flex min-h-11 items-center text-primary underline">Conversion method and limitations</Link>
+        </nav>
+      </section>
     </main>
   );
 }

@@ -451,8 +451,8 @@ body {
  color: #FFFFFF !important;
 }
 
-/* Canvas / Light backgrounds → dark text */
-.bg-canvas, .bg-canvas *,
+/* Preserve reviewed result-card palettes inside the legacy canvas color override. */
+.bg-canvas, .bg-canvas :where(:not([data-share-color-scope], [data-share-color-scope] *)),
 .bg-white,
 [style*="background: #EDF1F5"],
 [style*="background:#EDF1F5"],

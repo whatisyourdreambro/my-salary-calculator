@@ -7,7 +7,7 @@ import type { NavItem } from "./navConfig";
 
 export const navConfigEn: NavItem[] = [
  {
-  name: "Calculator",
+  name: "English Tools",
   href: "/en",
   type: "link",
  },
@@ -15,9 +15,11 @@ export const navConfigEn: NavItem[] = [
   name: "Guides",
   type: "dropdown",
   items: [
+   { name: "Korea Take-home Salary", href: "/en#calculator" },
    { name: "📚 All English Guides", href: "/en/guides" },
-   { name: "💸 Flat Tax 19% (Expats)", href: "/en/flat-tax" },
-   { name: "💱 Salary Converter (Annual ↔ Monthly)", href: "/en/salary-converter" },
+   { name: "Methods, Sources & Help", href: "/en/help" },
+   { name: "Income Tax Comparison", href: "/en/flat-tax" },
+   { name: "Gross Salary Converter", href: "/en/salary-converter" },
   ],
  },
  {

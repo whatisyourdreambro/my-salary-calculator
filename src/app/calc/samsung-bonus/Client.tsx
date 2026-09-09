@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import PrivateFeedback from "@/components/PrivateFeedback";
 import {
   Lightbulb,
@@ -1414,7 +1414,7 @@ function MySalaryCalculator({
               · 세후 {fmtManwonInt(personal.netManwon)}만원 결과를 카카오·링크로
               공유합니다. 선택한 사업부와 추정 금액이 공유 내용에 포함됩니다.
             </p>
-            <ShareButtons
+            <ResultSharePanel resultIsCurrent={poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) && isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, 50) && [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite)} resultKey={JSON.stringify([poolInputsValid, perDivision, salaryFmt, selectedDivId, creditRate, applyInsurance, opi1Rate, personal])}
               url={SHARE_URL}
               title={`삼성전자 ${selected.label} 성과급 — 세전 ${fmtManwonInt(
                 personal.totalGrossManwon

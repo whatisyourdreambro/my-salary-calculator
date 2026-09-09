@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import Link from "@/components/AppLink";
 import { InArticleAd } from "@/components/AdPlacement";
 
@@ -188,7 +188,7 @@ export default function RankClient() {
  </button>
 
  <div className="flex-1">
- <ShareButtons
+ <ResultSharePanel resultKey={JSON.stringify([salaryInput, percentile])}
  title={`내 연봉은 상위 ${percentile}%!`}
  description="대한민국 연봉 랭킹 확인하기"
  />

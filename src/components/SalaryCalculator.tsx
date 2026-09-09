@@ -13,14 +13,15 @@ import MoneyInput from "./ui/MoneyInput"; // New UI Component
 import SalaryResultCard from "./SalaryResultCard"; // New UI Component
 import { motion } from "framer-motion";
 import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react";
-import ShareButtons from "@/components/ShareButtons";
+import ResultSharePanel from "@/components/ResultSharePanel";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import { trackEvent } from "@/lib/analytics";
 import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
+import { encodeSalarySharePayload, validateSalarySharePayload } from "@/lib/salarySharePayload";
+import { isCurrentSalaryResult, mergeSalarySnapshot, parseSavedHomeInputs } from "@/lib/salaryResultSnapshot";
 import type {
  StoredSalaryData,
- StoredFinancialData,
 } from "@/app/types";
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
@@ -136,16 +137,18 @@ export default function SalaryCalculator() {
  try {
  const saved = localStorage.getItem("moneysalary-user-input");
  if (saved) {
- const parsed = JSON.parse(saved);
- if (parsed.salaryInput) setSalaryInput(parsed.salaryInput);
- if (parsed.incomeType) setIncomeType(parsed.incomeType);
- if (parsed.payBasis) setPayBasis(parsed.payBasis);
- if (parsed.dependents) setDependents(parsed.dependents);
- if (parsed.children) setChildren(parsed.children);
- if (parsed.nonTaxableAmount) setNonTaxableAmount(parsed.nonTaxableAmount);
+ const parsed = parseSavedHomeInputs(saved);
+ if (parsed) {
+ setSalaryInput(parsed.salaryInput);
+ setIncomeType(parsed.incomeType);
+ setPayBasis(parsed.payBasis);
+ setDependents(parsed.dependents);
+ setChildren(parsed.children);
+ setNonTaxableAmount(parsed.nonTaxableAmount);
  }
- } catch (e) {
- console.error("Failed to load saved inputs", e);
+ }
+ } catch {
+ // Saved input text and parser errors can contain financial values. Do not log them.
  }
  }, []);
 
@@ -223,11 +226,14 @@ export default function SalaryCalculator() {
  }, [annualSalary, nonTaxableAmount, dependents, children, incomeType, salaryInput]);
 
  // Snapshot stays local: editing inputs must not count an old visible result as success.
- const inputSnapshot = JSON.stringify([salaryInput, incomeType, payBasis, nonTaxableAmount, dependents, children]);
+ const inputSnapshot = JSON.stringify([salaryInput, incomeType, payBasis, severanceType, nonTaxableAmount, dependents, children]);
  const [calculatedSnapshot, setCalculatedSnapshot] = useState<string | null>(null);
- const inputsValid = isValidCalculationNumber(salaryInput, Number.MIN_VALUE) &&
- isValidCalculationNumber(nonTaxableAmount, 0) && Number.isFinite(annualSalary) &&
- isValidCalculationNumber(dependents, 1, 20) && isValidCalculationNumber(children, 0, 10);
+ const sharePayload = validateSalarySharePayload(incomeType === "regular"
+ ? { v: 1, taxYear: 2026, incomeType, annualSalary, nonTaxableAmount: parseNumber(nonTaxableAmount), dependents, children }
+ : { v: 1, taxYear: 2026, incomeType, monthlyIncome: parseNumber(salaryInput) });
+ const inputsValid = isValidCalculationNumber(salaryInput, Number.MIN_VALUE) && Boolean(sharePayload) &&
+ (incomeType !== "regular" || isValidCalculationNumber(nonTaxableAmount, 0));
+ const currentResult = isCurrentSalaryResult({ showResult, isCalculating, inputsValid, calculatedSnapshot, inputSnapshot, result });
  const offerConditions = { annualGross: annualSalary, nonTaxableMonthly: parseNumber(nonTaxableAmount), dependents, children };
  const canHandoffOffer = canHandoffCurrentSalaryResult({ pathname, incomeType, severanceType,
  showResult, isCalculating, inputsValid, calculatedSnapshot, inputSnapshot, result, conditions: offerConditions });
@@ -244,8 +250,7 @@ export default function SalaryCalculator() {
  };
  const measurement = useCalculatorMeasurement({
  calcType: "salary",
- valid: showResult && !isCalculating && inputsValid && calculatedSnapshot === inputSnapshot &&
- Object.values(result).every(Number.isFinite) && result.monthlyNet > 0,
+ valid: currentResult,
  resultKey: result,
  onSuccess: () => {
  // Preserve configured Ads conversion, once on a real successful result, with no money values.
@@ -288,13 +293,17 @@ export default function SalaryCalculator() {
  // ... (Handlers for Seniors/Disabled omitted for brevity but logic remains in state if needed for future extension, keeping UI cleaner for now as per design)
  // Re-adding essential handlers if specific inputs are exposed
  const handleSaveData = () => {
+ if (!currentResult) {
+ alert("입력값이 바뀌었거나 올바르지 않습니다. 다시 계산한 뒤 저장해 주세요.");
+ return;
+ }
  if (incomeType !== "regular") {
  alert("정규직 소득만 대시보드에 저장할 수 있습니다.");
  return;
  }
  try {
  const existingDataJSON = localStorage.getItem("moneysalary-financial-data");
- const existingData: StoredFinancialData = existingDataJSON
+ const existingData: unknown = existingDataJSON
  ? JSON.parse(existingDataJSON)
  : { lastUpdated: new Date().toISOString() };
  const salaryDataToStore: StoredSalaryData = {
@@ -305,38 +314,19 @@ export default function SalaryCalculator() {
  nonTaxableAmount: parseNumber(nonTaxableAmount),
  dependents,
  children,
- monthlyExpenses: parseNumber(monthlyExpenses),
  };
- const updatedData: StoredFinancialData = {
- ...existingData,
- salary: salaryDataToStore,
- lastUpdated: new Date().toISOString(),
- };
+ const updatedData = mergeSalarySnapshot(existingData, salaryDataToStore, new Date().toISOString());
  localStorage.setItem("moneysalary-financial-data", JSON.stringify(updatedData));
  alert("연봉 정보가 대시보드에 저장되었습니다!");
  router.push("/dashboard");
- } catch (error) {
- console.error("Failed to save data to localStorage:", error);
+ } catch {
  alert("데이터 저장에 실패했습니다.");
  }
  };
 
- // 공유용 /share/{base64} 링크 — 입력값을 인코딩해 결과를 그대로 재현
- // 채널 귀속 utm(kakao|copy|webshare… / share)은 ShareButtons 가 채널별로 withUtm 적용 —
- // 여기서는 붙이지 않는다(채널 미확정·이중 부여 방지). /share/[data] 는 path 세그먼트라 쿼리 무영향.
- const shareUrl = useMemo(() => {
- if (typeof window === "undefined") return undefined;
- const dataToShare = {
- annualSalary,
- nonTaxableAmount: parseNumber(nonTaxableAmount),
- dependents,
- children,
- };
- const encodedData = btoa(
- unescape(encodeURIComponent(JSON.stringify(dataToShare)))
- );
- return `${window.location.origin}/share/${encodedData}`;
- }, [annualSalary, nonTaxableAmount, dependents, children]);
+ // The URL is only passed to the result opt-in panel. Its default page share is amount-free.
+ const shareToken = currentResult ? encodeSalarySharePayload(sharePayload) : null;
+ const shareUrl = shareToken ? `https://www.moneysalary.com/share/${shareToken}` : undefined;
 
  // 공유 카드 문구·썸네일 — 단톡방 클릭률을 높이는 호기심 훅 + 실제 금액 OG 이미지
  const shareMeta = useMemo(() => {
@@ -344,11 +334,11 @@ export default function SalaryCalculator() {
  const annualManwon = Math.round(annualSalary / 10000).toLocaleString("ko-KR");
  const origin = typeof window !== "undefined" ? window.location.origin : "";
  return {
- title: `💰 연봉 ${annualManwon}만원이면 월 실수령 ${netManwon}만원!`,
- description: "2026년 세법 기준 내 실수령액. 너도 1초만에 계산해봐 👀",
+ title: `${incomeType === "regular" ? "연봉" : "월 소득의 연 환산"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`,
+ description: incomeType === "freelancer" ? "월 사업소득 3.3% 원천징수 추정입니다. 최종 종합소득세와 다릅니다." : "2026년 계산 모델의 추정액입니다. 실제 급여명세서·최종 세액과 다를 수 있습니다.",
  imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&net=${result.monthlyNet}`,
  };
- }, [annualSalary, result.monthlyNet]);
+ }, [annualSalary, result.monthlyNet, incomeType]);
 
  const [activeSheet, setActiveSheet] = useState<"dependents" | "children" | "nonTaxable" | null>(null);
 
@@ -458,6 +448,7 @@ export default function SalaryCalculator() {
  transition={{ duration: 0.35 }}
  className="space-y-4"
  >
+ {!currentResult && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">아래는 이전 계산 결과입니다. 입력값을 확인하고 다시 계산해 주세요.</p>}
  {/* 마스코트 + 결과 카드 */}
  <div ref={measurement.resultRef} className="relative pt-10">
  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
@@ -478,13 +469,14 @@ export default function SalaryCalculator() {
  </div>
 
  {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
- <NextActions annualSalary={annualSalary} category="salary" />
+ <NextActions annualSalary={currentResult ? annualSalary : undefined} category="salary" />
 
  {canHandoffOffer && (
  <div className="rounded-2xl border border-canvas bg-white p-4">
  <button type="button" onClick={handleOfferHandoff} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary/90">
  현재 조건을 비교기에 가져오기 <ArrowRight size={16} aria-hidden="true" />
  </button>
+ {!inputsValid && <p role="alert" className="text-sm text-red-700">양수 소득(연 환산 1조 원 이하)을 입력해 주세요. 직장인은 월 비과세가 세전 월급 이하여야 하며, 공제 대상 자녀를 본인 포함 부양가족 수에도 포함해 주세요.</p>}
  <p className="mt-2 text-xs text-faint-blue">현재 연봉·비과세·가족 조건을 같은 탭에서 한 번 전달합니다. 비교기에서 확인 후 적용할 수 있어요.</p>
  {offerHandoffError && <p role="alert" className="mt-2 text-sm text-red-700">브라우저에서 조건을 전달하지 못했습니다. <Link href="/calc/offer-compare" className="underline">비교기에 직접 입력하기</Link></p>}
  </div>
@@ -499,17 +491,23 @@ export default function SalaryCalculator() {
  {/* 공유/저장 */}
  <div className="bg-white border border-canvas rounded-2xl p-4 flex flex-col items-center gap-3">
  <p className="text-sm font-bold text-muted-blue">결과 공유하기</p>
- <ShareButtons
+ {currentResult && shareUrl ? <ResultSharePanel
+ resultKey={inputSnapshot}
+ pageUrl="https://www.moneysalary.com/"
+ pageTitle="2026 연봉 실수령액 계산기 | 머니샐러리"
+ pageDescription="소득 조건을 직접 입력해 월 수령액을 계산해 보세요."
+ previewDescription={incomeType === "regular" ? `결과 링크에 연봉 ${formatNumber(annualSalary)}원, 월 비과세액 ${formatNumber(parseNumber(nonTaxableAmount))}원, 본인 포함 부양가족 ${dependents}명, 공제 대상 자녀 ${children}명이 포함됩니다. 받은 사람은 이를 복원할 수 있습니다. 공유 카드에는 연봉과 월 수령 추정액이 표시됩니다.` : `결과 링크에 ${incomeType === "freelancer" ? "프리랜서" : "알바"} 소득 유형과 세전 월 소득 ${formatNumber(parseNumber(salaryInput))}원이 포함됩니다. 받은 사람은 이를 복원할 수 있습니다. 공유 카드에는 연 환산 소득과 월 수령 추정액이 표시됩니다.`}
  url={shareUrl}
  title={shareMeta.title}
  description={shareMeta.description}
  imageUrl={shareMeta.imageUrl}
  contentType="salary_result"
- />
- <button onClick={handleSaveData} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all">
+ /> : <p role="status" className="text-sm text-muted-blue">현재 입력으로 다시 계산하면 결과 공유와 저장을 이용할 수 있습니다.</p>}
+ <button onClick={handleSaveData} disabled={!currentResult || incomeType !== "regular"} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
  <CheckCircle size={16} className="text-navy" />
  <span className="text-navy">대시보드에 저장하기</span>
  </button>
+ <p className="text-xs text-faint-blue">정규직의 현재 계산만 이 브라우저에 저장합니다. 입력하지 않은 지출은 미입력으로 저장됩니다.</p>
  {/* 공유(비교 심리) 맥락과 이어지는 다음 행동 */}
  <Link
  href="/company/compare"
@@ -525,7 +523,7 @@ export default function SalaryCalculator() {
  </div>
 
  {/* ── Row 2+3: 보조 패널 (결과 있을 때만) ────────────────────── */}
- {showResult && (
+ {currentResult && (
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}

@@ -80,9 +80,10 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/firefighter-pay-2026': { lastModified: new Date('2026-08-30') },
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
- '/en': { lastModified: new Date('2026-08-25') },
- '/en/flat-tax': { lastModified: new Date('2026-08-25') },
- '/en/salary-converter': { lastModified: new Date('2026-08-25') },
+ '/en': { lastModified: new Date('2026-09-09') },
+ '/en/flat-tax': { lastModified: new Date('2026-09-09') },
+ '/en/salary-converter': { lastModified: new Date('2026-09-09') },
+ '/en/help': { lastModified: new Date('2026-09-09') },
  '/en/guides': { lastModified: new Date('2026-08-25') },
 };
 
@@ -266,6 +267,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/en',
  '/en/flat-tax',
  '/en/salary-converter',
+ '/en/help',
  '/en/guides',
  '/global',
  // 복지·혜택 계산기 — 네이버 핫 키워드 전용 페이지
@@ -330,6 +332,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/en/guides': { 'ko-KR': `${baseUrl}/guides`, en: `${baseUrl}/en/guides`, 'x-default': `${baseUrl}/guides` },
  '/en/flat-tax': { en: `${baseUrl}/en/flat-tax`, 'x-default': `${baseUrl}/en/flat-tax` },
  '/en/salary-converter': { en: `${baseUrl}/en/salary-converter`, 'x-default': `${baseUrl}/en/salary-converter` },
+ '/en/help': { en: `${baseUrl}/en/help`, 'x-default': `${baseUrl}/en/help` },
  };
 
  const staticUrls = staticRoutes.map((route) => ({

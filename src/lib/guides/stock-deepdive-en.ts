@@ -106,18 +106,19 @@ const samsungEmployeeRsu = `
 <div class="grid md:grid-cols-3 gap-4 mt-6">
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">① ESOP Subscription</h4>
-  <p class="text-sm text-muted-foreground">Discounted purchase during new share issuance. 1-year mandatory holding period.</p>
+  <p class="text-sm text-muted-foreground">Subscription price, eligibility and lock-up depend on the actual offering and plan documents. A discount or one-year holding period is not universal.</p>
  </div>
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">② ESOP Loan</h4>
-  <p class="text-sm text-muted-foreground">Company subsidizes part of the loan interest, allowing employees to scale subscription beyond personal cash.</p>
+  <p class="text-sm text-muted-foreground">If financing is offered, check its current rate, subsidy, repayment and employment-exit conditions. Do not assume the company subsidizes every employee purchase.</p>
  </div>
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">③ Executive RSU / Stock Options</h4>
-  <p class="text-sm text-muted-foreground">Limited to executives and selected roles. Vesting schedule, taxed as capital gains on exercise.</p>
+  <p class="text-sm text-muted-foreground">RSUs and options are different contracts. Employment-related value can be taxed as earned income when the right becomes taxable or an option is exercised. A later share sale is a separate tax event; check grant terms, tax residence and any special relief.</p>
  </div>
 </div>
 
+<p><a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000011075">NTS RSU income classification (Korean)</a> distinguishes employment-related compensation from other situations. Retirement timing and special plan conditions can change the treatment; a later sale has separate rules.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📈 Asset Simulation by Job Level</h2>
 <p>
  The numbers below are illustrative simulations (actual grants vary widely).
@@ -370,9 +371,8 @@ const skHynixEmployeeBonus = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">Option 2. ISA + S&amp;P 500 / KOSPI diversification</h3>
 <p>
- Within ISA's annual KRW 20M / cumulative KRW 100M tax-free cap, you can buy S&amp;P 500 and KOSPI ETFs.
- This bets on industries and countries beyond your employer while keeping gains tax-free.
- Many employees fill the ISA cap right after January's PS payout.
+ An ISA's KRW 20 million annual and KRW 100 million total figures are contribution limits, not tax-free profit limits. Current qualifying net-profit exemptions are KRW 2 million for the general category or KRW 4 million for eligible special categories; excess taxable profit is subject to 9.9% separate tax including local tax.
+ Product eligibility, the three-year holding requirement and permitted investments matter. A Korean-listed overseas-index ETF is different from directly buying foreign shares. <a href="https://www.samsungpop.com/ux/kor/finance/isa/isainfo/intro.do">Check the provider's current ISA rules (Korean)</a> before contributing.
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">Option 3. Mortgage / loan paydown</h3>
@@ -547,6 +547,7 @@ ${DISCLAIMER_HTML}
 `;
 
 const chipStockTax = `
+<p><strong>Tax source:</strong> <a href="https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=&amp;nttSn=1348384">NTS share-sale tax guidance, 3 February 2026 (Korean)</a>. Check tax residence, share type and sale venue before applying a general rule.</p>
 <p class="lead">
  If you buy and sell Samsung Electronics or SK Hynix shares through a regular Korean brokerage account, capital gains tax may apply depending on your holdings.
  (Korean stock capital gains tax currently applies to "large shareholders"; rules can change in 2026, so this guide focuses on general principles.)
@@ -555,8 +556,8 @@ const chipStockTax = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📚 Korean Stock Capital Gains Tax Basics</h2>
 <ul class="space-y-3 mt-4">
  <li><strong>Large shareholder rule:</strong> Once your position in a single ticker exceeds the threshold (by value or ownership ratio), capital gains tax applies on sale.</li>
- <li><strong>Retail investors:</strong> Currently no capital gains tax on Korean stock sales.</li>
- <li><strong>Foreign stocks:</strong> 22% capital gains tax (incl. local tax) after KRW 2.5M annual deduction.</li>
+ <li><strong>Small shareholders:</strong> Sales of domestically listed shares on a Korean exchange are generally outside capital gains tax for qualifying small shareholders. This does not cover every off-exchange or unlisted sale, and does not remove dividend or transaction taxes.</li>
+ <li><strong>Foreign stocks:</strong> A commonly applicable Korean-resident calculation is 22% including local tax after the applicable KRW 2.5 million annual basic deduction. Residence history, taxable scope and eligible annual netting must be checked; this is not a universal rule for every foreign resident.</li>
 </ul>
 
 <div class="bg-amber-50 dark:bg-amber-950/20 p-6 rounded-xl border border-amber-200 dark:border-amber-800 my-6">
@@ -569,17 +570,16 @@ const chipStockTax = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💡 Four Tax-Efficient Strategies for Working Professionals</h2>
 
-<h3 class="text-xl font-bold mt-8 mb-3">Strategy 1. ISA account (top priority)</h3>
+<h3 class="text-xl font-bold mt-8 mb-3">Strategy 1. Check ISA eligibility and contribution limits</h3>
 <p>
- The ISA (Individual Savings Account) provides annual KRW 20M / cumulative KRW 100M tax-free caps.
- Trading Samsung / SK Hynix inside the ISA makes capital gains tax-free.
- Conditions: 3-year minimum holding and limited withdrawals.
+ The ISA's KRW 20 million annual and KRW 100 million total limits concern contributions. The qualifying net-profit exemption is KRW 2 million for general accounts or KRW 4 million for eligible special categories; excess taxable profit is separately taxed at 9.9% including local tax. Check residency, account eligibility and the three-year requirement.
+ Small shareholders' exchange-traded domestic listed-share gains are generally already outside capital gains tax in ordinary accounts. An ISA is not automatically an additional exemption for those gains. <a href="https://www.samsungpop.com/ux/kor/finance/isa/isainfo/intro.do">Provider's current ISA rules (Korean)</a>.
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">Strategy 2. Pension fund / IRP ETF trading</h3>
 <p>
  Inside a pension savings or IRP account, trading KOSPI 200 ETFs or semiconductor ETFs defers tax on capital gains.
- At distribution, only the much lower pension income tax (3.3–5.5%) applies — beats standard capital gains tax.
+ Withdrawal tax depends on the source of the funds, age, qualifying pension conditions and withdrawal method. Early or non-qualifying withdrawals can be treated differently; do not compare a single pension rate with an ordinary account without those conditions.
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">Strategy 3. Loss harvesting (foreign stocks)</h3>
@@ -590,7 +590,7 @@ const chipStockTax = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">Strategy 4. Use the KRW 2.5M annual deduction (foreign stocks)</h3>
 <p>
- Splitting realized foreign-stock gains across years to stay under KRW 2.5M each year can effectively zero out the tax.
+ An applicable annual basic deduction may reduce taxable net gains, but the taxable scope, other gains and losses, fees and market movement also matter. A tax-saving estimate is not a reason to assume a future sale price.
 </p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🧮 Pre-Sale Checklist</h2>
@@ -727,6 +727,7 @@ export const stockDeepdiveGuidesEn = [
   tags: ["Samsung Electronics", "ESOP", "RSU", "employee", "wealth"],
   level: "Intermediate" as const,
   publishedDate: "2026-05-06",
+    modifiedDate: "2026-09-09",
   views: 0,
   lang: "en" as const,
   content: samsungEmployeeRsu,
@@ -751,6 +752,7 @@ export const stockDeepdiveGuidesEn = [
   tags: ["SK Hynix", "PS", "PI", "bonus", "ESOP"],
   level: "Intermediate" as const,
   publishedDate: "2026-05-06",
+    modifiedDate: "2026-09-09",
   views: 0,
   lang: "en" as const,
   content: skHynixEmployeeBonus,
@@ -787,6 +789,7 @@ export const stockDeepdiveGuidesEn = [
   tags: ["stock tax", "capital gains", "ISA", "pension", "tax saving"],
   level: "Intermediate" as const,
   publishedDate: "2026-05-06",
+    modifiedDate: "2026-09-09",
   views: 0,
   lang: "en" as const,
   content: chipStockTax,

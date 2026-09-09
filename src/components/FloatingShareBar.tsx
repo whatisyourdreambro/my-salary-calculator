@@ -11,10 +11,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Link as LinkIcon, Share2, X } from "lucide-react";
-import { trackShare, trackEvent } from "@/lib/analytics";
-import { SITE_CONFIG } from "@/lib/seo";
-import { tryKakaoFeedShare, withUtm, type ShareChannelId } from "@/lib/shareChannels";
+import { X } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import ShareButtons from "./ShareButtons";
+import { useSharePageContext } from "@/hooks/useSharePageContext";
+import { resolveShareLocale, shareAnalyticsPath } from "@/lib/sharePolicy";
 // 하단 광고 3중 감지는 공유 유틸로 이동(2026-09-05, §12-2 ⑪) — InstallPwaBanner·BottomSheet 와 공용.
 // 로직·상수(4초 유예·1초 재평가)는 동일. 여기서 정의하던 함수를 되살리지 말 것(이중 관리).
 import {
@@ -28,7 +29,7 @@ const SCROLL_THRESHOLD = 400;
 const CONTENT_TYPE = "float_bar";
 
 function isPwaBannerShown(): boolean {
-  return !!document.querySelector('[role="dialog"][aria-label="홈 화면에 추가"]');
+  return !!document.querySelector('[data-pwa-install-banner]');
 }
 
 function isInlineShareVisible(): boolean {
@@ -42,12 +43,16 @@ function isInlineShareVisible(): boolean {
 
 export default function FloatingShareBar() {
   const pathname = usePathname();
+  const { context } = useSharePageContext();
+  const en = resolveShareLocale(pathname ?? "/") === "en";
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
   const impressionSent = useRef(false);
 
   useEffect(() => {
+    setVisible(false);
+    impressionSent.current = false;
+    if (!context) return;
     // 데스크톱은 CSS(md:hidden)로도 가려지지만, 관찰 비용 자체를 아끼기 위해 스킵
     if (!window.matchMedia("(max-width: 767px)").matches) return;
     try {
@@ -76,7 +81,7 @@ export default function FloatingShareBar() {
       if (show && !impressionSent.current) {
         impressionSent.current = true;
         trackEvent("share_bar_impression", {
-          page_path: window.location.pathname,
+          page_path: shareAnalyticsPath(window.location.pathname),
         });
       }
     };
@@ -95,66 +100,7 @@ export default function FloatingShareBar() {
       clearInterval(interval);
       cancelAnimationFrame(raf);
     };
-  }, [pathname]);
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 2800);
-  };
-
-  // 채널별 귀속 utm(kakao|webshare|copy / share) — canonical 은 pathname 기준이라 OG 무영향
-  const derive = (channel: ShareChannelId) => {
-    const url = withUtm(`${SITE_CONFIG.url}${window.location.pathname}`, channel);
-    const title =
-      document.title.replace(/\s*[|—-]\s*머니샐러리\s*$/, "").trim() ||
-      "머니샐러리 - 2026년 연봉 실수령액 계산기";
-    return { url, title };
-  };
-
-  const copyLink = async (url: string, title: string, kakaoHint: boolean) => {
-    try {
-      await navigator.clipboard.writeText(kakaoHint ? `${title}\n${url}` : url);
-      showToast(
-        kakaoHint ? "💬 링크 복사 완료! 카카오톡에 붙여넣기 하세요" : "🔗 링크가 복사됐어요!"
-      );
-    } catch {
-      showToast("복사에 실패했습니다.");
-    }
-  };
-
-  const handleKakao = () => {
-    trackShare("kakao", CONTENT_TYPE);
-    const { url, title } = derive("kakao");
-    const opened = tryKakaoFeedShare({
-      url,
-      title,
-      description: "내 연봉의 실제 수령액을 확인해보세요!",
-      imageUrl: `${SITE_CONFIG.url}/api/og?path=${encodeURIComponent(
-        window.location.pathname
-      )}&title=${encodeURIComponent(title)}`,
-    });
-    if (!opened) void copyLink(url, title, true);
-  };
-
-  const handleWebShare = async () => {
-    trackShare("webshare", CONTENT_TYPE);
-    const { url, title } = derive("webshare");
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch {
-        // 시트 닫음(AbortError) — 무시
-      }
-    } else {
-      void copyLink(url, title, false);
-    }
-  };
-
-  const handleCopy = () => {
-    trackShare("copy", CONTENT_TYPE);
-    const { url, title } = derive("copy");
-    void copyLink(url, title, false);
-  };
+  }, [pathname, context]);
 
   const handleDismiss = () => {
     setDismissed(true);
@@ -163,69 +109,15 @@ export default function FloatingShareBar() {
     } catch {}
   };
 
-  if (dismissed || !visible) {
-    return toast ? <ToastNode msg={toast} /> : null;
-  }
-
+  if (dismissed || !visible || !context) return null;
   return (
-    <>
-      <div
-        role="region"
-        aria-label="빠른 공유"
-        className="md:hidden fixed left-1/2 -translate-x-1/2 z-40 share-bar-in"
-        style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
-      >
-        <div className="flex items-center gap-1.5 pl-3.5 pr-1.5 py-1.5 rounded-full bg-navy/95 backdrop-blur border border-white/10 shadow-2xl">
-          <span className="text-xs font-bold text-white mr-1">공유</span>
-          <button
-            type="button"
-            onClick={handleKakao}
-            aria-label="카카오톡 공유"
-            className="w-9 h-9 rounded-full bg-[#FEE500] flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#371D1E" aria-hidden>
-              <path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.394 1.36 4.514 3.445 5.882L4.5 20l4.094-2.182A11.3 11.3 0 0 0 12 18c5.523 0 10-3.477 10-7.5S17.523 3 12 3Z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={handleWebShare}
-            aria-label="공유하기"
-            className="w-9 h-9 rounded-full bg-electric flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <Share2 className="w-4 h-4 text-white" />
-          </button>
-          <button
-            type="button"
-            onClick={handleCopy}
-            aria-label="링크 복사"
-            className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <LinkIcon className="w-4 h-4 text-white" />
-          </button>
-          <button
-            type="button"
-            onClick={handleDismiss}
-            aria-label="공유 바 닫기"
-            className="p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+    <div role="region" aria-label={en ? "Quick sharing" : "빠른 공유"}
+      className="md:hidden fixed left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] share-bar-in"
+      style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}>
+      <div className="flex items-start gap-2 rounded-2xl border border-slate-300 bg-white/95 p-2 shadow-xl backdrop-blur dark:border-slate-600 dark:bg-slate-900/95">
+        <ShareButtons variant="floating" register={false} contentType={CONTENT_TYPE} />
+        <button type="button" onClick={handleDismiss} aria-label={en ? "Close quick sharing" : "공유 바 닫기"} className="flex min-w-11 min-h-11 items-center justify-center rounded-full text-slate-600 focus-visible:ring-2 focus-visible:ring-electric dark:text-slate-200"><X className="w-5 h-5" /></button>
       </div>
-      {toast && <ToastNode msg={toast} />}
-    </>
-  );
-}
-
-function ToastNode({ msg }: { msg: string }) {
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="share-toast fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full text-sm font-bold shadow-xl z-[100] whitespace-nowrap"
-    >
-      {msg}
     </div>
   );
 }

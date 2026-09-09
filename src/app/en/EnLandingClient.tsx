@@ -2,12 +2,13 @@
 
 import Link from "@/components/AppLink";
 import { motion } from "framer-motion";
-import { Globe, ArrowRight, BookOpen, TrendingUp, Calculator, Sparkles, Calendar } from "lucide-react";
+import { Globe, ArrowRight, BookOpen, TrendingUp, Calculator, Calendar } from "lucide-react";
 import type { GuideCardMeta } from "@/lib/guidesData";
 import { HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
+import EnglishSalaryCalculator from "./EnglishSalaryCalculator";
 
 export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] }) {
- const featuredStockGuides = guides;
+ const featuredGuides = guides;
 
  return (
  <div className="w-full overflow-x-hidden">
@@ -41,7 +42,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  />
 
  <motion.div
- initial={{ opacity: 0, y: 28 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
  style={{
@@ -53,7 +54,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  }}
  >
  <motion.div
- initial={{ scale: 0.9, opacity: 0 }}
+ initial={false}
  animate={{ scale: 1, opacity: 1 }}
  transition={{ delay: 0.15 }}
  className="border border-primary/20 bg-electric-10 text-electric"
@@ -68,7 +69,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  fontWeight: 700,
  }}
  >
- <Globe size={14} /> Working in Korea · 2026 Tax Law
+ <Globe size={14} /> Working in Korea · English tools
  </motion.div>
 
  <h1
@@ -81,8 +82,8 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  marginBottom: "1.25rem",
  }}
  >
- Salary, Stocks &amp; Tax<br />
- <span className="text-electric">Made Clear in English</span>
+ Korea Salary Calculator<br />
+ <span className="text-electric">2026 Take-home Estimate</span>
  </h1>
 
  <p
@@ -95,8 +96,8 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  fontWeight: 500,
  }}
  >
- Korea&apos;s #1 salary calculator now in English. Calculate net pay,
- analyze Samsung &amp; SK Hynix stocks, and master ESOP / ISA strategies.
+ Estimate Korean take-home pay, convert gross salary, and check the
+ sources and assumptions before making a decision.
  </p>
 
  <div
@@ -108,7 +109,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  }}
  >
  <Link
- href="/en/salary-converter"
+ href="/en#calculator"
  className="bg-electric text-white"
  style={{
  display: "inline-flex",
@@ -123,7 +124,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  transition: "all 0.15s ease",
  }}
  >
- <Calculator size={18} /> Salary Converter
+ <Calculator size={18} /> Estimate Take-home Pay
  </Link>
  <Link
  href="/en/flat-tax"
@@ -140,10 +141,10 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  transition: "all 0.15s ease",
  }}
  >
- 19% Flat Tax (Expats) <ArrowRight size={18} />
+ Income Tax Comparison <ArrowRight size={18} />
  </Link>
  <Link
- href="/en/guides"
+ href="/en/help"
  className="bg-white text-muted-blue border border-canvas-200"
  style={{
  display: "inline-flex",
@@ -157,11 +158,13 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  transition: "all 0.15s ease",
  }}
  >
- <BookOpen size={18} /> All Guides
+ <BookOpen size={18} /> Methods &amp; Help
  </Link>
  </div>
  </motion.div>
  </section>
+
+ <EnglishSalaryCalculator />
 
  {/* ═══ Top Ad ═════════════════════════════════════════════════ */}
  <div className="max-w-5xl mx-auto px-4 mt-10">
@@ -183,7 +186,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  marginBottom: "0.5rem",
  }}
  >
- <TrendingUp size={16} /> Trending in 2026
+ <TrendingUp size={16} /> Start with the question you have
  </div>
  <h2
  className="text-navy"
@@ -193,7 +196,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  letterSpacing: "-0.02em",
  }}
  >
- Samsung &amp; SK Hynix Stock Guides
+ Pay, Insurance &amp; Tax Guides
  </h2>
  </div>
  <Link
@@ -213,10 +216,10 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- {featuredStockGuides.map((guide, index) => (
+ {featuredGuides.map((guide, index) => (
  <motion.div
  key={guide.slug}
- initial={{ opacity: 0, y: 20 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: index * 0.05, duration: 0.4 }}
  className="group h-full"
@@ -250,7 +253,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  fontWeight: 700,
  }}
  >
- <Sparkles size={11} /> NEW
+ English
  </span>
  </div>
 
@@ -294,7 +297,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  >
  <div className="flex items-center gap-1">
  <Calendar size={12} />
- <span>{new Date(guide.publishedDate).toLocaleDateString("en-US")}</span>
+ <span>{new Date(guide.modifiedDate ?? guide.publishedDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
  </div>
  <div
  className="text-electric"
@@ -357,7 +360,7 @@ export default function EnLandingClient({ guides }: { guides: GuideCardMeta[] })
  margin: "0 auto 2rem",
  }}
  >
- For 100+ calculators, 50+ Korean guides, and the full company salary database, visit the Korean version of Moneysalary.
+ For additional calculators, Korean guides and the company salary database, visit the Korean site. Pages linked there are in Korean.
  </p>
  <Link
  href="/"
