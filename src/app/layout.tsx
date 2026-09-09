@@ -20,15 +20,24 @@ import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
-// Pretendard 가변 폰트 — self-host (next/font/local), 한글 서브셋판.
-// 원본 2,009KB가 데스크톱 LCP를 3.0초로 밀어내던 주범(GSC 2026-07-06 이슈)이라
-// KS X 1001 상용 2,350자 + 사이트 실사용 문자 + 기호로 서브셋 → 503KB (-75%).
-// 재생성 방법은 src/app/fonts/README.md 참고. font-display: swap + 자동 폴백 매칭.
-const pretendard = localFont({
-  src: "./fonts/PretendardVariable-subset.woff2",
-  display: "swap",
+// 동일 원본의 비중첩 문자 영역. 영문 페이지는 작은 Latin/기호 파일만 사용한다.
+// optional은 느린 첫 방문의 뒤늦은 글꼴 교체를 막는다. 재생성은 fonts/README.md 참고.
+const pretendardLatin = localFont({
+  src: "./fonts/MoneySalaryText-Latin.woff2",
+  display: "optional",
+  preload: false,
   weight: "45 920",
+  variable: "--font-pretendard-latin",
+  declarations: [{ prop: "unicode-range", value: "U+0000-10FF,U+1200-2FFF,U+AD6D,U+C5B4,U+D55C,U+FF00-FFEF" }],
+});
+const pretendard = localFont({
+  src: "./fonts/MoneySalaryText-Korean.woff2",
+  display: "optional",
+  preload: false,
+  weight: "45 920",
+  adjustFontFallback: false,
   variable: "--font-pretendard-local",
+  declarations: [{ prop: "unicode-range", value: "U+1100-11FF,U+3000-AD6C,U+AD6E-C5B3,U+C5B5-D55B,U+D55D-FEFF,U+FFF0-10FFFF" }],
 });
 
 export const viewport: Viewport = {
@@ -121,7 +130,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning className={pretendard.variable}>
+    <html lang="ko" suppressHydrationWarning className={`${pretendardLatin.variable} ${pretendard.variable}`}>
       <head>
         {/* AdSense 오리진 — preconnect로 TCP+TLS 핸드셰이크 선행 (dns-prefetch는 폴백 병행) */}
         <link

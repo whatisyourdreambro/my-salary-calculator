@@ -20,7 +20,7 @@ export default function EnglishPageShell({ eyebrow, title, description, breadcru
           {eyebrow && <p className="mb-3 text-sm font-bold text-electric dark:text-blue-300">{eyebrow}</p>}
           <h1 className="break-words text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">{title}</h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">{description}</p>
-          <div className="mt-5"><FavoritesButton locale="en" /></div>
+          <div className="mt-5 min-h-12"><FavoritesButton locale="en" className="min-h-11" /></div>
         </header>
         <div className="min-w-0 space-y-10">{children}</div>
       </div>

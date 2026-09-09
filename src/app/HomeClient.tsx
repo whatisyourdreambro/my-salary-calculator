@@ -21,6 +21,7 @@ import {
 import { motion } from "framer-motion";
 import Link from "@/components/AppLink";
 import ToolCard from "@/components/home/ToolCard";
+import HeroBadge from "@/components/HeroBadge";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
 import { HomeTopAd, GuideMidAd, Display2Ad, MultiplexAd } from "@/components/AdPlacement";
 
@@ -75,10 +76,6 @@ const SeasonalBanner = dynamic(
  () => import("@/components/SeasonalBanner"),
  { ssr: false }
 );
-const HeroBadge = dynamic(
- () => import("@/components/HeroBadge"),
- { ssr: false, loading: () => <span>2026년 세법 완벽 반영</span> }
-);
 const GuideCategories = dynamic(
  () => import("@/components/GuideCategories"),
  { ssr: false }
@@ -95,12 +92,6 @@ const stats = [
 
 /* ── Homepage (client island) ──────────────────────────────────── */
 export default function HomeClient({ featuredGuides }: { featuredGuides: ReactNode }) {
- const scrollToCalculator = () => {
- document.getElementById("calculator-section")?.scrollIntoView({
- behavior: "smooth",
- });
- };
-
  return (
  <>
  <div className="w-full overflow-x-hidden">
@@ -178,13 +169,13 @@ export default function HomeClient({ featuredGuides }: { featuredGuides: ReactNo
 
  {/* CTA Buttons */}
  <div className="flex flex-wrap justify-center gap-3">
- <button
- onClick={scrollToCalculator}
+ <a
+ href="#calculator-section"
  className="btn-primary text-base px-8 py-3.5"
  >
  <Zap className="w-[18px] h-[18px]" aria-hidden="true" />
- 내 연봉 실수령액 5초 계산
- </button>
+ 내 연봉 실수령액 계산
+ </a>
  <Link
  href="/salary-db"
  className="btn-secondary text-[15px] px-6 py-3.5"
@@ -230,7 +221,8 @@ export default function HomeClient({ featuredGuides }: { featuredGuides: ReactNo
  </div>
 
  {/* ═══ Calculator Section ══════════════════════════════════ */}
- <section id="calculator-section" className="page-width section-lg">
+ <section id="calculator-section" className="page-width section-lg scroll-mt-24">
+ <noscript><p className="mb-6 rounded-xl border border-border bg-background p-5">계산기를 사용하려면 자바스크립트를 켜 주세요. <a href="/table/2026/annual" className="font-bold underline">2026 연봉별 실수령액 표</a>는 바로 읽을 수 있습니다.</p></noscript>
  <motion.div
  initial={{ opacity: 0, y: 24 }}
  whileInView={{ opacity: 1, y: 0 }}

@@ -12,6 +12,8 @@ module.exports = {
         'http://127.0.0.1:3000/civil-servant-pay-2027',
         'http://127.0.0.1:3000/guides/wage-delayed-claim-2026',
         'http://127.0.0.1:3000/home-loan',
+        'http://127.0.0.1:3000/en',
+        'http://127.0.0.1:3000/en/tools/loan',
       ],
       numberOfRuns: 3,
       settings: {

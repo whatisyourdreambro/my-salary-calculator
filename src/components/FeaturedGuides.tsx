@@ -67,7 +67,7 @@ export default function FeaturedGuides() {
  href="/guides"
  className="inline-flex items-center gap-1 text-sm font-bold text-electric hover:text-blue-600 transition-colors"
  >
- 전체 보기
+ 금융 가이드 전체 보기
  <ArrowRight className="w-4 h-4" />
  </Link>
  </div>

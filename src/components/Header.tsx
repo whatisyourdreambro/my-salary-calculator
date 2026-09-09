@@ -80,7 +80,7 @@ export default function Header() {
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
- <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Moneysalary home" : "머니샐러리 홈"} className="flex min-h-11 items-center gap-2 no-underline">
+ <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Money Salary home" : "Money Salary — 머니샐러리 홈"} className="flex min-h-11 items-center gap-2 no-underline">
  <Logo
  className="h-6 min-[360px]:h-8 sm:h-9 w-auto text-electric"
  showText={true}

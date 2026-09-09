@@ -277,7 +277,10 @@ export default function CoupangBannerCore({
  <p
  style={{
  fontSize: "11px",
- color: "#7A9AB5",
+ // A fixed surface keeps the disclosure readable inside both themed cards
+ // and legacy sections that retain an inline white background in dark mode.
+ color: "#3D5E78",
+ backgroundColor: "#FFFFFF",
  marginTop: "8px",
  textAlign: "center",
  lineHeight: 1.5,

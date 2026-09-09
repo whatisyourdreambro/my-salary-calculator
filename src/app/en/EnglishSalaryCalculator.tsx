@@ -7,6 +7,8 @@ import { parseWholeKRW } from "@/lib/englishCalculators";
 import { calculateEnglishTakeHome } from "@/lib/englishTakeHome";
 import { saveEnglishSalarySnapshot } from "@/lib/englishSavedResults";
 import ResultSharePanel from "@/components/ResultSharePanel";
+import EnglishResultNextTasks from "@/components/english/EnglishResultNextTasks";
+import { getEnglishSalaryNextTasks } from "@/lib/englishResultTasks";
 
 const formatKRW = (value: number) => value.toLocaleString("en-US");
 const inputClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
@@ -81,6 +83,7 @@ export default function EnglishSalaryCalculator() {
                 ["Local income tax", result.localIncomeTax],
               ].map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 rounded-lg bg-secondary/30 p-3"><dt>{label}</dt><dd className="font-semibold">{formatKRW(Number(value))} KRW</dd></div>)}
             </dl>
+            <EnglishResultNextTasks source="salary" plan={getEnglishSalaryNextTasks(result)} />
             <div className="mt-5 rounded-xl border border-border p-4">
               <button type="button" onClick={saveCurrentResult} disabled={currentSave?.ok} className="min-h-11 rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground disabled:opacity-50">{currentSave?.ok ? "Saved in this browser" : "Save this estimate"}</button>
               <p className="mt-2 text-xs leading-5 text-muted-foreground">Optional: save this KRW estimate and its four inputs on this device. It is separate from Korean dashboard data and is not an account or cloud backup.</p>
@@ -99,10 +102,8 @@ export default function EnglishSalaryCalculator() {
             <p>Amounts are estimates in KRW. They are not an actual payroll quote or a refund calculation. For a foreign-worker tax choice, use the separate limited comparison and confirm eligibility with payroll or NTS.</p>
           </div>
         </details>
-        <nav aria-label="Salary follow-up tasks" className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+        <nav aria-label="Salary calculation reference" className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
           <Link href="/en/help#salary" className="inline-flex min-h-11 items-center text-primary underline">Sources and method</Link>
-          <Link href="/en/flat-tax" className="inline-flex min-h-11 items-center text-primary underline">Compare income-tax methods</Link>
-          <Link href="/en/salary-converter" className="inline-flex min-h-11 items-center text-primary underline">Convert gross salary</Link>
         </nav>
       </div>
     </section>

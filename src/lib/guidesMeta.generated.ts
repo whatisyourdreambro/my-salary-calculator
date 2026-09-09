@@ -1921,7 +1921,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "en",
-  "contentChars": 3441
+  "contentChars": 6356
  },
  {
   "slug": "chip-stock-tax-guide",
