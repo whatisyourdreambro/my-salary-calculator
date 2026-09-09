@@ -9,6 +9,10 @@ import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
 import FeaturedGuides from "@/components/FeaturedGuides";
+import SocialProof from "@/components/SocialProof";
+import GuideCategories from "@/components/GuideCategories";
+import HomeToolsSection from "@/components/home/HomeToolsSection";
+import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import AutoShareSection from "@/components/AutoShareSection";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
@@ -33,7 +37,13 @@ export default function HomePage() {
     <>
       <JsonLd data={[webApplicationLd(), faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
       {/* Server-render the discovery links in place; keep the calculator interactive. */}
-      <HomeClient featuredGuides={<FeaturedGuides />} />
+      <HomeClient
+        featuredGuides={<FeaturedGuides />}
+        socialProof={<SocialProof />}
+        guideCategories={<GuideCategories />}
+        toolsSection={<HomeToolsSection />}
+        trafficEngines={<TrafficEnginesNav />}
+      />
       <HomeSeoSection />
       <AutoShareSection contentType="page" maxWidth="7xl" className="pb-12" />
       {/* 모바일 전용 — 스크롤 후 하단 공유 pill (앵커 광고·PWA 배너 감지 시 자동 숨김) */}
