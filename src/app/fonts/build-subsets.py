@@ -15,13 +15,18 @@ HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "PretendardVariable-subset.woff2"
 original = TTFont(SOURCE)
 cmap = original.getBestCmap()
-latin = {cp for cp in cmap if cp <= 0x10FF or 0x1200 <= cp <= 0x2FFF or 0xFF00 <= cp <= 0xFFEF} | set(map(ord, "한국어"))
+latin = {cp for cp in cmap if cp <= 0x10FF or 0x1200 <= cp <= 0x2FFF or 0xFF00 <= cp <= 0xFFEF} | set(map(ord, "한국어연말정산"))
 parts = {
-    "Latin": (latin, "U+0000-10FF,U+1200-2FFF,U+AD6D,U+C5B4,U+D55C,U+FF00-FFEF"),
-    "Korean": (set(cmap) - latin, "U+1100-11FF,U+3000-AD6C,U+AD6E-C5B3,U+C5B5-D55B,U+D55D-FEFF,U+FFF0-10FFFF"),
+    "Latin": (latin, "U+0000-10FF,U+1200-2FFF,U+AD6D,U+B9D0,U+C0B0,U+C5B4,U+C5F0,U+C815,U+D55C,U+FF00-FFEF"),
+    "Korean": (set(cmap) - latin, "U+1100-11FF,U+3000-AD6C,U+AD6E-B9CF,U+B9D1-C0AF,U+C0B1-C5B3,U+C5B5-C5EF,U+C5F1-C814,U+C816-D55B,U+D55D-FEFF,U+FFF0-10FFFF"),
 }
 assert parts["Latin"][0].isdisjoint(parts["Korean"][0])
 assert parts["Latin"][0] | parts["Korean"][0] == set(cmap)
+for selected, unicode_range in parts.values():
+    intervals = [tuple(int(point, 16) for point in segment.removeprefix("U+").split("-")) for segment in unicode_range.split(",")]
+    covers = lambda cp: any(bounds[0] <= cp <= bounds[-1] for bounds in intervals)
+    assert {cp for cp in cmap if covers(cp)} == selected
+    assert unicode_range in (HERE.parent / "layout.tsx").read_text(encoding="utf-8")
 report = {"sourceBytes": SOURCE.stat().st_size, "sourceCmapCount": len(cmap), "sourceSha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(), "parts": {}}
 for label, (selected, unicode_range) in parts.items():
     options = subset.Options()

@@ -28,7 +28,7 @@ const pretendardLatin = localFont({
   preload: false,
   weight: "45 920",
   variable: "--font-pretendard-latin",
-  declarations: [{ prop: "unicode-range", value: "U+0000-10FF,U+1200-2FFF,U+AD6D,U+C5B4,U+D55C,U+FF00-FFEF" }],
+  declarations: [{ prop: "unicode-range", value: "U+0000-10FF,U+1200-2FFF,U+AD6D,U+B9D0,U+C0B0,U+C5B4,U+C5F0,U+C815,U+D55C,U+FF00-FFEF" }],
 });
 const pretendard = localFont({
   src: "./fonts/MoneySalaryText-Korean.woff2",
@@ -37,7 +37,7 @@ const pretendard = localFont({
   weight: "45 920",
   adjustFontFallback: false,
   variable: "--font-pretendard-local",
-  declarations: [{ prop: "unicode-range", value: "U+1100-11FF,U+3000-AD6C,U+AD6E-C5B3,U+C5B5-D55B,U+D55D-FEFF,U+FFF0-10FFFF" }],
+  declarations: [{ prop: "unicode-range", value: "U+1100-11FF,U+3000-AD6C,U+AD6E-B9CF,U+B9D1-C0AF,U+C0B1-C5B3,U+C5B5-C5EF,U+C5F1-C814,U+C816-D55B,U+D55D-FEFF,U+FFF0-10FFFF" }],
 });
 
 export const viewport: Viewport = {
