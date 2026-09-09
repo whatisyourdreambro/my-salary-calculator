@@ -139,7 +139,7 @@ export default function InteractiveTable({
  {/* 연봉 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="salary" className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+ <Label id="salary-label" htmlFor="salary" onClick={() => document.getElementById("salary")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  {pageConfig.salaryLabel}
  </Label>
  <span className="text-2xl font-black text-foreground tabular-nums">
@@ -149,6 +149,8 @@ export default function InteractiveTable({
  </div>
  <Slider
  id="salary"
+ aria-labelledby="salary-label"
+ aria-valuetext={`${salary.toLocaleString("ko-KR")}원`}
  min={pageConfig.salaryMin}
  max={pageConfig.salaryMax}
  step={pageConfig.salaryStep}
@@ -161,7 +163,7 @@ export default function InteractiveTable({
  {/* 부양가족 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="dependents" className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+ <Label id="dependents-label" htmlFor="dependents" onClick={() => document.getElementById("dependents")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  부양가족
  </Label>
  <span className="text-2xl font-black text-foreground tabular-nums">
@@ -171,6 +173,8 @@ export default function InteractiveTable({
  </div>
  <Slider
  id="dependents"
+ aria-labelledby="dependents-label"
+ aria-valuetext={`${dependents}명`}
  min={1}
  max={10}
  step={1}
@@ -183,7 +187,7 @@ export default function InteractiveTable({
  {/* 비과세 슬라이더 */}
  <div className="space-y-3">
  <div className="flex justify-between items-baseline">
- <Label htmlFor="non-taxable" className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+ <Label id="non-taxable-label" htmlFor="non-taxable" onClick={() => document.getElementById("non-taxable")?.focus()} className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
  비과세 (월)
  </Label>
  <span className="text-2xl font-black text-foreground tabular-nums">
@@ -193,6 +197,8 @@ export default function InteractiveTable({
  </div>
  <Slider
  id="non-taxable"
+ aria-labelledby="non-taxable-label"
+ aria-valuetext={`월 ${nonTaxableAmount.toLocaleString("ko-KR")}원`}
  min={0}
  max={1000000}
  step={100000}

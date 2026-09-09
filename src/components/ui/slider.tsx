@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 const Slider = React.forwardRef<
  React.ElementRef<typeof SliderPrimitive.Root>,
  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className, id, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-describedby": ariaDescribedBy, "aria-valuetext": ariaValueText, ...props }, ref) => (
  <SliderPrimitive.Root
  ref={ref}
  className={cn(
@@ -24,6 +24,11 @@ const Slider = React.forwardRef<
  />
  </SliderPrimitive.Track>
  <SliderPrimitive.Thumb
+ id={id}
+ aria-label={ariaLabel}
+ aria-labelledby={ariaLabelledBy}
+ aria-describedby={ariaDescribedBy}
+ aria-valuetext={ariaValueText}
  className="relative block h-6 w-6 rounded-full border-2 border-primary bg-card shadow-sm ring-offset-background before:absolute before:-inset-2.5 before:rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
  />
  </SliderPrimitive.Root>
