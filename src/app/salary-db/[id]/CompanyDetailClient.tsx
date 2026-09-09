@@ -19,6 +19,7 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 
 const formatMoney = (val: number) => `${(val / 10000).toLocaleString('ko-KR')}만원`;
 
@@ -51,9 +52,9 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  { level: "임원", base: company.salary.executive.base, total: company.salary.executive.base + (company.salary.executive.incentive.avgAmount || 0) },
  ];
 
- // Buying Power Simulation (Tesla Model 3 ~ 6000만원)
- const monthlyNetIncome = (company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0)) / 12 * 0.85; // Rough net
- const monthsToTesla = Math.ceil(60000000 / (monthlyNetIncome * 0.5)); // Saving 50%
+ // The same annual tax estimate as the salary comparison; this is a fixed savings scenario.
+ const monthlyNetIncome = calculateSalary2026(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0), 200_000, 1, 0).netPay;
+ const monthsToGoal = monthlyNetIncome > 0 ? Math.ceil(60_000_000 / (monthlyNetIncome * 0.5)) : null;
 
  return (
  <main className="w-full min-h-screen bg-background pb-20">
@@ -102,16 +103,16 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  />
  <StatCard
  icon={Clock}
- label="실제 근무 시간"
+ label="참고 근무 시간"
  value={`${company.workLife.weeklyHours.real}시간`}
- sub={`계약 ${company.workLife.weeklyHours.contract}시간 대비`}
+ sub={`DB 입력값 · 계약 ${company.workLife.weeklyHours.contract}시간 대비`}
  color="text-electric"
  />
  <StatCard
  icon={Trophy}
- label="기업 문화 점수"
+ label="문화 참고 지표"
  value={`${company.culture.score}/10`}
- sub={company.culture.keywords[0]}
+ sub="조사 출처·기간·표본 미연결"
  color="text-primary"
  />
  <StatCard
@@ -148,21 +149,25 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
  <h2 className="text-xl font-bold mb-4 flex items-center gap-2 relative z-10">
  <Car className="w-5 h-5" />
- 구매력 시뮬레이터
+ 목표 금액 모으기
  </h2>
  <div className="relative z-10">
  <p className="text-indigo-200 mb-6">
- 신입사원으로 입사하여 월급의 50%를 저축한다면,<br />
- <span className="text-white font-bold">테슬라 Model 3</span>를 사는데 얼마나 걸릴까요?
+ DB의 신입 영끌 연봉으로 계산한 월 실수령 추정액의 50%를 저축한다면,<br />
+ <span className="text-white font-bold">목표 6,000만원</span>까지 얼마나 걸릴까요?
  </p>
  <div className="flex items-baseline gap-2">
  <span className="text-5xl font-black text-primary">
- <AnimatedNumber value={monthsToTesla} duration={2} />
+ {monthsToGoal === null ? "—" : <AnimatedNumber value={monthsToGoal} duration={2} />}
  </span>
  <span className="text-xl font-bold">개월</span>
  </div>
  <p className="text-sm text-indigo-300 mt-2">
- (약 {Math.ceil(monthsToTesla / 12)}년 소요 예상)
+ {monthsToGoal === null ? "급여 자료를 확인해 주세요." : `(약 ${Math.ceil(monthsToGoal / 12)}년 · 현재 저축액 0원, 이자·물가 변화 제외)`}
+ </p>
+ <p className="text-xs text-white/80 mt-3 leading-relaxed">
+ 본인 1명·자녀 0명·월 비과세 20만원, 연간 세액을 월로 나눈 간이 추정입니다.
+ 성과급도 12개월에 나눠 받는 가정이므로 실제 월급·지급 시점과 다릅니다.
  </p>
  <Link
  href="/car-loan"

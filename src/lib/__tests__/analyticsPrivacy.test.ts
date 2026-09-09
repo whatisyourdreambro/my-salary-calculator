@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "../analyticsPrivacy";
-import { trackCalcStart, trackCalcSuccess, trackCalcResultView, trackEvent } from "../analytics";
+import { trackCalcStart, trackCalcSuccess, trackCalcResultView, trackEvent, trackOfferCompareComplete, trackOfferCompareExplanationView } from "../analytics";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -27,6 +27,22 @@ describe("custom analytics privacy", () => {
   it("preserves unrelated ad diagnostics and web-vitals measurements", () => {
     expect(sanitizeAnalyticsParams("ad_request_error", { slot_kind: "result", error_type: "push_failed" })).toEqual({ slot_kind: "result", error_type: "push_failed" });
     expect(sanitizeAnalyticsParams("web_vitals", { metric_name: "LCP", metric_value: 1234 })).toEqual({ metric_name: "LCP", metric_value: 1234 });
+  });
+  it("allows comparison state while excluding arbitrary offer inputs and names", () => {
+    expect(sanitizeAnalyticsParams("offer_compare_complete", {
+      comparison_mode: "first", measurement_version: "1", company_name: "private company",
+      offers: [{ salary: 70000000 }], dependents: 2, snapshot_id: "private-id",
+    })).toEqual({ comparison_mode: "first", measurement_version: "1" });
+    const gtag = vi.fn();
+    vi.stubGlobal("window", { gtag, location: { href: "https://www.moneysalary.com/calc/offer-compare" } });
+    trackOfferCompareComplete("first");
+    trackOfferCompareComplete("recalculate");
+    trackOfferCompareExplanationView();
+    expect(gtag.mock.calls.map((call) => call[1])).toEqual([
+      "offer_compare_complete", "offer_compare_complete", "offer_compare_explanation_view",
+    ]);
+    expect(gtag.mock.calls[1][2]).toMatchObject({ comparison_mode: "recalculate", measurement_version: "1" });
+    expect(gtag.mock.calls[2][2]).toMatchObject({ section: "result_basis" });
   });
   it("sends real wrapper payloads with sanitized event-scoped URLs and v2 dimensions", () => {
     const gtag = vi.fn();

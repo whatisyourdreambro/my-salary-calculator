@@ -18,6 +18,7 @@
     "verify:companies": "tsx scripts/verify-company-data.ts",
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
+    "qa:quality": "node scripts/qa-page-quality.mjs",
     "ad-depth": "node scripts/ad-depth-audit.mjs"
   },
   "dependencies": {

@@ -24,7 +24,7 @@ const SEASONAL_COPY: SeasonalCopy[] = [
  { month: [2, 3], badge: "3월 신입 연봉 협상 시즌", emoji: "🚀" },
 ];
 
-const DEFAULT_COPY = { badge: "2026년 세법 완벽 반영", emoji: "" };
+const DEFAULT_COPY = { badge: "2026 기준 · 내 조건으로 연봉 비교", emoji: "" };
 
 export default function HeroBadge() {
  const [copy, setCopy] = useState<{ badge: string; emoji: string }>(DEFAULT_COPY);

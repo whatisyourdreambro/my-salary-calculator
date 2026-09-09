@@ -74,7 +74,7 @@ const AdviceCard = ({ title, message, link, linkText }: { title: string; message
 
 export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  const { salary, severance, rank, futureSalary } = data;
- const { score, rating } = calculateHealthScore(data);
+ const { score, rating, missing } = calculateHealthScore(data);
  const advice = getFinancialAdvice(data);
 
  const netAnnual = salary ? salary.monthlyNet * 12 : 0;
@@ -91,6 +91,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  <div className="text-center">
  <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">나의 종합 금융 대시보드</h1>
  <p className="text-muted-foreground">마지막 업데이트: {new Date(data.lastUpdated).toLocaleString('ko-KR')}</p>
+ <p className="mt-2 text-sm text-muted-foreground">이 브라우저에 저장한 항목별 최신 결과입니다. 항목의 계산 시점과 가정이 다를 수 있으며 과거 이력이나 실제 계좌 정보를 조회하지 않습니다.</p>
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -130,8 +131,14 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  </div>
 
  <div className="lg:col-span-1 bg-card p-6 rounded-2xl shadow-lg border border-border flex flex-col items-center justify-center">
- <h3 className="text-xl font-bold mb-4">나의 금융 건강 점수</h3>
- <HealthScoreGauge score={score} rating={rating} />
+ <h3 className="text-xl font-bold mb-4">저장값 기준 참고 점수</h3>
+ {score === null ? (
+ <div className="text-center space-y-3">
+ <p className="font-semibold">{rating}</p>
+ <p className="text-sm text-muted-foreground">확인할 정보: {missing.join(" · ")}</p>
+ </div>
+ ) : <HealthScoreGauge score={score} rating={rating} />}
+ <p className="mt-4 text-xs text-muted-foreground">정보 미입력은 무부채나 0원으로 간주하지 않습니다. 점수는 저장된 순위·지출·단일 주택대출·미래 연봉 가정을 이용한 자체 규칙이며, 신용점수·대출 심사·금융 건전성 진단이 아닙니다.</p>
  </div>
 
  <div className="lg:col-span-1 bg-card p-6 rounded-2xl shadow-lg border border-border">
@@ -160,12 +167,13 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  </div>
 
  <div className="bg-card p-6 rounded-2xl shadow-lg border border-border">
- <h3 className="text-2xl font-bold mb-6 text-center">AI 기반 맞춤 조언</h3>
+ <h3 className="text-2xl font-bold mb-3 text-center">저장한 조건에 따른 참고 안내</h3>
+ <p className="text-sm text-muted-foreground text-center mb-6">입력된 비율과 순위에 정해진 규칙을 적용합니다. 실제 자산·부채나 투자 성향을 분석한 상담 결과가 아닙니다.</p>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  {advice.length > 0 ? (
  advice.map((adv, index) => <AdviceCard key={index} {...adv} />)
  ) : (
- <p className="md:col-span-2 text-center text-muted-foreground py-8">더 많은 정보를 입력하면 맞춤형 조언을 받을 수 있습니다.</p>
+ <p className="md:col-span-2 text-center text-muted-foreground py-8">현재 저장된 정보에 해당하는 참고 안내가 없습니다.</p>
  )}
  </div>
  </div>

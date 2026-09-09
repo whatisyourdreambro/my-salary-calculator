@@ -279,7 +279,7 @@ export default function BonusCalculatorPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5"
             style={{ backgroundColor: "#0145F21A", color: "#0145F2", border: "1.5px solid #0145F233" }}
           >
-            <Sparkles size={12} /> 2026 세법 완벽 반영
+            <Sparkles size={12} /> 2026 기준 · 성과급 세후 비교
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
@@ -297,7 +297,7 @@ export default function BonusCalculatorPage() {
             className="text-lg font-medium"
             style={{ color: "#3D5E78" }}
           >
-            소득세 + 4대보험까지 <strong style={{ color: "#0145F2" }}>전부 정확하게</strong> 계산합니다
+            소득세와 보험료를 <strong style={{ color: "#0145F2" }}>간이 추정</strong>해 지급 전후를 비교합니다
           </motion.p>
         </div>
 

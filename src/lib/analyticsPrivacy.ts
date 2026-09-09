@@ -9,6 +9,7 @@ const PRIVATE_KEYS = new Set([
   "non_taxable_amount", "nonTaxableAmount", "dependents", "children", "inputs", "result",
 ]);
 const CALC_KEYS = new Set(["calc_type", "page_path", "measurement_version", "result_origin"]);
+const COMPARE_KEYS = new Set(["comparison_mode", "section", "measurement_version"]);
 
 export function sanitizeAnalyticsUrl(value: string, base = "https://www.moneysalary.com"): string {
   if (!value.trim()) return "";
@@ -34,6 +35,7 @@ export function sanitizeAnalyticsParams(name: string, params: Record<string, unk
   const safe: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(params)) {
     if (PRIVATE_KEYS.has(key) || (isCalculation && !CALC_KEYS.has(key))) continue;
+    if ((name === "offer_compare_complete" || name === "offer_compare_explanation_view") && !COMPARE_KEYS.has(key)) continue;
     safe[key] = typeof value === "string" &&
       (key === "page_location" || key === "page_referrer" || value.startsWith("/") || /^https?:\/\//.test(value))
       ? sanitizeAnalyticsUrl(value)

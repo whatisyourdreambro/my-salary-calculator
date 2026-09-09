@@ -142,34 +142,20 @@ const lgensolWage2026 = `
 // 4. 카카오 RSU 5년 베스팅 양도세 절세
 // ═══════════════════════════════════════════════════════════════
 const kakaoRsuTax = `
-<p class="lead">
-카카오 임직원에게 부여되는 RSU(Restricted Stock Unit)는 4~5년 베스팅 구조. 베스팅된 주식을 매도할 때 양도세 22%(소득세 20% + 지방소득세 2%)가 부과되며, 1년 250만원 기본공제와 손익 통산으로 절세 가능합니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 RSU 베스팅 단계별 세금</h2>
-<p>
-<strong>1단계 — 베스팅 시점(근로소득세 부과)</strong>: 베스팅된 주식 시가만큼이 근로소득으로 잡혀 원천징수됨. 한계세율 35~38% 적용 시 시가의 약 38.5% 세금.
-</p>
-<p>
-<strong>2단계 — 매도 시점(양도세)</strong>: 매도가에서 베스팅 시점 시가를 뺀 차익에 22% 양도세. 1년 250만원 기본공제. 즉 차익 500만원이면 (500-250) × 22% = 55만원.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 RSU 1억 매도 시 절세 5가지</h2>
-<ol class="space-y-3 mt-4">
-<li><strong>① 분할 매도</strong>: 연 250만원 공제 활용 — 4년에 나눠 매도하면 1,000만원 공제 효과</li>
-<li><strong>② 손익 통산</strong>: 같은 해 손실 종목과 통산해 과세표준 줄이기</li>
-<li><strong>③ 부부 합산</strong>: 배우자 명의로 일부 증여 후 매도 (증여세 비과세 한도 6억 활용)</li>
-<li><strong>④ 베스팅 직후 매도</strong>: 시가 = 매도가 → 차익 0원으로 양도세 회피 (단 가격 하락 리스크)</li>
-<li><strong>⑤ 이월결손금 활용</strong>: 작년 손실분을 10년간 이월 가능</li>
+<p class="lead">RSU는 주식을 받는 단계와 받은 주식을 파는 단계를 나누어 확인해야 합니다. 카카오라는 회사명만으로 베스팅 기간이나 매도 세율이 결정되지 않습니다. 부여 계약, 실제 발행법인, 거주자 여부와 거래 시장을 먼저 확인하세요.</p>
+<h2>주식 수령과 매도, 두 단계의 확인</h2>
+<p>근로의 대가로 받는 주식 보상은 근로소득 과세와 원천징수 여부를 확인해야 합니다. 권리 확정·주식 인도 조건에 따른 귀속과 평가 금액은 부여 계약과 급여명세서로 대조하세요. 모든 수령자에게 38.5%가 적용되는 것은 아닙니다.</p>
+<p>국세청의 2026년 안내에 따르면 국내 상장주식을 장내에서 거래하는 소액주주는 일반적으로 양도소득세 대상이 아닙니다. 대주주·장외거래·비상장주식·국외주식은 판단이 달라집니다. 국내 상장 카카오 주식의 모든 매도차익에 국외주식용 22% 계산을 적용할 수 없습니다. 양도소득세 비과세와 증권거래세·수수료는 별개입니다.</p>
+<h2>매도 전 확인표</h2>
+<ol>
+<li><strong>계약:</strong> 본인의 지급 일정·재직 조건·매도 제한을 확인합니다. 일괄 4~5년 베스팅으로 가정하지 않습니다.</li>
+<li><strong>수령 증빙:</strong> 지급 주식 수, 평가 금액, 원천징수 내역을 보관합니다.</li>
+<li><strong>과세 유형:</strong> 발행법인·거래 시장·대주주 해당 여부를 구분합니다. 국외주식용 계산기에 국내 장내 비과세 주식을 넣지 않습니다.</li>
+<li><strong>손익과 공제:</strong> 과세 대상일 때 해당 연도의 통산 범위·기본공제·취득가액을 확인합니다. 전년도 손실을 자동으로 10년 이월하지 않습니다.</li>
+<li><strong>명의 변경:</strong> 배우자 증여는 취득가액과 이후 매도 과세까지 확인해야 합니다. 일정 금액의 절감을 보장하지 않습니다.</li>
 </ol>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/tools/finance/stock-tax" class="text-primary underline">주식 양도세 계산기</a></li>
-<li>· <a href="/salary-db/kakao" class="text-primary underline">카카오 연봉 상세</a></li>
-</ul>
-</div>
+<p>근거: <a href="https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=&amp;nttSn=1348384">국세청 주식 양도소득세 안내(2026-02-03)</a>. 이 자료는 주식 양도 과세 구분의 근거이며 카카오의 개별 보상 계약을 확인한 자료는 아닙니다.</p>
+<p><a href="/salary-db/kakao">카카오 연봉 자료와 기준 보기</a> · <a href="/tools/finance/stock-tax">주식 양도세 계산기 — 과세 유형을 확인한 뒤 사용</a></p>
 `;
 
 // ═══════════════════════════════════════════════════════════════
@@ -328,48 +314,19 @@ ISA(개인종합자산관리계좌)는 연간 2,000만원 한도(5년 누적 1�
 // 9. 1주택 종부세 12억 공제
 // ═══════════════════════════════════════════════════════════════
 const oneHomePropTax = `
-<p class="lead">
-1세대 1주택자는 종합부동산세에서 공시가격 12억원을 공제받습니다. 즉 공시가 12억 이하 1주택 보유자는 종부세 부담 0원. 1주택자 보유세 부담을 크게 낮추는 핵심 혜택입니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 1세대 1주택 요건</h2>
-<ul class="space-y-2 mt-4">
-<li>· 본인 + 배우자 합산 1주택만 보유</li>
-<li>· 주민등록 + 실거주 일치</li>
-<li>· 부부 공동명의는 별도 신청 필요(각자 6억씩 공제 vs 12억 통합)</li>
-<li>· 분양권·입주권은 주택 수에 포함</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 공시가별 종부세 부담(2026)</h2>
-<div class="overflow-x-auto my-6">
-<table class="w-full text-sm border border-border">
-<thead class="bg-secondary"><tr><th class="p-3">공시가</th><th class="p-3">1주택자 (12억 공제)</th><th class="p-3">다주택자 (공제 0)</th></tr></thead>
-<tbody>
-<tr class="border-t"><td class="p-3">10억</td><td class="p-3 text-emerald-600">0원</td><td class="p-3">약 300만원</td></tr>
-<tr class="border-t"><td class="p-3">15억</td><td class="p-3">약 90만원</td><td class="p-3">약 600만원</td></tr>
-<tr class="border-t"><td class="p-3">20억</td><td class="p-3">약 240만원</td><td class="p-3">약 1,200만원</td></tr>
-<tr class="border-t"><td class="p-3">30억</td><td class="p-3">약 700만원</td><td class="p-3">약 3,600만원</td></tr>
-</tbody>
-</table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 추가 세액공제 — 만 60세·5년 보유</h2>
-<p>
-만 60세 이상 + 5년 이상 보유 시 추가 종부세 세액공제:
-</p>
-<ul class="space-y-2 mt-4">
-<li>· 60~64세: 20% / 65~69세: 30% / 70세+: 40%</li>
-<li>· 5~9년 보유: 20% / 10~14년: 40% / 15년+: 50%</li>
-<li>· <strong>합산 최대 80%</strong>까지 감면</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/property-holding-tax-2026" class="text-primary underline">부동산 보유세 계산기</a></li>
-<li>· <a href="/calc/comprehensive-property-tax-quick" class="text-primary underline">종부세 빠른 계산</a></li>
-</ul>
-</div>
+<p class="lead">개인 주택분 종합부동산세 기본공제는 인별 9억원, 법령상 1세대 1주택자는 12억원입니다. 다주택 개인의 공제가 0원이거나 부부 공동명의 공제가 각 6억원인 것은 아닙니다.</p>
+<h2>먼저 확인할 보유 조건</h2>
+<ul><li>과세기준일 6월 1일의 소유자와 세대별 주택 보유를 확인합니다.</li><li>주택 수 제외·합산배제 등 특례는 요건과 신청을 별도로 확인합니다.</li><li>부부 공동명의는 지분별 인별 과세가 기본이며 공동명의 1주택자 특례 선택 여부에 따라 공제 구조가 달라집니다.</li><li>양도소득세의 주택 수 판정을 종부세에 그대로 적용하지 않습니다.</li></ul>
+<h2>공시가격에서 과세표준까지 검산</h2>
+<p>개인 주택분, 공정시장가액비율 60%를 가정한 표입니다. 인별 공시가격 합계에서 해당 공제를 뺀 양수 금액에 60%를 곱합니다. <strong>아래 금액은 납부 세금이 아니라 과세표준</strong>입니다.</p>
+<div class="overflow-x-auto"><table><thead><tr><th>인별 공시가격 합계</th><th>1세대 1주택자(12억 공제)</th><th>일반 개인(9억 공제)</th></tr></thead><tbody>
+<tr><td>10억원</td><td>0원</td><td>6,000만원</td></tr><tr><td>15억원</td><td>1억 8,000만원</td><td>3억 6,000만원</td></tr><tr><td>20억원</td><td>4억 8,000만원</td><td>6억 6,000만원</td></tr><tr><td>30억원</td><td>10억 8,000만원</td><td>12억 6,000만원</td></tr>
+</tbody></table></div>
+<p>법인·토지는 이 표의 대상이 아닙니다. 최종 세액에는 주택 수·과세표준별 세율, 공제할 재산세, 세액공제와 세부담 상한 등을 추가 적용합니다. 종부세가 없어도 재산세는 별개입니다.</p>
+<h2>공동명의와 고령·장기보유 공제 비교</h2>
+<p>공동명의 지분별 공제와 1주택자 특례를 비교할 때 공제액만 비교하지 마세요. 해당 1세대 1주택자의 고령자 공제는 60~64세 20%, 65~69세 30%, 70세 이상 40%, 장기보유 공제는 5~9년 20%, 10~14년 40%, 15년 이상 50%이며 합산 한도는 80%입니다. 각 요건을 따로 판단합니다.</p>
+<p>근거: <a href="https://i.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7735&amp;mi=2353">국세청 종합부동산세 계산 흐름도</a>.</p>
+<p><a href="/property-holding-tax-2026">재산세와 종부세 계산</a> · <a href="/guides/newlywed-asset-tax-saving-2026">부부 명의와 공제 확인표</a></p>
 `;
 
 // ═══════════════════════════════════════════════════════════════
@@ -1501,13 +1458,12 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "kakao-rsu-tax-saving-2026",
-    title: "카카오 RSU 5년 베스팅 + 양도세 절세 5가지 — 1억 매도 시 165만원 절감",
-    description:
-      "카카오 RSU 베스팅 시 근로소득세 38.5%, 매도 시 양도세 22%. 분할 매도·손익 통산·부부 합산·이월결손금·즉시 매도까지 5가지 절세 전략으로 165만원+ 절감.",
+    title: "카카오 RSU 세금 — 주식 수령과 매도 과세 확인표",
+    description: "RSU 수령 시 근로소득과 매도 시 양도소득을 구분합니다. 국내 상장 소액주주 장내거래와 대주주·비상장·국외주식의 차이, 계약·증빙 확인표.",
     category: "주식",
     tags: ["카카오", "RSU", "양도세", "스톡옵션", "절세", "2026"],
     level: "고급",
-    publishedDate: "2026-05-23",
+    publishedDate: "2026-05-23", modifiedDate: "2026-09-09",
     views: 0,
     content: kakaoRsuTax,
     lang: "ko",
@@ -1568,13 +1524,12 @@ export const hotNewsMay2026: Guide[] = [
     // 한글 포함 슬러그는 프리렌더 시 percent-encoding 불일치로 빌드 시점부터
     // 308 유령화(한 번도 200인 적 없음, 2026-07-06 감사) — ASCII로 개명 (아래 2편 동일)
     slug: "one-home-prop-tax-12eok-2026",
-    title: "1세대 1주택 종합부동산세 12억 공제 — 공시가 12억 이하 종부세 0원",
-    description:
-      "1세대 1주택자 종부세 12억 공제 + 고령자·장기보유 최대 80% 추가 감면. 공시가 15억 = 종부세 90만원, 다주택자 600만원 대비 1/7. 부부 공동명의 각자 6억 vs 통합 12억 비교.",
+    title: "1세대 1주택 종부세 12억 공제 — 인별 9억 공제·공동명의 비교",
+    description: "개인 주택분 기본공제 9억원과 1세대 1주택자 12억원을 구분합니다. 공시가격별 과세표준 검산, 공동명의 특례와 고령·장기보유 공제 확인.",
     category: "부동산",
     tags: ["종합부동산세", "1주택자", "종부세", "공제", "보유세", "2026"],
     level: "중급",
-    publishedDate: "2026-05-23",
+    publishedDate: "2026-05-23", modifiedDate: "2026-09-09",
     views: 0,
     content: oneHomePropTax,
     lang: "ko",

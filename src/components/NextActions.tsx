@@ -50,21 +50,13 @@ function buildActions(
  category: NextActionCategory | undefined,
  annualSalary: number | undefined
 ): ActionItem[] {
- const formatManwon = (amount: number) =>
- `${Math.round(amount / 10000).toLocaleString("ko-KR")}만원`;
- const dsrLimit = annualSalary
- ? Math.round((annualSalary * 0.4) / 10000).toLocaleString("ko-KR")
- : null;
-
  // 카테고리별 분기
  if (category === "loan" || category === "real-estate") {
  return [
  {
  icon: Home,
- title: "주택담보대출 한도",
- description: dsrLimit
- ? `DSR 40% 기준 연 ${dsrLimit}만원 한도`
- : "DSR/LTV 한도와 월 상환액",
+ title: "주택대출 월 상환액",
+ description: "대출금·금리·기간별 상환 부담 비교",
  href: "/home-loan",
  },
  {
@@ -138,7 +130,7 @@ function buildActions(
  {
  icon: Calculator,
  title: "주식 양도세 계산",
- description: "2026 금투세 기준",
+ description: "주식 유형과 과세 대상별 양도세 확인",
  href: "/calc/stock-capital-gains-quick",
  },
  {
@@ -155,16 +147,14 @@ function buildActions(
  ? [
  {
  icon: Home,
- title: "이 연봉으로 받을 수 있는 대출",
- description: dsrLimit
- ? `DSR 40% 기준 연 ${dsrLimit}만원 한도`
- : `연봉 ${formatManwon(annualSalary)} → DSR 40% 한도`,
+ title: "월급과 대출 상환액 비교",
+ description: "대출금·금리·기간을 입력해 월 부담 확인",
  href: "/home-loan",
  },
  {
  icon: Building2,
- title: "동급 연봉 회사 보기",
- description: "비슷한 연봉대 기업 평균·복지 비교",
+ title: "회사별 연봉 살펴보기",
+ description: "기업 평균 연봉과 복지 정보 비교",
  href: "/salary-db",
  },
  {
@@ -178,7 +168,7 @@ function buildActions(
  {
  icon: Home,
  title: "주택담보대출 계산",
- description: "DSR/LTV 한도와 월 상환액",
+ description: "입력한 금리로 월 상환액·총 이자 계산",
  href: "/home-loan",
  },
  {

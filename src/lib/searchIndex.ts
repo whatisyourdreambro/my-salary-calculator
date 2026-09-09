@@ -84,7 +84,7 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 경찰 봉급표", href: "/police-pay-2026", category: "시즌", description: "순경 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 소방관 봉급표", href: "/firefighter-pay-2026", category: "시즌", description: "소방사 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 공무원 봉급표", href: "/civil-servant-pay-2026", category: "시즌", description: "9급 1호봉 213만원·직급별 봉급표", priority: 1 },
- { title: "2027 공무원 봉급표 — 3.9% 인상 확정(예산안)", href: "/civil-servant-pay-2027", category: "시즌", description: "16년 만 최대 인상·9급~5급 예상 월급·확정 일정", priority: 1 },
+ { title: "2027 공무원 봉급표 — 인상 전망과 확정 일정", href: "/civil-servant-pay-2027", category: "시즌", description: "예산안과 확정 봉급표의 차이·9급~5급 예상 월급", priority: 1 },
  // 2026-08-31 — R2 신규 8건 (연말정산 시즌 패키지·뉴스 트리거·이직)
  { title: "맞벌이 연말정산 몰아주기 계산기", href: "/calc/dual-income-year-end", category: "계산기", description: "자녀공제·의료비 귀속 시나리오별 부부 합산 세액 비교", priority: 1 },
  { title: "기부금 세액공제 계산기", href: "/donation-tax-credit-2026", category: "계산기", description: "정치자금·고향사랑 전액공제·종교 10% 한도·10년 이월", priority: 1 },
@@ -119,7 +119,7 @@ const seasonPages: SearchEntry[] = [
 ];
 
 const toolPages: SearchEntry[] = [
- { title: "주택담보대출 계산", href: "/home-loan", category: "도구", description: "DSR·LTV·월 상환" },
+ { title: "주택담보대출 계산", href: "/home-loan", category: "도구", description: "대출금·금리·기간별 월 상환액과 총 이자" },
  { title: "자동차 구매·할부", href: "/car-loan", category: "도구" },
  { title: "FIRE 은퇴 계산기", href: "/fire-calculator", category: "도구" },
  { title: "연말정산 환급금 계산", href: "/year-end-tax", category: "도구" },

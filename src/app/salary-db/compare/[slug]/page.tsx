@@ -410,7 +410,7 @@ export default function ComparePage({ params }: Props) {
     },
     {
       question: `${a.name.ko} vs ${b.name.ko} 기업 문화는 어떻게 다른가요?`,
-      answer: `직원이 평가하는 기업 문화 점수는 ${a.name.ko} ${a.culture.score}점, ${b.name.ko} ${b.culture.score}점(10점 만점)입니다. ${a.name.ko}는 '${a.culture.keywords.slice(0, 2).join(", ")}', ${b.name.ko}는 '${b.culture.keywords.slice(0, 2).join(", ")}'를 핵심 키워드로 합니다.`,
+      answer: `DB의 문화 참고 지표는 ${a.name.ko} ${a.culture.score}점, ${b.name.ko} ${b.culture.score}점(10점 만점)입니다. 조사 출처·기간·표본이 연결되어 있지 않아 직원 설문 점수로 해석하지 않습니다. ${a.name.ko}의 참고 키워드는 '${a.culture.keywords.slice(0, 2).join(", ")}', ${b.name.ko}는 '${b.culture.keywords.slice(0, 2).join(", ")}'입니다.`,
     },
   ];
 
@@ -565,11 +565,11 @@ export default function ComparePage({ params }: Props) {
             {REMOTE_LABEL[b.workLife.remoteWork.policy]}로 운영됩니다.
           </p>
           <p>
-            <strong>기업 문화</strong> — 직원이 평가하는 기업 문화 점수는 {a.name.ko}{" "}
+            <strong>문화 참고 지표</strong> — DB에 입력된 값은 {a.name.ko}{" "}
             {a.culture.score}점, {b.name.ko} {b.culture.score}점(10점 만점)입니다. {a.name.ko}의
             핵심 키워드는 &apos;{a.culture.keywords.join(", ")}&apos;이며, {b.name.ko}는 &apos;
             {b.culture.keywords.join(", ")}&apos;을 강조합니다. 본인 성향과 일치하는 문화 키워드를
-            선택하는 것이 만족도에 큰 영향을 줍니다.
+            살펴보되 조사 출처·기간·표본이 연결되지 않은 참고값으로 보세요. 직원 설문 결과나 입사 후 경험을 보장하는 점수는 아닙니다.
           </p>
         </section>
 
