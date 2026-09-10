@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useModalDialog } from "@/hooks/useModalDialog";
 import Logo from "./Logo";
-import { LayoutDashboard, Menu, X } from "lucide-react";
+import { CircleCheck, LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
 import { navConfigEn } from "./header/navConfigEn";
 import DesktopDropdown from "./header/DesktopDropdown";
@@ -86,7 +86,7 @@ export default function Header() {
  </Link>
  </div>
 
- {/* Desktop Nav — 7개 카테고리, xl(1280px)부터 노출. 2xl 에서 폰트·간격↑ */}
+ {/* Desktop navigation and the money checklist shortcut. */}
  <div className="hidden xl:flex items-center gap-0 2xl:gap-0.5 flex-1 justify-center min-w-0">
  {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
@@ -100,13 +100,15 @@ export default function Header() {
  <Link
  key={item.name}
  href={item.href}
+ data-msy-module={item.featured ? "header-money-check" : undefined}
  aria-current={pathname === item.href ? "page" : undefined}
- className={`ms-interactive hover:!translate-y-0 hover:!shadow-none inline-flex min-h-11 items-center px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-medium rounded-lg whitespace-nowrap no-underline hover:bg-secondary hover:text-link ${
- pathname === item.href
- ? "text-link bg-secondary"
+ className={`ms-interactive hover:!translate-y-0 hover:!shadow-none inline-flex min-h-11 items-center gap-1.5 px-2 2xl:px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap no-underline hover:bg-secondary hover:text-link ${
+ item.featured || pathname === item.href
+ ? "text-link bg-accent font-semibold"
  : "text-muted-foreground"
  }`}
  >
+ {item.featured && <CircleCheck size={15} aria-hidden="true" />}
  {item.name}
  </Link>
  )
@@ -192,15 +194,20 @@ export default function Header() {
  <Link
  key={item.href}
  href={item.href}
+ data-msy-module={item.featured ? "header-money-check" : undefined}
  aria-current={pathname === item.href ? "page" : undefined}
  onClick={() => setIsMobileMenuOpen(false)}
  className={`ms-interactive hover:!translate-y-0 hover:!shadow-none block no-underline border-b border-border last:border-b-0 px-5 py-4 text-base font-semibold transition-colors ${
- pathname === item.href
- ? "text-link bg-secondary"
+ item.featured || pathname === item.href
+ ? "text-link bg-accent"
  : "text-foreground hover:bg-secondary"
  }`}
  >
+ <span className="flex items-center gap-2">
+ {item.featured && <CircleCheck size={19} aria-hidden="true" />}
  {item.name}
+ {item.badge === "NEW" && <span className="rounded-md bg-primary px-1.5 py-0.5 text-[11px] font-semibold text-primary-foreground">NEW</span>}
+ </span>
  </Link>
  ) : (
  <MobileDropdown

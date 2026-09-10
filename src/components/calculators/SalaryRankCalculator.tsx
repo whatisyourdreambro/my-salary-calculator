@@ -75,7 +75,7 @@ export default function SalaryRankCalculator() {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/80/20 border border-primary/30 mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
           <Crown className="w-8 h-8 text-primary" />
         </div>
-        <h2 className="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-4 tracking-tight">
+        <h2 className="text-4xl md:text-5xl font-sans font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-4 tracking-tight">
           나의 연봉 참고 티어
         </h2>
         <p className="text-muted-blue text-lg max-w-2xl mx-auto font-light">
@@ -88,7 +88,7 @@ export default function SalaryRankCalculator() {
         <div className="bg-canvas rounded-[2.5rem] p-8 sm:p-10 border border-canvas shadow-2xl relative overflow-hidden">
           <h3 className="text-xl font-bold text-navy mb-8 flex items-center gap-3 relative z-10">
             <CreditCard className="w-6 h-6 text-primary" />
-            <span className="font-serif tracking-wide">정보 입력</span>
+            <span className="font-sans tracking-wide">정보 입력</span>
           </h3>
 
           <div className="space-y-8 relative z-10">
@@ -132,7 +132,7 @@ export default function SalaryRankCalculator() {
                   className="w-full p-6 text-3xl font-black bg-white border border-canvas rounded-2xl focus:border-primary/50 outline-none text-navy placeholder-zinc-800 transition-all text-right tracking-tight"
                   placeholder="0"
                 />
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-blue font-serif text-xl">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-blue font-sans text-xl">
                   ₩
                 </span>
               </div>
@@ -171,7 +171,7 @@ export default function SalaryRankCalculator() {
                 className="absolute inset-0 flex flex-col items-center justify-center text-muted-blue bg-canvas rounded-[2.5rem] border border-canvas border-dashed"
               >
                 <Crown className="w-24 h-24 mb-6 opacity-10" />
-                <p className="font-serif text-xl opacity-50">연봉을 입력해 주세요...</p>
+                <p className="font-sans text-xl opacity-50">연봉을 입력해 주세요...</p>
               </motion.div>
             )}
 
@@ -264,12 +264,12 @@ export default function SalaryRankCalculator() {
                   {/* 카드 푸터 */}
                   <div className="mt-12 pt-8 border-t border-white/10 flex justify-between items-end relative z-10">
                     <div>
-                      <p className="text-muted-blue text-[10px] font-mono mb-1">소유자</p>
-                      <p className="text-muted-blue font-mono tracking-widest">익명 VIP</p>
+                      <p className="text-muted-blue text-[10px] font-sans mb-1">소유자</p>
+                      <p className="text-muted-blue font-sans tracking-widest">익명 VIP</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-muted-blue text-[10px] font-mono mb-1">공식 통계연도</p>
-                      <p className="text-muted-blue font-mono">미확인</p>
+                      <p className="text-muted-blue text-[10px] font-sans mb-1">공식 통계연도</p>
+                      <p className="text-muted-blue font-sans">미확인</p>
                     </div>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ export default function SalaryRankCalculator() {
       </div>
 
       {/* 면책 고지 */}
-      <p className="text-center text-muted-blue text-xs mt-16 font-mono">
+      <p className="text-center text-muted-blue text-xs mt-16 font-sans">
         * 자체 참고표에 따른 분류이며 공식 전국 순위가 아닙니다. 참고용으로만 활용하세요.
         <br />
         머니샐러리 연봉 분석 서비스 © 2026

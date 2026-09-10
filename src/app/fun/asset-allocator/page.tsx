@@ -262,7 +262,7 @@ export default function AssetAllocatorGame() {
  <div className="w-full flex justify-between items-center px-6 py-4 bg-[#292524]/80 backdrop-blur-md rounded-2xl border border-[#CBA577]/30 shadow-2xl">
  <div className="flex flex-col">
  <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">Net Worth</span>
- <span className="text-3xl font-serif font-black text-white tabular-nums">
+ <span className="text-3xl font-sans font-black text-white tabular-nums">
  ${score.toLocaleString('ko-KR')}
  </span>
  </div>
@@ -276,7 +276,7 @@ export default function AssetAllocatorGame() {
 
  <div className="flex flex-col items-end">
  <span className="text-xs text-[#CBA577] font-bold tracking-widest uppercase">High Score</span>
- <span className="text-lg font-serif font-bold text-faint-blue tabular-nums">
+ <span className="text-lg font-sans font-bold text-faint-blue tabular-nums">
  ${highScore.toLocaleString('ko-KR')}
  </span>
  </div>
@@ -295,10 +295,10 @@ export default function AssetAllocatorGame() {
  {/* Start Overlay */}
  {gameState === "start" && (
  <div className="absolute inset-0 z-20 bg-electric/60 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center">
- <h1 className="text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#FDE68A] to-[#CBA577] mb-2 drop-shadow-sm">
+ <h1 className="text-6xl font-sans font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#FDE68A] to-[#CBA577] mb-2 drop-shadow-sm">
  ASSET RUN
  </h1>
- <p className="text-stone-300 mb-8 font-serif italic text-lg opacity-80">
+ <p className="text-stone-300 mb-8 font-sans italic text-lg opacity-80">
  &quot;Catch the Gems, Avoid the Debt&quot;
  </p>
 
@@ -330,10 +330,10 @@ export default function AssetAllocatorGame() {
  {gameState === "gameover" && (
  <div className="absolute inset-0 z-20 bg-electric/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
  <Trophy className="w-20 h-20 text-[#CBA577] mb-6 drop-shadow-[0_0_20px_rgba(203,165,119,0.5)]" />
- <h2 className="text-4xl font-serif font-bold text-white mb-2">SESSION CLOSED</h2>
+ <h2 className="text-4xl font-sans font-bold text-white mb-2">SESSION CLOSED</h2>
  <p className="text-faint-blue mb-8 uppercase tracking-widest text-xs font-bold">Final Net Worth</p>
 
- <div className="text-7xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400 mb-12">
+ <div className="text-7xl font-sans font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400 mb-12">
  ${score.toLocaleString('ko-KR')}
  </div>
 

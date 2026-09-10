@@ -373,7 +373,7 @@ export default function ExchangeRateImpactCalculator() {
 
   const inputStyle =
     "w-full p-4 mt-1 bg-white border border-canvas rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary transition disabled:opacity-50 text-navy font-medium";
-  const textInputStyle = `${inputStyle} text-center font-mono text-lg`;
+  const textInputStyle = `${inputStyle} text-center tabular-nums text-lg`;
 
   return (
     <div className="animate-fade-in-up bg-canvas min-h-screen">

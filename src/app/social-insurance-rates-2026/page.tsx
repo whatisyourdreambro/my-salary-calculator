@@ -205,16 +205,16 @@ export default function SocialInsuranceRates2026Page() {
  <td className="py-3 px-2 font-bold text-navy">
  {(salary / 10000).toLocaleString("ko-KR")}만
  </td>
- <td className="py-3 px-2 text-right text-muted-blue font-mono">
+ <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
  {ins.pension.toLocaleString("ko-KR")}
  </td>
- <td className="py-3 px-2 text-right text-muted-blue font-mono">
+ <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
  {(ins.health + ins.longTermCare).toLocaleString("ko-KR")}
  </td>
- <td className="py-3 px-2 text-right text-muted-blue font-mono">
+ <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
  {ins.employment.toLocaleString("ko-KR")}
  </td>
- <td className="py-3 px-2 text-right font-bold text-electric font-mono">
+ <td className="py-3 px-2 text-right font-bold text-electric tabular-nums">
  {ins.total.toLocaleString("ko-KR")}원
  </td>
  </tr>

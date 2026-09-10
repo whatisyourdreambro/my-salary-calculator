@@ -52,7 +52,7 @@ const AnalysisReport = ({ inputs, result }: { inputs: TaxInputs; result: TaxResu
  {step.label}
  </span>
  <span
- className={`font-mono text-sm sm:text-base ${
+ className={`tabular-nums text-sm sm:text-base ${
  step.isFinal && step.value >= 0 ? "text-primary" : ""
  } ${step.isFinal && step.value < 0 ? "text-destructive" : ""} ${
  step.isBold ? "font-bold text-foreground" : "text-muted-foreground"

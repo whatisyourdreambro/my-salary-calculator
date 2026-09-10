@@ -156,7 +156,7 @@ export default function RankClient() {
  {/* Chart */}
  <div className="h-80 w-full relative bg-electric/20 rounded-3xl p-4 border border-white/5">
  <RankChart data={distributionData} salary={salary} />
- <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-muted-blue font-mono">
+ <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-muted-blue font-sans">
  * 통계 기반 자체 추정 모델 (실제 분포와 다를 수 있음)
  </div>
  </div>

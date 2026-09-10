@@ -1237,7 +1237,7 @@ function Step({
         </p>
         <p
           className={`text-xs text-muted-blue leading-relaxed ${
-            mono ? "font-mono" : ""
+            mono ? "tabular-nums" : ""
           }`}
         >
           {desc}

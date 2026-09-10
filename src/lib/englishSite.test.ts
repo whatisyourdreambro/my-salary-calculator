@@ -11,7 +11,7 @@ import { softwareApplicationLd } from "./structuredData";
 
 describe("English navigation and publication contracts", () => {
   it("uses the same ordered seven categories and only real English menu destinations", () => {
-    expect(navConfig.map(item => item.name)).toEqual(EN_SECTIONS.map(section => section.koTitle));
+    expect(navConfig.filter(item => item.type === "dropdown").map(item => item.name)).toEqual(EN_SECTIONS.map(section => section.koTitle));
     expect(navConfigEn.map(item => item.name)).toEqual(EN_SECTIONS.map(section => section.title));
     for (const category of navConfigEn) {
       expect(category.type).toBe("dropdown");

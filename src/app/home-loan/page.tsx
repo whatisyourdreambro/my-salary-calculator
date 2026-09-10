@@ -284,16 +284,16 @@ export default function HomeLoanPage() {
                     <td className="py-3 px-2 font-bold text-navy">
                       {row.principal}
                     </td>
-                    <td className="py-3 px-2 text-right text-muted-blue font-mono">
+                    <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
                       {row.before}
                     </td>
-                    <td className="py-3 px-2 text-right text-muted-blue font-mono">
+                    <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
                       {row.after}
                     </td>
-                    <td className="py-3 px-2 text-right font-bold text-electric font-mono">
+                    <td className="py-3 px-2 text-right font-bold text-electric tabular-nums">
                       {row.monthlyDiff}
                     </td>
-                    <td className="py-3 px-2 text-right font-bold text-navy font-mono">
+                    <td className="py-3 px-2 text-right font-bold text-navy tabular-nums">
                       {row.totalDiff}
                     </td>
                   </tr>

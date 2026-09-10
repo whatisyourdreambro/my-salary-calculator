@@ -244,7 +244,7 @@ export default function TetrisPage() {
  }
 
  return (
- <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-mono pb-16">
+ <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-sans tabular-nums pb-16">
  {/* Cyberpunk Background */}
  <div className="absolute inset-0 z-0 pointer-events-none">
  <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />

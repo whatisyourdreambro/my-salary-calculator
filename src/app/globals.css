@@ -57,14 +57,16 @@
     --color-text: hsl(var(--foreground));
     --color-text-muted: hsl(var(--muted-foreground));
     --color-text-faint: hsl(var(--muted-foreground));
-    --font-pretendard:
+    --font-site-sans:
       var(--font-pretendard-latin), var(--font-pretendard-local),
       var(--font-pretendard-extra-1), var(--font-pretendard-extra-2),
       var(--font-pretendard-extra-3), var(--font-pretendard-extra-4),
-      "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
-      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+      "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕",
+      "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui,
+      "Segoe UI", Roboto, "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol", sans-serif;
+    /* Compatibility for the SVG wordmark and older inline styles. */
+    --font-pretendard: var(--font-site-sans);
   }
 
   .dark {
@@ -102,27 +104,35 @@
   }
   html, body { max-width: 100%; overflow-x: hidden; }
   @supports (overflow: clip) { html, body { overflow-x: clip; } }
-  html { scroll-padding-top: calc(var(--header-height) + 1rem); }
+  html {
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
   body {
     margin: 0;
     padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
     background: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: var(--font-pretendard);
-    font-feature-settings: "cv11", "ss01";
+    font-family: var(--font-site-sans);
+    font-feature-settings: normal;
+    font-kerning: normal;
+    font-weight: 400;
     font-size: 1rem;
-    line-height: 1.6;
-    letter-spacing: -0.012em;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  :where(h1, h2, h3, h4, h5, h6) { color: inherit; }
-  h1 { font-size: clamp(2rem, 4.2vw, 3.75rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; }
-  h2 { font-size: clamp(1.5rem, 2.8vw, 2.25rem); font-weight: 750; letter-spacing: -0.03em; line-height: 1.25; }
-  h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.35; }
+  :where(h1, h2, h3, h4, h5, h6) { color: inherit; text-wrap: balance; overflow-wrap: anywhere; }
+  :where(h1, h2, h3, h4, h5, h6, p, li, label):lang(ko) { word-break: keep-all; overflow-wrap: anywhere; }
+  h1 { font-size: clamp(2rem, 4.2vw, 3.75rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.25; }
+  h2 { font-size: clamp(1.5rem, 2.8vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.35; }
+  h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 600; letter-spacing: -0.015em; line-height: 1.45; }
   :where(h4, h5, h6) { font-weight: 650; line-height: 1.4; }
   :where(p) { color: inherit; }
   :where(button, input, select, textarea) { font: inherit; letter-spacing: inherit; }
+  :where(input[inputmode="numeric"], input[inputmode="decimal"], input[type="number"], output, table) { font-variant-numeric: tabular-nums; }
   :where(button, [role="button"], a, input, select, textarea) { -webkit-tap-highlight-color: transparent; }
   :where(button, input, select, textarea):disabled { cursor: not-allowed; }
   :where(a:not([class])) { color: hsl(var(--content-link, var(--link))); text-decoration: underline; text-underline-offset: 0.2em; }
@@ -173,8 +183,8 @@
     box-shadow: var(--shadow-card);
   }
   .ms-panel { padding: var(--panel-space); }
-  .ms-eyebrow { color: hsl(var(--content-link, var(--link))); font-size: 0.75rem; line-height: 1.4; font-weight: 700; letter-spacing: 0.08em; }
-  .ms-title { max-width: 22ch; font-size: clamp(2rem, 4.4vw, 3.75rem); line-height: 1.12; font-weight: 800; letter-spacing: -0.04em; text-wrap: balance; }
+  .ms-eyebrow { color: hsl(var(--content-link, var(--link))); font-size: 0.8125rem; line-height: 1.5; font-weight: 600; letter-spacing: 0.01em; }
+  .ms-title { max-width: 22ch; font-size: clamp(2rem, 4.4vw, 3.75rem); line-height: 1.25; font-weight: 700; letter-spacing: -0.025em; text-wrap: balance; }
   .ms-description { max-width: 65ch; color: hsl(var(--content-muted, var(--muted-foreground))); font-size: clamp(1rem, 1.4vw, 1.125rem); line-height: 1.75; }
   .ms-result {
     --content-foreground: var(--primary-foreground);
@@ -288,7 +298,7 @@
   .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
   .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
-  .font-mono-tabular { font-variant-numeric: tabular-nums; }
+  .font-mono-tabular { font-family: var(--font-site-sans); font-variant-numeric: tabular-nums; }
   .section-xl { padding-block: 7rem; }
   .section-lg { padding-block: 5rem; }
   .section-md { padding-block: 3.5rem; }

@@ -159,7 +159,7 @@ export default function MemeCoinPage() {
   const isProfit = result ? result.profit >= 0 : true;
 
   return (
-    <main className="w-full min-h-screen bg-[#0D1117] text-white font-mono overflow-hidden relative">
+    <main className="w-full min-h-screen bg-[#0D1117] text-white font-sans tabular-nums overflow-hidden relative">
       {/* Matrix grid background */}
       <div className="fixed inset-0 opacity-[0.04] pointer-events-none bg-[linear-gradient(rgba(0,255,65,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,.5)_1px,transparent_1px)] bg-[size:40px_40px]" />
 

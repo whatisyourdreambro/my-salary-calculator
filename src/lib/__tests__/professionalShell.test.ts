@@ -78,4 +78,18 @@ describe("Professional shell and home contracts", () => {
     expect(html).toContain("2026 계산 기준");
     expect(html).not.toMatch(/5초|100\+|즉시 반영|시즌/);
   });
+
+  it("offers the checklist in both Korean menus with a current-page indicator and keeps English navigation local", () => {
+    location.pathname = "/money-check";
+    const html = renderToStaticMarkup(createElement(Header));
+    const shortcuts = [...html.matchAll(/<a\b[^>]*href="\/money-check"[^>]*>/g)].map(match => match[0]).filter(anchor => anchor.includes('data-msy-module="header-money-check"'));
+    expect(shortcuts).toHaveLength(2);
+    for (const shortcut of shortcuts) {
+      expect(shortcut).toContain('aria-current="page"');
+      expect(shortcut).toContain('data-msy-module="header-money-check"');
+    }
+    expect(renderToStaticMarkup(createElement(Footer))).toContain('href="/money-check"');
+    location.pathname = "/en";
+    expect(renderToStaticMarkup(createElement(Header))).not.toContain('href="/money-check"');
+  });
 });

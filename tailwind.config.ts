@@ -26,7 +26,17 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-pretendard)"],
+        sans: ["var(--font-site-sans)"],
+      },
+      // Legacy pages use these heavy utilities throughout their Korean UI.
+      // Keep emphasis without closing up small Hangul counters at 800–900.
+      fontWeight: {
+        extrabold: "750",
+        black: "750",
+      },
+      letterSpacing: {
+        tight: "-0.015em",
+        tighter: "-0.025em",
       },
       spacing: {
         header: "var(--header-height)",
@@ -34,6 +44,12 @@ const config = {
       typography: {
         DEFAULT: {
           css: {
+            fontFamily: "var(--font-site-sans)",
+            lineHeight: "1.8",
+            letterSpacing: "-0.01em",
+            h1: { fontWeight: "700", letterSpacing: "-0.025em", lineHeight: "1.3" },
+            h2: { fontWeight: "700", letterSpacing: "-0.02em", lineHeight: "1.4" },
+            h3: { fontWeight: "600", letterSpacing: "-0.015em", lineHeight: "1.5" },
             "--tw-prose-body": "hsl(var(--content-muted, var(--muted-foreground)))",
             "--tw-prose-headings": "hsl(var(--content-foreground, var(--foreground)))",
             "--tw-prose-lead": "hsl(var(--content-muted, var(--muted-foreground)))",

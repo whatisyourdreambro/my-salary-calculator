@@ -212,7 +212,7 @@ export default function WeekendDutyGame() {
               value={datesInput}
               onChange={e => setDatesInput(e.target.value)}
               placeholder={"11/23\n11/24\n11/30\n12/07"}
-              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-emerald-500/50 outline-none resize-none font-mono text-sm"
+              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-emerald-500/50 outline-none resize-none font-sans tabular-nums text-sm"
             />
             <p className="text-xs text-gray-500 mt-2">쉼표(,)나 엔터로 구분</p>
           </div>
@@ -226,7 +226,7 @@ export default function WeekendDutyGame() {
               value={peopleInput}
               onChange={e => setPeopleInput(e.target.value)}
               placeholder={"김철수\n이영희\n박지성\n최민준"}
-              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-sky-500/50 outline-none resize-none font-mono text-sm"
+              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-sky-500/50 outline-none resize-none font-sans tabular-nums text-sm"
             />
             <p className="text-xs text-gray-500 mt-2">쉼표(,)나 엔터로 구분</p>
           </div>
@@ -297,7 +297,7 @@ export default function WeekendDutyGame() {
                           <span className="font-bold text-white">{person.name}</span>
                           <div className="flex items-center gap-1.5 bg-black/30 border border-white/10 rounded-lg px-2 py-1">
                             <button aria-label={`${person.name} 근무 제한 줄이기`} onClick={() => updateMaxShifts(person.id, -1)} className="text-gray-500 hover:text-white w-5 text-center">-</button>
-                            <span className="font-mono text-emerald-400 font-bold text-sm w-4 text-center">{person.maxShifts}</span>
+                            <span className="tabular-nums text-emerald-400 font-bold text-sm w-4 text-center">{person.maxShifts}</span>
                             <button aria-label={`${person.name} 근무 제한 늘리기`} onClick={() => updateMaxShifts(person.id, 1)} className="text-gray-500 hover:text-white w-5 text-center">+</button>
                           </div>
                         </div>
@@ -362,7 +362,7 @@ export default function WeekendDutyGame() {
               />
             </div>
 
-            <div className="text-sm text-gray-500 mb-2 font-mono">
+            <div className="text-sm text-gray-500 mb-2 tabular-nums">
               {gameState.currentDateIndex + 1} / {gameState.dates.length}
             </div>
             <h3 className="text-lg font-bold text-gray-400 mb-6">대상 날짜</h3>
@@ -385,7 +385,7 @@ export default function WeekendDutyGame() {
                   ))}
                 </div>
               ) : (
-                <div className="text-gray-500 text-lg font-mono tracking-wider">
+                <div className="text-gray-500 text-lg font-sans tracking-wider">
                   추첨 준비 완료 . . .
                 </div>
               )}
@@ -404,7 +404,7 @@ export default function WeekendDutyGame() {
 
           {/* Log */}
           {gameState.logs.length > 0 && (
-            <div className="mt-6 bg-black/40 border border-white/10 rounded-2xl p-5 text-left max-h-44 overflow-y-auto font-mono text-sm">
+            <div className="mt-6 bg-black/40 border border-white/10 rounded-2xl p-5 text-left max-h-44 overflow-y-auto font-sans tabular-nums text-sm">
               {gameState.logs.map((log, i) => (
                 <div key={i} className="text-emerald-400 mb-1">
                   &gt; {log}

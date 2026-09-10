@@ -134,7 +134,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setIsOpen(true); focusItem(event.key === "ArrowUp" ? -1 : 0); }
         }}
-        className={`flex min-h-11 items-center gap-0.5 px-2 2xl:px-3 py-2 text-[13px] 2xl:text-[14px] font-medium rounded-lg bg-transparent border-none cursor-pointer whitespace-nowrap transition-colors duration-150 motion-reduce:transition-none hover:bg-secondary hover:text-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-link ${
+        className={`flex min-h-11 items-center gap-0.5 px-2 2xl:px-3 py-2 text-sm font-medium rounded-lg bg-transparent border-none cursor-pointer whitespace-nowrap transition-colors duration-150 motion-reduce:transition-none hover:bg-secondary hover:text-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-link ${
           isOpen || currentSection ? "text-link bg-secondary" : "text-muted-foreground"
         }`}
       >

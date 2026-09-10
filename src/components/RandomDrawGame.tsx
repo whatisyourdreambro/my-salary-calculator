@@ -468,7 +468,7 @@ export default function RandomDrawGame() {
  value={candidatesText}
  onChange={(e) => setCandidatesText(e.target.value)}
  placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
- className="w-full h-60 bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none resize-none font-mono leading-relaxed"
+ className="w-full h-60 bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none resize-none font-sans leading-relaxed"
  />
  <div className="flex justify-between text-xs text-faint-blue mt-2 px-1">
  <span>엔터로 구분해주세요</span>

@@ -140,7 +140,7 @@ export default function TaxRates2026Page() {
  {bracket.max ? formatKrw(bracket.max) : "초과"}
  </td>
  <td className="py-3 px-2 text-center font-bold text-electric">{bracket.rate}</td>
- <td className="py-3 px-2 text-right text-muted-blue font-mono">
+ <td className="py-3 px-2 text-right text-muted-blue tabular-nums">
  {bracket.deduction === 0 ? "-" : `${bracket.deduction.toLocaleString("ko-KR")}원`}
  </td>
  </tr>

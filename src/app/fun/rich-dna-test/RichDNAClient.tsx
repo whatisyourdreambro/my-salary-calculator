@@ -231,7 +231,7 @@ export default function RichDNAClient() {
  </h2>
  <div className="flex items-center justify-center gap-4">
  <div className="h-px w-12 bg-white/10" />
- <p className="text-xl font-serif italic text-muted-blue">
+ <p className="text-xl font-sans italic text-muted-blue">
  {result.subtitle}
  </p>
  <div className="h-px w-12 bg-white/10" />

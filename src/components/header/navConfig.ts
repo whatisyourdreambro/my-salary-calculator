@@ -26,6 +26,7 @@ export type LinkItem = {
  href: string;
  type: "link";
  badge?: Badge;
+ featured?: boolean;
 };
 
 export type DropdownSubItem = {
@@ -48,6 +49,7 @@ export type DropdownItem = {
 export type NavItem = LinkItem | DropdownItem;
 
 export const navConfig: NavItem[] = [
+ { name: "내 돈 체크", href: "/money-check", type: "link", featured: true, badge: "NEW" },
  // ─── 성과급 카테고리 ────────────────────────────────────
  // 회사별 성과급 계산기를 별도 메가 메뉴로 묶어 검색 사용자가 빠르게 찾도록.
  // 시즌(1·6·12월 OPI/PS 지급) 수요 대응.

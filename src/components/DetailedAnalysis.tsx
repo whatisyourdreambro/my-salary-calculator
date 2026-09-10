@@ -204,7 +204,7 @@ export default function DetailedAnalysis({
  <span className="font-semibold text-navy text-base">{item.name}</span>
  <span className="text-xs text-faint-blue ml-2">({item.rate})</span>
  </div>
- <span className="font-mono font-bold text-navy text-base">
+ <span className="tabular-nums font-bold text-navy text-base">
  {formatNumber(item.value)}원
  </span>
  </div>

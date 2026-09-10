@@ -134,7 +134,7 @@ export default function PayStubGenerator() {
  <div
  ref={payStubRef}
  className="w-[600px] min-w-[600px] bg-white text-navy p-8 shadow-2xl relative overflow-hidden"
- style={{ fontFamily: "'Noto Serif KR', serif" }} // 명조체 느낌
+ style={{ fontFamily: "var(--font-pretendard)" }}
  >
  {/* Watermark */}
  <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
@@ -248,10 +248,10 @@ export default function PayStubGenerator() {
  <p>본 명세서는 참고용이며 법적 효력이 없습니다.</p>
  </div>
  <div className="flex flex-col items-center relative">
- <span className="font-serif font-bold text-lg text-navy mb-2 z-10">(주) 머니샐러리 대표</span>
+ <span className="font-sans font-bold text-lg text-navy mb-2 z-10">(주) 머니샐러리 대표</span>
  <div className="relative">
  <div className="w-16 h-16 border-4 border-canvas rounded-full flex items-center justify-center opacity-80 rotate-[-15deg] mask-image:url('/grunge.png')">
- <span className="text-electric font-serif font-black text-sm">머니<br />샐러리<br />인</span>
+ <span className="text-electric font-sans font-black text-sm">머니<br />샐러리<br />인</span>
  </div>
  </div>
  </div>

@@ -119,6 +119,7 @@ const seasonPages: SearchEntry[] = [
 ];
 
 const toolPages: SearchEntry[] = [
+ { title: "내 돈 체크 · 직장인 금융 체크리스트", href: "/money-check", category: "도구", description: "월급·절세·이직·주거·저축·가족 상황별 계산기와 가이드, 확인한 항목 저장", priority: 1 },
  { title: "주택담보대출 계산", href: "/home-loan", category: "도구", description: "대출금·금리·기간별 월 상환액과 총 이자" },
  { title: "자동차 구매·할부", href: "/car-loan", category: "도구" },
  { title: "FIRE 은퇴 계산기", href: "/fire-calculator", category: "도구" },

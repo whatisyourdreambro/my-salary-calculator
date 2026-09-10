@@ -54,6 +54,7 @@ export default function Footer() {
         { name: "Methods, Sources & Help", href: "/en/help" },
       ]
     : [
+        { name: "내 돈 체크 · 상황별 금융 체크리스트", href: "/money-check" },
         { name: "주제별 가이드", href: "/hub" },
         { name: "금융 가이드", href: "/guides" },
         { name: "용어 사전", href: "/glossary" },

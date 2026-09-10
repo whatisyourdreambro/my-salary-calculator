@@ -117,7 +117,7 @@ export default function FortunePage() {
  };
 
  return (
- <main className="w-full min-h-screen bg-[#1a1a1a] text-[#e5e5e5] pb-20 overflow-hidden relative font-serif pt-28">
+ <main className="w-full min-h-screen bg-[#1a1a1a] text-[#e5e5e5] pb-20 overflow-hidden relative font-sans pt-28">
  {/* 은은한 배경 그라데이션 (외부 텍스처 제거 — CSS 대체) */}
  <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(220,38,38,0.08)_0%,transparent_60%)]" />
 
@@ -301,13 +301,13 @@ export default function FortunePage() {
 
  {/* Stamp */}
  <div className="absolute top-6 right-6 w-20 h-20 border-4 border-primary rounded-lg flex items-center justify-center opacity-80 rotate-[-10deg] mix-blend-multiply pointer-events-none">
- <span className="text-primary font-serif font-black text-2xl">大吉</span>
+ <span className="text-primary font-sans font-black text-2xl">大吉</span>
  </div>
 
  <div className="relative z-10">
  <div className="text-center border-b-2 border-canvas pb-8 mb-8">
- <p className="text-faint-blue font-serif mb-2">2026 병오년(丙午年)</p>
- <h2 className="text-3xl md:text-4xl font-black mb-4 font-serif text-primary">
+ <p className="text-faint-blue font-sans mb-2">2026 병오년(丙午年)</p>
+ <h2 className="text-3xl md:text-4xl font-black mb-4 font-sans text-primary">
  {resultData.title}
  </h2>
  <div className="inline-flex items-center gap-2 px-4 py-1
@@ -320,7 +320,7 @@ export default function FortunePage() {
 
  <div className="space-y-8">
  <section>
- <h3 className="flex items-center gap-2 text-xl font-bold text-primary mb-3 font-serif">
+ <h3 className="flex items-center gap-2 text-xl font-bold text-primary mb-3 font-sans">
  <Sparkles size={20} /> 총운 (Total Luck)
  </h3>
  <p className="text-lg leading-relaxed text-primary text-justify">
@@ -330,7 +330,7 @@ export default function FortunePage() {
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  <section>
- <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-serif">
+ <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-sans">
  💰 재물운
  </h3>
  <p className="text-muted-blue text-justify text-sm leading-relaxed">
@@ -338,7 +338,7 @@ export default function FortunePage() {
  </p>
  </section>
  <section>
- <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-serif">
+ <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-sans">
  💼 직장/사업운
  </h3>
  <p className="text-muted-blue text-justify text-sm leading-relaxed">
