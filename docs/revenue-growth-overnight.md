@@ -87,6 +87,7 @@ Playwright(Chrome) 30개 동작 검사 — 28건 PASS, 2건은 검사 셀렉터 
 - main 에서 재실행한 게이트: vitest·tsc·eslint·ad-audit·qa:share·verify:tax/site/companies/sitemap/bonus·스크립트 테스트·python 검증 통과, `qa:quality` 2,497 HTML 0 이슈. `qa:crawl`·`qa:english` 결과는 아래 푸시 기록에 병기.
 - 푸시: 2026-09-11 05:01 KST, main `075f9be` → `1c1fda2` (커밋 2개: `41ce72d` 코드, `1c1fda2` 404 게이트 이동+이 문서). 강제 푸시 없음.
 - 배포 확인 (2026-09-11 05:20 KST): 푸시 05:01 KST 이후 약 20분간 프로덕션은 아직 이전 빌드(075f9be)를 서빙 중(`/salary/6980-manwon` 404, split-bill 구 제목, 구 레지스트리 청크 참조). Cloudflare Pages 빌드 완료 여부는 대시보드에서 확인 필요 — 완료 후 `/salary/6980-manwon` 이 308 인지, `/calc/split-bill` 제목이 '더치페이 계산기 | 머니샐러리'인지, 404 HTML 에 pauseAdRequests 스크립트가 있는지 확인하면 배포 완료다. 주간 헬스체크(scripts/health-check.mjs)도 같은 경로를 본다.
+- 배포 확인 (2026-09-11 08:05 KST): Cloudflare 배포 완료. 프로덕션 `/calc/split-bill` 제목 '더치페이 계산기 | 머니샐러리', '다음 계산기' nav 1개, 구 레지스트리 청크 참조 0건, 404 HTML 에 pauseAdRequests 스크립트 1건, 미요청 변형 `/salary/6981-manwon` → 308 `/salary/70000000`, `/salary/13401-manwon` → 308, `/salary/210500000` → 308 `/salary/207000000`. `/salary/6980-manwon` 만 엣지 캐시 HIT(Age 11,070/14,400초)로 아직 404 — 캐시 만료(약 1시간) 후 308 로 바뀐다(캐시 퍼지 불필요).
 - 로컬 서버(3200/3300)에서 광고·분석 요청은 브라우저 검사 시 전부 차단했다. 실제 광고 클릭·노출 유발 0건.
 - 정리: 조사 서브에이전트가 남긴 14바이트 임시 파일 `savings` 를 저장소 루트에서 삭제했다(추적되지 않은 파일). `.claude/settings.local.json`·`docs/revenue-audit-2026-09-08/` 은 손대지 않았다.
 
