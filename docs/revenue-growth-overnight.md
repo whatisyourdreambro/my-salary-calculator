@@ -79,13 +79,14 @@ Playwright(Chrome) 30개 동작 검사 — 28건 PASS, 2건은 검사 셀렉터 
 - /job/professor 모바일: `mobile-banner` 크리에이티브(축소 728×90 아님). 삼성 페이지 첫 인아티클 광고 래퍼 margin-top 32px.
 - dead-end 3쪽(실업급여·육아휴직·2026-year) 관련 계산기 블록 렌더.
 - 미들웨어: `/salary/6980-manwon → 308 /salary/70000000`, `/salary/13400-manwon → 308 /salary/134000000`, `/salary/210000000 → 308 /salary/207000000`(가장 가까운 정적 금액), `/salary/50000000 → 200`, `/salary/abc → 404`, 끝 슬래시는 Next 정규화에 위임(2단 리다이렉트 없음).
-- 라우트 12종 × (모바일·데스크톱) × (라이트·다크) 스크린샷·콘솔·가로 넘침 검사 결과는 §4 아래에 요약.
+- 라우트 12종 × (모바일 390px·데스크톱 1366px) × (라이트·다크) = 48케이스: HTTP 상태·콘솔 오류·페이지 오류·가로 넘침 모두 0건(의도된 404 라우트 제외). 상호작용: 쉼표 입력 유지(1,234,567), 음수 부호 차단, 빈 값은 aria-invalid + '입력값 확인', 소수점(3.5) 유지. 스크린샷은 로컬 산출물(scratchpad)에 보관, 저장소 미포함.
 
 ## 4. 커밋·푸시·배포 상태
 
 - 코드 커밋: `41ce72d` (main, 075f9be 위 fast-forward). 후속 커밋(이 문서 포함): 404 광고 보류 컴포넌트를 `not-found.tsx` 직접 import 에서 루트 layout 마운트로 이동 — 워크트리 `next start` 에서 Edge 라우트(qna·glossary 한글 슬러그, /en 폴백)가 `Cannot read properties of undefined (reading 'default')` 500 을 냈고, main 빌드에서는 재현되지 않았으나 Cloudflare Edge 매니페스트 리스크를 없애기 위해 루트 마운트로 확정(동작 동일: 404 마커 감지로 보류/해제).
 - main 에서 재실행한 게이트: vitest·tsc·eslint·ad-audit·qa:share·verify:tax/site/companies/sitemap/bonus·스크립트 테스트·python 검증 통과, `qa:quality` 2,497 HTML 0 이슈. `qa:crawl`·`qa:english` 결과는 아래 푸시 기록에 병기.
-- 푸시·배포: (푸시 시각·Cloudflare 배포 확인은 아래에 추가)
+- 푸시: 2026-09-11 05:01 KST, main `075f9be` → `1c1fda2` (커밋 2개: `41ce72d` 코드, `1c1fda2` 404 게이트 이동+이 문서). 강제 푸시 없음.
+- 배포 확인 (2026-09-11 05:20 KST): 푸시 05:01 KST 이후 약 20분간 프로덕션은 아직 이전 빌드(075f9be)를 서빙 중(`/salary/6980-manwon` 404, split-bill 구 제목, 구 레지스트리 청크 참조). Cloudflare Pages 빌드 완료 여부는 대시보드에서 확인 필요 — 완료 후 `/salary/6980-manwon` 이 308 인지, `/calc/split-bill` 제목이 '더치페이 계산기 | 머니샐러리'인지, 404 HTML 에 pauseAdRequests 스크립트가 있는지 확인하면 배포 완료다. 주간 헬스체크(scripts/health-check.mjs)도 같은 경로를 본다.
 - 로컬 서버(3200/3300)에서 광고·분석 요청은 브라우저 검사 시 전부 차단했다. 실제 광고 클릭·노출 유발 0건.
 - 정리: 조사 서브에이전트가 남긴 14바이트 임시 파일 `savings` 를 저장소 루트에서 삭제했다(추적되지 않은 파일). `.claude/settings.local.json`·`docs/revenue-audit-2026-09-08/` 은 손대지 않았다.
 
