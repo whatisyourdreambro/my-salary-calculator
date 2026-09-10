@@ -1,5 +1,4 @@
 import Link from "@/components/AppLink";
-import NotFoundAdPause from "@/components/NotFoundAdPause";
 import { Home, Search, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift } from "lucide-react";
 
 const SUGGESTED_LINKS = [
@@ -18,9 +17,9 @@ export default function NotFound() {
     <main data-page-state="not-found" className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center bg-canvas dark:bg-canvas-950 min-h-[80vh]">
       {/* 404 화면에는 광고 요청을 보류한다 — Google 게시자 정책 '콘텐츠 없는 화면·알림/내비게이션 목적 화면' 광고 금지.
           인라인 스크립트가 layout 의 afterInteractive 로더보다 먼저 실행돼 자동광고·수동 유닛 요청을 모두 보류하고,
-          NotFoundAdPause 가 SPA 로 정상 페이지로 이동할 때 보류를 해제한다. 슬롯·ID·광고 코드는 변경하지 않는다. */}
+          루트 layout 의 NotFoundAdPause 가 data-page-state 마커를 보고 SPA 이탈 시 보류를 해제한다(여기서 클라이언트
+          컴포넌트를 직접 import 하면 Edge 라우트 매니페스트에서 빠져 500 — 2026-09-11). 슬롯·ID·광고 코드는 변경하지 않는다. */}
       <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1;" }} />
-      <NotFoundAdPause />
       <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-electric-10 mb-6">
         <span className="text-4xl font-black text-electric">404</span>
       </div>

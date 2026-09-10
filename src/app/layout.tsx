@@ -12,6 +12,7 @@ import JsonLd from "@/components/JsonLd";
 import InstallPwaBanner from "@/components/InstallPwaBanner";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 import WebVitals from "@/components/WebVitals";
+import NotFoundAdPause from "@/components/NotFoundAdPause";
 import InternalLinkTracker from "@/components/InternalLinkTracker";
 import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
@@ -146,6 +147,9 @@ export default function RootLayout({
 
         {/* 실사용자 Core Web Vitals → GA4 (속도 개선 효과 측정) */}
         <WebVitals />
+
+        {/* 404 화면 광고 요청 보류/해제 — 루트에서 마운트해야 Edge 라우트 매니페스트에 포함된다 (2026-09-11) */}
+        <NotFoundAdPause />
 
         {/* 서버 컴포넌트 링크 모듈([data-msy-module]) 클릭 → guide_cta_click(position=모듈) 위임 계측 */}
         <InternalLinkTracker />
