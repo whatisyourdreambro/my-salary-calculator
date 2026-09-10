@@ -11,6 +11,8 @@ describe("custom analytics privacy", () => {
     expect(sanitizeAnalyticsUrl("/calc/loan?v=payload&utm_campaign=bonus&wbraid=id")).toBe("/calc/loan?utm_campaign=bonus&wbraid=id");
     expect(sanitizeAnalyticsUrl("/salary/80000000")).toBe("/salary/[amount]");
     expect(sanitizeAnalyticsUrl("/salary/8000-manwon")).toBe("/salary/[amount]");
+    expect(sanitizeAnalyticsUrl("/monthly/3000000")).toBe("/monthly/[amount]");
+    expect(sanitizeAnalyticsUrl("/monthly/3000000/?utm_source=naver")).toBe("/monthly/[amount]/?utm_source=naver");
   });
   it("does not invent referrers or turn unsupported schemes into destinations", () => {
     expect(sanitizeAnalyticsUrl("")).toBe("");

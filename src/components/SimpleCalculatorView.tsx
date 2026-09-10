@@ -1,7 +1,14 @@
 // src/components/SimpleCalculatorView.tsx
 //
-// 100가지 단순 계산기 공통 UI.
-// slug props 받아 client에서 직접 calculator 정의 import (function 직렬화 회피).
+// 간이 계산기(202종) 공통 UI.
+//
+// 번들 분리 (2026-09-11): 종전에는 이 클라이언트 컴포넌트가 `@/lib/simpleCalculators` 를 직접
+// import 해 202종 정의 전체(설명·FAQ·공식 텍스트 포함, 청크 507KB·gzip 151KB)가 /calc/[slug]
+// 202쪽 모두의 첫 로드 JS 에 포함됐다(라우트 JS 170KB — 다른 라우트 6~18KB 대비 유일한 이상치).
+// 이제 텍스트·필드는 서버 페이지가 props(calc)로 넘기고, compute 함수만 자기 배치 파일 하나를
+// 동적 import 해 얻는다(computeLoader). 프리렌더/하이드레이션은 서버가 계산한 initialResult 를
+// 쓰므로 첫 화면은 종전과 동일하고, compute 가 도착하면(대개 하이드레이션 직후) 입력이 살아난다.
+// ★ 이 파일에서 `@/lib/simpleCalculators`(index) 를 import 하지 말 것 — 테스트가 막는다.
 
 "use client";
 
@@ -9,8 +16,8 @@ import { useState, useMemo, useRef, useEffect, useId, useCallback, Suspense } fr
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight, AlertTriangle, HelpCircle, Sigma } from "lucide-react";
-import { getCalculatorBySlug } from "@/lib/simpleCalculators";
-import type { CalculatorResult } from "@/lib/simpleCalculators/types";
+import type { CalculatorDef, CalculatorField, CalculatorResult, ClientCalculatorDef } from "@/lib/simpleCalculators/types";
+import { loadCalculatorCompute, type CalculatorBatch } from "@/lib/simpleCalculators/computeLoader";
 import { CalcResultAd, GuideMidAd, InArticleAd } from "./AdPlacement";
 import JsonLd from "./JsonLd";
 import ResultSharePanel from "./ResultSharePanel";
@@ -25,7 +32,15 @@ import NumberInput from "@/components/NumberInput";
 
 interface Props {
  slug: string;
+ /** compute 를 제외한 직렬화 정의 (서버 page.tsx 가 toClientCalculator 로 생성) */
+ calc: ClientCalculatorDef;
+ /** compute 가 들어 있는 배치 파일 키 (서버 getCalculatorBatch) */
+ batch: CalculatorBatch;
+ /** 기본값 입력의 서버 계산 결과 — compute 로드 전 첫 화면·하이드레이션에 사용 */
+ initialResult: CalculatorResult;
 }
+
+type ComputeFn = CalculatorDef["compute"];
 
 const formatNumber = (v: number, suffix?: string): string => {
  if (!Number.isFinite(v)) return "—"; // NaN/Infinity 공통 가드 (0 나눗셈·로그 등)
@@ -52,11 +67,28 @@ const compactKo = (v: number): string | null => {
  return `${sign}${man.toLocaleString("ko-KR")}만`;
 };
 
-export default function SimpleCalculatorView({ slug }: Props) {
+/**
+ * 필드 하한 — 명시 min 이 없으면 금액·수량은 0 이상으로 본다. 비율(%·%p)과 음수 기본값 필드만 음수를 허용한다.
+ * 2026-09-11 전수 프로브: batch1/2 의 100종이 음수 재산세(-300,000원)·음수 등록면허세 같은 무의미한 결과를
+ * 경고 없이 냈다. 하한이 0 이면 NumberInput 이 '-' 입력을 막고 범위 안내가 바로 뜬다.
+ */
+const effectiveMin = (f: CalculatorField): number | undefined =>
+ f.min ?? (f.defaultValue < 0 || /%/.test(f.suffix ?? "") ? undefined : 0);
+
+const rangeMessage = (f: CalculatorField): string => {
+ const min = effectiveMin(f);
+ const unit = f.suffix ?? "";
+ if (min !== undefined && f.max !== undefined) return `${min.toLocaleString("ko-KR")}~${f.max.toLocaleString("ko-KR")}${unit} 범위의 숫자를 입력해 주세요.`;
+ if (min !== undefined) return `${min.toLocaleString("ko-KR")}${unit} 이상의 숫자를 입력해 주세요.`;
+ if (f.max !== undefined) return `${f.max.toLocaleString("ko-KR")}${unit} 이하의 숫자를 입력해 주세요.`;
+ return "허용 범위의 숫자를 입력해 주세요.";
+};
+
+export default function SimpleCalculatorView({ slug, calc, batch, initialResult }: Props) {
  const [shareToken, setShareToken] = useState<string | null>(null);
  return <>
  <Suspense fallback={null}><SimpleShareQuery onChange={setShareToken} /></Suspense>
- <SimpleCalculatorInstance key={`${slug}:${shareToken ?? ""}`} slug={slug} shareToken={shareToken} />
+ <SimpleCalculatorInstance key={`${slug}:${shareToken ?? ""}`} slug={slug} calc={calc} batch={batch} initialResult={initialResult} shareToken={shareToken} />
  </>;
 }
 
@@ -68,18 +100,27 @@ function SimpleShareQuery({ onChange }: { onChange: (token: string | null) => vo
  return null;
 }
 
-function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: string | null }) {
- const calc = getCalculatorBySlug(slug);
- // label htmlFor ↔ input id 연결용 인스턴스 고유 접두사 (간이 계산기 ~100종 일괄)
+function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken }: Props & { shareToken: string | null }) {
+ // label htmlFor ↔ input id 연결용 인스턴스 고유 접두사 (간이 계산기 ~200종 일괄)
  const fieldIdPrefix = useId();
  const resultCardRef = useRef<HTMLElement | null>(null);
- const restored = useMemo(() => calc && shareToken ? decodeSimpleCalculatorInputs(shareToken, calc) : null, [calc, shareToken]);
+
+ // compute 지연 로드 — 배치 청크 하나만 받는다. 실패 시 서버 초기 결과는 그대로 두고 안내만 붙인다.
+ const [compute, setCompute] = useState<ComputeFn | null>(null);
+ const [computeFailed, setComputeFailed] = useState(false);
+ useEffect(() => {
+ let alive = true;
+ loadCalculatorCompute(batch, slug)
+ .then((fn) => { if (!alive) return; if (fn) setCompute(() => fn); else setComputeFailed(true); })
+ .catch(() => { if (alive) setComputeFailed(true); });
+ return () => { alive = false; };
+ }, [batch, slug]);
+ // 공유 인코딩·검증은 compute 가 필요하므로 로드 뒤에만 완전한 정의를 만든다.
+ const fullCalc = useMemo<CalculatorDef | null>(() => (compute ? { ...calc, compute } : null), [calc, compute]);
+
  const [inputs, setInputs] = useState<Record<string, number>>(() => {
- if (!calc) return {};
  const init: Record<string, number> = {};
- calc.fields.forEach((f) => {
- init[f.name] = restored?.[f.name] ?? f.defaultValue;
- });
+ calc.fields.forEach((f) => { init[f.name] = f.defaultValue; });
  return init;
  });
 
@@ -89,21 +130,45 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  // 소수점이 사라졌다. 금리 3.5% 를 입력하면 35% 가 확정돼 월 상환액이 6배로
  // 계산됐다(2026-09-06 전수검사 실브라우저 실측: 143만원 → 875만원).
  const [rawInputs, setRawInputs] = useState<Record<string, string>>(() => {
- if (!calc) return {};
  const init: Record<string, string> = {};
- calc.fields.forEach((f) => {
- init[f.name] = String(restored?.[f.name] ?? f.defaultValue);
- });
+ calc.fields.forEach((f) => { init[f.name] = String(f.defaultValue); });
  return init;
  });
 
- const result = useMemo<CalculatorResult | null>(() => {
- if (!calc) return null;
- try { return calc.compute(inputs); } catch { return { primary: { label: "계산 결과", value: NaN }, note: "입력값과 허용 범위를 확인해 주세요." }; }
- }, [calc, inputs]);
+ // 공유 링크(?v=) 복원 — 검증에 compute 가 필요하므로 로드 뒤 1회 적용. 인스턴스는 token 별 key 로 재마운트된다.
+ const [restoreState, setRestoreState] = useState<"none" | "pending" | "ok" | "failed">(shareToken ? "pending" : "none");
+ useEffect(() => {
+ if (!shareToken || !fullCalc) return;
+ const restored = decodeSimpleCalculatorInputs(shareToken, fullCalc);
+ if (restored) {
+ setInputs(restored);
+ const raw: Record<string, string> = {};
+ for (const f of fullCalc.fields) raw[f.name] = String(restored[f.name]);
+ setRawInputs(raw);
+ setRestoreState("ok");
+ } else {
+ setRestoreState("failed");
+ }
+ }, [shareToken, fullCalc]);
 
- const resultValid = Boolean(calc && result && result.status !== "invalid" && validateSimpleCalculatorInputs(inputs, calc) &&
- calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)));
+ const inputsAreDefault = calc.fields.every((f) => inputs[f.name] === f.defaultValue);
+
+ // compute 로드 전: 기본값이면 서버 결과를 그대로, 값을 바꿨으면 잠시 대기(null).
+ const result = useMemo<CalculatorResult | null>(() => {
+ if (compute) {
+ try { return compute(inputs); } catch { return { primary: { label: "계산 결과", value: NaN }, note: "입력값과 허용 범위를 확인해 주세요." }; }
+ }
+ return inputsAreDefault ? initialResult : null;
+ }, [compute, inputs, inputsAreDefault, initialResult]);
+
+ const rawValid = calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", effectiveMin(field), field.max));
+ // 범위는 통과했는데 계산이 무한대/NaN 인 경우(0 나눗셈 등) — 어느 항목이 0 인지 짚어 준다.
+ // 종전에는 '입력값 확인'만 떠서 사용자가 무엇을 고쳐야 하는지 알 수 없었다(29종 41케이스, 2026-09-11 프로브).
+ const zeroFieldLabels = calc.fields.filter((f) => inputs[f.name] === 0).map((f) => f.label);
+ const resultValid = Boolean(
+ result && result.status !== "invalid" && rawValid &&
+ (fullCalc ? validateSimpleCalculatorInputs(inputs, fullCalc) : inputsAreDefault && Number.isFinite(result.primary.value))
+ );
  const resultSnapshot = JSON.stringify([slug, rawInputs, inputs]);
  const captureSnapshot = useRef<string | null>(null);
  captureSnapshot.current = resultValid ? resultSnapshot : null;
@@ -125,12 +190,10 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  // 채널 귀속 utm 은 ShareSection→ShareButtons 가 채널별 withUtm 으로 부여(`?v=` 뒤에 `&utm_…` 결합).
  const shareUrl = useMemo(() => {
  const base = `${SITE_CONFIG.url}/calc/${slug}`;
- if (!calc) return base;
- const isDefault = calc.fields.every((f) => inputs[f.name] === f.defaultValue);
- if (isDefault) return base;
- const encoded = encodeSimpleCalculatorInputs(inputs, calc);
+ if (inputsAreDefault || !fullCalc) return base;
+ const encoded = encodeSimpleCalculatorInputs(inputs, fullCalc);
  return encoded ? `${base}?v=${encoded}` : base;
- }, [calc, slug, inputs]);
+ }, [fullCalc, slug, inputs, inputsAreDefault]);
 
  // 결과 카드 캡처 → 인스타·시스템 공유에서 이미지 파일로 전송
  const getShareImage = async (): Promise<Blob | null> => {
@@ -153,16 +216,6 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  }
  };
 
- if (!calc || !result) {
- return (
- <div className="min-h-screen bg-background pt-28 text-foreground">
- <div className="max-w-3xl mx-auto px-4">
- <p className="text-center text-muted-blue dark:text-canvas-300">계산기를 불러올 수 없습니다.</p>
- </div>
- </div>
- );
- }
-
  // 표시용 문자열은 사용자가 친 그대로 두고(소수점 입력 중 상태 포함),
  // 계산에는 파싱된 숫자만 쓴다. 숫자·소수점·선행 부호 외 입력은 무시한다.
  const handleChange = (name: string, value: string) => {
@@ -177,6 +230,9 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  setInputs((prev) => ({ ...prev, [name]: num }));
  }
  };
+
+ const primary = result?.primary ?? initialResult.primary;
+ const computeLoading = !compute && !computeFailed;
 
  return (
  <div className="min-h-screen bg-background pb-16 pt-24 text-foreground sm:pt-28">
@@ -198,7 +254,8 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  </header>
 
  <section {...measurement.inputProps} className="ms-surface ms-panel mb-6" aria-labelledby={`${fieldIdPrefix}input-heading`}>
- {shareToken && !restored && <p role="status" className="ms-status-warning mb-4 rounded-xl p-3 text-sm">공유 링크의 입력값을 확인할 수 없어 기본값을 표시합니다. 입력값과 범위를 확인해 주세요.</p>}
+ {restoreState === "failed" && <p role="status" className="ms-status-warning mb-4 rounded-xl p-3 text-sm">공유 링크의 입력값을 확인할 수 없어 기본값을 표시합니다. 입력값과 범위를 확인해 주세요.</p>}
+ {computeFailed && <p role="alert" className="ms-status-warning mb-4 rounded-xl p-3 text-sm">계산 모듈을 불러오지 못했습니다. 네트워크를 확인하고 페이지를 새로고침해 주세요.</p>}
  <h2 id={`${fieldIdPrefix}input-heading`} className="mb-2 flex items-center gap-2 text-xl font-bold text-foreground">
  <Calculator className="w-4 h-4 text-electric" />
  내 조건 입력
@@ -225,38 +282,47 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  // 금리 3.5 를 입력할 방법이 아예 없었다).
  inputMode="decimal"
  value={rawInputs[field.name] ?? ""}
- min={field.min}
+ min={effectiveMin(field)}
  max={field.max}
- aria-invalid={!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)}
+ // 하한이 0 이상인 필드는 '-' 자체를 받지 않는다 (음수 금액·수량 차단)
+ allowNegative={effectiveMin(field) === undefined || (effectiveMin(field) as number) < 0}
+ aria-invalid={!isValidCalculationNumber(rawInputs[field.name] ?? "", effectiveMin(field), field.max)}
  aria-describedby={`${fieldIdPrefix}${field.name}-help`}
  onChange={(e) => handleChange(field.name, e.target.value)}
  className="ms-field w-full text-lg font-semibold tabular-nums"
- placeholder={field.defaultValue.toLocaleString("ko-KR")}
+ placeholder={`예: ${field.defaultValue.toLocaleString("ko-KR")}`}
  />
  <p id={`${fieldIdPrefix}${field.name}-help`} className="mt-2 text-sm leading-6 text-muted-foreground">
  {field.hint}
- {!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max) && <span className="block text-destructive">{field.min !== undefined && field.max !== undefined ? `${field.min.toLocaleString("ko-KR")}~${field.max.toLocaleString("ko-KR")}${field.suffix ?? ""} 범위의 숫자를 입력해 주세요.` : "허용 범위의 숫자를 입력해 주세요."}</span>}
+ {!isValidCalculationNumber(rawInputs[field.name] ?? "", effectiveMin(field), field.max) && <span className="block text-destructive">{rangeMessage(field)}</span>}
  </p>
  </div>
  ))}
  </div>
  </section>
 
- <section ref={setResultRef} className="mb-6 rounded-2xl bg-primary p-5 text-primary-foreground sm:p-8" aria-label="현재 조건의 계산 결과">
- <p className="mb-2 text-sm font-medium text-primary-foreground">{result.primary.label}</p>
+ <section ref={setResultRef} className="mb-6 rounded-2xl bg-primary p-5 text-primary-foreground sm:p-8" aria-label="현재 조건의 계산 결과" aria-busy={computeLoading && !result}>
+ <p className="mb-2 text-sm font-medium text-primary-foreground">{primary.label}</p>
  <p className="break-words text-[clamp(1.75rem,6vw,2.75rem)] font-bold leading-tight tracking-tight text-primary-foreground tabular-nums">
- {resultValid ? formatNumber(result.primary.value, result.primary.suffix) : "입력값 확인"}
+ {resultValid ? formatNumber(primary.value, primary.suffix) : result ? "입력값 확인" : "계산 준비 중…"}
  </p>
+ {!resultValid && result && rawValid && result.status !== "invalid" && (
+ <p role="status" className="mt-2 text-sm leading-6 text-primary-foreground/90">
+ {zeroFieldLabels.length > 0
+ ? `0으로 입력된 항목(${zeroFieldLabels.join(", ")})이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.`
+ : "이 입력 조합으로는 결과를 계산할 수 없습니다. 값을 확인해 주세요."}
+ </p>
+ )}
  {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기 */}
- {resultValid && result.primary.suffix === "원" &&
- typeof result.primary.value === "number" &&
- compactKo(result.primary.value) && (
+ {resultValid && primary.suffix === "원" &&
+ typeof primary.value === "number" &&
+ compactKo(primary.value) && (
  <p className="mt-2 text-sm text-primary-foreground">
- ≈ {compactKo(result.primary.value)}원
+ ≈ {compactKo(primary.value)}원
  </p>
  )}
  <div className="mb-6" />
- {resultValid && result.secondary && result.secondary.length > 0 && (
+ {resultValid && result?.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (
  <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -268,7 +334,7 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  ))}
  </div>
  )}
- {result.note && (
+ {result?.note && (
  <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
  {result.note}
  </p>
@@ -287,17 +353,38 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  pageDescription={calc.description}
  previewDescription={`결과 링크에 포함되는 입력: ${calc.fields.map((field) => `${field.label} ${inputs[field.name].toLocaleString("ko-KR")}${field.suffix ?? ""}`).join(" · ")}. 받은 사람은 이를 복원할 수 있습니다. 이미지는 아래 미리보기 그대로 공유됩니다. 기본값도 현재 결과로 공유됩니다.`}
  contentType="calc_result"
- title={`${calc.title} — ${result.primary.label} ${formatNumber(result.primary.value, result.primary.suffix)}`}
+ title={`${calc.title} — ${primary.label} ${formatNumber(primary.value, primary.suffix)}`}
  description={calc.description}
  url={shareUrl}
  getShareImage={getShareImage}
  className="mb-6"
- /> : <p role="status" className="ms-status-warning mb-6 rounded-xl p-4 text-sm">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
+ /> : result === null ? <p role="status" className="mb-6 rounded-xl p-4 text-sm text-muted-foreground">계산 모듈을 불러오는 중입니다. 잠시 후 결과와 공유 링크가 표시됩니다.</p> : <p role="status" className="ms-status-warning mb-6 rounded-xl p-4 text-sm">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
+
+ {/* 결과 직후 다음 단계 한 줄 — 광고(CalcResultAd)·공유 패널 아래. 종전에는 첫 내부 링크가 광고 3개·섹션 9개
+     아래(관련 계산기)라 결과만 보고 떠나는 방문이 다음 페이지로 이어지지 않았다 (2026-09-11 NAV-01/SI-03).
+     정밀 계산기(같은 의도의 /tools·전용 페이지)가 있으면 첫 핀으로 둔다. 광고 위로 올리지 말 것. */}
+ {(calc.precisionTwin || (calc.relatedCards && calc.relatedCards.length > 0)) && (
+ <nav aria-label="다음 계산기" className="mb-6 flex flex-wrap gap-2">
+ {calc.precisionTwin && (
+ <Link href={calc.precisionTwin.href} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-electric px-4 text-sm font-bold text-white hover:bg-electric/90">
+ {calc.precisionTwin.title}
+ <ArrowRight className="h-4 w-4" aria-hidden="true" />
+ </Link>
+ )}
+ {(calc.relatedCards ?? []).slice(0, calc.precisionTwin ? 2 : 3).map((rel) => (
+ <Link key={rel.slug} href={`/calc/${rel.slug}`} className="inline-flex min-h-11 items-center gap-1 rounded-full border border-border bg-background px-4 text-sm font-semibold text-foreground hover:border-electric hover:text-electric">
+ {rel.title}
+ <ArrowRight className="h-4 w-4" aria-hidden="true" />
+ </Link>
+ ))}
+ </nav>
+ )}
 
  {calc.explanation && (
  <section className="ms-surface ms-panel mb-6">
  <h2 className="mb-4 text-xl font-bold text-foreground">계산 방식</h2>
- <p className="whitespace-pre-line text-base leading-7 text-muted-foreground">
+ {/* calc-explanation: page.tsx speakable 셀렉터가 가리키는 클래스 (DOM 에 없던 문제, 2026-09-11) */}
+ <p className="calc-explanation whitespace-pre-line text-base leading-7 text-muted-foreground">
  {calc.explanation}
  </p>
  </section>
@@ -312,7 +399,8 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  <Sigma className="w-4 h-4 text-electric" />
  계산 공식
  </h2>
- <code className="block overflow-x-auto rounded-xl border border-border bg-secondary p-4 text-sm leading-7 text-foreground">
+ {/* whitespace-pre-line: 42종의 공식 문자열에 줄바꿈이 있는데 한 줄로 뭉개지던 문제 (2026-09-11) */}
+ <code className="block overflow-x-auto whitespace-pre-line rounded-xl border border-border bg-secondary p-4 text-sm leading-7 text-foreground">
  {calc.formula}
  </code>
  </section>
@@ -369,14 +457,11 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  </section>
  )}
 
- {calc.relatedSlugs && calc.relatedSlugs.length > 0 && (
+ {calc.relatedCards && calc.relatedCards.length > 0 && (
  <section className="ms-surface ms-panel mb-6">
  <h2 className="mb-4 text-xl font-bold text-foreground">관련 계산기</h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {calc.relatedSlugs
- .map((s) => getCalculatorBySlug(s))
- .filter((c): c is NonNullable<typeof c> => Boolean(c))
- .map((rel) => (
+ {calc.relatedCards.map((rel) => (
  <Link
  key={rel.slug}
  href={`/calc/${rel.slug}`}

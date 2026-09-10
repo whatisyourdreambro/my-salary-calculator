@@ -123,7 +123,7 @@ export default function IndustryIndexPage() {
             <MultiplexAd />
           </div>
 
-          <CoupangBanner />
+          <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
           <ShareSection contentType="page" className="mt-8" />
         </div>

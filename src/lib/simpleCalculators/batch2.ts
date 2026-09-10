@@ -429,7 +429,7 @@ const BUSINESS: CalculatorDef[] = [
  keywords: ["프리랜서 시간당", "시급 청구"],
  fields: [
  { name: "target", label: "목표 연 수입", defaultValue: 80000000, suffix: "원" },
- { name: "hours", label: "주 가능 시간", defaultValue: 30, suffix: "시간" },
+ { name: "hours", label: "주 가능 시간", defaultValue: 30, suffix: "시간", min: 1 },
  ],
  compute: ({ target, hours }) => {
  const yearlyHours = hours * 48;
@@ -624,7 +624,7 @@ const LIFE: CalculatorDef[] = [
  keywords: ["더치페이", "n분의 1"],
  fields: [
  { name: "total", label: "총 금액", defaultValue: 120000, suffix: "원" },
- { name: "people", label: "인원", defaultValue: 4, suffix: "명" },
+ { name: "people", label: "인원", defaultValue: 4, suffix: "명", min: 1 },
  ],
  compute: ({ total, people }) => {
  const each = total / people;
@@ -736,7 +736,7 @@ const LIFE: CalculatorDef[] = [
  fields: [
  { name: "order", label: "주문 금액", defaultValue: 30000, suffix: "원" },
  { name: "delivery", label: "배달비", defaultValue: 4000, suffix: "원" },
- { name: "people", label: "인원", defaultValue: 3, suffix: "명" },
+ { name: "people", label: "인원", defaultValue: 3, suffix: "명", min: 1 },
  ],
  compute: ({ order, delivery, people }) => {
  const each = (order + delivery) / people;
@@ -1032,7 +1032,7 @@ const FAMILY: CalculatorDef[] = [
 const UNEMPLOYMENT: CalculatorDef[] = [
  {
    slug: "unemployment-benefit",
-   title: "실업급여 계산기",
+   title: "실업급여 간편 계산기",
    description: "이직 전 평균임금·근무기간으로 구직급여 즉시 계산",
    category: "salary",
    categoryLabel: "세금/연봉",

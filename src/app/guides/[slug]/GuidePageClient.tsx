@@ -1,9 +1,8 @@
 "use client";
 
 import { Calendar, Clock, ChevronLeft, Calculator, ArrowRight, Lightbulb, BookOpen, Sparkles } from "lucide-react";
-import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "@/components/AppLink";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
@@ -87,18 +86,39 @@ const PROSE_CLASS = `prose prose-lg max-w-none
  prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-link prose-table:text-sm`;
 
 export default function GuidePageClient({ guide, relatedGuides }: GuidePageClientProps) {
- const { scrollYProgress } = useScroll();
- const scaleX = useSpring(scrollYProgress, {
- stiffness: 100,
- damping: 30,
- restDelta: 0.001,
- });
+ // 읽기 진행 바 — framer-motion(useScroll/useSpring, 청크 40KB br)을 passive scroll + rAF 로 대체 (2026-09-11 번들 감사).
+ // 가이드 341쪽이 3px 바 하나 때문에 framer 청크를 첫 로드에 실었다. CSS transition 이 스프링 감쇠를 대신한다.
+ const progressRef = useRef<HTMLDivElement | null>(null);
 
  const [mounted, setMounted] = useState(false);
 
  useEffect(() => {
  setMounted(true);
  }, []);
+
+ // 진행 바 갱신 — passive scroll + rAF (framer useScroll/useSpring 대체). mounted 뒤에만 DOM 이 있다.
+ useEffect(() => {
+ if (!mounted) return;
+ const el = progressRef.current;
+ if (!el) return;
+ let raf = 0;
+ const update = () => {
+ raf = 0;
+ const doc = document.documentElement;
+ const max = doc.scrollHeight - window.innerHeight;
+ const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+ el.style.transform = `scaleX(${p})`;
+ };
+ const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+ update();
+ window.addEventListener("scroll", onScroll, { passive: true });
+ window.addEventListener("resize", onScroll);
+ return () => {
+ window.removeEventListener("scroll", onScroll);
+ window.removeEventListener("resize", onScroll);
+ if (raf) cancelAnimationFrame(raf);
+ };
+ }, [mounted]);
 
  // Calculate reading time
  const readingTime = Math.ceil(guide.content.length / 1000);
@@ -122,9 +142,11 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  {/* Reading Progress Bar — 클라이언트 전용(useScroll). mounted 게이트는 이 요소에만 적용,
  본문은 정적 HTML에 즉시 렌더되어 SEO 색인에 포함된다. */}
  {mounted && (
- <motion.div
- className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-[#0145F2] to-primary/80 z-50 origin-left"
- style={{ scaleX }}
+ <div
+ ref={progressRef}
+ aria-hidden="true"
+ className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-[#0145F2] to-primary/80 z-50 origin-left transition-transform duration-150 ease-out"
+ style={{ transform: "scaleX(0)" }}
  />
  )}
 

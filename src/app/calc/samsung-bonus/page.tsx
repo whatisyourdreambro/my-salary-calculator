@@ -385,7 +385,10 @@ export default function SamsungBonusCalculatorPage() {
 
           <SamsungBonusClient />
 
-          <InArticleAd />
+          {/* 결과 공유 버튼과 첫 광고 사이 여백 — 형제 성과급 페이지의 32px 와 통일(우발 클릭 방지). 광고 위치(결과 아래)는 그대로. */}
+          <div className="mt-8">
+            <InArticleAd />
+          </div>
 
           {/* ═══ TAI (목표달성장려금) — 2026 상반기 실제 발표 지급률 ═══ */}
           <section className="mb-10" aria-labelledby="tai-title">

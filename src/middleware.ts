@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isGuideSearchVariant } from "@/lib/guideDiscovery";
 import { isMissingEnglishDetail } from "@/lib/englishRouteGuard";
+import { resolveSalaryRedirect } from "@/lib/salaryRedirect";
 
 // Edge runtime — Cloudflare Pages 호환 (Web API만 사용)
 // Node.js 전용 API 절대 금지: fs, crypto.randomBytes 등
@@ -17,6 +18,14 @@ const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|
 const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap|ClaudeBot|PerplexityBot|GPTBot|Google-Extended|cohere-ai|anthropic-ai|Amazonbot)/i;
 
 function nextResponse(req: NextRequest) {
+  // /salary/* 격자 밖 금액·구형 {N}-manwon·{N}-eok 는 404 대신 가장 가까운 정적 페이지로 308
+  // (GSC 404 312건의 예시가 전부 이 형태, 2026-09-11). 집합은 코드젠 상수(~5KB) — 무거운 import 금지.
+  const salaryTarget = resolveSalaryRedirect(req.nextUrl.pathname);
+  if (salaryTarget) {
+    const url = req.nextUrl.clone();
+    url.pathname = salaryTarget;
+    return NextResponse.redirect(url, 308);
+  }
   if (isMissingEnglishDetail(req.nextUrl.pathname)) {
     const target = new URL("/en/page-unavailable", req.url);
     // The existing English Edge catch-all supplies the 404 status and layout.

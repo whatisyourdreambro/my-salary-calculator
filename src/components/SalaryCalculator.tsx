@@ -228,6 +228,9 @@ export default function SalaryCalculator() {
  // Snapshot stays local: editing inputs must not count an old visible result as success.
  const inputSnapshot = JSON.stringify([salaryInput, incomeType, payBasis, severanceType, nonTaxableAmount, dependents, children]);
  const [calculatedSnapshot, setCalculatedSnapshot] = useState<string | null>(null);
+ // '결과 확인하기'를 눌렀는데 입력이 무효인 경우 — 종전에는 아무 반응이 없었다(안내문이 결과 뒤 비교기 블록 안에만 있어
+ // 유효한 입력에서만 렌더되는 도달 불가 코드였음, 2026-09-11 감사). 클릭 이후에만 버튼 아래에 사유를 표시한다.
+ const [invalidAttempt, setInvalidAttempt] = useState(false);
  const sharePayload = validateSalarySharePayload(incomeType === "regular"
  ? { v: 1, taxYear: 2026, incomeType, annualSalary, nonTaxableAmount: parseNumber(nonTaxableAmount), dependents, children }
  : { v: 1, taxYear: 2026, incomeType, monthlyIncome: parseNumber(salaryInput) });
@@ -262,8 +265,16 @@ export default function SalaryCalculator() {
  },
  });
 
+ const invalidReason = !isValidCalculationNumber(salaryInput, Number.MIN_VALUE)
+ ? "소득 금액을 0보다 크게 입력해 주세요 (연 환산 1조 원 이하)."
+ : incomeType === "regular" && parseNumber(nonTaxableAmount) > annualSalary / 12
+ ? "월 비과세액이 세전 월급보다 클 수 없습니다. 비과세액을 줄여 주세요."
+ : incomeType === "regular" && children > dependents - 1
+ ? "자녀 수는 본인을 뺀 부양가족 수를 넘을 수 없습니다. 부양가족 수를 먼저 늘려 주세요."
+ : "양수 소득(연 환산 1조 원 이하)을 입력해 주세요. 직장인은 월 비과세가 세전 월급 이하여야 하며, 공제 대상 자녀를 본인 포함 부양가족 수에도 포함해 주세요.";
  const handleCalculateClick = () => {
- if (!inputsValid) return;
+ if (!inputsValid) { setInvalidAttempt(true); return; }
+ setInvalidAttempt(false);
  setIsCalculating(true);
  setCalculatedSnapshot(inputSnapshot);
  runCalculation();
@@ -423,11 +434,15 @@ export default function SalaryCalculator() {
 
  <button
  onClick={handleCalculateClick}
+ aria-describedby={invalidAttempt && !inputsValid ? "salary-invalid-hint" : undefined}
  className="w-full h-13 py-3.5 bg-primary rounded-2xl text-base font-black hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md"
  >
  <Zap size={18} className="text-white" />
  <span className="text-white">결과 확인하기</span>
  </button>
+ {invalidAttempt && !inputsValid && (
+ <p id="salary-invalid-hint" role="alert" className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 dark:bg-red-950/40 dark:text-red-300">{invalidReason}</p>
+ )}
  </div>
 
  {/* 오른쪽: 실수령액 결과 */}
@@ -476,7 +491,6 @@ export default function SalaryCalculator() {
  <button type="button" onClick={handleOfferHandoff} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary/90">
  현재 조건을 비교기에 가져오기 <ArrowRight size={16} aria-hidden="true" />
  </button>
- {!inputsValid && <p role="alert" className="text-sm text-red-700">양수 소득(연 환산 1조 원 이하)을 입력해 주세요. 직장인은 월 비과세가 세전 월급 이하여야 하며, 공제 대상 자녀를 본인 포함 부양가족 수에도 포함해 주세요.</p>}
  <p className="mt-2 text-xs text-faint-blue">현재 연봉·비과세·가족 조건을 같은 탭에서 한 번 전달합니다. 비교기에서 확인 후 적용할 수 있어요.</p>
  {offerHandoffError && <p role="alert" className="mt-2 text-sm text-red-700">브라우저에서 조건을 전달하지 못했습니다. <Link href="/calc/offer-compare" className="underline">비교기에 직접 입력하기</Link></p>}
  </div>

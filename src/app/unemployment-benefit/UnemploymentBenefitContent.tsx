@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { InArticleAd, GuideMidAd, HomeTopAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import {
  Calculator,
  CheckCircle2,
@@ -398,7 +399,7 @@ export default function UnemploymentBenefitContent() {
     </div>
    </section>
 
-   <CoupangBanner />
+   <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
    {/* FAQ */}
    <section className="bg-card rounded-2xl border border-border p-6 mb-6">
@@ -478,6 +479,9 @@ export default function UnemploymentBenefitContent() {
    </section>
 
    <GuideMidAd />
+
+   {/* 마지막 광고 아래 관련 계산기 — 본문 내 내부 링크 0건인 dead-end 해소 (2026-09-11) */}
+   <RelatedCalculators currentPath="/unemployment-benefit" />
   </div>
  );
 }

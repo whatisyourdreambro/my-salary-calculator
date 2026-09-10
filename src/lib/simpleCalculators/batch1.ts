@@ -43,7 +43,7 @@ const TAX: CalculatorDef[] = [
  ],
  };
  },
- explanation: "산출세액 = 과세표준 × 세율 - 누진공제. 지방소득세 10% 별도.",
+ // explanation 은 enrichments.ts 의 216자 설명을 쓴다 (batch 값이 우선돼 38자 한 줄이 노출되던 문제, 2026-09-11)
  },
  {
  slug: "inheritance-tax-sim",
@@ -422,7 +422,7 @@ const SALARY: CalculatorDef[] = [
  keywords: ["시급 연봉 환산", "시급 계산"],
  fields: [
  { name: "hourly", label: "시급", defaultValue: 10320, suffix: "원" },
- { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간" },
+ { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간", min: 1 },
  ],
  compute: ({ hourly, weekHours }) => {
  // 주휴수당: 주 15시간 이상 근무 시 min(주 근무시간, 40)/40 × 8시간 유급 가산
@@ -452,7 +452,7 @@ const SALARY: CalculatorDef[] = [
  keywords: ["연봉 시급 환산", "연봉 시급"],
  fields: [
  { name: "yearly", label: "연봉", defaultValue: 50000000, suffix: "원" },
- { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간" },
+ { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간", min: 1 },
  ],
  compute: ({ yearly, weekHours }) => {
  const monthly = yearly / 12;
@@ -493,7 +493,7 @@ const SALARY: CalculatorDef[] = [
  keywords: ["일급 계산", "하루 임금"],
  fields: [
  { name: "yearly", label: "연봉", defaultValue: 50000000, suffix: "원" },
- { name: "workDays", label: "연 근무일수", defaultValue: 250, suffix: "일" },
+ { name: "workDays", label: "연 근무일수", defaultValue: 250, suffix: "일", min: 1 },
  ],
  compute: ({ yearly, workDays }) => {
  const daily = yearly / workDays;
@@ -844,7 +844,7 @@ const LOAN: CalculatorDef[] = [
  fields: [
  { name: "amount", label: "할부 원금", defaultValue: 5000000, suffix: "원" },
  { name: "rate", label: "할부 수수료율", defaultValue: 12, suffix: "%" },
- { name: "months", label: "할부 개월", defaultValue: 12, suffix: "개월" },
+ { name: "months", label: "할부 개월", defaultValue: 12, suffix: "개월", min: 1 },
  ],
  compute: ({ amount, rate, months }) => {
  const r = rate / 100 / 12;
@@ -869,7 +869,7 @@ const LOAN: CalculatorDef[] = [
 const INVESTMENT: CalculatorDef[] = [
  {
  slug: "compound-interest-quick",
- title: "복리 계산기",
+ title: "복리 간편 계산기",
  description: "원금 + 매월 적립 + 연 수익률 → 미래가치",
  category: "investment",
  categoryLabel: "투자",

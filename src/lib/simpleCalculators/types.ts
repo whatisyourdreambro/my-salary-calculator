@@ -71,3 +71,15 @@ export interface CalculatorDef {
  /** Public references explaining the model or calculation method. */
  sources?: Array<{ title: string; url: string }>;
 }
+
+/**
+ * 서버 → 클라이언트 props 로 직렬화 가능한 정의 (compute 함수 제외).
+ * /calc/[slug] 페이지가 텍스트·필드를 이 형태로 넘기고, 클라이언트는 compute 만
+ * computeLoader 로 지연 로드한다 (2026-09-11 번들 분리).
+ */
+export type ClientCalculatorDef = Omit<CalculatorDef, "compute"> & {
+ /** relatedSlugs 를 서버에서 카드 데이터로 풀어 둔 것 — 클라이언트가 레지스트리 없이 링크를 그린다. */
+ relatedCards?: Array<{ slug: string; title: string; description: string }>;
+ /** 같은 의도의 정밀 페이지 링크 (twins.ts) — 결과 직후 첫 번째 다음 단계로 노출 */
+ precisionTwin?: { href: string; title: string };
+};

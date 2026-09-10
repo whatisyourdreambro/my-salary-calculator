@@ -149,7 +149,7 @@ export default function JobIndexPage() {
           ))}
 
           <InArticleAd />
-          <CoupangBanner />
+          <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
           {/* 총 요약 */}
           <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 text-center">

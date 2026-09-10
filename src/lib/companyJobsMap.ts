@@ -14,31 +14,15 @@
 
 import { industriesData, type IndustryProfile } from "@/data/industriesData";
 import { getJobById } from "@/data/jobsData";
+import type { CompanyJobLink, CompanyJobsHub, CompanyJobsMap } from "./companyJobsResolve";
+
+// 2026-09-11: 타입·resolveHub 는 데이터 import 가 없는 companyJobsResolve.ts 로 이전(클라이언트 번들 분리).
+// 서버 빌더(buildCompanyJobsMap)만 여기 남는다. 기존 import 경로 호환을 위해 재export 한다.
+export { resolveHub } from "./companyJobsResolve";
+export type { CompanyJobLink, CompanyJobsHub, CompanyJobsMap } from "./companyJobsResolve";
 
 /** 허브당 직업 링크 상한 — RelatedCompanies 등 기존 추천망과 경쟁 최소화 */
 export const COMPANY_JOBS_LIMIT = 4;
-
-export interface CompanyJobLink {
-  /** /job/[slug] */
-  slug: string;
-  name: string;
-  /** 전체 평균 연봉(만원) — jobsData.salary.overall */
-  avg: number;
-}
-
-export interface CompanyJobsHub {
-  /** industriesData id (/industry/[id]) */
-  id: string;
-  /** 업종 허브 한글명 */
-  name: string;
-  jobs: CompanyJobLink[];
-  /** /salary-db/[id] 회사 id 목록 */
-  companies: string[];
-  /** /salary-db/listed/[stockCode] 종목코드 목록 */
-  listed: string[];
-}
-
-export type CompanyJobsMap = CompanyJobsHub[];
 
 /** 입력 최소 형태 — CompanyProfile(enrich 후 industryId 보유)·DartLiteCompany 가 그대로 만족 */
 export interface CompanyJobsCompanyInput {
@@ -108,28 +92,3 @@ export function buildCompanyJobsMap(
   return [...hubs.values()].filter((h) => h.companies.length + h.listed.length > 0);
 }
 
-/**
- * pathname → 허브. 대상은 /salary-db/[id] 와 /salary-db/listed/[stockCode] 두 패턴뿐.
- * 인덱스·ranking·compare·submit·listed 인덱스·listed/industry·top-* 는 맵 키에 없으므로 null.
- */
-export function resolveHub(pathname: string | null, map: CompanyJobsMap): CompanyJobsHub | null {
-  if (!pathname) return null;
-  const segs = pathname.replace(/\/+$/, "").split("/").filter(Boolean);
-  if (segs[0] !== "salary-db") return null;
-
-  if (segs.length === 3 && segs[1] === "listed") {
-    const code = segs[2];
-    return map.find((h) => h.listed.includes(code)) ?? null;
-  }
-  if (segs.length === 2) {
-    // 한글 슬러그(정상 동작 — 오판 금지)는 인코딩된 채 올 수 있어 디코드 후 매칭
-    let id = segs[1];
-    try {
-      id = decodeURIComponent(id);
-    } catch {
-      /* 잘못된 인코딩은 원문 그대로 매칭 */
-    }
-    return map.find((h) => h.companies.includes(id)) ?? null;
-  }
-  return null;
-}

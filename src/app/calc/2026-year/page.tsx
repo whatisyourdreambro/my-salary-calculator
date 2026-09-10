@@ -7,6 +7,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { GuideMidAd } from "@/components/AdPlacement";
+import RelatedCalculators from "@/components/RelatedCalculators";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
@@ -91,6 +92,9 @@ export default function Calc2026Page() {
  </p>
  </div>
  </div>
+
+ {/* 계산 전에는 본문 내 링크가 0건이던 dead-end 해소 — 광고(GuideMidAd) 아래 (2026-09-11) */}
+ <RelatedCalculators currentPath="/calc/2026-year" />
  </div>
  </main>
  );

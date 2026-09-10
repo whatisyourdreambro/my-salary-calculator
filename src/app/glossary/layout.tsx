@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import { breadcrumbLd } from "@/lib/structuredData";
 import { glossaryData } from "@/data/glossaryData";
 import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
@@ -34,15 +33,9 @@ function buildDefinedTermSetLd() {
 export default function GlossaryLayout({ children }: { children: React.ReactNode }) {
  return (
  <>
- <JsonLd
- data={[
- breadcrumbLd([
- { name: "홈", path: "/" },
- { name: "용어 사전", path: "/glossary" },
- ]),
- buildDefinedTermSetLd(),
- ]}
- />
+ {/* BreadcrumbList 는 페이지 단위(index·[slug])가 담당 — layout 이중 주입 시 잎 이름이 다른 목록 2개가
+     같은 문서에 실려 구글이 잎을 임의 선택한다(2026-07-06 전 사이트 제거 사고의 재발, 2026-09-11 감사). */}
+ <JsonLd data={[buildDefinedTermSetLd()]} />
  {children}
  {/* 58개 용어 동적 + 메인 = 정의 검색 트래픽 광고 적용 */}
  <PageFooterAds maxWidth="3xl" />

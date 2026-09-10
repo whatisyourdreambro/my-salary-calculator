@@ -317,17 +317,17 @@ const nextConfig = {
       // 2025-09 리디렉션 없이 삭제된 구 영문 qna 4종 → 동일 주제의 살아있는 글로 통합
       {
         source: "/qna/interim-severance-pay",
-        destination: "/qna/퇴직금-중간정산-아무-때나-받을-수-있나요",
+        destination: "/qna/%ED%87%B4%EC%A7%81%EA%B8%88-%EC%A4%91%EA%B0%84%EC%A0%95%EC%82%B0-%EC%95%84%EB%AC%B4-%EB%95%8C%EB%82%98-%EB%B0%9B%EC%9D%84-%EC%88%98-%EC%9E%88%EB%82%98%EC%9A%94", // 한글 목적지는 percent-encoding (Location 헤더 원시 UTF-8 바이트 방지, 2026-09-11)
         permanent: true,
       },
       {
         source: "/qna/year-end-tax-preview",
-        destination: "/qna/연말정산-13월의-월급이라는데-왜-누구는-토해내나요",
+        destination: "/qna/%EC%97%B0%EB%A7%90%EC%A0%95%EC%82%B0-13%EC%9B%94%EC%9D%98-%EC%9B%94%EA%B8%89%EC%9D%B4%EB%9D%BC%EB%8A%94%EB%8D%B0-%EC%99%9C-%EB%88%84%EA%B5%AC%EB%8A%94-%ED%86%A0%ED%95%B4%EB%82%B4%EB%82%98%EC%9A%94",
         permanent: true,
       },
       {
         source: "/qna/health-insurance",
-        destination: "/glossary/건강보험",
+        destination: "/glossary/%EA%B1%B4%EA%B0%95%EB%B3%B4%ED%97%98",
         permanent: true,
       },
       {

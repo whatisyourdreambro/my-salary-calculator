@@ -154,6 +154,10 @@ export default function CoupangBannerCore({
  //   그 결과 두 배너가 모두 bannerIndex!==0 이 되어 공정위 고지문이 페이지에서
  //   통째로 사라졌다 — 가이드 상세 334쪽에서 100% 재현 (2026-09-06 전수검사).
  const registrationKey = responsive ? responsive.desktop : size;
+ // 모바일 렌더 사이즈 키 — 등록(dedup)은 실제 렌더될 사이즈로 비교해야 한다. 데스크톱 키만 비교하면
+ // large-portrait(본문)+leaderboard(푸터)가 모바일에서 둘 다 mobile-banner 로 렌더돼 같은 크리에이티브가
+ // 한 페이지에 2번 나왔다(가이드 상세 ~308쪽, 2026-09-11 감사). 원시값이라 deps 규칙(위 주석)을 지킨다.
+ const mobileKey = responsive?.mobile;
  // 등록 배열의 첫 항목이 고지문 소유자다. 첫 렌더에는 아직 등록 전이라
  // 아무도 소유자가 아니고(=false), 등록 이펙트가 끝난 뒤 구독 알림으로
  // 정확히 한 배너만 true 가 된다. 렌더 중에 레지스트리를 읽으면 등록 전
@@ -161,8 +165,9 @@ export default function CoupangBannerCore({
  const [isDisclosureOwner, setIsDisclosureOwner] = useState(false);
  useEffect(() => {
  if (!pathname) return;
- // 사이즈 키는 마운트 시점 기준(데스크톱 기본값) — resize 로 바뀌어도 등록 키는 고정
- const sizeKey = registrationKey;
+ // 사이즈 키는 마운트 시점의 실제 렌더 사이즈(뷰포트 768px 기준) — resize 로 바뀌어도 등록 키는 고정
+ const sizeKey: CoupangBannerSize =
+ mobileKey && window.innerWidth < 768 ? mobileKey : registrationKey;
  const sizes = renderedBannersByPath.get(pathname) ?? [];
  if (sizes.length >= MAX_BANNERS_PER_PAGE || sizes.includes(sizeKey)) {
  setAllowed(false);
@@ -193,7 +198,7 @@ export default function CoupangBannerCore({
  setIsDisclosureOwner(false);
  notifyDisclosureOwners(pathname);
  };
- }, [pathname, registrationKey]);
+ }, [pathname, registrationKey, mobileKey]);
 
  useEffect(() => {
  if (!responsive) {

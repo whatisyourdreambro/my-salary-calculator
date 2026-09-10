@@ -391,7 +391,7 @@ export default function EarnedIncomeCreditContent() {
     </div>
    </div>
 
-   <CoupangBanner />
+   <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
    {/* Application Steps */}
    <div className="bg-white rounded-2xl border border-canvas-200 shadow-sm p-6 space-y-4">

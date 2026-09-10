@@ -308,7 +308,7 @@ export default function IndustryPage({ params }: Props) {
             </div>
           </section>
 
-          <CoupangBanner />
+          <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
           <ShareSection
             heading="이 업계 연봉, 동료에게도 알려주세요"

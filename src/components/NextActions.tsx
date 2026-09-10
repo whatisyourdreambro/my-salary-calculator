@@ -36,6 +36,8 @@ interface NextActionsProps {
  annualSalary?: number;
  /** 컨텍스트 카테고리 — 카테고리별로 다른 3 CTA 표시 */
  category?: NextActionCategory;
+ /** 현재 경로 — 자기 자신을 가리키는 CTA 제외 (2026-09-11: 2개 계산기가 자기 링크를 냈음) */
+ currentPath?: string;
  className?: string;
 }
 
@@ -189,9 +191,10 @@ function buildActions(
 export default function NextActions({
  annualSalary,
  category,
+ currentPath,
  className = "",
 }: NextActionsProps) {
- const actions = buildActions(category, annualSalary);
+ const actions = buildActions(category, annualSalary).filter((a) => a.href !== currentPath);
 
  // 제휴 오퍼 병기 (지시서 §TASK-3-4) — 카테고리 문맥에 맞는 버티컬만 매핑.
  // vertical="loan" 하드코딩 시 활성 대출 오퍼가 보험·저축 등 /calc/[slug] 전

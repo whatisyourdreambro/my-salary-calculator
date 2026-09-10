@@ -19,8 +19,16 @@ import {
  howToLd,
  speakableLd,
 } from "@/lib/structuredData";
-import { getCalculatorBySlug, getAllSlugs, type CalculatorDef } from "@/lib/simpleCalculators";
+import {
+ getCalculatorBySlug,
+ getAllSlugs,
+ getCalculatorBatch,
+ toClientCalculator,
+ defaultInputsOf,
+ type CalculatorDef,
+} from "@/lib/simpleCalculators";
 import { getCalcRelatedGuideSlugs } from "@/lib/crossLink";
+import { calculatorSeoDescription, calculatorSeoTitle } from "@/lib/simpleCalculators/seoText";
 
 export const dynamic = "force-static";
 
@@ -45,9 +53,10 @@ export async function generateMetadata({
  calc.faqs.length >= 3
  );
 
+ // 2026-09-11 SEO 감사: '계산기' 키워드 보장 + 9~34자 공식 조각 description 을 60~160자 스니펫으로 (seoText.ts)
  return buildPageMetadata({
- title: `${calc.title} — 계산식·조건별 결과`,
- description: calc.description,
+ title: calculatorSeoTitle(calc),
+ description: calculatorSeoDescription(calc),
  path: `/calc/${calc.slug}`,
  keywords: calc.keywords,
  noIndex: !isContentRich,
@@ -136,12 +145,21 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  return (
  <>
  <JsonLd data={ldData} />
- <SimpleCalculatorView slug={calc.slug} />
+ {/* 텍스트·필드는 props 로, compute 는 클라이언트가 배치 단위 지연 로드 (번들 분리 2026-09-11).
+     initialResult 는 기본값 입력의 서버 계산 결과 — 프리렌더 HTML 과 하이드레이션이 같은 값을 쓴다. */}
+ <SimpleCalculatorView
+ slug={calc.slug}
+ calc={toClientCalculator(calc)}
+ batch={getCalculatorBatch(calc.slug) ?? "batch1"}
+ initialResult={calc.compute(defaultInputsOf(calc))}
+ />
 
  <div className="page-width lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-10 xl:gap-14 pb-16">
  <div>
  <div className="max-w-3xl mx-auto">
- <NextActions category={nextActionCategory} />
+ {/* 카테고리 매핑이 없는 생활·사업·가족·커리어·환율 86종에는 범용 급여 CTA(주담대·회사연봉·연말정산)가 나가던 것을
+     중단 — 결과 직후 '다음 계산기' 핀(SimpleCalculatorView)과 아래 관련 계산기가 대신한다 (2026-09-11). */}
+ {nextActionCategory && <NextActions category={nextActionCategory} currentPath={`/calc/${calc.slug}`} />}
 
  <CoupangBanner
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
@@ -161,11 +179,14 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  title="이 계산기와 함께 보면 좋은 가이드"
  />
 
+ {/* 회사 블록은 급여·커리어 계산기에서만 — 그 외 카테고리에서는 문맥 없는 고정 6개사였다 (2026-09-11) */}
+ {(calc.category === "salary" || calc.category === "career") && (
  <RelatedCompanies
  currentId="__calc"
  limit={6}
- title="인기 회사 연봉 비교"
+ title="회사별 연봉 비교"
  />
+ )}
 
  <div className="mt-8">
  <HomeTopAd />

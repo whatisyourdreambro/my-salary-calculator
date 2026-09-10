@@ -30,6 +30,16 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  ],
  // 회사 성과급 계산기 클러스터 전용 — 수익 #1(/calc/samsung-bonus) 방문자를
  // 수익 #3(홈 계산기)·#2(/salary-db)와 절세·순위 도구로 순환시키는 동선
+ // 회사·직업·업종·지역 페이지 전용 — "{회사명} 연봉" 방문자의 다음 질문 순서:
+ // 그 연봉의 실수령 → 연말정산 → 퇴직금 → 오퍼 비교 → 성과급 (2026-09-11 NAV-03)
+ company: [
+ { path: "/", title: "연봉 실수령액 계산기", description: "이 연봉이면 세후 월급은 얼마?", icon: "Calculator" },
+ { path: "/year-end-tax", title: "연말정산 계산기", description: "13월의 월급 미리 계산", icon: "Receipt" },
+ { path: "/tools/finance/severance", title: "퇴직금 계산기", description: "환산급여 방식 정확 계산", icon: "Briefcase" },
+ { path: "/calc/offer-compare", title: "이직 오퍼 비교", description: "두 회사 총보상·실수령 비교", icon: "Scale" },
+ { path: "/calc/bonus-calculators", title: `성과급 계산기 ${bonusCalcCountKo} 모음`, description: "회사별 지급률·세후 실수령", icon: "Gift" },
+ { path: "/salary-db/ranking", title: "회사 연봉 순위", description: "업종별 평균 연봉 랭킹", icon: "TrendingUp" },
+ ],
  bonus: [
  { path: "/calc/bonus-calculators", title: `성과급 계산기 ${bonusCalcCountKo} 모음`, description: "회사별 최신 지급률·시즌 캘린더 한눈에", icon: "Gift" },
  { path: "/", title: "연봉 실수령액 계산기", description: "성과급 합산 연봉 세후 계산", icon: "Calculator" },
@@ -200,14 +210,19 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/tools/life/subscription": ["life"],
  "/tools/life/unit-converter": ["life"],
  "/dashboard": ["salary"],
- // 회사 페이지: 회사명 검색 사용자는 본인 연봉 시뮬레이션·연말정산·퇴직금에 관심 높음 → tax 카테고리 추가
- "/salary-db": ["salary", "tax"],
+ // 회사 페이지: 회사명 검색 사용자는 본인 연봉 시뮬레이션·연말정산·퇴직금에 관심 높음.
+ // 2026-09-11: ["salary","tax"] 는 salary 8종이 limit 4 를 먼저 채워 모든 회사·직업 페이지가
+ // [홈, 삼성 성과급, 주휴수당, 통상임금] 동일 4종을 받았다 → 회사 맥락 전용 세트(company)로 교체.
+ "/salary-db": ["company", "tax"],
  // 비교 페이지: 두 회사 비교 후 본인 연봉 분석으로 이동 동선
  "/salary-db/compare": ["salary", "tax"],
  // 직업·산업·지역 페이지: 본인 연봉 시뮬레이션/세금 계산기로의 cross-link (세션당 PV ↑)
- "/job": ["salary", "tax"],
- "/industry": ["salary", "tax"],
- "/region": ["salary"],
+ "/job": ["company", "tax"],
+ "/industry": ["company", "tax"],
+ "/region": ["company", "salary"],
+ // 2026-09-11 dead-end 해소: 헤더 HOT 계산기 2종이 본문 내 관련 링크 0건이었다
+ "/unemployment-benefit": ["salary", "tax"],
+ "/parental-leave": ["family", "salary"],
  // 14차 — 7차/11차 신설 시즌 계산기 dead-end 차단
  "/auto-tax-2026": ["realEstate", "tax"],
  "/weekly-holiday-allowance-2026": ["salary"],

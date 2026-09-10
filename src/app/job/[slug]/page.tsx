@@ -411,7 +411,7 @@ export default function JobPage({ params }: Props) {
             </section>
           )}
 
-          <CoupangBanner />
+          <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
           <ShareSection
             heading="이 직업 연봉, 친구에게도 알려주세요"

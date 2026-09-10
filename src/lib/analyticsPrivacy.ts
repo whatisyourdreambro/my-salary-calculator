@@ -18,7 +18,7 @@ export function sanitizeAnalyticsUrl(value: string, base = "https://www.moneysal
     if (url.protocol !== "https:" && url.protocol !== "http:") return "";
     const path = url.pathname
       .replace(/^\/share\/[^/]+/, "/share/[redacted]")
-      .replace(/^\/salary\/(?:\d+(?:-manwon)?)(?=\/|$)/, "/salary/[amount]");
+      .replace(/^\/(salary|monthly)\/(?:\d+(?:-manwon)?)(?=\/|$)/, "/$1/[amount]");
     const params = new URLSearchParams();
     for (const [key, item] of url.searchParams) {
       if (ATTRIBUTION_KEYS.has(key)) params.append(key, item);

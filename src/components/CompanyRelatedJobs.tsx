@@ -7,14 +7,16 @@
 // - layout 에는 params 가 없어 usePathname 으로 현재 회사를 판별한다.
 // - 데이터는 서버(layout)가 계산한 경량 맵(companyJobsMap, ~15KB)만 props 로 받는다.
 //   dartLite/dartDisclosed/CompanyRepository 는 이 파일에서 import 금지(클라 번들 오염).
-//   companyJobsMap 은 순수 모듈(industriesData·jobsData 만 참조)이라 resolveHub 런타임 import 가능.
+//   resolveHub 는 companyJobsResolve.ts(데이터 import 0) 에서 가져온다 — companyJobsMap.ts 는 서버 전용 빌더.
 // - SSR 에도 포함(usePathname 은 서버 렌더에서도 동작) → 크롤러가 링크를 본다.
 
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { Briefcase, ArrowRight } from "lucide-react";
 import Link from "@/components/AppLink";
-import { resolveHub, type CompanyJobsMap } from "@/lib/companyJobsMap";
+// 2026-09-11: companyJobsMap.ts(industriesData·jobsData 118KB 를 최상위 import)가 아니라 데이터 없는
+// companyJobsResolve.ts 를 import — /salary-db/* layout 청크에서 직업 프로필 전체(30KB br)가 빠진다.
+import { resolveHub, type CompanyJobsMap } from "@/lib/companyJobsResolve";
 
 const MAX_WIDTH_CLASS = {
   "3xl": "max-w-3xl",
