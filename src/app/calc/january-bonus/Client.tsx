@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
+import NumberInput from "@/components/NumberInput";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -220,9 +221,9 @@ export default function JanuaryBonusClient() {
                 onClick={() => setHasSpouse(!hasSpouse)}
                 className="px-4 rounded-xl text-xs font-bold transition-all"
                 style={{
-                  backgroundColor: hasSpouse ? "#0145F2" : "#F8FAFB",
-                  border: `1.5px solid ${hasSpouse ? "#0145F2" : "#DDE4EC"}`,
-                  color: hasSpouse ? "#FFFFFF" : "#3D5E78",
+                  backgroundColor: hasSpouse ? "#0145F2" : "hsl(var(--card))",
+                  border: `1.5px solid ${hasSpouse ? "#0145F2" : "hsl(var(--border))"}`,
+                  color: hasSpouse ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                 }}
                 aria-pressed={hasSpouse}
               >
@@ -293,7 +294,7 @@ export default function JanuaryBonusClient() {
               key={row.label}
               className={`flex justify-between items-center py-3 ${row.sub ? "pl-4" : ""}`}
               style={{
-                borderBottom: i < arr.length - 1 ? "1px solid #EDF1F5" : "none",
+                borderBottom: i < arr.length - 1 ? "1px solid hsl(var(--border))" : "none",
               }}
             >
               <span
@@ -342,7 +343,7 @@ function Field({
         {label}
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           id={id}
           type="text"
           inputMode="numeric"

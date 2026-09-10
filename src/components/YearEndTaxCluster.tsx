@@ -38,12 +38,12 @@ export default function YearEndTaxCluster({ className = "" }: { className?: stri
  className={`mt-4 mb-2 inline-flex flex-wrap items-center gap-x-1 gap-y-1 px-4 py-2 bg-canvas-100 dark:bg-canvas-800 rounded-xl border border-canvas-200 dark:border-canvas-700 text-xs ${className}`}
  aria-label="연말정산 시즌 페이지 모음"
  >
- <span className="text-canvas-600 dark:text-canvas-400 mr-1">📍 연말정산 시리즈:</span>
+ <span className="text-muted-foreground mr-1">📍 연말정산 시리즈:</span>
  {PAGES.map((page, i) => {
  const isCurrent = pathname === page.path;
  return (
  <span key={page.path} className="inline-flex items-center">
- {i > 0 && <span className="mx-1 text-canvas-400">·</span>}
+ {i > 0 && <span className="mx-1 text-muted-foreground" aria-hidden="true">·</span>}
  {isCurrent ? (
  <span className="font-bold text-navy dark:text-canvas-50" aria-current="page">
  {page.label}

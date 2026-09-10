@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 셀트리온 경영성과급 시나리오.
 // 공식 명칭 없는 연 1회 경영성과급 — 기본급 연봉 대비 % 책정, 인사평가 등급별
@@ -107,7 +108,7 @@ export default function CelltrionBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="지급률 (기본급 연봉 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={rateOverride}
                 onChange={(e) => setRateOverride(Number(e.target.value) || 0)}
@@ -128,7 +129,7 @@ export default function CelltrionBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 기본급 연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">기본급 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={baseSalaryManwon}
             onChange={(e) => setBaseSalaryManwon(Number(e.target.value) || 0)}

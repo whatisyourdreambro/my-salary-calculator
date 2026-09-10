@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { PiggyBank, TrendingUp } from "lucide-react";
 import SegmentedControl from "@/components/ui/SegmentedControl";
+import NumberInput from "@/components/NumberInput";
 
 type SavingsType = "deposit" | "savings"; // 예금(Lump sum) vs 적금(Monthly)
 type TaxType = "normal" | "preferential" | "none"; // 일반(15.4), 우대(9.5), 비과세(0)
@@ -90,7 +91,7 @@ export default function DepositCalculator() {
  {type === "deposit" ? "예치 금액" : "월 납입 금액"}
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="deposit-amount"
  type="number"
  inputMode="numeric"
@@ -107,7 +108,7 @@ export default function DepositCalculator() {
  연 이자율 (%)
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="deposit-rate"
  type="number"
  inputMode="decimal"
@@ -125,7 +126,7 @@ export default function DepositCalculator() {
  저축 기간 (개월)
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="deposit-term"
  type="number"
  inputMode="numeric"

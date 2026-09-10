@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 한화에어로스페이스 BPI(전사 경영성과급) + VEI(조직별 성과급) 시나리오.
 // FY2025 실적분 사업부별 지급률: 한국경제TV 단독·알파경제 2026-02-13 보도.
@@ -149,7 +150,7 @@ export default function HanwhaAerospaceBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과급 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -159,7 +160,7 @@ export default function HanwhaAerospaceBonusClient() {
               <span className="text-sm">%</span>
             </Row>
             <Row label="정액 인센티브 (원)">
-              <input
+              <NumberInput
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -209,7 +210,7 @@ export default function HanwhaAerospaceBonusClient() {
         </h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -243,7 +244,7 @@ export default function HanwhaAerospaceBonusClient() {
         </h2>
         <label className="block">
           <span className="text-sm font-bold">연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={annualSalaryManwon}
             onChange={(e) => setAnnualSalaryManwon(Number(e.target.value) || 0)}

@@ -32,6 +32,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import ResultSharePanel from "@/components/ResultSharePanel";
+import NumberInput from "@/components/NumberInput";
 
 // --- Types & Utilities ---
 
@@ -216,7 +217,7 @@ const CurrencyInput = ({
  {label}
  </label>
  <div className="relative">
- <input
+ <NumberInput
  type="text"
  value={value}
  onChange={handleChange}
@@ -511,8 +512,8 @@ export default function FireCalculatorPage() {
  <motion.div
  animate={{
  scale: isCurrent ? 1.2 : 1,
- backgroundColor: isActive ? "#0145F2" : "var(--background)",
- borderColor: isActive ? "#0145F2" : "var(--border)"
+ backgroundColor: isActive ? "hsl(var(--primary))" : "hsl(var(--card))",
+ borderColor: isActive ? "hsl(var(--primary))" : "hsl(var(--border))"
  }}
  className={`w-4 h-4 rounded-full border-2 transition-colors duration-500 ${isActive ? "bg-primary border-primary" : "bg-canvas-dark border-canvas"}`}
  />
@@ -543,7 +544,7 @@ export default function FireCalculatorPage() {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
  <div className="space-y-4 group">
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest">현재 나이</label>
- <input
+ <NumberInput
  type="number"
  value={inputs.currentAge}
  onChange={(e) => handleInputChange("currentAge", e.target.value)}
@@ -628,7 +629,7 @@ export default function FireCalculatorPage() {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 border-t border-canvas ">
  <div className="space-y-4">
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block">소득 상승률 (%)</label>
- <input
+ <NumberInput
  type="number"
  value={inputs.salaryGrowthRate}
  onChange={(e) => handleInputChange("salaryGrowthRate", e.target.value)}
@@ -637,7 +638,7 @@ export default function FireCalculatorPage() {
  </div>
  <div className="space-y-1">
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">은퇴 후 추가 소득 (월)</label>
- <input
+ <NumberInput
  type="text"
  value={inputs.retirementIncome}
  onChange={(e) => {
@@ -658,7 +659,7 @@ export default function FireCalculatorPage() {
  </div>
  </label>
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  value={inputs.withdrawalRate}
  onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
@@ -702,7 +703,7 @@ export default function FireCalculatorPage() {
  className="p-6 bg-canvas border border-canvas rounded-3xl flex items-center gap-6 flex-wrap shadow-sm"
  >
  <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-canvas shadow-inner">
- <input
+ <input data-number-format="calendar"
  type="number"
  value={event.year}
  onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
@@ -729,7 +730,7 @@ export default function FireCalculatorPage() {
  </select>
 
  <div className="flex items-center gap-2 ml-auto">
- <input
+ <NumberInput
  type="text"
  value={formatNumber(parseNumber(event.amount))}
  onChange={(e) => updateLifeEvent(index, "amount", e.target.value.replace(/[^0-9]/g, ""))}

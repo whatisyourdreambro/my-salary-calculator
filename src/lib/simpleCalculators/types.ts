@@ -20,6 +20,8 @@ export interface CalculatorField {
 }
 
 export interface CalculatorResult {
+ /** A condition outside this model has no numeric result; show the note instead. */
+ status?: "invalid";
  /** 핵심 결과 (강조 표시) */
  primary: { label: string; value: number; suffix?: string };
  /** 추가 결과 (작게 표시) */
@@ -64,4 +66,8 @@ export interface CalculatorDef {
  caveats?: string[];
  /** 관련 계산기 슬러그 (3~5개 권장) */
  relatedSlugs?: string[];
+ /** Publication date of a new calculator, independent of site-wide releases. */
+ publishedAt?: string;
+ /** Public references explaining the model or calculation method. */
+ sources?: Array<{ title: string; url: string }>;
 }

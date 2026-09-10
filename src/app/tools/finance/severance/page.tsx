@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 // 2026 퇴직소득세 계산 (환산급여 방식)
 function calcSeveranceTax(severancePay: number, workYears: number): {
  tax: number; localTax: number; totalTax: number; netPay: number;
@@ -110,19 +111,19 @@ export default function SeveranceCalculatorPage() {
  <>
  <div>
  <label htmlFor="severance-monthly-salary" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">3개월 평균 월 급여 (세전)</label>
- <input id="severance-monthly-salary" type="number" inputMode="numeric" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
+ <NumberInput id="severance-monthly-salary" type="number" inputMode="numeric" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(monthlySalary)}원/월 · 연봉 {fmt(monthlySalary * 12)}원</p>
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="severance-work-years" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수</label>
- <input id="severance-work-years" type="number" inputMode="numeric" min={0} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <NumberInput id="severance-work-years" type="number" inputMode="numeric" min={0} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="severance-work-months" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 개월 수</label>
- <input id="severance-work-months" type="number" inputMode="numeric" min={0} max={11} value={workMonths} onChange={e => setWorkMonths(Number(e.target.value))}
+ <NumberInput id="severance-work-months" type="number" inputMode="numeric" min={0} max={11} value={workMonths} onChange={e => setWorkMonths(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
@@ -135,12 +136,12 @@ export default function SeveranceCalculatorPage() {
  ) : (
  <div>
  <label htmlFor="severance-custom-amount" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">수령 예정 퇴직금 (세전)</label>
- <input id="severance-custom-amount" type="number" inputMode="numeric" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
+ <NumberInput id="severance-custom-amount" type="number" inputMode="numeric" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <div className="mt-4 grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="severance-tax-work-years" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수 (세율 계산용)</label>
- <input id="severance-tax-work-years" type="number" inputMode="numeric" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <NumberInput id="severance-tax-work-years" type="number" inputMode="numeric" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

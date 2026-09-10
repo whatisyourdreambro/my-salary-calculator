@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Calculator, Dices } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 // --- Percent Calculator ---
 export function PercentCalculator() {
  const inputId = useId();
@@ -58,22 +59,22 @@ export function PercentCalculator() {
  <>
  <div>
  <label htmlFor={`${inputId}-whole`} className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label htmlFor={`${inputId}-part`} className="block text-sm font-bold text-muted-blue mb-2">비율 (X%)</label>
- <input id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  ) : (
  <>
  <div>
  <label htmlFor={`${inputId}-part`} className="block text-sm font-bold text-muted-blue mb-2">일부값 (X)</label>
- <input id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-part`} type="number" inputMode="numeric" value={val1} onChange={(e) => setVal1(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label htmlFor={`${inputId}-whole`} className="block text-sm font-bold text-muted-blue mb-2">전체값 (Y)</label>
- <input id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-whole`} type="number" inputMode="numeric" value={val2} onChange={(e) => setVal2(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </>
  )}
@@ -131,15 +132,15 @@ export function NumberGenerator() {
  <div className="grid grid-cols-3 gap-4">
  <div>
  <label htmlFor={`${inputId}-min`} className="block text-sm font-bold text-muted-blue mb-2">최소값</label>
- <input id={`${inputId}-min`} type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-min`} type="number" inputMode="numeric" value={min} onChange={(e) => setMin(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label htmlFor={`${inputId}-max`} className="block text-sm font-bold text-muted-blue mb-2">최대값</label>
- <input id={`${inputId}-max`} type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-max`} type="number" inputMode="numeric" value={max} onChange={(e) => setMax(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  <div>
  <label htmlFor={`${inputId}-count`} className="block text-sm font-bold text-muted-blue mb-2">개수</label>
- <input id={`${inputId}-count`} type="number" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
+ <NumberInput id={`${inputId}-count`} type="number" inputMode="numeric" value={count} onChange={(e) => setCount(e.target.value)} className="w-full p-4 bg-electric border border-canvas rounded-xl text-white outline-none" />
  </div>
  </div>
 

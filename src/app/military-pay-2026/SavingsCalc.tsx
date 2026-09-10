@@ -7,6 +7,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { MILITARY_SAVINGS_2026 } from "@/lib/civilServantPay";
+import NumberInput from "@/components/NumberInput";
 
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
@@ -32,7 +33,7 @@ export default function SavingsCalc() {
             납입 개월 수 (육군 18개월 기준)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="ms-months"
               type="text"
               inputMode="numeric"
@@ -49,7 +50,7 @@ export default function SavingsCalc() {
             월 납입액 (한도 {fmt(MILITARY_SAVINGS_2026.monthlyCap)}원)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="ms-monthly"
               type="text"
               inputMode="numeric"
@@ -59,7 +60,7 @@ export default function SavingsCalc() {
                 setMonthly(d ? Number(d).toLocaleString("ko-KR") : "");
               }}
               className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-9"
-              style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2", color: "#0145F2" }}
+              style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid hsl(var(--input))", color: "hsl(var(--link))" }}
               aria-label="월 납입액"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-electric">원</span>

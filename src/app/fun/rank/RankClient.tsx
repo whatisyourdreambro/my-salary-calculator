@@ -8,6 +8,7 @@ import { Trophy, Users, Crown, RefreshCw, TrendingUp } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import Link from "@/components/AppLink";
 import { InArticleAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 // 연봉 분포 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const RankChart = dynamic(() => import("@/components/charts/RankChart"), {
@@ -109,7 +110,7 @@ export default function RankClient() {
  </label>
  <div className="relative max-w-md mx-auto group">
  <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity" />
- <input
+ <NumberInput
  id="rank-annual-salary"
  type="text"
  value={salaryInput}

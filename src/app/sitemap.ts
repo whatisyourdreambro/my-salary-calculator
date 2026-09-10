@@ -39,6 +39,7 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
+ '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/': { lastModified: new Date('2026-09-10') },
  '/home-loan': { lastModified: new Date('2026-09-10') },
@@ -510,12 +511,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // GSC "발견됨-색인 안 됨" 358개 차단(7차): thin page는 sitemap에서 제외 + page.tsx에서 noindex.
  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드
  const { allCalculators } = require('@/lib/simpleCalculators');
- (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown> }>)
+ (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown>; publishedAt?: string }>)
  .filter((c) => c.explanation && c.faqs && c.faqs.length >= 3)
  .forEach((c) => {
  companyUrls.push({
  url: `${baseUrl}/calc/${c.slug}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: c.publishedAt ? new Date(`${c.publishedAt}T00:00:00+09:00`) : STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly',
  priority: 0.7,
  });

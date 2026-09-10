@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { PieChart, Calculator } from "lucide-react";
 import SegmentedControl from "@/components/ui/SegmentedControl";
+import NumberInput from "@/components/NumberInput";
 
 // 잔액 추이 차트(recharts)는 지연 로드 — recharts가 무거워 First Load 에서 제외.
 const LoanChart = dynamic(() => import("@/components/charts/LoanChart"), {
@@ -148,7 +149,7 @@ export default function LoanCalculator() {
  대출 금액
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="loan-amount"
  type="number"
  inputMode="numeric"
@@ -178,7 +179,7 @@ export default function LoanCalculator() {
  연 이자율 (%)
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="loan-rate"
  type="number"
  inputMode="decimal"
@@ -196,7 +197,7 @@ export default function LoanCalculator() {
  대출 기간 (년)
  </label>
  <div className="relative">
- <input
+ <NumberInput
  id="loan-term"
  type="number"
  inputMode="numeric"

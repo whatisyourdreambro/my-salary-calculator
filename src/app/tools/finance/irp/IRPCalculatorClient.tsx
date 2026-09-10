@@ -6,6 +6,7 @@ import { useId, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 export default function IRPCalculatorClient() {
  const fieldId = useId();
@@ -26,7 +27,7 @@ export default function IRPCalculatorClient() {
  <div className="space-y-6">
  <div>
  <label htmlFor={`${fieldId}-salary`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연간 총급여 (원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-salary`}
  type="number"
  value={salary}
@@ -40,7 +41,7 @@ export default function IRPCalculatorClient() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor={`${fieldId}-irp`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 납입액 (최대 900만원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-irp`}
  type="number"
  value={irpAmount}
@@ -51,7 +52,7 @@ export default function IRPCalculatorClient() {
  </div>
  <div>
  <label htmlFor={`${fieldId}-pension`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 납입액 (최대 600만원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-pension`}
  type="number"
  value={pensionAmount}

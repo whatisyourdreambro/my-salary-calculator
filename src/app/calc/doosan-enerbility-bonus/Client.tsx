@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 두산에너빌리티 경영성과급 시나리오.
 // 제도: 영업이익 목표 달성률 기준, 상한 기본급 530% / 하한 100%
@@ -121,7 +122,7 @@ export default function DoosanEnerbilityBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과급 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={basicPctOverride}
                 onChange={(e) => setBasicPctOverride(Number(e.target.value) || 0)}
@@ -144,7 +145,7 @@ export default function DoosanEnerbilityBonusClient() {
         <div className="grid sm:grid-cols-2 gap-4">
           <label className="block">
             <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-            <input
+            <NumberInput
               type="number"
               value={annualSalaryManwon}
               onChange={(e) => setAnnualSalaryManwon(Number(e.target.value) || 0)}
@@ -158,7 +159,7 @@ export default function DoosanEnerbilityBonusClient() {
           </label>
           <label className="block">
             <span className="text-sm font-bold">월 기본급 (만원)</span>
-            <input
+            <NumberInput
               type="number"
               value={monthlyBasicManwon}
               onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}

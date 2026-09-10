@@ -13,7 +13,7 @@
 //   /embed 페이지가 담당한다.
 
 import { calculateNetSalary2026 } from "@/lib/calculator";
-import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT } from "../shared";
+import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
 export const runtime = "edge";
 
@@ -73,12 +73,12 @@ function buildHtml(): string {
   .title span { color: var(--accent); }
   .row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   label { font-weight: 700; font-size: 13px; color: var(--sub); white-space: nowrap; }
-  input[type="number"] {
+  input[data-number-input="grouped"] {
     flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px; font-weight: 700;
     border: 1px solid var(--border); border-radius: 10px;
     background: var(--bg); color: var(--text); outline: none;
   }
-  input[type="number"]:focus { border-color: var(--accent); }
+  input[data-number-input="grouped"]:focus { border-color: var(--accent); }
   .unit { font-weight: 700; color: var(--sub); font-size: 13px; }
   .result {
     background: var(--card); border-radius: 12px; padding: 14px 16px;
@@ -102,7 +102,7 @@ function buildHtml(): string {
   <p class="title">💰 2026 연봉 <span>실수령액</span> 계산기</p>
   <div class="row">
     <label for="salary">연봉</label>
-    <input id="salary" type="number" inputmode="numeric" min="500" max="20000" step="100" value="5000">
+    <input id="salary" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="500" max="20000" step="100" value="5,000">
     <span class="unit">만원</span>
   </div>
   <div class="result">
@@ -113,6 +113,7 @@ function buildHtml(): string {
   <a class="cta" href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">정확한 공제 내역 계산하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
+${WIDGET_NUMBER_INPUT_SCRIPT}
 (function () {
   var GRID = ${gridJson};
   var MIN = ${GRID_MIN}, MAX = ${GRID_MAX}, STEP = ${GRID_STEP};
@@ -126,7 +127,7 @@ function buildHtml(): string {
     return GRID[lo] + (GRID[hi] - GRID[lo]) * t;
   }
   function render() {
-    var manwon = parseFloat(input.value);
+    var manwon = parseFloat(input.value.replace(/,/g, ""));
     if (!isFinite(manwon) || manwon <= 0) { out.textContent = "—"; return; }
     if (manwon * 10000 > MAX) {
       // 그리드 상한(2억) 초과 — 틀린 값을 조용히 보여주는 대신 본편으로 안내
@@ -137,7 +138,7 @@ function buildHtml(): string {
     var netManwon = Math.round(net / 10000);
     out.innerHTML = "월 " + netManwon.toLocaleString("ko-KR") + "<small>만원</small>";
   }
-  input.addEventListener("input", render);
+  bindGroupedNumberInput(input, render);
   render();
 })();
 </script>

@@ -15,6 +15,7 @@ import {
  Info,
  HelpCircle,
 } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
@@ -137,7 +138,7 @@ export default function UnemploymentBenefitContent() {
        퇴직 전 월 평균임금 (세전)
       </label>
       <div className="relative">
-       <input id="ms-unemployment-benefit-field-0"
+       <NumberInput id="ms-unemployment-benefit-field-0"
         type="text"
         value={Number(monthlyWage).toLocaleString("ko-KR")}
         onChange={(e) =>

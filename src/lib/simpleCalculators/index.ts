@@ -1,5 +1,5 @@
 // src/lib/simpleCalculators/index.ts
-// 100개 계산기 통합 진입점 + enrichments 자동 머지
+// Calculator registry and explanations shared by routes, search and sitemap.
 
 import type { CalculatorDef } from "./types";
 import { batch1Calculators } from "./batch1";
@@ -8,10 +8,14 @@ import { enrichmentMap } from "./enrichments";
 import { enrichmentsExtA } from "./enrichments-ext-a";
 import { enrichmentsExtB } from "./enrichments-ext-b";
 import { enrichmentsExtC } from "./enrichments-ext-c";
+import { expandedFinanceCalculators } from "./expandedFinance";
+import { expandedPracticalCalculators } from "./expandedPractical";
 
 const rawCalculators: CalculatorDef[] = [
  ...batch1Calculators,
  ...batch2Calculators,
+ ...expandedFinanceCalculators,
+ ...expandedPracticalCalculators,
 ];
 
 // 우선순위 30개(enrichments) + 확장 70개(ext-a/b/c) = 100개 전체 enrichment 병합

@@ -135,6 +135,7 @@ const CALC_DATA_CATEGORY_MAP: Record<string, string[]> = {
  currency: ["life", "investment"],
  health: ["health"],
  family: ["family"],
+ career: ["salary", "investment"],
 };
 
 /**

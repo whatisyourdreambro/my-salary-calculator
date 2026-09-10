@@ -14,6 +14,6 @@ export const REGION_COUNT = 19;
 /** 한국어 가이드 편수 — koGuides.length */
 export const GUIDE_COUNT = 334;
 /** /calc/[slug] 퀵 계산기 수 — allCalculators.length */
-export const SIMPLE_CALC_COUNT = 101;
+export const SIMPLE_CALC_COUNT = 202;
 /** /tools 리프 도구 수 — page.tsx 파일 수(인덱스 제외) */
 export const TOOL_COUNT = 29;

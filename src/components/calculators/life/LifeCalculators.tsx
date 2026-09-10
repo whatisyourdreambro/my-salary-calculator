@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Users, Fuel, Ruler } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 // --- Dutch Pay Calculator ---
 export function DutchPayCalculator() {
  const inputId = useId();
@@ -25,7 +26,7 @@ export function DutchPayCalculator() {
  <div className="space-y-6">
  <div>
  <label htmlFor={`${inputId}-amount`} className="block text-sm font-bold text-muted-blue mb-2">총 금액 (원)</label>
- <input
+ <NumberInput
  id={`${inputId}-amount`}
  type="text"
  value={amount}
@@ -36,7 +37,7 @@ export function DutchPayCalculator() {
  </div>
  <div>
  <label htmlFor={`${inputId}-people`} className="block text-sm font-bold text-muted-blue mb-2">인원 수 (명)</label>
- <input
+ <NumberInput
  id={`${inputId}-people`}
  type="number"
  value={people}
@@ -89,7 +90,7 @@ export function FuelCostCalculator() {
  <div className="space-y-6">
  <div>
  <label htmlFor={`${inputId}-distance`} className="block text-sm font-bold text-muted-blue mb-2">이동 거리 (km)</label>
- <input
+ <NumberInput
  id={`${inputId}-distance`}
  type="number"
  value={distance}
@@ -99,7 +100,7 @@ export function FuelCostCalculator() {
  </div>
  <div>
  <label htmlFor={`${inputId}-efficiency`} className="block text-sm font-bold text-muted-blue mb-2">연비 (km/L)</label>
- <input
+ <NumberInput
  id={`${inputId}-efficiency`}
  type="number"
  value={efficiency}
@@ -109,7 +110,7 @@ export function FuelCostCalculator() {
  </div>
  <div>
  <label htmlFor={`${inputId}-price`} className="block text-sm font-bold text-muted-blue mb-2">리터당 가격 (원)</label>
- <input
+ <NumberInput
  id={`${inputId}-price`}
  type="number"
  value={price}
@@ -183,7 +184,7 @@ export function UnitConverter() {
  <label htmlFor={inputId} className="block text-sm font-bold text-muted-blue mb-2">
  {type === "length" ? "센티미터 (cm)" : "킬로그램 (kg)"}
  </label>
- <input
+ <NumberInput
  id={inputId}
  type="number"
  value={value}

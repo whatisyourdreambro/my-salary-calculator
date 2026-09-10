@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Heart, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 증여세 계산
@@ -76,7 +77,7 @@ export default function GiftTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-6">
  <div>
  <label htmlFor="gift-tax-amount" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">증여 금액 (원)</label>
- <input id="gift-tax-amount" type="number" inputMode="numeric" value={amount} onChange={e => setAmount(Number(e.target.value))}
+ <NumberInput id="gift-tax-amount" type="number" inputMode="numeric" value={amount} onChange={e => setAmount(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(amount)}원 ({(amount / 100_000_000).toFixed(2)}억원)</p>
  </div>

@@ -11,6 +11,7 @@ import {
 import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026 세법 기준 로직 (소득세법 제47조, 제55조, 제59조)
@@ -348,7 +349,7 @@ export default function BonusCalculatorPage() {
                 연간 기본급 (세전 연봉)
               </label>
               <div className="relative">
-                <input
+                <NumberInput
                   id="bonus-annual-salary"
                   type="text"
                   inputMode="numeric"
@@ -384,7 +385,7 @@ export default function BonusCalculatorPage() {
                 성과급 / 인센티브 (세전)
               </label>
               <div className="relative">
-                <input
+                <NumberInput
                   id="bonus-gross-bonus"
                   type="text"
                   inputMode="numeric"

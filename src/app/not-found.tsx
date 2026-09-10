@@ -3,7 +3,7 @@ import { Home, Search, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift
 
 const SUGGESTED_LINKS = [
   { href: "/", label: "연봉 계산기", icon: Home, description: "2026 실수령액 즉시 계산" },
-  { href: "/calc", label: "100가지 계산기", icon: Calculator, description: "세금·대출·투자·부동산" },
+  { href: "/calc", label: "계산기 모음", icon: Calculator, description: "세금·대출·투자·부동산" },
   { href: "/guides", label: "금융 가이드", icon: BookOpen, description: "직장인 절세·재테크" },
   { href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "기업 평균 연봉 비교" },
   { href: "/calc/january-bonus", label: "13월의 월급", icon: Gift, description: "연말정산 환급 미리보기" },

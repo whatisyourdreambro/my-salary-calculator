@@ -54,12 +54,7 @@ export const regionLabel = `${REGION_COUNT - 2}개 시도 + 판교·여의도`;
 export const guideCountPlus = plus(GUIDE_COUNT);
 
 // ── 계산기 수 ────────────────────────────────────────────
-/** "100+" — /calc 퀵 계산기(101종) 마케팅 표기 */
+/** /calc registry count rounded down to a conservative public label. */
 export const simpleCalcCountPlus = plus(SIMPLE_CALC_COUNT);
-/**
- * 사이트 전체 계산기 수 마케팅 라벨.
- * 퀵 계산기 101 + 전용 계산기 페이지(성과급 23종·시즌 계산기·/tools 25종 등)의 합산은
- * 명확한 단일 데이터 소스가 없어 수동 상수로 유지 — 전 표면이 이 값 하나로 수렴한다.
- * (기존 표면에 150+/200+/100+ 세 값이 혼재하던 것을 150+ 로 통일)
- */
-export const TOTAL_CALC_LABEL = "150+";
+/** Verified lower bound; overlapping dedicated calculators are not double counted. */
+export const TOTAL_CALC_LABEL = simpleCalcCountPlus;

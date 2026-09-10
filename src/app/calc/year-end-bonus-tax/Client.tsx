@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -136,8 +137,8 @@ export default function YearEndBonusTaxClient() {
         <div
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{
-            backgroundColor: "#FFFFFF",
-            border: !isTie && !isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
+            backgroundColor: "hsl(var(--card))",
+            border: !isTie && !isBetter ? "2px solid #0145F2" : "1.5px solid hsl(var(--border))",
             boxShadow: !isTie && !isBetter ? "0 8px 24px #0145F220" : "none",
           }}
         >
@@ -150,7 +151,7 @@ export default function YearEndBonusTaxClient() {
             ① 12월 일시 지급
           </p>
           <p className="text-3xl font-black text-navy mb-2">{fmt(result.netA)}원</p>
-          <p className="text-xs text-rose-500 mb-2 font-bold">
+          <p className="text-xs text-destructive mb-2 font-bold">
             세금 -{fmt(result.totalA)}원 ({result.rateA.toFixed(1)}%)
           </p>
           <p className="text-xs text-muted-blue">올해 연봉에 합산 과세</p>
@@ -159,8 +160,8 @@ export default function YearEndBonusTaxClient() {
         <div
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{
-            backgroundColor: "#FFFFFF",
-            border: !isTie && isBetter ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
+            backgroundColor: "hsl(var(--card))",
+            border: !isTie && isBetter ? "2px solid #0145F2" : "1.5px solid hsl(var(--border))",
             boxShadow: !isTie && isBetter ? "0 8px 24px #0145F220" : "none",
           }}
         >
@@ -173,7 +174,7 @@ export default function YearEndBonusTaxClient() {
             ② 1월 다음해 지급
           </p>
           <p className="text-3xl font-black text-navy mb-2">{fmt(result.netB)}원</p>
-          <p className="text-xs text-rose-500 mb-2 font-bold">
+          <p className="text-xs text-destructive mb-2 font-bold">
             세금 -{fmt(result.totalB)}원 ({result.rateB.toFixed(1)}%)
           </p>
           <p className="text-xs text-muted-blue">다음해 연봉에 합산 과세</p>
@@ -185,22 +186,22 @@ export default function YearEndBonusTaxClient() {
         <div
           className="rounded-2xl p-5 border"
           style={{
-            backgroundColor: isBetter ? "#ECFDF5" : "#FEF3F2",
-            borderColor: isBetter ? "#A7F3D0" : "#FECACA",
+            backgroundColor: isBetter ? "hsl(var(--success) / 0.08)" : "hsl(var(--destructive) / 0.08)",
+            borderColor: isBetter ? "hsl(var(--success) / 0.3)" : "hsl(var(--destructive) / 0.3)",
           }}
         >
           <p className="text-xs font-black uppercase tracking-widest mb-1" style={{
-            color: isBetter ? "#065F46" : "#991B1B"
+            color: isBetter ? "hsl(var(--success))" : "hsl(var(--destructive))"
           }}>
             {isBetter ? "1월 지급" : "12월 지급"} 절세 효과
           </p>
           <p className="text-2xl font-black" style={{
-            color: isBetter ? "#065F46" : "#991B1B"
+            color: isBetter ? "hsl(var(--success))" : "hsl(var(--destructive))"
           }}>
             +{fmt(Math.abs(result.diff))}원
           </p>
           <p className="text-xs mt-1" style={{
-            color: isBetter ? "#047857" : "#B91C1C"
+            color: isBetter ? "hsl(var(--success))" : "hsl(var(--destructive))"
           }}>
             다음해 소득 감소가 예상되면 1월 지급 협의를, 그렇지 않다면 차이가 거의 없거나
             12월 지급이 유리합니다.
@@ -236,7 +237,7 @@ function Field({
         {label}
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           id={id}
           type="text"
           inputMode="numeric"
@@ -244,9 +245,9 @@ function Field({
           onChange={(e) => onChange(formatInput(e.target.value))}
           className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-10"
           style={{
-            backgroundColor: highlight ? "#0145F208" : "#F8FAFB",
-            border: highlight ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
-            color: highlight ? "#0145F2" : "#0A1829",
+            backgroundColor: highlight ? "hsl(var(--accent))" : "hsl(var(--card))",
+            border: highlight ? "2px solid #0145F2" : "1.5px solid hsl(var(--border))",
+            color: highlight ? "hsl(var(--link))" : "hsl(var(--foreground))",
           }}
           placeholder="0"
           aria-label={label}

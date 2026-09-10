@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 2026 임협 타결(8/31 찬반투표 가결) / 2025 합의(전년 실지급) 시나리오
 // 2026 타결 수치 출처: 머니투데이·한국경제 2026-09-01 보도 (찬성 61.55%·투표율 78.63%).
@@ -118,7 +119,7 @@ export default function HyundaiBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -128,7 +129,7 @@ export default function HyundaiBonusClient() {
               <span className="text-sm">%</span>
             </Row>
             <Row label="정액 (원)">
-              <input
+              <NumberInput
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -137,7 +138,7 @@ export default function HyundaiBonusClient() {
               />
             </Row>
             <Row label="무상주 (주)">
-              <input
+              <NumberInput
                 type="number"
                 value={sharesOverride}
                 onChange={(e) => setSharesOverride(Number(e.target.value) || 0)}
@@ -155,7 +156,7 @@ export default function HyundaiBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 통상임금</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -187,7 +188,7 @@ export default function HyundaiBonusClient() {
         <h2 className="text-xl font-black mb-4">3단계 · 현대차 주가</h2>
         <label className="block">
           <span className="text-sm font-bold">현대차 보통주 1주 가격 (원)</span>
-          <input
+          <NumberInput
             type="number"
             value={stockPrice}
             onChange={(e) => setStockPrice(Number(e.target.value) || 0)}

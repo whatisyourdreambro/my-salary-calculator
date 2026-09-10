@@ -7,6 +7,7 @@ import { Receipt, Printer, RefreshCw, Calculator } from "lucide-react";
 import { calculateNetSalary } from "@/lib/calculator";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 export default function SalarySlipPage() {
  const [salaryInput, setSalaryInput] = useState("60,000,000");
@@ -85,7 +86,7 @@ export default function SalarySlipPage() {
 
  <div className="space-y-2">
  <label htmlFor="salary-slip-salary" className="text-sm font-bold text-faint-blue">연봉 (세전)</label>
- <input
+ <NumberInput
  id="salary-slip-salary"
  type="text"
  value={salaryInput}

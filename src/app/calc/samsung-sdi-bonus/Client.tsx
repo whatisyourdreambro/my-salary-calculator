@@ -5,6 +5,7 @@ import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
 import { SCENARIOS, DEFAULT_SALARY_MANWON, BASIC_RATIO, TAI_HALF, TAI_PER_YEAR } from "./data";
+import NumberInput from "@/components/NumberInput";
 
 export default function SamsungSdiBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("chasm");
@@ -75,7 +76,7 @@ export default function SamsungSdiBonusClient() {
         {customMode && (
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
-            <input
+            <NumberInput
               type="number"
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
@@ -91,7 +92,7 @@ export default function SamsungSdiBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}

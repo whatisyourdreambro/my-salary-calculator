@@ -128,7 +128,7 @@ const toolPages: SearchEntry[] = [
  { title: "해외 연봉 비교", href: "/global", category: "도구" },
  { title: "커리어 플래너", href: "/pro/career-planner", category: "도구" },
  { title: "기업별 연봉 DB", href: "/salary-db", category: "도구", description: `${companyCountKo} 기업`, priority: 1 },
- { title: "100가지 계산기 인덱스", href: "/calc", category: "도구", priority: 1 },
+ { title: "금융·생활 계산기 모음", href: "/calc", category: "도구", priority: 1 },
  { title: "전체 가이드", href: "/guides", category: "도구" },
  { title: "용어 사전", href: "/glossary", category: "도구" },
  { title: "Q&A 인덱스", href: "/qna", category: "도구" },
@@ -167,6 +167,12 @@ const toolPages: SearchEntry[] = [
  { title: "유류비 계산기", href: "/tools/life/fuel-cost", category: "도구" },
  { title: "구독 서비스 비용 계산기", href: "/tools/life/subscription", category: "도구", description: "월 구독료 총합 분석" },
  { title: "단위 변환기", href: "/tools/life/unit-converter", category: "도구" },
+ { title: "BMI 상세 계산기", href: "/tools/health/bmi", category: "계산기", description: "키·체중 입력과 성인 BMI 참고 범위" },
+ { title: "퍼센트 상세 계산기", href: "/tools/math/percent", category: "계산기", description: "비율·증감률·할인 후 금액 비교" },
+ { title: "랜덤 숫자 추첨기", href: "/tools/math/number-gen", category: "계산기", description: "범위와 개수를 지정하는 숫자 추첨" },
+ { title: "만 나이 계산기", href: "/tools/date/age", category: "계산기", description: "생년월일과 기준일로 만 나이 확인" },
+ { title: "D-Day 계산기", href: "/tools/date/d-day", category: "계산기", description: "기준 날짜까지 남은 날과 지난 날" },
+ { title: "근무일수 계산기", href: "/tools/date/work-days", category: "계산기", description: "시작일·종료일 사이의 근무일 수" },
  { title: "2026 대기업 연봉 순위 TOP 30", href: "/salary-db/ranking", category: "도구", description: "시니어 기준 총보상 랭킹", priority: 2 },
  { title: "머니샐러리 데이터 리포트", href: "/insights", category: "도구", description: "연봉·성과급 데이터 분석" },
  { title: "내 블로그에 계산기 위젯 달기", href: "/embed", category: "도구", description: "무료 임베드 위젯" },
@@ -184,6 +190,19 @@ const bonusCalcEntries: SearchEntry[] = BONUS_CALCS.filter((c) => !explicitBonus
  description: c.hook,
  priority: 2,
 }));
+
+/** Dedicated calculator discovery reuses the same labels as header search. */
+export function getDedicatedCalculatorEntries(): SearchEntry[] {
+ const toolsHubs = new Set(["/tools", "/tools/finance", "/tools/life", "/tools/real-estate"]);
+ const core = new Set(["/home-loan", "/car-loan", "/fire-calculator", "/year-end-tax", "/global", "/pro/career-planner"]);
+ const entries = [
+   { title: "연봉 실수령액 계산기", href: "/", category: "계산기" as const, description: "연봉·월급·비과세 조건에 따른 세후 월급" },
+   ...seasonPages.filter(entry => entry.category === "계산기"),
+   ...bonusCalcEntries,
+   ...toolPages.filter(entry => entry.category === "계산기" || core.has(entry.href) || (entry.href.startsWith("/tools/") && !toolsHubs.has(entry.href))),
+ ];
+ return entries.filter((entry, index) => entries.findIndex(other => other.href === entry.href) === index);
+}
 
 const calculatorEntries: SearchEntry[] = allCalculators.map((c) => ({
  title: c.title,

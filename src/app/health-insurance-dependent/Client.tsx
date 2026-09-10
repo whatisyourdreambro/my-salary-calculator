@@ -8,6 +8,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
+import NumberInput from "@/components/NumberInput";
 
 // ── 별표 1의2 판정 기준 (원 단위) ──────────────────────────────
 const INCOME_CAP = 20_000_000; // 연간 합산소득 2,000만원 이하
@@ -214,7 +215,7 @@ export default function HealthInsuranceDependentClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ② 연간 합산소득 (만원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={incomeManwon}
             onChange={(e) => setIncomeManwon(Math.max(0, Number(e.target.value) || 0))}
@@ -280,7 +281,7 @@ export default function HealthInsuranceDependentClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ④ 사업소득 (연간 · 만원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={bizIncomeManwon}
             onChange={(e) => setBizIncomeManwon(Math.max(0, Number(e.target.value) || 0))}
@@ -301,7 +302,7 @@ export default function HealthInsuranceDependentClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ⑤ 재산세 과세표준 (만원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={propertyManwon}
             onChange={(e) => setPropertyManwon(Math.max(0, Number(e.target.value) || 0))}

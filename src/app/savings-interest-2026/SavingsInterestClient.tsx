@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 type Product = "savings" | "deposit"; // 정기적금 / 정기예금
 type InterestType = "simple" | "compound"; // 단리 / 복리
@@ -119,7 +120,7 @@ export default function SavingsInterestClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             {product === "savings" ? "월 적립액 (원)" : "예치금 (원)"}
           </label>
-          <input
+          <NumberInput
             type="number"
             value={amount}
             onChange={(e) => setAmount(Math.max(0, Number(e.target.value) || 0))}
@@ -195,12 +196,12 @@ export default function SavingsInterestClient() {
               <span>+{fmt(result.interest)}원</span>
             </div>
             {!taxFree && (
-              <div className="flex justify-between text-rose-600 dark:text-rose-400">
+              <div className="flex justify-between text-destructive">
                 <span>이자소득세 (15.4%)</span>
                 <span>-{fmt(result.tax)}원</span>
               </div>
             )}
-            <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-bold pt-2 border-t border-electric-20 mt-2">
+            <div className="flex justify-between text-success font-bold pt-2 border-t border-electric-20 mt-2">
               <span>세후 이자</span>
               <span>+{fmt(result.netInterest)}원</span>
             </div>

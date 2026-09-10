@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 현대로템 임단협 경영성과금 시나리오 — "월 기본급 × N% + 정액금" 구조.
 // 연 1회, 임단협 타결(통상 연말) 후 지급.
@@ -103,7 +104,7 @@ export default function HyundaiRotemBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -113,7 +114,7 @@ export default function HyundaiRotemBonusClient() {
               <span className="text-sm">%</span>
             </Row>
             <Row label="정액 (원)">
-              <input
+              <NumberInput
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -129,7 +130,7 @@ export default function HyundaiRotemBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -193,7 +194,7 @@ export default function HyundaiRotemBonusClient() {
               <span className="font-bold">4대보험 추가 부과 적용</span>
             </label>
             <Row label="연봉 직접 입력 (만원)">
-              <input
+              <NumberInput
                 type="number"
                 value={annualOverrideManwon}
                 onChange={(e) => setAnnualOverrideManwon(Number(e.target.value) || 0)}

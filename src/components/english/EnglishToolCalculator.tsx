@@ -7,6 +7,7 @@ import { getEnglishToolNextTasks } from '@/lib/englishResultTasks';
 import { useCalculatorMeasurement } from '@/hooks/useCalculatorMeasurement';
 import { ENGLISH_CURRENCIES, englishCurrencyDigits, formatEnglishMoney, getEnglishTool, isEnglishCurrency, type EnglishCurrency, type EnglishToolSlug } from '@/lib/englishTools';
 import { ENGLISH_TOOL_DETAILS, calculateEnglishTool, englishToolFieldError, parseEnglishToolInputs, type EnglishToolMetric } from '@/lib/englishToolModels';
+import NumberInput from "@/components/NumberInput";
 
 function displayMetric(metric: EnglishToolMetric, currency: EnglishCurrency) {
   if (typeof metric.value === 'string') return metric.value;
@@ -47,7 +48,7 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
           const error = englishToolFieldError(field, raw[field.key], currency);
           return <div key={field.key} className="min-w-0">
             <label htmlFor={id} className="mb-2 block font-semibold">{field.label}{field.kind === 'money' ? ` (${currency})` : ''}</label>
-            <input id={id} type="text" inputMode={field.precision === 0 || (field.kind === 'money' && englishCurrencyDigits(currency) === 0) ? 'numeric' : 'decimal'} autoComplete="off" maxLength={24} value={raw[field.key]} onChange={event => setRaw(previous => ({ ...previous, [field.key]: event.target.value }))} aria-invalid={!!error} aria-describedby={`${id}-help${error ? ` ${id}-error` : ''}`} className="ms-field w-full min-w-0 text-lg tabular-nums" />
+            <NumberInput id={id} type="text" inputMode={field.precision === 0 || (field.kind === 'money' && englishCurrencyDigits(currency) === 0) ? 'numeric' : 'decimal'} autoComplete="off" maxLength={24} value={raw[field.key]} onChange={event => setRaw(previous => ({ ...previous, [field.key]: event.target.value }))} aria-invalid={!!error} aria-describedby={`${id}-help${error ? ` ${id}-error` : ''}`} className="ms-field w-full min-w-0 text-lg tabular-nums" />
             <p id={`${id}-help`} className="mt-2 text-sm text-muted-foreground">{field.help}</p>
             {error && <p id={`${id}-error`} className="mt-1 text-sm text-destructive">{error}</p>}
           </div>;

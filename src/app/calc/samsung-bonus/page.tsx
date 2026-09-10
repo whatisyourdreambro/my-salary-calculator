@@ -435,9 +435,9 @@ export default function SamsungBonusCalculatorPage() {
                       <td
                         className={`px-4 py-2.5 text-right font-black tabular-nums ${
                           t.rate >= 100
-                            ? "text-electric dark:text-[#4D80F5]"
+                            ? "text-link"
                             : t.rate >= 75
-                            ? "text-emerald-600 dark:text-emerald-400"
+                            ? "text-success"
                             : "text-muted-blue dark:text-canvas-300"
                         }`}
                       >
@@ -624,7 +624,7 @@ export default function SamsungBonusCalculatorPage() {
                       <p className="text-faint-blue mb-0.5">1인당 성과급</p>
                       <p
                         className="font-black"
-                        style={{ color: s.color }}
+                        style={{ color: "hsl(var(--link))" }}
                       >
                         {s.perPersonRange}
                       </p>
@@ -1217,7 +1217,7 @@ function Step({
   const color = isResult
     ? "text-white"
     : highlight
-    ? "text-emerald-600"
+    ? "text-success"
     : "text-electric";
 
   return (

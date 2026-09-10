@@ -31,6 +31,7 @@ import {
  calculateCarLoan,
  recommendCarsBySalary,
 } from "@/lib/carLoanCalculator";
+import NumberInput from "@/components/NumberInput";
 
 // Currency Input Component
 const CurrencyInput = ({
@@ -56,7 +57,7 @@ const CurrencyInput = ({
  <div className="space-y-2">
  <label htmlFor={fieldId} className="text-sm font-medium text-muted-foreground">{label}</label>
  <div className="relative">
- <input
+ <NumberInput
  id={fieldId}
  type="text"
  value={value}

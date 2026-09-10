@@ -14,6 +14,7 @@ import {
 } from "@/lib/yearEndTaxCalculator";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -242,7 +243,7 @@ export default function DualIncomeYearEndClient() {
               {f.label}
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id={`di-${f.key}`}
                 type="text"
                 inputMode="numeric"
@@ -292,7 +293,7 @@ export default function DualIncomeYearEndClient() {
                   {f.label}
                 </label>
                 <div className="relative">
-                  <input
+                  <NumberInput
                     id={`di-${f.key}`}
                     type="text"
                     inputMode="numeric"

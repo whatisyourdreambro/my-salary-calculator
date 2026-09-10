@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CreditCard } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function InstallmentPage() {
@@ -53,7 +54,7 @@ export default function InstallmentPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
  <label htmlFor="installment-principal" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 원금 (원)</label>
- <input id="installment-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
+ <NumberInput id="installment-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div className="grid grid-cols-2 gap-4">
@@ -64,7 +65,7 @@ export default function InstallmentPage() {
  </div>
  <div>
  <label htmlFor="installment-rate" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 이자율 ({annualRate}%)</label>
- <input id="installment-rate" type="number" inputMode="numeric" step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
+ <NumberInput id="installment-rate" type="number" inputMode="numeric" step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

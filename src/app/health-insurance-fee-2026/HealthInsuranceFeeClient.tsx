@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -82,7 +83,7 @@ export default function HealthInsuranceFeeClient() {
             <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
               월 보수액 (비과세 제외, 원)
             </label>
-            <input
+            <NumberInput
               type="number"
               value={monthlyWage}
               onChange={(e) => setMonthlyWage(Math.max(0, Number(e.target.value) || 0))}

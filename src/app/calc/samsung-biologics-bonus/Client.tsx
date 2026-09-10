@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 삼성바이오로직스 OPI 지급 이력 (보도 기준)
 // - 2025 실적분: 연봉의 50% 상한 (아시아경제 2025-12-27, 산경투데이·컨슈머타임스 2025-12-26)
@@ -100,7 +101,7 @@ export default function SamsungBiologicsBonusClient() {
         {customMode && (
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
-            <input
+            <NumberInput
               type="number"
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
@@ -120,7 +121,7 @@ export default function SamsungBiologicsBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}

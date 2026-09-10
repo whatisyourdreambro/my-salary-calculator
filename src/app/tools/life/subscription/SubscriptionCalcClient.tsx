@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { CreditCard, PlusCircle, Trash2, BarChart3 } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 type Subscription = { name: string; amount: number; period: "monthly" | "yearly" };
 
 const PRESETS: Subscription[] = [
@@ -65,7 +66,7 @@ export default function SubscriptionCalcClient() {
  <h2 className="font-black text-navy mb-4">직접 입력</h2>
  <div className="space-y-3">
  <input aria-label="서비스명" value={newName} onChange={e => setNewName(e.target.value)} placeholder="서비스명" className="w-full border border-canvas rounded-xl px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
- <input aria-label="금액 (원)" value={newAmount} onChange={e => setNewAmount(e.target.value)} type="number" inputMode="numeric" placeholder="금액 (원)" className="w-full border border-canvas rounded-xl px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
+ <NumberInput aria-label="금액 (원)" value={newAmount} onChange={e => setNewAmount(e.target.value)} type="number" inputMode="numeric" placeholder="금액 (원)" className="w-full border border-canvas rounded-xl px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <div className="grid grid-cols-2 gap-2">
  <button onClick={() => setNewPeriod("monthly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "monthly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>월간</button>
  <button onClick={() => setNewPeriod("yearly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "yearly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>연간</button>

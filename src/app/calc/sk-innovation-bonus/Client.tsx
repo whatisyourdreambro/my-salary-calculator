@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Building2, User, Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // ────────────────────────────────────────────────────────────
 // SK이노베이션 성과급 시나리오 (공개 보도 기반 — 수치 창작 금지)
@@ -175,7 +176,7 @@ export default function SkInnovationBonusClient() {
               className="w-full accent-primary"
             />
             <div className="mt-2 flex items-center gap-2">
-              <input
+              <NumberInput
                 type="number"
                 value={customPct}
                 onChange={(e) => setCustomPct(Number(e.target.value) || 0)}
@@ -200,7 +201,7 @@ export default function SkInnovationBonusClient() {
         </h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -232,7 +233,7 @@ export default function SkInnovationBonusClient() {
         <h2 className="text-xl font-black mb-4">3단계 · 본인 연봉 (세후 계산용)</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={annualSalaryManwon}
             onChange={(e) => setAnnualSalaryManwon(Number(e.target.value) || 0)}

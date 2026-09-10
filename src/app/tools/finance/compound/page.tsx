@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { compoundDisplayRatios } from "@/lib/compoundDisplay";
+import NumberInput from "@/components/NumberInput";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function CompoundCalculatorPage() {
@@ -44,12 +45,12 @@ export default function CompoundCalculatorPage() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="compound-principal" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">초기 투자금 (원)</label>
- <input id="compound-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
+ <NumberInput id="compound-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-bold text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="compound-monthly" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">월 적립금 (원)</label>
- <input id="compound-monthly" type="number" inputMode="numeric" value={monthly} onChange={e => setMonthly(Number(e.target.value))}
+ <NumberInput id="compound-monthly" type="number" inputMode="numeric" value={monthly} onChange={e => setMonthly(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-bold text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

@@ -6,6 +6,7 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { convertGrossSalary, parseCalculatorAmount, parseWholeKRW } from "@/lib/englishCalculators";
 import EnglishPageShell from "@/components/english/EnglishPageShell";
+import NumberInput from "@/components/NumberInput";
 
 const initialRates = { USD: "1350", JPY: "9", SGD: "1000", GBP: "1800" };
 const number = (value: number) => value.toLocaleString("en-US", { maximumFractionDigits: 2 });
@@ -28,7 +29,7 @@ export default function SalaryConverterPage() {
         <div {...inputProps} className="mt-5 space-y-6">
           <div>
             <label htmlFor="converter-salary" className="mb-2 block font-semibold">Annual gross salary in KRW</label>
-            <input id="converter-salary" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-invalid={annualKRW === null} aria-describedby="salary-help converter-error" className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xl" />
+            <NumberInput id="converter-salary" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-invalid={annualKRW === null} aria-describedby="salary-help converter-error" className="w-full rounded-xl border border-border bg-background px-4 py-3 text-xl" />
             <p id="salary-help" className="mt-2 text-sm text-muted-foreground">Before taxes and employee contributions. Enter whole KRW from 0 to 1,000,000,000 without commas. Include a bonus only if you intend to spread it across all twelve months.</p>
           </div>
           <fieldset>
@@ -38,7 +39,7 @@ export default function SalaryConverterPage() {
               {entries.map(({ currency, rate }) => (
                 <div key={currency}>
                   <label htmlFor={`rate-${currency}`} className="mb-2 block font-medium">KRW per 1 {currency}</label>
-                  <input id={`rate-${currency}`} type="text" inputMode="decimal" value={rates[currency as keyof typeof rates]} onChange={(event) => setRates((previous) => ({ ...previous, [currency]: event.target.value }))} aria-describedby="rates-help converter-error" aria-invalid={rate === null || rate < 0.000001} className="w-full rounded-xl border border-border bg-background px-4 py-3" />
+                  <NumberInput id={`rate-${currency}`} type="text" inputMode="decimal" value={rates[currency as keyof typeof rates]} onChange={(event) => setRates((previous) => ({ ...previous, [currency]: event.target.value }))} aria-describedby="rates-help converter-error" aria-invalid={rate === null || rate < 0.000001} className="w-full rounded-xl border border-border bg-background px-4 py-3" />
                 </div>
               ))}
             </div>

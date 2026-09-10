@@ -15,7 +15,7 @@ export function validateSimpleCalculatorInputs(value: unknown, calc: CalculatorD
   }
   try {
     const computed = calc.compute(result);
-    if (!Number.isFinite(computed.primary.value) || !(computed.secondary ?? []).every((item) => Number.isFinite(item.value))) return null;
+    if (computed.status === "invalid" || !Number.isFinite(computed.primary.value) || !(computed.secondary ?? []).every((item) => Number.isFinite(item.value))) return null;
   } catch { return null; }
   return result;
 }

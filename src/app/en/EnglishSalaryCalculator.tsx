@@ -9,6 +9,7 @@ import { saveEnglishSalarySnapshot } from "@/lib/englishSavedResults";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import EnglishResultNextTasks from "@/components/english/EnglishResultNextTasks";
 import { getEnglishSalaryNextTasks } from "@/lib/englishResultTasks";
+import NumberInput from "@/components/NumberInput";
 
 const formatKRW = (value: number) => value.toLocaleString("en-US");
 const inputClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
@@ -42,12 +43,12 @@ export default function EnglishSalaryCalculator() {
         <div {...measurement.inputProps} className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="en-salary-annual" className="mb-2 block font-semibold">Annual gross salary (KRW)</label>
-            <input id="en-salary-annual" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-invalid={annualSalary === null} aria-describedby="en-salary-annual-help en-salary-error" className={inputClass} />
+            <NumberInput id="en-salary-annual" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-invalid={annualSalary === null} aria-describedby="en-salary-annual-help en-salary-error" className={inputClass} />
             <p id="en-salary-annual-help" className="mt-2 text-sm text-muted-foreground">Whole KRW, 0–1,000,000,000 without commas. Include the annual exempt pay entered alongside; exclude severance.</p>
           </div>
           <div>
             <label htmlFor="en-salary-exempt" className="mb-2 block font-semibold">Monthly non-taxable pay (KRW)</label>
-            <input id="en-salary-exempt" type="text" inputMode="numeric" value={exempt} onChange={(event) => setExempt(event.target.value)} aria-invalid={!consistentExempt} aria-describedby="en-salary-exempt-help en-salary-error" className={inputClass} />
+            <NumberInput id="en-salary-exempt" type="text" inputMode="numeric" value={exempt} onChange={(event) => setExempt(event.target.value)} aria-invalid={!consistentExempt} aria-describedby="en-salary-exempt-help en-salary-error" className={inputClass} />
             <p id="en-salary-exempt-help" className="mt-2 text-sm text-muted-foreground">Qualifying exempt pay already included in gross salary. Starting example: KRW 200,000 per month. Actual eligibility varies; enter 0 if none.</p>
           </div>
           <div>

@@ -10,6 +10,7 @@ import {
   calcDonationCredit2026,
   DONATION_CREDIT_2026,
 } from "@/lib/donationCredit";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -80,7 +81,7 @@ export default function DonationTaxCreditClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ① 총급여 (연봉, 비과세 제외 · 원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={grossSalary}
             onChange={(e) => setGrossSalary(Math.max(0, Number(e.target.value) || 0))}
@@ -105,7 +106,7 @@ export default function DonationTaxCreditClient() {
               <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-1.5">
                 {f.label}
               </label>
-              <input
+              <NumberInput
                 type="number"
                 value={amounts[f.key]}
                 onChange={(e) => setAmount(f.key, Number(e.target.value))}

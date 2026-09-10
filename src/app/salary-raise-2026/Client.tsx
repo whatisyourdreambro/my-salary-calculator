@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { TrendingUp, ArrowRight } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 // 간이세액표 기반 누진세
 const TAX_BRACKETS = [
@@ -117,7 +118,7 @@ export default function SalaryRaiseClient() {
             현재 연봉 (세전)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="current-salary"
               type="text"
               inputMode="numeric"

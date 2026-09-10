@@ -7,6 +7,7 @@ import { calculateSalaryRank, AGE_GROUPS } from "@/data/salaryRankData";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { normalizeShareImageText } from "@/lib/shareImage";
 import { InArticleAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 export default function SalaryRankCalculator() {
   const [salary, setSalary] = useState("");
@@ -121,7 +122,7 @@ export default function SalaryRankCalculator() {
                 연간 연봉 (원)
               </label>
               <div className="relative">
-                <input
+                <NumberInput
                   id="salary-rank-annual"
                   type="text"
                   value={salary}

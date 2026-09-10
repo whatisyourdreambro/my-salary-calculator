@@ -22,6 +22,7 @@ describe("simple calculator shared inputs", () => {
     expect(validateSimpleCalculatorInputs({ amount: Infinity, change: 0 }, calc)).toBeNull();
     expect(validateSimpleCalculatorInputs({ amount: 0, change: 0 }, { ...calc, compute: () => ({ primary: { label: "result", value: NaN } }) })).toBeNull();
     expect(validateSimpleCalculatorInputs({ amount: 0, change: 0 }, { ...calc, compute: () => { throw Error("input error"); } })).toBeNull();
+    expect(validateSimpleCalculatorInputs({ amount: 0, change: 0 }, { ...calc, compute: () => ({ status: "invalid", primary: { label: "입력 조건 확인", value: 0 }, note: "분모가 0입니다." }) })).toBeNull();
   });
   it.each(allCalculators.map(calculator => [calculator.slug, calculator] as const))("keeps valid default numeric links reproducible for %s", (_, calculator) => {
     const values = Object.fromEntries(calculator.fields.map(field => [field.name, field.defaultValue]));

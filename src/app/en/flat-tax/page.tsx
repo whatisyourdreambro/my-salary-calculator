@@ -6,6 +6,7 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { compareKoreanIncomeTax, parseWholeKRW, MAX_ANNUAL_KRW } from "@/lib/englishCalculators";
 import EnglishPageShell from "@/components/english/EnglishPageShell";
+import NumberInput from "@/components/NumberInput";
 
 const money = (value: number) => Math.round(value).toLocaleString("en-US");
 const fieldClass = "w-full rounded-xl border border-border bg-background px-4 py-3 text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
@@ -34,17 +35,17 @@ export default function FlatTaxPage() {
         <div {...inputProps} className="space-y-5">
           <div>
             <label htmlFor="flat-remuneration" className="mb-2 block font-semibold">Remuneration subject to the flat-tax comparison</label>
-            <input id="flat-remuneration" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-describedby="remuneration-help flat-input-error" aria-invalid={gross === null} className={fieldClass} />
+            <NumberInput id="flat-remuneration" type="text" inputMode="numeric" value={salary} onChange={(event) => setSalary(event.target.value)} aria-describedby="remuneration-help flat-input-error" aria-invalid={gross === null} className={fieldClass} />
             <p id="remuneration-help" className="mt-2 text-sm text-muted-foreground">Cash pay and relevant benefits for the year, including items exempt only under the progressive method. Confirm the flat-tax base with payroll; statutory exceptions can apply. Whole KRW, 0–{money(MAX_ANNUAL_KRW)}; omit commas.</p>
           </div>
           <div>
             <label htmlFor="flat-exempt" className="mb-2 block font-semibold">Amount exempt under the progressive method</label>
-            <input id="flat-exempt" type="text" inputMode="numeric" value={exempt} onChange={(event) => setExempt(event.target.value)} aria-describedby="exempt-help flat-input-error" aria-invalid={exemptAmount === null || (gross !== null && exemptAmount > gross)} className={fieldClass} />
+            <NumberInput id="flat-exempt" type="text" inputMode="numeric" value={exempt} onChange={(event) => setExempt(event.target.value)} aria-describedby="exempt-help flat-input-error" aria-invalid={exemptAmount === null || (gross !== null && exemptAmount > gross)} className={fieldClass} />
             <p id="exempt-help" className="mt-2 text-sm text-muted-foreground">Only the qualifying exempt amount included above. Enter 0 if none; do not subtract the same amount twice.</p>
           </div>
           <div>
             <label htmlFor="flat-contributions" className="mb-2 block font-semibold">Deductible pension and employee insurance paid</label>
-            <input id="flat-contributions" type="text" inputMode="numeric" value={contributions} onChange={(event) => setContributions(event.target.value)} aria-describedby="contributions-help flat-input-error" aria-invalid={paid === null || (gross !== null && exemptAmount !== null && paid > gross - exemptAmount)} className={fieldClass} />
+            <NumberInput id="flat-contributions" type="text" inputMode="numeric" value={contributions} onChange={(event) => setContributions(event.target.value)} aria-describedby="contributions-help flat-input-error" aria-invalid={paid === null || (gross !== null && exemptAmount !== null && paid > gross - exemptAmount)} className={fieldClass} />
             <p id="contributions-help" className="mt-2 text-sm text-muted-foreground">Actual annual contributions eligible for an income deduction. Coverage varies by nationality, visa and agreements; the tool does not assume you pay all four Korean insurances.</p>
           </div>
         </div>

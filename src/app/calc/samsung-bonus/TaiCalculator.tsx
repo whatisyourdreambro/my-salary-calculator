@@ -14,6 +14,7 @@ import {
   ResultNextLinks,
 } from "./shared";
 import { TAI_RATES_2026_H1 } from "./taiData";
+import NumberInput from "@/components/NumberInput";
 
 export default function TaiCalculator() {
   const [baseSalaryFmt, setBaseSalaryFmt] = useState("5,000,000");
@@ -53,7 +54,7 @@ export default function TaiCalculator() {
             내 월 기본급 (세전)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="tai-base-salary"
               type="text"
               inputMode="numeric"
@@ -61,8 +62,8 @@ export default function TaiCalculator() {
               onChange={(e) => setBaseSalaryFmt(formatNumberInput(e.target.value))}
               className="w-full rounded-xl px-4 py-3 text-2xl font-black focus:outline-none transition pr-12 text-electric tabular-nums"
               style={{
-                backgroundColor: "#0145F208",
-                border: "2px solid #0145F2",
+                backgroundColor: "hsl(var(--accent))",
+                border: "1.5px solid hsl(var(--input))",
               }}
               placeholder="5,000,000"
               aria-label="월 기본급 입력 (원)"
@@ -83,7 +84,7 @@ export default function TaiCalculator() {
               지급률 (2026 상반기 발표값)
             </span>
             <span className="inline-flex items-baseline gap-0.5">
-              <input
+              <NumberInput
                 type="text"
                 inputMode="numeric"
                 value={String(rate)}

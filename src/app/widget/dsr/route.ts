@@ -42,15 +42,15 @@ function buildHtml(): string {
     bodyHtml: `  <p class="title">🏠 DSR 40% <span>대출 한도</span> 계산기</p>
   <div class="row">
     <label for="yearly">연소득</label>
-    <input id="yearly" type="number" inputmode="numeric" min="500" max="100000" step="100" value="5000">
+    <input id="yearly" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="500" max="100000" step="100" value="5,000">
     <span class="unit">만원</span>
   </div>
   <div class="row">
     <label for="rate">금리</label>
-    <input id="rate" type="number" inputmode="decimal" min="0" max="20" step="0.1" value="4">
+    <input id="rate" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="0" max="20" step="0.1" value="4">
     <span class="unit">%</span>
     <label for="years">만기</label>
-    <input id="years" type="number" inputmode="numeric" min="1" max="50" step="1" value="30">
+    <input id="years" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="1" max="50" step="1" value="30">
     <span class="unit">년</span>
   </div>
   <div class="result">
@@ -70,9 +70,9 @@ function buildHtml(): string {
   var limitEl = document.getElementById("limit");
   var monthlyEl = document.getElementById("monthly");
   function render() {
-    var y = parseFloat(yearly.value) * 10000;
-    var rp = parseFloat(rate.value);
-    var n = parseInt(years.value, 10);
+    var y = parseFloat(yearly.value.replace(/,/g, "")) * 10000;
+    var rp = parseFloat(rate.value.replace(/,/g, ""));
+    var n = parseInt(years.value.replace(/,/g, ""), 10);
     if (!isFinite(y) || y <= 0 || !isFinite(rp) || rp < 0 || !isFinite(n) || n < 1) {
       limitEl.textContent = "—"; monthlyEl.textContent = "—"; return;
     }
@@ -83,9 +83,9 @@ function buildHtml(): string {
     limitEl.innerHTML = (eok >= 1 ? eok.toFixed(2) + "<small>억원</small>" : Math.round(principal / 10000).toLocaleString("ko-KR") + "<small>만원</small>");
     monthlyEl.innerHTML = Math.round(monthly / 10000).toLocaleString("ko-KR") + "<small>만원</small>";
   }
-  yearly.addEventListener("input", render);
-  rate.addEventListener("input", render);
-  years.addEventListener("input", render);
+  bindGroupedNumberInput(yearly, render);
+  bindGroupedNumberInput(rate, render);
+  bindGroupedNumberInput(years, render);
   render();
 })();`,
     ctaHref: "/home-loan",

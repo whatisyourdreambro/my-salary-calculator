@@ -8,6 +8,7 @@
 import { useMemo, useState } from "react";
 import { fmtEok } from "@/lib/bonusTaxCalc";
 import { AGREEMENT_2026 } from "./psData";
+import NumberInput from "@/components/NumberInput";
 
 const CHANGE_PRESETS = [-50, -30, -10, 0, 20, 50, 100];
 
@@ -60,7 +61,7 @@ export default function StockScenarioSimulator() {
       <div className="grid sm:grid-cols-2 gap-4 mb-4">
         <label className="block">
           <span className="text-xs font-bold text-faint">내 PS 산정액 (억원)</span>
-          <input
+          <NumberInput
             type="number"
             value={psEok}
             onChange={(e) => setPsEok(Number(e.target.value) || 0)}
@@ -78,7 +79,7 @@ export default function StockScenarioSimulator() {
           <span className="text-xs font-bold text-faint">
             기준가 (원) — 3개 시점 종가 중 최저가
           </span>
-          <input
+          <NumberInput
             type="number"
             value={basePrice}
             onChange={(e) => setBasePrice(Number(e.target.value) || 0)}

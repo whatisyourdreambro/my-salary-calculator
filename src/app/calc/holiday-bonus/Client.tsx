@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -101,7 +102,7 @@ export default function HolidayBonusClient() {
             <div
               key={row.label}
               className="flex justify-between items-center py-3"
-              style={{ borderBottom: i < arr.length - 1 ? "1px solid #EDF1F5" : "none" }}
+              style={{ borderBottom: i < arr.length - 1 ? "1px solid hsl(var(--border))" : "none" }}
             >
               <span className="text-sm font-medium text-muted-blue dark:text-canvas-300">{row.label}</span>
               <span className="text-sm font-black tabular-nums text-rose-500">-{fmt(row.value)}원</span>
@@ -125,7 +126,7 @@ function Field({
         {label}
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           id={id}
           type="text"
           inputMode="numeric"
@@ -133,9 +134,9 @@ function Field({
           onChange={(e) => onChange(formatInput(e.target.value))}
           className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-10"
           style={{
-            backgroundColor: highlight ? "#0145F208" : "#F8FAFB",
-            border: highlight ? "2px solid #0145F2" : "1.5px solid #DDE4EC",
-            color: highlight ? "#0145F2" : "#0A1829",
+            backgroundColor: highlight ? "hsl(var(--accent))" : "hsl(var(--card))",
+            border: highlight ? "2px solid #0145F2" : "1.5px solid hsl(var(--border))",
+            color: highlight ? "hsl(var(--link))" : "hsl(var(--foreground))",
           }}
           placeholder="0"
           aria-label={label}

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 기아 임단협 시나리오 (현대차와 동일 패턴, 자사주·정액 구성 차이)
 // 2026 타결: 8/25 12차 본교섭 잠정합의 → 8/28 찬반투표 가결(찬성 64.1%·투표율 91.0%), 6년 연속 무분규.
@@ -117,7 +118,7 @@ export default function KiaBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -127,7 +128,7 @@ export default function KiaBonusClient() {
               <span className="text-sm">%</span>
             </Row>
             <Row label="정액 (원)">
-              <input
+              <NumberInput
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -136,7 +137,7 @@ export default function KiaBonusClient() {
               />
             </Row>
             <Row label="무상주 (주)">
-              <input
+              <NumberInput
                 type="number"
                 value={sharesOverride}
                 onChange={(e) => setSharesOverride(Number(e.target.value) || 0)}
@@ -153,7 +154,7 @@ export default function KiaBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 통상임금</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -183,7 +184,7 @@ export default function KiaBonusClient() {
         <h2 className="text-xl font-black mb-4">3단계 · 기아 주가</h2>
         <label className="block">
           <span className="text-sm font-bold">기아 보통주 1주 가격 (원)</span>
-          <input
+          <NumberInput
             type="number"
             value={stockPrice}
             onChange={(e) => setStockPrice(Number(e.target.value) || 0)}

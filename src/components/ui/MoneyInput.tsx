@@ -4,6 +4,7 @@
 
 import React, { useRef, useId } from "react";
 import { cn } from "@/lib/utils";
+import NumberInput from "@/components/NumberInput";
 
 interface MoneyInputProps {
  label: string;
@@ -40,7 +41,7 @@ export default function MoneyInput({
  </label>
 
  <div className="w-full">
- <input
+ <NumberInput
  id={inputId}
  ref={inputRef}
  type="text"

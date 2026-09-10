@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // LG디스플레이 경영성과급 시나리오 (정률형 — 기본급의 %)
 // 수치 출처: EBN·한국경제·아주경제·서울경제TV 2026-01-29 보도(150%),
@@ -121,7 +122,7 @@ export default function LgDisplayBonusClient() {
             <span className="text-xs font-bold text-faint w-40">
               경영성과급 % (월 기본급 대비)
             </span>
-            <input
+            <NumberInput
               type="number"
               value={bonusPctOverride}
               onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -138,7 +139,7 @@ export default function LgDisplayBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) =>
@@ -174,7 +175,7 @@ export default function LgDisplayBonusClient() {
         </h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={annualSalaryManwon}
             onChange={(e) =>

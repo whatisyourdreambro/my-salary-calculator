@@ -38,12 +38,12 @@ function buildHtml(): string {
     bodyHtml: `  <p class="title">🎁 2026 성과급 <span>세후 실수령</span> 계산기</p>
   <div class="row">
     <label for="salary">연봉</label>
-    <input id="salary" type="number" inputmode="numeric" min="500" max="20000" step="100" value="5000">
+    <input id="salary" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="500" max="20000" step="100" value="5,000">
     <span class="unit">만원</span>
   </div>
   <div class="row">
     <label for="bonus">성과급</label>
-    <input id="bonus" type="number" inputmode="numeric" min="0" max="20000" step="50" value="1000">
+    <input id="bonus" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="0" max="20000" step="50" value="1,000">
     <span class="unit">만원</span>
   </div>
   <div class="result">
@@ -70,8 +70,8 @@ function buildHtml(): string {
     return G[lo] + (G[hi] - G[lo]) * t;
   }
   function render() {
-    var s = parseFloat(salary.value) * 10000;
-    var b = parseFloat(bonus.value) * 10000;
+    var s = parseFloat(salary.value.replace(/,/g, "")) * 10000;
+    var b = parseFloat(bonus.value.replace(/,/g, "")) * 10000;
     if (!isFinite(s) || s <= 0 || !isFinite(b) || b < 0) { net.textContent = "—"; ded.textContent = "—"; return; }
     if (s + b > MAX) {
       net.innerHTML = "<small>합산 4억 초과는 아래 버튼으로</small>"; ded.textContent = "—"; return;
@@ -81,8 +81,8 @@ function buildHtml(): string {
     net.innerHTML = Math.round(netWon / 10000).toLocaleString("ko-KR") + "<small>만원</small>";
     ded.innerHTML = Math.round(deductions / 10000).toLocaleString("ko-KR") + "<small>만원</small>";
   }
-  salary.addEventListener("input", render);
-  bonus.addEventListener("input", render);
+  bindGroupedNumberInput(salary, render);
+  bindGroupedNumberInput(bonus, render);
   render();
 })();`,
     ctaHref: "/tools/finance/bonus",

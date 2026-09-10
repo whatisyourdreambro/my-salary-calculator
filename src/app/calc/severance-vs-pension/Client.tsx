@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -293,7 +294,7 @@ function Field({
         {label}
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           id={id}
           type="text"
           inputMode={plain ? "decimal" : "numeric"}

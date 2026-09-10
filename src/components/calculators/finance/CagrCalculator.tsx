@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { TrendingUp } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 export default function CagrCalculator() {
  const fieldId = useId();
@@ -26,7 +27,7 @@ export default function CagrCalculator() {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
  <label htmlFor={`${fieldId}-start`} className="block text-sm font-medium text-muted-blue mb-2">시작 금액</label>
- <input
+ <NumberInput
  id={`${fieldId}-start`}
  type="number"
  value={startValue}
@@ -36,7 +37,7 @@ export default function CagrCalculator() {
  </div>
  <div>
  <label htmlFor={`${fieldId}-end`} className="block text-sm font-medium text-muted-blue mb-2">종료 금액</label>
- <input
+ <NumberInput
  id={`${fieldId}-end`}
  type="number"
  value={endValue}
@@ -47,7 +48,7 @@ export default function CagrCalculator() {
  </div>
  <div>
  <label htmlFor={`${fieldId}-years`} className="block text-sm font-medium text-muted-blue mb-2">기간 (년)</label>
- <input
+ <NumberInput
  id={`${fieldId}-years`}
  type="number"
  value={years}

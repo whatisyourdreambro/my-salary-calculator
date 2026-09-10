@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Laptop, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 프리랜서/사업소득 종합소득세
@@ -53,18 +54,18 @@ export default function FreelanceTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
  <label htmlFor="freelance-revenue" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연간 수입 (매출)</label>
- <input id="freelance-revenue" type="number" inputMode="numeric" value={revenue} onChange={e => setRevenue(Number(e.target.value))}
+ <NumberInput id="freelance-revenue" type="number" inputMode="numeric" value={revenue} onChange={e => setRevenue(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="freelance-expenses" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">필요경비 (장비, 통신비 등 업무 관련 비용)</label>
- <input id="freelance-expenses" type="number" inputMode="numeric" value={expenses} onChange={e => setExpenses(Number(e.target.value))}
+ <NumberInput id="freelance-expenses" type="number" inputMode="numeric" value={expenses} onChange={e => setExpenses(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1">영수증·증빙 있는 실제 경비만 인정됩니다</p>
  </div>
  <div>
  <label htmlFor="freelance-deductions" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 소득공제 (연금저축, IRP 등)</label>
- <input id="freelance-deductions" type="number" inputMode="numeric" value={deductions} onChange={e => setDeductions(Number(e.target.value))}
+ <NumberInput id="freelance-deductions" type="number" inputMode="numeric" value={deductions} onChange={e => setDeductions(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

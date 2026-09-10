@@ -32,6 +32,7 @@ import CustomBarLabel from "./CustomBarLabel";
 import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
+import NumberInput from "@/components/NumberInput";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
@@ -114,18 +115,18 @@ function CurrencyTicker({ liveRates, isLive }: { liveRates: LiveRates; isLive: b
         {[...items, ...items, ...items].map((c, i) => (
           <div key={i} className="flex items-center gap-3 text-sm font-semibold">
             <span className="text-xl">{c.flag}</span>
-            <span style={{ color: "rgba(255,255,255,0.7)" }}>{c.id}</span>
+            <span style={{ color: "rgba(255,255,255,0.85)" }}>{c.id}</span>
             <span style={{ color: "#FFFFFF", fontWeight: 800, fontVariantNumeric: "tabular-nums" }}>
               {formatNumber(Math.round(c.krwPerUnit))}
-              <span style={{ fontSize: "0.7rem", fontWeight: 400, marginLeft: "2px", color: "rgba(255,255,255,0.6)" }}> KRW</span>
+              <span style={{ fontSize: "0.7rem", fontWeight: 400, marginLeft: "2px", color: "rgba(255,255,255,0.85)" }}> KRW</span>
             </span>
             {isLive ? (
-              <span className="flex items-center gap-1" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.65rem", fontWeight: 700 }}>
-                <Wifi size={10} /> LIVE
+              <span className="flex items-center gap-1" style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.65rem", fontWeight: 700 }}>
+                <Wifi size={10} /> UPDATED
               </span>
             ) : (
-              <span className="flex items-center gap-1" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.65rem" }}>
-                <WifiOff size={10} /> CACHED
+              <span className="flex items-center gap-1" style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.65rem" }}>
+                <WifiOff size={10} /> EXAMPLE
               </span>
             )}
           </div>
@@ -190,8 +191,10 @@ export default function ExchangeRateImpactCalculator() {
         if (data.result !== "success") throw new Error("API error");
 
         const usdToKrw: number = data.rates["KRW"];
+        if (!Number.isFinite(usdToKrw) || usdToKrw <= 0) throw new Error("Invalid base rate");
         const krwBase: LiveRates = { KRW: 1 };
         for (const cur of ["USD", "JPY", "EUR", "CNY", "GBP"]) {
+          if (!Number.isFinite(data.rates[cur]) || data.rates[cur] <= 0) throw new Error("Invalid quote rate");
           // 1 KRW = (rate_cur/usdToKrw) units of cur
           // so liveRates[cur] = rate_cur / usdToKrw
           krwBase[cur] = data.rates[cur] / usdToKrw;
@@ -243,7 +246,7 @@ export default function ExchangeRateImpactCalculator() {
     try {
       // Past rate: Frankfurter historical
       const pastRes = await fetch(
-        `https://api.frankfurter.app/${pastDate}?from=${from}&to=${to}`
+        `https://api.frankfurter.dev/v1/${pastDate}?base=${from}&symbols=${to}`
       );
       if (!pastRes.ok) throw new Error("과거 환율 정보를 불러오는 데 실패했습니다.");
       const pastData = await pastRes.json();
@@ -386,22 +389,27 @@ export default function ExchangeRateImpactCalculator() {
           <div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-6"
             style={{
-              backgroundColor: isLive ? "#0145F21A" : "#DDE4EC",
-              color: isLive ? "#0145F2" : "#7A9AB5",
-              border: `1.5px solid ${isLive ? "#0145F233" : "#DDE4EC"}`,
+              backgroundColor: "hsl(var(--accent))",
+              color: "hsl(var(--accent-foreground))",
+              border: "1px solid hsl(var(--border))",
             }}
           >
             {isLive ? <Wifi size={13} /> : <WifiOff size={13} />}
             {isLive
-              ? `실시간 환율 적용 중 · 업데이트: ${lastUpdated}`
-              : "오프라인 모드 (캐시된 환율 사용 중)"}
+              ? `최근 고시 환율 적용 중 · 업데이트: ${lastUpdated}`
+              : "환율 조회 전·연결 불가 시 예시 환율 표시"}
           </div>
 
           <h1 className="text-4xl md:text-5xl font-black text-navy tracking-tight mb-4">
             환율 <span className="text-electric">영향 계산기</span>
           </h1>
           <p className="text-faint-blue text-lg max-w-2xl mx-auto font-medium">
-            실시간 환율을 기반으로 자산 가치 변화와 구매력을 분석합니다
+            일 단위 참고 환율로 자산 가치 변화와 구매력을 비교합니다
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer" className="text-link underline">Rates By Exchange Rate API</a>
+            {" · 과거 환율: "}<a href="https://frankfurter.dev/v1/" target="_blank" rel="noopener noreferrer" className="text-link underline">Frankfurter</a>
+            {" · 실제 환전에는 은행의 적용환율과 수수료를 확인하세요."}
           </p>
 
           {/* Live rate summary pills */}
@@ -417,11 +425,11 @@ export default function ExchangeRateImpactCalculator() {
                   <div
                     key={c.id}
                     className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
-                    style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC", color: "#0A1829" }}
+                    style={{ backgroundColor: "hsl(var(--card))", border: "1.5px solid hsl(var(--border))", color: "hsl(var(--foreground))" }}
                   >
                     <span>{c.flag}</span>
-                    <span style={{ color: "#7A9AB5" }}>{c.id}</span>
-                    <span style={{ color: "#0145F2", fontVariantNumeric: "tabular-nums" }}>
+                    <span style={{ color: "hsl(var(--muted-foreground))" }}>{c.id}</span>
+                    <span style={{ color: "hsl(var(--link))", fontVariantNumeric: "tabular-nums" }}>
                       {formatNumber(Math.round(krwPer))}원
                     </span>
                   </div>
@@ -435,7 +443,7 @@ export default function ExchangeRateImpactCalculator() {
         <div
           ref={reportRef}
           className="bg-white rounded-[2rem] shadow-sm p-8 sm:p-10 relative overflow-hidden"
-          style={{ border: "1.5px solid #DDE4EC" }}
+          style={{ border: "1.5px solid hsl(var(--border))" }}
         >
           {/* Top accent line */}
           <div
@@ -496,7 +504,7 @@ export default function ExchangeRateImpactCalculator() {
               {/* Rate inputs */}
               <div
                 className="p-5 rounded-2xl space-y-4"
-                style={{ border: "1.5px solid #DDE4EC", backgroundColor: "#F8FAFB" }}
+                style={{ border: "1.5px solid hsl(var(--border))", backgroundColor: "hsl(var(--accent))" }}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-faint-blue uppercase tracking-wider">
@@ -505,14 +513,14 @@ export default function ExchangeRateImpactCalculator() {
                   <button
                     onClick={() => setIsManual(!isManual)}
                     className="flex items-center gap-2 text-xs font-bold transition-colors"
-                    style={{ color: isManual ? "#0145F2" : "#7A9AB5" }}
+                    style={{ color: isManual ? "hsl(var(--link))" : "hsl(var(--muted-foreground))" }}
                   >
                     수동 입력
                     <div
                       className="w-3 h-3 rounded-full border-2 transition-colors"
                       style={{
-                        backgroundColor: isManual ? "#0145F2" : "transparent",
-                        borderColor: isManual ? "#0145F2" : "#C8D4E0",
+                        backgroundColor: isManual ? "hsl(var(--primary))" : "transparent",
+                        borderColor: isManual ? "hsl(var(--primary))" : "hsl(var(--input))",
                       }}
                     />
                   </button>
@@ -520,7 +528,7 @@ export default function ExchangeRateImpactCalculator() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <span className="text-xs text-faint-blue block mb-1 text-center font-bold">과거</span>
-                    <input
+                    <NumberInput
                       type="text"
                       value={manualPastRateStr}
                       onChange={(e) => setManualPastRateStr(e.target.value)}
@@ -531,9 +539,9 @@ export default function ExchangeRateImpactCalculator() {
                   <ArrowRight className="text-electric flex-none" />
                   <div className="flex-1">
                     <span className="text-xs text-faint-blue block mb-1 text-center font-bold">
-                      현재 {isLive && <span style={{ color: "#0145F2" }}>· LIVE</span>}
+                      현재 {isLive && <span style={{ color: "hsl(var(--link))" }}>· 최근 고시</span>}
                     </span>
-                    <input
+                    <NumberInput
                       type="text"
                       value={manualCurrentRateStr}
                       onChange={(e) => setManualCurrentRateStr(e.target.value)}
@@ -557,7 +565,7 @@ export default function ExchangeRateImpactCalculator() {
                 {isLoading ? (
                   <><Loader size={16} className="animate-spin" /> 환율 조회 중...</>
                 ) : (
-                  <><Globe size={16} /> 실시간 환율 다시 불러오기</>
+                  <><Globe size={16} /> 환율 다시 확인하기</>
                 )}
               </button>
             </div>
@@ -574,7 +582,7 @@ export default function ExchangeRateImpactCalculator() {
                     className="text-center py-20"
                   >
                     <Loader className="animate-spin mx-auto text-primary mb-4" size={40} />
-                    <p className="text-muted-blue font-semibold">실시간 환율 분석 중...</p>
+                    <p className="text-muted-blue font-semibold">환율 분석 중...</p>
                   </motion.div>
                 ) : error ? (
                   <motion.div
@@ -583,10 +591,10 @@ export default function ExchangeRateImpactCalculator() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="p-8 rounded-2xl text-center"
-                    style={{ backgroundColor: "#FFF0F3", border: "1.5px solid #FFD0D8" }}
+                    style={{ backgroundColor: "hsl(var(--destructive) / 0.08)", border: "1.5px solid hsl(var(--destructive) / 0.3)" }}
                   >
-                    <AlertCircle className="w-10 h-10 mx-auto mb-3" style={{ color: "#E63B5A" }} />
-                    <h3 className="font-bold mb-1" style={{ color: "#E63B5A" }}>환율 조회 실패</h3>
+                    <AlertCircle className="w-10 h-10 mx-auto mb-3" style={{ color: "hsl(var(--destructive))" }} />
+                    <h3 className="font-bold mb-1" style={{ color: "hsl(var(--destructive))" }}>환율 조회 실패</h3>
                     <p className="text-sm text-faint-blue">{error}</p>
                   </motion.div>
                 ) : (
@@ -610,17 +618,17 @@ export default function ExchangeRateImpactCalculator() {
                         style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
                       />
                       <p className="text-xs font-bold uppercase tracking-widest mb-4 relative z-10"
-                        style={{ color: "rgba(255,255,255,0.65)" }}>
+                        style={{ color: "rgba(255,255,255,0.85)" }}>
                         환율 영향 시뮬레이션 결과
                       </p>
 
                       <div className="flex flex-col items-center gap-2 mb-5 relative z-10">
                         <span className="text-base font-medium line-through"
-                          style={{ color: "rgba(255,255,255,0.5)" }}>
+                          style={{ color: "rgba(255,255,255,0.85)" }}>
                           {resultSymbol}{formatNumber(analysis.pastValue)}
                         </span>
                         <ArrowRight className="rotate-90" size={18} style={{ color: "rgba(255,255,255,0.4)" }} />
-                        <span className="text-5xl font-black tabular-nums" style={{ color: "#FFFFFF" }}>
+                        <span className="max-w-full break-all text-[clamp(1.625rem,6vw,3rem)] font-black tabular-nums sm:text-5xl" style={{ color: "#FFFFFF" }}>
                           <CountUp
                             end={analysis.currentValue}
                             prefix={resultSymbol}
@@ -652,13 +660,13 @@ export default function ExchangeRateImpactCalculator() {
                     <div className="grid grid-cols-2 gap-4">
                       <div
                         className="p-5 rounded-2xl flex flex-col items-center justify-center text-center"
-                        style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+                        style={{ backgroundColor: "hsl(var(--card))", border: "1.5px solid hsl(var(--border))" }}
                       >
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center mb-2"
-                          style={{ backgroundColor: "#0145F21A" }}
+                          style={{ backgroundColor: "hsl(var(--accent))" }}
                         >
-                          <Gem className="w-5 h-5" style={{ color: "#0145F2" }} />
+                          <Gem className="w-5 h-5" style={{ color: "hsl(var(--link))" }} />
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue mb-1">
                           빅맥 지수
@@ -670,13 +678,13 @@ export default function ExchangeRateImpactCalculator() {
                       </div>
                       <div
                         className="p-5 rounded-2xl flex flex-col items-center justify-center text-center"
-                        style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+                        style={{ backgroundColor: "hsl(var(--card))", border: "1.5px solid hsl(var(--border))" }}
                       >
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center mb-2"
-                          style={{ backgroundColor: "#0145F21A" }}
+                          style={{ backgroundColor: "hsl(var(--accent))" }}
                         >
-                          <Coffee className="w-5 h-5" style={{ color: "#0145F2" }} />
+                          <Coffee className="w-5 h-5" style={{ color: "hsl(var(--link))" }} />
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue mb-1">
                           커피 지수
@@ -691,7 +699,7 @@ export default function ExchangeRateImpactCalculator() {
                     {/* Chart */}
                     <div
                       className="h-44 p-5 rounded-2xl"
-                      style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+                      style={{ backgroundColor: "hsl(var(--card))", border: "1.5px solid hsl(var(--border))" }}
                     >
                       <p className="text-xs font-bold text-faint-blue uppercase tracking-wider mb-3">
                         과거 vs 현재 자산 가치
@@ -751,14 +759,14 @@ export default function ExchangeRateImpactCalculator() {
           <button
             onClick={handleReset}
             className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
-            style={{ backgroundColor: "#FFFFFF", color: "#3D5E78", border: "1.5px solid #DDE4EC" }}
+            style={{ backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))", border: "1.5px solid hsl(var(--border))" }}
           >
             <RotateCcw size={16} /> 초기화
           </button>
           <button
             onClick={handleShareLink}
             className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
-            style={{ backgroundColor: "#FFFFFF", color: "#3D5E78", border: "1.5px solid #DDE4EC" }}
+            style={{ backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))", border: "1.5px solid hsl(var(--border))" }}
           >
             <LinkIcon size={16} /> 링크 공유
           </button>

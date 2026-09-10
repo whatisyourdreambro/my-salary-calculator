@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 삼성디스플레이 OPI 시나리오 — 보도 확인값만 사용
 // 36%: 2025년 실적분, 2026-01-30 지급, 전 사업부 공통 (연합뉴스·디지털타임스 2026-01-28)
@@ -94,7 +95,7 @@ export default function SamsungDisplayBonusClient() {
         {customMode && (
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
-            <input
+            <NumberInput
               type="number"
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
@@ -114,7 +115,7 @@ export default function SamsungDisplayBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}
@@ -248,7 +249,7 @@ function TaiInput({
       <label className="block">
         <span className="text-sm font-bold">{label}</span>
         <div className="flex items-center gap-2 mt-2">
-          <input
+          <NumberInput
             type="number"
             value={value}
             onChange={(e) => onChange(Number(e.target.value) || 0)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -52,7 +53,7 @@ export default function WeeklyHolidayAllowanceClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             시급 (원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={hourlyWage}
             onChange={(e) => setHourlyWage(Math.max(0, Number(e.target.value) || 0))}

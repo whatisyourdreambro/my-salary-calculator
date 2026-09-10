@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Scale } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 export default function BmiCalculator() {
  const inputId = useId();
@@ -45,7 +46,7 @@ export default function BmiCalculator() {
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
  <label htmlFor={`${inputId}-height`} className="block text-sm font-medium text-muted-blue mb-2">신장 (cm)</label>
- <input
+ <NumberInput
  id={`${inputId}-height`}
  type="number"
  value={height}
@@ -55,7 +56,7 @@ export default function BmiCalculator() {
  </div>
  <div>
  <label htmlFor={`${inputId}-weight`} className="block text-sm font-medium text-muted-blue mb-2">체중 (kg)</label>
- <input
+ <NumberInput
  id={`${inputId}-weight`}
  type="number"
  value={weight}

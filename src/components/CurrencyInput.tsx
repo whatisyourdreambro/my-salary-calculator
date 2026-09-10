@@ -1,8 +1,9 @@
 // src/components/CurrencyInput.tsx
 "use client";
 
-import { useRef, useEffect, useId } from "react";
+import { useRef, useId } from "react";
 import { cn } from "@/lib/utils";
+import NumberInput from "@/components/NumberInput";
 
 /** 숫자에 천 단위 콤마를 붙임 (ko-KR) */
 const formatNumber = (num: number) => num.toLocaleString("ko-KR");
@@ -40,14 +41,6 @@ export default function CurrencyInput({
  // 14차 — 접근성(a11y) 보강: label-input·select 명시 연결 (WCAG 2.1 레벨 A)
  const inputId = useId();
  const selectId = useId();
-
- useEffect(() => {
-   const raw = value.replace(/[^0-9]/g, "");
-   if (raw && !value.includes(",") && raw.length > 3) {
-     onValueChange(formatNumber(Number(raw)));
-   }
-   // eslint-disable-next-line react-hooks/exhaustive-deps
- }, []);
 
  const symbol =
  currencies?.find((c) => c.id === selectedCurrency)?.symbol || "원";
@@ -94,7 +87,7 @@ export default function CurrencyInput({
  </div>
  )}
 
- <input
+ <NumberInput
  id={inputId}
  {...(!currencies ? { ref: inputRef } : {})}
  type="text"

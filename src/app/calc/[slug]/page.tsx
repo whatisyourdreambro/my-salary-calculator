@@ -1,5 +1,5 @@
 // src/app/calc/[slug]/page.tsx
-// 100개 계산기 동적 라우트 — generateStaticParams로 모두 정적 생성
+// Registry calculator routes, statically generated with visible explanations.
 
 import { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
@@ -46,7 +46,7 @@ export async function generateMetadata({
  );
 
  return buildPageMetadata({
- title: `${calc.title} 2026 — 즉시 계산`,
+ title: `${calc.title} — 계산식·조건별 결과`,
  description: calc.description,
  path: `/calc/${calc.slug}`,
  keywords: calc.keywords,
@@ -91,8 +91,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
 
  // FAQPage 스키마는 가시 FAQ 섹션과 같은 SimpleCalculatorView 에서 단일 출력(중복 제거).
 
- // HowTo schema — 모든 계산기에 적용해 Google SERP의 How-To 리치 결과 노출 기회 확보.
- // 조건부 적용을 풀어 enrichments 없는 계산기도 step 정보 노출 (calc.fields는 항상 존재).
+ // Describe the visible calculation flow; search appearance is determined by the engine.
  ldData.push(
  howToLd({
  name: `${calc.title} 사용법`,

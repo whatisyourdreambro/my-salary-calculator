@@ -25,7 +25,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com https://*.coupangcdn.com https://*.adtrafficquality.google;
   media-src 'none';
-  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
+  connect-src 'self' https://open.er-api.com https://api.frankfurter.dev https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';

@@ -5,6 +5,7 @@ import { Settings, Lock, Coins, MessageCircle } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
 import { PI_SCENARIOS, DEFAULT_SALARY_MANWON, DEFAULT_KAKAO_STOCK, DEFAULT_RSU_SHARES, ENCOURAGEMENT_BONUS } from "./data";
+import NumberInput from "@/components/NumberInput";
 
 export default function KakaoBonusClient() {
   const [salaryManwon, setSalaryManwon] = useState(DEFAULT_SALARY_MANWON);
@@ -42,7 +43,7 @@ export default function KakaoBonusClient() {
         <h2 className="text-xl font-black mb-4">1단계 · 본인 연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}
@@ -104,7 +105,7 @@ export default function KakaoBonusClient() {
         <div className="grid sm:grid-cols-2 gap-4">
           <label className="block">
             <span className="text-sm font-bold">RSU 부여 주식 수 (주)</span>
-            <input
+            <NumberInput
               type="number"
               value={rsuShares}
               onChange={(e) => setRsuShares(Number(e.target.value) || 0)}
@@ -127,7 +128,7 @@ export default function KakaoBonusClient() {
           </label>
           <label className="block">
             <span className="text-sm font-bold">카카오 주가 (원)</span>
-            <input
+            <NumberInput
               type="number"
               value={stockPrice}
               onChange={(e) => setStockPrice(Number(e.target.value) || 0)}

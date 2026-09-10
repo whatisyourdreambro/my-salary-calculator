@@ -43,7 +43,7 @@ function buildHtml(): string {
   </div>
   <div class="row">
     <label for="hourly">시급 환산</label>
-    <input id="hourly" type="number" inputmode="numeric" min="1000" max="100000" step="10" value="${NEXT.hourly}">
+    <input id="hourly" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="1000" max="100000" step="10" value="${NEXT.hourly.toLocaleString("ko-KR")}">
     <span class="unit">원</span>
   </div>
   <div class="result minor">
@@ -56,14 +56,14 @@ function buildHtml(): string {
   var input = document.getElementById("hourly");
   var out = document.getElementById("converted");
   function render() {
-    var h = parseFloat(input.value);
+    var h = parseFloat(input.value.replace(/,/g, ""));
     if (!isFinite(h) || h <= 0) { out.textContent = "—"; return; }
     var monthly = h * HOURS;
     var yearly = monthly * 12;
     out.innerHTML = "월 " + Math.round(monthly).toLocaleString("ko-KR") +
       "<small>원</small> · 연 " + Math.round(yearly / 10000).toLocaleString("ko-KR") + "<small>만원</small>";
   }
-  input.addEventListener("input", render);
+  bindGroupedNumberInput(input, render);
   render();
 })();`,
     ctaHref: "/minimum-wage-2027",

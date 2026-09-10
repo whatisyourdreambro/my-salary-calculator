@@ -110,7 +110,7 @@ const VERTICAL_RULES: Array<[RegExp, OfferVertical]> = [
   [/^\/tools\/finance\/installment(\/|$)/, "loan"],
   [/^\/tools\/real-estate\/(dsr|ltv)(\/|$)/, "loan"],
   [
-    /^\/calc\/(dsr-quick|ltv-quick|loan-[a-z0-9-]+|level-principal-payment|bullet-loan|prepayment-fee-quick|monthly-installment|mortgage-monthly-quick|jeonse-loan-cost|jeonse-loan|housing-subscription)(\/|$)/,
+    /^\/calc\/(dsr-quick|ltv-quick|loan-[a-z0-9-]+|level-principal-payment|bullet-loan|prepayment-fee-quick|monthly-installment|mortgage-monthly-quick|jeonse-loan-cost|jeonse-loan|housing-subscription|refinance-break-even|extra-payment-term|lump-sum-prepayment-term|payment-holiday-cost|variable-rate-stress|debt-consolidation-payment|debt-avalanche-vs-snowball|credit-line-daily-interest)(\/|$)/,
     "loan",
   ],
 

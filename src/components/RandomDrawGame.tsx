@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Play, RotateCcw, Users, Sparkles, Gift, Plus, Trash2 } from "lucide-react";
 import { InArticleAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 // --- Types ---
 interface Ball {
@@ -457,7 +458,7 @@ export default function RandomDrawGame() {
  value={title}
  onChange={(e) => setTitle(e.target.value)}
  placeholder="예: 오늘 점심 쏘기"
- className="w-full bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none transition-all"
+ className="w-full bg-card border border-canvas rounded-xl p-4 text-foreground focus:ring-2 focus:ring-primary outline-none transition-all"
  />
  </div>
 
@@ -468,7 +469,7 @@ export default function RandomDrawGame() {
  value={candidatesText}
  onChange={(e) => setCandidatesText(e.target.value)}
  placeholder="김철수&#13;&#10;이영희&#13;&#10;박지성&#13;&#10;..."
- className="w-full h-60 bg-white/50 border border-canvas rounded-xl p-4 text-navy focus:ring-2 focus:ring-primary outline-none resize-none font-sans leading-relaxed"
+ className="w-full h-60 bg-card border border-canvas rounded-xl p-4 text-foreground focus:ring-2 focus:ring-primary outline-none resize-none font-sans leading-relaxed"
  />
  <div className="flex justify-between text-xs text-faint-blue mt-2 px-1">
  <span>엔터로 구분해주세요</span>
@@ -482,16 +483,16 @@ export default function RandomDrawGame() {
  {/* Winner Count */}
  <div>
  <label htmlFor="random-draw-winners" className="block text-sm font-bold text-faint-blue mb-2">당첨자 수</label>
- <div className="flex items-center gap-4 bg-white/50 border border-canvas rounded-xl p-4">
+ <div className="flex items-center gap-4 bg-card border border-canvas rounded-xl p-4">
  <Users className="text-faint-blue" />
- <input
+ <NumberInput
  id="random-draw-winners"
  type="number"
  min="1"
  max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
  value={winnerCount}
  onChange={(e) => setWinnerCount(Number(e.target.value))}
- className="bg-transparent text-navy text-2xl font-bold outline-none w-full"
+ className="bg-transparent text-foreground text-2xl font-bold outline-none w-full"
  />
  <span className="text-faint-blue font-bold">명</span>
  </div>
@@ -515,7 +516,7 @@ export default function RandomDrawGame() {
  <div key={idx} className="flex items-center gap-2">
  <div className="flex shrink-0 items-center gap-1 bg-canvas rounded-lg px-3 py-2 border border-canvas w-24">
  <span className="text-faint-blue text-xs">No.</span>
- <input
+ <NumberInput
  type="number"
  aria-label={`${idx + 1}번째 특별상 등수`}
  value={prize.rank}

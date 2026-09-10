@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -36,7 +37,7 @@ export default function VacationPayClient() {
         <div>
           <label htmlFor="vp-salary" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">연봉 (세전)</label>
           <div className="relative">
-            <input id="vp-salary" type="text" inputMode="numeric" value={salaryFmt}
+            <NumberInput id="vp-salary" type="text" inputMode="numeric" value={salaryFmt}
               onChange={(e) => setSalaryFmt(formatInput(e.target.value))}
               className="w-full rounded-xl px-4 py-4 text-xl font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50 pr-10"
               aria-label="연봉" />
@@ -46,10 +47,10 @@ export default function VacationPayClient() {
         <div>
           <label htmlFor="vp-days" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">미사용 연차 일수</label>
           <div className="relative">
-            <input id="vp-days" type="text" inputMode="numeric" value={days}
+            <NumberInput id="vp-days" type="text" inputMode="numeric" value={days}
               onChange={(e) => setDays(e.target.value.replace(/[^0-9]/g, ""))}
               className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-10"
-              style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2", color: "#0145F2" }}
+              style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid hsl(var(--input))", color: "hsl(var(--link))" }}
               aria-label="미사용 연차 일수" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-electric">일</span>
           </div>

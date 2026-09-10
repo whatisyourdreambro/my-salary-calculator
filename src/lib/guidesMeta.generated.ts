@@ -1703,7 +1703,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4368
+  "contentChars": 4365
  },
  {
   "slug": "sk-hynix-stock-2026",

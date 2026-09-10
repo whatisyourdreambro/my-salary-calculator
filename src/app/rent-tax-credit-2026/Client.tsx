@@ -6,6 +6,7 @@
 
 import { useMemo, useState } from "react";
 import { RENT_CREDIT_2026 } from "@/lib/taxConstants2026";
+import NumberInput from "@/components/NumberInput";
 
 // ── 2026년 귀속 현행법 파라미터 — 정본은 taxConstants2026 (엔진과 공유) ──
 const RENT_CREDIT_CAP = RENT_CREDIT_2026.CAP;
@@ -80,7 +81,7 @@ export default function RentTaxCreditClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ① 총급여 (연봉, 비과세 제외 · 원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={totalSalary}
             onChange={(e) => setTotalSalary(Math.max(0, Number(e.target.value) || 0))}
@@ -104,7 +105,7 @@ export default function RentTaxCreditClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ② 월세액 (월 단위 · 원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={monthlyRent}
             onChange={(e) => setMonthlyRent(Math.max(0, Number(e.target.value) || 0))}

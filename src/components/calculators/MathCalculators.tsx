@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Divide, ArrowRightLeft, Percent } from "lucide-react";
 import { UnitConverter } from "@/components/calculators/life/LifeCalculators";
+import NumberInput from "@/components/NumberInput";
 
 export default function MathCalculators() {
  const [activeTab, setActiveTab] = useState<"percent" | "unit">("percent");
@@ -68,7 +69,7 @@ function PercentCalculator() {
  </h3>
  <div className="space-y-3">
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="전체값"
  aria-label="비율 계산 전체값"
@@ -78,7 +79,7 @@ function PercentCalculator() {
  <span className="text-muted-blue">의</span>
  </div>
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="비율(%)"
  aria-label="비율 계산 비율 (%)"
@@ -100,7 +101,7 @@ function PercentCalculator() {
  </h3>
  <div className="space-y-3">
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="일부값"
  aria-label="비중 계산 일부값"
@@ -110,7 +111,7 @@ function PercentCalculator() {
  <span className="text-muted-blue">은</span>
  </div>
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="전체값"
  aria-label="비중 계산 전체값"
@@ -132,7 +133,7 @@ function PercentCalculator() {
  </h3>
  <div className="space-y-3">
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="기존값"
  aria-label="증감율 계산 기존값"
@@ -142,7 +143,7 @@ function PercentCalculator() {
  <span className="text-muted-blue">에서</span>
  </div>
  <div className="flex items-center gap-2">
- <input
+ <NumberInput
  type="number"
  placeholder="변경값"
  aria-label="증감율 계산 변경값"

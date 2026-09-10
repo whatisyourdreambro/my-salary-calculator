@@ -47,12 +47,12 @@ export const WIDGET_STYLE = `
   .title span { color: var(--accent); }
   .row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   label { font-weight: 700; font-size: 13px; color: var(--sub); white-space: nowrap; }
-  input[type="number"] {
+  input[data-number-input="grouped"] {
     flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px; font-weight: 700;
     border: 1px solid var(--border); border-radius: 10px;
     background: var(--bg); color: var(--text); outline: none;
   }
-  input[type="number"]:focus { border-color: var(--accent); }
+  input[data-number-input="grouped"]:focus { border-color: var(--accent); }
   .unit { font-weight: 700; color: var(--sub); font-size: 13px; }
   .result {
     background: var(--card); border-radius: 12px; padding: 14px 16px;
@@ -86,6 +86,52 @@ export const WIDGET_REFERRER_SCRIPT =
   'var as=document.querySelectorAll("a.cta,.brand a");for(var i=0;i<as.length;i++){try{' +
   'var u=new URL(as[i].href);u.searchParams.set("utm_content",h);as[i].href=u.href;}catch(e){}}}catch(e){}})();';
 
+/** The standalone iframe has no React runtime. Bind only the fields its renderer explicitly owns. */
+export const WIDGET_NUMBER_INPUT_SCRIPT = String.raw`
+function bindGroupedNumberInput(input, render) {
+  var raw = input.value.replace(/,/g, "");
+  function format(value) {
+    var parts = value.split(".");
+    return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts.length > 1 ? "." + parts[1] : "");
+  }
+  function update(text, caret) {
+    var next = text.normalize("NFKC").replace(/\u2212/g, "-").replace(/[,\s]/g, "");
+    if (!/^-?\d*\.?\d*$/.test(next)) { input.value = format(raw); return; }
+    raw = next.replace(/^(-?)0+(?=\d)/, "$1");
+    var units = text.slice(0, caret).replace(/[,\s]/g, "").length;
+    input.value = format(raw);
+    var position = 0, seen = 0;
+    while (position < input.value.length && seen < units) { if (input.value[position] !== ",") seen++; position++; }
+    if (document.activeElement === input) input.setSelectionRange(position, position);
+    var number = Number(raw), complete = /^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw) && isFinite(number);
+    if (complete) input.setAttribute("aria-valuenow", raw); else input.removeAttribute("aria-valuenow");
+    input.setCustomValidity(raw && !complete ? "숫자를 입력해 주세요." : complete && input.min && number < Number(input.min) ? "최솟값 이상을 입력해 주세요." : complete && input.max && number > Number(input.max) ? "최댓값 이하를 입력해 주세요." : "");
+    render();
+  }
+  input.addEventListener("input", function () { update(input.value, input.selectionStart || 0); });
+  input.addEventListener("keydown", function (event) {
+    var start = input.selectionStart || 0;
+    if (start === input.selectionEnd && event.key === "Backspace" && input.value[start - 1] === "," && start > 1) {
+      event.preventDefault(); update(input.value.slice(0, start - 2) + input.value.slice(start), start - 2);
+    } else if (start === input.selectionEnd && event.key === "Delete" && input.value[start] === ",") {
+      event.preventDefault(); update(input.value.slice(0, start) + input.value.slice(start + 2), start);
+    } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      event.preventDefault();
+      var step = Number(input.step) || 1;
+      var next = (Number(raw) || 0) + (event.key === "ArrowUp" ? step : -step);
+      if (input.min) next = Math.max(Number(input.min), next);
+      if (input.max) next = Math.min(Number(input.max), next);
+      var digits = Math.max((String(step).split(".")[1] || "").length, (raw.split(".")[1] || "").length);
+      var text = String(Number(next.toFixed(Math.min(digits, 12))));
+      update(text, text.length);
+    }
+  });
+  if (input.min) input.setAttribute("aria-valuemin", input.min);
+  if (input.max) input.setAttribute("aria-valuemax", input.max);
+  input.value = format(raw);
+}
+`;
+
 export interface WidgetShellOptions {
   /** <title> */
   title: string;
@@ -114,6 +160,7 @@ ${bodyHtml}
   <a class="cta" href="${cta}" target="_blank" rel="noopener">${ctaLabel}</a>
   <p class="brand"><a href="${cta}" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
+${WIDGET_NUMBER_INPUT_SCRIPT}
 ${script}
 </script>
 <script>${WIDGET_REFERRER_SCRIPT}</script>

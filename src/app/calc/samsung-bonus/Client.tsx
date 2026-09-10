@@ -41,6 +41,7 @@ import {
   useCountUp,
   ResultNextLinks,
 } from "./shared";
+import NumberInput from "@/components/NumberInput";
 
 // 하단 시뮬레이터는 해당 구역에 접근할 때만 마운트해 첫 계산과의 경쟁을 줄인다.
 const MultiYearRSUSimulator = dynamic(() => import("./MultiYearRSUSimulator"), {
@@ -203,7 +204,7 @@ export default function SamsungBonusClient() {
             </label>
             <span
               className="text-2xl font-black tabular-nums"
-              style={{ color: "#7C83FF" }}
+              style={{ color: "hsl(var(--link))" }}
             >
               {year}년
             </span>
@@ -242,7 +243,7 @@ export default function SamsungBonusClient() {
                       : "bg-canvas-50 dark:bg-canvas-800 text-muted-blue hover:bg-[#7C83FF] hover:text-white"
                   }`}
                   style={{
-                    backgroundColor: active ? "#7C83FF" : undefined,
+                    backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
                   }}
                 >
                   {y}
@@ -267,7 +268,7 @@ export default function SamsungBonusClient() {
             </label>
             <span
               className="text-3xl font-black tabular-nums"
-              style={{ color: triggered ? "#0145F2" : "#EF4444" }}
+              style={{ color: triggered ? "hsl(var(--link))" : "hsl(var(--destructive))" }}
               aria-live="polite"
             >
               {profit.toLocaleString("ko-KR")}
@@ -275,7 +276,7 @@ export default function SamsungBonusClient() {
             </span>
           </div>
           <div className="relative">
-            <input
+            <NumberInput
               id="profit-input"
               type="text"
               inputMode="decimal"
@@ -288,8 +289,8 @@ export default function SamsungBonusClient() {
               }}
               className="w-full rounded-xl px-4 py-3 text-2xl font-black tabular-nums focus:outline-none transition-all pr-14 text-electric"
               style={{
-                backgroundColor: "#0145F208",
-                border: "2px solid #0145F2",
+                backgroundColor: "hsl(var(--accent))",
+                border: "1.5px solid hsl(var(--input))",
               }}
               placeholder="350"
               aria-label="회사 연간 영업이익 (조원)"
@@ -308,7 +309,7 @@ export default function SamsungBonusClient() {
                 </span>
                 <span
                   className={`inline-flex items-center gap-1 text-[11px] font-black ${
-                    triggered ? "text-emerald-600" : "text-rose-500"
+                    triggered ? "text-success" : "text-destructive"
                   }`}
                 >
                   {triggered ? (
@@ -357,7 +358,7 @@ export default function SamsungBonusClient() {
                 <div className="mt-2 rounded-lg p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 flex items-start gap-2">
                   <AlertCircle
                     size={14}
-                    className="text-rose-500 flex-shrink-0 mt-0.5"
+                    className="text-destructive flex-shrink-0 mt-0.5"
                     aria-hidden
                   />
                   <div className="text-[11px] text-rose-700 dark:text-rose-300 leading-relaxed">
@@ -471,11 +472,11 @@ export default function SamsungBonusClient() {
             <div key={d.id}>
               <p
                 className="text-sm font-black mb-3 inline-flex items-center gap-1.5"
-                style={{ color: d.color }}
+                style={{ color: "hsl(var(--link))" }}
               >
                 <span
                   className="w-3 h-3 rounded-full inline-flex items-center justify-center text-[8px] font-black text-white"
-                  style={{ backgroundColor: d.color }}
+                  style={{ backgroundColor: d.color , color: d.color === "#0145F2" ? "#FFFFFF" : "#111827" }}
                   aria-hidden
                 >
                   {d.shortLabel}
@@ -613,7 +614,7 @@ export default function SamsungBonusClient() {
         <h2
           id="hynix-compare-title"
           className="text-[10px] font-black uppercase tracking-[0.2em] mb-2"
-          style={{ color: "#10B981" }}
+          style={{ color: "hsl(var(--success))" }}
         >
           SK하이닉스 성과급과 비교
         </h2>
@@ -640,7 +641,7 @@ export default function SamsungBonusClient() {
               → 연봉 1억 기준 PS 세전{" "}
               <strong
                 className="text-lg font-black"
-                style={{ color: "#10B981" }}
+                style={{ color: "hsl(var(--success))" }}
               >
                 ≈ 약 1억 4,820만원
               </strong>
@@ -656,7 +657,7 @@ export default function SamsungBonusClient() {
               <Link
                 href="/calc/sk-hynix-bonus"
                 className="text-xs font-bold underline"
-                style={{ color: "#10B981" }}
+                style={{ color: "hsl(var(--success))" }}
               >
                 SK하이닉스 PS·PI 성과급 계산기에서 정밀 계산 →
               </Link>
@@ -874,7 +875,7 @@ function MySalaryCalculator({
             내 연봉 (세전)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="my-salary"
               type="text"
               inputMode="numeric"
@@ -885,8 +886,8 @@ function MySalaryCalculator({
               }
               className="w-full rounded-xl px-4 py-3 text-2xl font-black focus:outline-none transition pr-12 text-electric tabular-nums"
               style={{
-                backgroundColor: "#0145F208",
-                border: "2px solid #0145F2",
+                backgroundColor: "hsl(var(--accent))",
+                border: "1.5px solid hsl(var(--input))",
               }}
               placeholder="80,000,000"
               aria-label="내 연봉 입력 (원)"
@@ -970,9 +971,9 @@ function MySalaryCalculator({
                       : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
                   }`}
                   style={{
-                    backgroundColor: active ? d.color : undefined,
-                    borderColor: active ? d.color : `${d.color}55`,
-                    color: active ? "#fff" : d.color,
+                    backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
+                    borderColor: active ? "hsl(var(--primary))" : "hsl(var(--border))",
+                    color: active ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                   }}
                 >
                   {active && <Check size={12} aria-hidden />}
@@ -997,11 +998,11 @@ function MySalaryCalculator({
               >
                 <p
                   className="text-xs font-black mb-2 inline-flex items-center gap-1.5"
-                  style={{ color: r.color }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   <span
                     className="w-3 h-3 rounded-full inline-flex items-center justify-center text-[8px] font-black text-white"
-                    style={{ backgroundColor: r.color }}
+                    style={{ backgroundColor: r.color , color: r.color === "#0145F2" ? "#FFFFFF" : "#111827" }}
                     aria-hidden
                   >
                     {r.shortLabel}
@@ -1018,7 +1019,7 @@ function MySalaryCalculator({
                   <span className="text-muted-blue">세후</span>
                   <span
                     className="font-black tabular-nums text-base"
-                    style={{ color: r.color }}
+                    style={{ color: "hsl(var(--link))" }}
                   >
                     {fmtManwon(r.netManwon)}
                   </span>
@@ -1048,7 +1049,7 @@ function MySalaryCalculator({
                 </span>
                 <span
                   className="text-lg font-black tabular-nums"
-                  style={{ color: "#0145F2" }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   {opi1Rate}%
                 </span>
@@ -1082,7 +1083,7 @@ function MySalaryCalculator({
                 </span>
                 <span
                   className="text-lg font-black tabular-nums"
-                  style={{ color: "#0145F2" }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   {creditRate}%
                 </span>
@@ -1199,13 +1200,13 @@ function MySalaryCalculator({
             >
               <p
                 className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5"
-                style={{ color: selected.color }}
+                style={{ color: "hsl(var(--link))" }}
               >
                 세후 실수령
               </p>
               <p
                 className="text-3xl sm:text-4xl font-black tabular-nums"
-                style={{ color: selected.color }}
+                style={{ color: "hsl(var(--link))" }}
               >
                 {fmtManwon(animNet)}
               </p>
@@ -1254,7 +1255,7 @@ function MySalaryCalculator({
                   <div>
                     <p
                       className="text-[10px] font-bold uppercase tracking-[0.15em]"
-                      style={{ color: selected.color }}
+                      style={{ color: "hsl(var(--link))" }}
                     >
                       OPI2 · 특별경영성과금
                     </p>
@@ -1287,13 +1288,13 @@ function MySalaryCalculator({
                 >
                   <p
                     className="text-[9px] font-bold uppercase tracking-[0.15em] mb-0.5"
-                    style={{ color: selected.color }}
+                    style={{ color: "hsl(var(--link))" }}
                   >
                     사업부 (가중 60%)
                   </p>
                   <p
                     className="text-sm font-black tabular-nums"
-                    style={{ color: selected.color }}
+                    style={{ color: "hsl(var(--link))" }}
                   >
                     {fmtManwon(personal.opi2SaManwon)}
                   </p>
@@ -1462,7 +1463,7 @@ function DeductRow({
       <span
         className={`tabular-nums ${
           bold
-            ? "font-black text-rose-500 text-sm"
+            ? "font-black text-destructive text-sm"
             : "font-bold text-navy dark:text-canvas-50"
         }`}
       >
@@ -1495,13 +1496,13 @@ function LabeledCommaInput({
         {label} <span className="opacity-70 font-medium">({unit})</span>
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           type="text"
           inputMode="numeric"
           value={value}
           onChange={(e) => onChange(formatNumberInput(e.target.value))}
-          className="w-full rounded-lg px-3 py-2 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
-          style={{ border: `1.5px solid ${color}33` }}
+          className="w-full rounded-lg px-3 py-2 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-card text-foreground"
+          style={{ border: "1.5px solid hsl(var(--input))" }}
           onFocus={(e) => (e.currentTarget.style.borderColor = color)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${color}33`)}
           aria-label={`${label} (${unit})`}
@@ -1533,7 +1534,7 @@ function LabeledDecimalInput({
         {label} <span className="opacity-70 font-medium">({unit})</span>
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           type="text"
           inputMode="decimal"
           value={value}
@@ -1542,8 +1543,8 @@ function LabeledDecimalInput({
             const [head, ...rest] = raw.split(".");
             onChange(rest.length > 0 ? `${head}.${rest.join("")}` : head);
           }}
-          className="w-full rounded-lg px-3 py-2 pr-10 text-base font-black tabular-nums focus:outline-none transition-all bg-canvas-50 dark:bg-canvas-800 text-navy dark:text-canvas-50"
-          style={{ border: `1.5px solid ${color}33` }}
+          className="w-full rounded-lg px-3 py-2 pr-10 text-base font-black tabular-nums focus:outline-none transition-all bg-card text-foreground"
+          style={{ border: "1.5px solid hsl(var(--input))" }}
           onFocus={(e) => (e.currentTarget.style.borderColor = color)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${color}33`)}
           aria-label={`${label} (${unit})`}
@@ -1579,7 +1580,7 @@ function FixedPolicyCard({
       </div>
       <p
         className="text-2xl font-black tabular-nums mb-1"
-        style={{ color }}
+        style={{ color: "hsl(var(--link))" }}
       >
         {value}
       </p>
@@ -1619,11 +1620,11 @@ function ResultCard({
     >
       <p
         className="text-sm font-black mb-2 inline-flex items-center gap-1.5"
-        style={{ color }}
+        style={{ color: "hsl(var(--link))" }}
       >
         <span
           className="w-3 h-3 rounded-full inline-flex items-center justify-center text-[8px] font-black text-white"
-          style={{ backgroundColor: color }}
+          style={{ backgroundColor: color , color: color === "#0145F2" ? "#FFFFFF" : "#111827" }}
           aria-hidden
         >
           {shortLabel}
@@ -1644,7 +1645,7 @@ function ResultCard({
           </span>
         </div>
       </div>
-      <p className="text-xl font-black tabular-nums" style={{ color }}>
+      <p className="text-xl font-black tabular-nums" style={{ color: "hsl(var(--link))" }}>
         {fmtManwon(animTotal)}
       </p>
       <p className="text-[11px] text-faint-blue mt-0.5">{fmtEok(total)}</p>

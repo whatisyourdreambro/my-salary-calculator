@@ -264,7 +264,7 @@ export default function GlossaryDetailPage({
  <ul className="space-y-2 text-sm">
  <li>
  <Link href="/calc" className="text-electric hover:underline font-bold">
- → 100개 금융 계산기 둘러보기
+ → 전체 금융 계산기 둘러보기
  </Link>
  </li>
  <li>

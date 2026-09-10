@@ -1,5 +1,5 @@
 // src/app/calc/page.tsx
-// 100개 계산기 인덱스 페이지 (검색·카테고리 점프는 CalcIndexClient에서)
+// Calculator directory: the registry is the source of counts and crawlable links.
 
 import type { Metadata } from "next";
 import { Calculator } from "lucide-react";
@@ -8,15 +8,16 @@ import { bonusCalcCountKo } from "@/config/site";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/structuredData";
 import { allCalculators } from "@/lib/simpleCalculators";
+import { getDedicatedCalculatorEntries } from "@/lib/searchIndex";
 import { MultiplexAd } from "@/components/AdPlacement";
 import CalcIndexClient from "./CalcIndexClient";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "연봉·세금·대출 100가지 계산기 — 한 페이지에서 한눈에",
+ title: `금융·생활 계산기 ${allCalculators.length}종 — 연봉·대출·저축·사업`,
  description:
- "연봉·세금·대출·투자·부동산·보험·사업자·건강·생활까지 100가지 단순 계산기를 한 페이지에 모았습니다. 성과급·연말정산·통상임금·전세대출 등 2026 시즌 핵심 계산기 포함 — 입력하면 즉시 결과.",
+ `연봉·세금·대출·저축·부동산·사업·가족 생활에 필요한 계산기 ${allCalculators.length}종과 전용 계산기를 한곳에서 찾으세요. 대환대출 손익분기점, 이직 비용, 생활비 분담 등 상황별로 계산하고 계산식과 주의사항을 함께 확인할 수 있습니다.`,
  path: "/calc",
- keywords: ["연봉 계산기", "100가지 계산기", "금융 계산기 모음", "생활 계산기", "세금 계산기"],
+ keywords: ["연봉 계산기", "계산기 모음", "금융 계산기 모음", "생활 계산기", "세금 계산기", "사업 계산기"],
 });
 
 const CATEGORY_ORDER = [
@@ -31,6 +32,7 @@ const CATEGORY_ORDER = [
  { id: "currency", label: "환율" },
  { id: "health", label: "건강" },
  { id: "family", label: "결혼·육아" },
+ { id: "career", label: "이직·커리어" },
 ];
 
 // 8차 점검 — 정적 라우트로 신설된 시즌 핵심 계산기들을 인덱스 최상위에 노출.
@@ -209,34 +211,56 @@ export default function CalcIndexPage() {
  title: c.title,
  description: c.description,
  category: c.category,
+ publishedAt: c.publishedAt,
  })),
  })).filter((g) => g.items.length > 0);
 
  return (
- <main className="min-h-screen bg-canvas pb-20 pt-28">
+ <div className="min-h-screen bg-background text-foreground pb-20 pt-28">
  <JsonLd
  data={breadcrumbLd([
  { name: "홈", path: "/" },
- { name: "계산기 100", path: "/calc" },
+ { name: "계산기 모음", path: "/calc" },
  ])}
  />
+ <JsonLd data={{
+   "@context": "https://schema.org",
+   "@type": "CollectionPage",
+   name: `금융·생활 계산기 ${allCalculators.length}종`,
+   url: "https://www.moneysalary.com/calc",
+   mainEntity: {
+     "@type": "ItemList",
+     numberOfItems: allCalculators.length,
+     itemListElement: allCalculators.map((calc, index) => ({
+       "@type": "ListItem", position: index + 1,
+       name: calc.title, url: `https://www.moneysalary.com/calc/${calc.slug}`,
+     })),
+   },
+ }} />
 
  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="text-center mb-8">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <Calculator className="w-4 h-4" />
- 100가지 단순 계산기
+ 금융·생활 계산기 {allCalculators.length}종
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  한 페이지로 끝내는 <span className="text-electric">계산기 모음</span>
  </h1>
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  세금·연봉·대출·투자·부동산·보험·사업자·일상까지
- 자주 쓰는 100가지 계산기를 한곳에서.
+ 상황에 맞는 계산기를 찾고, 입력값을 바꾸며 결과를 비교해 보세요.
  </p>
  </div>
 
- <CalcIndexClient grouped={grouped} featured={FEATURED_CALCS} />
+ <CalcIndexClient grouped={[...grouped, {
+   id: "dedicated", label: "더 많은 전용 계산기",
+   items: getDedicatedCalculatorEntries().map(entry => ({
+     slug: entry.href, href: entry.href, title: entry.title,
+     description: entry.description ?? "상세 조건을 입력하고 내 상황에 따른 계산 결과를 확인하세요.",
+     category: "dedicated",
+   })),
+ }]} featured={FEATURED_CALCS} />
 
  {/* 목록 그리드 하단 멀티플렉스 — env 미설정 시 렌더 안 함.
     HOME_TOP 은 calc/layout.tsx 하단에서 이미 제공 (page 중복 시 슬롯 dedup 충돌) */}
@@ -244,6 +268,6 @@ export default function CalcIndexPage() {
  <MultiplexAd />
  </div>
  </div>
- </main>
+ </div>
  );
 }

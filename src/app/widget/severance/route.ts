@@ -40,12 +40,12 @@ function buildHtml(): string {
     bodyHtml: `  <p class="title">🏦 2026 <span>퇴직금</span> 계산기</p>
   <div class="row">
     <label for="wage">월평균임금</label>
-    <input id="wage" type="number" inputmode="numeric" min="100" max="3000" step="10" value="350">
+    <input id="wage" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="100" max="3000" step="10" value="350">
     <span class="unit">만원</span>
   </div>
   <div class="row">
     <label for="years">근속연수</label>
-    <input id="years" type="number" inputmode="numeric" min="1" max="${YEARS_MAX}" step="1" value="5">
+    <input id="years" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="1" max="${YEARS_MAX}" step="1" value="5">
     <span class="unit">년</span>
   </div>
   <div class="result">
@@ -73,8 +73,8 @@ function buildHtml(): string {
   }
   function fmtManwon(won) { return Math.round(won / 10000).toLocaleString("ko-KR"); }
   function render() {
-    var w = parseFloat(wage.value) * 10000;
-    var y = parseInt(years.value, 10);
+    var w = parseFloat(wage.value.replace(/,/g, "")) * 10000;
+    var y = parseInt(years.value.replace(/,/g, ""), 10);
     if (!isFinite(w) || w <= 0 || !isFinite(y) || y < 1) { net.textContent = "—"; detail.textContent = "—"; return; }
     if (y > YEARS_MAX) { net.innerHTML = "<small>" + YEARS_MAX + "년 초과는 아래 버튼으로</small>"; detail.textContent = "—"; return; }
     var gross = w * y; // 30일분 평균임금 × 연수
@@ -83,8 +83,8 @@ function buildHtml(): string {
     net.innerHTML = fmtManwon(gross - tax) + "<small>만원</small>";
     detail.innerHTML = fmtManwon(gross) + "<small>만원</small> / " + fmtManwon(tax) + "<small>만원</small>";
   }
-  wage.addEventListener("input", render);
-  years.addEventListener("input", render);
+  bindGroupedNumberInput(wage, render);
+  bindGroupedNumberInput(years, render);
   render();
 })();`,
     ctaHref: "/?tab=severance",

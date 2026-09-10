@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // ────────────────────────────────────────────────────────────
 // GS칼텍스 경영성과급 시나리오 (전부 공개 언론 보도 기반 — 수치 창작 없음)
@@ -121,7 +122,7 @@ export default function GsCaltexBonusClient() {
           <div className="mt-3 space-y-2 p-4 rounded-xl bg-canvas/30">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-faint w-32">기본연봉 대비 %</span>
-              <input
+              <NumberInput
                 type="number"
                 value={pctOverride}
                 onChange={(e) => setPctOverride(Number(e.target.value) || 0)}
@@ -144,7 +145,7 @@ export default function GsCaltexBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 기본연봉</h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}

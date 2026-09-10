@@ -12,6 +12,7 @@ import {
   earnedIncomeDeduction2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -54,7 +55,7 @@ function MoneyField({
       <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
         {label}
       </label>
-      <input
+      <NumberInput
         type="number"
         value={value}
         onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}

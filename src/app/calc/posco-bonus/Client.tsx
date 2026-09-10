@@ -5,6 +5,7 @@ import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
 import { SCENARIOS, DEFAULT_BASIC_MANWON } from "./data";
+import NumberInput from "@/components/NumberInput";
 
 export default function PoscoBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("normal");
@@ -66,7 +67,7 @@ export default function PoscoBonusClient() {
         {customMode && (
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">성과급 (월 기본급 대비)</span>
-            <input
+            <NumberInput
               type="number"
               value={customPercent}
               onChange={(e) => setCustomPercent(Number(e.target.value) || 0)}
@@ -82,7 +83,7 @@ export default function PoscoBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}

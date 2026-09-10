@@ -365,7 +365,7 @@ export const hubs: Hub[] = [
         links: [
           { label: "금융 용어 사전", href: "/glossary", desc: "보험·연금 용어 쉬운 설명" },
           { label: "금융 Q&A", href: "/qna", desc: "4대보험·건강보험 자주 묻는 질문" },
-          { label: "100가지 계산기", href: "/calc", desc: "전체 계산기 모음" },
+          { label: "계산기 모음", href: "/calc", desc: "전체 계산기 모음" },
         ],
       },
     ],

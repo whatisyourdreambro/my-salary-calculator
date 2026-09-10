@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { Home, Calculator, Info } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 export default function LtvCalculator() {
  const fieldId = useId();
  const [price, setPrice] = useState("");
@@ -34,7 +35,7 @@ export default function LtvCalculator() {
  <div className="p-6 space-y-6">
  <div>
  <label htmlFor={`${fieldId}-price`} className="block text-sm font-bold mb-2">주택 가격 (원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-price`}
  type="text"
  value={price}
@@ -46,7 +47,7 @@ export default function LtvCalculator() {
 
  <div>
  <label htmlFor={`${fieldId}-loan`} className="block text-sm font-bold mb-2">대출 금액 (원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-loan`}
  type="text"
  value={loan}

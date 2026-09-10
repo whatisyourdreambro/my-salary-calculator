@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Percent } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 export default function VatCalculator() {
  const amountId = useId();
@@ -73,7 +74,7 @@ export default function VatCalculator() {
  <label htmlFor={amountId} className="block text-sm font-medium text-muted-blue mb-2">
  금액 입력
  </label>
- <input
+ <NumberInput
  id={amountId}
  type="number"
  value={amount}

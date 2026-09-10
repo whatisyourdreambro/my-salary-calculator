@@ -15,6 +15,7 @@ import {
  Star,
  Users,
 } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
@@ -132,7 +133,7 @@ export default function ParentalLeaveContent() {
        월 통상임금 (세전)
       </label>
       <div className="relative">
-       <input id="ms-parental-leave-field-0"
+       <NumberInput id="ms-parental-leave-field-0"
         type="text"
         value={Number(monthlyWage).toLocaleString("ko-KR")}
         onChange={(e) =>

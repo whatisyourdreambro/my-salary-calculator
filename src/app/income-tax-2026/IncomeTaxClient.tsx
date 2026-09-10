@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 const BRACKETS: Array<{ ceil: number; rate: number; deduction: number }> = [
   { ceil: 14_000_000, rate: 0.06, deduction: 0 },
@@ -52,7 +53,7 @@ export default function IncomeTaxClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             연 총소득 (원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={grossIncome}
             onChange={(e) => setGrossIncome(Math.max(0, Number(e.target.value) || 0))}
@@ -70,7 +71,7 @@ export default function IncomeTaxClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             총 공제액 (원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={deductions}
             onChange={(e) => setDeductions(Math.max(0, Number(e.target.value) || 0))}

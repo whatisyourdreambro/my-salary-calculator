@@ -136,7 +136,7 @@ export function breadcrumbLd(crumbs: Breadcrumb[]) {
 // ─────────────────────────────────────────────────────────────
 const SEGMENT_LABELS: Record<string, string> = {
  "": "홈",
- calc: "100가지 계산기",
+ calc: "계산기 모음",
  salary: "연봉 표",
  "salary-db": "회사 연봉 DB",
  insights: "데이터 리포트",
@@ -181,7 +181,7 @@ const SEGMENT_LABELS: Record<string, string> = {
 export interface AutoBreadcrumbOptions {
  /** 마지막 단계의 한국어 명 (없으면 마지막 segment 사용) */
  leafName?: string;
- /** 중간 단계 명 강제 override (예: { "calc": "100가지 계산기" }) */
+ /** 중간 단계 명 강제 override (예: { "calc": "계산기 모음" }) */
  overrides?: Record<string, string>;
 }
 

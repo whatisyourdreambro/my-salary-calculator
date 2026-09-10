@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 한국전력 공공기관 경영평가 성과급 시나리오.
 // 등급별 지급률(공기업 직원 기준 월 기본급의 %): S 250 / A 200 / B 150 / C 100 / D·E 0
@@ -144,7 +145,7 @@ export default function KepcoBonusClient() {
               <span className="text-xs font-bold text-faint w-32">
                 지급률 % (월 기본급 대비)
               </span>
-              <input
+              <NumberInput
                 type="number"
                 value={pctOverride}
                 onChange={(e) => setPctOverride(Number(e.target.value) || 0)}
@@ -162,7 +163,7 @@ export default function KepcoBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -194,7 +195,7 @@ export default function KepcoBonusClient() {
         <h2 className="text-xl font-black mb-4">3단계 · 연 총보수 (세금 계산용)</h2>
         <label className="block">
           <span className="text-sm font-bold">본인 연 총보수 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={annualManwon}
             onChange={(e) => setAnnualManwon(Number(e.target.value) || 0)}

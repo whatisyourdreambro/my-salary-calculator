@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // 현대모비스 임단협 시나리오 (현대차그룹 연동형 — 정률 + 정액 + 주식 패키지)
 // 출처: 전자신문·서울경제·아주경제 2025-10-17 (2025 타결), 머니S 단독 2024-07-09 (2024 합의)
@@ -109,7 +110,7 @@ export default function HyundaiMobisBonusClient() {
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -119,7 +120,7 @@ export default function HyundaiMobisBonusClient() {
               <span className="text-sm">%</span>
             </Row>
             <Row label="정액 격려금 (원)">
-              <input
+              <NumberInput
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -128,7 +129,7 @@ export default function HyundaiMobisBonusClient() {
               />
             </Row>
             <Row label="지급 주식 (주)">
-              <input
+              <NumberInput
                 type="number"
                 value={sharesOverride}
                 onChange={(e) => setSharesOverride(Number(e.target.value) || 0)}
@@ -145,7 +146,7 @@ export default function HyundaiMobisBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -175,7 +176,7 @@ export default function HyundaiMobisBonusClient() {
         <h2 className="text-xl font-black mb-4">3단계 · 현대모비스 주가</h2>
         <label className="block">
           <span className="text-sm font-bold">현대모비스 보통주 1주 가격 (원)</span>
-          <input
+          <NumberInput
             type="number"
             value={stockPrice}
             onChange={(e) => setStockPrice(Number(e.target.value) || 0)}

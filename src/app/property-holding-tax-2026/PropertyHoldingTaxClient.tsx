@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 // 재산세 (주택분) — 1세대 1주택 특례 반영 (2026년 기준, 행안부·지방세법)
 // · 공정시장가액비율: 1세대1주택 43~45% 특례(공시 3억 이하 43% / 3~6억 44% /
@@ -85,7 +86,7 @@ export default function PropertyHoldingTaxClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             주택 공시가격 (원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={publishedValue}
             onChange={(e) => setPublishedValue(Math.max(0, Number(e.target.value) || 0))}

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import NumberInput from "@/components/NumberInput";
 
 // S-OIL 연 1회 경영성과급 — 최근 지급 실적 시나리오 (보도 기준)
 const SCENARIOS = [
@@ -120,7 +121,7 @@ export default function SOilBonusClient() {
               <span className="text-xs font-bold text-faint w-40">
                 성과급 % (월 기본급 대비)
               </span>
-              <input
+              <NumberInput
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) =>
@@ -145,7 +146,7 @@ export default function SOilBonusClient() {
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) =>

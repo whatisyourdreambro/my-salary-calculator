@@ -8,6 +8,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -106,7 +107,7 @@ export default function VoluntaryRetirementClient() {
               근속 연수
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-years"
                 type="text"
                 inputMode="numeric"
@@ -124,7 +125,7 @@ export default function VoluntaryRetirementClient() {
               추가 개월
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-months"
                 type="text"
                 inputMode="numeric"
@@ -142,7 +143,7 @@ export default function VoluntaryRetirementClient() {
               월평균임금 (세전 — 상여 포함 3개월 평균)
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-wage"
                 type="text"
                 inputMode="numeric"
@@ -172,7 +173,7 @@ export default function VoluntaryRetirementClient() {
           </div>
           {sevMode === "manual" ? (
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-sev"
                 type="text"
                 inputMode="numeric"
@@ -208,7 +209,7 @@ export default function VoluntaryRetirementClient() {
           </div>
           {compMode === "months" ? (
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-comp-months"
                 type="text"
                 inputMode="numeric"
@@ -222,7 +223,7 @@ export default function VoluntaryRetirementClient() {
             </div>
           ) : (
             <div className="relative">
-              <input
+              <NumberInput
                 id="vr-comp-amount"
                 type="text"
                 inputMode="numeric"

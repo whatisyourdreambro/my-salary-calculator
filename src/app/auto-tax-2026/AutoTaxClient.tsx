@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 const CC_RATES: Array<{ ceil: number; rate: number; label: string }> = [
   { ceil: 1000, rate: 80, label: "1,000cc 이하 (80원/cc)" },
@@ -86,7 +87,7 @@ export default function AutoTaxClient() {
             <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
               배기량 (cc)
             </label>
-            <input
+            <NumberInput
               type="number"
               value={cc}
               onChange={(e) => setCc(Math.max(0, Number(e.target.value) || 0))}

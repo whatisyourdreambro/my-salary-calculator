@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Home, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 // 2026 취득세율 — 아파트·단독주택 모두 주택 세율 체계 적용, 토지는 4%
@@ -66,7 +67,7 @@ export default function AcquisitionTaxPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-6">
  <div>
  <label htmlFor="acquisition-tax-price" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">매매 가격 (원)</label>
- <input id="acquisition-tax-price" type="number" inputMode="numeric" value={price} onChange={e => setPrice(Number(e.target.value))}
+ <NumberInput id="acquisition-tax-price" type="number" inputMode="numeric" value={price} onChange={e => setPrice(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(price)}원 ({(price / 100_000_000).toFixed(2)}억원)</p>
  </div>

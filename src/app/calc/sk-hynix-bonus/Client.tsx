@@ -13,6 +13,7 @@ import {
   PROFIT_SCENARIOS,
   REFERENCE_SALARY,
 } from "./psData";
+import NumberInput from "@/components/NumberInput";
 
 // 지급 방식 — 신 체계(2026 잠정합의)·구 체계(2025년분까지)·주식 100% 선택권.
 // 세 방식 모두 항상 계산하고 토글은 "어느 쪽을 크게 보여줄지"만 결정한다
@@ -155,7 +156,7 @@ export default function SkHynixBonusClient() {
         </div>
         <label className="block">
           <span className="text-xs font-bold text-faint">또는 직접 입력 (조원)</span>
-          <input
+          <NumberInput
             type="number"
             value={opiTrillion}
             onChange={(e) => setOpiTrillion(Number(e.target.value) || 0)}
@@ -183,7 +184,7 @@ export default function SkHynixBonusClient() {
         </h2>
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
-          <input
+          <NumberInput
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}

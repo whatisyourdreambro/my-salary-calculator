@@ -18,6 +18,7 @@ import {
 import { InArticleAd, GuideMidAd, HomeTopAd, CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Link from "@/components/AppLink";
+import NumberInput from "@/components/NumberInput";
 
 type HouseholdType = "single" | "one-earner" | "dual-earner";
 
@@ -225,7 +226,7 @@ export default function EarnedIncomeCreditContent() {
       연간 총소득 <span className="text-muted-blue font-normal">(만원)</span>
      </label>
      <div className="relative">
-      <input id="ms-earned-income-credit-field-0"
+      <NumberInput id="ms-earned-income-credit-field-0"
        type="number"
        value={incomeInput}
        onChange={(e) => setIncomeInput(e.target.value)}
@@ -248,7 +249,7 @@ export default function EarnedIncomeCreditContent() {
       가구원 합산 재산 <span className="text-muted-blue font-normal">(만원)</span>
      </label>
      <div className="relative">
-      <input id="ms-earned-income-credit-field-1"
+      <NumberInput id="ms-earned-income-credit-field-1"
        type="number"
        value={propertyInput}
        onChange={(e) => setPropertyInput(e.target.value)}

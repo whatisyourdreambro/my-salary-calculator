@@ -9,6 +9,7 @@ import { prepareOfferComparisonExport } from "@/lib/offerComparisonExport";
 import Link from "@/components/AppLink";
 import CurrencyInput from "./CurrencyInput";
 import { X } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 const formatNumber = (value: number) => value.toLocaleString("ko-KR");
 const signed = (value: number) => `${value > 0 ? "+" : ""}${formatNumber(value)}원`;
@@ -119,13 +120,13 @@ export default function SalaryComparator() {
               quickAmounts={[100000, 50000]} className="pr-8" />
             <div>
               <label htmlFor={`${id}-dependents`} className="block text-sm font-medium mb-2">기본공제 대상 가족 (본인 포함)</label>
-              <input id={`${id}-dependents`} type="number" min={1} max={20} step={1} value={settings.dependents}
+              <NumberInput id={`${id}-dependents`} type="number" min={1} max={20} step={1} value={settings.dependents}
                 onChange={event => dispatch({ type: "settings", value: { ...settings, dependents: event.target.value === "" ? 0 : Number(event.target.value) } })}
                 className={inputStyle} aria-describedby={`${id}-family-help`} />
             </div>
             <div>
               <label htmlFor={`${id}-children`} className="block text-sm font-medium mb-2">만 8세 이상 공제 대상 자녀</label>
-              <input id={`${id}-children`} type="number" min={0} max={10} step={1} value={settings.children}
+              <NumberInput id={`${id}-children`} type="number" min={0} max={10} step={1} value={settings.children}
                 onChange={event => dispatch({ type: "settings", value: { ...settings, children: event.target.value === "" ? 0 : Number(event.target.value) } })}
                 className={inputStyle} aria-describedby={`${id}-family-help`} />
             </div>

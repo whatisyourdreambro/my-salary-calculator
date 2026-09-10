@@ -8,6 +8,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import NumberInput from "@/components/NumberInput";
 
 // 2026 요율·상하한은 정본(taxConstants2026)에서 가져온다 — verify:tax 게이트(정본 밖 리터럴 금지).
 // 2026-08-30 신설 이후 리터럴 하드코딩으로 CI verify:tax 가 매 푸시 실패하던 원인(2026-09-05 수정).
@@ -45,7 +46,7 @@ export default function PensionHikeClient() {
           월급 (세전, 월 소득)
         </label>
         <div className="relative max-w-md">
-          <input
+          <NumberInput
             id="ph-salary"
             type="text"
             inputMode="numeric"
@@ -55,7 +56,7 @@ export default function PensionHikeClient() {
               setSalaryFmt(d ? Number(d).toLocaleString("ko-KR") : "");
             }}
             className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-9"
-            style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2", color: "#0145F2" }}
+            style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid #0145F2", color: "hsl(var(--link))" }}
             aria-label="월급"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-electric">원</span>

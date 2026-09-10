@@ -21,6 +21,7 @@ import { SITE_CONFIG } from "@/lib/seo";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import { decodeSimpleCalculatorInputs, encodeSimpleCalculatorInputs, validateSimpleCalculatorInputs } from "@/lib/simpleCalculatorShare";
+import NumberInput from "@/components/NumberInput";
 
 interface Props {
  slug: string;
@@ -35,8 +36,8 @@ const formatNumber = (v: number, suffix?: string): string => {
  // (2026-09-06 전수검사 실브라우저 실측). 1억 이상도 억 단위 2자리라 ±50만원까지
  // 어긋났다. 압축 표기는 아래 compact 로 옮겨 보조 표기로만 쓴다.
  if (suffix === "원") return `${Math.round(v).toLocaleString("ko-KR")}원`;
- if (suffix) return `${Math.round(v).toLocaleString("ko-KR")}${suffix}`;
- return v.toLocaleString("ko-KR");
+ if (suffix) return `${v.toLocaleString("ko-KR", { maximumFractionDigits: 2 })}${suffix}`;
+ return v.toLocaleString("ko-KR", { maximumFractionDigits: 2 });
 };
 
 /** 큰 금액의 보조 표기 — "3억 85만" 처럼 감을 잡아 주되 정확값을 대체하지 않는다. */
@@ -101,7 +102,7 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  try { return calc.compute(inputs); } catch { return { primary: { label: "계산 결과", value: NaN }, note: "입력값과 허용 범위를 확인해 주세요." }; }
  }, [calc, inputs]);
 
- const resultValid = Boolean(calc && result && validateSimpleCalculatorInputs(inputs, calc) &&
+ const resultValid = Boolean(calc && result && result.status !== "invalid" && validateSimpleCalculatorInputs(inputs, calc) &&
  calc.fields.every((field) => isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)));
  const resultSnapshot = JSON.stringify([slug, rawInputs, inputs]);
  const captureSnapshot = useRef<string | null>(null);
@@ -154,11 +155,11 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
 
  if (!calc || !result) {
  return (
- <main className="min-h-screen bg-canvas dark:bg-canvas-950 pt-28">
+ <div className="min-h-screen bg-background pt-28 text-foreground">
  <div className="max-w-3xl mx-auto px-4">
  <p className="text-center text-muted-blue dark:text-canvas-300">계산기를 불러올 수 없습니다.</p>
  </div>
- </main>
+ </div>
  );
  }
 
@@ -175,17 +176,6 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  if (Number.isFinite(num)) {
  setInputs((prev) => ({ ...prev, [name]: num }));
  }
- };
-
- /** 정수부만 천단위 구분 — 입력 중인 소수부("3." · "3.5")를 보존한다. */
- const displayValue = (rawValue: string): string => {
- if (rawValue === "" || rawValue === "-") return rawValue;
- const negative = rawValue.startsWith("-");
- const body = negative ? rawValue.slice(1) : rawValue;
- const [intPart, fracPart] = body.split(".");
- const grouped = intPart === "" ? "" : Number(intPart).toLocaleString("ko-KR");
- const decimals = body.includes(".") ? `.${fracPart ?? ""}` : "";
- return `${negative ? "-" : ""}${grouped}${decimals}`;
  };
 
  return (
@@ -228,13 +218,15 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  </span>
  )}
  </label>
- <input
+ <NumberInput
  id={`${fieldIdPrefix}${field.name}`}
  type="text"
  // decimal: 모바일 키패드에 소수점 키가 나온다(numeric 은 정수 전용이라
  // 금리 3.5 를 입력할 방법이 아예 없었다).
  inputMode="decimal"
- value={displayValue(rawInputs[field.name] ?? "")}
+ value={rawInputs[field.name] ?? ""}
+ min={field.min}
+ max={field.max}
  aria-invalid={!isValidCalculationNumber(rawInputs[field.name] ?? "", field.min, field.max)}
  aria-describedby={`${fieldIdPrefix}${field.name}-help`}
  onChange={(e) => handleChange(field.name, e.target.value)}
@@ -276,7 +268,7 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  ))}
  </div>
  )}
- {resultValid && result.note && (
+ {result.note && (
  <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
  {result.note}
  </p>
@@ -363,13 +355,13 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  {calc.caveats && calc.caveats.length > 0 && (
  <section className="ms-status-warning mb-6 rounded-2xl p-5 sm:p-6">
  <h2 className="mb-3 flex items-center gap-2 text-xl font-bold">
- <AlertTriangle className="w-4 h-4 text-amber-600" />
+ <AlertTriangle className="w-4 h-4" />
  유의사항
  </h2>
  <ul className="space-y-2 text-base leading-7">
  {calc.caveats.map((item, idx) => (
  <li key={idx} className="flex gap-2">
- <span className="text-amber-600 font-bold">·</span>
+ <span className="font-bold" aria-hidden="true">·</span>
  <span>{item}</span>
  </li>
  ))}
@@ -402,6 +394,21 @@ function SimpleCalculatorInstance({ slug, shareToken }: Props & { shareToken: st
  </Link>
  ))}
  </div>
+ </section>
+ )}
+ {calc.sources && calc.sources.length > 0 && (
+ <section className="ms-surface ms-panel mb-6" aria-labelledby={`${fieldIdPrefix}sources-heading`}>
+ <h2 id={`${fieldIdPrefix}sources-heading`} className="mb-3 text-xl font-bold text-foreground">공식 계산방법 참고</h2>
+ <p className="mb-4 text-sm leading-6 text-muted-foreground">계산에 사용한 개념과 기준을 원문에서 확인할 수 있습니다.</p>
+ <ul className="space-y-3">
+ {calc.sources.map((source) => (
+ <li key={source.url}>
+ <a href={source.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-link underline underline-offset-4">
+ {source.title}<span className="sr-only"> (새 창)</span><ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+ </a>
+ </li>
+ ))}
+ </ul>
  </section>
  )}
  </div>

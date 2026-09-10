@@ -10,6 +10,7 @@
 //   3) 공제세액 = min(④', 700만) × 15% + ③' × 15% + ②' × 20% + ①' × 30%
 
 import { useMemo, useState } from "react";
+import NumberInput from "@/components/NumberInput";
 
 const GENERAL_LIMIT = 7_000_000; // ④ 그 밖의 부양가족 의료비 연 한도
 
@@ -115,7 +116,7 @@ export default function MedicalTaxCreditClient() {
           <label className={labelCls} htmlFor="mtc-salary">
             연간 총급여 (비과세 제외, 원)
           </label>
-          <input
+          <NumberInput
             id="mtc-salary"
             type="number"
             value={salary}
@@ -141,7 +142,7 @@ export default function MedicalTaxCreditClient() {
             <label className={labelCls} htmlFor="mtc-general">
               그 밖의 부양가족 의료비 (15% · 연 700만원 한도)
             </label>
-            <input
+            <NumberInput
               id="mtc-general"
               type="number"
               value={generalMed}
@@ -162,7 +163,7 @@ export default function MedicalTaxCreditClient() {
             <label className={labelCls} htmlFor="mtc-special">
               본인·65세 이상·장애인·6세 이하·산정특례자 의료비 (15% · 한도 없음)
             </label>
-            <input
+            <NumberInput
               id="mtc-special"
               type="number"
               value={specialMed}
@@ -182,7 +183,7 @@ export default function MedicalTaxCreditClient() {
             <label className={labelCls} htmlFor="mtc-premature">
               미숙아·선천성이상아 의료비 (20% · 한도 없음)
             </label>
-            <input
+            <NumberInput
               id="mtc-premature"
               type="number"
               value={prematureMed}
@@ -198,7 +199,7 @@ export default function MedicalTaxCreditClient() {
             <label className={labelCls} htmlFor="mtc-fertility">
               난임시술비 (30% · 한도 없음)
             </label>
-            <input
+            <NumberInput
               id="mtc-fertility"
               type="number"
               value={fertilityMed}
@@ -219,7 +220,7 @@ export default function MedicalTaxCreditClient() {
           <label className={labelCls} htmlFor="mtc-insurance">
             올해 지출한 의료비에 대해 받은(받을) 실손보험금 (원)
           </label>
-          <input
+          <NumberInput
             id="mtc-insurance"
             type="number"
             value={insurance}

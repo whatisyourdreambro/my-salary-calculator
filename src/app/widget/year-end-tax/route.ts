@@ -15,7 +15,7 @@ import {
   deriveAnnualHealthPremium,
 } from "@/lib/yearEndTaxCalculator";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
-import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT } from "../shared";
+import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
 export const runtime = "edge";
 
@@ -102,12 +102,12 @@ function buildHtml(): string {
   .title span { color: var(--accent); }
   .row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   label { font-weight: 700; font-size: 13px; color: var(--sub); white-space: nowrap; width: 74px; }
-  input[type="number"] {
+  input[data-number-input="grouped"] {
     flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px; font-weight: 700;
     border: 1px solid var(--border); border-radius: 10px;
     background: var(--bg); color: var(--text); outline: none;
   }
-  input[type="number"]:focus { border-color: var(--accent); }
+  input[data-number-input="grouped"]:focus { border-color: var(--accent); }
   .unit { font-weight: 700; color: var(--sub); font-size: 13px; }
   .result {
     background: var(--card); border-radius: 12px; padding: 14px 16px;
@@ -132,12 +132,12 @@ function buildHtml(): string {
   <p class="title">🧾 2026 연말정산 <span>환급</span> 계산기</p>
   <div class="row">
     <label for="salary">연간 총급여</label>
-    <input id="salary" type="number" inputmode="numeric" min="1200" max="20000" step="100" value="5000">
+    <input id="salary" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="1200" max="20000" step="100" value="5,000">
     <span class="unit">만원</span>
   </div>
   <div class="row">
     <label for="prepaid">기납부세액</label>
-    <input id="prepaid" type="number" inputmode="numeric" min="0" step="10" placeholder="월급 소득세×12">
+    <input id="prepaid" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="0" step="10" placeholder="월급 소득세×12">
     <span class="unit">만원</span>
   </div>
   <div class="result">
@@ -148,6 +148,7 @@ function buildHtml(): string {
   <a class="cta" href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">공제 다 넣고 정확히 계산하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
+${WIDGET_NUMBER_INPUT_SCRIPT}
 (function () {
   var GRID = ${gridJson};
   var MIN = ${GRID_MIN}, MAX = ${GRID_MAX}, STEP = ${GRID_STEP};
@@ -164,7 +165,7 @@ function buildHtml(): string {
   }
   function fmtMan(won) { return Math.round(won / 10000).toLocaleString("ko-KR"); }
   function render() {
-    var manwon = parseFloat(salaryEl.value);
+    var manwon = parseFloat(salaryEl.value.replace(/,/g, ""));
     if (!isFinite(manwon) || manwon <= 0) { out.textContent = "—"; return; }
     if (manwon * 10000 > MAX) {
       out.className = "value";
@@ -172,7 +173,7 @@ function buildHtml(): string {
       return;
     }
     var tax = taxOf(manwon * 10000);
-    var prepaidMan = parseFloat(prepaidEl.value);
+    var prepaidMan = parseFloat(prepaidEl.value.replace(/,/g, ""));
     if (!isFinite(prepaidMan)) {
       lab.textContent = "올해 결정세액(추정)";
       out.className = "value";
@@ -190,8 +191,8 @@ function buildHtml(): string {
       out.innerHTML = "-" + fmtMan(-refund) + "<small>만원</small>";
     }
   }
-  salaryEl.addEventListener("input", render);
-  prepaidEl.addEventListener("input", render);
+  bindGroupedNumberInput(salaryEl, render);
+  bindGroupedNumberInput(prepaidEl, render);
   render();
 })();
 </script>

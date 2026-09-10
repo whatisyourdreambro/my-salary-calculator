@@ -9,6 +9,7 @@ import {
   YOUTH_MIN_AGE,
   type SmbBreakType,
 } from "@/lib/smbTaxBreak";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -81,7 +82,7 @@ export default function SmbTaxBreakClient() {
               연봉 (총급여 — 비과세 제외)
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id="smb-salary"
                 type="text"
                 inputMode="numeric"
@@ -99,7 +100,7 @@ export default function SmbTaxBreakClient() {
               기본공제 인원 (본인 포함)
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id="smb-dependents"
                 type="text"
                 inputMode="numeric"
@@ -140,7 +141,7 @@ export default function SmbTaxBreakClient() {
                   취업(근로계약)일 만 나이
                 </label>
                 <div className="relative">
-                  <input
+                  <NumberInput
                     id="smb-age"
                     type="text"
                     inputMode="numeric"
@@ -158,7 +159,7 @@ export default function SmbTaxBreakClient() {
                   병역 이행기간
                 </label>
                 <div className="relative">
-                  <input
+                  <NumberInput
                     id="smb-mil"
                     type="text"
                     inputMode="numeric"

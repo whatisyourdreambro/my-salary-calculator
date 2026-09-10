@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { computeOrdinaryWage } from "@/lib/ordinaryWage";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -52,7 +53,7 @@ export default function OrdinaryWageClient() {
               {f.label}
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 id={f.id}
                 type="text"
                 inputMode="numeric"

@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, Calculator, Info } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 export default function DsrCalculator() {
  const fieldId = useId();
  const [income, setIncome] = useState("");
@@ -37,7 +38,7 @@ export default function DsrCalculator() {
  <div className="p-6 space-y-6">
  <div>
  <label htmlFor={`${fieldId}-income`} className="block text-sm font-bold mb-2">연소득 (원)</label>
- <input
+ <NumberInput
  id={`${fieldId}-income`}
  type="text"
  value={income}
@@ -50,7 +51,7 @@ export default function DsrCalculator() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor={`${fieldId}-principal`} className="block text-sm font-bold mb-2">연간 원금 상환액</label>
- <input
+ <NumberInput
  id={`${fieldId}-principal`}
  type="text"
  value={principal}
@@ -61,7 +62,7 @@ export default function DsrCalculator() {
  </div>
  <div>
  <label htmlFor={`${fieldId}-interest`} className="block text-sm font-bold mb-2">연간 이자 상환액</label>
- <input
+ <NumberInput
  id={`${fieldId}-interest`}
  type="text"
  value={interest}

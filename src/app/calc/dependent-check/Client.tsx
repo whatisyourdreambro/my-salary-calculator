@@ -13,6 +13,7 @@ import {
   type IncomeType,
   type LivingStatus,
 } from "@/lib/dependentEligibility";
+import NumberInput from "@/components/NumberInput";
 
 function fmtMan(won: number): string {
   return `${Math.round(won / 10_000).toLocaleString("ko-KR")}만원`;
@@ -145,7 +146,7 @@ export default function DependentCheckClient() {
             <label htmlFor="dc-birth" className="text-xs font-bold tracking-tight block mb-2 text-faint-blue">
               2. 출생연도 (주민등록 기준)
             </label>
-            <input
+            <input data-number-format="calendar"
               id="dc-birth"
               type="text"
               inputMode="numeric"
@@ -201,7 +202,7 @@ export default function DependentCheckClient() {
                   : "연간 소득금액 (총수입 − 필요경비, 각 소득 합산)"}
               </label>
               <div className="relative max-w-xs">
-                <input
+                <NumberInput
                   id="dc-income"
                   type="text"
                   inputMode="numeric"

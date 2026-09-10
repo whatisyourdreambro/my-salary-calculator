@@ -7,20 +7,20 @@
 @layer base {
   :root {
     color-scheme: light;
-    --background: 216 33% 97%;
-    --foreground: 215 38% 16%;
+    --background: 220 14% 97%;
+    --foreground: 220 18% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 215 38% 16%;
+    --card-foreground: 220 18% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 38% 16%;
+    --popover-foreground: 220 18% 15%;
     --primary: 223.07 99.18% 47.65%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 223 99% 41%;
     --link: 223 88% 42%;
-    --secondary: 216 27% 94%;
-    --secondary-foreground: 215 38% 20%;
-    --muted: 216 24% 93%;
-    --muted-foreground: 215 18% 39%;
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 18% 20%;
+    --muted: 220 12% 93%;
+    --muted-foreground: 220 10% 38%;
     --accent: 220 85% 96%;
     --accent-foreground: 223 88% 42%;
     --destructive: 4 76% 40%;
@@ -29,8 +29,8 @@
     --success-foreground: 0 0% 100%;
     --warning: 32 92% 32%;
     --warning-foreground: 0 0% 100%;
-    --border: 216 22% 86%;
-    --input: 215 15% 55%;
+    --border: 220 13% 86%;
+    --input: 220 10% 53%;
     --ring: 223 88% 42%;
     --radius: 0.875rem;
     --header-height: 72px;
@@ -71,18 +71,18 @@
 
   .dark {
     color-scheme: dark;
-    --background: 217 44% 9%;
-    --foreground: 215 33% 94%;
-    --card: 216 42% 13%;
-    --card-foreground: 215 33% 94%;
-    --popover: 216 42% 13%;
-    --popover-foreground: 215 33% 94%;
+    --background: 220 12% 7%;
+    --foreground: 215 20% 94%;
+    --card: 220 11% 12%;
+    --card-foreground: 215 20% 94%;
+    --popover: 220 11% 12%;
+    --popover-foreground: 215 20% 94%;
     /* Filled brand buttons retain white-on-blue contrast in both themes. */
     --link: 216 100% 78%;
-    --secondary: 216 32% 18%;
-    --secondary-foreground: 215 33% 94%;
-    --muted: 216 30% 18%;
-    --muted-foreground: 215 26% 74%;
+    --secondary: 220 10% 18%;
+    --secondary-foreground: 215 20% 94%;
+    --muted: 220 10% 18%;
+    --muted-foreground: 215 12% 72%;
     --accent: 219 45% 20%;
     --accent-foreground: 216 100% 78%;
     --destructive: 6 100% 84%;
@@ -91,8 +91,8 @@
     --success-foreground: 217 44% 9%;
     --warning: 40 85% 74%;
     --warning-foreground: 217 44% 9%;
-    --border: 216 25% 28%;
-    --input: 215 22% 53%;
+    --border: 220 10% 28%;
+    --input: 215 10% 53%;
     --ring: 216 100% 78%;
     --shadow-card: 0 1px 2px hsl(220 60% 3% / 0.16);
     --shadow-raised: 0 10px 28px -14px hsl(220 60% 3% / 0.6);
@@ -139,14 +139,13 @@
   :where(a:not([class])):hover { text-decoration-thickness: 2px; }
   :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
 
-  /* Legacy fields keep a readable light fallback. New ms-field opts into both themes.
-     No !important: explicit field/result styles may override this base. */
+  /* Native and shared fields use the same light/dark surface as their content. */
   input:where(:not([type="range"], [type="checkbox"], [type="radio"], [type="hidden"], [type="color"], [type="button"], [type="submit"], [type="reset"])), select, textarea {
-    color: #172435;
-    background-color: #fff;
+    color: hsl(var(--card-foreground));
+    background-color: hsl(var(--card));
     -webkit-text-fill-color: currentColor;
     border-color: hsl(var(--input));
-    color-scheme: light;
+    color-scheme: inherit;
   }
   /* A semantic field background needs its matching foreground. Keep this at
      element specificity so an explicit text utility still wins. */
@@ -156,7 +155,7 @@
     color: hsl(var(--foreground));
     color-scheme: inherit;
   }
-  :where(input, textarea)::placeholder { color: #627086; opacity: 1; }
+  :where(input, textarea)::placeholder { color: hsl(var(--muted-foreground)); opacity: 1; }
   :where(input[type="checkbox"], input[type="radio"], input[type="range"]) { accent-color: hsl(var(--primary)); }
 
   :where(table) { border-collapse: collapse; }
@@ -324,11 +323,35 @@
     --content-link: var(--link);
     color: hsl(var(--card-foreground));
   }
-  :where(.dark) .bg-white:where(:not(input, select, textarea, [data-share-color-scope], [data-share-color-scope] *)) {
+  :where(.dark) .bg-white:where(:not([data-share-color-scope], [data-share-color-scope] *)) {
     background-color: hsl(var(--card));
   }
   :where(.dark) .text-primary:where(:not(.bg-primary, .bg-electric, .bg-primary *, .bg-electric *, [data-share-color-scope], [data-share-color-scope] *)) { color: hsl(var(--link)); }
   :where(.dark) .border-canvas-200 { border-color: hsl(var(--border)); }
+
+  /* Older page templates use literal light utility colors. Adapt only those
+     without an explicit dark counterpart; exported result images retain their palette. */
+  :where(.dark) :is(.bg-canvas-50, .bg-canvas-100, .bg-canvas-200, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-slate-50, .bg-slate-100, .bg-slate-200, .bg-zinc-50, .bg-zinc-100):where(:not([class*="dark:bg-"], [data-share-color-scope], [data-share-color-scope] *)) {
+    --content-foreground: var(--secondary-foreground);
+    --content-muted: var(--muted-foreground);
+    --content-link: var(--link);
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+  :where(.dark) :is(.text-black, .text-gray-900, .text-gray-800, .text-gray-700, .text-slate-900, .text-slate-800, .text-slate-700, .text-canvas-900, .text-canvas-800, .text-canvas-700):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: hsl(var(--content-foreground, var(--foreground))); }
+  :where(.dark) :is(.text-gray-600, .text-gray-500, .text-slate-600, .text-slate-500, .text-canvas-600, .text-canvas-500):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: hsl(var(--content-muted, var(--muted-foreground))); }
+  :where(.dark) :is(.border-gray-100, .border-gray-200, .border-gray-300, .border-slate-100, .border-slate-200, .border-canvas-100, .border-canvas-300):where(:not([class*="dark:border-"], [data-share-color-scope], [data-share-color-scope] *)) { border-color: hsl(var(--border)); }
+  :where(.dark) :is(.bg-blue-50, .bg-blue-100, .bg-indigo-50, .bg-indigo-100, .bg-sky-50, .bg-sky-100):where(:not([class*="dark:bg-"], [data-share-color-scope], [data-share-color-scope] *)) { background-color: hsl(var(--accent)); }
+  :where(.dark) :is(.text-blue-600, .text-blue-700, .text-blue-800, .text-blue-900, .text-indigo-700, .text-indigo-800, .text-sky-700, .text-sky-800):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: hsl(var(--link)); }
+  :where(.dark) :is(.bg-amber-50, .bg-amber-100, .bg-yellow-50, .bg-yellow-100, .bg-orange-50, .bg-orange-100):where(:not([class*="dark:bg-"], [data-share-color-scope], [data-share-color-scope] *)) { background-color: #332a1c; }
+  :where(.dark) :is(.text-amber-600, .text-amber-700, .text-amber-800, .text-amber-900, .text-yellow-700, .text-yellow-800, .text-orange-700, .text-orange-800):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: #f5cf85; }
+  :where(.dark) :is(.border-amber-200, .border-yellow-200, .border-orange-200):where(:not([class*="dark:border-"], [data-share-color-scope], [data-share-color-scope] *)) { border-color: #806338; }
+  :where(.dark) :is(.bg-emerald-50, .bg-emerald-100, .bg-green-50, .bg-green-100):where(:not([class*="dark:bg-"], [data-share-color-scope], [data-share-color-scope] *)) { background-color: #172f27; }
+  :where(.dark) :is(.text-emerald-600, .text-emerald-700, .text-emerald-800, .text-emerald-900, .text-green-600, .text-green-700, .text-green-800, .text-green-900):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: #8ae5bb; }
+  :where(.dark) :is(.border-emerald-200, .border-green-200):where(:not([class*="dark:border-"], [data-share-color-scope], [data-share-color-scope] *)) { border-color: #376d55; }
+  :where(.dark) :is(.bg-red-50, .bg-red-100, .bg-rose-50, .bg-rose-100):where(:not([class*="dark:bg-"], [data-share-color-scope], [data-share-color-scope] *)) { background-color: #382024; }
+  :where(.dark) :is(.text-red-600, .text-red-700, .text-red-800, .text-red-900, .text-rose-600, .text-rose-700, .text-rose-800):where(:not([class*="dark:text-"], [data-share-color-scope], [data-share-color-scope] *)) { color: #ffb4ac; }
+  :where(.dark) :is(.border-red-200, .border-rose-200):where(:not([class*="dark:border-"], [data-share-color-scope], [data-share-color-scope] *)) { border-color: #804952; }
 }
 
 @media (hover: hover) and (pointer: fine) {

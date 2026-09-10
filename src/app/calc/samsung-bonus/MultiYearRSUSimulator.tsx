@@ -14,6 +14,7 @@ import {
   useCountUp,
   ResultNextLinks,
 } from "./shared";
+import NumberInput from "@/components/NumberInput";
 
 // ────────────────────────────────────────────────────────────
 // 다년도 RSU 시뮬레이터 + 누적 그래프
@@ -193,7 +194,7 @@ export default function MultiYearRSUSimulator({
             <button
               type="button"
               onClick={undoSync}
-              className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-canvas-50 dark:bg-canvas-800 text-muted-blue border border-canvas-200 dark:border-canvas-700 hover:text-rose-500 transition-colors"
+              className="text-[10px] font-black px-2.5 py-1.5 rounded-lg bg-canvas-50 dark:bg-canvas-800 text-muted-blue border border-canvas-200 dark:border-canvas-700 hover:text-destructive transition-colors"
             >
               ↺ 되돌리기
             </button>
@@ -314,14 +315,14 @@ export default function MultiYearRSUSimulator({
           </div>
         </div>
         <div className="relative">
-          <input
+          <NumberInput
             id="sell-price"
             type="text"
             inputMode="numeric"
             value={sellPriceFmt}
             onChange={(e) => setSellPriceFmt(formatNumberInput(e.target.value))}
             className="w-full rounded-xl px-4 py-3 text-2xl font-black tabular-nums focus:outline-none transition pr-12 text-electric bg-white dark:bg-canvas-900"
-            style={{ border: "2px solid #0145F2" }}
+            style={{ border: "1.5px solid hsl(var(--input))" }}
             aria-label="기준 매도가 (원/주)"
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-electric">
@@ -738,7 +739,7 @@ function YearRowCard({
     <div className="rounded-xl border border-canvas-200 dark:border-canvas-800 bg-canvas-50 dark:bg-canvas-800 p-4 transition-all hover:border-electric/40">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <input
+          <input data-number-format="calendar"
             type="number"
             value={yearDraft ?? String(row.year)}
             onChange={(e) => setYearDraft(e.target.value)}
@@ -757,7 +758,7 @@ function YearRowCard({
           <button
             type="button"
             onClick={onRemove}
-            className="p-2.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+            className="p-2.5 rounded-md text-faint-blue hover:text-destructive hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
             aria-label={`${row.year}년 행 삭제`}
           >
             <Trash2 size={14} aria-hidden />
@@ -858,13 +859,13 @@ function CompactCommaInput({
         {label} <span className="opacity-70 font-medium">({unit})</span>
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           type="text"
           inputMode="numeric"
           value={value}
           onChange={(e) => onChange(formatNumberInput(e.target.value))}
           className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
-          style={{ border: "1.5px solid #0145F233" }}
+          style={{ border: "1.5px solid hsl(var(--input))" }}
           onFocus={(e) => (e.currentTarget.style.borderColor = "#0145F2")}
           onBlur={(e) => (e.currentTarget.style.borderColor = "#0145F233")}
           aria-label={`${label} (${unit})`}
@@ -896,7 +897,7 @@ function CompactPercentInput({
         {label} <span className="opacity-70 font-medium">(%)</span>
       </label>
       <div className="relative">
-        <input
+        <NumberInput
           type="number"
           value={value}
           onChange={(e) => {
@@ -907,7 +908,7 @@ function CompactPercentInput({
           min={0}
           max={max}
           className="w-full rounded-md px-2 py-1.5 pr-7 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
-          style={{ border: `1.5px solid ${accent}33` }}
+          style={{ border: "1.5px solid hsl(var(--input))" }}
           onFocus={(e) => (e.currentTarget.style.borderColor = accent)}
           onBlur={(e) => (e.currentTarget.style.borderColor = `${accent}33`)}
           aria-label={`${label} (%)`}

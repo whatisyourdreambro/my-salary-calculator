@@ -204,7 +204,7 @@ ${DISCLAIMER_HTML}
  <p class="font-bold text-primary mb-2">🛠 함께 사용하면 좋은 도구</p>
  <ul class="space-y-1 text-sm">
   <li>· <a href="/salary-db" class="text-primary underline">기업별 연봉 DB</a> — 삼성전자 직급별 평균 연봉</li>
-  <li>· <a href="/calc" class="text-primary underline">100가지 계산기</a> — 자사주 매도 시 양도소득세 계산</li>
+  <li>· <a href="/calc" class="text-primary underline">계산기 모음</a> — 자사주 매도 시 양도소득세 계산</li>
   <li>· <a href="/fire-calculator" class="text-primary underline">FIRE 계산기</a> — 자사주 포함 자산 기반 은퇴 시뮬레이션</li>
  </ul>
 </div>

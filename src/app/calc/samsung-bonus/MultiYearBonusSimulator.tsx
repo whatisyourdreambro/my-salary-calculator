@@ -37,6 +37,7 @@ import {
   netWorthForAgeGroup,
   NET_WORTH_SURVEY_LABEL,
 } from "@/data/netWorthData";
+import NumberInput from "@/components/NumberInput";
 
 // ────────────────────────────────────────────────────────────
 // 다년도 누적 성과급 시뮬레이터
@@ -461,9 +462,9 @@ export default function MultiYearBonusSimulator({
                   active ? "text-white scale-[1.02] shadow-md" : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
                 }`}
                 style={{
-                  backgroundColor: active ? d.color : undefined,
-                  borderColor: active ? d.color : `${d.color}55`,
-                  color: active ? "#fff" : d.color,
+                  backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
+                  borderColor: active ? "hsl(var(--primary))" : "hsl(var(--border))",
+                  color: active ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                 }}
               >
                 {active && <Check size={12} aria-hidden />}
@@ -589,7 +590,7 @@ export default function MultiYearBonusSimulator({
                   <div key={d.id} className="grid grid-cols-[60px_1fr_1fr_1fr] gap-2 items-center">
                     <span
                       className="text-[11px] font-black text-center py-1.5 rounded-md"
-                      style={{ backgroundColor: `${d.color}15`, color: d.color }}
+                      style={{ backgroundColor: `${d.color}15`, color: "hsl(var(--link))" }}
                     >
                       {d.shortLabel}
                     </span>
@@ -597,7 +598,7 @@ export default function MultiYearBonusSimulator({
                       <label className="text-[9px] font-bold text-amber-600 dark:text-amber-400 block mb-0.5">
                         가 (1.4배)
                       </label>
-                      <input
+                      <NumberInput
                         type="text"
                         inputMode="numeric"
                         value={ev.gaCount}
@@ -612,10 +613,10 @@ export default function MultiYearBonusSimulator({
                       />
                     </div>
                     <div>
-                      <label className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 block mb-0.5">
+                      <label className="text-[9px] font-bold text-success block mb-0.5">
                         나 (1.2배)
                       </label>
-                      <input
+                      <NumberInput
                         type="text"
                         inputMode="numeric"
                         value={ev.naCount}
@@ -784,7 +785,7 @@ export default function MultiYearBonusSimulator({
                 <div key={b.id} className="grid grid-cols-[1fr_auto_1fr_1fr_auto] gap-2 items-center">
                   {/* 입력 중에는 자유 타이핑 허용, blur 시점에만 2026~2035 클램프
                       (키 입력마다 즉시 클램프하면 '2030' 타이핑이 불가능해짐) */}
-                  <input
+                  <input data-number-format="calendar"
                     type="number"
                     min={2026}
                     max={2035}
@@ -803,7 +804,7 @@ export default function MultiYearBonusSimulator({
                     aria-label="시작 연도"
                   />
                   <span className="text-faint-blue font-bold text-xs">~</span>
-                  <input
+                  <input data-number-format="calendar"
                     type="number"
                     min={2026}
                     max={2035}
@@ -825,7 +826,7 @@ export default function MultiYearBonusSimulator({
                     aria-label="끝 연도"
                   />
                   <div className="relative">
-                    <input
+                    <NumberInput
                       type="text"
                       inputMode="decimal"
                       value={b.profitTrillionFmt}
@@ -845,7 +846,7 @@ export default function MultiYearBonusSimulator({
                     <button
                       type="button"
                       onClick={() => removeBulkRange(b.id)}
-                      className="p-2.5 rounded-md text-faint-blue hover:text-rose-500"
+                      className="p-2.5 rounded-md text-faint-blue hover:text-destructive"
                       aria-label="구간 삭제"
                     >
                       <Trash2 size={14} aria-hidden />
@@ -974,13 +975,13 @@ export default function MultiYearBonusSimulator({
           >
             <p
               className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1.5"
-              style={{ color: targetDivision.color }}
+              style={{ color: "hsl(var(--link))" }}
             >
               누적 세후
             </p>
             <p
               className="text-3xl sm:text-4xl font-black tabular-nums"
-              style={{ color: targetDivision.color }}
+              style={{ color: "hsl(var(--link))" }}
             >
               {fmtManwon(animCumNet)}
             </p>
@@ -1024,7 +1025,7 @@ export default function MultiYearBonusSimulator({
                 />
                 <p
                   className="text-[10px] font-bold uppercase tracking-[0.15em]"
-                  style={{ color: targetDivision.color }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   OPI2 누적 · 특별경영성과금
                 </p>
@@ -1048,13 +1049,13 @@ export default function MultiYearBonusSimulator({
               >
                 <p
                   className="text-[9px] font-bold uppercase tracking-[0.15em] mb-0.5"
-                  style={{ color: targetDivision.color }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   사업부 누적 (60%)
                 </p>
                 <p
                   className="text-sm font-black tabular-nums"
-                  style={{ color: targetDivision.color }}
+                  style={{ color: "hsl(var(--link))" }}
                 >
                   {fmtManwon(computed.cumOpi2Sa)}
                 </p>
@@ -1065,11 +1066,11 @@ export default function MultiYearBonusSimulator({
 
         {/* 임계값 정보 띠 */}
         <div className="px-5 py-3 border-t border-canvas-200 dark:border-canvas-800 flex flex-wrap gap-x-4 gap-y-1 text-[10px]">
-          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+          <span className="text-success font-bold">
             ✓ 임계값 충족 {computed.triggeredCount}년
           </span>
           {computed.blockedCount > 0 && (
-            <span className="text-rose-500 font-bold">
+            <span className="text-destructive font-bold">
               ⚠ 미달 {computed.blockedCount}년 (OPI2만 0)
             </span>
           )}
@@ -1176,7 +1177,7 @@ function YearProfitRowCard({
           <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue">
             연도
           </label>
-          <input
+          <input data-number-format="calendar"
             type="text"
             inputMode="numeric"
             value={yearDraft}
@@ -1200,7 +1201,7 @@ function YearProfitRowCard({
               className="ml-1.5 inline-block px-1.5 py-0.5 rounded text-[9px] font-black"
               style={{
                 backgroundColor: row.threshold === 0 ? "#A8B9D622" : blocked ? "#EF444422" : "#10B98122",
-                color: row.threshold === 0 ? "#7B8FA1" : blocked ? "#EF4444" : "#10B981",
+                color: "hsl(var(--link))",
               }}
             >
               {row.threshold === 0
@@ -1209,7 +1210,7 @@ function YearProfitRowCard({
             </span>
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               type="text"
               inputMode="decimal"
               value={row.profitTrillionFmt}
@@ -1218,7 +1219,7 @@ function YearProfitRowCard({
               }}
               className="w-full rounded-md px-2 py-1.5 pr-9 text-base font-black tabular-nums focus:outline-none transition-all bg-white dark:bg-canvas-900 text-navy dark:text-canvas-50"
               style={{
-                border: blocked ? "1.5px solid #EF444466" : "1.5px solid #0145F233",
+                border: "1.5px solid hsl(var(--input))",
               }}
               aria-label={`${row.year}년 영업이익 (조원)`}
             />
@@ -1235,7 +1236,7 @@ function YearProfitRowCard({
               <Pencil size={9} aria-hidden /> 연봉 <span className="opacity-70 font-medium">(만원)</span>
             </label>
             <div className="relative">
-              <input
+              <NumberInput
                 type="text"
                 inputMode="numeric"
                 value={row.yearlySalaryManwonFmt ?? ""}
@@ -1259,7 +1260,7 @@ function YearProfitRowCard({
           <button
             type="button"
             onClick={onRemove}
-            className="p-2.5 rounded-md text-faint-blue hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors self-end"
+            className="p-2.5 rounded-md text-faint-blue hover:text-destructive hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors self-end"
             aria-label={`${row.year}년 행 삭제`}
           >
             <Trash2 size={14} aria-hidden />
@@ -1322,7 +1323,7 @@ function YearProfitRowCard({
             <button
               type="button"
               onClick={() => onUpdate({ myClPerYear: undefined })}
-              className="px-2 py-0.5 rounded text-[10px] font-bold border border-canvas-200 text-faint-blue hover:text-rose-500"
+              className="px-2 py-0.5 rounded text-[10px] font-bold border border-canvas-200 text-faint-blue hover:text-destructive"
               aria-label="기본값으로 되돌리기"
             >
               ↺ 기본
@@ -1348,9 +1349,9 @@ function YearProfitRowCard({
                   active ? "text-white scale-[1.02] shadow-sm" : "bg-white dark:bg-canvas-900 hover:scale-[1.01]"
                 }`}
                 style={{
-                  backgroundColor: active ? ev.color : undefined,
-                  borderColor: active ? ev.color : `${ev.color}40`,
-                  color: active ? "#fff" : ev.color,
+                  backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
+                  borderColor: active ? "hsl(var(--primary))" : "hsl(var(--border))",
+                  color: active ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                 }}
               >
                 {ev.label}
@@ -1393,7 +1394,7 @@ function YearProfitRowCard({
             </p>
             <p
               className={`font-black tabular-nums text-sm ${
-                blocked ? "text-rose-500" : "text-navy"
+                blocked ? "text-destructive" : "text-navy"
               }`}
             >
               {blocked ? "0원 (미달)" : fmtManwon(row.opi2Manwon)}
@@ -1426,7 +1427,7 @@ function YearProfitRowCard({
           </p>
           <p
             className={`font-black tabular-nums text-sm ${
-              blocked ? "text-rose-500" : "text-navy"
+              blocked ? "text-destructive" : "text-navy"
             }`}
           >
             {fmtManwon(row.myGrossManwon)}
@@ -1438,7 +1439,7 @@ function YearProfitRowCard({
           </p>
           <p
             className={`font-black tabular-nums text-sm ${
-              blocked ? "text-rose-500" : "text-electric"
+              blocked ? "text-destructive" : "text-electric"
             }`}
           >
             {fmtManwon(row.myNetManwon)}
@@ -1726,7 +1727,7 @@ function BonusBarChart({
           세후
         </span>
         <span className="inline-flex items-center gap-1.5 text-muted-blue">
-          <span className="text-rose-500 font-black">✕</span>
+          <span className="text-destructive font-black">✕</span>
           임계값 미달 (0원)
         </span>
       </div>
@@ -1785,7 +1786,6 @@ function BonusBarChart({
 function ChartViewToggle({
   view,
   setView,
-  color,
 }: {
   view: "bar" | "pie" | "compare";
   setView: (v: "bar" | "pie" | "compare") => void;
@@ -1813,8 +1813,8 @@ function ChartViewToggle({
             onClick={() => setView(o.key)}
             className="px-2.5 py-1 rounded-md text-[11px] font-black transition-colors"
             style={{
-              backgroundColor: active ? color : "transparent",
-              color: active ? "#fff" : "#7B8FA1",
+              backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
+              color: active ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
             }}
           >
             {o.label}
@@ -2042,7 +2042,7 @@ function AgeCompareView({
           <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue">
             내 연봉+평균성과급 (세전)
           </p>
-          <p className="text-xl font-black tabular-nums" style={{ color }}>
+          <p className="text-xl font-black tabular-nums" style={{ color: "hsl(var(--link))" }}>
             {fmtManwon(myComp)}
           </p>
           <p className="text-[10px] text-faint-blue tabular-nums mt-0.5">
@@ -2054,7 +2054,7 @@ function AgeCompareView({
           <p className="text-[10px] font-bold uppercase tracking-widest text-faint-blue">
             추정 위치
           </p>
-          <p className="text-xl font-black" style={{ color }}>
+          <p className="text-xl font-black" style={{ color: "hsl(var(--link))" }}>
             상위 {myTopPct}%
           </p>
         </div>
@@ -2085,7 +2085,7 @@ function AgeCompareView({
         <div className="flex items-center gap-2 pt-1">
           <span
             className="text-[10px] font-black w-16 flex-shrink-0 text-right"
-            style={{ color }}
+            style={{ color: "hsl(var(--link))" }}
           >
             나
           </span>
@@ -2100,7 +2100,7 @@ function AgeCompareView({
           </div>
           <span
             className="text-[10px] tabular-nums font-black w-14 flex-shrink-0"
-            style={{ color }}
+            style={{ color: "hsl(var(--link))" }}
           >
             {fmtManwonInt(myComp)}만
           </span>
@@ -2124,7 +2124,7 @@ function AgeCompareView({
               {netWorth.label}
             </strong>{" "}
             가구의 평균 순자산은{" "}
-            <strong className="tabular-nums" style={{ color }}>
+            <strong className="tabular-nums" style={{ color: "hsl(var(--link))" }}>
               약 {(netWorth.avgManwon / 10000).toFixed(1)}억원
             </strong>{" "}
             <span className="text-faint-blue tabular-nums">
@@ -2197,8 +2197,8 @@ function SalaryModeCard({
           : "bg-white dark:bg-canvas-900 hover:scale-[1.01] hover:shadow-sm"
       }`}
       style={{
-        backgroundColor: active ? `${accent.bg}12` : undefined,
-        borderColor: active ? accent.color : "#DDE4EC",
+        backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
+        borderColor: active ? "hsl(var(--primary))" : "hsl(var(--border))",
       }}
     >
       {/* 활성 시 우상단 체크 */}

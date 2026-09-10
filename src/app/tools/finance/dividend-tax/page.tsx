@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { PiggyBank, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { calcDividendTax } from "@/lib/dividendTax";
+import NumberInput from "@/components/NumberInput";
 
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
@@ -54,7 +55,7 @@ export default function DividendTaxPage() {
               <label htmlFor="dividend-tax-dividend" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
                 연간 배당소득 (원)
               </label>
-              <input
+              <NumberInput
                 id="dividend-tax-dividend"
                 type="number"
                 inputMode="numeric"
@@ -67,7 +68,7 @@ export default function DividendTaxPage() {
               <label htmlFor="dividend-tax-interest" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
                 연간 이자소득 (원)
               </label>
-              <input
+              <NumberInput
                 id="dividend-tax-interest"
                 type="number"
                 inputMode="numeric"
@@ -81,7 +82,7 @@ export default function DividendTaxPage() {
             <label htmlFor="dividend-tax-other-base" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">
               기타 종합소득 과세표준 (원) — 근로·사업소득 등 공제 후 금액
             </label>
-            <input
+            <NumberInput
               id="dividend-tax-other-base"
               type="number"
               inputMode="numeric"

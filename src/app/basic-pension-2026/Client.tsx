@@ -23,6 +23,7 @@ import {
   Users,
   User,
 } from "lucide-react";
+import NumberInput from "@/components/NumberInput";
 
 // ── 2026 공표 상수 ──────────────────────────────────────────
 const BASE_PENSION = 349_700; // 기준연금액(월)
@@ -144,7 +145,7 @@ export default function BasicPensionCalculator() {
             월 소득인정액 {household === "couple" && "(부부 합산)"}
           </label>
           <div className="relative">
-            <input id="ms-basic-pension-2026-field-0"
+            <NumberInput id="ms-basic-pension-2026-field-0"
               type="text"
               inputMode="numeric"
               value={parseNumber(incomeStr).toLocaleString("ko-KR")}
@@ -181,7 +182,7 @@ export default function BasicPensionCalculator() {
             국민연금 월 수령액 (본인 기준, 없으면 0)
           </label>
           <div className="relative">
-            <input id="ms-basic-pension-2026-field-1"
+            <NumberInput id="ms-basic-pension-2026-field-1"
               type="text"
               inputMode="numeric"
               value={parseNumber(npStr).toLocaleString("ko-KR")}

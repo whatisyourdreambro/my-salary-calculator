@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 const TAX_BRACKETS = [
   { limit: 14_000_000, rate: 0.06, deduction: 0 },
@@ -99,7 +100,7 @@ export default function IncentiveClient() {
             연봉 (세전)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="salary-input"
               type="text"
               inputMode="numeric"
@@ -120,14 +121,14 @@ export default function IncentiveClient() {
             인센티브 / 스톡옵션 행사이익 (세전)
           </label>
           <div className="relative">
-            <input
+            <NumberInput
               id="incentive-input"
               type="text"
               inputMode="numeric"
               value={incentiveFmt}
               onChange={(e) => setIncentiveFmt(formatInput(e.target.value))}
               className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-12 text-electric"
-              style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2" }}
+              style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid #0145F2" }}
               placeholder="예: 30,000,000"
               aria-label="인센티브 입력"
             />

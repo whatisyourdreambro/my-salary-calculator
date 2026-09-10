@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -47,10 +48,10 @@ export default function JeonseLoanClient() {
         <div>
           <label htmlFor="jl-deposit" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">전세보증금</label>
           <div className="relative">
-            <input id="jl-deposit" type="text" inputMode="numeric" value={depositFmt}
+            <NumberInput id="jl-deposit" type="text" inputMode="numeric" value={depositFmt}
               onChange={(e) => setDepositFmt(formatInput(e.target.value))}
               className="w-full rounded-xl px-4 py-4 text-xl font-black focus:outline-none transition pr-10"
-              style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2", color: "#0145F2" }}
+              style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid #0145F2", color: "hsl(var(--link))" }}
               aria-label="전세보증금" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-electric">원</span>
           </div>
@@ -58,7 +59,7 @@ export default function JeonseLoanClient() {
         <div>
           <label htmlFor="jl-salary" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">본인 연소득</label>
           <div className="relative">
-            <input id="jl-salary" type="text" inputMode="numeric" value={salaryFmt}
+            <NumberInput id="jl-salary" type="text" inputMode="numeric" value={salaryFmt}
               onChange={(e) => setSalaryFmt(formatInput(e.target.value))}
               className="w-full rounded-xl px-4 py-4 text-xl font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50 pr-10"
               aria-label="연소득" />
@@ -74,9 +75,9 @@ export default function JeonseLoanClient() {
             <div key={r.name}
               className="rounded-2xl p-5 relative"
               style={{
-                backgroundColor: isBest ? "#0145F2" : "#FFFFFF",
-                border: isBest ? "none" : "1.5px solid #DDE4EC",
-                color: isBest ? "#FFFFFF" : "#0A1829",
+                backgroundColor: isBest ? "#0145F2" : "hsl(var(--card))",
+                border: isBest ? "none" : "1.5px solid hsl(var(--border))",
+                color: isBest ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
                 boxShadow: isBest ? "0 8px 24px #0145F230" : "none",
               }}>
               {isBest && (
@@ -85,21 +86,21 @@ export default function JeonseLoanClient() {
                 </div>
               )}
               <p className="text-xs font-black uppercase tracking-widest mb-2"
-                style={{ color: isBest ? "rgba(255,255,255,0.7)" : "#7A9AB5" }}>
+                style={{ color: isBest ? "rgba(255,255,255,0.85)" : "hsl(var(--muted-foreground))" }}>
                 {r.name}
               </p>
               <p className="text-2xl font-black tabular-nums mb-1">{fmt(r.limit)}원</p>
               <p className="text-xs mb-3"
-                style={{ color: isBest ? "rgba(255,255,255,0.85)" : "#3D5E78" }}>
+                style={{ color: isBest ? "rgba(255,255,255,0.85)" : "hsl(var(--muted-foreground))" }}>
                 금리 연 {r.rate.toFixed(1)}%
               </p>
               <div className="flex justify-between text-xs"
-                style={{ color: isBest ? "rgba(255,255,255,0.8)" : "#7A9AB5", borderTop: isBest ? "1px solid rgba(255,255,255,0.2)" : "1px solid #EDF1F5", paddingTop: "8px" }}>
+                style={{ color: isBest ? "rgba(255,255,255,0.8)" : "hsl(var(--muted-foreground))", borderTop: isBest ? "1px solid rgba(255,255,255,0.2)" : "1px solid hsl(var(--border))", paddingTop: "8px" }}>
                 <span>월 이자</span>
                 <span className="font-black">{fmt(r.monthlyInterest)}원</span>
               </div>
               <div className="flex justify-between text-xs mt-1"
-                style={{ color: isBest ? "rgba(255,255,255,0.8)" : "#7A9AB5" }}>
+                style={{ color: isBest ? "rgba(255,255,255,0.8)" : "hsl(var(--muted-foreground))" }}>
                 <span>연 이자</span>
                 <span className="font-black">{fmt(r.annualInterest)}원</span>
               </div>

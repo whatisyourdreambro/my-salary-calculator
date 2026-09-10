@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -75,7 +76,7 @@ export default function NationalPensionClient() {
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             가입 중 평균 월소득 (현재 가치, 원)
           </label>
-          <input
+          <NumberInput
             type="number"
             value={avgIncome}
             onChange={(e) => setAvgIncome(Math.max(0, Number(e.target.value) || 0))}

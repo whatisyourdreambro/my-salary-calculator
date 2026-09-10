@@ -12,6 +12,7 @@ import CurrencyInput from "./CurrencyInput";
 import type { StoredFinancialData, StoredSeveranceData } from "@/app/types";
 import { Save, RotateCcw, ChevronDown } from "lucide-react";
 import CountUp from "react-countup";
+import NumberInput from "@/components/NumberInput";
 
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
 
@@ -242,7 +243,7 @@ export default function SeveranceCalculator() {
  />
  <div>
  <label htmlFor="dcReturnRate" className="text-sm font-medium text-muted-foreground">연평균 예상 투자수익률 (%)</label>
- <input type="number" inputMode="numeric" id="dcReturnRate" value={dcReturnRate} onChange={(e) => setDcReturnRate(e.target.value)} className={inputStyle} placeholder="예: 5" />
+ <NumberInput type="number" inputMode="numeric" id="dcReturnRate" value={dcReturnRate} onChange={(e) => setDcReturnRate(e.target.value)} className={inputStyle} placeholder="예: 5" />
  </div>
  </div>
  </div>
