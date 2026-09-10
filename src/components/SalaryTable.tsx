@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import Link from "@/components/AppLink";
 
 
@@ -18,6 +19,8 @@ interface SalaryTableProps {
  linkValueKey?: string;
  /** 첫 열 값 → 연봉 환산 배수 (월급 ×12, 주급 ×52, 시급 ×2508(209시간×12)). 미지정 시 1(연봉표). */
  linkValueMultiplier?: number;
+ /** 표 중간 광고 — afterRow(1-based) 행 뒤에 노드 삽입. 모바일 카드/데스크톱 행 양쪽에 렌더 (2026-09-11) */
+ interstitials?: { afterRow: number; node: ReactNode }[];
 }
 
 export default function SalaryTable({
@@ -28,7 +31,34 @@ export default function SalaryTable({
  linkColumnBaseHref,
  linkValueKey,
  linkValueMultiplier = 1,
+ interstitials = [],
 }: SalaryTableProps) {
+ // 표 중간 광고 — 연봉표는 모바일에서 57,000px(60화면) 동안 광고 0개였다(2026-09-11 실측, 운영자 승인 배치).
+ // 모바일 카드 목록과 데스크톱 표가 둘 다 DOM 에 있어(CSS 로 한쪽 숨김) 같은 슬롯을 두 번 그리면 AdPlacement dedup 이
+ // 뒤쪽(데스크톱 행)을 죽인다 → 현재 뷰포트에 맞는 한쪽에만 렌더. SSR·첫 렌더는 모바일(트래픽 다수) 기준, 마운트 후 전환.
+ const [wide, setWide] = useState(false);
+ useEffect(() => {
+ const mq = window.matchMedia("(min-width: 768px)");
+ const sync = () => setWide(mq.matches);
+ sync();
+ mq.addEventListener("change", sync);
+ return () => mq.removeEventListener("change", sync);
+ }, []);
+ const interstitialAfter = (index: number, mode: "card" | "row") => {
+ if ((mode === "card") === wide) return null;
+ const hit = interstitials.find((i) => i.afterRow === index + 1);
+ if (!hit) return null;
+ if (mode === "card") return <div className="py-2">{hit.node}</div>;
+ // colSpan 셀은 표 전체 폭(overflow-x 스크롤 영역보다 넓을 수 있음)이라 광고가 가로로 잘릴 수 있다 →
+ // 스크롤 컨테이너 왼쪽에 고정(sticky)하고 폭을 뷰포트·페이지 폭으로 제한해 항상 보이는 영역 안에 둔다.
+ return (
+ <tr>
+ <td colSpan={headers.length} className="p-0">
+ <div className="sticky left-0 max-w-[64rem]" style={{ width: "min(100%, calc(100vw - 2rem))" }}>{hit.node}</div>
+ </td>
+ </tr>
+ );
+ };
  // 첫 열 링크 href — 월급/주급/시급 값도 연봉으로 환산해 /salary/{연봉} 으로 연결
  const buildHref = (row: TableRow) => {
  if (!linkColumnBaseHref) return undefined;
@@ -44,8 +74,8 @@ export default function SalaryTable({
  const isHighlighted = highlightRows.includes(row[headers[0].key] as number);
 
  return (
+ <Fragment key={`mobile-${index}`}>
  <div
- key={`mobile-${index}`}
  className={`relative overflow-hidden rounded-2xl p-5 transition-colors duration-150 ${isHighlighted
  ? "bg-primary/5 border border-primary/20 shadow-sm"
  : "bg-card border border-border shadow-sm"
@@ -81,6 +111,8 @@ export default function SalaryTable({
  </div>
  </div>
  </div>
+ {interstitialAfter(index, "card")}
+ </Fragment>
  );
  })}
  </div>
@@ -112,8 +144,8 @@ export default function SalaryTable({
  );
 
  return (
+ <Fragment key={index}>
  <tr
- key={index}
  className={`group transition-colors duration-150 ${isHighlighted
  ? "bg-primary/5 hover:bg-primary/8"
  : "hover:bg-secondary"
@@ -145,6 +177,8 @@ export default function SalaryTable({
  );
  })}
  </tr>
+ {interstitialAfter(index, "row")}
+ </Fragment>
  );
  })}
  </tbody>

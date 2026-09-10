@@ -85,3 +85,19 @@ export function isBottomAdPresent(): boolean {
   }
   return false;
 }
+
+/** 뷰포트 하단 band(px) 안에 채워진 인플로 광고(iframe 또는 data-ad-status=filled ins)가 걸쳐 있으면 true.
+ *  앵커(fixed)와 달리 스크롤로 지나가는 광고라 순간 판정이며, 하단 고정 UI 는 그동안만 양보한다 (2026-09-11). */
+export function isAdInBottomBand(bandPx = 120): boolean {
+  if (typeof window === "undefined" || typeof document === "undefined") return false;
+  const vh = window.innerHeight;
+  const nodes = document.querySelectorAll<HTMLElement>(
+    `${AD_FRAME_SELECTOR}, ins.adsbygoogle[data-ad-status="filled"]`
+  );
+  for (const el of nodes) {
+    const rect = el.getBoundingClientRect();
+    if (rect.height <= 0) continue;
+    if (rect.bottom > vh - bandPx && rect.top < vh) return true;
+  }
+  return false;
+}

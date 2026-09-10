@@ -6,7 +6,7 @@ import Link from "@/components/AppLink";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
-import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
+import { CalcResultAd, Display2Ad, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
@@ -111,11 +111,16 @@ function MonthlyTable() {
  />
 
  <div className="page-width -mt-20 relative z-10">
+ {/* 표 1/3·2/3 지점 광고 — layout 하단 PageFooterAds 의 InArticle·HomeTop 사본은 dedup 으로 죽고 이곳이 산다(유닛 수 불변, 2026-09-11) */}
  <SalaryTable
  headers={tableHeaders}
  data={allData}
  linkColumnBaseHref="/salary"
  linkValueKey="preTax"
+ interstitials={[
+ { afterRow: Math.round(allData.length / 3), node: <InArticleAd /> },
+ { afterRow: Math.round((allData.length * 2) / 3), node: <HomeTopAd /> },
+ ]}
  />
 
  {/* 운영자 승인 광고 배치(2026-07-07): 표와 SEO 본문 사이 — 표 전 구간 무광고였음 */}

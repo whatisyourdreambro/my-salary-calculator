@@ -21,6 +21,7 @@ import { resolveShareLocale, shareAnalyticsPath } from "@/lib/sharePolicy";
 import {
   BOTTOM_AD_CHECK_INTERVAL_MS as CHECK_INTERVAL_MS,
   BOTTOM_AD_GRACE_MS as INITIAL_GRACE_MS,
+  isAdInBottomBand,
   isBottomAdPresent,
 } from "@/lib/bottomAdDetect";
 
@@ -76,7 +77,9 @@ export default function FloatingShareBar() {
         !bottomAdSeen &&
         window.scrollY > SCROLL_THRESHOLD &&
         !isInlineShareVisible() &&
-        !isPwaBannerShown();
+        !isPwaBannerShown() &&
+        // 인플로 광고(결과 직하·인아티클)가 하단 band 를 지나는 동안은 가리지 않는다 (2026-09-11)
+        !isAdInBottomBand();
       setVisible(show);
       if (show && !impressionSent.current) {
         impressionSent.current = true;

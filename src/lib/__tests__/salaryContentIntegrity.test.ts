@@ -8,7 +8,7 @@ vi.mock("@/components/AppLink", () => ({ default: ({ children, ...props }: { chi
 vi.mock("@/components/SalaryTable", () => ({ default: ({ data }: { data: { preTax: number; monthlyNet: number }[] }) => createElement("table", null, createElement("tbody", null, data.map(row => createElement("tr", { key: row.preTax, "data-annual": row.preTax }, createElement("td", null, row.monthlyNet))))) }));
 vi.mock("@/components/TableHero", () => ({ default: ({ title, description }: { title: ReactNode; description: ReactNode }) => createElement("header", null, createElement("h1", null, title), createElement("p", null, description)) }));
 vi.mock("@/components/SalaryResultCard", () => ({ default: ({ monthlyNet }: { monthlyNet: number }) => createElement("output", { "data-monthly-net": monthlyNet }, monthlyNet.toLocaleString("ko-KR")) }));
-vi.mock("@/components/AdPlacement", () => ({ CalcResultAd: () => null, Display2Ad: () => null, GuideMidAd: () => null, HomeTopAd: () => null, SidebarAd: () => null }));
+vi.mock("@/components/AdPlacement", () => ({ CalcResultAd: () => null, Display2Ad: () => null, GuideMidAd: () => null, HomeTopAd: () => null, InArticleAd: () => null, SidebarAd: () => null }));
 vi.mock("@/components/FavoritesButton", () => ({ default: () => null }));
 vi.mock("@/app/table/2026/SeasonalLinks", () => ({ default: () => null }));
 vi.mock("@/components/SalaryTierCard", () => ({ default: () => null }));

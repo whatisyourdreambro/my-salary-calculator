@@ -10,6 +10,15 @@ import {
 } from "@/lib/analytics";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
+// 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
+const AD_LABEL_HEIGHT = 20;
+const containerBaseStyle: React.CSSProperties = {
+  width: "100%",
+  margin: "1.5rem 0",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
 
 // 페이지별로 이미 렌더된 슬롯 ID 추적 — AdSense "페이지당 동일 슬롯 1회" 정책 강제.
 // SLOT_IN_ARTICLE 미설정 시 InArticleAd 가 GUIDE_MID fallback 했을 때,
@@ -54,7 +63,9 @@ function AdSlot({
   const pushed = useRef(false);
   const [visible, setVisible] = useState(false);
   const [allowed, setAllowed] = useState(true);
-  const [unfilled, setUnfilled] = useState(false);
+  // unfilled: "collapse" = 뷰포트 아래에서 미충족 → 컨테이너째 접기(종전 동작). "keep" = 뷰포트 안(위)에서 미충족 →
+  // 높이는 두고 내용만 숨겨 결과 카드·다음 링크가 위로 튀지 않게 한다(CLS·우발 클릭 방지, 2026-09-11 운영자 승인).
+  const [unfilled, setUnfilled] = useState<false | "collapse" | "keep">(false);
 
   // 페이지 이동(pathname 변경) 시 광고 상태 reset → 뒤로가기로 돌아왔을 때도 광고 정상 표시
   // (이전: pushed.current 영구 true 가 되어 뒤로가기 시 viewability 0% — 매출 손실)
@@ -164,7 +175,13 @@ function AdSlot({
     if (!ins) return;
     const check = () => {
       const status = ins.getAttribute("data-ad-status");
-      if (status === "unfilled") setUnfilled(true);
+      if (status === "unfilled") {
+        // 뷰포트와 실제로 겹치는 동안만 자리를 유지(보이는 콘텐츠가 튀지 않게). 완전히 아래/위에 있으면 접는다 —
+        // 위쪽은 브라우저 스크롤 앵커링이 보정하고, 아래쪽은 아직 보이지 않아 CLS 가 아니다.
+        const rect = container.getBoundingClientRect();
+        const intersects = rect.bottom > 0 && rect.top < window.innerHeight;
+        setUnfilled(intersects ? "keep" : "collapse");
+      }
       if (
         (status === "filled" || status === "unfilled") &&
         fillReported.current !== status
@@ -181,6 +198,8 @@ function AdSlot({
 
   if (!slot || !allowed) return null;
 
+  const unfilledStyle: React.CSSProperties =
+    unfilled === "collapse" ? { display: "none" } : unfilled === "keep" ? { visibility: "hidden" } : {};
   const baseClass = containerClassName ?? "ad-container";
   const composedClass = slotKind ? `${baseClass} ad-slot-${slotKind}` : baseClass;
   const isInArticle = layout === "in-article";
@@ -189,16 +208,7 @@ function AdSlot({
     <div
       ref={containerRef}
       className={composedClass}
-      style={{
-        width: "100%",
-        margin: "1.5rem 0",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        minHeight: `${minHeight}px`,
-        ...style,
-        ...(unfilled ? { display: "none" } : {}),
-      }}
+      style={{ ...containerBaseStyle, minHeight: `${minHeight + AD_LABEL_HEIGHT}px`, ...style, ...unfilledStyle }}
     >
       <span
         style={{

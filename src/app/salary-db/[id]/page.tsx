@@ -23,7 +23,7 @@ import RelatedCompanies from "@/components/RelatedCompanies";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
-import { GuideMidAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
+import { Display2Ad, GuideMidAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
@@ -290,6 +290,11 @@ export default function CompanyDetailPage({
  <SamsungSectionAnchor companyId={company.id} id="samsung-career-levels">
  <CompanyCareerLevels company={company} />
  </SamsungSectionAnchor>
+
+ {/* 연봉표 직후 광고 ~ 인사이트 직전 광고 사이가 모바일 ~8,500px(10화면) 무광고 구간이었다 — 중간 지점 Display2 (2026-09-11 운영자 승인, 순증 1) */}
+ <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
+ <Display2Ad />
+ </div>
 
  {company.id === "samsung-electronics" && (
  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

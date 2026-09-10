@@ -39,8 +39,10 @@ describe("광고 채움 계측", () => {
     expect(AD_PLACEMENT).toContain("fillReported.current !== status");
   });
 
-  it("기존 unfilled 접힘 동작은 유지된다", () => {
-    expect(AD_PLACEMENT).toContain('if (status === "unfilled") setUnfilled(true);');
+  it("unfilled 는 뷰포트 아래면 접고(collapse) 뷰포트 안이면 높이를 유지한다(keep) — 2026-09-11 CLS 정비", () => {
+    expect(AD_PLACEMENT).toContain('if (status === "unfilled") {');
+    expect(AD_PLACEMENT).toContain('setUnfilled(intersects ? "keep" : "collapse");');
+    expect(AD_PLACEMENT).toContain('unfilled === "collapse" ? { display: "none" } : unfilled === "keep" ? { visibility: "hidden" } : {}');
   });
 
   it("pathname 변경 직후 stale <ins> 를 읽지 않도록 pushed 가드가 관찰 effect 앞에 있다", () => {

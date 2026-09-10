@@ -21,11 +21,12 @@ export default function PageFooterAds({ maxWidth = "3xl" }: Props) {
 
   return (
     <div className={`${maxWidthClass} mx-auto px-4 sm:px-6 lg:px-8 my-10 space-y-6`}>
+      {/* 2026-09-11 운영자 승인 순서 변경: 쿠팡 고지문(법정)이 아래 HomeTopAd 를 25~40px 밀던 것을 해소 — AdSense 2유닛 먼저, 쿠팡은 마지막 */}
+      <HomeTopAd />
       <InArticleAd />
       <CoupangBanner
         responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
       />
-      <HomeTopAd />
     </div>
   );
 }

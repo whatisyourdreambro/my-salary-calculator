@@ -42,6 +42,9 @@ import {
   ResultNextLinks,
 } from "./shared";
 import NumberInput from "@/components/NumberInput";
+// 결과 직하 광고 2곳 (2026-09-11 운영자 승인 배치 변경): 종전 첫 광고는 클라이언트 아래 7,183px(모바일 8.5화면)였다.
+// HomeTopAd 는 calc/layout 하단 사본이 dedup 으로 죽고 이곳이 살아 유닛 수 불변, CalcResultAd 는 page.tsx 시나리오 구간에서 이동.
+import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 
 // 하단 시뮬레이터는 해당 구역에 접근할 때만 마운트해 첫 계산과의 경쟁을 줄인다.
 const MultiYearRSUSimulator = dynamic(() => import("./MultiYearRSUSimulator"), {
@@ -572,8 +575,10 @@ export default function SamsungBonusClient() {
             />
           ))}
         </div>
+        {/* 첫 결과(1인당 모델) 직하 광고 — 다음 링크는 광고 아래 (광고 위 UI 금지 규칙 준수) */}
+        <HomeTopAd />
         <ResultNextLinks
-          className="mt-4"
+          className="mt-8"
           position="samsung-pool-next"
           links={[
             {
@@ -1317,10 +1322,15 @@ function MySalaryCalculator({
           </div>
         </div>
 
+        {/* 세후 실수령 직하 광고 — 페이지 최대 참여 순간. page.tsx 시나리오 구간(11,925px)에서 이동(2026-09-11).
+            ResultNextLinks(OfferSlot 포함)는 광고 아래로 내려가 C6(오퍼 카드가 광고 위) 도 함께 해소. */}
+        <CalcResultAd />
+
         {/* 결과 직하 다음 액션 — 세후 확인 직후가 페이지 최대 참여 순간.
             calcResult: 오퍼 활성 시 "성과급 {amount}만원 …" 보간용 (내부 링크는 유지) */}
         {personal.totalGrossWon > 0 && (
           <ResultNextLinks
+            className="mt-8"
             position="samsung-personal-next"
             calcResult={{ amount: Math.round(personal.totalGrossWon / 10000) }}
             links={[
