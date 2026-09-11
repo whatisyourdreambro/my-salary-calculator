@@ -15,6 +15,7 @@
 //  - 설명자: explanation 을 공백 정규화(연속 공백→1칸, 앞뒤 제거)한 글자 수. 제목·description·공식·FAQ 제외.
 //  - FAQ답변자: faqs[].a 의 정규화 글자 수 합계.
 //  - 출처: sources[] 개수. 국내공식 = 호스트가 *.go.kr / *.or.kr (또는 OFFICIAL_KR_HOSTS) 인 URL 수.
+//         공식(허용목록) = sourcePolicy.isOfficialSourceUrl(https + OFFICIAL_SOURCE_HOSTS 접미사) 인 URL 수 — S3-1 게이트 기준.
 //  - 보일러: explanation / 각 faq.a / 각 caveat 를 정규화 후 SHA-1 → 2개 이상 슬러그가 공유하는 그룹.
 //  - 색인: src/app/calc/[slug]/page.tsx 의 규칙 (explanation 있음 && faqs ≥ 3) — 아니면 noindex.
 
@@ -25,6 +26,7 @@ import { dirname, resolve } from "node:path";
 import { allCalculators, getAllSlugs, getCalculatorBySlug, getCalculatorBatch } from "../src/lib/simpleCalculators/index";
 import type { CalculatorDef } from "../src/lib/simpleCalculators/types";
 import { PRECISION_TWINS } from "../src/lib/simpleCalculators/twins";
+import { isOfficialSourceUrl } from "../src/lib/simpleCalculators/sourcePolicy";
 import { enrichmentMap, type Enrichment } from "../src/lib/simpleCalculators/enrichments";
 import { enrichmentsExtA } from "../src/lib/simpleCalculators/enrichments-ext-a";
 import { enrichmentsExtB } from "../src/lib/simpleCalculators/enrichments-ext-b";
@@ -257,6 +259,8 @@ interface Row {
   faqAnswerMinChars: number;
   sourcesCount: number;
   officialKrSources: number;
+  /** sourcePolicy 허용 목록·https 를 만족하는 URL 수 (S3-1 게이트 기준) */
+  allowlistedSources: number;
   foreignPublicSources: number;
   sourceHosts: string[];
   caveatsCount: number;
@@ -319,6 +323,7 @@ function buildRows(): { rows: Row[]; groups: BoilerplateGroup[] } {
       faqAnswerMinChars: faqAnswerLens.length ? Math.min(...faqAnswerLens) : 0,
       sourcesCount: sources.length,
       officialKrSources: hosts.filter(isOfficialKr).length,
+      allowlistedSources: sources.filter((s) => isOfficialSourceUrl(s.url)).length,
       foreignPublicSources: hosts.filter((h) => !isOfficialKr(h) && isForeignPublic(h)).length,
       sourceHosts: hosts,
       caveatsCount: calc.caveats?.length ?? 0,
@@ -416,7 +421,7 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   lines.push(`- 생성일: ${kstToday()} (KST) · 스크립트 재실행으로 재생성 가능`);
   lines.push(`- 명령: \`${command}\``);
   lines.push(
-    "- 데이터 원본: `src/lib/simpleCalculators/index.ts` 병합 결과(allCalculators) = `batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`(정의·sources) + `enrichments.ts`·`enrichments-ext-{a,b,c}.ts`(explanation·formula·faqs·caveats — batch 값이 있으면 batch 우선) + `twins.ts`(정밀 쌍) · 색인 규칙은 `src/app/calc/[slug]/page.tsx`"
+    "- 데이터 원본: `src/lib/simpleCalculators/index.ts` 병합 결과(allCalculators) = `batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`(정의·sources) + `enrichments.ts`·`enrichments-ext-{a,b,c}.ts`(explanation·formula·faqs·caveats·relatedSlugs·sources — batch 값이 있으면 batch 우선) + `twins.ts`(정밀 쌍) · 색인 규칙은 `src/app/calc/[slug]/page.tsx`"
   );
   lines.push(
     "- 수치 의미: 설명자 = explanation 공백 정규화 글자 수(제목·description·공식·FAQ 제외) · FAQ답변자 = faqs[].a 합계 · 출처 = sources[] URL 수, 국내공식 = *.go.kr/*.or.kr 호스트 수, 해외공공 = .gov/.edu 등 · 보일러 = 다른 슬러그와 글자 단위 동일한 설명(E)/FAQ 답변(F)/유의사항(C) 그룹 ID · 색인 = explanation 있음 && FAQ ≥ 3 이면 index, 아니면 noindex · 숫자 = 설명에 숫자(예시 계산) 포함 여부"
@@ -443,6 +448,9 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   const officialUrls = rows.reduce((a, r) => a + r.officialKrSources, 0);
   const foreignUrls = rows.reduce((a, r) => a + r.foreignPublicSources, 0);
   const calcsWithOfficial = rows.filter((r) => r.officialKrSources > 0).length;
+  const allowlistedUrls = rows.reduce((a, r) => a + r.allowlistedSources, 0);
+  const calcsWithAllowlisted = rows.filter((r) => r.allowlistedSources > 0).length;
+  const calcsWithTwoAllowlisted = rows.filter((r) => r.allowlistedSources >= 2).length;
   const explChars = rows.map((r) => r.explanationChars).filter((n) => n > 0).sort((a, b) => a - b);
   const median = explChars.length ? explChars[Math.floor(explChars.length / 2)] : 0;
   const mean = explChars.length ? Math.round(explChars.reduce((a, b) => a + b, 0) / explChars.length) : 0;
@@ -493,6 +501,7 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   lines.push("");
   lines.push(`- 출처 URL 총 ${totalSourceUrls}건 중 국내 공식(*.go.kr/*.or.kr) ${officialUrls}건 (${pct(officialUrls, totalSourceUrls)}) · 해외 공공(.gov/.edu 등) ${foreignUrls}건 (${pct(foreignUrls, totalSourceUrls)}) · 기타 ${totalSourceUrls - officialUrls - foreignUrls}건`);
   lines.push(`- 국내 공식 출처를 1건 이상 가진 계산기: ${calcsWithOfficial} / ${total} (${pct(calcsWithOfficial, total)})`);
+  lines.push(`- 공식 출처 보유(sourcePolicy 허용 목록·https 기준, S3-1 게이트): 계산기 ${calcsWithAllowlisted} / ${total} (${pct(calcsWithAllowlisted, total)}) · 2건 이상 ${calcsWithTwoAllowlisted} · URL ${allowlistedUrls}건`);
   const hostCounts = new Map<string, number>();
   for (const r of rows) for (const h of r.sourceHosts) hostCounts.set(h, (hostCounts.get(h) ?? 0) + 1);
   const hostList = [...hostCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
@@ -571,7 +580,7 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   // 데이터 모델 메모
   lines.push("## 4. 데이터 모델 메모 (스크립트 자동 판정)");
   lines.push("");
-  lines.push("- `sources` 는 batch 정의에만 존재하며 `index.ts` 병합 대상이 아니다 → enrichments 파일에 sources 를 추가해도 페이지에 나오지 않는다. S3-1 출처는 반드시 batch 파일(`batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`) 의 정의에 넣어야 한다.");
+  lines.push("- `sources` 는 2026-09-12(S3-1 기반)부터 `index.ts` 병합 대상이다 — `calc.sources ?? enrichment.sources`(batch 우선). 출처 0건인 170종은 enrichment 파일(`enrichments.ts`·`enrichments-ext-{a,b,c}.ts`)에 sources 를 넣으면 '공식 계산방법 참고' 블록에 나온다. batch sources 가 있는 32종(`expandedFinance.ts`·`expandedPractical.ts`)은 enrichment sources 가 무시되므로 batch 의 SOURCES 표에서 고친다. 게이트 `src/lib/__tests__/calcSources.test.ts`(enrichment sources = 정확히 2건·https·`sourcePolicy.OFFICIAL_SOURCE_HOSTS`) · 규칙 `docs/calc-content-writing-guide-2026-09-12.md`.");
   lines.push("- `notes` 필드는 없다. 유의사항은 `caveats: string[]`, 결과 해석은 compute 가 돌려주는 `CalculatorResult.note`(본문 아님) 뿐이다.");
   lines.push("- `index.ts` 병합은 `calc.x ?? enrichment.x` — batch 에 값이 있으면 enrichment 는 무시된다(설명 본문 파일 열 참고).");
   const orphanEnrichments = ENRICHMENT_FILES.flatMap(([file, map]) => Object.keys(map).filter((k) => !rawBySlug.has(k)).map((k) => `${k}(${file})`));

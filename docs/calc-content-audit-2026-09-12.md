@@ -2,7 +2,7 @@
 
 - 생성일: 2026-09-12 (KST) · 스크립트 재실행으로 재생성 가능
 - 명령: `npx tsx scripts/calc-content-audit.ts --out docs/calc-content-audit-2026-09-12.md`
-- 데이터 원본: `src/lib/simpleCalculators/index.ts` 병합 결과(allCalculators) = `batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`(정의·sources) + `enrichments.ts`·`enrichments-ext-{a,b,c}.ts`(explanation·formula·faqs·caveats — batch 값이 있으면 batch 우선) + `twins.ts`(정밀 쌍) · 색인 규칙은 `src/app/calc/[slug]/page.tsx`
+- 데이터 원본: `src/lib/simpleCalculators/index.ts` 병합 결과(allCalculators) = `batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`(정의·sources) + `enrichments.ts`·`enrichments-ext-{a,b,c}.ts`(explanation·formula·faqs·caveats·relatedSlugs·sources — batch 값이 있으면 batch 우선) + `twins.ts`(정밀 쌍) · 색인 규칙은 `src/app/calc/[slug]/page.tsx`
 - 수치 의미: 설명자 = explanation 공백 정규화 글자 수(제목·description·공식·FAQ 제외) · FAQ답변자 = faqs[].a 합계 · 출처 = sources[] URL 수, 국내공식 = *.go.kr/*.or.kr 호스트 수, 해외공공 = .gov/.edu 등 · 보일러 = 다른 슬러그와 글자 단위 동일한 설명(E)/FAQ 답변(F)/유의사항(C) 그룹 ID · 색인 = explanation 있음 && FAQ ≥ 3 이면 index, 아니면 noindex · 숫자 = 설명에 숫자(예시 계산) 포함 여부
 - ★ 동결: `<title>`·description(`seoText.ts` 생성분 포함)은 2026-10-09 판정 창까지 무접촉 — S3-1 은 explanation·formula·faqs·caveats·sources 본문 문자열만 수정한다(필드·컴포넌트·라우트 무접촉).
 
@@ -27,8 +27,8 @@
 
 | 구간 | 수 | 비율 |
 |---|---|---|
-| <200 | 56 | 27.7% |
-| 200-400 | 146 | 72.3% |
+| <200 | 54 | 26.7% |
+| 200-400 | 148 | 73.3% |
 | 400-600 | 0 | 0.0% |
 | 600-1000 | 0 | 0.0% |
 | >1000 | 0 | 0.0% |
@@ -54,6 +54,7 @@
 
 - 출처 URL 총 32건 중 국내 공식(*.go.kr/*.or.kr) 0건 (0.0%) · 해외 공공(.gov/.edu 등) 20건 (62.5%) · 기타 12건
 - 국내 공식 출처를 1건 이상 가진 계산기: 0 / 202 (0.0%)
+- 공식 출처 보유(sourcePolicy 허용 목록·https 기준, S3-1 게이트): 계산기 0 / 202 (0.0%) · 2건 이상 0 · URL 0건
 - 발견된 출처 호스트: www.investor.gov×12(해외공공), support.microsoft.com×10, legacy.sba.gov×2(해외공공), www.consumerfinance.gov×2(해외공공), ext.vt.edu×1(해외공공), files.consumerfinance.gov×1(해외공공), ocw.ump.edu.my×1(해외공공), openstax.org×1, www.accaglobal.com×1, www.bls.gov×1(해외공공)
 
 ### 1-5. 카테고리별
@@ -61,7 +62,7 @@
 | 분류 | 수 | 설명 중앙값(자) | 설명 <600자 | 출처 0건 | 보일러 멤버 | noindex | 정밀 쌍 |
 |---|---|---|---|---|---|---|---|
 | tax ★ | 15 | 190 | 15 | 15 | 0 | 0 | 9 |
-| salary ★ | 17 | 190 | 17 | 16 | 6 | 0 | 4 |
+| salary ★ | 17 | 194 | 17 | 16 | 6 | 0 | 4 |
 | loan ★ | 22 | 231 | 22 | 10 | 12 | 0 | 8 |
 | real-estate ★ | 18 | 219 | 18 | 18 | 8 | 0 | 1 |
 | investment ★ | 31 | 229 | 31 | 20 | 16 | 0 | 3 |
@@ -123,39 +124,39 @@
 | 15 | loan | `loan-monthly-payment` | 대출 월 상환액 계산 | 172 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
 | 16 | investment | `real-return-quick` | 실질 수익률 (인플레이션 차감) | 173 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
 | 17 | salary | `weekend-pay-quick` | 휴일 근로 수당 | 173 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 18 | salary | `weekly-pay` | 주급 계산 | 176 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 19 | loan | `loan-refinance-savings` | 대출 갈아타기 절감액 | 177 | 3 | 0 | - | index | - | enrichments.ts |
-| 20 | investment | `rule-of-72-quick` | 72의 법칙 — 자산 2배 시간 | 177 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 21 | loan | `loan-total-interest` | 대출 총 이자 계산 | 178 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
-| 22 | real-estate | `jeonse-loan-cost` | 전세대출 월 이자 | 179 | 3 | 0 | - | index | - | enrichments.ts |
-| 23 | tax | `stock-capital-gains-quick` | 주식 양도세 간편 계산 | 180 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
-| 24 | investment | `fire-target` | FIRE 목표 자산 | 181 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
-| 25 | investment | `savings-goal-time` | 저축 목표 도달 시간 | 181 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 26 | investment | `compound-interest-quick` | 복리 간편 계산기 | 182 | 3 | 0 | - | index | Y | enrichments.ts |
-| 27 | real-estate | `deposit-equivalent` | 월세 → 전세금 환산 | 182 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 28 | tax | `gift-tax-quick` | 증여세 간편 계산 | 183 | 3 | 0 | - | index | Y | enrichments.ts |
-| 29 | salary | `holiday-allowance-quick` | 주휴수당 계산 | 185 | 3 | 0 | - | index | Y | enrichments.ts |
-| 30 | tax | `import-tax-quick` | 해외 직구 관세·부가세 계산 | 185 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 31 | investment | `dollar-cost-average` | 적립식 투자 시뮬 | 186 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 32 | investment | `portfolio-allocation` | 포트폴리오 배분 시뮬 | 186 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 33 | real-estate | `area-conversion` | 평·제곱미터 변환 | 187 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 34 | salary | `hourly-to-yearly` | 시급 → 연봉 환산 | 187 | 3 | 0 | - | index | - | enrichments.ts |
-| 35 | tax | `interest-tax-quick` | 이자소득세 계산 | 188 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
-| 36 | salary | `night-shift-pay-quick` | 야간 근로 수당 계산 | 190 | 3 | 0 | - | index | - | enrichments.ts |
-| 37 | tax | `vat-reverse-quick` | 부가세 역산 (VAT 포함가 → 공급가) | 190 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 38 | real-estate | `mortgage-monthly-quick` | 주택담보대출 월 상환 | 191 | 3 | 0 | - | index | Y | enrichments.ts |
-| 39 | tax | `vat-quick` | 부가가치세(VAT) 계산 | 191 | 3 | 0 | - | index | Y | enrichments.ts |
-| 40 | real-estate | `rental-yield` | 임대 수익률 | 192 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 41 | investment | `exchange-impact-quick` | 환율 변동 자산 영향 | 194 | 3 | 0 | - | index | - | enrichments.ts |
-| 42 | salary | `overtime-pay-quick` | 시간외 수당 계산 | 194 | 3 | 0 | - | index | - | enrichments.ts |
-| 43 | investment | `bond-yield-quick` | 채권 수익률 계산 | 196 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 44 | investment | `inflation-impact-quick` | 인플레이션 구매력 영향 | 198 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 45 | real-estate | `jeonse-vs-monthly-cost` | 전세 vs 월세 월 비용 | 198 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 46 | investment | `dividend-yield-quick` | 배당 수익률 계산 | 199 | 3 | 0 | - | index | - | enrichments.ts |
-| 47 | real-estate | `monthly-rent-tax-credit-quick` | 월세 세액공제 환급 | 199 | 3 | 0 | - | index | - | enrichments.ts |
-| 48 | salary | `yearly-to-hourly` | 연봉 → 시급 환산 | 199 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
-| 49 | investment | `savings-rate-after-raise` | 월급 인상 후 저축률 계획 | 229 | 3 | 0 | B01 | index | - | expandedFinance.ts |
-| 50 | investment | `emergency-fund-runway` | 현재 비상금으로 버틸 기간 | 231 | 3 | 0 | B01 | index | - | expandedFinance.ts |
+| 18 | loan | `loan-refinance-savings` | 대출 갈아타기 절감액 | 177 | 3 | 0 | - | index | - | enrichments.ts |
+| 19 | investment | `rule-of-72-quick` | 72의 법칙 — 자산 2배 시간 | 177 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 20 | loan | `loan-total-interest` | 대출 총 이자 계산 | 178 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
+| 21 | real-estate | `jeonse-loan-cost` | 전세대출 월 이자 | 179 | 3 | 0 | - | index | - | enrichments.ts |
+| 22 | tax | `stock-capital-gains-quick` | 주식 양도세 간편 계산 | 180 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
+| 23 | investment | `fire-target` | FIRE 목표 자산 | 181 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
+| 24 | investment | `savings-goal-time` | 저축 목표 도달 시간 | 181 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 25 | investment | `compound-interest-quick` | 복리 간편 계산기 | 182 | 3 | 0 | - | index | Y | enrichments.ts |
+| 26 | real-estate | `deposit-equivalent` | 월세 → 전세금 환산 | 182 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 27 | tax | `gift-tax-quick` | 증여세 간편 계산 | 183 | 3 | 0 | - | index | Y | enrichments.ts |
+| 28 | salary | `holiday-allowance-quick` | 주휴수당 계산 | 185 | 3 | 0 | - | index | Y | enrichments.ts |
+| 29 | tax | `import-tax-quick` | 해외 직구 관세·부가세 계산 | 185 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 30 | investment | `dollar-cost-average` | 적립식 투자 시뮬 | 186 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 31 | investment | `portfolio-allocation` | 포트폴리오 배분 시뮬 | 186 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 32 | real-estate | `area-conversion` | 평·제곱미터 변환 | 187 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 33 | salary | `hourly-to-yearly` | 시급 → 연봉 환산 | 187 | 3 | 0 | - | index | - | enrichments.ts |
+| 34 | tax | `interest-tax-quick` | 이자소득세 계산 | 188 | 3 | 0 | - | index | Y | enrichments-ext-a.ts |
+| 35 | salary | `night-shift-pay-quick` | 야간 근로 수당 계산 | 190 | 3 | 0 | - | index | - | enrichments.ts |
+| 36 | tax | `vat-reverse-quick` | 부가세 역산 (VAT 포함가 → 공급가) | 190 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 37 | real-estate | `mortgage-monthly-quick` | 주택담보대출 월 상환 | 191 | 3 | 0 | - | index | Y | enrichments.ts |
+| 38 | tax | `vat-quick` | 부가가치세(VAT) 계산 | 191 | 3 | 0 | - | index | Y | enrichments.ts |
+| 39 | real-estate | `rental-yield` | 임대 수익률 | 192 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 40 | investment | `exchange-impact-quick` | 환율 변동 자산 영향 | 194 | 3 | 0 | - | index | - | enrichments.ts |
+| 41 | salary | `overtime-pay-quick` | 시간외 수당 계산 | 194 | 3 | 0 | - | index | - | enrichments.ts |
+| 42 | investment | `bond-yield-quick` | 채권 수익률 계산 | 196 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 43 | investment | `inflation-impact-quick` | 인플레이션 구매력 영향 | 198 | 3 | 0 | - | index | - | enrichments-ext-a.ts |
+| 44 | real-estate | `jeonse-vs-monthly-cost` | 전세 vs 월세 월 비용 | 198 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 45 | investment | `dividend-yield-quick` | 배당 수익률 계산 | 199 | 3 | 0 | - | index | - | enrichments.ts |
+| 46 | real-estate | `monthly-rent-tax-credit-quick` | 월세 세액공제 환급 | 199 | 3 | 0 | - | index | - | enrichments.ts |
+| 47 | investment | `savings-rate-after-raise` | 월급 인상 후 저축률 계획 | 229 | 3 | 0 | B01 | index | - | expandedFinance.ts |
+| 48 | investment | `emergency-fund-runway` | 현재 비상금으로 버틸 기간 | 231 | 3 | 0 | B01 | index | - | expandedFinance.ts |
+| 49 | salary | `irregular-income-baseline` | 불규칙 수입의 생활비 점검 | 232 | 3 | 0 | B01 | index | - | expandedFinance.ts |
+| 50 | investment | `investment-drawdown-recovery` | 손실 회복에 필요한 수익률 | 233 | 3 | 0 | B01 | index | - | expandedFinance.ts |
 
 ## 3. 전체 표 (202종 · 분류 순서 = types.ts union → slug)
 
@@ -163,7 +164,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | tax | `comprehensive-property-tax-quick` | 종합부동산세 간편 계산 | enrichments.ts | 168 | Y | 72 | 3 | 353 | 0 | 0 | 3 | - | Y | index |
 | tax | `dividend-tax-quick` | 배당소득세 계산 | enrichments-ext-a.ts | 201 | Y | 44 | 3 | 343 | 0 | 0 | 3 | - | Y | index |
-| tax | `earned-income-tax-quick` | 근로소득세 간편 계산 | enrichments.ts | 165 | Y | 63 | 3 | 380 | 0 | 0 | 3 | - | - | index |
+| tax | `earned-income-tax-quick` | 근로소득세 간편 계산 | enrichments.ts | 165 | Y | 196 | 3 | 380 | 0 | 0 | 3 | - | - | index |
 | tax | `gift-tax-quick` | 증여세 간편 계산 | enrichments.ts | 183 | Y | 77 | 3 | 380 | 0 | 0 | 3 | - | Y | index |
 | tax | `import-tax-quick` | 해외 직구 관세·부가세 계산 | enrichments-ext-a.ts | 185 | Y | 67 | 3 | 322 | 0 | 0 | 3 | - | - | index |
 | tax | `income-tax-bracket-sim` | 소득세 누진세율 시뮬레이터 | enrichments.ts | 216 | Y | 52 | 3 | 387 | 0 | 0 | 3 | - | Y | index |
@@ -186,13 +187,13 @@
 | salary | `overtime-pay-quick` | 시간외 수당 계산 | enrichments.ts | 194 | Y | 51 | 3 | 448 | 0 | 0 | 3 | - | - | index |
 | salary | `salary-purchasing-power` | 물가 반영 실질 월급 비교 | expandedFinance.ts | 233 | - | 57 | 3 | 99 | 1 | 0 | 1 | B01 | - | index |
 | salary | `salary-raise-timing` | 연봉 인상 적용월의 올해 소득 | expandedFinance.ts | 235 | Y | 37 | 3 | 90 | 0 | 0 | 1 | B01 | - | index |
-| salary | `severance-pay-quick` | 퇴직금 간편 계산 | enrichments.ts | 166 | Y | 65 | 3 | 477 | 0 | 0 | 3 | - | Y | index |
+| salary | `severance-pay-quick` | 퇴직금 간편 계산 | enrichments.ts | 166 | Y | 89 | 3 | 477 | 0 | 0 | 4 | - | Y | index |
 | salary | `split-payday-budget` | 월 2회 급여의 현금 부족일 | expandedFinance.ts | 238 | Y | 48 | 3 | 120 | 0 | 0 | 1 | B01 | - | index |
 | salary | `unemployment-benefit` | 실업급여 간편 계산기 | batch2.ts | 94 | Y | 67 | 3 | 334 | 0 | 0 | 5 | - | Y | index |
 | salary | `unpaid-leave-budget` | 무급휴가 급여 감소 예산 | expandedFinance.ts | 238 | - | 46 | 3 | 110 | 0 | 0 | 1 | B01 | - | index |
 | salary | `weekend-pay-quick` | 휴일 근로 수당 | enrichments-ext-a.ts | 173 | Y | 98 | 3 | 336 | 0 | 0 | 3 | - | - | index |
-| salary | `weekly-pay` | 주급 계산 | enrichments-ext-a.ts | 176 | Y | 37 | 3 | 272 | 0 | 0 | 3 | - | - | index |
-| salary | `yearly-to-hourly` | 연봉 → 시급 환산 | enrichments-ext-a.ts | 199 | Y | 45 | 3 | 327 | 0 | 0 | 3 | - | - | index |
+| salary | `weekly-pay` | 주급 계산 | enrichments-ext-a.ts | 231 | Y | 50 | 3 | 350 | 0 | 0 | 3 | - | - | index |
+| salary | `yearly-to-hourly` | 연봉 → 시급 환산 | enrichments-ext-a.ts | 242 | Y | 58 | 3 | 419 | 0 | 0 | 3 | - | - | index |
 | loan | `bullet-loan` | 만기일시 상환 계산 | enrichments-ext-a.ts | 170 | - | 59 | 3 | 333 | 0 | 0 | 3 | - | Y | index |
 | loan | `credit-line-daily-interest` | 마이너스통장 잔액 구간별 이자 | expandedFinance.ts | 231 | Y | 40 | 3 | 99 | 1 | 0 | 1 | B01 | - | index |
 | loan | `debt-avalanche-vs-snowball` | 고금리 우선·소액 우선 상환 비교 | expandedFinance.ts | 240 | Y | 48 | 3 | 101 | 1 | 0 | 1 | B01 | - | index |
@@ -235,7 +236,7 @@
 | real-estate | `vacancy-carrying-cost` | 공실 유지비·놓친 임대료 계산기 | expandedPractical.ts | 248 | - | 59 | 3 | 104 | 0 | 0 | 2 | B02 | - | index |
 | investment | `bond-yield-quick` | 채권 수익률 계산 | enrichments-ext-a.ts | 196 | - | 85 | 3 | 354 | 0 | 0 | 3 | - | - | index |
 | investment | `cagr-quick` | 연평균 수익률 (CAGR) | enrichments.ts | 155 | - | 78 | 3 | 497 | 0 | 0 | 3 | - | Y | index |
-| investment | `compound-interest-quick` | 복리 간편 계산기 | enrichments.ts | 182 | Y | 53 | 3 | 432 | 0 | 0 | 3 | - | Y | index |
+| investment | `compound-interest-quick` | 복리 간편 계산기 | enrichments.ts | 182 | Y | 107 | 3 | 432 | 0 | 0 | 3 | - | Y | index |
 | investment | `deposit-break-switch` | 예금 중도해지 후 갈아타기 비교 | expandedFinance.ts | 238 | - | 55 | 3 | 107 | 1 | 0 | 1 | B01 | - | index |
 | investment | `dividend-yield-quick` | 배당 수익률 계산 | enrichments.ts | 199 | Y | 52 | 3 | 516 | 0 | 0 | 3 | - | - | index |
 | investment | `dollar-cost-average` | 적립식 투자 시뮬 | enrichments-ext-a.ts | 186 | - | 96 | 3 | 332 | 0 | 0 | 3 | - | - | index |
@@ -366,7 +367,7 @@
 
 ## 4. 데이터 모델 메모 (스크립트 자동 판정)
 
-- `sources` 는 batch 정의에만 존재하며 `index.ts` 병합 대상이 아니다 → enrichments 파일에 sources 를 추가해도 페이지에 나오지 않는다. S3-1 출처는 반드시 batch 파일(`batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`) 의 정의에 넣어야 한다.
+- `sources` 는 2026-09-12(S3-1 기반)부터 `index.ts` 병합 대상이다 — `calc.sources ?? enrichment.sources`(batch 우선). 출처 0건인 170종은 enrichment 파일(`enrichments.ts`·`enrichments-ext-{a,b,c}.ts`)에 sources 를 넣으면 '공식 계산방법 참고' 블록에 나온다. batch sources 가 있는 32종(`expandedFinance.ts`·`expandedPractical.ts`)은 enrichment sources 가 무시되므로 batch 의 SOURCES 표에서 고친다. 게이트 `src/lib/__tests__/calcSources.test.ts`(enrichment sources = 정확히 2건·https·`sourcePolicy.OFFICIAL_SOURCE_HOSTS`) · 규칙 `docs/calc-content-writing-guide-2026-09-12.md`.
 - `notes` 필드는 없다. 유의사항은 `caveats: string[]`, 결과 해석은 compute 가 돌려주는 `CalculatorResult.note`(본문 아님) 뿐이다.
 - `index.ts` 병합은 `calc.x ?? enrichment.x` — batch 에 값이 있으면 enrichment 는 무시된다(설명 본문 파일 열 참고).
 - enrichment 키 중 계산기가 없는 고아 키: 없음
