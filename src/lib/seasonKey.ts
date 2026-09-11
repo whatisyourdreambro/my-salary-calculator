@@ -50,6 +50,15 @@ export const SEASON_BOUNDARIES: ReadonlyArray<{ key: AutoSeasonKey; fromKst: Kst
 /** JAN 수동 전환 창 시작(KST) — 이 날 이후 오버라이드가 비어 있으면 게이트가 알린다 */
 export const JAN_MANUAL_FROM_KST: KstDate = [2027, 1, 2];
 
+/** 키별 만료(KST 자정) — 만료 뒤엔 어떤 게이트도 울리지 않던 공백을 메운다(2026-09-12 리뷰). JAN 은 연말정산 신고 마감(3/10) 익일. 세트가 늘면 함께 추가. scripts/season-key.mjs 사본과 동일해야 함. */
+export const SEASON_EXPIRES_KST: Partial<Record<SeasonKey, KstDate>> = { JAN: [2027, 3, 11] };
+
+/** 해당 키의 세트가 만료됐는가 (만료표에 없는 키는 false) */
+export function isSeasonKeyExpired(key: SeasonKey, now: Date): boolean {
+  const exp = SEASON_EXPIRES_KST[key];
+  return exp ? now.getTime() >= kstMidnight(...exp) : false;
+}
+
 /** 날짜만으로 고르는 키 (JAN 은 절대 반환하지 않음) */
 export function pickSeasonKey(now: Date): AutoSeasonKey {
   const t = now.getTime();

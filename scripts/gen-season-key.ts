@@ -20,6 +20,7 @@ import {
   SEASON_KEY_OVERRIDE,
   daysToNextBoundary,
   isJanManualWindow,
+  isSeasonKeyExpired,
   pickSeasonKey,
   resolveSeasonKey,
   type SeasonKey,
@@ -81,6 +82,12 @@ if (isCheck) {
       `JAN 수동 전환 대기 — 1/2 이후인데 SEASON_KEY_OVERRIDE 가 비어 있음(자동 키 ${pickSeasonKey(now)} 유지 중). ` +
         `확인 2건(공무원 2027 봉급표 확정 여부·간소화 오픈일) 후 src/lib/seasonKey.ts 의 ` +
         `SEASON_KEY_OVERRIDE 를 "JAN" 으로 → tsx scripts/gen-season-key.ts → 커밋.`,
+    );
+  }
+  if (isSeasonKeyExpired(key, now)) {
+    warnings.push(
+      `시즌 세트 만료 — ${key} 세트의 유효기간이 지났음(src/lib/seasonKey.ts SEASON_EXPIRES_KST). ` +
+        `다음 세트를 정의하거나 SEASON_KEY_OVERRIDE 를 바꿀 것 — 그때까지 프로덕션은 만료 세트를 계속 노출한다.`,
     );
   }
   const nextB = SEASON_KEY_OVERRIDE === null ? daysToNextBoundary(now) : null;

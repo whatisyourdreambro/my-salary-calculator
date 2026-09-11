@@ -16,9 +16,11 @@ import { describe, expect, it } from "vitest";
 import {
   JAN_MANUAL_FROM_KST,
   SEASON_BOUNDARIES,
+  SEASON_EXPIRES_KST,
   SEASON_KEY_OVERRIDE,
   daysToNextBoundary,
   isJanManualWindow,
+  isSeasonKeyExpired,
   pickSeasonKey,
   resolveSeasonKey,
   type SeasonKey,
@@ -126,6 +128,26 @@ describe("scripts/season-key.mjs ↔ src/lib/seasonKey.ts 일치 (헬스체크�
     );
     expect(mjs.JAN_MANUAL_FROM_KST).toEqual([...JAN_MANUAL_FROM_KST]);
     expect(mjs.SEASON_KEYS).toEqual(KEYS);
+    expect(mjs.SEASON_EXPIRES_KST).toEqual(JSON.parse(JSON.stringify(SEASON_EXPIRES_KST)));
+  });
+
+  it("만료표 — JAN 은 2027-03-11 00:00 KST 부터 만료, 그 전·다른 키는 false (mjs 동일, 2026-09-12 리뷰)", () => {
+    expect(isSeasonKeyExpired("JAN", kst("2027-03-10T23:59:59"))).toBe(false);
+    expect(isSeasonKeyExpired("JAN", kst("2027-03-11T00:00:00"))).toBe(true);
+    expect(isSeasonKeyExpired("DEC", kst("2027-03-11T00:00:00"))).toBe(false);
+    for (const k of KEYS) {
+      for (const d of ["2026-09-12T00:00:00", "2027-03-10T23:59:59", "2027-03-11T00:00:00", "2027-06-01T12:00:00"]) {
+        expect(mjs.isSeasonKeyExpired(k, kst(d)), `${k} ${d}`).toBe(isSeasonKeyExpired(k, kst(d)));
+      }
+    }
+  });
+
+  it("health-check 가 엣지 캐시 경로(/salary/50000000)에서도 마커를 대조하고 만료 경고를 낸다", () => {
+    const hc = read("scripts/health-check.mjs");
+    expect(hc).toContain('"/salary/50000000"');
+    expect(hc).toContain("isSeasonKeyExpired(EXPECTED_SEASON_KEY, NOW)");
+    const gen = read("scripts/gen-season-key.ts");
+    expect(gen).toContain("isSeasonKeyExpired(key, now)");
   });
 
   it("2026-09-01~2027-02-28 일별 스윕(KST 00:00·12:00·23:59)에서 같은 키를 낸다", () => {

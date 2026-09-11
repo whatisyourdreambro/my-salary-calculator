@@ -11,6 +11,7 @@
 import { fileURLToPath } from "node:url";
 import {
   isJanManualWindow,
+  isSeasonKeyExpired,
   pickSeasonKey,
   readSeasonKeyOverride,
   resolveSeasonKey,
@@ -83,7 +84,16 @@ const CHECKS = [
     "/table/2026/annual",
     200,
     SEASON_MARKER,
-    `시즌 세트 키 == 오늘 키 ${EXPECTED_SEASON_KEY} (미교체·CF 캐시 잔존 감시)`,
+    `시즌 세트 키 == 오늘 키 ${EXPECTED_SEASON_KEY} (미교체 감시 — 이 경로는 엣지 캐시 없음)`,
+    diagnoseSeasonKey,
+  ],
+  // 엣지 캐시 경로(/salary/* 14400s)에서도 대조 — 경계일 이후 배포해도 최대 4h 구 세트가 남는 것을 잡는다(2026-09-12 리뷰).
+  // 격자 위 금액만 유효(dynamicParams=false) — 5,000만은 정적 격자 고정값.
+  [
+    "/salary/50000000",
+    200,
+    SEASON_MARKER,
+    `시즌 세트 키 == 오늘 키 ${EXPECTED_SEASON_KEY} (엣지 캐시 경로 /salary/* 잔존 감시 — 배포 직후면 CF 퍼지 후 재확인)`,
     diagnoseSeasonKey,
   ],
 ];
@@ -141,6 +151,12 @@ if (!SEASON_OVERRIDE.override && isJanManualWindow(NOW)) {
   console.log(
     "WARN  1/2 이후인데 JAN 수동 전환 전 — 확인 2건(공무원 2027 확정·간소화 오픈일) 후 " +
       "src/lib/seasonKey.ts SEASON_KEY_OVERRIDE = \"JAN\" → tsx scripts/gen-season-key.ts → 커밋·배포",
+  );
+}
+if (isSeasonKeyExpired(EXPECTED_SEASON_KEY, NOW)) {
+  console.log(
+    `WARN  시즌 세트 만료 — ${EXPECTED_SEASON_KEY} 세트 유효기간 경과(scripts/season-key.mjs SEASON_EXPIRES_KST). ` +
+      "다음 세트 정의 또는 SEASON_KEY_OVERRIDE 변경 전까지 프로덕션은 만료 세트를 노출한다.",
   );
 }
 console.log(`\n결과: ${CHECKS.length - failed}/${CHECKS.length} 통과${failed ? ` — 실패 ${failed}건!` : ""}`);

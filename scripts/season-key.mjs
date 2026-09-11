@@ -24,6 +24,18 @@ export const SEASON_BOUNDARIES = [
 
 /** JAN 수동 전환 창 시작(KST) — src/lib/seasonKey.ts JAN_MANUAL_FROM_KST 와 동일해야 함 */
 export const JAN_MANUAL_FROM_KST = [2027, 1, 2];
+/** 키별 만료(KST 자정) — src/lib/seasonKey.ts SEASON_EXPIRES_KST 와 동일해야 함 */
+export const SEASON_EXPIRES_KST = { JAN: [2027, 3, 11] };
+/**
+ * 해당 키의 세트가 만료됐는가 (만료표에 없는 키는 false)
+ * @param {string} key
+ * @param {Date} now
+ * @returns {boolean}
+ */
+export function isSeasonKeyExpired(key, now) {
+  const exp = SEASON_EXPIRES_KST[key];
+  return exp ? now.getTime() >= kstMidnight(...exp) : false;
+}
 
 /**
  * 날짜만으로 고르는 키 — JAN 은 절대 반환하지 않음
