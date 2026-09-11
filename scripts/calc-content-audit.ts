@@ -250,6 +250,8 @@ interface Row {
   faqFile: string;
   descriptionChars: number;
   explanationChars: number;
+  /** S3-1 장문 본문(details) 글자 수 — 0 이면 미작성 */
+  detailsChars: number;
   explanationBucket: string;
   explanationHasNumber: boolean;
   hasFormula: boolean;
@@ -301,6 +303,7 @@ function buildRows(): { rows: Row[]; groups: BoilerplateGroup[] } {
     const sources = calc.sources ?? [];
     const hosts = sources.map((s) => hostOf(s.url));
     const explanationChars = charCount(calc.explanation);
+    const detailsChars = charCount(calc.details);
     const faqAnswerLens = (calc.faqs ?? []).map((f) => charCount(f.a));
     const twin = PRECISION_TWINS[slug];
 
@@ -314,6 +317,7 @@ function buildRows(): { rows: Row[]; groups: BoilerplateGroup[] } {
       faqFile: textOrigin(slug, "faqs"),
       descriptionChars: charCount(calc.description),
       explanationChars,
+      detailsChars,
       explanationBucket: lengthBucket(explanationChars),
       explanationHasNumber: /\d/.test(calc.explanation ?? ""),
       hasFormula: Boolean(calc.formula),
@@ -379,7 +383,9 @@ const RANKING_RULE = [
 ];
 
 function rankCandidates(rows: Row[]): Row[] {
-  return [...rows]
+  // S3-1 본문(details ≥ 600자)이 이미 있는 계산기는 다음 후보에서 제외한다(2026-09-12).
+  return rows
+    .filter((r) => r.detailsChars < 600)
     .sort((a, b) => {
       const tierA = PRIORITY_CATEGORIES.has(a.category) ? 0 : 1;
       const tierB = PRIORITY_CATEGORIES.has(b.category) ? 0 : 1;
@@ -455,6 +461,9 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   const median = explChars.length ? explChars[Math.floor(explChars.length / 2)] : 0;
   const mean = explChars.length ? Math.round(explChars.reduce((a, b) => a + b, 0) / explChars.length) : 0;
 
+  const detailsRows = rows.filter((r) => r.detailsChars > 0);
+  const detailsLens = detailsRows.map((r) => r.detailsChars).sort((a, b) => a - b);
+  const detailsMedian = detailsLens.length ? detailsLens[Math.floor(detailsLens.length / 2)] : 0;
   lines.push("### 1-1. 총계");
   lines.push("");
   lines.push("| 항목 | 값 |");
@@ -462,6 +471,7 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   lines.push(`| 계산기 수 (getAllSlugs) | ${total} |`);
   lines.push(`| explanation 보유 | ${withExplanation} (${pct(withExplanation, total)}) · 중앙값 ${median}자 · 평균 ${mean}자 |`);
   lines.push(`| explanation 에 숫자(예시 계산) 포함 | ${withNumber} (${pct(withNumber, total)}) |`);
+  lines.push(`| details(장문 본문, S3-1 · 메타 무영향) 보유 | ${detailsRows.length} (${pct(detailsRows.length, total)}) · 중앙값 ${detailsMedian}자 · 600자 미만 ${detailsRows.filter((r) => r.detailsChars < 600).length} · 1,000자 초과 ${detailsRows.filter((r) => r.detailsChars > 1000).length} |`);
   lines.push(`| formula 보유 | ${withFormula} (${pct(withFormula, total)}) |`);
   lines.push(`| faqs 보유 | ${withFaq} (${pct(withFaq, total)}) |`);
   lines.push(`| sources 보유 | ${withSources} (${pct(withSources, total)}) |`);
@@ -556,11 +566,11 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   lines.push("");
   for (const rule of RANKING_RULE) lines.push(`- ${rule}`);
   lines.push("");
-  lines.push("| # | 분류 | slug | 제목 | 설명자 | FAQ | 출처 | 보일러 | 색인 | 정밀쌍 | 본문 파일 |");
-  lines.push("|---|---|---|---|---|---|---|---|---|---|---|");
+  lines.push("| # | 분류 | slug | 제목 | 설명자 | 본문자 | FAQ | 출처 | 보일러 | 색인 | 정밀쌍 | 본문 파일 |");
+  lines.push("|---|---|---|---|---|---|---|---|---|---|---|---|");
   candidates.forEach((r, i) => {
     lines.push(
-      `| ${i + 1} | ${r.category} | \`${r.slug}\` | ${md(r.title)} | ${r.explanationChars} | ${r.faqCount} | ${r.sourcesCount} | ${r.boilerplateGroups.join(" ") || "-"} | ${r.indexEligible ? "index" : "noindex"} | ${yn(r.hasTwin)} | ${r.explanationFile} |`
+      `| ${i + 1} | ${r.category} | \`${r.slug}\` | ${md(r.title)} | ${r.explanationChars} | ${r.detailsChars} | ${r.faqCount} | ${r.sourcesCount} | ${r.boilerplateGroups.join(" ") || "-"} | ${r.indexEligible ? "index" : "noindex"} | ${yn(r.hasTwin)} | ${r.explanationFile} |`
     );
   });
   lines.push("");
@@ -568,11 +578,11 @@ function renderMarkdown(rows: Row[], groups: BoilerplateGroup[], candidates: Row
   // (a) 전체 표
   lines.push(`## 3. 전체 표 (${total}종 · 분류 순서 = types.ts union → slug)`);
   lines.push("");
-  lines.push("| 분류 | slug | 제목 | 본문 파일 | 설명자 | 숫자 | 공식(자) | FAQ | FAQ답변자 | 출처 | 국내공식 | 유의 | 보일러 | 정밀쌍 | 색인 |");
-  lines.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+  lines.push("| 분류 | slug | 제목 | 본문 파일 | 설명자 | 본문자 | 숫자 | 공식(자) | FAQ | FAQ답변자 | 출처 | 국내공식 | 유의 | 보일러 | 정밀쌍 | 색인 |");
+  lines.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
   for (const r of sortedRows) {
     lines.push(
-      `| ${r.category} | \`${r.slug}\` | ${md(r.title)} | ${r.explanationFile} | ${r.explanationChars} | ${yn(r.explanationHasNumber)} | ${r.hasFormula ? r.formulaChars : "-"} | ${r.faqCount} | ${r.faqAnswerChars} | ${r.sourcesCount} | ${r.officialKrSources} | ${r.caveatsCount} | ${r.boilerplateGroups.join(" ") || "-"} | ${yn(r.hasTwin)} | ${r.indexEligible ? "index" : "noindex"} |`
+      `| ${r.category} | \`${r.slug}\` | ${md(r.title)} | ${r.explanationFile} | ${r.explanationChars} | ${r.detailsChars} | ${yn(r.explanationHasNumber)} | ${r.hasFormula ? r.formulaChars : "-"} | ${r.faqCount} | ${r.faqAnswerChars} | ${r.sourcesCount} | ${r.officialKrSources} | ${r.caveatsCount} | ${r.boilerplateGroups.join(" ") || "-"} | ${yn(r.hasTwin)} | ${r.indexEligible ? "index" : "noindex"} |`
     );
   }
   lines.push("");
