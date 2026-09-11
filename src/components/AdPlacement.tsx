@@ -8,6 +8,7 @@ import {
   trackAdRequestError,
   trackAdUnitClick,
 } from "@/lib/analytics";
+import { viewportBucket } from "@/lib/vitalsAttribution";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 // 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
@@ -156,6 +157,9 @@ function AdSlot({
   //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_request_attempt 는 push 시점 "요청 수"라
   //   실노출·채움률을 답하지 못했고, 실험 판정 기준 'unfilled 급증 없음'이 AdSense CSV(운영자 제공)에만
   //   의존하던 공백을 메운다. 광고 요청·렌더 로직·슬롯·스타일은 무변경 — 계측 호출만 추가.
+  // + S1-6(2026-09-11, 승인②의 필드 확장): 전이 시점 <ins> 레이아웃 높이(px, unfilled 는 0 가능)와 뷰포트 폭 버킷(m/t/d)을
+  //   같은 이벤트에 실어 슬롯·뷰포트별 예약 높이(minHeight) 자료를 모은다(S3-3 재조정은 2027-02 승인 상정, 여기서 손대지 않음).
+  //   역시 계측 인자 추가뿐 — 요청·렌더·dedup·접힘·슬롯·스타일 무변경, 사용자 입력·금액은 어떤 경로로도 담기지 않는다.
   const fillReported = useRef<string | null>(null);
   useEffect(() => {
     fillReported.current = null;
@@ -187,7 +191,11 @@ function AdSlot({
         fillReported.current !== status
       ) {
         fillReported.current = status;
-        trackAdFillStatus(slotKind ?? "unknown", slot, status, pathname);
+        // S1-6: 전이 시점 <ins> 레이아웃 높이(px, unfilled 는 0 가능) + 뷰포트 버킷 — 위 effect 주석 참조. 사용자 입력 무관.
+        trackAdFillStatus(slotKind ?? "unknown", slot, status, pathname, {
+          ad_height: Math.round(ins.getBoundingClientRect().height),
+          viewport: viewportBucket(window.innerWidth),
+        });
       }
     };
     check();

@@ -247,18 +247,33 @@ export function trackAdUnitClick(
  * 이 두 이벤트로 슬롯별 채움률(ad_filled ÷ (ad_filled+ad_unfilled))과
  * '요청은 됐는데 채움 상태가 영영 안 잡히는' 죽은 유닛(27a692c 유형)을 GA4 에서 찾는다.
  * (2026-09-05 운영자 승인 — 광고 컴포넌트 내부 계측 2줄 예외)
+ *
+ * + S1-6(2026-09-11) 필드 확장 — 승인②(2026-09-05 계측 예외)의 확장으로 분류, 요청·렌더·dedup 로직 무변경:
+ *   extra.ad_height = 전이 시점 <ins> 레이아웃 높이(px 정수, unfilled 는 0 가능),
+ *   extra.viewport  = 뷰포트 폭 버킷 m(<768) / t(<1024) / d(그 외).
+ *   슬롯·뷰포트별 예약 높이(minHeight) 자료용(S3-3, 2027-02 승인 상정). 사용자 입력·금액·URL 은 받지 않고,
+ *   유효하지 않은 값은 생략한다. GA4 보고서에 보이려면 맞춤 측정기준(이벤트 범위) ad_height·viewport 를 콘솔에 등록할 것.
  */
+export type AdFillExtra = { ad_height?: number; viewport?: "m" | "t" | "d" };
+
 export function trackAdFillStatus(
   slotKind: string,
   position: string,
   status: "filled" | "unfilled",
-  pagePath?: string
+  pagePath?: string,
+  extra?: AdFillExtra
 ): void {
+  const height = extra?.ad_height;
+  const viewport = extra?.viewport;
   trackEvent(status === "filled" ? "ad_filled" : "ad_unfilled", {
     slot_kind: slotKind,
     position,
     page_path:
       pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    ...(typeof height === "number" && Number.isFinite(height) && height >= 0
+      ? { ad_height: Math.round(height) }
+      : {}),
+    ...(viewport === "m" || viewport === "t" || viewport === "d" ? { viewport } : {}),
   });
 }
 

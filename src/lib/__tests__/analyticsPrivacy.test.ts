@@ -30,6 +30,17 @@ describe("custom analytics privacy", () => {
     expect(sanitizeAnalyticsParams("ad_request_error", { slot_kind: "result", error_type: "push_failed" })).toEqual({ slot_kind: "result", error_type: "push_failed" });
     expect(sanitizeAnalyticsParams("web_vitals", { metric_name: "LCP", metric_value: 1234 })).toEqual({ metric_name: "LCP", metric_value: 1234 });
   });
+  it("passes the S1-6 measurement fields through for ad fill and web-vitals attribution events, never amounts", () => {
+    const fill = { slot_kind: "result", position: "1234567890", page_path: "/calc/vat", ad_height: 250, viewport: "m" };
+    expect(sanitizeAnalyticsParams("ad_filled", fill)).toEqual(fill);
+    expect(sanitizeAnalyticsParams("ad_unfilled", { ...fill, ad_height: 0, viewport: "d" })).toEqual({ ...fill, ad_height: 0, viewport: "d" });
+    const lcp = { metric_name: "LCP", metric_value: 1800, metric_rating: "good", lcp_element: "img#hero.rounded-xl.shadow", lcp_load_state: "complete" };
+    expect(sanitizeAnalyticsParams("web_vitals", lcp)).toEqual(lcp);
+    const cls = { metric_name: "CLS", metric_value: 120, cls_target: "div.ad-container.ad-slot-result" };
+    expect(sanitizeAnalyticsParams("web_vitals", cls)).toEqual(cls);
+    // A caller that mistakenly attached amounts would still have them dropped.
+    expect(sanitizeAnalyticsParams("ad_filled", { ...fill, amount: 80000000, salary: 1, inputs: { salary: 1 } })).toEqual(fill);
+  });
   it("allows comparison state while excluding arbitrary offer inputs and names", () => {
     expect(sanitizeAnalyticsParams("offer_compare_complete", {
       comparison_mode: "first", measurement_version: "1", company_name: "private company",
