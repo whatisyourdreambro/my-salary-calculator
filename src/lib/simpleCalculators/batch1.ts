@@ -10,7 +10,7 @@ import {
  earnedIncomeDeduction2026,
  earnedIncomeTaxCredit2026,
 } from "@/lib/taxConstants2026";
-import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
+import { MINIMUM_WAGE_2026, MONTHLY_HOURS } from "@/config/minimumWage";
 // 이자율 0%(무이자 할부·0% 프로모션·수익률 0 가정)에서도 정의된 값을 내는
 // 연금·복리 공식 정본. 인라인 P·i/(1-(1+i)^-n) 은 i=0 에서 NaN 이 된다.
 import {
@@ -427,12 +427,14 @@ const SALARY: CalculatorDef[] = [
  ],
  compute: ({ hourly, weekHours }) => {
  // 주휴수당: 주 15시간 이상 근무 시 min(주 근무시간, 40)/40 × 8시간 유급 가산
- // 주 40시간 기준 월 환산시간 = (40+8) × 4.345 ≈ 209시간 (통상임금 관행과 일치)
+ // 월 환산시간은 정본 MONTHLY_HOURS(209 = 주 48시간 유급 기준)에 비례 — 주 40시간
+ // (+주휴 8 = 48시간)이면 정확히 209시간이라 최저임금 월 환산액과 왕복이 맞는다.
+ // (종전 주수 곱 208.56시간은 사이트 내 209시간 기준과 0.2% 어긋났다 — 2026-09-12 SI-04)
  const holidayHours = weekHours >= 15 ? (Math.min(weekHours, 40) / 40) * 8 : 0;
- const monthlyHours = (weekHours + holidayHours) * 4.345;
+ const monthlyHours = (MONTHLY_HOURS * (weekHours + holidayHours)) / 48;
  const monthly = hourly * monthlyHours;
  const yearly = monthly * 12;
- const yearlyNoHoliday = hourly * weekHours * 4.345 * 12;
+ const yearlyNoHoliday = ((hourly * MONTHLY_HOURS * weekHours) / 48) * 12;
  return {
  primary: { label: "예상 연봉 (주휴 포함)", value: Math.round(yearly), suffix: "원" },
  secondary: [
@@ -457,7 +459,7 @@ const SALARY: CalculatorDef[] = [
  ],
  compute: ({ yearly, weekHours }) => {
  const monthly = yearly / 12;
- const weekly = monthly / 4.345;
+ const weekly = monthly / (MONTHLY_HOURS / 48); // 월 209시간 ÷ 주 48시간 ≈ 4.354주
  const hourly = weekly / weekHours;
  return {
  primary: { label: "환산 시급", value: Math.round(hourly), suffix: "원" },
@@ -477,7 +479,7 @@ const SALARY: CalculatorDef[] = [
  keywords: ["주급 계산", "주급"],
  fields: [{ name: "monthly", label: "월급", defaultValue: 3000000, suffix: "원" }],
  compute: ({ monthly }) => {
- const weekly = monthly / 4.345;
+ const weekly = monthly / (MONTHLY_HOURS / 48); // 월 209시간 ÷ 주 48시간 ≈ 4.354주
  const daily = weekly / 5;
  return {
  primary: { label: "주급", value: Math.round(weekly), suffix: "원" },
@@ -516,7 +518,7 @@ const SALARY: CalculatorDef[] = [
  return {
  primary: { label: "주 1회 주휴수당", value: Math.round(weekly), suffix: "원" },
  secondary: [
- { label: "월 4회분 (4.345주)", value: Math.round(weekly * 4.345), suffix: "원" },
+ { label: "월 환산분 (209시간 기준)", value: Math.round((weekly * MONTHLY_HOURS) / 48), suffix: "원" },
  ],
  note: "주 15시간 이상 일한 근로자에게 주 1일 추가 임금 지급 의무 (근로기준법).",
  };

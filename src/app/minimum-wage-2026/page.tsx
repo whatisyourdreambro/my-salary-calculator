@@ -56,7 +56,7 @@ const FAQ_ITEMS = [
  {
  question: "최저임금 시급에 주휴수당이 포함되나요?",
  answer:
- "아니요. 최저임금 시급은 주휴수당을 제외한 시급입니다. 다만 월급으로 계산할 때는 주휴수당을 포함해 월 209시간(주 40시간 × 4.345주)으로 환산하는 것이 일반적입니다. 예: 시급 1만원 × 209시간 = 월 209만원(주휴수당 포함).",
+ "아니요. 최저임금 시급은 주휴수당을 제외한 시급입니다. 다만 월급으로 계산할 때는 주휴수당을 포함해 월 209시간((주 40시간 + 주휴 8시간) × 4.345주 ≈ 209시간)으로 환산하는 것이 일반적입니다. 예: 시급 1만원 × 209시간 = 월 209만원(주휴수당 포함).",
  },
  {
  question: "최저임금에 포함되는 임금과 제외되는 임금은?",
@@ -137,7 +137,7 @@ export default function MinimumWage2026Page() {
  <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-08-26" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  시급 기준은 매년 8월 5일 고용노동부장관이 고시하고, 다음 해 1월 1일부터 적용됩니다.
- 주휴수당 포함 월급은 209시간(주 40시간 × 4.345주) 기준으로 환산합니다.
+ 주휴수당 포함 월급은 209시간((주 40시간 + 주휴 8시간) × 4.345주 ≈ 209시간) 기준으로 환산합니다.
  </p>
  <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
  📚 공식 출처:{" "}

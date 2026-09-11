@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import NumberInput from "@/components/NumberInput";
-import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
+import { MINIMUM_WAGE_2026, MONTHLY_HOURS } from "@/config/minimumWage";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -12,6 +12,8 @@ export default function WeeklyHolidayAllowanceClient() {
   const [hourlyWage, setHourlyWage] = useState(MINIMUM_WAGE_2026.hourly);
   const [weeklyHours, setWeeklyHours] = useState(40);
 
+  // 월 환산 = 주급 × 209 ÷ 48 — 정본 MONTHLY_HOURS 기준(주 48시간 유급 = 209시간),
+  // 최저임금 월 환산액·/calc/hourly-to-yearly 와 같은 잣대 (2026-09-12 SI-04).
   const result = useMemo(() => {
     if (weeklyHours < 15) {
       return {
@@ -19,7 +21,7 @@ export default function WeeklyHolidayAllowanceClient() {
         weeklyAllowance: 0,
         weeklyBaseline: hourlyWage * weeklyHours,
         weeklyTotal: hourlyWage * weeklyHours,
-        monthlyTotal: hourlyWage * weeklyHours * 4.345,
+        monthlyTotal: (hourlyWage * weeklyHours * MONTHLY_HOURS) / 48,
         allowanceHours: 0,
       };
     }
@@ -27,7 +29,7 @@ export default function WeeklyHolidayAllowanceClient() {
     const weeklyAllowance = hourlyWage * allowanceHours;
     const weeklyBaseline = hourlyWage * weeklyHours;
     const weeklyTotal = weeklyBaseline + weeklyAllowance;
-    const monthlyTotal = weeklyTotal * 4.345;
+    const monthlyTotal = (weeklyTotal * MONTHLY_HOURS) / 48;
     return {
       eligible: true,
       weeklyAllowance,
@@ -141,7 +143,7 @@ export default function WeeklyHolidayAllowanceClient() {
                   <span>{fmt(result.weeklyTotal)}원</span>
                 </div>
                 <div className="flex justify-between text-electric font-black pt-2">
-                  <span>월 단순 환산 (×4.345주)</span>
+                  <span>월 단순 환산 (209시간 기준 ≈ ×4.354주)</span>
                   <span>{fmt(result.monthlyTotal)}원</span>
                 </div>
               </div>

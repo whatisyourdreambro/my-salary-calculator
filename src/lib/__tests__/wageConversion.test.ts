@@ -3,6 +3,7 @@
 // S2-1 "계산 정확성 3건" (docs/next-upgrade-plan-2026-09-11.md §3) 회귀 가드.
 //   SI-07: 퀵 계산기 표시 공식 = compute (복리·근로소득세 간이·퇴직금 간이)
 //   SI-08: 최저임금·실업급여 상수는 정본(src/config/*) 한곳에서만 나온다
+//   SI-04: 시급↔월급 환산은 209시간(MONTHLY_HOURS) 단일 기준 — 4.345주 곱 폐기
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -14,6 +15,7 @@ import {
   unemploymentDailyLowerBound,
 } from "@/config/unemploymentBenefit";
 import { MONTHLY_ORDINARY_HOURS } from "@/lib/ordinaryWage";
+import { isStaticSalaryAmount } from "@/lib/salaryStaticParams";
 
 function run(slug: string, overrides: Record<string, number> = {}) {
   const def = getCalculatorBySlug(slug);
@@ -143,6 +145,79 @@ describe("SI-08 — 최저임금·실업급여 상수 정본", () => {
       const def = getCalculatorBySlug(slug);
       expect(def?.fields[0]?.name, slug).toBe("hourly");
       expect(def?.fields[0]?.defaultValue, slug).toBe(MINIMUM_WAGE_2026.hourly);
+    }
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// SI-04 — 월 환산은 209시간(MONTHLY_HOURS) 단일 기준 (2026-09-12 출력 변경)
+//   종전 4.345주 곱은 주 48시간 기준 208.56시간 → 최저임금 월 2,156,880원과
+//   4,541원(0.2%) 어긋났고, 시급 10,320 → 연봉 → 시급 왕복이 10,298 로 돌아왔다.
+// ─────────────────────────────────────────────────────────────
+describe("SI-04 — 시급↔월급 환산 209시간 통일", () => {
+  it("hourly-to-yearly 기본값(10,320·주 40h): 25,882,560 / 2,156,880 / 209h / 주휴 미포함 21,568,800", () => {
+    const { result } = run("hourly-to-yearly");
+    expect(result.primary.value).toBe(25882560);
+    expect(secondaryValues(result)).toEqual([2156880, 209, 21568800]);
+  });
+
+  it("최저임금 왕복: 연봉 ÷ 12 ÷ 209 = 10,320 정확히, 연봉은 정적 /salary 집합에 포함", () => {
+    const yearly = run("hourly-to-yearly", { hourly: MINIMUM_WAGE_2026.hourly, weekHours: 40 })
+      .result.primary.value;
+    expect(yearly).toBe(MINIMUM_WAGE_2026.yearly);
+    expect(yearly / 12 / MONTHLY_HOURS).toBe(MINIMUM_WAGE_2026.hourly);
+    expect(isStaticSalaryAmount(yearly)).toBe(true);
+    // 2027 시급도 같은 식으로 정확히 왕복한다
+    const yearly2027 = run("hourly-to-yearly", { hourly: MINIMUM_WAGE_2027.hourly, weekHours: 40 })
+      .result.primary.value;
+    expect(yearly2027).toBe(MINIMUM_WAGE_2027.yearly);
+  });
+
+  it("주 20시간(주휴 4h) → 월 104.5시간 = 24h × 209 ÷ 48 (부분 주휴도 209 비례)", () => {
+    const { result } = run("hourly-to-yearly", { hourly: 10320, weekHours: 20 });
+    expect(secondaryValues(result)[1]).toBe(104.5);
+    expect(secondaryValues(result)[0]).toBe(1078440);
+  });
+
+  it("yearly-to-hourly 기본값(5,000만·주 40h): 시급 23,923 / 주급 956,938 / 월급 4,166,667", () => {
+    const { result } = run("yearly-to-hourly");
+    expect(result.primary.value).toBe(23923);
+    expect(secondaryValues(result)).toEqual([956938, 4166667]);
+  });
+
+  it("weekly-pay 기본값(300만): 주급 688,995 / 일급 137,799", () => {
+    const { result } = run("weekly-pay");
+    expect(result.primary.value).toBe(688995);
+    expect(secondaryValues(result)).toEqual([137799]);
+  });
+
+  it("holiday-allowance-quick 기본값(10,320): 주 82,560 / 월 359,480 — 라벨은 209시간 기준", () => {
+    const { result } = run("holiday-allowance-quick");
+    expect(result.primary.value).toBe(82560);
+    expect(secondaryValues(result)).toEqual([359480]);
+    expect(result.secondary?.[0]?.label).toBe("월 환산분 (209시간 기준)");
+  });
+
+  it("환산 계산 파일 2곳의 계산 라인에 4.345 가 남아 있지 않다 (주석 제외 source scan)", () => {
+    for (const rel of [
+      "src/lib/simpleCalculators/batch1.ts",
+      "src/app/weekly-holiday-allowance-2026/WeeklyHolidayAllowanceClient.tsx",
+    ]) {
+      const offenders = readSrc(rel)
+        .split(/\r?\n/)
+        .map((line, i) => ({ line, no: i + 1 }))
+        .filter(({ line }) => line.includes("4.345") && !/^\s*(\/\/|\*|\/\*|\{\/\*)/.test(line));
+      expect(offenders, rel).toEqual([]);
+      expect(readSrc(rel), rel).toMatch(/\bMONTHLY_HOURS\b/);
+    }
+  });
+
+  it("환산 설명(yearly-to-hourly·weekly-pay)의 공식이 209 ÷ 48 기준으로 바뀌었다", () => {
+    for (const slug of ["yearly-to-hourly", "weekly-pay"]) {
+      const def = getCalculatorBySlug(slug);
+      expect(def?.formula, slug).toContain("209 ÷ 48");
+      expect(def?.formula, slug).not.toContain("4.345");
+      expect(def?.explanation, slug).toContain("4.354");
     }
   });
 });

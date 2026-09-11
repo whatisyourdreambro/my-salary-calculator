@@ -1379,11 +1379,11 @@ const coupangFulfillmentPay = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 월급 시뮬 — 야간 풀타임</h2>
 <p>
-야간 시급 17,000원 × 주 40시간 × 4.345주 = 약 295만원
+야간 시급 17,000원 × 주 40시간 × (209 ÷ 48 ≈ 4.354주) = 약 296만원
 </p>
 <ul class="space-y-2 mt-4">
 <li>· 주휴수당 (주 8시간분 17,000원): 월 약 59만원 추가</li>
-<li>· <strong>월 총수입: 약 354만원</strong></li>
+<li>· <strong>월 총수입: 약 355만원</strong></li>
 <li>· 4대보험·소득세 공제 후 실수령 약 305~315만원</li>
 </ul>
 

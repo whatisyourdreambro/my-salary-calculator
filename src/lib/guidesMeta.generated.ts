@@ -69,7 +69,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 85000,
   "lang": "ko",
-  "contentChars": 5024
+  "contentChars": 5048
  },
  {
   "slug": "severance-pay-guide",
@@ -3055,7 +3055,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1797
+  "contentChars": 1810
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
