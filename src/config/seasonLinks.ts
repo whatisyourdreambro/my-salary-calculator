@@ -15,6 +15,8 @@
 //  ※ /civil-servant-pay-2026 은 2026-08-30 운영자 지시로 헤더 연봉DB 메뉴에 노출됨
 //    (navConfig.ts 봉급표 버티컬 블록 — 군인·교사·경찰·소방과 함께).
 import { bonusCalcCountKo, companyCountKo } from "./site";
+import type { SeasonKey } from "@/lib/seasonKey";
+import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 export type SeasonBadge = "HOT" | "NEW" | "SEASON" | "MUST";
 
@@ -27,7 +29,8 @@ export type SeasonLink = {
 };
 
 // ── 시즌 상단 블록 — 교체 단위 (배열 순서 = 헤더 순서) ────────────────────
-// 2026-09-05 L13a: 세트를 상수로 사전 제작해 두고 아래 SEASON_TOP 한 줄만 바꾼다.
+// 2026-09-05 L13a: 세트를 상수로 사전 제작해 둔다. 활성 세트는 사람이 한 줄 바꾸지 않고
+// 빌드 시점 키 SEASON_KEY 가 고른다 (S1-1 2026-09-11 — 아래 SEASON_TOP_BY_KEY 참조).
 // 상단 블록의 href 가 공통 목록(SEASON_REST)과 겹치면 상단 항목이 우선한다
 // (seasonLinks 조립 시 href 기준 첫 항목만 남김 — 배지·순서 승격용).
 
@@ -180,9 +183,20 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
   },
 ];
 
-// 9/26 교체: SEASON_TOP_SEP → SEASON_TOP_OCT
-// 12/1·1/2 교체 = 한 줄: SEASON_TOP_OCT → SEASON_TOP_DEC → SEASON_TOP_JAN
-const SEASON_TOP: SeasonLink[] = SEASON_TOP_SEP;
+// ── 활성 세트 선택 (S1-1, 2026-09-11) — 사람이 한 줄 바꾸지 않는다 ─────────────
+// 빌드 시점 키 SEASON_KEY(src/config/seasonKey.generated.ts, prebuild 코드젠)가 세트를 고른다:
+//   ~9/25 SEP → 9/26 OCT → 12/1 DEC 자동 (KST 자정, 경계표 src/lib/seasonKey.ts).
+//   ★JAN 은 자동 전환 없음 — 1/2 전 확인 2건(공무원 2027 확정·간소화 오픈일) 후
+//     src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE = "JAN" → tsx scripts/gen-season-key.ts → 커밋.
+// 경계일 이후 첫 배포에 반영되고(배포 후 CF 캐시 퍼지는 운영자), 커밋된 키가 만료되면
+// verify:site 가 WARNING, 주간 health-check 가 프로덕션 data-season-key 로 알린다.
+const SEASON_TOP_BY_KEY: Record<SeasonKey, SeasonLink[]> = {
+  SEP: SEASON_TOP_SEP,
+  OCT: SEASON_TOP_OCT,
+  DEC: SEASON_TOP_DEC,
+  JAN: SEASON_TOP_JAN,
+};
+const SEASON_TOP: SeasonLink[] = SEASON_TOP_BY_KEY[SEASON_KEY];
 
 // ── 공통 목록 — 시즌과 무관하게 유지 (상단 블록과 href 가 겹치면 상단이 우선) ──
 const SEASON_REST: SeasonLink[] = [

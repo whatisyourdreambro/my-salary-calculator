@@ -12,6 +12,7 @@ import Link from "@/components/AppLink";
 import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry } from "@/lib/searchIndex";
 import { useModalDialog } from "@/hooks/useModalDialog";
+import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
 // 전 페이지 First Load JS에 실려 LCP를 지연시킴 — 검색을 열 때만 동적 로드한다.
@@ -28,7 +29,9 @@ async function loadSearchIndex(english: boolean) {
   return searchIndexPromise;
 }
 
-// 시즌 검색 칩(ko) — 교체 단위. 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT (L13a)
+// 시즌 검색 칩(ko) — 교체 단위. 활성 세트는 빌드 시점 키 SEASON_KEY 가 고른다 (S1-1 2026-09-11):
+// ~9/25 SEP → 9/26 OCT → 12/1 DEC 자동(KST), JAN 은 src/lib/seasonKey.ts SEASON_KEY_OVERRIDE 로 수동.
+// 클라이언트 컴포넌트라 new Date() 대신 빌드 상수를 써야 서버·클라 칩이 일치한다(hydration).
 const KO_CHIP_SETS = {
   // 9월 추석 세트 — 전면 최적화 (운영자 지시 2026-09-02)
   SEP: ["추석 상여금", "연말정산", "성과급", "퇴직금", "삼성전자", "DSR", "IRP"],
@@ -41,7 +44,7 @@ const KO_CHIP_SETS = {
   // 으로 대체, "2027 연봉" → /table/2027/annual, "13월의 월급" → /calc/january-bonus 매치 확인.
   JAN: ["연말정산", "OPI", "신용카드", "2027 연봉", "13월의 월급", "삼성전자", "IRP"],
 } as const;
-// 12/1·1/2 교체 = 한 줄 (아래 chips): KO_CHIP_SETS.OCT → KO_CHIP_SETS.DEC → KO_CHIP_SETS.JAN
+// 네 키 전부 정의돼 있어야 KO_CHIP_SETS[SEASON_KEY] 가 타입 검사를 통과한다 — 키 추가 시 함께 추가.
 
 // /en 페이지 UI 문구 분기 — 푸터의 /en 분기와 동일 패턴 (검색 인덱스 자체는 공용)
 const SEARCH_STRINGS = {
@@ -54,8 +57,8 @@ const SEARCH_STRINGS = {
     empty: "계산기·가이드·용어를 검색해 보세요",
     noResults: "검색 결과가 없습니다. 다른 키워드로 검색해 보세요.",
     loadError: "검색을 불러오지 못했습니다. 닫은 뒤 다시 열어 주세요.",
-    // 9/26 교체: KO_CHIP_SETS.SEP → KO_CHIP_SETS.OCT
-    chips: KO_CHIP_SETS.SEP,
+    // 빌드 시점 시즌 키로 자동 선택 (S1-1) — 수동 교체 금지
+    chips: KO_CHIP_SETS[SEASON_KEY],
   },
   en: {
     trigger: "Search",

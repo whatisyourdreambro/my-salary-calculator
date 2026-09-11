@@ -7,13 +7,19 @@
 // 0건이었음(2026-07 감사). 기존 유입을 시즌 페이지로 라우팅 + 신규 페이지 색인 가속.
 // ★시즌마다 목록·제목을 교체할 것 (2026-08-17 감사에서 7월 세트 만료 방치 적발 —
 //   재산세 1기 종료, 하이닉스 PI "발표 예정" 등 만료 문구가 최상위 트래픽에 노출됨).
-// ★교체 방법(2026-09-05 L13a): 세트를 상수로 사전 제작해 두고 아래 ACTIVE_SET
-//   한 줄만 바꾼다 (제목 heading 도 세트에 포함 — 링크와 제목이 따로 만료되지 않게).
+// ★교체 방법(2026-09-05 L13a → S1-1 2026-09-11 자동화): 세트를 상수로 사전 제작해 두고
+//   (제목 heading 도 세트에 포함 — 링크와 제목이 따로 만료되지 않게) 활성 세트는 빌드 시점 키
+//   SEASON_KEY(src/config/seasonKey.generated.ts, prebuild 코드젠)가 SEASONAL_LINKS_BY_KEY 에서
+//   고른다: ~9/25 SEP → 9/26 OCT → 12/1 DEC 자동(KST). ★JAN 은 수동 — 1/2 전 확인 2건 후
+//   src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE = "JAN". 섹션의 data-season-key 를 주간
+//   health-check 가 프로덕션에서 오늘 키와 대조한다(미교체·CF 캐시 잔존 알림).
 // 주의: 광고 슬롯(layout GuideMidAd·페이지 내 CalcResultAd·PageFooterAds)과 겹치지 않는
 // 본문 콘텐츠 영역에만 배치할 것. 광고 위치는 절대 이동 금지.
 
 import Link from "@/components/AppLink";
 import { ArrowRight, Flame } from "lucide-react";
+import type { SeasonKey } from "@/lib/seasonKey";
+import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 export interface SeasonalLinkItem {
   href: string;
@@ -181,9 +187,14 @@ export const SEASONAL_LINKS_JAN: SeasonalLinkSet = {
   ],
 };
 
-// 9/26 교체: SEASONAL_LINKS_SEP → SEASONAL_LINKS_OCT
-// 12/1·1/2 교체 = 한 줄: SEASONAL_LINKS_OCT → SEASONAL_LINKS_DEC → SEASONAL_LINKS_JAN
-const ACTIVE_SET: SeasonalLinkSet = SEASONAL_LINKS_SEP;
+// 활성 세트 = 빌드 시점 키 (S1-1). 9/26 OCT·12/1 DEC 자동, JAN 은 SEASON_KEY_OVERRIDE 로 수동.
+const SEASONAL_LINKS_BY_KEY: Record<SeasonKey, SeasonalLinkSet> = {
+  SEP: SEASONAL_LINKS_SEP,
+  OCT: SEASONAL_LINKS_OCT,
+  DEC: SEASONAL_LINKS_DEC,
+  JAN: SEASONAL_LINKS_JAN,
+};
+const ACTIVE_SET: SeasonalLinkSet = SEASONAL_LINKS_BY_KEY[SEASON_KEY];
 
 interface SeasonalLinksProps {
   /** 페이지별 여백 보정용 (예: page-width 밖에서 쓸 때 px-4 sm:px-6) */
@@ -195,6 +206,7 @@ export default function SeasonalLinks({ className = "" }: SeasonalLinksProps) {
     <section
       className={`max-w-4xl mx-auto mt-12 mb-4 ${className}`}
       data-msy-module="seasonal-links"
+      data-season-key={SEASON_KEY}
     >
       <div className="flex items-center gap-2 mb-4 px-1">
         <Flame className="w-5 h-5 text-electric" aria-hidden="true" />

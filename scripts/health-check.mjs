@@ -4,12 +4,42 @@
 // 사용: node scripts/health-check.mjs   (모두 통과 시 exit 0, 실패 있으면 exit 1)
 // 주의: 브라우저 UA 필수(기본 curl UA는 CF가 403 차단). 배포 직후 몇 분간은 전파 중이라
 //       오탐 가능 — 실패 시 5분 뒤 1회 재확인 후 판단할 것.
+// 시즌 세트(S1-1, 2026-09-11): 프로덕션 /table/2026/annual 의 data-season-key 가 '오늘 키'와
+//       같은지 검사한다(경계표 scripts/season-key.mjs = src/lib/seasonKey.ts 사본, 오버라이드는
+//       TS 파일에서 읽음). 불일치 = 경계일 이후 미배포 또는 CF 캐시 잔존 → 재생성·재배포·퍼지.
+
+import { fileURLToPath } from "node:url";
+import {
+  isJanManualWindow,
+  pickSeasonKey,
+  readSeasonKeyOverride,
+  resolveSeasonKey,
+} from "./season-key.mjs";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const BASE = "https://www.moneysalary.com";
 
-// [경로, 기대 상태코드, 본문 필수 문자열(선택), 설명]
+// ── 시즌 키 기대값 — 오늘(KST) 자동 키, 단 src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE 가 우선 ──
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const NOW = new Date();
+const SEASON_OVERRIDE = readSeasonKeyOverride(ROOT);
+const EXPECTED_SEASON_KEY = resolveSeasonKey(NOW, SEASON_OVERRIDE.override);
+const SEASON_MARKER = `data-season-key="${EXPECTED_SEASON_KEY}"`;
+
+/** 시즌 마커 불일치 시 실제 값과 조치를 덧붙인다 */
+function diagnoseSeasonKey(html) {
+  const m = html.match(/data-season-key="([A-Z]{3})"/);
+  const live = m ? m[1] : "(속성 없음 — S1-1 미배포?)";
+  return (
+    `프로덕션=${live}, 기대=${EXPECTED_SEASON_KEY}` +
+    (SEASON_OVERRIDE.override ? `(오버라이드 ${SEASON_OVERRIDE.override})` : `(자동 ${pickSeasonKey(NOW)})`) +
+    `. 조치: tsx scripts/gen-season-key.ts 실행 후 커밋·재배포(또는 src/lib/seasonKey.ts 의 ` +
+    `SEASON_KEY_OVERRIDE 설정) → 배포 후 CF 캐시 퍼지. 방금 배포했다면 캐시 잔존 — 퍼지 후 재확인.`
+  );
+}
+
+// [경로, 기대 상태코드, 본문 필수 문자열(선택), 설명, 마커 불일치 시 진단 함수(선택, html → string)]
 const CHECKS = [
   // 핵심 정적 페이지
   ["/", 200, "연봉", "홈"],
@@ -48,12 +78,20 @@ const CHECKS = [
   ["/sitemap.xml", 200, "<loc>", "사이트맵"],
   ["/rss.xml", 200, "<rss", "RSS"],
   ["/robots.txt", 200, null, "robots"],
+  // 시즌 세트 만료 감시 (S1-1) — 표 페이지 SeasonalLinks 섹션의 data-season-key == 오늘 키
+  [
+    "/table/2026/annual",
+    200,
+    SEASON_MARKER,
+    `시즌 세트 키 == 오늘 키 ${EXPECTED_SEASON_KEY} (미교체·CF 캐시 잔존 감시)`,
+    diagnoseSeasonKey,
+  ],
 ];
 
 const results = [];
 let failed = 0;
 
-async function check([path, expect, marker, desc]) {
+async function check([path, expect, marker, desc, diagnose]) {
   const url = BASE + path;
   try {
     const res = await fetch(url, {
@@ -68,6 +106,7 @@ async function check([path, expect, marker, desc]) {
       if (!text.includes(marker)) {
         ok = false;
         detail += ` 본문에 "${marker}" 없음`;
+        if (diagnose) detail += ` — ${diagnose(text)}`;
       }
     }
     results.push({ ok, path, desc, detail });
@@ -89,6 +128,20 @@ await Promise.all(
 console.log(`\n=== moneysalary.com 헬스체크 (${CHECKS.length}건) ===\n`);
 for (const r of results) {
   console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.path}  [${r.desc}] ${r.ok ? "" : "— " + r.detail}`);
+}
+// 시즌 키 참고 정보 (PASS/FAIL 과 별개 — 사람이 볼 알림)
+if (SEASON_OVERRIDE.source !== "file") {
+  console.log(
+    `INFO  시즌 오버라이드를 읽지 못함(${SEASON_OVERRIDE.source}) — 자동 키 ${EXPECTED_SEASON_KEY} 로 대조함`,
+  );
+} else if (SEASON_OVERRIDE.override) {
+  console.log(`INFO  시즌 오버라이드 활성: ${SEASON_OVERRIDE.override} (자동 키였다면 ${pickSeasonKey(NOW)})`);
+}
+if (!SEASON_OVERRIDE.override && isJanManualWindow(NOW)) {
+  console.log(
+    "WARN  1/2 이후인데 JAN 수동 전환 전 — 확인 2건(공무원 2027 확정·간소화 오픈일) 후 " +
+      "src/lib/seasonKey.ts SEASON_KEY_OVERRIDE = \"JAN\" → tsx scripts/gen-season-key.ts → 커밋·배포",
+  );
 }
 console.log(`\n결과: ${CHECKS.length - failed}/${CHECKS.length} 통과${failed ? ` — 실패 ${failed}건!` : ""}`);
 process.exit(failed ? 1 : 0);

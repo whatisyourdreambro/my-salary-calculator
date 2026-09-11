@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "tsx scripts/gen-guides-meta.ts && tsx scripts/gen-site-metrics.ts && tsx scripts/gen-salary-amounts.ts && node scripts/ad-audit.mjs",
+    "prebuild": "tsx scripts/gen-guides-meta.ts && tsx scripts/gen-site-metrics.ts && tsx scripts/gen-salary-amounts.ts && tsx scripts/gen-season-key.ts && node scripts/ad-audit.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -14,7 +14,7 @@
     "analyze": "node -e \"process.env.ANALYZE='true'; require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\"",
     "ad-audit": "node scripts/ad-audit.mjs",
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped",
-    "verify:site": "tsx scripts/gen-site-metrics.ts --check && tsx scripts/gen-salary-amounts.ts --check",
+    "verify:site": "tsx scripts/gen-site-metrics.ts --check && tsx scripts/gen-salary-amounts.ts --check && tsx scripts/gen-season-key.ts --check",
     "verify:companies": "tsx scripts/verify-company-data.ts",
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
