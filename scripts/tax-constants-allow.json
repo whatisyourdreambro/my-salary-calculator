@@ -30,6 +30,6 @@
     { "src/lib/guides/lifecycle-deepdive.ts": ["최저시급 10,320"] },
     { "src/lib/searchIndex.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/lib/simpleCalculators/batch2.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
-    { "src/lib/simpleCalculators/enrichments.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] }
+    { "src/lib/simpleCalculators/enrichments.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] }
   ]
 }
