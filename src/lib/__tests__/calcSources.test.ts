@@ -104,6 +104,10 @@ describe("sources merge precedence (index.ts mergeEnrichment)", () => {
 });
 
 describe("every calculator's sources are well-formed", () => {
+  it("source URLs contain no raw whitespace (law.go.kr readable paths must be percent-encoded)", () => {
+    for (const calc of allCalculators) for (const s of calc.sources ?? []) expect(s.url, `${calc.slug}: ${s.url}`).not.toMatch(/\s/);
+  });
+
   it("https, parseable, non-empty title and unique URL within each calculator", () => {
     const violations: string[] = [];
     for (const calc of allCalculators) {

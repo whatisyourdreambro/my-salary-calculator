@@ -1087,7 +1087,7 @@ const UNEMPLOYMENT: CalculatorDef[] = [
          { label: "수급 가능 기간", value: benefitDays, suffix: "일" },
          { label: "월 환산 수급액", value: monthlyBenefit, suffix: "원" },
        ],
-       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일(50세 미만 기준). 50세 이상·장애인은 각 구간 +30일(최대 270일). 실제 수급은 워크넷 수급자격 인정 후 지급됩니다.`,
+       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일(50세 미만 기준). 50세 이상·장애인은 각 구간 +30일(최대 270일). 실제 수급은 고용24(고용센터) 수급자격 인정 후 지급됩니다.`,
      };
    },
    explanation:

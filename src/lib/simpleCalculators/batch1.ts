@@ -743,7 +743,7 @@ const LOAN: CalculatorDef[] = [
  { label: "월 원금", value: Math.round(monthlyPrincipal), suffix: "원" },
  { label: "총 이자", value: Math.round(totalInterest), suffix: "원" },
  ],
- note: "원금균등은 초기 부담 크지만 총 이자가 적음 (원리금균등 대비 약 -20%).",
+ note: "원금균등은 초기 상환 부담이 크지만 총 이자가 적습니다. 원리금균등과의 차이는 금리·기간에 따라 달라집니다.",
  };
  },
  },
