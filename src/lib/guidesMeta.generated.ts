@@ -3055,7 +3055,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1810
+  "contentChars": 1797
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",

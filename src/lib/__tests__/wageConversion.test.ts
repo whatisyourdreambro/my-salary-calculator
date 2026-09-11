@@ -212,12 +212,40 @@ describe("SI-04 — 시급↔월급 환산 209시간 통일", () => {
     }
   });
 
-  it("환산 설명(yearly-to-hourly·weekly-pay)의 공식이 209 ÷ 48 기준으로 바뀌었다", () => {
+  it("환산 계산기 3종의 formula 가 209 ÷ 48 기준을 말하고 4.345 를 쓰지 않는다 (hourly-to-yearly 는 2026-09-12 리뷰로 추가)", () => {
+    const FORMULA_PHRASE: Record<string, string> = {
+      "hourly-to-yearly": "월 환산시간 = 209 × (주 근무시간 + 주휴시간) ÷ 48",
+      "yearly-to-hourly": "209 ÷ 48",
+      "weekly-pay": "209 ÷ 48",
+    };
+    for (const [slug, phrase] of Object.entries(FORMULA_PHRASE)) {
+      const def = getCalculatorBySlug(slug);
+      expect(def?.formula, slug).toContain(phrase);
+      expect(def?.formula, slug).not.toContain("4.345");
+    }
+    const h = getCalculatorBySlug("hourly-to-yearly");
+    expect(h?.formula).toContain("주 40시간 + 주휴 8시간이면 정확히 209시간");
+    expect(h?.formula).toContain("연봉 = 월급 × 12");
+  });
+
+  it("explanation 은 메타 동결(~2026-10-09) 동안 cdf3176 이전 문구 — 209 ÷ 48 ≈ 4.354 설명은 FAQ 가 맡는다 (2026-09-12 리뷰)", () => {
+    // yearly-to-hourly·weekly-pay 의 description 은 60자 미만이라 explanation 앞부분이 meta description 에 이어 붙는다
+    // (seoText.ts). 동결 기간의 byte 단위 일치는 calcDescriptionFreeze.test.ts 가 202쪽 전부를 스냅샷과 대조한다.
     for (const slug of ["yearly-to-hourly", "weekly-pay"]) {
       const def = getCalculatorBySlug(slug);
-      expect(def?.formula, slug).toContain("209 ÷ 48");
-      expect(def?.formula, slug).not.toContain("4.345");
-      expect(def?.explanation, slug).toContain("4.354");
+      expect(def?.description.length, slug).toBeLessThan(60);
+      expect(def?.explanation, slug).toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(def?.explanation, slug).not.toContain("4.354");
+      const faq = (def?.faqs ?? []).map((f) => f.a).join("\n");
+      expect(faq, slug).toContain("209 ÷ 48 ≈ 4.354");
+      expect(faq, slug).toContain("365 ÷ 7 ÷ 12");
     }
+    // hourly-to-yearly: explanation 불변(209시간 기준 서술), FAQ 는 4.345주 = 365 ÷ 7 ÷ 12 이고 계산기는 정확히 209시간
+    const h = getCalculatorBySlug("hourly-to-yearly");
+    expect(h?.explanation).toContain("주 48시간(월 209시간) 기준이 표준입니다");
+    const hFaq = (h?.faqs ?? []).map((f) => f.a).join("\n");
+    expect(hFaq).toContain("365일 ÷ 7일 ÷ 12개월");
+    expect(hFaq).toContain("정확히 209시간(≈ 4.354주)");
+    expect(hFaq).not.toContain("52주를 12개월로 나누면");
   });
 });
