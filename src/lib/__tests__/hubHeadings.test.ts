@@ -22,7 +22,8 @@ const h1Blocks = (src: string) => [...src.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/
 type Case = { file: string; h1Parts: string[]; oldSlogan: string; sloganNowInBody?: boolean };
 
 const KO_CASES: Case[] = [
-  { file: "src/app/qna/page.tsx", h1Parts: ["연봉·세금", "자주 묻는 질문 Q&A"], oldSlogan: "모든 질문과 해답", sloganNowInBody: true },
+  // qna: 슬로건을 <p> 에 옮기자 모바일에서 한 줄이 늘어 아래 광고가 29px 밀렸다(9/12 실측) → 슬로건은 버림(높이 중립 우선).
+  { file: "src/app/qna/page.tsx", h1Parts: ["연봉·세금", "자주 묻는 질문 Q&A"], oldSlogan: "모든 질문과 해답", sloganNowInBody: false },
   { file: "src/app/glossary/page.tsx", h1Parts: ["금융·세금", "용어 사전 {glossaryData.length}개"], oldSlogan: "당신의 돈이 말을 거는 순간", sloganNowInBody: true },
   { file: "src/app/insights/page.tsx", h1Parts: ["연봉·성과급", "데이터 리포트"], oldSlogan: "연봉의 진실", sloganNowInBody: true },
   { file: "src/app/money-check/page.tsx", h1Parts: ["내 돈 체크", "직장인 돈 체크리스트"], oldSlogan: "하나씩 가볍게", sloganNowInBody: true },
@@ -46,7 +47,9 @@ describe("허브 H1 — 키워드 선행, 슬로건은 부제 (S3-5)", () => {
     expect(src).toMatch(/headingPrefix="금융 계산기 모음"/);
     expect(src).toMatch(/headingAccent="2026"/);
     expect(src).toMatch(/headingSuffix=\{`\$\{totalCount\}종`\}/);
-    expect(src).toMatch(/lead=\{`필요한 계산을 한곳에서\. /);
+    // 슬로건을 lead 앞에 붙이면 데스크톱에서 한 줄이 늘어 광고가 32px 밀렸다(9/12 실측) → lead 는 원문 유지.
+    expect(src).not.toMatch(/lead=\{`필요한 계산을 한곳에서/);
+    expect(src).toMatch(/lead=\{`급여, 세금, 대출부터 일상 계산까지 /);
     expect(src).not.toMatch(/headingPrefix="필요한 계산을"/);
     // 형제 허브 3종은 무접촉 (금융·부동산·생활 계산기 N종 모음)
     for (const f of ["finance", "real-estate", "life"]) {

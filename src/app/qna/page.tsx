@@ -65,7 +65,7 @@ export default function QnaPage() {
               </span>
             </h1>
             <p className="text-lg sm:text-xl text-faint-blue leading-relaxed font-light">
-              금융에 대한 모든 질문과 해답. 급여, 세금, 퇴직금부터 재테크까지.
+              급여, 세금, 퇴직금부터 재테크까지.
               <br className="hidden sm:block" />
               알아두면 피가 되고 살이 되는 금융 지식을 명쾌하게 알려드립니다.
             </p>
