@@ -104,10 +104,11 @@ const nextConfig = {
       // /company/[id] 는 Edge 페이지의 permanentRedirect 로 308 중이지만, 그 응답은
       // 캐시 재생 시 Location 을 잃을 수 있다(아래 dedupe 규칙 주석과 같은 함정).
       // 라우팅 이전 단계 규칙으로 항상 정상 308 을 보장한다. compare·simulator 는
-      // 실제 페이지이므로 제외(2세그먼트 /company/compare/[slug] 는 애초에 불일치).
+      // 실제 페이지이므로 제외 — 끝 슬래시 형태(/company/compare/)까지 규칙 자체가 제외한다
+      // (Next 내부 끝슬래시 리다이렉트 순서에 기대지 않음, 2026-09-12 리뷰). 2세그먼트 /company/compare/[slug] 는 애초에 불일치.
       // Edge 페이지는 폴백으로 유지 — 삭제는 마스터플랜 §12-2 ⑩ 결정 후.
       {
-        source: "/company/:id((?!compare$|simulator$)[^/]+)",
+        source: "/company/:id((?!(?:compare|simulator)(?:/|$))[^/]+)",
         destination: "/salary-db/:id",
         permanent: true,
       },

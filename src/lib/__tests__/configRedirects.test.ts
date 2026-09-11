@@ -46,7 +46,7 @@ describe("next.config redirects — S1-5 SEO hygiene", () => {
 
   it("leaves the real /company pages alone", async () => {
     const list = await rules();
-    for (const p of ["/company/compare", "/company/simulator", "/company/compare/samsung-electronics-vs-sk-hynix"]) {
+    for (const p of ["/company/compare", "/company/simulator", "/company/compare/", "/company/simulator/", "/company/compare/samsung-electronics-vs-sk-hynix"]) {
       expect(matchOf(list, p)).toBeNull();
     }
     // 인덱스 /company 자체는 기존 규칙으로 /salary-db 에 간다(의도된 동작, 회귀 방지).
