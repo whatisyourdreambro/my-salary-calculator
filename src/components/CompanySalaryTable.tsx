@@ -2,9 +2,18 @@
 //
 // 회사 페이지 — 직급별 연봉/실수령액 자동 표 (server component, SEO 텍스트)
 // thin content 탈출용: 직급 5단계 × 연봉/세금/실수령 자동 계산.
+//
+// '연 실수령' 셀 → /salary/[amount] hop (2026-09-12 S2-2, 높이 0):
+//   · 행당 링크 1개(이 열만), 쪽당 ≤5, 표에 행·열 추가 없음. 링크는 display:inline 밑줄 텍스트라
+//     48px 행 높이가 그대로다 (탭 타깃은 셀이 아니라 글자 — 접근성 트레이드오프, 의도된 것).
+//   · href 는 정본 salaryReportHref: 정적 집합 범위 밖(임원 3.5억 초과 등)·최근접 금액 오차 2% 초과는
+//     null → 평문 유지. dynamicParams=false 라 클램프해 보내면 틀린 목적지, 1원 어긋나면 404 라서다.
+//   · 클릭 계측은 루트 InternalLinkTracker 가 data-msy-module 로 잡는다 — onClick 금지(서버 컴포넌트).
 
 import type { CompanyProfile, JobLevel } from "@/types/company";
+import Link from "@/components/AppLink";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { salaryReportHref } from "@/lib/salaryRedirect";
 
 /** 사이트 공통 기준 — /salary/[amount]·/table 과 같은 비과세 식대 월 20만원 */
 const NON_TAXABLE_MONTHLY = 200_000;
@@ -62,6 +71,8 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
       signOn: comp.signOn || 0,
       total,
       totalWithStock,
+      // 연 실수령 셀의 /salary 리포트 링크 — 집합 밖·오차 2% 초과는 null(평문)
+      salaryHref: salaryReportHref(total),
       ...net,
     };
   });
@@ -73,7 +84,7 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
   const signOnRows = rows.filter((row) => row.signOn > 0);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section data-msy-module="company-salary-net" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-black text-navy dark:text-canvas-50 mb-2">
           {company.name.ko} 직급별 연봉 · 실수령액 (2026 세법 기준)
@@ -136,7 +147,17 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
                   -{fmt(row.totalDeduction)}원
                 </td>
                 <td className="px-4 py-3.5 text-right font-black text-electric tabular-nums">
-                  {fmt(row.netAnnual)}원
+                  {row.salaryHref ? (
+                    <Link
+                      href={row.salaryHref}
+                      className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                      title={`연봉 ${fmt(row.total)}원 실수령액 상세`}
+                    >
+                      {fmt(row.netAnnual)}원
+                    </Link>
+                  ) : (
+                    `${fmt(row.netAnnual)}원`
+                  )}
                 </td>
                 <td className="px-4 py-3.5 text-right text-muted-blue dark:text-canvas-300 tabular-nums">
                   {fmt(row.netMonthly)}원

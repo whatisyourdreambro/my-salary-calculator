@@ -14,7 +14,7 @@
     "analyze": "node -e \"process.env.ANALYZE='true'; require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\"",
     "ad-audit": "node scripts/ad-audit.mjs",
     "postbuild": "node scripts/indexnow-ping.mjs || echo [indexnow] skipped",
-    "verify:site": "tsx scripts/gen-site-metrics.ts --check && tsx scripts/gen-salary-amounts.ts --check && tsx scripts/gen-season-key.ts --check",
+    "verify:site": "tsx scripts/gen-site-metrics.ts --check && tsx scripts/gen-salary-amounts.ts --check && tsx scripts/gen-season-key.ts --check && tsx scripts/verify-company-salary-hrefs.ts",
     "verify:companies": "tsx scripts/verify-company-data.ts",
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
