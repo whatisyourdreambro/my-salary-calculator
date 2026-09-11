@@ -128,7 +128,8 @@ describe("BonusNextLinks 컴포넌트 — 서버 컴포넌트·계측 속성·�
   });
 
   it("기본 className 이 mt-8 — AdSlot 하단 마진(1.5rem)과 접혀 32px 간격", () => {
-    expect(src).toContain('className = "mt-8"');
+    expect(src).toContain('className={`mt-8 flex flex-wrap gap-2 ${className ?? ""}`.trim()}');
+    expect(src).not.toContain('className = "mt-8"');
   });
 });
 

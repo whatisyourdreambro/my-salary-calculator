@@ -8,7 +8,7 @@
 // - pill 스타일은 삼성 shared.tsx ResultNextLinks 를 **복제**했다(import·이동 금지 —
 //   삼성 4파일은 9/21 이후 배치에서만 접촉).
 // - OfferSlot·제휴 없음(제휴 표면 불변), 클라이언트 JS 없음.
-// - 배치 규칙(2026-08-16): 항상 광고 아래. 기본 mt-8 이 AdSlot 하단 마진(1.5rem)과 접혀
+// - 배치 규칙(2026-08-16): 항상 광고 아래. 고정 mt-8(className 은 추가만, 덮어쓰기 불가 — 2026-09-12 리뷰)이 AdSlot 하단 마진(1.5rem)과 접혀
 //   광고 컨테이너와 32px 간격 — 광고 위에 두거나 CalcResultAd 앞에 끼우지 말 것.
 
 import Link from "@/components/AppLink";
@@ -27,7 +27,7 @@ const PILL_PRIMARY = "min-h-11 text-white bg-electric border-electric hover:bg-e
 const PILL_SECONDARY =
   "text-electric bg-electric-5 border-electric-20 hover:bg-electric hover:text-white";
 
-export default function BonusNextLinks({ slug, className = "mt-8" }: Props) {
+export default function BonusNextLinks({ slug, className }: Props) {
   const links = resolveBonusNextLinks(slug);
   if (links.length === 0) return null;
 
@@ -35,7 +35,7 @@ export default function BonusNextLinks({ slug, className = "mt-8" }: Props) {
     <nav
       aria-label="계산 결과 다음 단계"
       data-msy-module="bonus-next-links"
-      className={`flex flex-wrap gap-2 ${className}`}
+      className={`mt-8 flex flex-wrap gap-2 ${className ?? ""}`.trim()}
     >
       {links.map((l) => (
         <Link
