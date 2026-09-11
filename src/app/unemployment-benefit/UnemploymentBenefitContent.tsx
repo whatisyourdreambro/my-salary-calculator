@@ -17,6 +17,7 @@ import {
  HelpCircle,
 } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
@@ -36,9 +37,8 @@ const INSURANCE_PERIODS = [
  { label: "10년 이상", days: { under50: 240, over50: 270 } },
 ] as const;
 
-const MIN_WAGE_2026 = 10320;
-// 2026년 이직자 기준 상한액 — 매년 고시 확인 필요 (2025년까지 66,000원)
-const DAILY_UPPER_LIMIT = 68100;
+// 상·하한 정본: src/config/unemploymentBenefit.ts (상한 고시값 · 하한 최저시급 × 80% × 1일 소정근로시간)
+const DAILY_UPPER_LIMIT = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER;
 
 interface FaqItem {
  q: string;
@@ -83,7 +83,7 @@ export default function UnemploymentBenefitContent() {
   const dailyWage = wage / 30;
   const dailyBenefit = dailyWage * 0.6;
 
-  const lowerLimit = MIN_WAGE_2026 * 0.8 * hoursPerDay;
+  const lowerLimit = unemploymentDailyLowerBound(hoursPerDay);
   // 2026년: 상한 68,100원 > 하한(8시간 기준 66,048원) — 상·하한 사이 구간이 존재.
   // isFlatRate는 하한≥상한으로 역전되는 해에만 true (과거 2025년까지의 상태).
   const isFlatRate = lowerLimit >= DAILY_UPPER_LIMIT;

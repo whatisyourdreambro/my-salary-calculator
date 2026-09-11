@@ -10,6 +10,7 @@ import {
  earnedIncomeDeduction2026,
  earnedIncomeTaxCredit2026,
 } from "@/lib/taxConstants2026";
+import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 // 이자율 0%(무이자 할부·0% 프로모션·수익률 0 가정)에서도 정의된 값을 내는
 // 연금·복리 공식 정본. 인라인 P·i/(1-(1+i)^-n) 은 i=0 에서 NaN 이 된다.
 import {
@@ -421,7 +422,7 @@ const SALARY: CalculatorDef[] = [
  categoryLabel: "연봉",
  keywords: ["시급 연봉 환산", "시급 계산"],
  fields: [
- { name: "hourly", label: "시급", defaultValue: 10320, suffix: "원" },
+ { name: "hourly", label: "시급", defaultValue: MINIMUM_WAGE_2026.hourly, suffix: "원" },
  { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간", min: 1 },
  ],
  compute: ({ hourly, weekHours }) => {
@@ -509,7 +510,7 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["주휴수당", "주휴수당 계산"],
- fields: [{ name: "hourly", label: "시급", defaultValue: 10320, suffix: "원" }],
+ fields: [{ name: "hourly", label: "시급", defaultValue: MINIMUM_WAGE_2026.hourly, suffix: "원" }],
  compute: ({ hourly }) => {
  const weekly = hourly * 8;
  return {

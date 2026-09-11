@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 import NumberInput from "@/components/NumberInput";
+import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
 }
 
 export default function WeeklyHolidayAllowanceClient() {
-  const [hourlyWage, setHourlyWage] = useState(10320);
+  const [hourlyWage, setHourlyWage] = useState(MINIMUM_WAGE_2026.hourly);
   const [weeklyHours, setWeeklyHours] = useState(40);
 
   const result = useMemo(() => {
@@ -63,7 +64,7 @@ export default function WeeklyHolidayAllowanceClient() {
             aria-label="시급 (원)"
           />
           <div className="flex flex-wrap gap-2 mt-2">
-            {[10320, 12000, 15000, 20000].map((v) => (
+            {[MINIMUM_WAGE_2026.hourly, 12000, 15000, 20000].map((v) => (
               <button
                 key={v}
                 type="button"

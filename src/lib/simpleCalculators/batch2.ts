@@ -3,6 +3,7 @@
 
 import type { CalculatorDef } from "./types";
 import { RENT_CREDIT_2026, calcIncomeTax2026 } from "@/lib/taxConstants2026";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 // 이자율 0% 극한 처리 정본 (batch1 과 동일 사유 — i=0 에서 NaN 방지)
 import { annuityPayment, annuityPrincipal, monthlyRate } from "./finance";
 
@@ -1062,8 +1063,9 @@ const UNEMPLOYMENT: CalculatorDef[] = [
      const dailyAvg = avgMonthly / 30;
      // 구직급여 일액 = 일일 평균임금 × 60% (상한: 68,100원 — 2026년 이직자 기준,
      // 하한: 최저시급 × 80% × 8시간 = 66,048원)
-     const UPPER_LIMIT = 68100; // 매년 고시 확인 필요 (2025년까지 66,000원)
-     const LOWER_LIMIT = Math.round((10320 * 8 * 0.8)); // 2026년 최저시급 10,320원 기준
+     // 상·하한 정본: src/config/unemploymentBenefit.ts (상한 고시값 · 하한 최저시급 × 80% × 8시간)
+     const UPPER_LIMIT = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER;
+     const LOWER_LIMIT = Math.round(unemploymentDailyLowerBound());
      const dailyBenefit = Math.min(UPPER_LIMIT, Math.max(LOWER_LIMIT, Math.round(dailyAvg * 0.6)));
 
      // 소정급여일수 — 현행 고용보험법 별표1 (50세 미만 기준)

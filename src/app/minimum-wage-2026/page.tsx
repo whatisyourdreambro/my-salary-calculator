@@ -3,6 +3,7 @@
 
 import type { Metadata } from "next";
 import { companyCountKo } from "@/config/site";
+import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 import Link from "@/components/AppLink";
 import { TrendingUp, ArrowRight, Calculator, FileText, Calendar } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
@@ -215,7 +216,7 @@ export default function MinimumWage2026Page() {
  {[
  { hourly: 9860, label: "2024 시급" },
  { hourly: 10030, label: "2025 시급" },
- { hourly: 10320, label: "2026 시급 (확정)" },
+ { hourly: MINIMUM_WAGE_2026.hourly, label: "2026 시급 (확정)" },
  { hourly: 11000, label: "시급 11,000원 (참고)" },
  { hourly: 12000, label: "시급 12,000원 (참고)" },
  { hourly: 13000, label: "시급 13,000원 (참고)" },

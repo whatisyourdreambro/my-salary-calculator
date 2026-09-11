@@ -1,6 +1,6 @@
 // src/lib/ordinaryWage.ts
 //
-// 통상임금 계산 — /calc/ordinary-wage 전용 순수 함수 (서버·클라 공용, 의존성 0).
+// 통상임금 계산 — /calc/ordinary-wage 전용 순수 함수 (서버·클라 공용, 의존성은 src/config/minimumWage 의 MONTHLY_HOURS 뿐).
 //
 // 법적 근거 (2026 기준, 전부 원문 확인 2026-08-30):
 // - 대법원 2020다247190 전원합의체(2024-12-19): '고정성' 요건 폐기 — 재직조건부·
@@ -10,6 +10,8 @@
 // - 근로기준법 시행령 제6조: 시간급 = 월 통상임금 ÷ 월 통상임금 산정 기준시간.
 //   주 40h: (40 + 주휴 8) × (365/7/12 = 4.345주) = 208.57 → 209시간.
 // - 근로기준법 제56조: 연장·야간 50% 가산(중복 가능), 휴일 8h 이내 50%·초과 100%.
+
+import { MONTHLY_HOURS } from "@/config/minimumWage";
 
 export interface OrdinaryWageInput {
   /** 월 기본급 (원) */
@@ -41,8 +43,8 @@ export interface OrdinaryWageResult {
   annualLeaveDaily: number;
 }
 
-/** 주 40시간 기준 월 통상임금 산정 기준시간 — 209시간 고정 */
-export const MONTHLY_ORDINARY_HOURS = 209;
+/** 주 40시간 기준 월 통상임금 산정 기준시간 — 209시간 (정본 src/config/minimumWage 의 MONTHLY_HOURS 재수출) */
+export const MONTHLY_ORDINARY_HOURS = MONTHLY_HOURS;
 
 export function computeOrdinaryWage(input: OrdinaryWageInput): OrdinaryWageResult {
   const monthlyOrdinary =

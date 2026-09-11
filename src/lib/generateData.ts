@@ -12,6 +12,7 @@
 //   이 파일의 함수들은 weekly·hourly 표와 /api/salary-table 이 사용한다.
 
 import { calculateSalary2026 } from "./TaxLogic";
+import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 
 export type SalaryData = {
  preTax: number;
@@ -108,13 +109,13 @@ export function generateWeeklyPayTableData2026(): SalaryData[] {
  return generateWeeklyPayTableData();
 }
 
-// 시급 표 구간 — 9,500~30,000원은 500원 단위(+최저시급 10,320원 행 명시), 30,000~50,000원은 1,000원 단위
+// 시급 표 구간 — 9,500~30,000원은 500원 단위(+최저시급 행 명시 — MINIMUM_WAGE_2026.hourly), 30,000~50,000원은 1,000원 단위
 function buildHourlyWageSteps(): number[] {
  const steps: number[] = [];
  for (let hourly = 9500; hourly <= 30000; hourly += 500) {
  steps.push(hourly);
  }
- steps.push(10320); // 2026 최저시급 행
+ steps.push(MINIMUM_WAGE_2026.hourly); // 2026 최저시급 행
  for (let hourly = 31000; hourly <= 50000; hourly += 1000) {
  steps.push(hourly);
  }

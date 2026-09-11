@@ -15,7 +15,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 import { calculateNetSalary2026 } from "@/lib/calculator";
 import type { AdvancedSettings } from "@/app/types";
-import { MINIMUM_WAGE_2027 } from "@/config/minimumWage";
+import { MINIMUM_WAGE_2026, MINIMUM_WAGE_2027 } from "@/config/minimumWage";
 
 // 2027년 적용 최저임금 — 정본은 src/config/minimumWage.ts (위젯 /widget/minimum-wage 와 공유)
 const MONTHLY_2027 = MINIMUM_WAGE_2027.monthly; // 2,236,300원 (주 40시간, 월 209시간)
@@ -226,8 +226,8 @@ export default function MinimumWage2027Page() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { hourly: 10030, label: "2025 시급" },
-              { hourly: 10320, label: "2026 시급 (현재 적용 중)" },
-              { hourly: 10700, label: "2027 시급 (확정 고시)" },
+              { hourly: MINIMUM_WAGE_2026.hourly, label: "2026 시급 (현재 적용 중)" },
+              { hourly: MINIMUM_WAGE_2027.hourly, label: "2027 시급 (확정 고시)" },
               { hourly: 11000, label: "시급 11,000원 (참고)" },
               { hourly: 12000, label: "시급 12,000원 (참고)" },
               { hourly: 13000, label: "시급 13,000원 (참고)" },

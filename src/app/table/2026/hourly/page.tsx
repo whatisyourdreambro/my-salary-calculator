@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { generateHourlyWageTableData2026 } from "@/lib/generateData";
+import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 import { HelpCircle, TrendingUp } from "lucide-react";
 import Link from "@/components/AppLink";
 import HourlyTableInteractive from "./HourlyTableInteractive";
@@ -74,7 +75,7 @@ const structuredData = [
 // 서버 컴포넌트는 데이터 로직에만 집중합니다.
 function HourlyTable2026() {
  const allData = generateHourlyWageTableData2026();
- const highlightRows = [10320, 12000, 15000, 20000];
+ const highlightRows = [MINIMUM_WAGE_2026.hourly, 12000, 15000, 20000];
 
  return (
  <>
