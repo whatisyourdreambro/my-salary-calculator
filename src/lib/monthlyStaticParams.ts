@@ -18,3 +18,16 @@ export function getStaticMonthlyAmounts(): number[] {
   cached = out;
   return out;
 }
+
+/** 임의의 월급을 정적 생성 격자에서 가장 가까운 금액으로 스냅(동률이면 낮은 쪽). 링크 생성용 — dynamicParams=false 라 격자 밖 href 는 404 가 된다. */
+export function nearestStaticMonthlyAmount(monthly: number): number {
+  const amounts = getStaticMonthlyAmounts();
+  if (!Number.isFinite(monthly)) return amounts[0];
+  if (monthly <= MIN_MONTHLY) return MIN_MONTHLY;
+  if (monthly >= MAX_MONTHLY) return MAX_MONTHLY;
+  let best = amounts[0];
+  for (const a of amounts) {
+    if (Math.abs(a - monthly) < Math.abs(best - monthly)) best = a;
+  }
+  return best;
+}

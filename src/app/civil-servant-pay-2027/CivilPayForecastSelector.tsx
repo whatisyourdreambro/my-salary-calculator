@@ -6,6 +6,7 @@ import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { trackGuideCTAClick } from "@/lib/analytics";
 import { RAISE_2027_BUDGET } from "@/lib/civilServantPay";
 import { CIVIL_FORECAST_GRADES, CIVIL_FORECAST_STEPS, getCivilServantForecast } from "@/lib/civilServantForecast";
+import { nearestStaticMonthlyAmount } from "@/lib/monthlyStaticParams";
 
 const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 const percent = (RAISE_2027_BUDGET * 100).toFixed(1);
@@ -14,6 +15,8 @@ export default function CivilPayForecastSelector() {
   const [grade, setGrade] = useState(9);
   const [step, setStep] = useState(1);
   const result = getCivilServantForecast(grade, step);
+  // 예상 월 기본급을 /monthly 정적 격자에 스냅한 실수령 링크(격자 밖 href 는 404).
+  const netHref = result ? `/monthly/${nearestStaticMonthlyAmount(result.predicted2027)}` : "/table/2026/monthly";
   const measurement = useCalculatorMeasurement({
     calcType: "civil-servant-pay-2027",
     valid: result !== null,
@@ -67,7 +70,7 @@ export default function CivilPayForecastSelector() {
         </>}
       </div>
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-3 text-sm font-bold text-electric">
-        <a href="#civil-forecast-table" className="underline underline-offset-4">전체 50개 예상액 비교</a>
+        <Link href={netHref} onClick={event => { if (event.nativeEvent.isTrusted) trackGuideCTAClick(netHref, "civil-forecast-net"); }} className="underline underline-offset-4">예상 기본급 실수령액 보기</Link>
         <Link href="/civil-servant-pay-2026" onClick={event => { if (event.nativeEvent.isTrusted) trackGuideCTAClick("/civil-servant-pay-2026", "civil-forecast-next"); }} className="underline underline-offset-4">2026년 확정표 확인</Link>
       </div>
     </section>
