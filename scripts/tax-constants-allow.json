@@ -1,5 +1,7 @@
 {
-  "note": "요율 리터럴 하드코딩 허용목록 — verify-tax-constants.mjs 가 대조. 표시용 텍스트(설명·FAQ 속 '4.75%' 등)와 아직 정본 미수렴 인라인 계산기를 등재한다. 2027 요율 개정 시 이 목록의 파일 전량을 함께 갱신할 것. 인라인 계산기 4곳(calc/*)의 정본 수렴은 후속 백로그 (docs/inspection-2026-08.md). CompanySalaryTable·tools/finance/bonus 는 2026-09-06 전수검사에서 정본(TaxLogic·earnedIncomeTaxCredit2026)으로 수렴 완료해 목록에서 제거했다.",
+  "note": "요율·최저임금·실업급여 리터럴 하드코딩 허용목록 — verify-tax-constants.mjs 가 대조. 표시용 텍스트(설명·FAQ 속 '4.75%'·'10,320원' 등)와 아직 정본 미수렴 인라인 계산기를 등재한다. 2027 요율·최저임금 개정 시 이 목록의 파일 전량을 함께 갱신할 것. 인라인 계산기 4곳(calc/*)의 정본 수렴은 후속 백로그 (docs/inspection-2026-08.md). CompanySalaryTable·tools/finance/bonus 는 2026-09-06 전수검사에서 정본(TaxLogic·earnedIncomeTaxCredit2026)으로 수렴 완료해 목록에서 제거했다.",
+  "note_format": "항목은 두 형식을 섞어 쓴다. 문자열 = 모든 패턴 허용(구 형식, 요율 8곳). 객체 { 경로: [패턴명…] } = 나열한 패턴만 허용(2026-09-12 S2-1 SI-08 부터). 패턴명은 verify-tax-constants.mjs 의 PATTERNS name 과 일치해야 한다.",
+  "note_minimum_wage": "2026-09-12 S2-1 SI-08: 아래 객체 항목 20곳은 전부 표시용 텍스트(메타 설명·FAQ·본문·용어사전·검색 인덱스·가이드 본문)만 갖는다 — 표시 텍스트는 허용하되, 계산·기본값·프리셋은 반드시 src/config/minimumWage.ts(MINIMUM_WAGE_2026·MONTHLY_HOURS)·src/config/unemploymentBenefit.ts(UNEMPLOYMENT_BENEFIT_2026·unemploymentDailyLowerBound)를 import 할 것. 목록은 파일 단위라 같은 파일 안의 계산 리터럴 회귀는 잡지 못하므로, 이 파일들의 계산 라인은 src/lib/__tests__/wageConversion.test.ts 의 소스 스캔이 별도로 지킨다.",
   "files": [
     "src/app/calc/holiday-bonus/Client.tsx",
     "src/app/calc/incentive-tax/Client.tsx",
@@ -8,6 +10,26 @@
     "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx",
     "src/app/salary-raise-2026/Client.tsx",
     "src/app/social-insurance-rates-2026/page.tsx",
-    "src/app/tools/finance/bonus/page.tsx"
+    "src/app/tools/finance/bonus/page.tsx",
+    { "src/app/calc/page.tsx": ["최저시급 10,320"] },
+    { "src/app/minimum-wage-2026/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/minimum-wage-2027/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/table/2026/hourly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/table/2026/monthly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/table/2026/weekly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/table/2027/hourly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/app/unemployment-benefit/UnemploymentBenefitContent.tsx": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
+    { "src/app/unemployment-benefit/page.tsx": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
+    { "src/app/weekly-holiday-allowance-2026/WeeklyHolidayAllowanceClient.tsx": ["최저시급 10,320"] },
+    { "src/app/weekly-holiday-allowance-2026/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/data/glossaryData.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 하한 66,048"] },
+    { "src/data/qnaData.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
+    { "src/lib/guides/hot-keywords-deepdive.ts": ["실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
+    { "src/lib/guides/legacy-rewrite-1.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/lib/guides/legacy-rewrite-2.ts": ["최저시급 10,320"] },
+    { "src/lib/guides/lifecycle-deepdive.ts": ["최저시급 10,320"] },
+    { "src/lib/searchIndex.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] },
+    { "src/lib/simpleCalculators/batch2.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
+    { "src/lib/simpleCalculators/enrichments.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] }
   ]
 }
