@@ -14,6 +14,10 @@
 //    /chuseok-bonus-2026(헤더+푸터)·/social-insurance-rates-2027(헤더)도 같은 날 등재 — 위 year-end-tax-2027 줄은 해소됨
 //  ※ /civil-servant-pay-2026 은 2026-08-30 운영자 지시로 헤더 연봉DB 메뉴에 노출됨
 //    (navConfig.ts 봉급표 버티컬 블록 — 군인·교사·경찰·소방과 함께).
+//  ※ S3-5 (2026-09-12, docs/next-upgrade-plan-2026-09-11.md §4 NAV-11): 헤더 시즌 드롭다운은
+//    키별 ≤ HEADER_SEASON_MAX(12) — 종전 38(SEP)·성과급 메뉴 중복 10·비시즌 2. SEASON_REST 의
+//    header 는 상시 5종만 남기고, 내려온 항목은 푸터(order 19+)나 다른 메뉴로 도달한다.
+//    게이트: src/lib/__tests__/seasonMenu.test.ts (4키 전부 — S1-1 자동 전환이 구 구조를 되살리지 않도록).
 import { bonusCalcCountKo, companyCountKo } from "./site";
 import type { SeasonKey } from "@/lib/seasonKey";
 import { SEASON_KEY } from "@/config/seasonKey.generated";
@@ -102,8 +106,8 @@ export const SEASON_TOP_OCT: SeasonLink[] = [
 ];
 
 // 12월 연말정산 마감 세트 — 12/1 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
-// 1순위 허브, 2순위 삼성 TAI(하반기 발표 전 → 라벨만·수치 금지, SEASON_REST 의 header+footer 를
-// 상단으로 승격 — footer 를 빼면 dedup 으로 푸터 링크가 사라지므로 반드시 동반), 공제 3종 SEASON,
+// 1순위 허브, 2순위 삼성 TAI(하반기 발표 전 → 라벨만·수치 금지, SEASON_REST 의 삼성 항목(footer order 3,
+// 헤더는 S3-5 로 제외)을 상단으로 승격 — footer 를 빼면 dedup 으로 푸터 링크가 사라지므로 반드시 동반), 공제 3종 SEASON,
 // 12.31 체크리스트. 공무원 2027·4대보험 2027·재산세 푸터는 OCT 세트 그대로 이월.
 export const SEASON_TOP_DEC: SeasonLink[] = [
   {
@@ -190,7 +194,7 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
 //     src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE = "JAN" → tsx scripts/gen-season-key.ts → 커밋.
 // 경계일 이후 첫 배포에 반영되고(배포 후 CF 캐시 퍼지는 운영자), 커밋된 키가 만료되면
 // verify:site 가 WARNING, 주간 health-check 가 프로덕션 data-season-key 로 알린다.
-const SEASON_TOP_BY_KEY: Record<SeasonKey, SeasonLink[]> = {
+export const SEASON_TOP_BY_KEY: Record<SeasonKey, SeasonLink[]> = {
   SEP: SEASON_TOP_SEP,
   OCT: SEASON_TOP_OCT,
   DEC: SEASON_TOP_DEC,
@@ -199,7 +203,14 @@ const SEASON_TOP_BY_KEY: Record<SeasonKey, SeasonLink[]> = {
 const SEASON_TOP: SeasonLink[] = SEASON_TOP_BY_KEY[SEASON_KEY];
 
 // ── 공통 목록 — 시즌과 무관하게 유지 (상단 블록과 href 가 겹치면 상단이 우선) ──
-const SEASON_REST: SeasonLink[] = [
+// S3-5 (2026-09-12): 헤더 상시 항목은 아래 5종만(연중 유효·성과급/계산기 메뉴와 미중복). 나머지는
+// header 를 떼어 푸터 또는 다른 진입로(navConfig 성과급·계산기 메뉴, hubs, seasonalCalendar,
+// yearEndTaxHub)로만 도달한다 — 도달성은 seasonMenu.test 가 4키 전부 검사한다.
+//  - 표면 없는 { href } 항목은 삭제하지 않는다: 시즌 재진입 시 header 를 되살릴 자리이자
+//    도달성 검사 대상 목록이다. 되살릴 때는 키별 ≤ HEADER_SEASON_MAX 를 넘지 말 것.
+//  - 푸터 order 0~18 은 종전 값 그대로(재번호 금지), 19+ 는 이번에 헤더에서 내려온 항목.
+export const SEASON_REST: SeasonLink[] = [
+  // ── 헤더 상시 5종 (배열 순서 = 헤더 순서) ─────────────────────────────
   {
     href: "/minimum-wage-2027",
     header: { name: "2027 최저임금 10,700원 확정", description: "+3.7%·월 223.6만원 환산", badge: "HOT" },
@@ -208,10 +219,7 @@ const SEASON_REST: SeasonLink[] = [
   {
     href: "/tax-reform-2026",
     header: { name: "2026 세법개정안 (8·3 확정 발표)", description: "발표 내용·직장인 영향 정리", badge: "HOT" },
-  },
-  {
-    href: "/auto-tax-2026",
-    header: { name: "6·12월 자동차세 계산기", description: "배기량·차령·연납 5% 공제" },
+    footer: { name: "2026 세법개정안", order: 19 },
   },
   {
     href: "/health-insurance-2026",
@@ -219,153 +227,82 @@ const SEASON_REST: SeasonLink[] = [
     footer: { name: "건강보험 2026", order: 10 },
   },
   {
-    href: "/year-end-tax-settlement-2026",
-    header: { name: "12월 연말정산·성과급", description: "근로자 절세 전략" },
-  },
-  {
-    href: "/credit-card-deduction-2026",
-    header: { name: "신용카드 소득공제 계산기", description: "결제수단별 공제율·한도" },
-  },
-  {
-    href: "/rent-tax-credit-2026",
-    header: { name: "월세 세액공제 계산기", description: "연 1,000만 한도 최대 170만" },
-  },
-  {
-    href: "/medical-tax-credit-2026",
-    header: { name: "의료비 세액공제 계산기", description: "난임 30%·무한도 대상 구분" },
-  },
-  // R2 (2026-08-31) — 연말정산 공제 4축 완성 + 맞벌이 + 11월 피부양자 시즌
-  {
-    href: "/donation-tax-credit-2026",
-    header: { name: "기부금 세액공제 계산기", description: "정치자금·고향사랑 전액공제·한도", badge: "NEW" },
-  },
-  {
-    href: "/calc/dual-income-year-end",
-    header: { name: "맞벌이 연말정산 몰아주기", description: "자녀·의료비 최적 배분 시뮬", badge: "NEW" },
-  },
-  {
-    href: "/health-insurance-dependent",
-    header: { name: "건보 피부양자 자격 판정기", description: "11월 재산정 — 탈락 기준 확인", badge: "NEW" },
-  },
-  {
     href: "/new-employee-salary-2026",
     header: { name: "신입 초봉 TOP 50", description: `회사 ${companyCountKo} 영끌 인덱스` },
     footer: { name: "신입 초봉 TOP 50", order: 7 },
   },
-  {
-    href: "/minimum-wage-2026",
-    header: { name: "최저임금 2026", description: "시급·월급·연봉 환산표" },
-  },
-  {
-    href: "/health-checkup-2026",
-    header: { name: "건강검진 2026", description: "대상자·항목·비용·예약" },
-  },
-  {
-    href: "/year-end-tax-checklist",
-    header: { name: "연말정산 체크리스트", description: "12.31 마감 점검" },
-  },
-  {
-    href: "/tax-rates-2026",
-    header: { name: "2026 세율표", description: "소득세 구간 한눈" },
-  },
-  {
-    href: "/social-insurance-rates-2026",
-    header: { name: "2026 4대보험 요율", description: "최신 요율표" },
-  },
-  {
-    href: "/tax-changes-2026",
-    header: { name: "2026 세법 변경사항", description: "올해 핵심 변화" },
-  },
-  {
-    href: "/retirement-pension-2026",
-    header: { name: "퇴직연금 (DB·DC·IRP)", description: "유형별 비교" },
-  },
-  {
-    href: "/samsung-negotiation-2026",
-    header: { name: "삼성 신입 연봉 협상", description: "반도체 대기업 가이드" },
-  },
-  {
-    href: "/calc/samsung-bonus",
-    header: { name: "삼성 성과급 시뮬레이터", description: "OPI + TAI 사업부별 분배", badge: "HOT" },
-    footer: { name: "삼성 성과급 계산기", order: 3 },
-  },
-  {
-    href: "/calc/sk-hynix-bonus",
-    header: { name: "SK하이닉스 PS·PI 계산기", description: "8/25 잠정합의 부결·재협상 중 — 신구 체계 비교", badge: "HOT" },
-    footer: { name: "SK하이닉스 성과급 계산기", order: 4 },
-  },
-  {
-    // 현대차 2026 임협 8/31 가결 — 페이지 수치 동기화 완료 (운영자 승인 2026-09-03)
-    href: "/calc/hyundai-bonus",
-    header: { name: "현대차 성과급 계산기", description: "2026 타결 400%+1,270만+주식 15주 세후", badge: "HOT" },
-  },
-  {
-    href: "/calc/kia-bonus",
-    header: { name: "기아 성과급 계산기", description: "2026 타결 400%+1,270만+자사주 47주" },
-  },
-  {
-    href: "/calc/lg-energy-bonus",
-    header: { name: "LG에너지솔루션 성과급", description: "배터리 사이클별 5가지 시나리오" },
-  },
-  {
-    href: "/calc/hd-hyundai-bonus",
-    header: { name: "HD현대중공업 성과급", description: "조선 슈퍼사이클 + 노조 영업이익 30%" },
-  },
-  {
-    href: "/calc/naver-bonus",
-    header: { name: "네이버 성과급·RSU", description: "정기 PI + 자사주 RSU 465억" },
-  },
-  {
-    href: "/calc/kakao-bonus",
-    header: { name: "카카오 성과급·RSU", description: "RSU 47만주 + 격려금 100만" },
-  },
-  {
-    href: "/calc/celltrion-bonus",
-    header: { name: "1월 셀트리온 성과급", description: "연봉의 최대 50% — 1월 선지급" },
-  },
-  {
-    href: "/calc/hyundai-rotem-bonus",
-    header: { name: "12월 현대로템 성과급", description: "임단협 450%+1,620만 타결안" },
-  },
-  // ── 비시즌 항목 — 하단 배치 (전면 최적화, 운영자 지시 2026-09-02). 해당 시즌 진입 시 상단으로 이동.
-  {
-    // /year-end-tax-2026 은 실제로는 종합소득세(5월 종소세) 페이지 — 표면별 라벨 상이 이력 보존
-    href: "/year-end-tax-2026",
-    header: { name: "5월 종합소득세 신고", description: "프리랜서·N잡러" },
-    footer: { name: "종합소득세 2026", order: 18 },
-  },
-  {
-    href: "/new-employee-2026",
-    header: { name: "3월 신입 연봉 협상", description: "첫 협상 가이드" },
-  },
-  // ── 푸터 전용 (헤더 시즌 드롭다운 미노출) ──────────────────────────
-  {
-    href: "/calc/bonus-calculators",
-    footer: { name: `성과급 계산기 ${bonusCalcCountKo}`, order: 2 },
-  },
-  { href: "/calc/january-bonus", footer: { name: "13월의 월급", order: 8 } },
-  { href: "/calc/year-end-bonus", footer: { name: "성과급 세금", order: 9 } },
-  // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
-  { href: "/civil-servant-pay-2026", footer: { name: "공무원 봉급표 2026", order: 11 } },
-  { href: "/year-end-tax-mid-resign", footer: { name: "중도퇴사 연말정산", order: 12 } },
-  // R2 W3 (2026-08-31) — 8/30 신설 시즌 페이지 링크망 편입 (운영자 승인 R2 실행분).
-  // pension-hike는 2027-01 시행 확정 이벤트(12~1월 뉴스 피크) — 헤더+푸터.
+  // R2 W3 (2026-08-31) — pension-hike는 2027-01 시행 확정 이벤트(12~1월 뉴스 피크) — 헤더+푸터.
   {
     href: "/calc/pension-hike-2027",
     header: { name: "국민연금 인상 계산기 (2027)", description: "요율 9.5→10% — 월급에서 더 빠지는 금액", badge: "NEW" },
     footer: { name: "국민연금 인상 계산기", order: 13 },
   },
+  // ── 푸터 노출 (헤더 미노출, footer.order 순) ────────────────────────────
+  {
+    href: "/calc/bonus-calculators",
+    footer: { name: `성과급 계산기 ${bonusCalcCountKo}`, order: 2 },
+  },
+  // 삼성·SK 는 DEC/JAN 상단 블록이 이 footer 를 승격해 쓴다 — footer 를 빼면 dedup 으로 푸터 링크가 사라진다.
+  { href: "/calc/samsung-bonus", footer: { name: "삼성 성과급 계산기", order: 3 } },
+  { href: "/calc/sk-hynix-bonus", footer: { name: "SK하이닉스 성과급 계산기", order: 4 } },
+  { href: "/calc/january-bonus", footer: { name: "13월의 월급", order: 8 } },
+  { href: "/calc/year-end-bonus", footer: { name: "성과급 세금", order: 9 } },
+  // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
+  { href: "/civil-servant-pay-2026", footer: { name: "공무원 봉급표 2026", order: 11 } },
+  { href: "/year-end-tax-mid-resign", footer: { name: "중도퇴사 연말정산", order: 12 } },
   // 봉급표 버티컬 4종 — 헤더는 연봉DB 메뉴(navConfig)에 기노출이라 푸터만.
   { href: "/military-pay-2026", footer: { name: "군인 월급 2026", order: 14 } },
   { href: "/teacher-pay-2026", footer: { name: "교사 호봉표 2026", order: 15 } },
   { href: "/police-pay-2026", footer: { name: "경찰 봉급표 2026", order: 16 } },
   { href: "/firefighter-pay-2026", footer: { name: "소방관 봉급표 2026", order: 17 } },
+  // /year-end-tax-2026 은 실제로는 종합소득세(5월 종소세) 페이지 — 표면별 라벨 상이 이력 보존
+  { href: "/year-end-tax-2026", footer: { name: "종합소득세 2026", order: 18 } },
+  // S3-5 (2026-09-12) 헤더에서 내려온 항목 — 다른 진입로가 없어 푸터 신설 (order 19+)
+  { href: "/year-end-tax-settlement-2026", footer: { name: "연말정산·성과급 절세 2026", order: 20 } },
+  { href: "/year-end-tax-checklist", footer: { name: "연말정산 체크리스트", order: 21 } },
+  { href: "/new-employee-2026", footer: { name: "신입 연봉 협상 2026", order: 22 } },
+  { href: "/health-insurance-dependent", footer: { name: "건보 피부양자 판정기", order: 23 } },
+  { href: "/donation-tax-credit-2026", footer: { name: "기부금 세액공제 계산기", order: 24 } },
+  { href: "/calc/dual-income-year-end", footer: { name: "맞벌이 연말정산 몰아주기", order: 25 } },
+  { href: "/minimum-wage-2026", footer: { name: "최저임금 2026", order: 26 } },
+  { href: "/social-insurance-rates-2026", footer: { name: "2026 4대보험 요율", order: 27 } },
+  { href: "/retirement-pension-2026", footer: { name: "퇴직연금 DB·DC·IRP", order: 28 } },
+  // ── 헤더·푸터 미노출 — 다른 진입로로 도달 (href 만 보존, 시즌 재진입 시 header 부활 자리) ──
+  // hubs.ts / seasonalCalendar.ts 경유
+  { href: "/auto-tax-2026" },
+  { href: "/health-checkup-2026" },
+  { href: "/tax-rates-2026" },
+  { href: "/tax-changes-2026" },
+  { href: "/samsung-negotiation-2026" },
+  // navConfig 계산기 메뉴 경유 (+ OCT/DEC/JAN 상단 블록이 시즌 배지로 승격)
+  { href: "/credit-card-deduction-2026" },
+  { href: "/rent-tax-credit-2026" },
+  { href: "/medical-tax-credit-2026" },
+  // navConfig 성과급 메뉴 경유 — 시즌 드롭다운과 10건 중복이던 회사별 계산기 (NAV-11)
+  { href: "/calc/hyundai-bonus" },
+  { href: "/calc/kia-bonus" },
+  { href: "/calc/lg-energy-bonus" },
+  { href: "/calc/hd-hyundai-bonus" },
+  { href: "/calc/naver-bonus" },
+  { href: "/calc/kakao-bonus" },
+  { href: "/calc/celltrion-bonus" },
+  { href: "/calc/hyundai-rotem-bonus" },
 ];
 
-/** 시즌 상단 블록 + 공통 목록. href 중복은 앞(상단 블록) 항목만 남긴다. */
-export const seasonLinks: SeasonLink[] = [...SEASON_TOP, ...SEASON_REST].filter(
-  (l, i, arr) => arr.findIndex((x) => x.href === l.href) === i
-);
+/** 헤더 시즌 드롭다운 상한 — 키별 header 항목 수 (S3-5, 2026-09-12). seasonMenu.test 가 4키 전부 검사. */
+export const HEADER_SEASON_MAX = 12;
+
+/** href 중복은 앞(상단 블록) 항목만 남긴다. */
+const dedupByHref = (links: SeasonLink[]): SeasonLink[] =>
+  links.filter((l, i, arr) => arr.findIndex((x) => x.href === l.href) === i);
+
+/** 임의 키의 시즌 링크 조립 — seasonLinks 와 같은 dedup. 테스트·검증 스크립트용 (활성 키는 seasonLinks). */
+export function buildSeasonLinks(key: SeasonKey): SeasonLink[] {
+  return dedupByHref([...SEASON_TOP_BY_KEY[key], ...SEASON_REST]);
+}
+
+/** 활성 키의 시즌 상단 블록 + 공통 목록. */
+export const seasonLinks: SeasonLink[] = dedupByHref([...SEASON_TOP, ...SEASON_REST]);
 
 /** 헤더 시즌 드롭다운 항목 — navConfig 소비용 (배열 순서 유지) */
 export const headerSeasonItems: {
