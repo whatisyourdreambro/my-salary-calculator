@@ -6,15 +6,24 @@
 //   (b) 쪽당 1~5건 — 신입 총보상은 companyEntryAmounts 로 집합에 등재되므로 항상 링크(회귀 가드),
 //   (c) 클램프 누출 0,
 //   (d)(e) 소스 스캔 — 높이 0 인라인 링크·AppLink·모듈 속성·로컬 스냅 복제 2벌 제거
-// 를 고정한다. 소스 스캔은 internalLinkModules.test.ts 와 같은 방식(jsdom 없음).
+//   (f) title — 스냅된 링크(≤2%, 1,890건 중 112건)는 행 총액이 아니라 href 금액을 '구간'으로 말한다 (2026-09-12 리뷰)
+// 를 고정한다. 소스 스캔은 internalLinkModules.test.ts 와 같은 방식(jsdom 없음); (f) 는 react-dom/server 로 렌더한다.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { createElement, type ReactNode } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
 import { allCompanies } from "@/data/companies";
 import { getStaticSalaryAmounts } from "@/lib/salaryStaticParams";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
 import { SALARY_HREF_MAX_GAP, salaryReportHref } from "@/lib/salaryRedirect";
 import type { CompanyProfile, JobLevel } from "@/types/company";
+
+// (f) 렌더용 — next/link 대신 평범한 <a> (속성 순서: href, class, title)
+vi.mock("@/components/AppLink", () => ({
+  default: ({ children, ...props }: { children: ReactNode }) => createElement("a", props, children),
+}));
+import CompanySalaryTable from "@/components/CompanySalaryTable";
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
 const RANKS: JobLevel[] = ["entry", "junior", "senior", "lead", "executive"];
@@ -124,5 +133,52 @@ describe("CompanySalaryTable 소스 — 높이 0 링크·계측 속성", () => {
       expect(s, file).toMatch(/import \{[^}]*salaryReportHref\w*[^}]*\} from "@\/lib\/salaryRedirect";/);
     }
     expect(read("src/lib/salaryRedirect.ts")).toContain("export function salaryReportHref(");
+  });
+});
+
+describe("CompanySalaryTable title — 스냅된 링크는 href 금액을 '구간'으로 말한다 (2026-09-12 리뷰)", () => {
+  const src = read("src/components/CompanySalaryTable.tsx");
+  const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
+  const LINK_RE = /<a href="\/salary\/(\d+)" class="[^"]*" title="연봉 ([\d,]+)원( 구간)? 실수령액 상세">([\d,]+)원<\/a>/g;
+
+  it("(f) 소스: 정확 링크는 행 총액, 스냅 링크는 href 금액 + 구간 — 링크 텍스트·셀 클래스는 그대로", () => {
+    expect(src).toContain("`연봉 ${fmt(salaryHrefAmount)}원 구간 실수령액 상세`");
+    expect(src).toContain("`연봉 ${fmt(total)}원 실수령액 상세`");
+    expect(src).toContain("title={row.salaryHrefTitle}");
+    expect(src).not.toContain("title={`연봉 ${fmt(row.total)}원 실수령액 상세`}");
+    // 스냅 금액은 href 에서 파생 — 두 번째 salaryReportHref 호출이나 별도 스냅 함수를 두지 않는다
+    expect(src.match(/salaryReportHref\(/g)?.length).toBe(1);
+    expect(src).toContain('salaryHref.slice("/salary/".length)');
+  });
+
+  it("(f) 렌더(회사 전수): title 금액 = href 금액이고, 구간 표기 ⇔ href 금액 ≠ 행 총액", () => {
+    let snappedLinks = 0;
+    let exactLinks = 0;
+    for (const c of allCompanies) {
+      const html = renderToStaticMarkup(createElement(CompanySalaryTable, { company: c }));
+      const links = [...html.matchAll(LINK_RE)];
+      const expected = RANKS.map((rank) => ({ total: rowTotal(c, rank), href: salaryReportHref(rowTotal(c, rank)) })).filter(
+        (r) => r.href !== null,
+      );
+      expect(links.length, `${c.id}: 링크 수`).toBe(expected.length);
+      links.forEach((m, i) => {
+        const hrefAmount = Number(m[1]);
+        const titleAmount = Number(m[2].replace(/,/g, ""));
+        const isRange = m[3] !== undefined;
+        const { total, href } = expected[i];
+        expect(`/salary/${hrefAmount}`, `${c.id}: href 순서`).toBe(href);
+        expect(titleAmount, `${c.id}: title 금액은 href 금액`).toBe(hrefAmount);
+        expect(isRange, `${c.id}: 구간 표기 ⇔ 스냅 (${total} → ${hrefAmount})`).toBe(hrefAmount !== total);
+        if (isRange) snappedLinks++;
+        else {
+          exactLinks++;
+          expect(m[2]).toBe(fmt(total));
+        }
+      });
+    }
+    // 리뷰 시점 실측: 1,890 링크 중 112건 스냅. 데이터가 바뀌어도 두 경로가 모두 살아 있어야 테스트가 공허하지 않다
+    expect(snappedLinks).toBeGreaterThan(0);
+    expect(exactLinks).toBeGreaterThan(snappedLinks);
+    console.log(`[companySalaryNetHop] title 검증 — 정확 ${exactLinks} · 구간(스냅) ${snappedLinks}`);
   });
 });

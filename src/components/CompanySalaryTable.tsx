@@ -59,6 +59,15 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
     const stockValue = comp.stock?.amount || 0;
     const totalWithStock = total + stockValue;
     const net = estimateNetSalary(total);
+    // 연 실수령 셀의 /salary 리포트 링크 — 집합 밖·오차 2% 초과는 null(평문)
+    const salaryHref = salaryReportHref(total);
+    // href 가 실제로 가리키는 정적 금액(최근접 스냅, 오차 ≤2%). 총액과 다르면 title 에 '구간'으로 밝힌다 —
+    // 1,890 링크 중 112건이 스냅인데 title 은 행 총액을 정확한 목적지처럼 말했다 (2026-09-12 리뷰 지적).
+    const salaryHrefAmount = salaryHref ? Number(salaryHref.slice("/salary/".length)) : null;
+    const salaryHrefTitle =
+      salaryHrefAmount !== null && salaryHrefAmount !== total
+        ? `연봉 ${fmt(salaryHrefAmount)}원 구간 실수령액 상세`
+        : `연봉 ${fmt(total)}원 실수령액 상세`;
 
     return {
       rank,
@@ -71,8 +80,8 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
       signOn: comp.signOn || 0,
       total,
       totalWithStock,
-      // 연 실수령 셀의 /salary 리포트 링크 — 집합 밖·오차 2% 초과는 null(평문)
-      salaryHref: salaryReportHref(total),
+      salaryHref,
+      salaryHrefTitle,
       ...net,
     };
   });
@@ -151,7 +160,7 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
                     <Link
                       href={row.salaryHref}
                       className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                      title={`연봉 ${fmt(row.total)}원 실수령액 상세`}
+                      title={row.salaryHrefTitle}
                     >
                       {fmt(row.netAnnual)}원
                     </Link>
