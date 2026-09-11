@@ -21,6 +21,9 @@ const MODULES: Record<string, string[]> = {
   "src/components/YearEndTaxCluster.tsx": ["year-end-cluster"],
   "src/components/SiblingHubsNav.tsx": ["sibling-hubs"],
   "src/components/ListedSalaryBandTable.tsx": ["listed-band"],
+  // 2026-09-11 S1-0/S1-2: 계산기 결과 핀·성과급 22쪽 결과 직하(광고 아래) 링크
+  "src/components/SimpleCalculatorView.tsx": ["calc-next-pins"],
+  "src/components/BonusNextLinks.tsx": ["bonus-next-links"],
   "src/app/job/[slug]/page.tsx": [
     "job-related-calc",
     "job-companies",
