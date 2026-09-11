@@ -131,9 +131,12 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  //       mortgage-monthly-quick 의 /home-loan) — NextActions 는 채울 예비 항목이 없다.
  //   둘 다 광고(GuideMid·InArticle·CoupangBanner·HomeTopAd) 위 블록의 항목 수를 줄여야만 풀리므로 2026-08-16
  //   "광고 위 높이 불변" 규칙상 손대지 않는다. 잔여 목록은 nextLinkDedup.test.ts 가 표본으로 고정한다.
+ // 카테고리 매핑이 없어 NextActions 를 렌더하지 않는 쪽(생활·사업·가족·커리어·환율)에서는 nextActionHrefs 의
+ // salary 폴백 3종(주담대·회사연봉·연말정산)을 제외하지 않는다 — 화면에 없는 블록의 href 를 빼면 RelatedCalculators
+ // 가 이유 없이 폴백 항목으로 채워졌다 (2026-09-12 리뷰 지적; nextLinkDedup.test.ts calcPage 가 같은 가드를 미러링).
  const relatedExclude = [
  ...calcPinHrefs(clientCalc),
- ...nextActionHrefs(nextActionCategory, `/calc/${calc.slug}`),
+ ...(nextActionCategory ? nextActionHrefs(nextActionCategory, `/calc/${calc.slug}`) : []),
  ];
 
  return (

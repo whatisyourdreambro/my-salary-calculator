@@ -8,12 +8,16 @@
 //  3) /salary 인근 연봉 격자 링크가 다른 블록과 겹치지 않음
 //  4) NextActions.tsx buildActions ↔ nextActionLinks.nextActionHrefs 가 전 카테고리에서 같은 href (드리프트 차단)
 //  5) 광고 위 블록끼리(결과 핀 ∪ 관련 카드 ↔ NextActions)의 잔여 중복은 표본별로 고정 — 늘거나 줄면 알아채도록
+//  6) /share/[data] 도 exclude 를 넘기고(누락분), /calc 의 NextActions 미렌더 카테고리는 salary 폴백 3종을 제외하지
+//     않는다 — 화면에 없는 블록의 href 를 빼면 폴백 채움이 이유 없이 일어났다 (2026-09-12 리뷰 지적 2건)
 // jsdom 없음 — 렌더 대신 페이지가 쓰는 같은 순수 함수로 각 블록의 href 를 재구성한다.
 // ★ 남겨둔 중복(승인 게이트): (a) /calc 결과 핀(최대 3)은 관련 카드 그리드의 부분집합. (b) /calc 일부에서
 //   NextActions 3종이 결과 핀·카드와 겹친다(예: cagr-quick 의 복리, mortgage-monthly-quick 의 /home-loan).
 //   두 블록 다 광고(GuideMid·InArticle·CoupangBanner·HomeTopAd) 위에 있고 NextActions 는 채울 예비 항목이
 //   없어 "제외 + 채움"이 불가능하다 — 줄이면 광고가 올라오므로 운영자 승인 전까지 손대지 않는다.
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 // NextActions.tsx 를 node 에서 import 하기 위한 최소 스텁 (링크·오퍼 슬롯은 이 테스트와 무관)
@@ -88,6 +92,17 @@ function homePage(): PageSample {
   };
 }
 
+/** /share/[data]: NextActions(salary) → RelatedCalculators(currentPath="/") — 홈과 같은 구조 (2026-09-12 리뷰: exclude 누락분) */
+function sharePage(): PageSample {
+  const next = nextActionHrefs("salary");
+  return {
+    label: "/share/[data]",
+    blocks: { nextActions: next, related: paths(getRelatedCalculators("/", RELATED_LIMIT, undefined, next)) },
+    relatedBefore: paths(getRelatedCalculators("/", RELATED_LIMIT)),
+    relatedAfter: paths(getRelatedCalculators("/", RELATED_LIMIT, undefined, next)),
+  };
+}
+
 /** /salary/[amount]: NextActions(salary) → 광고들 → 인근 연봉 격자 → RelatedCalculators(currentPath="/") */
 function salaryPage(amount: number): PageSample {
   const next = nextActionHrefs("salary");
@@ -124,7 +139,8 @@ function calcPage(slug: string): PageSample {
   const client = toClientCalculator(calc);
   const pins = calcPinHrefs(client);
   const category = mapToNextActionCategory(calc.category);
-  const next = nextActionHrefs(category, path);
+  // page.tsx 와 같은 가드 — NextActions 를 렌더하지 않는 카테고리(undefined)는 nextActionHrefs 의 salary 폴백을 제외하지 않는다
+  const next = category ? nextActionHrefs(category, path) : [];
   const exclude = [...pins, ...next];
   return {
     label: path,
@@ -140,6 +156,7 @@ function calcPage(slug: string): PageSample {
 
 const samples: PageSample[] = [
   homePage(),
+  sharePage(),
   ...SALARY_AMOUNTS.map(salaryPage),
   ...MONTHLY_AMOUNTS.map(monthlyPage),
   ...CALC_SLUGS.map(calcPage),
@@ -197,6 +214,35 @@ describe("다음 링크 중복 제거 (S2-3) — 표본 페이지", () => {
       crossBlockDuplicates([...Object.values({ ...s.blocks, related: s.relatedBefore })]),
     );
     expect(before.length).toBeGreaterThan(0);
+  });
+
+  it("/share: 수정 전에는 /year-end-tax 가 NextActions 와 RelatedCalculators 에 겹쳤고, exclude 후 0 (2026-09-12 리뷰)", () => {
+    const s = sharePage();
+    expect(s.blocks.nextActions).toContain("/year-end-tax");
+    expect(s.relatedBefore).toContain("/year-end-tax");
+    expect(crossBlockDuplicates([s.blocks.nextActions, s.relatedAfter])).toEqual([]);
+    expect(s.relatedAfter).toHaveLength(RELATED_LIMIT);
+    // page.tsx 가 실제로 같은 exclude 를 넘긴다 (source scan — /salary/[amount] 와 동일 호출)
+    const src = readFileSync(resolve(process.cwd(), "src/app/share/[data]/page.tsx"), "utf8");
+    expect(src).toContain('exclude={nextActionHrefs("salary")}');
+    expect(src).toMatch(/import \{ nextActionHrefs \} from "@\/lib\/nextActionLinks";/);
+  });
+
+  it("/calc 카테고리 매핑이 없는 계산기(NextActions 미렌더)는 salary 폴백 3종을 제외하지 않는다 (2026-09-12 리뷰)", () => {
+    const unmapped = CALC_SLUGS.filter((s) => mapToNextActionCategory(getCalculatorBySlug(s)!.category) === undefined);
+    expect(unmapped.length, "표본에 미매핑 카테고리 계산기가 있어야 한다").toBeGreaterThan(0);
+    for (const slug of unmapped) {
+      const s = calcPage(slug);
+      const calc = getCalculatorBySlug(slug)!;
+      expect(s.blocks.nextActions, slug).toEqual([]);
+      // 제외 목록은 결과 핀 ∪ 관련 카드뿐이어야 한다 — 페이지가 넘기는 exclude(핀만)로 계산한 결과와 같다
+      const pinsOnly = paths(getRelatedCalculators(`/calc/${slug}`, RELATED_LIMIT, calc.category, calcPinHrefs(toClientCalculator(calc))));
+      expect(s.relatedAfter, slug).toEqual(pinsOnly);
+    }
+    // page.tsx 의 가드 (source scan)
+    const src = readFileSync(resolve(process.cwd(), "src/app/calc/[slug]/page.tsx"), "utf8");
+    expect(src).toContain("...(nextActionCategory ? nextActionHrefs(nextActionCategory, `/calc/${calc.slug}`) : []),");
+    expect(src).not.toMatch(/\.\.\.nextActionHrefs\(nextActionCategory,/);
   });
 
   it("/salary 인근 연봉 격자는 다른 블록과 겹치지 않고 자기 자신을 포함하지 않는다", () => {

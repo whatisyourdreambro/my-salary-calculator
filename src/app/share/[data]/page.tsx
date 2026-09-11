@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
 import NextActions from "@/components/NextActions";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import { nextActionHrefs } from "@/lib/nextActionLinks";
 import ResultSharePanel from "@/components/ResultSharePanel";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
@@ -112,7 +113,9 @@ export default function SharePage({ params }: Props) {
  {/* 다음 액션 + 관련 계산기 — 유입 방문자를 사이트 탐색으로 유도 */}
  <div className="w-full mt-8 space-y-6">
  <NextActions annualSalary={decoded?.annualSalary} category="salary" />
- <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" />
+ {/* 위 NextActions(salary 3종)와 같은 대상은 빼고 채움 — 4개 유지. 종전에는 /year-end-tax 가 두 블록에 겹쳤다
+     (S2-3 중복 제거의 누락분, 2026-09-12 리뷰 지적 — /salary/[amount] 와 같은 exclude) */}
+ <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" exclude={nextActionHrefs("salary")} />
  </div>
  </main>
  );
