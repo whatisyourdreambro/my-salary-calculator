@@ -64,6 +64,8 @@ export interface CalculatorDef {
  compute: (inputs: Record<string, number>) => CalculatorResult;
  /** 결과 하단에 표시될 추가 설명 (선택) */
  explanation?: string;
+ /** 장문 본문(S3-1, 2026-09-12) — 화면에서 explanation 바로 아래에 이어 렌더. seoText 가 읽지 않으므로 메타 무영향(explanation 은 description<60자일 때 메타에 붙는다). 600~1,000자 권장, 게이트 1,200. */
+ details?: string;
  /** 계산 공식 (예: "산출세액 = 과세표준 × 세율 - 누진공제") */
  formula?: string;
  /** 자주 묻는 질문 (FAQPage Schema.org 자동 노출) */

@@ -7,7 +7,10 @@
 //  4) enrichment sources 가 batch sources 있는 슬러그를 겨냥하면 병합에서 무음 폐기되므로 실패시킨다.
 //  5) 202종 explanation 은 1,200자 이하이고 explanation·FAQ·유의사항에 HTML(<) 이 없다.
 //  6) sourcePolicy 헬퍼 단위 검증 + 허용 목록 위생(소문자·중복·공용 2단계 도메인·하위 도메인 중복 금지).
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { calculatorSeoDescription, calculatorSeoTitle } from "@/lib/simpleCalculators/seoText";
 import { allCalculators, mergeEnrichment, toClientCalculator } from "@/lib/simpleCalculators";
 import type { CalculatorDef } from "@/lib/simpleCalculators/types";
 import { enrichmentMap, type Enrichment } from "@/lib/simpleCalculators/enrichments";
@@ -233,5 +236,49 @@ describe("sourcePolicy", () => {
     expect(sourceYear({ title: "법령 본문", url: "https://www.law.go.kr/lsInfoP.do?lsiSeq=265430" })).toBeNull();
     expect(sourceYear({ title: "시행일 20260101" })).toBeNull();
     expect(sourceYear({ title: "제목 2024", url: "https://www.nts.go.kr/2026/" })).toBe(2024);
+  });
+});
+
+describe("details field (S3-1 장문 본문) — 메타 무영향 보장", () => {
+  const readSrc = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
+
+  it("mergeEnrichment merges details with batch precedence", () => {
+    const base = allCalculators[0];
+    const withBatch = { ...base, details: "배치" } as CalculatorDef;
+    expect(mergeEnrichment(withBatch, { details: "보강" } as Enrichment).details).toBe("배치");
+    const noBatch = { ...base, details: undefined } as CalculatorDef;
+    expect(mergeEnrichment(noBatch, { details: "보강" } as Enrichment).details).toBe("보강");
+  });
+
+  it("title/description 은 details 유무와 무관하다 (seoText 는 details 를 읽지 않는다)", () => {
+    for (const calc of allCalculators) {
+      const withDetails: CalculatorDef = { ...calc, details: "가".repeat(900) };
+      const stripped: CalculatorDef = { ...calc, details: undefined };
+      expect(calculatorSeoDescription(withDetails)).toBe(calculatorSeoDescription(stripped));
+      expect(calculatorSeoTitle(withDetails)).toBe(calculatorSeoTitle(calc));
+    }
+    const seoSrc = readSrc("src/lib/simpleCalculators/seoText.ts");
+    expect(seoSrc).not.toContain("details");
+  });
+
+  it("details 는 1,200자 이하·HTML 없음 (현재 등록분 전수)", () => {
+    for (const calc of allCalculators) {
+      if (!calc.details) continue;
+      expect(calc.details.length, calc.slug).toBeLessThanOrEqual(1200);
+      expect(calc.details, calc.slug).not.toContain("<");
+    }
+  });
+
+  it("뷰는 details 를 explanation 문단 바로 아래 같은 섹션에 렌더한다 (새 섹션·광고 이동 없음)", () => {
+    const view = readSrc("src/components/SimpleCalculatorView.tsx");
+    const explIdx = view.indexOf("{calc.explanation}");
+    const detailsIdx = view.indexOf("{calc.details && (");
+    const guideMidIdx = view.indexOf("{calc.explanation && <GuideMidAd />}");
+    expect(explIdx).toBeGreaterThan(-1);
+    expect(detailsIdx).toBeGreaterThan(explIdx);
+    expect(detailsIdx).toBeLessThan(guideMidIdx);
+    expect(view.slice(explIdx, detailsIdx)).not.toContain("<section");
+    expect(view).toContain('className="calc-details mt-4 whitespace-pre-line');
+    expect(toClientCalculator({ ...allCalculators[0], details: "x" } as CalculatorDef).details).toBe("x");
   });
 });

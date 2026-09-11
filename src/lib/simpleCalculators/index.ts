@@ -45,6 +45,7 @@ export function mergeEnrichment(calc: CalculatorDef, enrichment: Enrichment | un
  caveats: calc.caveats ?? enrichment.caveats,
  relatedSlugs: calc.relatedSlugs ?? enrichment.relatedSlugs,
  sources: calc.sources ?? enrichment.sources,
+ details: calc.details ?? enrichment.details,
  };
 }
 

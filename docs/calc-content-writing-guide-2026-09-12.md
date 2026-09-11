@@ -6,14 +6,15 @@
 
 - 본문 위치는 실측표 §3 의 '본문 파일' 열. `index.ts` 병합은 모든 필드가 `batch 값 ?? enrichment 값` — batch 파일(`batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`)에 이미 있는 필드는 enrichment 를 고쳐도 반영되지 않으니 그 파일의 문자열을 고친다. 그 외는 enrichment 파일(`enrichments.ts`·`enrichments-ext-{a,b,c}.ts`)의 해당 슬러그 항목만 수정한다.
 - `sources` 도 2026-09-12 부터 같은 규칙으로 병합된다. 출처 0건인 170종 → enrichment 항목에 `sources` 추가. batch sources 가 이미 있는 32종(expandedFinance·expandedPractical) → enrichment 에 넣으면 무음 폐기되므로 테스트가 실패시킨다. 그 32종의 기존 해외 출처는 다시 쓰지 않는다(호스트 규칙 면제분, 면제 집합 확대 금지).
-- ★ 화면 위치 사실(기반 보고서에 보고됨): '공식 계산방법 참고' 블록은 `SimpleCalculatorView` 의 마지막 섹션 — 뷰 안 광고 3개(CalcResultAd·GuideMidAd·InArticleAd) 아래, `page.tsx` 의 CoupangBanner·HomeTopAd 위(관련 계산기 섹션과 같은 자리)다. 출처가 없던 계산기에 sources 를 채우면 그 두 유닛이 섹션 하나만큼 내려간다. 운영자 판단이 이 문서에 반영되기 전에는 explanation·faqs·caveats 부터 진행하고 sources 는 채우지 않는다.
+- ★ 화면 위치 사실(기반 보고서에 보고됨): '공식 계산방법 참고' 블록은 `SimpleCalculatorView` 의 마지막 섹션 — 뷰 안 광고 3개(CalcResultAd·GuideMidAd·InArticleAd) 아래, `page.tsx` 의 CoupangBanner·HomeTopAd 위(관련 계산기 섹션과 같은 자리)다. 출처가 없던 계산기에 sources 를 채우면 그 두 유닛이 섹션 하나만큼 내려간다. 리드 결정(2026-09-12): 계획 S3-1 이 '출처 2건' 을 명시하고 문자열 범주(L·낮음)로 승인돼 있으므로 sources 를 채운다 — 이 블록은 관련 계산기 섹션과 같은 자리(뷰 안 광고 3개 아래, 페이지 하단 CoupangBanner·HomeTopAd 위)이며 결과 직하 CalcResultAd 와는 무관하다.
 - 필드·compute·컴포넌트·라우트·광고 코드·`src/app/calc/samsung-bonus/*` 무접촉. `<title>`·description(`seoText.ts` 생성분 포함)은 2026-10-09 판정 창까지 동결.
 
 ## 1. 필드별 규칙
 
 | 필드 | 규칙 |
 |---|---|
-| explanation | 600~1,000자(원문 `.length`, 게이트 상한 1,200). 평문, 문단은 `\n\n` 로 구분, HTML·마크다운·이모지 금지. 4문단 고정: ① 무엇을 누구를 위해 계산하는지(기본값이 어떤 상황인지 한 문장 포함) ② 기본 입력값 예시 계산 — 입력값 전부와 compute() 의 primary·secondary 값을 그대로 인용(§2) ③ 적용 규칙·구간·상한·요율 — 문장 안에 기관명과 연도를 명시(예: 국민연금공단 2026년 기준 상한) ④ 이 계산기를 쓰면 안 되는 경우와 정밀 도구(정밀 쌍 `twins.ts`, /tools, 전용 페이지) 안내 |
+| explanation | **수정 금지 — 바이트 동일 유지.** `seoText.calculatorSeoDescription` 이 description 이 60자 미만인 계산기에서 explanation 을 meta description 에 이어 붙인다(10/9 까지 메타 동결). 회귀 게이트: 202종 description 스냅샷 테스트 |
+| details | 장문 본문(신설 2026-09-12). 화면에서 explanation 바로 아래 같은 섹션에 이어 렌더되고 메타에는 쓰이지 않는다. 규칙은 종전 explanation 규칙 그대로: 600~1,000자(원문 `.length`, 게이트 상한 1,200). 평문, 문단은 `\n\n` 로 구분, HTML·마크다운·이모지 금지. 4문단 고정: ① 무엇을 누구를 위해 계산하는지(기본값이 어떤 상황인지 한 문장 포함) ② 기본 입력값 예시 계산 — 입력값 전부와 compute() 의 primary·secondary 값을 그대로 인용(§2) ③ 적용 규칙·구간·상한·요율 — 문장 안에 기관명과 연도를 명시(예: 국민연금공단 2026년 기준 상한) ④ 이 계산기를 쓰면 안 되는 경우와 정밀 도구(정밀 쌍 `twins.ts`, /tools, 전용 페이지) 안내 |
 | formula | 원칙 무접촉. compute 와 다를 때만 compute 에 맞춰 고치고 로그에 `formula≠compute` 로 남긴다 |
 | faqs | 3~5개. 답변 120~300자. 기존 3개는 사실이 맞으면 유지, 4·5번째는 검색 의도형 질문(언제/얼마/차이/포함 여부) |
 | caveats | 2~4개, 계산기별 개별 작성. 다른 슬러그와 글자 단위로 같은 문장 금지 — 실측표 B01·B02 문장을 포함해 복붙 금지. 각 항목은 이 모델이 빼놓은 것 1가지(특정 공제·상한·비과세·지역 차이 등)를 구체적으로 |

@@ -387,6 +387,12 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  <p className="calc-explanation whitespace-pre-line text-base leading-7 text-muted-foreground">
  {calc.explanation}
  </p>
+ {/* details: S3-1 장문 본문 — explanation(메타 스니펫에 쓰임)은 두고 그 아래에 이어 붙인다. 새 섹션·광고 이동 없음. */}
+ {calc.details && (
+ <p className="calc-details mt-4 whitespace-pre-line text-base leading-7 text-muted-foreground">
+ {calc.details}
+ </p>
+ )}
  </section>
  )}
 
