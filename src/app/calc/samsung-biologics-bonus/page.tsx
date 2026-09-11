@@ -17,6 +17,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { FlaskConical, AlertTriangle, Info } from "lucide-react";
 import SamsungBiologicsBonusClient from "./Client";
@@ -152,6 +153,7 @@ export default function SamsungBiologicsBonusPage() {
 
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="samsung-biologics-bonus" />
           </div>
 
           {/* 성과급 구조 · 지급 이력 — 본문 콘텐츠 (광고 사이 배치) */}

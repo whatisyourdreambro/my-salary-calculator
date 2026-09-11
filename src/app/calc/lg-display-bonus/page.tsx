@@ -19,6 +19,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Monitor, AlertTriangle, Info, Coins } from "lucide-react";
 import LgDisplayBonusClient from "./Client";
@@ -180,6 +181,7 @@ export default function LgDisplayBonusPage() {
           {/* 결과 직후 광고 */}
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="lg-display-bonus" />
           </div>
 
           {/* 제도 개요 */}

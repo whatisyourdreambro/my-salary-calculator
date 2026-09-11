@@ -20,6 +20,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Fuel, AlertTriangle, Info } from "lucide-react";
 import SOilBonusClient from "./Client";
@@ -200,6 +201,7 @@ export default function SOilBonusPage() {
           {/* 결과 직후 광고 */}
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="s-oil-bonus" />
           </div>
 
           {/* 제도 개요 */}

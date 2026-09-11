@@ -19,6 +19,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { FlaskConical, AlertTriangle, Info } from "lucide-react";
 import CelltrionBonusClient from "./Client";
@@ -154,6 +155,7 @@ export default function CelltrionBonusPage() {
 
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="celltrion-bonus" />
           </div>
 
           <section className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">

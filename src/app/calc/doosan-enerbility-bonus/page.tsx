@@ -21,6 +21,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Zap, Coins, AlertTriangle, Info } from "lucide-react";
 import DoosanEnerbilityBonusClient from "./Client";
@@ -171,6 +172,7 @@ export default function DoosanEnerbilityBonusPage() {
           {/* 결과 직후 광고 */}
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="doosan-enerbility-bonus" />
           </div>
 
           {/* 제도 구조 */}

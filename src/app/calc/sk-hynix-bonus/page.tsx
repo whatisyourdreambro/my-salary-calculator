@@ -24,6 +24,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Sparkles, Coins, Info, ShieldCheck } from "lucide-react";
 import SkHynixBonusClient from "./Client";
@@ -318,6 +319,7 @@ export default function SkHynixBonusPage() {
           {/* 결과 직후 광고 */}
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="sk-hynix-bonus" />
           </div>
 
           {/* 정책 개요 */}

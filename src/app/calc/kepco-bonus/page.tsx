@@ -20,6 +20,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Zap, AlertTriangle, Info } from "lucide-react";
 import KepcoBonusClient from "./Client";
@@ -180,6 +181,7 @@ export default function KepcoBonusPage() {
 
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="kepco-bonus" />
           </div>
 
           <section

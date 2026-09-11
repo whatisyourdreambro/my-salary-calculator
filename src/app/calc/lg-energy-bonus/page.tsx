@@ -17,6 +17,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Zap, AlertTriangle, Info } from "lucide-react";
 import LgEnergyBonusClient from "./Client";
@@ -144,6 +145,7 @@ export default function LgEnergyBonusPage() {
 
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="lg-energy-bonus" />
           </div>
 
           <section className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">

@@ -18,6 +18,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { InArticleAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
+import BonusNextLinks from "@/components/BonusNextLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Monitor, AlertTriangle, Info } from "lucide-react";
 import SamsungDisplayBonusClient from "./Client";
@@ -147,6 +148,7 @@ export default function SamsungDisplayBonusPage() {
 
           <div className="mt-8">
             <CalcResultAd />
+            <BonusNextLinks slug="samsung-display-bonus" />
           </div>
 
           {/* 성과급 구조 · 지급 이력 — 본문 콘텐츠 */}
