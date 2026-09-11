@@ -249,7 +249,7 @@ export function trackAdUnitClick(
  * (2026-09-05 운영자 승인 — 광고 컴포넌트 내부 계측 2줄 예외)
  *
  * + S1-6(2026-09-11) 필드 확장 — 승인②(2026-09-05 계측 예외)의 확장으로 분류, 요청·렌더·dedup 로직 무변경:
- *   extra.ad_height = 전이 시점 <ins> 레이아웃 높이(px 정수, unfilled 는 0 가능),
+ *   extra.ad_height = 채움 시 크리에이티브(iframe) 높이(px 정수), 미채움은 0 — <ins> 는 예약 minHeight 로 바닥이 깔려 쓰지 않는다,
  *   extra.viewport  = 뷰포트 폭 버킷 m(<768) / t(<1024) / d(그 외).
  *   슬롯·뷰포트별 예약 높이(minHeight) 자료용(S3-3, 2027-02 승인 상정). 사용자 입력·금액·URL 은 받지 않고,
  *   유효하지 않은 값은 생략한다. GA4 보고서에 보이려면 맞춤 측정기준(이벤트 범위) ad_height·viewport 를 콘솔에 등록할 것.

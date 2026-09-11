@@ -96,8 +96,21 @@ export default function WebVitals() {
       state.clsValue = picked.value;
       state.clsTarget = describeNode(picked.node) || "unknown";
     });
+    // bfcache 복원 시 web-vitals 는 CLS 를 0 부터 다시 세고 새 metric_id 로 보고하므로 귀속 창도 함께 리셋한다(2026-09-12 리뷰).
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        state.clsValue = 0;
+        state.clsTarget = "";
+      }
+    };
+    try {
+      window.addEventListener("pageshow", onPageShow, true);
+    } catch {
+      // ignore
+    }
     return () => {
       try {
+        window.removeEventListener("pageshow", onPageShow, true);
         lcp?.disconnect();
         cls?.disconnect();
       } catch {

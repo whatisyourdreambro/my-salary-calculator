@@ -56,11 +56,14 @@ describe("광고 채움 계측", () => {
     expect(AD_PLACEMENT).toContain("trackAdFillStatus(slotKind ?? \"unknown\", slot, status, pathname, {");
   });
 
-  it("S1-6 확장 — 전이 시점 <ins> 높이와 뷰포트 버킷을 같은 호출에 싣는다(승인② 필드 확장, 요청·렌더 로직 무접촉)", () => {
+  it("S1-6 확장 — 전이 시점 크리에이티브 높이(미채움 0)와 뷰포트 버킷을 같은 호출에 싣는다(승인② 필드 확장, 요청·렌더 로직 무접촉)", () => {
     const observerIdx = AD_PLACEMENT.indexOf('attributeFilter: ["data-ad-status"]');
-    const window = AD_PLACEMENT.slice(Math.max(0, observerIdx - 900), observerIdx);
-    // 높이는 status 전이 시점의 레이아웃 값이어야 한다(setUnfilled 재렌더 전 — 같은 check 호출 안).
-    expect(window).toContain("ad_height: Math.round(ins.getBoundingClientRect().height)");
+    const window = AD_PLACEMENT.slice(Math.max(0, observerIdx - 1400), observerIdx);
+    // 높이는 status 전이 시점의 값이어야 한다(setUnfilled 재렌더 전 — 같은 check 호출 안). <ins> 는 예약 minHeight 로
+    // 바닥이 깔리므로(2026-09-12 리뷰) 채움 시 iframe 을 재고, 미채움은 0 을 보낸다.
+    expect(window).toContain('const creative = status === "filled" ? ins.querySelector("iframe") : null;');
+    expect(window).toContain('status !== "filled" ? 0 : Math.round((creative ?? ins).getBoundingClientRect().height)');
+    expect(window).not.toContain("ad_height: Math.round(ins.getBoundingClientRect().height)");
     expect(window).toContain("viewport: viewportBucket(window.innerWidth)");
     expect(AD_PLACEMENT).toContain('import { viewportBucket } from "@/lib/vitalsAttribution";');
     // 계측 확장이 광고 요청·dedup 경로를 건드리지 않았다는 최소 증거.

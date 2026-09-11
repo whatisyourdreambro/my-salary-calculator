@@ -157,7 +157,7 @@ function AdSlot({
   //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_request_attempt 는 push 시점 "요청 수"라
   //   실노출·채움률을 답하지 못했고, 실험 판정 기준 'unfilled 급증 없음'이 AdSense CSV(운영자 제공)에만
   //   의존하던 공백을 메운다. 광고 요청·렌더 로직·슬롯·스타일은 무변경 — 계측 호출만 추가.
-  // + S1-6(2026-09-11, 승인②의 필드 확장): 전이 시점 <ins> 레이아웃 높이(px, unfilled 는 0 가능)와 뷰포트 폭 버킷(m/t/d)을
+  // + S1-6(2026-09-11, 승인②의 필드 확장): 채움 시 크리에이티브(iframe) 높이(px, 미채움 0)와 뷰포트 폭 버킷(m/t/d)을
   //   같은 이벤트에 실어 슬롯·뷰포트별 예약 높이(minHeight) 자료를 모은다(S3-3 재조정은 2027-02 승인 상정, 여기서 손대지 않음).
   //   역시 계측 인자 추가뿐 — 요청·렌더·dedup·접힘·슬롯·스타일 무변경, 사용자 입력·금액은 어떤 경로로도 담기지 않는다.
   const fillReported = useRef<string | null>(null);
@@ -191,9 +191,12 @@ function AdSlot({
         fillReported.current !== status
       ) {
         fillReported.current = status;
-        // S1-6: 전이 시점 <ins> 레이아웃 높이(px, unfilled 는 0 가능) + 뷰포트 버킷 — 위 effect 주석 참조. 사용자 입력 무관.
+        // S1-6: 채움 시 크리에이티브(iframe) 높이, 미채움은 0 + 뷰포트 버킷 — 위 effect 주석 참조. 사용자 입력 무관.
+        // <ins> 자체는 예약 minHeight 로 바닥이 깔려 실제 크리에이티브 크기를 못 잰다(2026-09-12 리뷰) — iframe 이 없으면 <ins> 높이로 폴백.
+        const creative = status === "filled" ? ins.querySelector("iframe") : null;
         trackAdFillStatus(slotKind ?? "unknown", slot, status, pathname, {
-          ad_height: Math.round(ins.getBoundingClientRect().height),
+          ad_height:
+            status !== "filled" ? 0 : Math.round((creative ?? ins).getBoundingClientRect().height),
           viewport: viewportBucket(window.innerWidth),
         });
       }
