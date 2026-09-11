@@ -26,6 +26,7 @@ import FavoritesButton from "@/components/FavoritesButton";
 // InArticleAd 는 SalaryResultCard 내부(결과 직하)가 담당 — 여기서 또 쓰면 dedup 사망
 import { CalcResultAd, GuideMidAd, HomeTopAd, Display2Ad } from "@/components/AdPlacement";
 import NextActions from "@/components/NextActions";
+import { nextActionHrefs } from "@/lib/nextActionLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { ChevronRight, ArrowRight } from "lucide-react";
@@ -409,10 +410,12 @@ export default function MonthlyPage({ params }: Props) {
           />
         </div>
 
+        {/* 위 NextActions(salary 3종)와 같은 대상은 빼고 채움 — 4개 유지 (S2-3 중복 제거) */}
         <RelatedCalculators
           currentPath={`/monthly/${monthly}`}
           limit={4}
           title="함께 보면 좋은 계산기"
+          exclude={nextActionHrefs("salary")}
         />
 
         {/* 시즌 크로스링크 — 표 4종 공용 블록 재사용 (G8 메쉬, 2026-08-23) */}

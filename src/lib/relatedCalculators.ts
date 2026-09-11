@@ -264,11 +264,17 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  * 주어진 경로에 대해 추천할 다른 계산기 N개 반환.
  * 우선순위: PATH_RECOMMENDATIONS → category fallback → salary 기본값.
  * 자기 자신(currentPath)은 자동 제외.
+ *
+ * exclude(2026-09-12 S2-3): 같은 페이지의 위 블록(NextActions·/calc 결과 핀)이 이미 보여준 href.
+ * 제외된 자리는 아래 salary 폴백이 다시 채워 반환 개수가 limit 그대로다 — "제외 + 채움"만 허용.
+ * 블록 개수가 줄면 그 아래 광고의 위치가 올라가므로(2026-08-16 규칙) exclude 로 개수를 줄이지 말 것.
+ * 게이트: src/lib/__tests__/nextLinkDedup.test.ts (표본 페이지 전부 length 4 유지).
  */
 export function getRelatedCalculators(
  currentPath: string,
  limit = 4,
- calcCategory?: string
+ calcCategory?: string,
+ exclude?: readonly string[]
 ): RelatedItem[] {
  // /salary/[amount] 같은 동적 경로 처리
  const normalizedPath = currentPath.startsWith("/salary/")
@@ -297,7 +303,7 @@ export function getRelatedCalculators(
 
  const categories =
  PATH_RECOMMENDATIONS[normalizedPath] || calcClusterCategories || ["salary"];
- const seen = new Set<string>([currentPath, normalizedPath]);
+ const seen = new Set<string>([currentPath, normalizedPath, ...(exclude ?? [])]);
  const items: RelatedItem[] = [];
 
  for (const category of categories) {

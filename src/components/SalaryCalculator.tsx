@@ -26,6 +26,7 @@ import type {
 import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
 import NextActions from "./NextActions";
+import { nextActionHrefs } from "@/lib/nextActionLinks";
 // 무거운 recharts 컴포넌트는 동적 로드 — 초기 번들 절감
 const WealthChart = dynamic(() => import("./WealthChart"), {
  ssr: false,
@@ -44,6 +45,9 @@ const DetailedAnalysis = dynamic(() => import("./DetailedAnalysis"), {
 import SalaryTierCard from "./SalaryTierCard"; // New Import
 import LoadingInterstitial from "./LoadingInterstitial";
 import BottomSheet from "./BottomSheet";
+
+// 결과 아래 NextActions(category=salary)가 내는 3 href — 그 아래 RelatedCalculators 에서 제외(빈자리는 채움, S2-3)
+const HOME_NEXT_ACTION_HREFS = nextActionHrefs("salary");
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -499,8 +503,8 @@ export default function SalaryCalculator() {
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />
 
- {/* 관련 계산기 cross-link */}
- <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" />
+ {/* 관련 계산기 cross-link — 위 NextActions(salary 3종)와 같은 대상은 빼고 채움(4개 유지, S2-3) */}
+ <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" exclude={HOME_NEXT_ACTION_HREFS} />
 
  {/* 공유/저장 */}
  <div className="bg-white border border-canvas rounded-2xl p-4 flex flex-col items-center gap-3">

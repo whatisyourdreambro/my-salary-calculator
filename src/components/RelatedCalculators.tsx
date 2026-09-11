@@ -62,6 +62,11 @@ interface RelatedCalculatorsProps {
  className?: string;
  /** /calc/[slug] 전용: 계산기 데이터 category (서버에서 문자열만 전달) */
  calcCategory?: string;
+ /**
+ * 같은 페이지의 위 블록(NextActions·/calc 결과 핀)이 이미 보여준 href — 여기서는 빼고 다른 항목으로
+ * 채운다(개수 limit 유지, 2026-09-12 S2-3). href 정본은 @/lib/nextActionLinks.
+ */
+ exclude?: string[];
 }
 
 export default function RelatedCalculators({
@@ -70,10 +75,11 @@ export default function RelatedCalculators({
  title = "이런 계산기도 함께 보세요",
  className = "",
  calcCategory,
+ exclude,
 }: RelatedCalculatorsProps) {
  const pathname = usePathname();
  const resolvedPath = currentPath || pathname || "/";
- const items = getRelatedCalculators(resolvedPath, limit, calcCategory);
+ const items = getRelatedCalculators(resolvedPath, limit, calcCategory, exclude);
 
  if (items.length === 0) return null;
 

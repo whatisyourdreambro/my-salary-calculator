@@ -18,6 +18,7 @@ import ShareSection from "@/components/ShareSection";
 import { CalcResultAd, GuideMidAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import { SALARY_PAGE_GUIDES } from "@/lib/crossLink";
 import NextActions from "@/components/NextActions";
+import { nextActionHrefs } from "@/lib/nextActionLinks";
 import SeasonalLinks from "@/app/table/2026/SeasonalLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import FavoritesButton from "@/components/FavoritesButton";
@@ -326,8 +327,9 @@ export default function SalaryAmountPage({ params }: Props) {
  </div>
  )}
 
+ {/* 위 NextActions(salary 3종)와 같은 대상은 빼고 채움 — 4개 유지 (S2-3 중복 제거) */}
  <div className="px-2 sm:px-6">
- <RelatedCalculators currentPath="/" title="이 연봉으로 다음 단계는?" />
+ <RelatedCalculators currentPath="/" title="이 연봉으로 다음 단계는?" exclude={nextActionHrefs("salary")} />
  </div>
 
  {/* 핵심 가이드 cross-link — 본인 연봉을 바탕으로 다음 의사결정 도움 */}

@@ -10,7 +10,8 @@ import { getRelatedGuides } from "@/lib/relatedGuides";
 import RelatedCompanies from "@/components/RelatedCompanies";
 import JsonLd from "@/components/JsonLd";
 import { HomeTopAd, SidebarAd } from "@/components/AdPlacement";
-import NextActions, { type NextActionCategory } from "@/components/NextActions";
+import NextActions from "@/components/NextActions";
+import { calcPinHrefs, mapToNextActionCategory, nextActionHrefs } from "@/lib/nextActionLinks";
 import CoupangBanner from "@/components/CoupangBanner";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -25,7 +26,6 @@ import {
  getCalculatorBatch,
  toClientCalculator,
  defaultInputsOf,
- type CalculatorDef,
 } from "@/lib/simpleCalculators";
 import { getCalcRelatedGuideSlugs } from "@/lib/crossLink";
 import { calculatorSeoDescription, calculatorSeoTitle } from "@/lib/simpleCalculators/seoText";
@@ -61,27 +61,6 @@ export async function generateMetadata({
  keywords: calc.keywords,
  noIndex: !isContentRich,
  });
-}
-
-function mapToNextActionCategory(
- cat: CalculatorDef["category"]
-): NextActionCategory | undefined {
- switch (cat) {
- case "loan":
- case "real-estate":
- return cat;
- case "tax":
- return "tax";
- case "insurance":
- case "health":
- return "insurance";
- case "investment":
- return "investment";
- case "salary":
- return "salary";
- default:
- return undefined;
- }
 }
 
 export default function CalcPage({ params }: { params: { slug: string } }) {
@@ -141,6 +120,21 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  );
 
  const nextActionCategory = mapToNextActionCategory(calc.category);
+ const clientCalc = toClientCalculator(calc);
+
+ // S2-3 중복 다음 링크 제거(2026-09-12): 페이지 위→아래 순서로 [결과 핀 ∪ 관련 카드 그리드](SimpleCalculatorView)
+ // → NextActions → RelatedCalculators 가 같은 대상을 반복했다. 맨 아래 RelatedCalculators 만 위 두 블록의 href 를
+ // 제외하고, 빠진 자리는 getRelatedCalculators 폴백이 채워 4개를 유지한다(그 아래 HomeTopAd 위치 불변).
+ // ★ 남겨둔 중복(운영자 승인 게이트, docs/next-upgrade-plan-2026-09-11.md S2-3):
+ //   (a) 결과 핀(최대 3개)은 관련 카드 그리드의 부분집합이다.
+ //   (b) 19쪽에서 NextActions 3종이 핀·카드와 겹친다(예: cagr-quick 의 /calc/compound-interest-quick,
+ //       mortgage-monthly-quick 의 /home-loan) — NextActions 는 채울 예비 항목이 없다.
+ //   둘 다 광고(GuideMid·InArticle·CoupangBanner·HomeTopAd) 위 블록의 항목 수를 줄여야만 풀리므로 2026-08-16
+ //   "광고 위 높이 불변" 규칙상 손대지 않는다. 잔여 목록은 nextLinkDedup.test.ts 가 표본으로 고정한다.
+ const relatedExclude = [
+ ...calcPinHrefs(clientCalc),
+ ...nextActionHrefs(nextActionCategory, `/calc/${calc.slug}`),
+ ];
 
  return (
  <>
@@ -149,7 +143,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
      initialResult 는 기본값 입력의 서버 계산 결과 — 프리렌더 HTML 과 하이드레이션이 같은 값을 쓴다. */}
  <SimpleCalculatorView
  slug={calc.slug}
- calc={toClientCalculator(calc)}
+ calc={clientCalc}
  batch={getCalculatorBatch(calc.slug) ?? "batch1"}
  initialResult={calc.compute(defaultInputsOf(calc))}
  />
@@ -168,6 +162,7 @@ export default function CalcPage({ params }: { params: { slug: string } }) {
  <RelatedCalculators
  currentPath={`/calc/${calc.slug}`}
  calcCategory={calc.category}
+ exclude={relatedExclude}
  />
 
  <RelatedGuides

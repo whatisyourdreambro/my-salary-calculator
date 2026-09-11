@@ -22,14 +22,10 @@ import {
  Receipt,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { NextActionCategory } from "@/lib/nextActionLinks";
 
-export type NextActionCategory =
- | "salary"
- | "loan"
- | "tax"
- | "insurance"
- | "investment"
- | "real-estate";
+// 타입 정본은 @/lib/nextActionLinks (서버·테스트가 React 없이 href 를 참조) — 기존 import 경로 유지용 재수출.
+export type { NextActionCategory };
 
 interface NextActionsProps {
  /** 현재 연봉 (없으면 generic CTA) */
@@ -48,7 +44,9 @@ interface ActionItem {
  href: string;
 }
 
-function buildActions(
+// export 는 테스트 전용(nextLinkDedup.test.ts) — 각 카테고리의 href 가 @/lib/nextActionLinks 의
+// nextActionHrefs 와 어긋나지 않는지 대조한다. href 를 바꾸면 그쪽 목록도 함께 바꿀 것.
+export function buildActions(
  category: NextActionCategory | undefined,
  annualSalary: number | undefined
 ): ActionItem[] {
