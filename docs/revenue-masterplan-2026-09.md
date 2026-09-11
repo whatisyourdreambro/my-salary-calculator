@@ -217,10 +217,10 @@
 | ④ | `/auto-tax-2026` 중고차 일할계산 "관행" 본문 vs FAQ "법정" 상충, 상단 주석 기간 불일치 | 사실 확인 후 정정 |
 | ⑤ | `/samsung-negotiation-2026` title·hero "5월 12일 시작" 시점 프레임 → 타결 여부 확인 후 결과 중심 재작성 | CTR 회복 여지 |
 | ⑥ | **데스크톱 SIDEBAR(300x600) 2컬럼 도입** — 장문 4페이지(mid-resign·tax-reform·sir-2027·dependent)·/home-loan·/calc 정적 19종·/tools | 레이아웃 재설계, 최고 RPM 포맷 |
-| ⑦ | 계산기형 15곳 H1 직하 HomeTopAd(레거시) + /tools 3곳 히어로 직하 CalcResultAd → 결과 직하로 이동 여부 | 9/13 이후 GA4 slot_kind CTR 확인 후 |
-| ⑧ | `/chuseok-bonus-2026` CalcResultAd를 미니 계산기 결과 직하로 이동(순증 아님) | 시즌 중 결정 |
+| ⑦ | 계산기형 15곳 H1 직하 HomeTopAd(레거시) + /tools 3곳 히어로 직하 CalcResultAd → 결과 직하로 이동 여부 | 9/13 이후 GA4 slot_kind CTR 확인 후. (참고: 9/11 `f2379fa` 는 삼성·/calc 인덱스·성과급 허브·회사·표 2종만 이동 — 이 15+3곳은 미접촉) |
+| ⑧ | `/chuseok-bonus-2026` CalcResultAd를 미니 계산기 결과 직하로 이동(순증 아님) | ✖ **폐기 2026-09-12** — 광고가 이미 결과 카드 직상, GA4/GSC 행·ad-depth 기준선 없음(판정 불가), 9/26 시즌 종료까지 13일. 재제안 금지 |
 | ⑨ | insights 리포트 3편 상호 링크 섹션 — 마지막 광고 아래에 두면 레이아웃 쿠팡을 밀어 규칙 2와 충돌해 보류 | 위치 결정 필요 |
-| ⑩ | `/company` 레거시 page.tsx 삭제(308 redirect 중, 빌드 산출물·중복 BreadcrumbList 잔재) | 정리 |
+| ⑩ | `/company` 레거시 page.tsx 삭제(308 redirect 중, 빌드 산출물·중복 BreadcrumbList 잔재) | 1단계 ✅ 2026-09-12 `ec6ebcd`·`4a6ce83`: `/company/:id`(compare·simulator 제외) next.config 308 규칙. Edge 페이지 삭제(2단계)는 결정 대기 |
 | ⑪ | **InstallPwaBanner 하단 앵커 광고 미감지** — FloatingShareBar의 3중 감지 공유 유틸화 권고 | 앵커 토글 전 처리 권장 |
 | ⑫ | EN 가이드 데이터 title 축약(이모지·부제) — 11편 여전히 60자 초과 | 콘텐츠 결정 |
 | ⑬ | `/tools/loan`·`/tools/math` toolContent 작성 → GuideMid 자동 +1 | 콘텐츠 |

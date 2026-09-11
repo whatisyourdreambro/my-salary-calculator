@@ -165,3 +165,49 @@ T0 = 이 커밋의 Cloudflare 배포 완료 시각. 부분일 제외, KST 첫 �
 - 광고 단위별: CALC_RESULT·HOME_TOP·DISPLAY_2 노출과 Active View, 표 페이지(IN_ARTICLE·HOME_TOP)의 요청 증가. 멀티플렉스는 변경 없음.
 - GA4 `ad_filled`/`ad_unfilled`(slot_kind·page_path) 비율, `share_bar_impression` 감소 여부(광고 밴드 양보 영향).
 - 진행 중인 콘솔 인페이지 간격 실험(50→200px)과 창을 분리해 판정한다. 이 배포가 그 실험의 T0 를 바꾸지는 않는다.
+
+## 9. 스프린트 1 실행 — 2026-09-12 새벽 (계획서 `next-upgrade-plan-2026-09-11.md` §2·§7)
+
+운영자 지시 "진행해" → 계획 §7 순서대로 S1-0 → S1-1 → S1-5 → S1-6 → S1-3 → S1-2 를 독립 커밋으로 구현하고, 병합본에 5관점 적대 리뷰(광고 정책·시즌 키·분석 프라이버시·SEO/리다이렉트·CI 동등성, 발견 10건 → 검증 25에이전트)를 돌린 뒤 확정 지적을 고쳐 배포했다.
+광고 슬롯 ID·env·쿠팡 파라미터 무변경, 광고 위 UI 삽입 0건(`ad-audit --diff --base b465bba` 로 커밋 범위 전체 재평가: 삽입 0·삭제 0·인접 신규 0).
+
+### 9-1. 배포 항목 (커밋 순, main)
+
+| 항목 | 커밋 | 변경 | 근거·기대 효과 |
+|---|---|---|---|
+| S1-0 핀 계측 | `1c8a624` | 계산기 결과 아래 '다음 계산기' 핀 nav 에 `data-msy-module="calc-next-pins"` 1속성 | 9/11 배포분의 클릭이 `guide_cta_click`(position=calc-next-pins) 으로 잡힘 — 9/19 D+7 표본 확보 |
+| S1-5 SEO 위생 | `ec6ebcd` + `4a6ce83` | `/community`(2025-09 삭제 후 404) → `/qna` 308, `/company/:id` → `/salary-db/:id` 를 next.config 규칙으로(캐시 재생 시 Location 소실 함정 회피, compare·simulator 는 끝슬래시 형태까지 규칙 자체가 제외) | 구 URL 권위 회수·404 크롤 예산 절약. Edge 페이지는 폴백 유지(마스터플랜 ⑩ 결정 후 삭제) |
+| S1-3 공무원 2027 | `7e7e6c8` + `7b16228` | 선택기 카드의 페이지 내 앵커를 `/monthly/{격자}` 링크로 치환(`nearestStaticMonthlyAmount`, 격자 밖 404 불가), 라벨은 리뷰 반영 "일반 근로자 기준 실수령 참고"(공무원연금·수당 미반영을 숨기지 않음), position `civil-forecast-net`. 링크 2개·행 높이 20px 그대로(아래 HomeTopAd 위치 불변) | 3위 랜딩(1,865세션/28일)에서 결과 직하 다음 페이지 0건 → 1건 |
+| S1-2 성과급 22쪽 | `add77fd` + `83679d6` + `6c3a260` | `CalcResultAd` **아래** 서버 컴포넌트 `BonusNextLinks`(회사 DB 1 + 같은 섹터 형제 계산기 2, OfferSlot 없음, 삼성 4파일 무접촉). 간격 32px 고정(className 은 추가만) | 결과 직하 다음 링크 0건 → 3건. 도달 소규모(hyundai 519세션/28일) — 실험 |
+| S1-1 시즌 키 | `6237a80` + `7a9f8fc` | 세트 선택을 빌드 시점 상수 `SEASON_KEY`(prebuild 코드젠)로: ~9/25 SEP → 9/26 OCT → 12/1 DEC 자동(KST), JAN 은 `SEASON_KEY_OVERRIDE` 수동. `verify:site` 만료·D-7 WARNING(비차단), 주간 health-check 가 프로덕션 `data-season-key` 를 `/table/2026/annual`(캐시 없음)·`/salary/50000000`(엣지 캐시 4h 경로)에서 대조. JAN 만료(2027-03-11) 알람 추가 | 2026-08 7월 세트 장기 잔류 사고 유형 차단. 3소비자(헤더 칩·시즌 상단·표 하단) 동시 전환 |
+| S1-6 계측 2종 | `c72ba14` + `e1f8254` | `ad_filled/ad_unfilled` 에 `ad_height`(채움 시 iframe 크리에이티브 높이, 미채움 0)·`viewport`(m/t/d). `web_vitals` 에 20% 표본으로 `lcp_element`·`lcp_load_state`·`cls_target`(태그+id+클래스 2개, 80자, 텍스트·값 없음; bfcache 복원 시 CLS 귀속 리셋). 비표본 이벤트는 종전과 동일 | S3-3(2027-02) 예약 높이 재조정 자료·데스크톱 LCP 108 URL 요소 식별. 승인②(9/5 계측 예외) 필드 확장으로 분류 — 요청·렌더·dedup 무변경 |
+| 도구 | `da99a03`, `01ce9fe` | `ad-audit --diff --base <ref>`(커밋 후 사후 평가 가능), `gen-salary-amounts` 줄바꿈만 다른 재작성 중단 | 게이트 공백·Windows 더티 트리 제거 |
+
+### 9-2. 검증 (병합 최종 빌드, 광고·분석 요청 차단)
+
+- CI 동등 게이트: vitest 88파일 1,602건, tsc 0, eslint 추적 파일 0(288 오류는 gitignore 된 `.artifacts/` 로컬 산출물뿐), `ad-audit` ERROR 0/WARN 0, `verify:tax/site/companies/sitemap/bonus` OK(`verify:site` 에 시즌 키 --check 포함), `qa:share` missing 0, node:test 11건, python 저장소 검증 2건 PASS, `qa:quality` 2,497 HTML 구조 이슈 0·미해결 링크 0, `qa:crawl` 266쪽 통과, `qa:english` 39/39.
+- 브라우저(Playwright, 모바일 390px·데스크톱 1366px): 리다이렉트 5건(308 목적지·실페이지 200), 공무원 링크(격자 위 href·등급 변경 시 갱신·행 20px·광고 위 높이 불변), 핀 nav 속성, 성과급 22쪽 전부 핀 3개·CalcResultAd 아래 정확히 32px·hrefs 45개 200·삼성 무접촉, 표·/salary·/monthly 의 `data-season-key="SEP"`, 채움 이벤트 실측(dataLayer: 모바일 `ad_unfilled` ad_height 250·viewport m, 데스크톱 `ad_filled` viewport d), 광고 기하 회귀 21항목 중 20 통과(미달 1 = 회사 페이지 공백 임계 6,000px 임의 기준, 9/11 과 동일 6,313px).
+- 적대 리뷰 결과: 확정 7 → 수정 6(ad_height 가 예약 minHeight 바닥에 깔리던 것, bfcache CLS 귀속, JAN 이후 알람 공백, 엣지 캐시 경로 미검사, 공무원 라벨 정직성, /company 끝슬래시), 수용 1(별칭 2홉 체인 — 기존 구조·루프 없음); 반박 3 중 2 는 그래도 보강(간격 고정, --base), 1 은 의도된 동작(월요일 헬스체크 FAIL = 알림 채널).
+- 검증 중 발견한 함정(재발 방지): (a) 백그라운드 `next start` 를 TaskStop 으로 끊어도 node 자식이 살아남아 재빌드된 `.next` 를 계속 서빙 → React #423 hydration 오류·빈 DOM 거짓 실패. 재빌드 전 포트 3200 리스너를 PID 로 종료할 것. (b) `qa:quality` 는 `.next/server/app` 의 HTML 전부를 읽는데, 로컬 서버가 미등록 슬러그(`/calc/compound-interest` 등)를 온디맨드 렌더하면 404 스텁이 남아 "구조 이슈 3" 거짓 실패 — 빌드 직후·서버 기동 전에 실행. (c) 루트 레이아웃 인라인 GA 스니펫이 `function gtag(){}` 로 전역을 다시 정의하므로 `window.gtag` 스파이는 덮여 사라진다 — `dataLayer` 를 읽어 검증.
+
+### 9-3. 커밋·푸시·배포 상태
+
+- 커밋 14건 `1c8a624`…`01ce9fe` 를 2026-09-12 01:45 KST 에 `origin/main` 으로 푸시(b465bba..01ce9fe, force 아님). 이어서 S2-5 `f19e71e`. Cloudflare Pages 자동 배포 — 프로덕션 확인: **2026-09-12 01:58 KST 라이브 확인** — `/community` 308→`/qna`, `/company/naver` 308→`/salary-db/naver`, `/company/compare`·`/simulator` 200(끝슬래시 형태는 Next 내부 308 로 슬래시 없는 실페이지로), 공무원 2027 카드 새 라벨 1·앵커 0, `/calc/hyundai-bonus` bonus-next-links 1(핀 3), `/table/2026/annual`·`/salary/50000000` `data-season-key="SEP"`, calc 핀 `calc-next-pins` 속성 1. S2-5(`f19e71e`)는 스프린트 2 배치와 함께 배포 예정.
+
+### 9-4. 운영자 항목 (콘솔·날짜)
+
+1. GA4 맞춤 측정기준(이벤트 범위) 등록: `ad_height`, `viewport`, `lcp_element`, `cls_target`, 선택 `lcp_load_state` — 등록 전에는 이벤트에 실려도 보고서에 안 보인다.
+2. 9/26(토) 이후 **첫 푸시**가 시즌 세트를 OCT 로 바꾼다(prebuild 자동). 그날 푸시가 없으면 구 세트 잔류 → `verify:site` WARNING·9/28(월) 헬스체크 FAIL 로 알림. 자동 푸시 워크플로는 운영자가 되돌려 두지 않았다 — 9/26 에 아무 커밋이나 푸시 + CF 캐시 퍼지.
+3. 1/2 JAN: `src/lib/seasonKey.ts` 의 `SEASON_KEY_OVERRIDE = "JAN" as SeasonKey | null;` → `npx tsx scripts/gen-season-key.ts` → 커밋·푸시·퍼지. JAN 세트는 2027-03-11 부터 만료 경고.
+4. 승인②(9/5 계측 예외) 필드 확장 동의는 "진행해"로 갈음했다 — 다른 판단이면 `e1f8254`·`c72ba14` 만 되돌리면 된다(광고 요청·렌더 무관).
+
+### 9-5. 판정 지표 (9/19 D+7 점검, 10/10 D+28 판정 — 9/11 두 배포와 창이 겹치므로 라우트 단면으로 분리)
+
+- GA4 `guide_cta_click` position ∈ {calc-next-pins, bonus-next-links, civil-forecast-net} 클릭 수·클릭한 세션의 세션당 페이지.
+- GSC: `/community`·`/company/*` 의 "리다이렉트가 있는 페이지" 증가(정상), `/qna`·`/salary-db/*` 노출 변화 없음 확인.
+- `ad_filled` 의 `ad_height` 분포(slot_kind × viewport) — 예약 높이(120/250/280/600)와의 차이가 S3-3(2027-02) 승인 자료.
+- `web_vitals` LCP 의 `lcp_element` 상위 5(데스크톱) → 폰트/이미지 원인 분리.
+
+### 9-6. 수익 기대치 — 솔직한 수치
+
+일 $10 → $100 은 코드 변경만으로는 나오지 않는다. 계획서·10x 계획의 실측 근거: RPM $4.40, 노출/PV 5.3(밀도 소진), 코드 레버 합계 ×1.05 미만, 도달 가능 배수 ×1.4~2.0(2027-03), 10배는 **세션 ×3~4** 가 전제(검색 유입 — 회사 연봉·시즌 콘텐츠·색인률)다. 이번 스프린트는 계측·사고 예방·다음 페이지 유도(세션당 페이지)를 확보한 것이고, 수익 증가는 D+28 실측 전까지 **가정**이다. 이어지는 스프린트 2·3(정확성, 회사 430쪽 실수령 hop, 중복 링크 정리, 간이 계산기 50종 본문, /salary 격자 정본화, 허브 H1)이 유입 쪽 레버다.

@@ -65,6 +65,7 @@ ad-audit ERROR 0(fixed 헤더 가림 후보 4 → **0**) · lint error 0 · qa:c
 2. 쿠팡 공정위 고지문이 `PageFooterAds` 소비 41지면에서 새로 렌더되며 **그 아래 `HomeTopAd` 를 25~40px 밀어냈다.**
    고지문은 법적 필수라 되돌릴 수 없다. 무손실 해법은 `PageFooterAds` 순서를
    `HomeTopAd → InArticleAd → CoupangBanner` 로 바꾸는 것이나 **배치 변경이라 승인 항목**이다.
+   → **2026-09-11 `f2379fa` 로 이 순서 변경을 배포했다**(운영자 지시 '광고 수익 극대화, AdSense 위치 변경 허용'). 41지면 HomeTopAd 밀림 해소.
 3. `/qna` 하단 `InArticleAd`+쿠팡이 죽은 칩("4대보험 & 세금") 세션에서 소멸하던 것이 해소.
    단 가드(`filteredData.length > 0`)는 유지 — 없애면 "검색 결과가 없습니다" 빈 화면 위에 광고가 남는다.
 4. `/table` 시급·주급 4쪽 프리렌더 본문 0행 → 100행 (LCP/CLS 미측정 — lighthouse.yml D0 실행 결과로 확인).
