@@ -81,7 +81,7 @@ export function isOfficialSourceUrl(url: string): boolean {
 /**
  * 출처가 가리키는 규정의 연도. 제목의 4자리 연도(1990~2099, 여러 개면 가장 최근)를 우선하고,
  * 없으면 URL 에서 찾는다(경로·쿼리의 4자리 숫자는 오탐 가능 — 제목에 연도를 쓰는 것이 규칙). 둘 다 없으면 null.
- * '10,320원'·'20260101' 처럼 4자리가 아닌 숫자 덩어리는 연도로 보지 않는다.
+ * '9,860원'·'20260101' 처럼 4자리가 아닌 숫자 덩어리는 연도로 보지 않는다(금액 예시는 정본 상수와 무관한 값).
  */
 export function sourceYear(source: { title: string; url?: string }): number | null {
   return yearIn(source.title) ?? (source.url ? yearIn(safeDecode(source.url)) : null);
