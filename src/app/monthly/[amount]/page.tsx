@@ -32,7 +32,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
-import { isStaticSalaryAmount, sitemapGridAmounts } from "@/lib/salaryStaticParams";
+import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
@@ -54,16 +54,9 @@ function parseMonthlyParam(param: string): number | null {
   return amount;
 }
 
-/** 연봉 정적 집합(50만 격자)으로 스냅 — /salary 링크 404 방지 */
-function snapToSalaryGrid(annual: number): number {
-  if (isStaticSalaryAmount(annual)) return annual;
-  const grid = Array.from(new Set(sitemapGridAmounts())).sort((a, b) => a - b);
-  let best = grid[0];
-  for (const g of grid) {
-    if (Math.abs(g - annual) < Math.abs(best - annual)) best = g;
-  }
-  return best;
-}
+// /salary 링크의 격자 스냅은 정본 salaryReportHrefOrNearest(src/lib/salaryRedirect) — 종전의 로컬 선형 탐색
+// 복제는 2026-09-12 S2-2 에서 제거. 집합 범위 안이면 가장 가까운 정적 페이지, 범위 밖(상여 800% 환산이
+// 3.5억을 넘는 고월급 행 등)은 집합 끝 페이지로 클램프하지 않고 null → 링크 생략.
 
 /** 인근 월급 링크 — 격자 위 값만 (±10만/±20만/±50만/±100만) */
 function monthlyNeighbors(amount: number): number[] {
@@ -133,7 +126,8 @@ export default function MonthlyPage({ params }: Props) {
     annual: Math.round(annual + (monthly * pct) / 100),
   }));
 
-  const salaryHref = `/salary/${snapToSalaryGrid(annual)}`;
+  // 월 160만~2,000만 × 12 는 항상 집합 범위 안 — null 분기는 방어용
+  const salaryHref = salaryReportHrefOrNearest(annual);
   const neighbors = monthlyNeighbors(monthly);
 
   const faqItems = [
@@ -238,7 +232,7 @@ export default function MonthlyPage({ params }: Props) {
               </thead>
               <tbody>
                 {bonusScenarios.map((s) => {
-                  const href = `/salary/${snapToSalaryGrid(s.annual)}`;
+                  const href = salaryReportHrefOrNearest(s.annual);
                   return (
                     <tr key={s.pct} className="border-b border-canvas-100">
                       <td className="py-2.5 pr-4 font-bold text-navy">
@@ -248,12 +242,16 @@ export default function MonthlyPage({ params }: Props) {
                         약 {fmtManwon(s.annual)}만원
                       </td>
                       <td className="py-2.5">
-                        <Link
-                          href={href}
-                          className="inline-flex items-center gap-1 text-primary font-bold hover:underline"
-                        >
-                          실수령 보기 <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
+                        {href ? (
+                          <Link
+                            href={href}
+                            className="inline-flex items-center gap-1 text-primary font-bold hover:underline"
+                          >
+                            실수령 보기 <ChevronRight className="w-3.5 h-3.5" />
+                          </Link>
+                        ) : (
+                          <span className="text-faint-blue">—</span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -351,13 +349,15 @@ export default function MonthlyPage({ params }: Props) {
             월급 {m}만원 × 12개월 = 연봉 약 {fmtManwon(annual)}만원의 상세
             리포트 (자산 시뮬레이션·연봉 티어 포함)
           </p>
-          <Link
-            href={salaryHref}
-            className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition"
-          >
-            연봉 {fmtManwon(annual)}만원 리포트 보기
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {salaryHref && (
+            <Link
+              href={salaryHref}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition"
+            >
+              연봉 {fmtManwon(annual)}만원 리포트 보기
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
         </section>
 
         {/* 인근 월급 */}

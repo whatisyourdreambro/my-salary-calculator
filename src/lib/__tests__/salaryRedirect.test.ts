@@ -4,7 +4,14 @@ import { NextRequest } from "next/server";
 import { middleware } from "@/middleware";
 import { getStaticSalaryAmounts } from "@/lib/salaryStaticParams";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
-import { nearestStaticSalaryAmount, parseSalaryPathAmount, resolveSalaryRedirect } from "@/lib/salaryRedirect";
+import {
+  SALARY_HREF_MAX_GAP,
+  nearestStaticSalaryAmount,
+  parseSalaryPathAmount,
+  resolveSalaryRedirect,
+  salaryReportHref,
+  salaryReportHrefOrNearest,
+} from "@/lib/salaryRedirect";
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36";
 const request = (path: string) => new NextRequest(`https://www.moneysalary.com${path}`, { headers: { "user-agent": UA, host: "www.moneysalary.com" } });
@@ -39,6 +46,55 @@ describe("nearestStaticSalaryAmount", () => {
     expect(nearestStaticSalaryAmount(10_000_000_000)).toBe(SALARY_STATIC_AMOUNTS.at(-1));
     // 항상 집합의 원소여야 한다
     for (const probe of [1234567, 33_333_333, 99_999_999, 123_456_789, 555_555_555]) expect(SALARY_STATIC_AMOUNTS).toContain(nearestStaticSalaryAmount(probe));
+  });
+});
+
+describe("salaryReportHref (내부 링크 — 클램프 금지·오차 2% 게이트, 2026-09-12 S2-2)", () => {
+  it("returns members as-is and snaps within SALARY_HREF_MAX_GAP", () => {
+    expect(SALARY_HREF_MAX_GAP).toBe(0.02);
+    expect(salaryReportHref(50_000_000)).toBe("/salary/50000000");
+    expect(salaryReportHref(SALARY_STATIC_AMOUNTS[0])).toBe(`/salary/${SALARY_STATIC_AMOUNTS[0]}`);
+    expect(salaryReportHref(SALARY_STATIC_AMOUNTS.at(-1)!)).toBe(`/salary/${SALARY_STATIC_AMOUNTS.at(-1)}`);
+    expect(salaryReportHref(69_800_000)).toBe("/salary/70000000"); // 0.29%
+    expect(salaryReportHref(204_000_000)).toBe("/salary/207000000"); // 1.47%
+    expect(salaryReportHref(345_000_000)).toBe("/salary/350000000"); // 1.45%
+  });
+  it("never clamps: below the first or above the last static amount is null", () => {
+    expect(salaryReportHref(SALARY_STATIC_AMOUNTS[0] - 1)).toBeNull();
+    expect(salaryReportHref(SALARY_STATIC_AMOUNTS.at(-1)! + 1)).toBeNull();
+    for (const a of [360_000_000, 410_000_000, 450_000_000, 900_000_000, 1_500_000_000]) expect(salaryReportHref(a), String(a)).toBeNull();
+    for (const a of [0, -5_000_000, Number.NaN, Number.POSITIVE_INFINITY, 1, 4_000_000]) expect(salaryReportHref(a), String(a)).toBeNull();
+  });
+  it("gap boundary: exactly 2% links, just over 2% is null", () => {
+    // 비율을 정확히 만들기 위한 소형 격자
+    const g1 = [98, 300];
+    expect(salaryReportHref(100, g1)).toBe("/salary/98"); // 2/100 = 2.00% (경계 포함)
+    expect(salaryReportHref(101, g1)).toBeNull(); // 3/101 = 2.97%
+    const g2 = [100, 200];
+    expect(salaryReportHref(102, g2)).toBe("/salary/100"); // 1.96%
+    expect(salaryReportHref(104, g2)).toBeNull(); // 3.85%
+    expect(salaryReportHref(198, g2)).toBe("/salary/200"); // 1.01%
+    // 실제 집합의 성긴 구간(2억~3.5억): 최근접이 있어도 오차가 크면 링크 없음
+    expect(salaryReportHref(228_000_000)).toBeNull(); // 최근접 2.2억, 3.5%
+    expect(salaryReportHref(275_000_000)).toBeNull(); // 최근접 2.5억/3억, 9.1%
+  });
+  it("every non-null result is a member of the static set", () => {
+    for (let a = 5_000_000; a <= 360_000_000; a += 1_234_567) {
+      const h = salaryReportHref(a);
+      if (h !== null) expect(SALARY_STATIC_AMOUNTS).toContain(Number(h.replace("/salary/", "")));
+    }
+  });
+});
+
+describe("salaryReportHrefOrNearest (월급 리포트·공유 결과용 느슨한 판)", () => {
+  it("agrees with salaryReportHref when it links, falls back to the nearest member in range, null outside", () => {
+    expect(salaryReportHrefOrNearest(69_800_000)).toBe(salaryReportHref(69_800_000));
+    expect(salaryReportHrefOrNearest(50_000_000)).toBe("/salary/50000000");
+    expect(salaryReportHrefOrNearest(228_000_000)).toBe("/salary/220000000");
+    expect(salaryReportHrefOrNearest(275_000_000)).toBe("/salary/300000000"); // 동률 → 큰 쪽
+    expect(salaryReportHrefOrNearest(400_000_000)).toBeNull();
+    expect(salaryReportHrefOrNearest(4_000_000)).toBeNull();
+    expect(salaryReportHrefOrNearest(Number.NaN)).toBeNull();
   });
 });
 
