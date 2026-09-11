@@ -128,15 +128,21 @@ try {
   /* 최초 생성 */
 }
 
+// CRLF 체크아웃(core.autocrlf=true)에서는 작업 트리 파일이 CRLF 라 LF 렌더와 바이트 비교하면
+// 수치가 같아도 '드리프트'로 읽혀 verify:site 첫 단계에서 멈췄다 — 줄바꿈만 다른 경우는 동일 취급
+// (gen-salary-amounts.ts 의 2026-09-12 수정과 같은 규칙).
+const normalize = (s: string) => s.replace(/\r\n/g, "\n");
+const sameContent = normalize(current) === normalize(next);
+
 if (isCheck) {
-  if (current !== next) {
+  if (!sameContent) {
     console.error("[gen-site-metrics] 드리프트 감지 — 데이터 수와 생성 상수 불일치.");
     console.error("  → tsx scripts/gen-site-metrics.ts 로 재생성 후 커밋하세요.");
     process.exit(1);
   }
   console.log("[gen-site-metrics] OK — 드리프트 0건, 클라 import 오염 0건");
 } else {
-  if (current === next) {
+  if (sameContent) {
     console.log("[gen-site-metrics] 변경 없음");
   } else {
     writeFileSync(OUT_PATH, next);
