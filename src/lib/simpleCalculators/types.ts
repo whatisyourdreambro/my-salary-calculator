@@ -35,6 +35,12 @@ export interface CalculatorFaq {
  a: string;
 }
 
+/** 계산 방법의 근거 링크 — 화면의 '공식 계산방법 참고' 블록에 그대로 나간다. 호스트 정책: sourcePolicy.ts */
+export interface CalculatorSource {
+ title: string;
+ url: string;
+}
+
 export interface CalculatorDef {
  slug: string;
  title: string;
@@ -69,7 +75,7 @@ export interface CalculatorDef {
  /** Publication date of a new calculator, independent of site-wide releases. */
  publishedAt?: string;
  /** Public references explaining the model or calculation method. */
- sources?: Array<{ title: string; url: string }>;
+ sources?: CalculatorSource[];
 }
 
 /**

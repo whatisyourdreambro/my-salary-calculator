@@ -1,14 +1,16 @@
 // src/lib/simpleCalculators/enrichments.ts
 //
 // 100개 단순 계산기 중 우선순위 30개에 대한 콘텐츠 보강 데이터.
-// 각 항목은 explanation, formula, faqs, caveats, relatedSlugs를 포함.
+// 각 항목은 explanation, formula, faqs, caveats, relatedSlugs(·sources)를 포함.
+// sources 는 2026-09-12(S3-1 기반)부터 병합된다 — 규칙 docs/calc-content-writing-guide-2026-09-12.md,
+// 허용 호스트 sourcePolicy.ts, 게이트 src/lib/__tests__/calcSources.test.ts.
 // allCalculators 머지 시 index.ts에서 자동 적용됨.
 //
 // 페이지당 추가 텍스트 약 600~900자 → AdSense thin content 임계 통과 + SEO E-E-A-T 강화.
 
 import type { CalculatorDef } from "./types";
 
-export type Enrichment = Pick<CalculatorDef, "explanation" | "formula" | "faqs" | "caveats" | "relatedSlugs">;
+export type Enrichment = Pick<CalculatorDef, "explanation" | "formula" | "faqs" | "caveats" | "relatedSlugs" | "sources">;
 
 export const enrichmentMap: Record<string, Enrichment> = {
   // ═══════ 세금 8개 ═══════════════════════════════════════════

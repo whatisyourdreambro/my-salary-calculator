@@ -6,7 +6,7 @@ import type { CalculatorBatch } from "./computeLoader";
 import { PRECISION_TWINS } from "./twins";
 import { batch1Calculators } from "./batch1";
 import { batch2Calculators } from "./batch2";
-import { enrichmentMap } from "./enrichments";
+import { enrichmentMap, type Enrichment } from "./enrichments";
 import { enrichmentsExtA } from "./enrichments-ext-a";
 import { enrichmentsExtB } from "./enrichments-ext-b";
 import { enrichmentsExtC } from "./enrichments-ext-c";
@@ -28,10 +28,14 @@ const mergedEnrichments = {
  ...enrichmentsExtC,
 };
 
-// enrichments(explanation·formula·faqs·caveats·relatedSlugs)를 슬러그별로 자동 병합
-// 기존 batch에 explanation이 있으면 그대로 유지, enrichments에만 있는 키는 추가 적용
-export const allCalculators: CalculatorDef[] = rawCalculators.map((calc) => {
- const enrichment = mergedEnrichments[calc.slug];
+/**
+ * enrichment(explanation·formula·faqs·caveats·relatedSlugs·sources)를 batch 정의 위에 얹는다.
+ * 모든 필드가 `calc.x ?? enrichment.x` — batch 에 값이 있으면 enrichment 는 무시된다.
+ * sources 도 같은 우선순위(2026-09-12, S3-1 기반): expandedFinance/Practical 의 batch sources 32종은 그대로,
+ * 출처가 없던 170종은 enrichment 파일의 sources 가 '공식 계산방법 참고' 블록에 나간다.
+ * 게이트: src/lib/__tests__/calcSources.test.ts (우선순위·https·중복·sourcePolicy 허용 호스트).
+ */
+export function mergeEnrichment(calc: CalculatorDef, enrichment: Enrichment | undefined): CalculatorDef {
  if (!enrichment) return calc;
  return {
  ...calc,
@@ -40,8 +44,11 @@ export const allCalculators: CalculatorDef[] = rawCalculators.map((calc) => {
  faqs: calc.faqs ?? enrichment.faqs,
  caveats: calc.caveats ?? enrichment.caveats,
  relatedSlugs: calc.relatedSlugs ?? enrichment.relatedSlugs,
+ sources: calc.sources ?? enrichment.sources,
  };
-});
+}
+
+export const allCalculators: CalculatorDef[] = rawCalculators.map((calc) => mergeEnrichment(calc, mergedEnrichments[calc.slug]));
 
 export function getCalculatorBySlug(slug: string): CalculatorDef | undefined {
  return allCalculators.find((c) => c.slug === slug);
