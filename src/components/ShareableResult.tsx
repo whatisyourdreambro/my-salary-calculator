@@ -15,7 +15,7 @@ const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 // /salary/[amount]는 정적 생성(dynamicParams=false)이라 정적 집합 밖 금액은 404.
 // 종전에는 격자를 닫힌식(5백만~1억 50만 단위, 1억~2억 5백만 단위, 2억 상한)으로 복제했는데
 // 실제 집합(1억~2억은 100만 단위, 최대 3.5억)과 어긋나 링크 대상이 달랐다 — 2026-09-12 S2-2 에서
-// 정본 salaryReportHref 계열로 교체. 집합 범위 밖 금액은 클램프 대신 버튼 생략.
+// 정본 salaryReportHref 계열로 교체. 집합 범위 밖 금액은 클램프하지 않고, 같은 자리의 버튼을 홈 계산기로 돌린다(높이 불변).
 
 interface ShareableResultProps {
  data: string;
@@ -44,7 +44,10 @@ export default function ShareableResult({ data }: ShareableResultProps) {
  const { annualSalary, payload } = result;
 
  // 연봉 상세 리포트(/salary/[amount]) — 정적 집합 범위 안일 때만, 가장 가까운 정적 페이지로.
- // 범위 밖이면 null → 버튼 생략 (월 소득 환산 결과는 종전대로 미노출).
+ // 범위 밖(500만 미만·3.5억 초과 — 페이로드는 1조까지 허용)이면 null. 그래도 버튼 자리는 비우지 않는다:
+ // 이 카드 바로 아래가 /share 의 CalcResultAd 라 카드 높이가 줄면 광고가 올라온다(2026-08-16 규칙). null 이면
+ // 같은 클래스의 버튼을 홈 계산기(/)로 연결해 두 버튼 행을 유지한다 (2026-09-12 리뷰 지적, S2-2).
+ // 월 소득 환산 결과(regular 아님)는 종전대로 버튼 1개 — 그쪽은 원래 상세 리포트 버튼이 없었다.
  const salaryReportLink = result.regular ? salaryReportHrefOrNearest(annualSalary) : null;
 
  return (
@@ -73,12 +76,12 @@ export default function ShareableResult({ data }: ShareableResultProps) {
  </> : <div><dt className="inline font-semibold">세전 월 소득: </dt><dd className="inline">{formatNumber(payload.monthlyIncome)}원</dd></div>}
  </dl>
  <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
- {salaryReportLink && (
+ {result.regular && (
  <Link
- href={salaryReportLink}
+ href={salaryReportLink ?? "/"}
  className="inline-block py-4 px-8 bg-primary text-primary-foreground font-bold text-lg rounded-lg hover:bg-primary/90 transition-transform transform hover:scale-105 shadow-lg"
  >
- 연봉 상세 분석 보기
+ {salaryReportLink ? "연봉 상세 분석 보기" : "연봉 계산기로 다시 계산"}
  </Link>
  )}
  <Link
