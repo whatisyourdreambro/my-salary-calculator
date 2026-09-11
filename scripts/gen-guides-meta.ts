@@ -7,7 +7,7 @@
 //
 // 실행: tsx scripts/gen-guides-meta.ts
 
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { guides } from "../src/lib/guidesContent";
 import type { GuideCardMeta } from "../src/lib/guidesData";
@@ -29,5 +29,19 @@ const banner = [
   "export const guideCards: GuideCardMeta[] = ",
 ].join("\n");
 
-writeFileSync(OUT_PATH, `${banner}${JSON.stringify(cards, null, 1)};\n`, "utf8");
-console.log(`[gen-guides-meta] OK — 카드 메타 ${cards.length}편 생성 (${OUT_PATH})`);
+const next = `${banner}${JSON.stringify(cards, null, 1)};\n`;
+// CRLF 체크아웃(core.autocrlf)에서 내용이 같으면 다시 쓰지 않는다 — prebuild 마다 줄바꿈만 다른
+// 더티 트리가 생기던 것 방지(2026-09-12, gen-salary-amounts·gen-site-metrics 와 동일).
+let current = "";
+try {
+  current = readFileSync(OUT_PATH, "utf8");
+} catch {
+  /* 최초 생성 */
+}
+const eol = (s: string) => s.replace(/\r\n/g, "\n");
+if (eol(current) === eol(next)) {
+  console.log(`[gen-guides-meta] 변경 없음 — 카드 메타 ${cards.length}편 (${OUT_PATH})`);
+} else {
+  writeFileSync(OUT_PATH, next, "utf8");
+  console.log(`[gen-guides-meta] OK — 카드 메타 ${cards.length}편 생성 (${OUT_PATH})`);
+}
