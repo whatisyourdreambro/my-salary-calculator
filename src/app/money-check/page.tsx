@@ -47,8 +47,8 @@ export default function MoneyCheckPage() {
         <header className="mb-12 grid items-center gap-8 py-4 lg:grid-cols-[1.45fr_1fr] lg:gap-16 lg:py-8">
           <div>
             <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-sm font-semibold text-accent-foreground"><ClipboardCheck aria-hidden="true" className="h-4 w-4" />내 돈 체크</p>
-            <h1 className="text-4xl font-bold leading-[1.22] tracking-tight sm:text-5xl">내 돈 체크,<br /><span className="text-link">하나씩 가볍게.</span></h1>
-            <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">월급부터 이직, 연말정산까지.<br className="hidden sm:block" /> 지금 내 상황에 필요한 계산과 준비를 모았어요.</p>
+            <h1 className="text-4xl font-bold leading-[1.22] tracking-tight sm:text-5xl">내 돈 체크<br /><span className="text-link">직장인 돈 체크리스트</span></h1>
+            <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground sm:text-lg">하나씩 가볍게. 월급부터 이직, 연말정산까지.<br className="hidden sm:block" /> 지금 내 상황에 필요한 계산과 준비를 모았어요.</p>
             <a href="#checklist-heading" className="mt-7 inline-flex min-h-12 items-center gap-3 rounded-xl bg-primary px-5 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-[hsl(var(--primary-hover))]">내 체크리스트 보기<ArrowDown aria-hidden="true" className="h-4 w-4" /></a>
             <p className="mt-4 text-sm text-muted-foreground">로그인 없이 무료 · 확인 기록은 내 브라우저에</p>
           </div>

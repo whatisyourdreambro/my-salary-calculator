@@ -95,9 +95,10 @@ export default function ToolsHubPage() {
   leafName="금융 계산기 모음"
   badge="금융·생활 도구"
   badgeIcon={Calculator}
-  headingPrefix="필요한 계산을"
-  headingAccent="한곳에서"
-  lead={`급여, 세금, 대출부터 일상 계산까지 ${totalCount}가지 도구를 제공합니다. 주제를 선택하고 내 조건에 맞게 계산해 보세요.`}
+  headingPrefix="금융 계산기 모음"
+  headingAccent="2026"
+  headingSuffix={`${totalCount}종`}
+  lead={`필요한 계산을 한곳에서. 급여, 세금, 대출부터 일상 계산까지 ${totalCount}가지 도구를 제공합니다. 주제를 선택하고 내 조건에 맞게 계산해 보세요.`}
   stats={[]}
   categories={CATEGORIES}
   seoHeading="계산 결과를 읽는 방법"

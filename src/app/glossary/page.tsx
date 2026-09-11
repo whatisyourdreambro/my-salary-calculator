@@ -54,11 +54,11 @@ export default function GlossaryPage() {
             <span>금융 문맹 탈출 프로젝트</span>
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-tight text-navy mb-5 leading-[1.15]">
-            금융 용어, <br className="sm:hidden" />
-            <span className="text-electric">당신의 돈이 말을 거는 순간</span>
+            금융·세금 <br className="sm:hidden" />
+            <span className="text-electric">용어 사전 {glossaryData.length}개</span>
           </h1>
           <p className="text-lg sm:text-xl text-faint-blue leading-relaxed max-w-2xl mx-auto font-medium">
-            더 이상 어렵고 복잡한 용어에 주눅 들지 마세요.{" "}
+            금융 용어, 당신의 돈이 말을 거는 순간. 더 이상 어렵고 복잡한 용어에 주눅 들지 마세요.{" "}
             <br className="hidden sm:block" />
             당신의 월급봉투와 통장, 그리고 미래를 이해하는 가장 확실한 열쇠를
             드립니다.

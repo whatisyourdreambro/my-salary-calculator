@@ -35,7 +35,7 @@ export default function HubIndexPage() {
         <Breadcrumbs path="/hub" leafName="주제별 종합 가이드" className="mb-6" />
         <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 mb-3">
-            주제별 종합 가이드
+            재테크·절세 주제별 가이드
           </h1>
           <p className="text-lg text-muted-blue dark:text-canvas-300">
             관심 주제를 고르면 핵심 계산기·도구·전략을 한 번에 볼 수 있습니다.

@@ -37,10 +37,10 @@ export default function InsightsIndexPage() {
             <span>머니샐러리 데이터 리포트</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-navy mb-5 leading-[1.15]">
-            데이터로 보는 <span className="text-electric">연봉의 진실</span>
+            연봉·성과급 <span className="text-electric">데이터 리포트</span>
           </h1>
           <p className="text-lg text-faint-blue leading-relaxed font-medium">
-            국내 {companyCount}개사 연봉 DB와 공시·정부 통계를 직접 집계해 분기마다
+            데이터로 보는 연봉의 진실. 국내 {companyCount}개사 연봉 DB와 공시·정부 통계를 직접 집계해 분기마다
             발행하는 데이터 리포트입니다. 언론·블로그에서{" "}
             <strong className="text-navy">출처 표기 시 자유롭게 인용</strong>할 수
             있습니다.

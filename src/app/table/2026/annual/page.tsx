@@ -96,7 +96,7 @@ function AnnualTable() {
           <>
             2026 연봉 실수령액 <br className="sm:hidden" />
             <span className="text-electric whitespace-nowrap">
-              대백과
+              표
             </span>
           </>
         }

@@ -1,7 +1,10 @@
 import { ENGLISH_TOOLS, type EnglishToolSlug } from "./englishTools";
 
 type Task = { title: string; description: string; href: string };
-type Hub = { path: string; title: string; description: string; tasks: Task[]; sections: { title: string; text: string; points?: string[] }[]; reading: Task[] };
+// heading: keyword-led on-page <h1> (S3-5, 2026-09-12). title stays the <title>/OG/breadcrumb label —
+// buildEnglishMetadata reads title, and titles are frozen for the CTR judgment window, so the H1 is a separate field.
+export type EnglishHub = { path: string; title: string; heading?: string; description: string; tasks: Task[]; sections: { title: string; text: string; points?: string[] }[]; reading: Task[] };
+type Hub = EnglishHub;
 const tool = (slug: EnglishToolSlug): Task => {
   const entry = ENGLISH_TOOLS.find(item => item.slug === slug)!;
   return { title: entry.title, description: entry.description, href: `/en/tools/${slug}` };
@@ -13,7 +16,7 @@ const currency: Task = { href: "/en/salary-converter", title: "Gross salary curr
 
 export const ENGLISH_HUBS = {
   bonus: {
-    path: "/en/bonus", title: "Bonuses and stock awards", description: "Work out what a bonus notice actually promises before turning it into a spending plan. Separate the employer's rules, your assumptions and the gross arithmetic.",
+    path: "/en/bonus", title: "Bonuses and stock awards", heading: "Korea bonus & stock award tax", description: "Work out what a bonus notice actually promises before turning it into a spending plan. Separate the employer's rules, your assumptions and the gross arithmetic.",
     tasks: [tool("bonus"), tool("offer-compare"), flat],
     sections: [
       { title: "Start with the pay base", text: "A percentage of annual base salary is different from the same percentage of monthly basic pay. The gross bonus tool uses annual base salary. Convert the amount in your notice to that basis before entering a percentage; do not substitute total compensation if the employer uses a narrower definition.", points: ["Record the relevant performance year, payment date and eligible employment period.", "Separate guaranteed cash from a discretionary or performance-dependent amount.", "Check whether a quoted amount is before tax, after withholding or a share valuation."] },
@@ -23,7 +26,7 @@ export const ENGLISH_HUBS = {
     reading: [guide("samsung-employee-rsu-stock", "Read a Samsung stock-award notice", "Distinguish grant, vesting, sale and company-specific conditions."), guide("sk-hynix-employee-bonus-stock", "Read PS and PI bonus information", "Identify the base, period and documents behind a bonus figure."), guide("year-end-tax-deductions-guide", "Understand year-end reconciliation", "A withheld amount and final annual tax are different.")],
   },
   calculators: {
-    path: "/en/calculators", title: "English calculators", description: "Choose by the result you need: Korean take-home pay, a limited tax comparison, currency conversion or a planning calculation in one currency.",
+    path: "/en/calculators", title: "English calculators", heading: "Korea salary & tax calculators", description: "Choose by the result you need: Korean take-home pay, a limited tax comparison, currency conversion or a planning calculation in one currency.",
     tasks: [salary, flat, currency, ...ENGLISH_TOOLS.map(entry => tool(entry.slug))],
     sections: [
       { title: "Three different calculation boundaries", text: "The Korea salary form models regular-employee deductions in KRW. The flat-tax tool compares two limited annual income-tax methods. The general planning tools use your amounts and assumptions without choosing a country's tax or benefit rules. A familiar currency symbol does not turn a gross model into a local payroll engine." },
@@ -33,7 +36,7 @@ export const ENGLISH_HUBS = {
     reading: [{ href: "/en/help", title: "Methods and official sources", description: "Review assumptions, tax-year boundaries and insurance coverage." }, { href: "/en/dashboard", title: "My dashboard", description: "Review or delete English salary estimates saved in this browser." }],
   },
   salary: {
-    path: "/en/salary-db", title: "Understand salary data and compare offers", description: "Read Korean compensation figures in English: what an employee average includes, what a new-hire offer says and why neither is automatically your take-home pay.",
+    path: "/en/salary-db", title: "Understand salary data and compare offers", heading: "Korea salary data & offers", description: "Read Korean compensation figures in English: what an employee average includes, what a new-hire offer says and why neither is automatically your take-home pay.",
     tasks: [salary, tool("offer-compare"), tool("hourly-to-salary"), tool("salary-raise"), currency],
     sections: [
       { title: "An employee average is not an offer", text: "A company's disclosed employee average can combine different roles, tenure levels, sites and bonus outcomes for the reporting period. It does not identify a new graduate's base salary or a particular foreign employee's package. Check the entity, year, employee scope, unit and source before comparing two figures.", points: ["Public employee average: preserve its reporting period and population.", "Advertised range: check role, location and whether variable pay is included.", "Your offer: use the written fixed salary and separate conditional components."] },
@@ -54,7 +57,7 @@ export const ENGLISH_HUBS = {
     reading: [guide("earned-income-credit-2026", "EITC application and income years", "Read the dated NTS windows and household eligibility conditions."), guide("year-end-tax-deductions-guide", "Year-end deduction checklist", "Separate income deductions, tax credits and a refund."), guide("health-insurance-2026-guide", "Health insurance after leaving a job", "Check the first regional bill and continuation conditions.")],
   },
   money: {
-    path: "/en/tools", title: "Money planning tools", description: "Compare borrowing, saving and everyday spending with transparent assumptions. Choose a currency for display and keep all amounts in that same currency.",
+    path: "/en/tools", title: "Money planning tools", heading: "Korea money planning tools", description: "Compare borrowing, saving and everyday spending with transparent assumptions. Choose a currency for display and keep all amounts in that same currency.",
     tasks: ENGLISH_TOOLS.map(entry => tool(entry.slug)),
     sections: [
       { title: "Borrowing: compare the schedule", text: "For a loan, enter the principal, annual rate and term from the same quotation. A fixed monthly-payment model is different from an interest-only facility or a changing-rate agreement. Review fees, rate resets and early-repayment conditions separately. An affordable-looking payment does not establish regulatory eligibility or approval." },
@@ -65,7 +68,7 @@ export const ENGLISH_HUBS = {
     reading: [guide("loan-types-comparison-2026", "Loan types and renewal risks", "Mortgage, instalment loan and credit line are different obligations."), currency, { href: "/en/help", title: "Methods and limitations", description: "What the English tools do and what they leave out." }],
   },
   fun: {
-    path: "/en/fun", title: "Everyday money, in perspective", description: "Turn a price into work time or divide a shared bill. These small tools make the arithmetic visible without scoring your worth or prescribing how you should spend.",
+    path: "/en/fun", title: "Everyday money, in perspective", heading: "Korea money, everyday numbers", description: "Turn a price into work time or divide a shared bill. These small tools make the arithmetic visible without scoring your worth or prescribing how you should spend.",
     tasks: [tool("work-time-cost"), tool("split-bill"), tool("savings-goal")],
     sections: [
       { title: "What does a purchase cost in work time?", text: "Use the spendable hourly pay you actually want to budget against. A purchase of 120 at spendable pay of 20 per hour represents six hours in the same currency. Gross hourly wage can overstate money available to spend because it comes before deductions; the work-time tool does not estimate those deductions for you." },
