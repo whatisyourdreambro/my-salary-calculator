@@ -15,7 +15,8 @@ export default function CivilPayForecastSelector() {
   const [grade, setGrade] = useState(9);
   const [step, setStep] = useState(1);
   const result = getCivilServantForecast(grade, step);
-  // 예상 월 기본급을 /monthly 정적 격자에 스냅한 실수령 링크(격자 밖 href 는 404).
+  // 예상 월 기본급을 /monthly 정적 격자에 스냅한 실수령 참고 링크(격자 밖 href 는 404).
+  // /monthly 는 일반 근로자(4대보험) 기준이라 공무원연금·수당은 미반영 — 라벨에 '일반 근로자 기준 … 참고'를 명시(2026-09-12 리뷰).
   const netHref = result ? `/monthly/${nearestStaticMonthlyAmount(result.predicted2027)}` : "/table/2026/monthly";
   const measurement = useCalculatorMeasurement({
     calcType: "civil-servant-pay-2027",
@@ -70,7 +71,7 @@ export default function CivilPayForecastSelector() {
         </>}
       </div>
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-3 text-sm font-bold text-electric">
-        <Link href={netHref} onClick={event => { if (event.nativeEvent.isTrusted) trackGuideCTAClick(netHref, "civil-forecast-net"); }} className="underline underline-offset-4">예상 기본급 실수령액 보기</Link>
+        <Link href={netHref} onClick={event => { if (event.nativeEvent.isTrusted) trackGuideCTAClick(netHref, "civil-forecast-net"); }} className="underline underline-offset-4">일반 근로자 기준 실수령 참고</Link>
         <Link href="/civil-servant-pay-2026" onClick={event => { if (event.nativeEvent.isTrusted) trackGuideCTAClick("/civil-servant-pay-2026", "civil-forecast-next"); }} className="underline underline-offset-4">2026년 확정표 확인</Link>
       </div>
     </section>
