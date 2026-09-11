@@ -32,6 +32,14 @@ const SRC = path.join(ROOT, "src");
 const APP = path.join(SRC, "app");
 const ALLOW_FILE = path.join(ROOT, "scripts", "ad-audit-allow.json");
 const DIFF_MODE = process.argv.includes("--diff");
+// --base <ref>: diff 게이트의 기준 커밋(기본 HEAD = 작업 트리 미커밋분만). 이미 커밋된 배치를 사후 평가할 때
+// `--diff --base <배치 직전 커밋>` (2026-09-12 리뷰: HEAD 고정이라 커밋 후 실행한 --diff 는 아무 삽입도 보지 못했다).
+const BASE_IDX = process.argv.indexOf("--base");
+const DIFF_BASE = BASE_IDX > -1 && process.argv[BASE_IDX + 1] ? process.argv[BASE_IDX + 1] : "HEAD";
+if (!/^[\w./~^-]+$/.test(DIFF_BASE)) {
+  console.error("--base 값이 올바르지 않습니다:", DIFF_BASE);
+  process.exit(1);
+}
 
 // 컴포넌트 → AdSense 슬롯 매핑 (AdPlacement.tsx 가 정본)
 const SLOT_OF = {
@@ -360,7 +368,7 @@ if (DIFF_MODE) {
   let d0 = "";
   try {
     // -c core.safecrlf=false: 작업 트리 LF/CRLF 경고(stderr 소음) 억제 — 결과 영향 없음
-    d0 = execSync('git -c core.safecrlf=false diff -U0 HEAD -- "src/**/*.tsx"', {
+    d0 = execSync(`git -c core.safecrlf=false diff -U0 ${DIFF_BASE} -- "src/**/*.tsx"`, {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 32 * 1024 * 1024,
@@ -403,7 +411,7 @@ const fmtHdr = (h) =>
 if (DIFF_MODE) {
   let diff = "";
   try {
-    diff = execSync('git diff -U2 HEAD -- "src/**/*.tsx"', {
+    diff = execSync(`git diff -U2 ${DIFF_BASE} -- "src/**/*.tsx"`, {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 32 * 1024 * 1024,
