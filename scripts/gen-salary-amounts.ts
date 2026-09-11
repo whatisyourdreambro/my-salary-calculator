@@ -51,6 +51,18 @@ if (process.argv.includes("--check")) {
   }
   console.log("[gen-salary-amounts] OK (드리프트 없음)");
 } else {
-  writeFileSync(OUT_PATH, next);
-  console.log(`[gen-salary-amounts] wrote ${OUT_PATH}`);
+  // CRLF 체크아웃(core.autocrlf)에서 내용이 같으면 다시 쓰지 않는다 — prebuild 마다 줄바꿈만 다른 더티 트리가 생기던 것 방지(2026-09-12).
+  let current = "";
+  try {
+    current = readFileSync(OUT_PATH, "utf8");
+  } catch {
+    /* 최초 생성 */
+  }
+  const sameContent = current.replace(/\r\n/g, "\n") === next.replace(/\r\n/g, "\n");
+  if (sameContent) {
+    console.log("[gen-salary-amounts] 변경 없음");
+  } else {
+    writeFileSync(OUT_PATH, next);
+    console.log(`[gen-salary-amounts] wrote ${OUT_PATH}`);
+  }
 }
