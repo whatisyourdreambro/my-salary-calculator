@@ -76,3 +76,30 @@
 | `mortgage-monthly-quick` | 원금균등 총 이자 180,500,000원(P·r·(n+1)/2, r=4%/12, n=360) → 원리금균등 대비 약 16% 적음 | finance.ts 산식 (scripts 임시 계산) | 2026-09-12 | computed |
 | `mortgage-monthly-quick` | 보금자리론 2026.9.1 공시 기준금리: u-보금자리론 10년 5.00%·15년 5.10%·20년 5.15%·30년 5.20%·40년 5.25%·50년 5.30%, 아낌e 4.90~5.20%, 실행일부터 만기까지 고정, 우대 최대 1.0%p | https://www.hf.go.kr/ko/sub01/sub01_01_04.do | 2026-09-12 | 200·2026 |
 | `mortgage-monthly-quick` | 은행별 분할상환방식 주택담보대출 평균금리 공시(2026 공시일정) | https://portal.kfb.or.kr/compare/loan_household_new.php | 2026-09-12 | 200·2026 |
+| `jeonse-loan-cost` | 기본값 전세대출 200,000,000원·금리 3.5% → 월 이자 583,333원·연 이자 7,000,000원 | compute() | 2026-09-12 | computed |
+| `jeonse-loan-cost` | 버팀목전세자금: 부부합산 연소득 5천만원 이하·순자산 3.45억원 이하 무주택 세대주, 연 2.5~3.5%, 수도권 1.2억원·수도권 외 0.8억원, 2년 이내(최장 10년), 신규계약 전세금액의 70%(신혼·2자녀 이상 80%) | https://nhuf.molit.go.kr/FP/FP05/FP0502/FP05020101.jsp | 2026-09-12 | 200·2026 |
+| `jeonse-loan-cost` | 청년전용 버팀목전세자금: 만 19~34세, 연 2.2~3.3%, 최대 1.5억원(임차보증금의 80% 이내), 2026년도 기준 자산 3.45억원 | https://nhuf.molit.go.kr/FP/FP05/FP0502/FP05020301.jsp | 2026-09-12 | 200·2026 |
+| `jeonse-loan-cost` | 한국주택금융공사 일반전세자금보증 기준보증료율 0.06~0.20% (본문 미인용, 보증료 존재 확인용) | https://www.hf.go.kr/ko/sub02/sub02_01_02.do | 2026-09-12 | 200·연도 미표기 |
+| `compound-interest-quick` | 기본값 원금 10,000,000원·월 500,000원·7%·20년 → 미래 자산 300,850,718원·총 투자 원금 130,000,000원·수익 170,850,718원 | compute() | 2026-09-12 | computed |
+| `compound-interest-quick` | 원금 10,000,000원·월 0원·7%·30년 → 81,164,975원; 10년 → 20,096,614원 | compute() | 2026-09-12 | computed |
+| `compound-interest-quick` | 연 복리 1,000만원 × 1.07^30 = 76,122,550원(약 7,612만원), 단리 1,000만원 + 30 × 70만원 = 3,100만원 | FSS 자료의 복리·단리 공식으로 산술 | 2026-09-12 | computed |
+| `compound-interest-quick` | 복리 = 이자에 이자, 미래가치 = 현재가치 × (1+연 이자율)^연수, 72의 법칙(72 ÷ 수익률), 개발연도 2023 | https://www.fss.or.kr/edu/fec/contMng/view.do?contentsSlno=618&menuNo=300017 | 2026-09-12 | 200·2023 |
+| `compound-interest-quick` | 1천만원 1년 연 3% 월복리 세후 1,025만 7,319원 vs 단리 정기예금 1,025만 3,800원, 금융소득 15.4% 원천징수, 개발연도 2024 | https://www.fss.or.kr/edu/fec/contMng/view.do?menuNo=300017&contentsSlno=682 | 2026-09-12 | 200·2024 |
+| `cagr-quick` | 기본값 초기 10,000,000원·최종 30,000,000원·10년 → CAGR 11.61%·총 수익률 200.00% | compute() | 2026-09-12 | computed |
+| `cagr-quick` | 초기 10,000,000원·최종 20,000,000원·10년 → CAGR 7.18%·총 수익률 100.00% (72 ÷ 7.18 ≈ 10.0) | compute() | 2026-09-12 | computed |
+| `cagr-quick` | 복리 미래가치 공식과 72의 법칙(CAGR 은 그 역산) | https://www.fss.or.kr/edu/fec/contMng/view.do?contentsSlno=618&menuNo=300017 | 2026-09-12 | 200·2023 |
+| `cagr-quick` | 경제금융용어 800선 등록일 2026.01.29, 첨부 2026_경제금융용어 800선.pdf | https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765 | 2026-09-12 | 200·2026 |
+| `exchange-impact-quick` | 기본값 10,000USD·매수 1,300원·현재 1,400원 → 환차익 1,000,000원·환율 변동 7.69%·현재 원화 가치 14,000,000원 | compute() | 2026-09-12 | computed |
+| `exchange-impact-quick` | 매수 1,400원·현재 1,300원 → 환차익 -1,000,000원·환율 변동 -7.14% | compute() | 2026-09-12 | computed |
+| `exchange-impact-quick` | 매매기준율은 외화 거래의 기준 환율, 은행은 환전수수료를 가감해 현찰·전신환 매입·매도율 고시; 등록일 2021.02.17 | https://www.bok.or.kr/portal/bbs/B0000216/view.do?menuNo=20064&nttId=10062982 | 2026-09-12 | 200·2021 |
+| `exchange-impact-quick` | 환율은 외환 수요·공급으로 결정, 변동요인 경제성장률·경상수지·실질금리·물가상승률·지정학적 위험·투기적 거래 | https://www.bok.or.kr/portal/bbs/B0000216/view.do?nttId=165643&type=YNGBGS&menuNo=20064 | 2026-09-12 | 200·2008 (등록일 2008.12.01) |
+| `exchange-impact-quick` | 경제금융용어 800선(2026) | https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765 | 2026-09-12 | 200·2026 |
+| `dividend-yield-quick` | 기본값 주가 50,000원·연 배당금 2,000원 → 배당 수익률 4.00%·100주 연 배당 200,000원 | compute() | 2026-09-12 | computed |
+| `dividend-yield-quick` | 세후 200,000원 × 84.6% = 169,200원, 4.00% × 0.846 = 3.38% (formula 의 세후 = 명목 × (1 − 0.154)) | formula 산술 | 2026-09-12 | computed |
+| `dividend-yield-quick` | 그 밖의 배당소득 원천징수세율 100분의 14 | https://www.law.go.kr/법령/소득세법/제129조 | 2026-09-12 | 200·2026 |
+| `dividend-yield-quick` | 개인지방소득세 = 원천징수 소득세의 100분의 10 특별징수 | https://www.law.go.kr/법령/지방세법/제103조의13 | 2026-09-12 | 200·2026 |
+| `dividend-yield-quick` | 이자소득등의 종합과세기준금액 2천만원 | https://www.law.go.kr/법령/소득세법/제14조 | 2026-09-12 | 200·2026 |
+| `monthly-rent-tax-credit-quick` | 기본값 월세 600,000원 → 예상 환급액 1,224,000원·공제 한도 적용 7,200,000원; 월세 1,000,000원 → 1,700,000원·10,000,000원 | compute() | 2026-09-12 | computed |
+| `monthly-rent-tax-credit-quick` | 공제율 15% 적용 시 10,000,000원 × 15% = 1,500,000원 | 산술 | 2026-09-12 | computed |
+| `monthly-rent-tax-credit-quick` | 무주택 세대주, 총급여 8천만원 이하(종합소득 7천만원 초과 제외) 15%, 총급여 5천5백만원 이하(종합소득 4천5백만원 초과 제외) 17%, 월세액 1천만원 한도, 배우자 추가공제 신설(2025.12.23) | https://www.law.go.kr/법령/조세특례제한법/제95조의2 | 2026-09-12 | 200·2026 |
+| `monthly-rent-tax-credit-quick` | 공제대상 주택 국민주택규모(85㎡) 또는 기준시가 4억원 이하(주거용 오피스텔·고시원 포함), 임대차계약서·주민등록 주소 일치, 2024.12.31 기준 안내 | https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=40613&cntntsId=239025 | 2026-09-12 | 200·2024 |
