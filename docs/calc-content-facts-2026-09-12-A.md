@@ -50,3 +50,29 @@
 | `annual-leave-pay-quick` | 월급의 시간급 환산: 1주 통상임금 산정 기준시간 × 1년 평균 주 수 ÷ 12 | https://www.law.go.kr/법령/근로기준법시행령/제6조 | 2026-09-12 | 200·2025 |
 | `annual-leave-pay-quick` | 월 209시간 = 최저임금 월급 환산 기준(고시 209시간 기준) | https://www.minimumwage.go.kr/minWage/policy/decisionMain.do | 2026-09-12 | 200·2026 |
 | `annual-leave-pay-quick` | 4주 평균 주 15시간 미만은 제60조 미적용 | https://www.law.go.kr/법령/근로기준법/제18조 | 2026-09-12 | 200·2026 |
+| `severance-pay-quick` | 기본값 최근 3개월 평균 월급 3,500,000원·근속연수 5년 → 예상 퇴직금 17,500,000원; 근속연수 1년 → 3,500,000원 | compute() | 2026-09-12 | computed |
+| `severance-pay-quick` | 계속근로기간 1년에 대하여 30일분 이상의 평균임금 | https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조 | 2026-09-12 | 200·2026 (시행 2026.7.1) |
+| `severance-pay-quick` | 계속근로기간 1년 미만·4주 평균 1주 소정근로시간 15시간 미만 근로자 제외 | https://www.law.go.kr/법령/근로자퇴직급여보장법/제4조 | 2026-09-12 | 200·2026 |
+| `severance-pay-quick` | 평균임금 = 사유 발생일 이전 3개월 임금 총액 ÷ 총일수, 통상임금보다 적으면 통상임금 | https://www.law.go.kr/법령/근로기준법/제2조 | 2026-09-12 | 200·2026 |
+| `severance-pay-quick` | 산식 퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365), 14일 이내 지급(제9조), 위반 시 3년 이하 징역 또는 3천만원 이하 벌금(제44조) | https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=999&ccfNo=3&cciNo=2&cnpClsNo=1 | 2026-09-12 | 200·2026 (2026.8.15 기준) |
+| `severance-pay-quick` | 고용노동부 FAQ 동일 산식(평균임금 × 30일분 × 계속근로일수 / 365) | https://www.moel.go.kr/faq/faqView.do?seqRepeat=89 | 2026-09-12 | 200·연도 미표기 |
+| `severance-pay-quick` | 직전 3개월이 91~92일이면 1일 평균임금이 월급 ÷ 30보다 작아 간이값 대비 1~2% 낮음 (30 ÷ (91/3) ≈ 0.989, 30 ÷ (92/3) ≈ 0.978) | 달력 산술 (기존 SI-07 게이트 문장 유지) | 2026-09-12 | computed |
+| `night-shift-pay-quick` | 기본값 통상시급 15,000원·야간 5시간 → 야간 수당 112,500원; 8시간 → 180,000원 | compute() | 2026-09-12 | computed |
+| `night-shift-pay-quick` | 야간근로(오후 10시~다음 날 오전 6시) 통상임금의 100분의 50 이상 가산(제3항), 연장 50%(제1항), 휴일 8시간 이내 50%·초과 100%(제2항) | https://www.law.go.kr/법령/근로기준법/제56조 | 2026-09-12 | 200·2026 (시행 2026.8.20) |
+| `night-shift-pay-quick` | 가산임금 의무는 상시 5명 이상 근로자 사업장, 야간근로 22시~06시 50% 가산 | https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=82&onhunqueSeq=4882 | 2026-09-12 | 200·2026 (2026.8.15 기준) |
+| `overtime-pay-quick` | 기본값 통상시급 15,000원·시간외 10시간 → 시간외 수당 225,000원·할증분 75,000원; 12시간 → 270,000원·90,000원 | compute() | 2026-09-12 | computed |
+| `overtime-pay-quick` | 연장근로 통상임금의 100분의 50 이상 가산 | https://www.law.go.kr/법령/근로기준법/제56조 | 2026-09-12 | 200·2026 |
+| `overtime-pay-quick` | 1주 12시간 한도(제53조 제1항), 특별한 사정 시 고용노동부장관 인가·근로자 동의로 연장(제4항) | https://www.law.go.kr/법령/근로기준법/제53조 | 2026-09-12 | 200·2026 |
+| `loan-affordability` | 기본값 연봉 50,000,000원·금리 4% → 30년 만기 가능 대출액 349,102,067원·월 상환 한도 1,666,667원; 금리 5.5% → 293,536,272원 | compute() | 2026-09-12 | computed |
+| `loan-affordability` | 종전 formula 근사식(연 상환액 × 만기 / (1 + 평균금리 × 만기/2)) ≠ compute(annuityPrincipal, r=월금리, n=360) → 실제 산식으로 교체 | compute() | 2026-09-12 | formula≠compute |
+| `loan-affordability` | 차주단위 DSR 은행 40%, 제2금융권 60%→50% ('22.1월~) | https://www.fsc.go.kr/no010101/76740 | 2026-09-12 | 200·2021 (2021-10-26 보도자료) |
+| `loan-affordability` | 3단계 스트레스 DSR '25.7.1 시행, 스트레스 금리 1.50%, 지방 주담대 0.75% | https://www.fsc.go.kr/no010101/84617 | 2026-09-12 | 200·2025 (2025-05-20 보도자료) |
+| `loan-affordability` | 스트레스 DSR 은 변동·혼합·주기형 대출에 적용, 스트레스 금리 하한 1.5%·상한 3.0% | https://www.fsc.go.kr/po010101/81343 | 2026-09-12 | 200·2024 ('24년 시행 안내) |
+| `loan-affordability` | 제2금융권 규제비율 50% vs 은행권 40% Q&A | https://www.korea.kr/news/policyNewsView.do?newsId=148894881 | 2026-09-12 | 200·2021 |
+| `loan-refinance-savings` | 기본값 잔여 원금 200,000,000원·기존 5%·신규 3.5%·20년 → 총 이자 절감 38,398,090원·월 절감 159,992원; 신규 4.5% → 13,107,054원·54,613원 | compute() | 2026-09-12 | computed |
+| `loan-refinance-savings` | 2025.1.13 신규 대출부터 실비용 내 중도상환수수료, 은행권 고정금리 주담대 수수료율 1.43%→0.56% | https://www.fsc.go.kr/no010101/83833 | 2026-09-12 | 200·2025 (2025-01-09 보도자료) |
+| `loan-refinance-savings` | 가계대출금리 비교공시 2026년도 공시일정(매월), 신규취급액 기준 공시·분할상환방식 주택담보대출 정의 | https://portal.kfb.or.kr/compare/loan_household_new.php | 2026-09-12 | 200·2026 |
+| `mortgage-monthly-quick` | 기본값 대출액 300,000,000원·4%·30년 → 월 상환액 1,432,246원·총 이자 215,608,519원; 20년 → 1,817,941원·136,305,837원 | compute() | 2026-09-12 | computed |
+| `mortgage-monthly-quick` | 원금균등 총 이자 180,500,000원(P·r·(n+1)/2, r=4%/12, n=360) → 원리금균등 대비 약 16% 적음 | finance.ts 산식 (scripts 임시 계산) | 2026-09-12 | computed |
+| `mortgage-monthly-quick` | 보금자리론 2026.9.1 공시 기준금리: u-보금자리론 10년 5.00%·15년 5.10%·20년 5.15%·30년 5.20%·40년 5.25%·50년 5.30%, 아낌e 4.90~5.20%, 실행일부터 만기까지 고정, 우대 최대 1.0%p | https://www.hf.go.kr/ko/sub01/sub01_01_04.do | 2026-09-12 | 200·2026 |
+| `mortgage-monthly-quick` | 은행별 분할상환방식 주택담보대출 평균금리 공시(2026 공시일정) | https://portal.kfb.or.kr/compare/loan_household_new.php | 2026-09-12 | 200·2026 |
