@@ -364,7 +364,7 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
      아래(관련 계산기)라 결과만 보고 떠나는 방문이 다음 페이지로 이어지지 않았다 (2026-09-11 NAV-01/SI-03).
      정밀 계산기(같은 의도의 /tools·전용 페이지)가 있으면 첫 핀으로 둔다. 광고 위로 올리지 말 것. */}
  {(calc.precisionTwin || (calc.relatedCards && calc.relatedCards.length > 0)) && (
- <nav aria-label="다음 계산기" className="mb-6 flex flex-wrap gap-2">
+ <nav aria-label="다음 계산기" data-msy-module="calc-next-pins" className="mb-6 flex flex-wrap gap-2">
  {calc.precisionTwin && (
  <Link href={calc.precisionTwin.href} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-electric px-4 text-sm font-bold text-white hover:bg-electric/90">
  {calc.precisionTwin.title}
