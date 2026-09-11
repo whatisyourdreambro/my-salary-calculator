@@ -93,6 +93,24 @@ const nextConfig = {
   // 위험: 일시적 GSC "Page with redirect" 카운트 증가 (정상). 시즌 직전 배포 주의.
   async redirects() {
     return [
+      // ── SEO 위생 (2026-09-11, S1-5) ─────────────────────────────────────
+      // /community 는 2025-09-20 삭제(6a942d5) 후 리다이렉트 없이 404 로 남아 있던
+      // 구 URL. 가장 가까운 허브(Q&A)로 308.
+      {
+        source: "/community",
+        destination: "/qna",
+        permanent: true,
+      },
+      // /company/[id] 는 Edge 페이지의 permanentRedirect 로 308 중이지만, 그 응답은
+      // 캐시 재생 시 Location 을 잃을 수 있다(아래 dedupe 규칙 주석과 같은 함정).
+      // 라우팅 이전 단계 규칙으로 항상 정상 308 을 보장한다. compare·simulator 는
+      // 실제 페이지이므로 제외(2세그먼트 /company/compare/[slug] 는 애초에 불일치).
+      // Edge 페이지는 폴백으로 유지 — 삭제는 마스터플랜 §12-2 ⑩ 결정 후.
+      {
+        source: "/company/:id((?!compare$|simulator$)[^/]+)",
+        destination: "/salary-db/:id",
+        permanent: true,
+      },
       {
         source: "/table/annual",
         destination: "/table/2026/annual",
