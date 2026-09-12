@@ -6,6 +6,8 @@ import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
+import GuideSupplement from "@/components/GuideSupplement";
+import { guideSupplements } from "@/lib/guides/supplements";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
 import { speakableLd, articleLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
@@ -89,7 +91,8 @@ export default function GuidePage({ params }: Props) {
  });
 
  // 본문의 "자주 묻는 질문" 섹션에서 빌드 타임 추출 — 가시 콘텐츠와 1:1 (중복 데이터 없음)
- const guideFaqs = extractGuideFaqs(guide.content);
+ // 마지막 광고 아래 보강 섹션(GuideSupplement)의 FAQ 도 같은 페이지에 보이므로 함께 포함한다.
+ const guideFaqs = extractGuideFaqs(guide.content + (guideSupplements[guide.slug] ?? ""));
 
  return (
  <>
@@ -136,6 +139,9 @@ export default function GuidePage({ params }: Props) {
  <div className="my-8">
  <HomeTopAd />
  </div>
+
+ {/* 보강 섹션은 반드시 마지막 광고(HomeTopAd) 아래 — 광고 위 UI 삽입 금지 규칙(2026-08-16) */}
+ <GuideSupplement slug={guide.slug} />
  </div>
  </>
  );

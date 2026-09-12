@@ -151,6 +151,7 @@ const rawGuides = [
  tags: ["간호사 연봉", "수간호사", "간호사 5년차", "간호사 월급", "3교대", "대학병원"],
  level: "중급",
  publishedDate: "2025-11-15",
+ modifiedDate: "2026-09-12",
  views: 185000,
  },
  {

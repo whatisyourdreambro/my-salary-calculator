@@ -150,6 +150,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-09-12",
   "views": 185000,
   "lang": "ko",
   "contentChars": 5156
