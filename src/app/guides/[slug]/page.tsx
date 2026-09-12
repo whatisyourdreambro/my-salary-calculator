@@ -6,7 +6,6 @@ import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
-import GuideSupplement from "@/components/GuideSupplement";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import JsonLd from "@/components/JsonLd";
@@ -91,7 +90,7 @@ export default function GuidePage({ params }: Props) {
  });
 
  // 본문의 "자주 묻는 질문" 섹션에서 빌드 타임 추출 — 가시 콘텐츠와 1:1 (중복 데이터 없음)
- // 마지막 광고 아래 보강 섹션(GuideSupplement)의 FAQ 도 같은 페이지에 보이므로 함께 포함한다.
+ // 레이아웃 푸터 광고 아래 보강 섹션(GuideSupplement, guides/layout.tsx)의 FAQ 도 같은 페이지에 보이므로 함께 포함한다.
  const guideFaqs = extractGuideFaqs(guide.content + (guideSupplements[guide.slug] ?? ""));
 
  return (
@@ -140,8 +139,8 @@ export default function GuidePage({ params }: Props) {
  <HomeTopAd />
  </div>
 
- {/* 보강 섹션은 반드시 마지막 광고(HomeTopAd) 아래 — 광고 위 UI 삽입 금지 규칙(2026-08-16) */}
- <GuideSupplement slug={guide.slug} />
+ {/* 글별 보강 섹션(GuideSupplement)은 여기(page)가 아니라 guides/layout.tsx 의 PageFooterAds 아래에서 렌더된다 —
+    page 에 두면 레이아웃 푸터 광고 3개를 밀어낸다(광고 위 UI 삽입 금지, 2026-09-12 로컬 빌드 HTML 순서 검사로 확인). */}
  </div>
  </>
  );

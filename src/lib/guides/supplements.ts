@@ -1,13 +1,13 @@
 // src/lib/guides/supplements.ts
 //
-// 가이드 보강 섹션 — 마지막 광고(HomeTopAd) 아래에만 렌더되는 HTML 조각 (2026-09-12, S3-4).
+// 가이드 보강 섹션 — guides/layout.tsx 의 PageFooterAds(레이아웃 푸터 광고 3개) 아래에만 렌더되는 HTML 조각 (2026-09-12, S3-4).
 //
 // ★ 본문(guide.content)에 넣으면 광고 위치가 밀리므로 금지.
 //   - 본문 뒤에 오는 CalcResultAd·HomeTopAd 가 아래로 밀리고,
 //   - GuidePageClient 의 H2 분할 지점(1/3·2/3)이 바뀌어 본문 내 GuideMidAd·InArticleAd 위치까지 이동한다
 //     (2026-08-16 "광고 위 UI 삽입" 수익 사고 규칙).
 //   그래서 본문 정본(legacy-rewrite-*.ts)은 건드리지 않고, 이 조각을 src/components/GuideSupplement.tsx 가
-//   가이드 상세 페이지의 HomeTopAd 바로 아래에 붙인다.
+//   guides/layout.tsx 에서 PageFooterAds 바로 아래에 붙인다(page.tsx 의 HomeTopAd 아래는 레이아웃 푸터 광고 위라 금지).
 //
 // - 마크업 관습은 본문과 동일: <h2>·<p>·<ul><li>·<table class="w-full text-sm">. 이모지 헤더는 쓰지 않는다.
 // - "자주 묻는 질문" 섹션은 src/lib/guideFaq.ts 의 추출 패턴
@@ -111,7 +111,7 @@ const nurseSalarySupplement = `
 
 /**
  * 슬러그 → 보강 HTML. 항목이 없는 가이드는 GuideSupplement 가 아무것도 렌더하지 않는다.
- * 새 항목을 넣을 때도 같은 규칙: 마지막 광고 아래에서만 렌더, 본문 정본 무접촉, 수치는 검증 로그에 기록.
+ * 새 항목을 넣을 때도 같은 규칙: 레이아웃 푸터 광고(PageFooterAds) 아래에서만 렌더, 본문 정본 무접촉, 수치는 검증 로그에 기록.
  */
 export const guideSupplements: Record<string, string> = {
   "nurse-salary": nurseSalarySupplement,

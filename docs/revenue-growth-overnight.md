@@ -266,7 +266,7 @@ T0 = 이 커밋의 Cloudflare 배포 완료 시각. 부분일 제외, KST 첫 �
 | 항목 | 커밋 | 변경 | 근거·효과 |
 |---|---|---|---|
 | S3-4 문서 갱신 | `f0b4533` | 10x §5-11(OfferSlot 이동) ✅ `f2379fa` 해소 표기, L07' 사이드바 강등 후보(9/8 AdSense 기기 분해 데스크톱 수익 16.6%·자동 사이드레일 중복 — 9/13 GA4 기기 비중으로 확정), 마스터플랜 §12-2 ⑥⑦ 상태, 수익 감사 §7-5(PageFooterAds 순서) 완료 | 계획 §4 S3-4 "문서 갱신 먼저" |
-| S3-4 nurse-salary 보강 | `0341bce` | `src/lib/guides/supplements.ts` + `GuideSupplement`(서버 컴포넌트)를 `guides/[slug]/page.tsx` 의 **HomeTopAd 아래**에만 렌더. 연차별 급여 구조·직군/근무처 비교(간호직 8급 봉급표·보건교사 교원 봉급표·간호조무사 최저임금은 저장소 상수 import)·FAQ 4문항. FAQ 추출을 본문+보강으로 확장(FAQPage 3→7). `modifiedDate` 2026-09-12 | 397노출 살아 있는 가이드 온페이지 보강. 본문에 넣으면 본문 내 광고 분할점·CalcResultAd·HomeTopAd 가 밀리므로 전용 슬롯. 수치는 복지부 2020 실태조사·고용24·law.go.kr·경기도/시흥시 2026 공고·인사혁신처 봉급표만(미검증 7건 제외, 로그 `docs/nurse-salary-supplement-facts-2026-09-12.md`) |
+| S3-4 nurse-salary 보강 | `0341bce` | `src/lib/guides/supplements.ts` + `GuideSupplement`(클라이언트, usePathname 키 — CompanyRelatedJobs 패턴)를 `guides/layout.tsx` 의 **PageFooterAds(레이아웃 푸터 광고 3개) 아래**에만 렌더. 첫 구현은 page.tsx 의 HomeTopAd 아래였는데 로컬 빌드 HTML 순서 검사에서 그 아래에 레이아웃 푸터 광고(홈탑·인아티클·쿠팡)가 더 있음이 드러나 옮김(`0341bce` → 후속 커밋). 연차별 급여 구조·직군/근무처 비교(간호직 8급 봉급표·보건교사 교원 봉급표·간호조무사 최저임금은 저장소 상수 import)·FAQ 4문항. FAQ 추출을 본문+보강으로 확장(FAQPage 3→7). `modifiedDate` 2026-09-12 | 397노출 살아 있는 가이드 온페이지 보강. 본문에 넣으면 본문 내 광고 분할점·CalcResultAd·HomeTopAd 가 밀리므로 전용 슬롯. 수치는 복지부 2020 실태조사·고용24·law.go.kr·경기도/시흥시 2026 공고·인사혁신처 봉급표만(미검증 7건 제외, 로그 `docs/nurse-salary-supplement-facts-2026-09-12.md`) |
 | S3-1 배치 D | `aa45940` | enrichment 파일 16종(enrichments 8·ext-a 5·ext-b 3): details·caveats·faqs·sources. formula≠compute 2건 교체(real-estate-flip-cost·real-estate-capital-gains-quick). ext-a 최저임금 표시 리터럴 허용 등재 | 실측표 §2 후보 순 |
 | S3-1 배치 E | `ed12743` | expandedFinance 26종: define() 스펙의 questions·caveats(+`individualCaveats`)·details, 해외 출처 키(Microsoft·investor.gov·CFPB·BLS) → 공식 2건 | B02 보일러 47→21 |
 | S3-1 배치 F | `103b138` | expandedPractical 8종 + `individualCaveats` 플래그 신설(기본 false), 실측표 재생성 | B01 50→42. details 49→99/202, 출처 2건 49→99 |
@@ -281,6 +281,7 @@ T0 = 이 커밋의 Cloudflare 배포 완료 시각. 부분일 제외, KST 첫 �
 
 ### 11-3. 발견·함정 (다음 배치용)
 
+- ★가이드 상세의 마지막 광고는 page 의 HomeTopAd 가 아니라 `guides/layout.tsx` 의 PageFooterAds 다 — '마지막 광고 아래' 판단은 page 가 아니라 **빌드 HTML 순서**(또는 layout 까지)로 해야 한다(2026-05-29 layout 확인 교훈의 재발, 푸시 전 로컬 빌드 검사로 차단).
 - law.go.kr 조문은 가독 URL 셸 안의 iframe `LSW/lsSideInfoP.do?lsiSeq=…&joNo=<4자리>&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR` 로만 본문이 온다(규칙서의 joNo 6자리 힌트는 빈 셸 — 규칙서 갱신 대상).
 - `wageConversion.test.ts` 가 시급↔월급 3종 FAQ 문구("209 ÷ 48 ≈ 4.354"·"365 ÷ 7 ÷ 12"·"정확히 209시간(≈ 4.354주)")를 고정 — 수정 에이전트가 문장을 바꿔 1회 실패, 복원.
 - 산문의 최저임금 리터럴(10,320·2,156,880)은 `verify:tax` 가 파일별로 막는다 — `scripts/tax-constants-allow.json` 사유 등재.

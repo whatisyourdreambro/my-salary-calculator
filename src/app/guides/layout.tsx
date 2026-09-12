@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
+import GuideSupplement from "@/components/GuideSupplement";
+import { guideSupplements } from "@/lib/guides/supplements";
 
 // /guides 허브 페이지 전용 메타데이터.
 // /guides/[slug] 글 페이지는 자체 generateMetadata 가 우선 적용된다.
@@ -43,6 +45,9 @@ export default function GuidesLayout({
       {children}
       {/* 308개 가이드 글 + 메인 = 광고 부재 시 수익 누수 큼. layout 자동 광고. */}
       <PageFooterAds maxWidth="3xl" />
+      {/* 글별 보강 섹션(S3-4, 2026-09-12) — 반드시 PageFooterAds 아래(광고 위 UI 금지). layout 에는 params 가 없어
+          서버가 supplements 맵을 넘기고 클라가 pathname 으로 슬러그를 고른다(CompanyRelatedJobs 패턴). 항목 없는 글은 null. */}
+      <GuideSupplement map={guideSupplements} maxWidth="3xl" />
       {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
       <AutoShareSection contentType="guide" maxWidth="3xl" className="pb-16" />
     </>

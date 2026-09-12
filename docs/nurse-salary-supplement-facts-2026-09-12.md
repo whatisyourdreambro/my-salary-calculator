@@ -1,6 +1,6 @@
 # `/guides/nurse-salary` 보강 섹션 사실 검증 로그 (S3-4 · 2026-09-12)
 
-- 대상: `src/lib/guides/supplements.ts` 의 `nurse-salary` 항목(연차별 급여 구조 · 직군·근무처별 비교 · FAQ 4문항). 마지막 광고(HomeTopAd) 아래에만 렌더되며 본문 정본(`src/lib/guides/legacy-rewrite-2.ts`)은 무접촉.
+- 대상: `src/lib/guides/supplements.ts` 의 `nurse-salary` 항목(연차별 급여 구조 · 직군·근무처별 비교 · FAQ 4문항). `guides/layout.tsx` 의 PageFooterAds(레이아웃 푸터 광고 3개) 아래에만 렌더되며(page.tsx 의 HomeTopAd 는 마지막 광고가 아님) 본문 정본(`src/lib/guides/legacy-rewrite-2.ts`)은 무접촉.
 - 원칙: 수치는 (a) 저장소 정본 상수·데이터, (b) 브라우저 UA 로 GET 하여 본문을 읽은 공식 출처(보건복지부·고용24/워크넷·인사혁신처·법제처·지자체 공고)만. 뉴스 기사·2차 게시글 수치는 쓰지 않았다.
 - 검증 방법: `curl -sS -o /dev/null -w "%{http_code}" -L -A "Mozilla/5.0 … Chrome/128.0 Safari/537.36" "<url>"` 로 상태 코드를 확인하고, 본문은 WebFetch 또는 curl 본문(law.go.kr 은 셸이 `/LSW/lsSideInfoP.do` iframe 으로 조문을 싣는 구조라 그 iframe 본문·PDF 를 pypdf 로 추출)에서 읽었다.
 - status 표기: `200·<기준 연도>` — 페이지에 보이는 조사 기준연도·시행일·공고 연도. `repo` 는 저장소 정본 상수(그 상수의 출처 주석을 그대로 따른다).
