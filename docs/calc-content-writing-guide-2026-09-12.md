@@ -18,7 +18,7 @@
 | formula | 원칙 무접촉. compute 와 다를 때만 compute 에 맞춰 고치고 로그에 `formula≠compute` 로 남긴다 |
 | faqs | 3~5개. 답변 120~300자. 기존 3개는 사실이 맞으면 유지, 4·5번째는 검색 의도형 질문(언제/얼마/차이/포함 여부) |
 | caveats | 2~4개, 계산기별 개별 작성. 다른 슬러그와 글자 단위로 같은 문장 금지 — 실측표 B01·B02 문장을 포함해 복붙 금지. 각 항목은 이 모델이 빼놓은 것 1가지(특정 공제·상한·비과세·지역 차이 등)를 구체적으로 |
-| sources | 정확히 2건 `{ title, url }`. 호스트는 `src/lib/simpleCalculators/sourcePolicy.ts` 의 `OFFICIAL_SOURCE_HOSTS`(하위 도메인 허용)·https 만. 제목 형식 `기관명 — 자료명(연도)`, 예: `국세청 — 근로소득 간이세액표(2026)` (연도는 `sourceYear()` 가 제목에서 읽는다). 두 URL 모두 실제 GET 200 확인 + 규정 연도 확인 후 §4 로그에 기록. 목록 밖 호스트가 필요하면 sources 를 비워 두고 보고서에 후보 호스트를 올린다(허용 목록 추가는 별도 커밋) |
+| sources | 정확히 2건 `{ title, url }`. 호스트는 `src/lib/simpleCalculators/sourcePolicy.ts` 의 `OFFICIAL_SOURCE_HOSTS`(하위 도메인 허용)·https 만. 제목 형식 `기관명 — 자료명(연도)`, 예: `국세청 — 근로소득 간이세액표(2026)` (연도는 `sourceYear()` 가 제목에서 읽는다). 두 URL 모두 실제 GET 200 확인 + 규정 연도 확인 후 §4 로그에 기록. law.go.kr 가독 URL(`/법령/<법령명>/제n조`)은 200 셸이 조문을 iframe 으로 싣는다 — 조문 원문·시행일은 셸 HTML 안의 iframe src(`/LSW/lsSideInfoP.do?lsiSeq=<셸의 번호>&joNo=<조번호 4자리>&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR`)를 그대로 GET 해 확인한다(joNo 6자리·파라미터 생략형은 빈 셸만 온다, 2026-09-12 배치 D~F 실측). 목록 밖 호스트가 필요하면 sources 를 비워 두고 보고서에 후보 호스트를 올린다(허용 목록 추가는 별도 커밋) |
 | title·description·keywords·fields·compute·relatedSlugs·publishedAt | 무접촉 |
 
 ## 2. 예시 계산 절차 (추정 금지)

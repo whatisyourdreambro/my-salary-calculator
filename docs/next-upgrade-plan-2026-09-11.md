@@ -23,7 +23,8 @@
 | S2-2 회사 표 실수령 hop | ✅ 9/12 | `54febe1`·`c622d07`·`70a89d0` | 1,890셀 링크(null-not-clamp 260셀 평문), verify:site 430쪽 게이트, 모듈 company-salary-net |
 | S2-3 중복 링크 | ✅ 9/12 | `9df7b5b`·`854d000` | exclude+백필(항목 수 불변). calc 82→19쪽 잔여 = pins⊂cards·NextActions 겹침(광고 위 높이 감소라 **승인 항목**) |
 | S3-5 허브 H1 · 시즌 메뉴 | ✅ 9/12(부분) | `219e74e`·`fffc8dd` | 허브 12곳 H1 키워드화(홈·/calc 는 9/20 후), 헤더 시즌 38→10~12/키 |
-| S3-1 기반 · 본문 50종 | 🔧 9/12 | `25595ac`·`adf0c1f`·`d854eec`·`f8795ac` + 본문 배치 진행 중 | sources 병합·`details` 필드(메타 무영향)·작성 규칙. 본문은 `details` 에만 — explanation 동결 |
+| S3-1 기반 · 본문 50종 | ✅ 9/12 (본문 99/202) | 기반 `25595ac`·`adf0c1f`·`d854eec`·`f8795ac` · 1차 49종 `a9d5cc5`~`5eb2ae0` · **2차 50종 `aa45940`(D 16)·`ed12743`(E 26)·`103b138`(F 8)** | `details` 99/202(중앙값 894자)·공식 출처 2건 99/202·보일러 B01 50→42·B02 47→21. 작성→적대 검증→수정→결정론 린터→적용 대조. 사실 로그 A~F. formula≠compute 교체 2건(real-estate-flip-cost·real-estate-capital-gains-quick). 잔여 103종은 동결기에도 문자열만으로 계속(다음 후보 `payment-holiday-cost`부터, 보고서 §11) |
+| S3-4 이월 확인 | ✅ 9/12 | `f0b4533`·`0341bce` | 문서 갱신(10x §5-11 해소·L07' 강등 후보·마스터플랜 ⑥⑦·감사 §7-5) + `/guides/nurse-salary` 보강은 **HomeTopAd 아래 전용 슬롯**(`GuideSupplement`)으로 렌더(본문 접촉 시 광고 밀림). M05 는 10x §5-12 승인 대기라 미실행, L07' 강등 확정은 9/13 GA4 기기 비중(운영자) |
 | S2-0 삼성 9/21 배치 | ⏳ | — | 9/21 이후만 |
 | S3-2 격자 정본화 | ⏳ 10/11~ | — | 스코핑 완료 `docs/salary-grid-canonicalization-scoping-2026-09-12.md`(416/211/205 검증, 생성기 15곳, 게이트 설계). 1단계 GSC 내보내기는 운영자 |
 

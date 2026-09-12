@@ -256,3 +256,39 @@ T0 = 이 커밋의 Cloudflare 배포 완료 시각. 부분일 제외, KST 첫 �
 
 - 9/20 M01 판정 후: 홈·/calc H1 키워드화(S3-5 잔여) 1회. 9/21 이후: S2-0 삼성 배치(L13b + 공유 해시). 10/10: /guides/coupang-fulfillment-night-pay-2026 제목·본문 209 기준 동시 갱신, S3-2 착수(스코핑 `docs/salary-grid-canonicalization-scoping-2026-09-12.md`).
 - 판정 지표(10/10 D+28): `guide_cta_click` position=company-salary-net(회사 430쪽 → /salary 이동률), /calc 세션당 페이지(중복 제거 전후), 서치어드바이저 /home-loan CTR, GSC `/calc/hourly-to-yearly` 등 5쪽 노출(값 변경 영향).
+
+## 11. S3-1 본문 2차분 50종 + S3-4 실행 — 2026-09-12 오후 (운영자 지시 "완료된 것 빼고 순차 진행")
+
+날짜 게이트가 없는 잔여 항목만 실행했다. S2-0 삼성(9/21 이후)·M01①/홈·/calc H1(9/20 판정 후)·PWA 배너 수리(9/18~20)·lite 이웃 카드(9/21 이후)·S3-6(10/9 이후)·S3-2(10/11~, 1단계는 운영자 GSC 내보내기)·S3-3(2027-02)은 그대로 둔다. 광고 코드·슬롯·위치·env 무접촉, `ad-audit --diff --base HEAD` 삽입 0·인접 신규 0.
+
+### 11-1. 배포 항목 (커밋 순, main)
+
+| 항목 | 커밋 | 변경 | 근거·효과 |
+|---|---|---|---|
+| S3-4 문서 갱신 | `f0b4533` | 10x §5-11(OfferSlot 이동) ✅ `f2379fa` 해소 표기, L07' 사이드바 강등 후보(9/8 AdSense 기기 분해 데스크톱 수익 16.6%·자동 사이드레일 중복 — 9/13 GA4 기기 비중으로 확정), 마스터플랜 §12-2 ⑥⑦ 상태, 수익 감사 §7-5(PageFooterAds 순서) 완료 | 계획 §4 S3-4 "문서 갱신 먼저" |
+| S3-4 nurse-salary 보강 | `0341bce` | `src/lib/guides/supplements.ts` + `GuideSupplement`(서버 컴포넌트)를 `guides/[slug]/page.tsx` 의 **HomeTopAd 아래**에만 렌더. 연차별 급여 구조·직군/근무처 비교(간호직 8급 봉급표·보건교사 교원 봉급표·간호조무사 최저임금은 저장소 상수 import)·FAQ 4문항. FAQ 추출을 본문+보강으로 확장(FAQPage 3→7). `modifiedDate` 2026-09-12 | 397노출 살아 있는 가이드 온페이지 보강. 본문에 넣으면 본문 내 광고 분할점·CalcResultAd·HomeTopAd 가 밀리므로 전용 슬롯. 수치는 복지부 2020 실태조사·고용24·law.go.kr·경기도/시흥시 2026 공고·인사혁신처 봉급표만(미검증 7건 제외, 로그 `docs/nurse-salary-supplement-facts-2026-09-12.md`) |
+| S3-1 배치 D | `aa45940` | enrichment 파일 16종(enrichments 8·ext-a 5·ext-b 3): details·caveats·faqs·sources. formula≠compute 2건 교체(real-estate-flip-cost·real-estate-capital-gains-quick). ext-a 최저임금 표시 리터럴 허용 등재 | 실측표 §2 후보 순 |
+| S3-1 배치 E | `ed12743` | expandedFinance 26종: define() 스펙의 questions·caveats(+`individualCaveats`)·details, 해외 출처 키(Microsoft·investor.gov·CFPB·BLS) → 공식 2건 | B02 보일러 47→21 |
+| S3-1 배치 F | `103b138` | expandedPractical 8종 + `individualCaveats` 플래그 신설(기본 false), 실측표 재생성 | B01 50→42. details 49→99/202, 출처 2건 49→99 |
+
+### 11-2. 작성·검증 절차 (재사용 가능)
+
+1. 컨텍스트 덤프(슬러그별 JSON: 필드·기본값·compute 결과·compute 소스·twin·현재 본문) → 작성 에이전트 1/슬러그(출처 2건 실제 GET 200 + 본문·시행연도 확인).
+2. 적대 검증 에이전트 1/슬러그(기본 태도 반박 — 출처 재요청, 예시 숫자 compute 대조, compute 의미론, 형식, facts 대응, 보일러 재사용) → 지적 시 수정 에이전트 → must-fix 였던 18종은 재검증(전부 통과).
+3. 결정론 린터: 600~1,000자·4문단·HTML/마크다운/이모지·마케팅어·타 사이트·내부 경로 실존(routes.txt)·sources 2건 허용 호스트·제목 연도·FAQ 3~5개 120~300자·caveats 2~4개·**202종+초안 전체와 문장 단위 중복**·예시 문단 숫자의 compute 추적. 50/50 통과.
+4. 적용 스크립트(3가지 파일 형식 자동 패치, 멱등) → 병합 레지스트리 대조(details/caveats/faqs/sources = 초안, title/description/explanation/fields/relatedSlugs 바이트 동일 50/50).
+5. 게이트: vitest 96파일 1,717건, tsc 0, eslint 0, ad-audit 0/0(+diff 0/0), verify:tax 0, 실측표 재생성. 사실 로그 D 186행·E 198행·F 54행(FAIL 로 본문에서 뺀 주장 3건 기록).
+
+### 11-3. 발견·함정 (다음 배치용)
+
+- law.go.kr 조문은 가독 URL 셸 안의 iframe `LSW/lsSideInfoP.do?lsiSeq=…&joNo=<4자리>&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR` 로만 본문이 온다(규칙서의 joNo 6자리 힌트는 빈 셸 — 규칙서 갱신 대상).
+- `wageConversion.test.ts` 가 시급↔월급 3종 FAQ 문구("209 ÷ 48 ≈ 4.354"·"365 ÷ 7 ÷ 12"·"정확히 209시간(≈ 4.354주)")를 고정 — 수정 에이전트가 문장을 바꿔 1회 실패, 복원.
+- 산문의 최저임금 리터럴(10,320·2,156,880)은 `verify:tax` 가 파일별로 막는다 — `scripts/tax-constants-allow.json` 사유 등재.
+- 세션 한도로 워크플로가 2회 끊겨 3단계(작성 → 검증/수정 → 마무리)로 나눠 재개했다. 에이전트 합계 약 260, 서브에이전트 토큰 약 2,100만. 다음 배치는 25종 단위로 나누고 검증을 must-fix 재검증만 중간 강도로 두는 편이 싸다.
+- 검증자가 지적한 compute 관찰(수정 안 함): `credit-line-daily-interest` 하루 이자만 보려면 둘째 구간 0일 입력 필요(FAQ 로 안내), `deposit-break-switch` 음수 표기는 화면과 같은 ASCII 하이픈으로 통일.
+
+### 11-4. 남은 것·운영자 항목
+
+- S3-1 잔여 103종(실측표 §2 후보 `payment-holiday-cost`부터) — 동결기에도 문자열만으로 계속 가능.
+- 운영자: 9/13 GA4 기기 비중(L07' 강등 확정), GA4 맞춤 측정기준 5개 등록(§9-4), 9/21 앵커 ON, 9/26 시즌 세트 교체 푸시 + CF 퍼지, M05(10x §5-12) 승인 여부.
+- 다음 코드 슬롯: 9/18~20 InstallPwaBanner PV 수리 → 9/20 판정 후 M01①·홈/calc H1 → 9/21 이후 S2-0 삼성(L13b+공유 해시)·lite 이웃 카드 → 10/9 S3-6 → 10/11 S3-2 → 10/31 구조 마감.
