@@ -218,7 +218,7 @@ AdSense 링크는 모두 미실행이다.
 2. 병합 직후 `docs/metrics-log.md` 에 D0 을 절단점으로 기록하겠는가?
 3. 이번 감사분 base 를 §6 프로젝션·RPM 번들·2027-09 상한에 **가산하지 않고 각주로만** 남기겠는가?
 4. **홈 description 변경(§3-2)에 대해 9/13·9/20·9/21 판정에 절단점을 표시**하겠는가?
-5. `PageFooterAds` 순서를 `HomeTopAd → InArticleAd → CoupangBanner` 로 바꿔 고지문 밀림(§3-3)을 없애겠는가? — 배치 변경이라 승인 필요.
+5. `PageFooterAds` 순서를 `HomeTopAd → InArticleAd → CoupangBanner` 로 바꿔 고지문 밀림(§3-3)을 없애겠는가? — 배치 변경이라 승인 필요. → ✅ **2026-09-11 `f2379fa` 배포 완료**(운영자 지시 '광고 위치 변경 허용', ad-experiments.md 기준선 리셋 항목 2 참조)
 6. L9(samsung-bonus 광고 깊이) 실행 전제로 **27a692c 병합 선행**을 요구하겠는가? — 선행 없이 이동만 하면 효과 0.
 7. L9 실행을 **M01 판정 종료(10/19~26) 이후**로, **M02 와 같은 승인 건에 라우트 추가** 형태로 하겠는가?
 8. L9 이동 대상을 **`CalcResultAd` 제외, `InArticleAd`/`GuideMidAd` 로만** 제한하겠는가? — 결과창_본문은 수동 수익 64.5%이고 승인 M 이 "보류"다.
