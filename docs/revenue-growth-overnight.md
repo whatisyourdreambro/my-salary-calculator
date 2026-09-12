@@ -293,3 +293,9 @@ T0 = 이 커밋의 Cloudflare 배포 완료 시각. 부분일 제외, KST 첫 �
 - S3-1 잔여 103종(실측표 §2 후보 `payment-holiday-cost`부터) — 동결기에도 문자열만으로 계속 가능.
 - 운영자: 9/13 GA4 기기 비중(L07' 강등 확정), GA4 맞춤 측정기준 5개 등록(§9-4), 9/21 앵커 ON, 9/26 시즌 세트 교체 푸시 + CF 퍼지, M05(10x §5-12) 승인 여부.
 - 다음 코드 슬롯: 9/18~20 InstallPwaBanner PV 수리 → 9/20 판정 후 M01①·홈/calc H1 → 9/21 이후 S2-0 삼성(L13b+공유 해시)·lite 이웃 카드 → 10/9 S3-6 → 10/11 S3-2 → 10/31 구조 마감.
+
+### 11-5. 커밋·푸시·배포 상태
+
+- `f0b4533`·`0341bce`·`aa45940`·`ed12743`·`103b138`·`95ac657`·`cd7a3ec` 7커밋을 2026-09-12 20:0x KST 에 `origin/main` 으로 푸시(79952a1..cd7a3ec, force 아님). `cd7a3ec` 는 `0341bce` 의 보강 섹션 위치 수정(page HomeTopAd 아래 → guides/layout PageFooterAds 아래).
+- 프로덕션 확인 **2026-09-12 20:18 KST 라이브** — `/calc/dsr-quick`·`/calc/extra-payment-term`·`/calc/rent-free-effective-cost` 에 `calc-details` 본문·공식 출처 링크·FAQ 5문항, `/guides/nurse-salary` 보강 섹션이 광고 컨테이너 8개 전부 뒤에 위치·FAQPage 7문항.
+- 로컬 게이트(푸시 전): vitest 96파일 1,717건, tsc 0, eslint 0, ad-audit 0/0 + `--diff --base HEAD` 0/0, verify:tax 0, 빌드 2,509쪽, qa:quality 2,497 HTML 구조 이슈 0·미해결 링크 0, qa:crawl 266쪽 통과.
