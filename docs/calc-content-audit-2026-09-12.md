@@ -1,6 +1,6 @@
 # 간이 계산기 본문 실측표 (S3-1 선행)
 
-- 생성일: 2026-09-12 (KST) · 스크립트 재실행으로 재생성 가능
+- 생성일: 2026-09-14 (KST) · 스크립트 재실행으로 재생성 가능
 - 명령: `npx tsx scripts/calc-content-audit.ts --out docs/calc-content-audit-2026-09-12.md`
 - 데이터 원본: `src/lib/simpleCalculators/index.ts` 병합 결과(allCalculators) = `batch1.ts`·`batch2.ts`·`expandedFinance.ts`·`expandedPractical.ts`(정의·sources) + `enrichments.ts`·`enrichments-ext-{a,b,c}.ts`(explanation·formula·faqs·caveats·relatedSlugs·sources — batch 값이 있으면 batch 우선) + `twins.ts`(정밀 쌍) · 색인 규칙은 `src/app/calc/[slug]/page.tsx`
 - 수치 의미: 설명자 = explanation 공백 정규화 글자 수(제목·description·공식·FAQ 제외) · FAQ답변자 = faqs[].a 합계 · 출처 = sources[] URL 수, 국내공식 = *.go.kr/*.or.kr 호스트 수, 해외공공 = .gov/.edu 등 · 보일러 = 다른 슬러그와 글자 단위 동일한 설명(E)/FAQ 답변(F)/유의사항(C) 그룹 ID · 색인 = explanation 있음 && FAQ ≥ 3 이면 index, 아니면 noindex · 숫자 = 설명에 숫자(예시 계산) 포함 여부
@@ -15,14 +15,14 @@
 | 계산기 수 (getAllSlugs) | 202 |
 | explanation 보유 | 202 (100.0%) · 중앙값 237자 · 평균 225자 |
 | explanation 에 숫자(예시 계산) 포함 | 106 (52.5%) |
-| details(장문 본문, S3-1 · 메타 무영향) 보유 | 99 (49.0%) · 중앙값 894자 · 600자 미만 0 · 1,000자 초과 0 |
+| details(장문 본문, S3-1 · 메타 무영향) 보유 | 103 (51.0%) · 중앙값 894자 · 600자 미만 0 · 1,000자 초과 0 |
 | formula 보유 | 202 (100.0%) |
 | faqs 보유 | 202 (100.0%) |
 | sources 보유 | 111 (55.0%) |
 | caveats 보유 | 202 (100.0%) |
 | 정밀 쌍(twins.ts) 보유 | 32 (15.8%) |
 | 색인 허용(explanation && FAQ ≥ 3) | 202 (100.0%) · noindex 0 |
-| 보일러플레이트 멤버(그룹 1개 이상) | 63 (31.2%) · 그중 설명 자체가 공유된 것 0 |
+| 보일러플레이트 멤버(그룹 1개 이상) | 59 (29.2%) · 그중 설명 자체가 공유된 것 0 |
 
 ### 1-2. 설명 길이 분포 (explanation 글자 수)
 
@@ -41,8 +41,8 @@
 | 0 | 0 | 0.0% |
 | 1 | 0 | 0.0% |
 | 2 | 0 | 0.0% |
-| 3 | 106 | 52.5% |
-| 4 | 59 | 29.2% |
+| 3 | 102 | 50.5% |
+| 4 | 63 | 31.2% |
 | 5+ | 37 | 18.3% |
 
 ### 1-4. 출처 수 분포·공식 출처 비중
@@ -50,13 +50,13 @@
 | 출처 수 | 계산기 수 | 비율 |
 |---|---|---|
 | 0 | 91 | 45.0% |
-| 1 | 12 | 5.9% |
-| 2+ | 99 | 49.0% |
+| 1 | 8 | 4.0% |
+| 2+ | 103 | 51.0% |
 
-- 출처 URL 총 210건 중 국내 공식(*.go.kr/*.or.kr) 198건 (94.3%) · 해외 공공(.gov/.edu 등) 9건 (4.3%) · 기타 3건
-- 국내 공식 출처를 1건 이상 가진 계산기: 99 / 202 (49.0%)
-- 공식 출처 보유(sourcePolicy 허용 목록·https 기준, S3-1 게이트): 계산기 99 / 202 (49.0%) · 2건 이상 99 · URL 198건
-- 발견된 출처 호스트: www.law.go.kr×94(국내공식), www.fss.or.kr×17(국내공식), www.fsc.go.kr×16(국내공식), www.nts.go.kr×10(국내공식), fine.fss.or.kr×8(국내공식), mods.go.kr×7(국내공식), portal.kfb.or.kr×7(국내공식), www.bok.or.kr×7(국내공식), finlife.fss.or.kr×6(국내공식), easylaw.go.kr×4(국내공식), www.investor.gov×4(해외공공), www.minimumwage.go.kr×4(국내공식), www.hf.go.kr×3(국내공식), kosis.kr×2(국내공식), ktb.moef.go.kr×2(국내공식), legacy.sba.gov×2(해외공공), nhuf.molit.go.kr×2(국내공식), www.easylaw.go.kr×2(국내공식), www.korea.kr×2(국내공식), www.moel.go.kr×2(국내공식), ext.vt.edu×1(해외공공), fss.or.kr×1(국내공식), fund.nps.or.kr×1(국내공식), ocw.ump.edu.my×1(해외공공), openstax.org×1, support.microsoft.com×1, www.accaglobal.com×1, www.consumerfinance.gov×1(해외공공), www.nps.or.kr×1(국내공식)
+- 출처 URL 총 214건 중 국내 공식(*.go.kr/*.or.kr) 206건 (96.3%) · 해외 공공(.gov/.edu 등) 6건 (2.8%) · 기타 2건
+- 국내 공식 출처를 1건 이상 가진 계산기: 103 / 202 (51.0%)
+- 공식 출처 보유(sourcePolicy 허용 목록·https 기준, S3-1 게이트): 계산기 103 / 202 (51.0%) · 2건 이상 103 · URL 206건
+- 발견된 출처 호스트: www.law.go.kr×94(국내공식), www.fsc.go.kr×19(국내공식), www.fss.or.kr×18(국내공식), www.nts.go.kr×10(국내공식), fine.fss.or.kr×8(국내공식), mods.go.kr×7(국내공식), portal.kfb.or.kr×7(국내공식), www.bok.or.kr×7(국내공식), finlife.fss.or.kr×6(국내공식), easylaw.go.kr×4(국내공식), www.hf.go.kr×4(국내공식), www.minimumwage.go.kr×4(국내공식), www.nps.or.kr×3(국내공식), fund.nps.or.kr×2(국내공식), kosis.kr×2(국내공식), ktb.moef.go.kr×2(국내공식), legacy.sba.gov×2(해외공공), nhuf.molit.go.kr×2(국내공식), www.easylaw.go.kr×2(국내공식), www.korea.kr×2(국내공식), www.moel.go.kr×2(국내공식), ext.vt.edu×1(해외공공), fss.or.kr×1(국내공식), ocw.ump.edu.my×1(해외공공), openstax.org×1, www.accaglobal.com×1, www.consumerfinance.gov×1(해외공공), www.investor.gov×1(해외공공)
 
 ### 1-5. 카테고리별
 
@@ -64,9 +64,9 @@
 |---|---|---|---|---|---|---|---|
 | tax ★ | 15 | 190 | 15 | 0 | 0 | 0 | 9 |
 | salary ★ | 17 | 190 | 17 | 0 | 0 | 0 | 4 |
-| loan ★ | 22 | 231 | 22 | 0 | 1 | 0 | 8 |
+| loan ★ | 22 | 231 | 22 | 0 | 0 | 0 | 8 |
 | real-estate ★ | 18 | 219 | 18 | 0 | 0 | 0 | 1 |
-| investment ★ | 31 | 229 | 31 | 0 | 3 | 0 | 3 |
+| investment ★ | 31 | 229 | 31 | 0 | 0 | 0 | 3 |
 | insurance | 8 | 189 | 8 | 8 | 0 | 0 | 0 |
 | business | 26 | 249 | 26 | 21 | 18 | 0 | 1 |
 | life | 31 | 255 | 31 | 30 | 18 | 0 | 5 |
@@ -94,7 +94,7 @@
 | ID | 종류 | 멤버 수 | 글자 | 본문 앞부분 | 멤버 슬러그 |
 |---|---|---|---|---|---|
 | B01 | caveat | 42 | 33 | 기본 입력값은 시장 평균이나 추천값이 아닌 계산 예시입니다. | advertising-profit-roas, annual-plan-break-even, appliance-energy-replacement, break-even-order-count, bulk-unit-price-waste, car-total-ownership, cash-conversion-cycle, cloud-storage-growth, commute-time-value, coupon-stack-savings, customer-acquisition-payback, data-plan-overage, discount-volume-target, diy-service-time-cost, equipment-lease-buy, ev-charge-vs-fuel, event-budget-headcount, exchange-spread-cost, export-quote-break-even-rate, foreign-atm-cost, free-shipping-threshold, inventory-order-quantity, inventory-turnover-days, invoice-early-payment, leftover-currency-roundtrip, marketplace-settlement, meeting-cost, online-order-profit, operating-cashflow-plan, overseas-card-cost, parking-pass-break-even, prepaid-pass-usage, product-return-cost, project-budget-variance, receivables-aging-loss, remittance-received, return-or-exchange-cost, reusable-item-payback, stock-reorder-point, travel-luggage-shipping, travel-shared-budget, wholesale-price-target |
-| B02 | caveat | 21 | 46 | 초기 숫자는 계산 예시입니다. 계약서·견적서·실제 지출 내역으로 바꾸어 비교하세요. | allowance-growth-plan, bonus-repayment-reserve, career-training-payback, childcare-work-return, commute-adjusted-offer, couple-expense-income-split, education-savings-gap, eldercare-family-budget, family-event-fund, family-insurance-premium-share, family-medical-budget, flex-time-tradeoff, job-transition-cash-gap, parental-leave-household-gap, payment-holiday-cost, portfolio-rebalance-amount, savings-ladder-cashflow, shared-goal-contribution, single-income-transition-budget, systematic-withdrawal-runway, work-from-home-savings |
+| B02 | caveat | 17 | 46 | 초기 숫자는 계산 예시입니다. 계약서·견적서·실제 지출 내역으로 바꾸어 비교하세요. | allowance-growth-plan, bonus-repayment-reserve, career-training-payback, childcare-work-return, commute-adjusted-offer, couple-expense-income-split, education-savings-gap, eldercare-family-budget, family-event-fund, family-insurance-premium-share, family-medical-budget, flex-time-tradeoff, job-transition-cash-gap, parental-leave-household-gap, shared-goal-contribution, single-income-transition-budget, work-from-home-savings |
 
 ## 2. S3-1 후보 50종
 
@@ -108,56 +108,56 @@
 
 | # | 분류 | slug | 제목 | 설명자 | 본문자 | FAQ | 출처 | 보일러 | 색인 | 정밀쌍 | 본문 파일 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | loan | `payment-holiday-cost` | 납입 유예 이자와 이후 상환액 | 242 | 0 | 3 | 1 | B02 | index | - | expandedFinance.ts |
-| 2 | investment | `portfolio-rebalance-amount` | 목표 비중으로 리밸런싱 금액 | 244 | 0 | 3 | 1 | B02 | index | - | expandedFinance.ts |
-| 3 | investment | `savings-ladder-cashflow` | 예금 사다리 만기 유동성 | 244 | 0 | 3 | 1 | B02 | index | - | expandedFinance.ts |
-| 4 | investment | `systematic-withdrawal-runway` | 월 정액 인출의 자금 유지 기간 | 247 | 0 | 3 | 1 | B02 | index | - | expandedFinance.ts |
-| 5 | insurance | `auto-insurance-quick` | 자동차보험 견적 추정 | 162 | 0 | 3 | 0 | - | index | - | enrichments.ts |
-| 6 | business | `business-margin-quick` | 사업 마진율 계산 | 181 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 7 | insurance | `medical-expense-coverage` | 실손보험 청구 가능액 | 185 | 0 | 3 | 0 | - | index | - | enrichments.ts |
-| 8 | insurance | `child-insurance-needs` | 어린이보험 권장 | 187 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 9 | insurance | `pet-insurance-quick` | 반려동물 보험료 | 188 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 10 | insurance | `fire-insurance-quick` | 화재보험 보장 한도 | 189 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 11 | business | `corporate-tax-quick` | 법인세 간편 계산 | 195 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 12 | business | `employee-cost-quick` | 직원 인건비 (회사 부담) | 197 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
-| 13 | career | `flex-time-tradeoff` | 근무시간 단축의 시간당 비용 | 228 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 14 | career | `bonus-repayment-reserve` | 사이닝보너스 반환 준비액 | 230 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 15 | career | `work-from-home-savings` | 재택근무 전환 순절감액 | 231 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 16 | career | `commute-adjusted-offer` | 통근 비용·시간 포함 이직 비교 | 233 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 17 | family | `allowance-growth-plan` | 자녀 용돈 증액·저축 계획 | 235 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 18 | family | `family-insurance-premium-share` | 가족 보험료의 수입 비중 | 237 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 19 | career | `career-training-payback` | 직무교육 투자 비용 회수 | 239 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 20 | family | `family-medical-budget` | 가족 의료비 본인부담 예산 | 240 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 21 | family | `childcare-work-return` | 복직 후 보육비 차감 순수입 | 241 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 22 | family | `eldercare-family-budget` | 가족 돌봄 실비 월 예산 | 241 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 23 | career | `job-transition-cash-gap` | 이직 급여 공백 준비금 | 242 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 24 | business | `customer-acquisition-payback` | 고객획득비 회수기간 계산기 | 244 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 25 | business | `product-return-cost` | 상품 반품 처리비용 계산기 | 244 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 26 | business | `operating-cashflow-plan` | 영업현금흐름 운영예산 계산기 | 245 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 27 | life | `car-total-ownership` | 차량 총보유비·월평균 비용 계산기 | 246 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 28 | family | `shared-goal-contribution` | 가구 여유자금별 공동 저축 분담 | 246 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 29 | business | `receivables-aging-loss` | 미수금 구간별 회수손실 시나리오 | 247 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 30 | family | `parental-leave-household-gap` | 육아휴직 가계 부족자금 | 248 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 31 | business | `invoice-early-payment` | 조기결제 할인과 자금비용 비교 계산기 | 249 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 32 | family | `couple-expense-income-split` | 부부 소득 비례 생활비 분담 | 250 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 33 | business | `online-order-profit` | 온라인 주문 건별 공헌이익 계산기 | 250 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 34 | business | `wholesale-price-target` | 목표마진 도매 견적단가 계산기 | 250 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 35 | life | `reusable-item-payback` | 다회용품 비용 회수 이용횟수 계산기 | 251 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 36 | life | `commute-time-value` | 출퇴근 수단 시간·비용 비교 계산기 | 253 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 37 | family | `family-event-fund` | 가족 행사 부족자금 월 적립 | 254 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 38 | business | `project-budget-variance` | 프로젝트 완료예산·초과액 계산기 | 254 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 39 | family | `single-income-transition-budget` | 외벌이 전환 후 가계 여유 | 254 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
-| 40 | business | `equipment-lease-buy` | 장비 임대·매입 총비용 비교 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 41 | currency | `exchange-spread-cost` | 환전 우대율·수수료 비용 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 42 | life | `parking-pass-break-even` | 주차 정기권 손익분기 이용일 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 43 | life | `return-or-exchange-cost` | 반품 후 교환·재구매 추가비용 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 44 | life | `travel-luggage-shipping` | 추가 수하물·짐 배송 비용 비교 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 45 | business | `discount-volume-target` | 할인 후 이익 유지 판매량 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 46 | life | `diy-service-time-cost` | 직접 작업·전문가 의뢰 비용 비교 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 47 | business | `marketplace-settlement` | 마켓 판매대금 정산 예상액 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 48 | life | `bulk-unit-price-waste` | 폐기율 반영 대용량 상품 단가 비교 | 258 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 49 | business | `stock-reorder-point` | 재주문 시점·재고 여유 계산기 | 258 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
-| 50 | life | `event-budget-headcount` | 예산별 행사 수용인원 계산기 | 259 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 1 | insurance | `auto-insurance-quick` | 자동차보험 견적 추정 | 162 | 0 | 3 | 0 | - | index | - | enrichments.ts |
+| 2 | business | `business-margin-quick` | 사업 마진율 계산 | 181 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 3 | insurance | `medical-expense-coverage` | 실손보험 청구 가능액 | 185 | 0 | 3 | 0 | - | index | - | enrichments.ts |
+| 4 | insurance | `child-insurance-needs` | 어린이보험 권장 | 187 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 5 | insurance | `pet-insurance-quick` | 반려동물 보험료 | 188 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 6 | insurance | `fire-insurance-quick` | 화재보험 보장 한도 | 189 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 7 | business | `corporate-tax-quick` | 법인세 간편 계산 | 195 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 8 | business | `employee-cost-quick` | 직원 인건비 (회사 부담) | 197 | 0 | 3 | 0 | - | index | - | enrichments-ext-b.ts |
+| 9 | career | `flex-time-tradeoff` | 근무시간 단축의 시간당 비용 | 228 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 10 | career | `bonus-repayment-reserve` | 사이닝보너스 반환 준비액 | 230 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 11 | career | `work-from-home-savings` | 재택근무 전환 순절감액 | 231 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 12 | career | `commute-adjusted-offer` | 통근 비용·시간 포함 이직 비교 | 233 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 13 | family | `allowance-growth-plan` | 자녀 용돈 증액·저축 계획 | 235 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 14 | family | `family-insurance-premium-share` | 가족 보험료의 수입 비중 | 237 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 15 | career | `career-training-payback` | 직무교육 투자 비용 회수 | 239 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 16 | family | `family-medical-budget` | 가족 의료비 본인부담 예산 | 240 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 17 | family | `childcare-work-return` | 복직 후 보육비 차감 순수입 | 241 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 18 | family | `eldercare-family-budget` | 가족 돌봄 실비 월 예산 | 241 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 19 | career | `job-transition-cash-gap` | 이직 급여 공백 준비금 | 242 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 20 | business | `customer-acquisition-payback` | 고객획득비 회수기간 계산기 | 244 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 21 | business | `product-return-cost` | 상품 반품 처리비용 계산기 | 244 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 22 | business | `operating-cashflow-plan` | 영업현금흐름 운영예산 계산기 | 245 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 23 | life | `car-total-ownership` | 차량 총보유비·월평균 비용 계산기 | 246 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 24 | family | `shared-goal-contribution` | 가구 여유자금별 공동 저축 분담 | 246 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 25 | business | `receivables-aging-loss` | 미수금 구간별 회수손실 시나리오 | 247 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 26 | family | `parental-leave-household-gap` | 육아휴직 가계 부족자금 | 248 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 27 | business | `invoice-early-payment` | 조기결제 할인과 자금비용 비교 계산기 | 249 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 28 | family | `couple-expense-income-split` | 부부 소득 비례 생활비 분담 | 250 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 29 | business | `online-order-profit` | 온라인 주문 건별 공헌이익 계산기 | 250 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 30 | business | `wholesale-price-target` | 목표마진 도매 견적단가 계산기 | 250 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 31 | life | `reusable-item-payback` | 다회용품 비용 회수 이용횟수 계산기 | 251 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 32 | life | `commute-time-value` | 출퇴근 수단 시간·비용 비교 계산기 | 253 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 33 | family | `family-event-fund` | 가족 행사 부족자금 월 적립 | 254 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 34 | business | `project-budget-variance` | 프로젝트 완료예산·초과액 계산기 | 254 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 35 | family | `single-income-transition-budget` | 외벌이 전환 후 가계 여유 | 254 | 0 | 3 | 0 | B02 | index | - | expandedFinance.ts |
+| 36 | business | `equipment-lease-buy` | 장비 임대·매입 총비용 비교 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 37 | currency | `exchange-spread-cost` | 환전 우대율·수수료 비용 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 38 | life | `parking-pass-break-even` | 주차 정기권 손익분기 이용일 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 39 | life | `return-or-exchange-cost` | 반품 후 교환·재구매 추가비용 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 40 | life | `travel-luggage-shipping` | 추가 수하물·짐 배송 비용 비교 계산기 | 255 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 41 | business | `discount-volume-target` | 할인 후 이익 유지 판매량 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 42 | life | `diy-service-time-cost` | 직접 작업·전문가 의뢰 비용 비교 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 43 | business | `marketplace-settlement` | 마켓 판매대금 정산 예상액 계산기 | 257 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 44 | life | `bulk-unit-price-waste` | 폐기율 반영 대용량 상품 단가 비교 | 258 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 45 | business | `stock-reorder-point` | 재주문 시점·재고 여유 계산기 | 258 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 46 | life | `event-budget-headcount` | 예산별 행사 수용인원 계산기 | 259 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 47 | life | `prepaid-pass-usage` | 횟수권 필요한 이용횟수 계산기 | 259 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 48 | life | `cloud-storage-growth` | 클라우드 저장량 증가·초과비용 계산기 | 260 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 49 | currency | `foreign-atm-cost` | 해외 ATM 인출 총비용 계산기 | 260 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
+| 50 | life | `annual-plan-break-even` | 연간 구독권 손익분기 이용기간 계산기 | 263 | 0 | 3 | 0 | B01 | index | - | expandedPractical.ts |
 
 ## 3. 전체 표 (202종 · 분류 순서 = types.ts union → slug)
 
@@ -213,7 +213,7 @@
 | loan | `ltv-quick` | LTV 한도 계산 | enrichments.ts | 238 | 955 | Y | 51 | 4 | 1047 | 2 | 2 | 4 | - | Y | index |
 | loan | `lump-sum-prepayment-term` | 목돈 중도상환의 완납 시점 | expandedFinance.ts | 232 | 975 | - | 48 | 5 | 1080 | 2 | 2 | 4 | - | - | index |
 | loan | `monthly-installment` | 할부 이자 계산 | enrichments-ext-a.ts | 169 | 767 | - | 90 | 4 | 689 | 2 | 2 | 3 | - | Y | index |
-| loan | `payment-holiday-cost` | 납입 유예 이자와 이후 상환액 | expandedFinance.ts | 242 | 0 | - | 57 | 3 | 91 | 1 | 0 | 1 | B02 | - | index |
+| loan | `payment-holiday-cost` | 납입 유예 이자와 이후 상환액 | expandedFinance.ts | 242 | 867 | - | 57 | 4 | 673 | 2 | 2 | 3 | - | - | index |
 | loan | `prepayment-fee-quick` | 중도상환 수수료 계산 | enrichments.ts | 246 | 901 | Y | 61 | 5 | 1173 | 2 | 2 | 4 | - | - | index |
 | loan | `refinance-break-even` | 대환대출 비용 회수 기간 | expandedFinance.ts | 236 | 894 | - | 40 | 5 | 993 | 2 | 2 | 4 | - | - | index |
 | loan | `variable-rate-stress` | 대출 금리 상승 부담 점검 | expandedFinance.ts | 226 | 969 | - | 46 | 5 | 1158 | 2 | 2 | 4 | - | - | index |
@@ -250,14 +250,14 @@
 | investment | `investment-drawdown-recovery` | 손실 회복에 필요한 수익률 | expandedFinance.ts | 233 | 786 | Y | 20 | 4 | 689 | 2 | 2 | 3 | - | - | index |
 | investment | `investment-fee-break-even` | 정액·정률 투자 수수료 교차점 | expandedFinance.ts | 235 | 892 | - | 42 | 5 | 910 | 2 | 2 | 4 | - | - | index |
 | investment | `portfolio-allocation` | 포트폴리오 배분 시뮬 | enrichments-ext-a.ts | 186 | 898 | Y | 78 | 4 | 773 | 2 | 2 | 3 | - | - | index |
-| investment | `portfolio-rebalance-amount` | 목표 비중으로 리밸런싱 금액 | expandedFinance.ts | 244 | 0 | Y | 36 | 3 | 102 | 1 | 0 | 1 | B02 | - | index |
+| investment | `portfolio-rebalance-amount` | 목표 비중으로 리밸런싱 금액 | expandedFinance.ts | 244 | 928 | Y | 36 | 4 | 689 | 2 | 2 | 3 | - | - | index |
 | investment | `real-return-quick` | 실질 수익률 (인플레이션 차감) | enrichments-ext-a.ts | 173 | 793 | Y | 48 | 4 | 686 | 2 | 2 | 3 | - | - | index |
 | investment | `rule-of-72-quick` | 72의 법칙 — 자산 2배 시간 | enrichments-ext-a.ts | 177 | 696 | Y | 25 | 4 | 725 | 2 | 2 | 3 | - | - | index |
 | investment | `savings-beginning-vs-end` | 월초·월말 적립 시점 비교 | expandedFinance.ts | 234 | 964 | - | 45 | 4 | 811 | 2 | 2 | 4 | - | - | index |
 | investment | `savings-contribution-pause` | 저축 일시 중단의 목표 차이 | expandedFinance.ts | 234 | 983 | - | 38 | 5 | 936 | 2 | 2 | 4 | - | - | index |
 | investment | `savings-contribution-stepup` | 매년 저축액 증액 시뮬레이션 | expandedFinance.ts | 237 | 943 | Y | 60 | 4 | 874 | 2 | 2 | 4 | - | - | index |
 | investment | `savings-goal-time` | 저축 목표 도달 시간 | enrichments-ext-a.ts | 181 | 822 | - | 81 | 4 | 701 | 2 | 2 | 3 | - | - | index |
-| investment | `savings-ladder-cashflow` | 예금 사다리 만기 유동성 | expandedFinance.ts | 244 | 0 | - | 50 | 3 | 105 | 1 | 0 | 1 | B02 | - | index |
+| investment | `savings-ladder-cashflow` | 예금 사다리 만기 유동성 | expandedFinance.ts | 244 | 928 | - | 50 | 4 | 685 | 2 | 2 | 3 | - | - | index |
 | investment | `savings-rate-after-raise` | 월급 인상 후 저축률 계획 | expandedFinance.ts | 229 | 984 | - | 50 | 4 | 675 | 2 | 2 | 3 | - | - | index |
 | investment | `savings-required-monthly` | 목표까지 필요한 월 저축액 | expandedFinance.ts | 238 | 895 | Y | 59 | 5 | 1005 | 2 | 2 | 4 | - | - | index |
 | investment | `savings-start-delay` | 저축 시작을 미룬 기회비용 | expandedFinance.ts | 237 | 901 | - | 44 | 5 | 1085 | 2 | 2 | 4 | - | - | index |
@@ -265,7 +265,7 @@
 | investment | `simple-interest-quick` | 단리 계산기 | enrichments-ext-a.ts | 165 | 785 | - | 42 | 4 | 698 | 2 | 2 | 3 | - | - | index |
 | investment | `sinking-fund-monthly` | 연간 비정기 지출의 월 적립 | expandedFinance.ts | 233 | 890 | - | 35 | 4 | 873 | 2 | 2 | 4 | - | - | index |
 | investment | `stock-pl-quick` | 주식 손익 계산 | enrichments-ext-a.ts | 166 | 859 | - | 68 | 4 | 716 | 2 | 2 | 3 | - | - | index |
-| investment | `systematic-withdrawal-runway` | 월 정액 인출의 자금 유지 기간 | expandedFinance.ts | 247 | 0 | Y | 48 | 3 | 98 | 1 | 0 | 1 | B02 | - | index |
+| investment | `systematic-withdrawal-runway` | 월 정액 인출의 자금 유지 기간 | expandedFinance.ts | 247 | 912 | Y | 48 | 4 | 685 | 2 | 2 | 3 | - | - | index |
 | insurance | `auto-insurance-quick` | 자동차보험 견적 추정 | enrichments.ts | 162 | 0 | Y | 40 | 3 | 459 | 0 | 0 | 3 | - | - | index |
 | insurance | `cancer-insurance-needs` | 암보험 권장 보장액 | enrichments-ext-b.ts | 205 | 0 | Y | 35 | 3 | 397 | 0 | 0 | 3 | - | - | index |
 | insurance | `child-insurance-needs` | 어린이보험 권장 | enrichments-ext-b.ts | 187 | 0 | Y | 65 | 3 | 423 | 0 | 0 | 3 | - | - | index |
