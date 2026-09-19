@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, CalendarDays, Check, Clock3, Coffee, Flag, History, LockKeyhole, Pause, Play, RotateCcw, Settings2, ShieldCheck, Square, Timer, Trash2, Wallet } from "lucide-react";
+import { AlertCircle, CalendarDays, Check, Clock3, Coffee, Flag, History, LockKeyhole, Pause, Play, Plus, RotateCcw, Settings2, ShieldCheck, Square, Timer, Trash2, Wallet } from "lucide-react";
 import {
   calculatePeriodTotals, calculateSession, createWorkSession, DEFAULT_PAY_PROFILE,
   endBreak, estimateWeeklyRestAllowance, finishSession, getKstDayKey, getKstDayRange,
@@ -16,6 +16,7 @@ import WorkCalendar from "./WorkCalendar";
 import { buildWorkCalendarMonth, isWorkCalendarMonth } from "@/lib/workClockCalendar";
 import Link from "@/components/AppLink";
 import NumberInput from "@/components/NumberInput";
+import { addGoalFavorite, addTimerFavorite, createFocusTimer, defaultWorkClockExtras, focusRemaining as getFocusRemaining, getBreakReceipt, isFocusMinutes, parseWorkClockExtras, pauseFocusTimer, startFocusTimer, WORK_CLOCK_EXTRAS_KEY, type WorkClockExtras } from "./workClockExtras";
 
 const HOUR = 3_600_000;
 const GOAL_KEY = "moneysalary:work-clock:goal:v1";
@@ -30,7 +31,7 @@ const duration = (milliseconds: number, seconds = false) => {
   const minutes = Math.floor(total % 3600 / 60);
   return seconds ? `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}` : `${hours}시간 ${minutes}분`;
 };
-const breakLabels: Record<WorkBreak["kind"], string> = { rest: "휴식", toilet: "화장실", meal: "식사" };
+const breakLabels: Record<WorkBreak["kind"], string> = { rest: "잠깐 자리 비움", toilet: "화장실", meal: "식사" };
 const draftFrom = (profile: PayProfile) => ({ ...profile, amount: String(profile.amount), dailyHours: String(profile.dailyHours), workDaysPerWeek: String(profile.workDaysPerWeek), deductionPercent: String(profile.deductionPercent) });
 type PayDraft = ReturnType<typeof draftFrom>;
 
@@ -74,7 +75,6 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
   const [exactStartAt, setExactStartAt] = useState<number | null>(null);
   const [cutoffInput, setCutoffInput] = useState("");
   const [finishInput, setFinishInput] = useState("");
-  const [breakKind, setBreakKind] = useState<WorkBreak["kind"]>("rest");
   const [breakPaid, setBreakPaid] = useState(false);
   const [month, setMonth] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
@@ -83,14 +83,16 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
   const [manualPauseAt, setManualPauseAt] = useState("");
   const [manualPauseMinutes, setManualPauseMinutes] = useState("60");
   const [goalAmount, setGoalAmount] = useState("5000");
-  const [focusEndAt, setFocusEndAt] = useState<number | null>(null);
+  const [extras, setExtras] = useState<WorkClockExtras>(defaultWorkClockExtras);
+  const [goalLabel, setGoalLabel] = useState("");
+  const [focusMinutes, setFocusMinutes] = useState("25");
   const [weeklyHourly, setWeeklyHourly] = useState("");
   const [weeklyHours, setWeeklyHours] = useState("40");
   const [attendance, setAttendance] = useState(false);
   const [employment, setEmployment] = useState(false);
   const [clearConfirmation, setClearConfirmation] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [undo, setUndo] = useState<{ state: WorkClockState; goal: string; save: boolean } | null>(null);
+  const [undo, setUndo] = useState<{ state: WorkClockState; goal: string; extras: WorkClockExtras; save: boolean } | null>(null);
 
   useEffect(() => {
     const initialNow = Date.now();
@@ -105,6 +107,16 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
       try {
         const storedGoal = window.localStorage.getItem(GOAL_KEY);
         if (storedGoal && /^\d{1,9}$/.test(storedGoal) && Number(storedGoal) > 0) setGoalAmount(storedGoal);
+        const rawExtras = window.localStorage.getItem(WORK_CLOCK_EXTRAS_KEY);
+        const storedExtras = parseWorkClockExtras(rawExtras);
+        if (storedExtras) {
+          setExtras(storedExtras);
+          setFocusMinutes(String(storedExtras.timer.durationMs / 60_000));
+        } else if (rawExtras) {
+          setSaveEnabled(false);
+          setUnreadableSaved(true);
+          setStorageError("저장된 즐겨찾기·타이머 설정을 읽지 못해 자동 저장을 멈췄습니다. 기존 데이터는 그대로 보관합니다. 확인 후 ‘설정·기록 모두 삭제’로 초기화할 수 있습니다.");
+        }
       } catch { /* Storage status is reported when saving is requested. */ }
     } else {
       try {
@@ -129,14 +141,17 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
   useEffect(() => {
     if (!ready || !saveEnabled) return;
     const saved = saveWorkClockState({ version: 1, profile, sessions });
-    let goalSaved = true;
-    try { window.localStorage.setItem(GOAL_KEY, goalAmount); } catch { goalSaved = false; }
-    setStorageError(saved && goalSaved ? "" : "브라우저 저장에 실패했습니다. 현재 기록은 이 탭에만 있으니 닫기 전에 확인해 주세요.");
-  }, [ready, saveEnabled, profile, sessions, goalAmount]);
+    let extrasSaved = true;
+    try {
+      window.localStorage.setItem(GOAL_KEY, goalAmount);
+      window.localStorage.setItem(WORK_CLOCK_EXTRAS_KEY, JSON.stringify(extras));
+    } catch { extrasSaved = false; }
+    setStorageError(saved && extrasSaved ? "" : "브라우저 저장에 실패했습니다. 현재 기록은 이 탭에만 있으니 닫기 전에 확인해 주세요.");
+  }, [ready, saveEnabled, profile, sessions, goalAmount, extras]);
 
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
-      if (event.key !== WORK_CLOCK_STORAGE_KEY) return;
+      if (event.key !== null && ![WORK_CLOCK_STORAGE_KEY, GOAL_KEY, WORK_CLOCK_EXTRAS_KEY].includes(event.key)) return;
       setSaveEnabled(false);
       setStaleStorage(true);
       setUndo(null);
@@ -161,10 +176,15 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
   const goal = Number(goalAmount);
   const validGoal = Number.isFinite(goal) && goal > 0 && goal <= 999_999_999;
   const goalProgress = validGoal ? Math.min(100, todayTotals.net / goal * 100) : 0;
-  const focusRemaining = focusEndAt === null ? 25 * 60_000 : Math.max(0, focusEndAt - now);
+  const focusRemaining = getFocusRemaining(extras.timer, now);
+  const focusRunning = extras.timer.status === "running" && focusRemaining > 0;
+  const focusPaused = extras.timer.status === "paused" && focusRemaining > 0;
+  const validFocusMinutes = isFocusMinutes(Number(focusMinutes));
   const latestBreakSession = sessions.slice().sort((a, b) => b.startAt - a.startAt).find((session) => session.breaks.some((pause) => pause.endAt !== null));
   const latestBreak = latestBreakSession?.breaks.slice().reverse().find((pause) => pause.endAt !== null);
-  const receiptGross = latestBreak && latestBreakSession && latestBreak.paid ? ((latestBreak.endAt ?? now) - latestBreak.startAt) / HOUR * getPayRates(latestBreakSession.profile).workHourlyGross : 0;
+  const receiptSession = openBreak && active ? active : latestBreakSession;
+  const receiptBreak = openBreak ?? latestBreak;
+  const breakReceipt = receiptSession && receiptBreak ? getBreakReceipt(receiptSession, receiptBreak, now) : null;
   const minuteNow = Math.floor(now / 60_000) * 60_000;
   const calendarMonth = isWorkCalendarMonth(month) ? month : getKstDayKey(now).slice(0, 7);
   const calendar = useMemo(() => buildWorkCalendarMonth(calendarMonth, sessions, minuteNow), [calendarMonth, sessions, minuteNow]);
@@ -222,16 +242,16 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     });
   }
 
-  function changeActive(action: "break" | "return" | "finish", recordedEnd?: number) {
+  function changeActive(action: "break" | "return" | "finish", recordedEnd?: number, kind: WorkBreak["kind"] = "rest") {
     run(() => {
       if (!active) return;
       const at = recordedEnd ?? Date.now();
       if (!Number.isFinite(at) || at > Date.now()) throw new Error("실제 퇴근시간을 현재 이전으로 입력해 주세요.");
-      const next = action === "break" ? startBreak(active, breakKind, breakPaid, at) : action === "return" ? endBreak(active, at) : finishSession(active, at);
+      const next = action === "break" ? startBreak(active, kind, breakPaid, at) : action === "return" ? endBreak(active, at) : finishSession(active, at);
       setUndo(null);
       setSessions((previous) => previous.map((session) => session.id === active.id ? next : session));
       setRecovered(false);
-      setMessage(action === "break" ? `${breakLabels[breakKind]} 시간을 ${breakPaid ? "유급" : "무급"}으로 기록합니다.` : action === "return" ? "복귀했습니다. 수고하고 있는 나에게 잠깐의 응원을!" : "오늘도 수고했어요. 퇴근 기록을 남겼습니다.");
+      setMessage(action === "break" ? `${breakLabels[kind]} 시간을 ${breakPaid ? "유급" : "무급"}으로 기록합니다.` : action === "return" ? "복귀했습니다. 휴게 기록을 마치고 근무를 계속합니다." : "오늘도 수고했어요. 퇴근 기록을 남겼습니다.");
       if (action === "finish") {
         const nextStart = Date.now();
         setStartInput(localInput(nextStart));
@@ -272,7 +292,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     });
   }
 
-  function captureUndo() { setUndo({ state: { version: 1, profile, sessions }, goal: goalAmount, save: saveEnabled }); }
+  function captureUndo() { setUndo({ state: { version: 1, profile, sessions }, goal: goalAmount, extras, save: saveEnabled }); }
 
   function removeSession(id: string) {
     captureUndo();
@@ -291,9 +311,11 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     setRecovered(false);
     setUnreadableSaved(false);
     setStaleStorage(false);
-    setFocusEndAt(null);
+    setExtras(defaultWorkClockExtras());
+    setFocusMinutes("25");
+    setGoalLabel("");
     setClearConfirmation(false);
-    try { window.localStorage.removeItem(WORK_CLOCK_STORAGE_KEY); window.localStorage.removeItem(GOAL_KEY); setStorageError(""); }
+    try { window.localStorage.removeItem(WORK_CLOCK_STORAGE_KEY); window.localStorage.removeItem(GOAL_KEY); window.localStorage.removeItem(WORK_CLOCK_EXTRAS_KEY); setStorageError(""); }
     catch { setStorageError("브라우저 저장소 삭제에 실패했습니다. 브라우저의 사이트 데이터 설정에서 삭제할 수 있습니다."); }
     setMessage("급여 설정과 모든 근무 기록을 삭제했습니다. 이 탭을 닫기 전까지 실행 취소할 수 있습니다.");
   }
@@ -304,6 +326,8 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     setDraft(draftFrom(undo.state.profile));
     setSessions(undo.state.sessions);
     setGoalAmount(undo.goal);
+    setExtras(undo.extras);
+    setFocusMinutes(String(undo.extras.timer.durationMs / 60_000));
     setSaveEnabled(undo.save);
     setUndo(null);
     setMessage("삭제 전 기록을 복원했습니다.");
@@ -322,10 +346,40 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     setSaveEnabled(enabled);
     setStorageError("");
     if (!enabled) {
-      try { window.localStorage.removeItem(WORK_CLOCK_STORAGE_KEY); window.localStorage.removeItem(GOAL_KEY); }
+      try { window.localStorage.removeItem(WORK_CLOCK_STORAGE_KEY); window.localStorage.removeItem(GOAL_KEY); window.localStorage.removeItem(WORK_CLOCK_EXTRAS_KEY); }
       catch { setStorageError("브라우저 저장소 삭제에 실패했습니다. 브라우저의 사이트 데이터 설정에서 삭제해 주세요."); }
       setMessage("이 브라우저에 저장된 기록을 지웠습니다. 현재 탭의 기록은 닫을 때까지 유지됩니다.");
     }
+  }
+
+  function chooseFocus(minutes: number) {
+    if (focusRunning || focusPaused) return;
+    setFocusMinutes(String(minutes));
+    setExtras(previous => ({ ...previous, timer: createFocusTimer(minutes) }));
+  }
+
+  function beginFocus() {
+    run(() => {
+      const timer = focusPaused ? extras.timer : createFocusTimer(Number(focusMinutes));
+      setExtras(previous => ({ ...previous, timer: startFocusTimer(timer, Date.now()) }));
+    });
+  }
+
+  function saveGoalFavorite() {
+    run(() => {
+      const goals = addGoalFavorite(extras.goals, Number(goalAmount), goalLabel);
+      setExtras(previous => ({ ...previous, goals }));
+      setGoalLabel("");
+      setMessage(saveEnabled ? "목표를 이 브라우저의 즐겨찾기에 추가했습니다." : "목표를 이 탭의 즐겨찾기에 추가했습니다. 다음 방문에도 쓰려면 브라우저 저장을 켜 주세요.");
+    });
+  }
+
+  function saveTimerFavorite() {
+    run(() => {
+      const timerMinutes = addTimerFavorite(extras.timerMinutes, Number(focusMinutes));
+      setExtras(previous => ({ ...previous, timerMinutes }));
+      setMessage(saveEnabled ? "자주 쓰는 시간을 이 브라우저에 저장했습니다." : "자주 쓰는 시간을 이 탭에 추가했습니다. 다음 방문에도 쓰려면 브라우저 저장을 켜 주세요.");
+    });
   }
 
   function markStarted(trusted: boolean) {
@@ -342,7 +396,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
 
       <div className={`${styles.storage} ${saveEnabled ? styles.storageEnabled : ""}`}><div className={styles.storageInfo}><label className={styles.checkbox}><input type="checkbox" checked={saveEnabled} disabled={!ready} onChange={(event) => toggleStorage(event.target.checked)} /><span><strong>회원가입 없이 이 브라우저에 저장하기</strong> (선택)</span></label><p>{saveEnabled ? "저장 켜짐 · 홈과 월급 시계에서 같은 기록을 불러옵니다." : "저장 꺼짐 · 새로고침하거나 탭을 닫으면 기록이 사라집니다."} 급여와 근무 기록은 서버에 전송하지 않아요. 최대 500개 기록을 보관하며, 브라우저 사이트 데이터 삭제·시크릿 모드 종료 시 사라질 수 있습니다. 공용 기기에서는 저장을 끄세요.</p></div><button type="button" className={styles.textButton} onClick={() => setClearConfirmation(true)}><Trash2 size={14} /> 설정·기록 모두 삭제</button></div>
       {storageError && <p className={`${styles.notice} ${styles.error}`} role="alert"><LockKeyhole size={16} />{storageError}</p>}
-      {clearConfirmation && <div className={styles.confirmation} role="group" aria-label="모든 기록 삭제 확인"><p>급여 설정, 근무 기록, 목표를 삭제하고 브라우저 저장을 끕니다.</p><div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.danger}`} onClick={clearAll}>모두 삭제</button><button type="button" className={styles.button} onClick={() => setClearConfirmation(false)}>취소</button></div></div>}
+      {clearConfirmation && <div className={styles.confirmation} role="group" aria-label="모든 기록 삭제 확인"><p>급여 설정, 근무 기록, 목표·시간 즐겨찾기와 타이머를 삭제하고 브라우저 저장을 끕니다.</p><div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.danger}`} onClick={clearAll}>모두 삭제</button><button type="button" className={styles.button} onClick={() => setClearConfirmation(false)}>취소</button></div></div>}
 
       <div className={styles.topGrid}>
         <section className={styles.hero} aria-labelledby="earnings-title">
@@ -397,16 +451,23 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
         </div>
         <div className={styles.controlAside}>
           <div className={styles.breakControls}>
-            <div className={styles.fields}>
-              <label className={styles.field} htmlFor="break-kind">잠깐 자리 비우기<select id="break-kind" className={styles.select} value={breakKind} disabled={!!openBreak} onChange={(event) => { const kind = event.target.value as WorkBreak["kind"]; setBreakKind(kind); setBreakPaid(false); }}><option value="rest">휴식 / 스트레칭</option><option value="meal">식사</option><option value="toilet">화장실</option></select></label>
-              <div className={styles.field}><span>휴게 시작</span><button type="button" className={styles.button} disabled={!active || !!openBreak || activeTotals?.capped} onClick={() => changeActive("break")}><Pause size={15} /> {breakLabels[breakKind]} 시작</button></div>
-            </div>
+            <h3 className={styles.panelTitle}>잠깐 자리 비우기</h3>
             <label className={styles.checkbox}><input type="checkbox" checked={breakPaid} disabled={!!openBreak} onChange={(event) => setBreakPaid(event.target.checked)} /><span>이 시간도 유급으로 환산하기<br />실제 회사 규정에 맞춰 직접 선택해 주세요. 기본값은 무급입니다.</span></label>
+            <div className={styles.quickBreaks} role="group" aria-label="휴게 빠른 시작">
+              {(["meal", "toilet", "rest"] as const).map(kind => <button key={kind} type="button" data-work-clock-action className={styles.button} disabled={!active || !!openBreak || activeTotals?.capped} onClick={() => changeActive("break", undefined, kind)}><Pause size={14} />{breakLabels[kind]} 시작</button>)}
+            </div>
+            {!active && <p className={styles.muted}>출근 기록을 시작하면 바로 사용할 수 있어요.</p>}
+            {openBreak && <button type="button" data-work-clock-action className={`${styles.button} ${styles.primary}`} onClick={() => changeActive("return")}><Play size={15} /> 복귀 · 휴게 중단</button>}
           </div>
-          <div className={styles.breakReceipt}>
-            <span>{latestBreak ? `최근 ${breakLabels[latestBreak.kind]} 영수증 · ${latestBreak.paid ? "유급 환산" : "무급 기록"}` : "잠깐 쉬어 간 시간도 기록해요"}</span>
-            <strong>{latestBreak ? `${won(receiptGross)}원` : "REST & RECHARGE"}</strong>
-            <p>{latestBreak ? `${duration((latestBreak.endAt ?? now) - latestBreak.startAt)} 동안의 세전 환산액 · 전체 금액에 이미 반영됨` : "화장실·식사·스트레칭 후 복귀하면 시간과 유급 환산액을 보여 드려요."}</p>
+          <div className={styles.breakReceipt} aria-live="off">
+            <span>{receiptBreak ? `${openBreak ? "지금" : "최근"} ${breakLabels[receiptBreak.kind]} · ${receiptBreak.paid ? "유급 기록" : "무급 기록"}` : "잠깐 쉬어 간 시간도 기록해요"}</span>
+            {breakReceipt && receiptBreak && receiptSession ? <>
+              <strong>{duration(breakReceipt.elapsedMs, true)}</strong>
+              <dl className={styles.receiptAmounts}><div><dt>세전 시간 가치</dt><dd>{won(breakReceipt.hypotheticalGross)}원</dd></div><div><dt>공제 후 가정 환산</dt><dd>{won(breakReceipt.hypotheticalNet)}원</dd></div></dl>
+              <p>이번 근무에 저장된 급여·공제율 {receiptSession.profile.deductionPercent}% 기준의 참고 금액입니다.</p>
+              <p className={styles.receiptAccrued}>{receiptBreak.paid ? `누적에 반영된 공제 후 금액 ${won(breakReceipt.accruedNet)}원 · 위 전체 금액에 이미 포함됩니다.` : "무급이므로 이 시간의 실제 누적 반영액은 0원입니다. 위 시간 가치는 급여에 더하지 않아요."}</p>
+              {openBreak && activeTotals?.capped && <p>예정 퇴근시간까지 계산했어요. 복귀 또는 퇴근으로 기록을 마쳐 주세요.</p>}
+            </> : <p>빠른 시작을 누르면 경과 시간과 세전·공제 후 시간 가치를 함께 보여 드려요.</p>}
           </div>
         </div>
       </section>
@@ -419,16 +480,25 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
           <p className={styles.sectionSubtitle}>공제 후 환산액으로 커피 한 잔까지.</p>
           <div className={styles.goalChoices}><button type="button" aria-pressed={goalAmount === "5000"} onClick={() => setGoalAmount("5000")}>커피 5천원</button><button type="button" aria-pressed={goalAmount === "12000"} onClick={() => setGoalAmount("12000")}>점심 1만2천원</button></div>
           <label className={styles.field} htmlFor="work-goal">내 목표 금액 (원)<NumberInput id="work-goal" className={styles.input} type="number" min="1" max="999999999" value={goalAmount} onChange={(event) => setGoalAmount(event.target.value)} /></label>
+          <div className={styles.favoriteEditor}><label className={styles.field} htmlFor="work-goal-label">즐겨찾기 이름 (선택)<input id="work-goal-label" className={styles.input} maxLength={24} placeholder="예: 책 한 권, 운동비" value={goalLabel} onChange={event => setGoalLabel(event.target.value)} /></label><button type="button" className={styles.button} disabled={!ready || !validGoal} onClick={saveGoalFavorite}><Plus size={15} /> 이 목표 추가</button></div>
+          {extras.goals.length > 0 && <ul className={styles.favoriteList} aria-label="목표 즐겨찾기">{extras.goals.map(item => <li key={item.amount}><button type="button" className={styles.favoriteChoice} aria-pressed={Number(goalAmount) === item.amount} onClick={() => setGoalAmount(String(item.amount))}><span>{item.label}</span><strong>{won(item.amount)}원</strong></button><button type="button" className={styles.favoriteDelete} aria-label={`${item.label} ${won(item.amount)}원 즐겨찾기 삭제`} onClick={() => setExtras(previous => ({ ...previous, goals: previous.goals.filter(goal => goal.amount !== item.amount) }))}><Trash2 size={14} /></button></li>)}</ul>}
+          <p className={styles.sectionSubtitle}>즐겨찾기 최대 8개 · {saveEnabled ? "이 브라우저에 저장돼요." : "현재 탭에서만 유지돼요. 위에서 브라우저 저장을 켜면 다음에도 사용할 수 있어요."}</p>
           <div className={styles.progress} role="progressbar" aria-label="오늘 목표 달성률" aria-valuenow={Math.floor(goalProgress)} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${goalProgress}%` }} /></div>
           <p className={styles.muted}>{!validGoal ? "목표 금액을 1원 이상 입력해 주세요." : goalProgress >= 100 ? "목표 달성! 오늘의 시간을 잘 쌓고 있어요." : `${won(Math.max(0, goal - todayTotals.net))}원 남았어요 · ${Math.floor(goalProgress)}% 달성`}</p>
         </section>
 
         <section className={styles.panel} aria-labelledby="focus-title">
-          <div className={styles.featureIcon}><Timer size={20} /></div><h2 id="focus-title" className={styles.panelTitle}>25분, 한 가지에 집중</h2>
+          <div className={styles.featureIcon}><Timer size={20} /></div><h2 id="focus-title" className={styles.panelTitle}>내 시간에 맞춰 집중</h2>
           <p className={styles.sectionSubtitle}>할 일 하나를 끝낸 뒤 가볍게 몸을 풀어요.</p>
-          <div className={styles.focusClock} aria-live="off">{String(Math.floor(focusRemaining / 60_000)).padStart(2, "0")}<span>:</span>{String(Math.floor(focusRemaining / 1000) % 60).padStart(2, "0")}</div>
-          <div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.primary}`} disabled={!ready} onClick={() => setFocusEndAt(Date.now() + 25 * 60_000)}><Play size={14} /> {focusEndAt === null ? "집중 시작" : "다시 25분"}</button>{focusEndAt !== null && <button type="button" className={styles.iconButton} aria-label="집중 타이머 초기화" onClick={() => setFocusEndAt(null)}><RotateCcw size={15} /></button>}</div>
-          <p className={styles.sectionSubtitle}>{focusEndAt !== null && focusRemaining === 0 ? "집중 완료. 어깨를 펴고 잠깐 쉬어 가세요." : "근무 기록과 독립적인 타이머예요. 창을 닫으면 초기화됩니다."}</p>
+          <div className={styles.goalChoices} role="group" aria-label="집중 시간 선택">{[25, 50].map(minutes => <button type="button" key={minutes} disabled={focusRunning || focusPaused} aria-pressed={Number(focusMinutes) === minutes} onClick={() => chooseFocus(minutes)}>{minutes}분</button>)}</div>
+          <label className={styles.field} htmlFor="focus-minutes">직접 입력 (1~180분)<input id="focus-minutes" className={styles.input} type="number" min="1" max="180" step="1" value={focusMinutes} disabled={focusRunning || focusPaused} onChange={event => { const value = event.target.value; setFocusMinutes(value); if (isFocusMinutes(Number(value))) setExtras(previous => ({ ...previous, timer: createFocusTimer(Number(value)) })); }} /></label>
+          <button type="button" className={`${styles.button} ${styles.favoriteAdd}`} disabled={!ready || !validFocusMinutes} onClick={saveTimerFavorite}><Plus size={15} /> 자주 쓰는 시간 추가</button>
+          {extras.timerMinutes.length > 0 && <ul className={styles.favoriteList} aria-label="집중 시간 즐겨찾기">{extras.timerMinutes.map(minutes => <li key={minutes}><button type="button" className={styles.favoriteChoice} disabled={focusRunning || focusPaused} aria-pressed={Number(focusMinutes) === minutes} onClick={() => chooseFocus(minutes)}><strong>{minutes}분</strong></button><button type="button" className={styles.favoriteDelete} aria-label={`${minutes}분 즐겨찾기 삭제`} onClick={() => setExtras(previous => ({ ...previous, timerMinutes: previous.timerMinutes.filter(item => item !== minutes) }))}><Trash2 size={14} /></button></li>)}</ul>}
+          <div className={styles.focusClock} aria-live="off">{String(Math.floor(Math.ceil(focusRemaining / 1000) / 60)).padStart(2, "0")}<span>:</span>{String(Math.ceil(focusRemaining / 1000) % 60).padStart(2, "0")}</div>
+          <p className={styles.focusStatus}>{focusRemaining === 0 ? "집중 완료" : focusRunning ? "집중 중" : focusPaused ? "일시정지" : "시작 전"}</p>
+          <div className={styles.buttonRow}>{focusRunning ? <button type="button" className={`${styles.button} ${styles.primary}`} onClick={() => setExtras(previous => ({ ...previous, timer: pauseFocusTimer(previous.timer, Date.now()) }))}><Pause size={14} /> 일시정지</button> : <button type="button" className={`${styles.button} ${styles.primary}`} disabled={!ready || !validFocusMinutes} onClick={beginFocus}><Play size={14} /> {focusPaused ? "재개" : focusRemaining === 0 ? "다시 시작" : "집중 시작"}</button>}<button type="button" className={styles.button} disabled={!ready} onClick={() => { setFocusMinutes(String(extras.timer.durationMs / 60_000)); setExtras(previous => ({ ...previous, timer: createFocusTimer(previous.timer.durationMs / 60_000) })); }}><RotateCcw size={15} /> 초기화</button></div>
+          <p className={styles.sectionSubtitle}>{focusRemaining === 0 ? "집중 완료. 어깨를 펴고 잠깐 쉬어 가세요. " : ""}시간을 바꾸려면 초기화해 주세요. 다른 창을 보아도 실제 경과 시간으로 계산해요. 근무·급여 기록에는 영향을 주지 않습니다.</p>
+          <p className={styles.sectionSubtitle}>{saveEnabled ? "즐겨찾기와 타이머 상태를 이 브라우저에 저장해요. 실행 중에는 창을 닫아도 시간이 계속 흘러요." : "즐겨찾기와 타이머는 현재 탭에서만 유지돼요. 다음 방문에도 쓰려면 위에서 브라우저 저장을 켜 주세요."}</p>
         </section>
 
         <section className={styles.panel} aria-labelledby="weekly-title">

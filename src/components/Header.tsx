@@ -74,14 +74,14 @@ export default function Header() {
  minHeight: 64,
  }}
  >
- <nav className="page-width" aria-label={isEn ? "Main menu" : "주 메뉴"}>
+ <nav className="page-width max-w-[96rem]" aria-label={isEn ? "Main menu" : "주 메뉴"}>
  <div className="flex items-center justify-between gap-2">
  {/* Logo */}
  <div className="flex-shrink-0 z-50">
  <Link href={isEn ? "/en" : "/"} aria-label={isEn ? "Money Salary home" : "Money Salary — 머니샐러리 홈"} className="ms-interactive hover:!translate-y-0 hover:!shadow-none flex min-h-11 items-center gap-2 rounded-lg no-underline">
- {!isEn && <Logo className="h-8 w-8 min-[480px]:hidden text-electric" />}
+ <Logo className="h-8 w-8 min-[480px]:hidden text-electric" />
  <Logo
- className={`${isEn ? "h-6 min-[360px]:h-8" : "hidden min-[480px]:block h-8"} sm:h-9 w-auto text-electric`}
+ className="hidden min-[480px]:block h-8 sm:h-9 w-auto text-electric"
  showText={true}
  />
  </Link>
@@ -121,22 +121,24 @@ export default function Header() {
  <div className="flex items-center gap-1 sm:gap-2 z-50 flex-shrink-0">
  {!isEn && <Link
  href="/work-clock"
+ aria-label="월급 시계"
  data-msy-module="header-work-clock"
  aria-current={pathname === "/work-clock" ? "page" : undefined}
  className="ms-interactive hover:!translate-y-0 hover:!shadow-none inline-flex xl:hidden min-h-11 items-center justify-center gap-1 rounded-xl border border-border bg-accent px-2 text-xs font-semibold text-link no-underline whitespace-nowrap"
  >
- <Clock3 size={15} aria-hidden="true" />월급 시계
+ <Clock3 size={15} aria-hidden="true" /><span className="hidden min-[360px]:inline">월급 시계</span>
  </Link>}
  <HeaderSearch />
- <LocaleSwitcher />
+ {/* Compact headers keep language and saved pages accessible from the menu. */}
+ <div className="hidden lg:block"><LocaleSwitcher /></div>
  <ThemeToggle />
  {/* 즐겨찾기 배지 — 저장 0개면 미렌더 (재방문 루프 진입점) */}
- <div className="hidden sm:block"><FavoritesBadge /></div>
- {/* Dashboard CTA — md+ 에서만 텍스트, sm 이하 아이콘만 */}
+ <div className="hidden 2xl:block"><FavoritesBadge /></div>
+ {/* Dashboard CTA — compact phones use the menu; wide desktops add the label. */}
  <Link
  href={dashboardHref}
  aria-label={dashboardLabel}
- className="ms-interactive hover:!translate-y-0 hover:!shadow-none hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-foreground bg-secondary border border-border rounded-xl no-underline whitespace-nowrap hover:bg-accent"
+ className="ms-interactive hover:!translate-y-0 hover:!shadow-none hidden md:inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-foreground bg-secondary border border-border rounded-xl no-underline whitespace-nowrap hover:bg-accent"
  >
  <LayoutDashboard size={14} aria-hidden="true" />
  <span className="hidden 2xl:inline">{dashboardLabel}</span>

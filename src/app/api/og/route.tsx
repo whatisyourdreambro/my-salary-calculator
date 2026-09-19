@@ -112,6 +112,16 @@ const watermarkStyle = {
 
 type OgRender = { node: ReactElement; text: string };
 
+function BrandSignature() {
+  return <div style={{ ...watermarkStyle, display: "flex", alignItems: "center", gap: 14, opacity: 0.9 }}>
+    <svg width="46" height="46" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="30" height="30" rx="8" fill="white" />
+      <path d="M8 23L16 11L24 23" stroke={BRAND_BLUE} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+    <span>moneysalary.com</span>
+  </div>;
+}
+
 function renderSalaryOg(amount: string, netPay?: string): OgRender {
   const manwon = Math.round(Number(amount) / 10000).toLocaleString("ko-KR");
   // netPay는 원 단위(예: 3300000)로 전달 → 만원 단위로 포맷해 SNS 카드 가독성 ↑
@@ -148,7 +158,7 @@ function renderSalaryOg(amount: string, netPay?: string): OgRender {
           </div>
         )}
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -175,7 +185,7 @@ function renderToolOg(name: string): OgRender {
           2026년 최신 세법 기준 · 무료
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -201,7 +211,7 @@ function renderGuideOg(title: string): OgRender {
           직장인이 꼭 알아야 할 세금·재테크
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -234,7 +244,7 @@ function renderFunOg(title: string): OgRender {
           지금 바로 무료로 즐기는 머니 게임
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -260,7 +270,7 @@ function renderCompanyOg(name: string): OgRender {
           평균 연봉 · 직급별 실수령액
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -287,7 +297,7 @@ function renderReportOg(title: string): OgRender {
           출처 표기 시 자유 인용 · 원문 데이터 공개
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -315,7 +325,7 @@ function renderEnOg(title: string): OgRender {
           Korea salary · tax · stocks — in English
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
   const text = [
@@ -338,13 +348,13 @@ function renderDefaultOg(title: string): OgRender {
           {title}
         </div>
         <div style={{ color: "white", fontSize: 28, fontWeight: 500, opacity: 0.85 }}>
-          2026년 최신 세법 · 무료
+          내 조건으로 비교하는 급여·금융 도구
         </div>
       </div>
-      <div style={watermarkStyle}>moneysalary.com</div>
+      <BrandSignature />
     </div>
   );
-  const text = ["머니샐러리", title, "2026년 최신 세법 · 무료", "moneysalary.com"].join(" ");
+  const text = ["머니샐러리", title, "내 조건으로 비교하는 급여·금융 도구", "moneysalary.com"].join(" ");
   return { node, text };
 }
 

@@ -53,7 +53,13 @@ describe("Professional shell and home contracts", () => {
     const html = renderToStaticMarkup(createElement(Header));
     expect(html).toContain('aria-controls="mobile-nav-menu"');
     expect(html).toContain('id="mobile-nav-menu"');
-    expect(html).toContain(pathname === "/en" ? 'aria-label="Open search"' : 'aria-label="검색 열기"');
+    const searchLabel = pathname === "/en" ? "Open search" : "검색 열기";
+    const searchTriggers = [...html.matchAll(/<button\b[^>]*aria-label="([^"]+)"[^>]*>[\s\S]*?<\/button>/g)]
+      .filter(match => match[1] === searchLabel).map(match => match[0]);
+    expect(searchTriggers).toHaveLength(1);
+    expect(searchTriggers[0]).toContain(pathname === "/en" ? ">Search</span>" : ">검색</span>");
+    expect(searchTriggers[0]).toContain('aria-haspopup="dialog"');
+    expect(searchTriggers[0]).toContain('aria-expanded="false"');
     expect(html).toContain(pathname === "/en" ? 'href="/en/guides"' : 'href="/guides"');
     expect(html).not.toContain("header-slide-in");
     expect(html).not.toContain("backdrop-filter");

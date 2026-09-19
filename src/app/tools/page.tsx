@@ -30,6 +30,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  color: "text-primary",
  items: [
  { title: "연봉 실수령액 계산기", desc: "4대보험·소득세와 예상 월급", href: "/", icon: DollarSign, isHot: true },
+ { title: "공기업·공공기관 연봉 계산기", desc: "공시 기준 확인·내 연봉으로 계산", href: "/public-institutions", icon: Building2, isNew: true },
  { title: "성과급·인센티브 세금", desc: "2026 연봉합산 세율 적용", href: "/tools/finance/bonus", icon: Gift, isNew: true, isHot: true },
  { title: "퇴직금 세금 계산기", desc: "환산급여 방식 퇴직소득세", href: "/tools/finance/severance", icon: Briefcase, isNew: true },
  { title: "프리랜서 종합소득세", desc: "사업소득·필요경비 계산", href: "/tools/finance/freelance-tax", icon: Laptop, isNew: true },

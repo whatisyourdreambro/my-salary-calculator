@@ -126,6 +126,7 @@ export const navConfig: NavItem[] = [
   description: "실제 데이터 기반 연봉 정보",
   items: [
    { name: "기업별 연봉 DB", href: "/salary-db", description: `${companyCountPlus}개 기업 평균 연봉`, badge: "MUST" },
+   { name: "공기업·공공기관 연봉 계산기", href: "/public-institutions", description: "공시 기준 확인·내 연봉으로 계산", badge: "NEW" },
    { name: "직업별 연봉", href: "/job", description: `${JOB_COUNT}개 직종 연봉 비교` },
    { name: "산업별 연봉", href: "/industry", description: `${INDUSTRY_COUNT}개 산업군 연봉 현황` },
    { name: "지역별 연봉", href: "/region", description: regionLabel },

@@ -168,29 +168,21 @@ export default function HeaderSearch() {
 
   return (
     <>
-      {/* 트리거 버튼 — lg 미만 / xl 이상 분기로 너비 조절 */}
-      {/* xl(1280px+): 검색바 + 텍스트 + ⌘K */}
+      {/* One labelled trigger stays visible at every width; only the shortcut hint is optional. */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={S.ariaOpen}
-        className="ms-interactive hover:!translate-y-0 hover:!shadow-none hidden min-h-11 xl:inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium text-muted-foreground bg-card border border-border rounded-xl hover:bg-secondary"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-keyshortcuts="Control+K Meta+K"
+        className="ms-interactive hover:!translate-y-0 hover:!shadow-none inline-flex shrink-0 min-h-11 items-center justify-center gap-2 whitespace-nowrap px-2.5 sm:px-3 py-2 text-[13px] font-semibold text-link bg-accent border border-primary/30 rounded-xl hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-link"
       >
-        <Search size={14} aria-hidden="true" />
+        <Search size={18} aria-hidden="true" />
         <span>{S.trigger}</span>
-        <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-secondary text-muted-foreground rounded">
+        <kbd aria-hidden="true" className="hidden xl:inline ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-card text-muted-foreground rounded">
           ⌘K
         </kbd>
-      </button>
-
-      {/* lg(1024~1279px) + 모바일: 검색 아이콘만 */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        aria-label={S.ariaOpen}
-        className="ms-interactive hover:!translate-y-0 hover:!shadow-none xl:hidden inline-flex min-w-11 min-h-11 items-center justify-center p-2 rounded-xl text-foreground hover:bg-secondary"
-      >
-        <Search size={20} aria-hidden="true" />
       </button>
 
       {/* 검색 모달 — createPortal(document.body): 헤더의 backdrop-filter·슬라이드

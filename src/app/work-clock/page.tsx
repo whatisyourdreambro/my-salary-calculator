@@ -32,7 +32,7 @@ export default function WorkClockPage() {
       <JsonLd data={[
         breadcrumbLd([{ name: "홈", path: "/" }, { name: "월급 시계", path: "/work-clock" }]),
         faqLd(FAQ),
-        softwareApplicationLd({ name: "실시간 월급 시계", description: "출퇴근과 휴게시간을 기록하고 근무 달력에서 일별·월별 급여 환산액을 확인하는 무료 개인용 도구", url: "/work-clock", featureList: ["실시간 급여 환산", "출퇴근·유급/무급 휴게 기록", "일별·월별 근무 달력", "회원가입 없는 선택형 브라우저 저장", "주휴수당 참고 추정", "25분 집중 타이머"] }),
+        softwareApplicationLd({ name: "실시간 월급 시계", description: "출퇴근과 휴게시간을 기록하고 근무 달력에서 일별·월별 급여 환산액을 확인하는 무료 개인용 도구", url: "/work-clock", featureList: ["실시간 급여 환산", "출퇴근·유급/무급 휴게 기록", "일별·월별 근무 달력", "회원가입 없는 선택형 브라우저 저장", "주휴수당 참고 추정", "목표 금액 즐겨찾기", "시간 설정·일시정지 가능한 집중 타이머"] }),
       ]} />
       <div className={styles.shell}>
         <nav className={styles.breadcrumbs} aria-label="현재 위치"><Link href="/">홈</Link><ChevronRight size={12} /><span aria-current="page">월급 시계</span></nav>

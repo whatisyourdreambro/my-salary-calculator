@@ -50,7 +50,7 @@ const seasonPages: SearchEntry[] = [
  { title: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", category: "계산기", description: "OPI·TAI 세후 실수령", priority: 1 },
  // 2026-08-07 — 기업 성과급 계산기 검색 인덱스 갭 해소 (기존 10종 미등록) + 신규 2종
  { title: "SK하이닉스 성과급 계산기", href: "/calc/sk-hynix-bonus", category: "계산기", description: "PS·PI 세전·세후 즉시 계산", priority: 1 },
- { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "2026 임협 타결 400% + 1,270만 + 주식 15주 세후", priority: 1 },
+ { title: "현대차 성과급 계산기", href: "/calc/hyundai-bonus", category: "계산기", description: "월 기준금액·정액 지급분·주식 평가액을 나눠 성과급 비교", priority: 1 },
  { title: "기아 성과급 계산기", href: "/calc/kia-bonus", category: "계산기", description: "2026 타결 400% + 1,270만 + 자사주 47주 세후", priority: 2 },
  { title: "LG에너지솔루션 성과급 계산기", href: "/calc/lg-energy-bonus", category: "계산기", description: "배터리 사이클 50~900% 시나리오", priority: 2 },
  { title: "HD현대중공업 성과급 계산기", href: "/calc/hd-hyundai-bonus", category: "계산기", description: "조선 슈퍼사이클 600%+", priority: 2 },
@@ -140,6 +140,7 @@ const toolPages: SearchEntry[] = [
  { title: "2027 연봉 실수령액 표", href: "/table/2027/annual", category: "도구", description: "최저임금 223.6만·연금 5% 선반영" },
  { title: "2027 월급 실수령액 표", href: "/table/2027/monthly", category: "도구" },
  { title: "상장사 공시 연봉 DB", href: "/salary-db/listed", category: "도구", description: "DART 사업보고서 기준 — 추정 0" },
+ { title: "공기업·공공기관 연봉 계산기", href: "/public-institutions", category: "계산기", description: "공기업·준정부기관·지방공기업의 ALIO·클린아이 공시 확인과 개인 실수령액 계산", priority: 1 },
  { title: "연봉 인상률 TOP 100 (상장사)", href: "/salary-db/listed/top-raise", category: "도구", description: "공시 기준 전년比 인상률 순위" },
  // 2026-09-02 전면 최적화 (운영자 지시) — /tools 트리(리프 29종)·허브·전역 진입로가 헤더 검색 0건이던 갭 해소 (제목은 각 페이지 메타 기준)
  { title: `성과급 계산기 ${bonusCalcCountKo} 허브`, href: "/calc/bonus-calculators", category: "도구", description: "회사별 최신 지급률·시즌 캘린더", priority: 1 },

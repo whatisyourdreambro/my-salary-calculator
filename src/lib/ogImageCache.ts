@@ -1,5 +1,5 @@
 /** Keep this version in the key: an image design change must not reuse old renders. */
-const IMAGE_VERSION = "20260919-1";
+const IMAGE_VERSION = "20260919-2";
 const MAX_TEXT_CHARACTERS = 120;
 const MAX_FONT_BYTES = 262_144;
 const FONT_CACHE_BYTES = 2_097_152;
