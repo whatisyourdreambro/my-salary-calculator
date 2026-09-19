@@ -3,6 +3,7 @@ import { ArrowDown, ArrowRight, Building2, ExternalLink, FileCheck2, Landmark } 
 import Link from "@/components/AppLink";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import JsonLd from "@/components/JsonLd";
+import AutoShareSection from "@/components/AutoShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import { PUBLIC_INSTITUTION_FAQ, PUBLIC_INSTITUTION_SALARY_PATH as PATH, PUBLIC_INSTITUTION_SALARY_TITLE as TITLE } from "@/lib/publicInstitutionSalary";
@@ -81,6 +82,7 @@ export default function PublicInstitutionsPage() {
           </ul>
           <p className="mt-4">안내 확인일: 2026년 9월 19일. 기관 공시는 수정될 수 있으므로 입력 시 원문 기준을 다시 확인하세요. 이 페이지는 머니샐러리의 비교 도구이며 정부·개별 기관의 공식 급여 산정 서비스가 아닙니다.</p>
         </section>
+        <AutoShareSection contentType="tool" maxWidth="7xl" />
       </div>
     </div>
   );
