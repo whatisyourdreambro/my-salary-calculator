@@ -15,6 +15,7 @@ import HolidayPayEstimate from "./HolidayPayEstimate";
 import WorkCalendar from "./WorkCalendar";
 import { buildWorkCalendarMonth, isWorkCalendarMonth } from "@/lib/workClockCalendar";
 import Link from "@/components/AppLink";
+import NumberInput from "@/components/NumberInput";
 
 const HOUR = 3_600_000;
 const GOAL_KEY = "moneysalary:work-clock:goal:v1";
@@ -364,7 +365,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
             {([ ["annual", "연봉"], ["monthly", "월급"], ["hourly", "시급"] ] as const).map(([basis, label]) => <button type="button" key={basis} aria-pressed={draft.basis === basis} onClick={() => setDraft((previous) => ({ ...previous, basis, amount: basis === "annual" ? "48000000" : basis === "monthly" ? "4000000" : "12000" }))}>{label}</button>)}
           </div>
           <div className={styles.fields}>
-            <label className={`${styles.field} ${styles.fullField}`} htmlFor="work-pay">세전 {draft.basis === "annual" ? "연봉" : draft.basis === "monthly" ? "월급" : "시급"} (원)<input id="work-pay" className={styles.input} inputMode="numeric" type="number" min="0" max="1000000000000" value={draft.amount} onChange={(event) => updateDraft("amount", event.target.value)} /></label>
+            <label className={`${styles.field} ${styles.fullField}`} htmlFor="work-pay">세전 {draft.basis === "annual" ? "연봉" : draft.basis === "monthly" ? "월급" : "시급"} (원)<NumberInput id="work-pay" className={styles.input} inputMode="numeric" type="number" min="0" max="1000000000000" value={draft.amount} onChange={(event) => updateDraft("amount", event.target.value)} /></label>
             <label className={styles.field} htmlFor="work-hours">환산용 하루 근무 (시간)<input id="work-hours" className={styles.input} type="number" min="0.25" max="16" step="0.25" value={draft.dailyHours} onChange={(event) => updateDraft("dailyHours", event.target.value)} /></label>
             <label className={styles.field} htmlFor="work-days">환산용 주 근무일 (일)<input id="work-days" className={styles.input} type="number" min="1" max="7" step="1" value={draft.workDaysPerWeek} onChange={(event) => updateDraft("workDaysPerWeek", event.target.value)} /></label>
             <label className={`${styles.field} ${styles.fullField}`} htmlFor="work-deductions">세금·보험 합산 예상 공제율 (%)<input id="work-deductions" className={styles.input} type="number" min="0" max="100" step="0.1" value={draft.deductionPercent} onChange={(event) => updateDraft("deductionPercent", event.target.value)} /></label>
@@ -417,7 +418,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
           <div className={styles.featureIcon}><Coffee size={20} /></div><h2 id="goal-title" className={styles.panelTitle}>오늘의 작은 목표</h2>
           <p className={styles.sectionSubtitle}>공제 후 환산액으로 커피 한 잔까지.</p>
           <div className={styles.goalChoices}><button type="button" aria-pressed={goalAmount === "5000"} onClick={() => setGoalAmount("5000")}>커피 5천원</button><button type="button" aria-pressed={goalAmount === "12000"} onClick={() => setGoalAmount("12000")}>점심 1만2천원</button></div>
-          <label className={styles.field} htmlFor="work-goal">내 목표 금액 (원)<input id="work-goal" className={styles.input} type="number" min="1" max="999999999" value={goalAmount} onChange={(event) => setGoalAmount(event.target.value)} /></label>
+          <label className={styles.field} htmlFor="work-goal">내 목표 금액 (원)<NumberInput id="work-goal" className={styles.input} type="number" min="1" max="999999999" value={goalAmount} onChange={(event) => setGoalAmount(event.target.value)} /></label>
           <div className={styles.progress} role="progressbar" aria-label="오늘 목표 달성률" aria-valuenow={Math.floor(goalProgress)} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${goalProgress}%` }} /></div>
           <p className={styles.muted}>{!validGoal ? "목표 금액을 1원 이상 입력해 주세요." : goalProgress >= 100 ? "목표 달성! 오늘의 시간을 잘 쌓고 있어요." : `${won(Math.max(0, goal - todayTotals.net))}원 남았어요 · ${Math.floor(goalProgress)}% 달성`}</p>
         </section>
@@ -436,7 +437,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
           <div className={styles.featureValue}>{weekly.eligible && weeklyRateKnown ? `${won(weekly.amount)}원` : "요건 확인 필요"}</div>
           <p className={styles.muted}>오늘·월 누적에 더하지 않아요. 월급·연봉에 이미 포함될 수 있습니다.</p>
           <details className={styles.weeklyDetails}><summary>통상시급과 해당 주 요건 입력</summary><div className={styles.weeklyFields}>
-            <label className={styles.field} htmlFor="weekly-hourly">통상시급 (원)<input id="weekly-hourly" className={styles.input} type="number" min="0" max="1000000000" placeholder={rates.ordinaryHourlyEstimate === null ? "직접 입력해 주세요" : String(Math.round(rates.ordinaryHourlyEstimate))} value={weeklyHourly} onChange={(event) => setWeeklyHourly(event.target.value)} /></label>
+            <label className={styles.field} htmlFor="weekly-hourly">통상시급 (원)<NumberInput id="weekly-hourly" className={styles.input} type="number" min="0" max="1000000000" placeholder={rates.ordinaryHourlyEstimate === null ? "직접 입력해 주세요" : won(rates.ordinaryHourlyEstimate)} value={weeklyHourly} onChange={(event) => setWeeklyHourly(event.target.value)} /></label>
             <p className={styles.muted}>{rates.ordinaryHourlyEstimate === null ? "현재 근무 형태는 자동 통상시급 추정을 지원하지 않습니다." : `미입력 시 ${won(rates.ordinaryHourlyEstimate)}원 사용${profile.basis === "hourly" ? " (입력 시급)" : " (월급 ÷ 209시간, 전액 통상임금 가정)"}`}</p>
             <label className={styles.field} htmlFor="weekly-hours">4주 평균 주 소정근로 (시간)<input id="weekly-hours" className={styles.input} type="number" min="0" max="40" step="0.5" value={weeklyHours} onChange={(event) => setWeeklyHours(event.target.value)} /></label>
             <label className={styles.checkbox}><input type="checkbox" checked={attendance} onChange={(event) => setAttendance(event.target.checked)} />해당 주 소정근로일을 개근했어요</label>
