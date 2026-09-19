@@ -12,9 +12,11 @@ import {
 import styles from "./work-clock.module.css";
 import { trackCalcStart, trackCalcSuccess } from "@/lib/analytics";
 import HolidayPayEstimate from "./HolidayPayEstimate";
+import WorkCalendar from "./WorkCalendar";
+import { buildWorkCalendarMonth, isWorkCalendarMonth } from "@/lib/workClockCalendar";
+import Link from "@/components/AppLink";
 
 const HOUR = 3_600_000;
-const DAY = 24 * HOUR;
 const GOAL_KEY = "moneysalary:work-clock:goal:v1";
 const won = (value: number) => Math.round(value).toLocaleString("ko-KR");
 const timeText = (value: number) => new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false }).format(value);
@@ -48,8 +50,12 @@ function useVisibleClock() {
   return now;
 }
 
-export default function WorkClockClient() {
+export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "home" }) {
+  const isHome = mode === "home";
+  const analyticsPath = isHome ? "/" : "/work-clock";
   const measuredStart = useRef(false);
+  const manualDetailsRef = useRef<HTMLDetailsElement>(null);
+  const manualStartRef = useRef<HTMLInputElement>(null);
   const clock = useVisibleClock();
   const now = clock ?? Date.UTC(2026, 0, 1);
   const [ready, setReady] = useState(false);
@@ -70,6 +76,7 @@ export default function WorkClockClient() {
   const [breakKind, setBreakKind] = useState<WorkBreak["kind"]>("rest");
   const [breakPaid, setBreakPaid] = useState(false);
   const [month, setMonth] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
   const [manualStart, setManualStart] = useState("");
   const [manualEnd, setManualEnd] = useState("");
   const [manualPauseAt, setManualPauseAt] = useState("");
@@ -110,6 +117,7 @@ export default function WorkClockClient() {
     setExactStartAt(initialNow);
     setCutoffInput(localInput(initialNow + 8 * HOUR));
     setMonth(today.slice(0, 7));
+    setSelectedDay(today);
     setManualStart(`${today}T09:00`);
     setManualEnd(`${today}T18:00`);
     setManualPauseAt(`${today}T12:00`);
@@ -157,14 +165,12 @@ export default function WorkClockClient() {
   const latestBreak = latestBreakSession?.breaks.slice().reverse().find((pause) => pause.endAt !== null);
   const receiptGross = latestBreak && latestBreakSession && latestBreak.paid ? ((latestBreak.endAt ?? now) - latestBreak.startAt) / HOUR * getPayRates(latestBreakSession.profile).workHourlyGross : 0;
   const minuteNow = Math.floor(now / 60_000) * 60_000;
-  const chartDays = useMemo(() => {
-    const days: { at: number; gross: number }[] = [];
-    for (let at = monthRange.startAt; at < monthRange.endAt; at += DAY) {
-      days.push({ at, gross: calculatePeriodTotals(sessions, at, at + DAY, minuteNow).gross });
-    }
-    return days;
-  }, [sessions, monthRange.startAt, monthRange.endAt, minuteNow]);
-  const chartMax = Math.max(1, ...chartDays.map((day) => day.gross));
+  const calendarMonth = isWorkCalendarMonth(month) ? month : getKstDayKey(now).slice(0, 7);
+  const calendar = useMemo(() => buildWorkCalendarMonth(calendarMonth, sessions, minuteNow), [calendarMonth, sessions, minuteNow]);
+  const selectedCalendarDay = calendar.days.find((day) => day.key === selectedDay) ?? calendar.days[0];
+  const selectedDayTotals = calculatePeriodTotals(sessions, selectedCalendarDay.startAt, selectedCalendarDay.endAt, now);
+  const selectedDaySessions = monthSessions.filter((session) => session.startAt < selectedCalendarDay.endAt && Math.min(session.endAt ?? now, now, session.scheduledEndAt) > selectedCalendarDay.startAt);
+  const canAddSelectedDay = ready && !active && selectedCalendarDay.key <= getKstDayKey(now);
   const status = !active ? "출근 전 / 근무 종료" : activeTotals?.capped ? "예정 퇴근 도달 · 계산 멈춤" : openBreak ? `${breakLabels[openBreak.kind]} 중 · ${openBreak.paid ? "유급" : "무급"}` : "근무 기록 중";
 
   function run(action: () => void) {
@@ -175,6 +181,21 @@ export default function WorkClockClient() {
 
   function updateDraft(field: keyof PayDraft, value: string) {
     setDraft((previous) => ({ ...previous, [field]: value }));
+  }
+
+  function changeMonth(next: string) {
+    if (!isWorkCalendarMonth(next)) return;
+    setMonth(next);
+    setSelectedDay(next === getKstDayKey(now).slice(0, 7) ? getKstDayKey(now) : `${next}-01`);
+  }
+
+  function addSelectedDay() {
+    const day = selectedCalendarDay.key;
+    setManualStart(`${day}T09:00`);
+    setManualEnd(`${day}T18:00`);
+    setManualPauseAt(`${day}T12:00`);
+    if (manualDetailsRef.current) manualDetailsRef.current.open = true;
+    manualStartRef.current?.focus();
   }
 
   function applyProfile() {
@@ -216,7 +237,7 @@ export default function WorkClockClient() {
         setExactStartAt(nextStart);
         setCutoffInput(localInput(nextStart + 8 * HOUR));
         setFinishInput("");
-        trackCalcSuccess("work_clock", "/work-clock");
+        trackCalcSuccess("work_clock", analyticsPath);
       }
     });
   }
@@ -244,8 +265,9 @@ export default function WorkClockClient() {
       setUndo(null);
       setSessions((previous) => [...previous, added].sort((a, b) => a.startAt - b.startAt));
       setMonth(getKstDayKey(startAt).slice(0, 7));
+      setSelectedDay(getKstDayKey(startAt));
       setMessage("지난 근무를 추가했습니다. 현재 급여 설정으로 기록했으며, 이후 설정을 바꿔도 이 기록은 유지됩니다.");
-      trackCalcSuccess("work_clock", "/work-clock");
+      trackCalcSuccess("work_clock", analyticsPath);
     });
   }
 
@@ -308,14 +330,18 @@ export default function WorkClockClient() {
   function markStarted(trusted: boolean) {
     if (!trusted || measuredStart.current) return;
     measuredStart.current = true;
-    trackCalcStart("work_clock", "/work-clock");
+    trackCalcStart("work_clock", analyticsPath);
   }
 
   return (
-    <div id="work-clock-dashboard" className={styles.dashboard} onInputCapture={(event) => markStarted(event.nativeEvent.isTrusted)} onClickCapture={(event) => {
+    <div id="work-clock-dashboard" className={`${styles.dashboard} ${isHome ? styles.homeDashboard : ""}`} onInputCapture={(event) => markStarted(event.nativeEvent.isTrusted)} onClickCapture={(event) => {
       if (event.target instanceof Element && event.target.closest("[data-work-clock-action]")) markStarted(event.nativeEvent.isTrusted);
     }}>
       {recovered && active && <div className={styles.notice}><History size={16} /><p>이전에 저장한 근무가 진행 중입니다. {dateText(active.startAt)} {timeText(active.startAt)} 출근 기록과 실제 퇴근시간을 확인해 주세요. 예정 퇴근 이후에는 금액이 늘어나지 않습니다.</p></div>}
+
+      <div className={`${styles.storage} ${saveEnabled ? styles.storageEnabled : ""}`}><div className={styles.storageInfo}><label className={styles.checkbox}><input type="checkbox" checked={saveEnabled} disabled={!ready} onChange={(event) => toggleStorage(event.target.checked)} /><span><strong>회원가입 없이 이 브라우저에 저장하기</strong> (선택)</span></label><p>{saveEnabled ? "저장 켜짐 · 홈과 월급 시계에서 같은 기록을 불러옵니다." : "저장 꺼짐 · 새로고침하거나 탭을 닫으면 기록이 사라집니다."} 급여와 근무 기록은 서버에 전송하지 않아요. 최대 500개 기록을 보관하며, 브라우저 사이트 데이터 삭제·시크릿 모드 종료 시 사라질 수 있습니다. 공용 기기에서는 저장을 끄세요.</p></div><button type="button" className={styles.textButton} onClick={() => setClearConfirmation(true)}><Trash2 size={14} /> 설정·기록 모두 삭제</button></div>
+      {storageError && <p className={`${styles.notice} ${styles.error}`} role="alert"><LockKeyhole size={16} />{storageError}</p>}
+      {clearConfirmation && <div className={styles.confirmation} role="group" aria-label="모든 기록 삭제 확인"><p>급여 설정, 근무 기록, 목표를 삭제하고 브라우저 저장을 끕니다.</p><div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.danger}`} onClick={clearAll}>모두 삭제</button><button type="button" className={styles.button} onClick={() => setClearConfirmation(false)}>취소</button></div></div>}
 
       <div className={styles.topGrid}>
         <section className={styles.hero} aria-labelledby="earnings-title">
@@ -331,8 +357,9 @@ export default function WorkClockClient() {
           {active && <p className={styles.heroEstimate}>이번 근무 전체 {won(activeTotals?.net ?? 0)}원 · 공제율 {active.profile.deductionPercent}%</p>}
         </section>
 
-        <section className={styles.panel} aria-labelledby="pay-settings-title">
-          <div className={styles.panelHeading}><h2 id="pay-settings-title" className={styles.panelTitle}><Settings2 size={18} /> 내 급여 설정</h2><span className={styles.smallTag}>다음 근무에 적용</span></div>
+        <details className={`${styles.panel} ${styles.paySettings}`} open={isHome ? undefined : true}>
+          <summary><h2 id="pay-settings-title" className={styles.panelTitle}><Settings2 size={18} /> 내 급여 설정</h2><span className={styles.settingsSummary}>{profile.basis === "annual" ? "연봉" : profile.basis === "monthly" ? "월급" : "시급"} {won(profile.amount)}원 · 공제 {profile.deductionPercent}%<br />{isHome ? "눌러서 내 금액으로 바꾸기" : "변경한 설정은 다음 근무부터 적용"}</span></summary>
+          <div className={styles.settingsBody}>
           <div className={styles.basis} role="group" aria-label="급여 기준">
             {([ ["annual", "연봉"], ["monthly", "월급"], ["hourly", "시급"] ] as const).map(([basis, label]) => <button type="button" key={basis} aria-pressed={draft.basis === basis} onClick={() => setDraft((previous) => ({ ...previous, basis, amount: basis === "annual" ? "48000000" : basis === "monthly" ? "4000000" : "12000" }))}>{label}</button>)}
           </div>
@@ -345,7 +372,8 @@ export default function WorkClockClient() {
           <div className={styles.ratePreview}><span>현재 적용된 근무시간당 환산</span><strong>{won(rates.workHourlyGross)}원</strong></div>
           <button type="button" data-work-clock-action className={`${styles.button} ${styles.primary} ${styles.wide}`} onClick={applyProfile}><Check size={16} /> 급여 설정 적용</button>
           <p className={styles.sectionSubtitle}>기본값은 예시입니다. 공제율은 급여명세서의 총 공제 ÷ 세전 급여로 조정하세요. 연봉·월급 환산 시급은 법정 통상시급과 다릅니다.</p>
-        </section>
+          </div>
+        </details>
       </div>
 
       <section className={`${styles.panel} ${styles.controlPanel}`} aria-labelledby="work-record-title">
@@ -384,7 +412,7 @@ export default function WorkClockClient() {
 
       <div aria-live="polite" aria-atomic="true">{error ? <p className={`${styles.notice} ${styles.error}`}><AlertCircle size={16} />{error}</p> : message ? <p className={styles.message}>{message}</p> : null}</div>
 
-      <div className={styles.bottomGrid}>
+      {!isHome && <div className={styles.bottomGrid}>
         <section className={styles.panel} aria-labelledby="goal-title">
           <div className={styles.featureIcon}><Coffee size={20} /></div><h2 id="goal-title" className={styles.panelTitle}>오늘의 작은 목표</h2>
           <p className={styles.sectionSubtitle}>공제 후 환산액으로 커피 한 잔까지.</p>
@@ -416,32 +444,41 @@ export default function WorkClockClient() {
             <p className={styles.muted}>{weeklyRateKnown ? weekly.reason : "통상시급을 입력해야 계산할 수 있습니다."}</p>
           </div></details>
         </section>
-      </div>
+      </div>}
 
-      <HolidayPayEstimate ordinaryHourlyDefault={rates.ordinaryHourlyEstimate} />
+      {!isHome && <HolidayPayEstimate ordinaryHourlyDefault={rates.ordinaryHourlyEstimate} />}
 
       <section className={styles.panel} aria-labelledby="history-title">
-        <div className={styles.historyHeader}><div><h2 id="history-title" className={styles.panelTitle}><CalendarDays size={19} /> 차곡차곡, 나의 근무 달력</h2><p className={styles.sectionSubtitle}>기록한 시간만 합산합니다. 월급 전체, 주휴·연장·휴일 가산수당은 자동으로 더하지 않아요.</p></div><label className={styles.field} htmlFor="history-month">조회 월 (한국시간)<input id="history-month" className={`${styles.input} ${styles.monthInput}`} type="month" min="2000-01" max="2099-12" value={month} onChange={(event) => { if (/^(20\d{2})-(0[1-9]|1[0-2])$/.test(event.target.value)) setMonth(event.target.value); }} /></label></div>
+        <div className={styles.historyHeader}><div><h2 id="history-title" className={styles.panelTitle}><CalendarDays size={19} /> 차곡차곡, 나의 근무 달력</h2><p className={styles.sectionSubtitle}>기록한 시간만 합산합니다. 월급 전체, 주휴·연장·휴일 가산수당은 자동으로 더하지 않아요.</p></div><label className={styles.field} htmlFor="history-month">조회 월 (한국시간)<input id="history-month" className={`${styles.input} ${styles.monthInput}`} type="month" min="2000-01" max="2099-12" value={month} onChange={(event) => changeMonth(event.target.value)} /></label></div>
         <dl className={styles.monthTotals} aria-live="off"><div><dt>이 달 세전 환산</dt><dd>{won(monthTotals.gross)}원</dd></div><div><dt>예상 공제 후</dt><dd>{won(monthTotals.net)}원</dd></div><div><dt>유급 기록</dt><dd>{duration(monthTotals.paidMs)}</dd></div></dl>
-        <div className={styles.chart} role="img" aria-label={`${month || "조회 월"} 일별 세전 환산액 막대그래프. 정확한 금액은 아래 기록에서 확인할 수 있습니다.`}>{chartDays.map((day) => <div key={day.at} className={styles.chartDay} title={`${getKstDayKey(day.at)}: ${won(day.gross)}원`}><span className={`${styles.chartBar} ${getKstDayKey(day.at) === getKstDayKey(now) ? styles.chartBarToday : ""}`} style={{ height: `${Math.max(3, day.gross / chartMax * 100)}%` }} /></div>)}</div>
-        <div className={styles.chartLabels}><span>1일</span><span>일별 기록 · 1분마다 반영</span><span>{chartDays.length}일</span></div>
+        {ready ? <>
+          <WorkCalendar month={calendarMonth} days={calendar.days} firstWeekday={calendar.firstWeekday} today={getKstDayKey(now)} selectedDay={selectedCalendarDay.key} onMonthChange={changeMonth} onSelectDay={setSelectedDay} />
+          <section className={styles.selectedDay} aria-labelledby="selected-work-day">
+            <div className={styles.historyHeader}><div><h3 id="selected-work-day" className={styles.panelTitle}>{dateText(selectedCalendarDay.startAt)}의 기록</h3><p className={styles.sectionSubtitle}>세전 {won(selectedDayTotals.gross)}원 · 예상 공제 {won(selectedDayTotals.deduction)}원 · 공제 후 {won(selectedDayTotals.net)}원<br />유급 {duration(selectedDayTotals.paidMs)} · 무급 휴게 {duration(selectedDayTotals.unpaidBreakMs)}</p></div><button type="button" className={styles.button} disabled={!canAddSelectedDay} onClick={addSelectedDay}>이 날짜에 근무 추가</button></div>
+            {selectedDaySessions.length ? <ul className={styles.dayRecords}>{selectedDaySessions.map((session) => {
+              const total = calculateSession(session, now, selectedCalendarDay);
+              return <li key={session.id}><span>{timeText(Math.max(session.startAt, selectedCalendarDay.startAt))} → {session.endAt === null && now < session.scheduledEndAt && now < selectedCalendarDay.endAt ? "근무 중" : timeText(Math.min(session.endAt ?? session.scheduledEndAt, selectedCalendarDay.endAt))}{session.startAt < selectedCalendarDay.startAt ? " · 전날부터 이어짐" : ""}{(session.endAt ?? session.scheduledEndAt) > selectedCalendarDay.endAt ? " · 다음 날로 이어짐" : ""}</span><strong>공제 후 {won(total.net)}원</strong></li>;
+            })}</ul> : <p className={styles.muted}>{selectedCalendarDay.key > getKstDayKey(now) ? "아직 지나지 않은 날짜입니다. 실제 근무한 기록만 추가할 수 있어요." : "이 날짜에는 기록한 근무가 없어요."}</p>}
+            {active && <p className={styles.sectionSubtitle}>지난 근무를 추가하려면 진행 중인 근무를 먼저 마쳐 주세요.</p>}
+          </section>
+        </> : <div className={styles.empty}>내 브라우저의 근무 달력을 준비하고 있어요.</div>}
+        <details className={styles.monthHistory} open={isHome ? undefined : true}><summary>이 달 전체 근무 목록 · {monthSessions.length}개</summary>
         {monthSessions.length === 0 ? <div className={styles.empty}><Flag size={23} className="mx-auto mb-2" /><p>아직 이 달에 기록한 근무가 없어요.<br />오늘 출근을 시작하거나 지난 근무를 추가해 보세요.</p></div> : <div className={styles.historyList}>{monthSessions.map((session) => {
           const total = calculateSession(session, now, monthRange);
           return <div key={session.id} className={styles.historyRow}><div><strong>{dateText(session.startAt)}{session.endAt === null ? " · 진행 중" : ""}</strong><p>{timeText(session.startAt)} → {session.endAt !== null ? `${getKstDayKey(session.startAt) !== getKstDayKey(session.endAt) ? `${getKstDayKey(session.endAt).slice(5)} ` : ""}${timeText(session.endAt)}` : "근무 중"} · 유급 {duration(total.paidMs)}</p></div><div className={styles.historyAmount}><strong>{won(total.net)}원</strong><p>세전 {won(total.gross)}원 · 공제 {session.profile.deductionPercent}%</p></div><button type="button" className={styles.iconButton} aria-label={`${dateText(session.startAt)} ${timeText(session.startAt)} 근무 삭제`} onClick={() => setDeleteId(session.id)}><Trash2 size={14} /></button></div>;
         })}</div>}
         {deleteId && <div className={styles.confirmation} role="group" aria-label="근무 삭제 확인"><p>선택한 근무와 휴게 기록을 삭제할까요?</p><div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.danger}`} onClick={() => removeSession(deleteId)}>이 기록 삭제</button><button type="button" className={styles.button} onClick={() => setDeleteId(null)}>취소</button></div></div>}
         <p className={styles.sectionSubtitle}>자정을 넘긴 근무는 각 날짜·월에 해당하는 시간만 나눠 합산해요. 기록별 금액은 조회 월에 해당하는 부분입니다.</p>
+        </details>
 
-        <details className={styles.manualDetails}><summary>+ 지난 근무 직접 추가하기</summary><form className={styles.manualForm} onSubmit={addManualShift}>
+        <details ref={manualDetailsRef} className={styles.manualDetails}><summary>+ 지난 근무 직접 추가하기</summary><form className={styles.manualForm} onSubmit={addManualShift}>
           <p className={styles.muted}>현재 적용된 급여 설정을 사용합니다. 출퇴근과 무급 휴게의 실제 일시를 입력하세요. 한 근무는 최대 24시간입니다.</p>
-          <div className={styles.fields}><label className={styles.field} htmlFor="manual-start">출근 일시<input id="manual-start" className={styles.input} type="datetime-local" required value={manualStart} onChange={(event) => setManualStart(event.target.value)} /></label><label className={styles.field} htmlFor="manual-end">퇴근 일시<input id="manual-end" className={styles.input} type="datetime-local" required value={manualEnd} onChange={(event) => setManualEnd(event.target.value)} /></label><label className={styles.field} htmlFor="manual-pause-minutes">무급 휴게 (분, 없으면 0)<input id="manual-pause-minutes" className={styles.input} type="number" min="0" max="1439" required value={manualPauseMinutes} onChange={(event) => setManualPauseMinutes(event.target.value)} /></label><label className={styles.field} htmlFor="manual-pause-start">무급 휴게 시작 일시<input id="manual-pause-start" className={styles.input} type="datetime-local" disabled={Number(manualPauseMinutes) === 0} required={Number(manualPauseMinutes) > 0} value={manualPauseAt} onChange={(event) => setManualPauseAt(event.target.value)} /></label></div>
+          <div className={styles.fields}><label className={styles.field} htmlFor="manual-start">출근 일시<input ref={manualStartRef} id="manual-start" className={styles.input} type="datetime-local" required value={manualStart} onChange={(event) => setManualStart(event.target.value)} /></label><label className={styles.field} htmlFor="manual-end">퇴근 일시<input id="manual-end" className={styles.input} type="datetime-local" required value={manualEnd} onChange={(event) => setManualEnd(event.target.value)} /></label><label className={styles.field} htmlFor="manual-pause-minutes">무급 휴게 (분, 없으면 0)<input id="manual-pause-minutes" className={styles.input} type="number" min="0" max="1439" required value={manualPauseMinutes} onChange={(event) => setManualPauseMinutes(event.target.value)} /></label><label className={styles.field} htmlFor="manual-pause-start">무급 휴게 시작 일시<input id="manual-pause-start" className={styles.input} type="datetime-local" disabled={Number(manualPauseMinutes) === 0} required={Number(manualPauseMinutes) > 0} value={manualPauseAt} onChange={(event) => setManualPauseAt(event.target.value)} /></label></div>
           <div className={styles.buttonRow}><button type="submit" data-work-clock-action disabled={!!active || !ready} className={`${styles.button} ${styles.primary}`}><Check size={16} /> 지난 근무 추가</button>{active && <span className={styles.muted}>진행 중인 근무를 먼저 마쳐 주세요.</span>}</div>
         </form></details>
       </section>
 
-      <div className={styles.storage}><div className={styles.storageInfo}><label className={styles.checkbox}><input type="checkbox" checked={saveEnabled} onChange={(event) => toggleStorage(event.target.checked)} /><span><strong>이 브라우저에 급여와 근무 기록 저장하기</strong> (선택)</span></label><p>기본은 저장 안 함 · 입력값은 서버에 전송하지 않아요. 저장하면 최대 500개 기록을 이 기기에 보관합니다. 공용 기기에서는 저장을 끄세요.</p></div><button type="button" className={styles.textButton} onClick={() => setClearConfirmation(true)}><Trash2 size={14} /> 설정·기록 모두 삭제</button></div>
-      {storageError && <p className={`${styles.notice} ${styles.error}`} role="alert"><LockKeyhole size={16} />{storageError}</p>}
-      {clearConfirmation && <div className={styles.confirmation} role="group" aria-label="모든 기록 삭제 확인"><p>급여 설정, 근무 기록, 목표를 삭제하고 브라우저 저장을 끕니다.</p><div className={styles.buttonRow}><button type="button" className={`${styles.button} ${styles.danger}`} onClick={clearAll}>모두 삭제</button><button type="button" className={styles.button} onClick={() => setClearConfirmation(false)}>취소</button></div></div>}
+      {isHome && <Link href="/work-clock" className={styles.fullClockLink}>주휴·휴일수당, 커피값 목표, 집중 타이머까지 → 월급 시계 전체 보기</Link>}
       {undo && <div className={styles.buttonRow}><button type="button" className={styles.button} onClick={restoreDeleted}><RotateCcw size={15} /> 마지막 삭제 실행 취소</button><span className={styles.muted}>다음 급여·근무 변경 또는 탭 종료 전까지 복원할 수 있어요.</span></div>}
       <p className={styles.muted}><ShieldCheck size={14} className="mr-1 inline" /> 개인용 환산 도구이며 회사의 근태·급여 증빙이 아닙니다. 휴게 유급 여부와 실제 수당은 근로계약 및 급여명세서를 확인하세요.</p>
     </div>

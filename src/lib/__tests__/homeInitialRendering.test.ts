@@ -53,6 +53,25 @@ describe("Korean home initial rendering", () => {
     expect(html).not.toContain("opacity:0");
   });
 
+  it("offers the in-page work clock before the first ad without mounting its timer during SSR", () => {
+    const html = renderHome();
+    expect(html).toContain('href="#home-work-clock"');
+    expect(html).toContain('id="home-work-clock"');
+    expect(html).toContain("실시간 월급 시계와 나의 근무 달력");
+    expect(html).toContain("여기서 월급 시계 열기");
+    expect(html).toContain("메인과 전체 화면에서 같은 기록을 사용하며");
+    const start = html.indexOf('id="home-work-clock"');
+    const end = html.indexOf('data-slot-position="home-top"');
+    expect(start).toBeLessThan(end);
+    const clockSection = html.slice(start, end);
+    expect(clockSection).toContain('href="/work-clock"');
+    expect(clockSection).toContain('aria-controls="home-work-clock-content"');
+    expect(clockSection).toContain('<noscript>');
+    expect(clockSection).not.toContain("data-dynamic-placeholder");
+    expect(clockSection).not.toContain('id="work-clock-dashboard"');
+    expect([...html.matchAll(/<h1\b/g)]).toHaveLength(1);
+  });
+
   it("retains the original advertising boundary order and mounts the primary calculator immediately", () => {
     const html = renderHome();
     expect([...html.matchAll(/data-slot-position="([^"]+)"/g)].map(match => match[1])).toEqual(["home-top", "display2", "guide-mid", "multiplex"]);

@@ -8,6 +8,7 @@ module.exports = {
       startServerReadyTimeout: 30000,
       url: [
         'http://127.0.0.1:3000/',
+        'http://127.0.0.1:3000/work-clock',
         'http://127.0.0.1:3000/calc/samsung-bonus',
         'http://127.0.0.1:3000/civil-servant-pay-2027',
         'http://127.0.0.1:3000/guides/wage-delayed-claim-2026',

@@ -15,7 +15,7 @@ import MobileDropdown from "@/components/header/MobileDropdown";
 import Header from "@/components/Header";
 import HeroBadge from "@/components/HeroBadge";
 import EnLandingClient from "@/app/en/EnLandingClient";
-import type { DropdownItem } from "@/components/header/navConfig";
+import { navConfig, type DropdownItem } from "@/components/header/navConfig";
 
 describe("Professional shell and home contracts", () => {
   it.each(["/", "/en"])("keeps all five footer link groups available in server HTML on %s", (pathname) => {
@@ -91,5 +91,22 @@ describe("Professional shell and home contracts", () => {
     expect(renderToStaticMarkup(createElement(Footer))).toContain('href="/money-check"');
     location.pathname = "/en";
     expect(renderToStaticMarkup(createElement(Header))).not.toContain('href="/money-check"');
+  });
+
+  it("exposes the work clock in the top-level menu and closed mobile header without changing the English shell", () => {
+    expect(navConfig.find(item => item.name === "월급 시계")).toMatchObject({ type: "link", href: "/work-clock" });
+    location.pathname = "/work-clock";
+    const html = renderToStaticMarkup(createElement(Header));
+    const shortcuts = [...html.matchAll(/<a\b[^>]*href="\/work-clock"[^>]*>/g)].map(match => match[0]).filter(anchor => anchor.includes('data-msy-module="header-work-clock"'));
+    expect(shortcuts).toHaveLength(3);
+    for (const shortcut of shortcuts) expect(shortcut).toContain('aria-current="page"');
+    const closedHeader = html.slice(0, html.indexOf("</header>"));
+    expect(closedHeader).toContain('data-msy-module="header-work-clock"');
+    expect(closedHeader).toContain('aria-label="검색 열기"');
+    expect(closedHeader).toContain('aria-label="메뉴 열기"');
+    location.pathname = "/en";
+    const english = renderToStaticMarkup(createElement(Header));
+    expect(english).not.toContain('href="/work-clock"');
+    expect(english).toContain('href="/en/dashboard"');
   });
 });

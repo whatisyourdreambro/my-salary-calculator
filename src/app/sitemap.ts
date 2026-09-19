@@ -42,7 +42,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
  '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
- '/': { lastModified: new Date('2026-09-10') },
+ '/': { lastModified: new Date('2026-09-19') },
  '/home-loan': { lastModified: new Date('2026-09-10') },
  '/about': { lastModified: new Date('2026-09-10') },
  '/tools/loan': { lastModified: new Date('2026-09-10') },
