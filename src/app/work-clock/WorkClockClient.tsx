@@ -209,7 +209,7 @@ export default function WorkClockClient() {
       setUndo(null);
       setSessions((previous) => previous.map((session) => session.id === active.id ? next : session));
       setRecovered(false);
-      setMessage(action === "break" ? `${breakLabels[breakKind]}를 ${breakPaid ? "유급" : "무급"}으로 기록합니다.` : action === "return" ? "복귀했습니다. 수고하고 있는 나에게 잠깐의 응원을!" : "오늘도 수고했어요. 퇴근 기록을 남겼습니다.");
+      setMessage(action === "break" ? `${breakLabels[breakKind]} 시간을 ${breakPaid ? "유급" : "무급"}으로 기록합니다.` : action === "return" ? "복귀했습니다. 수고하고 있는 나에게 잠깐의 응원을!" : "오늘도 수고했어요. 퇴근 기록을 남겼습니다.");
       if (action === "finish") {
         const nextStart = Date.now();
         setStartInput(localInput(nextStart));
@@ -312,7 +312,7 @@ export default function WorkClockClient() {
   }
 
   return (
-    <div className={styles.dashboard} onInputCapture={(event) => markStarted(event.nativeEvent.isTrusted)} onClickCapture={(event) => {
+    <div id="work-clock-dashboard" className={styles.dashboard} onInputCapture={(event) => markStarted(event.nativeEvent.isTrusted)} onClickCapture={(event) => {
       if (event.target instanceof Element && event.target.closest("[data-work-clock-action]")) markStarted(event.nativeEvent.isTrusted);
     }}>
       {recovered && active && <div className={styles.notice}><History size={16} /><p>이전에 저장한 근무가 진행 중입니다. {dateText(active.startAt)} {timeText(active.startAt)} 출근 기록과 실제 퇴근시간을 확인해 주세요. 예정 퇴근 이후에는 금액이 늘어나지 않습니다.</p></div>}
