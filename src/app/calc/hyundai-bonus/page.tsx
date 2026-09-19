@@ -30,10 +30,10 @@ import FavoritesButton from "@/components/FavoritesButton";
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const PAGE_PATH = "/calc/hyundai-bonus";
-const PAGE_TITLE = "현대차 성과급 계산기 2026";
+const PAGE_TITLE = "현대차 성과급 계산기 2026 — 현금·주식·세금 비교";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const PAGE_DESC =
-  "현대자동차 성과급을 2026 임협 타결 보도와 2025 합의 시나리오로 비교합니다. 월 기준금액·주가 가정에 따른 현금·주식·포인트 합산 가치와 예상 공제액을 확인하세요. 회사의 개인별 지급 확정액은 아닙니다.";
+  "현대차 성과급 계산기. 월 기준금액과 주가를 입력해 2026·2025 보도 시나리오의 현금 성과금, 주식·포인트 평가액, 예상 공제액을 비교합니다. 개인별 지급 확정액이 아닌 가정에 따른 계산입니다.";
 
 const FAQ_ITEMS = [
   {
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
       "본 계산기는 공개 보도에 기재된 정률(%) + 정액 + 주식 + 포인트·상품권을 합산하는 시나리오입니다. 2026년 타결 보도(8월 31일 찬반투표 가결)의 성과금 400% + 정액 1,270만원 / 주식 15주 / 복지포인트 50만원과, 2025년 합의의 450% + 정액 1,580만원 / 무상주 30주를 비교합니다. 회사가 성과금 산정에 사용하는 본인의 월 기준금액을 입력하면 정률 부분을 환산합니다. 기본급 인상·휴가비 인상 등은 계산 결과에 별도로 합산하지 않습니다.",
   },
   {
-    question: "기본급은 어떻게 정하나요?",
+    question: "계산기에 넣을 월 기준금액은 어디서 확인하나요?",
     answer:
       "입력란은 회사가 해당 성과금의 정률 부분을 계산할 때 사용하는 월 기준금액입니다. 연봉이나 연봉을 12로 나눈 값을 그대로 넣지 마세요. 급여명세서의 기본급과 각종 수당을 포함한 통상임금이 같은 금액이라고 가정해서도 안 됩니다. 적용 항목은 본인에게 해당하는 합의안·회사 지급 안내에서 확인하세요. 세후 추정에는 입력한 월 기준금액의 18배를 연봉으로 보는 별도 가정이 사용됩니다.",
   },
@@ -82,7 +82,7 @@ const HOW_TO_STEPS = [
   { name: "시나리오 선택", text: "2026 임협 타결안 / 2025 합의 / 직접 입력 중 선택합니다." },
   { name: "본인 기준금액(월) 입력", text: "회사 지급 안내에서 정률 성과금 산정에 사용하는 월 기준금액을 확인해 입력합니다." },
   { name: "무상주 주가 가정 입력", text: "비교에 사용할 주가를 입력합니다. 기본값 23만원은 예시이며 실시간 시세가 아닙니다." },
-  { name: "결과 확인", text: "% × 기본급 + 정액 + 무상주 + 상품권 합산이 즉시 표시됩니다." },
+  { name: "현금·비현금 항목 확인", text: "월 기준금액 × 지급률 + 정액으로 계산한 현금 항목과, 주식·포인트 평가액을 나누어 확인합니다." },
   { name: "예상 공제액 확인", text: "연봉·세액공제·보험료 가정을 확인하고, 현금과 비현금 항목을 합한 비교용 결과로 이용합니다." },
 ];
 
@@ -120,7 +120,7 @@ export default function HyundaiBonusPage() {
             name: PAGE_TITLE,
             description: PAGE_DESC,
             url: `${SITE_URL}${PAGE_PATH}`,
-            dateModified: "2026-09-09",
+            dateModified: "2026-09-19",
           }),
           faqLd(FAQ_ITEMS),
           howToLd({
@@ -140,12 +140,21 @@ export default function HyundaiBonusPage() {
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
               현대차 성과급 계산기 <span className="text-primary">2026</span>
+              <span className="mt-2 block text-lg font-bold sm:text-xl">현금·주식·예상 공제액 비교</span>
             </h1>
             <p className="text-base sm:text-lg text-faint-blue leading-relaxed max-w-3xl">
               2026 임금협상 타결 보도 시나리오에 월 기준금액과 주가 가정을 입력해{" "}
               <strong>성과금 400% + 정액 1,270만 + 주식 15주 + 복지포인트 50만</strong>{" "}
               합산 가치와 예상 공제액을 비교합니다. 주식·포인트 평가액이 포함되며 개인별 현금 입금액은 아닙니다.
             </p>
+            <nav aria-label="현대차 성과급 계산기 바로가기" className="mt-5 flex flex-wrap gap-3">
+              <a href="#hyundai-bonus-input" className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+                내 월 기준금액으로 계산
+              </a>
+              <a href="#hyundai-agreement" className="inline-flex min-h-11 items-center rounded-xl border border-primary/30 px-4 py-2 text-sm font-bold text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+                2026·2025 합의 항목 비교
+              </a>
+            </nav>
             <div className="mt-5">
               <ShareButtons title={PAGE_TITLE_FULL} description={PAGE_DESC} />
             </div>
@@ -159,7 +168,7 @@ export default function HyundaiBonusPage() {
             <BonusNextLinks slug="hyundai-bonus" />
           </div>
 
-          <section className="mt-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+          <section id="hyundai-agreement" className="mt-12 scroll-mt-28 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
             <h2 className="text-2xl font-black mb-4">
               현대차 임단협 합의 구조
             </h2>
@@ -284,9 +293,9 @@ export default function HyundaiBonusPage() {
                 <strong>데이터 출처</strong>: 2026년 8월 31일 현대차 임금협상 잠정합의안 찬반투표 가결
                 (머니투데이·한국경제 2026-09-01 보도), 2025년 9월 임단협 합의안
                 (현대차그룹 공식 발표·녹색경제·전자신문). 회사별 지급 안내를 대체하지 않습니다.
-                세금 설명 확인: 2026-09-09. 근거:{" "}
+                입력·결과 해석 및 세금 설명 확인: 2026-09-19. 근거:{" "}
                 <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7873&mi=6594">국세청 과세표준·기본세율</a>,{" "}
-                <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6583">상여 원천징수 방법</a>.
+                <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6426">상여 원천징수 방법</a>.
               </span>
             </p>
           </footer>

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 // 2026 임협 타결(8/31 찬반투표 가결) / 2025 합의(전년 실지급) 시나리오
 // 2026 타결 수치 출처: 머니투데이·한국경제 2026-09-01 보도 (찬성 61.55%·투표율 78.63%).
@@ -11,7 +12,7 @@ import NumberInput from "@/components/NumberInput";
 const SCENARIOS = [
   {
     id: "2026-agreed",
-    label: "2026 임협 타결 (8/31 가결·실제 지급)",
+    label: "2026 임협 타결 보도 (8/31 가결)",
     bonusPercent: 400,
     fixedAmount: 12_700_000, // 1,270만원
     freeShares: 15,
@@ -21,7 +22,7 @@ const SCENARIOS = [
   },
   {
     id: "2025-agreed",
-    label: "2025 합의 (전년 실제 지급)",
+    label: "2025 합의 보도 시나리오",
     bonusPercent: 450,
     fixedAmount: 15_800_000, // 1,580만원
     freeShares: 30,
@@ -31,8 +32,8 @@ const SCENARIOS = [
   },
 ] as const;
 
-const DEFAULT_SALARY_MANWON = 500; // 월 통상임금 디폴트
-const DEFAULT_HYUNDAI_STOCK = 230_000; // 현대차 보통주 23만원 가정 (2026)
+const DEFAULT_SALARY_MANWON = 500; // 성과금 산정에 쓰는 월 기준금액 예시
+const DEFAULT_HYUNDAI_STOCK = 230_000; // 비교용 주가 예시, 실시간 시세가 아님
 
 export default function HyundaiBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2026-agreed");
@@ -51,7 +52,7 @@ export default function HyundaiBonusClient() {
 
   const calc = useMemo(() => {
     const monthlyBasicWon = monthlyBasicManwon * 10_000;
-    // 추정 연봉: 월 기본급 × 12 + 상여 (현대차 600% 기준 평균 = 월 기본급 × 18)
+    // 세금 비교 모델의 연봉 가정: 월 기준금액 × 18. 실제 개인 연봉이 아님.
     const estimatedAnnualSalary = monthlyBasicWon * 18;
 
     const bp = customMode ? bonusPctOverride : scenario.bonusPercent;
@@ -82,16 +83,29 @@ export default function HyundaiBonusClient() {
     };
   }, [scenarioId, monthlyBasicManwon, stockPrice, customMode, bonusPctOverride, fixedOverride, sharesOverride, creditRate, applyInsurance, scenario]);
 
+  const inputsValid = Number.isFinite(monthlyBasicManwon) && monthlyBasicManwon > 0
+    && Number.isFinite(stockPrice) && stockPrice >= 0
+    && Number.isFinite(creditRate) && creditRate >= 0 && creditRate <= 50
+    && (!customMode || [bonusPctOverride, fixedOverride, sharesOverride]
+      .every(value => Number.isFinite(value) && value >= 0));
+  const measurement = useCalculatorMeasurement({
+    calcType: "hyundai-bonus",
+    valid: inputsValid && [calc.totalGross, calc.tax.net, calc.tax.totalDeductions]
+      .every(Number.isFinite),
+    resultKey: calc,
+  });
+
   return (
     <div className="space-y-6">
       {/* 시나리오 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">1단계 · 시나리오 선택</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {SCENARIOS.map((s) => (
             <button
               key={s.id}
               type="button"
+              aria-pressed={scenarioId === s.id && !customMode}
               onClick={() => {
                 setScenarioId(s.id);
                 setCustomMode(false);
@@ -118,7 +132,7 @@ export default function HyundaiBonusClient() {
         </button>
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
-            <Row label="성과금 % (월 기본급 대비)">
+            <Row label="성과금 % (월 기준금액 대비)">
               <NumberInput
                 type="number"
                 value={bonusPctOverride}
@@ -151,17 +165,18 @@ export default function HyundaiBonusClient() {
         )}
       </section>
 
-      {/* 본인 기본급 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
-        <h2 className="text-xl font-black mb-4">2단계 · 본인 월 통상임금</h2>
+      {/* 회사 지급 안내에서 확인한 월 기준금액 */}
+      <section {...measurement.inputProps} id="hyundai-bonus-input" className="scroll-mt-28 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+        <h2 className="text-xl font-black mb-4">2단계 · 성과금 산정 월 기준금액</h2>
         <label className="block">
-          <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
+          <span className="text-sm font-bold">회사 지급 안내의 월 기준금액 (만원)</span>
           <NumberInput
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
             step="10"
             min="0"
+            aria-describedby="hyundai-basis-help"
             className="w-full mt-2 p-3 rounded-lg border border-canvas-deep text-lg font-bold tabular-nums focus:outline-none focus:border-primary"
           />
         </label>
@@ -177,17 +192,21 @@ export default function HyundaiBonusClient() {
             </button>
           ))}
         </div>
-        <p className="mt-2 text-xs text-faint">
-          급여명세서 &apos;기본급&apos; 또는 &apos;통상임금&apos;. 추정 연봉(기본급 × 18) ={" "}
+        <p id="hyundai-basis-help" className="mt-2 text-xs leading-relaxed text-faint">
+          기본급·통상임금·연봉 ÷ 12가 서로 같다고 가정하지 마세요. 회사 합의안이나 지급 안내에서 성과금 산정 기준을 확인해 입력합니다.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-faint">
+          세금 비교에 쓰는 연봉 가정(월 기준금액 × 18) ={" "}
           <strong>{fmtEok(calc.estimatedAnnualSalary)}</strong>
+          . 실제 연봉이나 개인별 원천징수액을 재현하는 계산은 아닙니다.
         </p>
       </section>
 
       {/* 주가 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
-        <h2 className="text-xl font-black mb-4">3단계 · 현대차 주가</h2>
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+        <h2 className="text-xl font-black mb-4">3단계 · 주식 가치 비교용 주가</h2>
         <label className="block">
-          <span className="text-sm font-bold">현대차 보통주 1주 가격 (원)</span>
+          <span className="text-sm font-bold">현대차 보통주 1주 가격 가정 (원)</span>
           <NumberInput
             type="number"
             value={stockPrice}
@@ -210,7 +229,7 @@ export default function HyundaiBonusClient() {
           ))}
         </div>
         <p className="mt-2 text-xs text-faint">
-          2026년 평균 23~26만원 범위. 무상주 가치 = 주가 × 주식수.
+          기본값 23만원은 계산용 예시입니다. 현재가·평균 주가가 아니며, 주식 평가액은 입력한 주가 × 주식 수로 계산합니다.
         </p>
       </section>
 
@@ -219,13 +238,15 @@ export default function HyundaiBonusClient() {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
+          aria-controls="hyundai-tax-assumptions"
           className="flex items-center gap-2 font-bold text-base"
         >
           <Settings className="w-4 h-4" />
           세금 계산 가정 조정 {showAdvanced ? "▲" : "▼"}
         </button>
         {showAdvanced && (
-          <div className="mt-4 space-y-4">
+          <div {...measurement.inputProps} id="hyundai-tax-assumptions" className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
@@ -249,26 +270,41 @@ export default function HyundaiBonusClient() {
               />
               <span className="font-bold">4대보험 추가 부과 적용</span>
             </label>
+            <p className="text-xs leading-relaxed text-faint">
+              연봉과 성과급을 합산한 세금 차이를 비교하는 모델입니다. 기본 공제율 30%는 가정이며,
+              실제 상여 지급대상기간·개인별 공제·보험료 정산은 회사 급여명세서에서 확인하세요.
+            </p>
           </div>
         )}
       </section>
 
       {/* 결과 */}
-      <section className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
+      <section ref={measurement.resultRef} className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5 text-primary" />
-          내 성과급 계산 결과
+          입력 가정에 따른 성과급 비교
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
-          <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
-          <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액" />
-          <ResultCard label="무상주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
+          <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기준금액 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
+          <ResultCard label="정액 성과금·격려금" value={fmtManwon(calc.fixedBonusWon)} sub={customMode ? "직접 입력한 정액" : "선택한 보도 시나리오의 정액"} />
+          <ResultCard label="주식 평가액" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${stockPrice.toLocaleString("ko-KR")}원 (주가 가정)`} />
           <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={customMode ? "직접 입력 모드 — 시나리오 포인트 미포함" : scenario.voucherLabel} />
         </div>
 
+        <dl className="mb-5 space-y-2 text-sm">
+          <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
+            <dt className="text-faint">현금 항목 합계 (세전)</dt>
+            <dd className="font-bold tabular-nums">{fmtManwon(calc.percentBonusWon + calc.fixedBonusWon)}</dd>
+          </div>
+          <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
+            <dt className="text-faint">주식·포인트 평가액 (비현금)</dt>
+            <dd className="font-bold tabular-nums">{fmtManwon(calc.freeShareValueWon + calc.voucherWon)}</dd>
+          </div>
+        </dl>
+
         <div className="rounded-xl bg-white border border-primary/30 p-5">
-          <p className="text-xs font-bold text-faint mb-1">📊 총 성과급 (세전)</p>
+          <p className="text-xs font-bold text-faint mb-1">현금·비현금 합산 가치 (공제 전)</p>
           <p className="text-3xl sm:text-4xl font-black text-primary tabular-nums">
             {fmtEok(calc.totalGross)}
           </p>
@@ -278,20 +314,24 @@ export default function HyundaiBonusClient() {
         </div>
 
         <div className="mt-4 rounded-xl bg-white border border-canvas-deep p-5">
-          <p className="text-xs font-bold text-faint mb-1">💰 세후 실수령</p>
+          <p className="text-xs font-bold text-faint mb-1">예상 공제 후 합산 가치</p>
           <p className="text-2xl sm:text-3xl font-black tabular-nums">
             {fmtEok(calc.tax.net)}
           </p>
           <p className="text-xs text-faint mt-1">
-            세전 {fmtEok(calc.totalGross)} − 공제{" "}
-            {fmtEok(calc.tax.totalDeductions)} (실효세율{" "}
+            합산 {fmtEok(calc.totalGross)} − 예상 공제{" "}
+            {fmtEok(calc.tax.totalDeductions)} (합산 가치 대비 공제 비율{" "}
             <strong>{calc.tax.effectiveRate}%</strong>)
+          </p>
+          <p className="mt-3 text-xs leading-relaxed text-faint">
+            주식·포인트 평가액이 포함된 비교값입니다. 전액을 현금으로 받는다는 뜻이 아니며,
+            실제 입금액은 지급 항목·원천징수·정산 조건에 따라 달라집니다.
           </p>
         </div>
 
         <details className="mt-4 text-xs">
           <summary className="cursor-pointer font-bold text-faint">
-            🧾 세금 상세 공제 내역
+            예상 공제 내역과 계산 범위
           </summary>
           <div className="mt-3 grid grid-cols-2 sm:grid-cols-5 gap-2">
             <DeductItem label="소득세" value={fmtManwon(calc.tax.incomeTaxDelta)} />
@@ -301,8 +341,8 @@ export default function HyundaiBonusClient() {
             <DeductItem label="고용보험" value={fmtManwon(calc.tax.empInsDelta)} />
           </div>
           <p className="mt-3 text-faint">
-            * 무상주는 시가 기준 근로소득으로 과세, 매도 시점이 아닌 지급
-            시점에 과세. 코스피 상장주 매도 양도세는 대주주가 아니면 비과세.
+            이 모델은 주식·포인트도 합산 소득처럼 처리합니다. 비현금 항목의 실제 과세 여부·평가 시점과
+            주식 처분 시 세금은 지급 조건에 따라 별도 확인해야 합니다. 상여 지급월의 원천징수액과는 다를 수 있습니다.
           </p>
         </details>
       </section>

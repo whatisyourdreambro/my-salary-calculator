@@ -297,7 +297,7 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-09-09",
+            dateModified: "2026-09-19",
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
               "TAI(목표달성장려금) 2026 상반기 지급률 자동 적용",
@@ -344,7 +344,7 @@ export default function SamsungBonusCalculatorPage() {
             >
               삼성전자 성과급 계산기
               <span className="block text-2xl sm:text-3xl mt-2 text-electric">
-                2026 OPI·TAI 세후 실수령
+                2026 OPI·TAI 예상 금액
               </span>
             </h1>
             <p className="text-base sm:text-lg font-medium text-muted-blue dark:text-canvas-300">
@@ -366,15 +366,17 @@ export default function SamsungBonusCalculatorPage() {
               id="calc-hero-summary"
               className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed"
             >
-              <strong>삼성 성과급 계산기</strong>·
-              <strong>삼전 성과급 계산기</strong>로 찾아오셨다면 맞는
-              페이지입니다. OPI(초과이익성과금) 재원 분배, TAI(목표달성장려금)
-              지급률, 본인 연봉 세후 실수령과 다년도 RSU 매도까지 이 한
-              페이지에서 추정합니다.
+              OPI는 연봉과 성과 가정으로, TAI는 월 기본급과 지급률로
+              계산합니다. 지난 지급 이력과 앞으로의 가정을 구분해 비교하세요.
+              세후 금액과 RSU 가치는 입력 조건에 따른 추정이며,
+              회사의 개인별 지급 확정액은 아닙니다.
             </p>
             <nav aria-label="삼성 성과급 계산기 바로가기" className="mt-5 flex flex-wrap justify-center gap-2">
               <a href="#my-calc-title" className="inline-flex min-h-11 items-center rounded-xl bg-electric px-4 py-2 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
                 내 연봉으로 바로 계산
+              </a>
+              <a href="#tai-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
+                월 기본급으로 TAI 계산
               </a>
               <a href="#opi-actual-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
                 지난 OPI 지급 이력
@@ -394,7 +396,8 @@ export default function SamsungBonusCalculatorPage() {
           <section className="mb-10" aria-labelledby="tai-title">
             <h2
               id="tai-title"
-              className="text-2xl font-black text-navy dark:text-canvas-50 mb-2"
+              tabIndex={-1}
+              className="scroll-mt-28 text-2xl font-black text-navy dark:text-canvas-50 mb-2"
             >
               삼성전자 TAI(목표달성장려금) — 2026 상반기 지급률
             </h2>

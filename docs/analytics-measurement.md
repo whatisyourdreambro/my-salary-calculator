@@ -14,7 +14,7 @@ Events with `measurement_version=2` use a calculator within one pathname visit a
 
 The home salary calculator also requires an explicit completed calculation matching the current inputs. Restoring shared inputs or viewing defaults is not a successful user calculation. Repeated calculations do not create additional successes in the same visit. Do not compare the legacy input-idle `calc_submit` count directly with the new success count.
 
-Initial coverage: home salary calculator, shared `SimpleCalculatorView` calculators, Samsung bonus pool and personal calculators, and the Chuseok bonus mini calculator. Other independent calculators are not included in this success funnel. Do not use all site visits as the denominator for this subset.
+Coverage: home salary calculator, shared `SimpleCalculatorView` calculators, Samsung bonus pool and personal calculators, Hyundai bonus calculator (added 2026-09-19), and the Chuseok bonus mini calculator. Other independent calculators are not included in this success funnel. Do not use all site visits as the denominator for this subset. Hyundai's tax-assumption disclosure toggle is not a calculation interaction; its scenario, amount, and tax controls are eligible inputs.
 
 Calculation events contain calculator type, sanitized page path, measurement version, and result origin where applicable. Amounts, income bands, family details, and result payloads are excluded. Custom event URLs remove calculation/share payloads and preserve campaign attribution parameters. Automatic Google tag events are separate and require their own URL-redaction verification; this wrapper is not proof that all automatic telemetry has been sanitized.
 

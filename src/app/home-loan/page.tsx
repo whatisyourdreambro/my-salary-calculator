@@ -31,7 +31,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/home-loan",
   ogType: "article",
   publishedTime: "2026-05-23",
-  modifiedTime: "2026-09-10",
+  modifiedTime: "2026-09-19",
   keywords: [
     "주택담보대출 계산기",
     "주담대 계산기",
@@ -233,9 +233,25 @@ export default function HomeLoanPage() {
           DSR·LTV에 따른 승인 한도는 별도로 확인해야 합니다.
         </p>
         <p className="mt-3 text-xs text-faint-blue">내용·계산 기준 확인: <time dateTime="2026-09-09">2026년 9월 9일</time></p>
+        <nav aria-label="주택담보대출 목적별 바로가기" className="mt-5 flex flex-wrap justify-center gap-3">
+          <a
+            href="#home-loan-repayment"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-electric px-4 py-3 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
+          >
+            월 상환액 바로 계산 <ArrowRight size={16} aria-hidden />
+          </a>
+          <a
+            href="#home-loan-policy-check"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl border border-electric-30 bg-white px-4 py-3 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
+          >
+            생애최초·신혼부부 한도 확인 순서
+          </a>
+        </nav>
       </header>
 
-      <HomeLoanSimulator />
+      <div id="home-loan-repayment" className="scroll-mt-24">
+        <HomeLoanSimulator />
+      </div>
 
       {/* 계산 결과 직하 광고 — 하단 PageFooterAds 와는 본문 섹션들로 간격 확보 */}
       <CalcResultAd />
@@ -464,8 +480,8 @@ export default function HomeLoanPage() {
           조건을 비교할 수 있습니다. 금리 인하 신청의 승인·인하 폭은 보장되지 않습니다.
         </p>
 
-        <h2 className="text-2xl font-black text-navy mt-8 mb-4">
-          정책 상품은 공식 자격·금리를 확인한 뒤 계산하세요
+        <h2 id="home-loan-policy-check" className="text-2xl font-black text-navy mt-8 mb-4 scroll-mt-24">
+          생애최초·신혼부부 대출 한도 확인 순서
         </h2>
         <p className="text-muted-blue leading-relaxed">
           신혼부부나 생애최초라는 조건 하나만으로 특정 상품의 자격이나 금리를 확정할 수 없습니다.
@@ -485,6 +501,11 @@ export default function HomeLoanPage() {
             • <a href="https://www.hf.go.kr/ko/sub01/sub01_01_01.do" target="_blank" rel="noopener noreferrer">한국주택금융공사 보금자리론 공식 상품 안내</a>
           </li>
         </ul>
+        <p className="mt-4">
+          <a href="#home-loan-repayment" className="inline-flex min-h-11 items-center gap-2 font-bold text-electric underline underline-offset-4">
+            조건 확인 후 월 상환액 계산하기 <ArrowRight size={16} aria-hidden />
+          </a>
+        </p>
       </article>
 
       {/* 경고 */}

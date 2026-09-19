@@ -43,7 +43,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/': { lastModified: new Date('2026-09-19') },
- '/home-loan': { lastModified: new Date('2026-09-10') },
+ '/home-loan': { lastModified: new Date('2026-09-19') },
  '/about': { lastModified: new Date('2026-09-10') },
  '/tools/loan': { lastModified: new Date('2026-09-10') },
  '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
@@ -53,12 +53,12 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/table/2027/monthly': { lastModified: new Date('2026-09-10') },
  '/table/2027/weekly': { lastModified: new Date('2026-09-10') },
  '/table/2027/hourly': { lastModified: new Date('2026-09-10') },
- '/calc/samsung-bonus': { lastModified: new Date('2026-09-09'), priority: 0.95 },
+ '/calc/samsung-bonus': { lastModified: new Date('2026-09-19'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
- '/calc/hyundai-bonus': { lastModified: new Date('2026-09-09'), priority: 0.85 },
+ '/calc/hyundai-bonus': { lastModified: new Date('2026-09-19'), priority: 0.85 },
  '/calc/year-end-bonus': { lastModified: new Date('2026-09-09') },
  '/calc/kia-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },

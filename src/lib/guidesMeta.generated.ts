@@ -509,8 +509,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "first-home-buyer-loan",
-  "title": "생애최초 주택구입 대출: 디딤돌, 보금자리론 금리 비교 🏦",
-  "description": "내 집 마련의 꿈, 정부 지원 대출로 앞당기자! 소득 요건, 한도, 금리 우대 혜택 총정리.",
+  "title": "생애최초 주택구입 대출 2026 — 디딤돌·보금자리론 조건과 한도",
+  "description": "생애최초 주택구입 대출의 소득·주택 조건과 디딤돌·보금자리론 한도를 비교합니다. 지역별 LTV, 신청 시점의 금리 확인 방법과 월 상환액 계산을 안내합니다.",
   "category": "부동산",
   "tags": [
    "대출",
@@ -519,9 +519,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-09-19",
   "views": 145000,
   "lang": "ko",
-  "contentChars": 5038
+  "contentChars": 4466
  },
  {
   "slug": "subscription-account-tips",
