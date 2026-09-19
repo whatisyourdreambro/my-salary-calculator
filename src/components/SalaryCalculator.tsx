@@ -503,6 +503,11 @@ export default function SalaryCalculator() {
  {/* 결과 직하 광고 — CTR 최고 구간 */}
  <ResultAd />
 
+ <Link href="/work-clock" data-msy-module="salary-work-clock" className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-5 text-foreground no-underline hover:border-electric/50">
+ <span><span className="block font-semibold">이 월급, 오늘은 얼마나 벌었을까?</span><span className="mt-1 block text-sm text-muted-foreground">실시간 월급 시계에서 출퇴근과 휴식을 기록해 보세요.</span></span>
+ <ArrowRight size={20} className="shrink-0 text-electric" aria-hidden="true" />
+ </Link>
+
  {/* 관련 계산기 cross-link — 위 NextActions(salary 3종)와 같은 대상은 빼고 채움(4개 유지, S2-3) */}
  <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" exclude={HOME_NEXT_ACTION_HREFS} />
 

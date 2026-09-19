@@ -1,6 +1,7 @@
-import { Calculator, PiggyBank, Briefcase, Globe, FileText, Receipt, TrendingUp, GitCompare, BarChart3, Shield } from "lucide-react";
+import { Calculator, PiggyBank, Briefcase, Globe, FileText, Receipt, TrendingUp, GitCompare, BarChart3, Shield, Timer } from "lucide-react";
 import ToolCard from "@/components/home/ToolCard";
 const tools = [
+  { icon: Timer, title: "실시간 월급 시계", description: "오늘 번 돈·휴식 영수증·월별 근무 기록을 내 기기에", href: "/work-clock", badge: "NEW" },
   { icon: Calculator, title: "정규직 계산기", description: "연봉과 가족 조건에 따른 공제액·예상 세후 월급", href: "/?tab=salary#calculator-section" },
   { icon: PiggyBank, title: "퇴직금 계산기", description: "근속기간과 평균임금으로 예상 퇴직금 확인", href: "/?tab=severance#calculator-section" },
   { icon: Briefcase, title: "알바·프리랜서", description: "근무 조건과 원천징수 방식에 따른 예상 수령액", href: "/?tab=freelancer#calculator-section" },
@@ -16,6 +17,6 @@ const tools = [
 export default function HomeToolsSection() {
   return <section className="ms-section border-t border-border bg-background" aria-labelledby="home-tools-heading"><div className="page-width">
     <div className="mb-8 max-w-2xl"><p className="ms-eyebrow">목적별 계산</p><h2 id="home-tools-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl mt-3">다음 돈 고민도, 같은 기준으로.</h2><p className="ms-description mt-3">급여에서 퇴직금까지. 지금 필요한 계산을 선택하세요.</p></div>
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">{tools.map(tool => <ToolCard key={tool.href} {...tool} />)}</div>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" data-msy-module="home-tools">{tools.map(tool => <ToolCard key={tool.href} {...tool} />)}</div>
   </div></section>;
 }

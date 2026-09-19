@@ -22,6 +22,8 @@ const eslintConfig = [
       ".claude/**",
       // next-on-pages 빌드 산출물 — 압축 번들이 no-unused-expressions 오탐 38건 유발
       ".vercel/**",
+      // Local QA exports and browser bundles are generated, ignored artifacts.
+      ".artifacts/**",
     ],
   },
   {

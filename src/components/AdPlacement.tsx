@@ -224,6 +224,9 @@ function AdSlot({
       <span
         style={{
           fontSize: "11px",
+          // 전역 line-height(1.65)를 상속하면 라벨+간격이 22.15px가 되어 예약한 20px를 넘는다.
+          lineHeight: `${AD_LABEL_HEIGHT - 4}px`,
+          flexShrink: 0,
           color: "hsl(var(--muted-foreground))",
           marginBottom: "4px",
           textAlign: "center",

@@ -40,10 +40,11 @@ describe("Korean home initial rendering", () => {
     expect(html).not.toContain("translateY(24px)");
   });
 
-  it("preserves all ten tool destinations without opacity-zero entrance wrappers", () => {
+  it("preserves the tool destinations without opacity-zero entrance wrappers", () => {
     const html = renderToStaticMarkup(createElement(HomeToolsSection));
     const destinations = [...html.matchAll(/href="([^"]+)"/g)].map(match => match[1]);
     expect(destinations).toEqual([
+      "/work-clock",
       "/?tab=salary#calculator-section", "/?tab=severance#calculator-section",
       "/?tab=freelancer#calculator-section", "/?tab=exchange#calculator-section",
       "/year-end-tax", "/fun/salary-slip", "/?tab=future#calculator-section",

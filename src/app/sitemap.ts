@@ -39,6 +39,7 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
+ '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
  '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/': { lastModified: new Date('2026-09-10') },
@@ -104,6 +105,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
 const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-10');
 const COMPANY_FAQ_REVIEW_DATE = new Date('2026-09-10');
 
+
 export default function sitemap(): MetadataRoute.Sitemap {
  const baseUrl = "https://www.moneysalary.com";
 
@@ -111,6 +113,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const staticRoutes = [
  '/',
  '/money-check',
+ '/work-clock',
  // /dashboard, /report 는 개인 localStorage 페이지(noindex) → 사이트맵 제외
  '/home-loan',
  '/year-end-tax',

@@ -4,13 +4,13 @@ import {
  Gift, Briefcase, TrendingUp, Home, CreditCard, Laptop,
  Heart, PiggyBank, Calculator, Calendar, Scale, Flame,
  DollarSign, Percent, Activity, Building2,
- Fuel, RefreshCw, Users, Zap
+ Fuel, RefreshCw, Users, Zap, Timer
 } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "금융 계산기 모음 2026 | 31가지 세금·재테크 계산기 - 머니샐러리",
- description: "성과급 세금 계산기, 퇴직금, 증여세, 취득세, 주식 양도세, 배당소득세, 연봉 계산기 등 2026년 세법 기준 31가지 금융 계산기를 무료로 이용하세요.",
+ title: "금융·생활 계산기 모음 2026 | 세금·재테크·실시간 월급 - 머니샐러리",
+ description: "실시간 월급 시계부터 성과급 세금, 퇴직금, 증여세, 취득세, 연봉 실수령액까지. 금융 계산과 일상 기록에 필요한 도구를 무료로 이용하세요.",
  path: "/tools",
 });
 
@@ -75,6 +75,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  title: "생활 · 일반 계산기",
  color: "text-primary",
  items: [
+ { title: "실시간 월급 시계", desc: "오늘 번 돈·휴식·월별 근무 기록", href: "/work-clock", icon: Timer, isNew: true },
  { title: "BMI 비만도 계산기", desc: "체질량지수·비만 등급", href: "/tools/health/bmi", icon: Activity },
  { title: "나이 계산기", desc: "만 나이·한국 나이 계산", href: "/tools/date/age", icon: Calendar },
  { title: "D-Day 계산기", desc: "날짜 차이·남은 일수", href: "/tools/date/d-day", icon: Calendar },

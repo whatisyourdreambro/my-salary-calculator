@@ -7,7 +7,9 @@
 //   node scripts/adsense-report.mjs window <일별.csv> <from> <to> [--compare <from2> <to2>] [--md]
 //   node scripts/adsense-report.mjs join <사이트일별.csv> <subset일별.csv> <from> <to> [--md]
 //   node scripts/adsense-report.mjs units <광고단위.csv> [--from <d> --to <d>] [--md]
-//   node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.csv> [--days <n1> <n2>] [--md]
+//   node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.csv> [--before-period <from> <to> --after-period <from> <to>] [--md]
+// exp1: 날짜 없는 요약표의 period 옵션은 운영자가 원본 내보내기 기간을 확인했다는 명시다.
+// 누적표에 임의 기간을 붙이지 말 것. --days 는 일평균 계산만 하며 기간의 증거가 아니다.
 //   node scripts/adsense-report.mjs --selftest [--dir <csv 폴더>]
 //
 // 입력(UTF-8, 첫 줄 헤더, 영문/한글 UI 모두 — 열 이름 사전 매핑, 없는 열은 무시):
@@ -100,7 +102,8 @@ function usage() {
       "  node scripts/adsense-report.mjs window <일별.csv> <from> <to> [--compare <from2> <to2>] [--md]",
       "  node scripts/adsense-report.mjs join <사이트일별.csv> <subset일별.csv> <from> <to> [--md]",
       "  node scripts/adsense-report.mjs units <광고단위.csv> [--from <d> --to <d>] [--md]",
-      "  node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.csv> [--days <n1> <n2>] [--md]",
+      "  node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.csv> [--before-period <from> <to> --after-period <from> <to>] [--days <n1> <n2>] [--md]",
+      "  exp1: 날짜 없는 요약표는 원본 내보내기에서 확인한 기간을 period 옵션으로 명시해야 합니다. --days 만으로 판정하지 않습니다.",
       "  node scripts/adsense-report.mjs --selftest [--dir <csv 폴더>]",
       "  날짜는 YYYY-MM-DD. CSV 는 리포 밖 폴더(기본 " + DEFAULT_DIR + ")에서 읽는다.",
     ].join("\n")
@@ -284,11 +287,15 @@ function loadCsv(file, what = "CSV") {
   const get = (r, f) => (cols[f] == null ? undefined : r[cols[f]]);
   const records = [];
   let skipped = 0;
+  let invalidDateRows = 0;
   for (const r of rows.slice(hi + 1)) {
     const rec = { date: null, unit: null };
     if (hasDate) {
       rec.date = isoDate(get(r, "date"));
       if (!rec.date) {
+        const isTotal = [get(r, "date"), get(r, "unit"), get(r, "unitId")]
+          .some((value) => /^(total|grand total|합계|총계|전체)$/i.test(String(value ?? "").trim()));
+        if (!isTotal) invalidDateRows++;
         skipped++; // 합계(Total) 행 등
         continue;
       }
@@ -327,6 +334,7 @@ function loadCsv(file, what = "CSV") {
     records,
     mode: hasUnit ? (hasDate ? "dailyUnits" : "units") : "daily",
     skipped,
+    invalidDateRows,
     minDate: dates.length ? dates[0] : null,
     maxDate: dates.length ? dates[dates.length - 1] : null,
   };
@@ -712,10 +720,55 @@ function cmdUnits(pos, opts) {
 }
 
 // ── exp1: 실험 #1 판정 (display-2 확산) ───────────────────────────────────────
+function exp1Period(data, declared, label, requiredUnits) {
+  const blockers = [];
+  const validDate = (value) => Boolean(value) &&
+    Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+  let range = null;
+  if (declared) {
+    const [from, to] = declared.map(isoDate);
+    if (!validDate(from) || !validDate(to) || from > to) {
+      fail(`${label} period: 유효한 시작일·종료일을 YYYY-MM-DD 순서로 지정하세요`);
+    }
+    range = { from, to };
+  }
+  const dated = data.cols.date != null;
+  if (!dated) {
+    if (!range) blockers.push(`${label} 창 날짜 없음 — 원본 내보내기에서 확인한 period 필요 (--days 는 증거 아님)`);
+    return { range, blockers, source: range ? "운영자 확인 내보내기 기간" : "기간 미확인" };
+  }
+  range ??= { from: data.minDate, to: data.maxDate };
+  if (data.invalidDateRows || data.records.some((record) => !validDate(record.date))) {
+    blockers.push(`${label} 창 해석 불가·잘못된 날짜 행 존재`);
+  }
+  if (data.minDate !== range.from || data.maxDate !== range.to) {
+    blockers.push(`${label} 창 명시 기간과 CSV 날짜 범위 불일치`);
+  }
+  const expectedDays = calendarDays(range);
+  const dates = new Set(data.records.map((record) => record.date));
+  if (dates.size !== expectedDays) blockers.push(`${label} 창 날짜 누락 — ${dates.size}/${expectedDays}일`);
+  const seen = new Set();
+  for (const record of data.records) {
+    const key = `${record.date}/${record.unit.key}`;
+    if (seen.has(key)) {
+      blockers.push(`${label} 창 날짜·광고 단위 중복 행`);
+      break;
+    }
+    seen.add(key);
+  }
+  for (const id of requiredUnits) {
+    const unitDates = new Set(data.records.filter((record) => record.unit.id === id).map((record) => record.date));
+    if (unitDates.size !== expectedDays) {
+      blockers.push(`${label} 창 ${UNIT_NAMES[id]} 날짜 누락 — ${unitDates.size}/${expectedDays}일 (0건도 명시 필요)`);
+    }
+  }
+  return { range, blockers, source: "CSV 날짜별 행" };
+}
+
 function cmdExp1(pos, opts) {
   const [beforeFile, afterFile] = pos;
   if (!beforeFile || !afterFile)
-    fail("사용법: exp1 <광고단위_전.csv> <광고단위_후.csv> [--days <n1> <n2>] [--md]");
+    fail("사용법: exp1 <광고단위_전.csv> <광고단위_후.csv> [--before-period <from> <to> --after-period <from> <to>] [--days <n1> <n2>] [--md]");
   const before = loadCsv(beforeFile, "전 창 광고 단위 CSV");
   const after = loadCsv(afterFile, "후 창 광고 단위 CSV");
   requireUnit(before, "exp1");
@@ -723,12 +776,23 @@ function cmdExp1(pos, opts) {
   const gb = groupByUnit(before.records);
   const ga = groupByUnit(after.records);
 
-  let days = [null, null];
+  const periods = [
+    exp1Period(before, opts.beforePeriod, "전", [EXP1.result, EXP1.inArticle]),
+    exp1Period(after, opts.afterPeriod, "후", [EXP1.display2, EXP1.result, EXP1.inArticle]),
+  ];
+  const periodBlockers = periods.flatMap((period) => period.blockers);
+  if (periods.every((period) => period.range) && periods[0].range.to >= periods[1].range.from) {
+    periodBlockers.push("전/후 기간 겹침 또는 순서 역전 — 전 창 종료일은 후 창 시작일보다 빨라야 함");
+  }
+
+  const periodDays = periods.map((period) => period.range ? calendarDays(period.range) : null);
+  let days = periodDays;
   if (opts.days) {
-    days = opts.days.map((d) => parseInt(d, 10));
+    days = opts.days.map((d) => Number(d));
     if (days.some((d) => !Number.isInteger(d) || d < 1)) fail("--days 에는 1 이상의 정수 두 개가 필요합니다 (전 창 일수, 후 창 일수)");
-  } else {
-    days = [aggregate(before.records).days || null, aggregate(after.records).days || null];
+    if (periodDays.some((count, index) => count != null && count !== days[index])) {
+      periodBlockers.push("--days 와 확인된 기간의 일수 불일치");
+    }
   }
   const normalized = days[0] && days[1];
   const basis = normalized ? "일평균" : "합계";
@@ -787,10 +851,14 @@ function cmdExp1(pos, opts) {
   //       기존 규칙만으로는 통과해 잘못된 '유지'가 나왔다.
   //   (b) 실험 유닛(display-2) 후 창 클릭이 50 미만이면 실험 축의 표본이 부족하다.
   //       잠식 표본은 실험 유닛의 표본이 아니다.
-  const sameInput = path.resolve(beforeFile) === path.resolve(afterFile);
+  const signature = (data) => JSON.stringify(data.records.map((record) => JSON.stringify(record)).sort());
+  const sameInput = path.resolve(beforeFile) === path.resolve(afterFile) || signature(before) === signature(after);
   const expSample = stats.display2.rawClicksA;
-  const blockers = [];
-  if (sameInput) blockers.push("전/후 입력이 동일 파일 — 창 구성 불가");
+  const blockers = [...periodBlockers];
+  if (sameInput) blockers.push("전/후 입력이 동일 파일 또는 동일 데이터 — 창 구성 불가");
+  for (const id of [EXP1.result, EXP1.inArticle]) {
+    if (!gb.has(id) || !ga.has(id)) blockers.push(`${UNIT_NAMES[id]} 비교 행 누락 — 0건과 미보고를 구분할 수 없음`);
+  }
   if (expSample < 50) blockers.push(`실험 유닛(display-2) 후 창 클릭 ${fmtInt(expSample)} < 50`);
   let verdict;
   if (blockers.length) verdict = `판정 불가·현상 유지 (${blockers.join(" · ")})`;
@@ -800,10 +868,16 @@ function cmdExp1(pos, opts) {
 
   const condRows = [
     {
-      c: "입력: 전/후 창이 서로 다른 파일",
-      v: sameInput ? "동일 파일" : "서로 다름",
+      c: "입력: 전/후 창이 서로 다른 데이터",
+      v: sameInput ? "동일 파일 또는 동일 데이터" : "서로 다름",
       s: "서로 다름",
       ok: sameInput ? "미충족" : "충족",
+    },
+    {
+      c: "기간: 확인된 독립 기간과 완전한 날짜별 자료",
+      v: periodBlockers.length ? periodBlockers.join(" · ") : "전/후 기간 확인",
+      s: "날짜 누락·겹침 없음",
+      ok: periodBlockers.length ? "미충족" : "충족",
     },
     {
       c: "실험 유닛 표본: display-2 후 창 클릭",
@@ -845,9 +919,12 @@ function cmdExp1(pos, opts) {
   console.log(heading(`실험 #1 판정 — 전 ${before.base} / 후 ${after.base}`, opts.md));
   console.log(
     `비교 기준: ${basis}` +
-      (normalized ? ` (전 ${days[0]}일 · 후 ${days[1]}일)` : " (일수 미상 — 날짜 열이 없으면 --days <n1> <n2> 로 창 길이를 지정하세요)") +
+      (normalized ? ` (전 ${days[0]}일 · 후 ${days[1]}일)` : " (일수 미상 — 날짜별 CSV 또는 원본 내보내기에서 확인한 period 필요)") +
       "\n"
   );
+  periods.forEach((period, index) => console.log(
+    `${index === 0 ? "전" : "후"} 창: ${period.range ? `${period.range.from}~${period.range.to}` : "미확인"} (${period.source})`
+  ));
   console.log(
     renderTable(
       [
@@ -872,7 +949,7 @@ function cmdExp1(pos, opts) {
   console.log(`\n판정: ${verdict}`);
   console.log(
     note(
-      "규칙: 전/후 동일 파일 또는 실험 유닛(display-2) 후 창 클릭 < 50 → 판정 불가·현상 유지('유지' 불가) / 잠식 표본 < 50 → 판정 불가·현상 유지 / display-2 후 창 수입 > 0 AND 결과창·인아티클 클릭·수입 −10% 이내 → 유지 / 그 외 재검토",
+      "규칙: 기간 미확인·겹침·날짜 누락·동일 데이터 또는 실험 유닛(display-2) 후 창 클릭 < 50 → 판정 불가·현상 유지('유지' 불가) / 잠식 표본 < 50 → 판정 불가·현상 유지 / display-2 후 창 수입 > 0 AND 결과창·인아티클 클릭·수입 −10% 이내 → 유지 / 그 외 재검토. 날짜 없는 요약표의 period는 운영자가 확인한 원본 보고 기간이며 --days 만으로 이를 대신할 수 없습니다.",
       opts.md
     )
   );
@@ -914,7 +991,7 @@ function selftest(opts) {
 // ── 인자 처리 ─────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
   const pos = [];
-  const opts = { md: false, compare: null, from: null, to: null, days: null, dir: null, selftest: false, help: false };
+  const opts = { md: false, compare: null, from: null, to: null, days: null, beforePeriod: null, afterPeriod: null, dir: null, selftest: false, help: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--md") opts.md = true;
@@ -924,6 +1001,8 @@ function parseArgs(argv) {
     else if (a === "--from") opts.from = argv[++i];
     else if (a === "--to") opts.to = argv[++i];
     else if (a === "--days") opts.days = [argv[++i], argv[++i]];
+    else if (a === "--before-period") opts.beforePeriod = [argv[++i], argv[++i]];
+    else if (a === "--after-period") opts.afterPeriod = [argv[++i], argv[++i]];
     else if (a === "--dir") opts.dir = argv[++i];
     else if (a.startsWith("--")) fail(`알 수 없는 옵션: ${a}`);
     else pos.push(a);

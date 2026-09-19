@@ -14,6 +14,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import type { ReactElement } from "react";
+import { OgFontCache, serveCachedOgImage } from "@/lib/ogImageCache";
 
 export const runtime = "edge";
 
@@ -49,8 +50,8 @@ const FALLBACK_HEADERS = {
 // 초과(Cloudflare error 1102)로 503이 나므로, &text= 서브셋(수 KB)만 받아
 // satori에 전달한다 (2026-06-11 OG 503 incident 대응).
 // 동일 서브셋 재요청 시 외부 fetch 2회를 생략하는 메모리 캐시 (isolate 생존 동안 유효).
-// OG 텍스트는 페이지 제목·금액 조합으로 종류가 유한해 무한 성장 위험이 낮다.
-const fontCache = new Map<string, ArrayBuffer>();
+// 제목은 외부 쿼리로도 들어오므로 엔트리 수·총 용량을 제한한다.
+const fontCache = new OgFontCache();
 
 async function loadGoogleFont(text: string): Promise<ArrayBuffer> {
   const subset = Array.from(new Set(text)).join("");
@@ -71,6 +72,7 @@ async function loadGoogleFont(text: string): Promise<ArrayBuffer> {
   const fontRes = await fetch(match[1], { signal: AbortSignal.timeout(3000) });
   if (!fontRes.ok) throw new Error("font file fetch failed");
   const fontData = await fontRes.arrayBuffer();
+  if (fontData.byteLength > 262_144) throw new Error("font subset exceeds render budget");
   fontCache.set(subset, fontData);
   return fontData;
 }
@@ -369,8 +371,11 @@ function renderAsciiFallbackOg(): ReactElement {
 }
 
 export async function GET(req: NextRequest) {
+  return serveCachedOgImage(req.url, renderOgResponse);
+}
+
+async function renderOgResponse(searchParams: URLSearchParams) {
   try {
-    const { searchParams } = new URL(req.url);
     const type = searchParams.get("type");
     const lang = searchParams.get("lang");
     const title = searchParams.get("title") || "연봉 실수령액 계산기";
@@ -449,7 +454,7 @@ export async function GET(req: NextRequest) {
         status: 500,
         headers: {
           "X-Robots-Tag": ROBOTS_HEADER,
-          "Cache-Control": "public, max-age=300, s-maxage=300",
+          "Cache-Control": "no-store",
         },
       });
     }

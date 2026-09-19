@@ -83,6 +83,7 @@ export const navConfig: NavItem[] = [
   items: [
    { name: `${SIMPLE_CALC_COUNT}가지 계산기 한눈에`, href: "/calc", description: "모든 금융 계산기 인덱스", badge: "MUST" },
    { name: "종합 연봉 실수령액", href: "/?tab=salary", description: "2026 세후 월급·4대보험" },
+   { name: "실시간 월급 시계", href: "/work-clock", description: "오늘 번 돈·휴식·월별 근무 기록", badge: "NEW" },
    { name: "퇴직금 계산기", href: "/?tab=severance", description: "30일분 평균임금 자동" },
    { name: "프리랜서·알바", href: "/?tab=freelancer", description: "3.3% 원천징수 후 수령액" },
    { name: "연말정산 계산기", href: "/year-end-tax", description: "환급금 미리보기", badge: "SEASON" },
