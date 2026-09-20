@@ -49,19 +49,19 @@ const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const STATUS = AGREEMENT_2026.status;
 const PAGE_DESC =
   STATUS === "ratified"
-    ? "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 타결(현금 40%+자사주 60%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
+    ? "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 9/16 가결(현금 50%+자사주 50%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
     : STATUS === "rejected"
       ? "SK하이닉스 PS·PI 성과급 계산기. 잠정합의안(현금 40%+자사주 60%) 8/25 총투표 부결·재협상 중 — 신·구 체계 모두 영업이익·연봉만 입력하면 주식 지급분·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
       : "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 잠정합의(현금 40%+자사주 60%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정.";
 const STATUS_BADGE =
   STATUS === "ratified"
-    ? "🔔 2026 임단협 최종 타결 · 현금 40% + 자사주 60%"
+    ? "🔔 2026 임단협 최종 타결(9/16 가결) · 현금 50% + 자사주 50%"
     : STATUS === "rejected"
       ? "🔔 2026 임단협 잠정합의 부결 — 재협상 중"
       : "🔔 2026-08-20 임단협 잠정합의 · 현금 40% + 자사주 60%";
 const STATUS_SENTENCE =
   STATUS === "ratified"
-    ? "조합원 총투표를 통과해 최종 타결됐습니다."
+    ? "9월 9일 수정안(현금 50%+자사주 50%)이 9월 16일 조합원 총투표에서 가결(찬성 57.08%)돼 최종 타결됐습니다."
     : STATUS === "rejected"
       ? "조합원 총투표(8/24~25)에서 부결되어 재협상 중입니다 — 이 페이지의 신 체계 설명은 부결된 잠정합의안 기준이며, 새 합의가 나오면 즉시 갱신합니다."
       : `아직 최종 확정이 아닙니다 — ${AGREEMENT_2026.voteNote}이며, 투표 결과에 따라 내용이 바뀔 수 있습니다.`;
@@ -70,16 +70,16 @@ const FAQ_ITEMS = [
   {
     question: "SK하이닉스 성과급을 주식으로 준다는 게 확정인가요?",
     answer:
-      `2026년 8월 20일 노사가 잠정합의했습니다(복수 언론 보도). PS 재원(연간 영업이익의 10%)은 유지하되 지급 방식을 '당해 현금 40% + 자사주 60%'로 바꾸는 내용입니다. ${STATUS_SENTENCE} ${
+      `네. 2026년 8월 20일 첫 잠정합의안(현금 40%+자사주 60%)이 8월 25일 총투표에서 부결된 뒤, 9월 9일 마련한 수정안 — PS 재원(연간 영업이익의 10%)과 상한 폐지는 유지하되 지급 방식을 '당해 현금 50% + 자사주 30%, 1·2년 후 자사주 10%씩'으로 바꾸는 내용 — 이 최종안입니다(복수 언론 보도). ${STATUS_SENTENCE} ${
         STATUS === "rejected"
           ? `부결된 안 기준 적용 시점은 ${AGREEMENT_2026.appliesFrom}였으며, 재협상 결과에 따라 달라질 수 있습니다.`
           : `적용은 ${AGREEMENT_2026.appliesFrom}입니다.`
       } 본 계산기는 신·구 체계를 모두 계산해 비교할 수 있습니다.`,
   },
   {
-    question: "자사주 60%는 언제 팔 수 있나요?",
+    question: "자사주 50%는 언제 팔 수 있나요?",
     answer:
-      "잠정합의 보도 기준으로 자사주 60%p 중 40%p는 당해(4월경) 지급 즉시 매도할 수 있고, 나머지 20%p는 1년 후 10%p·2년 후 10%p씩 주식으로 이연 지급되며 수령 즉시 처분할 수 있습니다. 즉 '팔 수 없는 기간'이 있는 게 아니라, 일부가 늦게 지급되는 구조입니다.",
+      "가결안 보도 기준으로 자사주 50%p 중 30%p는 당해(4월경) 지급 즉시 매도할 수 있고, 나머지 20%p는 1년 후 10%p·2년 후 10%p씩 주식으로 이연 지급되며 수령 즉시 처분할 수 있습니다. 즉 '팔 수 없는 기간'이 있는 게 아니라, 일부가 늦게 지급되는 구조입니다.",
   },
   {
     question: "주식 수는 어떤 가격으로 계산하나요?",
@@ -94,7 +94,7 @@ const FAQ_ITEMS = [
   {
     question: "성과급을 주식 100%로 받을 수도 있나요?",
     answer:
-      "본인이 요청하면 주식 비중을 100%까지 높일 수 있는 선택권이 포함된 것으로 보도됐습니다. 주가 상승을 기대하는 직원은 현금 40%까지 주식으로 전환해 받을 수 있는 구조입니다. 다만 주식 100% 선택 시 이연 구조가 어떻게 되는지는 보도되지 않아, 본 계산기는 '이연 20%p 동일' 가정으로 계산합니다.",
+      "가결안 보도 기준으로 현금 50% 중 일부를 본인 요청 시 10% 단위로 주식으로 전환할 수 있어, 주가 상승을 기대하는 직원은 주식 비중을 최대 100%까지 높일 수 있는 구조입니다. 다만 전환분의 이연 구조가 어떻게 되는지는 보도되지 않아, 본 계산기는 '이연 20%p 동일' 가정으로 계산합니다.",
   },
   {
     question: "주식으로 받으면 세금은 어떻게 되나요?",
@@ -124,7 +124,7 @@ const FAQ_ITEMS = [
   {
     question: "SK하이닉스 PI는 PS와 어떻게 다른가요?",
     answer:
-      "PI(Productivity Incentive, 생산성 격려금)는 반기별 영업이익률을 평가해 지급하는 격려금으로, 기본급의 최대 150% × 연 2회(최대 300%)입니다. PS는 회사 전체 이익 기반·연 1회, PI는 반기마다 지급되는 차이가 있습니다. 이번 잠정합의의 주식 지급 개편은 PS가 대상이며, 본 계산기는 PI를 현금 지급 유지로 가정합니다.",
+      "PI(Productivity Incentive, 생산성 격려금)는 반기별 영업이익률을 평가해 지급하는 격려금으로, 기본급의 최대 150% × 연 2회(최대 300%)입니다. PS는 회사 전체 이익 기반·연 1회, PI는 반기마다 지급되는 차이가 있습니다. 이번 개편(2026-09-16 가결)의 주식 지급 대상은 PS이며, 본 계산기는 PI를 현금 지급 유지로 가정합니다.",
   },
   {
     question: "기본급(통상임금)은 어떻게 정의되나요?",
@@ -149,10 +149,10 @@ const FAQ_ITEMS = [
   {
     question: "이 계산기 결과를 어디까지 신뢰할 수 있나요?",
     answer:
-      `본 계산기는 2026-08-20 잠정합의 등 공개 보도·사업보고서 기반 추정 시뮬레이터이며 회사 공식 자료가 아닙니다. 실제 PS·PI는 본인 평가·근속·직급 등에 따라 ±15~25% 차이가 날 수 있고, ${
+      `본 계산기는 2026-09-16 가결된 임단협 수정안 등 공개 보도·사업보고서 기반 추정 시뮬레이터이며 회사 공식 자료가 아닙니다. 실제 PS·PI는 본인 평가·근속·직급 등에 따라 ±15~25% 차이가 날 수 있고, ${
         STATUS === "rejected"
           ? "잠정합의안은 2026-08-25 총투표에서 부결되어 재협상 결과에 따라 내용이 바뀔 수 있습니다"
-          : "잠정합의 내용은 총투표 결과에 따라 바뀔 수 있습니다"
+          : "세부 시행 기준(기준가·이연·전환 절차)은 회사 공식 공지에 따라 달라질 수 있습니다"
       }. 결과는 참고용으로만 사용하시고, 정확한 본인 케이스는 사내 시스템 명세서를 확인하세요.`,
   },
 ];
@@ -172,7 +172,7 @@ const HOW_TO_STEPS = [
   },
   {
     name: "PS 지급 방식 선택",
-    text: "신 체계(현금 40%+자사주 60%, 잠정합의) / 구 체계(현금 80%+이연 20%) / 주식 100% 선택권을 토글해 비교합니다.",
+    text: "신 체계(현금 50%+자사주 50%, 2026-09-16 가결) / 구 체계(현금 80%+이연 20%) / 주식 100% 선택권을 토글해 비교합니다.",
   },
   {
     name: "결과·세후 확인",
@@ -202,8 +202,9 @@ export const metadata: Metadata = {
     // 2026 잠정합의 (뉴스 대응)
     "SK하이닉스 성과급 주식",
     "SK하이닉스 자사주 성과급",
-    "SK하이닉스 성과급 현금 40 주식 60",
+    "SK하이닉스 성과급 현금 50 주식 50",
     "SK하이닉스 임단협 2026",
+    "SK하이닉스 임단협 가결",
     "SK하이닉스 잠정합의",
     "SK하이닉스 성과급 1인당",
     "SK하이닉스 성과급 7억",
@@ -251,7 +252,7 @@ export default function SkHynixBonusPage() {
           howToLd({
             name: "SK하이닉스 PS·PI 성과급 계산하는 방법",
             description:
-              "영업이익·연봉·PI에 2026 잠정합의 지급 방식(현금 40%+자사주 60%)까지 반영해 세후 실수령액을 산출하는 5단계 가이드",
+              "영업이익·연봉·PI에 2026 임단협 타결 지급 방식(현금 50%+자사주 50%)까지 반영해 세후 실수령액을 산출하는 5단계 가이드",
             steps: HOW_TO_STEPS,
           }),
         ]}
@@ -270,8 +271,8 @@ export default function SkHynixBonusPage() {
             </h1>
             <p className="text-base sm:text-lg text-faint-blue leading-relaxed max-w-3xl">
               PS(영업이익 10% 풀) + PI(반기 기본급 최대 150% × 2회) 합산
-              시뮬레이터. 2026 임단협 잠정합의의{" "}
-              <strong>현금 40% + 자사주 60%</strong> 지급 방식과 구 체계를
+              시뮬레이터. 2026 임단협 타결(9/16 가결)의{" "}
+              <strong>현금 50% + 자사주 50%</strong> 지급 방식과 구 체계를
               나란히 비교하고, 세전·세후 실수령액까지 즉시 계산합니다.
             </p>
             <div className="mt-5">
@@ -296,12 +297,14 @@ export default function SkHynixBonusPage() {
                   : "⏰ 2026 임단협 잠정합의 — 총투표 전"}
             </p>
             <p className="text-sm leading-relaxed text-navy">
-              <strong>2026년 8월 20일</strong> SK하이닉스 노사가 임금{" "}
-              <strong>6.3% 인상</strong>과 PS 지급 방식 개편에 잠정합의했습니다
-              (복수 언론 보도). PS의 <strong>40%는 당해 현금</strong>,{" "}
-              <strong>60%는 자사주</strong>(40%p 즉시 매도 가능 + 1·2년 후
-              10%p씩 이연)로 지급하며, 주가 하락 시 현금 보전 장치가
-              포함됐습니다. {STATUS_SENTENCE}
+              <strong>2026년 9월 16일</strong> SK하이닉스 임단협 수정안이 조합원
+              총투표에서 <strong>가결</strong>됐습니다(찬성 57.08%·투표율 95.37%,
+              복수 언론 보도). 임금 <strong>6.3% 인상</strong>은 유지되고, PS는
+              당해 80%를 <strong>현금 50% + 자사주 30%</strong>(즉시 매도 가능)로,
+              나머지 20%는 1·2년 후 자사주 10%p씩 이연 지급합니다. 현금 일부는
+              본인 요청 시 10% 단위로 주식 전환이 가능하며, 적자 발생 시 임금의
+              최대 3% 이내 이연 조항이 명문화됐습니다. 기준가·하방 보전 규정은
+              8월 20일 안 기준입니다(수정안 보도에 변경 언급 없음). {STATUS_SENTENCE}
             </p>
             <p className="text-xs text-faint mt-2 leading-relaxed">
               한편 <strong>2026 상반기 PI는 최대치 150%로 확정</strong>되어 7월
@@ -309,7 +312,7 @@ export default function SkHynixBonusPage() {
               내용을 모두 반영했으며,{" "}
               {STATUS === "rejected"
                 ? "재협상 결과가 나오면 즉시 갱신합니다."
-                : "투표 결과가 나오면 즉시 갱신합니다."}
+                : "회사 공식 시행 기준이 공지되면 갱신합니다."}
             </p>
           </aside>
 
@@ -341,8 +344,10 @@ export default function SkHynixBonusPage() {
                   <li>
                     • <strong className="text-primary">2026년분부터({STATUS === "rejected"
                       ? "잠정합의안 부결 — 재협상 중"
-                      : "잠정합의"}): 현금
-                    40% + 자사주 60%</strong>
+                      : STATUS === "ratified"
+                        ? "2026-09-16 가결"
+                        : "잠정합의"}): 현금
+                    50% + 자사주 50%</strong>
                   </li>
                 </ul>
               </article>
@@ -402,7 +407,7 @@ export default function SkHynixBonusPage() {
                 * 2026년분 PS는 2027년 초 확정·지급 예정 —{" "}
                 {STATUS === "rejected"
                   ? "잠정합의안(현금 40%+자사주 60%)이 총투표에서 부결되어 지급 방식은 재협상 결과에 따라 확정됩니다."
-                  : "잠정합의 기준 신 체계(현금 40%+자사주 60%)가 첫 적용될 전망입니다."}
+                  : "2026-09-16 가결된 신 체계(현금 50%+자사주 50%)가 첫 적용됩니다."}
               </p>
             </div>
           </section>
@@ -422,12 +427,13 @@ export default function SkHynixBonusPage() {
               className="text-xl sm:text-2xl font-black mb-3 flex items-center gap-2"
             >
               <Info className="w-5 h-5 text-primary" />
-              2026 잠정합의 전면 정리 — 현금 40% + 자사주 60%
+              2026 임단협 타결 정리 — 현금 50% + 자사주 50%
             </h2>
             <p className="text-sm leading-relaxed text-navy">
-              2026년 8월 20일 노사가 마련한 잠정합의안의 핵심은 PS 지급
+              2026년 9월 9일 노사가 마련한 수정 잠정합의안의 핵심은 PS 지급
               방식의 개편입니다. <strong>재원(영업이익의 10%)과 상한 폐지는
-              그대로 유지</strong>하되, 지급 형태가 바뀝니다.{" "}
+              그대로 유지</strong>하되, 지급 형태가 바뀝니다(첫 잠정합의안
+              현금 40%+자사주 60%는 8월 25일 부결).{" "}
               {STATUS_SENTENCE}
             </p>
 
@@ -449,13 +455,13 @@ export default function SkHynixBonusPage() {
                   <tr className="border-b border-canvas-deep/60">
                     <td className="py-2 pr-3">2027년 2월경</td>
                     <td className="py-2 pr-3 font-bold">현금</td>
-                    <td className="py-2 pr-3 tabular-nums font-black text-primary">40%</td>
-                    <td className="py-2 text-faint">당해 일시 지급</td>
+                    <td className="py-2 pr-3 tabular-nums font-black text-primary">50%</td>
+                    <td className="py-2 text-faint">당해 일시 지급 (일부 10% 단위 주식 전환 가능)</td>
                   </tr>
                   <tr className="border-b border-canvas-deep/60">
                     <td className="py-2 pr-3">2027년 4월경</td>
                     <td className="py-2 pr-3 font-bold">자사주</td>
-                    <td className="py-2 pr-3 tabular-nums font-black text-primary">40%</td>
+                    <td className="py-2 pr-3 tabular-nums font-black text-primary">30%</td>
                     <td className="py-2 text-faint">지급 즉시 매도 가능</td>
                   </tr>
                   <tr className="border-b border-canvas-deep/60">
@@ -488,10 +494,11 @@ export default function SkHynixBonusPage() {
                 <p className="text-faint">{AGREEMENT_2026.downsideProtection}.</p>
               </div>
               <div className="rounded-xl border border-canvas-deep p-4 bg-canvas/30">
-                <p className="font-bold mb-1">🔁 주식 100% 선택권</p>
+                <p className="font-bold mb-1">🔁 주식 전환 선택권</p>
                 <p className="text-faint">
-                  본인 요청 시 주식 비중을 100%까지 상향할 수 있습니다. 이연
-                  구조는 미보도 — 본 계산기는 이연 20%p 동일로 가정합니다.
+                  현금 50% 중 일부를 본인 요청 시 10% 단위로 주식으로 전환할 수
+                  있습니다(최대 주식 100%). 전환분의 이연 구조는 미보도 — 본
+                  계산기는 이연 20%p 동일로 가정합니다.
                 </p>
               </div>
               <div className="rounded-xl border border-canvas-deep p-4 bg-canvas/30">
@@ -550,12 +557,13 @@ export default function SkHynixBonusPage() {
               <div>
                 <p className="font-bold mb-1">근거</p>
                 <p className="text-faint">
-                  지급 방식(현금 40%+자사주 60%)·기준가 3시점 최저가·하방
-                  보전·주식 100% 선택권·임금 6.3% 인상은{" "}
-                  <strong>2026-08-20 임단협 잠정합의에 대한 복수 언론
-                  보도</strong>
+                  지급 방식(당해 현금 50%+자사주 30%, 이연 주식 10%p×2)·임금
+                  6.3% 인상·적자 시 임금 이연은{" "}
+                  <strong>2026-09-16 가결된 임단협 수정안에 대한 복수 언론
+                  보도(헤럴드경제·파이낸셜뉴스)</strong>를, 기준가 3시점
+                  최저가·하방 보전·주식 전환 선택권은 2026-08-20 잠정합의 보도
                   {STATUS === "ratified"
-                    ? "(이후 총투표 가결)"
+                    ? "(수정안 보도에 변경 언급 없음)"
                     : STATUS === "rejected"
                       ? "(이후 2026-08-25 총투표 부결 — 재협상 중)"
                       : ""}

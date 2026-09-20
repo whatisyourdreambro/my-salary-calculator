@@ -21,7 +21,7 @@ import NumberInput from "@/components/NumberInput";
 type PayoutMode = "new" | "old" | "stock100";
 
 const PAYOUT_MODES: { id: PayoutMode; label: string; sub: string }[] = [
-  { id: "new", label: "신 체계 40/60", sub: "현금 40% + 자사주 60% (잠정합의)" },
+  { id: "new", label: "신 체계 50/50", sub: "현금 50% + 자사주 50% (2026-09-16 가결)" },
   { id: "old", label: "구 체계 80/20", sub: "현금 80% + 이연 현금 20% (2025년분까지)" },
   { id: "stock100", label: "주식 100%", sub: "본인 선택 시 (이연 20%p 동일 가정)" },
 ];
@@ -61,7 +61,7 @@ export default function SkHynixBonusClient() {
       cashY2: psPersonalWon * (AGREEMENT_2026.oldSplit.cashYear2Pct / 100),
       stockNow: 0,
     };
-    // 신 체계: 당해 현금 40% + 자사주 40%p(즉시 매도 가능) + 이연 주식 10%p × 2
+    // 신 체계(가결안): 당해 현금 50% + 자사주 30%p(즉시 매도 가능) + 이연 주식 10%p × 2
     const neo = {
       cashNow: psPersonalWon * (AGREEMENT_2026.newSplit.cashNowPct / 100),
       stockNow: psPersonalWon * (AGREEMENT_2026.newSplit.stockNowPct / 100),
@@ -293,9 +293,9 @@ export default function SkHynixBonusClient() {
             </>
           ) : (
             <>
-              2026-08-20 임단협 <strong>잠정합의</strong> 기준 — 2026년
-              성과급부터 현금 40% + 자사주 60%로 개편 예정. 구 체계와 비교해
-              보세요.
+              2026-09-16 <strong>가결</strong>된 임단협 기준 — 2026년
+              성과급부터 현금 50% + 자사주 50%(당해 30%p + 이연 10%p×2)로
+              개편. 구 체계와 비교해 보세요.
             </>
           )}
         </p>
@@ -409,7 +409,7 @@ export default function SkHynixBonusClient() {
               <span className="ml-1 font-normal">
                 {AGREEMENT_2026.status === "rejected"
                   ? "(부결된 잠정합의안 기준 · 재협상 중)"
-                  : "(잠정합의 기준 · 2026년 성과급부터)"}
+                  : "(2026-09-16 가결 기준 · 2026년 성과급부터)"}
               </span>
             )}
           </p>
@@ -431,7 +431,7 @@ export default function SkHynixBonusClient() {
           {payoutMode === "new" && (
             <p className="mt-3 text-[11px] text-faint leading-relaxed">
               💡 당해 수령 비율(80%)은 구 체계와 같습니다 — 달라지는 건 그중
-              40%p가 <strong>자사주</strong>(즉시 매도 가능)로 지급된다는 점.
+              30%p가 <strong>자사주</strong>(즉시 매도 가능)로 지급된다는 점.
               최저가 기준 산정 + 지급일 하방 보전으로{" "}
               <strong>지급 시점 기준 가치는 산정액 이상</strong>이며, 주가
               변동 리스크는 지급 후 보유 구간에만 있습니다.

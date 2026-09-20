@@ -2497,7 +2497,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "sk-hynix-ps-bonus-2026",
   "title": "SK하이닉스 2026 PS 성과급 — 기본급 2,000% 가능할까",
-  "description": "[8월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 현금 40%+자사주 60% 잠정합의안은 8/25 조합원 총투표 부결로 재협상 중 — 5월 작성 전망 글에 최신 확정치를 병기.",
+  "description": "[9월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 현금 40%+자사주 60% 잠정합의안은 8/25 부결 → 수정안(현금 50%+자사주 50%) 9/16 가결 — 5월 작성 전망 글에 최신 확정치를 병기.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
@@ -2511,7 +2511,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2571
+  "contentChars": 2618
  },
  {
   "slug": "lgensol-wage-negotiation-2026",
@@ -4918,7 +4918,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2165
+  "contentChars": 2232
  },
  {
   "slug": "lg-hyundai-posco-bonus-2026",
@@ -5864,7 +5864,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6562
+  "contentChars": 6838
  },
  {
   "slug": "sk-ax-salary-2026",
@@ -6131,7 +6131,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12899
+  "contentChars": 13216
  },
  {
   "slug": "sk-hynix-ps-cash-vs-stock-scenarios-2026",
@@ -6151,7 +6151,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 11997
+  "contentChars": 12276
  },
  {
   "slug": "samsung-bonus-treasury-stock-15-trillion-2026",
@@ -6191,7 +6191,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 13856
+  "contentChars": 14048
  },
  {
   "slug": "samsung-special-bonus-q3-preview-2027",

@@ -51,7 +51,7 @@ const samsungOpiTai = `
 `;
 
 const skHynixPs = `
-<p class="lead">SK하이닉스 PS(Profit Sharing, 초과이익분배금)는 연간 영업이익의 10%를 재원으로 임직원에게 분배하는 성과급. 2025년 9월 합의로 기본급 1,000% 상한이 폐지됐고, 2025년분은 <strong>2,964%</strong>(영업이익 47.2조)가 확정 지급됐다. 2026년분 지급 방식은 2026-08-20 잠정합의안(<strong>현금 40% + 자사주 60%</strong>)이 2026-08-25 조합원 총투표에서 부결되어 노사 재협상 중이다.</p>
+<p class="lead">SK하이닉스 PS(Profit Sharing, 초과이익분배금)는 연간 영업이익의 10%를 재원으로 임직원에게 분배하는 성과급. 2025년 9월 합의로 기본급 1,000% 상한이 폐지됐고, 2025년분은 <strong>2,964%</strong>(영업이익 47.2조)가 확정 지급됐다. 2026년분 지급 방식은 2026-08-20 잠정합의안(현금 40% + 자사주 60%)이 8/25 총투표에서 부결된 뒤, 수정안(<strong>당해 현금 50% + 자사주 30%, 1·2년 후 자사주 10%씩 이연</strong>)이 2026-09-16 총투표에서 가결(찬성 57.08%)되어 확정됐다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 SK하이닉스 연도별 PS 추이</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">연도</th><th class="p-3">PS %</th><th class="p-3">영업이익</th></tr></thead><tbody>
@@ -60,7 +60,7 @@ const skHynixPs = `
 <tr class="border-t"><td class="p-3">2023</td><td class="p-3">0% (적자)</td><td class="p-3">-7.7조</td></tr>
 <tr class="border-t"><td class="p-3">2024</td><td class="p-3">1,500%</td><td class="p-3">약 23.4조</td></tr>
 <tr class="border-t"><td class="p-3">2025</td><td class="p-3"><strong>2,964% 확정</strong> (상한 폐지 첫 적용)</td><td class="p-3">47.2조</td></tr>
-<tr class="border-t"><td class="p-3"><strong>2026 (전망)</strong></td><td class="p-3"><strong>상한 없음 — 지급 방식 재협상 중 (잠정합의안 8/25 부결)</strong></td><td class="p-3"><strong>컨센서스 약 250조</strong></td></tr>
+<tr class="border-t"><td class="p-3"><strong>2026 (전망)</strong></td><td class="p-3"><strong>상한 없음 — 현금 50%+자사주 50% 신 체계 (9/16 가결)</strong></td><td class="p-3"><strong>컨센서스 약 250조</strong></td></tr>
 </tbody></table></div>
 <p class="text-sm">2026년 상반기 실적만 98.2조원 — 컨센서스(250조) 실현 시 1인 평균 세전 약 7억원 추정 보도가 있다. 최신 수치·신구 체계 비교는 <a href="/calc/sk-hynix-bonus" class="text-primary underline">SK하이닉스 성과급 계산기</a>에서.</p>
 

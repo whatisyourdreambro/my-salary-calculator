@@ -55,8 +55,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/table/2027/weekly': { lastModified: new Date('2026-09-10') },
  '/table/2027/hourly': { lastModified: new Date('2026-09-10') },
  '/calc/samsung-bonus': { lastModified: new Date('2026-09-19'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-08-26'), priority: 0.9 },
- '/calc/bonus-calculators': { lastModified: new Date('2026-08-26'), priority: 0.9 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-20'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
+ '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-19'), priority: 0.85 },

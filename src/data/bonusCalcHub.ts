@@ -46,7 +46,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     company: "SK하이닉스",
     companyId: "sk-hynix",
     sector: "반도체·디스플레이",
-    hook: "잠정합의안 8/25 총투표 부결·재협상 중 — 신구 체계 비교 시뮬",
+    hook: "2026 임단협 9/16 가결 — 현금 50%+자사주 50% 신 체계·구 체계 비교 시뮬",
     seasonLabel: "2월 PS · 반기 PI",
     badge: "HOT",
   },
@@ -277,6 +277,11 @@ export const BONUS_NEWS_2026: Array<{
   text: string;
   href: string;
 }> = [
+  {
+    date: "2026-09-16",
+    text: "SK하이닉스 임단협 수정안 총투표 가결(찬성 57.08%) — PS 당해 현금 50%+자사주 30%, 1·2년 후 주식 10%씩 이연, 임금 6.3% 인상 유지",
+    href: "/calc/sk-hynix-bonus",
+  },
   {
     date: "2026-09-02",
     text: "SK하이닉스 부결 후 첫 소통행사 — 곽노정 사장 \"세세한 부분 구성원과 함께 고민\", 재교섭 일정은 미발표",

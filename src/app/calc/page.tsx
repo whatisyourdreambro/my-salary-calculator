@@ -55,7 +55,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/sk-hynix-bonus",
    title: "SK하이닉스 성과급 계산기 (PS·PI)",
-   description: "잠정합의안 8/25 부결·재협상 중 — 신구 체계 비교·세후 즉시 계산",
+   description: "2026 임단협 9/16 가결(현금 50%+자사주 50%) 반영 — 신구 체계 비교·세후 즉시 계산",
    season: "2월 PS·반기 PI",
  },
  {
