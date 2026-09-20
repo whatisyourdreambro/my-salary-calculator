@@ -45,7 +45,7 @@
 | **9/26** | SeasonalLinks 추석→연말정산 세트 교체(10배 계획 L13a — `SeasonalLinks.tsx`·`seasonLinks.ts`·`HeaderSearch.tsx` 각 한 줄, 종전 '10월 초' 표기 폐기) — 이번엔 /year-end-tax-2027(허브)·/year-end-tax-preview·/embed(연말정산 위젯) 링크 포함 (1파일 320페이지 일괄) | 필수 |
 | 10월 말 | 홈택스 연말정산 미리보기 오픈 대응 — /year-end-tax-preview 확정 일정·메뉴 경로 갱신 + /year-end-tax-2027 캘린더·뉴스 갱신 + 관련 페이지 수치 총점검 | 필수 |
 | 11월~1월 | **구조 변경 동결** — 콘텐츠 수치 갱신만. 주간 모니터링 강화 | 원칙 |
-| 12월 초 | 삼성 TAI 하반기 지급률 발표 → src/app/calc/samsung-bonus/taiData.ts 갱신 + 허브(/calc/bonus-calculators) 캘린더·뉴스 동시 갱신 (Claude 지시) | 필수 |
+| 12월 초 | 삼성 TAI 하반기 지급률 발표 → src/app/calc/samsung-bonus/taiData.ts 의 `TAI_RATES_2026_H2`·`TAI_H2_ANNOUNCED_DATE`·`TAI_H2_PAY_DATE` 3필드를 한 번에 채움(하나라도 비면 null 유지) → page.tsx·TaiCalculator 라벨은 `TAI_LATEST` 파생이라 문자열 무접촉, `npx vitest run src/app/calc/samsung-bonus` 통과 + 허브(/calc/bonus-calculators) 캘린더·뉴스 동시 갱신 (Claude 지시, 2026-09-21 S2-0 구조) | 필수 |
 | 12월 말 | 공무원 봉급표 2027 확정 → `/civil-servant-pay-2027` 예상표 → 확정표 전환(`civilServantPay.ts` `GENERAL_PAY_ROWS_2027` 교체, 봉급표 버티컬 4종 포함) + 봉급표 풀표(1~32호봉 공식 별표, 마지막 광고 아래 접힘 — 100배 계획 §5 google-clusters-1) 같은 슬롯, OPI/PS 전망 가이드 갱신 | 필수 |
 | 1월 | **피크**: 성과급 발표 24시간 내 반영(삼성 OPI·하이닉스 PS·정유 경영성과급 등 — 보도 확인→Claude 지시→배포). 자동차세 연납·최저임금 콘텐츠 | 최대 수익 구간 |
 | 2월 | LG디스플레이·한화에어로 등 2월 지급사 실적 반영. 시즌 회고(GA4) | 체크포인트 |
@@ -58,7 +58,8 @@
 ### 발표 런북 (D0 → D+3, 12~2월 지급 발표 공통 — 10배 계획 L13b)
 
 - D0: 보도 확인(출처 URL 2개 이상) → 상수 갱신 → 배포 → CF Purge Everything → GSC URL 검사(색인 요청) → D+1 실제 URL 테스트로 문구 확인 → D+3 리포트(/insights 성과급 실지급률)·허브 캘린더 갱신. SK PS 는 `docs/drafts/sk-ps-sync-kit-2027.md` 5점·런북 그대로. 발표 전 추정 카피 금지(null 게이트).
-- **OPI 발표 D0**: ① `src/data/opiAnnouncement.ts` 의 `announced`/`rate`/`date`/`source` 4필드 동시 기입(보도 URL 필수) ② `SeasonalBanner.tsx` 게이트 한 줄(`getCurrentSeasonal(now, { opiAnnounced: OPI_2026_ANNOUNCEMENT.announced })`) 연결 여부 확인 — 2026-09-05 배치는 미연결 상태 ③ `npx vitest run src/lib/__tests__/seasonalBanner.test.ts` 통과 확인(발표 정본 불변식 테스트 포함). 1월 홈 배너 1순위(OPI vs 카드공제)는 100배 계획 승인 H.
+- **OPI 발표 D0**: ① `src/data/opiAnnouncement.ts` 의 `announced`/`rate`/`date`/`source` 4필드 동시 기입(보도 URL 필수) ② `SeasonalBanner.tsx` 게이트 한 줄(`getCurrentSeasonal(now, { opiAnnounced: OPI_2026_ANNOUNCEMENT.announced })`) 연결 여부 확인 — 2026-09-05 배치는 미연결 상태 ③ `npx vitest run src/lib/__tests__/seasonalBanner.test.ts` 통과 확인(발표 정본 불변식 테스트 포함) ④ 계산기 본문: `src/app/calc/samsung-bonus/opiData.ts` `OPI_ACTUAL` 에 2026년 실적분 블록을 **추가**(마지막 원소가 최신 — FAQ·실지급률 표·슬라이더 기본값·분배 모델 설명이 자동 파생) + `data.test.ts`·`model.test.ts` 동결값 갱신 + `node scripts/verify-bonus-data.mjs`(Client+opiData+taiData 합산 스캔) exit 0. 1월 홈 배너 1순위(OPI vs 카드공제)는 100배 계획 승인 H.
+- **연간 잠정실적 D0(1월 8일 전후)**: `src/app/calc/samsung-bonus/annualOp.ts` `ANNUAL_OP_2026_PRELIM` 4필드(announced·profitTrillion·date·source URL) 동시 기입 → 히어로 문장이 잠정실적 문장으로 치환되고 계산기 기본 영업이익(350조)이 잠정치로 바뀐다(요소 추가 없음). `data.test.ts` 불변식 통과 확인.
 
 ## 4. 데이터 갱신 체크포인트 (Claude 지시용)
 
