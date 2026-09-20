@@ -40,6 +40,8 @@ export interface SharePageContext {
   canonical: string | null;
   title: string;
   notFound: boolean;
+  /** Calculator-declared result URL ([data-share-result-url], same-site + fragment). Page-mode share never carries it. */
+  resultUrl?: string | null;
 }
 
 /** A previous route's head must not become the next route's share title. */

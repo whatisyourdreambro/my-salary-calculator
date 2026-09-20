@@ -24,6 +24,7 @@ import {
   REFERENCE_SALARY,
   getThreshold,
   calcSamsungBonusNet,
+  FIXED_OPI1_RATE,
   fmtManwon,
   fmtManwonInt,
   fmtEok,
@@ -116,7 +117,7 @@ export default function MultiYearBonusSimulator({
   creditRate,
   applyInsurance,
   defaultDivId,
-  opi1Rate = 50,
+  opi1Rate = FIXED_OPI1_RATE,
 }: {
   counts: Record<string, string>;
   ratios: Record<string, string>;

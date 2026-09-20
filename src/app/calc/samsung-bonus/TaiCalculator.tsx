@@ -1,7 +1,7 @@
 "use client";
 
 // TAI(목표달성장려금) 미니 계산기 — 월 기본급 × 지급률(%).
-// 지급률 프리셋은 2026년 상반기 실제 발표값(taiData.ts). 세금은 OPI와 동일하게
+// 지급률 프리셋은 최신 반기 실제 발표값(taiData.ts TAI_LATEST — H2 발표 시 자동 전환). 세금은 OPI와 동일하게
 // 근로소득 합산 과세되므로, 세후까지 보려면 위 '내 연봉으로 계산' 가정을 참고하도록 안내.
 
 import { useMemo, useState } from "react";
@@ -13,13 +13,13 @@ import {
   useCountUp,
   ResultNextLinks,
 } from "./shared";
-import { TAI_RATES_2026_H1 } from "./taiData";
+import { TAI_LATEST, TAI_LATEST_TOP } from "./taiData";
 import NumberInput from "@/components/NumberInput";
 
 export default function TaiCalculator() {
   const [baseSalaryFmt, setBaseSalaryFmt] = useState("5,000,000");
-  const [rate, setRate] = useState(100); // 월 기본급 대비 % — 디폴트 메모리 100%
-  const [selectedId, setSelectedId] = useState<string>("memory");
+  const [rate, setRate] = useState(TAI_LATEST_TOP.rate); // 월 기본급 대비 % — 디폴트 최신 반기 최고 지급률
+  const [selectedId, setSelectedId] = useState<string>(TAI_LATEST_TOP.id);
 
   const baseSalary = parseNumberInput(baseSalaryFmt);
 
@@ -42,7 +42,7 @@ export default function TaiCalculator() {
       </h3>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         TAI는 <strong>월 기본급 대비 %</strong>로 지급됩니다. 사업부를 누르면
-        2026년 상반기 실제 발표 지급률이 적용됩니다.
+        {TAI_LATEST.periodLabel} 실제 발표 지급률이 적용됩니다.
       </p>
 
       <div className="space-y-4">
@@ -81,7 +81,7 @@ export default function TaiCalculator() {
         <div>
           <div className="flex items-end justify-between mb-2">
             <span className="text-xs font-bold uppercase tracking-widest text-faint-blue">
-              지급률 (2026 상반기 발표값)
+              지급률 ({TAI_LATEST.shortLabel} 발표값)
             </span>
             <span className="inline-flex items-baseline gap-0.5">
               <NumberInput
@@ -104,7 +104,7 @@ export default function TaiCalculator() {
             role="group"
             aria-label="사업부별 TAI 지급률 선택"
           >
-            {TAI_RATES_2026_H1.map((t) => {
+            {TAI_LATEST.rates.map((t) => {
               const active = selectedId === t.id;
               return (
                 <button
@@ -161,9 +161,11 @@ export default function TaiCalculator() {
         </div>
 
         <p className="text-[10px] text-faint-blue leading-relaxed">
-          ※ TAI도 OPI와 같이 근로소득에 합산되어 누진세율로 과세됩니다. 하반기
-          지급률은 12월 말 별도 발표되며 상반기와 다를 수 있습니다 — 발표값이
-          다르면 위 지급률 칸에 직접 입력하세요.
+          ※ TAI도 OPI와 같이 근로소득에 합산되어 누진세율로 과세됩니다.{" "}
+          {TAI_LATEST.half === "H1"
+            ? "하반기 지급률은 12월 말 별도 발표되며 상반기와 다를 수 있습니다"
+            : "상반기(7월) 지급률과 다를 수 있습니다"}{" "}
+          — 발표값이 다르면 위 지급률 칸에 직접 입력하세요.
         </p>
 
         <ResultNextLinks

@@ -134,7 +134,7 @@ function manwonVariants(v) {
 
 // ── sourceFile 별 검사 ───────────────────────────────────────
 const fileCache = new Map();
-let dataModuleCount = 0; // Client.tsx 와 합산 스캔한 data.ts 수
+let dataModuleCount = 0; // Client.tsx 와 데이터 모듈(data.ts·opiData.ts·taiData.ts)을 합산 스캔한 폴더 수
 function readSource(rel) {
   if (!fileCache.has(rel)) {
     const abs = path.join(ROOT, rel);
@@ -142,13 +142,18 @@ function readSource(rel) {
       fileCache.set(rel, null);
     } else {
       let text = fs.readFileSync(abs, "utf8");
-      // Client.tsx + 같은 폴더 data.ts 합산 스캔 (2026-09-05 데이터 모듈 분리 대응)
+      // Client.tsx + 같은 폴더 데이터 모듈 합산 스캔 (2026-09-05 데이터 모듈 분리 대응).
+      // 2026-09-21 S2-0: 삼성 OPI 실지급률이 opiData.ts 로 분리돼 data.ts 외에 opiData.ts·taiData.ts 도 합산.
       if (/[\\/]Client\.tsx$/.test(rel)) {
-        const sibling = path.join(path.dirname(abs), "data.ts");
-        if (fs.existsSync(sibling)) {
-          text += "\n" + fs.readFileSync(sibling, "utf8");
-          dataModuleCount++;
+        let merged = false;
+        for (const name of ["data.ts", "opiData.ts", "taiData.ts"]) {
+          const sibling = path.join(path.dirname(abs), name);
+          if (fs.existsSync(sibling)) {
+            text += "\n" + fs.readFileSync(sibling, "utf8");
+            merged = true;
+          }
         }
+        if (merged) dataModuleCount++;
       }
       fileCache.set(rel, text);
     }

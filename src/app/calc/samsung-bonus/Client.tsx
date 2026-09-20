@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import ResultSharePanel from "@/components/ResultSharePanel";
@@ -23,10 +23,11 @@ import { DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import {
-  FIXED_RERATE,
-  FIXED_BU_RATIO,
-  FIXED_SA_RATIO,
+  FIXED_OPI1_RATE,
   REFERENCE_SALARY,
+  computeDivisionPool,
+  defaultDivisionCounts,
+  defaultDivisionRatios,
   getThreshold,
   getThresholdPeriod,
   calcSamsungBonusNet,
@@ -42,6 +43,9 @@ import {
   ResultNextLinks,
 } from "./shared";
 import NumberInput from "@/components/NumberInput";
+import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
+import { initialProfitTrillion } from "./annualOp";
+import { buildShareHash, parseShareHash, type SamsungShareState } from "./shareState";
 // 결과 직하 광고 2곳 (2026-09-11 운영자 승인 배치 변경): 종전 첫 광고는 클라이언트 아래 7,183px(모바일 8.5화면)였다.
 // HomeTopAd 는 calc/layout 하단 사본이 dedup 으로 죽고 이곳이 살아 유닛 수 불변, CalcResultAd 는 page.tsx 시나리오 구간에서 이동.
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
@@ -62,6 +66,19 @@ const MultiYearBonusSimulator = dynamic(
 // 결과 공유용 canonical URL (page.tsx의 PAGE_PATH와 동일)
 const SHARE_URL = "https://www.moneysalary.com/calc/samsung-bonus";
 
+// 공유 상태 URL 해시 기본값 — 전부 기본값이면 해시를 붙이지 않는다 (shareState.ts, S2-0).
+// p 는 잠정실적(1/8) 발표 후 자동 치환(annualOp.ts), o1 은 opiData 단일 소스에서 파생.
+const SHARE_DEFAULTS: SamsungShareState = {
+  d: "memory",
+  s: 80_000_000,
+  p: initialProfitTrillion(),
+  y: 2026,
+  o1: FIXED_OPI1_RATE,
+  cr: DEFAULT_BONUS_CREDIT_RATE,
+  ins: true,
+};
+const DIVISION_IDS = DIVISIONS.map((d) => d.id);
+
 function SimulatorLoading({ label }: { label: string }) {
   return (
     <section role="status" className="flex min-h-[560px] items-center justify-center rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 text-center text-xs text-faint-blue">
@@ -75,38 +92,27 @@ function SimulatorLoading({ label }: { label: string }) {
 // ────────────────────────────────────────────────────────────
 
 export default function SamsungBonusClient() {
-  const [year, setYear] = useState(2026); // 적용 연도
-  const [profitFmt, setProfitFmt] = useState("350"); // 조원 — 자유 입력
-  const [counts, setCounts] = useState<Record<string, string>>(
-    Object.fromEntries(
-      DIVISIONS.map((d) => [d.id, d.defaultCount.toLocaleString("ko-KR")])
-    )
-  );
-  const [ratios, setRatios] = useState<Record<string, string>>(
-    Object.fromEntries(DIVISIONS.map((d) => [d.id, String(d.defaultRatio)]))
-  );
+  // 첫 렌더는 기본값(SSR 일치) — 공유 해시 복원은 마운트 후 effect 에서 1회
+  const [year, setYear] = useState(SHARE_DEFAULTS.y); // 적용 연도
+  const [profitFmt, setProfitFmt] = useState(String(SHARE_DEFAULTS.p)); // 조원 — 자유 입력
+  const [counts, setCounts] = useState<Record<string, string>>(defaultDivisionCounts);
+  const [ratios, setRatios] = useState<Record<string, string>>(defaultDivisionRatios);
 
   // 본인 케이스 state — MySalaryCalculator + MultiYearBonusSimulator 공유
-  const [salaryFmt, setSalaryFmt] = useState("80,000,000");
-  const [selectedDivId, setSelectedDivId] = useState<string>("memory");
+  const [salaryFmt, setSalaryFmt] = useState(SHARE_DEFAULTS.s.toLocaleString("ko-KR"));
+  const [selectedDivId, setSelectedDivId] = useState<string>(SHARE_DEFAULTS.d);
   // 세액공제율 디폴트는 성과급 계산기 23종 공통값(=bonusTaxCalc 의 문서화된
   // 기본값 30%)과 맞춘다. 종전 20% 는 이 계산기에만 있어, 같은 삼성 계열
   // OPI 를 계산하는 /calc/samsung-display-bonus 와 동일 입력에서 세후가
   // 120만원 갈렸다.
   const [creditRate, setCreditRate] = useState<number>(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState<boolean>(true);
-  // OPI1(기존 OPI) 지급률 — 상한 50%. 2025년 실적분 실지급: MX 50%·DS 47%·VD 12% 등
-  const [opi1Rate, setOpi1Rate] = useState<number>(50);
+  // OPI1(기존 OPI) 지급률 — 상한·기본값·실지급률은 opiData.ts 단일 소스(기본 = 최신 최고 실지급률)
+  const [opi1Rate, setOpi1Rate] = useState<number>(SHARE_DEFAULTS.o1);
 
   function resetDivisions() {
-    setCounts(
-      Object.fromEntries(
-        DIVISIONS.map((d) => [d.id, d.defaultCount.toLocaleString("ko-KR")])
-      )
-    );
-    setRatios(
-      Object.fromEntries(DIVISIONS.map((d) => [d.id, String(d.defaultRatio)]))
-    );
+    setCounts(defaultDivisionCounts());
+    setRatios(defaultDivisionRatios());
   }
 
   const profit = Math.max(0, Number(profitFmt) || 0);
@@ -115,52 +121,16 @@ export default function SamsungBonusClient() {
   const thresholdMet = threshold > 0 ? profit >= threshold : true;
   const triggered = thresholdMet;
 
+  // 풀 분배 본체는 순수 함수(model.ts computeDivisionPool) — 회귀 테스트가 같은 함수를 검증한다.
   const result = useMemo(() => {
-    // 임계값 미달이면 성과급 풀 = 0
-    const effectiveProfit = triggered ? profit : 0;
-    const totalFundManwon = effectiveProfit * 1e8 * (FIXED_RERATE / 100);
-    const buFund = totalFundManwon * (FIXED_BU_RATIO / 10);
-    const saFund = totalFundManwon * (FIXED_SA_RATIO / 10);
-
-    const countNums = Object.fromEntries(
-      Object.entries(counts).map(([k, v]) => [k, parseNumberInput(v)])
-    );
-    const ratioNums = Object.fromEntries(
-      Object.entries(ratios).map(([k, v]) => [k, Number(v) || 0])
-    );
-
-    const totalCount = DIVISIONS.reduce(
-      (acc, d) => acc + (countNums[d.id] || 0),
-      0
-    );
-    const buPer = totalCount > 0 ? buFund / totalCount : 0;
-
-    const wTotal = DIVISIONS.reduce(
-      (acc, d) => acc + (countNums[d.id] || 0) * (ratioNums[d.id] || 0),
-      0
-    );
-    const saUnit = wTotal > 0 ? saFund / wTotal : 0;
-    const ratioSum = DIVISIONS.reduce(
-      (acc, d) => acc + (ratioNums[d.id] || 0),
-      0
-    );
-
-    const perDivision = DIVISIONS.map((d) => {
-      const r = ratioNums[d.id] || 0;
-      const saPart = saUnit * r;
-      const total = buPer + saPart;
-      return { ...d, buPart: buPer, saPart, total };
-    });
-
-    const max = Math.max(...perDivision.map((r) => r.total), 1);
-
+    const pool = computeDivisionPool(profit, counts, ratios, triggered);
     return {
-      totalFundManwon,
-      totalFundTrillion: fmtTrillion(totalFundManwon),
-      totalFundEok: fmtEokInt(totalFundManwon),
-      perDivision,
-      max,
-      ratioSum,
+      totalFundManwon: pool.totalFundManwon,
+      totalFundTrillion: fmtTrillion(pool.totalFundManwon),
+      totalFundEok: fmtEokInt(pool.totalFundManwon),
+      perDivision: pool.perDivision,
+      max: pool.max,
+      ratioSum: pool.ratioSum,
     };
   }, [profit, counts, ratios, triggered]);
 
@@ -176,11 +146,58 @@ export default function SamsungBonusClient() {
     resultKey: result,
   });
 
+  // ── 공유 상태 URL 해시 (S2-0, CALC-06 흡수) — #d/s/p/y/o1/cr/ins, ?v= 쿼리 신설 금지 ──
+  // 마운트 시 1회 복원. 앵커 해시(#tai-title 등, '=' 없음)는 무시한다.
+  useEffect(() => {
+    const parsed = parseShareHash(window.location.hash, { divisionIds: DIVISION_IDS, maxOpi1: OPI1_MAX_RATE });
+    if (!parsed) return;
+    if (parsed.d !== undefined) setSelectedDivId(parsed.d);
+    if (parsed.s !== undefined) setSalaryFmt(parsed.s.toLocaleString("ko-KR"));
+    if (parsed.p !== undefined) setProfitFmt(String(parsed.p));
+    if (parsed.y !== undefined) setYear(parsed.y);
+    if (parsed.o1 !== undefined) setOpi1Rate(parsed.o1);
+    if (parsed.cr !== undefined) setCreditRate(parsed.cr);
+    if (parsed.ins !== undefined) setApplyInsurance(parsed.ins);
+  }, []);
+  const shareHash = buildShareHash(
+    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, cr: creditRate, ins: applyInsurance },
+    SHARE_DEFAULTS
+  );
+  const shareStateUrl = `${SHARE_URL}${shareHash}`;
+  // 상태가 바뀔 때만 replaceState — history 항목·hashchange 이벤트가 생기지 않아 DeferredSection 의
+  // 앵커 감시(#multi-year-*)와 충돌하지 않는다. 첫 커밋은 건너뛴다(복원 전 기본값으로 해시를 지우는 것 방지).
+  const hashWriteArmed = useRef(false);
+  useEffect(() => {
+    if (!hashWriteArmed.current) {
+      hashWriteArmed.current = true;
+      return;
+    }
+    const current = window.location.hash;
+    if (shareHash === "" && !current.includes("=")) return; // 앵커 해시는 보존
+    if (current === shareHash) return;
+    history.replaceState(history.state, "", `${window.location.pathname}${window.location.search}${shareHash}`);
+  }, [shareHash]);
+
+  // 시뮬레이터 2종 입력은 지연값 — 메인 입력 타이핑 렌더가 먼저 커밋되고 무거운 다년도 재계산이 뒤따른다 (S2-0).
+  // IO 지연 마운트(DeferredSection, 고정 min-height 560)는 그대로 — 광고 위 높이 불변.
+  const deferredCounts = useDeferredValue(counts);
+  const deferredRatios = useDeferredValue(ratios);
+  const deferredSalary = useDeferredValue(parseNumberInput(salaryFmt));
+  const deferredCreditRate = useDeferredValue(creditRate);
+  const deferredApplyInsurance = useDeferredValue(applyInsurance);
+  const deferredSelectedDivId = useDeferredValue(selectedDivId);
+  const deferredOpi1Rate = useDeferredValue(opi1Rate);
+  const divisionTotals = useMemo(
+    () => result.perDivision.map((d) => ({ id: d.id, label: d.label, shortLabel: d.shortLabel, color: d.color, total: d.total })),
+    [result]
+  );
+  const deferredDivisionTotals = useDeferredValue(divisionTotals);
+
   return (
     <div className="space-y-4 mb-10">
       <section aria-label="계산 자료와 가정 구분" className="rounded-2xl border border-electric/20 bg-electric-5 p-4 text-sm leading-relaxed text-muted-blue dark:text-canvas-300">
         <p><strong className="text-navy dark:text-canvas-50">지급 이력:</strong> 지난 OPI·TAI 지급률은 하단의 보도 기준 자료입니다. 미래 지급률이나 개인 지급액을 확정하지 않습니다.</p>
-        <p className="mt-2"><strong className="text-navy dark:text-canvas-50">모델 가정:</strong> 최초 영업이익 350조원·기준 연봉 8,000만원과 사업부 인원·가중치는 계산용 가정입니다. 실제 확정 실적이나 회사의 개인별 산정 기준이 아닙니다.</p>
+        <p className="mt-2"><strong className="text-navy dark:text-canvas-50">모델 가정:</strong> 최초 영업이익 {SHARE_DEFAULTS.p}조원·기준 연봉 8,000만원과 사업부 인원·가중치는 계산용 가정입니다. 실제 확정 실적이나 회사의 개인별 산정 기준이 아닙니다.</p>
         <p className="mt-2"><strong className="text-navy dark:text-canvas-50">직접 입력:</strong> 영업이익·연봉·사업부·세금 가정을 조정하면 현재 입력을 바탕으로 추정합니다. 초기 예시값을 본인 조건에 맞게 바꿔 주세요.</p>
       </section>
       {/* 영업이익 + 고정 정책 */}
@@ -603,6 +620,7 @@ export default function SamsungBonusClient() {
         setApplyInsurance={setApplyInsurance}
         opi1Rate={opi1Rate}
         setOpi1Rate={setOpi1Rate}
+        shareUrl={shareStateUrl}
       />
 
       <PrivateFeedback target="samsung_bonus" />
@@ -655,8 +673,9 @@ export default function SamsungBonusClient() {
               </span>
             </p>
             <p className="mt-1 text-xs">
-              잠정합의안(<strong>현금 40% + 자사주 60%</strong>)이 2026-08-25
-              조합원 총투표에서 부결되어 재협상 중입니다.
+              2026 임단협 수정안(<strong>현금 50% + 자사주 50%</strong>)이
+              2026-09-16 조합원 총투표에서 가결돼 최종 타결됐습니다 — 2026년
+              성과급부터 신 체계 적용.
             </p>
             <p className="mt-2">
               <Link
@@ -687,13 +706,13 @@ export default function SamsungBonusClient() {
       </div>
       <DeferredSection id="multi-year-bonus" label="다년도 누적 성과급 시뮬레이터" minHeight={560}>
       <MultiYearBonusSimulator
-        counts={counts}
-        ratios={ratios}
-        salary={parseNumberInput(salaryFmt)}
-        creditRate={creditRate}
-        applyInsurance={applyInsurance}
-        defaultDivId={selectedDivId}
-        opi1Rate={opi1Rate}
+        counts={deferredCounts}
+        ratios={deferredRatios}
+        salary={deferredSalary}
+        creditRate={deferredCreditRate}
+        applyInsurance={deferredApplyInsurance}
+        defaultDivId={deferredSelectedDivId}
+        opi1Rate={deferredOpi1Rate}
       />
       </DeferredSection>
 
@@ -711,15 +730,7 @@ export default function SamsungBonusClient() {
         </p>
       </div>
       <DeferredSection id="multi-year-rsu" label="다년도 RSU 매도 시뮬레이터" minHeight={560}>
-      <MultiYearRSUSimulator
-        divisionTotals={result.perDivision.map((d) => ({
-          id: d.id,
-          label: d.label,
-          shortLabel: d.shortLabel,
-          color: d.color,
-          total: d.total,
-        }))}
-      />
+      <MultiYearRSUSimulator divisionTotals={deferredDivisionTotals} />
       </DeferredSection>
 
       <p className="text-center text-[11px] text-faint-blue">
@@ -746,6 +757,7 @@ function MySalaryCalculator({
   setApplyInsurance,
   opi1Rate,
   setOpi1Rate,
+  shareUrl,
 }: {
   poolInputsValid: boolean;
   perDivision: Array<{
@@ -768,6 +780,8 @@ function MySalaryCalculator({
   setApplyInsurance: (v: boolean) => void;
   opi1Rate: number;
   setOpi1Rate: (v: number) => void;
+  /** 공유 상태 URL(해시 포함) — 결과 공유 패널·모바일 공유 바(FloatingShareBar) 동기 */
+  shareUrl: string;
 }) {
   const salary = parseNumberInput(salaryFmt);
   const selected =
@@ -847,7 +861,7 @@ function MySalaryCalculator({
   const personalMeasurement = useCalculatorMeasurement({
     calcType: "samsung-bonus-personal",
     valid: poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) &&
-      isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, 50) &&
+      isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, OPI1_MAX_RATE) &&
       [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite),
     resultKey: personal,
   });
@@ -857,6 +871,8 @@ function MySalaryCalculator({
       className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
       aria-labelledby="my-calc-title"
       onChangeCapture={personalMeasurement.inputProps.onChangeCapture}
+      // 기본값과 다른 상태일 때만 선언 — FloatingShareBar 가 이 URL 로 결과 모드 공유(useSharePageContext)
+      data-share-result-url={shareUrl.includes("#") ? shareUrl : undefined}
     >
       <h2
         id="my-calc-title"
@@ -1062,22 +1078,23 @@ function MySalaryCalculator({
               <input
                 type="range"
                 min={0}
-                max={50}
+                max={OPI1_MAX_RATE}
                 step={1}
                 value={opi1Rate}
                 onChange={(e) => setOpi1Rate(Number(e.target.value))}
                 className="w-full h-2 rounded-full appearance-none cursor-pointer"
                 style={{
                   background: `linear-gradient(to right, #0145F2 0%, #0145F2 ${
-                    (opi1Rate / 50) * 100
-                  }%, #DDE4EC ${(opi1Rate / 50) * 100}%, #DDE4EC 100%)`,
+                    (opi1Rate / OPI1_MAX_RATE) * 100
+                  }%, #DDE4EC ${(opi1Rate / OPI1_MAX_RATE) * 100}%, #DDE4EC 100%)`,
                   accentColor: "#0145F2",
                 }}
                 aria-label="OPI1 지급률 (연봉 대비 %)"
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
-                기존 OPI는 연봉의 최대 50%. 2025년 실적분 실지급률(보도 기준):
-                MX 50% · DS부문 47% · 경영지원 39% · VD·가전 12% 등 — 본인
+                기존 OPI는 연봉의 최대 {OPI1_MAX_RATE}%. {OPI_LATEST.fiscalYear}년
+                실적분 실지급률(보도 기준): {opiRateSummary(2)} ·{" "}
+                {OPI_LATEST_BOTTOM.division} {OPI_LATEST_BOTTOM.rate}% 등 — 본인
                 사업부에 맞게 조정하세요.
               </p>
             </div>
@@ -1430,8 +1447,8 @@ function MySalaryCalculator({
               · 세후 {fmtManwonInt(personal.netManwon)}만원 결과를 카카오·링크로
               공유합니다. 선택한 사업부와 추정 금액이 공유 내용에 포함됩니다.
             </p>
-            <ResultSharePanel resultIsCurrent={poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) && isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, 50) && [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite)} resultKey={JSON.stringify([poolInputsValid, perDivision, salaryFmt, selectedDivId, creditRate, applyInsurance, opi1Rate, personal])}
-              url={SHARE_URL}
+            <ResultSharePanel resultIsCurrent={poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) && isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, OPI1_MAX_RATE) && [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite)} resultKey={JSON.stringify([poolInputsValid, perDivision, salaryFmt, selectedDivId, creditRate, applyInsurance, opi1Rate, personal])}
+              url={shareUrl}
               title={`삼성전자 ${selected.label} 성과급 — 세전 ${fmtManwonInt(
                 personal.totalGrossManwon
               )}만원·세후 ${fmtManwonInt(personal.netManwon)}만원 (2026 추정)`}

@@ -30,11 +30,9 @@ import {
 } from "lucide-react";
 import SamsungBonusClient from "./Client";
 import TaiCalculator from "./TaiCalculator";
-import {
-  TAI_RATES_2026_H1,
-  TAI_ANNOUNCED_DATE,
-  TAI_PAY_DATE,
-} from "./taiData";
+import { TAI_LATEST, TAI_LATEST_TOP, taiRateSummary } from "./taiData";
+import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
+import { ANNUAL_OP_2026_PRELIM } from "./annualOp";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 
@@ -42,8 +40,8 @@ const SITE_URL = "https://www.moneysalary.com";
 const PAGE_PATH = "/calc/samsung-bonus";
 const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·TAI";
 // SERP 표시 한도(한글 80~90자) 안에 핵심 키워드 전진 배치
-const PAGE_DESC =
-  "삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 2026 상반기 TAI 메모리 100% 반영, 사업부별 1인당·세후 실수령·RSU 매도까지 무료 시뮬레이션.";
+// 반기 라벨·최고 지급률은 taiData TAI_LATEST 파생 — 오늘 출력은 종전 문자열과 동일
+const PAGE_DESC = `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 반영, 사업부별 1인당·세후 실수령·RSU 매도까지 무료 시뮬레이션.`;
 
 // ─────────────────────────────────────────────────────────────
 // FAQ
@@ -53,12 +51,12 @@ const FAQ_ITEMS = [
   {
     question: "삼성전자 성과급은 어떻게 계산되나요?",
     answer:
-      "2026년 5월 최종 타결된 노사 합의 보도에 따르면 삼성전자 DS부문 특별경영성과급은 연간 영업이익의 10.5%를 재원으로 부문(전체 인원 균등 분배 40%)과 사업부(인원×사업부 가중치 분배 60%) 두 갈래로 분배됩니다. 본 계산기는 영업이익(조원)·사업부별 인원·가중치만 입력하면 메모리·공통·파운드리·시스템LSI 사업부별 1인당 평균을 즉시 산출합니다. 여기에 기존 OPI(연봉의 최대 50%)는 OPI1로 별도 합산되며, 합의 임계값(2026~28년 영업이익 200조·2029~35년 100조) 미달 연도에는 특별경영성과급(OPI2)이 0으로 산정됩니다. 정확한 분배 정책은 회사 공식 발표를 참고하세요.",
+      `2026년 5월 최종 타결된 노사 합의 보도에 따르면 삼성전자 DS부문 특별경영성과급은 연간 영업이익의 10.5%를 재원으로 부문(전체 인원 균등 분배 40%)과 사업부(인원×사업부 가중치 분배 60%) 두 갈래로 분배됩니다. 본 계산기는 영업이익(조원)·사업부별 인원·가중치만 입력하면 메모리·공통·파운드리·시스템LSI 사업부별 1인당 평균을 즉시 산출합니다. 여기에 기존 OPI(연봉의 최대 ${OPI1_MAX_RATE}%)는 OPI1로 별도 합산되며, 합의 임계값(2026~28년 영업이익 200조·2029~35년 100조) 미달 연도에는 특별경영성과급(OPI2)이 0으로 산정됩니다. 정확한 분배 정책은 회사 공식 발표를 참고하세요.`,
   },
   {
     question: "삼성전자 TAI(목표달성장려금)는 얼마인가요?",
     answer:
-      "TAI는 월 기본급 대비 %로 상·하반기 연 2회 지급됩니다. 2026년 상반기 TAI(7월 6일 사내 공지, 7월 8일 지급 — 복수 언론 보도 기준)는 메모리·반도체연구소·SAIT·DS공통·CSS(화합물반도체솔루션) 100%, 시스템LSI·파운드리 75%, MX·VD·네트워크·경영지원 50%, 의료기기·한국총괄 75%, 생활가전(DA) 25%입니다. 본 페이지의 TAI 미니 계산기에 월 기본급을 입력하면 사업부별 지급률이 바로 적용됩니다. 하반기 지급률은 통상 12월 말 별도 발표되며, 메모리는 하반기에도 견조한 실적으로 최대 수준 지급 가능성이 크다는 전망 보도가 있습니다.",
+      `TAI는 월 기본급 대비 %로 상·하반기 연 2회 지급됩니다. ${TAI_LATEST.periodLabel} TAI(${TAI_LATEST.announcedDate} 사내 공지, ${TAI_LATEST.payDate} 지급 — 복수 언론 보도 기준)는 ${taiRateSummary()}입니다. 본 페이지의 TAI 미니 계산기에 월 기본급을 입력하면 사업부별 지급률이 바로 적용됩니다. ${TAI_LATEST.half === "H1" ? "하반기 지급률은 통상 12월 말 별도 발표되며, 메모리는 하반기에도 견조한 실적으로 최대 수준 지급 가능성이 크다는 전망 보도가 있습니다." : "상반기(7월) 지급률과는 사업부 실적에 따라 다를 수 있습니다."}`,
   },
   {
     question: "DX부문 자사주 성과급은 무엇인가요?",
@@ -68,12 +66,12 @@ const FAQ_ITEMS = [
   {
     question: "삼성전자 성과급 지급일은 언제인가요?",
     answer:
-      "보도 기준으로 OPI(초과이익성과금)는 연 1회 1월 말~2월 초(설 연휴 전)에 지급되며, 2025년 실적분은 2026년 1월 30일에 지급됐습니다. TAI(목표달성장려금)는 반기별 연 2회로 통상 7월 초와 12월 말에 지급되며, 2026년 상반기분은 7월 8일 지급으로 공지됐습니다. 2026년 신설된 DS부문 특별경영성과급은 2027년 1월 지급분부터 적용됩니다.",
+      `보도 기준으로 OPI(초과이익성과금)는 연 1회 1월 말~2월 초(설 연휴 전)에 지급되며, ${OPI_LATEST.fiscalYear}년 실적분은 ${OPI_LATEST.payDateLabel}에 지급됐습니다. TAI(목표달성장려금)는 반기별 연 2회로 통상 7월 초와 12월 말에 지급되며, ${TAI_LATEST.periodLabel}분은 ${TAI_LATEST.payDate} 지급으로 공지됐습니다. 2026년 신설된 DS부문 특별경영성과급은 2027년 1월 지급분부터 적용됩니다.`,
   },
   {
     question: "2026년 1월 OPI는 실제로 얼마나 지급됐나요?",
     answer:
-      "노조 공지 기반 보도에 따르면 2025년 실적분 OPI(2026-01-30 지급)는 연봉 대비 MX 50%, DS부문 공통 47%, 한국총괄·SR·CDO 37%, 생산기술연구소 36%, EHS 34%, 경영지원·하만 등 39%, VD·생활가전·네트워크·의료기기 12%, CSS사업팀 11%였습니다. OPI는 연봉의 최대 50%가 상한이며, 본 계산기의 OPI1 지급률에서 본인 사업부에 맞게 조정할 수 있습니다.",
+      `${OPI_LATEST.sourceNote}에 따르면 ${OPI_LATEST.fiscalYear}년 실적분 OPI(${OPI_LATEST.payDate} 지급)는 연봉 대비 ${OPI_LATEST.rates.map((r) => `${r.division} ${r.rate}%`).join(", ")}였습니다. OPI는 연봉의 최대 ${OPI1_MAX_RATE}%가 상한이며, 본 계산기의 OPI1 지급률에서 본인 사업부에 맞게 조정할 수 있습니다.`,
   },
   {
     question: "2026년 임금협상에서 무엇이 바뀌었나요?",
@@ -88,7 +86,7 @@ const FAQ_ITEMS = [
   {
     question: "세금 계산 가정을 직접 조정할 수 있나요?",
     answer:
-      `네, '내 연봉으로 계산' 섹션 안의 '계산 가정 조정 — OPI1·세금'에서 (1) 세액공제율을 0~50%까지 슬라이더로 조정 (디폴트 ${DEFAULT_BONUS_CREDIT_RATE}%, 조정 가능한 모델 가정, 자녀·연금·의료비·기부 등 공제 반영 비율), (2) 4대보험 추가 부과 적용 여부를 체크박스로 ON/OFF, (3) OPI1 지급률을 0~50%로 조정할 수 있습니다. 성과급은 보수에 합산되어 4대보험 정산되지만, 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원, 연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.`,
+      `네, '내 연봉으로 계산' 섹션 안의 '계산 가정 조정 — OPI1·세금'에서 (1) 세액공제율을 0~50%까지 슬라이더로 조정 (디폴트 ${DEFAULT_BONUS_CREDIT_RATE}%, 조정 가능한 모델 가정, 자녀·연금·의료비·기부 등 공제 반영 비율), (2) 4대보험 추가 부과 적용 여부를 체크박스로 ON/OFF, (3) OPI1 지급률을 0~${OPI1_MAX_RATE}%로 조정할 수 있습니다. 성과급은 보수에 합산되어 4대보험 정산되지만, 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원, 연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.`,
   },
   {
     question: "사업부 가중치는 무엇인가요?",
@@ -171,7 +169,7 @@ const HOW_TO_STEPS = [
   {
     name: "TAI 미니 계산기",
     text:
-      "월 기본급을 입력하고 사업부를 선택하면 2026년 상반기 실제 발표 지급률(메모리 100% 등)로 이번 TAI가 즉시 계산됩니다.",
+      `월 기본급을 입력하고 사업부를 선택하면 ${TAI_LATEST.periodLabel} 실제 발표 지급률(${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 등)로 이번 TAI가 즉시 계산됩니다.`,
   },
 ];
 
@@ -240,7 +238,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-09-09",
+    "article:modified_time": "2026-09-21",
   },
 };
 
@@ -297,10 +295,10 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-09-19",
+            dateModified: "2026-09-21",
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
-              "TAI(목표달성장려금) 2026 상반기 지급률 자동 적용",
+              `TAI(목표달성장려금) ${TAI_LATEST.shortLabel} 지급률 자동 적용`,
               "본인 연봉 기준 세전·세후 실수령액",
               "CL 직급·가고과 평가 반영 다년도 누적 시뮬레이션",
               "다년도 RSU 매도 가치 시뮬레이션",
@@ -352,10 +350,27 @@ export default function SamsungBonusCalculatorPage() {
               <strong className="text-electric">사업부별 1인당</strong>
             </p>
             <p className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed">
-              영업이익{" "}
-              <strong className="text-navy dark:text-canvas-50">10.5%</strong>{" "}
-              재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
-              분배 기준 (2026년 5월 노사 합의 타결 보도 기반). 사업부 1인당 평균
+              {/* 잠정실적(1/8) 발표 후 같은 문장을 치환 — 요소 추가 없음(광고 위 높이 불변, annualOp.ts) */}
+              {ANNUAL_OP_2026_PRELIM.announced && ANNUAL_OP_2026_PRELIM.profitTrillion != null ? (
+                <>
+                  2026년 연간 영업이익 잠정{" "}
+                  <strong className="text-navy dark:text-canvas-50">
+                    {ANNUAL_OP_2026_PRELIM.profitTrillion}조
+                  </strong>
+                  ({ANNUAL_OP_2026_PRELIM.date} 잠정실적 발표) 기준 ·{" "}
+                  <strong className="text-navy dark:text-canvas-50">10.5%</strong>{" "}
+                  재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
+                  분배.
+                </>
+              ) : (
+                <>
+                  영업이익{" "}
+                  <strong className="text-navy dark:text-canvas-50">10.5%</strong>{" "}
+                  재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
+                  분배 기준 (2026년 5월 노사 합의 타결 보도 기반).
+                </>
+              )}{" "}
+              사업부 1인당 평균
               + 본인 연봉별 세전·세후 + 다년도 RSU 매도 시뮬 +{" "}
               <strong className="text-navy dark:text-canvas-50">
                 TAI(목표달성장려금)
@@ -392,26 +407,26 @@ export default function SamsungBonusCalculatorPage() {
             <InArticleAd />
           </div>
 
-          {/* ═══ TAI (목표달성장려금) — 2026 상반기 실제 발표 지급률 ═══ */}
+          {/* ═══ TAI (목표달성장려금) — 최신 반기 발표 지급률 (taiData TAI_LATEST 파생, H2 발표 시 자동 전환) ═══ */}
           <section className="mb-10" aria-labelledby="tai-title">
             <h2
               id="tai-title"
               tabIndex={-1}
               className="scroll-mt-28 text-2xl font-black text-navy dark:text-canvas-50 mb-2"
             >
-              삼성전자 TAI(목표달성장려금) — 2026 상반기 지급률
+              삼성전자 TAI(목표달성장려금) — {TAI_LATEST.shortLabel} 지급률
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
               TAI는 OPI와 별도로 <strong>월 기본급 대비 %</strong>로 상·하반기
-              연 2회 지급되는 성과급입니다. 2026년 상반기 지급률은{" "}
-              {TAI_ANNOUNCED_DATE} 사내 공지됐고(복수 언론 보도 기준),{" "}
-              {TAI_PAY_DATE}에 지급됩니다.
+              연 2회 지급되는 성과급입니다. {TAI_LATEST.periodLabel} 지급률은{" "}
+              {TAI_LATEST.announcedDate} 사내 공지됐고(복수 언론 보도 기준),{" "}
+              {TAI_LATEST.payDate}에 지급됐습니다.
             </p>
 
             <div className="overflow-x-auto rounded-2xl border border-canvas-200 dark:border-canvas-800 mb-5">
               <table className="w-full text-sm bg-white dark:bg-canvas-900">
                 <caption className="sr-only">
-                  삼성전자 2026년 상반기 TAI 사업부별 지급률 (월 기본급 대비)
+                  삼성전자 {TAI_LATEST.periodLabel} TAI 사업부별 지급률 (월 기본급 대비)
                 </caption>
                 <thead>
                   <tr className="border-b border-canvas-200 dark:border-canvas-800 text-left">
@@ -427,7 +442,7 @@ export default function SamsungBonusCalculatorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {TAI_RATES_2026_H1.map((t) => (
+                  {TAI_LATEST.rates.map((t) => (
                     <tr
                       key={t.id}
                       className="border-b border-canvas-100 dark:border-canvas-800/60 last:border-0"
@@ -458,8 +473,10 @@ export default function SamsungBonusCalculatorPage() {
             <TaiCalculator />
 
             <p className="text-xs text-faint-blue mt-3 leading-relaxed">
-              ※ 하반기 TAI는 통상 12월 말 발표되며 사업부 실적에 따라 상반기와
-              다를 수 있습니다. 위 지급률은 사내 공지를 인용한 복수 언론 보도
+              {TAI_LATEST.half === "H1"
+                ? "※ 하반기 TAI는 통상 12월 말 발표되며 사업부 실적에 따라 상반기와 다를 수 있습니다."
+                : "※ 하반기 지급률 기준입니다. 상반기(7월) 지급률과는 사업부 실적에 따라 다를 수 있습니다."}{" "}
+              위 지급률은 사내 공지를 인용한 복수 언론 보도
               기준이며 회사 공식 발표 자료가 아닙니다.
             </p>
           </section>
@@ -470,45 +487,36 @@ export default function SamsungBonusCalculatorPage() {
             responsive={{ mobile: "square", desktop: "rectangle" }}
           />
 
-          {/* ═══ OPI 실제 지급률 — 2025년 실적분 (2026-01-30 지급) ═══ */}
+          {/* ═══ OPI 실제 지급률 — 최신 실적분 (opiData OPI_LATEST 파생) ═══ */}
           <section className="mb-10" aria-labelledby="opi-actual-title">
             <h2
               id="opi-actual-title"
               tabIndex={-1}
               className="scroll-mt-28 text-2xl font-black text-navy dark:text-canvas-50 mb-2"
             >
-              OPI(초과이익성과금) 실제 지급률 — 2025년 실적분
+              OPI(초과이익성과금) 실제 지급률 — {OPI_LATEST.fiscalYear}년 실적분
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
-              OPI는 <strong>연봉 대비 %</strong>(상한 50%)로 연 1회, 통상 1월
-              말~2월 초에 지급됩니다. 2025년 실적분은 2026년 1월 30일
-              지급됐으며, 노조 공지 기반 보도에 따른 실제 지급률은 다음과
+              OPI는 <strong>연봉 대비 %</strong>(상한 {OPI1_MAX_RATE}%)로 연 1회, 통상 1월
+              말~2월 초에 지급됩니다. {OPI_LATEST.fiscalYear}년 실적분은 {OPI_LATEST.payDateLabel}
+              지급됐으며, {OPI_LATEST.sourceNote}에 따른 실제 지급률은 다음과
               같습니다.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-              {[
-                { label: "MX (스마트폰)", rate: "50%", top: true },
-                { label: "DS부문 공통", rate: "47%", top: true },
-                { label: "한국총괄·SR·CDO", rate: "37%", top: false },
-                { label: "생산기술연구소", rate: "36%", top: false },
-                { label: "EHS", rate: "34%", top: false },
-                { label: "경영지원·하만·상생협력·글로벌CS", rate: "39%", top: false },
-                { label: "VD·생활가전·네트워크·의료기기", rate: "12%", top: false },
-                { label: "CSS사업팀", rate: "11%", top: false },
-              ].map((r) => (
+              {OPI_LATEST.rates.map((r) => (
                 <div
-                  key={r.label}
+                  key={r.id}
                   className="flex items-center justify-between rounded-xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 px-4 py-3"
                 >
                   <span className="text-sm font-bold text-navy dark:text-canvas-50">
-                    {r.label}
+                    {r.division}
                   </span>
                   <span
                     className={`font-black tabular-nums ${
                       r.top ? "text-electric text-lg" : "text-muted-blue"
                     }`}
                   >
-                    {r.rate}
+                    {r.rate}%
                   </span>
                 </div>
               ))}
@@ -567,7 +575,8 @@ export default function SamsungBonusCalculatorPage() {
                     553%)하므로 보도값 매칭을 우선했습니다. 참고로 이
                     791%/553%/252%는 1월 OPI 실지급률이 아니라, 임금협상 타결
                     보도의 <strong>연봉 1억 가정 시뮬레이션</strong>(OPI+특별
-                    경영성과급 합산액)을 월 기본급 대비로 환산한 수치입니다.
+                    경영성과급 합산액)을 연봉 대비 %로 환산한 수치입니다(분모는
+                    연봉이며 월 기본급이 아닙니다).
                   </li>
                   <li>
                     <strong>2026년 한정</strong> — 회의록상 적자
@@ -760,7 +769,7 @@ export default function SamsungBonusCalculatorPage() {
               <Step
                 num="A"
                 title="OPI1 (기존 OPI·초과이익성과금) = 연봉 × 지급률"
-                desc="상한 50%. 사업부별 실지급률 상이(2025년분: MX 50%·DS 47%·VD 12% 등) — 계산기에서 조정 가능. 임계값 미달 연도에도 지급."
+                desc={`상한 ${OPI1_MAX_RATE}%. 사업부별 실지급률 상이(${OPI_LATEST.fiscalYear}년분: ${opiRateSummary(2)}·${OPI_LATEST_BOTTOM.division} ${OPI_LATEST_BOTTOM.rate}% 등) — 계산기에서 조정 가능. 임계값 미달 연도에도 지급.`}
                 highlight
               />
               <Step
