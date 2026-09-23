@@ -134,8 +134,11 @@ function renderSalaryOg(amount: string, netPay?: string): OgRender {
         <div style={{ color: CANVAS, fontSize: 28, fontWeight: 900, marginBottom: 16, letterSpacing: "0.04em" }}>
           2026 연봉 리포트
         </div>
+        {/* 자식을 문자열 하나로 합친다 — JSX 가 ["연봉 ", manwon, "만원"] 배열을 만들면 satori 가
+            display:flex 없는 <div> 의 복수 자식을 거부해(Expected <div> to have explicit "display: flex")
+            type=salary 카드가 항상 ASCII 폴백으로 나가던 원인 (2026-09-23 리뷰에서 확인). */}
         <div style={{ color: "white", fontSize: 64, fontWeight: 900, marginBottom: 10 }}>
-          연봉 {manwon}만원
+          {`연봉 ${manwon}만원`}
         </div>
         <div style={{ color: "white", fontSize: 32, fontWeight: 400, opacity: 0.85, marginBottom: 32 }}>
           세후 월 실수령액
@@ -450,23 +453,39 @@ async function renderOgResponse(searchParams: URLSearchParams) {
     // 스트리밍 도중 렌더가 실패하면 200 + 0바이트가 CDN에 캐시되므로 버퍼링 후 응답
     const body = await image.arrayBuffer();
     return new Response(body, { headers: OK_HEADERS });
-  } catch {
-    // 폰트 로드/렌더 실패 — ASCII 폴백 이미지 + 짧은 캐시로 응답
+  } catch (error) {
+    // 폰트 로드/렌더 실패 — ASCII 폴백 이미지 + 짧은 캐시로 응답.
+    // 2026-09-23: 원인 진단용으로 실패 사유를 로그와 X-OG-Error 헤더에 노출한다
+    // (type=salary 카드가 프로덕션에서 항상 폴백으로 나가는데 catch 가 사유를 삼키고 있었음).
+    const reason = describeOgError(error);
+    console.error("[og] render failed:", reason);
     try {
       const image = new ImageResponse(renderAsciiFallbackOg(), {
         width: 1200,
         height: 630,
       });
       const body = await image.arrayBuffer();
-      return new Response(body, { headers: FALLBACK_HEADERS });
-    } catch {
+      return new Response(body, {
+        headers: { ...FALLBACK_HEADERS, "X-OG-Error": reason },
+      });
+    } catch (fallbackError) {
+      const fallbackReason = describeOgError(fallbackError);
+      console.error("[og] fallback failed:", fallbackReason);
       return new Response("Failed to generate the image", {
         status: 500,
         headers: {
           "X-Robots-Tag": ROBOTS_HEADER,
           "Cache-Control": "no-store",
+          "X-OG-Error": `${reason} | fallback: ${fallbackReason}`.slice(0, 400),
         },
       });
     }
   }
+}
+
+// 헤더 값은 ASCII 만 안전 — 비ASCII 는 ? 로 치환하고 200자로 자른다.
+function describeOgError(error: unknown): string {
+  const message =
+    error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  return message.replace(/[^\x20-\x7e]/g, "?").slice(0, 200) || "unknown";
 }

@@ -201,8 +201,12 @@ ${WIDGET_NUMBER_INPUT_SCRIPT}
 </html>`;
 }
 
+// 요청마다 189개 결정세액 계산 + 템플릿 조립을 반복하지 않도록 isolate 당 1회만 생성
+// (2026-09-23 Worker CPU 10ms 한도 대응). 배포 시에만 바뀌는 내용이라 안전.
+const WIDGET_HTML = buildHtml();
+
 export async function GET() {
-  return new Response(buildHtml(), {
+  return new Response(WIDGET_HTML, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": WIDGET_CSP,

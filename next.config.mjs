@@ -112,6 +112,12 @@ const nextConfig = {
         destination: "/salary-db/:id",
         permanent: true,
       },
+      // 2026-09-23 CPU 한도(1102) 대응: 엣지 생성 이미지 라우트 3종(src/app/opengraph-image.tsx·
+      // icon.tsx·apple-icon.tsx)을 public/ 정적 파일로 교체. 이미 스크랩·북마크된 구 URL
+      // (카카오/페북 og:image 캐시, 브라우저 파비콘 링크)이 계속 이미지를 받도록 308 연결.
+      { source: "/opengraph-image", destination: "/og-default.png", permanent: true },
+      { source: "/icon", destination: "/icon-192.png", permanent: true },
+      { source: "/apple-icon", destination: "/icon-192.png", permanent: true },
       {
         source: "/table/annual",
         destination: "/table/2026/annual",
@@ -986,9 +992,6 @@ const nextConfig = {
         "/rss.xml",
         "/rss-companies.xml",
         "/robots.txt",
-        "/icon",
-        "/apple-icon",
-        "/opengraph-image",
         "/api/og",
         "/api/salary-table",
       ].map((source) => ({

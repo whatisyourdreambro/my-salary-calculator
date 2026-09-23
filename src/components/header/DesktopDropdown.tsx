@@ -7,6 +7,11 @@
 // 제어한다. 조건부 렌더({isOpen && ...})로 되돌리면 SSR HTML에서 메뉴 링크가
 // 사라져 Googlebot이 내비 링크를 전혀 못 보게 되므로 금지.
 // invisible(visibility:hidden)은 닫힘 상태에서 탭 포커스·접근성 트리에서도 제외한다.
+//
+// 유일한 예외 — deferPanel(2026-09-23 Worker CPU 한도 대응): 요청마다 edge SSR 되는 경로
+// (src/lib/edgeRenderedPaths.ts)에서만 Header 가 하이드레이션 전까지 패널 "내용"을 비운다.
+// 패널 요소 자체(id·role=menu)는 남겨 aria-controls 가 항상 유효하고, 하이드레이션 직후
+// 전체 항목이 채워진다. 프리렌더 페이지는 이 prop 이 항상 false 다.
 
 "use client";
 
@@ -19,6 +24,8 @@ interface DesktopDropdownProps {
   item: DropdownItem;
   pathname: string | null;
   locale?: "ko" | "en";
+  /** true 면 패널 내용을 렌더하지 않음(edge SSR 경로의 하이드레이션 전 단계 전용) */
+  deferPanel?: boolean;
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
@@ -52,7 +59,7 @@ function Caret() {
   );
 }
 
-export default function DesktopDropdown({ item, pathname, locale = "ko" }: DesktopDropdownProps) {
+export default function DesktopDropdown({ item, pathname, locale = "ko", deferPanel = false }: DesktopDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -177,6 +184,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
           maxHeight: `calc(100dvh - ${position.top + 16}px)`,
         }}
       >
+        {deferPanel ? null : (<>
         <Caret />
 
         {/* Header — 카테고리 제목 + description */}
@@ -239,6 +247,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko" }: Deskt
             );
           })}
         </div>
+        </>)}
       </div>
     </div>
   );

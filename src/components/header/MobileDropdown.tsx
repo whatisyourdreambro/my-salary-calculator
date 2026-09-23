@@ -5,6 +5,8 @@
 // SEO: 아코디언 패널은 항상 DOM에 렌더하고 열림/닫힘은 CSS(grid-rows 0fr↔1fr +
 // visibility/opacity)로만 제어한다. 조건부 렌더({isOpen && ...})로 되돌리면
 // SSR HTML에서 링크가 사라져 크롤러가 내비 링크를 못 보게 되므로 금지.
+// 유일한 예외 — deferPanel(2026-09-23 Worker CPU 한도 대응): edge SSR 경로에서만
+// 하이드레이션 전까지 패널 내용을 비운다(DesktopDropdown 주석 참고). 패널 요소·id 는 유지.
 
 "use client";
 
@@ -18,6 +20,8 @@ interface MobileDropdownProps {
   pathname: string | null;
   onClose: () => void;
   locale?: "ko" | "en";
+  /** true 면 패널 내용을 렌더하지 않음(edge SSR 경로의 하이드레이션 전 단계 전용) */
+  deferPanel?: boolean;
 }
 
 const BADGE_STYLES: Record<Badge, { bg: string; text: string; label: string; Icon: typeof Sparkles }> = {
@@ -40,7 +44,7 @@ function BadgePill({ badge, locale }: { badge: Badge; locale: "ko" | "en" }) {
   );
 }
 
-export default function MobileDropdown({ item, pathname, onClose, locale = "ko" }: MobileDropdownProps) {
+export default function MobileDropdown({ item, pathname, onClose, locale = "ko", deferPanel = false }: MobileDropdownProps) {
   const currentSection = item.items.some(link => link.href === pathname);
   const [isOpen, setIsOpen] = useState(currentSection);
   const panelId = useId();
@@ -86,6 +90,7 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
         }`}
       >
         <div className="overflow-hidden min-h-0">
+          {deferPanel ? null : (<>
           <div className="mx-5 mb-2 border-t border-border" aria-hidden="true" />
 
           <div className="px-3 pb-3 pt-0.5">
@@ -136,6 +141,7 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko" 
               );
             })}
           </div>
+          </>)}
         </div>
       </div>
     </div>

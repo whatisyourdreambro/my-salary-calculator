@@ -20,9 +20,19 @@ import ThemeToggle from "./header/ThemeToggle";
 import LocaleSwitcher from "./header/LocaleSwitcher";
 import HeaderSearch from "./header/HeaderSearch";
 import FavoritesBadge from "./header/FavoritesBadge";
+import { isEdgeRenderedPath } from "@/lib/edgeRenderedPaths";
 
 export default function Header() {
  const pathname = usePathname();
+ // 2026-09-23 CPU 한도(1102) 대응: 요청마다 Worker 에서 SSR 되는 경로(공유·용어집·QnA 상세)는
+ // 메가메뉴 패널(데스크톱 7개 + 모바일 dialog 7개, ~330KB·SVG 350개)을 매 요청 React 로 그려
+ // 무료 플랜 CPU 10ms 를 넘겼다. 그 경로에서만 패널 내용을 하이드레이션 뒤 렌더한다 —
+ // 상단 바·드롭다운 트리거·dialog 골격은 SSR 그대로라 화면·접근성 트리는 동일하고,
+ // 서버와 클라이언트 첫 렌더가 모두 "패널 비움"이라 하이드레이션 불일치도 없다.
+ // 프리렌더 페이지(~2,000)는 종전대로 전체 패널을 SSR 한다(내부 링크 크롤 경로 불변).
+ const [isHydrated, setIsHydrated] = useState(false);
+ useEffect(() => { setIsHydrated(true); }, []);
+ const deferPanels = isEdgeRenderedPath(pathname) && !isHydrated;
  // /en 트리는 영어 메뉴 — 영어판이 있는 페이지만 링크 (navConfigEn 주석 참고)
  const isEn = pathname === "/en" || pathname.startsWith("/en/");
  const activeNavConfig = isEn ? navConfigEn : navConfig;
@@ -96,6 +106,7 @@ export default function Header() {
  item={item}
  pathname={pathname}
  locale={isEn ? "en" : "ko"}
+ deferPanel={deferPanels}
  />
  ) : (
  <Link
@@ -229,6 +240,7 @@ export default function Header() {
  pathname={pathname}
  onClose={() => setIsMobileMenuOpen(false)}
  locale={isEn ? "en" : "ko"}
+ deferPanel={deferPanels}
  />
  )
  )}

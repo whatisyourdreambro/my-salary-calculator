@@ -21,6 +21,10 @@ import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
+// 기본 OG 카드 — 종전 /opengraph-image 엣지 렌더 결과를 1회 저장한 정적 파일(1200×630).
+// 디자인을 바꾸면 파일명을 함께 바꿀 것(SNS 스크래퍼·CDN 이 URL 단위로 캐시).
+const OG_DEFAULT_IMAGE = "https://www.moneysalary.com/og-default.png";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -57,9 +61,16 @@ export const metadata: Metadata = {
     "퇴직금 계산기",
     "FIRE 계산기",
   ].join(", "),
+  // 2026-09-23 CPU 한도(1102) 대응: /icon·/apple-icon·/opengraph-image 엣지 생성 라우트를
+  // public/ 정적 파일로 교체. 매 요청 satori 렌더가 Worker CPU 10ms 한도를 넘겨 503(1102)·
+  // 빈 파비콘을 내던 최고 빈도 경로였다. 정적 파일은 _routes.json exclude 로 Worker 를 우회한다.
+  // 구 URL(/icon·/apple-icon·/opengraph-image)은 next.config redirects() 가 308 로 연결.
   icons: {
-    icon: [{ url: "/icon", type: "image/png" }],
-    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
   },
   // src/app/manifest.json(매 요청 Worker 경유) → public/manifest.webmanifest 정적
   // 서빙 전환(2026-08-10, 요청 한도 대응). _routes.json 에서 Worker 우회 처리.
@@ -84,11 +95,22 @@ export const metadata: Metadata = {
     siteName: "머니샐러리",
     title: HOME_META_TITLE,
     description: HOME_META_DESCRIPTION,
+    // 종전 src/app/opengraph-image.tsx(파일 규약, 엣지 렌더)가 주던 기본 og:image 를 정적 PNG 로.
+    // 자체 openGraph.images 를 선언한 페이지(buildPageMetadata → /api/og)는 이 값을 덮어쓴다.
+    images: [
+      {
+        url: OG_DEFAULT_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "머니샐러리 - 2026년 연봉 실수령액 계산기",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: HOME_META_TITLE,
     description: HOME_META_DESCRIPTION,
+    images: [OG_DEFAULT_IMAGE],
   },
   // canonical/hreflang은 홈 전용 값이라 src/app/page.tsx로 이동(2026-07-06) —
   // layout에 두면 alternates 미정의 페이지 전부가 "canonical: 홈"을 상속하는 사고 위험.

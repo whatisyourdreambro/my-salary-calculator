@@ -17,7 +17,7 @@ const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 const request = (path: string) => new NextRequest(`https://www.moneysalary.com${path}`, { headers: { "user-agent": UA, host: "www.moneysalary.com" } });
 
 describe("salaryStaticAmounts.generated", () => {
-  it("matches getStaticSalaryAmounts() (no drift) and is sorted unique", () => {
+  it("matches getStaticSalaryAmounts() (no drift) and is sorted unique", async () => {
     const expected = [...new Set(getStaticSalaryAmounts())].sort((a, b) => a - b);
     expect(SALARY_STATIC_AMOUNTS).toEqual(expected);
     expect(SALARY_STATIC_AMOUNTS.length).toBeGreaterThan(200);
@@ -25,20 +25,20 @@ describe("salaryStaticAmounts.generated", () => {
 });
 
 describe("parseSalaryPathAmount", () => {
-  it("reads numeric, manwon and eok forms", () => {
+  it("reads numeric, manwon and eok forms", async () => {
     expect(parseSalaryPathAmount("62500000")).toBe(62_500_000);
     expect(parseSalaryPathAmount("13400-manwon")).toBe(134_000_000);
     expect(parseSalaryPathAmount("6980-manwon")).toBe(69_800_000);
     expect(parseSalaryPathAmount("1-eok")).toBe(100_000_000);
     expect(parseSalaryPathAmount("1-5-eok")).toBe(150_000_000);
   });
-  it("rejects other shapes", () => {
+  it("rejects other shapes", async () => {
     for (const s of ["abc", "50000000abc", "-5000000", "5,000", "eok", "1-eok-2", "99999999999"]) expect(parseSalaryPathAmount(s), s).toBeNull();
   });
 });
 
 describe("nearestStaticSalaryAmount", () => {
-  it("returns members unchanged and snaps others to the closest member", () => {
+  it("returns members unchanged and snaps others to the closest member", async () => {
     for (const a of [50_000_000, 62_500_000, SALARY_STATIC_AMOUNTS[0], SALARY_STATIC_AMOUNTS.at(-1)!]) expect(nearestStaticSalaryAmount(a)).toBe(a);
     expect(nearestStaticSalaryAmount(69_800_000)).toBe(70_000_000);
     expect(nearestStaticSalaryAmount(210_000_000)).toBe(SALARY_STATIC_AMOUNTS.filter((x) => x <= 210_000_000).at(-1)! >= 200_000_000 ? nearestStaticSalaryAmount(210_000_000) : 200_000_000);
@@ -50,7 +50,7 @@ describe("nearestStaticSalaryAmount", () => {
 });
 
 describe("salaryReportHref (내부 링크 — 클램프 금지·오차 2% 게이트, 2026-09-12 S2-2)", () => {
-  it("returns members as-is and snaps within SALARY_HREF_MAX_GAP", () => {
+  it("returns members as-is and snaps within SALARY_HREF_MAX_GAP", async () => {
     expect(SALARY_HREF_MAX_GAP).toBe(0.02);
     expect(salaryReportHref(50_000_000)).toBe("/salary/50000000");
     expect(salaryReportHref(SALARY_STATIC_AMOUNTS[0])).toBe(`/salary/${SALARY_STATIC_AMOUNTS[0]}`);
@@ -59,13 +59,13 @@ describe("salaryReportHref (내부 링크 — 클램프 금지·오차 2% 게이
     expect(salaryReportHref(204_000_000)).toBe("/salary/207000000"); // 1.47%
     expect(salaryReportHref(345_000_000)).toBe("/salary/350000000"); // 1.45%
   });
-  it("never clamps: below the first or above the last static amount is null", () => {
+  it("never clamps: below the first or above the last static amount is null", async () => {
     expect(salaryReportHref(SALARY_STATIC_AMOUNTS[0] - 1)).toBeNull();
     expect(salaryReportHref(SALARY_STATIC_AMOUNTS.at(-1)! + 1)).toBeNull();
     for (const a of [360_000_000, 410_000_000, 450_000_000, 900_000_000, 1_500_000_000]) expect(salaryReportHref(a), String(a)).toBeNull();
     for (const a of [0, -5_000_000, Number.NaN, Number.POSITIVE_INFINITY, 1, 4_000_000]) expect(salaryReportHref(a), String(a)).toBeNull();
   });
-  it("gap boundary: exactly 2% links, just over 2% is null", () => {
+  it("gap boundary: exactly 2% links, just over 2% is null", async () => {
     // 비율을 정확히 만들기 위한 소형 격자
     const g1 = [98, 300];
     expect(salaryReportHref(100, g1)).toBe("/salary/98"); // 2/100 = 2.00% (경계 포함)
@@ -78,7 +78,7 @@ describe("salaryReportHref (내부 링크 — 클램프 금지·오차 2% 게이
     expect(salaryReportHref(228_000_000)).toBeNull(); // 최근접 2.2억, 3.5%
     expect(salaryReportHref(275_000_000)).toBeNull(); // 최근접 2.5억/3억, 9.1%
   });
-  it("every non-null result is a member of the static set", () => {
+  it("every non-null result is a member of the static set", async () => {
     for (let a = 5_000_000; a <= 360_000_000; a += 1_234_567) {
       const h = salaryReportHref(a);
       if (h !== null) expect(SALARY_STATIC_AMOUNTS).toContain(Number(h.replace("/salary/", "")));
@@ -87,7 +87,7 @@ describe("salaryReportHref (내부 링크 — 클램프 금지·오차 2% 게이
 });
 
 describe("salaryReportHrefOrNearest (월급 리포트·공유 결과용 느슨한 판)", () => {
-  it("agrees with salaryReportHref when it links, falls back to the nearest member in range, null outside", () => {
+  it("agrees with salaryReportHref when it links, falls back to the nearest member in range, null outside", async () => {
     expect(salaryReportHrefOrNearest(69_800_000)).toBe(salaryReportHref(69_800_000));
     expect(salaryReportHrefOrNearest(50_000_000)).toBe("/salary/50000000");
     expect(salaryReportHrefOrNearest(228_000_000)).toBe("/salary/220000000");
@@ -99,7 +99,7 @@ describe("salaryReportHrefOrNearest (월급 리포트·공유 결과용 느슨�
 });
 
 describe("resolveSalaryRedirect", () => {
-  it("passes static pages through and redirects off-grid or legacy forms", () => {
+  it("passes static pages through and redirects off-grid or legacy forms", async () => {
     expect(resolveSalaryRedirect("/salary/50000000")).toBeNull();
     expect(resolveSalaryRedirect("/salary/62500000")).toBeNull();
     expect(resolveSalaryRedirect("/salary/6980-manwon")).toBe("/salary/70000000");
@@ -117,21 +117,21 @@ describe("resolveSalaryRedirect", () => {
 });
 
 describe("middleware /salary normalization", () => {
-  it("308s off-grid and legacy salary URLs to the nearest static page, keeps static pages", () => {
-    const r1 = middleware(request("/salary/6980-manwon"));
+  it("308s off-grid and legacy salary URLs to the nearest static page, keeps static pages", async () => {
+    const r1 = await middleware(request("/salary/6980-manwon"));
     expect(r1.status).toBe(308);
     expect(new URL(r1.headers.get("location")!).pathname).toBe("/salary/70000000");
-    const r2 = middleware(request("/salary/13400-manwon"));
+    const r2 = await middleware(request("/salary/13400-manwon"));
     expect(r2.status).toBe(308);
     expect(SALARY_STATIC_AMOUNTS).toContain(Number(new URL(r2.headers.get("location")!).pathname.replace("/salary/", "")));
-    const ok = middleware(request("/salary/50000000"));
+    const ok = await middleware(request("/salary/50000000"));
     expect(ok.status).toBe(200);
     expect(ok.headers.get("x-middleware-next")).toBe("1");
-    const unrelated = middleware(request("/calc/samsung-bonus"));
+    const unrelated = await middleware(request("/calc/samsung-bonus"));
     expect(unrelated.headers.get("x-middleware-next")).toBe("1");
   });
-  it("preserves the query string on redirect", () => {
-    const r = middleware(request("/salary/6980-manwon?utm_source=naver"));
+  it("preserves the query string on redirect", async () => {
+    const r = await middleware(request("/salary/6980-manwon?utm_source=naver"));
     expect(r.status).toBe(308);
     const loc = new URL(r.headers.get("location")!);
     expect(loc.pathname).toBe("/salary/70000000");

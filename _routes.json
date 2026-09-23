@@ -1,6 +1,8 @@
 {
   "version": 1,
-  "include": ["/*"],
+  "include": [
+    "/*"
+  ],
   "exclude": [
     "/_next/static/*",
     "/ads.txt",
@@ -14,6 +16,7 @@
     "/icon-maskable-512.png",
     "/logo-full.png",
     "/logo.svg",
+    "/og-default.png",
     "/security.txt",
     "/.well-known/*",
     "/manifest.webmanifest",

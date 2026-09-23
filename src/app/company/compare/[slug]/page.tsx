@@ -5,7 +5,17 @@ import { buildPageMetadata } from "@/lib/seo";
 // 부활 팩 P2-B (운영자 승인 2026-08-31) — 2유닛 박약 해소: GuideMid 1개 추가
 import { GuideMidAd } from "@/components/AdPlacement";
 
-export const runtime = 'edge';
+// 2026-09-23 CPU 한도(1102) 대응: edge SSR → 빌드 타임 정적 생성. 비교 슬러그는 6개사의
+// 순서쌍 30개로 유한하다. 집합 밖 슬러그는 404 (dynamicParams=false — CF Pages 는 폴백 렌더
+// 불가, /salary/[amount] 와 동일 패턴). 슬러그가 전부 ASCII 라 한글 프리렌더 404 함정 없음.
+export const dynamicParams = false;
+
+export function generateStaticParams(): { slug: string }[] {
+  const ids = companies.map((company) => company.id);
+  return ids.flatMap((idA) =>
+    ids.filter((idB) => idB !== idA).map((idB) => ({ slug: `${idA}-vs-${idB}` }))
+  );
+}
 
 interface PageProps {
   params: {
