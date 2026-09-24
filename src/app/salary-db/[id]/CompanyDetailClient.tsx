@@ -1,9 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { CompanyProfile } from "@/types/company";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
+import IslandBoundary, { IslandFallback } from "@/components/IslandBoundary";
+import { watchNearViewport } from "@/lib/deferredSectionActivation";
+import type { SalaryRoadmapDatum } from "./SalaryRoadmapChart";
 import {
  Briefcase,
  Clock,
@@ -34,12 +37,39 @@ const TIER_LABEL_KO: Record<string, string> = {
 
 // 무거운 recharts 차트는 클라이언트에서만 + 지연 로드 → 432개 회사 페이지의
 // 초기 번들(First Load JS)에서 recharts(~60kB) 분리. (WealthChart 와 동일 패턴)
+const ChartPulse = () => (
+ <div className="h-full w-full animate-pulse rounded-xl bg-canvas-200/40" />
+);
+
 const SalaryRoadmapChart = dynamic(() => import("./SalaryRoadmapChart"), {
  ssr: false,
- loading: () => (
- <div className="h-full w-full animate-pulse rounded-xl bg-canvas-200/40" />
- ),
+ loading: ChartPulse,
 });
+
+// 2026-09-25 PERF-03: 차트는 첫 광고(CalcResultAd) 아래라 하이드레이션 직후 recharts(~104KB br)와
+// 강제 레이아웃이 첫 화면 비용이었다 → 고정 h-[300px] 박스가 뷰포트 300px 안에 들어올 때만 마운트.
+// 박스 크기·위치는 그대로(ref 만 기존 div 에), 그 전에는 같은 pulse 자리표시라 광고 오프셋 불변.
+// 상태를 이 작은 컴포넌트에 가둬 활성화 때 회사 페이지 나머지(광고 포함)는 다시 그리지 않는다.
+function DeferredRoadmapChart({ data }: { data: SalaryRoadmapDatum[] }) {
+ const box = useRef<HTMLDivElement>(null);
+ const [near, setNear] = useState(false);
+ useEffect(() => {
+ if (near || !box.current) return;
+ return watchNearViewport(box.current, () => setNear(true));
+ }, [near]);
+ return (
+ <div ref={box} className="h-[300px] w-full">
+ {near ? (
+ <IslandBoundary
+ name="salary-roadmap-chart"
+ fallback={<IslandFallback className="flex h-full w-full items-center justify-center rounded-xl bg-canvas-200/40 px-4 text-center text-sm text-muted-foreground" message="차트를 불러오지 못했습니다. 새로고침하면 다시 표시됩니다." />}
+ >
+ <SalaryRoadmapChart data={data} />
+ </IslandBoundary>
+ ) : <ChartPulse />}
+ </div>
+ );
+}
 
 export default function CompanyDetailClient({ company, summary }: { company: CompanyProfile; summary?: ReactNode }) {
  // Prepare Chart Data
@@ -133,9 +163,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  <TrendingUp className="w-5 h-5 text-primary" />
  커리어 연봉 로드맵
  </h2>
- <div className="h-[300px] w-full">
- <SalaryRoadmapChart data={salaryData} />
- </div>
+ <DeferredRoadmapChart data={salaryData} />
  <p className="text-sm text-muted-foreground mt-4 text-center">
  * 성과급 및 스톡옵션 포함 추정치입니다.
  </p>

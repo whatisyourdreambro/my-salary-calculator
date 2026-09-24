@@ -3,7 +3,8 @@
 //  2) 지연 로드된 compute 와 레지스트리 compute 가 기본값·0·최대값 입력에서 동일 결과를 낸다.
 //  3) toClientCalculator 는 compute 를 떼고 나머지 텍스트·필드를 그대로 보존한다.
 //  4) 클라이언트 컴포넌트(SimpleCalculatorView)가 레지스트리 전체를 다시 import 하지 않는다.
-import { describe, expect, it } from "vitest";
+//  5) (2026-09-25 CLIENT-08) 거부된 배치 import 는 캐시에 남지 않아 다음 호출이 재시도한다.
+import { describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import {
@@ -12,7 +13,8 @@ import {
   getCalculatorBatch,
   toClientCalculator,
 } from "@/lib/simpleCalculators";
-import { loadCalculatorCompute } from "@/lib/simpleCalculators/computeLoader";
+import { createComputeLoader, loadCalculatorCompute, type CalculatorBatch } from "@/lib/simpleCalculators/computeLoader";
+import type { CalculatorDef } from "@/lib/simpleCalculators/types";
 
 const probeInputs = (fields: (typeof allCalculators)[number]["fields"]) => {
   const zero: Record<string, number> = {};
@@ -67,5 +69,57 @@ describe("simpleCalculators compute loader (client bundle split)", () => {
     expect(src).not.toMatch(/from\s+["']@\/lib\/simpleCalculators["']/);
     expect(src).not.toMatch(/from\s+["']@\/lib\/simpleCalculators\/index["']/);
     expect(src).toMatch(/simpleCalculators\/computeLoader/);
+  });
+});
+
+describe("compute loader cache eviction (CLIENT-08)", () => {
+  const fakeCalc = (slug: string) => ({ slug, compute: () => ({ slug }) }) as unknown as CalculatorDef;
+  const makeImports = (batch1: () => Promise<CalculatorDef[]>) =>
+    ({
+      batch1,
+      batch2: () => Promise.resolve([]),
+      expandedFinance: () => Promise.resolve([]),
+      expandedPractical: () => Promise.resolve([]),
+    }) satisfies Record<CalculatorBatch, () => Promise<CalculatorDef[]>>;
+
+  it("retries the import after a rejected first load (no permanently cached failure)", async () => {
+    const chunkError = Object.assign(new Error("Loading chunk 123 failed."), { name: "ChunkLoadError" });
+    const batch1 = vi.fn<() => Promise<CalculatorDef[]>>()
+      .mockRejectedValueOnce(chunkError)
+      .mockResolvedValue([fakeCalc("a"), fakeCalc("b")]);
+    const load = createComputeLoader(makeImports(batch1));
+
+    await expect(load("batch1", "a")).rejects.toBe(chunkError);
+    const compute = await load("batch1", "a");
+    expect(compute).toBeTypeOf("function");
+    expect(batch1).toHaveBeenCalledTimes(2);
+  });
+
+  it("concurrent callers share one in-flight import, and a success stays cached", async () => {
+    const batch1 = vi.fn<() => Promise<CalculatorDef[]>>().mockResolvedValue([fakeCalc("a"), fakeCalc("b")]);
+    const load = createComputeLoader(makeImports(batch1));
+    const [a, b] = await Promise.all([load("batch1", "a"), load("batch1", "b")]);
+    expect(a).toBeTypeOf("function");
+    expect(b).toBeTypeOf("function");
+    await load("batch1", "a");
+    expect(batch1).toHaveBeenCalledTimes(1);
+  });
+
+  it("concurrent callers of a failing import all see the rejection, then the next call retries", async () => {
+    const batch1 = vi.fn<() => Promise<CalculatorDef[]>>()
+      .mockRejectedValueOnce(new Error("Failed to load"))
+      .mockResolvedValue([fakeCalc("a")]);
+    const load = createComputeLoader(makeImports(batch1));
+    const results = await Promise.allSettled([load("batch1", "a"), load("batch1", "a")]);
+    expect(results.map((r) => r.status)).toEqual(["rejected", "rejected"]);
+    expect(batch1).toHaveBeenCalledTimes(1);
+    await expect(load("batch1", "a")).resolves.toBeTypeOf("function");
+    expect(batch1).toHaveBeenCalledTimes(2);
+  });
+
+  it("the production loader is built from the eviction-aware factory", () => {
+    const src = readFileSync(path.resolve(process.cwd(), "src/lib/simpleCalculators/computeLoader.ts"), "utf8");
+    expect(src).toContain("export const loadCalculatorCompute = createComputeLoader(BATCH_IMPORTS)");
+    expect(src).toContain("batchCache.delete(batch)");
   });
 });

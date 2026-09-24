@@ -3,9 +3,11 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { startTransition, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "@/components/AppLink";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
+import { isChunkLoadError, reloadOnceForChunkError } from "@/lib/chunkReload";
 
 export default function GlobalError({
   error,
@@ -14,12 +16,30 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   useEffect(() => {
     // 콘솔 로그만 (외부 트래킹 서비스 없음 — Phase E에서 무료 endpoint 추가 예정)
     if (typeof window !== "undefined") {
-      console.error("[GlobalError]", error.message, error.digest);
+      console.error("[GlobalError]", error.name, error.message, error.digest);
     }
+    // 2026-09-25 CLIENT-01: 배포로 옛 청크가 404 → 새 HTML 로 1회 새로고침(60초에 1회, lib/chunkReload).
+    // 이 화면에는 본문 광고가 없어 새로고침이 광고를 잃지 않는다.
+    reloadOnceForChunkError(error);
   }, [error]);
+
+  // 서버 컴포넌트 오류는 RSC 를 다시 받아야 풀린다 → refresh + reset 을 한 전환으로.
+  // 청크 오류는 React.lazy 가 거부된 import 를 캐시해 재렌더로는 안 풀린다 → 사용자가 누르면 전체 새로고침.
+  const retry = () => {
+    if (isChunkLoadError(error)) {
+      window.location.reload();
+      return;
+    }
+    startTransition(() => {
+      router.refresh();
+      reset();
+    });
+  };
 
   return (
     <main
@@ -44,7 +64,8 @@ export default function GlobalError({
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={reset}
+            type="button"
+            onClick={retry}
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-electric text-white font-bold transition-all hover:bg-blue-700"
           >
             <RotateCcw size={16} />

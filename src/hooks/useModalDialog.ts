@@ -2,6 +2,26 @@
 
 import { useEffect, type RefObject } from "react";
 
+/** Open a dialog modally where supported. Browsers without showModal (Safari < 15.4) get the plain
+ *  `open` attribute instead of a TypeError; if showModal throws, the attribute still shows it. */
+export function openDialog(dialog: HTMLDialogElement) {
+  if (typeof dialog.showModal === "function") {
+    try {
+      dialog.showModal();
+      return;
+    } catch {
+      // Already open or not connected: fall through to the attribute.
+    }
+  }
+  if (!dialog.hasAttribute("open")) dialog.setAttribute("open", "");
+}
+
+/** Mirror of openDialog for effect cleanup. */
+export function closeDialog(dialog: HTMLDialogElement) {
+  if (typeof dialog.close === "function") dialog.close();
+  else dialog.removeAttribute("open");
+}
+
 /** Native modal semantics provide focus containment, background inertness and focus return. */
 export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement>) {
   useEffect(() => {
@@ -9,7 +29,7 @@ export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement>)
     if (!dialog || !open) return;
     const overflow = document.body.style.overflow;
     const opener = document.activeElement;
-    dialog.showModal();
+    openDialog(dialog);
     document.body.style.overflow = "hidden";
     // Keep boundary tabbing inside the document instead of handing focus to browser chrome.
     const containTab = (event: KeyboardEvent) => {
@@ -24,7 +44,7 @@ export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement>)
     dialog.addEventListener("keydown", containTab);
     return () => {
       dialog.removeEventListener("keydown", containTab);
-      dialog.close();
+      closeDialog(dialog);
       document.body.style.overflow = overflow;
       if (opener instanceof HTMLElement && opener.isConnected && !dialog.contains(opener)) opener.focus({ preventScroll: true });
     };

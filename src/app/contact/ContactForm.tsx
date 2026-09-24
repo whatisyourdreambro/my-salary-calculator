@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/AppLink";
+import { uuidV4 } from "@/lib/uuidV4";
 
 const TYPES = [
   ["calculation_error", "계산 오류", "Calculation error"],
@@ -65,7 +66,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
     }
     const normalized = { type, pagePath: trimmedPath, body: body.trim(), inquiryConsent, replyEmail: replyEmail.trim(), replyConsent: !!replyEmail.trim() && replyConsent };
     const payload = JSON.stringify(normalized);
-    if (lastAttempt.current?.payload !== payload) lastAttempt.current = { payload, id: crypto.randomUUID() };
+    if (lastAttempt.current?.payload !== payload) lastAttempt.current = { payload, id: uuidV4() };
     const submissionId = lastAttempt.current!.id;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15000);

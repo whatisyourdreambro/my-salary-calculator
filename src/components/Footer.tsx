@@ -187,7 +187,9 @@ export default function Footer() {
           </div>)}
         </nav>
         <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 text-xs leading-6 text-muted-foreground sm:flex-row sm:items-start sm:justify-between">
-          <p>© {currentYear} Moneysalary.</p><p className="max-w-xl">{disclaimer}</p>
+          {/* 연도는 빌드(UTC)·방문(KST·기기 시계) 시점이 다를 수 있다(예: 2027-01-01 00~09시 KST) —
+              문구 불일치로 루트 전체가 클라이언트 재렌더되지 않게 이 <p> 의 텍스트 비교만 끈다(DOM 동일). */}
+          <p suppressHydrationWarning>© {currentYear} Moneysalary.</p><p className="max-w-xl">{disclaimer}</p>
         </div>
       </div>
     </footer>

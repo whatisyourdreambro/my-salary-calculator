@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import Link from "@/components/AppLink";
+import { subscribeMediaQuery } from "@/lib/mediaQueryListener";
 
 
 type TableRow = { [key: string]: string | number };
@@ -41,8 +42,8 @@ export default function SalaryTable({
  const mq = window.matchMedia("(min-width: 768px)");
  const sync = () => setWide(mq.matches);
  sync();
- mq.addEventListener("change", sync);
- return () => mq.removeEventListener("change", sync);
+ // Safari 13 이하 호환 — addEventListener 가 없으면 addListener 폴백(해제도 같은 짝).
+ return subscribeMediaQuery(mq, sync);
  }, []);
  const interstitialAfter = (index: number, mode: "card" | "row") => {
  if ((mode === "card") === wide) return null;

@@ -10,6 +10,7 @@ import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useModalDialog } from "@/hooks/useModalDialog";
+import { subscribeMediaQuery } from "@/lib/mediaQueryListener";
 import Logo from "./Logo";
 import { CircleCheck, Clock3, LayoutDashboard, Menu, X } from "lucide-react";
 import { navConfig } from "./header/navConfig";
@@ -47,8 +48,8 @@ export default function Header() {
  useEffect(() => {
  const wide = window.matchMedia("(min-width: 1280px)");
  const closeOnDesktop = () => { if (wide.matches) setIsMobileMenuOpen(false); };
- wide.addEventListener("change", closeOnDesktop);
- return () => wide.removeEventListener("change", closeOnDesktop);
+ // Safari 13 이하엔 MediaQueryList.addEventListener 가 없다 → addListener 폴백(루트 레이아웃 throw 방지).
+ return subscribeMediaQuery(wide, closeOnDesktop);
  }, []);
 
  // 2026-08-26 Phase 4 배포 2: framer useScroll → 순수 passive 리스너.
