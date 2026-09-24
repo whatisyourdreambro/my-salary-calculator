@@ -190,6 +190,14 @@ describe("benefit pages keep the verified facts that the FAQ now states", () => 
     expect(body).not.toContain("210만원");
   });
 
+  // 육아기 근로시간 단축 급여: 매주 최초 10시간 단축분 통상임금 100%(상한 250만원)
+  // (korea.kr 148957375, easylaw csmSeq=1380). 종전 비교표의 단축 5시간 100%는 옛 기준.
+  it("육아기 근로시간 단축 비교표는 최초 주 10시간 100% 기준", () => {
+    const body = render(ParentalLeavePage);
+    expect(body).toContain("주 10시간 100%");
+    expect(body).not.toContain("5시간 100%");
+  });
+
   it("구직급여 소정급여일수: 피보험기간 1년 미만은 연령 무관 120일", () => {
     const src = readSrc("src/app/unemployment-benefit/UnemploymentBenefitContent.tsx");
     expect(src).toMatch(/label: "1년 미만 \(12개월 미만\)", days: \{ under50: 120, over50: 120 \}/);
