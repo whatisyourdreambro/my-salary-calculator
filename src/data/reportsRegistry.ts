@@ -25,7 +25,8 @@ const laterIsoDate = (a: string, b: string) => (a >= b ? a : b);
 // Dataset/Article dateModified·RSS pubDate 신선도 신호가 어긋나지 않게 한다 (2026-09-05).
 // dartReportStats는 이미 이 파일이 import하는 dartReport(서버 전용)에서 오므로 클라 번들 노출 증가 없음.
 // bonus 리포트는 bonusData에 검증일 필드가 없어 수동 유지 (필드 신설은 L13b와 함께).
-const LISTED_AVG_SALARY_MANUAL_UPDATED = "2026-08-23";
+// 2026-09-25: 순위 제외 기준 강화(두 집계 방식 괴리 30%→10%, 승인 A19) — 순위·회사 수가 바뀐 실질 변경
+const LISTED_AVG_SALARY_MANUAL_UPDATED = "2026-09-25";
 
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */

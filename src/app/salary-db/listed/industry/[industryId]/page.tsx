@@ -25,6 +25,10 @@ import {
   LISTED_TOTAL,
   rankingItemListItems,
 } from "@/lib/salary-data/dartRanking";
+import {
+  RANKING_DIVERGENCE_MAX_PCT,
+  RANKING_METHOD_REVISED_DATE,
+} from "@/lib/salary-data/dartRankingGuards";
 import { ShieldCheck, TrendingUp } from "lucide-react";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CitationCopyButton from "@/components/CitationCopyButton";
@@ -141,7 +145,7 @@ export default function IndustryRankingPage({ params }: Props) {
     },
     {
       question: "이 순위는 어떻게 산정되나요?",
-      answer: `금융감독원 전자공시(DART) ${DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의 현황」의 연간 급여총액을 직원 수로 나눈 값(등기임원 제외)입니다. DART 원자료로 계산한 값이라 회사가 공시한 1인평균급여액과 다를 수 있으며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다. 집계 방식 괴리 플래그가 있는 회사는 제외했습니다.`,
+      answer: `금융감독원 전자공시(DART) ${DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의 현황」의 연간 급여총액을 직원 수로 나눈 값(등기임원 제외)입니다. DART 원자료로 계산한 값이라 회사가 공시한 1인평균급여액과 다를 수 있으며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다. [${RANKING_METHOD_REVISED_DATE} 정정] 이 값과 회사 공시 1인평균급여액(인원 가중)의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사는 순위에서 제외합니다(종전 30%).`,
     },
   ];
 
@@ -189,7 +193,7 @@ export default function IndustryRankingPage({ params }: Props) {
             <strong className="text-navy">{fmtManwon(r.weightedAvgManwon)}</strong>, 중위값은{" "}
             <strong className="text-navy">{fmtManwon(r.medianManwon)}</strong>이며, 1위는{" "}
             <strong className="text-navy">{top1.nameKo}</strong>(
-            {fmtManwon(top1.avgSalaryManwon)})입니다. 급여총액 ÷ 직원 수의 공식 수치로, 신입
+            {fmtManwon(top1.avgSalaryManwon)})입니다. 급여총액 ÷ 직원 수 산정치로, 신입
             초봉이 아닌 전 직급 평균입니다.
           </p>
         </section>

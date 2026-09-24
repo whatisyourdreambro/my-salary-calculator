@@ -10,7 +10,12 @@ import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
 import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
 // 서버 전용 DART 집계 — 클라이언트 컴포넌트에서 import 금지 (dartReport.ts 헤더 참조)
-import { dartTop100, dartReportStats, dartCompanyStatsById } from "@/lib/salary-data/dartReport";
+import {
+ dartTop100,
+ dartTop100CardBadgeCorps,
+ dartReportStats,
+ dartCompanyStatsById,
+} from "@/lib/salary-data/dartReport";
 // R2 W1 (2026-08-31) — 공시 카드→업종 랭킹 도선 (서버 전용)
 import { industryRankingByCompanyId } from "@/lib/salary-data/dartRanking";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
@@ -237,7 +242,11 @@ export default function CompanyDetailPage({
  <CompanyDisclosedSalary
  company={company}
  dartRank={(() => {
- const row = dartTop100.find((r) => r.companyId === company.id);
+ // 카드 배지는 종전 기준에서도 TOP100 이던 corp 만 (10/5까지 광고 위 줄 추가 금지 —
+ // dartTop100CardBadgeCorps 주석 참조, 10/6 이후 가드 제거)
+ const row = dartTop100.find(
+ (r) => r.companyId === company.id && dartTop100CardBadgeCorps.has(r.corpCode)
+ );
  return row
  ? {
  rank: row.rank,
@@ -254,6 +263,10 @@ export default function CompanyDetailPage({
  // 수기 disclosed 값과 DART 원값 괴리 10% 초과 시 미전달 (라벨 혼선 방지).
  const stats = dartCompanyStatsById.get(company.id);
  if (!stats || !company.disclosed) return null;
+ // DART 자동 주입 블록은 헤드라인·이력이 같은 사업보고서에서 나온다 — 헤드라인이 공시
+ // 1인평균 기준(A19)으로 바뀌어 산정치와 벌어져도 이력 표('급여총액÷인원' 표기)는 유지
+ // (게이트로 빠지면 광고 위 카드가 줄어 GuideMidAd 위치가 바뀐다, 2026-09-25).
+ if (company.disclosed.basis) return stats;
  const gap =
  Math.abs(stats.dartSalaryManwon - company.disclosed.avgSalaryManwon) /
  company.disclosed.avgSalaryManwon;

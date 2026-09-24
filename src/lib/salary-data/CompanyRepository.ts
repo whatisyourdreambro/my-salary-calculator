@@ -8,17 +8,25 @@ import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 /** DART 공시 요약(dartInjection)으로 disclosed 블록 조립.
  *  수기 disclosed 가 있는 회사에는 절대 적용하지 않는다(수기 우선 —
  *  수기 43곳은 언론 교차확인·산정기준 note 가 붙은 큐레이션 값).
+ *  헤드라인 산정 기준(A19, 2026-09-25 운영자 승인): 주입 항목 b="r" 이면 회사가 공시한
+ *  1인평균급여액의 인원 가중 평균(basis "reported"), 아니면 연간 급여총액÷인원 산정치
+ *  (basis "computed" — '공식 수치' 라벨 없음). note 는 기준별 문구, 길이는 종전 이하(광고 위 높이 불변).
  *  갱신: 매년 4월 scripts/dart-etl.mjs 재실행(골든 diff 통과 후 커밋). */
 function buildDartDisclosed(id: string): CompanyProfile["disclosed"] | undefined {
  const d = dartInjection[id];
  if (!d) return undefined;
+ const reported = d.b === "r";
+ const staff = `직원 ${d.e.toLocaleString("ko-KR")}명 기준.`;
  return {
  avgSalaryManwon: d.a,
  fiscalYear: d.y,
  ...(d.t != null ? { avgTenureYears: d.t } : {}),
  source: `금융감독원 전자공시(DART) 사업보고서(${d.y} 사업연도) '직원 등의 현황' — OpenDART 수집`,
  sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${d.r}`,
- note: `직원 ${d.e.toLocaleString("ko-KR")}명 기준. 사업부문·성별 구분 공시를 연간급여총액÷인원으로 가중 평균한 값(등기임원 제외).`,
+ note: reported
+ ? `${staff} 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`
+ : `${staff} 사업부문·성별 구분 공시를 연간급여총액÷인원으로 가중 평균한 값(등기임원 제외).`,
+ basis: reported ? "reported" : "computed",
  };
 }
 

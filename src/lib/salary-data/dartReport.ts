@@ -8,7 +8,8 @@
 //
 // 집계 원칙:
 // - 랭킹은 fiscalYear 2025(직전 사업연도) 단일 기준 — 연도 혼합 랭킹 금지.
-// - V4-divergence 플래그(집계 방식 간 괴리 >30%) 회사는 랭킹에서 제외.
+// - 두 집계 방식 간 괴리 >10% 회사는 랭킹에서 제외 (2026-09-25 A19 — 종전 V4 플래그 >30%).
+//   회사 카드 통계는 종전 모수(플래그만 제외) 유지 — dartRankingGuards.ts 참조.
 // - 업종 평균은 직원 수 가중(= 급여총액 합산 ÷ 인원 합산과 동치) — 소기업
 //   평균의 왜곡 방지.
 
@@ -17,6 +18,11 @@ import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
 import { listedCohortStockCodes, resolveCompanyRouteId } from "./dartLite";
+import {
+  passesRankingDivergence,
+  RANKING_DIVERGENCE_MAX_PCT,
+  RANKING_METHOD_REVISED_DATE,
+} from "./dartRankingGuards";
 
 /** HTML 엔티티 디코드 — DART corp_name 에 &amp; 등이 섞여 있음 (삼성E&A 등) */
 function decodeName(s: string): string {
@@ -53,10 +59,15 @@ export interface DartRankRow {
 
 const RANK_YEAR = "2025";
 
-// 랭킹 모수: 2025 사업연도 + 플래그 없음
+// 기본 모수: 2025 사업연도 + 플래그 없음 — 회사 카드 통계(dartCompanyStatsById)·밴드 표 전용.
+// (카드의 순위 배지·이력 표는 광고 위 높이와 묶여 있어 종전 모수 유지 — dartRankingGuards 참조)
 const eligible = dartDisclosed.filter(
   (d) => d.fiscalYear === RANK_YEAR && !(d.flags && d.flags.length)
 );
+
+// 순위 모수: + 두 집계 방식 괴리 10% 이하 (A19, 2026-09-25 — 종전 30% 플래그만)
+// TOP100 표·CSV/JSON·업종 집계·리포트 통계(회사 수)가 이 모수를 쓴다.
+const rankEligible = eligible.filter(passesRankingDivergence);
 
 function toRow(d: DartDisclosedEntry, rank: number): DartRankRow {
   const industryId = mapKsicToIndustry(d.ksicCode);
@@ -77,10 +88,24 @@ function toRow(d: DartDisclosedEntry, rank: number): DartRankRow {
 }
 
 /** TOP 100 — 평균연봉 내림차순 */
-export const dartTop100: DartRankRow[] = [...eligible]
+export const dartTop100: DartRankRow[] = [...rankEligible]
   .sort((a, b) => b.avgSalaryManwonRaw - a.avgSalaryManwonRaw)
   .slice(0, 100)
   .map((d, i) => toRow(d, i + 1));
+
+/**
+ * 회사 카드 TOP100 배지 노출 가드 (2026-09-25 — 광고 위치 변경 금지 창 9/21~10/5 대응).
+ * 10% 기준 전환으로 TOP100 에 새로 든 회사(하이트진로·에이비엘바이오·LG유플러스·삼성물산 등)는
+ * 카드에 배지 줄이 새로 생겨 GuideMidAd 위 높이가 늘어난다. 종전 기준(30% 플래그만)에서도
+ * TOP100 이던 corp 에만 카드 배지를 단다 — 리포트 표 자체는 새 기준 그대로.
+ * ★2026-10-06 이후: 이 가드를 제거해 신규 진입사에도 배지를 단다 (회사 page.tsx 한 곳).
+ */
+export const dartTop100CardBadgeCorps: ReadonlySet<string> = new Set(
+  [...eligible]
+    .sort((a, b) => b.avgSalaryManwonRaw - a.avgSalaryManwonRaw)
+    .slice(0, 100)
+    .map((d) => d.corpCode)
+);
 
 /** 업종별 집계 (회사 10곳 이상 업종, 직원 수 가중 평균) */
 export interface DartIndustryRow {
@@ -98,7 +123,7 @@ export const DART_INDUSTRY_MIN_COMPANIES = 10;
 
 export const dartIndustryRows: DartIndustryRow[] = (() => {
   const groups = new Map<string, DartDisclosedEntry[]>();
-  for (const d of eligible) {
+  for (const d of rankEligible) {
     const id = mapKsicToIndustry(d.ksicCode);
     if (id === "etc") continue;
     if (!groups.has(id)) groups.set(id, []);
@@ -243,18 +268,22 @@ export function getListedBySalaryBand(annualWon: number, limit = 10): ListedBand
 
 /** 전체 통계 */
 export const dartReportStats = (() => {
-  const totalEmployees = eligible.reduce((s, d) => s + d.employeeCount, 0);
+  const totalEmployees = rankEligible.reduce((s, d) => s + d.employeeCount, 0);
   const weightedAvg =
-    eligible.reduce((s, d) => s + d.avgSalaryManwonRaw * d.employeeCount, 0) /
+    rankEligible.reduce((s, d) => s + d.avgSalaryManwonRaw * d.employeeCount, 0) /
     Math.max(1, totalEmployees);
-  const sorted = [...eligible].sort((a, b) => a.avgSalaryManwonRaw - b.avgSalaryManwonRaw);
+  const sorted = [...rankEligible].sort((a, b) => a.avgSalaryManwonRaw - b.avgSalaryManwonRaw);
   const mid = Math.floor(sorted.length / 2);
   const median =
     sorted.length % 2 === 1
       ? sorted[mid].avgSalaryManwonRaw
       : Math.round((sorted[mid - 1].avgSalaryManwonRaw + sorted[mid].avgSalaryManwonRaw) / 2);
   return {
-    companyCount: eligible.length,
+    companyCount: rankEligible.length,
+    /** 괴리 10% 초과로 순위에서 뺀 회사 수 — 방법론·정정 메모 표기용 (A19) */
+    divergenceExcludedCount: eligible.length - rankEligible.length,
+    divergenceMaxPct: RANKING_DIVERGENCE_MAX_PCT,
+    methodRevisedDate: RANKING_METHOD_REVISED_DATE,
     totalEmployees,
     weightedAvgManwon: Math.round(weightedAvg),
     medianManwon: median,

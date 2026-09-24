@@ -6,6 +6,8 @@
 // 본 DB 직급별 추정치와 분리해 "공식 수치"로 보여주는 권위 차별화 섹션.
 // 수치·출처는 데이터 파일의 disclosed 필드에만 기재 — 이 컴포넌트에서
 // 추정·가공 금지. 추정치와의 관계는 정직하게 설명한다.
+// DART 자동 주입 블록은 disclosed.basis 로 산정 기준을 구분한다(A19, 2026-09-25):
+// "reported"(회사 공시 1인평균 기준)만 '공식 수치', "computed"(급여총액÷인원)는 산정치 라벨.
 
 import { ShieldCheck, ExternalLink, Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
@@ -78,7 +80,11 @@ export default function CompanyDisclosedSalary({
       <div className="rounded-2xl border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900 p-5 sm:p-6">
         <h2 className="flex items-center gap-2 text-base font-black text-navy dark:text-canvas-50 mb-3">
           <ShieldCheck size={18} className="text-electric flex-shrink-0" />
-          {koName} 공시 기준 평균연봉 — 추정이 아닌 공식 수치
+          {/* '공식 수치'는 수기 큐레이션·회사 공시 1인평균 기준에만. 급여총액÷인원 자체 산정치는
+              같은 길이 이하의 라벨로 (A19, 2026-09-25 — 광고 위 카드 높이 불변) */}
+          {d.basis === "computed"
+            ? `${koName} 공시 기준 평균연봉 — 급여총액÷인원 산정치`
+            : `${koName} 공시 기준 평균연봉 — 추정이 아닌 공식 수치`}
         </h2>
 
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
@@ -143,7 +149,8 @@ export default function CompanyDisclosedSalary({
               <thead>
                 <tr className="border-b border-canvas-200 dark:border-canvas-800 text-left text-faint-blue">
                   <th className="py-1.5 pr-3 font-bold">사업연도</th>
-                  <th className="py-1.5 pr-3 font-bold">공시 평균연봉</th>
+                  {/* 이력 값은 연도별 연간 급여총액÷인원 산정치 — 헤드라인(수기·공시 1인평균)과 기준 구분 (A19) */}
+                  <th className="py-1.5 pr-3 font-bold">급여총액÷인원</th>
                   <th className="py-1.5 font-bold">직원 수</th>
                 </tr>
               </thead>

@@ -16,8 +16,12 @@ export function getCompanySalaryBasis(
     entryIncentiveWon,
     entryTotalWon: entryBaseWon + entryIncentiveWon,
     dartSalaryManwon,
+    // 수기 블록 전용 — DART 자동 주입 블록(basis 있음)은 헤드라인 자체가 같은 공시의 값이고
+    // 산정치는 카드의 '급여총액÷인원' 이력 표로 따로 보여 주므로 인라인 병기를 붙이지 않는다
+    // (A19 헤드라인 기준 전환 후에도 광고 위 카드 문단 길이 불변, 2026-09-25).
     hasDartGap: Boolean(
       disclosed &&
+      !disclosed.basis &&
       dartSalaryManwon != null &&
       disclosed.avgSalaryManwon > 0 &&
       Math.abs(dartSalaryManwon - disclosed.avgSalaryManwon) / disclosed.avgSalaryManwon > 0.05,
@@ -37,7 +41,7 @@ export function buildCompanySalaryFaq(
     {
       question: `${name} 평균 연봉은 얼마인가요?`,
       answer: disclosed
-        ? `${name}의 공시 기준 직원 평균연봉은 ${disclosed.fiscalYear} 사업연도 ${disclosed.avgSalaryManwon.toLocaleString("ko-KR")}만원입니다. 공시 인용 출처: ${disclosed.source}. 신입 초봉이나 개인 지급액과는 다르며, 성과급 포함 범위·집계 대상·산정 방식은 공시 카드의 출처와 주의사항을 확인하세요.`
+        ? `${name}의 공시 기준 직원 평균연봉은 ${disclosed.fiscalYear} 사업연도 ${disclosed.avgSalaryManwon.toLocaleString("ko-KR")}만원${disclosed.basis === "computed" ? "(연간 급여총액÷인원 산정)" : ""}입니다. 공시 인용 출처: ${disclosed.source}. 신입 초봉이나 개인 지급액과는 다르며, 성과급 포함 범위·집계 대상·산정 방식은 공시 카드의 출처와 주의사항을 확인하세요.`
         : `본 DB에서 확인한 ${name}의 직원 전체 평균연봉 공시 자료는 없습니다. 아래 신입·직급별 연봉은 기본급과 평균 인센티브를 바탕으로 한 자체 추정치이며, 직원 전체 평균을 대신하지 않습니다.`,
     },
     {

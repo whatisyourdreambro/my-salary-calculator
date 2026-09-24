@@ -163,7 +163,8 @@ export default function ListedCompanyPage({ params }: Props) {
         <section className="mb-8">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-electric/10 px-3 py-1 text-xs font-bold text-electric mb-3">
             <ShieldCheck size={13} aria-hidden="true" />
-            금융감독원 전자공시(DART) 사업보고서 — 추정이 아닌 공식 수치
+            {/* 헤드라인이 급여총액÷인원 산정치라 '공식 수치' 라벨 제거 — 같은 길이 이하 (A19, 2026-09-25) */}
+            금융감독원 전자공시(DART) 사업보고서 — 급여총액÷인원 산정치
           </p>
           <h1 className="text-2xl sm:text-4xl font-black text-navy leading-tight mb-3">
             {c.nameKo} 평균연봉 <span className="text-primary">{fmtManwon(c.avgSalaryManwon)}</span>

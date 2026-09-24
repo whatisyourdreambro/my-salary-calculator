@@ -288,7 +288,7 @@ export default function CompanyRankingPage() {
             <span className="font-bold text-navy">
               연봉 인상률 TOP 100
               <span className="block text-xs font-medium text-faint-blue">
-                DART 공시 기준 — 추정 아닌 공식 수치
+                DART 공시 기준 — 급여총액÷인원 산정
               </span>
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />

@@ -9,6 +9,7 @@
 // - 단일 축·고정 코호트만 — 조합 축 페이지 금지.
 // - 업종 페이지는 상장사 5곳 이상 업종만 생성 (dynamicParams=false, 밖은 404).
 // - dartReport 집계 원칙 승계: FY2025 단일 기준·플래그 제외·직원 수 가중 평균.
+// - 두 집계 방식 괴리 10% 초과 회사는 순위 모수에서 제외 (A19, 2026-09-25 — dartRankingGuards).
 // - 인상률 랭킹은 직원 수 급변(±30% 초과) 회사 제외 — 합병·분할 왜곡 방지.
 // - 행 링크: corpCodeMap 매칭 시 /salary-db/{id}, 아니면 listedCohortStockCodes
 //   등재 시에만 /salary-db/listed/{stockCode} — 코호트 밖 lite URL은 404.
@@ -18,6 +19,7 @@ import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
 import { listedCohortStockCodes, resolveCompanyRouteId } from "./dartLite";
+import { passesRankingDivergence } from "./dartRankingGuards";
 
 export const DART_RANKING_YEAR = "2025";
 export const DART_RANKING_DATE = DART_DATA_DATE;
@@ -59,13 +61,17 @@ export interface RankingRow {
   prevSalaryManwon?: number;
 }
 
-// ── 모수: FY2025 + 무플래그 + 상장 전수 ──
-const listedEligible: DartDisclosedEntry[] = dartDisclosed.filter(
+// ── 링크 모수: FY2025 + 무플래그 + 상장 전수 — 회사 카드의 업종 랭킹 도선 전용 ──
+// (카드 링크 줄이 광고 위에 있어 순위 모수 강화와 무관하게 종전 집합 유지)
+const listedLinkPool: DartDisclosedEntry[] = dartDisclosed.filter(
   (d) =>
     d.fiscalYear === DART_RANKING_YEAR &&
     !(d.flags && d.flags.length) &&
     d.stockCode !== ""
 );
+
+// ── 순위 모수: + 두 집계 방식 괴리 10% 이하 (A19, 2026-09-25 — dartRankingGuards) ──
+const listedEligible: DartDisclosedEntry[] = listedLinkPool.filter(passesRankingDivergence);
 
 export const LISTED_TOTAL = listedEligible.length;
 
@@ -172,7 +178,7 @@ export const industryRankingByCompanyId: ReadonlyMap<
   { industryId: string; industryKo: string }
 > = (() => {
   const m = new Map<string, { industryId: string; industryKo: string }>();
-  for (const d of listedEligible) {
+  for (const d of listedLinkPool) {
     const id = resolveCompanyRouteId(companyIdByCorp.get(d.corpCode), d.corpNameKo);
     if (!id || m.has(id)) continue;
     const industryId = mapKsicToIndustry(d.ksicCode);
