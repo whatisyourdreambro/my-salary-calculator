@@ -12,17 +12,88 @@ function getTotalDays(startDate: string, endDate: string): number {
  return (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1;
 }
 
+const DAY_MS = 1000 * 60 * 60 * 24;
+
 /**
- * 퇴사일 이전 3개월간의 달력상 총일수를 정확하게 계산합니다.
+ * 'YYYY-MM-DD' 를 연·월·일 숫자로 쪼갠다(형식이 다르거나 없는 날짜면 null).
+ * 날짜 연산은 전부 Date.UTC 로 한다 — new Date('YYYY-MM-DD') 는 UTC 로,
+ * new Date(y, m, d) 는 로컬 시각으로 해석돼 둘을 섞으면 음(-)의 시간대에서
+ * 하루씩 밀린다.
+ */
+function parseYmd(value: string): { y: number; m: number; d: number } | null {
+ const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? "");
+ if (!match) return null;
+ const y = Number(match[1]);
+ const m = Number(match[2]);
+ const d = Number(match[3]);
+ const check = new Date(Date.UTC(y, m - 1, d));
+ if (
+ check.getUTCFullYear() !== y ||
+ check.getUTCMonth() !== m - 1 ||
+ check.getUTCDate() !== d
+ ) {
+ return null;
+ }
+ return { y, m, d };
+}
+
+/** 퇴직일 = 마지막 근무일 다음 날 (UTC 자정 epoch ms). */
+function retirementDayUtc(lastDay: { y: number; m: number; d: number }): number {
+ return Date.UTC(lastDay.y, lastDay.m - 1, lastDay.d + 1);
+}
+
+/**
+ * 평균임금 산정기간의 총일수 — 근로기준법 §2①6 "산정 사유 발생일 이전 3개월".
+ * 퇴직금의 사유 발생일은 퇴직일(마지막 근무일 다음 날)이므로 기간은
+ * [퇴직일 − 3개월, 마지막 근무일] 이다(고용노동부 퇴직금 계산기: "퇴직일자는
+ * 마지막으로 근무한 날의 1일 후 날짜", 예제 퇴직일 9/16 → 6/16~9/15 = 92일).
+ *
+ * 종전에는 퇴사한 달을 빼고 그 앞 3개 달력월을 통째로 더했다. 월 중간 퇴사는
+ * 우연히 같았지만(5/15 → 2/16~5/15 = 89일), 월말 퇴사는 퇴사한 달이 빠지고 한 달
+ * 앞이 들어갔다 — 5/31 퇴사 89일(정답 3/1~5/31 = 92일, 퇴직금 +3.4% 과대),
+ * 7/31·12/31 퇴사 91일(정답 92일), 2/28 퇴사 92일(정답 90일, −2.2% 과소)
+ * (2026-09-25 감사 CALC-04).
+ *
+ * 퇴직일 − 3개월에 같은 날짜가 없으면(퇴직일 7/31 → 4/31) 그 달 말일(4/30)부터
+ * 센다. 2월만은 고용노동부 퇴직금 계산기와 같이 3/1부터 센다(퇴직일 5/29~5/31).
  */
 function getDaysInLast3Months(endDate: string): number {
- const end = new Date(endDate);
- let totalDays = 0;
- for (let i = 1; i <= 3; i++) {
- const targetDate = new Date(end.getFullYear(), end.getMonth() - i + 1, 0);
- totalDays += targetDate.getDate();
+ const lastDay = parseYmd(endDate);
+ if (!lastDay) return 0;
+ const retirement = retirementDayUtc(lastDay);
+ const r = new Date(retirement);
+ const year = r.getUTCFullYear();
+ const day = r.getUTCDate();
+ // Date.UTC 는 음수·12 이상 월을 연도로 넘겨 정규화한다 (1월 → 전년 10월)
+ const targetMonth = r.getUTCMonth() - 3;
+ const daysInTarget = new Date(Date.UTC(year, targetMonth + 1, 0)).getUTCDate();
+ let windowStart: number;
+ if (day <= daysInTarget) {
+ windowStart = Date.UTC(year, targetMonth, day);
+ } else if (new Date(Date.UTC(year, targetMonth, 1)).getUTCMonth() === 1) {
+ windowStart = Date.UTC(year, targetMonth + 1, 1); // 2월 → 3/1
+ } else {
+ windowStart = Date.UTC(year, targetMonth, daysInTarget); // 말일
  }
- return totalDays;
+ return Math.round((retirement - windowStart) / DAY_MS);
+}
+
+/**
+ * 퇴직금 지급 요건인 1년 이상 계속근로(근로자퇴직급여 보장법 §4①) 여부.
+ * 입사 1주년 기념일이 퇴직일(마지막 근무일 + 1일) 이하이면 충족한다.
+ *
+ * 종전의 "재직일수 < 365" 판정은 윤일(2/29)을 지나는 기간에서 하루 모자란 근속을
+ * 통과시켰다 — 2027-03-01 입사 · 2028-02-28 마지막 근무는 365일이지만 1주년
+ * (2028-03-01)의 전날인 2028-02-29 까지 일해야 1년이다(2026-09-25 감사 CALC-04).
+ * 2/29 입사자의 1주년은 Date.UTC 정규화로 다음 해 3/1 이 된다(민법 §160③ —
+ * 해당일이 없으면 그 달 말일 2/28 로 기간 만료).
+ */
+function hasOneYearOfService(startDate: string, endDateInclusive: string): boolean {
+ const start = parseYmd(startDate);
+ const lastDay = parseYmd(endDateInclusive);
+ if (!start || !lastDay) return false;
+ const anniversary = Date.UTC(start.y + 1, start.m - 1, start.d);
+ return anniversary <= retirementDayUtc(lastDay);
 }
 
 /**
@@ -103,6 +174,9 @@ export function calculateSeveranceTax(
  },
  };
 
+ // 날짜 없이 재직일수만 받는 경로(위젯·간이 계산기 — 연 단위 × 365)의 방어선.
+ // 입·퇴사일이 있는 calculateSeverancePay 는 1주년 기념일 기준(hasOneYearOfService)으로
+ // 먼저 거른다 — 그 기준을 통과한 기간은 항상 365일 이상이라 여기서 막히지 않는다.
  if (severancePay <= 0 || totalDaysOfEmployment < 365) {
  return defaultReturn;
  }
@@ -212,7 +286,7 @@ export function calculateSeverancePay(
  const { years, months } = getYearsOfService(totalDaysOfEmployment);
 
  if (
- totalDaysOfEmployment < 365 ||
+ !hasOneYearOfService(startDate, endDate) ||
  last3MonthsSalaries.reduce((a, b) => a + b, 0) <= 0
  ) {
  const defaultTaxDetails = {
