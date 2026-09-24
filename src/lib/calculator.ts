@@ -3,20 +3,16 @@
 // 연봉 실수령액 계산 단일 코어.
 // 2026-08 대규모 점검: 기존에 calculateNetSalary / calculateNetSalary2026 두 함수가
 // 상수 이름만 다르고 값·로직이 100% 동일하게 중복 정의되어 있던 것을 요율
-// 파라미터화된 코어 하나로 통합. 세율표·근로소득공제(2,000만 캡 포함)·
-// 근로소득세액공제·자녀세액공제는 taxConstants2026 정본 함수를 사용한다.
+// 파라미터화된 코어 하나로 통합. 월 소득세는 근로소득 간이세액표(withholdingTaxTable2026)
+// 금액이다 (2026-09-25 A17 — 종전 연간 추정 ÷ 12 모델 대체).
 
 // [추가] types.ts에서 AdvancedSettings 타입을 import 합니다.
 import type { AdvancedSettings } from "@/app/types";
 import {
  INSURANCE_RATES_2026,
  PENSION_BASE_2026,
- earnedIncomeDeduction2026,
- calcIncomeTax2026,
- earnedIncomeTaxCredit2026,
- childTaxCredit2026,
 } from "./taxConstants2026";
-import { applySmeYouthReduction } from "./smbTaxBreak";
+import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 /** 4대보험 요율 파라미터 — 연도별 계산(표의 "전년 대비" 기준선 등)에 사용 */
 export interface NetSalaryRates {
@@ -70,7 +66,6 @@ export function calculateNetSalaryWithRates(
  }
 
  const actualNonTaxableAmount = Math.min(annualSalary, nonTaxableAmount);
- const taxableAnnualSalary = annualSalary - actualNonTaxableAmount;
  const monthlySalary = annualSalary / 12;
  const taxableMonthlyIncome = Math.max(
  0,
@@ -87,45 +82,20 @@ export function calculateNetSalaryWithRates(
  const longTermCare = health * rates.ltcRatio;
  const employment = taxableMonthlyIncome * rates.employment;
 
- const earnedIncomeDeduction = earnedIncomeDeduction2026(taxableAnnualSalary);
-
- const personalDeduction =
- dependents * 1500000 +
+ // 월 소득세 — 근로소득 간이세액표(소득세법 시행령 별표2, 2026-03-01 지급분~) 월 원천징수액.
+ // 월급여액 = 월 과세 보수, 공제대상가족 수 = dependents(본인 포함), 8~20세 자녀 공제 = children.
+ // 2026-09-25(A17 CALC-01) 전에는 연간 세액을 추정해 12로 나눴고 건강·고용보험료 공제(§52)와
+ // 특별공제가 빠져 급여명세서보다 소득세가 컸다. 표의 '특별소득공제 등'이 이를 반영한다.
+ // - 장애인(200만)·경로우대(100만) 추가공제는 표에 없는 항목이라 같은 표 산식에 공제를 더해 추정.
+ // - 중소기업 청년 감면은 표 산식의 산출세액에 조특법 §30 감면과 소득세법 §59③ 공제 축소를
+ //   적용한다(/calc/smb-income-tax-break 와 같은 applySmeYouthReduction 헬퍼).
+ const extraAnnualDeduction =
  advancedSettings.disabledDependents * 2000000 +
  advancedSettings.seniorDependents * 1000000;
-
- const pensionDeduction = pension * 12;
-
- const taxBase = Math.max(
- 0,
- taxableAnnualSalary -
- earnedIncomeDeduction -
- personalDeduction -
- pensionDeduction
- );
-
- const calculatedTax = calcIncomeTax2026(taxBase);
- const taxCredit = earnedIncomeTaxCredit2026(calculatedTax, taxableAnnualSalary);
-
- // 자녀세액공제 (소득세법 §59의2) — 정본 함수 사용 (첫째 25만·둘째 30만·셋째+ 40만)
- const childTaxCredit = childTaxCredit2026(children);
-
- let finalAnnualTax: number;
- if (advancedSettings.isSmeYouth) {
- // 중소기업 취업자 감면(조특법 §30, 청년 90%·연 200만 한도)은 '산출세액'에 적용하고
- // 근로소득세액공제를 (1 − 감면/산출) 비율로 줄인다(소득세법 §59③) — 전용 계산기
- // /calc/smb-income-tax-break 와 같은 헬퍼. 종전에는 세액공제 뒤 금액에 90%·한도를
- // 적용해 한도가 걸리는 연봉(5,000만 등)에서 절감액이 최대 연 34.5만원 과대였다.
- const { reduction, creditAfter } = applySmeYouthReduction({
- calculatedTax,
- earnedIncomeCredit: taxCredit,
+ const incomeTax = withholdingIncomeTax2026(taxableMonthlyIncome, dependents, children, {
+ extraAnnualDeduction,
+ smeYouth: advancedSettings.isSmeYouth,
  });
- finalAnnualTax = Math.max(0, calculatedTax - reduction - creditAfter - childTaxCredit);
- } else {
- finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
- }
-
- const incomeTax = finalAnnualTax / 12;
  const localTax = incomeTax * LOCAL_INCOME_TAX_RATE;
 
  const totalDeduction =

@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  // SNS 공유 CTR — 월 실수령액 숫자를 OG 이미지에 직접 박기.
  const tax = calculateSalary2026(amount, 200000, 1, 0);
  const metadata = buildSalaryAmountMetadata(amount, tax.netPay);
- const description = `연봉 ${formatSalaryKorean(amount)}의 예상 월 실수령액은 약 ${Math.round(tax.netPay / 10000).toLocaleString("ko-KR")}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 연간 세액 추정의 월 환산액으로, 실제 급여와 다를 수 있습니다.`;
+ const description = `연봉 ${formatSalaryKorean(amount)}의 예상 월 실수령액은 약 ${Math.round(tax.netPay / 10000).toLocaleString("ko-KR")}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 소득세는 근로소득 간이세액표 기준이며, 실제 급여와 다를 수 있습니다.`;
  return {
   ...metadata,
   description,
@@ -159,23 +159,19 @@ export default function SalaryAmountPage({ params }: Props) {
  steps: [
  {
  name: "비과세 식대 차감",
- text: "연봉에 포함된 월 비과세 20만원(연 240만원)을 제외해 연간 총급여액을 구합니다.",
+ text: "연봉을 12로 나눈 월 급여에서 비과세 월 20만원을 빼 월급여액(과세 대상)을 구합니다.",
  },
  {
  name: "4대보험 공제",
  text: "비과세를 뺀 월 보수에 국민연금 4.75%(기준소득월액 상·하한 적용), 건강보험 3.595%, 고용보험 0.9%를 적용합니다. 장기요양보험은 건강보험료의 13.14%로 계산합니다.",
  },
  {
- name: "근로소득공제 적용",
- text: "연간 총급여액에 따라 구간별 근로소득공제를 적용합니다(공제 한도 2,000만원).",
+ name: "간이세액표 소득세 조회",
+ text: "월급여액과 공제대상가족 수로 근로소득 간이세액표(소득세법 시행령 별표2, 2026년 3월 1일 지급분부터)의 월 소득세를 찾습니다. 표에는 근로소득공제·기본공제·연금보험료공제, 건강·고용보험료 등 특별소득공제 일부와 근로소득세액공제가 반영돼 있습니다. 이 페이지는 공제대상가족 본인 1명·자녀 0명 조건입니다.",
  },
  {
- name: "기본·인적공제 차감",
- text: "근로소득공제 후 본인 기본공제 150만원과 연간 국민연금 보험료 추정액을 차감해 과세표준을 구합니다. 이 페이지는 부양가족 본인 1명·자녀 0명 조건입니다.",
- },
- {
- name: "산출세액 계산",
- text: "6~45% 누진세율과 근로소득세액공제를 적용한 연간 추정 세액을 12개월로 나누고, 월 소득세의 10%를 지방소득세로 계산합니다. 실제 월별 간이세액표 조회나 연말정산 확정 세액은 아닙니다.",
+ name: "지방소득세·실수령액 계산",
+ text: "월 소득세의 10%를 지방소득세로 더하고, 월 급여에서 4대보험과 세금을 빼 예상 월 실수령액을 구합니다. 원천징수 비율(80·100·120%) 선택이나 연말정산 확정 세액은 반영하지 않습니다.",
  },
  ],
  });

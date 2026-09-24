@@ -45,15 +45,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/': { lastModified: new Date('2026-09-19') },
  '/home-loan': { lastModified: new Date('2026-09-19') },
- '/about': { lastModified: new Date('2026-09-10') },
+ '/about': { lastModified: new Date('2026-09-25') }, // 연봉 계산 기준을 간이세액표로 갱신 (A17)
  '/tools/loan': { lastModified: new Date('2026-09-10') },
  '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
- '/table/2026/annual': { lastModified: new Date('2026-09-10') },
- '/table/2026/monthly': { lastModified: new Date('2026-09-10') },
- '/table/2027/annual': { lastModified: new Date('2026-09-10') },
- '/table/2027/monthly': { lastModified: new Date('2026-09-10') },
- '/table/2027/weekly': { lastModified: new Date('2026-09-10') },
- '/table/2027/hourly': { lastModified: new Date('2026-09-10') },
+ '/table/2026/annual': { lastModified: new Date('2026-09-25') }, // A17 간이세액표 엔진 재산출
+ '/table/2026/monthly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/annual': { lastModified: new Date('2026-09-25') },
+ '/table/2027/monthly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/weekly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/hourly': { lastModified: new Date('2026-09-25') },
  '/calc/samsung-bonus': { lastModified: new Date('2026-09-21'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-20'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
  '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
@@ -102,8 +102,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
-// 데이터 갱신일·계산 엔진 적용일과 구분하며, 이후 일반 배포 때 자동 갱신하지 않는다.
-const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-10');
+// 2026-09-25: 월 소득세를 근로소득 간이세액표 기준으로 바꿔 /salary 실수령액·제목·계산 방법이 바뀐 날(A17).
+// 이후 일반 배포 때 자동 갱신하지 않는다.
+const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-25');
 const COMPANY_FAQ_REVIEW_DATE = new Date('2026-09-10');
 
 

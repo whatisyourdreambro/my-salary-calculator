@@ -18,9 +18,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-09-25",
   "views": 150234,
   "lang": "ko",
-  "contentChars": 5566
+  "contentChars": 5582
  },
  {
   "slug": "salary-negotiation-secret",

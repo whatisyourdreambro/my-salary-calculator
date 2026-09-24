@@ -23,7 +23,7 @@ export default function Table2027Layout({ children }: { children: React.ReactNod
           <p className="rounded-xl bg-electric/5 border border-electric/20 px-4 py-3 text-xs leading-5 text-muted-blue">
             <strong className="text-navy">2027년 확정 반영:</strong> 국민연금 근로자 5.0%(요율
             인상)·최저시급 10,700원. <strong className="text-navy">미확정(2026 기준 준용):</strong>{" "}
-            건강보험·장기요양 — 확정 발표 시 즉시 갱신합니다. 소득세는 2026년 연간 누진세액 추정의 월 환산이며 실제 월별 간이세액표 조회 결과는 아닙니다. 올해 기준은{" "}
+            건강보험·장기요양 — 확정 발표 시 즉시 갱신합니다. 소득세는 현행 근로소득 간이세액표(2026년 3월 1일 지급분부터)를 준용하며, 2027년 표가 개정되면 갱신합니다. 올해 기준은{" "}
             <Link href="/table/2026/annual" className="font-bold text-electric hover:underline">
               2026 실수령액 표
             </Link>

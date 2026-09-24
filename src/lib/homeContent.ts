@@ -20,7 +20,7 @@ export const HOME_FAQ_ITEMS: HomeFaqItem[] = [
   {
     question: "연봉 실수령액과 세후 월급은 어떻게 다른가요?",
     answer:
-      `연봉 실수령액은 연간 수령액, 세후 월급은 월별 수령액을 뜻합니다. 이 계산기는 연봉을 12개월로 나눠 예상 월 수령액을 구하므로 성과급 지급 시기나 실제 월 급여와 차이가 날 수 있습니다. 연봉 5,000만원은 월 약 352만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준).`,
+      `연봉 실수령액은 연간 수령액, 세후 월급은 월별 수령액을 뜻합니다. 이 계산기는 연봉을 12개월로 나눠 예상 월 수령액을 구하므로 성과급 지급 시기나 실제 월 급여와 차이가 날 수 있습니다. 연봉 5,000만원은 월 약 357만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준).`,
   },
   {
     question: "4대보험 요율은 얼마인가요?",
@@ -35,7 +35,7 @@ export const HOME_FAQ_ITEMS: HomeFaqItem[] = [
   {
     question: "연봉 3000만원 실수령액은 얼마인가요?",
     answer:
-      `연봉 3,000만원의 2026년 예상 월 실수령액은 약 223만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 자세한 내역은 /salary/30000000 페이지에서 확인하세요.`,
+      `연봉 3,000만원의 2026년 예상 월 실수령액은 약 224만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 자세한 내역은 /salary/30000000 페이지에서 확인하세요.`,
   },
 ];
 

@@ -17,7 +17,7 @@ import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryM
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 연봉 실수령액 표 — 2400만~2억 전 구간 세후 월급 한눈에",
   description:
-    "연봉 3000만원은 월 약 223만원, 5000만원은 약 352만원, 1억원은 약 648만원으로 추정합니다. 연봉에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준의 2026년 보험료·세금 공제표입니다. 실제 급여와 다를 수 있습니다.",
+    "연봉 3000만원은 월 약 224만원, 5000만원은 약 357만원, 1억원은 약 653만원으로 추정합니다. 연봉에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준의 2026년 보험료·세금 공제표입니다. 실제 급여와 다를 수 있습니다.",
   path: "/table/2026/annual",
   keywords: [
     "연봉 실수령액 표",
@@ -51,7 +51,7 @@ const FAQ_ITEMS = [
  {
  question: "연봉 5,000만원의 실수령액은 얼마인가요?",
  answer:
- `2026년 모델의 예상 월 실수령액은 약 352만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 부양가족 수와 비과세 항목에 따라 달라질 수 있으며, 표의 각 행을 눌러 상세 공제 내역을 확인할 수 있습니다.`,
+ `2026년 모델의 예상 월 실수령액은 약 357만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 부양가족 수와 비과세 항목에 따라 달라질 수 있으며, 표의 각 행을 눌러 상세 공제 내역을 확인할 수 있습니다.`,
  },
  {
  question: "연봉에서 공제되는 항목은 무엇인가요?",
@@ -149,12 +149,12 @@ function AnnualTable() {
               확인하세요.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-              {/* 수치는 generateData2026(상세 페이지와 동일 엔진·식대 20만 기준) 결과와 동기 — 2026-08-30 통일 */}
+              {/* 수치는 generateData2026(상세 페이지와 동일 엔진·식대 20만 기준) 결과와 동기 — 2026-08-30 통일, 2026-09-25 간이세액표 엔진으로 재산출 */}
               {[
-                { label: "연봉 3천만원", monthly: "약 223만원" },
-                { label: "연봉 5천만원", monthly: "약 352만원" },
-                { label: "연봉 7천만원", monthly: "약 478만원" },
-                { label: "연봉 1억원",  monthly: "약 648만원" },
+                { label: "연봉 3천만원", monthly: "약 224만원" },
+                { label: "연봉 5천만원", monthly: "약 357만원" },
+                { label: "연봉 7천만원", monthly: "약 482만원" },
+                { label: "연봉 1억원",  monthly: "약 653만원" },
               ].map((item) => (
                 <div
                   key={item.label}

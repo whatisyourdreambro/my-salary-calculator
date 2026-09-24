@@ -65,7 +65,7 @@ export function calculateSharedSalary(payload: SalarySharePayload) {
       ? calculateSalary2026(annualSalary, payload.nonTaxableAmount, payload.dependents, payload.children).netPay
       : calculateNetSalary(annualSalary, payload.nonTaxableAmount * 12, payload.dependents, payload.children,
         { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }).monthlyNet;
-    modelLabel = "v" in payload ? "2026년 홈 계산 모델 · 연간 세액 추정을 12개월로 나눈 금액" : "기존 공유 링크의 연간 세액 추정 모델 · 현재 홈과 원 단위 처리 차이가 날 수 있음";
+    modelLabel = "v" in payload ? "2026년 홈 계산 모델 · 소득세는 근로소득 간이세액표 기준" : "기존 공유 링크 · 간이세액표 기준으로 다시 계산 · 현재 홈과 원 단위 처리 차이가 날 수 있음";
   }
   if (!Number.isFinite(monthlyNet) || monthlyNet <= 0) return null;
   return { annualSalary, monthlyNet, modelLabel, regular };

@@ -20,10 +20,11 @@ describe("English take-home uses the Korean home model", () => {
     expect(result.healthInsurance).toBe(172_560);
     expect(result.longTermCare).toBe(22_670);
     expect(result.employmentInsurance).toBe(43_200);
-    expect(result.incomeTax).toBe(349_170);
-    expect(result.localIncomeTax).toBe(34_910);
-    expect(result.totalDeductions).toBe(850_510);
-    expect(result.netPay).toBe(4_149_490);
+    // 월급여액 4,800,000원(500만 - 비과세 20만) · 1인 → 간이세액표 4,800~4,820천원 칸 307,420원
+    expect(result.incomeTax).toBe(307_420);
+    expect(result.localIncomeTax).toBe(30_740);
+    expect(result.totalDeductions).toBe(804_590);
+    expect(result.netPay).toBe(4_195_410);
   });
   it("allows zero only with a consistent zero exemption and never displays negative model pay", () => {
     expect(calculateEnglishTakeHome({ ...base, annualSalary: 0, nonTaxableMonthly: 0 })?.netPay).toBe(0);

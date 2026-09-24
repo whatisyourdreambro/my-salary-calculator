@@ -39,7 +39,7 @@ export default function EnglishSalaryCalculator() {
     <section id="calculator" aria-labelledby="english-salary-title" className="mx-auto mt-10 max-w-4xl scroll-mt-28 px-4 sm:px-6">
       <div className="rounded-3xl border border-border bg-background p-5 sm:p-8">
         <h2 id="english-salary-title" className="text-2xl font-black sm:text-3xl">Korea take-home salary estimate · 2026</h2>
-        <p className="mt-3 text-muted-foreground">Estimate average monthly take-home pay from an annual salary, qualifying non-taxable pay and eligible dependents. The estimate assumes standard employee insurance and spreads simplified annual income tax over twelve months.</p>
+        <p className="mt-3 text-muted-foreground">Estimate average monthly take-home pay from an annual salary, qualifying non-taxable pay and eligible dependents. The estimate assumes standard employee insurance and takes monthly income tax from Korea&apos;s official simplified withholding table (payments from March 1, 2026).</p>
         <div {...measurement.inputProps} className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="en-salary-annual" className="mb-2 block font-semibold">Annual gross salary (KRW)</label>
@@ -99,7 +99,7 @@ export default function EnglishSalaryCalculator() {
           <div className="mt-3 space-y-3 text-sm text-muted-foreground">
             <p>The annual salary is spread over twelve equal months. National tax is a simplified annual calculation divided by twelve, not the official monthly withholding-table calculation. Bonuses, irregular pay and actual year-end deductions can change each payslip and final tax.</p>
             <p>The model assumes standard employee pension, health, long-term-care and employment-insurance coverage. It uses current July 2026 pension limits throughout the estimate; a real January–December statement can use different limits in each half. Nationality, visa, age and social-security agreements are not checked.</p>
-            <p>Its income-tax calculation includes the earned-income deduction, basic deductions, pension deduction, earned-income tax credit and entered qualifying child credits. It omits other deductions and credits, including rent and medical expenses. It does not model a foreign-worker flat-tax election, treaty relief or non-resident restrictions.</p>
+            <p>Its monthly income tax is the official withholding-table amount for the monthly taxable pay and number of dependents. The table already reflects the earned-income deduction, basic deductions, a pension deduction, part of the special deductions such as health and employment insurance premiums, and the earned-income tax credit; the table&apos;s fixed reduction for entered children aged 8 to 20 is then applied. It omits year-end deductions and credits, including rent and medical expenses. It does not model a foreign-worker flat-tax election, treaty relief or non-resident restrictions.</p>
             <p>Amounts are estimates in KRW. They are not an actual payroll quote or a refund calculation. For a foreign-worker tax choice, use the separate limited comparison and confirm eligibility with payroll or NTS.</p>
           </div>
         </details>
