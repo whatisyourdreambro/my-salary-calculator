@@ -71,13 +71,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  description: guide.description,
  type: 'article',
  locale: 'en_US',
+ // 페이지 openGraph 가 상위 값을 통째로 대체하므로 site_name·image:alt 를 여기서 직접 선언 (OG-17)
+ siteName: 'Moneysalary',
  url: enUrl,
  publishedTime: guide.publishedDate,
  modifiedTime: getGuideModifiedDate(guide),
  authors: ['Moneysalary'],
  tags: guide.tags,
  // 페이지가 openGraph를 선언하면 루트 이미지가 상속되지 않음 — EN OG 분기 재사용
- images: [{ url: `https://www.moneysalary.com/api/og?lang=en&title=${encodeURIComponent(guide.title)}`, width: 1200, height: 630 }],
+ images: [{ url: `https://www.moneysalary.com/api/og?lang=en&title=${encodeURIComponent(guide.title)}`, width: 1200, height: 630, alt: guide.title }],
  },
  twitter: {
  card: 'summary_large_image',
@@ -95,9 +97,11 @@ export default function EnglishGuidePage({ params }: Props) {
  notFound();
  }
 
+ // Related cards use slug/title/description only — passing whole Guide objects put three
+ // other guides' full HTML into the RSC payload (PERF-08).
  const relatedGuides = rankRelatedGuides(enGuides, {
  currentSlug: guide.slug, category: guide.category, tags: guide.tags,
- }).slice(0, 3);
+ }).slice(0, 3).map(({ slug, title, description }) => ({ slug, title, description }));
 
  const jsonLd = articleLd({
  title: guide.title,

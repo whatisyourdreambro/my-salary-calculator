@@ -34,9 +34,12 @@ const OFFER_GUIDE_SLUGS = new Set([
 ]);
 import Breadcrumbs from "@/components/Breadcrumbs";
 
+/** 관련 글 카드에 실제로 쓰는 필드만 — 본문(content)이 RSC payload 에 실리지 않게 (PERF-08) */
+export type RelatedGuideCard = Pick<Guide, "slug" | "title" | "description" | "category">;
+
 interface GuidePageClientProps {
  guide: Guide;
- relatedGuides: Guide[];
+ relatedGuides: RelatedGuideCard[];
 }
 
 // 본문 HTML을 <h2 시작 위치에서만 분할 — 태그 중간이 잘리지 않도록 보장.

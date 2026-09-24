@@ -74,9 +74,11 @@ export default function GuidePage({ params }: Props) {
  permanentRedirect("/guides");
  }
 
+ // 카드에 쓰는 4개 필드만 넘긴다 — 전체 Guide 를 넘기면 관련 글 3편의 본문 HTML 이
+ // RSC payload 에 통째로 실린다(PERF-08: 쪽당 중앙값 13KB·최대 74KB).
  const relatedGuides = rankRelatedGuides(koGuides, {
  currentSlug: guide.slug, category: guide.category, tags: guide.tags,
- }).slice(0, 3);
+ }).slice(0, 3).map(({ slug, title, description, category }) => ({ slug, title, description, category }));
 
  const articleSchema = articleLd({
  title: guide.title,
