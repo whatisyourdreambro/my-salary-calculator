@@ -3,7 +3,9 @@
 // 2026-07-16 시즌 갱신: 7월분 납부기간(7/16~7/31) 시작 반영 — 납부지연가산세·
 // 납부 방법·서울시 부과 규모·카드 무이자 안내 추가
 // 2026-08-30 시즌 갱신: 9월분(2기분) 전환 — 본문 시즌 섹션 9월 기준 재작성
-// (다음 갱신: 12월 종부세 시즌 — CURRENT_PERIOD 유지, 종부세 납부 안내 섹션 추가 검토)
+// 2026-09-25 B6 DATE-15: 배지·헤더·메타·FAQ 기한을 빌드 시점(KST) 날짜로 자동 선택
+// (src/lib/propertyTaxPeriod.ts — 10/1 비시즌·11/25 종부세·12/16 비시즌, 경계일 후 첫 배포+Purge)
+// (다음 갱신: 12월 종부세 시즌 — 본문 시즌 섹션은 여전히 9월분 기준, 종부세 안내 재작성은 운영자 결정)
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -16,33 +18,27 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
 import PropertyHoldingTaxClient from "./PropertyHoldingTaxClient";
+import {
+  PERIOD_JULY,
+  PERIOD_SEPT,
+  pickPropertyTaxPeriod,
+  propertyTaxMetaDescription,
+} from "@/lib/propertyTaxPeriod";
 
 // ─────────────────────────────────────────────────────────────
-// 2026년 재산세 납부기간 상수 — 시즌 전환 시 이 블록만 갱신
-// 1) CURRENT_PERIOD를 교체하면 배지·헤더·메타 설명·FAQ 기한이 함께 바뀜
-// 2) 본문의 시즌 섹션(납부 안내·카드 무이자 일정)은 시즌 전용 수치이므로
-//    전환 때 수동 점검 필요 — 현재 9월 2기분 기준(2026-08-30)
+// 2026년 재산세·종부세 납부기간 — src/lib/propertyTaxPeriod.ts 가 단일 소스
+// 1) CURRENT_PERIOD는 빌드 시점(KST) 날짜로 자동 선택 — 배지·헤더·메타 설명·FAQ 기한이 함께 바뀜
+//    (~9/30 9월분 | 10/1~11/24 비시즌 | 11/25~12/15 종부세 | 12/16~ 비시즌).
+//    정적 프리렌더라 경계일 이후 첫 배포(CF Retry deployment 또는 아무 푸시) + 운영자 Purge 로 반영.
+//    SEASON_KEY 는 쓰지 않는다(9/26 에 OCT 로 넘어가지만 9월분 납기는 9/30).
+// 2) 본문의 시즌 섹션(납부 안내·카드 무이자 일정)은 '2026년 9월분'으로 명시된 기록이라
+//    기한 뒤에도 사실관계는 유지됨 — 종부세 시즌 재작성은 수동 점검(2026-09-25 기준 9월 2기분)
 // ─────────────────────────────────────────────────────────────
-const PERIOD_JULY = {
-  label: "7월분(1기분)",
-  range: "7월 16일(목)~7월 31일(금)",
-  rangeShort: "7/16~7/31",
-  deadline: "7월 31일(금)",
-  scope: "주택분 1/2 + 건축물·선박·항공기분",
-};
-const PERIOD_SEPT = {
-  label: "9월분(2기분)",
-  range: "9월 16일~9월 30일",
-  rangeShort: "9/16~9/30",
-  deadline: "9월 30일",
-  scope: "주택분 나머지 1/2 + 토지분",
-};
-// 현재 시즌에 강조할 납부기간 — 2026-08-30 9월 2기분 전환 완료
-const CURRENT_PERIOD = PERIOD_SEPT;
+const CURRENT_PERIOD = pickPropertyTaxPeriod(new Date());
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 부동산 보유세 계산기 — 재산세 + 종합부동산세 동시 산출",
-  description: `${CURRENT_PERIOD.label} 재산세 납부기간 ${CURRENT_PERIOD.rangeShort} — 대상은 ${CURRENT_PERIOD.scope}. 공시가 10억 1주택자 재산세+지방교육세 약 140만원(도시지역분 별도). 재산세(7·9월)+종합부동산세(12월) 동시 자동 계산, 공정시장가액비율·1세대 1주택 특례 반영.`,
+  description: propertyTaxMetaDescription(CURRENT_PERIOD),
   path: "/property-holding-tax-2026",
   keywords: [
     "부동산 보유세",
@@ -92,7 +88,7 @@ const FAQS = [
   },
   {
     q: "재산세를 기한 내에 못 내면 가산세가 얼마나 붙나요?",
-    a: `납부기한이 지나면 즉시 3%의 납부지연가산세가 붙습니다. 세목별 세액이 45만원 이상이면 여기에 매월 0.66%가 추가로 붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. 2026년 ${CURRENT_PERIOD.label} 재산세 기한은 ${CURRENT_PERIOD.deadline}이므로 하루라도 늦지 않게 납부하는 것이 좋습니다.`,
+    a: `납부기한이 지나면 즉시 3%의 납부지연가산세가 붙습니다. 세목별 세액이 45만원 이상이면 여기에 매월 0.66%가 추가로 붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. ${CURRENT_PERIOD.faqDeadline}`,
   },
   {
     q: "재산세를 신용카드로 내면 수수료가 있나요?",
@@ -135,7 +131,7 @@ export default function PropertyHoldingTax2026Page() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <header className="mb-8">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-10 text-electric font-bold text-xs uppercase tracking-wider mb-3">
-            {CURRENT_PERIOD.label} 재산세 납부기간 {CURRENT_PERIOD.rangeShort}
+            {CURRENT_PERIOD.badge}
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 leading-tight mb-3">
             2026 부동산 보유세 계산기
@@ -143,8 +139,7 @@ export default function PropertyHoldingTax2026Page() {
           <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
             주택 공시가격을 입력하면 7·9월 재산세와 12월 종합부동산세를 동시에 계산합니다. 1세대
             1주택 12억 공제, 다주택자 공제 9억, 공정시장가액비율 특례까지 반영.{" "}
-            {CURRENT_PERIOD.label} 재산세 고지서를 받았다면 계산기로 내 세액 수준을 확인하고,{" "}
-            {CURRENT_PERIOD.deadline}까지 위택스·이택스에서 납부하세요.
+            {CURRENT_PERIOD.headerCta}
           </p>
         </header>
 
