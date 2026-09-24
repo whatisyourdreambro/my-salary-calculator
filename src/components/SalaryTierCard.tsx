@@ -6,6 +6,7 @@ import React, { useRef, useState } from "react";
 import { calculateSalaryRank } from "@/data/salaryRankData";
 import { Download, Zap } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
+import { isImageDownloadRestricted } from "@/lib/inAppBrowser";
 
 interface SalaryTierCardProps {
  annualSalary: number;
@@ -36,13 +37,21 @@ const MungRankIcon = ({ tier }: { tier: string }) => {
 
 export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  const cardRef = useRef<HTMLDivElement>(null);
+ const actionsRef = useRef<HTMLDivElement>(null);
  const [isDownloading, setIsDownloading] = useState(false);
- 
+ const [previewRequest, setPreviewRequest] = useState(0);
+
  // Default to 30s for ranking as it's the most common target demographic
  const rank = calculateSalaryRank("30s", annualSalary);
 
  const downloadImage = async () => {
  if (!cardRef.current) return;
+ // 네이버 앱·카카오톡 인앱에서는 data: 다운로드가 조용히 실패하는 경우가 많다 — 바로 아래 기존 미리보기(이미지를 길게 눌러
+ // 저장)를 대신 연다 (A16, 운영자 승인 2026-09-25). 새 블록 없이 기존 패널만 펼친다. 패널이 아직 없으면 종전 다운로드.
+ if (isImageDownloadRestricted(navigator.userAgent) && actionsRef.current?.querySelector("[data-result-share-panel]")) {
+ setPreviewRequest((n) => n + 1);
+ return;
+ }
  setIsDownloading(true);
 
  try {
@@ -137,7 +146,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  </div>
 
  {/* Actions */}
- <div>
+ <div ref={actionsRef}>
  <button
  onClick={downloadImage}
  disabled={isDownloading}
@@ -154,6 +163,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  title={`30대 참고표 기준 내 연봉 티어: ${rank.name} · 참고표 상위 ${rank.percentile}%`}
  description="자체 추정표로 보는 참고 티어입니다. 공식 전국 순위가 아니며 공식 통계 기준연도·원자료가 확인되지 않았습니다."
  getShareImage={captureCardImage}
+ openPreviewRequest={previewRequest}
  className="justify-center mt-4"
  />
  </div>

@@ -201,6 +201,19 @@ function shareEventParams(channel: string, contentType: string, pagePath: string
   };
 }
 
+/**
+ * Result-share funnel before a channel is chosen: preview opened -> content approved
+ * (OG-13). The channel step is the existing share/share_outcome with share_mode=result.
+ * Fixed enum fields only; no URL, title, image, result key or user amounts.
+ */
+export function trackSharePreview(step: "open" | "approve", contentType: string): void {
+  trackEvent(step === "open" ? "share_preview_open" : "share_preview_approve", {
+    content_type: SHARE_TYPES.has(contentType) ? contentType : "page",
+    share_mode: "result",
+    event_version: 2,
+  });
+}
+
 /** Only fixed outcomes; no URL, title, image, result key, error text or user amounts. */
 export function trackShareOutcome(channel: string, contentType: string, outcome: ShareOutcome, pagePath?: string, shareMode: ShareMode = "page", errorKind?: ShareErrorKind): void {
   const allowed = ["native_handoff", "sdk_requested", "intent_requested", "clipboard_success", "aborted", "error", "manual_copy_shown"];

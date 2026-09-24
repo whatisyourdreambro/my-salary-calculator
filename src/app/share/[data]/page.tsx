@@ -10,6 +10,9 @@ import NextActions from "@/components/NextActions";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { nextActionHrefs } from "@/lib/nextActionLinks";
 import ResultSharePanel from "@/components/ResultSharePanel";
+import { salaryOgImagePath } from "@/lib/ogUrlVersion";
+
+const SITE_URL = "https://www.moneysalary.com";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
 
@@ -31,7 +34,8 @@ export function generateMetadata({ params }: Props): Metadata {
 
  if (!decoded) {
  return {
- title: "공유된 연봉 결과 — 머니샐러리",
+ // 브랜드는 루트 layout 템플릿('%s | 머니샐러리')이 한 번만 붙인다 — 종전 '— 머니샐러리' 는 브랜드 2회 노출
+ title: "공유된 연봉 결과",
  description: "공유된 연봉 계산 결과 페이지",
  robots: { index: false, follow: false },
  };
@@ -41,17 +45,25 @@ export function generateMetadata({ params }: Props): Metadata {
  const netManwon = Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR");
  const title = `${decoded.regular ? "연봉" : "연 환산 소득"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`;
  const description = `${decoded.modelLabel}. 공유자가 입력한 조건에 따른 추정액입니다.`;
- // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정)
- const ogImage = `/api/og?type=salary&amount=${decoded.annualSalary}&net=${decoded.monthlyNet}`;
+ // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정).
+ // 금액은 카드 표시 단위(1만원)로 모으고 &v= 버전을 붙인다 (OG-09·OG-03).
+ const ogImage = salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet);
+ // og:url — 같은 결과의 정규 토큰(재공유 링크와 같은 인코딩). noindex 는 그대로.
+ const shareToken = encodeSalarySharePayload(decoded.payload) ?? params.data;
 
  return {
  title,
  description,
  robots: { index: false, follow: false },
+ // 이 openGraph 객체가 루트 openGraph 를 통째로 대체하므로 type·locale·siteName·url 을 여기서 다시 채운다 (OG-11)
  openGraph: {
+ type: "website",
+ locale: "ko_KR",
+ siteName: "머니샐러리",
+ url: `${SITE_URL}/share/${shareToken}`,
  title,
  description,
- images: [{ url: ogImage, width: 1200, height: 630 }],
+ images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
  },
  twitter: {
  card: "summary_large_image",
@@ -104,7 +116,7 @@ export default function SharePage({ params }: Props) {
  url={`https://www.moneysalary.com/share/${encodeSalarySharePayload(decoded.payload)}`}
  title={`${decoded.regular ? "연봉" : "연 환산 소득"} ${decoded.annualSalary.toLocaleString("ko-KR")}원 · 월 수령 추정 ${decoded.monthlyNet.toLocaleString("ko-KR")}원`}
  description={decoded.modelLabel}
- imageUrl={`https://www.moneysalary.com/api/og?type=salary&amount=${decoded.annualSalary}&net=${decoded.monthlyNet}`}
+ imageUrl={`${SITE_URL}${salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet)}`}
  contentType="salary_result"
  />
  </div>
