@@ -63,7 +63,7 @@ const youthSubscriptionAccount = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 청년우대형 vs 청년주택드림 비교</h2>
 <ul class="space-y-2 mt-4">
 <li>· 청년우대형: 최대 금리 3.3% + 소득공제 40% × 300만원</li>
-<li>· 청년주택드림(신규): 최대 금리 4.5% + 소득공제 40% × 600만원 + 1.3억 대출 자격</li>
+<li>· 청년주택드림(신규): 최대 금리 4.5% + 소득공제 40% × 연 300만원(최대 120만원, 이자 비과세는 연 600만원 납입분) + 최대 3억원(신혼 4억원) 대출 자격</li>
 </ul>
 <p>청년우대형 기존 가입자는 청년주택드림으로 전환 신청 가능. 더 큰 혜택을 위해 전환 권장.</p>
 
@@ -71,8 +71,8 @@ const youthSubscriptionAccount = `
 <ul class="space-y-2 mt-4">
 <li>· 월 50만원 × 60개월 = 3,000만원</li>
 <li>· 4.5% 이자: 약 350만원</li>
-<li>· 소득공제 환급: 약 285만원 (5년 누적)</li>
-<li>· 청년주택드림 대출 자격: 1.3억 (1년 + 1,000만원 납입 시)</li>
+<li>· 소득공제 환급: 약 144만원 (연 120만원 공제 × 한계세율 24%, 5년 누적)</li>
+<li>· 청년주택드림 대출 자격: 최대 3억원·신혼 4억원 (1년 + 1,000만원 납입 시)</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/housing-subscription" class="text-primary underline">청약 시뮬레이터</a></li></ul></div>
@@ -111,14 +111,14 @@ const newlywedChildBirthBenefit = `
 `;
 
 const youthAccountCombination = `
-<p class="lead">청년이 가장 큰 절세·혜택을 얻으려면 청년도약계좌 + 청년주택드림 청약통장 + 청년형 장기집합투자증권저축 3가지를 동시 가입. 5년 누적 약 1,000만원+ 혜택.</p>
+<p class="lead">청년이 가장 큰 절세·혜택을 얻으려면 청년도약계좌 + 청년주택드림 청약통장 + 청년형 장기집합투자증권저축 3가지를 동시 가입(도약계좌·장기투자는 2025-12-31 신규 가입 종료 — 2026년 6월 출시 청년미래적금 참고). 기존 가입자 기준 5년 누적 약 640만원+ 혜택.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 청년 3종 조합 5년 혜택</h2>
 <ul class="space-y-3 mt-4">
-<li><strong>① 청년도약계좌</strong>: 정부기여금 144만원 + 비과세 99만원 = <strong>243만원</strong></li>
-<li><strong>② 청년주택드림</strong>: 우대금리 250만원 + 소득공제 285만원 = <strong>535만원</strong></li>
-<li><strong>③ 청년형 장기집합투자</strong>: 운용수익 비과세 108만원 + 소득공제 144만원 = <strong>252만원</strong></li>
-<li><strong>합산 5년 혜택: 약 1,030만원</strong></li>
+<li><strong>① 청년도약계좌</strong>(2025-12-31 신규 가입 종료, 기존 가입자): 정부기여금 144만원 + 비과세 99만원 = <strong>243만원</strong></li>
+<li><strong>② 청년주택드림</strong>: 우대금리 250만원 + 소득공제 환급 약 144만원(연 300만원 한도 40%) = <strong>약 394만원</strong></li>
+<li><strong>③ 청년형 장기집합투자</strong>: 가입 기한 2025-12-31 종료(2024 세법개정으로 1년 연장 후 일몰) — 기존 가입자만 연 납입 600만원 한도 40% 소득공제(최대 240만원), 운용수익 비과세 아님</li>
+<li><strong>합산 5년 혜택: 기존 가입자 기준 ①+② 약 637만원 + ③ 소득공제 환급(한계세율 24%면 연 최대 약 58만원)</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 동시 가입 자격</h2>
@@ -126,7 +126,7 @@ const youthAccountCombination = `
 <li>· 청년도약: 만 19~34세, 연 7,500만원 이하</li>
 <li>· 청년주택드림: 만 19~34세, 무주택 본인, 연 5,000만원 이하</li>
 <li>· 청년형 장기투자: 만 19~34세, 총급여 5,000만원 이하</li>
-<li>· 공통 자격 만족 시 3개 동시 가능</li>
+<li>· 2026년 신규 가입은 청년주택드림만 가능 — 도약계좌·장기투자는 2025-12-31 신규 가입 종료</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/savings-interest-2026" class="text-primary underline">적금 이자 계산기</a></li></ul></div>
@@ -178,22 +178,22 @@ const newlywedLoanLimit = `
 `;
 
 const newlywedJointOwnership = `
-<p class="lead">신혼부부 주택 공동명의 vs 단독명의 — 종부세·양도세·증여세 모두 다르게 적용. 일반적으로 공시가 18억 이하 1주택은 단독, 18억 초과 또는 2주택은 공동명의가 유리합니다.</p>
+<p class="lead">신혼부부 주택 공동명의 vs 단독명의 — 종부세·양도세·증여세 모두 다르게 적용. 종부세 공제는 단독 1주택 12억, 공동명의 인별 9억씩 18억이라 공시가 12억 초과부터 공동명의가 유리해지기 쉽습니다(단독은 세액공제 비교).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 1주택 시 비교</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">공시가</th><th class="p-3">단독명의</th><th class="p-3">공동명의(50:50)</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">10억</td><td class="p-3 text-emerald-600">0원</td><td class="p-3">0원(각 6억 공제)</td></tr>
-<tr class="border-t"><td class="p-3">14억</td><td class="p-3">60만원</td><td class="p-3">0원(각 6억 = 12억 공제)</td></tr>
-<tr class="border-t"><td class="p-3">18억</td><td class="p-3">180만원</td><td class="p-3">90만원</td></tr>
-<tr class="border-t"><td class="p-3">24억</td><td class="p-3">480만원</td><td class="p-3">240만원</td></tr>
+<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">공시가 (종부세, 재산세 공제 전)</th><th class="p-3">단독명의</th><th class="p-3">공동명의(50:50)</th></tr></thead><tbody>
+<tr class="border-t"><td class="p-3">10억</td><td class="p-3 text-emerald-600">0원</td><td class="p-3">0원(각 9억 공제)</td></tr>
+<tr class="border-t"><td class="p-3">14억</td><td class="p-3">약 60만원</td><td class="p-3">0원(각 7억 &lt; 9억)</td></tr>
+<tr class="border-t"><td class="p-3">18억</td><td class="p-3">약 192만원</td><td class="p-3">0원(각 9억 = 18억 공제)</td></tr>
+<tr class="border-t"><td class="p-3">24억</td><td class="p-3">약 480만원</td><td class="p-3">약 180만원(각 12억 − 9억)</td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 결정 기준</h2>
 <ul class="space-y-2 mt-4">
-<li>· 공시가 12억 이하: <strong>단독</strong>(12억 단일 공제로 종부세 0원)</li>
-<li>· 12~18억: <strong>공동명의 유리</strong> (각 6억 = 12억 공제 + 분산)</li>
-<li>· 18억+: <strong>공동명의 절대 유리</strong> (세금 분산)</li>
-<li>· 2주택 이상: <strong>무조건 공동명의</strong></li>
+<li>· 공시가 12억 이하: <strong>단독·공동 모두 종부세 0원</strong></li>
+<li>· 12~18억: <strong>공동명의 유리</strong> (각 9억 = 18억 공제 → 0원)</li>
+<li>· 18억+: <strong>공동명의가 대체로 유리</strong> — 단 단독 1세대1주택은 고령자·장기보유 세액공제(최대 80%) 비교</li>
+<li>· 공동명의 1주택 특례: 9월 16~30일 신청하면 1세대1주택자(12억 공제·세액공제)로 계산 가능 — 유리한 쪽 선택</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/property-holding-tax-2026" class="text-primary underline">부동산 보유세 계산기</a></li></ul></div>
@@ -204,12 +204,12 @@ const newlywedJointOwnership = `
 // ═══════════════════════════════════════════════════════════════
 
 const gangnamVsGangbuk = `
-<p class="lead">강남 1주택(공시가 20억) vs 강북 2주택(공시가 합산 16억) 보유세 비교. 일반적으로 같은 자산가치라도 1주택 집중이 다주택 분산보다 세금 부담 50~70% 적습니다.</p>
+<p class="lead">강남 1주택(공시가 20억) vs 강북 2주택(공시가 합산 16억) 연 보유세 비교. 1세대1주택 12억 공제 덕분에 강남 약 632만원 vs 강북 약 544만원으로 차이는 약 88만원입니다(도시지역분·세액공제 반영 전).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 연 보유세 비교</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">시나리오</th><th class="p-3">재산세</th><th class="p-3">종부세</th><th class="p-3">합계</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">강남 1주택 20억</td><td class="p-3">600만원</td><td class="p-3">240만원(12억 공제)</td><td class="p-3"><strong>840만원</strong></td></tr>
-<tr class="border-t"><td class="p-3">강북 2주택 합 16억(각 8억)</td><td class="p-3">800만원(2채)</td><td class="p-3">1,200만원(공제 0)</td><td class="p-3"><strong>2,000만원</strong></td></tr>
+<tr class="border-t"><td class="p-3">강남 1주택 20억</td><td class="p-3">약 356만원(교육세 포함)</td><td class="p-3">약 276만원(12억 공제)</td><td class="p-3"><strong>약 632만원</strong></td></tr>
+<tr class="border-t"><td class="p-3">강북 2주택 합 16억(각 8억)</td><td class="p-3">약 310만원(2채·교육세 포함)</td><td class="p-3">약 234만원(인별 9억 공제)</td><td class="p-3"><strong>약 544만원</strong></td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 양도세까지 고려</h2>
@@ -380,16 +380,16 @@ const rentalReportObligation = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 임대소득 신고 의무</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>1주택자 + 9억 이하 + 임대료 2,000만원 이하</strong>: 비과세 (신고 면제)</li>
+<li>· <strong>1주택자 + 기준시가 12억 이하</strong>: 월세 금액과 무관하게 비과세 (신고 면제)</li>
 <li>· <strong>2주택 이상 + 임대료 발생</strong>: 신고 의무 (금액 무관)</li>
-<li>· <strong>1주택 + 9억 초과 임대</strong>: 신고 의무</li>
-<li>· <strong>1주택 + 임대료 2,000만원 초과</strong>: 신고 의무</li>
+<li>· <strong>1주택 + 기준시가 12억 초과 임대</strong>: 신고 의무</li>
+<li>· <strong>국외 소재 주택 임대</strong>: 1주택이라도 신고 의무</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 미신고 시 가산세</h2>
 <ul class="space-y-2 mt-4">
 <li>· 무신고: 20% (단순 누락 10%)</li>
-<li>· 납부불성실: 연 9.125%</li>
+<li>· 납부지연가산세: 일 0.022%(연 약 8.03%)</li>
 <li>· 5년 누적 추징 가능 — 원래 세액의 약 2~3배</li>
 </ul>
 
@@ -515,14 +515,14 @@ const insurance100Limit = `
 `;
 
 const cardLimitDetail = `
-<p class="lead">신용카드 등 사용액 소득공제는 결제 수단별 공제율과 한도가 모두 다름. 신용카드 15%, 체크/현금 30%, 전통시장·대중교통·도서공연 40%. 한도는 총급여별 200~300만원.</p>
+<p class="lead">신용카드 등 사용액 소득공제는 결제 수단별 공제율과 한도가 모두 다름. 신용카드 15%, 체크/현금 30%, 도서공연 등 문화비 30%(총급여 7천 이하), 전통시장·대중교통 40%. 기본 한도는 7천 이하 300만원·초과 250만원(자녀 수에 따라 상향).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 한도 — 총급여별</h2>
 <ul class="space-y-2 mt-4">
-<li>· 7천 이하: 300만원</li>
-<li>· 7천~1.2억: 250만원</li>
-<li>· 1.2억 초과: 200만원</li>
-<li>· 전통시장·대중교통·도서공연 각 100만원 추가 한도</li>
+<li>· 7천 이하: 300만원 (자녀 1명 350만·2명 이상 400만)</li>
+<li>· 7천 초과: 250만원 (자녀 1명 275만·2명 이상 300만)</li>
+<li>· 1.2억 초과 별도 구간(200만원)은 2023년 귀속부터 폐지 — 7천 초과와 같은 한도</li>
+<li>· 추가 한도: 전통시장·대중교통(7천 이하는 문화비 포함) 합산 300만원 / 7천 초과 200만원</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 최적 사용 비율</h2>
@@ -565,7 +565,7 @@ const eyewearHerbMedical = `
 <li>· 임플란트·치과·교정</li>
 <li>· 출산·분만 의료비</li>
 <li>· 산후조리원 (200만원 한도)</li>
-<li>· 난임시술 (한도 없음, 20% 공제)</li>
+<li>· 난임시술 (한도 없음, 30% 공제)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 제외 항목</h2>
@@ -585,7 +585,7 @@ const foreignFlatTax19 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 적용 요건</h2>
 <ul class="space-y-2 mt-4">
 <li>· 한국 거주 외국인 근로자</li>
-<li>· 한국 거주 시작일로부터 5년간 적용</li>
+<li>· 국내 최초 근로 제공일부터 20년간 적용(2023년 개정)</li>
 <li>· 연말정산 시 또는 5월 종소세 신고 시 선택</li>
 <li>· 19% 단일세율 + 지방소득세 1.9% = 총 20.9%</li>
 </ul>
@@ -604,7 +604,7 @@ const foreignFlatTax19 = `
 `;
 
 const religiousDonation100 = `
-<p class="lead">종교단체 기부금은 연소득의 10% 한도, 그 외 지정기부금은 30% 한도. 정치자금 기부는 100% 세액공제(10만원 한도) + 초과분 15%. 절세 효과 큰 기부 전략.</p>
+<p class="lead">종교단체 기부금은 소득금액의 10% 한도, 그 외 지정기부금은 30% 한도. 정치자금 기부는 100% 세액공제(10만원 한도) + 초과분 15%. 절세 효과 큰 기부 전략.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 기부금 한도</h2>
 <ul class="space-y-2 mt-4">
@@ -617,8 +617,8 @@ const religiousDonation100 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>연소득 6,000만원 + 종교단체 기부 600만원:</p>
 <ul class="space-y-2 mt-4">
-<li>· 한도 = 6,000 × 10% = 600만원 (모두 인정)</li>
-<li>· 15% 세액공제 = 90만원 환급</li>
+<li>· 한도 = 근로소득금액(약 4,725만원) × 10% ≈ 472만원 (나머지 128만원은 한도 초과)</li>
+<li>· 472만원 × 15% 세액공제 ≈ 71만원 환급</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 영수증 필수</h2>
@@ -632,21 +632,21 @@ const religiousDonation100 = `
 // ═══════════════════════════════════════════════════════════════
 
 const domesticVsOverseasEtf = `
-<p class="lead">국내 상장 ETF는 매매차익 비과세(일반), 해외 ETF는 22% 양도세. 같은 S&P500이라도 TIGER 미국S&P500(국내 상장) vs SPY(미국 상장)는 세금 구조가 완전 다름.</p>
+<p class="lead">국내 상장 주식형 ETF만 매매차익 비과세 — 국내상장 해외지수 ETF는 과표기준가 증가분 15.4% 배당소득 과세, 해외 ETF는 22% 양도세. 같은 S&P500이라도 TIGER 미국S&P500(국내 상장) vs SPY(미국 상장)는 세금 구조가 완전 다름.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 세금 비교</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">항목</th><th class="p-3">국내 ETF</th><th class="p-3">해외 ETF</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">매매차익</td><td class="p-3 text-emerald-600">비과세 (일반)</td><td class="p-3">22% 양도세</td></tr>
+<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">항목</th><th class="p-3">국내상장 해외지수 ETF</th><th class="p-3">해외 ETF</th></tr></thead><tbody>
+<tr class="border-t"><td class="p-3">매매차익</td><td class="p-3">배당소득 15.4% (매매차익과 과표기준가 증가분 중 작은 금액)</td><td class="p-3">22% 양도세</td></tr>
 <tr class="border-t"><td class="p-3">배당소득</td><td class="p-3">15.4% 분리</td><td class="p-3">15% 원천(미국)</td></tr>
-<tr class="border-t"><td class="p-3">기본공제</td><td class="p-3">대주주 외 없음</td><td class="p-3">연 250만원</td></tr>
-<tr class="border-t"><td class="p-3">손익통산</td><td class="p-3">불가</td><td class="p-3">가능</td></tr>
+<tr class="border-t"><td class="p-3">기본공제</td><td class="p-3">없음(배당소득)</td><td class="p-3">연 250만원</td></tr>
+<tr class="border-t"><td class="p-3">손익통산</td><td class="p-3">불가(배당소득)</td><td class="p-3">가능</td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 5천만원 → 7천만원</h2>
 <ul class="space-y-2 mt-4">
-<li>· 국내 TIGER S&P500: 0원 세금</li>
+<li>· 국내 TIGER S&P500: 약 308만원(15.4%) — 금융소득종합과세 합산 대상</li>
 <li>· 미국 SPY: (2,000 - 250) × 22% = 385만원 세금</li>
-<li>· <strong>차이 385만원</strong> → 국내 ETF 압도적 유리</li>
+<li>· <strong>차이 약 77만원</strong> — 금융소득 연 2,000만원 초과 여부까지 함께 비교</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/stock-tax" class="text-primary underline">주식 양도세 계산기</a></li></ul></div>
@@ -832,7 +832,7 @@ const severanceLumpVsIrp = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 1억 퇴직금 비교</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">방식</th><th class="p-3">즉시 세금</th><th class="p-3">연금 수령 시</th><th class="p-3">총 세금</th></tr></thead><tbody>
 <tr class="border-t"><td class="p-3">일시금</td><td class="p-3">약 1,000만원</td><td class="p-3">—</td><td class="p-3">1,000만원</td></tr>
-<tr class="border-t"><td class="p-3">IRP 이전</td><td class="p-3">0원 (이연)</td><td class="p-3">10년 분할 시 약 600만원</td><td class="p-3">600만원</td></tr>
+<tr class="border-t"><td class="p-3">IRP 이전</td><td class="p-3">0원 (이연)</td><td class="p-3">10년 이내 연금수령 30% 감면 → 약 700만원</td><td class="p-3">700만원</td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 IRP 이전 권장 케이스</h2>
@@ -860,12 +860,11 @@ const careerGapRehire = `
 `;
 
 const taxFreeMealCommute = `
-<p class="lead">비과세 식대 월 20만원 + 출퇴근 통신비 일부 비과세. 한 달에 약 25~30만원 비과세 → 연 300~360만원 세금 부담 없는 소득. 한계세율 24% 적용 시 약 72~86만원 세금 절감 효과.</p>
+<p class="lead">비과세 식대 월 20만원 + 자가운전보조금·실비변상적 급여 등 비과세. 한 달에 약 25~30만원 비과세 → 연 300~360만원 세금 부담 없는 소득. 한계세율 24% 적용 시 약 72~86만원 세금 절감 효과.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 비과세 항목</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>식대</strong>: 월 20만원 (외부 식사 또는 회사 제공 식대)</li>
-<li>· <strong>출퇴근 통신비</strong>: 회사 업무용 일부 (월 5~10만원)</li>
 <li>· <strong>자가운전보조금</strong>: 월 20만원 (본인 차량 업무 사용)</li>
 <li>· <strong>일직·숙직 수당</strong>: 1일 5만원 한도</li>
 <li>· <strong>실비변상적 급여</strong>: 출장비·일비·차량유지비</li>
@@ -1064,15 +1063,15 @@ export const hotNewsExtended: Guide[] = [
   { slug: "newlywed-asset-tax-saving-2026", title: "신혼부부 자산·공제 확인표 — 공동명의와 맞벌이 비교", description: "부부 공제가 자동으로 두 배가 되지 않는 이유. 종부세 인별 9억원·1주택 12억원, 자산 명의와 지출자, 중복 공제 조건을 구분합니다.", category: "세금", tags: ["신혼부부", "절세", "공동명의", "증여세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: newlywedAssetTax, lang: "ko" },
   { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 5억 30년 시 1.8억 절감", description: "디딤돌 1.6%·한도 5억 vs 보금자리론 3.5%·한도 10억. 부부 소득·집값별 유리한 상품 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
-  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 1.3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 소득공제 600만원 + 1.3억 대출 자격. 5년 누적 635만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
+  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
   { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 5가지 — 양가 부모 부양·취득세 200만원", description: "무소득 배우자 인적공제 + 양가 부모 부양 + 신혼 첫 주택 취득세 감면 + 결혼 카드 사용 + 출산·산후조리원 의료비 200만원.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "취득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: newlywedDeduction, lang: "ko" },
   { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 3,200만원 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모 육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 80만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
-  { slug: "youth-3account-combination-2026", title: "청년 3종 조합 5년 1,030만원 혜택 — 도약계좌 + 주택드림 + 장기투자", description: "청년도약 243만원 + 청년주택드림 535만원 + 청년형 장기투자 252만원 = 5년 누적 1,030만원. 만 19~34세 동시 가입 가능.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
+  { slug: "youth-3account-combination-2026", title: "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료", description: "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
   { slug: "youth-k-pass-mass-transit-2026", title: "K-패스 대중교통 환급 — 청년 30% 연 28만원, 저소득층 53%", description: "월 15회+ 대중교통 이용 시 일반 20%·청년 30%·저소득 53% 환급. 청년 월 8만원 사용 시 연 28만원 환급.", category: "기초", tags: ["K-패스", "대중교통", "청년", "환급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthKpass, lang: "ko" },
   { slug: "newlywed-loan-limit-2x-2026", title: "신혼부부 대출 한도 부부 합산 — 단독 대비 2배 가능", description: "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.5억 대출 + 12억 주택 매수 가능. 공동 채무자 리스크 점검 필수.", category: "부동산", tags: ["신혼부부", "대출 한도", "DSR", "LTV", "공동명의", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedLoanLimit, lang: "ko" },
-  { slug: "newlywed-joint-ownership-2026", title: "신혼부부 공동명의 vs 단독명의 — 공시가 12억 기준 분기점", description: "1주택 공시가 12억 이하: 단독(12억 공제) / 12~18억: 공동명의(각 6억 합 12억) / 18억+: 공동명의 절대 유리.", category: "부동산", tags: ["신혼부부", "공동명의", "종부세", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedJointOwnership, lang: "ko" },
+  { slug: "newlywed-joint-ownership-2026", title: "신혼부부 공동명의 vs 단독명의 — 공시가 12억 기준 분기점", description: "1주택 공시가 12억 이하: 둘 다 0원 / 12~18억: 공동명의(각 9억)면 0원 / 18억+: 공동명의 대체로 유리, 단독 세액공제 비교.", category: "부동산", tags: ["신혼부부", "공동명의", "종부세", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedJointOwnership, lang: "ko" },
   // 부동산 심화 10편
-  { slug: "gangnam-vs-gangbuk-prop-tax-2026", title: "강남 1주택 vs 강북 2주택 — 같은 자산 합 16억일 때 세금 1,160만원 차이", description: "강남 1주택 20억 보유세 840만원 vs 강북 2주택 합 16억 보유세 2,000만원. 1주택 집중이 다주택 분산 대비 50~70% 적은 세금.", category: "부동산", tags: ["보유세", "종부세", "1주택자", "다주택", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: gangnamVsGangbuk, lang: "ko" },
+  { slug: "gangnam-vs-gangbuk-prop-tax-2026", title: "강남 1주택 20억 vs 강북 2주택 16억 — 보유세 632만 vs 544만원", description: "강남 1주택 20억 보유세 약 632만원 vs 강북 2주택 합 16억 약 544만원. 1주택 12억 공제로 공시가 4억 차이에도 세금 차이는 약 88만원.", category: "부동산", tags: ["보유세", "종부세", "1주택자", "다주택", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: gangnamVsGangbuk, lang: "ko" },
   { slug: "parcel-vs-occupancy-right-tax-2026", title: "분양권 vs 입주권 양도세 — 단기 양도세 70%·60% 점검", description: "분양권 단기 양도세 2년 미만 70%, 입주권 보유기간 합산(원조합원+본인). 8억 입주권 매도 시 양도세 약 6,800만원.", category: "부동산", tags: ["분양권", "입주권", "양도세", "재개발", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: parcelRightVsOccupancyRight, lang: "ko" },
   { slug: "temp-two-home-3year-rule-2026", title: "일시적 2주택 3년 룰 — 1일 초과 시 양도세 2~3억 점프", description: "신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.", category: "부동산", tags: ["일시적2주택", "양도세", "비과세", "이사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: tempTwoHomeRule, lang: "ko" },
   { slug: "redevelopment-tax-3-step-2026", title: "재건축·재개발 양도세 3단계 — 사업시행·관리처분·준공 시점별", description: "사업시행 전 일반 양도세, 관리처분~준공 입주권 보유기간 합산, 준공 후 새 주택 양도세 + 청산금 차익 별도.", category: "부동산", tags: ["재건축", "재개발", "양도세", "입주권", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: redevelopmentTax, lang: "ko" },
@@ -1081,20 +1080,20 @@ export const hotNewsExtended: Guide[] = [
   { slug: "commercial-office-capital-gains-2026", title: "상가·오피스텔 양도세 — 7억→12억 매도 시 1.25억 부담", description: "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억 + 장기보유공제 30% 시 약 1.25억 세금. 임대사업자 등록으로 우대 가능.", category: "부동산", tags: ["상가", "오피스텔", "양도세", "임대사업", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: commercialOfficeTax, lang: "ko" },
   { slug: "burdened-gift-strategy-2026", title: "부담부증여 — 시가 10억 + 대출 6억 증여 시 증여세 절반 이하", description: "자녀에게 부동산 + 대출 동시 이전. 증여 부분 4억만 증여세, 채무 인수 6억은 부모 양도세. 단순 증여 2.4억 → 6,000만원으로 절감.", category: "부동산", tags: ["부담부증여", "증여세", "양도세", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: burdenedGift, lang: "ko" },
   { slug: "child-gift-10year-rule-2026", title: "자녀 증여 10년 룰 — 평생 1.4억 비과세 자산 이전", description: "미성년 10년 2,000만원, 성인 5,000만원 비과세. 자녀 0세부터 시작하면 40년 1.4억 비과세. 운용수익도 자녀 자산.", category: "부동산", tags: ["자녀증여", "증여세", "10년룰", "자산이전", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childGift50m, lang: "ko" },
-  { slug: "rental-report-obligation-2026", title: "주택임대 신고 의무 — 미신고 시 5년 추징 + 가산세 2~3배", description: "1주택 9억+ 또는 2주택+ 임대료 발생 시 신고 의무. 무신고 20% + 납부불성실 9.125%. 5월 종소세 신고 시 임대 포함.", category: "부동산", tags: ["임대신고", "임대소득", "가산세", "종소세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: rentalReportObligation, lang: "ko" },
+  { slug: "rental-report-obligation-2026", title: "주택임대 신고 의무 — 미신고 시 5년 추징 + 가산세 2~3배", description: "1주택 기준시가 12억 초과 또는 2주택+ 임대료 발생 시 신고 의무. 무신고 20% + 납부지연 일 0.022%. 5월 종소세 신고 시 임대 포함.", category: "부동산", tags: ["임대신고", "임대소득", "가산세", "종소세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: rentalReportObligation, lang: "ko" },
   // 직장인 세부 절세 10편
   { slug: "earned-income-deduction-2026", title: "근로소득공제 + 근로소득세액공제 — 직장인 자동 200~400만원 절감", description: "근로소득공제(자동 적용 5~70%) + 근로소득세액공제(산출세액 55%·30%, 한도 74만원) = 직장인 자동 절세 200~400만원.", category: "세금", tags: ["근로소득공제", "근로소득세액공제", "직장인", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: earnedIncomeDeduction, lang: "ko" },
   { slug: "standard-vs-special-deduction-2026", title: "표준세액공제 13만원 vs 특별공제 — 의료비 80만원이면 표준 유리", description: "특별세액공제(의료비·교육비·기부금) 합계가 13만원 초과 시 특별, 미만이면 표준 자동 적용. 부부 한쪽 몰아주기로 한도 빠르게.", category: "세금", tags: ["표준세액공제", "특별세액공제", "의료비", "절세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: standardDeductionVsSpecial, lang: "ko" },
   { slug: "medical-edu-donation-limits-2026", title: "의료비·교육비·기부금 한도 — 평균 직장인 135만원 환급", description: "의료비 15% 한도 700, 교육비 본인 무제한·자녀 300/900, 기부금 종교 10%·일반 30%. 5천만원 직장인 평균 135만원 환급.", category: "세금", tags: ["의료비공제", "교육비공제", "기부금공제", "한도", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: medicalEduDonation, lang: "ko" },
   { slug: "child-education-deduction-limit-2026", title: "자녀 교육비 공제 한도 — 미취학 300만원·대학 900만원", description: "미취학 300, 초중고 300, 대학·대학원 900만원 한도 15% 공제. 학원비는 미취학·취학 전만 인정. 자녀 1명 800만원 시 125만원 환급.", category: "세금", tags: ["자녀교육비", "공제", "대학등록금", "학원비", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: childEducationLimit, lang: "ko" },
   { slug: "insurance-100man-limit-2026", title: "보장성 보험료 100만원 한도 — 종신·암·실손·자동차 합산 12만원 환급", description: "한도 100만원 × 12% = 12만원 환급. 종신·암·정기·실손·자동차·운전자·어린이 보험 포함. 저축성·연금보험 제외.", category: "세금", tags: ["보험료공제", "종신보험", "실손보험", "자동차보험", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: insurance100Limit, lang: "ko" },
-  { slug: "credit-card-deduction-limit-detail-2026", title: "신용카드 한도 상세 — 7천 이하 300만원·1.2억+ 200만원", description: "총급여별 한도 200~300만원 + 전통시장·대중교통·도서공연 각 100만원 추가. 25% 기준선 도달 후 체크·전통시장으로 전환.", category: "세금", tags: ["신용카드", "체크카드", "한도", "공제율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: cardLimitDetail, lang: "ko" },
+  { slug: "credit-card-deduction-limit-detail-2026", title: "신용카드 한도 상세 — 7천 이하 300만원·초과 250만원", description: "기본 한도 7천 이하 300만·초과 250만원(자녀 상향) + 전통시장·대중교통 추가 300만(7천 초과 200만). 25% 초과 후 체크·전통시장으로.", category: "세금", tags: ["신용카드", "체크카드", "한도", "공제율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: cardLimitDetail, lang: "ko" },
   { slug: "book-concert-museum-deduction-2026", title: "도서·공연·박물관·영화 30% 공제 — 100만원 한도 추가 환급", description: "총급여 7천 이하. 도서·공연·박물관·미술관·영화 티켓 30% 공제. 100만원 사용 시 한계세율 24% 약 7만원 추가 환급.", category: "세금", tags: ["도서공연비", "박물관", "영화", "공제", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bookConcertDeduction, lang: "ko" },
   { slug: "eyewear-herb-implant-medical-2026", title: "안경·한약·임플란트 의료비 — 종합 영수증으로 환급 극대화", description: "안경 50만 한도, 한약·한방, 임플란트·치과, 출산·산후조리원 200만 포함. 미용 목적·건강기능식품·마사지 제외.", category: "세금", tags: ["의료비공제", "안경", "한약", "임플란트", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: eyewearHerbMedical, lang: "ko" },
-  { slug: "foreign-flat-tax-19-2026", title: "외국인 근로자 단일세율 19% — 연봉 2억+ 외국인에게 유리", description: "한국 거주 외국인 근로자 5년간 단일세율 19% + 지방세 = 20.9%. 연봉 2억+ 외국인에게 일반 누진세율 대비 유리.", category: "세금", tags: ["외국인", "단일세율", "Flat Tax", "근로자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignFlatTax19, lang: "ko" },
-  { slug: "religious-donation-100-percent-2026", title: "기부금 한도 — 종교 10%·정치 10만원 100% 환급", description: "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 90만원 환급.", category: "세금", tags: ["기부금공제", "종교단체", "정치자금", "법정기부금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: religiousDonation100, lang: "ko" },
+  { slug: "foreign-flat-tax-19-2026", title: "외국인 근로자 단일세율 19% — 연봉 2억+ 외국인에게 유리", description: "국내 최초 근로 제공일부터 20년간 외국인 근로자 단일세율 19% + 지방세 = 20.9%. 연봉 2억+ 외국인에게 일반 누진세율 대비 유리.", category: "세금", tags: ["외국인", "단일세율", "Flat Tax", "근로자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignFlatTax19, lang: "ko" },
+  { slug: "religious-donation-100-percent-2026", title: "기부금 한도 — 종교 10%·정치 10만원 100% 환급", description: "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 약 57만원 환급.", category: "세금", tags: ["기부금공제", "종교단체", "정치자금", "법정기부금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: religiousDonation100, lang: "ko" },
   // 투자·재테크 10편
-  { slug: "domestic-vs-overseas-etf-tax-2026", title: "국내 ETF vs 해외 ETF 세금 — 5천 → 7천 매도 시 385만원 차이", description: "같은 S&P500이라도 TIGER(국내) 비과세 vs SPY(미국) 22% 양도세. 2,000만원 차익 시 385만원 세금 차이. 국내 ETF 압도적 유리.", category: "투자", tags: ["ETF", "양도세", "S&P500", "TIGER", "SPY", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: domesticVsOverseasEtf, lang: "ko" },
+  { slug: "domestic-vs-overseas-etf-tax-2026", title: "국내상장 vs 해외 ETF 세금 — 5천 → 7천 매도 시 77만원 차이", description: "같은 S&P500이라도 TIGER(국내상장) 배당소득 15.4% vs SPY(미국) 22% 양도세. 2,000만원 차익 시 308만 vs 385만원, 약 77만원 차이.", category: "투자", tags: ["ETF", "양도세", "S&P500", "TIGER", "SPY", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: domesticVsOverseasEtf, lang: "ko" },
   { slug: "bond-investment-tax-2026", title: "채권 투자 세금 — 이자 15.4% 분리, 매매차익 비과세", description: "1억 국채 10년 5% 보유 시 연 이자 500만원 × 15.4% = 77만원 세금, 10년 누적 770만원. 매매차익은 일반인 비과세.", category: "투자", tags: ["채권", "국채", "이자소득세", "분리과세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bondTax, lang: "ko" },
   { slug: "reits-tax-vs-direct-real-estate-2026", title: "리츠 vs 직접 부동산 — 5천 투자 연 6% 배당 시 46만원 세금만", description: "리츠 매매차익 비과세 + 배당 15.4% 분리 + 보유세 0원 + 취득세 0원. 직접 부동산 임대소득 종합과세 대비 50~70% 세금 절감.", category: "투자", tags: ["REITs", "리츠", "부동산", "배당세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: reitsTax, lang: "ko" },
   { slug: "fund-sell-timing-tax-2026", title: "펀드 매도 시점 — 분배락 전후 세금 차이", description: "국내 주식형 비과세, 해외 주식형 15.4%, 채권형 분배금 15.4%. 분배락 직전 매도 시 분배금 미포함으로 세금 회피 가능.", category: "투자", tags: ["펀드", "매도", "분배락", "분배금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: fundSellTiming, lang: "ko" },
@@ -1105,9 +1104,9 @@ export const hotNewsExtended: Guide[] = [
   { slug: "p2p-investment-tax-2026", title: "P2P 투자 세금 — 15.4% + 손실 시 손익통산 불가", description: "P2P 이자 15.4% 원천징수 + 종합과세 한도 2천만원 초과 시 종합. 부도 시 손실 비용 인정 안 됨 + 예금자보호 대상 아님.", category: "투자", tags: ["P2P", "이자소득", "온라인투자", "리스크", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: p2pTax, lang: "ko" },
   { slug: "bond-fund-distribution-tax-2026", title: "채권형 펀드 분배금 — 15.4% 분리, ISA 활용 시 비과세", description: "채권형 펀드 분배금 15.4% 분리과세 + 매매차익 일부 과세. ISA·연금계좌 활용 시 비과세 한도 활용 가능.", category: "투자", tags: ["채권형펀드", "분배금", "ISA", "분리과세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bondFundDistribution, lang: "ko" },
   // 직업·이직 10편
-  { slug: "severance-lump-vs-irp-2026", title: "퇴직금 일시금 vs IRP — 1억 퇴직금 시 400만원 절감", description: "일시금 즉시 세금 1,000만원 vs IRP 이전 + 10년 연금 600만원. 만 55세부터 수령 + 운용수익 누적까지 IRP 우위.", category: "커리어", tags: ["퇴직금", "IRP", "연금수령", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: severanceLumpVsIrp, lang: "ko" },
+  { slug: "severance-lump-vs-irp-2026", title: "퇴직금 일시금 vs IRP — 1억 퇴직금 시 300만원 절감", description: "일시금 세금 1,000만원 vs IRP 이전 후 10년 이내 연금수령 700만원(30% 감면). 만 55세부터 수령 + 운용수익 누적까지 IRP 우위.", category: "커리어", tags: ["퇴직금", "IRP", "연금수령", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: severanceLumpVsIrp, lang: "ko" },
   { slug: "career-gap-rehire-benefit-2026", title: "경력단절 후 재취업 — 정부지원 4가지 + 중소기업 감면 70%", description: "고용촉진지원금 월 30~80만원 × 6~12개월 + 출산 후 재취업 우대 + 중소기업 취업 소득세 70% 감면 + 직업훈련 500만원.", category: "커리어", tags: ["경력단절", "재취업", "고용촉진", "중소기업감면", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: careerGapRehire, lang: "ko" },
-  { slug: "tax-free-meal-commute-2026", title: "비과세 식대 20만원 + 통신비 — 연 360만원 세금 부담 없는 소득", description: "월 비과세 식대 20만원 + 통신비 5~10만원 + 자가운전 20만원 + 일직수당. 연 360만원 비과세 → 한계세율 24% 시 86만원 절감.", category: "연봉", tags: ["비과세", "식대", "통신비", "자가운전", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: taxFreeMealCommute, lang: "ko" },
+  { slug: "tax-free-meal-commute-2026", title: "비과세 식대 20만원 + 자가운전 — 연 360만원 세금 부담 없는 소득", description: "월 비과세 식대 20만원 + 자가운전보조금 20만원(요건 충족 시) + 일직수당. 월 30만원 비과세 시 연 360만원 → 한계세율 24%면 86만원 절감.", category: "연봉", tags: ["비과세", "식대", "통신비", "자가운전", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: taxFreeMealCommute, lang: "ko" },
   { slug: "business-trip-expense-tax-2026", title: "출장비 비과세 — 국내 1일 2만원·해외 1일 5만원", description: "실비 영수증 출장비 비과세. 일비 정액은 국내 2만원·해외 5만원까지. 초과분은 근로소득으로 과세.", category: "연봉", tags: ["출장비", "일비", "비과세", "해외출장", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: travelExpenseTax, lang: "ko" },
   { slug: "child-tuition-tax-free-2026", title: "자녀 학자금 비과세 — 사내복지기금 vs 회사 직접 지급", description: "사내복지기금 학자금 지원 비과세 + 본인 대학원 업무 관련 비과세 + 해외 주재원 자녀 학비 비과세. 연 500만원 = 175만원 절감.", category: "연봉", tags: ["자녀학자금", "사내복지기금", "비과세", "주재원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childTuitionTaxFree, lang: "ko" },
   { slug: "bonus-payout-timing-2026", title: "성과급 12월·1월 지급 차이 — 귀속연도와 원천징수 확인", description: "성과급 지급일과 소득 귀속연도는 다를 수 있습니다. 국세청 2026년 답변으로 분할 지급, 최종 세금과 원천징수, IRP 세액공제를 구분합니다.", category: "세금", tags: ["성과급", "귀속연도", "원천징수", "IRP", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: bonusTiming, lang: "ko" },
