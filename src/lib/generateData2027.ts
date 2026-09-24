@@ -8,10 +8,15 @@
 // - 건강보험 — ★확정: 2027 동결 (2026과 동일 총 7.19%·근로자 3.595%, 건정심 2026-09-08 의결
 //   — 보건복지부 보도자료 2026-09-08 보험정책과, 2026년 제15차 건강보험정책심의위원회)
 // - 장기요양·고용보험·간이세액표 — 미확정: 2026 값 준용 (페이지 고지 배너 필수)
+//   고용보험: 2027 실업급여 요율 2.0%(근로자·회사 각 0.9%→1.0%) 인상안 — 고용노동부 보도자료
+//   2026-09-01(고용보험위원회 「고용보험 제도개편 방안」 심의, moel.go.kr news_seq=19866).
+//   연내 법률·하위법령 개정 목표로 아직 확정 전 → employment 는 현행 0.9% 유지.
 //
 // ★ 갱신 슬롯: ① (완료 2026-09-25) 건보 2027 동결 확정 — 2026 정본 참조 유지 (건정심 2026-09-08)
 //   ② 2026년 10~11월 — 장기요양료율 ③ 2027년 2월 — 간이세액표(소득세) 개정 여부
 //   ④ 2027년 7월 — 연금 기준소득월액 상·하한 재조정.
+//   ⑤ 고용보험 실업급여 요율 법령 개정 공포 시 — employment 교체 + 요율표·표 4종 고지 문구 동기화
+//      (healthRate2027Freeze.test.ts 의 employment 준용 단언도 함께 수정).
 //   전부 이 파일 상수만 고치면 4표에 일괄 반영된다.
 //
 // 표시 엔진: calculateNetSalaryWithRates(요율 파라미터 코어) — 2026 표(TaxLogic)와
@@ -40,7 +45,7 @@ export const NET_SALARY_RATES_2027: NetSalaryRates = {
   pensionMonthlyCapBase: PENSION_BASE_2026.MAX_MONTHLY,
   pensionMonthlyFloorBase: PENSION_BASE_2026.MIN_MONTHLY,
   // ★확정 — 2027 동결 (건정심 2026-09-08), 2026 정본값 참조가 곧 2027 확정값.
-  // 장기요양 비율(ltcRatio)·고용보험은 미확정 — 2026 준용
+  // 장기요양 비율(ltcRatio)·고용보험은 미확정 — 2026 준용 (고용보험은 2027 인상안 심의 중, 갱신 슬롯 ⑤)
   health: INSURANCE_RATES_2026.HEALTH_INSURANCE,
   ltcRatio: INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO,
   employment: INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE,

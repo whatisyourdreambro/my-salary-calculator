@@ -1,5 +1,5 @@
 // src/app/table/2027/weekly/page.tsx — 2027년판 주급 실수령액 표 (2026-08-30 신설, 성장 제안 ④)
-// 엔진: generateData2027 (연금 5.0% 확정·건보 동결 확정 + 장기요양 2026 준용 — layout 고지 배너 참조)
+// 엔진: generateData2027 (연금 5.0% 확정·건보 동결 확정 + 장기요양·고용보험 2026 준용 — layout 고지 배너 참조)
 
 import { Suspense } from "react";
 import { generateWeeklyPayTableData2027, MIN_WAGE_2027 } from "@/lib/generateData2027";
@@ -64,7 +64,7 @@ const structuredData = [
   datasetLd({
     name: "2027년 주급 실수령액 표",
     description:
-      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (건강보험 2027 동결 확정 반영, 장기요양은 2026 준용).",
+      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (건강보험 2027 동결 확정 반영, 장기요양·고용보험은 2026 준용).",
     url: "/table/2027/weekly",
     dateModified: "2026-09-25",
     keywords: ["2027 주급", "실수령액", "주급 환산", "주급 테이블", "2027년"],
@@ -145,7 +145,7 @@ function WeeklyTable2027() {
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-center">미확정 (2026 준용)</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 장기요양보험료율 (통상 10~11월 결정)</li>
+                    <li>- 장기요양·고용보험(인상안 심의) 요율</li>
                     <li>- 소득세 — 2026년 연간 누진세액 추정의 월 환산(실제 월별 간이세액표 조회 아님)</li>
                   </ul>
                 </div>

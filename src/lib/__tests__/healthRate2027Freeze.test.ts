@@ -9,6 +9,9 @@
 //    이 값이 바뀌면(예: 착오 인상 반영) 아래 페이지들의 "동결" 문구와 어긋나므로 함께 고쳐야 한다.
 // 2) 문구: 2027 요율표·실수령액 표 4종·공통 배너에 "건강보험 미확정/2026 준용" 계열 옛 문구가 남지 않는다.
 // 3) 장기요양은 여전히 미확정 고지를 유지한다(지우면 실패 — 12월 고시 전까지 준용 표기 필수).
+// 4) 고용보험: 2026-09-01 고용노동부가 2027 실업급여 요율 2.0%(근로자 0.9%→1.0%) 인상안을 발표
+//    (고용보험위원회 심의, moel.go.kr news_seq=19866 — 법령 개정 전). "인상 발표 없음·현행 유지"나
+//    "2027 인상은 국민연금뿐" 같은 문구가 되살아나지 않고, 미확정(준용) 목록에 고용보험이 남는다.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -87,6 +90,33 @@ describe("2027 건강보험료율 동결 확정 (건정심 2026-09-08)", () => {
     expect(rates).toContain("미확정(2026 기준 준용):</strong> 장기요양·산재");
     expect(rates).toContain('status: "미확정 — 2027 요율은 통상 12월 고용노동부 고시, 확정 시 갱신"');
     expect(flat(TABLE_LAYOUT)).toContain("미확정(2026 기준 준용):</strong>{\" \"} 장기요양");
+  });
+
+  it("고용보험 2027 인상안(2026-09-01 고용보험위원회) — '인상 없음·국민연금뿐' 문구 금지, 미확정 고지 유지", () => {
+    const stale = [
+      "인상 발표 없음",
+      "인상 발표는 없습니다",
+      "현행 유지 중",
+      "국민연금(4.75%→5.0%)뿐",
+      "전액 국민연금 인상분",
+      "국민연금 인상 효과뿐",
+    ];
+    const hits: string[] = [];
+    for (const file of ALL_FILES) {
+      const text = flat(file);
+      for (const phrase of stale) {
+        if (text.includes(phrase)) hits.push(`${file}: ${phrase}`);
+      }
+    }
+    expect(hits).toEqual([]);
+
+    const rates = flat(RATES_PAGE);
+    expect(rates).toContain('status: "인상안 심의 — 2027 실업급여 2.0%(근로자 1.0%), 법령 개정 전"');
+    expect(rates).toContain("미확정(2026 기준 준용):</strong> 장기요양·산재·고용보험");
+    expect(rates).toContain("고용보험위원회");
+    expect(flat(TABLE_LAYOUT)).toContain("장기요양·고용보험(인상안 심의 중)");
+    // 인상안은 아직 법령 개정 전 — 계산 정본은 현행 0.9% 유지 (위 '2026 준용 유지' 단언과 짝)
+    expect(NET_SALARY_RATES_2027.employment).toBe(0.009);
   });
 
   it("표 4종 dataset dateModified 가 동결 반영일로 갱신됐다", () => {
