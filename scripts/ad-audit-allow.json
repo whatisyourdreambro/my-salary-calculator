@@ -28,5 +28,9 @@
     "route": "/salary-db/[id]",
     "slot": "COUPANG",
     "reason": "의도 구조 — page 쿠팡(본문+사이드바) 2개 + layout PageFooterAds 쿠팡 양보. 2026-08-24 점검에서 확인"
+  },
+  {
+    "deletedFile": "src/app/company/page.tsx",
+    "reason": "승인 삭제(결정 10 2단계 A27, 운영자 2026-09-25) — /company 는 2026-06부터 next.config 308(→/salary-db)로 도달 불가라 이 페이지의 HomeTop·InArticle·쿠팡은 렌더되지 않았음. 광고 노출 변화 0"
   }
 ]

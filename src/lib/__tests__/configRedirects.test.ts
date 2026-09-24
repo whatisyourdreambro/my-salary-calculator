@@ -136,6 +136,38 @@ describe("next.config redirects — B8 legacy URLs", () => {
     }
   });
 
+  it("keeps every old URL of the deleted /company and /salary-db/submit pages on a config 308 (decision 10 stage 2)", async () => {
+    const app = (p: string) => existsSync(new URL(`../../app/${p}`, import.meta.url));
+    // 도달 불가였던 페이지는 삭제 — 되살리면 config 규칙에 가려 다시 죽은 코드가 된다
+    expect(app("company/page.tsx")).toBe(false);
+    expect(app("company/[id]/page.tsx")).toBe(false);
+    expect(app("salary-db/submit/page.tsx")).toBe(false);
+    expect(app("salary-db/submit/layout.tsx")).toBe(false);
+    // 실제 페이지는 유지
+    expect(app("company/compare/page.tsx")).toBe(true);
+    expect(app("company/compare/[slug]/page.tsx")).toBe(true);
+    expect(app("company/simulator/page.tsx")).toBe(true);
+
+    const list = await rules();
+    const cases: Array<[string, string]> = [
+      ["/company", "/salary-db"],
+      ["/company/", "/salary-db"],
+      ["/salary-db/submit", "/salary-db"],
+      ["/salary-db/submit/", "/salary-db"],
+      ["/company/samsung-electronics", "/salary-db/samsung-electronics"],
+      ["/company/naver/", "/salary-db/naver"],
+      ["/company/hyundai-motor", "/salary-db/hyundai"],
+      ["/company/lg-energy", "/salary-db/lgensol"],
+    ];
+    for (const [from, to] of cases) {
+      const hit = matchOf(list, from);
+      expect(hit, from).not.toBeNull();
+      expect(hit!.rule.permanent, from).toBe(true);
+      const dest = hit!.rule.destination.replace(/:(\w+)/g, (_, k: string) => hit!.params[k]);
+      expect(dest, from).toBe(to);
+    }
+  });
+
   it("lands every fixed-destination rule in one hop (the destination is not itself a redirect source)", async () => {
     const list = await rules();
     const fixed = list.filter((r) => !r.destination.includes(":"));

@@ -108,11 +108,10 @@ const INTENTIONALLY_EXCLUDED = new Set([
   "/contact", // 비공개 문의 접수 폼 — page metadata의 noindex에 따라 검색 사이트맵 제외
   "/en/contact", // English private contact counterpart
   "/en/dashboard", // English local personal results
-  "/company", // next.config 301 → /salary-db (카니발 해소 2026-06)
   "/company/compare", // noindex (카니발 해소 2026-06)
   "/dashboard", // 개인화 페이지 — 검색 유입 가치 없음
   "/report", // 개인화 리포트 — 검색 유입 가치 없음
-  "/salary-db/submit", // 익명 제보 폼 — noindex (layout 주석 참조)
+  // /company·/salary-db/submit 은 페이지 삭제(2026-09-25, ⑩ 2단계) — next.config 308 만 남아 목록에서 제거
 ]);
 
 function fsStaticRoutes(dir = APP_DIR, prefix = ""): string[] {

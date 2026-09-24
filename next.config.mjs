@@ -101,12 +101,13 @@ const nextConfig = {
         destination: "/qna",
         permanent: true,
       },
-      // /company/[id] 는 Edge 페이지의 permanentRedirect 로 308 중이지만, 그 응답은
-      // 캐시 재생 시 Location 을 잃을 수 있다(아래 dedupe 규칙 주석과 같은 함정).
+      // /company/{id} 는 예전 Edge 페이지(permanentRedirect)가 308 했지만, 그 응답은
+      // 캐시 재생 시 Location 을 잃을 수 있었다(아래 dedupe 규칙 주석과 같은 함정).
       // 라우팅 이전 단계 규칙으로 항상 정상 308 을 보장한다. compare·simulator 는
       // 실제 페이지이므로 제외 — 끝 슬래시 형태(/company/compare/)까지 규칙 자체가 제외한다
       // (Next 내부 끝슬래시 리다이렉트 순서에 기대지 않음, 2026-09-12 리뷰). 2세그먼트 /company/compare/[slug] 는 애초에 불일치.
-      // Edge 페이지는 폴백으로 유지 — 삭제는 마스터플랜 §12-2 ⑩ 결정 후.
+      // 2026-09-25 마스터플랜 §12-2 ⑩ 2단계(운영자 승인): 도달 불가였던 Edge 폴백
+      // src/app/company/[id]/page.tsx 를 삭제 — 이제 이 규칙이 /company/{id} 의 유일한 처리 경로다.
       //
       // 구 companyData id 2종은 /salary-db 정본 id 와 이름이 달라 아래 일반 규칙을 타면
       // /salary-db/hyundai-motor·/salary-db/lg-energy(404)로 떨어진다(2026-09-24 실측).
@@ -373,7 +374,9 @@ const nextConfig = {
       },
       // 연봉 제보(준비 중 화면+광고 정책 리스크) — 페이지 내 permanentRedirect는
       // 정적 라우트에서 CF가 .meta 308을 무시하고 200을 서빙함(2026-07-07 실측)
-      // → 프로덕션 동작이 검증된 config 리다이렉트로 처리
+      // → 프로덕션 동작이 검증된 config 리다이렉트로 처리. 도달 불가였던 페이지·layout
+      // (src/app/salary-db/submit/*)은 2026-09-25 삭제 — 이 규칙이 유일한 처리 경로.
+      // 제보 기능을 실제로 열 때는 이 규칙부터 지운다.
       {
         source: "/salary-db/submit",
         destination: "/salary-db",
@@ -401,8 +404,9 @@ const nextConfig = {
         permanent: true,
       },
       // 카니발 해소(전체 점검 2026-06): 레거시 /company 인덱스를 /salary-db로 통합.
-      // /company/[id]는 이미 page에서 redirect, /company/compare(/[slug])는 noindex 처리,
-      // /company/simulator(고유 시뮬레이터)는 유지.
+      // /company/{id}는 위 config 규칙이 처리, /company/compare(/[slug])는 noindex 처리,
+      // /company/simulator(고유 시뮬레이터)는 유지. 도달 불가였던 인덱스 페이지
+      // src/app/company/page.tsx 는 2026-09-25 삭제(⑩ 2단계) — 이 규칙이 유일한 처리 경로.
       {
         source: "/company",
         destination: "/salary-db",
