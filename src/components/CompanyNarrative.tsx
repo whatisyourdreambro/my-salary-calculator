@@ -79,6 +79,7 @@ export default function CompanyNarrative({ company }: Props) {
 
   return (
     <section
+      data-msy-module="company-narrative"
       className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
       aria-label={`${koName} 상세 분석`}
     >

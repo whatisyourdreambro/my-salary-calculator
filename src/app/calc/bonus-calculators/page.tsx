@@ -199,7 +199,7 @@ export default function BonusCalculatorsHubPage() {
           <HomeTopAd />
 
           {/* 회사별 계산기 카드 그리드 — 섹터별 */}
-          <section className="mb-12" aria-labelledby="calcs-heading">
+          <section data-msy-module="bonus-hub-calcs" className="mb-12" aria-labelledby="calcs-heading">
             <h2 id="calcs-heading" className="text-2xl sm:text-3xl font-black mb-6">
               회사별 성과급 계산기
             </h2>
@@ -253,7 +253,7 @@ export default function BonusCalculatorsHubPage() {
           </div>
 
           {/* 시즌 캘린더 */}
-          <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="calendar-heading">
+          <section data-msy-module="bonus-hub-calendar" className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="calendar-heading">
             <h2 id="calendar-heading" className="text-2xl font-black mb-4 flex items-center gap-2">
               <CalendarDays className="w-6 h-6 text-primary" />
               2026 성과급 시즌 캘린더
@@ -300,7 +300,7 @@ export default function BonusCalculatorsHubPage() {
           </section>
 
           {/* 최근 소식 */}
-          <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="news-heading">
+          <section data-msy-module="bonus-hub-news" className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="news-heading">
             <h2 id="news-heading" className="text-2xl font-black mb-4 flex items-center gap-2">
               <Newspaper className="w-6 h-6 text-primary" />
               최근 성과급 소식
@@ -329,7 +329,7 @@ export default function BonusCalculatorsHubPage() {
           </div>
 
           {/* 일반 도구 링크 */}
-          <section className="mb-12" aria-labelledby="tools-heading">
+          <section data-msy-module="bonus-hub-tools" className="mb-12" aria-labelledby="tools-heading">
             <h2 id="tools-heading" className="text-2xl font-black mb-4 flex items-center gap-2">
               <Calculator className="w-6 h-6 text-primary" />
               금액만 넣고 바로 계산하려면
