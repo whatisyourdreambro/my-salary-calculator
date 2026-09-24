@@ -101,12 +101,40 @@ const nextConfig = {
         destination: "/qna",
         permanent: true,
       },
-      // /company/[id] 는 Edge 페이지의 permanentRedirect 로 308 중이지만, 그 응답은
-      // 캐시 재생 시 Location 을 잃을 수 있다(아래 dedupe 규칙 주석과 같은 함정).
+      // /company/{id} 는 예전 Edge 페이지(permanentRedirect)가 308 했지만, 그 응답은
+      // 캐시 재생 시 Location 을 잃을 수 있었다(아래 dedupe 규칙 주석과 같은 함정).
       // 라우팅 이전 단계 규칙으로 항상 정상 308 을 보장한다. compare·simulator 는
       // 실제 페이지이므로 제외 — 끝 슬래시 형태(/company/compare/)까지 규칙 자체가 제외한다
       // (Next 내부 끝슬래시 리다이렉트 순서에 기대지 않음, 2026-09-12 리뷰). 2세그먼트 /company/compare/[slug] 는 애초에 불일치.
-      // Edge 페이지는 폴백으로 유지 — 삭제는 마스터플랜 §12-2 ⑩ 결정 후.
+      // 2026-09-25 마스터플랜 §12-2 ⑩ 2단계(운영자 승인): 도달 불가였던 Edge 폴백
+      // src/app/company/[id]/page.tsx 를 삭제 — 이제 이 규칙이 /company/{id} 의 유일한 처리 경로다.
+      //
+      // 구 companyData id 2종은 /salary-db 정본 id 와 이름이 달라 아래 일반 규칙을 타면
+      // /salary-db/hyundai-motor·/salary-db/lg-energy(404)로 떨어진다(2026-09-24 실측).
+      // 2026-05 사이트맵에 /company/{id} 로 제출됐던 URL — 일반 규칙보다 먼저 정본으로 1홉 308.
+      // (id 매핑 정본: src/lib/companyData.ts 머리 주석 hyundai-motor↔hyundai, lg-energy↔lgensol)
+      {
+        source: "/company/hyundai-motor",
+        destination: "/salary-db/hyundai",
+        permanent: true,
+      },
+      {
+        source: "/company/lg-energy",
+        destination: "/salary-db/lgensol",
+        permanent: true,
+      },
+      // 위 구 규칙을 이미 거쳐 간 체인·직접 입력 URL 도 정본에 닿게 한다(단일 세그먼트 정확 경로 —
+      // 아래 -2/-3 정규식과 겹치지 않음).
+      {
+        source: "/salary-db/hyundai-motor",
+        destination: "/salary-db/hyundai",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/lg-energy",
+        destination: "/salary-db/lgensol",
+        permanent: true,
+      },
       {
         source: "/company/:id((?!(?:compare|simulator)(?:/|$))[^/]+)",
         destination: "/salary-db/:id",
@@ -136,6 +164,19 @@ const nextConfig = {
       {
         source: "/table/hourly",
         destination: "/table/2026/hourly",
+        permanent: true,
+      },
+      // /salary·/monthly 상위 경로는 페이지가 없어 404 였다(2026-09-24 실측) — 같은 성격의
+      // 전체 표로 보낸다. 정확 경로만: /salary/{금액}·/monthly/{금액} 상세는 건드리지 않는다
+      // (/salary/* 격자 밖 금액 정규화는 미들웨어 담당, /monthly/* 는 미들웨어 분기 없음 유지).
+      {
+        source: "/salary",
+        destination: "/table/2026/annual",
+        permanent: true,
+      },
+      {
+        source: "/monthly",
+        destination: "/table/2026/monthly",
         permanent: true,
       },
       {
@@ -333,7 +374,9 @@ const nextConfig = {
       },
       // 연봉 제보(준비 중 화면+광고 정책 리스크) — 페이지 내 permanentRedirect는
       // 정적 라우트에서 CF가 .meta 308을 무시하고 200을 서빙함(2026-07-07 실측)
-      // → 프로덕션 동작이 검증된 config 리다이렉트로 처리
+      // → 프로덕션 동작이 검증된 config 리다이렉트로 처리. 도달 불가였던 페이지·layout
+      // (src/app/salary-db/submit/*)은 2026-09-25 삭제 — 이 규칙이 유일한 처리 경로.
+      // 제보 기능을 실제로 열 때는 이 규칙부터 지운다.
       {
         source: "/salary-db/submit",
         destination: "/salary-db",
@@ -361,8 +404,9 @@ const nextConfig = {
         permanent: true,
       },
       // 카니발 해소(전체 점검 2026-06): 레거시 /company 인덱스를 /salary-db로 통합.
-      // /company/[id]는 이미 page에서 redirect, /company/compare(/[slug])는 noindex 처리,
-      // /company/simulator(고유 시뮬레이터)는 유지.
+      // /company/{id}는 위 config 규칙이 처리, /company/compare(/[slug])는 noindex 처리,
+      // /company/simulator(고유 시뮬레이터)는 유지. 도달 불가였던 인덱스 페이지
+      // src/app/company/page.tsx 는 2026-09-25 삭제(⑩ 2단계) — 이 규칙이 유일한 처리 경로.
       {
         source: "/company",
         destination: "/salary-db",
@@ -374,6 +418,52 @@ const nextConfig = {
         // /salary-db/compare/[slug] 상세 413쌍에는 영향 없음 (정확 경로만 매칭).
         source: "/salary-db/compare",
         destination: "/salary-db",
+        permanent: true,
+      },
+      // ── 사라진 비교 URL → 정확 경로 308 (2026-09-25, B8 RT-07b) ─────────
+      // 비교 슬러그는 신입 연봉 순서·연봉 인접으로 만들어져(companyComparePairs.ts) 데이터가
+      // 바뀌면 조용히 뒤집히거나 빠지고, 라우트는 dynamicParams=false 라 404 가 된다.
+      // 2026-08-16 GSC 노출 URL 중 현재 413쌍에 없는 7건만 명시 매핑한다(정확 경로만 —
+      // 미들웨어 분기·데이터 import 금지). 목적지 우선순위: 같은 쌍의 현행 슬러그 →
+      // 첫 회사의 정본 회사 페이지. 비교 쌍 사이트맵 재등재는 기각 항목이라 하지 않는다.
+      // ※ 이 규칙들이 있으면 /salary-db/compare/* 를 _routes 로 Worker 에서 뺄 때
+      //   CF Redirect Rule 로 옮겨야 한다.
+      {
+        // 같은 쌍이 역순 슬러그로 존재
+        source: "/salary-db/compare/korea-zinc-vs-posco",
+        destination: "/salary-db/compare/posco-vs-korea-zinc",
+        permanent: true,
+      },
+      {
+        // toss-viva 는 toss 로 병합(2026-08-30) — 같은 쌍이 정본 id 슬러그로 존재
+        source: "/salary-db/compare/toss-viva-vs-naver-financial",
+        destination: "/salary-db/compare/toss-vs-naver-financial",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/compare/lx-semicon-vs-samsung-electronics",
+        destination: "/salary-db/lx-semicon",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/compare/bithumb-vs-toss",
+        destination: "/salary-db/bithumb",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/compare/korea-sfa-vs-lg-display",
+        destination: "/salary-db/korea-sfa",
+        permanent: true,
+      },
+      {
+        source: "/salary-db/compare/toss-vs-shinhan-card",
+        destination: "/salary-db/toss",
+        permanent: true,
+      },
+      {
+        // bucketplace 는 ohou 로 병합(2026-08-30) — /salary-db/bucketplace 를 거치지 않고 1홉
+        source: "/salary-db/compare/bucketplace-vs-sk-cc",
+        destination: "/salary-db/ohou",
         permanent: true,
       },
       // ─────────────────────────────────────────────────────────────────
