@@ -22,6 +22,7 @@ import {
   getListedByStockCode,
   getSalaryNeighbors,
   getSameIndustryExisting,
+  listedDatasetDescription,
   DART_LITE_DATE,
 } from "@/lib/salary-data/dartLite";
 import { ShieldCheck, ExternalLink, TrendingUp, Building2, Users } from "lucide-react";
@@ -144,7 +145,8 @@ export default function ListedCompanyPage({ params }: Props) {
           faqLd(faqItems),
           datasetLd({
             name: `${c.nameKo} 공시 평균연봉 (${c.fiscalYear} 사업보고서)`,
-            description: `DART 사업보고서 기준 ${c.nameKo}의 평균연봉·직원 수·근속연수 공시 데이터`,
+            // META-11: 회사 고유 수치로 80자+ (Google Dataset 설명 50자 최소 충족)
+            description: listedDatasetDescription(c),
             url: path,
             dateModified: DART_LITE_DATE,
             keywords: [`${c.nameKo} 연봉`, "공시 평균연봉", "DART"],

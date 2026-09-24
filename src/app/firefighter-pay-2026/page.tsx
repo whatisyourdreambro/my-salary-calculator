@@ -88,7 +88,7 @@ export default function FirefighterPay2026Page() {
           datasetLd({
             name: "2026년 소방공무원 봉급표 데이터 (소방사~소방경 1~5호봉)",
             description:
-              "공무원보수규정 별표 10 기준 2026년 소방공무원 계급별·호봉별 월 봉급액 데이터셋.",
+              "공무원보수규정 별표 10 기준 2026년 소방공무원 계급별(소방사~소방경)·호봉별(1~5호봉) 월 봉급액 데이터셋.",
             url: "/firefighter-pay-2026",
             datePublished: "2026-08-30",
             dateModified: "2026-08-30",
