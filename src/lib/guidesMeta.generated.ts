@@ -132,9 +132,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-09-25",
   "views": 92000,
   "lang": "ko",
-  "contentChars": 5218
+  "contentChars": 5219
  },
  {
   "slug": "nurse-salary",
@@ -151,10 +152,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
-  "modifiedDate": "2026-09-12",
+  "modifiedDate": "2026-09-25",
   "views": 185000,
   "lang": "ko",
-  "contentChars": 5156
+  "contentChars": 5139
  },
  {
   "slug": "salary-peak-system",
@@ -168,9 +169,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-09-25",
   "views": 32000,
   "lang": "ko",
-  "contentChars": 5148
+  "contentChars": 5151
  },
  {
   "slug": "year-end-tax-2026",
