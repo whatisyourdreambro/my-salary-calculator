@@ -39,7 +39,8 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
- '/public-institutions': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
+ // 2026-09-25 A17: 기관별 세후 월급이 간이세액표 엔진으로 바뀜
+ '/public-institutions': { lastModified: new Date('2026-09-25'), priority: 0.8, changeFrequency: 'monthly' },
  '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
  '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
  '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
@@ -54,14 +55,16 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/table/2027/monthly': { lastModified: new Date('2026-09-25') },
  '/table/2027/weekly': { lastModified: new Date('2026-09-25') },
  '/table/2027/hourly': { lastModified: new Date('2026-09-25') },
- '/calc/samsung-bonus': { lastModified: new Date('2026-09-21'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-20'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
+ // 성과급 samsung·sk-hynix·hyundai·year-end·kia 2026-09-25: A18 세후 엔진 교체(연간 결정세액
+ // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
+ '/calc/samsung-bonus': { lastModified: new Date('2026-09-25'), priority: 0.95 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-25'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
  '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
- '/calc/hyundai-bonus': { lastModified: new Date('2026-09-19'), priority: 0.85 },
- '/calc/year-end-bonus': { lastModified: new Date('2026-09-09') },
- '/calc/kia-bonus': { lastModified: new Date('2026-09-03'), priority: 0.85 },
+ '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
+ '/calc/year-end-bonus': { lastModified: new Date('2026-09-25') },
+ '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
  '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
@@ -76,7 +79,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
  '/calc/dependent-check': { lastModified: new Date('2026-08-31') },
  '/calc/smb-income-tax-break': { lastModified: new Date('2026-08-31') },
- '/calc/offer-compare': { lastModified: new Date('2026-09-09') },
+ '/calc/offer-compare': { lastModified: new Date('2026-09-25') }, // A17 — 본문 '(설명 수정 2026-09-25)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-09-09') },
  '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
  '/year-end-tax-checklist': { lastModified: new Date('2026-09-09') },
@@ -106,6 +109,21 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
 // 이후 일반 배포 때 자동 갱신하지 않는다.
 const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-25');
 const COMPANY_FAQ_REVIEW_DATE = new Date('2026-09-10');
+// 같은 A17 엔진 교체로 FAQ 실수령 수치가 바뀐 직업 상세 (jobsData 의 nurse·care-worker FAQ).
+// 다른 직업 상세는 엔진을 쓰지 않아 STATIC_LAST_MODIFIED 그대로.
+const JOB_NET_PAY_FAQ_IDS = new Set(['nurse', 'care-worker']);
+// 2026-09-25 A18: 성과급 소득세를 연간 결정세액 차이로 바꾸고 세액공제 30% 기본 가정을 없애
+// 결과·기본값이 바뀐 계산기. ROUTE_OVERRIDES 에 있는 5곳도 같은 날짜로 맞춰 두었다.
+const BONUS_ENGINE_REVIEW_DATE = new Date('2026-09-25');
+const BONUS_ENGINE_ROUTES = [
+ '/calc/samsung-bonus', '/calc/sk-hynix-bonus', '/calc/hyundai-bonus', '/calc/year-end-bonus', '/calc/kia-bonus',
+ '/calc/holiday-bonus', '/calc/incentive-tax', '/calc/year-end-bonus-tax',
+ '/calc/celltrion-bonus', '/calc/doosan-enerbility-bonus', '/calc/gs-caltex-bonus', '/calc/hanwha-aerospace-bonus',
+ '/calc/hd-hyundai-bonus', '/calc/hyundai-mobis-bonus', '/calc/hyundai-rotem-bonus', '/calc/kakao-bonus',
+ '/calc/kepco-bonus', '/calc/lg-chem-bonus', '/calc/lg-display-bonus', '/calc/lg-energy-bonus', '/calc/naver-bonus',
+ '/calc/posco-bonus', '/calc/s-oil-bonus', '/calc/samsung-biologics-bonus', '/calc/samsung-display-bonus',
+ '/calc/samsung-sdi-bonus', '/calc/sk-innovation-bonus',
+];
 
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -348,6 +366,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  routeOverrides[route] = { priority: 0.85 };
  }
  }
+ // A18 성과급 엔진 교체일 — 위 priority 는 그대로 두고 lastModified 만 얹는다(사본에만 적용).
+ for (const route of BONUS_ENGINE_ROUTES) {
+ routeOverrides[route] = { ...routeOverrides[route], lastModified: BONUS_ENGINE_REVIEW_DATE };
+ }
 
  // /en 정적 4종 hreflang — 실존 KO 짝만 명시(과잉 적용 금지: seo.ts hreflang 사고 이력).
  // /en·/en/guides 는 KO 카운터파트 존재, flat-tax·salary-converter 는 EN 전용(self).
@@ -488,10 +510,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 3-1. 월급 축 /monthly/{amount} (2026-08-15 Phase 3 신설) —
  // 격자는 src/lib/monthlyStaticParams.ts 와 반드시 동일 유지 (정적 생성 단일 소스).
  // "월급 300만원 실수령액" 계열 쿼리 전용 랜딩. 100만 단위 정수는 우선순위 상향.
+ // lastModified: 같은 엔진(calculateSalary2026)이라 A17 간이세액표 전환으로 제목·금액이 함께 바뀜
+ // (105쪽 중 104쪽) — /salary 격자와 같은 SALARY_METHOD_REVIEW_DATE.
  for (const m of getStaticMonthlyAmounts()) {
  salaryUrls.push({
  url: `${baseUrl}/monthly/${m}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: SALARY_METHOD_REVIEW_DATE,
  changeFrequency: 'yearly',
  priority: m % 1_000_000 === 0 ? 0.65 : 0.5,
  });
@@ -626,7 +650,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  },
  ...jobsData.map((job) => ({
  url: `${baseUrl}/job/${job.id}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: JOB_NET_PAY_FAQ_IDS.has(job.id) ? SALARY_METHOD_REVIEW_DATE : STATIC_LAST_MODIFIED,
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.8,
  })),
