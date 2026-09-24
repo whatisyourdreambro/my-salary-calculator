@@ -3,6 +3,10 @@
 // 데이터: civilServantPay.ts POLICE_RANK_ROWS_2026 (별표 10 경찰·소방 통합표).
 // 광고: civil-servant-pay-2026 표준 배치 복제 (운영자 승인 2026-08-30).
 // ★ 갱신 체크포인트: 매년 12월 말 국무회의 의결 시 봉급표·수당 갱신.
+// 네이버 저CTR 정렬 (2026-09-25, 감사 배치 B20): 네이버 노출 23,558·CTR 2.1%.
+//   title·description(=og·twitter)·H1을 '소방공무원 봉급표 2026' 검색어 형태로 맞추고 리드 첫 문장이
+//   소방사 1호봉·소방경 1호봉 월 봉급을 바로 답하게 제자리 교체(글자 수 이전 수준, 광고 위 블록
+//   추가 없음 — payTableSnippets.test.ts 가드). 수치 재확인: 인사혁신처 2026 봉급표(2026-09-25).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -19,16 +23,30 @@ import PoliceFireRankTable from "@/components/PoliceFireRankTable";
 import { HAZARD_ALLOWANCE_2026, POLICE_RANK_ROWS_2026 } from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
 
+const fmt = (n: number) => n.toLocaleString("ko-KR");
+
+// 리드·메타 공용 — 별표 10 1호봉 행: [호봉, 소방사, 소방교, 소방장, 소방위, 소방경]
+const FIRST_STEP = POLICE_RANK_ROWS_2026[0];
+const ENTRY_PAY = FIRST_STEP[1]; // 소방사 1호봉
+const CAPTAIN_PAY = FIRST_STEP[5]; // 소방경 1호봉
+
+// 이전(2026-08-30~09-24) title: "2026 소방공무원 봉급표 — 소방사~소방경 계급·호봉별 월급"
+const PAGE_TITLE = `2026 소방공무원 봉급표 — 소방사 ${Math.floor(ENTRY_PAY / 10000)}만원부터 계급별 월급`;
+const PAGE_DESCRIPTION = `2026년 소방공무원 봉급표(경찰·소방 공통, 인사혁신처 공표). 소방사 1호봉 월 ${fmt(ENTRY_PAY)}원부터 소방경까지 계급·호봉별 월급과 위험근무수당 월 ${HAZARD_ALLOWANCE_2026 / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
+const MODIFIED = "2026-09-25";
+
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 소방공무원 봉급표 — 소방사~소방경 계급·호봉별 월급",
-  description:
-    "인사혁신처 확정 2026년 소방공무원 봉급표. 소방사 1호봉 월 2,133,000원(저연차 6.6% 인상)부터 소방경까지 계급×호봉 월급, 위험근무수당 8만원·화재진화 출동가산금 구조와 실수령액 계산 흐름 — 공무원보수규정 별표 10 원문 수치.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: "/firefighter-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
-  modifiedTime: "2026-08-30",
+  modifiedTime: MODIFIED,
   keywords: [
     "소방공무원 봉급표 2026",
+    "2026 소방공무원 봉급표",
+    "소방 봉급표 2026",
+    "소방공무원 월급",
     "소방 월급",
     "소방사 월급",
     "소방사 초임",
@@ -77,13 +95,12 @@ export default function FirefighterPay2026Page() {
           ]),
           faqLd(FAQ_ITEMS),
           articleLd({
-            title: "2026 소방공무원 봉급표 — 소방사~소방경 계급·호봉별 월급과 수당",
-            description:
-              "소방공무원 봉급표(소방사~소방경 1~5호봉)와 위험근무수당·출동가산금, 실수령액 계산 흐름",
+            title: PAGE_TITLE,
+            description: PAGE_DESCRIPTION,
             slug: "firefighter-pay-2026",
             url: "/firefighter-pay-2026",
             publishedDate: "2026-08-30",
-            modifiedDate: "2026-08-30",
+            modifiedDate: MODIFIED,
           }),
           datasetLd({
             name: "2026년 소방공무원 봉급표 데이터 (소방사~소방경 1~5호봉)",
@@ -105,12 +122,13 @@ export default function FirefighterPay2026Page() {
             공무원보수규정 별표 10 · 2026-01-01 시행
           </p>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
-            2026 소방 봉급표 <span className="text-electric">소방사~소방경 월급</span>
+            2026 소방공무원 봉급표 <span className="text-electric">소방사~소방경 월급</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-08-30" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-30" updatedDate={MODIFIED} className="mb-2" />
+          {/* 첫 답변(광고 위) — 제자리 교체만, 글자 수는 이전 리드 수준 유지 (B20 2026-09-25) */}
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
-            소방사 1호봉 월 2,133,000원(저연차 6.6% 인상 반영)부터 소방경까지 — 계급×호봉
-            봉급표 원문 수치와 위험근무수당·출동가산금, 실수령 계산 흐름을 정리했습니다.
+            <strong>소방사 1호봉 월 봉급은 {fmt(ENTRY_PAY)}원</strong>(저연차 6.6% 인상 반영)으로
+            순경·9급과 같습니다. 소방경 1호봉은 {fmt(CAPTAIN_PAY)}원이며 위험근무수당 등 수당은 별도입니다.
           </p>
           <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
             📚 공식 출처:{" "}
