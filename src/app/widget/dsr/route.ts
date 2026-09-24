@@ -1,40 +1,14 @@
 // /widget/dsr — 블로그 임베드용 DSR 대출 한도 계산기 (edge Route Handler).
 //
 // 계산 단일 소스: /calc/dsr-quick 의 compute (src/lib/simpleCalculators/batch1.ts,
-// DSR 40% 한도 → 원리금균등 PV 역산). 순수 산술이라 위젯 JS 에 동일 산식을 인라인하되,
-// 모듈 로드 시 아래 assert 가 본편 compute 와의 일치를 강제한다(드리프트 = 빌드 실패).
-import { getCalculatorBySlug } from "@/lib/simpleCalculators";
+// DSR 40% 한도 → 원리금균등 PV 역산). 순수 산술이라 위젯 JS 에 동일 산식을 인라인한다.
+// 본편 compute 와의 일치는 vitest(src/lib/__tests__/widgetDsr.test.ts)가 강제한다(드리프트 = 테스트 실패).
+// ★ 이 파일에서 @/lib/simpleCalculators 를 import 하지 말 것 — 계산기 레지스트리 전체가 edge 함수에
+//   번들돼 1.68MB·콜드 isolate CPU 낭비였다(2026-09-25 B1, 종전 모듈 스코프 assert 제거).
+import { DSR_RATIO } from "@/lib/widgets/dsrLimit";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
 export const runtime = "edge";
-
-const DSR_RATIO = 0.4;
-
-/** 위젯 JS 와 동일한 산식 (원리금균등 상환 월납 한도 → 대출원금 PV) */
-function dsrLimitOf(yearly: number, ratePct: number, years: number): number {
-  const annualLimit = yearly * DSR_RATIO;
-  const monthly = annualLimit / 12;
-  const r = ratePct / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return Math.round(monthly * n);
-  return Math.round((monthly * (1 - Math.pow(1 + r, -n))) / r);
-}
-
-// 본편 dsr-quick compute 와 산식 일치 검증 — 어긋나면 위젯을 배포시키지 않는다.
-{
-  const calc = getCalculatorBySlug("dsr-quick");
-  if (calc) {
-    const sample = calc.compute({ yearly: 50_000_000, rate: 4, years: 30 }) as {
-      primary: { value: number };
-    };
-    const mine = dsrLimitOf(50_000_000, 4, 30);
-    if (Math.abs(sample.primary.value - mine) > 1) {
-      throw new Error(
-        `[widget/dsr] 본편 dsr-quick 과 산식 불일치: ${sample.primary.value} vs ${mine}`,
-      );
-    }
-  }
-}
 
 function buildHtml(): string {
   return widgetShell({

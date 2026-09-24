@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Home, Search, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift } from "lucide-react";
+
+// 404 전용 메타 (2026-09-25 B1) — 종전에는 metadata 가 없어 루트 layout 의 홈 <title> 과
+// robots 'index, follow' 를 그대로 물려받아, Next 가 자동 주입하는 noindex 와 상충하는 robots 메타가 둘 나갔다.
+// robots 는 최상위 키 단위로 덮어써져 layout 의 googleBot 'index, follow' 도 함께 빠진다.
+// 정적 객체만 둔다 — 여기서 클라이언트 컴포넌트를 import 하면 Edge 라우트 매니페스트에서 빠져 500(2026-09-11).
+export const metadata: Metadata = {
+  title: { absolute: "페이지를 찾을 수 없습니다 | 머니샐러리" },
+  robots: { index: false, follow: true },
+};
 
 const SUGGESTED_LINKS = [
   { href: "/", label: "연봉 계산기", icon: Home, description: "2026 실수령액 즉시 계산" },

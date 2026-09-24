@@ -1,4 +1,6 @@
 // /salary/* 격자 밖·구형 URL 308 정규화 게이트 (2026-09-11)
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { middleware } from "@/middleware";
@@ -136,5 +138,19 @@ describe("middleware /salary normalization", () => {
     const loc = new URL(r.headers.get("location")!);
     expect(loc.pathname).toBe("/salary/70000000");
     expect(loc.searchParams.get("utm_source")).toBe("naver");
+  });
+  // 주간 헬스체크(scripts/health-check.mjs)의 격자 밖 프로브가 실제 미들웨어 동작과 같아야 한다 —
+  // 종전 기대값 404 가 9/11 308 도입 뒤 매주 FAIL 이던 사고(2026-09-25 B1) 재발 방지.
+  it("health-check probe /salary/12345678 expects the same 308 target the middleware returns", async () => {
+    const r = await middleware(request("/salary/12345678"));
+    expect(r.status).toBe(308);
+    const target = new URL(r.headers.get("location")!).pathname;
+    expect(target).toBe("/salary/12500000");
+    expect(SALARY_STATIC_AMOUNTS).toContain(12_500_000);
+    const hc = readFileSync(resolve(process.cwd(), "scripts/health-check.mjs"), "utf8");
+    const line = hc.split(/\r?\n/).find((l) => l.includes('"/salary/12345678"'));
+    expect(line, "health-check 에 /salary/12345678 프로브가 없음").toBeDefined();
+    expect(line).toMatch(/"\/salary\/12345678",\s*308,/);
+    expect(line).toContain("/\\/salary\\/12500000$/");
   });
 });
