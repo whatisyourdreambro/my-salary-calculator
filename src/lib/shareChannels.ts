@@ -141,6 +141,22 @@ interface KakaoSdkGlobal {
 const HOME_URL = "https://www.moneysalary.com";
 
 /**
+ * 카카오 피드 이미지 크기 힌트 (OG-12). 우리 OG 카드(/api/og)와 기본 이미지(/og-default.png)는
+ * 항상 1200×630 이라 크기를 알려 주면 카드 비율이 이미지 수집 전부터 고정된다.
+ * 크기를 모르는 외부·기타 이미지에는 넣지 않는다 — 틀린 값은 카드를 찌그러뜨린다.
+ */
+export function kakaoFeedImageSize(imageUrl: string): { imageWidth: number; imageHeight: number } | Record<string, never> {
+  try {
+    const { host, pathname } = new URL(imageUrl, HOME_URL);
+    // 우리 도메인(홈 계산기는 현재 origin 으로 만든다 — 프리뷰 배포 포함)의 두 경로만
+    const ours = host === "www.moneysalary.com" || host === "moneysalary.com" ||
+      (typeof window !== "undefined" && host === window.location?.host);
+    if (ours && (pathname === "/api/og" || pathname === "/og-default.png")) return { imageWidth: 1200, imageHeight: 630 };
+  } catch { /* 잘못된 URL — 크기 힌트 없이 공유 */ }
+  return {};
+}
+
+/**
  * Kakao SDK 초기화 시 피드 공유창 오픈 (ShareButtons·FloatingShareBar 공용).
  * false 반환 시 호출측이 폴백(링크 복사) 처리한다.
  * 버튼 2개: [자세히 보기 → 공유 페이지] + [내 연봉 계산하기 → 홈]
@@ -174,6 +190,7 @@ export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
         title: p.title,
         description: p.description ?? "",
         imageUrl: p.imageUrl,
+        ...kakaoFeedImageSize(p.imageUrl),
         link: { mobileWebUrl: p.url, webUrl: p.url },
       },
       buttons,

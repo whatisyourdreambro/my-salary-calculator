@@ -5,8 +5,8 @@
 // withUtm 이 `?`/`#`/`/share/{base64}`/`?v=base64` 를 깨뜨리면 공유 링크 81% 파손
 // 사건(2026-08-30)이 재발하므로 경계 케이스를 고정한다.
 
-import { describe, expect, it } from "vitest";
-import { SHARE_CHANNELS, withUtm } from "@/lib/shareChannels";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { kakaoFeedImageSize, SHARE_CHANNELS, tryKakaoFeedShare, withUtm } from "@/lib/shareChannels";
 
 const HOME = "https://www.moneysalary.com";
 
@@ -101,5 +101,46 @@ describe("withUtm — 채널 인텐트 결합", () => {
     const intent = SHARE_CHANNELS.naver_blog.intentUrl!({ url, title: "t" });
     expect(intent).toContain(encodeURIComponent(url));
     expect(intent).toContain("utm_source%3Dnaver_blog%26utm_medium%3Dshare");
+  });
+});
+
+// OG-12 (2026-09-25): 우리 1200×630 카드일 때만 카카오 피드에 크기 힌트
+describe("kakaoFeedImageSize — 우리 OG 카드에만 크기 힌트", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("/api/og·/og-default.png(우리 도메인)는 1200×630", () => {
+    for (const url of [
+      `${HOME}/api/og?type=salary&amount=50000000&net=3520000&v=20260924`,
+      `${HOME}/api/og?path=%2Fcalc%2Fx&title=t&lang=ko`,
+      `${HOME}/og-default.png`,
+      "https://moneysalary.com/api/og?type=guide&title=x",
+      "/api/og?type=tool&name=x",
+    ]) expect(kakaoFeedImageSize(url), url).toEqual({ imageWidth: 1200, imageHeight: 630 });
+  });
+
+  it("다른 경로·다른 도메인·잘못된 URL에는 넣지 않는다", () => {
+    for (const url of [
+      `${HOME}/images/card.png`,
+      `${HOME}/api/og-other`,
+      "https://example.com/api/og?type=salary",
+      "https://cdn.example.com/og-default.png",
+      "http://[invalid",
+    ]) expect(kakaoFeedImageSize(url), url).toEqual({});
+  });
+
+  it("홈 계산기는 현재 origin 으로 카드 주소를 만든다 — 같은 host(프리뷰 배포)도 우리 카드", () => {
+    vi.stubGlobal("window", { location: { host: "preview.moneysalary.pages.dev" } });
+    expect(kakaoFeedImageSize("https://preview.moneysalary.pages.dev/api/og?type=salary&amount=1")).toEqual({ imageWidth: 1200, imageHeight: 630 });
+  });
+
+  it("tryKakaoFeedShare content 에 imageWidth·imageHeight 가 실린다 (외부 이미지는 없음)", () => {
+    const sendDefault = vi.fn();
+    vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
+    expect(tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: `${HOME}/api/og?type=tool&name=x` })).toBe(true);
+    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: `${HOME}/api/og?type=tool&name=x`, imageWidth: 1200, imageHeight: 630 });
+    tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: "https://example.com/a.png" });
+    const content = sendDefault.mock.calls[1][0].content;
+    expect(content).not.toHaveProperty("imageWidth");
+    expect(content).not.toHaveProperty("imageHeight");
   });
 });
