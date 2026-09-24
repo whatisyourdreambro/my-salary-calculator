@@ -1,5 +1,5 @@
 // src/app/table/2027/weekly/page.tsx — 2027년판 주급 실수령액 표 (2026-08-30 신설, 성장 제안 ④)
-// 엔진: generateData2027 (연금 5.0% 확정 + 미확정 요율 2026 준용 — layout 고지 배너 참조)
+// 엔진: generateData2027 (연금 5.0% 확정·건보 동결 확정 + 장기요양 2026 준용 — layout 고지 배너 참조)
 
 import { Suspense } from "react";
 import { generateWeeklyPayTableData2027, MIN_WAGE_2027 } from "@/lib/generateData2027";
@@ -46,7 +46,7 @@ const FAQ_ITEMS = [
   {
     question: "주급을 월급으로 어떻게 환산하나요?",
     answer:
-      "주급 × 52주 ÷ 12개월로 환산합니다. 예를 들어 주급 100만원이면 연 5,200만원, 월 약 433만원(세전)입니다. 본 표는 이 환산 월급에서 2027년 국민연금 5.0%(확정 인상)와 건강보험·고용보험·소득세(2026 기준 준용)를 공제한 참고치입니다.",
+      "주급 × 52주 ÷ 12개월로 환산합니다. 예를 들어 주급 100만원이면 연 5,200만원, 월 약 433만원(세전)입니다. 본 표는 이 환산 월급에서 2027년 국민연금 5.0%(확정 인상)·건강보험 3.595%(동결 확정)와 장기요양·고용보험·소득세(2026 기준 준용)를 공제한 참고치입니다.",
   },
   {
     question: "2027년 최저임금 기준 주급은 얼마인가요?",
@@ -64,9 +64,9 @@ const structuredData = [
   datasetLd({
     name: "2027년 주급 실수령액 표",
     description:
-      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (미확정 요율은 2026 준용).",
+      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (건강보험 2027 동결 확정 반영, 장기요양은 2026 준용).",
     url: "/table/2027/weekly",
-    dateModified: "2026-08-30",
+    dateModified: "2026-09-25",
     keywords: ["2027 주급", "실수령액", "주급 환산", "주급 테이블", "2027년"],
   }),
   autoBreadcrumbLd("/table/2027/weekly", { leafName: "2027 주급 실수령액 표" }),
@@ -139,12 +139,13 @@ function WeeklyTable2027() {
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 최저시급 {fmtWon(MIN_WAGE_2027)}원 (+3.7%)</li>
                     <li>- 국민연금 근로자 5.0% (4.75%에서 인상)</li>
+                    <li>- 건강보험 근로자 3.595% (2027 동결, 9/8 건정심)</li>
                   </ul>
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-center">미확정 (2026 준용)</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 건강보험·장기요양 요율 (통상 9~11월 결정)</li>
+                    <li>- 장기요양보험료율 (통상 10~11월 결정)</li>
                     <li>- 소득세 — 2026년 연간 누진세액 추정의 월 환산(실제 월별 간이세액표 조회 아님)</li>
                   </ul>
                 </div>

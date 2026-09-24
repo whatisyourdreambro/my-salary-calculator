@@ -50,10 +50,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
  '/table/2026/annual': { lastModified: new Date('2026-09-10') },
  '/table/2026/monthly': { lastModified: new Date('2026-09-10') },
- '/table/2027/annual': { lastModified: new Date('2026-09-10') },
- '/table/2027/monthly': { lastModified: new Date('2026-09-10') },
- '/table/2027/weekly': { lastModified: new Date('2026-09-10') },
- '/table/2027/hourly': { lastModified: new Date('2026-09-10') },
+ // 2027 표 4종·요율표: 2027 건보료율 동결 확정(건정심 2026-09-08) 문구 반영 2026-09-25
+ '/table/2027/annual': { lastModified: new Date('2026-09-25') },
+ '/table/2027/monthly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/weekly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/hourly': { lastModified: new Date('2026-09-25') },
  '/calc/samsung-bonus': { lastModified: new Date('2026-09-21'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-20'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
  '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
@@ -86,7 +87,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
  '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
- '/social-insurance-rates-2027': { lastModified: new Date('2026-08-31') },
+ '/social-insurance-rates-2027': { lastModified: new Date('2026-09-25') },
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-08-30') },
  '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },
@@ -160,7 +161,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // Info pages — 정보성 검색 트래픽
  '/tax-rates-2026',
  '/social-insurance-rates-2026',
- // 2027 4대보험 요율표 선발행 (2026-08-31 R2) — 연금 10% 확정·건보 확정 시 갱신
+ // 2027 4대보험 요율표 선발행 (2026-08-31 R2) — 연금 10% 확정·건보 7.19% 동결 확정 반영(2026-09-25)
  '/social-insurance-rates-2027',
  '/tax-changes-2026',
  // 2026-07-16 신설 — 세법개정안 7월 말 발표 선점 페이지 (발표 당일 갱신)
