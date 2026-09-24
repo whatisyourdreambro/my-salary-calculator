@@ -14,7 +14,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import type { ReactElement } from "react";
-import { OgFontCache, serveCachedOgImage } from "@/lib/ogImageCache";
+import { OG_CLIENT_CACHE_CONTROL, OgFontCache, serveCachedOgImage } from "@/lib/ogImageCache";
 
 export const runtime = "edge";
 
@@ -32,10 +32,12 @@ const ROBOTS_HEADER = "noindex, noimageindex, nofollow";
 // 정상 응답: 브라우저 1일 · CDN 1일.
 // 기존 s-maxage=2592000(30일)은 0바이트/장애 응답이 CDN에 한 달 고착되는
 // 원인이었음 (2026-06-11 503 incident) — 1일로 단축.
+// 값은 ogImageCache 와 공유한다: 엣지 Cache API 저장본만 30일로 늘리고(검증된 카드만, STAB-04),
+// 밖으로 나가는 응답은 HIT·MISS 모두 이 1일로 다시 맞춘다.
 const OK_HEADERS = {
   "Content-Type": "image/png",
   "X-Robots-Tag": ROBOTS_HEADER,
-  "Cache-Control": "public, max-age=86400, s-maxage=86400",
+  "Cache-Control": OG_CLIENT_CACHE_CONTROL,
 };
 
 // 폴백/에러 응답: 5분만 캐시 — 장애 이미지가 CDN에 오래 남지 않도록.
@@ -112,8 +114,9 @@ const watermarkStyle = {
 
 type OgRender = { node: ReactElement; text: string };
 
-function BrandSignature() {
-  return <div style={{ ...watermarkStyle, display: "flex", alignItems: "center", gap: 14, opacity: 0.9 }}>
+// left 미지정 = 종전 위치(부모 alignItems 기준 — 가운데 정렬 카드는 하단 중앙). 좌측 정렬 카드는 명시 inset 을 준다.
+function BrandSignature({ left }: { left?: number } = {}) {
+  return <div style={{ ...watermarkStyle, ...(left === undefined ? {} : { left }), display: "flex", alignItems: "center", gap: 14, opacity: 0.9 }}>
     <svg width="46" height="46" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="30" height="30" rx="8" fill="white" />
       <path d="M8 23L16 11L24 23" stroke={BRAND_BLUE} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
@@ -201,8 +204,12 @@ function renderToolOg(name: string): OgRender {
 }
 
 function renderGuideOg(title: string): OgRender {
+  // 하단 여백 130px — BrandSignature(absolute, bottom 36, 높이 46 → y 548~594)가 좌측 같은 높이에 놓여
+  // 부제와 겹치던 것(바닥 60px 여백이라 부제가 y≈540~570, 2026-09-24 실측 OG-08)을 부제 아래로 분리.
+  // 서명은 left 미지정이면 x=0(왼쪽 끝에 붙음)이라 본문과 같은 x=80 으로 맞춘다. 좌하단 그대로라
+  // 네이버 가운데 정사각 크롭에는 변화가 없다. 3줄 제목 로컬 PNG 육안 확인(2026-09-25).
   const node = (
-    <div style={{ ...containerStyle, alignItems: "flex-start", justifyContent: "flex-end", padding: "60px 80px" }}>
+    <div style={{ ...containerStyle, alignItems: "flex-start", justifyContent: "flex-end", padding: "60px 80px 130px" }}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", maxWidth: "1040px" }}>
         <div style={{ color: CANVAS, fontSize: 24, fontWeight: 900, marginBottom: 16, letterSpacing: "0.04em" }}>
           머니샐러리 · 금융 가이드
@@ -214,7 +221,7 @@ function renderGuideOg(title: string): OgRender {
           직장인이 꼭 알아야 할 세금·재테크
         </div>
       </div>
-      <BrandSignature />
+      <BrandSignature left={80} />
     </div>
   );
   const text = [

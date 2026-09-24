@@ -19,6 +19,7 @@ import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import { trackEvent } from "@/lib/analytics";
 import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
 import { encodeSalarySharePayload, validateSalarySharePayload } from "@/lib/salarySharePayload";
+import { salaryOgImagePath } from "@/lib/ogUrlVersion";
 import { isCurrentSalaryResult, mergeSalarySnapshot, parseSavedHomeInputs } from "@/lib/salaryResultSnapshot";
 import type {
  StoredSalaryData,
@@ -351,7 +352,8 @@ export default function SalaryCalculator() {
  return {
  title: `${incomeType === "regular" ? "연봉" : "월 소득의 연 환산"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`,
  description: incomeType === "freelancer" ? "월 사업소득 3.3% 원천징수 추정입니다. 최종 종합소득세와 다릅니다." : "2026년 계산 모델의 추정액입니다. 실제 급여명세서·최종 세액과 다를 수 있습니다.",
- imageUrl: `${origin}/api/og?type=salary&amount=${annualSalary}&net=${result.monthlyNet}`,
+ // 1만원 단위 + &v= 버전 — 카드 표시값은 같고 OG 캐시 키만 모인다 (OG-09·OG-03)
+ imageUrl: `${origin}${salaryOgImagePath(annualSalary, result.monthlyNet)}`,
  };
  }, [annualSalary, result.monthlyNet, incomeType]);
 

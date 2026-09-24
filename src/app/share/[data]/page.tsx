@@ -10,6 +10,9 @@ import NextActions from "@/components/NextActions";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { nextActionHrefs } from "@/lib/nextActionLinks";
 import ResultSharePanel from "@/components/ResultSharePanel";
+import { salaryOgImagePath } from "@/lib/ogUrlVersion";
+
+const SITE_URL = "https://www.moneysalary.com";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
 
@@ -41,8 +44,9 @@ export function generateMetadata({ params }: Props): Metadata {
  const netManwon = Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR");
  const title = `${decoded.regular ? "연봉" : "연 환산 소득"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`;
  const description = `${decoded.modelLabel}. 공유자가 입력한 조건에 따른 추정액입니다.`;
- // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정)
- const ogImage = `/api/og?type=salary&amount=${decoded.annualSalary}&net=${decoded.monthlyNet}`;
+ // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정).
+ // 금액은 카드 표시 단위(1만원)로 모으고 &v= 버전을 붙인다 (OG-09·OG-03).
+ const ogImage = salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet);
 
  return {
  title,
@@ -104,7 +108,7 @@ export default function SharePage({ params }: Props) {
  url={`https://www.moneysalary.com/share/${encodeSalarySharePayload(decoded.payload)}`}
  title={`${decoded.regular ? "연봉" : "연 환산 소득"} ${decoded.annualSalary.toLocaleString("ko-KR")}원 · 월 수령 추정 ${decoded.monthlyNet.toLocaleString("ko-KR")}원`}
  description={decoded.modelLabel}
- imageUrl={`https://www.moneysalary.com/api/og?type=salary&amount=${decoded.annualSalary}&net=${decoded.monthlyNet}`}
+ imageUrl={`${SITE_URL}${salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet)}`}
  contentType="salary_result"
  />
  </div>

@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import { getGuideModifiedDate } from "./guideDates";
 import { englishPolicyCounterpart } from "./englishSite";
+import { salaryOgImagePath } from "./ogUrlVersion";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -168,7 +169,6 @@ export function buildSalaryAmountMetadata(
  amount >= 100_000_000 ? formatSalaryKorean(amount) : `${formatted}만원`;
  const eokShort =
  amount >= 100_000_000 ? `${Math.floor(amount / 100_000_000)}억` : null;
- const netParam = monthlyNet ? `&net=${Math.round(monthlyNet)}` : "";
  const netManwon = monthlyNet
  ? Math.round(monthlyNet / 10000).toLocaleString("ko-KR")
  : null;
@@ -200,7 +200,9 @@ export function buildSalaryAmountMetadata(
  ? [`연봉 ${eokShort}`, `연봉 ${eokShort} 실수령액`]
  : []),
  ],
- ogImage: `${SITE_URL}/api/og?type=salary&amount=${amount}${netParam}`,
+ // 금액은 1만원 단위(카드 표시 단위)로 모으고 &v= 버전을 붙인다 — 네이버·카카오가 쥔 9/23 이전
+ // ASCII 대체 썸네일을 새 주소로 교체 (OG-03·OG-09, 2026-09-25). 카드 모양·<title> 은 그대로.
+ ogImage: `${SITE_URL}${salaryOgImagePath(amount, monthlyNet)}`,
  });
 }
 
