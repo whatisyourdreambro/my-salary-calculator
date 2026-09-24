@@ -103,12 +103,11 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   {
     id: "hl-mando",
     disclosed: {
-      avgSalaryManwon: 10700,
-      fiscalYear: "2024",
-      source:
-        "뉴스투데이 2025-04-14 '직장 돋보기 분석' — 금융감독원 2024년 사업보고서 인용 (남 1억900만/여 7,800만, 전체 1억700만원)",
-      sourceUrl: "https://www.news2day.co.kr/article/20250414500254",
-      note: "전체 평균은 공시 원문의 전체값 사용. 2025 사업연도 사업보고서는 2026-03-18 제출됐으나 공시 인용 보도 미확보로 2024년 수치 유지.",
+      avgSalaryManwon: 10800,
+      fiscalYear: "2025",
+      source: "DART HL만도 사업보고서(2025.12) 직원 등 현황 합계행, 2026-03-18 제출 (남 1억1,100만/여 7,700만, 전체 1억800만원)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260318000883",
+      note: "전체 평균은 공시 원문 합계행 값 사용(백만원 단위 공시, 직원 3,828명·평균 근속 18.4년).",
     },
     name: { ko: "HL만도", en: "HL Mando" },
     industry: "Auto Parts",
@@ -128,7 +127,7 @@ export const krCompanies_Batch6: CompanyProfile[] = [
       { category: "growth", title: "직무 교육", description: "자율주행 전문 교육 지원", value: 3000000 },
     ],
     culture: { score: 7.8, keywords: ["섀시", "자율주행", "기술"], pros: ["브레이크·스티어링 분야 기술 경쟁력", "자율주행 부품 사업 확대", "글로벌 고객 다변화"], cons: ["완성차 단가 인하 압박", "보수적인 부품사 문화"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-09-24",
   },
   {
     id: "hanon-system",
@@ -287,13 +286,11 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   {
     id: "kai",
     disclosed: {
-      avgSalaryManwon: 11600,
-      fiscalYear: "2024",
-      source:
-        "뉴데일리경제 2025-07-03 '4대 방산기업 평균 연봉 1억 넘어' — 2024년 사업보고서 인용 (남 1억1,800만/여 8,200만, 전체 1억1,600만원)",
-      sourceUrl:
-        "https://biz.newdaily.co.kr/site/data/html/2025/07/03/2025070300091.html",
-      note: "전체 평균은 공시 전체값 사용. 2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지.",
+      avgSalaryManwon: 12000,
+      fiscalYear: "2025",
+      source: "DART 한국항공우주산업 사업보고서(2025.12) 직원 등 현황 합계행, 2026-03-18 제출 (1인평균급여액 120백만원, 직원 5,241명)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260318001461",
+      note: "전체 평균은 공시 원문 합계행 값(백만원 단위). 급여총액은 근로소득 기준·충당성 인건비 제외(공시 주석).",
     },
     name: { ko: "한국항공우주산업", en: "Korea Aerospace Industries (KAI)" },
     industry: "Aerospace",
@@ -313,17 +310,16 @@ export const krCompanies_Batch6: CompanyProfile[] = [
       { category: "financial", title: "자녀 학자금", description: "대학까지 학자금 지원", value: 9000000 },
     ],
     culture: { score: 8.0, keywords: ["항공우주", "공기업성", "안정"], pros: ["국내 유일 완제기 제조사로서의 위상", "공기업에 준하는 높은 고용 안정성", "우수한 워라밸과 정시 퇴근 문화"], cons: ["사천 지역 근무의 정주 한계", "느린 의사결정과 보수적 조직"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-09-24",
   },
   {
     id: "hyundai-rotem",
     disclosed: {
       avgSalaryManwon: 12000,
-      fiscalYear: "2024",
-      source:
-        "뉴스투데이 2025-05-26 '직장 돋보기 분석' 및 EBN·뉴데일리 — 2024년 사업보고서 인용 (전체 직원 4,182명 평균 1억2,000만원, 방산 4사 중 최고)",
-      sourceUrl: "https://www.news2day.co.kr/article/20250526500003",
-      note: "2025년 실적 급증(영업이익 1조원대)으로 실제 FY2025 평균은 더 높을 수 있으나, 공시 인용 보도 확인 전까지 2024년 수치 유지(추정 금지 원칙).",
+      fiscalYear: "2025",
+      source: "DART 현대로템 사업보고서(2025.12) 직원 등 현황 합계행, 2026-03-19 제출 (전체 직원 4,541명 1인평균급여액 120백만원)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260319001275",
+      note: "공시 원문 합계행 값(백만원 단위 공시, 약 1억2,000만원). 부문(공통·방산·철도·플랜트)·성별 1인평균은 7,400만~1억3,500만원.",
     },
     name: { ko: "현대로템", en: "Hyundai Rotem" },
     industry: "Defense",
@@ -343,7 +339,7 @@ export const krCompanies_Batch6: CompanyProfile[] = [
       { category: "lifestyle", title: "차량 할인", description: "현대차그룹 임직원 할인", value: 4000000 },
     ],
     culture: { score: 7.9, keywords: ["철도", "K2전차", "수출"], pros: ["K2 전차 수출 호조로 실적 개선", "현대차그룹 계열의 안정성", "철도·방산 양대 사업 포트폴리오"], cons: ["수주 산업 특성상 실적 변동성", "중공업 특유의 현장 강도"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-09-24",
   },
   {
     id: "lig-nex1",

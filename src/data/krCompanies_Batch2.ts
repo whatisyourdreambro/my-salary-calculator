@@ -33,12 +33,11 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  {
  id: "celltrion",
  disclosed: {
- avgSalaryManwon: 10300,
- fiscalYear: "2024",
- source:
- "메디칼업저버 2025-04-17 — DART 2024년 사업보고서 재정리 (의약품 제조 상위 30사 분석, 1인 평균 1억300만원)",
- sourceUrl: "https://www.monews.co.kr/news/articleView.html?idxno=403602",
- note: "2025 사업연도 사업보고서는 2026-03 제출됐으나 공시 인용 보도 미확보로 2024년 수치 유지. 셀트리온제약(평균 7,700만원대)과는 별개 회사.",
+ avgSalaryManwon: 10700,
+ fiscalYear: "2025",
+ source: "DART 셀트리온 사업보고서(2025.12) 직원 등 현황 합계행, 2026-03-16 제출 (1인평균급여액 107백만원, 직원 3,153명)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260316001415",
+ note: "공시 합계행 값 — 스톡옵션 행사차익 제외 기준(포함 시 1인평균 112백만원), 직원 수에 미등기임원 포함(공시 주석). 셀트리온제약과는 별개 회사.",
  },
  name: { ko: "셀트리온", en: "Celltrion" },
  industry: "Bio / Pharma",
@@ -55,7 +54,7 @@ export const krCompanies_Batch2: CompanyProfile[] = [
  workLife: { weeklyHours: { contract: 40, real: 48 }, vacation: { days: 15, usageRate: 70 }, remoteWork: { policy: "office", description: "현장 중심" } },
  benefits: [{ category: "financial", title: "스톡옵션", description: "성과 우수자 대상 부여", value: 10000000 }, { category: "lifestyle", title: "구내식당", description: "삼시세끼 무료", value: 3000000 }],
  culture: { score: 7.5, keywords: ["열정", "도전", "야근"], pros: ["바이오 업계 탑티어", "스톡옵션 기회", "고속 성장"], cons: ["높은 업무 강도", "회장님 카리스마 중심"] },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-09-24",
  },
 
  // --- FINANCE ---

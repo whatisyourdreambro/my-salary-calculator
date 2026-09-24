@@ -24,12 +24,11 @@ export const krCompanies_Batch11: CompanyProfile[] = [
   {
     id: "korea-zinc",
     disclosed: {
-      avgSalaryManwon: 11100,
-      fiscalYear: "2024",
-      source:
-        "전자신문 2025-10-01 — 금융감독원 전자공시 기준 2024년 직원 1인 평균 급여액 1억1,100만원(2023년 1억248만원 대비 +8.3%)",
-      sourceUrl: "https://v.daum.net/v/20251001112647786",
-      note: "금속·철강 상장사 중 포스코홀딩스에 이은 2위 수준. 2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지.",
+      avgSalaryManwon: 12100,
+      fiscalYear: "2025",
+      source: "DART 고려아연 사업보고서(2025.12) 직원 등 현황 합계행, 2026-08-13 정정 제출분 (1인평균급여액 121백만원, 직원 2,054명)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260813001726",
+      note: "공시 원문 합계행 값(백만원 단위 공시, 남 1억2,500만·여 7,200만원). 2026-08-13 정정 사업보고서 기준.",
     },
     name: { ko: "고려아연", en: "Korea Zinc" },
     industry: "Metal",
@@ -46,7 +45,7 @@ export const krCompanies_Batch11: CompanyProfile[] = [
     workLife: { weeklyHours: { contract: 40, real: 44 }, vacation: { days: 20, usageRate: 82 }, remoteWork: { policy: "office", description: "온산 제련소 근무" } },
     benefits: [{ category: "financial", title: "성과 인센티브", description: "업계 최고 수준 성과급", value: 16000000 }, { category: "lifestyle", title: "사택 지원", description: "울산 온산 사택 제공", value: 4000000 }],
     culture: { score: 7.9, keywords: ["알짜", "제련", "고연봉"], pros: ["비철금속 세계 1위 기술력", "업계 최상위 연봉과 성과급", "탄탄한 재무 구조"], cons: ["경영권 분쟁 불확실성", "보수적인 제련업 문화"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-09-24",
   },
   {
     id: "hankook-tire",
@@ -151,12 +150,11 @@ export const krCompanies_Batch11: CompanyProfile[] = [
   {
     id: "chong-kun-dang",
     disclosed: {
-      avgSalaryManwon: 8100,
-      fiscalYear: "2024",
-      source:
-        "헬스조선 2025-03-25 — 2024년 사업보고서 기준 직원 평균 연봉 8,100만원(전년 대비 +3.9%)",
-      sourceUrl: "https://v.daum.net/v/UxTuNjsdOj",
-      note: "2025 사업연도 수치는 공시 인용 보도 미확보로 2024년 수치 유지.",
+      avgSalaryManwon: 8000,
+      fiscalYear: "2025",
+      source: "DART 종근당 사업보고서(2025.12) 직원의 현황 합계행, 2026-03-18 제출 (1인평균급여액 80백만원)",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260318001376",
+      note: "공시 원문 합계행 값(백만원 단위, 남 8,500만·여 6,800만원, 직원 2,304명).",
     },
     name: { ko: "종근당", en: "Chong Kun Dang" },
     industry: "Pharma",
@@ -173,7 +171,7 @@ export const krCompanies_Batch11: CompanyProfile[] = [
     workLife: { weeklyHours: { contract: 40, real: 44 }, vacation: { days: 20, usageRate: 80 }, remoteWork: { policy: "office", description: "충정로 본사 근무" } },
     benefits: [{ category: "growth", title: "학위 지원", description: "석·박사 학비 지원", value: 5000000 }, { category: "financial", title: "자녀 학자금", description: "중·고·대학 지원", value: 9000000 }],
     culture: { score: 7.6, keywords: ["제약", "안정", "영업중심"], pros: ["전통 제약사의 높은 안정성", "꾸준한 처방약 매출 기반", "체계적인 교육 제도"], cons: ["보수적인 제약 영업 문화", "영업·마케팅 부서의 실적 압박"] },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-09-24",
   },
   {
     id: "daewoong",

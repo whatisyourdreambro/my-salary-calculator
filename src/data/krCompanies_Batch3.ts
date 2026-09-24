@@ -34,13 +34,12 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  {
  id: "s-oil",
  disclosed: {
- avgSalaryManwon: 15400,
- fiscalYear: "2024",
- avgTenureYears: 17.8,
- source:
- "뉴스투데이 2025-09-15 — 금융감독원 공시 2024년 사업보고서 기준 (평균연봉 약 1억5,400만원, 근속 17.8년)",
- sourceUrl: "https://www.news2day.co.kr/article/20250914500030",
- note: "2025 사업연도 공시 인용 보도 미확보로 2024년 수치 유지. 취업포털의 1억7,000만원대 수치는 기준연도 확인이 불가해 채택하지 않음.",
+ avgSalaryManwon: 13865,
+ fiscalYear: "2025",
+ avgTenureYears: 17.4,
+ source: "DART S-OIL 사업보고서(2025.12) 직원 등 현황 합계행, 2026-03-20 제출 (1인평균급여액 138,652천원, 평균 근속 17.4년)",
+ sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260320000559",
+ note: "공시 원문 합계행 값(약 1억3,865만원, 직원 3,537명). 1인평균은 월별 급여총액÷월 평균 근무인원의 합으로 산정한 회사 공시값(공시 주석).",
  },
  name: { ko: "S-OIL", en: "S-OIL" },
  industry: "Energy",
@@ -57,7 +56,7 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  workLife: { weeklyHours: { contract: 40, real: 40 }, vacation: { days: 25, usageRate: 95 }, remoteWork: { policy: "hybrid", description: "PC OFF 철저" } },
  benefits: [{ category: "lifestyle", title: "여름 휴가비", description: "휴가비 별도 지급", value: 2000000 }, { category: "health", title: "의료비", description: "본인/가족 실비", value: 3000000 }],
  culture: { score: 9.3, keywords: ["신의직장", "워라밸", "고연봉"], pros: ["대한민국 3대 신의 직장", "높은 기본급 + 성과급", "칼퇴 문화"], cons: ["수직적인 문화 존재", "울산 근무 가능성"] },
- lastUpdated: "2025-11-23",
+ lastUpdated: "2026-09-24",
  },
  {
  id: "gs-caltex",
