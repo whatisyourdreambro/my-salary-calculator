@@ -29,7 +29,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
 
  return (
- <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+ <section data-msy-module="company-insights" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
  {/* 자동 요약 카드 */}
  <div className="p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl sm:text-2xl font-black text-navy mb-4">

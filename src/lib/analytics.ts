@@ -5,7 +5,7 @@
 // - gtag 미로드 상태(스크립트 차단·블로커) 시도 무해
 // - 무료 GA4 한도 (월 10M 이벤트) 내 안전한 사용 가정
 
-import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
+import { PAGE_SCOPED_MEASUREMENT_EVENTS, sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
 import { shareAnalyticsPath, type ShareMode } from "./sharePolicy";
 import type { ShareOutcome, ShareErrorKind } from "./shareTransport";
 
@@ -22,11 +22,14 @@ export function trackEvent(
 ): void {
   if (typeof window === "undefined") return;
   try {
+    // 광고·제휴 계측은 공개 금액 페이지(/monthly/N·/salary/N 정적 격자)의 실제 경로를 유지해
+    // page_view·ad_impression 과 같은 Page path 행에 붙는다. 그 외 이벤트는 금액 경로 비식별 유지.
+    const urlOptions = { keepPublicAmountPath: PAGE_SCOPED_MEASUREMENT_EVENTS.has(name) };
     window.gtag?.("event", name, {
       ...sanitizeAnalyticsParams(name, params),
       // Event-scoped overrides. Automatic GA history/outbound events are separate.
-      page_location: sanitizeAnalyticsUrl(window.location?.href ?? ""),
-      page_referrer: typeof document !== "undefined" ? sanitizeAnalyticsUrl(document.referrer) : "",
+      page_location: sanitizeAnalyticsUrl(window.location?.href ?? "", undefined, urlOptions),
+      page_referrer: typeof document !== "undefined" ? sanitizeAnalyticsUrl(document.referrer, undefined, urlOptions) : "",
     });
   } catch {
     // GA4 push errors are non-fatal
@@ -135,7 +138,11 @@ export function trackInternalLinkClick(href: string, moduleId: string): void {
   trackGuideCTAClick(href, moduleId);
 }
 
-/** 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시 */
+/**
+ * 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시
+ * 진입 맥락은 ui_source 로 보낸다 — 'source' 는 GA4 가 세션 소스로 읽어 채널을 덮어쓴다
+ * ("compare-page / (not set)" 세션, 2026-09-25 수정. analyticsPrivacy RESERVED_TRAFFIC_SOURCE_PARAMS 참고).
+ */
 export function trackCompareView(
   companyIds: string[],
   source?: string
@@ -143,7 +150,7 @@ export function trackCompareView(
   trackEvent("compare_view", {
     company_ids: companyIds.join(","),
     company_count: companyIds.length,
-    source: source ?? "",
+    ui_source: source ?? "",
   });
 }
 
@@ -225,14 +232,18 @@ export function trackShareOutcome(channel: string, contentType: string, outcome:
   });
 }
 
-/** 즐겨찾기/북마크 클릭 — 재방문률 향상 측정 */
+/**
+ * 즐겨찾기/북마크 클릭 — 재방문률 향상 측정
+ * 동작 구분(add·remove·toast_dashboard·header_badge)은 ui_source — 'source' 로 보내면 GA4 가
+ * 세션 소스를 "add / (not set)" 등으로 덮어써 실제 유입 채널이 사라졌다(2026-09-25 수정).
+ */
 export function trackBookmarkClick(
   targetPath: string,
   source?: string
 ): void {
   trackEvent("bookmark_click", {
     target_path: targetPath,
-    source: source ?? "",
+    ui_source: source ?? "",
     page_path: typeof location !== "undefined" ? location.pathname : "",
   });
 }
@@ -290,16 +301,38 @@ export function trackAdFillStatus(
   });
 }
 
-/** 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5) */
+/**
+ * 제휴 오퍼 배치 — GA4 맞춤 측정기준 'position'(제휴 배치, Slot03)의 값.
+ *   offer-slot  = OfferSlot(결과 연동 CTA 옆 병기, 쿠팡 폴백 없음)
+ *   banner-slot = CoupangBanner 호출부를 오퍼 카드가 대체한 자리
+ * 종전에는 position 을 보내지 않아 affiliate_impression 2,233건 전부 (not set) 이었다(2026-09-25 수정).
+ */
+export type AffiliatePlacement = "offer-slot" | "banner-slot";
+
+function affiliateParams(offerId: string, page: string, vertical: string, placement?: AffiliatePlacement) {
+  return {
+    offer_id: offerId,
+    page, // 기존 보고서 키 유지
+    page_path: page, // 다른 광고·제휴 이벤트와 같은 키로 페이지 조인
+    vertical,
+    ...(placement === "offer-slot" || placement === "banner-slot" ? { position: placement } : {}),
+  };
+}
+
+/**
+ * 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5)
+ * 링크가 새 탭(target=_blank)으로 나가므로 GA4 배치 큐(최대 약 5초)에서 기다리는 동안
+ * 인앱 브라우저 창 전환·종료로 유실되지 않도록 beacon 전송을 명시한다(측정 전용, 링크·파라미터 무변경).
+ */
 export function trackAffiliateClick(
   offerId: string,
   page: string,
-  vertical: string
+  vertical: string,
+  placement?: AffiliatePlacement
 ): void {
   trackEvent("affiliate_click", {
-    offer_id: offerId,
-    page,
-    vertical,
+    ...affiliateParams(offerId, page, vertical, placement),
+    transport_type: "beacon",
   });
 }
 
@@ -307,11 +340,8 @@ export function trackAffiliateClick(
 export function trackAffiliateImpression(
   offerId: string,
   page: string,
-  vertical: string
+  vertical: string,
+  placement?: AffiliatePlacement
 ): void {
-  trackEvent("affiliate_impression", {
-    offer_id: offerId,
-    page,
-    vertical,
-  });
+  trackEvent("affiliate_impression", affiliateParams(offerId, page, vertical, placement));
 }

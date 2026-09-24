@@ -969,8 +969,8 @@ export default function SamsungBonusCalculatorPage() {
             </div>
           </div>
 
-          {/* 관련 페이지 */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+          {/* 관련 페이지 — data-msy-module: InternalLinkTracker 위임 클릭 계측(속성만, 높이 무변경) */}
+          <section data-msy-module="samsung-related" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
             <Link
               href="/calc/bonus-calculators"
               className="block p-5 bg-white dark:bg-canvas-900 border-2 border-electric-30 rounded-2xl hover:border-electric transition-colors group"

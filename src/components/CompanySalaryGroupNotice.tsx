@@ -31,7 +31,7 @@ export default function CompanySalaryGroupNotice({
   )[0];
 
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+    <section data-msy-module="company-group-peers" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
       <div className="rounded-2xl border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900 p-5 sm:p-6">
         <h2 className="flex items-center gap-2 text-base font-black text-navy dark:text-canvas-50 mb-2">
           <Copy size={18} className="text-electric flex-shrink-0" />

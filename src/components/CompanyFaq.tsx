@@ -55,6 +55,7 @@ export default function CompanyFaq({
 
   return (
     <section
+      data-msy-module="company-faq"
       className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
       aria-label={`${companyName} 연봉 자주 묻는 질문`}
     >

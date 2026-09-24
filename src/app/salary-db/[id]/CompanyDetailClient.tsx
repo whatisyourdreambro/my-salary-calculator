@@ -169,8 +169,8 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  </p>
  </section>
 
- {/* Life Simulator */}
- <section className="ms-surface ms-panel">
+ {/* Life Simulator — data-msy-module: /car-loan 후속 링크 위임 클릭 계측(속성만) */}
+ <section data-msy-module="company-savings-goal" className="ms-surface ms-panel">
  <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
  <Car className="w-5 h-5" />
  목표 금액 모으기

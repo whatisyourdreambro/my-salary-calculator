@@ -31,6 +31,7 @@ import {
   trackAffiliateClick,
   trackAffiliateImpression,
   trackEvent,
+  type AffiliatePlacement,
 } from "@/lib/analytics";
 
 export type AffiliateSlotProps = CoupangBannerProps & {
@@ -58,10 +59,12 @@ function OfferCard({
   offer,
   pathname,
   calcResult,
+  placement,
 }: {
   offer: Offer;
   pathname: string;
   calcResult?: Record<string, string | number>;
+  placement: AffiliatePlacement;
 }) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   // 실제 50% 노출을 방문 경로·오퍼별 1회 계측. SPA 이동 시 구독을 새로 시작한다.
@@ -69,9 +72,14 @@ function OfferCard({
     const el = cardRef.current;
     if (!el) return;
     return observeViewableImpression(el, () => {
-      trackAffiliateImpression(offer.id, pathname, offer.vertical);
+      trackAffiliateImpression(offer.id, pathname, offer.vertical, placement);
     });
-  }, [offer.id, offer.vertical, pathname]);
+  }, [offer.id, offer.vertical, pathname, placement]);
+
+  // 클릭 계측 (측정 전용 — href·rel·target·오퍼 URL 무변경, 2026-09-25):
+  //   onClick    = 좌클릭·탭·키보드 Enter (브라우저가 click 으로 합성)
+  //   onAuxClick = 가운데 버튼 새 탭 열기(button 1) — click 이벤트가 발생하지 않아 종전엔 0건 처리됐다
+  const reportClick = () => trackAffiliateClick(offer.id, pathname, offer.vertical, placement);
 
   const description =
     offer.template && calcResult
@@ -90,7 +98,10 @@ function OfferCard({
         href={offer.url}
         target="_blank"
         rel="sponsored nofollow noopener noreferrer"
-        onClick={() => trackAffiliateClick(offer.id, pathname, offer.vertical)}
+        onClick={reportClick}
+        onAuxClick={(event) => {
+          if (event.button === 1) reportClick();
+        }}
         className="block rounded-2xl border-2 border-electric/30 dark:border-electric/40 bg-electric-5 dark:bg-electric-10 p-5 hover:border-electric transition-colors no-underline"
       >
         <p className="font-bold text-navy dark:text-canvas-50 text-[15px] mb-1">{offer.label}</p>
@@ -159,7 +170,12 @@ export default function AffiliateSlot({
 
   if (candidate && claimed !== false && pathname) {
     return (
-      <OfferCard offer={candidate} pathname={pathname} calcResult={calcResult} />
+      <OfferCard
+        offer={candidate}
+        pathname={pathname}
+        calcResult={calcResult}
+        placement={offerOnly ? "offer-slot" : "banner-slot"}
+      />
     );
   }
 

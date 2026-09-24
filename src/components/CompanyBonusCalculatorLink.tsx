@@ -153,7 +153,7 @@ export default function CompanyBonusCalculatorLink({
         ? Math.round(entryTotalWon)
         : null;
     return (
-      <section className="page-width py-6" aria-label="연봉·성과급 계산기 바로가기">
+      <section data-msy-module="company-bonus-calc" className="page-width py-6" aria-label="연봉·성과급 계산기 바로가기">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
             href={amount ? `/salary/${amount}` : "/"}
@@ -203,7 +203,7 @@ export default function CompanyBonusCalculatorLink({
   }
 
   return (
-    <section className="page-width py-6" aria-labelledby="bonus-calc-cta-heading">
+    <section data-msy-module="company-bonus-calc" className="page-width py-6" aria-labelledby="bonus-calc-cta-heading">
       <Link
         href={target.calc}
         className="group block rounded-2xl border-2 border-primary bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 p-6 sm:p-8 hover:from-primary/10 hover:via-primary/15 hover:to-primary/10 transition"

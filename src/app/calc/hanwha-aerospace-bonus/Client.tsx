@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 // 한화에어로스페이스 BPI(전사 경영성과급) + VEI(조직별 성과급) 시나리오.
 // FY2025 실적분 사업부별 지급률: 한국경제TV 단독·알파경제 2026-02-13 보도.
@@ -112,9 +113,20 @@ export default function HanwhaAerospaceBonusClient() {
     applyInsurance,
   ]);
 
+  // GA4 calc_start/calc_success v2 — 현대차 성과급 계산기와 같은 훅(방문당 1회, 입력값·금액 미전송).
+  const inputsValid = Number.isFinite(monthlyBasicManwon) && monthlyBasicManwon > 0
+    && Number.isFinite(annualSalaryManwon) && annualSalaryManwon > 0
+    && Number.isFinite(creditRate) && creditRate >= 0 && creditRate <= 50
+    && (!customMode || [bonusPctOverride, fixedOverride].every((value) => Number.isFinite(value) && value >= 0));
+  const measurement = useCalculatorMeasurement({
+    calcType: "hanwha-aerospace-bonus",
+    valid: inputsValid && [calc.totalGross, calc.tax.net, calc.tax.totalDeductions].every(Number.isFinite),
+    resultKey: calc,
+  });
+
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">1단계 · 지급 연도 선택</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {SCENARIOS.map((s) => (
@@ -173,7 +185,7 @@ export default function HanwhaAerospaceBonusClient() {
       </section>
 
       {scenarioId === "fy2025" && !customMode && (
-        <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+        <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
           <h2 className="text-xl font-black mb-1">2단계 · 소속 사업부 선택</h2>
           <p className="text-xs text-faint mb-4">
             VEI(조직별 성과급)가 사업부·실별 KPI 달성도에 따라 차등 산정되어 사업부마다
@@ -204,7 +216,7 @@ export default function HanwhaAerospaceBonusClient() {
         </section>
       )}
 
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">
           {scenarioId === "fy2025" && !customMode ? "3단계" : "2단계"} · 본인 월 기본급
         </h2>
@@ -237,7 +249,7 @@ export default function HanwhaAerospaceBonusClient() {
         </p>
       </section>
 
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">
           {scenarioId === "fy2025" && !customMode ? "4단계" : "3단계"} · 본인 연봉 (세금
           계산용)
@@ -283,7 +295,7 @@ export default function HanwhaAerospaceBonusClient() {
           세금 계산 가정 조정 {showAdvanced ? "▲" : "▼"}
         </button>
         {showAdvanced && (
-          <div className="mt-4 space-y-4">
+          <div {...measurement.inputProps} className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
@@ -311,7 +323,7 @@ export default function HanwhaAerospaceBonusClient() {
         )}
       </section>
 
-      <section className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
+      <section ref={measurement.resultRef} className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5 text-primary" />내 성과급 계산 결과
         </h2>
