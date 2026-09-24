@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { ArrowRight, CalendarDays, Clock3, LockKeyhole, Play } from "lucide-react";
 import Link from "@/components/AppLink";
+import IslandBoundary, { IslandFallback } from "@/components/IslandBoundary";
 import styles from "./home-work-clock.module.css";
 
 // The timer and calendar load only after an explicit action; browsing the home
@@ -29,7 +30,15 @@ export default function HomeWorkClockSection() {
         </div>
 
         <div id="home-work-clock-content" className={styles.content}>
-          {opened ? <WorkClockClient mode="home" /> : (
+          {/* 청크 로드 실패는 이 섬 자리(로딩 박스와 같은 크기)에서만 대체 화면 — 홈 본문·광고는 유지. */}
+          {opened ? (
+            <IslandBoundary
+              name="home-work-clock"
+              fallback={<IslandFallback className={styles.loading} message="월급 시계를 불러오지 못했습니다." href="/work-clock" linkLabel="월급 시계 전체 화면으로 보기" />}
+            >
+              <WorkClockClient mode="home" />
+            </IslandBoundary>
+          ) : (
             <div className={styles.intro}>
               <div className={styles.features}>
                 <p><Clock3 size={18} aria-hidden="true" /><span><strong>출근·휴식·퇴근</strong>초마다 달라지는 오늘의 예상 수입</span></p>
