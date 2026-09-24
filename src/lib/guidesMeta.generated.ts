@@ -54,7 +54,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 120000,
   "lang": "ko",
-  "contentChars": 5014
+  "contentChars": 5020
  },
  {
   "slug": "minimum-wage-2026",
@@ -573,7 +573,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 42000,
   "lang": "ko",
-  "contentChars": 5032
+  "contentChars": 5046
  },
  {
   "slug": "happy-housing-qualifications",
@@ -781,7 +781,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 41000,
   "lang": "ko",
-  "contentChars": 5078
+  "contentChars": 5098
  },
  {
   "slug": "split-accounts",
@@ -2289,7 +2289,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2665
+  "contentChars": 2727
  },
  {
   "slug": "etf-beginner",
@@ -2594,8 +2594,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-leap-account-2026",
-  "title": "2026 청년도약계좌 정부기여금 144만원 — 5년 만기 5,083만원",
-  "description": "만 19~34세, 연소득 7,500만원 이하. 월 70만원 × 5년 = 원금 4,200만원 + 정부기여금 144만원 + 이자 비과세 99만원 절감 = 만기 5,083만원.",
+  "title": "청년도약계좌 기존 가입자 — 정부기여금 144만원·만기 5,083만원",
+  "description": "2025-12-31 신규 가입 종료(청년미래적금 참고). 월 70만원 × 5년 = 원금 4,200만원 + 정부기여금 144만원 + 이자 비과세 99만원 절감 = 만기 5,083만원.",
   "category": "투자",
   "tags": [
    "청년도약계좌",
@@ -2609,7 +2609,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1347
+  "contentChars": 1374
  },
  {
   "slug": "isa-maturity-tax-saving-2026",
@@ -2708,7 +2708,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "us-stock-tax-saving-5strategies-2026",
   "title": "미국주식 양도세 22% 절세 5가지 — 2,000만원 차익 시 165만원 절감",
-  "description": "분할 매도 250만원 공제·손익 통산·이월결손금 10년·부부 합산·ISA 활용 5가지 전략. 2,000만원 차익 시 일시 매도 385만원 → 4년 분할 220만원으로 165만원 절감.",
+  "description": "분할 매도 250만원 공제·손익 통산·같은 해 손실 정리·부부 합산·ISA 활용 5가지 전략. 2,000만원 차익 시 일시 매도 385만원 → 4년 분할 220만원으로 165만원 절감.",
   "category": "주식",
   "tags": [
    "미국주식",
@@ -2722,7 +2722,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1529
+  "contentChars": 1533
  },
  {
   "slug": "side-hustle-n-jab-tax-2026",
@@ -2857,8 +2857,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "postpartum-medical-deduction-200man-2026",
-  "title": "2026 산후조리원 의료비 공제 200만원 — 출산 환급액 70만원",
-  "description": "산후조리원 출산 1회당 200만원 한도 의료비 공제(소득 무관) + 출산 의료비 합산. 한계세율 24% 시 약 7만원 환급. 영수증 5년 보관 + 부부 중 총급여 낮은 쪽 공제 유리.",
+  "title": "2026 산후조리원 의료비 공제 200만원 — 최대 환급 30만원",
+  "description": "산후조리원 출산 1회당 200만원 한도 의료비 공제(소득 무관) + 출산 의료비 합산. 최대 30만원(지방세 포함 33만원) 환급. 영수증 5년 보관 + 부부 중 총급여 낮은 쪽 공제 유리.",
   "category": "세금",
   "tags": [
    "산후조리원",
@@ -2871,7 +2871,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1392
+  "contentChars": 1432
  },
  {
   "slug": "implant-dental-medical-deduction-2026",
@@ -2894,8 +2894,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-housing-dream-1eok-2026",
-  "title": "청년주택드림 청약통장 — 만 19~34세, 5년 누적 635만원 혜택 + 1.3억 대출",
-  "description": "만 19~34세, 연소득 5천만원 이하. 4.5% 우대 적금 + 소득공제 600만원 + 청년주택드림 대출 1.3억 자격. 월 50만원 5년 시 총 혜택 635만원.",
+  "title": "청년주택드림 청약통장 — 만 19~34세, 5년 누적 494만원 혜택 + 3억 대출",
+  "description": "만 19~34세, 연소득 5천만원 이하. 4.5% 우대 적금 + 연 120만원 소득공제 + 청년주택드림 대출(최대 3억) 자격. 월 50만원 5년 시 총 혜택 약 494만원.",
   "category": "부동산",
   "tags": [
    "청년주택드림",
@@ -2909,7 +2909,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1676
+  "contentChars": 1758
  },
  {
   "slug": "one-home-capital-gains-12eok-2026",
@@ -2950,8 +2950,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-investment-savings-tax-free-2026",
-  "title": "청년형 장기집합투자증권저축 — 5년 252만원 절세 + 청년도약 중복",
-  "description": "만 19~34세, 총급여 5천만원 이하. 월 60만원 × 5년 시 운용수익 비과세 108만원 + 소득공제 환급 144만원. 청년도약계좌·청년주택드림과 모두 중복 가능.",
+  "title": "청년형 장기집합투자증권저축 — 2025년 가입 종료·소득공제만",
+  "description": "가입 기한 2025-12-31 종료(2024 세법개정으로 1년 연장 후 일몰). 기존 가입자만 연 납입 600만원 한도 40% 소득공제(최대 240만원), 운용수익 비과세 아님.",
   "category": "투자",
   "tags": [
    "청년형장기투자",
@@ -2965,7 +2965,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1686
+  "contentChars": 1789
  },
  {
   "slug": "monthly-rent-tax-credit-17-2026",
@@ -3119,8 +3119,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-housing-dream-account-detail-2026",
-  "title": "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 1.3억 대출",
-  "description": "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 소득공제 600만원 + 1.3억 대출 자격. 5년 누적 635만원 혜택.",
+  "title": "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출",
+  "description": "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.",
   "category": "부동산",
   "tags": [
    "청년주택드림",
@@ -3133,7 +3133,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 930
+  "contentChars": 1005
  },
  {
   "slug": "newlywed-deduction-first-year-2026",
@@ -3173,8 +3173,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-3account-combination-2026",
-  "title": "청년 3종 조합 5년 1,030만원 혜택 — 도약계좌 + 주택드림 + 장기투자",
-  "description": "청년도약 243만원 + 청년주택드림 535만원 + 청년형 장기투자 252만원 = 5년 누적 1,030만원. 만 19~34세 동시 가입 가능.",
+  "title": "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료",
+  "description": "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.",
   "category": "투자",
   "tags": [
    "청년",
@@ -3188,7 +3188,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1052
+  "contentChars": 1299
  },
  {
   "slug": "youth-k-pass-mass-transit-2026",
@@ -3230,7 +3230,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "newlywed-joint-ownership-2026",
   "title": "신혼부부 공동명의 vs 단독명의 — 공시가 12억 기준 분기점",
-  "description": "1주택 공시가 12억 이하: 단독(12억 공제) / 12~18억: 공동명의(각 6억 합 12억) / 18억+: 공동명의 절대 유리.",
+  "description": "1주택 공시가 12억 이하: 둘 다 0원 / 12~18억: 공동명의(각 9억)면 0원 / 18억+: 공동명의 대체로 유리, 단독 세액공제 비교.",
   "category": "부동산",
   "tags": [
    "신혼부부",
@@ -3243,12 +3243,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1457
+  "contentChars": 1594
  },
  {
   "slug": "gangnam-vs-gangbuk-prop-tax-2026",
-  "title": "강남 1주택 vs 강북 2주택 — 같은 자산 합 16억일 때 세금 1,160만원 차이",
-  "description": "강남 1주택 20억 보유세 840만원 vs 강북 2주택 합 16억 보유세 2,000만원. 1주택 집중이 다주택 분산 대비 50~70% 적은 세금.",
+  "title": "강남 1주택 20억 vs 강북 2주택 16억 — 보유세 632만 vs 544만원",
+  "description": "강남 1주택 20억 보유세 약 632만원 vs 강북 2주택 합 16억 약 544만원. 1주택 12억 공제로 공시가 4억 차이에도 세금 차이는 약 88만원.",
   "category": "부동산",
   "tags": [
    "보유세",
@@ -3261,7 +3261,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1198
+  "contentChars": 1252
  },
  {
   "slug": "parcel-vs-occupancy-right-tax-2026",
@@ -3410,7 +3410,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "rental-report-obligation-2026",
   "title": "주택임대 신고 의무 — 미신고 시 5년 추징 + 가산세 2~3배",
-  "description": "1주택 9억+ 또는 2주택+ 임대료 발생 시 신고 의무. 무신고 20% + 납부불성실 9.125%. 5월 종소세 신고 시 임대 포함.",
+  "description": "1주택 기준시가 12억 초과 또는 2주택+ 임대료 발생 시 신고 의무. 무신고 20% + 납부지연 일 0.022%. 5월 종소세 신고 시 임대 포함.",
   "category": "부동산",
   "tags": [
    "임대신고",
@@ -3423,7 +3423,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1039
+  "contentChars": 1057
  },
  {
   "slug": "earned-income-deduction-2026",
@@ -3517,8 +3517,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "credit-card-deduction-limit-detail-2026",
-  "title": "신용카드 한도 상세 — 7천 이하 300만원·1.2억+ 200만원",
-  "description": "총급여별 한도 200~300만원 + 전통시장·대중교통·도서공연 각 100만원 추가. 25% 기준선 도달 후 체크·전통시장으로 전환.",
+  "title": "신용카드 한도 상세 — 7천 이하 300만원·초과 250만원",
+  "description": "기본 한도 7천 이하 300만·초과 250만원(자녀 상향) + 전통시장·대중교통 추가 300만(7천 초과 200만). 25% 초과 후 체크·전통시장으로.",
   "category": "세금",
   "tags": [
    "신용카드",
@@ -3531,7 +3531,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 734
+  "contentChars": 886
  },
  {
   "slug": "book-concert-museum-deduction-2026",
@@ -3572,7 +3572,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "foreign-flat-tax-19-2026",
   "title": "외국인 근로자 단일세율 19% — 연봉 2억+ 외국인에게 유리",
-  "description": "한국 거주 외국인 근로자 5년간 단일세율 19% + 지방세 = 20.9%. 연봉 2억+ 외국인에게 일반 누진세율 대비 유리.",
+  "description": "국내 최초 근로 제공일부터 20년간 외국인 근로자 단일세율 19% + 지방세 = 20.9%. 연봉 2억+ 외국인에게 일반 누진세율 대비 유리.",
   "category": "세금",
   "tags": [
    "외국인",
@@ -3585,12 +3585,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 962
+  "contentChars": 975
  },
  {
   "slug": "religious-donation-100-percent-2026",
   "title": "기부금 한도 — 종교 10%·정치 10만원 100% 환급",
-  "description": "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 90만원 환급.",
+  "description": "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 약 57만원 환급.",
   "category": "세금",
   "tags": [
    "기부금공제",
@@ -3603,12 +3603,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1004
+  "contentChars": 1036
  },
  {
   "slug": "domestic-vs-overseas-etf-tax-2026",
-  "title": "국내 ETF vs 해외 ETF 세금 — 5천 → 7천 매도 시 385만원 차이",
-  "description": "같은 S&P500이라도 TIGER(국내) 비과세 vs SPY(미국) 22% 양도세. 2,000만원 차익 시 385만원 세금 차이. 국내 ETF 압도적 유리.",
+  "title": "국내상장 vs 해외 ETF 세금 — 5천 → 7천 매도 시 77만원 차이",
+  "description": "같은 S&P500이라도 TIGER(국내상장) 배당소득 15.4% vs SPY(미국) 22% 양도세. 2,000만원 차익 시 308만 vs 385만원, 약 77만원 차이.",
   "category": "투자",
   "tags": [
    "ETF",
@@ -3622,7 +3622,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1376
+  "contentChars": 1483
  },
  {
   "slug": "bond-investment-tax-2026",
@@ -3788,8 +3788,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "severance-lump-vs-irp-2026",
-  "title": "퇴직금 일시금 vs IRP — 1억 퇴직금 시 400만원 절감",
-  "description": "일시금 즉시 세금 1,000만원 vs IRP 이전 + 10년 연금 600만원. 만 55세부터 수령 + 운용수익 누적까지 IRP 우위.",
+  "title": "퇴직금 일시금 vs IRP — 1억 퇴직금 시 300만원 절감",
+  "description": "일시금 세금 1,000만원 vs IRP 이전 후 10년 이내 연금수령 700만원(30% 감면). 만 55세부터 수령 + 운용수익 누적까지 IRP 우위.",
   "category": "커리어",
   "tags": [
    "퇴직금",
@@ -3802,7 +3802,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1247
+  "contentChars": 1259
  },
  {
   "slug": "career-gap-rehire-benefit-2026",
@@ -3824,8 +3824,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "tax-free-meal-commute-2026",
-  "title": "비과세 식대 20만원 + 통신비 — 연 360만원 세금 부담 없는 소득",
-  "description": "월 비과세 식대 20만원 + 통신비 5~10만원 + 자가운전 20만원 + 일직수당. 연 360만원 비과세 → 한계세율 24% 시 86만원 절감.",
+  "title": "비과세 식대 20만원 + 자가운전 — 연 360만원 세금 부담 없는 소득",
+  "description": "월 비과세 식대 20만원 + 자가운전보조금 20만원(요건 충족 시) + 일직수당. 월 30만원 비과세 시 연 360만원 → 한계세율 24%면 86만원 절감.",
   "category": "연봉",
   "tags": [
    "비과세",
@@ -3838,7 +3838,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 870
+  "contentChars": 820
  },
  {
   "slug": "business-trip-expense-tax-2026",
@@ -4024,7 +4024,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "other-income-tax-strategy-2026",
   "title": "기타소득 8.8% 원천 — 분리과세 vs 종합과세 선택",
-  "description": "강연료·원고료·인세 8.8% 원천 후 300만원 초과 시 종합과세 선택 가능. 연봉 5천 + 500 기타 시 종합과세 3만원 유리.",
+  "description": "강연료·원고료·인세 8.8% 원천. 기타소득금액 300만원 이하면 분리과세 선택 가능. 연봉 5천 + 500 기타 시 종합과세 약 11만원 유리.",
   "category": "세금",
   "tags": [
    "기타소득",
@@ -4037,7 +4037,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 814
+  "contentChars": 902
  },
  {
   "slug": "personal-vs-corporation-tax-2026",
@@ -4096,7 +4096,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "carryover-loss-15year-2026",
   "title": "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세",
-  "description": "사업·양도 손실 15년 이월. 2025년 손실 1억 → 2026 이익 1.5억 시 절세 3,000만원. 가상자산은 5년만.",
+  "description": "사업 손실 15년 이월(양도차손 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 3,000만원. 가상자산은 5년만.",
   "category": "세금",
   "tags": [
    "이월결손금",
@@ -4109,7 +4109,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 917
+  "contentChars": 938
  },
  {
   "slug": "tax-reduction-disabled-2026",
@@ -4149,8 +4149,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "out-of-pocket-limit-2026",
-  "title": "본인부담상한제 — 5분위 시 333만원 자동 환급",
-  "description": "1년 의료비 87~808만원 초과 시 다음해 8월 자동 환급. 5분위 직장인 500만원 부담 시 333만원 환급.",
+  "title": "본인부담상한제 — 5분위 시 327만원 환급",
+  "description": "1년 의료비 90~843만원 초과분은 다음해 8월 말 안내 후 신청 시 환급. 5분위 직장인 500만원 부담 시 327만원 환급.",
   "category": "기초",
   "tags": [
    "본인부담상한제",
@@ -4163,7 +4163,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1462
+  "contentChars": 1578
  },
  {
   "slug": "orthodontics-tax-deduction-2026",
@@ -4274,8 +4274,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "infertility-medical-20-percent-2026",
-  "title": "난임 시술비 의료비 공제 20% — 800만원 시 160만원 환급",
-  "description": "난임 시술비 공제율 20%(일반 15% +5%) + 한도 무제한. 시술 800만 + 일반 200 시 합산 163만원 환급.",
+  "title": "난임 시술비 의료비 공제 30% — 800만원 시 240만원 환급",
+  "description": "난임 시술비 공제율 30%(일반 15%) + 한도 무제한. 시술 800만 + 일반 200 시 합산 243만원 환급.",
   "category": "세금",
   "tags": [
    "난임시술",
@@ -4288,7 +4288,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 879
+  "contentChars": 894
  },
  {
   "slug": "dementia-insurance-2026",
@@ -4327,8 +4327,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "inheritance-tax-2026",
-  "title": "상속세 — 배우자 공제 활용 20억 상속 시 세금 0원",
-  "description": "1억 10%~30억 50% 누진. 일괄공제 5억 + 배우자 공제 최대 30억. 20억 상속 시 배우자 15억 받으면 세금 0원.",
+  "title": "상속세 배우자 공제 — 법정상속분 한도와 20억 상속 예시",
+  "description": "1억 10%~30억 50% 누진. 일괄공제 5억 + 배우자 공제(법정상속분 한도). 20억·배우자+자녀 2명이면 산출세액 약 1.33억.",
   "category": "부동산",
   "tags": [
    "상속세",
@@ -4341,7 +4341,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 856
+  "contentChars": 917
  },
  {
   "slug": "gift-vs-transfer-asset-2026",
@@ -4399,8 +4399,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "reverse-mortgage-2026",
-  "title": "주택연금 — 만 70세 6억 주택 시 평생 월 180만원",
-  "description": "만 55세+ 1주택자 9억 이하. 부부 가입 시 평생 연금 + 사망 시 주택 처분으로 정산. 만 70세 6억 시 180만원/월.",
+  "title": "주택연금 — 만 70세 6억 주택 시 평생 월 185만원",
+  "description": "만 55세+ 1주택자 공시가 12억 이하. 부부 가입 시 평생 연금 + 사망 시 주택 처분으로 정산. 만 70세 6억 시 약 185만원/월.",
   "category": "부동산",
   "tags": [
    "주택연금",
@@ -4413,7 +4413,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 808
+  "contentChars": 890
  },
  {
   "slug": "retirement-home-strategy-2026",
@@ -4653,8 +4653,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "employment-insurance-detail-2026",
-  "title": "실업급여 — 평균임금 60%·최대 9개월 + 청년 6개월 보장",
-  "description": "고용보험 18개월 중 180일 이상 가입 + 비자발적 이직. 평균임금 250만원 시 7개월 1,554만원 수령.",
+  "title": "실업급여 — 평균임금 60%·최대 9개월 + 하한 66,048원",
+  "description": "고용보험 18개월 중 180일 이상 가입 + 비자발적 이직. 평균임금 200만원이면 하한 적용 7개월 약 1,387만원 수령.",
   "category": "커리어",
   "tags": [
    "실업급여",
@@ -4667,7 +4667,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 804
+  "contentChars": 854
  },
  {
   "slug": "voluntary-vs-recommended-resignation-2026",
@@ -4725,8 +4725,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "basic-pension-65-2026",
-  "title": "기초연금 — 만 65세+ 단독 40만원·부부 64만원 매월",
-  "description": "소득 하위 70%. 단독 최대 40만 + 부부 동시 수령 시 각 20% 감액(32만씩 = 64만). 국민연금 수령자도 일부 가능.",
+  "title": "기초연금 2026 — 단독 349,700원·부부 559,520원",
+  "description": "소득 하위 70%. 단독 최대 349,700원, 부부 동시 수령 시 각 20% 감액(합산 559,520원). 국민연금 수령자도 일부 가능.",
   "category": "기초",
   "tags": [
    "기초연금",
@@ -4739,12 +4739,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 711
+  "contentChars": 766
  },
  {
   "slug": "seeking-job-benefit-2026",
-  "title": "2026 구직급여 — 청년 6개월 보장 + 정년 60세+ 3개월 추가",
-  "description": "평균임금 60%·상한 일 7.4만. 청년 30세 미만 최소 6개월 보장, 정년 60세+ 3개월 추가. 자영업도 가입 시 가능.",
+  "title": "2026 구직급여 — 일 상한 68,100원·하한 66,048원",
+  "description": "평균임금 60%·상한 일 68,100원·하한 66,048원(2026). 지급기간 120~270일(나이·가입기간별). 자영업도 가입 시 가능.",
   "category": "커리어",
   "tags": [
    "구직급여",
@@ -4757,7 +4757,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 820
+  "contentChars": 881
  },
  {
   "slug": "digital-nomad-visa-korea-2026",
@@ -5014,7 +5014,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1022
+  "contentChars": 1037
  },
  {
   "slug": "retention-bonus-3year-split-2026",
@@ -5072,8 +5072,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-1eok-net-payment-2026",
-  "title": "성과급 1억 실수령 — 영끌 1.7억 시 약 1억 1,708만원",
-  "description": "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 종합소득세 + 지방세 + 4대보험 + 다음해 4월 건보 정산 = 약 5,300만. 실수령 약 1.17억(약 69%).",
+  "title": "성과급 1억 실수령 — 연봉 7천이면 세후 약 6,100만원",
+  "description": "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 소득세·지방세·4대보험·4월 건보 정산 약 5,395만. 연간 실수령 약 1.16억, 성과급분 약 6,110만.",
   "category": "세금",
   "tags": [
    "성과급",
@@ -5086,12 +5086,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1636
+  "contentChars": 1701
  },
  {
   "slug": "bonus-5000-net-payment-2026",
-  "title": "성과급 5,000만 실수령 — 약 3,180만, IRP 활용 시 3,330만",
-  "description": "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,820만. 실수령 약 3,180만 (63.6%). IRP 900만 만기 시 약 150만 환급 추가.",
+  "title": "성과급 5,000만 실수령 — 약 3,370만, IRP 활용 시 3,490만",
+  "description": "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,626만. 실수령 약 3,370만 (67.5%). IRP 900만 만기 시 약 119만 환급 추가.",
   "category": "세금",
   "tags": [
    "성과급",
@@ -5104,7 +5104,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 986
+  "contentChars": 1097
  },
  {
   "slug": "income-tax-8-step-bracket-2026",
@@ -5253,8 +5253,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-health-4-percent-2026",
-  "title": "성과급 건강보험 4.07% — 상한 없음, 1억 시 본인 약 407만원",
-  "description": "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 상한 없음. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.",
+  "title": "성과급 건강보험 4.07% — 1억 시 본인 약 407만원",
+  "description": "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 사실상 전액 부과. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.",
   "category": "기초",
   "tags": [
    "건강보험",
@@ -5267,7 +5267,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1147
+  "contentChars": 1239
  },
  {
   "slug": "bonus-employment-09-2026",
@@ -5285,7 +5285,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 842
+  "contentChars": 852
  },
  {
   "slug": "four-insurance-ceiling-summary-2026",
@@ -5303,7 +5303,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1507
+  "contentChars": 1550
  },
  {
   "slug": "july-health-adjust-bonus-1eok-2026",
@@ -5867,7 +5867,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6838
+  "contentChars": 6785
  },
  {
   "slug": "sk-ax-salary-2026",
@@ -6062,7 +6062,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "mortgage-refinance-guide-2026",
   "title": "주택담보대출 갈아타기 2026 — 온라인 대환으로 이자 아끼는 법",
-  "description": "2026년 기준금리 2.75% 인상기, 주담대 갈아타기가 진짜 이득인지 계산하는 법. 온라인 대환대출 이용 조건·중도상환수수료 개편·손익분기 계산 공식·스트레스 DSR 함정까지 실측 수치로 정리.",
+  "description": "2026년 기준금리 3.00%(7·8월 연속 인상), 주담대 갈아타기가 진짜 이득인지 계산하는 법. 온라인 대환대출 이용 조건·중도상환수수료 개편·손익분기 계산 공식·스트레스 DSR 함정까지 실측 수치로 정리.",
   "category": "부동산",
   "tags": [
    "주택담보대출",
@@ -6076,7 +6076,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5603
+  "contentChars": 5625
  },
  {
   "slug": "irp-pension-year-end-2026",
@@ -6114,12 +6114,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5552
+  "contentChars": 5576
  },
  {
   "slug": "sk-hynix-bonus-renegotiation-sept-2026",
-  "title": "SK하이닉스 성과급 재협상 9월 현황 — 25표 부결 이후 쟁점과 시나리오 총정리",
-  "description": "8월 25일 총투표에서 25표 차(반대 50.08%)로 부결된 SK하이닉스 잠정합의안(PS 현금 40%+자사주 60%). 9월 2일 첫 소통행사 발언, 통합노조 3,445명 변수, 재협상 시나리오 3가지와 직원·투자자 캘린더를 정리. 시나리오는 보도 기반, 확정 아님.",
+  "title": "SK하이닉스 성과급 재협상 9월 현황 — 25표 부결 이후 쟁점 총정리 → 9/16 가결",
+  "description": "8월 25일 총투표에서 25표 차(반대 50.08%)로 부결된 SK하이닉스 잠정합의안(PS 현금 40%+자사주 60%). 9월 2일 첫 소통행사 발언, 통합노조 3,445명 변수, 재협상 시나리오 3가지와 직원·투자자 캘린더를 정리. 시나리오는 보도 기반, 확정 아님. → 9/16 가결.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
@@ -6134,12 +6134,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 13216
+  "contentChars": 13322
  },
  {
   "slug": "sk-hynix-ps-cash-vs-stock-scenarios-2026",
   "title": "SK하이닉스 PS 7억 — 현금 전액 vs 자사주 60% 수령 가치 비교",
-  "description": "부결된 잠정합의안(현금 40%+자사주 60%)과 구 체계(현금 80%+이연 20%)에서 세전 7억원이 통장·증권계좌에 어떻게 들어오는지 기준가·지급 첫날 종가 시나리오로 비교. 7억은 보도 가정, 표는 예시 산수이며 확정 아님.",
+  "description": "부결된 잠정합의안(현금 40%+자사주 60%)과 구 체계(현금 80%+이연 20%)에서 세전 7억원이 통장·증권계좌에 어떻게 들어오는지 기준가·지급 첫날 종가 시나리오로 비교. 7억은 보도 가정, 표는 예시 산수이며 확정 아님. → 9/16 가결.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
@@ -6154,7 +6154,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12276
+  "contentChars": 12416
  },
  {
   "slug": "samsung-bonus-treasury-stock-15-trillion-2026",
@@ -6178,8 +6178,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "samsung-vs-sk-hynix-stock-bonus-2026",
-  "title": "삼성전자 자사주 성과급 vs SK하이닉스 부결 — 두 제도 비교 (2026년 9월)",
-  "description": "삼성전자는 세후 전액 자사주 성과급을 확정하고 자사주 15조원 매입을 의결한 반면, SK하이닉스 현금 40%+자사주 60% 안은 8월 25일 25표 차로 부결됐습니다. 재원·지급 형태·이연·기준가·하방보전을 한 표로 비교합니다. 금액 예시는 보도 기반이며 확정이 아닙니다.",
+  "title": "삼성전자 자사주 성과급 vs SK하이닉스 부결 → 9/16 가결 — 두 제도 비교",
+  "description": "삼성전자는 세후 전액 자사주 성과급을 확정하고 자사주 15조원 매입을 의결한 반면, SK하이닉스 현금 40%+자사주 60% 안은 8월 25일 25표 차로 부결됐습니다. 재원·지급 형태·이연·기준가·하방보전을 한 표로 비교합니다. 금액 예시는 보도 기반이며 확정이 아닙니다. → 9/16 가결.",
   "category": "연봉",
   "tags": [
    "삼성전자",
@@ -6194,7 +6194,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 14048
+  "contentChars": 14112
  },
  {
   "slug": "samsung-special-bonus-q3-preview-2027",
@@ -6214,6 +6214,6 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12864
+  "contentChars": 12928
  }
 ];

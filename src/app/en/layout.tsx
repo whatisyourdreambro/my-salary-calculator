@@ -30,6 +30,8 @@ export const metadata: Metadata = {
  card: "summary_large_image",
  title: "Korea Salary Calculator 2026 & Income Tax Tools | Moneysalary",
  description: "Estimate Korean take-home pay and compare tax methods with explicit assumptions.",
+ // openGraph 이미지와 같은 URL — 자체 twitter 를 선언하지 않는 하위 페이지의 twitter:image 누락 방지 (OG-17)
+ images: ["https://www.moneysalary.com/api/og?lang=en&title=Korea%20Salary%20%26%20Tax%20Calculator"],
  },
 };
 

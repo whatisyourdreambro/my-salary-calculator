@@ -322,7 +322,7 @@ export const hotKeywordsGuides = [
 <h2>💰 청년도약계좌 — 5년에 최대 5,000만원</h2>
 <div class="bg-secondary/30 p-6 rounded-xl mt-4 border border-primary/10">
 <ul>
-<li><strong>대상:</strong> 만 19~34세, 총급여 7,500만원 이하, 가구 중위소득 250% 이하</li>
+<li><strong>대상:</strong> 만 19~34세, 총급여 7,500만원 이하, 가구 중위소득 250% 이하 — <strong>2025-12-31 신규 가입 종료</strong>(2026년 6월 출시 청년미래적금 참고)</li>
 <li><strong>납입:</strong> 월 40~70만원, 5년 만기</li>
 <li><strong>혜택:</strong> 비과세 + 정부 기여금 (소득 낮을수록 더 많이)</li>
 <li><strong>정부 기여금:</strong> 총급여 2,400만원 이하 → 월 최대 2.4만원 (연 28.8만원)</li>

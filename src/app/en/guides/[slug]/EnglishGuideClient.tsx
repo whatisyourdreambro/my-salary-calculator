@@ -12,7 +12,10 @@ import EnglishPageShell from "@/components/english/EnglishPageShell";
 
 const categoryLabel: Record<string, string> = { Stocks: "Stocks and employee compensation", Tax: "Tax and insurance", RealEstate: "Housing and borrowing" };
 
-export default function EnglishGuideClient({ guide, relatedGuides }: { guide: Guide; relatedGuides: Guide[] }) {
+/** Related cards read only these fields — keeps guide bodies out of the RSC payload (PERF-08). */
+export type RelatedEnglishGuideCard = Pick<Guide, "slug" | "title" | "description">;
+
+export default function EnglishGuideClient({ guide, relatedGuides }: { guide: Guide; relatedGuides: RelatedEnglishGuideCard[] }) {
   const articleContent = englishGuideContent(guide.content);
   const nextTask = englishGuideNextTask(guide.slug);
   const readingTime = Math.max(1, Math.ceil(guide.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length / 200));
