@@ -5,6 +5,10 @@
 // 5개 영역 각 10편 = 50편. 누적 181편.
 
 import type { Guide } from "@/lib/guidesData";
+import { UNEMPLOYMENT_BENEFIT_2026 } from "@/config/unemploymentBenefit";
+
+// 구직급여 1일 상한 표시값 — 정본(src/config/unemploymentBenefit.ts)에서 끼워 넣는다 (verify-tax-constants 게이트)
+const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
 
 // ═══════════════════════════════════════════════════════════════
 // 영역 A — 성과급 종류·구조 (10편)
@@ -172,7 +176,7 @@ const signOnBonus = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 사인온 5,000만원 일시 지급</h2>
 <ul class="space-y-2 mt-4">
-<li>· 한계세율 35%: 약 1,750만원 세금</li>
+<li>· 한계세율 35%(연봉 약 1억 이상 가정): 약 1,750만원 세금</li>
 <li>· 4대보험 약 200만원</li>
 <li>· 지방세 175만원</li>
 <li>· <strong>실수령 약 2,875만원</strong> (약 57.5%)</li>
@@ -259,40 +263,40 @@ const bonusBracketJump = `
 `;
 
 const bonus1euk = `
-<p class="lead">성과급 1억 받으면 실수령 얼마? 연봉 7,000만원 + 성과급 1억 = 영끌 1.7억 가정 시 종합소득세 + 지방세 + 4대보험 합산 약 5,300만원 → <strong>실수령 약 4,700만원</strong> (47%). 4대보험 상한 적용으로 부담 약간 완화.</p>
+<p class="lead">성과급 1억 받으면 실수령 얼마? 연봉 7,000만원 + 성과급 1억 = 영끌 1.7억 가정 시 연봉만 받을 때보다 세후 <strong>약 6,100만원(약 61%)</strong> 증가 — 머니샐러리 성과급 엔진, 세액공제 0% 가정(30% 가정 시 약 7,100만원).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 1억 상세 세금 분석</h2>
-<p>연봉 7,000만원 + 성과급 1억 (영끌 1.7억) 직장인 가정:</p>
+<p>연봉 7,000만원 + 성과급 1억 (영끌 1.7억) 직장인 가정 — 1인·본인 기본공제만, 세액공제 0%:</p>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">항목</th><th class="p-3">금액</th></tr></thead><tbody>
 <tr class="border-t"><td class="p-3">총 소득</td><td class="p-3">170,000,000원</td></tr>
-<tr class="border-t"><td class="p-3">근로소득공제 + 인적공제</td><td class="p-3">-30,000,000원</td></tr>
-<tr class="border-t"><td class="p-3">과세표준</td><td class="p-3">140,000,000원</td></tr>
-<tr class="border-t"><td class="p-3">산출세액 (35%·1,544만 누진공제)</td><td class="p-3">33,560,000원</td></tr>
-<tr class="border-t"><td class="p-3">지방소득세 10%</td><td class="p-3">3,356,000원</td></tr>
-<tr class="border-t"><td class="p-3">4대보험 (상한 적용)</td><td class="p-3">약 8,500,000원</td></tr>
-<tr class="border-t"><td class="p-3">건강보험 추가 정산 (7월)</td><td class="p-3">약 7,500,000원</td></tr>
-<tr class="border-t"><td class="p-3"><strong>총 세금·보험</strong></td><td class="p-3"><strong>약 52,916,000원</strong></td></tr>
-<tr class="border-t"><td class="p-3"><strong>실수령</strong></td><td class="p-3"><strong>약 117,084,000원</strong></td></tr>
+<tr class="border-t"><td class="p-3">근로소득공제 + 인적공제(본인)</td><td class="p-3">-17,650,000원</td></tr>
+<tr class="border-t"><td class="p-3">과세표준</td><td class="p-3">152,350,000원</td></tr>
+<tr class="border-t"><td class="p-3">산출세액 (38%·1,994만 누진공제)</td><td class="p-3">37,953,000원</td></tr>
+<tr class="border-t"><td class="p-3">지방소득세 10%</td><td class="p-3">3,795,300원</td></tr>
+<tr class="border-t"><td class="p-3">4대보험 (월급분 + 성과급 연금·고용, 연금 상한 적용)</td><td class="p-3">약 8,133,000원</td></tr>
+<tr class="border-t"><td class="p-3">건강보험 성과급분 정산 (이듬해 4월)</td><td class="p-3">약 4,067,000원</td></tr>
+<tr class="border-t"><td class="p-3"><strong>총 세금·보험</strong></td><td class="p-3"><strong>약 53,949,000원</strong></td></tr>
+<tr class="border-t"><td class="p-3"><strong>실수령 (연간 합계)</strong></td><td class="p-3"><strong>약 116,051,000원</strong></td></tr>
 </tbody></table></div>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li></ul></div>
 `;
 
 const bonus5000 = `
-<p class="lead">성과급 5,000만원 받으면 실수령 약 3,100~3,400만원 (60~68%). 연봉 + 성과급 합산 한계세율 35% 구간 진입 여부에 따라 차이. IRP·연금저축 만기 납입으로 약 119~149만원 환급 가능.</p>
+<p class="lead">성과급 5,000만원 받으면 실수령 약 3,370~3,490만원 (연봉 6,000만원 가정, 67~70%). 연봉 + 성과급 합산 한계세율 35% 구간 진입 여부에 따라 차이. IRP·연금저축 만기 납입으로 약 119만원 환급 가능.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 성과급 5,000만원 시뮬</h2>
 <p>연봉 6,000만원 + 성과급 5,000만원 (영끌 1억 1천):</p>
 <ul class="space-y-2 mt-4">
-<li>· 과세표준 약 8,500만원 → 한계세율 24%</li>
-<li>· 성과급 5,000 부분 세금: 약 1,200만원 (24%)</li>
-<li>· 지방세 120만원</li>
-<li>· 4대보험 부담 약 500만원</li>
-<li>· <strong>총 부담 약 1,820만원 → 실수령 약 3,180만원</strong> (63.6%)</li>
+<li>· 과세표준 약 9,355만원 → 한계세율 35%</li>
+<li>· 성과급 5,000 부분 소득세: 약 1,170만원</li>
+<li>· 지방세 약 117만원</li>
+<li>· 4대보험 부담 약 339만원 (연금 91만·건보+요양 203만·고용 45만)</li>
+<li>· <strong>총 부담 약 1,626만원 → 실수령 약 3,370만~3,490만원</strong> (연봉 6,000만원 가정 — 세액공제 0% 기준 ~ 연금보험료 공제 반영 기준)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 IRP·연금저축 활용</h2>
-<p>성과급 받기 전 11~12월에 IRP·연금저축 900만원 만기 납입 → 약 119~149만원 세액공제 환급 → 실수령 약 3,300~3,330만원으로 증가.</p>
+<p>성과급 받기 전 11~12월에 IRP·연금저축 900만원 만기 납입 → 총급여 5,500만원 초과라 공제율 13.2%(지방세 포함) 적용, 약 119만원 세액공제 환급 → 실수령 약 3,490만원 수준으로 증가.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li><li>· <a href="/tools/finance/irp" class="text-primary underline">IRP 계산기</a></li></ul></div>
 `;
@@ -482,14 +486,14 @@ const bonusPension45 = `
 `;
 
 const bonusHealth3545 = `
-<p class="lead">성과급에 건강보험료 3.595% + 장기요양 0.472% = 본인 약 4.07% 부과. 국민연금과 달리 건강보험은 상한 없음. 성과급 1억 받으면 그 달 본인 건보료 약 360만원 추가 부과.</p>
+<p class="lead">성과급에 건강보험료 3.595% + 장기요양 0.472% = 본인 약 4.07% 부과. 국민연금과 달리 건강보험은 보수월액 상한이 매우 높아 사실상 전액 부과. 성과급 1억 받으면 이듬해 4월 정산 시 본인 건보료 약 360만원 추가 부과.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 건강보험료 상한 없음</h2>
 <ul class="space-y-2 mt-4">
 <li>· 건강보험 본인 3.595%</li>
 <li>· 장기요양 건강보험의 13.14% = 약 0.472%</li>
 <li>· 합산 본인 약 4.07%</li>
-<li>· <strong>보수월액 상한 없음 → 성과급 그대로 부과</strong></li>
+<li>· <strong>보수월액 상한이 매우 높아 → 성과급에 사실상 전액 부과</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 1억 시 건보료 부담</h2>
@@ -501,13 +505,13 @@ const bonusHealth3545 = `
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 4월 건보료 정산 폭탄 주의</h2>
-<p>매월 정기 부과 외 7월에 작년 소득 기준 정산. 성과급 큰 해는 7월에 매달 100~200만원 추가 부과 가능. 미리 대비.</p>
+<p>매월 정기 부과는 월급 기준이라 성과급분은 이듬해 4월분 보험료에 작년 소득 기준 정산액으로 일시 반영(정산액이 당월 보험료 이상이면 12회 이내 분할 신청 가능). 성과급 큰 해는 4월 고지액이 크게 늘 수 있으니 미리 대비.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li><li>· <a href="/health-insurance-2026" class="text-primary underline">건보료 연말정산 가이드</a></li></ul></div>
 `;
 
 const bonusEmployment09 = `
-<p class="lead">성과급에 고용보험 0.9% 부과 (본인). 건강보험처럼 상한 없음. 성과급 1억 받으면 고용보험 90만원 추가. 회사는 0.9% + α(고용안정·직업능력)도 함께 부담.</p>
+<p class="lead">성과급에 고용보험 0.9% 부과 (본인). 고용보험은 보수 상한 없음. 성과급 1억 받으면 고용보험 90만원 추가. 회사는 0.9% + α(고용안정·직업능력)도 함께 부담.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 고용보험 본인 0.9%</h2>
 <ul class="space-y-2 mt-4">
@@ -520,19 +524,19 @@ const bonusEmployment09 = `
 <p>성과급 5,000만 시 본인 고용보험 45만, 1억 시 90만, 3억 시 270만원.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 활용 — 실업급여 산정 베이스</h2>
-<p>고용보험 부담 큰 만큼 실업급여 산정 시 평균임금 베이스도 큼. 성과급 큰 직원이 퇴직 시 실업급여 일 7.4만(상한)까지 받기 쉬움.</p>
+<p>고용보험 부담 큰 만큼 실업급여 산정 시 평균임금 베이스도 큼. 성과급 큰 직원이 퇴직 시 실업급여 일 ${UB_UPPER}원(2026 상한)까지 받기 쉬움.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/unemployment-benefit" class="text-primary underline">실업급여 계산기</a></li></ul></div>
 `;
 
 const bonusInsuranceCeiling = `
-<p class="lead">4대보험 상한·하한 정리. 국민연금 보수월액 상한 659만(2026년 7월~), 건강보험 상한 없음, 고용보험 상한 없음, 산재 회사만 부담. 성과급 큰 직원에게 가장 큰 부담은 건강보험(약 4.07%), 그 다음 고용보험(0.9%).</p>
+<p class="lead">4대보험 상한·하한 정리. 국민연금 보수월액 상한 659만(2026년 7월~), 건강보험은 상한이 매우 높아 사실상 전액 부과, 고용보험 상한 없음, 산재 회사만 부담. 성과급 큰 직원에게 가장 큰 부담은 건강보험(약 4.07%), 그 다음 고용보험(0.9%).</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 4대보험 본인 부담 정리</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">보험</th><th class="p-3">본인 부담률</th><th class="p-3">상한·하한</th></tr></thead><tbody>
 <tr class="border-t"><td class="p-3">국민연금</td><td class="p-3">4.75%</td><td class="p-3"><strong>상한 659만원</strong></td></tr>
-<tr class="border-t"><td class="p-3">건강보험</td><td class="p-3">3.595%</td><td class="p-3">상한 없음</td></tr>
-<tr class="border-t"><td class="p-3">장기요양</td><td class="p-3">0.472%</td><td class="p-3">상한 없음</td></tr>
+<tr class="border-t"><td class="p-3">건강보험</td><td class="p-3">3.595%</td><td class="p-3">보수월액 상한 매우 높음(사실상 전액)</td></tr>
+<tr class="border-t"><td class="p-3">장기요양</td><td class="p-3">0.472%</td><td class="p-3">건강보험료에 연동(사실상 전액)</td></tr>
 <tr class="border-t"><td class="p-3">고용보험</td><td class="p-3">0.9%</td><td class="p-3">상한 없음</td></tr>
 <tr class="border-t"><td class="p-3">산재보험</td><td class="p-3">0% (회사 부담)</td><td class="p-3">-</td></tr>
 </tbody></table></div>
@@ -1151,8 +1155,8 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   { slug: "bonus-bracket-jump-2026", title: "성과급 한계세율 점프 — 1.2억+1억 시 추가 3,800만원 세금", description: "8단계 누진세율 6~45%. 성과급 받으면 한 단계 점프 흔함. 연봉 1.2억+성과급 1억 시 35%→38% 점프 → 추가 3,800만원 세금.", category: "세금", tags: ["성과급", "한계세율", "누진세율", "8단계", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusBracketJump, lang: "ko" },
-  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 영끌 1.7억 시 약 1억 1,708만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 종합소득세 + 지방세 + 4대보험 + 다음해 4월 건보 정산 = 약 5,300만. 실수령 약 1.17억(약 69%).", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
-  { slug: "bonus-5000-net-payment-2026", title: "성과급 5,000만 실수령 — 약 3,180만, IRP 활용 시 3,330만", description: "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,820만. 실수령 약 3,180만 (63.6%). IRP 900만 만기 시 약 150만 환급 추가.", category: "세금", tags: ["성과급", "실수령액", "5000만", "IRP", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonus5000, lang: "ko" },
+  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 연봉 7천이면 세후 약 6,100만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 소득세·지방세·4대보험·4월 건보 정산 약 5,395만. 연간 실수령 약 1.16억, 성과급분 약 6,110만.", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
+  { slug: "bonus-5000-net-payment-2026", title: "성과급 5,000만 실수령 — 약 3,370만, IRP 활용 시 3,490만", description: "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,626만. 실수령 약 3,370만 (67.5%). IRP 900만 만기 시 약 119만 환급 추가.", category: "세금", tags: ["성과급", "실수령액", "5000만", "IRP", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonus5000, lang: "ko" },
   { slug: "income-tax-8-step-bracket-2026", title: "2026 종합소득세 8단계 누진세율 완벽 — 초과분만 높은 세율", description: "6~45% 8단계 누진세율 + 누진공제 + 지방세 10%. 초과분만 높은 세율 적용. 8,800만→8,801만 되어도 추가 1만에만 35% 적용.", category: "세금", tags: ["누진세율", "8단계", "종합소득세", "지방소득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bracket8Step, lang: "ko" },
   { slug: "salary-bonus-calc-8step-2026", title: "성과급 + 연봉 합산 세금 계산 8단계 — 직접 계산 vs 계산기", description: "총소득 → 근로소득공제 → 인적공제 → 과세표준 → 산출세액 → 세액공제 → 결정세액 → 납부세액. 8단계 계산 → 머니샐러리 계산기 활용.", category: "세금", tags: ["성과급계산법", "8단계", "연말정산", "산출세액", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: salaryBonusCalc, lang: "ko" },
   { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 1년 vs 2년 = 1,000만 절감", description: "일시 지급 한계세율 38% vs 2년 분할 35%. 절감 1,000만. 인사·임원과 분할 협상 가능 시 적극 시도. 잔류 의무 부가 가능.", category: "세금", tags: ["성과급", "분할지급", "한계세율", "협상", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: splitPayoutLower, lang: "ko" },
@@ -1162,7 +1166,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "dependent-deduction-bonus-year-2026", title: "성과급 받는 해 인적공제 — 1인 150만 × 35% = 52만 환급", description: "한계세율 35% 시 인적공제 효과 큼. 부모 2명 + 자녀 2명 + 경로우대 + 의료비 통합 시 약 174만 추가 환급.", category: "세금", tags: ["인적공제", "부양가족", "성과급", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dependentBonus, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
   { slug: "bonus-pension-45-ceiling-590-2026", title: "성과급 국민연금 4.75% — 보수월액 상한 659만원 적용", description: "국민연금은 659만 상한(2026년 7월~). 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 월 약 7,900원 추가.", category: "기초", tags: ["국민연금", "성과급", "상한", "659만", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusPension45, lang: "ko" },
-  { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 상한 없음, 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 상한 없음. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
+  { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 사실상 전액 부과. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
   { slug: "bonus-employment-09-2026", title: "성과급 고용보험 0.9% — 1억 시 90만, 3억 시 270만", description: "고용보험 본인 0.9% + 회사 0.9% + α. 상한 없음. 1억 성과급 시 본인 90만, 3억 시 270만. 실업급여 산정 시 평균임금 베이스 증가 효과.", category: "기초", tags: ["고용보험", "성과급", "실업급여", "0.9%", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusEmployment09, lang: "ko" },
   { slug: "four-insurance-ceiling-summary-2026", title: "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만", description: "국민연금 4.75% 상한 659만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.", category: "기초", tags: ["4대보험", "상한", "성과급", "건강보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusInsuranceCeiling, lang: "ko" },
   { slug: "july-health-adjust-bonus-1eok-2026", title: "성과급 1억 + 4월 건보료 정산 — 추가 400만 부과", description: "성과급 부분은 매월 부과 안 되고 다음해 4월 연말정산에서 부과. 1억 성과급 시 약 400만 추가, 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 가능.", category: "기초", tags: ["건보료정산", "건강보험", "성과급", "분할납부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusHealthAdjust, lang: "ko" },
