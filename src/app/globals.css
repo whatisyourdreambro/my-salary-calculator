@@ -163,6 +163,9 @@
   :where(td) { padding: 0.75rem 1rem; color: inherit; font-size: 0.9375rem; border-bottom: 1px solid hsl(var(--border)); }
   :where(caption) { color: hsl(var(--content-muted, var(--muted-foreground))); }
   ::selection { color: hsl(var(--foreground)); background: hsl(var(--link) / 0.2); }
+  /* <dialog> 미지원 구형 브라우저(iOS 15.3 이하 등)에서 SSR 된 헤더 메뉴 dialog(fixed inset-0 bg-card)가
+     전면 오버레이로 남지 않게 한다. 지원 브라우저는 UA 스타일이 이미 같은 규칙이라 영향 없음. */
+  dialog:not([open]) { display: none; }
 }
 
 @layer components {

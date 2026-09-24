@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "@/components/AppLink";
+import { uuidV4 } from "@/lib/uuidV4";
 import {
   FIXED_FEEDBACK_CONFIG,
   type FixedFeedbackRequest,
@@ -65,7 +66,7 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
       if (!consent || !vote || (vote === "confusing" && !config.reasons.some(option => option.value === reason))) return;
       try {
         attempt.current = {
-          submissionId: crypto.randomUUID(), target, vote,
+          submissionId: uuidV4(), target, vote,
           reason: vote === "helpful" ? null : reason, feedbackConsent: true,
         };
       } catch {
