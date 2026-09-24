@@ -168,6 +168,13 @@ describe("/salary·/monthly FAQ (FAQPage JSON-LD 원천)", () => {
     expect(repayment).toContain("가정하면 연 1억원입니다");
   });
 
+  it("G9: 출처 미확인 통계 수치(2024년 국세청 평균 4,200만원·중위 3,200만원)를 싣지 않는다", () => {
+    const text = JSON.stringify(renderSalary(50_000_000));
+    expect(text).not.toMatch(/국세청 통계|4,200만원|3,200만원/);
+    expect(text).toContain("자체 참고표");
+    expect(text).toContain("공식 전국 순위가 아닙니다");
+  });
+
   it("/monthly FAQ 의 상여 400% 환산 연봉은 1억 이상에서 억 표기, 미만은 종전 그대로", () => {
     const answerOf = (monthly: number) =>
       faqOf(renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: String(monthly) } })))
