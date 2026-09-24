@@ -607,16 +607,14 @@ function emit() {
   // RSS pubDate·sitemap, TOP100 '수집일'로 흘러간다. 규칙:
   //  - 방출 payload 가 기존 파일과 바이트 동일(날짜 줄 제외)하면 기존 날짜를 그대로 둔다.
   //  - dartDisclosed(수집 데이터)가 달라지면 "수집일" = 이번 집계가 읽은 캐시 파일의 최신
-  //    수정일(로컬 날짜). 실제 재수집(fetch --force)이면 그날이 되고, 같은 캐시를 재집계하면
+  //    수정일. 실제 재수집(fetch --force)이면 그날이 되고, 같은 캐시를 재집계하면
   //    원래 수집일이 유지된다 — 재집계를 재수집으로 잘못 신고하지 않는다.
   //  - dartInjection(회사 카드 내용)이 달라지면 실행일 — 카드 문구·값이 실제로 바뀐 날.
-  const localDate = (ms) => {
-    const d = new Date(ms);
-    const p = (n) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
-  };
-  const runDate = localDate(Date.now());
-  const collectedDate = latestCacheMs > 0 ? localDate(latestCacheMs) : runDate;
+  // 날짜 문자열은 종전 관례대로 UTC 날짜(toISOString) — 사이트는 "YYYY-MM-DD"를 UTC 자정으로
+  // 파싱하므로 KST 날짜를 쓰면 한국 시간 00~09시 실행분이 '미래 날짜'가 된다(lastUpdated 가드 위반).
+  const isoDate = (ms) => new Date(ms).toISOString().slice(0, 10);
+  const runDate = isoDate(Date.now());
+  const collectedDate = latestCacheMs > 0 ? isoDate(latestCacheMs) : runDate;
   /** render(date) 가 기존 파일을 그 파일의 날짜로 정확히 재현하면 그 날짜, 아니면 null */
   const keepPrevDate = (file, constName, render) => {
     if (!existsSync(file)) return null;
