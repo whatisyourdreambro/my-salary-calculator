@@ -13,7 +13,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
-import { calculateNetSalary2026 } from "@/lib/calculator";
+import { calculateNetSalary2027 } from "@/lib/generateData2027";
 import type { AdvancedSettings } from "@/app/types";
 import { MINIMUM_WAGE_2026, MINIMUM_WAGE_2027 } from "@/config/minimumWage";
 
@@ -83,7 +83,7 @@ const FAQ_ITEMS = [
   {
     question: "월 2,236,300원의 세후 실수령액은 얼마인가요?",
     answer:
-      "이 페이지 본문의 실수령액 표에서 2026년 4대보험 요율 기준 참고치를 확인할 수 있습니다. 다만 2027년 요율이 확정되면 실제 실수령액은 달라질 수 있습니다. 특히 국민연금 보험료율은 법정 인상 일정에 따라 2026년 9.5%에서 2027년 10.0%(직장인 본인부담 5.0%)로 오를 예정이어서, 실제 공제액은 참고치보다 커질 수 있습니다.",
+      "이 페이지 본문의 실수령액 표에서 참고치를 확인할 수 있습니다. 국민연금 보험료율은 법정 인상 일정 확정에 따라 2026년 9.5%에서 2027년 10.0%(직장인 본인부담 5.0%)로 오르며, 표에는 이 5.0%를 반영했습니다. 건강보험·장기요양·고용보험·간이세액표(소득세)는 2026년 기준을 준용했으므로 실제 공제액과 다를 수 있습니다. 또 식대 비과세 0원을 가정했기 때문에, 식대 비과세 월 20만원을 가정한 2027 시급·월급 환산표보다 실수령액이 조금 적게 나옵니다.",
   },
   {
     question: "최저임금 시급에 주휴수당이 포함되나요?",
@@ -103,13 +103,15 @@ const FAQ_ITEMS = [
 ];
 
 export default function MinimumWage2027Page() {
-  // 세후 실수령액 — 사이트 공용 계산 함수로 렌더 시 계산 (2026년 요율 기준 참고치)
-  // 비과세액 0원, 부양가족 본인 1인 기준
-  const net = calculateNetSalary2026(YEARLY_2027, 0, 1, 0, DEFAULT_SETTINGS);
+  // 세후 실수령액 — /table/2027 과 같은 2027 요율 엔진(generateData2027)으로 렌더 시 계산.
+  // 국민연금만 2027 법정 요율 5.0%, 건강보험·장기요양·고용보험·간이세액표는 2026 준용.
+  // 식대 비과세 0원 가정(/table/2027은 20만원 가정) — 최저임금 근로자는 식대 비과세가
+  // 없는 경우가 많아 0원을 유지한다. 부양가족 본인 1인 기준 (2026-09-25 감사 CALC-08).
+  const net = calculateNetSalary2027(YEARLY_2027, 0, 1, 0, DEFAULT_SETTINGS);
   const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
   const deductionRows = [
-    { label: "국민연금 (4.75%)", value: net.pension },
+    { label: "국민연금 (2027년 5.0%)", value: net.pension },
     { label: "건강보험 (3.595%)", value: net.health },
     { label: "장기요양보험", value: net.longTermCare },
     { label: "고용보험 (0.9%)", value: net.employment },
@@ -295,10 +297,10 @@ export default function MinimumWage2027Page() {
             </table>
           </div>
           <p className="text-xs text-faint-blue mt-4 leading-relaxed">
-            ※ 위 실수령액은 <strong>2026년 4대보험 요율 기준 참고치</strong>입니다.
-            2027년 요율이 확정되면 실수령액은 달라질 수 있습니다. 특히 국민연금
-            보험료율은 법정 인상 일정에 따라 2026년 9.5% → 2027년 10.0%(직장인
-            본인부담 5.0%)로 오를 예정이어서 실제 공제액은 이보다 커질 수 있습니다.
+            ※ 위 실수령액은 <strong>국민연금만 2027년 요율을 반영한 참고치</strong>입니다.
+            국민연금 보험료율은 법정 인상 일정 확정에 따라 2026년 9.5% → 2027년 10.0%(직장인
+            본인부담 5.0%)로 오릅니다. 건강보험·장기요양·고용보험·간이세액표는 2026년 기준을
+            준용해 실제와 다를 수 있습니다.
           </p>
         </section>
 
