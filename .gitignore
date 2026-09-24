@@ -41,6 +41,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# wrangler 로컬 CF 빌드·dev 산출물(9/23 로컬 빌드가 남긴 30MB 번들 — lint 오염, 커밋 금지)
+/.wrangler/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
