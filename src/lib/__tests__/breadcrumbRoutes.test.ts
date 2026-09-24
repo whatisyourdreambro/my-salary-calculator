@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { autoBreadcrumbLd, buildBreadcrumbTrail } from "@/lib/structuredData";
+import { autoBreadcrumbLd, buildBreadcrumbTrail, companyOrganizationLd, organizationLd } from "@/lib/structuredData";
 
 const APP_DIR = path.resolve(__dirname, "../../app");
 const SITE = "https://www.moneysalary.com";
@@ -196,5 +196,25 @@ describe("마지막 단계는 한국어 라벨만 (영문 슬러그 금지)", ()
     };
     walk(path.resolve(__dirname, "../.."));
     expect(offenders).toEqual([]);
+  });
+});
+
+// B14 META-14 — 같은 파일의 JSON-LD 위생 검사 (Organization)
+describe("Organization JSON-LD", () => {
+  it("회사 Organization 에 schema.org 밖 industry·페이지 요약 description 을 싣지 않는다", () => {
+    const ld = companyOrganizationLd({ name: "삼성전자", alternateName: ["삼전"] });
+    expect(ld).toEqual({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "삼성전자",
+      alternateName: ["삼전"],
+    });
+    const src = fs.readFileSync(path.join(APP_DIR, "salary-db/[id]/page.tsx"), "utf8");
+    const call = src.slice(src.indexOf("companyOrganizationLd({"), src.indexOf("})", src.indexOf("companyOrganizationLd({")));
+    expect(call).not.toMatch(/\bindustry:|\bdescription:/);
+  });
+
+  it("사이트 운영 주체 Organization 은 @id 로 식별된다", () => {
+    expect(organizationLd()["@id"]).toBe(`${SITE}/#organization`);
   });
 });

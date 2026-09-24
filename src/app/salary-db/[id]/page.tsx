@@ -193,8 +193,6 @@ export default function CompanyDetailPage({
  autoBreadcrumbLd(`/salary-db/${company.id}`, { leafName: company.name.ko }),
  companyOrganizationLd({
  name: company.name.ko,
- industry: industryLabelKo(company.industry),
- description: `${company.name.ko} 평균 연봉, 워라밸, 복지 정보`,
  alternateName: company.aliases,
  }),
  faqLd(faqItems),

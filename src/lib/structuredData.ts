@@ -19,6 +19,8 @@ export function organizationLd() {
  return {
  "@context": "https://schema.org",
  "@type": "Organization",
+ // 사이트 운영 주체 노드 식별자 — 회사 페이지의 Organization(다른 회사)과 구분 (2026-09-25 B14 META-14)
+ "@id": `${SITE_URL}/#organization`,
  name: ORGANIZATION_NAME,
  url: SITE_URL,
  logo: ORGANIZATION_LOGO,
@@ -427,12 +429,13 @@ export function speakableLd(opts: {
 
 // ─────────────────────────────────────────────────────────────
 // Person/Organization (회사 페이지) - 회사 정보 LD
+// 2026-09-25 B14 META-14: schema.org Organization 에 없는 `industry`(JobPosting 속성)와,
+// 회사 설명이 아닌 페이지 요약 문구("○○ 평균 연봉, 워라밸, 복지 정보")를 넣던
+// description 을 뺐다. 회사 <title>·meta description 과는 무관 (JSON-LD 만).
 // ─────────────────────────────────────────────────────────────
 export function companyOrganizationLd(company: {
  name: string;
  url?: string;
- industry?: string;
- description?: string;
  /** 별칭(옛 사명·표기 변형) — schema.org alternateName */
  alternateName?: string[];
 }) {
@@ -444,8 +447,6 @@ export function companyOrganizationLd(company: {
  ? { alternateName: company.alternateName }
  : {}),
  ...(company.url ? { url: company.url } : {}),
- ...(company.description ? { description: company.description } : {}),
- ...(company.industry ? { industry: company.industry } : {}),
  };
 }
 
