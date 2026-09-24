@@ -14,6 +14,7 @@ import {
   REFERENCE_SALARY,
 } from "./psData";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 // 지급 방식 — 신 체계(2026 잠정합의)·구 체계(2025년분까지)·주식 100% 선택권.
 // 세 방식 모두 항상 계산하고 토글은 "어느 쪽을 크게 보여줄지"만 결정한다
@@ -128,10 +129,22 @@ export default function SkHynixBonusClient() {
     return payoutMode === "stock100" ? rows.filter((r) => r.amount > 0) : rows;
   }, [payoutMode, calc]);
 
+  // GA4 calc_start/calc_success v2 — 삼성·현대차 계산기와 같은 훅(방문당 1회, 입력값·금액 미전송).
+  // 입력 영역에만 inputProps, 결과 카드에만 resultRef — 고급 옵션 토글 버튼 자체는 시작으로 치지 않는다.
+  const inputsValid = Number.isFinite(opiTrillion) && opiTrillion >= 0
+    && Number.isFinite(salaryManwon) && salaryManwon > 0
+    && Number.isFinite(creditRate) && creditRate >= 0 && creditRate <= 50;
+  const measurement = useCalculatorMeasurement({
+    calcType: "sk-hynix-bonus",
+    valid: inputsValid && [calc.totalGross, calc.tax.net, calc.taxCurrent.net, calc.taxCurrent.totalDeductions]
+      .every(Number.isFinite),
+    resultKey: calc,
+  });
+
   return (
     <div className="space-y-6">
       {/* 1. 영업이익 시나리오 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-primary" />
           1단계 · 영업이익 시나리오
@@ -177,7 +190,7 @@ export default function SkHynixBonusClient() {
       </section>
 
       {/* 2. 본인 연봉 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <User className="w-5 h-5 text-primary" />
           2단계 · 본인 연봉
@@ -213,7 +226,7 @@ export default function SkHynixBonusClient() {
       </section>
 
       {/* 3. PI 시나리오 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <Coins className="w-5 h-5 text-primary" />
           3단계 · PI (생산성 격려금)
@@ -279,7 +292,7 @@ export default function SkHynixBonusClient() {
       </section>
 
       {/* 4. 지급 방식 — 2026 잠정합의 신구 비교 */}
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-2 flex items-center gap-2">
           <Layers className="w-5 h-5 text-primary" />
           4단계 · PS 지급 방식
@@ -336,7 +349,7 @@ export default function SkHynixBonusClient() {
           세금 계산 가정 조정 {showAdvanced ? "▲" : "▼"}
         </button>
         {showAdvanced && (
-          <div className="mt-4 space-y-4">
+          <div {...measurement.inputProps} className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
@@ -371,7 +384,7 @@ export default function SkHynixBonusClient() {
       </section>
 
       {/* 6. 결과 */}
-      <section className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
+      <section ref={measurement.resultRef} className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5 text-primary" />
           내 성과급 계산 결과

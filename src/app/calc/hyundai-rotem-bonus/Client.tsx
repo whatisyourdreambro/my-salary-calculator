@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
 import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 // 현대로템 임단협 경영성과금 시나리오 — "월 기본급 × N% + 정액금" 구조.
 // 연 1회, 임단협 타결(통상 연말) 후 지급.
@@ -68,9 +69,20 @@ export default function HyundaiRotemBonusClient() {
     };
   }, [scenarioId, monthlyBasicManwon, customMode, bonusPctOverride, fixedOverride, creditRate, applyInsurance, annualOverrideManwon, scenario]);
 
+  // GA4 calc_start/calc_success v2 — 현대차 성과급 계산기와 같은 훅(방문당 1회, 입력값·금액 미전송).
+  const inputsValid = Number.isFinite(monthlyBasicManwon) && monthlyBasicManwon > 0
+    && Number.isFinite(annualOverrideManwon) && annualOverrideManwon >= 0
+    && Number.isFinite(creditRate) && creditRate >= 0 && creditRate <= 50
+    && (!customMode || [bonusPctOverride, fixedOverride].every((value) => Number.isFinite(value) && value >= 0));
+  const measurement = useCalculatorMeasurement({
+    calcType: "hyundai-rotem-bonus",
+    valid: inputsValid && [calc.totalGross, calc.tax.net, calc.tax.totalDeductions].every(Number.isFinite),
+    resultKey: calc,
+  });
+
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">1단계 · 시나리오 선택</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {SCENARIOS.map((s) => (
@@ -126,7 +138,7 @@ export default function HyundaiRotemBonusClient() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
+      <section {...measurement.inputProps} className="rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4">2단계 · 본인 월 기본급</h2>
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
@@ -169,7 +181,7 @@ export default function HyundaiRotemBonusClient() {
           세금 계산 가정 조정 {showAdvanced ? "▲" : "▼"}
         </button>
         {showAdvanced && (
-          <div className="mt-4 space-y-4">
+          <div {...measurement.inputProps} className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
                 세액공제율: <span className="text-primary">{creditRate}%</span>
@@ -208,7 +220,7 @@ export default function HyundaiRotemBonusClient() {
         )}
       </section>
 
-      <section className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
+      <section ref={measurement.resultRef} className="rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10 p-6 sm:p-8">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5 text-primary" />
           내 성과급 계산 결과
