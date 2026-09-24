@@ -220,7 +220,7 @@
 | ⑦ | 계산기형 15곳 H1 직하 HomeTopAd(레거시) + /tools 3곳 히어로 직하 CalcResultAd → 결과 직하로 이동 여부 | 9/13 이후 GA4 slot_kind CTR 확인 후. (참고: 9/11 `f2379fa` 는 삼성·/calc 인덱스·성과급 허브·회사·표 2종만 이동 — 이 15+3곳은 미접촉). **상태(2026-09-12)**: = 10x 계획 §5 승인 8(미승인). 광고 위치 변경 배포는 앵커 판정 창(9/21~10/5) 밖에서만 — 승인 시 10/6 이후 배포·10/31 구조 마감 전 |
 | ⑧ | `/chuseok-bonus-2026` CalcResultAd를 미니 계산기 결과 직하로 이동(순증 아님) | ✖ **폐기 2026-09-12** — 광고가 이미 결과 카드 직상, GA4/GSC 행·ad-depth 기준선 없음(판정 불가), 9/26 시즌 종료까지 13일. 재제안 금지 |
 | ⑨ | insights 리포트 3편 상호 링크 섹션 — 마지막 광고 아래에 두면 레이아웃 쿠팡을 밀어 규칙 2와 충돌해 보류 | 위치 결정 필요 |
-| ⑩ | `/company` 레거시 page.tsx 삭제(308 redirect 중, 빌드 산출물·중복 BreadcrumbList 잔재) | 1단계 ✅ 2026-09-12 `ec6ebcd`·`4a6ce83`: `/company/:id`(compare·simulator 제외) next.config 308 규칙. Edge 페이지 삭제(2단계)는 결정 대기 |
+| ⑩ | `/company` 레거시 page.tsx 삭제(308 redirect 중, 빌드 산출물·중복 BreadcrumbList 잔재) | 1단계 ✅ 2026-09-12 `ec6ebcd`·`4a6ce83`: `/company/:id`(compare·simulator 제외) next.config 308 규칙. Edge 페이지 삭제(2단계)는 결정 대기. ★**2단계 ✅ 2026-09-25 `6f85a2f5`**(운영자 승인 A27): `/company` 인덱스·`/company/[id]` edge 폴백·`/salary-db/submit` 삭제, `/company/compare`·`/company/simulator` 유지. 같은 배치 `9093a833` 이 옛 URL 13건을 정확 경로 308 로 연결(`/salary-db/compare/*` 7건 포함 — 그 경로를 Worker 에서 빼면 CF Redirect Rule 로 먼저 옮길 것) |
 | ⑪ | **InstallPwaBanner 하단 앵커 광고 미감지** — FloatingShareBar의 3중 감지 공유 유틸화 권고 | 앵커 토글 전 처리 권장 |
 | ⑫ | EN 가이드 데이터 title 축약(이모지·부제) — 11편 여전히 60자 초과 | 콘텐츠 결정 |
 | ⑬ | `/tools/loan`·`/tools/math` toolContent 작성 → GuideMid 자동 +1 | 콘텐츠 |
