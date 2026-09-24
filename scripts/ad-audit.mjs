@@ -8,16 +8,27 @@
 //   node scripts/ad-audit.mjs --diff   — git diff 기준 "광고 위 새 UI 삽입" 검출 추가
 //                                        (2026-08-16 수익 급락 사건 규칙의 자동 게이트)
 //                                        + 신설 INFO 검출 2종은 diff 모드에서 "증가분(신규 후보)"만 상세 출력
+//   node scripts/ad-audit.mjs --diff --base <ref> — <ref>..작업 트리 전체를 평가(CI: push 는
+//                                        github.event.before, PR 은 pull_request.base.sha — ci.yml)
 //   node scripts/ad-audit.mjs --verbose — INFO 상세(신설 검출 2종의 file:line 목록 포함)
+// --diff 게이트 등급(2026-09-25 개정, 감사 ADS-03 — 9/6~9/19 광고 위 삽입 12건+가 WARN 만 남기고 통과):
+//   · 추가된 JSX 줄 바로 아래 2줄 안에 기존 광고 줄 → ERROR(exit 1). 면제는 ad-audit-allow.json 의
+//     {file, pattern, reason, approvalId} 항목(운영자 승인 ID 필수)으로만.
+//   · 광고 유닛 삭제(대체 추가 없음) → WARN 유지(9/11 PageFooterAds 재배열 등 오탐 이력).
+//   · 7) 광고 위 UI 후보(넓은 창) — 추가된 JSX 줄 아래 15줄 안에 중간 광고 없이 기존 광고 태그 →
+//     INFO 전용(오탐률 측정 단계, 승격은 운영자 결정 후).
+//   · CI 환경(env CI)에서 git diff 자체가 실패하면 exit 2 — 얕은 clone 에서 조용히 통과하던 구멍 차단.
 // 신설 INFO 전용 검출(2026-09-05, 10배 계획 adsense-quality-6) — 절대 ERROR/WARN 으로 승격 금지,
 // exit 코드 불변, 자동 수정 없음. 후보 목록은 운영자 콘솔 점검(9/7)·승인 큐(수리)로만 흘러간다:
-//   5) 우발 클릭 인접 후보 — 광고 태그 ±3줄 안에 button/input/role="tab"/공유·즐겨찾기 버튼.
+//   5) 우발 클릭 인접 후보 — 광고 태그 ±3줄 안에 button/input/role="tab"/공유·즐겨찾기 버튼
+//      (2026-09-25 트리거 확장: ResultSharePanel·PrivateFeedback·select·textarea — 확장 전 기준 수도 병기).
 //      AdSlot 자체 마진(1.5rem)·NextActions 자체 mt-8 은 감안 — 래퍼 클래스(mt-2 등)만으로는 미검출.
 //   6) fixed 헤더 가림 후보 — min-h-screen 래퍼의 첫 렌더 자식이 광고인데 page 서브트리·조상
 //      layout 체인 어디에도 상단 패딩 토큰(pt-2x|pt-[|pt-header|var(--header))이 없음.
 //      Header 는 fixed top-0(--header-height 72px), 루트 <main> 은 상단 패딩 없음.
 // 한계: AST 파서가 아니라 정규식 휴리스틱이다. 오탐/미탐 가능 — 의도적 예외는
 //       scripts/ad-audit-allow.json 에 {route, slot, reason} 으로 등재할 것(reason 필수).
+//       --diff 의 광고 위 UI ERROR 예외는 {file, pattern, reason, approvalId}(4개 모두 필수).
 // 주의: InArticleAd 는 env NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로
 //       폴백한다(AdPlacement.tsx). 프로덕션은 설정돼 있어 별개 슬롯으로 취급하지만,
 //       env 를 지우면 InArticle(100+곳)과 GuideMid(70+곳)가 같은 슬롯이 되어 페이지마다
@@ -40,6 +51,8 @@ if (!/^[\w./~^-]+$/.test(DIFF_BASE)) {
   console.error("--base 값이 올바르지 않습니다:", DIFF_BASE);
   process.exit(1);
 }
+// CI 판정 — GitHub Actions 는 CI=true 를 넣는다. "false"/"0" 은 로컬 취급.
+const IN_CI = !!process.env.CI && !/^(0|false)$/i.test(process.env.CI);
 
 // 컴포넌트 → AdSense 슬롯 매핑 (AdPlacement.tsx 가 정본)
 const SLOT_OF = {
@@ -164,14 +177,37 @@ function ancestorLayouts(pagePath) {
 }
 
 // ---------- allowlist ----------
-let allow = [];
+// 같은 배열에 항목 2종:
+//   A) 슬롯 예외 {route, slot, reason} — 전 라우트 스캔 1)~4) 용(기존).
+//   B) 광고 위 UI 예외 {file, pattern, reason, approvalId} — --diff 게이트의 ERROR 면제 전용.
+//      file = 리포 상대 경로(정확히 일치), pattern = 추가된 줄(앞뒤 공백 제거)에 적용할 정규식 소스,
+//      approvalId = 운영자 승인 ID(예: "A12 2026-09-25"). 넷 중 하나라도 비면 감사 자체를 중단한다.
+const allow = [];
+const uiAllow = [];
 if (fs.existsSync(ALLOW_FILE)) {
-  allow = JSON.parse(fs.readFileSync(ALLOW_FILE, "utf8"));
-  for (const a of allow) {
+  const raw = JSON.parse(fs.readFileSync(ALLOW_FILE, "utf8"));
+  const filled = (v) => typeof v === "string" && v.trim() !== "";
+  for (const a of raw) {
+    if ("file" in a || "pattern" in a || "approvalId" in a) {
+      if (!filled(a.file) || !filled(a.pattern) || !filled(a.reason) || !filled(a.approvalId)) {
+        console.error(`allowlist(광고 위 UI) 항목에 file/pattern/reason/approvalId 필수: ${JSON.stringify(a)}`);
+        process.exit(1);
+      }
+      let re;
+      try {
+        re = new RegExp(a.pattern);
+      } catch (e) {
+        console.error(`allowlist(광고 위 UI) pattern 정규식 오류: ${JSON.stringify(a)} — ${e.message}`);
+        process.exit(1);
+      }
+      uiAllow.push({ ...a, re });
+      continue;
+    }
     if (!a.route || !a.slot || !a.reason) {
       console.error(`allowlist 항목에 route/slot/reason 필수: ${JSON.stringify(a)}`);
       process.exit(1);
     }
+    allow.push(a);
   }
 }
 const isAllowed = (route, slot) =>
@@ -287,29 +323,41 @@ const isCommentLine = (s) => /^\s*(\{\s*\/\*|\/\/|\/\*|\*)/.test(s);
 // 5) 우발 클릭 인접 후보 — 트리거는 실제 상호작용 요소만. 래퍼 마진 클래스(mt-0~2 등)는
 //    AdSlot 자체 margin 1.5rem(AdPlacement.tsx AdSlot style)·NextActions 자체 mt-8 이 있어
 //    단독 근거로 약하므로 트리거에서 제외한다(검증 노트 1).
-const ADJ_TRIGGER_RE =
+// 2026-09-25 트리거 확장(감사 ADS-03): 9/9 이후 30곳에 들어간 ResultSharePanel·PrivateFeedback 과
+// 폼 요소 select·textarea 를 추가. 기준선 비교가 끊기지 않게 확장 전 정규식(LEGACY) 집계도 함께 출력한다
+// (확장 직전 44건 — docs/ad-experiments.md 기준선 41건 대비 증가분 기록은 B5 문서 배치).
+const ADJ_TRIGGER_RE_LEGACY =
   /<button\b|<input\b|role=["']tab["']|<(?:Auto)?ShareSection\b|<ShareButtons\b|<FavoritesButton\b/;
+const ADJ_TRIGGER_RE = new RegExp(
+  ADJ_TRIGGER_RE_LEGACY.source + "|<ResultSharePanel\\b|<PrivateFeedback\\b|<select\\b|<textarea\\b"
+);
 const ADJ_WINDOW = 3;
 const scannedFiles = new Set();
 for (const r of routeFiles) for (const f of r.pageFiles.concat(r.layoutFiles)) scannedFiles.add(f);
-for (const f of scannedFiles) {
-  const lines = readLines(f);
-  for (const s of parseFile(f).slots) {
-    const i = s.line - 1;
-    let hit = null;
-    for (let j = Math.max(0, i - ADJ_WINDOW); j <= Math.min(lines.length - 1, i + ADJ_WINDOW); j++) {
-      if (isCommentLine(lines[j])) continue;
-      // 같은 줄이면 광고 태그 자체는 제외하고 나머지 텍스트만 검사
-      const probe = j === i ? lines[j].replace(AD_COMPONENT_RE, "") : lines[j];
-      const m = probe.match(ADJ_TRIGGER_RE);
-      if (m) {
-        hit = { triggerLine: j + 1, trigger: m[0] };
-        break;
+const scanAdjacency = (triggerRe) => {
+  const out = [];
+  for (const f of scannedFiles) {
+    const lines = readLines(f);
+    for (const s of parseFile(f).slots) {
+      const i = s.line - 1;
+      let hit = null;
+      for (let j = Math.max(0, i - ADJ_WINDOW); j <= Math.min(lines.length - 1, i + ADJ_WINDOW); j++) {
+        if (isCommentLine(lines[j])) continue;
+        // 같은 줄이면 광고 태그 자체는 제외하고 나머지 텍스트만 검사
+        const probe = j === i ? lines[j].replace(AD_COMPONENT_RE, "") : lines[j];
+        const m = probe.match(triggerRe);
+        if (m) {
+          hit = { triggerLine: j + 1, trigger: m[0] };
+          break;
+        }
       }
+      if (hit) out.push({ file: f, line: s.line, comp: s.name, ...hit });
     }
-    if (hit) adjacencyInfos.push({ file: f, line: s.line, comp: s.name, ...hit });
   }
-}
+  return out;
+};
+adjacencyInfos.push(...scanAdjacency(ADJ_TRIGGER_RE));
+const adjacencyLegacyCount = scanAdjacency(ADJ_TRIGGER_RE_LEGACY).length;
 
 // 6) fixed 헤더 가림 후보 — page 서브트리(클라 컴포넌트 포함) 안의 `min-h-screen` 래퍼에서
 //    첫 렌더 자식을 찾는다. 중간에 pt/py 토큰 없는 순수 래퍼 태그(div/section/main/article)는
@@ -361,21 +409,38 @@ for (const r of routeFiles) {
   }
 }
 
-// --diff: 신설 검출은 "증가분(신규 후보)"만 상세 출력 — git diff -U0 HEAD 의 추가 줄 범위와 교차.
-//         WARN 계층 추가 없음(INFO 유지). 기준선 후보는 count 줄로만 보인다.
-const addedRanges = new Map(); // relFile -> [{from,to}]
-if (DIFF_MODE) {
-  let d0 = "";
+// --diff 공통: git diff 실행. 실패(얕은 clone 에 base 커밋 없음·잘못된 ref 등)를 삼키면 diff 가 빈
+// 문자열이 되어 게이트가 조용히 통과한다 — CI 에서는 exit 2 로 끊고, 로컬은 WARN 으로 드러낸다.
+let diffFailed = false;
+const gitDiff = (context) => {
   try {
     // -c core.safecrlf=false: 작업 트리 LF/CRLF 경고(stderr 소음) 억제 — 결과 영향 없음
-    d0 = execSync(`git -c core.safecrlf=false diff -U0 ${DIFF_BASE} -- "src/**/*.tsx"`, {
+    return execSync(`git -c core.safecrlf=false diff -U${context} ${DIFF_BASE} -- "src/**/*.tsx"`, {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 32 * 1024 * 1024,
     });
   } catch (e) {
-    console.error("git diff -U0 실행 실패:", e.message);
+    console.error(`git diff -U${context} ${DIFF_BASE} 실행 실패:`, e.message);
+    if (IN_CI) {
+      console.error(
+        "CI 에서 diff 기준을 읽지 못함 — 광고 위 UI 게이트를 통과로 처리하지 않는다(exit 2). checkout fetch-depth: 0 과 --base 값을 확인할 것."
+      );
+      process.exit(2);
+    }
+    if (!diffFailed) {
+      diffFailed = true;
+      warns.push(`git diff 실행 실패(--base ${DIFF_BASE}) — 광고 위 UI 게이트가 아무것도 검사하지 못함, --base 값 확인`);
+    }
+    return "";
   }
+};
+
+// --diff: 신설 검출은 "증가분(신규 후보)"만 상세 출력 — git diff -U0 <base> 의 추가 줄 범위와 교차.
+//         WARN 계층 추가 없음(INFO 유지). 기준선 후보는 count 줄로만 보인다.
+const addedRanges = new Map(); // relFile -> [{from,to}]
+if (DIFF_MODE) {
+  const d0 = gitDiff(0);
   let cur = "";
   for (const ln of d0.split("\n")) {
     if (ln.startsWith("+++ b/")) {
@@ -408,41 +473,120 @@ const fmtHdr = (h) =>
   `${h.route}  ${rel(h.file)}:${h.line} <${h.comp}> min-h-screen 첫 자식${h.hops ? `(래퍼 ${h.hops}단 경유)` : ""} — page·layout 체인에 상단 패딩 토큰 없음(헤더 72px fixed)`;
 
 // ---------- --diff: 광고 위 새 UI 삽입 검출 ----------
+const adLineRe = new RegExp("<(" + Object.keys(SLOT_OF).join("|") + ")\\b");
+// JSX 태그 줄 판정 — `<` 앞이 줄머리·공백·{ ( & | ? : > 일 때만. Array<string>·useState<number> 같은
+// 타입 제네릭(`y<`·`e<`)은 제외한다(2026-09-25: ERROR 승격에 맞춰 오탐 축소).
+const isJsxLine = (s) => /(^|[\s{(&|?:>])<[A-Za-z]/.test(s);
+// 7) 넓은 창용 — 줄이 JSX 여는 태그로 시작할 때만(`<Tag`·`{cond && <Tag`·`{x ? <Tag`). 문단 안 <strong> 같은
+// 본문 문구 수정까지 세면 15줄 창이 잡음으로 덮인다(9/8~9/25 이력 재생에서 확인).
+const isJsxStartLine = (s) => /^\s*(?:\{[^}]*(?:&&|\?)\s*\(?\s*)?<[A-Za-z]/.test(s);
+// 광고 정의 파일 — 7) 넓은 창 후보에서 제외(내부 재배열은 광고 코드 변경 승인 절차가 따로 잡는다)
+const AD_DEF_FILE_RE = /AdPlacement\.tsx$|CoupangBanner\.tsx$|CoupangBannerCore\.tsx$|AffiliateSlot\.tsx$|PageFooterAds\.tsx$/;
+const UI_ABOVE_WINDOW = 15; // 7) 넓은 창 줄 수
+const uiAllowUsed = new Set(); // 실제로 면제에 쓰인 allowlist(광고 위 UI) 항목
+const uiAllowHits = []; // ERROR 대신 승인 면제된 건 {file, line, text, adComp, approvalId}
+const narrowHitKeys = new Set(); // 2줄 창 적중 광고 "file:line" — 7) 출력에서 ERROR 동일 건 표시용
+const uiAboveInfos = []; // 7) {file, line, text, adLine, adComp, addedCount}
 if (DIFF_MODE) {
-  let diff = "";
-  try {
-    diff = execSync(`git diff -U2 ${DIFF_BASE} -- "src/**/*.tsx"`, {
-      cwd: ROOT,
-      encoding: "utf8",
-      maxBuffer: 32 * 1024 * 1024,
-    });
-  } catch (e) {
-    console.error("git diff 실행 실패:", e.message);
-  }
-  const adLineRe = new RegExp("<(" + Object.keys(SLOT_OF).join("|") + ")\\b");
-  const lines = diff.split("\n");
+  const lines = gitDiff(2).split("\n");
+  // 1패스: 줄마다 {file, hunk, newNo}(새 파일 기준 줄 번호 — 추가·컨텍스트 줄만 유효)를 붙인다.
+  // 헤더(---/+++)와 내용 줄('-- ' 로 시작하는 삭제 줄 등)은 헌크 안/밖 상태로 구분한다.
+  const meta = [];
   let file = "";
+  let inHunk = false;
+  let hunk = -1;
+  let newNo = 0;
+  for (const ln of lines) {
+    if (ln.startsWith("diff --git ")) {
+      inHunk = false;
+      file = "";
+      meta.push(null);
+      continue;
+    }
+    if (!inHunk && ln.startsWith("+++ ")) {
+      file = ln.startsWith("+++ b/") ? ln.slice(6) : "";
+      meta.push(null);
+      continue;
+    }
+    const h = ln.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
+    if (h) {
+      inHunk = true;
+      hunk++;
+      newNo = Number(h[1]);
+      meta.push(null);
+      continue;
+    }
+    if (!inHunk || !file) meta.push(null);
+    else if (ln.startsWith("+") || ln.startsWith(" ")) meta.push({ file, hunk, newNo: newNo++ });
+    else if (ln.startsWith("-")) meta.push({ file, hunk, newNo: 0 });
+    else meta.push(null); // "\ No newline at end of file" 등
+  }
+  // 2패스
   for (let i = 0; i < lines.length; i++) {
+    const m = meta[i];
+    if (!m) continue;
     const ln = lines[i];
-    if (ln.startsWith("+++ b/")) file = ln.slice(6);
-    // 추가된 줄(비어있지 않은 UI 줄) 바로 아래 2줄 안에 기존(컨텍스트) 광고 줄이 있으면 경고
-    if (ln.startsWith("+") && !ln.startsWith("+++") && /<[A-Za-z]/.test(ln) && !adLineRe.test(ln)) {
+    const body = ln.slice(1);
+    // (b) 추가된 JSX 줄 바로 아래 2줄(같은 헌크) 안에 기존(컨텍스트) 광고 줄 → ERROR.
+    //     승인 면제는 allowlist {file, pattern, reason, approvalId} 만. 같은 광고에 대한 중복 보고는 1건으로.
+    if (ln.startsWith("+") && isJsxLine(body) && !isCommentLine(body) && !adLineRe.test(body)) {
       for (let j = i + 1; j <= i + 2 && j < lines.length; j++) {
+        const n = meta[j];
+        if (!n || n.hunk !== m.hunk) break;
         const next = lines[j];
-        if (next.startsWith(" ") && adLineRe.test(next)) {
-          warns.push(
-            `${file}: 광고 직상단에 새 UI 삽입 감지 (${ln.trim().slice(0, 60)}…) — 2026-08-16 규칙: 새 UI 는 광고 아래에`
+        if (!next.startsWith(" ") || isCommentLine(next.slice(1))) continue;
+        const ad = next.match(adLineRe);
+        if (!ad) continue;
+        const key = `${m.file}:${n.newNo}`;
+        if (narrowHitKeys.has(key)) break;
+        narrowHitKeys.add(key);
+        const text = body.trim();
+        const ok = uiAllow.find((a) => a.file === m.file && a.re.test(text));
+        if (ok) {
+          uiAllowUsed.add(ok);
+          uiAllowHits.push({ file: m.file, line: m.newNo, text, adComp: ad[1], approvalId: ok.approvalId });
+        } else {
+          errors.push(
+            `${m.file}:${m.newNo} 광고 <${ad[1]}>(:${n.newNo}) 직상단에 새 UI 삽입 (${text.slice(0, 60)}…) — 2026-08-16 규칙: 새 UI 는 광고 아래에. 운영자 승인 건만 ad-audit-allow.json {file, pattern, reason, approvalId} 등재`
           );
-          break;
         }
+        break;
       }
     }
-    // 광고 줄 삭제만 있고 인접한 추가가 없으면 유닛 소실 의심
-    if (ln.startsWith("-") && !ln.startsWith("---") && adLineRe.test(ln)) {
+    // (d) 광고 줄 삭제만 있고 인접한 추가가 없으면 유닛 소실 의심 — WARN 유지(재배열 오탐 이력)
+    if (ln.startsWith("-") && adLineRe.test(ln)) {
       const window = lines.slice(Math.max(0, i - 4), i + 5);
       const readded = window.some((w) => w.startsWith("+") && adLineRe.test(w));
-      if (!readded) warns.push(`${file}: 광고 유닛 삭제 감지, 대체 추가 없음 — 의도 확인 필요`);
+      if (!readded) warns.push(`${m.file}: 광고 유닛 삭제 감지, 대체 추가 없음 — 의도 확인 필요`);
     }
+  }
+
+  // 7) 광고 위 UI 후보(넓은 창, INFO 전용) — 추가된 JSX 줄 아래 15줄 안의 첫 광고 태그가 기존 줄이면 후보.
+  //    그 사이에 다른 광고가 있으면 그 광고가 "첫 광고"가 되므로 중간 광고 없음 조건이 자동으로 성립한다.
+  //    작업 트리 파일을 직접 읽는다(-U0 추가 범위와 같은 새 파일 기준 줄 번호). 광고별 1건으로 묶는다.
+  for (const [relFile, ranges] of addedRanges) {
+    if (!ranges.length || AD_DEF_FILE_RE.test(relFile)) continue;
+    const src = readLines(path.join(ROOT, relFile));
+    const added = new Set();
+    for (const r of ranges) for (let k = r.from; k <= r.to; k++) added.add(k);
+    const byAd = new Map();
+    for (const a of [...added].sort((x, y) => x - y)) {
+      const t = src[a - 1] || "";
+      if (!isJsxStartLine(t) || isCommentLine(t) || adLineRe.test(t)) continue;
+      for (let j = a; j < Math.min(src.length, a + UI_ABOVE_WINDOW); j++) {
+        if (isCommentLine(src[j])) continue;
+        const ad = src[j].match(adLineRe);
+        if (!ad) continue;
+        if (!added.has(j + 1)) {
+          const key = `${relFile}:${j + 1}`;
+          const cur = byAd.get(key);
+          if (cur) cur.addedCount++;
+          else byAd.set(key, { file: relFile, line: a, text: t.trim(), adLine: j + 1, adComp: ad[1], addedCount: 1 });
+        }
+        break;
+      }
+    }
+    uiAboveInfos.push(...byAd.values());
   }
 }
 
@@ -461,6 +605,10 @@ if (process.argv.includes("--verbose")) {
 console.log(
   `INFO   우발 클릭 인접 후보 ${adjacencyInfos.length}건 / fixed 헤더 가림 후보 ${headerInfos.length}건 (INFO 전용 — 수리는 승인 큐, --verbose 상세)`
 );
+// 트리거 확장 전후 비교 줄 — 기준선(docs/ad-experiments.md) 연속성 유지용
+console.log(
+  `INFO   우발 클릭 인접 후보 트리거 확장 전(2026-09-25 이전 정규식) ${adjacencyLegacyCount}건 → 확장 후 ${adjacencyInfos.length}건 (+ResultSharePanel·PrivateFeedback·select·textarea)`
+);
 if (process.argv.includes("--verbose")) {
   for (const a of adjacencyInfos) console.log("INFO   [인접] " + fmtAdj(a));
   for (const h of headerInfos) console.log("INFO   [헤더가림] " + fmtHdr(h));
@@ -471,7 +619,27 @@ if (process.argv.includes("--verbose")) {
   for (const a of adjacencyNew) console.log("INFO   [diff][인접] " + fmtAdj(a));
   for (const h of headerNew) console.log("INFO   [diff][헤더가림] " + fmtHdr(h));
 }
+if (DIFF_MODE) {
+  // 7) 넓은 창 후보 — INFO 전용(오탐률 측정 단계). --verbose 여부와 무관하게 diff 모드면 상세 출력.
+  console.log(
+    `INFO   [diff] 광고 위 UI 후보(${UI_ABOVE_WINDOW}줄 창, INFO 전용) ${uiAboveInfos.length}건`
+  );
+  for (const u of uiAboveInfos) {
+    const dup = narrowHitKeys.has(`${u.file}:${u.adLine}`) ? " ※2줄 창 ERROR/면제와 동일 건" : "";
+    console.log(
+      `INFO   [diff][광고위UI] ${u.file}:${u.line} ${u.text.slice(0, 50)} → 기존 <${u.adComp}> :${u.adLine} (${u.adLine - u.line}줄 아래, 추가 JSX ${u.addedCount}줄)${dup}`
+    );
+  }
+  for (const h of uiAllowHits) {
+    console.log(`INFO   [diff][승인 면제] ${h.file}:${h.line} <${h.adComp}> 직상단 — approvalId ${h.approvalId}`);
+  }
+}
 if (allow.length) console.log(`\nallowlist ${allow.length}건 적용 (scripts/ad-audit-allow.json)`);
+if (uiAllow.length) {
+  console.log(
+    `allowlist(광고 위 UI 승인 면제) ${uiAllow.length}건 등재${DIFF_MODE ? ` · 이번 diff 에서 사용 ${uiAllowUsed.size}건` : ""}`
+  );
+}
 console.log(
   `\n결과: ERROR ${errors.length}건 / WARN ${warns.length}건${errors.length ? " — 커밋 전 수정 또는 allowlist(사유 필수) 등재" : " — 통과"}`
 );
