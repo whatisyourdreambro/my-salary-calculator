@@ -4,7 +4,9 @@
 // 데이터·가드는 src/lib/salary-data/dartRanking.ts 단일 소스.
 // 광고는 salary-db/layout.tsx 상속 — 광고 코드 없음.
 // DATA-07 (2026-09-25): 최저임금 미달 연도 제외 + 이상치(+100% 초과·직원 50명 미만) 분리 —
-// 인용 자산이라 날짜 붙은 정정 메모를 방법론에 남기고, 이상치 목록은 페이지 최하단(방법론 안)에만.
+// 인용 자산이라 날짜 붙은 한 줄 정정 메모를 방법론에 남기고, 이상치 목록은 계산 방법 FAQ(접힌
+// details) 안에만 둔다. 방법론 문단은 layout 의 PageFooterAds 바로 위라 기준선 길이를 넘기지 않는다
+// (종전 방법론 안 목록·긴 메모가 하단 광고를 +222~246px 밀었다 — 최종 점검 2026-09-25).
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -41,15 +43,15 @@ export const metadata: Metadata = buildPageMetadata({
   keywords: ["연봉 인상률 높은 기업", "연봉 인상률 순위", "상장사 연봉 인상", "연봉 많이 오른 회사"],
 });
 
-/** 순위에서 뺀 이상치 목록 — 접힌 details (방법론 섹션 안, 본문 광고 전부의 아래) */
+/** 순위에서 뺀 이상치 목록 — 계산 방법 FAQ(접힌 details) 답변 아래에만 보인다 */
 function OutlierList() {
   if (topRaiseOutlierRows.length === 0) return null;
   return (
-    <details className="mt-3 rounded-xl border border-canvas-200 bg-white p-4">
-      <summary className="cursor-pointer text-xs font-bold text-navy">
-        순위에서 뺀 이상치 {topRaiseOutlierRows.length}곳 보기 (인상률 +{RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원{" "}
+    <div className="mt-3 rounded-xl border border-canvas-200 bg-canvas-50 p-4">
+      <p className="text-xs font-bold text-navy">
+        순위에서 뺀 이상치 {topRaiseOutlierRows.length}곳 (인상률 +{RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원{" "}
         {RAISE_MIN_EMPLOYEES}명 미만)
-      </summary>
+      </p>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full text-xs min-w-[480px]">
           <thead>
@@ -80,7 +82,7 @@ function OutlierList() {
         스톡옵션 행사·부분연도 근무·소수 인원 효과로 평균이 크게 튀는 경우라 순위와 인용문에서 뺐습니다.
         공시 원값 자체는 그대로 표기합니다.
       </p>
-    </details>
+    </div>
   );
 }
 
@@ -124,21 +126,21 @@ export default function TopRaisePage() {
               RAISE_PREV_YEAR
             )}·${DART_RANKING_YEAR}년 ${minWageLabel(
               DART_RANKING_YEAR
-            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호), 급여총액÷인원 값과 회사 공시 1인평균급여액의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사(두 집계 방식이 어긋나 평균을 대표하지 못함)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 페이지 하단에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
+            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호), 급여총액÷인원 값과 회사 공시 1인평균급여액의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사(두 집계 방식이 어긋나 평균을 대표하지 못함 — 상장사 ${LISTED_DIVERGENCE_EXCLUDED.toLocaleString("ko-KR")}곳)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 이 답변 아래 목록에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
+            extra: <OutlierList />,
           },
           {
             question: "인상률이 높으면 좋은 회사인가요?",
             answer: "평균연봉 인상은 임금 인상 외에 성과급 지급 시점, 고연봉 인력 채용, 인력 구조 변화로도 발생합니다. 절대 연봉 수준·근속연수와 함께 보는 것이 정확합니다.",
           },
         ],
-        methodologyExtra: `인상률은 ${RAISE_PREV_YEAR} 공시 대비 증감률입니다. 두 해 공시가 모두 있고 직원 수 변동 ±30% 이내이며 두 해 평균연봉이 그해 연간 최저임금 환산액(${minWageLabel(
-          RAISE_PREV_YEAR
-        )}·${minWageLabel(DART_RANKING_YEAR)}) 이상인 회사 중 이상치(+${RAISE_OUTLIER_MAX_PCT}% 초과·직원 ${RAISE_MIN_EMPLOYEES}명 미만)를 뺀 ${raiseEligibleCount.toLocaleString(
+        // 정정 메모는 한 줄만 — 전체 기준(직원 수 ±30%·최저임금 환산액·집계 괴리·이상치)은 계산 방법 FAQ 가 담는다
+        methodologyExtra: `인상률은 ${RAISE_PREV_YEAR} 공시 대비 증감률(${raiseEligibleCount.toLocaleString(
           "ko-KR"
-        )}곳을 비교했습니다. [${CORRECTION_DATE} 정정] 종전 순위는 직원 수 급변만 걸러, 전년 평균이 최저임금 환산액에 못 미치는 회사와 이상치가 상위를 차지했습니다. 이들을 순위·인용문에서 빼고 이상치는 아래 목록에 따로 표시합니다.`,
-        methodologyAppendix: <OutlierList />,
-        // 연봉 순위 모수 — 두 급여 집계 방식 괴리 10% 초과 제외를 밝힌다 (종전 '상장사 전체 모수' 표기 정정)
-        poolNote: `상장사 모수 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳(두 급여 집계 방식 괴리 ${RANKING_DIVERGENCE_MAX_PCT}% 초과 ${LISTED_DIVERGENCE_EXCLUDED.toLocaleString("ko-KR")}곳 제외).`,
+        )}곳 비교). [${CORRECTION_DATE} 정정] 최저임금 미달·이상치 제외.`,
+        // 연봉 순위 모수 — 두 급여 집계 방식 괴리 초과 제외를 밝힌다 (종전 '상장사 전체 모수' 표기 정정).
+        // 괴리 기준(10%)·제외 수는 계산 방법 FAQ 가 담는다 — 광고 위 방법론 문단은 기준선 길이 유지
+        poolNote: `상장사 모수 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳(집계 괴리 제외).`,
         poolTotal: raiseEligibleCount,
         datasetName: `상장사 연봉 인상률 TOP ${topRaiseRows.length} (${DART_RANKING_YEAR})`,
         rows: topRaiseRows,

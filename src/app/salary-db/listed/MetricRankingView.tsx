@@ -38,18 +38,17 @@ interface MetricConfig {
   heroLead: React.ReactNode;
   valueHeader: string;
   renderValue: (row: RankingRow) => React.ReactNode;
-  faqItems: { question: string; answer: string }[];
+  /**
+   * FAQ — 접힌 details 라 펼치기 전 높이는 질문 줄뿐이다. extra 는 답변 문단 아래(펼쳤을 때만)
+   * 보이는 부가 블록 — 인상률 랭킹의 이상치 목록용(DATA-07, 2026-09-25). FAQPage JSON-LD 에는
+   * question·answer 문자열만 나간다.
+   */
+  faqItems: { question: string; answer: string; extra?: React.ReactNode }[];
   methodologyExtra: string;
   datasetName: string;
   rows: RankingRow[];
   /** 인용 복사 버튼 — R2 B4 (운영자 승인 2026-08-31). 데이터 변수 기반 빌드타임 생성만. */
   citation?: { quote: string; quoteId: string };
-  /**
-   * 방법론 섹션 안(페이지 최하단 — 본문 광고 전부의 아래)에 붙는 부가 블록.
-   * 인상률 랭킹의 이상치 목록(접힌 details)용 — DATA-07 (2026-09-25). 광고 위 삽입 금지 원칙상
-   * 이 위치 외에는 새 블록을 두지 않는다.
-   */
-  methodologyAppendix?: React.ReactNode;
   /**
    * 방법론의 모수 문장 — 랭킹마다 모수가 다르다 (2026-09-25 리뷰 정정). 생략 시 상장사 전수
    * 모수(직원 수·근속연수 랭킹 — 급여 집계 괴리와 무관). 인상률 랭킹은 괴리 10% 제외를 밝힌다.
@@ -174,6 +173,7 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
               <details key={item.question} className="group rounded-xl border border-canvas-200 bg-white p-5">
                 <summary className="cursor-pointer text-sm font-bold text-navy">{item.question}</summary>
                 <p className="faq-answer mt-3 text-sm leading-7 text-muted-blue">{item.answer}</p>
+                {item.extra}
               </details>
             ))}
           </div>
@@ -203,7 +203,6 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
             성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
-          {cfg.methodologyAppendix}
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
           {cfg.citation && (
             <CitationCopyButton
