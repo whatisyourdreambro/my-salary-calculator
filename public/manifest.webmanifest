@@ -1,7 +1,7 @@
 {
   "name": "머니샐러리 — 2026 연봉 실수령액 계산기",
   "short_name": "머니샐러리",
-  "description": "2026년 최신 세법 기준 연봉 실수령액·4대보험·연말정산 계산기. 100가지 금융 도구 무료.",
+  "description": "2026년 세법 기준 연봉 실수령액·4대보험·연말정산 계산기와 금융 계산기 모음(무료).",
   "id": "/",
   "start_url": "/?utm_source=pwa&utm_medium=homescreen",
   "display": "standalone",
@@ -60,9 +60,9 @@
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "100가지 계산기",
+      "name": "계산기 모음",
       "short_name": "계산기",
-      "description": "대출·보험·세금·투자 100개 도구",
+      "description": "대출·보험·세금·투자 계산기",
       "url": "/calc",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }

@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "Asset Allocator",
+ "name": "자산 배분 마스터 (Asset Allocator)",
  "description": "자산 배분 및 투자 시뮬레이션 미니게임",
  "genre": "Simulation",
  "applicationCategory": "Game",

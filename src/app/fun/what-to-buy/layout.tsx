@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "FLEX Calculator",
+ "name": "플렉스(FLEX) 계산기",
  "description": "입력한 예산으로 구매 가능한 물건을 재미있게 환산해주는 플렉스 계산기",
  "applicationCategory": "EntertainmentApplication",
  "operatingSystem": "Any",

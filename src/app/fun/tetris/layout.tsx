@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "Salaryman Tetris",
+ "name": "직장인 테트리스 (Salaryman Tetris)",
  "description": "직장인 컨셉의 테트리스 퍼즐 게임",
  "genre": "Puzzle",
  "applicationCategory": "Game",

@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "Spending Habit Test",
+ "name": "소비 성향 테스트",
  "description": "개인의 소비 패턴을 분석하여 과소비 위험도를 진단하는 도구",
  "applicationCategory": "FinanceApplication",
  "operatingSystem": "Any",

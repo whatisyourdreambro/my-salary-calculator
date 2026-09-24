@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "CRYPTO PANIC - 밈코인 모의투자",
+ "name": "밈코인 모의투자 시뮬레이션 (CRYPTO PANIC)",
  "description": "가상 자금 100만원으로 밈코인 포트폴리오를 구성하고 랜덤 시장 이벤트를 체험하는 모의투자 시뮬레이션 게임",
  "genre": "Simulation",
  "applicationCategory": "Game",

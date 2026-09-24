@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "Flappy Salaryman",
+ "name": "플래피 샐러리맨 (Flappy Salaryman)",
  "description": "세금과 물가를 피해 월급을 지키는 서바이벌 미니게임",
  "genre": "Arcade",
  "applicationCategory": "Game",

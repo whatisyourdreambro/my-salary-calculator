@@ -71,8 +71,9 @@ export default function RankClient() {
  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/15 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
  <div className="max-w-5xl mx-auto px-4">
+ {/* H1(LCP) 포함 hero — initial={false}로 SSR에서 바로 보이게 (opacity:0 전송 금지) */}
  <motion.div
- initial={{ opacity: 0, y: 20 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6 }}
  >

@@ -23,6 +23,9 @@ export default function FlappyGamePage() {
  const obstaclesRef = useRef<{ x: number; topHeight: number; passed: boolean }[]>([]);
  const lastSpawnTime = useRef(0);
  const scoreRef = useRef(0); // Ref for score to avoid closure issues in loop if needed
+ // 최고점도 ref로 비교 — 스페이스바 핸들러(deps [])는 첫 렌더의 startGame→update→gameOver
+ // 클로저를 쥐고 있어 state(highScore=0)로 비교하면 낮은 점수가 저장된 최고점을 덮어쓴다.
+ const highScoreRef = useRef(0);
 
  // Sync ref with state
  useEffect(() => {
@@ -32,8 +35,11 @@ export default function FlappyGamePage() {
  // Load high score
  useEffect(() => {
  try {
- const saved = localStorage.getItem("flappyHighScore");
- if (saved) setHighScore(parseInt(saved));
+ const saved = parseInt(localStorage.getItem("flappyHighScore") ?? "", 10);
+ if (Number.isFinite(saved) && saved > 0) {
+ highScoreRef.current = saved;
+ setHighScore(saved);
+ }
  } catch {
  // 프라이버시 모드 등 localStorage 접근 불가 — 최고점 저장만 생략
  }
@@ -148,7 +154,8 @@ export default function FlappyGamePage() {
  gameStateRef.current = "gameover";
  if (requestRef.current) cancelAnimationFrame(requestRef.current);
 
- if (scoreRef.current > highScore) {
+ if (scoreRef.current > highScoreRef.current) {
+ highScoreRef.current = scoreRef.current;
  setHighScore(scoreRef.current);
  try {
  localStorage.setItem("flappyHighScore", scoreRef.current.toString());
@@ -177,6 +184,8 @@ export default function FlappyGamePage() {
  };
  window.addEventListener("keydown", handleKeyPress);
  return () => window.removeEventListener("keydown", handleKeyPress);
+ // 리스너는 한 번만 등록한다. 첫 렌더 클로저여도 게임 상태·점수·최고점을 모두 ref로 읽어 안전.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  }, []);
 
  return (
