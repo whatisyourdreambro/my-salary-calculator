@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { watchDeferredSectionActivation as watchHomeCalculatorActivation } from "@/lib/deferredSectionActivation";
+import { watchDeferredSectionActivation as watchHomeCalculatorActivation, watchNearViewport } from "@/lib/deferredSectionActivation";
 
 describe("secondary home calculator activation", () => {
   const target = {} as Element;
@@ -80,5 +80,56 @@ describe("secondary home calculator activation", () => {
     expect(activate).not.toHaveBeenCalled();
     expect(disconnect).toHaveBeenCalledTimes(1);
     expect(remove).toHaveBeenCalledWith("hashchange", expect.any(Function));
+  });
+});
+
+// 2026-09-25 PERF-03: 회사 페이지 recharts 차트는 고정 h-[300px] 박스가 뷰포트 300px 안에 올 때만 마운트.
+describe("near-viewport mount gate (company roadmap chart)", () => {
+  const target = {} as Element;
+  let intersection: IntersectionObserverCallback;
+  const observe = vi.fn();
+  const disconnect = vi.fn();
+  const construct = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubGlobal("IntersectionObserver", class {
+      constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit) { intersection = callback; construct(options); }
+      observe = observe;
+      disconnect = disconnect;
+    });
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  const notify = (visible: boolean, element = target) => intersection([{ target: element, isIntersecting: visible } as IntersectionObserverEntry], {} as IntersectionObserver);
+
+  it("uses a ~300px margin (not 800px, which fires immediately on desktop) and activates once", () => {
+    const activate = vi.fn();
+    watchNearViewport(target, activate);
+    expect(construct).toHaveBeenCalledWith({ rootMargin: "300px 0px", threshold: 0 });
+    expect(observe).toHaveBeenCalledWith(target);
+    notify(false);
+    notify(true, {} as Element);
+    expect(activate).not.toHaveBeenCalled();
+    notify(true);
+    notify(true);
+    expect(activate).toHaveBeenCalledTimes(1);
+    expect(disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it("mounts immediately without IntersectionObserver", () => {
+    vi.stubGlobal("IntersectionObserver", undefined);
+    const activate = vi.fn();
+    watchNearViewport(target, activate);
+    expect(activate).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores late notifications after cleanup", () => {
+    const activate = vi.fn();
+    const stop = watchNearViewport(target, activate);
+    stop();
+    notify(true);
+    expect(activate).not.toHaveBeenCalled();
+    expect(disconnect).toHaveBeenCalledTimes(1);
   });
 });
