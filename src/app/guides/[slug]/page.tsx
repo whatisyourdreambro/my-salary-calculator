@@ -36,7 +36,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const base = buildGuideMetadata({
  slug: guide.slug,
  title: guide.title,
- description: guide.description,
+ // 검색 전용 보강 설명(META-07)이 있으면 그것을, 없으면 화면 TL;DR 과 같은 description 을 쓴다.
+ description: guide.metaDescription ?? guide.description,
  publishedDate: guide.publishedDate,
  modifiedDate: guide.modifiedDate,
  tags: guide.tags,

@@ -28,6 +28,12 @@ export interface Guide {
  /** 과거 메타데이터 호환용. 실측 출처·기간이 없어 표시·정렬·추천에 사용하지 않는다. */
  views: number;
  content: string;
+ /**
+  * 검색 결과(meta description) 전용 설명. 없으면 description 을 쓴다.
+  * 화면의 TL;DR·카드에는 쓰지 않는다 — 본문 광고 위 높이를 바꾸지 않기 위해
+  * guides/[slug] generateMetadata 에서만 읽는다 (META-07, 2026-09-25).
+  */
+ metaDescription?: string;
  /** 'ko' | 'en'. 미지정 시 'ko'로 간주 (기존 50개 가이드 호환) */
  lang?: GuideLang;
 }
@@ -59,7 +65,8 @@ export const categoriesEn = [
 // contentChars: 본문 글자수 — 본문 없이 "실질 본문 보유" 판단용
 // (FeaturedGuides 의 content.length > 1500 필터를 본문 import 없이 대체)
 // ─────────────────────────────────────────────────────────────
-export type GuideCardMeta = Omit<Guide, 'content'> & {
+// metaDescription 은 상세 페이지 메타 전용이라 카드 청크(목록·홈·검색)에서 뺀다.
+export type GuideCardMeta = Omit<Guide, 'content' | 'metaDescription'> & {
  /** 본문 글자수 (gen-guides-meta 산출) */
  contentChars: number;
 };
