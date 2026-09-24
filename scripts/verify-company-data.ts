@@ -10,8 +10,10 @@
 //  5. CL 신입(설명에 "신입") total 과 entry 영끌의 10% 초과 괴리 — warn 리포트
 //     (라벨로 안내되는 정당한 기준 차이 — 실패 아님, 목록 확인용)
 //  6. id / name.ko 원본(dedupe 전) 중복 리포트 — warn
-import { allCompanies } from "../src/data/companies/index";
+//  7. dedupe 탈락 레코드가 disclosed·careerLevels 를 가지면 FAIL (알려진 예외는 허용 목록 WARN)
+import { allCompanies, krCompanies } from "../src/data/companies/index";
 import { globalCompanies } from "../src/data/globalCompanies";
+import type { CompanyProfile } from "../src/types/company";
 import { COMPANY_COUNT } from "../src/config/site-metrics.generated";
 
 const errors: string[] = [];
@@ -93,6 +95,57 @@ for (const c of allCompanies) {
   if (seenNames.has(c.name.ko)) errors.push(`중복 name.ko 잔존: ${c.name.ko}`);
   seenIds.add(c.id);
   seenNames.add(c.name.ko);
+}
+
+// 7. dedupe 로 탈락한 레코드의 disclosed·careerLevels 유실 감지 (COMP-11, 2026-09-25)
+//    dedupeCompanies 는 id 또는 name.ko 가 먼저 나온 레코드만 남긴다. 탈락 레코드에 적은
+//    공시 카드·직급표는 어떤 페이지에도 렌더되지 않는다 — 데이터는 반드시 생존 레코드
+//    (companyRepository.getById 가 반환하는 엔트리)에 적을 것.
+//    알려진 예외는 WARN(허용 목록) — 데이터 이전은 광고 위 카드 삽입이라 10/6 이후 창에서.
+const DROPPED_DATA_ALLOW = new Set<string>([
+  // 한국도로공사 ALIO FY2025 disclosed(9,069만원)가 중복 레코드에 있음 → korea-highway(Batch12)로 이전 예정
+  "korea-expressway",
+]);
+{
+  const survivorByName = new Map(allCompanies.map((c) => [c.name.ko.trim(), c.id]));
+  const kept = new Set<CompanyProfile>(krCompanies.filter((c) => allCompanies.includes(c)));
+  // globalCompanies 는 병합 시 복제({...c, isGlobal})되므로 id·이름으로 생존 여부를 판정
+  const survivorIds = new Set(allCompanies.map((c) => c.id));
+  const seenIds = new Set<string>();
+  const seenNames = new Set<string>();
+  const raw: { c: CompanyProfile; global: boolean }[] = [
+    ...krCompanies.map((c) => ({ c, global: false })),
+    ...globalCompanies.map((c) => ({ c, global: true })),
+  ];
+  for (const { c, global } of raw) {
+    const nameKey = c.name.ko.trim();
+    const dropped = seenIds.has(c.id) || seenNames.has(nameKey);
+    if (!dropped) {
+      // dedupeCompanies 와 같이 생존 레코드의 id·이름만 등록한다 — 탈락 레코드까지 등록하면
+      // 이름으로 탈락한 레코드와 id 만 같은 뒤 레코드(또는 그 반대)를 탈락으로 오판한다
+      seenIds.add(c.id);
+      seenNames.add(nameKey);
+      // 탈락하지 않은 레코드가 실제 생존 목록에 있는지 교차 확인 (판정 로직 드리프트 감지)
+      if (!(global ? survivorIds.has(c.id) : kept.has(c))) {
+        errors.push(`${c.id}: dedupe 판정 재현 불일치 — src/data/companies/index.ts dedupeCompanies 와 동기화 필요`);
+      }
+      continue;
+    }
+    const lost = [
+      c.disclosed ? "disclosed" : null,
+      c.careerLevels?.length ? "careerLevels" : null,
+    ].filter(Boolean);
+    if (!lost.length) continue;
+    const survivor = survivorByName.get(nameKey) ?? c.id;
+    const msg = `${c.id}(${nameKey}): dedupe 탈락 레코드의 ${lost.join("·")} 미렌더 — 생존 레코드 ${survivor} 로 이전 필요`;
+    if (DROPPED_DATA_ALLOW.has(c.id)) warns.push(`${msg} [허용 목록]`);
+    else errors.push(msg);
+  }
+  for (const id of DROPPED_DATA_ALLOW) {
+    if (survivorIds.has(id) || !raw.some(({ c }) => c.id === id && (c.disclosed || c.careerLevels?.length))) {
+      warns.push(`${id}: 허용 목록 항목이 더 이상 해당 없음 — DROPPED_DATA_ALLOW 에서 제거`);
+    }
+  }
 }
 
 if (warns.length > 0) {

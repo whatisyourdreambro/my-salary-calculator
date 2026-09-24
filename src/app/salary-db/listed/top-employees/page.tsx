@@ -8,7 +8,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import MetricRankingView, { fmtManwon } from "../MetricRankingView";
 import {
   topEmployeesRows,
-  LISTED_TOTAL,
+  LISTED_ALL_TOTAL,
   DART_RANKING_YEAR,
 } from "@/lib/salary-data/dartRanking";
 
@@ -19,7 +19,7 @@ const top1 = topEmployeesRows[0];
 
 export const metadata: Metadata = buildPageMetadata({
   title: `직원 수 TOP ${topEmployeesRows.length} — 가장 큰 상장사 (${DART_RANKING_YEAR} 공시)`,
-  description: `직원 수가 가장 많은 상장사 TOP ${topEmployeesRows.length}. DART 사업보고서 공시 기준(상장사 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳) — 고용 규모와 평균연봉을 함께 확인하세요.`,
+  description: `직원 수가 가장 많은 상장사 TOP ${topEmployeesRows.length}. DART 사업보고서 공시 기준(상장사 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳) — 고용 규모와 평균연봉을 함께 확인하세요.`,
   path: PATH,
   keywords: ["직원 수 많은 회사", "대기업 직원 수", "고용 규모 순위", "상장사 직원 수"],
 });
@@ -33,7 +33,7 @@ export default function TopEmployeesPage() {
         heroLead: (
           <>
             고용 규모가 가장 큰 상장사 순위입니다. {DART_RANKING_YEAR} 사업보고서 공시 기준
-            상장사 {LISTED_TOTAL.toLocaleString("ko-KR")}곳 중 1위는{" "}
+            상장사 {LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳 중 1위는{" "}
             <strong className="text-navy">{top1.nameKo}</strong>(
             {top1.employeeCount.toLocaleString("ko-KR")}명, 평균연봉{" "}
             {fmtManwon(top1.avgSalaryManwon)})입니다. 직원 수는 채용 기회의 규모이기도 합니다.
@@ -43,7 +43,7 @@ export default function TopEmployeesPage() {
         renderValue: (row) => `${row.employeeCount.toLocaleString("ko-KR")}명`,
         // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지)
         citation: {
-          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 수가 가장 많은 상장사는 ${top1.nameKo}(${top1.employeeCount.toLocaleString("ko-KR")}명, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 상장사 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳 전수 기준.`,
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 수가 가장 많은 상장사는 ${top1.nameKo}(${top1.employeeCount.toLocaleString("ko-KR")}명, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 상장사 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳 전수 기준.`,
           quoteId: "top-employees-no1",
         },
         faqItems: [

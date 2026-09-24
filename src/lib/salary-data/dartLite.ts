@@ -230,5 +230,27 @@ export function getSameIndustryExisting(
     .map((co) => ({ id: co.id, nameKo: co.name.ko }));
 }
 
+/** 만원 → "1억 5,800만원" (lite 페이지 표기와 동일) */
+function fmtManwonKo(manwon: number): string {
+  const eok = Math.floor(manwon / 10000);
+  const rest = manwon % 10000;
+  if (eok > 0 && rest > 0) return `${eok}억 ${rest.toLocaleString("ko-KR")}만원`;
+  if (eok > 0) return `${eok}억원`;
+  return `${rest.toLocaleString("ko-KR")}만원`;
+}
+
+/**
+ * lite 페이지 Dataset JSON-LD description — 회사 고유 수치로 80자 이상
+ * (META-11, 2026-09-25: 종전 템플릿 39~48자는 Google Dataset 설명 최소 50자 미달).
+ * 산정 기준(급여총액÷직원 수)을 함께 밝혀 DART 1인평균급여액 필드명으로 오인되지 않게 한다.
+ */
+export function listedDatasetDescription(c: DartLiteCompany): string {
+  const tenure =
+    c.avgTenureYears != null ? `·평균 근속 ${Math.round(c.avgTenureYears * 10) / 10}년` : "";
+  return `${c.nameKo} ${c.fiscalYear} 사업연도 공시 평균연봉 ${fmtManwonKo(c.avgSalaryManwon)}·직원 ${c.employeeCount.toLocaleString(
+    "ko-KR"
+  )}명${tenure} — DART 사업보고서 '직원 등의 현황' 기준(연간 급여총액÷직원 수, 등기임원 제외)`;
+}
+
 /** 코호트 stockCode 집합 — TOP100 리포트 행 링크화 등 외부 소비용 */
 export const listedCohortStockCodes = new Set(listedCohort.map((c) => c.stockCode));

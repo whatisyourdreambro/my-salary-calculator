@@ -57,8 +57,8 @@ const statQuote = `공시 기준 ${stats.companyCount.toLocaleString("ko-KR")}�
 const faqs = [
   {
     question: "이 순위의 평균연봉은 어떻게 계산했나요?",
-    answer:
-      "각 회사가 금융감독원 전자공시(DART) 사업보고서 '직원 등의 현황'에 공시한 연간 급여총액을 직원 수로 나눈 값입니다(등기임원 보수 제외). 사업부문·성별로 나뉜 공시는 급여총액 합산 ÷ 인원 합산으로 가중 평균했습니다. 회사가 제출한 공시 원문이 출처이므로 추정치가 아닙니다.",
+    // 날짜 붙은 정정 메모 — 인용 자산이라 순위 기준 변경을 조용히 바꾸지 않는다 (A19, 접힌 FAQ라 높이 불변)
+    answer: `각 회사가 금융감독원 전자공시(DART) 사업보고서 '직원 등의 현황'에 공시한 연간 급여총액을 직원 수로 나눈 값입니다(등기임원 보수 제외). 사업부문·성별로 나뉜 공시는 급여총액 합산 ÷ 인원 합산으로 가중 평균했습니다. 회사가 제출한 공시 원문이 출처이므로 추정치가 아닙니다. DART 원자료로 계산한 값이며 회사가 공시한 1인평균급여액과 다를 수 있습니다. [${stats.methodRevisedDate} 정정] 이 값과 회사 공시 1인평균급여액(인원 가중)의 차이가 ${stats.divergenceMaxPct}%를 넘는 회사 ${stats.divergenceExcludedCount.toLocaleString("ko-KR")}곳을 순위에서 제외하도록 기준을 강화했습니다(종전 30%). 연중 인원 급변·합병 등으로 산정치가 실제 평균을 대표하지 못하는 경우를 거르기 위한 조치로, 이에 따라 순위와 집계 회사 수가 바뀌었습니다.`,
   },
   {
     question: "어떤 회사들이 집계 대상인가요?",
@@ -324,7 +324,7 @@ export default function ListedAvgSalaryTop100Report() {
               <strong>모수</strong>: {stats.rankYear} 사업연도 보고서 제출 법인 중 직원
               30명 이상·급여 유효값 {stats.companyCount.toLocaleString("ko-KR")}곳 (연도
               무관 전체 검증 통과 {stats.allValidCount.toLocaleString("ko-KR")}곳).
-              집계 방식 간 30% 이상 괴리가 있는 공시는 랭킹에서 제외.
+              집계 방식 간 {stats.divergenceMaxPct}% 넘게 괴리가 있는 공시는 랭킹에서 제외.
             </li>
             <li>
               <strong>한계</strong>: 공시 평균은 미등기임원·성과급 포함 값으로 신입

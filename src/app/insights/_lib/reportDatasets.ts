@@ -117,7 +117,7 @@ const LISTED_COLUMNS: Record<string, string> = {
   stockCode: "종목코드 (비상장은 빈칸)",
   corpCode: "DART 고유번호",
   fiscalYear: "사업연도",
-  avgSalaryManwon: "직원 1인 평균 급여액 (만원, 급여총액÷인원, 등기임원 제외)",
+  avgSalaryManwon: "직원 평균 급여 (만원, 연간 급여총액÷연말 인원 산정, 등기임원 제외)",
   employeeCount: "직원 수 (명)",
   avgTenureYears: "평균 근속연수 (년, 공시 시만)",
   industry: "머니샐러리 표준 업종",

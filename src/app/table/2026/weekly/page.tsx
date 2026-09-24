@@ -13,6 +13,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import SalaryTable from "@/components/SalaryTable";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -66,6 +67,8 @@ const structuredData = [
  url: "/table/2026/weekly",
  dateModified: "2026-08-07",
  keywords: ["주급", "실수령액", "세후 월급", "주급 테이블", "2026년"],
+ // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
+ license: CITATION_POLICY_URL,
  }),
  autoBreadcrumbLd("/table/2026/weekly", { leafName: "2026 주급 실수령액 표" }),
  faqLd(FAQ_ITEMS),

@@ -10,7 +10,12 @@ import CompanySalaryGroupNotice from "@/components/CompanySalaryGroupNotice";
 import CompanyUniqueStats from "@/components/CompanyUniqueStats";
 import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
 // 서버 전용 DART 집계 — 클라이언트 컴포넌트에서 import 금지 (dartReport.ts 헤더 참조)
-import { dartTop100, dartReportStats, dartCompanyStatsById } from "@/lib/salary-data/dartReport";
+import {
+ dartTop100,
+ dartTop100CardBadgeCorps,
+ dartReportStats,
+ dartCompanyStatsById,
+} from "@/lib/salary-data/dartReport";
 // R2 W1 (2026-08-31) — 공시 카드→업종 랭킹 도선 (서버 전용)
 import { industryRankingByCompanyId } from "@/lib/salary-data/dartRanking";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
@@ -38,6 +43,7 @@ import {
  datasetLd,
  faqLd,
 } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 
 export const dynamic = "force-static";
 
@@ -122,6 +128,8 @@ export default function CompanyDetailPage({
  url: `/salary-db/${company.id}`,
  dateModified: company.lastUpdated,
  keywords: [`${company.name.ko} 연봉`, `${company.name.ko} 초봉`, `${company.name.ko} 신입 연봉`],
+ // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset "license 누락" 경고 해소). 추정치 포함 명시는 description 유지
+ license: CITATION_POLICY_URL,
  // 공시 출처가 실재하는 회사만 citation/isBasedOn (DART·알리오 원문 링크 → 권위 근거를 기계에 전달)
  ...(citation ? { citation, isBasedOn: citation.url } : {}),
  }),
@@ -153,7 +161,11 @@ export default function CompanyDetailPage({
  <CompanyDisclosedSalary
  company={company}
  dartRank={(() => {
- const row = dartTop100.find((r) => r.companyId === company.id);
+ // 카드 배지는 종전 기준에서도 TOP100 이던 corp 만 (10/5까지 광고 위 줄 추가 금지 —
+ // dartTop100CardBadgeCorps 주석 참조, 10/6 이후 가드 제거)
+ const row = dartTop100.find(
+ (r) => r.companyId === company.id && dartTop100CardBadgeCorps.has(r.corpCode)
+ );
  return row
  ? {
  rank: row.rank,
@@ -170,6 +182,12 @@ export default function CompanyDetailPage({
  // 수기 disclosed 값과 DART 원값 괴리 10% 초과 시 미전달 (라벨 혼선 방지).
  const stats = dartCompanyStatsById.get(company.id);
  if (!stats || !company.disclosed) return null;
+ // DART 자동 주입 블록은 헤드라인·이력이 같은 사업보고서에서 나온다 — 헤드라인이 공시
+ // 1인평균 기준(A19)으로 바뀌어 산정치와 벌어져도 배지·이력 표는 유지하고, 카드가
+ // 배지·순위에 '급여총액÷인원'·'산정치 기준' 라벨을 달고 같은 연도 산정치를 이력 표
+ // 첫 행에 올린다(CompanyDisclosedSalary disclosedHistoryRows — 행 수 불변).
+ // (게이트로 빠지면 광고 위 카드가 줄어 GuideMidAd 위치가 바뀐다, 2026-09-25).
+ if (company.disclosed.basis) return stats;
  const gap =
  Math.abs(stats.dartSalaryManwon - company.disclosed.avgSalaryManwon) /
  company.disclosed.avgSalaryManwon;

@@ -170,11 +170,17 @@ describe("추정치 정직성 문구 (COMP-05·06·07·09·10·12)", () => {
   it("COMP-12: 지주회사 본사 공시 6곳은 계열사 평균이 아님을 노트에 명시(덧붙이지 않고 교체)", () => {
     for (const id of ["kb-financial", "hd-hyundai", "sk-square", "nice-holdings", "bnk-financial", "jb-financial"]) {
       const c = companyRepository.getById(id)!;
-      expect(c.disclosed?.note, id).toMatch(/^지주회사 본사 직원 [\d,]+명 기준\(계열사 직원 평균 아님\)\. 연간급여총액÷인원 가중\(등기임원 제외\)\.$/);
+      // 통합(2026-09-25): B13 A19 산정 기준 반영 — 공시 1인평균 기준(reported)은 괄호를 줄인 문구(종전 길이 이하)
+      expect(c.disclosed?.note, id).toMatch(
+        c.disclosed?.basis === "reported"
+          ? /^지주회사 본사 직원 [\d,]+명 기준\(계열사 미포함\)\. 1인평균급여액을 인원 가중 평균\(등기임원 제외\)\.$/
+          : /^지주회사 본사 직원 [\d,]+명 기준\(계열사 직원 평균 아님\)\. 연간급여총액÷인원 가중\(등기임원 제외\)\.$/
+      );
       expect(c.name.ko, id).not.toContain("지주회사 본사"); // 회사명(동결 title 원천) 불변
     }
-    // 그 외 DART 주입사는 기존 노트 그대로
-    const other = companies.find((c) => c.disclosed?.note?.startsWith("직원 ") && c.disclosed.note.includes("사업부문·성별 구분 공시"));
+    // 그 외 DART 주입사는 기존 노트 형식 그대로 — 통합(2026-09-25): B13 A19 로 기준별 문구
+    // ('사업부문·성별로 공시된 1인평균급여액…' / '사업부문·성별 구분 공시를 연간급여총액÷인원…')
+    const other = companies.find((c) => c.disclosed?.note?.startsWith("직원 ") && c.disclosed.note.includes("사업부문·성별"));
     expect(other).toBeDefined();
   });
 
@@ -201,7 +207,8 @@ describe("추정치 정직성 문구 (COMP-05·06·07·09·10·12)", () => {
     expect(sk.disclosed?.note).not.toContain("58.1%");
     // 추이표 머리글·상장 순위 배지는 급여총액÷인원 산정 기준임을 표기 (헤드라인 수기값과 구분)
     const html = pages.get("sk-hynix")!;
-    expect(html).toContain(">DART 산정치</th>");
+    // 통합(2026-09-25): 표 머리글은 B13 A19 배지 '(급여총액÷인원)' 과 같은 이름
+    expect(html).toContain(">급여총액÷인원</th>");
     expect(html).not.toContain(">공시 평균연봉</th>");
     expect(html).not.toContain("DART 공시 기준</span>");
   });

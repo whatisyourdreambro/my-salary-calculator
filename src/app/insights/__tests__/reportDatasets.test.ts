@@ -176,3 +176,15 @@ describe("메타 정합", () => {
     expect(re.test("/salary-db/samsung-electronics")).toBe(true);
   });
 });
+
+// 업종별 신입 초봉 리포트 — 교차 검증 표가 DART 주입 카드 값을 읽으므로 updatedDate 가
+// 주입 변경일(DART_INJECTION_DATE) 이상이어야 한다 (2026-09-25 리뷰 정정 — 조용한 변경 금지)
+describe("entry 리포트 updatedDate — DART 주입 변경일 반영", () => {
+  it("updatedDate >= DART_INJECTION_DATE", async () => {
+    const { getReportBySlug } = await import("@/data/reportsRegistry");
+    const { DART_INJECTION_DATE } = await import("@/data/dart/dartInjection");
+    const report = getReportBySlug("entry-salary-by-industry-2026")!;
+    expect(report.updatedDate >= DART_INJECTION_DATE).toBe(true);
+    expect(report.updatedDate >= "2026-08-25").toBe(true);
+  });
+});

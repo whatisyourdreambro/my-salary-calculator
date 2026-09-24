@@ -136,7 +136,10 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
       expect(disclosed.avgSalaryManwon).toBe(dartInjection[company.id].a);
       expect(disclosed.fiscalYear).toBe(dartInjection[company.id].y);
       expect(disclosed.sourceUrl).toContain(dartInjection[company.id].r);
-      expect(disclosed.note).toContain("연간급여총액÷인원");
+      // A19(2026-09-25): 헤드라인 산정 기준별 note — 공시 1인평균 기준 / 급여총액÷인원 산정치
+      expect(disclosed.note).toContain(
+        dartInjection[company.id].b === "c" ? "연간급여총액÷인원" : "1인평균급여액을 인원 가중 평균"
+      );
     }
   });
 

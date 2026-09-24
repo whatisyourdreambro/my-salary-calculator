@@ -8,6 +8,10 @@
 // - 2027: 최저임금위원회 2026-07-14 제14차 전원회의 의결 → 고용노동부
 //   2026-08-05 확정 고시 (시급 10,700원)
 // - 2026: 고용노동부 고시 제2025-… (2026-01-01 시행, 시급 10,320원)
+// - 2025: 고용노동부 「2025년 적용 최저임금 고시」(2024-08, 시급 10,030원·월 2,096,270원)
+//   — moel.go.kr 보도자료 news_seq=16902 · korea.kr newsId=156644351 (2026-09-25 확인)
+// - 2024: 시급 9,860원 (위 2025 고시 보도자료의 "2024년 대비 170원 인상" 기준값)
+//   과년도 두 값은 DART 인상률 랭킹의 최저임금 미달 행 제외 필터 전용 (dartRanking.ts, DATA-07).
 //
 // ★ 갱신 슬롯: 매년 7월 중순 최저임금위원회 의결 + 8월 초 고용노동부 확정
 //   고시 직후 이듬해 값 추가 (2027-07 → MINIMUM_WAGE_2028 추가 예정).
@@ -30,6 +34,12 @@ function build(year: number, hourly: number): MinimumWageYear {
   const monthly = hourly * MONTHLY_HOURS;
   return { year, hourly, monthly, yearly: monthly * 12 };
 }
+
+/** 2024년 적용 최저임금 (과년도) — 시급 9,860원 · 월 2,060,740원 · 연 24,728,880원 */
+export const MINIMUM_WAGE_2024: MinimumWageYear = build(2024, 9860);
+
+/** 2025년 적용 최저임금 (과년도) — 시급 10,030원 · 월 2,096,270원 · 연 25,155,240원 */
+export const MINIMUM_WAGE_2025: MinimumWageYear = build(2025, 10030);
 
 /** 2026년 적용 최저임금 (현행, 2026-12-31까지) — 시급 10,320원 · 월 2,156,880원 */
 export const MINIMUM_WAGE_2026: MinimumWageYear = build(2026, 10320);

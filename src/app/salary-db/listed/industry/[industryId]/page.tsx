@@ -23,7 +23,12 @@ import {
   DART_RANKING_YEAR,
   DART_RANKING_DATE,
   LISTED_TOTAL,
+  rankingItemListItems,
 } from "@/lib/salary-data/dartRanking";
+import {
+  RANKING_DIVERGENCE_MAX_PCT,
+  RANKING_METHOD_REVISED_DATE,
+} from "@/lib/salary-data/dartRankingGuards";
 import { ShieldCheck, TrendingUp } from "lucide-react";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 import CitationCopyButton from "@/components/CitationCopyButton";
@@ -114,6 +119,7 @@ export default function IndustryRankingPage({ params }: Props) {
   const path = `/salary-db/listed/industry/${r.industryId}`;
   const capped = r.companyCount > r.topRows.length;
   const top1 = r.topRows[0];
+  const listItems = rankingItemListItems(r.topRows.slice(0, 50), (row) => `${row.nameKo} 평균연봉`);
 
   const crumbs = [
     { name: "홈", path: "/" },
@@ -139,7 +145,7 @@ export default function IndustryRankingPage({ params }: Props) {
     },
     {
       question: "이 순위는 어떻게 산정되나요?",
-      answer: `금융감독원 전자공시(DART) ${DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의 현황」의 1인 평균 급여액(급여총액÷직원 수, 등기임원 제외)을 그대로 사용합니다. 추정치는 없으며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다. 집계 방식 괴리 플래그가 있는 회사는 제외했습니다.`,
+      answer: `금융감독원 전자공시(DART) ${DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의 현황」의 연간 급여총액을 직원 수로 나눈 값(등기임원 제외)입니다. DART 원자료로 계산한 값이라 회사가 공시한 1인평균급여액과 다를 수 있으며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다. [${RANKING_METHOD_REVISED_DATE} 정정] 이 값과 회사 공시 1인평균급여액(인원 가중)의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사는 순위에서 제외합니다(종전 30%).`,
     },
   ];
 
@@ -150,17 +156,14 @@ export default function IndustryRankingPage({ params }: Props) {
       <JsonLd
         data={[
           breadcrumbLd(crumbs),
-          itemListLd({
-            name: `${r.industryKo} 상장사 공시 평균연봉 순위`,
-            items: r.topRows.slice(0, 50).map((row) => ({
-              position: row.rank,
-              name: `${row.nameKo} 평균연봉`,
-              url: row.href ?? path,
-            })),
-          }),
+          // 자체 페이지 있는 행만 (RT-09 — 랭킹 페이지 자기참조 ListItem 금지). 0건이면 블록 생략
+          ...(listItems.length
+            ? [itemListLd({ name: `${r.industryKo} 상장사 공시 평균연봉 순위`, items: listItems })]
+            : []),
           datasetLd({
             name: `${r.industryKo} 상장사 공시 평균연봉 순위 (${DART_RANKING_YEAR})`,
-            description: `DART 사업보고서 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터`,
+            // META-11 — Google Dataset description 50자 이상: 사업연도·가중 평균까지 업종 고유 값으로
+            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터 (직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)})`,
             url: path,
             dateModified: DART_RANKING_DATE,
             keywords: [`${r.industryKo} 연봉 순위`, "상장사 평균연봉", "DART 공시"],
@@ -191,7 +194,7 @@ export default function IndustryRankingPage({ params }: Props) {
             <strong className="text-navy">{fmtManwon(r.weightedAvgManwon)}</strong>, 중위값은{" "}
             <strong className="text-navy">{fmtManwon(r.medianManwon)}</strong>이며, 1위는{" "}
             <strong className="text-navy">{top1.nameKo}</strong>(
-            {fmtManwon(top1.avgSalaryManwon)})입니다. 급여총액 ÷ 직원 수의 공식 수치로, 신입
+            {fmtManwon(top1.avgSalaryManwon)})입니다. 급여총액 ÷ 직원 수 산정치로, 신입
             초봉이 아닌 전 직급 평균입니다.
           </p>
         </section>
@@ -301,7 +304,7 @@ export default function IndustryRankingPage({ params }: Props) {
           <h2 id="method-heading" className="text-sm font-black text-navy mb-2">데이터 출처·산정 기준</h2>
           <p className="text-xs leading-6 text-muted-blue">
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
-            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 전체 모수는{" "}
+            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 순위 모수는{" "}
             {LISTED_TOTAL.toLocaleString("ko-KR")}곳이며, 업종 분류는 표준산업분류(KSIC) 기반
             자체 매핑입니다. <strong className="text-navy">신입 초봉이 아니며</strong>, 성과급
             지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.

@@ -124,6 +124,13 @@ export interface CompanyProfile {
   sourceUrl?: string;
   /** 산정 기준·주의점 등 부가 설명 */
   note?: string;
+  /**
+   * DART 자동 주입 블록의 헤드라인 산정 기준 (CompanyRepository.enrich 가 채움 — 데이터 파일에
+   * 직접 쓰지 않는다). "reported" = 회사 공시 1인평균급여액의 인원 가중 평균,
+   * "computed" = 연간 급여총액÷인원 자체 산정치. 없음 = 수기 큐레이션 블록.
+   * '공식 수치' 라벨은 수기·reported 에만 (A19, 2026-09-25).
+   */
+  basis?: "reported" | "computed";
  };
 
  // Work Life & Culture

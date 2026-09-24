@@ -13,9 +13,15 @@
 // ★키 보안 (불가침): 키는 env DART_API_KEY 로만 — 이 파일·산출물·로그에 키를
 //   절대 남기지 않는다. 로그는 crtfc_key= 값을 마스킹한다.
 // ★집계 정본: 급여는 "성별 합계" 행에만 존재 → Σ연간급여총액 ÷ Σ인원 가중평균.
+//   + 회사 공시 1인평균급여액 기준값(reportedAvgManwonRaw, A19 2026-09-25): 급여 행 전부에
+//   1인평균이 있을 때만 Σ(1인평균×인원)÷Σ인원 — 회사 카드(dartInjection) 헤드라인 우선값.
+//   랭킹은 산정치 기준 유지 + 두 방식 괴리(divergencePct) 10% 초과 제외(src/lib/salary-data).
+// ★날짜: DART_DATA_DATE = 캐시 수집일, DART_INJECTION_DATE = 카드 내용 변경일. payload 가
+//   기존과 같으면 기존 날짜 유지(COMP-13) — emit 재실행만으로 237쪽 날짜가 움직이지 않는다.
 // ★캐시: scripts/.dart-cache/ (gitignore) — 재실행 시 API 호출 생략, --force 로 무시.
+//   emit·diff 는 캐시만 읽는다(네트워크·키 불필요).
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
@@ -438,6 +444,20 @@ async function fetchHist() {
   if (aborted) process.exit(3);
 }
 
+// ── 1인평균급여액(jan_salary_am) 단위 정규화 (A19, 2026-09-25) ──
+// OpenDART 값은 원 단위가 정상이지만 일부 공시는 천원·백만원 표기값을 그대로 싣는다
+// (예: 49 → 백만원, 97,473 → 천원). 회사 단위로 행 최댓값의 자릿수로 배율을 정한다.
+// 한 회사 안에서 자릿수가 섞여 있으면(양수 최대/최소 10배 초과) mixed=true — 호출부는
+// 공시 1인평균 기준값을 만들지 않는다(추정 금지 — 급여총액÷인원 산정치로 폴백).
+function janScale(values) {
+  const positive = values.filter((v) => v != null && v > 0);
+  if (!positive.length) return { scale: 1, mixed: false };
+  const max = Math.max(...positive);
+  const min = Math.min(...positive);
+  const scale = max < 1_000 ? 1_000_000 /* 백만원 */ : max < 1_000_000 ? 1_000 /* 천원 */ : 1;
+  return { scale, mixed: max / min > 10 };
+}
+
 // ── 집계 (성별합계 행 기반 가중평균) ─────────────────────────
 function aggregate(list) {
   const rows = list.map((r) => ({
@@ -470,7 +490,18 @@ function aggregate(list) {
     const alt = withAvg.reduce((s, r) => s + r.avgPer * r.headcount, 0) / withAvg.reduce((s, r) => s + r.headcount, 0);
     divergence = Math.abs(avgWon - alt) / avgWon;
   }
-  return { totalHead, avgWon, tenure, divergence };
+  // 회사 공시 1인평균급여액 기준값 (A19, 2026-09-25 운영자 승인) — 급여총액 보유 행 "전부"에
+  // 1인평균이 있고 자릿수가 한 단위일 때만 Σ(1인평균×인원)/Σ인원. 한 행이라도 비면 만들지 않는다
+  // (HD현대중공업처럼 '-' 공시 → 산정치 유지). V3 범위 검사는 emit 에서 한다.
+  // 단위 정규화는 이 값에만 적용한다 — 기존 산정치·V4 괴리·플래그는 종전 방식 그대로(재방출 드리프트 0).
+  let reportedWon = null;
+  if (withPayroll.length && withPayroll.every((r) => r.avgPer != null && r.avgPer > 0)) {
+    const { scale, mixed } = janScale(withPayroll.map((r) => r.avgPer));
+    if (!mixed) {
+      reportedWon = withPayroll.reduce((s, r) => s + r.avgPer * scale * r.headcount, 0) / totalHead;
+    }
+  }
+  return { totalHead, avgWon, tenure, divergence, reportedWon };
 }
 
 // ═══════════ ④ emit ═══════════
@@ -480,10 +511,14 @@ function emit() {
   const excluded = { V1: 0, V2: 0, V3: 0, V6: 0, "no-cache": 0, "no-data": 0 };
   const v3Queue = [];
   const currentYear = new Date().getFullYear();
+  // 수집일 판정용 — 이번 집계가 읽은 캐시 파일(emp/·emp-hist/)의 최신 수정 시각 (COMP-13)
+  let latestCacheMs = 0;
+  let reportedCount = 0;
 
   for (const e of entries) {
     const empFile = join(EMP_CACHE, `${e.corpCode}.json`);
     if (!existsSync(empFile)) { excluded["no-cache"]++; continue; }
+    latestCacheMs = Math.max(latestCacheMs, statSync(empFile).mtimeMs);
     const { year, list } = JSON.parse(readFileSync(empFile, "utf8"));
     if (!year || !list.length) { excluded["no-data"]++; continue; }
     const agg = aggregate(list);
@@ -504,6 +539,11 @@ function emit() {
     const flags = [];
     if (agg.divergence != null && agg.divergence > 0.3) flags.push("V4-divergence");
     const tenureOk = agg.tenure != null && agg.tenure >= 0 && agg.tenure <= 40;
+    // 회사 공시 1인평균 기준값 (A19) — 산정치와 같은 V3 범위(1,200~30,000만원) 통과분만.
+    // 범위 밖(월평균을 연평균 칸에 적은 공시 등)은 싣지 않는다 — 추정·보정 금지.
+    const reportedManwon = agg.reportedWon != null ? agg.reportedWon / 10_000 : null;
+    const reportedOk = reportedManwon != null && reportedManwon >= 1200 && reportedManwon <= 30000;
+    if (reportedOk) reportedCount++;
 
     results.push({
       corpCode: e.corpCode,
@@ -517,6 +557,8 @@ function emit() {
       avgTenureYears: tenureOk ? Math.round(agg.tenure * 10) / 10 : undefined,
       rceptNo: list[0].rcept_no,
       ksicCode: ksic,
+      ...(reportedOk ? { reportedAvgManwonRaw: Math.round(reportedManwon) } : {}),
+      ...(agg.divergence != null ? { divergencePct: Math.round(agg.divergence * 1000) / 10 } : {}),
       ...(flags.length ? { flags } : {}),
     });
   }
@@ -535,6 +577,7 @@ function emit() {
         if (y === r.fiscalYear) continue; // primary 연도 중복 방지
         const f = join(EMP_HIST_CACHE, y, `${r.corpCode}.json`);
         if (!existsSync(f)) continue;
+        latestCacheMs = Math.max(latestCacheMs, statSync(f).mtimeMs);
         const { list } = JSON.parse(readFileSync(f, "utf8"));
         if (!list || !list.length) continue;
         const agg = aggregate(list);
@@ -558,9 +601,30 @@ function emit() {
 
   results.sort((a, b) => b.employeeCount * b.avgSalaryManwonRaw - a.employeeCount * a.avgSalaryManwonRaw);
   mkdirSync(OUT_DIR, { recursive: true });
-  const today = new Date().toISOString().slice(0, 10);
-  const ts = `// AUTO-GENERATED by scripts/dart-etl.mjs — DO NOT EDIT.
-// 재생성: node scripts/dart-etl.mjs emit  (데이터 기준일: ${today})
+
+  // ── 날짜 도장 (COMP-13, 2026-09-25) — today() 일괄 도장 금지 ──
+  // DART_DATA_DATE / DART_INJECTION_DATE 는 회사 페이지 lastUpdated·배지·Dataset dateModified·
+  // RSS pubDate·sitemap, TOP100 '수집일'로 흘러간다. 규칙:
+  //  - 방출 payload 가 기존 파일과 바이트 동일(날짜 줄 제외)하면 기존 날짜를 그대로 둔다.
+  //  - dartDisclosed(수집 데이터)가 달라지면 "수집일" = 이번 집계가 읽은 캐시 파일의 최신
+  //    수정일. 실제 재수집(fetch --force)이면 그날이 되고, 같은 캐시를 재집계하면
+  //    원래 수집일이 유지된다 — 재집계를 재수집으로 잘못 신고하지 않는다.
+  //  - dartInjection(회사 카드 내용)이 달라지면 실행일 — 카드 문구·값이 실제로 바뀐 날.
+  // 날짜 문자열은 종전 관례대로 UTC 날짜(toISOString) — 사이트는 "YYYY-MM-DD"를 UTC 자정으로
+  // 파싱하므로 KST 날짜를 쓰면 한국 시간 00~09시 실행분이 '미래 날짜'가 된다(lastUpdated 가드 위반).
+  const isoDate = (ms) => new Date(ms).toISOString().slice(0, 10);
+  const runDate = isoDate(Date.now());
+  const collectedDate = latestCacheMs > 0 ? isoDate(latestCacheMs) : runDate;
+  /** render(date) 가 기존 파일을 그 파일의 날짜로 정확히 재현하면 그 날짜, 아니면 null */
+  const keepPrevDate = (file, constName, render) => {
+    if (!existsSync(file)) return null;
+    const prev = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+    const m = prev.match(new RegExp(`export const ${constName} = "(\\d{4}-\\d{2}-\\d{2})"`));
+    return m && render(m[1]) === prev ? m[1] : null;
+  };
+
+  const renderDisclosed = (dataDate) => `// AUTO-GENERATED by scripts/dart-etl.mjs — DO NOT EDIT.
+// 재생성: node scripts/dart-etl.mjs emit  (데이터 기준일: ${dataDate})
 // 집계: 사업보고서 "직원 등의 현황" 성별합계 행의 Σ연간급여총액 ÷ Σ인원 (임원 제외).
 // 검증 제외분·사유는 scripts/.dart-cache/run-report.md 참조.
 
@@ -578,16 +642,26 @@ export interface DartDisclosedEntry {
   avgTenureYears?: number;
   rceptNo: string;
   ksicCode?: string;
+  /**
+   * 회사 공시 1인평균급여액 기준 평균 (만원, 반올림 전) — 급여총액 보유 행 전부에 1인평균이
+   * 있고 V3 범위(1,200~30,000만원) 통과 시만. Σ(1인평균×연말 인원)÷Σ연말 인원 (A19).
+   */
+  reportedAvgManwonRaw?: number;
+  /** 두 집계 방식(급여총액÷인원 vs 1인평균 인원 가중) 괴리 % (소수 1자리) — 랭킹 제외 판정용 */
+  divergencePct?: number;
   flags?: string[];
   /** 과년도 공시 이력 (최신 연도 우선, fetch-hist 수집분 — 추이 표시용) */
   history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
 }
 
-export const DART_DATA_DATE = "${today}";
+export const DART_DATA_DATE = "${dataDate}";
 
 export const dartDisclosed: DartDisclosedEntry[] = ${JSON.stringify(results, null, 1)};
 `;
-  writeFileSync(join(OUT_DIR, "dartDisclosed.ts"), ts);
+  const disclosedFile = join(OUT_DIR, "dartDisclosed.ts");
+  const dataDate = keepPrevDate(disclosedFile, "DART_DATA_DATE", renderDisclosed) ?? collectedDate;
+  writeFileSync(disclosedFile, renderDisclosed(dataDate));
+  log(`DART_DATA_DATE=${dataDate} (캐시 수집일 ${collectedDate}, 실행일 ${runDate}) · 공시 1인평균 기준값 ${reportedCount}곳`);
 
   // ── 경량 주입 파일 — corpCodeMap 매칭분만 (클라이언트 번들 보호: 전체
   //    dartDisclosed 600KB 대신 ~360곳 컴팩트 맵. source/note 문구는
@@ -601,21 +675,35 @@ export const dartDisclosed: DartDisclosedEntry[] = ${JSON.stringify(results, nul
     while ((mm = mRe.exec(mapSrc))) idToCorp[mm[1]] = mm[2];
     const byCorp = new Map(results.map((r) => [r.corpCode, r]));
     const inj = {};
+    let skippedFlagged = 0;
     for (const [id, corp] of Object.entries(idToCorp)) {
       const d = byCorp.get(corp);
       if (!d) continue;
+      const reported = d.reportedAvgManwonRaw;
+      // COMP-02 (2026-09-25): V4 플래그(두 집계 방식 괴리 >30%) 항목의 급여총액÷인원 산정치는
+      // 회사 카드에 싣지 않는다 — 랭킹에서 이미 빠진 값이 카드에서만 '공식 수치'로 나가던 모순.
+      // 회사 공시 1인평균 기준값(A19)이 있으면 그 값으로만 주입한다(현대카드·GS리테일 등 —
+      // 카드 유지·값만 공시 기준으로 교체, 광고 위 높이 불변).
+      if (d.flags?.length && reported == null) {
+        skippedFlagged++;
+        continue;
+      }
       inj[id] = {
-        a: d.avgSalaryManwon,
+        // 헤드라인: 공시 1인평균 기준값 우선, 없으면 급여총액÷인원 산정치(b="c") — 100만원 반올림.
+        // 플래그는 소수인 산정치 쪽에만 단다 — 대부분(공시 기준)은 무플래그라 클라이언트 번들 증가 0.
+        a: reported != null ? Math.round(reported / 100) * 100 : d.avgSalaryManwon,
         y: d.fiscalYear,
         e: d.employeeCount,
         r: d.rceptNo,
         ...(d.avgTenureYears != null ? { t: d.avgTenureYears } : {}),
+        ...(reported == null ? { b: "c" } : {}),
       };
     }
-    const injTs = `// AUTO-GENERATED by scripts/dart-etl.mjs — DO NOT EDIT.
+    const renderInjection = (injDate) => `// AUTO-GENERATED by scripts/dart-etl.mjs — DO NOT EDIT.
 // 기존 회사 id → DART 공시 요약 (corpCodeMap 매칭분만, 클라이언트 번들 안전 경량판).
 // a=평균연봉(만원, 100만원 반올림) y=사업연도 e=직원수 r=접수번호 t=평균근속(년)
-// disclosed 문구 조립은 CompanyRepository.enrich() 참조. 기준일: ${today}
+// b="c" 이면 a 는 연간 급여총액÷인원 산정치, 없으면 회사 공시 1인평균급여액의 인원 가중 평균.
+// disclosed 문구 조립은 CompanyRepository.enrich() 참조. 기준일: ${injDate}
 
 export interface DartInjectionEntry {
   a: number;
@@ -623,20 +711,24 @@ export interface DartInjectionEntry {
   e: number;
   r: string;
   t?: number;
+  /** 헤드라인 산정 기준 — "c" = 연간 급여총액÷인원 산정치 (없으면 회사 공시 1인평균급여액 기준) */
+  b?: "c";
 }
 
-export const DART_INJECTION_DATE = "${today}";
+export const DART_INJECTION_DATE = "${injDate}";
 
 export const dartInjection: Record<string, DartInjectionEntry> = ${JSON.stringify(inj, null, 0)};
 `;
-    writeFileSync(join(OUT_DIR, "dartInjection.ts"), injTs);
-    log(`dartInjection.ts: ${Object.keys(inj).length}곳 (corpCodeMap ${Object.keys(idToCorp).length}곳 중 데이터 보유분)`);
+    const injectionFile = join(OUT_DIR, "dartInjection.ts");
+    const injDate = keepPrevDate(injectionFile, "DART_INJECTION_DATE", renderInjection) ?? runDate;
+    writeFileSync(injectionFile, renderInjection(injDate));
+    log(`dartInjection.ts: ${Object.keys(inj).length}곳 (corpCodeMap ${Object.keys(idToCorp).length}곳 중 데이터 보유분, 플래그·공시 기준값 없음 제외 ${skippedFlagged}곳) · DART_INJECTION_DATE=${injDate}`);
   } else {
     log(`corpCodeMap.ts 없음 — dartInjection.ts 생성 건너뜀`);
   }
 
   const report = [
-    `# dart-etl run report (${today})`,
+    `# dart-etl run report (${runDate}, 데이터 기준일 ${dataDate})`,
     ``,
     `- 상장사 총: ${entries.length}`,
     `- 산출(검증 통과): ${results.length}`,

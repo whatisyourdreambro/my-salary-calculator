@@ -90,7 +90,7 @@ export default function PolicePay2026Page() {
           datasetLd({
             name: "2026년 경찰공무원 봉급표 데이터 (순경~경감 1~5호봉)",
             description:
-              "공무원보수규정 별표 10 기준 2026년 경찰공무원 계급별·호봉별 월 봉급액 데이터셋.",
+              "공무원보수규정 별표 10 기준 2026년 경찰공무원 계급별(순경~경감)·호봉별(1~5호봉) 월 봉급액 데이터셋.",
             url: "/police-pay-2026",
             datePublished: "2026-08-30",
             dateModified: "2026-08-30",

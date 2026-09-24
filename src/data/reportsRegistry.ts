@@ -11,6 +11,7 @@ import {
   entryReportIndustryCount,
 } from "@/lib/salary-data/entrySalaryReport";
 import { dartReportStats } from "@/lib/salary-data/dartReport";
+import { DART_INJECTION_DATE } from "@/data/dart/dartInjection";
 import { BONUS_PROFILES } from "@/data/bonusData";
 
 // 성과급 리포트(serp 전략 2호 과제) 카운트 — bonusData 단일 소스에서 파생 (하드코딩 금지 원칙)
@@ -25,7 +26,15 @@ const laterIsoDate = (a: string, b: string) => (a >= b ? a : b);
 // Dataset/Article dateModified·RSS pubDate 신선도 신호가 어긋나지 않게 한다 (2026-09-05).
 // dartReportStats는 이미 이 파일이 import하는 dartReport(서버 전용)에서 오므로 클라 번들 노출 증가 없음.
 // bonus 리포트는 bonusData에 검증일 필드가 없어 수동 유지 (필드 신설은 L13b와 함께).
-const LISTED_AVG_SALARY_MANUAL_UPDATED = "2026-08-23";
+// 2026-09-25: 순위 제외 기준 강화(두 집계 방식 괴리 30%→10%, 승인 A19) — 순위·회사 수가 바뀐 실질 변경
+const LISTED_AVG_SALARY_MANUAL_UPDATED = "2026-09-25";
+
+// 업종별 신입 초봉 리포트의 '공시 연봉 교차 검증' 표는 회사 disclosed(수기 + DART 주입)를 그대로
+// 읽는다 → DART 주입 카드 값이 바뀌면(DART_INJECTION_DATE, COMP-13: 카드 내용 변경일) 표가 조용히
+// 바뀐다. updatedDate 를 수기값과 주입 변경일의 max()로 파생 (2026-09-25 리뷰 정정 — A19 로
+// 토스 9,400→11,400·HD한국조선해양 12,800→13,100만원 등 표 값이 바뀜). 수기 disclosed 를 고치면
+// ENTRY_SALARY_MANUAL_UPDATED 도 함께 올린다.
+const ENTRY_SALARY_MANUAL_UPDATED = "2026-08-25";
 
 export interface ReportMeta {
   /** ASCII URL 슬러그 — /insights/<slug> */
@@ -81,7 +90,7 @@ export const reportsRegistry: ReportMeta[] = [
     title: `2026 업종별 신입 초봉 순위 — ${entryReportCompanyCount}개사 데이터 분석`,
     description: `머니샐러리가 국내 ${entryReportCompanyCount}개사 연봉 데이터를 ${entryReportIndustryCount}개 업종으로 집계한 2026 신입 초봉(기본급+평균 인센티브) 순위 리포트. 업종별 평균·중앙값·초봉 1위 기업, 공시·정부 통계 교차 검증까지 한눈에. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-17",
-    updatedDate: "2026-08-25",
+    updatedDate: laterIsoDate(ENTRY_SALARY_MANUAL_UPDATED, DART_INJECTION_DATE),
     keywords: [
       "업종별 초봉",
       "업종별 연봉 순위",

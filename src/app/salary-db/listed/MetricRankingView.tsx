@@ -17,8 +17,9 @@ import { breadcrumbLd, faqLd, itemListLd, datasetLd } from "@/lib/structuredData
 import {
   DART_RANKING_YEAR,
   DART_RANKING_DATE,
-  LISTED_TOTAL,
+  LISTED_ALL_TOTAL,
   industryRankings,
+  rankingItemListItems,
   type RankingRow,
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
@@ -43,6 +44,19 @@ interface MetricConfig {
   rows: RankingRow[];
   /** 인용 복사 버튼 — R2 B4 (운영자 승인 2026-08-31). 데이터 변수 기반 빌드타임 생성만. */
   citation?: { quote: string; quoteId: string };
+  /**
+   * 방법론 섹션 안(페이지 최하단 — 본문 광고 전부의 아래)에 붙는 부가 블록.
+   * 인상률 랭킹의 이상치 목록(접힌 details)용 — DATA-07 (2026-09-25). 광고 위 삽입 금지 원칙상
+   * 이 위치 외에는 새 블록을 두지 않는다.
+   */
+  methodologyAppendix?: React.ReactNode;
+  /**
+   * 방법론의 모수 문장 — 랭킹마다 모수가 다르다 (2026-09-25 리뷰 정정). 생략 시 상장사 전수
+   * 모수(직원 수·근속연수 랭킹 — 급여 집계 괴리와 무관). 인상률 랭킹은 괴리 10% 제외를 밝힌다.
+   */
+  poolNote?: string;
+  /** 모수 회사 수 — Dataset description 용 (생략 시 전수 모수) */
+  poolTotal?: number;
 }
 
 function RankTable({ cfg, rows }: { cfg: MetricConfig; rows: RankingRow[] }) {
@@ -93,23 +107,21 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
     { name: "상장사 공시 연봉", path: "/salary-db/listed" },
     { name: cfg.h1, path: cfg.path },
   ];
+  const listItems = rankingItemListItems(cfg.rows.slice(0, 50));
+  const poolTotal = cfg.poolTotal ?? LISTED_ALL_TOTAL;
+  const poolNote = cfg.poolNote ?? `상장사 전체 모수 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳.`;
 
   return (
     <main className="min-h-screen bg-transparent pb-10">
       <JsonLd
         data={[
           breadcrumbLd(crumbs),
-          itemListLd({
-            name: cfg.datasetName,
-            items: cfg.rows.slice(0, 50).map((row) => ({
-              position: row.rank,
-              name: `${row.nameKo}`,
-              url: row.href ?? cfg.path,
-            })),
-          }),
+          // 자체 페이지 있는 행만 (RT-09 — 랭킹 페이지 자기참조 ListItem 금지). 0건이면 블록 생략
+          ...(listItems.length ? [itemListLd({ name: cfg.datasetName, items: listItems })] : []),
           datasetLd({
             name: cfg.datasetName,
-            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 상장사 랭킹 데이터`,
+            // META-11 — Google Dataset description 50자 이상: 모수·상위 행 수·열 구성까지 명시
+            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 ${cfg.datasetName} — 상장사 ${poolTotal.toLocaleString("ko-KR")}곳 중 상위 ${cfg.rows.length}곳의 ${cfg.valueHeader}·평균연봉·업종 순위 데이터`,
             url: cfg.path,
             dateModified: DART_RANKING_DATE,
             keywords: ["상장사 연봉", "DART 공시", "연봉 순위"],
@@ -187,10 +199,11 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
           <h2 id="method-heading" className="text-sm font-black text-navy mb-2">데이터 출처·산정 기준</h2>
           <p className="text-xs leading-6 text-muted-blue">
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
-            현황」 기준(등기임원 제외). 상장사 전체 모수 {LISTED_TOTAL.toLocaleString("ko-KR")}곳.{" "}
+            현황」 기준(등기임원 제외). {poolNote}{" "}
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
             성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
+          {cfg.methodologyAppendix}
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
           {cfg.citation && (
             <CitationCopyButton

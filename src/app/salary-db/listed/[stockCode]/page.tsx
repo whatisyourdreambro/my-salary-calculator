@@ -22,6 +22,7 @@ import {
   getListedByStockCode,
   getSalaryNeighbors,
   getSameIndustryExisting,
+  listedDatasetDescription,
   DART_LITE_DATE,
 } from "@/lib/salary-data/dartLite";
 import { ShieldCheck, ExternalLink, TrendingUp, Building2, Users } from "lucide-react";
@@ -95,7 +96,7 @@ export default function ListedCompanyPage({ params }: Props) {
   const faqItems = [
     {
       question: `${c.nameKo} 평균연봉은 얼마인가요?`,
-      answer: `${c.nameKo}의 ${c.fiscalYear} 사업연도 사업보고서 공시 기준 평균연봉(1인 평균 급여액)은 ${fmtManwon(
+      answer: `${c.nameKo}의 ${c.fiscalYear} 사업연도 사업보고서 공시 기준 평균연봉(연간 급여총액÷직원 수)은 ${fmtManwon(
         c.avgSalaryManwon
       )}입니다. 등기임원을 제외한 직원 ${c.employeeCount.toLocaleString("ko-KR")}명 기준이며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다.`,
     },
@@ -144,7 +145,8 @@ export default function ListedCompanyPage({ params }: Props) {
           faqLd(faqItems),
           datasetLd({
             name: `${c.nameKo} 공시 평균연봉 (${c.fiscalYear} 사업보고서)`,
-            description: `DART 사업보고서 기준 ${c.nameKo}의 평균연봉·직원 수·근속연수 공시 데이터`,
+            // META-11: 회사 고유 수치로 80자+ (Google Dataset 설명 50자 최소 충족)
+            description: listedDatasetDescription(c),
             url: path,
             dateModified: DART_LITE_DATE,
             keywords: [`${c.nameKo} 연봉`, "공시 평균연봉", "DART"],
@@ -161,7 +163,8 @@ export default function ListedCompanyPage({ params }: Props) {
         <section className="mb-8">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-electric/10 px-3 py-1 text-xs font-bold text-electric mb-3">
             <ShieldCheck size={13} aria-hidden="true" />
-            금융감독원 전자공시(DART) 사업보고서 — 추정이 아닌 공식 수치
+            {/* 헤드라인이 급여총액÷인원 산정치라 '공식 수치' 라벨 제거 — 같은 길이 이하 (A19, 2026-09-25) */}
+            금융감독원 전자공시(DART) 사업보고서 — 급여총액÷인원 산정치
           </p>
           <h1 className="text-2xl sm:text-4xl font-black text-navy leading-tight mb-3">
             {c.nameKo} 평균연봉 <span className="text-primary">{fmtManwon(c.avgSalaryManwon)}</span>

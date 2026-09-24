@@ -45,6 +45,12 @@ function buildCompanyHtml(id: string, name: string): string {
   </div>
 `
       : "";
+  // 헤드라인 산정 기준 표기 (A19, 2026-09-25) — b 없음 = 회사 공시 1인평균급여액(인원 가중) 기준,
+  // b="c" = 급여총액÷인원 산정치. 임베드 iframe 높이 고정(420px)이라 종전 문구보다 짧게 유지
+  // (종전 '기준(임원 제외 전 직원 평균, 100만원 단위 반올림). 데이터 기준일 ' 41자 → 36자).
+  // 날짜는 DART_INJECTION_DATE = 카드 내용이 바뀐 날(COMP-13)이라 '갱신일' — 수집일(DART_DATA_DATE)은
+  // 800KB dartDisclosed 에만 있어 edge 위젯에서 import 하지 않는다.
+  const basisNote = d.b === "c" ? "급여총액÷인원 기준" : "1인평균급여액 기준";
   return widgetShell({
     title: `${esc(name)} 평균연봉 — DART 공시 기준 — 머니샐러리`,
     bodyHtml: `  <p class="title">🏢 ${esc(name)} <span>평균연봉</span></p>
@@ -56,7 +62,7 @@ function buildCompanyHtml(id: string, name: string): string {
     <span class="label">직원수</span>
     <span class="value">${d.e.toLocaleString("ko-KR")}<small>명</small></span>
   </div>
-${tenureRow}  <p class="note">금융감독원 DART ${esc(d.y)}년 사업보고서 &ldquo;직원 등의 현황&rdquo; 기준(임원 제외 전 직원 평균, 100만원 단위 반올림). 데이터 기준일 ${DART_INJECTION_DATE}.</p>`,
+${tenureRow}  <p class="note">금융감독원 DART ${esc(d.y)}년 사업보고서 &ldquo;직원 등의 현황&rdquo; ${basisNote}(등기임원 제외, 100만원 반올림). 갱신일 ${DART_INJECTION_DATE}.</p>`,
     script: `/* 정적 카드 위젯 — 상호작용 스크립트 없음 */`,
     ctaHref: `/salary-db/${id}`,
     ctaLabel: "직급별 연봉·업계 비교 보기 →",

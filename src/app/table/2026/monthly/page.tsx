@@ -10,6 +10,7 @@ import { CalcResultAd, Display2Ad, HomeTopAd, InArticleAd } from "@/components/A
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import SeasonalLinks from "../SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
 import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
@@ -76,6 +77,8 @@ const monthlyJsonLd = [
  url: "/table/2026/monthly",
  dateModified: "2026-08-30",
  keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2026년"],
+ // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
+ license: CITATION_POLICY_URL,
  }),
  faqLd(FAQ_ITEMS),
  autoBreadcrumbLd("/table/2026/monthly", { leafName: "2026 월급 실수령액 표" }),
