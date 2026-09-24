@@ -44,6 +44,12 @@ interface MetricConfig {
   rows: RankingRow[];
   /** 인용 복사 버튼 — R2 B4 (운영자 승인 2026-08-31). 데이터 변수 기반 빌드타임 생성만. */
   citation?: { quote: string; quoteId: string };
+  /**
+   * 방법론 섹션 안(페이지 최하단 — 본문 광고 전부의 아래)에 붙는 부가 블록.
+   * 인상률 랭킹의 이상치 목록(접힌 details)용 — DATA-07 (2026-09-25). 광고 위 삽입 금지 원칙상
+   * 이 위치 외에는 새 블록을 두지 않는다.
+   */
+  methodologyAppendix?: React.ReactNode;
 }
 
 function RankTable({ cfg, rows }: { cfg: MetricConfig; rows: RankingRow[] }) {
@@ -187,6 +193,7 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
             성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
+          {cfg.methodologyAppendix}
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
           {cfg.citation && (
             <CitationCopyButton
