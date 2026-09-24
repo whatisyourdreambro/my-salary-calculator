@@ -17,6 +17,13 @@ export interface DartDisclosedEntry {
   avgTenureYears?: number;
   rceptNo: string;
   ksicCode?: string;
+  /**
+   * 회사 공시 1인평균급여액 기준 평균 (만원, 반올림 전) — 급여총액 보유 행 전부에 1인평균이
+   * 있고 V3 범위(1,200~30,000만원) 통과 시만. Σ(1인평균×연말 인원)÷Σ연말 인원 (A19).
+   */
+  reportedAvgManwonRaw?: number;
+  /** 두 집계 방식(급여총액÷인원 vs 1인평균 인원 가중) 괴리 % (소수 1자리) — 랭킹 제외 판정용 */
+  divergencePct?: number;
   flags?: string[];
   /** 과년도 공시 이력 (최신 연도 우선, fetch-hist 수집분 — 추이 표시용) */
   history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
@@ -37,6 +44,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260310002820",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 15706,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62,6 +71,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.8,
   "rceptNo": "20260318001394",
   "ksicCode": "30121",
+  "reportedAvgManwonRaw": 13086,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -87,6 +98,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260317000635",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 18500,
+  "divergencePct": 4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -112,6 +125,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 20.8,
   "rceptNo": "20260312001224",
   "ksicCode": "30121",
+  "reportedAvgManwonRaw": 13401,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -137,6 +152,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260706000276",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 11759,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -162,6 +179,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.4,
   "rceptNo": "20260318001125",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 12332,
+  "divergencePct": 3.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -187,6 +206,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.9,
   "rceptNo": "20260311003822",
   "ksicCode": "2621",
+  "reportedAvgManwonRaw": 8586,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -212,6 +233,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260317000686",
   "ksicCode": "35120",
+  "reportedAvgManwonRaw": 9453,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -236,6 +259,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 15389,
   "rceptNo": "20260814002787",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12333,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -286,6 +311,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260313000815",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12173,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -311,6 +338,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260309001878",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 13696,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -336,6 +365,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.3,
   "rceptNo": "20260323001553",
   "ksicCode": "612",
+  "reportedAvgManwonRaw": 11860,
+  "divergencePct": 7.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -361,6 +392,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.2,
   "rceptNo": "20260310002989",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 13829,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -385,6 +418,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 12781,
   "rceptNo": "20260318001285",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12294,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -410,6 +445,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.6,
   "rceptNo": "20260316000962",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12368,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -434,6 +471,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 12922,
   "rceptNo": "20260312000217",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 11171,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -458,6 +497,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 12869,
   "rceptNo": "20260313001195",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 10702,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -482,6 +523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260331003643",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 10749,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -507,6 +550,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.7,
   "rceptNo": "20260310003071",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 10953,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -531,6 +576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 11694,
   "rceptNo": "20260318001506",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 11288,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -555,6 +602,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 13507,
   "rceptNo": "20260318000761",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 9396,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -580,6 +629,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260310002954",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 9498,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -605,6 +656,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260313000442",
   "ksicCode": "61220",
+  "reportedAvgManwonRaw": 11652,
+  "divergencePct": 5.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -630,6 +683,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260318001024",
   "ksicCode": "471",
+  "reportedAvgManwonRaw": 5173,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -655,6 +710,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260312001270",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 9263,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -680,6 +737,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260312000856",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 12301,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -705,6 +764,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.2,
   "rceptNo": "20260312001037",
   "ksicCode": "3111",
+  "reportedAvgManwonRaw": 10642,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -730,6 +791,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260316001112",
   "ksicCode": "31321",
+  "reportedAvgManwonRaw": 12413,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -755,6 +818,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.9,
   "rceptNo": "20260317000644",
   "ksicCode": "3111",
+  "reportedAvgManwonRaw": 9705,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -780,6 +845,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.5,
   "rceptNo": "20260312001405",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 5394,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -805,6 +872,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260318000532",
   "ksicCode": "61220",
+  "reportedAvgManwonRaw": 16296,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -830,6 +899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.9,
   "rceptNo": "20260312001399",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 15851,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -855,6 +926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.8,
   "rceptNo": "20260318001395",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 11210,
+  "divergencePct": 4.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -880,6 +953,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.4,
   "rceptNo": "20260331004244",
   "ksicCode": "65110",
+  "reportedAvgManwonRaw": 15473,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -905,6 +980,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260316000832",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 11575,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -930,6 +1007,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260313001021",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 14552,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -955,6 +1034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.9,
   "rceptNo": "20260311003927",
   "ksicCode": "72129",
+  "reportedAvgManwonRaw": 13284,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -980,6 +1061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260316001116",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 8411,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1005,6 +1088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260320001246",
   "ksicCode": "29119",
+  "reportedAvgManwonRaw": 10049,
+  "divergencePct": 6.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1030,6 +1115,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260318001045",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 9074,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1055,6 +1142,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260318000959",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 9933,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1080,6 +1169,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260318001461",
   "ksicCode": "31311",
+  "reportedAvgManwonRaw": 12028,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1105,6 +1196,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260323001004",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 8693,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1130,6 +1223,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260515001658",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 11432,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1155,6 +1250,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260323001211",
   "ksicCode": "25200",
+  "reportedAvgManwonRaw": 10982,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1180,6 +1277,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260313000771",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 18483,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1205,6 +1304,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260318001324",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 9918,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1230,6 +1331,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.8,
   "rceptNo": "20260311004583",
   "ksicCode": "75320",
+  "reportedAvgManwonRaw": 8059,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1254,6 +1357,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260318001089",
   "ksicCode": "41229",
+  "reportedAvgManwonRaw": 9708,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1279,6 +1384,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260319001275",
   "ksicCode": "31910",
+  "reportedAvgManwonRaw": 12031,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1304,6 +1411,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.4,
   "rceptNo": "20260701000624",
   "ksicCode": "4111",
+  "reportedAvgManwonRaw": 10594,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1329,6 +1438,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.7,
   "rceptNo": "20260515002972",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 15741,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1354,6 +1465,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260323000091",
   "ksicCode": "42311",
+  "reportedAvgManwonRaw": 8319,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1379,6 +1492,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.5,
   "rceptNo": "20260318001029",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 9876,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1404,6 +1519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.6,
   "rceptNo": "20260513000644",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 10759,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1429,6 +1546,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260316001417",
   "ksicCode": "493",
+  "reportedAvgManwonRaw": 7517,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1453,6 +1572,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.1,
   "rceptNo": "20260515000880",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 19226,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1478,6 +1599,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.7,
   "rceptNo": "20260318001157",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 12064,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1503,6 +1626,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260814003447",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 9834,
+  "divergencePct": 7.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1528,6 +1653,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.2,
   "rceptNo": "20260318001422",
   "ksicCode": "12000",
+  "reportedAvgManwonRaw": 11474,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1553,6 +1680,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.2,
   "rceptNo": "20260317000836",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 9112,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1578,6 +1707,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.4,
   "rceptNo": "20260320000559",
   "ksicCode": "19210",
+  "reportedAvgManwonRaw": 13864,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1603,6 +1734,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.7,
   "rceptNo": "20260324000784",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 16658,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1627,6 +1760,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 4716,
   "rceptNo": "20260331003904",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 10371,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1652,6 +1787,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260325001401",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 8840,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1677,6 +1814,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.6,
   "rceptNo": "20260312001296",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 9861,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1701,6 +1840,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260331003163",
   "ksicCode": "30",
+  "reportedAvgManwonRaw": 10980,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1725,6 +1866,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3922,
   "rceptNo": "20260318001423",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 10872,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1750,6 +1893,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260318000785",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 10226,
+  "divergencePct": 10.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1775,6 +1920,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260312001379",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 16796,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1800,6 +1947,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260323000924",
   "ksicCode": "969",
+  "reportedAvgManwonRaw": 6820,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1825,6 +1974,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.5,
   "rceptNo": "20260323001058",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 10208,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1849,6 +2000,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 4881,
   "rceptNo": "20260318000781",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8785,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1874,6 +2027,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.4,
   "rceptNo": "20260318000883",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 10837,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1898,6 +2053,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3987,
   "rceptNo": "20260312001448",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 10236,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1921,6 +2078,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3537,
   "rceptNo": "20260813001068",
   "ksicCode": "65110",
+  "reportedAvgManwonRaw": 11431,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1946,6 +2105,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 25.3,
   "rceptNo": "20260318000964",
   "ksicCode": "301",
+  "reportedAvgManwonRaw": 9725,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1970,6 +2131,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16,
   "rceptNo": "20260331004120",
   "ksicCode": "19210",
+  "reportedAvgManwonRaw": 12757,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -1995,6 +2158,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260312000907",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6088,
+  "divergencePct": 9.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2020,6 +2185,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18,
   "rceptNo": "20260331004354",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 11637,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2045,6 +2212,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260311004566",
   "ksicCode": "11209",
+  "reportedAvgManwonRaw": 7344,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2070,6 +2239,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260325000632",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 14648,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2094,6 +2265,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2440,
   "rceptNo": "20260318001276",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 13697,
+  "divergencePct": 11.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2119,6 +2292,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.3,
   "rceptNo": "20260317000785",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 13245,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2144,6 +2319,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.2,
   "rceptNo": "20260316001434",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12415,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2169,6 +2346,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.1,
   "rceptNo": "20260318001111",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 11961,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2193,6 +2372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260331004727",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 9516,
+  "divergencePct": 5.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2218,6 +2399,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260311004487",
   "ksicCode": "47122",
+  "reportedAvgManwonRaw": 6732,
+  "divergencePct": 34.8,
   "flags": [
    "V4-divergence"
   ],
@@ -2245,6 +2428,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2935,
   "rceptNo": "20260318000752",
   "ksicCode": "11122",
+  "reportedAvgManwonRaw": 12399,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2269,6 +2454,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.5,
   "rceptNo": "20260316001108",
   "ksicCode": "19210",
+  "reportedAvgManwonRaw": 14951,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2293,6 +2480,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 5106,
   "rceptNo": "20260327000936",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6823,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2318,6 +2507,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260311003892",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6560,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2343,6 +2534,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260318001448",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 11687,
+  "divergencePct": 7.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2368,6 +2561,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260323000707",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 2264,
+  "divergencePct": 39.7,
   "flags": [
    "V4-divergence"
   ],
@@ -2396,6 +2591,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.1,
   "rceptNo": "20260312001327",
   "ksicCode": "242",
+  "reportedAvgManwonRaw": 9370,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2421,6 +2618,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.9,
   "rceptNo": "20250711000373",
   "ksicCode": "3111",
+  "reportedAvgManwonRaw": 9231,
+  "divergencePct": 5.2,
   "history": [
    {
     "fiscalYear": "2023",
@@ -2441,6 +2640,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.3,
   "rceptNo": "20260323000917",
   "ksicCode": "91249",
+  "reportedAvgManwonRaw": 7476,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2466,6 +2667,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260331000594",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 10582,
+  "divergencePct": 13.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2491,6 +2694,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.1,
   "rceptNo": "20260316000985",
   "ksicCode": "20422",
+  "reportedAvgManwonRaw": 8757,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2516,6 +2721,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260318001435",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 8137,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2541,6 +2748,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.5,
   "rceptNo": "20260331003209",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 11531,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2566,6 +2775,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.1,
   "rceptNo": "20260331003304",
   "ksicCode": "61210",
+  "reportedAvgManwonRaw": 12914,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2590,6 +2801,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13,
   "rceptNo": "20260331003949",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 9308,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2615,6 +2828,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.7,
   "rceptNo": "20260331001900",
   "ksicCode": "205",
+  "reportedAvgManwonRaw": 7815,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2640,6 +2855,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16,
   "rceptNo": "20260318001243",
   "ksicCode": "28121",
+  "reportedAvgManwonRaw": 9528,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2665,6 +2882,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.8,
   "rceptNo": "20260331003585",
   "ksicCode": "65110",
+  "reportedAvgManwonRaw": 11715,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2690,6 +2909,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260401004248",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 21894,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2715,6 +2936,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260316001415",
   "ksicCode": "21100",
+  "reportedAvgManwonRaw": 10816,
+  "divergencePct": 6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2739,6 +2962,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 9088,
   "rceptNo": "20260323001433",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 3553,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2763,6 +2988,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11,
   "rceptNo": "20260331003653",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 11607,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2788,6 +3015,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260309001896",
   "ksicCode": "20411",
+  "reportedAvgManwonRaw": 8398,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2813,6 +3042,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260331003871",
   "ksicCode": "20494",
+  "reportedAvgManwonRaw": 9304,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2838,6 +3069,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260316001009",
   "ksicCode": "471",
+  "reportedAvgManwonRaw": 4611,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2863,6 +3096,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260316000827",
   "ksicCode": "192",
+  "reportedAvgManwonRaw": 14609,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2888,6 +3123,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319000895",
   "ksicCode": "4632",
+  "reportedAvgManwonRaw": 3690,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2913,6 +3150,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16,
   "rceptNo": "20260311004049",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 14639,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2938,6 +3177,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260318001372",
   "ksicCode": "29162",
+  "reportedAvgManwonRaw": 10967,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -2962,6 +3203,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3027,
   "rceptNo": "20260331003916",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 13167,
+  "divergencePct": 35.9,
   "flags": [
    "V4-divergence"
   ],
@@ -2990,6 +3233,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260316000940",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 13109,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3014,6 +3259,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.3,
   "rceptNo": "20260331003093",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 9466,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3039,6 +3286,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.6,
   "rceptNo": "20260319000495",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 9084,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3063,6 +3312,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2497,
   "rceptNo": "20250418000372",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 10152,
+  "divergencePct": 8.7,
   "history": [
    {
     "fiscalYear": "2023",
@@ -3083,6 +3334,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.7,
   "rceptNo": "20260317000554",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 11974,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3107,6 +3360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.4,
   "rceptNo": "20260331002847",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 8925,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3131,6 +3386,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.3,
   "rceptNo": "20260330000716",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 8685,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3156,6 +3413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260318001001",
   "ksicCode": "759",
+  "reportedAvgManwonRaw": 3337,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3180,6 +3439,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.8,
   "rceptNo": "20260331003348",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 9487,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3205,6 +3466,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318001205",
   "ksicCode": "5299",
+  "reportedAvgManwonRaw": 11499,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3230,6 +3493,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260312000826",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 8701,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3254,6 +3519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3105,
   "rceptNo": "20260318001469",
   "ksicCode": "602",
+  "reportedAvgManwonRaw": 8376,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3278,6 +3545,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260318001032",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 12535,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3301,6 +3570,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1746,
   "rceptNo": "20260316001131",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 14704,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3325,6 +3596,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2054,
   "rceptNo": "20260813001726",
   "ksicCode": "24213",
+  "reportedAvgManwonRaw": 12159,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3349,6 +3622,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.1,
   "rceptNo": "20260331004279",
   "ksicCode": "3511",
+  "reportedAvgManwonRaw": 9689,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3374,6 +3649,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260318001314",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 7721,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3399,6 +3676,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260312000253",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 13638,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3423,6 +3702,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2118,
   "rceptNo": "20260515002689",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 12893,
+  "divergencePct": 13.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3448,6 +3729,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.9,
   "rceptNo": "20260316001555",
   "ksicCode": "2222",
+  "reportedAvgManwonRaw": 8666,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3473,6 +3756,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260316001039",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 8781,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3497,6 +3782,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3614,
   "rceptNo": "20260319000705",
   "ksicCode": "72129",
+  "reportedAvgManwonRaw": 6602,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3522,6 +3809,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260318001444",
   "ksicCode": "50112",
+  "reportedAvgManwonRaw": 13114,
+  "divergencePct": 7.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3547,6 +3836,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260430001376",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 6949,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3572,6 +3863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260323000945",
   "ksicCode": "26221",
+  "reportedAvgManwonRaw": 13463,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3597,6 +3890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.6,
   "rceptNo": "20260318000645",
   "ksicCode": "29172",
+  "reportedAvgManwonRaw": 10407,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3622,6 +3917,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260313000002",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 8230,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3647,6 +3944,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.4,
   "rceptNo": "20260318001494",
   "ksicCode": "461",
+  "reportedAvgManwonRaw": 14037,
+  "divergencePct": 6.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3672,6 +3971,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260318001439",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 7280,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3697,6 +3998,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.1,
   "rceptNo": "20260319000066",
   "ksicCode": "52939",
+  "reportedAvgManwonRaw": 6550,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3721,6 +4024,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2912,
   "rceptNo": "20260316001627",
   "ksicCode": "72121",
+  "reportedAvgManwonRaw": 7577,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3746,6 +4051,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.4,
   "rceptNo": "20260330001220",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 14341,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3770,6 +4077,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1806,
   "rceptNo": "20260318000884",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 12498,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3795,6 +4104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13,
   "rceptNo": "20260326001003",
   "ksicCode": "72129",
+  "reportedAvgManwonRaw": 9205,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3819,6 +4130,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3776,
   "rceptNo": "20260311004061",
   "ksicCode": "47320",
+  "reportedAvgManwonRaw": 5867,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3843,6 +4156,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2153,
   "rceptNo": "20260312001236",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 10000,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3868,6 +4183,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260601001661",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 9322,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3892,6 +4209,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2382,
   "rceptNo": "20260320001130",
   "ksicCode": "21212",
+  "reportedAvgManwonRaw": 8640,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3917,6 +4236,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260417000431",
   "ksicCode": "72129",
+  "reportedAvgManwonRaw": 9986,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3942,6 +4263,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260318001514",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 8153,
+  "divergencePct": 6.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -3966,6 +4289,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260318001407",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 13015,
+  "divergencePct": 44.2,
   "flags": [
    "V4-divergence"
   ],
@@ -3994,6 +4319,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260320001032",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 13065,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4019,6 +4346,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.4,
   "rceptNo": "20260311004548",
   "ksicCode": "2050",
+  "reportedAvgManwonRaw": 7756,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4044,6 +4373,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260318000996",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 10652,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4069,6 +4400,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260318001288",
   "ksicCode": "423",
+  "reportedAvgManwonRaw": 3006,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4094,6 +4427,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260323000639",
   "ksicCode": "65122",
+  "reportedAvgManwonRaw": 11999,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4113,6 +4448,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260317000719",
   "ksicCode": "2830",
+  "reportedAvgManwonRaw": 8625,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4138,6 +4475,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260318000946",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 8168,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4161,6 +4500,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1986,
   "rceptNo": "20260331003713",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 11447,
+  "divergencePct": 21.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4185,6 +4526,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1432,
   "rceptNo": "20260319000718",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 13016,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4209,6 +4552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2304,
   "rceptNo": "20260318001376",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7958,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4234,6 +4579,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260318000829",
   "ksicCode": "47122",
+  "reportedAvgManwonRaw": 7047,
+  "divergencePct": 18.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4258,6 +4605,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2981,
   "rceptNo": "20260331003297",
   "ksicCode": "27191",
+  "reportedAvgManwonRaw": 6456,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4283,6 +4632,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260310002959",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 12724,
+  "divergencePct": 5.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4308,6 +4659,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260313000652",
   "ksicCode": "35300",
+  "reportedAvgManwonRaw": 8693,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4333,6 +4686,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260313000519",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 8765,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4358,6 +4713,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260318000621",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5202,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4383,6 +4740,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260317000641",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5998,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4407,6 +4766,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3273,
   "rceptNo": "20260323001556",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 5288,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4432,6 +4793,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260318001316",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7308,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4456,6 +4819,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3025,
   "rceptNo": "20260318001082",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5630,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4480,6 +4845,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260330001631",
   "ksicCode": "63",
+  "reportedAvgManwonRaw": 25411,
+  "divergencePct": 4.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4505,6 +4872,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.2,
   "rceptNo": "20260319000606",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8058,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4530,6 +4899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318001066",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5316,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4555,6 +4926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260318000936",
   "ksicCode": "561",
+  "reportedAvgManwonRaw": 5059,
+  "divergencePct": 33.2,
   "flags": [
    "V4-divergence"
   ],
@@ -4583,6 +4956,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260318001268",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 10351,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4608,6 +4983,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.2,
   "rceptNo": "20260311004423",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 9263,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4633,6 +5010,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260319001065",
   "ksicCode": "104",
+  "reportedAvgManwonRaw": 8376,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4658,6 +5037,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260319000629",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4965,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4683,6 +5064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.5,
   "rceptNo": "20260313000943",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 9834,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4708,6 +5091,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260318001249",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 8958,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4733,6 +5118,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260313000818",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 6347,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4757,6 +5144,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260327001072",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 11553,
+  "divergencePct": 28.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4781,6 +5170,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1190,
   "rceptNo": "20260317000838",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 14267,
+  "divergencePct": 8.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4806,6 +5197,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20250314001622",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 8427,
+  "divergencePct": 10,
   "history": [
    {
     "fiscalYear": "2023",
@@ -4826,6 +5219,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260319000948",
   "ksicCode": "2311",
+  "reportedAvgManwonRaw": 7321,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4851,6 +5246,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260319001097",
   "ksicCode": "50112",
+  "reportedAvgManwonRaw": 11260,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4875,6 +5272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1284,
   "rceptNo": "20260319001105",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 11596,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4900,6 +5299,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260325001239",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 8040,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4925,6 +5326,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260317000550",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 15212,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4949,6 +5352,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1714,
   "rceptNo": "20260319000472",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 9032,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4974,6 +5379,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260608000239",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 10331,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -4999,6 +5406,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.2,
   "rceptNo": "20260319000729",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8067,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5024,6 +5433,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260318000705",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 8458,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5048,6 +5459,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 2564,
   "rceptNo": "20260318000871",
   "ksicCode": "1012",
+  "reportedAvgManwonRaw": 5439,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5073,6 +5486,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.6,
   "rceptNo": "20260313001328",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 8002,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5098,6 +5513,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260318001528",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7720,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5121,6 +5538,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1870,
   "rceptNo": "20260331003116",
   "ksicCode": "4791",
+  "reportedAvgManwonRaw": 7437,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5141,6 +5560,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260318001308",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 9769,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5165,6 +5586,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260327000997",
   "ksicCode": "4791",
+  "reportedAvgManwonRaw": 4766,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5190,6 +5613,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260319001194",
   "ksicCode": "72111",
+  "reportedAvgManwonRaw": 6918,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5214,6 +5639,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1368,
   "rceptNo": "20260323000847",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 9849,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5239,6 +5666,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001681",
   "ksicCode": "72121",
+  "reportedAvgManwonRaw": 7079,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5264,6 +5693,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.6,
   "rceptNo": "20260318001526",
   "ksicCode": "104",
+  "reportedAvgManwonRaw": 6831,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5288,6 +5719,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1685,
   "rceptNo": "20260318001313",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7886,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5312,7 +5745,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1060,
   "avgTenureYears": 11.7,
   "rceptNo": "20260316001204",
-  "ksicCode": "264"
+  "ksicCode": "264",
+  "reportedAvgManwonRaw": 12252,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "01135941",
@@ -5326,6 +5761,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260316001453",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 8562,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5350,7 +5787,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 919,
   "avgTenureYears": 4.2,
   "rceptNo": "20251023000250",
-  "ksicCode": "64992"
+  "ksicCode": "64992",
+  "reportedAvgManwonRaw": 13869,
+  "divergencePct": 0
  },
  {
   "corpCode": "00132637",
@@ -5364,6 +5803,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.1,
   "rceptNo": "20260514000698",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 7389,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5388,6 +5829,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1505,
   "rceptNo": "20260320001410",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 8138,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5413,6 +5856,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260318001320",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 8031,
+  "divergencePct": 5.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5438,6 +5883,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260319001167",
   "ksicCode": "46431",
+  "reportedAvgManwonRaw": 5565,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5461,6 +5908,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1177,
   "rceptNo": "20260331001760",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 10777,
+  "divergencePct": 3.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5485,6 +5934,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1565,
   "rceptNo": "20260318000694",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 8341,
+  "divergencePct": 7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5509,6 +5960,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1563,
   "rceptNo": "20260313001074",
   "ksicCode": "14112",
+  "reportedAvgManwonRaw": 7715,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5534,6 +5987,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260319000264",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 8264,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5559,6 +6014,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260319001270",
   "ksicCode": "91249",
+  "reportedAvgManwonRaw": 8025,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5583,6 +6040,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1645,
   "rceptNo": "20260709000536",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7206,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5608,6 +6067,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260318001398",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7731,
+  "divergencePct": 10.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5633,6 +6094,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260311004398",
   "ksicCode": "47859",
+  "reportedAvgManwonRaw": 5936,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5657,6 +6120,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1226,
   "rceptNo": "20260318000997",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9441,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5681,6 +6146,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260312000533",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 10956,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5706,6 +6173,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.7,
   "rceptNo": "20260608000223",
   "ksicCode": "91249",
+  "reportedAvgManwonRaw": 6441,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5731,6 +6200,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260318001570",
   "ksicCode": "28520",
+  "reportedAvgManwonRaw": 6637,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5756,6 +6227,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260602000456",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 10109,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5781,6 +6254,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260331000566",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 8992,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5806,6 +6281,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.8,
   "rceptNo": "20260814002211",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 11975,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5830,6 +6307,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1354,
   "rceptNo": "20260318001527",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 7944,
+  "divergencePct": 3.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5855,6 +6334,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.9,
   "rceptNo": "20260331004655",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 10162,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5880,6 +6361,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260317000766",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 7912,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5904,6 +6387,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1282,
   "rceptNo": "20260312001366",
   "ksicCode": "66199",
+  "reportedAvgManwonRaw": 9317,
+  "divergencePct": 8.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5929,6 +6414,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.3,
   "rceptNo": "20260318001250",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 11500,
+  "divergencePct": 11.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5954,6 +6441,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260312000976",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 10182,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -5979,6 +6468,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260318001198",
   "ksicCode": "62022",
+  "reportedAvgManwonRaw": 6103,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6003,6 +6494,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1027,
   "rceptNo": "20260310002967",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 11113,
+  "divergencePct": 5.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6028,6 +6521,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260316001427",
   "ksicCode": "49309",
+  "reportedAvgManwonRaw": 6469,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6052,6 +6547,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1198,
   "rceptNo": "20260317000824",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 9007,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6077,6 +6574,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318001080",
   "ksicCode": "102",
+  "reportedAvgManwonRaw": 4738,
+  "divergencePct": 26.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6102,6 +6601,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.3,
   "rceptNo": "20260318001585",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 8620,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6126,6 +6627,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1405,
   "rceptNo": "20260731000505",
   "ksicCode": "72111",
+  "reportedAvgManwonRaw": 7574,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6151,6 +6654,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260318001432",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 11946,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6176,6 +6681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260602000343",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6798,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6201,6 +6708,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260316001567",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 9344,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6226,6 +6735,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260319001235",
   "ksicCode": "104",
+  "reportedAvgManwonRaw": 6427,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6251,6 +6762,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318000876",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 13503,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6276,6 +6789,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.4,
   "rceptNo": "20260316001588",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 9214,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6301,6 +6816,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260318001112",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 6651,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6326,6 +6843,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260312001285",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 6533,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6351,6 +6870,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.6,
   "rceptNo": "20260609000080",
   "ksicCode": "851",
+  "reportedAvgManwonRaw": 4430,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6375,6 +6896,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1924,
   "rceptNo": "20260814000818",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 6043,
+  "divergencePct": 11.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6400,6 +6923,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260316001238",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 7849,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6425,6 +6950,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260318001135",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 8192,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6450,6 +6977,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260316000884",
   "ksicCode": "76110",
+  "reportedAvgManwonRaw": 7747,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6475,6 +7004,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260318001418",
   "ksicCode": "28302",
+  "reportedAvgManwonRaw": 7328,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6500,6 +7031,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001196",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 7349,
+  "divergencePct": 15.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6525,6 +7058,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260316001362",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 8290,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6550,6 +7085,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.1,
   "rceptNo": "20260331004234",
   "ksicCode": "65110",
+  "reportedAvgManwonRaw": 10726,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6575,6 +7112,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260318001574",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8692,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6599,6 +7138,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1120,
   "rceptNo": "20260316001377",
   "ksicCode": "72111",
+  "reportedAvgManwonRaw": 8641,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6624,6 +7165,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260331004266",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 7655,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6648,6 +7191,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 741,
   "rceptNo": "20260318000844",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 12484,
+  "divergencePct": 3.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6673,6 +7218,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260312000938",
   "ksicCode": "2812",
+  "reportedAvgManwonRaw": 8476,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6698,6 +7245,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260310003051",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 10112,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6722,6 +7271,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1063,
   "rceptNo": "20260326000509",
   "ksicCode": "3111",
+  "reportedAvgManwonRaw": 9249,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6746,6 +7297,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 838,
   "rceptNo": "20260316000883",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 11298,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6771,6 +7324,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260323000235",
   "ksicCode": "30331",
+  "reportedAvgManwonRaw": 7110,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6796,6 +7351,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.5,
   "rceptNo": "20260316000461",
   "ksicCode": "30391",
+  "reportedAvgManwonRaw": 9193,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6820,6 +7377,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 881,
   "rceptNo": "20260312000794",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 10577,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6845,6 +7404,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260318001552",
   "ksicCode": "29210",
+  "reportedAvgManwonRaw": 8379,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6870,6 +7431,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260320000868",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 7386,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6894,6 +7457,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 832,
   "rceptNo": "20260319001224",
   "ksicCode": "60210",
+  "reportedAvgManwonRaw": 11770,
+  "divergencePct": 7.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6918,6 +7483,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 459,
   "rceptNo": "20260318001610",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 19326,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6943,6 +7510,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260312001256",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6763,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6967,6 +7536,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 975,
   "rceptNo": "20260323001119",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 9088,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -6992,6 +7563,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260318000939",
   "ksicCode": "29111",
+  "reportedAvgManwonRaw": 10018,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7015,6 +7588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 727,
   "rceptNo": "20260814002150",
   "ksicCode": "64913",
+  "reportedAvgManwonRaw": 11951,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7040,6 +7615,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260317000736",
   "ksicCode": "511",
+  "reportedAvgManwonRaw": 6474,
+  "divergencePct": 11.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7065,6 +7642,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11,
   "rceptNo": "20260318000787",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7969,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7089,6 +7668,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260331003637",
   "ksicCode": "63999",
+  "reportedAvgManwonRaw": 9440,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7114,6 +7695,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260313001207",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 9293,
+  "divergencePct": 16.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7139,6 +7722,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260323001320",
   "ksicCode": "42311",
+  "reportedAvgManwonRaw": 7070,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7164,6 +7749,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.2,
   "rceptNo": "20260323001257",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 9546,
+  "divergencePct": 26.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7189,6 +7776,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260316001380",
   "ksicCode": "4741",
+  "reportedAvgManwonRaw": 6992,
+  "divergencePct": 10.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7214,6 +7803,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260318001023",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5513,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7239,6 +7830,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.5,
   "rceptNo": "20260721001043",
   "ksicCode": "65110",
+  "reportedAvgManwonRaw": 10939,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7264,6 +7857,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260630000672",
   "ksicCode": "423",
+  "reportedAvgManwonRaw": 7180,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7289,6 +7884,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260318000870",
   "ksicCode": "26292",
+  "reportedAvgManwonRaw": 5285,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7314,6 +7911,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260318001424",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 12107,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7339,6 +7938,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260319001047",
   "ksicCode": "65121",
+  "reportedAvgManwonRaw": 9074,
+  "divergencePct": 18.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7364,6 +7965,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318000849",
   "ksicCode": "85503",
+  "reportedAvgManwonRaw": 5113,
+  "divergencePct": 22.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7389,6 +7992,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.2,
   "rceptNo": "20260305001191",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 9595,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7414,6 +8019,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.8,
   "rceptNo": "20260316000756",
   "ksicCode": "60222",
+  "reportedAvgManwonRaw": 8483,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7439,6 +8046,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260706000279",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 3571,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7464,6 +8073,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318000506",
   "ksicCode": "45120",
+  "reportedAvgManwonRaw": 7298,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7489,6 +8100,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260320000806",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 5458,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7514,6 +8127,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260630001001",
   "ksicCode": "681",
+  "reportedAvgManwonRaw": 4182,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7539,6 +8154,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.8,
   "rceptNo": "20260318000807",
   "ksicCode": "24199",
+  "reportedAvgManwonRaw": 8132,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7564,6 +8181,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260813001480",
   "ksicCode": "46713",
+  "reportedAvgManwonRaw": 12279,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7589,6 +8208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260319001284",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 8809,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7614,6 +8235,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260320000475",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 12750,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7639,6 +8262,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.2,
   "rceptNo": "20260318000473",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6689,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7664,6 +8289,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260318001573",
   "ksicCode": "21220",
+  "reportedAvgManwonRaw": 7837,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7689,6 +8316,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20250829000681",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 12216,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7714,6 +8343,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260320000802",
   "ksicCode": "592",
+  "reportedAvgManwonRaw": 9331,
+  "divergencePct": 4.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7739,6 +8370,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260316000819",
   "ksicCode": "47919",
+  "reportedAvgManwonRaw": 7688,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7764,6 +8397,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.5,
   "rceptNo": "20260311004517",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 14739,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7789,6 +8424,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.1,
   "rceptNo": "20260323000690",
   "ksicCode": "29111",
+  "reportedAvgManwonRaw": 8547,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7813,6 +8450,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 822,
   "rceptNo": "20260319000422",
   "ksicCode": "2130",
+  "reportedAvgManwonRaw": 9501,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7838,6 +8477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260331003834",
   "ksicCode": "65200",
+  "reportedAvgManwonRaw": 17650,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7863,6 +8504,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260318001226",
   "ksicCode": "29210",
+  "reportedAvgManwonRaw": 7677,
+  "divergencePct": 5.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7888,6 +8531,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260323001584",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 8741,
+  "divergencePct": 8.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7912,6 +8557,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 904,
   "rceptNo": "20260318001525",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 8915,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7936,6 +8583,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 677,
   "rceptNo": "20260318000182",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 11701,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7961,6 +8610,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.7,
   "rceptNo": "20260317000660",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8876,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -7986,6 +8637,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260316001332",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7720,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8010,6 +8663,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1370,
   "rceptNo": "20260323001134",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5650,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8035,6 +8690,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260312001146",
   "ksicCode": "205",
+  "reportedAvgManwonRaw": 7713,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8059,6 +8716,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 982,
   "rceptNo": "20260317000899",
   "ksicCode": "63112",
+  "reportedAvgManwonRaw": 7681,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8083,6 +8742,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1129,
   "rceptNo": "20260313000936",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6784,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8108,6 +8769,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260319001024",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 9176,
+  "divergencePct": 27.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8133,6 +8796,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260331004951",
   "ksicCode": "64911",
+  "reportedAvgManwonRaw": 11818,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8158,6 +8823,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260318000762",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7804,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8183,6 +8850,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260318001622",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 6144,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8207,6 +8876,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 763,
   "rceptNo": "20260413002635",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 8943,
+  "divergencePct": 7.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8231,6 +8902,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 733,
   "rceptNo": "20260319001336",
   "ksicCode": "58211",
+  "reportedAvgManwonRaw": 10361,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8256,6 +8929,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260601001924",
   "ksicCode": "14111",
+  "reportedAvgManwonRaw": 8441,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8281,6 +8956,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260319000721",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 8599,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8306,6 +8983,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319001345",
   "ksicCode": "75210",
+  "reportedAvgManwonRaw": 5411,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8331,6 +9010,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260318001626",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6605,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8356,6 +9037,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.4,
   "rceptNo": "20260312000989",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 8983,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8381,6 +9064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260327001110",
   "ksicCode": "759",
+  "reportedAvgManwonRaw": 2432,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8406,6 +9091,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260316000476",
   "ksicCode": "85650",
+  "reportedAvgManwonRaw": 7922,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8431,6 +9118,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318001195",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9712,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8456,6 +9145,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260318001544",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6420,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8481,6 +9172,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260319000865",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5684,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8505,6 +9198,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1328,
   "rceptNo": "20260318000988",
   "ksicCode": "25934",
+  "reportedAvgManwonRaw": 4992,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8530,6 +9225,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260305001586",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 7956,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8555,6 +9252,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260319001055",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 5273,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8580,6 +9279,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260318000900",
   "ksicCode": "106",
+  "reportedAvgManwonRaw": 5193,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8605,6 +9306,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260318001606",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 8990,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8630,6 +9333,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260318001170",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 8742,
+  "divergencePct": 3.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8655,6 +9360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.2,
   "rceptNo": "20260316001338",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 8150,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8680,6 +9387,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318001666",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5540,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8705,6 +9414,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260323000927",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 9613,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8729,6 +9440,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 572,
   "rceptNo": "20260316000923",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 11969,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8754,6 +9467,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260316001512",
   "ksicCode": "7212",
+  "reportedAvgManwonRaw": 11573,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8774,6 +9489,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260318001677",
   "ksicCode": "451",
+  "reportedAvgManwonRaw": 4825,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8798,6 +9515,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 780,
   "rceptNo": "20260312000811",
   "ksicCode": "20411",
+  "reportedAvgManwonRaw": 8325,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8823,6 +9542,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260311004216",
   "ksicCode": "2830",
+  "reportedAvgManwonRaw": 5920,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8847,6 +9568,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 635,
   "rceptNo": "20260323001560",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 10339,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8871,6 +9594,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 784,
   "rceptNo": "20260731000640",
   "ksicCode": "49301",
+  "reportedAvgManwonRaw": 8234,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8896,6 +9621,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260316000872",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6376,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8921,6 +9648,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.2,
   "rceptNo": "20260318001240",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 8383,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8946,6 +9675,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.6,
   "rceptNo": "20260312001127",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 11165,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8971,6 +9702,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.8,
   "rceptNo": "20260318000462",
   "ksicCode": "20411",
+  "reportedAvgManwonRaw": 7104,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -8995,6 +9728,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 754,
   "rceptNo": "20260320001109",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8461,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9020,6 +9755,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.8,
   "rceptNo": "20260602000117",
   "ksicCode": "20499",
+  "reportedAvgManwonRaw": 10465,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9045,6 +9782,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.5,
   "rceptNo": "20260318001470",
   "ksicCode": "30320",
+  "reportedAvgManwonRaw": 10150,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9070,6 +9809,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.5,
   "rceptNo": "20260313001288",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 8778,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9094,6 +9835,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1618,
   "rceptNo": "20260323001667",
   "ksicCode": "423",
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9119,6 +9861,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260319001296",
   "ksicCode": "529",
+  "reportedAvgManwonRaw": 7572,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9144,6 +9888,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260323001636",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5805,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9167,6 +9913,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 638,
   "rceptNo": "20260331004333",
   "ksicCode": "4791",
+  "reportedAvgManwonRaw": 9869,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9192,6 +9940,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260610000400",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 8554,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9217,6 +9967,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.4,
   "rceptNo": "20260317000863",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 8456,
+  "divergencePct": 32.2,
   "flags": [
    "V4-divergence"
   ],
@@ -9245,6 +9997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260318001405",
   "ksicCode": "20422",
+  "reportedAvgManwonRaw": 6726,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9270,6 +10024,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.4,
   "rceptNo": "20260318001323",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 9376,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9294,6 +10050,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 288,
   "rceptNo": "20260403002276",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 21551,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9318,6 +10076,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 954,
   "rceptNo": "20260319001237",
   "ksicCode": "1721",
+  "reportedAvgManwonRaw": 6475,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9343,6 +10103,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20250317000823",
   "ksicCode": "22232",
+  "reportedAvgManwonRaw": 4687,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2023",
@@ -9363,6 +10125,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.2,
   "rceptNo": "20260320000882",
   "ksicCode": "239",
+  "reportedAvgManwonRaw": 9447,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9388,6 +10152,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20250918000334",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 5284,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9413,6 +10179,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260320000611",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7714,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9437,6 +10205,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 813,
   "rceptNo": "20260319001348",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 7853,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9462,6 +10232,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 23.5,
   "rceptNo": "20260318000625",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 12055,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9487,6 +10259,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260323001500",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 7139,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9512,6 +10286,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260319001196",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6699,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9536,6 +10312,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1127,
   "rceptNo": "20260814002696",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5402,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9560,6 +10338,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 838,
   "rceptNo": "20260318001027",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7132,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9584,6 +10364,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260318000691",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 9487,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9604,6 +10386,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 22.6,
   "rceptNo": "20260316000994",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 9411,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9629,6 +10413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260318001337",
   "ksicCode": "762",
+  "reportedAvgManwonRaw": 5967,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9653,6 +10439,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 806,
   "rceptNo": "20260311004333",
   "ksicCode": "4112",
+  "reportedAvgManwonRaw": 7281,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9678,6 +10466,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260319000635",
   "ksicCode": "20312",
+  "reportedAvgManwonRaw": 10053,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9703,6 +10493,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.1,
   "rceptNo": "20260701000444",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 8039,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9727,6 +10519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 344,
   "rceptNo": "20260312000604",
   "ksicCode": "661",
+  "reportedAvgManwonRaw": 17805,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9752,6 +10546,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260317000814",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 8288,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9777,6 +10573,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.3,
   "rceptNo": "20260318001369",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 9243,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9802,6 +10600,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260319001226",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 6933,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9827,6 +10627,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260318000595",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 8432,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9852,6 +10654,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260313000585",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 12887,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9877,6 +10681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260309001785",
   "ksicCode": "32029",
+  "reportedAvgManwonRaw": 5019,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9902,6 +10708,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260320000590",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 5041,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9926,6 +10734,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 879,
   "rceptNo": "20260731000461",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6414,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9951,6 +10761,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260318001197",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 7799,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -9975,6 +10787,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 733,
   "rceptNo": "20260319001233",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 7589,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10000,6 +10814,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260313001351",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 7680,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10025,6 +10841,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260331004398",
   "ksicCode": "76110",
+  "reportedAvgManwonRaw": 8588,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10050,6 +10868,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260318000311",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8500,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10075,6 +10895,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.4,
   "rceptNo": "20260310002923",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 11573,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10100,6 +10922,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260318001421",
   "ksicCode": "85120",
+  "reportedAvgManwonRaw": 4274,
+  "divergencePct": 19.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10125,6 +10949,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260323001516",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6238,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10149,6 +10975,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 786,
   "rceptNo": "20260323001118",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 5739,
+  "divergencePct": 17.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10173,6 +11001,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 782,
   "rceptNo": "20260313001174",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 6892,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10196,6 +11026,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 609,
   "rceptNo": "20260327000262",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 9512,
+  "divergencePct": 8.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10215,6 +11047,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 765,
   "rceptNo": "20260317000781",
   "ksicCode": "59201",
+  "reportedAvgManwonRaw": 7013,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10239,6 +11073,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1056,
   "rceptNo": "20260625000299",
   "ksicCode": "5811",
+  "reportedAvgManwonRaw": 5045,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10264,6 +11100,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260320000821",
   "ksicCode": "29176",
+  "reportedAvgManwonRaw": 8211,
+  "divergencePct": 6.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10289,6 +11127,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260316000483",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 6873,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10314,6 +11154,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260316001287",
   "ksicCode": "32029",
+  "reportedAvgManwonRaw": 6833,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10339,6 +11181,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318001657",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 5566,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10364,6 +11208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.3,
   "rceptNo": "20260320001046",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7548,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10389,6 +11235,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260313000957",
   "ksicCode": "64911",
+  "reportedAvgManwonRaw": 9792,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10413,6 +11261,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 709,
   "rceptNo": "20260318001264",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 7858,
+  "divergencePct": 7.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10437,6 +11287,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 646,
   "rceptNo": "20260318001512",
   "ksicCode": "14111",
+  "reportedAvgManwonRaw": 7980,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10462,6 +11314,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318001114",
   "ksicCode": "59141",
+  "reportedAvgManwonRaw": 5658,
+  "divergencePct": 349.7,
   "flags": [
    "V4-divergence"
   ],
@@ -10490,6 +11344,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.1,
   "rceptNo": "20260318001187",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8241,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10514,6 +11370,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 644,
   "rceptNo": "20260320001208",
   "ksicCode": "23322",
+  "reportedAvgManwonRaw": 8002,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10538,6 +11396,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 1081,
   "rceptNo": "20260319000832",
   "ksicCode": "75210",
+  "reportedAvgManwonRaw": 4728,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10563,6 +11423,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318001283",
   "ksicCode": "10211",
+  "reportedAvgManwonRaw": 5372,
+  "divergencePct": 13.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10588,6 +11450,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260814002718",
   "ksicCode": "14112",
+  "reportedAvgManwonRaw": 6186,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10612,6 +11476,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 737,
   "rceptNo": "20260312001230",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6531,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10636,6 +11502,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 716,
   "rceptNo": "20260318000074",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 6877,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10660,6 +11528,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 671,
   "rceptNo": "20260312001200",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7532,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10685,6 +11555,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260318001705",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 7964,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10710,6 +11582,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.9,
   "rceptNo": "20260323000529",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 9973,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10735,6 +11609,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.7,
   "rceptNo": "20260316001034",
   "ksicCode": "22231",
+  "reportedAvgManwonRaw": 7627,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10759,6 +11635,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 833,
   "rceptNo": "20260316000837",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6024,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10783,6 +11661,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 632,
   "rceptNo": "20260608000293",
   "ksicCode": "16212",
+  "reportedAvgManwonRaw": 7877,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10807,6 +11687,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 876,
   "rceptNo": "20260401003696",
   "ksicCode": "27191",
+  "reportedAvgManwonRaw": 5681,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10832,6 +11714,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.1,
   "rceptNo": "20260331001759",
   "ksicCode": "41225",
+  "reportedAvgManwonRaw": 9925,
+  "divergencePct": 5.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10857,6 +11741,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260311004607",
   "ksicCode": "855",
+  "reportedAvgManwonRaw": 5074,
+  "divergencePct": 21.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10882,6 +11768,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.8,
   "rceptNo": "20260318001221",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 6476,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10907,6 +11795,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001480",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 5308,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10932,6 +11822,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260316001043",
   "ksicCode": "4112",
+  "reportedAvgManwonRaw": 7962,
+  "divergencePct": 6.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10957,6 +11849,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260319000032",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6294,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -10982,6 +11876,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.7,
   "rceptNo": "20260323001599",
   "ksicCode": "301",
+  "reportedAvgManwonRaw": 8537,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11007,6 +11903,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260319001223",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6442,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11031,7 +11929,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 559,
   "avgTenureYears": 9.7,
   "rceptNo": "20260323000620",
-  "ksicCode": "3111"
+  "ksicCode": "3111",
+  "reportedAvgManwonRaw": 8308,
+  "divergencePct": 4.2
  },
  {
   "corpCode": "00141307",
@@ -11044,6 +11944,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 781,
   "rceptNo": "20260317000753",
   "ksicCode": "24213",
+  "reportedAvgManwonRaw": 6389,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11068,6 +11970,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 412,
   "rceptNo": "20260318000623",
   "ksicCode": "4610",
+  "reportedAvgManwonRaw": 11720,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11093,6 +11997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260318001381",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 7790,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11117,6 +12023,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 334,
   "rceptNo": "20260319001298",
   "ksicCode": "46713",
+  "reportedAvgManwonRaw": 14370,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11142,6 +12050,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260323001555",
   "ksicCode": "46",
+  "reportedAvgManwonRaw": 5991,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11167,6 +12077,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260323000996",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 6358,
+  "divergencePct": 8.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11192,6 +12104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.6,
   "rceptNo": "20260319000486",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 8007,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11217,6 +12131,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319001242",
   "ksicCode": "461",
+  "reportedAvgManwonRaw": 8503,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11241,6 +12157,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 551,
   "rceptNo": "20260318001359",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 8564,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11266,6 +12184,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260319001272",
   "ksicCode": "2512",
+  "reportedAvgManwonRaw": 5602,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11291,6 +12211,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001383",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6205,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11315,6 +12237,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 604,
   "rceptNo": "20260313001193",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 7733,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11340,6 +12264,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260318001663",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5481,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11365,6 +12291,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260318001310",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 9533,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11389,6 +12317,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 410,
   "rceptNo": "20260316001520",
   "ksicCode": "411",
+  "divergencePct": 24.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11409,6 +12338,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260319001310",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 5263,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11434,6 +12365,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.8,
   "rceptNo": "20260310002974",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 7180,
+  "divergencePct": 8.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11458,6 +12391,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 985,
   "rceptNo": "20260318000738",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 4707,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11483,6 +12418,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 22.2,
   "rceptNo": "20260219002256",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8801,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11507,6 +12444,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 619,
   "rceptNo": "20260319001249",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 7514,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11532,6 +12471,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260313000415",
   "ksicCode": "2927",
+  "reportedAvgManwonRaw": 6462,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11557,6 +12498,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260319001406",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 7384,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11582,6 +12525,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260323001573",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7176,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11607,6 +12552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260318001361",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6190,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11632,6 +12579,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260316001374",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 9624,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11657,6 +12606,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260317000684",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 10640,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11682,6 +12633,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319001199",
   "ksicCode": "23222",
+  "reportedAvgManwonRaw": 6226,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11707,6 +12660,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20260320001049",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7265,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11732,6 +12687,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260318000323",
   "ksicCode": "29229",
+  "reportedAvgManwonRaw": 9266,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11757,6 +12714,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.9,
   "rceptNo": "20260323000719",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8303,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11782,6 +12741,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260323001146",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7124,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11806,6 +12767,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 628,
   "rceptNo": "20260323000486",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 6708,
+  "divergencePct": 5.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11831,6 +12794,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260319000853",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 8872,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11856,6 +12821,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260319000796",
   "ksicCode": "2321",
+  "reportedAvgManwonRaw": 6899,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11881,6 +12848,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260318000932",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 5852,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11905,6 +12874,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 588,
   "rceptNo": "20260814000768",
   "ksicCode": "422",
+  "reportedAvgManwonRaw": 7467,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11930,6 +12901,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260602000398",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 7122,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11955,6 +12928,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260318001186",
   "ksicCode": "76320",
+  "reportedAvgManwonRaw": 7210,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -11979,6 +12954,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 626,
   "rceptNo": "20260312000801",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6932,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12004,6 +12981,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318001659",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 9023,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12029,6 +13008,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260324000013",
   "ksicCode": "4112",
+  "reportedAvgManwonRaw": 7619,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12053,6 +13034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 496,
   "rceptNo": "20260318001519",
   "ksicCode": "59201",
+  "reportedAvgManwonRaw": 9634,
+  "divergencePct": 11.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12078,6 +13061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260318000720",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6789,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12103,6 +13088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260316001619",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 15427,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12127,6 +13114,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 723,
   "rceptNo": "20260630000845",
   "ksicCode": "423",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12151,6 +13139,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 571,
   "rceptNo": "20260318001475",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 7504,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12176,6 +13166,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260316000534",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 6640,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12201,6 +13193,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260602000342",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 9212,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12226,6 +13220,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.4,
   "rceptNo": "20260313001090",
   "ksicCode": "22232",
+  "reportedAvgManwonRaw": 8043,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12249,7 +13245,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 7908,
   "employeeCount": 532,
   "rceptNo": "20260325001031",
-  "ksicCode": "21212"
+  "ksicCode": "21212",
+  "reportedAvgManwonRaw": 7868,
+  "divergencePct": 0.5
  },
  {
   "corpCode": "00245472",
@@ -12262,6 +13260,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 471,
   "rceptNo": "20260310002891",
   "ksicCode": "23999",
+  "reportedAvgManwonRaw": 8912,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12287,6 +13287,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260323000279",
   "ksicCode": "24121",
+  "reportedAvgManwonRaw": 7244,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12312,6 +13314,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260318001625",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6777,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12337,6 +13341,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260323001001",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 7411,
+  "divergencePct": 12.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12362,6 +13368,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.5,
   "rceptNo": "20260316001269",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 9359,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12387,6 +13395,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260515000077",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5266,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12411,6 +13421,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 529,
   "rceptNo": "20260318001401",
   "ksicCode": "50112",
+  "divergencePct": 90,
   "flags": [
    "V4-divergence"
   ],
@@ -12439,6 +13450,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260319001054",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 6294,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12464,6 +13477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11,
   "rceptNo": "20260318001410",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 9284,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12488,6 +13503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 576,
   "rceptNo": "20260323001544",
   "ksicCode": "6201",
+  "reportedAvgManwonRaw": 7178,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12513,6 +13530,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260406004277",
   "ksicCode": "3131",
+  "reportedAvgManwonRaw": 8004,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12538,6 +13557,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260316001273",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6268,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12563,6 +13584,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260313001168",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4733,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12588,6 +13611,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260318001064",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 6713,
+  "divergencePct": 8.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12613,6 +13638,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260320000349",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6468,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12637,6 +13664,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 582,
   "rceptNo": "20260323001365",
   "ksicCode": "49220",
+  "reportedAvgManwonRaw": 6719,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12662,6 +13691,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260318001406",
   "ksicCode": "23322",
+  "reportedAvgManwonRaw": 8310,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12687,6 +13718,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260316001149",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 11408,
+  "divergencePct": 9.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12712,6 +13745,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.8,
   "rceptNo": "20250317000892",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 10588,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2023",
@@ -12732,6 +13767,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260318001296",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 4859,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12757,6 +13794,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260311004416",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8509,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12782,6 +13821,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260323001247",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7417,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12806,6 +13847,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 627,
   "rceptNo": "20260318001400",
   "ksicCode": "20411",
+  "reportedAvgManwonRaw": 6217,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12830,6 +13873,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 806,
   "rceptNo": "20260316001381",
   "ksicCode": "73909",
+  "reportedAvgManwonRaw": 4894,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12854,6 +13899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 480,
   "rceptNo": "20260316000708",
   "ksicCode": "64121",
+  "reportedAvgManwonRaw": 8208,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12879,6 +13926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260313001124",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4938,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12904,6 +13953,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260323000403",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 7500,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12929,6 +13980,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260316000390",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6563,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12954,6 +14007,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260323001005",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6234,
+  "divergencePct": 9.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -12979,6 +14034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 23.8,
   "rceptNo": "20260629000189",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7199,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13004,6 +14061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260312001217",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 7846,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13029,6 +14088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260316000969",
   "ksicCode": "28302",
+  "reportedAvgManwonRaw": 7703,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13053,6 +14114,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 540,
   "rceptNo": "20260318001036",
   "ksicCode": "2219",
+  "reportedAvgManwonRaw": 7129,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13077,6 +14140,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 526,
   "rceptNo": "20260319001288",
   "ksicCode": "29141",
+  "reportedAvgManwonRaw": 5993,
+  "divergencePct": 17.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13102,6 +14167,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260417000596",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8034,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13127,6 +14194,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260319001346",
   "ksicCode": "58219",
+  "reportedAvgManwonRaw": 7267,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13152,6 +14221,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260608000442",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 5984,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13177,6 +14248,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260320000233",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 7257,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13201,6 +14274,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 383,
   "rceptNo": "20260724000595",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 9864,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13226,6 +14301,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260318000593",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 7972,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13251,6 +14328,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260318000934",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5764,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13276,6 +14355,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260311003661",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 7184,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13301,6 +14382,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260320001014",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5304,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13326,6 +14409,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.4,
   "rceptNo": "20250618000195",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6999,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13350,6 +14435,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 587,
   "rceptNo": "20260731000261",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6365,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13375,6 +14462,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260318001305",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 8774,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13400,6 +14489,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260318000451",
   "ksicCode": "20121",
+  "reportedAvgManwonRaw": 6981,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13424,6 +14515,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 373,
   "rceptNo": "20260318001593",
   "ksicCode": "60229",
+  "reportedAvgManwonRaw": 10172,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13449,6 +14542,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260317000717",
   "ksicCode": "75993",
+  "reportedAvgManwonRaw": 4441,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13473,6 +14568,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 310,
   "rceptNo": "20260319001212",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 11721,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13498,6 +14595,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260319001417",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 6855,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13523,6 +14622,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260317000731",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 8114,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13547,6 +14648,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 533,
   "rceptNo": "20260318001214",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6898,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13571,6 +14674,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 715,
   "rceptNo": "20260323000930",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 4915,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13590,6 +14695,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 195,
   "rceptNo": "20260318001025",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 17958,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13615,6 +14722,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260325001187",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 7107,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13640,6 +14749,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260323001547",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6534,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13664,6 +14775,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 489,
   "rceptNo": "20260320001158",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 7266,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13689,6 +14802,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260320001337",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 7069,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13714,6 +14829,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260323001610",
   "ksicCode": "59201",
+  "reportedAvgManwonRaw": 6096,
+  "divergencePct": 24.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13739,6 +14856,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.1,
   "rceptNo": "20260323001493",
   "ksicCode": "30310",
+  "reportedAvgManwonRaw": 6339,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13764,6 +14883,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.6,
   "rceptNo": "20260323001569",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 6989,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13789,6 +14910,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.4,
   "rceptNo": "20260319000141",
   "ksicCode": "2321",
+  "reportedAvgManwonRaw": 7359,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13814,6 +14937,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260317000831",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 8763,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13839,6 +14964,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260319000837",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 10051,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13863,6 +14990,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 457,
   "rceptNo": "20260320001314",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7636,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13887,6 +15016,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 383,
   "rceptNo": "20260318001167",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 9087,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13912,6 +15043,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 22.2,
   "rceptNo": "20260319001021",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 10579,
+  "divergencePct": 8.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13936,6 +15069,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 466,
   "rceptNo": "20260319001225",
   "ksicCode": "49301",
+  "reportedAvgManwonRaw": 7436,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13961,6 +15096,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260317000470",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6912,
+  "divergencePct": 15.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -13985,6 +15122,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 195,
   "rceptNo": "20260318000826",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 17803,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14010,6 +15149,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001541",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 6513,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14034,6 +15175,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 589,
   "rceptNo": "20260623000173",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5811,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14059,6 +15202,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260318001459",
   "ksicCode": "14199",
+  "reportedAvgManwonRaw": 7557,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14084,6 +15229,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318000986",
   "ksicCode": "102",
+  "reportedAvgManwonRaw": 6821,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14109,6 +15256,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260318000780",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 8207,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14133,6 +15282,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 486,
   "rceptNo": "20260323001685",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 7022,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14157,6 +15308,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 404,
   "rceptNo": "20260319001278",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 8440,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14182,6 +15335,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260323001680",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 11142,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14207,6 +15362,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260318001002",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 11824,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14232,6 +15389,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260715000540",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7206,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14257,6 +15416,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260324000742",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6698,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14282,6 +15443,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260323000826",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 5786,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14307,6 +15470,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260311003981",
   "ksicCode": "551",
+  "reportedAvgManwonRaw": 4791,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14332,6 +15497,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.2,
   "rceptNo": "20260319000605",
   "ksicCode": "75210",
+  "reportedAvgManwonRaw": 5612,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14356,6 +15523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 672,
   "rceptNo": "20260318001456",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4993,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14380,6 +15549,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 516,
   "rceptNo": "20260323001605",
   "ksicCode": "66202",
+  "reportedAvgManwonRaw": 6539,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14405,6 +15576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260311004024",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 6484,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14430,6 +15603,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260702000296",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6149,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14455,6 +15630,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260316001310",
   "ksicCode": "49301",
+  "reportedAvgManwonRaw": 6388,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14480,6 +15657,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260319000395",
   "ksicCode": "20132",
+  "reportedAvgManwonRaw": 7065,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14505,6 +15684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260312001132",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 11881,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14530,6 +15711,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260312000804",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7015,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14555,6 +15738,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260316001261",
   "ksicCode": "72911",
+  "reportedAvgManwonRaw": 6346,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14579,6 +15764,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 337,
   "rceptNo": "20260813001221",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9818,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14604,6 +15791,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.2,
   "rceptNo": "20260319000580",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 6074,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14629,6 +15818,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318000773",
   "ksicCode": "7011",
+  "reportedAvgManwonRaw": 10900,
+  "divergencePct": 9.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14654,6 +15845,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260323001645",
   "ksicCode": "20411",
+  "reportedAvgManwonRaw": 6200,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14679,6 +15872,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20250619000193",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 5468,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14703,6 +15898,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 269,
   "rceptNo": "20260330001754",
   "ksicCode": "64911",
+  "reportedAvgManwonRaw": 12112,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14727,6 +15924,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 403,
   "rceptNo": "20260317000864",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8064,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14751,6 +15950,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 321,
   "rceptNo": "20260814002240",
   "ksicCode": "424",
+  "reportedAvgManwonRaw": 10052,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14776,6 +15977,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260318001569",
   "ksicCode": "31322",
+  "reportedAvgManwonRaw": 4194,
+  "divergencePct": 24.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14801,6 +16004,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260317000794",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6034,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14826,6 +16031,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318000465",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5611,
+  "divergencePct": 29.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14851,6 +16058,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260319000717",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4579,
+  "divergencePct": 25,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14876,6 +16085,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260323001581",
   "ksicCode": "759",
+  "reportedAvgManwonRaw": 7029,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14901,6 +16112,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260323001413",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 11729,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14926,6 +16139,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.7,
   "rceptNo": "20260402002347",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 10773,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14951,6 +16166,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001299",
   "ksicCode": "642",
+  "reportedAvgManwonRaw": 12371,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -14976,6 +16193,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260323000879",
   "ksicCode": "46313",
+  "reportedAvgManwonRaw": 6937,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15000,6 +16219,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 488,
   "rceptNo": "20260318001274",
   "ksicCode": "24113",
+  "reportedAvgManwonRaw": 6543,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15025,6 +16246,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260313000025",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6709,
+  "divergencePct": 7.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15049,6 +16272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 357,
   "rceptNo": "20260318001565",
   "ksicCode": "2332",
+  "reportedAvgManwonRaw": 7757,
+  "divergencePct": 12.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15073,6 +16298,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 343,
   "rceptNo": "20260323000017",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 9057,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15098,6 +16325,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.4,
   "rceptNo": "20260219002133",
   "ksicCode": "30331",
+  "reportedAvgManwonRaw": 8335,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15122,6 +16351,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 404,
   "rceptNo": "20260318001458",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 7739,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15147,6 +16378,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260319001183",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 7494,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15172,6 +16405,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260318001672",
   "ksicCode": "58212",
+  "reportedAvgManwonRaw": 9392,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15192,6 +16427,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260317000848",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5210,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15217,6 +16454,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.9,
   "rceptNo": "20260319000424",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 4399,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15241,6 +16480,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 466,
   "rceptNo": "20260317000758",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 6617,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15266,6 +16507,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260318000447",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 9184,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15285,6 +16528,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 440,
   "rceptNo": "20260318000967",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7042,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15309,6 +16554,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 468,
   "rceptNo": "20260317000761",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6609,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15334,6 +16581,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260615000326",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4164,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15359,6 +16608,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318001491",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 8731,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15384,6 +16635,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260323001326",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4819,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15409,6 +16662,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260323000304",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 6221,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15433,6 +16688,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 522,
   "rceptNo": "20260317000826",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 5835,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15458,6 +16715,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260318000740",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 5965,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15483,6 +16742,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260312000432",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7473,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15508,6 +16769,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260318000788",
   "ksicCode": "76110",
+  "reportedAvgManwonRaw": 6730,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15533,6 +16796,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260330001688",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 6027,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15557,6 +16822,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 601,
   "rceptNo": "20260727000339",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4945,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15582,6 +16849,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260323001403",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 8074,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15607,6 +16876,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260317000869",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9932,
+  "divergencePct": 12.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15631,6 +16902,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 446,
   "rceptNo": "20260325001192",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6717,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15655,7 +16928,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 528,
   "avgTenureYears": 4.1,
   "rceptNo": "20260326001251",
-  "ksicCode": "25200"
+  "ksicCode": "25200",
+  "reportedAvgManwonRaw": 5716,
+  "divergencePct": 0.5
  },
  {
   "corpCode": "00585608",
@@ -15669,6 +16944,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20250321000823",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4143,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -15689,6 +16966,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20250618000187",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6369,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15713,6 +16992,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 575,
   "rceptNo": "20260604000634",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5173,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15738,6 +17019,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260316001327",
   "ksicCode": "29119",
+  "reportedAvgManwonRaw": 10157,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15763,6 +17046,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260323001448",
   "ksicCode": "23999",
+  "reportedAvgManwonRaw": 7133,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15787,6 +17072,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 525,
   "rceptNo": "20260318000940",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 5638,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15811,6 +17098,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 406,
   "rceptNo": "20260608000428",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 7319,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15835,6 +17124,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 430,
   "rceptNo": "20260317000858",
   "ksicCode": "28201",
+  "reportedAvgManwonRaw": 6862,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15859,6 +17150,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 363,
   "rceptNo": "20260316001465",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 8203,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15884,6 +17177,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260320000571",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 6442,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15909,6 +17204,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260323001371",
   "ksicCode": "73909",
+  "reportedAvgManwonRaw": 5764,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15933,6 +17230,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 438,
   "rceptNo": "20260318001553",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 6705,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15958,6 +17257,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260515001873",
   "ksicCode": "03111",
+  "reportedAvgManwonRaw": 5975,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -15982,6 +17283,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 442,
   "rceptNo": "20260320000284",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6811,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16007,6 +17310,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260312000677",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5830,
+  "divergencePct": 5.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16032,6 +17337,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260312000098",
   "ksicCode": "2221",
+  "reportedAvgManwonRaw": 9227,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16057,6 +17364,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260320000311",
   "ksicCode": "01123",
+  "reportedAvgManwonRaw": 7716,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16081,6 +17390,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 301,
   "rceptNo": "20260316000333",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 9700,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16106,6 +17417,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260319000368",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5536,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16131,6 +17444,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260319000608",
   "ksicCode": "10121",
+  "reportedAvgManwonRaw": 5347,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16156,6 +17471,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260320001352",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6047,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16181,6 +17498,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260319000675",
   "ksicCode": "331",
+  "reportedAvgManwonRaw": 4652,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16205,6 +17524,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 665,
   "rceptNo": "20260319001221",
   "ksicCode": "22232",
+  "reportedAvgManwonRaw": 4329,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16229,6 +17550,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 431,
   "rceptNo": "20260316001364",
   "ksicCode": "58212",
+  "reportedAvgManwonRaw": 6710,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16253,6 +17576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 632,
   "rceptNo": "20260330000011",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4543,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16278,6 +17603,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260602000573",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6584,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16303,6 +17630,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001574",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 9322,
+  "divergencePct": 11.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16328,6 +17657,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260213002543",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7173,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16353,6 +17684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260318001178",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6915,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16377,6 +17710,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 666,
   "rceptNo": "20260323001238",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4299,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16401,6 +17736,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 351,
   "rceptNo": "20260319001279",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 8215,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16426,6 +17763,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260323000994",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 6563,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16451,6 +17790,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.6,
   "rceptNo": "20260317000713",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 10477,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16476,6 +17817,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260814001252",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7016,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16501,6 +17844,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.2,
   "rceptNo": "20260320000407",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 7797,
+  "divergencePct": 6.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16525,6 +17870,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 180,
   "rceptNo": "20260323001538",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 15713,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16550,6 +17897,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.5,
   "rceptNo": "20260316001663",
   "ksicCode": "26529",
+  "reportedAvgManwonRaw": 8263,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16575,6 +17924,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260320000344",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 5042,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16599,6 +17950,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 144,
   "rceptNo": "20260619000667",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 19795,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16624,6 +17977,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260318001708",
   "ksicCode": "25912",
+  "reportedAvgManwonRaw": 5903,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16649,6 +18004,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318001219",
   "ksicCode": "26519",
+  "reportedAvgManwonRaw": 5928,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16673,6 +18030,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 519,
   "rceptNo": "20260316001450",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 5374,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16697,6 +18056,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 276,
   "rceptNo": "20260316001210",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 10095,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16722,6 +18083,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318001698",
   "ksicCode": "2110",
+  "reportedAvgManwonRaw": 6088,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16747,6 +18110,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260515000331",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6546,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16771,6 +18136,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 432,
   "rceptNo": "20260316001148",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 6393,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16795,6 +18162,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 505,
   "rceptNo": "20260319000964",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5867,
+  "divergencePct": 7.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16820,6 +18189,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260715000525",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 8633,
+  "divergencePct": 9.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16845,6 +18216,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260630000637",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 12147,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16870,6 +18243,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260323001662",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 6070,
+  "divergencePct": 11.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16893,7 +18268,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 10061,
   "employeeCount": 270,
   "rceptNo": "20260323001690",
-  "ksicCode": "721"
+  "ksicCode": "721",
+  "reportedAvgManwonRaw": 10467,
+  "divergencePct": 4
  },
  {
   "corpCode": "00357740",
@@ -16907,6 +18284,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318000635",
   "ksicCode": "661",
+  "reportedAvgManwonRaw": 6038,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16932,6 +18311,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260320001135",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6973,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16952,6 +18333,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260318001668",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5806,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -16977,6 +18360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260319000847",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 5905,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17001,6 +18386,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 281,
   "rceptNo": "20260318000366",
   "ksicCode": "24191",
+  "reportedAvgManwonRaw": 9538,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17026,6 +18413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260316001329",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7832,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17051,6 +18440,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260319001365",
   "ksicCode": "29169",
+  "reportedAvgManwonRaw": 7382,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17076,6 +18467,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260320000683",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5801,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17101,6 +18494,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260318001588",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 7082,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17126,6 +18521,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260319000299",
   "ksicCode": "25991",
+  "reportedAvgManwonRaw": 4975,
+  "divergencePct": 18.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17151,6 +18548,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318001522",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6155,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17176,6 +18575,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260312000712",
   "ksicCode": "292",
+  "divergencePct": 37.7,
   "flags": [
    "V4-divergence"
   ],
@@ -17204,6 +18604,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260316000896",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 4722,
+  "divergencePct": 3.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17228,6 +18630,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 423,
   "rceptNo": "20260311004029",
   "ksicCode": "1721",
+  "reportedAvgManwonRaw": 6173,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17253,6 +18657,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318001215",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5619,
+  "divergencePct": 13.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17277,6 +18683,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 439,
   "rceptNo": "20260312000931",
   "ksicCode": "252",
+  "reportedAvgManwonRaw": 5923,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17301,6 +18709,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 277,
   "rceptNo": "20260319001027",
   "ksicCode": "20111",
+  "reportedAvgManwonRaw": 9362,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17326,6 +18736,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260324000038",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 5469,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17351,6 +18763,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 23.2,
   "rceptNo": "20260319001071",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 9028,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17376,6 +18790,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260319000983",
   "ksicCode": "242",
+  "reportedAvgManwonRaw": 5497,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17401,6 +18817,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260312000935",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 7092,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17425,6 +18843,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 315,
   "rceptNo": "20260318001637",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 8202,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17450,6 +18870,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260319000859",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 6997,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17475,6 +18897,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260320000328",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 6454,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17500,6 +18924,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260318000018",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 6332,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17525,6 +18951,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.3,
   "rceptNo": "20260316000206",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 7969,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17550,6 +18978,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260311003779",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6649,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17574,6 +19004,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 204,
   "rceptNo": "20250620000266",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 12545,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17598,7 +19030,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 402,
   "avgTenureYears": 7.8,
   "rceptNo": "20260318000642",
-  "ksicCode": "2830"
+  "ksicCode": "2830",
+  "reportedAvgManwonRaw": 6377,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "00131504",
@@ -17612,6 +19046,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260703000164",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 6753,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17636,6 +19072,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 385,
   "rceptNo": "20260313001349",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 6602,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17661,6 +19099,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260320001111",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 6596,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17685,6 +19125,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 407,
   "rceptNo": "20260320001328",
   "ksicCode": "66202",
+  "reportedAvgManwonRaw": 6594,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17709,6 +19151,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 434,
   "rceptNo": "20260319000867",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 5804,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17734,6 +19178,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.7,
   "rceptNo": "20260407001978",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 14749,
+  "divergencePct": 18.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17754,6 +19200,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.9,
   "rceptNo": "20260312001433",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9168,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17778,6 +19226,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 478,
   "rceptNo": "20260319000594",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5262,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17803,6 +19253,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260323001188",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6656,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17827,6 +19279,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 405,
   "rceptNo": "20260318000714",
   "ksicCode": "5299",
+  "reportedAvgManwonRaw": 6221,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17852,6 +19306,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260319000022",
   "ksicCode": "27219",
+  "reportedAvgManwonRaw": 6405,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17876,6 +19332,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 501,
   "rceptNo": "20260312000318",
   "ksicCode": "85669",
+  "reportedAvgManwonRaw": 5211,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17896,6 +19354,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260318001295",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 6972,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17921,6 +19381,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260318000608",
   "ksicCode": "855",
+  "reportedAvgManwonRaw": 5004,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17946,6 +19408,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.5,
   "rceptNo": "20260318000857",
   "ksicCode": "29223",
+  "reportedAvgManwonRaw": 8267,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17971,6 +19435,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260320001390",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6302,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -17996,6 +19462,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323001736",
   "ksicCode": "7291",
+  "reportedAvgManwonRaw": 6200,
+  "divergencePct": 38.5,
   "flags": [
    "V4-divergence"
   ],
@@ -18024,6 +19492,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260318000992",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5864,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18049,6 +19519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260318001618",
   "ksicCode": "20131",
+  "reportedAvgManwonRaw": 8202,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18074,6 +19546,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260625000520",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5650,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18099,6 +19573,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260326001049",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 6257,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18123,6 +19599,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 497,
   "rceptNo": "20260312000862",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 5191,
+  "divergencePct": 5.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18148,6 +19626,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260707000351",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6234,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18173,6 +19653,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260319000781",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 6721,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18197,6 +19679,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 366,
   "rceptNo": "20260319001077",
   "ksicCode": "582",
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18217,6 +19700,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260313000531",
   "ksicCode": "8550",
+  "reportedAvgManwonRaw": 4675,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18242,6 +19727,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260319000004",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6868,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18267,6 +19754,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260323001278",
   "ksicCode": "30320",
+  "reportedAvgManwonRaw": 9029,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18292,6 +19781,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260318001204",
   "ksicCode": "13101",
+  "reportedAvgManwonRaw": 4605,
+  "divergencePct": 8.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18316,6 +19807,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 475,
   "rceptNo": "20260306000812",
   "ksicCode": "27192",
+  "reportedAvgManwonRaw": 5119,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18340,6 +19833,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 351,
   "rceptNo": "20260318001128",
   "ksicCode": "17223",
+  "reportedAvgManwonRaw": 6883,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18365,6 +19860,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260312000997",
   "ksicCode": "64911",
+  "reportedAvgManwonRaw": 9057,
+  "divergencePct": 6.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18390,6 +19887,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260317000832",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6085,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18414,6 +19913,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 367,
   "rceptNo": "20260313001133",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 6399,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18439,6 +19940,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260323001596",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 14911,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18463,6 +19966,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 257,
   "rceptNo": "20260602000269",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 9338,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18488,6 +19993,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260312000207",
   "ksicCode": "4632",
+  "reportedAvgManwonRaw": 8633,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18513,6 +20020,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260318001176",
   "ksicCode": "2032",
+  "reportedAvgManwonRaw": 6198,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18537,6 +20046,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 345,
   "rceptNo": "20260317000720",
   "ksicCode": "713",
+  "reportedAvgManwonRaw": 7023,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18562,6 +20073,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260728000417",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6062,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18587,6 +20100,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260414002511",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 5647,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18611,6 +20126,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 602,
   "rceptNo": "20260318001070",
   "ksicCode": "10211",
+  "reportedAvgManwonRaw": 3989,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18636,6 +20153,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260320001266",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 6469,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18661,6 +20180,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260318000860",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 6164,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18686,6 +20207,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260316001359",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6146,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18711,6 +20234,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.3,
   "rceptNo": "20260708000008",
   "ksicCode": "24133",
+  "reportedAvgManwonRaw": 7510,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18736,6 +20261,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318000411",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 5698,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18760,6 +20287,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 491,
   "rceptNo": "20260313001223",
   "ksicCode": "1012",
+  "reportedAvgManwonRaw": 4769,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18785,6 +20314,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260403003697",
   "ksicCode": "28112",
+  "reportedAvgManwonRaw": 6978,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18804,6 +20335,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 419,
   "rceptNo": "20260323000702",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5551,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18828,6 +20361,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 234,
   "rceptNo": "20260311004373",
   "ksicCode": "2225",
+  "reportedAvgManwonRaw": 9891,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18853,6 +20388,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.6,
   "rceptNo": "20260319000542",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 7243,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18878,6 +20415,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260320000730",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 5426,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18903,6 +20442,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260319001078",
   "ksicCode": "1721",
+  "reportedAvgManwonRaw": 6922,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18927,6 +20468,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 420,
   "rceptNo": "20260320000351",
   "ksicCode": "49301",
+  "reportedAvgManwonRaw": 5487,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -18952,6 +20495,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260330001300",
   "ksicCode": "75991",
+  "reportedAvgManwonRaw": 3237,
+  "divergencePct": 31.7,
   "flags": [
    "V4-divergence"
   ],
@@ -18980,6 +20525,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260320001141",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6346,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19005,6 +20552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260602000219",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5998,
+  "divergencePct": 13.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19025,6 +20574,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260318001643",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5750,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19050,6 +20601,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260319000002",
   "ksicCode": "551",
+  "reportedAvgManwonRaw": 3556,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19074,6 +20627,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 342,
   "rceptNo": "20260312000632",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 6690,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19099,6 +20654,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260319000008",
   "ksicCode": "2229",
+  "reportedAvgManwonRaw": 5426,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19124,6 +20681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 20.2,
   "rceptNo": "20260319001031",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7788,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19149,6 +20708,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260319001075",
   "ksicCode": "14112",
+  "reportedAvgManwonRaw": 6000,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19174,6 +20735,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.5,
   "rceptNo": "20260311003722",
   "ksicCode": "263",
+  "reportedAvgManwonRaw": 7517,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19199,6 +20762,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260317000830",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 26625,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19224,6 +20789,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.8,
   "rceptNo": "20250612000335",
   "ksicCode": "29293",
+  "reportedAvgManwonRaw": 5390,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19248,6 +20815,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 251,
   "rceptNo": "20260331003309",
   "ksicCode": "582",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19268,6 +20836,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260814001264",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6338,
+  "divergencePct": 3.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19293,6 +20863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260319001396",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 4686,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19318,6 +20890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.8,
   "rceptNo": "20260331002685",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7913,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19342,6 +20916,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 358,
   "rceptNo": "20260731000751",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6334,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19367,6 +20943,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260318001364",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5990,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19392,6 +20970,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260312000761",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 6202,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19417,6 +20997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260319001066",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6874,
+  "divergencePct": 5.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19441,6 +21023,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 330,
   "rceptNo": "20260316001685",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7153,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19465,6 +21049,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 333,
   "rceptNo": "20260324000935",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 7686,
+  "divergencePct": 13.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19490,6 +21076,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260814004019",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 16841,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19515,6 +21103,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260318001371",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6800,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19540,6 +21130,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.1,
   "rceptNo": "20260318001051",
   "ksicCode": "29223",
+  "reportedAvgManwonRaw": 7940,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19565,6 +21157,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260319000860",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6741,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19590,6 +21184,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260319001175",
   "ksicCode": "14120",
+  "reportedAvgManwonRaw": 4110,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19614,6 +21210,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 374,
   "rceptNo": "20260316001224",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6051,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19639,6 +21237,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260429000193",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 1759,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19664,6 +21264,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260319000019",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 10337,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19689,6 +21291,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260318001362",
   "ksicCode": "172",
+  "reportedAvgManwonRaw": 7857,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19714,6 +21318,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17,
   "rceptNo": "20260318000499",
   "ksicCode": "24221",
+  "reportedAvgManwonRaw": 6630,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19739,6 +21345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260312001140",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 5708,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19763,6 +21371,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 275,
   "rceptNo": "20260312001374",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 8014,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19788,6 +21398,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260323001116",
   "ksicCode": "29192",
+  "reportedAvgManwonRaw": 6756,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19813,6 +21425,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.5,
   "rceptNo": "20260326001257",
   "ksicCode": "75993",
+  "reportedAvgManwonRaw": 12691,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19838,6 +21452,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260316001438",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5905,
+  "divergencePct": 10.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19862,6 +21478,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 454,
   "rceptNo": "20260318001206",
   "ksicCode": "75210",
+  "reportedAvgManwonRaw": 4818,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19886,6 +21504,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 312,
   "rceptNo": "20260323001135",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6501,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19911,6 +21531,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260323001678",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5507,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19936,6 +21558,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260316001319",
   "ksicCode": "2229",
+  "reportedAvgManwonRaw": 6384,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19960,6 +21584,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 328,
   "rceptNo": "20260318000753",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6721,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -19984,6 +21610,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 344,
   "rceptNo": "20260319000921",
   "ksicCode": "75210",
+  "reportedAvgManwonRaw": 6311,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20009,6 +21637,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260319001259",
   "ksicCode": "421",
+  "reportedAvgManwonRaw": 7570,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20033,6 +21663,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 466,
   "rceptNo": "20260318001319",
   "ksicCode": "4791",
+  "reportedAvgManwonRaw": 4676,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20058,6 +21690,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260319001006",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 23438,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20083,6 +21717,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260316000444",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8398,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20108,6 +21744,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260319001251",
   "ksicCode": "477",
+  "reportedAvgManwonRaw": 5696,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20132,6 +21770,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 370,
   "rceptNo": "20260316000413",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 5769,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20157,6 +21797,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260320001024",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 6911,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20182,6 +21824,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260320000801",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5672,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20207,6 +21851,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319001147",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 7977,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20232,6 +21878,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260323001419",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7376,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20257,6 +21905,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.1,
   "rceptNo": "20260311003988",
   "ksicCode": "161",
+  "reportedAvgManwonRaw": 6430,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20282,6 +21932,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260316001660",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5901,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20307,6 +21959,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260318001612",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 11717,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20331,6 +21985,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 342,
   "rceptNo": "20260319001247",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6166,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20356,6 +22012,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260317000091",
   "ksicCode": "75993",
+  "reportedAvgManwonRaw": 7356,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20381,6 +22039,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260430000458",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 3309,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20406,6 +22066,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260323001443",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4371,
+  "divergencePct": 25.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20430,6 +22092,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 334,
   "rceptNo": "20260318000745",
   "ksicCode": "50112",
+  "reportedAvgManwonRaw": 6302,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20455,6 +22119,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.6,
   "rceptNo": "20260325000974",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 4810,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20475,6 +22141,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260320000881",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4739,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20499,6 +22167,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 274,
   "rceptNo": "20260331004794",
   "ksicCode": "26519",
+  "reportedAvgManwonRaw": 7642,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20524,6 +22194,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260319001060",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 4955,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20548,6 +22220,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 423,
   "rceptNo": "20260318000548",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4825,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20572,6 +22246,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 267,
   "rceptNo": "20260317000844",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 7381,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20596,6 +22272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 336,
   "rceptNo": "20260318001293",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6079,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20621,6 +22299,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260318001104",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4986,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20646,6 +22326,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260323001250",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6929,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20671,6 +22353,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260313001045",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 8989,
+  "divergencePct": 4.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20696,6 +22380,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260317000606",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7767,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20721,6 +22407,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20250407003477",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 6354,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2023",
@@ -20740,6 +22428,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260331003687",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 9634,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2023",
@@ -20760,6 +22450,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260220002472",
   "ksicCode": "29176",
+  "reportedAvgManwonRaw": 8365,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20785,6 +22477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 26.5,
   "rceptNo": "20260331000928",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 8528,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20809,6 +22503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 121,
   "rceptNo": "20260318001147",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 17031,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20834,6 +22530,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260317000438",
   "ksicCode": "24212",
+  "reportedAvgManwonRaw": 6552,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20857,7 +22555,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5197,
   "employeeCount": 393,
   "rceptNo": "20260312001439",
-  "ksicCode": "26211"
+  "ksicCode": "26211",
+  "reportedAvgManwonRaw": 5176,
+  "divergencePct": 0.4
  },
  {
   "corpCode": "00131896",
@@ -20871,6 +22571,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.4,
   "rceptNo": "20260529000793",
   "ksicCode": "52942",
+  "reportedAvgManwonRaw": 8748,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20895,6 +22597,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 334,
   "rceptNo": "20260331004907",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 6374,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20919,6 +22623,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 358,
   "rceptNo": "20260327001840",
   "ksicCode": "27111",
+  "reportedAvgManwonRaw": 5661,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20943,6 +22649,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 345,
   "rceptNo": "20260320000835",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6357,
+  "divergencePct": 7.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20968,6 +22676,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20260320001252",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5604,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -20993,6 +22703,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260323001658",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 6519,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21018,6 +22730,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260318001632",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 5840,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21043,6 +22757,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260318001545",
   "ksicCode": "421",
+  "reportedAvgManwonRaw": 7789,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21067,6 +22783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 440,
   "rceptNo": "20260323001417",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 4611,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21092,6 +22810,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260619000542",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 5174,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21117,6 +22837,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260319000664",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6463,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21141,6 +22863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 534,
   "rceptNo": "20260323001657",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 3757,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21165,6 +22889,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 286,
   "rceptNo": "20260319000997",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 7002,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21190,6 +22916,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260313000246",
   "ksicCode": "7390",
+  "reportedAvgManwonRaw": 6149,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21215,6 +22943,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260320001313",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5220,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21239,6 +22969,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 153,
   "rceptNo": "20260319001265",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 14014,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21263,6 +22995,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 339,
   "rceptNo": "20260331004955",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 5867,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21288,6 +23022,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13,
   "rceptNo": "20260317000646",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 7699,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21313,6 +23049,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.4,
   "rceptNo": "20260318001126",
   "ksicCode": "23222",
+  "reportedAvgManwonRaw": 8229,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21338,6 +23076,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260319000985",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 7089,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21362,6 +23102,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 278,
   "rceptNo": "20260318000984",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7061,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21387,6 +23129,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260313000821",
   "ksicCode": "25130",
+  "reportedAvgManwonRaw": 5198,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21411,6 +23155,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 251,
   "rceptNo": "20260319001121",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 7736,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21435,6 +23181,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 273,
   "rceptNo": "20260709000678",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 7218,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21460,6 +23208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260316001065",
   "ksicCode": "6202",
+  "reportedAvgManwonRaw": 8256,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21485,6 +23235,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260330001698",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5301,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21510,6 +23262,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19.5,
   "rceptNo": "20260305001037",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 9546,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21534,6 +23288,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 114,
   "rceptNo": "20260313001235",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 18505,
+  "divergencePct": 7.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21559,6 +23315,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260318001304",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5278,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21583,6 +23341,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 370,
   "rceptNo": "20260323001435",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 5290,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21607,6 +23367,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 248,
   "rceptNo": "20260319000663",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 7915,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21632,6 +23394,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260312001308",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 6935,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21657,6 +23421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260330000375",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6308,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21681,6 +23447,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 257,
   "rceptNo": "20260317000545",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 7565,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21705,6 +23473,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 298,
   "rceptNo": "20260311003176",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6506,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21729,6 +23499,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260318001225",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 17522,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21753,6 +23525,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 254,
   "rceptNo": "20260319001111",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 6566,
+  "divergencePct": 13.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21778,6 +23552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260804000547",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 7605,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21798,6 +23574,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260324000644",
   "ksicCode": "2927",
+  "reportedAvgManwonRaw": 6007,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21822,6 +23600,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 299,
   "rceptNo": "20260319001314",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 7145,
+  "divergencePct": 10.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21846,6 +23626,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 261,
   "rceptNo": "20260324000009",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 6430,
+  "divergencePct": 12.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21870,6 +23652,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 203,
   "rceptNo": "20260319000936",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 9480,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21895,6 +23679,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260320001146",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7367,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21919,6 +23705,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 284,
   "rceptNo": "20260319001107",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6759,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21944,6 +23732,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260320000572",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5695,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21969,6 +23759,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260323001496",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6270,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -21994,6 +23786,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260324001036",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5240,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22018,6 +23812,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 312,
   "rceptNo": "20260317000805",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 6082,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22043,6 +23839,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260331004184",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8120,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22067,6 +23865,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 323,
   "rceptNo": "20260323001462",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5846,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22092,6 +23892,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260331003421",
   "ksicCode": "1419",
+  "reportedAvgManwonRaw": 6469,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22117,6 +23919,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260320001308",
   "ksicCode": "5822",
+  "reportedAvgManwonRaw": 8159,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22141,6 +23945,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 392,
   "rceptNo": "20260320000579",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 4779,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22165,6 +23971,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 198,
   "rceptNo": "20260319000659",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 9462,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22189,6 +23997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 224,
   "rceptNo": "20260311004507",
   "ksicCode": "29120",
+  "reportedAvgManwonRaw": 8323,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22214,6 +24024,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.4,
   "rceptNo": "20260318000669",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6854,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22239,6 +24051,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319001038",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6124,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22263,6 +24077,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 251,
   "rceptNo": "20260323001743",
   "ksicCode": "29163",
+  "reportedAvgManwonRaw": 7378,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22287,6 +24103,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 237,
   "rceptNo": "20260317000522",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 7791,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22312,6 +24130,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260318001562",
   "ksicCode": "2928",
+  "reportedAvgManwonRaw": 7233,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22337,6 +24157,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260312000618",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 6429,
+  "divergencePct": 5.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22361,6 +24183,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 264,
   "rceptNo": "20260319001064",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 6994,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22385,6 +24209,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 399,
   "rceptNo": "20260317000817",
   "ksicCode": "144",
+  "reportedAvgManwonRaw": 4546,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22410,6 +24236,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260610000521",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 10642,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22434,6 +24262,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 311,
   "rceptNo": "20260316000487",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5889,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22459,6 +24289,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.2,
   "rceptNo": "20260319000536",
   "ksicCode": "953",
+  "reportedAvgManwonRaw": 5184,
+  "divergencePct": 10.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22484,6 +24316,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260323000936",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 5204,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22509,6 +24343,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260318001498",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 7694,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22534,6 +24370,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260609000370",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5147,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22558,6 +24396,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 378,
   "rceptNo": "20260312001122",
   "ksicCode": "14120",
+  "reportedAvgManwonRaw": 4909,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22583,6 +24423,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260309001317",
   "ksicCode": "20421",
+  "reportedAvgManwonRaw": 7792,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22608,6 +24450,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260318001190",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5383,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22632,6 +24476,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 296,
   "rceptNo": "20260323001379",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6125,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22657,6 +24503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260316001307",
   "ksicCode": "27216",
+  "reportedAvgManwonRaw": 8171,
+  "divergencePct": 6.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22682,6 +24530,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260323001076",
   "ksicCode": "55103",
+  "reportedAvgManwonRaw": 4689,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22706,6 +24556,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 270,
   "rceptNo": "20260312001152",
   "ksicCode": "2512",
+  "reportedAvgManwonRaw": 6678,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22731,6 +24583,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260629000364",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5251,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22756,6 +24610,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260318001576",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4917,
+  "divergencePct": 8.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22781,6 +24637,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20250320001605",
   "ksicCode": "22299",
+  "reportedAvgManwonRaw": 6486,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -22800,6 +24658,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 360,
   "rceptNo": "20260323001601",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 4987,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22825,6 +24685,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260323001366",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 5645,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22850,6 +24712,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260602000371",
   "ksicCode": "29293",
+  "reportedAvgManwonRaw": 5223,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22875,6 +24739,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260317000822",
   "ksicCode": "20421",
+  "reportedAvgManwonRaw": 8745,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22900,6 +24766,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260319001239",
   "ksicCode": "132",
+  "reportedAvgManwonRaw": 5742,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22925,6 +24793,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260318001457",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 7488,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22949,6 +24819,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 300,
   "rceptNo": "20260318001193",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5896,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22973,6 +24845,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 336,
   "rceptNo": "20260602000010",
   "ksicCode": "2812",
+  "reportedAvgManwonRaw": 5580,
+  "divergencePct": 5.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -22998,6 +24872,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260316001242",
   "ksicCode": "24221",
+  "reportedAvgManwonRaw": 6888,
+  "divergencePct": 7.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23023,6 +24899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260319000272",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5827,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23047,6 +24925,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 213,
   "rceptNo": "20260319000706",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 8364,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23072,6 +24952,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318001482",
   "ksicCode": "62090",
+  "reportedAvgManwonRaw": 3617,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23096,6 +24978,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 258,
   "rceptNo": "20260814003680",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 6859,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23121,6 +25005,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260320001343",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5651,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23146,6 +25032,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260323001468",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6636,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23170,6 +25058,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 272,
   "rceptNo": "20260814003200",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6513,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23195,6 +25085,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260323000941",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4836,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23220,6 +25112,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260330000218",
   "ksicCode": "31322",
+  "reportedAvgManwonRaw": 3998,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23244,6 +25138,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 286,
   "rceptNo": "20260319000846",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6154,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23269,6 +25165,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260319000774",
   "ksicCode": "752",
+  "reportedAvgManwonRaw": 4803,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23294,6 +25192,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260319000776",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 14271,
+  "divergencePct": 3.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23318,6 +25218,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 203,
   "rceptNo": "20260320001172",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 8583,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23343,6 +25245,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318000944",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5719,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23367,6 +25271,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 328,
   "rceptNo": "20260323001592",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 5340,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23392,6 +25298,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260515000720",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 12712,
+  "divergencePct": 4.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23416,6 +25324,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 264,
   "rceptNo": "20260814001348",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 6609,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23441,6 +25351,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260407003361",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 5040,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23465,6 +25377,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 281,
   "rceptNo": "20260703000477",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6476,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23490,6 +25404,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.3,
   "rceptNo": "20260313001308",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 8070,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23515,6 +25431,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260422000199",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5598,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23540,6 +25458,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260316001124",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6213,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23565,6 +25485,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260320000723",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6436,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23590,6 +25512,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.5,
   "rceptNo": "20260319000934",
   "ksicCode": "23312",
+  "reportedAvgManwonRaw": 6349,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23614,6 +25538,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 219,
   "rceptNo": "20260316000068",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 7875,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23638,6 +25564,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 282,
   "rceptNo": "20260323001183",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 6099,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23663,6 +25591,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260319000474",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 5949,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23688,6 +25618,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260529001886",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 4349,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23712,6 +25644,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 327,
   "rceptNo": "20260318000730",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 5196,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23737,6 +25671,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260317000896",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 5584,
+  "divergencePct": 3.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23761,6 +25697,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 180,
   "rceptNo": "20260320001138",
   "ksicCode": "50112",
+  "reportedAvgManwonRaw": 9138,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23786,6 +25724,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.7,
   "rceptNo": "20260318001647",
   "ksicCode": "16102",
+  "reportedAvgManwonRaw": 8125,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23811,6 +25751,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260323000925",
   "ksicCode": "29223",
+  "reportedAvgManwonRaw": 5950,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23835,6 +25777,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260323001028",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 4681,
+  "divergencePct": 58.4,
   "flags": [
    "V4-divergence"
   ],
@@ -23863,6 +25807,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260312001227",
   "ksicCode": "351",
+  "reportedAvgManwonRaw": 8096,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23887,6 +25833,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 284,
   "rceptNo": "20260320000317",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 5987,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23912,6 +25860,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260318001436",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5807,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23936,6 +25886,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 395,
   "rceptNo": "20260319000027",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 4791,
+  "divergencePct": 11.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23961,6 +25913,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260515001314",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7134,
+  "divergencePct": 3.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -23986,6 +25940,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260320001026",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 5161,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24011,6 +25967,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260323001749",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 4549,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24035,6 +25993,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 313,
   "rceptNo": "20260318000636",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5584,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24060,6 +26020,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260323001466",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4653,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24085,6 +26047,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260318001699",
   "ksicCode": "59114",
+  "reportedAvgManwonRaw": 9407,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24110,6 +26074,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260312000569",
   "ksicCode": "2032",
+  "reportedAvgManwonRaw": 7040,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24135,6 +26101,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260318000658",
   "ksicCode": "11122",
+  "reportedAvgManwonRaw": 4421,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24160,6 +26128,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318001686",
   "ksicCode": "73909",
+  "reportedAvgManwonRaw": 8626,
+  "divergencePct": 12,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24184,6 +26154,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 263,
   "rceptNo": "20260318000494",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6399,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24209,6 +26181,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260318001468",
   "ksicCode": "46103",
+  "reportedAvgManwonRaw": 3678,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24234,6 +26208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260513000805",
   "ksicCode": "729",
+  "reportedAvgManwonRaw": 5496,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24259,6 +26235,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.6,
   "rceptNo": "20260319000893",
   "ksicCode": "23311",
+  "reportedAvgManwonRaw": 7572,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24284,6 +26262,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260311003536",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6580,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24309,6 +26289,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260316000916",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 7804,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24333,6 +26315,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 452,
   "rceptNo": "20260318000947",
   "ksicCode": "313",
+  "reportedAvgManwonRaw": 3679,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24357,6 +26341,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 307,
   "rceptNo": "20260316001120",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5366,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24382,6 +26368,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260324000394",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 7198,
+  "divergencePct": 43.5,
   "flags": [
    "V4-divergence"
   ],
@@ -24410,6 +26398,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260323001210",
   "ksicCode": "22232",
+  "reportedAvgManwonRaw": 7188,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24435,6 +26425,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260312000830",
   "ksicCode": "03111",
+  "reportedAvgManwonRaw": 8491,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24459,6 +26451,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 242,
   "rceptNo": "20260319001386",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6822,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24479,6 +26473,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260630000693",
   "ksicCode": "30310",
+  "reportedAvgManwonRaw": 6046,
+  "divergencePct": 11.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24504,6 +26500,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318000583",
   "ksicCode": "2229",
+  "reportedAvgManwonRaw": 6134,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24529,6 +26527,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260626000038",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6125,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24553,7 +26553,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 131,
   "avgTenureYears": 2.4,
   "rceptNo": "20260323000987",
-  "ksicCode": "582"
+  "ksicCode": "582",
+  "reportedAvgManwonRaw": 13203,
+  "divergencePct": 5
  },
  {
   "corpCode": "00160621",
@@ -24566,6 +26568,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 247,
   "rceptNo": "20260813000488",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 6679,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24590,6 +26594,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 207,
   "rceptNo": "20250612000209",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 8214,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24614,6 +26620,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 363,
   "rceptNo": "20260316000805",
   "ksicCode": "26293",
+  "reportedAvgManwonRaw": 4518,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24638,6 +26646,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 397,
   "rceptNo": "20260317000187",
   "ksicCode": "85503",
+  "reportedAvgManwonRaw": 4097,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24663,6 +26673,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260324000005",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 9087,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24687,6 +26699,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 316,
   "rceptNo": "20260319000680",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 3683,
+  "divergencePct": 28.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24711,6 +26725,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 234,
   "rceptNo": "20260423000391",
   "ksicCode": "29223",
+  "reportedAvgManwonRaw": 6936,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24735,6 +26751,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 171,
   "rceptNo": "20260605000334",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 9500,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24759,6 +26777,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 318,
   "rceptNo": "20260323000904",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5100,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24784,6 +26804,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319000938",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5935,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24809,6 +26831,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260319000454",
   "ksicCode": "25991",
+  "reportedAvgManwonRaw": 8588,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24834,6 +26858,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260319000972",
   "ksicCode": "49220",
+  "reportedAvgManwonRaw": 5851,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24859,6 +26885,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318001646",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4663,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24884,6 +26912,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260317000688",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6621,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24909,6 +26939,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260323000748",
   "ksicCode": "581",
+  "reportedAvgManwonRaw": 8030,
+  "divergencePct": 10.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24934,6 +26966,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.5,
   "rceptNo": "20260319000477",
   "ksicCode": "22299",
+  "reportedAvgManwonRaw": 7099,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24959,6 +26993,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260318001118",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 6364,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -24984,6 +27020,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260320000125",
   "ksicCode": "2219",
+  "reportedAvgManwonRaw": 5433,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25009,6 +27047,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260323001377",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6759,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25034,6 +27074,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.6,
   "rceptNo": "20250912000376",
   "ksicCode": "29210",
+  "reportedAvgManwonRaw": 5469,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25059,6 +27101,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260318000700",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 4002,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25084,6 +27128,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260227005846",
   "ksicCode": "62010",
+  "reportedAvgManwonRaw": 7750,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25109,6 +27155,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260317000411",
   "ksicCode": "68122",
+  "reportedAvgManwonRaw": 10507,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25134,6 +27182,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260323000437",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 4290,
+  "divergencePct": 29.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25158,6 +27208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 258,
   "rceptNo": "20260323001509",
   "ksicCode": "14300",
+  "reportedAvgManwonRaw": 6095,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25178,6 +27230,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260319000825",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 5923,
+  "divergencePct": 9.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25203,6 +27257,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001365",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6110,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25228,6 +27284,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260312000972",
   "ksicCode": "27111",
+  "reportedAvgManwonRaw": 5715,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25253,6 +27311,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.3,
   "rceptNo": "20260318001149",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 9269,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25277,6 +27337,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 102,
   "rceptNo": "20260320000666",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 16713,
+  "divergencePct": 8.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25302,6 +27364,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20250529000465",
   "ksicCode": "471",
+  "reportedAvgManwonRaw": 3481,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25326,6 +27390,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 200,
   "rceptNo": "20260706000269",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7880,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25350,6 +27416,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 311,
   "rceptNo": "20260323001476",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5198,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25375,6 +27443,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260323001498",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 4767,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25399,6 +27469,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 250,
   "rceptNo": "20260318001142",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6259,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25424,6 +27496,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260316001140",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4031,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25449,6 +27523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260319001375",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 6707,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25473,6 +27549,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 319,
   "rceptNo": "20260309001566",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 4849,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25498,6 +27576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260316001654",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5039,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25523,6 +27603,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260316001301",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5124,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25548,6 +27630,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319001351",
   "ksicCode": "23999",
+  "reportedAvgManwonRaw": 6427,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25573,6 +27657,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260319001360",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6738,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25598,6 +27684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260602000220",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 8142,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25623,6 +27711,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260319000720",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7879,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25648,6 +27738,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260812000273",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5278,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25673,6 +27765,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260318001501",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6126,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25698,6 +27792,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323001679",
   "ksicCode": "29221",
+  "reportedAvgManwonRaw": 7200,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25723,6 +27819,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260319001127",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4828,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25748,6 +27846,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260311004422",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6311,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25773,6 +27873,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260323000799",
   "ksicCode": "59112",
+  "reportedAvgManwonRaw": 4784,
+  "divergencePct": 9.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25797,6 +27899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 264,
   "rceptNo": "20260313001112",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5985,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25821,6 +27925,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 216,
   "rceptNo": "20260318000522",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 7100,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25846,6 +27952,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260318001022",
   "ksicCode": "642",
+  "reportedAvgManwonRaw": 10553,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25869,7 +27977,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5456,
   "employeeCount": 281,
   "rceptNo": "20260714000375",
-  "ksicCode": "31322"
+  "ksicCode": "31322",
+  "reportedAvgManwonRaw": 5690,
+  "divergencePct": 4.3
  },
  {
   "corpCode": "00321204",
@@ -25883,6 +27993,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260319000105",
   "ksicCode": "421",
+  "divergencePct": 89.4,
   "flags": [
    "V4-divergence"
   ],
@@ -25911,6 +28022,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20250922000199",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7647,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25936,6 +28049,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260318000908",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 11900,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25961,6 +28076,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260310002770",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 7970,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -25985,6 +28102,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 230,
   "rceptNo": "20260331004980",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 6602,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26009,6 +28128,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 243,
   "rceptNo": "20260313000763",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6242,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26033,6 +28154,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 273,
   "rceptNo": "20260313000860",
   "ksicCode": "5299",
+  "reportedAvgManwonRaw": 5559,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26058,6 +28181,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260323000869",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 4950,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26083,6 +28208,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260316001275",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 5988,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26108,6 +28235,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323001066",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6816,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26132,6 +28261,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 230,
   "rceptNo": "20260605000121",
   "ksicCode": "603",
+  "reportedAvgManwonRaw": 6542,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26156,6 +28287,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 274,
   "rceptNo": "20260320001407",
   "ksicCode": "29172",
+  "reportedAvgManwonRaw": 6635,
+  "divergencePct": 20.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26176,6 +28309,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260319000854",
   "ksicCode": "283",
+  "reportedAvgManwonRaw": 6000,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26200,6 +28335,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 328,
   "rceptNo": "20260323001426",
   "ksicCode": "30331",
+  "reportedAvgManwonRaw": 4577,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26224,6 +28361,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 250,
   "rceptNo": "20260316001182",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 5992,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26249,6 +28388,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260319001193",
   "ksicCode": "242",
+  "reportedAvgManwonRaw": 8859,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26274,6 +28415,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260319001294",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 6352,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26299,6 +28442,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323001226",
   "ksicCode": "59113",
+  "reportedAvgManwonRaw": 5173,
+  "divergencePct": 13,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26324,6 +28469,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260318001476",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5160,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26349,6 +28496,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260317000738",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 7187,
+  "divergencePct": 10.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26374,6 +28523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260320001171",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4737,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26399,6 +28550,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260515001776",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 6928,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26424,6 +28577,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260317000560",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 5288,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26449,6 +28604,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260605000456",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7712,
+  "divergencePct": 8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26468,6 +28625,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 305,
   "rceptNo": "20260319001319",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 4856,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26493,6 +28652,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260528000864",
   "ksicCode": "29176",
+  "reportedAvgManwonRaw": 8531,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26517,6 +28678,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 303,
   "rceptNo": "20260316000912",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 4886,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26542,6 +28705,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.6,
   "rceptNo": "20260320000787",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6379,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26567,6 +28732,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318001091",
   "ksicCode": "45110",
+  "reportedAvgManwonRaw": 8193,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26587,6 +28754,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260323001378",
   "ksicCode": "2641",
+  "reportedAvgManwonRaw": 6467,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26612,6 +28781,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260323001603",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5590,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26637,6 +28808,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260320001289",
   "ksicCode": "46510",
+  "reportedAvgManwonRaw": 5744,
+  "divergencePct": 12.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26662,6 +28835,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260316000795",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 5975,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26687,6 +28862,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260318000958",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 5824,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26712,6 +28889,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260319000873",
   "ksicCode": "15110",
+  "reportedAvgManwonRaw": 5267,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26736,6 +28915,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 225,
   "rceptNo": "20260316001022",
   "ksicCode": "27111",
+  "reportedAvgManwonRaw": 6526,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26760,6 +28941,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 255,
   "rceptNo": "20260318000011",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 5601,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26785,6 +28968,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260318000535",
   "ksicCode": "20131",
+  "reportedAvgManwonRaw": 7654,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26810,6 +28995,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260319000750",
   "ksicCode": "64201",
+  "reportedAvgManwonRaw": 20705,
+  "divergencePct": 6.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26834,6 +29021,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260316000737",
   "ksicCode": "60210",
+  "reportedAvgManwonRaw": 9640,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26859,6 +29048,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260316000001",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 6251,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26884,6 +29075,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260318001317",
   "ksicCode": "857",
+  "reportedAvgManwonRaw": 4097,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26909,6 +29102,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11,
   "rceptNo": "20260724000315",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 7252,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26934,6 +29129,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260319000406",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 4093,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26959,6 +29156,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260319000025",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 17514,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -26984,6 +29183,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.8,
   "rceptNo": "20260323001240",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 9178,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27009,6 +29210,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260408003166",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4945,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27032,7 +29235,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4339,
   "employeeCount": 334,
   "rceptNo": "20260323001621",
-  "ksicCode": "27112"
+  "ksicCode": "27112",
+  "reportedAvgManwonRaw": 4426,
+  "divergencePct": 2
  },
  {
   "corpCode": "00126937",
@@ -27046,6 +29251,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260323001299",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9565,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27071,6 +29278,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260323001536",
   "ksicCode": "31322",
+  "reportedAvgManwonRaw": 4872,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27096,6 +29305,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260318000576",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 6900,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27121,6 +29332,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.2,
   "rceptNo": "20260731000737",
   "ksicCode": "31311",
+  "reportedAvgManwonRaw": 6079,
+  "divergencePct": 6.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27140,6 +29353,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 253,
   "rceptNo": "20260320000616",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5683,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27164,6 +29379,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 251,
   "rceptNo": "20260318001550",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5741,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27189,6 +29406,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260323001550",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 5406,
+  "divergencePct": 32.8,
   "flags": [
    "V4-divergence"
   ],
@@ -27217,6 +29436,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260323001499",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5186,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27241,6 +29462,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 371,
   "rceptNo": "20260406000001",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 3853,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27266,6 +29489,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260323001199",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 5197,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27285,6 +29510,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 244,
   "rceptNo": "20260319000516",
   "ksicCode": "60221",
+  "reportedAvgManwonRaw": 5826,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27309,6 +29536,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 196,
   "rceptNo": "20260316001197",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 6782,
+  "divergencePct": 6.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27334,6 +29563,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319000245",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 5228,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27359,6 +29590,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260319000646",
   "ksicCode": "20421",
+  "reportedAvgManwonRaw": 6950,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27384,6 +29617,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260319001022",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7333,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27409,6 +29644,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260323001613",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 7022,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27434,6 +29671,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260318000903",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 19821,
+  "divergencePct": 6.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27458,6 +29697,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 176,
   "rceptNo": "20260407002515",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 8015,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27482,6 +29723,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 250,
   "rceptNo": "20260319000649",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5616,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27507,6 +29750,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20260319000001",
   "ksicCode": "29142",
+  "reportedAvgManwonRaw": 5446,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27530,7 +29775,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5519,
   "employeeCount": 254,
   "rceptNo": "20260604000439",
-  "ksicCode": "58222"
+  "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5517,
+  "divergencePct": 0
  },
  {
   "corpCode": "00158149",
@@ -27544,6 +29791,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.8,
   "rceptNo": "20260319000588",
   "ksicCode": "19221",
+  "reportedAvgManwonRaw": 11777,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27569,6 +29818,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323001723",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 3054,
+  "divergencePct": 43.5,
   "flags": [
    "V4-divergence"
   ],
@@ -27596,7 +29847,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 323,
   "avgTenureYears": 1.4,
   "rceptNo": "20260327001386",
-  "ksicCode": "64999"
+  "ksicCode": "64999",
+  "reportedAvgManwonRaw": 4285,
+  "divergencePct": 1.1
  },
  {
   "corpCode": "01222867",
@@ -27609,6 +29862,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 244,
   "rceptNo": "20260320000625",
   "ksicCode": "213",
+  "divergencePct": 92.2,
   "flags": [
    "V4-divergence"
   ],
@@ -27637,6 +29891,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260316000908",
   "ksicCode": "101",
+  "reportedAvgManwonRaw": 4149,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27662,6 +29918,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20250922000295",
   "ksicCode": "71400",
+  "reportedAvgManwonRaw": 5251,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27687,6 +29945,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260323000678",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5148,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27712,6 +29972,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.1,
   "rceptNo": "20260323000453",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6382,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27736,6 +29998,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 223,
   "rceptNo": "20260323000658",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6118,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27761,6 +30025,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260323000992",
   "ksicCode": "10121",
+  "reportedAvgManwonRaw": 4621,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27786,6 +30052,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260320001365",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5620,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27811,6 +30079,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001269",
   "ksicCode": "4741",
+  "reportedAvgManwonRaw": 6215,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27835,6 +30105,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 171,
   "rceptNo": "20260318000356",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 8077,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27860,6 +30132,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.7,
   "rceptNo": "20260319000726",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 8078,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -27879,6 +30153,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 223,
   "rceptNo": "20260313000769",
   "ksicCode": "20499",
+  "reportedAvgManwonRaw": 6159,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27899,6 +30175,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260722000434",
   "ksicCode": "25112",
+  "reportedAvgManwonRaw": 3726,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27923,6 +30201,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 283,
   "rceptNo": "20260319001159",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 4758,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27948,6 +30228,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20260318001427",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 14547,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27972,6 +30254,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 216,
   "rceptNo": "20260702000541",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6358,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -27997,6 +30281,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260319001003",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 5653,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28021,6 +30307,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 252,
   "rceptNo": "20260318001472",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 5206,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28046,6 +30334,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318000836",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 14163,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28071,6 +30361,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260319000931",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 8365,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28096,6 +30388,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260319000017",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5209,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28120,6 +30414,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 227,
   "rceptNo": "20260318001611",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5952,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28143,7 +30439,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5033,
   "employeeCount": 269,
   "rceptNo": "20260323000962",
-  "ksicCode": "26299"
+  "ksicCode": "26299",
+  "reportedAvgManwonRaw": 5714,
+  "divergencePct": 13.5
  },
  {
   "corpCode": "01021949",
@@ -28156,6 +30454,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 283,
   "rceptNo": "20260320000939",
   "ksicCode": "59120",
+  "reportedAvgManwonRaw": 4779,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28180,6 +30480,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 164,
   "rceptNo": "20260323001492",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6721,
+  "divergencePct": 18.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28205,6 +30507,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260318000614",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 8053,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28230,6 +30534,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318000243",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 7166,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28255,6 +30561,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260317000678",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5415,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28280,6 +30588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323000784",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6683,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28304,6 +30614,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 126,
   "rceptNo": "20260615000296",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5506,
+  "divergencePct": 48.3,
   "flags": [
    "V4-divergence"
   ],
@@ -28327,6 +30639,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260319000219",
   "ksicCode": "5811",
+  "reportedAvgManwonRaw": 5224,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28351,6 +30665,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260312000744",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 12542,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28375,6 +30691,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 252,
   "rceptNo": "20260814002401",
   "ksicCode": "11111",
+  "reportedAvgManwonRaw": 5306,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28400,6 +30718,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260814002527",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 14285,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28420,6 +30740,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260318001021",
   "ksicCode": "58190",
+  "reportedAvgManwonRaw": 5082,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28444,6 +30766,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 172,
   "rceptNo": "20260319001409",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 7442,
+  "divergencePct": 4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28469,6 +30793,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260331004947",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 6019,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28493,6 +30819,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 234,
   "rceptNo": "20260313000682",
   "ksicCode": "27213",
+  "reportedAvgManwonRaw": 5687,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28518,6 +30846,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260316000450",
   "ksicCode": "27216",
+  "reportedAvgManwonRaw": 8151,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28542,6 +30872,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 238,
   "rceptNo": "20260312000466",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5581,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28567,6 +30899,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260311004292",
   "ksicCode": "319",
+  "reportedAvgManwonRaw": 4778,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28592,6 +30926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323001414",
   "ksicCode": "103",
+  "reportedAvgManwonRaw": 3830,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28616,6 +30952,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 228,
   "rceptNo": "20251117000158",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 5816,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28640,6 +30978,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 277,
   "rceptNo": "20260319001002",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4745,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28664,6 +31004,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 272,
   "rceptNo": "20260323001396",
   "ksicCode": "30",
+  "reportedAvgManwonRaw": 4844,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28689,6 +31031,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260313001177",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 5771,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28713,6 +31057,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 224,
   "rceptNo": "20260731000748",
   "ksicCode": "25112",
+  "reportedAvgManwonRaw": 5899,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28737,6 +31083,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 152,
   "rceptNo": "20260323000883",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 8685,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28762,6 +31110,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260410001848",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5123,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28786,6 +31136,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 234,
   "rceptNo": "20260318001289",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6297,
+  "divergencePct": 11.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28811,6 +31163,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260323001195",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 4927,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28836,6 +31190,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260319001179",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6541,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28861,6 +31217,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260316001217",
   "ksicCode": "4741",
+  "reportedAvgManwonRaw": 8515,
+  "divergencePct": 7.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28886,6 +31244,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16,
   "rceptNo": "20260326000328",
   "ksicCode": "24113",
+  "reportedAvgManwonRaw": 6428,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28910,6 +31270,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 249,
   "rceptNo": "20260323001506",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 5291,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28934,6 +31296,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 263,
   "rceptNo": "20260320001267",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 5010,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28959,6 +31323,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260313000218",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6454,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -28979,6 +31345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260506000554",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4263,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29004,6 +31372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260318000629",
   "ksicCode": "27211",
+  "reportedAvgManwonRaw": 5268,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29028,6 +31398,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 242,
   "rceptNo": "20260319000357",
   "ksicCode": "25991",
+  "reportedAvgManwonRaw": 5374,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29053,6 +31425,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260319001380",
   "ksicCode": "661",
+  "reportedAvgManwonRaw": 5870,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29078,6 +31452,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260323000880",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6144,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29103,6 +31479,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001271",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6983,
+  "divergencePct": 7.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29128,6 +31506,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260318000736",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7714,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29153,6 +31533,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260323001029",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 9312,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29178,6 +31560,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260319001089",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6282,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29203,6 +31587,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260320000406",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5801,
+  "divergencePct": 30.4,
   "flags": [
    "V4-divergence"
   ],
@@ -29231,6 +31617,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260318000731",
   "ksicCode": "24312",
+  "reportedAvgManwonRaw": 10048,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29256,6 +31644,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260323000809",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4670,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29281,6 +31671,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.7,
   "rceptNo": "20260311004300",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5689,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29306,6 +31698,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260320000486",
   "ksicCode": "612",
+  "reportedAvgManwonRaw": 8609,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29325,6 +31719,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 201,
   "rceptNo": "20260317000740",
   "ksicCode": "25114",
+  "reportedAvgManwonRaw": 6375,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29350,6 +31746,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318001201",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7288,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29375,6 +31773,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260326000479",
   "ksicCode": "3111",
+  "reportedAvgManwonRaw": 6563,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29400,6 +31800,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12,
   "rceptNo": "20260323000312",
   "ksicCode": "23325",
+  "reportedAvgManwonRaw": 5541,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29425,6 +31827,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260318000995",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 7854,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29450,6 +31854,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260323001563",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5583,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29475,6 +31881,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260618000383",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4203,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29495,6 +31903,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260317000667",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 5938,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29519,6 +31929,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 238,
   "rceptNo": "20260318001510",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5370,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29544,6 +31956,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260318001455",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 11288,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29568,6 +31982,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 247,
   "rceptNo": "20260320000432",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 6230,
+  "divergencePct": 20.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29593,6 +32009,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260323001111",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 8143,
+  "divergencePct": 6.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29617,6 +32035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 172,
   "rceptNo": "20260507000454",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 7401,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29642,6 +32062,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.4,
   "rceptNo": "20251215000379",
   "ksicCode": "23192",
+  "reportedAvgManwonRaw": 5560,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29666,6 +32088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 215,
   "rceptNo": "20260323001234",
   "ksicCode": "172",
+  "reportedAvgManwonRaw": 5909,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29690,6 +32114,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 219,
   "rceptNo": "20260318001709",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5844,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29714,6 +32140,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 210,
   "rceptNo": "20260318001246",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6037,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29739,6 +32167,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260317000763",
   "ksicCode": "102",
+  "reportedAvgManwonRaw": 4844,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29763,6 +32193,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 273,
   "rceptNo": "20260313000844",
   "ksicCode": "10121",
+  "reportedAvgManwonRaw": 4607,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29788,6 +32220,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260318001110",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 12579,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29813,6 +32247,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260616000254",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 5777,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29837,6 +32273,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 185,
   "rceptNo": "20260318000721",
   "ksicCode": "20491",
+  "reportedAvgManwonRaw": 6754,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29861,6 +32299,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 259,
   "rceptNo": "20260319001206",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5247,
+  "divergencePct": 9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29886,6 +32326,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318000889",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6107,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29911,6 +32353,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260319001177",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6803,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29935,6 +32379,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 222,
   "rceptNo": "20251222000124",
   "ksicCode": "132",
+  "reportedAvgManwonRaw": 5605,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29960,6 +32406,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260318001682",
   "ksicCode": "263",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -29985,6 +32432,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.5,
   "rceptNo": "20260403002080",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 3780,
+  "divergencePct": 25.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30010,6 +32459,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260323000161",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 6716,
+  "divergencePct": 6.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30029,6 +32480,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 213,
   "rceptNo": "20260515002512",
   "ksicCode": "17902",
+  "reportedAvgManwonRaw": 5807,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30054,6 +32507,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260316001645",
   "ksicCode": "732",
+  "reportedAvgManwonRaw": 7454,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30079,6 +32534,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260318000906",
   "ksicCode": "15129",
+  "reportedAvgManwonRaw": 5117,
+  "divergencePct": 9.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30104,6 +32561,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19,
   "rceptNo": "20260319000683",
   "ksicCode": "60210",
+  "reportedAvgManwonRaw": 10817,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30128,6 +32587,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 275,
   "rceptNo": "20260318001084",
   "ksicCode": "28201",
+  "reportedAvgManwonRaw": 4444,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30148,6 +32609,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260319000743",
   "ksicCode": "603",
+  "reportedAvgManwonRaw": 6510,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30172,6 +32635,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 227,
   "rceptNo": "20260318000704",
   "ksicCode": "11122",
+  "reportedAvgManwonRaw": 5424,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30196,6 +32661,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 251,
   "rceptNo": "20260323000705",
   "ksicCode": "22232",
+  "reportedAvgManwonRaw": 4904,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30221,6 +32688,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260319001056",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6170,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30245,6 +32714,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 159,
   "rceptNo": "20260318000955",
   "ksicCode": "41121",
+  "reportedAvgManwonRaw": 7737,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30269,6 +32740,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 265,
   "rceptNo": "20260323000912",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4328,
+  "divergencePct": 6.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30294,6 +32767,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260319000707",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6383,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30319,6 +32794,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260319000714",
   "ksicCode": "139",
+  "reportedAvgManwonRaw": 4026,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30344,6 +32821,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260316001522",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 6332,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30369,6 +32848,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323001529",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6846,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30394,6 +32875,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319000012",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 4921,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30419,6 +32902,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260318000827",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4485,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30444,6 +32929,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260407003277",
   "ksicCode": "32029",
+  "reportedAvgManwonRaw": 4710,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30469,6 +32956,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260313000899",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4477,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30494,6 +32983,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260319001301",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6536,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30518,6 +33009,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 156,
   "rceptNo": "20260323000909",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7750,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30542,6 +33035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 215,
   "rceptNo": "20260318001079",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 5647,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30567,6 +33062,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260320000892",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 8126,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30592,6 +33089,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260319000689",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5296,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30617,6 +33116,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260319000887",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 5686,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30642,6 +33143,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260319000752",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6785,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30667,6 +33170,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260319000953",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 4942,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30687,6 +33192,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260323001742",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6100,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30712,6 +33219,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260622000358",
   "ksicCode": "251",
+  "reportedAvgManwonRaw": 6567,
+  "divergencePct": 9.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30736,6 +33245,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 212,
   "rceptNo": "20260319001041",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 5799,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30761,6 +33272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.6,
   "rceptNo": "20260318001189",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7916,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30786,6 +33299,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20251218000494",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4155,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30810,7 +33325,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 249,
   "avgTenureYears": 4.7,
   "rceptNo": "20260323000640",
-  "ksicCode": "291"
+  "ksicCode": "291",
+  "reportedAvgManwonRaw": 4819,
+  "divergencePct": 0
  },
  {
   "corpCode": "00122551",
@@ -30824,6 +33341,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260319000754",
   "ksicCode": "22214",
+  "reportedAvgManwonRaw": 5352,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30849,6 +33368,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260319001217",
   "ksicCode": "46712",
+  "reportedAvgManwonRaw": 4982,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30873,6 +33394,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 154,
   "rceptNo": "20260313000634",
   "ksicCode": "320",
+  "reportedAvgManwonRaw": 7574,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30897,6 +33420,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 246,
   "rceptNo": "20260317000532",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 4839,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30917,6 +33442,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260623000058",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 15900,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30941,6 +33468,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 115,
   "rceptNo": "20260327000549",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 10322,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30965,6 +33494,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 207,
   "rceptNo": "20260323001611",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5686,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -30988,7 +33519,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5111,
   "employeeCount": 232,
   "rceptNo": "20260316001647",
-  "ksicCode": "283"
+  "ksicCode": "283",
+  "reportedAvgManwonRaw": 5111,
+  "divergencePct": 0
  },
  {
   "corpCode": "01222113",
@@ -31002,6 +33535,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260319001011",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6519,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31027,6 +33562,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2,
   "rceptNo": "20260323000950",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5930,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31047,6 +33584,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260323001002",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6888,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31072,6 +33611,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260330001840",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6238,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31097,6 +33638,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260318001260",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 4779,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31121,6 +33664,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 144,
   "rceptNo": "20260323001036",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 8175,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31146,6 +33691,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260319000354",
   "ksicCode": "581",
+  "reportedAvgManwonRaw": 4990,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31170,6 +33717,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 133,
   "rceptNo": "20260320000819",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 9262,
+  "divergencePct": 4.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31195,6 +33744,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260318000671",
   "ksicCode": "26310",
+  "reportedAvgManwonRaw": 5661,
+  "divergencePct": 6.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31220,6 +33771,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260731000782",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 6003,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31244,6 +33797,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 290,
   "rceptNo": "20260602000490",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 4052,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31269,6 +33824,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.8,
   "rceptNo": "20260318001636",
   "ksicCode": "16211",
+  "reportedAvgManwonRaw": 7602,
+  "divergencePct": 10.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31294,6 +33851,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.1,
   "rceptNo": "20260331002706",
   "ksicCode": "28302",
+  "reportedAvgManwonRaw": 8122,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31319,6 +33878,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260323000977",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 3750,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31343,6 +33904,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 156,
   "rceptNo": "20260313001301",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5310,
+  "divergencePct": 29.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31368,6 +33931,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.3,
   "rceptNo": "20260323001373",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 7019,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31393,6 +33958,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260310002913",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 4658,
+  "divergencePct": 14.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31418,6 +33985,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260318000474",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5436,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31442,6 +34011,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 221,
   "rceptNo": "20260313000615",
   "ksicCode": "20413",
+  "reportedAvgManwonRaw": 5302,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31467,6 +34038,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260313001254",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4068,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31492,6 +34065,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260323001668",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 7188,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31517,6 +34092,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260312000696",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 6371,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31542,6 +34119,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260323000257",
   "ksicCode": "28909",
+  "reportedAvgManwonRaw": 6389,
+  "divergencePct": 12,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31567,6 +34146,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260331002196",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5668,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31592,6 +34173,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319000618",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 6164,
+  "divergencePct": 12.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31617,6 +34200,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260319000658",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 4890,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31641,6 +34226,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 216,
   "rceptNo": "20260318001615",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5314,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31666,6 +34253,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260318000570",
   "ksicCode": "251",
+  "reportedAvgManwonRaw": 7505,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31685,6 +34274,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 220,
   "rceptNo": "20260318000724",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5280,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31709,6 +34300,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 215,
   "rceptNo": "20260317000861",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5384,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31734,6 +34327,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260318001380",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 6705,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31759,6 +34354,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260318001624",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 6022,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31784,6 +34381,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.5,
   "rceptNo": "20260319001410",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 10284,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31809,6 +34408,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260316001408",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 5635,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31834,6 +34435,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260317000700",
   "ksicCode": "29175",
+  "reportedAvgManwonRaw": 4751,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31859,6 +34462,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260319001158",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5494,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31884,6 +34489,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260320001080",
   "ksicCode": "58212",
+  "reportedAvgManwonRaw": 8358,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31908,6 +34515,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 190,
   "rceptNo": "20260312001420",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5994,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31933,6 +34542,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260318001623",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 8082,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31958,6 +34569,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318001005",
   "ksicCode": "63112",
+  "reportedAvgManwonRaw": 6520,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -31983,6 +34596,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260702000424",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 5616,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32007,6 +34622,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 156,
   "rceptNo": "20260331003244",
   "ksicCode": "28302",
+  "reportedAvgManwonRaw": 7300,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32032,6 +34649,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260430001612",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4972,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32057,6 +34676,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260319000711",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4702,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32082,6 +34703,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260316001412",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 4135,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32106,6 +34729,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 145,
   "rceptNo": "20260318000491",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 7868,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32131,6 +34756,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260629000421",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4918,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32156,6 +34783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318000382",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5908,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32181,6 +34810,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20250328001189",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 7187,
+  "divergencePct": 3,
   "history": [
    {
     "fiscalYear": "2023",
@@ -32201,6 +34832,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260318000486",
   "ksicCode": "47119",
+  "reportedAvgManwonRaw": 5430,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32225,6 +34858,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 187,
   "rceptNo": "20260319000765",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 6036,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32250,6 +34885,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260318001548",
   "ksicCode": "179",
+  "reportedAvgManwonRaw": 5836,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32275,6 +34912,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001595",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6929,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32300,6 +34939,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318001144",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 4844,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32325,6 +34966,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260318001120",
   "ksicCode": "20499",
+  "reportedAvgManwonRaw": 4923,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32349,7 +34992,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 189,
   "avgTenureYears": 4.4,
   "rceptNo": "20260323000596",
-  "ksicCode": "41112"
+  "ksicCode": "41112",
+  "reportedAvgManwonRaw": 5921,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "00249894",
@@ -32363,6 +35008,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260319001163",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5050,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32387,6 +35034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260311004380",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 13043,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32412,6 +35061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260330001610",
   "ksicCode": "14199",
+  "reportedAvgManwonRaw": 6290,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32436,6 +35087,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 208,
   "rceptNo": "20260319001092",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 5354,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32460,6 +35113,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 256,
   "rceptNo": "20260318001559",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4506,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32484,6 +35139,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 179,
   "rceptNo": "20260316001681",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6173,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32509,6 +35166,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318001697",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4680,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32533,6 +35192,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 193,
   "rceptNo": "20260409000308",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5738,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32558,6 +35219,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.1,
   "rceptNo": "20260312001348",
   "ksicCode": "64999",
+  "reportedAvgManwonRaw": 5951,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32578,6 +35241,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260320000289",
   "ksicCode": "27111",
+  "reportedAvgManwonRaw": 6053,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32603,6 +35268,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260316001508",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5714,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32628,6 +35295,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20250321001402",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 7678,
+  "divergencePct": 24.5,
   "history": [
    {
     "fiscalYear": "2023",
@@ -32648,6 +35317,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.4,
   "rceptNo": "20260316001014",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 6497,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32672,6 +35343,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 114,
   "rceptNo": "20260319001044",
   "ksicCode": "172",
+  "reportedAvgManwonRaw": 9609,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32697,6 +35370,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260319000927",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4740,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32722,6 +35397,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260319000612",
   "ksicCode": "20421",
+  "reportedAvgManwonRaw": 6048,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32747,6 +35424,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318001635",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 7201,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32772,6 +35451,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260318000227",
   "ksicCode": "20201",
+  "reportedAvgManwonRaw": 6661,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32796,6 +35477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 210,
   "rceptNo": "20260320000652",
   "ksicCode": "26212",
+  "reportedAvgManwonRaw": 4960,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32820,6 +35503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 199,
   "rceptNo": "20260323001543",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 5495,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32844,6 +35529,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 200,
   "rceptNo": "20250328000985",
   "ksicCode": "63112",
+  "reportedAvgManwonRaw": 5758,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2023",
@@ -32863,6 +35550,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 188,
   "rceptNo": "20260306000209",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5841,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32888,6 +35577,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260319000482",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6425,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32913,6 +35604,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260407003063",
   "ksicCode": "64132",
+  "reportedAvgManwonRaw": 7840,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32938,6 +35631,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260320000688",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 6869,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32963,6 +35658,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260407003303",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 5343,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -32987,6 +35684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 196,
   "rceptNo": "20260319001387",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5515,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33012,6 +35711,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260323000942",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6851,
+  "divergencePct": 16.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33037,6 +35738,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318001639",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 13136,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33062,6 +35765,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260316001080",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7034,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33081,6 +35786,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 170,
   "rceptNo": "20260323001157",
   "ksicCode": "24121",
+  "reportedAvgManwonRaw": 7553,
+  "divergencePct": 19.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33106,6 +35813,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260323001717",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 7729,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33131,6 +35840,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260319001250",
   "ksicCode": "5822",
+  "reportedAvgManwonRaw": 6225,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33156,6 +35867,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260318001484",
   "ksicCode": "2032",
+  "reportedAvgManwonRaw": 5434,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33181,6 +35894,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20251217000580",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 4365,
+  "divergencePct": 6.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33205,6 +35920,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 129,
   "rceptNo": "20260318000744",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 8730,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33230,6 +35947,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260323000831",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 5550,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33254,7 +35973,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 208,
   "avgTenureYears": 5.4,
   "rceptNo": "20260318000699",
-  "ksicCode": "58222"
+  "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5113,
+  "divergencePct": 0
  },
  {
   "corpCode": "00113544",
@@ -33268,6 +35989,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260318001465",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 7167,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33292,6 +36015,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260319001009",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 5963,
+  "divergencePct": 74.7,
   "flags": [
    "V4-divergence"
   ],
@@ -33320,6 +36045,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260323001248",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 7362,
+  "divergencePct": 9.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33345,6 +36072,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260316001426",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6648,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33369,6 +36098,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 197,
   "rceptNo": "20250916000173",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5410,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33394,6 +36125,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260317000533",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 6551,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33413,6 +36146,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 152,
   "rceptNo": "20260318000864",
   "ksicCode": "41225",
+  "reportedAvgManwonRaw": 6299,
+  "divergencePct": 9.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33437,6 +36172,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 188,
   "rceptNo": "20260316001657",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 5557,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33462,6 +36199,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260318001566",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 7772,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33486,6 +36225,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 77,
   "rceptNo": "20260318001307",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 12723,
+  "divergencePct": 6.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33510,6 +36251,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 103,
   "rceptNo": "20260320001317",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 7401,
+  "divergencePct": 27.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33535,6 +36278,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 0.8,
   "rceptNo": "20260318001674",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 8846,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33558,7 +36303,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5333,
   "employeeCount": 196,
   "rceptNo": "20260311004383",
-  "ksicCode": "26224"
+  "ksicCode": "26224",
+  "reportedAvgManwonRaw": 5196,
+  "divergencePct": 2.6
  },
  {
   "corpCode": "00536523",
@@ -33571,6 +36318,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 204,
   "rceptNo": "20260312000793",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 5107,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33596,6 +36345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260320001022",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 4840,
+  "divergencePct": 6.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33621,6 +36372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260330001000",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5340,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33646,6 +36399,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260323000919",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 4002,
+  "divergencePct": 10.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33670,6 +36425,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 185,
   "rceptNo": "20260421000082",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5609,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33690,6 +36447,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260323001081",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6913,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33715,6 +36474,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260320000513",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6020,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33740,6 +36501,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260316001316",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6134,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33765,6 +36528,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260703000506",
   "ksicCode": "263",
+  "reportedAvgManwonRaw": 8356,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33789,6 +36554,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 217,
   "rceptNo": "20260320001156",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4687,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33814,6 +36581,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.1,
   "rceptNo": "20260320000650",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 6727,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33839,6 +36608,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260325000515",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 3931,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33864,6 +36635,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260317000588",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 6654,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33889,6 +36662,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323001607",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5716,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33914,6 +36689,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20250918000405",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4219,
+  "divergencePct": 15.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33939,6 +36716,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260319001000",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7181,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33964,6 +36743,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260320001082",
   "ksicCode": "22212",
+  "reportedAvgManwonRaw": 5926,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -33988,6 +36769,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 201,
   "rceptNo": "20260316001449",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5078,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34012,6 +36795,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 184,
   "rceptNo": "20260318000580",
   "ksicCode": "22214",
+  "reportedAvgManwonRaw": 5540,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34036,6 +36821,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 224,
   "rceptNo": "20260323000889",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 3769,
+  "divergencePct": 17.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34061,6 +36848,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260316000323",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 6389,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34085,6 +36874,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260331002865",
   "ksicCode": "30320",
+  "reportedAvgManwonRaw": 7778,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34110,6 +36901,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260730000045",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 6471,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34135,6 +36928,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260319001383",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 5851,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34160,6 +36955,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260318000523",
   "ksicCode": "32021",
+  "reportedAvgManwonRaw": 5292,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34185,6 +36982,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260810000668",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 4609,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34210,6 +37009,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001342",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5178,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34234,6 +37035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 145,
   "rceptNo": "20260319000858",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6905,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34258,6 +37061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 185,
   "rceptNo": "20260319000010",
   "ksicCode": "70111",
+  "reportedAvgManwonRaw": 5399,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34283,6 +37088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260320001402",
   "ksicCode": "4521",
+  "reportedAvgManwonRaw": 4860,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34308,6 +37115,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.7,
   "rceptNo": "20260320001078",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6093,
+  "divergencePct": 14.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34333,6 +37142,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 0.7,
   "rceptNo": "20260319000016",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 3385,
+  "divergencePct": 16,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34358,6 +37169,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260320000963",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 7251,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34383,6 +37196,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260617000463",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5426,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34403,6 +37218,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260319001150",
   "ksicCode": "41112",
+  "reportedAvgManwonRaw": 7594,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34428,6 +37245,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260318000875",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6833,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34453,6 +37272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260323001718",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 10847,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34477,6 +37298,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 168,
   "rceptNo": "20260317000021",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5873,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34501,6 +37324,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 167,
   "rceptNo": "20260318001521",
   "ksicCode": "46800",
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34525,6 +37349,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 134,
   "rceptNo": "20260323000928",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7304,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34549,6 +37375,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 189,
   "rceptNo": "20260319001255",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5129,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34573,6 +37401,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 194,
   "rceptNo": "20260320001149",
   "ksicCode": "46331",
+  "reportedAvgManwonRaw": 5099,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34598,6 +37428,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260319000283",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 6050,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34623,6 +37455,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260707000320",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4891,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34648,6 +37482,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260721001149",
   "ksicCode": "901",
+  "reportedAvgManwonRaw": 4567,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34673,6 +37509,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260320000003",
   "ksicCode": "58221",
+  "divergencePct": 91.4,
   "flags": [
    "V4-divergence"
   ]
@@ -34688,6 +37525,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260318001467",
   "ksicCode": "46522",
+  "reportedAvgManwonRaw": 8434,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34712,6 +37551,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 79,
   "rceptNo": "20260318001177",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 7756,
+  "divergencePct": 36.7,
   "flags": [
    "V4-divergence"
   ],
@@ -34735,6 +37576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260323001475",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5188,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34759,6 +37602,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260319000977",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 8312,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34783,6 +37628,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 166,
   "rceptNo": "20260323001559",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6050,
+  "divergencePct": 4.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34808,6 +37655,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260318001341",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 16307,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34832,6 +37681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 161,
   "rceptNo": "20260318001072",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 5952,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34856,6 +37707,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 171,
   "rceptNo": "20260319000615",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5604,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34881,6 +37734,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260731000620",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 5602,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34906,6 +37761,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260324000034",
   "ksicCode": "1030",
+  "reportedAvgManwonRaw": 5091,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34931,6 +37788,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260324000414",
   "ksicCode": "46510",
+  "reportedAvgManwonRaw": 5623,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34955,6 +37814,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 167,
   "rceptNo": "20260320000994",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5719,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -34980,6 +37841,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260319001208",
   "ksicCode": "26293",
+  "reportedAvgManwonRaw": 5704,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35004,6 +37867,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 113,
   "rceptNo": "20260317000665",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 8487,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35029,6 +37894,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260319000779",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 4291,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35054,6 +37921,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260320001214",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 6711,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35079,6 +37948,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260323001177",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5397,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35103,6 +37974,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 187,
   "rceptNo": "20260320000308",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4606,
+  "divergencePct": 9.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35128,6 +38001,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260331004202",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 25016,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35153,6 +38028,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260318000412",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 4631,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35178,6 +38055,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260318001345",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5806,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35202,6 +38081,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 159,
   "rceptNo": "20260320000913",
   "ksicCode": "14120",
+  "reportedAvgManwonRaw": 5806,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35227,6 +38108,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260319000682",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6887,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35251,6 +38134,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260318000236",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 7240,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35276,6 +38161,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260320000872",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 20466,
+  "divergencePct": 4.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35301,6 +38188,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260318001363",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 6851,
+  "divergencePct": 7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35326,6 +38215,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260316000862",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 10670,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35345,6 +38236,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 179,
   "rceptNo": "20260318001578",
   "ksicCode": "27192",
+  "reportedAvgManwonRaw": 5274,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35370,6 +38263,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260319000430",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 3356,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35394,6 +38289,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260318001433",
   "ksicCode": "263",
+  "reportedAvgManwonRaw": 5854,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35419,6 +38316,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260507000504",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 4828,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35443,6 +38342,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 140,
   "rceptNo": "20260318001520",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 6756,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35468,6 +38369,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260323000743",
   "ksicCode": "29142",
+  "reportedAvgManwonRaw": 6037,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35492,6 +38395,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 163,
   "rceptNo": "20260317000729",
   "ksicCode": "25924",
+  "reportedAvgManwonRaw": 5712,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35511,6 +38416,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260309001578",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 5833,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35535,6 +38442,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 173,
   "rceptNo": "20260608000226",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5390,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35560,6 +38469,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260320000218",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5691,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35584,6 +38495,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 236,
   "rceptNo": "20260320000173",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 3931,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35609,6 +38522,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260323001209",
   "ksicCode": "14120",
+  "reportedAvgManwonRaw": 4661,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35634,6 +38549,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260318001673",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 6729,
+  "divergencePct": 6.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35658,6 +38575,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260319000959",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 4917,
+  "divergencePct": 19.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35683,6 +38602,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.5,
   "rceptNo": "20260323001025",
   "ksicCode": "19221",
+  "reportedAvgManwonRaw": 8495,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35707,6 +38628,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 150,
   "rceptNo": "20260318001696",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6172,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35731,6 +38654,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 137,
   "rceptNo": "20260316001045",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6723,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35756,6 +38681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260702000226",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 5874,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35780,6 +38707,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260316001631",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5738,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35805,6 +38734,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260814001743",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 6380,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35830,6 +38761,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260319000816",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 5978,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35854,6 +38787,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 153,
   "rceptNo": "20260626000150",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5998,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35878,6 +38813,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260318001554",
   "ksicCode": "24222",
+  "reportedAvgManwonRaw": 5635,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35902,6 +38839,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260319000445",
   "ksicCode": "14112",
+  "reportedAvgManwonRaw": 5838,
+  "divergencePct": 3.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35926,6 +38865,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 133,
   "rceptNo": "20260612000582",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6889,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35950,6 +38891,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260318000249",
   "ksicCode": "27219",
+  "reportedAvgManwonRaw": 5714,
+  "divergencePct": 5.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -35975,6 +38918,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260318001127",
   "ksicCode": "29142",
+  "reportedAvgManwonRaw": 6770,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36000,6 +38945,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318000562",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 4850,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36025,6 +38972,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260318001116",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 5088,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36050,6 +38999,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20260319001328",
   "ksicCode": "25993",
+  "reportedAvgManwonRaw": 4361,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36074,6 +39025,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 170,
   "rceptNo": "20260323000393",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 5340,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36099,6 +39052,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260319000890",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 6038,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36123,6 +39078,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 175,
   "rceptNo": "20260703000453",
   "ksicCode": "2927",
+  "reportedAvgManwonRaw": 5150,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36147,6 +39104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 175,
   "rceptNo": "20260318001054",
   "ksicCode": "25923",
+  "reportedAvgManwonRaw": 5226,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36172,6 +39131,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260429001131",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 2198,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36197,6 +39158,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260320001193",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6978,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36222,6 +39185,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260814003249",
   "ksicCode": "620",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -36250,6 +39214,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260407003641",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 6354,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36275,6 +39241,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260323000984",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 6276,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36299,7 +39267,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 105,
   "avgTenureYears": 2.7,
   "rceptNo": "20260318001533",
-  "ksicCode": "582"
+  "ksicCode": "582",
+  "reportedAvgManwonRaw": 8899,
+  "divergencePct": 4.1
  },
  {
   "corpCode": "00985686",
@@ -36312,6 +39282,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 170,
   "rceptNo": "20260319001122",
   "ksicCode": "59201",
+  "reportedAvgManwonRaw": 5286,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36337,6 +39309,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260316000806",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6170,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36362,6 +39336,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318001638",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6620,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36387,6 +39363,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260320000390",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4538,
+  "divergencePct": 27.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36411,6 +39389,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 148,
   "rceptNo": "20260316000744",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 6003,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36436,6 +39416,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260318000528",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 7855,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36461,6 +39443,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260323001416",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6736,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36485,6 +39469,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 213,
   "rceptNo": "20260320001002",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4157,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36510,6 +39496,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260323000900",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 4701,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36535,6 +39523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260319000117",
   "ksicCode": "63120",
+  "reportedAvgManwonRaw": 5107,
+  "divergencePct": 10.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36555,6 +39545,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260318001140",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 5865,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36580,6 +39572,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260318001251",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 11712,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36604,6 +39598,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 131,
   "rceptNo": "20260313001285",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 6704,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36624,6 +39620,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260319001238",
   "ksicCode": "29119",
+  "reportedAvgManwonRaw": 6499,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36649,6 +39647,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260319001143",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 4847,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36674,6 +39674,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260319001329",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5443,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36699,6 +39701,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260323001728",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4843,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36723,6 +39727,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 166,
   "rceptNo": "20260515000792",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5227,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36748,6 +39754,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260318000617",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 14325,
+  "divergencePct": 9.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36773,6 +39781,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318001173",
   "ksicCode": "423",
+  "reportedAvgManwonRaw": 6134,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36798,6 +39808,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260316001038",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6127,
+  "divergencePct": 19.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36823,6 +39835,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260323001123",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 5587,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36848,6 +39862,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323001424",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 6180,
+  "divergencePct": 60.2,
   "flags": [
    "V4-divergence"
   ],
@@ -36875,6 +39891,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 142,
   "rceptNo": "20260323001480",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 6153,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36899,6 +39917,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260323001268",
   "ksicCode": "759",
+  "reportedAvgManwonRaw": 5583,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36924,6 +39944,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260319000691",
   "ksicCode": "2121",
+  "reportedAvgManwonRaw": 6577,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36948,6 +39970,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 181,
   "rceptNo": "20260318000842",
   "ksicCode": "13219",
+  "reportedAvgManwonRaw": 4799,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36973,6 +39997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260318001183",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 9274,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -36997,6 +40023,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 182,
   "rceptNo": "20260318000138",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 5021,
+  "divergencePct": 5.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37020,7 +40048,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4748,
   "employeeCount": 182,
   "rceptNo": "20260320001331",
-  "ksicCode": "272"
+  "ksicCode": "272",
+  "reportedAvgManwonRaw": 5091,
+  "divergencePct": 7.2
  },
  {
   "corpCode": "01226270",
@@ -37034,6 +40064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260320001099",
   "ksicCode": "22211",
+  "reportedAvgManwonRaw": 4571,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37058,6 +40090,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 172,
   "rceptNo": "20260319001029",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5022,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37083,6 +40117,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260319000459",
   "ksicCode": "713",
+  "reportedAvgManwonRaw": 6866,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37108,6 +40144,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260319000013",
   "ksicCode": "27211",
+  "reportedAvgManwonRaw": 7650,
+  "divergencePct": 12.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37127,6 +40165,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 218,
   "rceptNo": "20260316001165",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 3972,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37151,7 +40191,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 138,
   "avgTenureYears": 4.8,
   "rceptNo": "20260319000957",
-  "ksicCode": "47320"
+  "ksicCode": "47320",
+  "reportedAvgManwonRaw": 6468,
+  "divergencePct": 3.7
  },
  {
   "corpCode": "00258360",
@@ -37164,6 +40206,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 161,
   "rceptNo": "20260326000001",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5342,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37189,6 +40233,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260313001345",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5164,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37214,6 +40260,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20250918000340",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 5370,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37239,6 +40287,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260312001247",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 5822,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37263,6 +40313,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 159,
   "rceptNo": "20260319001290",
   "ksicCode": "38230",
+  "reportedAvgManwonRaw": 5399,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37287,6 +40339,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 193,
   "rceptNo": "20260317000725",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4461,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37312,6 +40366,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260318000926",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5245,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37337,6 +40393,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20251219000592",
   "ksicCode": "011",
+  "reportedAvgManwonRaw": 2562,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37361,6 +40419,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 219,
   "rceptNo": "20260319000408",
   "ksicCode": "5811",
+  "reportedAvgManwonRaw": 3927,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37385,6 +40445,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 124,
   "rceptNo": "20260319000465",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6875,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37410,6 +40472,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260320000512",
   "ksicCode": "203",
+  "reportedAvgManwonRaw": 5285,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37435,6 +40499,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323001300",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 3682,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37459,6 +40525,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 117,
   "rceptNo": "20260318001087",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7231,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37484,6 +40552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323001694",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5960,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37509,6 +40579,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260316001549",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 7629,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37534,6 +40606,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260318001443",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 7563,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37558,6 +40632,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 142,
   "rceptNo": "20260814001568",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5964,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37583,6 +40659,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.8,
   "rceptNo": "20260320000352",
   "ksicCode": "179",
+  "reportedAvgManwonRaw": 6070,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37608,6 +40686,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.6,
   "rceptNo": "20260318000334",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 5975,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37632,6 +40712,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 139,
   "rceptNo": "20260316000774",
   "ksicCode": "239",
+  "reportedAvgManwonRaw": 6129,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37656,6 +40738,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 190,
   "rceptNo": "20260313000454",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 4404,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37675,6 +40759,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 160,
   "rceptNo": "20260319000014",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5175,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37699,6 +40785,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 131,
   "rceptNo": "20260311003408",
   "ksicCode": "10520",
+  "reportedAvgManwonRaw": 6649,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37723,6 +40811,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 141,
   "rceptNo": "20260317000604",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4783,
+  "divergencePct": 19,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37748,6 +40838,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260320000921",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 6481,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37772,6 +40864,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 138,
   "rceptNo": "20260515000598",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6015,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37796,6 +40890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 129,
   "rceptNo": "20260626000139",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6420,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37821,6 +40917,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260615000277",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 7261,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37840,6 +40938,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 184,
   "rceptNo": "20260327001131",
   "ksicCode": "331",
+  "reportedAvgManwonRaw": 4473,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37865,6 +40965,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260323001673",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 6059,
+  "divergencePct": 10.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37889,6 +40991,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 197,
   "rceptNo": "20260626000761",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4155,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37914,6 +41018,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260319000003",
   "ksicCode": "2612",
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37938,6 +41043,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 161,
   "rceptNo": "20260323000584",
   "ksicCode": "11209",
+  "reportedAvgManwonRaw": 5113,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37963,6 +41070,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260320000353",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5254,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -37987,6 +41096,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 164,
   "rceptNo": "20260317000873",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4973,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38012,6 +41123,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260320000852",
   "ksicCode": "73203",
+  "reportedAvgManwonRaw": 4395,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38037,6 +41150,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260323001646",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4970,
+  "divergencePct": 14,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38062,6 +41177,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260313001171",
   "ksicCode": "713",
+  "reportedAvgManwonRaw": 5128,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38087,6 +41204,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260323001354",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 3535,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38112,6 +41231,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260311004653",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 4576,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38137,6 +41258,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260320000508",
   "ksicCode": "46521",
+  "reportedAvgManwonRaw": 6118,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38161,6 +41284,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 179,
   "rceptNo": "20260323001249",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 4528,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38186,6 +41311,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260318001050",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6363,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38210,7 +41337,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 113,
   "avgTenureYears": 6.1,
   "rceptNo": "20260318000032",
-  "ksicCode": "26429"
+  "ksicCode": "26429",
+  "reportedAvgManwonRaw": 6912,
+  "divergencePct": 3.8
  },
  {
   "corpCode": "00187725",
@@ -38224,6 +41353,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260318001121",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 5385,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38249,6 +41380,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260318001653",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4711,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38273,6 +41406,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 102,
   "rceptNo": "20260316001695",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 7933,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38297,6 +41432,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 103,
   "rceptNo": "20260317000715",
   "ksicCode": "20121",
+  "reportedAvgManwonRaw": 7856,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38321,7 +41458,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 139,
   "avgTenureYears": 2.7,
   "rceptNo": "20260320001389",
-  "ksicCode": "58222"
+  "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5815,
+  "divergencePct": 0
  },
  {
   "corpCode": "00264732",
@@ -38334,6 +41473,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 128,
   "rceptNo": "20260312000854",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6305,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38358,6 +41499,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 133,
   "rceptNo": "20260319001180",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6053,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38383,6 +41526,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260323001163",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 4431,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38408,6 +41553,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.5,
   "rceptNo": "20260320001378",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6200,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38431,7 +41578,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5518,
   "employeeCount": 146,
   "rceptNo": "20260320000589",
-  "ksicCode": "21212"
+  "ksicCode": "21212",
+  "reportedAvgManwonRaw": 5489,
+  "divergencePct": 0.5
  },
  {
   "corpCode": "00158015",
@@ -38445,6 +41594,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260319001245",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 5250,
+  "divergencePct": 7.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38470,6 +41621,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260320000951",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 6758,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38495,6 +41648,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260317000359",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 5310,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38519,6 +41674,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 126,
   "rceptNo": "20260323001351",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6325,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38543,6 +41700,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 128,
   "rceptNo": "20260522000549",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5278,
+  "divergencePct": 15.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38563,6 +41722,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323000571",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 4933,
+  "divergencePct": 8.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38588,6 +41749,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260319000970",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 5589,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38612,6 +41775,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 131,
   "rceptNo": "20260319001347",
   "ksicCode": "151",
+  "reportedAvgManwonRaw": 6061,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38637,6 +41802,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260319000484",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5453,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38661,6 +41828,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260319000571",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 7409,
+  "divergencePct": 21,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38681,6 +41850,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260318000703",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 7450,
+  "divergencePct": 17.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38706,6 +41877,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260325001443",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 4970,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38731,6 +41904,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11,
   "rceptNo": "20260608000034",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 5036,
+  "divergencePct": 6.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38756,6 +41931,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260320001188",
   "ksicCode": "24219",
+  "reportedAvgManwonRaw": 5708,
+  "divergencePct": 10,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38775,6 +41952,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 151,
   "rceptNo": "20260313001028",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 5266,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38800,6 +41979,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260317000862",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6434,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38825,6 +42006,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260323001298",
   "ksicCode": "46452",
+  "reportedAvgManwonRaw": 5141,
+  "divergencePct": 43.2,
   "flags": [
    "V4-divergence"
   ],
@@ -38852,6 +42035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260319000270",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 6102,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38872,6 +42057,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260318000916",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 12833,
+  "divergencePct": 9.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38897,6 +42084,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260320000487",
   "ksicCode": "13992",
+  "reportedAvgManwonRaw": 6461,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38921,6 +42110,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 189,
   "rceptNo": "20260323000783",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 4164,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38946,6 +42137,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260312000549",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5464,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -38971,6 +42164,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260318000508",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 5924,
+  "divergencePct": 5.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -38991,6 +42186,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260323001454",
   "ksicCode": "463",
+  "reportedAvgManwonRaw": 10469,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39015,6 +42212,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 113,
   "rceptNo": "20260320001370",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6833,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39040,6 +42239,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260312001020",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5909,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39064,6 +42265,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 163,
   "rceptNo": "20260323001218",
   "ksicCode": "33999",
+  "reportedAvgManwonRaw": 4790,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39087,7 +42290,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5563,
   "employeeCount": 140,
   "rceptNo": "20260318000748",
-  "ksicCode": "292"
+  "ksicCode": "292",
+  "reportedAvgManwonRaw": 5563,
+  "divergencePct": 0
  },
  {
   "corpCode": "00154462",
@@ -39101,6 +42306,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260318000825",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 14820,
+  "divergencePct": 14.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39126,6 +42333,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260319001086",
   "ksicCode": "32029",
+  "reportedAvgManwonRaw": 4556,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39151,6 +42360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260331003325",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 6572,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39175,6 +42386,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 148,
   "rceptNo": "20260323000642",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5231,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39200,6 +42413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20251229000628",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4135,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39225,6 +42440,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15,
   "rceptNo": "20260330000925",
   "ksicCode": "353",
+  "reportedAvgManwonRaw": 8685,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39250,6 +42467,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20250619000224",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 15200,
+  "divergencePct": 23.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39274,6 +42493,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 181,
   "rceptNo": "20260318001678",
   "ksicCode": "3033",
+  "reportedAvgManwonRaw": 4214,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39298,6 +42519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 121,
   "rceptNo": "20260731000744",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6254,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39323,6 +42546,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260318001237",
   "ksicCode": "27214",
+  "reportedAvgManwonRaw": 4559,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39347,6 +42572,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260318001415",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 11995,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39372,6 +42599,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.4,
   "rceptNo": "20260323000923",
   "ksicCode": "24123",
+  "reportedAvgManwonRaw": 5961,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39396,6 +42625,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 111,
   "rceptNo": "20260318001650",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 6194,
+  "divergencePct": 10.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39420,6 +42651,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 197,
   "rceptNo": "20260324000545",
   "ksicCode": "320",
+  "reportedAvgManwonRaw": 3902,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39444,6 +42677,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260318001654",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 5223,
+  "divergencePct": 11.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39469,6 +42704,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20250911000416",
   "ksicCode": "1811",
+  "reportedAvgManwonRaw": 3505,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39489,6 +42726,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260323001204",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6392,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39514,6 +42753,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260316001016",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 6409,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39539,6 +42780,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260731000634",
   "ksicCode": "21309",
+  "divergencePct": 91.1,
   "flags": [
    "V4-divergence"
   ],
@@ -39567,6 +42809,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260318001161",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 6013,
+  "divergencePct": 8.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39592,6 +42836,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260310003096",
   "ksicCode": "25112",
+  "reportedAvgManwonRaw": 6165,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39616,6 +42862,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 141,
   "rceptNo": "20260323000963",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5319,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39641,6 +42889,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260323001381",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 19323,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39665,6 +42915,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 153,
   "rceptNo": "20260318001334",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4923,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39690,6 +42942,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.1,
   "rceptNo": "20260814000666",
   "ksicCode": "24131",
+  "reportedAvgManwonRaw": 5656,
+  "divergencePct": 6.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39715,6 +42969,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260318001507",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 5365,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39739,6 +42995,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260323001700",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6537,
+  "divergencePct": 18.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39764,6 +43022,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260320001232",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5680,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39788,6 +43048,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260310002871",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6942,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39813,6 +43075,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260323001670",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6195,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39838,6 +43102,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260813001338",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 6273,
+  "divergencePct": 8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39862,6 +43128,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 50,
   "rceptNo": "20260323000907",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 14949,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39887,6 +43155,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260316001688",
   "ksicCode": "424",
+  "reportedAvgManwonRaw": 4246,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39907,6 +43177,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260319001132",
   "ksicCode": "582",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39931,6 +43202,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 135,
   "rceptNo": "20260319001326",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5525,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39956,6 +43229,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.3,
   "rceptNo": "20260319001416",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 8893,
+  "divergencePct": 3.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -39981,6 +43256,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260320001113",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5359,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40006,6 +43283,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260324000049",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5557,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40031,6 +43310,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260319001306",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5526,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40056,6 +43337,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260323001653",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5417,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40080,6 +43363,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 186,
   "rceptNo": "20260623000191",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 3977,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40104,6 +43389,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260323001497",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7283,
+  "divergencePct": 6.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40129,6 +43416,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260331002416",
   "ksicCode": "46417",
+  "reportedAvgManwonRaw": 4393,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40154,6 +43443,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260320000908",
   "ksicCode": "2031",
+  "reportedAvgManwonRaw": 4183,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40178,6 +43469,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 169,
   "rceptNo": "20260318001332",
   "ksicCode": "463",
+  "reportedAvgManwonRaw": 4340,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40201,7 +43494,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5514,
   "employeeCount": 133,
   "rceptNo": "20260407003281",
-  "ksicCode": "21100"
+  "ksicCode": "21100",
+  "reportedAvgManwonRaw": 5514,
+  "divergencePct": 0
  },
  {
   "corpCode": "00128607",
@@ -40215,6 +43510,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.3,
   "rceptNo": "20260312001435",
   "ksicCode": "46465",
+  "reportedAvgManwonRaw": 6825,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40239,6 +43536,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 153,
   "rceptNo": "20260310002556",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 5284,
+  "divergencePct": 10.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40264,6 +43563,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260312000650",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 6492,
+  "divergencePct": 5.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40288,6 +43589,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 102,
   "rceptNo": "20260319001119",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 7162,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40312,6 +43615,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 110,
   "rceptNo": "20260226007165",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 7261,
+  "divergencePct": 9.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40337,6 +43642,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.5,
   "rceptNo": "20260415000660",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 5873,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40362,6 +43669,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260316001668",
   "ksicCode": "101",
+  "reportedAvgManwonRaw": 5391,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40386,6 +43695,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 122,
   "rceptNo": "20260311003680",
   "ksicCode": "25912",
+  "reportedAvgManwonRaw": 6641,
+  "divergencePct": 11.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40411,6 +43722,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260318001016",
   "ksicCode": "471",
+  "reportedAvgManwonRaw": 4270,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40435,6 +43748,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 129,
   "rceptNo": "20260320001391",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5624,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40460,6 +43775,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318000858",
   "ksicCode": "46739",
+  "reportedAvgManwonRaw": 5537,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40484,6 +43801,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 190,
   "rceptNo": "20260324000001",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 3820,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40508,6 +43827,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 136,
   "rceptNo": "20260318000989",
   "ksicCode": "205",
+  "reportedAvgManwonRaw": 5312,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40532,6 +43853,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 147,
   "rceptNo": "20260318000775",
   "ksicCode": "26429",
+  "reportedAvgManwonRaw": 4913,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40557,6 +43880,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260814000097",
   "ksicCode": "46414",
+  "reportedAvgManwonRaw": 5870,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40581,6 +43906,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 115,
   "rceptNo": "20260319001166",
   "ksicCode": "27219",
+  "reportedAvgManwonRaw": 6236,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40606,6 +43933,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260324000006",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4983,
+  "divergencePct": 7.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40631,6 +43960,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260320000895",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 7504,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40656,6 +43987,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260320000430",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4466,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40676,6 +44009,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260319001243",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 14069,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40701,6 +44036,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260323000789",
   "ksicCode": "2221",
+  "reportedAvgManwonRaw": 4930,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40726,6 +44063,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323001065",
   "ksicCode": "661",
+  "reportedAvgManwonRaw": 5002,
+  "divergencePct": 6.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40751,6 +44090,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260331002391",
   "ksicCode": "61210",
+  "reportedAvgManwonRaw": 5423,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40775,6 +44116,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 120,
   "rceptNo": "20260319000906",
   "ksicCode": "14120",
+  "reportedAvgManwonRaw": 6184,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40800,6 +44143,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20250922000111",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 3822,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40824,6 +44169,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 65,
   "rceptNo": "20260317000867",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 10660,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40849,6 +44196,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260316001624",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 4530,
+  "divergencePct": 4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40874,6 +44223,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260318000396",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5360,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40898,6 +44249,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 91,
   "rceptNo": "20260323001527",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 7771,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40923,6 +44276,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260805000412",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6008,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40947,6 +44302,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 121,
   "rceptNo": "20260319001292",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4693,
+  "divergencePct": 19.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40972,6 +44329,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260309001568",
   "ksicCode": "24199",
+  "reportedAvgManwonRaw": 6400,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -40996,6 +44355,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 159,
   "rceptNo": "20260318001253",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 4421,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41020,6 +44381,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 119,
   "rceptNo": "20260318001011",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5863,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41044,6 +44407,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 221,
   "rceptNo": "20260316001265",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5526,
+  "divergencePct": 74.3,
   "flags": [
    "V4-divergence"
   ],
@@ -41072,6 +44437,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260318000905",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 5254,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41096,6 +44463,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 158,
   "rceptNo": "20260318000963",
   "ksicCode": "2032",
+  "reportedAvgManwonRaw": 4422,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41121,6 +44490,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260312000578",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 6646,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41145,6 +44516,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 114,
   "rceptNo": "20260323001739",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6092,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41170,6 +44543,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260323001169",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 7026,
+  "divergencePct": 12.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41195,6 +44570,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260323001335",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4149,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41219,6 +44596,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 148,
   "rceptNo": "20250919000232",
   "ksicCode": "14112",
+  "reportedAvgManwonRaw": 4709,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41243,6 +44622,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 128,
   "rceptNo": "20260320000704",
   "ksicCode": "29111",
+  "reportedAvgManwonRaw": 5681,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41268,6 +44649,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260731000424",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5571,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41293,6 +44676,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260330001067",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 5802,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41318,6 +44703,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260313001348",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 19766,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41343,6 +44730,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.6,
   "rceptNo": "20260323001693",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5827,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41367,6 +44756,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 112,
   "rceptNo": "20260727000316",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6188,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41392,6 +44783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260323000918",
   "ksicCode": "24290",
+  "reportedAvgManwonRaw": 5856,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41417,6 +44810,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260323001698",
   "ksicCode": "73909",
+  "reportedAvgManwonRaw": 7861,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41441,6 +44836,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 128,
   "rceptNo": "20260320001321",
   "ksicCode": "27216",
+  "reportedAvgManwonRaw": 6145,
+  "divergencePct": 14.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41466,6 +44863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260320000130",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 9749,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41491,6 +44890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260323001192",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 6410,
+  "divergencePct": 13.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41516,6 +44917,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260515000361",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4950,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41540,6 +44943,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 89,
   "rceptNo": "20260320001235",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6512,
+  "divergencePct": 15.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41565,6 +44970,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260326000710",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 6072,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41590,6 +44997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260320001056",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 5050,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41615,6 +45024,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260318001000",
   "ksicCode": "29169",
+  "reportedAvgManwonRaw": 4289,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41640,6 +45051,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260316001138",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5081,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41665,6 +45078,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.8,
   "rceptNo": "20260601001187",
   "ksicCode": "243",
+  "reportedAvgManwonRaw": 6322,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41689,6 +45104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 118,
   "rceptNo": "20260430001147",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 5727,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41714,6 +45131,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260323001333",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6126,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41738,6 +45157,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 105,
   "rceptNo": "20260319000082",
   "ksicCode": "20121",
+  "reportedAvgManwonRaw": 6509,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41762,6 +45183,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 161,
   "rceptNo": "20260323001106",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 4242,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41787,6 +45210,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260313001362",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4657,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41812,6 +45237,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260316000800",
   "ksicCode": "423",
+  "reportedAvgManwonRaw": 8844,
+  "divergencePct": 2.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41837,6 +45264,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260629000485",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 5383,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41861,6 +45290,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 99,
   "rceptNo": "20260319000888",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6580,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41885,7 +45316,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 119,
   "avgTenureYears": 2.3,
   "rceptNo": "20260323001740",
-  "ksicCode": "20202"
+  "ksicCode": "20202",
+  "reportedAvgManwonRaw": 5687,
+  "divergencePct": 0
  },
  {
   "corpCode": "00114093",
@@ -41898,6 +45331,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 152,
   "rceptNo": "20260318000948",
   "ksicCode": "22214",
+  "reportedAvgManwonRaw": 4449,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41923,6 +45358,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260319001354",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5826,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41948,6 +45385,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319000937",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 4839,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41973,6 +45412,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260318000113",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5841,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -41997,6 +45438,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 87,
   "rceptNo": "20260316000856",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7672,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42020,7 +45463,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5118,
   "employeeCount": 131,
   "rceptNo": "20260316001070",
-  "ksicCode": "739"
+  "ksicCode": "739",
+  "reportedAvgManwonRaw": 5323,
+  "divergencePct": 4
  },
  {
   "corpCode": "00373447",
@@ -42033,6 +45478,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 110,
   "rceptNo": "20260318000909",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 6082,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42058,6 +45505,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260316001289",
   "ksicCode": "231",
+  "reportedAvgManwonRaw": 5576,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42082,6 +45531,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 161,
   "rceptNo": "20260320000803",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 4152,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42106,7 +45557,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "avgTenureYears": 4.3,
   "rceptNo": "20260319000737",
-  "ksicCode": "272"
+  "ksicCode": "272",
+  "reportedAvgManwonRaw": 6115,
+  "divergencePct": 0
  },
  {
   "corpCode": "00995993",
@@ -42119,6 +45572,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260324000002",
   "ksicCode": "729",
+  "reportedAvgManwonRaw": 10742,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42144,6 +45599,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260619000475",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 6219,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42163,6 +45620,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 125,
   "rceptNo": "20260731000758",
   "ksicCode": "251",
+  "reportedAvgManwonRaw": 5327,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42188,6 +45647,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260318001532",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 8623,
+  "divergencePct": 44.2,
   "flags": [
    "V4-divergence"
   ],
@@ -42215,6 +45676,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260323000792",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5721,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42240,6 +45703,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260625000120",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4891,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42265,6 +45730,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260319000567",
   "ksicCode": "85503",
+  "reportedAvgManwonRaw": 4225,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42290,6 +45757,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260323001602",
   "ksicCode": "22211",
+  "reportedAvgManwonRaw": 5514,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42314,6 +45783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 119,
   "rceptNo": "20260327001702",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5550,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42339,6 +45810,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260310002997",
   "ksicCode": "27213",
+  "reportedAvgManwonRaw": 6596,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42364,6 +45837,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260325000061",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 5974,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42388,6 +45863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 42,
   "rceptNo": "20260323001295",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 16229,
+  "divergencePct": 3.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42413,6 +45890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260311004387",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4799,
+  "divergencePct": 29.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42437,6 +45916,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 112,
   "rceptNo": "20260320000970",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 5861,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42462,6 +45943,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260612000200",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4923,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42486,6 +45969,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 99,
   "rceptNo": "20260323000560",
   "ksicCode": "2612",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -42513,6 +45997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 106,
   "rceptNo": "20260814002194",
   "ksicCode": "2599",
+  "reportedAvgManwonRaw": 6168,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42538,6 +46024,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.8,
   "rceptNo": "20260324000012",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 5183,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42563,6 +46051,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260318000929",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5095,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42588,6 +46078,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260311003697",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5472,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42612,6 +46104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 100,
   "rceptNo": "20260316001246",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6529,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42636,6 +46130,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 103,
   "rceptNo": "20260317000027",
   "ksicCode": "47812",
+  "reportedAvgManwonRaw": 6292,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42660,6 +46156,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 120,
   "rceptNo": "20260318000685",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 5416,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42684,6 +46182,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 121,
   "rceptNo": "20260318001166",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 7407,
+  "divergencePct": 38,
   "flags": [
    "V4-divergence"
   ]
@@ -42700,6 +46200,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260323000857",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 4388,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42725,6 +46227,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260323000952",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6049,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42749,6 +46253,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260323001612",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 5507,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42774,6 +46280,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323001219",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 3945,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42798,6 +46306,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 158,
   "rceptNo": "20260318001287",
   "ksicCode": "71310",
+  "reportedAvgManwonRaw": 4478,
+  "divergencePct": 9.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42823,6 +46333,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260814003179",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 6814,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42848,6 +46360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 19,
   "rceptNo": "20260320001114",
   "ksicCode": "19221",
+  "reportedAvgManwonRaw": 7705,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42873,6 +46387,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260319000036",
   "ksicCode": "2622",
+  "reportedAvgManwonRaw": 4511,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42897,6 +46413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "rceptNo": "20260319000810",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 10089,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42922,6 +46440,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319000343",
   "ksicCode": "25924",
+  "reportedAvgManwonRaw": 4538,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42942,6 +46462,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260323000959",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 5945,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42966,6 +46488,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 118,
   "rceptNo": "20260318001546",
   "ksicCode": "2224",
+  "reportedAvgManwonRaw": 5478,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -42991,6 +46515,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260420000463",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 4547,
+  "divergencePct": 173.9,
   "flags": [
    "V4-divergence"
   ],
@@ -43019,6 +46545,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260316001353",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 7859,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43043,6 +46571,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 70,
   "rceptNo": "20260318000646",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 9171,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43067,6 +46597,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 122,
   "rceptNo": "20260319001131",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5195,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43092,6 +46624,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260320000954",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4198,
+  "divergencePct": 26.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43112,6 +46646,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.1,
   "rceptNo": "20260731000454",
   "ksicCode": "35200",
+  "reportedAvgManwonRaw": 7815,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43136,6 +46672,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 144,
   "rceptNo": "20260318001568",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4448,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43160,6 +46698,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260317000168",
   "ksicCode": "242",
+  "reportedAvgManwonRaw": 4922,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43184,6 +46724,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 134,
   "rceptNo": "20260319000429",
   "ksicCode": "26129",
+  "reportedAvgManwonRaw": 4772,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43203,6 +46745,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 107,
   "rceptNo": "20260323001185",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 5970,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43228,6 +46772,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260727000170",
   "ksicCode": "29241",
+  "reportedAvgManwonRaw": 6557,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43252,6 +46798,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 203,
   "rceptNo": "20260318000741",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 3145,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43276,6 +46824,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 91,
   "rceptNo": "20260318001077",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 7009,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43300,6 +46850,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 115,
   "rceptNo": "20260701000606",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 5548,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43325,6 +46877,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260326000397",
   "ksicCode": "91249",
+  "reportedAvgManwonRaw": 4042,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43350,6 +46904,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260323001102",
   "ksicCode": "2221",
+  "reportedAvgManwonRaw": 5720,
+  "divergencePct": 6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43374,6 +46930,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 113,
   "rceptNo": "20260323001220",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5565,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43399,6 +46957,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260320001358",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 8789,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43424,6 +46984,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260319000505",
   "ksicCode": "24229",
+  "reportedAvgManwonRaw": 7531,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43449,6 +47011,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260319001174",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 5404,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43473,6 +47037,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "rceptNo": "20260318000778",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 5783,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43498,6 +47064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.6,
   "rceptNo": "20260313001395",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6392,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43522,6 +47090,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 135,
   "rceptNo": "20260316001256",
   "ksicCode": "20493",
+  "reportedAvgManwonRaw": 4655,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43546,6 +47116,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 52,
   "rceptNo": "20260316001503",
   "ksicCode": "2411",
+  "reportedAvgManwonRaw": 11808,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43571,6 +47143,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260318000475",
   "ksicCode": "741",
+  "reportedAvgManwonRaw": 4736,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43596,6 +47170,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260430001041",
   "ksicCode": "452",
+  "reportedAvgManwonRaw": 3701,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43620,6 +47196,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 112,
   "rceptNo": "20260317000614",
   "ksicCode": "27212",
+  "reportedAvgManwonRaw": 5685,
+  "divergencePct": 2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43644,6 +47222,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 106,
   "rceptNo": "20260318001328",
   "ksicCode": "29221",
+  "reportedAvgManwonRaw": 5759,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43669,6 +47249,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.3,
   "rceptNo": "20260316001609",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 5987,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43694,6 +47276,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260324000018",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5763,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43719,6 +47303,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260318000577",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 7414,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43744,6 +47330,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260319000185",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5601,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43763,6 +47351,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 126,
   "rceptNo": "20260723000380",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 4944,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43787,6 +47377,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 186,
   "rceptNo": "20260317000656",
   "ksicCode": "107",
+  "reportedAvgManwonRaw": 3482,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43807,6 +47399,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260320000711",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4725,
+  "divergencePct": 5.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43832,6 +47426,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260316000567",
   "ksicCode": "21230",
+  "reportedAvgManwonRaw": 4467,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43857,6 +47453,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260316001623",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4702,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43881,6 +47479,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 126,
   "rceptNo": "20260319000767",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5733,
+  "divergencePct": 17.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43905,6 +47505,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260306000369",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 7131,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43930,6 +47532,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260313000831",
   "ksicCode": "2229",
+  "reportedAvgManwonRaw": 4670,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2023",
@@ -43950,6 +47554,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260323001486",
   "ksicCode": "22291",
+  "reportedAvgManwonRaw": 4421,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43975,6 +47581,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260323001251",
   "ksicCode": "70111",
+  "reportedAvgManwonRaw": 5352,
+  "divergencePct": 21.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -43999,6 +47607,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 124,
   "rceptNo": "20260702000587",
   "ksicCode": "46413",
+  "reportedAvgManwonRaw": 4942,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44023,6 +47633,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 80,
   "rceptNo": "20260320001342",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 7156,
+  "divergencePct": 6.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44043,6 +47655,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.8,
   "rceptNo": "20260319000402",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 7168,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44068,6 +47682,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260313000173",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5339,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44093,6 +47709,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260319001091",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5894,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44117,6 +47735,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 111,
   "rceptNo": "20260313001353",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5888,
+  "divergencePct": 7.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44141,6 +47761,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260319000650",
   "ksicCode": "15110",
+  "reportedAvgManwonRaw": 5197,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44166,6 +47788,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260604000337",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 4993,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44191,6 +47815,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260320001211",
   "ksicCode": "27192",
+  "reportedAvgManwonRaw": 5113,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44216,6 +47842,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260318001347",
   "ksicCode": "21212",
+  "reportedAvgManwonRaw": 12542,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44235,6 +47863,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 115,
   "rceptNo": "20260320001087",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 5229,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44260,6 +47890,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260319000497",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 6530,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44285,6 +47917,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.4,
   "rceptNo": "20260320000662",
   "ksicCode": "38220",
+  "reportedAvgManwonRaw": 4639,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44309,7 +47943,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "avgTenureYears": 3.9,
   "rceptNo": "20260318000428",
-  "ksicCode": "291"
+  "ksicCode": "291",
+  "reportedAvgManwonRaw": 5946,
+  "divergencePct": 0
  },
  {
   "corpCode": "00681249",
@@ -44323,6 +47959,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260724000403",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 5288,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44348,6 +47986,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260323000811",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 5085,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44372,6 +48012,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 94,
   "rceptNo": "20260323000858",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 6389,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44396,6 +48038,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 127,
   "rceptNo": "20260323000931",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 4998,
+  "divergencePct": 6.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44421,6 +48065,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260319000101",
   "ksicCode": "30399",
+  "reportedAvgManwonRaw": 5351,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44445,6 +48091,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 81,
   "rceptNo": "20260312001293",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 7325,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44470,6 +48118,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260319000642",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 4939,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44495,6 +48145,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260325000837",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 7058,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44519,6 +48171,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 94,
   "rceptNo": "20260318001655",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 6298,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44543,6 +48197,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260731000292",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 6125,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44568,6 +48224,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323000252",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 4159,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44593,6 +48251,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20250627000295",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5694,
+  "divergencePct": 2.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44617,6 +48277,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 130,
   "rceptNo": "20260318001671",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 4542,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44642,6 +48304,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260806000290",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 4680,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44666,6 +48330,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 92,
   "rceptNo": "20260323001375",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 6415,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44690,7 +48356,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 80,
   "avgTenureYears": 2.6,
   "rceptNo": "20260313001213",
-  "ksicCode": "29271"
+  "ksicCode": "29271",
+  "reportedAvgManwonRaw": 7366,
+  "divergencePct": 0
  },
  {
   "corpCode": "00261009",
@@ -44704,6 +48372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260318001572",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 5930,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44729,6 +48399,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260323001100",
   "ksicCode": "26294",
+  "reportedAvgManwonRaw": 5072,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44749,6 +48421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260323000718",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 6331,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44774,6 +48448,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260318000448",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4260,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44799,6 +48475,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260318000966",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 6115,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44824,6 +48502,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260323001051",
   "ksicCode": "424",
+  "reportedAvgManwonRaw": 5127,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44849,6 +48529,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.4,
   "rceptNo": "20260814002909",
   "ksicCode": "11121",
+  "reportedAvgManwonRaw": 9608,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44874,6 +48556,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260319000427",
   "ksicCode": "29242",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44899,6 +48582,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20250813001010",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 6597,
+  "divergencePct": 14.3,
   "history": [
    {
     "fiscalYear": "2023",
@@ -44918,6 +48603,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260312001180",
   "ksicCode": "27194",
+  "reportedAvgManwonRaw": 6044,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44943,6 +48630,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318001652",
   "ksicCode": "15121",
+  "reportedAvgManwonRaw": 6463,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44968,6 +48657,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260320000337",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 5644,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -44993,6 +48684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260319001411",
   "ksicCode": "304",
+  "reportedAvgManwonRaw": 5767,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45018,6 +48711,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260319000819",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5018,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45042,6 +48737,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 96,
   "rceptNo": "20260323000632",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 6058,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45066,6 +48763,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 98,
   "rceptNo": "20260320000320",
   "ksicCode": "603",
+  "reportedAvgManwonRaw": 6031,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45091,6 +48790,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260323000265",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6450,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45116,6 +48817,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.7,
   "rceptNo": "20260323001027",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 5041,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45141,6 +48844,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260812000028",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 2859,
+  "divergencePct": 15,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45166,6 +48871,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260312000986",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 6593,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45190,7 +48897,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 92,
   "avgTenureYears": 8.6,
   "rceptNo": "20260319000531",
-  "ksicCode": "28302"
+  "ksicCode": "28302",
+  "reportedAvgManwonRaw": 6237,
+  "divergencePct": 0.6
  },
  {
   "corpCode": "00133089",
@@ -45204,6 +48913,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.5,
   "rceptNo": "20260331003681",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 5896,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45229,6 +48940,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318001547",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6607,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45253,6 +48966,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260319000242",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5890,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45277,6 +48992,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 142,
   "rceptNo": "20260323001212",
   "ksicCode": "2812",
+  "reportedAvgManwonRaw": 4056,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45301,6 +49018,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260319001067",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 8528,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45326,6 +49045,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260318000245",
   "ksicCode": "3330",
+  "reportedAvgManwonRaw": 5376,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45351,6 +49072,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260320001084",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6078,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45376,6 +49099,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318000419",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5802,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45400,6 +49125,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 120,
   "rceptNo": "20260318000364",
   "ksicCode": "29175",
+  "reportedAvgManwonRaw": 4779,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45419,6 +49146,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 80,
   "rceptNo": "20260318000717",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 7144,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45443,6 +49172,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260331004209",
   "ksicCode": "29174",
+  "reportedAvgManwonRaw": 4922,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45468,6 +49199,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260318001590",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 4351,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45493,6 +49226,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260312001259",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 5715,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45518,6 +49253,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260323000995",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5491,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45543,6 +49280,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260319000984",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 5233,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45568,6 +49307,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260319001181",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5717,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45593,6 +49334,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260323000971",
   "ksicCode": "422",
+  "reportedAvgManwonRaw": 5505,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45617,6 +49360,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 95,
   "rceptNo": "20260320000716",
   "ksicCode": "26129",
+  "reportedAvgManwonRaw": 5975,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45642,6 +49387,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260323001405",
   "ksicCode": "172",
+  "reportedAvgManwonRaw": 5700,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45666,6 +49413,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260312001302",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9342,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45690,6 +49439,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 111,
   "rceptNo": "20260708000478",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5089,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45714,6 +49465,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 142,
   "rceptNo": "20260318001466",
   "ksicCode": "33999",
+  "reportedAvgManwonRaw": 3834,
+  "divergencePct": 3.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45734,6 +49487,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260319001030",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 7230,
+  "divergencePct": 15.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45758,6 +49513,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 107,
   "rceptNo": "20260318000686",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5271,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45783,6 +49540,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.5,
   "rceptNo": "20260320000772",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 5618,
+  "divergencePct": 5.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45808,6 +49567,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260313000481",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4172,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45832,6 +49593,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 116,
   "rceptNo": "20260324000019",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4845,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45856,6 +49619,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260311003776",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 8268,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45881,6 +49646,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260323001695",
   "ksicCode": "26293",
+  "reportedAvgManwonRaw": 5357,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45905,6 +49672,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 137,
   "rceptNo": "20260604000502",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 4102,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45930,6 +49699,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260318001687",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4585,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45955,6 +49726,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260323001464",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 4040,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -45979,6 +49752,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260630000075",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5513,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46003,6 +49778,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 147,
   "rceptNo": "20260323001651",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 3792,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46027,6 +49804,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260319000840",
   "ksicCode": "46414",
+  "reportedAvgManwonRaw": 5627,
+  "divergencePct": 9.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46052,6 +49831,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260323001638",
   "ksicCode": "46800",
+  "reportedAvgManwonRaw": 7678,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46076,6 +49857,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260729000467",
   "ksicCode": "70111",
+  "reportedAvgManwonRaw": 5531,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46101,6 +49884,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260611000460",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5167,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46126,6 +49911,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260319001070",
   "ksicCode": "21230",
+  "reportedAvgManwonRaw": 5417,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46150,6 +49937,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260323001194",
   "ksicCode": "264",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46174,6 +49962,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 100,
   "rceptNo": "20260331003468",
   "ksicCode": "271",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46194,6 +49983,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260319000928",
   "ksicCode": "1419",
+  "reportedAvgManwonRaw": 6258,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46219,6 +50010,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260319000661",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 4530,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46244,6 +50037,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260323001716",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4298,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46269,6 +50064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260319001413",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6000,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46293,6 +50090,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 131,
   "rceptNo": "20260320001292",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 2354,
+  "divergencePct": 44.4,
   "flags": [
    "V4-divergence"
   ],
@@ -46320,7 +50119,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "avgTenureYears": 5.5,
   "rceptNo": "20260319000665",
-  "ksicCode": "303"
+  "ksicCode": "303",
+  "reportedAvgManwonRaw": 5063,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "00573269",
@@ -46333,6 +50134,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260625000380",
   "ksicCode": "26422",
+  "reportedAvgManwonRaw": 8782,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46358,6 +50161,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260323001112",
   "ksicCode": "46539",
+  "reportedAvgManwonRaw": 6247,
+  "divergencePct": 11.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46383,6 +50188,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260320001388",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5938,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46408,6 +50215,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.7,
   "rceptNo": "20260716000527",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 6053,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46432,6 +50241,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 103,
   "rceptNo": "20260323000759",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 5268,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46456,7 +50267,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "avgTenureYears": 4,
   "rceptNo": "20260323000960",
-  "ksicCode": "264"
+  "ksicCode": "264",
+  "reportedAvgManwonRaw": 10665,
+  "divergencePct": 0.5
  },
  {
   "corpCode": "00171636",
@@ -46470,6 +50283,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.4,
   "rceptNo": "20260318001586",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 13886,
+  "divergencePct": 6.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46494,6 +50309,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 94,
   "rceptNo": "20260701000705",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5776,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46518,6 +50335,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 121,
   "rceptNo": "20260320000986",
   "ksicCode": "59111",
+  "reportedAvgManwonRaw": 4884,
+  "divergencePct": 9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46538,6 +50357,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260323001355",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4358,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46563,6 +50384,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260318001530",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 14363,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46587,6 +50410,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 107,
   "rceptNo": "20260319000950",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5052,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46607,6 +50432,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260323000561",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6657,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46627,6 +50454,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260619000106",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 5553,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46652,6 +50481,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260323001265",
   "ksicCode": "26422",
+  "reportedAvgManwonRaw": 4145,
+  "divergencePct": 17.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46676,6 +50507,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 81,
   "rceptNo": "20260318000999",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 6614,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46701,6 +50534,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260318000498",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 12451,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46726,6 +50561,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260323001632",
   "ksicCode": "22211",
+  "reportedAvgManwonRaw": 4774,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46751,6 +50588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260323000940",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4858,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46776,6 +50615,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260423000673",
   "ksicCode": "33309",
+  "reportedAvgManwonRaw": 4105,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46801,6 +50642,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.1,
   "rceptNo": "20260323000588",
   "ksicCode": "24122",
+  "reportedAvgManwonRaw": 5498,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46825,6 +50668,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260317000631",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5471,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46850,6 +50695,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260319001303",
   "ksicCode": "21309",
+  "reportedAvgManwonRaw": 4897,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46870,6 +50717,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.2,
   "rceptNo": "20260317000585",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4828,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46895,6 +50744,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260320001416",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6167,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46920,6 +50771,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260316000782",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 4696,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46945,6 +50798,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260330001311",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 7873,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -46970,6 +50825,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323000346",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5519,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -46990,6 +50847,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260318000921",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 5626,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47014,6 +50873,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 118,
   "rceptNo": "20260317000565",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4476,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47039,6 +50900,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260323001521",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 4385,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47063,6 +50926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260327001807",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5227,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47088,6 +50953,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260323001576",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 6165,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47112,6 +50979,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 88,
   "rceptNo": "20260320000831",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5984,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47132,6 +51001,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260323000721",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 3607,
+  "divergencePct": 25.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47157,6 +51028,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260327001423",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 10375,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47181,6 +51054,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 112,
   "rceptNo": "20260318001675",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4658,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47201,6 +51076,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260318001076",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6233,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47225,6 +51102,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 143,
   "rceptNo": "20260318001700",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 17535,
+  "divergencePct": 379.3,
   "flags": [
    "V4-divergence"
   ],
@@ -47252,6 +51131,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20260318001634",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6301,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47276,6 +51157,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 103,
   "rceptNo": "20260317000853",
   "ksicCode": "581",
+  "reportedAvgManwonRaw": 5072,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47301,6 +51184,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260318001599",
   "ksicCode": "64209",
+  "reportedAvgManwonRaw": 17971,
+  "divergencePct": 17,
   "history": [
    {
     "fiscalYear": "2023",
@@ -47321,6 +51206,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260320000600",
   "ksicCode": "2812",
+  "reportedAvgManwonRaw": 4860,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47345,6 +51232,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 75,
   "rceptNo": "20260318001644",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6913,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47370,6 +51259,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260331004451",
   "ksicCode": "14120",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -47398,6 +51288,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260319001013",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 4898,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47423,6 +51315,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260401004906",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 3505,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47447,6 +51341,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 129,
   "rceptNo": "20260324000884",
   "ksicCode": "301",
+  "reportedAvgManwonRaw": 4020,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47471,6 +51367,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 98,
   "rceptNo": "20260316000300",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 5280,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47496,6 +51394,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260318000687",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4034,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47521,6 +51421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260323001654",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4014,
+  "divergencePct": 13,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47545,6 +51447,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 92,
   "rceptNo": "20260407001497",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 5610,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47570,6 +51474,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260319000153",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5428,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47595,6 +51501,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260318000519",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 4890,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47620,6 +51528,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260323000934",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 7390,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47644,6 +51554,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260313000041",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 7816,
+  "divergencePct": 4.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47669,6 +51581,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260320001302",
   "ksicCode": "466",
+  "reportedAvgManwonRaw": 4923,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47694,6 +51608,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260320000812",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 4539,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47719,6 +51635,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.3,
   "rceptNo": "20260515001783",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 7726,
+  "divergencePct": 145.5,
   "flags": [
    "V4-divergence"
   ],
@@ -47747,6 +51665,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260703000398",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 7343,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47772,6 +51692,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260330001828",
   "ksicCode": "59112",
+  "reportedAvgManwonRaw": 4081,
+  "divergencePct": 4.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47797,6 +51719,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260320001058",
   "ksicCode": "461",
+  "reportedAvgManwonRaw": 4863,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47822,6 +51746,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260319001085",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 12119,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47847,6 +51773,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260318000777",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9678,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47872,6 +51800,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260319000903",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 5671,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47896,6 +51826,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 74,
   "rceptNo": "20260323001535",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 6784,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47921,6 +51853,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260320001360",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4899,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47946,6 +51880,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20260319000522",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6066,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47971,6 +51907,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260311003940",
   "ksicCode": "26329",
+  "reportedAvgManwonRaw": 8593,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -47996,6 +51934,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260323001255",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 5813,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48021,6 +51961,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260311004106",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6434,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48046,6 +51988,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260318000404",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5332,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48070,6 +52014,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260324000582",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6520,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48095,6 +52041,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260316001459",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4930,
+  "divergencePct": 10,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48120,6 +52068,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260630001121",
   "ksicCode": "28909",
+  "reportedAvgManwonRaw": 5175,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48145,6 +52095,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260318000471",
   "ksicCode": "14199",
+  "reportedAvgManwonRaw": 8213,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48170,6 +52122,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260320000990",
   "ksicCode": "46510",
+  "reportedAvgManwonRaw": 5512,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48194,6 +52148,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 106,
   "rceptNo": "20260319001342",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4662,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48218,6 +52174,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 123,
   "rceptNo": "20260318000497",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 4015,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48242,6 +52200,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 134,
   "rceptNo": "20260331004609",
   "ksicCode": "21100",
+  "reportedAvgManwonRaw": 3604,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48267,6 +52227,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260320001396",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5760,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48291,6 +52253,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260320001061",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5310,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48315,6 +52279,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 92,
   "rceptNo": "20260319000647",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5331,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48340,6 +52306,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260318001683",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 5723,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48364,6 +52332,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 61,
   "rceptNo": "20260318001592",
   "ksicCode": "59130",
+  "reportedAvgManwonRaw": 7994,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48389,6 +52359,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260625000480",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 3557,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48413,6 +52385,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 126,
   "rceptNo": "20260320001269",
   "ksicCode": "713",
+  "reportedAvgManwonRaw": 3880,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48438,6 +52412,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260319001377",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 3914,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48462,6 +52438,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "rceptNo": "20260318001042",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 7617,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48486,6 +52464,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 58,
   "rceptNo": "20260319000672",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 7955,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48510,6 +52490,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20260319001240",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 9800,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48535,6 +52517,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260327000811",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6361,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48560,6 +52544,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260318001493",
   "ksicCode": "20119",
+  "reportedAvgManwonRaw": 4906,
+  "divergencePct": 18.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48580,6 +52566,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323001508",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 7466,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48604,6 +52592,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260331003389",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 5635,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48629,6 +52619,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260318001156",
   "ksicCode": "233",
+  "reportedAvgManwonRaw": 3985,
+  "divergencePct": 7.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48649,6 +52641,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.7,
   "rceptNo": "20260318001703",
   "ksicCode": "2429",
+  "reportedAvgManwonRaw": 6104,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48674,6 +52668,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260331002001",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 3919,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48698,6 +52694,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 118,
   "rceptNo": "20260330001644",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 3634,
+  "divergencePct": 11,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48723,6 +52721,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260320001380",
   "ksicCode": "27215",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48747,6 +52746,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260325000792",
   "ksicCode": "139",
+  "reportedAvgManwonRaw": 5870,
+  "divergencePct": 18.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48772,6 +52773,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260317000600",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 5572,
+  "divergencePct": 5.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48796,6 +52799,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 98,
   "rceptNo": "20260403003694",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4867,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48820,6 +52825,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260320000180",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 7694,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48844,6 +52851,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "rceptNo": "20250618000208",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 4367,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48868,6 +52877,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260319001068",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4746,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48893,6 +52904,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260319000035",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 4789,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48918,6 +52931,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.2,
   "rceptNo": "20260323000280",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4561,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48943,6 +52958,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20250318001336",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5452,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -48963,6 +52980,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260316001638",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6000,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -48987,6 +53006,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 114,
   "rceptNo": "20260318000161",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4158,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49011,6 +53032,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 79,
   "rceptNo": "20260313000903",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5987,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49035,6 +53058,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 114,
   "rceptNo": "20260408003344",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4063,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49054,6 +53079,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 108,
   "rceptNo": "20260312001016",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 4375,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49079,6 +53106,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260320001238",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5746,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49103,7 +53132,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 80,
   "avgTenureYears": 2.7,
   "rceptNo": "20260319000778",
-  "ksicCode": "31311"
+  "ksicCode": "31311",
+  "reportedAvgManwonRaw": 5900,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "00562360",
@@ -49117,6 +53148,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260318000446",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4325,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49141,6 +53174,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 87,
   "rceptNo": "20260323000976",
   "ksicCode": "58222",
+  "divergencePct": 90.8,
   "flags": [
    "V4-divergence"
   ],
@@ -49163,6 +53197,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 97,
   "rceptNo": "20260323001647",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4747,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49187,6 +53223,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "rceptNo": "20260312000803",
   "ksicCode": "11121",
+  "reportedAvgManwonRaw": 8352,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49212,6 +53250,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260320001332",
   "ksicCode": "60221",
+  "reportedAvgManwonRaw": 5890,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49237,6 +53277,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260318000568",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4115,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49262,6 +53304,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260323001727",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 4069,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49287,6 +53331,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323000851",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5705,
+  "divergencePct": 3.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49311,6 +53357,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260706000055",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5124,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49331,6 +53379,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260318000488",
   "ksicCode": "58111",
+  "reportedAvgManwonRaw": 5123,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49355,6 +53405,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260320001279",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 4561,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49379,6 +53431,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 74,
   "rceptNo": "20260323001582",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6217,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49404,6 +53458,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260323001053",
   "ksicCode": "239",
+  "reportedAvgManwonRaw": 4298,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49428,6 +53484,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 127,
   "rceptNo": "20260323000628",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 3606,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49452,6 +53510,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260320001115",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 6867,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49476,6 +53536,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260319001398",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 4935,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49500,6 +53562,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260323001520",
   "ksicCode": "479",
+  "reportedAvgManwonRaw": 7129,
+  "divergencePct": 3.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49524,6 +53588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260316001455",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 4898,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49549,6 +53615,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 0.5,
   "rceptNo": "20260323001409",
   "ksicCode": "47430",
+  "reportedAvgManwonRaw": 4607,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49569,6 +53637,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260323000638",
   "ksicCode": "4610",
+  "reportedAvgManwonRaw": 4944,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49593,6 +53663,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260320000782",
   "ksicCode": "27112",
+  "reportedAvgManwonRaw": 4894,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49618,6 +53690,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260320001229",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5125,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49642,6 +53716,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 82,
   "rceptNo": "20260318000767",
   "ksicCode": "22212",
+  "reportedAvgManwonRaw": 5576,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49667,6 +53743,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260320000150",
   "ksicCode": "72911",
+  "reportedAvgManwonRaw": 4652,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49692,6 +53770,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.7,
   "rceptNo": "20260318001105",
   "ksicCode": "28410",
+  "reportedAvgManwonRaw": 5601,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49717,6 +53797,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260319001392",
   "ksicCode": "70130",
+  "reportedAvgManwonRaw": 10817,
+  "divergencePct": 5.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49740,7 +53822,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4468,
   "employeeCount": 102,
   "rceptNo": "20260319000611",
-  "ksicCode": "141"
+  "ksicCode": "141",
+  "reportedAvgManwonRaw": 4399,
+  "divergencePct": 1.5
  },
  {
   "corpCode": "00303396",
@@ -49754,6 +53838,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.5,
   "rceptNo": "20260731000387",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4888,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49779,6 +53865,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260323000842",
   "ksicCode": "24131",
+  "reportedAvgManwonRaw": 4492,
+  "divergencePct": 16.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49804,6 +53892,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260316000062",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 10022,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49829,6 +53919,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.6,
   "rceptNo": "20260323000575",
   "ksicCode": "31311",
+  "reportedAvgManwonRaw": 5991,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49849,6 +53941,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260413001727",
   "ksicCode": "242",
+  "reportedAvgManwonRaw": 6017,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49873,6 +53967,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 119,
   "rceptNo": "20260319000560",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 3784,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49897,6 +53993,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "rceptNo": "20260319000530",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 7009,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49921,6 +54019,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260430001895",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 5217,
+  "divergencePct": 11.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49945,6 +54045,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260320000097",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5160,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49964,6 +54066,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 73,
   "rceptNo": "20260318001712",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 6791,
+  "divergencePct": 11.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -49989,6 +54093,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260318001616",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 14175,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50014,6 +54120,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323000737",
   "ksicCode": "46499",
+  "reportedAvgManwonRaw": 3303,
+  "divergencePct": 9.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50037,7 +54145,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4779,
   "employeeCount": 93,
   "rceptNo": "20260316000751",
-  "ksicCode": "273"
+  "ksicCode": "273",
+  "reportedAvgManwonRaw": 4779,
+  "divergencePct": 0
  },
  {
   "corpCode": "00147222",
@@ -50051,6 +54161,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260319000974",
   "ksicCode": "13101",
+  "reportedAvgManwonRaw": 5689,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50076,6 +54188,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260323001390",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 4495,
+  "divergencePct": 26.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50101,6 +54215,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260323000586",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 5509,
+  "divergencePct": 1.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50126,6 +54242,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.1,
   "rceptNo": "20260422000484",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5766,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50151,6 +54269,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323000537",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6271,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50175,6 +54295,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "rceptNo": "20260227007246",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 4027,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50200,6 +54322,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260814003673",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 6512,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50225,6 +54349,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260327001240",
   "ksicCode": "28410",
+  "reportedAvgManwonRaw": 5054,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50249,6 +54375,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260319001168",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 7268,
+  "divergencePct": 2.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50273,6 +54401,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20250618000340",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5148,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50298,6 +54428,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260323001726",
   "ksicCode": "264",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -50325,6 +54456,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "rceptNo": "20260331004393",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6936,
+  "divergencePct": 1.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50349,6 +54482,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 70,
   "rceptNo": "20260723000522",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 6232,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50374,6 +54509,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.5,
   "rceptNo": "20260323000520",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4589,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50398,6 +54535,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 74,
   "rceptNo": "20260318000578",
   "ksicCode": "46510",
+  "reportedAvgManwonRaw": 5878,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50423,6 +54562,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260626000758",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4680,
+  "divergencePct": 22.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50447,6 +54588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 95,
   "rceptNo": "20260319000772",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 4537,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50471,6 +54614,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 72,
   "rceptNo": "20260318000551",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 7280,
+  "divergencePct": 20.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50495,6 +54640,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 79,
   "rceptNo": "20260317000531",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 5500,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50520,6 +54667,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260331004022",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 3680,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50544,6 +54693,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 65,
   "rceptNo": "20260515000429",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6674,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50569,6 +54720,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260311003760",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 4251,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50594,6 +54747,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260320000265",
   "ksicCode": "2110",
+  "reportedAvgManwonRaw": 5559,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50619,6 +54774,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260320001361",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 5035,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50644,6 +54801,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.1,
   "rceptNo": "20260316001214",
   "ksicCode": "23993",
+  "reportedAvgManwonRaw": 4554,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50669,6 +54828,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318001145",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6159,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50693,6 +54854,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260323000029",
   "ksicCode": "25929",
+  "reportedAvgManwonRaw": 4792,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50718,6 +54881,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260310002586",
   "ksicCode": "263",
+  "reportedAvgManwonRaw": 4793,
+  "divergencePct": 23.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50743,6 +54908,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 0.5,
   "rceptNo": "20260323001469",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 1574,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50768,6 +54935,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260317000770",
   "ksicCode": "21301",
+  "reportedAvgManwonRaw": 5110,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50793,6 +54962,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260814002486",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5314,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50818,6 +54989,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260619000568",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4661,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50838,6 +55011,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260316000423",
   "ksicCode": "251",
+  "reportedAvgManwonRaw": 8564,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50863,6 +55038,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260323000622",
   "ksicCode": "2927",
+  "reportedAvgManwonRaw": 5230,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50887,6 +55064,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260316001642",
   "ksicCode": "23991",
+  "reportedAvgManwonRaw": 5200,
+  "divergencePct": 13.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50912,6 +55091,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260316001629",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 7247,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50937,6 +55118,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260318001057",
   "ksicCode": "13225",
+  "reportedAvgManwonRaw": 4627,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50961,6 +55144,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260318000845",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4728,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -50986,6 +55171,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260318001350",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 5185,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51009,7 +55196,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4770,
   "employeeCount": 89,
   "rceptNo": "20260318001661",
-  "ksicCode": "70129"
+  "ksicCode": "70129",
+  "reportedAvgManwonRaw": 5385,
+  "divergencePct": 12.9
  },
  {
   "corpCode": "00146542",
@@ -51023,6 +55212,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260323000224",
   "ksicCode": "133",
+  "reportedAvgManwonRaw": 4040,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51048,6 +55239,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260319001291",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 8200,
+  "divergencePct": 8.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51072,6 +55265,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 109,
   "rceptNo": "20260318000950",
   "ksicCode": "28422",
+  "reportedAvgManwonRaw": 3876,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51097,6 +55292,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260320001359",
   "ksicCode": "27219",
+  "reportedAvgManwonRaw": 5343,
+  "divergencePct": 5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51121,6 +55318,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 82,
   "rceptNo": "20260318001580",
   "ksicCode": "21100",
+  "reportedAvgManwonRaw": 5144,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51146,6 +55345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260313000859",
   "ksicCode": "24121",
+  "reportedAvgManwonRaw": 4815,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2023",
@@ -51165,6 +55366,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260331000297",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4893,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51190,6 +55393,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260319000844",
   "ksicCode": "231",
+  "reportedAvgManwonRaw": 5834,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51209,6 +55414,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20260318000490",
   "ksicCode": "29221",
+  "reportedAvgManwonRaw": 5278,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51234,6 +55441,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 15.9,
   "rceptNo": "20260319001343",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 10264,
+  "divergencePct": 7.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51259,6 +55468,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260331001824",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6244,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51284,6 +55495,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260330001629",
   "ksicCode": "311",
+  "reportedAvgManwonRaw": 4142,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51303,6 +55516,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 88,
   "rceptNo": "20260320001164",
   "ksicCode": "20501",
+  "reportedAvgManwonRaw": 4760,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51328,6 +55543,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.3,
   "rceptNo": "20260319001189",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6657,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51353,6 +55570,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260721000833",
   "ksicCode": "27192",
+  "reportedAvgManwonRaw": 4133,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51377,6 +55596,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 65,
   "rceptNo": "20260323000972",
   "ksicCode": "21100",
+  "reportedAvgManwonRaw": 6409,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51397,6 +55618,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260320000110",
   "ksicCode": "27309",
+  "reportedAvgManwonRaw": 5519,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51417,6 +55640,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260316001142",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5789,
+  "divergencePct": 4.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51442,6 +55667,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.9,
   "rceptNo": "20260323001402",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 3744,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51466,6 +55693,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 58,
   "rceptNo": "20260331002144",
   "ksicCode": "1710",
+  "reportedAvgManwonRaw": 7158,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51491,6 +55720,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319000958",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 3949,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51516,6 +55747,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260323001571",
   "ksicCode": "26529",
+  "reportedAvgManwonRaw": 3727,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51540,6 +55773,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 72,
   "rceptNo": "20260319000627",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5744,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51564,6 +55799,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 93,
   "rceptNo": "20260319000254",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 4367,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51589,6 +55826,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260316001605",
   "ksicCode": "70111",
+  "reportedAvgManwonRaw": 4978,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51613,6 +55852,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 110,
   "rceptNo": "20260318000719",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 3756,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51632,6 +55873,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 107,
   "rceptNo": "20260318001382",
   "ksicCode": "26224",
+  "reportedAvgManwonRaw": 3854,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51657,6 +55900,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2,
   "rceptNo": "20260724000378",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 5352,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51682,6 +55927,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260324000003",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 4960,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51707,6 +55954,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260323001747",
   "ksicCode": "412",
+  "reportedAvgManwonRaw": 5424,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51731,6 +55980,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 74,
   "rceptNo": "20260323000716",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 6101,
+  "divergencePct": 9.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51756,6 +56007,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260227008561",
   "ksicCode": "22259",
+  "reportedAvgManwonRaw": 4566,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51781,6 +56034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260629000350",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 6734,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51801,6 +56056,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260318000417",
   "ksicCode": "29133",
+  "reportedAvgManwonRaw": 4875,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51826,6 +56083,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.2,
   "rceptNo": "20260319000455",
   "ksicCode": "29222",
+  "reportedAvgManwonRaw": 5245,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51845,6 +56104,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260318001706",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6169,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51869,6 +56130,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 89,
   "rceptNo": "20260318001224",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 5073,
+  "divergencePct": 11,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51893,6 +56156,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 70,
   "rceptNo": "20260318001137",
   "ksicCode": "20499",
+  "reportedAvgManwonRaw": 5810,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51913,6 +56178,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260327000999",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4375,
+  "divergencePct": 2.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51932,6 +56199,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260319000806",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 5342,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51957,6 +56226,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20250619000265",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 3293,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -51981,6 +56252,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 69,
   "rceptNo": "20260318000401",
   "ksicCode": "24199",
+  "reportedAvgManwonRaw": 5880,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52005,6 +56278,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20260710000233",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4827,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52030,6 +56305,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260323001528",
   "ksicCode": "2512",
+  "divergencePct": 19.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52054,6 +56330,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 72,
   "rceptNo": "20260309001837",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 5565,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52078,6 +56356,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260324000011",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 5688,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52103,6 +56383,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260323001629",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 5862,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52127,6 +56409,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260323001530",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6224,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52151,6 +56435,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 58,
   "rceptNo": "20260622000085",
   "ksicCode": "292",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -52178,6 +56463,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 71,
   "rceptNo": "20260407003656",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 5545,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52203,6 +56490,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260319000358",
   "ksicCode": "26519",
+  "reportedAvgManwonRaw": 5951,
+  "divergencePct": 14.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52228,6 +56517,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260731000513",
   "ksicCode": "273",
+  "divergencePct": 92,
   "flags": [
    "V4-divergence"
   ],
@@ -52255,6 +56545,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260318001270",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 5184,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52279,6 +56571,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 73,
   "rceptNo": "20260320001333",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5374,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52304,6 +56598,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260323000676",
   "ksicCode": "72129",
+  "reportedAvgManwonRaw": 4337,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52329,6 +56625,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13,
   "rceptNo": "20260626000141",
   "ksicCode": "24312",
+  "reportedAvgManwonRaw": 6099,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52353,6 +56651,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 129,
   "rceptNo": "20260316001630",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 3031,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52377,6 +56677,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260323000631",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 4480,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52396,6 +56698,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 48,
   "rceptNo": "20260320001312",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 6217,
+  "divergencePct": 23.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52420,6 +56724,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 57,
   "rceptNo": "20260319000900",
   "ksicCode": "4112",
+  "reportedAvgManwonRaw": 6802,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52444,6 +56750,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260323001245",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 5609,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52469,6 +56777,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260319001276",
   "ksicCode": "11121",
+  "reportedAvgManwonRaw": 6881,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52493,6 +56803,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "rceptNo": "20260312000684",
   "ksicCode": "29111",
+  "reportedAvgManwonRaw": 7138,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52518,6 +56830,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260319001418",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 3981,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52542,6 +56856,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 90,
   "rceptNo": "20260319001026",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 4290,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52566,6 +56882,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260318000695",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5742,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52590,6 +56908,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260318000173",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 5972,
+  "divergencePct": 3.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52614,6 +56934,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 101,
   "rceptNo": "20260323001168",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 3816,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52638,7 +56960,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "avgTenureYears": 2.3,
   "rceptNo": "20260323000797",
-  "ksicCode": "29271"
+  "ksicCode": "29271",
+  "reportedAvgManwonRaw": 6008,
+  "divergencePct": 0
  },
  {
   "corpCode": "00317487",
@@ -52652,6 +56976,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.1,
   "rceptNo": "20260407003639",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 7249,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52677,6 +57003,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260318001614",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 5488,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52702,6 +57030,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260318001694",
   "ksicCode": "4659",
+  "reportedAvgManwonRaw": 4205,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52727,6 +57057,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260323000801",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 5243,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52751,6 +57083,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "rceptNo": "20260319001049",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 8185,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52776,6 +57110,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260313000798",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5787,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52801,6 +57137,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260319000246",
   "ksicCode": "46510",
+  "reportedAvgManwonRaw": 5746,
+  "divergencePct": 37,
   "flags": [
    "V4-divergence"
   ],
@@ -52829,6 +57167,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.8,
   "rceptNo": "20260319000852",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 5043,
+  "divergencePct": 8.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52854,6 +57194,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4,
   "rceptNo": "20260320000879",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 3990,
+  "divergencePct": 14.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52879,6 +57221,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.9,
   "rceptNo": "20260702000206",
   "ksicCode": "22214",
+  "divergencePct": 14.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52903,6 +57246,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 75,
   "rceptNo": "20260316001236",
   "ksicCode": "2511",
+  "reportedAvgManwonRaw": 5064,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52927,6 +57272,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260318001396",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5656,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52952,6 +57299,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.8,
   "rceptNo": "20260323000791",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 6786,
+  "divergencePct": 6.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -52977,6 +57326,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318000897",
   "ksicCode": "61299",
+  "reportedAvgManwonRaw": 4344,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53002,6 +57353,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260323001619",
   "ksicCode": "233",
+  "reportedAvgManwonRaw": 4950,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53027,6 +57380,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323001517",
   "ksicCode": "13402",
+  "reportedAvgManwonRaw": 3356,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53051,6 +57406,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260323000313",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5648,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53076,6 +57433,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260319001382",
   "ksicCode": "17223",
+  "reportedAvgManwonRaw": 5701,
+  "divergencePct": 10.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53100,6 +57459,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 71,
   "rceptNo": "20260319000879",
   "ksicCode": "1419",
+  "reportedAvgManwonRaw": 5251,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53124,6 +57485,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 53,
   "rceptNo": "20260319000869",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 7126,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53149,6 +57512,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260319001145",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 3894,
+  "divergencePct": 212.5,
   "flags": [
    "V4-divergence"
   ],
@@ -53176,6 +57541,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 70,
   "rceptNo": "20260323001664",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 5340,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53201,6 +57568,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260323000776",
   "ksicCode": "901",
+  "reportedAvgManwonRaw": 4449,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53225,6 +57594,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 46,
   "rceptNo": "20260428000679",
   "ksicCode": "451",
+  "reportedAvgManwonRaw": 8092,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53250,6 +57621,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260605000111",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 11987,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53275,6 +57648,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260311004334",
   "ksicCode": "66121",
+  "reportedAvgManwonRaw": 5763,
+  "divergencePct": 11.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53300,6 +57675,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.6,
   "rceptNo": "20260304001741",
   "ksicCode": "2225",
+  "reportedAvgManwonRaw": 4321,
+  "divergencePct": 11.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53325,6 +57702,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260430001906",
   "ksicCode": "29293",
+  "reportedAvgManwonRaw": 5627,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53349,6 +57728,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260814003320",
   "ksicCode": "2711",
+  "reportedAvgManwonRaw": 5459,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53369,6 +57750,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260323001523",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4508,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53394,6 +57777,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260324000280",
   "ksicCode": "29271",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -53420,7 +57804,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 7000,
   "employeeCount": 53,
   "rceptNo": "20260320001240",
-  "ksicCode": "701"
+  "ksicCode": "701",
+  "reportedAvgManwonRaw": 7000,
+  "divergencePct": 0
  },
  {
   "corpCode": "00666329",
@@ -53434,6 +57820,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.4,
   "rceptNo": "20260331004755",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 5365,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53459,6 +57847,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260319001082",
   "ksicCode": "104",
+  "reportedAvgManwonRaw": 9198,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53484,6 +57874,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260323000914",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 4722,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53509,6 +57901,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260407003512",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 7050,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53534,6 +57928,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260327001234",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 3957,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53559,6 +57955,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260323001746",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5123,
+  "divergencePct": 16.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53584,6 +57982,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260319001172",
   "ksicCode": "901",
+  "reportedAvgManwonRaw": 5387,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53609,6 +58009,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.7,
   "rceptNo": "20260319000015",
   "ksicCode": "2419",
+  "reportedAvgManwonRaw": 5902,
+  "divergencePct": 12.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53633,6 +58035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 54,
   "rceptNo": "20260331003359",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6578,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53657,6 +58061,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260323001346",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5332,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53682,6 +58088,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260714000499",
   "ksicCode": "26329",
+  "reportedAvgManwonRaw": 4588,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53707,6 +58115,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260318000689",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 5172,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53732,6 +58142,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319001116",
   "ksicCode": "27309",
+  "reportedAvgManwonRaw": 4826,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53756,6 +58168,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 89,
   "rceptNo": "20260318000416",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 4057,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53780,6 +58194,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 75,
   "rceptNo": "20260326000238",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 4799,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53805,6 +58221,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260320001122",
   "ksicCode": "27219",
+  "reportedAvgManwonRaw": 5729,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53830,6 +58248,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20260316001343",
   "ksicCode": "108",
+  "reportedAvgManwonRaw": 3957,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53854,6 +58274,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 66,
   "rceptNo": "20260319000769",
   "ksicCode": "49309",
+  "reportedAvgManwonRaw": 5454,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53878,6 +58300,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260318000746",
   "ksicCode": "2221",
+  "reportedAvgManwonRaw": 4561,
+  "divergencePct": 3.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53903,6 +58327,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260318000823",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 8175,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53928,6 +58354,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260319000587",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4040,
+  "divergencePct": 23.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53948,6 +58376,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260320000422",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4563,
+  "divergencePct": 3.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53967,6 +58397,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260316001636",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5680,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -53992,6 +58424,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.9,
   "rceptNo": "20260318001092",
   "ksicCode": "29229",
+  "reportedAvgManwonRaw": 6875,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54017,6 +58451,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.9,
   "rceptNo": "20250923000316",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5361,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54041,6 +58477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260320000005",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 6657,
+  "divergencePct": 17.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54065,6 +58503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260320000669",
   "ksicCode": "32099",
+  "reportedAvgManwonRaw": 4945,
+  "divergencePct": 7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54090,6 +58530,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260629000376",
   "ksicCode": "21212",
+  "reportedAvgManwonRaw": 3206,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54110,6 +58552,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260320001166",
   "ksicCode": "59113",
+  "reportedAvgManwonRaw": 6030,
+  "divergencePct": 4.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54135,6 +58579,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260331003381",
   "ksicCode": "2642",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -54163,6 +58608,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260316001628",
   "ksicCode": "201",
+  "reportedAvgManwonRaw": 5702,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54188,6 +58635,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260318000856",
   "ksicCode": "23322",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -54215,6 +58663,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 57,
   "rceptNo": "20260319001005",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 6161,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54240,6 +58690,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260319001236",
   "ksicCode": "47111",
+  "reportedAvgManwonRaw": 5416,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54265,6 +58717,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260323000530",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5309,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54289,6 +58743,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 77,
   "rceptNo": "20260626000596",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4559,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54308,6 +58764,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 82,
   "rceptNo": "20260324000162",
   "ksicCode": "103",
+  "reportedAvgManwonRaw": 4268,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54333,6 +58791,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323000887",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6041,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54358,6 +58818,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.7,
   "rceptNo": "20260318000795",
   "ksicCode": "47711",
+  "reportedAvgManwonRaw": 3919,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54382,6 +58844,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 79,
   "rceptNo": "20260316001357",
   "ksicCode": "1419",
+  "reportedAvgManwonRaw": 4291,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54402,6 +58866,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.2,
   "rceptNo": "20250619000257",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 5873,
+  "divergencePct": 27.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54427,6 +58893,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.5,
   "rceptNo": "20260323000808",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5840,
+  "divergencePct": 21.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54452,6 +58920,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260317000499",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4094,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54477,6 +58947,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318001409",
   "ksicCode": "22222",
+  "reportedAvgManwonRaw": 3837,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54501,7 +58973,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "avgTenureYears": 2.3,
   "rceptNo": "20260323000990",
-  "ksicCode": "29280"
+  "ksicCode": "29280",
+  "reportedAvgManwonRaw": 5073,
+  "divergencePct": 0
  },
  {
   "corpCode": "00108940",
@@ -54514,6 +58988,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "rceptNo": "20260319000799",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 7285,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54539,6 +59015,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.8,
   "rceptNo": "20260318000170",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 4769,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54564,6 +59042,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.7,
   "rceptNo": "20260318000296",
   "ksicCode": "23992",
+  "reportedAvgManwonRaw": 5919,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54588,6 +59068,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 84,
   "rceptNo": "20260319000742",
   "ksicCode": "291",
+  "reportedAvgManwonRaw": 4074,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54612,6 +59094,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 78,
   "rceptNo": "20260629000256",
   "ksicCode": "475",
+  "reportedAvgManwonRaw": 3715,
+  "divergencePct": 15.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54636,6 +59120,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 46,
   "rceptNo": "20260319000954",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 6374,
+  "divergencePct": 13.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54660,6 +59146,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 46,
   "rceptNo": "20260319000120",
   "ksicCode": "26112",
+  "reportedAvgManwonRaw": 7424,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54679,6 +59167,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260320000634",
   "ksicCode": "20202",
+  "reportedAvgManwonRaw": 4826,
+  "divergencePct": 5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54703,6 +59193,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 91,
   "rceptNo": "20260320001385",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 3739,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54728,6 +59220,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323001236",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 3771,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54752,6 +59246,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 59,
   "rceptNo": "20260331001154",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 5732,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54777,6 +59273,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260323000695",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 9096,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54802,6 +59300,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14,
   "rceptNo": "20260320000837",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 5630,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54827,6 +59327,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260319001197",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 5360,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54852,6 +59354,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10,
   "rceptNo": "20260323001724",
   "ksicCode": "492",
+  "reportedAvgManwonRaw": 5572,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54876,6 +59380,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 54,
   "rceptNo": "20260331003496",
   "ksicCode": "26421",
+  "reportedAvgManwonRaw": 5767,
+  "divergencePct": 7.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54899,7 +59405,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 3490,
   "employeeCount": 96,
   "rceptNo": "20260320000164",
-  "ksicCode": "29192"
+  "ksicCode": "29192",
+  "reportedAvgManwonRaw": 3403,
+  "divergencePct": 2.5
  },
  {
   "corpCode": "00764807",
@@ -54913,6 +59421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.4,
   "rceptNo": "20250425000530",
   "ksicCode": "27211",
+  "reportedAvgManwonRaw": 4021,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2023",
@@ -54932,6 +59442,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 65,
   "rceptNo": "20260313000806",
   "ksicCode": "26323",
+  "reportedAvgManwonRaw": 4846,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -54956,6 +59468,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260318001711",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6882,
+  "divergencePct": 40,
   "flags": [
    "V4-divergence"
   ],
@@ -54984,6 +59498,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.6,
   "rceptNo": "20260324001029",
   "ksicCode": "90199",
+  "reportedAvgManwonRaw": 3978,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55004,6 +59520,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260324000016",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 5801,
+  "divergencePct": 9.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55029,6 +59547,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260814002876",
   "ksicCode": "58221",
+  "reportedAvgManwonRaw": 5595,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55053,6 +59573,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 59,
   "rceptNo": "20260319000464",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 5617,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55078,6 +59600,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260317000735",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6343,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55103,6 +59627,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260422000692",
   "ksicCode": "649",
+  "reportedAvgManwonRaw": 2216,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55128,6 +59654,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260319000024",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5780,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55153,6 +59681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260316001632",
   "ksicCode": "31991",
+  "reportedAvgManwonRaw": 5425,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55178,6 +59708,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260318001598",
   "ksicCode": "319",
+  "reportedAvgManwonRaw": 9816,
+  "divergencePct": 10.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55197,6 +59729,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 86,
   "rceptNo": "20260318000998",
   "ksicCode": "20495",
+  "reportedAvgManwonRaw": 4787,
+  "divergencePct": 25.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55222,6 +59756,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260320001397",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5526,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55247,6 +59783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260320000681",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 5812,
+  "divergencePct": 16.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55271,7 +59809,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "avgTenureYears": 10.4,
   "rceptNo": "20260318001388",
-  "ksicCode": "715"
+  "ksicCode": "715",
+  "reportedAvgManwonRaw": 6889,
+  "divergencePct": 0
  },
  {
   "corpCode": "00475985",
@@ -55285,6 +59825,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260319001269",
   "ksicCode": "271",
+  "reportedAvgManwonRaw": 4979,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55310,6 +59852,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.6,
   "rceptNo": "20260318000524",
   "ksicCode": "46739",
+  "reportedAvgManwonRaw": 6355,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55335,6 +59879,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260323000867",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 6340,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55359,6 +59905,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 81,
   "rceptNo": "20260318000115",
   "ksicCode": "26129",
+  "reportedAvgManwonRaw": 3990,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55384,6 +59932,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260323001691",
   "ksicCode": "424",
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55408,6 +59957,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 52,
   "rceptNo": "20260323001231",
   "ksicCode": "4610",
+  "reportedAvgManwonRaw": 6631,
+  "divergencePct": 7.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55431,7 +59982,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 7140,
   "employeeCount": 45,
   "rceptNo": "20260320001412",
-  "ksicCode": "26112"
+  "ksicCode": "26112",
+  "reportedAvgManwonRaw": 8462,
+  "divergencePct": 18.5
  },
  {
   "corpCode": "01137860",
@@ -55444,6 +59997,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 76,
   "rceptNo": "20260323000549",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 4224,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55463,6 +60018,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 53,
   "rceptNo": "20260320001349",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 5966,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55488,6 +60045,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260324000021",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4725,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55513,6 +60072,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260319000268",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 9465,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55538,6 +60099,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260318001537",
   "ksicCode": "1419",
+  "reportedAvgManwonRaw": 10046,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55558,6 +60121,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260708000510",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4629,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55583,6 +60148,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260320001005",
   "ksicCode": "911",
+  "reportedAvgManwonRaw": 6593,
+  "divergencePct": 11.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55608,6 +60175,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260330001188",
   "ksicCode": "28519",
+  "reportedAvgManwonRaw": 4179,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55627,6 +60196,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20250919000095",
   "ksicCode": "2031",
+  "reportedAvgManwonRaw": 3823,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55651,6 +60222,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260323001542",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5768,
+  "divergencePct": 18,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55675,6 +60248,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 115,
   "rceptNo": "20260316001419",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 1767,
+  "divergencePct": 35.5,
   "flags": [
    "V4-divergence"
   ],
@@ -55703,6 +60278,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260323001074",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 5787,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55726,7 +60303,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4987,
   "employeeCount": 63,
   "rceptNo": "20260728000338",
-  "ksicCode": "204"
+  "ksicCode": "204",
+  "reportedAvgManwonRaw": 4987,
+  "divergencePct": 0
  },
  {
   "corpCode": "00442631",
@@ -55740,6 +60319,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260320001219",
   "ksicCode": "30320",
+  "reportedAvgManwonRaw": 5228,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55764,6 +60345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 79,
   "rceptNo": "20260331000018",
   "ksicCode": "28301",
+  "reportedAvgManwonRaw": 3965,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55789,6 +60372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 14.7,
   "rceptNo": "20260316000265",
   "ksicCode": "91121",
+  "reportedAvgManwonRaw": 4285,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55813,6 +60398,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260318001267",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 6361,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55838,6 +60425,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.5,
   "rceptNo": "20260318000484",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 5295,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55863,6 +60452,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260323001558",
   "ksicCode": "29280",
+  "reportedAvgManwonRaw": 4313,
+  "divergencePct": 22.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55888,6 +60479,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260318001008",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5730,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55913,6 +60506,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318001122",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4728,
+  "divergencePct": 4.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55937,6 +60532,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 88,
   "rceptNo": "20260319000795",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 3525,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55962,6 +60559,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260319000005",
   "ksicCode": "612",
+  "reportedAvgManwonRaw": 5472,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -55987,6 +60586,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260317000743",
   "ksicCode": "716",
+  "reportedAvgManwonRaw": 5623,
+  "divergencePct": 2.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56012,6 +60613,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260317000661",
   "ksicCode": "32091",
+  "reportedAvgManwonRaw": 3609,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56037,6 +60640,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260318000805",
   "ksicCode": "241",
+  "reportedAvgManwonRaw": 5849,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56061,7 +60666,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 56,
   "avgTenureYears": 3.2,
   "rceptNo": "20260617000355",
-  "ksicCode": "29299"
+  "ksicCode": "29299",
+  "reportedAvgManwonRaw": 5500,
+  "divergencePct": 0.2
  },
  {
   "corpCode": "00127857",
@@ -56074,6 +60681,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260814002549",
   "ksicCode": "33201",
+  "reportedAvgManwonRaw": 7544,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56098,6 +60707,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 67,
   "rceptNo": "20260318000866",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 4590,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56122,6 +60733,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260318001358",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 4957,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56146,6 +60759,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 124,
   "rceptNo": "20250917000341",
   "ksicCode": "901",
+  "reportedAvgManwonRaw": 2478,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56171,6 +60786,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260331000004",
   "ksicCode": "29193",
+  "reportedAvgManwonRaw": 4515,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56196,6 +60813,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260323001233",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 4761,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56221,6 +60840,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260318000552",
   "ksicCode": "20203",
+  "divergencePct": 91.2,
   "flags": [
    "V4-divergence"
   ],
@@ -56249,6 +60869,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.5,
   "rceptNo": "20260319001412",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6493,
+  "divergencePct": 3.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56273,6 +60895,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 61,
   "rceptNo": "20260318000509",
   "ksicCode": "28422",
+  "reportedAvgManwonRaw": 4978,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56298,6 +60922,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260318001662",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6974,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56322,6 +60948,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 56,
   "rceptNo": "20260312000904",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5429,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56347,6 +60975,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260323000281",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 4554,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56371,6 +61001,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260319001402",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6137,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56396,6 +61028,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.7,
   "rceptNo": "20260324000015",
   "ksicCode": "284",
+  "reportedAvgManwonRaw": 4582,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56421,6 +61055,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001578",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 3887,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56446,6 +61082,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260317000840",
   "ksicCode": "29299",
+  "reportedAvgManwonRaw": 6068,
+  "divergencePct": 25.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56470,7 +61108,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "avgTenureYears": 1.9,
   "rceptNo": "20260313000787",
-  "ksicCode": "701"
+  "ksicCode": "701",
+  "reportedAvgManwonRaw": 7856,
+  "divergencePct": 0
  },
  {
   "corpCode": "01309421",
@@ -56484,6 +61124,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318000375",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 4885,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56508,7 +61150,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "avgTenureYears": 2.7,
   "rceptNo": "20260709000026",
-  "ksicCode": "27199"
+  "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5404,
+  "divergencePct": 0.1
  },
  {
   "corpCode": "00823429",
@@ -56521,6 +61165,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "rceptNo": "20260319001261",
   "ksicCode": "46443",
+  "reportedAvgManwonRaw": 6291,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56546,6 +61192,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 0.8,
   "rceptNo": "20250321001551",
   "ksicCode": "872",
+  "reportedAvgManwonRaw": 2113,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -56566,6 +61214,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.6,
   "rceptNo": "20260316001198",
   "ksicCode": "715",
+  "reportedAvgManwonRaw": 7339,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56590,6 +61240,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 53,
   "rceptNo": "20260320000826",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 5513,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56615,6 +61267,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260320001120",
   "ksicCode": "26519",
+  "reportedAvgManwonRaw": 5614,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56634,6 +61288,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 50,
   "rceptNo": "20260818000208",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5208,
+  "divergencePct": 10.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56659,6 +61315,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260630000287",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 2493,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56684,6 +61342,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.9,
   "rceptNo": "20260316000205",
   "ksicCode": "2599",
+  "reportedAvgManwonRaw": 5047,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56709,6 +61369,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20260319000807",
   "ksicCode": "64992",
+  "reportedAvgManwonRaw": 6272,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56733,6 +61395,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 53,
   "rceptNo": "20260319001171",
   "ksicCode": "46413",
+  "reportedAvgManwonRaw": 5404,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56758,6 +61422,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260421000153",
   "ksicCode": "2413",
+  "reportedAvgManwonRaw": 5676,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2023",
@@ -56778,6 +61444,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260407003703",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 6028,
+  "divergencePct": 9.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56802,6 +61470,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 62,
   "rceptNo": "20260730000356",
   "ksicCode": "46712",
+  "reportedAvgManwonRaw": 4637,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56827,6 +61497,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260319000655",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5859,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56851,6 +61523,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "rceptNo": "20260323001310",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 5113,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56875,6 +61549,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260323001526",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6929,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56899,6 +61575,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 48,
   "rceptNo": "20260319001104",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 6078,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56924,6 +61602,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260320001329",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 5079,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56944,6 +61624,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260318001648",
   "ksicCode": "11121",
+  "reportedAvgManwonRaw": 5778,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56969,6 +61651,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.1,
   "rceptNo": "20260320000887",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 6752,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -56994,6 +61678,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260814000419",
   "ksicCode": "639",
+  "reportedAvgManwonRaw": 5063,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57018,6 +61704,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 102,
   "rceptNo": "20260318000800",
   "ksicCode": "171",
+  "reportedAvgManwonRaw": 2762,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57043,6 +61731,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.3,
   "rceptNo": "20260319001316",
   "ksicCode": "461",
+  "reportedAvgManwonRaw": 7085,
+  "divergencePct": 1.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57067,6 +61757,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 69,
   "rceptNo": "20260318001702",
   "ksicCode": "11112",
+  "reportedAvgManwonRaw": 4055,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57091,6 +61783,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "rceptNo": "20260324000733",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6036,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57116,6 +61810,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.5,
   "rceptNo": "20260320001205",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 5873,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57135,6 +61831,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20260327001731",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5498,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57160,6 +61858,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260323000697",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 4163,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57185,6 +61885,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.2,
   "rceptNo": "20260320001336",
   "ksicCode": "46799",
+  "reportedAvgManwonRaw": 4662,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57210,6 +61912,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.3,
   "rceptNo": "20260323000394",
   "ksicCode": "58113",
+  "reportedAvgManwonRaw": 5073,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57234,6 +61938,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "rceptNo": "20260331003217",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5084,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57258,6 +61964,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 36,
   "rceptNo": "20260318000485",
   "ksicCode": "59120",
+  "reportedAvgManwonRaw": 7761,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57282,6 +61990,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 55,
   "rceptNo": "20260319001253",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 5079,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57307,6 +62017,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260323000081",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 4047,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57331,6 +62043,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 56,
   "rceptNo": "20260316001360",
   "ksicCode": "76310",
+  "reportedAvgManwonRaw": 4985,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57355,6 +62069,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 83,
   "rceptNo": "20260323001515",
   "ksicCode": "465",
+  "reportedAvgManwonRaw": 3348,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57380,6 +62096,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.2,
   "rceptNo": "20260323000310",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 5761,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57404,6 +62122,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260313000915",
   "ksicCode": "259",
+  "reportedAvgManwonRaw": 4368,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57429,6 +62149,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.2,
   "rceptNo": "20260319000722",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 5027,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57453,6 +62175,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260313000886",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 6726,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57478,6 +62202,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260407003694",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 4365,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57503,6 +62229,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323001324",
   "ksicCode": "144",
+  "reportedAvgManwonRaw": 2676,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57528,6 +62256,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.7,
   "rceptNo": "20260309001126",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 3512,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57552,6 +62282,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 39,
   "rceptNo": "20260320001280",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6444,
+  "divergencePct": 8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57577,6 +62309,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260629000311",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 3447,
+  "divergencePct": 3.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57602,6 +62336,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260331000650",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5338,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57627,6 +62363,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.7,
   "rceptNo": "20260319000644",
   "ksicCode": "25112",
+  "reportedAvgManwonRaw": 5355,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57652,6 +62390,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.8,
   "rceptNo": "20260320000168",
   "ksicCode": "20422",
+  "reportedAvgManwonRaw": 3640,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57672,6 +62412,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001630",
   "ksicCode": "59201",
+  "reportedAvgManwonRaw": 3767,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57697,6 +62439,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260318000734",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 4230,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57716,6 +62460,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260318000657",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6033,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57741,6 +62487,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.6,
   "rceptNo": "20260323001575",
   "ksicCode": "181",
+  "reportedAvgManwonRaw": 6267,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57765,6 +62513,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 63,
   "rceptNo": "20260323000724",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4276,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57790,6 +62540,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260320000825",
   "ksicCode": "20499",
+  "reportedAvgManwonRaw": 5605,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57815,6 +62567,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.8,
   "rceptNo": "20260629000219",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4633,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57839,6 +62593,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 56,
   "rceptNo": "20260324000898",
   "ksicCode": "30",
+  "reportedAvgManwonRaw": 4764,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57863,6 +62619,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 48,
   "rceptNo": "20260323000022",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4839,
+  "divergencePct": 13.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57888,6 +62646,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260814004296",
   "ksicCode": "681",
+  "reportedAvgManwonRaw": 7714,
+  "divergencePct": 5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57907,6 +62667,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 60,
   "rceptNo": "20260323001692",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 4375,
+  "divergencePct": 1.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57932,6 +62694,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260319001155",
   "ksicCode": "28909",
+  "reportedAvgManwonRaw": 6064,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57957,6 +62721,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.9,
   "rceptNo": "20260318000727",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 4421,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -57981,6 +62747,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 58,
   "rceptNo": "20260324000120",
   "ksicCode": "31114",
+  "reportedAvgManwonRaw": 4584,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58006,6 +62774,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260323001567",
   "ksicCode": "21230",
+  "reportedAvgManwonRaw": 5655,
+  "divergencePct": 5.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58031,6 +62801,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260323001681",
   "ksicCode": "266",
+  "reportedAvgManwonRaw": 7246,
+  "divergencePct": 4.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58055,6 +62827,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 35,
   "rceptNo": "20260323000522",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 7557,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58079,6 +62853,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 56,
   "rceptNo": "20260714000336",
   "ksicCode": "29169",
+  "divergencePct": 91.7,
   "flags": [
    "V4-divergence"
   ],
@@ -58107,6 +62882,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260317000506",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 5157,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58131,6 +62908,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 33,
   "rceptNo": "20260318001680",
   "ksicCode": "23325",
+  "reportedAvgManwonRaw": 7948,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58156,6 +62935,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260316000348",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5343,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58181,6 +62962,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.2,
   "rceptNo": "20260323000274",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 3968,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58206,6 +62989,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260318001692",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 8187,
+  "divergencePct": 3.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58231,6 +63016,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8,
   "rceptNo": "20260814001540",
   "ksicCode": "22211",
+  "reportedAvgManwonRaw": 4419,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58256,6 +63043,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.4,
   "rceptNo": "20260601000703",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 3026,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58280,6 +63069,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 52,
   "rceptNo": "20260323001643",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 5004,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58304,7 +63095,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "avgTenureYears": 1.9,
   "rceptNo": "20260325001160",
-  "ksicCode": "701"
+  "ksicCode": "701",
+  "reportedAvgManwonRaw": 7617,
+  "divergencePct": 20.4
  },
  {
   "corpCode": "00660033",
@@ -58318,6 +63111,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260821000672",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4540,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58343,6 +63138,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.5,
   "rceptNo": "20260323001331",
   "ksicCode": "63991",
+  "reportedAvgManwonRaw": 7702,
+  "divergencePct": 25,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58363,6 +63160,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260316001281",
   "ksicCode": "59130",
+  "reportedAvgManwonRaw": 6220,
+  "divergencePct": 1.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58388,6 +63187,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260331003709",
   "ksicCode": "411",
+  "reportedAvgManwonRaw": 6002,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58412,6 +63213,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260323001748",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 4967,
+  "divergencePct": 5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58436,6 +63239,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 52,
   "rceptNo": "20260324000025",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 4239,
+  "divergencePct": 13.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58460,6 +63265,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20260324000008",
   "ksicCode": "24121",
+  "reportedAvgManwonRaw": 5258,
+  "divergencePct": 5.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58484,6 +63291,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260331002343",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 5191,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58509,6 +63318,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260319000043",
   "ksicCode": "2321",
+  "reportedAvgManwonRaw": 6870,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58529,6 +63340,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.6,
   "rceptNo": "20260318001707",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 6299,
+  "divergencePct": 4.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58554,6 +63367,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260318001301",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 4464,
+  "divergencePct": 1.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58579,6 +63394,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260319000826",
   "ksicCode": "713",
+  "reportedAvgManwonRaw": 6460,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58604,6 +63421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260630001068",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 3657,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58628,6 +63447,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20260318000918",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4955,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58653,6 +63474,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.5,
   "rceptNo": "20260327001816",
   "ksicCode": "105",
+  "reportedAvgManwonRaw": 4614,
+  "divergencePct": 2.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58678,6 +63501,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323000926",
   "ksicCode": "59114",
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58703,6 +63527,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323000601",
   "ksicCode": "21230",
+  "reportedAvgManwonRaw": 4234,
+  "divergencePct": 8.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58728,6 +63554,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.1,
   "rceptNo": "20260319001352",
   "ksicCode": "132",
+  "reportedAvgManwonRaw": 4879,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58748,6 +63576,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260331001631",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 6532,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58772,6 +63602,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260323000319",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 6034,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58797,6 +63629,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260312001075",
   "ksicCode": "759",
+  "reportedAvgManwonRaw": 5737,
+  "divergencePct": 4.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58821,6 +63655,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 54,
   "rceptNo": "20260316000918",
   "ksicCode": "631",
+  "reportedAvgManwonRaw": 3881,
+  "divergencePct": 14.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58846,6 +63682,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260313000261",
   "ksicCode": "28909",
+  "reportedAvgManwonRaw": 4105,
+  "divergencePct": 6.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58870,6 +63708,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 50,
   "rceptNo": "20260319001264",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4864,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58895,6 +63735,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260320001256",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 5814,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58920,6 +63762,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260318001354",
   "ksicCode": "141",
+  "reportedAvgManwonRaw": 4264,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58944,6 +63788,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 40,
   "rceptNo": "20260716000447",
   "ksicCode": "70111",
+  "reportedAvgManwonRaw": 7527,
+  "divergencePct": 24.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58968,6 +63814,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260311003815",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 5180,
+  "divergencePct": 3.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -58992,7 +63840,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 73,
   "avgTenureYears": 4.8,
   "rceptNo": "20260323001478",
-  "ksicCode": "75992"
+  "ksicCode": "75992",
+  "reportedAvgManwonRaw": 3304,
+  "divergencePct": 0.2
  },
  {
   "corpCode": "01590980",
@@ -59005,6 +63855,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 52,
   "rceptNo": "20260323000047",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 4637,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59025,6 +63877,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260327001315",
   "ksicCode": "4632",
+  "reportedAvgManwonRaw": 5060,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59050,6 +63904,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20250314000098",
   "ksicCode": "13992",
+  "reportedAvgManwonRaw": 4700,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -59070,6 +63926,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260317000491",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4079,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59094,6 +63952,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260312000944",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 6296,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59119,6 +63979,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260320001142",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 5437,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59143,6 +64005,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260318000155",
   "ksicCode": "28123",
+  "reportedAvgManwonRaw": 6277,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59167,6 +64031,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 43,
   "rceptNo": "20260311003919",
   "ksicCode": "478",
+  "reportedAvgManwonRaw": 5551,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59192,6 +64058,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260313001240",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 5395,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59216,6 +64084,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 61,
   "rceptNo": "20260323000619",
   "ksicCode": "27191",
+  "reportedAvgManwonRaw": 3993,
+  "divergencePct": 3.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59241,6 +64111,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 18.8,
   "rceptNo": "20260316000539",
   "ksicCode": "23322",
+  "reportedAvgManwonRaw": 3745,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59265,6 +64137,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260324000035",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4788,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59290,6 +64164,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260319000699",
   "ksicCode": "26310",
+  "reportedAvgManwonRaw": 5033,
+  "divergencePct": 7.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59315,6 +64191,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260323001026",
   "ksicCode": "26211",
+  "reportedAvgManwonRaw": 4773,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59340,6 +64218,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260318000232",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 6100,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59364,6 +64244,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 64,
   "rceptNo": "20260320000829",
   "ksicCode": "47520",
+  "reportedAvgManwonRaw": 3633,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59388,6 +64270,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 60,
   "rceptNo": "20260331002202",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 3866,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59413,6 +64297,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260318000059",
   "ksicCode": "29271",
+  "reportedAvgManwonRaw": 5651,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59437,6 +64323,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 47,
   "rceptNo": "20260323000543",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 4887,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2023",
@@ -59457,6 +64345,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260323001745",
   "ksicCode": "47912",
+  "reportedAvgManwonRaw": 4036,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59482,6 +64372,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.3,
   "rceptNo": "20260323001411",
   "ksicCode": "26224",
+  "reportedAvgManwonRaw": 4889,
+  "divergencePct": 17.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59507,6 +64399,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.8,
   "rceptNo": "20260316000972",
   "ksicCode": "24221",
+  "reportedAvgManwonRaw": 4932,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2023",
@@ -59527,6 +64421,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.9,
   "rceptNo": "20260331003884",
   "ksicCode": "41221",
+  "reportedAvgManwonRaw": 6199,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59552,6 +64448,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.7,
   "rceptNo": "20260318001229",
   "ksicCode": "62021",
+  "reportedAvgManwonRaw": 4598,
+  "divergencePct": 4.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59577,6 +64475,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.4,
   "rceptNo": "20260323001151",
   "ksicCode": "261",
+  "reportedAvgManwonRaw": 5443,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59602,6 +64502,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260331001241",
   "ksicCode": "21309",
+  "reportedAvgManwonRaw": 5081,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59627,6 +64529,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323001648",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 5398,
+  "divergencePct": 5.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59651,6 +64555,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 34,
   "rceptNo": "20260707000432",
   "ksicCode": "2611",
+  "reportedAvgManwonRaw": 6676,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59676,6 +64582,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260727000146",
   "ksicCode": "26",
+  "reportedAvgManwonRaw": 4926,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59700,6 +64608,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 73,
   "rceptNo": "20260318001575",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 3110,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59724,6 +64634,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 44,
   "rceptNo": "20260323001704",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5156,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59749,6 +64661,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260310003045",
   "ksicCode": "26291",
+  "reportedAvgManwonRaw": 5649,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59774,6 +64688,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2,
   "rceptNo": "20260629000531",
   "ksicCode": "739",
+  "reportedAvgManwonRaw": 3574,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59798,6 +64714,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 33,
   "rceptNo": "20260331003271",
   "ksicCode": "263",
+  "reportedAvgManwonRaw": 6801,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59823,6 +64741,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.9,
   "rceptNo": "20260319000990",
   "ksicCode": "68121",
+  "reportedAvgManwonRaw": 3651,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59848,6 +64768,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.9,
   "rceptNo": "20260320001093",
   "ksicCode": "383",
+  "reportedAvgManwonRaw": 4949,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59872,6 +64794,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 99,
   "rceptNo": "20260331004396",
   "ksicCode": "582",
+  "reportedAvgManwonRaw": 2265,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59896,6 +64820,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 36,
   "rceptNo": "20260323001551",
   "ksicCode": "28511",
+  "reportedAvgManwonRaw": 6150,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59921,6 +64847,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 11.3,
   "rceptNo": "20260319000253",
   "ksicCode": "2612",
+  "reportedAvgManwonRaw": 6147,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59945,6 +64873,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260323001734",
   "ksicCode": "60222",
+  "reportedAvgManwonRaw": 4917,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59970,6 +64900,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260323001548",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 6838,
+  "divergencePct": 2.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -59995,6 +64927,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.7,
   "rceptNo": "20260323001457",
   "ksicCode": "2229",
+  "reportedAvgManwonRaw": 4399,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60020,6 +64954,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.3,
   "rceptNo": "20260715000140",
   "ksicCode": "222",
+  "reportedAvgManwonRaw": 4488,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60045,6 +64981,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.5,
   "rceptNo": "20260323001292",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5917,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60070,6 +65008,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260731000140",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 3963,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60094,6 +65034,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 48,
   "rceptNo": "20260323001172",
   "ksicCode": "29272",
+  "reportedAvgManwonRaw": 4535,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60118,6 +65060,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 42,
   "rceptNo": "20260323000816",
   "ksicCode": "620",
+  "reportedAvgManwonRaw": 5168,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60143,6 +65087,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3,
   "rceptNo": "20260629000181",
   "ksicCode": "26329",
+  "reportedAvgManwonRaw": 3614,
+  "divergencePct": 1.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60167,6 +65113,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20260312000752",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 3847,
+  "divergencePct": 9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60185,7 +65133,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4128,
   "employeeCount": 52,
   "rceptNo": "20260331004915",
-  "ksicCode": "20423"
+  "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4124,
+  "divergencePct": 0.1
  },
  {
   "corpCode": "00390860",
@@ -60199,6 +65149,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001661",
   "ksicCode": "463",
+  "reportedAvgManwonRaw": 3997,
+  "divergencePct": 12.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60224,6 +65176,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.6,
   "rceptNo": "20260323001264",
   "ksicCode": "701",
+  "reportedAvgManwonRaw": 3972,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60249,6 +65203,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.5,
   "rceptNo": "20260327000708",
   "ksicCode": "46712",
+  "reportedAvgManwonRaw": 3970,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60273,6 +65229,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 44,
   "rceptNo": "20260430001951",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4853,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60298,6 +65256,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9,
   "rceptNo": "20260319000021",
   "ksicCode": "26422",
+  "reportedAvgManwonRaw": 5188,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60323,6 +65283,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.7,
   "rceptNo": "20260629000325",
   "ksicCode": "10897",
+  "reportedAvgManwonRaw": 4377,
+  "divergencePct": 7.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60343,6 +65305,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260319001084",
   "ksicCode": "29171",
+  "reportedAvgManwonRaw": 5697,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60366,7 +65330,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4147,
   "employeeCount": 51,
   "rceptNo": "20260323001721",
-  "ksicCode": "204"
+  "ksicCode": "204",
+  "reportedAvgManwonRaw": 4969,
+  "divergencePct": 19.8
  },
  {
   "corpCode": "00791209",
@@ -60379,7 +65345,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 32,
   "avgTenureYears": 3.1,
   "rceptNo": "20260317000732",
-  "ksicCode": "4659"
+  "ksicCode": "4659",
+  "reportedAvgManwonRaw": 6570,
+  "divergencePct": 0
  },
  {
   "corpCode": "00122825",
@@ -60393,6 +65361,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260407003654",
   "ksicCode": "612",
+  "reportedAvgManwonRaw": 4172,
+  "divergencePct": 22,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60418,6 +65388,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.7,
   "rceptNo": "20260323001562",
   "ksicCode": "46443",
+  "reportedAvgManwonRaw": 8091,
+  "divergencePct": 160.4,
   "flags": [
    "V4-divergence"
   ],
@@ -60440,6 +65412,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 39,
   "rceptNo": "20260323001735",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 5309,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60465,6 +65439,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260319000947",
   "ksicCode": "251",
+  "reportedAvgManwonRaw": 4902,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60490,6 +65466,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.3,
   "rceptNo": "20260323001115",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4550,
+  "divergencePct": 16.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60515,6 +65493,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.2,
   "rceptNo": "20260319001312",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 6267,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60539,6 +65519,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 39,
   "rceptNo": "20260323001132",
   "ksicCode": "27111",
+  "reportedAvgManwonRaw": 5333,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60559,6 +65541,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20260319000677",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 5461,
+  "divergencePct": 9.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60583,6 +65567,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260319000006",
   "ksicCode": "339",
+  "reportedAvgManwonRaw": 5500,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2023",
@@ -60602,6 +65588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 51,
   "rceptNo": "20250311000391",
   "ksicCode": "721",
+  "reportedAvgManwonRaw": 3871,
+  "divergencePct": 2.3,
   "history": [
    {
     "fiscalYear": "2023",
@@ -60622,6 +65610,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7,
   "rceptNo": "20260318001676",
   "ksicCode": "462",
+  "reportedAvgManwonRaw": 4476,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60646,6 +65636,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 53,
   "rceptNo": "20260318000278",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 3758,
+  "divergencePct": 0.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60670,6 +65662,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260324000956",
   "ksicCode": "20129",
+  "reportedAvgManwonRaw": 4895,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60695,6 +65689,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260323000991",
   "ksicCode": "581",
+  "reportedAvgManwonRaw": 3557,
+  "divergencePct": 18.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60720,6 +65716,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6,
   "rceptNo": "20250331003048",
   "ksicCode": "26299",
+  "reportedAvgManwonRaw": 3371,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2023",
@@ -60739,6 +65737,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 44,
   "rceptNo": "20260320001401",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 4573,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60759,6 +65759,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.4,
   "rceptNo": "20260323000741",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 3555,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60783,6 +65785,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 39,
   "rceptNo": "20260407003630",
   "ksicCode": "22213",
+  "reportedAvgManwonRaw": 5094,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60803,6 +65807,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.6,
   "rceptNo": "20260325001218",
   "ksicCode": "29180",
+  "reportedAvgManwonRaw": 4834,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60827,6 +65833,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 33,
   "rceptNo": "20260409001053",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 6280,
+  "divergencePct": 4.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60852,6 +65860,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.2,
   "rceptNo": "20260317000808",
   "ksicCode": "28111",
+  "reportedAvgManwonRaw": 5547,
+  "divergencePct": 1.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60872,6 +65882,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.1,
   "rceptNo": "20260326000050",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4127,
+  "divergencePct": 22.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60891,6 +65903,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260323000608",
   "ksicCode": "474",
+  "reportedAvgManwonRaw": 5181,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60916,6 +65930,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 17.7,
   "rceptNo": "20260320001257",
   "ksicCode": "319",
+  "reportedAvgManwonRaw": 4793,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60941,6 +65957,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260319001268",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4558,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60966,6 +65984,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.6,
   "rceptNo": "20260324000863",
   "ksicCode": "351",
+  "reportedAvgManwonRaw": 4037,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -60991,6 +66011,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 16.8,
   "rceptNo": "20260331002889",
   "ksicCode": "28302",
+  "reportedAvgManwonRaw": 1784,
+  "divergencePct": 5.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61016,6 +66038,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260625000184",
   "ksicCode": "211",
+  "reportedAvgManwonRaw": 4801,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61041,6 +66065,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2,
   "rceptNo": "20260318000877",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 7232,
+  "divergencePct": 28.7,
   "history": [
    {
     "fiscalYear": "2023",
@@ -61060,6 +66086,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 35,
   "rceptNo": "20260318001099",
   "ksicCode": "289",
+  "reportedAvgManwonRaw": 5451,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61084,6 +66112,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260407003484",
   "ksicCode": "2811",
+  "reportedAvgManwonRaw": 5006,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61108,6 +66138,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260323000803",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 4942,
+  "divergencePct": 0.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61132,6 +66164,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 31,
   "rceptNo": "20260320001090",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 6091,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61156,6 +66190,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 33,
   "rceptNo": "20260318001247",
   "ksicCode": "273",
+  "reportedAvgManwonRaw": 5703,
+  "divergencePct": 0.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61181,6 +66217,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5,
   "rceptNo": "20260320000208",
   "ksicCode": "472",
+  "reportedAvgManwonRaw": 4252,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61205,6 +66243,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 48,
   "rceptNo": "20260323001660",
   "ksicCode": "59111",
+  "reportedAvgManwonRaw": 3895,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61230,6 +66270,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.4,
   "rceptNo": "20260701000447",
   "ksicCode": "292",
+  "reportedAvgManwonRaw": 5186,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61255,6 +66297,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.9,
   "rceptNo": "20260319000686",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 7250,
+  "divergencePct": 32.6,
   "flags": [
    "V4-divergence"
   ],
@@ -61282,6 +66326,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260316001089",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4529,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61302,6 +66348,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.8,
   "rceptNo": "20260303003003",
   "ksicCode": "22214",
+  "reportedAvgManwonRaw": 5100,
+  "divergencePct": 1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61327,6 +66375,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.8,
   "rceptNo": "20260319000929",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4386,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61352,6 +66402,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.4,
   "rceptNo": "20260319001277",
   "ksicCode": "281",
+  "reportedAvgManwonRaw": 4984,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61377,6 +66429,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 12.8,
   "rceptNo": "20260318001539",
   "ksicCode": "221",
+  "reportedAvgManwonRaw": 4015,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61401,6 +66455,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260323001600",
   "ksicCode": "11112",
+  "reportedAvgManwonRaw": 4069,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61421,6 +66477,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 5.3,
   "rceptNo": "20260323000002",
   "ksicCode": "265",
+  "reportedAvgManwonRaw": 5675,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61445,6 +66503,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 102,
   "rceptNo": "20260319000028",
   "ksicCode": "63",
+  "reportedAvgManwonRaw": 3905,
+  "divergencePct": 119.4,
   "flags": [
    "V4-divergence"
   ],
@@ -61473,6 +66533,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260331004903",
   "ksicCode": "272",
+  "reportedAvgManwonRaw": 5035,
+  "divergencePct": 5.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61497,6 +66559,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 68,
   "rceptNo": "20260319001297",
   "ksicCode": "901",
+  "reportedAvgManwonRaw": 4079,
+  "divergencePct": 53.5,
   "flags": [
    "V4-divergence"
   ],
@@ -61524,6 +66588,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 37,
   "rceptNo": "20260403002632",
   "ksicCode": "27309",
+  "reportedAvgManwonRaw": 3957,
+  "divergencePct": 18.9,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61543,6 +66609,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 34,
   "rceptNo": "20260316000473",
   "ksicCode": "182",
+  "reportedAvgManwonRaw": 5304,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61563,6 +66631,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.2,
   "rceptNo": "20260319001338",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 2468,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61588,6 +66658,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.2,
   "rceptNo": "20260323001343",
   "ksicCode": "23325",
+  "reportedAvgManwonRaw": 3779,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61612,6 +66684,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 45,
   "rceptNo": "20260323001580",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 3938,
+  "divergencePct": 0.2,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61635,7 +66709,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 5893,
   "employeeCount": 30,
   "rceptNo": "20260330001814",
-  "ksicCode": "29280"
+  "ksicCode": "29280",
+  "reportedAvgManwonRaw": 5920,
+  "divergencePct": 0.5
  },
  {
   "corpCode": "00151605",
@@ -61648,6 +66724,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260312001406",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4587,
+  "divergencePct": 0.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61673,6 +66751,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 6.8,
   "rceptNo": "20250623000071",
   "ksicCode": "46204",
+  "reportedAvgManwonRaw": 5294,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61693,6 +66773,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.4,
   "rceptNo": "20260323001089",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 4258,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61718,6 +66800,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260323001652",
   "ksicCode": "28202",
+  "reportedAvgManwonRaw": 4778,
+  "divergencePct": 11.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61738,6 +66822,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260320000816",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 2990,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61763,6 +66849,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.3,
   "rceptNo": "20260320000836",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4282,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61788,6 +66876,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.8,
   "rceptNo": "20260326000677",
   "ksicCode": "58222",
+  "reportedAvgManwonRaw": 5317,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61813,6 +66903,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 9.3,
   "rceptNo": "20260318000501",
   "ksicCode": "13213",
+  "reportedAvgManwonRaw": 4649,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61837,6 +66929,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 36,
   "rceptNo": "20260319001341",
   "ksicCode": "109",
+  "reportedAvgManwonRaw": 4764,
+  "divergencePct": 2.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61862,6 +66956,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.9,
   "rceptNo": "20260320000272",
   "ksicCode": "2629",
+  "reportedAvgManwonRaw": 4881,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61886,6 +66982,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 41,
   "rceptNo": "20260318001150",
   "ksicCode": "20423",
+  "reportedAvgManwonRaw": 4001,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61910,6 +67008,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 32,
   "rceptNo": "20260318001440",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 5055,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61935,6 +67035,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2,
   "rceptNo": "20260318001384",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4613,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -61954,6 +67056,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 31,
   "rceptNo": "20260429001057",
   "ksicCode": "27192",
+  "divergencePct": 92.3,
   "flags": [
    "V4-divergence"
   ],
@@ -61976,6 +67079,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 37,
   "rceptNo": "20260320000602",
   "ksicCode": "5821",
+  "reportedAvgManwonRaw": 4299,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62001,6 +67106,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.4,
   "rceptNo": "20250324000009",
   "ksicCode": "213",
+  "reportedAvgManwonRaw": 5274,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -62020,6 +67127,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 38,
   "rceptNo": "20260312000851",
   "ksicCode": "26410",
+  "reportedAvgManwonRaw": 4119,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62045,6 +67154,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260323001684",
   "ksicCode": "282",
+  "reportedAvgManwonRaw": 5218,
+  "divergencePct": 4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62064,6 +67175,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 57,
   "rceptNo": "20260316001483",
   "ksicCode": "2049",
+  "reportedAvgManwonRaw": 2717,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62089,6 +67202,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.5,
   "rceptNo": "20260331001834",
   "ksicCode": "33201",
+  "reportedAvgManwonRaw": 3855,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62113,6 +67228,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 40,
   "rceptNo": "20260407003565",
   "ksicCode": "212",
+  "reportedAvgManwonRaw": 3121,
+  "divergencePct": 16.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62136,7 +67253,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgSalaryManwonRaw": 4647,
   "employeeCount": 32,
   "rceptNo": "20260318001300",
-  "ksicCode": "464"
+  "ksicCode": "464",
+  "reportedAvgManwonRaw": 4647,
+  "divergencePct": 0
  },
  {
   "corpCode": "00876209",
@@ -62149,6 +67268,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 49,
   "rceptNo": "20260320001226",
   "ksicCode": "857",
+  "reportedAvgManwonRaw": 3025,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62173,6 +67294,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 40,
   "rceptNo": "20260323001699",
   "ksicCode": "264",
+  "reportedAvgManwonRaw": 3685,
+  "divergencePct": 0.3,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62198,6 +67321,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 7.9,
   "rceptNo": "20260323001675",
   "ksicCode": "262",
+  "reportedAvgManwonRaw": 4317,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -62218,6 +67343,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 8.9,
   "rceptNo": "20260701000629",
   "ksicCode": "46419",
+  "reportedAvgManwonRaw": 5425,
+  "divergencePct": 18.1,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62243,6 +67370,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 4.1,
   "rceptNo": "20260318001609",
   "ksicCode": "591",
+  "reportedAvgManwonRaw": 3908,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62267,7 +67396,9 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 30,
   "avgTenureYears": 2.4,
   "rceptNo": "20260323000938",
-  "ksicCode": "713"
+  "ksicCode": "713",
+  "reportedAvgManwonRaw": 4657,
+  "divergencePct": 0.3
  },
  {
   "corpCode": "00393618",
@@ -62281,6 +67412,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.9,
   "rceptNo": "20260313000656",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 4109,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62301,6 +67434,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.4,
   "rceptNo": "20250321001777",
   "ksicCode": "464",
+  "reportedAvgManwonRaw": 4647,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2023",
@@ -62321,6 +67456,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.8,
   "rceptNo": "20260318000600",
   "ksicCode": "477",
+  "reportedAvgManwonRaw": 3269,
+  "divergencePct": 11.4,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62346,6 +67483,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 10.5,
   "rceptNo": "20260319000751",
   "ksicCode": "2642",
+  "reportedAvgManwonRaw": 3966,
+  "divergencePct": 0.7,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62371,6 +67510,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.5,
   "rceptNo": "20260318001102",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 4074,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62395,6 +67536,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 31,
   "rceptNo": "20260327001530",
   "ksicCode": "303",
+  "reportedAvgManwonRaw": 4275,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62420,6 +67563,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.9,
   "rceptNo": "20260324000091",
   "ksicCode": "204",
+  "reportedAvgManwonRaw": 1840,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62445,6 +67590,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 3.1,
   "rceptNo": "20260319000952",
   "ksicCode": "59120",
+  "reportedAvgManwonRaw": 4865,
+  "divergencePct": 17.6,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62469,6 +67616,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 34,
   "rceptNo": "20260324000083",
   "ksicCode": "27199",
+  "reportedAvgManwonRaw": 3552,
+  "divergencePct": 0,
   "history": [
    {
     "fiscalYear": "2023",
@@ -62489,6 +67638,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 1.9,
   "rceptNo": "20260318001265",
   "ksicCode": "468",
+  "reportedAvgManwonRaw": 3867,
+  "divergencePct": 0.5,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62513,6 +67664,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 32,
   "rceptNo": "20260324001035",
   "ksicCode": "70113",
+  "reportedAvgManwonRaw": 3560,
+  "divergencePct": 1.8,
   "history": [
    {
     "fiscalYear": "2024",
@@ -62533,6 +67686,8 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 2.5,
   "rceptNo": "20260515001623",
   "ksicCode": "467",
+  "reportedAvgManwonRaw": 3450,
+  "divergencePct": 0.6,
   "history": [
    {
     "fiscalYear": "2023",
