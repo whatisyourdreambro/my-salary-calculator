@@ -70,7 +70,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
  '/chuseok-bonus-2026': { lastModified: new Date('2026-08-16') },
  '/tax-reform-2026': { lastModified: new Date('2026-08-07') },
- '/civil-servant-pay-2027': { lastModified: new Date('2026-09-09') },
+ '/civil-servant-pay-2027': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
  '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
  '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
@@ -89,9 +89,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/social-insurance-rates-2027': { lastModified: new Date('2026-08-31') },
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-08-30') },
- '/teacher-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/teacher-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
  '/police-pay-2026': { lastModified: new Date('2026-08-30') },
- '/firefighter-pay-2026': { lastModified: new Date('2026-08-30') },
+ '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
  '/en': { lastModified: new Date('2026-09-09') },
