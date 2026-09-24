@@ -288,16 +288,38 @@ export function trackAdFillStatus(
   });
 }
 
-/** 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5) */
+/**
+ * 제휴 오퍼 배치 — GA4 맞춤 측정기준 'position'(제휴 배치, Slot03)의 값.
+ *   offer-slot  = OfferSlot(결과 연동 CTA 옆 병기, 쿠팡 폴백 없음)
+ *   banner-slot = CoupangBanner 호출부를 오퍼 카드가 대체한 자리
+ * 종전에는 position 을 보내지 않아 affiliate_impression 2,233건 전부 (not set) 이었다(2026-09-25 수정).
+ */
+export type AffiliatePlacement = "offer-slot" | "banner-slot";
+
+function affiliateParams(offerId: string, page: string, vertical: string, placement?: AffiliatePlacement) {
+  return {
+    offer_id: offerId,
+    page, // 기존 보고서 키 유지
+    page_path: page, // 다른 광고·제휴 이벤트와 같은 키로 페이지 조인
+    vertical,
+    ...(placement === "offer-slot" || placement === "banner-slot" ? { position: placement } : {}),
+  };
+}
+
+/**
+ * 제휴 오퍼 클릭 — AffiliateSlot 전용 (지시서 §TASK-3-5)
+ * 링크가 새 탭(target=_blank)으로 나가므로 GA4 배치 큐(최대 약 5초)에서 기다리는 동안
+ * 인앱 브라우저 창 전환·종료로 유실되지 않도록 beacon 전송을 명시한다(측정 전용, 링크·파라미터 무변경).
+ */
 export function trackAffiliateClick(
   offerId: string,
   page: string,
-  vertical: string
+  vertical: string,
+  placement?: AffiliatePlacement
 ): void {
   trackEvent("affiliate_click", {
-    offer_id: offerId,
-    page,
-    vertical,
+    ...affiliateParams(offerId, page, vertical, placement),
+    transport_type: "beacon",
   });
 }
 
@@ -305,11 +327,8 @@ export function trackAffiliateClick(
 export function trackAffiliateImpression(
   offerId: string,
   page: string,
-  vertical: string
+  vertical: string,
+  placement?: AffiliatePlacement
 ): void {
-  trackEvent("affiliate_impression", {
-    offer_id: offerId,
-    page,
-    vertical,
-  });
+  trackEvent("affiliate_impression", affiliateParams(offerId, page, vertical, placement));
 }
