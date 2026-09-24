@@ -178,8 +178,54 @@ const SEGMENT_LABELS: Record<string, string> = {
  "mbti-salary": "MBTI 연봉",
 };
 
+/**
+ * 페이지(page.tsx)가 없는 중간 경로 — 라이브에서 404 다(2026-09-24 실측).
+ * BreadcrumbList 에 404 URL 을 싣지 않도록 "마지막이 아닌" 단계에서만 건너뛴다.
+ * 예: /table/2026/annual → [홈, 2026 연봉 실수령액 표] (종전 [홈, /table, /table/2026, …])
+ * 새 허브 페이지를 만들면 여기서 빼야 다시 단계로 나온다 — breadcrumbRoutes.test 가
+ * 방출되는 중간 경로가 전부 실제 라우트인지 검사한다 (2026-09-25 B14 RT-06/META-08).
+ */
+const NON_PAGE_PATHS: ReadonlySet<string> = new Set([
+ "/table",
+ "/table/2026",
+ "/table/2027",
+ "/tools/date",
+ "/tools/health",
+ "/pro",
+]);
+
+/**
+ * leafName 을 넘기지 않는 공용 layout(AutoBreadcrumb) 페이지의 마지막 단계 한국어 명 — 경로 전체 키.
+ * 라벨 출처는 각 페이지 layout/page 의 metadata title 앞부분 (fun/layout.tsx 는 광고 파일이라
+ * 손대지 않고 여기서 맵으로 처리). 2026-07-06 영문 슬러그 leaf("bmi quick") 제거와 같은 취지
+ * (2026-09-25 B14 META-09).
+ */
+const LEAF_LABELS: Record<string, string> = {
+ "/fun/asset-allocator": "자산 배분 마스터",
+ "/fun/escape-plan": "노비 탈출 계산기",
+ "/fun/financial-mbti": "금융 MBTI 테스트",
+ "/fun/flappy": "플래피 샐러리맨",
+ "/fun/fortune": "2026년 신년운세",
+ "/fun/iq-test": "멘사급 IQ 테스트",
+ "/fun/lunch-roulette": "직장인 점심 메뉴 룰렛",
+ "/fun/meme-coin": "밈코인 모의투자 시뮬레이션",
+ "/fun/random-draw": "랜덤 추첨",
+ "/fun/rank": "연봉 분포 시뮬레이터",
+ "/fun/reincarnation": "인생 2회차 시뮬레이터",
+ "/fun/rich-dna-test": "부자 DNA 테스트",
+ "/fun/salary-battle": "연봉 배틀",
+ "/fun/salary-rank": "내 연봉 순위 계산기",
+ "/fun/salary-slip": "가상 월급 명세서 만들기",
+ "/fun/spending-test": "소비 성향 테스트",
+ "/fun/tetris": "직장인 테트리스",
+ "/fun/weekend-duty": "주말 당직 게임",
+ "/fun/what-to-buy": "플렉스(FLEX) 계산기",
+ "/fun/worldcup": "기업 이상형 월드컵",
+ "/pro/career-planner": "커리어 패스 시뮬레이터",
+};
+
 export interface AutoBreadcrumbOptions {
- /** 마지막 단계의 한국어 명 (없으면 마지막 segment 사용) */
+ /** 마지막 단계의 한국어 명 (없으면 LEAF_LABELS·SEGMENT_LABELS, 그래도 없으면 마지막 단계 생략) */
  leafName?: string;
  /** 중간 단계 명 강제 override (예: { "calc": "계산기 모음" }) */
  overrides?: Record<string, string>;
@@ -189,6 +235,9 @@ export interface AutoBreadcrumbOptions {
  * 경로를 받아 breadcrumb 단계 배열 생성 (순수 함수).
  * 시각적 Breadcrumbs 컴포넌트와 JSON-LD가 동일 데이터를 공유하도록 분리.
  * 예: /tools/finance/severance → [홈, 금융 도구, 금융, 퇴직금 계산기]
+ *
+ * - NON_PAGE_PATHS 의 중간 단계는 건너뛴다 (404 URL 방출 금지).
+ * - 마지막 단계에 한국어 라벨이 없으면 영문 슬러그("career planner")를 싣지 않고 생략한다.
  */
 export function buildBreadcrumbTrail(
  path: string,
@@ -201,6 +250,7 @@ export function buildBreadcrumbTrail(
  segments.forEach((seg, idx) => {
  acc += `/${seg}`;
  const isLast = idx === segments.length - 1;
+ if (!isLast && NON_PAGE_PATHS.has(acc)) return;
  const override = options.overrides?.[seg];
  // 잘못된 % 인코딩 세그먼트에서 decodeURIComponent가 URIError를 던지면 원본 seg 사용
  let decoded: string;
@@ -209,11 +259,10 @@ export function buildBreadcrumbTrail(
  } catch {
  decoded = seg;
  }
- const label =
- override ||
- (isLast && options.leafName) ||
- SEGMENT_LABELS[seg] ||
- decoded.replace(/-/g, " ");
+ const label = isLast
+ ? override || options.leafName || LEAF_LABELS[acc] || SEGMENT_LABELS[seg]
+ : override || SEGMENT_LABELS[seg] || decoded.replace(/-/g, " ");
+ if (!label) return;
  crumbs.push({ name: label, path: acc });
  });
 
