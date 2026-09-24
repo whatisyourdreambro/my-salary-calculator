@@ -10,6 +10,7 @@ import { CalcResultAd, Display2Ad } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, datasetLd, faqLd } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import SeasonalLinks from "../../2026/SeasonalLinks";
 import FavoritesButton from "@/components/FavoritesButton";
 
@@ -72,6 +73,8 @@ const monthlyJsonLd = [
     url: "/table/2027/monthly",
     dateModified: "2026-08-30",
     keywords: ["2027 월급", "실수령액", "세후 월급", "최저임금 2027", "2027년"],
+    // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
+    license: CITATION_POLICY_URL,
   }),
   faqLd(FAQ_ITEMS),
   autoBreadcrumbLd("/table/2027/monthly", { leafName: "2027 월급 실수령액 표" }),

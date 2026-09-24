@@ -37,6 +37,7 @@ import {
  datasetLd,
  faqLd,
 } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 
 export const dynamic = "force-static";
 
@@ -203,6 +204,8 @@ export default function CompanyDetailPage({
  url: `/salary-db/${company.id}`,
  dateModified: company.lastUpdated,
  keywords: [`${company.name.ko} 연봉`, `${company.name.ko} 초봉`, `${company.name.ko} 신입 연봉`],
+ // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset "license 누락" 경고 해소). 추정치 포함 명시는 description 유지
+ license: CITATION_POLICY_URL,
  // 공시 출처가 실재하는 회사만 citation/isBasedOn (DART·알리오 원문 링크 → 권위 근거를 기계에 전달)
  ...(citation ? { citation, isBasedOn: citation.url } : {}),
  }),

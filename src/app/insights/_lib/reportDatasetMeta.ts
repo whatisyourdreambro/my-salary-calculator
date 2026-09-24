@@ -13,9 +13,9 @@ const SITE_URL = "https://www.moneysalary.com";
 /**
  * 데이터셋 license — 사이트 자체 인용 정책("출처 표기 시 자유 인용", /insights 인용 정책 섹션).
  * CC BY 등 외부 표준 라이선스 명시는 운영자 결정 항목이라 여기서 선언하지 않는다.
+ * 정본은 src/lib/citationPolicy.ts (회사·표 Dataset 도 공유 — A23, 2026-09-25). 여기서는 재수출.
  */
-export const CITATION_POLICY_PATH = "/insights#citation-policy";
-export const CITATION_POLICY_URL = `${SITE_URL}${CITATION_POLICY_PATH}`;
+export { CITATION_POLICY_PATH, CITATION_POLICY_URL } from "@/lib/citationPolicy";
 
 /** DART 원문 — 리포트 3편 공통 1차 출처 (schema.org Dataset.citation 용) */
 export const DART_CITATION = {
