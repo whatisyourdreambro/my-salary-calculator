@@ -3,54 +3,16 @@
 import { useState, useMemo } from "react";
 import { TrendingUp, ArrowRight } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
 
-// 간이세액표 기반 누진세
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function empDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit)
-      return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
-
-// 연봉 → 연 실수령액 추정 (4대보험 + 누진세 + 세액공제 약 20% 가정)
-function calcAnnualNet(salary: number): number {
+// 연봉 → 연 실수령액 — 홈 연봉 계산기와 같은 정본 엔진(TaxLogic, 간이세액표 근사)을
+// 쓴다. 기준은 비과세 식대 월 20만원·부양가족 본인 1인·자녀 0명(홈·연봉표 기본값).
+// 종전에는 구간표·근로소득공제를 이 파일에 따로 두고 "세액공제 20% 가정"(×0.8)으로
+// 계산해, 연금보험료 공제·비과세·연금 하한이 빠진 채 연 실수령이 3,000만 −69만 ~
+// 1.5억 +516만 어긋났다(2026-09-25 감사 CALC-06).
+export function calcAnnualNet(salary: number): number {
   if (salary <= 0) return 0;
-  const basicDeduct = 1_500_000;
-  const empDed = empDeduction(salary);
-  const taxable = Math.max(0, salary - empDed - basicDeduct);
-  const incomeTax = calcTax(taxable) * 0.8; // 세액공제 20% 가정
-  const localTax = incomeTax * 0.1;
-
-  // 4대보험 (본인 부담)
-  const pensionCap = 79_080_000; // 국민연금 기준소득월액 상한 월 659만원 (2026.7~2027.6)
-  const pension = Math.min(salary, pensionCap) * 0.0475;
-  const health = salary * 0.03595;
-  const ltc = health * 0.1314;
-  const employment = salary * 0.009;
-  const insurance = pension + health + ltc + employment;
-
-  return salary - incomeTax - localTax - insurance;
+  return calculateSalary2026(salary, 200_000, 1, 0).netPay * 12;
 }
 
 function formatInput(raw: string): string {
