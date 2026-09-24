@@ -74,7 +74,8 @@ const fmtManwon = (won: number) =>
   Math.round(won / 10_000).toLocaleString("ko-KR");
 
 /** 연봉(원) → "9,600만원" / "1억 2,000만원" — 1억 미만은 `${fmtManwon(won)}만원` 과 같은 문자열
- *  (2026-09-25 B14 META-06: "12,000만원" 다섯 자리 만원 표기 정리). 월급 금액에는 쓰지 않는다. */
+ *  (2026-09-25 B14 META-06: "12,000만원" 다섯 자리 만원 표기 정리). FAQ(JSON-LD 원천) 전용 —
+ *  월급 금액과 화면 본문 표·크로스링크에는 쓰지 않는다(광고 위 높이 실측 사유는 각 블록 주석). */
 const fmtAnnualKo = (won: number) => formatManwonKorean(Math.round(won / 10_000));
 
 type Props = { params: { amount: string } };
@@ -243,8 +244,11 @@ export default function MonthlyPage({ params }: Props) {
                       <td className="py-2.5 pr-4 font-bold text-navy">
                         {s.pct === 0 ? "없음 (월급×12)" : `${s.pct}%`}
                       </td>
+                      {/* (B14 2026-09-25) 이 셀의 연봉은 억 표기로 바꾸지 않는다 — 폰트 실측(320~460px 1px 간격)에서
+                          연봉 1억 이상 월급대의 371~379px·450~460px 폭에서 행마다 한 줄씩 늘어
+                          아래 Display2Ad 를 최대 120px 밀었다. 본문 표는 제목·설명·FAQ 게이트 대상 밖. */}
                       <td className="py-2.5 pr-4 tabular-nums">
-                        약 {fmtAnnualKo(s.annual)}
+                        약 {fmtManwon(s.annual)}만원
                       </td>
                       <td className="py-2.5">
                         {href ? (

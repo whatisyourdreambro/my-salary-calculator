@@ -35,6 +35,7 @@ import { formatSalaryKorean } from "@/lib/seo";
 import { jobsData } from "@/data/jobsData";
 import { industriesData } from "@/data/industriesData";
 import { regionsData } from "@/data/regionsData";
+import { guideCards } from "@/lib/guidesMeta.generated";
 import { getStaticSalaryAmounts } from "@/lib/salaryStaticParams";
 import { generateMetadata as jobMetadata } from "@/app/job/[slug]/page";
 import { generateMetadata as industryMetadata } from "@/app/industry/[slug]/page";
@@ -73,6 +74,17 @@ describe("formatManwonKorean", () => {
     expect(formatManwonKorean(123456)).toBe("12억 3,456만원");
     // 공시 원값의 소수 만원은 반올림하지 않는다
     expect(formatManwonKorean(12345.6)).toBe("1억 2,345.6만원");
+  });
+
+  it("표시 정밀도(소수 3자리) 반올림 경계에서 '10,000만원'·'1억 10,000만원' 이 나오지 않는다", () => {
+    expect(formatManwonKorean(9999.9994)).toBe(legacy(9999.9994)); // "9,999.999만원"
+    expect(formatManwonKorean(9999.9996)).toBe("1억원");
+    expect(formatManwonKorean(10000.0004)).toBe("1억원");
+    expect(formatManwonKorean(19999.9999)).toBe("2억원");
+    expect(formatManwonKorean(29999.9996)).toBe("3억원");
+    for (const n of [9999.9996, 19999.9999, 29999.9996, 109999.9999]) {
+      expect(formatManwonKorean(n), String(n)).not.toMatch(/10,000만원/);
+    }
   });
 
   it("정수 입력에서 원 단위 formatSalaryKorean 과 같고, 다섯 자리 만원이 없다", () => {
@@ -127,6 +139,37 @@ describe("/job·/industry·/region 제목·설명", () => {
       const title = String((meta.title as { absolute?: string })?.absolute ?? meta.title);
       expect(`${title}\n${meta.description}`, region.id).not.toMatch(FIVE_DIGIT_MANWON);
     }
+  });
+
+  it("/job·/industry·/region FAQ(FAQPage JSON-LD 원천) 질문·답에도 다섯 자리 만원이 없다", () => {
+    const sets = [
+      ["job", jobsData],
+      ["industry", industriesData],
+      ["region", regionsData],
+    ] as const;
+    for (const [kind, list] of sets) {
+      for (const entry of list) {
+        for (const [i, faq] of entry.faqs.entries()) {
+          expect(`${faq.q}\n${faq.a}`, `${kind}/${entry.id} faq#${i}`).not.toMatch(FIVE_DIGIT_MANWON);
+        }
+      }
+    }
+    const yeouido = regionsData.find((r) => r.id === "yeouido")!;
+    expect(yeouido.faqs[0].a).toContain("시니어는 1억 2,000만원 수준");
+  });
+});
+
+describe("가이드 카드 설명 (meta description·핵심 요약 원천)", () => {
+  it("다섯 자리 만원이 없다 — lgensol 은 원문보다 짧은 '9,500만~1.2억원' (핵심 요약 박스는 광고 위)", () => {
+    for (const card of guideCards) {
+      expect(card.description, card.slug).not.toMatch(FIVE_DIGIT_MANWON);
+    }
+    const lgensol = guideCards.find((c) => c.slug === "lgensol-wage-negotiation-2026")!;
+    expect(lgensol.description).toContain("시니어 9,500만~1.2억원.");
+    // 종전 설명("시니어 9,500~12,000만원.")보다 길어지면 핵심 요약이 한 줄 늘어 아래 광고를 민다
+    expect(lgensol.description.length).toBeLessThanOrEqual(
+      "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500~12,000만원. 미국 파견 인센티브 확대.".length,
+    );
   });
 });
 
@@ -186,5 +229,15 @@ describe("/salary·/monthly FAQ (FAQPage JSON-LD 원천)", () => {
       const faq = faqOf(renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: String(monthly) } })));
       expect(JSON.stringify(faq), String(monthly)).not.toMatch(FIVE_DIGIT_MANWON);
     }
+  });
+
+  it("/monthly 상여금 환산표 셀은 종전 '약 N,NNN만원' 그대로 — 억 표기는 Display2Ad 위 표 높이를 늘린다", () => {
+    // 월 750만원: 상여 400% → 연봉 1억 2,000만원. 폰트 실측(320~460px)에서 억 표기 셀이
+    // 371~379px·450~460px 폭에서 행마다 한 줄씩 늘어 아래 Display2Ad 를 최대 120px 밀었다.
+    const html = renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: "7500000" } }));
+    const table = html.slice(html.indexOf("<table"), html.indexOf("</table>"));
+    expect(table).toContain("약 12,000만원");
+    expect(table).toContain("약 9,000만원");
+    expect(table).not.toContain("억");
   });
 });
