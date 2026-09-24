@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import ShareButtons, { type ShareButtonsProps } from "./ShareButtons";
 import { useSharePageContext } from "@/hooks/useSharePageContext";
 import { resolveShareLocale } from "@/lib/sharePolicy";
+import { trackSharePreview } from "@/lib/analytics";
+import { isImageDownloadRestricted } from "@/lib/inAppBrowser";
 
 export interface ResultSharePanelProps extends Omit<ShareButtonsProps, "shareMode" | "imageBlob" | "variant" | "resultKey"> {
   /** Include every input represented by the result/image. Memory-only; not an event field. */
@@ -16,6 +18,8 @@ export interface ResultSharePanelProps extends Omit<ShareButtonsProps, "shareMod
   resultIsCurrent?: boolean;
   /** Auxiliary image cards can share the page's existing link controls. */
   showPageShare?: boolean;
+  /** Each increment opens the preview as if its button were pressed (a card's in-app save button). */
+  openPreviewRequest?: number;
 }
 
 type Preview = { key: string; approved: boolean; preparing: boolean; blob?: Blob; objectUrl?: string; error?: boolean };
@@ -24,7 +28,7 @@ type Preview = { key: string; approved: boolean; preparing: boolean; blob?: Blob
 export default function ResultSharePanel({
   resultKey, pageUrl, pageTitle, pageDescription, previewDescription, resultIsCurrent = true, showPageShare = true,
   url, title, description, imageUrl, getShareImage, contentType = "result",
-  className = "", locale: explicitLocale, register,
+  className = "", locale: explicitLocale, register, openPreviewRequest = 0,
 }: ResultSharePanelProps) {
   const { pathname, context } = useSharePageContext();
   const locale = resolveShareLocale(pathname, explicitLocale);
@@ -47,6 +51,7 @@ export default function ResultSharePanel({
   async function openPreview() {
     const currentRequest = ++request.current;
     const isCurrent = () => currentRequest === request.current && latestKey.current === key;
+    trackSharePreview("open", contentType);
     setPreview({ key, approved: false, preparing: !!getShareImage });
     if (!getShareImage) return;
     try {
@@ -62,6 +67,13 @@ export default function ResultSharePanel({
       if (isCurrent()) setPreview({ key, approved: false, preparing: false, error: true });
     }
   }
+
+  // A card's own save button asks for this same preview in Naver/KakaoTalk in-app browsers,
+  // where <a download> often silently does nothing (A16). The ref keeps the latest state so the
+  // effect runs only per request; an already open preview is left as it is.
+  const requestPreview = useRef(() => {});
+  requestPreview.current = () => { if (resultIsCurrent && !active) void openPreview(); };
+  useEffect(() => { if (openPreviewRequest > 0) requestPreview.current(); }, [openPreviewRequest]);
 
   if (!context) return null;
   return <section className={`rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 ${className}`} data-result-share-panel>
@@ -83,8 +95,11 @@ export default function ResultSharePanel({
         {/* A local object URL only. A private dynamic OG URL is never fetched for preview. */}
         {/* eslint-disable-next-line @next/next/no-img-element -- local Blob preview; no remote image optimizer or upload */}
         {active.objectUrl && <img src={active.objectUrl} alt={en ? "Result image preview" : "공유할 결과 이미지 미리보기"} className="mt-3 max-h-[28rem] w-full object-contain" />}
+        {/* In-app WebViews ignore file downloads; long-press on the image still saves it. The preview
+            only exists after a tap, so this client-only check never reaches server HTML. */}
+        {active.objectUrl && isImageDownloadRestricted(typeof navigator === "undefined" ? "" : navigator.userAgent) && <p className="mt-2 text-sm font-semibold">{en ? "Press and hold the image to save it." : "이미지를 길게 눌러 저장하세요."}</p>}
       </div>
-      {!active.approved && <button type="button" disabled={active.preparing || active.error} className="mt-3 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" onClick={() => setPreview((current) => current?.key === key ? { ...current, approved: true } : current)}>{en ? "Use this content for sharing" : "이 내용으로 공유"}</button>}
+      {!active.approved && <button type="button" disabled={active.preparing || active.error} className="mt-3 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" onClick={() => { trackSharePreview("approve", contentType); setPreview((current) => current?.key === key ? { ...current, approved: true } : current); }}>{en ? "Use this content for sharing" : "이 내용으로 공유"}</button>}
       {active.approved && <div className="mt-4">
         <p className="mb-3 text-xs text-slate-600 dark:text-slate-300">{en ? "Images are included only in image sharing or saving. A plain page link does not recreate this result." : "이미지는 이미지 공유·저장에서만 포함됩니다. 일반 페이지 링크만으로는 이 결과가 재현되지 않습니다."}</p>
         <ShareButtons key={key} shareMode="result" resultKey={resultKey} url={url} title={title} description={description} imageUrl={imageUrl} imageBlob={active.blob} contentType={contentType} locale={locale} register={false} />

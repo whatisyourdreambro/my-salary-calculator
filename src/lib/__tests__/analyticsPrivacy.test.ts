@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "../analyticsPrivacy";
-import { trackCalcStart, trackCalcSuccess, trackCalcResultView, trackEvent, trackOfferCompareComplete, trackOfferCompareExplanationView } from "../analytics";
+import { trackCalcStart, trackCalcSuccess, trackCalcResultView, trackEvent, trackOfferCompareComplete, trackOfferCompareExplanationView, trackSharePreview } from "../analytics";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -71,6 +71,22 @@ describe("custom analytics privacy", () => {
         page_referrer: "https://www.moneysalary.com/share/[redacted]" });
       expect(JSON.stringify(params)).not.toContain("secret");
       expect(JSON.stringify(params)).not.toContain("80000000");
+    }
+  });
+  it("sends the result-share preview funnel with fixed enum fields only (OG-13)", () => {
+    const gtag = vi.fn();
+    vi.stubGlobal("window", { gtag, location: { href: "https://www.moneysalary.com/share/eyJhbm51YWxTYWxhcnkiOjgwMDAwMDAwfQ?utm_source=kakao&utm_medium=share" } });
+    vi.stubGlobal("document", { referrer: "" });
+    trackSharePreview("open", "salary_result");
+    trackSharePreview("approve", "salary_result");
+    trackSharePreview("open", "https://www.moneysalary.com/share/secret?amount=80000000");
+    expect(gtag.mock.calls.map((call) => call[1])).toEqual(["share_preview_open", "share_preview_approve", "share_preview_open"]);
+    expect(Object.keys(gtag.mock.calls[0][2]).sort()).toEqual(["content_type", "event_version", "page_location", "page_referrer", "share_mode"]);
+    expect(gtag.mock.calls[1][2]).toMatchObject({ content_type: "salary_result", share_mode: "result", event_version: 2 });
+    // An unexpected content type collapses to the fixed enum rather than carrying a URL or amount.
+    expect(gtag.mock.calls[2][2]).toMatchObject({ content_type: "page", share_mode: "result" });
+    for (const [, , params] of gtag.mock.calls) {
+      expect(JSON.stringify(params)).not.toMatch(/80000000|eyJ|secret/);
     }
   });
   it("remains harmless without a browser, without GA or with a blocked GA function", () => {
