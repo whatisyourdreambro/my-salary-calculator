@@ -9,7 +9,8 @@
 // - 단일 축·고정 코호트만 — 조합 축 페이지 금지.
 // - 업종 페이지는 상장사 5곳 이상 업종만 생성 (dynamicParams=false, 밖은 404).
 // - dartReport 집계 원칙 승계: FY2025 단일 기준·플래그 제외·직원 수 가중 평균.
-// - 두 집계 방식 괴리 10% 초과 회사는 순위 모수에서 제외 (A19, 2026-09-25 — dartRankingGuards).
+// - 두 집계 방식 괴리 10% 초과 회사는 연봉 순위(업종·인상률) 모수에서 제외 (A19, 2026-09-25 —
+//   dartRankingGuards). 직원 수·근속연수 랭킹은 급여 괴리와 무관해 전수 모수(플래그만 제외).
 // - 인상률 랭킹은 직원 수 급변(±30% 초과) 회사 제외 — 합병·분할 왜곡 방지.
 //   + 두 해 중 한 해라도 평균연봉이 그해 연간 최저임금 환산액 미만이면 제외(부분연도·단시간
 //   혼입 신호), 인상률 +100% 초과·직원 50명 미만은 이상치로 순위에서 빼 별도 목록
@@ -88,8 +89,10 @@ export interface RankingRow {
   prevSalaryManwon?: number;
 }
 
-// ── 링크 모수: FY2025 + 무플래그 + 상장 전수 — 회사 카드의 업종 랭킹 도선 전용 ──
-// (카드 링크 줄이 광고 위에 있어 순위 모수 강화와 무관하게 종전 집합 유지)
+// ── 전수 모수: FY2025 + 무플래그 + 상장 전수 (종전 규칙) ──
+// - 회사 카드의 업종 랭킹 도선 (카드 링크 줄이 광고 위에 있어 순위 모수 강화와 무관하게 유지)
+// - 직원 수·근속연수 랭킹 — 급여 집계 방식 괴리는 인원·근속과 무관하다. 10% 괴리 모수로
+//   돌리면 인용 자산(top-employees·top-tenure)이 조용히 재정렬된다 (2026-09-25 리뷰 정정)
 const listedLinkPool: DartDisclosedEntry[] = dartDisclosed.filter(
   (d) =>
     d.fiscalYear === DART_RANKING_YEAR &&
@@ -97,10 +100,16 @@ const listedLinkPool: DartDisclosedEntry[] = dartDisclosed.filter(
     d.stockCode !== ""
 );
 
-// ── 순위 모수: + 두 집계 방식 괴리 10% 이하 (A19, 2026-09-25 — dartRankingGuards) ──
+// ── 연봉 순위 모수: + 두 집계 방식 괴리 10% 이하 (A19, 2026-09-25 — dartRankingGuards) ──
+// 업종 연봉 순위·인상률 순위 전용 (평균연봉 값 자체를 비교하는 랭킹)
 const listedEligible: DartDisclosedEntry[] = listedLinkPool.filter(passesRankingDivergence);
 
+/** 연봉 순위 모수 (괴리 10% 초과 제외) — 업종 연봉 순위·인상률 랭킹 표기용 */
 export const LISTED_TOTAL = listedEligible.length;
+/** 상장사 전수 모수 (플래그만 제외, 종전 규칙) — 직원 수·근속연수 랭킹 표기용 */
+export const LISTED_ALL_TOTAL = listedLinkPool.length;
+/** 연봉 순위 모수에서 괴리 10% 초과로 뺀 상장사 수 — 방법론 표기용 */
+export const LISTED_DIVERGENCE_EXCLUDED = LISTED_ALL_TOTAL - LISTED_TOTAL;
 
 function linkFor(d: DartDisclosedEntry): string | null {
   // corpCodeMap 의 id 를 그대로 쓰면 dedupe 로 사라진 회사(15곳)에 대해
@@ -289,19 +298,19 @@ export const topRaiseOutlierRows: RaiseOutlierRow[] = raiseSplit.outliers;
 /** 인상률 랭킹 모수 (방법론·메타 표기용) — 순위 행과 같은 필터 (이상치 제외) */
 export const raiseEligibleCount = raiseCandidates.filter((c) => !raiseOutlierReason(c)).length;
 
-/** 평균 근속연수 TOP 100 */
-export const topTenureRows: RankingRow[] = [...listedEligible]
+/** 평균 근속연수 TOP 100 — 전수 모수(급여 괴리 무관, 위 listedLinkPool 주석) */
+export const topTenureRows: RankingRow[] = [...listedLinkPool]
   .filter((d) => d.avgTenureYears != null && d.avgTenureYears > 0)
   .sort((a, b) => (b.avgTenureYears ?? 0) - (a.avgTenureYears ?? 0))
   .slice(0, RANK_ROWS_CAP)
   .map((d, i) => toRow(d, i + 1));
 
-export const tenureEligibleCount = listedEligible.filter(
+export const tenureEligibleCount = listedLinkPool.filter(
   (d) => d.avgTenureYears != null && d.avgTenureYears > 0
 ).length;
 
-/** 직원 수 TOP 100 */
-export const topEmployeesRows: RankingRow[] = [...listedEligible]
+/** 직원 수 TOP 100 — 전수 모수(급여 괴리 무관) */
+export const topEmployeesRows: RankingRow[] = [...listedLinkPool]
   .sort((a, b) => b.employeeCount - a.employeeCount)
   .slice(0, RANK_ROWS_CAP)
   .map((d, i) => toRow(d, i + 1));

@@ -18,7 +18,10 @@ import {
   RAISE_OUTLIER_MAX_PCT,
   RAISE_MIN_EMPLOYEES,
   MIN_WAGE_ANNUAL_MANWON,
+  LISTED_TOTAL,
+  LISTED_DIVERGENCE_EXCLUDED,
 } from "@/lib/salary-data/dartRanking";
+import { RANKING_DIVERGENCE_MAX_PCT } from "@/lib/salary-data/dartRankingGuards";
 
 export const dynamic = "force-static";
 
@@ -121,7 +124,7 @@ export default function TopRaisePage() {
               RAISE_PREV_YEAR
             )}·${DART_RANKING_YEAR}년 ${minWageLabel(
               DART_RANKING_YEAR
-            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 페이지 하단에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
+            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호), 급여총액÷인원 값과 회사 공시 1인평균급여액의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사(두 집계 방식이 어긋나 평균을 대표하지 못함)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 페이지 하단에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
           },
           {
             question: "인상률이 높으면 좋은 회사인가요?",
@@ -134,6 +137,9 @@ export default function TopRaisePage() {
           "ko-KR"
         )}곳을 비교했습니다. [${CORRECTION_DATE} 정정] 종전 순위는 직원 수 급변만 걸러, 전년 평균이 최저임금 환산액에 못 미치는 회사와 이상치가 상위를 차지했습니다. 이들을 순위·인용문에서 빼고 이상치는 아래 목록에 따로 표시합니다.`,
         methodologyAppendix: <OutlierList />,
+        // 연봉 순위 모수 — 두 급여 집계 방식 괴리 10% 초과 제외를 밝힌다 (종전 '상장사 전체 모수' 표기 정정)
+        poolNote: `상장사 모수 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳(두 급여 집계 방식 괴리 ${RANKING_DIVERGENCE_MAX_PCT}% 초과 ${LISTED_DIVERGENCE_EXCLUDED.toLocaleString("ko-KR")}곳 제외).`,
+        poolTotal: raiseEligibleCount,
         datasetName: `상장사 연봉 인상률 TOP ${topRaiseRows.length} (${DART_RANKING_YEAR})`,
         rows: topRaiseRows,
         // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지). 순위 행(top1)만 사용 — 이상치 인용 금지

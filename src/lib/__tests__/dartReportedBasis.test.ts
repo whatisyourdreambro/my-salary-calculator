@@ -27,7 +27,12 @@ import {
   industryRankings,
   industryRankingByCompanyId,
   LISTED_TOTAL,
+  LISTED_ALL_TOTAL,
+  LISTED_DIVERGENCE_EXCLUDED,
   topRaiseRows,
+  topEmployeesRows,
+  topTenureRows,
+  tenureEligibleCount,
 } from "@/lib/salary-data/dartRanking";
 import {
   passesRankingDivergence,
@@ -263,6 +268,33 @@ describe("랭킹 모수 — 괴리 10% 초과 제외 (A19)", () => {
     expect(LISTED_TOTAL).toBeLessThan(
       dartDisclosed.filter((d) => d.fiscalYear === "2025" && !d.flags?.length && d.stockCode).length
     );
+  });
+
+  it("직원 수·근속연수 랭킹은 급여 괴리와 무관 — 전수 모수(플래그만 제외) 그대로 (리뷰 정정)", () => {
+    const fullPool = dartDisclosed.filter(
+      (d) => d.fiscalYear === "2025" && !d.flags?.length && d.stockCode
+    );
+    expect(LISTED_ALL_TOTAL).toBe(fullPool.length);
+    expect(LISTED_DIVERGENCE_EXCLUDED).toBe(LISTED_ALL_TOTAL - LISTED_TOTAL);
+    expect(LISTED_DIVERGENCE_EXCLUDED).toBeGreaterThan(0);
+    const byEmployees = [...fullPool]
+      .sort((a, b) => b.employeeCount - a.employeeCount)
+      .slice(0, 100)
+      .map((d) => d.stockCode);
+    expect(topEmployeesRows.map((r) => r.stockCode)).toEqual(byEmployees);
+    const withTenure = fullPool.filter((d) => d.avgTenureYears != null && d.avgTenureYears > 0);
+    expect(tenureEligibleCount).toBe(withTenure.length);
+    const byTenure = [...withTenure]
+      .sort((a, b) => (b.avgTenureYears ?? 0) - (a.avgTenureYears ?? 0))
+      .slice(0, 100)
+      .map((d) => d.stockCode);
+    expect(topTenureRows.map((r) => r.stockCode)).toEqual(byTenure);
+    // 괴리 10% 초과 회사가 인원·근속 랭킹에서 빠지지 않는다 (감사 지적: 아모레퍼시픽·한화손해보험·서연이화)
+    expect(
+      [...topEmployeesRows, ...topTenureRows].some(
+        (r) => !passesRankingDivergence(fullPool.find((d) => d.stockCode === r.stockCode)!)
+      )
+    ).toBe(true);
   });
 });
 

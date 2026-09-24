@@ -2,6 +2,7 @@
 //
 // Dataset JSON-LD 품질 가드 (2026-09-25):
 //  - META-11: lite(/salary-db/listed/[stockCode]) description 은 회사 고유 수치로 80자 이상,
+//    상장사 지표·업종 랭킹 description 은 템플릿 고정 문구만으로 50자 이상,
 //    소방·경찰 봉급표 description 은 Google Dataset 최소 50자 이상.
 //  - A23(PROD-14): 회사 페이지·실수령액 표 Dataset 은 인용 정책 URL 을 license 로 싣는다.
 //    DART 원자료 파생 lite·랭킹 Dataset 에는 license 를 넣지 않는다(META-11 범위 밖).
@@ -43,6 +44,20 @@ describe("Dataset description 길이 (META-11)", () => {
       expect(datasetDescription(read(file)).length).toBeGreaterThanOrEqual(50);
     }
   );
+
+  // 상장사 지표 랭킹 3종·업종 랭킹 28종 — 템플릿의 고정 문구만으로도 50자 이상이어야 한다
+  // (보간 값 길이와 무관하게 하한 보장, 2026-09-25 리뷰 정정)
+  it.each([
+    "salary-db/listed/MetricRankingView.tsx",
+    "salary-db/listed/industry/[industryId]/page.tsx",
+  ])("%s description 템플릿 고정 문구가 50자 이상", (file) => {
+    const src = read(file);
+    const block = src.slice(src.indexOf("datasetLd({"));
+    const m = block.match(/description:\s*`([^`]+)`/);
+    expect(m, "datasetLd description 템플릿 리터럴").not.toBeNull();
+    const staticText = m![1].replace(/\$\{[^}]*\}/g, "");
+    expect(staticText.length).toBeGreaterThanOrEqual(50);
+  });
 });
 
 describe("Dataset license (A23)", () => {

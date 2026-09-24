@@ -162,7 +162,8 @@ export default function IndustryRankingPage({ params }: Props) {
             : []),
           datasetLd({
             name: `${r.industryKo} 상장사 공시 평균연봉 순위 (${DART_RANKING_YEAR})`,
-            description: `DART 사업보고서 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터`,
+            // META-11 — Google Dataset description 50자 이상: 사업연도·가중 평균까지 업종 고유 값으로
+            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터 (직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)})`,
             url: path,
             dateModified: DART_RANKING_DATE,
             keywords: [`${r.industryKo} 연봉 순위`, "상장사 평균연봉", "DART 공시"],
@@ -303,7 +304,7 @@ export default function IndustryRankingPage({ params }: Props) {
           <h2 id="method-heading" className="text-sm font-black text-navy mb-2">데이터 출처·산정 기준</h2>
           <p className="text-xs leading-6 text-muted-blue">
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
-            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 전체 모수는{" "}
+            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 순위 모수는{" "}
             {LISTED_TOTAL.toLocaleString("ko-KR")}곳이며, 업종 분류는 표준산업분류(KSIC) 기반
             자체 매핑입니다. <strong className="text-navy">신입 초봉이 아니며</strong>, 성과급
             지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_RANKING_DATE}.
