@@ -18,6 +18,8 @@
 //      Header 는 fixed top-0(--header-height 72px), 루트 <main> 은 상단 패딩 없음.
 // 한계: AST 파서가 아니라 정규식 휴리스틱이다. 오탐/미탐 가능 — 의도적 예외는
 //       scripts/ad-audit-allow.json 에 {route, slot, reason} 으로 등재할 것(reason 필수).
+//       승인된 라우트 파일 통째 삭제(도달 불가 페이지 정리 등)는 {deletedFile, reason} 으로 등재 —
+//       --diff 의 "광고 유닛 삭제" 경고를 그 파일이 통째로 삭제된 경우에만 INFO 로 내린다.
 // 주의: InArticleAd 는 env NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE 미설정 시 GUIDE_MID 로
 //       폴백한다(AdPlacement.tsx). 프로덕션은 설정돼 있어 별개 슬롯으로 취급하지만,
 //       env 를 지우면 InArticle(100+곳)과 GuideMid(70+곳)가 같은 슬롯이 되어 페이지마다
@@ -168,14 +170,16 @@ let allow = [];
 if (fs.existsSync(ALLOW_FILE)) {
   allow = JSON.parse(fs.readFileSync(ALLOW_FILE, "utf8"));
   for (const a of allow) {
-    if (!a.route || !a.slot || !a.reason) {
-      console.error(`allowlist 항목에 route/slot/reason 필수: ${JSON.stringify(a)}`);
+    if (a.deletedFile ? !a.reason : !a.route || !a.slot || !a.reason) {
+      console.error(`allowlist 항목에 route/slot/reason(또는 deletedFile/reason) 필수: ${JSON.stringify(a)}`);
       process.exit(1);
     }
   }
 }
 const isAllowed = (route, slot) =>
   allow.some((a) => a.route === route && a.slot === slot);
+// 승인된 통째 삭제 파일 (repo 상대 경로) — --diff 의 광고 유닛 삭제 경고 전용
+const retiredFiles = new Set(allow.filter((a) => a.deletedFile).map((a) => a.deletedFile));
 
 // ---------- 스캔 ----------
 const errors = [];
@@ -408,6 +412,7 @@ const fmtHdr = (h) =>
   `${h.route}  ${rel(h.file)}:${h.line} <${h.comp}> min-h-screen 첫 자식${h.hops ? `(래퍼 ${h.hops}단 경유)` : ""} — page·layout 체인에 상단 패딩 토큰 없음(헤더 72px fixed)`;
 
 // ---------- --diff: 광고 위 새 UI 삽입 검출 ----------
+const retiredHits = []; // allowlist deletedFile 로 승인된 통째 삭제 파일의 광고 줄 — 경고 대신 항상 표시
 if (DIFF_MODE) {
   let diff = "";
   try {
@@ -422,9 +427,20 @@ if (DIFF_MODE) {
   const adLineRe = new RegExp("<(" + Object.keys(SLOT_OF).join("|") + ")\\b");
   const lines = diff.split("\n");
   let file = "";
+  let oldFile = "";
+  let fileDeleted = false;
   for (let i = 0; i < lines.length; i++) {
     const ln = lines[i];
+    if (ln.startsWith("diff --git ")) {
+      oldFile = "";
+      fileDeleted = false;
+    } else if (ln.startsWith("--- a/")) oldFile = ln.slice(6);
     if (ln.startsWith("+++ b/")) file = ln.slice(6);
+    else if (ln.startsWith("+++ /dev/null")) {
+      // 파일 통째 삭제 — 새 경로가 없으므로 옛 경로로 보고(예전엔 직전 파일명·빈 이름으로 찍혔다)
+      file = oldFile;
+      fileDeleted = true;
+    }
     // 추가된 줄(비어있지 않은 UI 줄) 바로 아래 2줄 안에 기존(컨텍스트) 광고 줄이 있으면 경고
     if (ln.startsWith("+") && !ln.startsWith("+++") && /<[A-Za-z]/.test(ln) && !adLineRe.test(ln)) {
       for (let j = i + 1; j <= i + 2 && j < lines.length; j++) {
@@ -441,7 +457,10 @@ if (DIFF_MODE) {
     if (ln.startsWith("-") && !ln.startsWith("---") && adLineRe.test(ln)) {
       const window = lines.slice(Math.max(0, i - 4), i + 5);
       const readded = window.some((w) => w.startsWith("+") && adLineRe.test(w));
-      if (!readded) warns.push(`${file}: 광고 유닛 삭제 감지, 대체 추가 없음 — 의도 확인 필요`);
+      if (readded) continue;
+      if (fileDeleted && retiredFiles.has(file)) {
+        retiredHits.push(`${file} (${ln.slice(1).trim().slice(0, 50)})`);
+      } else warns.push(`${file}: 광고 유닛 삭제 감지, 대체 추가 없음 — 의도 확인 필요`);
     }
   }
 }
@@ -471,6 +490,7 @@ if (process.argv.includes("--verbose")) {
   for (const a of adjacencyNew) console.log("INFO   [diff][인접] " + fmtAdj(a));
   for (const h of headerNew) console.log("INFO   [diff][헤더가림] " + fmtHdr(h));
 }
+for (const r of retiredHits) console.log("INFO   [diff][승인 삭제] 광고 줄 제거 — " + r);
 if (allow.length) console.log(`\nallowlist ${allow.length}건 적용 (scripts/ad-audit-allow.json)`);
 console.log(
   `\n결과: ERROR ${errors.length}건 / WARN ${warns.length}건${errors.length ? " — 커밋 전 수정 또는 allowlist(사유 필수) 등재" : " — 통과"}`
