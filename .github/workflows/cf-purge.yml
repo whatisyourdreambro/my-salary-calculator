@@ -1,0 +1,53 @@
+# 배포 후 Cloudflare 캐시 자동 Purge (2026-09-25, 승인 A35 · 감사 CLIENT-02)
+# 배경: /salary/* 는 엣지 4시간, 규칙 B 이후 HTML 은 1시간 캐시 — 배포 뒤 Purge 를 잊으면 삭제된 청크를 가리키는
+#       옛 HTML 이 남아 하이드레이션·광고·GA 가 멈출 수 있다. 런북 "배포마다 Purge" 를 자동화한다.
+# 동작: main push → 이 커밋의 CF Pages 프로덕션 배포 성공을 최대 25분 폴링 → 존 캐시 Purge Everything.
+#       CF Pages 빌드는 이 워크플로와 별개로 돈다(여기서는 배포를 건드리지 않고 읽기만 한다).
+# 시크릿(저장소 Settings > Secrets and variables > Actions): CF_API_TOKEN(Pages 읽기 + 존 Cache Purge),
+#       CF_ACCOUNT_ID, CF_ZONE_ID — 하나라도 없으면 notice 만 남기고 성공(0) 처리, CI 를 실패시키지 않는다.
+# 실패(빨간 X)는 배포 실패·시간 초과·토큰 권한 오류·Purge 거부뿐 — 알림 메일이 오면 대시보드에서 수동 Purge.
+# 저장소 쓰기(push·커밋·태그) 없음. 설정 절차: docs/operator-console-pack.md '배포 후 캐시 자동 Purge'.
+name: cf-purge
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# 같은 커밋 재실행이 겹치지 않게만 묶는다(서로 다른 push 는 각자 자기 배포를 기다려 Purge).
+concurrency:
+  group: cf-purge-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+    steps:
+      - name: 시크릿 확인
+        id: secrets
+        run: |
+          if [ -z "$CF_API_TOKEN" ] || [ -z "$CF_ACCOUNT_ID" ] || [ -z "$CF_ZONE_ID" ]; then
+            echo "::notice::CF_API_TOKEN / CF_ACCOUNT_ID / CF_ZONE_ID 시크릿이 모두 있어야 캐시 자동 Purge 가 동작합니다 — 이번에는 건너뜀(설정: docs/operator-console-pack.md). 그동안은 배포마다 수동 Purge."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ok == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ok == 'true'
+        with:
+          node-version: 20
+      - name: CF Pages 배포 대기 후 Purge Everything
+        if: steps.secrets.outputs.ok == 'true'
+        env:
+          CF_PAGES_PROJECT: my-salary-calculator
+          CF_PURGE_TIMEOUT_MINUTES: "25"
+        run: node scripts/cf-purge-after-deploy.mjs

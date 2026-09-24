@@ -35,6 +35,10 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 광고 위 UI 게이트(ad-audit --diff)가 push 이전 커밋·PR base 커밋과 비교하려면 전체 이력이 필요.
+          # 기본값 1(얕은 clone)이면 git diff 가 실패하고, 스크립트는 CI 에서 그 경우 exit 2 로 멈춘다.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -46,6 +50,7 @@ jobs:
       - run: node --test scripts/__tests__/cloudflare-routes.test.mjs
       - run: node --test scripts/__tests__/adsense-report.test.mjs
       - run: node --test scripts/__tests__/edge-bundle-scripts.test.mjs
+      - run: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py
@@ -55,6 +60,24 @@ jobs:
       - run: npm run verify:sitemap
       - run: npm run verify:bonus
       - run: npm run ad-audit
+      # 광고 위 새 UI 삽입 게이트 (2026-09-25, 감사 ADS-03 — 2026-08-16 수익 급락 사건 규칙).
+      # 기준 커밋: push 는 github.event.before(이번 push 직전 main), PR 은 pull_request.base.sha.
+      # 운영자는 main 에 직접 push 하므로 merge-base(origin/main, HEAD) 방식은 HEAD 가 되어 diff 가 빈다 — 쓰지 않는다.
+      # before 가 0000…(첫 push)이거나 clone 에 없는 커밋(force push 로 사라진 이력)이면 HEAD~1 로 대체.
+      # CF Pages 는 이 CI 와 별개로 빌드하므로 사후 탐지다(실패 시 GitHub 알림 메일 → 되돌리기·승인 등재 판단).
+      - name: 광고 위 새 UI 게이트 (ad-audit --diff)
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then BASE="$PR_BASE"; else BASE="$PUSH_BEFORE"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            echo "::notice::diff 기준 커밋(${BASE:-없음})을 쓸 수 없어 HEAD~1 로 대체합니다"
+            BASE="HEAD~1"
+          fi
+          echo "ad-audit --diff 기준: $BASE"
+          node scripts/ad-audit.mjs --diff --base "$BASE"
       - run: npm run lint
       - run: npm run build
       # edge 번들 회귀 게이트 (2026-09-25 B1) — 서버에서 안 쓰는 검색 인덱스·계산기 레지스트리가

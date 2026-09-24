@@ -76,13 +76,15 @@ export default function robots(): MetadataRoute.Robots {
  // 방문자를 보내주는 유입 통로. 학습 크롤러(GPTBot 등)도 콘텐츠가
  // 공개 세법 정보라 차단 실익이 없음 → 별도 차단 그룹을 두지 않고
  // 아래 기본 그룹(User-agent: *)에 흡수되어 일반 검색봇처럼 허용.
- // ★ 각주(실측 2026-09-05): 프로덕션 robots.txt는 Cloudflare 관리 블록이 앞에
- // 주입돼 Amazonbot·Applebot-Extended·Bytespider·CCBot·ClaudeBot·
- // CloudflareBrowserRenderingCrawler·Google-Extended·GPTBot·meta-externalagent
- // 9종 Disallow + Content-Signal ai-train=no (코드 선언과 불일치, 해제는
- // CF 대시보드=결정②). 유입 UA(ChatGPT-User·OAI-SearchBot·PerplexityBot·
- // Claude-User·Claude-SearchBot)는 비차단. middleware.ts ALLOWED_BOTS 면제
- // 목록(GPTBot·ClaudeBot·Google-Extended·Amazonbot)도 같은 이유로 일부 사문화.
+ // ★ 각주(실측 2026-09-24, 9/25 재확인): 서빙 중인 robots.txt(1,265B)는 이 파일
+ // 출력뿐이다 — 9/05 에 앞에 주입돼 있던 Cloudflare 관리 AI 차단 블록(9종
+ // Disallow + Content-Signal ai-train=no)은 더 이상 없다. 대신 CF 엣지가 UA 로
+ // 응답을 가른다(/salary-db/samsung-electronics 에 각 봇 UA 로 요청):
+ // GPTBot·ClaudeBot → 403(학습 크롤러), OAI-SearchBot·ChatGPT-User·PerplexityBot
+ // → 200(검색·에이전트), Googlebot·bingbot·Yeti·Daum → 200. middleware.ts
+ // ALLOWED_BOTS 는 GPTBot·ClaudeBot 을 통과시키므로 이 403 은 코드가 아니라 CF
+ // 대시보드 AI 봇 설정(학습 차단) 몫이다. 이 파일의 그룹·crawl-delay 는 그대로
+ // 둔다(AI 전용 그룹·Bingbot crawl-delay 변경은 기각 목록 — 100x 계획 §9·§10-4).
 
  // ─── 3. SEO 분석 봇 차단: 서버 자원 낭비 + 경쟁사 정찰 방지 ──
  {

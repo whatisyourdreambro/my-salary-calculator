@@ -97,6 +97,14 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
 - ☐ **트리거형(날짜 없음) — SK하이닉스 재협상 타결 보도 당일(약 10분)**: 코드 배포 후 Cloudflare → Caching → Configuration → **Purge Everything**(또는 `/calc/sk-hynix-bonus`·`/calc/bonus-calculators`·`/sitemap.xml`·`/rss.xml` 커스텀 퍼지) → Search Console URL 검사 2건(`/calc/sk-hynix-bonus`·`/calc/bonus-calculators`) 색인 생성 요청 + Sitemaps 다시 제출 → D+1 '실제 URL 테스트'로 타결 문구 렌더 확인. 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 5점 동기화는 Claude).
 
+## 배포 후 캐시 자동 Purge 설정 (1회, 약 5분 — 승인 A35, 2026-09-25)
+배포(main push)마다 GitHub Actions `cf-purge` 가 이 커밋의 Cloudflare Pages 배포 성공을 기다렸다가(최대 25분) **Purge Everything** 을 대신 누른다. 아래 설정 전에는 아무것도 하지 않고 건너뛰므로(실패 표시 없음) **설정을 마칠 때까지는 지금처럼 배포마다 수동 Purge**.
+1. ☐ **API 토큰 만들기**: dash.cloudflare.com → 오른쪽 위 프로필 → **My Profile → API Tokens → Create Token → Custom token(Get started)** → 이름 `github-cf-purge` → 권한 2줄만: **Account · Cloudflare Pages · Read** / **Zone · Cache Purge · Purge** → Account Resources = 내 계정, Zone Resources = **Specific zone · moneysalary.com** → Continue to summary → Create Token → 한 번만 보이는 토큰 값을 복사(채팅·문서에 붙여넣지 말 것).
+2. ☐ **ID 2개 복사**: Cloudflare → moneysalary.com → **Overview** 화면 오른쪽 아래 **API** 칸의 **Zone ID** 와 **Account ID**.
+3. ☐ **GitHub 시크릿 3개 등록**: GitHub 저장소 → **Settings → Secrets and variables → Actions → New repository secret** 을 3번 — `CF_API_TOKEN`(1의 토큰), `CF_ACCOUNT_ID`, `CF_ZONE_ID`(2의 값). 이름은 대소문자까지 정확히.
+4. ☐ **첫 확인**: 다음 main push 뒤 GitHub → **Actions → cf-purge** 실행 → 초록 체크 + "Purge Everything 완료" 문구 확인(배포 시간만큼 10~25분 걸림). "시크릿 … 건너뜀" 문구가 보이면 3의 이름 오타.
+5. ☐ **빨간 X 알림 메일이 오면**: 배포 실패·25분 초과·토큰 권한 오류 중 하나 — 메일 속 문구대로 확인하고, 그 배포는 Caching → Configuration → **Purge Everything** 을 손으로 한 번(또는 Actions 에서 Re-run). 토큰은 캐시 비우기·Pages 읽기만 가능해 유출돼도 사이트 내용은 못 바꾸지만(캐시를 반복해 비울 수는 있음), 의심되면 API Tokens 에서 Roll(재발급) 후 3 의 `CF_API_TOKEN` 만 교체.
+
 ## 분석 스크립트 (Claude 용 — CSV 도착 시 실행, 원본은 리포 밖)
 ```
 node scripts/adsense-report.mjs window <일별.csv> <from> <to> [--compare <from2> <to2>] [--md]   # 기간 집계(+두 창 비교·변화율)
