@@ -334,6 +334,8 @@ Naver Yeti·AI 크롤러 21종 전부 200 실측), `/share/[data]` 500(실측 20
 | 내부 링크 → 리다이렉트 | 3 | **0** |
 | 보안 헤더 (CSP·HSTS·X-CTO·X-Frame·Referrer·Permissions) | 6종 | 6종 |
 
+★**2026-09-25 주석(감사 PROD-08)**: 위 '보안 헤더 6종'과 §9 의 '실측 6종 전부 존재'는 **로컬 `next start` 측정값**이다. 운영(Cloudflare next-on-pages) HTML 응답은 `x-content-type-options`·`referrer-policy` **2종뿐(2/6)** 이다 — `next.config` `headers()` 는 페이지 라우트에 적용되지 않는다(알려진 플랫폼 사실). HSTS·X-Frame-Options·Permissions-Policy 는 robots·sitemap·rss·`/api/og`·308 같은 함수 라우트에만 붙고, edge 라우트(용어집·QnA)는 `x-content-type-options` 도 없다. 조치는 코드가 아니라 CF 대시보드 HSTS(콘솔 C05 — 6개월, preload 안 함). X-Frame-Options 는 `/widget/*` 임베드 예외가 필요해 보류.
+
 게이트: tsc 0 · eslint error 0 · **vitest 262건 통과** · ad-audit ERROR 0 ·
 verify:tax/site/companies/bonus/sitemap 전부 OK · `npm run build` 성공(2,325쪽 프리렌더).
 
