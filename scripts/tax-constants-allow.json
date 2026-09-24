@@ -19,7 +19,6 @@
     { "src/app/table/2026/weekly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/app/table/2027/hourly/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/app/unemployment-benefit/UnemploymentBenefitContent.tsx": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
-    { "src/app/unemployment-benefit/page.tsx": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/app/weekly-holiday-allowance-2026/WeeklyHolidayAllowanceClient.tsx": ["최저시급 10,320"] },
     { "src/app/weekly-holiday-allowance-2026/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/data/glossaryData.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 하한 66,048"] },
