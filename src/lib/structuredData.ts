@@ -264,7 +264,16 @@ export function buildBreadcrumbTrail(
  const label = isLast
  ? override || options.leafName || LEAF_LABELS[acc] || SEGMENT_LABELS[seg]
  : override || SEGMENT_LABELS[seg] || decoded.replace(/-/g, " ");
- if (!label) return;
+ if (!label) {
+ // 라벨 없는 leaf 는 생략 — 그러면 BreadcrumbList 가 현재 페이지가 아닌 상위 URL(또는 홈)에서
+ // 끝난다. 새 라우트가 조용히 이 분기로 떨어지지 않도록 개발 서버에서만 경고한다.
+ if (isLast && process.env.NODE_ENV === "development") {
+ console.warn(
+ `[breadcrumb] ${path}: 마지막 단계 한국어 라벨 없음 — leafName 을 넘기거나 LEAF_LABELS 에 추가하세요.`
+ );
+ }
+ return;
+ }
  crumbs.push({ name: label, path: acc });
  });
 
