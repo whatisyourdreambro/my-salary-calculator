@@ -154,8 +154,11 @@ export default function YearEndTaxCalculator() {
  mortgageInterest: 0,
  creditCard: 15000000,
  debitCardAndCash: 5000000,
- traditionalMarket: 1000000,
- publicTransport: 500000,
+ // 전통시장·대중교통은 화면에 입력란이 없어 사용자가 보거나 0으로 고칠 수 없다.
+ // 종전 기본값(100만·50만)이 40% 공제로 몰래 들어가 결정세액을 5,000만 기준
+ // 9만원 낮게(환급 과대) 보여줬다 — 입력란이 생기기 전까지 0 (2026-09-25 감사 CALC-05).
+ traditionalMarket: 0,
+ publicTransport: 0,
  children: 0,
  birthsOrAdoptions: 0,
  pensionSavings: 0,
