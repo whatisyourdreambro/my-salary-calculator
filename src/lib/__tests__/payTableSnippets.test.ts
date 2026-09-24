@@ -25,7 +25,11 @@ vi.mock("@/components/AppLink", () => ({
   default: (props: AnchorHTMLAttributes<HTMLAnchorElement>) => createElement("a", props),
 }));
 vi.mock("@/components/AdPlacement", () => {
-  const ad = (name: string) => () => createElement("div", { "data-test-ad": name });
+  const ad = (name: string) => {
+    const MockAd = () => createElement("div", { "data-test-ad": name });
+    MockAd.displayName = `MockAd(${name})`; // react/display-name
+    return MockAd;
+  };
   return {
     HomeTopAd: ad("home-top"),
     CalcResultAd: ad("calc-result"),

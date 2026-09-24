@@ -56,8 +56,8 @@ self.addEventListener("install", (event) => {
           .addRoutes([{ condition: { requestMode: "navigate" }, source: "network" }])
           .catch(() => {})
       );
-    } catch (_err) {
-      // 구현 차이로 동기 예외가 나도 설치는 계속
+    } catch {
+      // 구현 차이로 동기 예외가 나도 설치는 계속 (optional catch binding — 미사용 변수 lint 회피)
     }
   }
 });

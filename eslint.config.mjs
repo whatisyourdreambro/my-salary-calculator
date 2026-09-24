@@ -27,7 +27,7 @@ const eslintConfig = [
       // wrangler 로컬 CF 빌드·dev 번들(.wrangler/tmp) — 압축 번들이 오류 7천여 건을 만든다(2026-09-24 감사 GATE-04)
       ".wrangler/**",
       // docs/ 아래 일회성 감사·수집 스크립트와 파이썬 캐시 — 사이트 소스가 아니라 lint 대상에서 제외
-      "docs/**/*.{mjs,js,ts,py}",
+      "docs/**/*.{mjs,cjs,js,ts,py}",
       "**/__pycache__/**",
     ],
   },
