@@ -40,7 +40,8 @@ function diagnoseSeasonKey(html) {
   );
 }
 
-// [경로, 기대 상태코드, 본문 필수 문자열(선택), 설명, 마커 불일치 시 진단 함수(선택, html → string)]
+// [경로, 기대 상태코드, 본문 필수 문자열(선택), 설명, 마커 불일치 시 진단 함수(선택, html → string),
+//  기대 Location 정규식(선택 — 리다이렉트 목적지까지 검사, redirect: "manual" 이라 헤더가 그대로 보인다)]
 const CHECKS = [
   // 핵심 정적 페이지
   ["/", 200, "연봉", "홈"],
@@ -57,7 +58,10 @@ const CHECKS = [
   // /salary 정적 격자 (2026-08 500 사건 재발 감시)
   ["/salary/50000000", 200, "실수령", "연봉 격자 페이지"],
   ["/salary/103000000", 200, null, "연봉 격자(표 행 전용값)"],
-  ["/salary/12345678", 404, null, "격자 밖 → 404가 정상 (200이면 정적화 깨짐)"],
+  // 9/11 S1-5 부터 미들웨어(resolveSalaryRedirect)가 격자 밖 금액을 가장 가까운 정적 금액으로 308 한다 —
+  // 종전 기대값 404 는 그 뒤 주간 점검을 매번 FAIL 시켰다(2026-09-25 B1). 200 이면 정적화 깨짐.
+  // 목적지 12,500,000 은 src/lib/__tests__/salaryRedirect.test.ts 가 정적 격자와 대조한다.
+  ["/salary/12345678", 308, null, "격자 밖 → 가장 가까운 정적 금액 308", null, /\/salary\/12500000$/],
   // 한글 슬러그 (실존 슬러그만! 임의 슬러그로 바꾸지 말 것 — 2026-08-08 오판 사례)
   ["/glossary/" + encodeURIComponent("국민연금"), 200, null, "글로서리 한글 슬러그"],
   ["/glossary/" + encodeURIComponent("원천징수"), 200, null, "글로서리 한글 슬러그 2"],
@@ -101,7 +105,7 @@ const CHECKS = [
 const results = [];
 let failed = 0;
 
-async function check([path, expect, marker, desc, diagnose]) {
+async function check([path, expect, marker, desc, diagnose, expectedLocation]) {
   const url = BASE + path;
   try {
     const res = await fetch(url, {
@@ -111,6 +115,12 @@ async function check([path, expect, marker, desc, diagnose]) {
     });
     let ok = res.status === expect;
     let detail = `status=${res.status}(기대 ${expect})`;
+    const location = res.headers.get("location");
+    if (!ok && location) detail += ` Location=${location}`;
+    if (ok && expectedLocation && !expectedLocation.test(location ?? "")) {
+      ok = false;
+      detail += ` Location=${location ?? "(없음)"} (기대 ${expectedLocation})`;
+    }
     if (ok && marker) {
       const text = await res.text();
       if (!text.includes(marker)) {
