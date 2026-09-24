@@ -30,6 +30,7 @@ import UpdatedBadge from "@/components/UpdatedBadge";
 import SalaryLookupTracker from "@/components/SalaryLookupTracker";
 import { industryLabelKo, getIndustryBenchmark } from "@/lib/companyContentBuilder";
 import { buildCompanyMetadata } from "@/lib/seo";
+import { companyMetadataInput } from "@/lib/companyPageMetadata";
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import {
  autoBreadcrumbLd,
@@ -55,26 +56,9 @@ export async function generateMetadata({
  const company = companyRepository.getById(params.id);
  if (!company) return { title: "Company Not Found" };
 
- const { entryTotalWon: entryTotal } = getCompanySalaryBasis(company);
- const seniorTotal =
- company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
- const juniorTotal =
- company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
- const leadTotal =
- company.salary.lead.base + (company.salary.lead.incentive.avgAmount || 0);
-
- return buildCompanyMetadata({
- id: company.id,
- name: company.name.ko,
- industry: company.industry,
- averageSalary: entryTotal,
- seniorSalary: seniorTotal,
- juniorSalary: juniorTotal,
- leadSalary: leadTotal,
- aliases: company.aliases,
- hasCareerLevels: !!company.careerLevels?.length,
- lastUpdated: company.lastUpdated,
- });
+ // 인자 조립은 rss-companies.xml 과 공유(src/lib/companyPageMetadata.ts) — RSS item 제목이
+ // 이 페이지 <title> 과 문자열 그대로 같게 유지된다 (2026-09-25 B7, 출력 불변 이동).
+ return buildCompanyMetadata(companyMetadataInput(company));
 }
 
 function buildCompanyFaq(company: ReturnType<typeof companyRepository.getById>) {

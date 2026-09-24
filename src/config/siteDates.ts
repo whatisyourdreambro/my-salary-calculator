@@ -25,6 +25,15 @@ export const STATIC_LAST_MODIFIED = new Date("2026-07-16");
 export const STATIC_LAST_MODIFIED_ISO = STATIC_LAST_MODIFIED.toISOString().slice(0, 10);
 
 /**
+ * 회사 상세(/salary-db/[id]) FAQ 본문을 실제로 고친 날 — 회사 페이지 수정일
+ * (src/lib/pageModified.ts companyPageModified)의 하한. sitemap lastmod 와
+ * rss-companies.xml pubDate 가 같은 값을 쓴다.
+ * 2026-09-10: 연봉 상세 계산 방법·회사 FAQ 문구 실질 수정 (sitemap.ts 에서 이동, 2026-09-25 B7).
+ * 다음 갱신: 회사 페이지 본문·메타를 실제로 바꾸는 커밋과 같은 커밋에서만 올린다(일반 배포 자동 갱신 금지).
+ */
+export const COMPANY_FAQ_REVIEW_DATE = new Date("2026-09-10");
+
+/**
  * 회사 페이지 실수령액 표(CompanySalaryTable.estimateNetSalary)가 마지막으로 실제
  * 재계산된 날 — CompanyRepository.enrich 가 lastUpdated = max(데이터일, DART 주입일,
  * 이 값) 으로 파생할 때 쓰는 하한.

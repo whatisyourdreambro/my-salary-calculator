@@ -8,6 +8,7 @@ import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
+import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
@@ -103,8 +104,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
 // 데이터 갱신일·계산 엔진 적용일과 구분하며, 이후 일반 배포 때 자동 갱신하지 않는다.
+// (회사 FAQ 검수일 COMPANY_FAQ_REVIEW_DATE 는 2026-09-25 siteDates.ts 로 이동 —
+//  rss-companies.xml pubDate 와 같은 규칙을 쓰도록 src/lib/pageModified.ts 가 소비한다.)
 const SALARY_METHOD_REVIEW_DATE = new Date('2026-09-10');
-const COMPANY_FAQ_REVIEW_DATE = new Date('2026-09-10');
 
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -535,16 +537,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const { companyRepository } = require('@/lib/salary-data/CompanyRepository');
  const allCompanies = companyRepository.getAll();
 
- // 페이지 수정일은 회사 데이터 또는 FAQ 본문을 실제로 바꾼 날 중 최신값.
+ // 페이지 수정일은 회사 데이터 또는 FAQ 본문을 실제로 바꾼 날 중 최신값 —
+ // rss-companies.xml pubDate 와 같은 함수(src/lib/pageModified.ts, 2026-09-25 B7 추출).
  // Dataset·데이터 배지의 lastUpdated는 원본 데이터 날짜를 그대로 유지한다.
  allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
- const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
- const dataModified =
- parsed && !Number.isNaN(parsed.getTime()) ? parsed : STATIC_LAST_MODIFIED;
- const lastModified = dataModified > COMPANY_FAQ_REVIEW_DATE ? dataModified : COMPANY_FAQ_REVIEW_DATE;
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
- lastModified,
+ lastModified: companyPageModified(company),
  changeFrequency: 'monthly',
  priority: 0.85,
  });
