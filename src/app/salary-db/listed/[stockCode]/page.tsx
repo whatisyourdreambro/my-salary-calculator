@@ -96,7 +96,7 @@ export default function ListedCompanyPage({ params }: Props) {
   const faqItems = [
     {
       question: `${c.nameKo} 평균연봉은 얼마인가요?`,
-      answer: `${c.nameKo}의 ${c.fiscalYear} 사업연도 사업보고서 공시 기준 평균연봉(1인 평균 급여액)은 ${fmtManwon(
+      answer: `${c.nameKo}의 ${c.fiscalYear} 사업연도 사업보고서 공시 기준 평균연봉(연간 급여총액÷직원 수)은 ${fmtManwon(
         c.avgSalaryManwon
       )}입니다. 등기임원을 제외한 직원 ${c.employeeCount.toLocaleString("ko-KR")}명 기준이며, 신입 초봉이 아니라 전 직급·전 연차 평균입니다.`,
     },
