@@ -12,9 +12,34 @@
 - ✅ 2026-09-05/06 **배치 1(B1~B14) 코드 완료** — 브랜치 `claude/100x-batch-20260905`(metrics-ingest·rss 리포트 3편·신선도 단일 상수·PWA manifest·공유 utm·내부링크 귀속·위젯 utm_content·리포트 CSV/JSON·회사→직업 링크·12/1·1/2 세트+OPI 게이트·계산기 7종 data.ts+SK 키트·ad-audit INFO 게이트·companyData 정합). main 푸시는 이 세션. 정본 `docs/revenue-100x-plan-2026-09.md` §4, 실행 현황 `docs/revenue-10x-plan-2026-09.md` §2-3. 콘솔 작업 0건(아래 세션표에 하위 항목으로만 병합).
 - ✅ 2026-09-06 **광고 단위별 CSV**(13행·합계 $131.32) + **GSC 361일 내보내기**(countries·devices·dates·pages·queries·appearance) 수령 → 보관 `C:\Users\ruby1\.moneysalary-secrets\adsense\` · `...\gsc\2026-09-06\`(리포 밖). 집계·판정은 `docs/revenue-100x-plan-2026-09.md` §1 F13~F17 · `docs/gsc-sniping-log.md` Round 2. ★두 자료가 9/7·9/13 세션 항목을 앞당겨 해소했으므로 **아래 세션표의 해당 항목을 축소·교체**했다(신규 세션 없음).
 - (참고 — 콘솔 조작 아님) 브리프의 "GSC 16개월"은 실제로 **361일(2025-09-08~2026-09-03)**이고 "2026-09 6일분 104클릭"은 **3일분(9/1~9/3)**이었다. 다음 내보내기 때 기간 라벨을 실데이터 범위로 적어 주시면 창 판정이 빨라집니다.
+- ✅ 2026-09-24 운영자 보고서(`docs/revenue-audit-2026-09-24/naver-cloudflare-adsense-report.md`) — 네이버 30일·진단, CF Functions 7일, AdSense 30일, 공개 HTTP 확인 수령. 같은 날 AdSense·GA4·GSC 콘솔 읽기 전용 추출(세션 scratchpad, 저장소 밖). 집계는 `docs/metrics-log.md` 2026-09-25 행.
+
+## ★2026-09-25 할 일 — 영향 큰 순 (운영자 "권장하는거 전부 진행" 뒤 · 감사 콘솔 C01~C21)
+
+읽기 전용 확인에서는 '저장'·'Deploy'·'Purge'를 누르지 않는다(0번 제외). 승인 원장: 광고 `docs/ad-experiments.md` 2026-09-25 절 4 · 비광고 `docs/next-upgrade-plan-2026-09-11.md` §9.
+
+0. ☐ **지금 1분 — Purge Everything**: dash.cloudflare.com → moneysalary.com → Caching → Configuration → **Purge Everything**. 9/25 실측에서 캐시된 `/salary/*` HTML 이 9/23 판본(자동광고 복구 `4d80ce3e` 이전)이었다 — 그대로면 /salary 에서 복구가 안 보인다. 이후 **배포마다** 반복(감사 통합 배포·9/26 시즌 푸시 포함), 5번을 마칠 때까지.
+1. ☐ **캐시 규칙 B·C + Smart Tiered Cache (C01 — 1102 를 줄이는 가장 큰 작업, 15분)**: 아래 세션 3 의 '★정정 2026-09-23' 블록 1~7 그대로(규칙 A 는 만들지 않음). 확인: 브라우저 UA 로 `/calc/samsung-bonus` 2회 → 두 번째 `HIT`·`Age>0`, `/api/og?type=company&name=삼성전자` 2회 → 두 번째 HIT, `rsc: 1` 요청·`/guides?q=test` 는 DYNAMIC. 7일 뒤 /glossary·/qna·/monthly·/api/og 의 HIT·1102 비율을 다시 본다(1시간 TTL 은 하루 한 번 오는 크롤러에겐 대부분 MISS — 부족하면 프리렌더 계열 4시간~1일 규칙을 따로 검토).
+2. ☐ **www 없는 주소 → www 1홉 (C02, 5분)**: Rules → Redirect Rules → Single Redirect → 조건 `http.host eq "moneysalary.com"` → 동적 301 `concat("https://www.moneysalary.com", http.request.uri.path)` → **Preserve query string** 체크 → Deploy. 확인: `/guides/bonus-tax/` 처럼 /salary/* 밖 경로를 브라우저 UA `curl -L` 로 받아 www 까지 1홉인지(Always Use HTTPS 와의 순서는 결과로 확인). 지금은 3홉이고 홉마다 Worker 를 부른다(GSC 아펙스 호스트 577요청 '문제 있음').
+3. ☐ **GA4 이벤트 데이터 보관 14개월 (C09, 1분)**: analytics.google.com → 관리 → 데이터 수집 및 수정 → 데이터 보관 → 이벤트 데이터 보관 **14개월** → 저장. 9/24 확인 시 '2개월'. 소급되지 않는다(세션 1 ① 미실행분).
+4. ☐ **AdSense 판매자 정보 '투명' (C14, 2분)**: adsense.google.com → 계정 → 설정 → 계정 정보 → 판매자 정보 공개 설정 = **투명**, 비즈니스 도메인 `moneysalary.com` → 저장. ads.txt 는 두 호스트 모두 정상 — 코드 변경 없음.
+5. ☐ **자동 Purge 시크릿 3개 (A35, 5분)**: 아래 '배포 후 캐시 자동 Purge 설정' 1~5. 마치면 0번 수동 Purge 가 필요 없다.
+6. ☐ **10/5 네이버 RSS 2종 제출**: 세션 4 ① — **감사 통합 배포 뒤**에(회사 피드가 200곳 → 430곳 전부, 제목·설명 = 실제 페이지. B7). 제출 직전 `rss-companies.xml` 에 삼성전자·SK하이닉스·현대차가 있는지 확인.
+7. ☐ **GSC 확인 (C16, 1번 적용 7일 뒤)**: 설정 → 크롤링 통계 → 호스트 상태('서버 연결' 양호 복귀)·5xx 비율(9/22 까지 90일 4%)·요청 목적 중 '검색(발견)'(3%). 통합 배포 뒤 Sitemaps 에서 가져오기 성공 확인. **깨끗해지기 전에는 대량 색인 요청·사이트맵 재제출을 하지 않는다.** 사이트맵의 얇은 URL 31개(주로 /fun)는 28일 노출 0 인 순수 게임만 사이트맵 제외 후보로(noindex 아님).
+
+그다음(순서 무관):
+- ☐ **9/26 시즌 푸시 뒤 재확인(C07)**: Purge → 운영 페이지 소스에 `data-season-key="OCT"`, 헤더 칩 '추석' 0건. 10/1·11/25 재산세 날짜 분기는 Deployments → Retry(재빌드) 뒤 다시 Purge.
+- ☐ **CF HSTS (C05, 3분)**: SSL/TLS → Edge Certificates → HSTS → max-age **6개월**, includeSubDomains 는 모든 서브도메인이 HTTPS 일 때만, **preload 안 함**. 확인: HTML 한 쪽의 `strict-transport-security` 헤더가 **하나만**. X-Frame-Options 규칙은 하지 않는다(`/widget/*` 임베드 예외 필요). 운영 HTML 보안 헤더는 2/6(`docs/inspection-2026-09-full.md` §10 주석).
+- ☐ **AdSense 오버레이 형식 캡처 (C13, 1분 — 저장 금지)**: 광고 → 사이트 기준 → moneysalary.com 연필 → '오버레이 형식' 패널 캡처(변경 기록이 보이면 함께) → **저장하지 않고 닫기**. 앵커·사이드레일·전면이 원래 켜져 있었다는 근거. 설정은 현행 유지(운영자 9/25 승인 12번).
+- ☐ **승인 J 적용 여부 한 줄 (C21)**: Cloudflare → Security → Bots(또는 AI Crawl Control)의 AI bot policy(Search·Agent·Training)와 적용일 → 세션 3 ① 아래 기록란. robots 규칙·Bingbot crawl-delay 는 바꾸지 않는다.
+- ☐ **정책 센터 주 1회 (C19, 10/10 까지)**: 무효 트래픽·정책 통지가 오면 날짜와 무관하게 결과창 오클릭 대응(승인 M, 광고 원장 5번)을 긴급 예외로.
+- ☐ **Cloudflare 대시보드 읽기 전용 (C06)** — 운영자 본인 브라우저(임베디드 창은 CF 봇 검증을 못 넘고, 비밀번호 입력·우회는 금지): ① Workers & Pages → Metrics: 9/17~9/24 일별 요청·오류·Exceeded CPU(9/23 기준 425/21,700 대비)·CPU p50/p99 — 7일 합계(2,622/140,410)는 9/24 보고서로 확인됨 ② Deployments: Production 커밋(9/24 23:25 `4d80ce3e`, 통합 배포 뒤 그 해시) ③ Settings: 호환성 날짜·플래그·플랜, env 는 이름만 ④ Cache Rules 전체 목록·순서, Tiered Cache ⑤ Speed: Rocket Loader·Early Hints·Google tag gateway ⑥ Security: Bot Fight Mode·AI 봇, Events 의 Yeti·Googlebot·bingbot 차단 건수(7일) ⑦ HTTP 5xx 일별 비율 ⑧ Redirect·Transform Rules 목록, SSL 모드. (Chrome 에 Claude-in-Chrome 확장을 연결하면 대행 열람 가능)
+- ☐ **네이버 서치어드바이저 읽기 전용 (C15)** — 운영자 본인 브라우저: ① 검색 성과 30일(9/24 보고서로 확인됨) ② 수집 오류 9/20~9/24 일별 — 보고서의 '서버 실패 410' 상세를 콘텐츠 HTML / OG·API 로 나눠 발생 시각 기록 ③ 사이트맵·RSS 상태 ④ robots.txt 검증 ⑤ 사이트 진단 '제목 중복' 559 가 여전히 `?q` 변형 위주인지 ⑥ /home-loan 노출·CTR(참고) ⑦ 10/5 캡처 쿼리 확장(세션 4 ②) ⑧ lite 게이트용 색인·색인제외 추이(10/19). CSV 는 저장소 밖에.
+
+**규칙(NV-8, 상시)**: 색인 페이지의 og:title 은 항상 `<title>` 과 같게 둔다(현행 `seo.ts` = og:title·twitter:title·title 일치). 공유용 훅 문구는 카카오 공유 payload(`content.title`)와 noindex 공유 URL(`/share/*`, `?v=`)에만. 네이버는 og 태그도 검색 제목 후보로 뽑으므로 og:title 을 바꾸면 사실상 제목 변경이다(회사 title 영구 동결 · /calc title·description 10/10 까지 동결).
 
 ## 세션 1 — 9/7 (20분 + 하위 항목 ≤5분 — 25분 초과분은 9/21 세션 3 ④ 여유 슬롯으로 이월)
-1. ☐ **GA4 데이터 보관 14개월** (1분): analytics.google.com → 왼쪽 아래 관리(톱니) → 데이터 수집 및 수정 → **데이터 보관** → 이벤트 데이터 보관 **14개월** → 저장. 증빙: 저장 화면 캡처.
+1. ☐ **GA4 데이터 보관 14개월** (1분): analytics.google.com → 왼쪽 아래 관리(톱니) → 데이터 수집 및 수정 → **데이터 보관** → 이벤트 데이터 보관 **14개월** → 저장. 증빙: 저장 화면 캡처. ★9/24 확인: 아직 '2개월' — 2026-09-25 할 일 3번.
 2. ☐ **GA4 맞춤 측정기준 5개** (8분): 관리 → 데이터 표시 → **맞춤 정의** → 맞춤 측정기준 만들기 → 범위 **이벤트** → 측정기준 이름·이벤트 매개변수에 같은 값 입력 → 저장. 5개: `slot_kind`, `position`, `calc_type`, `offer_id`, `vertical`. 증빙: 맞춤 정의 목록 캡처 1장. (나머지 8개 `page`·`company_id`·`method`·`content_type`·`size_key`·`target_path`·`metric_name`·`metric_rating`는 9/21)
    - 2-b **맞춤 채널 그룹(3분)**: 관리 → 데이터 표시 → **채널 그룹** → 새 채널 그룹 만들기(기본 복사) → Organic Search 규칙에 '세션 소스 정확히 일치' `m.search.naver.com` / `search.naver.com` / `m.search.daum.net` OR 추가 → 저장 → **보고서 기본 채널 그룹으로 지정**. 이유: 기본 채널 그룹은 네이버 모바일 검색(세션 53%)을 Referral 로 분류. 맞춤 채널 그룹은 조회 시점 적용(소급 반영)이라 25분 초과 시 9/21 세션 3 ④로 이월해도 손실 없음. 페이지 집계는 `page_title` 대신 **`page_path`** 측정기준 사용(삼성전자 2제목 분리 함정).
    - `position`(이벤트 범위, 매개변수 position)이 위 5개에 포함돼 있으면 추가 작업 없음 — 기존 related-calc·next-action·related-guide 외에 내부 링크 모듈 id 11종(industry-rank·related-companies·company-connections·bonus-cluster·year-end-cluster·sibling-hubs·listed-band·job-related-calc·job-companies·job-pay-table·job-siblings)도 값으로 들어옴(별도 등록 불필요, 등록 전 데이터는 이벤트 수만 보이고 모듈 분해 불가 — M04와 동일 주의). `href`/`slug`는 측정기준으로 등록하지 말 것(일 500 고유값 한도 초과 시 절삭).
@@ -67,7 +92,9 @@
    - **Cache Key**: 규칙 B 의 Cache Key 설정에서 Query String → 쿼리 `utm_source`·`utm_medium`·`utm_campaign`·`utm_term`·`utm_content`(및 `?tab=`) 무시(Custom cache key 에서 utm_* 제외) — PWA start_url 이 `/?utm_source=pwa&utm_medium=homescreen` 이고 공유 링크가 채널별 utm 을 달아 홈·계산기 HTML 캐시 키가 쿼리별로 분산(미스율·Worker 호출 증가)되지 않도록, 규칙 생성과 같은 세션에서 처리.
    - **검증(HIT 게이트)**: Purge Everything 후 `curl.exe -s -D - -o NUL -A "Mozilla/5.0 Chrome" https://www.moneysalary.com/calc/samsung-bonus` 를 2회 실행 → 두 번째 응답 `cf-cache-status: HIT`·`Age > 0` 확인. **미달 시 AI 봇 해제(아래)·Bingbot Crawl-delay 완화·lite 2차 발행 전부 보류.** (실측 2026-09-05: /calc·/salary-db·홈 HTML 은 DYNAMIC, max-age=0, must-revalidate — next.config headers() 의 s-maxage 는 프리렌더 HTML 에 미적용. /salary/* 14400 은 대시보드 규칙 기인.)
    - **HIT 확인 후 → AI bot policy(승인 J, 운영자 예/아니오, 2분)**: Security → Settings → **Configure AI bot policies**: Search = **Allow**, Agent = **Allow**, Training = **Block 유지** → 저장 → 검증 `curl.exe -s -o NUL -w "%{http_code}" -A "Mozilla/5.0 (compatible; OAI-SearchBot/1.0)" https://www.moneysalary.com/calc/samsung-bonus` → **200**. 배경: 2026-09-05 실측에서 CF 엣지가 OAI-SearchBot·ChatGPT-User·PerplexityBot·Claude-SearchBot·Claude-User·GPTBot·DuckAssistBot 전부 403(robots.txt 의 CF 관리 블록 9종 + Content-Signal ai-train=no 는 별개). 해제해도 자동광고·검색 무접촉, 효과는 AI 답변엔진 인용·Gemini 앱 그라운딩 노출뿐(AI Overview·AI Mode 는 Googlebot 이라 무관). 하방: Worker 요청 소폭 증가(캐시 HIT 전제).
+     - ★**2026-09-24·25 실측 — J 는 이미 적용된 모양**: robots.txt 1,265B 에 CF 관리 블록·Content-Signal 없음. GPTBot·ClaudeBot 403 / OAI-SearchBot·ChatGPT-User·PerplexityBot 200 / Googlebot·bingbot·Yeti·Daum 200. 규칙 B HIT 전에 적용된 것일 수 있다(100x §10-4 순서). **C21 기록란 — 적용 여부: ____ · 적용일: ____ · AI bot policy 값(Search/Agent/Training): ____**
 2. ☐ **앵커 광고 ON + 인피드 단위 발급** (8분): AdSense → 광고 → **사이트 기준** → moneysalary.com 연필 → 저장 전 패널 전체 캡처 1장(현재값) → **앵커 광고: 사용**, **사이드 레일: 사용 안 함**, **동적 앵커(접이식): 사용 안 함**, 전면(비네트)·인페이지 설정은 **건드리지 않음** → 사이트에 적용 → 저장 후 캡처 1장 + 채팅에 "앵커 켬 9/21". 이어서 광고 → **광고 단위 기준** → **인피드 광고** → 이름 `머니샐러리_인피드` → 스타일 자동 제안 → 만들기 → 코드의 `data-ad-slot` 숫자와 `data-ad-layout-key` 값을 채팅으로 전달.
+   - ★**2026-09-25 정정(감사 CON-01) — 앵커·사이드레일 토글은 취소**: AdSense 광고 형식 보고서상 앵커·사이드레일·모바일 전면은 **9/1 이전부터 이미 게재 중**이었다(9/1~9/9 앵커 25,431노출, 9/21~9/23 사이드레일 3,002노출, 9/8 라이브 감사 '오버레이 3/3 활성'). 이 항목은 처치가 없어 10/5 앵커 판정도 취소됐다. **'저장'은 누르지 않고 오버레이 형식 화면 캡처만**(위 할 일 목록 C13). 사이드레일 OFF 도 하지 않는다(28일 약 $10.5 순감, 측정된 이득 없음 — 운영자 9/25 승인 12번 '현행 유지'). 9/25 기준 광고 단위 15개 중 인피드는 0개 — **인피드 발급은 승인 7번(A07 /salary-db 목록, 10/25 주)과 함께 남는다**.
 3. ☐ **LinkPrice 머천트 실사** (5분+): LinkPrice 대시보드 → 머천트 검색에 `카드`·`증권`·`ISA`·`IRP`·`대출비교`·`보험` 각각 → 결과 화면 캡처(모집 중 여부·커미션·소재 규정). 있으면 제휴 신청(머천트당 3분). **없으면 '없음' 한 줄** — 그러면 제휴 확장 항목은 계획에서 제거된다.
 4. (여유 시) GA4 맞춤 측정기준 나머지 8개 + 세션 1·2 에서 이월된 하위 항목(맞춤 채널 그룹 등).
 
@@ -78,12 +105,15 @@
 1. ☐ **네이버 서치어드바이저** (10분): searchadvisor.naver.com → 웹마스터 도구 → moneysalary.com → 요청 → **RSS 제출** → `https://www.moneysalary.com/rss.xml`, `https://www.moneysalary.com/rss-companies.xml` 각각 제출(회사 피드는 10/5 이전에 설명문 갱신 배포가 끝난 뒤가 맞다) → 리포트 → 검색 유입(검색어·페이지 최근 28일)·콘텐츠 수집 현황·사이트 진단 각 캡처(검색어·페이지 **내보내기**는 9/13 세션 2 ①로 앞당김 — 여기서는 RSS 제출 + 재캡처만).
    - **제출 직전 확인**: 브라우저에서 `https://www.moneysalary.com/rss.xml` 을 열어 /insights 리포트 3편(성과급 실지급률·상장사 평균연봉 TOP100·업종별 초봉)이 `<category>데이터 리포트</category>` item 3건으로 실려 있는지 확인 후 제출 — 2026-09-05 코드 합류분(배포 후 최대 1시간 캐시 s-maxage=3600 반영 대기).
 2. ☐ **네이버 검색 5개 캡처** (10분): 시크릿 창에서 `삼성전자 연봉`, `한화시스템 연봉`, `중부발전 연봉`, `삼성전자 성과급 계산기`, `머니샐러리` — PC·모바일 첫 화면 각 1장(우리 위치·AI 브리핑 유무).
+   - ★2026-09-25 추가(감사 NV-13·G10, +5분 — 넘치면 10/19 이월): 중견사 3개 `LIG넥스원 연봉`·`에이비엘바이오 연봉`·`한미반도체 연봉`(9/24 모바일 통합 웹 영역 자사 1·2·4위) 캡처 + 같은 화면의 신규 연봉 사이트 순위 D0 한 줄: kbizin.com · opensalary.com · jobcho.wiki · salary.getcash.kr · dmand.co.kr · jobda.im · salarycrew.com. 상위 5개 회사 SERP 의 날짜 표기와 AI 브리핑 인용 도메인도 한 줄.
 3. ☐ **앵커 판정 자료** (5분): AdSense 보고서 → 최근 28일 → 분류 기준 **광고 형식**(자동 광고: 앵커/인페이지/비네트) 캡처 1장 + 정책 센터 경고 0 확인 캡처.
+   - ★2026-09-25 정정: **판정이 아니라 28일 형식 스냅샷**이다(앵커는 9/1 이전부터 ON — 처치 없음). 앵커·인페이지·모바일 전면·사이드레일 행을 그대로 기록만. 같은 화면을 **날짜 × 광고 형식**으로 한 장 더 받으면 9/24 자동 인페이지 복구의 P0 7완료일(9/25~10/1) 확인 자료가 된다(`docs/ad-experiments.md` 2026-09-25 절 2).
    - **GA4 트래픽 획득 3건(같은 화면에서 보조 측정기준만 교체, 합 5분 — 초과 시 10/19 이월)**: ① 세션 소스/매체 `pwa / homescreen` 세션 수 1차 판정(9/13 기준선 0 대비) — 재방문 20~25% 중 PWA 기여분 귀속. 0이면 신규 설치 부재(InstallPwaBanner 노출/수락률 A3 ⑪과 함께 점검), 웹푸시 등 알림 제안으로 확장 금지(기각 레버) ② `kakao / share`·`copy / share`·`webshare / share` 행 비중 판정(9/13 은 존재 확인만) — 공유 코호트가 direct 절반 이상이면 공유 카피·OG 후속(세션 +2~5% 이하) 검토 ③ **위젯 임베드 호스트**: 보조 측정기준 **'세션 수동 광고 콘텐츠'**(utm_content) 추가 → 필터 '세션 소스' 정확히 일치 `widget` → 행(hostname)별 세션·참여 세션 수를 docs/metrics-log.md 에 기록(맞춤 측정기준 등록 불필요, 기본 제공 — R2 B2·B3 KPI '임베드 도메인 수' 데이터 소스). 값이 `(not set)` 만이면 배포 후 24h 미경과(엣지 캐시) 또는 임베드 호스트가 no-referrer 정책. 네이버 블로그는 임의 iframe 미허용이라 사실상 티스토리·워드프레스·기업 블로그만 집계.
    - (Claude) 9/13 탐색 분석(guide_cta_click × position)을 기간 배포일~10/4(D+28)로 재조회해 내부 링크 모듈 순위 확정 — 9/13 수치는 7일치라 상대 순위 참고용.
 
 ## 세션 5 — 10/19 (20분)
 1. ☐ 서치콘솔 색인 생성 → 페이지 내보내기 재수출(상장사 219곳 색인률 게이트). 내보내기 시 **"색인 생성됨" 행도 내보내기(URL 목록)** — 상장사 /salary-db/listed/ 색인률을 색인+미색인 목록으로 계산하기 위함(없으면 `--section-total 219` 로 근사; 9/13 에 만든 URL-prefix 속성 `/salary-db/listed/` 의 페이지 화면이면 직접 읽힘).
+   - ★2026-09-25 판정식 개정(10x L16'): '발견됨-미색인'·'크롤링됨-미색인' 사유별 URL 목록도 함께 내보낸다 — 크롤 커버리지(1 − 발견됨 ÷ 전체)가 70% 미만이거나 호스트 상태 '서버 연결'이 14일 연속 양호가 아니면 **'판정 불가(크롤 제한)'**로 기록하고 Phase 2 를 열지 않는다. 같은 세션에 네이버 서치어드바이저 사이트 진단의 색인·색인제외 추이와 네이버 웹문서에서 lite 표본 10개 제목 검색 결과를 한 줄씩.
 2. ☐ AdSense 보고서 → 페이지 필터 `/salary-db/ranking`·`/salary-db/listed/`·`/guides` 전/후 14일 + 인피드 유닛 행 CSV(인피드 판정).
 3. ☐ LinkPrice 캡처 + "상장사 확장 2월 진행 / 보류" 한 줄. + (같은 GA4 화면) 사내망·AI 리퍼럴 랜딩 재확인(9/13 교차표 대비) + Cloudflare Workers & Pages 사용량 재캡처(규칙 B 이후·피크 대비).
 
@@ -91,7 +121,7 @@
 AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 서치콘솔 28일 zip → 서치어드바이저 캡처 3장 → 쿠팡 파트너스 리포트 → 실적 → **서브ID별** 28일 엑셀 → LinkPrice u_id → GA4 `utm_source=widget` × utm_content(hostname) 세션 수(metrics-log `widget_embed_hosts` 열, 월 1회). 원본은 리포 밖 보관, 문서에는 집계만 — `scripts/metrics-ingest.mjs log` 로 `docs/metrics-log.md` 1행.
 
 ## 남은 확인 항목 (5분 이내, 아무 세션에나)
-- ☐ EEA 동의 메시지(CMP) 게시 — AdSense → 개인 정보 보호 및 메시지 → 유럽 규정 메시지 → 만들기 → 기본 스타일 → 게시. **앵커 판정(10/5) 후**에 한다(겹침 회피). 코드측 CSP는 2026-08-23 배포 완료.
+- ☐ EEA 동의 메시지(CMP) 게시 — AdSense → 개인 정보 보호 및 메시지 → 유럽 규정 메시지 → 만들기 → 기본 스타일 → 게시. **앵커 판정(10/5) 후**에 한다(겹침 회피). 코드측 CSP는 2026-08-23 배포 완료. ★2026-09-25: 앵커 판정은 취소됐지만 광고 설정 변경을 겹치지 않도록 **P0 14완료일 조회(10/9)·10/10 판정 조회 뒤**에 한다.
 - ☐ Cloudflare Pages → Settings → Environment variables에 `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 1848295488인지 확인(없으면 할 일 없음).
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
