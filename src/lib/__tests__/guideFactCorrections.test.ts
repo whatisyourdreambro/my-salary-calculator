@@ -5,6 +5,10 @@ import { guides, koGuides } from "@/lib/guidesContent";
 import { guideCards } from "@/lib/guidesMeta.generated";
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { qnaData } from "@/data/qnaData";
+import { calculateSalary2026 } from "@/lib/TaxLogic";
+
+/** 만원 단위 반올림 표기(예: 6,776,033 → "678만") — QnA 월 실수령 범위 문구 형식 */
+const manRound = (won: number) => `${Math.round(won / 10_000).toLocaleString("ko-KR")}만`;
 
 const bySlug = (slug: string) => {
   const guide = koGuides.find((g) => g.slug === slug);
@@ -92,8 +96,12 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
   it("QnA — 연봉 1억 실수령·본인부담상한·청년도약계좌", () => {
     const find = (q: string) => qnaData.find((item) => item.question.includes(q));
     const oneEok = find("연봉 1억을 넘으면");
-    expect(oneEok?.answer.conclusion).toContain("648만~658만원");
+    // 월 실수령 범위 = 현재 엔진(calculateSalary2026, 식대 20만원 비과세) 부양가족 1인~4인
+    const net1 = calculateSalary2026(100_000_000, 200_000, 1, 0).netPay;
+    const net4 = calculateSalary2026(100_000_000, 200_000, 4, 0).netPay;
+    expect(oneEok?.answer.conclusion).toContain(`${manRound(net1)}~${manRound(net4)}원`); // 653만~678만원
     expect(JSON.stringify(oneEok)).not.toContain("680~720");
+    expect(JSON.stringify(oneEok)).not.toContain("648만~658만원");
     const oop = find("본인부담상한제");
     expect(JSON.stringify(oop)).toContain("843만원");
     expect(JSON.stringify(oop)).not.toContain("별도 신청 불필요");
