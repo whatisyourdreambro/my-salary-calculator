@@ -284,7 +284,7 @@ export default function ParentalLeaveContent() {
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">육아기 근로시간 단축</td>
-        <td className="p-3 text-center">최대 2년</td>
+        <td className="p-3 text-center">최대 3년</td>
         <td className="p-3 text-right">단축 5시간 100%<br /><span className="text-xs text-muted-foreground">나머지는 비례 지급</span></td>
        </tr>
       </tbody>

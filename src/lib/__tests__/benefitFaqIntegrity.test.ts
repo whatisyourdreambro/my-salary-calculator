@@ -152,3 +152,29 @@ describe("benefit calculator FAQPage markup matches the visible FAQ (B15 META-02
     });
   }
 });
+
+// FAQ 사실 확인 중 같은 페이지 본문에서 발견한 같은 사실의 오기 — 글자 폭이 같은(또는 한 자 짧은)
+// 범위에서만 정정했다 (2026-09-25 B15). 출처: call.nts.go.kr·korea.kr(기한 후 95% 지급),
+// easylaw.go.kr(육아기 근로시간 단축 최대 3년 · 구직급여 1년 미만 120일).
+describe("benefit pages keep the verified facts that the FAQ now states", () => {
+  const render = (page: FunctionComponent) =>
+    decodeEntities(visibleContent(renderToStaticMarkup(createElement(page))));
+
+  it("근로장려금 기한 후 신청 감액은 5% (10% 아님)", () => {
+    const body = render(EarnedIncomeCreditPage);
+    expect(body).toContain("지급액의 5% 감액 적용");
+    expect(body).not.toMatch(/10%\s*(?:가\s*)?감액/);
+  });
+
+  it("육아기 근로시간 단축 기간은 최대 3년", () => {
+    const body = render(ParentalLeavePage);
+    expect(body).toContain("최대 3년");
+    expect(body).not.toContain("최대 2년");
+  });
+
+  it("구직급여 소정급여일수: 피보험기간 1년 미만은 연령 무관 120일", () => {
+    const src = readSrc("src/app/unemployment-benefit/UnemploymentBenefitContent.tsx");
+    expect(src).toMatch(/label: "1년 미만 \(12개월 미만\)", days: \{ under50: 120, over50: 120 \}/);
+    expect(src).toMatch(/days: \{ under50: 240, over50: 270 \}/);
+  });
+});

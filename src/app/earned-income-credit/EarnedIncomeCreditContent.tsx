@@ -395,7 +395,7 @@ export default function EarnedIncomeCreditContent() {
     </div>
     <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 space-y-1">
      <p className="font-semibold">기한 후 신청 (5월 이후 ~ 11월 30일)</p>
-     <p>지급액의 10% 감액 적용. 최대한 5월 정기 신청을 활용하세요.</p>
+     <p>지급액의 5% 감액 적용. 최대한 5월 정기 신청을 활용하세요.</p>
     </div>
    </div>
 

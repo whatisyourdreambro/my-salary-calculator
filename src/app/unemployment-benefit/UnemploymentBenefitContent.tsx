@@ -30,8 +30,10 @@ const AGE_GROUPS = [
 
 type AgeGroup = (typeof AGE_GROUPS)[number]["value"];
 
+// 소정급여일수 (고용보험법 별표1 · easylaw.go.kr 구직급여 수급일수 2026-09-25 확인):
+// 피보험기간 1년 미만은 50세 이상·장애인도 120일 — 50세 이상 +30일 가산은 1년 이상 구간부터.
 const INSURANCE_PERIODS = [
- { label: "1년 미만 (12개월 미만)", days: { under50: 120, over50: 150 } },
+ { label: "1년 미만 (12개월 미만)", days: { under50: 120, over50: 120 } },
  { label: "1년 이상 ~ 3년 미만", days: { under50: 150, over50: 180 } },
  { label: "3년 이상 ~ 5년 미만", days: { under50: 180, over50: 210 } },
  { label: "5년 이상 ~ 10년 미만", days: { under50: 210, over50: 240 } },
