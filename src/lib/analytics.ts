@@ -135,7 +135,11 @@ export function trackInternalLinkClick(href: string, moduleId: string): void {
   trackGuideCTAClick(href, moduleId);
 }
 
-/** 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시 */
+/**
+ * 회사 비교/탐색 — /company, /company/compare, /salary-db 진입 시
+ * 진입 맥락은 ui_source 로 보낸다 — 'source' 는 GA4 가 세션 소스로 읽어 채널을 덮어쓴다
+ * ("compare-page / (not set)" 세션, 2026-09-25 수정. analyticsPrivacy RESERVED_TRAFFIC_SOURCE_PARAMS 참고).
+ */
 export function trackCompareView(
   companyIds: string[],
   source?: string
@@ -143,7 +147,7 @@ export function trackCompareView(
   trackEvent("compare_view", {
     company_ids: companyIds.join(","),
     company_count: companyIds.length,
-    source: source ?? "",
+    ui_source: source ?? "",
   });
 }
 
@@ -212,14 +216,18 @@ export function trackShareOutcome(channel: string, contentType: string, outcome:
   });
 }
 
-/** 즐겨찾기/북마크 클릭 — 재방문률 향상 측정 */
+/**
+ * 즐겨찾기/북마크 클릭 — 재방문률 향상 측정
+ * 동작 구분(add·remove·toast_dashboard·header_badge)은 ui_source — 'source' 로 보내면 GA4 가
+ * 세션 소스를 "add / (not set)" 등으로 덮어써 실제 유입 채널이 사라졌다(2026-09-25 수정).
+ */
 export function trackBookmarkClick(
   targetPath: string,
   source?: string
 ): void {
   trackEvent("bookmark_click", {
     target_path: targetPath,
-    source: source ?? "",
+    ui_source: source ?? "",
     page_path: typeof location !== "undefined" ? location.pathname : "",
   });
 }
