@@ -51,7 +51,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  { level: "임원", base: company.salary.executive.base, total: company.salary.executive.base + (company.salary.executive.incentive.avgAmount || 0) },
  ];
 
- // The same annual tax estimate as the salary comparison; this is a fixed savings scenario.
+ // The same withholding-table take-home engine as the salary comparison; this is a fixed savings scenario.
  const monthlyNetIncome = calculateSalary2026(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0), 200_000, 1, 0).netPay;
  const monthsToGoal = monthlyNetIncome > 0 ? Math.ceil(60_000_000 / (monthlyNetIncome * 0.5)) : null;
 
