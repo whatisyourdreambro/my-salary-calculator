@@ -22,6 +22,7 @@ import {
   getIndustryRanking,
   DART_RANKING_YEAR,
   DART_RANKING_DATE,
+  DART_RANKING_PAGE_MODIFIED,
   LISTED_TOTAL,
   rankingItemListItems,
 } from "@/lib/salary-data/dartRanking";
@@ -165,7 +166,8 @@ export default function IndustryRankingPage({ params }: Props) {
             // META-11 — Google Dataset description 50자 이상: 사업연도·가중 평균까지 업종 고유 값으로
             description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터 (직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)})`,
             url: path,
-            dateModified: DART_RANKING_DATE,
+            // 페이지 수정일(순위 기준 변경) — 보이는 '데이터 기준일'은 DART_RANKING_DATE 그대로
+            dateModified: DART_RANKING_PAGE_MODIFIED,
             keywords: [`${r.industryKo} 연봉 순위`, "상장사 평균연봉", "DART 공시"],
           }),
           faqLd(faqItems),

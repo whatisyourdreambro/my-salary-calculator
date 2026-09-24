@@ -52,6 +52,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
  '/table/2026/annual': { lastModified: new Date('2026-09-25') }, // A17 간이세액표 엔진 재산출
  '/table/2026/monthly': { lastModified: new Date('2026-09-25') },
+ // 주급·시급 표도 같은 generateData → calculateSalary2026 엔진이라 A17 로 값이 바뀌었다
+ '/table/2026/weekly': { lastModified: new Date('2026-09-25') },
+ '/table/2026/hourly': { lastModified: new Date('2026-09-25') },
  // 2027 표 4종·요율표: 2027 건보료율 동결 확정(건정심 2026-09-08) 문구 반영 2026-09-25
  '/table/2027/annual': { lastModified: new Date('2026-09-25') },
  '/table/2027/monthly': { lastModified: new Date('2026-09-25') },
@@ -577,10 +580,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
  // 상장사 공시 lite 페이지 (Phase 1, 2026-08-23) — 코호트는 dartLite.ts 단일 소스
  // (generateStaticParams와 동일 집합 — 코호트 밖 URL은 404라 사이트맵 등재 불가).
- // lastModified는 DART 데이터 기준일로 정직 표기.
+ // lastModified는 DART 데이터 기준일로 정직 표기. 개별 lite·랭킹 페이지는 공시가 그대로여도 페이지 값이
+ // 바뀐 날(2026-09-25 A17 월 실수령 재계산·A19/DATA-07 순위 기준 변경)로 — dartLite/dartRanking *_PAGE_MODIFIED.
  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 1.3MB) 지연 로드
- const { listedCohort, DART_LITE_DATE } = require('@/lib/salary-data/dartLite');
+ const { listedCohort, DART_LITE_DATE, DART_LITE_PAGE_MODIFIED } = require('@/lib/salary-data/dartLite');
  const dartLiteDate = new Date(DART_LITE_DATE);
+ const dartLitePageDate = new Date(DART_LITE_PAGE_MODIFIED);
  companyUrls.push({
  url: `${baseUrl}/salary-db/listed`,
  lastModified: dartLiteDate,
@@ -590,7 +595,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  (listedCohort as Array<{ stockCode: string }>).forEach((c) => {
  companyUrls.push({
  url: `${baseUrl}/salary-db/listed/${c.stockCode}`,
- lastModified: dartLiteDate,
+ lastModified: dartLitePageDate,
  changeFrequency: 'monthly',
  priority: 0.6,
  });
@@ -599,11 +604,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 상장사 랭킹 페이지군 (2026-08-30) — 업종별 순위 + 지표 TOP 100 3종.
  // 코호트는 dartRanking.ts 단일 소스 (generateStaticParams와 동일 집합 — 밖은 404).
  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터(공시 1.3MB) 지연 로드
- const { industryRankings } = require('@/lib/salary-data/dartRanking');
+ const { industryRankings, DART_RANKING_PAGE_MODIFIED } = require('@/lib/salary-data/dartRanking');
+ const dartRankingPageDate = new Date(DART_RANKING_PAGE_MODIFIED);
  (industryRankings as Array<{ industryId: string }>).forEach((r) => {
  companyUrls.push({
  url: `${baseUrl}/salary-db/listed/industry/${r.industryId}`,
- lastModified: dartLiteDate,
+ lastModified: dartRankingPageDate,
  changeFrequency: 'monthly',
  priority: 0.65,
  });
@@ -611,7 +617,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  for (const metricPath of ['top-raise', 'top-tenure', 'top-employees']) {
  companyUrls.push({
  url: `${baseUrl}/salary-db/listed/${metricPath}`,
- lastModified: dartLiteDate,
+ lastModified: dartRankingPageDate,
  changeFrequency: 'monthly',
  priority: 0.65,
  });

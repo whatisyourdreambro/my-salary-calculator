@@ -17,7 +17,12 @@ import {
   raiseEligibleCount,
   topRaiseOutlierRows,
   topRaiseRows,
+  DART_RANKING_DATE,
+  DART_RANKING_PAGE_MODIFIED,
 } from "@/lib/salary-data/dartRanking";
+import { DART_LITE_DATE, DART_LITE_PAGE_MODIFIED } from "@/lib/salary-data/dartLite";
+import { RANKING_METHOD_REVISED_DATE } from "@/lib/salary-data/dartRankingGuards";
+import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 
 const decode = (s: string) => s.replace(/&amp;/g, "&");
 const byName = new Map(
@@ -96,5 +101,21 @@ describe("인상률 TOP 100 필터 (DATA-07)", () => {
 
   it("비교 모수(raiseEligibleCount)는 순위 행과 같은 필터 — 순위 행 수 이상", () => {
     expect(raiseEligibleCount).toBeGreaterThanOrEqual(topRaiseRows.length);
+  });
+});
+
+// 신선도 신호 — 공시 수집일이 그대로여도 페이지 값·순위 기준이 바뀐 날을 sitemap lastmod·Dataset
+// dateModified 로 신고한다(보이는 '데이터 기준일'은 수집일 그대로). max() 라 수집일 갱신 시 자동 추종.
+describe("상장사 lite·랭킹 페이지 수정일", () => {
+  it("랭킹 페이지 수정일 = max(수집일, 순위 기준 변경일)", () => {
+    expect(DART_RANKING_PAGE_MODIFIED >= DART_RANKING_DATE).toBe(true);
+    expect(DART_RANKING_PAGE_MODIFIED >= RANKING_METHOD_REVISED_DATE).toBe(true);
+    expect([DART_RANKING_DATE, RANKING_METHOD_REVISED_DATE]).toContain(DART_RANKING_PAGE_MODIFIED);
+  });
+
+  it("lite 페이지 수정일 = max(수집일, 월 실수령 재계산일 TAX_TABLE_EFFECTIVE_DATE)", () => {
+    expect(DART_LITE_PAGE_MODIFIED >= DART_LITE_DATE).toBe(true);
+    expect(DART_LITE_PAGE_MODIFIED >= TAX_TABLE_EFFECTIVE_DATE).toBe(true);
+    expect([DART_LITE_DATE, TAX_TABLE_EFFECTIVE_DATE]).toContain(DART_LITE_PAGE_MODIFIED);
   });
 });

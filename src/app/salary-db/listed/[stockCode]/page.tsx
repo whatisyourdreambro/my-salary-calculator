@@ -24,6 +24,7 @@ import {
   getSameIndustryExisting,
   listedDatasetDescription,
   DART_LITE_DATE,
+  DART_LITE_PAGE_MODIFIED,
 } from "@/lib/salary-data/dartLite";
 import { ShieldCheck, ExternalLink, TrendingUp, Building2, Users } from "lucide-react";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
@@ -148,7 +149,8 @@ export default function ListedCompanyPage({ params }: Props) {
             // META-11: 회사 고유 수치로 80자+ (Google Dataset 설명 50자 최소 충족)
             description: listedDatasetDescription(c),
             url: path,
-            dateModified: DART_LITE_DATE,
+            // 페이지 수정일(월 실수령 재계산 등) — 보이는 '데이터 기준일'은 DART_LITE_DATE 그대로
+            dateModified: DART_LITE_PAGE_MODIFIED,
             keywords: [`${c.nameKo} 연봉`, "공시 평균연봉", "DART"],
           }),
         ]}

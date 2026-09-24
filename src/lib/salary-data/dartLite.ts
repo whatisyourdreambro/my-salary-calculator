@@ -21,8 +21,19 @@ import { corpCodeMap } from "@/data/dart/corpCodeMap";
 import { mapKsicToIndustry } from "@/data/dart/ksicToIndustry";
 import { getIndustryMeta } from "./industryTaxonomy";
 import { companyRepository } from "./CompanyRepository";
+import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 
+/** DART 공시 수집 기준일 — 페이지에 보이는 '데이터 기준일' */
 export const DART_LITE_DATE = DART_DATA_DATE;
+
+/**
+ * lite 페이지 수정일 — sitemap lastmod·Dataset dateModified 용 (보이는 '데이터 기준일'은 DART_LITE_DATE).
+ * 공시 데이터가 그대로여도 페이지 값이 바뀌면 올린다: 2026-09-25 A17 로 월 실수령(calculateSalary2026)이
+ * 간이세액표 기준으로 재계산되고 A19 로 '공식 수치'→'산정치' 라벨이 바뀌었다.
+ * max(수집일, 실수령액 재계산일) — ISO 날짜 문자열 비교, today() 승격 없음.
+ */
+export const DART_LITE_PAGE_MODIFIED =
+  DART_LITE_DATE >= TAX_TABLE_EFFECTIVE_DATE ? DART_LITE_DATE : TAX_TABLE_EFFECTIVE_DATE;
 
 /** Phase 1 코호트 게이트 — Phase 2 확대 시 이 상수만 조정 */
 const EMPLOYEE_MIN = 500;

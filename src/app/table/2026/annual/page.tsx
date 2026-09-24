@@ -77,7 +77,7 @@ const tableJsonLd = [
     description:
       `2026년 계산 모델의 연봉 2400만원부터 2억원까지 예상 월 실수령액과 보험료·세금 공제 내역. ${SALARY_MODEL_2026.defaultConditions} 기준.`,
     url: "/table/2026/annual",
-    dateModified: "2026-08-30",
+    dateModified: "2026-09-25", // A17 간이세액표 엔진으로 표 전체 재산출 (sitemap ROUTE_OVERRIDES 와 같은 날)
     keywords: ["연봉", "실수령액", "세후 월급", "연봉 테이블", "2026년"],
     // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
     license: CITATION_POLICY_URL,

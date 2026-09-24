@@ -17,6 +17,7 @@ import { breadcrumbLd, faqLd, itemListLd, datasetLd } from "@/lib/structuredData
 import {
   DART_RANKING_YEAR,
   DART_RANKING_DATE,
+  DART_RANKING_PAGE_MODIFIED,
   LISTED_ALL_TOTAL,
   industryRankings,
   rankingItemListItems,
@@ -122,7 +123,8 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             // META-11 — Google Dataset description 50자 이상: 모수·상위 행 수·열 구성까지 명시
             description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 ${cfg.datasetName} — 상장사 ${poolTotal.toLocaleString("ko-KR")}곳 중 상위 ${cfg.rows.length}곳의 ${cfg.valueHeader}·평균연봉·업종 순위 데이터`,
             url: cfg.path,
-            dateModified: DART_RANKING_DATE,
+            // 페이지 수정일(순위 기준 변경) — 보이는 '데이터 기준일'은 DART_RANKING_DATE 그대로
+            dateModified: DART_RANKING_PAGE_MODIFIED,
             keywords: ["상장사 연봉", "DART 공시", "연봉 순위"],
           }),
           faqLd(cfg.faqItems),

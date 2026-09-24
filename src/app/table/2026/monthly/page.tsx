@@ -75,7 +75,7 @@ const monthlyJsonLd = [
  description:
  `2026년 연봉 표를 12개월로 나눈 세전 월급과 예상 월 수령액·보험료·세금 공제 내역. ${SALARY_MODEL_2026.defaultConditions} 기준.`,
  url: "/table/2026/monthly",
- dateModified: "2026-08-30",
+ dateModified: "2026-09-25", // A17 간이세액표 엔진으로 표 전체 재산출 (sitemap ROUTE_OVERRIDES 와 같은 날)
  keywords: ["월급", "실수령액", "세후 월급", "월급 테이블", "2026년"],
  // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
  license: CITATION_POLICY_URL,

@@ -29,10 +29,18 @@ import {
 } from "@/config/minimumWage";
 import { getIndustryMeta } from "./industryTaxonomy";
 import { listedCohortStockCodes, resolveCompanyRouteId } from "./dartLite";
-import { passesRankingDivergence } from "./dartRankingGuards";
+import { passesRankingDivergence, RANKING_METHOD_REVISED_DATE } from "./dartRankingGuards";
 
 export const DART_RANKING_YEAR = "2025";
+/** DART 공시 수집 기준일 — 페이지에 보이는 '데이터 기준일' */
 export const DART_RANKING_DATE = DART_DATA_DATE;
+/**
+ * 랭킹 페이지(업종·지표 TOP) 수정일 — sitemap lastmod·Dataset dateModified 용. 공시 데이터가 그대로여도
+ * 순위 모수·기준이 바뀌면 올린다(2026-09-25 A19 괴리 30%→10%, DATA-07 최저임금 미달·이상치 제외).
+ * max(수집일, 기준 변경일) — ISO 날짜 문자열 비교, today() 승격 없음.
+ */
+export const DART_RANKING_PAGE_MODIFIED =
+  DART_RANKING_DATE >= RANKING_METHOD_REVISED_DATE ? DART_RANKING_DATE : RANKING_METHOD_REVISED_DATE;
 /** 인상률 비교 기준(전년) 사업연도 */
 export const RAISE_PREV_YEAR = String(Number(DART_RANKING_YEAR) - 1);
 

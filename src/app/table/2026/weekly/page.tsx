@@ -65,7 +65,7 @@ const structuredData = [
  name: "2026년 주급 실수령액 표",
  description: "2026년 최신 세법 기준 주급 구간별 월 예상 실수령액, 4대보험, 소득세 등 상세 공제 내역 데이터 표입니다.",
  url: "/table/2026/weekly",
- dateModified: "2026-08-07",
+ dateModified: "2026-09-25", // A17 간이세액표 엔진으로 표 전체 재산출 (sitemap ROUTE_OVERRIDES 와 같은 날)
  keywords: ["주급", "실수령액", "세후 월급", "주급 테이블", "2026년"],
  // 인용 정책 URL (승인 A23, 2026-09-25 — GSC Dataset license 경고 해소)
  license: CITATION_POLICY_URL,
