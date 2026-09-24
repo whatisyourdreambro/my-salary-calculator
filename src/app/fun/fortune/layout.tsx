@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "2026 New Year Fortune",
+ "name": "2026년 신년운세",
  "description": "생년월일 기반 2026년 병오년 재미용 운세 콘텐츠",
  "applicationCategory": "EntertainmentApplication",
  "operatingSystem": "Any",

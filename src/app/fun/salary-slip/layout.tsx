@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "Virtual Salary Slip Generator",
+ "name": "가상 월급 명세서 만들기",
  "description": "사용자가 입력한 연봉을 기반으로 가상의 급여 명세서를 생성하는 도구",
  "applicationCategory": "FinanceApplication",
  "operatingSystem": "Any",

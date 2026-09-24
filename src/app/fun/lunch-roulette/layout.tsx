@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "Lunch Menu Roulette",
+ "name": "직장인 점심 메뉴 룰렛",
  "description": "무작위 점심 메뉴 추천 및 의사결정 도구",
  "applicationCategory": "LifestyleApplication",
  "operatingSystem": "Any",

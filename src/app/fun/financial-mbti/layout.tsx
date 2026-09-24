@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "Financial MBTI Test",
+ "name": "금융 MBTI 테스트",
  "description": "개인의 투자 성향과 금융 습관을 분석하는 MBTI 기반 테스트",
  "applicationCategory": "FinanceApplication",
  "operatingSystem": "Any",

@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
- "name": "Escape Plan Calculator",
+ "name": "노비 탈출 계산기",
  "description": "경제적 자유 달성 시기 및 은퇴 자금 계산 도구",
  "applicationCategory": "FinanceApplication",
  "operatingSystem": "Any",

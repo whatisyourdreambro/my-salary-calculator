@@ -206,7 +206,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  SALARY <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-primary/50 to-red-500">FIGHT</span>
  </h1>
  <p className="text-faint-blue text-lg">
- 실전 배틀! 연봉/복지/워라벨 비교
+ 실전 배틀! 연봉/복지/워라밸 비교
  </p>
  </div>
  </section>
@@ -333,7 +333,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  winner={result.metrics.realHourlyWage.winner}
  />
  <StatBar
- label="워라벨"
+ label="워라밸"
  valueA={Math.round(result.metrics.workLifeScore.a)}
  valueB={Math.round(result.metrics.workLifeScore.b)}
  unit="점"

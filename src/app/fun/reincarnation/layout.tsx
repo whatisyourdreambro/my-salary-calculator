@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  const jsonLd = {
  "@context": "https://schema.org",
  "@type": "VideoGame",
- "name": "Reincarnation Simulator",
+ "name": "인생 2회차 시뮬레이터 (Life Gacha)",
  "description": "연봉 기반 인생 다시 살기 시뮬레이션 및 가챠 게임",
  "genre": "Simulation",
  "applicationCategory": "Game",
