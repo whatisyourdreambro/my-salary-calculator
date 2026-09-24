@@ -262,7 +262,7 @@ export default function ParentalLeaveContent() {
        <tr className="border-t border-border">
         <td className="p-3">출산전후휴가</td>
         <td className="p-3 text-center">90일 (다태아 120일)</td>
-        <td className="p-3 text-right">통상임금 100%<br /><span className="text-xs text-muted-foreground">상한 월 210만원</span></td>
+        <td className="p-3 text-right">통상임금 100%<br /><span className="text-xs text-muted-foreground">상한 월 220만원</span></td>
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">배우자 출산휴가</td>

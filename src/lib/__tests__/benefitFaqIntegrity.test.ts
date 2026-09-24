@@ -155,7 +155,8 @@ describe("benefit calculator FAQPage markup matches the visible FAQ (B15 META-02
 
 // FAQ 사실 확인 중 같은 페이지 본문에서 발견한 같은 사실의 오기 — 글자 폭이 같은(또는 한 자 짧은)
 // 범위에서만 정정했다 (2026-09-25 B15). 출처: call.nts.go.kr·korea.kr(기한 후 95% 지급),
-// easylaw.go.kr(육아기 근로시간 단축 최대 3년 · 구직급여 1년 미만 120일).
+// easylaw.go.kr(육아기 근로시간 단축 최대 3년 · 구직급여 1년 미만 120일),
+// korea.kr(출산전후휴가 상한 220만원 · 배우자 출산휴가 9/18 개정).
 describe("benefit pages keep the verified facts that the FAQ now states", () => {
   const render = (page: FunctionComponent) =>
     decodeEntities(visibleContent(renderToStaticMarkup(createElement(page))));
@@ -170,6 +171,23 @@ describe("benefit pages keep the verified facts that the FAQ now states", () => 
     const body = render(ParentalLeavePage);
     expect(body).toContain("최대 3년");
     expect(body).not.toContain("최대 2년");
+  });
+
+  // 2026-09-18 시행 남녀고용평등법 개정 — 출산예정일 50일 전부터 사용 가능
+  // (korea.kr 148970585, moel.go.kr 보도자료 news_seq=19964). 종전 출산일로부터 120일 이내만은 틀린 안내.
+  it("배우자 출산휴가 FAQ 는 2026-09-18 개정(출산예정일 50일 전부터) 기준", () => {
+    const item = PARENTAL_LEAVE_FAQ.find(f => f.question === "배우자 출산휴가는 얼마나 되나요?");
+    expect(item).toBeDefined();
+    expect(item!.answer).toContain("출산예정일 50일 전부터 출산 후 120일 이내");
+    expect(item!.answer).toContain("20일");
+    expect(item!.answer).not.toContain("출산일로부터 120일 이내");
+  });
+
+  // 2026년 출산전후휴가 급여 상한 월 220만원 (korea.kr 148957375, 고용노동부 고시)
+  it("출산전후휴가 급여 상한은 2026년 월 220만원", () => {
+    const body = render(ParentalLeavePage);
+    expect(body).toContain("상한 월 220만원");
+    expect(body).not.toContain("210만원");
   });
 
   it("구직급여 소정급여일수: 피보험기간 1년 미만은 연령 무관 120일", () => {
