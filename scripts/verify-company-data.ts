@@ -120,9 +120,11 @@ const DROPPED_DATA_ALLOW = new Set<string>([
   for (const { c, global } of raw) {
     const nameKey = c.name.ko.trim();
     const dropped = seenIds.has(c.id) || seenNames.has(nameKey);
-    seenIds.add(c.id);
-    seenNames.add(nameKey);
     if (!dropped) {
+      // dedupeCompanies 와 같이 생존 레코드의 id·이름만 등록한다 — 탈락 레코드까지 등록하면
+      // 이름으로 탈락한 레코드와 id 만 같은 뒤 레코드(또는 그 반대)를 탈락으로 오판한다
+      seenIds.add(c.id);
+      seenNames.add(nameKey);
       // 탈락하지 않은 레코드가 실제 생존 목록에 있는지 교차 확인 (판정 로직 드리프트 감지)
       if (!(global ? survivorIds.has(c.id) : kept.has(c))) {
         errors.push(`${c.id}: dedupe 판정 재현 불일치 — src/data/companies/index.ts dedupeCompanies 와 동기화 필요`);
