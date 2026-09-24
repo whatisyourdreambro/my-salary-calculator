@@ -21,6 +21,7 @@ import type {
   BenefitsValueSummary,
 } from "@/lib/companyContentBuilder";
 import { buildPageMetadata } from "@/lib/seo";
+import { josa, josaParticle } from "@/lib/josa";
 import { breadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import CompareViewTracker from "@/components/CompareViewTracker";
@@ -76,12 +77,12 @@ function pct(hi: number, lo: number): number {
   return Math.round(((hi - lo) / lo) * 100);
 }
 
-/** 두 금액 비교 문구: "{회사}가 약 N% 높음" 또는 "비슷한 수준". */
+/** 두 금액 비교 문구: "{회사}가 약 N% 높음" 또는 "비슷한 수준". 조사는 회사명 받침으로 선택(josa). */
 function compareText(aName: string, aVal: number, bName: string, bVal: number): string {
   const diff = pct(Math.max(aVal, bVal), Math.min(aVal, bVal));
   if (diff < 3) return "두 회사가 비슷한 수준";
   const higher = aVal >= bVal ? aName : bName;
-  return `${higher}가 약 ${diff}% 높음`;
+  return `${josa(higher, "이/가")} 약 ${diff}% 높음`;
 }
 
 /** 직급별 격차 평균 — 단순 표 외에 "전반적으로 어느 쪽이 우세인가" 한 줄 요약. */
@@ -95,9 +96,9 @@ function overallGapText(a: CompanyProfile, b: CompanyProfile): string {
   if (diffs.length === 0) return "직급별 격차가 제한적입니다";
   const avg = diffs.reduce((x, y) => x + y, 0) / diffs.length;
   const abs = Math.abs(Math.round(avg));
-  if (abs < 3) return `${a.name.ko}와 ${b.name.ko}는 직급별 평균 격차가 ${abs}% 이내로 거의 동등한 수준`;
-  if (avg > 0) return `직급 전반에 걸쳐 ${a.name.ko}가 평균 약 ${abs}% 높은 보상 수준`;
-  return `직급 전반에 걸쳐 ${b.name.ko}가 평균 약 ${abs}% 높은 보상 수준`;
+  if (abs < 3) return `${josa(a.name.ko, "과/와")} ${josa(b.name.ko, "은/는")} 직급별 평균 격차가 ${abs}% 이내로 거의 동등한 수준`;
+  if (avg > 0) return `직급 전반에 걸쳐 ${josa(a.name.ko, "이/가")} 평균 약 ${abs}% 높은 보상 수준`;
+  return `직급 전반에 걸쳐 ${josa(b.name.ko, "이/가")} 평균 약 ${abs}% 높은 보상 수준`;
 }
 
 /** 인센티브 비중 차이 분석. */
@@ -122,7 +123,7 @@ function incentiveCompareText(a: CompanyProfile, b: CompanyProfile): string {
   const ai = incentiveAnalysis(a);
   const bi = incentiveAnalysis(b);
   if (ai.ratio === bi.ratio) {
-    return `${a.name.ko}와 ${b.name.ko} 모두 ${ai.text}으로 인센티브 구조가 유사합니다.`;
+    return `${josa(a.name.ko, "과/와")} ${b.name.ko} 모두 ${ai.text}으로 인센티브 구조가 유사합니다.`;
   }
   if (Math.abs(ai.ratio - bi.ratio) < 5) {
     return `두 회사 모두 비슷한 인센티브 비중(${ai.ratio}% vs ${bi.ratio}%)으로 보상 구조가 유사합니다.`;
@@ -131,7 +132,7 @@ function incentiveCompareText(a: CompanyProfile, b: CompanyProfile): string {
   const lower = ai.ratio > bi.ratio ? b : a;
   const hRatio = ai.ratio > bi.ratio ? ai.ratio : bi.ratio;
   const lRatio = ai.ratio > bi.ratio ? bi.ratio : ai.ratio;
-  return `${higher.name.ko}는 기본급 대비 인센티브 비중이 약 ${hRatio}%로 ${lower.name.ko}(${lRatio}%)보다 변동성이 큰 구조입니다. 성과에 따라 보상 격차가 벌어질 수 있습니다.`;
+  return `${josa(higher.name.ko, "은/는")} 기본급 대비 인센티브 비중이 약 ${hRatio}%로 ${lower.name.ko}(${lRatio}%)보다 변동성이 큰 구조입니다. 성과에 따라 보상 격차가 벌어질 수 있습니다.`;
 }
 
 /** 워라밸 비교 문구. */
@@ -144,7 +145,13 @@ function workLifeText(a: CompanyProfile, b: CompanyProfile): string {
   const shorter = ah <= bh ? a : b;
   const longer = ah <= bh ? b : a;
   const diff = Math.abs(ah - bh);
-  return `${shorter.name.ko}의 주당 실근무시간이 약 ${diff}시간 짧아 워라밸이 상대적으로 양호한 편이며, ${longer.name.ko}는 업무 강도가 높을 수 있습니다.`;
+  return `${shorter.name.ko}의 주당 실근무시간이 약 ${diff}시간 짧아 워라밸이 상대적으로 양호한 편이며, ${josa(longer.name.ko, "은/는")} 업무 강도가 높을 수 있습니다.`;
+}
+
+/** 재택 문장 끝 — '하이브리드로 운영됩니다'. '출근 중심·전면 재택'은 '으로'가 붙어 한 글자 길어지므로
+ *  '… 방식입니다'로 끝내 문단 폭을 늘리지 않는다(광고 위 높이 증가 금지, 2026-09-25 실측). */
+function remoteSentenceTail(label: string): string {
+  return josaParticle(label, "으로/로") === "로" ? `${label}로 운영됩니다.` : `${label} 방식입니다.`;
 }
 
 /** 연차 표기 — 300일 이상은 무제한(자율) 센티널(넷플릭스 999 등). 숫자 그대로 노출 금지. */
@@ -204,7 +211,7 @@ function deepVerdictText(
   if (s.aHourly && s.bHourly && entryDiffPct >= 3) {
     const hourlyWinner = s.aHourly.hourly >= s.bHourly.hourly ? a : b;
     if (hourlyWinner.id !== salaryWinner.id) {
-      return `신입 영끌 연봉은 ${salaryWinner.name.ko}가 높지만, 주 실근무시간을 반영한 실질 시급은 ${hourlyWinner.name.ko}가 더 높습니다. 근무 강도까지 계산에 넣으면 단순 연봉 비교가 뒤집히는 조합입니다.`;
+      return `신입 영끌 연봉은 ${josa(salaryWinner.name.ko, "이/가")} 높지만, 주 실근무시간을 반영한 실질 시급은 ${josa(hourlyWinner.name.ko, "이/가")} 더 높습니다. 근무 강도까지 계산에 넣으면 단순 연봉 비교가 뒤집히는 조합입니다.`;
     }
   }
 
@@ -213,9 +220,9 @@ function deepVerdictText(
     let cumTail = "";
     if (s.aCum15 !== null && s.bCum15 !== null && s.aCum15 !== s.bCum15) {
       const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
-      cumTail = ` 15년 누적 세전 소득 기준으로는 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다.`;
+      cumTail = ` 15년 누적 세전 소득 기준으로는 ${josa(cumWinner.name.ko, "이/가")} 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다.`;
     }
-    return `초봉은 ${salaryWinner.name.ko}, 시니어 연봉은 ${seniorWinner.name.ko}가 앞서는 교차형 조합입니다. 초기 보상과 장기 상승 곡선 중 무엇을 우선할지에 따라 유불리가 갈립니다.${cumTail}`;
+    return `초봉은 ${salaryWinner.name.ko}, 시니어 연봉은 ${josa(seniorWinner.name.ko, "이/가")} 앞서는 교차형 조합입니다. 초기 보상과 장기 상승 곡선 중 무엇을 우선할지에 따라 유불리가 갈립니다.${cumTail}`;
   }
 
   // ③ 신입동급-장기격차형 — 초봉은 3% 미만 격차인데 15년 누적은 1억 이상 벌어짐
@@ -226,7 +233,7 @@ function deepVerdictText(
     Math.abs(s.aCum15 - s.bCum15) >= 100000000
   ) {
     const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
-    return `신입 시점 영끌 연봉은 사실상 동일하지만, 직급별 상승 곡선 차이로 15년 누적 세전 소득은 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다. 장기 근속을 전제할수록 격차가 커지는 조합입니다.`;
+    return `신입 시점 영끌 연봉은 사실상 동일하지만, 직급별 상승 곡선 차이로 15년 누적 세전 소득은 ${josa(cumWinner.name.ko, "이/가")} 약 ${formatSalaryKorean(Math.abs(s.aCum15 - s.bCum15))} 앞섭니다. 장기 근속을 전제할수록 격차가 커지는 조합입니다.`;
   }
 
   // ④ 동급형 — 연봉·실질 시급 격차 모두 3% 미만
@@ -236,7 +243,7 @@ function deepVerdictText(
       Math.min(s.aHourly.hourly, s.bHourly.hourly)
     );
     if (hourlyDiffPct < 3) {
-      return `${a.name.ko}와 ${b.name.ko}는 신입 영끌 연봉과 실질 시급 격차가 모두 3% 미만으로 사실상 동급입니다. 이 조합에서는 연봉표보다 복지 금전가치·재택 정책·기업 문화 점수 같은 비금전 지표가 실질적인 결정 변수가 됩니다.`;
+      return `${josa(a.name.ko, "과/와")} ${josa(b.name.ko, "은/는")} 신입 영끌 연봉과 실질 시급 격차가 모두 3% 미만으로 사실상 동급입니다. 이 조합에서는 연봉표보다 복지 금전가치·재택 정책·기업 문화 점수 같은 비금전 지표가 실질적인 결정 변수가 됩니다.`;
     }
   }
 
@@ -253,7 +260,7 @@ function deepVerdictText(
     if (lo > 0 && hi >= lo * 1.5) {
       const benefitsWinner =
         s.aBenefits.totalAnnualValue >= s.bBenefits.totalAnnualValue ? a : b;
-      return `연봉 격차는 약 ${entryDiffPct}%로 크지 않은 반면, 금액 환산 가능한 복지는 ${benefitsWinner.name.ko}가 연 ${formatSalaryKorean(hi)} 상당으로 앞섭니다. 총보상 격차의 상당 부분이 연봉이 아니라 복지에서 오는 조합입니다.`;
+      return `연봉 격차는 약 ${entryDiffPct}%로 크지 않은 반면, 금액 환산 가능한 복지는 ${josa(benefitsWinner.name.ko, "이/가")} 연 ${formatSalaryKorean(hi)} 상당으로 앞섭니다. 총보상 격차의 상당 부분이 연봉이 아니라 복지에서 오는 조합입니다.`;
     }
   }
 
@@ -262,12 +269,12 @@ function deepVerdictText(
     const diff = Math.abs(s.aCum15 - s.bCum15);
     const cumWinner = s.aCum15 >= s.bCum15 ? a : b;
     if (cumWinner.id === salaryWinner.id && diff >= 100000000) {
-      return `신입·시니어·15년 누적 전 구간에서 ${cumWinner.name.ko}가 앞서는 조합으로, 15년 재직 가정 시 세전 누적 격차가 약 ${formatSalaryKorean(diff)}까지 벌어집니다. 장기 재직을 전제한다면 격차가 구조적입니다.`;
+      return `신입·시니어·15년 누적 전 구간에서 ${josa(cumWinner.name.ko, "이/가")} 앞서는 조합으로, 15년 재직 가정 시 세전 누적 격차가 약 ${formatSalaryKorean(diff)}까지 벌어집니다. 장기 재직을 전제한다면 격차가 구조적입니다.`;
     }
     if (diff < 10000000) {
       return `15년 누적 세전 소득 격차가 1,000만원 미만으로, 장기 보상 총량은 사실상 동일한 조합입니다. 연봉 이외의 근무 조건이 결정 변수가 됩니다.`;
     }
-    return `15년 누적 세전 소득은 ${cumWinner.name.ko}가 약 ${formatSalaryKorean(diff)} 앞서지만, 연 단위로 나누면 격차가 크지 않아 복지·워라밸 조건에 따라 체감 우위가 바뀔 수 있는 조합입니다.`;
+    return `15년 누적 세전 소득은 ${josa(cumWinner.name.ko, "이/가")} 약 ${formatSalaryKorean(diff)} 앞서지만, 연 단위로 나누면 격차가 크지 않아 복지·워라밸 조건에 따라 체감 우위가 바뀔 수 있는 조합입니다.`;
   }
 
   return null;
@@ -280,8 +287,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const b = companyRepository.getById(pair.bId);
   if (!a || !b) return { title: "회사 비교를 찾을 수 없습니다" };
 
-  const aEntry = Math.round(levelTotal(a, "entry") / 10000).toLocaleString("ko-KR");
-  const bEntry = Math.round(levelTotal(b, "entry") / 10000).toLocaleString("ko-KR");
+  // 1억 이상은 "1억 8,700만원" 억 단위 표기(formatSalaryKorean) — "18,700만원"은 SERP 가독성이 나쁘다 (META-06).
+  // 1억 미만은 기존 "5,600만원" 문자열 그대로.
+  const entryText = (won: number) =>
+    won >= 100_000_000
+      ? formatSalaryKorean(won)
+      : `${Math.round(won / 10000).toLocaleString("ko-KR")}만원`;
+  const aEntry = entryText(levelTotal(a, "entry"));
+  const bEntry = entryText(levelTotal(b, "entry"));
   // 병기 사명(예: 마이크로소프트 (Microsoft)·삼성E&A (삼성엔지니어링)) 조합 5건은 ' | 머니샐러리' 포함 60자를 넘어 SERP에서 잘림 —
   // 핵심 키워드("A vs B 연봉 비교 2026")는 유지하고 뒤쪽 수식 구절만 생략. 60자 이내 페이지는 기존 타이틀 그대로.
   // 전면 최적화 (운영자 지시 2026-09-02)
@@ -291,7 +304,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildPageMetadata({
     title,
-    description: `${a.name.ko} 신입 영끌 약 ${aEntry}만원, ${b.name.ko} 약 ${bEntry}만원. ${a.name.ko}와 ${b.name.ko}의 신입·주니어·시니어 직급별 평균 연봉, 인센티브 구조, 워라밸, 복지를 2026년 기준으로 나란히 비교했습니다.`,
+    description: `${a.name.ko} 신입 영끌 약 ${aEntry}, ${b.name.ko} 약 ${bEntry}. ${josa(a.name.ko, "과/와")} ${b.name.ko}의 신입·주니어·시니어 직급별 평균 연봉, 인센티브 구조, 워라밸, 복지를 2026년 기준으로 나란히 비교했습니다.`,
     path: `/salary-db/compare/${params.slug}`,
     keywords: [
       `${a.name.ko} ${b.name.ko}`,
@@ -375,10 +388,10 @@ export default function ComparePage({ params }: Props) {
 
   const faqItems = [
     {
-      question: `${a.name.ko}와 ${b.name.ko} 중 신입 연봉이 더 높은 곳은?`,
-      answer: `신입 영끌 연봉(기본급+평균 인센티브) 기준 ${a.name.ko}는 약 ${formatSalaryKorean(
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko} 중 신입 연봉이 더 높은 곳은?`,
+      answer: `신입 영끌 연봉(기본급+평균 인센티브) 기준 ${josa(a.name.ko, "은/는")} 약 ${formatSalaryKorean(
         aEntry
-      )}, ${b.name.ko}는 약 ${formatSalaryKorean(bEntry)}입니다. ${compareText(
+      )}, ${josa(b.name.ko, "은/는")} 약 ${formatSalaryKorean(bEntry)}입니다. ${compareText(
         a.name.ko,
         aEntry,
         b.name.ko,
@@ -386,7 +399,7 @@ export default function ComparePage({ params }: Props) {
       )}입니다.`,
     },
     {
-      question: `${a.name.ko}와 ${b.name.ko} 시니어 연봉은 어디가 높나요?`,
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko} 시니어 연봉은 어디가 높나요?`,
       answer: `시니어(10년+) 영끌 연봉은 ${a.name.ko} 약 ${formatSalaryKorean(
         aSenior
       )}, ${b.name.ko} 약 ${formatSalaryKorean(bSenior)} 수준으로 ${compareText(
@@ -397,40 +410,40 @@ export default function ComparePage({ params }: Props) {
       )}입니다.`,
     },
     {
-      question: `${a.name.ko}와 ${b.name.ko}의 인센티브·성과급 구조 차이는?`,
-      answer: `${a.name.ko}는 기본급 대비 평균 인센티브 비중이 약 ${aIncentive.ratio}%로 ${aIncentive.text} 구조이며, ${b.name.ko}는 ${bIncentive.ratio}%로 ${bIncentive.text} 구조입니다. 인센티브 비중이 높을수록 성과에 따라 연봉 변동성이 커집니다.`,
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko}의 인센티브·성과급 구조 차이는?`,
+      answer: `${josa(a.name.ko, "은/는")} 기본급 대비 평균 인센티브 비중이 약 ${aIncentive.ratio}%로 ${aIncentive.text} 구조이며, ${josa(b.name.ko, "은/는")} ${bIncentive.ratio}%로 ${bIncentive.text} 구조입니다. 인센티브 비중이 높을수록 성과에 따라 연봉 변동성이 커집니다.`,
     },
     {
-      question: `${a.name.ko}와 ${b.name.ko} 워라밸 비교는?`,
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko} 워라밸 비교는?`,
       answer: `평균 주당 실근무시간은 ${a.name.ko} ${a.workLife.weeklyHours.real}시간, ${b.name.ko} ${b.workLife.weeklyHours.real}시간입니다. 연차는 각각 ${vacationDaysText(a)}·${vacationDaysText(b)}이며, 실제 사용률은 ${a.workLife.vacation.usageRate}% vs ${b.workLife.vacation.usageRate}%입니다. 근무시간이 짧고 연차 사용률이 높을수록 워라밸이 양호한 편입니다.`,
     },
     {
-      question: `${a.name.ko}와 ${b.name.ko}의 재택근무·근무 형태는 어떻게 다른가요?`,
-      answer: `${a.name.ko}는 ${REMOTE_LABEL[a.workLife.remoteWork.policy]}${a.workLife.remoteWork.daysPerWeek ? ` (주 ${a.workLife.remoteWork.daysPerWeek}일)` : ""}, ${b.name.ko}는 ${REMOTE_LABEL[b.workLife.remoteWork.policy]}${b.workLife.remoteWork.daysPerWeek ? ` (주 ${b.workLife.remoteWork.daysPerWeek}일)` : ""} 정책을 운영합니다. 입사 전 본인 라이프스타일과 맞는지 확인하세요.`,
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko}의 재택근무·근무 형태는 어떻게 다른가요?`,
+      answer: `${josa(a.name.ko, "은/는")} ${REMOTE_LABEL[a.workLife.remoteWork.policy]}${a.workLife.remoteWork.daysPerWeek ? ` (주 ${a.workLife.remoteWork.daysPerWeek}일)` : ""}, ${josa(b.name.ko, "은/는")} ${REMOTE_LABEL[b.workLife.remoteWork.policy]}${b.workLife.remoteWork.daysPerWeek ? ` (주 ${b.workLife.remoteWork.daysPerWeek}일)` : ""} 정책을 운영합니다. 입사 전 본인 라이프스타일과 맞는지 확인하세요.`,
     },
     {
       question: `${a.name.ko} vs ${b.name.ko} 기업 문화는 어떻게 다른가요?`,
-      answer: `DB의 문화 참고 지표는 ${a.name.ko} ${a.culture.score}점, ${b.name.ko} ${b.culture.score}점(10점 만점)입니다. 조사 출처·기간·표본이 연결되어 있지 않아 직원 설문 점수로 해석하지 않습니다. ${a.name.ko}의 참고 키워드는 '${a.culture.keywords.slice(0, 2).join(", ")}', ${b.name.ko}는 '${b.culture.keywords.slice(0, 2).join(", ")}'입니다.`,
+      answer: `DB의 문화 참고 지표는 ${a.name.ko} ${a.culture.score}점, ${b.name.ko} ${b.culture.score}점(10점 만점)입니다. 조사 출처·기간·표본이 연결되어 있지 않아 직원 설문 점수로 해석하지 않습니다. ${a.name.ko}의 참고 키워드는 '${a.culture.keywords.slice(0, 2).join(", ")}', ${josa(b.name.ko, "은/는")} '${b.culture.keywords.slice(0, 2).join(", ")}'입니다.`,
     },
   ];
 
   if (aBench && bBench) {
     faqItems.push({
-      question: `${a.name.ko}와 ${b.name.ko}는 업종 평균 대비 어디에 위치하나요?`,
-      answer: `${a.name.ko}는 ${aIndustry} 업종 ${aBench.sampleSize}개사 중 상위 ${aBench.topPercent}% 수준(평균 ${formatSalaryKorean(aBench.averageEntry)}), ${b.name.ko}는 ${bIndustry} 업종 ${bBench.sampleSize}개사 중 상위 ${bBench.topPercent}% 수준(평균 ${formatSalaryKorean(bBench.averageEntry)})으로 평가됩니다.`,
+      question: `${josa(a.name.ko, "과/와")} ${josa(b.name.ko, "은/는")} 업종 평균 대비 어디에 위치하나요?`,
+      answer: `${josa(a.name.ko, "은/는")} ${aIndustry} 업종 ${aBench.sampleSize}개사 중 상위 ${aBench.topPercent}% 수준(평균 ${formatSalaryKorean(aBench.averageEntry)}), ${josa(b.name.ko, "은/는")} ${bIndustry} 업종 ${bBench.sampleSize}개사 중 상위 ${bBench.topPercent}% 수준(평균 ${formatSalaryKorean(bBench.averageEntry)})으로 평가됩니다.`,
     });
   }
 
   if (aRank && bRank) {
     faqItems.push({
-      question: `${a.name.ko}와 ${b.name.ko}의 전국 연봉 순위는 어떻게 되나요?`,
-      answer: `연봉 DB 보유 국내 ${aRank.total}개사를 신입 영끌 연봉 기준으로 정렬하면 ${a.name.ko}는 ${aRank.rank}위(상위 ${aRank.topPercent}%), ${b.name.ko}는 ${bRank.rank}위(상위 ${bRank.topPercent}%)로, 순위 격차는 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`,
+      question: `${josa(a.name.ko, "과/와")} ${b.name.ko}의 전국 연봉 순위는 어떻게 되나요?`,
+      answer: `연봉 DB 보유 국내 ${aRank.total}개사를 신입 영끌 연봉 기준으로 정렬하면 ${josa(a.name.ko, "은/는")} ${aRank.rank}위(상위 ${aRank.topPercent}%), ${josa(b.name.ko, "은/는")} ${bRank.rank}위(상위 ${bRank.topPercent}%)로, 순위 격차는 ${Math.abs(aRank.rank - bRank.rank)}계단입니다.`,
     });
   }
 
   faqItems.push({
     question: `${a.name.ko} vs ${b.name.ko} 어디로 입사하는 게 좋을까요?`,
-    answer: `초봉을 우선시한다면 ${entryWinner.name.ko}, 장기 커리어와 시니어 연봉 상승을 본다면 ${seniorWinner.name.ko}가 유리할 수 있습니다. 워라밸은 주당 실근무시간이 짧은 회사를, 안정성은 ${a.tier === "conglomerate" || a.tier === "public" ? a.name.ko : b.tier === "conglomerate" || b.tier === "public" ? b.name.ko : "두 회사 모두 동일 tier"}를 고려하세요. 최종 결정은 본인 커리어 목표·연봉 외 보상·복지 가치와 함께 종합 판단해야 합니다.${verdict ? ` ${verdict}` : ""}`,
+    answer: `초봉을 우선시한다면 ${entryWinner.name.ko}, 장기 커리어와 시니어 연봉 상승을 본다면 ${josa(seniorWinner.name.ko, "이/가")} 유리할 수 있습니다. 워라밸은 주당 실근무시간이 짧은 회사를, 안정성은 ${a.tier === "conglomerate" || a.tier === "public" ? josa(a.name.ko, "을/를") : b.tier === "conglomerate" || b.tier === "public" ? josa(b.name.ko, "을/를") : "두 회사 모두 동일 tier를"} 고려하세요. 최종 결정은 본인 커리어 목표·연봉 외 보상·복지 가치와 함께 종합 판단해야 합니다.${verdict ? ` ${verdict}` : ""}`,
   });
 
   // autoBreadcrumbLd는 중간 세그먼트 /salary-db/compare(인덱스 없음 → 308)를
@@ -458,8 +471,8 @@ export default function ComparePage({ params }: Props) {
           {a.name.ko} vs {b.name.ko} 연봉 비교
         </h1>
         <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300 mb-6">
-          {sameIndustry ? `${aIndustry} 업종 내` : `${aIndustry}와 ${bIndustry} 업종에 속한`}{" "}
-          <strong>{a.name.ko}</strong>({TIER_LABEL[a.tier]})와 <strong>{b.name.ko}</strong>
+          {sameIndustry ? `${aIndustry} 업종 내` : `${josa(aIndustry, "과/와")} ${bIndustry} 업종에 속한`}{" "}
+          <strong>{a.name.ko}</strong>({TIER_LABEL[a.tier]}){josaParticle(a.name.ko, "과/와")} <strong>{b.name.ko}</strong>
           ({TIER_LABEL[b.tier]})의 직급별 평균 연봉·인센티브 구조·워라밸·복지를 2026년 최신 기준으로
           나란히 비교합니다.{" "}
           {/* 종전에는 동률일 때도 한쪽을 "더 높으며"로 단정해, 표에 같은 숫자가
@@ -469,7 +482,7 @@ export default function ComparePage({ params }: Props) {
           ) : (
             <>
               신입 영끌 연봉 기준{" "}
-              <strong className="text-electric">{entryWinner.name.ko}</strong>가 더 높으며,{" "}
+              <strong className="text-electric">{entryWinner.name.ko}</strong>{josaParticle(entryWinner.name.ko, "이/가")} 더 높으며,{" "}
             </>
           )}
           {aSenior === bSenior ? (
@@ -477,7 +490,7 @@ export default function ComparePage({ params }: Props) {
           ) : (
             <>
               시니어 기준으로는{" "}
-              <strong className="text-electric">{seniorWinner.name.ko}</strong>가 앞섭니다.
+              <strong className="text-electric">{seniorWinner.name.ko}</strong>{josaParticle(seniorWinner.name.ko, "이/가")} 앞섭니다.
             </>
           )}{" "}
           {overallGapText(a, b)}.
@@ -535,18 +548,18 @@ export default function ComparePage({ params }: Props) {
         {/* 상세 분석 (확장) */}
         <section className="my-8 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50">
-            상세 분석: {a.name.ko}와 {b.name.ko}의 보상 격차는 어디서 오는가
+            상세 분석: {josa(a.name.ko, "과/와")} {b.name.ko}의 보상 격차는 어디서 오는가
           </h2>
           <p>
             <strong>신입 비교</strong> — {a.name.ko}의 신입 영끌 연봉은{" "}
-            {formatSalaryKorean(aEntry)}, {b.name.ko}는 {formatSalaryKorean(bEntry)}로{" "}
+            {formatSalaryKorean(aEntry)}, {josa(b.name.ko, "은/는")} {formatSalaryKorean(bEntry)},{" "}
             {compareText(a.name.ko, aEntry, b.name.ko, bEntry)}입니다. 첫 입사 시 받는 보상을
             중시한다면 이 격차가 가장 직접적인 비교 지표입니다. 다만 신입 연봉은 시작점일 뿐이며, 다음
             단계인 주니어·시니어 연봉 상승 곡선까지 함께 보는 것이 중요합니다.
           </p>
           <p>
             <strong>시니어 비교</strong> — 경력 10년 이상 시니어급은 {a.name.ko}{" "}
-            {formatSalaryKorean(aSenior)}, {b.name.ko} {formatSalaryKorean(bSenior)}로{" "}
+            {formatSalaryKorean(aSenior)}, {b.name.ko} {formatSalaryKorean(bSenior)},{" "}
             {compareText(a.name.ko, aSenior, b.name.ko, bSenior)}입니다. 신입 대비 시니어의 연봉
             상승률은 {a.name.ko} 약 {pct(aSenior, aEntry)}%, {b.name.ko} 약 {pct(bSenior, bEntry)}%
             수준으로, 장기 커리어 관점에서의 보상 잠재력을 보여줍니다.
@@ -554,21 +567,21 @@ export default function ComparePage({ params }: Props) {
           <p>
             <strong>인센티브 구조</strong> — {incentiveCompareText(a, b)} {a.name.ko}의 인센티브
             타깃은 기본급의 {a.salary.entry.incentive.target}%·최대{" "}
-            {a.salary.entry.incentive.max}%이며, {b.name.ko}는 타깃 {b.salary.entry.incentive.target}
+            {a.salary.entry.incentive.max}%이며, {josa(b.name.ko, "은/는")} 타깃 {b.salary.entry.incentive.target}
             %·최대 {b.salary.entry.incentive.max}% 수준으로 책정되어 있습니다.
           </p>
           <p>
             <strong>워라밸·근무 환경</strong> — {workLifeText(a, b)} 연차는 각각{" "}
             {vacationDaysText(a)}·{vacationDaysText(b)}이며, 실제 사용률은{" "}
             {a.workLife.vacation.usageRate}% vs {b.workLife.vacation.usageRate}%입니다.
-            재택근무 정책은 {a.name.ko}가 {REMOTE_LABEL[a.workLife.remoteWork.policy]}, {b.name.ko}는{" "}
-            {REMOTE_LABEL[b.workLife.remoteWork.policy]}로 운영됩니다.
+            재택근무 정책은 {josa(a.name.ko, "이/가")} {REMOTE_LABEL[a.workLife.remoteWork.policy]}, {josa(b.name.ko, "은/는")}{" "}
+            {remoteSentenceTail(REMOTE_LABEL[b.workLife.remoteWork.policy])}
           </p>
           <p>
             <strong>문화 참고 지표</strong> — DB에 입력된 값은 {a.name.ko}{" "}
             {a.culture.score}점, {b.name.ko} {b.culture.score}점(10점 만점)입니다. {a.name.ko}의
-            핵심 키워드는 &apos;{a.culture.keywords.join(", ")}&apos;이며, {b.name.ko}는 &apos;
-            {b.culture.keywords.join(", ")}&apos;을 강조합니다. 본인 성향과 일치하는 문화 키워드를
+            핵심 키워드는 &apos;{a.culture.keywords.join(", ")}&apos;이며, {josa(b.name.ko, "은/는")} &apos;
+            {b.culture.keywords.join(", ")}&apos;{josaParticle(b.culture.keywords.join(", "), "을/를")} 강조합니다. 본인 성향과 일치하는 문화 키워드를
             살펴보되 조사 출처·기간·표본이 연결되지 않은 참고값으로 보세요. 직원 설문 결과나 입사 후 경험을 보장하는 점수는 아닙니다.
           </p>
         </section>
@@ -620,7 +633,7 @@ export default function ComparePage({ params }: Props) {
                     </strong>
                     (주 {bHourly.weeklyRealHours}시간).{" "}
                     {hourlyReversal && hourlyWinner
-                      ? `연봉은 ${entryWinner.name.ko}가 높지만, 실근무시간을 반영한 시간당 보상은 ${hourlyWinner.name.ko}가 앞서는 역전 사례입니다.`
+                      ? `연봉은 ${josa(entryWinner.name.ko, "이/가")} 높지만, 실근무시간을 반영한 시간당 보상은 ${josa(hourlyWinner.name.ko, "이/가")} 앞서는 역전 사례입니다.`
                       : `${compareText(a.name.ko, aHourly.hourly, b.name.ko, bHourly.hourly)}입니다.`}
                   </p>
                   <p className="mt-1 text-xs text-faint-blue">
@@ -675,7 +688,7 @@ export default function ComparePage({ params }: Props) {
                     .{" "}
                     {Math.abs(aCum15.cumulative - bCum15.cumulative) < 10000000
                       ? "누적 격차가 1,000만원 미만으로 사실상 동일한 수준입니다."
-                      : `15년 재직 가정 시 ${(aCum15.cumulative >= bCum15.cumulative ? a : b).name.ko}가 약 ${formatSalaryKorean(Math.abs(aCum15.cumulative - bCum15.cumulative))} 더 모으는 격차입니다.`}
+                      : `15년 재직 가정 시 ${josa((aCum15.cumulative >= bCum15.cumulative ? a : b).name.ko, "이/가")} 약 ${formatSalaryKorean(Math.abs(aCum15.cumulative - bCum15.cumulative))} 더 모으는 격차입니다.`}
                   </p>
                   <p className="mt-1 text-xs text-faint-blue">
                     ※ 직급별 평균 영끌 연봉을 연차 구간(신입 1~2년·주니어
@@ -916,7 +929,7 @@ export default function ComparePage({ params }: Props) {
         <div className="my-8">
           <ShareButtons
             title={`${a.name.ko} vs ${b.name.ko} 연봉 비교`}
-            description={`${a.name.ko}과 ${b.name.ko}의 직급별 영끌 연봉·복지·문화를 한눈에 비교`}
+            description={`${josa(a.name.ko, "과/와")} ${b.name.ko}의 직급별 영끌 연봉·복지·문화를 한눈에 비교`}
           />
         </div>
       </div>
