@@ -59,19 +59,26 @@ describe("ETL 산출 — 공시 1인평균 기준값·괴리율 (A19)", () => {
     }
   });
 
-  it("주입 헤드라인 a 는 공시 기준값(b=r) 또는 산정치를 100만원 반올림한 값이다", () => {
+  it("주입 헤드라인 a 는 공시 기준값(무플래그) 또는 산정치(b=c)를 100만원 반올림한 값이다", () => {
     for (const [id, inj] of Object.entries(dartInjection)) {
       const d = byCorp.get(corpCodeMap[id]?.corpCode ?? "");
       expect(d, id).toBeDefined();
-      if (inj.b === "r") {
+      if (inj.b !== "c") {
         expect(inj.a).toBe(Math.round(d!.reportedAvgManwonRaw! / 100) * 100);
       } else {
         expect(d!.reportedAvgManwonRaw).toBeUndefined();
         expect(inj.a).toBe(d!.avgSalaryManwon);
       }
       // COMP-02: 플래그 항목은 공시 기준값이 있을 때만 주입
-      if (d!.flags?.length) expect(inj.b).toBe("r");
+      if (d!.flags?.length) expect(inj.b).toBeUndefined();
     }
+  });
+
+  it("산정 기준 플래그는 산정치(b=c)에만 — 공시 기준 다수는 무플래그 (클라이언트 번들 증가 0)", () => {
+    const entries = Object.values(dartInjection);
+    const computed = entries.filter((e) => e.b === "c");
+    expect(computed.length).toBeLessThan(entries.length / 2);
+    for (const e of entries) expect(e.b === undefined || e.b === "c").toBe(true);
   });
 
   it("날짜 — 수집일(DART_DATA_DATE)이 카드 변경일(DART_INJECTION_DATE)보다 늦지 않다", () => {
@@ -88,10 +95,10 @@ describe("회사 카드 — 산정 기준 라벨 (A19)", () => {
     expect(injected.length).toBeGreaterThan(200);
     for (const c of injected) {
       const inj = dartInjection[c.id];
-      expect(c.disclosed!.basis).toBe(inj.b === "r" ? "reported" : "computed");
+      expect(c.disclosed!.basis).toBe(inj.b === "c" ? "computed" : "reported");
       expect(c.disclosed!.avgSalaryManwon).toBe(inj.a);
       expect(c.disclosed!.note).toContain(
-        inj.b === "r" ? "1인평균급여액을 인원 가중 평균" : "연간급여총액÷인원"
+        inj.b === "c" ? "연간급여총액÷인원" : "1인평균급여액을 인원 가중 평균"
       );
     }
     for (const c of companyRepository.getAll()) {

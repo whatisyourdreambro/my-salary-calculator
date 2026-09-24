@@ -8,14 +8,15 @@ import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 /** DART 공시 요약(dartInjection)으로 disclosed 블록 조립.
  *  수기 disclosed 가 있는 회사에는 절대 적용하지 않는다(수기 우선 —
  *  수기 43곳은 언론 교차확인·산정기준 note 가 붙은 큐레이션 값).
- *  헤드라인 산정 기준(A19, 2026-09-25 운영자 승인): 주입 항목 b="r" 이면 회사가 공시한
- *  1인평균급여액의 인원 가중 평균(basis "reported"), 아니면 연간 급여총액÷인원 산정치
- *  (basis "computed" — '공식 수치' 라벨 없음). note 는 기준별 문구, 길이는 종전 이하(광고 위 높이 불변).
+ *  헤드라인 산정 기준(A19, 2026-09-25 운영자 승인): 주입 항목에 b 가 없으면 회사가 공시한
+ *  1인평균급여액의 인원 가중 평균(basis "reported"), b="c" 이면 연간 급여총액÷인원 산정치
+ *  (basis "computed" — '공식 수치' 라벨 없음). 플래그는 소수인 산정치 쪽에만(클라이언트 번들 절약).
+ *  note 는 기준별 문구, 길이는 종전 이하(광고 위 높이 불변).
  *  갱신: 매년 4월 scripts/dart-etl.mjs 재실행(골든 diff 통과 후 커밋). */
 function buildDartDisclosed(id: string): CompanyProfile["disclosed"] | undefined {
  const d = dartInjection[id];
  if (!d) return undefined;
- const reported = d.b === "r";
+ const reported = d.b !== "c";
  const staff = `직원 ${d.e.toLocaleString("ko-KR")}명 기준.`;
  return {
  avgSalaryManwon: d.a,
