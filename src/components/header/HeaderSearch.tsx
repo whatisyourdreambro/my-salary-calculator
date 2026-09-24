@@ -16,15 +16,30 @@ import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
 // 전 페이지 First Load JS에 실려 LCP를 지연시킴 — 검색을 열 때만 동적 로드한다.
+//
+// ★ import() 는 반드시 아래 삼항식의 참 분기 안에 둔다 (2026-09-25 B1, CF Workers 1102 대응).
+// edge 서버 컴파일은 비동기 청크를 분리하지 않아, 서버에서 한 번도 실행되지 않는 이 import 가
+// 검색 인덱스 모듈(약 2.9MB)을 glossary·qna·share·company edge 함수의 공유 청크에 인라인했고,
+// 콜드 isolate 마다 파싱 비용이 CPU 10ms 한도를 잡아먹었다. SWC 가 서버·edge 컴파일에서
+// `typeof window` 를 "undefined" 로 치환 → webpack ConstPlugin 이 죽은 분기를 순회하지 않아
+// 의존성 자체가 등록되지 않는다. 클라이언트 번들은 그대로다.
+// `if (typeof window === "undefined") throw ...` 뒤에 import 를 두는 조기 반환 방식은 효과가 없다.
+// 회귀 감시: 빌드 후 node scripts/verify-edge-bundle.mjs (edge 소스맵에 searchIndex 가 있으면 exit 1).
 let searchIndexPromise: Promise<typeof import("@/lib/searchIndex")> | null = null;
 let englishIndexPromise: Promise<typeof import("@/lib/searchIndexEn")> | null = null;
 async function loadSearchIndex(english: boolean) {
   if (english) {
-    englishIndexPromise ??= import("@/lib/searchIndexEn");
+    englishIndexPromise ??=
+      typeof window !== "undefined"
+        ? import("@/lib/searchIndexEn")
+        : Promise.reject(new Error("search index is client-only"));
     return { searchEntries: (await englishIndexPromise).searchEnglishEntries };
   }
   if (!searchIndexPromise) {
-    searchIndexPromise = import("@/lib/searchIndex");
+    searchIndexPromise =
+      typeof window !== "undefined"
+        ? import("@/lib/searchIndex")
+        : Promise.reject(new Error("search index is client-only"));
   }
   return searchIndexPromise;
 }
