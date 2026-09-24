@@ -24,14 +24,26 @@ const BATCH_IMPORTS: Record<CalculatorBatch, () => Promise<CalculatorDef[]>> = {
   expandedPractical: () => import("./expandedPractical").then((m) => m.expandedPracticalCalculators),
 };
 
-const batchCache = new Map<CalculatorBatch, Promise<CalculatorDef[]>>();
-
-/** 배치 하나를 로드해 slug 의 compute 를 돌려준다. 미존재 slug 는 null. 로드 결과는 세션 캐시. */
-export function loadCalculatorCompute(batch: CalculatorBatch, slug: string): Promise<ComputeFn | null> {
-  let pending = batchCache.get(batch);
-  if (!pending) {
-    pending = BATCH_IMPORTS[batch]();
-    batchCache.set(batch, pending);
-  }
-  return pending.then((list) => list.find((c) => c.slug === slug)?.compute ?? null);
+/**
+ * 배치 로더 팩토리 — 성공한 import 만 세션 캐시에 남긴다.
+ * 2026-09-25 CLIENT-08: 거부된 import 를 캐시에 그대로 두면 한 번의 일시 실패(네트워크·배포 직후 청크)로
+ * 같은 배치의 계산기 전부가 SPA 세션 내내 '계산 모듈을 불러오지 못했습니다'에 머물렀다. webpack 은 실패한
+ * 청크를 초기화하므로 새 import() 는 다시 시도된다 → 실패하면 캐시에서 지워 다음 호출이 재시도하게 한다.
+ */
+export function createComputeLoader(imports: Record<CalculatorBatch, () => Promise<CalculatorDef[]>>) {
+  const batchCache = new Map<CalculatorBatch, Promise<CalculatorDef[]>>();
+  return function load(batch: CalculatorBatch, slug: string): Promise<ComputeFn | null> {
+    let pending = batchCache.get(batch);
+    if (!pending) {
+      pending = imports[batch]().catch((e) => {
+        batchCache.delete(batch);
+        throw e;
+      });
+      batchCache.set(batch, pending);
+    }
+    return pending.then((list) => list.find((c) => c.slug === slug)?.compute ?? null);
+  };
 }
+
+/** 배치 하나를 로드해 slug 의 compute 를 돌려준다. 미존재 slug 는 null. 성공한 로드 결과는 세션 캐시. */
+export const loadCalculatorCompute = createComputeLoader(BATCH_IMPORTS);
