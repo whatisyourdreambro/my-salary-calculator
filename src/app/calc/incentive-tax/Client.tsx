@@ -18,6 +18,50 @@ function parseInput(s: string): number {
   return Number(s.replace(/[^0-9]/g, "")) || 0;
 }
 
+// 조세특례제한법 §16의2 벤처기업 주식매수선택권 행사이익 비과세 한도 — 연 2억원
+// (벤처기업별 누적 5억원, 2027-12-31 이전 부여분). 2023년 행사분부터 연 5,000만원에서
+// 2억원으로 올랐다. 종전 코드는 옛 한도 5,000만원에 법에 없는 '초과분 20% 분리과세'를
+// 붙였다 — 한도를 넘는 행사이익은 근로소득 등으로 합산 과세된다(2026-09-25 감사 CALC-11).
+// 누적 5억원 한도는 연 단위 입력으로 추적할 수 없어 안내 문구로만 알린다.
+export const VENTURE_OPTION_TAX_FREE_LIMIT = 200_000_000;
+
+/**
+ * 연봉 위에 추가 소득 amount 를 얹었을 때 늘어나는 세금 + 4대보험 (① 합산과세 경로).
+ * 성과급 계산기 23종 공통 엔진(연간 결정세액 차이 + 4대보험 증가분) — 2026-09-25 A18 에서 종전
+ * 인라인 '산출세액 차이 × 0.7(세액공제 ~30% 가정)'·하드코딩 요율을 대체했다(통합 시 B11 구조에 반영).
+ */
+function combinedCost(salary: number, amount: number): number {
+  if (amount <= 0) return 0;
+  return calcBonusNet(salary, amount).totalDeductions;
+}
+
+/**
+ * ① 합산과세(일반 인센티브) vs ② 벤처 스톡옵션 비과세 특례(§16의2) 비교.
+ * ②는 연 2억원까지 비과세, 초과분은 ①과 같은 합산(누진) 경로로 과세한다.
+ */
+export function compareIncentiveTax(salary: number, incentive: number) {
+  const combinedTotal = combinedCost(salary, incentive);
+  const combinedNet = incentive - combinedTotal;
+
+  const taxFreeAmount = Math.min(incentive, VENTURE_OPTION_TAX_FREE_LIMIT);
+  const taxedAmount = Math.max(0, incentive - VENTURE_OPTION_TAX_FREE_LIMIT);
+  // 비과세분은 소득세·4대보험 대상 소득에서 빠지고, 초과분만 연봉에 합산된다
+  const separateTotal = combinedCost(salary, taxedAmount);
+  const separateNet = incentive - separateTotal;
+
+  return {
+    combinedNet,
+    combinedTotal,
+    combinedRate: incentive > 0 ? (combinedTotal / incentive) * 100 : 0,
+    separateNet,
+    separateTotal,
+    separateRate: incentive > 0 ? (separateTotal / incentive) * 100 : 0,
+    benefit: separateNet - combinedNet,
+    taxFreeAmount,
+    taxedAmount,
+  };
+}
+
 export default function IncentiveClient() {
   const [salaryFmt, setSalaryFmt] = useState("80,000,000");
   const [incentiveFmt, setIncentiveFmt] = useState("30,000,000");
@@ -25,35 +69,7 @@ export default function IncentiveClient() {
   const salary = parseInput(salaryFmt);
   const incentive = parseInput(incentiveFmt);
 
-  const result = useMemo(() => {
-    // 합산과세 — 성과급 계산기 23종 공통 엔진(연간 결정세액 차이 + 4대보험 증가분).
-    // 2026-09-25 A18: 종전 인라인 '산출세액 차이 × 0.7(세액공제 ~30% 가정)'·하드코딩 요율 대체.
-    const combined = calcBonusNet(salary, incentive);
-    const combinedTotal = combined.totalDeductions;
-    const combinedNet = combined.net;
-
-    // 분리과세 (벤처 스톡옵션 가정: 5천만 비과세 + 초과분 20%)
-    const taxFreeLimit = 50_000_000;
-    const taxFreeAmount = Math.min(incentive, taxFreeLimit);
-    const taxedAmount = Math.max(0, incentive - taxFreeLimit);
-    const separateTax = taxedAmount * 0.2;
-    const separateLocal = separateTax * 0.1;
-    // 4대보험은 분리과세 적용 시 보통 부과 안 됨 (스톡옵션 행사이익은 근로소득세만)
-    const separateTotal = separateTax + separateLocal;
-    const separateNet = incentive - separateTotal;
-
-    return {
-      combinedNet,
-      combinedTotal,
-      combinedRate: incentive > 0 ? (combinedTotal / incentive) * 100 : 0,
-      separateNet,
-      separateTotal,
-      separateRate: incentive > 0 ? (separateTotal / incentive) * 100 : 0,
-      benefit: separateNet - combinedNet,
-      taxFreeAmount,
-      taxedAmount,
-    };
-  }, [salary, incentive]);
+  const result = useMemo(() => compareIncentiveTax(salary, incentive), [salary, incentive]);
 
   return (
     <div className="space-y-5 mb-10">
@@ -132,15 +148,15 @@ export default function IncentiveClient() {
           }}
         >
           <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.65)" }}>
-            ② 분리과세 (벤처 스톡옵션)
+            ② 벤처 스톡옵션 비과세 특례
           </p>
           <p className="text-3xl font-black mb-2">{fmt(result.separateNet)}원</p>
           <p className="text-xs mb-4 font-bold" style={{ color: "rgba(255,255,255,0.85)" }}>
             세금 -{fmt(result.separateTotal)}원 ({result.separateRate.toFixed(1)}%)
           </p>
           <ul className="space-y-1 text-xs" style={{ color: "rgba(255,255,255,0.85)" }}>
-            <li>• 5천만원 비과세 + 초과분 20% 분리과세</li>
-            <li>• 4대보험 부과 안 됨 (행사이익 분리)</li>
+            <li>• 연 2억원 비과세 (누적 5억원 한도)</li>
+            <li>• 초과분 합산과세 (적격 시 과세이연 가능)</li>
             <li>• 벤처기업 임직원·요건 충족 시</li>
           </ul>
         </div>
@@ -150,13 +166,13 @@ export default function IncentiveClient() {
       {result.benefit > 0 && (
         <div className="rounded-2xl p-5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
           <p className="text-xs font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 mb-1">
-            분리과세 절세 효과
+            비과세 특례 절세 효과
           </p>
           <p className="text-2xl font-black text-emerald-900 dark:text-emerald-200">
             +{fmt(result.benefit)}원
           </p>
           <p className="text-xs text-emerald-800 dark:text-emerald-300 mt-1">
-            벤처 스톡옵션 분리과세가 적용되면 합산과세 대비 위 금액만큼 더 받습니다.
+            벤처 스톡옵션 비과세 특례를 받으면 합산과세 대비 위 금액만큼 더 받습니다.
           </p>
         </div>
       )}
