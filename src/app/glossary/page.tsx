@@ -14,6 +14,23 @@ import GlossaryExplorer, {
   type GlossaryPick,
 } from "./GlossaryExplorer";
 
+// schema.org DefinedTermSet — 용어 사전에 적합. 인덱스 전용(용어별 페이지는 DefinedTerm 단독) — layout 에서 이동 (META-10, 2026-09-25)
+function buildDefinedTermSetLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    name: "머니샐러리 금융 용어 사전",
+    description: "직장인을 위한 금융·세금·재테크 용어 모음",
+    url: "https://www.moneysalary.com/glossary",
+    hasDefinedTerm: glossaryData.slice(0, 50).map((item) => ({
+      "@type": "DefinedTerm",
+      name: item.title,
+      description: item.summary,
+      inDefinedTermSet: "https://www.moneysalary.com/glossary",
+    })),
+  };
+}
+
 export default function GlossaryPage() {
   // 경량 검색 인덱스 — 제목/카테고리/검색 키워드만 클라이언트로 전달
   // content(96KB 본문)는 제외 — 포함하면 본문 전체가 RSC payload 로 이중 직렬화되어
@@ -42,7 +59,7 @@ export default function GlossaryPage() {
 
   return (
     <main className="w-full bg-canvas min-h-screen pb-20">
-      <JsonLd data={autoBreadcrumbLd("/glossary")} />
+      <JsonLd data={[autoBreadcrumbLd("/glossary"), buildDefinedTermSetLd()]} />
       {/* Hero Section — 서버 렌더링 (크롤러에 즉시 노출) */}
       <section className="relative pt-28 pb-16 overflow-hidden text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-primary/80 dark:from-[#0A1829] dark:via-[#0F2236] dark:to-primary/30 -z-10" />

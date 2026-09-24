@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import JsonLd from "@/components/JsonLd";
 import { glossaryData } from "@/data/glossaryData";
 import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
@@ -13,29 +12,12 @@ export const metadata: Metadata = buildPageMetadata({
  keywords: ["금융 용어", "세금 용어", "4대보험 용어", "재테크 용어", "용어 사전"],
 });
 
-// schema.org DefinedTermSet — 용어 사전에 적합
-function buildDefinedTermSetLd() {
- return {
- "@context": "https://schema.org",
- "@type": "DefinedTermSet",
- name: "머니샐러리 금융 용어 사전",
- description: "직장인을 위한 금융·세금·재테크 용어 모음",
- url: "https://www.moneysalary.com/glossary",
- hasDefinedTerm: glossaryData.slice(0, 50).map((item) => ({
- "@type": "DefinedTerm",
- name: item.title,
- description: item.summary,
- inDefinedTermSet: "https://www.moneysalary.com/glossary",
- })),
- };
-}
-
 export default function GlossaryLayout({ children }: { children: React.ReactNode }) {
  return (
  <>
  {/* BreadcrumbList 는 페이지 단위(index·[slug])가 담당 — layout 이중 주입 시 잎 이름이 다른 목록 2개가
-     같은 문서에 실려 구글이 잎을 임의 선택한다(2026-07-06 전 사이트 제거 사고의 재발, 2026-09-11 감사). */}
- <JsonLd data={[buildDefinedTermSetLd()]} />
+     같은 문서에 실려 구글이 잎을 임의 선택한다(2026-07-06 전 사이트 제거 사고의 재발, 2026-09-11 감사).
+     DefinedTermSet(용어 50개·약 7KB)도 인덱스 page 로 이동 — 용어별 edge 렌더마다 싣지 않는다 (META-10, 2026-09-25). */}
  {children}
  {/* 58개 용어 동적 + 메인 = 정의 검색 트래픽 광고 적용 */}
  <PageFooterAds maxWidth="3xl" />
