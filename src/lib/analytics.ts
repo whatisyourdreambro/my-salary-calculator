@@ -5,7 +5,7 @@
 // - gtag 미로드 상태(스크립트 차단·블로커) 시도 무해
 // - 무료 GA4 한도 (월 10M 이벤트) 내 안전한 사용 가정
 
-import { sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
+import { PAGE_SCOPED_MEASUREMENT_EVENTS, sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
 import { shareAnalyticsPath, type ShareMode } from "./sharePolicy";
 import type { ShareOutcome, ShareErrorKind } from "./shareTransport";
 
@@ -22,11 +22,14 @@ export function trackEvent(
 ): void {
   if (typeof window === "undefined") return;
   try {
+    // 광고·제휴 계측은 공개 금액 페이지(/monthly/N·/salary/N 정적 격자)의 실제 경로를 유지해
+    // page_view·ad_impression 과 같은 Page path 행에 붙는다. 그 외 이벤트는 금액 경로 비식별 유지.
+    const urlOptions = { keepPublicAmountPath: PAGE_SCOPED_MEASUREMENT_EVENTS.has(name) };
     window.gtag?.("event", name, {
       ...sanitizeAnalyticsParams(name, params),
       // Event-scoped overrides. Automatic GA history/outbound events are separate.
-      page_location: sanitizeAnalyticsUrl(window.location?.href ?? ""),
-      page_referrer: typeof document !== "undefined" ? sanitizeAnalyticsUrl(document.referrer) : "",
+      page_location: sanitizeAnalyticsUrl(window.location?.href ?? "", undefined, urlOptions),
+      page_referrer: typeof document !== "undefined" ? sanitizeAnalyticsUrl(document.referrer, undefined, urlOptions) : "",
     });
   } catch {
     // GA4 push errors are non-fatal
