@@ -49,6 +49,7 @@ jobs:
       - run: node --test scripts/__tests__/qa-share-coverage.test.mjs
       - run: node --test scripts/__tests__/cloudflare-routes.test.mjs
       - run: node --test scripts/__tests__/adsense-report.test.mjs
+      - run: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py
