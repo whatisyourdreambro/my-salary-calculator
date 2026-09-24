@@ -7,6 +7,9 @@
 //   title·description(=og·twitter)·H1을 '소방공무원 봉급표 2026' 검색어 형태로 맞추고 리드 첫 문장이
 //   소방사 1호봉·소방경 1호봉 월 봉급을 바로 답하게 제자리 교체(글자 수 이전 수준, 광고 위 블록
 //   추가 없음 — payTableSnippets.test.ts 가드). 수치 재확인: 인사혁신처 2026 봉급표(2026-09-25).
+//   H1 은 사이트 폰트 실측(뷰포트 300~1400px 1px 단위)으로 이전 H1 보다 어느 폭에서도 줄 수가 늘지
+//   않는 '계급별 월급'으로 확정 — '소방사~소방경 월급'을 유지하면 768~897px·483~560px·320px 이하에서
+//   한 줄 늘어 HomeTopAd 를 36~48px 밀어 기각(리뷰 2026-09-25).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -122,7 +125,7 @@ export default function FirefighterPay2026Page() {
             공무원보수규정 별표 10 · 2026-01-01 시행
           </p>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
-            2026 소방공무원 봉급표 <span className="text-electric">소방사~소방경 월급</span>
+            2026 소방공무원 봉급표 <span className="text-electric">계급별 월급</span>
           </h1>
           <PublishedMeta publishedDate="2026-08-30" updatedDate={MODIFIED} className="mb-2" />
           {/* 첫 답변(광고 위) — 제자리 교체만, 글자 수는 이전 리드 수준 유지 (B20 2026-09-25) */}

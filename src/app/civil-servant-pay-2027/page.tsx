@@ -16,7 +16,11 @@
 //   '2027년 공무원 봉급표'(16,513 노출 0.9%)·'2027 공무원 봉급표'·'2027년 공무원 인상률'.
 //   title·description(=og·twitter)·H1·리드를 검색어 형태(2027년·인상률·호봉별 월급)로 맞추고
 //   리드 첫 문장이 '인상률 3.9% = 정부 예산안, 국회 심의 중·확정 전'을 먼저 답하게 제자리 교체
-//   (리드 글자 수 이전 이하, 광고 위 블록 추가 없음 — payTableSnippets.test.ts 가드).
+//   (리드 글자 수·H1 폭 이전 이하, 광고 위 블록 추가 없음 — payTableSnippets.test.ts 가드).
+//   title 에는 근거 '예산안'을 남겨 3.9% 가 확정률처럼 읽히지 않게 한다(YMYL).
+//   H1 은 사이트 폰트 실측(헤드리스 크롬, 뷰포트 300~1400px 1px 단위)으로 이전 H1 보다 어느 폭에서도
+//   줄 수가 늘지 않는 문구만 쓴다 — '인상률 3.9% 적용 예상'은 835~921px·523~575px 에서 한 줄 늘어
+//   HomeTopAd 를 36~48px 밀어 기각(리뷰 2026-09-25).
 //   2026-09-25 재확인: 2027년도 예산안 9/1 국무회의 의결·9/3 국회 제출 계획은 기획예산처 보도자료
 //   (korea.kr newsId=156776382) 원문 확인. 3.9% 수치는 보도자료·브리핑문·홍보자료 본문에 없고
 //   예산안 발표 보도(연합·서울경제·이투데이, 기획예산처 인용)로만 확인 → '예산안 기준·보도' 표기 유지.
@@ -64,7 +68,7 @@ const pct = (RAISE_2027_BUDGET * 100).toFixed(1);
 const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
 
 // 이전(2026-09-09~09-24) title: "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정"
-const PAGE_TITLE = `2027년 공무원 봉급표 예상 — 인상률 ${pct}% 호봉별 월급`;
+const PAGE_TITLE = `2027년 공무원 봉급표 예상 — 예산안 인상률 ${pct}%·호봉별 월급`;
 const PAGE_DESCRIPTION = `2027년 공무원 보수 인상률은 정부 예산안 ${pct}%로 국회 심의 중(확정 전)입니다. 2026년 봉급에 적용한 9급~5급 호봉별 예상 월급, 9급 1호봉 약 ${fmt(g9h1)}원(저연차 추가 인상 전)을 확인하세요.`;
 const MODIFIED = "2026-09-25";
 
@@ -157,7 +161,7 @@ export default function CivilServantPay2027Page() {
             예산안 {pct}% · 국회 심의 중 · 확정 전
           </p>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
-            2027년 공무원 봉급표 <span className="text-electric">인상률 {pct}% 적용 예상</span>
+            2027년 공무원 봉급표 <span className="text-electric">인상률 {pct}%</span>
           </h1>
           <PublishedMeta publishedDate="2026-08-16" updatedDate={MODIFIED} className="mb-2" />
           {/* 첫 답변(광고 위) — 제자리 교체만, 글자 수는 이전 리드 이하 유지 (B20 2026-09-25) */}
