@@ -45,6 +45,7 @@ jobs:
       - run: node --test scripts/__tests__/qa-share-coverage.test.mjs
       - run: node --test scripts/__tests__/cloudflare-routes.test.mjs
       - run: node --test scripts/__tests__/adsense-report.test.mjs
+      - run: node --test scripts/__tests__/edge-bundle-scripts.test.mjs
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py
@@ -56,6 +57,9 @@ jobs:
       - run: npm run ad-audit
       - run: npm run lint
       - run: npm run build
+      # edge 번들 회귀 게이트 (2026-09-25 B1) — 서버에서 안 쓰는 검색 인덱스·계산기 레지스트리가
+      # edge 함수에 다시 들어가면(CF Workers CPU 10ms 한도 1102 원인) 실패한다.
+      - run: node scripts/verify-edge-bundle.mjs
       - run: npm run qa:quality
       - name: 전체 URL 품질 장부 업로드
         if: always()
