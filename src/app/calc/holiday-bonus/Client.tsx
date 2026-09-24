@@ -3,33 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
-
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function calcEmpDeduction(t: number): number {
-  if (t <= 5_000_000) return t * 0.7;
-  if (t <= 15_000_000) return 3_500_000 + (t - 5_000_000) * 0.4;
-  if (t <= 45_000_000) return 7_500_000 + (t - 15_000_000) * 0.15;
-  if (t <= 100_000_000) return 12_000_000 + (t - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (t - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(t: number): number {
-  if (t <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (t <= b.limit) return Math.max(0, Math.round(t * b.rate - b.deduction));
-  }
-  return 0;
-}
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -50,25 +24,20 @@ export default function HolidayBonusClient() {
   const salary = parseInput(salaryFmt);
   const bonus = parseInput(bonusFmt);
 
+  // 성과급 계산기 23종 공통 엔진 — 소득세 = 연간 결정세액(연봉 + 상여) − 연간 결정세액(연봉).
+  // 2026-09-25 A18: 종전 인라인 '산출세액 차이 × 0.7(세액공제 30% 가정)'·하드코딩 요율 대체.
   const result = useMemo(() => {
-    const basicDeduct = 1_500_000;
-    const total = salary + bonus;
-    const taxableBase = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
-    const taxableNew = Math.max(0, total - calcEmpDeduction(total) - basicDeduct);
-    const incomeTax = (calcTax(taxableNew) - calcTax(taxableBase)) * 0.7;
-    const localTax = incomeTax * 0.1;
-
-    const pension = Math.min(bonus, Math.max(0, 79_080_000 - salary)) * 0.0475;
-    const health = bonus * 0.03595;
-    const longTerm = health * 0.1314;
-    const employment = bonus * 0.009;
-    const insurance = pension + health + longTerm + employment;
-
-    const totalDeduction = incomeTax + localTax + insurance;
-    const net = bonus - totalDeduction;
-    const rate = bonus > 0 ? (totalDeduction / bonus) * 100 : 0;
-
-    return { net, totalDeduction, rate, incomeTax, localTax, insurance };
+    const r = calcBonusNet(salary, bonus);
+    const insurance = r.pensionDelta + r.healthDelta + r.empInsDelta;
+    const rate = bonus > 0 ? (r.totalDeductions / bonus) * 100 : 0;
+    return {
+      net: r.net,
+      totalDeduction: r.totalDeductions,
+      rate,
+      incomeTax: r.incomeTaxDelta,
+      localTax: r.localTaxDelta,
+      insurance,
+    };
   }, [salary, bonus]);
 
   return (

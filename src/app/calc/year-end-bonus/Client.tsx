@@ -2,62 +2,15 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
 
-// 간단한 누진세 계산 (2026)
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function calcEmpDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit) return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
-
+// 성과급 계산기 23종 공통 엔진 — 소득세 = 연간 결정세액(연봉 + 성과급) − 연간 결정세액(연봉),
+// 4대보험은 성과급분(국민연금 상한 적용). 2026-09-25 A18: 종전 인라인 '산출세액 × 0.7(세액공제
+// 약 30% 가정)'·하드코딩 요율 대체.
 function quickEstimate(salary: number, bonus: number) {
-  const basicDeduct = 1_500_000;
-  const totalIncome = salary + bonus;
-
-  // 기본급만 세금
-  const taxableBase = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
-  const taxBase = calcTax(taxableBase) * 0.7; // 세액공제 약 30% 가정
-
-  // 합산 세금
-  const taxableNew = Math.max(0, totalIncome - calcEmpDeduction(totalIncome) - basicDeduct);
-  const taxNew = calcTax(taxableNew) * 0.7;
-
-  const bonusTax = Math.max(0, taxNew - taxBase);
-  const localTax = bonusTax * 0.1;
-
-  // 4대보험 (성과급 부분)
-  const pensionBase = Math.min(bonus, Math.max(0, 79_080_000 - salary));
-  const pension = pensionBase * 0.0475;
-  const health = bonus * 0.03595;
-  const longTerm = health * 0.1314;
-  const employment = bonus * 0.009;
-
-  const totalDeduction = bonusTax + localTax + pension + health + longTerm + employment;
-  const netBonus = bonus - totalDeduction;
-  const effectiveRate = bonus > 0 ? (totalDeduction / bonus) * 100 : 0;
-
-  return { totalDeduction, netBonus, effectiveRate };
+  const r = calcBonusNet(salary, bonus);
+  const effectiveRate = bonus > 0 ? (r.totalDeductions / bonus) * 100 : 0;
+  return { totalDeduction: r.totalDeductions, netBonus: r.net, effectiveRate };
 }
 
 interface Scenario {

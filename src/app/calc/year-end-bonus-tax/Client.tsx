@@ -3,33 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
-
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function calcEmpDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit) return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -54,38 +28,18 @@ export default function YearEndBonusTaxClient() {
   const nextSalary = parseInput(nextYearSalaryFmt);
 
   const result = useMemo(() => {
-    const basicDeduct = 1_500_000;
+    // 성과급 계산기 23종 공통 엔진 — 시나리오별 기준 연봉으로 각각 계산한다
+    // (소득세 = 연간 결정세액 차이, 국민연금은 시나리오별 연 상한까지만 — 2026-09-06 정정 유지).
+    // 2026-09-25 A18: 종전 인라인 '산출세액 차이 × 0.7(세액공제 30% 가정)'·하드코딩 요율 대체.
+    // 시나리오 A: 12월에 일시 지급 (당해 연도 합산) / B: 1월에 다음해 지급 (다음해 합산)
+    const scenarioA = calcBonusNet(salary, bonus);
+    const scenarioB = calcBonusNet(nextSalary, bonus);
 
-    // 시나리오 A: 12월에 일시 지급 (당해 연도 합산)
-    const totalA = salary + bonus;
-    const taxableBaseA = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
-    const taxableNewA = Math.max(0, totalA - calcEmpDeduction(totalA) - basicDeduct);
-    const incomeTaxBonusA = (calcTax(taxableNewA) - calcTax(taxableBaseA)) * 0.7;
+    const totalA_deduction = scenarioA.totalDeductions;
+    const totalB_deduction = scenarioB.totalDeductions;
 
-    // 시나리오 B: 1월에 다음해 지급 (다음해 합산)
-    const totalB = nextSalary + bonus;
-    const taxableBaseB = Math.max(0, nextSalary - calcEmpDeduction(nextSalary) - basicDeduct);
-    const taxableNewB = Math.max(0, totalB - calcEmpDeduction(totalB) - basicDeduct);
-    const incomeTaxBonusB = (calcTax(taxableNewB) - calcTax(taxableBaseB)) * 0.7;
-
-    // 4대보험 — 국민연금은 연 상한(기준소득월액 상한 × 12)까지만 부과되므로
-    // 시나리오별 기준 연봉으로 각각 계산해야 한다. 종전에는 두 연봉 중 낮은
-    // 쪽으로 한 번만 계산해, 이미 상한을 넘긴 고연봉 시나리오에도 존재하지 않는
-    // 국민연금 공제가 붙었다(올해 1억·다음해 3,000만 입력 시 A 시나리오에
-    // 약 71만원 과다 공제).
-    const insuranceFor = (baseSalary: number) =>
-      Math.min(bonus, Math.max(0, 79_080_000 - baseSalary)) * 0.0475 +
-      bonus * 0.03595 +
-      bonus * 0.03595 * 0.1314 +
-      bonus * 0.009;
-    const insuranceA = insuranceFor(salary);
-    const insuranceB = insuranceFor(nextSalary);
-
-    const totalA_deduction = incomeTaxBonusA + incomeTaxBonusA * 0.1 + insuranceA;
-    const totalB_deduction = incomeTaxBonusB + incomeTaxBonusB * 0.1 + insuranceB;
-
-    const netA = bonus - totalA_deduction;
-    const netB = bonus - totalB_deduction;
+    const netA = scenarioA.net;
+    const netB = scenarioB.net;
 
     return {
       netA,

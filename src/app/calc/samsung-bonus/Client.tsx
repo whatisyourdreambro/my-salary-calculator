@@ -74,7 +74,7 @@ const SHARE_DEFAULTS: SamsungShareState = {
   p: initialProfitTrillion(),
   y: 2026,
   o1: FIXED_OPI1_RATE,
-  cr: DEFAULT_BONUS_CREDIT_RATE,
+  ac: DEFAULT_BONUS_CREDIT_RATE,
   ins: true,
 };
 const DIVISION_IDS = DIVISIONS.map((d) => d.id);
@@ -101,10 +101,9 @@ export default function SamsungBonusClient() {
   // 본인 케이스 state — MySalaryCalculator + MultiYearBonusSimulator 공유
   const [salaryFmt, setSalaryFmt] = useState(SHARE_DEFAULTS.s.toLocaleString("ko-KR"));
   const [selectedDivId, setSelectedDivId] = useState<string>(SHARE_DEFAULTS.d);
-  // 세액공제율 디폴트는 성과급 계산기 23종 공통값(=bonusTaxCalc 의 문서화된
-  // 기본값 30%)과 맞춘다. 종전 20% 는 이 계산기에만 있어, 같은 삼성 계열
-  // OPI 를 계산하는 /calc/samsung-display-bonus 와 동일 입력에서 세후가
-  // 120만원 갈렸다.
+  // 추가 세액공제 가정 디폴트는 성과급 계산기 23종 공통값(bonusTaxCalc DEFAULT_BONUS_CREDIT_RATE = 0)과
+  // 맞춘다 — 소득세는 연말정산 구조의 실제 엔진 차이라 추가 가정이 없다(2026-09-25 A18, 종전 30%).
+  // 계산기마다 다르면 같은 삼성 계열 OPI 를 계산하는 /calc/samsung-display-bonus 와 세후가 갈린다.
   const [creditRate, setCreditRate] = useState<number>(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState<boolean>(true);
   // OPI1(기존 OPI) 지급률 — 상한·기본값·실지급률은 opiData.ts 단일 소스(기본 = 최신 최고 실지급률)
@@ -156,11 +155,11 @@ export default function SamsungBonusClient() {
     if (parsed.p !== undefined) setProfitFmt(String(parsed.p));
     if (parsed.y !== undefined) setYear(parsed.y);
     if (parsed.o1 !== undefined) setOpi1Rate(parsed.o1);
-    if (parsed.cr !== undefined) setCreditRate(parsed.cr);
+    if (parsed.ac !== undefined) setCreditRate(parsed.ac);
     if (parsed.ins !== undefined) setApplyInsurance(parsed.ins);
   }, []);
   const shareHash = buildShareHash(
-    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, cr: creditRate, ins: applyInsurance },
+    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, ac: creditRate, ins: applyInsurance },
     SHARE_DEFAULTS
   );
   const shareStateUrl = `${SHARE_URL}${shareHash}`;
@@ -1101,7 +1100,7 @@ function MySalaryCalculator({
             <div>
               <div className="flex items-end justify-between mb-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-faint-blue">
-                  세액공제율 (가정)
+                  추가 세액공제 (가정)
                 </span>
                 <span
                   className="text-lg font-black tabular-nums"
@@ -1124,18 +1123,18 @@ function MySalaryCalculator({
                   }%, #DDE4EC ${(creditRate / 50) * 100}%, #DDE4EC 100%)`,
                   accentColor: "#0145F2",
                 }}
-                aria-label="세액공제율 가정"
+                aria-label="추가 세액공제 가정"
               />
               <p className="text-[10px] text-faint-blue mt-1 leading-relaxed">
-                자녀·연금·의료비·기부 등 세액공제로 소득세가 줄어드는 비율.
-                디폴트 {DEFAULT_BONUS_CREDIT_RATE}% (조정 가능한 모델 가정).{" "}
+                근로소득세액공제·보험료 공제는 이미 반영(기본 {DEFAULT_BONUS_CREDIT_RATE}%).
+                추가 공제로 성과급 몫 소득세가 더 준다고 볼 때만 올리세요.{" "}
                 <Link
                   href="/tools/finance/irp"
                   className="font-bold text-electric underline underline-offset-2"
                 >
                   IRP
                 </Link>
-                ·기부 적극 활용 시 30%+, 단순 기본공제만이면 10% 내외.
+                ·연금저축·기부 등이 대표적입니다.
               </p>
             </div>
 
@@ -1375,7 +1374,7 @@ function MySalaryCalculator({
             </summary>
             <div className="mt-3 space-y-1.5 text-xs">
               <DeductRow
-                label={`소득세 (누진세율 · 세액공제 ${creditRate}% 가정)`}
+                label={`소득세 (합산 연간 세액 증가분${creditRate > 0 ? ` · 추가 공제 ${creditRate}%` : ""})`}
                 value={personal.breakdown.incomeTax}
               />
               <DeductRow
@@ -1410,8 +1409,8 @@ function MySalaryCalculator({
                 />
               </div>
               <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
-                ※ 본 계산은 추정치이며 실제 회사 원천징수와 다릅니다. 세액공제율
-                {creditRate}% 가정은 사용자 조정 가능.{" "}
+                ※ 추정치이며 실제 회사 원천징수와 다릅니다. 소득세는 연봉+성과급
+                합산 세액의 증가분(추가 공제 {creditRate}%).{" "}
                 {applyInsurance
                   ? "4대보험은 보수 정산 방식에 따라 회사가 일부 분담하므로 실제 본인 부담은 더 작을 수 있습니다."
                   : "4대보험 추가 부과를 적용하지 않은 상태입니다. 위의 토글을 켜면 부과 결과를 확인할 수 있습니다."}{" "}

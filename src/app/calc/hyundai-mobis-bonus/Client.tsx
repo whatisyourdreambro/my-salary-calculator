@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
 
 // 현대모비스 임단협 시나리오 (현대차그룹 연동형 — 정률 + 정액 + 주식 패키지)
@@ -41,7 +41,7 @@ export default function HyundaiMobisBonusClient() {
   const [fixedOverride, setFixedOverride] = useState(14_200_000);
   const [sharesOverride, setSharesOverride] = useState(17);
   const [customMode, setCustomMode] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -215,7 +215,7 @@ export default function HyundaiMobisBonusClient() {
           <div className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input
                 type="range"

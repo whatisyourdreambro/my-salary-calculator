@@ -8,6 +8,11 @@
 // 가능하도록 추출. 회사별로 다른 건 "성과급 풀 산정 방식"이지 세금 계산은
 // 동일.
 //
+// 소득세 증가분 = 연간 결정세액(연봉 + 성과급) − 연간 결정세액(연봉) — 연말정산 구조의
+// 실제 엔진 차이다 (2026-09-25 A18 CALC-02). 종전에는 산출세액 차이에 '세액공제 30%'
+// 를 일률로 곱했는데, 근로소득세액공제는 한도(총급여가 오를수록 줄어듦)가 있는 정액성
+// 공제라 성과급에 비례해 늘지 않는다 — 세후가 5~19% 과대(연봉 1억 + 성과급 5천만 +538만원)였다.
+//
 // 세율·요율 상수는 lib/taxConstants2026.ts 단일 진실 소스에서 import.
 // ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 calcBonusNet 의 선택 인자 rates 로 한다
 //   (기본값 2026 요율, 인자를 넘기지 않는 호출부는 그대로).
@@ -17,17 +22,53 @@ import {
   PENSION_BASE_2026,
   earnedIncomeDeduction2026 as earnedIncomeDeduction,
   calcIncomeTax2026 as calcIncomeTax,
+  earnedIncomeTaxCredit2026,
   type InsuranceRates,
 } from "./taxConstants2026";
 
 /**
- * 성과급 계산기 23종 공통 세액공제율 디폴트(%).
- * 자녀·연금·의료비·기부 등으로 소득세가 줄어드는 비율의 가정값이다.
- * 계산기마다 따로 두면 같은 회사·같은 입력에 세후가 갈리므로(2026-09-06
- * 전수검사: samsung-bonus 만 20% 라 samsung-display-bonus 와 120만원 차이)
- * 이 상수 하나만 참조한다.
+ * 성과급 계산기 23종 공통 '추가 세액공제' 가정 디폴트(%) — 0.
+ * 기본 계산은 연말정산 구조의 실제 엔진 차이(근로소득세액공제 한도 포함)라 추가 가정이
+ * 없다. 슬라이더를 올리면 연금저축·의료비·기부 등 개인별 공제로 성과급 몫 소득세가 그
+ * 비율만큼 더 줄어든다고 가정한다(사용자 조정). 2026-09-25 전까지는 30 이었고 이 30% 가
+ * 기본 가정이었다 — 삼성 공유 링크의 옛 cr 값은 samsung-bonus/shareState.ts 가 변환한다.
+ * 계산기마다 따로 두면 같은 회사·같은 입력에 세후가 갈리므로 이 상수 하나만 참조한다.
  */
-export const DEFAULT_BONUS_CREDIT_RATE = 30;
+export const DEFAULT_BONUS_CREDIT_RATE = 0;
+
+/**
+ * 연간 결정세액 추정 — 연말정산 구조(성과급 증가분 계산 전용).
+ *
+ * 총급여 → 근로소득공제(§47) → 본인 기본공제 150만(§50) → 연금보험료공제(§51의3) →
+ * 건강·장기요양·고용보험료 공제(§52) → 누진세율(§55) → 근로소득세액공제(§59, 총급여 기준 한도).
+ * 보험료는 2026 요율(국민연금은 기준소득월액 상·하한의 연 환산)로 추정한다.
+ * 자녀·연금저축·의료비·신용카드 등 개인별 공제는 넣지 않는다.
+ *
+ * @param grossSalary 총급여 (원)
+ * @param insuredGross 보험료를 매기는 보수 (원, 기본 = 총급여) — 성과급에 4대보험을
+ *   매기지 않는 가정이면 연봉만 넘긴다(보험료 공제도 그만큼만).
+ */
+export function estimateAnnualIncomeTax2026(
+  grossSalary: number,
+  rates: InsuranceRates = INSURANCE_RATES_2026,
+  insuredGross: number = grossSalary,
+): number {
+  if (!Number.isFinite(grossSalary) || grossSalary <= 0) return 0;
+  const insured = Number.isFinite(insuredGross) ? Math.max(0, insuredGross) : grossSalary;
+  const pension =
+    insured > 0
+      ? Math.min(Math.max(insured, PENSION_BASE_2026.MIN_MONTHLY * 12), PENSION_BASE_2026.MAX_ANNUAL) *
+        rates.NATIONAL_PENSION
+      : 0;
+  const healthAndCare = insured * rates.HEALTH_INSURANCE * (1 + rates.LONG_TERM_CARE_RATIO);
+  const employment = insured * rates.EMPLOYMENT_INSURANCE;
+  const taxBase = Math.max(
+    0,
+    grossSalary - earnedIncomeDeduction(grossSalary) - 1_500_000 - pension - healthAndCare - employment,
+  );
+  const calculatedTax = calcIncomeTax(taxBase);
+  return Math.max(0, calculatedTax - earnedIncomeTaxCredit2026(calculatedTax, grossSalary));
+}
 
 export interface BonusNetResult {
   /** 세전 성과급 (원) */
@@ -53,13 +94,13 @@ export interface BonusNetResult {
 /**
  * 성과급 세후 실수령액 계산.
  *
- * 누진세율 특성상 "기존 연봉 기준 세금" vs "연봉+성과급 합산 세금"의 차이를
- * 성과급에 귀속시키는 방식(marginal). 4대보험은 보수에 합산되어 추가 부과되는데
+ * "연봉만의 연간 결정세액" vs "연봉+성과급 합산 결정세액"의 차이를 성과급에 귀속시키는
+ * 방식(marginal, estimateAnnualIncomeTax2026). 4대보험은 보수에 합산되어 추가 부과되는데
  * 국민연금은 보수월액 상한(2026.7~2027.6 기준 연 7,908만원, 월 659만원) 적용.
  *
  * @param salary 본인 연 기본 연봉 (원)
  * @param bonusWon 세전 성과급 (원)
- * @param creditRate 세액공제율 0~50% (디폴트 30%) — 자녀·연금·의료비·기부 등
+ * @param creditRate 추가 세액공제 가정 0~50% (디폴트 0) — 엔진 증가분에서 이 비율만큼 더 뺀다
  * @param applyInsurance 4대보험 추가 부과 적용 여부 (디폴트 true)
  * @param rates 4대보험·지방세 요율 (디폴트 2026) — 연도 전환 시 해당 연도 요율을 넘긴다
  */
@@ -84,19 +125,14 @@ export function calcBonusNet(
     };
   }
 
-  // 1) 소득세 marginal 계산
-  const baseDeduction = 1_500_000; // 본인 기본공제
-  const empDeductBase = earnedIncomeDeduction(salary);
-  const empDeductWithBonus = earnedIncomeDeduction(salary + bonusWon);
-
-  const taxableBase = Math.max(0, salary - empDeductBase - baseDeduction);
-  const taxableWithBonus = Math.max(
-    0,
-    salary + bonusWon - empDeductWithBonus - baseDeduction,
+  // 1) 소득세 증가분 — 연말정산 구조 결정세액의 차이 (성과급에 4대보험을 매기지 않는
+  //    가정이면 보험료 공제도 연봉분만)
+  const taxBase = estimateAnnualIncomeTax2026(salary, rates);
+  const taxWithBonus = estimateAnnualIncomeTax2026(
+    salary + bonusWon,
+    rates,
+    applyInsurance ? salary + bonusWon : salary,
   );
-
-  const taxBase = calcIncomeTax(taxableBase);
-  const taxWithBonus = calcIncomeTax(taxableWithBonus);
 
   const creditMult = 1 - creditRate / 100;
   const incomeTaxDelta = Math.max(0, (taxWithBonus - taxBase) * creditMult);

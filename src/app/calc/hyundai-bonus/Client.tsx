@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
@@ -45,7 +45,7 @@ export default function HyundaiBonusClient() {
   const [fixedOverride, setFixedOverride] = useState(12_700_000);
   const [sharesOverride, setSharesOverride] = useState(15);
   const [customMode, setCustomMode] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -249,7 +249,7 @@ export default function HyundaiBonusClient() {
           <div {...measurement.inputProps} id="hyundai-tax-assumptions" className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input
                 type="range"
@@ -271,7 +271,7 @@ export default function HyundaiBonusClient() {
               <span className="font-bold">4대보험 추가 부과 적용</span>
             </label>
             <p className="text-xs leading-relaxed text-faint">
-              연봉과 성과급을 합산한 세금 차이를 비교하는 모델입니다. 기본 공제율 30%는 가정이며,
+              연봉과 성과급을 합산한 연간 세액 차이 모델입니다. 추가 공제는 기본 0%이며,
               실제 상여 지급대상기간·개인별 공제·보험료 정산은 회사 급여명세서에서 확인하세요.
             </p>
           </div>
