@@ -221,6 +221,18 @@ export function getOverallRank(company: CompanyProfile): OverallRank | null {
   return { rank, total, topPercent: topPercentOf(rank, total) };
 }
 
+/**
+ * 전국 순위 표기 — 상위 50% 이내는 "{N}위" 그대로, 그 밖은 같은 자리 길이의 구간 라벨.
+ * DB 신입 추정치 분포상 대기업도 중앙값 아래로 찍혀("삼성전자 422개사 중 252위") 오류처럼
+ * 보이던 문제 대응 (A22·PROD-04, 2026-09-25 운영자 승인). 백분위를 숨기는 기존 규칙(상위 50% 이내만
+ * "상위 N%")과 같은 경계를 쓰고, 카드 높이가 변하지 않도록 순위 숫자 자리에 짧은 라벨만 넣는다.
+ * 51~75% → "중위권", 76~100% → "중하위권".
+ */
+export function overallRankLabel(rank: OverallRank): string {
+  if (rank.topPercent <= 50) return `${rank.rank.toLocaleString("ko-KR")}위`;
+  return rank.topPercent <= 75 ? "중위권" : "중하위권";
+}
+
 /** 실질 시급(원) — 신입 영끌 ÷ (주 실근무시간 × 52주). 데이터 없으면 null. */
 function hourlyWageOf(c: CompanyProfile): number | null {
   const real = c.workLife?.weeklyHours?.real;

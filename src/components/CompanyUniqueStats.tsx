@@ -10,12 +10,14 @@ import { Trophy, Clock, Gift, TrendingUp } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import {
   getOverallRank,
+  overallRankLabel,
   getRealHourlyWage,
   getBenefitsValue,
   getCumulativeIncome,
   formatSalaryKorean,
   industryLabelKo,
 } from "@/lib/companyContentBuilder";
+import { josa } from "@/lib/josa";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -69,8 +71,7 @@ export default function CompanyUniqueStats({
           {koName} 심층 지표 — 전국 순위·실질 시급·복지·누적 소득
         </h2>
         <p className="text-sm text-muted-blue dark:text-canvas-300">
-          머니샐러리 연봉 DB 전체 회사 데이터에서 {koName}의 위치를 실제 수치로
-          계산한 결과입니다.
+          머니샐러리 연봉 DB 추정치로 {koName}의 위치를 계산한 참고 지표입니다.
         </p>
       </div>
 
@@ -87,7 +88,7 @@ export default function CompanyUniqueStats({
             </p>
             <p className="text-sm font-bold text-electric mb-2">글로벌 참고 데이터</p>
             <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
-              {koName}은(는) 해외 본사 기준 보상 체계라 국내 채용 시장과 직접
+              {josa(koName, "은/는")} 해외 본사 기준 보상 체계라 국내 채용 시장과 직접
               비교가 어려워 국내 연봉 순위에서 제외하고 글로벌 참고용으로
               제공합니다.
             </p>
@@ -99,7 +100,7 @@ export default function CompanyUniqueStats({
               전국 연봉 순위
             </p>
             <p className="text-2xl font-black text-navy dark:text-canvas-50 mb-1">
-              국내 {fmt(overallRank.total)}개사 중 {fmt(overallRank.rank)}위
+              국내 {fmt(overallRank.total)}개사 중 {overallRankLabel(overallRank)}
             </p>
             {/* 하위권 회사에 "상위 61%" 같은 오해 소지 표현 방지 — 상위 50% 이내만 백분위 강조 */}
             {overallRank.topPercent <= 50 && (
@@ -109,10 +110,10 @@ export default function CompanyUniqueStats({
             )}
             <p className="text-sm text-muted-blue dark:text-canvas-300 leading-relaxed">
               머니샐러리 연봉 DB 국내 {fmt(overallRank.total)}개 회사의 신입
-              영끌 연봉(기본급+평균 인센티브) 기준으로 {koName}은(는){" "}
+              영끌 연봉(기본급+평균 인센티브) 기준으로 {josa(koName, "은/는")}{" "}
               {overallRank.topPercent <= 50
                 ? `상위 ${overallRank.topPercent}% 구간에 위치합니다.`
-                : `${fmt(overallRank.rank)}위에 위치합니다.`}
+                : `${overallRankLabel(overallRank)}에 위치합니다.`}
             </p>
           </div>
         ) : null}

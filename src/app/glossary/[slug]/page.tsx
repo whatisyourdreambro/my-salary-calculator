@@ -9,7 +9,9 @@ import {
  toGlossarySlug,
  getGlossaryBySlug,
  getRelatedGlossaryItems,
+ type GlossaryItem,
 } from "@/data/glossaryData";
+import { josa } from "@/lib/josa";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import {
@@ -31,6 +33,24 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 // 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
 export const runtime = "edge";
 
+/** 메타 설명 — "{용어}는 {요약}. {본문 첫 완결 문장}" (약 120자 이내, 말줄임 없이 문장 끝에서 끝낸다).
+ *  첫 문장까지 넣으면 넘치는 용어는 요약 뒤에 카테고리 안내로 마무리한다 (META-10, 2026-09-25). */
+const GLOSSARY_DESCRIPTION_MAX = 120;
+
+/** 요약 문구 끝맺음 — "빌려줄까?" 같은 물음표 요약에 마침표를 덧붙여 "?."가 되지 않게 */
+function summarySentence(summary: string): string {
+ return /[.?!]$/.test(summary) ? summary : `${summary}.`;
+}
+
+function buildGlossaryDescription(item: GlossaryItem): string {
+ const head = `${josa(item.title, "은/는")} ${summarySentence(item.summary)}`;
+ const firstSentence = item.content.match(/^.+?[.?!](?=\s|$)/)?.[0];
+ if (firstSentence && `${head} ${firstSentence}`.length <= GLOSSARY_DESCRIPTION_MAX) {
+ return `${head} ${firstSentence}`;
+ }
+ return `${head} ${item.category} 용어 쉬운 비유 해설.`;
+}
+
 export async function generateMetadata({
  params,
 }: {
@@ -41,12 +61,12 @@ export async function generateMetadata({
 
  return buildPageMetadata({
  title: `${item.title} 뜻과 의미 — ${item.summary}`,
- description: `${item.title}은(는) ${item.summary}. ${item.content.slice(0, 80)}... ${item.category} 용어 쉬운 비유 해설.`,
+ description: buildGlossaryDescription(item),
  path: `/glossary/${toGlossarySlug(item.title)}`,
  keywords: [
  `${item.title} 뜻`,
  `${item.title} 의미`,
- `${item.title}이란`,
+ josa(item.title, "이란/란"),
  item.category,
  ],
  });
@@ -57,10 +77,10 @@ function buildDefinedTermLd(item: { title: string; summary: string; content: str
  "@context": "https://schema.org",
  "@type": "DefinedTerm",
  name: item.title,
- description: item.summary,
+ // about 은 Thing 을 기대하는 속성이라 본문 텍스트 대신 description 에 정의문을 싣는다 (META-10)
+ description: item.content,
  inDefinedTermSet: "https://www.moneysalary.com/glossary",
  url: `https://www.moneysalary.com/glossary/${toGlossarySlug(item.title)}`,
- about: item.content,
  };
 }
 
@@ -78,11 +98,11 @@ export default function GlossaryDetailPage({
 
  const faqItems = [
  {
- question: `${item.title}이(가) 무엇인가요?`,
- answer: `${item.summary}. ${item.content}`,
+ question: `${josa(item.title, "이/가")} 무엇인가요?`,
+ answer: `${summarySentence(item.summary)} ${item.content}`,
  },
  {
- question: `${item.title}을(를) 쉽게 비유하면?`,
+ question: `${josa(item.title, "을/를")} 쉽게 비유하면?`,
  answer: item.analogy,
  },
  {

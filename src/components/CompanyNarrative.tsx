@@ -13,6 +13,7 @@ import {
   describeWorkLife,
   industryLabelKo,
 } from "@/lib/companyContentBuilder";
+import { josa, josaParticle } from "@/lib/josa";
 
 interface Props {
   company: CompanyProfile;
@@ -89,18 +90,18 @@ export default function CompanyNarrative({ company }: Props) {
 
       <div className="prose prose-slate dark:prose-invert max-w-none space-y-5 text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
         <p>
-          <strong className="text-navy dark:text-canvas-50">{koName}</strong>은(는){" "}
+          <strong className="text-navy dark:text-canvas-50">{koName}</strong>{josaParticle(koName, "은/는")}{" "}
           <strong>{TIER_LABEL[company.tier]}</strong> 분류의{" "}
           <strong>{industryLabelKo(company.industry)}</strong> 기업입니다. 신입 영끌 평균 연봉은{" "}
           <strong>{formatSalaryKorean(entryTotal)}</strong> 수준이며, 시니어급은{" "}
           <strong>{formatSalaryKorean(seniorTotal)}</strong>까지 올라갑니다. 본 페이지는
-          기본급·인센티브·스톡옵션·복지·워라밸을 종합해 {koName}이(가) 본인 커리어에 맞는
+          기본급·인센티브·스톡옵션·복지·워라밸 등을 종합해 {josa(koName, "이/가")} 본인 커리어에 맞는
           회사인지 판단할 수 있는 1차 자료를 제공합니다.
         </p>
 
         {company.aliases && company.aliases.length > 0 && (
           <p className="text-sm text-faint-blue">
-            참고로 {koName}은(는) <strong>{company.aliases.join(", ")}</strong> 등의
+            참고로, {josa(koName, "은/는")} <strong>{company.aliases.join(", ")}</strong> 등의
             이름·표기로도 검색됩니다. 모두 같은 회사이며, 이 페이지에서 통합 연봉
             정보를 제공합니다.
           </p>
@@ -254,7 +255,7 @@ export default function CompanyNarrative({ company }: Props) {
               {++sec}. 비슷한 연봉대의 다른 회사
             </h3>
             <p>
-              {koName}과(와) ±15% 이내의 신입 영끌 연봉을 제공하는 회사로는{" "}
+              {josa(koName, "과/와")} ±15% 이내의 신입 영끌 연봉을 제공하는 회사로는{" "}
               {similar.map((c, i) => (
                 <span key={c.id}>
                   <Link

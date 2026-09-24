@@ -118,7 +118,7 @@ export default function CompanyDetailPage({
  name: `${company.name.ko} 직급별 연봉·실수령액 데이터`,
  // 신뢰 등급 명시(google-authority-8, 2026-09-05): 직급별 값은 about 페이지대로 자체 집계·추정치 —
  // Dataset 노드가 무표기로 인용되지 않도록 description 에 명시. name/keywords 는 불변.
- description: `${company.name.ko}의 신입·주니어·시니어·리드·임원 직급별 평균 연봉, 인센티브, 복지, 워라밸 데이터 — 공시·보도·공개 후기 종합 자체 집계(추정치 포함).`,
+ description: `${company.name.ko}의 신입·주니어·시니어·리드·임원 직급별 평균 연봉, 인센티브, 복지, 워라밸 데이터 — 공시·보도 종합 자체 집계(추정치 포함).`,
  url: `/salary-db/${company.id}`,
  dateModified: company.lastUpdated,
  keywords: [`${company.name.ko} 연봉`, `${company.name.ko} 초봉`, `${company.name.ko} 신입 연봉`],

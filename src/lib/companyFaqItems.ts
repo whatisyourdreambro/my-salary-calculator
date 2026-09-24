@@ -9,6 +9,7 @@ import type { CompanyProfile } from "@/types/company";
 import { industryLabelKo, getIndustryBenchmark } from "@/lib/companyContentBuilder";
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import { josa } from "@/lib/josa";
 
 export function buildCompanyFaq(company: CompanyProfile | undefined) {
  if (!company) return [];
@@ -47,7 +48,8 @@ export function buildCompanyFaq(company: CompanyProfile | undefined) {
  },
  {
  question: `${koName} 워라밸은 어떤가요?`,
- answer: `${koName}의 평균 주당 근무시간은 약 ${realHours}시간으로, 표준 주 40시간 대비 ${overtimeRatio > 0 ? `약 ${overtimeRatio}% 더 일하는 편` : "오히려 짧거나 비슷"}입니다. 워라밸을 중요시한다면 인근 동종사와 비교해 보는 것을 권장합니다.`,
+ // 근무시간은 출처 없는 DB 입력값 — 공식 통계·공시처럼 단정하지 않는다 (COMP-09, 2026-09-25)
+ answer: `${koName}의 주당 근무시간은 머니샐러리 DB 입력 참고값 기준 약 ${realHours}시간(공식 통계·회사 공시 아님)으로, 표준 주 40시간 대비 ${overtimeRatio > 0 ? `약 ${overtimeRatio}% 긴 편` : "짧거나 비슷한 편"}입니다. 부서·직무에 따라 실제 근무시간은 다를 수 있으니, 워라밸을 중요시한다면 인근 동종사와 비교해 보는 것을 권장합니다.`,
  },
  {
  question: `${koName} 연봉으로 대출 상환 부담을 어떻게 가늠하나요?`,
@@ -57,8 +59,8 @@ export function buildCompanyFaq(company: CompanyProfile | undefined) {
  question: `${koName} 같은 업종 내 연봉 수준은 어느 정도인가요?`,
  // 벤치마크 없는 회사(글로벌 등)는 본문에 "업종 평균 비교" 섹션이 없음 — 유령 섹션 안내 방지
  answer: getIndustryBenchmark(company)
- ? `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryLabel} 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`
- : `${koName}은 ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryLabel} 수준입니다. 국내 동종사 표본이 부족한 회사는 업종 평균 비교가 제공되지 않으며, 비슷한 연봉대 회사 목록으로 시장 위치를 가늠할 수 있습니다.`,
+ ? `${josa(koName, "은/는")} ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryLabel} 수준이며, 위 본문의 "업종 평균 비교" 섹션에서 동종사 대비 상위/하위 위치를 확인할 수 있습니다.`
+ : `${josa(koName, "은/는")} ${industryLabelKo(company.industry)} 업종 내에서 신입 ${entryLabel} 수준입니다. 국내 동종사 표본이 부족한 회사는 업종 평균 비교가 제공되지 않으며, 비슷한 연봉대 회사 목록으로 시장 위치를 가늠할 수 있습니다.`,
  },
  {
  question: `${koName} 연봉 협상은 어떻게 준비해야 하나요?`,
@@ -70,7 +72,10 @@ export function buildCompanyFaq(company: CompanyProfile | undefined) {
  },
  {
  question: `${koName} 연봉 정보는 2026년 최신 기준인가요?`,
- answer: `네. 본 페이지의 ${koName} 연봉·실수령액은 2026년 세법(소득세율·4대보험 요율)을 반영해 자동 계산됩니다. 기본급·인센티브 수치는 공개 자료 기반 추정치이며, 실제 금액은 부서·성과·연봉 협상 결과에 따라 달라질 수 있습니다.`,
+ // '최신' 단정 금지 — 계산 기준(세법)·추정치·공시 사업연도를 구분해 답한다. 페이지별 날짜는 넣지 않는다 (COMP-06, 2026-09-25)
+ answer: company.disclosed
+ ? "실수령액은 2026년 세법·4대보험 요율(2026-07 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 공시 평균연봉은 표시된 사업연도 기준입니다."
+ : "실수령액은 2026년 세법·4대보험 요율(2026-07 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 실제 금액은 부서·성과·연봉 협상 결과에 따라 달라질 수 있습니다.",
  },
  ];
 }
