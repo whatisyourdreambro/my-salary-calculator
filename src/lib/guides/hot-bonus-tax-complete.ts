@@ -263,40 +263,40 @@ const bonusBracketJump = `
 `;
 
 const bonus1euk = `
-<p class="lead">성과급 1억 받으면 실수령 얼마? 연봉 7,000만원 + 성과급 1억 = 영끌 1.7억 가정 시 연봉만 받을 때보다 세후 <strong>약 6,100만원(약 61%)</strong> 증가 — 머니샐러리 성과급 엔진, 세액공제 0% 가정(30% 가정 시 약 7,100만원).</p>
+<p class="lead">성과급 1억 받으면 실수령 얼마? 연봉 7,000만원 + 성과급 1억 = 영끌 1.7억 가정 시 세금·4대보험 약 3,627만원 → <strong>성과급 세후 약 6,373만원</strong> (64%). 추가 세액공제 30% 가정 시 약 7,300만원.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 1억 상세 세금 분석</h2>
-<p>연봉 7,000만원 + 성과급 1억 (영끌 1.7억) 직장인 가정 — 1인·본인 기본공제만, 세액공제 0%:</p>
+<p>연봉 7,000만원 + 성과급 1억 (영끌 1.7억) 직장인 가정:</p>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">항목</th><th class="p-3">금액</th></tr></thead><tbody>
 <tr class="border-t"><td class="p-3">총 소득</td><td class="p-3">170,000,000원</td></tr>
-<tr class="border-t"><td class="p-3">근로소득공제 + 인적공제(본인)</td><td class="p-3">-17,650,000원</td></tr>
-<tr class="border-t"><td class="p-3">과세표준</td><td class="p-3">152,350,000원</td></tr>
-<tr class="border-t"><td class="p-3">산출세액 (38%·1,994만 누진공제)</td><td class="p-3">37,953,000원</td></tr>
-<tr class="border-t"><td class="p-3">지방소득세 10%</td><td class="p-3">3,795,300원</td></tr>
-<tr class="border-t"><td class="p-3">4대보험 (월급분 + 성과급 연금·고용, 연금 상한 적용)</td><td class="p-3">약 8,133,000원</td></tr>
-<tr class="border-t"><td class="p-3">건강보험 성과급분 정산 (이듬해 4월)</td><td class="p-3">약 4,067,000원</td></tr>
-<tr class="border-t"><td class="p-3"><strong>총 세금·보험</strong></td><td class="p-3"><strong>약 53,949,000원</strong></td></tr>
-<tr class="border-t"><td class="p-3"><strong>실수령 (연간 합계)</strong></td><td class="p-3"><strong>약 116,051,000원</strong></td></tr>
+<tr class="border-t"><td class="p-3">각종 소득공제 (1인)</td><td class="p-3">-29,850,851원</td></tr>
+<tr class="border-t"><td class="p-3">과세표준</td><td class="p-3">140,149,149원</td></tr>
+<tr class="border-t"><td class="p-3">결정세액 (35% 구간)</td><td class="p-3">33,412,202원</td></tr>
+<tr class="border-t"><td class="p-3">지방소득세 10%</td><td class="p-3">3,341,220원</td></tr>
+<tr class="border-t"><td class="p-3">4대보험 (상한 적용)</td><td class="p-3">약 8,133,000원</td></tr>
+<tr class="border-t"><td class="p-3">건보 정산 (이듬해 4월)</td><td class="p-3">약 4,067,000원</td></tr>
+<tr class="border-t"><td class="p-3"><strong>총 세금·보험</strong></td><td class="p-3"><strong>약 48,954,000원</strong></td></tr>
+<tr class="border-t"><td class="p-3"><strong>연간 실수령</strong></td><td class="p-3"><strong>약 121,046,000원</strong></td></tr>
 </tbody></table></div>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li></ul></div>
 `;
 
 const bonus5000 = `
-<p class="lead">성과급 5,000만원 받으면 실수령 약 3,370~3,490만원 (연봉 6,000만원 가정, 67~70%). 연봉 + 성과급 합산 한계세율 35% 구간 진입 여부에 따라 차이. IRP·연금저축 만기 납입으로 약 119만원 환급 가능.</p>
+<p class="lead">성과급 5,000만원 받으면 실수령 약 3,570만원 (IRP 시 3,690만원). 연봉 + 성과급 합산 한계세율 35% 구간 진입 여부에 따라 차이. IRP·연금저축 만기 납입 시 약 119만원 환급.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 성과급 5,000만원 시뮬</h2>
 <p>연봉 6,000만원 + 성과급 5,000만원 (영끌 1억 1천):</p>
 <ul class="space-y-2 mt-4">
-<li>· 과세표준 약 9,355만원 → 한계세율 35%</li>
-<li>· 성과급 5,000 부분 소득세: 약 1,170만원</li>
-<li>· 지방세 약 117만원</li>
-<li>· 4대보험 부담 약 339만원 (연금 91만·건보+요양 203만·고용 45만)</li>
-<li>· <strong>총 부담 약 1,626만원 → 실수령 약 3,370만~3,490만원</strong> (연봉 6,000만원 가정 — 세액공제 0% 기준 ~ 연금보험료 공제 반영 기준)</li>
+<li>· 과세표준 약 8,433만원 → 24% 구간</li>
+<li>· 성과급 5,000 부분 소득세: 약 991만원</li>
+<li>· 지방세 약 99만원</li>
+<li>· 4대보험 부담 약 339만원</li>
+<li>· <strong>총 부담 약 1,429만원 → 실수령 약 3,571만원</strong> (71.4%)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 IRP·연금저축 활용</h2>
-<p>성과급 받기 전 11~12월에 IRP·연금저축 900만원 만기 납입 → 총급여 5,500만원 초과라 공제율 13.2%(지방세 포함) 적용, 약 119만원 세액공제 환급 → 실수령 약 3,490만원 수준으로 증가.</p>
+<p>성과급 받기 전 11~12월에 IRP·연금저축 900만원 만기 납입 → 약 119만원(13.2%) 세액공제 환급 → 실수령 약 3,690만원으로 증가.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li><li>· <a href="/tools/finance/irp" class="text-primary underline">IRP 계산기</a></li></ul></div>
 `;
@@ -1155,8 +1155,8 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   { slug: "bonus-bracket-jump-2026", title: "성과급 한계세율 점프 — 1.2억+1억 시 추가 3,800만원 세금", description: "8단계 누진세율 6~45%. 성과급 받으면 한 단계 점프 흔함. 연봉 1.2억+성과급 1억 시 35%→38% 점프 → 추가 3,800만원 세금.", category: "세금", tags: ["성과급", "한계세율", "누진세율", "8단계", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusBracketJump, lang: "ko" },
-  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 연봉 7천이면 세후 약 6,100만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 소득세·지방세·4대보험·4월 건보 정산 약 5,395만. 연간 실수령 약 1.16억, 성과급분 약 6,110만.", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
-  { slug: "bonus-5000-net-payment-2026", title: "성과급 5,000만 실수령 — 약 3,370만, IRP 활용 시 3,490만", description: "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,626만. 실수령 약 3,370만 (67.5%). IRP 900만 만기 시 약 119만 환급 추가.", category: "세금", tags: ["성과급", "실수령액", "5000만", "IRP", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonus5000, lang: "ko" },
+  { slug: "bonus-1eok-net-payment-2026", title: "성과급 1억 실수령 — 연봉 7천 시 세후 약 6,370만원", description: "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 세금·4대보험·4월 건보 정산 약 4,895만. 연간 실수령 약 1.21억, 성과급분 약 6,373만.", category: "세금", tags: ["성과급", "실수령액", "1억", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonus1euk, lang: "ko" },
+  { slug: "bonus-5000-net-payment-2026", title: "성과급 5,000만 실수령 — 약 3,570만, IRP 더하면 3,690만", description: "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금+4대보험 약 1,429만. 실수령 약 3,571만 (71.4%). IRP 900만 만기 시 약 119만 환급 추가.", category: "세금", tags: ["성과급", "실수령액", "5000만", "IRP", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonus5000, lang: "ko" },
   { slug: "income-tax-8-step-bracket-2026", title: "2026 종합소득세 8단계 누진세율 완벽 — 초과분만 높은 세율", description: "6~45% 8단계 누진세율 + 누진공제 + 지방세 10%. 초과분만 높은 세율 적용. 8,800만→8,801만 되어도 추가 1만에만 35% 적용.", category: "세금", tags: ["누진세율", "8단계", "종합소득세", "지방소득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bracket8Step, lang: "ko" },
   { slug: "salary-bonus-calc-8step-2026", title: "성과급 + 연봉 합산 세금 계산 8단계 — 직접 계산 vs 계산기", description: "총소득 → 근로소득공제 → 인적공제 → 과세표준 → 산출세액 → 세액공제 → 결정세액 → 납부세액. 8단계 계산 → 머니샐러리 계산기 활용.", category: "세금", tags: ["성과급계산법", "8단계", "연말정산", "산출세액", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: salaryBonusCalc, lang: "ko" },
   { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 1년 vs 2년 = 1,000만 절감", description: "일시 지급 한계세율 38% vs 2년 분할 35%. 절감 1,000만. 인사·임원과 분할 협상 가능 시 적극 시도. 잔류 의무 부가 가능.", category: "세금", tags: ["성과급", "분할지급", "한계세율", "협상", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: splitPayoutLower, lang: "ko" },

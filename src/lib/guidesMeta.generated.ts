@@ -5072,8 +5072,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-1eok-net-payment-2026",
-  "title": "성과급 1억 실수령 — 연봉 7천이면 세후 약 6,100만원",
-  "description": "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 소득세·지방세·4대보험·4월 건보 정산 약 5,395만. 연간 실수령 약 1.16억, 성과급분 약 6,110만.",
+  "title": "성과급 1억 실수령 — 연봉 7천 시 세후 약 6,370만원",
+  "description": "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 세금·4대보험·4월 건보 정산 약 4,895만. 연간 실수령 약 1.21억, 성과급분 약 6,373만.",
   "category": "세금",
   "tags": [
    "성과급",
@@ -5086,12 +5086,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1701
+  "contentChars": 1622
  },
  {
   "slug": "bonus-5000-net-payment-2026",
-  "title": "성과급 5,000만 실수령 — 약 3,370만, IRP 활용 시 3,490만",
-  "description": "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금 + 4대보험 약 1,626만. 실수령 약 3,370만 (67.5%). IRP 900만 만기 시 약 119만 환급 추가.",
+  "title": "성과급 5,000만 실수령 — 약 3,570만, IRP 더하면 3,690만",
+  "description": "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금+4대보험 약 1,429만. 실수령 약 3,571만 (71.4%). IRP 900만 만기 시 약 119만 환급 추가.",
   "category": "세금",
   "tags": [
    "성과급",
@@ -5104,7 +5104,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1097
+  "contentChars": 969
  },
  {
   "slug": "income-tax-8-step-bracket-2026",
