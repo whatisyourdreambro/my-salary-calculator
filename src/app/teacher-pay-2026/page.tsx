@@ -3,6 +3,15 @@
 // 데이터: src/lib/civilServantPay.ts (공무원보수규정 별표 11 발췌, 3중 교차검증).
 // 광고: civil-servant-pay-2026 표준 배치 복제 (운영자 승인 2026-08-30).
 // ★ 갱신 체크포인트: 매년 12월 말 국무회의 의결 시 봉급표·수당 갱신.
+// 네이버 저CTR 정렬 (2026-09-25, 감사 배치 B20): 네이버 노출 40,005·CTR 1.2%.
+//   title·description(=og·twitter)·H1을 '교사 호봉표 2026'·'교원 봉급표' 검색어 형태로 맞추고
+//   리드 첫 문장이 9호봉·40호봉 월 봉급을 바로 답하게 제자리 교체(글자 수 이전 이하, 광고 위 블록
+//   추가 없음 — payTableSnippets.test.ts 가드). 수치 재확인: 인사혁신처 2026 봉급표(2026-09-25).
+//   H1 은 사이트 폰트 실측(뷰포트 300~1400px 1px 단위)으로 이전 H1 보다 어느 폭에서도 줄 수가 늘지
+//   않는 '교원 봉급표'로 확정 — '교원 봉급표·월급'은 429~446px(아이폰 Pro Max 430)·676~704px 에서
+//   한 줄 늘어 HomeTopAd 를 36~48px 밀어 기각(수정 2026-09-25).
+//   시작 호봉은 표의 첫 행이 아니라 TEACHER_START_HOBONG 값으로 찾는다(표를 1~40호봉 전체로
+//   늘려도 '신규 교사 통상 시작' 문구가 1호봉을 가리키지 않게).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -15,21 +24,42 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
-import { TEACHER_PAY_ROWS_2026, TEACHER_ALLOWANCE_2026 } from "@/lib/civilServantPay";
+import {
+  TEACHER_PAY_ROWS_2026,
+  TEACHER_ALLOWANCE_2026,
+  TEACHER_START_HOBONG,
+} from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
+// 리드·메타 공용 — 신규 교사 통상 시작(9호봉)과 최상위(40호봉) 월 봉급.
+// 시작 행은 호봉 값으로 찾는다(표 첫 행 = 시작 호봉이라는 가정 금지), 최상위는 호봉 최댓값 행.
+function teacherRow(hobong: number) {
+  const row = TEACHER_PAY_ROWS_2026.find(([h]) => h === hobong);
+  if (!row) throw new Error(`[teacher-pay-2026] 교원 봉급표에 ${hobong}호봉 행이 없습니다`);
+  return row;
+}
+const FIRST_ROW = teacherRow(TEACHER_START_HOBONG);
+const LAST_ROW = TEACHER_PAY_ROWS_2026.reduce((top, row) => (row[0] > top[0] ? row : top));
+
+// 이전(2026-08-30~09-24) title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터"
+const PAGE_TITLE = `2026 교사 호봉표·교원 봉급표 — ${FIRST_ROW[0]}호봉 월 ${Math.floor(FIRST_ROW[1] / 10000)}만원부터`;
+const PAGE_DESCRIPTION = `2026년 교사 호봉표(유·초·중등 교원 봉급표) 인사혁신처 공표 수치. 신규 교사 통상 ${FIRST_ROW[0]}호봉 월 ${fmt(FIRST_ROW[1])}원, ${LAST_ROW[0]}호봉 ${fmt(LAST_ROW[1])}원과 담임수당 ${TEACHER_ALLOWANCE_2026.homeroom / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
+const MODIFIED = "2026-09-25";
+
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터",
-  description:
-    "인사혁신처 확정 2026년 교육공무원(유·초·중등 교원) 호봉표. 신규 교사 통상 시작인 9호봉 월 2,495,600원부터 40호봉 620만원까지, 담임수당 20만원·보직수당 15만원 구조와 실수령액 계산 흐름 총정리 — 공무원보수규정 별표 11 원문 수치.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: "/teacher-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
-  modifiedTime: "2026-08-30",
+  modifiedTime: MODIFIED,
   keywords: [
     "교사 호봉표 2026",
+    "2026 교사 호봉표",
+    "교원 봉급표 2026",
+    "교사 봉급표",
     "교사 월급",
     "초등교사 월급",
     "중등교사 월급",
@@ -78,13 +108,12 @@ export default function TeacherPay2026Page() {
           ]),
           faqLd(FAQ_ITEMS),
           articleLd({
-            title: "2026 교사 호봉표 — 유·초·중등 교원 월급과 수당 구조",
-            description:
-              "교육공무원 호봉표(9~40호봉 발췌)와 담임·보직수당, 신규 교사 시작 호봉과 실수령액 계산 흐름",
+            title: PAGE_TITLE,
+            description: PAGE_DESCRIPTION,
             slug: "teacher-pay-2026",
             url: "/teacher-pay-2026",
             publishedDate: "2026-08-30",
-            modifiedDate: "2026-08-30",
+            modifiedDate: MODIFIED,
           }),
           datasetLd({
             name: "2026년 교육공무원(교원) 호봉표 데이터",
@@ -106,12 +135,13 @@ export default function TeacherPay2026Page() {
             공무원보수규정 별표 11 · 2026-01-01 시행
           </p>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
-            2026 교사 호봉표 <span className="text-electric">유·초·중등 월급</span>
+            2026 교사 호봉표 <span className="text-electric">교원 봉급표</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-08-30" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-30" updatedDate={MODIFIED} className="mb-2" />
+          {/* 첫 답변(광고 위) — 제자리 교체만, 글자 수는 이전 리드 이하 유지 (B20 2026-09-25) */}
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
-            신규 교사 통상 시작인 9호봉 월 2,495,600원부터 40호봉 620만원까지 — 호봉표 원문
-            수치와 담임·보직수당, 실수령액 계산 흐름을 한 페이지에 정리했습니다.
+            2026년 교사 봉급은 신규 교사 통상 시작인 <strong>{FIRST_ROW[0]}호봉 월 {fmt(FIRST_ROW[1])}원</strong>,
+            {" "}{LAST_ROW[0]}호봉 {fmt(LAST_ROW[1])}원입니다. 유·초·중등 공통이며 담임수당 등 수당은 별도입니다.
           </p>
           <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
             📚 공식 출처:{" "}

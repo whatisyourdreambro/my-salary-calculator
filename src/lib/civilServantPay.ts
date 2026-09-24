@@ -92,6 +92,13 @@ export const TEACHER_PAY_ROWS_2026: ReadonlyArray<readonly [number, number]> = [
   [40, 6205700],
 ];
 
+/**
+ * 신규 교사(4년제 교대·사범대 졸업, 2급 정교사) 통상 시작 호봉 — 기산 8호봉 + 사범계 가산 1호봉.
+ * teacher-pay-2026 의 메타·리드·FAQ 가 쓰는 기준. 표의 첫 행([0])으로 대신하지 말 것 —
+ * TEACHER_PAY_ROWS_2026 을 1~40호봉 전체로 늘리면 첫 행이 1호봉이 된다.
+ */
+export const TEACHER_START_HOBONG = 9;
+
 /** 교원 주요 수당 (월, 원) — 공무원수당규정 (2024 인상 후 2026 유지, 보도 교차확인) */
 export const TEACHER_ALLOWANCE_2026 = {
   homeroom: 200000, // 담임수당

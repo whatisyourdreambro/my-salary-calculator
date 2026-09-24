@@ -11,6 +11,20 @@
 //   인상률 3.9% 반영(보수위 권고 상한, 2011년 이후 16년 만 최대). 7~9급 초임 추가 인상은 수치 미공표.
 //   표는 RAISE_2027_BUDGET 3.9% 단순 적용 예상치. 2단계(12월 말 확정표)는 위 체크포인트대로.
 // 사실관계 출처: 머니투데이·아시아경제·서울경제 2026-09-01~02 (권고안 경위는 뉴시스·이투데이 2026-07)
+//
+// 네이버 저CTR 정렬 (2026-09-25, 감사 배치 B20): 네이버 노출 118,063·CTR 1.1%, 주 검색어
+//   '2027년 공무원 봉급표'(16,513 노출 0.9%)·'2027 공무원 봉급표'·'2027년 공무원 인상률'.
+//   title·description(=og·twitter)·H1·리드를 검색어 형태(2027년·인상률·호봉별 월급)로 맞추고
+//   리드 첫 문장이 '인상률 3.9% = 정부 예산안, 국회 심의 중·확정 전'을 먼저 답하게 제자리 교체
+//   (리드 글자 수·H1 폭 이전 이하, 광고 위 블록 추가 없음 — payTableSnippets.test.ts 가드).
+//   title 에는 근거 '예산안'을 남겨 3.9% 가 확정률처럼 읽히지 않게 한다(YMYL).
+//   H1 은 사이트 폰트 실측(헤드리스 크롬, 뷰포트 300~1400px 1px 단위)으로 이전 H1 보다 어느 폭에서도
+//   줄 수가 늘지 않는 문구만 쓴다 — '인상률 3.9% 적용 예상'은 835~921px·523~575px 에서 한 줄 늘어
+//   HomeTopAd 를 36~48px 밀어 기각(리뷰 2026-09-25).
+//   2026-09-25 재확인: 2027년도 예산안 9/1 국무회의 의결·9/3 국회 제출 계획은 기획예산처 보도자료
+//   (korea.kr newsId=156776382) 원문 확인. 3.9% 수치는 보도자료·브리핑문·홍보자료 본문에 없고
+//   예산안 발표 보도(연합·서울경제·이투데이, 기획예산처 인용)로만 확인 → '예산안 기준·보도' 표기 유지.
+//   네이버 28일 판정: 배포일부터 같은 길이 창으로 클릭·CTR 비교.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -45,18 +59,32 @@ import {
   forecast2027,
 } from "@/lib/civilServantPay";
 
+const fmt = (n: number) => n.toLocaleString("ko-KR");
+const pctMin = (RAISE_2027_RECOMMENDED.min * 100).toFixed(1);
+const pctMax = (RAISE_2027_RECOMMENDED.max * 100).toFixed(1);
+const pct = (RAISE_2027_BUDGET * 100).toFixed(1);
+
+// 9급 1호봉 예상치 (메타·FAQ·리드문 공용) — 예산안 3.9% 단순 적용, 저연차 추가 인상 미반영
+const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
+
+// 이전(2026-09-09~09-24) title: "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정"
+const PAGE_TITLE = `2027년 공무원 봉급표 예상 — 예산안 인상률 ${pct}%·호봉별 월급`;
+const PAGE_DESCRIPTION = `2027년 공무원 보수 인상률은 정부 예산안 ${pct}%로 국회 심의 중(확정 전)입니다. 2026년 봉급에 적용한 9급~5급 호봉별 예상 월급, 9급 1호봉 약 ${fmt(g9h1)}원(저연차 추가 인상 전)을 확인하세요.`;
+const MODIFIED = "2026-09-25";
+
 export const metadata: Metadata = buildPageMetadata({
-  title: "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정",
-  description:
-    "2026년 확정 봉급에 예산안 보도 기준 인상률 3.9%를 적용한 2027년 예상표입니다. 9급~5급 기본 봉급과 증가액을 비교하세요. 저연차 추가 인상·수당은 미반영이며, 최종 봉급표는 보수규정 개정 후 별도 확인해야 합니다.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: "/civil-servant-pay-2027",
   ogType: "article",
   publishedTime: "2026-08-16",
-  modifiedTime: "2026-09-09",
+  modifiedTime: MODIFIED,
   // ⚠ 연도 없는 "공무원 봉급표" 단독 키워드 금지 — 2026 페이지 잠식 방지
   keywords: [
+    "2027년 공무원 봉급표",
     "2027 공무원 봉급표",
     "공무원 봉급표 2027",
+    "2027년 공무원 인상률",
     "공무원 인상률 2027",
     "2027 공무원 월급",
     "내년 공무원 월급",
@@ -66,19 +94,11 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
-const fmt = (n: number) => n.toLocaleString("ko-KR");
-const pctMin = (RAISE_2027_RECOMMENDED.min * 100).toFixed(1);
-const pctMax = (RAISE_2027_RECOMMENDED.max * 100).toFixed(1);
-const pct = (RAISE_2027_BUDGET * 100).toFixed(1);
-
-// 9급 1호봉 예상치 (FAQ·리드문 공용) — 예산안 3.9% 단순 적용, 저연차 추가 인상 미반영
-const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
-
 const FAQ_ITEMS = [
   {
-    question: "2027년 공무원 봉급 인상률은 확정됐나요?",
+    question: "2027년 공무원 인상률은 몇 %이고, 확정됐나요?",
     answer:
-      `최종 봉급표는 아직 확정되지 않았습니다. 2026년 9월 1일 예산안 보도에 따르면 정부안에는 공무원 보수 ${pct}% 인상이 반영됐습니다. 예산안의 인상률과 법령에 따른 호봉별 확정 봉급표는 구분해야 합니다. 국회 예산 심의와 공무원보수규정 개정 후 인사혁신처가 공표하는 최종표를 확인하세요.`,
+      `2026년 9월 1일 국무회의에서 의결된 2027년도 정부 예산안에는 공무원 보수 ${pct}% 인상이 반영됐다고 보도됐습니다. 다만 최종 봉급표는 아직 확정되지 않았습니다. 예산안의 인상률과 법령에 따른 호봉별 확정 봉급표는 구분해야 합니다. 국회 예산 심의와 공무원보수규정 개정 후 인사혁신처가 공표하는 최종표를 확인하세요.`,
   },
   {
     question: "3.9%면 9급 1호봉 월급은 얼마가 되나요?",
@@ -118,14 +138,12 @@ export default function CivilServantPay2027Page() {
           ]),
           faqLd(FAQ_ITEMS),
           articleLd({
-            title:
-              "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정",
-            description:
-              "2026년 확정 봉급에 예산안 보도 기준 3.9%를 단순 적용한 2027년 기본 봉급 예상표. 저연차 추가 인상·수당은 미반영이며 최종 봉급표와 다를 수 있습니다.",
+            title: PAGE_TITLE,
+            description: PAGE_DESCRIPTION,
             slug: "civil-servant-pay-2027",
             url: "/civil-servant-pay-2027",
             publishedDate: "2026-08-16",
-            modifiedDate: "2026-09-09",
+            modifiedDate: MODIFIED,
           }),
           // datasetLd는 확정표 발표 후에만 추가 (전망 시뮬레이션은 데이터셋 부적합)
           speakableLd({
@@ -140,19 +158,20 @@ export default function CivilServantPay2027Page() {
         <div className="text-center mb-10">
           <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
             <Calendar className="w-4 h-4" />
-            예산안 보도 기준 {pct}% · 최종 봉급표 공표 전
+            예산안 {pct}% · 국회 심의 중 · 확정 전
           </p>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
-            2027 공무원 봉급표 <span className="text-electric">{pct}% 적용 예상 봉급</span>
+            2027년 공무원 봉급표 <span className="text-electric">인상률 {pct}%</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-09-09" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-16" updatedDate={MODIFIED} className="mb-2" />
+          {/* 첫 답변(광고 위) — 제자리 교체만, 글자 수는 이전 리드 이하 유지 (B20 2026-09-25) */}
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
-            2026년 확정 봉급에 예산안 보도 기준 <strong>{pct}% 인상률</strong>을 적용하면
-            9급 1호봉의 2027년 기본 봉급은 약 {fmt(g9h1)}원입니다.
-            아래 금액은 수당·공제 전의 단순 예상치이며, 최종 봉급표나 월 실수령액이 아닙니다.
+            <strong>2027년 공무원 보수 인상률은 정부 예산안 기준 {pct}%</strong>로, 국회 심의
+            중인 확정 전 수치입니다. 2026년 봉급에 적용하면 9급 1호봉 기본 봉급은
+            약 {fmt(g9h1)}원이며, 수당·공제 전 단순 예상치입니다.
           </p>
           <p className="mt-3 text-xs text-muted-blue leading-6">
-            자료 확인일: 2026-09-08 · 기준 봉급: <a href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/" className="text-electric underline" target="_blank" rel="noopener noreferrer">인사혁신처 2026년 봉급표</a>
+            자료 확인일: 2026-09-25 · 기준 봉급: <a href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/" className="text-electric underline" target="_blank" rel="noopener noreferrer">인사혁신처 2026년 봉급표</a>
             {" · "}인상률 근거: <a href="https://www.yna.co.kr/view/AKR20260831140300002" className="text-electric underline" target="_blank" rel="noopener noreferrer">9월 1일 예산안 보도</a>
           </p>
           <p className="mt-6 inline-flex items-start gap-2 text-xs text-amber-800 px-4 py-2 bg-amber-50 rounded-xl border border-amber-200 max-w-xl text-left">
