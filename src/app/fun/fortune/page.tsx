@@ -122,7 +122,8 @@ export default function FortunePage() {
  <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(220,38,38,0.08)_0%,transparent_60%)]" />
 
  <div className="max-w-xl mx-auto px-4 py-12 relative z-10">
- <AnimatePresence mode="wait">
+ {/* initial={false}: 첫 화면(H1 포함 입력 단계)은 SSR에서 바로 보이게 — 단계 전환 애니메이션은 유지 */}
+ <AnimatePresence mode="wait" initial={false}>
  {step === "input" && (
  <motion.div
  key="input"
