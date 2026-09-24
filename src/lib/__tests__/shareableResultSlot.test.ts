@@ -14,12 +14,8 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/components/AppLink", () => ({
   default: ({ children, ...props }: { children: ReactNode }) => createElement("a", props, children),
 }));
-vi.mock("react-countup", () => ({
-  default: ({ end }: { end: number }) => createElement("span", null, String(end)),
-}));
-
 import ShareableResult from "@/components/ShareableResult";
-import { encodeSalarySharePayload } from "@/lib/salarySharePayload";
+import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
 import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
 
@@ -77,6 +73,19 @@ describe("ShareableResult 버튼 행 — 광고 위 높이 불변", () => {
     const b = buttons(render(monthlyToken(2_000_000)));
     expect(b).toHaveLength(1);
     expect(b[0]).toEqual({ href: "/", cls: HOME_CLS, label: "나의 연봉도 계산해보기 →" });
+  });
+
+  it("서버 HTML 의 h1 에 월 수령 추정액이 찍힌다 — 빈 CountUp span 금지 (PROD-11)", () => {
+    for (const token of [regularToken(50_000_000), monthlyToken(2_000_000)]) {
+      const net = decodeSharedSalary(token)!.monthlyNet;
+      const h1 = render(token).match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+      expect(h1).toContain(`${Math.round(net).toLocaleString("ko-KR")}원`);
+      expect(h1).not.toMatch(/<span><\/span>/);
+      // 두 줄(<br/>) 구조 유지 — 카드 높이 불변
+      expect(h1.match(/<br\/>/g)).toHaveLength(1);
+    }
+    const src = readFileSync(resolve(process.cwd(), "src/components/ShareableResult.tsx"), "utf8");
+    expect(src).not.toContain("react-countup");
   });
 
   it("소스: 버튼은 regular 분기 하나이고 href 만 null 폴백 — 클래스 문자열은 한 벌", () => {

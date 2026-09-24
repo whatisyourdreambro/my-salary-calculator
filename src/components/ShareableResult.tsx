@@ -3,7 +3,8 @@
 "use client";
 
 import { useMemo } from "react";
-import CountUp from "react-countup";
+// 금액은 서버 HTML 에도 그대로 찍는다 — 종전 CountUp 은 SSR 에서 빈 span 이라 h1 이 '월 수령 추정액 원'이었다
+// (PROD-11, 2026-09-24 실측). 줄 수·카드 클래스는 그대로라 아래 CalcResultAd 위 높이 불변.
 import { decodeSharedSalary } from "@/lib/salarySharePayload";
 import Link from "@/components/AppLink";
 // 정본 격자 스냅 — salaryRedirect 는 코드젠된 숫자 배열(~5KB)만 끌어오므로 클라이언트 번들에
@@ -62,7 +63,7 @@ export default function ShareableResult({ data }: ShareableResultProps) {
  </h2>
  <h1 className="text-5xl sm:text-6xl font-bold text-primary my-4">
  월 수령 추정액 <br />{" "}
- <CountUp end={result.monthlyNet} separator="," duration={1.5} />원
+ {formatNumber(Math.round(result.monthlyNet))}원
  </h1>
  <p className="text-muted-foreground">
  {result.modelLabel}
