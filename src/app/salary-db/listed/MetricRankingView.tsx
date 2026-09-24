@@ -19,6 +19,7 @@ import {
   DART_RANKING_DATE,
   LISTED_TOTAL,
   industryRankings,
+  rankingItemListItems,
   type RankingRow,
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
@@ -93,20 +94,15 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
     { name: "상장사 공시 연봉", path: "/salary-db/listed" },
     { name: cfg.h1, path: cfg.path },
   ];
+  const listItems = rankingItemListItems(cfg.rows.slice(0, 50));
 
   return (
     <main className="min-h-screen bg-transparent pb-10">
       <JsonLd
         data={[
           breadcrumbLd(crumbs),
-          itemListLd({
-            name: cfg.datasetName,
-            items: cfg.rows.slice(0, 50).map((row) => ({
-              position: row.rank,
-              name: `${row.nameKo}`,
-              url: row.href ?? cfg.path,
-            })),
-          }),
+          // 자체 페이지 있는 행만 (RT-09 — 랭킹 페이지 자기참조 ListItem 금지). 0건이면 블록 생략
+          ...(listItems.length ? [itemListLd({ name: cfg.datasetName, items: listItems })] : []),
           datasetLd({
             name: cfg.datasetName,
             description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 상장사 랭킹 데이터`,

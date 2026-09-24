@@ -23,6 +23,7 @@ import {
   DART_RANKING_YEAR,
   DART_RANKING_DATE,
   LISTED_TOTAL,
+  rankingItemListItems,
 } from "@/lib/salary-data/dartRanking";
 import { ShieldCheck, TrendingUp } from "lucide-react";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
@@ -114,6 +115,7 @@ export default function IndustryRankingPage({ params }: Props) {
   const path = `/salary-db/listed/industry/${r.industryId}`;
   const capped = r.companyCount > r.topRows.length;
   const top1 = r.topRows[0];
+  const listItems = rankingItemListItems(r.topRows.slice(0, 50), (row) => `${row.nameKo} 평균연봉`);
 
   const crumbs = [
     { name: "홈", path: "/" },
@@ -150,14 +152,10 @@ export default function IndustryRankingPage({ params }: Props) {
       <JsonLd
         data={[
           breadcrumbLd(crumbs),
-          itemListLd({
-            name: `${r.industryKo} 상장사 공시 평균연봉 순위`,
-            items: r.topRows.slice(0, 50).map((row) => ({
-              position: row.rank,
-              name: `${row.nameKo} 평균연봉`,
-              url: row.href ?? path,
-            })),
-          }),
+          // 자체 페이지 있는 행만 (RT-09 — 랭킹 페이지 자기참조 ListItem 금지). 0건이면 블록 생략
+          ...(listItems.length
+            ? [itemListLd({ name: `${r.industryKo} 상장사 공시 평균연봉 순위`, items: listItems })]
+            : []),
           datasetLd({
             name: `${r.industryKo} 상장사 공시 평균연봉 순위 (${DART_RANKING_YEAR})`,
             description: `DART 사업보고서 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터`,

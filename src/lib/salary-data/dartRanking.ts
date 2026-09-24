@@ -78,6 +78,21 @@ function linkFor(d: DartDisclosedEntry): string | null {
   return null;
 }
 
+/**
+ * ItemList JSON-LD 항목 — 자체 페이지(href)가 있는 행만, position 은 원래 순위 유지.
+ * href 없는 행을 랭킹 페이지 자신의 URL 로 채우면 ListItem 이 자기 자신을 가리킨다
+ * (RT-09, 2026-09-25: 업종 28쪽 972항목 중 608개가 canonical 과 동일했다).
+ * 화면 순위표는 그대로 두고 구조화 데이터에서만 뺀다.
+ */
+export function rankingItemListItems(
+  rows: RankingRow[],
+  nameOf: (row: RankingRow) => string = (row) => row.nameKo
+): { position: number; name: string; url: string }[] {
+  return rows
+    .filter((row): row is RankingRow & { href: string } => Boolean(row.href))
+    .map((row) => ({ position: row.rank, name: nameOf(row), url: row.href }));
+}
+
 function toRow(d: DartDisclosedEntry, rank: number): RankingRow {
   const industryId = mapKsicToIndustry(d.ksicCode);
   return {
