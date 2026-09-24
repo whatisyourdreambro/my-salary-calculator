@@ -116,8 +116,12 @@ export default function JanuaryBonusClient() {
         ? donation * (100 / 110)
         : DONATION_FULL_CREDIT + (donation - 100_000) * 0.15;
 
-    // IRP/연금저축 세액공제: 한도 900만, 총급여 5,500만 이하 16.5% / 초과 13.2%
-    const irpCreditRate = salary > 55_000_000 ? 0.132 : 0.165;
+    // IRP/연금저축(연금계좌) 세액공제: 한도 900만, 총급여 5,500만 이하 15% / 초과 12%
+    // (소득세법 §59의3①). 여기서는 소득세에서 빼고 아래에서 지방소득세 10%를 붙이므로
+    // 소득세분 공제율을 쓴다 — 흔히 말하는 16.5%/13.2%는 지방소득세까지 포함한 값이다.
+    // 종전에는 16.5%/13.2%를 소득세에서 빼 지방세가 두 번 반영됐다(실효 18.15%/14.52%,
+    // IRP 900만 기준 환급 148,500원 과대 — 2026-09-25 감사 CALC-10).
+    const irpCreditRate = salary > 55_000_000 ? 0.12 : 0.15;
     const irpCredit = Math.min(irp, 9_000_000) * irpCreditRate;
 
     const totalCredit =
@@ -285,7 +289,7 @@ export default function JanuaryBonusClient() {
               value: result.withheld,
             },
             { label: "결정세액 (소득세 + 지방세)", value: result.totalFinalTax },
-            { label: "IRP/연금저축 세액공제", value: result.irpCredit, sub: true },
+            { label: "IRP 세액공제(소득세분)", value: result.irpCredit, sub: true },
             { label: "의료비 세액공제", value: result.medicalCredit, sub: true },
             { label: "기부금 세액공제", value: result.donationCredit, sub: true },
             { label: "카드 소득공제", value: result.cardDeductionCapped, sub: true },
