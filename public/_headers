@@ -56,6 +56,26 @@
 /b112e39a5933ca97201c83a7c5d7d91e.txt
   Cache-Control: public, max-age=86400
 
+# 크롤러 메타 파일 4종(2026-09-25 B2). public/ 사본이 아니라 빌드가 src/app 의 robots.ts·sitemap.ts·
+# rss.xml·rss-companies.xml 라우트를 프리렌더해 .vercel/output/static 에 쓰는 파일이다
+# (public/ 에 두면 동적 라우트가 무효화되는 함정 — 절대 복사하지 말 것).
+# 미들웨어 matcher 가 원래 제외하던 경로라 Worker 우회로 잃는 동작(www 301·봇 403)이 없다.
+# robots.txt 는 GSC 크롤 통계에서 9/15~9/22 가져오기 실패(0.3~3.8%/일, 그 여파 크롤 96건)가 났고,
+# robots.txt 5xx 는 구글 크롤 전체 중단 사유라 Worker CPU 한도(1102)에서 떼어 낸다.
+# rss 2종은 우회 전 route 응답 헤더 값 그대로, sitemap 은 기존 max-age=0 대신 1시간.
+# Content-Type 은 Pages 가 확장자로 지정한다(배포 후 xml·text/plain 확인).
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/rss.xml
+  Cache-Control: public, max-age=3600, s-maxage=3600
+
+/rss-companies.xml
+  Cache-Control: public, max-age=3600, s-maxage=86400
+
 # 서비스워커 킬스위치 — SW 파일이 브라우저 HTTP 캐시에 오래 잡히면 잘못된 SW를
 # 즉시 회수할 수 없다. no-cache 로 매 방문 재검증(304)시켜 배포 즉시 교체 보장.
 /sw.js

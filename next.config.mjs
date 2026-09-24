@@ -987,6 +987,8 @@ const nextConfig = {
       // 크롤러가 고빈도로 가져가는 메타 파일·생성 이미지 라우트 — 내용이 사실상
       // 고정이므로 길게 캐시해 Worker 호출을 차단.
       // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 (sitemap.xml·rss 2종 DYNAMIC 실측, robots.txt만 CF 규칙으로 14400 캐시).
+      // ★ 2026-09-25(B2): sitemap.xml·rss 2종·robots.txt 는 _routes.json exclude 로 Worker 를 우회한다 —
+      //    이 4줄은 더 이상 닿지 않고, 실제 Cache-Control 은 public/_headers 가 준다(값 변경은 그쪽에서).
       ...[
         "/sitemap.xml",
         "/rss.xml",
