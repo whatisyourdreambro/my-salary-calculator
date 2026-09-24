@@ -141,15 +141,15 @@ function WeeklyTable2027() {
                   <h3 className="font-bold text-xl mb-3 text-center">확정 변경</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 최저시급 {fmtWon(MIN_WAGE_2027)}원 (+3.7%)</li>
-                    <li>- 국민연금 근로자 5.0% (4.75%에서 인상)</li>
-                    <li>- 건강보험 근로자 3.595% (2027 동결, 9/8 건정심)</li>
+                    {/* 건보 동결은 기존 연금 항목에 합쳐 항목 수 유지 — 아래 표·광고를 밀지 않게 (2026-09-25) */}
+                    <li>- 국민연금 5.0%(인상)·건강보험 3.595%(동결)</li>
                   </ul>
                 </div>
                 <div>
                   <h3 className="font-bold text-xl mb-3 text-center">미확정 (2026 준용)</h3>
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 장기요양·고용보험(인상안 심의) 요율</li>
-                    <li>- 소득세 — 현행 근로소득 간이세액표(2026년 3월 1일 지급분부터) 준용</li>
+                    <li>- 소득세 — 현행 근로소득 간이세액표 준용</li>
                   </ul>
                 </div>
               </div>

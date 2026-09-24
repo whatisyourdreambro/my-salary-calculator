@@ -273,15 +273,16 @@ export default function SocialInsuranceRates2027Page() {
         <InArticleAd />
 
         {/* 미확정 요율 고지 배너 — 광고 아래 배치 (2026-08-16 규칙 준수,
-            table/2027/layout.tsx 20-32행 배너 패턴 복제) */}
+            table/2027/layout.tsx 20-32행 배너 패턴 복제). GuideMidAd 위라 문구 폭을 2026-08-31
+            기준선 이하로 유지 — 건정심 의결일·고용보험 인상안은 카드·FAQ 가 담는다 (2026-09-25) */}
         <div className="mt-8 mb-12">
           <p className="rounded-xl bg-electric/5 border border-electric/20 px-4 py-3 text-xs leading-5 text-muted-blue">
             <strong className="text-navy">2027 확정:</strong> 국민연금 총 10.0%(근로자
             5.0%, 연금개혁법 법정 스케줄)·최저임금 시급{" "}
             {MIN_WAGE_2027.toLocaleString("ko-KR")}원(고용노동부 고시 제2026-60호)·건강보험
-            총 7.19%(근로자 3.595%, 2027 동결 — 2026-09-08 건정심 의결).{" "}
-            <strong className="text-navy">미확정(2026 기준 준용):</strong> 장기요양·산재·고용보험(2027
-            실업급여 2.0% 인상안 심의 중) — 확정 고시 즉시 갱신합니다. 올해 확정 요율은{" "}
+            총 7.19%(근로자 3.595%, 2027 동결).{" "}
+            <strong className="text-navy">미확정(2026 기준 준용):</strong> 장기요양·산재·고용보험 —
+            확정 고시 즉시 갱신합니다. 올해 확정 요율은{" "}
             <Link
               href="/social-insurance-rates-2026"
               className="font-bold text-electric hover:underline"
@@ -344,8 +345,8 @@ export default function SocialInsuranceRates2027Page() {
           </div>
           <div className="mt-4 p-3 bg-canvas rounded-xl">
             <p className="text-xs text-muted-blue">
-              ※ 본인 부담만 표시. 회사 부담은 별도(산재보험 100% 회사). 건강보험은 2027
-              동결 확정(3.595%), 장기요양·고용보험은 2026 요율 준용 참고치이며 확정 시 갱신. 국민연금은 기준소득월액
+              ※ 본인 부담만 표시. 회사 부담은 별도(산재보험 100% 회사). 건강보험 2027
+              동결, 장기요양·고용보험은 2026 준용 참고치. 국민연금은 기준소득월액
               상한(659만원)까지만 산정. 정확한 금액은 비과세 항목·세부 조건에 따라 다름.
               최저임금 근로자(월 {MIN_WAGE_2027_MONTHLY.toLocaleString("ko-KR")}원) 기준
               시뮬은 2027 최저임금 페이지 참조.
