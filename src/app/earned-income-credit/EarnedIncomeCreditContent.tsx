@@ -19,6 +19,7 @@ import { InArticleAd, GuideMidAd, HomeTopAd, CalcResultAd } from "@/components/A
 import CoupangBanner from "@/components/CoupangBanner";
 import Link from "@/components/AppLink";
 import NumberInput from "@/components/NumberInput";
+import { EARNED_INCOME_CREDIT_FAQ } from "./faq";
 
 type HouseholdType = "single" | "one-earner" | "dual-earner";
 
@@ -114,28 +115,8 @@ const ELIGIBILITY_CHECKS = [
  { label: "국적 요건", value: "대한민국 국적 (또는 국적자와 혼인한 외국인)" },
 ];
 
-const FAQ_LIST = [
- {
-  q: "아르바이트·일용직도 신청할 수 있나요?",
-  a: "네. 일용근로소득, 사업소득, 종교인소득도 포함됩니다. 단, 소득 유형에 따라 계산 방식이 다를 수 있어 국세청 안내를 확인하세요.",
- },
- {
-  q: "재산이 1억7천만원 이상이면 아예 못 받나요?",
-  a: "받을 수 있지만 50% 감액됩니다. 재산이 2억 4천만원 이상이면 지급 대상에서 제외됩니다. 재산에는 토지·건물·자동차·금융재산 등이 포함됩니다.",
- },
- {
-  q: "반기 신청과 정기 신청 중 무엇이 유리한가요?",
-  a: "반기 신청은 소득이 발생한 직후 빠르게 받을 수 있어 현금 흐름에 유리합니다. 다만 소득이 연말에 집중된다면 정기 신청이 더 높은 금액을 받을 수도 있습니다. 두 방식은 중복 신청이 불가합니다.",
- },
- {
-  q: "자녀장려금과 어떻게 다른가요?",
-  a: "근로장려금은 저소득 근로자·사업자 대상 소득 지원입니다. 자녀장려금은 18세 미만 자녀가 있는 홑벌이·맞벌이 가구에 추가로 지급(자녀 1인당 최대 100만원)합니다. 둘 다 동시에 신청 가능합니다.",
- },
- {
-  q: "신청을 놓쳤을 때 기한 후 신청이 가능한가요?",
-  a: "정기 신청 기간(5월) 이후에도 11월 30일까지 기한 후 신청이 가능합니다. 단, 지급액의 10%가 감액됩니다.",
- },
-];
+// FAQ 는 faq.ts 단일 소스 — page.tsx 의 FAQPage JSON-LD 와 같은 배열 (B15 META-02)
+const FAQ_LIST = EARNED_INCOME_CREDIT_FAQ;
 
 export default function EarnedIncomeCreditContent() {
  const [household, setHousehold] = useState<HouseholdType>("one-earner");
@@ -414,7 +395,7 @@ export default function EarnedIncomeCreditContent() {
     </div>
     <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 space-y-1">
      <p className="font-semibold">기한 후 신청 (5월 이후 ~ 11월 30일)</p>
-     <p>지급액의 10% 감액 적용. 최대한 5월 정기 신청을 활용하세요.</p>
+     <p>지급액의 5% 감액 적용. 최대한 5월 정기 신청을 활용하세요.</p>
     </div>
    </div>
 
@@ -427,19 +408,25 @@ export default function EarnedIncomeCreditContent() {
      <div key={i} className="border border-canvas-200 rounded-xl overflow-hidden">
       <button
        onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+       aria-expanded={expandedFaq === i}
+       aria-controls={`eic-faq-answer-${i}`}
        className="w-full flex items-center justify-between px-4 py-3.5 text-left bg-white hover:bg-canvas transition-colors"
       >
-       <span className="text-sm font-semibold text-navy pr-4">{item.q}</span>
+       <span className="text-sm font-semibold text-navy pr-4">{item.question}</span>
        {expandedFaq === i
         ? <ChevronUp size={16} className="text-muted-blue flex-shrink-0" />
         : <ChevronDown size={16} className="text-muted-blue flex-shrink-0" />
        }
       </button>
-      {expandedFaq === i && (
-       <div className="px-4 pb-4 text-sm text-muted-blue leading-relaxed border-t border-canvas-100 pt-3">
-        {item.a}
-       </div>
-      )}
+      {/* 답변은 항상 DOM 에 둔다 — 접힌 상태는 hidden(display:none)이라 접힌 높이는 종전과 같고,
+        FAQPage JSON-LD 의 답변 문구가 본문에도 존재한다 (B15 META-02) */}
+      <div
+       id={`eic-faq-answer-${i}`}
+       hidden={expandedFaq !== i}
+       className="px-4 pb-4 text-sm text-muted-blue leading-relaxed border-t border-canvas-100 pt-3"
+      >
+       {item.answer}
+      </div>
      </div>
     ))}
    </div>

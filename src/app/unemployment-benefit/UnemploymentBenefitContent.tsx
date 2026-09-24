@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
 import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
+import { UNEMPLOYMENT_BENEFIT_FAQ } from "./faq";
 
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
@@ -29,8 +30,10 @@ const AGE_GROUPS = [
 
 type AgeGroup = (typeof AGE_GROUPS)[number]["value"];
 
+// 소정급여일수 (고용보험법 별표1 · easylaw.go.kr 구직급여 수급일수 2026-09-25 확인):
+// 피보험기간 1년 미만은 50세 이상·장애인도 120일 — 50세 이상 +30일 가산은 1년 이상 구간부터.
 const INSURANCE_PERIODS = [
- { label: "1년 미만 (12개월 미만)", days: { under50: 120, over50: 150 } },
+ { label: "1년 미만 (12개월 미만)", days: { under50: 120, over50: 120 } },
  { label: "1년 이상 ~ 3년 미만", days: { under50: 150, over50: 180 } },
  { label: "3년 이상 ~ 5년 미만", days: { under50: 180, over50: 210 } },
  { label: "5년 이상 ~ 10년 미만", days: { under50: 210, over50: 240 } },
@@ -40,33 +43,8 @@ const INSURANCE_PERIODS = [
 // 상·하한 정본: src/config/unemploymentBenefit.ts (상한 고시값 · 하한 최저시급 × 80% × 1일 소정근로시간)
 const DAILY_UPPER_LIMIT = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER;
 
-interface FaqItem {
- q: string;
- a: string;
-}
-
-const FAQ: FaqItem[] = [
- {
-  q: "자진 퇴사해도 실업급여를 받을 수 있나요?",
-  a: "원칙적으로 비자발적 퇴사여야 하지만, 임금 체불(2개월 이상), 직장 내 괴롭힘·성희롱 피해, 통근 불가(왕복 3시간 이상), 건강 악화, 배우자 이직으로 인한 이사 등 정당한 사유가 있으면 자진 퇴사도 수급 자격이 인정됩니다.",
- },
- {
-  q: "고용보험 180일 계산 방법은?",
-  a: "퇴직일 이전 18개월 동안 고용보험에 가입한 총 날수입니다. 일용직이라면 근무일 수, 상용직이라면 월 단위로 계산됩니다. 1개월 = 30일로 환산합니다.",
- },
- {
-  q: "실업급여 신청 기한이 있나요?",
-  a: "퇴직일 다음 날부터 12개월이 수급 기간입니다. 이 기간이 지나면 미사용 급여는 소멸합니다. 퇴직 직후 최대한 빨리 신청하는 것이 유리합니다.",
- },
- {
-  q: "알바나 프리랜서 소득이 생기면 신고해야 하나요?",
-  a: "주 15시간 이상 또는 월 60만원 초과 소득이 생기면 고용센터에 즉시 신고해야 합니다. 신고하면 해당 날의 급여만 차감되고 지급 기간은 연장됩니다. 미신고 시 부정수급으로 전액 반환 + 추가 징수됩니다.",
- },
- {
-  q: "조기재취업수당은 언제 신청하나요?",
-  a: "재취업일 다음 날부터 12개월 이내에 가까운 고용센터에 신청해야 합니다. 잔여 급여 일수가 30일 이상 남아 있고, 취업 후 6개월 이상 근무를 예정한 경우에 해당합니다.",
- },
-];
+// FAQ 는 faq.ts 단일 소스 — page.tsx 의 FAQPage JSON-LD 와 같은 배열 (B15 META-02)
+const FAQ = UNEMPLOYMENT_BENEFIT_FAQ;
 
 export default function UnemploymentBenefitContent() {
  const [monthlyWage, setMonthlyWage] = useState("3000000");
@@ -412,20 +390,26 @@ export default function UnemploymentBenefitContent() {
       <div key={i} className="border border-border rounded-xl overflow-hidden">
        <button
         onClick={() => setOpenFaq(openFaq === i ? null : i)}
+        aria-expanded={openFaq === i}
+        aria-controls={`ub-faq-answer-${i}`}
         className="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium hover:bg-secondary/30 transition-colors"
        >
-        <span>{item.q}</span>
+        <span>{item.question}</span>
         {openFaq === i ? (
          <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />
         ) : (
          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
         )}
        </button>
-       {openFaq === i && (
-        <div className="px-4 pb-4 text-sm text-muted-foreground border-t border-border pt-3">
-         {item.a}
-        </div>
-       )}
+       {/* 답변은 항상 DOM 에 둔다 — 접힌 상태는 hidden(display:none)이라 접힌 높이는 종전과 같다.
+         이 FAQ 는 GuideMidAd 위라 높이 불변 필수 (B15 META-02) */}
+       <div
+        id={`ub-faq-answer-${i}`}
+        hidden={openFaq !== i}
+        className="px-4 pb-4 text-sm text-muted-foreground border-t border-border pt-3"
+       >
+        {item.answer}
+       </div>
       </div>
      ))}
     </div>

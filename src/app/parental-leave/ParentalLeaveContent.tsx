@@ -17,13 +17,14 @@ import {
  Users,
 } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
+import { PARENTAL_LEAVE_FAQ } from "./faq";
 
 const formatNumber = (n: number) => Math.round(n).toLocaleString("ko-KR");
 const parseNumber = (s: string) => Number(s.replace(/,/g, "")) || 0;
 
 // 6+6 부모 육아휴직: 첫 6개월 통상임금 100%, 상한 월 250→450만원 (2025 개편: 첫달 250만)
 const MONTHS_6_6_LIMIT = [250, 250, 300, 350, 400, 450];
-/** 육아휴직 급여 하한 (고용보험법 시행령) — 본문 :256·page.tsx FAQ 안내값과 단일 소스 */
+/** 육아휴직 급여 하한 (고용보험법 시행령) — 본문 월별 상세 안내('하한: 월 70만원')와 단일 소스 */
 const BENEFIT_FLOOR = 700_000;
 
 // 일반 육아휴직 (2025 개편, 사후지급금 폐지 — 매월 전액 지급)
@@ -34,33 +35,8 @@ function getGeneralBenefit(month: number) {
  return { rate: 0.8, limit: 1_600_000 };
 }
 
-interface FaqItem {
- q: string;
- a: string;
-}
-
-const FAQ: FaqItem[] = [
- {
-  q: "6+6 부모 육아휴직, 부모가 동시에 써야 하나요?",
-  a: "동시에 사용하거나 순차적으로 사용해도 됩니다. 단, 자녀가 생후 18개월이 되기 전까지 사용 기간이 포함되어야 합니다. 아빠가 먼저 사용 후 엄마가 사용해도 각자 6+6 혜택이 적용됩니다.",
- },
- {
-  q: "육아휴직 급여 사후지급금(25%)이 아직 있나요?",
-  a: "아니요. 2025년 개편으로 사후지급금 제도가 폐지되어 매월 급여 전액이 당월 지급됩니다. 복직 후 별도로 청구할 금액이 없습니다.",
- },
- {
-  q: "육아기 근로시간 단축제도는 뭔가요?",
-  a: "만 8세 이하 자녀를 둔 근로자가 주 15~35시간으로 줄여 일하는 제도입니다. 단축한 시간 중 주 5시간까지는 통상임금 100%를 고용보험에서 지원합니다. 자녀 1명당 최대 2년 사용 가능합니다.",
- },
- {
-  q: "계약직·기간제인데 육아휴직이 가능한가요?",
-  a: "고용보험 가입 기간 180일만 충족하면 계약직도 육아휴직을 신청할 수 있습니다. 단, 육아휴직 중 계약이 만료되면 연장 의무는 없습니다.",
- },
- {
-  q: "배우자 출산휴가는 얼마나 되나요?",
-  a: "배우자(남성 근로자)는 출산일로부터 120일 이내에 20일의 유급 배우자 출산휴가를 사용할 수 있습니다(2025년 개편으로 10일→20일 확대). 120일 이내 3회 분할 사용도 가능합니다.",
- },
-];
+// FAQ 는 faq.ts 단일 소스 — page.tsx 의 FAQPage JSON-LD 와 같은 배열 (B15 META-02)
+const FAQ = PARENTAL_LEAVE_FAQ;
 
 export default function ParentalLeaveContent() {
  const [monthlyWage, setMonthlyWage] = useState("4000000");
@@ -87,7 +63,7 @@ export default function ParentalLeaveContent() {
   const startMonth = useParents ? 7 : 1;
   for (let m = startMonth; m <= 12; m++) {
    const { rate, limit } = getGeneralBenefit(m);
-   // 하한 월 70만원 — 페이지 본문·FAQ(JSON-LD 포함)가 안내하는 값이지만
+   // 하한 월 70만원 — 페이지 본문이 안내하는 값이지만
    // 종전에는 계산에 반영되지 않아 저임금 근로자에게 실제 지급액보다
    // 적게 표시됐다(통상임금 80만원이면 월 64만 표시 vs 실지급 70만).
    const benefit = Math.max(BENEFIT_FLOOR, Math.min(wage * rate, limit));
@@ -286,7 +262,7 @@ export default function ParentalLeaveContent() {
        <tr className="border-t border-border">
         <td className="p-3">출산전후휴가</td>
         <td className="p-3 text-center">90일 (다태아 120일)</td>
-        <td className="p-3 text-right">통상임금 100%<br /><span className="text-xs text-muted-foreground">상한 월 210만원</span></td>
+        <td className="p-3 text-right">통상임금 100%<br /><span className="text-xs text-muted-foreground">상한 월 220만원</span></td>
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">배우자 출산휴가</td>
@@ -308,8 +284,8 @@ export default function ParentalLeaveContent() {
        </tr>
        <tr className="border-t border-border">
         <td className="p-3">육아기 근로시간 단축</td>
-        <td className="p-3 text-center">최대 2년</td>
-        <td className="p-3 text-right">단축 5시간 100%<br /><span className="text-xs text-muted-foreground">나머지는 비례 지급</span></td>
+        <td className="p-3 text-center">최대 3년</td>
+        <td className="p-3 text-right">주 10시간 100%<br /><span className="text-xs text-muted-foreground">나머지는 비례 지급</span></td>
        </tr>
       </tbody>
      </table>
@@ -356,20 +332,26 @@ export default function ParentalLeaveContent() {
       <div key={i} className="border border-border rounded-xl overflow-hidden">
        <button
         onClick={() => setOpenFaq(openFaq === i ? null : i)}
+        aria-expanded={openFaq === i}
+        aria-controls={`parental-faq-answer-${i}`}
         className="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium hover:bg-secondary/30 transition-colors"
        >
-        <span>{item.q}</span>
+        <span>{item.question}</span>
         {openFaq === i ? (
          <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />
         ) : (
          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />
         )}
        </button>
-       {openFaq === i && (
-        <div className="px-4 pb-4 text-sm text-muted-foreground border-t border-border pt-3">
-         {item.a}
-        </div>
-       )}
+       {/* 답변은 항상 DOM 에 둔다 — 접힌 상태는 hidden(display:none)이라 접힌 높이는 종전과 같다.
+         이 FAQ 는 GuideMidAd 위라 높이 불변 필수 (B15 META-02) */}
+       <div
+        id={`parental-faq-answer-${i}`}
+        hidden={openFaq !== i}
+        className="px-4 pb-4 text-sm text-muted-foreground border-t border-border pt-3"
+       >
+        {item.answer}
+       </div>
       </div>
      ))}
     </div>
