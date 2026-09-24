@@ -16,6 +16,7 @@ import {
  earnedIncomeTaxCredit2026,
  childTaxCredit2026,
 } from "./taxConstants2026";
+import { applySmeYouthReduction } from "./smbTaxBreak";
 
 /** 4대보험 요율 파라미터 — 연도별 계산(표의 "전년 대비" 기준선 등)에 사용 */
 export interface NetSalaryRates {
@@ -109,12 +110,19 @@ export function calculateNetSalaryWithRates(
  // 자녀세액공제 (소득세법 §59의2) — 정본 함수 사용 (첫째 25만·둘째 30만·셋째+ 40만)
  const childTaxCredit = childTaxCredit2026(children);
 
- let finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
-
+ let finalAnnualTax: number;
  if (advancedSettings.isSmeYouth) {
- const taxReductionLimit = 2000000;
- const taxReductionAmount = finalAnnualTax * 0.9;
- finalAnnualTax -= Math.min(taxReductionAmount, taxReductionLimit);
+ // 중소기업 취업자 감면(조특법 §30, 청년 90%·연 200만 한도)은 '산출세액'에 적용하고
+ // 근로소득세액공제를 (1 − 감면/산출) 비율로 줄인다(소득세법 §59③) — 전용 계산기
+ // /calc/smb-income-tax-break 와 같은 헬퍼. 종전에는 세액공제 뒤 금액에 90%·한도를
+ // 적용해 한도가 걸리는 연봉(5,000만 등)에서 절감액이 최대 연 34.5만원 과대였다.
+ const { reduction, creditAfter } = applySmeYouthReduction({
+ calculatedTax,
+ earnedIncomeCredit: taxCredit,
+ });
+ finalAnnualTax = Math.max(0, calculatedTax - reduction - creditAfter - childTaxCredit);
+ } else {
+ finalAnnualTax = Math.max(0, calculatedTax - taxCredit - childTaxCredit);
  }
 
  const incomeTax = finalAnnualTax / 12;

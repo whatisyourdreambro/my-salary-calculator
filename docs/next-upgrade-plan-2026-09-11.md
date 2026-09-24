@@ -102,6 +102,7 @@
 - 삼성 TAI 2026 하반기(12월) → `taiData.ts`; OPI(1월 말) → `opiAnnouncement.ts` 4필드 + **`SeasonalBanner.tsx:18` OPI 게이트 한 줄** + 발표 런북(growth-playbook §3). 발표 전 추정 카피 금지.
 - 공무원 2027 확정 봉급표(12월 말) → `GENERAL_PAY_ROWS_2027` 교체, 라벨 '예상'→'확정'.
 - 2027 최저임금(1/1, 상수는 이미 config 에 있음) → **현행 포인터 2026→2027 전환** + 간이 계산기 하드코딩 제거는 S2-1 에서 선행; 4대보험 2027 요율(연금 상한 7월) `verify:tax`.
+- **국민연금 5.0%(1/1) — 운영자 결정 필요**: `taxConstants2026` 의 2026 블록은 제자리 수정 금지(2026-09-25 B10). 월 실수령 엔진은 `calculateSalary2026(…, rates)`·`calcBonusNet(…, rates)` 선택 인자(기본 2026)로 전환한다. 전환 시 2026 귀속 연말정산 3표면(`yearEndTaxCalculator.ts`·`YearEndTaxCalculator.tsx`·`widget/year-end-tax`)과 `/table/2026` 은 2026 요율을 **명시 고정**해야 한다(지금은 기본값이라 무영향). 전환하면 `/salary` 제목 금액·'(2026 세후 월급)' 라벨이 바뀌므로 승인 항목.
 - S3-1 잔여분은 동결기에도 계속 가능 — batch 파일의 description/faq/sources 문자열만(필드·컴포넌트·라우트 무접촉, 검증 로그 동반).
 
 ## 6. 승인·콘솔이 필요한 것 (운영자 한 줄)

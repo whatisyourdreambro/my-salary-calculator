@@ -9,13 +9,15 @@
 // 동일.
 //
 // 세율·요율 상수는 lib/taxConstants2026.ts 단일 진실 소스에서 import.
-// 2027년 세율 변경 시 taxConstants2026 만 수정하면 모든 계산기에 일괄 반영.
+// ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 calcBonusNet 의 선택 인자 rates 로 한다
+//   (기본값 2026 요율, 인자를 넘기지 않는 호출부는 그대로).
 
 import {
   INSURANCE_RATES_2026,
   PENSION_BASE_2026,
   earnedIncomeDeduction2026 as earnedIncomeDeduction,
   calcIncomeTax2026 as calcIncomeTax,
+  type InsuranceRates,
 } from "./taxConstants2026";
 
 /**
@@ -59,12 +61,14 @@ export interface BonusNetResult {
  * @param bonusWon 세전 성과급 (원)
  * @param creditRate 세액공제율 0~50% (디폴트 30%) — 자녀·연금·의료비·기부 등
  * @param applyInsurance 4대보험 추가 부과 적용 여부 (디폴트 true)
+ * @param rates 4대보험·지방세 요율 (디폴트 2026) — 연도 전환 시 해당 연도 요율을 넘긴다
  */
 export function calcBonusNet(
   salary: number,
   bonusWon: number,
   creditRate = DEFAULT_BONUS_CREDIT_RATE,
   applyInsurance = true,
+  rates: InsuranceRates = INSURANCE_RATES_2026,
 ): BonusNetResult {
   if (bonusWon <= 0) {
     return {
@@ -97,7 +101,7 @@ export function calcBonusNet(
   const creditMult = 1 - creditRate / 100;
   const incomeTaxDelta = Math.max(0, (taxWithBonus - taxBase) * creditMult);
   const localTaxDelta = Math.round(
-    incomeTaxDelta * INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO,
+    incomeTaxDelta * rates.LOCAL_INCOME_TAX_RATIO,
   );
 
   // 2) 4대보험 추가 부과 (보수에 합산되므로 성과급도 부과 대상)
@@ -110,15 +114,15 @@ export function calcBonusNet(
     // 이상이면 성과급 추가 부과 없음 (cap 도달)
     const remainingPensionRoom = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
     const pensionTarget = Math.min(bonusWon, remainingPensionRoom);
-    pensionDelta = Math.round(pensionTarget * INSURANCE_RATES_2026.NATIONAL_PENSION);
+    pensionDelta = Math.round(pensionTarget * rates.NATIONAL_PENSION);
 
     // 건강보험 + 장기요양 (건보의 13.14%) — 상한 없음
-    const healthBase = bonusWon * INSURANCE_RATES_2026.HEALTH_INSURANCE;
-    const longTermCare = healthBase * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+    const healthBase = bonusWon * rates.HEALTH_INSURANCE;
+    const longTermCare = healthBase * rates.LONG_TERM_CARE_RATIO;
     healthDelta = Math.round(healthBase + longTermCare);
 
     // 고용보험 — 상한 없음
-    empInsDelta = Math.round(bonusWon * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE);
+    empInsDelta = Math.round(bonusWon * rates.EMPLOYMENT_INSURANCE);
   }
 
   const totalDeductions =

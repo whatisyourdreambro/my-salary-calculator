@@ -105,6 +105,48 @@ export interface SmbTaxBreakResult {
   savedPeriodTotal: number;
 }
 
+export interface SmeYouthReductionInput {
+  /** 근로소득 산출세액 (소득세법 §55) */
+  calculatedTax: number;
+  /** 근로소득세액공제 — 감면 미적용 시 (소득세법 §59①②) */
+  earnedIncomeCredit: number;
+  /** 감면율 — 청년 0.9 (기본) / 그 외 0.7 */
+  rate?: number;
+  /** 과세기간당 감면 한도 (기본 200만원) */
+  cap?: number;
+}
+
+export interface SmeYouthReductionResult {
+  /** 감면세액 = min(반올림(산출세액 × 감면율), 한도) */
+  reduction: number;
+  /** 연동 축소 후 근로소득세액공제 = 공제액 × (1 − 감면세액/산출세액) (소득세법 §59③) */
+  creditAfter: number;
+  /** 한도(200만원)에 걸렸는지 여부 */
+  capped: boolean;
+}
+
+/**
+ * 조특법 §30 감면 + 소득세법 §59③ 근로소득세액공제 연동 축소 — 순수 헬퍼.
+ * /calc/smb-income-tax-break(computeSmbTaxBreak)와 calculator.ts 의 '중소기업 청년'
+ * 스위치가 같은 산식을 쓰도록 추출했다 (2026-09-25 CALC-09 — 종전 calculator.ts 는
+ * 세액공제 뒤 금액에 90%·200만 한도를 적용해 한도가 걸리는 구간에서 절감액을 최대
+ * 연 34.5만원 과대 계산했다).
+ */
+export function applySmeYouthReduction({
+  calculatedTax,
+  earnedIncomeCredit,
+  rate = SMB_BREAK_RULES.youth.rate,
+  cap = SMB_BREAK_CAP_PER_YEAR,
+}: SmeYouthReductionInput): SmeYouthReductionResult {
+  // 조특법 §30: 감면세액 = 산출세액 × 감면율 (급여 전액 감면대상 가정), 한도 200만
+  const rawReduction = calculatedTax * rate;
+  const reduction = Math.min(Math.round(rawReduction), cap);
+  // 소득세법 §59③ 연동: 근로소득세액공제 × (1 − 감면세액/산출세액)
+  const creditAfter =
+    calculatedTax > 0 ? earnedIncomeCredit * (1 - reduction / calculatedTax) : 0;
+  return { reduction, creditAfter, capped: rawReduction > cap };
+}
+
 export function computeSmbTaxBreak(input: SmbTaxBreakInput): SmbTaxBreakResult {
   const annual = Math.max(0, input.annualSalary);
   const dependents = Math.max(1, Math.floor(input.dependents || 1));
@@ -127,15 +169,19 @@ export function computeSmbTaxBreak(input: SmbTaxBreakInput): SmbTaxBreakResult {
   );
   const calculatedTax = calcIncomeTax2026(taxBase);
 
-  // ── 조특법 §30: 감면세액 = 산출세액 × 감면율 (급여 전액 감면대상 가정), 한도 200만
-  const rawReduction = calculatedTax * rule.rate;
-  const reduction = Math.min(Math.round(rawReduction), SMB_BREAK_CAP_PER_YEAR);
-  const reductionCapped = rawReduction > SMB_BREAK_CAP_PER_YEAR;
-
-  // ── 소득세법 §59③ 연동: 근로소득세액공제 × (1 − 감면세액/산출세액)
+  // ── 조특법 §30 감면(산출세액 × 감면율, 한도 200만) + 소득세법 §59③ 공제 연동 축소
+  //    — calculator.ts '중소기업 청년' 스위치와 같은 헬퍼 (applySmeYouthReduction)
   const creditBefore = earnedIncomeTaxCredit2026(calculatedTax, annual);
-  const creditAfter =
-    calculatedTax > 0 ? creditBefore * (1 - reduction / calculatedTax) : 0;
+  const {
+    reduction,
+    creditAfter,
+    capped: reductionCapped,
+  } = applySmeYouthReduction({
+    calculatedTax,
+    earnedIncomeCredit: creditBefore,
+    rate: rule.rate,
+    cap: SMB_BREAK_CAP_PER_YEAR,
+  });
 
   const finalTaxWithout = Math.max(0, calculatedTax - creditBefore);
   const finalTaxWith = Math.max(0, calculatedTax - reduction - creditAfter);
