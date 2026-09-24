@@ -50,14 +50,30 @@ describe("배선 — 새 블록 없이 기존 미리보기를 연다", () => {
 
   it("패널: 요청마다 같은 openPreview 를 쓰고, 길게 눌러 저장 안내는 탭 뒤 미리보기 안에서만", () => {
     expect(panel).toContain("useEffect(() => { if (openPreviewRequest > 0) requestPreview.current(); }, [openPreviewRequest]);");
-    expect(panel).toContain("if (resultIsCurrent && !active) void openPreview();");
-    expect(panel).toMatch(/\{active\.objectUrl && isImageDownloadRestricted\(/);
+    // 닫혀 있으면 저장 요청으로 열고, 이미 열려 있으면 아무 반응 없음 대신 미리보기로 스크롤
+    expect(panel).toContain("if (active) reveal();");
+    expect(panel).toContain("else void openPreview(true);");
+    // 판정은 미리보기(탭 뒤)가 있을 때만 — 서버 HTML 에는 닿지 않는다
+    expect(panel).toContain("const saveByLongPress = !!active?.objectUrl && isImageDownloadRestricted(");
+    expect(panel).toMatch(/\{saveByLongPress && <p\b/);
     expect(panel).toContain("이미지를 길게 눌러 저장하세요.");
   });
 
-  it("퍼널 계측: 미리보기 열기·승인에 고정 enum 이벤트 (OG-13)", () => {
-    expect(panel).toContain('trackSharePreview("open", contentType);');
-    expect(panel).toContain('trackSharePreview("approve", contentType);');
+  it("인앱에서는 승인 뒤에도 조용히 실패하는 <a download> 대신 길게 눌러 저장 안내만", () => {
+    expect(panel).toContain('{active.objectUrl && !saveByLongPress && <a href={active.objectUrl} download="moneysalary-result.png"');
+    expect(panel.match(/\bdownload=/g)).toHaveLength(1);
+  });
+
+  it("저장 요청으로 연 미리보기는 이미지가 뜬 뒤 화면 안으로 스크롤만 — 새 요소 없음", () => {
+    expect(panel).toContain("revealOnLoad.current = fromSave;");
+    expect(panel).toContain("onLoad={() => { if (revealOnLoad.current) { revealOnLoad.current = false; reveal(); } }}");
+    expect(panel).toContain('scrollIntoView?.({ block: "center", behavior: "smooth" })');
+  });
+
+  it("퍼널 계측: 미리보기 버튼으로 연 경우만 열기·승인 고정 enum 이벤트 (OG-13) — 인앱 저장 탭은 제외", () => {
+    expect(panel).toContain('if (!fromSave) trackSharePreview("open", contentType);');
+    expect(panel).toContain('if (!active.fromSave) trackSharePreview("approve", contentType);');
+    expect(panel.match(/trackSharePreview\(/g)).toHaveLength(2);
     expect(panel).not.toMatch(/trackSharePreview\([^)]*(resultKey|url|title|imageUrl)/);
   });
 });
