@@ -170,6 +170,10 @@ const YOY_EMPLOYEE_CHANGE_MAX = 0.3;
 export interface DartCompanyStats {
   /** DART 공시 평균연봉 (만원, FY2025) — 수기 disclosed 와 괴리 검사용 */
   dartSalaryManwon: number;
+  /** dartSalaryManwon 의 사업연도·직원 수 — 공시 1인평균 기준(reported) 카드는 이 산정치를
+   *  이력 표 첫 행으로 올려 전년 대비 배지의 두 값을 모두 보여 준다 (A19 리뷰 정정, 2026-09-25) */
+  fiscalYear: string;
+  employeeCount: number;
   /** 전년(FY2024) 대비 인상률 % (소수 1자리) — 비교 불가 시 null */
   yoyPct: number | null;
   prevSalaryManwon: number | null;
@@ -203,6 +207,8 @@ export const dartCompanyStatsById: Map<string, DartCompanyStats> = (() => {
     }
     map.set(companyId, {
       dartSalaryManwon: d.avgSalaryManwonRaw,
+      fiscalYear: d.fiscalYear,
+      employeeCount: d.employeeCount,
       yoyPct,
       prevSalaryManwon,
       listedRank: listedRankByCorp.get(d.corpCode) ?? null,

@@ -17,7 +17,8 @@ export function getCompanySalaryBasis(
     entryTotalWon: entryBaseWon + entryIncentiveWon,
     dartSalaryManwon,
     // 수기 블록 전용 — DART 자동 주입 블록(basis 있음)은 헤드라인 자체가 같은 공시의 값이고
-    // 산정치는 카드의 '급여총액÷인원' 이력 표로 따로 보여 주므로 인라인 병기를 붙이지 않는다
+    // 같은 사업연도 산정치는 카드의 '급여총액÷인원' 이력 표 첫 행으로 따로 보여 주므로
+    // (CompanyDisclosedSalary disclosedHistoryRows) 인라인 병기를 붙이지 않는다
     // (A19 헤드라인 기준 전환 후에도 광고 위 카드 문단 길이 불변, 2026-09-25).
     hasDartGap: Boolean(
       disclosed &&

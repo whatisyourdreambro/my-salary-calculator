@@ -264,7 +264,9 @@ export default function CompanyDetailPage({
  const stats = dartCompanyStatsById.get(company.id);
  if (!stats || !company.disclosed) return null;
  // DART 자동 주입 블록은 헤드라인·이력이 같은 사업보고서에서 나온다 — 헤드라인이 공시
- // 1인평균 기준(A19)으로 바뀌어 산정치와 벌어져도 이력 표('급여총액÷인원' 표기)는 유지
+ // 1인평균 기준(A19)으로 바뀌어 산정치와 벌어져도 배지·이력 표는 유지하고, 카드가
+ // 배지·순위에 '급여총액÷인원'·'산정치 기준' 라벨을 달고 같은 연도 산정치를 이력 표
+ // 첫 행에 올린다(CompanyDisclosedSalary disclosedHistoryRows — 행 수 불변).
  // (게이트로 빠지면 광고 위 카드가 줄어 GuideMidAd 위치가 바뀐다, 2026-09-25).
  if (company.disclosed.basis) return stats;
  const gap =

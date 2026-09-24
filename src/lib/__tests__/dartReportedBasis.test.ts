@@ -21,6 +21,7 @@ import {
   dartTop100CardBadgeCorps,
   dartReportStats,
   dartIndustryRows,
+  dartCompanyStatsById,
 } from "@/lib/salary-data/dartReport";
 import {
   industryRankings,
@@ -32,7 +33,7 @@ import {
   passesRankingDivergence,
   RANKING_DIVERGENCE_MAX_PCT,
 } from "@/lib/salary-data/dartRankingGuards";
-import CompanyDisclosedSalary from "@/components/CompanyDisclosedSalary";
+import CompanyDisclosedSalary, { disclosedHistoryRows } from "@/components/CompanyDisclosedSalary";
 
 const rawById = new Map(allCompanies.map((c) => [c.id, c]));
 const byCorp = new Map(dartDisclosed.map((d) => [d.corpCode, d]));
@@ -120,6 +121,109 @@ describe("회사 카드 — 산정 기준 라벨 (A19)", () => {
     const samsung = companyRepository.getById("samsung-electronics")!;
     expect(samsung.disclosed!.basis).toBeUndefined();
     expect(getCompanySalaryBasis(samsung, { dartSalaryManwon: 20000 }).hasDartGap).toBe(true);
+  });
+});
+
+describe("reported 카드 — 배지·순위·이력 표가 헤드라인과 산정 기준을 섞지 않는다 (A19 리뷰 정정)", () => {
+  /** CompanyDisclosedSalary.formatManwon 과 같은 표기 */
+  const fmt = (manwon: number) => {
+    const eok = Math.floor(manwon / 10000);
+    const rest = manwon % 10000;
+    if (eok > 0 && rest > 0) return `${eok}억 ${rest.toLocaleString("ko-KR")}만원`;
+    if (eok > 0) return `${eok}억원`;
+    return `${rest.toLocaleString("ko-KR")}만원`;
+  };
+  // page.tsx 와 같은 전달: 주입 카드는 괴리 게이트 없이 stats 그대로
+  const render = (c: ReturnType<typeof companyRepository.getAll>[number]) => {
+    const stats = dartCompanyStatsById.get(c.id)!;
+    return renderToStaticMarkup(
+      createElement(CompanyDisclosedSalary, {
+        company: c,
+        dartStats: stats,
+        dartSalaryManwon: stats.dartSalaryManwon,
+      })
+    );
+  };
+  const reportedWithStats = companyRepository
+    .getAll()
+    .filter(
+      (c) =>
+        !rawById.get(c.id)?.disclosed &&
+        c.disclosed?.basis === "reported" &&
+        dartCompanyStatsById.has(c.id)
+    );
+
+  it.each(["lotte-card", "yg-entertainment"])(
+    "%s — 전년 대비 배지가 산정치 전년값을 헤드라인에 잇지 않고, 같은 연도 산정치가 표에 보인다",
+    (id) => {
+      const c = companyRepository.getById(id)!;
+      expect(c.disclosed!.basis).toBe("reported");
+      const stats = dartCompanyStatsById.get(id)!;
+      expect(stats.yoyPct).not.toBeNull();
+      // 감사 지적 사례 — 헤드라인(공시 1인평균)과 산정치가 5% 넘게 벌어진 카드
+      expect(
+        Math.abs(c.disclosed!.avgSalaryManwon - stats.dartSalaryManwon) / stats.dartSalaryManwon
+      ).toBeGreaterThan(0.05);
+      const html = render(c);
+      expect(html).not.toContain(`(${fmt(stats.prevSalaryManwon!)} →)`);
+      expect(html).not.toContain(" →)");
+      expect(html).toContain("(급여총액÷인원)");
+      // 상장사만 순위 줄이 있다 (롯데카드는 비상장)
+      if (stats.listedRank != null) expect(html).toContain("산정치 기준");
+      expect(html).not.toContain("DART 공시 기준");
+      // 배지 % 의 두 값(당해·전년 산정치)이 모두 '급여총액÷인원' 이력 표에 있다
+      expect(html).toContain(`>${stats.fiscalYear}</td>`);
+      expect(html).toContain(fmt(stats.dartSalaryManwon));
+      expect(html).toContain(fmt(stats.prevSalaryManwon!));
+    }
+  );
+
+  it("전 reported 카드 — 이력 표 행 수 불변·첫 행은 같은 연도 산정치, 라벨은 종전 문구보다 짧다", () => {
+    expect(reportedWithStats.length).toBeGreaterThan(200);
+    for (const c of reportedWithStats) {
+      const stats = dartCompanyStatsById.get(c.id)!;
+      const rows = disclosedHistoryRows(c.disclosed!, stats);
+      // 광고 위 높이 불변 — 종전 표 행 수(과년도 이력 최대 3행)와 같다
+      expect(rows.length, c.id).toBe(Math.min(stats.history?.length ?? 0, 3));
+      if (rows.length && stats.fiscalYear === c.disclosed!.fiscalYear) {
+        expect(rows[0], c.id).toEqual({
+          fiscalYear: stats.fiscalYear,
+          avgSalaryManwonRaw: stats.dartSalaryManwon,
+          employeeCount: stats.employeeCount,
+        });
+      }
+      if (stats.prevSalaryManwon != null) {
+        expect("(급여총액÷인원)".length).toBeLessThanOrEqual(
+          `(${fmt(stats.prevSalaryManwon)} →)`.length
+        );
+      }
+      const html = render(c);
+      const tbody = html.includes("<tbody>")
+        ? html.slice(html.indexOf("<tbody>"), html.indexOf("</tbody>"))
+        : "";
+      expect((tbody.match(/<tr/g) ?? []).length, c.id).toBe(rows.length);
+      expect(html, c.id).not.toContain(" →)");
+      expect(html, c.id).not.toContain("DART 공시 기준");
+      if (stats.yoyPct != null && stats.listedRank != null) {
+        expect(html, c.id).toContain("산정치 기준");
+      }
+    }
+    expect("산정치 기준".length).toBeLessThan("DART 공시 기준".length);
+  });
+
+  it("수기 카드는 종전 그대로 — 전년값 → 배지·과년도 이력만", () => {
+    const samsung = companyRepository.getById("samsung-electronics")!;
+    const stats = dartCompanyStatsById.get("samsung-electronics")!;
+    expect(disclosedHistoryRows(samsung.disclosed!, stats)).toEqual(
+      (stats.history ?? []).slice(0, 3)
+    );
+    const html = renderToStaticMarkup(
+      createElement(CompanyDisclosedSalary, { company: samsung, dartStats: stats })
+    );
+    expect(stats.prevSalaryManwon).not.toBeNull();
+    expect(html).toContain(`(${fmt(stats.prevSalaryManwon!)} →)`);
+    expect(html).toContain("DART 공시 기준");
+    expect(html).not.toContain("(급여총액÷인원)");
   });
 });
 

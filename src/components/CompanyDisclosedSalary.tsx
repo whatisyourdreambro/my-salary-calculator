@@ -30,6 +30,55 @@ function formatTenure(years: number): string {
   return `${rounded}`;
 }
 
+type HistoryRow = { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number };
+
+/** DART 파생 통계 prop — 전부 연간 급여총액÷인원 산정치 기준 (dartReport.DartCompanyStats) */
+type DartStatsProp = {
+  /** 산정치(만원)·그 사업연도·직원 수 — reported 카드 이력 표 첫 행용 */
+  dartSalaryManwon?: number;
+  fiscalYear?: string;
+  employeeCount?: number;
+  yoyPct: number | null;
+  prevSalaryManwon: number | null;
+  listedRank: number | null;
+  listedTotal: number;
+  history?: HistoryRow[];
+};
+
+/** 과년도 이력 표 최대 행 수 */
+const HISTORY_MAX_ROWS = 3;
+
+/**
+ * 이력 표 행. 회사 공시 1인평균 기준(basis "reported") 카드는 헤드라인과 산정 기준이 달라,
+ * 전년 대비 배지(산정치 기준)가 가리키는 같은 사업연도 산정치를 표 첫 행에 올린다 — 배지의
+ * 두 값이 모두 표에 보이고, 헤드라인과 5% 넘게 벌어진 카드에도 DART 산정치가 병기된다.
+ * 행 수는 종전(과년도 이력 최대 3행)과 같게 자른다 — 광고 위 카드 높이 불변
+ * (A19 리뷰 정정, 2026-09-25). 수기·computed 카드는 종전 그대로 과년도 이력만.
+ */
+export function disclosedHistoryRows(
+  disclosed: { basis?: "reported" | "computed"; fiscalYear: string },
+  dartStats: DartStatsProp | null | undefined,
+): HistoryRow[] {
+  const history = dartStats?.history ?? [];
+  const rowCount = Math.min(history.length, HISTORY_MAX_ROWS);
+  if (rowCount === 0) return [];
+  if (
+    disclosed.basis === "reported" &&
+    dartStats?.dartSalaryManwon != null &&
+    dartStats.employeeCount != null &&
+    dartStats.fiscalYear === disclosed.fiscalYear &&
+    !history.some((h) => h.fiscalYear === disclosed.fiscalYear)
+  ) {
+    const current: HistoryRow = {
+      fiscalYear: disclosed.fiscalYear,
+      avgSalaryManwonRaw: dartStats.dartSalaryManwon,
+      employeeCount: dartStats.employeeCount,
+    };
+    return [current, ...history].slice(0, rowCount);
+  }
+  return history.slice(0, rowCount);
+}
+
 export default function CompanyDisclosedSalary({
   company,
   dartRank,
@@ -51,14 +100,10 @@ export default function CompanyDisclosedSalary({
    * DART 파생 통계 (인상률 배지·3개년 미니 추이) — 서버(page)에서
    * dartCompanyStatsById 조회 후 전달. 수기 disclosed 와 괴리 10% 초과 시
    * page 에서 null 로 걸러 전달 (라벨 혼선 방지). 2026-08-30 증강 팩 ①.
+   * 주입 카드(basis 있음)는 게이트 없이 전달 — reported 카드는 배지·순위에 산정치 기준 라벨을
+   * 달고 같은 연도 산정치를 이력 표 첫 행에 올린다 (disclosedHistoryRows, 2026-09-25).
    */
-  dartStats?: {
-    yoyPct: number | null;
-    prevSalaryManwon: number | null;
-    listedRank: number | null;
-    listedTotal: number;
-    history?: { fiscalYear: string; avgSalaryManwonRaw: number; employeeCount: number }[];
-  } | null;
+  dartStats?: DartStatsProp | null;
   /**
    * 소속 업종 랭킹 도선 — R2 W1 (2026-08-31). 서버(page)에서
    * industryRankingByCompanyId 조회 후 전달 (랭킹 페이지 실재 업종만).
@@ -74,6 +119,11 @@ export default function CompanyDisclosedSalary({
     hasDartGap
       ? `(DART 급여총액÷인원 산정치 ${dartSalaryManwon!.toLocaleString("ko-KR")}만원)`
       : "";
+  // 헤드라인이 회사 공시 1인평균 기준인 카드 — 배지·순위(산정치 기준)를 헤드라인에 잇지 않는다.
+  // 라벨은 종전 문구보다 짧게: 배지 '(8,184만원 →)' 11자+ → '(급여총액÷인원)' 9자,
+  // 순위 'DART 공시 기준' → '산정치 기준' (광고 위 줄바꿈 증가 없음, 2026-09-25 리뷰 정정)
+  const reportedBasis = d.basis === "reported";
+  const historyRows = disclosedHistoryRows(d, dartStats);
 
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
@@ -128,22 +178,27 @@ export default function CompanyDisclosedSalary({
               }`}
             >
               전년 대비 {dartStats.yoyPct >= 0 ? `+${dartStats.yoyPct}` : dartStats.yoyPct}%
-              {dartStats.prevSalaryManwon != null && (
-                <span className="font-medium opacity-80">
-                  ({formatManwon(dartStats.prevSalaryManwon)} →)
-                </span>
+              {reportedBasis ? (
+                <span className="font-medium opacity-80">(급여총액÷인원)</span>
+              ) : (
+                dartStats.prevSalaryManwon != null && (
+                  <span className="font-medium opacity-80">
+                    ({formatManwon(dartStats.prevSalaryManwon)} →)
+                  </span>
+                )
               )}
             </span>
             {dartStats.listedRank != null && (
               <span className="text-xs font-bold text-muted-blue dark:text-canvas-300">
                 상장 {dartStats.listedTotal.toLocaleString("ko-KR")}곳 중{" "}
-                {dartStats.listedRank.toLocaleString("ko-KR")}위 · DART 공시 기준
+                {dartStats.listedRank.toLocaleString("ko-KR")}위 ·{" "}
+                {reportedBasis ? "산정치 기준" : "DART 공시 기준"}
               </span>
             )}
           </p>
         )}
 
-        {dartStats && dartStats.history && dartStats.history.length > 0 && (
+        {historyRows.length > 0 && (
           <div className="mb-3 overflow-x-auto">
             <table className="w-full max-w-md text-xs">
               <thead>
@@ -155,7 +210,7 @@ export default function CompanyDisclosedSalary({
                 </tr>
               </thead>
               <tbody>
-                {dartStats.history.slice(0, 3).map((h) => (
+                {historyRows.map((h) => (
                   <tr key={h.fiscalYear} className="border-b border-canvas-100 dark:border-canvas-800/60">
                     <td className="py-1.5 pr-3 font-bold text-navy dark:text-canvas-50">{h.fiscalYear}</td>
                     <td className="py-1.5 pr-3 tabular-nums text-muted-blue dark:text-canvas-300">
