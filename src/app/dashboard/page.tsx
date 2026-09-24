@@ -13,6 +13,7 @@ const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
 });
 import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
+import { FINANCIAL_DATA_KEY, isStoredFinancialData } from "@/lib/storedFinancialData";
 import Link from "@/components/AppLink";
 import { useRouter } from "next/navigation";
 import {
@@ -57,20 +58,23 @@ export default function DashboardPage() {
 
  useEffect(() => {
  try {
- const savedData = localStorage.getItem("moneysalary-financial-data");
+ const savedData = localStorage.getItem(FINANCIAL_DATA_KEY);
  if (savedData) {
- setDashboardData(JSON.parse(savedData));
+ // 형태가 맞지 않는 값은 '데이터 없음'으로 본다(지우지는 않음 — 다른 계산기가 쓰는 키).
+ const parsed: unknown = JSON.parse(savedData);
+ if (isStoredFinancialData(parsed)) setDashboardData(parsed);
  }
  } catch (error) {
  console.error("Failed to parse dashboard data from localStorage", error);
- localStorage.removeItem("moneysalary-financial-data");
+ // 저장소 자체가 막힌 경우(사파리 쿠키 전체 차단 등) removeItem 도 던진다 → 오류 화면으로 번지지 않게.
+ try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch { /* storage unavailable */ }
  } finally {
  setIsLoading(false);
  }
  }, []);
 
  const handleResetDashboard = () => {
- localStorage.removeItem("moneysalary-financial-data");
+ try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch { /* storage unavailable */ }
  setDashboardData(null);
  router.push("/");
  };
