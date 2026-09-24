@@ -11,6 +11,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 
 export const dynamic = "force-static";
 
@@ -40,9 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const job = getJobById(params.slug);
   if (!job) return { title: "직업 정보를 찾을 수 없습니다" };
 
+  // 금액 표기: 1억 이상은 "1억 8,000만원"(formatManwonKorean) — "18,000만원"은 SERP 가독성이
+  // 나빠 CTR 을 깎는다. 1억 미만 문자열은 종전과 바이트 단위로 같다 (2026-09-25 B14 META-06).
   return buildPageMetadata({
-    title: `${job.name} 연봉 2026 — 평균 ${job.salary.overall.toLocaleString()}만원·경력별 급여 비교`,
-    description: `${job.name} 연봉 참고 자료: 평균 ${job.salary.overall.toLocaleString()}만원, 신입 ${job.salary.entry.avg.toLocaleString()}만원, 3~5년 ${job.salary.junior.avg.toLocaleString()}만원, 10년 이상 ${job.salary.senior.avg.toLocaleString()}만원. 자료 기준과 경력별 차이를 확인하고 개인 조건으로 실수령액을 계산하세요.`,
+    title: `${job.name} 연봉 2026 — 평균 ${formatManwonKorean(job.salary.overall)}·경력별 급여 비교`,
+    description: `${job.name} 연봉 참고 자료: 평균 ${formatManwonKorean(job.salary.overall)}, 신입 ${formatManwonKorean(job.salary.entry.avg)}, 3~5년 ${formatManwonKorean(job.salary.junior.avg)}, 10년 이상 ${formatManwonKorean(job.salary.senior.avg)}. 자료 기준과 경력별 차이를 확인하고 개인 조건으로 실수령액을 계산하세요.`,
     path: `/job/${params.slug}`,
     keywords: [
       ...job.keywords,

@@ -31,6 +31,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { ChevronRight, ArrowRight } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
@@ -71,6 +72,11 @@ function monthlyNeighbors(amount: number): number[] {
 
 const fmtManwon = (won: number) =>
   Math.round(won / 10_000).toLocaleString("ko-KR");
+
+/** 연봉(원) → "9,600만원" / "1억 2,000만원" — 1억 미만은 `${fmtManwon(won)}만원` 과 같은 문자열
+ *  (2026-09-25 B14 META-06: "12,000만원" 다섯 자리 만원 표기 정리). FAQ(JSON-LD 원천) 전용 —
+ *  월급 금액과 화면 본문 표·크로스링크에는 쓰지 않는다(광고 위 높이 실측 사유는 각 블록 주석). */
+const fmtAnnualKo = (won: number) => formatManwonKorean(Math.round(won / 10_000));
 
 type Props = { params: { amount: string } };
 
@@ -137,7 +143,7 @@ export default function MonthlyPage({ params }: Props) {
     },
     {
       question: "월급 실수령액과 '연봉 ÷ 12'가 왜 다른가요?",
-      answer: `상여금·성과급이 별도인 회사는 연봉이 월급×12보다 큽니다. 예를 들어 월 기본급 ${m}만원에 상여 400%면 연봉은 약 ${fmtManwon(annual + monthly * 4)}만원이 됩니다. 아래 상여금 시나리오 표에서 본인 연봉 구조로 확인하세요.`,
+      answer: `상여금·성과급이 별도인 회사는 연봉이 월급×12보다 큽니다. 예를 들어 월 기본급 ${m}만원에 상여 400%면 연봉은 약 ${fmtAnnualKo(annual + monthly * 4)}이 됩니다. 아래 상여금 시나리오 표에서 본인 연봉 구조로 확인하세요.`,
     },
     {
       question: `월급 ${m}만원은 시급으로 얼마인가요?`,
@@ -238,6 +244,9 @@ export default function MonthlyPage({ params }: Props) {
                       <td className="py-2.5 pr-4 font-bold text-navy">
                         {s.pct === 0 ? "없음 (월급×12)" : `${s.pct}%`}
                       </td>
+                      {/* (B14 2026-09-25) 이 셀의 연봉은 억 표기로 바꾸지 않는다 — 폰트 실측(320~460px 1px 간격)에서
+                          연봉 1억 이상 월급대의 371~379px·450~460px 폭에서 행마다 한 줄씩 늘어
+                          아래 Display2Ad 를 최대 120px 밀었다. 본문 표는 제목·설명·FAQ 게이트 대상 밖. */}
                       <td className="py-2.5 pr-4 tabular-nums">
                         약 {fmtManwon(s.annual)}만원
                       </td>
@@ -340,7 +349,9 @@ export default function MonthlyPage({ params }: Props) {
           <GuideMidAd />
         </div>
 
-        {/* 연봉 축 크로스링크 */}
+        {/* 연봉 축 크로스링크
+            (B14 2026-09-25) 이 블록의 연봉은 억 표기로 바꾸지 않는다 — 폰트 실측에서 344~360px 폭,
+            연봉 1억 이상 월급대에서 문단·버튼이 한 줄씩 늘어 아래 쿠팡·HOME_TOP 광고를 20~27px 밀었다. */}
         <section className="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
           <h2 className="text-lg font-black text-navy mb-2">
             연봉 기준으로도 확인해 보세요

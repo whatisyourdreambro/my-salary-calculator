@@ -5,6 +5,8 @@ import { allCompanies } from "@/data/companies";
 import { dartInjection } from "@/data/dart/dartInjection";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
+import { buildCompanyFaq } from "@/lib/companyFaqItems";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import { faqLd } from "@/lib/structuredData";
 import CompanyFaq from "@/components/CompanyFaq";
 import type { CompanyProfile } from "@/types/company";
@@ -14,7 +16,7 @@ const samsung = companyRepository.getById("samsung-electronics")!;
 const rawById = new Map(allCompanies.map((company) => [company.id, company]));
 
 describe("회사 평균과 신입 연봉의 자료 기준", () => {
-  it("삼성의 공시 평균 15,800만원과 신입 총연봉 추정 5,600만원을 구분한다", () => {
+  it("삼성의 공시 평균 1억 5,800만원과 신입 총연봉 추정 5,600만원을 구분한다", () => {
     const basis = getCompanySalaryBasis(samsung, { dartSalaryManwon: 20000 });
     expect(basis.entryBaseWon).toBe(48000000);
     expect(basis.entryIncentiveWon).toBe(8000000);
@@ -24,7 +26,8 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
     expect(basis.dartSalaryManwon).toBe(20000);
     expect(basis.hasDartGap).toBe(true);
     const [average, entry] = buildCompanySalaryFaq(samsung);
-    expect(average.answer).toContain("2025 사업연도 15,800만원");
+    expect(average.answer).toContain("2025 사업연도 1억 5,800만원");
+    expect(average.answer).not.toContain("15,800만원");
     expect(average.answer).not.toContain("5,600만원");
     expect(average.answer).toContain(samsung.disclosed!.source);
     expect(entry.answer).toContain("기본급 추정은 약 4,800만원");
@@ -41,6 +44,7 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
     expect(average.answer).toContain("평균연봉 공시 자료는 없습니다");
     expect(average.answer).not.toContain("5,600만원");
     expect(average.answer).not.toContain("20,000만원");
+    expect(average.answer).not.toContain("2억원");
     expect(entry.answer).toContain("5,600만원");
   });
 
@@ -79,7 +83,7 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
     expect(basis.disclosed?.note).toBe(company.disclosed.note);
     const answer = buildCompanySalaryFaq(company)[0].answer;
     expect(answer).toContain(company.disclosed.fiscalYear);
-    expect(answer).toContain("12,345.6만원");
+    expect(answer).toContain("1억 2,345.6만원");
     expect(answer).toContain(company.disclosed.source);
     expect(answer).not.toContain("https://");
   });
@@ -104,12 +108,15 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
       expect(basis.disclosed, company.id).toBe(company.disclosed);
       const [average, entry] = buildCompanySalaryFaq(company);
       if (company.disclosed) {
-        expect(average.answer, company.id).toContain(`${company.disclosed.fiscalYear} 사업연도 ${company.disclosed.avgSalaryManwon.toLocaleString("ko-KR")}만원`);
+        expect(average.answer, company.id).toContain(`${company.disclosed.fiscalYear} 사업연도 ${formatManwonKorean(company.disclosed.avgSalaryManwon)}`);
         expect(average.answer, company.id).toContain(company.disclosed.source);
       } else {
         expect(average.answer, company.id).toContain("평균연봉 공시 자료는 없습니다");
       }
-      expect(entry.answer, company.id).toContain(`${Math.round(basis.entryTotalWon / 10000).toLocaleString("ko-KR")}만원`);
+      expect(entry.answer, company.id).toContain(formatManwonKorean(Math.round(basis.entryTotalWon / 10000)));
+      // 1억 이상을 다섯 자리 만원("15,800만원")으로 쓰지 않는다 (B14 META-06)
+      expect(average.answer, company.id).not.toMatch(/\d{2,3},\d{3}만원/);
+      expect(entry.answer, company.id).not.toMatch(/\d{2,3},\d{3}만원/);
     }
     expect(JSON.stringify(companies)).toBe(before);
   });
@@ -131,6 +138,24 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
       expect(disclosed.sourceUrl).toContain(dartInjection[company.id].r);
       expect(disclosed.note).toContain("연간급여총액÷인원");
     }
+  });
+
+  it("회사 상세 FAQ 전체(신입·주니어·시니어·DSR 참고값 포함) JSON-LD 에 다섯 자리 만원이 없다 (B14 META-06)", () => {
+    let eokCompanies = 0;
+    for (const company of companies) {
+      const items = buildCompanyFaq(company);
+      expect(items.length, company.id).toBeGreaterThan(2);
+      expect(JSON.stringify(faqLd(items)), company.id).not.toMatch(/\d{2,3},\d{3}만원/);
+      const senior = company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
+      if (senior >= 100_000_000) {
+        eokCompanies++;
+        const seniorLabel = formatManwonKorean(Math.round(senior / 10000));
+        expect(seniorLabel, company.id).toContain("억");
+        expect(items.find((i) => i.question.includes("시니어 연봉은 신입 대비"))!.answer, company.id).toContain(`약 ${seniorLabel}으로`);
+      }
+    }
+    expect(eokCompanies).toBeGreaterThan(0);
+    expect(buildCompanyFaq(undefined)).toEqual([]);
   });
 
   it("서버 FAQ 본문과 구조화 데이터에 같은 질문·답을 사용한다", () => {

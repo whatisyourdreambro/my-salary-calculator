@@ -2516,7 +2516,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "lgensol-wage-negotiation-2026",
   "title": "LG에너지솔루션 2026 임금협상 — 배터리 캐즘 종료, 인상률 5%+",
-  "description": "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500~12,000만원. 미국 파견 인센티브 확대.",
+  "description": "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500만~1.2억원. 미국 파견 인센티브 확대.",
   "category": "연봉",
   "tags": [
    "LG에너지솔루션",
