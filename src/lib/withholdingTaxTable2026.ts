@@ -223,6 +223,9 @@ export function withholdingIncomeTax2026(
     const t10 = tableTaxForFamily(monthlyTaxablePay, 10, opts);
     tax = Math.max(0, t11 - (t10 - t11) * (fam - 11));
   }
-  // 비고 3: 자녀 공제 후 음수면 0원
-  return Math.max(0, tax - withholdingChildDeduction2026(children));
+  // 비고 3: 자녀 공제 후 음수면 0원. 공제 뒤 남은 세액에도 1,000원 미만 0원(소득세법 §86
+  // 소액부징수 — 국세청 원천징수 안내: 근로소득은 이자·인적용역 사업소득 같은 예외가 아니다)을
+  // 다시 적용한다. 표 금액만 걸러 두면 월 226만 2인·자녀 1명이 50원(지방세 5원)으로 남았다.
+  const afterChildren = Math.max(0, tax - withholdingChildDeduction2026(children));
+  return afterChildren < 1_000 ? 0 : afterChildren;
 }
