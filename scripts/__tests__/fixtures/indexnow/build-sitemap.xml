@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+<loc>https://www.moneysalary.com/</loc>
+<xhtml:link rel="alternate" hreflang="ko-KR" href="https://www.moneysalary.com/" />
+<xhtml:link rel="alternate" hreflang="en" href="https://www.moneysalary.com/en" />
+<lastmod>2026-09-19</lastmod>
+<changefreq>weekly</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/about</loc>
+<lastmod>2026-09-10T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/glossary/%EA%B8%B0%ED%9A%8C%EB%B9%84%EC%9A%A9</loc>
+<lastmod>2026-08-30T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/monthly/1600000</loc>
+<lastmod>2026-09-07T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.5</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/search?q=a&amp;page=2</loc>
+<lastmod>2026-08-01T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/salary/11020000</loc>
+<lastmod>2026-09-10T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.55</priority>
+</url>
+<url>
+<loc>https://www.moneysalary.com/calc/new-page</loc>
+<lastmod>2026-09-25T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://example.com/another-foreign-host</loc>
+<lastmod>2026-09-25T00:00:00.000Z</lastmod>
+</url>
+</urlset>

@@ -91,7 +91,9 @@ X-Frame-Options SAMEORIGIN 예외 필요 주의, 광고 없는 경량판으로 �
   GA4 `citation_copy` 이벤트. (전역 CopyAttribution은 드래그 복사 전용 —
   clipboard.writeText에는 발동하지 않아 버튼이 출처를 직접 내장)
 - `reportsRegistry`(src/data/reportsRegistry.ts) = 발행 목록 단일 소스 →
-  sitemap 자동 등재 → postbuild IndexNow 전량 자동 핑.
+  sitemap 자동 등재 → postbuild IndexNow 자동 핑(2026-09-25 B7부터 변경분만 — 빌드 vs 운영
+  사이트맵의 신규·lastmod 변경·삭제 URL. 새 리포트는 신규 URL 이라 그대로 핑된다. 갱신 리포트는
+  updatedDate 를 올려야 lastmod 가 바뀌어 핑된다).
 - (2026-09-05 배치 B2·B9) `rss.xml` 에 리포트 3편 합류(`<category>데이터 리포트</category>`, guid=/insights/slug, 채널 pubDate=가이드·리포트 max) + 리포트 원본 `/insights/<slug>/data.csv`·`.json`(source/grade 열 포함, 추정 표기 유지) + Dataset `distribution`/`license`(사이트 인용 정책 URL — 외부 라이선스 채택은 승인 I)/`citation`(DART). 내려받기·위젯 링크는 insights layout **PageFooterAds 아래**만(본문 내 링크는 승인 항목).
 - OG: `/api/og?type=report` + `path=/insights` 자동 분기. 공유 헤딩 `report` 키.
 - **/widget/salary** (기둥 4) — edge Route Handler가 광고·GA·카카오 스크립트가
