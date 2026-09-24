@@ -33,7 +33,8 @@ const ROBOTS_HEADER = "noindex, noimageindex, nofollow";
 // 기존 s-maxage=2592000(30일)은 0바이트/장애 응답이 CDN에 한 달 고착되는
 // 원인이었음 (2026-06-11 503 incident) — 1일로 단축.
 // 값은 ogImageCache 와 공유한다: 엣지 Cache API 저장본만 30일로 늘리고(검증된 카드만, STAB-04),
-// 밖으로 나가는 응답은 HIT·MISS 모두 이 1일로 다시 맞춘다.
+// 밖으로 나가는 정상 카드는 HIT·MISS 모두 1일이다 — MISS 는 이 헤더 그대로, HIT 는 30일 저장본을
+// 1일로 다시 표기(Age 제거). 폴백(아래 5분)은 저장본·HIT·MISS 모두 5분 그대로다.
 const OK_HEADERS = {
   "Content-Type": "image/png",
   "X-Robots-Tag": ROBOTS_HEADER,

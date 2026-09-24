@@ -81,9 +81,16 @@ export async function serveCachedOgImage(
       if (found && isPng(found)) {
         const hit = new Response(found.body, found);
         hit.headers.set("X-OG-Cache", "HIT");
-        // The stored copy may live 30 days; the outgoing card still says 1 day.
+        // The stored copy may live 30 days; the outgoing card still says 1 day. The Cache API
+        // adds an Age header on match (seen in the production probe), so that goes too: from
+        // day 2 an Age above 86400 would make the relabelled 1-day card stale on arrival for
+        // browsers and for any CDN that honours origin Age. The card is immutable per key and
+        // IMAGE_VERSION, so a fresh 1-day downstream TTL is correct.
         // Anything else (a 300s fallback, an older 1d entry) passes through unchanged.
-        if (hit.headers.get("Cache-Control") === OG_STORED_CACHE_CONTROL) hit.headers.set("Cache-Control", OG_CLIENT_CACHE_CONTROL);
+        if (hit.headers.get("Cache-Control") === OG_STORED_CACHE_CONTROL) {
+          hit.headers.set("Cache-Control", OG_CLIENT_CACHE_CONTROL);
+          hit.headers.delete("Age");
+        }
         return hit;
       }
     } catch { /* Cache failures must not become image failures. */ }

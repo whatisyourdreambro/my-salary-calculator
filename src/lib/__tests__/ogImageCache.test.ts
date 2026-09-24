@@ -125,11 +125,28 @@ describe("stored TTL vs outgoing TTL", () => {
   });
 
   it("re-labels a stored 30-day entry to the client TTL on HIT without rewriting it", async () => {
-    const found = card(100_000, { "Cache-Control": STORED_TTL });
+    // The Workers Cache API adds Age on match; a 23-day-old copy must not go out as
+    // max-age=86400 with Age 2000000 (stale on arrival downstream).
+    const found = card(100_000, { "Cache-Control": STORED_TTL, Age: "2000000" });
     const cache = { match: vi.fn(async () => found), put: vi.fn(async () => {}) };
     const hit = await serveCachedOgImage("https://www.moneysalary.com/api/og?title=old", async () => card(1), cache);
+    expect(hit.headers.get("X-OG-Cache")).toBe("HIT");
     expect(hit.headers.get("Cache-Control")).toBe(CLIENT_TTL);
+    expect(hit.headers.get("Age")).toBeNull();
+    expect(hit.headers.get("X-Robots-Tag")).toContain("noindex");
+    expect((await hit.arrayBuffer()).byteLength).toBe(100_000);
     expect(cache.put).not.toHaveBeenCalled();
+  });
+
+  it("leaves legacy 1-day and 300s fallback HITs (and their Age) unchanged", async () => {
+    for (const [ttl, age] of [[86400, "3600"], [300, "120"]] as const) {
+      const found = card(100_000, { Age: age }, ttl);
+      const cache = { match: vi.fn(async () => found), put: vi.fn(async () => {}) };
+      const hit = await serveCachedOgImage("https://www.moneysalary.com/api/og?title=legacy", async () => card(1), cache);
+      expect(hit.headers.get("X-OG-Cache")).toBe("HIT");
+      expect(hit.headers.get("Cache-Control")).toBe(`public, max-age=${ttl}, s-maxage=${ttl}`);
+      expect(hit.headers.get("Age")).toBe(age);
+    }
   });
 });
 
