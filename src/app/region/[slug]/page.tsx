@@ -8,6 +8,7 @@ import { regionsData, getRegionById } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -43,9 +44,11 @@ export async function generateMetadata({
   // CTR 강화(7차): 평균 월 실수령 + 검색 키워드 변형 확대
   const monthlyNetEstimate = Math.round((region.salary.overall * 10000) / 12 / 10000 * 0.83);
 
+  // 금액 표기: 1억 이상은 "1억 2,000만원"(formatManwonKorean), 1억 미만은 종전 문자열과
+  // 바이트 단위로 같다 (2026-09-25 B14 META-06 — /job·/industry 와 같은 규칙).
   return buildPageMetadata({
-    title: `${region.nameShort} 평균 연봉 2026 — ${region.salary.overall.toLocaleString()}만원·월급 약 ${monthlyNetEstimate}만원`,
-    description: `${region.name} 평균 연봉 ${region.salary.overall.toLocaleString()}만원(월 실수령 약 ${monthlyNetEstimate}만원). 신입 ${region.salary.entry.avg.toLocaleString()}만원~, 시니어 ${region.salary.senior.avg.toLocaleString()}만원~. 2026 세법 기준 실수령액 즉시 계산.`,
+    title: `${region.nameShort} 평균 연봉 2026 — ${formatManwonKorean(region.salary.overall)}·월급 약 ${monthlyNetEstimate}만원`,
+    description: `${region.name} 평균 연봉 ${formatManwonKorean(region.salary.overall)}(월 실수령 약 ${monthlyNetEstimate}만원). 신입 ${formatManwonKorean(region.salary.entry.avg)}~, 시니어 ${formatManwonKorean(region.salary.senior.avg)}~. 2026 세법 기준 실수령액 즉시 계산.`,
     path: `/region/${region.id}`,
     keywords: [
       ...region.keywords,

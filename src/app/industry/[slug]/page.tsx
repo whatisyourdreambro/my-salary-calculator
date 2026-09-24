@@ -7,6 +7,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { getIndustryAggregate } from "@/lib/salary-data/industryAggregates";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -37,9 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? ` 1위 ${aggregate.topPayer.name.ko}.`
     : "";
 
+  // 금액 표기: 1억 이상은 "1억 3,000만원"(formatManwonKorean), 1억 미만은 종전 문자열과
+  // 바이트 단위로 같다 (2026-09-25 B14 META-06 — /job·/salary 제목과 같은 규칙).
   return buildPageMetadata({
-    title: `${industry.name} 업계 연봉 2026 — 평균 ${industry.salary.overall.toLocaleString()}만원·회사별 TOP 순위`,
-    description: `${industry.name} 업계 평균 연봉 ${industry.salary.overall.toLocaleString()}만원(월 약 ${monthlyNetEstimate}만원). 신입 ${industry.salary.entry.avg.toLocaleString()}만원~, 시니어 ${industry.salary.senior.avg.toLocaleString()}만원~.${companyNote}${topCompanyHint} 2026 실수령액 즉시 계산.`,
+    title: `${industry.name} 업계 연봉 2026 — 평균 ${formatManwonKorean(industry.salary.overall)}·회사별 TOP 순위`,
+    description: `${industry.name} 업계 평균 연봉 ${formatManwonKorean(industry.salary.overall)}(월 약 ${monthlyNetEstimate}만원). 신입 ${formatManwonKorean(industry.salary.entry.avg)}~, 시니어 ${formatManwonKorean(industry.salary.senior.avg)}~.${companyNote}${topCompanyHint} 2026 실수령액 즉시 계산.`,
     path: `/industry/${params.slug}`,
     keywords: [
       ...industry.keywords,

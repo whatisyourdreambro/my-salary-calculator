@@ -25,6 +25,7 @@ import FavoritesButton from "@/components/FavoritesButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { buildSalaryAmountMetadata , formatSalaryKorean } from "@/lib/seo";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import {
  breadcrumbLd,
  faqLd,
@@ -101,23 +102,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: number) {
- const manwon = Math.round(amount / 10000).toLocaleString("ko-KR");
+ // 금액 표기는 이 페이지 title·H1 과 같은 규칙: 1억 이상은 formatSalaryKorean("1억 2,000만원"),
+ // 1억 미만은 종전 "N,NNN만원" 문자열 그대로 (2026-09-25 B14 META-06 — 같은 페이지에서
+ // 제목은 "1억 2,000만원", FAQ 는 "12,000만원" 으로 갈리던 불일치 정리).
+ const isEok = amount >= 100_000_000;
+ const amountLabel = isEok
+ ? formatSalaryKorean(amount)
+ : `${Math.round(amount / 10000).toLocaleString("ko-KR")}만원`;
  const netManwon = (monthlyNet / 10000).toFixed(0);
  const deductionManwon = (totalDeduction / 10000).toFixed(0);
- const repaymentReference = Math.round((amount * 0.4) / 10000).toLocaleString("ko-KR");
+ const repaymentReference = formatManwonKorean(Math.round((amount * 0.4) / 10000));
+ // 질문은 접힌 FAQ 의 <summary> 로 화면에 보인다 — 억 표기는 "12,000만원" 보다 한 글자쯤 길어
+ // 356~378px·426~440px 폭에서 질문이 한 줄 늘고 아래 GuideMidAd 가 20px 밀렸다(폰트 실측).
+ // 1억 이상은 질문을 조금 줄여 전 폭(320~1920px, 정적 1억+ 135쪽)에서 줄 수 증가 0 을 확인했다.
+ // 1억 미만 질문은 종전 문자열 그대로.
+ const questions = isEok
+ ? [
+ `연봉 ${amountLabel}의 월 실수령액은?`,
+ `연봉 ${amountLabel}일 때 대출 상환 부담은?`,
+ `연봉 ${amountLabel}이면 직장인 중 어느 정도 위치인가요?`,
+ ]
+ : [
+ `연봉 ${amountLabel}의 월 실수령액은 얼마인가요?`,
+ `연봉 ${amountLabel}일 때 대출 상환 부담은 어떻게 비교하나요?`,
+ `연봉 ${amountLabel}이면 한국 직장인 중 어느 정도 위치인가요?`,
+ ];
 
  return [
  {
- question: `연봉 ${manwon}만원의 월 실수령액은 얼마인가요?`,
- answer: `연봉 ${manwon}만원의 2026년 예상 월 실수령액은 약 ${netManwon}만원입니다. 보험료와 세금을 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
+ question: questions[0],
+ answer: `연봉 ${amountLabel}의 2026년 예상 월 실수령액은 약 ${netManwon}만원입니다. 보험료와 세금을 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
  },
  {
- question: `연봉 ${manwon}만원일 때 대출 상환 부담은 어떻게 비교하나요?`,
- answer: `세전 연봉의 40%를 상환 부담 비교용으로 가정하면 연 ${repaymentReference}만원입니다. 이는 단순 비율 예시이며 대출 가능 금액이나 DSR 심사 결과가 아닙니다. 기존 대출의 원리금, 금리·만기와 금융기관의 인정 소득·심사 조건을 함께 확인해야 합니다.`,
+ question: questions[1],
+ answer: `세전 연봉의 40%를 상환 부담 비교용으로 가정하면 연 ${repaymentReference}입니다. 이는 단순 비율 예시이며 대출 가능 금액이나 DSR 심사 결과가 아닙니다. 기존 대출의 원리금, 금리·만기와 금융기관의 인정 소득·심사 조건을 함께 확인해야 합니다.`,
  },
  {
- question: `연봉 ${manwon}만원이면 한국 직장인 중 어느 정도 위치인가요?`,
- answer: `2024년 국세청 통계 기준 한국 직장인 평균 연봉은 약 4,200만원, 중위 연봉은 약 3,200만원입니다. 연봉 ${manwon}만원은 머니샐러리 연봉 티어에서 자세히 확인할 수 있으며, 본 페이지의 시각화를 참고하세요.`,
+ question: questions[2],
+ answer: `2024년 국세청 통계 기준 한국 직장인 평균 연봉은 약 4,200만원, 중위 연봉은 약 3,200만원입니다. 연봉 ${amountLabel}은 머니샐러리 연봉 티어에서 자세히 확인할 수 있으며, 본 페이지의 시각화를 참고하세요.`,
  },
  {
  question: "실수령액이 더 늘어나는 방법이 있나요?",
