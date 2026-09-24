@@ -2,12 +2,8 @@
 // shared.tsx 가 그대로 재수출하므로 Client·시뮬레이터의 "./shared" import 는 바뀌지 않는다.
 // 2026-09-21 S2-0 배치: 계산 로직·사업부 데이터를 shared.tsx(use client)에서 분리.
 
-import {
-  INSURANCE_RATES_2026,
-  PENSION_BASE_2026,
-  earnedIncomeDeduction2026,
-  calcIncomeTax2026,
-} from "@/lib/taxConstants2026";
+import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { estimateAnnualIncomeTax2026 } from "@/lib/bonusTaxCalc";
 import { OPI1_DEFAULT_RATE } from "./opiData";
 
 // ────────────────────────────────────────────────────────────
@@ -35,12 +31,13 @@ export function getThresholdPeriod(year: number): string {
 }
 
 // ────────────────────────────────────────────────────────────
-// 세금 로직 — 세율·요율은 단일 진실 소스(taxConstants2026.ts)에서 import.
-// 2027년 요율 변경 시 taxConstants2026.ts만 수정하면 이 계산기도 일괄 반영된다.
+// 세금 로직 — 소득세 증가분은 성과급 계산기 23종 공통 엔진(bonusTaxCalc.estimateAnnualIncomeTax2026)
+// 의 연간 결정세액 차이, 요율은 taxConstants2026.ts 단일 진실 소스. (2026-09-25 A18: 종전
+// '산출세액 차이 × (1 − 세액공제 30%)' 가정 대체 — 근로소득세액공제는 한도가 있어 비례하지 않는다.)
 // (반환 shape는 UI가 4대보험 4개 행을 분리 렌더링하므로 유지)
 // ────────────────────────────────────────────────────────────
 
-// 세금/4대보험 계산. credit = 세액공제율(0~50%), applyInsurance = 4대보험 추가 부과 적용 여부
+// 세금/4대보험 계산. credit = 추가 세액공제 가정(0~50%, 기본 0), applyInsurance = 4대보험 추가 부과 적용 여부
 export function calcSamsungBonusNet(
   salary: number,
   bonusWon: number,
@@ -50,18 +47,12 @@ export function calcSamsungBonusNet(
   if (bonusWon <= 0)
     return { net: 0, deduct: 0, effRate: 0, breakdown: emptyBreakdown() };
 
-  const basicDeduct = 1_500_000;
-  const baseTaxable = Math.max(
-    0,
-    salary - earnedIncomeDeduction2026(salary) - basicDeduct
-  );
   const total = salary + bonusWon;
-  const totalTaxable = Math.max(
+  const grossIncomeTaxOnBonus = Math.max(
     0,
-    total - earnedIncomeDeduction2026(total) - basicDeduct
+    estimateAnnualIncomeTax2026(total, INSURANCE_RATES_2026, applyInsurance ? total : salary) -
+      estimateAnnualIncomeTax2026(salary)
   );
-  const grossIncomeTaxOnBonus =
-    calcIncomeTax2026(totalTaxable) - calcIncomeTax2026(baseTaxable);
   const incomeTaxOnBonus = grossIncomeTaxOnBonus * (1 - credit / 100);
   const localTax = incomeTaxOnBonus * INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO;
 

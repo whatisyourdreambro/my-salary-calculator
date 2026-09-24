@@ -3,10 +3,8 @@
 import {
  INSURANCE_RATES_2026,
  PENSION_BASE_2026,
- calcIncomeTax2026,
- earnedIncomeDeduction2026,
- earnedIncomeTaxCredit2026,
 } from "./taxConstants2026";
+import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 /**
  * 3.3% 사업소득 또는 4대보험 적용 아르바이트 급여를 계산합니다.
@@ -69,20 +67,8 @@ export function calculatePartTimeSalary(
  // 바로 위에서 계산한 국민연금(연금보험료공제)과 근로소득세액공제(§59)를
  // 과세표준·세액에서 빼지 않았다. 같은 화면에서 '직장인' 탭과 '알바' 탭이
  // 월 최대 10만원 가까이 다른 답을 냈다.
- const annualIncome = income * 12;
- const taxBase = Math.max(
- 0,
- annualIncome -
- earnedIncomeDeduction2026(annualIncome) -
- 1_500_000 -
- nationalPension * 12
- );
- const calculatedTax = calcIncomeTax2026(taxBase);
- const annualIncomeTax = Math.max(
- 0,
- calculatedTax - earnedIncomeTaxCredit2026(calculatedTax, annualIncome)
- );
- const incomeTax = annualIncomeTax / 12;
+ // 2026-09-25(A17): 직장인 탭과 함께 근로소득 간이세액표(별표2) 월 원천징수액으로 전환.
+ const incomeTax = withholdingIncomeTax2026(income, 1, 0);
  const localTax = incomeTax * 0.1;
 
  const totalDeduction =

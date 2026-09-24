@@ -81,7 +81,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  { level: "임원", base: company.salary.executive.base, total: company.salary.executive.base + (company.salary.executive.incentive.avgAmount || 0) },
  ];
 
- // The same annual tax estimate as the salary comparison; this is a fixed savings scenario.
+ // The same withholding-table take-home engine as the salary comparison; this is a fixed savings scenario.
  const monthlyNetIncome = calculateSalary2026(company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0), 200_000, 1, 0).netPay;
  const monthsToGoal = monthlyNetIncome > 0 ? Math.ceil(60_000_000 / (monthlyNetIncome * 0.5)) : null;
 
@@ -190,7 +190,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  {monthsToGoal === null ? "급여 자료를 확인해 주세요." : `(약 ${Math.ceil(monthsToGoal / 12)}년 · 현재 저축액 0원, 이자·물가 변화 제외)`}
  </p>
  <p className="mt-3 text-sm leading-6 text-muted-foreground">
- 본인 1명·자녀 0명·월 비과세 20만원, 연간 세액을 월로 나눈 간이 추정입니다.
+ 본인 1명·자녀 0명·월 비과세 20만원, 소득세는 근로소득 간이세액표 기준의 간이 추정입니다.
  성과급도 12개월에 나눠 받는 가정이므로 실제 월급·지급 시점과 다릅니다.
  </p>
  <Link

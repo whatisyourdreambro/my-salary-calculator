@@ -1098,7 +1098,7 @@ export default function MultiYearBonusSimulator({
 
       <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
         ※ 본인 연봉 {(salary / 10000).toLocaleString("ko-KR")}만원 비례 적용 ·
-        세액공제 {creditRate}% · 4대보험 {applyInsurance ? "ON" : "OFF"} (위 본인
+        추가 세액공제 {creditRate}% · 4대보험 {applyInsurance ? "ON" : "OFF"} (위 본인
         케이스 가정 동일). 인원·가중치는 메인 시뮬 그대로.
       </p>
     </section>
@@ -1928,7 +1928,7 @@ function BonusPieView({
           </span>
         </div>
         <p className="text-[10px] text-faint-blue leading-relaxed">
-          여러 해 누적 성과급 중 실제로 손에 쥐는 비율입니다. 세액공제율·4대보험
+          여러 해 누적 성과급 중 실제로 손에 쥐는 비율입니다. 추가 세액공제·4대보험
           토글 설정에 따라 달라집니다.
         </p>
         <ResultNextLinks

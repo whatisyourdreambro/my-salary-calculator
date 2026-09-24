@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
 import { SCENARIOS, DEFAULT_BASIC_MANWON } from "./data";
 import NumberInput from "@/components/NumberInput";
@@ -14,7 +14,7 @@ export default function PoscoBonusClient() {
   const [customPercent, setCustomPercent] = useState(400);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -119,7 +119,7 @@ export default function PoscoBonusClient() {
           <div className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}

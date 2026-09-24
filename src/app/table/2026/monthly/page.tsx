@@ -18,7 +18,7 @@ import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryM
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 월급 실수령액 표 — 200만~1000만원 전 구간 세후 수령액",
  description:
- "세전 월급 250만원은 세후 약 223만원, 500만원은 약 415만원으로 추정합니다. 급여에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준으로, 연봉을 12개월로 나눈 2026년 예상 월 수령액과 공제 내역을 비교하세요.",
+ "세전 월급 250만원은 세후 약 224만원, 500만원은 약 420만원으로 추정합니다. 급여에 포함된 월 비과세 20만원·본인 1명·자녀 0명 기준으로, 연봉을 12개월로 나눈 2026년 예상 월 수령액과 공제 내역을 비교하세요.",
  path: "/table/2026/monthly",
  keywords: [
  "월급 실수령액 표",
@@ -49,7 +49,7 @@ const FAQ_ITEMS = [
  {
  question: "월급 250만원의 실수령액은 얼마인가요?",
  answer:
- `세전 월급을 연 3,000만원으로 환산하면 2026년 모델의 예상 월 수령액은 약 223만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 실제 지급액은 비과세 항목과 부양가족 수, 급여 정산 방식에 따라 달라질 수 있습니다.`,
+ `세전 월급을 연 3,000만원으로 환산하면 2026년 모델의 예상 월 수령액은 약 224만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 실제 지급액은 비과세 항목과 부양가족 수, 급여 정산 방식에 따라 달라질 수 있습니다.`,
  },
  {
  question: "월급에서 공제되는 항목은 무엇인가요?",
@@ -171,12 +171,12 @@ function MonthlyTable() {
  다를 수 있습니다.
  </p>
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
- {/* 수치는 generateData2026(상세 페이지와 동일 엔진·식대 20만 기준) 결과와 동기 — 2026-08-30 통일 */}
+ {/* 수치는 generateData2026(상세 페이지와 동일 엔진·식대 20만 기준) 결과와 동기 — 2026-08-30 통일, 2026-09-25 간이세액표 엔진으로 재산출 */}
  {[
- { label: "월급 250만원", monthly: "약 223만원" },
- { label: "월급 300만원", monthly: "약 263만원" },
- { label: "월급 400만원", monthly: "약 340만원" },
- { label: "월급 500만원", monthly: "약 415만원" },
+ { label: "월급 250만원", monthly: "약 224만원" },
+ { label: "월급 300만원", monthly: "약 267만원" },
+ { label: "월급 400만원", monthly: "약 344만원" },
+ { label: "월급 500만원", monthly: "약 420만원" },
  ].map((item) => (
  <div
  key={item.label}

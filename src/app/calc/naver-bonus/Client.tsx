@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock, Coins, Search } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
 import { PI_SCENARIOS, DEFAULT_SALARY_MANWON, DEFAULT_NAVER_STOCK, DEFAULT_RSU_SHARES } from "./data";
 import NumberInput from "@/components/NumberInput";
@@ -14,7 +14,7 @@ export default function NaverBonusClient() {
   const [stockPrice, setStockPrice] = useState(DEFAULT_NAVER_STOCK);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const calc = useMemo(() => {
@@ -171,7 +171,7 @@ export default function NaverBonusClient() {
           <div className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input
                 type="range"

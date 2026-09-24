@@ -201,9 +201,9 @@ export default function YearEndBonusPage() {
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              계산 가정: 근로소득공제·본인 기본공제 150만원을 반영하고, 산출세액의 30%가 공제된다고
-              일괄 가정합니다. 보험료도 단순 추정하므로 개인별 실제 세액공제·보험료 정산을 재현하지 않습니다.
-              확정 세액이나 지급월 입금액은 원천징수영수증·급여명세서로 확인하세요. 설명 확인: 2026-09-09. 근거:{" "}
+              계산 가정: 연봉·성과급 합산 연간 세액에 근로소득공제·기본공제 150만원·보험료 공제·
+              근로소득세액공제(총급여별 한도)를 반영합니다. 개인별 추가 세액공제·보험료 정산은 재현하지 않습니다.
+              확정 세액이나 지급월 입금액은 원천징수영수증·급여명세서로 확인하세요. 설명 확인: 2026-09-25. 근거:{" "}
               <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7873&mi=6594">국세청 과세표준·기본세율</a>,{" "}
               <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&mi=6596">연금계좌 세액공제</a>,{" "}
               <a className="underline" href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6583">상여 원천징수</a>,{" "}

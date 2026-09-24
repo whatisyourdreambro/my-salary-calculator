@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
 
 // 두산에너빌리티 경영성과급 시나리오.
@@ -48,7 +48,7 @@ export default function DoosanEnerbilityBonusClient() {
   const [basicPctOverride, setBasicPctOverride] = useState(300);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -227,7 +227,7 @@ export default function DoosanEnerbilityBonusClient() {
           <div className="mt-4 space-y-4">
             <div>
               <label htmlFor="ms-doosan-enerbility-bonus-field-1" className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input id="ms-doosan-enerbility-bonus-field-1"
                 type="range"

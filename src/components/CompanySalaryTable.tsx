@@ -225,7 +225,7 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
       </div>
 
       <p className="text-xs text-faint-blue mt-4 text-center">
-        * 본인 1인 기본공제, 세액공제 평균 적용 추정치. 부양가족·연말정산 변수에 따라 실제 금액은 다를 수 있습니다.
+        * 1인·비과세 식대 월 20만원, 간이세액표 원천징수 기준. 부양가족·연말정산에 따라 실제와 다를 수 있습니다.
       </p>
       {hasStock && (
         <p className="text-xs text-faint-blue mt-2 text-center">

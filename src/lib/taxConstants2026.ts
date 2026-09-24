@@ -6,7 +6,11 @@
 // 정의되어 있어, 2027년 세율 변경 시 두 곳 모두 손봐야 하는 위험이 있었음.
 // 이 파일에 모아두고 두 파일이 import 해 사용.
 //
-// 2027년 세율 변경 시: 이 파일만 수정하면 모든 계산기에 일괄 반영됨.
+// ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 rates 인자/포인터 상수로 한다.
+//   (TaxLogic.calculateSalary2026·bonusTaxCalc.calcBonusNet 의 선택 인자 rates,
+//   calculator.ts calculateNetSalaryWithRates 의 NetSalaryRates.)
+//   2026 귀속 연말정산(YearEndTaxCalculator·widget/year-end-tax)과 /table/2026 은
+//   2027년에도 2026 요율을 써야 하므로 이 블록 값은 2026 으로 고정한다.
 
 // ─────────────────────────────────────────────────────────────
 // 종합소득세 누진세율 (소득세법 §55) — 2026년 기준 8단계
@@ -47,6 +51,15 @@ export const INSURANCE_RATES_2026 = {
   /** 지방소득세 — 소득세의 10%. 변동 없음. */
   LOCAL_INCOME_TAX_RATIO: 0.1,
 } as const;
+
+/**
+ * 4대보험·지방세 요율 묶음의 형태 — INSURANCE_RATES_2026 과 같은 키, 값은 number.
+ * (`typeof INSURANCE_RATES_2026` 은 as const 리터럴 타입이라 다른 연도 값을 받을 수 없다.)
+ * TaxLogic.calculateSalary2026·bonusTaxCalc.calcBonusNet 의 선택 인자 rates 타입.
+ */
+export type InsuranceRates = {
+  readonly [K in keyof typeof INSURANCE_RATES_2026]: number;
+};
 
 // ─────────────────────────────────────────────────────────────
 // 국민연금 기준소득월액 상한·하한

@@ -60,7 +60,7 @@ describe("Salary explanation and result integrity", () => {
     expect(body).toContain(`href="${SALARY_CALCULATION_METHOD_HREF}"`);
   });
 
-  it.each([[30_000_000, 223], [50_000_000, 352], [100_000_000, 648]])("keeps the %i example, table row, detail result and metadata on the same default inputs", async (annual, approximateManwon) => {
+  it.each([[30_000_000, 224], [50_000_000, 357], [100_000_000, 653]])("keeps the %i example, table row, detail result and metadata on the same default inputs", async (annual, approximateManwon) => {
     const expected = calculateSalary2026(annual, 200_000, 1, 0).netPay;
     expect(Math.round(expected / 10_000)).toBe(approximateManwon);
     for (const html of [annualHtml(), monthlyHtml()]) {
@@ -77,14 +77,16 @@ describe("Salary explanation and result integrity", () => {
     expect(annualMetadata.description).toContain(`약 ${approximateManwon}만원`);
   });
 
-  it.each([annualHtml, monthlyHtml])("keeps table FAQ visible and states the model rather than a withholding-table lookup", (render) => {
+  it.each([annualHtml, monthlyHtml])("keeps table FAQ visible and states the withholding-table income tax model", (render) => {
     const html = render();
     const faq = structuredData(html).find(item => item["@type"] === "FAQPage")!;
     for (const question of faq.mainEntity!) expect(html).toContain(escapedText(question.acceptedAnswer.text));
     const methodAnswer = faq.mainEntity!.find(item => item.name.includes("공제되는"))!.acceptedAnswer.text;
     expect(methodAnswer).toContain(SALARY_MODEL_2026.incomeTaxMethod);
     expect(methodAnswer).toContain(SALARY_MODEL_2026.limitation);
-    expect(html).not.toContain("소득세(근로소득 간이세액표 기준)");
+    // 2026-09-25 A17: 월 소득세가 근로소득 간이세액표 금액이 됐다 — 설명도 표 기준을 밝힌다
+    expect(SALARY_MODEL_2026.incomeTaxMethod).toContain("간이세액표");
+    expect(methodAnswer).not.toMatch(/연간 세액을 추정해 12개월로 나눈/);
     expect(html).toContain(`href="${SALARY_CALCULATION_METHOD_HREF}"`);
   });
 
@@ -95,9 +97,10 @@ describe("Salary explanation and result integrity", () => {
     expect(html).not.toContain("DSR 40% 규제 기준");
     expect(html).toContain("대출 가능 금액이나 DSR 심사 결과가 아닙니다");
     expect(steps).not.toMatch(/표준세액공제|70~5%|최종 세액을 결정/);
-    expect(steps).toContain("연간 국민연금 보험료 추정액");
+    expect(steps).toContain("간이세액표");
     expect(steps).toContain("근로소득세액공제");
-    expect(steps).toContain("12개월로 나누고");
+    expect(steps).toContain("지방소득세");
+    expect(steps).not.toMatch(/12개월로 나누고|연간 추정 세액/);
     const meta = await generateMetadata({ params: { amount: "50000000" } });
     expect(meta.alternates?.canonical).toBe("https://www.moneysalary.com/salary/50000000");
     expect(meta.openGraph?.description).toBe(meta.description);

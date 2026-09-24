@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
 
 // 삼성디스플레이 OPI 시나리오 — 보도 확인값만 사용
@@ -32,7 +32,7 @@ export default function SamsungDisplayBonusClient() {
   const [customOpiPercent, setCustomOpiPercent] = useState(36);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = OPI_SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -177,7 +177,7 @@ export default function SamsungDisplayBonusClient() {
           <div className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}

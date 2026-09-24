@@ -1,8 +1,8 @@
 // /widget/bonus — 블로그 임베드용 성과급 세후 실수령 계산기 (edge Route Handler).
 //
-// 계산 단일 소스: src/lib/bonusTaxCalc.calcBonusNet (한계세율 모델 — 요율·산식 재구현 금지).
+// 계산 단일 소스: src/lib/bonusTaxCalc.calcBonusNet (연간 결정세액 차이 모델 — 요율·산식 재구현 금지).
 // calcBonusNet(s, b).totalDeductions 는 순수 한계차 G(s+b) − G(s) 로 텔레스코핑됨을
-// 수치 검증(오차 ≤1원, 2026-08-25) — 연소득 축 1D 공제 그리드만 인라인하면
+// 수치 검증(오차 ≤1원 2026-08-25, 2026-09-25 A18 엔진 교체 후 ≤3원(연봉 500만~2억 × 성과급 100만~2억 격자 실측) — 항목별 원 단위 반올림) — 연소득 축 1D 공제 그리드만 인라인하면
 // 위젯 JS 는 보간·차감만 수행한다(외부 요청 0회, 산식 중복 0).
 //
 // 회사별 지급률(OPI/PS 시나리오)은 다루지 않는다 — 제네릭 성과급 세후 계산 전용.
@@ -54,7 +54,7 @@ function buildHtml(): string {
     <span class="label">공제 합계(추정)</span>
     <span class="value" id="ded">—</span>
   </div>
-  <p class="note">2026년 세법 한계세율 기준 추정치입니다. 성과급이 연봉에 합산되며 늘어나는 소득세·4대보험 증가분을 공제로 반영합니다.</p>`,
+  <p class="note">2026년 세법 기준 추정치입니다. 성과급을 연봉에 합산한 연간 세액(근로소득세액공제 포함)과 4대보험 증가분을 공제로 반영합니다.</p>`,
     script: `(function () {
   var G = ${gridJson};
   var MIN = ${GRID_MIN}, MAX = ${GRID_MAX}, STEP = ${GRID_STEP};

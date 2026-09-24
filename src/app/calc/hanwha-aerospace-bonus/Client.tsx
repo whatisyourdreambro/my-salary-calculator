@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Settings, Lock } from "lucide-react";
-import { calcBonusNet, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 import NumberInput from "@/components/NumberInput";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
@@ -73,7 +73,7 @@ export default function HanwhaAerospaceBonusClient() {
   const [customMode, setCustomMode] = useState(false);
   const [bonusPctOverride, setBonusPctOverride] = useState(725);
   const [fixedOverride, setFixedOverride] = useState(4_000_000);
-  const [creditRate, setCreditRate] = useState(30);
+  const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId)!;
@@ -298,7 +298,7 @@ export default function HanwhaAerospaceBonusClient() {
           <div {...measurement.inputProps} className="mt-4 space-y-4">
             <div>
               <label className="block text-sm font-bold mb-2">
-                세액공제율: <span className="text-primary">{creditRate}%</span>
+                추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
               <input
                 type="range"
