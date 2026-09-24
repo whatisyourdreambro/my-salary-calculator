@@ -43,5 +43,7 @@ export const COMPANY_FAQ_REVIEW_DATE = new Date("2026-09-10");
  * "실제 갱신 커밋일만" 원칙에 따라 커밋일을 쓴다. 다음 갱신 체크포인트: 매년 7월
  * 연금 상한 개정 반영 커밋 시 이 값을 그 커밋일로 올린다(자의적 상향 금지 —
  * 실수령액 열에 영향 없는 배포는 포함 금지).
+ * 2026-09-25: A17(c95c183e) — TaxLogic.calculateSalary2026 월 소득세를 근로소득 간이세액표
+ *   원천징수액으로 전환해 전 회사 실수령액 열(CompanySalaryTable·CompanyNarrative)이 다시 계산됐다.
  */
-export const TAX_TABLE_EFFECTIVE_DATE = "2026-07-06";
+export const TAX_TABLE_EFFECTIVE_DATE = "2026-09-25";

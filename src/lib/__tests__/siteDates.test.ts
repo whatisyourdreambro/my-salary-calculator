@@ -24,9 +24,9 @@ describe("siteDates 단일 소스", () => {
     expect(ld.datePublished).toBe("2024-12-01");
   });
 
-  it("TAX_TABLE_EFFECTIVE_DATE 는 YYYY-MM-DD 문자열이며 실제 반영 커밋일(e0604ae 2026-07-06)이다", () => {
+  it("TAX_TABLE_EFFECTIVE_DATE 는 YYYY-MM-DD 문자열이며 실제 반영 커밋일(A17 간이세액표 엔진 2026-09-25)이다", () => {
     expect(TAX_TABLE_EFFECTIVE_DATE).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(TAX_TABLE_EFFECTIVE_DATE).toBe("2026-07-06");
+    expect(TAX_TABLE_EFFECTIVE_DATE).toBe("2026-09-25");
     expect(Number.isNaN(new Date(TAX_TABLE_EFFECTIVE_DATE).getTime())).toBe(false);
   });
 });
