@@ -131,7 +131,7 @@ export default function CompanyDisclosedSalary({
             {dartStats.listedRank != null && (
               <span className="text-xs font-bold text-muted-blue dark:text-canvas-300">
                 상장 {dartStats.listedTotal.toLocaleString("ko-KR")}곳 중{" "}
-                {dartStats.listedRank.toLocaleString("ko-KR")}위 · DART 공시 기준
+                {dartStats.listedRank.toLocaleString("ko-KR")}위 · DART 산정 기준
               </span>
             )}
           </p>
@@ -143,7 +143,7 @@ export default function CompanyDisclosedSalary({
               <thead>
                 <tr className="border-b border-canvas-200 dark:border-canvas-800 text-left text-faint-blue">
                   <th className="py-1.5 pr-3 font-bold">사업연도</th>
-                  <th className="py-1.5 pr-3 font-bold">공시 평균연봉</th>
+                  <th className="py-1.5 pr-3 font-bold">DART 산정치</th>
                   <th className="py-1.5 font-bold">직원 수</th>
                 </tr>
               </thead>

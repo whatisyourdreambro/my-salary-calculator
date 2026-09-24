@@ -51,7 +51,9 @@ export default function CompanyCareerLevels({ company }: Props) {
           className="text-3xl sm:text-4xl font-black tracking-tight mb-4"
         >
           {company.name.ko}{" "}
-          {isSamsung || isHynix ? "CL 직급별 연봉" : "직급별 세부 연봉"} (2026)
+          {/* '(2026)'은 2026년 자료인 삼성전자·SK하이닉스만 — 타사 표는 2019~2025년 보도·공시 기준이 섞여 있어
+              연도 대신 '(공개 자료)'. 같은 폭이라 제목 줄 수·아래 Display2Ad 위치 불변 (COMP-07, 2026-09-25 실측) */}
+          {isSamsung || isHynix ? "CL 직급별 연봉 (2026)" : "직급별 세부 연봉 (공개 자료)"}
         </h2>
         {isSamsung ? (
           <p className="text-base text-faint leading-relaxed">
@@ -174,11 +176,11 @@ export default function CompanyCareerLevels({ company }: Props) {
       </div>
 
       <aside className="mt-8 space-y-4">
-        {/* 삼성전자 전용 — 2026 임금협약 잠정합의서 박스 (타사 노출 금지) */}
+        {/* 삼성전자 전용 — 2026 임금협약 합의서 박스 (2026-05-27 조합원 투표 가결로 타결, 타사 노출 금지) */}
         {isSamsung && (
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-5 text-sm leading-relaxed">
           <p className="font-black text-foreground mb-3">
-            🆕 2026년 임금협약 잠정합의서 — 핵심 변경사항
+            2026년 임금협약 타결 합의서 — 핵심 변경사항
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
@@ -222,7 +224,7 @@ export default function CompanyCareerLevels({ company }: Props) {
           {isSamsung ? (
             <ul className="space-y-1 list-disc list-inside">
               <li>
-                <strong>셀러리캡 수치</strong>는 2026년 임금협약 잠정합의서
+                <strong>셀러리캡 수치</strong>는 2026년 임금협약 합의서
                 원문 명시값(추정 아님).
               </li>
               <li>

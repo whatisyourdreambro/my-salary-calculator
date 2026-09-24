@@ -12,6 +12,7 @@ import {
   getIndustryRanking,
   getOverallRank,
   getSimilarSalaryCompanies,
+  overallRankLabel,
 } from "@/lib/companyContentBuilder";
 
 const domestic = allCompanies.filter((c) => !c.isGlobal);
@@ -56,6 +57,29 @@ describe("getOverallRank — 국내 전국 순위", () => {
     const rank = getOverallRank(bottom)!;
     expect(rank.rank).toBe(domestic.length);
     expect(rank.topPercent).toBe(100);
+  });
+});
+
+describe("overallRankLabel — 상위 50% 밖은 순위 숫자 대신 구간 라벨 (A22)", () => {
+  it("상위 50% 이내는 '{N}위' 그대로", () => {
+    expect(overallRankLabel({ rank: 12, total: 422, topPercent: 3 })).toBe("12위");
+    expect(overallRankLabel({ rank: 211, total: 422, topPercent: 50 })).toBe("211위");
+  });
+
+  it("51~75%는 '중위권', 76~100%는 '중하위권'", () => {
+    expect(overallRankLabel({ rank: 252, total: 422, topPercent: 60 })).toBe("중위권");
+    expect(overallRankLabel({ rank: 316, total: 422, topPercent: 75 })).toBe("중위권");
+    expect(overallRankLabel({ rank: 321, total: 422, topPercent: 77 })).toBe("중하위권");
+    expect(overallRankLabel({ rank: 422, total: 422, topPercent: 100 })).toBe("중하위권");
+  });
+
+  it("국내 전 회사 — 라벨은 '{N}위'·'중위권'·'중하위권' 셋 중 하나이고 경계는 topPercent 50", () => {
+    for (const c of domestic) {
+      const rank = getOverallRank(c)!;
+      const label = overallRankLabel(rank);
+      if (rank.topPercent <= 50) expect(label).toBe(`${rank.rank.toLocaleString("ko-KR")}위`);
+      else expect(["중위권", "중하위권"]).toContain(label);
+    }
   });
 });
 

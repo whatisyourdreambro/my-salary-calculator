@@ -15,6 +15,7 @@ import Link from "@/components/AppLink";
 import { ArrowRight, Copy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import { getSalaryGroupPeers } from "@/lib/companyContentBuilder";
+import { josa, josaParticle } from "@/lib/josa";
 
 export default function CompanySalaryGroupNotice({
   company,
@@ -38,7 +39,7 @@ export default function CompanySalaryGroupNotice({
           머니샐러리 DB 기준 급여 수치가 동일한 회사들
         </h2>
         <p className="text-sm leading-7 text-muted-blue dark:text-canvas-300 mb-4">
-          {company.name.ko}는 아래 {peers.length}개사와 본 DB에 등록된 직급별
+          {josa(company.name.ko, "은/는")} 아래 {peers.length}개사와 본 DB에 등록된 직급별
           기본급 수치(신입~임원 5단계)가 동일합니다. 같은 공개 자료 기준으로
           집계된 회사들은 수치가 겹칠 수 있으며, 위 연봉표가 이 회사만의 확정
           급여를 뜻하지는 않습니다. 실제 차이는 복지·조직문화·근무지에서
@@ -46,10 +47,10 @@ export default function CompanySalaryGroupNotice({
           {firstPro && (
             <>
               {" "}
-              {company.name.ko}의 경우 &ldquo;{firstPro}&rdquo;이(가) 장점으로
+              {company.name.ko}의 경우 &ldquo;{firstPro}&rdquo;{josaParticle(firstPro, "이/가")} 장점으로
               꼽히며
               {topBenefit
-                ? `, 대표 복지로는 ${topBenefit.title}이(가) 있습니다.`
+                ? `, 대표적인 복지로는 ${josa(topBenefit.title, "이/가")} 있습니다.`
                 : "."}
             </>
           )}

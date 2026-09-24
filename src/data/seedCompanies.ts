@@ -250,7 +250,7 @@ export const seedCompanies: CompanyProfile[] = [
  source:
  "뉴시스 2026-03-18 — 2025년 사업보고서 인용 (아이뉴스24 2026-03 보도 동일 수치)",
  sourceUrl: "https://www.newsis.com/view/NISX20260317_0003552314",
- note: "전년 1억1,700만원 대비 58.1% 급증한 역대 최고치. HBM 호황 성과급 반영으로 삼성전자를 역전. 직원 수 3만4,549명.",
+ note: "전년 대비 50%대 급증한 역대 최고치. HBM 호황 성과급 반영으로 삼성전자를 역전. 직원 수 3만4,549명.",
  },
  name: { ko: "SK하이닉스", en: "SK Hynix" },
  industry: "Semiconductor",
@@ -687,7 +687,7 @@ export const seedCompanies: CompanyProfile[] = [
  score: 8.8,
  keywords: ["안정", "변화", "워라밸"],
  pros: ["강력한 노조와 고용 안정성", "높은 성과급", "차량 할인 혜택"],
- cons: ["수직적인 군대 문화 (부서바부서)", "보수적인 의사결정"],
+ cons: ["수직적 조직 문화(부서별 편차)", "보수적인 의사결정"],
  },
  lastUpdated: "2026-08-15",
  },

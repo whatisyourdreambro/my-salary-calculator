@@ -183,7 +183,7 @@ export const krCompanies_Batch4: CompanyProfile[] = [
  },
  workLife: { weeklyHours: { contract: 40, real: 50 }, vacation: { days: 20, usageRate: 70 }, remoteWork: { policy: "office", description: "용산 사옥" } },
  benefits: [{ category: "lifestyle", title: "용산 사옥", description: "최고급 사옥 시설", value: 3000000 }, { category: "lifestyle", title: "구내식당", description: "2천원 고퀄리티", value: 2000000 }],
- culture: { score: 8.2, keywords: ["엔터", "열정", "용산"], pros: ["글로벌 1위 엔터사 자부심", "최고급 사옥과 구내식당", "젊은 분위기"], cons: ["살인적인 업무 강도 (엔터 특성)", "잦은 야근", "박한 연봉"] },
+ culture: { score: 8.2, keywords: ["엔터", "열정", "용산"], pros: ["글로벌 1위 엔터사 자부심", "최고급 사옥과 구내식당", "젊은 분위기"], cons: ["매우 높은 업무 강도 (엔터 특성)", "잦은 야근", "박한 연봉"] },
  lastUpdated: "2025-11-23",
  },
  {

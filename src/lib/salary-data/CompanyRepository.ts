@@ -5,6 +5,19 @@ import { normalizeIndustry } from "./industryTaxonomy";
 import { dartInjection, DART_INJECTION_DATE } from "@/data/dart/dartInjection";
 import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 
+/** 지주회사 본사 공시만 주입된 회사 — 페이지 이름은 그룹명(예: KB금융그룹)이지만 DART 수치는
+ *  지주회사 본사 직원(48~144명) 평균이라 계열사(은행·조선 등) 직원 평균으로 읽히면 안 된다 (COMP-12).
+ *  업종·이름 휴리스틱은 KB금융그룹(Finance)·HD현대·SK스퀘어를 놓치므로 id 명시 목록으로 관리.
+ *  회사명은 바꾸지 않는다 — 이름이 동결된 회사 <title> 을 만든다. */
+const HOLDING_COMPANY_DART_IDS = new Set([
+ "kb-financial",
+ "hd-hyundai",
+ "sk-square",
+ "nice-holdings",
+ "bnk-financial",
+ "jb-financial",
+]);
+
 /** DART 공시 요약(dartInjection)으로 disclosed 블록 조립.
  *  수기 disclosed 가 있는 회사에는 절대 적용하지 않는다(수기 우선 —
  *  수기 43곳은 언론 교차확인·산정기준 note 가 붙은 큐레이션 값).
@@ -12,13 +25,17 @@ import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 function buildDartDisclosed(id: string): CompanyProfile["disclosed"] | undefined {
  const d = dartInjection[id];
  if (!d) return undefined;
+ const employees = d.e.toLocaleString("ko-KR");
  return {
  avgSalaryManwon: d.a,
  fiscalYear: d.y,
  ...(d.t != null ? { avgTenureYears: d.t } : {}),
  source: `금융감독원 전자공시(DART) 사업보고서(${d.y} 사업연도) '직원 등의 현황' — OpenDART 수집`,
  sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${d.r}`,
- note: `직원 ${d.e.toLocaleString("ko-KR")}명 기준. 사업부문·성별 구분 공시를 연간급여총액÷인원으로 가중 평균한 값(등기임원 제외).`,
+ // 지주회사는 덧붙이지 않고 교체 — 공시 카드(GuideMidAd 위) 높이를 기존 문구와 같게 유지
+ note: HOLDING_COMPANY_DART_IDS.has(id)
+ ? `지주회사 본사 직원 ${employees}명 기준(계열사 직원 평균 아님). 연간급여총액÷인원 가중(등기임원 제외).`
+ : `직원 ${employees}명 기준. 사업부문·성별 구분 공시를 연간급여총액÷인원으로 가중 평균한 값(등기임원 제외).`,
  };
 }
 

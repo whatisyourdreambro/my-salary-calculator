@@ -13,6 +13,7 @@ import {
   industryLabelKo,
   formatSalaryKorean,
 } from "@/lib/companyContentBuilder";
+import { josa } from "@/lib/josa";
 
 const TOP_VISIBLE = 15;
 
@@ -43,7 +44,7 @@ export default function CompanyIndustryRank({
         {industryKo} 업종 연봉 순위
       </h2>
       <p className="text-sm text-muted-blue dark:text-canvas-300 mb-6">
-        {company.name.ko}은(는) 국내 {industryKo} 업종 {total}개사 중 신입 영끌 연봉{" "}
+        {josa(company.name.ko, "은/는")} 국내 {industryKo} 업종 {total}개사 중 신입 영끌 연봉{" "}
         <strong className="text-electric">{myRank}위</strong>입니다. 같은 업종 회사의
         초봉을 한눈에 비교해 보세요. (글로벌 기업은 국내 순위 비교에서 제외)
       </p>
@@ -98,7 +99,7 @@ export default function CompanyIndustryRank({
       </ol>
 
       <p className="mt-4 text-xs text-faint-blue">
-        신입 영끌 연봉(기본급 + 평균 인센티브) 기준 · 연봉 데이터 최종 업데이트{" "}
+        신입 영끌 연봉(기본급 + 평균 인센티브) 추정치 기준 · 페이지 갱신{" "}
         {company.lastUpdated}
       </p>
 

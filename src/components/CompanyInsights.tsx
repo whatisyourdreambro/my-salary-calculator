@@ -15,6 +15,7 @@ import {
  describeWorkLife,
  industryLabelKo,
 } from "@/lib/companyContentBuilder";
+import { josa } from "@/lib/josa";
 
 interface CompanyInsightsProps {
  company: CompanyProfile;
@@ -112,7 +113,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  비슷한 연봉대 회사 {similarCompanies.length}개
  </h2>
  <p className="text-sm text-faint-blue mb-6">
- {koName}와 신입 연봉이 ±15% 범위 내인 회사
+ {josa(koName, "과/와")} 신입 연봉이 ±15% 범위 내인 회사
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
  {similarCompanies.map((peer) => {
