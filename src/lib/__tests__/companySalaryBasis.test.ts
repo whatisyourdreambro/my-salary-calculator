@@ -5,6 +5,7 @@ import { allCompanies } from "@/data/companies";
 import { dartInjection } from "@/data/dart/dartInjection";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
+import { buildCompanyFaq } from "@/lib/companyFaqItems";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { faqLd } from "@/lib/structuredData";
 import CompanyFaq from "@/components/CompanyFaq";
@@ -137,6 +138,24 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
       expect(disclosed.sourceUrl).toContain(dartInjection[company.id].r);
       expect(disclosed.note).toContain("연간급여총액÷인원");
     }
+  });
+
+  it("회사 상세 FAQ 전체(신입·주니어·시니어·DSR 참고값 포함) JSON-LD 에 다섯 자리 만원이 없다 (B14 META-06)", () => {
+    let eokCompanies = 0;
+    for (const company of companies) {
+      const items = buildCompanyFaq(company);
+      expect(items.length, company.id).toBeGreaterThan(2);
+      expect(JSON.stringify(faqLd(items)), company.id).not.toMatch(/\d{2,3},\d{3}만원/);
+      const senior = company.salary.senior.base + (company.salary.senior.incentive.avgAmount || 0);
+      if (senior >= 100_000_000) {
+        eokCompanies++;
+        const seniorLabel = formatManwonKorean(Math.round(senior / 10000));
+        expect(seniorLabel, company.id).toContain("억");
+        expect(items.find((i) => i.question.includes("시니어 연봉은 신입 대비"))!.answer, company.id).toContain(`약 ${seniorLabel}으로`);
+      }
+    }
+    expect(eokCompanies).toBeGreaterThan(0);
+    expect(buildCompanyFaq(undefined)).toEqual([]);
   });
 
   it("서버 FAQ 본문과 구조화 데이터에 같은 질문·답을 사용한다", () => {
