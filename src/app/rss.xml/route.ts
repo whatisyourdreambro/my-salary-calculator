@@ -8,8 +8,13 @@ import { koGuides } from "@/lib/guidesContent";
 // pubDate=updatedDate(갱신 시 피드 상단 재노출). 10/5 서치어드바이저 rss.xml 제출 전 선행.
 import { reportsRegistry } from "@/data/reportsRegistry";
 import { getGuideModifiedDate } from "@/lib/guideDates";
+import { contentEncoded } from "@/lib/rssFullText";
 
 const REPORT_CATEGORY = "데이터 리포트";
+// 본문 전문(content:encoded)을 싣는 최신 가이드 수 (2026-09-26 NAVER-03b) — 네이버 요청 피드는 item 에
+// 요약이 아닌 전문을 요구한다. 전 편(334편·본문 약 1.5MB)이 아니라 최신 50편(약 0.5MB)만 실어
+// 피드를 가볍게 유지한다. 나머지 가이드·리포트 item 은 종전 그대로(요약 description 만).
+const FULL_TEXT_GUIDE_COUNT = 50;
 
 /** 가이드·리포트 공통 피드 항목 */
 interface FeedItem {
@@ -19,7 +24,12 @@ interface FeedItem {
  /** ISO YYYY-MM-DD */
  date: string;
  categories: string[];
+ /** 본문 HTML — 최신 가이드 FULL_TEXT_GUIDE_COUNT 편만 */
+ fullText?: string;
 }
+
+const byDateDesc = (a: FeedItem, b: FeedItem) =>
+ new Date(b.date).getTime() - new Date(a.date).getTime();
 
 const escapeXml = (unsafe: string) => {
  return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -42,7 +52,10 @@ const escapeXml = (unsafe: string) => {
 
 /** 가이드 + 리포트를 날짜 내림차순으로 병합 (guid 중복 없음 — 경로 prefix 상이) */
 function buildFeedItems(baseUrl: string): FeedItem[] {
- const guideItems: FeedItem[] = koGuides.map((guide) => ({
+ // 수정일(없으면 발행일) 내림차순 — sort 는 안정 정렬이라 같은 날짜는 koGuides 순서를 유지하고,
+ // 아래 병합 정렬 뒤에도 가이드끼리의 순서가 같다(= 피드의 첫 50개 가이드 item 이 전문 대상).
+ const guideItems: FeedItem[] = koGuides
+ .map((guide) => ({
  title: guide.title,
  url: `${baseUrl}/guides/${guide.slug}`,
  description: guide.description,
@@ -51,7 +64,10 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  ...(guide.category ? [guide.category] : []),
  ...(guide.tags ?? []).slice(0, 5),
  ],
- }));
+ fullText: guide.content,
+ }))
+ .sort(byDateDesc)
+ .map((item, index) => (index < FULL_TEXT_GUIDE_COUNT ? item : { ...item, fullText: undefined }));
  const reportItems: FeedItem[] = reportsRegistry.map((report) => ({
  title: report.title,
  url: `${baseUrl}/insights/${report.slug}`,
@@ -59,9 +75,7 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  date: report.updatedDate,
  categories: [REPORT_CATEGORY, ...report.keywords.slice(0, 4)],
  }));
- return [...guideItems, ...reportItems].sort(
- (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
- );
+ return [...guideItems, ...reportItems].sort(byDateDesc);
 }
 
 function generateRssFeed() {
@@ -110,6 +124,8 @@ function generateRssFeed() {
  item.categories.forEach((category) => {
  rss += `<category>${escapeXml(category)}</category>`;
  });
+ // 전문은 item 맨 끝 — 앞 요소(title·link·guid…)를 정규식으로 읽는 소비처가 본문 HTML 과 섞이지 않게
+ if (item.fullText) rss += contentEncoded(item.fullText, item.url);
  rss += `</item>`;
  });
 
