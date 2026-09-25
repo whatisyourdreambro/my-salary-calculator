@@ -110,6 +110,12 @@ const FORBIDDEN: readonly ForbiddenPattern[] = [
     why: "가상자산소득은 분리과세 기타소득(2027-01-01 양도분부터 20%·250만 공제) — 결손금 이월공제 규정 없음 (nts.go.kr 가상자산소득 과세 개요)",
   },
   { id: "stock-10y-carry", re: /주식의 10년/g, why: "주식 양도차손 10년 이월 규정은 없다 (소득세법 §102, 같은 해 통산만)" },
+  {
+    // transfer-loss-carry 가 놓치는 표기 — '양도'가 멀리 있거나 앞 문장에 있는 '손실 시 이월 가능'
+    id: "stock-loss-carry",
+    re: /(?:주식|RSU|양도)[^.]{0,40}손실[^.]{0,12}이월\s?가능|손실 시 이월 가능/g,
+    why: "주식·RSU 양도차손은 같은 과세기간 안에서만 통산 — 다음 해로 이월공제되지 않는다 (소득세법 §102). 사업소득 결손금 이월은 '결손금 이월공제'로 쓸 것",
+  },
 
   // ── SEASON-11 흡수 — 시즌 가이드에서 되풀이되는 옛 값
   {
@@ -123,12 +129,15 @@ const FORBIDDEN: readonly ForbiddenPattern[] = [
     why: "전통시장·대중교통·문화 추가공제는 항목별 각 100만이 아니라 합산 300만(7천 이하)/200만(초과) — korea.kr 148923639, EDIT-08",
   },
   {
+    // 현행 소득 요건의 짝 '종합소득금액 7,000만 이하'는 옳은 값이라 제외한다 (nts.go.kr 239025 — 2024년 과세연도부터
+    // 총급여 7천→8천만·종합소득금액 6천→7천만). 뒤보기는 정규식 리터럴 대신 문자열로 만든다(타깃 ES2017 리터럴 검사 회피, 런타임 Node 는 지원).
     id: "rent-salary-7000",
-    re: /월세.{0,40}(?:7,000만|7천만)/g,
-    why: "월세 세액공제 총급여 요건은 2024년 귀속부터 8,000만 이하 (nts.go.kr 월세액 세액공제)",
+    re: new RegExp("월세.{0,40}(?<!종합소득(?:금액)?[이은]?\\s?)(?:7,000만|7천만)", "g"),
+    why: "월세 세액공제 총급여 요건은 2024년 귀속부터 8,000만 이하 — 종합소득금액 요건은 7,000만 이하 (nts.go.kr 월세액 세액공제)",
   },
+  // 한도 1,200만은 금지하지 않는다 — 2026년 세제개편안(korea.kr 정책뉴스 148969870, 2026-08-13)이 1,000만 → 1,200만 확대와
+  // 15~34세 청년 17% 를 제안했고 국회 심의 중이라 적용 귀속연도가 미확정이다. 12월 국회 의결 뒤 이 줄과 rent-cap-750 을 다시 볼 것.
   { id: "rent-cap-750", re: /월세.{0,40}750만/g, why: "월세 세액공제 한도는 2024년 귀속부터 연 1,000만 (nts.go.kr 월세액 세액공제)" },
-  { id: "rent-cap-1200", re: /월세.{0,40}1,200만/g, why: "2026년 귀속 월세 한도는 연 1,000만 (RENT_CREDIT_2026.CAP, 조특법 §95의2)" },
   {
     id: "postpartum-70-7",
     re: /산후조리[^.]{0,30}?[^\d,.](?:70|7)만/g,
@@ -138,6 +147,12 @@ const FORBIDDEN: readonly ForbiddenPattern[] = [
     id: "child-credit-old",
     re: /자녀\s?세액\s?공제.{0,30}(?:1명|첫째|1인)[^0-9]{0,6}15만|자녀\s?세액\s?공제.{0,40}(?:2명|두 명)[^0-9]{0,6}(?:30|35)만|자녀\s?세액\s?공제.{0,40}둘째[^0-9]{0,6}20만/g,
     why: "자녀세액공제는 2025년 귀속부터 1명 25만·2명 55만·셋째부터 40만씩 (korea.kr 148956909, CHILD_TAX_CREDIT_2026)",
+  },
+  {
+    // 출산·입양 세액공제(30·50·70만, 1회)를 연간 자녀세액공제로 적은 표기. 사이에 '출산·입양'이 끼면 옳은 문장이라 제외
+    id: "child-credit-30-70",
+    re: /자녀\s?세액\s?공제(?:(?!출산|입양)[^.+·]){0,12}30\s?~\s?70만|자녀\s?\(30\s?~\s?70만/g,
+    why: "30·50·70만은 출산·입양 세액공제(첫째·둘째·셋째 이상, 출산·입양한 과세기간에 1회) — 연간 자녀세액공제는 1명 25만·2명 55만·셋째부터 40만씩 (nts.go.kr 근로소득 세액공제 cntntsId=7875, 소득세법 §59의2)",
   },
   {
     id: "transit-80",
@@ -329,7 +344,10 @@ interface TaxLiteral {
   name: string;
   re: RegExp;
 }
-/** verify-tax-constants.mjs 의 PATTERNS(코드 리터럴 형태)를 그대로 읽어 온다 — 목록을 복제하지 않는다 */
+/**
+ * verify-tax-constants.mjs 의 PATTERNS(코드 리터럴 형태)를 그대로 읽어 온다 — 목록을 복제하지 않는다.
+ * 그 파일을 고칠 때는 항목마다 한 줄 `{ name: "…", re: /…/ }` 모양을 지킬 것(문자 클래스 안 '/'·키 순서 변경 시 이 파서도 함께).
+ */
 function verifyTaxPatterns(): TaxLiteral[] {
   const script = read("scripts/verify-tax-constants.mjs");
   const block = /const PATTERNS = \[([\s\S]*?)\n\];/.exec(script)?.[1] ?? "";
@@ -532,12 +550,22 @@ describe.skipIf(REGEN.size > 0)("(1) 금지 사실 스캔 — 한국어 가이�
     expect(probe("자녀세액공제 1명 15만원, 2명 35만원")).toContain("child-credit-old");
     expect(probe("고향사랑기부 10만원 초과분 16.5%")).toContain("hometown-15");
     expect(probe("청년도약계좌 지금 가입하세요")).toContain("youth-leap-invite");
+    // 뒤보기가 뒤쪽 옳은 값에서 막혀도 앞쪽 옛 값은 되짚어 잡는다
+    expect(probe("월세 세액공제 — 총급여 7천만 이하(종합소득금액 7,000만원 이하)")).toContain("rent-salary-7000");
+    expect(probe("RSU 단기 보유: 차익 발생 시 250만원 공제 후 22%. 손실 시 이월 가능.")).toContain("stock-loss-carry");
+    expect(probe("해외주식 양도에서 난 손실은 다음 해로 이월 가능합니다")).toContain("stock-loss-carry");
+    expect(probe("부모 자녀세액공제 추가 환급 30~70만원/년.")).toContain("child-credit-30-70");
+    expect(probe("세액공제: 자녀(30~70만) + 연금저축")).toContain("child-credit-30-70");
     // 현행 문구
     expect(probe("양도소득세 이월과세가 적용돼 증여자의 취득가액으로 계산")).toEqual([]);
     expect(probe("자녀세액공제 1명 25만원, 2명 55만원, 첫째 25만원·둘째 30만원")).toEqual([]);
     expect(probe("고향사랑 10만원까지 100/110 · 10만~20만원 40% · 20만원 초과 15%")).toEqual([]);
     expect(probe("산후조리원 200만원 한도 × 15% = 최대 30만원")).toEqual([]);
     expect(probe("월세 세액공제 총급여 8,000만원 이하, 연 1,000만원 한도")).toEqual([]);
+    expect(probe("월세 세액공제 총급여 8,000만원 이하(종합소득금액 7,000만원 이하)")).toEqual([]);
+    expect(probe("월세 세액공제 한도를 연 1,200만원으로 늘리는 2026년 세제개편안")).toEqual([]);
+    expect(probe("사업소득 결손금은 15년간 이월공제 가능(양도차손은 같은 해 통산만, 이월 불가)")).toEqual([]);
+    expect(probe("자녀세액공제 연 25~40만원 + 출산·입양 세액공제(일회성) 30~70만원")).toEqual([]);
   });
 });
 
@@ -686,12 +714,15 @@ describe.skipIf(REGEN.size > 0)("(4) /guides/nurse-salary — verify:autoads 기
 });
 
 describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정본 상수에서 (리터럴 금지)", () => {
-  const taxPatterns = verifyTaxPatterns();
-  const patterns = [...taxPatterns, ...DISPLAY_RATE_LITERALS];
+  // 파싱은 it 안에서 처음 쓸 때 한다 — verify-tax-constants.mjs 형식이 바뀌면 (5) 의 패턴 테스트만 실패하고
+  // 파일 수집(건너뛰기·REGEN 포함)과 (1)~(4) 는 영향을 받지 않는다.
+  let taxCache: TaxLiteral[] | null = null;
+  const taxPatterns = () => (taxCache ??= verifyTaxPatterns());
+  const patterns = () => [...taxPatterns(), ...DISPLAY_RATE_LITERALS];
 
   it("verify-tax-constants.mjs 의 감시 패턴을 읽어 온다", () => {
-    expect(taxPatterns.length).toBeGreaterThanOrEqual(11);
-    expect(taxPatterns.map((p) => p.name)).toEqual(expect.arrayContaining(["국민연금 4.75%", "최저시급 10,320", "실업급여 일 상한 68,100"]));
+    expect(taxPatterns().length).toBeGreaterThanOrEqual(11);
+    expect(taxPatterns().map((p) => p.name)).toEqual(expect.arrayContaining(["국민연금 4.75%", "최저시급 10,320", "실업급여 일 상한 68,100"]));
   });
 
   it("원본 소스 탐색기가 한국어 가이드 전편의 본문 템플릿을 찾는다 (H2·표 개수가 렌더 결과와 같음)", () => {
@@ -714,16 +745,16 @@ describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정�
   it("리터럴 검사가 공허하지 않다 — 하드코딩은 잡고 ${정본 상수} 보간은 통과", () => {
     const literal = '<table class="w-full text-sm"><tr><td>최저시급</td><td>10,320원</td></tr><tr><td>국민연금</td><td>4.75%</td></tr></table>';
     const imported = '<table class="w-full text-sm"><tr><td>최저시급</td><td>${won(MINIMUM_WAGE_2026.hourly)}원</td></tr></table>';
-    expect(tableLiterals(literal, patterns)).toEqual(expect.arrayContaining(["표 1: 최저시급 10,320", "표 1: 국민연금 4.75% (표기)"]));
-    expect(tableLiterals(imported, patterns)).toEqual([]);
-    expect(tableLiterals("<p>최저시급 10,320원</p>", patterns)).toEqual([]);
+    expect(tableLiterals(literal, patterns())).toEqual(expect.arrayContaining(["표 1: 최저시급 10,320", "표 1: 국민연금 4.75% (표기)"]));
+    expect(tableLiterals(imported, patterns())).toEqual([]);
+    expect(tableLiterals("<p>최저시급 10,320원</p>", patterns())).toEqual([]);
   });
 
   it("키퍼 표에 2026 요율·상한 리터럴이 없다", () => {
     const report = KEEPERS.flatMap((slug) => {
       const src = guideContentSource(slug);
       if (!src) return [`${slug}: 본문 소스를 찾지 못함`];
-      return tableLiterals(src.body, patterns).map((x) => `${slug} (${src.rel}) ${x}`);
+      return tableLiterals(src.body, patterns()).map((x) => `${slug} (${src.rel}) ${x}`);
     });
     expect(report, "표의 요율·상한은 taxConstants2026·config 정본을 import 해 ${…} 로 넣는다").toEqual([]);
   });
