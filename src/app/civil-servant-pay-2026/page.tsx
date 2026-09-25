@@ -5,6 +5,11 @@
 //   국무회의 의결 직후 발표한다(2026년분은 2025-12-30 의결). 발표 즉시
 //   봉급표(GENERAL_PAY_ROWS·POLICE_FIRE_ROWS)·인상률·수당 수치·연도 표기를 갱신할 것.
 //   출처: 인사혁신처 mpm.go.kr(2026 봉급표 원문·보도자료 cntId=4187), 법제처 공무원수당규정
+// 일반직 전 급수·전 호봉 풀표 (2026-09-25 준비, 수익 추천 #2 — 배포는 10/8 자동광고 복구 판정 뒤): 9급~1급
+//   전체표를 페이지 맨 끝(MultiplexAd·사이드바 광고까지 모든 광고 아래, 그리드 밖)에 붙였다. 광고 위 요약표
+//   (9~5급 1~10호봉)·메타 title/description·리드는 그대로 — 전체표 데이터는 payTablesFull2026.ts(원문 파싱).
+//   수정일은 메타·Article·Dataset(head)만 풀표 추가일로 갱신 — 광고 위 PublishedMeta 는 발행일과 달라지면
+//   '최종 갱신' 문구가 새로 붙어 길어지므로 그대로 둔다(광고 위 제자리·같은 길이 원칙).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -30,6 +35,19 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
+import PayStepTable from "@/components/PayStepTable";
+import {
+  GENERAL_GRADES_FULL,
+  GENERAL_PAY_FULL_2026,
+  PAY_FULL_2026_CHECKED,
+  pickPayColumns,
+} from "@/lib/payTablesFull2026";
+
+const MODIFIED = "2026-09-25";
+
+// 전체표 — 9급~5급·4급~1급 두 표로 나눠 모바일 가로 스크롤을 줄인다
+const FULL_LOWER_GRADES = pickPayColumns(GENERAL_PAY_FULL_2026, 0, 5);
+const FULL_UPPER_GRADES = pickPayColumns(GENERAL_PAY_FULL_2026, 5, 9);
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 공무원 봉급표 — 9급~5급 호봉별 월급·3.5% 인상 확정",
@@ -38,7 +56,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-15",
-  modifiedTime: "2026-09-09",
+  modifiedTime: MODIFIED,
   keywords: [
     "공무원 봉급표 2026",
     "2026 공무원 봉급표",
@@ -118,15 +136,15 @@ export default function CivilServantPay2026Page() {
             slug: "civil-servant-pay-2026",
             url: "/civil-servant-pay-2026",
             publishedDate: "2026-08-15",
-            modifiedDate: "2026-09-09",
+            modifiedDate: MODIFIED,
           }),
           datasetLd({
-            name: "2026년 공무원 봉급표 데이터 (9급~5급 1~10호봉)",
+            name: "2026년 공무원 봉급표 데이터 (일반직 9급~1급 전 호봉)",
             description:
-              "인사혁신처 2026년 공무원 보수규정 기준 일반직 9·8·7·6·5급 1~10호봉 월 봉급액과 경찰(순경)·소방(소방사) 초임 봉급 데이터셋. 2025-12-30 국무회의 의결, 2026-01-01 시행분.",
+              "인사혁신처 2026년 공무원 보수규정 기준 일반직 9급~1급 전 호봉 월 봉급액(별표 3)과 경찰(순경)·소방(소방사) 초임 봉급 데이터셋. 2025-12-30 국무회의 의결, 2026-01-01 시행분.",
             url: "/civil-servant-pay-2026",
             datePublished: "2026-08-15",
-            dateModified: "2026-09-09",
+            dateModified: MODIFIED,
             keywords: [
               "공무원 봉급표",
               "2026 공무원 월급",
@@ -451,6 +469,65 @@ export default function CivilServantPay2026Page() {
             <CoupangBanner size="skyscraper" showDisclosure={false} />
           </aside>
         </div>
+
+        {/* 일반직 전 급수·전 호봉 전체표 — 모든 광고 아래 페이지 맨 끝 (수익 추천 #2, 2026-09-25 준비) */}
+        <section
+          id="general-full-table"
+          aria-labelledby="general-full-table-title"
+          className="scroll-mt-24 mt-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200"
+        >
+          <h2 id="general-full-table-title" className="text-xl font-black text-navy mb-2">
+            2026 일반직 공무원 봉급표 전체 (9급~1급, 전 호봉)
+          </h2>
+          <p className="text-xs text-faint-blue leading-6 mb-5">
+            단위: 원(월 봉급액) · 출처:{" "}
+            <a
+              href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              인사혁신처 2026년 공무원 봉급표
+            </a>
+            (공무원보수규정 별표 3, 인사혁신처 표기 9급·1등급~4급·6등급 포함) · 확인일 {PAY_FULL_2026_CHECKED} ·
+            &lsquo;–&rsquo;는 해당 급수에 없는 호봉
+          </p>
+          <div className="space-y-8">
+            <PayStepTable
+              caption="9급~5급 (1~32호봉)"
+              columns={GENERAL_GRADES_FULL.slice(0, 5)}
+              rows={FULL_LOWER_GRADES}
+              regionLabel="일반직 봉급표 9급~5급 전체 (가로 스크롤)"
+              minWidthClass="min-w-[520px]"
+            />
+            <PayStepTable
+              caption="4급~1급 (1~28호봉)"
+              columns={GENERAL_GRADES_FULL.slice(5, 9)}
+              rows={FULL_UPPER_GRADES}
+              regionLabel="일반직 봉급표 4급~1급 전체 (가로 스크롤)"
+              minWidthClass="min-w-[440px]"
+            />
+          </div>
+          <p className="text-xs text-faint-blue leading-6 mt-4">
+            ※ 봉급표 금액은 수당을 뺀 기본급이며 군무원도 같은 표를 적용받습니다. 직렬별 전체표는{" "}
+            <Link href="/teacher-pay-2026#teacher-full-table" className="text-electric font-bold hover:underline">
+              교원
+            </Link>
+            ·
+            <Link href="/police-pay-2026#police-full-table" className="text-electric font-bold hover:underline">
+              경찰
+            </Link>
+            ·
+            <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
+              소방
+            </Link>
+            {" "}봉급표에서, 내년 예상액은{" "}
+            <Link href="/civil-servant-pay-2027" className="text-electric font-bold hover:underline">
+              2027 공무원 봉급표 예상
+            </Link>
+            에서 확인하세요.
+          </p>
+        </section>
       </div>
     </main>
   );

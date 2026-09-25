@@ -3,6 +3,11 @@
 // 데이터: civilServantPay.ts POLICE_RANK_ROWS_2026 (별표 10, 3중 교차검증).
 // 광고: civil-servant-pay-2026 표준 배치 복제 (운영자 승인 2026-08-30).
 // ★ 갱신 체크포인트: 매년 12월 말 국무회의 의결 시 봉급표·수당 갱신.
+// 전 계급·전 호봉 풀표 (2026-09-25 준비, 수익 추천 #2 — 배포는 10/8 자동광고 복구 판정 뒤): 순경~치안정감
+//   전체표를 페이지 맨 끝(사이드바 광고까지 포함한 모든 광고·공유 버튼 아래, 그리드 밖)에 붙였다. 광고 위
+//   요약표(PoliceFireRankTable 1~5호봉)·메타·리드는 그대로 — 전체표 데이터는 payTablesFull2026.ts(원문 파싱).
+//   수정일은 메타·Article·Dataset(head)만 풀표 추가일로 갱신 — 광고 위 PublishedMeta 는 발행일과 달라지면
+//   '최종 갱신' 문구가 새로 붙어 길어지므로 그대로 둔다(광고 위 제자리·같은 길이 원칙).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -18,8 +23,21 @@ import ShareButtons from "@/components/ShareButtons";
 import PoliceFireRankTable from "@/components/PoliceFireRankTable";
 import { HAZARD_ALLOWANCE_2026, POLICE_RANK_ROWS_2026 } from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
+import PayStepTable from "@/components/PayStepTable";
+import {
+  POLICE_FIRE_PAY_FULL_2026,
+  POLICE_FIRE_RANKS_FULL,
+  PAY_FULL_2026_CHECKED,
+  pickPayColumns,
+} from "@/lib/payTablesFull2026";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
+const MODIFIED = "2026-09-25";
+
+// 전체표 — 하위 5계급(순경~경감)·상위 5계급(경정~치안정감) 두 표로 나눠 모바일 가로 스크롤을 줄인다
+const POLICE_LABELS = POLICE_FIRE_RANKS_FULL.map((r) => r.police);
+const FULL_LOWER = pickPayColumns(POLICE_FIRE_PAY_FULL_2026, 0, 5);
+const FULL_UPPER = pickPayColumns(POLICE_FIRE_PAY_FULL_2026, 5, 10);
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 경찰 봉급표 — 순경~경감 계급·호봉별 월급 총정리",
@@ -28,7 +46,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/police-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
-  modifiedTime: "2026-08-30",
+  modifiedTime: MODIFIED,
   keywords: [
     "경찰 봉급표 2026",
     "경찰 월급",
@@ -85,15 +103,15 @@ export default function PolicePay2026Page() {
             slug: "police-pay-2026",
             url: "/police-pay-2026",
             publishedDate: "2026-08-30",
-            modifiedDate: "2026-08-30",
+            modifiedDate: MODIFIED,
           }),
           datasetLd({
-            name: "2026년 경찰공무원 봉급표 데이터 (순경~경감 1~5호봉)",
+            name: "2026년 경찰공무원 봉급표 데이터 (순경~치안정감 전 호봉)",
             description:
-              "공무원보수규정 별표 10 기준 2026년 경찰공무원 계급별(순경~경감)·호봉별(1~5호봉) 월 봉급액 데이터셋.",
+              "공무원보수규정 별표 10 기준 2026년 경찰공무원 계급별(순경~치안정감)·호봉별 전체 월 봉급액 데이터셋(인사혁신처 2026 봉급표 원문).",
             url: "/police-pay-2026",
             datePublished: "2026-08-30",
-            dateModified: "2026-08-30",
+            dateModified: MODIFIED,
             keywords: ["경찰 봉급표", "순경 월급", "경찰 월급", "경찰공무원"],
           }),
           speakableLd({ url: "/police-pay-2026", cssSelectors: [".faq-answer"] }),
@@ -268,6 +286,57 @@ export default function PolicePay2026Page() {
             <CoupangBanner size="skyscraper" showDisclosure={false} />
           </aside>
         </div>
+
+        {/* 전 계급·전 호봉 전체표 — 모든 광고·공유 버튼 아래 페이지 맨 끝 (수익 추천 #2, 2026-09-25 준비) */}
+        <section
+          id="police-full-table"
+          aria-labelledby="police-full-table-title"
+          className="scroll-mt-24 mt-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200"
+        >
+          <h2 id="police-full-table-title" className="text-xl font-black text-navy mb-2">
+            2026 경찰공무원 봉급표 전체 (순경~치안정감, 전 호봉)
+          </h2>
+          <p className="text-xs text-faint-blue leading-6 mb-5">
+            단위: 원(월 봉급액) · 출처:{" "}
+            <a
+              href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              인사혁신처 2026년 공무원 봉급표
+            </a>
+            (공무원보수규정 별표 10, 경찰·소방 통합표) · 확인일 {PAY_FULL_2026_CHECKED} · &lsquo;–&rsquo;는 해당
+            계급에 없는 호봉
+          </p>
+          <div className="space-y-8">
+            <PayStepTable
+              caption="순경~경감 (1~32호봉)"
+              columns={POLICE_LABELS.slice(0, 5)}
+              rows={FULL_LOWER}
+              regionLabel="경찰 봉급표 순경~경감 전체 (가로 스크롤)"
+              minWidthClass="min-w-[520px]"
+            />
+            <PayStepTable
+              caption="경정~치안정감 (1~30호봉)"
+              columns={POLICE_LABELS.slice(5, 10)}
+              rows={FULL_UPPER}
+              regionLabel="경찰 봉급표 경정~치안정감 전체 (가로 스크롤)"
+              minWidthClass="min-w-[520px]"
+            />
+          </div>
+          <p className="text-xs text-faint-blue leading-6 mt-4">
+            ※ 봉급표 금액은 위험근무수당·초과근무수당 등 수당을 뺀 기본급입니다. 같은 표를 소방 계급으로 보려면{" "}
+            <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
+              소방 봉급표 전체
+            </Link>
+            , 내년 예상액은{" "}
+            <Link href="/police-pay-2027" className="text-electric font-bold hover:underline">
+              2027 경찰 봉급표 예상
+            </Link>
+            에서 확인하세요.
+          </p>
+        </section>
       </div>
     </main>
   );

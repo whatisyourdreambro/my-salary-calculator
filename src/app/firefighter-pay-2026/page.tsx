@@ -10,6 +10,9 @@
 //   H1 은 사이트 폰트 실측(뷰포트 300~1400px 1px 단위)으로 이전 H1 보다 어느 폭에서도 줄 수가 늘지
 //   않는 '계급별 월급'으로 확정 — '소방사~소방경 월급'을 유지하면 768~897px·483~560px·320px 이하에서
 //   한 줄 늘어 HomeTopAd 를 36~48px 밀어 기각(리뷰 2026-09-25).
+// 전 계급·전 호봉 풀표 (2026-09-25 준비, 수익 추천 #2 — 배포는 10/8 자동광고 복구 판정 뒤): 소방사~소방정감
+//   전체표를 페이지 맨 끝(사이드바 광고까지 포함한 모든 광고·공유 버튼 아래, 그리드 밖)에 붙였다. 광고 위
+//   요약표·메타·리드는 그대로 — 전체표 데이터는 payTablesFull2026.ts(원문 파싱, 경찰과 같은 별표 10).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -25,8 +28,20 @@ import ShareButtons from "@/components/ShareButtons";
 import PoliceFireRankTable from "@/components/PoliceFireRankTable";
 import { HAZARD_ALLOWANCE_2026, POLICE_RANK_ROWS_2026 } from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
+import PayStepTable from "@/components/PayStepTable";
+import {
+  POLICE_FIRE_PAY_FULL_2026,
+  POLICE_FIRE_RANKS_FULL,
+  PAY_FULL_2026_CHECKED,
+  pickPayColumns,
+} from "@/lib/payTablesFull2026";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
+
+// 전체표 — 하위 5계급(소방사~소방경)·상위 5계급(소방령~소방정감) 두 표로 나눠 모바일 가로 스크롤을 줄인다
+const FIRE_LABELS = POLICE_FIRE_RANKS_FULL.map((r) => r.fire);
+const FULL_LOWER = pickPayColumns(POLICE_FIRE_PAY_FULL_2026, 0, 5);
+const FULL_UPPER = pickPayColumns(POLICE_FIRE_PAY_FULL_2026, 5, 10);
 
 // 리드·메타 공용 — 별표 10 1호봉 행: [호봉, 소방사, 소방교, 소방장, 소방위, 소방경]
 const FIRST_STEP = POLICE_RANK_ROWS_2026[0];
@@ -106,12 +121,12 @@ export default function FirefighterPay2026Page() {
             modifiedDate: MODIFIED,
           }),
           datasetLd({
-            name: "2026년 소방공무원 봉급표 데이터 (소방사~소방경 1~5호봉)",
+            name: "2026년 소방공무원 봉급표 데이터 (소방사~소방정감 전 호봉)",
             description:
-              "공무원보수규정 별표 10 기준 2026년 소방공무원 계급별(소방사~소방경)·호봉별(1~5호봉) 월 봉급액 데이터셋.",
+              "공무원보수규정 별표 10 기준 2026년 소방공무원 계급별(소방사~소방정감)·호봉별 전체 월 봉급액 데이터셋(인사혁신처 2026 봉급표 원문).",
             url: "/firefighter-pay-2026",
             datePublished: "2026-08-30",
-            dateModified: "2026-08-30",
+            dateModified: MODIFIED,
             keywords: ["소방공무원 봉급표", "소방사 월급", "소방관 월급", "소방 봉급표"],
           }),
           speakableLd({ url: "/firefighter-pay-2026", cssSelectors: [".faq-answer"] }),
@@ -287,6 +302,58 @@ export default function FirefighterPay2026Page() {
             <CoupangBanner size="skyscraper" showDisclosure={false} />
           </aside>
         </div>
+
+        {/* 전 계급·전 호봉 전체표 — 모든 광고·공유 버튼 아래 페이지 맨 끝 (수익 추천 #2, 2026-09-25 준비) */}
+        <section
+          id="fire-full-table"
+          aria-labelledby="fire-full-table-title"
+          className="scroll-mt-24 mt-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200"
+        >
+          <h2 id="fire-full-table-title" className="text-xl font-black text-navy mb-2">
+            2026 소방공무원 봉급표 전체 (소방사~소방정감, 전 호봉)
+          </h2>
+          <p className="text-xs text-faint-blue leading-6 mb-5">
+            단위: 원(월 봉급액) · 출처:{" "}
+            <a
+              href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              인사혁신처 2026년 공무원 봉급표
+            </a>
+            (공무원보수규정 별표 10, 경찰·소방 통합표) · 확인일 {PAY_FULL_2026_CHECKED} · &lsquo;–&rsquo;는 해당
+            계급에 없는 호봉
+          </p>
+          <div className="space-y-8">
+            <PayStepTable
+              caption="소방사~소방경 (1~32호봉)"
+              columns={FIRE_LABELS.slice(0, 5)}
+              rows={FULL_LOWER}
+              regionLabel="소방 봉급표 소방사~소방경 전체 (가로 스크롤)"
+              minWidthClass="min-w-[520px]"
+            />
+            <PayStepTable
+              caption="소방령~소방정감 (1~30호봉)"
+              columns={FIRE_LABELS.slice(5, 10)}
+              rows={FULL_UPPER}
+              regionLabel="소방 봉급표 소방령~소방정감 전체 (가로 스크롤)"
+              minWidthClass="min-w-[520px]"
+            />
+          </div>
+          <p className="text-xs text-faint-blue leading-6 mt-4">
+            ※ 봉급표 금액은 위험근무수당·출동가산금·초과근무수당 등 수당을 뺀 기본급입니다. 같은 표를 경찰
+            계급으로 보려면{" "}
+            <Link href="/police-pay-2026#police-full-table" className="text-electric font-bold hover:underline">
+              경찰 봉급표 전체
+            </Link>
+            , 내년 예상액은{" "}
+            <Link href="/firefighter-pay-2027" className="text-electric font-bold hover:underline">
+              2027 소방공무원 봉급표 예상
+            </Link>
+            에서 확인하세요.
+          </p>
+        </section>
       </div>
     </main>
   );

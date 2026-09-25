@@ -89,7 +89,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
  '/year-end-tax-checklist': { lastModified: new Date('2026-09-09') },
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-09') },
- '/civil-servant-pay-2026': { lastModified: new Date('2026-09-09') },
+ '/civil-servant-pay-2026': { lastModified: new Date('2026-09-25') }, // 일반직 전 급수 풀표(페이지 끝)
  '/tools/finance/compound': { lastModified: new Date('2026-09-09') },
  '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
@@ -98,8 +98,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-08-30') },
  '/teacher-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
- '/police-pay-2026': { lastModified: new Date('2026-08-30') },
- '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
+ '/police-pay-2026': { lastModified: new Date('2026-09-25') }, // 전 계급·전 호봉 풀표(페이지 끝)
+ '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)·전 호봉 풀표
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
  '/en': { lastModified: new Date('2026-09-09') },
