@@ -120,30 +120,102 @@ function calculationParams(calcType: string, pagePath?: string) {
 }
 
 /**
+ * 링크 목적지의 템플릿 묶음 — guide_cta_click 의 dest_tpl 인자 (2026-09-26 RPM-02, 측정 전용).
+ * href 자체는 고유값이 하루 500개를 넘어 맞춤 측정기준으로 등록할 수 없다(아래 trackInternalLinkClick 주석).
+ * 대신 목적지를 아래 17개 고정값으로 묶어 '어느 모듈이 어떤 템플릿으로 보냈나'를 본다.
+ * 값을 늘리거나 이름을 바꾸면 GA4 에 쌓인 과거 행과 이어지지 않으므로 새 값은 추가만 한다.
+ */
+export const DEST_TEMPLATES = [
+  "company",
+  "compare",
+  "salary-db-hub",
+  "ranking",
+  "job",
+  "job-hub",
+  "bonus-calc",
+  "samsung-bonus",
+  "calc",
+  "salary-amount",
+  "monthly",
+  "pay-table",
+  "table",
+  "guide",
+  "industry",
+  "home",
+  "other",
+] as const;
+export type DestTemplate = (typeof DEST_TEMPLATES)[number];
+
+const SITE_HOSTS = new Set(["www.moneysalary.com", "moneysalary.com"]);
+
+/**
+ * href → 목적지 템플릿. 순수 함수(브라우저 전역 미사용). 쿼리·해시를 떼고, 끝 슬래시를 무시하며,
+ * 같은 사이트의 절대 URL(https://www.moneysalary.com/…)은 경로만 본다. 다른 도메인·상대 경로·빈 값은 other.
+ */
+export function destTemplate(href: string): DestTemplate {
+  let path = (href ?? "").trim().split("#")[0].split("?")[0];
+  if (/^(https?:)?\/\//i.test(path)) {
+    try {
+      const url = new URL(path, "https://www.moneysalary.com");
+      if (!SITE_HOSTS.has(url.hostname.toLowerCase())) return "other";
+      path = url.pathname;
+    } catch {
+      return "other";
+    }
+  }
+  if (!path.startsWith("/")) return "other";
+  path = path.replace(/\/+$/, "") || "/";
+
+  if (path === "/") return "home";
+  if (path === "/salary-db") return "salary-db-hub";
+  if (/^\/salary-db\/compare(\/|$)/.test(path)) return "compare";
+  if (/^\/salary-db\/ranking(\/|$)/.test(path)) return "ranking";
+  // 상장사 공시 트리: 허브는 salary-db-hub, 순위형(top-*·업종별)은 ranking, 종목 코드 페이지는 company
+  if (path === "/salary-db/listed") return "salary-db-hub";
+  if (/^\/salary-db\/listed\/(top-[a-z-]+|industry)(\/|$)/.test(path)) return "ranking";
+  if (/^\/salary-db\/[^/]+/.test(path)) return "company";
+  if (/^\/calc\/samsung-bonus(\/|$)/.test(path)) return "samsung-bonus";
+  if (/^\/calc\/([a-z0-9-]+-bonus|bonus-calculators)(\/|$)/.test(path)) return "bonus-calc";
+  if (/^\/calc(\/|$)/.test(path)) return "calc";
+  if (/^\/salary\/[^/]+/.test(path)) return "salary-amount";
+  if (/^\/monthly(\/|$)/.test(path)) return "monthly";
+  if (/^\/(teacher|police|firefighter|civil-servant)-pay-/.test(path)) return "pay-table";
+  if (/^\/table(\/|$)/.test(path)) return "table";
+  if (/^\/guides(\/|$)/.test(path)) return "guide";
+  if (/^\/industry(\/|$)/.test(path)) return "industry";
+  if (path === "/job") return "job-hub";
+  if (/^\/job\//.test(path)) return "job";
+  return "other";
+}
+
+/**
  * 가이드/시즌 페이지 CTA 카드 클릭.
  * position 값: related-calc · next-action · related-guide (onClick 직접 호출)
- *   + InternalLinkTracker 가 보내는 data-msy-module id (industry-rank 등, ≤15종).
+ *   + InternalLinkTracker 가 보내는 data-msy-module id (industry-rank 등, ≤40종 — internalLinkModules.test).
+ * destTpl: 목적지 템플릿(destTemplate). 넘긴 호출만 dest_tpl 을 싣는다 — 직접 호출부는 종전 그대로(미전송).
  */
 export function trackGuideCTAClick(
   slug: string,
   position: string,
-  pagePath?: string
+  pagePath?: string,
+  destTpl?: DestTemplate
 ): void {
   trackEvent("guide_cta_click", {
     slug,
     position,
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    ...(destTpl ? { dest_tpl: destTpl } : {}),
   });
 }
 
 /**
  * 서버 컴포넌트 링크 모듈 내부 링크 클릭 (InternalLinkTracker 전용).
- * 새 이벤트명 대신 guide_cta_click 을 재사용 — slug=href, position=모듈 id.
+ * 새 이벤트명 대신 guide_cta_click 을 재사용 — slug=href, position=모듈 id, dest_tpl=목적지 템플릿.
  * 9/7 등록되는 'position' 맞춤 측정기준 하나로 모듈별 클릭이 분해된다.
- * href 는 측정기준으로 등록하지 않는다(일 500 고유값 한도 초과 → 절삭).
+ * href 는 측정기준으로 등록하지 않는다(일 500 고유값 한도 초과 → 절삭). 목적지 분해는 17값 dest_tpl 로 본다.
  */
 export function trackInternalLinkClick(href: string, moduleId: string): void {
-  trackGuideCTAClick(href, moduleId);
+  trackGuideCTAClick(href, moduleId, undefined, destTemplate(href));
 }
 
 /**

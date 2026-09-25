@@ -166,7 +166,7 @@ describe("내부 링크 모듈 계측", () => {
     const analytics = read("src/lib/analytics.ts");
     const fnIdx = analytics.indexOf("export function trackInternalLinkClick(");
     expect(fnIdx).toBeGreaterThan(-1);
-    expect(analytics.slice(fnIdx, fnIdx + 200)).toContain("trackGuideCTAClick(href, moduleId)");
+    expect(analytics.slice(fnIdx, fnIdx + 200)).toContain("trackGuideCTAClick(href, moduleId, undefined, destTemplate(href))");
     expect(analytics).not.toContain("internal_link_click");
   });
 });
